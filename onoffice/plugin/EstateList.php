@@ -50,7 +50,34 @@ class EstateList {
 	 */
 
 	public function getFilterContent( $content ) {
-		return str_replace( "[onoffice]", $this->getEstateList(), $content );
+		$regexSearch = '!(\[oo_estate ([0-9a-z]*)\])!';
+		$matches = array();
+
+		preg_match_all( $regexSearch, $content, $matches );
+
+		$matchescount = count( $matches ) - 1;
+
+		if ( 0 == $matchescount ) {
+			return $content;
+		}
+
+		$onofficeTags = array_pop( $matches );
+
+		foreach ( $onofficeTags as $id => $name ) {
+			if ( ! array_key_exists( $name, $this->_config['estate'] ) ||
+				 ! array_key_exists( 'data', $this->_config['estate'][$name] ) ) {
+				continue;
+			}
+			if ( ! array_key_exists( 'filter', $this->_config['estate'][$name] ) ) {
+				$this->_config['estate'][$name]['filter'] = array();
+			}
+
+			$filter = $this->_config['estate'][$name]['filter'];
+			$data = $this->_config['estate'][$name]['data'];
+			$content = str_replace( $matches[0][$id], $this->getEstateList( $data, $filter ), $content );
+		}
+
+		return $content;
 	}
 
 
@@ -60,13 +87,13 @@ class EstateList {
 	 *
 	 */
 
-	private function getEstateList() {
+	private function getEstateList( $data = array(), $filter = array() ) {
 		$pSdk = $this->_pOnOfficeSdk;
 		$pSdk->setApiVersion( '1.5' );
 
 		$parametersGetEstateList = array(
-			'data' => $this->_config['estate']['data'],
-			'filter' => $this->_config['estate']['filter'],
+			'data' => $data,
+			'filter' => $filter,
 		);
 
 		$idReadEstate = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
@@ -109,7 +136,7 @@ class EstateList {
 	 */
 
 	private function collectEstateIds( $estateResponseArray ) {
-		if ( ! array_key_exists ( 'data', $estateResponseArray ) ) {
+		if ( ! array_key_exists( 'data', $estateResponseArray ) ) {
 			return array();
 		}
 
@@ -137,7 +164,9 @@ class EstateList {
 	 */
 
 	private function collectEstatePictures( $responseArrayEstatePictures ) {
-		if ( null !== $this->_estateFiles ) {
+		if ( null !== $this->_estateFiles ||
+			! array_key_exists('data', $responseArrayEstatePictures) ||
+			! array_key_exists('records', $responseArrayEstatePictures['data'])) {
 			return;
 		}
 
@@ -186,7 +215,7 @@ class EstateList {
 	 */
 
 	private function createHtml( $responseArray ) {
-		if ( ! array_key_exists ( 'data', $responseArray ) ) {
+		if ( ! array_key_exists( 'data', $responseArray ) ) {
 			return;
 		}
 
