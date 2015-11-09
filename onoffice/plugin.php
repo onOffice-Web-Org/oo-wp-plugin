@@ -21,17 +21,16 @@ $pAutoloader->addNamespace( 'onOffice\SDK', __DIR__.DIRECTORY_SEPARATOR.'SDK' );
 $pAutoloader->addNamespace( 'onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plugin' );
 $pAutoloader->register();
 
-
 $config = array();
 $config['estate'] = array();
-$config['estate']['data'] = array();
-$config['estate']['filter'] = array();
 
 // load user defined settings
 include 'config.php';
 
-
 $pEstateList = new EstateList( $config );
 
-add_filter('the_content', array($pEstateList, 'getFilterContent') );
+add_action( 'init', array($pEstateList, 'addCustomRewriteTags') );
+add_action( 'init', array($pEstateList, 'addCustomRewriteRules') );
 
+add_filter( 'the_posts', array($pEstateList, 'filter_the_posts') );
+add_filter( 'the_content', array($pEstateList, 'filter_the_content') );

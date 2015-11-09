@@ -21,10 +21,9 @@ $config['estate']['miete']['data'] = array(
 );
 
 $config['estate']['miete']['filter'] = array(
-	'vermarktungsart' => array
-		(
-			array('op' => '=', 'val' => 'miete'),
-		),
+	'vermarktungsart' => array(
+		array('op' => '=', 'val' => 'miete'),
+	),
 );
 
 $config['estate']['kauf']['data'] = array(
@@ -36,9 +35,13 @@ $config['estate']['kauf']['data'] = array(
 	'grundstuecksflaeche',
 );
 
+$config['estate']['miete']['detailpageid'] = 24;
+$config['estate']['miete']['listpagename'] = 'mietobjekte';
+$config['estate']['kauf']['detailpageid'] = 34;
+$config['estate']['kauf']['listpagename'] = 'kaufobjekte';
+
 $config['estate']['kauf']['filter'] = array(
-	'vermarktungsart' => array
-		(
-			array('op' => '=', 'val' => 'kauf'),
-		),
+	'vermarktungsart' => array(
+		array('op' => '=', 'val' => 'kauf'),
+	),
 );
