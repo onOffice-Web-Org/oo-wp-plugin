@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 include 'Psr4AutoloaderClass.php';
 
 use onOffice\SDK\Psr4AutoloaderClass;
-use onOffice\WPlugin\EstateList;
+use onOffice\WPlugin\ContentFilter;
 
 $pAutoloader = new Psr4AutoloaderClass();
 $pAutoloader->addNamespace( 'onOffice', __DIR__ );
@@ -27,10 +27,11 @@ $config['estate'] = array();
 // load user defined settings
 include 'config.php';
 
-$pEstateList = new EstateList( $config );
+$pContentFilter = new ContentFilter( $config );
 
-add_action( 'init', array($pEstateList, 'addCustomRewriteTags') );
-add_action( 'init', array($pEstateList, 'addCustomRewriteRules') );
+add_action( 'init', array($pContentFilter, 'addCustomRewriteTags') );
+add_action( 'init', array($pContentFilter, 'addCustomRewriteRules') );
+add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
 
-add_filter( 'the_posts', array($pEstateList, 'filter_the_posts') );
-add_filter( 'the_content', array($pEstateList, 'filter_the_content') );
+add_filter( 'the_posts', array($pContentFilter, 'filter_the_posts') );
+add_filter( 'the_content', array($pContentFilter, 'filter_the_content') );

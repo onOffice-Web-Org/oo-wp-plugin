@@ -27,8 +27,13 @@ class EstateList {
 	private $_config = array();
 
 	/** @var array */
-	private $_estateFiles = null;
+	private $_estateFiles = array();
 
+	/** @var array */
+	private $_responseArray = array();
+
+	/** @var array */
+	private $_currentEstate = array();
 
 	/**
 	 *
@@ -44,154 +49,11 @@ class EstateList {
 
 	/**
 	 *
-	 */
-
-	public function addCustomRewriteTags() {
-		add_rewrite_tag('%estate_id%', '([^&]+)');
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function addCustomRewriteRules() {
-		$lists = $this->getEstateListPageList();
-
-		foreach ( $lists as $list ) {
-			add_rewrite_rule( '('.preg_quote($list).')/([^/]*)/?$',
-				'index.php?pagename=$matches[1]&estate_id=$matches[2]','top' );
-		}
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function getEstateListPageList() {
-		$list = array();
-		foreach ( $this->_config['estate'] as $config ) {
-			if ( array_key_exists('listpagename', $config) ) {
-				$list[] = $config['listpagename'];
-			}
-		}
-
-		$list = array_unique($list);
-		return $list;
-	}
-
-
-	/**
-	 *
-	 * Insert the estate overview list
-	 *
-	 * @param string $content
 	 * @return string
 	 *
 	 */
 
-	public function filter_the_content( $content ) {
-		$regexSearch = '!(\[oo_estate ([0-9a-z]*)\])!';
-		$matches = array();
-
-		preg_match_all( $regexSearch, $content, $matches );
-
-		$matchescount = count( $matches ) - 1;
-
-		if ( 0 == $matchescount ) {
-			return $content;
-		}
-
-		$onofficeTags = array_pop( $matches );
-
-		foreach ( $onofficeTags as $id => $name ) {
-			if ( ! array_key_exists( $name, $this->_config['estate'] ) ||
-				 ! array_key_exists( 'data', $this->_config['estate'][$name] ) ) {
-				continue;
-			}
-			if ( ! array_key_exists( 'filter', $this->_config['estate'][$name] ) ) {
-				$this->_config['estate'][$name]['filter'] = array();
-			}
-
-			$filter = $this->_config['estate'][$name]['filter'];
-			$data = $this->_config['estate'][$name]['data'];
-			$content = str_replace( $matches[0][$id], $this->getEstateList( $data, $filter ), $content );
-		}
-
-		return $content;
-	}
-
-
-	/**
-	 *
-	 * @global \WP_Query $wp_query
-	 * @global \WP_Post $post
-	 * @param \WP_Post[] $posts
-	 * @return \WP_Post
-	 *
-	 */
-
-	public function filter_the_posts( $posts ) {
-		global $wp_query;
-		global $post;
-
-		if ( empty( $posts[0] ) ) {
-			return $posts;
-		}
-
-		$configKey = $this->getConfigKeyByPostname( $posts[0]->post_name );
-		$detailpageId = null;
-
-		if (array_key_exists( $configKey, $this->_config['estate'] ) &&
-			array_key_exists( 'detailpageid', $this->_config['estate'][$configKey] ) ) {
-			$detailpageId = $this->_config['estate'][$configKey]['detailpageid'];
-		}
-
-		if ( ! empty( $wp_query->query_vars['estate_id'] ) && ! is_null( $detailpageId ) ) {
-			$newPost = get_post( $detailpageId );
-			if ( ! is_null( $newPost ) ) {
-				$post = $newPost;
-				$post->post_content = $this->filter_the_content( $post->post_content );
-				$post->post_status = 'publish';
-				$post->post_name = 'detailansicht';
-
-				return array($post);
-			}
-		}
-
-		return $posts;
-	}
-
-
-	/**
-	 *
-	 * @param string $parentname
-	 * @return string
-	 *
-	 */
-
-	private function getConfigKeyByPostname( $parentname ) {
-		foreach ( $this->_config['estate'] as $index => $config ) {
-			if ( array_key_exists('listpagename', $config ) &&
-				$config['listpagename'] === $parentname ) {
-				return $index;
-			}
-		}
-
-		return null;
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	private function getEstateList( $data = array(), $filter = array() ) {
+	public function loadEstates( $data = array(), $filter = array() ) {
 		$pSdk = $this->_pOnOfficeSdk;
 		$pSdk->setApiVersion( '1.5' );
 
@@ -214,21 +76,47 @@ class EstateList {
 
 		$responseArrayEstates = $pSdk->getResponseArray( $idReadEstate );
 
+		$pictureCategories =  array(
+			'Titelbild',
+			'Foto',
+			'Foto_gross',
+			'Grundriss',
+			'Lageplan',
+			'Stadtplan',
+			'Anzeigen',
+			'Epass_Skala',
+			'Finanzierungsbeispiel'
+		);
+
 		$estateIds = $this->collectEstateIds( $responseArrayEstates );
-		$idGetEstatePictures = $pSdk->callGeneric
-			( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array('estateids' => $estateIds, 'categories' => 'Titelbild') );
+		$idGetEstatePicturesSmall = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
+					'estateids' => $estateIds,
+					'categories' => $pictureCategories,
+					'size' => '300x400',
+				)
+			);
+		$idGetEstatePicturesOriginal = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
+					'estateids' => $estateIds,
+					'categories' => $pictureCategories,
+				)
+			);
 		$responseArrayFieldList = $pSdk->getResponseArray( $idGetFields );
 
 
 		$pSdk->sendRequests( $this->_config['token'], $this->_config['secret'] );
-		$responseArrayEstatePictures = $pSdk->getResponseArray( $idGetEstatePictures );
+		$responseArrayEstatePicturesSmall = $pSdk->getResponseArray( $idGetEstatePicturesSmall );
 
-		$this->collectEstatePictures( $responseArrayEstatePictures );
+		$this->collectEstatePictures( $responseArrayEstatePicturesSmall, '300x400' );
+
+		$responseArrayEstatePicturesOriginal = $pSdk->getResponseArray( $idGetEstatePicturesOriginal );
+
+		$this->collectEstatePictures( $responseArrayEstatePicturesOriginal, 'o' );
 
 		$fieldList = $responseArrayFieldList['data']['records'];
 		$this->createFieldList( $fieldList );
 
-		return $this->createHtml( $responseArrayEstates );
+		$this->_responseArray = $responseArrayEstates;
+		$this->resetEstateIterator( $this->_responseArray );
 	}
 
 
@@ -267,18 +155,16 @@ class EstateList {
 	 *
 	 */
 
-	private function collectEstatePictures( $responseArrayEstatePictures ) {
-		if ( null !== $this->_estateFiles ||
-			! array_key_exists( 'data', $responseArrayEstatePictures ) ||
+	private function collectEstatePictures( $responseArrayEstatePictures, $size ) {
+		if (! array_key_exists( 'data', $responseArrayEstatePictures ) ||
 			! array_key_exists( 'records', $responseArrayEstatePictures['data'] ) ) {
 			return;
 		}
 
-		$this->_estateFiles = array();
 		$records = $responseArrayEstatePictures['data']['records'];
 
 		foreach ( $records as $properties ) {
-			$this->_estateFiles[$properties['elements']['estateid']][] = $properties['elements']['url'];
+			$this->_estateFiles[$properties['elements']['estateid']][$size][] = $properties['elements']['url'];
 		}
 	}
 
@@ -295,7 +181,7 @@ class EstateList {
 			return;
 		}
 
-		foreach ($fieldResult as $moduleProperties) {
+		foreach ( $fieldResult as $moduleProperties ) {
 			if ( ! array_key_exists( 'elements', $moduleProperties ) ) {
 				continue;
 			}
@@ -313,46 +199,89 @@ class EstateList {
 
 	/**
 	 *
-	 * @param array $responseArray
+	 * @return array|boolean
+	 *
+	 */
+
+	public function estateIterator() {
+		if ( ! array_key_exists( 'data', $this->_responseArray ) &&
+				! array_key_exists( 'records', $this->_responseArray['data'] ) ) {
+			return false;
+		}
+
+		$currentRecord = each( $this->_responseArray['data']['records'] );
+
+		$this->_currentEstate['id'] = $currentRecord['value']['id'];
+		$this->_currentEstate['type'] = $currentRecord['value']['type'];
+
+		if ( false !== $currentRecord ) {
+			return $currentRecord['value']['elements'];
+		}
+
+		return false;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
 	 * @return string
 	 *
 	 */
 
-	private function createHtml( $responseArray ) {
-		if ( ! array_key_exists( 'data', $responseArray ) ) {
-			return;
+	public function getFieldLabel( $field ) {
+		$recordType = $this->_currentEstate['type'];
+		$fieldNewName = $field;
+
+		if ( array_key_exists( $recordType, $this->_fieldList ) &&
+			array_key_exists( $field, $this->_fieldList[$recordType] ) ) {
+			$fieldNewName = $this->_fieldList[$recordType][$field]['label'];
 		}
 
-		$records = $responseArray['data']['records'];
-		$output = '';
+		return $fieldNewName;
+	}
 
-		foreach ( $records as $record ) {
-			$recordType = $record['type'];
-			$output .= '<p>';
 
-			foreach ( $record['elements'] as $field => $value ) {
-				$fieldNewName = $field;
-				if ( is_numeric( $value ) && 0 == $value ) {
-					continue;
-				}
+	/**
+	 *
+	 * @return array
+	 *
+	 */
 
-				if ( array_key_exists( $recordType, $this->_fieldList ) &&
-					array_key_exists( $field, $this->_fieldList[$recordType] ) ) {
-					$fieldNewName = $this->_fieldList[$recordType][$field]['label'];
-				}
-
-				$output .= wptexturize( $fieldNewName.': '.$value ).'<br>';
-			}
-
-			if ( array_key_exists( $record['id'], $this->_estateFiles ) ) {
-				foreach ( $this->_estateFiles[$record['id']] as $picture ) {
-					$output .= '<img src="'.$picture.'" width=200>';
-				}
-			}
-
-			$output .= '</p>';
+	public function getEstatePicturesSmall( ) {
+		$recordId = $this->_currentEstate['id'];
+		$size = '300x400';
+		if ( array_key_exists( $recordId, $this->_estateFiles ) &&
+			array_key_exists( $size, $this->_estateFiles[$recordId] ) ) {
+			return $this->_estateFiles[$recordId][$size];
 		}
 
-		return $output;
+		return array();
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getEstatePictureBig( $number ) {
+		$recordId = $this->_currentEstate['id'];
+		$size = 'o';
+		if ( ! empty( $this->_estateFiles[$recordId][$size][$number] ) ) {
+			return $this->_estateFiles[$recordId][$size][$number];
+		}
+
+		return null;
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function resetEstateIterator() {
+		reset( $this->_responseArray );
 	}
 }
