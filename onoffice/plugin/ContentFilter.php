@@ -108,7 +108,7 @@ class ContentFilter
 			$filter = $this->_config['estate'][$name]['filter'];
 			$data = $this->_config['estate'][$name]['data'];
 
-			$pEstateList = new EstateList( $this->_config );
+			$pEstateList = new EstateList( $this->_config, $name );
 			$pEstateList->loadEstates( $data, $filter );
 
 			$pTemplate = new Template( $pEstateList, $name );
@@ -120,6 +120,7 @@ class ContentFilter
 
 		return $content;
 	}
+
 
 	/**
 	 *

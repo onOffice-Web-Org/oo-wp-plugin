@@ -35,15 +35,26 @@ class EstateList {
 	/** @var array */
 	private $_currentEstate = array();
 
+	/** @var array */
+	private $_estateContacts = array();
+
+	/** @var AddressList */
+	private $_pAddressList = array();
+
+	/** @var string */
+	private $_configName = null;
+
 	/**
 	 *
 	 * @param array $config
 	 *
 	 */
 
-	public function __construct( array $config ) {
+	public function __construct( array $config, $configName ) {
 		$this->_pOnOfficeSdk = new onOfficeSDK();
 		$this->_config = $config;
+		$this->_configName = $configName;
+		$this->_pAddressList = new AddressList( $config );
 	}
 
 
@@ -55,7 +66,7 @@ class EstateList {
 
 	public function loadEstates( $data = array(), $filter = array() ) {
 		$pSdk = $this->_pOnOfficeSdk;
-		$pSdk->setApiVersion( '1.5' );
+		$pSdk->setApiVersion( $this->_config['apiversion'] );
 
 		$parametersGetEstateList = array(
 			'data' => $data,
@@ -68,11 +79,8 @@ class EstateList {
 			'language' => 'DEU',
 		);
 
-		$token = $this->_config['token'];
-		$secret = $this->_config['secret'];
-
 		$idGetFields = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList );
-		$pSdk->sendRequests( $token, $secret );
+		$pSdk->sendRequests( $this->_config['token'], $this->_config['secret'] );
 
 		$responseArrayEstates = $pSdk->getResponseArray( $idReadEstate );
 
@@ -102,14 +110,21 @@ class EstateList {
 			);
 		$responseArrayFieldList = $pSdk->getResponseArray( $idGetFields );
 
+		$handleEstateContactPerson = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
+					'parentids' => $estateIds,
+					'relationtype' => 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:contactPerson',
+				)
+			);
 
 		$pSdk->sendRequests( $this->_config['token'], $this->_config['secret'] );
-		$responseArrayEstatePicturesSmall = $pSdk->getResponseArray( $idGetEstatePicturesSmall );
 
+		$responseArrayContactPerson = $pSdk->getResponseArray( $handleEstateContactPerson );
+		$this->collectEstateContactPerson( $responseArrayContactPerson );
+
+		$responseArrayEstatePicturesSmall = $pSdk->getResponseArray( $idGetEstatePicturesSmall );
 		$this->collectEstatePictures( $responseArrayEstatePicturesSmall, '300x400' );
 
 		$responseArrayEstatePicturesOriginal = $pSdk->getResponseArray( $idGetEstatePicturesOriginal );
-
 		$this->collectEstatePictures( $responseArrayEstatePicturesOriginal, 'o' );
 
 		$fieldList = $responseArrayFieldList['data']['records'];
@@ -166,6 +181,42 @@ class EstateList {
 		foreach ( $records as $properties ) {
 			$this->_estateFiles[$properties['elements']['estateid']][$size][] = $properties['elements']['url'];
 		}
+	}
+
+
+	/**
+	 *
+	 * @param array $responseArrayContacts
+	 * @return null
+	 *
+	 */
+
+	private function collectEstateContactPerson( $responseArrayContacts ) {
+		if (! array_key_exists( 'data', $responseArrayContacts ) ||
+			! array_key_exists( 'records', $responseArrayContacts['data'] ) ||
+			! array_key_exists( 0, $responseArrayContacts['data']['records'] ) ||
+			! array_key_exists( 'elements', $responseArrayContacts['data']['records'][0] ) ) {
+			return;
+		}
+
+		$records = $responseArrayContacts['data']['records'][0]['elements'];
+		$allAddressIds = array();
+
+		foreach ( $records as $estateId => $adressIds ) {
+			if ( is_null( $adressIds ) ) {
+				continue;
+			}
+
+			if ( !is_array( $adressIds ) ) {
+				$adressIds = array($adressIds);
+			}
+
+			$this->_estateContacts[$estateId] = $adressIds;
+			$allAddressIds = array_merge( $allAddressIds, $adressIds );
+		}
+
+		$fields = $this->_config['estate'][$this->_configName]['contactdata'];
+		$this->_pAddressList->loadAdressesById( $allAddressIds, $fields );
 	}
 
 
@@ -274,6 +325,40 @@ class EstateList {
 		}
 
 		return null;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getEstateContactIds() {
+		$recordId = $this->_currentEstate['id'];
+		if ( ! empty( $this->_estateContacts[$recordId] ) ) {
+			return $this->_estateContacts[$recordId];
+		}
+
+		return array();
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getEstateContacts() {
+		$addressIds = $this->getEstateContactIds();
+		$result = array();
+
+		foreach ( $addressIds as $addressId ) {
+			$result[] = $this->_pAddressList->getAddressById( $addressId );
+		}
+
+		return $result;
 	}
 
 

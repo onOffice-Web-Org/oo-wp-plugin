@@ -45,3 +45,19 @@ $config['estate']['kauf']['filter'] = array(
 		array('op' => '=', 'val' => 'kauf'),
 	),
 );
+
+$config['estate']['miete']['contactdata'] = array(
+	'Vorname',
+	'Name',
+	'defaultphone',
+	'defaultfax',
+	'defaultemail',
+);
+
+$config['estate']['kauf']['contactdata'] = array(
+	'Vorname',
+	'Name',
+	'defaultphone',
+	'defaultfax',
+	'defaultemail',
+);
