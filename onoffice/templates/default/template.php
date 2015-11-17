@@ -17,7 +17,7 @@
 		}
 	?>
 
-		<?php echo wptexturize( $pEstates->getFieldLabel( $field ) .': '.$value ); ?><br>
+		<?php echo $pEstates->getFieldLabel( $field ) .': '.$value; ?><br>
 
 	<?php endforeach; ?>
 
@@ -37,8 +37,8 @@
 	<?php
 	$estatePictures = $pEstates->getEstatePicturesSmall();
 	foreach ( $estatePictures as $id => $picture ) : ?>
-		<a href="<?php echo $pEstates->getEstatePictureBig( $id ); ?>">
-			<img src="<?php echo $picture ?>">
+	<a href="<?php echo $pEstates->getEstatePictureBig( $id ); ?>">
+		<img src="<?php echo $picture ?>">
 		</a>
 	<?php endforeach; ?>
 </p>

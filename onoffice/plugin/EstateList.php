@@ -10,6 +10,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\ArrayContainer;
 
 /**
  *
@@ -250,7 +251,7 @@ class EstateList {
 
 	/**
 	 *
-	 * @return array|boolean
+	 * @return ArrayContainerEscape
 	 *
 	 */
 
@@ -266,7 +267,10 @@ class EstateList {
 		$this->_currentEstate['type'] = $currentRecord['value']['type'];
 
 		if ( false !== $currentRecord ) {
-			return $currentRecord['value']['elements'];
+			$record = $currentRecord['value']['elements'];
+			$pArrayContainer = new ArrayContainerEscape( $record );
+
+			return $pArrayContainer;
 		}
 
 		return false;
@@ -295,7 +299,7 @@ class EstateList {
 
 	/**
 	 *
-	 * @return array
+	 * @return ArrayContainerEscape
 	 *
 	 */
 
@@ -304,10 +308,13 @@ class EstateList {
 		$size = '300x400';
 		if ( array_key_exists( $recordId, $this->_estateFiles ) &&
 			array_key_exists( $size, $this->_estateFiles[$recordId] ) ) {
-			return $this->_estateFiles[$recordId][$size];
+			$estateFiles = $this->_estateFiles[$recordId][$size];
+
+			$pArrayContainer = new ArrayContainerEscape( $estateFiles, Escape::URL );
+			return $pArrayContainer;
 		}
 
-		return array();
+		return new ArrayContainerEscape( array() );
 	}
 
 
@@ -321,7 +328,7 @@ class EstateList {
 		$recordId = $this->_currentEstate['id'];
 		$size = 'o';
 		if ( ! empty( $this->_estateFiles[$recordId][$size][$number] ) ) {
-			return $this->_estateFiles[$recordId][$size][$number];
+			return esc_url( $this->_estateFiles[$recordId][$size][$number] );
 		}
 
 		return null;
@@ -346,7 +353,7 @@ class EstateList {
 
 	/**
 	 *
-	 * @return array
+	 * @return ArrayContainerEscape[]
 	 *
 	 */
 
@@ -355,7 +362,9 @@ class EstateList {
 		$result = array();
 
 		foreach ( $addressIds as $addressId ) {
-			$result[] = $this->_pAddressList->getAddressById( $addressId );
+			$currentAddressData = $this->_pAddressList->getAddressById( $addressId );
+			$pArrayContainerCurrentAddress = new ArrayContainerEscape( $currentAddressData );
+			$result[] = $pArrayContainerCurrentAddress;
 		}
 
 		return $result;
