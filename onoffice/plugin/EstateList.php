@@ -68,16 +68,19 @@ class EstateList {
 	public function loadEstates( $data = array(), $filter = array() ) {
 		$pSdk = $this->_pOnOfficeSdk;
 		$pSdk->setApiVersion( $this->_config['apiversion'] );
+		$language = $this->_config['estate'][$this->_configName]['language'];
 
 		$parametersGetEstateList = array(
 			'data' => $data,
 			'filter' => $filter,
+			'language' => $language,
 		);
 
 		$idReadEstate = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
+
 		$parametersGetFieldList = array(
 			'labels' => 1,
-			'language' => 'DEU',
+			'language' => $language,
 		);
 
 		$idGetFields = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList );

@@ -7,6 +7,8 @@ $config['token'] = 'xyz';
 /** ... and its secret */
 $config['secret'] = '123';
 
+$config['apiversion'] = 'trunk';
+
 /* Estate data you want to fetch */
 
 $config['estate']['miete']['data'] = array(
@@ -18,7 +20,11 @@ $config['estate']['miete']['data'] = array(
 	'balkon_terrasse_flaeche',
 	'grundstuecksflaeche',
 	'warmwasserEnthalten',
+	'objekttitel',
 );
+
+$config['estate']['miete']['language'] = 'ENG';
+$config['estate']['kauf']['language'] = 'ENG';
 
 $config['estate']['miete']['filter'] = array(
 	'vermarktungsart' => array(
@@ -33,6 +39,7 @@ $config['estate']['kauf']['data'] = array(
 	'energieverbrauchskennwert',
 	'balkon_terrasse_flaeche',
 	'grundstuecksflaeche',
+	'objekttitel',
 );
 
 $config['estate']['miete']['detailpageid'] = 24;
