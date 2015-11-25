@@ -10,7 +10,6 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\ArrayContainer;
 
 /**
  *
@@ -45,16 +44,23 @@ class EstateList {
 	/** @var string */
 	private $_configName = null;
 
+	/** @var string */
+	private $_view = null;
+
+
 	/**
 	 *
 	 * @param array $config
+	 * @param string $configName
+	 * @param string $viewName
 	 *
 	 */
 
-	public function __construct( array $config, $configName ) {
+	public function __construct( array $config, $configName, $viewName ) {
 		$this->_pOnOfficeSdk = new onOfficeSDK();
 		$this->_config = $config;
 		$this->_configName = $configName;
+		$this->_view = $viewName;
 		$this->_pAddressList = new AddressList( $config );
 	}
 
@@ -65,10 +71,21 @@ class EstateList {
 	 *
 	 */
 
-	public function loadEstates( $data = array(), $filter = array() ) {
+	public function loadEstates( $filter = array() ) {
 		$pSdk = $this->_pOnOfficeSdk;
 		$pSdk->setApiVersion( $this->_config['apiversion'] );
-		$language = $this->_config['estate'][$this->_configName]['language'];
+
+		$configByName = $this->_config['estate'][$this->_configName];
+		$configByView = $configByName['views'][$this->_view];
+
+		$language = $configByView['language'];
+		$data = $configByView['data'];
+
+		$filter = array_merge( $filter, $configByName['filter'] );
+
+		if ( isset( $configByView['filter'] ) ) {
+			$filter = $configByView['filter'];
+		}
 
 		$parametersGetEstateList = array(
 			'data' => $data,
@@ -136,6 +153,23 @@ class EstateList {
 
 		$this->_responseArray = $responseArrayEstates;
 		$this->resetEstateIterator( $this->_responseArray );
+	}
+
+
+	/**
+	 *
+	 * @param int $id
+	 *
+	 */
+
+	public function loadSingleEstate( $id ) {
+		$filter = array(
+			'Id' => array(
+				array('op' => '=', 'val' => $id),
+			),
+		);
+
+		$this->loadEstates( $filter );
 	}
 
 
@@ -211,7 +245,7 @@ class EstateList {
 				continue;
 			}
 
-			if ( !is_array( $adressIds ) ) {
+			if ( ! is_array( $adressIds ) ) {
 				$adressIds = array($adressIds);
 			}
 
@@ -219,8 +253,14 @@ class EstateList {
 			$allAddressIds = array_merge( $allAddressIds, $adressIds );
 		}
 
-		$fields = $this->_config['estate'][$this->_configName]['contactdata'];
-		$this->_pAddressList->loadAdressesById( $allAddressIds, $fields );
+		$fields = array();
+		if ( isset( $this->_config['estate'][$this->_configName]['views'][$this->_view]['contactdata'] ) ) {
+			$fields = $this->_config['estate'][$this->_configName]['views'][$this->_view]['contactdata'];
+		}
+
+		if ( count( $fields ) > 0 ) {
+			$this->_pAddressList->loadAdressesById( $allAddressIds, $fields );
+		}
 	}
 
 
@@ -259,8 +299,7 @@ class EstateList {
 	 */
 
 	public function estateIterator() {
-		if ( ! array_key_exists( 'data', $this->_responseArray ) &&
-				! array_key_exists( 'records', $this->_responseArray['data'] ) ) {
+		if ( ! isset( $this->_responseArray['data']['records'] ) ) {
 			return false;
 		}
 
@@ -302,11 +341,26 @@ class EstateList {
 
 	/**
 	 *
+	 * @return string
+	 *
+	 */
+
+	public function getEstateLink( $view )
+	{
+		$currentPageLink = get_permalink();
+		$estate = $this->_currentEstate['id'];
+		$fullLink = esc_url($currentPageLink.$view.'-'.$estate.'/');
+		return $fullLink;
+	}
+
+
+	/**
+	 *
 	 * @return ArrayContainerEscape
 	 *
 	 */
 
-	public function getEstatePicturesSmall( ) {
+	public function getEstatePicturesSmall() {
 		$recordId = $this->_currentEstate['id'];
 		$size = '300x400';
 		if ( array_key_exists( $recordId, $this->_estateFiles ) &&

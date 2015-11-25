@@ -11,60 +11,109 @@ $config['apiversion'] = 'trunk';
 
 /* Estate data you want to fetch */
 
-$config['estate']['miete']['data'] = array(
-	'objektnr_extern',
-	'kaltmiete',
-	'warmmiete',
-	'heizkosten_in_nebenkosten',
-	'energieverbrauchskennwert',
-	'balkon_terrasse_flaeche',
-	'grundstuecksflaeche',
-	'warmwasserEnthalten',
-	'objekttitel',
-);
-
-$config['estate']['miete']['language'] = 'ENG';
-$config['estate']['kauf']['language'] = 'ENG';
-
-$config['estate']['miete']['filter'] = array(
-	'vermarktungsart' => array(
-		array('op' => '=', 'val' => 'miete'),
+$config['estate'] = array(
+	'miete' => array(
+		'listpagename' => 'mietobjekte',
+		'filter' => array(
+			'vermarktungsart' => array(
+				array('op' => '=', 'val' => 'miete'),
+			),
+		),
+		'views' => array(
+			'list' => array(
+				'data' => array(
+					'Id',
+					'objektnr_extern',
+					'kaltmiete',
+					'warmmiete',
+					'heizkosten_in_nebenkosten',
+					'energieverbrauchskennwert',
+					'balkon_terrasse_flaeche',
+					'grundstuecksflaeche',
+					'warmwasserEnthalten',
+					'objekttitel',
+				),
+				'contactdata' => array(
+					'Vorname',
+					'Name',
+					'defaultphone',
+					'defaultfax',
+					'defaultemail',
+				),
+				'language' => 'ENG',
+				'records' => 20,
+				'template' => 'default',
+			),
+			'detail' => array(
+				'data' => array(
+					'Id',
+					'objektnr_extern',
+					'kaltmiete',
+					'warmmiete',
+					'heizkosten_in_nebenkosten',
+					'energieverbrauchskennwert',
+					'balkon_terrasse_flaeche',
+					'grundstuecksflaeche',
+					'warmwasserEnthalten',
+					'objekttitel',
+				),
+				'language' => 'ENG',
+				'pageid' => 24,
+				'pagename' => 'Objektdetailansicht Mietobjekt',
+				'template' => 'default_detail',
+			),
+		),
 	),
-);
-
-$config['estate']['kauf']['data'] = array(
-	'objektnr_extern',
-	'kaufpreis',
-	'heizkosten_in_nebenkosten',
-	'energieverbrauchskennwert',
-	'balkon_terrasse_flaeche',
-	'grundstuecksflaeche',
-	'objekttitel',
-);
-
-$config['estate']['miete']['detailpageid'] = 24;
-$config['estate']['miete']['listpagename'] = 'mietobjekte';
-$config['estate']['kauf']['detailpageid'] = 34;
-$config['estate']['kauf']['listpagename'] = 'kaufobjekte';
-
-$config['estate']['kauf']['filter'] = array(
-	'vermarktungsart' => array(
-		array('op' => '=', 'val' => 'kauf'),
+	'kauf' => array(
+		'listpagename' => 'kaufobjekte',
+		'filter' => array(
+			'vermarktungsart' => array(
+				array('op' => '=', 'val' => 'kauf'),
+			),
+		),
+		'views' => array(
+			'list' => array(
+				'data' => array(
+					'Id',
+					'objektnr_extern',
+					'kaltmiete',
+					'warmmiete',
+					'heizkosten_in_nebenkosten',
+					'energieverbrauchskennwert',
+					'balkon_terrasse_flaeche',
+					'grundstuecksflaeche',
+					'warmwasserEnthalten',
+					'objekttitel',
+				),
+				'contactdata' => array(
+					'Vorname',
+					'Name',
+					'defaultphone',
+					'defaultfax',
+					'defaultemail',
+				),
+				'language' => 'ENG',
+				'records' => 20,
+				'template' => 'default'
+			),
+			'detail' => array(
+				'data' => array(
+					'Id',
+					'objektnr_extern',
+					'kaltmiete',
+					'warmmiete',
+					'heizkosten_in_nebenkosten',
+					'energieverbrauchskennwert',
+					'balkon_terrasse_flaeche',
+					'grundstuecksflaeche',
+					'warmwasserEnthalten',
+					'objekttitel',
+				),
+				'language' => 'ENG',
+				'pageid' => 34,
+				'pagename' => 'Objektdetailansicht Kaufobjekt',
+				'template' => 'default_detail',
+			),
+		),
 	),
-);
-
-$config['estate']['miete']['contactdata'] = array(
-	'Vorname',
-	'Name',
-	'defaultphone',
-	'defaultfax',
-	'defaultemail',
-);
-
-$config['estate']['kauf']['contactdata'] = array(
-	'Vorname',
-	'Name',
-	'defaultphone',
-	'defaultfax',
-	'defaultemail',
 );

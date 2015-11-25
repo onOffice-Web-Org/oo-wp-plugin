@@ -36,6 +36,7 @@ class ContentFilter
 
 	public function addCustomRewriteTags() {
 		add_rewrite_tag('%estate_id%', '([^&]+)');
+		add_rewrite_tag('%view%', '([^&]+)');
 	}
 
 
@@ -44,11 +45,13 @@ class ContentFilter
 	 */
 
 	public function addCustomRewriteRules() {
-		$lists = $this->getEstateListPageList();
+		$pages = $this->getEstateListPageList();
 
-		foreach ( $lists as $list ) {
-			add_rewrite_rule( '('.preg_quote($list).')/([^/]*)/?$',
-				'index.php?pagename=$matches[1]&estate_id=$matches[2]','top' );
+		foreach ( $pages as $listName => $views ) {
+			foreach ( $views as $viewName ) {
+				add_rewrite_rule( '('.preg_quote($listName).')/('.preg_quote($viewName).')-([^/]*)/?$',
+					'index.php?pagename=$matches[1]&view=$matches[2]&estate_id=$matches[3]','top' );
+			}
 		}
 	}
 
@@ -61,13 +64,18 @@ class ContentFilter
 
 	private function getEstateListPageList() {
 		$list = array();
-		foreach ( $this->_config['estate'] as $config ) {
+		foreach ( $this->_config['estate'] as $configname => $config ) {
+			$listpagename = $configname;
 			if ( array_key_exists('listpagename', $config ) ) {
-				$list[] = $config['listpagename'];
+				$listpagename = $config['listpagename'];
 			}
+			$views = array_keys($config['views']);
+			$listIndex = array_search('list', $views);
+			unset($views[$listIndex]);
+
+			$list[$listpagename] = array_values($views);
 		}
 
-		$list = array_unique( $list );
 		return $list;
 	}
 
@@ -82,22 +90,28 @@ class ContentFilter
 	 */
 
 	public function filter_the_content( $content ) {
-		$regexSearch = '!(\[oo_estate ([0-9a-z]*)\])!';
+		$regexSearch = '!(?P<tag>\[oo_estate\s+(?P<name>[0-9a-z]+)(?:\s+(?P<view>[0-9a-z]+))?\])!';
 		$matches = array();
 
 		preg_match_all( $regexSearch, $content, $matches );
 
 		$matchescount = count( $matches ) - 1;
 
-		if ( 0 == $matchescount ) {
+		if ( 0 == $matchescount || empty( $matches['name'] ) ) {
 			return $content;
 		}
 
-		$onofficeTags = array_pop( $matches );
+		$onofficeTags = $matches['name'];
 
 		foreach ( $onofficeTags as $id => $name ) {
+			$viewName = 'list';
+
+			if ('' != $matches['view'][$id]) {
+				$viewName = $matches['view'][$id];
+			}
+
 			if ( ! array_key_exists( $name, $this->_config['estate'] ) ||
-				 ! array_key_exists( 'data', $this->_config['estate'][$name] ) ) {
+				empty( $this->_config['estate'][$name]['views'][$viewName] ) ) {
 				continue;
 			}
 
@@ -105,20 +119,65 @@ class ContentFilter
 				$this->_config['estate'][$name]['filter'] = array();
 			}
 
-			$filter = $this->_config['estate'][$name]['filter'];
-			$data = $this->_config['estate'][$name]['data'];
+			$configByName = $this->_config['estate'][$name];
+			$templateName = 'default';
 
-			$pEstateList = new EstateList( $this->_config, $name );
-			$pEstateList->loadEstates( $data, $filter );
+			if (isset($configByName['views'][$viewName]['template'])) {
+				$templateName = $configByName['views'][$viewName]['template'];
+			}
 
-			$pTemplate = new Template( $pEstateList, $name );
-			add_action( 'wp_enqueue_scripts', array($pTemplate, 'inquireIncludes' ) );
+			if ( 'list' == $viewName ) {
+				$pEstateList = $this->preloadEstateList( $name, $viewName );
+			} else {
+				$pEstateList = $this->preloadSingleEstate( $name, $viewName );
+			}
+
+			$pTemplate = new Template( $pEstateList, $templateName );
 			$htmlOutput = $pTemplate->render();
 
 			$content = str_replace( $matches[0][$id], $htmlOutput, $content );
 		}
 
 		return $content;
+	}
+
+
+	/**
+	 *
+	 * @param array $configName
+	 *
+	 */
+
+	private function preloadEstateList( $configName, $viewName ) {
+
+		$pEstateList = new EstateList( $this->_config, $configName, $viewName );
+		$pEstateList->loadEstates();
+
+		return $pEstateList;
+	}
+
+
+	/**
+	 *
+	 * @global \WP_Query $wp_query
+	 * @param string $configName
+	 * @param string $view
+	 * @return \onOffice\WPlugin\EstateList
+	 *
+	 */
+
+	private function preloadSingleEstate( $configName, $view ) {
+		global $wp_query;
+
+		$estateId = 0;
+		if ( ! empty( $wp_query->query_vars['estate_id'] ) ) {
+			$estateId = $wp_query->query_vars['estate_id'];
+		}
+
+		$pEstateList = new EstateList( $this->_config, $configName, $view );
+		$pEstateList->loadSingleEstate( $estateId );
+
+		return $pEstateList;
 	}
 
 
@@ -139,15 +198,24 @@ class ContentFilter
 			return $posts;
 		}
 
-		$configKey = $this->getConfigKeyByPostname( $posts[0]->post_name );
+		$view = null;
+		$configKey = $this->getConfigKeyByPostname( $wp_query->query_vars['pagename'] );
+
+		if ( isset( $wp_query->query_vars['view'] )) {
+			$view = $wp_query->query_vars['view'];
+		}
+
 		$detailpageId = null;
 
 		if (array_key_exists( $configKey, $this->_config['estate'] ) &&
-			array_key_exists( 'detailpageid', $this->_config['estate'][$configKey] ) ) {
-			$detailpageId = $this->_config['estate'][$configKey]['detailpageid'];
+			! is_null( $view ) &&
+			isset( $this->_config['estate'][$configKey]['views'][$view] ) &&
+			array_key_exists( 'pageid', $this->_config['estate'][$configKey]['views'][$view] ) ) {
+			$detailpageId = $this->_config['estate'][$configKey]['views'][$view]['pageid'];
 		}
 
-		if ( ! empty( $wp_query->query_vars['estate_id'] ) && ! is_null( $detailpageId ) ) {
+		if ( ! empty( $wp_query->query_vars['estate_id'] ) &&
+			! is_null( $detailpageId ) ) {
 			$newPost = get_post( $detailpageId );
 			if ( ! is_null( $newPost ) ) {
 				$post = $newPost;
@@ -155,6 +223,7 @@ class ContentFilter
 				$post->post_status = 'publish';
 				$post->post_name = 'detailansicht';
 
+				remove_filter ('the_content', 'wpautop');
 				return array($post);
 			}
 		}
