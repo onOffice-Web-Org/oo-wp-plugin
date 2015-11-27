@@ -47,6 +47,15 @@ class EstateList {
 	/** @var string */
 	private $_view = null;
 
+	/** @var int */
+	private $_currentEstatePage = 1;
+
+	/** @var int */
+	private $_numEstatePages = null;
+
+	/** @var int */
+	private $_estateRecordsPerPage = 20;
+
 
 	/**
 	 *
@@ -67,11 +76,32 @@ class EstateList {
 
 	/**
 	 *
+	 * @return int
+	 *
+	 */
+
+	private function getNumEstatePages() {
+		if ( empty( $this->_responseArray['data']['meta']['cntabsolute'] ) ) {
+			return null;
+		}
+
+		$recordNumOverAll = $this->_responseArray['data']['meta']['cntabsolute'];
+		$numEstatePages = ceil( $recordNumOverAll / $this->_estateRecordsPerPage );
+
+		return $numEstatePages;
+	}
+
+
+	/**
+	 *
+	 * @param int $currentPage
+	 * @param array $filter
+	 *
 	 * @return string
 	 *
 	 */
 
-	public function loadEstates( $filter = array() ) {
+	public function loadEstates( $currentPage, $filter = array() ) {
 		$pSdk = $this->_pOnOfficeSdk;
 		$pSdk->setApiVersion( $this->_config['apiversion'] );
 
@@ -81,7 +111,11 @@ class EstateList {
 		$language = $configByView['language'];
 		$data = $configByView['data'];
 
+		$numRecordsPerPage = isset( $configByView['records'] ) ? $configByView['records'] : 20;
+
 		$filter = array_merge( $filter, $configByName['filter'] );
+		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
+		$this->_currentEstatePage = $currentPage;
 
 		if ( isset( $configByView['filter'] ) ) {
 			$filter = $configByView['filter'];
@@ -91,6 +125,7 @@ class EstateList {
 			'data' => $data,
 			'filter' => $filter,
 			'language' => $language,
+			'listoffset' => $offset,
 		);
 
 		$idReadEstate = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
@@ -152,6 +187,8 @@ class EstateList {
 		$this->createFieldList( $fieldList );
 
 		$this->_responseArray = $responseArrayEstates;
+		$this->_numEstatePages = $this->getNumEstatePages();
+
 		$this->resetEstateIterator( $this->_responseArray );
 	}
 
@@ -169,7 +206,7 @@ class EstateList {
 			),
 		);
 
-		$this->loadEstates( $filter );
+		$this->loadEstates( 1, $filter );
 	}
 
 
@@ -299,8 +336,18 @@ class EstateList {
 	 */
 
 	public function estateIterator() {
+		global $numpages, $multipage, $page, $more, $pages;
 		if ( ! isset( $this->_responseArray['data']['records'] ) ) {
 			return false;
+		}
+
+		if ( null !== $this->_numEstatePages ) {
+			$multipage = true;
+
+			$page = $this->_currentEstatePage;
+			$more = true;
+			$pages = array();
+			$numpages = $this->_numEstatePages;
 		}
 
 		$currentRecord = each( $this->_responseArray['data']['records'] );
@@ -434,5 +481,16 @@ class EstateList {
 
 	public function resetEstateIterator() {
 		reset( $this->_responseArray );
+	}
+
+
+	/**
+	 *
+	 * @param int $recordsPerPage
+	 *
+	 */
+
+	public function setEstateRecordsPerPage( $recordsPerPage ) {
+		$this->_estateRecordsPerPage = $recordsPerPage;
 	}
 }

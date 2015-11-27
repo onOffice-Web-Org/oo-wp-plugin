@@ -149,9 +149,16 @@ class ContentFilter
 	 */
 
 	private function preloadEstateList( $configName, $viewName ) {
-
+		global $wp_query;
+		$page = 1;
+		if ( ! empty( $wp_query->query_vars['page'] ) ) {
+			$page = $wp_query->query_vars['page'];
+		}
 		$pEstateList = new EstateList( $this->_config, $configName, $viewName );
-		$pEstateList->loadEstates();
+
+		$recordsPerPage = $this->_config['estate'][$configName]['views'][$viewName]['records'];
+		$pEstateList->setEstateRecordsPerPage($recordsPerPage);
+		$pEstateList->loadEstates( $page );
 
 		return $pEstateList;
 	}
@@ -194,7 +201,8 @@ class ContentFilter
 		global $wp_query;
 		global $post;
 
-		if ( empty( $posts[0] ) ) {
+		if ( empty( $posts[0] ) ||
+			empty( $wp_query->query_vars['pagename'] ) ) {
 			return $posts;
 		}
 

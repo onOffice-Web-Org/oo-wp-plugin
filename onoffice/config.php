@@ -7,7 +7,7 @@ $config['token'] = 'xyz';
 /** ... and its secret */
 $config['secret'] = '123';
 
-$config['apiversion'] = 'trunk';
+$config['apiversion'] = 'wp';
 
 /* Estate data you want to fetch */
 
@@ -108,6 +108,13 @@ $config['estate'] = array(
 					'grundstuecksflaeche',
 					'warmwasserEnthalten',
 					'objekttitel',
+				),
+				'contactdata' => array(
+					'Vorname',
+					'Name',
+					'defaultphone',
+					'defaultfax',
+					'defaultemail',
 				),
 				'language' => 'ENG',
 				'pageid' => 34,
