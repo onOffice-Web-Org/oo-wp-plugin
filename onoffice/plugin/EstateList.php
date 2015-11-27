@@ -140,17 +140,7 @@ class EstateList {
 
 		$responseArrayEstates = $pSdk->getResponseArray( $idReadEstate );
 
-		$pictureCategories =  array(
-			'Titelbild',
-			'Foto',
-			'Foto_gross',
-			'Grundriss',
-			'Lageplan',
-			'Stadtplan',
-			'Anzeigen',
-			'Epass_Skala',
-			'Finanzierungsbeispiel'
-		);
+		$pictureCategories = $configByView['pictures'];
 
 		$estateIds = $this->collectEstateIds( $responseArrayEstates );
 		$idGetEstatePicturesSmall = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
