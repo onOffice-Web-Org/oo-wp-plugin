@@ -4,10 +4,15 @@
 /* token of the API account... */
 $config['token'] = 'xyz';
 
-/** ... and its secret */
+/* ... and its secret */
 $config['secret'] = '123';
 
 $config['apiversion'] = 'wp';
+
+/* register cache classes (with their namespaces) here: */
+$config['cache'] = array(
+	new \onOffice\WPlugin\Cache\DBCache( array('ttl' => 300) ),
+);
 
 /* Estate data you want to fetch */
 

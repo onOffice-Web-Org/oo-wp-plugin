@@ -22,6 +22,8 @@ $pAutoloader->addNamespace( 'onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plu
 $pAutoloader->register();
 
 $config = array();
+$config['cache'] = array();
+$config['apiversion'] = '1.5';
 $config['estate'] = array();
 $config['apiversion'] = '1.5';
 
@@ -36,3 +38,27 @@ add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
 
 add_filter( 'the_posts', array($pContentFilter, 'filter_the_posts') );
 add_filter( 'the_content', array($pContentFilter, 'filter_the_content') );
+
+if ( ! wp_next_scheduled( 'oo_cache_cleanup' ) ) {
+	wp_schedule_event( time(), 'hourly', 'oo_cache_cleanup' );
+}
+
+add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
+
+
+/**
+ *
+ * Callback for cron job
+ *
+ */
+
+function ooCacheCleanup() {
+	global $config;
+
+	$cacheInstances = $config['cache'];
+
+	foreach ( $cacheInstances as $pCacheInstance) {
+		/* @var $cacheInstance \onOffice\SDK\Cache\onOfficeSDKCache */
+		$pCacheInstance->cleanup();
+	}
+}

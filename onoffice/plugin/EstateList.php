@@ -67,6 +67,7 @@ class EstateList {
 
 	public function __construct( array $config, $configName, $viewName ) {
 		$this->_pOnOfficeSdk = new onOfficeSDK();
+		$this->_pOnOfficeSdk->setCaches( $config['cache'] );
 		$this->_config = $config;
 		$this->_configName = $configName;
 		$this->_view = $viewName;

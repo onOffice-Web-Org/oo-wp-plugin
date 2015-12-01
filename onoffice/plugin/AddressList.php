@@ -35,6 +35,7 @@ class AddressList {
 	public function __construct( array $config ) {
 		$this->_config = $config;
 		$this->_pSDK = new onOfficeSDK();
+		$this->_pSDK->setCaches( $config['cache'] );
 		$this->_pSDK->setApiVersion( $config['apiversion'] );
 	}
 
