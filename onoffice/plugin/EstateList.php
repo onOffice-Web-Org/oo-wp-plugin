@@ -159,7 +159,7 @@ class EstateList {
 
 		$handleEstateContactPerson = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
 					'parentids' => $estateIds,
-					'relationtype' => 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:contactPerson',
+					'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
 				)
 			);
 

@@ -126,19 +126,45 @@ class ContentFilter
 				$templateName = $configByName['views'][$viewName]['template'];
 			}
 
-			if ( 'list' == $viewName ) {
-				$pEstateList = $this->preloadEstateList( $name, $viewName );
-			} else {
-				$pEstateList = $this->preloadSingleEstate( $name, $viewName );
-			}
+			try {
+				if ( 'list' == $viewName ) {
+					$pEstateList = $this->preloadEstateList( $name, $viewName );
+				} else {
+					$pEstateList = $this->preloadSingleEstate( $name, $viewName );
+				}
 
-			$pTemplate = new Template( $pEstateList, $templateName );
-			$htmlOutput = $pTemplate->render();
+				$pTemplate = new Template( $pEstateList, $templateName );
+				$htmlOutput = $pTemplate->render();
+			} catch (\onOffice\SDK\Exception\SDKException $pSdkException) {
+				$htmlOutput = $this->logErrorAndDisplayMessage( $pSdkException );
+			}
 
 			$content = str_replace( $matches[0][$id], $htmlOutput, $content );
 		}
 
 		return $content;
+	}
+
+
+	/**
+	 *
+	 * @param \onOffice\SDK\Exception\SDKException $pException
+	 * @return string
+	 *
+	 */
+
+	public function logErrorAndDisplayMessage( \onOffice\SDK\Exception\SDKException $pException ) {
+		$output = '';
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$output = '<pre>'
+					. '<u><strong>[onOffice-Plugin]</strong> Ein Fehler ist aufgetreten:</u><p>'
+					.esc_html((string) $pException).'</pre></p>';
+		}
+
+		error_log('[onOffice-Plugin]: '.strval($pException));
+
+		return $output;
 	}
 
 
