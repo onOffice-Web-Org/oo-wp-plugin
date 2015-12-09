@@ -48,7 +48,7 @@ $config['estate'] = array(
 				'pictures' => array(
 					'Titelbild',
 				),
-				'language' => 'ENG',
+				'language' => 'DEU',
 				'records' => 20,
 				'template' => 'default',
 			),
@@ -76,7 +76,7 @@ $config['estate'] = array(
 					'Epass_Skala',
 					'Finanzierungsbeispiel',
 				),
-				'language' => 'ENG',
+				'language' => 'DEU',
 				'pageid' => 24,
 				'pagename' => 'Objektdetailansicht Mietobjekt',
 				'template' => 'default_detail',
@@ -94,10 +94,8 @@ $config['estate'] = array(
 			'list' => array(
 				'data' => array(
 					'Id',
+					'kaufpreis',
 					'objektnr_extern',
-					'kaltmiete',
-					'warmmiete',
-					'heizkosten_in_nebenkosten',
 					'energieverbrauchskennwert',
 					'balkon_terrasse_flaeche',
 					'grundstuecksflaeche',
@@ -114,7 +112,7 @@ $config['estate'] = array(
 				'pictures' => array(
 					'Titelbild',
 				),
-				'language' => 'ENG',
+				'language' => 'DEU',
 				'records' => 20,
 				'template' => 'default'
 			),
@@ -122,8 +120,7 @@ $config['estate'] = array(
 				'data' => array(
 					'Id',
 					'objektnr_extern',
-					'kaltmiete',
-					'warmmiete',
+					'kaufpreis',
 					'heizkosten_in_nebenkosten',
 					'energieverbrauchskennwert',
 					'balkon_terrasse_flaeche',
@@ -149,7 +146,7 @@ $config['estate'] = array(
 					'Epass_Skala',
 					'Finanzierungsbeispiel',
 				),
-				'language' => 'ENG',
+				'language' => 'DEU',
 				'pageid' => 34,
 				'pagename' => 'Objektdetailansicht Kaufobjekt',
 				'template' => 'default_detail',

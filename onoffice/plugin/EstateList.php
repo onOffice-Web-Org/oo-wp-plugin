@@ -127,6 +127,7 @@ class EstateList {
 			'filter' => $filter,
 			'language' => $language,
 			'listoffset' => $offset,
+			'formatoutput' => 1,
 		);
 
 		$idReadEstate = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );

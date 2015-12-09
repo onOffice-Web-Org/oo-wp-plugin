@@ -25,7 +25,6 @@ $config = array();
 $config['cache'] = array();
 $config['apiversion'] = '1.5';
 $config['estate'] = array();
-$config['apiversion'] = '1.5';
 
 // load user defined settings
 include 'config.php';
