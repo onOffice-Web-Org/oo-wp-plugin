@@ -119,7 +119,8 @@ class EstateList {
 		$parametersGetEstateList = array(
 			'data' => $data,
 			'filter' => $filter,
-			'language' => $language,
+			'estatelanguage' => $language,
+			'outputlanguage' => $language,
 			'listoffset' => $offset,
 			'formatoutput' => 1,
 		);
