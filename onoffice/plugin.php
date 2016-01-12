@@ -14,6 +14,7 @@ include 'Psr4AutoloaderClass.php';
 
 use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
+use onOffice\WPlugin\SDKWrapper;
 
 $pAutoloader = new Psr4AutoloaderClass();
 $pAutoloader->addNamespace( 'onOffice', __DIR__ );
@@ -21,15 +22,7 @@ $pAutoloader->addNamespace( 'onOffice\SDK', __DIR__.DIRECTORY_SEPARATOR.'SDK' );
 $pAutoloader->addNamespace( 'onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plugin' );
 $pAutoloader->register();
 
-$config = array();
-$config['cache'] = array();
-$config['apiversion'] = '1.5';
-$config['estate'] = array();
-
-// load user defined settings
-include 'config.php';
-
-$pContentFilter = new ContentFilter( $config );
+$pContentFilter = new ContentFilter();
 
 add_action( 'init', array($pContentFilter, 'addCustomRewriteTags') );
 add_action( 'init', array($pContentFilter, 'addCustomRewriteRules') );
@@ -54,9 +47,8 @@ if ( ! wp_next_scheduled( 'oo_cache_cleanup' ) ) {
  */
 
 function ooCacheCleanup() {
-	global $config;
-
-	$cacheInstances = $config['cache'];
+	$pSDKWrapper = new SDKWrapper();
+	$cacheInstances = $pSDKWrapper->getCache();
 
 	foreach ( $cacheInstances as $pCacheInstance) {
 		/* @var $cacheInstance \onOffice\SDK\Cache\onOfficeSDKCache */

@@ -40,7 +40,7 @@
 	foreach ( $estatePictures as $id => $picture ) : ?>
 	<a href="<?php echo $pEstates->getEstatePictureBig( $id ); ?>">
 		<img src="<?php echo $picture ?>">
-		</a>
+	</a>
 	<?php endforeach; ?>
 </p>
 

@@ -9,6 +9,8 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\SDK\onOfficeSDK;
 
 /**
@@ -17,14 +19,14 @@ use onOffice\SDK\onOfficeSDK;
 
 
 class EstateList {
-	/** @var onOffice\SDK\onOfficeSDK */
-	private $_pOnOfficeSdk = null;
+	/** @var onOffice\WPlugin\SDKWrapper */
+	private $_pSDKWrapper = null;
+
+	/** @var onOffice\WPlugin\Fieldnames */
+	private $_pFieldnames = null;
 
 	/** @var array */
-	private $_fieldList = array();
-
-	/** @var array */
-	private $_config = array();
+	private $_configByName = array();
 
 	/** @var array */
 	private $_estateFiles = array();
@@ -40,9 +42,6 @@ class EstateList {
 
 	/** @var AddressList */
 	private $_pAddressList = array();
-
-	/** @var string */
-	private $_configName = null;
 
 	/** @var string */
 	private $_view = null;
@@ -65,13 +64,13 @@ class EstateList {
 	 *
 	 */
 
-	public function __construct( array $config, $configName, $viewName ) {
-		$this->_pOnOfficeSdk = new onOfficeSDK();
-		$this->_pOnOfficeSdk->setCaches( $config['cache'] );
-		$this->_config = $config;
-		$this->_configName = $configName;
+	public function __construct( $configName, $viewName ) {
+		$this->_pSDKWrapper = new SDKWrapper();
+		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
+		$this->_configByName = $estateConfig[$configName];
 		$this->_view = $viewName;
-		$this->_pAddressList = new AddressList( $config );
+		$this->_pFieldnames = new Fieldnames();
+		$this->_pAddressList = new AddressList();
 	}
 
 
@@ -103,18 +102,13 @@ class EstateList {
 	 */
 
 	public function loadEstates( $currentPage, $filter = array() ) {
-		$pSdk = $this->_pOnOfficeSdk;
-		$pSdk->setApiVersion( $this->_config['apiversion'] );
+		$pSDKWrapper = $this->_pSDKWrapper;
 
-		$configByName = $this->_config['estate'][$this->_configName];
-		$configByView = $configByName['views'][$this->_view];
-
+		$configByView = $this->_configByName['views'][$this->_view];
 		$language = $configByView['language'];
 		$data = $configByView['data'];
-
 		$numRecordsPerPage = isset( $configByView['records'] ) ? $configByView['records'] : 20;
-
-		$filter = array_merge( $filter, $configByName['filter'] );
+		$filter = array_merge( $filter, $this->_configByName['filter'] );
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		$this->_currentEstatePage = $currentPage;
 
@@ -130,53 +124,42 @@ class EstateList {
 			'formatoutput' => 1,
 		);
 
-		$idReadEstate = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
+		$handleReadEstate = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
+		$pSDKWrapper->sendRequests();
 
-		$parametersGetFieldList = array(
-			'labels' => 1,
-			'language' => $language,
-		);
-
-		$idGetFields = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList );
-		$pSdk->sendRequests( $this->_config['token'], $this->_config['secret'] );
-
-		$responseArrayEstates = $pSdk->getResponseArray( $idReadEstate );
-
+		$responseArrayEstates = $pSDKWrapper->getRequestResponse( $handleReadEstate );
 		$pictureCategories = $configByView['pictures'];
 
 		$estateIds = $this->collectEstateIds( $responseArrayEstates );
-		$idGetEstatePicturesSmall = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
+
+		$handleGetEstatePicturesSmall = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
 					'estateids' => $estateIds,
 					'categories' => $pictureCategories,
 					'size' => '300x400',
 				)
 			);
-		$idGetEstatePicturesOriginal = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
+		$handleGetEstatePicturesOriginal = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
 					'estateids' => $estateIds,
 					'categories' => $pictureCategories,
 				)
 			);
-		$responseArrayFieldList = $pSdk->getResponseArray( $idGetFields );
 
-		$handleEstateContactPerson = $pSdk->callGeneric( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
+		$handleEstateContactPerson = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
 					'parentids' => $estateIds,
 					'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
 				)
 			);
 
-		$pSdk->sendRequests( $this->_config['token'], $this->_config['secret'] );
+		$pSDKWrapper->sendRequests();
 
-		$responseArrayContactPerson = $pSdk->getResponseArray( $handleEstateContactPerson );
+		$responseArrayContactPerson = $pSDKWrapper->getRequestResponse( $handleEstateContactPerson );
 		$this->collectEstateContactPerson( $responseArrayContactPerson );
 
-		$responseArrayEstatePicturesSmall = $pSdk->getResponseArray( $idGetEstatePicturesSmall );
+		$responseArrayEstatePicturesSmall = $pSDKWrapper->getRequestResponse( $handleGetEstatePicturesSmall );
 		$this->collectEstatePictures( $responseArrayEstatePicturesSmall, '300x400' );
 
-		$responseArrayEstatePicturesOriginal = $pSdk->getResponseArray( $idGetEstatePicturesOriginal );
+		$responseArrayEstatePicturesOriginal = $pSDKWrapper->getRequestResponse( $handleGetEstatePicturesOriginal );
 		$this->collectEstatePictures( $responseArrayEstatePicturesOriginal, 'o' );
-
-		$fieldList = $responseArrayFieldList['data']['records'];
-		$this->createFieldList( $fieldList );
 
 		$this->_responseArray = $responseArrayEstates;
 		$this->_numEstatePages = $this->getNumEstatePages();
@@ -220,7 +203,7 @@ class EstateList {
 
 		foreach ( $estateProperties as $estate ) {
 			if ( ! array_key_exists( 'id', $estate ) ) {
-				return array();
+				continue;
 			}
 
 			$estateIds[] = $estate['id'];
@@ -283,40 +266,12 @@ class EstateList {
 		}
 
 		$fields = array();
-		if ( isset( $this->_config['estate'][$this->_configName]['views'][$this->_view]['contactdata'] ) ) {
-			$fields = $this->_config['estate'][$this->_configName]['views'][$this->_view]['contactdata'];
+		if ( isset( $this->_configByName['views'][$this->_view]['contactdata'] ) ) {
+			$fields = $this->_configByName['views'][$this->_view]['contactdata'];
 		}
 
 		if ( count( $fields ) > 0 ) {
 			$this->_pAddressList->loadAdressesById( $allAddressIds, $fields );
-		}
-	}
-
-
-	/**
-	 *
-	 * @param array $fieldResult
-	 * @return null
-	 *
-	 */
-
-	private function createFieldList( $fieldResult ) {
-		if ( count( $fieldResult ) == 0 ) {
-			return;
-		}
-
-		foreach ( $fieldResult as $moduleProperties ) {
-			if ( ! array_key_exists( 'elements', $moduleProperties ) ) {
-				continue;
-			}
-
-			foreach ( $moduleProperties['elements'] as $fieldName => $fieldProperties ) {
-				if ( 'label' == $fieldName ) {
-					continue;
-				}
-
-				$this->_fieldList[$moduleProperties['id']][$fieldName] = $fieldProperties;
-			}
 		}
 	}
 
@@ -360,19 +315,17 @@ class EstateList {
 
 	/**
 	 *
-	 * @param string $field
 	 * @return string
 	 *
 	 */
 
 	public function getFieldLabel( $field ) {
 		$recordType = $this->_currentEstate['type'];
-		$fieldNewName = $field;
+		$configByView = $this->_configByName['views'][$this->_view];
 
-		if ( array_key_exists( $recordType, $this->_fieldList ) &&
-			array_key_exists( $field, $this->_fieldList[$recordType] ) ) {
-			$fieldNewName = $this->_fieldList[$recordType][$field]['label'];
-		}
+		$this->_pFieldnames->loadLanguageIfNotCached($configByView['language']);
+		$fieldNewName = $this->_pFieldnames->getFieldLabel(
+			$field, $recordType, $configByView['language'] );
 
 		return $fieldNewName;
 	}
@@ -388,7 +341,7 @@ class EstateList {
 	{
 		$currentPageLink = get_permalink();
 		$estate = $this->_currentEstate['id'];
-		$fullLink = esc_url($currentPageLink.$view.'-'.$estate.'/');
+		$fullLink = esc_url( $currentPageLink.$view.'-'.$estate.'/' );
 		return $fullLink;
 	}
 

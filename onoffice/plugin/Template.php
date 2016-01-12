@@ -21,21 +21,45 @@ class Template
 	/** @var string */
 	private $_templateName = null;
 
+	/** @var \onOffice\WPlugin\Form */
+	private $_pForm = null;
+
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\EstateList $pEstates
 	 * @param string $templateName
+	 * @param string $defaultTemplateName
 	 *
 	 */
 
-	public function __construct( EstateList $pEstates, $templateName ) {
-		$this->_pEstateList = $pEstates;
+	public function __construct( $templateName, $defaultTemplateName ) {
 		$this->_templateName = $templateName;
 
 		if ( ! file_exists( $this->getFilePath( 'template.php' ) ) ) {
-			$this->_templateName = 'default';
+			$this->_templateName = $defaultTemplateName;
 		}
+	}
+
+
+	/**
+	 *
+	 * @param \onOffice\WPlugin\EstateList $pEstateList
+	 *
+	 */
+
+	public function setEstateList( EstateList $pEstateList ) {
+		$this->_pEstateList = $pEstateList;
+	}
+
+
+	/**
+	 *
+	 * @param \onOffice\WPlugin\Form $pForm
+	 *
+	 */
+
+	public function setForm( Form $pForm ) {
+		$this->_pForm = $pForm;
 	}
 
 
@@ -46,8 +70,7 @@ class Template
 	 */
 
 	public function render() {
-		$pEstateList = $this->_pEstateList;
-		$result = $this->getIncludeContents( $pEstateList );
+		$result = $this->getIncludeContents();
 
 		return $result;
 	}
@@ -55,16 +78,19 @@ class Template
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\EstateList $pEstates Used later on in the included template
-	 * @param string $templateName
 	 * @return string
 	 *
 	 */
 
-	private function getIncludeContents( EstateList $pEstates ) {
+	private function getIncludeContents() {
+
 		$filename = $this->getFilePath( 'template.php' );
 		if ( file_exists($filename) ) {
 			ob_start();
+
+			// vars which might be used in template
+			$pEstates = $this->_pEstateList;
+			$pForm = $this->_pForm;
 			include $filename;
 			return ob_get_clean();
 		}

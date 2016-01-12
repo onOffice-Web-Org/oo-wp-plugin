@@ -9,14 +9,16 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\WPlugin\Fieldnames;
+
 /**
  *
  */
 
 class ContentFilter
 {
-	/** @var array */
-	private $_config = array();
+	/** @var \onOffice\WPlugin\Fieldnames */
+	private $_pFieldnames = null;
 
 
 	/**
@@ -25,8 +27,8 @@ class ContentFilter
 	 *
 	 */
 
-	public function __construct( array $config ) {
-		$this->_config = $config;
+	public function __construct() {
+		$this->_pFieldnames = new Fieldnames();
 	}
 
 
@@ -64,19 +66,70 @@ class ContentFilter
 
 	private function getEstateListPageList() {
 		$list = array();
-		foreach ( $this->_config['estate'] as $configname => $config ) {
+		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
+
+		foreach ( $estateConfig as $configname => $config ) {
 			$listpagename = $configname;
-			if ( array_key_exists('listpagename', $config ) ) {
+			if ( array_key_exists( 'listpagename', $config ) ) {
 				$listpagename = $config['listpagename'];
 			}
-			$views = array_keys($config['views']);
-			$listIndex = array_search('list', $views);
-			unset($views[$listIndex]);
+			$views = array_keys( $config['views'] );
+			$listIndex = array_search( 'list', $views );
+			unset( $views[$listIndex] );
 
-			$list[$listpagename] = array_values($views);
+			$list[$listpagename] = array_values( $views );
 		}
 
 		return $list;
+	}
+
+
+	/**
+	 *
+	 * Filter the user's written page
+	 *
+	 * @param string $content
+	 * @return string
+	 *
+	 */
+
+	public function filter_the_content( $content ) {
+		$content = $this->filterEstate( $content );
+		$content = $this->filterForms( $content );
+		return $content;
+	}
+
+
+	/**
+	 *
+	 * @param string $content
+	 * @return string
+	 *
+	 */
+
+	private function filterForms( $content ) {
+		$regexSearch = '!(?P<tag>\[oo_form\s+(?P<name>[0-9a-z]+)?\])!';
+		$matches = array();
+		preg_match_all( $regexSearch, $content, $matches );
+
+		$matchescount = count( $matches ) - 1;
+		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
+
+		if ( 0 == $matchescount || empty( $matches['name'] ) ) {
+			return $content;
+		}
+		$onofficeTags = $matches['name'];
+
+		foreach ( $onofficeTags as $id => $name ) {
+			if ( array_key_exists( $name, $formConfig ) ) {
+				$pForm = new \onOffice\WPlugin\Form();
+				$htmlOutput = $pForm->render( $name );
+
+				$content = str_replace( $matches['tag'][$id], $htmlOutput, $content );
+			}
+		}
+
+		return $content;
 	}
 
 
@@ -89,13 +142,13 @@ class ContentFilter
 	 *
 	 */
 
-	public function filter_the_content( $content ) {
+	private function filterEstate( $content ) {
 		$regexSearch = '!(?P<tag>\[oo_estate\s+(?P<name>[0-9a-z]+)(?:\s+(?P<view>[0-9a-z]+))?\])!';
 		$matches = array();
 
 		preg_match_all( $regexSearch, $content, $matches );
-
 		$matchescount = count( $matches ) - 1;
+		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
 
 		if ( 0 == $matchescount || empty( $matches['name'] ) ) {
 			return $content;
@@ -110,20 +163,31 @@ class ContentFilter
 				$viewName = $matches['view'][$id];
 			}
 
-			if ( ! array_key_exists( $name, $this->_config['estate'] ) ||
-				empty( $this->_config['estate'][$name]['views'][$viewName] ) ) {
+			if ( ! array_key_exists( $name, $estateConfig ) ||
+				empty( $estateConfig[$name]['views'][$viewName] ) ) {
 				continue;
 			}
 
-			if ( ! array_key_exists( 'filter', $this->_config['estate'][$name] ) ) {
-				$this->_config['estate'][$name]['filter'] = array();
+			if ( ! array_key_exists( 'filter', $estateConfig[$name] ) ) {
+				$estateConfig[$name]['filter'] = array();
 			}
 
-			$configByName = $this->_config['estate'][$name];
+			$configByName = $estateConfig[$name];
 			$templateName = 'default';
+
+			$configByView = $configByName['views'][$viewName];
+			$pForm = null;
 
 			if (isset($configByName['views'][$viewName]['template'])) {
 				$templateName = $configByName['views'][$viewName]['template'];
+			}
+
+			$pTemplate = new Template( $templateName, 'default' );
+
+			if ( array_key_exists( 'formname', $configByView ) ) {
+				$formName = $configByView['formname'];
+				$pForm = new \onOffice\WPlugin\Form( $formName );
+				$pTemplate->setForm($pForm);
 			}
 
 			try {
@@ -133,7 +197,7 @@ class ContentFilter
 					$pEstateList = $this->preloadSingleEstate( $name, $viewName );
 				}
 
-				$pTemplate = new Template( $pEstateList, $templateName );
+				$pTemplate->setEstateList( $pEstateList );
 				$htmlOutput = $pTemplate->render();
 			} catch (\onOffice\SDK\Exception\SDKException $pSdkException) {
 				$htmlOutput = $this->logErrorAndDisplayMessage( $pSdkException );
@@ -180,10 +244,12 @@ class ContentFilter
 		if ( ! empty( $wp_query->query_vars['page'] ) ) {
 			$page = $wp_query->query_vars['page'];
 		}
-		$pEstateList = new EstateList( $this->_config, $configName, $viewName );
 
-		$recordsPerPage = $this->_config['estate'][$configName]['views'][$viewName]['records'];
-		$pEstateList->setEstateRecordsPerPage($recordsPerPage);
+		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
+		$recordsPerPage = $estateConfig[$configName]['views'][$viewName]['records'];
+
+		$pEstateList = new EstateList( $configName, $viewName );
+		$pEstateList->setEstateRecordsPerPage( $recordsPerPage );
 		$pEstateList->loadEstates( $page );
 
 		return $pEstateList;
@@ -207,7 +273,7 @@ class ContentFilter
 			$estateId = $wp_query->query_vars['estate_id'];
 		}
 
-		$pEstateList = new EstateList( $this->_config, $configName, $view );
+		$pEstateList = new EstateList( $configName, $view );
 		$pEstateList->loadSingleEstate( $estateId );
 
 		return $pEstateList;
@@ -240,12 +306,13 @@ class ContentFilter
 		}
 
 		$detailpageId = null;
+		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
 
-		if (array_key_exists( $configKey, $this->_config['estate'] ) &&
+		if (array_key_exists( $configKey, $estateConfig ) &&
 			! is_null( $view ) &&
-			isset( $this->_config['estate'][$configKey]['views'][$view] ) &&
-			array_key_exists( 'pageid', $this->_config['estate'][$configKey]['views'][$view] ) ) {
-			$detailpageId = $this->_config['estate'][$configKey]['views'][$view]['pageid'];
+			isset( $estateConfig[$configKey]['views'][$view] ) &&
+			array_key_exists( 'pageid', $estateConfig[$configKey]['views'][$view] ) ) {
+			$detailpageId = $estateConfig[$configKey]['views'][$view]['pageid'];
 		}
 
 		if ( ! empty( $wp_query->query_vars['estate_id'] ) &&
@@ -274,7 +341,7 @@ class ContentFilter
 	 */
 
 	private function getConfigKeyByPostname( $parentname ) {
-		foreach ( $this->_config['estate'] as $index => $config ) {
+		foreach ( ConfigWrapper::getInstance()->getConfigByKey( 'estate' ) as $index => $config ) {
 			if ( array_key_exists( 'listpagename', $config ) &&
 				$config['listpagename'] === $parentname ) {
 				return $index;

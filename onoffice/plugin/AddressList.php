@@ -9,6 +9,7 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\SDK\onOfficeSDK;
 
 /**
@@ -17,26 +18,18 @@ use onOffice\SDK\onOfficeSDK;
 
 class AddressList {
 	/** @var array */
-	private $_config = null;
-
-	/** @var array */
 	private $_adressesById = array();
 
-	/** @var \onOffice\SDK\onOfficeSDK */
-	private $_pSDK = null;
+	/** @var \onOffice\WPlugin\SDKWrapper */
+	private $_pSDKWrapper = null;
 
 
 	/**
 	 *
-	 * @param array $config
-	 *
 	 */
 
-	public function __construct( array $config ) {
-		$this->_config = $config;
-		$this->_pSDK = new onOfficeSDK();
-		$this->_pSDK->setCaches( $config['cache'] );
-		$this->_pSDK->setApiVersion( $config['apiversion'] );
+	public function __construct() {
+		$this->_pSDKWrapper = new SDKWrapper();
 	}
 
 
@@ -48,14 +41,14 @@ class AddressList {
 	 */
 
 	public function loadAdressesById( array $addressIds, array $fields ) {
-		$handleReadAddresses = $this->_pSDK->callGeneric( onOfficeSDK::ACTION_ID_READ, 'address', array(
+		$handleReadAddresses = $this->_pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_READ, 'address', array(
 				'recordids' => $addressIds,
 				'data' => $fields,
 			)
 		);
 
-		$this->_pSDK->sendRequests( $this->_config['token'], $this->_config['secret'] );
-		$responseRaw = $this->_pSDK->getResponseArray( $handleReadAddresses );
+		$this->_pSDKWrapper->sendRequests();
+		$responseRaw = $this->_pSDKWrapper->getRequestResponse( $handleReadAddresses );
 
 		$this->fillAddressesById( $responseRaw );
 	}

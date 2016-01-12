@@ -1,19 +1,5 @@
 <?php
 
-
-/* token of the API account... */
-$config['token'] = 'xyz';
-
-/* ... and its secret */
-$config['secret'] = '123';
-
-$config['apiversion'] = 'wp';
-
-/* register cache classes (with their namespaces) here: */
-$config['cache'] = array(
-	new \onOffice\WPlugin\Cache\DBCache( array('ttl' => 300) ),
-);
-
 /* Estate data you want to fetch */
 
 $config['estate'] = array(
@@ -112,6 +98,7 @@ $config['estate'] = array(
 				'pictures' => array(
 					'Titelbild',
 				),
+				'formname' => 'defaultform',
 				'language' => 'DEU',
 				'records' => 20,
 				'template' => 'default'
@@ -146,11 +133,22 @@ $config['estate'] = array(
 					'Epass_Skala',
 					'Finanzierungsbeispiel',
 				),
+				'formname' => 'defaultform',
 				'language' => 'DEU',
 				'pageid' => 34,
 				'pagename' => 'Objektdetailansicht Kaufobjekt',
 				'template' => 'default_detail',
 			),
 		),
+	),
+);
+
+$config['forms'] = array(
+	'defaultform' => array(
+		'inputs' => array(
+			'Vorname'	=>	'address',
+			'name'		=>	'address',
+		),
+		'language'	=>	'DEU',
 	),
 );
