@@ -107,4 +107,13 @@ class SDKWrapper {
 		$config = $this->readConfig();
 		return $config['cache'];
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function removeCacheInstances() {
+		$this->_pSDK->removeCacheInstances();
+	}
 }

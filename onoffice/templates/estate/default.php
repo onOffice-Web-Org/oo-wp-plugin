@@ -35,6 +35,15 @@
 	</p>
 	<?php endforeach; ?>
 
+	<p><b>Kontaktformular:</b>
+		<?php
+			$pForm = new \onOffice\WPlugin\Form( 'estatelistcontactform', 'DEU' );
+
+			include( __DIR__ . "/../form/defaultform.php" );
+		?>
+	</p>
+
+
 	<?php
 	$estatePictures = $pEstates->getEstatePicturesSmall();
 	foreach ( $estatePictures as $id => $picture ) : ?>

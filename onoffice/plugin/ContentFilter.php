@@ -122,8 +122,11 @@ class ContentFilter
 
 		foreach ( $onofficeTags as $id => $name ) {
 			if ( array_key_exists( $name, $formConfig ) ) {
-				$pForm = new \onOffice\WPlugin\Form();
-				$htmlOutput = $pForm->render( $name );
+				$language = $formConfig[$name]['language'];
+				$pTemplate = new Template( $name, 'form', 'defaultform' );
+				$pForm = new \onOffice\WPlugin\Form( $name, $language );
+				$pTemplate->setForm( $pForm );
+				$htmlOutput = $pTemplate->render();
 
 				$content = str_replace( $matches['tag'][$id], $htmlOutput, $content );
 			}
@@ -182,11 +185,13 @@ class ContentFilter
 				$templateName = $configByName['views'][$viewName]['template'];
 			}
 
-			$pTemplate = new Template( $templateName, 'default' );
+			$pTemplate = new Template( $templateName, 'estate', 'default' );
 
 			if ( array_key_exists( 'formname', $configByView ) ) {
 				$formName = $configByView['formname'];
-				$pForm = new \onOffice\WPlugin\Form( $formName );
+				$language = $configByView['language'];
+
+				$pForm = new \onOffice\WPlugin\Form( $formName, $language );
 				$pTemplate->setForm($pForm);
 			}
 
@@ -308,7 +313,7 @@ class ContentFilter
 		$detailpageId = null;
 		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
 
-		if (array_key_exists( $configKey, $estateConfig ) &&
+		if ( array_key_exists( $configKey, $estateConfig ) &&
 			! is_null( $view ) &&
 			isset( $estateConfig[$configKey]['views'][$view] ) &&
 			array_key_exists( 'pageid', $estateConfig[$configKey]['views'][$view] ) ) {

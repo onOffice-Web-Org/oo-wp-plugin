@@ -87,6 +87,7 @@ $config['estate'] = array(
 					'grundstuecksflaeche',
 					'warmwasserEnthalten',
 					'objekttitel',
+					'objektart',
 				),
 				'contactdata' => array(
 					'Vorname',
@@ -98,7 +99,7 @@ $config['estate'] = array(
 				'pictures' => array(
 					'Titelbild',
 				),
-				'formname' => 'defaultform',
+				'formname' => 'estatelistcontactform',
 				'language' => 'DEU',
 				'records' => 20,
 				'template' => 'default'
@@ -114,6 +115,7 @@ $config['estate'] = array(
 					'grundstuecksflaeche',
 					'warmwasserEnthalten',
 					'objekttitel',
+					'objektart',
 				),
 				'contactdata' => array(
 					'Vorname',
@@ -134,7 +136,7 @@ $config['estate'] = array(
 					'Finanzierungsbeispiel',
 				),
 				'formname' => 'defaultform',
-				'language' => 'DEU',
+				'language' => 'ENG',
 				'pageid' => 34,
 				'pagename' => 'Objektdetailansicht Kaufobjekt',
 				'template' => 'default_detail',
@@ -144,11 +146,27 @@ $config['estate'] = array(
 );
 
 $config['forms'] = array(
+	'estatelistcontactform' => array(
+		'inputs' => array(
+			'Vorname'	=> 'address',
+			'Name'		=> 'address',
+			'Strasse'	=> 'address',
+			'Plz-Ort'	=> 'address',
+			'message'	=> null,
+			'Id'		=> 'estate',
+		),
+		'language'	=>	'ENG',
+		'required'	=>	array('Vorname', 'Name', 'message'),
+	),
 	'defaultform' => array(
 		'inputs' => array(
-			'Vorname'	=>	'address',
-			'name'		=>	'address',
+			'Vorname'		=> 'address',
+			'Name'			=> 'address',
+			'message'		=> null,
 		),
-		'language'	=>	'DEU',
+		'language'	=>	'ENG',
+		'subject'	=>	'Eine Kontaktanfrage.',
+		'recipient' => 'you@my-onoffice.com',
+		'required'	=>	array('Vorname', 'Name', 'message'),
 	),
 );

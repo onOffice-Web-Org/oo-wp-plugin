@@ -21,6 +21,9 @@ class Template
 	/** @var string */
 	private $_templateName = null;
 
+	/** @var string */
+	private $_dirName = null;
+
 	/** @var \onOffice\WPlugin\Form */
 	private $_pForm = null;
 
@@ -32,10 +35,11 @@ class Template
 	 *
 	 */
 
-	public function __construct( $templateName, $defaultTemplateName ) {
+	public function __construct( $templateName, $dirName, $defaultTemplateName ) {
 		$this->_templateName = $templateName;
+		$this->_dirName = $dirName;
 
-		if ( ! file_exists( $this->getFilePath( 'template.php' ) ) ) {
+		if ( ! file_exists( $this->getFilePath() ) ) {
 			$this->_templateName = $defaultTemplateName;
 		}
 	}
@@ -84,10 +88,10 @@ class Template
 
 	private function getIncludeContents() {
 
-		$filename = $this->getFilePath( 'template.php' );
+		$filename = $this->getFilePath();
+
 		if ( file_exists($filename) ) {
 			ob_start();
-
 			// vars which might be used in template
 			$pEstates = $this->_pEstateList;
 			$pForm = $this->_pForm;
@@ -101,12 +105,12 @@ class Template
 
 	/**
 	 *
-	 * @param string $fileName
+	 * @param string $templateName
 	 * @return string
 	 *
 	 */
 
-	private function getFilePath( $fileName ) {
-		return __DIR__.'/../templates/' . $this->_templateName . '/'. $fileName;
+	private function getFilePath() {
+		return __DIR__.'/../templates/' . $this->_dirName . '/'. $this->_templateName.'.php';
 	}
 }

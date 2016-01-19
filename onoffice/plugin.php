@@ -14,6 +14,7 @@ include 'Psr4AutoloaderClass.php';
 
 use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
+use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\SDKWrapper;
 
 $pAutoloader = new Psr4AutoloaderClass();
@@ -23,9 +24,11 @@ $pAutoloader->addNamespace( 'onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plu
 $pAutoloader->register();
 
 $pContentFilter = new ContentFilter();
+$pFormPost = FormPost::getInstance();
 
 add_action( 'init', array($pContentFilter, 'addCustomRewriteTags') );
 add_action( 'init', array($pContentFilter, 'addCustomRewriteRules') );
+add_action( 'init', array($pFormPost, 'initialCheck') );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
 add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
 
