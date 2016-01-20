@@ -133,36 +133,40 @@ class EstateList {
 
 		$estateIds = $this->collectEstateIds( $responseArrayEstates );
 
-		$handleGetEstatePicturesSmall = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
-					'estateids' => $estateIds,
-					'categories' => $pictureCategories,
-					'size' => '300x400',
-				)
-			);
-		$handleGetEstatePicturesOriginal = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
-					'estateids' => $estateIds,
-					'categories' => $pictureCategories,
-				)
-			);
+		if (count($estateIds) > 0) {
 
-		$handleEstateContactPerson = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
-					'parentids' => $estateIds,
-					'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
-				)
-			);
+			$handleGetEstatePicturesSmall = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
+						'estateids' => $estateIds,
+						'categories' => $pictureCategories,
+						'size' => '300x400',
+					)
+				);
+			$handleGetEstatePicturesOriginal = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
+						'estateids' => $estateIds,
+						'categories' => $pictureCategories,
+					)
+				);
 
-		$pSDKWrapper->sendRequests();
+			$handleEstateContactPerson = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
+						'parentids' => $estateIds,
+						'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+					)
+				);
 
-		$responseArrayContactPerson = $pSDKWrapper->getRequestResponse( $handleEstateContactPerson );
-		$this->collectEstateContactPerson( $responseArrayContactPerson );
+			$pSDKWrapper->sendRequests();
 
-		$responseArrayEstatePicturesSmall = $pSDKWrapper->getRequestResponse( $handleGetEstatePicturesSmall );
-		$this->collectEstatePictures( $responseArrayEstatePicturesSmall, '300x400' );
+			$responseArrayContactPerson = $pSDKWrapper->getRequestResponse( $handleEstateContactPerson );
+			$this->collectEstateContactPerson( $responseArrayContactPerson );
 
-		$responseArrayEstatePicturesOriginal = $pSDKWrapper->getRequestResponse( $handleGetEstatePicturesOriginal );
-		$this->collectEstatePictures( $responseArrayEstatePicturesOriginal, 'o' );
+			$responseArrayEstatePicturesSmall = $pSDKWrapper->getRequestResponse( $handleGetEstatePicturesSmall );
+			$this->collectEstatePictures( $responseArrayEstatePicturesSmall, '300x400' );
 
-		$this->_responseArray = $responseArrayEstates;
+			$responseArrayEstatePicturesOriginal = $pSDKWrapper->getRequestResponse( $handleGetEstatePicturesOriginal );
+			$this->collectEstatePictures( $responseArrayEstatePicturesOriginal, 'o' );
+
+			$this->_responseArray = $responseArrayEstates;
+		}
+
 		$this->_numEstatePages = $this->getNumEstatePages();
 
 		$this->resetEstateIterator( $this->_responseArray );

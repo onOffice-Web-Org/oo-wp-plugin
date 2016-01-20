@@ -1,5 +1,8 @@
 <?php
 
+use \onOffice\WPlugin\FormPost;
+
+
 /* Estate data you want to fetch */
 
 $config['estate'] = array(
@@ -170,3 +173,14 @@ $config['forms'] = array(
 		'required'	=>	array('Vorname', 'Name', 'message'),
 	),
 );
+
+
+// Search
+
+$maxPrice = FormPost::getPostValue('preis_bis', FILTER_VALIDATE_INT);
+if ( ! is_null( $maxPrice ) ) {
+	$config['estate']['kauf']['filter']['kaufpreis'][] = array('op' => '<', 'val' => $maxPrice);
+	$config['estate']['kauf']['filter']['kaufpreis'][] = array('op' => '>', 'val' => 0);
+}
+
+unset($maxPrice);

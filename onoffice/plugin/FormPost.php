@@ -65,6 +65,39 @@ class FormPost {
 	 *
 	 */
 
+	private function __construct() { }
+
+
+	/**
+	 *
+	 */
+
+	private function __clone() { }
+
+
+	/**
+	 *
+	 * @param string $postvar
+	 * @param int $validate one or more of the PHP FILTER_* constants
+	 * @return mixed
+	 *
+	 */
+
+	public static function getPostValue($postvar, $validate = FILTER_DEFAULT) {
+		$value = filter_input( INPUT_POST, $postvar, $validate );
+
+		if ( null === $value || false === $value) {
+			return null;
+		}
+
+		return $value;
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function initialCheck() {
 		if ( array_key_exists( 'oo_formid', $_POST ) ) {
 			$formNo = null;
