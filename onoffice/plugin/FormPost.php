@@ -208,8 +208,8 @@ class FormPost {
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
-		$result = isset( $response['data']['records'][0]['elements']['value'] ) &&
-			'success' == $response['data']['records'][0]['elements']['value'];
+		$result = isset( $response['data']['records'][0]['elements']['success'] ) &&
+			'success' == $response['data']['records'][0]['elements']['success'];
 		return $result;
 	}
 
