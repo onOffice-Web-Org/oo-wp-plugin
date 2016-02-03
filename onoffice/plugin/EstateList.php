@@ -29,7 +29,16 @@ class EstateList {
 	private $_configByName = array();
 
 	/** @var array */
-	private $_estateFiles = array();
+	private $_estateImageUrls = array();
+
+	/** @var array */
+	private $_estateImageCategories = array();
+
+	/** @var array */
+	private $_estateImageByEstate = array();
+
+	/** @var array */
+	private $_estateImageText = array();
 
 	/** @var array */
 	private $_responseArray = array();
@@ -134,13 +143,6 @@ class EstateList {
 		$estateIds = $this->collectEstateIds( $responseArrayEstates );
 
 		if (count($estateIds) > 0) {
-
-			$handleGetEstatePicturesSmall = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
-						'estateids' => $estateIds,
-						'categories' => $pictureCategories,
-						'size' => '300x400',
-					)
-				);
 			$handleGetEstatePicturesOriginal = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
 						'estateids' => $estateIds,
 						'categories' => $pictureCategories,
@@ -158,11 +160,8 @@ class EstateList {
 			$responseArrayContactPerson = $pSDKWrapper->getRequestResponse( $handleEstateContactPerson );
 			$this->collectEstateContactPerson( $responseArrayContactPerson );
 
-			$responseArrayEstatePicturesSmall = $pSDKWrapper->getRequestResponse( $handleGetEstatePicturesSmall );
-			$this->collectEstatePictures( $responseArrayEstatePicturesSmall, '300x400' );
-
 			$responseArrayEstatePicturesOriginal = $pSDKWrapper->getRequestResponse( $handleGetEstatePicturesOriginal );
-			$this->collectEstatePictures( $responseArrayEstatePicturesOriginal, 'o' );
+			$this->collectEstatePictures( $responseArrayEstatePicturesOriginal );
 
 			$this->_responseArray = $responseArrayEstates;
 		}
@@ -225,7 +224,7 @@ class EstateList {
 	 *
 	 */
 
-	private function collectEstatePictures( $responseArrayEstatePictures, $size ) {
+	private function collectEstatePictures( $responseArrayEstatePictures ) {
 		if (! array_key_exists( 'data', $responseArrayEstatePictures ) ||
 			! array_key_exists( 'records', $responseArrayEstatePictures['data'] ) ) {
 			return;
@@ -234,7 +233,16 @@ class EstateList {
 		$records = $responseArrayEstatePictures['data']['records'];
 
 		foreach ( $records as $properties ) {
-			$this->_estateFiles[$properties['elements']['estateid']][$size][] = $properties['elements']['url'];
+			$estateId = $properties['elements']['estateid'];
+			$imageType = $properties['elements']['type'];
+			$imageUrl = $properties['elements']['url'];
+			$imageText = $properties['elements']['text'];
+			$imageTitle = $properties['elements']['title'];
+			$imageId = $properties['id'];
+			$this->_estateImageByEstate[$estateId][] = $imageId;
+			$this->_estateImageUrls[$imageId] = $imageUrl;
+			$this->_estateImageCategories[$imageId][] = $imageType;
+			$this->_estateImageText[$imageId] = array('title' => $imageTitle, 'text' => $imageText);
 		}
 	}
 
@@ -357,18 +365,22 @@ class EstateList {
 	 *
 	 */
 
-	public function getEstatePicturesSmall() {
-		$recordId = $this->_currentEstate['id'];
-		$size = '300x400';
-		if ( array_key_exists( $recordId, $this->_estateFiles ) &&
-			array_key_exists( $size, $this->_estateFiles[$recordId] ) ) {
-			$estateFiles = $this->_estateFiles[$recordId][$size];
+	public function getEstatePictures( array $types = null ) {
+		$estateId = $this->_currentEstate['id'];
+		$estateFiles = array();
 
-			$pArrayContainer = new ArrayContainerEscape( $estateFiles, Escape::URL );
-			return $pArrayContainer;
+		if ( array_key_exists( $estateId, $this->_estateImageByEstate ) ) {
+			$estateImageIds = $this->_estateImageByEstate[$estateId];
+			foreach ( $estateImageIds as $imageId ) {
+				if ( null !== $types &&
+					count( array_intersect( $types, $this->_estateImageCategories[$imageId] ) ) == 0) {
+					continue;
+				}
+
+				$estateFiles []= $imageId;
+			}
 		}
-
-		return new ArrayContainerEscape( array() );
+		return $estateFiles;
 	}
 
 
@@ -378,11 +390,26 @@ class EstateList {
 	 *
 	 */
 
-	public function getEstatePictureBig( $number ) {
-		$recordId = $this->_currentEstate['id'];
-		$size = 'o';
-		if ( ! empty( $this->_estateFiles[$recordId][$size][$number] ) ) {
-			return esc_url( $this->_estateFiles[$recordId][$size][$number] );
+	public function getEstatePictureUrl( $imageId, array $options = null ) {
+		$size = null;
+
+		if ( ! is_null($options) ) {
+			$width = null;
+			$height = null;
+
+			if ( array_key_exists( 'width', $options ) ) {
+				$width = $options['width'];
+			}
+
+			if ( array_key_exists( 'height', $options ) ) {
+				$height = $options['height'];
+			}
+
+			$size = '@'.$width.'x'.$height; // values such as 'x300' or '300x' are totally okay
+		}
+
+		if ( ! empty( $this->_estateImageUrls[$imageId] ) ) {
+			return esc_url( $this->_estateImageUrls[$imageId].$size );
 		}
 
 		return null;

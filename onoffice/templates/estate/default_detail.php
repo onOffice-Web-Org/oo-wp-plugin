@@ -33,10 +33,10 @@
 	<?php endforeach; ?>
 
 	<?php
-	$estatePictures = $pEstates->getEstatePicturesSmall();
-	foreach ( $estatePictures as $id => $picture ) : ?>
-	<a href="<?php echo $pEstates->getEstatePictureBig( $id ); ?>">
-		<img src="<?php echo $picture ?>">
+	$estatePictures = $pEstates->getEstatePictures();
+	foreach ( $estatePictures as $id ) : ?>
+	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
+		<img src="<?php echo $pEstates->getEstatePictureUrl( $id, array('width' => 300, 'height' => 400) ); ?>">
 	</a>
 	<?php endforeach; ?>
 

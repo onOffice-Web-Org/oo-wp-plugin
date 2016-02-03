@@ -45,10 +45,11 @@
 
 
 	<?php
-	$estatePictures = $pEstates->getEstatePicturesSmall();
-	foreach ( $estatePictures as $id => $picture ) : ?>
-	<a href="<?php echo $pEstates->getEstatePictureBig( $id ); ?>">
-		<img src="<?php echo $picture ?>">
+	$estatePictures = $pEstates->getEstatePictures();
+
+	foreach ( $estatePictures as $id ) : ?>
+	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
+		<img src="<?php echo $pEstates->getEstatePictureUrl( $id, array('width' => 400, 'height' => 300) ); ?>">
 	</a>
 	<?php endforeach; ?>
 </p>
