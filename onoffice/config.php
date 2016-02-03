@@ -1,6 +1,7 @@
 <?php
 
-use \onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\ImageType;
 
 
 /* Estate data you want to fetch */
@@ -35,7 +36,7 @@ $config['estate'] = array(
 					'defaultemail',
 				),
 				'pictures' => array(
-					'Titelbild',
+					ImageType::TITLE,
 				),
 				'language' => 'DEU',
 				'records' => 20,
@@ -55,15 +56,14 @@ $config['estate'] = array(
 					'objekttitel',
 				),
 				'pictures' => array(
-					'Titelbild',
-					'Foto',
-					'Foto_gross',
-					'Grundriss',
-					'Lageplan',
-					'Stadtplan',
-					'Anzeigen',
-					'Epass_Skala',
-					'Finanzierungsbeispiel',
+					ImageType::TITLE,
+					ImageType::PHOTO_BIG,
+					ImageType::PHOTO,
+					ImageType::LOCATION_MAP,
+					ImageType::GROUNDPLAN,
+					ImageType::FINANCE_EXAMPLE,
+					ImageType::ENERGY_PASS_RANGE,
+					ImageType::CITY_MAP,
 				),
 				'language' => 'DEU',
 				'pageid' => 24,
@@ -100,7 +100,7 @@ $config['estate'] = array(
 					'defaultemail',
 				),
 				'pictures' => array(
-					'Titelbild',
+					ImageType::TITLE,
 				),
 				'formname' => 'estatelistcontactform',
 				'language' => 'DEU',
@@ -128,15 +128,14 @@ $config['estate'] = array(
 					'defaultemail',
 				),
 				'pictures' => array(
-					'Titelbild',
-					'Foto',
-					'Foto_gross',
-					'Grundriss',
-					'Lageplan',
-					'Stadtplan',
-					'Anzeigen',
-					'Epass_Skala',
-					'Finanzierungsbeispiel',
+					ImageType::TITLE,
+					ImageType::PHOTO_BIG,
+					ImageType::PHOTO,
+					ImageType::LOCATION_MAP,
+					ImageType::GROUNDPLAN,
+					ImageType::FINANCE_EXAMPLE,
+					ImageType::ENERGY_PASS_RANGE,
+					ImageType::CITY_MAP,
 				),
 				'formname' => 'defaultform',
 				'language' => 'ENG',
