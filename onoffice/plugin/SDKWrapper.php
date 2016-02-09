@@ -56,7 +56,7 @@ class SDKWrapper {
 			'cache' => array(),
 		);
 
-		include plugin_dir_path(__FILE__).'../api-config.php';
+		include dirname( __FILE__ ).'/../api-config.php';
 
 		return $config;
 	}

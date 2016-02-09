@@ -4,6 +4,8 @@
  *  Default template
  */
 
+use onOffice\WPlugin\PdfDocumentType;
+
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
 ?>
@@ -39,6 +41,12 @@
 		<img src="<?php echo $pEstates->getEstatePictureUrl( $id, array('width' => 300, 'height' => 400) ); ?>">
 	</a>
 	<?php endforeach; ?>
+
+	<h2>Dokumente</h2>
+	<?php
+		$document = $pEstates->getDocument( PdfDocumentType::EXPOSE_SHORT_DESIGN01 );
+	?>
+	<a href="<?php echo $document; ?>">PDF-Exposé</a>
 
 <?php
 endwhile;

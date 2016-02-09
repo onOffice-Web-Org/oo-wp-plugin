@@ -2,6 +2,7 @@
 
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\ImageType;
+use onOffice\WPlugin\PdfDocumentType;
 
 
 /* Estate data you want to fetch */
@@ -14,6 +15,7 @@ $config['estate'] = array(
 				array('op' => '=', 'val' => 'miete'),
 			),
 		),
+		'documents' => array(PdfDocumentType::EXPOSE_SHORT_DESIGN01),
 		'views' => array(
 			'list' => array(
 				'data' => array(
@@ -79,6 +81,7 @@ $config['estate'] = array(
 				array('op' => '=', 'val' => 'kauf'),
 			),
 		),
+		'documents' => array(PdfDocumentType::EXPOSE_SHORT_DESIGN01),
 		'views' => array(
 			'list' => array(
 				'data' => array(
@@ -105,7 +108,7 @@ $config['estate'] = array(
 				'formname' => 'estatelistcontactform',
 				'language' => 'DEU',
 				'records' => 20,
-				'template' => 'default'
+				'template' => 'default',
 			),
 			'detail' => array(
 				'data' => array(

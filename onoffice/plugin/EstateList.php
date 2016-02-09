@@ -26,6 +26,9 @@ class EstateList {
 	private $_pFieldnames = null;
 
 	/** @var array */
+	private $_configName = null;
+
+	/** @var array */
 	private $_configByName = array();
 
 	/** @var array */
@@ -77,6 +80,7 @@ class EstateList {
 		$this->_pSDKWrapper = new SDKWrapper();
 		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
 		$this->_configByName = $estateConfig[$configName];
+		$this->_configName = $configName;
 		$this->_view = $viewName;
 		$this->_pFieldnames = new Fieldnames();
 		$this->_pAddressList = new AddressList();
@@ -142,7 +146,7 @@ class EstateList {
 
 		$estateIds = $this->collectEstateIds( $responseArrayEstates );
 
-		if (count($estateIds) > 0) {
+		if ( count( $estateIds ) > 0 ) {
 			$handleGetEstatePicturesOriginal = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
 						'estateids' => $estateIds,
 						'categories' => $pictureCategories,
@@ -197,7 +201,7 @@ class EstateList {
 	 */
 
 	private function collectEstateIds( $estateResponseArray ) {
-		if ( ! array_key_exists( 'data', $estateResponseArray ) ) {
+		if ( ! isset( $estateResponseArray['data']['records'] ) ) {
 			return array();
 		}
 
@@ -449,6 +453,32 @@ class EstateList {
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param string $templateType
+	 * @return string
+	 *
+	 */
+
+	public function getDocument( $templateType ) {
+		$configByView = $this->_configByName['views'][$this->_view];
+		$language = $configByView['language'];
+
+		$estateId = $this->_currentEstate['id'];
+		$documentId = array_search( $templateType, $this->_configByName['documents'] );
+
+		$queryVars = array(
+			'documentid' => $documentId,
+			'estateid' => $estateId,
+			'language' => $language,
+			'configindex' => $this->_configName,
+		);
+
+		$documentlink = plugin_dir_url( __DIR__ ).'document.php?'. http_build_query( $queryVars );
+		return esc_url( $documentlink );
 	}
 
 

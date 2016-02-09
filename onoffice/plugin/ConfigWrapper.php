@@ -53,7 +53,7 @@ class ConfigWrapper {
 
 	private function readConfig() {
 		$config = array();
-		include plugin_dir_path( __FILE__ ) . '../config.php';
+		include dirname( __FILE__ ) . '/../config.php';
 		return $config;
 	}
 
