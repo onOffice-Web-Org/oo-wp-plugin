@@ -295,6 +295,37 @@ class EstateList {
 
 	/**
 	 *
+	 * @return type
+	 *
+	 */
+
+	private function getCensoredAddressData( $record ) {
+		if ( isset( $this->_configByName['views'][$this->_view] ) ) {
+			$requestedFields = $this->_configByName['views'][$this->_view]['data'];
+
+			if ( in_array( 'virtualAddress', $requestedFields ) &&
+				1 == $record['virtualAddress'] ) {
+				if ( in_array( 'virtualStreet', $requestedFields ) ) {
+					$record['strasse'] = $record['virtualStreet'];
+				}
+				if ( in_array( 'virtualHouseNumber', $requestedFields ) ) {
+					$record['hausnummer'] = $record['virtualHouseNumber'];
+				}
+				if ( in_array( 'virtualLongitude', $requestedFields ) ) {
+					$record['laengengrad'] = $record['virtualLongitude'];
+				}
+				if ( in_array( 'virtualLatitude', $requestedFields ) ) {
+					$record['breitengrad'] = $record['virtualLatitude'];
+				}
+			}
+		}
+
+		return $record;
+	}
+
+
+	/**
+	 *
 	 * @return ArrayContainerEscape
 	 *
 	 */
@@ -321,7 +352,8 @@ class EstateList {
 
 		if ( false !== $currentRecord ) {
 			$record = $currentRecord['value']['elements'];
-			$pArrayContainer = new ArrayContainerEscape( $record );
+			$recordCensored = $this->getCensoredAddressData( $record );
+			$pArrayContainer = new ArrayContainerEscape( $recordCensored );
 
 			return $pArrayContainer;
 		}
@@ -487,7 +519,7 @@ class EstateList {
 	 */
 
 	public function resetEstateIterator() {
-		reset( $this->_responseArray );
+		reset( $this->_responseArray['data']['records'] );
 	}
 
 

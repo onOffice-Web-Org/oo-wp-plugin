@@ -42,12 +42,28 @@ use onOffice\WPlugin\PdfDocumentType;
 	</a>
 	<?php endforeach; ?>
 
+		<?php
+			$position = array(
+				'lat' => (float) $currentEstate['breitengrad'],
+				'lng' => (float) $currentEstate['laengengrad'],
+			);
+			$title = $currentEstate['objekttitel'];
+
+			if ( 1 == $currentEstate['showGoogleMap'] ) {
+				$pMaps = new onOffice\WPlugin\Maps\GoogleMap();
+
+				// if you want the marker to be always visible, change the 3rd arg to true
+				$pMaps->addNewMarker(
+					$position['lng'], $position['lat'], ! $currentEstate['virtualAddress'], $title );
+				$pMaps->setZoom(16);
+				echo $pMaps->render();
+			}
+		?>
+
 	<h2>Dokumente</h2>
 	<?php
 		$document = $pEstates->getDocument( PdfDocumentType::EXPOSE_SHORT_DESIGN01 );
 	?>
 	<a href="<?php echo $document; ?>">PDF-Exposé</a>
 
-<?php
-endwhile;
-?>
+<?php endwhile; ?>

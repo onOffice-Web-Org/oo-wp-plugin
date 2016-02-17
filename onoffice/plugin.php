@@ -29,6 +29,7 @@ $pFormPost = FormPost::getInstance();
 add_action( 'init', array($pContentFilter, 'addCustomRewriteTags') );
 add_action( 'init', array($pContentFilter, 'addCustomRewriteRules') );
 add_action( 'init', array($pFormPost, 'initialCheck') );
+add_action( 'wp_enqueue_scripts', array($pContentFilter, 'registerScripts'), 9 );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
 add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
 

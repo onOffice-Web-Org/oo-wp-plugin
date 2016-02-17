@@ -8,6 +8,32 @@
 
 ?>
 
+<h1>Übersicht der dargestellten Objekte</h1>
+
+<?php
+$pMaps = new onOffice\WPlugin\Maps\GoogleMap();
+$pMaps->setWidth(630);
+$pMaps->setHeight(350);
+
+while ( $currentEstate = $pEstates->estateIterator() ) {
+	$position = array(
+		'lat' => (float) $currentEstate['breitengrad'],
+		'lng' => (float) $currentEstate['laengengrad'],
+	);
+	$title = $currentEstate['objekttitel'];
+
+	if ( ! $position['lng'] || ! $position['lat'] || ! $currentEstate['showGoogleMap'] ) {
+		continue;
+	}
+
+	$pMaps->addNewMarker(
+		$position['lng'], $position['lat'],	! $currentEstate['virtualAddress'], $title );
+}
+echo $pMaps->render();
+
+$pEstates->resetEstateIterator();
+?>
+
 <?php while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 
 <p>
@@ -54,6 +80,4 @@
 	<?php endforeach; ?>
 </p>
 
-<?php
-endwhile;
-?>
+<?php endwhile; ?>

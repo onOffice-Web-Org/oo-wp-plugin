@@ -361,7 +361,19 @@ class ContentFilter
 	 *
 	 */
 
+	public function registerScripts() {
+		wp_register_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js' );
+		wp_register_script( 'gmapsinit', plugins_url( '/js/gmapsinit.js', __DIR__ ), array('google-maps') );
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function includeScripts() {
+		wp_enqueue_script( 'gmapsinit' );
+
 		if ( is_file( plugin_dir_path( __FILE__ ).'../templates/default/style.css' ) ) {
 			wp_enqueue_style( 'onoffice-template-style.css', $this->getFileUrl( 'style.css' ) );
 		}
