@@ -32,19 +32,16 @@ class EstateList {
 	private $_configByName = array();
 
 	/** @var array */
-	private $_estateImageUrls = array();
-
-	/** @var array */
 	private $_estateImageCategories = array();
 
 	/** @var array */
 	private $_estateImageByEstate = array();
 
 	/** @var array */
-	private $_estateImageText = array();
-
-	/** @var array */
 	private $_responseArray = array();
+
+	/** @var EstateImages */
+	private $_pEstateImages = null;
 
 	/** @var array */
 	private $_currentEstate = array();
@@ -147,11 +144,8 @@ class EstateList {
 		$estateIds = $this->collectEstateIds( $responseArrayEstates );
 
 		if ( count( $estateIds ) > 0 ) {
-			$handleGetEstatePicturesOriginal = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
-						'estateids' => $estateIds,
-						'categories' => $pictureCategories,
-					)
-				);
+
+			$this->_pEstateImages = new EstateImages( $estateIds, $pictureCategories );
 
 			$handleEstateContactPerson = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
 						'parentids' => $estateIds,
@@ -163,9 +157,6 @@ class EstateList {
 
 			$responseArrayContactPerson = $pSDKWrapper->getRequestResponse( $handleEstateContactPerson );
 			$this->collectEstateContactPerson( $responseArrayContactPerson );
-
-			$responseArrayEstatePicturesOriginal = $pSDKWrapper->getRequestResponse( $handleGetEstatePicturesOriginal );
-			$this->collectEstatePictures( $responseArrayEstatePicturesOriginal );
 
 			$this->_responseArray = $responseArrayEstates;
 		}
@@ -218,36 +209,6 @@ class EstateList {
 		}
 
 		return $estateIds;
-	}
-
-
-	/**
-	 *
-	 * @param array $responseArrayEstatePictures
-	 * @return null
-	 *
-	 */
-
-	private function collectEstatePictures( $responseArrayEstatePictures ) {
-		if (! array_key_exists( 'data', $responseArrayEstatePictures ) ||
-			! array_key_exists( 'records', $responseArrayEstatePictures['data'] ) ) {
-			return;
-		}
-
-		$records = $responseArrayEstatePictures['data']['records'];
-
-		foreach ( $records as $properties ) {
-			$estateId = $properties['elements']['estateid'];
-			$imageType = $properties['elements']['type'];
-			$imageUrl = $properties['elements']['url'];
-			$imageText = $properties['elements']['text'];
-			$imageTitle = $properties['elements']['title'];
-			$imageId = $properties['id'];
-			$this->_estateImageByEstate[$estateId][] = $imageId;
-			$this->_estateImageUrls[$imageId] = $imageUrl;
-			$this->_estateImageCategories[$imageId][] = $imageType;
-			$this->_estateImageText[$imageId] = array('title' => $imageTitle, 'text' => $imageText);
-		}
 	}
 
 
@@ -405,16 +366,14 @@ class EstateList {
 		$estateId = $this->_currentEstate['id'];
 		$estateFiles = array();
 
-		if ( array_key_exists( $estateId, $this->_estateImageByEstate ) ) {
-			$estateImageIds = $this->_estateImageByEstate[$estateId];
-			foreach ( $estateImageIds as $imageId ) {
-				if ( null !== $types &&
-					count( array_intersect( $types, $this->_estateImageCategories[$imageId] ) ) == 0) {
-					continue;
-				}
+		$estateImages = $this->_pEstateImages->getEstatePictures( $estateId );
 
-				$estateFiles []= $imageId;
+		foreach ( $estateImages as $image ) {
+			if ( null !== $types && ! in_array( $image['imagetype'], $types, true ) ) {
+				continue;
 			}
+
+			$estateFiles []= $image['id'];
 		}
 		return $estateFiles;
 	}
@@ -422,33 +381,15 @@ class EstateList {
 
 	/**
 	 *
+	 * @param int $imageId
+	 * @param array $options
 	 * @return string
 	 *
 	 */
 
 	public function getEstatePictureUrl( $imageId, array $options = null ) {
-		$size = null;
-
-		if ( ! is_null($options) ) {
-			$width = null;
-			$height = null;
-
-			if ( array_key_exists( 'width', $options ) ) {
-				$width = $options['width'];
-			}
-
-			if ( array_key_exists( 'height', $options ) ) {
-				$height = $options['height'];
-			}
-
-			$size = '@'.$width.'x'.$height; // values such as 'x300' or '300x' are totally okay
-		}
-
-		if ( ! empty( $this->_estateImageUrls[$imageId] ) ) {
-			return esc_url( $this->_estateImageUrls[$imageId].$size );
-		}
-
-		return null;
+		$currentEstate = $this->_currentEstate['id'];
+		return $this->_pEstateImages->getEstatePictureUrl( $imageId, $currentEstate, $options );
 	}
 
 
