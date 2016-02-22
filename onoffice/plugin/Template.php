@@ -90,7 +90,7 @@ class Template
 
 		$filename = $this->getFilePath();
 
-		if ( file_exists($filename) ) {
+		if ( file_exists( $filename ) ) {
 			ob_start();
 			// vars which might be used in template
 			$pEstates = $this->_pEstateList;
@@ -111,6 +111,6 @@ class Template
 	 */
 
 	private function getFilePath() {
-		return __DIR__.'/../templates/' . $this->_dirName . '/'. $this->_templateName.'.php';
+		return ConfigWrapper::getSubPluginPath() . '/templates/' . $this->_dirName . '/'. $this->_templateName.'.php';
 	}
 }

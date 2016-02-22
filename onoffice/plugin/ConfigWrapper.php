@@ -47,13 +47,33 @@ class ConfigWrapper {
 
 	/**
 	 *
+	 * @return string
+	 *
+	 */
+
+	public static function getSubPluginPath() {
+		return ABSPATH . 'wp-content/plugins/onoffice-personalized';
+	}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */
 
 	private function readConfig() {
 		$config = array();
-		include dirname( __FILE__ ) . '/../config.php';
+
+		$configFile = dirname( __FILE__ ) . '/../config.php';
+		$configFilePersonalized = self::getSubPluginPath() . '/config.php';
+
+		if ( is_file( $configFilePersonalized ) ) {
+			include $configFilePersonalized;
+		} else {
+			include $configFile;
+		}
+
 		return $config;
 	}
 

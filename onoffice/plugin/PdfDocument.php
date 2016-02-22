@@ -67,7 +67,7 @@ class PdfDocument {
 		$handlePdf = $pSdkWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'pdf', $parameters );
 		$pSdkWrapper->sendRequests();
 
-		$response = $pSdkWrapper->getRequestResponse($handlePdf);
+		$response = $pSdkWrapper->getRequestResponse( $handlePdf );
 
 		if ( isset( $response['data']['records'][0]['elements'] ) ) {
 			$documentApiPath = $response['data']['records'][0]['elements'];
