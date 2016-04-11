@@ -32,12 +32,6 @@ class EstateList {
 	private $_configByName = array();
 
 	/** @var array */
-	private $_estateImageCategories = array();
-
-	/** @var array */
-	private $_estateImageByEstate = array();
-
-	/** @var array */
 	private $_responseArray = array();
 
 	/** @var EstateImages */
@@ -159,11 +153,13 @@ class EstateList {
 			$this->collectEstateContactPerson( $responseArrayContactPerson );
 
 			$this->_responseArray = $responseArrayEstates;
+		} else {
+			$this->_responseArray['data']['records'] = array();
 		}
 
 		$this->_numEstatePages = $this->getNumEstatePages();
 
-		$this->resetEstateIterator( $this->_responseArray );
+		$this->resetEstateIterator();
 	}
 
 
