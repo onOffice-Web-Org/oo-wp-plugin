@@ -77,7 +77,11 @@ class ContentFilter
 			$listIndex = array_search( 'list', $views );
 			unset( $views[$listIndex] );
 
-			$list[$listpagename] = array_values( $views );
+			foreach ( $views as $view ) {
+				$listpageid = wp_get_post_parent_id( $config['views'][$view]['pageid'] );
+				$listpermalink = get_page_uri($listpageid);
+				$list[$listpermalink][] = $view;
+			}
 		}
 
 		return $list;
