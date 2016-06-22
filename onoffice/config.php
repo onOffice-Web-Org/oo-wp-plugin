@@ -192,6 +192,7 @@ $config['forms'] = array(
 			'message'	=> null,
 			'Id'		=> 'estate',
 		),
+		'formtype'	=>	\onOffice\WPlugin\Form::TYPE_CONTACT,
 		'language'	=>	'ENG',
 		'required'	=>	array('Vorname', 'Name', 'message'),
 	),
@@ -201,20 +202,56 @@ $config['forms'] = array(
 			'Name'			=> 'address',
 			'message'		=> null,
 		),
+		'formtype'	=>	\onOffice\WPlugin\Form::TYPE_CONTACT,
 		'language'	=>	'ENG',
 		'subject'	=>	'Eine Kontaktanfrage.',
 		'recipient' => 'you@my-onoffice.com',
 		'required'	=>	array('Vorname', 'Name', 'message'),
+	),
+	'searchform' => array(
+		'inputs' => array(
+            'regionaler_zusatz' => 'estate',
+			'vermarktungsart' => 'estate',
+            'heizkosten_in_nebenkosten' => 'estate',
+		),
+		'formtype'	=>	\onOffice\WPlugin\Form::TYPE_FREE,
+		'language'	=>	'ENG',
+        'required'	=>	array(),
 	),
 );
 
 
 // Search
 
+// http://php.net/manual/de/filter.filters.sanitize.php
+
 $maxPrice = FormPost::getPostValue('preis_bis', FILTER_VALIDATE_INT);
+$vermarktungsart = isset( $_POST['vermarktungsart'] ) ? $_POST['vermarktungsart'] : array();
+$regionaler_zusatz = FormPost::getPostValue('regionaler_zusatz', FILTER_SANITIZE_STRING);
+$hkInNk = FormPost::getPostValue('heizkosten_in_nebenkosten', FILTER_SANITIZE_STRING);
+
 if ( ! is_null( $maxPrice ) ) {
 	$config['estate']['kauf']['filter']['kaufpreis'][] = array('op' => '<', 'val' => $maxPrice);
 	$config['estate']['kauf']['filter']['kaufpreis'][] = array('op' => '>', 'val' => 0);
 }
 
+if ( $vermarktungsart != "" ) {
+	if ( is_array( $vermarktungsart ) && count( $vermarktungsart ) > 0 ) {
+		$config['estate']['kauf']['filter']['vermarktungsart'][0] = array('op' => 'in', 'val' => $vermarktungsart);
+	} elseif (!is_array( $vermarktungsart )) {
+		$config['estate']['kauf']['filter']['vermarktungsart'][0] = array('op' => '=', 'val' => $vermarktungsart);
+	}
+}
+
+if ( $regionaler_zusatz != "" ) {
+	$config['estate']['kauf']['filter']['regionaler_zusatz'][0] = array('op' => 'like', 'val' => $regionaler_zusatz);
+}
+
+if ( ( $hkInNk != "" ) ) {
+	$config['estate']['kauf']['filter']['heizkosten_in_nebenkosten'][0] = array('op' => '=', 'val' => ( $hkInNk == "on" ? "J" : "N" ));
+}
+
 unset($maxPrice);
+unset($vermarktungsart);
+unset($regionaler_zusatz);
+unset($hkInNk);

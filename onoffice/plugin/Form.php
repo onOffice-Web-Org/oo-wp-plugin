@@ -16,6 +16,11 @@ use onOffice\WPlugin\FormData;
  */
 
 class Form {
+	/** choose this to create a contact form */
+	const TYPE_CONTACT = 'contact';
+
+	/** choose this if you'd like to control by yourself */
+	const TYPE_FREE = 'free';
 
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
@@ -29,6 +34,9 @@ class Form {
 	/** @var FormData */
 	private $_pFormData = null;
 
+	/** @var string */
+	private $_language = null;
+
 
 	/**
 	 *
@@ -38,6 +46,7 @@ class Form {
 	 */
 
 	public function __construct( $formId, $language ) {
+		$this->_language = $language;
 		$this->_pFieldnames = new Fieldnames();
 		$this->_pFieldnames->loadLanguage($language);
 		$this->_formId = $formId;
@@ -117,6 +126,73 @@ class Form {
 	 *
 	 * @param string $field
 	 * @param bool $raw
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getPermittedValues( $field, $raw = false ) {
+		$config = $this->getConfigByFormId( $this->_formId );
+		$language = $config['language'];
+		$module = $config['inputs'][$field];
+
+		$fieldType = $this->getFieldType( $field );
+		$isMultiselectOrSingleselect = in_array( $fieldType,
+			array(FieldType::FIELD_TYPE_MULTISELECT, FieldType::FIELD_TYPE_SINGLESELECT), true );
+
+		$result = null;
+
+		if ( $isMultiselectOrSingleselect ) {
+			$result = $this->_pFieldnames->getPermittedValues( $field, $module, $language );
+
+			if ( false === $raw ) {
+				$result = $this->escapePermittedValues($result);
+			}
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return string
+	 *
+	 */
+
+	public function getFieldType( $field ) {
+		$config = $this->getConfigByFormId( $this->_formId );
+		$language = $config['language'];
+		$module = $config['inputs'][$field];
+
+		$fieldType = $this->_pFieldnames->getType( $field, $module, $language );
+		return $fieldType;
+	}
+
+
+	/**
+	 *
+	 * @param array $keyValues
+	 * @return array
+	 *
+	 */
+
+	private function escapePermittedValues( array $keyValues ) {
+		$result = array();
+
+		foreach ( $keyValues as $key => $value ) {
+			$result[esc_html( $key )] = esc_html( $value );
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @param bool $raw
 	 * @return string
 	 *
 	 */
@@ -185,5 +261,16 @@ class Form {
 
 	public function getFormId() {
 		return esc_html($this->_formId);
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getLanguage() {
+		return $this->_language;
 	}
 }

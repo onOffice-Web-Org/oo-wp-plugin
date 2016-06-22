@@ -9,27 +9,19 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\Fieldnames;
-
 /**
  *
  */
 
 class ContentFilter
 {
-	/** @var \onOffice\WPlugin\Fieldnames */
-	private $_pFieldnames = null;
-
-
 	/**
 	 *
 	 * @param array $config
 	 *
 	 */
 
-	public function __construct() {
-		$this->_pFieldnames = new Fieldnames();
-	}
+	public function __construct() {}
 
 
 	/**

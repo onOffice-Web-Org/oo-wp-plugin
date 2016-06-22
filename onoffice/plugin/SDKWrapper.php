@@ -71,7 +71,7 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function addRequest( $actionId, $resourceType, $parameters ) {
+	public function addRequest( $actionId, $resourceType, $parameters = array() ) {
 		return $this->_pSDK->callGeneric( $actionId, $resourceType, $parameters );
 	}
 

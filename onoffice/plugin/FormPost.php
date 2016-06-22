@@ -141,6 +141,11 @@ class FormPost {
 		$this->_formDataInstances[$prefix][$formNo] = $pFormData;
 		$pFormData->setValues( $formData );
 
+		if ( $configByPrefix['formtype'] !== Form::TYPE_CONTACT) {
+			// don't do form handling and API call if not wanted
+			return;
+		}
+
 		$missingFields = $pFormData->getMissingFields();
 
 		if ( count( $missingFields ) > 0 ) {
@@ -149,7 +154,7 @@ class FormPost {
 			$pFormData->setFormSent( true );
 			$response = $this->sendContactRequest( $pFormData, $recipient, $subject );
 
-			if (true === $response) {
+			if ( true === $response ) {
 				$pFormData->setStatus( self::MESSAGE_SUCCESS );
 			} else {
 				$pFormData->setStatus( self::MESSAGE_ERROR );

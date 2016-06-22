@@ -109,7 +109,7 @@ class EstateList {
 		$pSDKWrapper = $this->_pSDKWrapper;
 
 		$configByView = $this->_configByName['views'][$this->_view];
-		$language = $configByView['language'];
+		$language = $this->getLanguage();
 		$data = $configByView['data'];
 		$numRecordsPerPage = isset( $configByView['records'] ) ? $configByView['records'] : 20;
 		$filter = array_merge( $filter, $this->_configByName['filter'] );
@@ -468,5 +468,19 @@ class EstateList {
 
 	public function setEstateRecordsPerPage( $recordsPerPage ) {
 		$this->_estateRecordsPerPage = $recordsPerPage;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getLanguage() {
+		$configByView = $this->_configByName['views'][$this->_view];
+		$language = $configByView['language'];
+
+		return $language;
 	}
 }

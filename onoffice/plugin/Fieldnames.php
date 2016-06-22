@@ -119,6 +119,34 @@ class Fieldnames {
 
 	/**
 	 *
+	 * @param string $fieldName
+	 * @param string $module
+	 * @param string $language
+	 * @return string
+	 *
+	 */
+
+	public function getType( $fieldName, $module, $language ) {
+		return $this->_fieldList[$language][$module][$fieldName]['type'];
+	}
+
+
+	/**
+	 *
+	 * @param string $inputField
+	 * @param string $module
+	 * @param string $language
+	 * @return string
+	 *
+	 */
+
+	public function getPermittedValues( $inputField, $module, $language ) {
+		return $this->_fieldList[$language][$module][$inputField]['permittedvalues'];
+	}
+
+
+	/**
+	 *
 	 * @param string $language
 	 * @return bool
 	 *
