@@ -32,6 +32,9 @@ class FormData {
 	/** @var bool */
 	private $_formSent = false;
 
+	/** @var string */
+	private $_formtype = null;
+
 
 	/**
 	 *
@@ -119,4 +122,12 @@ class FormData {
 	/** @return bool */
 	public function getFormSent()
 		{ return $this->_formSent; }
+
+	/** @param string $formtype */
+	public function setFormtype($formtype)
+		{ $this->_formtype = $formtype; }
+
+	/** @return string */
+	public function getFormtype()
+		{ return $this->_formtype; }
 }

@@ -129,6 +129,7 @@ class FormPost {
 		$formData = array_intersect_key( $_POST, $formFields );
 		$pFormData = new FormData( $prefix, $formNo );
 		$pFormData->setRequiredFields( $configByPrefix['required'] );
+		$pFormData->setFormtype( $configByPrefix['formtype'] );
 
 		if ( isset( $configByPrefix['recipient'] ) ) {
 			$recipient = $configByPrefix['recipient'];
@@ -198,6 +199,8 @@ class FormPost {
 			'estateid' => $estateId,
 			'message' => $message,
 			'subject' => $subject,
+			'referrer' => filter_input( INPUT_SERVER, 'REQUEST_URI' ),
+			'formtype' => $pFormData->getFormtype(),
 		);
 
 		if ( null != $recipient ) {
