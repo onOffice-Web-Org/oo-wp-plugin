@@ -52,8 +52,9 @@ $pEstates->resetEstateIterator();
 	<?php
 	foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
 	<p>
+		<b>ASP: <?php echo $contactData['Vorname']; ?> <?php echo $contactData['Name']; ?></b><br>
+		<img src="<?php echo $contactData['imageUrl']; ?>">
 		<ul>
-			<b>ASP: <?php echo $contactData['Vorname']; ?> <?php echo $contactData['Name']; ?></b>
 			<li>Telefon: <?php echo $contactData['defaultphone']; ?></li>
 			<li>Telefax: <?php echo $contactData['defaultfax']; ?></li>
 			<li>E-Mail: <?php echo $contactData['defaultemail']; ?></li>

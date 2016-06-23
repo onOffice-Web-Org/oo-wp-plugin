@@ -43,6 +43,7 @@ $config['estate'] = array(
 					'defaultphone',
 					'defaultfax',
 					'defaultemail',
+					'imageUrl',
 				),
 				'pictures' => array(
 					ImageType::TITLE,
@@ -122,6 +123,7 @@ $config['estate'] = array(
 					'defaultphone',
 					'defaultfax',
 					'defaultemail',
+					'imageUrl',
 				),
 				'pictures' => array(
 					ImageType::TITLE,
