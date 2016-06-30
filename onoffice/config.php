@@ -190,12 +190,14 @@ $config['forms'] = array(
 			'Vorname'	=> 'address',
 			'Name'		=> 'address',
 			'Strasse'	=> 'address',
-			'Plz-Ort'	=> 'address',
+			'Plz'		=> 'address',
+			'Ort'		=> 'address',
 			'message'	=> null,
 			'Id'		=> 'estate',
 		),
 		'formtype'	=>	\onOffice\WPlugin\Form::TYPE_CONTACT,
 		'language'	=>	'ENG',
+		'createaddress' => false, // no compounding fields possible, if true
 		'required'	=>	array('Vorname', 'Name', 'message'),
 	),
 	'defaultform' => array(

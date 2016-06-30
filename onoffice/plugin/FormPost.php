@@ -155,6 +155,12 @@ class FormPost {
 			$pFormData->setFormSent( true );
 			$response = $this->sendContactRequest( $pFormData, $recipient, $subject );
 
+			if ( array_key_exists( 'createaddress', $configByPrefix ) &&
+				$configByPrefix['createaddress'] ) {
+				$responseNewAddress = $this->createOrCompleteAddress( $pFormData, true );
+				$response = $response && $responseNewAddress;
+			}
+
 			if ( true === $response ) {
 				$pFormData->setStatus( self::MESSAGE_SUCCESS );
 			} else {
@@ -218,6 +224,34 @@ class FormPost {
 
 		$result = isset( $response['data']['records'][0]['elements']['success'] ) &&
 			'success' == $response['data']['records'][0]['elements']['success'];
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @param bool $mergeExisting
+	 * @return bool
+	 *
+	 */
+
+	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )
+	{
+		$requestParams = $pFormData->getAddressData();
+		$requestParams['checkDuplicate'] = $mergeExisting;
+
+		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper->removeCacheInstances();
+
+		$handle = $pSDKWrapper->addRequest(
+				onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
+		$pSDKWrapper->sendRequests();
+
+		$response = $pSDKWrapper->getRequestResponse( $handle );
+
+		$result = isset( $response['data']['records'] ) &&
+				count( $response['data']['records'] ) > 0;
 		return $result;
 	}
 
