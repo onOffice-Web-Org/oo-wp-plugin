@@ -198,6 +198,7 @@ $config['forms'] = array(
 		'formtype'	=>	\onOffice\WPlugin\Form::TYPE_CONTACT,
 		'language'	=>	'ENG',
 		'createaddress' => false, // no compounding fields possible, if true
+		// 'checkduplicate'=> false, // optional, if createaddress
 		'required'	=>	array('Vorname', 'Name', 'message'),
 	),
 	'defaultform' => array(

@@ -157,7 +157,14 @@ class FormPost {
 
 			if ( array_key_exists( 'createaddress', $configByPrefix ) &&
 				$configByPrefix['createaddress'] ) {
-				$responseNewAddress = $this->createOrCompleteAddress( $pFormData, true );
+
+				$checkDuplicate = true;
+				if (array_key_exists( 'checkduplicate', $configByPrefix ) &&
+					!$configByPrefix['checkduplicate']) {
+					$checkDuplicate = false;
+				}
+
+				$responseNewAddress = $this->createOrCompleteAddress( $pFormData, $checkDuplicate );
 				$response = $response && $responseNewAddress;
 			}
 
