@@ -125,6 +125,7 @@ class EstateList {
 			'filter' => $filter,
 			'estatelanguage' => $language,
 			'outputlanguage' => $language,
+			'listlimit' => $numRecordsPerPage,
 			'listoffset' => $offset,
 			'formatoutput' => 1,
 		);
