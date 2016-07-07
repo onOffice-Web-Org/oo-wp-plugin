@@ -152,21 +152,21 @@ class FormPost {
 		if ( count( $missingFields ) > 0 ) {
 			$pFormData->setStatus( self::MESSAGE_REQUIRED_FIELDS_MISSING );
 		} else {
-			$pFormData->setFormSent( true );
-			$response = $this->sendContactRequest( $pFormData, $recipient, $subject );
-
 			if ( array_key_exists( 'createaddress', $configByPrefix ) &&
 				$configByPrefix['createaddress'] ) {
-
 				$checkDuplicate = true;
 				if (array_key_exists( 'checkduplicate', $configByPrefix ) &&
 					!$configByPrefix['checkduplicate']) {
 					$checkDuplicate = false;
 				}
-
 				$responseNewAddress = $this->createOrCompleteAddress( $pFormData, $checkDuplicate );
-				$response = $response && $responseNewAddress;
+				$response = $responseNewAddress;
+			} else	{
+				$response = true;
 			}
+
+			$pFormData->setFormSent( true );
+			$response = $this->sendContactRequest( $pFormData, $recipient, $subject ) && $response;
 
 			if ( true === $response ) {
 				$pFormData->setStatus( self::MESSAGE_SUCCESS );
