@@ -61,22 +61,52 @@ class ContentFilter
 		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
 
 		foreach ( $estateConfig as $configname => $config ) {
-			$listpagename = $configname;
-			if ( array_key_exists( 'listpagename', $config ) ) {
-				$listpagename = $config['listpagename'];
+			if ( substr( $configname, 0, 1 ) == '_' ) {
+				$views = array_keys( $config['views'] );
+
+				foreach ( $views as $view ) {
+					$detailPageId = UrlConfig::getViewPageIdByConfig( $config['views'][$view] );
+					$pagename = get_page_uri( $detailPageId );
+					add_rewrite_rule( '^('.preg_quote( $view ).')/([0-9]+)/?$',
+						'index.php?pagename='.urlencode( $pagename ).'&view=$matches[1]&estate_id=$matches[2]','top' );
+				}
+				continue;
 			}
+
 			$views = array_keys( $config['views'] );
 			$listIndex = array_search( 'list', $views );
 			unset( $views[$listIndex] );
 
 			foreach ( $views as $view ) {
-				$listpageid = wp_get_post_parent_id( $config['views'][$view]['pageid'] );
-				$listpermalink = get_page_uri($listpageid);
+				$detailPageId = UrlConfig::getViewPageIdByConfig( $config['views'][$view] );
+				$listpageid = wp_get_post_parent_id( $detailPageId );
+				$listpermalink = $this->rebuildSlugTaxonomy( $detailPageId );
+
 				$list[$listpermalink][] = $view;
 			}
 		}
 
 		return $list;
+	}
+
+
+	/**
+	 *
+	 * @param int $page
+	 * @return string
+	 *
+	 */
+
+	private function rebuildSlugTaxonomy( $page ) {
+		$pPost = get_post( $page );
+		$listpermalink = $pPost->post_name;
+		$parent = wp_get_post_parent_id( $page );
+
+		if ( $parent ) {
+			$listpermalink = $this->rebuildSlugTaxonomy( $parent ).'/'.$listpermalink;
+		}
+
+		return $listpermalink;
 	}
 
 
@@ -142,7 +172,9 @@ class ContentFilter
 	 */
 
 	private function filterEstate( $content ) {
-		$regexSearch = '!(?P<tag>\[oo_estate\s+(?P<name>[0-9a-z]+)(?:\s+(?P<view>[0-9a-z]+))?\])!';
+		global $wp_query;
+
+		$regexSearch = '!(?P<tag>\[oo_estate\s+(?P<name>[0-9a-z_]+)(?:\s+(?P<view>[0-9a-z]+))?\])!';
 		$matches = array();
 
 		preg_match_all( $regexSearch, $content, $matches );
@@ -161,6 +193,8 @@ class ContentFilter
 			if ('' != $matches['view'][$id]) {
 				$viewName = $matches['view'][$id];
 			}
+
+			$viewName = isset( $wp_query->query['view'] ) ? $wp_query->query['view'] : $viewName;
 
 			if ( ! array_key_exists( $name, $estateConfig ) ||
 				empty( $estateConfig[$name]['views'][$viewName] ) ) {
@@ -292,7 +326,6 @@ class ContentFilter
 
 	public function filter_the_posts( $posts ) {
 		global $wp_query;
-		global $post;
 
 		if ( empty( $posts[0] ) ||
 			empty( $wp_query->query_vars['pagename'] ) ) {
@@ -300,32 +333,26 @@ class ContentFilter
 		}
 
 		$view = null;
-		$configKey = $this->getConfigKeyByPostname( $wp_query->query_vars['pagename'] );
+		$pPage = get_page_by_title( $wp_query->query_vars['pagename'] );
+		$oldPageId = $pPage->ID;
 
-		if ( isset( $wp_query->query_vars['view'] )) {
+
+		if ( isset( $wp_query->query_vars['view'] ) ) {
 			$view = $wp_query->query_vars['view'];
+			$pageId = $this->getDetailViewPageidByListPageId( $oldPageId, $view );
+		} else {
+			return $posts;
 		}
 
-		$detailpageId = null;
-		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
+		if ( ! is_null( $view ) && ! is_null( $pageId ) &&
+			! empty( $wp_query->query_vars['estate_id'] ) ) {
+			$newPost = get_post( $pageId );
+			remove_filter ('the_content', 'wpautop');
 
-		if ( array_key_exists( $configKey, $estateConfig ) &&
-			! is_null( $view ) &&
-			isset( $estateConfig[$configKey]['views'][$view] ) &&
-			array_key_exists( 'pageid', $estateConfig[$configKey]['views'][$view] ) ) {
-			$detailpageId = $estateConfig[$configKey]['views'][$view]['pageid'];
-		}
-
-		if ( ! empty( $wp_query->query_vars['estate_id'] ) &&
-			! is_null( $detailpageId ) ) {
-			$newPost = get_post( $detailpageId );
 			if ( ! is_null( $newPost ) ) {
 				$post = $newPost;
 				$post->post_content = $this->filter_the_content( $post->post_content );
 				$post->post_status = 'publish';
-				$post->post_name = 'detailansicht';
-
-				remove_filter ('the_content', 'wpautop');
 				return array($post);
 			}
 		}
@@ -336,16 +363,36 @@ class ContentFilter
 
 	/**
 	 *
+	 * @param int $listPageid
+	 * @param string $detailViewName
+	 * @return int
+	 *
+	 */
+
+	private function getDetailViewPageidByListPageId( $listPageid, $detailViewName ) {
+		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
+		$configKey = $this->getConfigKeyByPostId( $listPageid );
+
+		if (isset($estateConfig[$configKey]['views'][$detailViewName])) {
+			return $estateConfig[$configKey]['views'][$detailViewName]['pageid'];
+		}
+	}
+
+
+	/**
+	 *
 	 * @param string $parentname
 	 * @return string
 	 *
 	 */
 
-	private function getConfigKeyByPostname( $parentname ) {
+	private function getConfigKeyByPostId( $pageid ) {
 		foreach ( ConfigWrapper::getInstance()->getConfigByKey( 'estate' ) as $index => $config ) {
-			if ( array_key_exists( 'listpagename', $config ) &&
-				$config['listpagename'] === $parentname ) {
-				return $index;
+			foreach ($config['views'] as $view) {
+				if ( is_array( $view ) && array_key_exists( 'pageid', $view ) &&
+					$view['pageid'] === $pageid ) {
+					return $index;
+				}
 			}
 		}
 

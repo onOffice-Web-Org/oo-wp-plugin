@@ -1,10 +1,12 @@
 <?php
-function printRegion( onOffice\WPlugin\Region\Region $pRegion, $selected = null, $level = 0 ) {
-	$prefix = str_repeat( '-', $level );
-	$selectStr = ($selected == $pRegion->getId() ? ' selected' : '');
-	echo '<option value="'.esc_html( $pRegion->getId() ). '"'.$selectStr.'>'.$prefix.' '.esc_html( $pRegion->getName() ).'</option>';
-	foreach ( $pRegion->getChildren() as $pRegionChild ) {
-		printRegion($pRegionChild, $selected, $level + 1);
+if ( ! function_exists( 'printRegion') ) {
+	function printRegion( onOffice\WPlugin\Region\Region $pRegion, $selected = null, $level = 0 ) {
+		$prefix = str_repeat( '-', $level );
+		$selectStr = ($selected == $pRegion->getId() ? ' selected' : '');
+		echo '<option value="'.esc_html( $pRegion->getId() ). '"'.$selectStr.'>'.$prefix.' '.esc_html( $pRegion->getName() ).'</option>';
+		foreach ( $pRegion->getChildren() as $pRegionChild ) {
+			printRegion($pRegionChild, $selected, $level + 1);
+		}
 	}
 }
 ?>

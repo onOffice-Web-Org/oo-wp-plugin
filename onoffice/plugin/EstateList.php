@@ -346,9 +346,36 @@ class EstateList {
 
 	public function getEstateLink( $view )
 	{
-		$currentPageLink = get_permalink();
+		$targetView = $this->_configByName['views'][$view];
+
+		if ( is_string( $targetView ) && strpos( $targetView, ':' ) !== false) {
+			$foreignView = explode( ':', $targetView );
+
+			$foreignViewConfigName = $foreignView[0];
+			$foreignViewConfigView = $foreignView[1];
+
+			if (strpos($foreignViewConfigName, '@') === 0) {
+				$foreignViewConfigName = substr($foreignViewConfigName, 1);
+			}
+		} else {
+			$foreignViewConfigName = $this->_configName;
+			$foreignViewConfigView = $view;
+		}
+
 		$estate = $this->_currentEstate['id'];
-		$fullLink = esc_url( $currentPageLink.$view.'-'.$estate.'/' );
+
+		// _default
+		if ( substr( $foreignViewConfigName, 0, 1) == '_' ) {
+			$fullLink = site_url().'/'.$foreignViewConfigView.'/'.$estate;
+		} else {
+			$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
+			$detailpageid = $estateConfig[$foreignViewConfigName]['views'][$foreignViewConfigView]['pageid'];
+			$listpageid = wp_get_post_parent_id( $detailpageid );
+			$link = get_permalink( $listpageid );
+
+			$fullLink = $link.$foreignViewConfigView.'-'.$estate;
+		}
+
 		return $fullLink;
 	}
 
