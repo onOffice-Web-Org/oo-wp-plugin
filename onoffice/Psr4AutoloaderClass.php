@@ -1,12 +1,5 @@
 <?php
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software AG
- *
- */
-
 namespace onOffice\SDK;
 
 
