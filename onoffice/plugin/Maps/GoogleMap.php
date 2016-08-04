@@ -35,6 +35,12 @@ use onOffice\WPlugin\Renderable;
  */
 
 class GoogleMap implements Renderable {
+	/** */
+	const UNIT_PX = 'px';
+
+	/** */
+	const UNIT_PERCENT = '%';
+
 	/** @var int */
 	private $_zoom = null;
 
@@ -43,6 +49,12 @@ class GoogleMap implements Renderable {
 
 	/** @var int */
 	private $_height = 300;
+
+	/** @var string */
+	private $_widthUnit = self::UNIT_PX;
+
+	/** @var string */
+	private $_heightUnit = self::UNIT_PX;
 
 
 	/**
@@ -156,9 +168,9 @@ class GoogleMap implements Renderable {
 	private function renderHtml() {
 		$output = '<div'
 				.' id="'.$this->getMapVariableName().'"'
-				.' style="width:'.$this->_width.'px;'
-				.' height:'.$this->_height.'px"'
-				.'></div>'."\n"
+				.' style="width:'.$this->_width.$this->_widthUnit.';'
+				.' height:'.$this->_height.$this->_heightUnit.'">'
+				.'</div>'."\n"
 				.'<script type="application/javascript">'."\n"
 					.$this->renderJs()."\n"
 				.'</script>';
@@ -234,5 +246,29 @@ class GoogleMap implements Renderable {
 		}
 
 		return $output;
+	}
+
+
+	/** @return string */
+	public function getWidthUnit() {
+		return $this->_widthUnit;
+	}
+
+
+	/** @return string */
+	public function getHeightUnit() {
+		return $this->_heightUnit;
+	}
+
+
+	/** @param string */
+	public function setWidthUnit($unit) {
+		$this->_widthUnit = $unit;
+	}
+
+
+	/** @param string */
+	public function setHeightUnit($unit) {
+		$this->_heightUnit = $unit;
 	}
 }

@@ -23,15 +23,17 @@
  *  Default template
  */
 
-/* @var $pEstates onOffice\WPlugin\EstateList */
+use onOffice\WPlugin\Maps\GoogleMap;
 
+/* @var $pEstates onOffice\WPlugin\EstateList */
 ?>
 
 <h1>Übersicht der dargestellten Objekte</h1>
 
 <?php
-$pMaps = new onOffice\WPlugin\Maps\GoogleMap();
-$pMaps->setWidth(630);
+$pMaps = new GoogleMap();
+$pMaps->setWidth(100);
+$pMaps->setWidthUnit(GoogleMap::UNIT_PERCENT);
 $pMaps->setHeight(350);
 
 while ( $currentEstate = $pEstates->estateIterator() ) {
