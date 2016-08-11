@@ -58,6 +58,7 @@ use onOffice\WPlugin\PdfDocumentType;
 	foreach ( $estatePictures as $id ) : ?>
 	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
 		<img src="<?php echo $pEstates->getEstatePictureUrl( $id, array('width' => 300, 'height' => 400) ); ?>">
+		<?php echo $pEstates->getEstatePictureTitle($id).'<br>'; ?>
 	</a>
 	<?php endforeach; ?>
 
