@@ -144,4 +144,60 @@ class EstateImages {
 
 		return null;
 	}
+
+
+	/**
+	 *
+	 * @param int $imageId
+	 * @param int $estateId
+	 * @return string
+	 *
+	 */
+
+	public function getEstatePuctureTitle( $imageId, $estateId)
+	{
+		if ( ! empty( $this->_estateImages[$estateId][$imageId] ) )	{
+			return $this->_estateImages[$estateId][$imageId]['title'];
+		}
+
+		return null;
+	}
+
+
+
+	/**
+	 *
+	 * @param int $imageId
+	 * @param int $estateId
+	 * @return string
+	 *
+	 */
+
+	public function getEstatePictureText( $imageId, $estateId)
+	{
+		if ( ! empty( $this->_estateImages[$estateId][$imageId] ) )	{
+			return $this->_estateImages[$estateId][$imageId]['text'];
+		}
+
+		return null;
+	}
+
+
+
+	/**
+	 *
+	 * @param int $imageId
+	 * @param int $estateId
+	 * @return array
+	 *
+	 */
+
+	public function getEstatePictureValues( $imageId, $estateId)
+	{
+		if ( ! empty( $this->_estateImages[$estateId][$imageId] ) ) {
+			return $this->_estateImages[$estateId][$imageId];
+		}
+
+		return array();
+	}
 }

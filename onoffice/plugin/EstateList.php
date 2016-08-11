@@ -438,6 +438,45 @@ class EstateList {
 
 	/**
 	 *
+	 * @param int $imageId
+	 * @return string
+	 *
+	 */
+
+	public function getEstatePictureTitle( $imageId ) {
+		$currentEstate = $this->_currentEstate['id'];
+		return $this->_pEstateImages->getEstatePuctureTitle($imageId, $currentEstate);
+	}
+
+
+	/**
+	 *
+	 * @param int $imageId
+	 * @return string
+	 *
+	 */
+
+	public function getEstatePictureText( $imageId ) {
+		$currentEstate = $this->_currentEstate['id'];
+		return $this->_pEstateImages->getEstatePuctureText($imageId, $currentEstate);
+	}
+
+
+	/**
+	 *
+	 * @param int $imageId
+	 * @return array
+	 *
+	 */
+
+	public function getEstatePictureValues( $imageId ) {
+		$currentEstate = $this->_currentEstate['id'];
+		return $this->_pEstateImages->getEstatePuctureValues($imageId, $currentEstate);
+	}
+
+	
+	/**
+	 *
 	 * @return array
 	 *
 	 */
