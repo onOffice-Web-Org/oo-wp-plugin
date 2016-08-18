@@ -27,6 +27,7 @@
  */
 
 namespace onOffice\WPlugin;
+use onOffice\WPlugin\Helper;
 
 /**
  *
@@ -351,10 +352,10 @@ class ContentFilter
 			return $posts;
 		}
 
+		$pHelper = new Helper();
+		$oldPageId = $pHelper->get_pageId_by_title($wp_query->query_vars['pagename']);
 		$view = null;
-		$pPage = get_page_by_title( $wp_query->query_vars['pagename'] );
-		$oldPageId = $pPage->ID;
-
+		
 
 		if ( isset( $wp_query->query_vars['view'] ) ) {
 			$view = $wp_query->query_vars['view'];
