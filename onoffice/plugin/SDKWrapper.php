@@ -45,6 +45,12 @@ class SDKWrapper {
 	/** @var string */
 	private $_token = '';
 
+	/** @var array */
+	private $_curlOptions = array();
+
+	/** @var string */
+	private $_server = null;
+
 
 	/**
 	 *
@@ -58,6 +64,10 @@ class SDKWrapper {
 		$this->_pSDK->setCaches( $config['cache'] );
 		$this->_token = $config['token'];
 		$this->_secret = $config['secret'];
+		$this->_curlOptions = $config['curl_options'];
+		$this->_server = $config['server'];
+		$this->_pSDK->setApiServer($this->_server);
+		$this->_pSDK->setApiCurlOptions($this->_curlOptions);
 	}
 
 
@@ -73,6 +83,12 @@ class SDKWrapper {
 			'secret' => '',
 			'apiversion' => '1.5',
 			'cache' => array(),
+			'server' => 'https://api.onoffice.de/api/',
+			'curl_options' => array
+				(
+					'CURLOPT_SSL_VERIFYPEER' => true,
+					'CURLOPT_PROTOCOLS'		=> 'CURLPROTO_HTTPS',
+				),
 		);
 
 		include ConfigWrapper::getSubPluginPath() . '/api-config.php';
