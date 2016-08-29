@@ -34,4 +34,10 @@ $config = array(
 	'cache' => array(
 		new \onOffice\WPlugin\Cache\DBCache( array('ttl' => 3600) ),
 	),
+
+	'curl_options' => array
+		(
+			'CURLOPT_SSL_VERIFYPEER'	=> true,
+			'CURLOPT_PROTOCOLS'		=> 'CURLPROTO_HTTPS',
+		),
 );
