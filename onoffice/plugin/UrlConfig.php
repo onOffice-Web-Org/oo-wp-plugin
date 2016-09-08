@@ -45,13 +45,20 @@ class UrlConfig {
 	 */
 
 	public static function getViewPageIdByConfig( $viewConfig ) {
-		$pageid = null;
+		$pageId = null;
 
 		if ( is_string( $viewConfig ) ) {
 			$substr = substr($viewConfig, 1);
 			list($configName, $view) = explode( ':', $substr );
 			$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
-			$pageId = $estateConfig[$configName]['views'][$view]['pageid'];
+			$foreignView = $estateConfig[$configName]['views'][$view];
+
+			if (is_string($foreignView))
+			{
+				$foreignView = self::getViewPageIdByConfig($foreignView);
+			}
+
+			$pageId = $foreignView['pageid'];
 		} elseif ( is_array( $viewConfig ) ) {
 			$pageId = $viewConfig['pageid'];
 		}

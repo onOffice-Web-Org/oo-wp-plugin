@@ -78,7 +78,7 @@ class SDKWrapper {
 	 */
 
 	private function readConfig() {
-		$config = array(
+		$localconfig = array(
 			'token' => '',
 			'secret' => '',
 			'apiversion' => '1.5',
@@ -92,6 +92,8 @@ class SDKWrapper {
 		);
 
 		include ConfigWrapper::getSubPluginPath() . '/api-config.php';
+
+		$config = array_merge($localconfig, $config);
 
 		return $config;
 	}

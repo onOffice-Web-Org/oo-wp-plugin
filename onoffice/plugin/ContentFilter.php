@@ -119,6 +119,11 @@ class ContentFilter
 
 	private function rebuildSlugTaxonomy( $page ) {
 		$pPost = get_post( $page );
+
+		if ($pPost === null) {
+			return;
+		}
+
 		$listpermalink = $pPost->post_name;
 		$parent = wp_get_post_parent_id( $page );
 
@@ -355,7 +360,7 @@ class ContentFilter
 		$pHelper = new Helper();
 		$oldPageId = $pHelper->get_pageId_by_title($wp_query->query_vars['pagename']);
 		$view = null;
-		
+
 
 		if ( isset( $wp_query->query_vars['view'] ) ) {
 			$view = $wp_query->query_vars['view'];
