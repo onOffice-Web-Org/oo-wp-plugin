@@ -37,7 +37,7 @@ $config = array(
 
 	'curl_options' => array
 		(
-			'CURLOPT_SSL_VERIFYPEER'	=> true,
-			'CURLOPT_PROTOCOLS'		=> 'CURLPROTO_HTTPS',
+			CURLOPT_SSL_VERIFYPEER	=> true,
+			CURLOPT_PROTOCOLS		=> CURLPROTO_HTTPS,
 		),
 );
