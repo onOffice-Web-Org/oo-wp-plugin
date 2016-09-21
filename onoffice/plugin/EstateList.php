@@ -128,26 +128,8 @@ class EstateList {
 		$pSDKWrapper = $this->_pSDKWrapper;
 
 		$configByView = $this->_configByName['views'][$this->_view];
-		$language = $this->getLanguage();
-		$data = $configByView['data'];
-		$numRecordsPerPage = isset( $configByView['records'] ) ? $configByView['records'] : 20;
-		$filter = array_merge( $filter, $this->_configByName['filter'] );
-		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
-		$this->_currentEstatePage = $currentPage;
 
-		if ( isset( $configByView['filter'] ) ) {
-			$filter = $configByView['filter'];
-		}
-
-		$parametersGetEstateList = array(
-			'data' => $data,
-			'filter' => $filter,
-			'estatelanguage' => $language,
-			'outputlanguage' => $language,
-			'listlimit' => $numRecordsPerPage,
-			'listoffset' => $offset,
-			'formatoutput' => 1,
-		);
+		$parametersGetEstateList = $this->getEstateParameters( $configByView, $currentPage, $filter );
 
 		$handleReadEstate = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
 		$pSDKWrapper->sendRequests();
@@ -180,6 +162,47 @@ class EstateList {
 		$this->_numEstatePages = $this->getNumEstatePages();
 
 		$this->resetEstateIterator();
+	}
+
+
+	/**
+	 *
+	 * @param array $configByView
+	 * @return array
+	 *
+	 */
+
+	private function getEstateParameters( array $configByView, $currentPage, $filter ) {
+		$language = $this->getLanguage();
+		$data = $configByView['data'];
+		$numRecordsPerPage = isset( $configByView['records'] ) ? $configByView['records'] : 20;
+		$filter = array_merge( $filter, $this->_configByName['filter'] );
+		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
+		$this->_currentEstatePage = $currentPage;
+
+		if ( isset( $configByView['filter'] ) ) {
+			$filter = $configByView['filter'];
+		}
+
+		$requestParams = array(
+			'data' => $data,
+			'filter' => $filter,
+			'estatelanguage' => $language,
+			'outputlanguage' => $language,
+			'listlimit' => $numRecordsPerPage,
+			'listoffset' => $offset,
+			'formatoutput' => 1,
+		);
+
+		if ( array_key_exists( 'sortby', $configByView) ) {
+			$requestParams['sortby'] = $configByView['sortby'];
+		}
+
+		if ( array_key_exists( 'sortorder', $configByView) ) {
+			$requestParams['sortorder'] = $configByView['sortorder'];
+		}
+
+		return $requestParams;
 	}
 
 
@@ -474,7 +497,7 @@ class EstateList {
 		return $this->_pEstateImages->getEstatePuctureValues($imageId, $currentEstate);
 	}
 
-	
+
 	/**
 	 *
 	 * @return array

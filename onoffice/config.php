@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 
+ *
  *    Copyright (C) 2016  onOffice Software AG
  *
  *    This program is free software: you can redistribute it and/or modify
@@ -70,6 +70,8 @@ $config['estate'] = array(
 				'language' => 'DEU',
 				'records' => 20,
 				'template' => 'default',
+				'orderby' => 'objektnr_extern',
+				'sortorder' => 'DESC',
 			),
 			'detail' => array(
 				'data' => array(
