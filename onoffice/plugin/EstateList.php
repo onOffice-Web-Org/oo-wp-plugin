@@ -364,6 +364,17 @@ class EstateList {
 
 	/**
 	 *
+	 * @return type
+	 *
+	 */
+
+	public function getEstateOverallCount() {
+		return $this->_responseArray['data']['meta']['cntabsolute'];
+	}
+
+
+	/**
+	 *
 	 * @return string
 	 *
 	 */

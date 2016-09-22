@@ -30,6 +30,8 @@ use onOffice\WPlugin\Maps\GoogleMap;
 
 <h1>Übersicht der dargestellten Objekte</h1>
 
+<p>Insgesamt <?php echo $pEstates->getEstateOverallCount(); ?> Objekte gefunden.</p>
+
 <?php
 $pMaps = new GoogleMap();
 $pMaps->setWidth(100);
