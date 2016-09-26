@@ -70,7 +70,7 @@ $config['estate'] = array(
 				'language' => 'DEU',
 				'records' => 20,
 				'template' => 'default',
-				'orderby' => 'objektnr_extern',
+				'sortby' => 'objektnr_extern',
 				'sortorder' => 'DESC',
 			),
 			'detail' => array(
