@@ -203,6 +203,40 @@ $config['estate'] = array(
 			),
 		),
 	),
+	'unitlist' => array(
+		'listpagename' => 'einheiten',
+		'filter' => array(),
+		'documents' => array(),
+		'views' => array(
+			'units' => array(
+				'data' => array(
+					'Id',
+					'kaufpreis',
+					'objektnr_extern',
+					'objekttitel',
+					'objektart',
+					'laengengrad',
+					'breitengrad',
+				),
+				'contactdata' => array(
+					'Vorname',
+					'Name',
+					'defaultphone',
+					'defaultfax',
+					'defaultemail',
+					'imageUrl',
+				),
+				'pictures' => array(
+					ImageType::TITLE,
+				),
+				'formname' => '',
+				'language' => 'DEU',
+				'records' => 99999,
+				'pageid' => 11,
+				'template' => 'default_units',
+			),
+		),
+	),
 );
 
 $config['forms'] = array(

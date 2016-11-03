@@ -56,6 +56,9 @@ class EstateList {
 	/** @var EstateImages */
 	private $_pEstateImages = null;
 
+	/** @var EstateUnits */
+	private $_pEstateUnits = null;
+
 	/** @var array */
 	private $_currentEstate = array();
 
@@ -77,6 +80,8 @@ class EstateList {
 	/** @var int */
 	private $_estateRecordsPerPage = 20;
 
+	/** @var array */
+	private $_additionalFields = array('stammobjekt');
 
 	/**
 	 *
@@ -175,6 +180,8 @@ class EstateList {
 	private function getEstateParameters( array $configByView, $currentPage, $filter ) {
 		$language = $this->getLanguage();
 		$data = $configByView['data'];
+		$data = array_merge($data, $this->_additionalFields);
+
 		$numRecordsPerPage = isset( $configByView['records'] ) ? $configByView['records'] : 20;
 		$filter = array_merge( $filter, $this->_configByName['filter'] );
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
@@ -542,6 +549,41 @@ class EstateList {
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	public function getCurrentEstateId() {
+		$recordId = $this->_currentEstate['id'];
+
+		return $recordId;
+	}
+
+
+	/**
+	 *
+	 * @param int $estateId
+	 * @param string $configName
+	 * @param string $viewName
+	 * @return string
+	 *
+	 */
+
+	public function getEstateUnits( $estateId, $configName, $viewName ) {
+		$this->_pEstateUnits = new EstateUnits( array( $estateId ), $configName, $viewName );
+		$unitCount = $this->_pEstateUnits->getUnitCount( $estateId );
+		$htmlOutput = '';
+
+		if ( $unitCount > 0 ) {
+			$htmlOutput = $this->_pEstateUnits->generateHtmlOutput( $estateId );
+		}
+
+		return $htmlOutput;
 	}
 
 

@@ -35,6 +35,10 @@ use onOffice\WPlugin\Helper;
 
 class ContentFilter
 {
+	/** @var array */
+	private $_configNameBlackList = array('unitlist');
+
+
 	/**
 	 *
 	 * @param array $config
@@ -81,6 +85,9 @@ class ContentFilter
 		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
 
 		foreach ( $estateConfig as $configname => $config ) {
+			if ( in_array( $configname, $this->_configNameBlackList ) ) {
+				continue;
+			}
 			if ( substr( $configname, 0, 1 ) == '_' ) {
 				$views = array_keys( $config['views'] );
 
