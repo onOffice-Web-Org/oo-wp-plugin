@@ -158,11 +158,9 @@ class EstateList {
 
 			$responseArrayContactPerson = $pSDKWrapper->getRequestResponse( $handleEstateContactPerson );
 			$this->collectEstateContactPerson( $responseArrayContactPerson );
-
-			$this->_responseArray = $responseArrayEstates;
-		} else {
-			$this->_responseArray['data']['records'] = array();
 		}
+
+		$this->_responseArray = $responseArrayEstates;
 
 		$this->_numEstatePages = $this->getNumEstatePages();
 
