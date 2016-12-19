@@ -31,7 +31,7 @@ if ( ! function_exists( 'printRegion') ) {
 }
 ?>
 
-<form method="post">
+<form method="get">
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
@@ -86,7 +86,6 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 $language = $pForm->getLanguage();
 $pRegionController = new \onOffice\WPlugin\Region\RegionController($language);
 $regions = $pRegionController->getRegions();
-var_dump($pForm->getFieldValue( 'regionaler_zusatz' ));
 
 foreach ($regions as $pRegion) {
 	/* @var $pRegion onOffice\WPlugin\Region\Region */

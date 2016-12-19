@@ -41,15 +41,6 @@ class ContentFilter
 
 	/**
 	 *
-	 * @param array $config
-	 *
-	 */
-
-	public function __construct() {}
-
-
-	/**
-	 *
 	 */
 
 	public function addCustomRewriteTags() {
@@ -413,7 +404,7 @@ class ContentFilter
 
 	/**
 	 *
-	 * @param string $parentname
+	 * @param int $pageid
 	 * @return string
 	 *
 	 */

@@ -36,6 +36,7 @@ use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\SearchParameters;
 
 $pAutoloader = new Psr4AutoloaderClass();
 $pAutoloader->addNamespace( 'onOffice', __DIR__ );
@@ -45,6 +46,8 @@ $pAutoloader->register();
 
 $pContentFilter = new ContentFilter();
 $pFormPost = FormPost::getInstance();
+$pSearchParams = SearchParameters::getInstance();
+$pSearchParams->setParameters( $_GET );
 
 add_action( 'init', array($pContentFilter, 'addCustomRewriteTags') );
 add_action( 'init', array($pContentFilter, 'addCustomRewriteRules') );
@@ -55,6 +58,8 @@ add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
 
 add_filter( 'the_posts', array($pContentFilter, 'filter_the_posts') );
 add_filter( 'the_content', array($pContentFilter, 'filter_the_content') );
+add_filter( 'wp_link_pages_link', array($pSearchParams, 'linkPagesLink'), 10, 2);
+add_filter( 'wp_link_pages_args', array($pSearchParams, 'populateDefaultLinkParams') );
 
 register_activation_hook( __FILE__, 'oo_plugin_install' );
 register_uninstall_hook( __FILE__, 'oo_plugin_deinstall' );
