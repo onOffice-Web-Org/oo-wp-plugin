@@ -22,6 +22,7 @@
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\ImageType;
 use onOffice\WPlugin\PdfDocumentType;
+use onOffice\WPlugin\SearchParameters;
 
 
 /* Estate data you want to fetch */
@@ -285,10 +286,12 @@ $config['forms'] = array(
 
 // http://php.net/manual/de/filter.filters.sanitize.php
 
-$maxPrice = FormPost::getPostValue('preis_bis', FILTER_VALIDATE_INT);
-$vermarktungsart = isset( $_POST['vermarktungsart'] ) ? $_POST['vermarktungsart'] : array();
-$regionaler_zusatz = FormPost::getPostValue('regionaler_zusatz', FILTER_SANITIZE_STRING);
-$hkInNk = FormPost::getPostValue('heizkosten_in_nebenkosten', FILTER_SANITIZE_STRING);
+$maxPrice = FormPost::getGetValue('preis_bis', FILTER_VALIDATE_INT);
+$vermarktungsart = isset( $_GET['vermarktungsart'] ) ? $_GET['vermarktungsart'] : array();
+$regionaler_zusatz = FormPost::getGetValue('regionaler_zusatz', FILTER_SANITIZE_STRING);
+$hkInNk = FormPost::getGetValue('heizkosten_in_nebenkosten', FILTER_SANITIZE_STRING);
+
+SearchParameters::getInstance()->addAllowedGetParameter('vermarktungsart'); // not validated by FormPost::getGetValue
 
 if ( ! is_null( $maxPrice ) ) {
 	$config['estate']['kauf']['filter']['kaufpreis'][] = array('op' => '<', 'val' => $maxPrice);
