@@ -151,17 +151,55 @@ class SearchParameters {
 		}
 
 		$linkparams = $this->_defaultLinkParams;
+		$output = '';
 
-		$link = $linkparams['link_before'] . str_replace( '%', $i, $linkparams['pagelink'] ) . $linkparams['link_after'];
+		if ( 'number' == $linkparams['next_or_number'] ) {
+			$link = $linkparams['link_before'] . str_replace( '%', $i, $linkparams['pagelink'] )
+				. $linkparams['link_after'];
+			if ( $i != $page || ! $more && 1 == $page ) {
+				$url = $this->geturl( $i );
 
-		if ( $i != $page || ! $more && 1 == $page ) {
-			$url = trailingslashit(get_permalink()) . user_trailingslashit($i, 'single_paged');
-			$url = add_query_arg($this->getParameters(), $url);
-
-			$link = '<a href="' . esc_url( $url ) . '">' . $link . '</a>';
+				$output .= '<a href="' . esc_url( $url ) . '">' . $link . '</a>';
+			} else {
+				$output .= $link;
+			}
+		} elseif ( $more ) {
+			$output .= $this->getLinkSnippetForPage( $i, $page );
 		}
 
-		return $link;
+		return $output;
+	}
+
+
+	/**
+	 *
+	 * @param int $i
+	 * @param int $page
+	 * @return string
+	 *
+	 */
+
+	private function getLinkSnippetForPage( $i, $page ) {
+		$linkparams = $this->_defaultLinkParams;
+
+		$key = $i < $page ? 'previouspagelink' : 'nextpagelink';
+
+		return '<a href="'.  esc_url( $this->geturl( $i ) ) .'">'
+			. $linkparams['link_before'] . $linkparams[$key]
+			. $linkparams['link_after'].'</a>';
+	}
+
+
+	/**
+	 *
+	 * @param int $i
+	 * @return string
+	 *
+	 */
+
+	private function geturl ($i ) {
+		$url = trailingslashit(get_permalink()) . user_trailingslashit($i, 'single_paged');
+		return add_query_arg($this->getParameters(), $url);
 	}
 
 
