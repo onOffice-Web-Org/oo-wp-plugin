@@ -115,6 +115,22 @@ class SDKWrapper {
 
 	/**
 	 *
+	 * @param string $actionId
+	 * @param string $resourceType
+	 * @param int $resourceId
+	 * @param array $parameters
+	 * @param string $identifier
+	 * @return handle
+	 *
+	 */
+
+	public function addFullRequest($actionId, $resourceType, $resourceId, $parameters = array(), $identifier = null) {
+		return $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
+	}
+
+
+	/**
+	 *
 	 */
 
 	public function sendRequests() {

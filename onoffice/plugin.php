@@ -34,7 +34,7 @@ include 'Psr4AutoloaderClass.php';
 
 use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
-use onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
 
@@ -45,7 +45,7 @@ $pAutoloader->addNamespace( 'onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plu
 $pAutoloader->register();
 
 $pContentFilter = new ContentFilter();
-$pFormPost = FormPost::getInstance();
+$pFormPost = FormPostHandler::getInstance();
 $pSearchParams = SearchParameters::getInstance();
 $pSearchParams->setParameters( $_GET );
 

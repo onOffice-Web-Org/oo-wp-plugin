@@ -41,6 +41,9 @@ class Form {
 	/** choose this if you'd like to control by yourself */
 	const TYPE_FREE = 'free';
 
+	/** choose this to create an owner form */
+	const TYPE_OWNER = 'owner';
+
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
@@ -56,6 +59,8 @@ class Form {
 	/** @var string */
 	private $_language = null;
 
+	/** @var int */
+	private $_pages = 1;
 
 	/**
 	 *
@@ -69,7 +74,7 @@ class Form {
 		$this->_pFieldnames = new Fieldnames();
 		$this->_pFieldnames->loadLanguage($language);
 		$this->_formId = $formId;
-		$pFormPost = FormPost::getInstance();
+		$pFormPost = FormPostHandler::getInstance();
 		$pFormPost->incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();
 		$this->_pFormData = $pFormPost->getFormDataInstance( $formId, $this->_formNo );
@@ -78,6 +83,7 @@ class Form {
 		if ( is_null( $this->_pFormData ) ) {
 			$this->_pFormData = new FormData( $formId, $this->_formNo );
 		}
+		$this->setPages();
 	}
 
 
@@ -292,4 +298,26 @@ class Form {
 	public function getLanguage() {
 		return $this->_language;
 	}
+
+
+	/**
+	 *
+	 */
+
+	private function setPages() {
+		$config = $this->getConfigByFormId( $this->_formId );
+
+		if (isset($config['pages']))
+		{
+			if ($config['pages'] > 0)
+			{
+				$this->_pages = $config['pages'];
+			}
+		}
+	}
+
+
+	/** @return int */
+	public function getPages()
+	{ return $this->_pages; }
 }

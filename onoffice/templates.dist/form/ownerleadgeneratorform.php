@@ -19,13 +19,9 @@
  *
  */
 
-?>
+add_thickbox();
 
-<form method="post">
-
-	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
-	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
-<?php
+$pages = $pForm->getPages();
 
 $addressValues = array();
 $estateValues = array();
@@ -44,6 +40,12 @@ else
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table )
 	{
+
+		if ( $pForm->isMissingField( $input )  && $pForm->getFormStatus() == onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING)
+		{
+			echo $pForm->getFieldLabel( $input ).' - Angabe fehlt, bitte ausfüllen!<br>';
+		}
+
 		$line = null;
 
 		$selectTypes = array(
@@ -81,11 +83,6 @@ else
 					.$pForm->getFieldValue( $input ).'">';
 		}
 
-		if ( $pForm->isMissingField( $input ) )
-		{
-			$line .= '<span>Bitte ausfüllen!</span>';
-		}
-
 		if ($table == 'address')
 		{
 			$addressValues []= $line;
@@ -96,21 +93,83 @@ else
 			$estateValues []= $line;
 		}
 	}
-
-	echo '<h2>Ihre Kontaktdaten</h2>'
-		.'<p>';
-	echo implode('<br/>', $addressValues);
-	echo '</p>
-		<h2>Angaben zu Ihrem Eigentum</h2>
-		<p>';
-	echo implode('<br/>', $estateValues);
-	echo '</p>';
-
-?>
-
-	<input type="submit" value="GO!">
-<?php
 }
 ?>
 
-</form>
+<script>
+function weiter(pages)
+{
+	for (i=1; i<= pages; i++)
+	{
+		if ($('#'+i).is(':visible'))
+		{
+			if (i < pages)
+			{
+				$('#'+i).hide();
+				i++;
+				$('#'+i).show();
+				break;
+			}
+		}
+	}
+}
+
+function zurueck(pages)
+{
+	for (i=pages; i>= 1; i--)
+	{
+		if ($('#'+i).is(':visible'))
+		{
+			if (i > 1)
+			{
+				$('#'+i).hide();
+				i--;
+				$('#'+i).show();
+				break;
+			}
+		}
+	}
+}
+</script>
+
+<div id="my-content-id" style="display:none;">
+	<p>
+		<form name="leadgenerator" action="" method="post">
+			<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
+			<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
+			<div id="inhalt">
+				<?php
+					if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)
+					{
+						echo 'ERROR!';
+					}
+
+					for ($i = 1; $i <= $pages; $i++)
+					{
+						if ($i == 1)
+						{
+							$displayValue = 'block';
+						}
+						else
+						{
+							$displayValue = 'none';
+						}
+						echo '<div id="'.$i.'" style="display:'.$displayValue.'">';
+							include('includes/ownerleadgeneratorform_'.$i.'.php');
+						echo '</div>';
+					}
+				?>
+			</div>
+			<br/>
+			<div style="width:500">
+				<div id="back"  style="float:left; cursor:pointer;" onclick="zurueck(<?php echo $pages; ?>)">Zur&uuml;ck</div>
+				<div id="vor"  style="float:right; cursor:pointer;" onclick="weiter(<?php echo $pages; ?>)">Weiter</div>
+			</div>
+			<p>
+			<div id="buttonSubmit" style="clear:both"><input type="submit" value="GO!"></div>
+		   </p>
+		</form>
+     </p>
+</div>
+
+<a href="#TB_inline?width=700&height=650&inlineId=my-content-id" class="thickbox">Zum Formular...</a>

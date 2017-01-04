@@ -110,6 +110,26 @@ class FormData {
 	}
 
 
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getEstateData() {
+		$config = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
+		$inputs = $config[$this->_formId]['inputs'];
+		$estateData = array();
+
+		foreach ($this->_values as $input => $value) {
+			if ('estate' === $inputs[$input]) {
+				$estateData[$input] = $value;
+			}
+		}
+		return $estateData;
+	}
+
+
 	/** @param string[] $missingFields */
 	public function setRequiredFields( array $missingFields )
 		{ $this->_requiredFields = $missingFields; }

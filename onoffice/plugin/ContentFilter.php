@@ -430,6 +430,7 @@ class ContentFilter
 	public function registerScripts() {
 		wp_register_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js' );
 		wp_register_script( 'gmapsinit', plugins_url( '/js/gmapsinit.js', __DIR__ ), array('google-maps') );
+		wp_register_script( 'jquery-latest', 'http://code.jquery.com/jquery-latest.js');
 	}
 
 
@@ -447,6 +448,7 @@ class ContentFilter
 		if ( is_file( plugin_dir_path( __FILE__ ).'../templates/default/script.js' ) ) {
 			wp_enqueue_style( 'onoffice-template-script.js', $this->getFileUrl( 'script.js' ) );
 		}
+		wp_enqueue_script('jquery-latest');
 	}
 
 
