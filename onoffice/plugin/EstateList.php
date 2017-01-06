@@ -80,9 +80,6 @@ class EstateList {
 	/** @var int */
 	private $_estateRecordsPerPage = 20;
 
-	/** @var array */
-	private $_additionalFields = array('stammobjekt');
-
 	/**
 	 *
 	 * @param array $config
@@ -178,7 +175,6 @@ class EstateList {
 	private function getEstateParameters( array $configByView, $currentPage, $filter ) {
 		$language = $this->getLanguage();
 		$data = $configByView['data'];
-		$data = array_merge($data, $this->_additionalFields);
 
 		$numRecordsPerPage = isset( $configByView['records'] ) ? $configByView['records'] : 20;
 		$filter = array_merge( $filter, $this->_configByName['filter'] );
