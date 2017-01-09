@@ -106,6 +106,32 @@ class Form {
 	 *
 	 */
 
+	public function getRequiredFields() {
+		$formConfigs = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
+		$config = $formConfigs[$this->_formId];
+		return $config['required'];
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return bool
+	 *
+	 */
+
+	public function isRequiredField( $field ) {
+		$requiredFields = $this->getRequiredFields();
+		return in_array($field, $requiredFields);
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
 	private function getConfigByFormId() {
 		$formConfigs = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
 		return $formConfigs[$this->_formId];
