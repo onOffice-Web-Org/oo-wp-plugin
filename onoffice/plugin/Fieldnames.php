@@ -36,6 +36,8 @@ use onOffice\SDK\onOfficeSDK;
  */
 
 class Fieldnames {
+	/** @var Fieldnames */
+	static private $_pInstance = null;
 
 	/** @var array */
 	private $_fieldList = array();
@@ -45,7 +47,29 @@ class Fieldnames {
 	 *
 	 */
 
-	public function __construct() {}
+	private function __construct() {}
+
+
+	/**
+	 *
+	 */
+
+	private function __clone() {}
+
+
+	/**
+	 *
+	 * @return Fieldnames
+	 *
+	 */
+
+	static public function getInstance() {
+		if (is_null(self::$_pInstance)) {
+			self::$_pInstance = new static();
+		}
+
+		return self::$_pInstance;
+	}
 
 
 	/**
@@ -55,6 +79,10 @@ class Fieldnames {
 	 */
 
 	public function loadLanguage( $language ) {
+		if ( $this->hasLanguageCached( $language ) ) {
+			return;
+		}
+
 		$parametersGetFieldList = array(
 			'labels' => 1,
 			'language' => $language,
@@ -69,19 +97,6 @@ class Fieldnames {
 		$fieldList = $responseArrayFieldList['data']['records'];
 
 		$this->createFieldList( $fieldList, $language );
-	}
-
-
-	/**
-	 *
-	 * @param string $language
-	 *
-	 */
-
-	public function loadLanguageIfNotCached( $language ) {
-		if ( ! $this->hasLanguageCached( $language ) ) {
-			$this->loadLanguage( $language );
-		}
 	}
 
 

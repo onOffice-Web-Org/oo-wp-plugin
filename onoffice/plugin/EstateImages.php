@@ -38,28 +38,54 @@ class EstateImages {
 	/** @var array */
 	private $_estateImages = array();
 
+	/** @var int */
+	private $_handleEstatePictures = null;
+
+	/** @var array */
+	private $_pictureCategories = array();
+
 
 	/**
 	 *
-	 * @param int[] $estateIds
 	 * @param string[] $pictureCategories
 	 *
 	 */
 
-	public function __construct( $estateIds, $pictureCategories ) {
-		$pSDKWrapper = new SDKWrapper();
-		$handleGetEstatePicturesOriginal = $pSDKWrapper->addRequest(
+	public function __construct( $pictureCategories ) {
+		$this->_pictureCategories = $pictureCategories;
+
+		add_action('oo_beforeEstateRelations', array($this, 'registerRequest'), 10, 2);
+		add_action('oo_afterEstateRelations', array($this, 'parseRequest'), 10, 1);
+	}
+
+
+	/**
+	 *
+	 * @param \onOffice\WPlugin\SDKWrapper $pSDKWrapper
+	 * @param array $estateIds
+	 *
+	 */
+
+	public function registerRequest( SDKWrapper $pSDKWrapper, array $estateIds ) {
+		$this->_handleEstatePictures = $pSDKWrapper->addRequest(
 			onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
 				'estateids' => $estateIds,
-				'categories' => $pictureCategories,
+				'categories' => $this->_pictureCategories,
 			)
 		);
+	}
 
-		$pSDKWrapper->sendRequests();
 
-		$responseArrayEstatePicturesOriginal = $pSDKWrapper->getRequestResponse(
-			$handleGetEstatePicturesOriginal );
-		$this->collectEstatePictures( $responseArrayEstatePicturesOriginal );
+	/**
+	 *
+	 * @param \onOffice\WPlugin\SDKWrapper $pSDKWrapper
+	 *
+	 */
+
+	public function parseRequest( SDKWrapper $pSDKWrapper) {
+		$responseArrayEstatePictures = $pSDKWrapper->getRequestResponse(
+			$this->_handleEstatePictures );
+		$this->collectEstatePictures( $responseArrayEstatePictures );
 	}
 
 

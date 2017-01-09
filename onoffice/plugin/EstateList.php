@@ -41,7 +41,7 @@ class EstateList {
 	/** @var onOffice\WPlugin\SDKWrapper */
 	private $_pSDKWrapper = null;
 
-	/** @var onOffice\WPlugin\Fieldnames */
+	/** @var \onOffice\WPlugin\Fieldnames */
 	private $_pFieldnames = null;
 
 	/** @var array */
@@ -80,6 +80,9 @@ class EstateList {
 	/** @var int */
 	private $_estateRecordsPerPage = 20;
 
+	/** @var int */
+	private $_handleEstateContactPerson = null;
+
 	/**
 	 *
 	 * @param array $config
@@ -94,7 +97,7 @@ class EstateList {
 		$this->_configByName = $estateConfig[$configName];
 		$this->_configName = $configName;
 		$this->_view = $viewName;
-		$this->_pFieldnames = new Fieldnames();
+		$this->_pFieldnames = Fieldnames::getInstance();
 		$this->_pAddressList = new AddressList();
 	}
 
@@ -130,6 +133,7 @@ class EstateList {
 		$pSDKWrapper = $this->_pSDKWrapper;
 
 		$configByView = $this->_configByName['views'][$this->_view];
+		$this->_pFieldnames->loadLanguage( $configByView['language'] );
 
 		$parametersGetEstateList = $this->getEstateParameters( $configByView, $currentPage, $filter );
 
@@ -138,23 +142,19 @@ class EstateList {
 
 		$responseArrayEstates = $pSDKWrapper->getRequestResponse( $handleReadEstate );
 		$pictureCategories = $configByView['pictures'];
+		$this->_pEstateImages = new EstateImages( $pictureCategories );
 
 		$estateIds = $this->collectEstateIds( $responseArrayEstates );
 
 		if ( count( $estateIds ) > 0 ) {
+			add_action('oo_beforeEstateRelations', array($this, 'registerContactPersonCall'), 10, 2);
+			add_action('oo_afterEstateRelations', array($this, 'extractEstateContactPerson'), 10, 1);
 
-			$this->_pEstateImages = new EstateImages( $estateIds, $pictureCategories );
-
-			$handleEstateContactPerson = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
-						'parentids' => $estateIds,
-						'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
-					)
-				);
+			do_action('oo_beforeEstateRelations', $pSDKWrapper, $estateIds);
 
 			$pSDKWrapper->sendRequests();
 
-			$responseArrayContactPerson = $pSDKWrapper->getRequestResponse( $handleEstateContactPerson );
-			$this->collectEstateContactPerson( $responseArrayContactPerson );
+			do_action('oo_afterEstateRelations', $pSDKWrapper);
 		}
 
 		$this->_responseArray = $responseArrayEstates;
@@ -162,6 +162,33 @@ class EstateList {
 		$this->_numEstatePages = $this->getNumEstatePages();
 
 		$this->resetEstateIterator();
+	}
+
+
+	/**
+	 *
+	 * @param array $estateIds
+	 *
+	 */
+
+	public function registerContactPersonCall( SDKWrapper $pSDKWrapper, array $estateIds) {
+		$this->_handleEstateContactPerson = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
+				'parentids' => $estateIds,
+				'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+			)
+		);
+	}
+
+
+	/**
+	 *
+	 * @param SDKWrapper $pSDKWrapper
+	 *
+	 */
+
+	public function extractEstateContactPerson(SDKWrapper $pSDKWrapper) {
+		$responseArrayContactPerson = $pSDKWrapper->getRequestResponse( $this->_handleEstateContactPerson );
+		$this->collectEstateContactPerson( $responseArrayContactPerson );
 	}
 
 
@@ -280,7 +307,7 @@ class EstateList {
 			}
 
 			$this->_estateContacts[$estateId] = $adressIds;
-			$allAddressIds = array_merge( $allAddressIds, $adressIds );
+			$allAddressIds = array_unique( array_merge( $allAddressIds, $adressIds ) );
 		}
 
 		$fields = array();
@@ -384,7 +411,6 @@ class EstateList {
 		$recordType = $this->_currentEstate['type'];
 		$configByView = $this->_configByName['views'][$this->_view];
 
-		$this->_pFieldnames->loadLanguageIfNotCached($configByView['language']);
 		$fieldNewName = $this->_pFieldnames->getFieldLabel(
 			$field, $recordType, $configByView['language'] );
 

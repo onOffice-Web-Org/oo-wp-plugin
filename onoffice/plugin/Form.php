@@ -71,7 +71,7 @@ class Form {
 
 	public function __construct( $formId, $language ) {
 		$this->_language = $language;
-		$this->_pFieldnames = new Fieldnames();
+		$this->_pFieldnames = Fieldnames::getInstance();
 		$this->_pFieldnames->loadLanguage($language);
 		$this->_formId = $formId;
 		$pFormPost = FormPostHandler::getInstance();
