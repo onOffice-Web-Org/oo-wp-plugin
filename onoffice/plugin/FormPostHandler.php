@@ -26,9 +26,11 @@
  */
 namespace onOffice\WPlugin;
 
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostFree;
 use onOffice\WPlugin\FormPostInterest;
+use onOffice\WPlugin\FormPostApplicant;
 use onOffice\WPlugin\FormPostOwner;
 
 /**
@@ -84,12 +86,16 @@ class FormPostHandler
 	{
 		switch ($configByPrefix)
 		{
-			case \onOffice\WPlugin\Form::TYPE_CONTACT:
+			case Form::TYPE_CONTACT:
 				self::$_instances[Form::TYPE_CONTACT] = FormPostInterest::getInstance();
 				break;
 
-			case \onOffice\WPlugin\Form::TYPE_OWNER:
+			case Form::TYPE_OWNER:
 				self::$_instances[Form::TYPE_OWNER] = FormPostOwner::getInstance();
+				break;
+
+			case Form::TYPE_INTEREST:
+				self::$_instances[Form::TYPE_INTEREST] = FormPostApplicant::getInstance();
 				break;
 
 			default:

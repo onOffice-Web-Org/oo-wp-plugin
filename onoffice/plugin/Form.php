@@ -44,6 +44,9 @@ class Form {
 	/** choose this to create an owner form */
 	const TYPE_OWNER = 'owner';
 
+	/** choose this to create an aplicant form (with searchcriterias)*/
+	const TYPE_INTEREST = 'interest';
+
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
@@ -170,6 +173,77 @@ class Form {
 		}
 
 		return $label;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return boolean
+	 *
+	 */
+
+	public function isSearchcriteriaField( $field ) {
+		$config = $this->getConfigByFormId( $this->_formId );
+		$module = $config['inputs'][$field];
+
+		return $module === 'searchcriteria';
+	}
+
+
+	/**
+	 *
+	 * @param type $field
+	 * @return boolean
+	 *
+	 */
+
+	public function inRangeSearchcriteriaInfos( $field ) {
+		$config = $this->getConfigByFormId( $this->_formId );
+		$module = $config['inputs'][$field];
+
+		if ($module === 'searchcriteria' &&
+			$this->_pFieldnames->inRangeSearchcriteriaInfos($field))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getSearchcriteriaRangeInfos() {
+		return $this->_pFieldnames->getSearchcriteriaRangeInfos();
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return array
+	 *
+	 */
+
+	public function getSearchcriteriaRangeInfosForField ( $field ) {
+
+		$returnValues = array();
+
+		$config = $this->getConfigByFormId( $this->_formId );
+		$module = $config['inputs'][$field];
+
+		if ($module === 'searchcriteria' &&
+			$this->_pFieldnames->inRangeSearchcriteriaInfos($field))
+		{
+			$returnValues = $this->_pFieldnames->getRangeSearchcriteriaInfosForField($field);
+		}
+
+		return $returnValues;
 	}
 
 

@@ -42,6 +42,8 @@ class Fieldnames {
 	/** @var array */
 	private $_fieldList = array();
 
+	/** @var array */
+	private $_searchcriteriaRangeInfos = array();
 
 	/**
 	 *
@@ -97,6 +99,123 @@ class Fieldnames {
 		$fieldList = $responseArrayFieldList['data']['records'];
 
 		$this->createFieldList( $fieldList, $language );
+		$this->completeFieldListWithSearchcriteria( $language );
+	}
+
+
+	/**
+	 *
+	 * @param string $language
+	 *
+	 */
+
+	private function completeFieldListWithSearchcriteria( $language ) {
+		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper->removeCacheInstances();
+		$requestParameter = array
+			(
+				'language' => $language,
+				'additionalTranslations' => true,
+			);
+
+		$handle = $pSDKWrapper->addRequest(
+				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', $requestParameter);
+		$pSDKWrapper->sendRequests();
+
+		$response = $pSDKWrapper->getRequestResponse( $handle );
+
+		foreach ($response['data']['records'] as $tableValues)
+		{
+			$felder = $tableValues['elements'];
+
+			foreach ($felder['fields'] as $field)
+			{
+				$fieldProperties = array();
+				$fieldProperties['type'] = $field['type'];
+				$fieldProperties['label'] = $field['name'];
+				$fieldProperties['default'] = null;
+				$fieldProperties['permittedvalues'] = array();
+
+				if (array_key_exists('default', $field))
+				{
+					$fieldProperties['default'] = $field['default'];
+				}
+
+				if (array_key_exists('values', $field))
+				{
+					$fieldProperties['permittedvalues'] = $field['values'];
+				}
+
+				if (array_key_exists('rangefield', $field) &&
+					$field['rangefield'] == true &&
+					array_key_exists('additionalTranslations', $field))
+				{
+					$this->_searchcriteriaRangeInfos[$field['id']] = array();
+
+					foreach ($field['additionalTranslations'] as $key => $value)
+					{
+						$this->_searchcriteriaRangeInfos[$field['id']][$key] = $value;
+					}
+				}
+
+				$this->_fieldList[$language]['searchcriteria'][$field['id']] = $fieldProperties;
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return bool
+	 *
+	 */
+
+	public function inRangeSearchcriteriaInfos($field)	{
+		return array_key_exists($field, $this->_searchcriteriaRangeInfos);
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return array
+	 *
+	 */
+
+	public function getRangeSearchcriteriaInfosForField($field)	{
+		$infos = array();
+
+		if (array_key_exists($field, $this->_searchcriteriaRangeInfos))
+		{
+			$infos = $this->_searchcriteriaRangeInfos[$field];
+		}
+
+		return $infos;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getSearchcriteriaRangeInfos() {
+		return $this->_searchcriteriaRangeInfos;
+	}
+
+
+	/**
+	 *
+	 * @param string $language
+	 *
+	 */
+
+	public function loadLanguageIfNotCached( $language ) {
+		if ( ! $this->hasLanguageCached( $language ) ) {
+			$this->loadLanguage( $language );
+		}
 	}
 
 

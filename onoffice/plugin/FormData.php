@@ -54,6 +54,9 @@ class FormData {
 	/** @var string */
 	private $_formtype = null;
 
+	/** @var array */
+	private $_configFields = array();
+
 
 	/**
 	 *
@@ -65,8 +68,16 @@ class FormData {
 	public function __construct( $formId, $formNo ) {
 		$this->_formId = $formId;
 		$this->_formNo = $formNo;
+
+		$config = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
+		$this->_configFields = $config[$this->_formId]['inputs'];
 	}
 
+
+
+	public function setConfigFields($configFields)	{
+		$this->_configFields = $configFields;
+	}
 
 
 	/**
@@ -97,8 +108,7 @@ class FormData {
 	 */
 
 	public function getAddressData() {
-		$config = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$inputs = $config[$this->_formId]['inputs'];
+		$inputs = $this->_configFields;
 		$addressData = array();
 
 		foreach ($this->_values as $input => $value) {
@@ -117,8 +127,7 @@ class FormData {
 	 */
 
 	public function getEstateData() {
-		$config = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$inputs = $config[$this->_formId]['inputs'];
+		$inputs = $this->_configFields;
 		$estateData = array();
 
 		foreach ($this->_values as $input => $value) {
@@ -127,6 +136,26 @@ class FormData {
 			}
 		}
 		return $estateData;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getSearchcriteriaData() {
+		$inputs = $this->_configFields;
+		$searchcriteriaData = array();
+
+		foreach ($this->_values as $input => $value) {
+			if ('searchcriteria' === $inputs[$input]) {
+				$searchcriteriaData[$input] = $value;
+			}
+		}
+
+		return $searchcriteriaData;
 	}
 
 
