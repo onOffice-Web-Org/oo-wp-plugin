@@ -97,7 +97,6 @@ class ContentFilter
 
 			foreach ( $views as $view ) {
 				$detailPageId = UrlConfig::getViewPageIdByConfig( $config['views'][$view] );
-				$listpageid = wp_get_post_parent_id( $detailPageId );
 				$listpermalink = $this->rebuildSlugTaxonomy( $detailPageId );
 
 				$list[$listpermalink][] = $view;

@@ -113,6 +113,23 @@ function oo_plugin_install() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
 	add_option( "oo_plugin_db_version", "1.0" );
+
+	$pContentFilter = new ContentFilter();
+	$pContentFilter->addCustomRewriteTags();
+	$pContentFilter->addCustomRewriteRules();
+	oo_flushRules();
+}
+
+
+/**
+ *
+ * @global WP_Rewrite $wp_rewrite
+ *
+ */
+
+function oo_flushRules() {
+	global $wp_rewrite;
+	$wp_rewrite->flush_rules(false);
 }
 
 
@@ -130,4 +147,6 @@ function oo_plugin_deinstall() {
 	delete_option('oo_plugin_db_version');
 
 	$wpdb->query("DROP TABLE IF EXISTS $table");
+
+	oo_flushRules();
 }
