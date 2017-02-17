@@ -103,23 +103,25 @@ class EstateImages {
 
 		$records = $responseArrayEstatePictures['data']['records'];
 
-		foreach ( $records as $properties ) {
-			$estateId = $properties['elements']['estateid'];
-			$imageType = $properties['elements']['type'];
-			$imageUrl = $properties['elements']['url'];
-			$imageText = $properties['elements']['text'];
-			$imageTitle = $properties['elements']['title'];
-			$imageId = $properties['id'];
+		foreach ($records as $imageEntry) {
+			$imageId = $imageEntry['id'];
+			foreach ( $imageEntry['elements'] as $properties ) {
+				$estateId = $properties['estateid'];
+				$imageType = $properties['type'];
+				$imageUrl = $properties['url'];
+				$imageText = $properties['text'];
+				$imageTitle = $properties['title'];
 
-			$image = array(
-				'id' => $imageId,
-				'url' => $imageUrl,
-				'title' => $imageTitle,
-				'text' => $imageText,
-				'imagetype' => $imageType,
-			);
+				$image = array(
+					'id' => $imageId,
+					'url' => $imageUrl,
+					'title' => $imageTitle,
+					'text' => $imageText,
+					'imagetype' => $imageType,
+				);
 
-			$this->_estateImages[$estateId][$imageId] = $image;
+				$this->_estateImages[$estateId][$imageId] = $image;
+			}
 		}
 	}
 
