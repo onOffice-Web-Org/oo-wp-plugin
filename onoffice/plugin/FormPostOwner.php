@@ -159,7 +159,7 @@ class FormPostOwner
 
 	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )
 	{
-		$requestParams = $pFormData->getAddressData();
+		$requestParams = $pFormData->getAddressDataForApiCall();
 		$requestParams['checkDuplicate'] = $mergeExisting;
 
 		$pSDKWrapper = new SDKWrapper();

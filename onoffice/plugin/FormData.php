@@ -126,6 +126,42 @@ class FormData {
 	 *
 	 */
 
+	public function getAddressDataForApiCall() {
+		$inputs = $this->_configFields;
+		$addressData = array();
+
+		foreach ($this->_values as $input => $value) {
+			if ('address' === $inputs[$input]) {
+
+				switch ($input)
+				{
+					case 'Telefon1':
+						$input = 'phone';
+						break;
+
+					case 'Email':
+						$input = 'email';
+						break;
+
+					case 'Telefax1':
+						$input = 'fax';
+						break;
+				}
+
+				$addressData[$input] = $value;
+			}
+		}
+
+		return $addressData;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
 	public function getEstateData() {
 		$inputs = $this->_configFields;
 		$estateData = array();
