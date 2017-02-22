@@ -133,20 +133,22 @@ class EstateList {
 		$pSDKWrapper = $this->_pSDKWrapper;
 
 		$configByView = $this->_configByName['views'][$this->_view];
-		$this->_pFieldnames->loadLanguage( $configByView['language'] );
+		$language = $this->getLanguage();
+		$this->_pFieldnames->loadLanguage( $language );
 
 		$parametersGetEstateList = $this->getEstateParameters( $configByView, $currentPage, $filter );
 
-		$handleReadEstate = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
-		$pSDKWrapper->sendRequests();
+		$handleReadEstate = $this->_pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
+		$this->_pSDKWrapper->sendRequests();
 
-		$responseArrayEstates = $pSDKWrapper->getRequestResponse( $handleReadEstate );
+		$responseArrayEstates = $this->_pSDKWrapper->getRequestResponse( $handleReadEstate );
 		$pictureCategories = $configByView['pictures'];
 		$this->_pEstateImages = new EstateImages( $pictureCategories );
 
 		$estateIds = $this->collectEstateIds( $responseArrayEstates );
 
 		if ( count( $estateIds ) > 0 ) {
+			$pSDKWrapper = new SDKWrapper();
 			add_action('oo_beforeEstateRelations', array($this, 'registerContactPersonCall'), 10, 2);
 			add_action('oo_afterEstateRelations', array($this, 'extractEstateContactPerson'), 10, 1);
 
@@ -409,10 +411,8 @@ class EstateList {
 
 	public function getFieldLabel( $field ) {
 		$recordType = $this->_currentEstate['type'];
-		$configByView = $this->_configByName['views'][$this->_view];
-
-		$fieldNewName = $this->_pFieldnames->getFieldLabel(
-			$field, $recordType, $configByView['language'] );
+		$language = $this->getLanguage();
+		$fieldNewName = $this->_pFieldnames->getFieldLabel($field, $recordType, $language );
 
 		return $fieldNewName;
 	}
@@ -615,8 +615,7 @@ class EstateList {
 	 */
 
 	public function getDocument( $templateType ) {
-		$configByView = $this->_configByName['views'][$this->_view];
-		$language = $configByView['language'];
+		$language = $this->getLanguage();
 
 		$estateId = $this->_currentEstate['id'];
 		$documentId = array_search( $templateType, $this->_configByName['documents'] );
@@ -663,6 +662,21 @@ class EstateList {
 		$configByView = $this->_configByName['views'][$this->_view];
 		$language = $configByView['language'];
 
+		if ($configByView['language'] == 'auto')
+		{
+			$config = ConfigWrapper::getInstance()->getConfig();
+			$languageMapping = $config['localemap'];
+			$currentLocale = get_locale();
+
+			if (array_key_exists($currentLocale, $languageMapping))
+			{
+				$language = $languageMapping[$currentLocale];
+			}
+			else
+			{
+				$language = $languageMapping['fallback'];
+			}
+		}
 		return $language;
 	}
 }

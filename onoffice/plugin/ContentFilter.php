@@ -158,6 +158,7 @@ class ContentFilter
 	private function filterForms( $content ) {
 		$regexSearch = '!(?P<tag>\[oo_form\s+(?P<name>[0-9a-z]+)?\])!';
 		$matches = array();
+		$pLanguage = new Language();
 		preg_match_all( $regexSearch, $content, $matches );
 
 		$matchescount = count( $matches ) - 1;
@@ -170,7 +171,7 @@ class ContentFilter
 
 		foreach ( $onofficeTags as $id => $name ) {
 			if ( array_key_exists( $name, $formConfig ) ) {
-				$language = $formConfig[$name]['language'];
+				$language = $pLanguage->getLanguageForForm($name);
 				$pTemplate = new Template( $name, 'form', 'defaultform' );
 				$pForm = new \onOffice\WPlugin\Form( $name, $language );
 				$pTemplate->setForm( $pForm );
@@ -196,7 +197,9 @@ class ContentFilter
 	private function filterEstate( $content ) {
 		global $wp_query;
 
-		$regexSearch = '!(?P<tag>\[oo_estate\s+(?P<name>[0-9a-z_]+)(?:\s+(?P<view>[0-9a-z]+))?\])!';
+		$pLanguage = new Language();
+
+		$regexSearch = '!(?P<tag>\[oo_estate\s+(?P<name>[0-9a-z_]+)(?:\s+(?P<view>[0-9a-z_]+))?\])!';
 		$matches = array();
 
 		preg_match_all( $regexSearch, $content, $matches );
@@ -241,7 +244,7 @@ class ContentFilter
 
 			if ( array_key_exists( 'formname', $configByView ) ) {
 				$formName = $configByView['formname'];
-				$language = $configByView['language'];
+				$language = $pLanguage->getLanguageForEstateSingle($name, $viewName);
 
 				$pForm = new \onOffice\WPlugin\Form( $formName, $language );
 				$pTemplate->setForm($pForm);

@@ -68,7 +68,7 @@ $config['estate'] = array(
 				'pictures' => array(
 					ImageType::TITLE,
 				),
-				'language' => 'DEU',
+				'language' => 'auto',
 				'records' => 20,
 				'template' => 'default',
 				'sortby' => 'objektnr_extern',
@@ -365,6 +365,16 @@ $config['forms'] = array(
 		'checkduplicate'=> false, // optional, if createaddress
 	),
 
+);
+
+
+$config['localemap'] = array(
+	'de' => 'DEU',
+	'de_DE' => 'DEU',
+	'en' => 'ENG',
+	'en_GB' => 'ENG',
+	'en_US' => 'ENG',
+	'fallback' => 'DEU',
 );
 
 
