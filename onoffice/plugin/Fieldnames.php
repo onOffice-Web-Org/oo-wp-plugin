@@ -88,6 +88,11 @@ class Fieldnames {
 		$parametersGetFieldList = array(
 			'labels' => 1,
 			'language' => $language,
+			'modules' => array
+				(
+					'address',
+					'estate',
+				),
 		);
 
 		$pSDKWrapper = new SDKWrapper();
