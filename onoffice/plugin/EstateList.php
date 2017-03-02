@@ -221,7 +221,8 @@ class EstateList {
 			'outputlanguage' => $language,
 			'listlimit' => $numRecordsPerPage,
 			'listoffset' => $offset,
-			'formatoutput' => 1,
+			'formatoutput' => true,
+			'addMainLangId' => true,
 		);
 
 		if ( array_key_exists( 'sortby', $configByView) ) {
@@ -350,6 +351,10 @@ class EstateList {
 			}
 		}
 
+		if (array_key_exists('mainLangId', $record)) {
+			unset($record['mainLangId']);
+		}
+
 		return $record;
 	}
 
@@ -379,6 +384,14 @@ class EstateList {
 
 		$this->_currentEstate['id'] = $currentRecord['value']['id'];
 		$this->_currentEstate['type'] = $currentRecord['value']['type'];
+		$this->_currentEstate['mainId'] = $this->_currentEstate['id'];
+		$recordElements = $currentRecord['value']['elements'];
+
+		if (is_array($recordElements) && array_key_exists('mainLangId', $recordElements) &&
+			$recordElements['mainLangId'] != null) {
+			$mainLangId = $recordElements['mainLangId'];
+			$this->_currentEstate['mainId'] = $mainLangId;
+		}
 
 		if ( false !== $currentRecord ) {
 			$record = $currentRecord['value']['elements'];
@@ -442,7 +455,7 @@ class EstateList {
 			$foreignViewConfigView = $view;
 		}
 
-		$estate = $this->_currentEstate['id'];
+		$estate = $this->_currentEstate['mainId'];
 
 		// _default
 		if ( substr( $foreignViewConfigName, 0, 1) == '_' ) {
