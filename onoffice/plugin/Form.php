@@ -73,9 +73,10 @@ class Form {
 	 */
 
 	public function __construct( $formId, $language ) {
-		$this->_language = $language;
+		$pLanguage = new Language();
+		$this->_language = $pLanguage->getLanguageForForm( $formId );
 		$this->_pFieldnames = Fieldnames::getInstance();
-		$this->_pFieldnames->loadLanguage($language);
+		$this->_pFieldnames->loadLanguage($this->_language);
 		$this->_formId = $formId;
 		$pFormPost = FormPostHandler::getInstance();
 		$pFormPost->incrementFormNo();
@@ -163,10 +164,9 @@ class Form {
 
 	public function getFieldLabel( $field, $raw = false ) {
 		$config = $this->getConfigByFormId( $this->_formId );
-		$language = $config['language'];
 		$module = $config['inputs'][$field];
 
-		$label = $this->_pFieldnames->getFieldLabel( $field, $module, $language );
+		$label = $this->_pFieldnames->getFieldLabel( $field, $module, $this->_language );
 
 		if (false === $raw) {
 			$label = esc_html($label);
@@ -268,7 +268,7 @@ class Form {
 		$result = null;
 
 		if ( $isMultiselectOrSingleselect ) {
-			$result = $this->_pFieldnames->getPermittedValues( $field, $module, $language );
+			$result = $this->_pFieldnames->getPermittedValues( $field, $module, $this->_language );
 
 			if ( false === $raw ) {
 				$result = $this->escapePermittedValues($result);
@@ -288,10 +288,9 @@ class Form {
 
 	public function getFieldType( $field ) {
 		$config = $this->getConfigByFormId( $this->_formId );
-		$language = $config['language'];
 		$module = $config['inputs'][$field];
 
-		$fieldType = $this->_pFieldnames->getType( $field, $module, $language );
+		$fieldType = $this->_pFieldnames->getType( $field, $module, $this->_language );
 		return $fieldType;
 	}
 
