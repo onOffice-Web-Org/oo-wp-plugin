@@ -52,6 +52,10 @@ class RegionController {
 
 	public function __construct( $language ) {
 		$this->_language = $language;
+
+		if ( is_null( $this->_regions ) ) {
+			$this->fetchRegions();
+		}
 	}
 
 
@@ -117,10 +121,73 @@ class RegionController {
 	 */
 
 	public function getRegions() {
-		if ( is_null( $this->_regions ) ) {
-			$this->fetchRegions();
+		return $this->_regions;
+	}
+
+
+	/**
+	 *
+	 * @param string $key
+	 * @param \onOffice\WPlugin\Region\Region $pParentRegion
+	 * @return \onOffice\WPlugin\Region\Region
+	 *
+	 */
+
+	public function getRegionByKey($key, Region $pParentRegion = null) {
+		if ($pParentRegion === null) {
+			$outerLevel = $this->_regions;
+		} else {
+			$outerLevel = $pParentRegion->getChildren();
 		}
 
-		return $this->_regions;
+		foreach ($outerLevel as $pRegion) {
+			if ($pRegion->getId() === $key) {
+				return $pRegion;
+			}
+		}
+
+		$pResult = null;
+		foreach ($outerLevel as $pRegion) {
+			$pResult = $this->getRegionByKey($key, $pRegion);
+			if (!is_null($pResult)) {
+				return $pResult;
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 * @param string $key
+	 * @return string[]
+	 *
+	 */
+
+	public function getSubRegionsByParentRegion($key)
+	{
+		$pRegion = $this->getRegionByKey($key);
+		if ($pRegion === null) {
+			return null;
+		}
+
+		return $this->getRegionNamesOfChildRegions($pRegion);
+	}
+
+
+	/**
+	 *
+	 * @param \onOffice\WPlugin\Region\Region $pRegion
+	 * @return string[]
+	 *
+	 */
+
+	private function getRegionNamesOfChildRegions(Region $pRegion) {
+		$childRegions = array($pRegion->getId());
+		foreach ($pRegion->getChildren() as $pChildRegion) {
+			$childRegions = array_merge($childRegions, $this->getRegionNamesOfChildRegions
+				($pChildRegion));
+		}
+
+		return $childRegions;
 	}
 }
