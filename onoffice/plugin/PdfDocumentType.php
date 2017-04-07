@@ -33,6 +33,8 @@ namespace onOffice\WPlugin;
  */
 
 class PdfDocumentType {
+	const EXPOSE_LONG_STANDARD = 'urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:standard';
 	const EXPOSE_SHORT_STANDARD = 'urn:onoffice-de-ns:smart:2.5:pdf:expose:kurz:standard';
 	const EXPOSE_SHORT_DESIGN01 = 'urn:onoffice-de-ns:smart:2.5:pdf:expose:kurz:design01Expose';
+	const EXPOSE_LONG_DESIGN01 = 'urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:design01Expose';
 }
