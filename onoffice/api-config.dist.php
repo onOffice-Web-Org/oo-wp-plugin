@@ -28,7 +28,7 @@ $config = array(
 	'secret' => '',
 
 	/* API branch */
-	'apiversion' => 'wp',
+	'apiversion' => '1.10',
 
 	/* register cache classes (with their namespaces) here: */
 	'cache' => array(
