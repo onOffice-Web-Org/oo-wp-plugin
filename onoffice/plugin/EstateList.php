@@ -630,7 +630,7 @@ class EstateList {
 	public function getDocument( $templateType ) {
 		$language = $this->getLanguage();
 
-		$estateId = $this->_currentEstate['id'];
+		$estateId = $this->_currentEstate['mainId'];
 		$documentId = array_search( $templateType, $this->_configByName['documents'] );
 
 		$queryVars = array(

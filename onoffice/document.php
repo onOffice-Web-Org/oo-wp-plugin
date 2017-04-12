@@ -43,11 +43,13 @@ if ( null === $estateConfig || ! array_key_exists( $configIndex, $estateConfig) 
 	exit();
 }
 
+$estateIdOriginal = $estateId;
 
 // check if the estate is accessible by the given config index so only documents are
 // accessible if they are free for the web.
 $listConfig = $estateConfig[$configIndex];
 $filter = $listConfig['filter'];
+// append ID to filter in order to make sure viewing this document is allowed
 $filter['Id'][] = array('op' => '=', 'val' => $estateId);
 
 $parametersGetEstate = array(
@@ -65,14 +67,13 @@ $pSdkWrapper->sendRequests();
 $response = $pSdkWrapper->getRequestResponse( $estateHandle );
 
 $found = false;
+
 if (isset($response['data']['records'])) {
 	$records = $response['data']['records'];
-
-	foreach ($records as $row) {
-		if ( $row['id'] === $estateId ) {
-			$found = true;
-			break;
-		}
+	if (count($records) === 1) {
+		$found = true;
+		$row = array_shift($records);
+		$estateId = $row['id'];
 	}
 }
 
@@ -98,6 +99,6 @@ $typeParts = explode('/', $type);
 $fileEnding = $typeParts[1];
 
 header( 'Content-Type: '.$type );
-header( 'Content-Disposition: attachment; filename="document_'.$estateId.'.'.$fileEnding.'"' );
+header( 'Content-Disposition: attachment; filename="document_'.$estateIdOriginal.'.'.$fileEnding.'"' );
 
 echo $binary;
