@@ -47,6 +47,9 @@ class Form {
 	/** choose this to create an aplicant form (with searchcriterias)*/
 	const TYPE_INTEREST = 'interest';
 
+	/** choose this to create an applicant-search form */
+	const TYPE_APPLICANT_SEARCH = 'applicantsearch';
+
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
@@ -225,6 +228,17 @@ class Form {
 
 	/**
 	 *
+	 * @return array
+	 *
+	 */
+
+	public function getUmkreisFields(){
+		return $this->_pFieldnames->getUmkreisFields();
+	}
+
+
+	/**
+	 *
 	 * @param string $field
 	 * @return array
 	 *
@@ -241,6 +255,30 @@ class Form {
 			$this->_pFieldnames->inRangeSearchcriteriaInfos($field))
 		{
 			$returnValues = $this->_pFieldnames->getRangeSearchcriteriaInfosForField($field);
+		}
+
+		return $returnValues;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return array
+	 *
+	 */
+
+	public function getUmkreisValuesForField($field){
+
+		$returnValues = array();
+
+		$config = $this->getConfigByFormId( $this->_formId );
+		$module = $config['inputs'][$field];
+
+		if ($module === 'searchcriteria' &&
+			$this->_pFieldnames->isUmkreisField($field))
+		{
+			$returnValues = $this->_pFieldnames->getUmkreisValuesForField($field);
 		}
 
 		return $returnValues;
@@ -419,4 +457,9 @@ class Form {
 	/** @return int */
 	public function getPages()
 	{ return $this->_pages; }
+
+
+	/** @return array */
+	public function getResponseFieldsValues()
+	{ return $this->_pFormData->getResponseFieldsValues(); }
 }

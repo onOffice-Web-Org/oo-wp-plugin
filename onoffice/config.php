@@ -365,6 +365,18 @@ $config['forms'] = array(
 		'checkduplicate'=> false, // optional, if createaddress
 	),
 
+	'applicantsearchform'	=> array(
+		'inputs' => array(
+			'objektart'		=> 'searchcriteria',
+			'vermarktungsart'	=> 'searchcriteria',
+			'kaufpreis'		=> 'searchcriteria',
+			'Umkreis'		=> 'searchcriteria',
+		 ),
+		'formtype'	=>	\onOffice\WPlugin\Form::TYPE_APPLICANT_SEARCH,
+		'language'	=>	'DEU',
+		'required'	=>	array(),
+		'limitResults'	=>	100,
+	),
 );
 
 

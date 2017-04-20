@@ -45,6 +45,9 @@ class Fieldnames {
 	/** @var array */
 	private $_searchcriteriaRangeInfos = array();
 
+	/** @var array */
+	private $_umkreisFields = array();
+
 	/**
 	 *
 	 */
@@ -163,6 +166,11 @@ class Fieldnames {
 					}
 				}
 
+				if ($felder['name'] == 'Umkreis')
+				{
+					$this->_umkreisFields[$field['id']] = $fieldProperties;
+				}
+
 				$this->_fieldList[$language]['searchcriteria'][$field['id']] = $fieldProperties;
 			}
 		}
@@ -184,6 +192,38 @@ class Fieldnames {
 	/**
 	 *
 	 * @param string $field
+	 * @return bool
+	 *
+	 */
+
+	public function isUmkreisField($field){
+		return array_key_exists($field, $this->_umkreisFields);
+	}
+
+
+	/**
+	 *
+	 * @param atring $field
+	 * @return array
+	 *
+	 */
+
+	public function getUmkreisValuesForField($field){
+
+		$infos = array();
+
+		if (array_key_exists($field, $this->_umkreisFields))
+		{
+			$infos = $this->_umkreisFields[$field];
+		}
+
+		return $infos;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
 	 * @return array
 	 *
 	 */
@@ -197,6 +237,17 @@ class Fieldnames {
 		}
 
 		return $infos;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getUmkreisFields(){
+		return $this->_umkreisFields;
 	}
 
 

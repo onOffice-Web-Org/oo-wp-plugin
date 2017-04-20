@@ -98,6 +98,10 @@ class FormPostHandler
 				self::$_instances[Form::TYPE_INTEREST] = FormPostApplicant::getInstance();
 				break;
 
+			case Form::TYPE_APPLICANT_SEARCH:
+				self::$_instances[Form::TYPE_APPLICANT_SEARCH] = FormPostApplicantSearch::getInstance();
+				break;
+
 			default:
 				self::$_instances[Form::TYPE_FREE] = FormPostFree::getInstance();
 				break;

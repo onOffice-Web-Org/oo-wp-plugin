@@ -88,7 +88,7 @@ class FormPostApplicant
 
 		$configByPrefix = $formConfig[$prefix];
 		$formFields = $configByPrefix['inputs'];
-		$newFormFields = $this->getFormFields($formFields);
+		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
 
 		$formData = array_intersect_key( $_POST, $newFormFields );
 
@@ -154,42 +154,7 @@ class FormPostApplicant
 	}
 
 
-	/**
-	 *
-	 * @param array $inputFormFields
-	 * @return array
-	 *
-	 */
 
-	private function getFormFields($inputFormFields) {
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields');
-		$pSDKWrapper->sendRequests();
-
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		foreach ($response['data']['records'] as $tableValues)
-		{
-			$felder = $tableValues['elements'];
-			foreach ($felder['fields'] as $field)
-			{
-				if (array_key_exists('rangefield', $field) &&
-					$field['rangefield'] == true)
-				{
-					if (array_key_exists($field['id'], $inputFormFields))
-					{
-						unset($inputFormFields[$field['id']]);
-						$inputFormFields[$field['id'].'__von'] = 'searchcriteria';
-						$inputFormFields[$field['id'].'__bis'] = 'searchcriteria';
-					}
-				}
-			}
-		}
-		return $inputFormFields;
-	}
 
 
 	/**

@@ -57,6 +57,8 @@ class FormData {
 	/** @var array */
 	private $_configFields = array();
 
+	/** @var array */
+	private $_responseFieldsValues = array();
 
 	/**
 	 *
@@ -234,4 +236,12 @@ class FormData {
 	/** @return string */
 	public function getFormtype()
 		{ return $this->_formtype; }
+
+	/** @param array $values */
+	public function setResponseFieldsValues($values)
+		{ $this->_responseFieldsValues = $values; }
+
+	/** @return array */
+	public function getResponseFieldsValues()
+		{ return $this->_responseFieldsValues; }
 }

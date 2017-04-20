@@ -29,7 +29,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\FormData;
-
+use onOffice\SDK\onOfficeSDK;
 
 /**
  *
@@ -54,11 +54,21 @@ abstract class FormPost {
 	/** */
 	const MESSAGE_ERROR = 'error';
 
+	/** */
+	const RANGE_VON = '__von';
+
+	/** */
+	const RANGE_BIS = '__bis';
+
+
 	/** @var int */
 	private $_formNo = 0;
 
 	/** @var array */
 	private $_formDataInstances = array();
+
+	/** @var array */
+	private $_searchcriteriaRangeFields = array();
 
 
 	/**
@@ -197,4 +207,127 @@ abstract class FormPost {
 	public function resetFormNo() {
 		$this->_formNo = 0;
 	}
+
+
+	/**
+	 *
+	 * @param array $inputFormFields
+	 * @return array
+	 *
+	 */
+
+	protected function getFormFieldsConsiderSearchcriteria($inputFormFields) {
+		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper->removeCacheInstances();
+
+		$handle = $pSDKWrapper->addRequest(
+				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields');
+		$pSDKWrapper->sendRequests();
+
+		$response = $pSDKWrapper->getRequestResponse( $handle );
+
+		foreach ($response['data']['records'] as $tableValues)
+		{
+			$felder = $tableValues['elements'];
+
+			// new
+			if ($felder['name'] == 'Umkreis' &&
+				array_key_exists('Umkreis', $inputFormFields))
+			{
+				unset($inputFormFields['Umkreis']);
+
+				foreach ($felder['fields'] as $field)
+				{
+					$inputFormFields[$field['id']] = 'searchcriteria';
+				}
+			}
+			else
+			{
+				foreach ($felder['fields'] as $field)
+				{
+					if (array_key_exists('rangefield', $field) &&
+						$field['rangefield'] == true)
+					{
+						if (array_key_exists($field['id'], $inputFormFields))
+						{
+							unset($inputFormFields[$field['id']]);
+
+							$inputFormFields[$field['id'].self::RANGE_VON] = 'searchcriteria';
+							$inputFormFields[$field['id'].self::RANGE_BIS] = 'searchcriteria';
+
+							$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_VON] = $field['id'];
+							$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_BIS] = $field['id'];
+						}
+					}
+				}
+			}
+
+		}
+
+		return $inputFormFields;
+	}
+
+
+	/**
+	 *
+	 * @param string $fieldVonBis
+	 * @return boolean
+	 *
+	 */
+
+	protected function isSearchcriteriaRangeField($fieldVonBis)
+	{
+		if (array_key_exists($fieldVonBis, $this->_searchcriteriaRangeFields))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return null|string
+	 *
+	 */
+
+	protected function getVonRangeFieldname($field)
+	{
+		if (in_array($field, $this->_searchcriteriaRangeFields))
+		{
+			return $field.self::RANGE_VON;
+		}
+
+		return null;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return null|string
+	 *
+	 */
+
+	protected function getBisRangeFieldname($field)
+	{
+		if (in_array($field, $this->_searchcriteriaRangeFields))
+		{
+			return $field.self::RANGE_BIS;
+		}
+
+		return null;
+	}
+
+	
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	protected function getSearchcriteriaRangeFields()
+	{ return $this->_searchcriteriaRangeFields; }
 }
