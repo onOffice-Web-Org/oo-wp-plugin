@@ -459,14 +459,14 @@ class EstateList {
 
 		// _default
 		if ( substr( $foreignViewConfigName, 0, 1) == '_' ) {
-			$fullLink = site_url().'/'.$foreignViewConfigView.'/'.$estate;
+			$fullLink = site_url().'/'.$foreignViewConfigView.'/'.$estate.'/';
 		} else {
 			$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
 			$detailpageid = $estateConfig[$foreignViewConfigName]['views'][$foreignViewConfigView]['pageid'];
 			$listpageid = wp_get_post_parent_id( $detailpageid );
 			$link = get_permalink( $listpageid );
 
-			$fullLink = $link.$foreignViewConfigView.'-'.$estate;
+			$fullLink = $link.$foreignViewConfigView.'-'.$estate.'/';
 		}
 
 		return $fullLink;
