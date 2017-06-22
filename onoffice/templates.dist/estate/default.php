@@ -81,6 +81,13 @@ $pEstates->resetEstateIterator();
 			<li>Telefon: <?php echo $contactData['defaultphone']; ?></li>
 			<li>Telefax: <?php echo $contactData['defaultfax']; ?></li>
 			<li>E-Mail: <?php echo $contactData['defaultemail']; ?></li>
+
+			<?php
+			$mobilePhoneNumbers = $contactData->offsetExists('mobile') ? $contactData->getValueRaw('mobile') : array();
+			if (count($mobilePhoneNumbers) > 0) :
+			?>
+				<li>Mobil: <?php echo esc_html(array_shift($mobilePhoneNumbers)); ?></li>
+			<?php endif; ?>
 		</ul>
 	</p>
 	<?php endforeach; ?>

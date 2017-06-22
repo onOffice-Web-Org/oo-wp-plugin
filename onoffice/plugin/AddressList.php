@@ -88,7 +88,20 @@ class AddressList {
 		$data = $responseRaw['data']['records'];
 
 		foreach ( $data as $address ) {
-			$this->_adressesById[$address['id']] = $address['elements'];
+			$elements = $address['elements'];
+			$mobilePhoneNumbers = array();
+
+			foreach ($elements as $key => $value) {
+				if (strpos($key, 'mobile') === 0) {
+					$mobilePhoneNumbers []= $value;
+				}
+			}
+
+			if (count($mobilePhoneNumbers) > 0) {
+				$elements['mobile'] = $mobilePhoneNumbers;
+			}
+
+			$this->_adressesById[$address['id']] = $elements;
 		}
 	}
 
