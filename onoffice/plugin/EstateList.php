@@ -145,18 +145,18 @@ class EstateList {
 		$pictureCategories = $configByView['pictures'];
 		$this->_pEstateImages = new EstateImages( $pictureCategories );
 
-		$estateIds = $this->collectEstateIds( $responseArrayEstates );
+		$estateIds = $this->getEstateIdToForeignMapping( $responseArrayEstates );
 
 		if ( count( $estateIds ) > 0 ) {
 			$pSDKWrapper = new SDKWrapper();
 			add_action('oo_beforeEstateRelations', array($this, 'registerContactPersonCall'), 10, 2);
-			add_action('oo_afterEstateRelations', array($this, 'extractEstateContactPerson'), 10, 1);
+			add_action('oo_afterEstateRelations', array($this, 'extractEstateContactPerson'), 10, 2);
 
-			do_action('oo_beforeEstateRelations', $pSDKWrapper, $estateIds);
+			do_action('oo_beforeEstateRelations', $pSDKWrapper, array_keys($estateIds));
 
 			$pSDKWrapper->sendRequests();
 
-			do_action('oo_afterEstateRelations', $pSDKWrapper);
+			do_action('oo_afterEstateRelations', $pSDKWrapper, $estateIds);
 		}
 
 		$this->_responseArray = $responseArrayEstates;
@@ -185,12 +185,13 @@ class EstateList {
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
+	 * @param array $estateIds
 	 *
 	 */
 
-	public function extractEstateContactPerson(SDKWrapper $pSDKWrapper) {
+	public function extractEstateContactPerson(SDKWrapper $pSDKWrapper, array $estateIds) {
 		$responseArrayContactPerson = $pSDKWrapper->getRequestResponse( $this->_handleEstateContactPerson );
-		$this->collectEstateContactPerson( $responseArrayContactPerson );
+		$this->collectEstateContactPerson( $responseArrayContactPerson, $estateIds );
 	}
 
 
@@ -257,11 +258,11 @@ class EstateList {
 	/**
 	 *
 	 * @param array $estateResponseArray
-	 * @return array
+	 * @return array Mapping: mainEstateId => multiLangId
 	 *
 	 */
 
-	private function collectEstateIds( $estateResponseArray ) {
+	private function getEstateIdToForeignMapping( $estateResponseArray ) {
 		if ( ! isset( $estateResponseArray['data']['records'] ) ) {
 			return array();
 		}
@@ -275,7 +276,13 @@ class EstateList {
 				continue;
 			}
 
-			$estateIds[] = $estate['id'];
+			$elements = $estate['elements'];
+
+			if (array_key_exists('mainLangId', $elements) && $elements['mainLangId'] != null) {
+				$estateIds[$elements['mainLangId']] = $estate['id'];
+			} else {
+				$estateIds[$estate['id']] = null;
+			}
 		}
 
 		return $estateIds;
@@ -285,11 +292,12 @@ class EstateList {
 	/**
 	 *
 	 * @param array $responseArrayContacts
+	 * @param array $estateIds
 	 * @return null
 	 *
 	 */
 
-	private function collectEstateContactPerson( $responseArrayContacts ) {
+	private function collectEstateContactPerson( $responseArrayContacts, array $estateIds ) {
 		if (! array_key_exists( 'data', $responseArrayContacts ) ||
 			! array_key_exists( 'records', $responseArrayContacts['data'] ) ||
 			! array_key_exists( 0, $responseArrayContacts['data']['records'] ) ||
@@ -309,7 +317,13 @@ class EstateList {
 				$adressIds = array($adressIds);
 			}
 
-			$this->_estateContacts[$estateId] = $adressIds;
+			$subjectEstateId = $estateId;
+
+			if ($estateIds[$estateId] !== null) {
+				$subjectEstateId = $estateIds[$estateId];
+			}
+
+			$this->_estateContacts[$subjectEstateId] = $adressIds;
 			$allAddressIds = array_unique( array_merge( $allAddressIds, $adressIds ) );
 		}
 
