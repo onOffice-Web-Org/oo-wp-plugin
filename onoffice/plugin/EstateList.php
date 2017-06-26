@@ -152,7 +152,7 @@ class EstateList {
 			add_action('oo_beforeEstateRelations', array($this, 'registerContactPersonCall'), 10, 2);
 			add_action('oo_afterEstateRelations', array($this, 'extractEstateContactPerson'), 10, 2);
 
-			do_action('oo_beforeEstateRelations', $pSDKWrapper, array_keys($estateIds));
+			do_action('oo_beforeEstateRelations', $pSDKWrapper, $estateIds);
 
 			$pSDKWrapper->sendRequests();
 
@@ -175,7 +175,7 @@ class EstateList {
 
 	public function registerContactPersonCall( SDKWrapper $pSDKWrapper, array $estateIds) {
 		$this->_handleEstateContactPerson = $pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
-				'parentids' => $estateIds,
+				'parentids' => array_keys($estateIds),
 				'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
 			)
 		);
@@ -281,7 +281,7 @@ class EstateList {
 			if (array_key_exists('mainLangId', $elements) && $elements['mainLangId'] != null) {
 				$estateIds[$elements['mainLangId']] = $estate['id'];
 			} else {
-				$estateIds[$estate['id']] = null;
+				$estateIds[$estate['id']] = $estate['id'];
 			}
 		}
 
@@ -317,11 +317,7 @@ class EstateList {
 				$adressIds = array($adressIds);
 			}
 
-			$subjectEstateId = $estateId;
-
-			if ($estateIds[$estateId] !== null) {
-				$subjectEstateId = $estateIds[$estateId];
-			}
+			$subjectEstateId = $estateIds[$estateId];
 
 			$this->_estateContacts[$subjectEstateId] = $adressIds;
 			$allAddressIds = array_unique( array_merge( $allAddressIds, $adressIds ) );

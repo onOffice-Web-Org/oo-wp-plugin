@@ -69,7 +69,7 @@ class EstateImages {
 	public function registerRequest( SDKWrapper $pSDKWrapper, array $estateIds ) {
 		$this->_handleEstatePictures = $pSDKWrapper->addRequest(
 			onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
-				'estateids' => $estateIds,
+				'estateids' => array_values($estateIds),
 				'categories' => $this->_pictureCategories,
 			)
 		);
