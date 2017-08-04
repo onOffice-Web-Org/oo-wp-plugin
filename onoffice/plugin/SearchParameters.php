@@ -144,12 +144,6 @@ class SearchParameters {
 	public function linkPagesLink( $link, $i = 1 ) {
 		global $page, $more;
 
-		if (count($this->_parameters) === 0)
-		{
-			return '<a href="' . esc_url( $link ) . '">' . $link . '</a>';
-
-		}
-
 		$linkparams = $this->_defaultLinkParams;
 		$output = '';
 
