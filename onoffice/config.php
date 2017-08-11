@@ -232,7 +232,7 @@ $config['estate'] = array(
 				),
 				'formname' => '',
 				'language' => 'DEU',
-				'records' => 99999,
+				'records' => 500,
 				'pageid' => 11,
 				'template' => 'default_units',
 			),
