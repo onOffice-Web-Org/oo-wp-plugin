@@ -90,15 +90,74 @@ class AddressList {
 		foreach ( $data as $address ) {
 			$elements = $address['elements'];
 			$mobilePhoneNumbers = array();
+			$privatePhoneNumbers = array();
+			$businessPhoneNumbers = array();
+			$genericPhoneNumbers = array();
+			$privateEmailAddresses = array();
+			$businessEmailAddresses = array();
+			$genericEmailAddresses = array();
 
 			foreach ($elements as $key => $value) {
+				// comes into response if `mobile` was requested
 				if (strpos($key, 'mobile') === 0) {
 					$mobilePhoneNumbers []= $value;
 				}
+
+				// kinds of phone numbers if `phone` was requested
+				if (strpos($key, 'phoneprivate') === 0) {
+					$privatePhoneNumbers []= $value;
+				}
+
+				if (strpos($key, 'phonebusiness') === 0) {
+					$businessPhoneNumbers []= $value;
+				}
+
+				if (strpos($key, 'phone') === 0) {
+					$genericPhoneNumbers []= $value;
+				}
+
+				// kinds of email addresses if `email` was requested
+				if (strpos($key, 'emailprivate') === 0) {
+					$privateEmailAddresses []= $value;
+				}
+
+				if (strpos($key, 'emailbusiness') === 0) {
+					$businessEmailAddresses []= $value;
+				}
+
+				if (strpos($key, 'email') === 0) {
+					$genericEmailAddresses []= $value;
+				}
 			}
 
+			// phone
 			if (count($mobilePhoneNumbers) > 0) {
 				$elements['mobile'] = $mobilePhoneNumbers;
+			}
+
+			if (count($businessPhoneNumbers) > 0) {
+				$elements['phonebusiness'] = $businessPhoneNumbers;
+			}
+
+			if (count($privatePhoneNumbers) > 0) {
+				$elements['phoneprivate'] = $privatePhoneNumbers;
+			}
+
+			if (count($genericPhoneNumbers) > 0) {
+				$elements['phone'] = $genericPhoneNumbers;
+			}
+
+			// email
+			if (count($genericEmailAddresses) > 0) {
+				$elements['email'] = $genericEmailAddresses;
+			}
+
+			if (count($businessEmailAddresses) > 0) {
+				$elements['emailbusiness'] = $businessEmailAddresses;
+			}
+
+			if (count($privateEmailAddresses) > 0) {
+				$elements['emailprivate'] = $privateEmailAddresses;
 			}
 
 			$this->_adressesById[$address['id']] = $elements;

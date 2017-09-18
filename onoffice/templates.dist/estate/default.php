@@ -78,15 +78,32 @@ $pEstates->resetEstateIterator();
 		<b>ASP: <?php echo $contactData['Vorname']; ?> <?php echo $contactData['Name']; ?></b><br>
 		<img src="<?php echo $contactData['imageUrl']; ?>">
 		<ul>
-			<li>Telefon: <?php echo $contactData['defaultphone']; ?></li>
-			<li>Telefax: <?php echo $contactData['defaultfax']; ?></li>
-			<li>E-Mail: <?php echo $contactData['defaultemail']; ?></li>
+			<?php // either use the phone number flagged as default (add `default*` to config) ... ?>
+			<!--<li>Telefon: <?php // echo $contactData['defaultphone']; ?></li>-->
+			<!--<li>Telefax: <?php // echo $contactData['defaultfax']; ?></li>-->
+			<!--<li>E-Mail: <?php // echo $contactData['defaultemail']; ?></li>-->
 
+
+			<?php // ... or the specific one (add `mobile`, `phone`, `email` to config): ?>
 			<?php
 			$mobilePhoneNumbers = $contactData->offsetExists('mobile') ? $contactData->getValueRaw('mobile') : array();
 			if (count($mobilePhoneNumbers) > 0) :
 			?>
 				<li>Mobil: <?php echo esc_html(array_shift($mobilePhoneNumbers)); ?></li>
+			<?php endif; ?>
+			<?php
+			$businessPhoneNumbers = $contactData->offsetExists('phonebusiness') ?
+				$contactData->getValueRaw('phonebusiness') : array();
+			if (count($businessPhoneNumbers) > 0) :
+			?>
+				<li>phone business: <?php echo esc_html(array_shift($businessPhoneNumbers)); ?></li>
+			<?php endif; ?>
+			<?php
+			$businessEmailAddresses = $contactData->offsetExists('emailbusiness') ?
+				$contactData->getValueRaw('emailbusiness') : array();
+			if (count($businessEmailAddresses) > 0) :
+			?>
+				<li>email business: <?php echo esc_html(array_shift($businessEmailAddresses)); ?></li>
 			<?php endif; ?>
 		</ul>
 	</p>
