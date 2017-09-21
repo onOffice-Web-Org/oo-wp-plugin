@@ -71,8 +71,7 @@ $config['estate'] = array(
 				'language' => 'auto',
 				'records' => 20,
 				'template' => 'default',
-				'sortby' => 'objektnr_extern',
-				'sortorder' => 'DESC',
+				'sortby' => array('kaufpreis' => 'DESC', 'kaltmiete' => 'DESC'),
 			),
 			'detail' => array(
 				'data' => array(
