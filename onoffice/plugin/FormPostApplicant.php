@@ -170,7 +170,7 @@ class FormPostApplicant
 		$addressData = $pFormData->getAddressData();
 		$name = $addressData['Name'];
 		$vorname = $addressData['Vorname'];
-		$mailInteressant = $addressData['Email'];
+		$mailInteressent = $addressData['Email'];
 
 		$body = 'Sehr geehrte Damen und Herren,'."\n\n".'
 
@@ -183,7 +183,7 @@ Ihr onOffice Team';
 			'anonymousEmailidentity' => true,
 			'body' => $body,
 			'subject' => $subject,
-			'replyto' => $mailInteressant,
+			'replyto' => $mailInteressent,
 		);
 
 		$requestParams['receiver'] = array($recipient);
@@ -207,7 +207,7 @@ Ihr onOffice Team';
 	/**
 	 *
 	 * @param \onOffice\WPlugin\FormData $pFormData
-	 * @param type $addressId
+	 * @param int $addressId
 	 * @return boolean
 	 *
 	 */
