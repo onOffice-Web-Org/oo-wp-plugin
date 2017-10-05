@@ -45,7 +45,7 @@ $pAutoloader->addNamespace( 'onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plu
 $pAutoloader->register();
 
 $pContentFilter = new ContentFilter();
-$pAdminView = new onOffice\WPlugin\Gui\AdminOverview();
+$pAdminViewController = new onOffice\WPlugin\Gui\AdminViewController();
 $pFormPost = FormPostHandler::getInstance();
 $pSearchParams = SearchParameters::getInstance();
 $pSearchParams->setParameters( $_GET );
@@ -53,8 +53,8 @@ $pSearchParams->setParameters( $_GET );
 add_action( 'init', array($pContentFilter, 'addCustomRewriteTags') );
 add_action( 'init', array($pContentFilter, 'addCustomRewriteRules') );
 add_action( 'init', array($pFormPost, 'initialCheck') );
-add_action( 'admin_menu', array($pAdminView, 'register_menu') );
-add_action( 'admin_init', array($pAdminView, 'registerForms'));
+add_action( 'admin_menu', array($pAdminViewController, 'register_menu') );
+add_action( 'admin_init', array($pAdminViewController, 'registerForms'));
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'registerScripts'), 9 );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
 add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );

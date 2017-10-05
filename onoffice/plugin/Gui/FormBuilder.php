@@ -59,7 +59,8 @@ class FormBuilder
 
 		add_settings_section($pForm->getGroupSlug(), $pForm->getLabel(),
 			function(){}, $pForm->getPageSlug());
-		settings_fields( $pForm->getGroupSlug() );
+		settings_fields($pForm->getGroupSlug());
+
 		foreach ($pForm->getInputModel() as $pInputModel)
 		{
 			$pInputField = $this->createInputField($pInputModel);

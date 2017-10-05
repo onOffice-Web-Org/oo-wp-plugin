@@ -83,6 +83,7 @@ abstract class InputFieldRenderer
 		$this->_additionalAttributes = $attributes;
 	}
 
+
 	/** @return string */
 	public function getName()
 		{ return $this->_name; }

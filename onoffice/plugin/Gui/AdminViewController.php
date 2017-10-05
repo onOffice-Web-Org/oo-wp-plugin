@@ -28,7 +28,7 @@ namespace onOffice\WPlugin\Gui;
  *
  */
 
-class AdminOverview
+class AdminViewController
 {
 	/** @var string */
 	private $_pageSlug = null;

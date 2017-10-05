@@ -33,6 +33,15 @@ use onOffice\WPlugin\Model;
 class AdminPageApiSettings
 	extends AdminPage
 {
+	/** @var string */
+	private $_inputApiSecretGroupSlugName = null;
+
+
+	/**
+	 *
+	 * @param string $pageSlug
+	 *
+	 */
 
 	public function __construct($pageSlug)
 	{
@@ -42,6 +51,8 @@ class AdminPageApiSettings
 		$pInputModelApiKey->setValue(get_option('onoffice-settings-apikey'));
 		$pInputModelApiSecret = new Model\InputModel('onoffice-settings', 'apisecret', $labelSecret, 'string');
 		$pInputModelApiSecret->setIsPassword(true);
+		$pInputModelApiSecret->setSanitizeCallback(array($this, 'checkPassword'));
+		$this->_inputApiSecretGroupSlugName = $pInputModelApiSecret->getOptionName();
 
 		$pFormModel = new Model\FormModel();
 		$pFormModel->addInputModel($pInputModelApiKey);
@@ -53,6 +64,19 @@ class AdminPageApiSettings
 		$this->addFormModel($pFormModel);
 
 		parent::__construct($pageSlug);
+	}
+
+
+	/**
+	 *
+	 * @param string $password
+	 * @return bool
+	 *
+	 */
+
+	public function checkPassword($password)
+	{
+		return $password != '' ? $password : get_option($this->_inputApiSecretGroupSlugName);
 	}
 
 

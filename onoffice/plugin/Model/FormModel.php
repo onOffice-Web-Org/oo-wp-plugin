@@ -39,7 +39,7 @@ class FormModel
 	/** @var string Label of section */
 	private $_label = null;
 
-		/** @var InputModel[] */
+	/** @var InputModel[] */
 	private $_inputModels = array();
 
 	/** @param InputModel $pInputModel */
