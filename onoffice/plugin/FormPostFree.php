@@ -67,7 +67,7 @@ class FormPostFree
 
 	/** @return string */
 	protected function getFormType()
-	{ return Form::TYPE_FREE; }
+		{ return Form::TYPE_FREE; }
 
 
 	/**

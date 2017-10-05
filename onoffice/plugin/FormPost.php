@@ -168,7 +168,6 @@ abstract class FormPost {
 	}
 
 
-
 	/**
 	 *
 	 * @param string $prefix
@@ -176,9 +175,11 @@ abstract class FormPost {
 	 * @param FormData $pFormData
 	 *
 	 */
+
 	public function setFormDataInstances( $prefix, $formNo, $pFormData ){
 		$this->_formDataInstances[$prefix][$formNo] = $pFormData;
 	}
+
 
 	/**
 	 *
@@ -277,12 +278,7 @@ abstract class FormPost {
 
 	protected function isSearchcriteriaRangeField($fieldVonBis)
 	{
-		if (array_key_exists($fieldVonBis, $this->_searchcriteriaRangeFields))
-		{
-			return true;
-		}
-
-		return false;
+		return array_key_exists($fieldVonBis, $this->_searchcriteriaRangeFields);
 	}
 
 
@@ -321,13 +317,8 @@ abstract class FormPost {
 		return null;
 	}
 
-	
-	/**
-	 *
-	 * @return array
-	 *
-	 */
 
+	/** @return array */
 	protected function getSearchcriteriaRangeFields()
-	{ return $this->_searchcriteriaRangeFields; }
+		{ return $this->_searchcriteriaRangeFields; }
 }

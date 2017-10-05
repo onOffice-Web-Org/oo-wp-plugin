@@ -138,7 +138,8 @@ class EstateList {
 
 		$parametersGetEstateList = $this->getEstateParameters( $configByView, $currentPage, $filter );
 
-		$handleReadEstate = $this->_pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
+		$handleReadEstate = $this->_pSDKWrapper->addRequest(
+			onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
 		$this->_pSDKWrapper->sendRequests();
 
 		$responseArrayEstates = $this->_pSDKWrapper->getRequestResponse( $handleReadEstate );

@@ -76,6 +76,11 @@ class FormData {
 	}
 
 
+	/**
+	 *
+	 * @param array $configFields
+	 *
+	 */
 
 	public function setConfigFields($configFields)	{
 		$this->_configFields = $configFields;

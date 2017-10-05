@@ -44,11 +44,13 @@ class FormPostApplicantSearch
 	/** @var FormPost */
 	private static $_pInstance = null;
 
+
 	/**
 	 *
 	 * @return FormPost
 	 *
 	 */
+
 	public static function getInstance() {
 		if (is_null(self::$_pInstance)) {
 			self::$_pInstance = new static;
@@ -57,15 +59,25 @@ class FormPostApplicantSearch
 		return self::$_pInstance;
 	}
 
-	/** 	 */
-	private function __construct() {
 
-	}
+	/**
+	 *
+	 */
+
+	private function __construct() {}
 
 	/** @return string */
 	protected function getFormType() {
 		return Form::TYPE_APPLICANT_SEARCH;
 	}
+
+
+	/**
+	 *
+	 * @param string $prefix
+	 * @param in $formNo
+	 *
+	 */
 
 	protected function analyseFormContentByPrefix($prefix, $formNo = null) {
 		$formConfig = ConfigWrapper::getInstance()->getConfigByKey('forms');
@@ -125,7 +137,7 @@ class FormPostApplicantSearch
 
 	private function getApplicants(FormData $pFormData, $limitResults)
 	{
-		$finded = array();
+		$found = array();
 		$searchData = $this->editFormValuesForApiCall($pFormData->getValues());
 
 		$searchFields = array_keys($searchData);
@@ -214,16 +226,16 @@ class FormPostApplicantSearch
 					}
 				}
 
-				$finded[$addressId]= $searchParameters;
+				$found[$addressId] = $searchParameters;
 			}
 
-			if (count($finded) > 0)
+			if (count($found) > 0)
 			{
-				$finded = $this->setKdNr($finded);
+				$found = $this->setKdNr($found);
 			}
 		}
 
-		return $finded;
+		return $found;
 	}
 
 
@@ -339,5 +351,3 @@ class FormPostApplicantSearch
 		return $result;
 	}
 }
-
-?>
