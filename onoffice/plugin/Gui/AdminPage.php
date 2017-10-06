@@ -115,6 +115,14 @@ abstract class AdminPage
 		echo '<hr class="wp-header-end">';
 	}
 
+
+	/**
+	 * 
+	 */
+
+	public function handleAdminNotices()
+		{}
+
 	/** @return string */
 	public function getPageSlug()
 		{ return $this->_pageSlug; }

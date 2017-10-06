@@ -156,4 +156,17 @@ class DBCache implements onOfficeSDKCache {
 				", $cacheMaxAge )
 		);
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function clearAll()
+	{
+		$oldTtl = $this->_options['ttl'];
+		$this->_options['ttl'] = 0;
+		$this->cleanup();
+		$this->_options['ttl'] = $oldTtl;
+	}
 }

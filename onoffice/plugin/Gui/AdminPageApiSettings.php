@@ -84,6 +84,21 @@ class AdminPageApiSettings
 	 *
 	 */
 
+	public function handleAdminNotices()
+	{
+		$cacheClean = isset( $_GET['cache-refresh'] ) ? $_GET['cache-refresh'] : null ;
+
+		if ($cacheClean === 'success')
+		{
+			add_action( 'admin_notices', array($this, 'displayCacheClearSuccess') );
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function renderContent()
 	{
 		$this->generatePageMainTitle('Settings');
@@ -100,5 +115,23 @@ class AdminPageApiSettings
 
 		submit_button();
 		echo '</form>';
+
+		echo '<form method="post" action="'.plugins_url(basename(ONOFFICE_PLUGIN_DIR)).'/clearCache.php">';
+		wp_nonce_field( 'onoffice-clear-cache', 'onoffice-cache-nonce' );
+		submit_button(__('Clear cache'), 'delete');
+		echo '</form>';
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function displayCacheClearSuccess()
+	{
+		$class = 'notice notice-success is-dismissible';
+		$message = __( 'The cache was cleaned.', 'onoffice' );
+
+		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 	}
 }

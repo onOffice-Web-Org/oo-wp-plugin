@@ -33,9 +33,6 @@ class AdminViewController
 	/** @var string */
 	private $_pageSlug = null;
 
-	/** @var AdminPageApiSettings */
-	private $_pAdminSettingsPage = null;
-
 
 	/**
 	 *
@@ -44,7 +41,6 @@ class AdminViewController
 	public function __construct()
 	{
 		$this->_pageSlug = 'onoffice';
-		$this->_pAdminSettingsPage = new AdminPageApiSettings($this->_pageSlug.'-settings');
 	}
 
 
@@ -61,17 +57,12 @@ class AdminViewController
 			$this->_pageSlug.'-forms', function() {});
 		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice'), __('Modules', 'onoffice'), 'edit_pages',
 			$this->_pageSlug.'-modules', function() {});
-		add_submenu_page( $this->_pageSlug, __('Settings', 'onoffice'), __('Settings', 'onoffice'), 'edit_pages',
-			$this->_pageSlug.'-settings', array($this->_pAdminSettingsPage, 'render'));
-	}
 
-
-	/**
-	 *
-	 */
-
-	public function registerForms()
-	{
-		$this->_pAdminSettingsPage->registerForms();
+		$pAdminSettingsPage = new AdminPageApiSettings($this->_pageSlug.'-settings');
+		$hookSettings = add_submenu_page( $this->_pageSlug, __('Settings', 'onoffice'),
+			__('Settings', 'onoffice'), 'edit_pages', $this->_pageSlug.'-settings',
+			array($pAdminSettingsPage, 'render'));
+		add_action( 'admin_init', array($pAdminSettingsPage, 'registerForms'));
+		add_action( 'load-'.$hookSettings, array($pAdminSettingsPage, 'handleAdminNotices'));
 	}
 }
