@@ -79,21 +79,28 @@ class SDKWrapper {
 
 	private function readConfig() {
 		$localconfig = array(
-			'token' => '',
-			'secret' => '',
-			'apiversion' => '1.5',
-			'cache' => array(),
+			'token' => get_option('onoffice-settings-apikey'),
+			'secret' => get_option('onoffice-settings-apisecret'),
+			'apiversion' => 'latest',
+			'cache' => array(
+				new \onOffice\WPlugin\Cache\DBCache( array('ttl' => 3600) ),
+			),
 			'server' => 'https://api.onoffice.de/api/',
 			'curl_options' => array
 				(
-					'CURLOPT_SSL_VERIFYPEER' => true,
-					'CURLOPT_PROTOCOLS'		=> 'CURLPROTO_HTTPS',
+					CURLOPT_SSL_VERIFYPEER => true,
+					CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
 				),
 		);
 
-		include ConfigWrapper::getSubPluginPath() . '/api-config.php';
+		$configUser = ConfigWrapper::getInstance()->getConfigByKey('api');
 
-		$config = array_merge($localconfig, $config);
+		if ($configUser === null)
+		{
+			$configUser = array();
+		}
+
+		$config = array_merge($localconfig, $configUser);
 
 		return $config;
 	}

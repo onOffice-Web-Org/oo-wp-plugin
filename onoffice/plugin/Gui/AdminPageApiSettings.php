@@ -45,8 +45,8 @@ class AdminPageApiSettings
 
 	public function __construct($pageSlug)
 	{
-		$labelKey = __('API-key', 'onoffice');
-		$labelSecret = __('API-key', 'onoffice');
+		$labelKey = __('API token', 'onoffice');
+		$labelSecret = __('API secret', 'onoffice');
 		$pInputModelApiKey = new Model\InputModel('onoffice-settings', 'apikey', $labelKey, 'string');
 		$pInputModelApiKey->setValue(get_option('onoffice-settings-apikey'));
 		$pInputModelApiSecret = new Model\InputModel('onoffice-settings', 'apisecret', $labelSecret, 'string');

@@ -425,3 +425,5 @@ unset($maxPrice);
 unset($vermarktungsart);
 unset($regionaler_zusatz);
 unset($hkInNk);
+
+$config['api'] = array();

@@ -108,6 +108,7 @@ class FormBuilder
 		{
 			case 'string':
 				$pInstance = new Renderer\InputFieldTextRenderer($pInputModel->getOptionName());
+				$pInstance->addAdditionalAttribute('size', '50');
 
 				if ($pInputModel->getIsPassword())
 				{
