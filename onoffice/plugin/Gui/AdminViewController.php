@@ -51,10 +51,15 @@ class AdminViewController
 	public function register_menu()
 	{
 		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'), 'edit_pages', $this->_pageSlug, function(){});
-		add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'), __('Estates', 'onoffice'), 'edit_pages',
-			$this->_pageSlug.'-estates', function() {});
+
+		$pAdminPageEstate = new AdminPageEstate($this->_pageSlug);
+		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'), __('Estates', 'onoffice'), 'edit_pages',
+			$this->_pageSlug.'-estates', array($pAdminPageEstate, 'render'));
+		add_action( 'load-'.$hookEstates, array($pAdminPageEstate, 'handleAdminNotices'));
+
 		add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'), 'edit_pages',
 			$this->_pageSlug.'-forms', function() {});
+
 		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice'), __('Modules', 'onoffice'), 'edit_pages',
 			$this->_pageSlug.'-modules', function() {});
 

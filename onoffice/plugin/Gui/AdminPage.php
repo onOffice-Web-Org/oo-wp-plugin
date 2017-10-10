@@ -104,11 +104,11 @@ abstract class AdminPage
 
 	public function generatePageMainTitle($subTitle)
 	{
-		echo '<h1 class="wp-heading-inline">'.esc_html_x('onOffice', 'onoffice');
+		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
 
 		if ($subTitle != '')
 		{
-			echo ' › '.esc_html_x($subTitle, 'onoffice');
+			echo ' › '.esc_html__($subTitle, 'onoffice');
 		}
 
 		echo '</h1>';
@@ -117,7 +117,7 @@ abstract class AdminPage
 
 
 	/**
-	 * 
+	 *
 	 */
 
 	public function handleAdminNotices()

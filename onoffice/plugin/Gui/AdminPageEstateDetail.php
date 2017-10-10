@@ -19,32 +19,25 @@
  *
  */
 
+namespace onOffice\WPlugin\Gui;
+use onOffice\WPlugin\Gui\AdminPage;
 
-// set up WP environment
-require '../../../wp-load.php';
+/**
+ *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2017, onOffice(R) GmbH
+ *
+ */
 
-use onOffice\WPlugin\SDKWrapper;
-
-if (!current_user_can('edit_pages') ||
-	!array_key_exists('onoffice-cache-nonce', $_REQUEST) ||
-	!wp_verify_nonce( $_REQUEST['onoffice-cache-nonce'], 'onoffice-clear-cache' ))
+class AdminPageEstateDetail
+	extends AdminPage
 {
-	die();
-}
+	/**
+	 *
+	 */
 
-$pSdkWrapper = new SDKWrapper();
-$cacheInstances = $pSdkWrapper->getCache();
+	public function renderContent()
+	{
 
-foreach ($cacheInstances as $pCacheInstance)
-{
-	$pCacheInstance->clearAll();
-}
-
-if ( wp_get_referer() )
-{
-    wp_safe_redirect( add_query_arg( 'cache-refresh', 'success', wp_get_referer() ) );
-}
-else
-{
-    wp_safe_redirect( get_home_url() );
+	}
 }
