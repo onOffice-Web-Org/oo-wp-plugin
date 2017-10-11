@@ -66,6 +66,8 @@ add_filter( 'the_content', array($pContentFilter, 'filter_the_content') );
 add_filter( 'wp_link_pages_link', array($pSearchParams, 'linkPagesLink'), 10, 2);
 add_filter( 'wp_link_pages_args', array($pSearchParams, 'populateDefaultLinkParams') );
 
+add_shortcode( 'oo_estate', array($pContentFilter, 'registerEstateShortCodes') );
+
 register_activation_hook( __FILE__, '\onOffice\WPlugin\Installer::install' );
 register_deactivation_hook( __FILE__, '\onOffice\WPlugin\Installer::deactivate' );
 register_uninstall_hook( __FILE__, '\onOffice\WPlugin\Installer::deinstall' );

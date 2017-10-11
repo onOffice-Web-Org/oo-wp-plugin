@@ -67,6 +67,44 @@ class ContentFilter
 
 	/**
 	 *
+	 * @param array $attributesInput
+	 * @return type
+	 *
+	 */
+
+	public function registerEstateShortCodes( $attributesInput )
+	{
+		global $wp_query;
+		$page = 1;
+		if ( ! empty( $wp_query->query_vars['page'] ) ) {
+			$page = $wp_query->query_vars['page'];
+		}
+
+		$attributes = shortcode_atts(array(
+			'view' => null,
+		), $attributesInput);
+
+		if ($attributes['view'] !== null)
+		{
+			$pListViewFactory = new DataView\DataListViewFactory();
+			$pListView = $pListViewFactory->getListViewByName($attributes['view']);
+
+			if (is_object($pListView) && $pListView->getName() === $attributes['view'])
+			{
+				$pTemplate = new Template($pListView->getTemplate(), 'estate', 'default');
+				$pEstateList = new EstateList($pListView);
+				$pEstateList->loadEstates($page);
+				$pTemplate->setEstateList($pEstateList);
+				$result = $pTemplate->render();
+				return $result;
+			}
+			return __('Estates view not found.', 'onoffice');
+		}
+	}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */
@@ -83,6 +121,10 @@ class ContentFilter
 				$views = array_keys( $config['views'] );
 
 				foreach ( $views as $view ) {
+					if ($view === 'list')
+					{
+						continue;
+					}
 					$detailPageId = UrlConfig::getViewPageIdByConfig( $config['views'][$view] );
 					$pagename = get_page_uri( $detailPageId );
 					add_rewrite_rule( '^('.preg_quote( $view ).')/([0-9]+)/?$',
@@ -250,20 +292,16 @@ class ContentFilter
 				$pTemplate->setForm($pForm);
 			}
 
-			try {
-				if ( 'list' == $viewName ) {
-					$pEstateList = $this->preloadEstateList( $name, $viewName );
-				} else {
+			if ( 'list' != $viewName ) {
+				try {
 					$pEstateList = $this->preloadSingleEstate( $name, $viewName );
+					$pTemplate->setEstateList( $pEstateList );
+					$htmlOutput = $pTemplate->render();
+				} catch (\onOffice\SDK\Exception\SDKException $pSdkException) {
+					$htmlOutput = $this->logErrorAndDisplayMessage( $pSdkException );
 				}
-
-				$pTemplate->setEstateList( $pEstateList );
-				$htmlOutput = $pTemplate->render();
-			} catch (\onOffice\SDK\Exception\SDKException $pSdkException) {
-				$htmlOutput = $this->logErrorAndDisplayMessage( $pSdkException );
+				$content = str_replace( $matches[0][$id], $htmlOutput, $content );
 			}
-
-			$content = str_replace( $matches[0][$id], $htmlOutput, $content );
 		}
 
 		return $content;
@@ -309,7 +347,6 @@ class ContentFilter
 		$recordsPerPage = $estateConfig[$configName]['views'][$viewName]['records'];
 
 		$pEstateList = new EstateList( $configName, $viewName );
-		$pEstateList->setEstateRecordsPerPage( $recordsPerPage );
 		$pEstateList->loadEstates( $page );
 
 		return $pEstateList;

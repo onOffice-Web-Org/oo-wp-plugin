@@ -70,19 +70,51 @@ class RecordManagerReadListView
 	 *
 	 */
 
-	public function getRow($listviewId)
+	public function getRowById($listviewId)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
 		$sql = "SELECT *
 				FROM {$prefix}oo_plugin_listviews
-				WHERE `listview_id` = ".$listviewId;
+				WHERE `listview_id` = ".(int)$listviewId;
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
-		$result[self::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
-		$result[self::FIELD] = $this->getFieldconfigByListviewId($listviewId);
+		if ($result !== null)
+		{
+			$result[self::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
+			$result[self::FIELD] = $this->getFieldconfigByListviewId($listviewId);
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param int $listviewName
+	 * @return array
+	 *
+	 */
+
+	public function getRowByName($listviewName)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT *
+				FROM {$prefix}oo_plugin_listviews
+				WHERE `name` = '".esc_sql($listviewName)."'";
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		if ($result !== null)
+		{
+			$id = $result['listview_id'];
+			$result[self::PICTURES] = $this->getPictureTypesByListviewId($id);
+			$result[self::FIELDS] = $this->getFieldconfigByListviewId($id);
+		}
 
 		return $result;
 	}
@@ -100,24 +132,16 @@ class RecordManagerReadListView
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlPictures = "SELECT *
+		$sqlPictures = "SELECT `picturetype`
 				FROM {$prefix}oo_plugin_picturetypes
 				WHERE `listview_id` = ".$listviewId;
 
-		$pWpDb->get_results($sqlPictures);
-		$pictures = $pWpDb->num_rows;
+		$pictures = $pWpDb->get_col($sqlPictures);
 		$result = array();
 
-		if (count($pictures) > 0)
+		if (is_array($pictures))
 		{
-			foreach ($pictures as $picture)
-			{
-				$result[$picture->picturetype_id] =
-						array
-						(
-							'picturetype' => $picture->picturetype
-						);
-			}
+			$result = $pictures;
 		}
 
 		return $result;
@@ -137,25 +161,17 @@ class RecordManagerReadListView
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT *
+		$sqlFields = "SELECT `fieldname`
 				FROM {$prefix}oo_plugin_fieldconfig
-				WHERE `listview_id` = ".$listviewId;
+				WHERE `listview_id` = ".esc_sql($listviewId)."
+				ORDER BY `order` ASC";
 
-		$pWpDb->get_results($sqlFields);
-		$fields = $pWpDb->num_rows;
+		$fields = $pWpDb->get_col($sqlFields);
 		$result = array();
 
-		if (count($fields) > 0)
+		if (is_array($fields))
 		{
-			foreach ($fields as $field)
-			{
-				$result[$field->fieldconfig_id] =
-						array
-						(
-							'order' => $field->order,
-							'name'	=> $field->name,
-						);
-			}
+			$result = $fields;
 		}
 
 		return $result;
@@ -173,14 +189,11 @@ class RecordManagerReadListView
 	public function getColumn($listviewId, $column)
 	{
 		$result = null;
-		$values = $this->getRow($listviewId);
+		$values = $this->getRowById($listviewId);
 
-		if (is_array($values))
+		if (is_array($values) && array_key_exists($column, $values))
 		{
-			if (array_key_exists($column, $values))
-			{
-				$result = $values[$column];
-			}
+			$result = $values[$column];
 		}
 
 		return $result;
@@ -196,15 +209,7 @@ class RecordManagerReadListView
 
 	public function getPictureTypesByListviewId($listviewId)
 	{
-		$result = array();
-		$values = $this->readPicturetypesByListviewId($listviewId);
-
-		if (is_array($values))
-		{
-			$result = $values;
-		}
-
-		return $result;
+		return $this->readPicturetypesByListviewId($listviewId);
 	}
 
 
@@ -218,14 +223,6 @@ class RecordManagerReadListView
 
 	public function getFieldconfigByListviewId($listviewId)
 	{
-		$result = array();
-		$values = $this->getFieldconfigByListviewId($listviewId);
-
-		if (is_array($values))
-		{
-			$result = $values;
-		}
-
-		return $result;
+		return $this->readFieldconfigByListviewId($listviewId);
 	}
 }

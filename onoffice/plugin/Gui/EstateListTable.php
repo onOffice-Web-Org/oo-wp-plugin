@@ -210,14 +210,14 @@ class EstateListTable extends ListTable
 
 	/**
 	 *
-	 * @param string $item
+	 * @param string $pItem
 	 * @return string
 	 *
 	 */
 
-	protected function column_shortcode($item)
+	protected function column_shortcode($pItem)
 	{
-		return '<input type="text" readonly value="[oo_estate '.esc_html($item->name).']">';
+		return '<input type="text" readonly value="[oo_estate view=&quot;'.esc_html($pItem->name).'&quot;]">';
 	}
 
 

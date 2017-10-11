@@ -45,9 +45,6 @@ class EstateList {
 	private $_pFieldnames = null;
 
 	/** @var array */
-	private $_configName = null;
-
-	/** @var array */
 	private $_configByName = array();
 
 	/** @var array */
@@ -78,10 +75,10 @@ class EstateList {
 	private $_numEstatePages = null;
 
 	/** @var int */
-	private $_estateRecordsPerPage = 20;
-
-	/** @var int */
 	private $_handleEstateContactPerson = null;
+
+	/** @var DataView */
+	private $_pListView = null;
 
 	/**
 	 *
@@ -91,12 +88,9 @@ class EstateList {
 	 *
 	 */
 
-	public function __construct( $configName, $viewName ) {
+	public function __construct(DataView\DataListView $pListView) {
 		$this->_pSDKWrapper = new SDKWrapper();
-		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
-		$this->_configByName = $estateConfig[$configName];
-		$this->_configName = $configName;
-		$this->_view = $viewName;
+		$this->_pListView = $pListView;
 		$this->_pFieldnames = Fieldnames::getInstance();
 		$this->_pAddressList = new AddressList();
 	}
@@ -114,7 +108,7 @@ class EstateList {
 		}
 
 		$recordNumOverAll = $this->_responseArray['data']['meta']['cntabsolute'];
-		$numEstatePages = ceil( $recordNumOverAll / $this->_estateRecordsPerPage );
+		$numEstatePages = ceil( $recordNumOverAll / $this->_pListView->getRecordsPerPage());
 
 		return $numEstatePages;
 	}
@@ -123,27 +117,24 @@ class EstateList {
 	/**
 	 *
 	 * @param int $currentPage
-	 * @param array $filter
-	 *
-	 * @return string
 	 *
 	 */
 
-	public function loadEstates( $currentPage, $filter = array() ) {
+	public function loadEstates( $currentPage )
+	{
 		$pSDKWrapper = $this->_pSDKWrapper;
 
-		$configByView = $this->_configByName['views'][$this->_view];
 		$language = $this->getLanguage();
 		$this->_pFieldnames->loadLanguage( $language );
 
-		$parametersGetEstateList = $this->getEstateParameters( $configByView, $currentPage, $filter );
+		$parametersGetEstateList = $this->getEstateParameters( $currentPage );
 
 		$handleReadEstate = $this->_pSDKWrapper->addRequest(
 			onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
 		$this->_pSDKWrapper->sendRequests();
 
 		$responseArrayEstates = $this->_pSDKWrapper->getRequestResponse( $handleReadEstate );
-		$pictureCategories = $configByView['pictures'];
+		$pictureCategories = $this->_pListView->getPictureTypes();
 		$this->_pEstateImages = new EstateImages( $pictureCategories );
 
 		$estateIds = $this->getEstateIdToForeignMapping( $responseArrayEstates );
@@ -198,26 +189,21 @@ class EstateList {
 
 	/**
 	 *
-	 * @param array $configByView
 	 * @return array
 	 *
 	 */
 
-	private function getEstateParameters( array $configByView, $currentPage, $filter ) {
+	private function getEstateParameters($currentPage) {
 		$language = $this->getLanguage();
-		$data = $configByView['data'];
+		$pListView = $this->_pListView;
 
-		$numRecordsPerPage = isset( $configByView['records'] ) ? $configByView['records'] : 20;
-		$filter = array_merge( $filter, $this->_configByName['filter'] );
+		$numRecordsPerPage = $this->_pListView->getRecordsPerPage();
+		$filter = null; // todo
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		$this->_currentEstatePage = $currentPage;
 
-		if ( isset( $configByView['filter'] ) ) {
-			$filter = $configByView['filter'];
-		}
-
 		$requestParams = array(
-			'data' => $data,
+			'data' => $pListView->getFields(),
 			'filter' => $filter,
 			'estatelanguage' => $language,
 			'outputlanguage' => $language,
@@ -227,12 +213,12 @@ class EstateList {
 			'addMainLangId' => true,
 		);
 
-		if ( array_key_exists( 'sortby', $configByView) ) {
-			$requestParams['sortby'] = $configByView['sortby'];
+		if ($pListView->getSortby() !== null ) {
+			$requestParams['sortby'] = $pListView->getSortby();
 		}
 
-		if ( array_key_exists( 'sortorder', $configByView) ) {
-			$requestParams['sortorder'] = $configByView['sortorder'];
+		if ($pListView->getSortorder() !== null) {
+			$requestParams['sortorder'] = $pListView->getSortorder();
 		}
 
 		return $requestParams;
@@ -450,35 +436,14 @@ class EstateList {
 
 	public function getEstateLink( $view )
 	{
-		$targetView = $this->_configByName['views'][$view];
-
-		if ( is_string( $targetView ) && strpos( $targetView, ':' ) !== false) {
-			$foreignView = explode( ':', $targetView );
-
-			$foreignViewConfigName = $foreignView[0];
-			$foreignViewConfigView = $foreignView[1];
-
-			if (strpos($foreignViewConfigName, '@') === 0) {
-				$foreignViewConfigName = substr($foreignViewConfigName, 1);
-			}
-		} else {
-			$foreignViewConfigName = $this->_configName;
-			$foreignViewConfigView = $view;
-		}
-
 		$estate = $this->_currentEstate['mainId'];
+		$foreignViewConfigView = 'detail';
+		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
+		$detailpageid = $estateConfig['_default']['views'][$foreignViewConfigView]['pageid'];
+		$listpageid = wp_get_post_parent_id( $detailpageid );
+		$link = get_permalink( $listpageid );
 
-		// _default
-		if ( substr( $foreignViewConfigName, 0, 1) == '_' ) {
-			$fullLink = site_url().'/'.$foreignViewConfigView.'/'.$estate.'/';
-		} else {
-			$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
-			$detailpageid = $estateConfig[$foreignViewConfigName]['views'][$foreignViewConfigView]['pageid'];
-			$listpageid = wp_get_post_parent_id( $detailpageid );
-			$link = get_permalink( $listpageid );
-
-			$fullLink = $link.$foreignViewConfigView.'-'.$estate.'/';
-		}
+		$fullLink = site_url().'/'.$foreignViewConfigView.'/'.$estate.'/';
 
 		return $fullLink;
 	}
@@ -543,7 +508,7 @@ class EstateList {
 
 	public function getEstatePictureText( $imageId ) {
 		$currentEstate = $this->_currentEstate['id'];
-		return $this->_pEstateImages->getEstatePuctureText($imageId, $currentEstate);
+		return $this->_pEstateImages->getEstatePictureText($imageId, $currentEstate);
 	}
 
 
@@ -556,7 +521,7 @@ class EstateList {
 
 	public function getEstatePictureValues( $imageId ) {
 		$currentEstate = $this->_currentEstate['id'];
-		return $this->_pEstateImages->getEstatePuctureValues($imageId, $currentEstate);
+		return $this->_pEstateImages->getEstatePictureValues($imageId, $currentEstate);
 	}
 
 
@@ -642,13 +607,13 @@ class EstateList {
 		$language = $this->getLanguage();
 
 		$estateId = $this->_currentEstate['mainId'];
-		$documentId = array_search( $templateType, $this->_configByName['documents'] );
+		$documentId = $this->_pListView->getExpose();
 
 		$queryVars = array(
 			'documentid' => $documentId,
 			'estateid' => $estateId,
 			'language' => $language,
-			'configindex' => $this->_configName,
+			'configindex' => $this->_pListView->getName(),
 		);
 
 		$documentlink = plugin_dir_url( __DIR__ ).'document.php?'. http_build_query( $queryVars );
@@ -667,40 +632,21 @@ class EstateList {
 
 	/**
 	 *
-	 * @param int $recordsPerPage
-	 *
-	 */
-
-	public function setEstateRecordsPerPage( $recordsPerPage ) {
-		$this->_estateRecordsPerPage = $recordsPerPage;
-	}
-
-
-	/**
-	 *
 	 * @return string
 	 *
 	 */
 
 	public function getLanguage() {
-		$configByView = $this->_configByName['views'][$this->_view];
-		$language = $configByView['language'];
+		$config = ConfigWrapper::getInstance()->getConfig();
+		$languageMapping = $config['localemap'];
+		$currentLocale = get_locale();
+		$language = $languageMapping['fallback'];
 
-		if ($configByView['language'] == 'auto')
+		if (array_key_exists($currentLocale, $languageMapping))
 		{
-			$config = ConfigWrapper::getInstance()->getConfig();
-			$languageMapping = $config['localemap'];
-			$currentLocale = get_locale();
-
-			if (array_key_exists($currentLocale, $languageMapping))
-			{
-				$language = $languageMapping[$currentLocale];
-			}
-			else
-			{
-				$language = $languageMapping['fallback'];
-			}
+			$language = $languageMapping[$currentLocale];
 		}
+
 		return $language;
 	}
 }
