@@ -30,6 +30,19 @@ namespace onOffice\WPlugin\Model;
 
 class InputModel
 {
+	/** */
+	const HTML_TYPE_SELECT = 'select';
+
+	/** */
+	const HTML_TYPE_CHECKBOX = 'checkbox';
+
+	/** */
+	const HTML_TYPE_RADIO = 'radio';
+
+	/** */
+	const HTML_TYPE_TEXT = 'text';
+
+
 	/** @var string */
 	private $_optionGroup = null;
 
@@ -60,6 +73,8 @@ class InputModel
 	/** @var mixed */
 	private $_value = null;
 
+	/** @var string */
+	private $_htmlType = self::HTML_TYPE_TEXT;
 
 	/**
 	 *
@@ -165,4 +180,12 @@ class InputModel
 	/** @param mixed $value */
 	public function setValue($value)
 		{ $this->_value = $value; }
+
+	/** @param string $htmlType */
+	public function setHtmlType($htmlType)
+		{ $this->_htmlType = $htmlType; }
+
+	/** @return string */
+	public function getHtmlType()
+		{ return $this->_htmlType; }
 }

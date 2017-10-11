@@ -111,6 +111,7 @@ abstract class Installer
 			`is_reference` tinyint(1) NOT NULL DEFAULT '0',
 			`template` tinytext NOT NULL,
 			`expose` tinytext,
+			`estatesNumber` INT( 10 ) NOT NULL DEFAULT '10',
 			PRIMARY KEY (`listview_id`)
 		) $charsetCollate;";
 

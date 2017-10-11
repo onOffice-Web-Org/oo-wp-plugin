@@ -32,6 +32,12 @@ class RecordManagerReadListView
 	extends RecordManagerRead
 {
 
+	/** */
+	const PICTURES = 'pictures';
+
+	/** */
+	const FIELDS = 'fields';
+
 
 	/**
 	 *
@@ -54,5 +60,172 @@ class RecordManagerReadListView
 		$this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
 		return $this->getFoundRows();
+	}
+
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+
+	public function getRow($listviewId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT *
+				FROM {$prefix}oo_plugin_listviews
+				WHERE `listview_id` = ".$listviewId;
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		$result[self::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
+		$result[self::FIELD] = $this->getFieldconfigByListviewId($listviewId);
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+
+	private function readPicturetypesByListviewId($listviewId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlPictures = "SELECT *
+				FROM {$prefix}oo_plugin_picturetypes
+				WHERE `listview_id` = ".$listviewId;
+
+		$pWpDb->get_results($sqlPictures);
+		$pictures = $pWpDb->num_rows;
+		$result = array();
+
+		if (count($pictures) > 0)
+		{
+			foreach ($pictures as $picture)
+			{
+				$result[$picture->picturetype_id] =
+						array
+						(
+							'picturetype' => $picture->picturetype
+						);
+			}
+		}
+
+		return $result;
+	}
+
+
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+
+	private function readFieldconfigByListviewId($listviewId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlFields = "SELECT *
+				FROM {$prefix}oo_plugin_fieldconfig
+				WHERE `listview_id` = ".$listviewId;
+
+		$pWpDb->get_results($sqlFields);
+		$fields = $pWpDb->num_rows;
+		$result = array();
+
+		if (count($fields) > 0)
+		{
+			foreach ($fields as $field)
+			{
+				$result[$field->fieldconfig_id] =
+						array
+						(
+							'order' => $field->order,
+							'name'	=> $field->name,
+						);
+			}
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @param string $column
+	 * @return string
+	 *
+	 */
+
+	public function getColumn($listviewId, $column)
+	{
+		$result = null;
+		$values = $this->getRow($listviewId);
+
+		if (is_array($values))
+		{
+			if (array_key_exists($column, $values))
+			{
+				$result = $values[$column];
+			}
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+
+	public function getPictureTypesByListviewId($listviewId)
+	{
+		$result = array();
+		$values = $this->readPicturetypesByListviewId($listviewId);
+
+		if (is_array($values))
+		{
+			$result = $values;
+		}
+
+		return $result;
+	}
+
+
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+
+	public function getFieldconfigByListviewId($listviewId)
+	{
+		$result = array();
+		$values = $this->getFieldconfigByListviewId($listviewId);
+
+		if (is_array($values))
+		{
+			$result = $values;
+		}
+
+		return $result;
 	}
 }
