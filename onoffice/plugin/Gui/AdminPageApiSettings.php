@@ -55,8 +55,8 @@ class AdminPageApiSettings
 		$this->_inputApiSecretGroupSlugName = $pInputModelApiSecret->getOptionName();
 
 		$pFormModel = new Model\FormModel();
-		$pFormModel->addInputModel($pInputModelApiKey);
 		$pFormModel->addInputModel($pInputModelApiSecret);
+		$pFormModel->addInputModel($pInputModelApiKey);
 		$pFormModel->setGroupSlug('onoffice-api');
 		$pFormModel->setPageSlug($pageSlug);
 		$pFormModel->setLabel(__('API settings', 'onoffice'));
