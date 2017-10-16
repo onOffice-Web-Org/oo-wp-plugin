@@ -17,6 +17,12 @@ class InputFieldSelectRenderer
 	extends InputFieldRenderer
 {
 
+	/** @var bool */
+	private $_multiple = false;
+
+	/** @var string */
+	private $_selectedValue = null;
+
 	/**
 	 *
 	 * @param string $name
@@ -24,27 +30,47 @@ class InputFieldSelectRenderer
 	 *
 	 */
 
-	public function __construct($name, $values)
+	public function __construct($name, $value = array())
 	{
-		parent::__construct('select', $name, $values);
+		parent::__construct('select', $name, $value);
 	}
 
 
 	/**
 	 *
 	 */
-	
+
 	public function render()
 	{
-		echo '<select name="'.esc_html($this->getName())
+		echo '<select name="'.esc_html($this->getName()).'" '
+			 .($this->_multiple ? ' multiple = "multiple" ' : null)
 			 .$this->renderAdditionalAttributes()
 			 .'>';
 
-		foreach ($values as $value => $label)
+		foreach ($this->getValue() as $key => $label)
 		{
-			echo '<option value="'.esc_html($label).'">'.esc_html($label).'</option>';
+			echo '<option value="'.esc_html($key).'" '
+				.($key == $this->_selectedValue ? ' selected="selected" ' : null)
+				.' >'
+				.esc_html($label)
+				.'</option>';
 		}
-
+		
 		echo '</select>';
 	}
+
+
+	/**
+	 *
+	 * @param string $selectedValue
+	 *
+	 */
+
+	public function setSelectedValue($selectedValue)
+	 { $this->_selectedValue = $selectedValue; }
+
+
+	/** @param string $selectedValue */
+	public function getSelectedValue()
+	 { return $this->_selectedValue; }
 }

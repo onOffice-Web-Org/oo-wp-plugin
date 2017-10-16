@@ -41,4 +41,23 @@ class ImageType {
 	const CITY_MAP = 'Stadtplan';
 	const ENERGY_PASS_RANGE = 'Epass_Skala';
 	const FINANCE_EXAMPLE = 'Finanzierungsbeispiel';
+
+
+	/** @var array */
+	static private $_imageTypes = array
+		(
+			ImageType::TITLE => 'Titelbild',
+			ImageType::PHOTO => 'Foto',
+			ImageType::PHOTO_BIG => 'Foto (groß)',
+			ImageType::GROUNDPLAN => 'Grundriss',
+			ImageType::LOCATION_MAP => 'Lageplan',
+			ImageType::CITY_MAP => 'Stadtplan',
+			ImageType::ENERGY_PASS_RANGE => 'Energiepass-Skala',
+			ImageType::FINANCE_EXAMPLE => 'Finanzierungsbeispiel',
+		);
+
+
+	/** @return array */
+	static public function getAllImageTypes()
+		{ return self::$_imageTypes; }
 }

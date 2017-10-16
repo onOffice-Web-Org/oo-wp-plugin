@@ -364,4 +364,9 @@ class Fieldnames {
 	public function hasLanguageCached( $language ) {
 		return array_key_exists( $language, $this->_fieldList );
 	}
+
+
+	/** @return array */
+	public function getFieldList()
+	 { return $this->_fieldList; }
 }

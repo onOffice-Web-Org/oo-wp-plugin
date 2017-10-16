@@ -29,7 +29,7 @@ namespace onOffice\WPlugin\Renderer;
  */
 
 class InputFieldRadioRenderer
-	extends InputFieldRadioRenderer
+	extends InputFieldRenderer
 {
 	/**
 	 *
@@ -41,5 +41,16 @@ class InputFieldRadioRenderer
 	public function __construct($name, $value)
 	{
 		parent::__construct('radio', $name, $value);
+	}
+
+	/**
+	 *
+	 */
+	public function render()
+	{
+		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+			.'" value="'.esc_html($this->getValue()).'"'
+			.$this->renderAdditionalAttributes()
+			.'>';
 	}
 }

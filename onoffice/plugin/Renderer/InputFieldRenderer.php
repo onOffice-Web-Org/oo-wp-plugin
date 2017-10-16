@@ -36,7 +36,7 @@ abstract class InputFieldRenderer
 	/** @var string */
 	private $_name = null;
 
-	/** @var string */
+	/** @var mixed */
 	private $_value = null;
 
 	/** @var array  */
@@ -47,7 +47,7 @@ abstract class InputFieldRenderer
 	 *
 	 * @param string $type
 	 * @param string $name
-	 * @param string $value
+	 * @param mixed $value
 	 *
 	 */
 
@@ -57,6 +57,13 @@ abstract class InputFieldRenderer
 		$this->_name = $name;
 		$this->_value = $value;
 	}
+
+
+	/**
+	 *
+	 */
+
+	abstract public function render();
 
 
 	/**
@@ -89,11 +96,11 @@ abstract class InputFieldRenderer
 		{ return $this->_name; }
 
 
-	/** @return sting */
+	/** @return mixed */
 	public function getValue()
 		{ return $this->_value; }
 
-	/** @param string $value */
+	/** @param mixed $value */
 	public function setValue($value)
 		{ $this->_value = $value; }
 
@@ -108,7 +115,7 @@ abstract class InputFieldRenderer
 	 *
 	 */
 
-	private function renderAdditionalAttributes()
+	protected function renderAdditionalAttributes()
 	{
 		$outputValues = array();
 
@@ -116,30 +123,10 @@ abstract class InputFieldRenderer
 		{
 			foreach ($this->_additionalAttributes as $name => $value)
 			{
-				if (in_array($name, array('disabled', 'checked')) )
-				{
-					$outputValues []= $name;
-				}
-				else
-				{
-					$outputValues []= esc_html($name).'="'.esc_html($value).'"';
-				}
+				$outputValues []= esc_html($name).'="'.esc_html($value).'"';
 			}
 		}
 
 		return implode(' ', $outputValues);
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function render()
-	{
-		echo '<input type="'.esc_html($this->_type).'" name="'.esc_html($this->_name)
-			.'" value="'.esc_html($this->_value).'"'
-			.$this->renderAdditionalAttributes()
-			.'>';
 	}
 }

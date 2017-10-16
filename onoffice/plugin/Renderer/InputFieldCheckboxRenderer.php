@@ -32,6 +32,10 @@ class InputFieldCheckboxRenderer
 	extends InputFieldRenderer
 {
 
+	/** @var array */
+	private $_checkedValues = null;
+
+
 	/**
 	 *
 	 * @param string $name
@@ -44,14 +48,39 @@ class InputFieldCheckboxRenderer
 	}
 
 
+	/** @param array $checkedValues */
+	public function setCheckedValues($checkedValues)
+		{ $this->_checkedValues = $checkedValues;}
+
+
+	/** @return array */
+	public function getCheckedValues()
+		{ return $this->_checkedValues; }
+
+
 	/**
 	 *
-	 * @param bool $checked
-	 *
 	 */
-
-	public function setChecked($checked)
+	public function render()
 	{
-		$this->addAdditionalAttribute('checked', $checked);
+		if (is_array($this->getValue()))
+		{
+			foreach ($this->getValue() as $key => $label)
+			{
+				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+						.'" value="'.esc_html($key).'"'
+						.(in_array($key, $this->_checkedValues) ? ' checked="checked" ' : null)
+						.$this->renderAdditionalAttributes()
+						.'>'.esc_html($label).'<br>';
+			}
+		}
+		else
+		{
+			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+					.'" value="'.esc_html($this->getValue()).'"'
+					.(in_array($this->getValue(), $this->_checkedValues) ? ' checked="checked" ' : null)
+					.$this->renderAdditionalAttributes()
+					.'>';
+		}
 	}
 }

@@ -82,7 +82,8 @@ class FormBuilder
 		foreach ($pForm->getInputModel() as $pInputModel)
 		{
 			register_setting( $pForm->getGroupSlug(), $pInputModel->getOptionName(),
-				array(
+				array
+				(
 					'type' => $pInputModel->getType(),
 					'description' => $pInputModel->getDescription(),
 					'sanitize_callback' => $pInputModel->getSanitizeCallback(),
@@ -104,9 +105,21 @@ class FormBuilder
 	{
 		$pInstance = null;
 
-		switch ($pInputModel->getType())
+		switch ($pInputModel->getHtmlType())
 		{
-			case 'string':
+			case InputModel::HTML_TYPE_SELECT:
+				$pInstance = new Renderer\InputFieldSelectRenderer($pInputModel->getOptionName(), $pInputModel->getValue());
+				$pInstance->setSelectedValue($pInputModel->getDefault());
+				$optionName = $pInputModel->getOptionName();
+				break;
+
+			case InputModel::HTML_TYPE_CHECKBOX:
+				$pInstance = new Renderer\InputFieldCheckboxRenderer($pInputModel->getOptionName(), $pInputModel->getValue());
+				$pInstance->setCheckedValues($pInputModel->getDefault());
+				$optionName = $pInputModel->getOptionName();
+				break;
+
+			case InputModel::HTML_TYPE_TEXT:
 				$pInstance = new Renderer\InputFieldTextRenderer($pInputModel->getOptionName());
 				$pInstance->addAdditionalAttribute('size', '50');
 

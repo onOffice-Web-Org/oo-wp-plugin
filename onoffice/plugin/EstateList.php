@@ -124,7 +124,7 @@ class EstateList {
 	{
 		$pSDKWrapper = $this->_pSDKWrapper;
 
-		$language = $this->getLanguage();
+		$language = self::getLanguage();
 		$this->_pFieldnames->loadLanguage( $language );
 
 		$parametersGetEstateList = $this->getEstateParameters( $currentPage );
@@ -194,7 +194,7 @@ class EstateList {
 	 */
 
 	private function getEstateParameters($currentPage) {
-		$language = $this->getLanguage();
+		$language = self::getLanguage();
 		$pListView = $this->_pListView;
 
 		$numRecordsPerPage = $this->_pListView->getRecordsPerPage();
@@ -421,7 +421,7 @@ class EstateList {
 
 	public function getFieldLabel( $field ) {
 		$recordType = $this->_currentEstate['type'];
-		$language = $this->getLanguage();
+		$language = self::getLanguage();
 		$fieldNewName = $this->_pFieldnames->getFieldLabel($field, $recordType, $language );
 
 		return $fieldNewName;
@@ -604,7 +604,7 @@ class EstateList {
 	 */
 
 	public function getDocument( $templateType ) {
-		$language = $this->getLanguage();
+		$language = self::getLanguage();
 
 		$estateId = $this->_currentEstate['mainId'];
 		$documentId = $this->_pListView->getExpose();
@@ -636,7 +636,7 @@ class EstateList {
 	 *
 	 */
 
-	public function getLanguage() {
+	static public function getLanguage() {
 		$config = ConfigWrapper::getInstance()->getConfig();
 		$languageMapping = $config['localemap'];
 		$currentLocale = get_locale();
