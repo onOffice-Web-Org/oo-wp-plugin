@@ -104,7 +104,7 @@ abstract class Installer
 		$sql = "CREATE TABLE $tableName (
 			`listview_id` int(11) NOT NULL AUTO_INCREMENT,
 			`name` tinytext NOT NULL,
-			`filtername` tinytext,
+			`filterId` int(11),
 			`sortby` tinytext NOT NULL,
 			`sortorder` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
 			`show_status` tinyint(1) NOT NULL DEFAULT '0',

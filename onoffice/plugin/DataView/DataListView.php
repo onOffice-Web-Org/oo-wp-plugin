@@ -43,7 +43,7 @@ class DataListView
 	private $_pictureTypes = array();
 
 	/** @var string */
-	private $_filtername = null;
+	private $_filterId = null;
 
 	/** @var string */
 	private $_sortorder = null;
@@ -98,8 +98,8 @@ class DataListView
 		{ return $this->_pictureTypes; }
 
 	/** @return string */
-	public function getFiltername()
-		{ return $this->_filtername; }
+	public function getFilterId()
+		{ return $this->_filterId; }
 
 	/** @return string */
 	public function getSortorder()
@@ -137,9 +137,9 @@ class DataListView
 	public function setPictureTypes(array $pictureTypes)
 		{ $this->_pictureTypes = $pictureTypes; }
 
-	/** @param string $filtername */
-	public function setFiltername($filtername)
-		{ $this->_filtername = $filtername; }
+	/** @param string $filterId */
+	public function setFilterId($filterId)
+		{ $this->_filterId = $filterId; }
 
 	/** @param string $sortorder */
 	public function setSortorder($sortorder)

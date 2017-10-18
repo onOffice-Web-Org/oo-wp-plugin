@@ -19,6 +19,12 @@
  *
  */
 
+
+namespace onOffice\WPlugin;
+
+use onOffice\WPlugin\SDKWrapper;
+use onOffice\SDK\onOfficeSDK;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -26,18 +32,17 @@
  *
  */
 
-namespace onOffice\WPlugin;
-
-use onOffice\WPlugin\SDKWrapper;
-use onOffice\SDK\onOfficeSDK;
-
-
 class FilterCall
 {
 	/** @var array */
 	private $_filters = array();
 
 
+	/**
+	 *
+	 * @param string $module
+	 *
+	 */
 
 	public function __construct($module)
 	{
@@ -48,7 +53,7 @@ class FilterCall
 			);
 
 		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_GET, 'filters', $requestParameter);
+			onOfficeSDK::ACTION_ID_GET, 'filters', $requestParameter);
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
@@ -102,6 +107,6 @@ class FilterCall
 			return $this->_filters[$id];
 		}
 
-		return false;
+		return null;
 	}
 }

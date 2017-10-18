@@ -21,8 +21,9 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use \onOffice\WPlugin\wp_dependent\ListTable;
-use \onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\wp_dependent\ListTable;
+use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\FilterCall;
 
 /**
  *
@@ -33,7 +34,11 @@ use \onOffice\WPlugin\Record\RecordManagerReadListView;
 
 class EstateListTable extends ListTable
 {
+	/** @var int */
 	private $_itemsPerPage = null;
+
+	/** @var FilterCall */
+	private $_pFilterCall = null;
 
 	/**
 	 *
@@ -52,6 +57,7 @@ class EstateListTable extends ListTable
 		));
 
 		$this->_itemsPerPage = $this->get_items_per_page('onoffice-estate-listview_per_page', 10);
+		$this->_pFilterCall = new FilterCall(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
 	}
 
 
@@ -82,7 +88,7 @@ class EstateListTable extends ListTable
 		$pRecordRead->setOffset($offset);
 		$pRecordRead->addColumn('listview_id', 'ID');
 		$pRecordRead->addColumn('name');
-		$pRecordRead->addColumn('filtername');
+		$pRecordRead->addColumn('filterId');
 		$pRecordRead->addColumn('show_status');
 		$pRecordRead->addColumn('is_reference');
 		$pRecordRead->addColumn('name', 'shortcode');
@@ -113,7 +119,7 @@ class EstateListTable extends ListTable
 			'shortcode' => __('Shortcode', 'onoffice'),
 		);
 
-		$hidden = array('ID');
+		$hidden = array('ID', 'filterId');
 		$sortable = array();
 
 		$this->_column_headers = array($columns, $hidden, $sortable,
@@ -186,6 +192,19 @@ class EstateListTable extends ListTable
 	protected function column_show_status($pItem)
 	{
 		return $pItem->show_status == '1' ? __('Yes', 'onoffice') : __('No', 'onoffice');
+	}
+
+
+	/**
+	 *
+	 * @param object $pItem
+	 * @return string
+	 *
+	 */
+
+	protected function column_filtername($pItem)
+	{
+		return $this->_pFilterCall->getFilternameById($pItem->filterId);
 	}
 
 
