@@ -63,6 +63,10 @@ class AdminViewController
 		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice'), __('Modules', 'onoffice'), 'edit_pages',
 			$this->_pageSlug.'-modules', function() {});
 
+
+		$pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);
+		add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editListView', array($pAdminListViewSettings, 'render'));
+
 		$pAdminSettingsPage = new AdminPageApiSettings($this->_pageSlug.'-settings');
 		$hookSettings = add_submenu_page( $this->_pageSlug, __('Settings', 'onoffice'),
 			__('Settings', 'onoffice'), 'edit_pages', $this->_pageSlug.'-settings',

@@ -37,7 +37,7 @@ class AdminPageEstateListSettings
 	private $_listViewId = null;
 
 	/** @var array */
-	private $_dbValues = null;
+	private $_dbValues = array();
 
 	/**
 	 *
@@ -46,12 +46,15 @@ class AdminPageEstateListSettings
 	 *
 	 */
 
-	public function __construct($pageSlug, $listviewId)
+	public function __construct($pageSlug)
 	{
-		$this->_listViewId = $listviewId;
+		if (isset($_GET['listViewId']))
+		{
+			$this->_listViewId = $_GET['listViewId'];
 
-		$pRecordReadManager = new \onOffice\WPlugin\Record\RecordManagerReadListView();
-		$this->_dbValues = $pRecordReadManager->getRowById($this->_listViewId);
+			$pRecordReadManager = new \onOffice\WPlugin\Record\RecordManagerReadListView();
+			$this->_dbValues = $pRecordReadManager->getRowById($this->_listViewId);
+		}
 
 		$labelExpose = __('pdf-expose', 'onoffice');
 		$labelFieldConfiguration = __('field configuration', 'onoffice');
@@ -118,6 +121,7 @@ class AdminPageEstateListSettings
 		}
 
 		do_settings_sections( $this->getPageSlug() );
+		submit_button();
 		echo '</form>';
 	}
 

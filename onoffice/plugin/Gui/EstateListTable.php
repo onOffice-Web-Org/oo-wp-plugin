@@ -284,7 +284,8 @@ class EstateListTable extends ListTable
 			return '';
 		}
 
-		$edit_link = null;
+		$edit_link = admin_url('admin.php?page=onoffice-editListView&listViewId='.$pItem->ID);
+
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
 			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
 
