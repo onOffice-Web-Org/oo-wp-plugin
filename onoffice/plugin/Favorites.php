@@ -30,6 +30,12 @@ class Favorites
 	/** */
 	const COOKIE_NAME = 'onoffice_favorites';
 
+	/** Constant for setting: call it "Favorize" */
+	const KEY_SETTING_FAVORIZE = 0;
+
+	/** Constant for setting: call it "Memorize" */
+	const KEY_SETTING_MEMORIZE = 1;
+
 
 	/**
 	 *
@@ -46,5 +52,53 @@ class Favorites
 		}
 
 		return $favorites;
+	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	static public function isFavorizationEnabled() {
+		return get_option('onoffice-favorization-enableFav', false);
+	}
+
+
+	/**
+	 *
+	 * @return int value of KEY_SETTING_* constant
+	 *
+	 */
+
+	static public function getFavorizationLabel() {
+		if (!self::isFavorizationEnabled()) {
+			return null;
+		}
+
+		return get_option('onoffice-favorization-favButtonLabelFav', 0);
+	}
+
+
+	/**
+	 * 
+	 */
+
+	static public function registerScripts() {
+		if (self::isFavorizationEnabled()) {
+			wp_register_script( 'onoffice-favorites', plugins_url( '/js/favorites.js', ONOFFICE_PLUGIN_DIR ) );
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function includeScripts() {
+		if (self::isFavorizationEnabled()) {
+			wp_enqueue_script( 'onoffice-favorites' );
+		}
 	}
 }

@@ -42,6 +42,25 @@ class InputModel
 	/** */
 	const HTML_TYPE_TEXT = 'text';
 
+	/**
+	 *
+	 * Setting types
+	 * @see https://developer.wordpress.org/reference/functions/register_setting/
+	 *
+	 */
+
+	/** */
+	const SETTING_TYPE_STRING = 'string';
+
+	/** */
+	const SETTING_TYPE_BOOLEAN = 'boolean';
+
+	/** */
+	const SETTING_TYPE_INTEGER = 'integer';
+
+	/** */
+	CONST SETTING_TYPE_NUMBER = 'number';
+
 
 	/** @var string */
 	private $_optionGroup = null;
@@ -91,6 +110,11 @@ class InputModel
 		$this->_name = $name;
 		$this->_label = $label;
 		$this->_type = $type;
+
+		if ($type === self::SETTING_TYPE_BOOLEAN)
+		{
+			$this->_default = false;
+		}
 	}
 
 

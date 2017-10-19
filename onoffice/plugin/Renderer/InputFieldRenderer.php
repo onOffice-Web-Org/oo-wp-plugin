@@ -42,6 +42,9 @@ abstract class InputFieldRenderer
 	/** @var array  */
 	private $_additionalAttributes = array();
 
+	/** @var int */
+	private static $_guiId = 0;
+
 
 	/**
 	 *
@@ -56,6 +59,8 @@ abstract class InputFieldRenderer
 		$this->_type = $type;
 		$this->_name = $name;
 		$this->_value = $value;
+
+		self::$_guiId++;
 	}
 
 
@@ -108,6 +113,10 @@ abstract class InputFieldRenderer
 	/** @return string */
 	public function getType()
 		{ return $this->_type;}
+
+	/** @return int */
+	public function getGuiId()
+		{ return self::$_guiId; }
 
 	/**
 	 *

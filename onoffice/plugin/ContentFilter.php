@@ -470,7 +470,6 @@ class ContentFilter
 		wp_register_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js' );
 		wp_register_script( 'gmapsinit', plugins_url( '/js/gmapsinit.js', __DIR__ ), array('google-maps') );
 		wp_register_script( 'jquery-latest', 'https://code.jquery.com/jquery-latest.js');
-		wp_register_script( 'onoffice-favorites', plugins_url( '/js/favorites.js', __DIR__ ) );
 	}
 
 
@@ -490,7 +489,6 @@ class ContentFilter
 		}
 
 		wp_enqueue_script('jquery-latest');
-		wp_enqueue_script( 'onoffice-favorites' );
 	}
 
 

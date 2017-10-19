@@ -60,8 +60,10 @@ class AdminViewController
 		add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'), 'edit_pages',
 			$this->_pageSlug.'-forms', function() {});
 
+		$pAdminPageEstate = new AdminPageModules($this->_pageSlug);
 		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice'), __('Modules', 'onoffice'), 'edit_pages',
-			$this->_pageSlug.'-modules', function() {});
+			$this->_pageSlug.'-modules', array($pAdminPageEstate, 'render'));
+		add_action( 'admin_init', array($pAdminPageEstate, 'registerForms'));
 
 
 		$pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);

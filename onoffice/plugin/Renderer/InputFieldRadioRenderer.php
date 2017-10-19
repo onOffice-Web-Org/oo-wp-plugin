@@ -31,6 +31,9 @@ namespace onOffice\WPlugin\Renderer;
 class InputFieldRadioRenderer
 	extends InputFieldRenderer
 {
+	/** @var array */
+	private $_checkedValue = null;
+
 	/**
 	 *
 	 * @param string $name
@@ -43,14 +46,41 @@ class InputFieldRadioRenderer
 		parent::__construct('radio', $name, $value);
 	}
 
+
+	/** @param array $checkedValue */
+	public function setCheckedValue($checkedValue)
+		{ $this->_checkedValue = $checkedValue; }
+
+
+	/** @return array */
+	public function getCheckedValue()
+		{ return $this->_checkedValue; }
+
 	/**
 	 *
 	 */
+
 	public function render()
 	{
-		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
-			.'" value="'.esc_html($this->getValue()).'"'
-			.$this->renderAdditionalAttributes()
-			.'>';
+		if (is_array($this->getValue()))
+		{
+			foreach ($this->getValue() as $key => $label)
+			{
+				$inputId = 'label'.$this->getGuiId().'b'.$key;
+				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+					.'" value="'.esc_html($key).'"'
+					.($key == $this->_checkedValue ? ' checked="checked" ' : '')
+					.$this->renderAdditionalAttributes()
+					.' id="'.esc_html($inputId).'">'
+					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label> ';
+			}
+		}
+		else
+		{
+			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+				.'" value="'.esc_html($this->getValue()).'"'
+				.$this->renderAdditionalAttributes()
+				.'>';
+		}
 	}
 }

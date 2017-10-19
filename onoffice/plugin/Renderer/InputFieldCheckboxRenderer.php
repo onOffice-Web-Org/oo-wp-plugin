@@ -31,7 +31,6 @@ namespace onOffice\WPlugin\Renderer;
 class InputFieldCheckboxRenderer
 	extends InputFieldRenderer
 {
-
 	/** @var array */
 	private $_checkedValues = null;
 
@@ -61,26 +60,28 @@ class InputFieldCheckboxRenderer
 	/**
 	 *
 	 */
+
 	public function render()
 	{
 		if (is_array($this->getValue()))
 		{
 			foreach ($this->getValue() as $key => $label)
 			{
+				$inputId = 'label'.$this->getGuiId().'b'.$key;
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
-						.'" value="'.esc_html($key).'"'
-						.(in_array($key, $this->_checkedValues) ? ' checked="checked" ' : null)
-						.$this->renderAdditionalAttributes()
-						.'>'.esc_html($label).'<br>';
+					.'" value="'.esc_html($key).'"'
+					.(in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
+					.$this->renderAdditionalAttributes()
+					.'><label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
 			}
 		}
 		else
 		{
 			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
-					.'" value="'.esc_html($this->getValue()).'"'
-					.(in_array($this->getValue(), $this->_checkedValues) ? ' checked="checked" ' : null)
-					.$this->renderAdditionalAttributes()
-					.'>';
+				.'" value="'.esc_html($this->getValue()).'"'
+				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
+				.$this->renderAdditionalAttributes()
+				.'>';
 		}
 	}
 }

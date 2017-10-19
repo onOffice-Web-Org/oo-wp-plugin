@@ -119,6 +119,12 @@ class FormBuilder
 				$optionName = $pInputModel->getOptionName();
 				break;
 
+			case InputModel::HTML_TYPE_RADIO:
+				$pInstance = new Renderer\InputFieldRadioRenderer($pInputModel->getOptionName(), $pInputModel->getValue());
+				$pInstance->setCheckedValue($pInputModel->getDefault());
+				$optionName = $pInputModel->getOptionName();
+				break;
+
 			case InputModel::HTML_TYPE_TEXT:
 				$pInstance = new Renderer\InputFieldTextRenderer($pInputModel->getOptionName());
 				$pInstance->addAdditionalAttribute('size', '50');
