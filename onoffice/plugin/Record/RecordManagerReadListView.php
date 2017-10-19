@@ -84,7 +84,7 @@ class RecordManagerReadListView
 		if ($result !== null)
 		{
 			$result[self::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
-			$result[self::FIELD] = $this->getFieldconfigByListviewId($listviewId);
+			$result[self::FIELDS] = $this->getFieldconfigByListviewId($listviewId);
 		}
 
 		return $result;

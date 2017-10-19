@@ -129,9 +129,7 @@ class FormBuilder
 				}
 				else
 				{
-					$optionName = $pInputModel->getOptionName();
-					$value = get_option($optionName, $pInputModel->getDefault());
-					$pInstance->setValue($value);
+					$pInstance->setValue($pInputModel->getValue());
 				}
 
 				break;
