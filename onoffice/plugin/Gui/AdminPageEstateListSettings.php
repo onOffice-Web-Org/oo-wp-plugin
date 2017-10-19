@@ -22,7 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model;
-use onOffice\WPlugin\Filtercall;
+use onOffice\WPlugin\FilterCall;
 
 /**
  *
@@ -293,9 +293,6 @@ class AdminPageEstateListSettings
 	private function createInputModelTemplate()
 	{
 		$labelTemplate = __('template', 'onoffice');
-
-		//$pRecordReadListview = new \onOffice\WPlugin\Record\RecordManagerReadListView();
-		//$selectedTemplate = $pRecordReadListview->getColumn($this->_listViewId, 'template');
 		$selectedTemplate = $this->_dbValues['template'];
 
 		$pInputModelTemplate = new Model\InputModel(
