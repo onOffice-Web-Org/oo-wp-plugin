@@ -328,6 +328,25 @@ class Fieldnames {
 
 	/**
 	 *
+	 * @param string $module recordType
+	 * @param string $language
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getFieldList( $module, $language ) {
+		$fieldList = array();
+		if ( isset( $this->_fieldList[$language][$module] ) ) {
+			$fieldList = $this->_fieldList[$language][$module];
+		}
+
+		return $fieldList;
+	}
+
+
+	/**
+	 *
 	 * @param string $fieldName
 	 * @param string $module
 	 * @param string $language
@@ -364,9 +383,4 @@ class Fieldnames {
 	public function hasLanguageCached( $language ) {
 		return array_key_exists( $language, $this->_fieldList );
 	}
-
-
-	/** @return array */
-	public function getFieldList()
-	 { return $this->_fieldList; }
 }

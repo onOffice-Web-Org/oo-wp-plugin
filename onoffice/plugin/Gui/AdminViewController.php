@@ -115,8 +115,8 @@ class AdminViewController
 				'action' => $hook,
 				'nonce' => wp_create_nonce($hook),
 			);
-		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
 
+		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
 		wp_enqueue_script('onoffice-ajax-settings',
 			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
 

@@ -146,7 +146,6 @@ class AdminPageEstateListSettings
 	}
 
 
-
 	/** @return string */
 	public function getListViewId()
 		{ return $this->_listViewId; }

@@ -28,8 +28,6 @@
 
 namespace onOffice\WPlugin;
 
-use \onOffice\WPlugin;
-
 /**
  *
  */
@@ -128,5 +126,26 @@ class Language
 	public function reloadConfig()
 	{
 		$this->_config = ConfigWrapper::getInstance()->getConfig();
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	static public function getDefault() {
+		$config = ConfigWrapper::getInstance()->getConfig();
+		$languageMapping = $config['localemap'];
+		$currentLocale = get_locale();
+		$language = $languageMapping['fallback'];
+
+		if (array_key_exists($currentLocale, $languageMapping))
+		{
+			$language = $languageMapping[$currentLocale];
+		}
+
+		return $language;
 	}
 }

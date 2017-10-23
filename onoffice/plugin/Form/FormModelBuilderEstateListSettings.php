@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Model;
+use onOffice\WPlugin\Language;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Record\RecordManagerReadListView;
 use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
@@ -146,7 +148,10 @@ class FormModelBuilderEstateListSettings
 		$pInputModelSortBy = $this->_pInputModelDBFactory->create
 			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
 		$pInputModelSortBy->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
-		$pInputModelSortBy->setValuesAvailable(array());
+
+		$fieldnames = $this->readFieldnames();
+		natcasesort($fieldnames);
+		$pInputModelSortBy->setValuesAvailable($fieldnames);
 
 		return $pInputModelSortBy;
 	}
@@ -326,6 +331,30 @@ class FormModelBuilderEstateListSettings
 	{
 		$pFilterCall = new FilterCall(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
 		return $pFilterCall->getFilters();
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function readFieldnames()
+	{
+		$language = Language::getDefault();
+		$pFieldnames = \onOffice\WPlugin\Fieldnames::getInstance();
+		$pFieldnames->loadLanguageIfNotCached($language);
+
+		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE, $language);
+		$result = array();
+
+		foreach ($fieldnames as $key => $properties)
+		{
+			$result[$key] = $properties['label'];
+		}
+
+		return $result;
 	}
 
 

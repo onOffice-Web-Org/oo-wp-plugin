@@ -124,7 +124,7 @@ class EstateList {
 	{
 		$pSDKWrapper = $this->_pSDKWrapper;
 
-		$language = self::getLanguage();
+		$language = Language::getDefault();
 		$this->_pFieldnames->loadLanguage( $language );
 
 		$parametersGetEstateList = $this->getEstateParameters( $currentPage );
@@ -194,7 +194,7 @@ class EstateList {
 	 */
 
 	private function getEstateParameters($currentPage) {
-		$language = self::getLanguage();
+		$language = Language::getDefault();
 		$pListView = $this->_pListView;
 
 		$numRecordsPerPage = $this->_pListView->getRecordsPerPage();
@@ -421,7 +421,7 @@ class EstateList {
 
 	public function getFieldLabel( $field ) {
 		$recordType = $this->_currentEstate['type'];
-		$language = self::getLanguage();
+		$language = Language::getDefault();
 		$fieldNewName = $this->_pFieldnames->getFieldLabel($field, $recordType, $language );
 
 		return $fieldNewName;
@@ -604,7 +604,7 @@ class EstateList {
 	 */
 
 	public function getDocument( $templateType ) {
-		$language = self::getLanguage();
+		$language = Language::getDefault();
 
 		$estateId = $this->_currentEstate['mainId'];
 		$documentId = $this->_pListView->getExpose();
@@ -627,26 +627,5 @@ class EstateList {
 
 	public function resetEstateIterator() {
 		reset( $this->_responseArray['data']['records'] );
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	static public function getLanguage() {
-		$config = ConfigWrapper::getInstance()->getConfig();
-		$languageMapping = $config['localemap'];
-		$currentLocale = get_locale();
-		$language = $languageMapping['fallback'];
-
-		if (array_key_exists($currentLocale, $languageMapping))
-		{
-			$language = $languageMapping[$currentLocale];
-		}
-
-		return $language;
 	}
 }
