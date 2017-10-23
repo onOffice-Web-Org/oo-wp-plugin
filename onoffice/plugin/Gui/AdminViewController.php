@@ -58,6 +58,10 @@ class AdminViewController
 
 	/**
 	 *
+	 * Important note:
+	 * - pages usually use the load-(page) hook for handleAdminNotices() but
+	 * - ajax pages use it in order to pre-generate the form model.
+	 *
 	 */
 
 	public function register_menu()
@@ -104,15 +108,19 @@ class AdminViewController
 			return;
 		}
 
-		wp_enqueue_script('onoffice-ajax-settings',
-			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
-
-		wp_localize_script('onoffice-ajax-settings', 'onOffice_loc_settings',
-            array(
+		$pAdminView = $this->_ajaxHooks[$hook];
+		$ajaxDataAdminPage = $pAdminView->getEnqueueData();
+		$ajaxDataGeneral = array(
 				'ajax_url' => admin_url('admin-ajax.php'),
 				'action' => $hook,
 				'nonce' => wp_create_nonce($hook),
-			));
+			);
+		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
+
+		wp_enqueue_script('onoffice-ajax-settings',
+			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+
+		wp_localize_script('onoffice-ajax-settings', 'onOffice_loc_settings', $ajaxData);
 	}
 
 

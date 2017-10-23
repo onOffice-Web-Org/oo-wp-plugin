@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model;
+use onOffice\WPlugin\Form\InputModelRenderer;
 
 /**
  *
@@ -110,7 +111,7 @@ class AdminPageApiSettings
 
 		foreach ($this->getFormModels() as $pFormModel)
 		{
-			$pFormBuilder = new FormBuilder($pFormModel);
+			$pFormBuilder = new InputModelRenderer($pFormModel);
 			$pFormBuilder->buildForm();
 		}
 

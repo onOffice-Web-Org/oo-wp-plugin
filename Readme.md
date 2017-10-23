@@ -79,7 +79,7 @@ This project is licensed under both GNU AGPLv3 and GNU GPLv3:
 Contact
 -------
 
-onOffice Software AG
+onOffice GmbH
 Charlottenburger Allee 5
 52068 Aachen
 Germany

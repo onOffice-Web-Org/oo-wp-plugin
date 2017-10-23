@@ -19,8 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\Gui;
-use onOffice\WPlugin\Form\InputModelRenderer;
+namespace onOffice\WPlugin\Form;
 
 /**
  *
@@ -29,27 +28,25 @@ use onOffice\WPlugin\Form\InputModelRenderer;
  *
  */
 
-abstract class AdminPage
-	extends AdminPageBase
+class FormModelBuilder
 {
+	/** @var string */
+	private $_pageSlug = null;
+
+
 	/**
+	 *
+	 * @param string $pageSlug
 	 *
 	 */
 
-	public function registerForms()
+	public function __construct($pageSlug)
 	{
-		foreach ($this->getFormModels() as $pFormModel)
-		{
-			$pFormBuilder = new InputModelRenderer($pFormModel);
-			$pFormBuilder->registerFields();
-		}
+		$this->_pageSlug = $pageSlug;
 	}
 
 
-	/**
-	 *
-	 */
-
-	public function handleAdminNotices()
-		{}
+	/** @return string */
+	public function getPageSlug()
+		{ return $this->_pageSlug; }
 }

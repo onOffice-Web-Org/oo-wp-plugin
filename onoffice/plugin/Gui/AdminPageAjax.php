@@ -45,7 +45,7 @@ abstract class AdminPageAjax
 
 
 	/**
-	 * 
+	 *
 	 */
 
 	public function checkForms()
@@ -53,11 +53,29 @@ abstract class AdminPageAjax
 		$pCurrentScreen = get_current_screen();
 
 		if ($pCurrentScreen !== null &&
-			__String::getNew($pCurrentScreen->id)->contains('onoffice'))
+			__String::getNew($pCurrentScreen->id)->contains('onoffice') &&
+			is_admin())
 		{
 			$this->buildForms();
 		}
 	}
 
-	abstract public function buildForms();
+
+	/**
+	 *
+	 */
+
+	abstract protected function buildForms();
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getEnqueueData()
+	{
+		return array();
+	}
 }

@@ -22,6 +22,7 @@ onOffice.ajaxSaver = function(outerDiv) {
 		data.action = onOffice.settings.action;
 		data.nonce = onOffice.settings.nonce;
 		data.values = JSON.stringify(values);
+		data.record_id = onOffice.settings.record_id;
 
 		jQuery.post(onOffice.settings.ajax_url, data, function(response) {
 			alert('Got this from the server: ' + response);

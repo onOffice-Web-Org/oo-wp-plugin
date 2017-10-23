@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Favorites;
+use onOffice\WPlugin\Form\InputModelRenderer;
 
 /**
  *
@@ -85,7 +86,7 @@ class AdminPageModules
 
 		foreach ($this->getFormModels() as $pFormModel)
 		{
-			$pFormBuilder = new FormBuilder($pFormModel);
+			$pFormBuilder = new InputModelRenderer($pFormModel);
 			$pFormBuilder->buildForm();
 		}
 

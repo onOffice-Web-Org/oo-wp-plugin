@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\Gui;
+namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
@@ -33,7 +33,7 @@ use onOffice\WPlugin\Renderer;
  *
  */
 
-class FormBuilder
+class InputModelRenderer
 {
 	/** @var Model\FormModel */
 	private $_pFormModel = null;
@@ -140,7 +140,7 @@ class FormBuilder
 				if ($pInputModel->getIsPassword())
 				{
 					$pInstance->addAdditionalAttribute('placeholder',
-						__('(remains unchanged)', 'onoffice'));
+						__('(Remains unchanged)', 'onoffice'));
 				}
 				else
 				{
