@@ -23,6 +23,8 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model;
 use onOffice\WPlugin\FilterCall;
+use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
+use onOffice\WPlugin\Record\RecordManagerReadListView;
 
 /**
  *
@@ -30,8 +32,9 @@ use onOffice\WPlugin\FilterCall;
  * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
+
 class AdminPageEstateListSettings
-	extends AdminPage
+	extends AdminPageAjax
 {
 	/** @var int */
 	private $_listViewId = null;
@@ -39,68 +42,63 @@ class AdminPageEstateListSettings
 	/** @var array */
 	private $_dbValues = array();
 
+	/** @var InputModelDBFactory */
+	private $_pInputModelDBFactory = null;
+
+
 	/**
 	 *
-	 * @param string $pageSlug
-	 * @param string $listviewId
+	 * @return bool
 	 *
 	 */
 
-	public function __construct($pageSlug)
+	public function buildForms()
 	{
-		if (isset($_GET['listViewId']))
+		if (!is_admin()) {
+			return false;
+		}
+
+		$listViewId = filter_input(INPUT_GET, 'listViewId');
+		$this->_pInputModelDBFactory = new InputModelDBFactory();
+
+		if ($listViewId !== null)
 		{
-			$this->_listViewId = $_GET['listViewId'];
+			$this->_listViewId = $listViewId;
 
 			$pRecordReadManager = new \onOffice\WPlugin\Record\RecordManagerReadListView();
 			$this->_dbValues = $pRecordReadManager->getRowById($this->_listViewId);
 		}
 
-		$labelExpose = __('pdf-expose', 'onoffice');
 		$labelFieldConfiguration = __('field configuration', 'onoffice');
-
 		$pInputModelName = $this->createInputModelName();
-
 		$pInputModelFiltername =  $this->createInputModelFilter();
-
 		$pInputModelSortBy = $this->createInputModelSortBy();
-
 		$pInputModelSortOrder = $this->createInputModelSortOrder();
-
 		$pInputModelRecordsPerPage = $this->createInputModelRecordsPerPage();
-
 		$pInputModelShowStatus = $this->createInputModelShowStatus();
-
 		$pInputModelIsReference = $this->createInputModelIsReference();
-
 		$pInputModelTemplate = $this->createInputModelTemplate();
-
-		$pInputModelExpose = new Model\InputModel(
-				'onoffice-estateListSettings', 'expose', $labelExpose, 'string');
-		$pInputModelExpose->setHtmlType(Model\InputModel::HTML_TYPE_SELECT);
-
+		$pInputModelExpose = $this->createInputModelExpose();
 		$pInputModelPictureTypes = $this->createInputModelPictureTypes();
 
 		$pFormModel = new Model\FormModel();
 		$pFormModel->setLabel(__('list view', 'onoffice'));
 		$pFormModel->addInputModel($pInputModelName);
-		//$pFormModel->addInputModel($pInputModelFiltername);
+		$pFormModel->addInputModel($pInputModelFiltername);
 		$pFormModel->addInputModel($pInputModelSortBy);
 		$pFormModel->addInputModel($pInputModelSortOrder);
 		$pFormModel->addInputModel($pInputModelRecordsPerPage);
 		$pFormModel->addInputModel($pInputModelShowStatus);
 		$pFormModel->addInputModel($pInputModelIsReference);
 		$pFormModel->addInputModel($pInputModelTemplate);
-		//$pFormModel->addInputModel($pInputModelExpose);
+		$pFormModel->addInputModel($pInputModelExpose);
 		$pFormModel->addInputModel($pInputModelPictureTypes);
 		$pFormModel->setGroupSlug('onoffice-listview-settings');
-		$pFormModel->setPageSlug($pageSlug);
+		$pFormModel->setPageSlug($this->getPageSlug());
 
 		$this->readFieldnames();
 
 		$this->addFormModel($pFormModel);
-
-		parent::__construct($pageSlug);
 	}
 
 
@@ -110,9 +108,9 @@ class AdminPageEstateListSettings
 
 	public function renderContent()
 	{
-		$this->generatePageMainTitle(__('listview settings', 'onoffice'));
+		$this->generatePageMainTitle(__('Edit list view', 'onoffice'));
 
-		echo '<form method="post" action="">';
+		echo '<div id="onoffice-ajax">';
 
 		foreach ($this->getFormModels() as $pFormModel)
 		{
@@ -121,8 +119,12 @@ class AdminPageEstateListSettings
 		}
 
 		do_settings_sections( $this->getPageSlug() );
-		submit_button();
-		echo '</form>';
+		submit_button(null, 'primary', 'send_ajax');
+
+		echo '</div>';
+		echo '<script>onOffice.ajaxSaver = new onOffice.ajaxSaver("onoffice-ajax");';
+		echo 'onOffice.ajaxSaver.register();';
+		echo '</script>';
 	}
 
 
@@ -134,21 +136,21 @@ class AdminPageEstateListSettings
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModel
+	 * @return Model\InputModelDB
 	 *
 	 */
 
 	private function createInputModelFilter()
 	{
-		$labelFiltername = __('filtername', 'onoffice');
-		$pInputModelFiltername =  new Model\InputModel(
-				'onoffice-estateListSettings', 'filtername', $labelFiltername, 'string');
-		$pInputModelFiltername->setHtmlType(Model\InputModel::HTML_TYPE_SELECT);
+		$labelFiltername = __('filter name', 'onoffice');
+		$pInputModelFiltername = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_FILTERID, $labelFiltername);
+		$pInputModelFiltername->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
 		$availableFilters = $this->readFilters();
 
-		$pInputModelFiltername->setValue($availableFilters);
-		$pInputModelFiltername->setDefault($this->_dbValues['firlerid']);
+		$pInputModelFiltername->setValuesAvailable($availableFilters);
+		$pInputModelFiltername->setValue($this->getValue($pInputModelFiltername->getField()));
 
 		return $pInputModelFiltername;
 	}
@@ -156,25 +158,26 @@ class AdminPageEstateListSettings
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModel
+	 * @return Model\InputModelDB
 	 *
 	 */
 
 	private function createInputModelIsReference()
 	{
 		$labelIsReference = __('detail view for reference estates', 'onoffice');
-		$pInputModelIsReference = new Model\InputModel(
-				'onoffice-estateListSettings', 'is_reference', $labelIsReference, 'boolean');
-		$pInputModelIsReference->setHtmlType(Model\InputModel::HTML_TYPE_CHECKBOX);
-		$pInputModelIsReference->setDefault(array($this->_dbValues['is_reference']));
-		$pInputModelIsReference->setValue($this->_dbValues['is_reference']);
+		$pInputModelIsReference = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_IS_REFERENCE, $labelIsReference);
+		$pInputModelIsReference->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelIsReference->setValue(array($this->_dbValues['is_reference']));
+		$pInputModelIsReference->setValuesAvailable(1);
 
 		return $pInputModelIsReference;
 	}
 
+
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModel
+	 * @return Model\InputModelDB
 	 *
 	 */
 
@@ -182,28 +185,29 @@ class AdminPageEstateListSettings
 	{
 		$labelSortBy = __('sort by', 'onoffice');
 
-		$pInputModelSortBy = new Model\InputModel(
-				'onoffice-estateListSettings', 'sortby', $labelSortBy, 'string');
-		$pInputModelSortBy->setHtmlType(Model\InputModel::HTML_TYPE_SELECT);
-		$pInputModelSortBy->setValue(array());
+		$pInputModelSortBy = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
+		$pInputModelSortBy->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelSortBy->setValuesAvailable(array());
 
 		return $pInputModelSortBy;
 	}
 
+
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModel
+	 * @return Model\InputModelDB
 	 *
 	 */
 
 	private function createInputModelRecordsPerPage()
 	{
 		$labelRecordsPerPage = __('records per page', 'onoffice');
-		$pInputModelRecordsPerPage = new Model\InputModel(
-				'onoffice-estateListSettings', 'recordsPerPage', $labelRecordsPerPage, 'string');
-		$pInputModelRecordsPerPage->setHtmlType(Model\InputModel::HTML_TYPE_SELECT);
-		$pInputModelRecordsPerPage->setValue(array('5' => '5', '10' => '10', '15' => '15'));
-		$pInputModelRecordsPerPage->setDefault($this->_dbValues['recordsPerPage']);
+		$pInputModelRecordsPerPage = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_RECORDS_PER_PAGE, $labelRecordsPerPage);
+		$pInputModelRecordsPerPage->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelRecordsPerPage->setValuesAvailable(array('5' => '5', '10' => '10', '15' => '15'));
+		$pInputModelRecordsPerPage->setValue($this->getValue('recordsPerPage'));
 
 		return $pInputModelRecordsPerPage;
 	}
@@ -211,18 +215,18 @@ class AdminPageEstateListSettings
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModel
+	 * @return Model\InputModelDB
 	 *
 	 */
 
 	private function createInputModelSortOrder()
 	{
 		$labelSortOrder = __('sort order', 'onoffice');
-		$pInputModelSortOrder = new Model\InputModel(
-				'onoffice-estateListSettings', 'sortorder', $labelSortOrder, 'string');
-		$pInputModelSortOrder->setHtmlType(Model\InputModel::HTML_TYPE_SELECT);
-		$pInputModelSortOrder->setValue(array('asc' => __('ascending', 'onoffice'), 'desc' => __('descending', 'onoffice')));
-		$pInputModelSortOrder->setDefault($this->_dbValues['sortorder']);
+		$pInputModelSortOrder = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_SORTORDER, $labelSortOrder);
+		$pInputModelSortOrder->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelSortOrder->setValuesAvailable(array('asc' => __('ascending', 'onoffice'), 'desc' => __('descending', 'onoffice')));
+		$pInputModelSortOrder->setValue($this->getValue('sortorder'));
 
 		return $pInputModelSortOrder;
 	}
@@ -230,7 +234,7 @@ class AdminPageEstateListSettings
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModel
+	 * @return Model\InputModelDB
 	 *
 	 */
 
@@ -238,28 +242,30 @@ class AdminPageEstateListSettings
 	{
 		$labelShowStatus = __('show estate status', 'onoffice');
 
-		$pInputModelShowStatus = new Model\InputModel(
-				'onoffice-estateListSettings', 'show_status', $labelShowStatus, 'boolean');
-		$pInputModelShowStatus->setHtmlType(Model\InputModel::HTML_TYPE_CHECKBOX);
-		$pInputModelShowStatus->setValue($this->_dbValues['show_status']);
-		$pInputModelShowStatus->setDefault(array($this->_dbValues['show_status']));
+		$pInputModelShowStatus = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_SHOW_STATUS, $labelShowStatus);
+		$pInputModelShowStatus->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowStatus->setValue($this->getValue('show_status'));
+		$pInputModelShowStatus->setValuesAvailable(1);
 
 		return $pInputModelShowStatus;
 	}
 
+
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModel
+	 * @return Model\InputModelDB
 	 *
 	 */
+
 	private function createInputModelName()
 	{
 		$labelName = __('view name', 'onoffice');
 
-		$pInputModelName = new Model\InputModel(
-				'onoffice-estateListSettings', 'name', $labelName, 'string');
-		$pInputModelName->setHtmlType(Model\InputModel::HTML_TYPE_TEXT);
-		$pInputModelName->setValue($this->_dbValues['name']);
+		$pInputModelName = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_LISTNAME, $labelName);
+		$pInputModelName->setHtmlType(Model\InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelName->setValue($this->getValue($pInputModelName->getField()));
 
 		return $pInputModelName;
 	}
@@ -267,44 +273,63 @@ class AdminPageEstateListSettings
 
 	/**
 	 *
-	 * @return Model\InputModel
+	 * @return Model\InputModelDB
 	 *
 	 */
+
 	private function createInputModelPictureTypes()
 	{
-		$pictureTypes = $this->_dbValues[\onOffice\WPlugin\Record\RecordManagerReadListView::PICTURES];
-
 		$allPictureTypes = \onOffice\WPlugin\ImageType::getAllImageTypes();
 		$labelPictureTypes = __('picture types', 'onoffice');
 
-		$pInputModelPictureTypes = new Model\InputModel(
-				'onoffice-estateListSettings', 'pictureTypes[]', $labelPictureTypes, 'string');
-		$pInputModelPictureTypes->setHtmlType(Model\InputModel::HTML_TYPE_CHECKBOX);
-		$pInputModelPictureTypes->setValue($allPictureTypes);
-		$pInputModelPictureTypes->setDefault($pictureTypes);
+		$pInputModelPictureTypes = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_PICTURE_TYPE, $labelPictureTypes, true);
+		$pInputModelPictureTypes->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
+		$pictureTypes = $this->getValue(RecordManagerReadListView::PICTURES);
+		$pInputModelPictureTypes->setValue($pictureTypes);
 
 		return $pInputModelPictureTypes;
 	}
 
 
+	/**
+	 *
+	 * @return Model\InputModelDB
+	 *
+	 */
+
+	private function createInputModelExpose()
+	{
+		$labelExpose = __('PDF-Expose', 'onoffice');
+
+		$pInputModelPictureTypes = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_EXPOSE, $labelExpose);
+		$pInputModelPictureTypes->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelPictureTypes->setValuesAvailable(array());
+		$pInputModelPictureTypes->setValue(0);
+
+		return $pInputModelPictureTypes;
+	}
+
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModel
+	 * @return Model\InputModelDB
 	 *
 	 */
 
 	private function createInputModelTemplate()
 	{
 		$labelTemplate = __('template', 'onoffice');
-		$selectedTemplate = $this->_dbValues['template'];
+		$selectedTemplate = $this->getValue('template');
 
-		$pInputModelTemplate = new Model\InputModel(
-				'onoffice-estateListSettings', 'onOfficeTemplate', $labelTemplate, 'string');
-		$pInputModelTemplate->setHtmlType(Model\InputModel::HTML_TYPE_SELECT);
+		$pInputModelTemplate = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
+		$pInputModelTemplate->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
-		$pInputModelTemplate->setValue($this->readTemplates());
-		$pInputModelTemplate->setDefault($selectedTemplate);
+		$pInputModelTemplate->setValuesAvailable($this->readTemplates());
+		$pInputModelTemplate->setValue($selectedTemplate);
 
 		return $pInputModelTemplate;
 	}
@@ -333,6 +358,11 @@ class AdminPageEstateListSettings
 	}
 
 
+	/**
+	 *
+	 * @return array
+	 *
+	 */
 
 	private function readFieldnames()
 	{
@@ -354,7 +384,60 @@ class AdminPageEstateListSettings
 
 	private function readFilters()
 	{
-		$pFilterCall = new \onOffice\WPlugin\FilterCall('objekte');
+		$pFilterCall = new FilterCall(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
 		return $pFilterCall->getFilters();
+	}
+
+
+	/**
+	 *
+	 * @param string $key
+	 * @return mixed
+	 *
+	 */
+
+	private function getValue($key)
+	{
+		if (array_key_exists($key, $this->_dbValues))
+		{
+			return $this->_dbValues[$key];
+		}
+
+		return null;
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function ajax_action()
+	{
+		$this->buildForms();
+		$action = filter_input(INPUT_POST, 'action');
+		$nonce = filter_input(INPUT_POST, 'nonce');
+
+		if (!wp_verify_nonce($nonce, $action)) {
+			wp_die();
+		}
+
+		$values = json_decode(filter_input(INPUT_POST, 'values'));
+
+		$pInputModelDBAdapterRow = new Model\InputModelDBAdapterRow();
+
+		foreach ($this->getFormModels() as $pFormModel) {
+			foreach ($pFormModel->getInputModel() as $pInputModel) {
+				if ($pInputModel instanceof Model\InputModelDB) {
+					$identifier = $pInputModel->getIdentifier();
+					$value = isset($values->$identifier) ? $values->$identifier : null;
+					$pInputModel->setValue($value);
+					$pInputModelDBAdapterRow->addInputModelDB($pInputModel);
+				}
+			}
+			$row = $pInputModelDBAdapterRow->createUpdateValuesByTable();
+		}
+
+		var_dump($row);
+		wp_die();
 	}
 }

@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\Gui;
+namespace onOffice\WPlugin\Model;
 
 /**
  *
@@ -28,27 +28,8 @@ namespace onOffice\WPlugin\Gui;
  *
  */
 
-abstract class AdminPage
-	extends AdminPageBase
+class ExceptionInputModelMissingField
+	extends \Exception
 {
-	/**
-	 *
-	 */
 
-	public function registerForms()
-	{
-		foreach ($this->getFormModels() as $pFormModel)
-		{
-			$pFormBuilder = new FormBuilder($pFormModel);
-			$pFormBuilder->registerFields();
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function handleAdminNotices()
-		{}
 }

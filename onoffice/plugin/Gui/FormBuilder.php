@@ -22,7 +22,8 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Model\InputModel;
+use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Renderer;
 
 /**
@@ -65,7 +66,7 @@ class FormBuilder
 		{
 			$pInputField = $this->createInputField($pInputModel);
 
-			add_settings_field( $pInputModel->getOptionName(), $pInputModel->getLabel(),
+			add_settings_field( $pInputModel->getIdentifier(), $pInputModel->getLabel(),
 				array($pInputField, 'render'), $pForm->getPageSlug(), $pForm->getGroupSlug() );
 		}
 	}
@@ -81,57 +82,65 @@ class FormBuilder
 
 		foreach ($pForm->getInputModel() as $pInputModel)
 		{
-			register_setting( $pForm->getGroupSlug(), $pInputModel->getOptionName(),
-				array
-				(
-					'type' => $pInputModel->getType(),
-					'description' => $pInputModel->getDescription(),
-					'sanitize_callback' => $pInputModel->getSanitizeCallback(),
-					'show_in_rest' => $pInputModel->getShowInRest(),
-					'default' => $pInputModel->getDefault(),
-				));
+			if ($pInputModel instanceof InputModelOption)
+			{
+				register_setting( $pForm->getGroupSlug(), $pInputModel->getIdentifier(),
+					array
+					(
+						'type' => $pInputModel->getType(),
+						'description' => $pInputModel->getDescription(),
+						'sanitize_callback' => $pInputModel->getSanitizeCallback(),
+						'show_in_rest' => $pInputModel->getShowInRest(),
+						'default' => $pInputModel->getDefault(),
+					));
+			}
 		}
 	}
 
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\Model\InputModel $pInputModel
+	 * @param \onOffice\WPlugin\Model\InputModelBase $pInputModel
 	 * @return Renderer\InputFieldRenderer
 	 *
 	 */
 
-	private function createInputField(InputModel $pInputModel)
+	private function createInputField(InputModelBase $pInputModel)
 	{
 		$pInstance = null;
 
 		switch ($pInputModel->getHtmlType())
 		{
-			case InputModel::HTML_TYPE_SELECT:
-				$pInstance = new Renderer\InputFieldSelectRenderer($pInputModel->getOptionName(), $pInputModel->getValue());
-				$pInstance->setSelectedValue($pInputModel->getDefault());
-				$optionName = $pInputModel->getOptionName();
+			case InputModelOption::HTML_TYPE_SELECT:
+				$pInstance = new Renderer\InputFieldSelectRenderer($pInputModel->getIdentifier(),
+				$pInputModel->getValuesAvailable());
+				$pInstance->setSelectedValue($pInputModel->getValue());
 				break;
 
-			case InputModel::HTML_TYPE_CHECKBOX:
-				$pInstance = new Renderer\InputFieldCheckboxRenderer($pInputModel->getOptionName(), $pInputModel->getValue());
-				$pInstance->setCheckedValues($pInputModel->getDefault());
-				$optionName = $pInputModel->getOptionName();
+			case InputModelOption::HTML_TYPE_CHECKBOX:
+				$name = $pInputModel->getIdentifier();
+				if ($pInputModel->getIsMulti()) {
+					$name .= '[]';
+				}
+				$pInstance = new Renderer\InputFieldCheckboxRenderer($name,
+				$pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValues($pInputModel->getValue());
 				break;
 
-			case InputModel::HTML_TYPE_RADIO:
-				$pInstance = new Renderer\InputFieldRadioRenderer($pInputModel->getOptionName(), $pInputModel->getValue());
-				$pInstance->setCheckedValue($pInputModel->getDefault());
-				$optionName = $pInputModel->getOptionName();
+			case InputModelOption::HTML_TYPE_RADIO:
+				$pInstance = new Renderer\InputFieldRadioRenderer($pInputModel->getIdentifier(),
+				$pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValue($pInputModel->getValue());
 				break;
 
-			case InputModel::HTML_TYPE_TEXT:
-				$pInstance = new Renderer\InputFieldTextRenderer($pInputModel->getOptionName());
+			case InputModelOption::HTML_TYPE_TEXT:
+				$pInstance = new Renderer\InputFieldTextRenderer($pInputModel->getIdentifier());
 				$pInstance->addAdditionalAttribute('size', '50');
 
 				if ($pInputModel->getIsPassword())
 				{
-					$pInstance->addAdditionalAttribute('placeholder', __('(remains unchanged)', 'onoffice'));
+					$pInstance->addAdditionalAttribute('placeholder',
+						__('(remains unchanged)', 'onoffice'));
 				}
 				else
 				{
@@ -139,6 +148,10 @@ class FormBuilder
 				}
 
 				break;
+		}
+
+		if ($pInstance !== null) {
+			$pInstance->addAdditionalAttribute('class', 'onoffice-input');
 		}
 
 		return $pInstance;

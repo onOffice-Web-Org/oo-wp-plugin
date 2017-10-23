@@ -21,10 +21,10 @@
 
 /*
 Plugin Name: onOffice Plugin
-Plugin URI: http://www.onoffice.com/
+Plugin URI: https://www.onoffice.com/
 Description: onOffice Plugin
 Author: onOffice GmbH
-Author URI: http://en.onoffice.com/
+Author URI: https://en.onoffice.com/
 Version: 2.0
 Text Domain: onoffice
 Domain Path: /languages
@@ -57,9 +57,13 @@ add_action( 'init', array($pContentFilter, 'addCustomRewriteTags') );
 add_action( 'init', array($pContentFilter, 'addCustomRewriteRules') );
 add_action( 'init', array($pFormPost, 'initialCheck') );
 add_action( 'admin_menu', array($pAdminViewController, 'register_menu') );
+add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_ajax') );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'registerScripts'), 9 );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
 add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
+
+add_action( 'init', array($pAdminViewController, 'onInit') );
+add_action( 'admin_init', array($pAdminViewController, 'add_ajax_actions') );
 
 add_filter( 'the_posts', array($pContentFilter, 'filter_the_posts') );
 add_filter( 'the_content', array($pContentFilter, 'filter_the_content') );

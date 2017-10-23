@@ -20,6 +20,7 @@
  */
 
 namespace onOffice\WPlugin\Gui;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -28,27 +29,35 @@ namespace onOffice\WPlugin\Gui;
  *
  */
 
-abstract class AdminPage
+abstract class AdminPageAjax
 	extends AdminPageBase
 {
 	/**
 	 *
-	 */
-
-	public function registerForms()
-	{
-		foreach ($this->getFormModels() as $pFormModel)
-		{
-			$pFormBuilder = new FormBuilder($pFormModel);
-			$pFormBuilder->registerFields();
-		}
-	}
-
-
-	/**
+	 * Entry point for AJAX.
+	 * Method should end with wp_die().
+	 *
+	 * @see https://codex.wordpress.org/AJAX_in_Plugins
 	 *
 	 */
 
-	public function handleAdminNotices()
-		{}
+	abstract public function ajax_action();
+
+
+	/**
+	 * 
+	 */
+
+	public function checkForms()
+	{
+		$pCurrentScreen = get_current_screen();
+
+		if ($pCurrentScreen !== null &&
+			__String::getNew($pCurrentScreen->id)->contains('onoffice'))
+		{
+			$this->buildForms();
+		}
+	}
+
+	abstract public function buildForms();
 }

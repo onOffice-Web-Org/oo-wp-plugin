@@ -39,11 +39,11 @@ class FormModel
 	/** @var string Label of section */
 	private $_label = null;
 
-	/** @var InputModel[] */
+	/** @var InputModelBase[] */
 	private $_inputModels = array();
 
-	/** @param InputModel $pInputModel */
-	public function addInputModel(InputModel $pInputModel)
+	/** @param InputModelBase $pInputModel */
+	public function addInputModel(InputModelBase $pInputModel)
 		{ $this->_inputModels []= $pInputModel; }
 
 	/** @return string */
@@ -54,7 +54,7 @@ class FormModel
 	public function setGroupSlug($groupSlug)
 		{ $this->_groupSlug = $groupSlug; }
 
-	/** @return onOffice\WPlugin\Model\InputModel */
+	/** @return onOffice\WPlugin\Model\InputModelBase */
 	public function getInputModel()
 		{ return $this->_inputModels; }
 

@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Model\InputModel;
+use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Favorites;
 
@@ -46,16 +46,16 @@ class AdminPageModules
 		$groupSlugFavs = 'onoffice-favorization';
 		$enableFavLabel = __('Enable Favorization', 'onoffice');
 		$favButtonLabel = __('Expression used', 'onoffice');
-		$pInputModelEnableFav = new InputModel($groupSlugFavs, 'enableFav',
-			$enableFavLabel, InputModel::SETTING_TYPE_BOOLEAN);
-		$pInputModelEnableFav->setHtmlType(InputModel::HTML_TYPE_CHECKBOX);
-		$pInputModelEnableFav->setValue(1);
-		$pInputModelEnableFav->setDefault(get_option($pInputModelEnableFav->getOptionName()) == 1);
-		$pInputModelFavButtonLabel = new InputModel($groupSlugFavs, 'favButtonLabelFav',
-			$favButtonLabel, InputModel::SETTING_TYPE_NUMBER);
-		$pInputModelFavButtonLabel->setHtmlType(InputModel::HTML_TYPE_RADIO);
-		$pInputModelFavButtonLabel->setDefault(get_option($pInputModelFavButtonLabel->getOptionName()));
-		$pInputModelFavButtonLabel->setValue(array(
+		$pInputModelEnableFav = new InputModelOption($groupSlugFavs, 'enableFav',
+			$enableFavLabel, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModelEnableFav->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelEnableFav->setValuesAvailable(1);
+		$pInputModelEnableFav->setValue(get_option($pInputModelEnableFav->getIdentifier()) == 1);
+		$pInputModelFavButtonLabel = new InputModelOption($groupSlugFavs, 'favButtonLabelFav',
+			$favButtonLabel, InputModelOption::SETTING_TYPE_NUMBER);
+		$pInputModelFavButtonLabel->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
+		$pInputModelFavButtonLabel->setValue(get_option($pInputModelFavButtonLabel->getIdentifier()));
+		$pInputModelFavButtonLabel->setValuesAvailable(array(
 			Favorites::KEY_SETTING_FAVORIZE => __('Favorization', 'onoffice'),
 			Favorites::KEY_SETTING_MEMORIZE => __('Watchlist', 'onoffice'),
 		));

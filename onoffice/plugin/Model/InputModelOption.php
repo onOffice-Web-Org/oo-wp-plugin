@@ -28,20 +28,9 @@ namespace onOffice\WPlugin\Model;
  *
  */
 
-class InputModel
+class InputModelOption
+	extends InputModelBase
 {
-	/** */
-	const HTML_TYPE_SELECT = 'select';
-
-	/** */
-	const HTML_TYPE_CHECKBOX = 'checkbox';
-
-	/** */
-	const HTML_TYPE_RADIO = 'radio';
-
-	/** */
-	const HTML_TYPE_TEXT = 'text';
-
 	/**
 	 *
 	 * Setting types
@@ -65,13 +54,7 @@ class InputModel
 	/** @var string */
 	private $_optionGroup = null;
 
-	/** @var string */
-	private $_name = null;
-
-	/** @var string */
-	private $_label = null;
-
-	/** @var string */
+	/** @var string WP-specific type */
 	private $_type = 'string';
 
 	/** @var string */
@@ -86,14 +69,6 @@ class InputModel
 	/** @var bool */
 	private $_sanitizeCallback = null;
 
-	/** @var bool */
-	private $_isPassword = false;
-
-	/** @var mixed */
-	private $_value = null;
-
-	/** @var string */
-	private $_htmlType = self::HTML_TYPE_TEXT;
 
 	/**
 	 *
@@ -106,9 +81,9 @@ class InputModel
 
 	public function __construct($optionGroup, $name, $label, $type)
 	{
+		$this->setName($name);
+		$this->setLabel($label);
 		$this->_optionGroup = $optionGroup;
-		$this->_name = $name;
-		$this->_label = $label;
 		$this->_type = $type;
 
 		if ($type === self::SETTING_TYPE_BOOLEAN)
@@ -124,26 +99,11 @@ class InputModel
 	 *
 	 */
 
-	public function getOptionName()
+	public function getIdentifier()
 	{
 		return $this->getOptionGroup().'-'.$this->getName();
 	}
 
-	/** @return string */
-	public function getLabel()
-		{ return $this->_label; }
-
-	/** @return string */
-	public function getName()
-		{ return $this->_name; }
-
-	/** @param string $name */
-	public function setName($name)
-		{ $this->_name = $name; }
-
-	/** @param string $label */
-	public function setLabel($label)
-		{ $this->_label = $label; }
 
 	/** @return string */
 	public function getType()
@@ -185,31 +145,7 @@ class InputModel
 	public function setSanitizeCallback($sanitizeCallback)
 		{ $this->_sanitizeCallback = $sanitizeCallback; }
 
-	/** @return bool */
-	public function getIsPassword()
-		{ return $this->_isPassword; }
-
-	/** @param bool $isPassword */
-	public function setIsPassword($isPassword)
-		{ $this->_isPassword = $isPassword; }
-
 	/** @return string */
 	public function getOptionGroup()
 		{ return $this->_optionGroup; }
-
-	/** @return mixed */
-	public function getValue()
-		{ return $this->_value; }
-
-	/** @param mixed $value */
-	public function setValue($value)
-		{ $this->_value = $value; }
-
-	/** @param string $htmlType */
-	public function setHtmlType($htmlType)
-		{ $this->_htmlType = $htmlType; }
-
-	/** @return string */
-	public function getHtmlType()
-		{ return $this->_htmlType; }
 }

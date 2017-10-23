@@ -47,15 +47,15 @@ class AdminPageApiSettings
 	{
 		$labelKey = __('API token', 'onoffice');
 		$labelSecret = __('API secret', 'onoffice');
-		$pInputModelApiKey = new Model\InputModel('onoffice-settings', 'apikey', $labelKey, 'string');
-		$optionNameKey = $pInputModelApiKey->getOptionName();
+		$pInputModelApiKey = new Model\InputModelOption('onoffice-settings', 'apikey', $labelKey, 'string');
+		$optionNameKey = $pInputModelApiKey->getIdentifier();
 		$pInputModelApiKey->setValue(get_option($optionNameKey));
-		$pInputModelApiSecret = new Model\InputModel('onoffice-settings', 'apisecret', $labelSecret, 'string');
+		$pInputModelApiSecret = new Model\InputModelOption('onoffice-settings', 'apisecret', $labelSecret, 'string');
 		$pInputModelApiSecret->setIsPassword(true);
 		$pInputModelApiSecret->setSanitizeCallback(array($this, 'checkPassword'));
-		$optionNameSecret = $pInputModelApiSecret->getOptionName();
+		$optionNameSecret = $pInputModelApiSecret->getIdentifier();
 		$pInputModelApiSecret->setValue(get_option($optionNameSecret, $pInputModelApiSecret->getDefault()));
-		$this->_inputApiSecretGroupSlugName = $pInputModelApiSecret->getOptionName();
+		$this->_inputApiSecretGroupSlugName = $pInputModelApiSecret->getIdentifier();
 
 		$pFormModel = new Model\FormModel();
 		$pFormModel->addInputModel($pInputModelApiSecret);

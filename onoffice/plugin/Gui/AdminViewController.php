@@ -33,14 +33,26 @@ class AdminViewController
 	/** @var string */
 	private $_pageSlug = null;
 
+	/** @var string[] */
+	private $_ajaxHooks = array();
+
+	/** @var AdminPageEstateListSettings */
+	private $_pAdminListViewSettings = null;
+
 
 	/**
 	 *
 	 */
 
-	public function __construct()
+	public function onInit()
 	{
+		if (!is_admin()) {
+			return;
+		}
+
 		$this->_pageSlug = 'onoffice';
+		$this->_pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);
+		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editListView'] = $this->_pAdminListViewSettings;
 	}
 
 
@@ -50,24 +62,26 @@ class AdminViewController
 
 	public function register_menu()
 	{
-		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'), 'edit_pages', $this->_pageSlug, function(){});
+		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'), 'edit_pages',
+			$this->_pageSlug, function(){});
 
 		$pAdminPageEstate = new AdminPageEstate($this->_pageSlug);
-		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'), __('Estates', 'onoffice'), 'edit_pages',
+		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),
+			__('Estates', 'onoffice'), 'edit_pages',
 			$this->_pageSlug.'-estates', array($pAdminPageEstate, 'render'));
 		add_action( 'load-'.$hookEstates, array($pAdminPageEstate, 'handleAdminNotices'));
 
-		add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'), 'edit_pages',
-			$this->_pageSlug.'-forms', function() {});
+		add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
+			'edit_pages', $this->_pageSlug.'-forms', function() {});
 
-		$pAdminPageEstate = new AdminPageModules($this->_pageSlug);
-		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice'), __('Modules', 'onoffice'), 'edit_pages',
-			$this->_pageSlug.'-modules', array($pAdminPageEstate, 'render'));
-		add_action( 'admin_init', array($pAdminPageEstate, 'registerForms'));
+		$pAdminPageModules = new AdminPageModules($this->_pageSlug);
+		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice'), __('Modules', 'onoffice'),
+			'edit_pages', $this->_pageSlug.'-modules', array($pAdminPageModules, 'render'));
+		add_action( 'admin_init', array($pAdminPageModules, 'registerForms'));
 
-
-		$pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);
-		add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editListView', array($pAdminListViewSettings, 'render'));
+		$hookEditList = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editListView',
+			array($this->_pAdminListViewSettings, 'render'));
+		add_action( 'load-'.$hookEditList, array($this->_pAdminListViewSettings, 'checkForms'));
 
 		$pAdminSettingsPage = new AdminPageApiSettings($this->_pageSlug.'-settings');
 		$hookSettings = add_submenu_page( $this->_pageSlug, __('Settings', 'onoffice'),
@@ -75,5 +89,47 @@ class AdminViewController
 			array($pAdminSettingsPage, 'render'));
 		add_action( 'admin_init', array($pAdminSettingsPage, 'registerForms'));
 		add_action( 'load-'.$hookSettings, array($pAdminSettingsPage, 'handleAdminNotices'));
+	}
+
+
+	/**
+	 *
+	 * @param string $hook
+	 *
+	 */
+
+	public function enqueue_ajax($hook)
+	{
+		if ($hook == '' || !array_key_exists($hook, $this->_ajaxHooks)) {
+			return;
+		}
+
+		wp_enqueue_script('onoffice-ajax-settings',
+			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+
+		wp_localize_script('onoffice-ajax-settings', 'onOffice_loc_settings',
+            array(
+				'ajax_url' => admin_url('admin-ajax.php'),
+				'action' => $hook,
+				'nonce' => wp_create_nonce($hook),
+			));
+	}
+
+
+	/**
+	 *
+	 * @throws Exception
+	 *
+	 */
+
+	public function add_ajax_actions()
+	{
+		foreach ($this->_ajaxHooks as $hook => $pAdminPage) {
+			if (!$pAdminPage instanceof AdminPageAjax) {
+				throw new \Exception(get_class($pAdminPage).' must be an instance of AdminPageAjax!');
+			}
+
+			add_action( 'wp_ajax_'.$hook, array($this->_ajaxHooks[$hook], 'ajax_action'));
+		}
 	}
 }

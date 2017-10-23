@@ -54,7 +54,7 @@ class DataListViewFactory
 	 *
 	 */
 
-	private function createListViewByRow(array $row)
+	public function createListViewByRow(array $row)
 	{
 		$pListView = new DataListView($row['listview_id'], $row['name']);
 		$pListView->setExpose($row['expose']);
