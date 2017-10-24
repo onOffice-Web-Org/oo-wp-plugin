@@ -25,6 +25,7 @@ use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Language;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\FilterCall;
+use onOffice\WPlugin\TemplateCall;
 use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
 use onOffice\WPlugin\DataView\DataListView;
 
@@ -267,13 +268,14 @@ class FormModelBuilderEstateListSettings
 	{
 		$labelExpose = __('PDF-Expose', 'onoffice');
 
-		$pInputModelPictureTypes = $this->_pInputModelDBFactory->create
+		$pInputModelExpose = $this->_pInputModelDBFactory->create
 			(InputModelDBFactory::INPUT_EXPOSE, $labelExpose);
-		$pInputModelPictureTypes->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
-		$pInputModelPictureTypes->setValuesAvailable(array());
-		$pInputModelPictureTypes->setValue(0);
+		$pInputModelExpose->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$exposes = $this->readExposes();
+		$pInputModelExpose->setValuesAvailable($exposes);
+		$pInputModelExpose->setValue($this->getValue($pInputModelExpose->getField()));
 
-		return $pInputModelPictureTypes;
+		return $pInputModelExpose;
 	}
 
 
@@ -374,5 +376,18 @@ class FormModelBuilderEstateListSettings
 		}
 
 		return null;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function readExposes()
+	{
+		$pTemplateCall = new \onOffice\WPlugin\TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE);
+		return $pTemplateCall->getTemplates();
 	}
 }
