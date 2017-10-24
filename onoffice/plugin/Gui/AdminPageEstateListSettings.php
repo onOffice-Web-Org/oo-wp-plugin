@@ -126,9 +126,12 @@ class AdminPageEstateListSettings
 			$row = $pInputModelDBAdapterRow->createUpdateValuesByTable();
 		}
 
-		var_dump($recordId);
+		$pUpdate = new \onOffice\WPlugin\Record\RecordManagerUpdateListView($recordId);
+		$pUpdate->updateByRow($row);
+
+		/*var_dump($recordId);
 		var_dump($row);
-		wp_die();
+		wp_die();*/
 	}
 
 

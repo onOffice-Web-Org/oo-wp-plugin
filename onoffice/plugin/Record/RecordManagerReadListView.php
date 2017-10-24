@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\DataView;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -31,13 +33,6 @@ namespace onOffice\WPlugin\Record;
 class RecordManagerReadListView
 	extends RecordManagerRead
 {
-
-	/** */
-	const PICTURES = 'pictures';
-
-	/** */
-	const FIELDS = 'fields';
-
 
 	/**
 	 *
@@ -83,8 +78,8 @@ class RecordManagerReadListView
 
 		if ($result !== null)
 		{
-			$result[self::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
-			$result[self::FIELDS] = $this->getFieldconfigByListviewId($listviewId);
+			$result[DataView\DataListView::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
+			$result[DataView\DataListView::FIELDS] = $this->getFieldconfigByListviewId($listviewId);
 		}
 
 		return $result;
@@ -112,8 +107,8 @@ class RecordManagerReadListView
 		if ($result !== null)
 		{
 			$id = $result['listview_id'];
-			$result[self::PICTURES] = $this->getPictureTypesByListviewId($id);
-			$result[self::FIELDS] = $this->getFieldconfigByListviewId($id);
+			$result[DataView\DataListView::PICTURES] = $this->getPictureTypesByListviewId($id);
+			$result[DataView\DataListView::FIELDS] = $this->getFieldconfigByListviewId($id);
 		}
 
 		return $result;

@@ -25,8 +25,8 @@ use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Language;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\FilterCall;
-use onOffice\WPlugin\Record\RecordManagerReadListView;
 use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
+use onOffice\WPlugin\DataView\DataListView;
 
 /**
  *
@@ -128,7 +128,7 @@ class FormModelBuilderEstateListSettings
 		$pInputModelIsReference = $this->_pInputModelDBFactory->create
 			(InputModelDBFactory::INPUT_IS_REFERENCE, $labelIsReference);
 		$pInputModelIsReference->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModelIsReference->setValue(array($this->_dbValues['is_reference']));
+		$pInputModelIsReference->setValue($this->getValue($pInputModelIsReference->getField()));
 		$pInputModelIsReference->setValuesAvailable(1);
 
 		return $pInputModelIsReference;
@@ -152,6 +152,7 @@ class FormModelBuilderEstateListSettings
 		$fieldnames = $this->readFieldnames();
 		natcasesort($fieldnames);
 		$pInputModelSortBy->setValuesAvailable($fieldnames);
+		$pInputModelSortBy->setValue($this->getValue($pInputModelSortBy->getField()));
 
 		return $pInputModelSortBy;
 	}
@@ -188,8 +189,8 @@ class FormModelBuilderEstateListSettings
 		$pInputModelSortOrder = $this->_pInputModelDBFactory->create
 			(InputModelDBFactory::INPUT_SORTORDER, $labelSortOrder);
 		$pInputModelSortOrder->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
-		$pInputModelSortOrder->setValuesAvailable(array('asc' => __('ascending', 'onoffice'), 'desc' => __('descending', 'onoffice')));
-		$pInputModelSortOrder->setValue($this->getValue('sortorder'));
+		$pInputModelSortOrder->setValuesAvailable(array('ASC' => __('ascending', 'onoffice'), 'DESC' => __('descending', 'onoffice')));
+		$pInputModelSortOrder->setValue($this->getValue($pInputModelSortOrder->getField()));
 
 		return $pInputModelSortOrder;
 	}
@@ -249,7 +250,7 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_PICTURE_TYPE, $labelPictureTypes, true);
 		$pInputModelPictureTypes->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
-		$pictureTypes = $this->getValue(RecordManagerReadListView::PICTURES);
+		$pictureTypes = $this->getValue(DataListView::PICTURES);
 		$pInputModelPictureTypes->setValue($pictureTypes);
 
 		return $pInputModelPictureTypes;

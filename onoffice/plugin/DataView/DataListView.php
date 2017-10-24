@@ -30,6 +30,21 @@ namespace onOffice\WPlugin\DataView;
 
 class DataListView
 {
+	/** */
+	const PICTURES = 'pictures';
+
+	/** */
+	const FIELDS = 'fields';
+
+	/** */
+	const TABLENAME_LIST_VIEW = 'oo_plugin_listviews';
+
+	/** */
+	const TABLENAME_PICTUTYPES = 'oo_plugin_picturetypes';
+
+	/** */
+	const TABLENAME_FIELDCONFIG = 'oo_plugin_fieldconfig';
+
 	/** @var int */
 	private $_id = null;
 
