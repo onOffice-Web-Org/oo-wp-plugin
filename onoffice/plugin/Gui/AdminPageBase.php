@@ -103,6 +103,14 @@ abstract class AdminPageBase
 
 
 
+	/**
+	 *
+	 */
+
+	public function handleAdminNotices()
+		{}
+
+
 	/** @return \onOffice\WPlugin\Model\FormModel[] */
 	public function getFormModels()
 		{ return $this->_formModels; }

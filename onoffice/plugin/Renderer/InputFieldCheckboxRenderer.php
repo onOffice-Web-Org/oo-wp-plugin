@@ -72,7 +72,8 @@ class InputFieldCheckboxRenderer
 					.'" value="'.esc_html($key).'"'
 					.(in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
-					.'><label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
+					.' id="'.esc_html($inputId).'">'
+					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
 			}
 		}
 		else

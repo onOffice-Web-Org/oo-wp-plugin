@@ -90,7 +90,7 @@ class AdminPageApiSettings
 
 	public function handleAdminNotices()
 	{
-		$cacheClean = isset( $_GET['cache-refresh'] ) ? $_GET['cache-refresh'] : null ;
+		$cacheClean = filter_input(INPUT_GET, 'cache-refresh');
 
 		if ($cacheClean === 'success')
 		{

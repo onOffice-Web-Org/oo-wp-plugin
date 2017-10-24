@@ -44,12 +44,4 @@ abstract class AdminPage
 			$pFormBuilder->registerFields();
 		}
 	}
-
-
-	/**
-	 *
-	 */
-
-	public function handleAdminNotices()
-		{}
 }

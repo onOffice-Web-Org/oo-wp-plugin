@@ -79,11 +79,11 @@ class RecordManagerUpdateListView
 			);
 
 		$tableRow = array
-				(
-					\onOffice\WPlugin\DataView\DataListView::TABLENAME_LIST_VIEW => $row,
-					\onOffice\WPlugin\DataView\DataListView::TABLENAME_PICTUTYPES => $pictures,
-					\onOffice\WPlugin\DataView\DataListView::TABLENAME_FIELDCONFIG => $fields,
-				);
+			(
+				DataListView::TABLENAME_LIST_VIEW => $row,
+				DataListView::TABLENAME_PICTUTYPES => $pictures,
+				DataListView::TABLENAME_FIELDCONFIG => $fields,
+			);
 
 		$this->updateByRow($this->_listviewId, $tableRow);
 	}
@@ -93,6 +93,7 @@ class RecordManagerUpdateListView
 	 *
 	 * @param int $listviewId
 	 * @param array $tableRow
+	 * @return bool success
 	 *
 	 */
 
@@ -104,7 +105,7 @@ class RecordManagerUpdateListView
 		$pInsert = new RecordManagerInsertListView();
 
 		$whereListviewTable = array('listview_id' => $this->_listviewId);
-		$pWpDb->update($prefix.DataListView::TABLENAME_LIST_VIEW,
+		$result = $pWpDb->update($prefix.DataListView::TABLENAME_LIST_VIEW,
 				$tableRow[DataListView::TABLENAME_LIST_VIEW],
 				$whereListviewTable);
 
@@ -116,12 +117,14 @@ class RecordManagerUpdateListView
 			$pInsert->insertFields($this->_listviewId, $fields);
 		}
 
-		if (array_key_exists(\onOffice\WPlugin\DataView\DataListView::TABLENAME_PICTUTYPES, $tableRow))
+		if (array_key_exists(DataListView::TABLENAME_PICTUTYPES, $tableRow))
 		{
-			$pictures = $tableRow[\onOffice\WPlugin\DataView\DataListView::TABLENAME_PICTUTYPES];
-			$pWpDb->delete($prefix.\onOffice\WPlugin\DataView\DataListView::TABLENAME_PICTUTYPES,
+			$pictures = $tableRow[DataListView::TABLENAME_PICTUTYPES];
+			$pWpDb->delete($prefix.DataListView::TABLENAME_PICTUTYPES,
 					$whereListviewTable);
 			$pInsert->insertPictures($this->_listviewId, $pictures);
 		}
+
+		return $result !== false;
 	}
 }

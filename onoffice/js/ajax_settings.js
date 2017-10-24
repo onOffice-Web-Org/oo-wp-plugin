@@ -25,7 +25,21 @@ onOffice.ajaxSaver = function(outerDiv) {
 		data.record_id = onOffice.settings.record_id;
 
 		jQuery.post(onOffice.settings.ajax_url, data, function(response) {
-			alert('Got this from the server: ' + response);
+			var jsonResponse;
+			try {
+				jsonResponse = JSON.parse(response);
+			} catch (e) {
+				jsonResponse = false;
+			}
+
+			if (jsonResponse === true) {
+				$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
+					onOffice.settings.view_save_success_message + '</p></div>');
+			} else {
+				$('#onoffice-notice-wrapper').append('<div class="notice notice-error is-dismissible"><p>' +
+					onOffice.settings.view_save_fail_message + '</p></div>');
+			}
+			$(document).trigger('wp-updates-notice-added');
 		});
 	};
 

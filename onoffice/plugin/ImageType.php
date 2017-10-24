@@ -46,14 +46,14 @@ class ImageType {
 	/** @var array */
 	static private $_imageTypes = array
 		(
-			ImageType::TITLE => 'Titelbild',
-			ImageType::PHOTO => 'Foto',
-			ImageType::PHOTO_BIG => 'Foto (groß)',
-			ImageType::GROUNDPLAN => 'Grundriss',
-			ImageType::LOCATION_MAP => 'Lageplan',
-			ImageType::CITY_MAP => 'Stadtplan',
-			ImageType::ENERGY_PASS_RANGE => 'Energiepass-Skala',
-			ImageType::FINANCE_EXAMPLE => 'Finanzierungsbeispiel',
+			ImageType::TITLE => 'Cover Photo',
+			ImageType::PHOTO => 'Photo',
+			ImageType::PHOTO_BIG => 'Photo (big)',
+			ImageType::GROUNDPLAN => 'Ground Plan',
+			ImageType::LOCATION_MAP => 'Location Map',
+			ImageType::CITY_MAP => 'City Map',
+			ImageType::ENERGY_PASS_RANGE => 'Energy-Pass Range',
+			ImageType::FINANCE_EXAMPLE => 'Finance Example',
 		);
 
 

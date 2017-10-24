@@ -38,6 +38,12 @@ class AdminPageEstateListSettings
 	/** caution: also needs to be set in Javascript */
 	const POST_RECORD_ID = 'record_id';
 
+	/** */
+	const VIEW_SAVE_SUCCESSFUL_MESSAGE = 'view_save_success_message';
+
+	/** */
+	const VIEW_SAVE_FAIL_MESSAGE = 'view_save_fail_message';
+
 	/** @var int */
 	private $_listViewId = null;
 
@@ -75,7 +81,7 @@ class AdminPageEstateListSettings
 
 	public function renderContent()
 	{
-		$this->generatePageMainTitle(__('Edit list view', 'onoffice'));
+		$this->generatePageMainTitle(__('Edit List View', 'onoffice'));
 
 		echo '<div id="onoffice-ajax">';
 
@@ -127,11 +133,10 @@ class AdminPageEstateListSettings
 		}
 
 		$pUpdate = new \onOffice\WPlugin\Record\RecordManagerUpdateListView($recordId);
-		$pUpdate->updateByRow($row);
+		$result = $pUpdate->updateByRow($row);
+		echo json_encode($result);
 
-		/*var_dump($recordId);
-		var_dump($row);
-		wp_die();*/
+		wp_die();
 	}
 
 
@@ -145,9 +150,32 @@ class AdminPageEstateListSettings
 	{
 		return array(
 			self::POST_RECORD_ID => $this->getListViewId(),
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view.', 'onoffice'),
 		);
 	}
 
+
+	/**
+	 *
+	 */
+
+	public function handleAdminNotices()
+	{
+		add_action('admin_notices', array($this, 'addAdminNoticeWrapper'));
+	}
+
+
+	/**
+	 *
+	 * rest will be added via js
+	 *
+	 */
+
+	public function addAdminNoticeWrapper()
+	{
+		echo '<div id="onoffice-notice-wrapper"></div>';
+	}
 
 	/** @return string */
 	public function getListViewId()

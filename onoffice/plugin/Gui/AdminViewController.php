@@ -66,27 +66,34 @@ class AdminViewController
 
 	public function register_menu()
 	{
+		// main page
 		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'), 'edit_pages',
 			$this->_pageSlug, function(){});
 
+		// Estates
 		$pAdminPageEstate = new AdminPageEstate($this->_pageSlug);
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),
 			__('Estates', 'onoffice'), 'edit_pages',
 			$this->_pageSlug.'-estates', array($pAdminPageEstate, 'render'));
 		add_action( 'load-'.$hookEstates, array($pAdminPageEstate, 'handleAdminNotices'));
 
+		// Forms
 		add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
 			'edit_pages', $this->_pageSlug.'-forms', function() {});
 
+		// Modules
 		$pAdminPageModules = new AdminPageModules($this->_pageSlug);
 		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice'), __('Modules', 'onoffice'),
 			'edit_pages', $this->_pageSlug.'-modules', array($pAdminPageModules, 'render'));
 		add_action( 'admin_init', array($pAdminPageModules, 'registerForms'));
 
+		// Estates: edit list view (hidden page)
 		$hookEditList = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editListView',
 			array($this->_pAdminListViewSettings, 'render'));
+		add_action( 'load-'.$hookEditList, array($this->_pAdminListViewSettings, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditList, array($this->_pAdminListViewSettings, 'checkForms'));
 
+		// Settings
 		$pAdminSettingsPage = new AdminPageApiSettings($this->_pageSlug.'-settings');
 		$hookSettings = add_submenu_page( $this->_pageSlug, __('Settings', 'onoffice'),
 			__('Settings', 'onoffice'), 'edit_pages', $this->_pageSlug.'-settings',
