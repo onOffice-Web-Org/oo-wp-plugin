@@ -70,8 +70,10 @@ class AdminPageEstateList
 			echo ' › '.esc_html__($subTitle, 'onoffice');
 		}
 
+		$new_link = admin_url('admin.php?page=onoffice-editlistview');
+
 		echo '</h1>';
-		echo '<a href="#" class="page-title-action">'.esc_html__('Create list view', 'onoffice').'</a>';
+		echo '<a href="'.$new_link.'" class="page-title-action">'.esc_html__('Create list view', 'onoffice').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 

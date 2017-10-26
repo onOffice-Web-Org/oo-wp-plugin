@@ -24,6 +24,8 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Form\InputModelRenderer;
 use onOffice\WPlugin\Form\FormModelBuilderEstateListSettings;
+use onOffice\WPlugin\Record\RecordManagerUpdateListView;
+use onOffice\WPlugin\Record\RecordManagerInsertListView;
 
 /**
  *
@@ -83,6 +85,7 @@ class AdminPageEstateListSettings
 
 	protected function buildForms()
 	{
+
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$pFormModelBuilder = new FormModelBuilderEstateListSettings($this->getPageSlug());
 		$pFormModel = $pFormModelBuilder->generate($this->_listViewId);
@@ -218,6 +221,7 @@ class AdminPageEstateListSettings
 		$action = filter_input(INPUT_POST, 'action');
 		$nonce = filter_input(INPUT_POST, 'nonce');
 		$recordId = filter_input(INPUT_POST, self::POST_RECORD_ID);
+		$result = false;
 
 		if (!wp_verify_nonce($nonce, $action)) {
 			wp_die();
@@ -239,9 +243,27 @@ class AdminPageEstateListSettings
 			$row = $pInputModelDBAdapterRow->createUpdateValuesByTable();
 		}
 
-		$pUpdate = new \onOffice\WPlugin\Record\RecordManagerUpdateListView($recordId);
-		$result = $pUpdate->updateByRow($row);
-		echo json_encode($result);
+		if ($recordId != null)
+		{
+			$pUpdate = new RecordManagerUpdateListView($recordId);
+			$result = $pUpdate->updateByRow($row);
+		}
+		else
+		{
+			$pInsert = new RecordManagerInsertListView();
+			$recordId = $pInsert->insertByRow($row);
+
+			if ($recordId != null)
+			{
+				$result = true;
+			}
+		}
+
+		$resultObject = new \stdClass();
+		$resultObject->result = $result;
+		$resultObject->record_id = $recordId;
+
+		echo json_encode($resultObject);
 
 		wp_die();
 	}

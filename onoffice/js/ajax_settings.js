@@ -25,14 +25,17 @@ onOffice.ajaxSaver = function(outerDiv) {
 		data.record_id = onOffice.settings.record_id;
 
 		jQuery.post(onOffice.settings.ajax_url, data, function(response) {
-			var jsonResponse;
+			var responseCode;
+
 			try {
-				jsonResponse = JSON.parse(response);
+				var jsonResponse = JSON.parse(response);
+				responseCode = jsonResponse.result;
+				onOffice.settings.record_id = jsonResponse.record_id;
 			} catch (e) {
-				jsonResponse = false;
+				responseCode = false;
 			}
 
-			if (jsonResponse === true) {
+			if (responseCode === true) {
 				$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
 					onOffice.settings.view_save_success_message + '</p></div>');
 			} else {

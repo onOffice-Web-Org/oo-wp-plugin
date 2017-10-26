@@ -32,7 +32,7 @@ class InputFieldCheckboxRenderer
 	extends InputFieldRenderer
 {
 	/** @var array */
-	private $_checkedValues = null;
+	private $_checkedValues = array();
 
 
 	/**
