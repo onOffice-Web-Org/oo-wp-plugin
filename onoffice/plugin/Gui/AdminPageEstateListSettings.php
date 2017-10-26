@@ -83,7 +83,6 @@ class AdminPageEstateListSettings
 
 	protected function buildForms()
 	{
-
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$pFormModelBuilder = new FormModelBuilderEstateListSettings($this->getPageSlug());
 		$pFormModel = $pFormModelBuilder->generate($this->_listViewId);
@@ -101,7 +100,7 @@ class AdminPageEstateListSettings
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pInputModelSortBy = $pFormModelBuilder->createInputModelSortBy();
 		$pInputModelSortOrder = $pFormModelBuilder->createInputModelSortOrder();
-		$pInputModelIsReference = $pFormModelBuilder->createInputModelIsReference();
+		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pFormModelRecordsFilter = new Model\FormModel();
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
@@ -111,7 +110,7 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
 		$pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
 		$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
-		$pFormModelRecordsFilter->addInputModel($pInputModelIsReference);
+		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
 		$pFormModelRecordsFilter->addInputModel($pInputModelShowStatus);
 		$this->addFormModel($pFormModelRecordsFilter);
 
@@ -283,6 +282,16 @@ class AdminPageEstateListSettings
 	public function addAdminNoticeWrapper()
 	{
 		echo '<div id="onoffice-notice-wrapper"></div>';
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function doExtraEnqueues()
+	{
+		wp_enqueue_script('postbox');
 	}
 
 	/** @return string */

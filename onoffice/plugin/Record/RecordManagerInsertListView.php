@@ -47,7 +47,7 @@ class RecordManagerInsertListView
 		$sortby = $pDataViewList->getSortby();
 		$sortorder = $pDataViewList->getSortOrder();
 		$showStatus = $pDataViewList->getShowStatus();
-		$isReference = $pDataViewList->getIsReference();
+		$listType = $pDataViewList->getListType();
 		$template = $pDataViewList->getTemplate();
 		$recordsPerPage = $pDataViewList->getRecordsPerPage();
 		$pictures = $pDataViewList->getPictureTypes();
@@ -59,16 +59,16 @@ class RecordManagerInsertListView
 				'sortby' => $sortby,
 				'sortorder' => $sortorder,
 				'show_status' => $showStatus,
-				'is_reference' => $isReference,
+				'is_reference' => $listType,
 				'template' => $template,
 				'recordsPerPage' => $recordsPerPage,
 			);
 
 		$row = array
 				(
-					\onOffice\WPlugin\DataView\DataListView::TABLENAME_LIST_VIEW => $values,
-					\onOffice\WPlugin\DataView\DataListView::TABLENAME_PICTUTYPES => $pictures,
-					\onOffice\WPlugin\DataView\DataListView::TABLENAME_FIELDCONFIG => $fields,
+					DataListView::TABLENAME_LIST_VIEW => $values,
+					DataListView::TABLENAME_PICTUTYPES => $pictures,
+					DataListView::TABLENAME_FIELDCONFIG => $fields,
 				);
 
 		$listViewId = $this->insertByRow($row);
@@ -120,7 +120,7 @@ class RecordManagerInsertListView
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 		$table = $prefix.DataListView::TABLENAME_FIELDCONFIG;
-		
+
 		//...
 
 	}

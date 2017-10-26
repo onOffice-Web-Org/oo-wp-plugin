@@ -63,29 +63,8 @@ class FormModelBuilderEstateListSettings
 			$this->_dbValues = $pRecordReadManager->getRowById($listViewId);
 		}
 
-		$pInputModelName = $this->createInputModelName();
-		$pInputModelFiltername =  $this->createInputModelFilter();
-		$pInputModelSortBy = $this->createInputModelSortBy();
-		$pInputModelSortOrder = $this->createInputModelSortOrder();
-		$pInputModelRecordsPerPage = $this->createInputModelRecordsPerPage();
-		$pInputModelShowStatus = $this->createInputModelShowStatus();
-		$pInputModelIsReference = $this->createInputModelIsReference();
-		$pInputModelTemplate = $this->createInputModelTemplate();
-		$pInputModelExpose = $this->createInputModelExpose();
-		$pInputModelPictureTypes = $this->createInputModelPictureTypes();
-
 		$pFormModel = new Model\FormModel();
 		$pFormModel->setLabel(__('List View', 'onoffice'));
-		$pFormModel->addInputModel($pInputModelName);
-		$pFormModel->addInputModel($pInputModelFiltername);
-		$pFormModel->addInputModel($pInputModelSortBy);
-		$pFormModel->addInputModel($pInputModelSortOrder);
-		$pFormModel->addInputModel($pInputModelRecordsPerPage);
-		$pFormModel->addInputModel($pInputModelShowStatus);
-		$pFormModel->addInputModel($pInputModelIsReference);
-		$pFormModel->addInputModel($pInputModelTemplate);
-		$pFormModel->addInputModel($pInputModelExpose);
-		$pFormModel->addInputModel($pInputModelPictureTypes);
 		$pFormModel->setGroupSlug('onoffice-listview-settings-main');
 		$pFormModel->setPageSlug($this->getPageSlug());
 
@@ -123,16 +102,22 @@ class FormModelBuilderEstateListSettings
 	 *
 	 */
 
-	public function createInputModelIsReference()
+	public function createInputModelListType()
 	{
-		$labelIsReference = __('Use Detail View for Reference Estates', 'onoffice');
-		$pInputModelIsReference = $this->_pInputModelDBFactory->create
-			(InputModelDBFactory::INPUT_IS_REFERENCE, $labelIsReference);
-		$pInputModelIsReference->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModelIsReference->setValue($this->getValue($pInputModelIsReference->getField()));
-		$pInputModelIsReference->setValuesAvailable(1);
+		$labelListType = __('Type of List', 'onoffice');
+		$pInputModelListType = $this->_pInputModelDBFactory->create
+			(InputModelDBFactory::INPUT_LIST_TYPE, $labelListType);
+		$pInputModelListType->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelListType->setValue($this->getValue($pInputModelListType->getField()));
 
-		return $pInputModelIsReference;
+		// enum values from DB
+		$pInputModelListType->setValuesAvailable(array(
+			'default' => __('Default', 'onoffice'),
+			'reference' => __('Reference Estates', 'onoffice'),
+			'favorites' => __('Favorites List', 'onoffice'),
+		));
+
+		return $pInputModelListType;
 	}
 
 

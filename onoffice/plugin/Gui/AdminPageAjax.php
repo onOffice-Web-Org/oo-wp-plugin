@@ -96,6 +96,16 @@ abstract class AdminPageAjax
 
 	/**
 	 *
+	 * place extra wp_enqueue_script() and wp_enqueue_style() only for this page
+	 *
+	 */
+
+	public function doExtraEnqueues()
+		{}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */

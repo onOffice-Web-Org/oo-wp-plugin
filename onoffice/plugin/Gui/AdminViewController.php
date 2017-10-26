@@ -126,11 +126,12 @@ class AdminViewController
 			);
 
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
-		wp_enqueue_script('postbox');
 		wp_enqueue_script('onoffice-ajax-settings',
 			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
 
 		wp_localize_script('onoffice-ajax-settings', 'onOffice_loc_settings', $ajaxData);
+
+		$pAdminView->doExtraEnqueues();
 	}
 
 

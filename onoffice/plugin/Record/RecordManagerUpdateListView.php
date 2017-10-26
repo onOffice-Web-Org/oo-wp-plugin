@@ -61,7 +61,7 @@ class RecordManagerUpdateListView
 		$sortby = $pDataViewList->getSortby();
 		$sortorder = $pDataViewList->getSortOrder();
 		$showStatus = $pDataViewList->getShowStatus();
-		$isReference = $pDataViewList->getIsReference();
+		$listType = $pDataViewList->getListType();
 		$template = $pDataViewList->getTemplate();
 		$recordsPerPage = $pDataViewList->getRecordsPerPage();
 		$pictures = $pDataViewList->getPictureTypes();
@@ -73,7 +73,7 @@ class RecordManagerUpdateListView
 				'sortby' => $sortby,
 				'sortorder' => $sortorder,
 				'show_status' => $showStatus,
-				'is_reference' => $isReference,
+				'list_type' => $listType,
 				'template' => $template,
 				'recordsPerPage' => $recordsPerPage,
 			);

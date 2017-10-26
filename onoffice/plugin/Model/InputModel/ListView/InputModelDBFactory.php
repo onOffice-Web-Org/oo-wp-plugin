@@ -52,7 +52,7 @@ class InputModelDBFactory
 	const INPUT_TEMPLATE = 'template';
 
 	/** */
-	const INPUT_IS_REFERENCE = 'isReference';
+	const INPUT_LIST_TYPE = 'listType';
 
 	/** */
 	const INPUT_SHOW_STATUS = 'showStatus';
@@ -98,9 +98,9 @@ class InputModelDBFactory
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'template',
 		),
-		self::INPUT_IS_REFERENCE => array(
+		self::INPUT_LIST_TYPE => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
-			self::KEY_FIELD => 'is_reference',
+			self::KEY_FIELD => 'list_type',
 		),
 		self::INPUT_SHOW_STATUS => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',

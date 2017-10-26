@@ -60,7 +60,7 @@ class DataListViewFactory
 		$pListView->setExpose($row['expose']);
 		$pListView->setFields($row[RecordManagerReadListView::FIELDS]);
 		$pListView->setFilterId($row['filterId']);
-		$pListView->setIsReference((bool)$row['is_reference']);
+		$pListView->setListType((bool)$row['list_type']);
 		$pListView->setPictureTypes($row[RecordManagerReadListView::PICTURES]);
 		$pListView->setShowStatus((bool)$row['show_status']);
 		$pListView->setSortby($row['sortby']);

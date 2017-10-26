@@ -72,8 +72,8 @@ class DataListView
 	/** @var bool */
 	private $_showStatus = false;
 
-	/** @var bool */
-	private $_isReference = false;
+	/** @var string */
+	private $_listType = false;
 
 	/** @var string */
 	private $_template = 'default';
@@ -128,9 +128,9 @@ class DataListView
 	public function getShowStatus()
 		{ return $this->_showStatus; }
 
-	/** @return bool */
-	public function getIsReference()
-		{ return $this->_isReference; }
+	/** @return string */
+	public function getListType()
+		{ return $this->_listType; }
 
 	/** @return itn */
 	public function getRecordsPerPage()
@@ -164,13 +164,13 @@ class DataListView
 	public function setSortby($sortby)
 		{ $this->_sortby = $sortby; }
 
-	/** @param string $showStatus */
+	/** @param bool $showStatus */
 	public function setShowStatus($showStatus)
 		{ $this->_showStatus = $showStatus; }
 
-	/** @param string $isReference */
-	public function setIsReference($isReference)
-		{ $this->_isReference = $isReference; }
+	/** @param string $listType */
+	public function setListType($listType)
+		{ $this->_listType = $listType; }
 
 	/** @param string $template */
 	public function setTemplate($template)

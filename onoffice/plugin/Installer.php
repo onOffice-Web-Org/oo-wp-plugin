@@ -108,7 +108,7 @@ abstract class Installer
 			`sortby` tinytext NOT NULL,
 			`sortorder` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
 			`show_status` tinyint(1) NOT NULL DEFAULT '0',
-			`is_reference` tinyint(1) NOT NULL DEFAULT '0',
+			`list_type` ENUM('default', 'reference', 'favorites') NOT NULL DEFAULT 'default',
 			`template` tinytext NOT NULL,
 			`expose` tinytext,
 			`recordsPerPage` INT( 10 ) NOT NULL DEFAULT '10',
