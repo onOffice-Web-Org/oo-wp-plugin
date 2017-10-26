@@ -1,11 +1,19 @@
-#onoffice-ajax > .metabox-holder .postbox-container .postbox label {
+#onoffice-ajax .metabox-holder .postbox-container .postbox p {
+	display: block;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox label {
 	float: left;
 	margin-right: 12pt;
 }
 
-#onoffice-ajax > .metabox-holder .postbox-container .postbox input,
-#onoffice-ajax > .metabox-holder .postbox-container .postbox select {
+#onoffice-ajax .metabox-holder .postbox-container .postbox input,
+#onoffice-ajax .metabox-holder .postbox-container .postbox select {
 	float: right;
+}
+
+#onoffice-ajax #post-body.columns-2  .postbox-container .postbox select {
+	max-width: 160px;
 }
 
 #onoffice-ajax input[name=oopluginlistviews-name] {
