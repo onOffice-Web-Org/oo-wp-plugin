@@ -272,15 +272,14 @@ class ContentFilter
 				$estateConfig[$name]['filter'] = array();
 			}
 
+			$pListViewFactory = new DataView\DataListViewFactory();
+			$pListView = $pListViewFactory->getListViewByName($viewName);
+
 			$configByName = $estateConfig[$name];
-			$templateName = 'default';
+			$templateName = $pListView->getTemplate();
 
 			$configByView = $configByName['views'][$viewName];
 			$pForm = null;
-
-			if (isset($configByName['views'][$viewName]['template'])) {
-				$templateName = $configByName['views'][$viewName]['template'];
-			}
 
 			$pTemplate = new Template( $templateName, 'estate', 'default' );
 
@@ -470,6 +469,7 @@ class ContentFilter
 		wp_register_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js' );
 		wp_register_script( 'gmapsinit', plugins_url( '/js/gmapsinit.js', __DIR__ ), array('google-maps') );
 		wp_register_script( 'jquery-latest', 'https://code.jquery.com/jquery-latest.js');
+		wp_register_script( 'onoffice-favorites', plugins_url( '/js/favorites.js', ONOFFICE_PLUGIN_DIR.'/index.php' ));
 	}
 
 
@@ -486,6 +486,10 @@ class ContentFilter
 
 		if ( is_file( plugin_dir_path( __FILE__ ).'../templates/default/script.js' ) ) {
 			wp_enqueue_style( 'onoffice-template-script.js', $this->getFileUrl( 'script.js' ) );
+		}
+
+		if (Favorites::isFavorizationEnabled()) {
+			wp_enqueue_script( 'onoffice-favorites' );
 		}
 
 		wp_enqueue_script('jquery-latest');

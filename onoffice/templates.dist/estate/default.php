@@ -28,27 +28,21 @@ use onOffice\WPlugin\Favorites;
 
 /* @var $pEstates onOffice\WPlugin\EstateList */
 ?>
+
+<?php if (Favorites::isFavorizationEnabled()): ?>
 <script>
-	<?php
-		// in order to use the favorization feature, add this to you favorite's list page filter:
-		//	'Id' => array(
-		//	  array('op' => 'in', 'val' => \onOffice\WPlugin\Favorites::getAllFavorizedIds()),
-		//	),
-
-	?>
-
 	$(document).ready(function() {
 		onofficeFavorites = new onOffice.favorites(<?php echo json_encode(Favorites::COOKIE_NAME); ?>);
 		onOffice.addFavoriteButtonLabel = function(i, element) {
 			var estateId = $(element).attr('data-onoffice-estateid');
 			if (!onofficeFavorites.favoriteExists(estateId)) {
-				$(element).text('Zu Favoriten hinzufügen');
+				$(element).text('<?php echo esc_js('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>');
 				$(element).on('click', function() {
 					onofficeFavorites.add(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
 				});
 			} else {
-				$(element).text('Aus Favoriten entfernen');
+				$(element).text('<?php echo esc_js('Remove from '.Favorites::getFavorizationLabel(), 'onoffice'); ?>');
 				$(element).on('click', function() {
 					onofficeFavorites.remove(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
@@ -58,6 +52,7 @@ use onOffice\WPlugin\Favorites;
 		$('button.onoffice.favorize').each(onOffice.addFavoriteButtonLabel);
 	});
 </script>
+<?php endif ?>
 <h1>Übersicht der dargestellten Objekte</h1>
 
 <p>Insgesamt <?php echo $pEstates->getEstateOverallCount(); ?> Objekte gefunden.</p>
@@ -158,7 +153,9 @@ $pEstates->resetEstateIterator();
 	<?php endforeach; ?>
 </p>
 
-<button data-onoffice-estateid="<?php echo $pEstates->getCurrentEstateId(); ?>" class="onoffice favorize">
-Zu Favoriten hinzufügen
-</button>
+<?php if (Favorites::isFavorizationEnabled()): ?>
+	<button data-onoffice-estateid="<?php echo $pEstates->getCurrentEstateId(); ?>" class="onoffice favorize">
+		<?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
+	</button>
+<?php endif ?>
 <?php endwhile; ?>

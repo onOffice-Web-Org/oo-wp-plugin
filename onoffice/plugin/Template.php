@@ -130,6 +130,6 @@ class Template
 	 */
 
 	private function getFilePath() {
-		return ConfigWrapper::getSubPluginPath() . '/templates/' . $this->_dirName . '/'. $this->_templateName.'.php';
+		return ConfigWrapper::getTemplateBasePath().'/'.$this->_templateName;
 	}
 }

@@ -44,7 +44,7 @@ class Favorites
 	 */
 
 	static public function getAllFavorizedIds() {
-		$jsonIds = isset($_COOKIE[self::COOKIE_NAME]) ? $_COOKIE[self::COOKIE_NAME] : null;
+		$jsonIds = filter_input(INPUT_COOKIE, self::COOKIE_NAME);
 		$favorites = array(0);
 
 		if ($jsonIds !== null) {
@@ -77,12 +77,19 @@ class Favorites
 			return null;
 		}
 
-		return get_option('onoffice-favorization-favButtonLabelFav', 0);
+		$id = get_option('onoffice-favorization-favButtonLabelFav', self::KEY_SETTING_FAVORIZE);
+
+		switch ($id) {
+			case self::KEY_SETTING_FAVORIZE:
+				return 'Favorites';
+			case self::KEY_SETTING_MEMORIZE:
+				return 'Watchlist';
+		}
 	}
 
 
 	/**
-	 * 
+	 *
 	 */
 
 	static public function registerScripts() {

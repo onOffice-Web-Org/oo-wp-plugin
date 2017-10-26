@@ -196,9 +196,10 @@ class EstateList {
 	private function getEstateParameters($currentPage) {
 		$language = Language::getDefault();
 		$pListView = $this->_pListView;
+		$pListViewFilterBuilder = new Filter\DefaultFilterBuilderListView($pListView);
 
 		$numRecordsPerPage = $this->_pListView->getRecordsPerPage();
-		$filter = null; // todo
+		$filter = $pListViewFilterBuilder->buildFilter();
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		$this->_currentEstatePage = $currentPage;
 
@@ -219,6 +220,10 @@ class EstateList {
 
 		if ($pListView->getSortorder() !== null) {
 			$requestParams['sortorder'] = $pListView->getSortorder();
+		}
+
+		if ($pListView->getFilterId() != null) {
+			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 
 		return $requestParams;

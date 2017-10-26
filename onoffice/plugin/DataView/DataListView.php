@@ -45,6 +45,15 @@ class DataListView
 	/** */
 	const TABLENAME_FIELDCONFIG = 'oo_plugin_fieldconfig';
 
+	/** */
+	const LISTVIEW_TYPE_DEFAULT = 'default';
+
+	/** */
+	const LISTVIEW_TYPE_REFERENCE = 'reference';
+
+	/** */
+	const LISTVIEW_TYPE_FAVORITES = 'favorites';
+
 	/** @var int */
 	private $_id = null;
 
@@ -73,10 +82,10 @@ class DataListView
 	private $_showStatus = false;
 
 	/** @var string */
-	private $_listType = false;
+	private $_listType = null;
 
 	/** @var string */
-	private $_template = 'default';
+	private $_template = '';
 
 	/** @var string */
 	private $_expose = null;

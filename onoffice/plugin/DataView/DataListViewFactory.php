@@ -35,7 +35,7 @@ class DataListViewFactory
 	/**
 	 *
 	 * @param string $listViewName
-	 * @return \onOffice\WPlugin\DataView\DataListView
+	 * @return DataListView
 	 *
 	 */
 
@@ -58,14 +58,16 @@ class DataListViewFactory
 	{
 		$pListView = new DataListView($row['listview_id'], $row['name']);
 		$pListView->setExpose($row['expose']);
-		$pListView->setFields($row[RecordManagerReadListView::FIELDS]);
+		$pListView->setFields($row[DataListView::FIELDS]);
 		$pListView->setFilterId($row['filterId']);
-		$pListView->setListType((bool)$row['list_type']);
-		$pListView->setPictureTypes($row[RecordManagerReadListView::PICTURES]);
+		$pListView->setListType($row['list_type']);
+		$pListView->setPictureTypes($row[DataListView::PICTURES]);
 		$pListView->setShowStatus((bool)$row['show_status']);
 		$pListView->setSortby($row['sortby']);
 		$pListView->setSortorder($row['sortorder']);
 		$pListView->setRecordsPerPage($row['recordsPerPage']);
+		$pListView->setTemplate($row['template']);
+
 		return $pListView;
 	}
 }

@@ -179,7 +179,7 @@ class EstateListTable extends ListTable
 
 	protected function column_list_type($pItem)
 	{
-		$listTypes = FormModelBuilderEstateListSettings::getListViewTypes();
+		$listTypes = FormModelBuilderEstateListSettings::getListViewLabels();
 		$selectedTypeLabel = null;
 		$selectedType = $pItem->list_type;
 

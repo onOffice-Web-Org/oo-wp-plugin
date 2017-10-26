@@ -109,7 +109,7 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_LIST_TYPE, $labelListType);
 		$pInputModelListType->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelListType->setValue($this->getValue($pInputModelListType->getField()));
-		$pInputModelListType->setValuesAvailable(self::getListViewTypes());
+		$pInputModelListType->setValuesAvailable(self::getListViewLabels());
 
 		return $pInputModelListType;
 	}
@@ -282,7 +282,7 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
-		$pInputModelTemplate->setValuesAvailable($this->readTemplates());
+		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths());
 		$pInputModelTemplate->setValue($selectedTemplate);
 
 		return $pInputModelTemplate;
@@ -295,9 +295,9 @@ class FormModelBuilderEstateListSettings
 	 *
 	 */
 
-	private function readTemplates()
+	private function readTemplatePaths()
 	{
-		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR).'onoffice/templates.dist/estate/*.php');
+		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR.'/index.php').'templates.dist/estate/*.php');
 		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR).'onoffice-personalized/templates/estate/*.php');
 		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
 		$templates = array();
@@ -386,12 +386,12 @@ class FormModelBuilderEstateListSettings
 	 *
 	 */
 
-	static public function getListViewTypes()
+	static public function getListViewLabels()
 	{
 		return array(
-			'default' => __('Default', 'onoffice'),
-			'reference' => __('Reference Estates', 'onoffice'),
-			'favorites' => __('Favorites List', 'onoffice'),
+			DataListView::LISTVIEW_TYPE_DEFAULT => __('Default', 'onoffice'),
+			DataListView::LISTVIEW_TYPE_REFERENCE => __('Reference Estates', 'onoffice'),
+			DataListView::LISTVIEW_TYPE_FAVORITES => __('Favorites List', 'onoffice'),
 		);
 	}
 }
