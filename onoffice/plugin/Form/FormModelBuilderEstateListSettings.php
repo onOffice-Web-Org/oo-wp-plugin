@@ -109,13 +109,7 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_LIST_TYPE, $labelListType);
 		$pInputModelListType->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelListType->setValue($this->getValue($pInputModelListType->getField()));
-
-		// enum values from DB
-		$pInputModelListType->setValuesAvailable(array(
-			'default' => __('Default', 'onoffice'),
-			'reference' => __('Reference Estates', 'onoffice'),
-			'favorites' => __('Favorites List', 'onoffice'),
-		));
+		$pInputModelListType->setValuesAvailable(self::getListViewTypes());
 
 		return $pInputModelListType;
 	}
@@ -383,5 +377,21 @@ class FormModelBuilderEstateListSettings
 	{
 		$pTemplateCall = new \onOffice\WPlugin\TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE);
 		return $pTemplateCall->getTemplates();
+	}
+
+
+	/**
+	 *
+	 * @return array enum values from DB
+	 *
+	 */
+
+	static public function getListViewTypes()
+	{
+		return array(
+			'default' => __('Default', 'onoffice'),
+			'reference' => __('Reference Estates', 'onoffice'),
+			'favorites' => __('Favorites List', 'onoffice'),
+		);
 	}
 }

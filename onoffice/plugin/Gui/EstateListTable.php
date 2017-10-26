@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\wp_dependent\ListTable;
 use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Form\FormModelBuilderEstateListSettings;
 use onOffice\WPlugin\FilterCall;
 
 /**
@@ -90,7 +91,7 @@ class EstateListTable extends ListTable
 		$pRecordRead->addColumn('name');
 		$pRecordRead->addColumn('filterId');
 		$pRecordRead->addColumn('show_status');
-		$pRecordRead->addColumn('is_reference');
+		$pRecordRead->addColumn('list_type');
 		$pRecordRead->addColumn('name', 'shortcode');
 
 		$this->setItems($pRecordRead->getRecords());
@@ -115,7 +116,7 @@ class EstateListTable extends ListTable
 			'name' => __('Name of View', 'onoffice'),
 			'filtername' => __('Filter', 'onoffice'),
 			'show_status' => __('Show Status', 'onoffice'),
-			'is_reference' => __('For References', 'onoffice'),
+			'list_type' => __('Type of List', 'onoffice'),
 			'shortcode' => __('Shortcode', 'onoffice'),
 		);
 
@@ -176,9 +177,18 @@ class EstateListTable extends ListTable
 	 *
 	 */
 
-	protected function column_is_reference($pItem)
+	protected function column_list_type($pItem)
 	{
-		return $pItem->is_reference == '1' ? __('Yes', 'onoffice') : __('No', 'onoffice');
+		$listTypes = FormModelBuilderEstateListSettings::getListViewTypes();
+		$selectedTypeLabel = null;
+		$selectedType = $pItem->list_type;
+
+		if (array_key_exists($selectedType, $listTypes))
+		{
+			$selectedTypeLabel = $listTypes[$selectedType];
+		}
+
+		return $selectedTypeLabel;
 	}
 
 
@@ -221,7 +231,7 @@ class EstateListTable extends ListTable
 			'name' => __('Name of View', 'onoffice'),
 			'filtername' => __('Filter', 'onoffice'),
 			'show_status' => __('Show Status', 'onoffice'),
-			'is_reference' => __('For References', 'onoffice'),
+			'list_type' => __('Type of List', 'onoffice'),
 			'shortcode' => __('Shortcode', 'onoffice'),
 		);
 	}

@@ -59,7 +59,7 @@ class RecordManagerInsertListView
 				'sortby' => $sortby,
 				'sortorder' => $sortorder,
 				'show_status' => $showStatus,
-				'is_reference' => $listType,
+				'list_type' => $listType,
 				'template' => $template,
 				'recordsPerPage' => $recordsPerPage,
 			);
