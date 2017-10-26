@@ -1,0 +1,39 @@
+#onoffice-ajax > .metabox-holder .postbox-container .postbox label {
+	float: left;
+	margin-right: 12pt;
+}
+
+#onoffice-ajax > .metabox-holder .postbox-container .postbox input,
+#onoffice-ajax > .metabox-holder .postbox-container .postbox select {
+	float: right;
+}
+
+#onoffice-ajax input[name=oopluginlistviews-name] {
+	font-size: 1.7em;
+	padding: 3px 8px;
+	width: 100%;
+}
+
+#onoffice-ajax #post-body.columns-2 input[name=oopluginlistviews-name] {
+	width: 100%;
+}
+
+#onoffice-ajax h2.hndle {
+	background: #fafafa;
+}
+
+#onoffice-ajax {
+	width: 580px;
+}
+
+body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
+	margin-right: -116px;
+}
+
+#onoffice-ajax #poststuff .metabox-holder.columns-2 #postbox-container-2 {
+     width: inherit;
+}
+#onoffice-ajax #poststuff #post-body-content {
+     width: 100%;
+	 margin: 0;
+}

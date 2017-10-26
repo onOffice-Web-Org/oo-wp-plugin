@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Form;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Renderer;
 
 /**
@@ -44,7 +45,7 @@ class InputModelRenderer
 	 *
 	 */
 
-	public function __construct(FormModel $pFormModel)
+	public function __construct(FormModel $pFormModel = null)
 	{
 		$this->_pFormModel = $pFormModel;
 	}
@@ -68,6 +69,26 @@ class InputModelRenderer
 
 			add_settings_field( $pInputModel->getIdentifier(), $pInputModel->getLabel(),
 				array($pInputField, 'render'), $pForm->getPageSlug(), $pForm->getGroupSlug() );
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function buildForAjax() {
+		$pForm = $this->_pFormModel;
+
+		foreach ($pForm->getInputModel() as $pInputModel)
+		{
+			$pInputField = $this->createInputField($pInputModel);
+			echo '<p id="" class="wp-clearfix">';
+			echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
+			echo esc_html__($pInputModel->getLabel());
+			echo '</label>';
+			$pInputField->render();
+			echo '</p>';
 		}
 	}
 
@@ -144,6 +165,12 @@ class InputModelRenderer
 				}
 				else
 				{
+					$placeholder = $pInputModel->getPlaceholder();
+
+					if (!__String::getNew($placeholder)->isEmpty())
+					{
+						$pInstance->addAdditionalAttribute('placeholder', $placeholder);
+					}
 					$pInstance->setValue($pInputModel->getValue());
 				}
 
@@ -156,4 +183,12 @@ class InputModelRenderer
 
 		return $pInstance;
 	}
+
+	/** @return onOffice\WPlugin\Model\FormModel */
+	public function getFormModel()
+		{ return $this->_pFormModel; }
+
+	/** @param \onOffice\WPlugin\Form\Model\FormModel $pFormModel */
+	public function setFormModel(FormModel $pFormModel)
+		{ $this->_pFormModel = $pFormModel; }
 }

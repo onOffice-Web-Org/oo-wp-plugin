@@ -63,6 +63,9 @@ abstract class InputModelBase
 	/** @var bool */
 	private $_isMulti = false;
 
+	/** @var string */
+	private $_placeholder = null;
+
 
 	/**
 	 *
@@ -127,4 +130,12 @@ abstract class InputModelBase
 	/** @return bool */
 	public function getIsMulti()
 		{ return $this->_isMulti; }
+
+	/** @return bool */
+	public function getPlaceholder()
+		{ return $this->_placeholder; }
+
+	/** @param string $placeholder */
+	public function setPlaceholder($placeholder)
+		{ $this->_placeholder = $placeholder; }
 }

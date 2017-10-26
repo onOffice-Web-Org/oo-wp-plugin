@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Model\FormModel;
+use onOffice\WPlugin\Form\InputModelRenderer;
 
 /**
  *
@@ -58,6 +60,30 @@ abstract class AdminPageAjax
 		{
 			$this->buildForms();
 		}
+	}
+
+
+	/**
+	 *
+	 * @param \onOffice\WPlugin\Model\FormModel $pFormModel
+	 * @param string $position
+	 * @param InputModelRenderer $pInputModelRenderer
+	 *
+	 */
+
+	protected function createMetaBoxByForm(FormModel $pFormModel,
+		$position = 'left', InputModelRenderer $pInputModelRenderer = null)
+	{
+		$screenId = get_current_screen()->id;
+		$formId = $pFormModel->getGroupSlug();
+		$formLabel = $pFormModel->getLabel();
+
+		if ($pInputModelRenderer === null) {
+			$pInputModelRenderer = new InputModelRenderer($pFormModel);
+		}
+
+		$callback =  array($pInputModelRenderer, 'buildForAjax');
+		add_meta_box($formId, $formLabel, $callback, $screenId, $position, 'default' );
 	}
 
 

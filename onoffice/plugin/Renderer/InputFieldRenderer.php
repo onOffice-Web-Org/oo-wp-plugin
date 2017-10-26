@@ -114,9 +114,16 @@ abstract class InputFieldRenderer
 	public function getType()
 		{ return $this->_type;}
 
-	/** @return int */
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+	
 	public function getGuiId()
-		{ return self::$_guiId; }
+	{
+		return $this->_type.'_'.self::$_guiId;
+	}
 
 	/**
 	 *

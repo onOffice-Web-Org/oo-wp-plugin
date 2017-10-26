@@ -45,7 +45,7 @@ class InputFieldSelectRenderer
 		echo '<select name="'.esc_html($this->getName()).'" '
 			 .($this->_multiple ? ' multiple = "multiple" ' : null)
 			 .$this->renderAdditionalAttributes()
-			 .'>';
+			 .' id="'.esc_html($this->getGuiId()).'">';
 
 		foreach ($this->getValue() as $key => $label)
 		{
@@ -55,7 +55,7 @@ class InputFieldSelectRenderer
 				.esc_html($label)
 				.'</option>';
 		}
-		
+
 		echo '</select>';
 	}
 

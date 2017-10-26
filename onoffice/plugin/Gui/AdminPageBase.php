@@ -102,6 +102,24 @@ abstract class AdminPageBase
 	}
 
 
+	/**
+	 *
+	 * @param string $groupSlug
+	 * @return \onOffice\WPlugin\Model\FormModel
+	 *
+	 */
+
+	public function getFormModelByGroupSlug($groupSlug)
+	{
+		$pFormModel = null;
+
+		if (array_key_exists($groupSlug, $this->_formModels)) {
+			$pFormModel = $this->_formModels[$groupSlug];
+		}
+
+		return $pFormModel;
+	}
+
 
 	/**
 	 *

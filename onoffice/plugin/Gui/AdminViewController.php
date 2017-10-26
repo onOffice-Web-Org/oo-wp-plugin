@@ -52,7 +52,7 @@ class AdminViewController
 
 		$this->_pageSlug = 'onoffice';
 		$this->_pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);
-		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editListView'] = $this->_pAdminListViewSettings;
+		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editlistview'] = $this->_pAdminListViewSettings;
 	}
 
 
@@ -61,6 +61,8 @@ class AdminViewController
 	 * Important note:
 	 * - pages usually use the load-(page) hook for handleAdminNotices() but
 	 * - ajax pages use it in order to pre-generate the form model.
+	 * - page slugs must be chosen according to WP's sanitize_key() function because of
+	 *   wp_ajax_closed_postboxes()
 	 *
 	 */
 
@@ -88,7 +90,7 @@ class AdminViewController
 		add_action( 'admin_init', array($pAdminPageModules, 'registerForms'));
 
 		// Estates: edit list view (hidden page)
-		$hookEditList = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editListView',
+		$hookEditList = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editlistview',
 			array($this->_pAdminListViewSettings, 'render'));
 		add_action( 'load-'.$hookEditList, array($this->_pAdminListViewSettings, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditList, array($this->_pAdminListViewSettings, 'checkForms'));
@@ -124,6 +126,7 @@ class AdminViewController
 			);
 
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
+		wp_enqueue_script('postbox');
 		wp_enqueue_script('onoffice-ajax-settings',
 			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
 
@@ -146,5 +149,16 @@ class AdminViewController
 
 			add_action( 'wp_ajax_'.$hook, array($this->_ajaxHooks[$hook], 'ajax_action'));
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function enqueue_css()
+	{
+		wp_enqueue_style('onoffice-admin-css',
+			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
 	}
 }

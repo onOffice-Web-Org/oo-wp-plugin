@@ -82,7 +82,7 @@ class InputFieldCheckboxRenderer
 				.'" value="'.esc_html($this->getValue()).'"'
 				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
 				.$this->renderAdditionalAttributes()
-				.'>';
+				.' id="'.esc_html($this->getGuiId()).'">';
 		}
 	}
 }
