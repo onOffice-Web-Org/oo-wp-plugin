@@ -240,6 +240,12 @@ class FormModelBuilderEstateListSettings
 		$pInputModelPictureTypes->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
 		$pictureTypes = $this->getValue(DataListView::PICTURES);
+
+		if (null == $pictureTypes)
+		{
+			$pictureTypes = array();
+		}
+
 		$pInputModelPictureTypes->setValue($pictureTypes);
 
 		return $pInputModelPictureTypes;
