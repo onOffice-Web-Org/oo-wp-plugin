@@ -129,6 +129,15 @@ abstract class AdminPageBase
 		{}
 
 
+	/**
+	 *
+	 * place extra wp_enqueue_script() and wp_enqueue_style() only for this page
+	 *
+	 */
+
+	public function doExtraEnqueues()
+		{}
+
 	/** @return \onOffice\WPlugin\Model\FormModel[] */
 	public function getFormModels()
 		{ return $this->_formModels; }

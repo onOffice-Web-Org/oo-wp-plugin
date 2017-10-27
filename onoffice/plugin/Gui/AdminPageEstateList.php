@@ -84,9 +84,9 @@ class AdminPageEstateList
 
 	public function handleAdminNotices()
 	{
-		$this->_itemsDeleted = isset( $_GET['delete'] ) ? $_GET['delete'] : null;
+		$this->_itemsDeleted = filter_input(INPUT_GET, 'delete');
 
-		if ($this->_itemsDeleted === null)
+		if ($this->_itemsDeleted === null || $this->_itemsDeleted === false)
 		{
 			return;
 		}
@@ -128,5 +128,23 @@ class AdminPageEstateList
 		$message = __( 'No list view was deleted.', 'onoffice' );
 
 		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function doExtraEnqueues()
+	{
+		$translation = array(
+			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice'),
+		);
+
+		wp_register_script('estatelist-bulk-actions', plugins_url('/js/estatelistview-bulk-actions.js',
+			ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+
+		wp_localize_script('estatelist-bulk-actions', 'onoffice_listviewlist_settings', $translation);
+		wp_enqueue_script('estatelist-bulk-actions');
 	}
 }

@@ -59,6 +59,7 @@ add_action( 'init', array($pFormPost, 'initialCheck') );
 add_action( 'admin_menu', array($pAdminViewController, 'register_menu') );
 add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_ajax') );
 add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_css') );
+add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueueExtraJs') );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'registerScripts'), 9 );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
 add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );

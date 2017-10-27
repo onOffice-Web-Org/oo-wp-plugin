@@ -162,4 +162,56 @@ class AdminViewController
 		wp_enqueue_style('onoffice-admin-css',
 			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function enqueueExtraJs($hook)
+	{
+		$pObject = $this->getObjectByHook($hook);
+
+		if ($pObject !== null)
+		{
+			$pObject->doExtraEnqueues();
+		}
+	}
+
+
+	/**
+	 *
+	 * Todo: Delete if pages are being registered and accessible from
+	 *	     a member variable by hook
+	 *
+	 * @global \WP_Hook[] $wp_filter
+	 * @param string $hook
+	 * @return AdminPageBase
+	 *
+	 */
+
+	private function getObjectByHook($hook)
+	{
+		global $wp_filter;
+		$fullHook = $hook;
+
+		if (isset($wp_filter[$fullHook]))
+		{
+			/* @var $pWpHook \WP_Hook */
+			$pWpHook = $wp_filter[$fullHook];
+
+			foreach ($pWpHook->callbacks as $priority => $settingsPriorized)
+			{
+				foreach ($settingsPriorized as $settings)
+				{
+					$pObject = isset($settings['function']) && is_array($settings['function']) ?
+						$settings['function'][0] : null;
+					if ($pObject !== null) {
+						return $pObject;
+					}
+				}
+			}
+		}
+		return null;
+	}
 }

@@ -150,4 +150,14 @@ class AdminPageEstate
 	{
 		$this->_pSelectedTab->handleAdminNotices();
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function doExtraEnqueues()
+	{
+		$this->_pSelectedTab->doExtraEnqueues();
+	}
 }
