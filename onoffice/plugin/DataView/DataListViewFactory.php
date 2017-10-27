@@ -43,6 +43,11 @@ class DataListViewFactory
 	{
 		$pRecordRead = new RecordManagerReadListView();
 		$record = $pRecordRead->getRowByName($listViewName);
+
+		if ($record === null) {
+			throw new UnknownListViewException($listViewName);
+		}
+
 		return $this->createListViewByRow($record);
 	}
 

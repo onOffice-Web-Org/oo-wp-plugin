@@ -38,8 +38,8 @@ class DefaultFilterBuilderListView
 
 	/** @var array */
 	private $_defaultFilter = array(
-		'vermarktungsart' => array(
-			array('op' => '=', 'val' => 'miete'),
+		'veroeffentlichen' => array(
+			array('op' => '=', 'val' => 1),
 		),
 	);
 
@@ -68,12 +68,11 @@ class DefaultFilterBuilderListView
 		$filter = $this->_defaultFilter;
 
 		switch ($this->_pDataListView->getListType()) {
-			case DataListView::LISTVIEW_TYPE_DEFAULT:
-			case DataListView::LISTVIEW_TYPE_REFERENCE:
-				$filter = $this->_defaultFilter;
-				break;
 			case DataListView::LISTVIEW_TYPE_FAVORITES:
 				$filter = $this->getFavoritesFilter();
+				break;
+			case DataListView::LISTVIEW_TYPE_REFERENCE:
+				$filter = $this->getReferenceViewFilter();
 				break;
 		}
 
@@ -94,6 +93,23 @@ class DefaultFilterBuilderListView
 		$filter = $this->_defaultFilter;
 		$filter['Id'] =  array(
 			array('op' => 'in', 'val' => $ids),
+		);
+
+		return $filter;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getReferenceViewFilter()
+	{
+		$filter = $this->_defaultFilter;
+		$filter['referenz'] =  array(
+			array('op' => '=', 'val' => 1),
 		);
 
 		return $filter;

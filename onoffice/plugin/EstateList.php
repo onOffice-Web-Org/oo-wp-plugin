@@ -581,6 +581,18 @@ class EstateList {
 
 	/**
 	 *
+	 * @return int
+	 *
+	 */
+
+	public function getCurrentMultiLangEstateMainId() {
+		$recordId = $this->_currentEstate['mainId'];
+		return $recordId;
+	}
+
+
+	/**
+	 *
 	 * @param int $estateId
 	 * @param string $configName
 	 * @param string $viewName

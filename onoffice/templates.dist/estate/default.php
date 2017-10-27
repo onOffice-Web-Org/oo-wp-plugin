@@ -154,7 +154,7 @@ $pEstates->resetEstateIterator();
 </p>
 
 <?php if (Favorites::isFavorizationEnabled()): ?>
-	<button data-onoffice-estateid="<?php echo $pEstates->getCurrentEstateId(); ?>" class="onoffice favorize">
+	<button data-onoffice-estateid="<?php echo $pEstates->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
 		<?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
 	</button>
 <?php endif ?>

@@ -44,14 +44,27 @@ class Favorites
 	 */
 
 	static public function getAllFavorizedIds() {
-		$jsonIds = filter_input(INPUT_COOKIE, self::COOKIE_NAME);
-		$favorites = array(0);
+		$jsonIds = filter_input(INPUT_COOKIE, self::COOKIE_NAME, FILTER_UNSAFE_RAW);
+		$favoriteIds = array(0);
 
 		if ($jsonIds !== null) {
-			$favorites = json_decode($jsonIds);
+			try
+			{
+				$favorites = json_decode($jsonIds);
+			}
+			catch (Exception $pE)
+			{
+				$favorites = array(0);
+			}
+
+			$favoriteIds = array_filter($favorites, 'is_numeric');
 		}
 
-		return $favorites;
+		if ($favoriteIds === array()) {
+			$favoriteIds = array(0);
+		}
+
+		return $favoriteIds;
 	}
 
 
