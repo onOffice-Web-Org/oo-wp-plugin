@@ -148,6 +148,13 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				break;
 
+			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST:
+				$name = $pInputModel->getIdentifier();
+				$pInstance = new Renderer\InputFieldComplexSortableListRenderer($name,
+				$pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				break;
+
 			case InputModelOption::HTML_TYPE_RADIO:
 				$pInstance = new Renderer\InputFieldRadioRenderer($pInputModel->getIdentifier(),
 				$pInputModel->getValuesAvailable());

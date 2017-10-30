@@ -61,6 +61,9 @@ class AdminPageEstateListSettings
 	/** */
 	const FORM_VIEW_DOCUMENT_TYPES = 'viewdocumenttypes';
 
+	/** */
+	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
+
 	/** @var int */
 	private $_listViewId = null;
 
@@ -140,6 +143,14 @@ class AdminPageEstateListSettings
 		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice'));
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
+
+		$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfig();
+		$pFormModelFieldsConfig = new Model\FormModel();
+		$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
+		$pFormModelFieldsConfig->setGroupSlug(self::FORM_VIEW_FIELDS_CONFIG);
+		$pFormModelFieldsConfig->setLabel(__('Fields Configuration', 'onoffice'));
+		$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
+		$this->addFormModel($pFormModelFieldsConfig);
 	}
 
 
@@ -160,6 +171,9 @@ class AdminPageEstateListSettings
 
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'normal');
+
+		$pFormFieldsConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_FIELDS_CONFIG);
+		$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 	}
 
 	/**
@@ -196,8 +210,6 @@ class AdminPageEstateListSettings
 		echo '</div>';
 		echo '</div>';
 		echo '<div class="clear"></div>';
-		echo '<div id="" class="card">';
-		echo '<i>(Field config goes here)</i></div>';
 
 		do_settings_sections( $this->getPageSlug() );
 		submit_button(null, 'primary', 'send_ajax');

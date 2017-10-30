@@ -45,6 +45,8 @@ class FormModelBuilderEstateListSettings
 	/** @var InputModelDBFactory */
 	private $_pInputModelDBFactory = null;
 
+	/** @var array */
+	private $_fields = array();
 
 	/**
 	 *
@@ -56,6 +58,7 @@ class FormModelBuilderEstateListSettings
 	public function generate($listViewId = null)
 	{
 		$this->_pInputModelDBFactory = new InputModelDBFactory();
+		$this->readFieldnames();
 
 		if ($listViewId !== null)
 		{
@@ -71,6 +74,31 @@ class FormModelBuilderEstateListSettings
 		return $pFormModel;
 	}
 
+
+	/**
+	 *
+	 * @return Model\InputModelDB
+	 *
+	 */
+
+	public function createInputModelFieldsConfig()
+	{
+		$pInputModelFieldsConfig = $this->_pInputModelDBFactory->create(
+				InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
+		$pInputModelFieldsConfig->setValuesAvailable($this->_fields);
+		$fields = $this->getValue(DataListView::FIELDS);
+
+		if (null == $fields)
+		{
+			$fields = array();
+		}
+
+		$pInputModelFieldsConfig->setValue($fields);
+
+		return $pInputModelFieldsConfig;
+	}
 
 
 	/**
@@ -129,7 +157,7 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
 		$pInputModelSortBy->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
-		$fieldnames = $this->readFieldnames();
+		$fieldnames = $this->_fields;
 		natcasesort($fieldnames);
 		$pInputModelSortBy->setValuesAvailable($fieldnames);
 		$pInputModelSortBy->setValue($this->getValue($pInputModelSortBy->getField()));
@@ -325,12 +353,7 @@ class FormModelBuilderEstateListSettings
 	}
 
 
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
+	/** */
 	private function readFieldnames()
 	{
 		$language = Language::getDefault();
@@ -345,7 +368,7 @@ class FormModelBuilderEstateListSettings
 			$result[$key] = $properties['label'];
 		}
 
-		return $result;
+		$this->_fields = $result;
 	}
 
 

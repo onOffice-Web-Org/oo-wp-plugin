@@ -42,6 +42,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_TEXT = 'text';
 
+	/** */
+	const HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST = 'complexSortableCheckboxList';
+
 	/** @var string */
 	private $_name = null;
 

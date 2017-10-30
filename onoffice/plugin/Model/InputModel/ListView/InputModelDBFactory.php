@@ -61,6 +61,9 @@ class InputModelDBFactory
 	const INPUT_EXPOSE = 'expose';
 
 	/** */
+	const INPUT_FIELD_CONFIG = 'fieldConfig';
+
+	/** */
 	const KEY_FIELD = 'field';
 
 	/** */
@@ -109,6 +112,10 @@ class InputModelDBFactory
 		self::INPUT_EXPOSE => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'expose',
+		),
+		self::INPUT_FIELD_CONFIG => array(
+			self::KEY_TABLE => 'oo_plugin_fieldconfig',
+			self::KEY_FIELD => 'fieldname',
 		),
 	);
 

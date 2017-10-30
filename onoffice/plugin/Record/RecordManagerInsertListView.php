@@ -92,18 +92,20 @@ class RecordManagerInsertListView
 		$pWpDb->insert($pWpDb->prefix.DataListView::TABLENAME_LIST_VIEW, $row);
 		$listViewId = $pWpDb->insert_id;
 
-		if (array_key_exists(DataListView::TABLENAME_FIELDCONFIG, $tableRow))
+		if ($listViewId > 0)
 		{
-			$fields = $tableRow[DataListView::TABLENAME_FIELDCONFIG];
-			$this->insertFields($listViewId, $fields);
-		}
+			if (array_key_exists(DataListView::TABLENAME_FIELDCONFIG, $tableRow))
+			{
+				$fields = $tableRow[DataListView::TABLENAME_FIELDCONFIG];
+				$this->insertFields($listViewId, $fields);
+			}
 
-		if (array_key_exists(DataListView::TABLENAME_PICTUTYPES, $tableRow))
-		{
-			$pictures = $tableRow[DataListView::TABLENAME_PICTUTYPES];
-			$this->insertPictures($listViewId, $pictures);
+			if (array_key_exists(DataListView::TABLENAME_PICTUTYPES, $tableRow))
+			{
+				$pictures = $tableRow[DataListView::TABLENAME_PICTUTYPES];
+				$this->insertPictures($listViewId, $pictures);
+			}
 		}
-
 		return $listViewId;
 	}
 
@@ -121,8 +123,23 @@ class RecordManagerInsertListView
 		$pWpDb = $this->getWpdb();
 		$table = $prefix.DataListView::TABLENAME_FIELDCONFIG;
 
-		//...
+		if (array_key_exists('fieldname', $fields))
+		{
+			$fieldValues = $fields['fieldname'];
+			$order = 1;
 
+			foreach ($fieldValues as $field)
+			{
+				$fieldRow = array();
+				$fieldRow['listview_id'] = $listViewId;
+				$fieldRow['fieldname'] = $field;
+				$fieldRow['order'] = $order;
+
+				$pWpDb->insert($table, $fieldRow);
+
+				$order++;
+			}
+		}
 	}
 
 
