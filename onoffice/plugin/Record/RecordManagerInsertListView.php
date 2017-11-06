@@ -65,11 +65,11 @@ class RecordManagerInsertListView
 			);
 
 		$row = array
-				(
-					DataListView::TABLENAME_LIST_VIEW => $values,
-					DataListView::TABLENAME_PICTUTYPES => $pictures,
-					DataListView::TABLENAME_FIELDCONFIG => $fields,
-				);
+		(
+			self::TABLENAME_LIST_VIEW => $values,
+			self::TABLENAME_PICTURETYPES => $pictures,
+			self::TABLENAME_FIELDCONFIG => $fields,
+		);
 
 		$listViewId = $this->insertByRow($row);
 
@@ -87,22 +87,22 @@ class RecordManagerInsertListView
 	public function insertByRow($tableRow)
 	{
 		$pWpDb = $this->getWpdb();
-		$row = $tableRow[DataListView::TABLENAME_LIST_VIEW];
+		$row = $tableRow[self::TABLENAME_LIST_VIEW];
 
-		$pWpDb->insert($pWpDb->prefix.DataListView::TABLENAME_LIST_VIEW, $row);
+		$pWpDb->insert($pWpDb->prefix.self::TABLENAME_LIST_VIEW, $row);
 		$listViewId = $pWpDb->insert_id;
 
 		if ($listViewId > 0)
 		{
-			if (array_key_exists(DataListView::TABLENAME_FIELDCONFIG, $tableRow))
+			if (array_key_exists(self::TABLENAME_FIELDCONFIG, $tableRow))
 			{
-				$fields = $tableRow[DataListView::TABLENAME_FIELDCONFIG];
+				$fields = $tableRow[self::TABLENAME_FIELDCONFIG];
 				$this->insertFields($listViewId, $fields);
 			}
 
-			if (array_key_exists(DataListView::TABLENAME_PICTUTYPES, $tableRow))
+			if (array_key_exists(self::TABLENAME_PICTURETYPES, $tableRow))
 			{
-				$pictures = $tableRow[DataListView::TABLENAME_PICTUTYPES];
+				$pictures = $tableRow[self::TABLENAME_PICTURETYPES];
 				$this->insertPictures($listViewId, $pictures);
 			}
 		}
@@ -121,7 +121,7 @@ class RecordManagerInsertListView
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-		$table = $prefix.DataListView::TABLENAME_FIELDCONFIG;
+		$table = $prefix.self::TABLENAME_FIELDCONFIG;
 
 		if (array_key_exists('fieldname', $fields))
 		{
@@ -154,7 +154,7 @@ class RecordManagerInsertListView
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-		$table = $prefix.DataListView::TABLENAME_PICTUTYPES;
+		$table = $prefix.self::TABLENAME_PICTURETYPES;
 
 		if (array_key_exists('picturetype', $pictures))
 		{

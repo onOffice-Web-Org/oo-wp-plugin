@@ -190,11 +190,10 @@ class AdminPageEstateListSettings
 
 		wp_nonce_field( $this->getPageSlug() );
 
-
 		$this->generatePageMainTitle(__('Edit List View', 'onoffice'));
 		echo '<div id="onoffice-ajax">';
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
-        wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 		echo '<div id="poststuff">';
 		echo '<div id="post-body" class="metabox-holder columns-'.(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
 		echo '<div id="post-body-content">';
@@ -290,9 +289,10 @@ class AdminPageEstateListSettings
 	public function getEnqueueData()
 	{
 		return array(
-			self::POST_RECORD_ID => $this->getListViewId(),
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view.', 'onoffice'),
+			self::ENQUEUE_DATA_MERGE => array(self::POST_RECORD_ID),
+			self::POST_RECORD_ID => $this->_listViewId,
 		);
 	}
 
@@ -325,7 +325,11 @@ class AdminPageEstateListSettings
 
 	public function doExtraEnqueues()
 	{
+		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/admin.js',
+			array('jquery'), '', true);
+
 		wp_enqueue_script('postbox');
+		wp_enqueue_script('admin-js');
 	}
 
 	/** @return string */

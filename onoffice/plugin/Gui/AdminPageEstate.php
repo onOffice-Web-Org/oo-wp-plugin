@@ -37,6 +37,9 @@ class AdminPageEstate
 	/** */
 	const PAGE_ESTATE_DETAIL = 'detail';
 
+	/** */
+	const PARAM_TAB = 'tab';
+
 	/** @var array */
 	private $_tabs = array();
 
@@ -59,8 +62,8 @@ class AdminPageEstate
 	public function __construct($pageSlug)
 	{
 		$this->_tabs = array(
-			self::PAGE_ESTATE_LIST => __('List view', 'onoffice'),
-			self::PAGE_ESTATE_DETAIL => __('Detail view', 'onoffice'),
+			self::PAGE_ESTATE_LIST => __('List Views', 'onoffice'),
+			self::PAGE_ESTATE_DETAIL => __('Detail View', 'onoffice'),
 		);
 
 		parent::__construct($pageSlug);
@@ -104,8 +107,16 @@ class AdminPageEstate
 
 	private function getSelectedTab()
 	{
-		$defaultTab = $this->getDefaultTab();
-		return isset($_GET['tab']) ? $_GET['tab'] : $defaultTab;
+		$selectedTab = $this->getDefaultTab();
+		$getParamTab = filter_input(INPUT_GET, self::PARAM_TAB);
+		$postParamTab = filter_input(INPUT_POST, self::PARAM_TAB);
+		if (!is_null($getParamTab)) {
+			$selectedTab = $getParamTab;
+		} elseif (!is_null($postParamTab)) {
+			$selectedTab = $postParamTab;
+		}
+
+		return $selectedTab;
 	}
 
 
@@ -159,5 +170,17 @@ class AdminPageEstate
 	public function doExtraEnqueues()
 	{
 		$this->_pSelectedTab->doExtraEnqueues();
+	}
+
+
+	/**
+	 *
+	 * @return AdminPage
+	 *
+	 */
+
+	public function getSelectedAdminPage()
+	{
+		return $this->_pSelectedTab;
 	}
 }

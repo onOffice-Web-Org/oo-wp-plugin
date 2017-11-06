@@ -37,15 +37,6 @@ class DataListView
 	const FIELDS = 'fields';
 
 	/** */
-	const TABLENAME_LIST_VIEW = 'oo_plugin_listviews';
-
-	/** */
-	const TABLENAME_PICTUTYPES = 'oo_plugin_picturetypes';
-
-	/** */
-	const TABLENAME_FIELDCONFIG = 'oo_plugin_fieldconfig';
-
-	/** */
 	const LISTVIEW_TYPE_DEFAULT = 'default';
 
 	/** */

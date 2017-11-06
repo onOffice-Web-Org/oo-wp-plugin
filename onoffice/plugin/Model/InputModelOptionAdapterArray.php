@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\Record;
+namespace onOffice\WPlugin\Model;
 
 /**
  *
@@ -28,39 +28,39 @@ namespace onOffice\WPlugin\Record;
  *
  */
 
-abstract class RecordManager
+class InputModelOptionAdapterArray
 {
-	/** */
-	const TABLENAME_LIST_VIEW = 'oo_plugin_listviews';
-
-	/** */
-	const TABLENAME_PICTURETYPES = 'oo_plugin_picturetypes';
-
-	/** */
-	const TABLENAME_FIELDCONFIG = 'oo_plugin_fieldconfig';
+	/** @var onOffice\WPlugin\Model\InputModelOption[] */
+	private $_inputModels = array();
 
 	/**
 	 *
-	 * @return string
+	 * @param InputModelOption $pInputModelOption
 	 *
 	 */
 
-	public function getTablePrefix()
+	public function addInputModelOption(InputModelOption $pInputModelOption)
 	{
-		return $this->getWpdb()->prefix;
+		$this->_inputModels []= $pInputModelOption;
 	}
 
 
 	/**
 	 *
-	 * @global \wpdb $wpdb
-	 * @return \wpdb
+	 * @return array
 	 *
 	 */
 
-	public function getWpdb()
+	public function generateValuesArray()
 	{
-		global $wpdb;
-		return $wpdb;
+		$values = array();
+		foreach ($this->_inputModels as $pInputModel)
+		{
+			$key = $pInputModel->getName();
+			$values[$key] = $pInputModel->getValue();
+		}
+
+		return $values;
 	}
+
 }

@@ -82,15 +82,6 @@ if ( ! wp_next_scheduled( 'oo_cache_cleanup' ) ) {
 	wp_schedule_event( time(), 'hourly', 'oo_cache_cleanup' );
 }
 
-function yourtheme_admin_scripts() {
-    if (is_admin()) {
-		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR).'onoffice/js'.'/admin.js', array('jquery'), '', true);
-		wp_enqueue_script('admin-js');
-		wp_enqueue_script('jquery-ui-core');
-		wp_enqueue_script('jquery-ui-sortable');
-    }
-}
-add_action('admin_enqueue_scripts', 'yourtheme_admin_scripts');
 
 /**
  *

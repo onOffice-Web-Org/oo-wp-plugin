@@ -34,6 +34,9 @@ use onOffice\WPlugin\Form\InputModelRenderer;
 abstract class AdminPageAjax
 	extends AdminPageBase
 {
+	/** */
+	const ENQUEUE_DATA_MERGE = 'merge';
+
 	/**
 	 *
 	 * Entry point for AJAX.

@@ -28,7 +28,7 @@ namespace onOffice\WPlugin\DataView;
  *
  */
 
-class UnknownListViewException
+class UnknownViewException
 	extends \Exception
 {
 

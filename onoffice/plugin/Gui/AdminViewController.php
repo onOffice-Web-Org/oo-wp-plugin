@@ -39,6 +39,9 @@ class AdminViewController
 	/** @var AdminPageEstateListSettings */
 	private $_pAdminListViewSettings = null;
 
+	/** @var AdminPageEstate */
+	private $_pAdminPageEstates = null;
+
 
 	/**
 	 *
@@ -53,6 +56,13 @@ class AdminViewController
 		$this->_pageSlug = 'onoffice';
 		$this->_pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editlistview'] = $this->_pAdminListViewSettings;
+
+
+		$this->_pAdminPageEstates = new AdminPageEstate($this->_pageSlug);
+		$pSelectedSubPage = $this->_pAdminPageEstates->getSelectedAdminPage();
+		if ($pSelectedSubPage instanceof AdminPageAjax) {
+			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-estates'] = $pSelectedSubPage;
+		}
 	}
 
 
@@ -73,11 +83,14 @@ class AdminViewController
 			$this->_pageSlug, function(){});
 
 		// Estates
-		$pAdminPageEstate = new AdminPageEstate($this->_pageSlug);
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),
 			__('Estates', 'onoffice'), 'edit_pages',
-			$this->_pageSlug.'-estates', array($pAdminPageEstate, 'render'));
-		add_action( 'load-'.$hookEstates, array($pAdminPageEstate, 'handleAdminNotices'));
+			$this->_pageSlug.'-estates',  array($this->_pAdminPageEstates, 'render'));
+		add_action( 'load-'.$hookEstates, array($this->_pAdminPageEstates, 'handleAdminNotices'));
+		$pSelectedSubPage = $this->_pAdminPageEstates->getSelectedAdminPage();
+		if ($pSelectedSubPage instanceof AdminPageAjax) {
+			add_action( 'load-'.$hookEstates, array($pSelectedSubPage, 'checkForms'));
+		}
 
 		// Forms
 		add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
@@ -130,8 +143,6 @@ class AdminViewController
 			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
 
 		wp_localize_script('onoffice-ajax-settings', 'onOffice_loc_settings', $ajaxData);
-
-		$pAdminView->doExtraEnqueues();
 	}
 
 
@@ -144,7 +155,7 @@ class AdminViewController
 	public function add_ajax_actions()
 	{
 		foreach ($this->_ajaxHooks as $hook => $pAdminPage) {
-			if (!$pAdminPage instanceof AdminPageAjax) {
+			if (!is_callable(array($pAdminPage, 'ajax_action'))) {
 				throw new \Exception(get_class($pAdminPage).' must be an instance of AdminPageAjax!');
 			}
 
@@ -165,6 +176,8 @@ class AdminViewController
 
 
 	/**
+	 *
+	 * @param string $hook
 	 *
 	 */
 

@@ -22,12 +22,8 @@
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Model;
-use onOffice\WPlugin\Language;
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\FilterCall;
-use onOffice\WPlugin\TemplateCall;
-use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
 
 /**
  *
@@ -37,16 +33,10 @@ use onOffice\WPlugin\DataView\DataListView;
  */
 
 class FormModelBuilderEstateListSettings
-	extends FormModelBuilder
+	extends FormModelBuilderEstate
 {
-	/** @var array */
-	private $_dbValues = array();
-
 	/** @var InputModelDBFactory */
 	private $_pInputModelDBFactory = null;
-
-	/** @var array */
-	private $_fields = array();
 
 	/**
 	 *
@@ -57,13 +47,13 @@ class FormModelBuilderEstateListSettings
 
 	public function generate($listViewId = null)
 	{
-		$this->_pInputModelDBFactory = new InputModelDBFactory();
-		$this->readFieldnames();
+		$this->_pInputModelDBFactory = $this->getInputModelDBFactory();
 
 		if ($listViewId !== null)
 		{
 			$pRecordReadManager = new \onOffice\WPlugin\Record\RecordManagerReadListView();
-			$this->_dbValues = $pRecordReadManager->getRowById($listViewId);
+			$values = $pRecordReadManager->getRowById($listViewId);
+			$this->setValues($values);
 		}
 
 		$pFormModel = new Model\FormModel();
@@ -72,32 +62,6 @@ class FormModelBuilderEstateListSettings
 		$pFormModel->setPageSlug($this->getPageSlug());
 
 		return $pFormModel;
-	}
-
-
-	/**
-	 *
-	 * @return Model\InputModelDB
-	 *
-	 */
-
-	public function createInputModelFieldsConfig()
-	{
-		$pInputModelFieldsConfig = $this->_pInputModelDBFactory->create(
-				InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
-
-		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
-		$pInputModelFieldsConfig->setValuesAvailable($this->_fields);
-		$fields = $this->getValue(DataListView::FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array();
-		}
-
-		$pInputModelFieldsConfig->setValue($fields);
-
-		return $pInputModelFieldsConfig;
 	}
 
 
@@ -157,7 +121,7 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
 		$pInputModelSortBy->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
-		$fieldnames = $this->_fields;
+		$fieldnames = $this->readFieldnames();
 		natcasesort($fieldnames);
 		$pInputModelSortBy->setValuesAvailable($fieldnames);
 		$pInputModelSortBy->setValue($this->getValue($pInputModelSortBy->getField()));
@@ -337,69 +301,6 @@ class FormModelBuilderEstateListSettings
 		}
 
 		return $templates;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function readFilters()
-	{
-		$pFilterCall = new FilterCall(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
-		return $pFilterCall->getFilters();
-	}
-
-
-	/** */
-	private function readFieldnames()
-	{
-		$language = Language::getDefault();
-		$pFieldnames = \onOffice\WPlugin\Fieldnames::getInstance();
-		$pFieldnames->loadLanguageIfNotCached($language);
-
-		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE, $language);
-		$result = array();
-
-		foreach ($fieldnames as $key => $properties)
-		{
-			$result[$key] = $properties['label'];
-		}
-
-		$this->_fields = $result;
-	}
-
-
-	/**
-	 *
-	 * @param string $key
-	 * @return mixed
-	 *
-	 */
-
-	private function getValue($key)
-	{
-		if (array_key_exists($key, $this->_dbValues))
-		{
-			return $this->_dbValues[$key];
-		}
-
-		return null;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function readExposes()
-	{
-		$pTemplateCall = new \onOffice\WPlugin\TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE);
-		return $pTemplateCall->getTemplates();
 	}
 
 

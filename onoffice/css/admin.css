@@ -30,18 +30,28 @@
 	background: #fafafa;
 }
 
-#onoffice-ajax {
-	width: 580px;
-}
-
 body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
-	margin-right: -116px;
+	width: 49%;
+	margin-right: 0;
 }
 
 #onoffice-ajax #poststuff .metabox-holder.columns-2 #postbox-container-2 {
-     width: inherit;
+    width: 49%;
 }
+
 #onoffice-ajax #poststuff #post-body-content {
-     width: 100%;
-	 margin: 0;
+    width: 100%;
+	margin: 0;
+}
+
+#onoffice-ajax #poststuff #post-body.columns-2 #side-sortables {
+    width: 100%;
+}
+
+#onoffice-ajax ul.filter-fields-list > li {
+	cursor: -webkit-grab; cursor:-moz-grab;
+}
+
+#onoffice-ajax ul.filter-fields-list > li:active{
+	cursor: -webkit-grabbing; cursor:-moz-grabbing;
 }

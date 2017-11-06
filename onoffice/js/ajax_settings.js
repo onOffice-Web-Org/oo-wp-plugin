@@ -22,7 +22,11 @@ onOffice.ajaxSaver = function(outerDiv) {
 		data.action = onOffice.settings.action;
 		data.nonce = onOffice.settings.nonce;
 		data.values = JSON.stringify(values);
-		data.record_id = onOffice.settings.record_id;
+		var mergeElement = onOffice.settings.merge;
+		for (var i in mergeElement) {
+			var newKey = mergeElement[i];
+			data[newKey] = onOffice.settings[newKey];
+		}
 
 		jQuery.post(onOffice.settings.ajax_url, data, function(response) {
 			var responseCode;

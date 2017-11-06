@@ -80,9 +80,9 @@ class RecordManagerUpdateListView
 
 		$tableRow = array
 			(
-				DataListView::TABLENAME_LIST_VIEW => $row,
-				DataListView::TABLENAME_PICTUTYPES => $pictures,
-				DataListView::TABLENAME_FIELDCONFIG => $fields,
+				self::TABLENAME_LIST_VIEW => $row,
+				self::TABLENAME_PICTURETYPES => $pictures,
+				self::TABLENAME_FIELDCONFIG => $fields,
 			);
 
 		$this->updateByRow($this->_listviewId, $tableRow);
@@ -105,22 +105,22 @@ class RecordManagerUpdateListView
 		$pInsert = new RecordManagerInsertListView();
 
 		$whereListviewTable = array('listview_id' => $this->_listviewId);
-		$result = $pWpDb->update($prefix.DataListView::TABLENAME_LIST_VIEW,
-				$tableRow[DataListView::TABLENAME_LIST_VIEW],
+		$result = $pWpDb->update($prefix.self::TABLENAME_LIST_VIEW,
+				$tableRow[self::TABLENAME_LIST_VIEW],
 				$whereListviewTable);
 
-		if (array_key_exists(DataListView::TABLENAME_FIELDCONFIG, $tableRow))
+		if (array_key_exists(self::TABLENAME_FIELDCONFIG, $tableRow))
 		{
-			$fields = $tableRow[DataListView::TABLENAME_FIELDCONFIG];
-			$pWpDb->delete($prefix.DataListView::TABLENAME_FIELDCONFIG,
+			$fields = $tableRow[self::TABLENAME_FIELDCONFIG];
+			$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG,
 					$whereListviewTable);
 			$pInsert->insertFields($this->_listviewId, $fields);
 		}
 
-		if (array_key_exists(DataListView::TABLENAME_PICTUTYPES, $tableRow))
+		if (array_key_exists(self::TABLENAME_PICTURETYPES, $tableRow))
 		{
-			$pictures = $tableRow[DataListView::TABLENAME_PICTUTYPES];
-			$pWpDb->delete($prefix.DataListView::TABLENAME_PICTUTYPES,
+			$pictures = $tableRow[self::TABLENAME_PICTURETYPES];
+			$pWpDb->delete($prefix.self::TABLENAME_PICTURETYPES,
 					$whereListviewTable);
 			$pInsert->insertPictures($this->_listviewId, $pictures);
 		}

@@ -45,7 +45,7 @@ class DataListViewFactory
 		$record = $pRecordRead->getRowByName($listViewName);
 
 		if ($record === null) {
-			throw new UnknownListViewException($listViewName);
+			throw new UnknownViewException($listViewName);
 		}
 
 		return $this->createListViewByRow($record);

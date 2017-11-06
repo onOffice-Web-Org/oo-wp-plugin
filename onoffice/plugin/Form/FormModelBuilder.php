@@ -33,6 +33,9 @@ class FormModelBuilder
 	/** @var string */
 	private $_pageSlug = null;
 
+	/** @var array */
+	private $_values = array();
+
 
 	/**
 	 *
@@ -46,7 +49,31 @@ class FormModelBuilder
 	}
 
 
+	/**
+	 *
+	 * @param string $key
+	 * @return mixed
+	 *
+	 */
+
+	protected function getValue($key)
+	{
+		if (array_key_exists($key, $this->_values))
+		{
+			return $this->_values[$key];
+		}
+
+		return null;
+	}
+
+
 	/** @return string */
 	public function getPageSlug()
 		{ return $this->_pageSlug; }
+
+
+	/** @param array $values */
+	protected function setValues(array $values) {
+		$this->_values = $values;
+	}
 }
