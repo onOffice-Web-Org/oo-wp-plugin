@@ -39,6 +39,9 @@ abstract class RecordManager
 	/** */
 	const TABLENAME_FIELDCONFIG = 'oo_plugin_fieldconfig';
 
+	/** */
+	const TABLENAME_LISTVIEW_CONTACTPERSON = 'oo_plugin_listview_contactperson';
+
 	/**
 	 *
 	 * @return string

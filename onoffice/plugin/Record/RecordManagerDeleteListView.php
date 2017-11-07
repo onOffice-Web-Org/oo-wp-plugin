@@ -47,6 +47,7 @@ class RecordManagerDeleteListView
 			$pWpdb->delete($prefix.'oo_plugin_listviews', array('listview_id' => $id));
 			$pWpdb->delete($prefix.'oo_plugin_fieldconfig', array('listview_id' => $id));
 			$pWpdb->delete($prefix.'oo_plugin_picturetypes', array('listview_id' => $id));
+			$pWpdb->delete($prefix.'oo_plugin_listview_contactperson', array('listview_id' => $id));
 		}
 	}
 }

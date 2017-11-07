@@ -66,6 +66,7 @@ class RecordManagerUpdateListView
 		$recordsPerPage = $pDataViewList->getRecordsPerPage();
 		$pictures = $pDataViewList->getPictureTypes();
 		$fields = $pDataViewList->getFields();
+		$contactPerson = $pDataViewList->getContactPerson();
 
 		$row = array
 			(
@@ -83,6 +84,7 @@ class RecordManagerUpdateListView
 				self::TABLENAME_LIST_VIEW => $row,
 				self::TABLENAME_PICTURETYPES => $pictures,
 				self::TABLENAME_FIELDCONFIG => $fields,
+				self::TABLENAME_LISTVIEW_CONTACTPERSON => $contactPerson,
 			);
 
 		$this->updateByRow($this->_listviewId, $tableRow);
@@ -123,6 +125,14 @@ class RecordManagerUpdateListView
 			$pWpDb->delete($prefix.self::TABLENAME_PICTURETYPES,
 					$whereListviewTable);
 			$pInsert->insertPictures($this->_listviewId, $pictures);
+		}
+
+		if (array_key_exists(self::TABLENAME_LISTVIEW_CONTACTPERSON, $tableRow))
+		{
+			$contactPerson = $tableRow[self::TABLENAME_LISTVIEW_CONTACTPERSON];
+			$pWpDb->delete($prefix.self::TABLENAME_LISTVIEW_CONTACTPERSON,
+					$whereListviewTable);
+			$pInsert->insertContactPerson($this->_listviewId, $contactPerson);
 		}
 
 		return $result !== false;

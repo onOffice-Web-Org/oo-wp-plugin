@@ -176,6 +176,34 @@ class RecordManagerReadListView
 	/**
 	 *
 	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+	private function readContactDataByListviewId($listviewId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlFields = "SELECT `fieldname`
+				FROM {$prefix}oo_plugin_listview_contactperson
+				WHERE `listview_id` = ".esc_sql($listviewId)."
+				ORDER BY `order` ASC";
+
+		$fields = $pWpDb->get_col($sqlFields);
+		$result = array();
+
+		if (is_array($fields))
+		{
+			$result = $fields;
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param int $listviewId
 	 * @param string $column
 	 * @return string
 	 *
@@ -219,5 +247,19 @@ class RecordManagerReadListView
 	public function getFieldconfigByListviewId($listviewId)
 	{
 		return $this->readFieldconfigByListviewId($listviewId);
+	}
+
+
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+
+	public function getContactDataByListviewId($listviewId)
+	{
+		return $this->readContactDataByListviewId($listviewId);
 	}
 }

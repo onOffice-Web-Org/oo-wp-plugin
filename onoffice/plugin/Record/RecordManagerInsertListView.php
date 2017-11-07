@@ -52,6 +52,7 @@ class RecordManagerInsertListView
 		$recordsPerPage = $pDataViewList->getRecordsPerPage();
 		$pictures = $pDataViewList->getPictureTypes();
 		$fields = $pDataViewList->getFields();
+		$contactPerson = $pDataViewList->getContactPerson();
 
 		$values = array
 			(
@@ -69,6 +70,7 @@ class RecordManagerInsertListView
 			self::TABLENAME_LIST_VIEW => $values,
 			self::TABLENAME_PICTURETYPES => $pictures,
 			self::TABLENAME_FIELDCONFIG => $fields,
+			self::TABLENAME_LISTVIEW_CONTACTPERSON => $contactPerson,
 		);
 
 		$listViewId = $this->insertByRow($row);
@@ -104,6 +106,12 @@ class RecordManagerInsertListView
 			{
 				$pictures = $tableRow[self::TABLENAME_PICTURETYPES];
 				$this->insertPictures($listViewId, $pictures);
+			}
+
+			if (array_key_exists(self::TABLENAME_LISTVIEW_CONTACTPERSON, $tableRow))
+			{
+				$contactPerson = $tableRow[self::TABLENAME_LISTVIEW_CONTACTPERSON];
+				$this->insertContactPerson($listViewId, $contactPerson);
 			}
 		}
 		return $listViewId;
@@ -166,6 +174,39 @@ class RecordManagerInsertListView
 				$pictureRow['picturetype'] = $type;
 				$pictureRow['listview_id'] = $listViewId;
 				$pWpDb->insert($table, $pictureRow);
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 * @param int $listViewId
+	 * @param array $contactPrsonValues
+	 *
+	 */
+
+	public function insertContactPerson($listViewId, $contactPrsonValues)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$table = $prefix.self::TABLENAME_LISTVIEW_CONTACTPERSON;
+
+		if (array_key_exists('fieldname', $contactPrsonValues))
+		{
+			$fieldValues = $contactPrsonValues['fieldname'];
+			$order = 1;
+
+			foreach ($fieldValues as $field)
+			{
+				$fieldRow = array();
+				$fieldRow['listview_id'] = $listViewId;
+				$fieldRow['fieldname'] = $field;
+				$fieldRow['order'] = $order;
+
+				$pWpDb->insert($table, $fieldRow);
+
+				$order++;
 			}
 		}
 	}

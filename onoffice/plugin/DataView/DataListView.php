@@ -37,6 +37,9 @@ class DataListView
 	const FIELDS = 'fields';
 
 	/** */
+	const CONTACT_PERSON = 'contactPerson';
+
+	/** */
 	const LISTVIEW_TYPE_DEFAULT = 'default';
 
 	/** */
@@ -56,6 +59,9 @@ class DataListView
 
 	/** @var string[] */
 	private $_pictureTypes = array();
+
+	/** @var string[] */
+	private $_contactPersonValues = array();
 
 	/** @var string */
 	private $_filterId = null;
@@ -144,6 +150,10 @@ class DataListView
 	public function getExpose()
 		{ return $this->_expose; }
 
+	/** @return array */
+	public function getContactPerson()
+	 { return $this->_contactPersonValues; }
+
 	/** @param array $fields */
 	public function setFields(array $fields)
 		{ $this->_fields = $fields; }
@@ -183,4 +193,9 @@ class DataListView
 	/** @param int $recordsPerPage */
 	public function setRecordsPerPage($recordsPerPage)
 		{ $this->_recordsPerPage = $recordsPerPage; }
+
+	/** @param array $contactPersonValues */
+	public function setContactPerson(array $contactPersonValues)
+		{ $this->_contactPersonValues = $contactPersonValues; }
+
 }
