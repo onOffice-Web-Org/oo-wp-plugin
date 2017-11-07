@@ -53,6 +53,7 @@ abstract class Installer
 			dbDelta( self::getCreateQueryListviews() );
 			dbDelta( self::getCreateQueryFieldConfig() );
 			dbDelta( self::getCreateQueryPictureTypes() );
+			dbDelta( self::getCreateQueryListViewContactPerson() );
 		}
 
 		update_option( 'oo_plugin_db_version', 2.0 );
@@ -136,6 +137,28 @@ abstract class Installer
 			`order` int(11) NOT NULL,
 			`fieldname` tinytext NOT NULL,
 			PRIMARY KEY (`fieldconfig_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+	static private function getCreateQueryListViewContactPerson()
+	{
+		$prefix = self::getPrefix();
+		$charsetCollate = self::getCharsetCollate();
+		$tableName = $prefix."oo_plugin_listview_contactperson";
+		$sql = "CREATE TABLE $tableName (
+				`contactperson_id` int(11) NOT NULL AUTO_INCREMENT,
+				`listview_id` int(11) NOT NULL,
+				`order` int(11) NOT NULL,
+				`fieldname` tinytext NOT NULL,
+				PRIMARY KEY (`contactperson_id`)
 		) $charsetCollate;";
 
 		return $sql;
