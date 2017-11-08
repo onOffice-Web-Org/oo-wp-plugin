@@ -31,6 +31,7 @@ namespace onOffice\WPlugin\DataView;
  */
 
 class DataDetailView
+	implements DataView
 {
 	/** */
 	const PICTURES = 'pictures';
@@ -50,6 +51,9 @@ class DataDetailView
 	/** @var string */
 	private $_expose = null;
 
+	/** @var int */
+	private $_pageId = null;
+
 
 	/** @return array */
 	public function getFields()
@@ -67,6 +71,14 @@ class DataDetailView
 	public function getExpose()
 		{ return $this->_expose; }
 
+	/** @return string */
+	public function getName()
+		{ return 'detail'; }
+
+	/** @return int */
+	public function getPageId()
+		{ return $this->_pageId; }
+
 	/** @param array $fields */
 	public function setFields(array $fields)
 		{ $this->_fields = $fields; }
@@ -82,4 +94,8 @@ class DataDetailView
 	/** @param string $expose */
 	public function setExpose($expose)
 		{ $this->_expose = $expose; }
+
+	/** @param int $pageId */
+	public function setPageId($pageId)
+		{ $this->_pageId = $pageId; }
 }

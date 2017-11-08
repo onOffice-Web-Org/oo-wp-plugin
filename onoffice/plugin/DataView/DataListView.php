@@ -29,6 +29,7 @@ namespace onOffice\WPlugin\DataView;
  */
 
 class DataListView
+	implements DataView
 {
 	/** */
 	const PICTURES = 'pictures';

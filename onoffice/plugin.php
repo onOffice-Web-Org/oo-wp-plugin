@@ -48,7 +48,8 @@ $pAutoloader->addNamespace( 'onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plu
 $pAutoloader->register();
 
 $pContentFilter = new ContentFilter();
-$pAdminViewController = new onOffice\WPlugin\Gui\AdminViewController();
+$pAdminViewController = new onOffice\WPlugin\Controller\AdminViewController();
+$pDetailViewPostSaveController = new onOffice\WPlugin\Controller\DetailViewPostSaveController();
 $pFormPost = FormPostHandler::getInstance();
 $pSearchParams = SearchParameters::getInstance();
 $pSearchParams->setParameters( $_GET );
@@ -62,6 +63,8 @@ add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_css')
 add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueueExtraJs') );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'registerScripts'), 9 );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
+add_action( 'save_post', array($pDetailViewPostSaveController, 'onSavePost') );
+add_action( 'wp_trash_post', array($pDetailViewPostSaveController, 'onMoveTrash') );
 add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
 
 add_action( 'init', array($pAdminViewController, 'onInit') );

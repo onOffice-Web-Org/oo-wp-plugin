@@ -35,10 +35,6 @@ use onOffice\WPlugin\Helper;
 
 class ContentFilter
 {
-	/** @var array */
-	private $_configNameBlackList = array('unitlist');
-
-
 	/**
 	 *
 	 */
@@ -54,13 +50,14 @@ class ContentFilter
 	 */
 
 	public function addCustomRewriteRules() {
-		$pages = $this->getEstateListPageList();
+		$pDetailView = DataView\DataDetailViewHandler::getDetailView();
+		$detailPageId = $pDetailView->getPageId();
 
-		foreach ( $pages as $listName => $views ) {
-			foreach ( $views as $viewName ) {
-				add_rewrite_rule( '('.preg_quote($listName).')/('.preg_quote($viewName).')-([^/]*)/?$',
-					'index.php?pagename=$matches[1]&view=$matches[2]&estate_id=$matches[3]','top' );
-			}
+		if ($detailPageId != null) {
+			$pagename = get_page_uri( $detailPageId );
+			$pageUrl = $this->rebuildSlugTaxonomy($detailPageId);
+			add_rewrite_rule( '^('.preg_quote( $pageUrl ).')/([0-9]+)/?$',
+				'index.php?pagename='.urlencode( $pagename ).'&view=$matches[1]&estate_id=$matches[2]','top' );
 		}
 	}
 
@@ -84,68 +81,36 @@ class ContentFilter
 			'view' => null,
 		), $attributesInput);
 
-		if ($attributes['view'] !== null)
-		{
-			$pListViewFactory = new DataView\DataListViewFactory();
-			$pListView = $pListViewFactory->getListViewByName($attributes['view']);
+		if ($attributes['view'] !== null) {
+			try {
+				$pDetailView = DataView\DataDetailViewHandler::getDetailView();
 
-			if (is_object($pListView) && $pListView->getName() === $attributes['view'])
-			{
-				$pTemplate = new Template($pListView->getTemplate(), 'estate', 'default');
-				$pEstateList = new EstateList($pListView);
-				$pEstateList->loadEstates($page);
-				$pTemplate->setEstateList($pEstateList);
-				$result = $pTemplate->render();
-				return $result;
+				if ($pDetailView->getName() === $attributes['view'])
+				{
+					$pTemplate = new Template($pDetailView->getTemplate(), 'estate', 'default_detail');
+					$pEstateDetail = $this->preloadSingleEstate($pDetailView);
+					$pTemplate->setEstateList($pEstateDetail);
+					$result = $pTemplate->render();
+					return $result;
+				}
+
+				$pListViewFactory = new DataView\DataListViewFactory();
+				$pListView = $pListViewFactory->getListViewByName($attributes['view']);
+
+				if (is_object($pListView) && $pListView->getName() === $attributes['view'])
+				{
+					$pTemplate = new Template($pListView->getTemplate(), 'estate', 'default');
+					$pEstateList = new EstateList($pListView);
+					$pEstateList->loadEstates($page);
+					$pTemplate->setEstateList($pEstateList);
+					$result = $pTemplate->render();
+					return $result;
+				}
+			} catch (\Exception $pException) {
+				return $this->logErrorAndDisplayMessage($pException);
 			}
 			return __('Estates view not found.', 'onoffice');
 		}
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function getEstateListPageList() {
-		$list = array();
-		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
-
-		foreach ( $estateConfig as $configname => $config ) {
-			if ( in_array( $configname, $this->_configNameBlackList ) ) {
-				continue;
-			}
-			if ( substr( $configname, 0, 1 ) == '_' ) {
-				$views = array_keys( $config['views'] );
-
-				foreach ( $views as $view ) {
-					if ($view === 'list')
-					{
-						continue;
-					}
-					$detailPageId = UrlConfig::getViewPageIdByConfig( $config['views'][$view] );
-					$pagename = get_page_uri( $detailPageId );
-					add_rewrite_rule( '^('.preg_quote( $view ).')/([0-9]+)/?$',
-						'index.php?pagename='.urlencode( $pagename ).'&view=$matches[1]&estate_id=$matches[2]','top' );
-				}
-				continue;
-			}
-
-			$views = array_keys( $config['views'] );
-			$listIndex = array_search( 'list', $views );
-			unset( $views[$listIndex] );
-
-			foreach ( $views as $view ) {
-				$detailPageId = UrlConfig::getViewPageIdByConfig( $config['views'][$view] );
-				$listpermalink = $this->rebuildSlugTaxonomy( $detailPageId );
-
-				$list[$listpermalink][] = $view;
-			}
-		}
-
-		return $list;
 	}
 
 
@@ -184,7 +149,6 @@ class ContentFilter
 	 */
 
 	public function filter_the_content( $content ) {
-		$content = $this->filterEstate( $content );
 		$content = $this->filterForms( $content );
 		return $content;
 	}
@@ -229,92 +193,12 @@ class ContentFilter
 
 	/**
 	 *
-	 * Insert the estate overview list
-	 *
-	 * @param string $content
+	 * @param \Exception $pException
 	 * @return string
 	 *
 	 */
 
-	private function filterEstate( $content ) {
-		global $wp_query;
-
-		$pLanguage = new Language();
-
-		$regexSearch = '!(?P<tag>\[oo_estate\s+(?P<name>[0-9a-z_]+)(?:\s+(?P<view>[0-9a-z_]+))?\])!';
-		$matches = array();
-
-		preg_match_all( $regexSearch, $content, $matches );
-		$matchescount = count( $matches ) - 1;
-		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
-
-		if ( 0 == $matchescount || empty( $matches['name'] ) ) {
-			return $content;
-		}
-
-		$onofficeTags = $matches['name'];
-
-		foreach ( $onofficeTags as $id => $name ) {
-			$viewName = 'list';
-
-			if ('' != $matches['view'][$id]) {
-				$viewName = $matches['view'][$id];
-			}
-
-			$viewName = isset( $wp_query->query['view'] ) ? $wp_query->query['view'] : $viewName;
-
-			if ( ! array_key_exists( $name, $estateConfig ) ||
-				empty( $estateConfig[$name]['views'][$viewName] ) ) {
-				continue;
-			}
-
-			if ( ! array_key_exists( 'filter', $estateConfig[$name] ) ) {
-				$estateConfig[$name]['filter'] = array();
-			}
-
-			$pListViewFactory = new DataView\DataListViewFactory();
-			$pListView = $pListViewFactory->getListViewByName($viewName);
-
-			$configByName = $estateConfig[$name];
-			$templateName = $pListView->getTemplate();
-
-			$configByView = $configByName['views'][$viewName];
-			$pForm = null;
-
-			$pTemplate = new Template( $templateName, 'estate', 'default' );
-
-			if ( array_key_exists( 'formname', $configByView ) ) {
-				$formName = $configByView['formname'];
-				$language = $pLanguage->getLanguageForEstateSingle($name, $viewName);
-
-				$pForm = new \onOffice\WPlugin\Form( $formName, $language );
-				$pTemplate->setForm($pForm);
-			}
-
-			if ( 'list' != $viewName ) {
-				try {
-					$pEstateList = $this->preloadSingleEstate( $name, $viewName );
-					$pTemplate->setEstateList( $pEstateList );
-					$htmlOutput = $pTemplate->render();
-				} catch (\onOffice\SDK\Exception\SDKException $pSdkException) {
-					$htmlOutput = $this->logErrorAndDisplayMessage( $pSdkException );
-				}
-				$content = str_replace( $matches[0][$id], $htmlOutput, $content );
-			}
-		}
-
-		return $content;
-	}
-
-
-	/**
-	 *
-	 * @param \onOffice\SDK\Exception\SDKException $pException
-	 * @return string
-	 *
-	 */
-
-	public function logErrorAndDisplayMessage( \onOffice\SDK\Exception\SDKException $pException ) {
+	public function logErrorAndDisplayMessage( \Exception $pException ) {
 		$output = '';
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -331,37 +215,13 @@ class ContentFilter
 
 	/**
 	 *
-	 * @param array $configName
-	 *
-	 */
-
-	private function preloadEstateList( $configName, $viewName ) {
-		global $wp_query;
-		$page = 1;
-		if ( ! empty( $wp_query->query_vars['page'] ) ) {
-			$page = $wp_query->query_vars['page'];
-		}
-
-		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
-		$recordsPerPage = $estateConfig[$configName]['views'][$viewName]['records'];
-
-		$pEstateList = new EstateList( $configName, $viewName );
-		$pEstateList->loadEstates( $page );
-
-		return $pEstateList;
-	}
-
-
-	/**
-	 *
 	 * @global \WP_Query $wp_query
-	 * @param string $configName
-	 * @param string $view
-	 * @return \onOffice\WPlugin\EstateList
+	 * @param \onOffice\WPlugin\DataView\DataDetailView $pDetailView
+	 * @return \onOffice\WPlugin\EstateDetail
 	 *
 	 */
 
-	private function preloadSingleEstate( $configName, $view ) {
+	private function preloadSingleEstate(DataView\DataDetailView $pDetailView) {
 		global $wp_query;
 
 		$estateId = 0;
@@ -369,8 +229,8 @@ class ContentFilter
 			$estateId = $wp_query->query_vars['estate_id'];
 		}
 
-		$pEstateList = new EstateList( $configName, $view );
-		$pEstateList->loadSingleEstate( $estateId );
+		$pEstateList = new EstateDetail($pDetailView);
+		$pEstateList->loadSingleEstate($estateId);
 
 		return $pEstateList;
 	}

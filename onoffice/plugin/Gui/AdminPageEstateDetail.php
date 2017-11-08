@@ -64,6 +64,7 @@ class AdminPageEstateDetail
 
 	public function renderContent()
 	{
+		$pDataView = DataDetailViewHandler::getDetailView();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
 
@@ -74,6 +75,20 @@ class AdminPageEstateDetail
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 		echo '<div id="poststuff">';
+		$pageId = $pDataView->getPageId();
+
+		echo '<span class="viewusage">';
+		if ($pageId != null) {
+			esc_attr_e('Detail view in use on page ', 'onoffice');
+			echo '<span class="italic">'.esc_html(get_the_title($pageId)).'</span>';
+			edit_post_link(__('Edit'), ' ', '', $pageId);
+		} else {
+			esc_attr_e('Detail view is not in use yet. '
+				.'Insert this code on a page to get the detail view there:', 'onoffice');
+			echo ' <code>[oo_estate view="'.$pDataView->getName().'"]</code>';
+		}
+		echo '</span>';
+
 		echo '<div id="post-body" class="metabox-holder columns-'.(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
 		echo '<div class="postbox-container" id="postbox-container-1">';
 		do_meta_boxes(get_current_screen()->id, 'normal', null );

@@ -32,6 +32,7 @@ use onOffice\WPlugin\Favorites;
  */
 
 class DefaultFilterBuilderListView
+	implements DefaultFilterBuilder
 {
 	/** @var string */
 	private $_pDataListView = null;

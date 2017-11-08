@@ -19,13 +19,6 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software AG
- *
- */
-
 namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\SDKWrapper;
@@ -34,8 +27,10 @@ use onOffice\SDK\onOfficeSDK;
 
 /**
  *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2015, onOffice(R) Software AG
+ *
  */
-
 
 class EstateList {
 	/** @var onOffice\WPlugin\SDKWrapper */
@@ -78,19 +73,17 @@ class EstateList {
 	private $_handleEstateContactPerson = null;
 
 	/** @var DataView */
-	private $_pListView = null;
+	private $_pDataView = null;
 
 	/**
 	 *
-	 * @param array $config
-	 * @param string $configName
-	 * @param string $viewName
+	 * @param \onOffice\WPlugin\DataView\DataView $pDataView
 	 *
 	 */
 
-	public function __construct(DataView\DataListView $pListView) {
+	public function __construct(DataView\DataView $pDataView) {
 		$this->_pSDKWrapper = new SDKWrapper();
-		$this->_pListView = $pListView;
+		$this->_pDataView = $pDataView;
 		$this->_pFieldnames = Fieldnames::getInstance();
 		$this->_pAddressList = new AddressList();
 	}
@@ -102,15 +95,26 @@ class EstateList {
 	 *
 	 */
 
-	private function getNumEstatePages() {
+	protected function getNumEstatePages() {
 		if ( empty( $this->_responseArray['data']['meta']['cntabsolute'] ) ) {
 			return null;
 		}
 
 		$recordNumOverAll = $this->_responseArray['data']['meta']['cntabsolute'];
-		$numEstatePages = ceil( $recordNumOverAll / $this->_pListView->getRecordsPerPage());
+		$numEstatePages = ceil( $recordNumOverAll / $this->_pDataView->getRecordsPerPage());
 
 		return $numEstatePages;
+	}
+
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	protected function getRecordsPerPage() {
+		return $this->_pDataView->getRecordsPerPage();
 	}
 
 
@@ -120,7 +124,7 @@ class EstateList {
 	 *
 	 */
 
-	public function loadEstates( $currentPage )
+	public function loadEstates($currentPage = 1)
 	{
 		$pSDKWrapper = $this->_pSDKWrapper;
 
@@ -134,7 +138,7 @@ class EstateList {
 		$this->_pSDKWrapper->sendRequests();
 
 		$responseArrayEstates = $this->_pSDKWrapper->getRequestResponse( $handleReadEstate );
-		$pictureCategories = $this->_pListView->getPictureTypes();
+		$pictureCategories = $this->_pDataView->getPictureTypes();
 		$this->_pEstateImages = new EstateImages( $pictureCategories );
 
 		$estateIds = $this->getEstateIdToForeignMapping( $responseArrayEstates );
@@ -195,11 +199,10 @@ class EstateList {
 
 	private function getEstateParameters($currentPage) {
 		$language = Language::getDefault();
-		$pListView = $this->_pListView;
-		$pListViewFilterBuilder = new Filter\DefaultFilterBuilderListView($pListView);
+		$pListView = $this->_pDataView;
+		$filter = $this->getDefaultFilter();
 
-		$numRecordsPerPage = $this->_pListView->getRecordsPerPage();
-		$filter = $pListViewFilterBuilder->buildFilter();
+		$numRecordsPerPage = $this->getRecordsPerPage();
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		$this->_currentEstatePage = $currentPage;
 
@@ -213,6 +216,23 @@ class EstateList {
 			'formatoutput' => true,
 			'addMainLangId' => true,
 		);
+
+		$requestParams = ($requestParams + $this->addExtraParams());
+
+		return $requestParams;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	protected function addExtraParams() {
+		$pListView = $this->_pDataView;
+
+		$requestParams = array();
 
 		if ($pListView->getSortby() !== null ) {
 			$requestParams['sortby'] = $pListView->getSortby();
@@ -232,18 +252,14 @@ class EstateList {
 
 	/**
 	 *
-	 * @param int $id
+	 * @return array
 	 *
 	 */
 
-	public function loadSingleEstate( $id ) {
-		$filter = array(
-			'Id' => array(
-				array('op' => '=', 'val' => $id),
-			),
-		);
-
-		$this->loadEstates( 1, $filter );
+	protected function getDefaultFilter()
+	{
+		$pListViewFilterBuilder = new Filter\DefaultFilterBuilderListView($this->_pDataView);
+		return $pListViewFilterBuilder->buildFilter();
 	}
 
 
@@ -441,14 +457,14 @@ class EstateList {
 
 	public function getEstateLink( $view )
 	{
-		$estate = $this->_currentEstate['mainId'];
-		$foreignViewConfigView = 'detail';
-		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
-		$detailpageid = $estateConfig['_default']['views'][$foreignViewConfigView]['pageid'];
-		$listpageid = wp_get_post_parent_id( $detailpageid );
-		$link = get_permalink( $listpageid );
+		$pDetailView = DataView\DataDetailViewHandler::getDetailView();
+		$pageId = $pDetailView->getPageId();
+		$fullLink = '#';
 
-		$fullLink = site_url().'/'.$foreignViewConfigView.'/'.$estate.'/';
+		if ($pageId != null) {
+			$estate = $this->_currentEstate['mainId'];
+			$fullLink = get_page_link($pageId).$estate;
+		}
 
 		return $fullLink;
 	}
@@ -624,13 +640,13 @@ class EstateList {
 		$language = Language::getDefault();
 
 		$estateId = $this->_currentEstate['mainId'];
-		$documentId = $this->_pListView->getExpose();
+		$documentId = $this->_pDataView->getExpose();
 
 		$queryVars = array(
 			'documentid' => $documentId,
 			'estateid' => $estateId,
 			'language' => $language,
-			'configindex' => $this->_pListView->getName(),
+			'configindex' => $this->_pDataView->getName(),
 		);
 
 		$documentlink = plugin_dir_url( __DIR__ ).'document.php?'. http_build_query( $queryVars );
@@ -644,5 +660,11 @@ class EstateList {
 
 	public function resetEstateIterator() {
 		reset( $this->_responseArray['data']['records'] );
+	}
+
+
+	/** @return onOffice\WPlugin\DataView\DataView */
+	protected function getDataView() {
+		return $this->_pDataView;
 	}
 }

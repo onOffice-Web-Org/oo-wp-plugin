@@ -19,7 +19,14 @@
  *
  */
 
-namespace onOffice\WPlugin\Gui;
+namespace onOffice\WPlugin\Controller;
+
+use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Gui\AdminPageEstateListSettings;
+use onOffice\WPlugin\Gui\AdminPageEstate;
+use onOffice\WPlugin\Gui\AdminPageAjax;
+use onOffice\WPlugin\Gui\AdminPageModules;
+use onOffice\WPlugin\Gui\AdminPageApiSettings;
 
 /**
  *
@@ -80,7 +87,7 @@ class AdminViewController
 	{
 		// main page
 		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'), 'edit_pages',
-			$this->_pageSlug, function(){});
+			$this->_pageSlug, function(){}, 'dashicons-admin-home');
 
 		// Estates
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),
@@ -183,11 +190,13 @@ class AdminViewController
 
 	public function enqueueExtraJs($hook)
 	{
-		$pObject = $this->getObjectByHook($hook);
+		if (__String::getNew($hook)->contains('onoffice')) {
+			$pObject = $this->getObjectByHook($hook);
 
-		if ($pObject !== null)
-		{
-			$pObject->doExtraEnqueues();
+			if ($pObject !== null)
+			{
+				$pObject->doExtraEnqueues();
+			}
 		}
 	}
 
