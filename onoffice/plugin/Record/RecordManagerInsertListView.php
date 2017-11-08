@@ -91,6 +91,22 @@ class RecordManagerInsertListView
 		$pWpDb = $this->getWpdb();
 		$row = $tableRow[self::TABLENAME_LIST_VIEW];
 
+		foreach ($row as $key => $value)
+		{
+			if (null == $value)
+			{
+				if (!RecordStructure::isNullAllowed(self::TABLENAME_LIST_VIEW, $key))
+				{
+					$emptyValue = RecordStructure::getEmptyValue(self::TABLENAME_LIST_VIEW, $key);
+
+					if ($emptyValue !== false)
+					{
+						$row[$key] = $emptyValue;
+					}
+				}
+			}
+		}
+
 		$pWpDb->insert($pWpDb->prefix.self::TABLENAME_LIST_VIEW, $row);
 		$listViewId = $pWpDb->insert_id;
 
