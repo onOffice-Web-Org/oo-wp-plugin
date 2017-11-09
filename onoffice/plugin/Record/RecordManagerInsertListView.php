@@ -52,7 +52,7 @@ class RecordManagerInsertListView
 		$recordsPerPage = $pDataViewList->getRecordsPerPage();
 		$pictures = $pDataViewList->getPictureTypes();
 		$fields = $pDataViewList->getFields();
-		$contactPerson = $pDataViewList->getContactPerson();
+		$contactPerson = $pDataViewList->getAddressFields();
 
 		$values = array
 			(

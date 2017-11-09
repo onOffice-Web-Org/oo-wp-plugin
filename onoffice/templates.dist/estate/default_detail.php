@@ -105,9 +105,6 @@ use onOffice\WPlugin\PdfDocumentType;
 		?>
 
 	<h2>Dokumente</h2>
-	<?php
-		$document = $pEstates->getDocument( PdfDocumentType::EXPOSE_SHORT_DESIGN01 );
-	?>
-	<a href="<?php echo $document; ?>">PDF-Exposé</a>
+	<a href="<?php echo $pEstates->getDocument(); ?>">PDF-Exposé</a>
 
 <?php endwhile; ?>

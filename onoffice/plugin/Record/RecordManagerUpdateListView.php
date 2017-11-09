@@ -66,7 +66,7 @@ class RecordManagerUpdateListView
 		$recordsPerPage = $pDataViewList->getRecordsPerPage();
 		$pictures = $pDataViewList->getPictureTypes();
 		$fields = $pDataViewList->getFields();
-		$contactPerson = $pDataViewList->getContactPerson();
+		$contactPerson = $pDataViewList->getAddressFields();
 
 		$row = array
 			(

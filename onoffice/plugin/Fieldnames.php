@@ -37,7 +37,13 @@ use onOffice\SDK\onOfficeSDK;
 
 class Fieldnames {
 
-	/** @var array */
+	/**
+	 *
+	 * @var array
+	 * "label" key needs to be translated
+	 *
+	 */
+
 	private static $_apiReadOnlyFields = array(
 		onOfficeSDK::MODULE_ADDRESS => array(
 			// parameter => label (english)
@@ -381,7 +387,15 @@ class Fieldnames {
 		}
 
 		if ($addApiOnlyFields) {
-			$extraFields = $this->getExtraFields($module, $annotated);
+			$extraFields = array();
+			$extraFieldsUntranslated = $this->getExtraFields($module, $annotated);
+
+			foreach ($extraFieldsUntranslated as $field => $options) {
+				$newOptions = $options;
+				$newOptions['label'] = __($options['label'], 'onoffice');
+				$extraFields[$field] = $newOptions;
+			}
+
 			$fieldList = array_merge($fieldList, $extraFields);
 		}
 

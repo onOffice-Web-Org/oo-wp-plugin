@@ -40,9 +40,6 @@ class EstateList {
 	private $_pFieldnames = null;
 
 	/** @var array */
-	private $_configByName = array();
-
-	/** @var array */
 	private $_responseArray = array();
 
 	/** @var EstateImages */
@@ -59,9 +56,6 @@ class EstateList {
 
 	/** @var AddressList */
 	private $_pAddressList = array();
-
-	/** @var string */
-	private $_view = null;
 
 	/** @var int */
 	private $_currentEstatePage = 1;
@@ -330,12 +324,9 @@ class EstateList {
 			$allAddressIds = array_unique( array_merge( $allAddressIds, $adressIds ) );
 		}
 
-		$fields = array();
-		if ( isset( $this->_configByName['views'][$this->_view]['contactdata'] ) ) {
-			$fields = $this->_configByName['views'][$this->_view]['contactdata'];
-		}
+		$fields = $this->_pDataView->getAddressFields();
 
-		if ( count( $fields ) > 0 ) {
+		if ( count( $fields ) > 0 && count( $allAddressIds ) > 0 ) {
 			$this->_pAddressList->loadAdressesById( $allAddressIds, $fields );
 		}
 	}
@@ -348,23 +339,21 @@ class EstateList {
 	 */
 
 	private function getCensoredAddressData( $record ) {
-		if ( isset( $this->_configByName['views'][$this->_view] ) ) {
-			$requestedFields = $this->_configByName['views'][$this->_view]['data'];
+		$requestedFields = $this->_pDataView->getAddressFields();
 
-			if ( in_array( 'virtualAddress', $requestedFields ) &&
-				1 == $record['virtualAddress'] ) {
-				if ( in_array( 'virtualStreet', $requestedFields ) ) {
-					$record['strasse'] = $record['virtualStreet'];
-				}
-				if ( in_array( 'virtualHouseNumber', $requestedFields ) ) {
-					$record['hausnummer'] = $record['virtualHouseNumber'];
-				}
-				if ( in_array( 'virtualLongitude', $requestedFields ) ) {
-					$record['laengengrad'] = $record['virtualLongitude'];
-				}
-				if ( in_array( 'virtualLatitude', $requestedFields ) ) {
-					$record['breitengrad'] = $record['virtualLatitude'];
-				}
+		if ( in_array( 'virtualAddress', $requestedFields ) &&
+			1 == $record['virtualAddress'] ) {
+			if ( in_array( 'virtualStreet', $requestedFields ) ) {
+				$record['strasse'] = $record['virtualStreet'];
+			}
+			if ( in_array( 'virtualHouseNumber', $requestedFields ) ) {
+				$record['hausnummer'] = $record['virtualHouseNumber'];
+			}
+			if ( in_array( 'virtualLongitude', $requestedFields ) ) {
+				$record['laengengrad'] = $record['virtualLongitude'];
+			}
+			if ( in_array( 'virtualLatitude', $requestedFields ) ) {
+				$record['breitengrad'] = $record['virtualLatitude'];
 			}
 		}
 
@@ -629,12 +618,11 @@ class EstateList {
 
 	/**
 	 *
-	 * @param string $templateType
 	 * @return string
 	 *
 	 */
 
-	public function getDocument( $templateType ) {
+	public function getDocument() {
 		$language = Language::getDefault();
 
 		$estateId = $this->_currentEstate['mainId'];

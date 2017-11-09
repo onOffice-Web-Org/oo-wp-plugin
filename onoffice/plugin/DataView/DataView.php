@@ -44,4 +44,7 @@ interface DataView
 
 	/** @return string */
 	public function getName();
+
+	/** @return array */
+	public function getAddressFields();
 }

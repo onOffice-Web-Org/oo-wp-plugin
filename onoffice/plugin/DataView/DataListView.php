@@ -62,7 +62,7 @@ class DataListView
 	private $_pictureTypes = array();
 
 	/** @var string[] */
-	private $_contactPersonValues = array();
+	private $_addressFields = array();
 
 	/** @var string */
 	private $_filterId = null;
@@ -152,8 +152,8 @@ class DataListView
 		{ return $this->_expose; }
 
 	/** @return array */
-	public function getContactPerson()
-	 { return $this->_contactPersonValues; }
+	public function getAddressFields()
+		{ return $this->_addressFields; }
 
 	/** @param array $fields */
 	public function setFields(array $fields)
@@ -195,8 +195,7 @@ class DataListView
 	public function setRecordsPerPage($recordsPerPage)
 		{ $this->_recordsPerPage = $recordsPerPage; }
 
-	/** @param array $contactPersonValues */
-	public function setContactPerson(array $contactPersonValues)
-		{ $this->_contactPersonValues = $contactPersonValues; }
-
+	/** @param array $addressFields */
+	public function setAddressFields(array $addressFields)
+		{ $this->_addressFields = $addressFields; }
 }

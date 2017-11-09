@@ -28,62 +28,6 @@ use onOffice\WPlugin\SearchParameters;
 /* Estate data you want to fetch */
 
 $config['estate'] = array(
-	'_default' => array(
-		'listpagename' => 'detailansicht',
-		'filter' => array(
-			'vermarktungsart' => array(
-				array('veroeffentlichen' => '=', 'val' => '1'),
-			),
-		),
-		'documents' => array(PdfDocumentType::EXPOSE_SHORT_DESIGN01),
-		'views' => array(
-			'detail' => array(
-				'data' => array(
-					'Id',
-					'objektnr_extern',
-					'kaltmiete',
-					'warmmiete',
-					'heizkosten_in_nebenkosten',
-					'energieverbrauchskennwert',
-					'balkon_terrasse_flaeche',
-					'grundstuecksflaeche',
-					'warmwasserEnthalten',
-					'objekttitel',
-					'laengengrad',
-					'breitengrad',
-					'showGoogleMap',
-					'virtualStreet',
-					'virtualLongitude',
-					'virtualLatitude',
-					'virtualAddress',
-				),
-				'pictures' => array(
-					ImageType::TITLE,
-					ImageType::PHOTO_BIG,
-					ImageType::PHOTO,
-					ImageType::LOCATION_MAP,
-					ImageType::GROUNDPLAN,
-					ImageType::FINANCE_EXAMPLE,
-					ImageType::ENERGY_PASS_RANGE,
-					ImageType::CITY_MAP,
-				),
-				'language' => 'DEU',
-				'pageid' => 24,
-				'pagename' => 'Objektdetailansicht Mietobjekt',
-				'template' => 'default_detail',
-			),
-		),
-	),
-	'kauf' => array(
-		'listpagename' => 'kaufobjekte',
-		'filter' => array(
-			'vermarktungsart' => array(
-				array('op' => '=', 'val' => 'kauf'),
-			),
-		),
-		'documents' => array(PdfDocumentType::EXPOSE_SHORT_DESIGN01),
-		'views' => array(),
-	),
 	'unitlist' => array(
 		'listpagename' => 'einheiten',
 		'filter' => array(),
