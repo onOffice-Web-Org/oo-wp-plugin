@@ -57,6 +57,9 @@ class AdminPageEstateDetail
 	/** */
 	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
 
+	/** */
+	const FORM_VIEW_CONTACT_DATA_FIELDS = 'viewcontactdatafields';
+
 
 	/**
 	 *
@@ -81,7 +84,7 @@ class AdminPageEstateDetail
 		if ($pageId != null) {
 			esc_attr_e('Detail view in use on page ', 'onoffice');
 			echo '<span class="italic">'.esc_html(get_the_title($pageId)).'</span>';
-			edit_post_link(__('Edit'), ' ', '', $pageId);
+			edit_post_link(__('Edit Page', 'onoffice'), ' ', '', $pageId);
 		} else {
 			esc_attr_e('Detail view is not in use yet. '
 				.'Insert this code on a page to get the detail view there:', 'onoffice');
@@ -144,6 +147,9 @@ class AdminPageEstateDetail
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'normal');
 
+		$pFormContactDataFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_DATA_FIELDS);
+		$this->createMetaBoxByForm($pFormContactDataFields, 'normal');
+
 		$pFormFieldsConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_FIELDS_CONFIG);
 		$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 	}
@@ -190,6 +196,14 @@ class AdminPageEstateDetail
 		$pFormModelFieldsConfig->setLabel(__('Fields Configuration', 'onoffice'));
 		$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
 		$this->addFormModel($pFormModelFieldsConfig);
+
+		$pInputModelContactDataFields = $pFormModelBuilder->createInputModelAddressFieldsConfig();
+		$pFormModelContactDataFields = new FormModel();
+		$pFormModelContactDataFields->setPageSlug($this->getPageSlug());
+		$pFormModelContactDataFields->setGroupSlug(self::FORM_VIEW_CONTACT_DATA_FIELDS);
+		$pFormModelContactDataFields->setLabel(__('Contact Data', 'onoffice'));
+		$pFormModelContactDataFields->addInputModel($pInputModelContactDataFields);
+		$this->addFormModel($pFormModelContactDataFields);
 	}
 
 

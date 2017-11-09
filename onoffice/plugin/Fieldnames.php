@@ -40,6 +40,70 @@ class Fieldnames {
 	static private $_pInstance = null;
 
 	/** @var array */
+	private static $_apiReadOnlyFields = array(
+		onOfficeSDK::MODULE_ADDRESS => array(
+			// parameter => label (english)
+			'imageUrl' => array(
+				'type' => 'freetext',
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Image',
+			),
+			'phone' => array(
+				'type' => 'freetext',
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Phone',
+			),
+			'email' => array(
+				'type' => 'freetext',
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'E-Mail',
+			),
+			'fax' => array(
+				'type' => 'freetext',
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Fax',
+			),
+			'mobile' => array(
+				'type' => 'freetext',
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Mobile',
+			),
+			'defaultphone' => array(
+				'type' => 'freetext',
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Phone',
+			),
+			'defaultemail' => array(
+				'type' => 'freetext',
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'E-Mail',
+			),
+			'defaultfax' => array(
+				'type' => 'freetext',
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Fax',
+			),
+		),
+	);
+
+	/** @var array */
+	private static $_readOnlyFieldsAnnotations = array(
+		onOfficeSDK::MODULE_ADDRESS => array(
+			'defaultphone' => 'Phone (Marked as default in onOffice)',
+			'defaultemail' => 'E-Mail (Marked as default in onOffice)',
+			'defaultfax' => 'Fax (Marked as default in onOffice)',
+		),
+	);
+
+	/** @var array */
 	private $_fieldList = array();
 
 	/** @var array */
@@ -335,13 +399,49 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getFieldList( $module, $language ) {
+	public function getFieldList( $module, $language, $addApiOnlyFields = false, $annotated = false ) {
 		$fieldList = array();
 		if ( isset( $this->_fieldList[$language][$module] ) ) {
 			$fieldList = $this->_fieldList[$language][$module];
 		}
 
+		if ($addApiOnlyFields) {
+			$extraFields = $this->getExtraFields($module, $annotated);
+			$fieldList = array_merge($fieldList, $extraFields);
+		}
+
 		return $fieldList;
+	}
+
+
+	/**
+	 *
+	 * @param string $module
+	 * @param string $annotated
+	 * @return array
+	 *
+	 */
+
+	private function getExtraFields($module, $annotated) {
+		$extraFields = array();
+		$hasApiFields = array_key_exists($module, self::$_apiReadOnlyFields);
+
+		if ($hasApiFields) {
+			$extraFields = self::$_apiReadOnlyFields[$module];
+		}
+
+		if ($annotated && array_key_exists($module, self::$_readOnlyFieldsAnnotations)) {
+			$annotatedFields = array();
+			foreach ($extraFields as $field => $option) {
+				if (array_key_exists($field, self::$_readOnlyFieldsAnnotations[$module])) {
+					$option['label'] = self::$_readOnlyFieldsAnnotations[$module][$field];
+					$annotatedFields[$field] = $option;
+				}
+			}
+			$extraFields = array_merge($extraFields, $annotatedFields);
+		}
+
+		return $extraFields;
 	}
 
 

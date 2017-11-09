@@ -42,10 +42,6 @@ class FormModelBuilderEstate
 	/** @var InputModelDBFactory */
 	private $_pInputModelDBFactory = null;
 
-	/** @var array */
-	private $_fields = null;
-
-
 	/**
 	 *
 	 * @param string $pageSlug
@@ -80,10 +76,6 @@ class FormModelBuilderEstate
 
 	protected function readFieldnames()
 	{
-		if ($this->_fields !== null) {
-			return $this->_fields;
-		}
-
 		$language = Language::getDefault();
 		$pFieldnames = \onOffice\WPlugin\Fieldnames::getInstance();
 		$pFieldnames->loadLanguageIfNotCached($language);

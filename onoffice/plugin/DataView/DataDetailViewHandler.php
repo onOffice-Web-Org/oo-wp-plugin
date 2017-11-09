@@ -90,6 +90,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setFields(self::getValue($row, DataDetailView::FIELDS, array()));
 		$pDataDetailView->setPictureTypes(self::getValue($row, DataDetailView::PICTURES, array()));
 		$pDataDetailView->setExpose(self::getValue($row, 'expose'));
+		$pDataDetailView->setAddressFields(self::getValue($row, DataDetailView::ADDRESSFIELDS));
 		return $pDataDetailView;
 	}
 

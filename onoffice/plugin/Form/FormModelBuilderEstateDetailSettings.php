@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Model;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 
@@ -143,6 +145,27 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 */
 
+	public function createInputModelAddressFieldsConfig()
+	{
+		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
+			InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA, null, true);
+
+		$fieldNames = $this->readContactDataFields();
+		$pInputModelFieldsConfig->setHtmlType(Model\InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+		$fields = $this->_pDataDetailView->getAddressFields();
+		$pInputModelFieldsConfig->setValue($fields);
+
+		return $pInputModelFieldsConfig;
+	}
+
+
+	/**
+	 *
+	 * @return Model\InputModelDB
+	 *
+	 */
+
 	public function createInputModelTemplate()
 	{
 		$labelTemplate = __('Template', 'onoffice');
@@ -155,6 +178,30 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelTemplate->setValue($this->_pDataDetailView->getTemplate());
 
 		return $pInputModelTemplate;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function readContactDataFields()
+	{
+		$language = Language::getDefault();
+		$pFieldnames = \onOffice\WPlugin\Fieldnames::getInstance();
+		$pFieldnames->loadLanguageIfNotCached($language);
+
+		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ADDRESS, $language, true, true);
+		$result = array();
+
+		foreach ($fieldnames as $key => $properties)
+		{
+			$result[$key] = $properties['label'];
+		}
+
+		return $result;
 	}
 
 

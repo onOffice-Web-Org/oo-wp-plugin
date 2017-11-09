@@ -39,8 +39,24 @@ class DataDetailView
 	/** */
 	const FIELDS = 'fields';
 
+	/** */
+	const ADDRESSFIELDS = 'addressfields';
+
 	/** @var string[] */
 	private $_fields = array();
+
+	/** @var string[] */
+	private $_addressFields = array(
+		'Anrede',
+		'Vorname',
+		'Name',
+		'Zusatz1',
+		'Strasse',
+		'Plz',
+		'Ort',
+		'Telefon1',
+		'mobile',
+	);
 
 	/** @var string[] */
 	private $_pictureTypes = array();
@@ -75,6 +91,10 @@ class DataDetailView
 	public function getName()
 		{ return 'detail'; }
 
+	/** @return string[] */
+	public function getAddressFields()
+		{ return $this->_addressFields; }
+
 	/** @return int */
 	public function getPageId()
 		{ return $this->_pageId; }
@@ -98,4 +118,8 @@ class DataDetailView
 	/** @param int $pageId */
 	public function setPageId($pageId)
 		{ $this->_pageId = $pageId; }
+
+	/** @var string[] $addressFields */
+	public function setAddressFields(array $addressFields)
+		{ $this->_addressFields = $addressFields; }
 }

@@ -32,7 +32,7 @@ use onOffice\WPlugin\Model\InputModelOption;
 class InputModelOptionFactoryDetailView
 {
 	/** */
-	const INPUT_PICTURE_TYPE = \onOffice\WPlugin\DataView\DataListView::PICTURES;
+	const INPUT_PICTURE_TYPE = \onOffice\WPlugin\DataView\DataDetailView::PICTURES;
 
 	/** */
 	const INPUT_TEMPLATE = 'template';
@@ -41,7 +41,10 @@ class InputModelOptionFactoryDetailView
 	const INPUT_EXPOSE = 'expose';
 
 	/** */
-	const INPUT_FIELD_CONFIG = \onOffice\WPlugin\DataView\DataListView::FIELDS;
+	const INPUT_FIELD_CONFIG = \onOffice\WPlugin\DataView\DataDetailView::FIELDS;
+
+	/** */
+	const INPUT_FIELD_CONTACTDATA = \onOffice\WPlugin\DataView\DataDetailView::ADDRESSFIELDS;
 
 	/** */
 	const KEY_TYPE = 'type';
@@ -62,6 +65,9 @@ class InputModelOptionFactoryDetailView
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		),
 		self::INPUT_FIELD_CONFIG => array(
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		),
+		self::INPUT_FIELD_CONTACTDATA => array(
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		),
 	);
