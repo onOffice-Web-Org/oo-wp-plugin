@@ -189,7 +189,7 @@ class FormModelBuilderEstateDetailSettings
 
 	private function readContactDataFields()
 	{
-		$pFieldnames = \onOffice\WPlugin\Fieldnames::getInstance();
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
 		$pFieldnames->loadLanguage();
 
 		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ADDRESS, true, true);
