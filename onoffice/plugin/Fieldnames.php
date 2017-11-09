@@ -36,8 +36,6 @@ use onOffice\SDK\onOfficeSDK;
  */
 
 class Fieldnames {
-	/** @var Fieldnames */
-	static private $_pInstance = null;
 
 	/** @var array */
 	private static $_apiReadOnlyFields = array(
@@ -112,34 +110,8 @@ class Fieldnames {
 	/** @var array */
 	private $_umkreisFields = array();
 
-	/**
-	 *
-	 */
-
-	private function __construct() {}
-
-
-	/**
-	 *
-	 */
-
-	private function __clone() {}
-
-
-	/**
-	 *
-	 * @return Fieldnames
-	 *
-	 */
-
-	static public function getInstance() {
-		if (is_null(self::$_pInstance)) {
-			self::$_pInstance = new static();
-		}
-
-		return self::$_pInstance;
-	}
-
+	/** @var string */
+	private $_language = null;
 
 	/**
 	 *
@@ -147,20 +119,41 @@ class Fieldnames {
 	 *
 	 */
 
-	public function loadLanguage( $language ) {
-		if ( $this->hasLanguageCached( $language ) ) {
-			return;
+	public function __construct($language = null)
+	{
+		if ($language == null)
+		{
+			$this->_language = Language::getDefault();
 		}
+		else
+		{
+			$this->_language = $language;
+		}
+	}
+
+
+	/**
+	 *
+	 * @param bool $showOnlyInactive
+	 *
+	 */
+
+	public function loadLanguage( $showOnlyInactive = false ) {
 
 		$parametersGetFieldList = array(
 			'labels' => 1,
-			'language' => $language,
+			'language' => $this->_language,
 			'modules' => array
 				(
 					'address',
 					'estate',
 				),
 		);
+
+		if ($showOnlyInactive)
+		{
+			$parametersGetFieldList['showOnlyInactive'] = true;
+		}
 
 		$pSDKWrapper = new SDKWrapper();
 		$handleGetFields = $pSDKWrapper->addRequest(
@@ -170,23 +163,21 @@ class Fieldnames {
 		$responseArrayFieldList = $pSDKWrapper->getRequestResponse( $handleGetFields );
 		$fieldList = $responseArrayFieldList['data']['records'];
 
-		$this->createFieldList( $fieldList, $language );
-		$this->completeFieldListWithSearchcriteria( $language );
+		$this->createFieldList( $fieldList, $this->_language );
+		$this->completeFieldListWithSearchcriteria( $this->_language );
 	}
 
 
 	/**
 	 *
-	 * @param string $language
-	 *
 	 */
 
-	private function completeFieldListWithSearchcriteria( $language ) {
+	private function completeFieldListWithSearchcriteria( ) {
 		$pSDKWrapper = new SDKWrapper();
 		$pSDKWrapper->removeCacheInstances();
 		$requestParameter = array
 			(
-				'language' => $language,
+				'language' => $this->_language,
 				'additionalTranslations' => true,
 			);
 
@@ -235,7 +226,7 @@ class Fieldnames {
 					$this->_umkreisFields[$field['id']] = $fieldProperties;
 				}
 
-				$this->_fieldList[$language]['searchcriteria'][$field['id']] = $fieldProperties;
+				$this->_fieldList[$this->_language]['searchcriteria'][$field['id']] = $fieldProperties;
 			}
 		}
 	}
@@ -328,26 +319,12 @@ class Fieldnames {
 
 	/**
 	 *
-	 * @param string $language
-	 *
-	 */
-
-	public function loadLanguageIfNotCached( $language ) {
-		if ( ! $this->hasLanguageCached( $language ) ) {
-			$this->loadLanguage( $language );
-		}
-	}
-
-
-	/**
-	 *
 	 * @param array $fieldResult
-	 * @param string $language
 	 * @return null
 	 *
 	 */
 
-	private function createFieldList( $fieldResult, $language ) {
+	private function createFieldList( $fieldResult) {
 		if ( count( $fieldResult ) == 0 ) {
 			return;
 		}
@@ -362,7 +339,7 @@ class Fieldnames {
 					continue;
 				}
 
-				$this->_fieldList[$language][$moduleProperties['id']][$fieldName] = $fieldProperties;
+				$this->_fieldList[$this->_language][$moduleProperties['id']][$fieldName] = $fieldProperties;
 			}
 		}
 	}
@@ -372,18 +349,17 @@ class Fieldnames {
 	 *
 	 * @param string $field
 	 * @param string $module recordType
-	 * @param string $language
 	 *
 	 * @return string
 	 *
 	 */
 
-	public function getFieldLabel( $field, $module, $language ) {
+	public function getFieldLabel( $field, $module) {
 		$fieldNewName = $field;
 
-		if ( isset( $this->_fieldList[$language][$module] ) &&
-			array_key_exists( $field, $this->_fieldList[$language][$module] ) ) {
-			$fieldNewName = $this->_fieldList[$language][$module][$field]['label'];
+		if ( isset( $this->_fieldList[$this->_language][$module] ) &&
+			array_key_exists( $field, $this->_fieldList[$this->_language][$module] ) ) {
+			$fieldNewName = $this->_fieldList[$this->_language][$module][$field]['label'];
 		}
 
 		return $fieldNewName;
@@ -393,16 +369,15 @@ class Fieldnames {
 	/**
 	 *
 	 * @param string $module recordType
-	 * @param string $language
 	 *
 	 * @return array
 	 *
 	 */
 
-	public function getFieldList( $module, $language, $addApiOnlyFields = false, $annotated = false ) {
+	public function getFieldList( $module, $addApiOnlyFields = false, $annotated = false ) {
 		$fieldList = array();
-		if ( isset( $this->_fieldList[$language][$module] ) ) {
-			$fieldList = $this->_fieldList[$language][$module];
+		if ( isset( $this->_fieldList[$this->_language][$module] ) ) {
+			$fieldList = $this->_fieldList[$this->_language][$module];
 		}
 
 		if ($addApiOnlyFields) {
@@ -449,13 +424,12 @@ class Fieldnames {
 	 *
 	 * @param string $fieldName
 	 * @param string $module
-	 * @param string $language
 	 * @return string
 	 *
 	 */
 
-	public function getType( $fieldName, $module, $language ) {
-		return $this->_fieldList[$language][$module][$fieldName]['type'];
+	public function getType( $fieldName, $module) {
+		return $this->_fieldList[$this->_language][$module][$fieldName]['type'];
 	}
 
 
@@ -463,13 +437,12 @@ class Fieldnames {
 	 *
 	 * @param string $inputField
 	 * @param string $module
-	 * @param string $language
 	 * @return string
 	 *
 	 */
 
-	public function getPermittedValues( $inputField, $module, $language ) {
-		return $this->_fieldList[$language][$module][$inputField]['permittedvalues'];
+	public function getPermittedValues( $inputField, $module ) {
+		return $this->_fieldList[$this->_language][$module][$inputField]['permittedvalues'];
 	}
 
 

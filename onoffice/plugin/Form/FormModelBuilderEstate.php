@@ -76,11 +76,10 @@ class FormModelBuilderEstate
 
 	protected function readFieldnames()
 	{
-		$language = Language::getDefault();
-		$pFieldnames = \onOffice\WPlugin\Fieldnames::getInstance();
-		$pFieldnames->loadLanguageIfNotCached($language);
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
 
-		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE, $language);
+		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
 		$result = array();
 
 		foreach ($fieldnames as $key => $properties)

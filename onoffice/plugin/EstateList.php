@@ -84,7 +84,7 @@ class EstateList {
 	public function __construct(DataView\DataView $pDataView) {
 		$this->_pSDKWrapper = new SDKWrapper();
 		$this->_pDataView = $pDataView;
-		$this->_pFieldnames = Fieldnames::getInstance();
+		$this->_pFieldnames = new Fieldnames();
 		$this->_pAddressList = new AddressList();
 	}
 
@@ -128,8 +128,7 @@ class EstateList {
 	{
 		$pSDKWrapper = $this->_pSDKWrapper;
 
-		$language = Language::getDefault();
-		$this->_pFieldnames->loadLanguage( $language );
+		$this->_pFieldnames->loadLanguage();
 
 		$parametersGetEstateList = $this->getEstateParameters( $currentPage );
 
@@ -442,8 +441,7 @@ class EstateList {
 
 	public function getFieldLabel( $field ) {
 		$recordType = $this->_currentEstate['type'];
-		$language = Language::getDefault();
-		$fieldNewName = $this->_pFieldnames->getFieldLabel($field, $recordType, $language );
+		$fieldNewName = $this->_pFieldnames->getFieldLabel($field, $recordType);
 
 		return $fieldNewName;
 	}
