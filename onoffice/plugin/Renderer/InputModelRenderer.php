@@ -19,13 +19,12 @@
  *
  */
 
-namespace onOffice\WPlugin\Form;
+namespace onOffice\WPlugin\Renderer;
 
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Utility\__String;
-use onOffice\WPlugin\Renderer;
 
 /**
  *
@@ -133,7 +132,7 @@ class InputModelRenderer
 		switch ($pInputModel->getHtmlType())
 		{
 			case InputModelOption::HTML_TYPE_SELECT:
-				$pInstance = new Renderer\InputFieldSelectRenderer($pInputModel->getIdentifier(),
+				$pInstance = new InputFieldSelectRenderer($pInputModel->getIdentifier(),
 				$pInputModel->getValuesAvailable());
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				break;
@@ -143,26 +142,26 @@ class InputModelRenderer
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}
-				$pInstance = new Renderer\InputFieldCheckboxRenderer($name,
+				$pInstance = new InputFieldCheckboxRenderer($name,
 				$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				break;
 
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST:
 				$name = $pInputModel->getIdentifier();
-				$pInstance = new Renderer\InputFieldComplexSortableListRenderer($name,
+				$pInstance = new InputFieldComplexSortableListRenderer($name,
 				$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				break;
 
 			case InputModelOption::HTML_TYPE_RADIO:
-				$pInstance = new Renderer\InputFieldRadioRenderer($pInputModel->getIdentifier(),
+				$pInstance = new InputFieldRadioRenderer($pInputModel->getIdentifier(),
 				$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValue($pInputModel->getValue());
 				break;
 
 			case InputModelOption::HTML_TYPE_TEXT:
-				$pInstance = new Renderer\InputFieldTextRenderer($pInputModel->getIdentifier());
+				$pInstance = new InputFieldTextRenderer($pInputModel->getIdentifier());
 				$pInstance->addAdditionalAttribute('size', '50');
 
 				if ($pInputModel->getIsPassword())

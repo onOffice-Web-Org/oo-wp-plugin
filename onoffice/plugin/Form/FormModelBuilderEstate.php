@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Form;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Language;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\TemplateCall;
 use onOffice\WPlugin\Model\InputModelBase;

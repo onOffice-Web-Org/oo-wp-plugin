@@ -22,7 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model;
-use onOffice\WPlugin\Form\InputModelRenderer;
+use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Form\FormModelBuilderEstateListSettings;
 use onOffice\WPlugin\Record\RecordManagerUpdateListView;
 use onOffice\WPlugin\Record\RecordManagerInsertListView;

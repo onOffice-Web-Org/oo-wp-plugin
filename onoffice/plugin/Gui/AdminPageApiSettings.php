@@ -22,7 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model;
-use onOffice\WPlugin\Form\InputModelRenderer;
+use onOffice\WPlugin\Renderer\InputModelRenderer;
 
 /**
  *
