@@ -70,7 +70,6 @@ add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
 add_action( 'init', array($pAdminViewController, 'onInit') );
 add_action( 'admin_init', array($pAdminViewController, 'add_ajax_actions') );
 
-add_filter( 'the_posts', array($pContentFilter, 'filter_the_posts') );
 add_filter( 'the_content', array($pContentFilter, 'filter_the_content') );
 add_filter( 'wp_link_pages_link', array($pSearchParams, 'linkPagesLink'), 10, 2);
 add_filter( 'wp_link_pages_args', array($pSearchParams, 'populateDefaultLinkParams') );

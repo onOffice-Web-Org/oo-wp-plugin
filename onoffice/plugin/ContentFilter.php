@@ -27,7 +27,6 @@
  */
 
 namespace onOffice\WPlugin;
-use onOffice\WPlugin\Helper;
 
 /**
  *
@@ -233,91 +232,6 @@ class ContentFilter
 		$pEstateList->loadSingleEstate($estateId);
 
 		return $pEstateList;
-	}
-
-
-	/**
-	 *
-	 * @global \WP_Query $wp_query
-	 * @global \WP_Post $post
-	 * @param \WP_Post[] $posts
-	 * @return \WP_Post
-	 *
-	 */
-
-	public function filter_the_posts( $posts ) {
-		global $wp_query;
-
-		if ( empty( $posts[0] ) ||
-			empty( $wp_query->query_vars['pagename'] ) ) {
-			return $posts;
-		}
-
-		$pHelper = new Helper();
-		$oldPageId = $pHelper->get_pageId_by_title($wp_query->query_vars['pagename']);
-		$view = null;
-
-
-		if ( isset( $wp_query->query_vars['view'] ) ) {
-			$view = $wp_query->query_vars['view'];
-			$pageId = $this->getDetailViewPageidByListPageId( $oldPageId, $view );
-		} else {
-			return $posts;
-		}
-
-		if ( ! is_null( $view ) && ! is_null( $pageId ) &&
-			! empty( $wp_query->query_vars['estate_id'] ) ) {
-			$newPost = get_post( $pageId );
-			remove_filter ('the_content', 'wpautop');
-
-			if ( ! is_null( $newPost ) ) {
-				$post = $newPost;
-				$post->post_content = $this->filter_the_content( $post->post_content );
-				$post->post_status = 'publish';
-				return array($post);
-			}
-		}
-
-		return $posts;
-	}
-
-
-	/**
-	 *
-	 * @param int $listPageid
-	 * @param string $detailViewName
-	 * @return int
-	 *
-	 */
-
-	private function getDetailViewPageidByListPageId( $listPageid, $detailViewName ) {
-		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
-		$configKey = $this->getConfigKeyByPostId( $listPageid );
-
-		if (isset($estateConfig[$configKey]['views'][$detailViewName])) {
-			return $estateConfig[$configKey]['views'][$detailViewName]['pageid'];
-		}
-	}
-
-
-	/**
-	 *
-	 * @param int $pageid
-	 * @return string
-	 *
-	 */
-
-	private function getConfigKeyByPostId( $pageid ) {
-		foreach ( ConfigWrapper::getInstance()->getConfigByKey( 'estate' ) as $index => $config ) {
-			foreach ($config['views'] as $view) {
-				if ( is_array( $view ) && array_key_exists( 'pageid', $view ) &&
-					$view['pageid'] === $pageid ) {
-					return $index;
-				}
-			}
-		}
-
-		return null;
 	}
 
 
