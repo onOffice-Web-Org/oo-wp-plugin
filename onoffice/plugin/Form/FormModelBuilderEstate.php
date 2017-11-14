@@ -92,34 +92,6 @@ class FormModelBuilderEstate
 
 	/**
 	 *
-	 * @return Model\InputModelDB
-	 *
-	 */
-
-	public function createInputModelFieldsConfig()
-	{
-		$pInputModelFieldsConfig = $this->_pInputModelDBFactory->create(
-			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
-
-		$fieldNames = $this->readFieldnames();
-		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-		$fields = $this->getValue(DataListView::FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array();
-		}
-
-		$pInputModelFieldsConfig->setValue($fields);
-
-		return $pInputModelFieldsConfig;
-	}
-
-
-
-	/**
-	 *
 	 * @return array
 	 *
 	 */
