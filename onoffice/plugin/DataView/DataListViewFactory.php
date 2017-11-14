@@ -72,6 +72,7 @@ class DataListViewFactory
 		$pListView->setSortorder($row['sortorder']);
 		$pListView->setRecordsPerPage($row['recordsPerPage']);
 		$pListView->setTemplate($row['template']);
+		$pListView->setRandom((bool)$row['random']);
 
 		return $pListView;
 	}

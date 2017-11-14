@@ -35,9 +35,6 @@ use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
 class FormModelBuilderEstateListSettings
 	extends FormModelBuilderEstate
 {
-	/** @var InputModelDBFactory */
-	private $_pInputModelDBFactory = null;
-
 	/**
 	 *
 	 * @param int $listViewId
@@ -47,8 +44,6 @@ class FormModelBuilderEstateListSettings
 
 	public function generate($listViewId = null)
 	{
-		$this->_pInputModelDBFactory = $this->getInputModelDBFactory();
-
 		if ($listViewId !== null)
 		{
 			$pRecordReadManager = new \onOffice\WPlugin\Record\RecordManagerReadListView();
@@ -74,7 +69,7 @@ class FormModelBuilderEstateListSettings
 	public function createInputModelFilter()
 	{
 		$labelFiltername = __('Filter', 'onoffice');
-		$pInputModelFiltername = $this->_pInputModelDBFactory->create
+		$pInputModelFiltername = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_FILTERID, $labelFiltername);
 		$pInputModelFiltername->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
@@ -96,7 +91,7 @@ class FormModelBuilderEstateListSettings
 
 	public function createInputModelFieldsConfig()
 	{
-		$pInputModelFieldsConfig = $this->_pInputModelDBFactory->create(
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
 		$fieldNames = $this->readFieldnames();
@@ -124,7 +119,7 @@ class FormModelBuilderEstateListSettings
 	public function createInputModelListType()
 	{
 		$labelListType = __('Type of List', 'onoffice');
-		$pInputModelListType = $this->_pInputModelDBFactory->create
+		$pInputModelListType = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_LIST_TYPE, $labelListType);
 		$pInputModelListType->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelListType->setValue($this->getValue($pInputModelListType->getField()));
@@ -144,7 +139,7 @@ class FormModelBuilderEstateListSettings
 	{
 		$labelSortBy = __('Sort by', 'onoffice');
 
-		$pInputModelSortBy = $this->_pInputModelDBFactory->create
+		$pInputModelSortBy = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
 		$pInputModelSortBy->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
@@ -166,7 +161,7 @@ class FormModelBuilderEstateListSettings
 	public function createInputModelRecordsPerPage()
 	{
 		$labelRecordsPerPage = __('Records per Page', 'onoffice');
-		$pInputModelRecordsPerPage = $this->_pInputModelDBFactory->create
+		$pInputModelRecordsPerPage = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_RECORDS_PER_PAGE, $labelRecordsPerPage);
 		$pInputModelRecordsPerPage->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelRecordsPerPage->setValuesAvailable(array('5' => '5', '10' => '10', '15' => '15'));
@@ -185,7 +180,7 @@ class FormModelBuilderEstateListSettings
 	public function createInputModelSortOrder()
 	{
 		$labelSortOrder = __('Sort order', 'onoffice');
-		$pInputModelSortOrder = $this->_pInputModelDBFactory->create
+		$pInputModelSortOrder = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_SORTORDER, $labelSortOrder);
 		$pInputModelSortOrder->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelSortOrder->setValuesAvailable(array(
@@ -208,7 +203,7 @@ class FormModelBuilderEstateListSettings
 	{
 		$labelShowStatus = __('Show Estate Status', 'onoffice');
 
-		$pInputModelShowStatus = $this->_pInputModelDBFactory->create
+		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_SHOW_STATUS, $labelShowStatus);
 		$pInputModelShowStatus->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelShowStatus->setValue($this->getValue('show_status'));
@@ -228,7 +223,7 @@ class FormModelBuilderEstateListSettings
 	{
 		$labelName = __('View Name', 'onoffice');
 
-		$pInputModelName = $this->_pInputModelDBFactory->create
+		$pInputModelName = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_LISTNAME, null);
 		$pInputModelName->setPlaceholder($labelName);
 		$pInputModelName->setHtmlType(Model\InputModelOption::HTML_TYPE_TEXT);
@@ -248,7 +243,7 @@ class FormModelBuilderEstateListSettings
 	{
 		$allPictureTypes = \onOffice\WPlugin\ImageType::getAllImageTypes();
 
-		$pInputModelPictureTypes = $this->_pInputModelDBFactory->create
+		$pInputModelPictureTypes = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_PICTURE_TYPE, null, true);
 		$pInputModelPictureTypes->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
@@ -275,7 +270,7 @@ class FormModelBuilderEstateListSettings
 	{
 		$labelExpose = __('PDF-Expose', 'onoffice');
 
-		$pInputModelExpose = $this->_pInputModelDBFactory->create
+		$pInputModelExpose = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_EXPOSE, $labelExpose);
 		$pInputModelExpose->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 		$exposes = array('' => '') + $this->readExposes();
@@ -297,7 +292,7 @@ class FormModelBuilderEstateListSettings
 		$labelTemplate = __('Template', 'onoffice');
 		$selectedTemplate = $this->getValue('template');
 
-		$pInputModelTemplate = $this->_pInputModelDBFactory->create
+		$pInputModelTemplate = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 

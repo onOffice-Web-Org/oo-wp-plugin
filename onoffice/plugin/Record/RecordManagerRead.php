@@ -49,6 +49,9 @@ abstract class RecordManagerRead
 	/** @var string[] */
 	private $_joins = array();
 
+	/** @var string[] */
+	private $_where = array(1);
+
 
 	/**
 	 *
@@ -111,6 +114,10 @@ abstract class RecordManagerRead
 	public function addJoin($fullJoinStatement)
 		{ $this->_joins []= $fullJoinStatement; }
 
+	/** @param string $where */
+	public function addWhere($where)
+		{ $this->_where []= $where; }
+
 	/** @param array $foundRows */
 	protected function setFoundRows($foundRows)
 		{ $this->_foundRows = $foundRows; }
@@ -134,4 +141,8 @@ abstract class RecordManagerRead
 	/** @return int */
 	protected function getLimit()
 		{ return $this->_limit; }
+
+	/** @return string[] */
+	protected function getWhere()
+		{ return $this->_where; }
 }

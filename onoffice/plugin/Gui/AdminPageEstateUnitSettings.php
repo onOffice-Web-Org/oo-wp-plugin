@@ -25,7 +25,7 @@ use onOffice\WPlugin\Model;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Record\RecordManagerReadListView;
-use onOffice\WPlugin\Form\FormModelBuilderEstateListSettings;
+use onOffice\WPlugin\Form\FormModelBuilderEstateUnitListSettings;
 
 /**
  *
@@ -34,7 +34,7 @@ use onOffice\WPlugin\Form\FormModelBuilderEstateListSettings;
  *
  */
 
-class AdminPageEstateListSettings
+class AdminPageEstateUnitSettings
 	extends AdminPageEstateListSettingsBase
 {
 	/**
@@ -46,20 +46,18 @@ class AdminPageEstateListSettings
 	public function __construct($pageSlug)
 	{
 		parent::__construct($pageSlug);
-		$this->setPageTitle(__('Edit List View', 'onoffice'));
+		$this->setPageTitle(__('Edit Units View', 'onoffice'));
 	}
 
 
 	/**
-	 *
-	 * @return bool
 	 *
 	 */
 
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$pFormModelBuilder = new FormModelBuilderEstateListSettings($this->getPageSlug());
+		$pFormModelBuilder = new FormModelBuilderEstateUnitListSettings($this->getPageSlug());
 		$pFormModel = $pFormModelBuilder->generate($this->getListViewId());
 		$this->addFormModel($pFormModel);
 
@@ -71,23 +69,15 @@ class AdminPageEstateListSettings
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
 
-		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
-		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
-		$pInputModelSortBy = $pFormModelBuilder->createInputModelSortBy();
-		$pInputModelSortOrder = $pFormModelBuilder->createInputModelSortOrder();
-		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
-		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
-		$pFormModelRecordsFilter = new Model\FormModel();
-		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
-		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
-		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice'));
-		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
-		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
-		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
-		$pFormModelRecordsFilter->addInputModel($pInputModelShowStatus);
-		$this->addFormModel($pFormModelRecordsFilter);
+		$pInputModelRecords = $pFormModelBuilder->createInputModelRecordsPerPage();
+		$pInputModelRandomOrder = $pFormModelBuilder->createInputModelRandomOrder();
+		$pFormModelRecords = new Model\FormModel();
+		$pFormModelRecords->setPageSlug($this->getPageSlug());
+		$pFormModelRecords->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
+		$pFormModelRecords->setLabel(__('Records', 'onoffice'));
+		$pFormModelRecords->addInputModel($pInputModelRecords);
+		$pFormModelRecords->addInputModel($pInputModelRandomOrder);
+		$this->addFormModel($pFormModelRecords);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
 		$pFormModelLayoutDesign = new Model\FormModel();
@@ -129,9 +119,6 @@ class AdminPageEstateListSettings
 
 	protected function generateMetaBoxes()
 	{
-		$pFormRecordsFilter = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
-		$this->createMetaBoxByForm($pFormRecordsFilter, 'normal');
-
 		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
 		$this->createMetaBoxByForm($pFormPictureTypes, 'side');
 
@@ -143,10 +130,14 @@ class AdminPageEstateListSettings
 
 		$pFormFieldsConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_FIELDS_CONFIG);
 		$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+
+		$pFormRecords = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
+		$this->createMetaBoxByForm($pFormRecords, 'side');
 	}
 
 
 	/**
+	 *
 	 * @param int $recordId
 	 * @throws UnknownViewException
 	 *
@@ -163,7 +154,7 @@ class AdminPageEstateListSettings
 		$pFactory = new DataListViewFactory();
 		$pDataListView = $pFactory->createListViewByRow($values);
 
-		if (!in_array($pDataListView->getListType(), array('default', 'reference', 'favorites'))) {
+		if ($pDataListView->getListType() !== 'units') {
 			throw new UnknownViewException;
 		}
 	}

@@ -38,6 +38,9 @@ class AdminPageEstate
 	const PAGE_ESTATE_DETAIL = 'detail';
 
 	/** */
+	const PAGE_ESTATE_UNITS = 'units';
+
+	/** */
 	const PARAM_TAB = 'tab';
 
 	/** @var array */
@@ -47,6 +50,7 @@ class AdminPageEstate
 	private $_subPageClassByTab = array(
 		self::PAGE_ESTATE_LIST => '\onOffice\WPlugin\Gui\AdminPageEstateList',
 		self::PAGE_ESTATE_DETAIL => '\onOffice\WPlugin\Gui\AdminPageEstateDetail',
+		self::PAGE_ESTATE_UNITS => '\onOffice\WPlugin\Gui\AdminPageEstateUnitList',
 	);
 
 	/** @var AdminPage */
@@ -64,6 +68,7 @@ class AdminPageEstate
 		$this->_tabs = array(
 			self::PAGE_ESTATE_LIST => __('List Views', 'onoffice'),
 			self::PAGE_ESTATE_DETAIL => __('Detail View', 'onoffice'),
+			self::PAGE_ESTATE_UNITS => __('Unit Lists', 'onoffice'),
 		);
 
 		parent::__construct($pageSlug);

@@ -93,6 +93,7 @@ class EstateListTable extends ListTable
 		$pRecordRead->addColumn('show_status');
 		$pRecordRead->addColumn('list_type');
 		$pRecordRead->addColumn('name', 'shortcode');
+		$pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites')");
 
 		$this->setItems($pRecordRead->getRecords());
 		$itemsCount = $pRecordRead->getCountOverall();
@@ -294,13 +295,14 @@ class EstateListTable extends ListTable
 			return '';
 		}
 
-		$edit_link = admin_url('admin.php?page=onoffice-editlistview&listViewId='.$pItem->ID);
+		$viewidParam = AdminPageEstateListSettingsBase::GET_PARAM_VIEWID;
+		$editLink = admin_url('admin.php?page=onoffice-editlistview&'.$viewidParam.'='.$pItem->ID);
 
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
 			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
 
 		$actions = array();
-		$actions['edit'] = '<a href="'.$edit_link.'">'.esc_html__('Edit').'</a>';
+		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';
 		$actions['delete'] = "<a class='submitdelete' href='"
 			.wp_nonce_url($actionFile.'?action=delete&list_id='.$pItem->ID, 'delete-listview_'.$pItem->ID)
 			."' onclick=\"if ( confirm( '"

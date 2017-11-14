@@ -88,6 +88,9 @@ class DataListView
 	/** @var string */
 	private $_expose = null;
 
+	/** @var bool */
+	private $_random = false;
+
 
 	/**
 	 *
@@ -154,6 +157,14 @@ class DataListView
 	/** @return array */
 	public function getAddressFields()
 		{ return $this->_addressFields; }
+
+	/** @param bool $random */
+	public function setRandom($random)
+		{ $this->_random = $random; }
+
+	/** @return bool */
+	public function getRandom()
+		{ return $this->_random; }
 
 	/** @param array $fields */
 	public function setFields(array $fields)

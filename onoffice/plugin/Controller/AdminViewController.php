@@ -27,6 +27,7 @@ use onOffice\WPlugin\Gui\AdminPageEstate;
 use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Gui\AdminPageModules;
 use onOffice\WPlugin\Gui\AdminPageApiSettings;
+use onOffice\WPlugin\Gui\AdminPageEstateUnitSettings;
 
 /**
  *
@@ -46,6 +47,9 @@ class AdminViewController
 	/** @var AdminPageEstateListSettings */
 	private $_pAdminListViewSettings = null;
 
+	/** @var AdminPageEstateUnitList */
+	private $_pAdminUnitListSettings = null;
+
 	/** @var AdminPageEstate */
 	private $_pAdminPageEstates = null;
 
@@ -64,6 +68,8 @@ class AdminViewController
 		$this->_pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editlistview'] = $this->_pAdminListViewSettings;
 
+		$this->_pAdminUnitListSettings = new AdminPageEstateUnitSettings($this->_pageSlug);
+		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editunitlist'] = $this->_pAdminUnitListSettings;
 
 		$this->_pAdminPageEstates = new AdminPageEstate($this->_pageSlug);
 		$pSelectedSubPage = $this->_pAdminPageEstates->getSelectedAdminPage();
@@ -114,6 +120,12 @@ class AdminViewController
 			array($this->_pAdminListViewSettings, 'render'));
 		add_action( 'load-'.$hookEditList, array($this->_pAdminListViewSettings, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditList, array($this->_pAdminListViewSettings, 'checkForms'));
+
+		// Estates: edit list view (hidden page)
+		$hookEditUnitList = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editunitlist',
+			array($this->_pAdminUnitListSettings, 'render'));
+		add_action( 'load-'.$hookEditUnitList, array($this->_pAdminUnitListSettings, 'handleAdminNotices'));
+		add_action( 'load-'.$hookEditUnitList, array($this->_pAdminUnitListSettings, 'checkForms'));
 
 		// Settings
 		$pAdminSettingsPage = new AdminPageApiSettings($this->_pageSlug.'-settings');

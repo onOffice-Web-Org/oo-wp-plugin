@@ -34,7 +34,6 @@ use onOffice\WPlugin\Record\RecordManagerInsertListView;
 class RecordManagerUpdateListView
 	extends RecordManager
 {
-
 	/** @var int */
 	private $_listviewId = null;
 
@@ -46,7 +45,7 @@ class RecordManagerUpdateListView
 	 */
 
 	public function __construct($listviewId)
-	{ $this->_listviewId = $listviewId; }
+		{ $this->_listviewId = $listviewId; }
 
 
 	/**
@@ -55,36 +54,26 @@ class RecordManagerUpdateListView
 	 *
 	 */
 
-	public function updateByDataListView($pDataViewList)
+	public function updateByDataListView(DataListView $pDataViewList)
 	{
-		$name = $pDataViewList->getName();
-		$sortby = $pDataViewList->getSortby();
-		$sortorder = $pDataViewList->getSortOrder();
-		$showStatus = $pDataViewList->getShowStatus();
-		$listType = $pDataViewList->getListType();
-		$template = $pDataViewList->getTemplate();
-		$recordsPerPage = $pDataViewList->getRecordsPerPage();
-		$pictures = $pDataViewList->getPictureTypes();
-		$fields = $pDataViewList->getFields();
-		$contactPerson = $pDataViewList->getAddressFields();
-
 		$row = array
 			(
-				'name' => $name,
-				'sortby' => $sortby,
-				'sortorder' => $sortorder,
-				'show_status' => $showStatus,
-				'list_type' => $listType,
-				'template' => $template,
-				'recordsPerPage' => $recordsPerPage,
+				'name' => $pDataViewList->getName(),
+				'sortby' => $pDataViewList->getSortby(),
+				'sortorder' => $pDataViewList->getSortOrder(),
+				'show_status' => $pDataViewList->getShowStatus(),
+				'list_type' => $pDataViewList->getListType(),
+				'template' => $pDataViewList->getTemplate(),
+				'recordsPerPage' => $pDataViewList->getRecordsPerPage(),
+				'random' => $pDataViewList->getRandom(),
 			);
 
 		$tableRow = array
 			(
 				self::TABLENAME_LIST_VIEW => $row,
-				self::TABLENAME_PICTURETYPES => $pictures,
-				self::TABLENAME_FIELDCONFIG => $fields,
-				self::TABLENAME_LISTVIEW_CONTACTPERSON => $contactPerson,
+				self::TABLENAME_PICTURETYPES => $pDataViewList->getPictureTypes(),
+				self::TABLENAME_FIELDCONFIG => $pDataViewList->getFields(),
+				self::TABLENAME_LISTVIEW_CONTACTPERSON => $pDataViewList->getAddressFields(),
 			);
 
 		$this->updateByRow($this->_listviewId, $tableRow);

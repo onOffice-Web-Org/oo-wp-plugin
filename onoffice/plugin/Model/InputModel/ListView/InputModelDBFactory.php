@@ -58,6 +58,9 @@ class InputModelDBFactory
 	const INPUT_SHOW_STATUS = 'showStatus';
 
 	/** */
+	const INPUT_RANDOM_ORDER = 'randomOrder';
+
+	/** */
 	const INPUT_EXPOSE = 'expose';
 
 	/** */
@@ -112,6 +115,10 @@ class InputModelDBFactory
 		self::INPUT_EXPOSE => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'expose',
+		),
+		self::INPUT_RANDOM_ORDER => array(
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'random',
 		),
 		self::INPUT_FIELD_CONFIG => array(
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',

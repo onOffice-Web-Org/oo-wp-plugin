@@ -205,15 +205,23 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
+	 * @param string $filepattern
 	 * @return array
 	 *
 	 */
 
-	private function readTemplatePaths()
+	private function readTemplatePaths($filepattern = '*')
 	{
-		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR.'/index.php').'templates.dist/estate/*.php');
-		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR).'onoffice-personalized/templates/estate/*.php');
-		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
+		$ooPluginDir = plugin_dir_path(ONOFFICE_PLUGIN_DIR.'/index.php');
+		$templatesAll = glob($ooPluginDir.'templates.dist/estate/'.$filepattern.'.php');
+
+		$ooPersonalizedDir = plugin_dir_path(ONOFFICE_PLUGIN_DIR).'onoffice-personalized';
+
+		if (is_dir($ooPersonalizedDir)) {
+			$templateLocalFiles = glob($ooPersonalizedDir.'/templates/estate/'.$filepattern.'.php');
+			$templatesAll = array_merge($templatesAll, $templateLocalFiles);
+		}
+
 		$templates = array();
 
 		foreach ($templatesAll as $value)

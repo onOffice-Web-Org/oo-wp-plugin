@@ -46,9 +46,11 @@ class RecordManagerReadListView
 		$pWpDb = $this->getWpdb();
 		$columns = implode(', ', $this->getColumns());
 		$join = implode("\n", $this->getJoins());
+		$where = "(".implode(") AND (", $this->getWhere()).")";
 		$sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
 				FROM {$prefix}oo_plugin_listviews
 				{$join}
+				WHERE {$where}
 				ORDER BY `listview_id` ASC
 				LIMIT {$this->getOffset()}, {$this->getLimit()}";
 		$this->setFoundRows($pWpDb->get_results($sql, OBJECT));
@@ -129,7 +131,7 @@ class RecordManagerReadListView
 
 		$sqlPictures = "SELECT `picturetype`
 				FROM {$prefix}oo_plugin_picturetypes
-				WHERE `listview_id` = ".$listviewId;
+				WHERE `listview_id` = ".esc_sql($listviewId);
 
 		$pictures = $pWpDb->get_col($sqlPictures);
 		$result = array();
