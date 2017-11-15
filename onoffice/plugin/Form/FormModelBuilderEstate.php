@@ -24,8 +24,6 @@ namespace onOffice\WPlugin\Form;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\TemplateCall;
-use onOffice\WPlugin\Model\InputModelBase;
-use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
 
 /**

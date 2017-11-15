@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model;
+use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Record\RecordManagerReadListView;
@@ -157,5 +158,19 @@ class AdminPageEstateUnitSettings
 		if ($pDataListView->getListType() !== 'units') {
 			throw new UnknownViewException;
 		}
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function setFixedValues(array $row)
+	{
+		$row[RecordManager::TABLENAME_LIST_VIEW]['list_type'] = 'units';
+		return $row;
 	}
 }

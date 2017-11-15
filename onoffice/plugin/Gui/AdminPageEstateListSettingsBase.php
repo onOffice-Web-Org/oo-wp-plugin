@@ -182,6 +182,8 @@ abstract class AdminPageEstateListSettingsBase
 			$row = $pInputModelDBAdapterRow->createUpdateValuesByTable();
 		}
 
+		$row = $this->setFixedValues($row);
+
 		if ($recordId != null)
 		{
 			$pUpdate = new RecordManagerUpdateListView($recordId);
@@ -205,6 +207,18 @@ abstract class AdminPageEstateListSettingsBase
 		echo json_encode($resultObject);
 
 		wp_die();
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function setFixedValues(array $row) {
+		return $row;
 	}
 
 
