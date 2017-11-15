@@ -90,6 +90,29 @@ class FormModelBuilderEstate
 
 	/**
 	 *
+	 * @return type
+	 *
+	 */
+	
+	protected function readFieldnamesByContent()
+	{
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
+
+		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
+		$resultByContent = array();
+
+		foreach ($fieldnames as $key => $properties)
+		{
+			$resultByContent[$properties['content']][$key]=$properties['label'];
+		}
+
+		return $resultByContent;
+	}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */

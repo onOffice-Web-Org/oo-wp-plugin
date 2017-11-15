@@ -148,6 +148,8 @@ class Fieldnames {
 
 		$parametersGetFieldList = array(
 			'labels' => 1,
+			'showContent' => 1,
+			'showTable' => 1,
 			'language' => $this->_language,
 			'modules' => array
 				(
@@ -345,6 +347,7 @@ class Fieldnames {
 					continue;
 				}
 
+				$fieldProperties['content'] = $moduleProperties['elements'][$fieldName]['content'];
 				$this->_fieldList[$this->_language][$moduleProperties['id']][$fieldName] = $fieldProperties;
 			}
 		}
