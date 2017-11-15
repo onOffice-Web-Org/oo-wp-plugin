@@ -183,4 +183,18 @@ class EstateUnitsTable extends ListTable
 			$this->_args['singular'],
 			$pItem->ID);
 	}
+
+
+	/**
+	 *
+	 * @param string $pItem
+	 * @return string
+	 *
+	 */
+
+	protected function column_shortcode($pItem)
+	{
+		return '<input type="text" readonly value="[oo_estate view=&quot;'
+			.esc_html($pItem->name).'&quot;]">';
+	}
 }
