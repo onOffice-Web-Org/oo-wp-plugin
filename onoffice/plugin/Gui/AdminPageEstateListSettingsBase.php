@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Record\RecordManager;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Model\InputModelDBAdapterRow;
 use onOffice\WPlugin\Record\RecordManagerUpdateListView;
@@ -184,6 +186,18 @@ abstract class AdminPageEstateListSettingsBase
 
 		$row = $this->setFixedValues($row);
 
+		$pDummyDetailView = new DataDetailView();
+		$resultObject = new \stdClass();
+
+		if ($row[RecordManager::TABLENAME_LIST_VIEW]['name'] === $pDummyDetailView->getName()) {
+			$resultObject->result = false;
+			$resultObject->record_id = null;
+
+			echo json_encode($resultObject);
+
+			wp_die();
+		}
+
 		if ($recordId != null)
 		{
 			$pUpdate = new RecordManagerUpdateListView($recordId);
@@ -200,7 +214,6 @@ abstract class AdminPageEstateListSettingsBase
 			}
 		}
 
-		$resultObject = new \stdClass();
 		$resultObject->result = $result;
 		$resultObject->record_id = $recordId;
 
@@ -232,7 +245,7 @@ abstract class AdminPageEstateListSettingsBase
 	{
 		return array(
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice'),
-			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view.', 'onoffice'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view. Please make sure the name of the view is unique.', 'onoffice'),
 			self::ENQUEUE_DATA_MERGE => array(self::POST_RECORD_ID),
 			self::POST_RECORD_ID => $this->_listViewId,
 		);

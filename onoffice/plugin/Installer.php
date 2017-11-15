@@ -104,7 +104,7 @@ abstract class Installer
 		$tableName = $prefix."oo_plugin_listviews";
 		$sql = "CREATE TABLE $tableName (
 			`listview_id` int(11) NOT NULL AUTO_INCREMENT,
-			`name` tinytext NOT NULL,
+			`name` varchar(191) NOT NULL,
 			`filterId` int(11),
 			`sortby` tinytext NOT NULL,
 			`sortorder` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
@@ -114,7 +114,8 @@ abstract class Installer
 			`expose` tinytext,
 			`recordsPerPage` INT( 10 ) NOT NULL DEFAULT '10',
 			`random` tinyint(1) NOT NULL DEFAULT '0',
-			PRIMARY KEY (`listview_id`)
+			PRIMARY KEY (`listview_id`),
+			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
 
 		return $sql;
