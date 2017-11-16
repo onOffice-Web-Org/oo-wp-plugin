@@ -31,7 +31,7 @@ use onOffice\WPlugin\PdfDocumentType;
 <h1>Detailansicht!</h1>
 
 <?php while ( $currentEstate = $pEstates->estateIterator() ) : ?>
-	<?php echo $pEstates->getEstateUnits( $pEstates->getCurrentEstateId(), 'unitlist', 'units' );?>
+	<?php echo $pEstates->getEstateUnits( ); ?>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
 			continue;

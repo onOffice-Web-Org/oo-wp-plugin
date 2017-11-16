@@ -54,11 +54,11 @@ class DetailViewPostSaveController
 			$pDetailView = DataDetailViewHandler::getDetailView();
 
 			$detailViewName = $pDetailView->getName();
-			$detailviewCode = $this->generateDetailViewCode($detailViewName);
 			$postContent = $pPost->post_content;
 			$pContentFilter = new ContentFilter();
+			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
-			if (__String::getNew($postContent)->contains($detailviewCode)) {
+			if ($viewContained) {
 				$pDetailView->setPageId($postId);
 				DataDetailViewHandler::saveDetailView($pDetailView);
 				$pContentFilter->addCustomRewriteRules();
@@ -108,6 +108,35 @@ class DetailViewPostSaveController
 	 */
 
 	private function generateDetailViewCode($detailViewName) {
-		return '[oo_estate view="'.$detailViewName.'"]';
+		return 'view="'.$detailViewName.'"';
+	}
+
+
+	/**
+	 *
+	 * @param string $post
+	 * @param string $viewName
+	 * @return bool
+	 *
+	 */
+
+	private function postContainsViewName($post, $viewName) {
+		$matches = array();
+		$regex = get_shortcode_regex(array('oo_estate'));
+		preg_match_all('/'.$regex.'/ism', $post, $matches);
+
+		$detailviewCode = $this->generateDetailViewCode($viewName);
+
+		if (!array_key_exists(3, $matches)) {
+			return false;
+		}
+
+		foreach ($matches[3] as $tagParams) {
+			if (__String::getNew($tagParams)->contains($detailviewCode)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

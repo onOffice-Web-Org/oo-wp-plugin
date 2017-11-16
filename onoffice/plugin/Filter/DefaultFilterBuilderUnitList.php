@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin;
+namespace onOffice\WPlugin\Filter;
 
 /**
  *
@@ -28,33 +28,11 @@ namespace onOffice\WPlugin;
  *
  */
 
-class EstateDetail
-	extends EstateList
+class DefaultFilterBuilderUnitList
+	implements DefaultFilterBuilder
 {
-	/** @var int */
-	private $_estateId = null;
-
-	/**
-	 *
-	 * @return int
-	 *
-	 */
-
-	protected function getNumEstatePages() {
-		return 1;
-	}
-
-
-	/**
-	 *
-	 * @param int $id
-	 *
-	 */
-
-	public function loadSingleEstate($id) {
-		$this->_estateId = $id;
-		$this->loadEstates(1);
-	}
+	/** @var int[] */
+	private $_unitIds = array();
 
 
 	/**
@@ -63,33 +41,23 @@ class EstateDetail
 	 *
 	 */
 
-	protected function getDefaultFilter() {
-		$pListViewFilterBuilder = new Filter\DefaultFilterBuilderDetailView();
-		$pListViewFilterBuilder->setEstateId($this->_estateId);
-		$filter = $pListViewFilterBuilder->buildFilter();
-
-		return $filter;
+	public function buildFilter()
+	{
+		return array(
+			'veroeffentlichen' => array(
+				array('op' => '=', 'val' => 1),
+			),
+			'Id' => array(
+				array('op' => 'in', 'val' => $this->_unitIds),
+			),
+		);
 	}
 
+	/** @param array $unitIds */
+	public function setUnitIds(array $unitIds)
+		{ $this->_unitIds = $unitIds; }
 
-	/**
-	 *
-	 * @return int
-	 *
-	 */
-
-	protected function getRecordsPerPage() {
-		return 1;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	protected function addExtraParams() {
-		return array();
-	}
+	/** @return array */
+	public function getUnitIds()
+		{ return $this->_unitIds; }
 }

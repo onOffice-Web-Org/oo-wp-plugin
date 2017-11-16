@@ -78,6 +78,7 @@ class ContentFilter
 
 		$attributes = shortcode_atts(array(
 			'view' => null,
+			'units' => null,
 		), $attributesInput);
 
 		if ($attributes['view'] !== null) {
@@ -87,7 +88,7 @@ class ContentFilter
 				if ($pDetailView->getName() === $attributes['view'])
 				{
 					$pTemplate = new Template($pDetailView->getTemplate(), 'estate', 'default_detail');
-					$pEstateDetail = $this->preloadSingleEstate($pDetailView);
+					$pEstateDetail = $this->preloadSingleEstate($pDetailView, $attributes['units']);
 					$pTemplate->setEstateList($pEstateDetail);
 					$result = $pTemplate->render();
 					return $result;
@@ -99,9 +100,14 @@ class ContentFilter
 				if (is_object($pListView) && $pListView->getName() === $attributes['view'])
 				{
 					$pTemplate = new Template($pListView->getTemplate(), 'estate', 'default');
+					$pListViewFilterBuilder = new Filter\DefaultFilterBuilderListView($pListView);
+
 					$pEstateList = new EstateList($pListView);
-					$pEstateList->loadEstates($page);
+					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
+					$pEstateList->setUnitsViewName($attributes['units']);
 					$pTemplate->setEstateList($pEstateList);
+					$pEstateList->loadEstates($page);
+
 					$result = $pTemplate->render();
 					return $result;
 				}
@@ -216,11 +222,12 @@ class ContentFilter
 	 *
 	 * @global \WP_Query $wp_query
 	 * @param \onOffice\WPlugin\DataView\DataDetailView $pDetailView
+	 * @param string $unitsView
 	 * @return \onOffice\WPlugin\EstateDetail
 	 *
 	 */
 
-	private function preloadSingleEstate(DataView\DataDetailView $pDetailView) {
+	private function preloadSingleEstate(DataView\DataDetailView $pDetailView, $unitsView) {
 		global $wp_query;
 
 		$estateId = 0;
@@ -228,10 +235,15 @@ class ContentFilter
 			$estateId = $wp_query->query_vars['estate_id'];
 		}
 
-		$pEstateList = new EstateDetail($pDetailView);
-		$pEstateList->loadSingleEstate($estateId);
+		$pDefaultFilterBuilder = new Filter\DefaultFilterBuilderDetailView();
+		$pDefaultFilterBuilder->setEstateId($estateId);
 
-		return $pEstateList;
+		$pEstateDetailList = new EstateDetail($pDetailView);
+		$pEstateDetailList->setDefaultFilterBuilder($pDefaultFilterBuilder);
+		$pEstateDetailList->setUnitsViewName($unitsView);
+		$pEstateDetailList->loadSingleEstate($estateId);
+
+		return $pEstateDetailList;
 	}
 
 

@@ -35,14 +35,15 @@ class DataListViewFactory
 	/**
 	 *
 	 * @param string $listViewName
+	 * @param string $type
 	 * @return DataListView
 	 *
 	 */
 
-	public function getListViewByName($listViewName)
+	public function getListViewByName($listViewName, $type = null)
 	{
 		$pRecordRead = new RecordManagerReadListView();
-		$record = $pRecordRead->getRowByName($listViewName);
+		$record = $pRecordRead->getRowByName($listViewName, $type);
 
 		if ($record === null) {
 			throw new UnknownViewException($listViewName);

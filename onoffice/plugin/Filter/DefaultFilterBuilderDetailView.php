@@ -31,6 +31,10 @@ namespace onOffice\WPlugin\Filter;
 class DefaultFilterBuilderDetailView
 	implements DefaultFilterBuilder
 {
+	/** @var int */
+	private $_estateId = null;
+
+
 	/**
 	 *
 	 * @return array
@@ -39,10 +43,21 @@ class DefaultFilterBuilderDetailView
 
 	public function buildFilter()
 	{
+		if ($this->_estateId == null) {
+			throw new Exception('EstateId must not be null');
+		}
+
 		return array(
 			'veroeffentlichen' => array(
 				array('op' => '=', 'val' => 1),
 			),
+			'Id' => array(
+				array('op' => '=', 'val' => $this->_estateId),
+			),
 		);
 	}
+
+	/** @param int $estateId */
+	public function setEstateId($estateId)
+		{ $this->_estateId = (int)$estateId; }
 }

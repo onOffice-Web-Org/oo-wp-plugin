@@ -194,7 +194,7 @@ class EstateUnitsTable extends ListTable
 
 	protected function column_shortcode($pItem)
 	{
-		return '<input type="text" readonly value="[oo_estate view=&quot;'
-			.esc_html($pItem->name).'&quot;]">';
+		return '<input type="text" readonly value="[oo_estate units=&quot;'
+			.esc_html($pItem->name).'&quot; view=&quot;...&quot;]">';
 	}
 }

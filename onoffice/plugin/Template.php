@@ -22,7 +22,7 @@
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software AG
+ * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -40,9 +40,6 @@ class Template
 	/** @var string */
 	private $_templateName = null;
 
-	/** @var string */
-	private $_dirName = null;
-
 	/** @var \onOffice\WPlugin\Form */
 	private $_pForm = null;
 
@@ -56,11 +53,6 @@ class Template
 
 	public function __construct( $templateName, $dirName, $defaultTemplateName ) {
 		$this->_templateName = $templateName;
-		$this->_dirName = $dirName;
-
-		if ( ! file_exists( $this->getFilePath() ) ) {
-			$this->_templateName = $defaultTemplateName;
-		}
 	}
 
 

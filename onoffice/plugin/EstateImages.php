@@ -182,7 +182,7 @@ class EstateImages {
 	 *
 	 */
 
-	public function getEstatePuctureTitle( $imageId, $estateId)
+	public function getEstatePictureTitle( $imageId, $estateId)
 	{
 		if ( ! empty( $this->_estateImages[$estateId][$imageId] ) )	{
 			return $this->_estateImages[$estateId][$imageId]['title'];

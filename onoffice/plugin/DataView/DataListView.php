@@ -49,6 +49,9 @@ class DataListView
 	/** */
 	const LISTVIEW_TYPE_FAVORITES = 'favorites';
 
+	/** */
+	const LISTVIEW_TYPE_UNITS = 'units';
+
 	/** @var int */
 	private $_id = null;
 

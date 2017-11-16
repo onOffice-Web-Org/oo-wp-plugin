@@ -21,9 +21,10 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Fieldnames;
-use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 
 /**
  *
@@ -44,9 +45,6 @@ class EstateList {
 
 	/** @var EstateImages */
 	private $_pEstateImages = null;
-
-	/** @var EstateUnits */
-	private $_pEstateUnits = null;
 
 	/** @var array */
 	private $_currentEstate = array();
@@ -69,17 +67,25 @@ class EstateList {
 	/** @var DataView */
 	private $_pDataView = null;
 
+	/** @var Filter\DefaultFilterBuilder */
+	private $_pDefaultFilterBuilder = null;
+
+	/** @var string */
+	private $_unitsViewName = null;
+
+
 	/**
 	 *
 	 * @param \onOffice\WPlugin\DataView\DataView $pDataView
+	 * @param DefaultFilterBuilder $pDefaultFilterBuilder
 	 *
 	 */
 
 	public function __construct(DataView\DataView $pDataView) {
 		$this->_pSDKWrapper = new SDKWrapper();
-		$this->_pDataView = $pDataView;
 		$this->_pFieldnames = new Fieldnames();
 		$this->_pAddressList = new AddressList();
+		$this->_pDataView = $pDataView;
 	}
 
 
@@ -193,7 +199,13 @@ class EstateList {
 	private function getEstateParameters($currentPage) {
 		$language = Language::getDefault();
 		$pListView = $this->_pDataView;
-		$filter = $this->getDefaultFilter();
+		$pFilterBuilder = $this->_pDefaultFilterBuilder;
+
+		if ($pFilterBuilder === null) {
+			throw new \Exception('$_pDefaultFilterBuilder must not be null');
+		}
+
+		$filter = $this->_pDefaultFilterBuilder->buildFilter();
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
@@ -503,7 +515,7 @@ class EstateList {
 
 	public function getEstatePictureTitle( $imageId ) {
 		$currentEstate = $this->_currentEstate['id'];
-		return $this->_pEstateImages->getEstatePuctureTitle($imageId, $currentEstate);
+		return $this->_pEstateImages->getEstatePictureTitle($imageId, $currentEstate);
 	}
 
 
@@ -596,20 +608,21 @@ class EstateList {
 
 	/**
 	 *
+	 * @param string $unitViewName
 	 * @param int $estateId
-	 * @param string $configName
-	 * @param string $viewName
 	 * @return string
 	 *
 	 */
 
-	public function getEstateUnits( $estateId, $configName, $viewName ) {
-		$this->_pEstateUnits = new EstateUnits( array( $estateId ), $configName, $viewName );
-		$unitCount = $this->_pEstateUnits->getUnitCount( $estateId );
+	public function getEstateUnits() {
+		$estateId = $this->getCurrentMultiLangEstateMainId();
+
+		$pEstateUnits = new EstateUnits( array($estateId), $this->_unitsViewName );
+		$unitCount = $pEstateUnits->getUnitCount( $estateId );
 		$htmlOutput = '';
 
 		if ( $unitCount > 0 ) {
-			$htmlOutput = $this->_pEstateUnits->generateHtmlOutput( $estateId );
+			$htmlOutput = $pEstateUnits->generateHtmlOutput( $estateId );
 		}
 
 		return $htmlOutput;
@@ -650,7 +663,23 @@ class EstateList {
 
 
 	/** @return onOffice\WPlugin\DataView\DataView */
-	protected function getDataView() {
+	public function getDataView() {
 		return $this->_pDataView;
 	}
+
+	/** @return DefaultFilterBuilder */
+	public function getDefaultFilterBuilder()
+		{ return $this->_pDefaultFilterBuilder; }
+
+	/** @param DefaultFilterBuilder $pDefaultFilterBuilder */
+	public function setDefaultFilterBuilder(DefaultFilterBuilder $pDefaultFilterBuilder)
+		{ $this->_pDefaultFilterBuilder = $pDefaultFilterBuilder; }
+
+	/** @return string */
+	public function getUnitsViewName()
+		{ return $this->_unitsViewName; }
+
+	/** @param string $unitsViewName */
+	public function setUnitsViewName($unitsViewName)
+		{ $this->_unitsViewName = $unitsViewName; }
 }

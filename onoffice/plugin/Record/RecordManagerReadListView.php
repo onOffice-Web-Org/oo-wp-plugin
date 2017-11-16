@@ -90,12 +90,13 @@ class RecordManagerReadListView
 
 	/**
 	 *
-	 * @param int $listviewName
+	 * @param string $listviewName
+	 * @param string $type
 	 * @return array
 	 *
 	 */
 
-	public function getRowByName($listviewName)
+	public function getRowByName($listviewName, $type = null)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
@@ -103,6 +104,10 @@ class RecordManagerReadListView
 		$sql = "SELECT *
 				FROM {$prefix}oo_plugin_listviews
 				WHERE `name` = '".esc_sql($listviewName)."'";
+
+		if ($type !== null) {
+			$sql .= " AND `list_type` = '".esc_sql($type)."'";
+		}
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 
