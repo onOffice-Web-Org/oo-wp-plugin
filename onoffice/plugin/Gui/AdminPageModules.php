@@ -45,7 +45,7 @@ class AdminPageModules
 	public function __construct($pageSlug)
 	{
 		$groupSlugFavs = 'onoffice-favorization';
-		$enableFavLabel = __('Enable Favorization', 'onoffice');
+		$enableFavLabel = __('Enable Watchlist', 'onoffice');
 		$favButtonLabel = __('Expression used', 'onoffice');
 		$pInputModelEnableFav = new InputModelOption($groupSlugFavs, 'enableFav',
 			$enableFavLabel, InputModelOption::SETTING_TYPE_BOOLEAN);
@@ -57,8 +57,8 @@ class AdminPageModules
 		$pInputModelFavButtonLabel->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
 		$pInputModelFavButtonLabel->setValue(get_option($pInputModelFavButtonLabel->getIdentifier()));
 		$pInputModelFavButtonLabel->setValuesAvailable(array(
-			Favorites::KEY_SETTING_FAVORIZE => __('Favorization', 'onoffice'),
 			Favorites::KEY_SETTING_MEMORIZE => __('Watchlist', 'onoffice'),
+			Favorites::KEY_SETTING_FAVORIZE => __('Favorise', 'onoffice'),
 		));
 
 		$pFormModel = new FormModel();
@@ -66,7 +66,7 @@ class AdminPageModules
 		$pFormModel->addInputModel($pInputModelFavButtonLabel);
 		$pFormModel->setGroupSlug($groupSlugFavs);
 		$pFormModel->setPageSlug($pageSlug);
-		$pFormModel->setLabel(__('Favorization', 'onoffice'));
+		$pFormModel->setLabel(__('Watchlist', 'onoffice'));
 
 		$this->addFormModel($pFormModel);
 
