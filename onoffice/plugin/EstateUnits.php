@@ -127,8 +127,15 @@ class EstateUnits {
 
 	public function generateHtmlOutput( $estateId ) {
 		$units = $this->getEstateUnits( $estateId );
+		$random = $this->_pDataListView->getRandom();
+
+		if ($random) {
+			// shuffle() twice: once here and once in EstateList
+			shuffle($units);
+		}
 
 		$pEstateList = new EstateList( $this->_pDataListView );
+		$pEstateList->setShuffleResult($random);
 		$pDefaultFilterBuilder = new DefaultFilterBuilderUnitList();
 		$pDefaultFilterBuilder->setUnitIds( $units );
 		$pEstateList->setDefaultFilterBuilder( $pDefaultFilterBuilder );

@@ -73,6 +73,8 @@ class EstateList {
 	/** @var string */
 	private $_unitsViewName = null;
 
+	/** @var bool */
+	private $_shuffleResult = false;
 
 	/**
 	 *
@@ -155,6 +157,10 @@ class EstateList {
 		}
 
 		$this->_responseArray = $responseArrayEstates;
+
+		if ( isset( $this->_responseArray['data']['records'] ) && $this->_shuffleResult ) {
+			shuffle($this->_responseArray['data']['records']);
+		}
 
 		$this->_numEstatePages = $this->getNumEstatePages();
 
@@ -682,4 +688,12 @@ class EstateList {
 	/** @param string $unitsViewName */
 	public function setUnitsViewName($unitsViewName)
 		{ $this->_unitsViewName = $unitsViewName; }
+
+	/** @return bool */
+	public function getShuffleResult()
+		{ return $this->_shuffleResult; }
+
+	/** @param bool $shuffleResult */
+	public function setShuffleResult($shuffleResult)
+		{ $this->_shuffleResult = $shuffleResult; }
 }
