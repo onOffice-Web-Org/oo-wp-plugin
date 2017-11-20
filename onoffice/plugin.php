@@ -20,12 +20,13 @@
  */
 
 /*
-Plugin Name: onOffice Plugin
-Plugin URI: https://www.onoffice.com/
-Description: onOffice Plugin
+Plugin Name: onOffice direct
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
+Description: This Plug-in keeps its promise: It is a fast and efficient way to keep your everyday worklife as productive as possible! The direct connection to onOffice enables you to have quick access to estates and forms, which can then be edited instantly and it also helps you with the compilation of your real estate lists. onOffice sends all the data – so no additional sync with the software is needed.
 Version: 2.0
+License: AGPL 3+
+License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice
 Domain Path: /languages
 */
@@ -71,8 +72,11 @@ add_action( 'init', array($pAdminViewController, 'onInit') );
 add_action( 'admin_init', array($pAdminViewController, 'add_ajax_actions') );
 
 add_filter( 'the_content', array($pContentFilter, 'filter_the_content') );
-add_filter( 'wp_link_pages_link', array($pSearchParams, 'linkPagesLink'), 10, 2);
+add_filter( 'wp_link_pages_link', array($pSearchParams, 'linkPagesLink'), 10, 2 );
 add_filter( 'wp_link_pages_args', array($pSearchParams, 'populateDefaultLinkParams') );
+
+// "Settings" link in plugins list
+add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $pAdminViewController, 'pluginSettingsLink' ) );
 
 add_shortcode( 'oo_estate', array($pContentFilter, 'registerEstateShortCodes') );
 

@@ -58,13 +58,22 @@ class AdminViewController
 	 *
 	 */
 
+	public function __construct()
+	{
+		$this->_pageSlug = 'onoffice';
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function onInit()
 	{
 		if (!is_admin()) {
 			return;
 		}
 
-		$this->_pageSlug = 'onoffice';
 		$this->_pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editlistview'] = $this->_pAdminListViewSettings;
 
@@ -73,6 +82,7 @@ class AdminViewController
 
 		$this->_pAdminPageEstates = new AdminPageEstate($this->_pageSlug);
 		$pSelectedSubPage = $this->_pAdminPageEstates->getSelectedAdminPage();
+
 		if ($pSelectedSubPage instanceof AdminPageAjax) {
 			$this->_ajaxHooks['onoffice_page_'.$this->_pageSlug.'-estates'] = $pSelectedSubPage;
 		}
@@ -247,5 +257,21 @@ class AdminViewController
 			}
 		}
 		return null;
+	}
+
+
+	/**
+	 *
+	 * @param array $links
+	 * @return array
+	 *
+	 */
+
+	public function pluginSettingsLink($links)
+	{
+		$url = get_admin_url().'admin.php?page='.$this->_pageSlug;
+		$settings_link = '<a href="'.$url.'">'.__( 'Settings', 'onOffice' ).'</a>';
+		array_unshift( $links, $settings_link );
+		return $links;
 	}
 }
