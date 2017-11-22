@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\wp_dependent;
+namespace onOffice\WPlugin\Gui\Table\WP;
 
 if (!class_exists('WP_List_Table')){
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );

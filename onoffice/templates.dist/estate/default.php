@@ -92,7 +92,7 @@ $pEstates->resetEstateIterator();
 		}
 	?>
 
-		<?php echo $pEstates->getFieldLabel( $field ) .': '.$value; ?><br>
+		<?php echo $pEstates->getFieldLabel( $field ) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
 
 	<?php endforeach; ?>
 

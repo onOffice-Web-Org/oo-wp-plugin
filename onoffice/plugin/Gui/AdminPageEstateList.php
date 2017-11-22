@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 use onOffice\WPlugin\Gui\AdminPage;
+use onOffice\WPlugin\Gui\Table\EstateListTable;
 
 /**
  *

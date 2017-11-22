@@ -19,10 +19,11 @@
  *
  */
 
-namespace onOffice\WPlugin\Gui;
+namespace onOffice\WPlugin\Gui\Table;
 
-use onOffice\WPlugin\wp_dependent\ListTable;
+use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 
 /**
  *

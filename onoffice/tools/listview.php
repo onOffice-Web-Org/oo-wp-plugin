@@ -30,7 +30,7 @@ if (!current_user_can('edit_pages') ||
 	wp_safe_redirect( add_query_arg( 'delete', 0, $redirectFile ) );
 }
 
-$action = onOffice\WPlugin\Gui\EstateListTable::currentAction();
+$action = \onOffice\WPlugin\Gui\Table\EstateListTable::currentAction();
 
 $pRecordManagerDelete = new \onOffice\WPlugin\Record\RecordManagerDeleteListView();
 

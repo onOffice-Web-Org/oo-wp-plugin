@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\WPlugin\Gui\Table\EstateUnitsTable;
+
 /**
  *
  * @url http://www.onoffice.de
