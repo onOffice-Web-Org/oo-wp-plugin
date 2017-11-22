@@ -24,7 +24,7 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
-use onOffice\WPlugin\Form\FormModelBuilderEstateDetailSettings;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 
 /**
  *

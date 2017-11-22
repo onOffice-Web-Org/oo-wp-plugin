@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\Form;
+namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\Model;
 use onOffice\WPlugin\DataView\DataListView;

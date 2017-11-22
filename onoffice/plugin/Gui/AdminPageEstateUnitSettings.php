@@ -26,7 +26,7 @@ use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Record\RecordManagerReadListView;
-use onOffice\WPlugin\Form\FormModelBuilderEstateUnitListSettings;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateUnitListSettings;
 
 /**
  *

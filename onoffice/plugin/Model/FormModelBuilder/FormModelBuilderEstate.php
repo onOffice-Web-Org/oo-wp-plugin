@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\Form;
+namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\FilterCall;
@@ -93,7 +93,7 @@ class FormModelBuilderEstate
 	 * @return type
 	 *
 	 */
-	
+
 	protected function readFieldnamesByContent()
 	{
 		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
