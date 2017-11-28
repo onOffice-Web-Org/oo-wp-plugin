@@ -186,6 +186,7 @@ class RecordManagerReadListView
 	 * @return array
 	 *
 	 */
+
 	private function readContactDataByListviewId($listviewId)
 	{
 		$prefix = $this->getTablePrefix();

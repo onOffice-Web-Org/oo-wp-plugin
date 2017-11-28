@@ -54,22 +54,16 @@ class FormPostApplicant
 	}
 
 
-	/**	 */
+	/**
+	 *
+	 */
+
 	private function __construct() { }
 
 
 	/** @return string */
 	protected function getFormType(){
 		return Form::TYPE_INTEREST; }
-
-
-	protected function getInputFields($prefix)	{
-		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$configByPrefix = $formConfig[$prefix];
-		$formFields = $configByPrefix['inputs'];
-
-		return $this->getFormFields($formFields);
-	}
 
 
 	/**
@@ -152,9 +146,6 @@ class FormPostApplicant
 			}
 		}
 	}
-
-
-
 
 
 	/**
@@ -264,5 +255,3 @@ Ihr onOffice Team';
 		return false;
 	}
 }
-
-?>

@@ -28,6 +28,7 @@ use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Gui\AdminPageModules;
 use onOffice\WPlugin\Gui\AdminPageApiSettings;
 use onOffice\WPlugin\Gui\AdminPageEstateUnitSettings;
+use onOffice\WPlugin\Gui\AdminPageFormList;
 
 /**
  *
@@ -116,8 +117,9 @@ class AdminViewController
 		}
 
 		// Forms
+		$pAdminPageFormList = new AdminPageFormList($this->_pageSlug);
 		add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
-			'edit_pages', $this->_pageSlug.'-forms', function() {});
+			'edit_pages', $this->_pageSlug.'-forms', array($pAdminPageFormList, 'render'));
 
 		// Modules
 		$pAdminPageModules = new AdminPageModules($this->_pageSlug);

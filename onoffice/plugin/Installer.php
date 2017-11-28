@@ -54,6 +54,8 @@ abstract class Installer
 			dbDelta( self::getCreateQueryFieldConfig() );
 			dbDelta( self::getCreateQueryPictureTypes() );
 			dbDelta( self::getCreateQueryListViewContactPerson() );
+			dbDelta( self::getCreateQueryForms() );
+			dbDelta( self::getCreateQueryFormFieldConfig() );
 		}
 
 		update_option( 'oo_plugin_db_version', 2.0 );
@@ -128,6 +130,30 @@ abstract class Installer
 	 *
 	 */
 
+	static private function getCreateQueryForms()
+	{
+		$prefix = self::getPrefix();
+		$charsetCollate = self::getCharsetCollate();
+		$tableName = $prefix."oo_plugin_forms";
+		$sql = "CREATE TABLE $tableName (
+			`form_id` int(11) NOT NULL AUTO_INCREMENT,
+			`name` varchar(191) NOT NULL,
+			`form_type` enum('owner', 'interest', 'contact', 'free') NOT NULL DEFAULT 'free',
+			`template` tinytext NOT NULL,
+			PRIMARY KEY (`form_id`),
+			UNIQUE KEY `name` (`name`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
 	static private function getCreateQueryFieldConfig()
 	{
 		$prefix = self::getPrefix();
@@ -139,6 +165,30 @@ abstract class Installer
 			`order` int(11) NOT NULL,
 			`fieldname` tinytext NOT NULL,
 			PRIMARY KEY (`fieldconfig_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	static private function getCreateQueryFormFieldConfig()
+	{
+		$prefix = self::getPrefix();
+		$charsetCollate = self::getCharsetCollate();
+		$tableName = $prefix."oo_plugin_form_fieldconfig";
+		$sql = "CREATE TABLE $tableName (
+			`form_fieldconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` int(11) NOT NULL,
+			`order` int(11) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			`fieldlabel` varchar(255) NULL,
+			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 
 		return $sql;
@@ -258,6 +308,8 @@ abstract class Installer
 			$prefix."oo_plugin_listviews",
 			$prefix."oo_plugin_fieldconfig",
 			$prefix."oo_plugin_picturetypes",
+			$prefix."oo_plugin_forms",
+			$prefix."oo_plugin_form_fieldconfig",
 		);
 
 		foreach ($tables as $table)

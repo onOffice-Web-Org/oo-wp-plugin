@@ -413,8 +413,7 @@ class EstateList {
 
 		if (is_array($recordElements) && array_key_exists('mainLangId', $recordElements) &&
 			$recordElements['mainLangId'] != null) {
-			$mainLangId = $recordElements['mainLangId'];
-			$this->_currentEstate['mainId'] = $mainLangId;
+			$this->_currentEstate['mainId'] = $recordElements['mainLangId'];
 		}
 
 		if ( false !== $currentRecord ) {
