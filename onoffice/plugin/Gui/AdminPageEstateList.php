@@ -144,10 +144,10 @@ class AdminPageEstateList
 			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice'),
 		);
 
-		wp_register_script('estatelist-bulk-actions', plugins_url('/js/estatelistview-bulk-actions.js',
+		wp_register_script('onoffice-bulk-actions', plugins_url('/js/onoffice-bulk-actions.js',
 			ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
 
-		wp_localize_script('estatelist-bulk-actions', 'onoffice_listviewlist_settings', $translation);
-		wp_enqueue_script('estatelist-bulk-actions');
+		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
+		wp_enqueue_script('onoffice-bulk-actions');
 	}
 }

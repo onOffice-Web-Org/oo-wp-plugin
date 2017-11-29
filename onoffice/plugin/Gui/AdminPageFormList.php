@@ -44,7 +44,7 @@ class AdminPageFormList
 	{
 		$this->generatePageMainTitle(__('Forms', 'onoffice'));
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
+			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/form.php';
 
 		$tab = $this->getTab();
 		$pTable = new FormsTable();
@@ -69,5 +69,77 @@ class AdminPageFormList
 	{
 		$getParamType = filter_input(INPUT_GET, self::PARAM_TYPE);
 		return $getParamType;
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function handleAdminNotices()
+	{
+		$this->_itemsDeleted = filter_input(INPUT_GET, 'delete');
+
+		if ($this->_itemsDeleted === null || $this->_itemsDeleted === false)
+		{
+			return;
+		}
+
+		if ($this->_itemsDeleted > 0)
+		{
+			add_action( 'admin_notices', array($this, 'displayFormDeleteSuccess') );
+		}
+		else
+		{
+			add_action( 'admin_notices', array($this, 'displayFormDeleteError') );
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function displayFormDeleteSuccess()
+	{
+		$class = 'notice notice-success is-dismissible';
+
+		$message = sprintf( _n( '%s form has been deleted.', '%s forms have been deleted.',
+			$this->_itemsDeleted, 'onoffice' ),
+				number_format_i18n( $this->_itemsDeleted ) );
+
+		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function displayFormDeleteError()
+	{
+		$class = 'notice notice-error is-dismissible';
+		$message = __( 'No form was deleted.', 'onoffice' );
+
+		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function doExtraEnqueues()
+	{
+		$translation = array(
+			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice'),
+		);
+
+		wp_register_script('onoffice-bulk-actions', plugins_url('/js/onoffice-bulk-actions.js',
+			ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+
+		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
+		wp_enqueue_script('onoffice-bulk-actions');
 	}
 }

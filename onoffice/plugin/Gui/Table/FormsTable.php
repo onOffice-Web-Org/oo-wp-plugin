@@ -63,6 +63,8 @@ class FormsTable
 
 	public function __construct($args = array())
 	{
+		$args['singular'] = 'form';
+		$args['plural'] = 'forms';
 		parent::__construct($args);
 
 		$this->_itemsPerPage = $this->get_items_per_page('onoffice-forms-forms_per_page', 10);
@@ -286,10 +288,11 @@ class FormsTable
 			return '';
 		}
 
-		$viewIdParam = AdminPageEstateListSettingsBase::GET_PARAM_VIEWID;
-		$editLink = admin_url('admin.php?page=onoffice-editform&'.$viewIdParam.'='.$pItem->ID);
+		$formIdParam = AdminPageEstateListSettingsBase::GET_PARAM_VIEWID;
+		$editLink = admin_url('admin.php?page=onoffice-editform&'.$formIdParam.'='.$pItem->ID);
 
-		$actionFile = null;
+		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
+			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/form.php';
 
 		$actions = array();
 		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';

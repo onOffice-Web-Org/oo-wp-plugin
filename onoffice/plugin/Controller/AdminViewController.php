@@ -118,8 +118,9 @@ class AdminViewController
 
 		// Forms
 		$pAdminPageFormList = new AdminPageFormList($this->_pageSlug);
-		add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
+		$hookForms = add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
 			'edit_pages', $this->_pageSlug.'-forms', array($pAdminPageFormList, 'render'));
+		add_action( 'load-'.$hookForms, array($pAdminPageFormList, 'handleAdminNotices'));
 
 		// Modules
 		$pAdminPageModules = new AdminPageModules($this->_pageSlug);
