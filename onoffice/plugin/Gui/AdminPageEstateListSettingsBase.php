@@ -69,6 +69,9 @@ abstract class AdminPageEstateListSettingsBase
 	/** */
 	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
 
+	/** */
+	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
+
 	/** @var int */
 	private $_listViewId = null;
 
@@ -117,6 +120,9 @@ abstract class AdminPageEstateListSettingsBase
 		$pFormViewName = $this->getFormModelByGroupSlug(self::FORM_VIEW_NAME);
 		$pInputRendererViewName = new InputModelRenderer($pFormViewName);
 
+		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
+		$pRendererSortablefields = new InputModelRenderer($pFormViewSortableFields);
+
 		wp_nonce_field( $this->getPageSlug() );
 
 		$this->generatePageMainTitle($this->_pageTitle);
@@ -136,6 +142,18 @@ abstract class AdminPageEstateListSettingsBase
 		do_meta_boxes(get_current_screen()->id, 'advanced', null );
 		echo '</div>';
 		echo '</div>';
+		echo '</div>';
+		echo '<div class="clear"></div>';
+		do_action('add_meta_boxes', get_current_screen()->id, null);
+		echo '<div style="float:left;">';
+		$this->generateAccordionBoxes();
+		echo '</div>';
+		echo '<div id="listSettings" style="float:left;">';
+		do_accordion_sections(get_current_screen()->id, 'side', null);
+		echo '</div>';
+		echo '<div class="fieldsSortable">';
+		echo '<h2>'.__('Fields', 'onoffice').'</h2>';
+		$pRendererSortablefields->buildForAjax();
 		echo '</div>';
 		echo '<div class="clear"></div>';
 

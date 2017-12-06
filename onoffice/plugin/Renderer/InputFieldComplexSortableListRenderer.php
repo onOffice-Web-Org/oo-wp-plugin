@@ -134,7 +134,7 @@ class InputFieldComplexSortableListRenderer
 	 *
 	 */
 
-	private function readInactiveFields()
+	protected function readInactiveFields()
 	{
 		$this->_inactiveFields = array();
 
@@ -148,4 +148,10 @@ class InputFieldComplexSortableListRenderer
 			$this->_inactiveFields[$key] = $properties['label'];
 		}
 	}
+
+
+	/** @return array */
+	public function getInactiveFilds()
+	{ return $this->_inactiveFields; }
+
 }

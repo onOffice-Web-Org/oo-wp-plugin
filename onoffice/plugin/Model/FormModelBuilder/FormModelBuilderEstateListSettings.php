@@ -112,6 +112,63 @@ class FormModelBuilderEstateListSettings
 
 	/**
 	 *
+	 * @param string $category
+	 * @param array $fieldNames
+	 * @return Model\InputModelDB
+	 *
+	 */
+
+	public function createInputModelFieldsConfigByCategory($category, $fieldNames)
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, $category, true);
+
+		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+		$pInputModelFieldsConfig->setId($category);
+		$fields = $this->getValue(DataListView::FIELDS);
+
+		if (null == $fields)
+		{
+			$fields = array();
+		}
+
+		$pInputModelFieldsConfig->setValue($fields);
+
+		return $pInputModelFieldsConfig;
+	}
+
+
+	/**
+	 *
+	 * @return Model\InputModelDB
+	 *
+	 */
+
+	public function createSortableFieldList()
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+
+		$fieldNames = $this->readFieldnames();
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+
+		$fields = $this->getValue(DataListView::FIELDS);
+
+		if (null == $fields)
+		{
+			$fields = array();
+		}
+
+		$pInputModelFieldsConfig->setValue($fields);
+		return $pInputModelFieldsConfig;
+	}
+
+
+	/**
+	 *
 	 * @return Model\InputModelDB
 	 *
 	 */

@@ -56,6 +56,10 @@ body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
 	cursor: -webkit-grabbing; cursor:-moz-grabbing;
 }
 
+#onoffice-ajax #listSettings {
+	width: 40.3%;
+}
+
 body.onoffice_page_onoffice-estates #onoffice-ajax span.viewusage {
 	font-size: 1.2em;
 	position: relative;
@@ -65,4 +69,46 @@ body.onoffice_page_onoffice-estates #onoffice-ajax span.viewusage {
 
 body.onoffice_page_onoffice-estates #onoffice-ajax span.viewusage .italic {
 	font-style: italic;
+}
+
+.fieldsSortable{
+	float: right;
+	min-height: 300px;
+	width: 50%;
+	position: relative;
+	/*border: 2px dotted #333;*/
+	background: #fff;
+	padding: 10px 10px 15px 10px;
+}
+
+#sortableFieldsList .menu-item-bar{
+	height: 30px;
+	display: block;
+	width: 90%;
+	padding: 5px;
+	border: 1px solid #e5e5e5;
+	background: #FAFAFA;
+}
+
+#sortableFieldsList .menu-item-bar:hover{
+	border-color: #999;
+	cursor: move;
+}
+
+#sortableFieldsList .menu-item-settings{
+	display:block;
+	width: 90%;
+	border-top: 1px solid #ddd;
+}
+
+#sortableFieldsList .item-delete-link{
+	padding-right: 10px;
+}
+
+#sortableFieldsList .menu-item-settings-name{
+	font-style: italic;
+}
+
+#sortableFieldsList a{
+	text-decoration: underline;
 }

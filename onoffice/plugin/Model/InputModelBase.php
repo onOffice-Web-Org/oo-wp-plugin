@@ -43,7 +43,13 @@ abstract class InputModelBase
 	const HTML_TYPE_TEXT = 'text';
 
 	/** */
+	const HTML_TYPE_CHECKBOX_BUTTON = 'checkboxWithSubmitButton';
+
+	/** */
 	const HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST = 'complexSortableCheckboxList';
+
+	/** */
+	const HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST = 'complexSortableDetailList';
 
 	/** @var string */
 	private $_name = null;
@@ -69,6 +75,8 @@ abstract class InputModelBase
 	/** @var string */
 	private $_placeholder = null;
 
+	/** @var string */
+	private $_id = null;
 
 	/**
 	 *
@@ -141,4 +149,12 @@ abstract class InputModelBase
 	/** @param string $placeholder */
 	public function setPlaceholder($placeholder)
 		{ $this->_placeholder = $placeholder; }
+
+	/** @param string $id */
+	public function setId($id)
+		{ $this->_id = $id; }
+
+	/** @return string */
+	public function getId()
+		{ return $this->_id; }
 }

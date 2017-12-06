@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Model;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
@@ -113,15 +114,27 @@ class AdminPageEstateListSettings
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
 
-		$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfig();
-		$pFormModelFieldsConfig = new Model\FormModel();
-		$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
-		$pFormModelFieldsConfig->setGroupSlug(self::FORM_VIEW_FIELDS_CONFIG);
-		$pFormModelFieldsConfig->setLabel(__('Fields Configuration', 'onoffice'));
-		$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
-		$this->addFormModel($pFormModelFieldsConfig);
-	}
+		$fieldNames = $this->readFieldnamesByContent();
 
+		foreach ($fieldNames as $category => $fields)
+		{
+			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory($category, $fields);
+			$pFormModelFieldsConfig = new Model\FormModel();
+			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
+			$pFormModelFieldsConfig->setGroupSlug($category);
+			$pFormModelFieldsConfig->setLabel($category);
+			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
+			$this->addFormModel($pFormModelFieldsConfig);
+		}
+
+		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList();
+		$pFormModelSortableFields = new Model\FormModel();
+		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
+		$pFormModelSortableFields->setGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
+		$pFormModelSortableFields->setLabel(__('Fields Configuration', 'onoffice'));
+		$pFormModelSortableFields->addInputModel($pInputModelSortableFields);
+		$this->addFormModel($pFormModelSortableFields);
+	}
 
 	/**
 	 *
@@ -140,9 +153,45 @@ class AdminPageEstateListSettings
 
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'normal');
+	}
 
-		$pFormFieldsConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_FIELDS_CONFIG);
-		$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+
+	/**
+	 *
+	 */
+
+	protected function generateAccordionBoxes()
+	{
+		$fieldNames = array_keys($this->readFieldnamesByContent());
+
+		foreach ($fieldNames as $category)
+		{
+			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
+			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+		}
+	}
+
+
+	/**
+	 *
+	 * @return type
+	 *
+	 */
+
+	private function readFieldnamesByContent()
+	{
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
+
+		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
+		$resultByContent = array();
+
+		foreach ($fieldnames as $key => $properties)
+		{
+			$resultByContent[$properties['content']][$key]=$properties['label'];
+		}
+
+		return $resultByContent;
 	}
 
 

@@ -128,6 +128,7 @@ class InputModelRenderer
 	private function createInputField(InputModelBase $pInputModel)
 	{
 		$pInstance = null;
+		$onOfficeInputFields = true;
 
 		switch ($pInputModel->getHtmlType())
 		{
@@ -152,6 +153,26 @@ class InputModelRenderer
 				$pInstance = new InputFieldComplexSortableListRenderer($name,
 				$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
+				break;
+
+			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST:
+				$name = $pInputModel->getIdentifier();
+				$pInstance = new InputFieldComplexSortableDetailListRenderer($name,
+						array($pInputModel->getValue()));
+				$pInstance->setAllFields($pInputModel->getValuesAvailable());
+				break;
+
+			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
+				$name = $pInputModel->getIdentifier();
+				$onOfficeInputFields = false;
+				if ($pInputModel->getIsMulti()) {
+					$name .= '[]';
+				}
+				$pInstance = new InputFieldCheckboxButtonRenderer($name,
+				$pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				$pInstance->setId($pInputModel->getId());
+				$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
 				break;
 
 			case InputModelOption::HTML_TYPE_RADIO:
@@ -183,7 +204,7 @@ class InputModelRenderer
 				break;
 		}
 
-		if ($pInstance !== null) {
+		if ($pInstance !== null && $onOfficeInputFields) {
 			$pInstance->addAdditionalAttribute('class', 'onoffice-input');
 		}
 
