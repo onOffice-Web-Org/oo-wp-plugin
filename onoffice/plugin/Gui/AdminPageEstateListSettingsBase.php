@@ -21,11 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\DataView\DataDetailView;
-use onOffice\WPlugin\Renderer\InputModelRenderer;
-use onOffice\WPlugin\Model\InputModelDBAdapterRow;
 use onOffice\WPlugin\Record\RecordManagerUpdateListView;
 use onOffice\WPlugin\Record\RecordManagerInsertListView;
 
@@ -37,11 +34,8 @@ use onOffice\WPlugin\Record\RecordManagerInsertListView;
  */
 
 abstract class AdminPageEstateListSettingsBase
-	extends AdminPageAjax
+	extends AdminPageSettingsBase
 {
-	/** caution: also needs to be set in Javascript */
-	const POST_RECORD_ID = 'record_id';
-
 	/** GET param for the view ID */
 	const GET_PARAM_VIEWID = 'viewid';
 
@@ -50,9 +44,6 @@ abstract class AdminPageEstateListSettingsBase
 
 	/** */
 	const VIEW_SAVE_FAIL_MESSAGE = 'view_save_fail_message';
-
-	/** */
-	const FORM_VIEW_NAME = 'viewname';
 
 	/** */
 	const FORM_VIEW_RECORDS_FILTER = 'viewrecordsfilter';
@@ -69,14 +60,8 @@ abstract class AdminPageEstateListSettingsBase
 	/** */
 	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
 
-	/** */
-	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
-
 	/** @var int */
 	private $_listViewId = null;
-
-	/** @var string */
-	private $_pageTitle = null;
 
 
 	/**
@@ -101,119 +86,33 @@ abstract class AdminPageEstateListSettingsBase
 
 	/**
 	 *
-	 * @throws Exception
-	 *
-	 */
-
-	abstract protected function validate();
-
-	/**
-	 *
 	 */
 
 	public function renderContent()
 	{
 		$this->validate($this->getListViewId());
-		do_action('add_meta_boxes', get_current_screen()->id, null);
-		$this->generateMetaBoxes();
-
-		$pFormViewName = $this->getFormModelByGroupSlug(self::FORM_VIEW_NAME);
-		$pInputRendererViewName = new InputModelRenderer($pFormViewName);
-
-		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
-		$pRendererSortablefields = new InputModelRenderer($pFormViewSortableFields);
-
-		wp_nonce_field( $this->getPageSlug() );
-
-		$this->generatePageMainTitle($this->_pageTitle);
-		echo '<div id="onoffice-ajax">';
-		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
-		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		echo '<div id="poststuff">';
-		echo '<div id="post-body" class="metabox-holder columns-'.(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
-		echo '<div id="post-body-content">';
-		$pInputRendererViewName->buildForAjax();
-		echo '</div>';
-		echo '<div class="postbox-container" id="postbox-container-1">';
-		do_meta_boxes(get_current_screen()->id, 'normal', null );
-		echo '</div>';
-		echo '<div class="postbox-container" id="postbox-container-2">';
-		do_meta_boxes(get_current_screen()->id, 'side', null );
-		do_meta_boxes(get_current_screen()->id, 'advanced', null );
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
-		echo '<div class="clear"></div>';
-		do_action('add_meta_boxes', get_current_screen()->id, null);
-		echo '<div style="float:left;">';
-		$this->generateAccordionBoxes();
-		echo '</div>';
-		echo '<div id="listSettings" style="float:left;">';
-		do_accordion_sections(get_current_screen()->id, 'side', null);
-		echo '</div>';
-		echo '<div class="fieldsSortable">';
-		echo '<h2>'.__('Fields', 'onoffice').'</h2>';
-		$pRendererSortablefields->buildForAjax();
-		echo '</div>';
-		echo '<div class="clear"></div>';
-
-		do_settings_sections( $this->getPageSlug() );
-		submit_button(null, 'primary', 'send_ajax');
-
-		echo '<script>onOffice.ajaxSaver = new onOffice.ajaxSaver("onoffice-ajax");';
-		echo 'onOffice.ajaxSaver.register();';
-		echo '$(document).ready(function(){'
-			.'postboxes.add_postbox_toggles(pagenow);'
-			.'});';
-		echo '</script>';
+		parent::renderContent();
 	}
 
 
 	/**
 	 *
+	 * @param array $row
+	 * @param \stdClass $pResult
+	 * @param int $recordId
+	 *
 	 */
 
-	public function ajax_action()
+	protected function updateValues(array $row, \stdClass $pResult, $recordId = null)
 	{
-		$this->buildForms();
-		$action = filter_input(INPUT_POST, 'action');
-		$nonce = filter_input(INPUT_POST, 'nonce');
-		$recordId = filter_input(INPUT_POST, self::POST_RECORD_ID);
-		$this->validate($recordId);
 		$result = false;
-
-		if (!wp_verify_nonce($nonce, $action)) {
-			wp_die();
-		}
-
-		$values = json_decode(filter_input(INPUT_POST, 'values'));
-
-		$pInputModelDBAdapterRow = new InputModelDBAdapterRow();
-
-		foreach ($this->getFormModels() as $pFormModel) {
-			foreach ($pFormModel->getInputModel() as $pInputModel) {
-				if ($pInputModel instanceof InputModelDB) {
-					$identifier = $pInputModel->getIdentifier();
-					$value = isset($values->$identifier) ? $values->$identifier : null;
-					$pInputModel->setValue($value);
-					$pInputModelDBAdapterRow->addInputModelDB($pInputModel);
-				}
-			}
-			$row = $pInputModelDBAdapterRow->createUpdateValuesByTable();
-		}
-
-		$row = $this->setFixedValues($row);
-
 		$pDummyDetailView = new DataDetailView();
-		$resultObject = new \stdClass();
 
 		if ($row[RecordManager::TABLENAME_LIST_VIEW]['name'] === $pDummyDetailView->getName()) {
-			$resultObject->result = false;
-			$resultObject->record_id = null;
-
-			echo json_encode($resultObject);
-
-			wp_die();
+			// false / null
+			$pResultObject->result = false;
+			$pResultObject->record_id = null;
+			return;
 		}
 
 		if ($recordId != null)
@@ -226,18 +125,11 @@ abstract class AdminPageEstateListSettingsBase
 			$pInsert = new RecordManagerInsertListView();
 			$recordId = $pInsert->insertByRow($row);
 
-			if ($recordId != null)
-			{
-				$result = true;
-			}
+			$result = ($recordId != null);
 		}
 
-		$resultObject->result = $result;
-		$resultObject->record_id = $recordId;
-
-		echo json_encode($resultObject);
-
-		wp_die();
+		$pResult->result = $result;
+		$pResult->record_id = $recordId;
 	}
 
 
@@ -264,56 +156,13 @@ abstract class AdminPageEstateListSettingsBase
 		return array(
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view. Please make sure the name of the view is unique.', 'onoffice'),
-			self::ENQUEUE_DATA_MERGE => array(self::POST_RECORD_ID),
-			self::POST_RECORD_ID => $this->_listViewId,
+			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
+			AdminPageSettingsBase::POST_RECORD_ID => $this->_listViewId,
 		);
 	}
 
 
-	/**
-	 *
-	 */
-
-	public function handleAdminNotices()
-	{
-		add_action('admin_notices', array($this, 'addAdminNoticeWrapper'));
-	}
-
-
-	/**
-	 *
-	 * rest will be added via js
-	 *
-	 */
-
-	public function addAdminNoticeWrapper()
-	{
-		echo '<div id="onoffice-notice-wrapper"></div>';
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function doExtraEnqueues()
-	{
-		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/admin.js',
-			array('jquery'), '', true);
-
-		wp_enqueue_script('postbox');
-		wp_enqueue_script('admin-js');
-	}
-
 	/** @return string */
 	public function getListViewId()
 		{ return $this->_listViewId; }
-
-	/** @return string */
-	protected function getPageTitle()
-		{ return $this->_pageTitle; }
-
-	/** @param string $pageTitle */
-	protected function setPageTitle($pageTitle)
-		{ $this->_pageTitle = $pageTitle; }
 }

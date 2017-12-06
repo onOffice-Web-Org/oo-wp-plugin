@@ -188,6 +188,7 @@ abstract class Installer
 			`order` int(11) NOT NULL,
 			`fieldname` tinytext NOT NULL,
 			`fieldlabel` varchar(255) NULL,
+			`module` tinytext NULL,
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 

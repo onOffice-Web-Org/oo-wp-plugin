@@ -65,7 +65,7 @@ class AdminPageEstateUnitSettings
 		$pInputModelName = $pFormModelBuilder->createInputModelName();
 		$pFormModelName = new Model\FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
-		$pFormModelName->setGroupSlug(self::FORM_VIEW_NAME);
+		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
 		$pFormModelName->setLabel(__('choose name', 'onoffice'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);

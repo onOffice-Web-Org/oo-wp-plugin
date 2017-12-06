@@ -142,4 +142,27 @@ class AdminPageFormList
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
 		wp_enqueue_script('onoffice-bulk-actions');
 	}
+
+
+	/**
+	 *
+	 * @param string $subTitle
+	 *
+	 */
+
+	public function generatePageMainTitle($subTitle)
+	{
+		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
+
+		if ($subTitle != '')
+		{
+			echo ' › '.esc_html__($subTitle, 'onoffice');
+		}
+
+		$new_link = admin_url('admin.php?page=onoffice-editform');
+
+		echo '</h1>';
+		echo '<a href="'.$new_link.'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
+		echo '<hr class="wp-header-end">';
+	}
 }

@@ -59,6 +59,51 @@ class RecordManagerReadForm
 
 	/**
 	 *
+	 * @param int $formId
+	 * @return array
+	 *
+	 */
+
+	public function getRowById($formId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT *
+				FROM {$prefix}oo_plugin_forms
+				WHERE `form_id` = ".esc_sql((int)$formId);
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param int $formId
+	 * @return array
+	 *
+	 */
+
+	public function readFieldsByFormId($formId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlFields = "SELECT *
+				FROM {$prefix}oo_plugin_form_fieldconfig
+				WHERE `listview_id` = ".esc_sql((int)$formId)."
+				ORDER BY `order` ASC";
+
+		$result = $pWpDb->get_row($sqlFields);
+
+		return $result;
+	}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */

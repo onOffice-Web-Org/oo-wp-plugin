@@ -27,7 +27,6 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
