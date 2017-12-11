@@ -22,7 +22,7 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\Model;
-use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 
 /**
  *

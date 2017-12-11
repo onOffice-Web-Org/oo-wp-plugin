@@ -18,7 +18,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace onOffice\WPlugin\Renderer;
+
+namespace onOffice\WPlugin\Model\InputModel;
 
 /**
  *
@@ -27,45 +28,20 @@ namespace onOffice\WPlugin\Renderer;
  *
  */
 
-class InputFieldCheckboxButtonRenderer
-	extends InputFieldCheckboxRenderer
+interface InputModelDBFactoryConfigBase
 {
+	/** */
+	const KEY_FIELD = 'field';
 
-	/** @var string */
-	private $_id = null;
-
-	/**
-	 *
-	 * @param string $name
-	 * @param mixed $value
-	 *
-	 */
-
-	public function __construct($name, $value)
-	{
-		parent::__construct($name, $value);
-	}
+	/** */
+	const KEY_TABLE = 'table';
 
 
 	/**
 	 *
+	 * @return array
+	 *
 	 */
 
-	public function render()
-	{
-		parent::render();
-		echo '<p>'
-			.'<input type="button" class="inputFieldCheckboxButton button" name="'
-				.esc_attr($this->_id).'" value="'.esc_html__('Add', 'onoffice').'">'
-			.'</p>';
-	}
-
-
-	/** @param string $id */
-	public function setId($id)
-		{ $this->_id = $id; }
-
-	/** @return string */
-	public function getId()
-		{ return $this->_id; }
+	public function getConfig();
 }

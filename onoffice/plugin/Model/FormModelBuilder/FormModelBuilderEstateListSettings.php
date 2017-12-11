@@ -23,7 +23,7 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\Model;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 
 /**
  *
@@ -94,7 +94,7 @@ class FormModelBuilderEstateListSettings
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
-		$fieldNames = $this->readFieldnames();
+		$fieldNames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
 		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$fields = $this->getValue(DataListView::FIELDS);
@@ -152,7 +152,7 @@ class FormModelBuilderEstateListSettings
 
 		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
 
-		$fieldNames = $this->readFieldnames();
+		$fieldNames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
 		$fields = $this->getValue(DataListView::FIELDS);
@@ -200,7 +200,7 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
 		$pInputModelSortBy->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
-		$fieldnames = $this->readFieldnames();
+		$fieldnames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
 		natcasesort($fieldnames);
 		$pInputModelSortBy->setValuesAvailable($fieldnames);
 		$pInputModelSortBy->setValue($this->getValue($pInputModelSortBy->getField()));
@@ -353,33 +353,10 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
-		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths());
+		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
 		$pInputModelTemplate->setValue($selectedTemplate);
 
 		return $pInputModelTemplate;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function readTemplatePaths()
-	{
-		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR.'/index.php').'templates.dist/estate/*.php');
-		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR).'onoffice-personalized/templates/estate/*.php');
-		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
-		$templates = array();
-
-		foreach ($templatesAll as $value)
-		{
-			$value = str_replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '', $value);
-			$templates[$value] = $value;
-		}
-
-		return $templates;
 	}
 
 

@@ -38,6 +38,9 @@ abstract class AdminPageSettingsBase
 	/** caution: also needs to be set in Javascript */
 	const POST_RECORD_ID = 'record_id';
 
+	/** GET param for the view ID */
+	const GET_PARAM_VIEWID = 'id';
+
 	/** */
 	const FORM_RECORD_NAME = 'recordname';
 
@@ -46,6 +49,22 @@ abstract class AdminPageSettingsBase
 
 	/** @var string */
 	private $_pageTitle = null;
+
+	/** @var int */
+	private $_listViewId = null;
+
+
+	/**
+	 *
+	 * @param string $pageSlug
+	 *
+	 */
+
+	public function __construct($pageSlug)
+	{
+		parent::__construct($pageSlug);
+		$this->_listViewId = filter_input(INPUT_GET, self::GET_PARAM_VIEWID);
+	}
 
 
 	/**
@@ -185,6 +204,37 @@ abstract class AdminPageSettingsBase
 
 	/**
 	 *
+	 * @param string $module
+	 * @return array
+	 *
+	 */
+
+	protected function readFieldnamesByContent($module)
+	{
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
+
+		$fieldnames = $pFieldnames->getFieldList($module);
+		$resultByContent = array();
+		$categories = array();
+
+		foreach ($fieldnames as $key => $properties) {
+			$content = $properties['content'];
+			$categories []= $content;
+			$label = $properties['label'];
+			$resultByContent[$content][$key] = $label;
+		}
+
+		foreach ($categories as $category) {
+			natcasesort($resultByContent[$category]);
+		}
+
+		return $resultByContent;
+	}
+
+
+	/**
+	 *
 	 * @param array $row
 	 * @param \stdClass $pResult having the properties `result` and `record_id`
 	 * @param int $recordId
@@ -208,6 +258,22 @@ abstract class AdminPageSettingsBase
 	}
 
 
+	/**
+	 *
+	 */
+
+	protected function generateMetaBoxes()
+		{}
+
+
+	/**
+	 *
+	 */
+
+	protected function generateAccordionBoxes()
+		{}
+
+
 	/** @return string */
 	protected function getPageTitle()
 		{ return $this->_pageTitle; }
@@ -215,4 +281,8 @@ abstract class AdminPageSettingsBase
 	/** @param string $pageTitle */
 	protected function setPageTitle($pageTitle)
 		{ $this->_pageTitle = $pageTitle; }
+
+		/** @return string */
+	public function getListViewId()
+		{ return $this->_listViewId; }
 }

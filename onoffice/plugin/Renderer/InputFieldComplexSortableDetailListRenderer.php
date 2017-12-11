@@ -21,15 +21,14 @@
 namespace onOffice\WPlugin\Renderer;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Language;
+
 
 /**
- * Description of InputFieldComplexSortableDetailListRenderer
  *
- * @author ana
  */
+
 class InputFieldComplexSortableDetailListRenderer
-		extends InputFieldRenderer
+	extends InputFieldRenderer
 {
 	/** @var array */
 	private $_inactiveFields = null;
@@ -51,12 +50,10 @@ class InputFieldComplexSortableDetailListRenderer
 	}
 
 
-	/** @param array */
-	public function setAllFields($allFields)
-	{ $this->_allFields = $allFields; }
+	/**
+	 *
+	 */
 
-
-	/** */
 	public function render()
 	{
 		echo '<ul class="filter-fields-list" id="sortableFieldsList">';
@@ -64,8 +61,8 @@ class InputFieldComplexSortableDetailListRenderer
 		$i = 1;
 
 		$fields = array();
-		$asd = $this->getValue();
-		$allFields = $asd[0];
+		$values = $this->getValue();
+		$allFields = $values[0];
 		$inactiveFields = $this->getInactiveFields();
 
 		foreach ($allFields as $value)
@@ -82,24 +79,27 @@ class InputFieldComplexSortableDetailListRenderer
 			{
 				$label = $inactiveFields[$key];
 				$deactivatedStyle = ' style="color:red;" ';
-				$deactivatedInTheSoftware = ' ('.__('deactivated in onOffice', 'onoffice').')';
+				$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
 			}
 
-			echo '<li class="sortable-item" id="menu-item-'.$key.'">'
+			echo '<li class="sortable-item" id="menu-item-'.esc_html($key).'">'
 					.'<div class="menu-item-bar">'
-						.'<span class="item-title" '.$deactivatedStyle.'>'.esc_html(__($label, 'onoffice')).$deactivatedInTheSoftware.'</span>'
+						.'<span class="item-title" '.$deactivatedStyle.'>'
+							.esc_html($label)
+							.$deactivatedInTheSoftware
+						.'</span>'
 						.'<span class="item-controls">'
 							.'<a class="item-edit-link">'.__('Edit', 'onoffice').'</a>'
 						.'</span>'
 						.'<input type="hidden" name="filter_fields_order'.$i.'[id]" value="'.$i.'">'
-						.'<input type="hidden" name="filter_fields_order'.$i.'[name]" value="'.$label.'">'
-						.'<input type="hidden" name="filter_fields_order'.$i.'[slug]" value="'.$key.'">'
-						.'<input type="hidden" name="'.$this->getName().'[]" value="'.$key.'" '
+						.'<input type="hidden" name="filter_fields_order'.$i.'[name]" value="'.esc_html($label).'">'
+						.'<input type="hidden" name="filter_fields_order'.$i.'[slug]" value="'.esc_html($key).'">'
+						.'<input type="hidden" name="'.$this->getName().'[]" value="'.esc_html($key).'" '
 							.' '.$this->renderAdditionalAttributes().'>'
 					.'</div>'
 					.'<div class="menu-item-settings" style="display:none">'
 						.'<a class="item-delete-link">'.__('Delete', 'onoffice').'</a>'
-						.'<span class="menu-item-settings-name">'.$key.'</span>'
+						.'<span class="menu-item-settings-name">'.esc_html($key).'</span>'
 					.'</div>'
 				.'</li>';
 
@@ -116,18 +116,17 @@ class InputFieldComplexSortableDetailListRenderer
 					.'<input type="hidden" name="filter_fields_order'.$i.'[id]" value="'.$i.'">'
 					.'<input type="hidden" name="filter_fields_order'.$i.'[name]" value="dummy_label">'
 					.'<input type="hidden" name="filter_fields_order'.$i.'[slug]" value="dummy_key">'
-					.'<input type="hidden" name="'.$this->getName().'[]" value="dummy_key" '
+					.'<input type="hidden" name="'.esc_html($this->getName()).'[]" value="dummy_key" '
 						.' class="onoffice-dummy-input">'
 				.'</div>'
 				.'<div class="menu-item-settings" style="display:none">'
 					.'<a class="item-delete-link">'.__('Delete', 'onoffice').'</a>'
 					.'<span class="menu-item-settings-name">dummy_key</span>'
-
 				.'</div>'
 			.'</li>';
-
 		echo '</ul>';
 	}
+
 
 	/**
 	 *
@@ -149,7 +148,12 @@ class InputFieldComplexSortableDetailListRenderer
 	}
 
 
-	/** @return array */
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
 	public function getInactiveFields()
 	{
 		if (null === $this->_inactiveFields)
@@ -159,4 +163,9 @@ class InputFieldComplexSortableDetailListRenderer
 
 		return $this->_inactiveFields;
 	}
+
+
+	/** @param array */
+	public function setAllFields($allFields)
+		{ $this->_allFields = $allFields; }
 }

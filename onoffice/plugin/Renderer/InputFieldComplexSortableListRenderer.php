@@ -105,7 +105,7 @@ class InputFieldComplexSortableListRenderer
 				if (in_array($key, $deactivatedFields))
 				{
 					$deactivatedStyle = ' style="color:red;" ';
-					$deactivatedInTheSoftware = ' ('.__('deactivated in onOffice', 'onoffice').')';
+					$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
 				}
 			}
 
@@ -116,7 +116,7 @@ class InputFieldComplexSortableListRenderer
 						.$checked
 						.$this->renderAdditionalAttributes()
 						.' id="'.esc_html($inputId).'">'
-						.esc_html(__($label, 'onoffice'))
+						.esc_html($label)
 						.$deactivatedInTheSoftware
 					.'<input type="hidden" name="filter_fields_order'.$i.'[id]" value="'.$i.'">'
 					.'<input type="hidden" name="filter_fields_order'.$i.'[name]" value="'.$label.'">'

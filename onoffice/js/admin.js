@@ -33,50 +33,45 @@ jQuery(document).ready(function($){
 	$(document).ready(function () {
 		$('.filter-fields-list').sortable({
 			axis: 'y',
-			curosr: 'move'
+			cursor: 'move'
 		});
 	});
 
 	$(document).ready(function () {
 		$('.property-detail-items-list').sortable({
 			axis: 'y',
-			curosr: 'move'
+			cursor: 'move'
 		});
 	});
 
 	$(document).ready(function () {
 		$('.agent-detail-items-list').sortable({
 			axis: 'y',
-			curosr: 'move'
+			cursor: 'move'
 		});
 	});
 
 	$(document).ready(function(){
-		$('.inputFieldCheckboxButton').click(function(){
+		$('.inputFieldCheckboxButton').click(function() {
 		   getCheckedFields(this);
 		});
 	});
 
 
-	function getCheckedFields(but)
-	{
+	function getCheckedFields(but) {
 		var category = but.name;
 		var checkedFields = [];
-
-		var inputConfigFields = $('#'+category).find('input.onoffice-possible-input:checked');
+		var inputConfigFields = $('#' + category).find('input.onoffice-possible-input:checked');
 		var ulEl = $('#sortableFieldsList');
-		//1.testen, ob das element existiert
-		//2. falls nicht, dann anlegen
+		// 1.testen, ob das element existiert
+		// 2. falls nicht, dann anlegen
 
-		$(inputConfigFields).each(function(index){
+		$(inputConfigFields).each(function(index) {
 			var valElName = $(this).val();
 			var valElLabel = $(this).next().text();
-			var myLi = null;
-			myLi = ulEl.find('#menu-item-'+valElName);
+			var myLi = myLi = ulEl.find('#menu-item-'+valElName);
 
-			if(!(myLi.length > 0))
-			{
-				console.log(valElName + '  ' + myLi.length + '  ' + valElLabel);
+			if (myLi.length === 0) {
 				createNewFieldItem(valElName, valElLabel);
 			}
 		});
@@ -84,10 +79,8 @@ jQuery(document).ready(function($){
 		return checkedFields;
 	}
 
-	function createNewFieldItem(fieldName, fieldLabel)
-	{
+	function createNewFieldItem(fieldName, fieldLabel) {
 		var clonedElement = $('#menu-item-dummyField').clone(true, true);
-
 		clonedElement.attr('id', 'menu-item-'+fieldName);
 		clonedElement.find('span:first').text(fieldLabel);
 		clonedElement.find('span:first').next().next().next().val(fieldLabel);
@@ -99,14 +92,14 @@ jQuery(document).ready(function($){
 		$('#menu-item-dummyField').parent().append(clonedElement);
 	}
 
-	$(document).ready(function(){
-		$('.item-edit-link').click(function(){
+	$(document).ready(function() {
+		$('.item-edit-link').click(function() {
 			$(this).parent().parent().parent().find('.menu-item-settings').toggle();
 		});
 	});
 
-	$(document).ready(function(){
-		$('.item-delete-link').click(function(){
+	$(document).ready(function() {
+		$('.item-delete-link').click(function() {
 			$(this).parent().parent().remove();
 		});
 	});

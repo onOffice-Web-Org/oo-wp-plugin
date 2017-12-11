@@ -21,10 +21,10 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\TemplateCall;
-use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 
 /**
  *
@@ -33,7 +33,7 @@ use onOffice\WPlugin\Model\InputModel\ListView\InputModelDBFactory;
  *
  */
 
-class FormModelBuilderEstate
+abstract class FormModelBuilderEstate
 	extends FormModelBuilder
 {
 	/** @var InputModelDBFactory */
@@ -48,7 +48,8 @@ class FormModelBuilderEstate
 	public function __construct($pageSlug)
 	{
 		parent::__construct($pageSlug);
-		$this->_pInputModelDBFactory = new InputModelDBFactory();
+		$pConfig = new InputModelDBFactoryConfigEstate();
+		$this->_pInputModelDBFactory = new InputModelDBFactory($pConfig);
 	}
 
 
@@ -62,52 +63,6 @@ class FormModelBuilderEstate
 	{
 		$pFilterCall = new FilterCall(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
 		return $pFilterCall->getFilters();
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	protected function readFieldnames()
-	{
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
-		$pFieldnames->loadLanguage();
-
-		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
-		$result = array();
-
-		foreach ($fieldnames as $key => $properties)
-		{
-			$result[$key] = $properties['label'];
-		}
-
-		return $result;
-	}
-
-
-	/**
-	 *
-	 * @return type
-	 *
-	 */
-
-	protected function readFieldnamesByContent()
-	{
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
-		$pFieldnames->loadLanguage();
-
-		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
-		$resultByContent = array();
-
-		foreach ($fieldnames as $key => $properties)
-		{
-			$resultByContent[$properties['content']][$key]=$properties['label'];
-		}
-
-		return $resultByContent;
 	}
 
 

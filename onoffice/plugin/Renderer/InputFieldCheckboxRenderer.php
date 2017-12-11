@@ -41,20 +41,11 @@ class InputFieldCheckboxRenderer
 	 * @param mixed $value
 	 *
 	 */
+
 	public function __construct($name, $value)
 	{
 		parent::__construct('checkbox', $name, $value);
 	}
-
-
-	/** @param array $checkedValues */
-	public function setCheckedValues($checkedValues)
-		{ $this->_checkedValues = $checkedValues;}
-
-
-	/** @return array */
-	public function getCheckedValues()
-		{ return $this->_checkedValues; }
 
 
 	/**
@@ -85,4 +76,13 @@ class InputFieldCheckboxRenderer
 				.' id="'.esc_html($this->getGuiId()).'">';
 		}
 	}
+
+	/** @param array $checkedValues */
+	public function setCheckedValues($checkedValues)
+		{ $this->_checkedValues = $checkedValues;}
+
+
+	/** @return array */
+	public function getCheckedValues()
+		{ return $this->_checkedValues; }
 }

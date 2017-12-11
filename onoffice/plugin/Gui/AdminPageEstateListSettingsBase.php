@@ -36,9 +36,6 @@ use onOffice\WPlugin\Record\RecordManagerInsertListView;
 abstract class AdminPageEstateListSettingsBase
 	extends AdminPageSettingsBase
 {
-	/** GET param for the view ID */
-	const GET_PARAM_VIEWID = 'viewid';
-
 	/** */
 	const VIEW_SAVE_SUCCESSFUL_MESSAGE = 'view_save_success_message';
 
@@ -59,29 +56,6 @@ abstract class AdminPageEstateListSettingsBase
 
 	/** */
 	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
-
-	/** @var int */
-	private $_listViewId = null;
-
-
-	/**
-	 *
-	 * @param string $pageSlug
-	 *
-	 */
-
-	public function __construct($pageSlug)
-	{
-		parent::__construct($pageSlug);
-		$this->_listViewId = filter_input(INPUT_GET, self::GET_PARAM_VIEWID);
-	}
-
-
-	/**
-	 *
-	 */
-
-	abstract protected function generateMetaBoxes();
 
 
 	/**
@@ -157,12 +131,7 @@ abstract class AdminPageEstateListSettingsBase
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view. Please make sure the name of the view is unique.', 'onoffice'),
 			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
-			AdminPageSettingsBase::POST_RECORD_ID => $this->_listViewId,
+			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 		);
 	}
-
-
-	/** @return string */
-	public function getListViewId()
-		{ return $this->_listViewId; }
 }

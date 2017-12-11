@@ -28,7 +28,7 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
  *
  */
 
-class FormModelBuilder
+abstract class FormModelBuilder
 {
 	/** @var string */
 	private $_pageSlug = null;
@@ -51,6 +51,13 @@ class FormModelBuilder
 
 	/**
 	 *
+	 */
+
+	abstract public function generate();
+
+
+	/**
+	 *
 	 * @param string $key
 	 * @return mixed
 	 *
@@ -58,12 +65,62 @@ class FormModelBuilder
 
 	protected function getValue($key)
 	{
-		if (array_key_exists($key, $this->_values))
+		if (isset($this->_values[$key]))
 		{
 			return $this->_values[$key];
 		}
 
 		return null;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	protected function readFieldnames($module)
+	{
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
+
+		$fieldnames = $pFieldnames->getFieldList($module, true, true);
+		$result = array();
+
+		foreach ($fieldnames as $key => $properties)
+		{
+			$result[$key] = $properties['label'];
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param string $directory
+	 * @param string $pattern
+	 * @return array
+	 *
+	 */
+
+	protected function readTemplatePaths($directory, $pattern = '*')
+	{
+		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR.'/index.php')
+			.'templates.dist/'.$directory.'/'.$pattern.'.php');
+		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR)
+			.'onoffice-personalized/templates/'.$directory.'/'.$pattern.'.php');
+		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
+		$templates = array();
+
+		foreach ($templatesAll as $value)
+		{
+			$value = str_replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '', $value);
+			$templates[$value] = $value;
+		}
+
+		return $templates;
 	}
 
 

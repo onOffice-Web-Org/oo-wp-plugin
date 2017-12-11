@@ -19,7 +19,8 @@
  *
  */
 
-namespace onOffice\WPlugin\Model\InputModel\ListView;
+namespace onOffice\WPlugin\Model\InputModel;
+
 
 /**
  *
@@ -28,99 +29,57 @@ namespace onOffice\WPlugin\Model\InputModel\ListView;
  *
  */
 
-class InputModelDBFactory
+class InputModelDBFactoryConfigEstate
+	implements InputModelDBFactoryConfigBase
 {
-	/** */
-	const INPUT_FILTERID = 'filterId';
-
-	/** */
-	const INPUT_LISTNAME = 'listName';
-
-	/** */
-	const INPUT_RECORDS_PER_PAGE = 'recordsPerPage';
-
-	/** */
-	const INPUT_SORTBY = 'sortBy';
-
-	/** */
-	const INPUT_SORTORDER = 'sortOrder';
-
-	/** */
-	const INPUT_PICTURE_TYPE = 'pictureType';
-
-	/** */
-	const INPUT_TEMPLATE = 'template';
-
-	/** */
-	const INPUT_LIST_TYPE = 'listType';
-
-	/** */
-	const INPUT_SHOW_STATUS = 'showStatus';
-
-	/** */
-	const INPUT_RANDOM_ORDER = 'randomOrder';
-
-	/** */
-	const INPUT_EXPOSE = 'expose';
-
-	/** */
-	const INPUT_FIELD_CONFIG = 'fieldConfig';
-
-	/** */
-	const KEY_FIELD = 'field';
-
-	/** */
-	const KEY_TABLE = 'table';
-
-
 
 	/** @var array */
 	private $_inputConfig = array(
-		self::INPUT_FILTERID => array(
+		InputModelDBFactory::INPUT_FILTERID => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'filterId',
 		),
-		self::INPUT_LISTNAME => array(
+		InputModelDBFactory::INPUT_LISTNAME => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'name',
 		),
-		self::INPUT_RECORDS_PER_PAGE => array(
+		InputModelDBFactory::INPUT_RECORDS_PER_PAGE => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'recordsPerPage',
 		),
-		self::INPUT_SORTBY => array(
+		InputModelDBFactory::INPUT_SORTBY => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortby',
 		),
-		self::INPUT_SORTORDER => array(
+		InputModelDBFactory::INPUT_SORTORDER => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortorder',
 		),
-		self::INPUT_PICTURE_TYPE => array(
+		InputModelDBFactory::INPUT_PICTURE_TYPE => array(
 			self::KEY_TABLE => 'oo_plugin_picturetypes',
 			self::KEY_FIELD => 'picturetype',
 		),
-		self::INPUT_TEMPLATE => array(
+		InputModelDBFactory::INPUT_TEMPLATE => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'template',
 		),
-		self::INPUT_LIST_TYPE => array(
+		InputModelDBFactory::INPUT_LIST_TYPE => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'list_type',
 		),
-		self::INPUT_SHOW_STATUS => array(
+		InputModelDBFactory::INPUT_SHOW_STATUS => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'show_status',
 		),
-		self::INPUT_EXPOSE => array(
+		InputModelDBFactory::INPUT_EXPOSE => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'expose',
 		),
-		self::INPUT_RANDOM_ORDER => array(
+		InputModelDBFactory::INPUT_RANDOM_ORDER => array(
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'random',
 		),
-		self::INPUT_FIELD_CONFIG => array(
+		InputModelDBFactory::INPUT_FIELD_CONFIG => array(
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'fieldname',
 		),
@@ -129,29 +88,12 @@ class InputModelDBFactory
 
 	/**
 	 *
-	 * @param string $type
-	 * @param string $label
-	 * @param bool $multi
-	 * @return \onOffice\WPlugin\Model\InputModelDB
+	 * @return array
 	 *
 	 */
 
-	public function create($type, $label, $multi = false)
+	public function getConfig()
 	{
-		$pInstance = null;
-
-		if (array_key_exists($type, $this->_inputConfig))
-		{
-			$config = $this->_inputConfig[$type];
-			$table = $config[self::KEY_TABLE];
-			$field = $config[self::KEY_FIELD];
-
-			$pInstance = new \onOffice\WPlugin\Model\InputModelDB(null, $label);
-			$pInstance->setTable($table);
-			$pInstance->setField($field);
-			$pInstance->setIsMulti($multi);
-		}
-
-		return $pInstance;
+		return $this->_inputConfig;
 	}
 }

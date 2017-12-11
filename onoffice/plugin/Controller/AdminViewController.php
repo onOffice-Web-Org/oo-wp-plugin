@@ -29,6 +29,7 @@ use onOffice\WPlugin\Gui\AdminPageModules;
 use onOffice\WPlugin\Gui\AdminPageApiSettings;
 use onOffice\WPlugin\Gui\AdminPageEstateUnitSettings;
 use onOffice\WPlugin\Gui\AdminPageFormList;
+use onOffice\WPlugin\Gui\AdminPageFormSettings;
 
 /**
  *
@@ -53,6 +54,9 @@ class AdminViewController
 
 	/** @var AdminPageEstate */
 	private $_pAdminPageEstates = null;
+
+	/** @var AdminPageFormSettings */
+	private $_pAdminPageFormSettings = null;
 
 
 	/**
@@ -80,6 +84,9 @@ class AdminViewController
 
 		$this->_pAdminUnitListSettings = new AdminPageEstateUnitSettings($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editunitlist'] = $this->_pAdminUnitListSettings;
+
+		$this->_pAdminPageFormSettings = new AdminPageFormSettings($this->_pageSlug);
+		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editform'] = $this->_pAdminPageFormSettings;
 
 		$this->_pAdminPageEstates = new AdminPageEstate($this->_pageSlug);
 		$pSelectedSubPage = $this->_pAdminPageEstates->getSelectedAdminPage();
@@ -121,6 +128,12 @@ class AdminViewController
 		$hookForms = add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
 			'edit_pages', $this->_pageSlug.'-forms', array($pAdminPageFormList, 'render'));
 		add_action( 'load-'.$hookForms, array($pAdminPageFormList, 'handleAdminNotices'));
+
+		// Edit Form (hidden page)
+		$hookEditForm = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editform',
+			array($this->_pAdminPageFormSettings, 'render'));
+		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'handleAdminNotices'));
+		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'checkForms'));
 
 		// Modules
 		$pAdminPageModules = new AdminPageModules($this->_pageSlug);

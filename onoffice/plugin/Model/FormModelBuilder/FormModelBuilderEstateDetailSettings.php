@@ -122,7 +122,7 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
 			InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
 
-		$fieldNames = $this->readFieldnames();
+		$fieldNames = $this->readFieldnames(onOfficeSDK::MODULE_ESTATE);
 		$pInputModelFieldsConfig->setHtmlType(Model\InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$fields = $this->_pDataDetailView->getFields();
@@ -149,7 +149,7 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
 			InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA, null, true);
 
-		$fieldNames = $this->readContactDataFields();
+		$fieldNames = $this->readFieldnames(onOfficeSDK::MODULE_ADDRESS);
 		$pInputModelFieldsConfig->setHtmlType(Model\InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$fields = $this->_pDataDetailView->getAddressFields();
@@ -177,29 +177,6 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelTemplate->setValue($this->_pDataDetailView->getTemplate());
 
 		return $pInputModelTemplate;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function readContactDataFields()
-	{
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
-		$pFieldnames->loadLanguage();
-
-		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ADDRESS, true, true);
-		$result = array();
-
-		foreach ($fieldnames as $key => $properties)
-		{
-			$result[$key] = $properties['label'];
-		}
-
-		return $result;
 	}
 
 

@@ -18,7 +18,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace onOffice\WPlugin\Renderer;
+
+namespace onOffice\WPlugin\Model\InputModel;
+
 
 /**
  *
@@ -27,45 +29,45 @@ namespace onOffice\WPlugin\Renderer;
  *
  */
 
-class InputFieldCheckboxButtonRenderer
-	extends InputFieldCheckboxRenderer
+class InputModelDBFactoryConfigForm
+	implements InputModelDBFactoryConfigBase
 {
+	/** */
+	const INPUT_FORM_NAME = 'formName';
 
-	/** @var string */
-	private $_id = null;
+	/** */
+	const INPUT_FORM_TYPE = 'formType';
+
+
+	/** @var array */
+	private $_inputConfig = array(
+		self::INPUT_FORM_NAME => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'name',
+		),
+		InputModelDBFactory::INPUT_TEMPLATE => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'template',
+		),
+		self::INPUT_FORM_TYPE => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'form_type',
+		),
+		InputModelDBFactory::INPUT_FIELD_CONFIG => array(
+			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
+			self::KEY_FIELD => 'fieldname',
+		),
+	);
+
 
 	/**
 	 *
-	 * @param string $name
-	 * @param mixed $value
+	 * @return array
 	 *
 	 */
 
-	public function __construct($name, $value)
+	public function getConfig()
 	{
-		parent::__construct($name, $value);
+		return $this->_inputConfig;
 	}
-
-
-	/**
-	 *
-	 */
-
-	public function render()
-	{
-		parent::render();
-		echo '<p>'
-			.'<input type="button" class="inputFieldCheckboxButton button" name="'
-				.esc_attr($this->_id).'" value="'.esc_html__('Add', 'onoffice').'">'
-			.'</p>';
-	}
-
-
-	/** @param string $id */
-	public function setId($id)
-		{ $this->_id = $id; }
-
-	/** @return string */
-	public function getId()
-		{ return $this->_id; }
 }

@@ -114,7 +114,7 @@ class AdminPageEstateListSettings
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
 
-		$fieldNames = $this->readFieldnamesByContent();
+		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
 
 		foreach ($fieldNames as $category => $fields)
 		{
@@ -162,36 +162,13 @@ class AdminPageEstateListSettings
 
 	protected function generateAccordionBoxes()
 	{
-		$fieldNames = array_keys($this->readFieldnamesByContent());
+		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE));
 
 		foreach ($fieldNames as $category)
 		{
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 		}
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function readFieldnamesByContent()
-	{
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
-		$pFieldnames->loadLanguage();
-
-		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
-		$resultByContent = array();
-
-		foreach ($fieldnames as $key => $properties)
-		{
-			$resultByContent[$properties['content']][$key]=$properties['label'];
-		}
-
-		return $resultByContent;
 	}
 
 

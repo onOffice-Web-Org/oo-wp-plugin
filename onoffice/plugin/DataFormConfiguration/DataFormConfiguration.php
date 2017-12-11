@@ -30,6 +30,10 @@ namespace onOffice\WPlugin\DataFormConfiguration;
 
 class DataFormConfiguration
 {
+	/** */
+	const FIELDS = 'fields';
+
+
 	/** @var string */
 	private $_formType = null;
 
