@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Renderer;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Language;
 
 /**
  * Description of InputFieldComplexSortableListRenderer
@@ -35,19 +34,6 @@ class InputFieldComplexSortableListRenderer
 
 	/** @var array */
 	private $_inactiveFields = null;
-
-
-	/**
-	 *
-	 * @param string $name
-	 * @param array $value
-	 *
-	 */
-
-	public function __construct($name, $value)
-	{
-		parent::__construct($name, $value);
-	}
 
 
 	/**
@@ -88,7 +74,7 @@ class InputFieldComplexSortableListRenderer
 		{
 			if (!in_array($val, $this->getCheckedValues()))
 			{
-				$fields[$val] =  $title;
+				$fields[$val] = $title;
 			}
 		}
 
@@ -152,6 +138,5 @@ class InputFieldComplexSortableListRenderer
 
 	/** @return array */
 	public function getInactiveFilds()
-	{ return $this->_inactiveFields; }
-
+		{ return $this->_inactiveFields; }
 }

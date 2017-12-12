@@ -132,22 +132,21 @@ abstract class AdminPageSettingsBase
 		do_meta_boxes(get_current_screen()->id, 'side', null );
 		do_meta_boxes(get_current_screen()->id, 'advanced', null );
 		echo '</div>';
-		echo '</div>';
-		echo '</div>';
 		echo '<div class="clear"></div>';
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		echo '<div style="float:left;">';
 		$this->generateAccordionBoxes();
 		echo '</div>';
-		echo '<div id="listSettings" style="float:left;">';
+		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'side', null);
 		echo '</div>';
-		echo '<div class="fieldsSortable">';
-		echo '<h2>'.__('Fields', 'onoffice').'</h2>';
+		echo '<div class="fieldsSortable postbox">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
 		$pRendererSortablefields->buildForAjax();
 		echo '</div>';
 		echo '<div class="clear"></div>';
-
+		echo '</div>';
+		echo '</div>';
 		do_settings_sections( $this->getPageSlug() );
 		submit_button(null, 'primary', 'send_ajax');
 

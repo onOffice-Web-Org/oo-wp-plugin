@@ -173,40 +173,9 @@ class FormModelBuilderEstateDetailSettings
 			(InputModelOptionFactoryDetailView::INPUT_TEMPLATE, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
-		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths());
+		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
 		$pInputModelTemplate->setValue($this->_pDataDetailView->getTemplate());
 
 		return $pInputModelTemplate;
-	}
-
-
-	/**
-	 *
-	 * @param string $filepattern
-	 * @return array
-	 *
-	 */
-
-	private function readTemplatePaths($filepattern = '*')
-	{
-		$ooPluginDir = plugin_dir_path(ONOFFICE_PLUGIN_DIR.'/index.php');
-		$templatesAll = glob($ooPluginDir.'templates.dist/estate/'.$filepattern.'.php');
-
-		$ooPersonalizedDir = plugin_dir_path(ONOFFICE_PLUGIN_DIR).'onoffice-personalized';
-
-		if (is_dir($ooPersonalizedDir)) {
-			$templateLocalFiles = glob($ooPersonalizedDir.'/templates/estate/'.$filepattern.'.php');
-			$templatesAll = array_merge($templatesAll, $templateLocalFiles);
-		}
-
-		$templates = array();
-
-		foreach ($templatesAll as $value)
-		{
-			$value = str_replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '', $value);
-			$templates[$value] = $value;
-		}
-
-		return $templates;
 	}
 }

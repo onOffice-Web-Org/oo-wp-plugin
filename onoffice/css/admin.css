@@ -48,16 +48,8 @@ body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
     width: 100%;
 }
 
-#onoffice-ajax ul.filter-fields-list > li {
-	cursor: -webkit-grab; cursor:-moz-grab;
-}
-
-#onoffice-ajax ul.filter-fields-list > li:active{
-	cursor: -webkit-grabbing; cursor:-moz-grabbing;
-}
-
 #onoffice-ajax #listSettings {
-	width: 40.3%;
+	width: 49%;
 }
 
 body.onoffice_page_onoffice-estates #onoffice-ajax span.viewusage {
@@ -73,42 +65,80 @@ body.onoffice_page_onoffice-estates #onoffice-ajax span.viewusage .italic {
 
 .fieldsSortable{
 	float: right;
-	min-height: 300px;
-	width: 50%;
-	position: relative;
-	/*border: 2px dotted #333;*/
+	min-height: 320px;
+	width: 49%;
 	background: #fff;
-	padding: 10px 10px 15px 10px;
 }
 
 #sortableFieldsList .menu-item-bar{
-	height: 30px;
 	display: block;
-	width: 90%;
-	padding: 5px;
-	border: 1px solid #e5e5e5;
-	background: #FAFAFA;
+	padding-left: 5px;
 }
 
-#sortableFieldsList .menu-item-bar:hover{
-	border-color: #999;
-	cursor: move;
+#sortableFieldsList .menu-item-settings .submitdelete {
+	text-align: right;
+	display:block;
+	width: 98%;
+}
+
+#listSettings .accordion-section-title:hover{
+	cursor: inherit;
 }
 
 #sortableFieldsList .menu-item-settings{
-	display:block;
-	width: 90%;
-	border-top: 1px solid #ddd;
+	display: block;
+	position: relative;
+	margin-left: 5px;
+	clear: both;
 }
 
 #sortableFieldsList .item-delete-link{
 	padding-right: 10px;
 }
 
+#listSettings .accordion-section-content > .inside > p {
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+#listSettings .accordion-section-content {
+	padding: 0;
+}
+
 #sortableFieldsList .menu-item-settings-name{
 	font-style: italic;
 }
 
-#sortableFieldsList a{
-	text-decoration: underline;
+#listSettings p:empty {
+	display: none;
+}
+
+.fieldsSortable .item-edit:before {
+    margin-top: 10px;
+    margin-left: 4px;
+    width: 20px;
+    border-radius: 50%;
+    text-indent: -1px;
+
+	content: "\f140";
+    font: 400 20px/1 dashicons;
+    speak: none;
+    display: block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-decoration: none!important;
+}
+
+.fieldsSortable .item-edit {
+    position: absolute;
+    right: -20px;
+    top: 0;
+    display: block;
+    width: 30px;
+    height: 40px;
+    outline: 0;
+}
+
+#menu-item-dummy_key {
+	display: none;
 }

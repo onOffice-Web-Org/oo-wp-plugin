@@ -53,7 +53,7 @@ onOffice.ajaxSaver = function(outerDiv) {
 	this._getValues = function() {
 		var values = {};
 		var proto = this;
-		this._outerDiv.find('.onoffice-input').each(function(i, elem) {
+		this._outerDiv.find('.onoffice-input:not([data-onoffice-ignore=true])').each(function(i, elem) {
 			var inputNameFull = $(elem).attr('name');
 			var inputName = inputNameFull;
 			var elementValue = proto._getValueOfElement(elem);

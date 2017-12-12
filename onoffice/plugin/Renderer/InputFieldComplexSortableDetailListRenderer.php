@@ -31,7 +31,7 @@ class InputFieldComplexSortableDetailListRenderer
 	extends InputFieldRenderer
 {
 	/** @var array */
-	private $_inactiveFields = null;
+	private static $_inactiveFields = null;
 
 	/** @var array */
 	private $_allFields = array();
@@ -63,68 +63,78 @@ class InputFieldComplexSortableDetailListRenderer
 		$fields = array();
 		$values = $this->getValue();
 		$allFields = $values[0];
-		$inactiveFields = $this->getInactiveFields();
 
 		foreach ($allFields as $value)
 		{
 			$fields[$value] = $this->_allFields[$value];
 		}
 
-		foreach ($fields as $key => $label)
+		foreach ($fields as $key => $properties)
 		{
-			$deactivatedStyle = null;
-			$deactivatedInTheSoftware = null;
+			$label = $properties['label'];
+			$category = $properties['content'];
 
-			if ($label == null)
-			{
-				$label = $inactiveFields[$key];
-				$deactivatedStyle = ' style="color:red;" ';
-				$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
-			}
-
-			echo '<li class="sortable-item" id="menu-item-'.esc_html($key).'">'
-					.'<div class="menu-item-bar">'
-						.'<span class="item-title" '.$deactivatedStyle.'>'
-							.esc_html($label)
-							.$deactivatedInTheSoftware
-						.'</span>'
-						.'<span class="item-controls">'
-							.'<a class="item-edit-link">'.__('Edit', 'onoffice').'</a>'
-						.'</span>'
-						.'<input type="hidden" name="filter_fields_order'.$i.'[id]" value="'.$i.'">'
-						.'<input type="hidden" name="filter_fields_order'.$i.'[name]" value="'.esc_html($label).'">'
-						.'<input type="hidden" name="filter_fields_order'.$i.'[slug]" value="'.esc_html($key).'">'
-						.'<input type="hidden" name="'.$this->getName().'[]" value="'.esc_html($key).'" '
-							.' '.$this->renderAdditionalAttributes().'>'
-					.'</div>'
-					.'<div class="menu-item-settings" style="display:none">'
-						.'<a class="item-delete-link">'.__('Delete', 'onoffice').'</a>'
-						.'<span class="menu-item-settings-name">'.esc_html($key).'</span>'
-					.'</div>'
-				.'</li>';
-
-			$i++;
+			echo $this->generateSelectableElement($key, $label, $category, $i);
 		}
 
-		// ein unsichtbares set zum klonen anlegen
-		echo '<li class="sortable-item" id="menu-item-dummyField" style="display:none;">'
-				.'<div class="menu-item-bar">'
-					.'<span class="item-title">dummy_label</span>'
-					.'<span class="item-controls">'
-						.'<a class="item-edit-link">'.__('Edit', 'onoffice').'</a>'
-					.'</span>'
-					.'<input type="hidden" name="filter_fields_order'.$i.'[id]" value="'.$i.'">'
-					.'<input type="hidden" name="filter_fields_order'.$i.'[name]" value="dummy_label">'
-					.'<input type="hidden" name="filter_fields_order'.$i.'[slug]" value="dummy_key">'
-					.'<input type="hidden" name="'.esc_html($this->getName()).'[]" value="dummy_key" '
-						.' class="onoffice-dummy-input">'
-				.'</div>'
-				.'<div class="menu-item-settings" style="display:none">'
-					.'<a class="item-delete-link">'.__('Delete', 'onoffice').'</a>'
-					.'<span class="menu-item-settings-name">dummy_key</span>'
-				.'</div>'
-			.'</li>';
+		// create hidden element for cloning
+		echo $this->generateSelectableElement('dummy_key', 'dummy_label', 'dummy_category', $i, true);
 		echo '</ul>';
+	}
+
+
+	/**
+	 *
+	 * @param string $key
+	 * @param string $label
+	 * @param string $category
+	 * @param int $iteration
+	 * @param bool $isDummy for javascript-side copying
+	 * @return string
+	 *
+	 */
+
+	private function generateSelectableElement($key, $label, $category, $iteration, $isDummy = false)
+	{
+		$inactiveFields = $this->getInactiveFields();
+
+		$deactivatedStyle = null;
+		$deactivatedInTheSoftware = null;
+		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
+
+		if ($label == null)
+		{
+			$label = $inactiveFields[$key];
+			$deactivatedStyle = ' style="color:red;" ';
+			$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
+		}
+
+		$output = '<li class="sortable-item" id="menu-item-'.esc_html($key).'">'
+			.'<div class="menu-item-bar">'
+				.'<div class="menu-item-handle ui-sortable-handle">'
+					.'<span class="item-title" '.$deactivatedStyle.'>'
+						.esc_html($label)
+						.$deactivatedInTheSoftware
+					.'</span>'
+					.'<span class="item-controls">'
+						.'<span class="item-type">'.esc_html($category).'</span>'
+						.'<a class="item-edit"><span class="screen-reader-text">'.__('Edit', 'onoffice').'</span></a>'
+					.'</span>'
+					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[id]" value="'.esc_html($iteration).'">'
+					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[name]" value="'.esc_html($label).'">'
+					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[slug]" value="'.esc_html($key).'">'
+					.'<input type="hidden" name="'.esc_attr($this->getName()).'[]" value="'.esc_html($key).'" '
+						.' '.$this->renderAdditionalAttributes().' '.$dummyText.'>'
+				.'</div>'
+			.'</div>'
+			.'<div class="menu-item-settings submitbox" style="display:none">'
+				.'<p class="description">'.esc_html__('Key of Field:', 'onoffice')
+					.' <span class="menu-item-settings-name">'.esc_html($key).'</span></p>'
+				.'<a class="item-delete-link submitdelete" href="">'.__('Delete', 'onoffice').'</a>'
+			.'</div>'
+		.'</li>';
+
+		return $output;
 	}
 
 
@@ -134,7 +144,7 @@ class InputFieldComplexSortableDetailListRenderer
 
 	protected function readInactiveFields()
 	{
-		$this->_inactiveFields = array();
+		self::$_inactiveFields = array();
 
 		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
 		$pFieldnames->loadLanguage(true);
@@ -143,7 +153,7 @@ class InputFieldComplexSortableDetailListRenderer
 
 		foreach ($fieldnames as $key => $properties)
 		{
-			$this->_inactiveFields[$key] = $properties['label'];
+			self::$_inactiveFields[$key] = $properties['label'];
 		}
 	}
 
@@ -156,12 +166,12 @@ class InputFieldComplexSortableDetailListRenderer
 
 	public function getInactiveFields()
 	{
-		if (null === $this->_inactiveFields)
+		if (null === self::$_inactiveFields)
 		{
 			$this->readInactiveFields();
 		}
 
-		return $this->_inactiveFields;
+		return self::$_inactiveFields;
 	}
 
 

@@ -126,6 +126,7 @@ class FormModelBuilderEstateListSettings
 		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$pInputModelFieldsConfig->setId($category);
+		$pInputModelFieldsConfig->setLabel($category);
 		$fields = $this->getValue(DataListView::FIELDS);
 
 		if (null == $fields)
@@ -152,7 +153,10 @@ class FormModelBuilderEstateListSettings
 
 		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
 
-		$fieldNames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
+
+		$fieldNames = $pFieldnames->getFieldList(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE, true, true);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
 		$fields = $this->getValue(DataListView::FIELDS);
