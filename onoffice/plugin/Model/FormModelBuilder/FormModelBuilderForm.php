@@ -174,7 +174,7 @@ class FormModelBuilderForm
 		$labelName = __('Form Name', 'onoffice');
 
 		$pInputModelName = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_LISTNAME, null);
+			(InputModelDBFactoryConfigForm::INPUT_FORM_NAME, null);
 		$pInputModelName->setPlaceholder($labelName);
 		$pInputModelName->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelName->setValue($this->getValue($pInputModelName->getField()));

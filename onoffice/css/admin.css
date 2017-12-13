@@ -16,13 +16,15 @@
 	max-width: 160px;
 }
 
-#onoffice-ajax input[name=oopluginlistviews-name] {
+#onoffice-ajax input[name=oopluginlistviews-name],
+#onoffice-ajax input[name=oopluginforms-name] {
 	font-size: 1.7em;
 	padding: 3px 8px;
 	width: 100%;
 }
 
-#onoffice-ajax #post-body.columns-2 input[name=oopluginlistviews-name] {
+#onoffice-ajax #post-body.columns-2 input[name=oopluginlistviews-name],
+#onoffice-ajax #post-body.columns-2 input[name=oopluginforms-name] {
 	width: 100%;
 }
 
@@ -98,6 +100,7 @@ body.onoffice_page_onoffice-estates #onoffice-ajax span.viewusage .italic {
 
 #listSettings .accordion-section-content > .inside > p {
 	max-height: 200px;
+	padding: 2px;
 	overflow-y: auto;
 }
 
