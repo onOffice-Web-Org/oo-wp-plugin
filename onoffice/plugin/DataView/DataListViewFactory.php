@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\DataView;
 
-use \onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Record\RecordManagerReadListView;
 
 /**
  *

@@ -355,6 +355,7 @@ class Form {
 	 *
 	 * @param string $field
 	 * @param bool $raw
+	 * @param bool $forceEvenIfSuccess
 	 * @return string
 	 *
 	 */
@@ -454,12 +455,32 @@ class Form {
 	}
 
 
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	static public function getFormTypesLabeled()
+	{
+		$formTypes = array(
+			self::TYPE_CONTACT => __('Contact Form', 'onoffice'),
+			self::TYPE_APPLICANT_SEARCH => __('Applicant Search', 'onoffice'),
+			self::TYPE_INTEREST => __('Applicant Form with Search Criteria', 'onoffice'),
+			self::TYPE_OWNER => __('Owner\'s Form', 'onoffice'),
+			self::TYPE_FREE => __('Free Form', 'onoffice'),
+		);
+
+		return $formTypes;
+	}
+
+
 	/** @return int */
 	public function getPages()
-	{ return $this->_pages; }
+		{ return $this->_pages; }
 
 
 	/** @return array */
 	public function getResponseFieldsValues()
-	{ return $this->_pFormData->getResponseFieldsValues(); }
+		{ return $this->_pFormData->getResponseFieldsValues(); }
 }

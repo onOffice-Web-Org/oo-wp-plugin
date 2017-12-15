@@ -34,39 +34,11 @@ use onOffice\SDK\onOfficeSDK;
 
 /**
  *
- * Description of FormPostInterest
- *
  */
+
 class FormPostInterest
 	extends FormPost
 {
-	/** @var FormPost */
-	private static $_pInstance = null;
-
-	/**
-	 *
-	 * @return FormPost
-	 *
-	 */
-
-	public static function getInstance() {
-		if ( is_null( self::$_pInstance ) ) {
-			self::$_pInstance = new static;
-		}
-
-		return self::$_pInstance;
-	}
-
-
-	/**	 */
-	private function __construct() { }
-
-
-	/** @return string */
-	protected function getFormType()
-	{ return Form::TYPE_CONTACT; }
-
-
 	/**
 	 *
 	 * @param string $prefix
@@ -74,7 +46,8 @@ class FormPostInterest
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix( $prefix, $formNo = null ){
+	protected function analyseFormContentByPrefix( $prefix, $formNo = null )
+	{
 		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
 		$recipient = null;
 		$subject = null;
@@ -126,6 +99,7 @@ class FormPostInterest
 			}
 		}
 	}
+
 
 	/**
 	 *
@@ -195,6 +169,7 @@ class FormPostInterest
 		return $result;
 	}
 
+	/** @return string */
+	static protected function getFormType()
+		{ return Form::TYPE_CONTACT; }
 }
-
-?>

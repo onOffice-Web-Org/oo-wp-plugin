@@ -21,6 +21,10 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
+use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -121,6 +125,38 @@ abstract class FormModelBuilder
 		}
 
 		return $templates;
+	}
+
+
+	/**
+	 *
+	 * @param string $module
+	 * @return Model\InputModelDB
+	 *
+	 */
+
+	public function createSortableFieldList($module)
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
+
+		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
+
+		$fieldNames = $pFieldnames->getFieldList($module, true, true);
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+
+		$fields = $this->getValue(DataFormConfiguration::FIELDS);
+
+		if (null == $fields)
+		{
+			$fields = array();
+		}
+
+		$pInputModelFieldsConfig->setValue($fields);
+		return $pInputModelFieldsConfig;
 	}
 
 

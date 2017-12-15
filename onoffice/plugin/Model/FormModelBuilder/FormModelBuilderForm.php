@@ -65,7 +65,7 @@ class FormModelBuilderForm
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
-		$fieldNames = $this->readFieldnames();
+		$fieldNames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
 		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
@@ -106,34 +106,6 @@ class FormModelBuilderForm
 
 		$pInputModelFieldsConfig->setValue($fields);
 
-		return $pInputModelFieldsConfig;
-	}
-
-
-	/**
-	 *
-	 * @return Model\InputModelDB
-	 *
-	 */
-
-	public function createSortableFieldList()
-	{
-		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
-			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
-
-		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
-
-		$fieldNames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-
-		$fields = $this->getValue(DataFormConfiguration::FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array();
-		}
-
-		$pInputModelFieldsConfig->setValue($fields);
 		return $pInputModelFieldsConfig;
 	}
 
@@ -202,6 +174,109 @@ class FormModelBuilderForm
 		$pInputModelTemplate->setValue($selectedTemplate);
 
 		return $pInputModelTemplate;
+	}
+
+
+	/**
+	 *
+	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 *
+	 */
+
+	public function createInputModelRecipient()
+	{
+		$labelRecipient = __('Recipient\'s E-Mail Address', 'onoffice');
+		$selectedRecipient = $this->getValue('recipient');
+
+		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
+		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelFormRecipient->setValue($selectedRecipient);
+		$pInputModelFormRecipient->setPlaceholder('john.doe@example.com');
+
+		return $pInputModelFormRecipient;
+	}
+
+
+	/**
+	 *
+	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 *
+	 */
+
+	public function createInputModelSubject()
+	{
+		$labelSubject = __('Subject (optional)', 'onoffice');
+		$selectedSubject = $this->getValue('subject');
+
+		$pInputModelFormSubject = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT, $labelSubject);
+		$pInputModelFormSubject->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelFormSubject->setValue($selectedSubject);
+
+		return $pInputModelFormSubject;
+	}
+
+
+	/**
+	 *
+	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 *
+	 */
+
+	public function createInputModelCreateAddress()
+	{
+		$labelCreateAddress = __('Create Address', 'onoffice');
+		$selectedValue = $this->getValue('createaddress');
+
+		$pInputModelFormCreateAddress = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS, $labelCreateAddress);
+		$pInputModelFormCreateAddress->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelFormCreateAddress->setValue($selectedValue);
+		$pInputModelFormCreateAddress->setValuesAvailable(1);
+
+		return $pInputModelFormCreateAddress;
+	}
+
+
+	/**
+	 *
+	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 *
+	 */
+
+	public function createInputModelCheckDuplicates()
+	{
+		$labelCheckDuplicates = __('Check for Duplicates', 'onoffice');
+		$selectedValue = $this->getValue('checkduplicates');
+
+		$pInputModelFormCheckDuplicates = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES, $labelCheckDuplicates);
+		$pInputModelFormCheckDuplicates->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelFormCheckDuplicates->setValue($selectedValue);
+		$pInputModelFormCheckDuplicates->setValuesAvailable(1);
+
+		return $pInputModelFormCheckDuplicates;
+	}
+
+
+	/**
+	 *
+	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 *
+	 */
+
+	public function createInputModelResultLimit()
+	{
+		$labelResultLimit = __('Result Limit', 'onoffice');
+		$selectedValue = $this->getValue('limitresult');
+
+		$pInputModelFormLimitResult = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_LIMIT_RESULTS, $labelResultLimit);
+		$pInputModelFormLimitResult->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelFormLimitResult->setValue($selectedValue);
+
+		return $pInputModelFormLimitResult;
 	}
 
 

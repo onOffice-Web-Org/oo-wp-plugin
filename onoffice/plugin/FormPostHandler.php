@@ -24,6 +24,7 @@
  * @copyright 2003-2016, onOffice(R) Software AG
  *
  */
+
 namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\Form;
@@ -35,9 +36,8 @@ use onOffice\WPlugin\FormPostOwner;
 
 /**
  *
- * Description of FormPostHandler
- *
  */
+
 class FormPostHandler
 {
 	/** @var array */
@@ -82,6 +82,7 @@ class FormPostHandler
 	 * @param string $configByPrefix
 	 *
 	 */
+
 	static private function create($configByPrefix)
 	{
 		switch ($configByPrefix)
@@ -108,5 +109,3 @@ class FormPostHandler
 		}
 	}
 }
-
-?>

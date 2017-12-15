@@ -39,37 +39,6 @@ use onOffice\WPlugin\FormData;
 class FormPostFree
 	extends FormPost
 {
-
-	/** @var FormPost */
-	private static $_pInstance = null;
-
-	/**
-	 *
-	 * @return FormPost
-	 *
-	 */
-
-	public static function getInstance() {
-		if ( is_null( self::$_pInstance ) ) {
-			self::$_pInstance = new static;
-		}
-
-		return self::$_pInstance;
-	}
-
-
-	/**
-	 *
-	 */
-
-	private function __construct() { }
-
-
-	/** @return string */
-	protected function getFormType()
-		{ return Form::TYPE_FREE; }
-
-
 	/**
 	 *
 	 * @param string $prefix
@@ -87,9 +56,14 @@ class FormPostFree
 		$formData = array_intersect_key( $_POST, $formFields );
 		$pFormData = new FormData( $prefix, $formNo );
 		$pFormData->setRequiredFields( $configByPrefix['required'] );
-		$pFormData->setFormtype( $this->getFormType() );
+		$pFormData->setFormtype( self::getFormType() );
 
 		$this->setFormDataInstances($prefix, $formNo, $pFormData);
 		$pFormData->setValues( $formData );
 	}
+
+
+	/** @return string */
+	static protected function getFormType()
+		{ return Form::TYPE_FREE; }
 }

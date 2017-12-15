@@ -29,7 +29,7 @@ use onOffice\WPlugin\Gui\AdminPageModules;
 use onOffice\WPlugin\Gui\AdminPageApiSettings;
 use onOffice\WPlugin\Gui\AdminPageEstateUnitSettings;
 use onOffice\WPlugin\Gui\AdminPageFormList;
-use onOffice\WPlugin\Gui\AdminPageFormSettings;
+use onOffice\WPlugin\Gui\AdminPageFormSettingsContact;
 
 /**
  *
@@ -55,7 +55,7 @@ class AdminViewController
 	/** @var AdminPageEstate */
 	private $_pAdminPageEstates = null;
 
-	/** @var AdminPageFormSettings */
+	/** @var AdminPageFormSettingsContact */
 	private $_pAdminPageFormSettings = null;
 
 
@@ -85,7 +85,7 @@ class AdminViewController
 		$this->_pAdminUnitListSettings = new AdminPageEstateUnitSettings($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editunitlist'] = $this->_pAdminUnitListSettings;
 
-		$this->_pAdminPageFormSettings = new AdminPageFormSettings($this->_pageSlug);
+		$this->_pAdminPageFormSettings = new AdminPageFormSettingsContact($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editform'] = $this->_pAdminPageFormSettings;
 
 		$this->_pAdminPageEstates = new AdminPageEstate($this->_pageSlug);

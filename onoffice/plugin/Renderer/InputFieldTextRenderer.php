@@ -48,6 +48,7 @@ class InputFieldTextRenderer
 	/**
 	 *
 	 */
+
 	public function render()
 	{
 		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())

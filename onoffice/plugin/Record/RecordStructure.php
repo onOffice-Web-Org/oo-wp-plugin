@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin\Record;
 
-use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Model\InputModelBase;
 
 /**
@@ -207,7 +206,7 @@ class RecordStructure
 	 * @return mixed
 	 *
 	 */
-	
+
 	public static function getEmptyValue($table, $field)
 	{
 		$returnValue = false;

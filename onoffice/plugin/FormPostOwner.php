@@ -40,33 +40,6 @@ use onOffice\SDK\onOfficeSDK;
 class FormPostOwner
 	extends FormPost
 {
-	/** @var FormPost */
-	private static $_pInstance = null;
-
-	/**
-	 *
-	 * @return FormPost
-	 *
-	 */
-
-	public static function getInstance() {
-		if ( is_null( self::$_pInstance ) ) {
-			self::$_pInstance = new static;
-		}
-
-		return self::$_pInstance;
-	}
-
-
-	/**	 */
-	private function __construct() { }
-
-
-	/** @return string */
-	protected function getFormType()
-	{ return Form::TYPE_OWNER; }
-
-
 	/**
 	 *
 	 * @param string $prefix
@@ -352,5 +325,9 @@ class FormPostOwner
 
 		return $result;
 	}
+
+	/** @return string */
+	static protected function getFormType()
+		{ return Form::TYPE_OWNER; }
+
 }
-?>

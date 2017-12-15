@@ -161,7 +161,7 @@ function zurueck(pages)
 				?>
 			</div>
 			<br/>
-			<div style="width:500">
+			<div style="width: 500px">
 				<div id="back"  style="float:left; cursor:pointer;" onclick="zurueck(<?php echo $pages; ?>)">Zur&uuml;ck</div>
 				<div id="vor"  style="float:right; cursor:pointer;" onclick="weiter(<?php echo $pages; ?>)">Weiter</div>
 			</div>

@@ -35,40 +35,10 @@ use onOffice\SDK\onOfficeSDK;
 class FormPostApplicant
 	extends FormPost
 {
-	/** @var FormPost */
-	private static $_pInstance = null;
-
 	/**
 	 *
-	 * @return FormPost
-	 *
-	 */
-
-	public static function getInstance() {
-		if ( is_null( self::$_pInstance ) ) {
-			self::$_pInstance = new static;
-		}
-
-		return self::$_pInstance;
-	}
-
-
-	/**
-	 *
-	 */
-
-	private function __construct() { }
-
-
-	/** @return string */
-	protected function getFormType(){
-		return Form::TYPE_INTEREST; }
-
-
-	/**
-	 *
-	 * @param type $estateId
-	 * @param type $addressId
+	 * @param string $prefix
+	 * @param int $formNo
 	 * @return bool $result
 	 *
 	 */
@@ -150,8 +120,8 @@ class FormPostApplicant
 	/**
 	 *
 	 * @param \onOffice\WPlugin\FormData $pFormData
-	 * @param type $recipient
-	 * @param type $subject
+	 * @param string $recipient
+	 * @param string $subject
 	 * @return boolean
 	 *
 	 */
@@ -198,7 +168,7 @@ Ihr onOffice Team';
 	 *
 	 * @param \onOffice\WPlugin\FormData $pFormData
 	 * @param int $addressId
-	 * @return boolean
+	 * @return bool
 	 *
 	 */
 
@@ -253,4 +223,8 @@ Ihr onOffice Team';
 
 		return false;
 	}
+
+	/** @return string */
+	static protected function getFormType()
+		{ return Form::TYPE_INTEREST; }
 }

@@ -38,6 +38,21 @@ class InputModelDBFactoryConfigForm
 	/** */
 	const INPUT_FORM_TYPE = 'formType';
 
+	/** */
+	const INPUT_FORM_RECIPIENT = 'formRecipient';
+
+	/** */
+	const INPUT_FORM_SUBJECT = 'formSubject';
+
+	/** */
+	const INPUT_FORM_CREATEADDRESS = 'formCreateAddress';
+
+	/** */
+	const INPUT_FORM_CHECKDUPLICATES = 'formCheckDuplicates';
+
+	/** */
+	const INPUT_FORM_LIMIT_RESULTS = 'formLimitResults';
+
 
 	/** @var array */
 	private $_inputConfig = array(
@@ -52,6 +67,26 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_TYPE => array(
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'form_type',
+		),
+		self::INPUT_FORM_RECIPIENT => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'recipient',
+		),
+		self::INPUT_FORM_SUBJECT => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'subject',
+		),
+		self::INPUT_FORM_CREATEADDRESS => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'createaddress',
+		),
+		self::INPUT_FORM_LIMIT_RESULTS => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'limitresults',
+		),
+		self::INPUT_FORM_CHECKDUPLICATES => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'checkduplicates',
 		),
 		InputModelDBFactory::INPUT_FIELD_CONFIG => array(
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',

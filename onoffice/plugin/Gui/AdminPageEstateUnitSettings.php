@@ -107,24 +107,7 @@ class AdminPageEstateUnitSettings
 
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
 
-		foreach ($fieldNames as $category => $fields)
-		{
-			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory($category, $fields);
-			$pFormModelFieldsConfig = new Model\FormModel();
-			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
-			$pFormModelFieldsConfig->setGroupSlug($category);
-			$pFormModelFieldsConfig->setLabel($category);
-			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
-			$this->addFormModel($pFormModelFieldsConfig);
-		}
-
-		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList();
-		$pFormModelSortableFields = new Model\FormModel();
-		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
-		$pFormModelSortableFields->setGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
-		$pFormModelSortableFields->setLabel(__('Fields Configuration', 'onoffice'));
-		$pFormModelSortableFields->addInputModel($pInputModelSortableFields);
-		$this->addFormModel($pFormModelSortableFields);
+		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
 	}
 
 

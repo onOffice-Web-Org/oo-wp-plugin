@@ -146,37 +146,6 @@ class FormModelBuilderEstateListSettings
 	 *
 	 */
 
-	public function createSortableFieldList()
-	{
-		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
-			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
-
-		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
-
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
-		$pFieldnames->loadLanguage();
-
-		$fieldNames = $pFieldnames->getFieldList(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE, true, true);
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-
-		$fields = $this->getValue(DataListView::FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array();
-		}
-
-		$pInputModelFieldsConfig->setValue($fields);
-		return $pInputModelFieldsConfig;
-	}
-
-
-	/**
-	 *
-	 * @return Model\InputModelDB
-	 *
-	 */
-
 	public function createInputModelListType()
 	{
 		$labelListType = __('Type of List', 'onoffice');

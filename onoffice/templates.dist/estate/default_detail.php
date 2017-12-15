@@ -23,8 +23,6 @@
  *  Default template
  */
 
-use onOffice\WPlugin\PdfDocumentType;
-
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
 ?>

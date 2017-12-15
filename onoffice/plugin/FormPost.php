@@ -70,17 +70,52 @@ abstract class FormPost {
 	/** @var array */
 	private $_searchcriteriaRangeFields = array();
 
+	/** @var FormPost */
+	private static $_pInstances = null;
+
+
+	/**
+	 *
+	 * @return FormPost
+	 *
+	 */
+
+	public static function getInstance() {
+		$formType = static::getFormType();
+		if ( !isset( self::$_pInstances[$formType] ) ) {
+			self::$_pInstances[$formType] = new static;
+		}
+
+		return self::$_pInstances[$formType];
+	}
+
 
 	/**
 	 *
 	 */
 
-	private function __clone() { }
+	protected function __construct() { }
 
 
 	/**
+	 *
 	 */
-	abstract protected function getFormType();
+
+	protected function __clone() { }
+
+
+	/**
+	 *
+	 * Use it like this: static::getFormType()
+	 * @throws Exception
+	 *
+	 */
+
+	static protected function getFormType()
+	{
+		throw new \Exception('getFormType must be overridden');
+	}
+
 
 	/**
 	 *
@@ -262,7 +297,6 @@ abstract class FormPost {
 					}
 				}
 			}
-
 		}
 
 		return $inputFormFields;

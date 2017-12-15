@@ -39,7 +39,7 @@ class UrlConfig {
 	 * You can either put the configuration for the view into the config of the list
 	 * or put in a reference
 	 *
-	 * @param string $view
+	 * @param string $viewConfig
 	 * @return int the page id
 	 *
 	 */
