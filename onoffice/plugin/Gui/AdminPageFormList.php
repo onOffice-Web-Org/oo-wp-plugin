@@ -159,7 +159,15 @@ class AdminPageFormList
 			echo ' › '.esc_html__($subTitle, 'onoffice');
 		}
 
-		$new_link = admin_url('admin.php?page=onoffice-editform');
+		$tab = $this->getTab();
+
+		if ($tab == null) {
+			$tab = \onOffice\WPlugin\Form::TYPE_CONTACT;
+		}
+
+		$typeParam = AdminPageFormSettingsMain::GET_PARAM_TYPE;
+
+		$new_link = add_query_arg($typeParam, $tab, admin_url('admin.php?page=onoffice-editform'));
 
 		echo '</h1>';
 		echo '<a href="'.$new_link.'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
