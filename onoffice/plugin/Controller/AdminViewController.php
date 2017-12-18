@@ -287,7 +287,7 @@ class AdminViewController
 	public function pluginSettingsLink($links)
 	{
 		$url = get_admin_url().'admin.php?page='.$this->_pageSlug;
-		$settings_link = '<a href="'.$url.'">'.__( 'Settings', 'onOffice' ).'</a>';
+		$settings_link = '<a href="'.$url.'">'.__( 'Settings', 'onoffice' ).'</a>';
 		array_unshift( $links, $settings_link );
 		return $links;
 	}

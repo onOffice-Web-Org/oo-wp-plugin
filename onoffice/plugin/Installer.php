@@ -140,6 +140,12 @@ abstract class Installer
 			`name` varchar(191) NOT NULL,
 			`form_type` enum('owner', 'interest', 'contact', 'free') NOT NULL DEFAULT 'free',
 			`template` tinytext NOT NULL,
+			`recipient` varchar(255) NULL,
+			`subject` mediumtext NULL,
+			`createaddress` tinyint(1) NOT NULL DEFAULT '0',
+			`limitresults` int,
+			`checkduplicates` tinyint(1) NOT NULL DEFAULT '0',
+			`pages` int NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -189,6 +195,7 @@ abstract class Installer
 			`fieldname` tinytext NOT NULL,
 			`fieldlabel` varchar(255) NULL,
 			`module` tinytext NULL,
+			`individual_fieldname` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 

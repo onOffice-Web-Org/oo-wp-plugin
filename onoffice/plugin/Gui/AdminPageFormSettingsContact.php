@@ -28,6 +28,18 @@ use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
 class AdminPageFormSettingsContact
 	extends AdminPageFormSettingsBase
 {
+	/** @var bool */
+	private $_showSearchCriteriaBoxes = false;
+
+	/** @var bool */
+	private $_showPagesOption = false;
+
+	/** @var bool */
+	private $_showEstateFields = false;
+
+	/** @var bool */
+	private $_showAddressFields = false;
+
 	/**
 	 *
 	 */
@@ -67,11 +79,26 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 		$pFormModelFormSpecific->addInputModel($pInputModelCreateAddress);
 		$pFormModelFormSpecific->addInputModel($pInputModelCheckDuplicates);
+		if ($this->_showPagesOption) {
+			$pInputModelPages = $pFormModelBuilder->createInputModelPages();
+			$pFormModelFormSpecific->addInputModel($pInputModelPages);
+		}
+
 		$this->addFormModel($pFormModelFormSpecific);
 
-		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
+		if ($this->_showEstateFields) {
+			$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
+			$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNamesEstate);
+		}
 
-		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
+		if ($this->_showAddressFields) {
+			$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
+			$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder, $fieldNamesAddress);
+		}
+
+		if ($this->_showSearchCriteriaBoxes) {
+			// todo
+		}
 	}
 
 
@@ -95,7 +122,15 @@ class AdminPageFormSettingsContact
 
 	protected function generateAccordionBoxes()
 	{
-		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE));
+		$fieldNames = array();
+
+		if ($this->_showEstateFields) {
+			$fieldNames += array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE));
+		}
+
+		if ($this->_showAddressFields) {
+			$fieldNames += array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS));
+		}
 
 		foreach ($fieldNames as $category)
 		{
@@ -103,4 +138,37 @@ class AdminPageFormSettingsContact
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 		}
 	}
+
+
+	/** @return bool */
+	public function getShowSearchCriteriaBoxes()
+		{ return $this->_showSearchCriteriaBoxes; }
+
+	/** @param bool $showSearchCriteriaBoxes */
+	public function setShowSearchCriteriaBoxes($showSearchCriteriaBoxes)
+		{ $this->_showSearchCriteriaBoxes = (bool)$showSearchCriteriaBoxes; }
+
+	/** @return bool */
+	public function getShowPagesOption()
+		{ return $this->_showPagesOption; }
+
+	/** @param bool $showPagesOption */
+	public function setShowPagesOption($showPagesOption)
+		{ $this->_showPagesOption = (bool)$showPagesOption; }
+
+	/** @return bool */
+	public function getShowEstateFields()
+		{ return $this->_showEstateFields; }
+
+	/** @return bool */
+	public function getShowAddressFields()
+		{ return $this->_showAddressFields; }
+
+	/** @param bool $showEstateFields */
+	public function setShowEstateFields($showEstateFields)
+		{ $this->_showEstateFields = (bool)$showEstateFields; }
+
+	/** @param bool $showAddressFields */
+	public function setShowAddressFields($showAddressFields)
+		{ $this->_showAddressFields = (bool)$showAddressFields; }
 }

@@ -38,10 +38,11 @@ class AdminPageFormSettingsMain
 	/** @var array */
 	private $_mappingTypeClass = array(
 		Form::TYPE_CONTACT => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
+		// search searchcriteria
 		Form::TYPE_APPLICANT_SEARCH => null,
-		Form::TYPE_INTEREST => null,
-		Form::TYPE_OWNER => null,
-		Form::TYPE_FREE => null,
+		Form::TYPE_INTEREST => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
+		Form::TYPE_OWNER => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
+		Form::TYPE_FREE => '\onOffice\WPlugin\Gui\AdminPageFormSettingsFree',
 	);
 
 	/** @var AdminPageFormSettingsBase */
@@ -65,6 +66,32 @@ class AdminPageFormSettingsMain
 		}
 
 		$this->_pInstance = new $className($pageSlug);
+		$this->configureAdminPage($this->_pInstance, $type);
+	}
+
+
+	/**
+	 *
+	 * @param \onOffice\WPlugin\Gui\AdminPageFormSettingsBase $pAdminPage
+	 * @param string $type
+	 *
+	 */
+
+	private function configureAdminPage(AdminPageFormSettingsBase $pAdminPage, $type)
+	{
+		switch ($type) {
+			case Form::TYPE_INTEREST:
+				/* @var $pAdminPage \onOffice\WPlugin\Gui\AdminPageFormSettingsContact */
+				$pAdminPage->setShowSearchCriteriaBoxes(true);
+				$pAdminPage->setShowAddressFields(true);
+				break;
+			case Form::TYPE_OWNER:
+				/* @var $pAdminPage \onOffice\WPlugin\Gui\AdminPageFormSettingsContact */
+				$pAdminPage->setShowPagesOption(true);
+				$pAdminPage->setShowEstateFields(true);
+				$pAdminPage->setShowAddressFields(true);
+				break;
+		}
 	}
 
 

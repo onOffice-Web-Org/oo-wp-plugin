@@ -192,7 +192,7 @@ class FormModelBuilderForm
 			(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
-		$pInputModelFormRecipient->setPlaceholder('john.doe@example.com');
+		$pInputModelFormRecipient->setPlaceholder(__('john.doe@example.com', 'onoffice'));
 
 		return $pInputModelFormRecipient;
 	}
@@ -277,6 +277,26 @@ class FormModelBuilderForm
 		$pInputModelFormLimitResult->setValue($selectedValue);
 
 		return $pInputModelFormLimitResult;
+	}
+
+
+	/**
+	 *
+	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 *
+	 */
+
+	public function createInputModelPages()
+	{
+		$labelPages = __('Pages', 'onoffice');
+		$selectedValue = $this->getValue('pages');
+
+		$pInputModelFormPages = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_PAGES, $labelPages);
+		$pInputModelFormPages->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelFormPages->setValue($selectedValue);
+
+		return $pInputModelFormPages;
 	}
 
 

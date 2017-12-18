@@ -33,9 +33,8 @@ use onOffice\WPlugin\FormData;
 
 /**
  *
- * Description of FormPostFree
- *
  */
+
 class FormPostFree
 	extends FormPost
 {

@@ -464,11 +464,11 @@ class Form {
 	static public function getFormTypesLabeled()
 	{
 		$formTypes = array(
-			self::TYPE_CONTACT => __('Contact Form', 'onoffice'),
-			self::TYPE_APPLICANT_SEARCH => __('Applicant Search', 'onoffice'),
-			self::TYPE_INTEREST => __('Applicant Form with Search Criteria', 'onoffice'),
-			self::TYPE_OWNER => __('Owner\'s Form', 'onoffice'),
-			self::TYPE_FREE => __('Free Form', 'onoffice'),
+			self::TYPE_CONTACT => 'Contact Form',
+			self::TYPE_APPLICANT_SEARCH => 'Applicant Search',
+			self::TYPE_INTEREST => 'Applicant Form with Search Criteria',
+			self::TYPE_OWNER => 'Owner\'s Form',
+			self::TYPE_FREE => 'Free Form',
 		);
 
 		return $formTypes;

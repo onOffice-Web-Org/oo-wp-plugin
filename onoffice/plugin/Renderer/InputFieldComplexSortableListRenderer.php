@@ -24,10 +24,9 @@ namespace onOffice\WPlugin\Renderer;
 use onOffice\SDK\onOfficeSDK;
 
 /**
- * Description of InputFieldComplexSortableListRenderer
  *
- * @author ana
  */
+
 class InputFieldComplexSortableListRenderer
 	extends InputFieldCheckboxRenderer
 {

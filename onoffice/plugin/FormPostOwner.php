@@ -34,9 +34,8 @@ use onOffice\SDK\onOfficeSDK;
 
 /**
  *
- * Description of FormPostOwner
- *
  */
+
 class FormPostOwner
 	extends FormPost
 {

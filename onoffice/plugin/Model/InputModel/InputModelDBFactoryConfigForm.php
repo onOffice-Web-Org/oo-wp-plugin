@@ -53,6 +53,9 @@ class InputModelDBFactoryConfigForm
 	/** */
 	const INPUT_FORM_LIMIT_RESULTS = 'formLimitResults';
 
+	/** */
+	const INPUT_FORM_PAGES = 'formPages';
+
 
 	/** @var array */
 	private $_inputConfig = array(
@@ -87,6 +90,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_CHECKDUPLICATES => array(
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'checkduplicates',
+		),
+		self::INPUT_FORM_PAGES => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'pages',
 		),
 		InputModelDBFactory::INPUT_FIELD_CONFIG => array(
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
