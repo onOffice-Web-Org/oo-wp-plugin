@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Model\InputModelDBAdapterRow;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
@@ -243,7 +244,7 @@ abstract class AdminPageSettingsBase
 	 */
 
 	protected function addFieldsConfiguration($module, FormModelBuilder $pFormModelBuilder,
-		array $fieldNames)
+		array $fieldNames, $htmlType = InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST)
 	{
 		foreach ($fieldNames as $category => $fields)
 		{
@@ -256,7 +257,7 @@ abstract class AdminPageSettingsBase
 			$this->addFormModel($pFormModelFieldsConfig);
 		}
 
-		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module);
+		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module, $htmlType);
 		$pFormModelSortableFields = new Model\FormModel();
 		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
 		$pFormModelSortableFields->setGroupSlug(AdminPageEstateListSettings::FORM_VIEW_SORTABLE_FIELDS_CONFIG);

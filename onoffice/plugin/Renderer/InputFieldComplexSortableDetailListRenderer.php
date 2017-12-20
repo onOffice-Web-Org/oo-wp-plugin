@@ -36,6 +36,9 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @var array */
 	private $_allFields = array();
 
+	/** @var InputFieldComplexSortableDetailListContentBase */
+	private $_pContentRenderer = null;
+
 
 	/**
 	 *
@@ -64,13 +67,11 @@ class InputFieldComplexSortableDetailListRenderer
 		$values = $this->getValue();
 		$allFields = $values[0];
 
-		foreach ($allFields as $value)
-		{
+		foreach ($allFields as $value) {
 			$fields[$value] = $this->_allFields[$value];
 		}
 
-		foreach ($fields as $key => $properties)
-		{
+		foreach ($fields as $key => $properties) {
 			$label = $properties['label'];
 			$category = $properties['content'];
 
@@ -102,8 +103,7 @@ class InputFieldComplexSortableDetailListRenderer
 		$deactivatedInTheSoftware = null;
 		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
 
-		if ($label == null)
-		{
+		if ($label == null) {
 			$label = $inactiveFields[$key];
 			$deactivatedStyle = ' style="color:red;" ';
 			$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
@@ -127,11 +127,13 @@ class InputFieldComplexSortableDetailListRenderer
 						.' '.$this->renderAdditionalAttributes().' '.$dummyText.'>'
 				.'</div>'
 			.'</div>'
-			.'<div class="menu-item-settings submitbox" style="display:none">'
-				.'<p class="description">'.esc_html__('Key of Field:', 'onoffice')
-					.' <span class="menu-item-settings-name">'.esc_html($key).'</span></p>'
-				.'<a class="item-delete-link submitdelete" href="">'.__('Delete', 'onoffice').'</a>'
-			.'</div>'
+			.'<div class="menu-item-settings submitbox" style="display:none;">';
+
+			if ($this->_pContentRenderer !== null) {
+				$output .= $this->_pContentRenderer->render($key, $isDummy);
+			}
+
+			$output .= '</div>'
 		.'</li>';
 
 		return $output;
@@ -178,4 +180,12 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @param array */
 	public function setAllFields($allFields)
 		{ $this->_allFields = $allFields; }
+
+	/** @return InputFieldComplexSortableDetailListContentBase */
+	public function getContentRenderer()
+		{ return $this->_pContentRenderer; }
+
+	/** @param InputFieldComplexSortableDetailListContentBase $pContentRenderer */
+	public function setContentRenderer(InputFieldComplexSortableDetailListContentBase $pContentRenderer)
+		{ $this->_pContentRenderer = $pContentRenderer; }
 }

@@ -72,7 +72,7 @@ jQuery(document).ready(function($){
 		clonedElement.find('input[value=dummy_key]').val(fieldName);
 		clonedElement.find('input[value=dummy_label]').val(fieldLabel);
 		clonedElement.find('span.menu-item-settings-name').text(fieldName);
-		clonedElement.find('input[data-onoffice-ignore]').removeAttr('data-onoffice-ignore');
+		clonedElement.find('input[data-onoffice-ignore=true]').removeAttr('data-onoffice-ignore');
 		clonedElement.show();
 		$('#menu-item-dummy_key').parent().append(clonedElement);
 	};

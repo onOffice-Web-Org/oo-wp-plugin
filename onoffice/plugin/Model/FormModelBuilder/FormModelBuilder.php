@@ -131,16 +131,17 @@ abstract class FormModelBuilder
 	/**
 	 *
 	 * @param string $module
+	 * @param string $htmlType
 	 * @return Model\InputModelDB
 	 *
 	 */
 
-	public function createSortableFieldList($module)
+	public function createSortableFieldList($module, $htmlType)
 	{
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
-		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
 
 		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
 		$pFieldnames->loadLanguage();

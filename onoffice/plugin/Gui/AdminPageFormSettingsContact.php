@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
 
 class AdminPageFormSettingsContact
@@ -88,12 +89,14 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showEstateFields) {
 			$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
-			$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNamesEstate);
+			$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder,
+				$fieldNamesEstate, InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
 		}
 
 		if ($this->_showAddressFields) {
 			$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
-			$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder, $fieldNamesAddress);
+			$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder,
+				$fieldNamesAddress, InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
 		}
 
 		if ($this->_showSearchCriteriaBoxes) {
