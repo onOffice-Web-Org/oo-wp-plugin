@@ -194,7 +194,7 @@ class FormModelBuilderEstateListSettings
 		$pInputModelRecordsPerPage = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_RECORDS_PER_PAGE, $labelRecordsPerPage);
 		$pInputModelRecordsPerPage->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
-		$pInputModelRecordsPerPage->setValuesAvailable(array('5' => '5', '10' => '10', '15' => '15'));
+		$pInputModelRecordsPerPage->setValuesAvailable(array('5' => '5', '9' => '9', '10' => '10', '12' => '12', '15' => '15'));
 		$pInputModelRecordsPerPage->setValue($this->getValue('recordsPerPage'));
 
 		return $pInputModelRecordsPerPage;
