@@ -173,12 +173,36 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
 		$pInputModelSortBy->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
 
-		$fieldnames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
-		natcasesort($fieldnames);
+		$fieldnames = $this->getOnlyDefaultSortByFields();
+
 		$pInputModelSortBy->setValuesAvailable($fieldnames);
 		$pInputModelSortBy->setValue($this->getValue($pInputModelSortBy->getField()));
 
 		return $pInputModelSortBy;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getOnlyDefaultSortByFields()
+	{
+		$fieldnames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
+		$defaultFields = \onOffice\WPlugin\Fieldnames::getDefaultSortByFields();
+		natcasesort($fieldnames);
+
+		foreach ($fieldnames as $key => $value)
+		{
+			if (in_array($key, $defaultFields))
+			{
+				$defaultActiveFields[$key]=$value;
+			}
+		}
+
+		return $defaultActiveFields;
 	}
 
 

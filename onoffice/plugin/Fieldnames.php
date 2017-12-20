@@ -108,6 +108,18 @@ class Fieldnames {
 	);
 
 	/** @var array */
+	private static $_defaultSortByFields = array(
+		'kaufpreis',
+		'kaltmiete',
+		'pacht',
+		'wohnflaeche',
+		'anzahl_zimmer',
+		'ort',
+		'grundstuecksflaeche',
+		'gesamtflaeche',
+	);
+
+	/** @var array */
 	private $_fieldList = array();
 
 	/** @var array */
@@ -472,5 +484,17 @@ class Fieldnames {
 
 	public function hasLanguageCached( $language ) {
 		return array_key_exists( $language, $this->_fieldList );
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+	
+	static public function getDefaultSortByFields()
+	{
+		return self::$_defaultSortByFields;
 	}
 }
