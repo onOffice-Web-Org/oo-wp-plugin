@@ -31,7 +31,6 @@ interface InputFieldComplexSortableDetailListContentBase
 	 *
 	 * @param string $key
 	 * @param bool $dummy
-	 * @return string
 	 *
 	 */
 

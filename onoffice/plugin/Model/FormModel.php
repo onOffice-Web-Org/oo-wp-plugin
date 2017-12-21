@@ -42,6 +42,9 @@ class FormModel
 	/** @var InputModelBase[] */
 	private $_inputModels = array();
 
+	/** @var bool Use this if you need the value but displaying is discouraged */
+	private $_isInvisibleForm = false;
+
 	/** @param InputModelBase $pInputModel */
 	public function addInputModel(InputModelBase $pInputModel)
 		{ $this->_inputModels []= $pInputModel; }
@@ -73,4 +76,12 @@ class FormModel
 	/** @param string $label */
 	public function setLabel($label)
 		{ $this->_label = $label; }
+
+	/** @return bool */
+	public function getIsInvisibleForm()
+		{ return $this->_isInvisibleForm; }
+
+	/** @param bool $isInvisibleForm */
+	public function setIsInvisibleForm($isInvisibleForm)
+		{ $this->_isInvisibleForm = (bool)$isInvisibleForm; }
 }

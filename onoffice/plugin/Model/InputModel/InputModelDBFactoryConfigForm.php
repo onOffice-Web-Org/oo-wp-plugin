@@ -51,6 +51,9 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_CHECKDUPLICATES = 'formCheckDuplicates';
 
 	/** */
+	const INPUT_FORM_REQUIRED = 'formRequired';
+
+	/** */
 	const INPUT_FORM_LIMIT_RESULTS = 'formLimitResults';
 
 	/** */
@@ -98,6 +101,10 @@ class InputModelDBFactoryConfigForm
 		InputModelDBFactory::INPUT_FIELD_CONFIG => array(
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'fieldname',
+		),
+		self::INPUT_FORM_REQUIRED => array(
+			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
+			self::KEY_FIELD => 'required',
 		),
 	);
 

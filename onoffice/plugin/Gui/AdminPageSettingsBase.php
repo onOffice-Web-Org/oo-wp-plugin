@@ -264,6 +264,16 @@ abstract class AdminPageSettingsBase
 		$pFormModelSortableFields->setLabel(__('Fields Configuration', 'onoffice'));
 		$pFormModelSortableFields->addInputModel($pInputModelSortableFields);
 		$this->addFormModel($pFormModelSortableFields);
+
+		$pFormHidden = new Model\FormModel();
+		$pFormHidden->setIsInvisibleForm(true);
+
+		foreach ($pInputModelSortableFields->getReferencedInputModels() as $pReference)
+		{
+			$pFormHidden->addInputModel($pReference);
+		}
+
+		$this->addFormModel($pFormHidden);
 	}
 
 
@@ -289,6 +299,18 @@ abstract class AdminPageSettingsBase
 
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function setFixedValues(array $row) {
+		return $row;
 	}
 
 

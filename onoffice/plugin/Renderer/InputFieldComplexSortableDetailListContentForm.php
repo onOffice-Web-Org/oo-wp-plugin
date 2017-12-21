@@ -21,6 +21,9 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
+
 /**
  *
  */
@@ -31,6 +34,8 @@ class InputFieldComplexSortableDetailListContentForm
 	/** @var int */
 	private static $_id = 0;
 
+	/** @var \onOffice\WPlugin\Model\InputModelBase[] */
+	private $_extraInputModels = array();
 
 	/**
 	 *
@@ -46,7 +51,6 @@ class InputFieldComplexSortableDetailListContentForm
 	 *
 	 * @param string $key
 	 * @param bool $dummy
-	 * @return string
 	 *
 	 */
 
@@ -55,16 +59,39 @@ class InputFieldComplexSortableDetailListContentForm
 		$dummyText = $dummy ? ' data-onoffice-ignore="true"' : '';
 		$id = (int)self::$_id;
 
-		$output = '<p class="description">'.esc_html__('Key of Field:', 'onoffice')
+		$pFormModel = new \onOffice\WPlugin\Model\FormModel();
+
+		foreach ($this->_extraInputModels as $pInputModel) {
+			$pInputModel->setValuesAvailable($key);
+			$pInputModel->setValue(false);
+			$pFormModel->addInputModel($pInputModel);
+		}
+
+		$pInputModelRenderer = new InputModelRenderer($pFormModel);
+
+		echo '<p class="description">'.esc_html__('Key of Field:', 'onoffice')
 			.' <span class="menu-item-settings-name">'.esc_html($key).'</span></p>';
 
-		$output .= '<p class="description"><label for="indName'.$id.'">'
+		echo '<p class="description">';
+		$pInputModelRenderer->buildForAjax();
+		echo '</p>';
+		echo '<p class="description"><label for="indName'.$id.'">'
 			.__('Use Individual Name:').'</label><input type="checkbox" '
 			.'name="useIndividualName['.esc_html($key).']" value="1" id="indName'.$id.'"'.$dummyText.'></p>';
-		$output .= '<p class="description">'.__('Individual Name:').'<input type="text" '
+		echo '<p class="description">'.__('Individual Name:').'<input type="text" '
 			.'name="individualName['.esc_html($key).']"'.$dummyText.'></p>';
-		$output .= '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
-
-		return $output;
+		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}
+
+	/** @return onOffice\WPlugin\Model\InputModelBase[] */
+	public function getExtraInputModels()
+		{ return $this->_extraInputModels; }
+
+	/** @param \onOffice\WPlugin\Model\InputModelBase $pInputModel */
+	public function addExtraInputModel(\onOffice\WPlugin\Model\InputModelBase $pInputModel)
+		{ $this->_extraInputModels []= $pInputModel; }
+
+	/** @var \onOffice\WPlugin\Model\InputModelBase[] $extraInputModels */
+	public function setExtraInputModels(array $extraInputModels)
+		{ $this->_extraInputModels = $extraInputModels; }
 }

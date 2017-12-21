@@ -39,6 +39,7 @@ class FormModelBuilderForm
 	/** @var InputModelDBFactory */
 	private $_pInputModelDBFactory = null;
 
+
 	/**
 	 *
 	 * @param string $pageSlug
@@ -53,21 +54,27 @@ class FormModelBuilderForm
 	}
 
 
-
 	/**
 	 *
+	 * @param string $module
+	 * @param string $htmlType
 	 * @return \onOffice\WPlugin\Model\InputModelDB
 	 *
 	 */
 
-	public function createInputModelFieldsConfig()
+	public function createSortableFieldList($module, $htmlType)
 	{
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
-		$fieldNames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
-		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
+
+		$fieldNames = $pFieldnames->getFieldList($module, true, true);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
 
 		if (null == $fields)
@@ -76,6 +83,9 @@ class FormModelBuilderForm
 		}
 
 		$pInputModelFieldsConfig->setValue($fields);
+
+		$pReferenceIsRequired = $this->getInputModelIsRequired();
+		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
 
 		return $pInputModelFieldsConfig;
 	}
@@ -297,6 +307,26 @@ class FormModelBuilderForm
 		$pInputModelFormPages->setValue($selectedValue);
 
 		return $pInputModelFormPages;
+	}
+
+
+	/**
+	 *
+	 * @return \onOffice\WPlugin\Model\InputModelDB
+	 *
+	 */
+
+	public function getInputModelIsRequired()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Required', 'onoffice');
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED;
+		/* @var $pInputModel \onOffice\WPlugin\Model\InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+
+		return $pInputModel;
 	}
 
 

@@ -109,18 +109,6 @@ abstract class AdminPageEstateListSettingsBase
 
 	/**
 	 *
-	 * @param array $row
-	 * @return array
-	 *
-	 */
-
-	protected function setFixedValues(array $row) {
-		return $row;
-	}
-
-
-	/**
-	 *
 	 * @return array
 	 *
 	 */

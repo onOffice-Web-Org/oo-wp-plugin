@@ -75,7 +75,7 @@ class InputFieldComplexSortableDetailListRenderer
 			$label = $properties['label'];
 			$category = $properties['content'];
 
-			echo $this->generateSelectableElement($key, $label, $category, $i);
+			$this->generateSelectableElement($key, $label, $category, $i);
 		}
 
 		// create hidden element for cloning
@@ -91,7 +91,6 @@ class InputFieldComplexSortableDetailListRenderer
 	 * @param string $category
 	 * @param int $iteration
 	 * @param bool $isDummy for javascript-side copying
-	 * @return string
 	 *
 	 */
 
@@ -109,7 +108,7 @@ class InputFieldComplexSortableDetailListRenderer
 			$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
 		}
 
-		$output = '<li class="sortable-item" id="menu-item-'.esc_html($key).'">'
+		echo '<li class="sortable-item" id="menu-item-'.esc_html($key).'">'
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle">'
 					.'<span class="item-title" '.$deactivatedStyle.'>'
@@ -130,13 +129,11 @@ class InputFieldComplexSortableDetailListRenderer
 			.'<div class="menu-item-settings submitbox" style="display:none;">';
 
 			if ($this->_pContentRenderer !== null) {
-				$output .= $this->_pContentRenderer->render($key, $isDummy);
+				$this->_pContentRenderer->render($key, $isDummy);
 			}
 
-			$output .= '</div>'
-		.'</li>';
-
-		return $output;
+		echo '</div>';
+		echo '</li>';
 	}
 
 

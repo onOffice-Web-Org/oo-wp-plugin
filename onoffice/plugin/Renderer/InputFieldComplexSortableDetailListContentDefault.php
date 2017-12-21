@@ -32,13 +32,12 @@ class InputFieldComplexSortableDetailListContentDefault
 	 *
 	 * @param string $key
 	 * @param bool $dummy
-	 * @return string
 	 *
 	 */
 
 	public function render($key, $dummy)
 	{
-		return '<p class="description">'.esc_html__('Key of Field:', 'onoffice')
+		echo '<p class="description">'.esc_html__('Key of Field:', 'onoffice')
 				.' <span class="menu-item-settings-name">'.esc_html($key).'</span></p>'
 			.'<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}

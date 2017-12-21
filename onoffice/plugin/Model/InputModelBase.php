@@ -81,6 +81,10 @@ abstract class InputModelBase
 	/** @var string */
 	private $_id = null;
 
+	/** @var InputModelBase */
+	private $_referencedInputModels = array();
+
+
 	/**
 	 *
 	 * @return string
@@ -160,4 +164,12 @@ abstract class InputModelBase
 	/** @return string */
 	public function getId()
 		{ return $this->_id; }
+
+	/** @param InputModelBase $pReferencedInputModel */
+	public function addReferencedInputModel(InputModelBase $pReferencedInputModel)
+		{ $this->_referencedInputModels []= $pReferencedInputModel; }
+
+	/** @return InputModelBase[] */
+	public function getReferencedInputModels()
+		{ return $this->_referencedInputModels; }
 }

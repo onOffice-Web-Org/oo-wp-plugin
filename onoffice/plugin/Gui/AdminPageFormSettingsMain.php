@@ -51,13 +51,19 @@ class AdminPageFormSettingsMain
 
 	/**
 	 *
-	 * @param string $pageSlug
-	 *
 	 */
 
-	public function initSubClass($pageSlug)
+	public function initSubClass()
 	{
+		if ($this->_pInstance !== null) {
+			return;
+		}
+
 		$type = filter_input(INPUT_GET, self::GET_PARAM_TYPE, FILTER_SANITIZE_STRING);
+
+		if ($type == null) {
+			$type = filter_input(INPUT_POST, self::GET_PARAM_TYPE, FILTER_SANITIZE_STRING);
+		}
 
 		$className = $this->getClassNameByType($type);
 
@@ -65,7 +71,7 @@ class AdminPageFormSettingsMain
 			throw new \UnexpectedValueException($type);
 		}
 
-		$this->_pInstance = new $className($pageSlug);
+		$this->_pInstance = new $className($this->getPageSlug());
 		$this->configureAdminPage($this->_pInstance, $type);
 	}
 
@@ -79,6 +85,8 @@ class AdminPageFormSettingsMain
 
 	private function configureAdminPage(AdminPageFormSettingsBase $pAdminPage, $type)
 	{
+		$pAdminPage->setType($type);
+
 		switch ($type) {
 			case Form::TYPE_INTEREST:
 				/* @var $pAdminPage \onOffice\WPlugin\Gui\AdminPageFormSettingsContact */
@@ -151,6 +159,7 @@ class AdminPageFormSettingsMain
 
 	public function ajax_action()
 	{
+		$this->initSubClass($this->getPageSlug());
 		$this->_pInstance->ajax_action();
 	}
 
@@ -162,5 +171,20 @@ class AdminPageFormSettingsMain
 	public function doExtraEnqueues()
 	{
 		$this->_pInstance->doExtraEnqueues();
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getEnqueueData()
+	{
+		return array(
+			self::GET_PARAM_TYPE => $this->_pInstance->getType(),
+			self::ENQUEUE_DATA_MERGE => array(self::GET_PARAM_TYPE),
+		);
 	}
 }

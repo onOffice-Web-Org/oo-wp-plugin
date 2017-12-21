@@ -40,6 +40,9 @@ abstract class AdminPageFormSettingsBase
 	/** */
 	const FORM_VIEW_FORM_SPECIFIC = 'viewformspecific';
 
+	/** @var string */
+	private $_type = null;
+
 	/**
 	 *
 	 * @param string $pageSlug
@@ -103,4 +106,12 @@ abstract class AdminPageFormSettingsBase
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;
 	}
+
+	/** @return string */
+	public function getType()
+		{ return $this->_type; }
+
+	/** @param string $type */
+	public function setType($type)
+		{ $this->_type = $type; }
 }

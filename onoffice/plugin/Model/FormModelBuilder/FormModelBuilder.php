@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 
@@ -132,7 +131,7 @@ abstract class FormModelBuilder
 	 *
 	 * @param string $module
 	 * @param string $htmlType
-	 * @return Model\InputModelDB
+	 * @return \onOffice\WPlugin\Model\InputModelDB
 	 *
 	 */
 

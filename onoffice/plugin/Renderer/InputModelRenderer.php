@@ -79,6 +79,10 @@ class InputModelRenderer
 	public function buildForAjax() {
 		$pForm = $this->_pFormModel;
 
+		if ($pForm->getIsInvisibleForm()) {
+			return;
+		}
+
 		foreach ($pForm->getInputModel() as $pInputModel)
 		{
 			$pInputField = $this->createInputField($pInputModel);
@@ -166,6 +170,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM:
 				$name = $pInputModel->getIdentifier();
 				$pContent = new InputFieldComplexSortableDetailListContentForm();
+				$pContent->setExtraInputModels($pInputModel->getReferencedInputModels());
 				$pInstance = new InputFieldComplexSortableDetailListRenderer($name,
 						array($pInputModel->getValue()));
 				$pInstance->setContentRenderer($pContent);

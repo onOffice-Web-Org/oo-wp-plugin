@@ -119,6 +119,7 @@ class AdminPageEstateListSettings
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
 	}
 
+
 	/**
 	 *
 	 */
