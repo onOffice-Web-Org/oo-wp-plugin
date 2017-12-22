@@ -37,6 +37,9 @@ class DataFormConfiguration
 	/** @var string */
 	private $_formType = null;
 
+	/** @var string */
+	private $_formName = null;
+
 	/** @var array */
 	private $_requiredFields = array();
 
@@ -45,6 +48,10 @@ class DataFormConfiguration
 
 	/** @var array */
 	private $_inputs = array();
+
+	/** @var string */
+	private $_template = '';
+
 
 	/** @return string */
 	public function getFormType()
@@ -91,4 +98,20 @@ class DataFormConfiguration
 
 	public function addInput($input, $module = null)
 		{ $this->_inputs[$input] = $module; }
+
+	/** @return string */
+	public function getTemplate()
+		{ return $this->_template; }
+
+	/** @param string $template */
+	public function setTemplate($template)
+		{ $this->_template = $template; }
+
+	/** @return string */
+	public function getFormName()
+		{ return $this->_formName; }
+
+	/** @param string $formName */
+	public function setFormName($formName)
+		{ $this->_formName = $formName; }
 }

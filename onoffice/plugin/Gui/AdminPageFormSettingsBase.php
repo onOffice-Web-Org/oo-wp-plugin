@@ -22,7 +22,9 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Record\RecordManagerInsertForm;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 
 /**
  *
@@ -92,6 +94,7 @@ abstract class AdminPageFormSettingsBase
 	protected function updateValues(array $row, \stdClass $pResult, $recordId = null)
 	{
 		$result = false;
+		$type = $this->getType();
 
 		if ($recordId != null)
 		{
@@ -100,6 +103,14 @@ abstract class AdminPageFormSettingsBase
 		else
 		{
 			// insert
+			$pFormDataConfigFactory = new DataFormConfigurationFactory($type);
+			$pFormData = $pFormDataConfigFactory->createByRow($row['oo_plugin_forms']);
+			/* @var $pFormData \onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration */
+			$pFormDataConfigFactory->addModulesByFields($row['oo_plugin_form_fieldconfig'], $pFormData);
+
+			$pRecordManagerInserForm = new RecordManagerInsertForm();
+			$recordId = $pRecordManagerInserForm->insertByDataFormConfiguration($pFormData);
+
 			$result = ($recordId != null);
 		}
 

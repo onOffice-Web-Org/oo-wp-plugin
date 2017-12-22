@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
@@ -35,6 +36,10 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 
 class DataFormConfigurationFactory
 {
+	/** @var string */
+	private $_type = null;
+
+
 	/** @var array */
 	private $_formClassMapping = array
 		(
@@ -48,22 +53,37 @@ class DataFormConfigurationFactory
 
 	/**
 	 *
-	 * @param string $formType
-	 * @return DataFormConfiguration
-	 * @throws UnknownFormException
+	 * @param string $type
 	 *
 	 */
 
-	public function createEmptyByType($formType)
+	public function __construct($type)
 	{
-		if (!array_key_exists($formType, $this->_formClassMapping))
-		{
+		if (!array_key_exists($type, $this->_formClassMapping)) {
+			throw new \Exception($type);
+		}
+
+		$this->_type = $type;
+	}
+
+
+	/**
+	 *
+	 * @throws UnknownFormException
+	 * @return \onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration
+	 *
+	 */
+
+	public function createEmpty()
+	{
+		if (!array_key_exists($this->_type, $this->_formClassMapping)) {
 			throw new UnknownFormException;
 		}
 
+		$class = __NAMESPACE__.'\\'.$this->_formClassMapping[$this->_type];
 		/* @var $pConfig DataFormConfiguration */
-		$pConfig = new $this->_formClassMapping[$formType];
-		$pConfig->setFormType($formType);
+		$pConfig = new $class;
+		$pConfig->setFormType($this->_type);
 
 		return $pConfig;
 	}
@@ -92,18 +112,16 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param array $row
-	 * @return DataFormConfiguration\DataFormConfiguration
+	 * @return \onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration
 	 *
 	 */
 
-	private function createByRow(array $row)
+	public function createByRow(array $row)
 	{
-		$type = $row['form_type'];
-		$pConfig = $this->createEmptyByType($type);
+		$pConfig = $this->createEmpty();
 		$this->configureGeneral($row, $pConfig);
 
-		switch ($type)
-		{
+		switch ($this->_type) {
 			case Form::TYPE_CONTACT:
 			case Form::TYPE_OWNER:
 			case Form::TYPE_INTEREST:
@@ -141,7 +159,9 @@ class DataFormConfigurationFactory
 
 	private function configureGeneral(array $row, DataFormConfiguration $pConfig)
 	{
+		$pConfig->setFormName($row['name']);
 		$pConfig->setLanguage($row['language']);
+		$pConfig->setTemplate($row['template']);
 	}
 
 
@@ -165,15 +185,24 @@ class DataFormConfigurationFactory
 	 *
 	 */
 
-	private function addModulesByFields(array $rows, DataFormConfiguration $pConfig)
+	public function addModulesByFields(array $rows, DataFormConfiguration $pConfig)
 	{
-		foreach ($rows as $row)
-		{
-			$pConfig->addInput($row['fieldname'], $row['module']);
+		foreach ($rows['fieldname'] as $fieldName) {
+			$module = null;
+			if (isset($rows['module'][$fieldName])) {
+				$module = $rows['module'][$fieldName];
+			}
 
-			if ($row['required'] == 1)
-			{
-				$pConfig->addRequiredField($row['fieldname']);
+			$pConfig->addInput($fieldName, $module);
+
+			if (!isset($rows['required'])) {
+				continue;
+			}
+
+			$required = in_array($fieldName, $rows['required'], true);
+
+			if ($required) {
+				$pConfig->addRequiredField($fieldName);
 			}
 		}
 	}

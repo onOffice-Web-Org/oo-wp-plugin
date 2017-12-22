@@ -289,7 +289,7 @@ class FormsTable
 		}
 
 		$formIdParam = AdminPageEstateListSettingsBase::GET_PARAM_VIEWID;
-		$editLink = add_query_arg(admin_url($formIdParam, $pItem->ID, 'admin.php?page=onoffice-editform'));
+		$editLink = add_query_arg($formIdParam, $pItem->ID, admin_url('admin.php?page=onoffice-editform'));
 
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
 			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/form.php';

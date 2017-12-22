@@ -41,7 +41,7 @@ class RecordManagerInsertListView
 	 *
 	 */
 
-	static public function insertByDataViewList(DataListView $pDataViewList)
+	public function insertByDataViewList(DataListView $pDataViewList)
 	{
 		$name = $pDataViewList->getName();
 		$sortby = $pDataViewList->getSortby();
@@ -54,19 +54,17 @@ class RecordManagerInsertListView
 		$fields = $pDataViewList->getFields();
 		$contactPerson = $pDataViewList->getAddressFields();
 
-		$values = array
-			(
-				'name' => $name,
-				'sortby' => $sortby,
-				'sortorder' => $sortorder,
-				'show_status' => $showStatus,
-				'list_type' => $listType,
-				'template' => $template,
-				'recordsPerPage' => $recordsPerPage,
-			);
+		$values = array(
+			'name' => $name,
+			'sortby' => $sortby,
+			'sortorder' => $sortorder,
+			'show_status' => $showStatus,
+			'list_type' => $listType,
+			'template' => $template,
+			'recordsPerPage' => $recordsPerPage,
+		);
 
-		$row = array
-		(
+		$row = array(
 			self::TABLENAME_LIST_VIEW => $values,
 			self::TABLENAME_PICTURETYPES => $pictures,
 			self::TABLENAME_FIELDCONFIG => $fields,
@@ -91,16 +89,12 @@ class RecordManagerInsertListView
 		$pWpDb = $this->getWpdb();
 		$row = $tableRow[self::TABLENAME_LIST_VIEW];
 
-		foreach ($row as $key => $value)
-		{
-			if (null == $value)
-			{
-				if (!RecordStructure::isNullAllowed(self::TABLENAME_LIST_VIEW, $key))
-				{
+		foreach ($row as $key => $value) {
+			if (null == $value) {
+				if (!RecordStructure::isNullAllowed(self::TABLENAME_LIST_VIEW, $key)) {
 					$emptyValue = RecordStructure::getEmptyValue(self::TABLENAME_LIST_VIEW, $key);
 
-					if ($emptyValue !== false)
-					{
+					if ($emptyValue !== false) {
 						$row[$key] = $emptyValue;
 					}
 				}
@@ -110,22 +104,18 @@ class RecordManagerInsertListView
 		$pWpDb->insert($pWpDb->prefix.self::TABLENAME_LIST_VIEW, $row);
 		$listViewId = $pWpDb->insert_id;
 
-		if ($listViewId > 0)
-		{
-			if (array_key_exists(self::TABLENAME_FIELDCONFIG, $tableRow))
-			{
+		if ($listViewId > 0) {
+			if (array_key_exists(self::TABLENAME_FIELDCONFIG, $tableRow)) {
 				$fields = $tableRow[self::TABLENAME_FIELDCONFIG];
 				$this->insertFields($listViewId, $fields);
 			}
 
-			if (array_key_exists(self::TABLENAME_PICTURETYPES, $tableRow))
-			{
+			if (array_key_exists(self::TABLENAME_PICTURETYPES, $tableRow)) {
 				$pictures = $tableRow[self::TABLENAME_PICTURETYPES];
 				$this->insertPictures($listViewId, $pictures);
 			}
 
-			if (array_key_exists(self::TABLENAME_LISTVIEW_CONTACTPERSON, $tableRow))
-			{
+			if (array_key_exists(self::TABLENAME_LISTVIEW_CONTACTPERSON, $tableRow)) {
 				$contactPerson = $tableRow[self::TABLENAME_LISTVIEW_CONTACTPERSON];
 				$this->insertContactPerson($listViewId, $contactPerson);
 			}
@@ -147,13 +137,11 @@ class RecordManagerInsertListView
 		$pWpDb = $this->getWpdb();
 		$table = $prefix.self::TABLENAME_FIELDCONFIG;
 
-		if (array_key_exists('fieldname', $fields))
-		{
+		if (array_key_exists('fieldname', $fields)) {
 			$fieldValues = $fields['fieldname'];
 			$order = 1;
 
-			foreach ($fieldValues as $field)
-			{
+			foreach ($fieldValues as $field) {
 				$fieldRow = array();
 				$fieldRow['listview_id'] = $listViewId;
 				$fieldRow['fieldname'] = $field;
@@ -180,12 +168,10 @@ class RecordManagerInsertListView
 		$pWpDb = $this->getWpdb();
 		$table = $prefix.self::TABLENAME_PICTURETYPES;
 
-		if (array_key_exists('picturetype', $pictures))
-		{
+		if (array_key_exists('picturetype', $pictures)) {
 			$picturetypes = $pictures['picturetype'];
 
-			foreach ($picturetypes as $type)
-			{
+			foreach ($picturetypes as $type) {
 				$pictureRow = array();
 				$pictureRow['picturetype'] = $type;
 				$pictureRow['listview_id'] = $listViewId;
@@ -208,13 +194,11 @@ class RecordManagerInsertListView
 		$pWpDb = $this->getWpdb();
 		$table = $prefix.self::TABLENAME_LISTVIEW_CONTACTPERSON;
 
-		if (array_key_exists('fieldname', $contactPrsonValues))
-		{
+		if (array_key_exists('fieldname', $contactPrsonValues)) {
 			$fieldValues = $contactPrsonValues['fieldname'];
 			$order = 1;
 
-			foreach ($fieldValues as $field)
-			{
+			foreach ($fieldValues as $field) {
 				$fieldRow = array();
 				$fieldRow['listview_id'] = $listViewId;
 				$fieldRow['fieldname'] = $field;
