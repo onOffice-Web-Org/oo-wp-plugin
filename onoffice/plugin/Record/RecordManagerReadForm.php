@@ -93,10 +93,10 @@ class RecordManagerReadForm
 
 		$sqlFields = "SELECT *
 				FROM {$prefix}oo_plugin_form_fieldconfig
-				WHERE `listview_id` = ".esc_sql((int)$formId)."
+				WHERE `form_id` = ".esc_sql((int)$formId)."
 				ORDER BY `order` ASC";
 
-		$result = $pWpDb->get_row($sqlFields);
+		$result = $pWpDb->get_results($sqlFields);
 
 		return $result;
 	}

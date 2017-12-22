@@ -59,10 +59,6 @@ class DataFormConfigurationFactory
 
 	public function __construct($type)
 	{
-		if (!array_key_exists($type, $this->_formClassMapping)) {
-			throw new \Exception($type);
-		}
-
 		$this->_type = $type;
 	}
 
@@ -101,7 +97,9 @@ class DataFormConfigurationFactory
 		$pRecordManagerRead = new RecordManagerReadForm();
 
 		$rowMain = $pRecordManagerRead->getRowById($formId);
+		$this->_type = $rowMain['form_type'];
 		$pConfig = $this->createByRow($rowMain);
+
 		$rowFields = $pRecordManagerRead->readFieldsByFormId($formId);
 		$this->addModulesByFields($rowFields, $pConfig);
 
@@ -160,8 +158,8 @@ class DataFormConfigurationFactory
 	private function configureGeneral(array $row, DataFormConfiguration $pConfig)
 	{
 		$pConfig->setFormName($row['name']);
-		$pConfig->setLanguage($row['language']);
 		$pConfig->setTemplate($row['template']);
+		$pConfig->setFormType($row['form_type']);
 	}
 
 
@@ -187,6 +185,10 @@ class DataFormConfigurationFactory
 
 	public function addModulesByFields(array $rows, DataFormConfiguration $pConfig)
 	{
+		if (!array_key_exists('fieldname', $rows)) {
+			return;
+		}
+
 		foreach ($rows['fieldname'] as $fieldName) {
 			$module = null;
 			if (isset($rows['module'][$fieldName])) {

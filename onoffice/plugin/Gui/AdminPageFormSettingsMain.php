@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 
 /**
  *
@@ -34,6 +35,9 @@ class AdminPageFormSettingsMain
 {
 	/** */
 	const GET_PARAM_TYPE = 'type';
+
+	/** */
+	const PARAM_FORMID = 'id';
 
 	/** @var array */
 	private $_mappingTypeClass = array(
@@ -63,6 +67,14 @@ class AdminPageFormSettingsMain
 
 		if ($type == null) {
 			$type = filter_input(INPUT_POST, self::GET_PARAM_TYPE, FILTER_SANITIZE_STRING);
+		}
+
+		$id = filter_input(INPUT_GET, self::PARAM_FORMID, FILTER_VALIDATE_INT);
+
+		if ($id != null) {
+			$pDataFormConfigFactory = new DataFormConfigurationFactory(null);
+			$pFormConfiguration = $pDataFormConfigFactory->loadByFormId($id);
+			$type = $pFormConfiguration->getFormType();
 		}
 
 		$className = $this->getClassNameByType($type);
