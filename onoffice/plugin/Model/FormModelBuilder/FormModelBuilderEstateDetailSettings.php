@@ -150,40 +150,17 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createSortableFieldList()
 	{
-		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
-			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
-
-		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
-
-		$fieldNames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-
-		$fields = $this->getValue(DataListView::FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array();
-		}
-
-		$pInputModelFieldsConfig->setValue($fields);
-		return $pInputModelFieldsConfig;
-	}
-
-
-	/**
-	 *
-	 * @return Model\InputModelDB
-	 *
-	 */
-
-	public function createInputModelFieldsConfig()
-	{
 		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
 			InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
 
-		$fieldNames = $this->readFieldnames(onOfficeSDK::MODULE_ESTATE);
-		$pInputModelFieldsConfig->setHtmlType(Model\InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
+		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
+
+		$fieldNames = $pFieldnames->getFieldList(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE, true, true);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+
 		$fields = $this->_pDataDetailView->getFields();
 
 		if (null == $fields)
@@ -192,7 +169,6 @@ class FormModelBuilderEstateDetailSettings
 		}
 
 		$pInputModelFieldsConfig->setValue($fields);
-
 		return $pInputModelFieldsConfig;
 	}
 
