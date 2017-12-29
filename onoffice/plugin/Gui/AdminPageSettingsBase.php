@@ -204,35 +204,7 @@ abstract class AdminPageSettingsBase
 	}
 
 
-	/**
-	 *
-	 * @param string $module
-	 * @return array
-	 *
-	 */
 
-	protected function readFieldnamesByContent($module)
-	{
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
-		$pFieldnames->loadLanguage();
-
-		$fieldnames = $pFieldnames->getFieldList($module);
-		$resultByContent = array();
-		$categories = array();
-
-		foreach ($fieldnames as $key => $properties) {
-			$content = $properties['content'];
-			$categories []= $content;
-			$label = $properties['label'];
-			$resultByContent[$content][$key] = $label;
-		}
-
-		foreach ($categories as $category) {
-			natcasesort($resultByContent[$category]);
-		}
-
-		return $resultByContent;
-	}
 
 
 	/**

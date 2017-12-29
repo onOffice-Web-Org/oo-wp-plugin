@@ -20,7 +20,10 @@
  */
 
 namespace onOffice\WPlugin\Gui;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Model\FormModel;
+use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
@@ -60,6 +63,8 @@ class AdminPageEstateDetail
 	/** */
 	const FORM_VIEW_CONTACT_DATA_FIELDS = 'viewcontactdatafields';
 
+	/** */
+	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
 
 	/**
 	 *
@@ -70,6 +75,9 @@ class AdminPageEstateDetail
 		$pDataView = DataDetailViewHandler::getDetailView();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
+
+		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
+		$pRendererSortablefields = new InputModelRenderer($pFormViewSortableFields);
 
 		wp_nonce_field( $this->getPageSlug() );
 
@@ -99,6 +107,17 @@ class AdminPageEstateDetail
 		echo '<div class="postbox-container" id="postbox-container-2">';
 		do_meta_boxes(get_current_screen()->id, 'side', null );
 		do_meta_boxes(get_current_screen()->id, 'advanced', null );
+		echo '</div>';
+		do_action('add_meta_boxes', get_current_screen()->id, null);
+		echo '<div style="float:left;">';
+		$this->generateAccordionBoxes();
+		echo '</div>';
+		echo '<div id="listSettings" style="float:left;" class="postbox">';
+		do_accordion_sections(get_current_screen()->id, 'side', null);
+		echo '</div>';
+		echo '<div class="fieldsSortable postbox">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
+		$pRendererSortablefields->buildForAjax();
 		echo '</div>';
 		echo '</div>';
 		echo '</div>';
@@ -149,9 +168,21 @@ class AdminPageEstateDetail
 
 		$pFormContactDataFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_DATA_FIELDS);
 		$this->createMetaBoxByForm($pFormContactDataFields, 'normal');
+	}
 
-		$pFormFieldsConfig = $this->getFormModelByGroupSlug(self::FORM_VIEW_FIELDS_CONFIG);
-		$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+	/**
+	 *
+	 */
+
+	protected function generateAccordionBoxes()
+	{
+		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE));
+
+		foreach ($fieldNames as $category)
+		{
+			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
+			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+		}
 	}
 
 	/**
@@ -189,13 +220,9 @@ class AdminPageEstateDetail
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
 
-		$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfig();
-		$pFormModelFieldsConfig = new FormModel();
-		$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
-		$pFormModelFieldsConfig->setGroupSlug(self::FORM_VIEW_FIELDS_CONFIG);
-		$pFormModelFieldsConfig->setLabel(__('Fields Configuration', 'onoffice'));
-		$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
-		$this->addFormModel($pFormModelFieldsConfig);
+		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
+
+		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
 
 		$pInputModelContactDataFields = $pFormModelBuilder->createInputModelAddressFieldsConfig();
 		$pFormModelContactDataFields = new FormModel();
@@ -303,5 +330,46 @@ class AdminPageEstateDetail
 			AdminPageEstate::PARAM_TAB => AdminPageEstate::PAGE_ESTATE_DETAIL,
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
 		);
+	}
+
+	/**
+	 *
+	 * @param string $module
+	 * @param FormModelBuilderEstateDetailSettings $pFormModelBuilder
+	 * @param array $fieldNames
+	 *
+	 */
+
+	protected function addFieldsConfiguration($module, FormModelBuilderEstateDetailSettings $pFormModelBuilder,
+		array $fieldNames, $htmlType = InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST)
+	{
+		foreach ($fieldNames as $category => $fields)
+		{
+			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory($category, $fields);
+			$pFormModelFieldsConfig = new FormModel();
+			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
+			$pFormModelFieldsConfig->setGroupSlug($category);
+			$pFormModelFieldsConfig->setLabel($category);
+			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
+			$this->addFormModel($pFormModelFieldsConfig);
+		}
+
+		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module, $htmlType);
+		$pFormModelSortableFields = new FormModel();
+		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
+		$pFormModelSortableFields->setGroupSlug(AdminPageEstateListSettings::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
+		$pFormModelSortableFields->setLabel(__('Fields Configuration', 'onoffice'));
+		$pFormModelSortableFields->addInputModel($pInputModelSortableFields);
+		$this->addFormModel($pFormModelSortableFields);
+
+		$pFormHidden = new FormModel();
+		$pFormHidden->setIsInvisibleForm(true);
+
+		foreach ($pInputModelSortableFields->getReferencedInputModels() as $pReference)
+		{
+			$pFormHidden->addInputModel($pReference);
+		}
+
+		$this->addFormModel($pFormHidden);
 	}
 }
