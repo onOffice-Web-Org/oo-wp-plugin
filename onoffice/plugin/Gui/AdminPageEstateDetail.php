@@ -108,6 +108,7 @@ class AdminPageEstateDetail
 		do_meta_boxes(get_current_screen()->id, 'side', null );
 		do_meta_boxes(get_current_screen()->id, 'advanced', null );
 		echo '</div>';
+		echo '<div class="clear"></div>';
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		echo '<div style="float:left;">';
 		$this->generateAccordionBoxes();
@@ -119,9 +120,9 @@ class AdminPageEstateDetail
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
 		$pRendererSortablefields->buildForAjax();
 		echo '</div>';
-		echo '</div>';
-		echo '</div>';
 		echo '<div class="clear"></div>';
+		echo '</div>';
+		echo '</div>';
 
 		do_settings_sections( $this->getPageSlug() );
 		submit_button(null, 'primary', 'send_ajax');
