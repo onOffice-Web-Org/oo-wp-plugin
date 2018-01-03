@@ -148,6 +148,37 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 */
 
+	public function createSortableFieldList($module, $htmlType)
+	{
+		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
+			InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
+
+		$pInputModelFieldsConfig->setHtmlType($htmlType);
+
+		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames->loadLanguage();
+
+		$fieldNames = $pFieldnames->getFieldList($module, true, true);
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+
+		$fields = $this->_pDataDetailView->getFields();
+
+		if (null == $fields)
+		{
+			$fields = array();
+		}
+
+		$pInputModelFieldsConfig->setValue($fields);
+		return $pInputModelFieldsConfig;
+	}
+
+
+	/**
+	 *
+	 * @return Model\InputModelDB
+	 *
+	 */
+
 	public function createInputModelAddressFieldsConfig()
 	{
 		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
