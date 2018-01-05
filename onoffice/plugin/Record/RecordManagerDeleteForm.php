@@ -48,4 +48,24 @@ class RecordManagerDeleteForm
 			$pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', array('form_id' => $id));
 		}
 	}
+
+
+	/**
+	 *
+	 * @param int $formId
+	 * @param array $fieldNames
+	 * @return bool
+	 *
+	 */
+
+	public function deleteFieldConfigEntriesByNames($formId, array $fieldNames)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpdb = $this->getWpdb();
+		return $pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', array(
+				'form_id' => $formId,
+				'fieldname' => $fieldNames,
+			)
+		);
+	}
 }

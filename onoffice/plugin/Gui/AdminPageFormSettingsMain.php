@@ -55,21 +55,17 @@ class AdminPageFormSettingsMain
 
 	/**
 	 *
+	 * @param string $type
+	 * @param int $id
+	 * @throws \UnexpectedValueException
+	 *
 	 */
 
-	public function initSubClass()
+	private function initSubClass($type, $id = null)
 	{
 		if ($this->_pInstance !== null) {
 			return;
 		}
-
-		$type = filter_input(INPUT_GET, self::GET_PARAM_TYPE, FILTER_SANITIZE_STRING);
-
-		if ($type == null) {
-			$type = filter_input(INPUT_POST, self::GET_PARAM_TYPE, FILTER_SANITIZE_STRING);
-		}
-
-		$id = filter_input(INPUT_GET, self::PARAM_FORMID, FILTER_VALIDATE_INT);
 
 		if ($id != null) {
 			$pDataFormConfigFactory = new DataFormConfigurationFactory(null);
@@ -85,6 +81,30 @@ class AdminPageFormSettingsMain
 
 		$this->_pInstance = new $className($this->getPageSlug());
 		$this->configureAdminPage($this->_pInstance, $type);
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function initSubclassForAjax()
+	{
+		$type = filter_input(INPUT_POST, self::GET_PARAM_TYPE, FILTER_SANITIZE_STRING);
+		$id = filter_input(INPUT_POST, 'record_id', FILTER_VALIDATE_INT);
+		$this->initSubClass($type, $id);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function initSubClassForGet()
+	{
+		$type = filter_input(INPUT_GET, self::GET_PARAM_TYPE, FILTER_SANITIZE_STRING);
+		$id = filter_input(INPUT_GET, self::PARAM_FORMID, FILTER_VALIDATE_INT);
+		$this->initSubClass($type, $id);
 	}
 
 
@@ -171,7 +191,7 @@ class AdminPageFormSettingsMain
 
 	public function ajax_action()
 	{
-		$this->initSubClass($this->getPageSlug());
+		$this->initSubclassForAjax();
 		$this->_pInstance->ajax_action();
 	}
 
@@ -194,9 +214,6 @@ class AdminPageFormSettingsMain
 
 	public function getEnqueueData()
 	{
-		return array(
-			self::GET_PARAM_TYPE => $this->_pInstance->getType(),
-			self::ENQUEUE_DATA_MERGE => array(self::GET_PARAM_TYPE),
-		);
+		return $this->_pInstance->getEnqueueData();
 	}
 }

@@ -21,13 +21,17 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Model\InputModelBase;
-use onOffice\WPlugin\Model\InputModelOption;
-use onOffice\WPlugin\Record\RecordManagerReadForm;
+use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
+use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 
 /**
  *
@@ -38,6 +42,9 @@ class FormModelBuilderForm
 {
 	/** @var InputModelDBFactory */
 	private $_pInputModelDBFactory = null;
+
+	/** @var string */
+	private $_formType = null;
 
 
 	/**
@@ -58,7 +65,7 @@ class FormModelBuilderForm
 	 *
 	 * @param string $module
 	 * @param string $htmlType
-	 * @return \onOffice\WPlugin\Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -69,7 +76,7 @@ class FormModelBuilderForm
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames = new Fieldnames();
 		$pFieldnames->loadLanguage();
 
 		$fieldNames = $pFieldnames->getFieldList($module, true, true);
@@ -95,7 +102,7 @@ class FormModelBuilderForm
 	 *
 	 * @param string $category
 	 * @param array $fieldNames
-	 * @return \onOffice\WPlugin\Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -109,8 +116,7 @@ class FormModelBuilderForm
 		$pInputModelFieldsConfig->setId($category);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
 
-		if (null == $fields)
-		{
+		if (null == $fields) {
 			$fields = array();
 		}
 
@@ -129,10 +135,17 @@ class FormModelBuilderForm
 
 	public function generate($formId = null)
 	{
-		if ($formId !== null)
-		{
+		if ($this->_formType === null) {
+			throw new Exception('formType must be set!');
+		}
+
+		if ($formId !== null) {
 			$pRecordReadManager = new RecordManagerReadForm();
 			$values = $pRecordReadManager->getRowById($formId);
+			$pFactory = new DataFormConfigurationFactory($this->_formType);
+			$pDataFormConfiguration = $pFactory->loadByFormId($formId);
+			$values[DataFormConfiguration::FIELDS] = array_keys($pDataFormConfiguration->getInputs());
+			$values['fieldsRequired'] = $pDataFormConfiguration->getRequiredFields();
 			$this->setValues($values);
 		}
 
@@ -147,7 +160,7 @@ class FormModelBuilderForm
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -167,7 +180,7 @@ class FormModelBuilderForm
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -189,7 +202,7 @@ class FormModelBuilderForm
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -210,7 +223,7 @@ class FormModelBuilderForm
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -230,7 +243,7 @@ class FormModelBuilderForm
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -251,7 +264,7 @@ class FormModelBuilderForm
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -272,7 +285,7 @@ class FormModelBuilderForm
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -292,7 +305,7 @@ class FormModelBuilderForm
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModelDB;
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -312,7 +325,7 @@ class FormModelBuilderForm
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -322,7 +335,7 @@ class FormModelBuilderForm
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
 		$label = __('Required', 'onoffice');
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED;
-		/* @var $pInputModel \onOffice\WPlugin\Model\InputModelDB */
+		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
 
@@ -338,4 +351,13 @@ class FormModelBuilderForm
 
 	protected function getInputModelDBFactory()
 		{ return $this->_pInputModelDBFactory; }
+
+
+	/** @return string */
+	public function getFormType()
+		{ return $this->_formType; }
+
+	/** @param string $formType */
+	public function setFormType($formType)
+		{ $this->_formType = $formType; }
 }

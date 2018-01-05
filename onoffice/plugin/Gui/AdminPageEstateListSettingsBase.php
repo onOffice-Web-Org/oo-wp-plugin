@@ -37,12 +37,6 @@ abstract class AdminPageEstateListSettingsBase
 	extends AdminPageSettingsBase
 {
 	/** */
-	const VIEW_SAVE_SUCCESSFUL_MESSAGE = 'view_save_success_message';
-
-	/** */
-	const VIEW_SAVE_FAIL_MESSAGE = 'view_save_fail_message';
-
-	/** */
 	const FORM_VIEW_RECORDS_FILTER = 'viewrecordsfilter';
 
 	/** */
@@ -89,16 +83,12 @@ abstract class AdminPageEstateListSettingsBase
 			return;
 		}
 
-		if ($recordId != null)
-		{
+		if ($recordId != null) {
 			$pUpdate = new RecordManagerUpdateListView($recordId);
 			$result = $pUpdate->updateByRow($row);
-		}
-		else
-		{
+		} else {
 			$pInsert = new RecordManagerInsertListView();
 			$recordId = $pInsert->insertByRow($row);
-
 			$result = ($recordId != null);
 		}
 

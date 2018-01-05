@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -23,54 +23,38 @@ namespace onOffice\WPlugin\Record;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
-abstract class RecordManager
+abstract class RecordManagerUpdate
+	extends RecordManager
 {
-	/** */
-	const TABLENAME_LIST_VIEW = 'oo_plugin_listviews';
-
-	/** */
-	const TABLENAME_PICTURETYPES = 'oo_plugin_picturetypes';
-
-	/** */
-	const TABLENAME_FIELDCONFIG = 'oo_plugin_fieldconfig';
-
-	/** */
-	const TABLENAME_LISTVIEW_CONTACTPERSON = 'oo_plugin_listview_contactperson';
-
-	/** */
-	const TABLENAME_FORMS = 'oo_plugin_forms';
-
-	/** */
-	const TABLENAME_FIELDCONFIG_FORMS = 'oo_plugin_form_fieldconfig';
+	/** @var int */
+	private $_recordId = null;
 
 
 	/**
 	 *
-	 * @return string
+	 * @param int $recordId
 	 *
 	 */
 
-	public function getTablePrefix()
+	public function __construct($recordId)
 	{
-		return $this->getWpdb()->prefix;
+		$this->_recordId = $recordId;
 	}
 
 
 	/**
 	 *
-	 * @global \wpdb $wpdb
-	 * @return \wpdb
+	 * @param array $tableRow
+	 * @return bool
 	 *
 	 */
 
-	public function getWpdb()
-	{
-		global $wpdb;
-		return $wpdb;
-	}
+	abstract public function updateByRow($tableRow);
+
+
+	/** @return int */
+	public function getRecordId()
+		{ return $this->_recordId; }
 }

@@ -132,7 +132,7 @@ class AdminViewController
 		// Edit Form (hidden page)
 		$hookEditForm = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editform',
 			array($this->_pAdminPageFormSettings, 'render'));
-		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'initSubClass'));
+		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'initSubClassForGet'));
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'checkForms'));
 

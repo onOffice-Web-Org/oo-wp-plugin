@@ -32,51 +32,36 @@ use onOffice\WPlugin\Record\RecordManagerInsertListView;
  */
 
 class RecordManagerUpdateListView
-	extends RecordManager
+	extends RecordManagerUpdate
 {
-	/** @var int */
-	private $_listviewId = null;
-
-
-	/**
-	 *
-	 * @param int $listviewId
-	 *
-	 */
-
-	public function __construct($listviewId)
-		{ $this->_listviewId = $listviewId; }
-
-
 	/**
 	 *
 	 * @param DataListView $pDataViewList
+	 * @return bool
 	 *
 	 */
 
 	public function updateByDataListView(DataListView $pDataViewList)
 	{
-		$row = array
-			(
-				'name' => $pDataViewList->getName(),
-				'sortby' => $pDataViewList->getSortby(),
-				'sortorder' => $pDataViewList->getSortOrder(),
-				'show_status' => $pDataViewList->getShowStatus(),
-				'list_type' => $pDataViewList->getListType(),
-				'template' => $pDataViewList->getTemplate(),
-				'recordsPerPage' => $pDataViewList->getRecordsPerPage(),
-				'random' => $pDataViewList->getRandom(),
-			);
+		$row = array(
+			'name' => $pDataViewList->getName(),
+			'sortby' => $pDataViewList->getSortby(),
+			'sortorder' => $pDataViewList->getSortOrder(),
+			'show_status' => $pDataViewList->getShowStatus(),
+			'list_type' => $pDataViewList->getListType(),
+			'template' => $pDataViewList->getTemplate(),
+			'recordsPerPage' => $pDataViewList->getRecordsPerPage(),
+			'random' => $pDataViewList->getRandom(),
+		);
 
-		$tableRow = array
-			(
-				self::TABLENAME_LIST_VIEW => $row,
-				self::TABLENAME_PICTURETYPES => $pDataViewList->getPictureTypes(),
-				self::TABLENAME_FIELDCONFIG => $pDataViewList->getFields(),
-				self::TABLENAME_LISTVIEW_CONTACTPERSON => $pDataViewList->getAddressFields(),
-			);
+		$tableRow = array(
+			self::TABLENAME_LIST_VIEW => $row,
+			self::TABLENAME_PICTURETYPES => $pDataViewList->getPictureTypes(),
+			self::TABLENAME_FIELDCONFIG => $pDataViewList->getFields(),
+			self::TABLENAME_LISTVIEW_CONTACTPERSON => $pDataViewList->getAddressFields(),
+		);
 
-		$this->updateByRow($this->_listviewId, $tableRow);
+		return $this->updateByRow($this->getRecordId(), $tableRow);
 	}
 
 
@@ -95,33 +80,26 @@ class RecordManagerUpdateListView
 
 		$pInsert = new RecordManagerInsertListView();
 
-		$whereListviewTable = array('listview_id' => $this->_listviewId);
+		$whereListviewTable = array('listview_id' => $this->getRecordId());
 		$result = $pWpDb->update($prefix.self::TABLENAME_LIST_VIEW,
-				$tableRow[self::TABLENAME_LIST_VIEW],
-				$whereListviewTable);
+			$tableRow[self::TABLENAME_LIST_VIEW], $whereListviewTable);
 
-		if (array_key_exists(self::TABLENAME_FIELDCONFIG, $tableRow))
-		{
+		if (array_key_exists(self::TABLENAME_FIELDCONFIG, $tableRow)) {
 			$fields = $tableRow[self::TABLENAME_FIELDCONFIG];
-			$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG,
-					$whereListviewTable);
-			$pInsert->insertFields($this->_listviewId, $fields);
+			$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG, $whereListviewTable);
+			$pInsert->insertFields($this->getRecordId(), $fields);
 		}
 
-		if (array_key_exists(self::TABLENAME_PICTURETYPES, $tableRow))
-		{
+		if (array_key_exists(self::TABLENAME_PICTURETYPES, $tableRow)) {
 			$pictures = $tableRow[self::TABLENAME_PICTURETYPES];
-			$pWpDb->delete($prefix.self::TABLENAME_PICTURETYPES,
-					$whereListviewTable);
-			$pInsert->insertPictures($this->_listviewId, $pictures);
+			$pWpDb->delete($prefix.self::TABLENAME_PICTURETYPES, $whereListviewTable);
+			$pInsert->insertPictures($this->getRecordId(), $pictures);
 		}
 
-		if (array_key_exists(self::TABLENAME_LISTVIEW_CONTACTPERSON, $tableRow))
-		{
+		if (array_key_exists(self::TABLENAME_LISTVIEW_CONTACTPERSON, $tableRow)) {
 			$contactPerson = $tableRow[self::TABLENAME_LISTVIEW_CONTACTPERSON];
-			$pWpDb->delete($prefix.self::TABLENAME_LISTVIEW_CONTACTPERSON,
-					$whereListviewTable);
-			$pInsert->insertContactPerson($this->_listviewId, $contactPerson);
+			$pWpDb->delete($prefix.self::TABLENAME_LISTVIEW_CONTACTPERSON, $whereListviewTable);
+			$pInsert->insertContactPerson($this->getRecordId(), $contactPerson);
 		}
 
 		return $result !== false;

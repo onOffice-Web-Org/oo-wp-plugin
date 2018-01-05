@@ -50,6 +50,12 @@ abstract class AdminPageSettingsBase
 	/** */
 	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
 
+	/** */
+	const VIEW_SAVE_SUCCESSFUL_MESSAGE = 'view_save_success_message';
+
+	/** */
+	const VIEW_SAVE_FAIL_MESSAGE = 'view_save_fail_message';
+
 	/** @var string */
 	private $_pageTitle = null;
 

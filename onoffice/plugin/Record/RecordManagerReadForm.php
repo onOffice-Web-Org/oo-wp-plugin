@@ -96,7 +96,7 @@ class RecordManagerReadForm
 				WHERE `form_id` = ".esc_sql((int)$formId)."
 				ORDER BY `order` ASC";
 
-		$result = $pWpDb->get_results($sqlFields);
+		$result = $pWpDb->get_results($sqlFields, ARRAY_A);
 
 		return $result;
 	}

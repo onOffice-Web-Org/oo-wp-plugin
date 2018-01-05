@@ -196,6 +196,7 @@ abstract class Installer
 			`fieldlabel` varchar(255) NULL,
 			`module` tinytext NULL,
 			`individual_fieldname` tinyint(1) NOT NULL DEFAULT '0',
+			`required` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 

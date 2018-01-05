@@ -42,6 +42,7 @@ class AdminPageFormSettingsFree
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$pFormModelBuilder = new FormModelBuilderForm($this->getPageSlug());
+		$pFormModelBuilder->setFormType($this->getType());
 		$pFormModel = $pFormModelBuilder->generate($this->getListViewId());
 		$this->addFormModel($pFormModel);
 

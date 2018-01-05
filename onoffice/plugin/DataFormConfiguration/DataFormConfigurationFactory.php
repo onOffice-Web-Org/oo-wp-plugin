@@ -21,11 +21,11 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 
 /**
  *
@@ -66,7 +66,7 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @throws UnknownFormException
-	 * @return \onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration
+	 * @return DataFormConfiguration
 	 *
 	 */
 
@@ -99,9 +99,11 @@ class DataFormConfigurationFactory
 		$rowMain = $pRecordManagerRead->getRowById($formId);
 		$this->_type = $rowMain['form_type'];
 		$pConfig = $this->createByRow($rowMain);
-
 		$rowFields = $pRecordManagerRead->readFieldsByFormId($formId);
-		$this->addModulesByFields($rowFields, $pConfig);
+
+		foreach ($rowFields as $fieldRow) {
+			$this->configureFieldsByRow($fieldRow, $pConfig);
+		}
 
 		return $pConfig;
 	}
@@ -110,7 +112,7 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param array $row
-	 * @return \onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration
+	 * @return DataFormConfiguration
 	 *
 	 */
 
@@ -131,6 +133,25 @@ class DataFormConfigurationFactory
 		}
 
 		return $pConfig;
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @param DataFormConfiguration $pFormConfiguration
+	 *
+	 */
+
+	private function configureFieldsByRow($row, DataFormConfiguration $pFormConfiguration)
+	{
+		$fieldName = $row['fieldname'];
+		$module = $row['module'];
+		$pFormConfiguration->addInput($fieldName, $module);
+
+		if ($row['required'] == 1) {
+			$pFormConfiguration->addRequiredField($fieldName);
+		}
 	}
 
 
@@ -159,7 +180,10 @@ class DataFormConfigurationFactory
 	{
 		$pConfig->setFormName($row['name']);
 		$pConfig->setTemplate($row['template']);
-		$pConfig->setFormType($row['form_type']);
+
+		if (array_key_exists('form_type', $row)) {
+			$pConfig->setFormType($row['form_type']);
+		}
 	}
 
 

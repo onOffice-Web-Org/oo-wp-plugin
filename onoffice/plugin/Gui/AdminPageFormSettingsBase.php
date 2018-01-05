@@ -21,8 +21,10 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Record\RecordManagerInsertForm;
+use onOffice\WPlugin\Record\RecordManagerUpdateForm;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 
@@ -41,6 +43,9 @@ abstract class AdminPageFormSettingsBase
 
 	/** */
 	const FORM_VIEW_FORM_SPECIFIC = 'viewformspecific';
+
+	/** */
+	const GET_PARAM_TYPE = 'type';
 
 	/** @var string */
 	private $_type = null;
@@ -65,9 +70,9 @@ abstract class AdminPageFormSettingsBase
 	 *
 	 */
 
-	protected function validate($recordId = null)
+	protected function validate($recordId = 0)
 	{
-		if ($recordId == null) {
+		if ((int)$recordId === 0) {
 			return;
 		}
 
@@ -77,7 +82,7 @@ abstract class AdminPageFormSettingsBase
 		$value = $pWpDb->get_var('SELECT form_id FROM `'.esc_sql($prefix)
 			.'oo_plugin_forms` WHERE `form_id` = "'.esc_sql($recordId).'"');
 
-		if ($value != $recordId) {
+		if ($value != (int)$recordId) {
 			throw new UnknownFormException;
 		}
 	}
@@ -96,17 +101,24 @@ abstract class AdminPageFormSettingsBase
 		$result = false;
 		$type = $this->getType();
 
-		if ($recordId != null)
-		{
+		if ($recordId != 0) {
 			// update by row
-		}
-		else
-		{
+			$pRecordManagerUpdateForm = new RecordManagerUpdateForm($recordId);
+			$result = $pRecordManagerUpdateForm->updateByRow($row[RecordManager::TABLENAME_FORMS]);
+
+			if (array_key_exists(RecordManager::TABLENAME_FIELDCONFIG_FORMS, $row)) {
+				$result = $result && $pRecordManagerUpdateForm->updateFieldConfigByRow
+					($row[RecordManager::TABLENAME_FIELDCONFIG_FORMS]);
+			}
+		} else {
 			// insert
 			$pFormDataConfigFactory = new DataFormConfigurationFactory($type);
-			$pFormData = $pFormDataConfigFactory->createByRow($row['oo_plugin_forms']);
+			$pFormData = $pFormDataConfigFactory->createByRow($row[RecordManager::TABLENAME_FORMS]);
+			$pFormData->setFormType($type);
 			/* @var $pFormData \onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration */
-			$pFormDataConfigFactory->addModulesByFields($row['oo_plugin_form_fieldconfig'], $pFormData);
+			$formConfigRow = array_key_exists(RecordManager::TABLENAME_FIELDCONFIG_FORMS, $row) ?
+					$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] : array();
+			$pFormDataConfigFactory->addModulesByFields($formConfigRow, $pFormData);
 
 			$pRecordManagerInserForm = new RecordManagerInsertForm();
 			$recordId = $pRecordManagerInserForm->insertByDataFormConfiguration($pFormData);
@@ -117,6 +129,29 @@ abstract class AdminPageFormSettingsBase
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;
 	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getEnqueueData()
+	{
+		return array(
+			self::GET_PARAM_TYPE => $this->getType(),
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was Saved.', 'onoffice'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make '
+					.'sure the name of the form is unique.', 'onoffice'),
+			self::ENQUEUE_DATA_MERGE => array(
+					AdminPageSettingsBase::POST_RECORD_ID,
+					self::GET_PARAM_TYPE,
+				),
+			AdminPageSettingsBase::POST_RECORD_ID => (int)$this->getListViewId(),
+		);
+	}
+
 
 	/** @return string */
 	public function getType()
