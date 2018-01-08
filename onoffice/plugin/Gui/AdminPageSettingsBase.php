@@ -224,9 +224,9 @@ abstract class AdminPageSettingsBase
 	protected function addFieldsConfiguration($module, FormModelBuilder $pFormModelBuilder,
 		array $fieldNames, $htmlType = InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST)
 	{
-		foreach ($fieldNames as $category => $fields)
-		{
-			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory($category, $fields);
+		foreach ($fieldNames as $category => $fields) {
+			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
+				($category, $fields);
 			$pFormModelFieldsConfig = new Model\FormModel();
 			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
 			$pFormModelFieldsConfig->setGroupSlug($category);
@@ -238,7 +238,8 @@ abstract class AdminPageSettingsBase
 		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module, $htmlType);
 		$pFormModelSortableFields = new Model\FormModel();
 		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
-		$pFormModelSortableFields->setGroupSlug(AdminPageEstateListSettings::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
+		$pFormModelSortableFields->setGroupSlug
+			(AdminPageEstateListSettings::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
 		$pFormModelSortableFields->setLabel(__('Fields Configuration', 'onoffice'));
 		$pFormModelSortableFields->addInputModel($pInputModelSortableFields);
 		$this->addFormModel($pFormModelSortableFields);
@@ -246,8 +247,7 @@ abstract class AdminPageSettingsBase
 		$pFormHidden = new Model\FormModel();
 		$pFormHidden->setIsInvisibleForm(true);
 
-		foreach ($pInputModelSortableFields->getReferencedInputModels() as $pReference)
-		{
+		foreach ($pInputModelSortableFields->getReferencedInputModels() as $pReference) {
 			$pFormHidden->addInputModel($pReference);
 		}
 

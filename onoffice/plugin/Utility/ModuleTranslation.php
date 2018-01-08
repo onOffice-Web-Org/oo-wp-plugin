@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,28 +19,40 @@
  *
  */
 
-namespace onOffice\WPlugin\Renderer;
+namespace onOffice\WPlugin\Utility;
 
-use onOffice\WPlugin\Renderer\InputFieldComplexSortableDetailListContentBase;
+use onOffice\SDK\onOfficeSDK;
 
 /**
  *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2018, onOffice(R) GmbH
+ *
  */
 
-class InputFieldComplexSortableDetailListContentDefault
-	implements InputFieldComplexSortableDetailListContentBase
+class ModuleTranslation
 {
+	/** @var array */
+	private static $_moduleTranslationSingular = array(
+		onOfficeSDK::MODULE_ADDRESS => 'Address',
+		onOfficeSDK::MODULE_ESTATE => 'Estate',
+		onOfficeSDK::MODULE_SEARCHCRITERIA => 'Search Criteria',
+	);
+
+
 	/**
 	 *
-	 * @param string $key
-	 * @param bool $dummy
+	 * @param string $module
+	 * @return string
 	 *
 	 */
 
-	public function render($key, $dummy)
+	public static function getTranslationSingular($module)
 	{
-		echo '<p class="description">'.esc_html__('Key of Field:', 'onoffice')
-				.' <span class="menu-item-settings-name">'.esc_html($key).'</span></p>'
-			.'<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
+		$result = null;
+		if (array_key_exists($module, self::$_moduleTranslationSingular)) {
+			$result = self::$_moduleTranslationSingular[$module];
+		}
+		return $result;
 	}
 }

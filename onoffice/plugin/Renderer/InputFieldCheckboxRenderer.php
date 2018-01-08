@@ -77,10 +77,10 @@ class InputFieldCheckboxRenderer
 		}
 	}
 
+
 	/** @param array $checkedValues */
 	public function setCheckedValues($checkedValues)
 		{ $this->_checkedValues = $checkedValues;}
-
 
 	/** @return array */
 	public function getCheckedValues()

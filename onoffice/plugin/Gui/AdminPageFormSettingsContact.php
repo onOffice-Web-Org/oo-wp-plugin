@@ -89,14 +89,14 @@ class AdminPageFormSettingsContact
 		$this->addFormModel($pFormModelFormSpecific);
 
 		if ($this->_showEstateFields) {
-			$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
+			$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, true);
 			$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder,
 				$fieldNamesEstate, InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
 		}
 
 		if ($this->_showAddressFields) {
-			$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
-			$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder,
+			$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS, true);
+			$this->addFieldsConfiguration(array(onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE), $pFormModelBuilder,
 				$fieldNamesAddress, InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
 		}
 
@@ -129,15 +129,16 @@ class AdminPageFormSettingsContact
 		$fieldNames = array();
 
 		if ($this->_showEstateFields) {
-			$fieldNames += array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE));
+			$fieldNames = array_merge($fieldNames,
+				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, true)));
 		}
 
 		if ($this->_showAddressFields) {
-			$fieldNames += array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS));
+			$fieldNames = array_merge($fieldNames,
+				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS, true)));
 		}
 
-		foreach ($fieldNames as $category)
-		{
+		foreach ($fieldNames as $category) {
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 		}

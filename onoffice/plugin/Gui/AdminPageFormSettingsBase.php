@@ -117,12 +117,11 @@ abstract class AdminPageFormSettingsBase
 			$pFormData->setFormType($type);
 			/* @var $pFormData \onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration */
 			$formConfigRow = array_key_exists(RecordManager::TABLENAME_FIELDCONFIG_FORMS, $row) ?
-					$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] : array();
+				$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] : array();
 			$pFormDataConfigFactory->addModulesByFields($formConfigRow, $pFormData);
 
 			$pRecordManagerInserForm = new RecordManagerInsertForm();
 			$recordId = $pRecordManagerInserForm->insertByDataFormConfiguration($pFormData);
-
 			$result = ($recordId != null);
 		}
 

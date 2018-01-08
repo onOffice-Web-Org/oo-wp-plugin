@@ -20,9 +20,12 @@
  */
 
 namespace onOffice\WPlugin\Gui;
-use onOffice\WPlugin\Utility\__String;
+
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
+use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Utility\ModuleTranslation;
 
 /**
  *
@@ -42,7 +45,7 @@ abstract class AdminPageAjax
 	 * Entry point for AJAX.
 	 * Method should end with wp_die().
 	 *
-	 * @see https://codex.wordpress.org/AJAX_in_Plugins
+	 * @url https://codex.wordpress.org/AJAX_in_Plugins
 	 *
 	 */
 
@@ -68,7 +71,7 @@ abstract class AdminPageAjax
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\Model\FormModel $pFormModel
+	 * @param FormModel $pFormModel
 	 * @param string $position
 	 * @param InputModelRenderer $pInputModelRenderer
 	 *
@@ -112,13 +115,14 @@ abstract class AdminPageAjax
 	/**
 	 *
 	 * @param string $module
+	 * @param bool $showModuleLabel
 	 * @return array
 	 *
 	 */
 
-	protected function readFieldnamesByContent($module)
+	protected function readFieldnamesByContent($module, $showModuleLabel = false)
 	{
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames = new Fieldnames();
 		$pFieldnames->loadLanguage();
 
 		$fieldnames = $pFieldnames->getFieldList($module);
@@ -127,6 +131,11 @@ abstract class AdminPageAjax
 
 		foreach ($fieldnames as $key => $properties) {
 			$content = $properties['content'];
+
+			if ($showModuleLabel) {
+				$content .= ' ('.ModuleTranslation::getTranslationSingular($module).')';
+			}
+
 			$categories []= $content;
 			$label = $properties['label'];
 			$resultByContent[$content][$key] = $label;

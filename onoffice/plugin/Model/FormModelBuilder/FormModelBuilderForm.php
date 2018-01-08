@@ -79,7 +79,17 @@ class FormModelBuilderForm
 		$pFieldnames = new Fieldnames();
 		$pFieldnames->loadLanguage();
 
-		$fieldNames = $pFieldnames->getFieldList($module, true, true);
+		$fieldNames = array();
+
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$newFields = $pFieldnames->getFieldList($submodule, true, true);
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		} else {
+			$fieldNames = $pFieldnames->getFieldList($module, true, true);
+		}
+
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
