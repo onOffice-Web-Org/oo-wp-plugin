@@ -22,8 +22,9 @@
 namespace onOffice\WPlugin\Renderer;
 
 use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Utility\__String;
 
 /**
@@ -35,12 +36,12 @@ use onOffice\WPlugin\Utility\__String;
 
 class InputModelRenderer
 {
-	/** @var Model\FormModel */
+	/** @var FormModel */
 	private $_pFormModel = null;
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\Model\FormModel $pFormModel
+	 * @param FormModel $pFormModel
 	 *
 	 */
 
@@ -124,8 +125,8 @@ class InputModelRenderer
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\Model\InputModelBase $pInputModel
-	 * @return Renderer\InputFieldRenderer
+	 * @param InputModelBase $pInputModel
+	 * @return InputFieldRenderer
 	 *
 	 */
 
@@ -197,7 +198,7 @@ class InputModelRenderer
 				break;
 
 			case InputModelOption::HTML_TYPE_TEXT:
-				$pInstance = new InputFieldTextRenderer($pInputModel->getIdentifier());
+				$pInstance = new InputFieldTextRenderer('text', $pInputModel->getIdentifier());
 				$pInstance->addAdditionalAttribute('size', '50');
 
 				if ($pInputModel->getIsPassword())
@@ -217,16 +218,40 @@ class InputModelRenderer
 				}
 
 				break;
+			case InputModelOption::HTML_TYPE_HIDDEN:
+				$name = $pInputModel->getIdentifier();
+				if ($pInputModel->getIsMulti()) {
+					$name .= '[]';
+				}
+				$pInstance = new InputFieldTextRenderer('hidden', $name);
+				$pInstance->setValue($pInputModel->getValue());
+
+				break;
 		}
 
-		if ($pInstance !== null && $onOfficeInputFields) {
-			$pInstance->addAdditionalAttribute('class', 'onoffice-input');
+		if ($pInstance !== null) {
+			if ($onOfficeInputFields) {
+				$pInstance->addAdditionalAttribute('class', 'onoffice-input');
+			}
+
+			if ($pInputModel instanceof InputModelDB) {
+				if (!__String::getNew($pInputModel->getModule())->isEmpty()) {
+					$module = $pInputModel->getModule();
+					$pInstance->addAdditionalAttribute('data-onoffice-module', $module);
+				}
+
+				if ($pInputModel->getIgnore()) {
+					$pInstance->addAdditionalAttribute('data-onoffice-ignore', 'true');
+				}
+
+			}
 		}
+
 
 		return $pInstance;
 	}
 
-	/** @return onOffice\WPlugin\Model\FormModel */
+	/** @return FormModel */
 	public function getFormModel()
 		{ return $this->_pFormModel; }
 

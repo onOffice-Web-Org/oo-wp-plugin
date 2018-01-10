@@ -41,6 +41,12 @@ class InputModelDB
 	/** @var int */
 	private $_mainRecordId = null;
 
+	/** @var string */
+	private $_module = null;
+
+	/** @var bool */
+	private $_ignore = false;
+
 
 	/**
 	 *
@@ -99,4 +105,20 @@ class InputModelDB
 	/** @param int $mainRecordId */
 	public function setMainRecordId($mainRecordId)
 		{ $this->_mainRecordId = $mainRecordId; }
+
+	/** @return string */
+	public function getModule()
+		{ return $this->_module; }
+
+	/** @param string $module */
+	public function setModule($module)
+		{ $this->_module = $module; }
+
+	/** @return bool */
+	public function getIgnore()
+		{ return $this->_ignore; }
+
+	/** @param bool $ignore */
+	public function setIgnore($ignore)
+		{ $this->_ignore = $ignore; }
 }

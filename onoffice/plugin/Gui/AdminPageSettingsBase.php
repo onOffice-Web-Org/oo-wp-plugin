@@ -21,12 +21,14 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use Exception;
 use onOffice\WPlugin\Model;
-use onOffice\WPlugin\Model\InputModelDB;
-use onOffice\WPlugin\Model\InputModelBase;
-use onOffice\WPlugin\Renderer\InputModelRenderer;
-use onOffice\WPlugin\Model\InputModelDBAdapterRow;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
+use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelDBAdapterRow;
+use onOffice\WPlugin\Renderer\InputModelRenderer;
+use stdClass;
 
 /**
  *
@@ -185,7 +187,7 @@ abstract class AdminPageSettingsBase
 		}
 
 		$values = json_decode(filter_input(INPUT_POST, 'values'));
-
+		$this->prepareValues($values);
 		$pInputModelDBAdapterRow = new InputModelDBAdapterRow();
 
 		foreach ($this->getFormModels() as $pFormModel) {
@@ -197,12 +199,12 @@ abstract class AdminPageSettingsBase
 					$pInputModelDBAdapterRow->addInputModelDB($pInputModel);
 				}
 			}
-			$row = $pInputModelDBAdapterRow->createUpdateValuesByTable();
 		}
-
+		$row = $pInputModelDBAdapterRow->createUpdateValuesByTable();
 		$row = $this->setFixedValues($row);
 
-		$pResultObject = new \stdClass();
+
+		$pResultObject = new stdClass();
 		$this->updateValues($row, $pResultObject, $recordId);
 		echo json_encode($pResultObject);
 
@@ -210,7 +212,13 @@ abstract class AdminPageSettingsBase
 	}
 
 
+	/**
+	 *
+	 * @param object $values
+	 *
+	 */
 
+	protected function prepareValues($values) {}
 
 
 	/**
@@ -218,15 +226,19 @@ abstract class AdminPageSettingsBase
 	 * @param string $module
 	 * @param FormModelBuilder $pFormModelBuilder
 	 * @param array $fieldNames
+	 * @param bool $addModule
 	 *
 	 */
 
 	protected function addFieldsConfiguration($module, FormModelBuilder $pFormModelBuilder,
-		array $fieldNames, $htmlType = InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST)
+		array $fieldNames, $addModule = false)
 	{
 		foreach ($fieldNames as $category => $fields) {
 			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
 				($category, $fields);
+			if ($addModule) {
+				$pInputModelFieldsConfig->setModule($module);
+			}
 			$pFormModelFieldsConfig = new Model\FormModel();
 			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
 			$pFormModelFieldsConfig->setGroupSlug($category);
@@ -234,8 +246,21 @@ abstract class AdminPageSettingsBase
 			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
 			$this->addFormModel($pFormModelFieldsConfig);
 		}
+	}
 
-		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module, $htmlType);
+
+	/**
+	 *
+	 * @param array $modules
+	 * @param FormModelBuilder $pFormModelBuilder
+	 * @param string $htmlType
+	 *
+	 */
+
+	protected function addSortableFieldsList(array $modules, FormModelBuilder $pFormModelBuilder,
+		$htmlType = InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST)
+	{
+		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($modules, $htmlType);
 		$pFormModelSortableFields = new Model\FormModel();
 		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
 		$pFormModelSortableFields->setGroupSlug
@@ -258,12 +283,12 @@ abstract class AdminPageSettingsBase
 	/**
 	 *
 	 * @param array $row
-	 * @param \stdClass $pResult having the properties `result` and `record_id`
+	 * @param stdClass $pResult having the properties `result` and `record_id`
 	 * @param int $recordId
 	 *
 	 */
 
-	abstract protected function updateValues(array $row, \stdClass $pResult, $recordId = null);
+	abstract protected function updateValues(array $row, stdClass $pResult, $recordId = null);
 
 
 	/**

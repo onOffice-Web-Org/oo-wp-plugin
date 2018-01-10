@@ -359,8 +359,25 @@ class Fieldnames {
 					continue;
 				}
 
+				$fieldProperties['module'] = $moduleProperties['id'];
 				$fieldProperties['content'] = $moduleProperties['elements'][$fieldName]['content'];
 				$this->_fieldList[$this->_language][$moduleProperties['id']][$fieldName] = $fieldProperties;
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 * @param string $fieldname
+	 * @return string
+	 *
+	 */
+
+	public function getModuleByField($fieldname) {
+		foreach ($this->_fieldList[$this->_language] as $module => $fieldProperties) {
+			if (isset($fieldProperties[$fieldname])) {
+				return $module;
 			}
 		}
 	}
@@ -492,7 +509,7 @@ class Fieldnames {
 	 * @return array
 	 *
 	 */
-	
+
 	static public function getDefaultSortByFields()
 	{
 		return self::$_defaultSortByFields;

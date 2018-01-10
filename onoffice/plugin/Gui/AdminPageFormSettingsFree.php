@@ -56,11 +56,14 @@ class AdminPageFormSettingsFree
 
 		$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
-			$pFormModelBuilder, $fieldNamesEstate, InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
+			$pFormModelBuilder, $fieldNamesEstate);
 
 		$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder,
-			$fieldNamesAddress, InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
+			$fieldNamesAddress);
+
+		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ESTATE, onOfficeSDK::MODULE_ADDRESS),
+			$pFormModelBuilder, InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
 	}
 
 

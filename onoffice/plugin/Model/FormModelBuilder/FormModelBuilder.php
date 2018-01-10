@@ -21,8 +21,10 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModelDB;
 
 /**
  *
@@ -85,7 +87,7 @@ abstract class FormModelBuilder
 
 	protected function readFieldnames($module)
 	{
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames = new Fieldnames();
 		$pFieldnames->loadLanguage();
 
 		$fieldnames = $pFieldnames->getFieldList($module, true, true);
@@ -131,7 +133,7 @@ abstract class FormModelBuilder
 	 *
 	 * @param string $module
 	 * @param string $htmlType
-	 * @return \onOffice\WPlugin\Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -142,10 +144,19 @@ abstract class FormModelBuilder
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames = new Fieldnames();
 		$pFieldnames->loadLanguage();
 
-		$fieldNames = $pFieldnames->getFieldList($module, true, true);
+		$fieldNames = array();
+
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$fieldNamesModule = $pFieldnames->getFieldList($submodule, true, true);
+				$fieldNames = array_merge($fieldNames, $fieldNamesModule);
+			}
+		} else {
+			$fieldNames = $pFieldnames->getFieldList($module, true, true);
+		}
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
@@ -159,6 +170,16 @@ abstract class FormModelBuilder
 		return $pInputModelFieldsConfig;
 	}
 
+
+	/**
+	 *
+	 * @param string $category
+	 * @param array $fieldNames
+	 * @return InputModelDB
+	 *
+	 */
+
+	abstract public function createInputModelFieldsConfigByCategory($category, $fieldNames);
 
 	/** @return string */
 	public function getPageSlug()

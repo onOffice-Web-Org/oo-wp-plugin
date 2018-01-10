@@ -26,6 +26,10 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
 
+/**
+ *
+ */
+
 class AdminPageFormSettingsContact
 	extends AdminPageFormSettingsBase
 {
@@ -88,21 +92,28 @@ class AdminPageFormSettingsContact
 
 		$this->addFormModel($pFormModelFormSpecific);
 
+		$sortableFieldListModules = array();
+
 		if ($this->_showEstateFields) {
-			$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, true);
-			$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder,
-				$fieldNamesEstate, InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
+			$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
+			$this->addFieldsConfiguration
+				(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNamesEstate, true);
+			$sortableFieldListModules []= onOfficeSDK::MODULE_ESTATE;
 		}
 
 		if ($this->_showAddressFields) {
-			$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS, true);
-			$this->addFieldsConfiguration(array(onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE), $pFormModelBuilder,
-				$fieldNamesAddress, InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
+			$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
+			$this->addFieldsConfiguration
+				(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder, $fieldNamesAddress, true);
+			$sortableFieldListModules []= onOfficeSDK::MODULE_ADDRESS;
 		}
 
 		if ($this->_showSearchCriteriaBoxes) {
 			// todo
 		}
+
+		$this->addSortableFieldsList($sortableFieldListModules, $pFormModelBuilder,
+			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
 	}
 
 
@@ -130,12 +141,12 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showEstateFields) {
 			$fieldNames = array_merge($fieldNames,
-				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, true)));
+				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE)));
 		}
 
 		if ($this->_showAddressFields) {
 			$fieldNames = array_merge($fieldNames,
-				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS, true)));
+				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS)));
 		}
 
 		foreach ($fieldNames as $category) {

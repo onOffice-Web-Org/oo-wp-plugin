@@ -32,6 +32,7 @@ use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Utility\ModuleTranslation;
 
 /**
  *
@@ -46,6 +47,9 @@ class FormModelBuilderForm
 	/** @var string */
 	private $_formType = null;
 
+	/** @var Fieldnames */
+	private $_pFieldNames = null;
+
 
 	/**
 	 *
@@ -58,6 +62,8 @@ class FormModelBuilderForm
 		parent::__construct($pageSlug);
 		$pConfigForm = new InputModelDBFactoryConfigForm();
 		$this->_pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
+		$this->_pFieldNames = new Fieldnames();
+		$this->_pFieldNames->loadLanguage();
 	}
 
 
@@ -75,23 +81,18 @@ class FormModelBuilderForm
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-
-		$pFieldnames = new Fieldnames();
-		$pFieldnames->loadLanguage();
-
 		$fieldNames = array();
 
 		if (is_array($module)) {
 			foreach ($module as $submodule) {
-				$newFields = $pFieldnames->getFieldList($submodule, true, true);
+				$newFields = $this->_pFieldNames->getFieldList($submodule, true, true);
 				$fieldNames = array_merge($fieldNames, $newFields);
 			}
 		} else {
-			$fieldNames = $pFieldnames->getFieldList($module, true, true);
+			$fieldNames = $this->_pFieldNames->getFieldList($module, true, true);
 		}
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
 
 		if (null == $fields)
@@ -101,7 +102,9 @@ class FormModelBuilderForm
 
 		$pInputModelFieldsConfig->setValue($fields);
 
+		$pModule = $this->getInputModelModule();
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
+		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
 
 		return $pInputModelFieldsConfig;
@@ -348,8 +351,63 @@ class FormModelBuilderForm
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsRequired'));
 
 		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 * @return bool
+	 *
+	 */
+
+	public function callbackValueInputModelIsRequired(InputModelBase $pInputModel, $key)
+	{
+		$fieldsRequired = $this->getValue('fieldsRequired');
+		$value = in_array($key, $fieldsRequired);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelModule()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Module', 'onoffice');
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_MODULE;
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelModule'));
+
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key
+	 *
+	 */
+
+	public function callbackValueInputModelModule(InputModelBase $pInputModel, $key)
+	{
+		$module = $this->_pFieldNames->getModuleByField($key);
+		$moduleTranslated = __(ModuleTranslation::getLabelSingular($module), 'onoffice');
+		$label = sprintf(__('Module: %s', 'onoffice'), $moduleTranslated);
+		$pInputModel->setLabel($label);
+		$pInputModel->setValue($module);
 	}
 
 

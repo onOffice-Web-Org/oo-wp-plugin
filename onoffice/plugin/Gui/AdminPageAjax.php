@@ -25,6 +25,7 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Utility\HtmlIdGenerator;
 use onOffice\WPlugin\Utility\ModuleTranslation;
 
 /**
@@ -82,6 +83,7 @@ abstract class AdminPageAjax
 	{
 		$screenId = get_current_screen()->id;
 		$formId = $pFormModel->getGroupSlug();
+		$formIdHtmlFriendly = HtmlIdGenerator::generateByString($formId);
 		$formLabel = $pFormModel->getLabel();
 
 		if ($pInputModelRenderer === null) {
@@ -89,7 +91,7 @@ abstract class AdminPageAjax
 		}
 
 		$callback =  array($pInputModelRenderer, 'buildForAjax');
-		add_meta_box($formId, $formLabel, $callback, $screenId, $position, 'default' );
+		add_meta_box($formIdHtmlFriendly, $formLabel, $callback, $screenId, $position, 'default' );
 	}
 
 
@@ -120,7 +122,7 @@ abstract class AdminPageAjax
 	 *
 	 */
 
-	protected function readFieldnamesByContent($module, $showModuleLabel = false)
+	protected function readFieldnamesByContent($module)
 	{
 		$pFieldnames = new Fieldnames();
 		$pFieldnames->loadLanguage();
@@ -131,11 +133,6 @@ abstract class AdminPageAjax
 
 		foreach ($fieldnames as $key => $properties) {
 			$content = $properties['content'];
-
-			if ($showModuleLabel) {
-				$content .= ' ('.ModuleTranslation::getTranslationSingular($module).')';
-			}
-
 			$categories []= $content;
 			$label = $properties['label'];
 			$resultByContent[$content][$key] = $label;

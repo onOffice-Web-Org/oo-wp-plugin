@@ -46,25 +46,26 @@ jQuery(document).ready(function($){
 	});
 
 	var getCheckedFields = function(but) {
-		var category = but.name;
+		var categoryShort = but.name;
+		var category = $(but).attr('data-onoffice-category');
 		var checkedFields = [];
-		var inputConfigFields = $('#' + category).find('input.onoffice-possible-input:checked');
+		var inputConfigFields = $('#' + categoryShort).find('input.onoffice-possible-input:checked');
 		var ulEl = $('#sortableFieldsList');
 
 		$(inputConfigFields).each(function(index) {
 			var valElName = $(this).val();
 			var valElLabel = $(this).next().text();
 			var myLi = myLi = ulEl.find('#menu-item-' + valElName);
-
+			var module = $(this).attr('data-onoffice-module');
 			if (myLi.length === 0) {
-				createNewFieldItem(valElName, valElLabel, category);
+				createNewFieldItem(valElName, valElLabel, category, module);
 			}
 		});
 
 		return checkedFields;
 	};
 
-	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory) {
+	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module) {
 		var clonedElement = $('#menu-item-dummy_key').clone(true, true);
 		clonedElement.attr('id', 'menu-item-'+fieldName);
 		clonedElement.find('span.item-title:contains("dummy_label")').text(fieldLabel);
@@ -73,6 +74,15 @@ jQuery(document).ready(function($){
 		clonedElement.find('input[value=dummy_label]').val(fieldLabel);
 		clonedElement.find('span.menu-item-settings-name').text(fieldName);
 		clonedElement.find('input[data-onoffice-ignore=true]').removeAttr('data-onoffice-ignore');
+
+		if (module) {
+			var inputModule = clonedElement.find('input[name^=oopluginformfieldconfig-module]');
+			inputModule.val(module);
+			var labelIdFor = inputModule.attr('id');
+			var moduleStr = onOffice_loc_settings.modulelabels[module];
+			var newLabelText = onOffice_loc_settings.fieldmodule.replace('%s', moduleStr);
+			clonedElement.find('label[for=' + labelIdFor + ']').text(newLabelText);
+		}
 		clonedElement.show();
 		$('#menu-item-dummy_key').parent().append(clonedElement);
 	};

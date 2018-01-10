@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,45 +19,29 @@
  *
  */
 
-namespace onOffice\WPlugin\Renderer;
+namespace onOffice\WPlugin\Utility;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
-class InputFieldTextRenderer
-	extends InputFieldRenderer
+class HtmlIdGenerator
 {
-
-	/**
-	 *
-	 * @param string $type
-	 * @param string $name
-	 * @param string $value
-	 *
-	 */
-
-	public function __construct($type, $name, $value = null)
-	{
-		if (!in_array($type, array('text', 'hidden'))) {
-			throw new \Exception(' wrong type!');
-		}
-		parent::__construct($type, $name, $value);
-	}
+	/** */
+	const WHITELIST_CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 
 	/**
 	 *
+	 * Convert a category into a html-friendly key
+	 *
+	 * @param string $string
+	 * @return string
+	 *
 	 */
 
-	public function render()
+	public static function generateByString($string)
 	{
-		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
-			.'" value="'.esc_html($this->getValue()).'" id="'.esc_html($this->getGuiId()).'"'
-			.' '.$this->renderAdditionalAttributes()
-			.'>';
+		return __String::getNew($string)->keep(self::WHITELIST_CHARS);
 	}
 }

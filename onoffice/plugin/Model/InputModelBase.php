@@ -40,6 +40,9 @@ abstract class InputModelBase
 	const HTML_TYPE_RADIO = 'radio';
 
 	/** */
+	const HTML_TYPE_HIDDEN = 'hidden';
+
+	/** */
 	const HTML_TYPE_TEXT = 'text';
 
 	/** */
@@ -80,6 +83,9 @@ abstract class InputModelBase
 
 	/** @var string */
 	private $_id = null;
+
+	/** @var array For referenced input models only */
+	private $_valueCallback = null;
 
 	/** @var InputModelBase */
 	private $_referencedInputModels = array();
@@ -164,6 +170,14 @@ abstract class InputModelBase
 	/** @return string */
 	public function getId()
 		{ return $this->_id; }
+
+	/** @return array */
+	public function getValueCallback()
+		{ return $this->_valueCallback; }
+
+	/** @param array|string $valueCallback */
+	public function setValueCallback($valueCallback)
+		{ $this->_valueCallback = $valueCallback; }
 
 	/** @param InputModelBase $pReferencedInputModel */
 	public function addReferencedInputModel(InputModelBase $pReferencedInputModel)

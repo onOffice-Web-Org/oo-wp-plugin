@@ -21,12 +21,15 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Record\RecordManager;
-use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\Record\RecordManagerInsertForm;
-use onOffice\WPlugin\Record\RecordManagerUpdateForm;
-use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Record\RecordManager;
+use onOffice\WPlugin\Record\RecordManagerInsertForm;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Record\RecordManagerUpdateForm;
+use onOffice\WPlugin\Utility\ModuleTranslation;
+use stdClass;
 
 /**
  *
@@ -43,6 +46,12 @@ abstract class AdminPageFormSettingsBase
 
 	/** */
 	const FORM_VIEW_FORM_SPECIFIC = 'viewformspecific';
+
+	/** */
+	const MODULE_LABELS = 'modulelabels';
+
+	/** */
+	const FIELD_MODULE = 'fieldmodule';
 
 	/** */
 	const GET_PARAM_TYPE = 'type';
@@ -91,12 +100,12 @@ abstract class AdminPageFormSettingsBase
 	/**
 	 *
 	 * @param array $row
-	 * @param \stdClass $pResult
+	 * @param stdClass $pResult
 	 * @param int $recordId
 	 *
 	 */
 
-	protected function updateValues(array $row, \stdClass $pResult, $recordId = null)
+	protected function updateValues(array $row, stdClass $pResult, $recordId = null)
 	{
 		$result = false;
 		$type = $this->getType();
@@ -115,7 +124,7 @@ abstract class AdminPageFormSettingsBase
 			$pFormDataConfigFactory = new DataFormConfigurationFactory($type);
 			$pFormData = $pFormDataConfigFactory->createByRow($row[RecordManager::TABLENAME_FORMS]);
 			$pFormData->setFormType($type);
-			/* @var $pFormData \onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration */
+			/* @var $pFormData DataFormConfiguration */
 			$formConfigRow = array_key_exists(RecordManager::TABLENAME_FIELDCONFIG_FORMS, $row) ?
 				$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] : array();
 			$pFormDataConfigFactory->addModulesByFields($formConfigRow, $pFormData);
@@ -148,6 +157,8 @@ abstract class AdminPageFormSettingsBase
 					self::GET_PARAM_TYPE,
 				),
 			AdminPageSettingsBase::POST_RECORD_ID => (int)$this->getListViewId(),
+			self::MODULE_LABELS => ModuleTranslation::getAllLabelsSingular(true),
+			self::FIELD_MODULE => __('Module: %s', 'onoffice'),
 		);
 	}
 

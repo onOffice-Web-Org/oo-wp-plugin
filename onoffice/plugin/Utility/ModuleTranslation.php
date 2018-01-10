@@ -47,12 +47,43 @@ class ModuleTranslation
 	 *
 	 */
 
-	public static function getTranslationSingular($module)
+	public static function getLabelSingular($module)
 	{
 		$result = null;
 		if (array_key_exists($module, self::$_moduleTranslationSingular)) {
 			$result = self::$_moduleTranslationSingular[$module];
 		}
 		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param bool $translate
+	 * @return array
+	 *
+	 */
+
+	public static function getAllLabelsSingular($translate = false)
+	{
+		$result = null;
+		if ($translate) {
+			$result = array_map(__CLASS__.'::translateValue', self::$_moduleTranslationSingular);
+		} else {
+			$result = self::$_moduleTranslationSingular;
+		}
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @internal for callback in method getAllLabelsSingular() only
+	 * @param string $value
+	 *
+	 */
+
+	public static function translateValue($value) {
+		return __($value, 'onoffice');
 	}
 }

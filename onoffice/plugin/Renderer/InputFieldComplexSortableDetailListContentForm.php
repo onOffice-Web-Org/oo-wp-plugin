@@ -62,8 +62,12 @@ class InputFieldComplexSortableDetailListContentForm
 		$pFormModel = new FormModel();
 
 		foreach ($this->_extraInputModels as $pInputModel) {
-			$pInputModel->setValuesAvailable($key);
-			$pInputModel->setValue(false);
+			$pInputModel->setIgnore($dummy);
+			$callbackValue = $pInputModel->getValueCallback();
+
+			if ($callbackValue !== null) {
+				call_user_func($callbackValue, $pInputModel, $key);
+			}
 			$pFormModel->addInputModel($pInputModel);
 		}
 
@@ -75,11 +79,14 @@ class InputFieldComplexSortableDetailListContentForm
 		echo '<p class="description">';
 		$pInputModelRenderer->buildForAjax();
 		echo '</p>';
+
+		// todo: remove
 		echo '<p class="description"><label for="indName'.$id.'">'
 			.__('Use Individual Name:').'</label><input type="checkbox" '
 			.'name="useIndividualName['.esc_html($key).']" value="1" id="indName'.$id.'"'.$dummyText.'></p>';
 		echo '<p class="description">'.__('Individual Name:').'<input type="text" '
 			.'name="individualName['.esc_html($key).']"'.$dummyText.'></p>';
+
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}
 

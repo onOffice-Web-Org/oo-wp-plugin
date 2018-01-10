@@ -88,6 +88,22 @@ class __String
 
 	/**
 	 *
+	 * @param string $chars
+	 * @return string
+	 *
+	 */
+
+	public function keep($chars)
+	{
+		$charArrayInput = $this->split();
+		$charArrayWhitelist = __String::getNew($chars)->split();
+		$intersect = array_intersect($charArrayInput, $charArrayWhitelist);
+		return implode('', $intersect);
+	}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */

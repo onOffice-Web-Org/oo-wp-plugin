@@ -59,6 +59,9 @@ class InputModelDBFactoryConfigForm
 	/** */
 	const INPUT_FORM_PAGES = 'formPages';
 
+	/** */
+	const INPUT_FORM_MODULE = 'formModule';
+
 
 	/** @var array */
 	private $_inputConfig = array(
@@ -105,6 +108,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_REQUIRED => array(
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'required',
+		),
+		self::INPUT_FORM_MODULE => array(
+			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
+			self::KEY_FIELD => 'module',
 		),
 	);
 
