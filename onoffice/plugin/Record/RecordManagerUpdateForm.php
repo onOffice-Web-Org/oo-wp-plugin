@@ -58,45 +58,14 @@ class RecordManagerUpdateForm
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-		$fieldConfigRows = $this->createFieldConfigRows($fieldConfig);
-
 		$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG_FORMS, array('form_id' => $this->getRecordId()));
 
 		$result = true;
 
-		foreach ($fieldConfigRows as $row) {
+		foreach ($fieldConfig as $row) {
 			$result = $result && $pWpDb->insert($pWpDb->prefix.self::TABLENAME_FIELDCONFIG_FORMS, $row);
 		}
 
 		return $result;
-	}
-
-
-	/**
-	 *
-	 * @param array $fieldConfig
-	 * @return int
-	 *
-	 */
-
-	private function createFieldConfigRows(array $fieldConfig)
-	{
-		$rows = array();
-		if ($fieldConfig['required'] == null) {
-			$fieldConfig['required'] = array();
-		}
-		$order = 0;
-
-		foreach ($fieldConfig['fieldname'] as $fieldname) {
-			$newRow = array(
-				'form_id' => $this->getRecordId(),
-				'fieldname' => $fieldname,
-				'required' => intval(in_array($fieldname, $fieldConfig['required'])),
-				'order' => $order,
-			);
-			$order++;
-			$rows []= $newRow;
-		}
-		return $rows;
 	}
 }

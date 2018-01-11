@@ -21,10 +21,11 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\DataView\DataDetailView;
-use onOffice\WPlugin\Record\RecordManagerUpdateListView;
+use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerInsertListView;
+use onOffice\WPlugin\Record\RecordManagerUpdateListView;
+use stdClass;
 
 /**
  *
@@ -66,12 +67,12 @@ abstract class AdminPageEstateListSettingsBase
 	/**
 	 *
 	 * @param array $row
-	 * @param \stdClass $pResult
+	 * @param stdClass $pResult
 	 * @param int $recordId
 	 *
 	 */
 
-	protected function updateValues(array $row, \stdClass $pResult, $recordId = null)
+	protected function updateValues(array $row, stdClass $pResult, $recordId = null)
 	{
 		$result = false;
 		$pDummyDetailView = new DataDetailView();
@@ -90,10 +91,53 @@ abstract class AdminPageEstateListSettingsBase
 			$pInsert = new RecordManagerInsertListView();
 			$recordId = $pInsert->insertByRow($row);
 			$result = ($recordId != null);
+			if ($result) {
+				$row = $this->addOrderValues($row);
+				$row = $this->prepareRelationValues
+					(RecordManager::TABLENAME_FIELDCONFIG, 'listview_id', $row, $recordId);
+				$row = $this->prepareRelationValues
+					(RecordManager::TABLENAME_LISTVIEW_CONTACTPERSON, 'listview_id', $row, $recordId);
+				$row = $this->prepareRelationValues
+					(RecordManager::TABLENAME_PICTURETYPES, 'listview_id', $row, $recordId);
+
+				$pInsert->insertAdditionalValues($row);
+			}
 		}
 
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function addOrderValues(array $row)
+	{
+		$table = RecordManager::TABLENAME_FIELDCONFIG;
+		if (array_key_exists($table, $row)) {
+			array_walk($row[$table], function (&$value, $key) {
+				$value['order'] = $key + 1;
+			});
+		}
+		return $row;
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function setFixedValues(array $row)
+	{
+		return $this->addOrderValues($row);
 	}
 
 

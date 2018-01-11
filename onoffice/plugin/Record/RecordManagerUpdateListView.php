@@ -77,9 +77,6 @@ class RecordManagerUpdateListView
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-
-		$pInsert = new RecordManagerInsertListView();
-
 		$whereListviewTable = array('listview_id' => $this->getRecordId());
 		$result = $pWpDb->update($prefix.self::TABLENAME_LIST_VIEW,
 			$tableRow[self::TABLENAME_LIST_VIEW], $whereListviewTable);
@@ -87,19 +84,28 @@ class RecordManagerUpdateListView
 		if (array_key_exists(self::TABLENAME_FIELDCONFIG, $tableRow)) {
 			$fields = $tableRow[self::TABLENAME_FIELDCONFIG];
 			$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG, $whereListviewTable);
-			$pInsert->insertFields($this->getRecordId(), $fields);
+			foreach ($fields as $fieldRow) {
+				$table = $prefix.self::TABLENAME_FIELDCONFIG;
+				$pWpDb->insert($table, $fieldRow);
+			}
 		}
 
 		if (array_key_exists(self::TABLENAME_PICTURETYPES, $tableRow)) {
 			$pictures = $tableRow[self::TABLENAME_PICTURETYPES];
 			$pWpDb->delete($prefix.self::TABLENAME_PICTURETYPES, $whereListviewTable);
-			$pInsert->insertPictures($this->getRecordId(), $pictures);
+			foreach ($pictures as $pictureRow) {
+				$table = $prefix.self::TABLENAME_PICTURETYPES;
+				$pWpDb->insert($table, $pictureRow);
+			}
 		}
 
 		if (array_key_exists(self::TABLENAME_LISTVIEW_CONTACTPERSON, $tableRow)) {
 			$contactPerson = $tableRow[self::TABLENAME_LISTVIEW_CONTACTPERSON];
 			$pWpDb->delete($prefix.self::TABLENAME_LISTVIEW_CONTACTPERSON, $whereListviewTable);
-			$pInsert->insertContactPerson($this->getRecordId(), $contactPerson);
+			foreach ($contactPerson as $contactPersonRow) {
+				$table = $prefix.self::TABLENAME_FIELDCONFIG;
+				$pWpDb->insert($table, $contactPersonRow);
+			}
 		}
 
 		return $result !== false;

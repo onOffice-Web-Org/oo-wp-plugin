@@ -186,6 +186,8 @@ abstract class AdminPageSettingsBase
 			wp_die();
 		}
 
+		$mainRecordId = $recordId != 0 ? $recordId : null;
+
 		$values = json_decode(filter_input(INPUT_POST, 'values'));
 		$this->prepareValues($values);
 		$pInputModelDBAdapterRow = new InputModelDBAdapterRow();
@@ -196,6 +198,7 @@ abstract class AdminPageSettingsBase
 					$identifier = $pInputModel->getIdentifier();
 					$value = isset($values->$identifier) ? $values->$identifier : null;
 					$pInputModel->setValue($value);
+					$pInputModel->setMainRecordId($mainRecordId);
 					$pInputModelDBAdapterRow->addInputModelDB($pInputModel);
 				}
 			}
@@ -214,11 +217,34 @@ abstract class AdminPageSettingsBase
 
 	/**
 	 *
-	 * @param object $values
+	 * @param string $table
+	 * @param string $column
+	 * @param array $values
+	 * @param int $recordId
 	 *
 	 */
 
-	protected function prepareValues($values) {}
+	protected function prepareRelationValues($table, $column, array $values, $recordId)
+	{
+		if (array_key_exists($table, $values)) {
+			array_walk($values[$table], function (&$value, $key) use ($column, $recordId) {
+				if (array_key_exists($column, $value)) {
+					$value[$column] = $recordId;
+				}
+			});
+		}
+
+		return $values;
+	}
+
+
+	/**
+	 *
+	 * @param stdClass $values
+	 *
+	 */
+
+	protected function prepareValues(stdClass $values) {}
 
 
 	/**

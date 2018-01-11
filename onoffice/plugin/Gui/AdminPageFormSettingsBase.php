@@ -21,9 +21,9 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerInsertForm;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
@@ -99,6 +99,39 @@ abstract class AdminPageFormSettingsBase
 
 	/**
 	 *
+	 * Since checkbox are only being submitted if checked they need to be reorganized
+	 *
+	 * @param stdClass $values
+	 *
+	 */
+
+	protected function prepareValues(stdClass $values) {
+		$pInputModelFactory = new InputModelDBFactory(new InputModelDBFactoryConfigForm());
+		$pInputModelRequired = $pInputModelFactory->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED, 'required', true);
+		$identifierRequired = $pInputModelRequired->getIdentifier();
+		$pInputModelFieldName = $pInputModelFactory->create
+			(InputModelDBFactory::INPUT_FIELD_CONFIG, 'fields', true);
+		$identifierFieldName = $pInputModelFieldName->getIdentifier();
+		// use order of fieldname-array, add required fields (which come in an array of names)
+		if (property_exists($values, $identifierRequired) &&
+			property_exists($values, $identifierFieldName)) {
+			$fieldsArray = (array)$values->$identifierFieldName;
+			$requiredFields = (array)$values->$identifierRequired;
+			$newRequiredFields = array_fill_keys(array_keys($fieldsArray), '0');
+
+			foreach ($requiredFields as $requiredField) {
+				$keyIndex = array_search($requiredField, $fieldsArray);
+				$newRequiredFields[$keyIndex] = '1';
+			}
+
+			$values->$identifierRequired = $newRequiredFields;
+		}
+	}
+
+
+	/**
+	 *
 	 * @param array $row
 	 * @param stdClass $pResult
 	 * @param int $recordId
@@ -108,7 +141,6 @@ abstract class AdminPageFormSettingsBase
 	protected function updateValues(array $row, stdClass $pResult, $recordId = null)
 	{
 		$result = false;
-		$type = $this->getType();
 
 		if ($recordId != 0) {
 			// update by row
@@ -121,21 +153,55 @@ abstract class AdminPageFormSettingsBase
 			}
 		} else {
 			// insert
-			$pFormDataConfigFactory = new DataFormConfigurationFactory($type);
-			$pFormData = $pFormDataConfigFactory->createByRow($row[RecordManager::TABLENAME_FORMS]);
-			$pFormData->setFormType($type);
-			/* @var $pFormData DataFormConfiguration */
-			$formConfigRow = array_key_exists(RecordManager::TABLENAME_FIELDCONFIG_FORMS, $row) ?
-				$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] : array();
-			$pFormDataConfigFactory->addModulesByFields($formConfigRow, $pFormData);
-
-			$pRecordManagerInserForm = new RecordManagerInsertForm();
-			$recordId = $pRecordManagerInserForm->insertByDataFormConfiguration($pFormData);
+			$pRecordManagerInsertForm = new RecordManagerInsertForm();
+			$recordId = $pRecordManagerInsertForm->insertByRow($row);
 			$result = ($recordId != null);
+
+			if ($result) {
+				$row = $this->addOrderValues($row);
+				$row = $this->prepareRelationValues
+					(RecordManager::TABLENAME_FIELDCONFIG_FORMS, 'form_id', $row, $recordId);
+				$pRecordManagerInsertForm->insertAdditionalValues($row);
+			}
 		}
 
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function setFixedValues(array $row)
+	{
+		$row = $this->addOrderValues($row);
+		$row[RecordManager::TABLENAME_FORMS]['form_type'] = $this->getType();
+
+		return $row;
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function addOrderValues(array $row)
+	{
+		$table = RecordManager::TABLENAME_FIELDCONFIG_FORMS;
+		if (array_key_exists($table, $row)) {
+			array_walk($row[$table], function (&$value, $key) {
+				$value['order'] = $key + 1;
+			});
+		}
+		return $row;
 	}
 
 

@@ -36,39 +36,6 @@ class RecordManagerInsertForm
 {
 	/**
 	 *
-	 * @param DataFormConfiguration $pDataFormConfiguration
-	 * @return int
-	 *
-	 */
-
-	public function insertByDataFormConfiguration(DataFormConfiguration $pDataFormConfiguration)
-	{
-		$rowMain = array(
-			'template' => $pDataFormConfiguration->getTemplate(),
-			'name' => $pDataFormConfiguration->getFormName(),
-			'form_type' => $pDataFormConfiguration->getFormType(),
-		);
-
-		if ($pDataFormConfiguration instanceof DataFormConfigurationApplicantSearch) {
-			$rowMain += array(
-				'limitresults' => $pDataFormConfiguration->getLimitResults(),
-			);
-		} elseif ($pDataFormConfiguration instanceof DataFormConfigurationContact) {
-			$rowMain += array(
-				'checkduplicates' => $pDataFormConfiguration->getCheckDuplicateOnCreateAddress(),
-				'createaddress' => $pDataFormConfiguration->getCreateAddress(),
-				'recipient' => $pDataFormConfiguration->getRecipient(),
-				'subject' => $pDataFormConfiguration->getSubject(),
-			);
-		}
-
-		$newFormId = $this->insertByRow(array(self::TABLENAME_FORMS => $rowMain));
-		return $newFormId;
-	}
-
-
-	/**
-	 *
 	 * @param array $values
 	 * @return int
 	 *
@@ -83,5 +50,29 @@ class RecordManagerInsertForm
 		$formId = $pWpDb->insert_id;
 
 		return $formId;
+	}
+
+
+	/**
+	 *
+	 * @param array $values
+	 * @return bool
+	 *
+	 */
+
+	public function insertAdditionalValues(array $values)
+	{
+		$pWpDb = $this->getWpdb();
+
+		unset($values[self::TABLENAME_FORMS]);
+		$result = true;
+
+		foreach ($values as $table => $tablevalues) {
+			foreach ($tablevalues as $tablerow) {
+				$result = $result && $pWpDb->insert($pWpDb->prefix.$table, $tablerow);
+			}
+		}
+
+		return $result;
 	}
 }

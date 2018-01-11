@@ -20,14 +20,16 @@
  */
 
 namespace onOffice\WPlugin\Gui;
+
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Model\InputModelBase;
-use onOffice\WPlugin\Renderer\InputModelRenderer;
-use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
-use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
+use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
+use onOffice\WPlugin\Renderer\InputModelRenderer;
+use stdClass;
 
 /**
  *
@@ -250,9 +252,7 @@ class AdminPageEstateDetail
 		}
 
 		$values = json_decode(filter_input(INPUT_POST, 'values'));
-
 		$pInputModelDBAdapterArray = new InputModelOptionAdapterArray();
-		$valuesPrefixless = array();
 
 		foreach ($this->getFormModels() as $pFormModel) {
 			foreach ($pFormModel->getInputModel() as $pInputModel) {
@@ -264,14 +264,14 @@ class AdminPageEstateDetail
 					$pInputModelDBAdapterArray->addInputModelOption($pInputModel);
 				}
 			}
-			$valuesPrefixless += $pInputModelDBAdapterArray->generateValuesArray();
 		}
 
+		$valuesPrefixless = $pInputModelDBAdapterArray->generateValuesArray();
 		$pDataDetailView = DataDetailViewHandler::createDetailViewByValues($valuesPrefixless);
 
 		$result = DataDetailViewHandler::saveDetailView($pDataDetailView);
 
-		$resultObject = new \stdClass();
+		$resultObject = new stdClass();
 		$resultObject->result = $result;
 		$resultObject->record_id = null;
 

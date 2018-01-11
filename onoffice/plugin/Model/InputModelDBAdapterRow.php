@@ -20,6 +20,7 @@
  */
 
 namespace onOffice\WPlugin\Model;
+
 use onOffice\WPlugin\Model\InputModelDB;
 
 /**
@@ -31,10 +32,19 @@ use onOffice\WPlugin\Model\InputModelDB;
 
 class InputModelDBAdapterRow
 {
-	/** @var onOffice\WPlugin\Model\InputModelDB[] */
+	/** @var InputModelDB[] */
 	private $_inputModels = array();
 
-	/** @var array */
+
+	/**
+	 *
+	 * array_keys($_foreignKeys[$table])[1] must always be the field that
+	 * holds the foreign key to the main table
+	 *
+	 * @var array
+	 *
+	 */
+
 	private $_foreignKeys = array(
 		'oo_plugin_fieldconfig' => array(
 			'fieldconfig_id' => null,
@@ -93,18 +103,22 @@ class InputModelDBAdapterRow
 
 			if ($this->isForeignKey($table, $field)) {
 				list($foreignTable, $foreignKey) = $this->_foreignKeys[$table][$field];
-
-				if ($this->isPrimaryKey($foreignTable, $foreignKey))
-				{
-					$valuesByTable[$foreignTable][$foreignKey] = $mainId;
+				if ($this->isPrimaryKey($foreignTable, $foreignKey)) {
+					$valuesByTable[$foreignTable][$foreignKey][] = $mainId;
 				}
-				else
-				{
-					$valuesByTable[$foreignTable][$foreignKey][] = $value;
+			} else {
+				if (is_array($value)) {
+					foreach ($value as $id => $subValue) {
+						$valuesByTable[$table][$id][$field] = $subValue;
+						$mainColumn = $this->getMainForeignKeyColumnOfRelation($table);
+						if ($mainColumn !== null) {
+							$valuesByTable[$table][$id][$mainColumn] = $mainId;
+						}
+					}
+				} else {
+					$valuesByTable[$table][$field] = $value;
 				}
 			}
-
-			$valuesByTable[$table][$field] = $value;
 		}
 
 		return $valuesByTable;
@@ -138,5 +152,24 @@ class InputModelDBAdapterRow
 	{
 		return array_key_exists($table, $this->_foreignKeys) &&
 			array_key_exists($field, $this->_foreignKeys[$table]);
+	}
+
+
+	/**
+	 *
+	 * @param string $relationTable
+	 * @return array
+	 *
+	 */
+
+	private function getMainForeignKeyColumnOfRelation($relationTable) {
+		$result = null;
+
+		if (isset($this->_foreignKeys[$relationTable])) {
+			$possibleValues = array_filter($this->_foreignKeys[$relationTable]);
+			$result = array_shift(array_keys($possibleValues));
+		}
+
+		return $result;
 	}
 }

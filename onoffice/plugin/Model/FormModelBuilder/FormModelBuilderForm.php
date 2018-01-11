@@ -152,6 +152,9 @@ class FormModelBuilderForm
 			throw new Exception('formType must be set!');
 		}
 
+		$values = array();
+		$values['fieldsRequired'] = array();
+
 		if ($formId !== null) {
 			$pRecordReadManager = new RecordManagerReadForm();
 			$values = $pRecordReadManager->getRowById($formId);
@@ -159,9 +162,9 @@ class FormModelBuilderForm
 			$pDataFormConfiguration = $pFactory->loadByFormId($formId);
 			$values[DataFormConfiguration::FIELDS] = array_keys($pDataFormConfiguration->getInputs());
 			$values['fieldsRequired'] = $pDataFormConfiguration->getRequiredFields();
-			$this->setValues($values);
 		}
 
+		$this->setValues($values);
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Form', 'onoffice'));
 		$pFormModel->setGroupSlug('onoffice-form-settings');
