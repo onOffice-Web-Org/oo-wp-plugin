@@ -44,7 +44,7 @@ class InputModelOptionFactoryDetailView
 	const INPUT_FIELD_CONFIG = \onOffice\WPlugin\DataView\DataDetailView::FIELDS;
 
 	/** */
-	const INPUT_FIELD_CONTACTDATA = \onOffice\WPlugin\DataView\DataDetailView::ADDRESSFIELDS;
+	const INPUT_FIELD_CONTACTDATA_ONLY = \onOffice\WPlugin\DataView\DataDetailView::ADDRESSFIELDS;
 
 	/** */
 	const KEY_TYPE = 'type';
@@ -67,7 +67,7 @@ class InputModelOptionFactoryDetailView
 		self::INPUT_FIELD_CONFIG => array(
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		),
-		self::INPUT_FIELD_CONTACTDATA => array(
+		self::INPUT_FIELD_CONTACTDATA_ONLY => array(
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		),
 	);
