@@ -90,6 +90,9 @@ abstract class InputModelBase
 	/** @var InputModelBase */
 	private $_referencedInputModels = array();
 
+	/** @var string */
+	private $_specialDivId = null;
+
 
 	/**
 	 *
@@ -186,4 +189,12 @@ abstract class InputModelBase
 	/** @return InputModelBase[] */
 	public function getReferencedInputModels()
 		{ return $this->_referencedInputModels; }
+
+	/** @param string $specialDivId */
+	public function setSpecialDivId($specialDivId)
+		{ $this->_specialDivId = $specialDivId; }
+
+	/** @return string */
+	public function getSpecialDivId()
+		{ return $this->_specialDivId; }
 }

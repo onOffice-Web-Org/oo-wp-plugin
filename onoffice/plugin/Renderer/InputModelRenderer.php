@@ -189,6 +189,11 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setId($pInputModel->getId());
 				$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
+
+				if ($pInputModel->getSpecialDivId() != null)
+				{
+					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_RADIO:

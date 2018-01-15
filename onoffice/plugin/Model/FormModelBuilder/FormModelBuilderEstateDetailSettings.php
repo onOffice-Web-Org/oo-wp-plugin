@@ -150,8 +150,16 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createSortableFieldList($module, $htmlType)
 	{
-		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
-			InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
+		if ($module == onOfficeSDK::MODULE_ESTATE)
+		{
+			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
+				InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
+		}
+		elseif ($module == onOfficeSDK::MODULE_ADDRESS)
+		{
+			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
+				InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
+		}
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 
@@ -159,9 +167,19 @@ class FormModelBuilderEstateDetailSettings
 		$pFieldnames->loadLanguage();
 
 		$fieldNames = $pFieldnames->getFieldList($module, true, true);
+		$fields = array();
+
+		if ($module == onOfficeSDK::MODULE_ADDRESS)
+		{
+			$fields = $this->_pDataDetailView->getAddressFields();
+		}
+		elseif ($module == onOfficeSDK::MODULE_ESTATE)
+		{
+			$fields = $this->_pDataDetailView->getFields();
+		}
+
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
-		$fields = $this->_pDataDetailView->getFields();
 
 		if (null == $fields)
 		{
@@ -182,7 +200,7 @@ class FormModelBuilderEstateDetailSettings
 	public function createInputModelAddressFieldsConfig()
 	{
 		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
-			InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA, null, true);
+			InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
 
 		$fieldNames = $this->readFieldnames(onOfficeSDK::MODULE_ADDRESS);
 		$pInputModelFieldsConfig->setHtmlType(Model\InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);

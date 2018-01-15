@@ -36,6 +36,9 @@ class InputFieldCheckboxButtonRenderer
 	/** @var string */
 	private $_id = null;
 
+	/** @var string */
+	private $_idOuterDiv = null;
+
 	/**
 	 *
 	 * @param string $name
@@ -61,7 +64,8 @@ class InputFieldCheckboxButtonRenderer
 		echo '<p>'
 			.'<input type="button" class="inputFieldCheckboxButton button" name="'
 				.esc_attr($id).'" value="'.esc_html__('Add', 'onoffice').'" '
-				.'data-onoffice-category="'.esc_attr($this->_id).'">'
+				.'data-onoffice-category="'.esc_attr($this->_id).'"'
+				. $this->renderAdditionalAttributes().'>'
 			.'</p>';
 	}
 
