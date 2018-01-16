@@ -45,6 +45,12 @@ class AdminPageFormSettingsContact
 	/** @var bool */
 	private $_showAddressFields = false;
 
+	/** @var bool message field has no module */
+	private $_showMessageInput = false;
+
+	/** @var array */
+	private $_additionalCategories = array();
+
 	/**
 	 *
 	 */
@@ -112,6 +118,24 @@ class AdminPageFormSettingsContact
 			// todo
 		}
 
+		if ($this->_showMessageInput) {
+			$category = __('Form-Specific', 'onoffice');
+			$this->_additionalCategories[] = $category;
+
+			$fieldNameMessage = array($category => array(
+					'message' => __('Message', 'onoffice'),
+				),
+			);
+			$this->addFieldsConfiguration(null, $pFormModelBuilder, $fieldNameMessage, true);
+			$sortableFieldListModules []= null;
+			$pFormModelBuilder->setAdditionalFields(array(
+				'message' => array(
+					'content' => $category,
+					'label' => __('Message', 'onoffice'),
+				),
+			));
+		}
+
 		$this->addSortableFieldsList($sortableFieldListModules, $pFormModelBuilder,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
 	}
@@ -153,6 +177,11 @@ class AdminPageFormSettingsContact
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 		}
+
+		foreach ($this->_additionalCategories as $category) {
+			$pFormFieldsConfigCategory = $this->getFormModelByGroupSlug($category);
+			$this->createMetaBoxByForm($pFormFieldsConfigCategory, 'side');
+		}
 	}
 
 
@@ -187,4 +216,12 @@ class AdminPageFormSettingsContact
 	/** @param bool $showAddressFields */
 	public function setShowAddressFields($showAddressFields)
 		{ $this->_showAddressFields = (bool)$showAddressFields; }
+
+	/** @return bool */
+	public function getShowMessageInput()
+		{ return $this->_showMessageInput; }
+
+	/** @param bool $showMessageInput */
+	public function setShowMessageInput($showMessageInput)
+		{ $this->_showMessageInput = (bool)$showMessageInput; }
 }

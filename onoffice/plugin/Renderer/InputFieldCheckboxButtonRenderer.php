@@ -36,9 +36,6 @@ class InputFieldCheckboxButtonRenderer
 	/** @var string */
 	private $_id = null;
 
-	/** @var string */
-	private $_idOuterDiv = null;
-
 	/**
 	 *
 	 * @param string $name

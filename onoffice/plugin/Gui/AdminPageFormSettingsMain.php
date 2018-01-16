@@ -131,6 +131,13 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowEstateFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				break;
+			case Form::TYPE_CONTACT:
+				$pAdminPage->setShowAddressFields(true);
+				$pAdminPage->setShowMessageInput(true);
+				break;
+			case Form::TYPE_APPLICANT_SEARCH:
+				$pAdminPage->setShowSearchCriteriaBoxes(true);
+				break;
 		}
 	}
 

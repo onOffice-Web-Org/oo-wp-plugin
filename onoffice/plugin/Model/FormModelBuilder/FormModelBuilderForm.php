@@ -92,6 +92,8 @@ class FormModelBuilderForm
 			$fieldNames = $this->_pFieldNames->getFieldList($module, true, true);
 		}
 
+		$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
+
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
 

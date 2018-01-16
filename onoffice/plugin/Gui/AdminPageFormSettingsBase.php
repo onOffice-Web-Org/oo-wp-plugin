@@ -229,6 +229,20 @@ abstract class AdminPageFormSettingsBase
 	}
 
 
+	/**
+	 *
+	 */
+
+	public function doExtraEnqueues()
+	{
+		parent::doExtraEnqueues();
+
+		wp_register_script('oo-forms-js',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/forms.js', array('jquery'), '', true);
+		wp_enqueue_script('oo-forms-js');
+	}
+
+
 	/** @return string */
 	public function getType()
 		{ return $this->_type; }

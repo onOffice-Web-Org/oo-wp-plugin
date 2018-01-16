@@ -21,7 +21,10 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use Exception;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Gui\Table\FormsTable;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -36,6 +39,32 @@ class AdminPageFormList
 	/** */
 	const PARAM_TYPE = 'type';
 
+	/** @var FormsTable */
+	private $_pFormsTable = null;
+
+
+	/**
+	 *
+	 * @param string $pageSlug
+	 *
+	 */
+
+	public function __construct($pageSlug)
+	{
+		parent::__construct($pageSlug);
+
+		$tab = $this->getTab();
+		$this->_pFormsTable = new FormsTable();
+
+		if (!__String::getNew($tab)->isEmpty() &&
+			!array_key_exists($tab, $this->_pFormsTable->getFormConfig())) {
+			throw new Exception('Unknown Form type');
+		}
+
+		$this->_pFormsTable->setListType($tab);
+	}
+
+
 	/**
 	 *
 	 */
@@ -46,14 +75,11 @@ class AdminPageFormList
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
 			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/form.php';
 
-		$tab = $this->getTab();
-		$pTable = new FormsTable();
-		$pTable->setListType($tab);
-		$pTable->prepare_items();
+		$this->_pFormsTable->prepare_items();
 		echo '<p>';
 		echo '<form method="post" action="'.esc_html($actionFile).'">';
-		echo $pTable->views();
-		$pTable->display();
+		echo $this->_pFormsTable->views();
+		$this->_pFormsTable->display();
 		echo '</form>';
 		echo '</p>';
 	}
@@ -162,15 +188,21 @@ class AdminPageFormList
 		$tab = $this->getTab();
 
 		if ($tab == null) {
-			$tab = \onOffice\WPlugin\Form::TYPE_CONTACT;
+			$tab = Form::TYPE_CONTACT;
 		}
 
 		$typeParam = AdminPageFormSettingsMain::GET_PARAM_TYPE;
 
 		$new_link = add_query_arg($typeParam, $tab, admin_url('admin.php?page=onoffice-editform'));
 
+		$formConfig = $this->_pFormsTable->getFormConfig();
+		$label = $formConfig[$tab];
+
+		$translation = translate_nooped_plural( $label[FormsTable::SUB_LABEL], 1, 'onoffice' );
+
 		echo '</h1>';
-		echo '<a href="'.$new_link.'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
+		echo '<a href="'.$new_link.'" class="page-title-action">'
+			.esc_html(sprintf(__('Add New %s', 'onoffice'), $translation)).'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 }

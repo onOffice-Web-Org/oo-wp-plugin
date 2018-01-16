@@ -312,4 +312,8 @@ class FormsTable
 	/** @param string $listType */
 	public function setListType($listType)
 		{ $this->_listType = $listType; }
+
+	/** @return array */
+	public function getFormConfig()
+		{ return $this->_formConfig; }
 }

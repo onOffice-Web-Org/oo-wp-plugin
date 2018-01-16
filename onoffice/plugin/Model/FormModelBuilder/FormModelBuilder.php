@@ -41,6 +41,9 @@ abstract class FormModelBuilder
 	/** @var array */
 	private $_values = array();
 
+	/** @var array */
+	private $_additionalFields = array();
+
 
 	/**
 	 *
@@ -157,6 +160,8 @@ abstract class FormModelBuilder
 		} else {
 			$fieldNames = $pFieldnames->getFieldList($module, true, true);
 		}
+
+		$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
@@ -188,4 +193,12 @@ abstract class FormModelBuilder
 	/** @param array $values */
 	protected function setValues(array $values)
 		{ $this->_values = $values; }
+
+	/** @return array */
+	public function getAdditionalFields()
+		{ return $this->_additionalFields; }
+
+	/** @param array $additionalFields */
+	public function setAdditionalFields($additionalFields)
+		{ $this->_additionalFields = $additionalFields; }
 }

@@ -49,7 +49,7 @@ class __String
 	/**
 	 *
 	 * @param string $string
-	 * @return \static
+	 * @return static
 	 *
 	 */
 
