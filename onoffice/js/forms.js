@@ -4,8 +4,11 @@ $(document).ready(function() {
 		toggleChild(receiver);
 	};
 
-	var elementCreateAddress = $(this).find('body.admin_page_onoffice-editform input[name=oopluginforms-createaddress]');
-	elementCreateAddress.ready(callback).change(callback);
+	var elementCreateAddress = $(this).find('input[name=oopluginforms-createaddress]');
+
+	if (elementCreateAddress.length) {
+		elementCreateAddress.ready(callback).change(callback);
+	}
 
 	var toggleChild = function(receiver) {
 		if (receiver.length) {

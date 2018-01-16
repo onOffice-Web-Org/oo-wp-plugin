@@ -51,6 +51,12 @@ class AdminPageFormSettingsContact
 	/** @var array */
 	private $_additionalCategories = array();
 
+	/** @var bool */
+	private $_showCreateAddress = false;
+
+	/** @var bool */
+	private $_showCheckDuplicates = false;
+
 	/**
 	 *
 	 */
@@ -80,8 +86,6 @@ class AdminPageFormSettingsContact
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
-		$pInputModelCreateAddress = $pFormModelBuilder->createInputModelCreateAddress();
-		$pInputModelCheckDuplicates = $pFormModelBuilder->createInputModelCheckDuplicates();
 		$pInputModelSubject = $pFormModelBuilder->createInputModelSubject();
 		$pFormModelFormSpecific = new Model\FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
@@ -89,8 +93,17 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->setLabel(__('Form Specific', 'onoffice'));
 		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
-		$pFormModelFormSpecific->addInputModel($pInputModelCreateAddress);
-		$pFormModelFormSpecific->addInputModel($pInputModelCheckDuplicates);
+
+		if ($this->_showCreateAddress) {
+			$pInputModelCreateAddress = $pFormModelBuilder->createInputModelCreateAddress();
+			$pFormModelFormSpecific->addInputModel($pInputModelCreateAddress);
+		}
+
+		if ($this->_showCheckDuplicates) {
+			$pInputModelCheckDuplicates = $pFormModelBuilder->createInputModelCheckDuplicates();
+			$pFormModelFormSpecific->addInputModel($pInputModelCheckDuplicates);
+		}
+
 		if ($this->_showPagesOption) {
 			$pInputModelPages = $pFormModelBuilder->createInputModelPages();
 			$pFormModelFormSpecific->addInputModel($pInputModelPages);
@@ -224,4 +237,18 @@ class AdminPageFormSettingsContact
 	/** @param bool $showMessageInput */
 	public function setShowMessageInput($showMessageInput)
 		{ $this->_showMessageInput = (bool)$showMessageInput; }
+
+	/** @return bool */
+	public function getShowCreateAddress()
+		{ return $this->_showCreateAddress; }
+
+	/** @return bool */
+	public function getShowCheckDuplicates()
+		{ return $this->_showCheckDuplicates; }
+
+	public function setShowCreateAddress($showCreateAddress)
+		{ $this->_showCreateAddress = (bool)$showCreateAddress; }
+
+	public function setShowCheckDuplicates($showCheckDuplicates)
+		{ $this->_showCheckDuplicates = (bool)$showCheckDuplicates; }
 }
