@@ -26,7 +26,6 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\HtmlIdGenerator;
-use onOffice\WPlugin\Utility\ModuleTranslation;
 
 /**
  *

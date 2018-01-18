@@ -413,6 +413,16 @@ class AdminPageEstateDetail
 		$this->addFormModel($pFormHidden);
 	}
 
+
+	/**
+	 *
+	 * @param string $module
+	 * @return string
+	 *
+	 */
+
 	private static function getSpecialDivId($module)
-	{ return 'actionFor'.$module; }
+	{
+		return 'actionFor'.$module;
+	}
 }
