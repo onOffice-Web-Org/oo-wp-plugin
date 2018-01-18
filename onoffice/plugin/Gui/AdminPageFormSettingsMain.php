@@ -124,6 +124,7 @@ class AdminPageFormSettingsMain
 				/* @var $pAdminPage \onOffice\WPlugin\Gui\AdminPageFormSettingsContact */
 				$pAdminPage->setShowSearchCriteriaBoxes(true);
 				$pAdminPage->setShowAddressFields(true);
+				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
 				break;
 			case Form::TYPE_OWNER:
 				/* @var $pAdminPage \onOffice\WPlugin\Gui\AdminPageFormSettingsContact */

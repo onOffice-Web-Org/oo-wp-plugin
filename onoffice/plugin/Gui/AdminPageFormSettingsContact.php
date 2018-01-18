@@ -128,7 +128,10 @@ class AdminPageFormSettingsContact
 		}
 
 		if ($this->_showSearchCriteriaBoxes) {
-			// todo
+			$fieldNamesSearchCriteria = $this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$this->addFieldsConfiguration
+				(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormModelBuilder, $fieldNamesSearchCriteria, true);
+			$sortableFieldListModules []= onOfficeSDK::MODULE_SEARCHCRITERIA;
 		}
 
 		if ($this->_showMessageInput) {
@@ -184,6 +187,11 @@ class AdminPageFormSettingsContact
 		if ($this->_showAddressFields) {
 			$fieldNames = array_merge($fieldNames,
 				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS)));
+		}
+
+		if ($this->_showSearchCriteriaBoxes) {
+			$fieldNames = array_merge($fieldNames,
+				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA)));
 		}
 
 		foreach ($fieldNames as $category) {

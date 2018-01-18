@@ -21,10 +21,12 @@
 
 namespace onOffice\WPlugin\Gui\Table;
 
+use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
+use WP_List_Table;
 /**
  *
  * @url http://www.onoffice.de
@@ -74,21 +76,25 @@ class FormsTable
 				self::SUB_LABEL => _nx_noop('All', 'All', 'forms', 'onoffice'),
 				self::SUB_DB_VALUE => null,
 			),
-			'contact' => array(
+			Form::TYPE_CONTACT => array(
 				self::SUB_LABEL => _nx_noop('Contact Form', 'Contact Forms', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => 'contact',
+				self::SUB_DB_VALUE => Form::TYPE_CONTACT,
 			),
-			'interessent' => array(
+			Form::TYPE_INTEREST => array(
 				self::SUB_LABEL => _nx_noop('Interest Form', 'Interest Forms', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => 'interest',
+				self::SUB_DB_VALUE => Form::TYPE_INTEREST,
 			),
-			'owner' => array(
+			Form::TYPE_OWNER => array(
 				self::SUB_LABEL => _nx_noop('Owner Form', 'Owner Forms', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => 'owner',
+				self::SUB_DB_VALUE => Form::TYPE_OWNER,
 			),
-			'free' => array(
+			Form::TYPE_FREE => array(
 				self::SUB_LABEL => _nx_noop('Free Form', 'Free Forms', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => 'free',
+				self::SUB_DB_VALUE => Form::TYPE_FREE,
+			),
+			Form::TYPE_APPLICANT_SEARCH => array(
+				self::SUB_LABEL => _nx_noop('Applicant Search Form', 'Applicant Search Forms', 'forms', 'onoffice'),
+				self::SUB_DB_VALUE => Form::TYPE_APPLICANT_SEARCH,
 			),
 		);
 	}

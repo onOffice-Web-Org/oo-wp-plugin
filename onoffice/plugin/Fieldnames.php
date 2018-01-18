@@ -209,15 +209,16 @@ class Fieldnames {
 
 		foreach ($response['data']['records'] as $tableValues)
 		{
-			$felder = $tableValues['elements'];
+			$fields = $tableValues['elements'];
 
-			foreach ($felder['fields'] as $field)
+			foreach ($fields['fields'] as $field)
 			{
 				$fieldProperties = array();
 				$fieldProperties['type'] = $field['type'];
 				$fieldProperties['label'] = $field['name'];
 				$fieldProperties['default'] = null;
 				$fieldProperties['permittedvalues'] = array();
+				$fieldProperties['content'] = __('Search Criteria', 'onoffice');
 
 				if (array_key_exists('default', $field))
 				{
@@ -241,7 +242,7 @@ class Fieldnames {
 					}
 				}
 
-				if ($felder['name'] == 'Umkreis')
+				if ($fields['name'] == 'Umkreis')
 				{
 					$this->_umkreisFields[$field['id']] = $fieldProperties;
 				}

@@ -203,15 +203,35 @@ abstract class AdminPageSettingsBase
 				}
 			}
 		}
+
 		$row = $pInputModelDBAdapterRow->createUpdateValuesByTable();
 		$row = $this->setFixedValues($row);
-
-
+		$checkResult = $this->checkFixedValues($row);
 		$pResultObject = new stdClass();
-		$this->updateValues($row, $pResultObject, $recordId);
+		$pResultObject->result = false;
+
+		if ($checkResult) {
+			$this->updateValues($row, $pResultObject, $recordId);
+		}
+
 		echo json_encode($pResultObject);
 
 		wp_die();
+	}
+
+
+	/**
+	 *
+	 * Check values here, throw \Exception if anything is wrong
+	 *
+	 * @param array $row
+	 * @return bool
+	 *
+	 */
+
+	protected function checkFixedValues($row)
+	{
+		return true;
 	}
 
 

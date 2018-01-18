@@ -74,6 +74,22 @@ abstract class AdminPageFormSettingsBase
 
 	/**
 	 *
+	 * @param array $row
+	 * @return bool
+	 *
+	 */
+
+	protected function checkFixedValues($row)
+	{
+		$table = RecordManager::TABLENAME_FORMS;
+		$result = isset($row[$table]['name']) && $row[$table]['name'] != null;
+
+		return $result;
+	}
+
+
+	/**
+	 *
 	 * @param int $recordId
 	 * @throws UnknownFormException
 	 *
@@ -89,7 +105,8 @@ abstract class AdminPageFormSettingsBase
 		$pWpDb = $pRecordReadManager->getWpdb();
 		$prefix = $pRecordReadManager->getTablePrefix();
 		$value = $pWpDb->get_var('SELECT form_id FROM `'.esc_sql($prefix)
-			.'oo_plugin_forms` WHERE `form_id` = "'.esc_sql($recordId).'"');
+			.'oo_plugin_forms` WHERE `form_id` = "'.esc_sql($recordId).'" AND '
+			.'`form_type` = "'.esc_sql($this->getType()).'"');
 
 		if ($value != (int)$recordId) {
 			throw new UnknownFormException;
