@@ -42,8 +42,7 @@ class AdminPageFormSettingsMain
 	/** @var array */
 	private $_mappingTypeClass = array(
 		Form::TYPE_CONTACT => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
-		// search searchcriteria
-		Form::TYPE_APPLICANT_SEARCH => null,
+		Form::TYPE_APPLICANT_SEARCH => '\onOffice\WPlugin\Gui\AdminPageFormSettingsApplicantSearch',
 		Form::TYPE_INTEREST => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
 		Form::TYPE_OWNER => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
 		Form::TYPE_FREE => '\onOffice\WPlugin\Gui\AdminPageFormSettingsFree',
@@ -122,7 +121,7 @@ class AdminPageFormSettingsMain
 		switch ($type) {
 			case Form::TYPE_INTEREST:
 				/* @var $pAdminPage \onOffice\WPlugin\Gui\AdminPageFormSettingsContact */
-				$pAdminPage->setShowSearchCriteriaBoxes(true);
+				$pAdminPage->setShowSearchCriteriaFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
 				break;
@@ -140,7 +139,11 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowMessageInput(true);
 				break;
 			case Form::TYPE_APPLICANT_SEARCH:
-				$pAdminPage->setShowSearchCriteriaBoxes(true);
+				$pAdminPage->setShowSearchCriteriaFields(true);
+				break;
+			case Form::TYPE_FREE:
+				$pAdminPage->setShowEstateFields(true);
+				$pAdminPage->setShowAddressFields(true);
 				break;
 		}
 	}

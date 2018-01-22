@@ -138,7 +138,7 @@ abstract class Installer
 		$sql = "CREATE TABLE $tableName (
 			`form_id` int(11) NOT NULL AUTO_INCREMENT,
 			`name` varchar(191) NOT NULL,
-			`form_type` enum('owner', 'interest', 'contact', 'free') NOT NULL DEFAULT 'free',
+			`form_type` enum('owner', 'interest', 'contact', 'applicantsearch', 'free') NOT NULL DEFAULT 'free',
 			`template` tinytext NOT NULL,
 			`recipient` varchar(255) NULL,
 			`subject` mediumtext NULL,

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -21,16 +21,18 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Model;
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
 use onOffice\WPlugin\Model\InputModelBase;
 
-
 /**
+ *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
-class AdminPageFormSettingsFree
+class AdminPageFormSettingsApplicantSearch
 	extends AdminPageFormSettingsBase
 {
 	/**
@@ -46,16 +48,46 @@ class AdminPageFormSettingsFree
 		$this->addFormModel($pFormModel);
 
 		$pInputModelName = $pFormModelBuilder->createInputModelName();
-		$pFormModelName = new Model\FormModel();
+		$pFormModelName = new FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
 		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
 		$pFormModelName->setLabel(__('choose name', 'onoffice'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
 
+		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
+		$pFormModelLayoutDesign = new FormModel();
+		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
+		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
+		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
+		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$this->addFormModel($pFormModelLayoutDesign);
+
+		$pInputModelResultLimit = $pFormModelBuilder->createInputModelResultLimit();
+		$pFormModelFormSpecific = new FormModel();
+		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
+		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
+		$pFormModelFormSpecific->setLabel(__('Form Specific', 'onoffice'));
+		$pFormModelFormSpecific->addInputModel($pInputModelResultLimit);
+		$this->addFormModel($pFormModelFormSpecific);
+
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
 
 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
+	}
+
+
+	/**
+	 *
+	 */
+
+	protected function generateMetaBoxes()
+	{
+		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
+		$this->createMetaBoxByForm($pFormFormSpecific, 'normal');
+
+		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
+		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
 	}
 }

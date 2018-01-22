@@ -196,7 +196,7 @@ class DataFormConfigurationFactory
 
 	private function configureApplicant(array $row, DataFormConfigurationApplicantSearch $pConfig)
 	{
-		$pConfig->setLimitResults($row['limitResults']);
+		$pConfig->setLimitResults($row['limitresults']);
 	}
 
 

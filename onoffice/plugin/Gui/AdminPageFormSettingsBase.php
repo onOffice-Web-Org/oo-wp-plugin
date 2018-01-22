@@ -21,7 +21,9 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Record\RecordManager;
@@ -55,6 +57,18 @@ abstract class AdminPageFormSettingsBase
 
 	/** */
 	const GET_PARAM_TYPE = 'type';
+
+	/** @var bool */
+	private $_showEstateFields = false;
+
+	/** @var bool */
+	private $_showAddressFields = false;
+
+	/** @var bool */
+	private $_showSearchCriteriaFields = false;
+
+	/** @var array */
+	private $_sortableFieldModules = array();
 
 	/** @var string */
 	private $_type = null;
@@ -250,6 +264,74 @@ abstract class AdminPageFormSettingsBase
 	 *
 	 */
 
+	protected function generateAccordionBoxes()
+	{
+		$fieldNames = array();
+
+		if ($this->_showEstateFields) {
+			$fieldNames = array_merge($fieldNames,
+				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE)));
+		}
+
+		if ($this->_showAddressFields) {
+			$fieldNames = array_merge($fieldNames,
+				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS)));
+		}
+
+		if ($this->_showSearchCriteriaFields) {
+			$fieldNames = array_merge($fieldNames,
+				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA)));
+		}
+
+		foreach ($fieldNames as $category) {
+			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
+			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+		}
+	}
+
+
+	/**
+	 *
+	 * Call this in method `buildForms` of overriding class
+	 *
+	 * Don't forget to call
+	 * <code>
+	 * 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
+	 *			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
+	 * </code>
+	 * afterwards.
+	 *
+	 */
+
+	protected function addFieldConfigurationForMainModules(FormModelBuilder $pFormModelBuilder)
+	{
+		if ($this->_showEstateFields) {
+			$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
+			$this->addFieldsConfiguration
+				(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNamesEstate, true);
+			$this->addSortableFieldModule(onOfficeSDK::MODULE_ESTATE);
+		}
+
+		if ($this->_showAddressFields) {
+			$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
+			$this->addFieldsConfiguration
+				(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder, $fieldNamesAddress, true);
+			$this->addSortableFieldModule(onOfficeSDK::MODULE_ADDRESS);
+		}
+
+		if ($this->_showSearchCriteriaFields) {
+			$fieldNamesSearchCriteria = $this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$this->addFieldsConfiguration
+				(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormModelBuilder, $fieldNamesSearchCriteria, true);
+			$this->addSortableFieldModule(onOfficeSDK::MODULE_SEARCHCRITERIA);
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function doExtraEnqueues()
 	{
 		parent::doExtraEnqueues();
@@ -267,4 +349,50 @@ abstract class AdminPageFormSettingsBase
 	/** @param string $type */
 	public function setType($type)
 		{ $this->_type = $type; }
+
+	/** @param string $module */
+	protected function addSortableFieldModule($module)
+		{ $this->_sortableFieldModules []= $module; }
+
+	/**
+	 *
+	 * @param string $module
+	 *
+	 */
+
+	protected function removeSortableFieldModule($module)
+	{
+		if (in_array($module, $this->_sortableFieldModules)) {
+			$key = array_search($module, $this->_sortableFieldModules);
+			unset($this->_sortableFieldModules[$key]);
+		}
+	}
+
+	/** @return array */
+	protected function getSortableFieldModules()
+		{ return $this->_sortableFieldModules; }
+
+	/** @return bool */
+	public function getShowEstateFields()
+		{ return $this->_showEstateFields; }
+
+	/** @return bool */
+	public function getShowAddressFields()
+		{ return $this->_showAddressFields; }
+
+	/** @return bool */
+	public function getShowSearchCriteriaFields()
+		{ return $this->_showSearchCriteriaFields; }
+
+	/** @param bool $showEstateFields */
+	public function setShowEstateFields($showEstateFields)
+		{ $this->_showEstateFields = (bool)$showEstateFields; }
+
+	/** @param bool $showAddressFields */
+	public function setShowAddressFields($showAddressFields)
+		{ $this->_showAddressFields = (bool)$showAddressFields; }
+
+	/** @param bool $showSearchCriteriaFields */
+	public function setShowSearchCriteriaFields($showSearchCriteriaFields)
+		{ $this->_showSearchCriteriaFields = (bool)$showSearchCriteriaFields; }
 }

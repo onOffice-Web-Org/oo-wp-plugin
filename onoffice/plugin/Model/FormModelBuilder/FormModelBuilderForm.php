@@ -310,10 +310,10 @@ class FormModelBuilderForm
 	public function createInputModelResultLimit()
 	{
 		$labelResultLimit = __('Result Limit', 'onoffice');
-		$selectedValue = $this->getValue('limitresult');
-
 		$pInputModelFormLimitResult = $this->getInputModelDBFactory()->create
 			(InputModelDBFactoryConfigForm::INPUT_FORM_LIMIT_RESULTS, $labelResultLimit);
+		$field = $pInputModelFormLimitResult->getField();
+		$selectedValue = $this->getValue($field);
 		$pInputModelFormLimitResult->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelFormLimitResult->setValue($selectedValue);
 

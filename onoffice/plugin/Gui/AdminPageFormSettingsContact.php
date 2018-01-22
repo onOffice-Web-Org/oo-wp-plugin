@@ -22,9 +22,8 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model;
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
+use onOffice\WPlugin\Model\InputModelBase;
 
 /**
  *
@@ -34,16 +33,7 @@ class AdminPageFormSettingsContact
 	extends AdminPageFormSettingsBase
 {
 	/** @var bool */
-	private $_showSearchCriteriaBoxes = false;
-
-	/** @var bool */
 	private $_showPagesOption = false;
-
-	/** @var bool */
-	private $_showEstateFields = false;
-
-	/** @var bool */
-	private $_showAddressFields = false;
 
 	/** @var bool message field has no module */
 	private $_showMessageInput = false;
@@ -110,29 +100,7 @@ class AdminPageFormSettingsContact
 		}
 
 		$this->addFormModel($pFormModelFormSpecific);
-
-		$sortableFieldListModules = array();
-
-		if ($this->_showEstateFields) {
-			$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
-			$this->addFieldsConfiguration
-				(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNamesEstate, true);
-			$sortableFieldListModules []= onOfficeSDK::MODULE_ESTATE;
-		}
-
-		if ($this->_showAddressFields) {
-			$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
-			$this->addFieldsConfiguration
-				(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder, $fieldNamesAddress, true);
-			$sortableFieldListModules []= onOfficeSDK::MODULE_ADDRESS;
-		}
-
-		if ($this->_showSearchCriteriaBoxes) {
-			$fieldNamesSearchCriteria = $this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA);
-			$this->addFieldsConfiguration
-				(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormModelBuilder, $fieldNamesSearchCriteria, true);
-			$sortableFieldListModules []= onOfficeSDK::MODULE_SEARCHCRITERIA;
-		}
+		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
 
 		if ($this->_showMessageInput) {
 			$category = __('Form-Specific', 'onoffice');
@@ -143,7 +111,7 @@ class AdminPageFormSettingsContact
 				),
 			);
 			$this->addFieldsConfiguration(null, $pFormModelBuilder, $fieldNameMessage, true);
-			$sortableFieldListModules []= null;
+			$this->addSortableFieldModule(null);
 			$pFormModelBuilder->setAdditionalFields(array(
 				'message' => array(
 					'content' => $category,
@@ -152,7 +120,7 @@ class AdminPageFormSettingsContact
 			));
 		}
 
-		$this->addSortableFieldsList($sortableFieldListModules, $pFormModelBuilder,
+		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
 	}
 
@@ -177,27 +145,7 @@ class AdminPageFormSettingsContact
 
 	protected function generateAccordionBoxes()
 	{
-		$fieldNames = array();
-
-		if ($this->_showEstateFields) {
-			$fieldNames = array_merge($fieldNames,
-				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE)));
-		}
-
-		if ($this->_showAddressFields) {
-			$fieldNames = array_merge($fieldNames,
-				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS)));
-		}
-
-		if ($this->_showSearchCriteriaBoxes) {
-			$fieldNames = array_merge($fieldNames,
-				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA)));
-		}
-
-		foreach ($fieldNames as $category) {
-			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
-			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
-		}
+		parent::generateAccordionBoxes();
 
 		foreach ($this->_additionalCategories as $category) {
 			$pFormFieldsConfigCategory = $this->getFormModelByGroupSlug($category);
@@ -207,36 +155,12 @@ class AdminPageFormSettingsContact
 
 
 	/** @return bool */
-	public function getShowSearchCriteriaBoxes()
-		{ return $this->_showSearchCriteriaBoxes; }
-
-	/** @param bool $showSearchCriteriaBoxes */
-	public function setShowSearchCriteriaBoxes($showSearchCriteriaBoxes)
-		{ $this->_showSearchCriteriaBoxes = (bool)$showSearchCriteriaBoxes; }
-
-	/** @return bool */
 	public function getShowPagesOption()
 		{ return $this->_showPagesOption; }
 
 	/** @param bool $showPagesOption */
 	public function setShowPagesOption($showPagesOption)
 		{ $this->_showPagesOption = (bool)$showPagesOption; }
-
-	/** @return bool */
-	public function getShowEstateFields()
-		{ return $this->_showEstateFields; }
-
-	/** @return bool */
-	public function getShowAddressFields()
-		{ return $this->_showAddressFields; }
-
-	/** @param bool $showEstateFields */
-	public function setShowEstateFields($showEstateFields)
-		{ $this->_showEstateFields = (bool)$showEstateFields; }
-
-	/** @param bool $showAddressFields */
-	public function setShowAddressFields($showAddressFields)
-		{ $this->_showAddressFields = (bool)$showAddressFields; }
 
 	/** @return bool */
 	public function getShowMessageInput()
