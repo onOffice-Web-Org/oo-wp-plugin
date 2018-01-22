@@ -23,7 +23,9 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Record\RecordManager;
@@ -72,6 +74,9 @@ abstract class AdminPageFormSettingsBase
 
 	/** @var string */
 	private $_type = null;
+
+	/** @var FormModelBuilder */
+	private $_pFormModelBuilder = null;
 
 	/**
 	 *
@@ -262,6 +267,49 @@ abstract class AdminPageFormSettingsBase
 
 	/**
 	 *
+	 * Call this first in overriding class
+	 *
+	 */
+
+	protected function buildForms()
+	{
+		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
+		$this->_pFormModelBuilder = new FormModelBuilderForm($this->getPageSlug());
+		$this->_pFormModelBuilder->setFormType($this->getType());
+		$pFormModel = $this->_pFormModelBuilder->generate($this->getListViewId());
+		$this->addFormModel($pFormModel);
+
+		$pInputModelName = $this->_pFormModelBuilder->createInputModelName();
+		$pFormModelName = new FormModel();
+		$pFormModelName->setPageSlug($this->getPageSlug());
+		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
+		$pFormModelName->setLabel(__('choose name', 'onoffice'));
+		$pFormModelName->addInputModel($pInputModelName);
+		$this->addFormModel($pFormModelName);
+
+		$pInputModelTemplate = $this->_pFormModelBuilder->createInputModelTemplate();
+		$pFormModelLayoutDesign = new FormModel();
+		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
+		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
+		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
+		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$this->addFormModel($pFormModelLayoutDesign);
+	}
+
+
+	/**
+	 *
+	 */
+
+	protected function generateMetaBoxes()
+	{
+		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
+		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
+	}
+
+
+	/**
+	 *
 	 */
 
 	protected function generateAccordionBoxes()
@@ -349,6 +397,10 @@ abstract class AdminPageFormSettingsBase
 	/** @param string $type */
 	public function setType($type)
 		{ $this->_type = $type; }
+
+	/** @return FormModelBuilder */
+	protected function getFormModelBuilder()
+		{ return $this->_pFormModelBuilder; }
 
 	/** @param string $module */
 	protected function addSortableFieldModule($module)

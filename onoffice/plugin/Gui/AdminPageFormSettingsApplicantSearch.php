@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
 use onOffice\WPlugin\Model\InputModelBase;
 
 /**
@@ -41,27 +40,8 @@ class AdminPageFormSettingsApplicantSearch
 
 	protected function buildForms()
 	{
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$pFormModelBuilder = new FormModelBuilderForm($this->getPageSlug());
-		$pFormModelBuilder->setFormType($this->getType());
-		$pFormModel = $pFormModelBuilder->generate($this->getListViewId());
-		$this->addFormModel($pFormModel);
-
-		$pInputModelName = $pFormModelBuilder->createInputModelName();
-		$pFormModelName = new FormModel();
-		$pFormModelName->setPageSlug($this->getPageSlug());
-		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
-		$pFormModelName->setLabel(__('choose name', 'onoffice'));
-		$pFormModelName->addInputModel($pInputModelName);
-		$this->addFormModel($pFormModelName);
-
-		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
-		$pFormModelLayoutDesign = new FormModel();
-		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
-		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
-		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
-		$this->addFormModel($pFormModelLayoutDesign);
+		parent::buildForms();
+		$pFormModelBuilder = $this->getFormModelBuilder();
 
 		$pInputModelResultLimit = $pFormModelBuilder->createInputModelResultLimit();
 		$pFormModelFormSpecific = new FormModel();
@@ -87,7 +67,6 @@ class AdminPageFormSettingsApplicantSearch
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$this->createMetaBoxByForm($pFormFormSpecific, 'normal');
 
-		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
+		parent::generateMetaBoxes();
 	}
 }

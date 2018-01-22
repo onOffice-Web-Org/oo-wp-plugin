@@ -21,8 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Model;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelBase;
 
 /**
@@ -47,37 +46,19 @@ class AdminPageFormSettingsContact
 	/** @var bool */
 	private $_showCheckDuplicates = false;
 
+
 	/**
 	 *
 	 */
 
 	protected function buildForms()
 	{
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$pFormModelBuilder = new FormModelBuilderForm($this->getPageSlug());
-		$pFormModelBuilder->setFormType($this->getType());
-		$pFormModel = $pFormModelBuilder->generate($this->getListViewId());
-		$this->addFormModel($pFormModel);
-
-		$pInputModelName = $pFormModelBuilder->createInputModelName();
-		$pFormModelName = new Model\FormModel();
-		$pFormModelName->setPageSlug($this->getPageSlug());
-		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
-		$pFormModelName->setLabel(__('choose name', 'onoffice'));
-		$pFormModelName->addInputModel($pInputModelName);
-		$this->addFormModel($pFormModelName);
-
-		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
-		$pFormModelLayoutDesign = new Model\FormModel();
-		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
-		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
-		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
-		$this->addFormModel($pFormModelLayoutDesign);
+		parent::buildForms();
+		$pFormModelBuilder = $this->getFormModelBuilder();
 
 		$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
 		$pInputModelSubject = $pFormModelBuilder->createInputModelSubject();
-		$pFormModelFormSpecific = new Model\FormModel();
+		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$pFormModelFormSpecific->setLabel(__('Form Specific', 'onoffice'));
@@ -134,8 +115,7 @@ class AdminPageFormSettingsContact
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$this->createMetaBoxByForm($pFormFormSpecific, 'normal');
 
-		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
+		parent::generateMetaBoxes();
 	}
 
 
@@ -178,9 +158,11 @@ class AdminPageFormSettingsContact
 	public function getShowCheckDuplicates()
 		{ return $this->_showCheckDuplicates; }
 
+	/** @param bool $showCreateAddress */
 	public function setShowCreateAddress($showCreateAddress)
 		{ $this->_showCreateAddress = (bool)$showCreateAddress; }
 
+	/** @param bool $showCheckDuplicates */
 	public function setShowCheckDuplicates($showCheckDuplicates)
 		{ $this->_showCheckDuplicates = (bool)$showCheckDuplicates; }
 }

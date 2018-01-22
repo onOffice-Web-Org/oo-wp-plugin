@@ -21,8 +21,6 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Model;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
 use onOffice\WPlugin\Model\InputModelBase;
 
 
@@ -39,19 +37,8 @@ class AdminPageFormSettingsFree
 
 	protected function buildForms()
 	{
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$pFormModelBuilder = new FormModelBuilderForm($this->getPageSlug());
-		$pFormModelBuilder->setFormType($this->getType());
-		$pFormModel = $pFormModelBuilder->generate($this->getListViewId());
-		$this->addFormModel($pFormModel);
-
-		$pInputModelName = $pFormModelBuilder->createInputModelName();
-		$pFormModelName = new Model\FormModel();
-		$pFormModelName->setPageSlug($this->getPageSlug());
-		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
-		$pFormModelName->setLabel(__('choose name', 'onoffice'));
-		$pFormModelName->addInputModel($pInputModelName);
-		$this->addFormModel($pFormModelName);
+		parent::buildForms();
+		$pFormModelBuilder = $this->getFormModelBuilder();
 
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
 
