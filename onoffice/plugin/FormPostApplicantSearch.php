@@ -83,7 +83,6 @@ class FormPostApplicantSearch
 		}
 		else
 		{
-			$response = false;
 			$interessenten = $this->getApplicants($pFormData, $limitResults);
 
 			if (is_array($interessenten) && count($interessenten) > 0)

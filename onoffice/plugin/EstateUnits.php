@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
@@ -68,13 +69,13 @@ class EstateUnits {
 	 /**
 	 *
 	 * @param array $responseArrayEstateUnits
-	 * @throws \onOffice\SDK\Exception\HttpFetchNoResultException
+	 * @throws HttpFetchNoResultException
 	 *
 	 */
 
 	private function evaluateEstateUnits( $responseArrayEstateUnits ) {
 		if ( ! isset( $responseArrayEstateUnits['data']['records'] ) ) {
-			throw new \onOffice\SDK\Exception\HttpFetchNoResultException();
+			throw new HttpFetchNoResultException();
 		}
 
 		$records = $responseArrayEstateUnits['data']['records'];

@@ -51,7 +51,6 @@ class FormPostOwner
 		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
 		$recipient = null;
 		$subject = null;
-		$saveInDb = false;
 		$checkduplicate = false;
 
 		$configByPrefix = $formConfig[$prefix];
@@ -68,11 +67,6 @@ class FormPostOwner
 
 		if ( isset( $configByPrefix['subject'] ) ) {
 			$subject = $configByPrefix['subject'];
-		}
-
-		if ( isset( $configByPrefix['saveInDb']))
-		{
-			$saveInDb = $configByPrefix['saveInDb'];
 		}
 
 		if ( isset( $configByPrefix['checkduplicate']))
@@ -121,6 +115,7 @@ class FormPostOwner
 
 	}
 
+
 	/**
 	 *
 	 * @param FormData $pFormData
@@ -158,13 +153,12 @@ class FormPostOwner
 	/**
 	 *
 	 * @param array $estateValues
-	 * @return null
+	 * @return bool
 	 *
 	 */
 
 	private function createEstate( $estateValues)
 	{
-		$result = null;
 		$requestParams = array('data' => $estateValues);
 
 		$pSDKWrapper = new SDKWrapper();
@@ -190,8 +184,8 @@ class FormPostOwner
 
 	/**
 	 *
-	 * @param type $estateId
-	 * @param type $estateValues
+	 * @param int $estateId
+	 * @param array $estateValues
 	 * @return mixed
 	 *
 	 */
@@ -224,7 +218,9 @@ class FormPostOwner
 	 *
 	 * @param \onOffice\WPlugin\FormData $pFormData
 	 * @return mixed
+	 *
 	 */
+
 	private function modifyOrCreateEstate(FormData $pFormData)
 	{
 		$estateValues = $pFormData->getEstateData();
@@ -247,8 +243,8 @@ class FormPostOwner
 
 	/**
 	 *
-	 * @param type $estateId
-	 * @param type $addressId
+	 * @param int $estateId
+	 * @param int $addressId
 	 * @return bool $result
 	 *
 	 */
@@ -328,5 +324,4 @@ class FormPostOwner
 	/** @return string */
 	static protected function getFormType()
 		{ return Form::TYPE_OWNER; }
-
 }

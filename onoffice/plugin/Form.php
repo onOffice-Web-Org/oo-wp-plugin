@@ -296,7 +296,6 @@ class Form {
 
 	public function getPermittedValues( $field, $raw = false ) {
 		$config = $this->getConfigByFormId( $this->_formId );
-		$language = $config['language'];
 		$module = $config['inputs'][$field];
 
 		$fieldType = $this->getFieldType( $field );

@@ -28,8 +28,9 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\FormData;
+use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\FormData;
 
 /**
  *
@@ -113,7 +114,7 @@ abstract class FormPost {
 
 	static protected function getFormType()
 	{
-		throw new \Exception('getFormType must be overridden');
+		throw new Exception('getFormType must be overridden');
 	}
 
 

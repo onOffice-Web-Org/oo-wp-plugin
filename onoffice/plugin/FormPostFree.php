@@ -28,8 +28,8 @@
 namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\FormPost;
 
 /**
  *

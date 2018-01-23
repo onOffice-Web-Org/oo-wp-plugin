@@ -29,9 +29,9 @@ namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\FormPostApplicant;
 use onOffice\WPlugin\FormPostFree;
 use onOffice\WPlugin\FormPostInterest;
-use onOffice\WPlugin\FormPostApplicant;
 use onOffice\WPlugin\FormPostOwner;
 
 /**
@@ -52,7 +52,7 @@ class FormPostHandler
 
 	static public function getInstance()
 	{
-		$configByPrefix = \onOffice\WPlugin\Form::TYPE_FREE;
+		$configByPrefix = Form::TYPE_FREE;
 
 		if ( array_key_exists( 'oo_formid', $_POST ) )
 		{

@@ -28,7 +28,9 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Cache\DBCache;
 
 
 /**
@@ -36,7 +38,7 @@ use onOffice\SDK\onOfficeSDK;
  */
 
 class SDKWrapper {
-	/** @var \onOffice\SDK\onOfficeSDK */
+	/** @var onOfficeSDK */
 	private $_pSDK = null;
 
 	/** @var string */
@@ -83,7 +85,7 @@ class SDKWrapper {
 			'secret' => get_option('onoffice-settings-apisecret'),
 			'apiversion' => 'latest',
 			'cache' => array(
-				new \onOffice\WPlugin\Cache\DBCache( array('ttl' => 3600) ),
+				new DBCache( array('ttl' => 3600) ),
 			),
 			'server' => 'https://api.onoffice.de/api/',
 			'curl_options' => array
@@ -127,7 +129,7 @@ class SDKWrapper {
 	 * @param int $resourceId
 	 * @param array $parameters
 	 * @param string $identifier
-	 * @return handle
+	 * @return int handle
 	 *
 	 */
 
@@ -159,7 +161,7 @@ class SDKWrapper {
 
 	/**
 	 *
-	 * @return \onOffice\SDK\Cache\onOfficeSDKCache[]
+	 * @return onOfficeSDKCache[]
 	 *
 	 */
 
