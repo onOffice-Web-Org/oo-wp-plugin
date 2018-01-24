@@ -18,6 +18,16 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+namespace onOffice\WPlugin;
+
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\Form;
+use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\FormPost;
+
+
 /**
  *
  * @url http://www.onoffice.de
@@ -25,53 +35,31 @@
  *
  */
 
-namespace onOffice\WPlugin;
-
-use onOffice\WPlugin\Form;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
-use onOffice\SDK\onOfficeSDK;
-
 class FormPostApplicantSearch
 	extends FormPost
 {
-
 	/** */
 	const LIMIT_RESULTS = 100;
 
 
 	/**
 	 *
-	 * @param string $prefix
-	 * @param in $formNo
+	 * @param FormData $pFormData
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix($prefix, $formNo = null) {
-		$formConfig = ConfigWrapper::getInstance()->getConfigByKey('forms');
-
-		$configByPrefix = $formConfig[$prefix];
-		$formFields = $configByPrefix['inputs'];
-
-		$limitResults = self::LIMIT_RESULTS;
-
-		if (array_key_exists('limitResults', $configByPrefix))
-		{
-			if ($configByPrefix['limitResults'] > 0)
-			{
-				$limitResults = $configByPrefix['limitResults'];
-			}
-		}
-
+	protected function analyseFormContentByPrefix(FormData $pFormData) {
+		/* @var $pFormConfig DataFormConfigurationApplicantSearch */
+		$pFormConfig = $pFormData->getDataFormConfiguration();
+		$formFields = $pFormConfig->getInputs();
 		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
 
 		$formData = array_intersect_key($_POST, $newFormFields);
+		$limitResults = $pFormConfig->getLimitResults();
 
-		$pFormData = new FormData($prefix, $formNo);
-		$pFormData->setRequiredFields($configByPrefix['required']);
-		$pFormData->setFormtype($configByPrefix['formtype']);
-
-		$this->setFormDataInstances($prefix, $formNo, $pFormData);
+		if ($limitResults <= 0) {
+			$limitResults = self::LIMIT_RESULTS;
+		}
 
 		$pFormData->setValues($formData);
 
@@ -85,7 +73,7 @@ class FormPostApplicantSearch
 		{
 			$interessenten = $this->getApplicants($pFormData, $limitResults);
 
-			if (is_array($interessenten) && count($interessenten) > 0)
+			if (is_array($interessenten))
 			{
 				$pFormData->setResponseFieldsValues($interessenten);
 				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
@@ -96,7 +84,7 @@ class FormPostApplicantSearch
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\FormData $pFormData
+	 * @param FormData $pFormData
 	 * @param int $limitResults
 	 * @return array
 	 *
@@ -106,7 +94,6 @@ class FormPostApplicantSearch
 	{
 		$found = array();
 		$searchData = $this->editFormValuesForApiCall($pFormData->getValues());
-
 		$searchFields = array_keys($searchData);
 		$searchcrieriaRangeFields = $this->getSearchcriteriaRangeFields();
 

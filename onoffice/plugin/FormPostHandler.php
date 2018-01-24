@@ -31,10 +31,6 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
-use onOffice\WPlugin\FormPostApplicant;
-use onOffice\WPlugin\FormPostFree;
-use onOffice\WPlugin\FormPostInterest;
-use onOffice\WPlugin\FormPostOwner;
 
 /**
  *
@@ -42,6 +38,16 @@ use onOffice\WPlugin\FormPostOwner;
 
 class FormPostHandler
 {
+	/** @var array */
+	static private $_formPostClassesByType = array(
+		Form::TYPE_CONTACT => '\onOffice\WPlugin\FormPostInterest',
+		Form::TYPE_OWNER => '\onOffice\WPlugin\FormPostOwner',
+		Form::TYPE_INTEREST => '\onOffice\WPlugin\FormPostApplicant',
+		Form::TYPE_APPLICANT_SEARCH => '\onOffice\WPlugin\FormPostApplicantSearch',
+		Form::TYPE_FREE => '\onOffice\WPlugin\FormPostFree',
+	);
+
+
 	/** @var array */
 	static private $_instances = array();
 
@@ -88,32 +94,20 @@ class FormPostHandler
 
 	/**
 	 *
-	 * @param string $configByPrefix
+	 * @param string $formType
 	 *
 	 */
 
-	static private function create($configByPrefix)
+	static private function create($formType)
 	{
-		switch ($configByPrefix) {
-			case Form::TYPE_CONTACT:
-				self::$_instances[Form::TYPE_CONTACT] = FormPostInterest::getInstance();
-				break;
+		$class = self::$_formPostClassesByType[Form::TYPE_FREE];
 
-			case Form::TYPE_OWNER:
-				self::$_instances[Form::TYPE_OWNER] = FormPostOwner::getInstance();
-				break;
-
-			case Form::TYPE_INTEREST:
-				self::$_instances[Form::TYPE_INTEREST] = FormPostApplicant::getInstance();
-				break;
-
-			case Form::TYPE_APPLICANT_SEARCH:
-				self::$_instances[Form::TYPE_APPLICANT_SEARCH] = FormPostApplicantSearch::getInstance();
-				break;
-
-			default:
-				self::$_instances[Form::TYPE_FREE] = FormPostFree::getInstance();
-				break;
+		if (array_key_exists($formType, self::$_formPostClassesByType)) {
+			$class = self::$_formPostClassesByType[$formType];
+		} else {
+			$formType = Form::TYPE_FREE;
 		}
+
+		self::$_instances[$formType] = $class::getInstance();
 	}
 }
