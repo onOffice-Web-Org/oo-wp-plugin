@@ -27,10 +27,11 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
-use onOffice\SDK\onOfficeSDK;
 
 /**
  *
@@ -41,48 +42,25 @@ class FormPostInterest
 {
 	/**
 	 *
-	 * @param string $prefix
+	 * @param DataFormConfiguration $pFormConfig
 	 * @param int $formNo
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix( $prefix, $formNo = null )
+	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
-		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$recipient = null;
-		$subject = null;
+		$pFormConfig = $pFormData->getDataFormConfiguration();
 
-		$configByPrefix = $formConfig[$prefix];
-		$formFields = $configByPrefix['inputs'];
-
-		$formData = array_intersect_key( $_POST, $formFields );
-		$pFormData = new FormData( $prefix, $formNo );
-		$pFormData->setRequiredFields( $configByPrefix['required'] );
-		$pFormData->setFormtype( $configByPrefix['formtype'] );
-
-		if ( isset( $configByPrefix['recipient'] ) ) {
-			$recipient = $configByPrefix['recipient'];
-		}
-
-		if ( isset( $configByPrefix['subject'] ) ) {
-			$subject = $configByPrefix['subject'];
-		}
-
-		$this->setFormDataInstances($prefix, $formNo, $pFormData);
-		$pFormData->setValues( $formData );
+		$recipient = $pFormConfig->getRecipient();
+		$subject = $pFormConfig->getSubject();
 
 		$missingFields = $pFormData->getMissingFields();
 
 		if ( count( $missingFields ) > 0 ) {
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
 		} else {
-			if ( array_key_exists( 'createaddress', $configByPrefix ) &&
-				$configByPrefix['createaddress'] ) {
-				$checkDuplicate = true;
-				if (array_key_exists( 'checkduplicate', $configByPrefix ) &&
-					!$configByPrefix['checkduplicate']) {
-					$checkDuplicate = false;
-				}
+			if ( $pFormConfig->getCreateAddress() ) {
+				$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
 				$responseNewAddress = $this->createOrCompleteAddress( $pFormData, $checkDuplicate );
 				$response = $responseNewAddress;
 			} else	{

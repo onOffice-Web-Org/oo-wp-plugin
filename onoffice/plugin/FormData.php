@@ -28,14 +28,14 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+
 /**
  *
  */
 
 class FormData {
-	/** @var string */
-	private $_formId = null;
-
 	/** @var int */
 	private $_formNo = null;
 
@@ -60,19 +60,21 @@ class FormData {
 	/** @var array */
 	private $_responseFieldsValues = array();
 
+	/** @var DataFormConfiguration */
+	private $_pDataFormConfiguration = null;
+
+
 	/**
 	 *
-	 * @param string $formId
+	 * @param DataFormConfiguration $pDataFormConfiguration
 	 * @param int $formNo
 	 *
 	 */
 
-	public function __construct( $formId, $formNo ) {
-		$this->_formId = $formId;
+	public function __construct( DataFormConfiguration $pDataFormConfiguration, $formNo ) {
+		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 		$this->_formNo = $formNo;
-
-		$config = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$this->_configFields = $config[$this->_formId]['inputs'];
+		$this->_configFields = $this->_pDataFormConfiguration->getInputs();
 	}
 
 
@@ -193,7 +195,7 @@ class FormData {
 		$searchcriteriaData = array();
 
 		foreach ($this->_values as $input => $value) {
-			if ('searchcriteria' === $inputs[$input]) {
+			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputs[$input]) {
 				$searchcriteriaData[$input] = $value;
 			}
 		}
@@ -214,7 +216,7 @@ class FormData {
 	public function setValues( array $values )
 		{ $this->_values = $values; }
 
-	/** @return values */
+	/** @return array */
 	public function getValues()
 		{ return $this->_values; }
 
@@ -249,4 +251,12 @@ class FormData {
 	/** @return array */
 	public function getResponseFieldsValues()
 		{ return $this->_responseFieldsValues; }
+
+	/** @return DataFormConfiguration */
+	public function getDataFormConfiguration()
+		{ return $this->_pDataFormConfiguration; }
+
+	/** @return int */
+	public function getFormNo()
+		{ return $this->_formNo; }
 }

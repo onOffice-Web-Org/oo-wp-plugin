@@ -30,6 +30,7 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\FormData;
 
 /**
@@ -63,7 +64,7 @@ abstract class FormPost {
 
 
 	/** @var int */
-	private $_formNo = 0;
+	private static $_formNo = 0;
 
 	/** @var array */
 	private $_formDataInstances = array();
@@ -162,29 +163,47 @@ abstract class FormPost {
 
 	/**
 	 *
+	 * @param DataFormConfiguration $pConfig
+	 * @param int $formNo
+	 *
 	 */
 
-	public function initialCheck() {
-		if ( array_key_exists( 'oo_formid', $_POST ) ) {
-			$formNo = null;
-
-			if ( array_key_exists( 'oo_formno', $_POST ) ) {
-				$formNo = $_POST['oo_formno'];
-			}
-
-			$this->analyseFormContentByPrefix( $_POST['oo_formid'], $formNo );
-		}
+	public function initialCheck(DataFormConfiguration $pConfig, $formNo = null)
+	{
+		$pFormData = $this->buildFormData( $pConfig, $formNo );
+		$this->setFormDataInstances( $pFormData );
+		$this->analyseFormContentByPrefix( $pFormData );
 	}
 
 
 	/**
 	 *
-	 * @param string $prefix
+	 * @param DataFormConfiguration $pFormConfig
 	 * @param int $formNo
+	 * @return FormData
 	 *
 	 */
 
-	abstract protected function analyseFormContentByPrefix( $prefix, $formNo = null );
+	protected function buildFormData(DataFormConfiguration $pFormConfig, $formNo)
+	{
+		$formFields = $pFormConfig->getInputs();
+		$formData = array_intersect_key( $_POST, $formFields );
+		$pFormData = new FormData( $pFormConfig, $formNo );
+		$pFormData->setRequiredFields( $pFormConfig->getRequiredFields() );
+		$pFormData->setFormtype( $pFormConfig->getFormType() );
+		$pFormData->setValues( $formData );
+
+		return $pFormData;
+	}
+
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 *
+	 */
+
+	abstract protected function analyseFormContentByPrefix(FormData $pFormData);
 
 
 	/**
@@ -195,7 +214,8 @@ abstract class FormPost {
 	 *
 	 */
 
-	public function getFormDataInstance( $prefix, $formNo ) {
+	public function getFormDataInstance( $prefix, $formNo )
+	{
 		if ( isset( $this->_formDataInstances[$prefix][$formNo] ) ) {
 			return $this->_formDataInstances[$prefix][$formNo];
 		}
@@ -206,13 +226,14 @@ abstract class FormPost {
 
 	/**
 	 *
-	 * @param string $prefix
-	 * @param string $formNo
 	 * @param FormData $pFormData
 	 *
 	 */
 
-	public function setFormDataInstances( $prefix, $formNo, $pFormData ){
+	public function setFormDataInstances( $pFormData )
+	{
+		$formNo = $pFormData->getFormNo();
+		$prefix = $pFormData->getDataFormConfiguration()->getFormName();
 		$this->_formDataInstances[$prefix][$formNo] = $pFormData;
 	}
 
@@ -221,8 +242,9 @@ abstract class FormPost {
 	 *
 	 */
 
-	public function incrementFormNo() {
-		$this->_formNo++;
+	public static function incrementFormNo()
+	{
+		self::$_formNo++;
 	}
 
 
@@ -232,17 +254,9 @@ abstract class FormPost {
 	 *
 	 */
 
-	public function getFormNo() {
-		return $this->_formNo;
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function resetFormNo() {
-		$this->_formNo = 0;
+	public function getFormNo()
+	{
+		return self::$_formNo;
 	}
 
 
@@ -253,7 +267,8 @@ abstract class FormPost {
 	 *
 	 */
 
-	protected function getFormFieldsConsiderSearchcriteria($inputFormFields) {
+	protected function getFormFieldsConsiderSearchcriteria($inputFormFields)
+	{
 		$pSDKWrapper = new SDKWrapper();
 		$pSDKWrapper->removeCacheInstances();
 
@@ -263,30 +278,23 @@ abstract class FormPost {
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
-		foreach ($response['data']['records'] as $tableValues)
-		{
+		foreach ($response['data']['records'] as $tableValues) {
 			$felder = $tableValues['elements'];
 
 			// new
 			if ($felder['name'] == 'Umkreis' &&
-				array_key_exists('Umkreis', $inputFormFields))
-			{
+				array_key_exists('Umkreis', $inputFormFields)) {
 				unset($inputFormFields['Umkreis']);
 
-				foreach ($felder['fields'] as $field)
-				{
+				foreach ($felder['fields'] as $field) {
 					$inputFormFields[$field['id']] = 'searchcriteria';
 				}
-			}
-			else
-			{
+			} else {
 				foreach ($felder['fields'] as $field)
 				{
 					if (array_key_exists('rangefield', $field) &&
-						$field['rangefield'] == true)
-					{
-						if (array_key_exists($field['id'], $inputFormFields))
-						{
+						$field['rangefield'] == true) {
+						if (array_key_exists($field['id'], $inputFormFields)) {
 							unset($inputFormFields[$field['id']]);
 
 							$inputFormFields[$field['id'].self::RANGE_VON] = 'searchcriteria';
@@ -326,8 +334,7 @@ abstract class FormPost {
 
 	protected function getVonRangeFieldname($field)
 	{
-		if (in_array($field, $this->_searchcriteriaRangeFields))
-		{
+		if (in_array($field, $this->_searchcriteriaRangeFields)) {
 			return $field.self::RANGE_VON;
 		}
 
@@ -344,8 +351,7 @@ abstract class FormPost {
 
 	protected function getBisRangeFieldname($field)
 	{
-		if (in_array($field, $this->_searchcriteriaRangeFields))
-		{
+		if (in_array($field, $this->_searchcriteriaRangeFields)) {
 			return $field.self::RANGE_BIS;
 		}
 

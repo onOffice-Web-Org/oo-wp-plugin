@@ -27,6 +27,8 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostApplicant;
@@ -50,30 +52,37 @@ class FormPostHandler
 	 *
 	 */
 
-	static public function getInstance()
+	static public function getInstance($type)
 	{
-		$configByPrefix = Form::TYPE_FREE;
-
-		if ( array_key_exists( 'oo_formid', $_POST ) )
-		{
-			$formNo = null;
-
-			if ( array_key_exists( 'oo_formno', $_POST ) )
-			{
-				$formNo = $_POST['oo_formno'];
-			}
-
-			$formId = $_POST['oo_formid'];
-			$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-			$configByPrefix = $formConfig[$formId]['formtype'];
+		if (!array_key_exists($type, Form::getFormTypesLabeled())) {
+			throw new UnknownFormException($type);
 		}
 
-		if (!array_key_exists($configByPrefix, self::$_instances))
-		{
-			self::create($configByPrefix);
+		if (!array_key_exists($type, self::$_instances)) {
+			self::create($type);
 		}
 
-		return self::$_instances[$configByPrefix];
+		return self::$_instances[$type];
+	}
+
+
+	/**
+	 *
+	 */
+
+	static public function initialCheck()
+	{
+		$formName = filter_input(INPUT_POST, 'oo_formid', FILTER_SANITIZE_STRING);
+		$formNo = filter_input(INPUT_POST, 'oo_formno', FILTER_SANITIZE_NUMBER_INT);
+
+		if ( ! is_null( $formName ) ) {
+			$pDatatFormConfigFactory = new DataFormConfigurationFactory();
+			$pFormConfig = $pDatatFormConfigFactory->loadByFormName($formName);
+			$formType = $pFormConfig->getFormType();
+
+			$pFormPostInstance = self::getInstance($formType);
+			$pFormPostInstance->initialCheck($pFormConfig, $formNo);
+		}
 	}
 
 
@@ -85,8 +94,7 @@ class FormPostHandler
 
 	static private function create($configByPrefix)
 	{
-		switch ($configByPrefix)
-		{
+		switch ($configByPrefix) {
 			case Form::TYPE_CONTACT:
 				self::$_instances[Form::TYPE_CONTACT] = FormPostInterest::getInstance();
 				break;

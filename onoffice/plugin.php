@@ -36,9 +36,12 @@ defined( 'ABSPATH' ) or die();
 include 'Psr4AutoloaderClass.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
+
+use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
-use onOffice\WPlugin\FormPostHandler;
+use onOffice\WPlugin\Controller\AdminViewController;
+use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
 
@@ -49,15 +52,14 @@ $pAutoloader->addNamespace( 'onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plu
 $pAutoloader->register();
 
 $pContentFilter = new ContentFilter();
-$pAdminViewController = new onOffice\WPlugin\Controller\AdminViewController();
-$pDetailViewPostSaveController = new onOffice\WPlugin\Controller\DetailViewPostSaveController();
-$pFormPost = FormPostHandler::getInstance();
+$pAdminViewController = new AdminViewController();
+$pDetailViewPostSaveController = new DetailViewPostSaveController();
 $pSearchParams = SearchParameters::getInstance();
 $pSearchParams->setParameters( $_GET );
 
 add_action( 'init', array($pContentFilter, 'addCustomRewriteTags') );
 add_action( 'init', array($pContentFilter, 'addCustomRewriteRules') );
-add_action( 'init', array($pFormPost, 'initialCheck') );
+add_action( 'init', '\onOffice\WPlugin\FormPostHandler::initialCheck' );
 add_action( 'admin_menu', array($pAdminViewController, 'register_menu') );
 add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_ajax') );
 add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_css') );
@@ -79,6 +81,7 @@ add_filter( 'wp_link_pages_args', array($pSearchParams, 'populateDefaultLinkPara
 add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $pAdminViewController, 'pluginSettingsLink' ) );
 
 add_shortcode( 'oo_estate', array($pContentFilter, 'registerEstateShortCodes') );
+add_shortcode( 'oo_form', array($pContentFilter, 'renderFormsSortCodes') );
 
 register_activation_hook( __FILE__, '\onOffice\WPlugin\Installer::install' );
 register_deactivation_hook( __FILE__, '\onOffice\WPlugin\Installer::deactivate' );
@@ -100,7 +103,7 @@ function ooCacheCleanup() {
 	$cacheInstances = $pSDKWrapper->getCache();
 
 	foreach ( $cacheInstances as $pCacheInstance) {
-		/* @var $cacheInstance \onOffice\SDK\Cache\onOfficeSDKCache */
+		/* @var $cacheInstance onOfficeSDKCache */
 		$pCacheInstance->cleanup();
 	}
 }

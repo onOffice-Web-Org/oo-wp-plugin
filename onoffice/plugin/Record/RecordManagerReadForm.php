@@ -81,6 +81,28 @@ class RecordManagerReadForm
 
 	/**
 	 *
+	 * @param string $formName
+	 * @return array
+	 *
+	 */
+
+	public function getRowByName($formName)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT *
+				FROM {$prefix}oo_plugin_forms
+				WHERE `name` = '".esc_sql($formName)."'";
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		return $result;
+	}
+
+
+	/**
+	 *
 	 * @param int $formId
 	 * @return array
 	 *

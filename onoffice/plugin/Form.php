@@ -28,6 +28,9 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\FormData;
 
 /**
@@ -53,46 +56,60 @@ class Form {
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
-	/** @var string */
-	private $_formId = '';
-
 	/** @var int */
 	private $_formNo = null;
 
 	/** @var FormData */
 	private $_pFormData = null;
 
-	/** @var string */
-	private $_language = null;
-
 	/** @var int */
 	private $_pages = 1;
 
 	/**
 	 *
-	 * @param string $formId
-	 * @param string $language
+	 * @param string $formName
+	 * @param string $type
 	 *
 	 */
 
-	public function __construct( $formId, $language ) {
-		$pLanguage = new Language();
-		$this->_language = $pLanguage->getLanguageForForm( $formId );
-		$this->_pFieldnames = new Fieldnames($this->_language);
+	public function __construct( $formName, $type ) {
+		$language = Language::getDefault();
+		$this->_pFieldnames = new Fieldnames($language);
 		$this->_pFieldnames->loadLanguage();
-		$this->_formId = $formId;
-		$pFormPost = FormPostHandler::getInstance();
-		$pFormPost->incrementFormNo();
+		$pFormPost = FormPostHandler::getInstance($type);
+		FormPost::incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();
-		$this->_pFormData = $pFormPost->getFormDataInstance( $formId, $this->_formNo );
+		$this->_pFormData = $pFormPost->getFormDataInstance( $formName, $this->_formNo );
 
 		// no form sent
 		if ( is_null( $this->_pFormData ) ) {
-			$this->_pFormData = new FormData( $formId, $this->_formNo );
+			$pFormConfigFactory = new DataFormConfigurationFactory();
+			$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
+			$this->_pFormData = new FormData( $pFormConfig, $this->_formNo );
+			$this->_pFormData->setRequiredFields( $pFormConfig->getRequiredFields() );
+			$this->_pFormData->setFormtype( $pFormConfig->getFormType() );
 		}
 		$this->setPages();
 	}
 
+
+	/**
+	 *
+	 * @param string $field
+	 * @return string
+	 *
+	 */
+
+	private function getModuleOfField($field) {
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+		$inputs = $pDataFormConfiguration->getInputs();
+		$module = null;
+		if (isset($inputs[$field])) {
+			$module = $inputs[$field];
+		}
+
+		return $module;
+	}
 
 	/**
 	 *
@@ -101,9 +118,8 @@ class Form {
 	 */
 
 	public function getInputFields() {
-		$formConfigs = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$config = $formConfigs[$this->_formId];
-		return $config['inputs'];
+		$inputs = $this->getDataFormConfiguration()->getInputs();
+		return $inputs;
 	}
 
 
@@ -114,9 +130,8 @@ class Form {
 	 */
 
 	public function getRequiredFields() {
-		$formConfigs = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$config = $formConfigs[$this->_formId];
-		return $config['required'];
+		$requiredFields = $this->getDataFormConfiguration()->getRequiredFields();
+		return $requiredFields;
 	}
 
 
@@ -135,13 +150,12 @@ class Form {
 
 	/**
 	 *
-	 * @return array
+	 * @return DataFormConfiguration
 	 *
 	 */
 
-	private function getConfigByFormId() {
-		$formConfigs = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		return $formConfigs[$this->_formId];
+	private function getDataFormConfiguration() {
+		return $this->_pFormData->getDataFormConfiguration();
 	}
 
 
@@ -166,9 +180,7 @@ class Form {
 	 */
 
 	public function getFieldLabel( $field, $raw = false ) {
-		$config = $this->getConfigByFormId( $this->_formId );
-		$module = $config['inputs'][$field];
-
+		$module = $this->getModuleOfField($field);
 		$label = $this->_pFieldnames->getFieldLabel( $field, $module);
 
 		if (false === $raw) {
@@ -182,36 +194,28 @@ class Form {
 	/**
 	 *
 	 * @param string $field
-	 * @return boolean
+	 * @return bool
 	 *
 	 */
 
 	public function isSearchcriteriaField( $field ) {
-		$config = $this->getConfigByFormId( $this->_formId );
-		$module = $config['inputs'][$field];
-
-		return $module === 'searchcriteria';
+		$module = $this->getModuleOfField($field);
+		return $module === onOfficeSDK::MODULE_SEARCHCRITERIA;
 	}
 
 
 	/**
 	 *
-	 * @param type $field
-	 * @return boolean
+	 * @param string $field
+	 * @return bool
 	 *
 	 */
 
 	public function inRangeSearchcriteriaInfos( $field ) {
-		$config = $this->getConfigByFormId( $this->_formId );
-		$module = $config['inputs'][$field];
+		$module = $this->getModuleOfField($field);
 
-		if ($module === 'searchcriteria' &&
-			$this->_pFieldnames->inRangeSearchcriteriaInfos($field))
-		{
-			return true;
-		}
-
-		return false;
+		return $module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
+			$this->_pFieldnames->inRangeSearchcriteriaInfos($field);
 	}
 
 
@@ -244,14 +248,11 @@ class Form {
 	 *
 	 */
 
-	public function getSearchcriteriaRangeInfosForField ( $field ) {
-
+	public function getSearchcriteriaRangeInfosForField( $field ) {
 		$returnValues = array();
+		$module = $this->getModuleOfField($field);
 
-		$config = $this->getConfigByFormId( $this->_formId );
-		$module = $config['inputs'][$field];
-
-		if ($module === 'searchcriteria' &&
+		if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
 			$this->_pFieldnames->inRangeSearchcriteriaInfos($field))
 		{
 			$returnValues = $this->_pFieldnames->getRangeSearchcriteriaInfosForField($field);
@@ -268,14 +269,11 @@ class Form {
 	 *
 	 */
 
-	public function getUmkreisValuesForField($field){
-
+	public function getUmkreisValuesForField( $field ) {
 		$returnValues = array();
+		$module = $this->getModuleOfField($field);
 
-		$config = $this->getConfigByFormId( $this->_formId );
-		$module = $config['inputs'][$field];
-
-		if ($module === 'searchcriteria' &&
+		if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
 			$this->_pFieldnames->isUmkreisField($field))
 		{
 			$returnValues = $this->_pFieldnames->getUmkreisValuesForField($field);
@@ -295,9 +293,7 @@ class Form {
 	 */
 
 	public function getPermittedValues( $field, $raw = false ) {
-		$config = $this->getConfigByFormId( $this->_formId );
-		$module = $config['inputs'][$field];
-
+		$module = $this->getModuleOfField($field);
 		$fieldType = $this->getFieldType( $field );
 		$isMultiselectOrSingleselect = in_array( $fieldType,
 			array(FieldType::FIELD_TYPE_MULTISELECT, FieldType::FIELD_TYPE_SINGLESELECT), true );
@@ -324,9 +320,7 @@ class Form {
 	 */
 
 	public function getFieldType( $field ) {
-		$config = $this->getConfigByFormId( $this->_formId );
-		$module = $config['inputs'][$field];
-
+		$module = $this->getModuleOfField($field);
 		$fieldType = $this->_pFieldnames->getType( $field, $module);
 		return $fieldType;
 	}
@@ -422,33 +416,25 @@ class Form {
 	 */
 
 	public function getFormId() {
-		return esc_html($this->_formId);
+		return esc_html($this->getDataFormConfiguration()->getFormName());
 	}
 
 
 	/**
 	 *
-	 * @return string
-	 *
-	 */
-
-	public function getLanguage() {
-		return $this->_language;
-	}
-
-
-	/**
+	 * Only for Owner forms
 	 *
 	 */
 
 	private function setPages() {
-		$config = $this->getConfigByFormId( $this->_formId );
+		$pDataFormConfig = $this->getDataFormConfiguration();
 
-		if (isset($config['pages']))
-		{
-			if ($config['pages'] > 0)
-			{
-				$this->_pages = $config['pages'];
+		if ($pDataFormConfig->getFormType() === Form::TYPE_OWNER) {
+			// todo
+			$pages = $pDataFormConfig->getPages();
+
+			if ($pages > 0) {
+				$this->_pages = $pages;
 			}
 		}
 	}
@@ -477,7 +463,6 @@ class Form {
 	/** @return int */
 	public function getPages()
 		{ return $this->_pages; }
-
 
 	/** @return array */
 	public function getResponseFieldsValues()

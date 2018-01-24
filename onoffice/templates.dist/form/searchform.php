@@ -83,8 +83,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		<option value="">(keine Auswahl)</option>
 <?php
 
-$language = $pForm->getLanguage();
-$pRegionController = new \onOffice\WPlugin\Region\RegionController($language);
+$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 $regions = $pRegionController->getRegions();
 
 foreach ($regions as $pRegion) {

@@ -67,7 +67,7 @@ class AdminPageFormSettingsMain
 		}
 
 		if ($id != null) {
-			$pDataFormConfigFactory = new DataFormConfigurationFactory(null);
+			$pDataFormConfigFactory = new DataFormConfigurationFactory();
 			$pFormConfiguration = $pDataFormConfigFactory->loadByFormId($id);
 			$type = $pFormConfiguration->getFormType();
 		}

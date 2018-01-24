@@ -53,11 +53,11 @@ class DataFormConfigurationFactory
 
 	/**
 	 *
-	 * @param string $type
+	 * @param string $type Optional when loading by ID/name
 	 *
 	 */
 
-	public function __construct($type)
+	public function __construct($type = null)
 	{
 		$this->_type = $type;
 	}
@@ -88,7 +88,7 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param int $formId
-	 * @return DataFormConfiguration;
+	 * @return DataFormConfiguration
 	 *
 	 */
 
@@ -98,6 +98,37 @@ class DataFormConfigurationFactory
 
 		$rowMain = $pRecordManagerRead->getRowById($formId);
 		$this->_type = $rowMain['form_type'];
+		$pConfig = $this->createByRow($rowMain);
+		$rowFields = $pRecordManagerRead->readFieldsByFormId($formId);
+
+		foreach ($rowFields as $fieldRow) {
+			$this->configureFieldsByRow($fieldRow, $pConfig);
+		}
+
+		return $pConfig;
+	}
+
+
+	/**
+	 *
+	 * @param string $name
+	 * @return DataFormConfiguration
+	 *
+	 * @throws UnknownFormException
+	 *
+	 */
+
+	public function loadByFormName($name)
+	{
+		$pRecordManagerRead = new RecordManagerReadForm();
+		$rowMain = $pRecordManagerRead->getRowByName($name);
+
+		if ($rowMain === null) {
+			throw new UnknownFormException($name);
+		}
+
+		$this->_type = $rowMain['form_type'];
+		$formId = $rowMain['form_id'];
 		$pConfig = $this->createByRow($rowMain);
 		$rowFields = $pRecordManagerRead->readFieldsByFormId($formId);
 

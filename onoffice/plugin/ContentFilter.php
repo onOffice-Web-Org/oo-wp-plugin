@@ -28,6 +28,16 @@
 
 namespace onOffice\WPlugin;
 
+use Exception;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataListViewFactory;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use WP_Query;
+
 /**
  *
  */
@@ -49,7 +59,7 @@ class ContentFilter
 	 */
 
 	public function addCustomRewriteRules() {
-		$pDetailView = DataView\DataDetailViewHandler::getDetailView();
+		$pDetailView = DataDetailViewHandler::getDetailView();
 		$detailPageId = $pDetailView->getPageId();
 
 		if ($detailPageId != null) {
@@ -64,7 +74,7 @@ class ContentFilter
 	/**
 	 *
 	 * @param array $attributesInput
-	 * @return type
+	 * @return string
 	 *
 	 */
 
@@ -83,7 +93,7 @@ class ContentFilter
 
 		if ($attributes['view'] !== null) {
 			try {
-				$pDetailView = DataView\DataDetailViewHandler::getDetailView();
+				$pDetailView = DataDetailViewHandler::getDetailView();
 
 				if ($pDetailView->getName() === $attributes['view'])
 				{
@@ -94,13 +104,13 @@ class ContentFilter
 					return $result;
 				}
 
-				$pListViewFactory = new DataView\DataListViewFactory();
+				$pListViewFactory = new DataListViewFactory();
 				$pListView = $pListViewFactory->getListViewByName($attributes['view']);
 
 				if (is_object($pListView) && $pListView->getName() === $attributes['view'])
 				{
 					$pTemplate = new Template($pListView->getTemplate(), 'estate', 'default');
-					$pListViewFilterBuilder = new Filter\DefaultFilterBuilderListView($pListView);
+					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
 
 					$pEstateList = new EstateList($pListView);
 					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
@@ -111,10 +121,43 @@ class ContentFilter
 					$result = $pTemplate->render();
 					return $result;
 				}
-			} catch (\Exception $pException) {
+			} catch (Exception $pException) {
 				return $this->logErrorAndDisplayMessage($pException);
 			}
 			return __('Estates view not found.', 'onoffice');
+		}
+	}
+
+
+	/**
+	 *
+	 * @param array $attributesInput
+	 * @return string
+	 *
+	 */
+
+	public function renderFormsSortCodes( $attributesInput )
+	{
+		$attributes = shortcode_atts(array(
+			'form' => null,
+		), $attributesInput);
+
+		$formName = $attributes['form'];
+
+		try {
+			if ($formName !== null) {
+				$pFormConfigFactory = new DataFormConfigurationFactory(null);
+				$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
+				/* @var $pFormConfig DataFormConfiguration */
+				$template = $pFormConfig->getTemplate();
+				$pTemplate = new Template( $template, 'form', 'defaultform' );
+				$pForm = new Form( $formName, $pFormConfig->getFormType() );
+				$pTemplate->setForm( $pForm );
+				$htmlOutput = $pTemplate->render();
+				return $htmlOutput;
+			}
+		} catch (Exception $pException) {
+			return $this->logErrorAndDisplayMessage($pException);
 		}
 	}
 
@@ -169,7 +212,6 @@ class ContentFilter
 	private function filterForms( $content ) {
 		$regexSearch = '!(?P<tag>\[oo_form\s+(?P<name>[0-9a-z]+)?\])!';
 		$matches = array();
-		$pLanguage = new Language();
 		preg_match_all( $regexSearch, $content, $matches );
 
 		$matchescount = count( $matches ) - 1;
@@ -182,9 +224,8 @@ class ContentFilter
 
 		foreach ( $onofficeTags as $id => $name ) {
 			if ( array_key_exists( $name, $formConfig ) ) {
-				$language = $pLanguage->getLanguageForForm($name);
 				$pTemplate = new Template( $name, 'form', 'defaultform' );
-				$pForm = new \onOffice\WPlugin\Form( $name, $language );
+				$pForm = new Form( $name );
 				$pTemplate->setForm( $pForm );
 				$htmlOutput = $pTemplate->render();
 
@@ -198,12 +239,12 @@ class ContentFilter
 
 	/**
 	 *
-	 * @param \Exception $pException
+	 * @param Exception $pException
 	 * @return string
 	 *
 	 */
 
-	public function logErrorAndDisplayMessage( \Exception $pException ) {
+	public function logErrorAndDisplayMessage( Exception $pException ) {
 		$output = '';
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -220,14 +261,14 @@ class ContentFilter
 
 	/**
 	 *
-	 * @global \WP_Query $wp_query
-	 * @param \onOffice\WPlugin\DataView\DataDetailView $pDetailView
+	 * @global WP_Query $wp_query
+	 * @param DataDetailView $pDetailView
 	 * @param string $unitsView
-	 * @return \onOffice\WPlugin\EstateDetail
+	 * @return EstateDetail
 	 *
 	 */
 
-	private function preloadSingleEstate(DataView\DataDetailView $pDetailView, $unitsView) {
+	private function preloadSingleEstate(DataDetailView $pDetailView, $unitsView) {
 		global $wp_query;
 
 		$estateId = 0;
@@ -235,7 +276,7 @@ class ContentFilter
 			$estateId = $wp_query->query_vars['estate_id'];
 		}
 
-		$pDefaultFilterBuilder = new Filter\DefaultFilterBuilderDetailView();
+		$pDefaultFilterBuilder = new DefaultFilterBuilderDetailView();
 		$pDefaultFilterBuilder->setEstateId($estateId);
 
 		$pEstateDetailList = new EstateDetail($pDetailView);
