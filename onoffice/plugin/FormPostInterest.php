@@ -18,22 +18,20 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2016, onOffice(R) Software AG
- *
- */
 
 namespace onOffice\WPlugin;
 
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
+use onOffice\SDK\onOfficeSDK;
 
 /**
+ *
+ * Applicant form. A person registers itself and leaves his/her search criteria
+ *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2016, onOffice(R) Software AG
  *
  */
 
@@ -42,37 +40,80 @@ class FormPostInterest
 {
 	/**
 	 *
-	 * @param DataFormConfiguration $pFormConfig
+	 * @param string $prefix
 	 * @param int $formNo
+	 * @return bool $result
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix(FormData $pFormData)
-	{
-		$pFormConfig = $pFormData->getDataFormConfiguration();
+	protected function analyseFormContentByPrefix( $prefix, $formNo = null ) {
+		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
+		$recipient = null;
+		$subject = null;
+		$checkduplicate = false;
 
-		$recipient = $pFormConfig->getRecipient();
-		$subject = $pFormConfig->getSubject();
+		$configByPrefix = $formConfig[$prefix];
+		$formFields = $configByPrefix['inputs'];
+		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
+
+		$formData = array_intersect_key( $_POST, $newFormFields );
+
+		$pFormData = new FormData( $prefix, $formNo );
+		$pFormData->setConfigFields($newFormFields);
+		$pFormData->setRequiredFields( $configByPrefix['required'] );
+		$pFormData->setFormtype( $configByPrefix['formtype'] );
+
+		if ( isset( $configByPrefix['recipient'] ) ) {
+			$recipient = $configByPrefix['recipient'];
+		}
+
+		if ( isset( $configByPrefix['subject'] ) ) {
+			$subject = $configByPrefix['subject'];
+		}
+
+		if ( isset( $configByPrefix['checkduplicate']))
+		{
+			$checkduplicate = $configByPrefix['checkduplicate'];
+		}
+
+		if ( isset( $configByPrefix['checkduplicate']))
+		{
+			$checkduplicate = $configByPrefix['checkduplicate'];
+		}
+
+		$this->setFormDataInstances($prefix, $formNo, $pFormData);
+		$pFormData->setValues( $formData );
 
 		$missingFields = $pFormData->getMissingFields();
 
-		if ( count( $missingFields ) > 0 ) {
+		if ( count( $missingFields ) > 0  )
+		{
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
-		} else {
-			if ( $pFormConfig->getCreateAddress() ) {
-				$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
-				$responseNewAddress = $this->createOrCompleteAddress( $pFormData, $checkDuplicate );
-				$response = $responseNewAddress;
-			} else	{
-				$response = true;
+		}
+		else
+		{
+			$response = false;
+
+			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
+
+			if (null != $responseAddress)
+			{
+				$responseSearchcriteria = $this->createSearchcriteria($pFormData, $responseAddress);
+
+				if ($responseSearchcriteria &&
+					null != $recipient &&
+					null != $subject)
+				{
+					$response = $this->sendEmail($pFormData, $recipient, $subject);
+				}
 			}
 
-			$pFormData->setFormSent( true );
-			$response = $this->sendContactRequest( $pFormData, $recipient, $subject ) && $response;
-
-			if ( true === $response ) {
+			if ( true === $response )
+			{
 				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
-			} else {
+			}
+			else
+			{
 				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
 			}
 		}
@@ -81,41 +122,75 @@ class FormPostInterest
 
 	/**
 	 *
-	 * @param FormData $pFormData
-	 * @return bool
+	 * @param \onOffice\WPlugin\FormData $pFormData
+	 * @param string $recipient
+	 * @param string $subject
+	 * @return boolean
 	 *
 	 */
 
-	private function sendContactRequest( FormData $pFormData, $recipient = null, $subject = null ) {
+	private function sendEmail(FormData $pFormData, $recipient, $subject = null) {
 		$addressData = $pFormData->getAddressData();
-		$values = $pFormData->getValues();
-		$estateId = isset( $values['Id'] ) ? $values['Id'] : null;
-		$message = isset( $values['message'] ) ? $values['message'] : null;
+		$name = $addressData['Name'];
+		$vorname = $addressData['Vorname'];
+		$mailInteressent = $addressData['Email'];
+
+		$body = 'Sehr geehrte Damen und Herren,'."\n\n".'
+
+ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite eingetragen. Die Adresse ('.$vorname.' '.$name.') wurde bereits in Ihrem System eingetragen.'."\n\n".'
+
+Herzliche Grüße
+Ihr onOffice Team';
 
 		$requestParams = array(
-			'addressdata' => $addressData,
-			'estateid' => $estateId,
-			'message' => $message,
+			'anonymousEmailidentity' => true,
+			'body' => $body,
 			'subject' => $subject,
-			'referrer' => filter_input( INPUT_SERVER, 'REQUEST_URI' ),
-			'formtype' => $pFormData->getFormtype(),
+			'replyto' => $mailInteressent,
 		);
 
-		if ( null != $recipient ) {
-			$requestParams['recipient'] = $recipient;
-		}
+		$requestParams['receiver'] = array($recipient);
 
 		$pSDKWrapper = new SDKWrapper();
 		$pSDKWrapper->removeCacheInstances();
 
 		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
+				onOfficeSDK::ACTION_ID_DO, 'sendmail', $requestParams );
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
-		$result = isset( $response['data']['records'][0]['elements']['success'] ) &&
-			'success' == $response['data']['records'][0]['elements']['success'];
+		$result = isset( $response['data']['records'] ) &&
+				count( $response['data']['records'] ) > 0;
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param \onOffice\WPlugin\FormData $pFormData
+	 * @param int $addressId
+	 * @return bool
+	 *
+	 */
+
+	private function createSearchcriteria( FormData $pFormData, $addressId ) {
+		$requestParams = array('data' => $pFormData->getSearchcriteriaData());
+		$requestParams['addressid'] = $addressId;
+
+		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper->removeCacheInstances();
+
+		$handle = $pSDKWrapper->addRequest(
+				onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria', $requestParams );
+		$pSDKWrapper->sendRequests();
+
+		$response = $pSDKWrapper->getRequestResponse( $handle );
+
+		$result = isset( $response['data']['records'] ) &&
+				count( $response['data']['records'] ) > 0;
+
 		return $result;
 	}
 
@@ -128,9 +203,8 @@ class FormPostInterest
 	 *
 	 */
 
-	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )
-	{
-		$requestParams = $pFormData->getAddressData();
+	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )	{
+		$requestParams = $pFormData->getAddressDataForApiCall();
 		$requestParams['checkDuplicate'] = $mergeExisting;
 
 		$pSDKWrapper = new SDKWrapper();
@@ -144,10 +218,16 @@ class FormPostInterest
 
 		$result = isset( $response['data']['records'] ) &&
 				count( $response['data']['records'] ) > 0;
-		return $result;
+
+		if ($result)
+		{
+			return $response['data']['records'][0]['id'];
+		}
+
+		return false;
 	}
 
 	/** @return string */
 	static protected function getFormType()
-		{ return Form::TYPE_CONTACT; }
+		{ return Form::TYPE_INTEREST; }
 }

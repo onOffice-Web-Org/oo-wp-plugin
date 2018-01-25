@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 
@@ -45,7 +46,7 @@ class DataFormConfigurationFactory
 		(
 			Form::TYPE_CONTACT => 'DataFormConfigurationContact',
 			Form::TYPE_FREE => 'DataFormConfiguration',
-			Form::TYPE_OWNER => 'DataFormConfigurationContact',
+			Form::TYPE_OWNER => 'DataFormConfigurationOwner',
 			Form::TYPE_INTEREST => 'DataFormConfigurationContact',
 			Form::TYPE_APPLICANT_SEARCH => 'DataFormConfigurationApplicantSearch',
 		);
@@ -154,12 +155,15 @@ class DataFormConfigurationFactory
 
 		switch ($this->_type) {
 			case Form::TYPE_CONTACT:
-			case Form::TYPE_OWNER:
-			case Form::TYPE_INTEREST:
 				$this->configureContact($row, $pConfig);
 				break;
+			case Form::TYPE_OWNER:
+				$this->configureOwner($row, $pConfig);
+				break;
+			case Form::TYPE_INTEREST:
+				break;
 			case Form::TYPE_APPLICANT_SEARCH:
-				$this->configureApplicant($row, $pConfig);
+				$this->configureApplicantSearch($row, $pConfig);
 				break;
 		}
 
@@ -225,9 +229,25 @@ class DataFormConfigurationFactory
 	 *
 	 */
 
-	private function configureApplicant(array $row, DataFormConfigurationApplicantSearch $pConfig)
+	private function configureApplicantSearch(array $row, DataFormConfigurationApplicantSearch $pConfig)
 	{
 		$pConfig->setLimitResults($row['limitresults']);
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @param DataFormConfigurationOwner $pConfig
+	 *
+	 */
+
+	private function configureOwner(array $row, DataFormConfigurationOwner $pConfig)
+	{
+		$pConfig->setRecipient($row['recipient']);
+		$pConfig->setSubject($row['subject']);
+		$pConfig->setPages($row['pages']);
+		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
 	}
 
 

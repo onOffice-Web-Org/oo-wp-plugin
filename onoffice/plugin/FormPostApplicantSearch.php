@@ -30,6 +30,8 @@ use onOffice\WPlugin\FormPost;
 
 /**
  *
+ * Applicant search form
+ *
  * @url http://www.onoffice.de
  * @copyright 2003-2016, onOffice(R) Software AG
  *
