@@ -358,7 +358,7 @@ class Form {
 		$values = $this->_pFormData->getValues();
 		$fieldValue = isset( $values[$field] ) ? $values[$field] : '';
 
-		if ( $this->_pFormData->getFormSent() && !$forceEvenIfSuccess ) {
+		if ( ! $this->_pFormData->getFormSent() && ! $forceEvenIfSuccess ) {
 			return '';
 		}
 

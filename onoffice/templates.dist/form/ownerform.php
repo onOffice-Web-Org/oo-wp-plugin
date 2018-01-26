@@ -59,7 +59,7 @@ else
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );
-			$line .= '<select size="1" name="'.esc_html($input).'">';
+			$line .= '<select size="1" name="'.esc_attr($input).'">';
 
 			foreach ( $permittedValues as $key => $value )
 			{
@@ -71,19 +71,19 @@ else
 				{
 					$isSelected = $selectedValue == $key;
 				}
-				$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
+				$line .=  '<option value="'.esc_attr($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
 			}
 			$line .= '</select>';
 		}
 		else
 		{
-			$line .= $pForm->getFieldLabel( $input ).': <input name="'.$input.'" value="'
-					.$pForm->getFieldValue( $input ).'">';
+			$line .= $pForm->getFieldLabel( $input ).': <input name="'.esc_attr($input).'" value="'
+					.esc_attr($pForm->getFieldValue( $input, true )).'">';
 		}
 
 		if ( $pForm->isMissingField( $input ) )
 		{
-			$line .= '<span>Bitte ausfüllen!</span>';
+			$line .= ' <span>Bitte ausfüllen!</span>';
 		}
 
 		if ($table == 'address')
