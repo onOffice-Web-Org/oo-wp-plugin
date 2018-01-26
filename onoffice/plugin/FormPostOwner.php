@@ -27,10 +27,11 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
-use onOffice\SDK\onOfficeSDK;
 
 /**
  *
@@ -41,41 +42,18 @@ class FormPostOwner
 {
 	/**
 	 *
-	 * @param string $prefix
-	 * @param string $formNo
+	 * @param FormData $pFormData
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix( $prefix, $formNo = null )
+	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
-		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$recipient = null;
-		$subject = null;
-		$checkduplicate = false;
+		/* @var $pDataFormConfiguration DataFormConfigurationOwner */
+		$pDataFormConfiguration = $pFormData->getDataFormConfiguration();
 
-		$configByPrefix = $formConfig[$prefix];
-		$formFields = $configByPrefix['inputs'];
-
-		$formData = array_intersect_key( $_POST, $formFields );
-		$pFormData = new FormData( $prefix, $formNo );
-		$pFormData->setRequiredFields( $configByPrefix['required'] );
-		$pFormData->setFormtype( $configByPrefix['formtype'] );
-
-		if ( isset( $configByPrefix['recipient'] ) ) {
-			$recipient = $configByPrefix['recipient'];
-		}
-
-		if ( isset( $configByPrefix['subject'] ) ) {
-			$subject = $configByPrefix['subject'];
-		}
-
-		if ( isset( $configByPrefix['checkduplicate']))
-		{
-			$checkduplicate = $configByPrefix['checkduplicate'];
-		}
-
-		$this->setFormDataInstances($prefix, $formNo, $pFormData);
-		$pFormData->setValues( $formData );
+		$recipient = $pDataFormConfiguration->getRecipient();
+		$subject = $pDataFormConfiguration->getSubject();
+		$checkduplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 
 		$missingFields = $pFormData->getMissingFields();
 
@@ -96,14 +74,12 @@ class FormPostOwner
 				$response = $this->createOwnerRelation($responseEstate, $responseAddress);
 			}
 
-			$pFormData->setFormSent( true );
-
-			if (null != $recipient && null != $subject)
+			if (null != $recipient && null != $subject && $responseEstate && $responseAddress)
 			{
-				$response = $this->sendContactRequest( $pFormData, $recipient, $subject, $responseEstate) && $response;
+				$response = $this->sendContactRequest( $pFormData, $recipient, $subject, $responseEstate ) && $response;
 			}
 
-			if ( true === $response )
+			if ( $response && $responseEstate && $responseAddress )
 			{
 				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
 			}
@@ -216,7 +192,7 @@ class FormPostOwner
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\FormData $pFormData
+	 * @param FormData $pFormData
 	 * @return mixed
 	 *
 	 */
@@ -284,6 +260,9 @@ class FormPostOwner
 	/**
 	 *
 	 * @param FormData $pFormData
+	 * @param string $recipient
+	 * @param string $subject
+	 * @param int $estateId
 	 * @return bool
 	 *
 	 */

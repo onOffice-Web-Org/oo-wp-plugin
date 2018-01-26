@@ -71,7 +71,6 @@ class FormPostContact
 				$response = true;
 			}
 
-			$pFormData->setFormSent( true );
 			$response = $this->sendContactRequest( $pFormData, $recipient, $subject ) && $response;
 
 			if ( true === $response ) {

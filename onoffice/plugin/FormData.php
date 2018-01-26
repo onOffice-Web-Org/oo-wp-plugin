@@ -98,7 +98,7 @@ class FormData {
 	public function getMissingFields() {
 		$missing = array();
 
-		if ( ! $this->_formSent ) {
+		if ( $this->_formSent ) {
 			$filledFormData = array_filter( $this->_values );
 			$requiredFields = array_flip( $this->_requiredFields );
 			$filled = array_intersect_key( $filledFormData, $requiredFields );
@@ -228,7 +228,7 @@ class FormData {
 	public function getStatus()
 		{ return $this->_status; }
 
-	/**	@param bool $formSent */
+	/**	@param bool $formSent Whether the Form was sent using GET or POST yet */
 	public function setFormSent( $formSent )
 		{ $this->_formSent = (bool) $formSent; }
 

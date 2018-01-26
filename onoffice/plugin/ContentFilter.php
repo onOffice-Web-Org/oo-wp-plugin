@@ -244,7 +244,8 @@ class ContentFilter
 	 *
 	 */
 
-	public function logErrorAndDisplayMessage( Exception $pException ) {
+	public function logErrorAndDisplayMessage( Exception $pException )
+	{
 		$output = '';
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {

@@ -30,13 +30,13 @@
 $addressValues = array();
 $estateValues = array();
 
-if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
+if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
 {
 	echo 'SUCCESS!';
 }
 else
 {
-	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)
+	if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR)
 	{
 		echo 'ERROR!';
 	}
@@ -47,8 +47,8 @@ else
 		$line = null;
 
 		$selectTypes = array(
-			onOffice\WPlugin\FieldType::FIELD_TYPE_MULTISELECT,
-			onOffice\WPlugin\FieldType::FIELD_TYPE_SINGLESELECT,
+			\onOffice\WPlugin\FieldType::FIELD_TYPE_MULTISELECT,
+			\onOffice\WPlugin\FieldType::FIELD_TYPE_SINGLESELECT,
 		);
 
 		$typeCurrentInput = $pForm->getFieldType( $input );
@@ -59,7 +59,7 @@ else
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );
-			$line .= '<select size="1" name="'.$input.'>';
+			$line .= '<select size="1" name="'.esc_html($input).'">';
 
 			foreach ( $permittedValues as $key => $value )
 			{

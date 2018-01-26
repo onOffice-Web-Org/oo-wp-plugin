@@ -88,6 +88,7 @@ class Form {
 			$this->_pFormData = new FormData( $pFormConfig, $this->_formNo );
 			$this->_pFormData->setRequiredFields( $pFormConfig->getRequiredFields() );
 			$this->_pFormData->setFormtype( $pFormConfig->getFormType() );
+			$this->_pFormData->setFormSent(false);
 		}
 		$this->setPages();
 	}
@@ -393,7 +394,7 @@ class Form {
 	 */
 
 	public function isMissingField( $field ) {
-		return ! $this->_pFormData->getFormSent() &&
+		return $this->_pFormData->getFormSent() &&
 			in_array( $field, $this->_pFormData->getMissingFields(), true );
 	}
 

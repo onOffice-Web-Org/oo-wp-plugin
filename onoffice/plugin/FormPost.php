@@ -171,6 +171,7 @@ abstract class FormPost {
 	public function initialCheck(DataFormConfiguration $pConfig, $formNo = null)
 	{
 		$pFormData = $this->buildFormData( $pConfig, $formNo );
+		$pFormData->setFormSent(true);
 		$this->setFormDataInstances( $pFormData );
 		$this->analyseFormContentByPrefix( $pFormData );
 	}
