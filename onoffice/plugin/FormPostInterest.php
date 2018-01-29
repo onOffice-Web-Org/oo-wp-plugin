@@ -21,10 +21,11 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
-use onOffice\SDK\onOfficeSDK;
 
 /**
  *
@@ -40,69 +41,41 @@ class FormPostInterest
 {
 	/**
 	 *
-	 * @param string $prefix
-	 * @param int $formNo
-	 * @return bool $result
+	 * @param FormData $pFormData
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix( $prefix, $formNo = null ) {
-		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$recipient = null;
-		$subject = null;
-		$checkduplicate = false;
-
-		$configByPrefix = $formConfig[$prefix];
-		$formFields = $configByPrefix['inputs'];
+	protected function analyseFormContentByPrefix( FormData $pFormData )
+	{
+		/* @var $pFormConfiguration DataFormConfigurationInterest */
+		$pFormConfiguration = $pFormData->getDataFormConfiguration();
+		$formFields = $pFormConfiguration->getInputs();
 		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
 
 		$formData = array_intersect_key( $_POST, $newFormFields );
+		$recipient = $pFormConfiguration->getRecipient();
+		$subject = $pFormConfiguration->getSubject();
+		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
 
-		$pFormData = new FormData( $prefix, $formNo );
-		$pFormData->setConfigFields($newFormFields);
-		$pFormData->setRequiredFields( $configByPrefix['required'] );
-		$pFormData->setFormtype( $configByPrefix['formtype'] );
-
-		if ( isset( $configByPrefix['recipient'] ) ) {
-			$recipient = $configByPrefix['recipient'];
-		}
-
-		if ( isset( $configByPrefix['subject'] ) ) {
-			$subject = $configByPrefix['subject'];
-		}
-
-		if ( isset( $configByPrefix['checkduplicate']))
-		{
-			$checkduplicate = $configByPrefix['checkduplicate'];
-		}
-
-		if ( isset( $configByPrefix['checkduplicate']))
-		{
-			$checkduplicate = $configByPrefix['checkduplicate'];
-		}
-
-		$this->setFormDataInstances($prefix, $formNo, $pFormData);
+		$this->setFormDataInstances($pFormData);
 		$pFormData->setValues( $formData );
 
 		$missingFields = $pFormData->getMissingFields();
 
-		if ( count( $missingFields ) > 0  )
+		if ( count( $missingFields ) > 0 )
 		{
-			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
+			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
 		}
 		else
 		{
 			$response = false;
-
 			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
 
-			if (null != $responseAddress)
+			if (false !== $responseAddress)
 			{
 				$responseSearchcriteria = $this->createSearchcriteria($pFormData, $responseAddress);
 
-				if ($responseSearchcriteria &&
-					null != $recipient &&
-					null != $subject)
+				if ($responseSearchcriteria && null != $recipient && null != $subject)
 				{
 					$response = $this->sendEmail($pFormData, $recipient, $subject);
 				}
@@ -122,18 +95,19 @@ class FormPostInterest
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\FormData $pFormData
+	 * @param FormData $pFormData
 	 * @param string $recipient
 	 * @param string $subject
-	 * @return boolean
+	 * @return bool
 	 *
 	 */
 
-	private function sendEmail(FormData $pFormData, $recipient, $subject = null) {
+	private function sendEmail(FormData $pFormData, $recipient, $subject = null)
+	{
 		$addressData = $pFormData->getAddressData();
-		$name = $addressData['Name'];
-		$vorname = $addressData['Vorname'];
-		$mailInteressent = $addressData['Email'];
+		$name = isset($addressData['Name']) ? $addressData['Name'] : null;
+		$vorname = isset($addressData['Vorname']) ? $addressData['Vorname'] : null;
+		$mailInteressent = isset($addressData['Email']) ? $addressData['Email'] : null;
 
 		$body = 'Sehr geehrte Damen und Herren,'."\n\n".'
 
@@ -169,13 +143,14 @@ Ihr onOffice Team';
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\FormData $pFormData
+	 * @param FormData $pFormData
 	 * @param int $addressId
 	 * @return bool
 	 *
 	 */
 
-	private function createSearchcriteria( FormData $pFormData, $addressId ) {
+	private function createSearchcriteria( FormData $pFormData, $addressId )
+	{
 		$requestParams = array('data' => $pFormData->getSearchcriteriaData());
 		$requestParams['addressid'] = $addressId;
 
@@ -203,7 +178,8 @@ Ihr onOffice Team';
 	 *
 	 */
 
-	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )	{
+	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )
+	{
 		$requestParams = $pFormData->getAddressDataForApiCall();
 		$requestParams['checkDuplicate'] = $mergeExisting;
 

@@ -140,6 +140,47 @@ class __String
 
 	/**
 	 *
+	 * @param string $subStr
+	 * @return bool
+	 *
+	 */
+
+	public function endsWith($subStr)
+	{
+		$pStringSub = __String::getNew($subStr);
+		return mb_strrpos($this->_string, $subStr) === $this->length() - $pStringSub->length();
+	}
+
+
+	/**
+	 *
+	 * @param string $subStr
+	 * @return bool
+	 *
+	 */
+
+	public function startsWith($subStr)
+	{
+		return mb_strrpos($this->_string, $subStr) === 0;
+	}
+
+
+	/**
+	 *
+	 * @param int $start
+	 * @param int $length
+	 * @return string
+	 *
+	 */
+
+	public function sub($start, $length = null)
+	{
+		return mb_substr($this->_string, $start, $length);
+	}
+
+
+	/**
+	 *
 	 * @param string $subString
 	 * @param int $offset
 	 * @return bool
@@ -161,5 +202,17 @@ class __String
 	public function binLength()
 	{
 		return strlen($this->_string);
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function __toString()
+	{
+		return $this->_string;
 	}
 }

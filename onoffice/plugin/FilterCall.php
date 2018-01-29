@@ -95,8 +95,8 @@ class FilterCall
 
 	/**
 	 *
-	 * @param type $id
-	 * @return boolean
+	 * @param int $id
+	 * @return bool
 	 *
 	 */
 

@@ -21,10 +21,6 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 
@@ -47,7 +43,7 @@ class DataFormConfigurationFactory
 			Form::TYPE_CONTACT => 'DataFormConfigurationContact',
 			Form::TYPE_FREE => 'DataFormConfiguration',
 			Form::TYPE_OWNER => 'DataFormConfigurationOwner',
-			Form::TYPE_INTEREST => 'DataFormConfigurationContact',
+			Form::TYPE_INTEREST => 'DataFormConfigurationInterest',
 			Form::TYPE_APPLICANT_SEARCH => 'DataFormConfigurationApplicantSearch',
 		);
 
@@ -161,6 +157,7 @@ class DataFormConfigurationFactory
 				$this->configureOwner($row, $pConfig);
 				break;
 			case Form::TYPE_INTEREST:
+				$this->configureInterest($row, $pConfig);
 				break;
 			case Form::TYPE_APPLICANT_SEARCH:
 				$this->configureApplicantSearch($row, $pConfig);
@@ -247,6 +244,21 @@ class DataFormConfigurationFactory
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setPages($row['pages']);
+		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @param DataFormConfigurationInterest $pConfig
+	 *
+	 */
+
+	private function configureInterest(array $row, DataFormConfigurationInterest $pConfig)
+	{
+		$pConfig->setRecipient($row['recipient']);
+		$pConfig->setSubject($row['subject']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
 	}
 

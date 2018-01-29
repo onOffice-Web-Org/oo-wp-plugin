@@ -38,7 +38,7 @@ use onOffice\WPlugin\FormData;
  *
  * Terminology used in this class:
  *
- * - prefix: the prefix of the input form. Must be the name of a config index for a form
+ * - prefix: the prefix of the input form. Must be the name of a form
  * - form No.: Every input's name consists of the prefix + form no to make multiple forms on
  *				one page possible.
  *				The Form No must be incremented at every new form output.
@@ -231,7 +231,7 @@ abstract class FormPost {
 	 *
 	 */
 
-	public function setFormDataInstances( $pFormData )
+	public function setFormDataInstances( FormData $pFormData )
 	{
 		$formNo = $pFormData->getFormNo();
 		$prefix = $pFormData->getDataFormConfiguration()->getFormName();
@@ -271,8 +271,6 @@ abstract class FormPost {
 	protected function getFormFieldsConsiderSearchcriteria($inputFormFields)
 	{
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
 		$handle = $pSDKWrapper->addRequest(
 				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields');
 		$pSDKWrapper->sendRequests();

@@ -30,6 +30,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -121,7 +122,9 @@ class FormData {
 		$addressData = array();
 
 		foreach ($this->_values as $input => $value) {
-			if ('address' === $inputs[$input]) {
+			$inputConfigName = $this->getFieldNameOfInput($input);
+
+			if (onOfficeSDK::MODULE_ADDRESS === $inputs[$inputConfigName]) {
 				$addressData[$input] = $value;
 			}
 		}
@@ -140,7 +143,9 @@ class FormData {
 		$addressData = array();
 
 		foreach ($this->_values as $input => $value) {
-			if ('address' === $inputs[$input]) {
+			$inputConfigName = $this->getFieldNameOfInput($input);
+
+			if (onOfficeSDK::MODULE_ADDRESS === $inputs[$inputConfigName]) {
 
 				switch ($input)
 				{
@@ -167,6 +172,29 @@ class FormData {
 
 	/**
 	 *
+	 * SearchCriteria fields have the suffixes `__von` and `__bis`
+	 *
+	 * @param string $input
+	 * @return string
+	 *
+	 */
+
+	private function getFieldNameOfInput($input)
+	{
+		$inputConfigName = $input;
+		$pInputStr = __String::getNew($input);
+
+		if ($pInputStr->endsWith('__von') ||
+			$pInputStr->endsWith('__bis')) {
+			$inputConfigName = $pInputStr->sub(0, -5);
+		}
+
+		return $inputConfigName;
+	}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */
@@ -176,7 +204,9 @@ class FormData {
 		$estateData = array();
 
 		foreach ($this->_values as $input => $value) {
-			if ('estate' === $inputs[$input]) {
+			$inputConfigName = $this->getFieldNameOfInput($input);
+
+			if (onOfficeSDK::MODULE_ESTATE === $inputs[$inputConfigName]) {
 				$estateData[$input] = $value;
 			}
 		}
@@ -195,7 +225,9 @@ class FormData {
 		$searchcriteriaData = array();
 
 		foreach ($this->_values as $input => $value) {
-			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputs[$input]) {
+			$inputConfigName = $this->getFieldNameOfInput($input);
+
+			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputs[$inputConfigName]) {
 				$searchcriteriaData[$input] = $value;
 			}
 		}
