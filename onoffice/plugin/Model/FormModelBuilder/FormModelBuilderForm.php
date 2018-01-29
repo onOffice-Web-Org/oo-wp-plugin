@@ -50,6 +50,9 @@ class FormModelBuilderForm
 	/** @var Fieldnames */
 	private $_pFieldNames = null;
 
+	/** @var array */
+	private $_formModules = array();
+
 
 	/**
 	 *
@@ -93,6 +96,8 @@ class FormModelBuilderForm
 		}
 
 		$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
+
+		$this->_formModules = is_array($module) ? $module : array($module);
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
@@ -408,7 +413,13 @@ class FormModelBuilderForm
 
 	public function callbackValueInputModelModule(InputModelBase $pInputModel, $key)
 	{
-		$module = $this->_pFieldNames->getModuleByField($key);
+		$module = null;
+		foreach ($this->_formModules as $formModule) {
+			if ( $this->_pFieldNames->getModuleContainsField($key, $formModule)) {
+				$module = $formModule;
+				break;
+			}
+		}
 		$moduleTranslated = __(ModuleTranslation::getLabelSingular($module), 'onoffice');
 		$label = sprintf(__('Module: %s', 'onoffice'), $moduleTranslated);
 		$pInputModel->setLabel($label);

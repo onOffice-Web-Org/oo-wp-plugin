@@ -219,6 +219,7 @@ class Fieldnames {
 				$fieldProperties['default'] = null;
 				$fieldProperties['permittedvalues'] = array();
 				$fieldProperties['content'] = __('Search Criteria', 'onoffice');
+				$fieldProperties['module'] = onOfficeSDK::MODULE_SEARCHCRITERIA;
 
 				if (array_key_exists('default', $field))
 				{
@@ -371,16 +372,13 @@ class Fieldnames {
 	/**
 	 *
 	 * @param string $fieldname
-	 * @return string
+	 * @param string $module
+	 * @return bool
 	 *
 	 */
 
-	public function getModuleByField($fieldname) {
-		foreach ($this->_fieldList[$this->_language] as $module => $fieldProperties) {
-			if (isset($fieldProperties[$fieldname])) {
-				return $module;
-			}
-		}
+	public function getModuleContainsField($fieldname, $module) {
+		return isset($this->_fieldList[$this->_language][$module][$fieldname]);
 	}
 
 
