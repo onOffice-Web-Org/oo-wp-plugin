@@ -10,9 +10,6 @@
 #onoffice-ajax .metabox-holder .postbox-container .postbox input,
 #onoffice-ajax .metabox-holder .postbox-container .postbox select {
 	float: right;
-}
-
-#onoffice-ajax #post-body.columns-2  .postbox-container .postbox select {
 	max-width: 160px;
 }
 
@@ -144,4 +141,16 @@ body.onoffice_page_onoffice-estates #onoffice-ajax span.viewusage .italic {
 
 #menu-item-dummy_key {
 	display: none;
+}
+
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p {
+	line-height: 1em;
+}
+
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p input {
+	margin-right: 10px;
+	float: right;
+}
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p label {
+	float: left;
 }

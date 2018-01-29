@@ -56,9 +56,6 @@ class InputFieldComplexSortableDetailListContentForm
 
 	public function render($key, $dummy)
 	{
-		$dummyText = $dummy ? ' data-onoffice-ignore="true"' : '';
-		$id = (int)self::$_id;
-
 		$pFormModel = new FormModel();
 
 		foreach ($this->_extraInputModels as $pInputModel) {
@@ -73,20 +70,10 @@ class InputFieldComplexSortableDetailListContentForm
 
 		$pInputModelRenderer = new InputModelRenderer($pFormModel);
 
-		echo '<p class="description">'.esc_html__('Key of Field:', 'onoffice')
-			.' <span class="menu-item-settings-name">'.esc_html($key).'</span></p>';
+		echo '<p class="wp-clearfix"><label class="howto">'.esc_html__('Key of Field:', 'onoffice')
+			.'&nbsp;</label><span class="menu-item-settings-name">'.esc_html($key).'</span></p>';
 
-		echo '<p class="description">';
 		$pInputModelRenderer->buildForAjax();
-		echo '</p>';
-
-		// todo: remove
-		echo '<p class="description"><label for="indName'.$id.'">'
-			.__('Use Individual Name:').'</label><input type="checkbox" '
-			.'name="useIndividualName['.esc_html($key).']" value="1" id="indName'.$id.'"'.$dummyText.'></p>';
-		echo '<p class="description">'.__('Individual Name:').'<input type="text" '
-			.'name="individualName['.esc_html($key).']"'.$dummyText.'></p>';
-
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}
 

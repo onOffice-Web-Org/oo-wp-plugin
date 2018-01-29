@@ -68,17 +68,18 @@ jQuery(document).ready(function($){
 
 	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label) {
 		var myLabel = $('#' + label);
+		var dummyKey;
 
 		if (myLabel.length)
 		{
-			var myDummyKey = myLabel.find('#menu-item-dummy_key');
+			dummyKey = myLabel.find('#menu-item-dummy_key');
 		}
 		else
 		{
-			var myDummyKey = $('#menu-item-dummy_key');
+			dummyKey = $('#menu-item-dummy_key');
 		}
 
-		var clonedElement = myDummyKey.clone(true, true);
+		var clonedElement = dummyKey.clone(true, true);
 		clonedElement.attr('id', 'menu-item-'+fieldName);
 		clonedElement.find('span.item-title:contains("dummy_label")').text(fieldLabel);
 		clonedElement.find('span.item-type:contains("dummy_category")').text(fieldCategory);
@@ -96,6 +97,6 @@ jQuery(document).ready(function($){
 			clonedElement.find('label[for=' + labelIdFor + ']').text(newLabelText);
 		}
 		clonedElement.show();
-		myDummyKey.parent().append(clonedElement);
+		dummyKey.parent().append(clonedElement);
 	};
 });

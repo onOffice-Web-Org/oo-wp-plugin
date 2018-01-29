@@ -39,8 +39,8 @@ class InputFieldComplexSortableDetailListContentDefault
 
 	public function render($key, $dummy)
 	{
-		echo '<p class="description">'.esc_html__('Key of Field:', 'onoffice')
-				.' <span class="menu-item-settings-name">'.esc_html($key).'</span></p>'
+		echo '<p class="wp-clearfix"><label class="howto">'.esc_html__('Key of Field:', 'onoffice')
+				.'&nbsp;</label><span class="menu-item-settings-name">'.esc_html($key).'</span></p>'
 			.'<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}
 }
