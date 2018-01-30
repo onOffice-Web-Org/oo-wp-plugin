@@ -62,12 +62,13 @@ class DataFormConfigurationFactory
 
 	/**
 	 *
+	 * @param bool $setDefaultFields
 	 * @throws UnknownFormException
 	 * @return DataFormConfiguration
 	 *
 	 */
 
-	public function createEmpty()
+	public function createEmpty($setDefaultFields = true)
 	{
 		if (!array_key_exists($this->_type, $this->_formClassMapping)) {
 			throw new UnknownFormException;
@@ -77,6 +78,10 @@ class DataFormConfigurationFactory
 		/* @var $pConfig DataFormConfiguration */
 		$pConfig = new $class;
 		$pConfig->setFormType($this->_type);
+
+		if ($setDefaultFields) {
+			$pConfig->setDefaultFields();
+		}
 
 		return $pConfig;
 	}
@@ -146,7 +151,7 @@ class DataFormConfigurationFactory
 
 	public function createByRow(array $row)
 	{
-		$pConfig = $this->createEmpty();
+		$pConfig = $this->createEmpty(false);
 		$this->configureGeneral($row, $pConfig);
 
 		switch ($this->_type) {

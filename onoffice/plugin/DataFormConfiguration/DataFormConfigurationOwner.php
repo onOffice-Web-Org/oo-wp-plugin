@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
+use onOffice\SDK\onOfficeSDK;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -31,6 +33,30 @@ namespace onOffice\WPlugin\DataFormConfiguration;
 class DataFormConfigurationOwner
 	extends DataFormConfiguration
 {
+	/**
+	 *
+	 */
+
+	public function setDefaultFields()
+	{
+		$this->setInputs(array(
+			'Vorname' => onOfficeSDK::MODULE_ADDRESS,
+			'Name' => onOfficeSDK::MODULE_ADDRESS,
+			'Strasse' => onOfficeSDK::MODULE_ADDRESS,
+			'Plz' => onOfficeSDK::MODULE_ADDRESS,
+			'Ort' => onOfficeSDK::MODULE_ADDRESS,
+			'Telefon1' => onOfficeSDK::MODULE_ADDRESS,
+			'Email' => onOfficeSDK::MODULE_ADDRESS,
+			'objektart' => onOfficeSDK::MODULE_ESTATE,
+			'objekttyp' => onOfficeSDK::MODULE_ESTATE,
+			'wohnflaeche' => onOfficeSDK::MODULE_ESTATE,
+			'plz' => onOfficeSDK::MODULE_ESTATE,
+			'ort' => onOfficeSDK::MODULE_ESTATE,
+			'message' => null,
+		));
+	}
+
+
 	/** @var bool */
 	private $_checkDuplicateOnCreateAddress = false;
 

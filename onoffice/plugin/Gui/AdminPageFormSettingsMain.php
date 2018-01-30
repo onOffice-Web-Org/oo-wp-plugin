@@ -131,6 +131,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowEstateFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
+				$pAdminPage->setShowMessageInput(true);
 				break;
 			case Form::TYPE_CONTACT:
 				$pAdminPage->setShowCreateAddress(true);

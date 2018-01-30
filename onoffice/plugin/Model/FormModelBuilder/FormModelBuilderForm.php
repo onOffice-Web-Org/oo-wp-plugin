@@ -161,15 +161,18 @@ class FormModelBuilderForm
 
 		$values = array();
 		$values['fieldsRequired'] = array();
+		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
 		if ($formId !== null) {
 			$pRecordReadManager = new RecordManagerReadForm();
 			$values = $pRecordReadManager->getRowById($formId);
-			$pFactory = new DataFormConfigurationFactory($this->_formType);
 			$pDataFormConfiguration = $pFactory->loadByFormId($formId);
-			$values[DataFormConfiguration::FIELDS] = array_keys($pDataFormConfiguration->getInputs());
-			$values['fieldsRequired'] = $pDataFormConfiguration->getRequiredFields();
+		} else {
+			$pDataFormConfiguration = $pFactory->createEmpty();
 		}
+
+		$values[DataFormConfiguration::FIELDS] = array_keys($pDataFormConfiguration->getInputs());
+		$values['fieldsRequired'] = $pDataFormConfiguration->getRequiredFields();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();

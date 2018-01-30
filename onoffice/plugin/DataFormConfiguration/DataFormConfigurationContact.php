@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
+use onOffice\SDK\onOfficeSDK;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -44,6 +46,25 @@ class DataFormConfigurationContact
 
 	/** @var string */
 	private $_recipient = null;
+
+
+	/**
+	 *
+	 */
+
+	public function setDefaultFields()
+	{
+		$this->setInputs(array(
+			'Vorname' => onOfficeSDK::MODULE_ADDRESS,
+			'Name' => onOfficeSDK::MODULE_ADDRESS,
+			'Strasse' => onOfficeSDK::MODULE_ADDRESS,
+			'Plz' => onOfficeSDK::MODULE_ADDRESS,
+			'Ort' => onOfficeSDK::MODULE_ADDRESS,
+			'Telefon1' => onOfficeSDK::MODULE_ADDRESS,
+			'Email' => onOfficeSDK::MODULE_ADDRESS,
+			'message' => null,
+		));
+	}
 
 
 	/** @return bool */

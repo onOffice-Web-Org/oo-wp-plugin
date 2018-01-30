@@ -267,7 +267,7 @@ class FormPostOwner
 	 *
 	 */
 
-	private function sendContactRequest( FormData $pFormData, $recipient = null, $subject = null, $estateId) {
+	private function sendContactRequest( FormData $pFormData, $recipient, $subject, $estateId) {
 		$addressData = $pFormData->getAddressData();
 		$values = $pFormData->getValues();
 		$message = isset( $values['message'] ) ? $values['message'] : null;

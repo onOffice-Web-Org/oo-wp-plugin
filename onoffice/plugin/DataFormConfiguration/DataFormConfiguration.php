@@ -53,6 +53,15 @@ class DataFormConfiguration
 	private $_template = '';
 
 
+	/**
+	 *
+	 * Override to set default fields for new, empty forms
+	 *
+	 */
+
+	public function setDefaultFields()
+		{}
+
 	/** @return string */
 	public function getFormType()
 		{ return $this->_formType; }
