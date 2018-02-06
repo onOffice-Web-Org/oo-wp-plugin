@@ -183,8 +183,8 @@ class Fieldnames {
 		$responseArrayFieldList = $pSDKWrapper->getRequestResponse( $handleGetFields );
 		$fieldList = $responseArrayFieldList['data']['records'];
 
-		$this->createFieldList( $fieldList, $this->_language );
-		$this->completeFieldListWithSearchcriteria( $this->_language );
+		$this->createFieldList( $fieldList );
+		$this->completeFieldListWithSearchcriteria();
 	}
 
 
@@ -194,7 +194,6 @@ class Fieldnames {
 
 	private function completeFieldListWithSearchcriteria( ) {
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
 		$requestParameter = array
 			(
 				'language' => $this->_language,
@@ -346,7 +345,7 @@ class Fieldnames {
 	 *
 	 */
 
-	private function createFieldList( $fieldResult) {
+	private function createFieldList($fieldResult) {
 		if ( count( $fieldResult ) == 0 ) {
 			return;
 		}

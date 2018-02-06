@@ -89,14 +89,9 @@ class TemplateCall
 	}
 
 
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
+	/** @return array */
 	public function getTemplates()
-	{ return $this->_templates; }
+		{ return $this->_templates; }
 
 
 

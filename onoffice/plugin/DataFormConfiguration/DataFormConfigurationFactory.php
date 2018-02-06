@@ -41,7 +41,6 @@ class DataFormConfigurationFactory
 	private $_formClassMapping = array
 		(
 			Form::TYPE_CONTACT => 'DataFormConfigurationContact',
-			Form::TYPE_FREE => 'DataFormConfiguration',
 			Form::TYPE_OWNER => 'DataFormConfigurationOwner',
 			Form::TYPE_INTEREST => 'DataFormConfigurationInterest',
 			Form::TYPE_APPLICANT_SEARCH => 'DataFormConfigurationApplicantSearch',

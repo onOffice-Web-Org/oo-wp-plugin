@@ -88,10 +88,6 @@ class FormsTable
 				self::SUB_LABEL => _nx_noop('Owner Form', 'Owner Forms', 'forms', 'onoffice'),
 				self::SUB_DB_VALUE => Form::TYPE_OWNER,
 			),
-			Form::TYPE_FREE => array(
-				self::SUB_LABEL => _nx_noop('Free Form', 'Free Forms', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => Form::TYPE_FREE,
-			),
 			Form::TYPE_APPLICANT_SEARCH => array(
 				self::SUB_LABEL => _nx_noop('Applicant Search Form', 'Applicant Search Forms', 'forms', 'onoffice'),
 				self::SUB_DB_VALUE => Form::TYPE_APPLICANT_SEARCH,

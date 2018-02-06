@@ -45,7 +45,6 @@ class AdminPageFormSettingsMain
 		Form::TYPE_APPLICANT_SEARCH => '\onOffice\WPlugin\Gui\AdminPageFormSettingsApplicantSearch',
 		Form::TYPE_INTEREST => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
 		Form::TYPE_OWNER => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
-		Form::TYPE_FREE => '\onOffice\WPlugin\Gui\AdminPageFormSettingsFree',
 	);
 
 	/** @var AdminPageFormSettingsBase */
@@ -141,10 +140,6 @@ class AdminPageFormSettingsMain
 				break;
 			case Form::TYPE_APPLICANT_SEARCH:
 				$pAdminPage->setShowSearchCriteriaFields(true);
-				break;
-			case Form::TYPE_FREE:
-				$pAdminPage->setShowEstateFields(true);
-				$pAdminPage->setShowAddressFields(true);
 				break;
 		}
 	}

@@ -48,7 +48,7 @@ use onOffice\WPlugin\Favorites;
 					onOffice.addFavoriteButtonLabel(0, element);
 				});
 			}
-		}
+		};
 		$('button.onoffice.favorize').each(onOffice.addFavoriteButtonLabel);
 	});
 </script>
