@@ -27,14 +27,14 @@
  */
 
 
-namespace onOffice\WPlugin;
+namespace onOffice\WPlugin\Types;
 
 
 /**
  *
  */
 
-abstract class FieldType {
+abstract class FieldTypes {
 	/** */
 	const FIELD_TYPE_MULTISELECT = 'multiselect';
 

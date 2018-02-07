@@ -31,8 +31,8 @@
 <?php
 
 	$selectTypes = array(
-			onOffice\WPlugin\FieldType::FIELD_TYPE_MULTISELECT,
-			onOffice\WPlugin\FieldType::FIELD_TYPE_SINGLESELECT,
+			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
+			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
 		);
 
 	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)

@@ -40,8 +40,8 @@ if ( ! function_exists( 'printRegion') ) {
 
 foreach ( $pForm->getInputFields() as $input => $table ) {
 	$selectTypes = array(
-		onOffice\WPlugin\FieldType::FIELD_TYPE_MULTISELECT,
-		onOffice\WPlugin\FieldType::FIELD_TYPE_SINGLESELECT,
+		\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
+		\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
 	);
 
 	$boolFields = array(

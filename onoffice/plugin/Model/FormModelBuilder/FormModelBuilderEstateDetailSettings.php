@@ -26,11 +26,11 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\ImageType;
 use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 
 /**
@@ -78,7 +78,7 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createInputModelPictureTypes()
 	{
-		$allPictureTypes = ImageType::getAllImageTypes();
+		$allPictureTypes = ImageTypes::getAllImageTypes();
 
 		$pInputModelPictureTypes = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_PICTURE_TYPE, null, true);

@@ -26,34 +26,50 @@
  *
  */
 
-namespace onOffice\WPlugin;
+namespace onOffice\WPlugin\Types;
 
 /**
  *
  */
 
-class ImageType {
-	const TITLE = 'Titelbild';
-	const PHOTO = 'Foto';
-	const PHOTO_BIG = 'Foto_gross';
-	const GROUNDPLAN = 'Grundriss';
-	const LOCATION_MAP = 'Lageplan';
-	const CITY_MAP = 'Stadtplan';
-	const ENERGY_PASS_RANGE = 'Epass_Skala';
-	const FINANCE_EXAMPLE = 'Finanzierungsbeispiel';
+class ImageTypes
+{
 
+	/** */
+	const TITLE = 'Titelbild';
+
+	/** */
+	const PHOTO = 'Foto';
+
+	/** */
+	const PHOTO_BIG = 'Foto_gross';
+
+	/** */
+	const GROUNDPLAN = 'Grundriss';
+
+	/** */
+	const LOCATION_MAP = 'Lageplan';
+
+	/** */
+	const CITY_MAP = 'Stadtplan';
+
+	/** */
+	const ENERGY_PASS_RANGE = 'Epass_Skala';
+
+	/** */
+	const FINANCE_EXAMPLE = 'Finanzierungsbeispiel';
 
 	/** @var array */
 	static private $_imageTypes = array
 		(
-			ImageType::TITLE => 'Cover Photo',
-			ImageType::PHOTO => 'Photo',
-			ImageType::PHOTO_BIG => 'Photo (big)',
-			ImageType::GROUNDPLAN => 'Ground Plan',
-			ImageType::LOCATION_MAP => 'Location Map',
-			ImageType::CITY_MAP => 'City Map',
-			ImageType::ENERGY_PASS_RANGE => 'Energy-Pass Range',
-			ImageType::FINANCE_EXAMPLE => 'Finance Example',
+			self::TITLE => 'Cover Photo',
+			self::PHOTO => 'Photo',
+			self::PHOTO_BIG => 'Photo (big)',
+			self::GROUNDPLAN => 'Ground Plan',
+			self::LOCATION_MAP => 'Location Map',
+			self::CITY_MAP => 'City Map',
+			self::ENERGY_PASS_RANGE => 'Energy-Pass Range',
+			self::FINANCE_EXAMPLE => 'Finance Example',
 		);
 
 

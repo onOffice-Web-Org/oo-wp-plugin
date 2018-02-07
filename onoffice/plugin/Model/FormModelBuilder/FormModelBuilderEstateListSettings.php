@@ -21,9 +21,14 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\WPlugin\Model;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Model;
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Types\ImageTypes;
 
 /**
  *
@@ -38,7 +43,7 @@ class FormModelBuilderEstateListSettings
 	/**
 	 *
 	 * @param int $listViewId
-	 * @return \onOffice\WPlugin\Model\FormModel
+	 * @return FormModel
 	 *
 	 */
 
@@ -46,7 +51,7 @@ class FormModelBuilderEstateListSettings
 	{
 		if ($listViewId !== null)
 		{
-			$pRecordReadManager = new \onOffice\WPlugin\Record\RecordManagerReadListView();
+			$pRecordReadManager = new RecordManagerReadListView();
 			$values = $pRecordReadManager->getRowById($listViewId);
 			$this->setValues($values);
 		}
@@ -94,7 +99,7 @@ class FormModelBuilderEstateListSettings
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
-		$fieldNames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
+		$fieldNames = $this->readFieldnames(onOfficeSDK::MODULE_ESTATE);
 		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$fields = $this->getValue(DataListView::FIELDS);
@@ -190,8 +195,8 @@ class FormModelBuilderEstateListSettings
 
 	private function getOnlyDefaultSortByFields()
 	{
-		$fieldnames = $this->readFieldnames(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
-		$defaultFields = \onOffice\WPlugin\Fieldnames::getDefaultSortByFields();
+		$fieldnames = $this->readFieldnames(onOfficeSDK::MODULE_ESTATE);
+		$defaultFields = Fieldnames::getDefaultSortByFields();
 		natcasesort($fieldnames);
 
 		foreach ($fieldnames as $key => $value)
@@ -295,7 +300,7 @@ class FormModelBuilderEstateListSettings
 
 	public function createInputModelPictureTypes()
 	{
-		$allPictureTypes = \onOffice\WPlugin\ImageType::getAllImageTypes();
+		$allPictureTypes = ImageTypes::getAllImageTypes();
 
 		$pInputModelPictureTypes = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_PICTURE_TYPE, null, true);

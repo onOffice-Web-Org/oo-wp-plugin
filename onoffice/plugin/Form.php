@@ -32,12 +32,14 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
  */
 
-class Form {
+class Form
+{
 	/** choose this to create a contact form */
 	const TYPE_CONTACT = 'contact';
 
@@ -297,7 +299,7 @@ class Form {
 		$module = $this->getModuleOfField($field);
 		$fieldType = $this->getFieldType( $field );
 		$isMultiselectOrSingleselect = in_array( $fieldType,
-			array(FieldType::FIELD_TYPE_MULTISELECT, FieldType::FIELD_TYPE_SINGLESELECT), true );
+			array(FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT), true );
 
 		$result = null;
 

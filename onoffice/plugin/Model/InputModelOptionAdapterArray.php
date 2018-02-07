@@ -30,7 +30,7 @@ namespace onOffice\WPlugin\Model;
 
 class InputModelOptionAdapterArray
 {
-	/** @var onOffice\WPlugin\Model\InputModelOption[] */
+	/** @var InputModelOption[] */
 	private $_inputModels = array();
 
 	/**

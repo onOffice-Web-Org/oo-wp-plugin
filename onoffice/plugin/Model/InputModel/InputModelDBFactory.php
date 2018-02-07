@@ -21,6 +21,9 @@
 
 namespace onOffice\WPlugin\Model\InputModel;
 
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigBase;
+use onOffice\WPlugin\Model\InputModelDB;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -88,7 +91,7 @@ class InputModelDBFactory
 	 * @param string $type
 	 * @param string $label
 	 * @param bool $multi
-	 * @return \onOffice\WPlugin\Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -103,7 +106,7 @@ class InputModelDBFactory
 			$table = $config[InputModelDBFactoryConfigBase::KEY_TABLE];
 			$field = $config[InputModelDBFactoryConfigBase::KEY_FIELD];
 
-			$pInstance = new \onOffice\WPlugin\Model\InputModelDB(null, $label);
+			$pInstance = new InputModelDB(null, $label);
 			$pInstance->setTable($table);
 			$pInstance->setField($field);
 			$pInstance->setIsMulti($multi);
