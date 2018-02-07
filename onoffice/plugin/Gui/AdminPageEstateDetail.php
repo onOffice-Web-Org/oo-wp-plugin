@@ -57,7 +57,7 @@ class AdminPageEstateDetail
 	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
 
 	/** */
-	const FORM_VIEW_DOCUMENT_TYPES = 'viewdocumenttypes';
+	const FORM_VIEW_ADDITIONAL_MEDIA = 'viewdocumenttypes';
 
 	/** */
 	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
@@ -184,7 +184,7 @@ class AdminPageEstateDetail
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
 
-		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
+		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'normal');
 	}
 
@@ -247,11 +247,13 @@ class AdminPageEstateDetail
 		$this->addFormModel($pFormModelPictureTypes);
 
 		$pInputModelDocumentTypes = $pFormModelBuilder->createInputModelExpose();
+		$pInputModelMovieLinks = $pFormModelBuilder->createInputModelMovieLinks();
 		$pFormModelDocumentTypes = new FormModel();
 		$pFormModelDocumentTypes->setPageSlug($this->getPageSlug());
-		$pFormModelDocumentTypes->setGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
-		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice'));
+		$pFormModelDocumentTypes->setGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
+		$pFormModelDocumentTypes->setLabel(__('Additional Media', 'onoffice'));
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
+		$pFormModelDocumentTypes->addInputModel($pInputModelMovieLinks);
 		$this->addFormModel($pFormModelDocumentTypes);
 
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);

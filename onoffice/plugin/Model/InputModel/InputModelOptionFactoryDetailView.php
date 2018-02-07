@@ -20,6 +20,8 @@
  */
 
 namespace onOffice\WPlugin\Model\InputModel;
+
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Model\InputModelOption;
 
 /**
@@ -32,7 +34,7 @@ use onOffice\WPlugin\Model\InputModelOption;
 class InputModelOptionFactoryDetailView
 {
 	/** */
-	const INPUT_PICTURE_TYPE = \onOffice\WPlugin\DataView\DataDetailView::PICTURES;
+	const INPUT_PICTURE_TYPE = DataDetailView::PICTURES;
 
 	/** */
 	const INPUT_TEMPLATE = 'template';
@@ -41,10 +43,13 @@ class InputModelOptionFactoryDetailView
 	const INPUT_EXPOSE = 'expose';
 
 	/** */
-	const INPUT_FIELD_CONFIG = \onOffice\WPlugin\DataView\DataDetailView::FIELDS;
+	const INPUT_MOVIE_LINKS = 'movielinks';
 
 	/** */
-	const INPUT_FIELD_CONTACTDATA_ONLY = \onOffice\WPlugin\DataView\DataDetailView::ADDRESSFIELDS;
+	const INPUT_FIELD_CONFIG = DataDetailView::FIELDS;
+
+	/** */
+	const INPUT_FIELD_CONTACTDATA_ONLY = DataDetailView::ADDRESSFIELDS;
 
 	/** */
 	const KEY_TYPE = 'type';
@@ -70,6 +75,9 @@ class InputModelOptionFactoryDetailView
 		self::INPUT_FIELD_CONTACTDATA_ONLY => array(
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		),
+		self::INPUT_MOVIE_LINKS => array(
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		),
 	);
 
 
@@ -90,7 +98,7 @@ class InputModelOptionFactoryDetailView
 	 * @param string $name
 	 * @param string $label
 	 * @param bool $multi
-	 * @return \onOffice\WPlugin\Model\InputModelOption
+	 * @return InputModelOption
 	 *
 	 */
 
@@ -103,7 +111,7 @@ class InputModelOptionFactoryDetailView
 			$config = $this->_inputConfig[$name];
 			$type = $config[self::KEY_TYPE];
 
-			$pInstance = new \onOffice\WPlugin\Model\InputModelOption($this->_optionGroup, $name, $label, $type);
+			$pInstance = new InputModelOption($this->_optionGroup, $name, $label, $type);
 			$pInstance->setIsMulti($multi);
 		}
 

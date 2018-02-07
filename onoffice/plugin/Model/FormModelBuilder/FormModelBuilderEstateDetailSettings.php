@@ -21,12 +21,17 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\WPlugin\Model;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\ImageType;
+use onOffice\WPlugin\Model;
+use onOffice\WPlugin\Model\FormModel;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
+use onOffice\WPlugin\Types\MovieLinkTypes;
 
 /**
  *
@@ -41,13 +46,13 @@ class FormModelBuilderEstateDetailSettings
 	/** @var InputModelOptionFactoryDetailView */
 	private $_pInputModelDetailViewFactory = null;
 
-	/** @var \onOffice\WPlugin\DataView\DataDetailView */
+	/** @var DataDetailView */
 	private $_pDataDetailView = null;
 
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\Model\FormModel
+	 * @return FormModel
 	 *
 	 */
 
@@ -73,7 +78,7 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createInputModelPictureTypes()
 	{
-		$allPictureTypes = \onOffice\WPlugin\ImageType::getAllImageTypes();
+		$allPictureTypes = ImageType::getAllImageTypes();
 
 		$pInputModelPictureTypes = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_PICTURE_TYPE, null, true);
@@ -110,6 +115,31 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelExpose->setValue($this->_pDataDetailView->getExpose());
 
 		return $pInputModelExpose;
+	}
+
+
+	/**
+	 *
+	 * @return Model\InputModelDB
+	 *
+	 */
+
+	public function createInputModelMovieLinks()
+	{
+		$labelMovieLinks = __('Movie Links', 'onoffice');
+
+		$pInputModelMedia = $this->_pInputModelDetailViewFactory->create
+			(InputModelOptionFactoryDetailView::INPUT_MOVIE_LINKS, $labelMovieLinks);
+		$pInputModelMedia->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$options = array(
+			MovieLinkTypes::MOVIE_LINKS_NONE => __('Disabled', 'onoffice'),
+			MovieLinkTypes::MOVIE_LINKS_LINK => __('Link', 'onoffice'),
+			MovieLinkTypes::MOVIE_LINKS_PLAYER => __('Player', 'onoffice'),
+		);
+		$pInputModelMedia->setValuesAvailable($options);
+		$pInputModelMedia->setValue($this->_pDataDetailView->getMovieLinks());
+
+		return $pInputModelMedia;
 	}
 
 
@@ -163,7 +193,7 @@ class FormModelBuilderEstateDetailSettings
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 
-		$pFieldnames = new \onOffice\WPlugin\Fieldnames();
+		$pFieldnames = new Fieldnames();
 		$pFieldnames->loadLanguage();
 
 		$fieldNames = $pFieldnames->getFieldList($module, true, true);

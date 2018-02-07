@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Types\MovieLinkTypes;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -69,6 +71,9 @@ class DataDetailView
 
 	/** @var int */
 	private $_pageId = null;
+
+	/** @var int */
+	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
 
 	/** @return array */
@@ -122,4 +127,12 @@ class DataDetailView
 	/** @var string[] $addressFields */
 	public function setAddressFields(array $addressFields)
 		{ $this->_addressFields = $addressFields; }
+
+	/** @return int */
+	public function getMovieLinks()
+		{ return $this->_movieLinks; }
+
+	/** @param int $movieLinks */
+	public function setMovieLinks($movieLinks)
+		{ $this->_movieLinks = $movieLinks; }
 }

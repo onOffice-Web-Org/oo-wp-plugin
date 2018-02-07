@@ -79,7 +79,7 @@ class DataDetailViewHandler
 	/**
 	 *
 	 * @param array $row
-	 * @return \onOffice\WPlugin\DataView\DataDetailView
+	 * @return DataDetailView
 	 *
 	 */
 
@@ -91,6 +91,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setPictureTypes(self::getValue($row, DataDetailView::PICTURES, array()));
 		$pDataDetailView->setExpose(self::getValue($row, 'expose'));
 		$pDataDetailView->setAddressFields(self::getValue($row, DataDetailView::ADDRESSFIELDS));
+		$pDataDetailView->setMovieLinks(self::getValue($row, 'movielinks'));
 		return $pDataDetailView;
 	}
 
