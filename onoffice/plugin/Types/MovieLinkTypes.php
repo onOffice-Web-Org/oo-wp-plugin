@@ -38,4 +38,26 @@ abstract class MovieLinkTypes
 
 	/** */
 	const MOVIE_LINKS_PLAYER = 2;
+
+
+	/** */
+	const FILE_TYPE_MOVIE_LINK = 'Film-Link';
+
+	/** @var string[] */
+	private static $_movieLinkTypes = array(
+		self::FILE_TYPE_MOVIE_LINK,
+	);
+
+
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
+
+	static public function isMovieLink($type)
+	{
+		return in_array($type, self::$_movieLinkTypes, true);
+	}
 }

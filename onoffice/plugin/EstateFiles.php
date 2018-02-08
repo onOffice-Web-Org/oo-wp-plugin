@@ -35,9 +35,10 @@ use onOffice\SDK\onOfficeSDK;
  *
  */
 
-class EstateImages {
+class EstateFiles
+{
 	/** @var array */
-	private $_estateImages = array();
+	private $_estateFiles = array();
 
 	/** @var int */
 	private $_handleEstatePictures = null;
@@ -52,7 +53,8 @@ class EstateImages {
 	 *
 	 */
 
-	public function __construct( $pictureCategories ) {
+	public function __construct( array $pictureCategories )
+	{
 		$this->_pictureCategories = $pictureCategories;
 
 		add_action('oo_beforeEstateRelations', array($this, 'registerRequest'), 10, 2);
@@ -67,7 +69,8 @@ class EstateImages {
 	 *
 	 */
 
-	public function registerRequest( SDKWrapper $pSDKWrapper, array $estateIds ) {
+	public function registerRequest( SDKWrapper $pSDKWrapper, array $estateIds )
+	{
 		$this->_handleEstatePictures = $pSDKWrapper->addRequest(
 			onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
 				'estateids' => array_values($estateIds),
@@ -83,10 +86,11 @@ class EstateImages {
 	 *
 	 */
 
-	public function parseRequest( SDKWrapper $pSDKWrapper) {
+	public function parseRequest( SDKWrapper $pSDKWrapper)
+	{
 		$responseArrayEstatePictures = $pSDKWrapper->getRequestResponse(
 			$this->_handleEstatePictures );
-		$this->collectEstatePictures( $responseArrayEstatePictures );
+		$this->collectEstateFiles( $responseArrayEstatePictures );
 	}
 
 
@@ -97,16 +101,17 @@ class EstateImages {
 	 *
 	 */
 
-	private function collectEstatePictures( $responseArrayEstatePictures ) {
+	private function collectEstateFiles( $responseArrayEstatePictures )
+	{
 		if ( ! isset( $responseArrayEstatePictures['data']['records'] ) ) {
 			throw new HttpFetchNoResultException();
 		}
 
 		$records = $responseArrayEstatePictures['data']['records'];
 
-		foreach ($records as $imageEntry) {
-			$imageId = $imageEntry['id'];
-			foreach ( $imageEntry['elements'] as $properties ) {
+		foreach ($records as $fileEntry) {
+			$fileId = $fileEntry['id'];
+			foreach ( $fileEntry['elements'] as $properties ) {
 				$estateId = $properties['estateid'];
 				$imageType = $properties['type'];
 				$imageUrl = $properties['url'];
@@ -114,14 +119,14 @@ class EstateImages {
 				$imageTitle = $properties['title'];
 
 				$image = array(
-					'id' => $imageId,
+					'id' => $fileId,
 					'url' => $imageUrl,
 					'title' => $imageTitle,
 					'text' => $imageText,
-					'imagetype' => $imageType,
+					'type' => $imageType,
 				);
 
-				$this->_estateImages[$estateId][$imageId] = $image;
+				$this->_estateFiles[$estateId][$fileId] = $image;
 			}
 		}
 	}
@@ -134,22 +139,64 @@ class EstateImages {
 	 *
 	 */
 
-	public function getEstatePictures( $estateId ) {
-		if ( array_key_exists( $estateId, $this->_estateImages ) ) {
-			return $this->_estateImages[$estateId];
-		}
-
-		return array();
+	public function getEstatePictures( $estateId )
+	{
+		$callback = '\onOffice\WPlugin\Types\ImageTypes::isImageType';
+		return $this->getFilesOfTypeByCallback($estateId, $callback);
 	}
 
 
 	/**
 	 *
+	 * @param int $estateId
+	 * @return array
+	 *
+	 */
+
+	public function getEstateMovieLinks( $estateId )
+	{
+		$callback = '\onOffice\WPlugin\Types\MovieLinkTypes::isMovieLink';
+		return $this->getFilesOfTypeByCallback($estateId, $callback);
+	}
+
+
+	/**
+	 *
+	 * @param int $estateId
+	 * @param string $callback
+	 * @return array
+	 *
+	 */
+
+	private function getFilesOfTypeByCallback($estateId, $callback)
+	{
+		$result = array();
+
+		if ( $this->_estateFiles[$estateId] ) {
+			$images = $this->_estateFiles[$estateId];
+
+			foreach ($images as $imageId => $imageProperties) {
+				$resultCb = call_user_func($callback, $imageProperties['type']);
+				if ($resultCb === true) {
+					$result[$imageId] = $imageProperties;
+				}
+			}
+		}
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param int $fileId
+	 * @param int $estateId
+	 * @param array $options
 	 * @return string
 	 *
 	 */
 
-	public function getEstatePictureUrl( $imageId, $estateId, array $options = null ) {
+	public function getEstateFileUrl( $fileId, $estateId, array $options = null )
+	{
 		$size = null;
 
 		if ( ! is_null($options) ) {
@@ -167,8 +214,8 @@ class EstateImages {
 			$size = '@'.$width.'x'.$height; // values such as 'x300' or '300x' are totally okay
 		}
 
-		if ( ! empty( $this->_estateImages[$estateId][$imageId] ) ) {
-			return esc_url( $this->_estateImages[$estateId][$imageId]['url'].$size );
+		if ( ! empty( $this->_estateFiles[$estateId][$fileId] ) ) {
+			return esc_url( $this->_estateFiles[$estateId][$fileId]['url'].$size );
 		}
 
 		return null;
@@ -183,15 +230,17 @@ class EstateImages {
 	 *
 	 */
 
-	public function getEstatePictureTitle( $imageId, $estateId)
+	public function getEstatePictureTitle( $imageId, $estateId )
 	{
-		if ( ! empty( $this->_estateImages[$estateId][$imageId] ) )	{
-			return $this->_estateImages[$estateId][$imageId]['title'];
+		$value = $this->getEstatePictureValues($imageId, $estateId);
+		$result = null;
+
+		if ( $value !== array() ) {
+			$result = $value['title'];
 		}
 
-		return null;
+		return $result;
 	}
-
 
 
 	/**
@@ -202,15 +251,17 @@ class EstateImages {
 	 *
 	 */
 
-	public function getEstatePictureText( $imageId, $estateId)
+	public function getEstatePictureText( $imageId, $estateId )
 	{
-		if ( ! empty( $this->_estateImages[$estateId][$imageId] ) )	{
-			return $this->_estateImages[$estateId][$imageId]['text'];
+		$value = $this->getEstatePictureValues($imageId, $estateId);
+		$result = null;
+
+		if ( $value !== array() ) {
+			$result = $value['text'];
 		}
 
-		return null;
+		return $result;
 	}
-
 
 
 	/**
@@ -221,10 +272,10 @@ class EstateImages {
 	 *
 	 */
 
-	public function getEstatePictureValues( $imageId, $estateId)
+	public function getEstatePictureValues( $imageId, $estateId )
 	{
-		if ( ! empty( $this->_estateImages[$estateId][$imageId] ) ) {
-			return $this->_estateImages[$estateId][$imageId];
+		if ( isset( $this->_estateFiles[$estateId][$imageId] ) ) {
+			return $this->_estateFiles[$estateId][$imageId];
 		}
 
 		return array();

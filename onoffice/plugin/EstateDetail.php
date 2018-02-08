@@ -21,6 +21,11 @@
 
 namespace onOffice\WPlugin;
 
+use Exception;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
+use onOffice\WPlugin\Types\MovieLinkTypes;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -60,11 +65,38 @@ class EstateDetail
 	/**
 	 *
 	 * @return array
+	 * @throws Exception
+	 *
+	 */
+
+	protected function getPreloadEstateFileCategories()
+	{
+		$fileCategories = parent::getPreloadEstateFileCategories();
+
+		$pDataView = $this->getDataView();
+
+		if (!$pDataView instanceof DataDetailView) {
+			throw new Exception('DataView must be instance of DataDetailView!');
+		}
+
+		$movieLinksActive = $pDataView->getMovieLinks() !== MovieLinkTypes::MOVIE_LINKS_NONE;
+
+		if ($movieLinksActive) {
+			$fileCategories []= MovieLinkTypes::FILE_TYPE_MOVIE_LINK;
+		}
+
+		return $fileCategories;
+	}
+
+
+	/**
+	 *
+	 * @return array
 	 *
 	 */
 
 	protected function getDefaultFilter() {
-		$pListViewFilterBuilder = new Filter\DefaultFilterBuilderDetailView();
+		$pListViewFilterBuilder = new DefaultFilterBuilderDetailView();
 		$pListViewFilterBuilder->setEstateId($this->_estateId);
 		$filter = $pListViewFilterBuilder->buildFilter();
 

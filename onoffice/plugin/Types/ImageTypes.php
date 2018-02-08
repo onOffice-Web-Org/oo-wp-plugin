@@ -73,6 +73,18 @@ class ImageTypes
 		);
 
 
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
+
+	static public function isImageType($type)
+	{
+		return isset(self::$_imageTypes[$type]);
+	}
+
 	/** @return array */
 	static public function getAllImageTypes()
 		{ return self::$_imageTypes; }

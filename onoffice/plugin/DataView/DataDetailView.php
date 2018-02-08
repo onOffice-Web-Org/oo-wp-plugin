@@ -130,9 +130,9 @@ class DataDetailView
 
 	/** @return int */
 	public function getMovieLinks()
-		{ return $this->_movieLinks; }
+		{ return (int)$this->_movieLinks; }
 
 	/** @param int $movieLinks */
 	public function setMovieLinks($movieLinks)
-		{ $this->_movieLinks = $movieLinks; }
+		{ $this->_movieLinks = (int)$movieLinks; }
 }

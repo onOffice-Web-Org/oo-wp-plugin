@@ -76,6 +76,12 @@
 	<?php endforeach; ?>
 
 	<?php
+
+	$estateMovieLinks = $pEstates->getEstateMovieLinks();
+	foreach ($estateMovieLinks as $movieLink) {
+		echo '<a href="'.esc_attr($movieLink['url']).'">'.esc_html($movieLink['title']).'</a>';
+	}
+
 	$estatePictures = $pEstates->getEstatePictures();
 	foreach ( $estatePictures as $id ) : ?>
 	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">

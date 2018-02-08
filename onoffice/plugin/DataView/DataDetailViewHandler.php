@@ -107,7 +107,7 @@ class DataDetailViewHandler
 
 	static private function getValue(array $array, $key, $default = null)
 	{
-		if (array_key_exists($key, $array)) {
+		if (isset($array[$key])) {
 			return $array[$key];
 		}
 
