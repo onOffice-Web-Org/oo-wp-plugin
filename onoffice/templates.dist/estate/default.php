@@ -85,7 +85,7 @@ $pEstates->resetEstateIterator();
 <?php while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 
 <p>
-	<a href="<?php echo $pEstates->getEstateLink('detail'); ?>">Zur Detailansicht</a><br>
+	<a href="<?php echo $pEstates->getEstateLink(); ?>">Zur Detailansicht</a><br>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
 			continue;

@@ -102,7 +102,6 @@ class Language
 	{
 		if ($language == 'auto')
 		{
-			$config = ConfigWrapper::getInstance()->getConfig();
 			$languageMapping = $this->_config['localemap'];
 			$currentLocale = get_locale();
 
