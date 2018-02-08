@@ -136,7 +136,7 @@ $pEstates->resetEstateIterator();
 
 	<p><b>Kontaktformular:</b>
 		<?php
-			$pForm = new \onOffice\WPlugin\Form( 'estatelistcontactform', 'DEU' );
+			$pForm = new \onOffice\WPlugin\Form('Contactform', \onOffice\WPlugin\Form::TYPE_CONTACT);
 
 			include( __DIR__ . "/../form/defaultform.php" );
 		?>
