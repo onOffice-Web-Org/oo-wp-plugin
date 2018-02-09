@@ -29,7 +29,6 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Types\MovieLinkTypes;
 
 /**
  *
@@ -532,24 +531,28 @@ class EstateList
 
 	/**
 	 *
+	 * Not supported in list view
 	 * @return array Returns an array if Movie Links are active and displayed as Link
 	 *
 	 */
 
 	public function getEstateMovieLinks()
 	{
-		$result = array();
-		$estateId = $this->_currentEstate['id'];
+		return array();
+	}
 
-		$pDataDetailView = DataDetailViewHandler::getDetailView();
-		$pCurrentDetailView = $this->_pDataView;
 
-		if ($pCurrentDetailView->getName() === $pDataDetailView->getName() &&
-			$pCurrentDetailView->getMovieLinks() === MovieLinkTypes::MOVIE_LINKS_LINK) {
-			$result = $this->_pEstateFiles->getEstateMovieLinks($estateId);
-		}
+	/**
+	 *
+	 * Not supported in list view
+	 * @param array $options
+	 * @return array
+	 *
+	 */
 
-		return $result;
+	public function getMovieEmbedPlayers($options = array())
+	{
+		return array();
 	}
 
 
@@ -730,6 +733,10 @@ class EstateList
 		reset( $this->_responseArray['data']['records'] );
 	}
 
+
+	/** @return EstateFiles */
+	protected function getEstateFiles()
+		{ return $this->_pEstateFiles; }
 
 	/** @return DataView */
 	public function getDataView()

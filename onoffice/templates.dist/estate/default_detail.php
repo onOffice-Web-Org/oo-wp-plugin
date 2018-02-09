@@ -82,6 +82,13 @@
 		echo '<a href="'.esc_attr($movieLink['url']).'">'.esc_html($movieLink['title']).'</a><br>';
 	}
 
+	$movieOptions = array('width' => 500); // optional
+
+	foreach ($pEstates->getMovieEmbedPlayers($movieOptions) as $movieInfos) {
+		echo '<h3>'.esc_html($movieInfos['title']).'</h3>';
+		echo $movieInfos['player'];
+	}
+
 	$estatePictures = $pEstates->getEstatePictures();
 	foreach ( $estatePictures as $id ) : ?>
 	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
