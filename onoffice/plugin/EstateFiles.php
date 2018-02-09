@@ -172,7 +172,7 @@ class EstateFiles
 	{
 		$result = array();
 
-		if ( $this->_estateFiles[$estateId] ) {
+		if ( isset($this->_estateFiles[$estateId]) ) {
 			$images = $this->_estateFiles[$estateId];
 
 			foreach ($images as $imageId => $imageProperties) {

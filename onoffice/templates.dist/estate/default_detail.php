@@ -79,7 +79,7 @@
 
 	$estateMovieLinks = $pEstates->getEstateMovieLinks();
 	foreach ($estateMovieLinks as $movieLink) {
-		echo '<a href="'.esc_attr($movieLink['url']).'">'.esc_html($movieLink['title']).'</a>';
+		echo '<a href="'.esc_attr($movieLink['url']).'">'.esc_html($movieLink['title']).'</a><br>';
 	}
 
 	$estatePictures = $pEstates->getEstatePictures();
