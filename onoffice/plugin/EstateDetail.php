@@ -25,6 +25,7 @@ use Exception;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use WP_Embed;
 
 /**
  *
@@ -102,6 +103,57 @@ class EstateDetail
 
 		return $filter;
 	}
+
+
+	/**
+	 *
+	 * @return array Returns an array if Movie Links are active and displayed as Link
+	 *
+	 */
+
+	public function getEstateMovieLinks()
+	{
+		$result = array();
+		$estateId = $this->getCurrentEstateId();
+
+		if ($this->getDataView()->getMovieLinks() === MovieLinkTypes::MOVIE_LINKS_LINK) {
+			$result = $this->getEstateFiles()->getEstateMovieLinks($estateId);
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param array $options key-value array of options (supports width and/or height)
+	 * @return array
+	 *
+	 */
+
+	public function getMovieEmbedPlayers($options = array())
+	{
+		$result = array();
+		$estateId = $this->getCurrentEstateId();
+
+		if ($this->getDataView()->getMovieLinks() === MovieLinkTypes::MOVIE_LINKS_PLAYER) {
+			$pWpEmbed = new WP_Embed();
+			$movieLinks = $this->getEstateFiles()->getEstateMovieLinks($estateId);
+			$allowedOptions = array_flip(array('width', 'height'));
+			$newOptions = array_intersect_key($options, $allowedOptions);
+
+			foreach ($movieLinks as $linkId => $properties)
+			{
+				$player = $pWpEmbed->shortcode($newOptions, $properties['url']);
+				$newProperties = $properties;
+				$newProperties['player'] = $player;
+				$result[$linkId] = $newProperties;
+			}
+		}
+
+		return $result;
+	}
+
 
 
 	/**

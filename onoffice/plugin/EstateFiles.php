@@ -57,8 +57,10 @@ class EstateFiles
 	{
 		$this->_pictureCategories = $pictureCategories;
 
-		add_action('oo_beforeEstateRelations', array($this, 'registerRequest'), 10, 2);
-		add_action('oo_afterEstateRelations', array($this, 'parseRequest'), 10, 1);
+		if (count($pictureCategories) > 0) {
+			add_action('oo_beforeEstateRelations', array($this, 'registerRequest'), 10, 2);
+			add_action('oo_afterEstateRelations', array($this, 'parseRequest'), 10, 1);
+		}
 	}
 
 
