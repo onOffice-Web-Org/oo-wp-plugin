@@ -285,6 +285,7 @@ abstract class AdminPageSettingsBase
 			if ($addModule) {
 				$pInputModelFieldsConfig->setModule($module);
 			}
+
 			$pFormModelFieldsConfig = new Model\FormModel();
 			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
 			$pFormModelFieldsConfig->setGroupSlug($category);

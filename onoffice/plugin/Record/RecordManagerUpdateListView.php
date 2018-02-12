@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Record;
 
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\Record\RecordManagerInsertListView;
 
 /**
  *

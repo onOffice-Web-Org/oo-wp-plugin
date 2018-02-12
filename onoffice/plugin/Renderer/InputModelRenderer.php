@@ -169,15 +169,6 @@ class InputModelRenderer
 				$pInstance->setContentRenderer($pContent);
 				$pInstance->setAllFields($pInputModel->getValuesAvailable());
 				break;
-			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM:
-				$name = $pInputModel->getIdentifier();
-				$pContent = new InputFieldComplexSortableDetailListContentForm();
-				$pContent->setExtraInputModels($pInputModel->getReferencedInputModels());
-				$pInstance = new InputFieldComplexSortableDetailListRenderer($name,
-						array($pInputModel->getValue()));
-				$pInstance->setContentRenderer($pContent);
-				$pInstance->setAllFields($pInputModel->getValuesAvailable());
-				break;
 
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
 				$name = $pInputModel->getIdentifier();

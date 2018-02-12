@@ -46,7 +46,8 @@ class EstateDetail
 	 *
 	 */
 
-	protected function getNumEstatePages() {
+	protected function getNumEstatePages()
+	{
 		return 1;
 	}
 
@@ -57,7 +58,8 @@ class EstateDetail
 	 *
 	 */
 
-	public function loadSingleEstate($id) {
+	public function loadSingleEstate($id)
+	{
 		$this->_estateId = $id;
 		$this->loadEstates(1);
 	}
@@ -96,7 +98,8 @@ class EstateDetail
 	 *
 	 */
 
-	protected function getDefaultFilter() {
+	protected function getDefaultFilter()
+	{
 		$pListViewFilterBuilder = new DefaultFilterBuilderDetailView();
 		$pListViewFilterBuilder->setEstateId($this->_estateId);
 		$filter = $pListViewFilterBuilder->buildFilter();
@@ -155,14 +158,14 @@ class EstateDetail
 	}
 
 
-
 	/**
 	 *
 	 * @return int
 	 *
 	 */
 
-	protected function getRecordsPerPage() {
+	protected function getRecordsPerPage()
+	{
 		return 1;
 	}
 
@@ -173,7 +176,8 @@ class EstateDetail
 	 *
 	 */
 
-	protected function addExtraParams() {
+	protected function addExtraParams()
+	{
 		return array();
 	}
 }

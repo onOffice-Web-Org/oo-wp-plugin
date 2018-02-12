@@ -54,9 +54,6 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST = 'complexSortableDetailList';
 
-	/** */
-	const HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM = 'complexSortableDetailListForm';
-
 	/** @var string */
 	private $_name = null;
 
