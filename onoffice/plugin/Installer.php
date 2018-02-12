@@ -170,6 +170,8 @@ abstract class Installer
 			`listview_id` int(11) NOT NULL,
 			`order` int(11) NOT NULL,
 			`fieldname` tinytext NOT NULL,
+			`filterable` tinyint(1) NOT NULL DEFAULT '0',
+			`hidden` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`fieldconfig_id`)
 		) $charsetCollate;";
 

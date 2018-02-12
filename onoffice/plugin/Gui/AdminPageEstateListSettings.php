@@ -22,11 +22,14 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Model;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
-use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateListSettings;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
+use onOffice\WPlugin\Record\RecordManagerReadListView;
+use stdClass;
 
 /**
  *
@@ -65,7 +68,7 @@ class AdminPageEstateListSettings
 		$this->addFormModel($pFormModel);
 
 		$pInputModelName = $pFormModelBuilder->createInputModelName();
-		$pFormModelName = new Model\FormModel();
+		$pFormModelName = new FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
 		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
 		$pFormModelName->setLabel(__('choose name', 'onoffice'));
@@ -78,7 +81,7 @@ class AdminPageEstateListSettings
 		$pInputModelSortOrder = $pFormModelBuilder->createInputModelSortOrder();
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
-		$pFormModelRecordsFilter = new Model\FormModel();
+		$pFormModelRecordsFilter = new FormModel();
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
 		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice'));
@@ -91,7 +94,7 @@ class AdminPageEstateListSettings
 		$this->addFormModel($pFormModelRecordsFilter);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
-		$pFormModelLayoutDesign = new Model\FormModel();
+		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
@@ -99,7 +102,7 @@ class AdminPageEstateListSettings
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
-		$pFormModelPictureTypes = new Model\FormModel();
+		$pFormModelPictureTypes = new FormModel();
 		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
 		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
 		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice'));
@@ -107,7 +110,7 @@ class AdminPageEstateListSettings
 		$this->addFormModel($pFormModelPictureTypes);
 
 		$pInputModelDocumentTypes = $pFormModelBuilder->createInputModelExpose();
-		$pFormModelDocumentTypes = new Model\FormModel();
+		$pFormModelDocumentTypes = new FormModel();
 		$pFormModelDocumentTypes->setPageSlug($this->getPageSlug());
 		$pFormModelDocumentTypes->setGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
 		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice'));
@@ -153,6 +156,39 @@ class AdminPageEstateListSettings
 		{
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+		}
+	}
+
+
+	/**
+	 *
+	 * Since checkbox are only being submitted if checked they need to be reorganized
+	 * @todo Examine booleans automatically
+	 *
+	 * @param stdClass $values
+	 *
+	 */
+
+	protected function prepareValues(stdClass $values) {
+		$pInputModelFactory = new InputModelDBFactory(new InputModelDBFactoryConfigEstate());
+		$pInputModelRequired = $pInputModelFactory->create
+			(InputModelDBFactoryConfigEstate::INPUT_FILED_FILTERABLE, 'filterable', true);
+		$identifierFilterable = $pInputModelRequired->getIdentifier();
+		$pInputModelFieldName = $pInputModelFactory->create
+			(InputModelDBFactory::INPUT_FIELD_CONFIG, 'fields', true);
+		$identifierFieldName = $pInputModelFieldName->getIdentifier();
+		if (property_exists($values, $identifierFilterable) &&
+			property_exists($values, $identifierFieldName)) {
+			$fieldsArray = (array)$values->$identifierFieldName;
+			$filterableFields = (array)$values->$identifierFilterable;
+			$newFilterableFields = array_fill_keys(array_keys($fieldsArray), '0');
+
+			foreach ($filterableFields as $requiredField) {
+				$keyIndex = array_search($requiredField, $fieldsArray);
+				$newFilterableFields[$keyIndex] = '1';
+			}
+
+			$values->$identifierFilterable = $newFilterableFields;
 		}
 	}
 

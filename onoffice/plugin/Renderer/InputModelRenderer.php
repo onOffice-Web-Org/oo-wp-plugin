@@ -163,6 +163,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST:
 				$name = $pInputModel->getIdentifier();
 				$pContent = new InputFieldComplexSortableDetailListContentDefault();
+				$pContent->setExtraInputModels($pInputModel->getReferencedInputModels());
 				$pInstance = new InputFieldComplexSortableDetailListRenderer($name,
 						array($pInputModel->getValue()));
 				$pInstance->setContentRenderer($pContent);

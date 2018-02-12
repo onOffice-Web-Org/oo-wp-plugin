@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Renderer\InputFieldComplexSortableDetailListContentBase;
 
 /**
@@ -28,7 +29,7 @@ use onOffice\WPlugin\Renderer\InputFieldComplexSortableDetailListContentBase;
  */
 
 class InputFieldComplexSortableDetailListContentDefault
-	implements InputFieldComplexSortableDetailListContentBase
+	extends InputFieldComplexSortableDetailListContentBase
 {
 	/**
 	 *
@@ -39,8 +40,25 @@ class InputFieldComplexSortableDetailListContentDefault
 
 	public function render($key, $dummy)
 	{
+		$pFormModel = new FormModel();
+
+		foreach ($this->getExtraInputModels() as $pInputModel) {
+			$pInputModel->setIgnore($dummy);
+			$callbackValue = $pInputModel->getValueCallback();
+
+			if ($callbackValue !== null) {
+				call_user_func($callbackValue, $pInputModel, $key);
+			}
+
+			$pFormModel->addInputModel($pInputModel);
+		}
+
+		$pInputModelRenderer = new InputModelRenderer($pFormModel);
 		echo '<p class="wp-clearfix"><label class="howto">'.esc_html__('Key of Field:', 'onoffice')
-				.'&nbsp;</label><span class="menu-item-settings-name">'.esc_html($key).'</span></p>'
-			.'<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
+				.'&nbsp;</label><span class="menu-item-settings-name">'.esc_html($key).'</span></p>';
+
+		$pInputModelRenderer->buildForAjax();
+
+		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}
 }

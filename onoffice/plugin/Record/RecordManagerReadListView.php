@@ -81,10 +81,34 @@ class RecordManagerReadListView
 		if ($result !== null)
 		{
 			$result[DataView\DataListView::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
-			$result[DataView\DataListView::FIELDS] = $this->getFieldconfigByListviewId($listviewId);
+
+			$fieldRows = $this->getFieldconfigByListviewId($listviewId);
+			$fields = array_column($fieldRows, 'fieldname');
+
+			$result[DataView\DataListView::FIELDS] = $fields;
+			$result['filterable'] = $this->getFilterableFieldsByFieldRow($fieldRows);
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	private function getFilterableFieldsByFieldRow(array $row)
+	{
+		$fields = array_column($row, 'fieldname');
+
+		$filterable = array_column($row, 'filterable');
+
+		$tmpFilterable = array_combine($fields, $filterable);
+		$filterableFields = array_keys(array_filter($tmpFilterable));
+		return $filterableFields;
 	}
 
 
@@ -115,7 +139,13 @@ class RecordManagerReadListView
 		{
 			$id = $result['listview_id'];
 			$result[DataView\DataListView::PICTURES] = $this->getPictureTypesByListviewId($id);
-			$result[DataView\DataListView::FIELDS] = $this->getFieldconfigByListviewId($id);
+
+			$fieldRows = $this->getFieldconfigByListviewId($id);
+			$fields = array_column($fieldRows, 'fieldname');
+
+			$result[DataView\DataListView::FIELDS] = $fields;
+			$result['filterable'] = $this->getFilterableFieldsByFieldRow($fieldRows);
+
 		}
 
 		return $result;
@@ -163,12 +193,12 @@ class RecordManagerReadListView
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT `fieldname`
+		$sqlFields = "SELECT *
 				FROM {$prefix}oo_plugin_fieldconfig
 				WHERE `listview_id` = ".esc_sql($listviewId)."
 				ORDER BY `order` ASC";
 
-		$fields = $pWpDb->get_col($sqlFields);
+		$fields = $pWpDb->get_results($sqlFields, ARRAY_A);
 		$result = array();
 
 		if (is_array($fields))

@@ -32,6 +32,12 @@ namespace onOffice\WPlugin\Model\InputModel;
 class InputModelDBFactoryConfigEstate
 	implements InputModelDBFactoryConfigBase
 {
+	/** */
+	const INPUT_FILED_FILTERABLE = 'inputfilterable';
+
+	/** If filterable, it can also be hidden */
+	const INPUT_FIELD_HIDDEN = 'inputhidden';
+
 
 	/** @var array */
 	private $_inputConfig = array(
@@ -82,6 +88,14 @@ class InputModelDBFactoryConfigEstate
 		InputModelDBFactory::INPUT_FIELD_CONFIG => array(
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'fieldname',
+		),
+		self::INPUT_FILED_FILTERABLE => array(
+			self::KEY_TABLE => 'oo_plugin_fieldconfig',
+			self::KEY_FIELD => 'filterable',
+		),
+		self::INPUT_FIELD_HIDDEN => array(
+			self::KEY_TABLE => 'oo_plugin_fieldconfig',
+			self::KEY_FIELD => 'hidden',
 		),
 	);
 

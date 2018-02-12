@@ -25,8 +25,25 @@ namespace onOffice\WPlugin\Renderer;
  *
  */
 
-interface InputFieldComplexSortableDetailListContentBase
+abstract class InputFieldComplexSortableDetailListContentBase
 {
+	/** @var int */
+	private static $_id = 0;
+
+	/** @var InputModelBase[] */
+	private $_extraInputModels = array();
+
+
+	/**
+	 *
+	 */
+
+	public function __construct()
+	{
+		self::$_id++;
+	}
+
+
 	/**
 	 *
 	 * @param string $key
@@ -34,5 +51,18 @@ interface InputFieldComplexSortableDetailListContentBase
 	 *
 	 */
 
-	public function render($key, $dummy);
+	abstract public function render($key, $dummy);
+
+
+	/** @return InputModelBase[] */
+	public function getExtraInputModels()
+		{ return $this->_extraInputModels; }
+
+	/** @param InputModelBase $pInputModel */
+	public function addExtraInputModel(InputModelBase $pInputModel)
+		{ $this->_extraInputModels []= $pInputModel; }
+
+	/** @var InputModelBase[] $extraInputModels */
+	public function setExtraInputModels(array $extraInputModels)
+		{ $this->_extraInputModels = $extraInputModels; }
 }

@@ -22,31 +22,14 @@
 namespace onOffice\WPlugin\Renderer;
 
 use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Model\InputModelBase;
 
 /**
  *
  */
 
 class InputFieldComplexSortableDetailListContentForm
-	implements InputFieldComplexSortableDetailListContentBase
+	extends InputFieldComplexSortableDetailListContentBase
 {
-	/** @var int */
-	private static $_id = 0;
-
-	/** @var InputModelBase[] */
-	private $_extraInputModels = array();
-
-	/**
-	 *
-	 */
-
-	public function __construct()
-	{
-		self::$_id++;
-	}
-
-
 	/**
 	 *
 	 * @param string $key
@@ -58,7 +41,7 @@ class InputFieldComplexSortableDetailListContentForm
 	{
 		$pFormModel = new FormModel();
 
-		foreach ($this->_extraInputModels as $pInputModel) {
+		foreach ($this->getExtraInputModels() as $pInputModel) {
 			$pInputModel->setIgnore($dummy);
 			$callbackValue = $pInputModel->getValueCallback();
 
@@ -76,16 +59,4 @@ class InputFieldComplexSortableDetailListContentForm
 		$pInputModelRenderer->buildForAjax();
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}
-
-	/** @return InputModelBase[] */
-	public function getExtraInputModels()
-		{ return $this->_extraInputModels; }
-
-	/** @param InputModelBase $pInputModel */
-	public function addExtraInputModel(InputModelBase $pInputModel)
-		{ $this->_extraInputModels []= $pInputModel; }
-
-	/** @var InputModelBase[] $extraInputModels */
-	public function setExtraInputModels(array $extraInputModels)
-		{ $this->_extraInputModels = $extraInputModels; }
 }

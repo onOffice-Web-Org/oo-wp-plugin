@@ -74,6 +74,7 @@ class DataListViewFactory
 		$pListView->setRecordsPerPage($row['recordsPerPage']);
 		$pListView->setTemplate($row['template']);
 		$pListView->setRandom((bool)$row['random']);
+		$pListView->setFilterableFields($row['filterable']);
 
 		return $pListView;
 	}

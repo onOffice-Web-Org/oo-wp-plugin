@@ -62,6 +62,9 @@ class DataListView
 	private $_fields = array();
 
 	/** @var string[] */
+	private $_filterableFields = array();
+
+	/** @var string[] */
 	private $_pictureTypes = array();
 
 	/** @var string[] */
@@ -212,4 +215,12 @@ class DataListView
 	/** @param array $addressFields */
 	public function setAddressFields(array $addressFields)
 		{ $this->_addressFields = $addressFields; }
+
+	/** @return array */
+	public function getFilterableFields()
+		{ return $this->_filterableFields; }
+
+	/** @param array $filterableFields */
+	public function setFilterableFields(array $filterableFields)
+		{ $this->_filterableFields = $filterableFields; }
 }
