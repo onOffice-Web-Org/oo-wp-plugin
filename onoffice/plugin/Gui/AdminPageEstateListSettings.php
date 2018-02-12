@@ -171,9 +171,9 @@ class AdminPageEstateListSettings
 
 	protected function prepareValues(stdClass $values) {
 		$pInputModelFactory = new InputModelDBFactory(new InputModelDBFactoryConfigEstate());
-		$pInputModelRequired = $pInputModelFactory->create
-			(InputModelDBFactoryConfigEstate::INPUT_FILED_FILTERABLE, 'filterable', true);
-		$identifierFilterable = $pInputModelRequired->getIdentifier();
+		$pInputModelFilterable = $pInputModelFactory->create
+			(InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE, 'filterable', true);
+		$identifierFilterable = $pInputModelFilterable->getIdentifier();
 		$pInputModelFieldName = $pInputModelFactory->create
 			(InputModelDBFactory::INPUT_FIELD_CONFIG, 'fields', true);
 		$identifierFieldName = $pInputModelFieldName->getIdentifier();
@@ -189,6 +189,24 @@ class AdminPageEstateListSettings
 			}
 
 			$values->$identifierFilterable = $newFilterableFields;
+		}
+
+		$pInputModelHidden = $pInputModelFactory->create
+			(InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN, 'hidden', true);
+		$identifierHidden = $pInputModelHidden->getIdentifier();
+
+		if (property_exists($values, $identifierHidden) &&
+			property_exists($values, $identifierFieldName)) {
+			$fieldsArray = (array)$values->$identifierFieldName;
+			$hiddenFields = (array)$values->$identifierHidden;
+			$newHiddenFields = array_fill_keys(array_keys($fieldsArray), '0');
+
+			foreach ($hiddenFields as $hiddenField) {
+				$keyIndex = array_search($hiddenField, $fieldsArray);
+				$newHiddenFields[$keyIndex] = '1';
+			}
+
+			$values->$identifierHidden = $newHiddenFields;
 		}
 	}
 
@@ -214,5 +232,19 @@ class AdminPageEstateListSettings
 		if (!in_array($pDataListView->getListType(), array('default', 'reference', 'favorites'))) {
 			throw new UnknownViewException;
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function doExtraEnqueues()
+	{
+		parent::doExtraEnqueues();
+
+		wp_register_script('oo-checkbox-js',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/checkbox.js', array('jquery'), '', true);
+		wp_enqueue_script('oo-checkbox-js');
 	}
 }

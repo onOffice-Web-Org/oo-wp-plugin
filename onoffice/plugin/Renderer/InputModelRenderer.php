@@ -181,9 +181,7 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setId($pInputModel->getId());
 				$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
-
-				if ($pInputModel->getSpecialDivId() != null)
-				{
+				if ($pInputModel->getSpecialDivId() != null) {
 					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
 				}
 				break;
@@ -197,18 +195,12 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_TEXT:
 				$pInstance = new InputFieldTextRenderer('text', $pInputModel->getIdentifier());
 				$pInstance->addAdditionalAttribute('size', '50');
-
-				if ($pInputModel->getIsPassword())
-				{
+				if ($pInputModel->getIsPassword()) {
 					$pInstance->addAdditionalAttribute('placeholder',
 						__('(Remains unchanged)', 'onoffice'));
-				}
-				else
-				{
+				} else {
 					$placeholder = $pInputModel->getPlaceholder();
-
-					if (!__String::getNew($placeholder)->isEmpty())
-					{
+					if (!__String::getNew($placeholder)->isEmpty()) {
 						$pInstance->addAdditionalAttribute('placeholder', $placeholder);
 					}
 					$pInstance->setValue($pInputModel->getValue());

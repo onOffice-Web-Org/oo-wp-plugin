@@ -102,11 +102,32 @@ class FormModelBuilderEstateListSettings
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
 		$label = __('Filterable', 'onoffice');
-		$type = InputModelDBFactoryConfigEstate::INPUT_FILED_FILTERABLE;
+		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
 		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsFilterable'));
+
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelIsHidden()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Hidden', 'onoffice');
+		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsHidden'));
 
 		return $pInputModel;
 	}
@@ -123,6 +144,24 @@ class FormModelBuilderEstateListSettings
 	public function callbackValueInputModelIsFilterable(InputModelBase $pInputModel, $key)
 	{
 		$valueFromConf = $this->getValue('filterable');
+		$filterableFields = is_array($valueFromConf) ? $valueFromConf : array();
+		$value = in_array($key, $filterableFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 * @return bool
+	 *
+	 */
+
+	public function callbackValueInputModelIsHidden(InputModelBase $pInputModel, $key)
+	{
+		$valueFromConf = $this->getValue('hidden');
 		$filterableFields = is_array($valueFromConf) ? $valueFromConf : array();
 		$value = in_array($key, $filterableFields);
 		$pInputModel->setValue($value);
@@ -172,8 +211,10 @@ class FormModelBuilderEstateListSettings
 	public function createSortableFieldList($module, $htmlType)
 	{
 		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
-		$pInputModelIdFilterable = $this->getInputModelIsFilterable();
-		$pSortableFieldsList->addReferencedInputModel($pInputModelIdFilterable);
+		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
+		$pInputModelIsHidden = $this->getInputModelIsHidden();
+		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
+		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
 
 		return $pSortableFieldsList;
 	}
@@ -233,10 +274,8 @@ class FormModelBuilderEstateListSettings
 		$defaultFields = Fieldnames::getDefaultSortByFields();
 		natcasesort($fieldnames);
 
-		foreach ($fieldnames as $key => $value)
-		{
-			if (in_array($key, $defaultFields))
-			{
+		foreach ($fieldnames as $key => $value) {
+			if (in_array($key, $defaultFields)) {
 				$defaultActiveFields[$key]=$value;
 			}
 		}

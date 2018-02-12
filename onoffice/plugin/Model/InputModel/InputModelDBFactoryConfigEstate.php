@@ -33,7 +33,7 @@ class InputModelDBFactoryConfigEstate
 	implements InputModelDBFactoryConfigBase
 {
 	/** */
-	const INPUT_FILED_FILTERABLE = 'inputfilterable';
+	const INPUT_FIELD_FILTERABLE = 'inputfilterable';
 
 	/** If filterable, it can also be hidden */
 	const INPUT_FIELD_HIDDEN = 'inputhidden';
@@ -89,7 +89,7 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'fieldname',
 		),
-		self::INPUT_FILED_FILTERABLE => array(
+		self::INPUT_FIELD_FILTERABLE => array(
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'filterable',
 		),

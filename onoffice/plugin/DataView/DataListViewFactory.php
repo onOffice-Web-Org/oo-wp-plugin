@@ -75,6 +75,7 @@ class DataListViewFactory
 		$pListView->setTemplate($row['template']);
 		$pListView->setRandom((bool)$row['random']);
 		$pListView->setFilterableFields($row['filterable']);
+		$pListView->setHiddenFields($row['hidden']);
 
 		return $pListView;
 	}

@@ -65,6 +65,9 @@ class DataListView
 	private $_filterableFields = array();
 
 	/** @var string[] */
+	private $_hiddenFields = array();
+
+	/** @var string[] */
 	private $_pictureTypes = array();
 
 	/** @var string[] */
@@ -223,4 +226,12 @@ class DataListView
 	/** @param array $filterableFields */
 	public function setFilterableFields(array $filterableFields)
 		{ $this->_filterableFields = $filterableFields; }
+
+	/** @return array */
+	public function getHiddenFields()
+		{ return $this->_hiddenFields; }
+
+	/** @param array $hiddenFields */
+	public function setHiddenFields(array $hiddenFields)
+		{ $this->_hiddenFields = $hiddenFields; }
 }

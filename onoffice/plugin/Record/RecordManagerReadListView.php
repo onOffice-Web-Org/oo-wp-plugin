@@ -86,7 +86,8 @@ class RecordManagerReadListView
 			$fields = array_column($fieldRows, 'fieldname');
 
 			$result[DataView\DataListView::FIELDS] = $fields;
-			$result['filterable'] = $this->getFilterableFieldsByFieldRow($fieldRows);
+			$result['filterable'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'filterable');
+			$result['hidden'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'hidden');
 		}
 
 		return $result;
@@ -96,15 +97,16 @@ class RecordManagerReadListView
 	/**
 	 *
 	 * @param array $row
-	 * @return array
+	 * @param string $booleanField
+	 * @return array an array of fieldnames having $booleanField == '1'
 	 *
 	 */
 
-	private function getFilterableFieldsByFieldRow(array $row)
+	private function getBooleanFieldValuesByFieldRow(array $row, $booleanField)
 	{
 		$fields = array_column($row, 'fieldname');
 
-		$filterable = array_column($row, 'filterable');
+		$filterable = array_column($row, $booleanField);
 
 		$tmpFilterable = array_combine($fields, $filterable);
 		$filterableFields = array_keys(array_filter($tmpFilterable));
@@ -144,7 +146,8 @@ class RecordManagerReadListView
 			$fields = array_column($fieldRows, 'fieldname');
 
 			$result[DataView\DataListView::FIELDS] = $fields;
-			$result['filterable'] = $this->getFilterableFieldsByFieldRow($fieldRows);
+			$result['filterable'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'filterable');
+			$result['hidden'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'hidden');
 
 		}
 
