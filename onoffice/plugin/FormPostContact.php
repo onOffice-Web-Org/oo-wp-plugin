@@ -54,7 +54,6 @@ class FormPostContact
 	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
-
 		$recipient = $pFormConfig->getRecipient();
 		$subject = $pFormConfig->getSubject();
 
@@ -89,7 +88,8 @@ class FormPostContact
 	 *
 	 */
 
-	private function sendContactRequest( FormData $pFormData, $recipient = null, $subject = null ) {
+	private function sendContactRequest( FormData $pFormData, $recipient = null, $subject = null )
+	{
 		$addressData = $pFormData->getAddressData();
 		$values = $pFormData->getValues();
 		$estateId = isset( $values['Id'] ) ? $values['Id'] : null;
@@ -109,12 +109,9 @@ class FormPostContact
 		}
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
+		$handle = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
 		$pSDKWrapper->sendRequests();
-
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
 		$result = isset( $response['data']['records'][0]['elements']['success'] ) &&
@@ -137,10 +134,8 @@ class FormPostContact
 		$requestParams['checkDuplicate'] = $mergeExisting;
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
+		$handle = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );

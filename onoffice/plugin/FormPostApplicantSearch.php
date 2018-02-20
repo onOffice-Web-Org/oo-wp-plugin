@@ -50,7 +50,8 @@ class FormPostApplicantSearch
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix(FormData $pFormData) {
+	protected function analyseFormContentByPrefix(FormData $pFormData)
+	{
 		/* @var $pFormConfig DataFormConfigurationApplicantSearch */
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$formFields = $pFormConfig->getInputs();
@@ -67,16 +68,12 @@ class FormPostApplicantSearch
 
 		$missingFields = $pFormData->getMissingFields();
 
-		if (count($missingFields) > 0)
-		{
+		if (count($missingFields) > 0) {
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
-		}
-		else
-		{
+		} else {
 			$interessenten = $this->getApplicants($pFormData, $limitResults);
 
-			if (is_array($interessenten))
-			{
+			if (is_array($interessenten)) {
 				$pFormData->setResponseFieldsValues($interessenten);
 				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
 			}
@@ -109,38 +106,30 @@ class FormPostApplicantSearch
 			);
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addFullRequest(
-				onOfficeSDK::ACTION_ID_GET, 'search', 'searchcriteria', $requestParams);
+		$handle = $pSDKWrapper->addFullRequest
+			(onOfficeSDK::ACTION_ID_GET, 'search', 'searchcriteria', $requestParams);
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse($handle);
 
 		$result = isset($response['data']['records']) &&
-				count($response['data']['records']) > 0;
+			count($response['data']['records']) > 0;
 
-		if ($result)
-		{
+		if ($result) {
 			$addressIds = array();
 
-			foreach ($response['data']['records'] as $record)
-			{
+			foreach ($response['data']['records'] as $record) {
 				$addressId = $record['elements']['adresse'];
 				$addressIds []= $addressId;
 				$elements = $record['elements'];
 				$searchParameters = array();
 
-				foreach ($elements as $key => $value)
-				{
-					if ($this->isSearchcriteriaRangeField($key))
-					{
+				foreach ($elements as $key => $value) {
+					if ($this->isSearchcriteriaRangeField($key)) {
 						$origName = $searchcrieriaRangeFields[$key];
 
-						if (in_array($origName, $searchFields))
-						{
-							if (array_key_exists($origName, $searchParameters))
-							{
+						if (in_array($origName, $searchFields)) {
+							if (array_key_exists($origName, $searchParameters)) {
 								continue;
 							}
 
@@ -150,43 +139,33 @@ class FormPostApplicantSearch
 							$vonValue = 0;
 							$bisValue = 0;
 
-							if (array_key_exists($vonFieldname, $elements))
-							{
+							if (array_key_exists($vonFieldname, $elements)) {
 								$vonValue = $elements[$vonFieldname];
 
-								if (null == $vonValue)
-								{
+								if (null == $vonValue) {
 									$vonValue = 0;
 								}
 							}
 
-							if (array_key_exists($bisFieldname, $elements))
-							{
+							if (array_key_exists($bisFieldname, $elements)) {
 								$bisValue = $elements[$bisFieldname];
 
-								if (null == $bisValue)
-								{
+								if (null == $bisValue) {
 									$bisValue = 0;
 								}
 							}
-
 							$searchParameters[$origName] = array($vonValue, $bisValue);
 						}
-					}
-					else
-					{
-						if (in_array($key, $searchFields))
-						{
+					} else {
+						if (in_array($key, $searchFields)) {
 							$searchParameters[$key] = $value;
 						}
 					}
 				}
-
 				$found[$addressId] = $searchParameters;
 			}
 
-			if (count($found) > 0)
-			{
+			if (count($found) > 0) {
 				$found = $this->setKdNr($found);
 			}
 		}
@@ -207,16 +186,12 @@ class FormPostApplicantSearch
 		$adressIds = array_keys($applicants);
 		$interessenten = array();
 
-
-		$requestParams = array
-			(
-				'recordids' => $adressIds,
-				'data' => array('KdNr'),
-			);
+		$requestParams = array(
+			'recordids' => $adressIds,
+			'data' => array('KdNr'),
+		);
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
 		$handle = $pSDKWrapper->addRequest(
 				onOfficeSDK::ACTION_ID_READ, 'address', $requestParams);
 		$pSDKWrapper->sendRequests();
@@ -226,12 +201,10 @@ class FormPostApplicantSearch
 		$result = isset($response['data']['records']) &&
 				count($response['data']['records']) > 0;
 
-		if ($result)
-		{
+		if ($result) {
 			$records = $response['data']['records'];
 
-			foreach ($records as $record)
-			{
+			foreach ($records as $record) {
 				$elements = $record['elements'];
 				$interessenten[$elements['KdNr']] = $applicants[$elements['id']];
 			}
@@ -253,14 +226,11 @@ class FormPostApplicantSearch
 		$result = array();
 		$searchcrieriaRangeFields = $this->getSearchcriteriaRangeFields();
 
-		foreach ($formValues as $name => $value)
-		{
-			if ($this->isSearchcriteriaRangeField($name))
-			{
+		foreach ($formValues as $name => $value) {
+			if ($this->isSearchcriteriaRangeField($name)) {
 				$origName = $searchcrieriaRangeFields[$name];
 
-				if (array_key_exists($origName, $result))
-				{
+				if (array_key_exists($origName, $result)) {
 					continue;
 				}
 
@@ -270,35 +240,27 @@ class FormPostApplicantSearch
 				$vonValue = 0;
 				$bisValue = 0;
 
-				if (array_key_exists($vonFieldname, $formValues))
-				{
+				if (array_key_exists($vonFieldname, $formValues)) {
 					$vonValue = $formValues[$vonFieldname];
 
-					if (null == $vonValue)
-					{
+					if (null == $vonValue) {
 						$vonValue = 0;
 					}
 				}
 
-				if (array_key_exists($bisFieldname, $formValues))
-				{
+				if (array_key_exists($bisFieldname, $formValues)) {
 					$bisValue = $formValues[$bisFieldname];
 
-					if (null == $bisValue)
-					{
+					if (null == $bisValue) {
 						$bisValue = 0;
 					}
 				}
 
-				if ($vonValue > 0 || $bisValue > 0)
-				{
+				if ($vonValue > 0 || $bisValue > 0) {
 					$result[$origName] = array($vonValue, $bisValue);
 				}
-			}
-			else
-			{
-				if (null != $value)
-				{
+			} else {
+				if (null != $value) {
 					$result[$name] = $value;
 				}
 			}

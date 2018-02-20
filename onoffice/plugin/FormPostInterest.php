@@ -118,10 +118,8 @@ Ihr onOffice Team';
 		$requestParams['receiver'] = array($recipient);
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_DO, 'sendmail', $requestParams);
+		$handle = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_DO, 'sendmail', $requestParams);
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
@@ -147,8 +145,6 @@ Ihr onOffice Team';
 		$requestParams['addressid'] = $addressId;
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
 		$handle = $pSDKWrapper->addRequest(
 			onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria', $requestParams);
 		$pSDKWrapper->sendRequests();
@@ -176,8 +172,6 @@ Ihr onOffice Team';
 		$requestParams['checkDuplicate'] = $mergeExisting;
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
 		$handle = $pSDKWrapper->addRequest
 			(onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams);
 		$pSDKWrapper->sendRequests();

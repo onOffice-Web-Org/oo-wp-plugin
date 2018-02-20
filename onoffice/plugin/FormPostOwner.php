@@ -57,38 +57,29 @@ class FormPostOwner
 
 		$missingFields = $pFormData->getMissingFields();
 
-		if ( count( $missingFields ) > 0  )
-		{
+		if ( count( $missingFields ) > 0 ) {
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
-		}
-		else
-		{
+		} else {
 			$response = false;
 
 			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
 			$responseEstate = $this->modifyOrCreateEstate($pFormData);
 
 			if ($responseAddress !== false &&
-				$responseEstate !== false)
-			{
+				$responseEstate !== false) {
 				$response = $this->createOwnerRelation($responseEstate, $responseAddress);
 			}
 
-			if (null != $recipient && null != $subject && $responseEstate && $responseAddress)
-			{
+			if (null != $recipient && null != $subject && $responseEstate && $responseAddress) {
 				$response = $this->sendContactRequest( $pFormData, $recipient, $subject, $responseEstate ) && $response;
 			}
 
-			if ( $response && $responseEstate && $responseAddress )
-			{
+			if ( $response && $responseEstate && $responseAddress ) {
 				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
-			}
-			else
-			{
+			} else {
 				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
 			}
 		}
-
 	}
 
 
@@ -106,19 +97,15 @@ class FormPostOwner
 		$requestParams['checkDuplicate'] = $mergeExisting;
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
+		$handle = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
 		$pSDKWrapper->sendRequests();
-
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
 		$result = isset( $response['data']['records'] ) &&
-				count( $response['data']['records'] ) > 0;
+			count( $response['data']['records'] ) > 0;
 
-		if ($result)
-		{
+		if ($result) {
 			return $response['data']['records'][0]['id'];
 		}
 
@@ -138,18 +125,15 @@ class FormPostOwner
 		$requestParams = array('data' => $estateValues);
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'estate', $requestParams );
+		$handle = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_CREATE, 'estate', $requestParams );
 		$pSDKWrapper->sendRequests();
-
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
 		$result = isset( $response['data']['records'] ) &&
-				count( $response['data']['records'] ) > 0;
+			count( $response['data']['records'] ) > 0;
 
-		if ($result)
-		{
+		if ($result) {
 			return $response['data']['records'][0]['id'];
 		}
 
@@ -171,23 +155,20 @@ class FormPostOwner
 		$requestParams = array('data' => $estateValues);
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-		$handle = $pSDKWrapper->addFullRequest(
-				onOfficeSDK::ACTION_ID_MODIFY, 'estate', $estateId, $requestParams );
+		$handle = $pSDKWrapper->addFullRequest
+			(onOfficeSDK::ACTION_ID_MODIFY, 'estate', $estateId, $requestParams);
 
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
 		if (isset( $response['data']['records'] ) &&
-			count( $response['data']['records'] ) > 0)
-		{
+			count( $response['data']['records'] ) > 0) {
 			return $estateId;
 		}
 
 		return false;
 	}
-
 
 
 	/**
@@ -203,13 +184,10 @@ class FormPostOwner
 		$estateId = isset( $estateValues['Id'] ) ? $estateValues['Id'] : null;
 		$result = null;
 
-		if (null != $estateId)
-		{
+		if (null != $estateId) {
 			unset($estateValues['Id']);
 			$result = $this->updateEstate($estateId, $estateValues);
-		}
-		else
-		{
+		} else {
 			$result = $this->createEstate($estateValues);
 		}
 
@@ -227,35 +205,27 @@ class FormPostOwner
 
 	private function createOwnerRelation($estateId, $addressId)
 	{
-		$result = false;
-
-		$requestParams = array
-			(
-				'relationtype' => onOfficeSDK::RELATION_TYPE_ESTATE_ADDRESS_OWNER,
-				'parentid' => $estateId,
-				'childid' => $addressId,
-			);
+		$requestParams = array(
+			'relationtype' => onOfficeSDK::RELATION_TYPE_ESTATE_ADDRESS_OWNER,
+			'parentid' => $estateId,
+			'childid' => $addressId,
+		);
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
 		$handle = $pSDKWrapper->addRequest(
 				onOfficeSDK::ACTION_ID_CREATE, 'relation', $requestParams );
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
-		if (isset($response['status']))
-		{
-			if ($response['status']['errorcode'] == 0 &&
-				$response['status']['message'] == 'OK')
-			{
-				$result = true;
-			}
-		}
+		$result = isset($response['status']) &&
+			$response['status']['errorcode'] == 0 &&
+			$response['status']['message'] == 'OK';
+
 
 		return $result;
 	}
+
 
 	/**
 	 *
@@ -267,7 +237,8 @@ class FormPostOwner
 	 *
 	 */
 
-	private function sendContactRequest( FormData $pFormData, $recipient, $subject, $estateId) {
+	private function sendContactRequest(FormData $pFormData, $recipient, $subject, $estateId)
+	{
 		$addressData = $pFormData->getAddressData();
 		$values = $pFormData->getValues();
 		$message = isset( $values['message'] ) ? $values['message'] : null;
@@ -286,10 +257,8 @@ class FormPostOwner
 		}
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
+		$handle = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
@@ -299,6 +268,7 @@ class FormPostOwner
 
 		return $result;
 	}
+
 
 	/** @return string */
 	static protected function getFormType()

@@ -37,7 +37,8 @@ use onOffice\WPlugin\Cache\DBCache;
  *
  */
 
-class SDKWrapper {
+class SDKWrapper
+{
 	/** @var onOfficeSDK */
 	private $_pSDK = null;
 
@@ -58,7 +59,8 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function __construct() {
+	public function __construct()
+	{
 		$config = $this->readConfig();
 
 		$this->_pSDK = new onOfficeSDK();
@@ -79,7 +81,8 @@ class SDKWrapper {
 	 *
 	 */
 
-	private function readConfig() {
+	private function readConfig()
+	{
 		$localconfig = array(
 			'token' => get_option('onoffice-settings-apikey'),
 			'secret' => get_option('onoffice-settings-apisecret'),
@@ -97,8 +100,7 @@ class SDKWrapper {
 
 		$configUser = ConfigWrapper::getInstance()->getConfigByKey('api');
 
-		if ($configUser === null)
-		{
+		if ($configUser === null) {
 			$configUser = array();
 		}
 
@@ -117,7 +119,8 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function addRequest( $actionId, $resourceType, $parameters = array() ) {
+	public function addRequest( $actionId, $resourceType, $parameters = array() )
+	{
 		return $this->_pSDK->callGeneric( $actionId, $resourceType, $parameters );
 	}
 
@@ -133,7 +136,8 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function addFullRequest($actionId, $resourceType, $resourceId, $parameters = array(), $identifier = null) {
+	public function addFullRequest($actionId, $resourceType, $resourceId, $parameters = array(), $identifier = null)
+	{
 		return $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
 	}
 
@@ -142,7 +146,8 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function sendRequests() {
+	public function sendRequests()
+	{
 		$this->_pSDK->sendRequests( $this->_token, $this->_secret );
 	}
 
@@ -154,7 +159,8 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function getRequestResponse( $handle ) {
+	public function getRequestResponse( $handle )
+	{
 		return $this->_pSDK->getResponseArray( $handle );
 	}
 
@@ -165,17 +171,9 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function getCache() {
+	public function getCache()
+	{
 		$config = $this->readConfig();
 		return $config['cache'];
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function removeCacheInstances() {
-		$this->_pSDK->removeCacheInstances();
 	}
 }
