@@ -20,13 +20,19 @@
  */
 
 /**
+ *
  *  Default template
+ *
  */
 
 use onOffice\WPlugin\Maps\GoogleMap;
 use onOffice\WPlugin\Favorites;
 
+// display search form
+require 'SearchForm.php';
+
 /* @var $pEstates onOffice\WPlugin\EstateList */
+
 ?>
 
 <?php if (Favorites::isFavorizationEnabled()): ?>

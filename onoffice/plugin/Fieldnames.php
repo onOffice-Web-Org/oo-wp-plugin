@@ -28,14 +28,15 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
  */
 
-class Fieldnames {
+class Fieldnames
+{
 
 	/**
 	 *
@@ -131,6 +132,7 @@ class Fieldnames {
 	/** @var string */
 	private $_language = null;
 
+
 	/**
 	 *
 	 * @param string $language
@@ -139,12 +141,9 @@ class Fieldnames {
 
 	public function __construct($language = null)
 	{
-		if ($language == null)
-		{
+		if ($language == null) {
 			$this->_language = Language::getDefault();
-		}
-		else
-		{
+		} else {
 			$this->_language = $language;
 		}
 	}
@@ -156,22 +155,20 @@ class Fieldnames {
 	 *
 	 */
 
-	public function loadLanguage( $showOnlyInactive = false ) {
-
+	public function loadLanguage( $showOnlyInactive = false )
+	{
 		$parametersGetFieldList = array(
-			'labels' => 1,
-			'showContent' => 1,
-			'showTable' => 1,
+			'labels' => true,
+			'showContent' => true,
+			'showTable' => true,
 			'language' => $this->_language,
-			'modules' => array
-				(
-					'address',
-					'estate',
-				),
+			'modules' => array(
+				onOfficeSDK::MODULE_ADDRESS,
+				onOfficeSDK::MODULE_ESTATE,
+			),
 		);
 
-		if ($showOnlyInactive)
-		{
+		if ($showOnlyInactive) {
 			$parametersGetFieldList['showOnlyInactive'] = true;
 		}
 
@@ -194,11 +191,10 @@ class Fieldnames {
 
 	private function completeFieldListWithSearchcriteria( ) {
 		$pSDKWrapper = new SDKWrapper();
-		$requestParameter = array
-			(
-				'language' => $this->_language,
-				'additionalTranslations' => true,
-			);
+		$requestParameter = array(
+			'language' => $this->_language,
+			'additionalTranslations' => true,
+		);
 
 		$handle = $pSDKWrapper->addRequest(
 				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', $requestParameter);
@@ -206,12 +202,12 @@ class Fieldnames {
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
-		foreach ($response['data']['records'] as $tableValues)
-		{
+		foreach ($response['data']['records'] as $tableValues) {
 			$fields = $tableValues['elements'];
 
-			foreach ($fields['fields'] as $field)
-			{
+			foreach ($fields['fields'] as $field) {
+				$fieldId = $field['id'];
+
 				$fieldProperties = array();
 				$fieldProperties['type'] = $field['type'];
 				$fieldProperties['label'] = $field['name'];
@@ -220,34 +216,25 @@ class Fieldnames {
 				$fieldProperties['content'] = __('Search Criteria', 'onoffice');
 				$fieldProperties['module'] = onOfficeSDK::MODULE_SEARCHCRITERIA;
 
-				if (array_key_exists('default', $field))
-				{
+				if (isset($field['default'])) {
 					$fieldProperties['default'] = $field['default'];
 				}
 
-				if (array_key_exists('values', $field))
-				{
+				if (isset($field['values'])) {
 					$fieldProperties['permittedvalues'] = $field['values'];
 				}
 
-				if (array_key_exists('rangefield', $field) &&
+				if (isset($field['rangefield']) &&
 					$field['rangefield'] == true &&
-					array_key_exists('additionalTranslations', $field))
-				{
-					$this->_searchcriteriaRangeInfos[$field['id']] = array();
-
-					foreach ($field['additionalTranslations'] as $key => $value)
-					{
-						$this->_searchcriteriaRangeInfos[$field['id']][$key] = $value;
-					}
+					isset($field['additionalTranslations'])) {
+					$this->_searchcriteriaRangeInfos[$fieldId] = $field['additionalTranslations'];
 				}
 
-				if ($fields['name'] == 'Umkreis')
-				{
-					$this->_umkreisFields[$field['id']] = $fieldProperties;
+				if ($fields['name'] == 'Umkreis') {
+					$this->_umkreisFields[$fieldId] = $fieldProperties;
 				}
 
-				$this->_fieldList[$this->_language]['searchcriteria'][$field['id']] = $fieldProperties;
+				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldId] = $fieldProperties;
 			}
 		}
 	}
@@ -260,7 +247,8 @@ class Fieldnames {
 	 *
 	 */
 
-	public function inRangeSearchcriteriaInfos($field)	{
+	public function inRangeSearchcriteriaInfos($field)
+	{
 		return array_key_exists($field, $this->_searchcriteriaRangeInfos);
 	}
 
@@ -272,7 +260,8 @@ class Fieldnames {
 	 *
 	 */
 
-	public function isUmkreisField($field){
+	public function isUmkreisField($field)
+	{
 		return array_key_exists($field, $this->_umkreisFields);
 	}
 
@@ -284,12 +273,11 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getUmkreisValuesForField($field){
-
+	public function getUmkreisValuesForField($field)
+	{
 		$infos = array();
 
-		if (array_key_exists($field, $this->_umkreisFields))
-		{
+		if (isset($this->_umkreisFields[$field])) {
 			$infos = $this->_umkreisFields[$field];
 		}
 
@@ -304,11 +292,11 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getRangeSearchcriteriaInfosForField($field)	{
+	public function getRangeSearchcriteriaInfosForField($field)
+	{
 		$infos = array();
 
-		if (array_key_exists($field, $this->_searchcriteriaRangeInfos))
-		{
+		if (array_key_exists($field, $this->_searchcriteriaRangeInfos)) {
 			$infos = $this->_searchcriteriaRangeInfos[$field];
 		}
 
@@ -322,7 +310,8 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getUmkreisFields(){
+	public function getUmkreisFields()
+	{
 		return $this->_umkreisFields;
 	}
 
@@ -333,7 +322,8 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getSearchcriteriaRangeInfos() {
+	public function getSearchcriteriaRangeInfos()
+	{
 		return $this->_searchcriteriaRangeInfos;
 	}
 
@@ -341,28 +331,25 @@ class Fieldnames {
 	/**
 	 *
 	 * @param array $fieldResult
-	 * @return null
 	 *
 	 */
 
-	private function createFieldList($fieldResult) {
-		if ( count( $fieldResult ) == 0 ) {
-			return;
-		}
-
+	private function createFieldList(array $fieldResult)
+	{
 		foreach ( $fieldResult as $moduleProperties ) {
 			if ( ! array_key_exists( 'elements', $moduleProperties ) ) {
 				continue;
 			}
+
+			$module = $moduleProperties['id'];
 
 			foreach ( $moduleProperties['elements'] as $fieldName => $fieldProperties ) {
 				if ( 'label' == $fieldName ) {
 					continue;
 				}
 
-				$fieldProperties['module'] = $moduleProperties['id'];
-				$fieldProperties['content'] = $moduleProperties['elements'][$fieldName]['content'];
-				$this->_fieldList[$this->_language][$moduleProperties['id']][$fieldName] = $fieldProperties;
+				$fieldProperties['module'] = $module;
+				$this->_fieldList[$module][$fieldName] = $fieldProperties;
 			}
 		}
 	}
@@ -376,8 +363,9 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getModuleContainsField($fieldname, $module) {
-		return isset($this->_fieldList[$this->_language][$module][$fieldname]);
+	public function getModuleContainsField($fieldname, $module)
+	{
+		return isset($this->_fieldList[$module][$fieldname]);
 	}
 
 
@@ -390,12 +378,13 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getFieldLabel( $field, $module) {
+	public function getFieldLabel( $field, $module)
+	{
 		$fieldNewName = $field;
 
-		if ( isset( $this->_fieldList[$this->_language][$module] ) &&
-			array_key_exists( $field, $this->_fieldList[$this->_language][$module] ) ) {
-			$fieldNewName = $this->_fieldList[$this->_language][$module][$field]['label'];
+		if ( isset( $this->_fieldList[$module] ) &&
+			array_key_exists( $field, $this->_fieldList[$module] ) ) {
+			$fieldNewName = $this->_fieldList[$module][$field]['label'];
 		}
 
 		return $fieldNewName;
@@ -410,10 +399,11 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getFieldList( $module, $addApiOnlyFields = false, $annotated = false ) {
+	public function getFieldList( $module, $addApiOnlyFields = false, $annotated = false )
+	{
 		$fieldList = array();
-		if ( isset( $this->_fieldList[$this->_language][$module] ) ) {
-			$fieldList = $this->_fieldList[$this->_language][$module];
+		if ( isset( $this->_fieldList[$module] ) ) {
+			$fieldList = $this->_fieldList[$module];
 		}
 
 		if ($addApiOnlyFields) {
@@ -441,7 +431,8 @@ class Fieldnames {
 	 *
 	 */
 
-	private function getExtraFields($module, $annotated) {
+	private function getExtraFields($module, $annotated)
+	{
 		$extraFields = array();
 		$hasApiFields = array_key_exists($module, self::$_apiReadOnlyFields);
 
@@ -472,8 +463,9 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getType( $fieldName, $module) {
-		return $this->_fieldList[$this->_language][$module][$fieldName]['type'];
+	public function getType( $fieldName, $module)
+	{
+		return $this->_fieldList[$module][$fieldName]['type'];
 	}
 
 
@@ -485,20 +477,23 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getPermittedValues( $inputField, $module ) {
-		return $this->_fieldList[$this->_language][$module][$inputField]['permittedvalues'];
+	public function getPermittedValues( $inputField, $module )
+	{
+		return $this->_fieldList[$module][$inputField]['permittedvalues'];
 	}
 
 
 	/**
 	 *
-	 * @param string $language
-	 * @return bool
+	 * @param string $field
+	 * @param string $module
+	 * @return array
 	 *
 	 */
 
-	public function hasLanguageCached( $language ) {
-		return array_key_exists( $language, $this->_fieldList );
+	public function getFieldInformation($field, $module)
+	{
+		return $this->_fieldList[$module][$field];
 	}
 
 

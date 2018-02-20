@@ -24,11 +24,14 @@ namespace onOffice\WPlugin;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -110,7 +113,7 @@ class EstateList
 		}
 
 		$recordNumOverAll = $this->_responseArray['data']['meta']['cntabsolute'];
-		$numEstatePages = ceil( $recordNumOverAll / $this->_pDataView->getRecordsPerPage());
+		$numEstatePages = ceil( $recordNumOverAll / $this->_pDataView->getRecordsPerPage() );
 
 		return $numEstatePages;
 	}
@@ -719,8 +722,65 @@ class EstateList
 			'configindex' => $this->_pDataView->getName(),
 		);
 
-		$documentlink = plugin_dir_url( __DIR__ ).'document.php?'. http_build_query( $queryVars );
+		$documentlink = plugin_dir_url( __DIR__ ).'document.php?'.http_build_query( $queryVars );
 		return esc_url( $documentlink );
+	}
+
+
+	/**
+	 *
+	 * @return string[] An array of visible fields
+	 *
+	 */
+
+	public function getVisibleFilterableFields()
+	{
+		if (!$this->_pDataView instanceof DataListView) {
+			throw new Exception('Only list views are filterable!');
+		}
+
+		$pDataListView = $this->_pDataView;
+
+		/* @var $pDataListView DataListView */
+		$filterable = $pDataListView->getFilterableFields();
+		$hidden = $pDataListView->getHiddenFields();
+
+		$visibleFilterable = array_diff($filterable, $hidden);
+
+		$fieldsArray = array_combine($visibleFilterable, $visibleFilterable);
+		$result = array_map(array($this, 'getFieldInformationForEstateField'), $fieldsArray);
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @internal for Callback only
+	 * @param string $fieldInput
+	 * @return array
+	 *
+	 */
+
+	public function getFieldInformationForEstateField($fieldInput)
+	{
+		$fieldInformation = $this->_pFieldnames->getFieldInformation
+			($fieldInput, onOfficeSDK::MODULE_ESTATE);
+		$type = $fieldInformation['type'];
+		$sanitizers = FieldTypes::getInputVarSanitizers();
+		$sanitizer = $sanitizers[$type];
+		$getValue = filter_input(INPUT_GET, $fieldInput, $sanitizer, FILTER_FORCE_ARRAY);
+		$postValue = filter_input(INPUT_POST, $fieldInput, $sanitizer);
+		$value = $getValue ? $getValue : $postValue;
+
+		if (is_array($value) && count($value) === 1 && key($value) === 0 &&
+			!is_array($_REQUEST[$fieldInput])) {
+			$value = $value[0];
+		}
+
+		$fieldInformation['value'] = $value;
+
+		return $fieldInformation;
 	}
 
 

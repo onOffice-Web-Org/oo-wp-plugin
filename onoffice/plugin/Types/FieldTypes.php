@@ -42,5 +42,48 @@ abstract class FieldTypes {
 	const FIELD_TYPE_SINGLESELECT = 'singleselect';
 
 	/** */
-	const FIELD_TYPE_FREETEXT = 'freetext';
+	const FIELD_TYPE_TEXT = 'text';
+
+	/** */
+	const FIELD_TYPE_INTEGER = 'integer';
+
+	/** */
+	const FIELD_TYPE_VARCHAR = 'varchar';
+
+	/** */
+	const FIELD_TYPE_FLOAT = 'float';
+
+	/** */
+	const FIELD_TYPE_BOOLEAN = 'boolean';
+
+	/** */
+	const FIELD_TYPE_DATE = 'date';
+
+	/** */
+	const FIELD_TYPE_BLOB = 'blob';
+
+	/** */
+	const FIELD_TYPE_DATETIME = 'datetime';
+
+
+	/** @var array */
+	private static $_inputVarSanitizers = array(
+		self::FIELD_TYPE_MULTISELECT => FILTER_SANITIZE_STRING,
+		self::FIELD_TYPE_SINGLESELECT => FILTER_SANITIZE_STRING,
+		self::FIELD_TYPE_TEXT => FILTER_SANITIZE_STRING,
+		self::FIELD_TYPE_INTEGER => FILTER_SANITIZE_NUMBER_INT,
+		self::FIELD_TYPE_VARCHAR =>FILTER_SANITIZE_STRING,
+		self::FIELD_TYPE_FLOAT => FILTER_SANITIZE_NUMBER_FLOAT,
+		self::FIELD_TYPE_BOOLEAN => FILTER_VALIDATE_BOOLEAN,
+		self::FIELD_TYPE_DATE => FILTER_SANITIZE_STRING,
+		self::FIELD_TYPE_BLOB => FILTER_UNSAFE_RAW,
+		self::FIELD_TYPE_DATETIME => FILTER_SANITIZE_STRING,
+	);
+
+
+	/** @return array */
+	static public function getInputVarSanitizers()
+	{
+		return self::$_inputVarSanitizers;
+	}
 }
