@@ -45,14 +45,14 @@ class FormPostInterest
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix( FormData $pFormData )
+	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
 		/* @var $pFormConfiguration DataFormConfigurationInterest */
 		$pFormConfiguration = $pFormData->getDataFormConfiguration();
 		$formFields = $pFormConfiguration->getInputs();
 		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
 
-		$formData = array_intersect_key( $_POST, $newFormFields );
+		$formData = array_intersect_key($_POST, $newFormFields);
 		$recipient = $pFormConfiguration->getRecipient();
 		$subject = $pFormConfiguration->getSubject();
 		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
@@ -62,32 +62,24 @@ class FormPostInterest
 
 		$missingFields = $pFormData->getMissingFields();
 
-		if ( count( $missingFields ) > 0 )
-		{
+		if (count($missingFields) > 0) {
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
-		}
-		else
-		{
+		} else {
 			$response = false;
 			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
 
-			if (false !== $responseAddress)
-			{
+			if (false !== $responseAddress) {
 				$responseSearchcriteria = $this->createSearchcriteria($pFormData, $responseAddress);
 
-				if ($responseSearchcriteria && null != $recipient && null != $subject)
-				{
+				if ($responseSearchcriteria && null != $recipient && null != $subject) {
 					$response = $this->sendEmail($pFormData, $recipient, $subject);
 				}
 			}
 
-			if ( true === $response )
-			{
-				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
-			}
-			else
-			{
-				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
+			if (true === $response) {
+				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
+			} else {
+				$pFormData->setStatus(FormPost::MESSAGE_ERROR);
 			}
 		}
 	}
@@ -129,13 +121,13 @@ Ihr onOffice Team';
 		$pSDKWrapper->removeCacheInstances();
 
 		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_DO, 'sendmail', $requestParams );
+			onOfficeSDK::ACTION_ID_DO, 'sendmail', $requestParams);
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
-		$result = isset( $response['data']['records'] ) &&
-				count( $response['data']['records'] ) > 0;
+		$result = isset($response['data']['records']) &&
+			count($response['data']['records']) > 0;
 
 		return $result;
 	}
@@ -149,7 +141,7 @@ Ihr onOffice Team';
 	 *
 	 */
 
-	private function createSearchcriteria( FormData $pFormData, $addressId )
+	private function createSearchcriteria(FormData $pFormData, $addressId)
 	{
 		$requestParams = array('data' => $pFormData->getSearchcriteriaData());
 		$requestParams['addressid'] = $addressId;
@@ -158,13 +150,13 @@ Ihr onOffice Team';
 		$pSDKWrapper->removeCacheInstances();
 
 		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria', $requestParams );
+			onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria', $requestParams);
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
-		$result = isset( $response['data']['records'] ) &&
-				count( $response['data']['records'] ) > 0;
+		$result = isset($response['data']['records']) &&
+			count($response['data']['records']) > 0;
 
 		return $result;
 	}
@@ -186,17 +178,15 @@ Ihr onOffice Team';
 		$pSDKWrapper = new SDKWrapper();
 		$pSDKWrapper->removeCacheInstances();
 
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
+		$handle = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams);
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+		$response = $pSDKWrapper->getRequestResponse($handle);
+		$result = isset($response['data']['records']) &&
+			count($response['data']['records']) > 0;
 
-		$result = isset( $response['data']['records'] ) &&
-				count( $response['data']['records'] ) > 0;
-
-		if ($result)
-		{
+		if ($result) {
 			return $response['data']['records'][0]['id'];
 		}
 
