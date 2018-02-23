@@ -82,6 +82,7 @@ add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array($pAdminViewC
 
 add_shortcode( 'oo_estate', array($pContentFilter, 'registerEstateShortCodes') );
 add_shortcode( 'oo_form', array($pContentFilter, 'renderFormsSortCodes') );
+add_shortcode( 'oo_basicdata', array($pContentFilter, 'renderImpressumShortCodes'));
 
 register_activation_hook( __FILE__, '\onOffice\WPlugin\Installer::install' );
 register_deactivation_hook( __FILE__, '\onOffice\WPlugin\Installer::deactivate' );

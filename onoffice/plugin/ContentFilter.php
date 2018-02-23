@@ -162,6 +162,27 @@ class ContentFilter
 	}
 
 
+	public function renderImpressumShortCodes( $attributesInput )
+	{
+		try
+		{
+			$pImpressum = Impressum::getInstace();
+
+			if ( count($attributesInput)== 1 )
+			{
+				$attribute = $attributesInput[0];
+				$impressumValue = $pImpressum->getDataByKey($attribute);
+
+				return $impressumValue;
+			}
+		}
+		catch (Exception $pException)
+		{
+			return $this->logErrorAndDisplayMessage($pException);
+		}
+	}
+
+
 	/**
 	 *
 	 * @param int $page
