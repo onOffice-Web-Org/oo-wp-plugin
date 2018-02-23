@@ -162,11 +162,18 @@ class ContentFilter
 	}
 
 
+	/**
+	 *
+	 * @param array $attributesInput
+	 * @return string
+	 *
+	 */
+	
 	public function renderImpressumShortCodes( $attributesInput )
 	{
 		try
 		{
-			$pImpressum = Impressum::getInstace();
+			$pImpressum = Impressum::getInstance();
 
 			if ( count($attributesInput)== 1 )
 			{

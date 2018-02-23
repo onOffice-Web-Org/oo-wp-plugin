@@ -90,14 +90,13 @@ class Impressum
 	}
 
 
-
 	/**
 	 *
 	 * @return Impressum
 	 *
 	 */
 
-	public static function getInstace()
+	public static function getInstance()
 	{
 		if (self::$_pInstance === null)
 		{
