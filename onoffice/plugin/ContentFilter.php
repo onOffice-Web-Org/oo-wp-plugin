@@ -168,7 +168,7 @@ class ContentFilter
 	 * @return string
 	 *
 	 */
-	
+
 	public function renderImpressumShortCodes( $attributesInput )
 	{
 		try
@@ -189,6 +189,12 @@ class ContentFilter
 		}
 	}
 
+	public function renderWidgetImpressum($text)
+	{
+		$pContentFilter = new ContentFilter();
+		add_shortcode( 'oo_basicdata', array($pContentFilter, 'renderImpressumShortCodes'));
+		return do_shortcode($text);
+	}
 
 	/**
 	 *
@@ -212,56 +218,6 @@ class ContentFilter
 		}
 
 		return $listpermalink;
-	}
-
-
-	/**
-	 *
-	 * Filter the user's written page
-	 *
-	 * @param string $content
-	 * @return string
-	 *
-	 */
-
-	public function filter_the_content( $content ) {
-		$content = $this->filterForms( $content );
-		return $content;
-	}
-
-
-	/**
-	 *
-	 * @param string $content
-	 * @return string
-	 *
-	 */
-
-	private function filterForms( $content ) {
-		$regexSearch = '!(?P<tag>\[oo_form\s+(?P<name>[0-9a-z]+)?\])!';
-		$matches = array();
-		preg_match_all( $regexSearch, $content, $matches );
-
-		$matchescount = count( $matches ) - 1;
-		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-
-		if ( 0 == $matchescount || empty( $matches['name'] ) ) {
-			return $content;
-		}
-		$onofficeTags = $matches['name'];
-
-		foreach ( $onofficeTags as $id => $name ) {
-			if ( array_key_exists( $name, $formConfig ) ) {
-				$pTemplate = new Template( $name, 'form', 'defaultform' );
-				$pForm = new Form( $name );
-				$pTemplate->setForm( $pForm );
-				$htmlOutput = $pTemplate->render();
-
-				$content = str_replace( $matches['tag'][$id], $htmlOutput, $content );
-			}
-		}
-
-		return $content;
 	}
 
 

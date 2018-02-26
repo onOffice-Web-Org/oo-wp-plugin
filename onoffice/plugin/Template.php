@@ -106,6 +106,7 @@ class Template
 			// vars which might be used in template
 			$pEstates = $this->_pEstateList;
 			$pForm = $this->_pForm;
+			$pBasicData = Impressum::getInstance();
 			include $filename;
 			return ob_get_clean();
 		}

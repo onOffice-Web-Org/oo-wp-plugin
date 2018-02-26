@@ -37,6 +37,77 @@ use onOffice\WPlugin\SDKWrapper;
 
 class Impressum
 {
+	/** */
+	const KEY_TITLE = 'title';
+
+	/** */
+	const KEY_FIRSTNAME = 'firstname';
+
+	/** */
+	const KEY_LASTNAME = 'lastname';
+
+	/** */
+	const KEY_FIRMA = 'firma';
+
+	/** */
+	const KEY_POSTCODE = 'postcode';
+
+	/** */
+	const KEY_CITY = 'city';
+
+	/** */
+	const KEY_STREET = 'street';
+
+	/** */
+	const KEY_HOUSENUMBER = 'housenumber';
+
+	/** */
+	const KEY_STATE = 'state';
+
+	/** */
+	const KEY_COUNTRY = 'country';
+
+	/** */
+	const KEY_PHONE = 'phone';
+
+	/** */
+	const KEY_MOBIL = 'mobil';
+
+	/** */
+	const KEY_FAX = 'fax';
+
+	/** */
+	const KEY_EMAIL = 'email';
+
+	/** */
+	const KEY_HOMEPAGE = 'homepage';
+
+	/** */
+	const KEY_VERTRETUNGSBERECHTIGTER = 'vertretungsberechtigter';
+
+	/** */
+	const KEY_BERUFSAUFSICHTSBEHOERDE = 'berufsaufsichtsbehoerde';
+
+	/** */
+	const KEY_HANDELSREGISTER = 'handelsregister';
+
+	/** */
+	const KEY_HANDELSREGISTERNUMMER = 'handelsregisterNr';
+
+	/** */
+	const KEY_UST_ID = 'ustId';
+
+	/** */
+	const KEY_BANK = 'bank';
+
+	/** */
+	const KEY_IBAN = 'iban';
+
+	/** */
+	const KEY_BIC = 'bic';
+
+	/** */
+	const KEY_CHAMBER = 'chamber';
 
 	/** @var Impressum */
 	static private $_pInstance = null;
@@ -44,6 +115,36 @@ class Impressum
 	/** @var array */
 	private $_data = array();
 
+	/** @var array */
+	private static $_keys = array
+		(
+			self::KEY_BANK,
+			self::KEY_BERUFSAUFSICHTSBEHOERDE,
+			self::KEY_BIC,
+			self::KEY_CHAMBER,
+			self::KEY_CITY,
+			self::KEY_COUNTRY,
+			self::KEY_COUNTRY,
+			self::KEY_EMAIL,
+			self::KEY_EMAIL,
+			self::KEY_FAX,
+			self::KEY_FIRMA,
+			self::KEY_FIRSTNAME,
+			self::KEY_HANDELSREGISTER,
+			self::KEY_HANDELSREGISTERNUMMER,
+			self::KEY_HOMEPAGE,
+			self::KEY_HOUSENUMBER,
+			self::KEY_IBAN,
+			self::KEY_LASTNAME,
+			self::KEY_MOBIL,
+			self::KEY_PHONE,
+			self::KEY_POSTCODE,
+			self::KEY_STATE,
+			self::KEY_STREET,
+			self::KEY_TITLE,
+			self::KEY_UST_ID,
+			self::KEY_VERTRETUNGSBERECHTIGTER,
+		);
 
 	/**
 	 *
@@ -104,5 +205,31 @@ class Impressum
 		}
 
 		return self::$_pInstance;
+	}
+
+
+	/**
+	 *
+	 * @param string $templateString
+	 * @return string
+	 *
+	 */
+
+	public static function replaceAll($templateString)
+	{
+		$pInstance = self::getInstance();
+
+		$searchpattern = array();
+		$replacepattern = array();
+
+		foreach (self::$_keys as $key)
+		{
+			$searchpattern []= '/\[oo_basicdata '.$key.'\]/';
+			$replacepattern []= $pInstance->getDataByKey($key);
+		}
+
+		$template = preg_replace($searchpattern, $replacepattern, $templateString);
+
+		return $template;
 	}
 }

@@ -73,7 +73,6 @@ add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
 add_action( 'init', array($pAdminViewController, 'onInit') );
 add_action( 'admin_init', array($pAdminViewController, 'add_ajax_actions') );
 
-add_filter( 'the_content', array($pContentFilter, 'filter_the_content') );
 add_filter( 'wp_link_pages_link', array($pSearchParams, 'linkPagesLink'), 10, 2 );
 add_filter( 'wp_link_pages_args', array($pSearchParams, 'populateDefaultLinkParams') );
 
@@ -83,6 +82,9 @@ add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array($pAdminViewC
 add_shortcode( 'oo_estate', array($pContentFilter, 'registerEstateShortCodes') );
 add_shortcode( 'oo_form', array($pContentFilter, 'renderFormsSortCodes') );
 add_shortcode( 'oo_basicdata', array($pContentFilter, 'renderImpressumShortCodes'));
+
+add_filter('widget_text_content', array($pContentFilter, 'renderWidgetImpressum'));
+add_filter('widget_title', array($pContentFilter, 'renderWidgetImpressum'));
 
 register_activation_hook( __FILE__, '\onOffice\WPlugin\Installer::install' );
 register_deactivation_hook( __FILE__, '\onOffice\WPlugin\Installer::deactivate' );
