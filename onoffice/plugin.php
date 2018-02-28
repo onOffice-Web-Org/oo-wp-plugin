@@ -23,7 +23,7 @@
 Plugin Name: onOffice direct
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
-Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed.
+Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
 Version: 2.0
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
