@@ -23,6 +23,7 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\EstateListInputVariableReader;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
@@ -30,8 +31,6 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -83,6 +82,10 @@ class EstateList
 
 	/** @var bool */
 	private $_shuffleResult = false;
+
+	/** @var EstateListInputVariableReader */
+	private $_pEstateListInputVariableReader = null;
+
 
 	/**
 	 *
@@ -748,6 +751,8 @@ class EstateList
 		$visibleFilterable = array_diff($filterable, $hidden);
 
 		$fieldsArray = array_combine($visibleFilterable, $visibleFilterable);
+		$this->_pEstateListInputVariableReader = new EstateListInputVariableReader();
+
 		$result = array_map(array($this, 'getFieldInformationForEstateField'), $fieldsArray);
 
 		return $result;
@@ -766,18 +771,7 @@ class EstateList
 	{
 		$fieldInformation = $this->_pFieldnames->getFieldInformation
 			($fieldInput, onOfficeSDK::MODULE_ESTATE);
-		$type = $fieldInformation['type'];
-		$sanitizers = FieldTypes::getInputVarSanitizers();
-		$sanitizer = $sanitizers[$type];
-		$getValue = filter_input(INPUT_GET, $fieldInput, $sanitizer, FILTER_FORCE_ARRAY);
-		$postValue = filter_input(INPUT_POST, $fieldInput, $sanitizer);
-		$value = $getValue ? $getValue : $postValue;
-
-		if (is_array($value) && count($value) === 1 && key($value) === 0 &&
-			!is_array($_REQUEST[$fieldInput])) {
-			$value = $value[0];
-		}
-
+		$value = $this->_pEstateListInputVariableReader->getFieldValue($fieldInput);
 		$fieldInformation['value'] = $value;
 
 		return $fieldInformation;

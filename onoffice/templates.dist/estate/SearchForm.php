@@ -21,9 +21,23 @@
 
 use onOffice\WPlugin\Types\FieldTypes;
 
+if ( ! function_exists( 'printRegion') ) {
+	function printRegion( onOffice\WPlugin\Region\Region $pRegion, $selected = array(), $level = 0 ) {
+		$prefix = str_repeat( '-', $level );
+		$selectStr = (in_array($pRegion->getId(), $selected) ? ' selected' : '');
+		echo '<option value="'.esc_html( $pRegion->getId() ).'"'.$selectStr.'>'
+			.$prefix.' '.esc_html( $pRegion->getName() ).'</option>';
+		foreach ( $pRegion->getChildren() as $pRegionChild ) {
+			printRegion($pRegionChild, $selected, $level + 1);
+		}
+	}
+}
 
 $visible = $pEstates->getVisibleFilterableFields();
-$multiSelectableTypes = array(FieldTypes::FIELD_TYPE_SINGLESELECT, FieldTypes::FIELD_TYPE_MULTISELECT);
+$multiSelectableTypes = array(
+	FieldTypes::FIELD_TYPE_SINGLESELECT,
+	FieldTypes::FIELD_TYPE_MULTISELECT,
+);
 
 if (count($visible) === 0) {
 	return;
@@ -44,7 +58,8 @@ foreach ($visible as $inputName => $properties) :
 		echo '<br>';
 		echo '<input type="checkbox" name="'.esc_attr($inputName).'"'
 			.('on' == $selectedValue ? ' checked' : '').'>';
-	} elseif ( in_array($properties['type'], $multiSelectableTypes) ) {
+	} elseif ( in_array($properties['type'], $multiSelectableTypes) &&
+		$inputName !== 'regionaler_zusatz' ) {
 		$permittedValues = $properties['permittedvalues'];
 		echo '<select size="5" name="'.esc_attr($inputName).'[]" multiple>';
 		foreach ( $permittedValues as $key => $value ) {
@@ -57,6 +72,22 @@ foreach ($visible as $inputName => $properties) :
 			echo esc_html($value).'</option>';
 		}
 		echo '</select>';
+	} elseif ( $inputName === 'regionaler_zusatz' ) {
+		echo '<select size="5" name="'.esc_attr($inputName).'[]" multiple>';
+		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
+		$regions = $pRegionController->getRegions();
+		foreach ($regions as $pRegion) {
+			/* @var $pRegion \onOffice\WPlugin\Region\Region */
+			printRegion( $pRegion, $selectedValue );
+		}
+		echo '</select>';
+	} elseif ( FieldTypes::isNumericType( $properties['type'] ) ) {
+		echo 'von: ';
+		echo '<input name="'.esc_attr($inputName).'__von" type="text" ';
+		echo 'value="'.esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '').'"><br>';
+		echo 'bis: ';
+		echo '<input name="'.esc_attr($inputName).'__bis" type="text" ';
+		echo 'value="'.esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '').'"><br>';
 	} else {
 		$lengthAttr = !is_null($properties['length']) ?
 			' maxlength="'.esc_attr($properties['length']).'"' : '';

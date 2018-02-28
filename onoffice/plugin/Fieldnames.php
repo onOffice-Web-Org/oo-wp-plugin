@@ -30,6 +30,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
@@ -47,51 +48,58 @@ class Fieldnames
 
 	private static $_apiReadOnlyFields = array(
 		onOfficeSDK::MODULE_ADDRESS => array(
-			// parameter => label (english)
 			'imageUrl' => array(
-				'type' => 'freetext',
+				'type' => FieldTypes::FIELD_TYPE_TEXT,
+				'length' => null,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Image',
 			),
 			'phone' => array(
-				'type' => 'freetext',
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Phone',
 			),
 			'email' => array(
-				'type' => 'freetext',
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 80,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'E-Mail',
 			),
 			'fax' => array(
-				'type' => 'freetext',
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Fax',
 			),
 			'mobile' => array(
-				'type' => 'freetext',
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Mobile',
 			),
 			'defaultphone' => array(
-				'type' => 'freetext',
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Phone',
 			),
 			'defaultemail' => array(
-				'type' => 'freetext',
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 80,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'E-Mail',
 			),
 			'defaultfax' => array(
-				'type' => 'freetext',
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Fax',
@@ -438,6 +446,9 @@ class Fieldnames
 
 		if ($hasApiFields) {
 			$extraFields = self::$_apiReadOnlyFields[$module];
+			array_walk($extraFields, function(&$array) {
+				$array['content'] = __('Additional Fields', 'onoffice');
+			});
 		}
 
 		if ($annotated && array_key_exists($module, self::$_readOnlyFieldsAnnotations)) {

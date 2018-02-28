@@ -34,7 +34,8 @@ namespace onOffice\WPlugin\Types;
  *
  */
 
-abstract class FieldTypes {
+abstract class FieldTypes
+{
 	/** */
 	const FIELD_TYPE_MULTISELECT = 'multiselect';
 
@@ -81,9 +82,34 @@ abstract class FieldTypes {
 	);
 
 
-	/** @return array */
+	/** @var array */
+	private static $_numericTypes = array(
+		self::FIELD_TYPE_INTEGER,
+		self::FIELD_TYPE_FLOAT,
+	);
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
 	static public function getInputVarSanitizers()
 	{
 		return self::$_inputVarSanitizers;
+	}
+
+
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
+
+	static public function isNumericType($type)
+	{
+		return in_array($type, self::$_numericTypes, true);
 	}
 }

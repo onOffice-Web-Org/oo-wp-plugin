@@ -121,48 +121,6 @@ abstract class FormPost {
 
 	/**
 	 *
-	 * @param string $postvar
-	 * @param int $validate one or more of the PHP FILTER_* constants
-	 * @return mixed
-	 *
-	 */
-
-	public static function getPostValue($postvar, $validate = FILTER_DEFAULT) {
-		$value = filter_input( INPUT_POST, $postvar, $validate );
-
-		if ( false === $value ) {
-			$value = null;
-		}
-
-		return $value;
-	}
-
-
-	/**
-	 *
-	 * @param string $getVar
-	 * @param int $validate one or more of the PHP FILTER_* constants
-	 * @return mixed
-	 *
-	 */
-
-	public static function getGetValue($getVar, $validate = FILTER_DEFAULT, $whitelist = true) {
-		$value = filter_input( INPUT_GET, $getVar, $validate );
-
-		if ( false === $value ) {
-			$value = null;
-		}
-
-		if ( $whitelist ) {
-			SearchParameters::getInstance()->addAllowedGetParameter( $getVar );
-		}
-
-		return $value;
-	}
-
-
-	/**
-	 *
 	 * @param DataFormConfiguration $pConfig
 	 * @param int $formNo
 	 *
