@@ -96,6 +96,11 @@ jQuery(document).ready(function($){
 			var newLabelText = onOffice_loc_settings.fieldmodule.replace('%s', moduleStr);
 			clonedElement.find('label[for=' + labelIdFor + ']').text(newLabelText);
 		}
+
+		if (onOffice !== undefined && onOffice.checkboxAdmin) {
+			var cbAdmin = new onOffice.checkboxAdmin();
+			cbAdmin.changeCbStatus(clonedElement);
+		}
 		clonedElement.show();
 		dummyKey.parent().append(clonedElement);
 	};
