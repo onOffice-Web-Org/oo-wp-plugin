@@ -105,7 +105,8 @@ class AdminPageEstateDetail
 		}
 		echo '</span>';
 
-		echo '<div id="post-body" class="metabox-holder columns-'.(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
+		echo '<div id="post-body" class="metabox-holder columns-'
+			.(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
 		echo '<div class="postbox-container" id="postbox-container-1">';
 		do_meta_boxes(get_current_screen()->id, 'normal', null );
 		echo '</div>';
@@ -122,7 +123,8 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'side', null);
 		echo '</div>';
-		echo '<div class="fieldsSortable postbox" id="'.self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS).'">';
+		echo '<div class="fieldsSortable postbox" id="'
+			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
 		$pRendererSortableContactFields->buildForAjax();
 		echo '</div>';
@@ -136,7 +138,8 @@ class AdminPageEstateDetail
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'advanced', null);
 		echo '</div>';
-		echo '<div class="fieldsSortable postbox" id="'.self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE).'">';
+		echo '<div class="fieldsSortable postbox" id="'
+			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
 		$pRendererSortablefields->buildForAjax();
 		echo '</div>';
@@ -210,7 +213,8 @@ class AdminPageEstateDetail
 
 	protected function generateAccordionBoxesContactPerson()
 	{
-		$fieldNamesContactData = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS));
+		$fieldNamesContactData = array_keys($this->readFieldnamesByContent
+			(onOfficeSDK::MODULE_ADDRESS, true));
 
 		foreach ($fieldNamesContactData as $content)
 		{
@@ -257,12 +261,13 @@ class AdminPageEstateDetail
 		$this->addFormModel($pFormModelDocumentTypes);
 
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
-		$this->addFieldsConfiguration(
-				onOfficeSDK::MODULE_ESTATE, self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldNames);
+		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
+			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldNames);
 
-		$fieldNamesContactPerson =  $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
-		$this->addFieldsConfiguration(
-				onOfficeSDK::MODULE_ADDRESS, self::FORM_VIEW_CONTACT_DATA_FIELDS, $pFormModelBuilder, $fieldNamesContactPerson);
+		$fieldNamesContactPerson =  $this->readFieldnamesByContent
+			(onOfficeSDK::MODULE_ADDRESS, true);
+		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS,
+			self::FORM_VIEW_CONTACT_DATA_FIELDS, $pFormModelBuilder, $fieldNamesContactPerson);
 	}
 
 

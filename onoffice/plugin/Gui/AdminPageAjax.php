@@ -116,17 +116,17 @@ abstract class AdminPageAjax
 	/**
 	 *
 	 * @param string $module
-	 * @param bool $showModuleLabel
+	 * @param bool $readOnlyPurpose
 	 * @return array
 	 *
 	 */
 
-	protected function readFieldnamesByContent($module)
+	protected function readFieldnamesByContent($module, $readOnlyPurpose = false)
 	{
 		$pFieldnames = new Fieldnames();
 		$pFieldnames->loadLanguage();
 
-		$fieldnames = $pFieldnames->getFieldList($module);
+		$fieldnames = $pFieldnames->getFieldList($module, $readOnlyPurpose, $readOnlyPurpose);
 		$resultByContent = array();
 		$categories = array();
 

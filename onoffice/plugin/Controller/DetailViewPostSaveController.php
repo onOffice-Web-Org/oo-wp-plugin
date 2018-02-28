@@ -22,8 +22,9 @@
 namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\ContentFilter;
-use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Utility\__String;
+use WP_Post;
 
 /**
  *
@@ -43,7 +44,7 @@ class DetailViewPostSaveController
 
 	public function onSavePost($postId) {
 
-		$pPost = \WP_Post::get_instance($postId);
+		$pPost = WP_Post::get_instance($postId);
 		if ($pPost->post_status === 'trash') {
 			return;
 		}
