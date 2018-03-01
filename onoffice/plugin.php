@@ -80,7 +80,7 @@ add_filter( 'wp_link_pages_args', array($pSearchParams, 'populateDefaultLinkPara
 add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array($pAdminViewController, 'pluginSettingsLink') );
 
 add_shortcode( 'oo_estate', array($pContentFilter, 'registerEstateShortCodes') );
-add_shortcode( 'oo_form', array($pContentFilter, 'renderFormsSortCodes') );
+add_shortcode( 'oo_form', array($pContentFilter, 'renderFormsShortCodes') );
 add_shortcode( 'oo_basicdata', array($pContentFilter, 'renderImpressumShortCodes'));
 
 add_filter('widget_text_content', array($pContentFilter, 'renderWidgetImpressum'));

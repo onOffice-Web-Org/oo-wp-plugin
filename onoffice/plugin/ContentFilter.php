@@ -136,7 +136,7 @@ class ContentFilter
 	 *
 	 */
 
-	public function renderFormsSortCodes( $attributesInput )
+	public function renderFormsShortCodes( $attributesInput )
 	{
 		$attributes = shortcode_atts(array(
 			'form' => null,
@@ -189,12 +189,20 @@ class ContentFilter
 		}
 	}
 
+
+	/**
+	 *
+	 * @param string $text
+	 * @return string
+	 *
+	 */
+
 	public function renderWidgetImpressum($text)
 	{
-		$pContentFilter = new ContentFilter();
-		add_shortcode( 'oo_basicdata', array($pContentFilter, 'renderImpressumShortCodes'));
+		add_shortcode( 'oo_basicdata', array($this, 'renderImpressumShortCodes'));
 		return do_shortcode($text);
 	}
+
 
 	/**
 	 *
@@ -203,7 +211,8 @@ class ContentFilter
 	 *
 	 */
 
-	private function rebuildSlugTaxonomy( $page ) {
+	private function rebuildSlugTaxonomy( $page )
+	{
 		$pPost = get_post( $page );
 
 		if ($pPost === null) {
@@ -253,7 +262,8 @@ class ContentFilter
 	 *
 	 */
 
-	private function preloadSingleEstate(DataDetailView $pDetailView, $unitsView) {
+	private function preloadSingleEstate(DataDetailView $pDetailView, $unitsView)
+	{
 		global $wp_query;
 
 		$estateId = 0;
@@ -277,7 +287,8 @@ class ContentFilter
 	 *
 	 */
 
-	public function registerScripts() {
+	public function registerScripts()
+	{
 		wp_register_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js' );
 		wp_register_script( 'gmapsinit', plugins_url( '/js/gmapsinit.js', __DIR__ ), array('google-maps') );
 		wp_register_script( 'jquery-latest', 'https://code.jquery.com/jquery-latest.js');
@@ -289,7 +300,8 @@ class ContentFilter
 	 *
 	 */
 
-	public function includeScripts() {
+	public function includeScripts()
+	{
 		wp_enqueue_script( 'gmapsinit' );
 
 		if ( is_file( plugin_dir_path( __FILE__ ).'../templates/default/style.css' ) ) {
@@ -315,7 +327,8 @@ class ContentFilter
 	 *
 	 */
 
-	private function getFileUrl( $fileName ) {
+	private function getFileUrl( $fileName )
+	{
 		return plugins_url( 'onoffice/templates/default/'. $fileName );
 	}
 }
