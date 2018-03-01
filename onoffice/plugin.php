@@ -83,8 +83,9 @@ add_shortcode( 'oo_estate', array($pContentFilter, 'registerEstateShortCodes') )
 add_shortcode( 'oo_form', array($pContentFilter, 'renderFormsShortCodes') );
 add_shortcode( 'oo_basicdata', array($pContentFilter, 'renderImpressumShortCodes'));
 
-add_filter('widget_text_content', array($pContentFilter, 'renderWidgetImpressum'));
-add_filter('widget_title', array($pContentFilter, 'renderWidgetImpressum'));
+add_filter( 'widget_text_content', array($pContentFilter, 'renderWidgetImpressum') );
+add_filter( 'widget_title', array($pContentFilter, 'renderWidgetImpressum') );
+add_filter( 'document_title_parts', array($pContentFilter, 'setTitle'), 10, 2 );
 
 register_activation_hook( __FILE__, '\onOffice\WPlugin\Installer::install' );
 register_deactivation_hook( __FILE__, '\onOffice\WPlugin\Installer::deactivate' );

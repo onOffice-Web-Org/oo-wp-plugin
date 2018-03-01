@@ -36,6 +36,7 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use onOffice\WPlugin\Utility\__String;
 use WP_Query;
 
 /**
@@ -171,20 +172,15 @@ class ContentFilter
 
 	public function renderImpressumShortCodes( $attributesInput )
 	{
-		try
-		{
+		try {
 			$pImpressum = Impressum::getInstance();
-
-			if ( count($attributesInput)== 1 )
-			{
+			if ( count($attributesInput)== 1 ) {
 				$attribute = $attributesInput[0];
 				$impressumValue = $pImpressum->getDataByKey($attribute);
 
 				return $impressumValue;
 			}
-		}
-		catch (Exception $pException)
-		{
+		} catch (Exception $pException) {
 			return $this->logErrorAndDisplayMessage($pException);
 		}
 	}
@@ -293,6 +289,76 @@ class ContentFilter
 		wp_register_script( 'gmapsinit', plugins_url( '/js/gmapsinit.js', __DIR__ ), array('google-maps') );
 		wp_register_script( 'jquery-latest', 'https://code.jquery.com/jquery-latest.js');
 		wp_register_script( 'onoffice-favorites', plugins_url( '/js/favorites.js', ONOFFICE_PLUGIN_DIR.'/index.php' ));
+	}
+
+
+	/**
+	 *
+	 * @global WP_Query $wp_query
+	 * @param array $title see Wordpress internal function wp_get_document_title()
+	 * @return string
+	 *
+	 */
+
+	public function setTitle(array $title)
+	{
+		global $wp_query;
+
+		if (!isset($wp_query->query_vars['estate_id'])) {
+			return $title;
+		}
+
+		$fieldsForTitle = array(
+			'objekttitel',
+			'objektart',
+			'vermarktungsart',
+			'ort',
+			'objektnr_extern',
+		);
+
+		$pDetailView = DataDetailViewHandler::getDetailView();
+		$pDetailView->setFields($fieldsForTitle);
+
+		$pEstateList = $this->preloadSingleEstate($pDetailView, null);
+		$pEstateIterator = $pEstateList->estateIterator();
+
+		if ($pEstateIterator) {
+			$fetchedValues = array_map(array($pEstateIterator, 'getValueRaw'), $fieldsForTitle);
+			$values = array_combine($fieldsForTitle, $fetchedValues);
+
+			$pEstateList->resetEstateIterator();
+			$title['title'] = $this->buildEstateTitle($values);
+		}
+
+		return $title;
+	}
+
+
+	/**
+	 *
+	 * @param array $values
+	 *
+	 */
+
+	private function buildEstateTitle(array $values)
+	{
+		$pageTitle = null;
+		$estateTitle = $values['objekttitel'];
+		$titleLength = __String::getNew($estateTitle)->length();
+
+		if ($titleLength > 0 && $titleLength < 70) {
+			$pageTitle = $estateTitle;
+		} else {
+			// Objektart (Vermarktungsart) in Ort - Objektnummer
+			$estateKind = $values['objektart'];
+			$estateMarketing = $values['vermarktungsart'];
+			$estateCity = $values['ort'];
+			$estateNo = $values['objektnr_extern'];
+			$format = __('%1$s (%2$s) in %3$s - %4$s', 'onoffice');
+			$pageTitle = sprintf($format, $estateKind, $estateMarketing, $estateCity, $estateNo);
+		}
+
+		return $pageTitle;
 	}
 
 
