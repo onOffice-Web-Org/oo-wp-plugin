@@ -337,6 +337,7 @@ class ContentFilter
 	/**
 	 *
 	 * @param array $values
+	 * @return string
 	 *
 	 */
 

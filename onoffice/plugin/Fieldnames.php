@@ -105,6 +105,15 @@ class Fieldnames
 				'label' => 'Fax',
 			),
 		),
+		onOfficeSDK::MODULE_SEARCHCRITERIA => array(
+			'comment' => array(
+				'type' => FieldTypes::FIELD_TYPE_TEXT,
+				'length' => null,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Comment',
+			),
+		),
 	);
 
 	/** @var array */
@@ -113,6 +122,9 @@ class Fieldnames
 			'defaultphone' => 'Phone (Marked as default in onOffice)',
 			'defaultemail' => 'E-Mail (Marked as default in onOffice)',
 			'defaultfax' => 'Fax (Marked as default in onOffice)',
+		),
+		onOfficeSDK::MODULE_SEARCHCRITERIA => array(
+			'comment' => 'Search Criteria Comment (internal)',
 		),
 	);
 
@@ -389,10 +401,10 @@ class Fieldnames
 	public function getFieldLabel( $field, $module)
 	{
 		$fieldNewName = $field;
+		$row = $this->getRow($module, $field);
 
-		if ( isset( $this->_fieldList[$module] ) &&
-			array_key_exists( $field, $this->_fieldList[$module] ) ) {
-			$fieldNewName = $this->_fieldList[$module][$field]['label'];
+		if (!is_null($row)) {
+			$fieldNewName = $row['label'];
 		}
 
 		return $fieldNewName;
@@ -476,7 +488,10 @@ class Fieldnames
 
 	public function getType( $fieldName, $module)
 	{
-		return $this->_fieldList[$module][$fieldName]['type'];
+		$row = $this->getRow($module, $fieldName);
+		if (!is_null($row)) {
+			return $row['type'];
+		}
 	}
 
 
@@ -490,7 +505,10 @@ class Fieldnames
 
 	public function getPermittedValues( $inputField, $module )
 	{
-		return $this->_fieldList[$module][$inputField]['permittedvalues'];
+		$row = $this->getRow($module, $inputField);
+		if (!is_null($row)) {
+			return $row['permittedvalues'];
+		}
 	}
 
 
@@ -504,7 +522,25 @@ class Fieldnames
 
 	public function getFieldInformation($field, $module)
 	{
-		return $this->_fieldList[$module][$field];
+		return $row = $this->getRow($module, $field);
+	}
+
+
+	/**
+	 *
+	 * @param string $module
+	 * @param string $field
+	 * @return array
+	 *
+	 */
+
+	private function getRow($module, $field)
+	{
+		if (isset($this->_fieldList[$module][$field])) {
+			return $this->_fieldList[$module][$field];
+		} elseif (isset(self::$_apiReadOnlyFields[$module][$field])) {
+			return self::$_apiReadOnlyFields[$module][$field];
+		}
 	}
 
 

@@ -36,7 +36,8 @@ use onOffice\WPlugin\Utility\__String;
  *
  */
 
-class FormData {
+class FormData
+{
 	/** @var int */
 	private $_formNo = null;
 
@@ -72,7 +73,8 @@ class FormData {
 	 *
 	 */
 
-	public function __construct( DataFormConfiguration $pDataFormConfiguration, $formNo ) {
+	public function __construct( DataFormConfiguration $pDataFormConfiguration, $formNo )
+	{
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 		$this->_formNo = $formNo;
 		$this->_configFields = $this->_pDataFormConfiguration->getInputs();
@@ -85,7 +87,8 @@ class FormData {
 	 *
 	 */
 
-	public function setConfigFields($configFields)	{
+	public function setConfigFields($configFields)
+	{
 		$this->_configFields = $configFields;
 	}
 
@@ -96,7 +99,8 @@ class FormData {
 	 *
 	 */
 
-	public function getMissingFields() {
+	public function getMissingFields()
+	{
 		$missing = array();
 
 		if ( $this->_formSent ) {
@@ -117,7 +121,8 @@ class FormData {
 	 *
 	 */
 
-	public function getAddressData() {
+	public function getAddressData()
+	{
 		$inputs = $this->_configFields;
 		$addressData = array();
 
@@ -138,7 +143,8 @@ class FormData {
 	 *
 	 */
 
-	public function getAddressDataForApiCall() {
+	public function getAddressDataForApiCall()
+	{
 		$inputs = $this->_configFields;
 		$addressData = array();
 
@@ -199,7 +205,8 @@ class FormData {
 	 *
 	 */
 
-	public function getEstateData() {
+	public function getEstateData()
+	{
 		$inputs = $this->_configFields;
 		$estateData = array();
 
@@ -220,7 +227,8 @@ class FormData {
 	 *
 	 */
 
-	public function getSearchcriteriaData() {
+	public function getSearchcriteriaData()
+	{
 		$inputs = $this->_configFields;
 		$searchcriteriaData = array();
 

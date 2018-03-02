@@ -328,7 +328,7 @@ abstract class AdminPageFormSettingsBase
 
 		if ($this->_showSearchCriteriaFields) {
 			$fieldNames = array_merge($fieldNames,
-				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA)));
+				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA, true)));
 		}
 
 		foreach ($fieldNames as $category) {
@@ -368,7 +368,7 @@ abstract class AdminPageFormSettingsBase
 		}
 
 		if ($this->_showSearchCriteriaFields) {
-			$fieldNamesSearchCriteria = $this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$fieldNamesSearchCriteria = $this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA, true);
 			$this->addFieldsConfiguration
 				(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormModelBuilder, $fieldNamesSearchCriteria, true);
 			$this->addSortableFieldModule(onOfficeSDK::MODULE_SEARCHCRITERIA);
