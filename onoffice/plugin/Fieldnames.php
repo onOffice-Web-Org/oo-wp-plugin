@@ -106,7 +106,7 @@ class Fieldnames
 			),
 		),
 		onOfficeSDK::MODULE_SEARCHCRITERIA => array(
-			'comment' => array(
+			'krit_bemerkung' => array(
 				'type' => FieldTypes::FIELD_TYPE_TEXT,
 				'length' => null,
 				'permittedvalues' => array(),
@@ -124,7 +124,7 @@ class Fieldnames
 			'defaultfax' => 'Fax (Marked as default in onOffice)',
 		),
 		onOfficeSDK::MODULE_SEARCHCRITERIA => array(
-			'comment' => 'Search Criteria Comment (internal)',
+			'krit_bemerkung' => 'Search Criteria Comment (internal)',
 		),
 	);
 
