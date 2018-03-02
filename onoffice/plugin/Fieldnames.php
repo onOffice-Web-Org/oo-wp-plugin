@@ -174,6 +174,12 @@ class Fieldnames {
 				$this->_fieldList[$language]['searchcriteria'][$field['id']] = $fieldProperties;
 			}
 		}
+		$this->_fieldList[$language]['searchcriteria']['krit_bemerkung'] = array(
+			'type' => 'freetext',
+			'permittedvalues' => array(),
+			'default' => null,
+			'label' => __('Comment', 'onoffice'),
+		);
 	}
 
 
