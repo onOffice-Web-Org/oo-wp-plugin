@@ -28,24 +28,25 @@ namespace onOffice\WPlugin\EstateViewFieldModifier;
  *
  */
 
-class EstateViewFieldModifierTypes
+class EstateViewFieldModifierTypeTitle
+	implements EstateViewFieldModifierTypeBase
 {
-	/** */
-	const MODIFIER_TYPE_DEFAULT = 'modifierTypeDefault';
+	/**
+	 *
+	 * @return array
+	 *
+	 */
 
-	/** */
-	const MODIFIER_TYPE_MAP = 'modifierTypeMap';
-
-	/** */
-	const MODIFIER_TYPE_TITLE = 'modifierTypeTitle';
-
-
-	/** @var array */
-	private static $_mapping = array(
-		self::MODIFIER_TYPE_DEFAULT => '\onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypeDefault',
-		self::MODIFIER_TYPE_MAP => '\onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypeMap',
-		self::MODIFIER_TYPE_TITLE => '\onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypeTitle',
-	);
+	public function getAPIFields()
+	{
+		return array(
+			'objekttitel',
+			'objektart',
+			'vermarktungsart',
+			'ort',
+			'objektnr_extern',
+		);
+	}
 
 
 	/**
@@ -54,8 +55,22 @@ class EstateViewFieldModifierTypes
 	 *
 	 */
 
-	public static function getMapping()
+	public function getVisibleFields()
 	{
-		return self::$_mapping;
+		return $this->getAPIFields();
+	}
+
+
+	/**
+	 *
+	 * @param array $record
+	 * @return array
+	 *
+	 */
+
+	public function reduceRecord(array $record)
+	{
+		// nothing to do
+		return $record;
 	}
 }

@@ -34,6 +34,8 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListViewFactory;
+use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierFactory;
+use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Utility\__String;
@@ -308,19 +310,12 @@ class ContentFilter
 			return $title;
 		}
 
-		$fieldsForTitle = array(
-			'objekttitel',
-			'objektart',
-			'vermarktungsart',
-			'ort',
-			'objektnr_extern',
-		);
-
 		$pDetailView = DataDetailViewHandler::getDetailView();
-		$pDetailView->setFields($fieldsForTitle);
-
 		$pEstateList = $this->preloadSingleEstate($pDetailView, null);
-		$pEstateIterator = $pEstateList->estateIterator();
+		$modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE;
+		$pEstateIterator = $pEstateList->estateIterator($modifier);
+		$pEstateFieldModifier = EstateViewFieldModifierFactory::create($modifier);
+		$fieldsForTitle = $pEstateFieldModifier->getVisibleFields();
 
 		if ($pEstateIterator) {
 			$fetchedValues = array_map(array($pEstateIterator, 'getValueRaw'), $fieldsForTitle);
