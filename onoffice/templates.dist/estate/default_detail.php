@@ -24,11 +24,14 @@
  */
 
 /* @var $pEstates onOffice\WPlugin\EstateList */
+require('estatemap.php');
 
 ?>
 <h1>Detailansicht!</h1>
 
-<?php while ( $currentEstate = $pEstates->estateIterator() ) : ?>
+<?php
+	$pEstates->resetEstateIterator();
+	while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 	<?php echo $pEstates->getEstateUnits( ); ?>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
@@ -96,24 +99,6 @@
 		<?php echo $pEstates->getEstatePictureTitle($id).'<br>'; ?>
 	</a>
 	<?php endforeach; ?>
-
-		<?php
-			$position = array(
-				'lat' => (float) $currentEstate['breitengrad'],
-				'lng' => (float) $currentEstate['laengengrad'],
-			);
-			$title = $currentEstate['objekttitel'];
-
-			if ( 1 == $currentEstate['showGoogleMap'] ) {
-				$pMaps = new onOffice\WPlugin\Maps\GoogleMap();
-
-				// if you want the marker to be always visible, change the 3rd arg to true
-				$pMaps->addNewMarker(
-					$position['lng'], $position['lat'], ! $currentEstate['virtualAddress'], $title );
-				$pMaps->setZoom(16);
-				echo $pMaps->render();
-			}
-		?>
 
 	<h2>Dokumente</h2>
 	<a href="<?php echo $pEstates->getDocument(); ?>">PDF-Exposé</a>

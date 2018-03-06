@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,26 +19,31 @@
  *
  */
 
+namespace onOffice\WPlugin\EstateViewFieldModifier;
+
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2016, onOffice(R) Software AG
+ * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
-namespace onOffice\WPlugin;
-
-/**
- *
- */
-
-interface Renderable {
-
+class EstateViewFieldModifierFactory
+{
 	/**
 	 *
-	 * @return string
+	 * @param string $type
+	 * @return EstateViewFieldModifier
 	 *
 	 */
 
-	public function render();
+	public static function create($type)
+	{
+		$mapping = EstateViewFieldModifierTypes::getMapping();
+
+		if (isset($mapping[$type])) {
+			return new $mapping[$type];
+		}
+		return null;
+	}
 }

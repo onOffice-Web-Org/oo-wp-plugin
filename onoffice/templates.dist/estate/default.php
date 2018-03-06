@@ -25,13 +25,15 @@
  *
  */
 
-use onOffice\WPlugin\Maps\GoogleMap;
 use onOffice\WPlugin\Favorites;
 
 // display search form
 require 'SearchForm.php';
 
 /* @var $pEstates onOffice\WPlugin\EstateList */
+
+
+require('estatemap.php');
 
 ?>
 
@@ -64,31 +66,8 @@ require 'SearchForm.php';
 <p>Insgesamt <?php echo $pEstates->getEstateOverallCount(); ?> Objekte gefunden.</p>
 
 <?php
-$pMaps = new GoogleMap();
-$pMaps->setWidth(100);
-$pMaps->setWidthUnit(GoogleMap::UNIT_PERCENT);
-$pMaps->setHeight(350);
-
-while ( $currentEstate = $pEstates->estateIterator() ) {
-	$position = array(
-		'lat' => (float) $currentEstate['breitengrad'],
-		'lng' => (float) $currentEstate['laengengrad'],
-	);
-	$title = $currentEstate['objekttitel'];
-
-	if ( ! $position['lng'] || ! $position['lat'] || ! $currentEstate['showGoogleMap'] ) {
-		continue;
-	}
-
-	$pMaps->addNewMarker(
-		$position['lng'], $position['lat'],	! $currentEstate['virtualAddress'], $title );
-}
-echo $pMaps->render();
-
 $pEstates->resetEstateIterator();
-?>
-
-<?php while ( $currentEstate = $pEstates->estateIterator() ) : ?>
+while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 
 <p>
 	<a href="<?php echo $pEstates->getEstateLink(); ?>">Zur Detailansicht</a><br>

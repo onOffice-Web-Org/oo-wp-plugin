@@ -27,6 +27,8 @@ use onOffice\WPlugin\Controller\EstateListInputVariableReader;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
+use onOffice\WPlugin\EstateViewFieldModifier\EstateFieldModifierHandler;
+use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
@@ -247,9 +249,10 @@ class EstateList
 		$numRecordsPerPage = $this->getRecordsPerPage();
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		$this->_currentEstatePage = $currentPage;
+		$extraFields = EstateFieldModifierHandler::getAllAPIFields();
 
 		$requestParams = array(
-			'data' => $pListView->getFields(),
+			'data' => array_unique(array_merge($pListView->getFields(), $extraFields)),
 			'filter' => $filter,
 			'estatelanguage' => $language,
 			'outputlanguage' => $language,
@@ -350,10 +353,7 @@ class EstateList
 
 	private function collectEstateContactPerson( $responseArrayContacts, array $estateIds )
 	{
-		if (! array_key_exists( 'data', $responseArrayContacts ) ||
-			! array_key_exists( 'records', $responseArrayContacts['data'] ) ||
-			! array_key_exists( 0, $responseArrayContacts['data']['records'] ) ||
-			! array_key_exists( 'elements', $responseArrayContacts['data']['records'][0] ) ) {
+		if ( ! isset( $responseArrayContacts['data']['records'][0]['elements'] ) ) {
 			return;
 		}
 
@@ -385,45 +385,11 @@ class EstateList
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	private function getCensoredAddressData( $record )
-	{
-		$requestedFields = $this->_pDataView->getAddressFields();
-
-		if ( in_array( 'virtualAddress', $requestedFields ) &&
-			1 == $record['virtualAddress'] ) {
-			if ( in_array( 'virtualStreet', $requestedFields ) ) {
-				$record['strasse'] = $record['virtualStreet'];
-			}
-			if ( in_array( 'virtualHouseNumber', $requestedFields ) ) {
-				$record['hausnummer'] = $record['virtualHouseNumber'];
-			}
-			if ( in_array( 'virtualLongitude', $requestedFields ) ) {
-				$record['laengengrad'] = $record['virtualLongitude'];
-			}
-			if ( in_array( 'virtualLatitude', $requestedFields ) ) {
-				$record['breitengrad'] = $record['virtualLatitude'];
-			}
-		}
-
-		if (array_key_exists('mainLangId', $record)) {
-			unset($record['mainLangId']);
-		}
-
-		return $record;
-	}
-
-
-	/**
-	 *
 	 * @return ArrayContainerEscape
 	 *
 	 */
 
-	public function estateIterator()
+	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
 		global $numpages, $multipage, $page, $more, $pages;
 		if ( ! isset( $this->_responseArray['data']['records'] ) ) {
@@ -439,6 +405,8 @@ class EstateList
 			$numpages = $this->_numEstatePages;
 		}
 
+		$pEstateFieldModifierHandler = new EstateFieldModifierHandler($this->_pDataView, $modifier);
+
 		$currentRecord = each( $this->_responseArray['data']['records'] );
 
 		$this->_currentEstate['id'] = $currentRecord['value']['id'];
@@ -453,8 +421,8 @@ class EstateList
 
 		if ( false !== $currentRecord ) {
 			$record = $currentRecord['value']['elements'];
-			$recordCensored = $this->getCensoredAddressData( $record );
-			$pArrayContainer = new ArrayContainerEscape( $recordCensored );
+			$recordModified = $pEstateFieldModifierHandler->processRecord($record);
+			$pArrayContainer = new ArrayContainerEscape( $recordModified );
 
 			return $pArrayContainer;
 		}
