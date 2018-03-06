@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\EstateViewFieldModifier;
 
+use onOffice\WPlugin\Utility\__String;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -28,8 +30,8 @@ namespace onOffice\WPlugin\EstateViewFieldModifier;
  *
  */
 
-class EstateViewFieldModifierTypeDefault
-	extends EstateViewFieldModifierTypeEstateGeoBase
+abstract class EstateViewFieldModifierTypeEstateGeoBase
+	implements EstateViewFieldModifierTypeBase
 {
 	/**
 	 *
@@ -39,7 +41,17 @@ class EstateViewFieldModifierTypeDefault
 
 	public function getAPIFields()
 	{
-		return array();
+		return array(
+			'virtualStreet',
+			'virtualHouseNumber',
+			'laengengrad',
+			'breitengrad',
+			'virtualAddress',
+			'virtualLatitude',
+			'virtualLongitude',
+			'objektadresse_freigeben',
+			'strasse',
+		);
 	}
 
 
@@ -64,11 +76,28 @@ class EstateViewFieldModifierTypeDefault
 
 	public function reduceRecord(array $record)
 	{
-		// do not use isset() since value may be NULL
-		if (array_key_exists('mainLangId', $record)) {
-			unset($record['mainLangId']);
+		if (1 == $record['virtualAddress']) {
+			if (isset($record['strasse'])) {
+				$record['strasse'] = $record['virtualStreet'];
+			}
+
+			if (isset($record['hausnummer'])) {
+				$record['hausnummer'] = $record['virtualHouseNumber'];
+			}
+
+			if (isset($record['laengengrad'])) {
+				$record['laengengrad'] = $record['virtualLongitude'];
+			}
+			if (isset($record['breitengrad'])) {
+				$record['breitengrad'] = $record['virtualLatitude'];
+			}
+		} elseif (0 == $record['objektadresse_freigeben'] ||
+			__String::getNew($record['strasse'])->isEmpty()) {
+			$record['laengengrad'] = 0;
+			$record['breitengrad'] = 0;
+			unset($record['strasse']);
 		}
 
-		return parent::reduceRecord($record);
+		return $record;
 	}
 }

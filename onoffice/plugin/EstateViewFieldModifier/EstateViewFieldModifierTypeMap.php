@@ -29,7 +29,7 @@ namespace onOffice\WPlugin\EstateViewFieldModifier;
  */
 
 class EstateViewFieldModifierTypeMap
-	implements EstateViewFieldModifierTypeBase
+	extends EstateViewFieldModifierTypeEstateGeoBase
 {
 	/**
 	 *
@@ -39,19 +39,15 @@ class EstateViewFieldModifierTypeMap
 
 	public function getAPIFields()
 	{
-		return array(
-			'virtualStreet',
-			'virtualHouseNumber',
+		$parent = parent::getAPIFields();
+		$mapSpecific = array(
 			'showGoogleMap',
-			'laengengrad',
-			'breitengrad',
-			'virtualAddress',
-			'virtualLatitude',
-			'virtualLongitude',
 			'strasse',
 			'hausnummer',
 			'objekttitel',
 		);
+
+		return array_merge($parent, $mapSpecific);
 	}
 
 
@@ -68,35 +64,7 @@ class EstateViewFieldModifierTypeMap
 			'laengengrad',
 			'breitengrad',
 			'virtualAddress',
-			'strasse',
-			'hausnummer',
 			'objekttitel',
 		);
-	}
-
-
-	/**
-	 *
-	 * @param array $record
-	 * @return array
-	 *
-	 */
-
-	public function reduceRecord(array $record)
-	{
-		if ( 1 == $record['virtualAddress'] ) {
-			if (isset($record['strasse'])) {
-				$record['strasse'] = $record['virtualStreet'];
-			}
-
-			if (isset($record['hausnummer'])) {
-				$record['hausnummer'] = $record['virtualHouseNumber'];
-			}
-
-			$record['laengengrad'] = $record['virtualLongitude'];
-			$record['breitengrad'] = $record['virtualLatitude'];
-		}
-
-		return $record;
 	}
 }

@@ -42,7 +42,7 @@ while ( $currentEstate = $pEstates->estateIterator( EstateViewFieldModifierTypes
 	$title = $currentEstate['objekttitel'];
 	$visible = ! $virtualAddressSet;
 
-	if ( ! $position['lng'] || ! $position['lat'] || ! $currentEstate['showGoogleMap'] ) {
+	if ( 0 == $position['lng'] || 0 == $position['lat'] || ! $currentEstate['showGoogleMap'] ) {
 		continue;
 	}
 
