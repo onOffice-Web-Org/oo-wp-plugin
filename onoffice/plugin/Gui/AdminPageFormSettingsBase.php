@@ -314,6 +314,7 @@ abstract class AdminPageFormSettingsBase
 
 	protected function generateAccordionBoxes()
 	{
+		$this->cleanPreviousBoxes();
 		$fieldNames = array();
 
 		if ($this->_showEstateFields) {

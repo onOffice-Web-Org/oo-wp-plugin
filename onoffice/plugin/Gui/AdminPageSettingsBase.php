@@ -380,6 +380,19 @@ abstract class AdminPageSettingsBase
 		{}
 
 
+	/**
+	 *
+	 * @global array $wp_meta_boxes
+	 *
+	 */
+
+	final protected function cleanPreviousBoxes()
+	{
+		global $wp_meta_boxes;
+		$wp_meta_boxes[get_current_screen()->id] = array();
+	}
+
+
 	/** @return string */
 	protected function getPageTitle()
 		{ return $this->_pageTitle; }

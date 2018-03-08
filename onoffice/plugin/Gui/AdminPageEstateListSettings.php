@@ -150,6 +150,7 @@ class AdminPageEstateListSettings
 
 	protected function generateAccordionBoxes()
 	{
+		$this->cleanPreviousBoxes();
 		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE));
 
 		foreach ($fieldNames as $category)
