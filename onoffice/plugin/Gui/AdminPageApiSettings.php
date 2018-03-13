@@ -120,7 +120,7 @@ class AdminPageApiSettings
 		submit_button();
 		echo '</form>';
 
-		echo '<form method="post" action="'.plugins_url(basename(ONOFFICE_PLUGIN_DIR)).'/tools/clearCache.php">';
+		echo '<form method="post" action="'.plugins_url('/tools/clearCache.php', ONOFFICE_PLUGIN_DIR.'/plugin.php').'">';
 		wp_nonce_field( 'onoffice-clear-cache', 'onoffice-cache-nonce' );
 		submit_button(__('Clear cache'), 'delete');
 		echo '</form>';

@@ -131,6 +131,22 @@ abstract class AdminPageEstateListSettingsBase
 	/**
 	 *
 	 * @param array $row
+	 * @return bool
+	 *
+	 */
+
+	protected function checkFixedValues($row)
+	{
+		$table = RecordManager::TABLENAME_LIST_VIEW;
+		$result = isset($row[$table]['name']) && $row[$table]['name'] != null;
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param array $row
 	 * @return array
 	 *
 	 */
