@@ -27,6 +27,9 @@ namespace onOffice\WPlugin;
  * @url http://www.onoffice.de
  * @copyright 2003-2017, onOffice(R) GmbH
  *
+ * Creates tables and sets options
+ * Also removes them
+ *
  */
 
 abstract class Installer
@@ -39,13 +42,16 @@ abstract class Installer
 
 	static public function install()
 	{
+		// If you are modifying this, please also make sure to edit the test
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$dbversion = get_option('oo_plugin_db_version', null);
 
 		if ($dbversion === null)
 		{
 			dbDelta( self::getCreateQueryCache() );
-			add_option( 'oo_plugin_db_version', 1.0 );
+
+			$dbversion = 1.0;
+			add_option( 'oo_plugin_db_version', $dbversion, '', false );
 		}
 
 		if ($dbversion == 1.0)
@@ -56,9 +62,11 @@ abstract class Installer
 			dbDelta( self::getCreateQueryListViewContactPerson() );
 			dbDelta( self::getCreateQueryForms() );
 			dbDelta( self::getCreateQueryFormFieldConfig() );
+
+			$dbversion = 2.0;
 		}
 
-		update_option( 'oo_plugin_db_version', 2.0 );
+		update_option( 'oo_plugin_db_version', $dbversion );
 
 		$pContentFilter = new ContentFilter();
 		$pContentFilter->addCustomRewriteTags();
@@ -321,14 +329,20 @@ abstract class Installer
 			$prefix."oo_plugin_picturetypes",
 			$prefix."oo_plugin_forms",
 			$prefix."oo_plugin_form_fieldconfig",
+			$prefix."oo_plugin_listview_contactperson",
 		);
 
 		foreach ($tables as $table)
 		{
-			$wpdb->query("DROP TABLE IF EXISTS $table");
+			$wpdb->query("DROP TABLE IF EXISTS ".esc_sql($table));
 		}
 
 		delete_option('oo_plugin_db_version');
+		delete_option('onoffice-default-view');
+		delete_option('onoffice-favorization-enableFav');
+		delete_option('onoffice-favorization-favButtonLabelFav');
+		delete_option('onoffice-settings-apisecret');
+		delete_option('onoffice-settings-apikey');
 
 		self::flushRules();
 	}
