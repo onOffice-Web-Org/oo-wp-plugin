@@ -82,7 +82,7 @@ class TestClassInstaller
 		$this->assertEquals(count(self::$_createQueries), count(self::$_dropQueries));
 
 		$dbversion = get_option('oo_plugin_db_version', null);
-		$this->assertEquals(null, $dbversion);
+		$this->assertNull($dbversion);
 	}
 
 
@@ -117,5 +117,22 @@ class TestClassInstaller
 		}
 
 		return $query;
+	}
+
+
+	/**
+	 *
+	 * @depends testUninstall
+	 *
+	 */
+
+	public function testOptionRemoval()
+	{
+		$this->assertFalse(get_option('oo_plugin_db_version'));
+		$this->assertFalse(get_option('onoffice-default-view'));
+		$this->assertFalse(get_option('onoffice-favorization-enableFav'));
+		$this->assertFalse(get_option('onoffice-favorization-favButtonLabelFav'));
+		$this->assertFalse(get_option('onoffice-settings-apisecret'));
+		$this->assertFalse(get_option('onoffice-settings-apikey'));
 	}
 }
