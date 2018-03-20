@@ -27,7 +27,7 @@ use onOffice\WPlugin\Utility\__String;
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
  *
- * @covers ArrayContainerEscape
+ * @covers Installer
  *
  * Please note $wpdb won't create any tables in testing mode
  *
