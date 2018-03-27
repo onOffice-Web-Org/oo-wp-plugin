@@ -21,15 +21,19 @@
 
 namespace onOffice\WPlugin\Controller;
 
-use onOffice\WPlugin\Utility\__String;
-use onOffice\WPlugin\Gui\AdminPageEstateListSettings;
-use onOffice\WPlugin\Gui\AdminPageEstate;
+use Exception;
 use onOffice\WPlugin\Gui\AdminPageAjax;
-use onOffice\WPlugin\Gui\AdminPageModules;
 use onOffice\WPlugin\Gui\AdminPageApiSettings;
+use onOffice\WPlugin\Gui\AdminPageBase;
+use onOffice\WPlugin\Gui\AdminPageEstate;
+use onOffice\WPlugin\Gui\AdminPageEstateListSettings;
+use onOffice\WPlugin\Gui\AdminPageEstateUnitList;
 use onOffice\WPlugin\Gui\AdminPageEstateUnitSettings;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\AdminPageFormSettingsMain;
+use onOffice\WPlugin\Gui\AdminPageModules;
+use onOffice\WPlugin\Utility\__String;
+use WP_Hook;
 
 /**
  *
@@ -112,6 +116,9 @@ class AdminViewController
 		// main page
 		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'), 'edit_pages',
 			$this->_pageSlug, function(){}, 'dashicons-admin-home');
+
+		add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'),
+			__('Addresses', 'onoffice'), 'edit_pages', $this->_pageSlug.'-addresses',  function() {});
 
 		// Estates
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),
@@ -202,7 +209,7 @@ class AdminViewController
 	{
 		foreach ($this->_ajaxHooks as $hook => $pAdminPage) {
 			if (!is_callable(array($pAdminPage, 'ajax_action'))) {
-				throw new \Exception(get_class($pAdminPage).' must be an instance of AdminPageAjax!');
+				throw new Exception(get_class($pAdminPage).' must be an instance of AdminPageAjax!');
 			}
 
 			add_action( 'wp_ajax_'.$hook, array($this->_ajaxHooks[$hook], 'ajax_action'));
@@ -245,7 +252,7 @@ class AdminViewController
 	 * Todo: Delete if pages are being registered and accessible from
 	 *	     a member variable by hook
 	 *
-	 * @global \WP_Hook[] $wp_filter
+	 * @global WP_Hook[] $wp_filter
 	 * @param string $hook
 	 * @return AdminPageBase
 	 *
@@ -258,7 +265,7 @@ class AdminViewController
 
 		if (isset($wp_filter[$fullHook]))
 		{
-			/* @var $pWpHook \WP_Hook */
+			/* @var $pWpHook WP_Hook */
 			$pWpHook = $wp_filter[$fullHook];
 
 			foreach ($pWpHook->callbacks as $priority => $settingsPriorized)
