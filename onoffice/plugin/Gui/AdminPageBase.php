@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\WPlugin\Model\FormModel;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -33,7 +35,7 @@ abstract class AdminPageBase
 	/** @var string */
 	private $_pageSlug = null;
 
-	/** @var \onOffice\WPlugin\Model\FormModel[] */
+	/** @var FormModel[] */
 	private $_formModels = array();
 
 	/**
@@ -79,8 +81,7 @@ abstract class AdminPageBase
 	{
 		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
 
-		if ($subTitle != '')
-		{
+		if ($subTitle != '') {
 			echo ' › '.esc_html__($subTitle, 'onoffice');
 		}
 
@@ -91,11 +92,11 @@ abstract class AdminPageBase
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\Model\FormModel $pFormModel
+	 * @param FormModel $pFormModel
 	 *
 	 */
 
-	protected function addFormModel(\onOffice\WPlugin\Model\FormModel $pFormModel)
+	protected function addFormModel(FormModel $pFormModel)
 	{
 		$key = $pFormModel->getGroupSlug();
 		$this->_formModels[$key] = $pFormModel;
@@ -105,7 +106,7 @@ abstract class AdminPageBase
 	/**
 	 *
 	 * @param string $groupSlug
-	 * @return \onOffice\WPlugin\Model\FormModel
+	 * @return FormModel
 	 *
 	 */
 
@@ -138,7 +139,7 @@ abstract class AdminPageBase
 	public function doExtraEnqueues()
 		{}
 
-	/** @return \onOffice\WPlugin\Model\FormModel[] */
+	/** @return FormModel[] */
 	public function getFormModels()
 		{ return $this->_formModels; }
 
