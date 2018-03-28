@@ -23,7 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Record\RecordManager;
-use onOffice\WPlugin\Record\RecordManagerInsertListView;
+use onOffice\WPlugin\Record\RecordManagerInsertListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerUpdateListView;
 use stdClass;
 
@@ -88,7 +88,7 @@ abstract class AdminPageEstateListSettingsBase
 			$pUpdate = new RecordManagerUpdateListView($recordId);
 			$result = $pUpdate->updateByRow($row);
 		} else {
-			$pInsert = new RecordManagerInsertListView();
+			$pInsert = new RecordManagerInsertListViewEstate();
 			$recordId = $pInsert->insertByRow($row);
 			$result = ($recordId != null);
 			if ($result) {

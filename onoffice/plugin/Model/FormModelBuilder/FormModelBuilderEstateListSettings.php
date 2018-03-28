@@ -30,7 +30,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
-use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\ImageTypes;
 
 /**
@@ -54,7 +54,7 @@ class FormModelBuilderEstateListSettings
 	{
 		if ($listViewId !== null)
 		{
-			$pRecordReadManager = new RecordManagerReadListView();
+			$pRecordReadManager = new RecordManagerReadListViewEstate();
 			$values = $pRecordReadManager->getRowById($listViewId);
 			$this->setValues($values);
 		}

@@ -21,8 +21,6 @@
 
 namespace onOffice\WPlugin\Record;
 
-use onOffice\WPlugin\DataView\DataListView;
-
 /**
  *
  * @url http://www.onoffice.de
@@ -30,7 +28,7 @@ use onOffice\WPlugin\DataView\DataListView;
  *
  */
 
-class RecordManagerInsertListView
+class RecordManagerInsertListViewEstate
 	extends RecordManager
 {
 	/**

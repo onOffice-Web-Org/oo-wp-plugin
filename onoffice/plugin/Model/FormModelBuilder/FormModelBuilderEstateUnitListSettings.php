@@ -22,7 +22,9 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\Model;
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 
 /**
  *
@@ -37,7 +39,7 @@ class FormModelBuilderEstateUnitListSettings
 	/**
 	 *
 	 * @param int $listViewId
-	 * @return \onOffice\WPlugin\Model\FormModel
+	 * @return FormModel
 	 *
 	 */
 
@@ -45,7 +47,7 @@ class FormModelBuilderEstateUnitListSettings
 	{
 		if ($listViewId !== null)
 		{
-			$pRecordReadManager = new \onOffice\WPlugin\Record\RecordManagerReadListView();
+			$pRecordReadManager = new RecordManagerReadListViewEstate();
 			$values = $pRecordReadManager->getRowById($listViewId);
 			$this->setValues($values);
 		}

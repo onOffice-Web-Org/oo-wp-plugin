@@ -26,7 +26,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
-use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateUnitListSettings;
 
 /**
@@ -161,7 +161,7 @@ class AdminPageEstateUnitSettings
 			return;
 		}
 
-		$pRecordReadManager = new RecordManagerReadListView();
+		$pRecordReadManager = new RecordManagerReadListViewEstate();
 		$values = $pRecordReadManager->getRowById($recordId);
 		$pFactory = new DataListViewFactory();
 		$pDataListView = $pFactory->createListViewByRow($values);

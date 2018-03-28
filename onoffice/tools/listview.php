@@ -32,7 +32,7 @@ if (!current_user_can('edit_pages') ||
 
 $action = \onOffice\WPlugin\Gui\Table\EstateListTable::currentAction();
 
-$pRecordManagerDelete = new \onOffice\WPlugin\Record\RecordManagerDeleteListView();
+$pRecordManagerDelete = new \onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate();
 
 switch ($action)
 {

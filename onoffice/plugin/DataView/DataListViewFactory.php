@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\DataView;
 
-use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 
 /**
  *
@@ -42,7 +42,7 @@ class DataListViewFactory
 
 	public function getListViewByName($listViewName, $type = null)
 	{
-		$pRecordRead = new RecordManagerReadListView();
+		$pRecordRead = new RecordManagerReadListViewEstate();
 		$record = $pRecordRead->getRowByName($listViewName, $type);
 
 		if ($record === null) {

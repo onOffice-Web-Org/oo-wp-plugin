@@ -23,7 +23,7 @@ namespace onOffice\WPlugin\Gui\Table;
 
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
-use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateListSettings;
 
@@ -85,7 +85,7 @@ class EstateListTable extends ListTable
 		$itemsPerPage = $this->_itemsPerPage;
 		$offset = $page * $itemsPerPage;
 
-		$pRecordRead = new RecordManagerReadListView();
+		$pRecordRead = new RecordManagerReadListViewEstate();
 		$pRecordRead->setLimit($itemsPerPage);
 		$pRecordRead->setOffset($offset);
 		$pRecordRead->addColumn('listview_id', 'ID');

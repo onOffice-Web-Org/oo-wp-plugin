@@ -28,7 +28,7 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
-use onOffice\WPlugin\Record\RecordManagerReadListView;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use stdClass;
 
 /**
@@ -225,7 +225,7 @@ class AdminPageEstateListSettings
 			return;
 		}
 
-		$pRecordReadManager = new RecordManagerReadListView();
+		$pRecordReadManager = new RecordManagerReadListViewEstate();
 		$values = $pRecordReadManager->getRowById($recordId);
 		$pFactory = new DataListViewFactory();
 		$pDataListView = $pFactory->createListViewByRow($values);

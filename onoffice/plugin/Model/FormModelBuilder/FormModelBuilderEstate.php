@@ -21,10 +21,11 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\FilterCall;
-use onOffice\WPlugin\TemplateCall;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
+use onOffice\WPlugin\TemplateCall;
 
 /**
  *
@@ -61,7 +62,7 @@ abstract class FormModelBuilderEstate
 
 	protected function readFilters()
 	{
-		$pFilterCall = new FilterCall(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
+		$pFilterCall = new FilterCall(onOfficeSDK::MODULE_ESTATE);
 		return $pFilterCall->getFilters();
 	}
 
@@ -74,7 +75,7 @@ abstract class FormModelBuilderEstate
 
 	protected function readExposes()
 	{
-		$pTemplateCall = new \onOffice\WPlugin\TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE);
+		$pTemplateCall = new TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE);
 		return $pTemplateCall->getTemplates();
 	}
 
