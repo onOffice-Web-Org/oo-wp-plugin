@@ -21,11 +21,14 @@
 
 namespace onOffice\WPlugin\Gui\Table;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\FilterCall;
-use onOffice\WPlugin\Gui\Table\WP\ListTable;
-use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
+use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateListSettings;
+use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use WP_List_Table;
 
 /**
  *
@@ -59,7 +62,7 @@ class EstateListTable extends ListTable
 		));
 
 		$this->_itemsPerPage = $this->get_items_per_page('onoffice-estate-listview_per_page', 10);
-		$this->_pFilterCall = new FilterCall(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE);
+		$this->_pFilterCall = new FilterCall(onOfficeSDK::MODULE_ESTATE);
 	}
 
 
@@ -139,36 +142,6 @@ class EstateListTable extends ListTable
 	public function no_items()
 	{
 		_e( 'No items found.' );
-	}
-
-
-	/**
-	 *
-	 * @param object $pItem
-	 * @return string
-	 *
-	 */
-
-	protected function column_cb($pItem)
-	{
-		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			$this->_args['singular'],
-			$pItem->ID);
-	}
-
-
-	/**
-	 *
-	 * @param object $pItem
-	 * @param string $columnName
-	 * @return string
-	 *
-	 */
-
-	protected function column_default($pItem, $columnName)
-	{
-		return $pItem->{$columnName};
 	}
 
 
@@ -267,19 +240,6 @@ class EstateListTable extends ListTable
 
 
 	/**
-	 *
-	 * @return array
-	 */
-
-	protected function get_bulk_actions() {
-		$actions = array();
-		$actions['bulk_delete'] = __( 'Delete' );
-
-		return $actions;
-	}
-
-
-	/**
 	 * Generates and displays row action links.
 	 *
 	 * @param object $pItem Link being acted upon.
@@ -305,7 +265,8 @@ class EstateListTable extends ListTable
 		$actions = array();
 		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';
 		$actions['delete'] = "<a class='submitdelete' href='"
-			.wp_nonce_url($actionFile.'?action=delete&list_id='.$pItem->ID, 'delete-listview_'.$pItem->ID)
+			.wp_nonce_url($actionFile.'?action=delete&list_id='.$pItem->ID.'&type='
+				.RecordManagerFactory::TYPE_ESTATE, 'delete-listview_'.$pItem->ID)
 			."' onclick=\"if ( confirm( '"
 			.esc_js(sprintf(__(
 			"You are about to delete this listview '%s'\n  'Cancel' to stop, 'OK' to delete."), $pItem->name))

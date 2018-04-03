@@ -202,36 +202,6 @@ class FormsTable
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	protected function get_bulk_actions() {
-		$actions = array();
-		$actions['bulk_delete'] = __( 'Delete' );
-
-		return $actions;
-	}
-
-
-	/**
-	 *
-	 * @param object $pItem
-	 * @return string
-	 *
-	 */
-
-	protected function column_cb($pItem)
-	{
-		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			$this->_args['singular'],
-			$pItem->ID);
-	}
-
-
-	/**
-	 *
 	 * @param string $pItem
 	 * @return string
 	 *

@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Controller;
 
 use Exception;
+use onOffice\WPlugin\Gui\AdminPageAddressList;
 use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Gui\AdminPageApiSettings;
 use onOffice\WPlugin\Gui\AdminPageBase;
@@ -117,8 +118,10 @@ class AdminViewController
 		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'), 'edit_pages',
 			$this->_pageSlug, function(){}, 'dashicons-admin-home');
 
+		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
 		add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'),
-			__('Addresses', 'onoffice'), 'edit_pages', $this->_pageSlug.'-addresses',  function() {});
+			__('Addresses', 'onoffice'), 'edit_pages', $this->_pageSlug.'-addresses',
+			array($pAdminPageAddresses, 'render'));
 
 		// Estates
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),

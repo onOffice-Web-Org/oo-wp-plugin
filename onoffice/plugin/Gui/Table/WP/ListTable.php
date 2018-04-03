@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui\Table\WP;
 
+use WP_List_Table;
+
 if (!class_exists('WP_List_Table')){
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
@@ -32,7 +34,7 @@ if (!class_exists('WP_List_Table')){
  *
  */
 
-abstract class ListTable extends \WP_List_Table
+abstract class ListTable extends WP_List_Table
 {
 	/**
 	 *
@@ -60,7 +62,8 @@ abstract class ListTable extends \WP_List_Table
 	 *
 	 */
 
-	public function prepare_items() {
+	public function prepare_items()
+	{
 		return parent::prepare_items();
 	}
 
@@ -69,7 +72,8 @@ abstract class ListTable extends \WP_List_Table
 	 *
 	 */
 
-	public function no_items() {
+	public function no_items()
+	{
 		_e( 'No items found.' );
 	}
 
@@ -83,7 +87,8 @@ abstract class ListTable extends \WP_List_Table
 	 * @return string|false The action name or False if no action was selected
 	 */
 
-	static public function currentAction() {
+	static public function currentAction()
+	{
 		if ( isset( $_REQUEST['filter_action'] ) && ! empty( $_REQUEST['filter_action'] ) )
 			return false;
 
@@ -103,9 +108,10 @@ abstract class ListTable extends \WP_List_Table
 	 *
 	 */
 
-	protected function get_bulk_actions() {
+	protected function get_bulk_actions()
+	{
 		$actions = array();
-		$actions['delete'] = __( 'Delete' );
+		$actions['bulk_delete'] = __( 'Delete' );
 
 		return $actions;
 	}
@@ -113,29 +119,31 @@ abstract class ListTable extends \WP_List_Table
 
 	/**
 	 *
-	 * @param array $item
+	 * @param object $pItem
 	 * @return string
 	 *
 	 */
 
-	protected function column_cb($item){
+	protected function column_cb($pItem)
+	{
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			$this->_args['singular'],
-			$item['ID']);
+			$pItem->ID);
 	}
 
 
 	/**
 	 *
-	 * @param mixed $item
-	 * @param mixed $column_name
-	 * @return mixed
+	 * @param object $pItem
+	 * @param string $columnName
+	 * @return string
 	 *
 	 */
 
-	protected function column_default($item, $column_name){
-		return $item[$column_name];
+	protected function column_default($pItem, $columnName)
+	{
+		return $pItem->{$columnName};
 	}
 
 

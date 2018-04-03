@@ -30,7 +30,7 @@ use onOffice\WPlugin\DataView\DataListView;
  *
  */
 
-class RecordManagerUpdateListView
+class RecordManagerUpdateListViewEstate
 	extends RecordManagerUpdate
 {
 	/**

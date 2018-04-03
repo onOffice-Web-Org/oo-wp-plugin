@@ -28,48 +28,32 @@ namespace onOffice\WPlugin\Record;
  *
  */
 
-class RecordManagerInsertForm
-	extends RecordManager
+class RecordManagerReadListViewAddress
+	extends RecordManagerRead
 {
 	/**
 	 *
-	 * @param array $values
-	 * @return int
+	 * @return array
 	 *
 	 */
 
-	public function insertByRow($values)
+	public function getRecords()
 	{
+		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-		$row = $values[self::TABLENAME_FORMS];
+		$columns = implode(', ', $this->getColumns());
+		$join = implode("\n", $this->getJoins());
+		$where = "(".implode(") AND (", $this->getWhere()).")";
+		$sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
+				FROM {$prefix}oo_plugin_listviews_address
+				{$join}
+				WHERE {$where}
+				ORDER BY `listview_address_id` ASC
+				LIMIT {$this->getOffset()}, {$this->getLimit()}";
 
-		$pWpDb->insert($pWpDb->prefix.self::TABLENAME_FORMS, $row);
-		$formId = $pWpDb->insert_id;
+		$this->setFoundRows($pWpDb->get_results($sql, OBJECT));
+		$this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
-		return $formId;
-	}
-
-
-	/**
-	 *
-	 * @param array $values
-	 * @return bool
-	 *
-	 */
-
-	public function insertAdditionalValues(array $values)
-	{
-		$pWpDb = $this->getWpdb();
-
-		unset($values[self::TABLENAME_FORMS]);
-		$result = true;
-
-		foreach ($values as $table => $tablevalues) {
-			foreach ($tablevalues as $tablerow) {
-				$result = $result && $pWpDb->insert($pWpDb->prefix.$table, $tablerow);
-			}
-		}
-
-		return $result;
+		return $this->getFoundRows();
 	}
 }

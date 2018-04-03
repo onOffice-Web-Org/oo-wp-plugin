@@ -19,36 +19,40 @@
  *
  */
 
+use onOffice\WPlugin\Gui\Table\WP\ListTable;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 
 // set up WP environment
 require '../../../../wp-load.php';
-$redirectFile = admin_url('admin.php?page=onoffice-estates');
 
-if (!current_user_can('edit_pages') ||
-	!(isset($_GET['action']) || isset($_POST['action2'])) )
-{
+$type = filter_input(INPUT_GET, 'type');
+
+$redirectFile = wp_get_referer();
+$actionGet = filter_input(INPUT_GET, 'action');
+$actionPost = filter_input(INPUT_POST, 'action2', FILTER_FORCE_ARRAY|FILTER_NULL_ON_FAILURE);
+
+if (!current_user_can('edit_pages') || !(isset($actionGet) || isset($actionPost)) ) {
 	wp_safe_redirect( add_query_arg( 'delete', 0, $redirectFile ) );
 }
 
-$action = \onOffice\WPlugin\Gui\Table\EstateListTable::currentAction();
+$pRecordManagerDelete = RecordManagerFactory::createByTypeAndAction
+	($type, RecordManagerFactory::ACTION_DELETE);
+$actionSelected = ListTable::currentAction();
 
-$pRecordManagerDelete = new \onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate();
+switch ($actionSelected) {
+	case 'bulk_delete':
+		$listpages = filter_input(INPUT_POST, 'listpage', FILTER_FORCE_ARRAY);
+		check_admin_referer('bulk-listpages');
+		$pRecordManagerDelete->deleteByIds($listpages);
 
-switch ($action)
-{
-case 'bulk_delete':
-	$listpages = isset($_POST['listpage']) ? $_POST['listpage'] : array();
-	check_admin_referer('bulk-listpages');
-	$pRecordManagerDelete->deleteByIds($listpages);
+		wp_safe_redirect( add_query_arg( 'delete', count($listpages), $redirectFile ) );
+		break;
 
-	wp_safe_redirect( add_query_arg( 'delete', count($listpages), $redirectFile ) );
-	break;
+	case 'delete':
+		$listId = filter_input(INPUT_GET, 'list_id');
+		check_admin_referer('delete-listview_'.$listId);
+		$pRecordManagerDelete->deleteByIds(array($listId));
 
-case 'delete':
-	$listId = $_GET['list_id'];
-	check_admin_referer('delete-listview_'.$listId);
-	$pRecordManagerDelete->deleteByIds(array($listId));
-
-	wp_safe_redirect( add_query_arg( 'delete', 1, $redirectFile ) );
-	break;
+		wp_safe_redirect( add_query_arg( 'delete', 1, $redirectFile ) );
+		break;
 }

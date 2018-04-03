@@ -46,16 +46,14 @@ abstract class Installer
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$dbversion = get_option('oo_plugin_db_version', null);
 
-		if ($dbversion === null)
-		{
+		if ($dbversion === null) {
 			dbDelta( self::getCreateQueryCache() );
 
 			$dbversion = 1.0;
 			add_option( 'oo_plugin_db_version', $dbversion, '', false );
 		}
 
-		if ($dbversion == 1.0)
-		{
+		if ($dbversion == 1.0) {
 			dbDelta( self::getCreateQueryListviews() );
 			dbDelta( self::getCreateQueryFieldConfig() );
 			dbDelta( self::getCreateQueryPictureTypes() );
@@ -64,6 +62,11 @@ abstract class Installer
 			dbDelta( self::getCreateQueryFormFieldConfig() );
 
 			$dbversion = 2.0;
+		}
+
+		if ($dbversion == 2.0) {
+			dbDelta( self::getCreateQueryListViewsAddress() );
+			$dbversion = 3.0;
 		}
 
 		update_option( 'oo_plugin_db_version', $dbversion );
@@ -260,6 +263,33 @@ abstract class Installer
 
 	/**
 	 *
+	 * @return string
+	 *
+	 */
+
+	static private function getCreateQueryListViewsAddress()
+	{
+		$prefix = self::getPrefix();
+		$charsetCollate = self::getCharsetCollate();
+		$tableName = $prefix."oo_plugin_listviews_address";
+		$sql = "CREATE TABLE $tableName (
+			`listview_address_id` int(11) NOT NULL AUTO_INCREMENT,
+			`name` varchar(191) NOT NULL,
+			`filterId` int(11) DEFAULT NULL,
+			`sortby` tinytext NOT NULL,
+			`sortorder` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
+			`template` tinytext NOT NULL,
+			`recordsPerPage` int(10) NOT NULL DEFAULT '10',
+			PRIMARY KEY (`listview_address_id`),
+			UNIQUE KEY `name` (`name`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+
+	/**
+	 *
 	 * @global WP_Rewrite $wp_rewrite
 	 *
 	 */
@@ -330,6 +360,7 @@ abstract class Installer
 			$prefix."oo_plugin_forms",
 			$prefix."oo_plugin_form_fieldconfig",
 			$prefix."oo_plugin_listview_contactperson",
+			$prefix."oo_plugin_listviews_address",
 		);
 
 		foreach ($tables as $table)
