@@ -38,12 +38,6 @@ abstract class AdminPageEstateListSettingsBase
 	extends AdminPageSettingsBase
 {
 	/** */
-	const FORM_VIEW_RECORDS_FILTER = 'viewrecordsfilter';
-
-	/** */
-	const FORM_VIEW_LAYOUT_DESIGN = 'viewlayoutdesign';
-
-	/** */
 	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
 
 	/** */

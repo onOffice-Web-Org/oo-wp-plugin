@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Controller;
 
 use Exception;
 use onOffice\WPlugin\Gui\AdminPageAddressList;
+use onOffice\WPlugin\Gui\AdminPageAddressListSettings;
 use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Gui\AdminPageApiSettings;
 use onOffice\WPlugin\Gui\AdminPageBase;
@@ -83,6 +84,9 @@ class AdminViewController
 		if (!is_admin()) {
 			return;
 		}
+
+		$this->_pAdminListViewSettingsAddress = new AdminPageAddressListSettings($this->_pageSlug);
+		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editlistviewaddress'] = $this->_pAdminListViewSettingsAddress;
 
 		$this->_pAdminListViewSettings = new AdminPageEstateListSettings($this->_pageSlug);
 		$this->_ajaxHooks['admin_page_'.$this->_pageSlug.'-editlistview'] = $this->_pAdminListViewSettings;
@@ -163,6 +167,12 @@ class AdminViewController
 			array($this->_pAdminUnitListSettings, 'render'));
 		add_action( 'load-'.$hookEditUnitList, array($this->_pAdminUnitListSettings, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditUnitList, array($this->_pAdminUnitListSettings, 'checkForms'));
+
+		// Address: edit list view (hidden page)
+		$hookEditAddressList = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editlistviewaddress',
+			array($this->_pAdminListViewSettingsAddress, 'render'));
+		add_action( 'load-'.$hookEditAddressList, array($this->_pAdminListViewSettingsAddress, 'handleAdminNotices'));
+		add_action( 'load-'.$hookEditAddressList, array($this->_pAdminListViewSettingsAddress, 'checkForms'));
 
 		// Settings
 		$pAdminSettingsPage = new AdminPageApiSettings($this->_pageSlug.'-settings');

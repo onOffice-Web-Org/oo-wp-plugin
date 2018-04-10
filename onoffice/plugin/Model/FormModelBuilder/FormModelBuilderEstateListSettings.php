@@ -81,7 +81,7 @@ class FormModelBuilderEstateListSettings
 			(InputModelDBFactory::INPUT_FILTERID, $labelFiltername);
 		$pInputModelFiltername->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 
-		$availableFilters = array(0 => '') + $this->readFilters();
+		$availableFilters = array(0 => '') + $this->readFilters(onOfficeSDK::MODULE_ESTATE);
 
 		$pInputModelFiltername->setValuesAvailable($availableFilters);
 		$filteridSelected = $this->getValue($pInputModelFiltername->getField());
@@ -188,7 +188,6 @@ class FormModelBuilderEstateListSettings
 		$pInputModelFieldsConfig->setLabel($category);
 		$fields = $this->getValue(DataListView::FIELDS);
 
-
 		if (null == $fields)
 		{
 			$fields = array();
@@ -276,7 +275,7 @@ class FormModelBuilderEstateListSettings
 
 		foreach ($fieldnames as $key => $value) {
 			if (in_array($key, $defaultFields)) {
-				$defaultActiveFields[$key]=$value;
+				$defaultActiveFields[$key] = $value;
 			}
 		}
 

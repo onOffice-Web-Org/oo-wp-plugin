@@ -13,6 +13,7 @@
 	max-width: 160px;
 }
 
+#onoffice-ajax input[name=oopluginlistviewsaddress-name],
 #onoffice-ajax input[name=oopluginlistviews-name],
 #onoffice-ajax input[name=oopluginforms-name] {
 	font-size: 1.7em;

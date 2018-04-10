@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
 
@@ -173,6 +174,19 @@ abstract class FormModelBuilder
 
 		$pInputModelFieldsConfig->setValue($fields);
 		return $pInputModelFieldsConfig;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	protected function readFilters($module)
+	{
+		$pFilterCall = new FilterCall($module);
+		return $pFilterCall->getFilters();
 	}
 
 

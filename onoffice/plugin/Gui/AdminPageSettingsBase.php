@@ -53,6 +53,12 @@ abstract class AdminPageSettingsBase
 	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
 
 	/** */
+	const FORM_VIEW_LAYOUT_DESIGN = 'viewlayoutdesign';
+
+	/** */
+	const FORM_VIEW_RECORDS_FILTER = 'viewrecordsfilter';
+
+	/** */
 	const VIEW_SAVE_SUCCESSFUL_MESSAGE = 'view_save_success_message';
 
 	/** */

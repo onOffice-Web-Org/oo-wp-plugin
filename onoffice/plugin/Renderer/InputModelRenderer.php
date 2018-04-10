@@ -77,7 +77,8 @@ class InputModelRenderer
 	 *
 	 */
 
-	public function buildForAjax() {
+	public function buildForAjax()
+	{
 		$pForm = $this->_pFormModel;
 
 		if ($pForm->getIsInvisibleForm()) {
@@ -244,7 +245,7 @@ class InputModelRenderer
 	public function getFormModel()
 		{ return $this->_pFormModel; }
 
-	/** @param \onOffice\WPlugin\Form\Model\FormModel $pFormModel */
+	/** @param FormModel $pFormModel */
 	public function setFormModel(FormModel $pFormModel)
 		{ $this->_pFormModel = $pFormModel; }
 }

@@ -21,8 +21,6 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\TemplateCall;
@@ -51,19 +49,6 @@ abstract class FormModelBuilderEstate
 		parent::__construct($pageSlug);
 		$pConfig = new InputModelDBFactoryConfigEstate();
 		$this->_pInputModelDBFactory = new InputModelDBFactory($pConfig);
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	protected function readFilters()
-	{
-		$pFilterCall = new FilterCall(onOfficeSDK::MODULE_ESTATE);
-		return $pFilterCall->getFilters();
 	}
 
 
