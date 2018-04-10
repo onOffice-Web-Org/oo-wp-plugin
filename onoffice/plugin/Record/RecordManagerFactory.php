@@ -58,6 +58,7 @@ class RecordManagerFactory
 	private static $_mapping = array(
 		self::TYPE_ADDRESS => array(
 			self::ACTION_READ => 'RecordManagerReadListViewAddress',
+			self::ACTION_DELETE => 'RecordManagerDeleteListViewAddress',
 		),
 		self::TYPE_ESTATE => array(
 			self::ACTION_READ => 'RecordManagerReadListViewEstate',

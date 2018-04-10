@@ -66,6 +66,7 @@ abstract class Installer
 
 		if ($dbversion == 2.0) {
 			dbDelta( self::getCreateQueryListViewsAddress() );
+			dbDelta( self::getCreateQueryAddressFieldConfig() );
 			$dbversion = 3.0;
 		}
 
@@ -222,6 +223,32 @@ abstract class Installer
 	 * @return string
 	 *
 	 */
+
+	static private function getCreateQueryAddressFieldConfig()
+	{
+		$prefix = self::getPrefix();
+		$charsetCollate = self::getCharsetCollate();
+		$tableName = $prefix."oo_plugin_address_fieldconfig";
+		$sql = "CREATE TABLE $tableName (
+			`address_fieldconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`listview_address_id` int(11) NOT NULL,
+			`order` int(11) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			`fieldlabel` varchar(255) NULL,
+			`module` tinytext NULL,
+			PRIMARY KEY (`address_fieldconfig_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
 	static private function getCreateQueryListViewContactPerson()
 	{
 		$prefix = self::getPrefix();

@@ -54,6 +54,12 @@ class AdminPageAddressList
 	}
 
 
+	/**
+	 *
+	 * @param string $subTitle
+	 *
+	 */
+
 	public function generatePageMainTitle($subTitle)
 	{
 		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');

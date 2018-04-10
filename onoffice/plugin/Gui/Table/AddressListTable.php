@@ -21,7 +21,9 @@
 
 namespace onOffice\WPlugin\Gui\Table;
 
+use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 
 /**
@@ -148,5 +150,41 @@ class AddressListTable
 			$this->get_default_primary_column_name());
 
 		$this->fillData();
+	}
+
+
+	/**
+	 * Generates and displays row action links.
+	 *
+	 * @param object $pItem Link being acted upon.
+	 * @param string $column_name Current column name.
+	 * @param string $primary Primary column name.
+	 * @return string Row action output for links.
+	 *
+	 */
+
+	protected function handle_row_actions($pItem, $column_name, $primary)
+	{
+		if ( $primary !== $column_name )
+		{
+			return '';
+		}
+
+		$viewidParam = AdminPageEstateListSettingsBase::GET_PARAM_VIEWID;
+		$editLink = admin_url('admin.php?page=onoffice-editlistviewaddress&'.$viewidParam.'='.$pItem->ID);
+
+		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
+			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
+
+		$actions = array();
+		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';
+		$actions['delete'] = "<a class='submitdelete' href='"
+			.wp_nonce_url($actionFile.'?action=delete&list_id='.$pItem->ID.'&type='
+				.RecordManagerFactory::TYPE_ADDRESS, 'delete-listview_'.$pItem->ID)
+			."' onclick=\"if ( confirm( '"
+			.esc_js(sprintf(__(
+			"You are about to delete this listview '%s'\n  'Cancel' to stop, 'OK' to delete."), $pItem->name))
+			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
+		return $this->row_actions( $actions );
 	}
 }
