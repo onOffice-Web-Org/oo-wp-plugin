@@ -25,7 +25,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateListSettings;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use WP_List_Table;
@@ -154,7 +154,7 @@ class EstateListTable extends ListTable
 
 	protected function column_list_type($pItem)
 	{
-		$listTypes = FormModelBuilderEstateListSettings::getListViewLabels();
+		$listTypes = FormModelBuilderDBEstateListSettings::getListViewLabels();
 		$selectedTypeLabel = null;
 		$selectedType = $pItem->list_type;
 

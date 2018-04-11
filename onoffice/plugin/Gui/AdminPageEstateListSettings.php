@@ -25,7 +25,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateListSettings;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
@@ -63,7 +63,7 @@ class AdminPageEstateListSettings
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$pFormModelBuilder = new FormModelBuilderEstateListSettings($this->getPageSlug());
+		$pFormModelBuilder = new FormModelBuilderDBEstateListSettings($this->getPageSlug());
 		$pFormModel = $pFormModelBuilder->generate($this->getListViewId());
 		$this->addFormModel($pFormModel);
 
@@ -77,7 +77,7 @@ class AdminPageEstateListSettings
 
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
-		$pInputModelSortBy = $pFormModelBuilder->createInputModelSortBy();
+		$pInputModelSortBy = $pFormModelBuilder->createInputModelSortBy(onOfficeSDK::MODULE_ESTATE);
 		$pInputModelSortOrder = $pFormModelBuilder->createInputModelSortOrder();
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
@@ -93,7 +93,7 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->addInputModel($pInputModelShowStatus);
 		$this->addFormModel($pFormModelRecordsFilter);
 
-		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
+		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);

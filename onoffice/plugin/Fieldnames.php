@@ -130,14 +130,21 @@ class Fieldnames
 
 	/** @var array */
 	private static $_defaultSortByFields = array(
-		'kaufpreis',
-		'kaltmiete',
-		'pacht',
-		'wohnflaeche',
-		'anzahl_zimmer',
-		'ort',
-		'grundstuecksflaeche',
-		'gesamtflaeche',
+		onOfficeSDK::MODULE_ADDRESS => array(
+			'KdNr',
+			'Eintragsdatum',
+			'Name',
+		),
+		onOfficeSDK::MODULE_ESTATE => array(
+			'kaufpreis',
+			'kaltmiete',
+			'pacht',
+			'wohnflaeche',
+			'anzahl_zimmer',
+			'ort',
+			'grundstuecksflaeche',
+			'gesamtflaeche',
+		),
 	);
 
 	/** @var array */
@@ -175,7 +182,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function loadLanguage( $showOnlyInactive = false )
+	public function loadLanguage($showOnlyInactive = false)
 	{
 		$parametersGetFieldList = array(
 			'labels' => true,
@@ -194,10 +201,10 @@ class Fieldnames
 
 		$pSDKWrapper = new SDKWrapper();
 		$handleGetFields = $pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList );
+			onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList);
 		$pSDKWrapper->sendRequests();
 
-		$responseArrayFieldList = $pSDKWrapper->getRequestResponse( $handleGetFields );
+		$responseArrayFieldList = $pSDKWrapper->getRequestResponse($handleGetFields);
 		$fieldList = $responseArrayFieldList['data']['records'];
 
 		$this->createFieldList( $fieldList );
@@ -209,7 +216,8 @@ class Fieldnames
 	 *
 	 */
 
-	private function completeFieldListWithSearchcriteria( ) {
+	private function completeFieldListWithSearchcriteria()
+	{
 		$pSDKWrapper = new SDKWrapper();
 		$requestParameter = array(
 			'language' => $this->_language,
@@ -398,7 +406,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getFieldLabel( $field, $module)
+	public function getFieldLabel($field, $module)
 	{
 		$fieldNewName = $field;
 		$row = $this->getRow($module, $field);
@@ -419,7 +427,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getFieldList( $module, $addApiOnlyFields = false, $annotated = false )
+	public function getFieldList($module, $addApiOnlyFields = false, $annotated = false)
 	{
 		$fieldList = array();
 		if ( isset( $this->_fieldList[$module] ) ) {
@@ -486,7 +494,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getType( $fieldName, $module)
+	public function getType($fieldName, $module)
 	{
 		$row = $this->getRow($module, $fieldName);
 		if (!is_null($row)) {
@@ -503,7 +511,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getPermittedValues( $inputField, $module )
+	public function getPermittedValues($inputField, $module)
 	{
 		$row = $this->getRow($module, $inputField);
 		if (!is_null($row)) {
@@ -550,8 +558,12 @@ class Fieldnames
 	 *
 	 */
 
-	static public function getDefaultSortByFields()
+	static public function getDefaultSortByFields($module)
 	{
-		return self::$_defaultSortByFields;
+		if (isset(self::$_defaultSortByFields[$module])) {
+			return self::$_defaultSortByFields[$module];
+		}
+
+		return array();
 	}
 }

@@ -23,7 +23,6 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
-use onOffice\WPlugin\TemplateCall;
 
 /**
  *
@@ -32,12 +31,9 @@ use onOffice\WPlugin\TemplateCall;
  *
  */
 
-abstract class FormModelBuilderEstate
-	extends FormModelBuilder
+abstract class FormModelBuilderDBEstate
+	extends FormModelBuilderDB
 {
-	/** @var InputModelDBFactory */
-	private $_pInputModelDBFactory = null;
-
 	/**
 	 *
 	 * @param string $pageSlug
@@ -48,30 +44,6 @@ abstract class FormModelBuilderEstate
 	{
 		parent::__construct($pageSlug);
 		$pConfig = new InputModelDBFactoryConfigEstate();
-		$this->_pInputModelDBFactory = new InputModelDBFactory($pConfig);
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	protected function readExposes()
-	{
-		$pTemplateCall = new TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE);
-		return $pTemplateCall->getTemplates();
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDBFactory
-	 *
-	 */
-
-	protected function getInputModelDBFactory() {
-		return $this->_pInputModelDBFactory;
+		$this->setInputModelDBFactory(new InputModelDBFactory($pConfig));
 	}
 }

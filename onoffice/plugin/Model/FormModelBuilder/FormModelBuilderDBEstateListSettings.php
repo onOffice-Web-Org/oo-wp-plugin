@@ -23,7 +23,6 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
@@ -40,8 +39,8 @@ use onOffice\WPlugin\Types\ImageTypes;
  *
  */
 
-class FormModelBuilderEstateListSettings
-	extends FormModelBuilderEstate
+class FormModelBuilderDBEstateListSettings
+	extends FormModelBuilderDBEstate
 {
 	/**
 	 *
@@ -171,36 +170,6 @@ class FormModelBuilderEstateListSettings
 
 	/**
 	 *
-	 * @param string $category
-	 * @param array $fieldNames
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelFieldsConfigByCategory($category, $fieldNames)
-	{
-		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
-			InputModelDBFactory::INPUT_FIELD_CONFIG, $category, true);
-
-		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-		$pInputModelFieldsConfig->setId($category);
-		$pInputModelFieldsConfig->setLabel($category);
-		$fields = $this->getValue(DataListView::FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array();
-		}
-
-		$pInputModelFieldsConfig->setValue($fields);
-
-		return $pInputModelFieldsConfig;
-	}
-
-
-	/**
-	 *
 	 * @param string $module
 	 * @param string $htmlType
 	 * @return InputModelDB
@@ -244,99 +213,6 @@ class FormModelBuilderEstateListSettings
 	 *
 	 */
 
-	public function createInputModelSortBy()
-	{
-		$labelSortBy = __('Sort by', 'onoffice');
-
-		$pInputModelSortBy = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
-		$pInputModelSortBy->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-
-		$fieldnames = $this->getOnlyDefaultSortByFields();
-
-		$pInputModelSortBy->setValuesAvailable($fieldnames);
-		$pInputModelSortBy->setValue($this->getValue($pInputModelSortBy->getField()));
-
-		return $pInputModelSortBy;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function getOnlyDefaultSortByFields()
-	{
-		$fieldnames = $this->readFieldnames(onOfficeSDK::MODULE_ESTATE);
-		$defaultFields = Fieldnames::getDefaultSortByFields();
-		natcasesort($fieldnames);
-
-		foreach ($fieldnames as $key => $value) {
-			if (in_array($key, $defaultFields)) {
-				$defaultActiveFields[$key] = $value;
-			}
-		}
-
-		return $defaultActiveFields;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelRecordsPerPage()
-	{
-		$labelRecordsPerPage = __('Records per Page', 'onoffice');
-		$pInputModelRecordsPerPage = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_RECORDS_PER_PAGE, $labelRecordsPerPage);
-		$pInputModelRecordsPerPage->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-		$pInputModelRecordsPerPage->setValuesAvailable(array(
-				'5' => '5',
-				'9' => '9',
-				'10' => '10',
-				'12' => '12',
-				'15' => '15'
-			)
-		);
-		$pInputModelRecordsPerPage->setValue($this->getValue('recordsPerPage'));
-
-		return $pInputModelRecordsPerPage;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelSortOrder()
-	{
-		$labelSortOrder = __('Sort order', 'onoffice');
-		$pInputModelSortOrder = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_SORTORDER, $labelSortOrder);
-		$pInputModelSortOrder->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-		$pInputModelSortOrder->setValuesAvailable(array(
-			'ASC' => __('Ascending', 'onoffice'),
-			'DESC' => __('Descending', 'onoffice'),
-		));
-		$pInputModelSortOrder->setValue($this->getValue($pInputModelSortOrder->getField()));
-
-		return $pInputModelSortOrder;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
 	public function createInputModelShowStatus()
 	{
 		$labelShowStatus = __('Show Estate Status', 'onoffice');
@@ -348,26 +224,6 @@ class FormModelBuilderEstateListSettings
 		$pInputModelShowStatus->setValuesAvailable(1);
 
 		return $pInputModelShowStatus;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelName()
-	{
-		$labelName = __('View Name', 'onoffice');
-
-		$pInputModelName = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_LISTNAME, null);
-		$pInputModelName->setPlaceholder($labelName);
-		$pInputModelName->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
-		$pInputModelName->setValue($this->getValue($pInputModelName->getField()));
-
-		return $pInputModelName;
 	}
 
 
@@ -416,28 +272,6 @@ class FormModelBuilderEstateListSettings
 		$pInputModelExpose->setValue($this->getValue($pInputModelExpose->getField()));
 
 		return $pInputModelExpose;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelTemplate()
-	{
-		$labelTemplate = __('Template', 'onoffice');
-		$selectedTemplate = $this->getValue('template');
-
-		$pInputModelTemplate = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
-		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-
-		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
-		$pInputModelTemplate->setValue($selectedTemplate);
-
-		return $pInputModelTemplate;
 	}
 
 

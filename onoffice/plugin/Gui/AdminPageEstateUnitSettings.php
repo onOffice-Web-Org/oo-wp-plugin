@@ -27,7 +27,7 @@ use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateUnitListSettings;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings;
 
 /**
  *
@@ -59,7 +59,7 @@ class AdminPageEstateUnitSettings
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$pFormModelBuilder = new FormModelBuilderEstateUnitListSettings($this->getPageSlug());
+		$pFormModelBuilder = new FormModelBuilderDBEstateUnitListSettings($this->getPageSlug());
 		$pFormModel = $pFormModelBuilder->generate($this->getListViewId());
 		$this->addFormModel($pFormModel);
 
@@ -81,7 +81,7 @@ class AdminPageEstateUnitSettings
 		$pFormModelRecords->addInputModel($pInputModelRandomOrder);
 		$this->addFormModel($pFormModelRecords);
 
-		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
+		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');
 		$pFormModelLayoutDesign = new Model\FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);

@@ -23,7 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderAddress;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress;
 use onOffice\WPlugin\Model\InputModelBase;
 use stdClass;
 
@@ -37,7 +37,7 @@ use stdClass;
 class AdminPageAddressListSettings
 	extends AdminPageSettingsBase
 {
-	/** @var FormModelBuilderAddress */
+	/** @var FormModelBuilderDBAddress */
 	private $_pFormModelBuilderAddress = null;
 
 	/**
@@ -59,7 +59,7 @@ class AdminPageAddressListSettings
 
 	protected function buildForms()
 	{
-		$this->_pFormModelBuilderAddress = new FormModelBuilderAddress($this->getPageSlug());
+		$this->_pFormModelBuilderAddress = new FormModelBuilderDBAddress($this->getPageSlug());
 		$pFormModel = $this->_pFormModelBuilderAddress->generate($this->getListViewId());
 		$this->addFormModel($pFormModel);
 
@@ -97,7 +97,7 @@ class AdminPageAddressListSettings
 
 	private function addFormModelTemplate()
 	{
-		$pInputModelTemplate = $this->_pFormModelBuilderAddress->createInputModelTemplate();
+		$pInputModelTemplate = $this->_pFormModelBuilderAddress->createInputModelTemplate('address');
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
@@ -115,6 +115,8 @@ class AdminPageAddressListSettings
 	{
 		$pInputModelFilter = $this->_pFormModelBuilderAddress->createInputModelFilter();
 		$pInputModelRecordCount = $this->_pFormModelBuilderAddress->createInputModelRecordsPerPage();
+		$pInputModelSortBy = $this->_pFormModelBuilderAddress->createInputModelSortBy
+			(onOfficeSDK::MODULE_ADDRESS);
 		$pInputModelSortOrder = $this->_pFormModelBuilderAddress->createInputModelSortOrder();
 		$pFormModelFilterRecords = new FormModel();
 		$pFormModelFilterRecords->setPageSlug($this->getPageSlug());
@@ -122,6 +124,7 @@ class AdminPageAddressListSettings
 		$pFormModelFilterRecords->setLabel(__('Layout & Design', 'onoffice'));
 		$pFormModelFilterRecords->addInputModel($pInputModelFilter);
 		$pFormModelFilterRecords->addInputModel($pInputModelRecordCount);
+		$pFormModelFilterRecords->addInputModel($pInputModelSortBy);
 		$pFormModelFilterRecords->addInputModel($pInputModelSortOrder);
 		$this->addFormModel($pFormModelFilterRecords);
 	}

@@ -25,7 +25,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderForm;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Record\RecordManager;
@@ -75,7 +75,7 @@ abstract class AdminPageFormSettingsBase
 	/** @var string */
 	private $_type = null;
 
-	/** @var FormModelBuilder */
+	/** @var FormModelBuilderDBForm */
 	private $_pFormModelBuilder = null;
 
 	/**
@@ -274,7 +274,7 @@ abstract class AdminPageFormSettingsBase
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$this->_pFormModelBuilder = new FormModelBuilderForm($this->getPageSlug());
+		$this->_pFormModelBuilder = new FormModelBuilderDBForm($this->getPageSlug());
 		$this->_pFormModelBuilder->setFormType($this->getType());
 		$pFormModel = $this->_pFormModelBuilder->generate($this->getListViewId());
 		$this->addFormModel($pFormModel);
@@ -287,7 +287,7 @@ abstract class AdminPageFormSettingsBase
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
 
-		$pInputModelTemplate = $this->_pFormModelBuilder->createInputModelTemplate();
+		$pInputModelTemplate = $this->_pFormModelBuilder->createInputModelTemplate('form');
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
@@ -391,6 +391,20 @@ abstract class AdminPageFormSettingsBase
 	}
 
 
+	/**
+	 *
+	 * @param string $module
+	 *
+	 */
+
+	protected function removeSortableFieldModule($module)
+	{
+		if (in_array($module, $this->_sortableFieldModules)) {
+			$key = array_search($module, $this->_sortableFieldModules);
+			unset($this->_sortableFieldModules[$key]);
+		}
+	}
+
 	/** @return string */
 	public function getType()
 		{ return $this->_type; }
@@ -406,20 +420,6 @@ abstract class AdminPageFormSettingsBase
 	/** @param string $module */
 	protected function addSortableFieldModule($module)
 		{ $this->_sortableFieldModules []= $module; }
-
-	/**
-	 *
-	 * @param string $module
-	 *
-	 */
-
-	protected function removeSortableFieldModule($module)
-	{
-		if (in_array($module, $this->_sortableFieldModules)) {
-			$key = array_search($module, $this->_sortableFieldModules);
-			unset($this->_sortableFieldModules[$key]);
-		}
-	}
 
 	/** @return array */
 	protected function getSortableFieldModules()

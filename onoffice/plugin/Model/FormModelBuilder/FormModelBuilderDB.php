@@ -21,11 +21,9 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\Model\FormModel;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
@@ -37,25 +35,11 @@ use onOffice\WPlugin\Model\InputModelOption;
  *
  */
 
-class FormModelBuilderAddress
+abstract class FormModelBuilderDB
 	extends FormModelBuilder
 {
 	/** @var InputModelDBFactory */
 	private $_pInputModelDBFactory = null;
-
-
-	/**
-	 *
-	 * @param string $pageSlug
-	 *
-	 */
-
-	public function __construct($pageSlug)
-	{
-		parent::__construct($pageSlug);
-		$pInputModelDBFactoryConfig = new InputModelDBFactoryConfigAddress();
-		$this->_pInputModelDBFactory = new InputModelDBFactory($pInputModelDBFactoryConfig);
-	}
 
 
 	/**
@@ -68,7 +52,7 @@ class FormModelBuilderAddress
 
 	public function createInputModelFieldsConfigByCategory($category, $fieldNames)
 	{
-		$pInputModelFieldsConfig = $this->_pInputModelDBFactory->create(
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, $category, true);
 
 		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
@@ -77,36 +61,13 @@ class FormModelBuilderAddress
 		$pInputModelFieldsConfig->setLabel($category);
 		$fields = $this->getValue(DataListView::FIELDS);
 
-		if (null == $fields)
-		{
+		if (null == $fields) {
 			$fields = array();
 		}
 
 		$pInputModelFieldsConfig->setValue($fields);
 
 		return $pInputModelFieldsConfig;
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function generate($listViewId = null)
-	{
-		if ($listViewId !== null)
-		{
-//			$pRecordReadManager = new RecordManagerReadListViewAddress();
-//			$values = $pRecordReadManager->getRowById($listViewId);
-//			$this->setValues($values);
-		}
-
-		$pFormModel = new FormModel();
-		$pFormModel->setLabel(__('List View', 'onoffice'));
-		$pFormModel->setGroupSlug('onoffice-listview-address-settings-main');
-		$pFormModel->setPageSlug($this->getPageSlug());
-
-		return $pFormModel;
 	}
 
 
@@ -120,7 +81,7 @@ class FormModelBuilderAddress
 	{
 		$labelName = __('View Name', 'onoffice');
 
-		$pInputModelName = $this->_pInputModelDBFactory->create
+		$pInputModelName = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_LISTNAME, null);
 		$pInputModelName->setPlaceholder($labelName);
 		$pInputModelName->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
@@ -132,46 +93,49 @@ class FormModelBuilderAddress
 
 	/**
 	 *
+	 * @param string $module
 	 * @return InputModelDB
 	 *
 	 */
 
-	public function createInputModelTemplate()
+	public function createInputModelSortBy($module)
 	{
-		$labelTemplate = __('Template', 'onoffice');
-		$selectedTemplate = $this->getValue('template');
+		$labelSortBy = __('Sort by', 'onoffice');
 
-		$pInputModelTemplate = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
-		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelSortBy = $this->getInputModelDBFactory()->create
+			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
+		$pInputModelSortBy->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 
-		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('address'));
-		$pInputModelTemplate->setValue($selectedTemplate);
+		$fieldnames = $this->getOnlyDefaultSortByFields($module);
 
-		return $pInputModelTemplate;
+		$pInputModelSortBy->setValuesAvailable($fieldnames);
+		$pInputModelSortBy->setValue($this->getValue($pInputModelSortBy->getField()));
+
+		return $pInputModelSortBy;
 	}
 
 
 	/**
 	 *
-	 * @return InputModelDB
+	 * @param string $module
+	 * @return array
 	 *
 	 */
 
-	public function createInputModelFilter()
+	private function getOnlyDefaultSortByFields($module)
 	{
-		$labelFiltername = __('Filter', 'onoffice');
-		$pInputModelFiltername = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_FILTERID, $labelFiltername);
-		$pInputModelFiltername->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$fieldnames = $this->readFieldnames($module);
+		$defaultFields = Fieldnames::getDefaultSortByFields($module);
+		natcasesort($fieldnames);
+		$defaultActiveFields = array();
 
-		$availableFilters = array(0 => '') + $this->readFilters(onOfficeSDK::MODULE_ADDRESS);
+		foreach ($fieldnames as $key => $value) {
+			if (in_array($key, $defaultFields)) {
+				$defaultActiveFields[$key] = $value;
+			}
+		}
 
-		$pInputModelFiltername->setValuesAvailable($availableFilters);
-		$filteridSelected = $this->getValue($pInputModelFiltername->getField());
-		$pInputModelFiltername->setValue($filteridSelected);
-
-		return $pInputModelFiltername;
+		return $defaultActiveFields;
 	}
 
 
@@ -195,32 +159,9 @@ class FormModelBuilderAddress
 				'15' => '15'
 			)
 		);
-
 		$pInputModelRecordsPerPage->setValue($this->getValue('recordsPerPage'));
+
 		return $pInputModelRecordsPerPage;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelSortBy()
-	{
-		$labelSortBy = __('Sort by', 'onoffice');
-
-		$pInputModelSortBy = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
-		$pInputModelSortBy->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-
-		$fieldnames = $this->getOnlyDefaultSortByFields();
-
-		$pInputModelSortBy->setValuesAvailable($fieldnames);
-		$pInputModelSortBy->setValue($this->getValue($pInputModelSortBy->getField()));
-
-		return $pInputModelSortBy;
 	}
 
 
@@ -246,8 +187,33 @@ class FormModelBuilderAddress
 	}
 
 
+	/**
+	 *
+	 * @param string $path
+	 * @return InputModelDB
+	 *
+	 */
 
-	/** @todo: remove */
+	public function createInputModelTemplate($path)
+	{
+		$labelTemplate = __('Template', 'onoffice');
+		$selectedTemplate = $this->getValue('template');
+
+		$pInputModelTemplate = $this->getInputModelDBFactory()->create
+			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
+		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+
+		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths($path));
+		$pInputModelTemplate->setValue($selectedTemplate);
+
+		return $pInputModelTemplate;
+	}
+
+
+	/** @param InputModelDBFactory $pInputModelDBFactory */
+	protected function setInputModelDBFactory(InputModelDBFactory $pInputModelDBFactory)
+		{ $this->_pInputModelDBFactory = $pInputModelDBFactory; }
+
 	/** @return InputModelDBFactory */
 	protected function getInputModelDBFactory()
 		{ return $this->_pInputModelDBFactory; }

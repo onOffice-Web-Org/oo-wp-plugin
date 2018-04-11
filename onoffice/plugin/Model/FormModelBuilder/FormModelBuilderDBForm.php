@@ -38,12 +38,9 @@ use onOffice\WPlugin\Utility\ModuleTranslation;
  *
  */
 
-class FormModelBuilderForm
-	extends FormModelBuilder
+class FormModelBuilderDBForm
+	extends FormModelBuilderDB
 {
-	/** @var InputModelDBFactory */
-	private $_pInputModelDBFactory = null;
-
 	/** @var string */
 	private $_formType = null;
 
@@ -64,7 +61,8 @@ class FormModelBuilderForm
 	{
 		parent::__construct($pageSlug);
 		$pConfigForm = new InputModelDBFactoryConfigForm();
-		$this->_pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
+		$pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
+		$this->setInputModelDBFactory($pInputModelDBFactory);
 		$this->_pFieldNames = new Fieldnames();
 		$this->_pFieldNames->loadLanguage();
 	}
@@ -201,28 +199,6 @@ class FormModelBuilderForm
 		$pInputModelName->setValue($this->getValue($pInputModelName->getField()));
 
 		return $pInputModelName;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelTemplate()
-	{
-		$labelTemplate = __('Template', 'onoffice');
-		$selectedTemplate = $this->getValue('template');
-
-		$pInputModelTemplate = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
-		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-
-		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('form'));
-		$pInputModelTemplate->setValue($selectedTemplate);
-
-		return $pInputModelTemplate;
 	}
 
 
@@ -428,16 +404,6 @@ class FormModelBuilderForm
 		$pInputModel->setLabel($label);
 		$pInputModel->setValue($module);
 	}
-
-
-	/**
-	 *
-	 * @return InputModelDBFactory
-	 *
-	 */
-
-	protected function getInputModelDBFactory()
-		{ return $this->_pInputModelDBFactory; }
 
 
 	/** @return string */

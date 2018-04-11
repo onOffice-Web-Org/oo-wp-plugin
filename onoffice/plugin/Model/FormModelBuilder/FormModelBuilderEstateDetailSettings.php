@@ -26,10 +26,12 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
+use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 
@@ -38,10 +40,12 @@ use onOffice\WPlugin\Types\MovieLinkTypes;
  * @url http://www.onoffice.de
  * @copyright 2003-2017, onOffice(R) GmbH
  *
+ * This class must not use InputModelDB!
+ *
  */
 
 class FormModelBuilderEstateDetailSettings
-	extends FormModelBuilderEstate
+	extends FormModelBuilder
 {
 	/** @var InputModelOptionFactoryDetailView */
 	private $_pInputModelDetailViewFactory = null;
@@ -61,7 +65,7 @@ class FormModelBuilderEstateDetailSettings
 		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView($this->getPageSlug());
 		$this->_pDataDetailView = DataDetailViewHandler::getDetailView();
 
-		$pFormModel = new Model\FormModel();
+		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Detail View', 'onoffice'));
 		$pFormModel->setGroupSlug('onoffice-detailview-settings-main');
 		$pFormModel->setPageSlug($this->getPageSlug());
@@ -72,7 +76,7 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
-	 * @return Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -82,7 +86,7 @@ class FormModelBuilderEstateDetailSettings
 
 		$pInputModelPictureTypes = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_PICTURE_TYPE, null, true);
-		$pInputModelPictureTypes->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
 		$pictureTypes = $this->_pDataDetailView->getPictureTypes();
 
@@ -99,7 +103,7 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
-	 * @return Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -109,7 +113,7 @@ class FormModelBuilderEstateDetailSettings
 
 		$pInputModelExpose = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_EXPOSE, $labelExpose);
-		$pInputModelExpose->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelExpose->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$exposes = array('' => '') + $this->readExposes();
 		$pInputModelExpose->setValuesAvailable($exposes);
 		$pInputModelExpose->setValue($this->_pDataDetailView->getExpose());
@@ -120,7 +124,7 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
-	 * @return Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -130,7 +134,7 @@ class FormModelBuilderEstateDetailSettings
 
 		$pInputModelMedia = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_MOVIE_LINKS, $labelMovieLinks);
-		$pInputModelMedia->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$options = array(
 			MovieLinkTypes::MOVIE_LINKS_NONE => __('Disabled', 'onoffice'),
 			MovieLinkTypes::MOVIE_LINKS_LINK => __('Link', 'onoffice'),
@@ -147,16 +151,17 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 * @param string $category
 	 * @param array $fieldNames
-	 * @return Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
 	public function createInputModelFieldsConfigByCategory($category, $fieldNames)
 	{
-		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
-			InputModelDBFactory::INPUT_FIELD_CONFIG, $category, true);
+		$pInputModelFieldsConfig = new InputModelOption
+			(null, $category, null, InputModelDBFactory::INPUT_FIELD_CONFIG);
+		$pInputModelFieldsConfig->setIsMulti(true);
 
-		$pInputModelFieldsConfig->setHtmlType(Model\InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
+		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$pInputModelFieldsConfig->setId($category);
 		$fields = $this->getValue(DataListView::FIELDS);
@@ -174,7 +179,7 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
-	 * @return Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -223,7 +228,7 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
-	 * @return Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -233,7 +238,7 @@ class FormModelBuilderEstateDetailSettings
 			InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
 
 		$fieldNames = $this->readFieldnames(onOfficeSDK::MODULE_ADDRESS);
-		$pInputModelFieldsConfig->setHtmlType(Model\InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
+		$pInputModelFieldsConfig->setHtmlType(InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$fields = $this->_pDataDetailView->getAddressFields();
 		$pInputModelFieldsConfig->setValue($fields);
@@ -244,7 +249,7 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
-	 * @return Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -254,7 +259,7 @@ class FormModelBuilderEstateDetailSettings
 
 		$pInputModelTemplate = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_TEMPLATE, $labelTemplate);
-		$pInputModelTemplate->setHtmlType(Model\InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
 		$pInputModelTemplate->setValue($this->_pDataDetailView->getTemplate());

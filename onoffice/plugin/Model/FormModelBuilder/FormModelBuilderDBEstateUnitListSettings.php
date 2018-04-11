@@ -21,9 +21,10 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 
 /**
@@ -33,8 +34,8 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
  *
  */
 
-class FormModelBuilderEstateUnitListSettings
-	extends FormModelBuilderEstateListSettings
+class FormModelBuilderDBEstateUnitListSettings
+	extends FormModelBuilderDBEstateListSettings
 {
 	/**
 	 *
@@ -52,7 +53,7 @@ class FormModelBuilderEstateUnitListSettings
 			$this->setValues($values);
 		}
 
-		$pFormModel = new Model\FormModel();
+		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Unit List', 'onoffice'));
 		$pFormModel->setGroupSlug('onoffice-unitlist-settings');
 		$pFormModel->setPageSlug($this->getPageSlug());
@@ -63,7 +64,7 @@ class FormModelBuilderEstateUnitListSettings
 
 	/**
 	 *
-	 * @return Model\InputModelDB
+	 * @return InputModelDB
 	 *
 	 */
 
@@ -73,7 +74,7 @@ class FormModelBuilderEstateUnitListSettings
 
 		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_RANDOM_ORDER, $labelShowStatus);
-		$pInputModelShowStatus->setHtmlType(Model\InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelShowStatus->setValue($this->getValue('random'));
 		$pInputModelShowStatus->setValuesAvailable(1);
 

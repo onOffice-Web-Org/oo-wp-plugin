@@ -21,8 +21,9 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Form;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\Form;
+use UnexpectedValueException;
 
 /**
  *
@@ -55,7 +56,7 @@ class AdminPageFormSettingsMain
 	 *
 	 * @param string $type
 	 * @param int $id
-	 * @throws \UnexpectedValueException
+	 * @throws UnexpectedValueException
 	 *
 	 */
 
@@ -74,7 +75,7 @@ class AdminPageFormSettingsMain
 		$className = $this->getClassNameByType($type);
 
 		if ($className === null) {
-			throw new \UnexpectedValueException($type);
+			throw new UnexpectedValueException($type);
 		}
 
 		$this->_pInstance = new $className($this->getPageSlug());
@@ -108,7 +109,7 @@ class AdminPageFormSettingsMain
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\Gui\AdminPageFormSettingsBase $pAdminPage
+	 * @param AdminPageFormSettingsBase $pAdminPage
 	 * @param string $type
 	 *
 	 */
@@ -119,13 +120,13 @@ class AdminPageFormSettingsMain
 
 		switch ($type) {
 			case Form::TYPE_INTEREST:
-				/* @var $pAdminPage \onOffice\WPlugin\Gui\AdminPageFormSettingsContact */
+				/* @var $pAdminPage AdminPageFormSettingsContact */
 				$pAdminPage->setShowSearchCriteriaFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
 				break;
 			case Form::TYPE_OWNER:
-				/* @var $pAdminPage \onOffice\WPlugin\Gui\AdminPageFormSettingsContact */
+				/* @var $pAdminPage AdminPageFormSettingsContact */
 				$pAdminPage->setShowPagesOption(true);
 				$pAdminPage->setShowEstateFields(true);
 				$pAdminPage->setShowAddressFields(true);

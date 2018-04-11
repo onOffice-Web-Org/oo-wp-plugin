@@ -26,6 +26,7 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\TemplateCall;
 
 /**
  *
@@ -187,6 +188,19 @@ abstract class FormModelBuilder
 	{
 		$pFilterCall = new FilterCall($module);
 		return $pFilterCall->getFilters();
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	protected function readExposes()
+	{
+		$pTemplateCall = new TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE);
+		return $pTemplateCall->getTemplates();
 	}
 
 
