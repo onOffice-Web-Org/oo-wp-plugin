@@ -388,6 +388,8 @@ $config['localemap'] = array(
 	'fallback' => 'DEU',
 );
 
+$config['googlemapskey'] = '';
+
 
 // Search
 

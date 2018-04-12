@@ -430,7 +430,13 @@ class ContentFilter
 	 */
 
 	public function registerScripts() {
-		wp_register_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js' );
+		$googleMapsKey = ConfigWrapper::getInstance()->getConfigByKey( 'googlemapskey' );
+		$urlParams = '';
+		if ($googleMapsKey != '') {
+			$urlParams .= 'key='.$googleMapsKey;
+		}
+
+		wp_register_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js?'.$urlParams );
 		wp_register_script( 'gmapsinit', plugins_url( '/js/gmapsinit.js', __DIR__ ), array('google-maps') );
 		wp_register_script( 'jquery-latest', 'https://code.jquery.com/jquery-latest.js');
 		wp_register_script( 'onoffice-favorites', plugins_url( '/js/favorites.js', __DIR__ ) );
