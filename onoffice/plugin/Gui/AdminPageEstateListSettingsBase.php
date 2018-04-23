@@ -38,9 +38,6 @@ abstract class AdminPageEstateListSettingsBase
 	extends AdminPageSettingsBase
 {
 	/** */
-	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
-
-	/** */
 	const FORM_VIEW_DOCUMENT_TYPES = 'viewdocumenttypes';
 
 	/** */
@@ -86,7 +83,7 @@ abstract class AdminPageEstateListSettingsBase
 			$recordId = $pInsert->insertByRow($row);
 			$result = ($recordId != null);
 			if ($result) {
-				$row = $this->addOrderValues($row);
+				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG);
 				$row = $this->prepareRelationValues
 					(RecordManager::TABLENAME_FIELDCONFIG, 'listview_id', $row, $recordId);
 				$row = $this->prepareRelationValues
@@ -100,25 +97,6 @@ abstract class AdminPageEstateListSettingsBase
 
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;
-	}
-
-
-	/**
-	 *
-	 * @param array $row
-	 * @return array
-	 *
-	 */
-
-	protected function addOrderValues(array $row)
-	{
-		$table = RecordManager::TABLENAME_FIELDCONFIG;
-		if (array_key_exists($table, $row)) {
-			array_walk($row[$table], function (&$value, $key) {
-				$value['order'] = $key + 1;
-			});
-		}
-		return $row;
 	}
 
 
@@ -147,7 +125,7 @@ abstract class AdminPageEstateListSettingsBase
 
 	protected function setFixedValues(array $row)
 	{
-		return $this->addOrderValues($row);
+		return $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG);
 	}
 
 

@@ -33,6 +33,17 @@ class RecordManagerReadListViewAddress
 {
 	/**
 	 *
+	 */
+
+	public function __construct()
+	{
+		$this->setMainTable(self::TABLENAME_LIST_VIEW_ADDRESS);
+		$this->setIdColumnMain('listview_address_id');
+	}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */
@@ -55,5 +66,28 @@ class RecordManagerReadListViewAddress
 		$this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
 		return $this->getFoundRows();
+	}
+
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+
+	public function readFieldconfigByListviewId($listviewId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlFields = "SELECT fieldname
+			FROM {$prefix}oo_plugin_address_fieldconfig
+			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($listviewId)."
+			ORDER BY `order` ASC";
+
+		$result = $pWpDb->get_col($sqlFields);
+
+		return $result;
 	}
 }

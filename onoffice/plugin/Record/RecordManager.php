@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Record;
 
+use wpdb;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -48,6 +50,12 @@ abstract class RecordManager
 	/** */
 	const TABLENAME_FIELDCONFIG_FORMS = 'oo_plugin_form_fieldconfig';
 
+	/** */
+	const TABLENAME_LIST_VIEW_ADDRESS = 'oo_plugin_listviews_address';
+
+	/** */
+	const TABLENAME_FIELDCONFIG_ADDRESS = 'oo_plugin_address_fieldconfig';
+
 
 	/**
 	 *
@@ -63,8 +71,8 @@ abstract class RecordManager
 
 	/**
 	 *
-	 * @global \wpdb $wpdb
-	 * @return \wpdb
+	 * @global wpdb $wpdb
+	 * @return wpdb
 	 *
 	 */
 

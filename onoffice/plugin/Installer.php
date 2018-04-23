@@ -307,6 +307,7 @@ abstract class Installer
 			`sortorder` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
 			`template` tinytext NOT NULL,
 			`recordsPerPage` int(10) NOT NULL DEFAULT '10',
+			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -388,6 +389,7 @@ abstract class Installer
 			$prefix."oo_plugin_form_fieldconfig",
 			$prefix."oo_plugin_listview_contactperson",
 			$prefix."oo_plugin_listviews_address",
+			$prefix."oo_plugin_address_fieldconfig",
 		);
 
 		foreach ($tables as $table)

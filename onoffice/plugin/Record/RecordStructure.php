@@ -166,12 +166,9 @@ class RecordStructure
 				break;
 		}
 
-		if (null != $fields)
+		if (null != $fields && array_key_exists($field, $fields))
 		{
-			if (array_key_exists($field, $fields))
-			{
-				return $fields[$field];
-			}
+			return $fields[$field];
 		}
 	}
 

@@ -52,6 +52,12 @@ abstract class RecordManagerRead
 	/** @var string[] */
 	private $_where = array(1);
 
+	/** @var string */
+	private $_mainTable = null;
+
+	/** @var string */
+	private $_idColumnMain = null;
+
 
 	/**
 	 *
@@ -93,6 +99,32 @@ abstract class RecordManagerRead
 	{
 		$this->_columns []= "'".esc_sql($column)."' AS `".esc_sql($alias)."'";
 	}
+
+
+
+
+	/**
+	 *
+	 * @param int $recordId
+	 * @return array
+	 *
+	 */
+
+	public function getRowById($recordId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$mainTable = $this->getMainTable();
+
+		$sql = "SELECT *
+				FROM `".esc_sql($prefix.$mainTable)."`
+				WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql((int)$recordId);
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		return $result;
+	}
+
 
 	/** @return int */
 	public function getCountOverall()
@@ -145,4 +177,20 @@ abstract class RecordManagerRead
 	/** @return string[] */
 	protected function getWhere()
 		{ return $this->_where; }
+
+	/** @return string */
+	protected function getMainTable()
+		{ return $this->_mainTable; }
+
+	/** @param string $mainTable */
+	protected function setMainTable($mainTable)
+		{ $this->_mainTable = $mainTable; }
+
+	/** @return string */
+	protected function getIdColumnMain()
+		{ return $this->_idColumnMain; }
+
+	/** @param string $idColumnMain */
+	protected function setIdColumnMain($idColumnMain)
+		{ $this->_idColumnMain = $idColumnMain; }
 }

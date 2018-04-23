@@ -50,6 +50,9 @@ abstract class AdminPageSettingsBase
 	const FORM_RECORD_NAME = 'recordname';
 
 	/** */
+	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
+
+	/** */
 	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
 
 	/** */
@@ -361,11 +364,31 @@ abstract class AdminPageSettingsBase
 	/**
 	 *
 	 * @param array $row
+	 * @param string $table
 	 * @return array
 	 *
 	 */
 
-	protected function setFixedValues(array $row) {
+	protected function addOrderValues(array $row, $table)
+	{
+		if (array_key_exists($table, $row)) {
+			array_walk($row[$table], function (&$value, $key) {
+				$value['order'] = $key + 1;
+			});
+		}
+		return $row;
+	}
+
+
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function setFixedValues(array $row)
+	{
 		return $row;
 	}
 

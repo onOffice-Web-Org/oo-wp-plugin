@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Record;
 
 use Exception;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -58,6 +59,8 @@ class RecordManagerFactory
 	private static $_mapping = array(
 		self::TYPE_ADDRESS => array(
 			self::ACTION_READ => 'RecordManagerReadListViewAddress',
+			self::ACTION_INSERT => 'RecordManagerInsertGeneric',
+			self::ACTION_UPDATE => 'RecordManagerUpdateListViewAddress',
 			self::ACTION_DELETE => 'RecordManagerDeleteListViewAddress',
 		),
 		self::TYPE_ESTATE => array(
@@ -75,6 +78,12 @@ class RecordManagerFactory
 	);
 
 
+	/** @var array */
+	private static $_genericClassTables = array(
+		self::TYPE_ADDRESS => RecordManager::TABLENAME_LIST_VIEW_ADDRESS,
+	);
+
+
 	/**
 	 *
 	 * @param string $type
@@ -86,6 +95,8 @@ class RecordManagerFactory
 
 	public static function createByTypeAndAction($type, $action, $recordId = null)
 	{
+		$pInstance = null;
+
 		if (isset(self::$_mapping[$type][$action])) {
 			$className = self::$_mapping[$type][$action];
 		} else {
@@ -94,10 +105,21 @@ class RecordManagerFactory
 
 		$classNamespacePrefixed = __NAMESPACE__.'\\'.$className;
 
-		if ($recordId !== null) {
-			return new $classNamespacePrefixed($recordId);
+		if (__String::getNew($classNamespacePrefixed)->endsWith('Generic')) {
+			$mainTable = self::$_genericClassTables[$type];
+			if ($recordId !== null) {
+				$pInstance = new $classNamespacePrefixed($mainTable, $recordId);
+			} else {
+				$pInstance = new $classNamespacePrefixed($mainTable);
+			}
+		} else {
+			if ($recordId !== null) {
+				$pInstance = new $classNamespacePrefixed($recordId);
+			} else {
+				$pInstance = new $classNamespacePrefixed;
+			}
 		}
 
-		return new $classNamespacePrefixed;
+		return $pInstance;
 	}
 }

@@ -60,7 +60,7 @@ class InputFieldCheckboxButtonRenderer
 		$id = HtmlIdGenerator::generateByString($this->_id);
 		echo '<p>'
 			.'<input type="button" class="inputFieldCheckboxButton button" name="'
-				.esc_attr($id).'" value="'.esc_html__('Add', 'onoffice').'" '
+				.esc_attr($id).'" value="'.esc_html__('Add to List >>', 'onoffice').'" '
 				.'data-onoffice-category="'.esc_attr($this->_id).'"'
 				. $this->renderAdditionalAttributes().'>'
 			.'</p>';

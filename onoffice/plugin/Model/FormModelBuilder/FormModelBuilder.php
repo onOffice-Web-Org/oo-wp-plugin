@@ -37,6 +37,8 @@ use onOffice\WPlugin\TemplateCall;
 
 abstract class FormModelBuilder
 {
+	const CONFIG_FIELDS = 'fields';
+
 	/** @var string */
 	private $_pageSlug = null;
 
@@ -166,7 +168,7 @@ abstract class FormModelBuilder
 		$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
-		$fields = $this->getValue(DataFormConfiguration::FIELDS);
+		$fields = $this->getValue(self::CONFIG_FIELDS);
 
 		if (null == $fields)
 		{

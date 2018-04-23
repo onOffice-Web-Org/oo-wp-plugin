@@ -27,6 +27,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 
 /**
  *
@@ -61,9 +62,10 @@ class FormModelBuilderDBAddress
 	{
 		if ($listViewId !== null)
 		{
-//			$pRecordReadManager = new RecordManagerReadListViewAddress();
-//			$values = $pRecordReadManager->getRowById($listViewId);
-//			$this->setValues($values);
+			$pRecordReadManager = new RecordManagerReadListViewAddress();
+			$values = $pRecordReadManager->getRowById($listViewId);
+			$values['fields'] = $pRecordReadManager->readFieldconfigByListviewId($listViewId);
+			$this->setValues($values);
 		}
 
 		$pFormModel = new FormModel();
@@ -95,5 +97,25 @@ class FormModelBuilderDBAddress
 		$pInputModelFiltername->setValue($filteridSelected);
 
 		return $pInputModelFiltername;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelPictureTypes()
+	{
+		$labelPhoto = __('Passport Photo', 'onoffice');
+		$pInputModelPictureTypes = $this->getInputModelDBFactory()->create
+			(InputModelDBFactory::INPUT_PICTURE_TYPE, $labelPhoto);
+		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelPictureTypes->setValuesAvailable(1);
+		$pictureTypeSelected = $this->getValue($pInputModelPictureTypes->getField());
+		$pInputModelPictureTypes->setValue((int)$pictureTypeSelected);
+
+		return $pInputModelPictureTypes;
 	}
 }

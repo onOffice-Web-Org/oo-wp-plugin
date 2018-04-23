@@ -33,6 +33,17 @@ class RecordManagerReadForm
 {
 	/**
 	 *
+	 */
+
+	public function __construct()
+	{
+		$this->setMainTable(self::TABLENAME_FORMS);
+		$this->setIdColumnMain('form_id');
+	}
+
+
+	/**
+	 *
 	 * @return object[]
 	 *
 	 */
@@ -54,28 +65,6 @@ class RecordManagerReadForm
 		$this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
 
 		return $this->getFoundRows();
-	}
-
-
-	/**
-	 *
-	 * @param int $formId
-	 * @return array
-	 *
-	 */
-
-	public function getRowById($formId)
-	{
-		$prefix = $this->getTablePrefix();
-		$pWpDb = $this->getWpdb();
-
-		$sql = "SELECT *
-				FROM {$prefix}oo_plugin_forms
-				WHERE `form_id` = ".esc_sql((int)$formId);
-
-		$result = $pWpDb->get_row($sql, ARRAY_A);
-
-		return $result;
 	}
 
 

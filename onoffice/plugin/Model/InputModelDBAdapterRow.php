@@ -51,6 +51,11 @@ class InputModelDBAdapterRow
 			'listview_id' => array('oo_plugin_listviews', 'listview_id'),
 		),
 
+		'oo_plugin_address_fieldconfig' => array(
+			'address_fieldconfig_id' => null,
+			'listview_address_id' => array('oo_plugin_listviews_address', 'listview_address_id'),
+		),
+
 		'oo_plugin_picturetypes' => array(
 			'picturetype_id' => null,
 			'listview_id' => array('oo_plugin_listviews', 'listview_id'),
@@ -166,10 +171,20 @@ class InputModelDBAdapterRow
 		$result = null;
 
 		if (isset($this->_foreignKeys[$relationTable])) {
-			$possibleValues = array_filter($this->_foreignKeys[$relationTable]);
-			$result = array_shift(array_keys($possibleValues));
+			$possibleValues = array_filter($this->_foreignKeys[$relationTable]); // without primary
+			$keyNames = array_keys($possibleValues);
+			$result = array_shift($keyNames);
 		}
 
 		return $result;
 	}
+
+
+	/** @return array */
+	public function getForeignKeys()
+		{ return $this->_foreignKeys; }
+
+	/** @return array */
+	public function getPrimaryKeys()
+		{ return $this->_primaryKeys; }
 }

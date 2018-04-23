@@ -56,8 +56,8 @@ class InputModelDBFactoryConfigAddress
 			self::KEY_FIELD => 'sortorder',
 		),
 		InputModelDBFactory::INPUT_PICTURE_TYPE => array(
-			self::KEY_TABLE => 'oo_plugin_picturetypes_address',
-			self::KEY_FIELD => 'picturetype',
+			self::KEY_TABLE => 'oo_plugin_listviews_address',
+			self::KEY_FIELD => 'showPhoto',
 		),
 		InputModelDBFactory::INPUT_TEMPLATE => array(
 			self::KEY_TABLE => 'oo_plugin_listviews_address',

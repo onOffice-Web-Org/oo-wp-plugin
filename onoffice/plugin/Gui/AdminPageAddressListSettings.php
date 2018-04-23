@@ -22,9 +22,15 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Record\RecordManager;
+use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
+use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerUpdateListViewAddress;
 use stdClass;
 
 /**
@@ -70,6 +76,7 @@ class AdminPageAddressListSettings
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
 
 		$this->addFormModelName();
+		$this->addFormModelPictureTypes();
 		$this->addFormModelTemplate();
 		$this->addFormModelRecordsFilter();
 	}
@@ -134,10 +141,29 @@ class AdminPageAddressListSettings
 	 *
 	 */
 
+	private function addFormModelPictureTypes()
+	{
+		$pInputModelPictureTypes = $this->_pFormModelBuilderAddress->createInputModelPictureTypes();
+		$pFormModelPictureTypes = new FormModel();
+		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
+		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
+		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice'));
+		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
+		$this->addFormModel($pFormModelPictureTypes);
+	}
+
+
+	/**
+	 *
+	 */
+
 	protected function generateMetaBoxes()
 	{
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'side');
+
+		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
+		$this->createMetaBoxByForm($pFormPictureTypes, 'side');
 
 		$pFormFilterRecords = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$this->createMetaBoxByForm($pFormFilterRecords, 'normal');
@@ -153,22 +179,102 @@ class AdminPageAddressListSettings
 		$this->cleanPreviousBoxes();
 		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS));
 
-		foreach ($fieldNames as $category)
-		{
+		foreach ($fieldNames as $category) {
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 		}
 	}
 
 
+	/**
+	 *
+	 * @param array $row
+	 * @param stdClass $pResult
+	 * @param int $recordId
+	 *
+	 */
 
 	protected function updateValues(array $row, stdClass $pResult, $recordId = null)
 	{
+		$type = RecordManagerFactory::TYPE_ADDRESS;
+		$action = RecordManagerFactory::ACTION_INSERT;
+		$result = false;
 
+		if ($recordId != null) {
+			$action = RecordManagerFactory::ACTION_UPDATE;
+			/* @var $pRecordManagerUpdate RecordManagerUpdateListViewAddress */
+			$pRecordManagerUpdate = RecordManagerFactory::createByTypeAndAction($type, $action, $recordId);
+			$result = $pRecordManagerUpdate->updateByRow($row[RecordManager::TABLENAME_LIST_VIEW_ADDRESS]);
+			$result = $result && $pRecordManagerUpdate->updateRelations($row, $recordId);
+		} else {
+			/* @var $pRecordManagerInsert RecordManagerInsertGeneric */
+			$pRecordManagerInsert = RecordManagerFactory::createByTypeAndAction($type, $action);
+			$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
+
+			$recordId = $pRecordManagerInsert->insertByRow($row);
+			$result = $recordId != null;
+
+			if ($result) {
+				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG);
+				$row = $this->prepareRelationValues(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS,
+					'listview_address_id', $row, $recordId);
+				$pRecordManagerInsert->insertAdditionalValues($row);
+			}
+		}
+
+		$pResult->result = $result;
+		$pResult->record_id = $recordId;
 	}
 
-	protected function validate()
-	{
 
+	/**
+	 *
+	 * @param array $row
+	 * @return array
+	 *
+	 */
+
+	protected function setFixedValues(array $row)
+	{
+		return $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
+	}
+
+
+	/**
+	 *
+	 * @return null
+	 * @throws UnknownViewException
+	 *
+	 */
+
+	protected function validate($recordId = null)
+	{
+		if ($recordId == null) {
+			return;
+		}
+
+		$pRecordReadManager = new RecordManagerReadListViewAddress();
+		$values = $pRecordReadManager->getRowById($recordId);
+
+		if (count($values) === 0) {
+			throw new UnknownViewException;
+		}
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getEnqueueData()
+	{
+		return array(
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The address list was saved.', 'onoffice'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the list. Please make sure the name of the list is unique.', 'onoffice'),
+			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
+			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
+		);
 	}
 }
