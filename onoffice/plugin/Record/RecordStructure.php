@@ -21,19 +21,15 @@
 
 namespace onOffice\WPlugin\Record;
 
-use onOffice\WPlugin\Model\InputModelBase;
-
 /**
  *
  * @url http://www.onoffice.de
  * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
+
 class RecordStructure
 {
-	/** */
-	const HTML_TYPE = 'htmlType';
-
 	/** */
 	const NULL_ALLOWED = 'nullAllowed';
 
@@ -42,134 +38,169 @@ class RecordStructure
 
 
 	/** @var array */
-	static private $_fieldsListview = array
-		(
-			'name' => array
-				(
-					self::NULL_ALLOWED => false,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_TEXT,
-					self::EMPTY_VALUE => '',
-				),
-
-			'filterId' => array
-				(
-					self::NULL_ALLOWED => true,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_SELECT,
-					self::EMPTY_VALUE => 0,
-				),
-
-			'sortby' => array
-				(
-					self::NULL_ALLOWED => false,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_SELECT,
-					self::EMPTY_VALUE => 'ASC',
-				),
-
-			'is_reference' => array
-				(
-					self::NULL_ALLOWED => false,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_CHECKBOX,
-					self::EMPTY_VALUE => 0,
-				),
-
-			'show_status' => array
-				(
-					self::NULL_ALLOWED => false,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_CHECKBOX,
-					self::EMPTY_VALUE => 0,
-				),
-
-			'template' => array
-				(
-					self::NULL_ALLOWED => false,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_SELECT,
-					self::EMPTY_VALUE => '',
-				),
-
-			'expose' => array
-				(
-					self::NULL_ALLOWED => true,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_SELECT,
-					self::EMPTY_VALUE => '',
-				),
-
-			'recordsPerPage' => array
-				(
-					self::NULL_ALLOWED => false,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_SELECT,
-					self::EMPTY_VALUE => 5,
-				),
-
-			'list_type' => array
-				(
-					self::NULL_ALLOWED => false,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_SELECT,
-					self::EMPTY_VALUE => '',
-				)
-		);
-
-	/** @var array */
-	static private $_fieldsFieldconfig = array
-		(
-			'order' => array
-				(
-					self::NULL_ALLOWED => false,
-					self::HTML_TYPE => null,
-					self::EMPTY_VALUE => 0,
-				),
-
-			'fieldname' => array
-				(
-					self::NULL_ALLOWED => false,
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_CHECKBOX,
-					self::EMPTY_VALUE => '',
-				),
-		);
-
-	/** @var array */
-	static private $_fieldsPicturetypes = array
-		(
-			'picturetype' => array
-				(
-					self::HTML_TYPE => InputModelBase::HTML_TYPE_CHECKBOX,
-					self::NULL_ALLOWED => false,
-					self::EMPTY_VALUE => '',
-				),
-		);
+	static private $_fieldsListview = array(
+		RecordManager::TABLENAME_LIST_VIEW => array(
+			'name' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+			'filterId' => array(
+				self::NULL_ALLOWED => true,
+				self::EMPTY_VALUE => 0,
+			),
+			'sortby' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 'ASC',
+			),
+			'is_reference' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+			'show_status' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+			'template' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+			'expose' => array(
+				self::NULL_ALLOWED => true,
+				self::EMPTY_VALUE => '',
+			),
+			'recordsPerPage' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 5,
+			),
+			'list_type' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		),
+		RecordManager::TABLENAME_FIELDCONFIG => array(
+			'order' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+			'fieldname' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		),
+		RecordManager::TABLENAME_LISTVIEW_CONTACTPERSON => array(
+			'order' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+			'fieldname' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		),
+		RecordManager::TABLENAME_PICTURETYPES => array(
+			'picturetype' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		),
+		RecordManager::TABLENAME_LIST_VIEW_ADDRESS => array(
+			'name' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => null, // force error
+			),
+			'filterId' => array(
+				self::NULL_ALLOWED => true,
+				self::EMPTY_VALUE => null,
+			),
+			'sortby' => array(
+				self::NULL_ALLOWED => true,
+				self::EMPTY_VALUE => null,
+			),
+			'sortorder' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 'ASC',
+			),
+			'template' => array(
+				self::NULL_ALLOWED => true,
+				self::EMPTY_VALUE => null,
+			),
+			'recordsPerPage' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 10,
+			),
+			'showPhoto' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+		),
+		RecordManager::TABLENAME_FIELDCONFIG_ADDRESS => array(
+			'order' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+			'fieldname' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		),
+		RecordManager::TABLENAME_FORMS => array(
+			'name' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => null, // force error
+			),
+			'form_type' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 'contact',
+			),
+			'template' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => null, // force error
+			),
+			'recipient' => array(
+				self::NULL_ALLOWED => true,
+				self::EMPTY_VALUE => null,
+			),
+			'subject' => array(
+				self::NULL_ALLOWED => true,
+				self::EMPTY_VALUE => null,
+			),
+			'createaddress' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+			'limitresults' => array(
+				self::NULL_ALLOWED => true,
+				self::EMPTY_VALUE => null,
+			),
+			'checkduplicates' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+			'pages' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => 0,
+			),
+		),
+	);
 
 
 	/**
 	 *
 	 * @param string $table
 	 * @param string $field
-	 * @return string
+	 * @return array
 	 *
 	 */
 
 	public static function getFieldByTable($table, $field)
 	{
-		$fields = null;
+		$result = null;
 
-		switch ($table)
-		{
-			case RecordManager::TABLENAME_LIST_VIEW:
-				$fields = self::$_fieldsListview;
-				break;
-
-			case RecordManager::TABLENAME_FIELDCONFIG:
-			case RecordManager::TABLENAME_LISTVIEW_CONTACTPERSON:
-				$fields = self::$_fieldsFieldconfig;
-				break;
-
-			case RecordManager::TABLENAME_PICTURETYPES:
-				$fields = self::$_fieldsPicturetypes;
-				break;
+		if (isset(self::$_fieldsListview[$table][$field])) {
+			$result = self::$_fieldsListview[$table][$field];
 		}
 
-		if (null != $fields && array_key_exists($field, $fields))
-		{
-			return $fields[$field];
-		}
+		return $result;
 	}
 
 
@@ -183,15 +214,8 @@ class RecordStructure
 
 	public static function isNullAllowed($table, $field)
 	{
-		$returnValue = false;
 		$fieldValues = self::getFieldByTable($table, $field);
-
-		if (is_array($fieldValues))
-		{
-			$returnValue = $fieldValues[self::NULL_ALLOWED];
-		}
-
-		return $returnValue;
+		return !is_null($fieldValues) && $fieldValues[self::NULL_ALLOWED];
 	}
 
 
@@ -207,11 +231,9 @@ class RecordStructure
 	public static function getEmptyValue($table, $field)
 	{
 		$returnValue = false;
-
 		$fieldValues = self::getFieldByTable($table, $field);
 
-		if (is_array($fieldValues))
-		{
+		if (!is_null($fieldValues)) {
 			$returnValue = $fieldValues[self::EMPTY_VALUE];
 		}
 

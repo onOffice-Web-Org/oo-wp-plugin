@@ -81,4 +81,27 @@ abstract class RecordManager
 		global $wpdb;
 		return $wpdb;
 	}
+
+
+	/**
+	 *
+	 * @param string $value
+	 * @param string $table
+	 * @param string $field
+	 * @return string
+	 *
+	 */
+
+	static public function postProcessValue($value, $table, $field)
+	{
+		$result = $value;
+
+		if (null == $value) {
+			if (!RecordStructure::isNullAllowed($table, $field)) {
+				$result = RecordStructure::getEmptyValue($table, $field);
+			}
+		}
+
+		return $result;
+	}
 }

@@ -43,6 +43,10 @@ class RecordManagerInsertForm
 		$pWpDb = $this->getWpdb();
 		$row = $values[self::TABLENAME_FORMS];
 
+		array_walk($row, function(&$value, $field) {
+			$value = RecordManager::postProcessValue($value, self::TABLENAME_FORMS, $field);
+		});
+
 		$pWpDb->insert($pWpDb->prefix.self::TABLENAME_FORMS, $row);
 		$formId = $pWpDb->insert_id;
 

@@ -43,17 +43,9 @@ class RecordManagerInsertListViewEstate
 		$pWpDb = $this->getWpdb();
 		$row = $tableRow[self::TABLENAME_LIST_VIEW];
 
-		foreach ($row as $key => $value) {
-			if (null == $value) {
-				if (!RecordStructure::isNullAllowed(self::TABLENAME_LIST_VIEW, $key)) {
-					$emptyValue = RecordStructure::getEmptyValue(self::TABLENAME_LIST_VIEW, $key);
-
-					if ($emptyValue !== false) {
-						$row[$key] = $emptyValue;
-					}
-				}
-			}
-		}
+		array_walk($row, function(&$value, $field) {
+			$value = RecordManager::postProcessValue($value, self::TABLENAME_LIST_VIEW, $field);
+		});
 
 		$pWpDb->insert($pWpDb->prefix.self::TABLENAME_LIST_VIEW, $row);
 		$listViewId = $pWpDb->insert_id;

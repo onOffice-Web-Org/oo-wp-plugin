@@ -96,12 +96,17 @@ class TestClassInputModelDBAdapterRow
 		$values = $pInputModelDBAdapterRow->createUpdateValuesByTable();
 
 		$this->assertArrayHasKey('testTable', $values);
+		$this->assertArrayHasKey('oo_plugin_forms', $values);
 		$this->assertArrayHasKey('oo_plugin_address_fieldconfig', $values);
 
 		$this->assertArraySubset(array(
 			'testColumn' => 'asdf',
 			'otherTestColumn' => 'bonjour'
-		), $values['testTable']);
+		), $values['testTable'], true);
+
+		$this->assertArraySubset(array(
+			'createaddress' => 0, // null to intcast here
+		), $values['oo_plugin_forms'], true);
 
 		$this->assertArraySubset(array(
 			array (
@@ -112,7 +117,7 @@ class TestClassInputModelDBAdapterRow
 			  'fieldname' => 'hello',
 			  'listview_address_id' => 1337,
 			),
-		), $values['oo_plugin_address_fieldconfig']);
+		), $values['oo_plugin_address_fieldconfig'], true);
 	}
 
 
@@ -142,8 +147,15 @@ class TestClassInputModelDBAdapterRow
 		$pInputModelDBforeign->setMainRecordId(1337);
 		$pInputModelDBforeign->setValue(array('test', 'hello'));
 
+		$pInputModelDBNullValue = new InputModelDB('test', 'Test');
+		$pInputModelDBNullValue->setTable('oo_plugin_forms');
+		$pInputModelDBNullValue->setField('createaddress');
+		$pInputModelDBNullValue->setMainRecordId(1337);
+		$pInputModelDBNullValue->setValue(null); // intcast expected
+
 		$pInputModelDBAdapterRow->addInputModelDB($pInputModelDBfictional);
 		$pInputModelDBAdapterRow->addInputModelDB($pInputModelDBfictional1);
 		$pInputModelDBAdapterRow->addInputModelDB($pInputModelDBforeign);
+		$pInputModelDBAdapterRow->addInputModelDB($pInputModelDBNullValue);
 	}
 }

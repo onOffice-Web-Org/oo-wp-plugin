@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Model;
 
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Record\RecordManager;
 
 /**
  *
@@ -114,14 +115,16 @@ class InputModelDBAdapterRow
 			} else {
 				if (is_array($value)) {
 					foreach ($value as $id => $subValue) {
-						$valuesByTable[$table][$id][$field] = $subValue;
+						$valuesByTable[$table][$id][$field] = RecordManager::postProcessValue
+							($subValue, $table, $field);
 						$mainColumn = $this->getMainForeignKeyColumnOfRelation($table);
 						if ($mainColumn !== null) {
 							$valuesByTable[$table][$id][$mainColumn] = $mainId;
 						}
 					}
 				} else {
-					$valuesByTable[$table][$field] = $value;
+					$valuesByTable[$table][$field] = RecordManager::postProcessValue
+						($value, $table, $field);
 				}
 			}
 		}

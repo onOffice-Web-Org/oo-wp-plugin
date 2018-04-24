@@ -58,6 +58,11 @@ class RecordManagerInsertGeneric
 	{
 		$pWpDb = $this->getWpdb();
 		$row = $values[$this->_mainTableName];
+		$tableName = $this->_mainTableName;
+
+		array_walk($row, function(&$value, $field) use ($tableName) {
+			$value = RecordManager::postProcessValue($value, $tableName, $field);
+		});
 
 		$pWpDb->insert($pWpDb->prefix.$this->_mainTableName, $row);
 		$formId = $pWpDb->insert_id;
