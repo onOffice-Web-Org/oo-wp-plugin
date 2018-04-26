@@ -69,16 +69,13 @@ class InputFieldComplexSortableDetailListRenderer
 		$allFields = $values[0];
 
 		foreach ($allFields as $value) {
-			$fields[$value] = $this->_allFields[$value];
+			$fields[$value] = isset($this->_allFields[$value]) ?
+				$this->_allFields[$value] : array();
 		}
 
 		foreach ($fields as $key => $properties) {
-			$label = $properties['label'];
-
-			if (array_key_exists('content', $properties))
-			{
-				$category = $properties['content'];
-			}
+			$label = isset($properties['label']) ? $properties['label'] : null;
+			$category = isset($properties['content']) ? $properties['content'] : null;
 
 			$this->generateSelectableElement($key, $label, $category, $i);
 		}

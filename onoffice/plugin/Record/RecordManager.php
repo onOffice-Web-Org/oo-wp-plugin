@@ -96,10 +96,8 @@ abstract class RecordManager
 	{
 		$result = $value;
 
-		if (null == $value) {
-			if (!RecordStructure::isNullAllowed($table, $field)) {
-				$result = RecordStructure::getEmptyValue($table, $field);
-			}
+		if (null === $value && !RecordStructure::isNullAllowed($table, $field)) {
+			$result = RecordStructure::getEmptyValue($table, $field);
 		}
 
 		return $result;

@@ -42,6 +42,26 @@ use onOffice\WPlugin\Types\ImageTypes;
 class FormModelBuilderDBEstateListSettings
 	extends FormModelBuilderDBEstate
 {
+	/** @var string[] */
+	private static $_defaultFields = array(
+		'objekttitel',
+		'objektart',
+		'objekttyp',
+		'vermarktungsart',
+		'plz',
+		'ort',
+		'bundesland',
+		'objektnr_extern',
+		'wohnflaeche',
+		'grundstuecksflaeche',
+		'nutzflaeche',
+		'anzahl_zimmer',
+		'anzahl_badezimmer',
+		'kaufpreis',
+		'kaltmiete',
+	);
+
+
 	/**
 	 *
 	 * @param int $listViewId
@@ -56,6 +76,12 @@ class FormModelBuilderDBEstateListSettings
 			$pRecordReadManager = new RecordManagerReadListViewEstate();
 			$values = $pRecordReadManager->getRowById($listViewId);
 			$this->setValues($values);
+		}
+		else
+		{
+			$this->setValues(array(
+				DataListView::FIELDS => self::$_defaultFields,
+			));
 		}
 
 		$pFormModel = new FormModel();

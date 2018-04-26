@@ -162,6 +162,8 @@ abstract class AdminPageFormSettingsBase
 			}
 
 			$values->$identifierRequired = $newRequiredFields;
+		} else {
+			$values->$identifierRequired = array();
 		}
 	}
 

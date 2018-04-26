@@ -190,8 +190,9 @@ class AdminPageEstateListSettings
 			}
 
 			$values->$identifierFilterable = $newFilterableFields;
+		} else {
+			$values->$identifierFilterable = array();
 		}
-
 		$pInputModelHidden = $pInputModelFactory->create
 			(InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN, 'hidden', true);
 		$identifierHidden = $pInputModelHidden->getIdentifier();
@@ -208,6 +209,8 @@ class AdminPageEstateListSettings
 			}
 
 			$values->$identifierHidden = $newHiddenFields;
+		} else {
+			$values->$identifierHidden = array();
 		}
 	}
 
