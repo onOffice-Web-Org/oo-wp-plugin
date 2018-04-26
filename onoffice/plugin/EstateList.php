@@ -660,13 +660,15 @@ class EstateList
 	public function getEstateUnits()
 	{
 		$estateId = $this->getCurrentMultiLangEstateMainId();
-
-		$pEstateUnits = new EstateUnits( array($estateId), $this->_unitsViewName );
-		$unitCount = $pEstateUnits->getUnitCount( $estateId );
 		$htmlOutput = '';
 
-		if ( $unitCount > 0 ) {
-			$htmlOutput = $pEstateUnits->generateHtmlOutput( $estateId );
+		if ($this->_unitsViewName !== null) {
+			$pEstateUnits = new EstateUnits( array($estateId), $this->_unitsViewName );
+			$unitCount = $pEstateUnits->getUnitCount( $estateId );
+
+			if ( $unitCount > 0 ) {
+				$htmlOutput = $pEstateUnits->generateHtmlOutput( $estateId );
+			}
 		}
 
 		return $htmlOutput;

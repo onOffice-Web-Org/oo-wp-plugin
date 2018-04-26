@@ -121,9 +121,12 @@ while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 
 	<p><b>Kontaktformular:</b>
 		<?php
-			$pForm = new \onOffice\WPlugin\Form('Contactform', \onOffice\WPlugin\Form::TYPE_CONTACT);
-
-			include( __DIR__ . "/../form/defaultform.php" );
+			try {
+				$pForm = new \onOffice\WPlugin\Form('Contactform', \onOffice\WPlugin\Form::TYPE_CONTACT);
+				include( __DIR__ . "/../form/defaultform.php" );
+			} catch (\onOffice\WPlugin\DataFormConfiguration\UnknownFormException $pE) {
+				echo '(Formular nicht verfügbar)';
+			}
 		?>
 	</p>
 
