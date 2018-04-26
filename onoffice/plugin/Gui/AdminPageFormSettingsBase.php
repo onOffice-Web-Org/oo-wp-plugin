@@ -29,9 +29,9 @@ use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Record\RecordManager;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerInsertForm;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\Record\RecordManagerUpdateForm;
 use onOffice\WPlugin\Utility\ModuleTranslation;
 use stdClass;
 
@@ -179,10 +179,12 @@ abstract class AdminPageFormSettingsBase
 	protected function updateValues(array $row, stdClass $pResult, $recordId = null)
 	{
 		$result = false;
+		$type = RecordManagerFactory::TYPE_FORM;
 
 		if ($recordId != 0) {
+			$action = RecordManagerFactory::ACTION_UPDATE;
 			// update by row
-			$pRecordManagerUpdateForm = new RecordManagerUpdateForm($recordId);
+			$pRecordManagerUpdateForm = RecordManagerFactory::createByTypeAndAction($type, $action, $recordId);
 			$result = $pRecordManagerUpdateForm->updateByRow($row[RecordManager::TABLENAME_FORMS]);
 
 			if (array_key_exists(RecordManager::TABLENAME_FIELDCONFIG_FORMS, $row)) {
@@ -190,8 +192,9 @@ abstract class AdminPageFormSettingsBase
 					($row[RecordManager::TABLENAME_FIELDCONFIG_FORMS]);
 			}
 		} else {
+			$action = RecordManagerFactory::ACTION_INSERT;
 			// insert
-			$pRecordManagerInsertForm = new RecordManagerInsertForm();
+			$pRecordManagerInsertForm = RecordManagerFactory::createByTypeAndAction($type, $action);
 			$recordId = $pRecordManagerInsertForm->insertByRow($row);
 			$result = ($recordId != null);
 

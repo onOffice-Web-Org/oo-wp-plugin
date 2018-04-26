@@ -65,13 +65,13 @@ class RecordManagerFactory
 		),
 		self::TYPE_ESTATE => array(
 			self::ACTION_READ => 'RecordManagerReadListViewEstate',
-			self::ACTION_INSERT => 'RecordManagerInsertListViewEstate',
+			self::ACTION_INSERT => 'RecordManagerInsertGeneric',
 			self::ACTION_UPDATE => 'RecordManagerUpdateListViewEstate',
 			self::ACTION_DELETE => 'RecordManagerDeleteListViewEstate',
 		),
 		self::TYPE_FORM => array(
 			self::ACTION_READ => 'RecordManagerReadForm',
-			self::ACTION_INSERT => 'RecordManagerInsertForm',
+			self::ACTION_INSERT => 'RecordManagerInsertGeneric',
 			self::ACTION_UPDATE => 'RecordManagerUpdateForm',
 			self::ACTION_DELETE => 'RecordManagerDeleteForm',
 		),
@@ -81,6 +81,8 @@ class RecordManagerFactory
 	/** @var array */
 	private static $_genericClassTables = array(
 		self::TYPE_ADDRESS => RecordManager::TABLENAME_LIST_VIEW_ADDRESS,
+		self::TYPE_ESTATE => RecordManager::TABLENAME_LIST_VIEW,
+		self::TYPE_FORM => RecordManager::TABLENAME_FORMS,
 	);
 
 
@@ -122,4 +124,9 @@ class RecordManagerFactory
 
 		return $pInstance;
 	}
+
+
+	/** @return array */
+	static public function getGenericClassTables()
+		{ return self::$_genericClassTables; }
 }

@@ -19,6 +19,7 @@
  *
  */
 
+use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 
 /**
@@ -35,19 +36,19 @@ class TestClassRecordManagerFactory
 	private static $_combinations = array(
 		RecordManagerFactory::TYPE_ADDRESS => array(
 			RecordManagerFactory::ACTION_READ => '\onOffice\WPlugin\Record\RecordManagerReadListViewAddress',
-			RecordManagerFactory::ACTION_INSERT => null,
-			RecordManagerFactory::ACTION_UPDATE => null,
-			RecordManagerFactory::ACTION_DELETE => null,
+			RecordManagerFactory::ACTION_INSERT => '\onOffice\WPlugin\Record\RecordManagerInsertGeneric',
+			RecordManagerFactory::ACTION_UPDATE => '\onOffice\WPlugin\Record\RecordManagerUpdateListViewAddress',
+			RecordManagerFactory::ACTION_DELETE => '\onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress',
 		),
 		RecordManagerFactory::TYPE_ESTATE => array(
 			RecordManagerFactory::ACTION_READ => '\onOffice\WPlugin\Record\RecordManagerReadListViewEstate',
-			RecordManagerFactory::ACTION_INSERT => '\onOffice\WPlugin\Record\RecordManagerInsertListViewEstate',
+			RecordManagerFactory::ACTION_INSERT => '\onOffice\WPlugin\Record\RecordManagerInsertGeneric',
 			RecordManagerFactory::ACTION_UPDATE => '\onOffice\WPlugin\Record\RecordManagerUpdateListViewEstate',
 			RecordManagerFactory::ACTION_DELETE => '\onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate',
 		),
 		RecordManagerFactory::TYPE_FORM => array(
 			RecordManagerFactory::ACTION_READ => '\onOffice\WPlugin\Record\RecordManagerReadForm',
-			RecordManagerFactory::ACTION_INSERT => '\onOffice\WPlugin\Record\RecordManagerInsertForm',
+			RecordManagerFactory::ACTION_INSERT => '\onOffice\WPlugin\Record\RecordManagerInsertGeneric',
 			RecordManagerFactory::ACTION_UPDATE => '\onOffice\WPlugin\Record\RecordManagerUpdateForm',
 			RecordManagerFactory::ACTION_DELETE => '\onOffice\WPlugin\Record\RecordManagerDeleteForm',
 		),
@@ -81,16 +82,32 @@ class TestClassRecordManagerFactory
 	private function execute($type, $action, $class)
 	{
 		$recordId = null;
+
 		if ($action === RecordManagerFactory::ACTION_UPDATE) {
 			$recordId = 1;
 		}
 
-		try {
-			$pRecordManager = RecordManagerFactory::createByTypeAndAction
-				($type, $action, $recordId);
-			$this->assertInstanceOf($class, $pRecordManager);
-		} catch (Exception $pException) {
-			$this->assertNull($class, $pException->getMessage());
-		}
+		$pRecordManager = RecordManagerFactory::createByTypeAndAction
+			($type, $action, $recordId);
+		$this->assertInstanceOf($class, $pRecordManager);
+	}
+
+
+	/**
+	 *
+	 * @covers RecordManagerFactory::getGenericClassTables
+	 *
+	 */
+
+	public function testGetGenericClassTables()
+	{
+		$expected = array(
+			RecordManagerFactory::TYPE_ADDRESS => RecordManager::TABLENAME_LIST_VIEW_ADDRESS,
+			RecordManagerFactory::TYPE_ESTATE => RecordManager::TABLENAME_LIST_VIEW,
+			RecordManagerFactory::TYPE_FORM => RecordManager::TABLENAME_FORMS,
+		);
+
+		$genericTables = RecordManagerFactory::getGenericClassTables();
+		$this->assertEquals($expected, $genericTables);
 	}
 }

@@ -255,7 +255,7 @@ abstract class AdminPageSettingsBase
 
 	protected function prepareRelationValues($table, $column, array $values, $recordId)
 	{
-		if (array_key_exists($table, $values)) {
+		if (isset($values[$table])) {
 			array_walk($values[$table], function (&$value, $key) use ($column, $recordId) {
 				if (array_key_exists($column, $value)) {
 					$value[$column] = $recordId;

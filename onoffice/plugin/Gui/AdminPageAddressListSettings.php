@@ -197,7 +197,6 @@ class AdminPageAddressListSettings
 	protected function updateValues(array $row, stdClass $pResult, $recordId = null)
 	{
 		$type = RecordManagerFactory::TYPE_ADDRESS;
-		$action = RecordManagerFactory::ACTION_INSERT;
 		$result = false;
 
 		if ($recordId != null) {
@@ -207,6 +206,7 @@ class AdminPageAddressListSettings
 			$result = $pRecordManagerUpdate->updateByRow($row[RecordManager::TABLENAME_LIST_VIEW_ADDRESS]);
 			$result = $result && $pRecordManagerUpdate->updateRelations($row, $recordId);
 		} else {
+			$action = RecordManagerFactory::ACTION_INSERT;
 			/* @var $pRecordManagerInsert RecordManagerInsertGeneric */
 			$pRecordManagerInsert = RecordManagerFactory::createByTypeAndAction($type, $action);
 			$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
