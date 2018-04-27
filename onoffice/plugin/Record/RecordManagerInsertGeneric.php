@@ -87,7 +87,9 @@ class RecordManagerInsertGeneric
 
 		foreach ($values as $table => $tablevalues) {
 			foreach ($tablevalues as $tablerow) {
-				$result = $result && $pWpDb->insert($pWpDb->prefix.$table, $tablerow);
+				if (is_array($tablerow)) {
+					$result = $result && $pWpDb->insert($pWpDb->prefix.$table, $tablerow);
+				}
 			}
 		}
 

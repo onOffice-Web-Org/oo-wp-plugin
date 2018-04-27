@@ -94,7 +94,9 @@ class RecordManagerUpdateListViewEstate
 			$pWpDb->delete($prefix.self::TABLENAME_PICTURETYPES, $whereListviewTable);
 			foreach ($pictures as $pictureRow) {
 				$table = $prefix.self::TABLENAME_PICTURETYPES;
-				$pWpDb->insert($table, $pictureRow);
+				if (is_array($pictureRow)) {
+					$pWpDb->insert($table, $pictureRow);
+				}
 			}
 		}
 
