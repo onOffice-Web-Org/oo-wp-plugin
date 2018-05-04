@@ -24,8 +24,8 @@
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
-	<?php if ( isset( $currentEstate ) ) : ?>
-	<input type="hidden" name="Id" value="<?php echo $currentEstate['Id']; ?>">
+	<?php if ( isset( $pEstates ) ) : ?>
+		<input type="hidden" name="Id" value="<?php echo $pEstates->getCurrentEstateId(); ?>">
 	<?php endif; ?>
 
 <?php
