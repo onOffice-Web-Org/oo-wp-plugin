@@ -30,6 +30,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientAction;
 use onOffice\WPlugin\Cache\DBCache;
 
 
@@ -53,6 +54,9 @@ class SDKWrapper
 
 	/** @var string */
 	private $_server = null;
+
+	/** @var array */
+	private $_callbacksAfterSend = array();
 
 
 	/**
@@ -144,11 +148,42 @@ class SDKWrapper
 
 	/**
 	 *
+	 * @param APIClientAction $pApiAction
+	 * @return int
+	 *
+	 */
+
+	public function addRequestByApiAction(APIClientAction $pApiAction)
+	{
+		$actionId = $pApiAction->getActionId();
+		$resourceId = $pApiAction->getResourceId();
+		$identifier = null;
+		$resourceType = $pApiAction->getResourceType();
+		$parameters = $pApiAction->getParameters();
+		$callback = $pApiAction->getResultCallback();
+
+		$id = $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
+
+		if ($callback !== null) {
+			$this->_callbacksAfterSend[$id] = $callback;
+		}
+
+		return $id;
+	}
+
+
+	/**
+	 *
 	 */
 
 	public function sendRequests()
 	{
 		$this->_pSDK->sendRequests( $this->_token, $this->_secret );
+
+		foreach ($this->_callbacksAfterSend as $handle => $callback) {
+			$response = $this->getRequestResponse($handle);
+			call_user_func($callback, $response);
+		}
 	}
 
 

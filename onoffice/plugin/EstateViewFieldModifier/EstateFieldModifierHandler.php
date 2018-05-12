@@ -35,7 +35,7 @@ class EstateFieldModifierHandler
 	/** @var DataView */
 	private $_pDataView = null;
 
-	/** @var \onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypeBase */
+	/** @var EstateViewFieldModifierTypeBase */
 	private $_pModifier = null;
 
 

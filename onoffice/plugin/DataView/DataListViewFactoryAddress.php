@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -21,16 +21,16 @@
 
 namespace onOffice\WPlugin\DataView;
 
-use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
+ * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
-class DataListViewFactory
+class DataListViewFactoryAddress
 	extends DataListViewFactoryBase
 {
 	/**
@@ -39,34 +39,28 @@ class DataListViewFactory
 
 	public function __construct()
 	{
-		$this->setRecordManagerRead(new RecordManagerReadListViewEstate());
+		$this->setRecordManagerRead(new RecordManagerReadListViewAddress());
 	}
 
 
 	/**
 	 *
 	 * @param array $row
-	 * @return DataListView
+	 * @return DataListViewAddress
 	 *
 	 */
 
 	public function createListViewByRow(array $row)
 	{
-		$pListView = new DataListView($row['listview_id'], $row['name']);
-		$pListView->setExpose($row['expose']);
-		$pListView->setFields($row[DataListView::FIELDS]);
-		$pListView->setFilterId($row['filterId']);
-		$pListView->setListType($row['list_type']);
-		$pListView->setPictureTypes($row[DataListView::PICTURES]);
-		$pListView->setShowStatus((bool)$row['show_status']);
-		$pListView->setSortby($row['sortby']);
-		$pListView->setSortorder($row['sortorder']);
-		$pListView->setRecordsPerPage($row['recordsPerPage']);
-		$pListView->setTemplate($row['template']);
-		$pListView->setRandom((bool)$row['random']);
-		$pListView->setFilterableFields($row['filterable']);
-		$pListView->setHiddenFields($row['hidden']);
+		$pDataListViewAddress = new DataListViewAddress($row['listview_address_id'], $row['name']);
+		$pDataListViewAddress->setFields($row['fields']);
+		$pDataListViewAddress->setFilterId($row['filterId']);
+		$pDataListViewAddress->setRecordsPerPage($row['recordsPerPage']);
+		$pDataListViewAddress->setShowPhoto((bool)$row['showPhoto']);
+		$pDataListViewAddress->setSortby($row['sortby']);
+		$pDataListViewAddress->setSortorder($row['sortorder']);
+		$pDataListViewAddress->setTemplate($row['template']);
 
-		return $pListView;
+		return $pDataListViewAddress;
 	}
 }

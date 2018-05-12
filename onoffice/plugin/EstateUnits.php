@@ -143,7 +143,7 @@ class EstateUnits {
 		$pEstateList->loadEstates( 1 );
 
 		$templateName = $this->_pDataListView->getTemplate();
-		$pTemplate = new Template( $templateName, 'estate', 'default' );
+		$pTemplate = new Template( $templateName );
 		$pTemplate->setEstateList( $pEstateList );
 		$htmlOutput = $pTemplate->render();
 

@@ -71,6 +71,30 @@ class RecordManagerReadListViewAddress
 
 	/**
 	 *
+	 * @param string $name
+	 * @return array
+	 *
+	 */
+
+	public function getRowByName($name)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+		$mainTable = $this->getMainTable();
+
+		$sql = "SELECT *
+				FROM {$prefix}{$mainTable}
+				WHERE `name` = '".esc_sql($name)."'";
+
+		$result = $pWpDb->get_row($sql, ARRAY_A);
+		$result['fields'] = $this->readFieldconfigByListviewId($result[$this->getIdColumnMain()]);
+
+		return $result;
+	}
+
+
+	/**
+	 *
 	 * @param int $listviewId
 	 * @return array
 	 *

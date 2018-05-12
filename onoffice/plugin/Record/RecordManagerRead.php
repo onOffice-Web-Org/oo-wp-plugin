@@ -70,6 +70,16 @@ abstract class RecordManagerRead
 
 	/**
 	 *
+	 * @param string $name
+	 * @return array
+	 *
+	 */
+	
+	abstract public function getRowByName($name);
+
+
+	/**
+	 *
 	 * @param string $column
 	 * @param string $alias
 	 *

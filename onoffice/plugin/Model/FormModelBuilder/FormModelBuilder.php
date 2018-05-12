@@ -21,12 +21,12 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\TemplateCall;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -128,7 +128,7 @@ abstract class FormModelBuilder
 
 		foreach ($templatesAll as $value)
 		{
-			$value = str_replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '', $value);
+			$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
 			$templates[$value] = $value;
 		}
 

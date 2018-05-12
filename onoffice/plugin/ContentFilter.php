@@ -34,6 +34,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListViewFactory;
+use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierFactory;
 use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
@@ -100,7 +101,7 @@ class ContentFilter
 
 				if ($pDetailView->getName() === $attributes['view'])
 				{
-					$pTemplate = new Template($pDetailView->getTemplate(), 'estate', 'default_detail');
+					$pTemplate = new Template($pDetailView->getTemplate());
 					$pEstateDetail = $this->preloadSingleEstate($pDetailView, $attributes['units']);
 					$pTemplate->setEstateList($pEstateDetail);
 					$result = $pTemplate->render();
@@ -112,7 +113,7 @@ class ContentFilter
 
 				if (is_object($pListView) && $pListView->getName() === $attributes['view'])
 				{
-					$pTemplate = new Template($pListView->getTemplate(), 'estate', 'default');
+					$pTemplate = new Template($pListView->getTemplate());
 					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
 
 					$pEstateList = new EstateList($pListView);
@@ -153,7 +154,7 @@ class ContentFilter
 				$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
 				/* @var $pFormConfig DataFormConfiguration */
 				$template = $pFormConfig->getTemplate();
-				$pTemplate = new Template( $template, 'form', 'defaultform' );
+				$pTemplate = new Template( $template );
 				$pForm = new Form( $formName, $pFormConfig->getFormType() );
 				$pTemplate->setForm( $pForm );
 				$htmlOutput = $pTemplate->render();
@@ -162,6 +163,41 @@ class ContentFilter
 		} catch (Exception $pException) {
 			return $this->logErrorAndDisplayMessage($pException);
 		}
+	}
+
+
+	/**
+	 *
+	 * @global WP_Query $wp_query
+	 * @param array $attributesInput
+	 * @return string
+	 *
+	 */
+
+	public function renderAddressShortCodes( $attributesInput )
+	{
+		global $wp_query;
+		$page = 1;
+		if ( ! empty( $wp_query->query_vars['page'] ) ) {
+			$page = $wp_query->query_vars['page'];
+		}
+
+		$attributes = shortcode_atts(array(
+			'view' => null,
+		), $attributesInput);
+		$addressListName = $attributes['view'];
+
+		$pDataListFactory = new DataListViewFactoryAddress();
+		/* @var $pAddressListView DataView\DataListViewAddress */
+		$pAddressListView = $pDataListFactory->getListViewByName($addressListName);
+
+		$pAddressList = new AddressList();
+
+		$pAddressList->loadAddresses($pAddressListView);
+		$templateName = $pAddressListView->getTemplate();
+		$pTemplate = new Template($templateName);
+		$pTemplate->setAddressList($pAddressList);
+		return $pTemplate->render();
 	}
 
 
