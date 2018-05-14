@@ -159,6 +159,9 @@ class Fieldnames
 	/** @var string */
 	private $_language = null;
 
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
+
 
 	/**
 	 *
@@ -173,6 +176,8 @@ class Fieldnames
 		} else {
 			$this->_language = $language;
 		}
+
+		$this->_pSDKWrapper = new SDKWrapper();
 	}
 
 
@@ -199,36 +204,37 @@ class Fieldnames
 			$parametersGetFieldList['showOnlyInactive'] = true;
 		}
 
-		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper = $this->_pSDKWrapper;
 		$handleGetFields = $pSDKWrapper->addRequest(
 			onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList);
+
+		$requestParamsSearchCriteria = array(
+			'language' => $this->_language,
+			'additionalTranslations' => true,
+		);
+
+		$handleSearchCriteria = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', $requestParamsSearchCriteria);
+
 		$pSDKWrapper->sendRequests();
 
 		$responseArrayFieldList = $pSDKWrapper->getRequestResponse($handleGetFields);
 		$fieldList = $responseArrayFieldList['data']['records'];
 
 		$this->createFieldList( $fieldList );
-		$this->completeFieldListWithSearchcriteria();
+		$this->completeFieldListWithSearchcriteria($handleSearchCriteria);
 	}
 
 
 	/**
 	 *
+	 * @param int $handle
+	 *
 	 */
 
-	private function completeFieldListWithSearchcriteria()
+	private function completeFieldListWithSearchcriteria($handle)
 	{
-		$pSDKWrapper = new SDKWrapper();
-		$requestParameter = array(
-			'language' => $this->_language,
-			'additionalTranslations' => true,
-		);
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', $requestParameter);
-		$pSDKWrapper->sendRequests();
-
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+		$response = $this->_pSDKWrapper->getRequestResponse($handle);
 
 		foreach ($response['data']['records'] as $tableValues) {
 			$fields = $tableValues['elements'];
@@ -277,7 +283,7 @@ class Fieldnames
 
 	public function inRangeSearchcriteriaInfos($field)
 	{
-		return array_key_exists($field, $this->_searchcriteriaRangeInfos);
+		return isset($this->_searchcriteriaRangeInfos[$field]);
 	}
 
 
@@ -290,7 +296,7 @@ class Fieldnames
 
 	public function isUmkreisField($field)
 	{
-		return array_key_exists($field, $this->_umkreisFields);
+		return isset($this->_umkreisFields[$field]);
 	}
 
 
@@ -324,7 +330,7 @@ class Fieldnames
 	{
 		$infos = array();
 
-		if (array_key_exists($field, $this->_searchcriteriaRangeInfos)) {
+		if (isset($this->_searchcriteriaRangeInfos[$field])) {
 			$infos = $this->_searchcriteriaRangeInfos[$field];
 		}
 
@@ -364,14 +370,14 @@ class Fieldnames
 
 	private function createFieldList(array $fieldResult)
 	{
-		foreach ( $fieldResult as $moduleProperties ) {
-			if ( ! array_key_exists( 'elements', $moduleProperties ) ) {
+		foreach ($fieldResult as $moduleProperties) {
+			if (!isset($moduleProperties['elements'])) {
 				continue;
 			}
 
 			$module = $moduleProperties['id'];
 
-			foreach ( $moduleProperties['elements'] as $fieldName => $fieldProperties ) {
+			foreach ($moduleProperties['elements'] as $fieldName => $fieldProperties) {
 				if ( 'label' == $fieldName ) {
 					continue;
 				}
@@ -430,7 +436,7 @@ class Fieldnames
 	public function getFieldList($module, $addApiOnlyFields = false, $annotated = false)
 	{
 		$fieldList = array();
-		if ( isset( $this->_fieldList[$module] ) ) {
+		if (isset( $this->_fieldList[$module])) {
 			$fieldList = $this->_fieldList[$module];
 		}
 
@@ -462,7 +468,7 @@ class Fieldnames
 	private function getExtraFields($module, $annotated)
 	{
 		$extraFields = array();
-		$hasApiFields = array_key_exists($module, self::$_apiReadOnlyFields);
+		$hasApiFields = isset(self::$_apiReadOnlyFields[$module]);
 
 		if ($hasApiFields) {
 			$extraFields = self::$_apiReadOnlyFields[$module];
@@ -471,10 +477,10 @@ class Fieldnames
 			});
 		}
 
-		if ($annotated && array_key_exists($module, self::$_readOnlyFieldsAnnotations)) {
+		if ($annotated && isset(self::$_readOnlyFieldsAnnotations[$module])) {
 			$annotatedFields = array();
 			foreach ($extraFields as $field => $option) {
-				if (array_key_exists($field, self::$_readOnlyFieldsAnnotations[$module])) {
+				if (isset(self::$_readOnlyFieldsAnnotations[$module][$field])) {
 					$option['label'] = self::$_readOnlyFieldsAnnotations[$module][$field];
 					$annotatedFields[$field] = $option;
 				}
@@ -566,4 +572,17 @@ class Fieldnames
 
 		return array();
 	}
+
+
+	/** @return string */
+	public function getLanguage()
+		{ return $this->_language; }
+
+	/** @return SDKWrapper */
+	public function getSDKWrapper()
+		{ return $this->_pSDKWrapper; }
+
+	/** @param SDKWrapper $pSDKWrapper */
+	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
+		{ $this->_pSDKWrapper = $pSDKWrapper; }
 }

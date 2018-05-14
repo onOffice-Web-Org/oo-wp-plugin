@@ -33,6 +33,7 @@ foreach ($pAddressList->getRows() as $escapedValues) {
 	echo 'Bild: ', $imageUrl, '<br>';
 
 	foreach ($escapedValues as $field => $value) {
-		echo $field, ': ', $value, '<br>';
+		$fieldLabel = $pAddressList->getFieldLabel($field);
+		echo $fieldLabel, ': ', $value, '<br>';
 	}
 }

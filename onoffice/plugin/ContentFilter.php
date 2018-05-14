@@ -191,7 +191,9 @@ class ContentFilter
 		/* @var $pAddressListView DataView\DataListViewAddress */
 		$pAddressListView = $pDataListFactory->getListViewByName($addressListName);
 
-		$pAddressList = new AddressList();
+		$pFieldnames = new Fieldnames();
+		$pFieldnames->loadLanguage();
+		$pAddressList = new AddressList($pFieldnames);
 
 		$pAddressList->loadAddresses($pAddressListView);
 		$templateName = $pAddressListView->getTemplate();

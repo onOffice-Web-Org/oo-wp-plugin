@@ -28,6 +28,7 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionReadAddress;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
@@ -58,14 +59,20 @@ class AddressList
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
+	/** @var Fieldnames */
+	private $_pFieldnames = null;
+
 
 	/**
 	 *
+	 * @param Fieldnames $pFieldnames
+	 *
 	 */
 
-	public function __construct()
+	public function __construct(Fieldnames $pFieldnames = null)
 	{
 		$this->_pSDKWrapper = new SDKWrapper();
+		$this->_pFieldnames = $pFieldnames;
 	}
 
 
@@ -215,6 +222,26 @@ class AddressList
 		}
 
 		return $pArrayContainer;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @param bool $raw
+	 * @return string
+	 *
+	 */
+
+	public function getFieldLabel($field, $raw = false)
+	{
+		$label = $field;
+		$pFieldnames = $this->_pFieldnames;
+
+		if ($pFieldnames !== null) {
+			$label = $pFieldnames->getFieldLabel($field, onOfficeSDK::MODULE_ADDRESS);
+		}
+		return $raw ? $label : esc_html($label);
 	}
 
 
