@@ -70,6 +70,10 @@ abstract class APIClientAction
 	}
 
 
+	/**
+	 *
+	 */
+
 	abstract protected function setSettings();
 
 	/**

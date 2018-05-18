@@ -25,12 +25,9 @@ use onOffice\SDK\onOfficeSDK;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
-class APIClientActionReadAddress
+class APIClientActionReadEstate
 	extends APIClientAction
 {
 	/**
@@ -40,7 +37,7 @@ class APIClientActionReadAddress
 	protected function setSettings()
 	{
 		$this->setActionId(onOfficeSDK::ACTION_ID_READ);
-		$this->setResourceType('address');
+		$this->setResourceType('estate');
 
 		$this->setResultCallback(array($this, 'onAfterExecution'));
 	}

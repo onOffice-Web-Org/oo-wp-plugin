@@ -54,6 +54,9 @@ class PdfDocument {
 	/** @var string */
 	private $_template = null;
 
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
+
 
 	/**
 	 *
@@ -61,10 +64,12 @@ class PdfDocument {
 	 *
 	 */
 
-	public function __construct( $estateId, $language, $template ) {
+	public function __construct($estateId, $language, $template)
+	{
 		$this->_estateId = $estateId;
 		$this->_language = $language;
 		$this->_template = $template;
+		$this->_pSDKWrapper = new SDKWrapper();
 	}
 
 
@@ -74,7 +79,8 @@ class PdfDocument {
 	 *
 	 */
 
-	public function fetch() {
+	public function fetch()
+	{
 		$parameters = array(
 			'estateid' => $this->_estateId,
 			'language' => $this->_language,
@@ -110,90 +116,43 @@ class PdfDocument {
 	}
 
 
-	/**
-	 *
-	 * @param int $addressId
-	 *
-	 */
+	/** @param int $addressId */
+	public function setAddressId($addressId)
+		{ $this->_addressId = $addressId; }
 
-	public function setAddressId( $addressId ) {
-		$this->_addressId = $addressId;
-	}
+	/** @return int */
+	public function getAddressId()
+		{ return $this->_addressId; }
 
+	/** @param int $estateId */
+	public function setEstateId($estateId)
+		{ $this->_estateId = $estateId; }
 
-	/**
-	 *
-	 * @return int
-	 *
-	 */
+	/** @return int */
+	public function getEstateId()
+		{ return $this->_estateId; }
 
-	public function getAddressId() {
-		return $this->_addressId;
-	}
+	/** @param string $language */
+	public function setLanguage($language)
+		{ $this->_language = $language; }
 
+	/** @return string */
+	public function getLanguage()
+		{ return $this->_language; }
 
-	/**
-	 *
-	 * @param int $estateId
-	 *
-	 */
+	/** @return string binary */
+	public function getDocumentBinary()
+		{ return $this->_documentBinary; }
 
-	public function setEstateId( $estateId ) {
-		$this->_estateId = $estateId;
-	}
+	/** @return string */
+	public function getMimeType()
+		{ return $this->_mimeType; }
 
+	/** @return SDKWrapper */
+	public function getSDKWrapper()
+		{ return $this->_pSDKWrapper; }
 
-	/**
-	 *
-	 * @return int
-	 *
-	 */
-
-	public function getEstateId() {
-		return $this->_estateId;
-	}
-
-
-	/**
-	 *
-	 * @param string $language
-	 *
-	 */
-
-	public function setLanguage( $language ) {
-		$this->_language = $language;
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getLanguage() {
-		return $this->_language;
-	}
-
-
-	/**
-	 *
-	 * @return string binary
-	 *
-	 */
-
-	public function getDocumentBinary() {
-		return $this->_documentBinary;
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getMimeType() {
-		return $this->_mimeType;
-	}
+	/** @param SDKWrapper $pSDKWrapper*/
+	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
+		{ $this->_pSDKWrapper = $pSDKWrapper; }
 }

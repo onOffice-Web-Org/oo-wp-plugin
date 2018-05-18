@@ -100,7 +100,9 @@ require('estatemap.php');
 	</a>
 	<?php endforeach; ?>
 
-	<h2>Dokumente</h2>
-	<a href="<?php echo $pEstates->getDocument(); ?>">PDF-Exposé</a>
+	<?php if ($pEstates->getDataView()->getExpose() != ''): ?>
+		<h2>Dokumente</h2>
+		<a href="<?php echo $pEstates->getDocument(); ?>">PDF-Exposé</a>
+	<?php endif; ?>
 
 <?php endwhile; ?>

@@ -686,10 +686,7 @@ class EstateList
 		$language = Language::getDefault();
 
 		$estateId = $this->_currentEstate['mainId'];
-		$documentId = $this->_pDataView->getExpose();
-
 		$queryVars = array(
-			'documentid' => $documentId,
 			'estateid' => $estateId,
 			'language' => $language,
 			'configindex' => $this->_pDataView->getName(),
