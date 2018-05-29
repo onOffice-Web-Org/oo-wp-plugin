@@ -30,7 +30,6 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
-use onOffice\WPlugin\Record\RecordManagerInsertForm;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Utility\ModuleTranslation;
 use stdClass;

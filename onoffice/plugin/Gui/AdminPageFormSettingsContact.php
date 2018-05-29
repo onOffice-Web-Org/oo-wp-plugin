@@ -113,7 +113,7 @@ class AdminPageFormSettingsContact
 	protected function generateMetaBoxes()
 	{
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
-		$this->createMetaBoxByForm($pFormFormSpecific, 'normal');
+		$this->createMetaBoxByForm($pFormFormSpecific, 'side');
 
 		parent::generateMetaBoxes();
 	}
