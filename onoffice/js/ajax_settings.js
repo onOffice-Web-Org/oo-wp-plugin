@@ -12,6 +12,7 @@ onOffice.ajaxSaver = function(outerDiv) {
 	this.register = function() {
 		var proto = this;
 		this._outerDiv.find('#send_ajax').on('click', function() {
+			window.scrollTo(0, 0);
 			proto.save();
 		});
 	};
