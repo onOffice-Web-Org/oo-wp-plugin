@@ -52,14 +52,14 @@ body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
 	width: 49%;
 }
 
-body.onoffice_page_onoffice-estates #onoffice-ajax span.viewusage {
+body #onoffice-ajax span.viewusage {
 	font-size: 1.2em;
 	position: relative;
 	margin-bottom: 20px;
-	display: block;
+	display: inline-block;
 }
 
-body.onoffice_page_onoffice-estates #onoffice-ajax span.viewusage .italic {
+body #onoffice-ajax span.viewusage .italic {
 	font-style: italic;
 }
 

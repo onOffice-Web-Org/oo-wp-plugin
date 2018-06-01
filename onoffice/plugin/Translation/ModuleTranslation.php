@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\Utility;
+namespace onOffice\WPlugin\Translation;
 
 use onOffice\SDK\onOfficeSDK;
 

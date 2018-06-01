@@ -30,9 +30,11 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\Utility\ModuleTranslation;
+use onOffice\WPlugin\Translation\FormTranslation;
+use onOffice\WPlugin\Translation\ModuleTranslation;
 
 /**
  *
@@ -199,6 +201,48 @@ class FormModelBuilderDBForm
 		$pInputModelName->setValue($this->getValue($pInputModelName->getField()));
 
 		return $pInputModelName;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelLabel
+	 *
+	 */
+
+	public function createInputModelFormType()
+	{
+		$formType = $this->getFormType();
+		$pFormTranslation = new FormTranslation();
+		$translation = $pFormTranslation->getPluralTranslationForForm($formType, 1);
+		$pInputModeLabel = new InputModelLabel(__('Form is of Type: ', 'onoffice'), $translation);
+
+		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
+
+		return $pInputModeLabel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelLabel
+	 *
+	 */
+
+	public function createInputModelEmbedCode()
+	{
+		$pConfig = new InputModelDBFactoryConfigForm();
+		$config = $pConfig->getConfig();
+		$name = $config[InputModelDBFactoryConfigForm::INPUT_FORM_NAME]
+			[InputModelDBFactoryConfigForm::KEY_FIELD];
+		$formName = $this->getValue($name);
+
+		$code = '[oo_form form="'.$formName.'"]';
+		$pInputModeLabel = new InputModelLabel(__(', Embed Code: ', 'onoffice'), $code);
+		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
+		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
+
+		return $pInputModeLabel;
 	}
 
 

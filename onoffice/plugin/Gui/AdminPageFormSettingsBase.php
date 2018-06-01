@@ -23,15 +23,19 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
+use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\Utility\ModuleTranslation;
+use onOffice\WPlugin\Translation\FormTranslation;
+use onOffice\WPlugin\Translation\ModuleTranslation;
 use stdClass;
 
 /**
@@ -270,6 +274,15 @@ abstract class AdminPageFormSettingsBase
 		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
 		$pFormModelName->setLabel(__('choose name', 'onoffice'));
 		$pFormModelName->addInputModel($pInputModelName);
+
+		$pInputModelType = $this->_pFormModelBuilder->createInputModelFormType();
+		$pFormModelName->addInputModel($pInputModelType);
+
+		if ($this->getListViewId() !== null) {
+			$pInputModelEmbedCode = $this->_pFormModelBuilder->createInputModelEmbedCode();
+			$pFormModelName->addInputModel($pInputModelEmbedCode);
+		}
+
 		$this->addFormModel($pFormModelName);
 
 		$pInputModelTemplate = $this->_pFormModelBuilder->createInputModelTemplate('form');

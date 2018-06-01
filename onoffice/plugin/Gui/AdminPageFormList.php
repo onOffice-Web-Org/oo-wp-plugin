@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use Exception;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Gui\Table\FormsTable;
+use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
 
 /**
@@ -55,9 +56,10 @@ class AdminPageFormList
 
 		$tab = $this->getTab();
 		$this->_pFormsTable = new FormsTable();
+		$pFormTranslation = new FormTranslation();
 
 		if (!__String::getNew($tab)->isEmpty() &&
-			!array_key_exists($tab, $this->_pFormsTable->getFormConfig())) {
+			!array_key_exists($tab, $pFormTranslation->getFormConfig())) {
 			throw new Exception('Unknown Form type');
 		}
 
@@ -180,29 +182,30 @@ class AdminPageFormList
 	{
 		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
 
-		if ($subTitle != '')
-		{
-			echo ' › '.esc_html__($subTitle, 'onoffice');
-		}
-
 		$tab = $this->getTab();
 
 		if ($tab == null) {
 			$tab = Form::TYPE_CONTACT;
 		}
 
+		$pFormTranslation = new FormTranslation();
+		$translation = $pFormTranslation->getPluralTranslationForForm($tab, 1);
+
+		if ($subTitle != '')
+		{
+			echo ' › '.esc_html__($subTitle, 'onoffice'). ' › '.$translation;
+		}
+
 		$typeParam = AdminPageFormSettingsMain::GET_PARAM_TYPE;
 
 		$new_link = add_query_arg($typeParam, $tab, admin_url('admin.php?page=onoffice-editform'));
 
-		$formConfig = $this->_pFormsTable->getFormConfig();
-		$label = $formConfig[$tab];
-
-		$translation = translate_nooped_plural( $label[FormsTable::SUB_LABEL], 1, 'onoffice' );
-
 		echo '</h1>';
-		echo '<a href="'.$new_link.'" class="page-title-action">'
-			.esc_html(sprintf(__('Add New %s', 'onoffice'), $translation)).'</a>';
+
+		if ($tab !== 'all') {
+			echo '<a href="'.$new_link.'" class="page-title-action">'
+				.esc_html__('Add New', 'onoffice').'</a>';
+		}
 		echo '<hr class="wp-header-end">';
 	}
 }

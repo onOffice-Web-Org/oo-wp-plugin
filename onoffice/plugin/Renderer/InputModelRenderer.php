@@ -85,15 +85,18 @@ class InputModelRenderer
 			return;
 		}
 
-		foreach ($pForm->getInputModel() as $pInputModel)
-		{
+		foreach ($pForm->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel);
-			echo '<p id="" class="wp-clearfix">';
-			echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
-			echo esc_html__($pInputModel->getLabel());
-			echo '</label>';
-			$pInputField->render();
-			echo '</p>';
+			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL) {
+				echo '<p id="" class="wp-clearfix">';
+				echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
+				echo esc_html__($pInputModel->getLabel());
+				echo '</label>';
+				$pInputField->render();
+				echo '</p>';
+			} else {
+				echo $pInputField->render();
+			}
 		}
 	}
 
@@ -215,6 +218,14 @@ class InputModelRenderer
 				}
 				$pInstance = new InputFieldTextRenderer('hidden', $name);
 				$pInstance->setValue($pInputModel->getValue());
+
+				break;
+
+			case InputModelBase::HTML_TYPE_LABEL:
+				$pInstance = new InputFieldLabelRenderer
+					(null, $pInputModel->getIdentifier(), $pInputModel->getValue());
+				$pInstance->setLabel($pInputModel->getLabel());
+				$pInstance->setValueEnclosure($pInputModel->getValueEnclosure());
 
 				break;
 		}

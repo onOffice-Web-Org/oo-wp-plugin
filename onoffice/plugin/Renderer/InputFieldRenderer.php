@@ -96,24 +96,6 @@ abstract class InputFieldRenderer
 	}
 
 
-	/** @return string */
-	public function getName()
-		{ return $this->_name; }
-
-
-	/** @return mixed */
-	public function getValue()
-		{ return $this->_value; }
-
-	/** @param mixed $value */
-	public function setValue($value)
-		{ $this->_value = $value; }
-
-
-	/** @return string */
-	public function getType()
-		{ return $this->_type;}
-
 	/**
 	 *
 	 * @return int
@@ -145,4 +127,35 @@ abstract class InputFieldRenderer
 
 		return implode(' ', $outputValues);
 	}
+
+
+	/**
+	 *
+	 * For testing only!
+	 *
+	 */
+
+	public static function resetGuiId()
+	{
+		self::$_guiId = 0;
+	}
+
+
+	/** @return string */
+	public function getName()
+		{ return $this->_name; }
+
+
+	/** @return mixed */
+	public function getValue()
+		{ return $this->_value; }
+
+	/** @param mixed $value */
+	public function setValue($value)
+		{ $this->_value = $value; }
+
+
+	/** @return string */
+	public function getType()
+		{ return $this->_type;}
 }

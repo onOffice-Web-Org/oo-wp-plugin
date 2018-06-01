@@ -46,6 +46,9 @@ abstract class InputModelBase
 	const HTML_TYPE_TEXT = 'text';
 
 	/** */
+	const HTML_TYPE_LABEL = 'label';
+
+	/** */
 	const HTML_TYPE_CHECKBOX_BUTTON = 'checkboxWithSubmitButton';
 
 	/** */

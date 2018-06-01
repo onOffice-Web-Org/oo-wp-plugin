@@ -21,11 +21,11 @@
 
 namespace onOffice\WPlugin\Gui\Table;
 
-use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Translation\FormTranslation;
 use WP_List_Table;
 /**
  *
@@ -37,17 +37,8 @@ use WP_List_Table;
 class FormsTable
 	extends ListTable
 {
-	/** */
-	const SUB_LABEL = 'label';
-
-	/** */
-	const SUB_DB_VALUE = 'dbValue';
-
 	/** @var int */
 	private $_itemsPerPage = null;
-
-	/** @var array */
-	private $_formConfig = array();
 
 	/** @var string */
 	private $_listType = 'all';
@@ -70,29 +61,6 @@ class FormsTable
 		parent::__construct($args);
 
 		$this->_itemsPerPage = $this->get_items_per_page('onoffice-forms-forms_per_page', 10);
-
-		$this->_formConfig = array(
-			'all' => array(
-				self::SUB_LABEL => _nx_noop('All', 'All', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => null,
-			),
-			Form::TYPE_CONTACT => array(
-				self::SUB_LABEL => _nx_noop('Contact Form', 'Contact Forms', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => Form::TYPE_CONTACT,
-			),
-			Form::TYPE_INTEREST => array(
-				self::SUB_LABEL => _nx_noop('Interest Form', 'Interest Forms', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => Form::TYPE_INTEREST,
-			),
-			Form::TYPE_OWNER => array(
-				self::SUB_LABEL => _nx_noop('Owner Form', 'Owner Forms', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => Form::TYPE_OWNER,
-			),
-			Form::TYPE_APPLICANT_SEARCH => array(
-				self::SUB_LABEL => _nx_noop('Applicant Search Form', 'Applicant Search Forms', 'forms', 'onoffice'),
-				self::SUB_DB_VALUE => Form::TYPE_APPLICANT_SEARCH,
-			),
-		);
 	}
 
 
@@ -224,9 +192,12 @@ class FormsTable
 		$paramName = AdminPageFormList::PARAM_TYPE;
 		$baseUrl = menu_page_url('onoffice-forms', false);
 
+		$pFormTranslation = new FormTranslation();
+		$formConfig = $pFormTranslation->getFormConfig();
+
 		$result = array();
 
-		foreach ($this->_formConfig as $type => $label)
+		foreach ($formConfig as $type => $label)
 		{
 			$editUrl = add_query_arg($paramName, $type, $baseUrl);
 
@@ -235,7 +206,7 @@ class FormsTable
 
 			$result[$type] = '<a href="'.esc_url($editUrl).'"'.$current.'>'.
 				sprintf( '%s <span class="count">(%s)</span>',
-					translate_nooped_plural( $label[self::SUB_LABEL], $count, 'onoffice' ),
+					$pFormTranslation->getPluralTranslationForForm($type, $count),
 					number_format_i18n( $count )
 				).'</a>';
 		}
@@ -284,8 +255,4 @@ class FormsTable
 	/** @param string $listType */
 	public function setListType($listType)
 		{ $this->_listType = $listType; }
-
-	/** @return array */
-	public function getFormConfig()
-		{ return $this->_formConfig; }
 }
