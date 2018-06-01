@@ -47,7 +47,7 @@ class AdminPageFormSettingsApplicantSearch
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
-		$pFormModelFormSpecific->setLabel(__('Form Specific', 'onoffice'));
+		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice'));
 		$pFormModelFormSpecific->addInputModel($pInputModelResultLimit);
 		$this->addFormModel($pFormModelFormSpecific);
 

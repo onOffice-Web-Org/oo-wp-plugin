@@ -473,7 +473,7 @@ class Fieldnames
 		if ($hasApiFields) {
 			$extraFields = self::$_apiReadOnlyFields[$module];
 			array_walk($extraFields, function(&$array) {
-				$array['content'] = __('Additional Fields', 'onoffice');
+				$array['content'] = __('Form Specific Fields', 'onoffice');
 			});
 		}
 

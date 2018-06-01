@@ -61,7 +61,7 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
-		$pFormModelFormSpecific->setLabel(__('Form Specific', 'onoffice'));
+		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice'));
 		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 
@@ -84,7 +84,7 @@ class AdminPageFormSettingsContact
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
 
 		if ($this->_showMessageInput) {
-			$category = __('Form-Specific', 'onoffice');
+			$category = __('Form Specific Fields', 'onoffice');
 			$this->_additionalCategories[] = $category;
 
 			$fieldNameMessage = array($category => array(
