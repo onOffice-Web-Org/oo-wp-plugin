@@ -151,11 +151,12 @@ class AdminPageEstateListSettings
 	protected function generateAccordionBoxes()
 	{
 		$this->cleanPreviousBoxes();
-		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE));
+		$module = onOfficeSDK::MODULE_ESTATE;
+		$fieldNames = array_keys($this->readFieldnamesByContent($module));
 
-		foreach ($fieldNames as $category)
-		{
-			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
+		foreach ($fieldNames as $category) {
+			$slug = $this->generateGroupSlugByModuleCategory($module, $category);
+			$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 		}
 	}

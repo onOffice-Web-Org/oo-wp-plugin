@@ -310,25 +310,28 @@ abstract class AdminPageFormSettingsBase
 	{
 		$this->cleanPreviousBoxes();
 		$fieldNames = array();
+		$settings = array();
 
 		if ($this->_showEstateFields) {
-			$fieldNames = array_merge($fieldNames,
-				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE)));
+			$settings[onOfficeSDK::MODULE_ESTATE] = false;
 		}
 
 		if ($this->_showAddressFields) {
-			$fieldNames = array_merge($fieldNames,
-				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS)));
+			$settings[onOfficeSDK::MODULE_ADDRESS] = false;
 		}
 
 		if ($this->_showSearchCriteriaFields) {
-			$fieldNames = array_merge($fieldNames,
-				array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA, true)));
+			$settings[onOfficeSDK::MODULE_SEARCHCRITERIA] = true;
 		}
 
-		foreach ($fieldNames as $category) {
-			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
-			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+		foreach ($settings as $module => $getExtraFields) {
+			$fieldNames = array_keys($this->readFieldnamesByContent($module, $getExtraFields));
+
+			foreach ($fieldNames as $category) {
+				$slug = $this->generateGroupSlugByModuleCategory($module, $category);
+				$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
+				$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+			}
 		}
 	}
 

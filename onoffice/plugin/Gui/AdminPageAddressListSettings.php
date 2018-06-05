@@ -180,7 +180,9 @@ class AdminPageAddressListSettings
 		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS));
 
 		foreach ($fieldNames as $category) {
-			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
+			$slug = $this->generateGroupSlugByModuleCategory
+				(onOfficeSDK::MODULE_ADDRESS, $category);
+			$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 		}
 	}

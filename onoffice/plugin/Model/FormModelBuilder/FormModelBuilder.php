@@ -210,11 +210,13 @@ abstract class FormModelBuilder
 	 *
 	 * @param string $category
 	 * @param array $fieldNames
+	 * @param string $categoryLabel
 	 * @return InputModelDB
 	 *
 	 */
 
-	abstract public function createInputModelFieldsConfigByCategory($category, $fieldNames);
+	abstract public function createInputModelFieldsConfigByCategory
+		($category, $fieldNames, $categoryLabel);
 
 	/** @return string */
 	public function getPageSlug()

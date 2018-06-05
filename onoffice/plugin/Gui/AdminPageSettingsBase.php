@@ -246,6 +246,20 @@ abstract class AdminPageSettingsBase
 
 	/**
 	 *
+	 * @param string $module
+	 * @param string $category
+	 * @return string
+	 *
+	 */
+
+	protected function generateGroupSlugByModuleCategory($module, $category)
+	{
+		return $module.'/'.$category;
+	}
+
+
+	/**
+	 *
 	 * @param string $table
 	 * @param string $column
 	 * @param array $values
@@ -289,15 +303,16 @@ abstract class AdminPageSettingsBase
 		array $fieldNames, $addModule = false)
 	{
 		foreach ($fieldNames as $category => $fields) {
+			$slug = $this->generateGroupSlugByModuleCategory($module, $category);
 			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
-				($category, $fields);
+				($slug, $fields, $category);
 			if ($addModule) {
 				$pInputModelFieldsConfig->setModule($module);
 			}
 
 			$pFormModelFieldsConfig = new Model\FormModel();
 			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
-			$pFormModelFieldsConfig->setGroupSlug($category);
+			$pFormModelFieldsConfig->setGroupSlug($slug);
 			$pFormModelFieldsConfig->setLabel($category);
 			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
 			$this->addFormModel($pFormModelFieldsConfig);

@@ -380,7 +380,8 @@ class AdminPageEstateDetail
 	{
 		foreach ($fieldNames as $category => $fields)
 		{
-			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory($category, $fields);
+			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
+				($category, $fields, $category);
 			$pInputModelFieldsConfig->setSpecialDivId(self::getSpecialDivId($module));
 			$pFormModelFieldsConfig = new FormModel();
 			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());

@@ -46,11 +46,12 @@ abstract class FormModelBuilderDB
 	 *
 	 * @param string $category
 	 * @param array $fieldNames
+	 * @param string $categoryLabel
 	 * @return InputModelDB
 	 *
 	 */
 
-	public function createInputModelFieldsConfigByCategory($category, $fieldNames)
+	public function createInputModelFieldsConfigByCategory($category, $fieldNames, $categoryLabel)
 	{
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, $category, true);
@@ -58,7 +59,7 @@ abstract class FormModelBuilderDB
 		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$pInputModelFieldsConfig->setId($category);
-		$pInputModelFieldsConfig->setLabel($category);
+		$pInputModelFieldsConfig->setLabel($categoryLabel);
 		$fields = $this->getValue(DataListView::FIELDS);
 
 		if (null == $fields) {

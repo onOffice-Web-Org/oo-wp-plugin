@@ -122,11 +122,12 @@ class FormModelBuilderDBForm
 	 *
 	 * @param string $category
 	 * @param array $fieldNames
+	 * @param string $categoryLabel
 	 * @return InputModelDB
 	 *
 	 */
 
-	public function createInputModelFieldsConfigByCategory($category, $fieldNames)
+	public function createInputModelFieldsConfigByCategory($category, $fieldNames, $categoryLabel)
 	{
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
 			InputModelDBFactory::INPUT_FIELD_CONFIG, $category, true);
@@ -134,6 +135,7 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$pInputModelFieldsConfig->setId($category);
+		$pInputModelFieldsConfig->setLabel($categoryLabel);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
 
 		if (null == $fields) {
@@ -438,7 +440,7 @@ class FormModelBuilderDBForm
 	{
 		$module = null;
 		foreach ($this->_formModules as $formModule) {
-			if ( $this->_pFieldNames->getModuleContainsField($key, $formModule)) {
+			if ($this->_pFieldNames->getModuleContainsField($key, $formModule)) {
 				$module = $formModule;
 				break;
 			}

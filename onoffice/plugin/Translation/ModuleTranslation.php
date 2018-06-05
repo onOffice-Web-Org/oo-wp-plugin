@@ -80,10 +80,12 @@ class ModuleTranslation
 	 *
 	 * @internal for callback in method getAllLabelsSingular() only
 	 * @param string $value
+	 * @return string
 	 *
 	 */
 
-	public static function translateValue($value) {
+	public static function translateValue($value)
+	{
 		return __($value, 'onoffice');
 	}
 }

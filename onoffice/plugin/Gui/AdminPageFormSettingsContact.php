@@ -128,7 +128,8 @@ class AdminPageFormSettingsContact
 		parent::generateAccordionBoxes();
 
 		foreach ($this->_additionalCategories as $category) {
-			$pFormFieldsConfigCategory = $this->getFormModelByGroupSlug($category);
+			$slug = $this->generateGroupSlugByModuleCategory(null, $category);
+			$pFormFieldsConfigCategory = $this->getFormModelByGroupSlug($slug);
 			$this->createMetaBoxByForm($pFormFieldsConfigCategory, 'side');
 		}
 	}
