@@ -61,7 +61,7 @@ else
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );
-			$line .= '<select size="1" name="'.$input.'>';
+			$line .= '<select size="1" name="'.$input.'">';
 
 			foreach ( $permittedValues as $key => $value )
 			{
@@ -73,7 +73,8 @@ else
 				{
 					$isSelected = $selectedValue == $key;
 				}
-				$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
+				$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'
+					.esc_html($value).'</option>';
 			}
 			$line .= '</select>';
 		}
@@ -97,34 +98,26 @@ else
 ?>
 
 <script>
-function weiter(pages)
-{
-	for (i=1; i<= pages; i++)
-	{
-		if ($('#'+i).is(':visible'))
-		{
-			if (i < pages)
-			{
-				$('#'+i).hide();
+function weiter(pages) {
+	for (var i = 1; i <= pages; i++) {
+		if ($('#' + i).is(':visible')) {
+			if (i < pages) {
+				$('#' + i).hide();
 				i++;
-				$('#'+i).show();
+				$('#' + i).show();
 				break;
 			}
 		}
 	}
 }
 
-function zurueck(pages)
-{
-	for (i=pages; i>= 1; i--)
-	{
-		if ($('#'+i).is(':visible'))
-		{
-			if (i > 1)
-			{
-				$('#'+i).hide();
+function zurueck(pages) {
+	for (var i = pages; i>= 1; i--) {
+		if ($('#' + i).is(':visible')) {
+			if (i > 1) {
+				$('#' + i).hide();
 				i--;
-				$('#'+i).show();
+				$('#' + i).show();
 				break;
 			}
 		}

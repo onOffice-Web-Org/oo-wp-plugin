@@ -67,7 +67,9 @@ require('estatemap.php');
 
 <?php
 $pEstates->resetEstateIterator();
-while ( $currentEstate = $pEstates->estateIterator() ) : ?>
+while ( $currentEstate = $pEstates->estateIterator() ) :
+	$estateId = $pEstates->getCurrentEstateId();
+?>
 
 <p>
 	<a href="<?php echo $pEstates->getEstateLink(); ?>">Zur Detailansicht</a><br>

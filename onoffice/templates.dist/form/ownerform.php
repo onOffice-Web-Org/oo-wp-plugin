@@ -71,7 +71,8 @@ else
 				{
 					$isSelected = $selectedValue == $key;
 				}
-				$line .=  '<option value="'.esc_attr($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
+				$line .=  '<option value="'.esc_attr($key).'"'.($isSelected ? ' selected' : '').'>'
+					.esc_html($value).'</option>';
 			}
 			$line .= '</select>';
 		}
