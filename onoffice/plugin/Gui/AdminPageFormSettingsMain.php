@@ -134,12 +134,14 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowMessageInput(true);
 				break;
 			case Form::TYPE_CONTACT:
+				/* @var $pAdminPage AdminPageFormSettingsContact */
 				$pAdminPage->setShowCreateAddress(true);
 				$pAdminPage->setShowCheckDuplicates(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowMessageInput(true);
 				break;
 			case Form::TYPE_APPLICANT_SEARCH:
+				/* @var $pAdminPage AdminPageFormSettingsApplicantSearch */
 				$pAdminPage->setShowSearchCriteriaFields(true);
 				break;
 		}
