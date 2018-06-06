@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Filter;
 
+use Exception;
+
 /**
  *
  * @url http://www.onoffice.de

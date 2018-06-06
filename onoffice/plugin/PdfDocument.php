@@ -29,13 +29,14 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\ApiClientActionGetPdf;
 
 /**
  *
  */
 
-class PdfDocument {
-
+class PdfDocument
+{
 	/** @var int */
 	private $_estateId = null;
 
@@ -81,40 +82,37 @@ class PdfDocument {
 
 	public function fetch()
 	{
-		$parameters = array(
+		$pSdkWrapper = $this->_pSDKWrapper;
+		$parameters = $this->getParameters();
+
+		$pApiClientAction = new ApiClientActionGetPdf
+			($pSdkWrapper, onOfficeSDK::ACTION_ID_GET, 'pdf');
+		$pApiClientAction->setParameters($parameters);
+		$pApiClientAction->addRequestToQueue();
+		$pSdkWrapper->sendRequests();
+
+		$this->_mimeType = $pApiClientAction->getMimeTypeResult();
+		$this->_documentBinary = $pApiClientAction->getResultRecords();
+
+		return $this->_documentBinary !== null && $this->_mimeType !== null;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getParameters()
+	{
+		return array(
 			'estateid' => $this->_estateId,
 			'language' => $this->_language,
 			'gzcompress' => true,
 			'template' => $this->_template,
 		);
-
-		$pSdkWrapper = new SDKWrapper();
-		$handlePdf = $pSdkWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'pdf', $parameters );
-		$pSdkWrapper->sendRequests();
-
-		$response = $pSdkWrapper->getRequestResponse( $handlePdf );
-
-		if ( isset( $response['data']['records'][0]['elements'] ) ) {
-			$documentApiPath = $response['data']['records'][0]['elements'];
-			$documentBase64 = $documentApiPath['document'];
-			$documentGzip = base64_decode( $documentBase64 );
-			$document = gzuncompress( $documentGzip );
-
-			if ( $document === false ) {
-				return false;
-			}
-			$this->_documentBinary = $document;
-		} else {
-			return false;
-		}
-
-		if ( isset( $response['data']['records'][0]['elements'] ) ) {
-			$this->_mimeType = $response['data']['records'][0]['elements']['type'];
-		}
-
-		return true;
 	}
-
 
 	/** @param int $addressId */
 	public function setAddressId($addressId)

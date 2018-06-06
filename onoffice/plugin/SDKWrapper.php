@@ -30,7 +30,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\APIClientAction;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Cache\DBCache;
 
 
@@ -148,12 +148,12 @@ class SDKWrapper
 
 	/**
 	 *
-	 * @param APIClientAction $pApiAction
+	 * @param APIClientActionGeneric $pApiAction
 	 * @return int
 	 *
 	 */
 
-	public function addRequestByApiAction(APIClientAction $pApiAction)
+	public function addRequestByApiAction(APIClientActionGeneric $pApiAction)
 	{
 		$actionId = $pApiAction->getActionId();
 		$resourceId = $pApiAction->getResourceId();

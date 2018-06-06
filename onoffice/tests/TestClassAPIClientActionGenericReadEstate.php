@@ -21,18 +21,18 @@
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
-use onOffice\WPlugin\API\APIClientActionReadEstate;
+use onOffice\WPlugin\API\ApiClientActionGeneric;
 
 /**
  *
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
  *
- * @covers APIClientActionReadAddress
+ * @covers APIClientActionGeneric
  *
  */
 
-class TestClassAPIClientActionReadEstate
+class TestClassAPIClientActionGenericReadEstate
 	extends WP_UnitTestCase
 {
 	/**
@@ -51,14 +51,14 @@ class TestClassAPIClientActionReadEstate
 	/**
 	 *
 	 * @param array $apiResult
-	 * @return APIClientActionReadEstate
+	 * @return ApiClientActionGeneric
 	 *
 	 */
 
 	private function sendRequest(array $apiResult)
 	{
 		$pSDKMocker = new SDKWrapperMocker();
-		$pApiCall = new APIClientActionReadEstate($pSDKMocker);
+		$pApiCall = new ApiClientActionGeneric($pSDKMocker, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$parameters = array(
 			'data' => array('kaufpreis', 'lage'),
 			'listlimit' => 2,

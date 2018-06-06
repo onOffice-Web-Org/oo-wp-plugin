@@ -21,18 +21,18 @@
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
-use onOffice\WPlugin\API\APIClientActionReadAddress;
+use onOffice\WPlugin\API\ApiClientActionGeneric;
 
 /**
  *
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
  *
- * @covers APIClientActionReadAddress
+ * @covers APIClientActionGeneric
  *
  */
 
-class TestClassAPIClientActionReadAddress
+class TestClassAPIClientActionGenericReadAddress
 	extends WP_UnitTestCase
 {
 	/**
@@ -51,14 +51,14 @@ class TestClassAPIClientActionReadAddress
 	/**
 	 *
 	 * @param array $apiResult
-	 * @return APIClientActionReadAddress
+	 * @return ApiClientActionGeneric
 	 *
 	 */
 
 	private function sendRequest(array $apiResult)
 	{
 		$pSDKMocker = new SDKWrapperMocker();
-		$pApiCall = new APIClientActionReadAddress($pSDKMocker);
+		$pApiCall = new ApiClientActionGeneric($pSDKMocker, onOfficeSDK::ACTION_ID_READ, 'address');
 		$parameters = array(
 			'recordids' => array(13, 37),
 			'data' => array('Name', 'KdNr', 'Vorname'),

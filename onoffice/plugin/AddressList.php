@@ -29,7 +29,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\APIClientActionReadAddress;
+use onOffice\WPlugin\API\ApiClientActionGeneric;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\SDKWrapper;
@@ -85,7 +85,8 @@ class AddressList
 
 	public function loadAdressesById(array $addressIds, array $fields)
 	{
-		$pApiCall = new APIClientActionReadAddress($this->_pSDKWrapper);
+		$pApiCall = new ApiClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
 		$parameters = array(
 			'recordids' => $addressIds,
 			'data' => $fields,
@@ -113,7 +114,8 @@ class AddressList
 		$pDataListViewToApi->setPage($page);
 		$parameters = $pDataListViewToApi->buildParameters();
 
-		$pApiCall = new APIClientActionReadAddress($this->_pSDKWrapper);
+		$pApiCall = new ApiClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
 		$pApiCall->setParameters($parameters);
 		$pApiCall->addRequestToQueue();
 		$this->_pSDKWrapper->sendRequests();

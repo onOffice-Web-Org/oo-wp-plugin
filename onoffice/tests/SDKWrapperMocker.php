@@ -21,7 +21,7 @@
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\API\APIClientAction;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Cache\DBCache;
 use onOffice\WPlugin\SDKWrapper;
 
@@ -97,12 +97,12 @@ class SDKWrapperMocker
 
 	/**
 	 *
-	 * @param APIClientAction $pApiAction
+	 * @param APIClientActionGeneric $pApiAction
 	 * @return int
 	 *
 	 */
 
-	public function addRequestByApiAction(APIClientAction $pApiAction)
+	public function addRequestByApiAction(APIClientActionGeneric $pApiAction)
 	{
 		$actionId = $pApiAction->getActionId();
 		$resourceId = $pApiAction->getResourceId();
@@ -141,12 +141,12 @@ class SDKWrapperMocker
 
 	/**
 	 *
-	 * @param APIClientAction $pApiAction
+	 * @param APIClientActionGeneric $pApiAction
 	 * @param array $response
 	 *
 	 */
 
-	public function addResponseByApiAction(APIClientAction $pApiAction, array $response)
+	public function addResponseByApiAction(APIClientActionGeneric $pApiAction, array $response)
 	{
 		$actionId = $pApiAction->getActionId();
 		$resourceId = $pApiAction->getResourceId();

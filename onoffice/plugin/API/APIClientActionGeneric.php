@@ -30,7 +30,7 @@ use onOffice\WPlugin\SDKWrapper;
  *
  */
 
-abstract class APIClientAction
+class APIClientActionGeneric
 {
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
@@ -60,12 +60,17 @@ abstract class APIClientAction
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
+	 * @param string $actionId
+	 * @param string $resourceType
 	 *
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper)
+	public function __construct(SDKWrapper $pSDKWrapper, $actionId, $resourceType)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->setResultCallback(array($this, 'onAfterExecution'));
+		$this->setActionId($actionId);
+		$this->setResourceType($resourceType);
 		$this->setSettings();
 	}
 
@@ -74,7 +79,7 @@ abstract class APIClientAction
 	 *
 	 */
 
-	abstract protected function setSettings();
+	protected function setSettings() {}
 
 	/**
 	 *
@@ -88,25 +93,41 @@ abstract class APIClientAction
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	public function getResultRecords()
-	{
-		return null;
-	}
-
-
-	/**
-	 *
 	 * @return bool
 	 *
 	 */
 
 	public function getResultStatus()
 	{
-		return false;
+		$result = $this->getResult();
+		return is_array($result) && isset($result['data']['records']);
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getResultRecords()
+	{
+		if ($this->getResultStatus()) {
+			$result = $this->getResult();
+			return $result['data']['records'];
+		}
+	}
+
+
+	/**
+	 *
+	 * @param array $result
+	 *
+	 */
+
+	public function onAfterExecution($result)
+	{
+		$this->setResult($result);
 	}
 
 
@@ -131,7 +152,7 @@ abstract class APIClientAction
 		{ $this->_resourceType = $resourceType; }
 
 	/** @param string $resourceId */
-	protected function setResourceId($resourceId)
+	public function setResourceId($resourceId)
 		{ $this->_resourceId = $resourceId; }
 
 	/** @param array $parameters */

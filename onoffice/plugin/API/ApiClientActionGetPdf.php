@@ -21,8 +21,6 @@
 
 namespace onOffice\WPlugin\API;
 
-use onOffice\SDK\onOfficeSDK;
-
 /**
  *
  * @url http://www.onoffice.de
@@ -30,19 +28,32 @@ use onOffice\SDK\onOfficeSDK;
  *
  */
 
-class APIClientActionReadAddress
-	extends APIClientAction
+class ApiClientActionGetPdf
+	extends APIClientActionGeneric
 {
 	/**
 	 *
+	 * @return array
+	 *
 	 */
 
-	protected function setSettings()
+	public function getResultRecords()
 	{
-		$this->setActionId(onOfficeSDK::ACTION_ID_READ);
-		$this->setResourceType('address');
+		if ($this->getResultStatus()) {
+			$result = $this->getResult();
 
-		$this->setResultCallback(array($this, 'onAfterExecution'));
+			$documentBase64 = $result['data']['records'][0]['elements']['document'];
+			$document = base64_decode($documentBase64);
+			$parameters = $this->getParameters();
+
+			if (isset($parameters['gzcompress']) && $parameters['gzcompress']) {
+				$document = gzuncompress($document);
+			}
+
+			if ($document !== false) {
+				return $document;
+			}
+		}
 	}
 
 
@@ -55,33 +66,35 @@ class APIClientActionReadAddress
 	public function getResultStatus()
 	{
 		$result = $this->getResult();
-		return is_array($result) && isset($result['data']['records']);
+		return is_array($result) && isset($result['data']['records'][0]['elements']['document']);
 	}
 
 
 	/**
 	 *
-	 * @return array
+	 * @return bool
 	 *
 	 */
 
-	public function getResultRecords()
+	public function getMimeTypeStatus()
 	{
-		if ($this->getResultStatus()) {
-			$result = $this->getResult();
-			return $result['data']['records'];
+		$result = $this->getResult();
+		return isset($result['data']['records'][0]['elements']['type']);
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getMimeTypeResult()
+	{
+		$result = $this->getResult();
+
+		if ($this->getMimeTypeStatus()) {
+			return $result['data']['records'][0]['elements']['type'];
 		}
-	}
-
-
-	/**
-	 *
-	 * @param array $result
-	 *
-	 */
-
-	public function onAfterExecution($result)
-	{
-		$this->setResult($result);
 	}
 }
