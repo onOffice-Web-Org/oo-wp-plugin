@@ -105,3 +105,25 @@ jQuery(document).ready(function($){
 		dummyKey.parent().append(clonedElement);
 	};
 });
+
+
+(function($) {
+	var refreshTemplateMouseOver = function() {
+		var value = templateSelector.find('option:selected').text();
+		templateSelector.attr('title', value);
+	};
+
+	var templateNameAttrs = [
+		'oopluginforms-template',
+		'oopluginlistviews-template',
+		'oopluginlistviewsaddress-template',
+		'onoffice-template'
+	];
+
+	var templateSelectorStr = 'select.onoffice-input[name=' +
+		templateNameAttrs.join('], select.onoffice-input[name=') + ']';
+
+	var templateSelector = $(templateSelectorStr).first();
+	templateSelector.on('change', refreshTemplateMouseOver);
+	refreshTemplateMouseOver();
+})(jQuery);
