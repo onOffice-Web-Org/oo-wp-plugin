@@ -739,9 +739,27 @@ class EstateList
 		$fieldInformation = $this->_pFieldnames->getFieldInformation
 			($fieldInput, onOfficeSDK::MODULE_ESTATE);
 		$value = $this->_pEstateListInputVariableReader->getFieldValue($fieldInput);
-		$fieldInformation['value'] = $value;
+		$fieldInformation['value'] = $this->formatFloat($value);
 
 		return $fieldInformation;
+	}
+
+
+	/**
+	 *
+	 * @param mixed $value
+	 * @return type
+	 *
+	 */
+
+	private function formatFloat($value)
+	{
+		if (is_float($value)) {
+			return number_format_i18n($value, 2);
+		} elseif (is_array($value)) {
+			$value = array_map(array($this, 'formatFloat'), $value);
+		}
+		return $value;
 	}
 
 

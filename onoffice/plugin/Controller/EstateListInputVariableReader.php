@@ -24,6 +24,8 @@ namespace onOffice\WPlugin\Controller;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\__String;
+use WP_Locale;
 
 /**
  *
@@ -92,8 +94,9 @@ class EstateListInputVariableReader
 	{
 		$sanitizers = FieldTypes::getInputVarSanitizers();
 		$sanitizer = $sanitizers[$type];
-		$getValue = filter_input(INPUT_GET, $fullInputName, $sanitizer, FILTER_FORCE_ARRAY);
-		$postValue = filter_input(INPUT_POST, $fullInputName, $sanitizer, FILTER_FORCE_ARRAY);
+		$options = FILTER_FORCE_ARRAY | FILTER_NULL_ON_FAILURE;
+		$getValue = filter_input(INPUT_GET, $fullInputName, $sanitizer, $options);
+		$postValue = filter_input(INPUT_POST, $fullInputName, $sanitizer, $options);
 		$value = $getValue ? $getValue : $postValue;
 
 		if (is_array($value) && count($value) === 1 && key($value) === 0 &&
@@ -101,6 +104,58 @@ class EstateListInputVariableReader
 			$value = $value[0];
 		}
 
+		return $this->parseValue($value, $type);
+	}
+
+
+	/**
+	 *
+	 * @param mixed $value
+	 * @param string $type
+	 * @return string
+	 *
+	 */
+
+	private function parseValue($value, $type)
+	{
+		if (is_array($value)) {
+			return array_map(function($val) use ($type) {
+				return $this->parseValue($val, $type);
+			}, $value);
+		} else if ($value === null) {
+			return null;
+		}
+
+		switch ($type) {
+			case FieldTypes::FIELD_TYPE_FLOAT:
+				$value = $this->parseFloat($value);
+				break;
+		}
+
 		return $value;
+	}
+
+
+	/**
+	 *
+	 * @global WP_Locale $wp_locale
+	 * @param string $floatString
+	 * @return float
+	 *
+	 */
+
+	private function parseFloat($floatString)
+	{
+		if (__String::getNew($floatString)->isEmpty()) {
+			return null;
+		}
+
+		global $wp_locale;
+		$stringThousand = __String::getNew($floatString)->replace
+			($wp_locale->number_format['thousands_sep'] , '');
+		$stringDec = __String::getNew($stringThousand)->replace
+			($wp_locale->number_format['decimal_point'] , '.');
+
+		return floatval($stringDec);
 	}
 }
