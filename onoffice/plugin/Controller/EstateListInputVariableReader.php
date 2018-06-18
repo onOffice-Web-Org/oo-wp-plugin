@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Controller;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 use WP_Locale;
@@ -36,18 +35,23 @@ use WP_Locale;
 
 class EstateListInputVariableReader
 {
-	/** @var Fieldnames */
-	private $_pFieldNames = null;
+	/** @var EstateListInputVariableReaderConfig */
+	private $_pConfig = null;
 
 
 	/**
 	 *
+	 * @param EstateListInputVariableReaderConfig $pConfig
+	 *
 	 */
 
-	public function __construct()
+	public function __construct(EstateListInputVariableReaderConfig $pConfig = null)
 	{
-		$this->_pFieldNames = new Fieldnames();
-		$this->_pFieldNames->loadLanguage();
+		$this->_pConfig = $pConfig;
+
+		if ($this->_pConfig === null) {
+			$this->_pConfig = new EstateListInputVariableReaderConfigFieldnames();
+		}
 	}
 
 
@@ -60,9 +64,7 @@ class EstateListInputVariableReader
 
 	public function getFieldValue($field)
 	{
-		$fieldInformation = $this->_pFieldNames->getFieldInformation
-			($field, onOfficeSDK::MODULE_ESTATE);
-		$type = $fieldInformation['type'];
+		$type = $this->getFieldType($field);
 		$fieldInputName = $field;
 		$fieldValue = null;
 		if (FieldTypes::isNumericType($type)) {
@@ -90,20 +92,15 @@ class EstateListInputVariableReader
 	 *
 	 */
 
-	private function getValueByFullInputNameAndType($fullInputName, $type)
+	private function getValueByFullInputNameAndType(string $fullInputName, string $type)
 	{
 		$sanitizers = FieldTypes::getInputVarSanitizers();
 		$sanitizer = $sanitizers[$type];
-		$options = FILTER_FORCE_ARRAY | FILTER_NULL_ON_FAILURE;
-		$getValue = filter_input(INPUT_GET, $fullInputName, $sanitizer, $options);
-		$postValue = filter_input(INPUT_POST, $fullInputName, $sanitizer, $options);
-		$value = $getValue ? $getValue : $postValue;
 
-		if (is_array($value) && count($value) === 1 && key($value) === 0 &&
-			!is_array($_REQUEST[$fullInputName])) {
-			$value = $value[0];
-		}
+		// Important: don't use FILTER_NULL_ON_FAILURE
+		// https://github.com/php/php-src/blob/c03ee1923057b62666a6a4144a9b2920e38b8765/ext/filter/filter.c#L744-L753
 
+		$value = $this->_pConfig->getValue($fullInputName, $sanitizer, FILTER_FORCE_ARRAY);
 		return $this->parseValue($value, $type);
 	}
 
@@ -130,6 +127,10 @@ class EstateListInputVariableReader
 			case FieldTypes::FIELD_TYPE_FLOAT:
 				$value = $this->parseFloat($value);
 				break;
+
+			case FieldTypes::FIELD_TYPE_BOOLEAN:
+				$value = $this->parseBool($value);
+				break;
 		}
 
 		return $value;
@@ -144,7 +145,7 @@ class EstateListInputVariableReader
 	 *
 	 */
 
-	private function parseFloat($floatString)
+	private function parseFloat(string $floatString)
 	{
 		if (__String::getNew($floatString)->isEmpty()) {
 			return null;
@@ -157,5 +158,35 @@ class EstateListInputVariableReader
 			($wp_locale->number_format['decimal_point'] , '.');
 
 		return floatval($stringDec);
+	}
+
+
+	/**
+	 *
+	 * @param string $boolString
+	 * @return bool
+	 *
+	 */
+
+	private function parseBool(string $boolString)
+	{
+		if (__String::getNew($boolString)->isEmpty() || $boolString === 'u') {
+			return null;
+		}
+
+		return $boolString === 'y';
+	}
+
+
+	/**
+	 *
+	 * @param string $fieldName
+	 * @return string
+	 *
+	 */
+
+	public function getFieldType(string $fieldName): string
+	{
+		return $this->_pConfig->getFieldType($fieldName, onOfficeSDK::MODULE_ESTATE);
 	}
 }

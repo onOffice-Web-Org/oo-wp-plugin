@@ -56,8 +56,17 @@ foreach ($visible as $inputName => $properties) :
 	echo '<br>';
 	if ( $properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN ) {
 		echo '<br>';
-		echo '<input type="checkbox" name="'.esc_attr($inputName).'"'
-			.('on' == $selectedValue ? ' checked' : '').'>';
+		echo '<fieldset>
+    <input type="radio" id="'.esc_attr($inputName).'_u" name="'.esc_attr($inputName).'" value="u"
+		'.($selectedValue === null ? ' checked' : '').'>
+    <label for="'.esc_attr($inputName).'_u">Keine Angabe</label>
+    <input type="radio" id="'.esc_attr($inputName).'_y" name="'.esc_attr($inputName).'" value="y"
+		'.($selectedValue === true  ? 'checked' : '').'>
+    <label for="'.esc_attr($inputName).'_y">Ja</label>
+    <input type="radio" id="'.esc_attr($inputName).'_n" name="'.esc_attr($inputName).'" value="n"
+		'.($selectedValue === false ? 'checked' : '').'>
+    <label for="'.esc_attr($inputName).'_n">Nein</label>
+  </fieldset>';
 	} elseif ( in_array($properties['type'], $multiSelectableTypes) &&
 		$inputName !== 'regionaler_zusatz' ) {
 		$permittedValues = $properties['permittedvalues'];
@@ -81,7 +90,9 @@ foreach ($visible as $inputName => $properties) :
 			printRegion( $pRegion, $selectedValue );
 		}
 		echo '</select>';
-	} elseif ( FieldTypes::isNumericType( $properties['type'] ) ) {
+	} elseif ( FieldTypes::isNumericType( $properties['type'] ) ||
+		FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
+		FieldTypes::FIELD_TYPE_DATE === $properties['type']) {
 		echo 'von: ';
 		echo '<input name="'.esc_attr($inputName).'__von" type="text" ';
 		echo 'value="'.esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '').'"><br>';

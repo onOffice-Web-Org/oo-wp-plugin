@@ -21,11 +21,11 @@
 
 namespace onOffice\WPlugin\Filter;
 
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateListInputVariableReader;
+use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfig;
+use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 
@@ -42,8 +42,8 @@ class DefaultFilterBuilderListView
 	/** @var string */
 	private $_pDataListView = null;
 
-	/** @var Fieldnames */
-	private $_pFieldNames = null;
+	/** @var EstateListInputVariableReaderConfig */
+	private $_pEstateListInputVariableReaderConf = null;
 
 	/** @var array */
 	private $_defaultFilter = array(
@@ -57,14 +57,20 @@ class DefaultFilterBuilderListView
 	/**
 	 *
 	 * @param DataListView $pDataListView
+	 * @param EstateListInputVariableReaderConfig $pEstateListInputVariableReaderConf
 	 *
 	 */
 
-	public function __construct(DataListView $pDataListView)
+	public function __construct(DataListView $pDataListView,
+		EstateListInputVariableReaderConfig $pEstateListInputVariableReaderConf = null)
 	{
 		$this->_pDataListView = $pDataListView;
-		$this->_pFieldNames = new Fieldnames();
-		$this->_pFieldNames->loadLanguage();
+		$this->_pEstateListInputVariableReaderConf = $pEstateListInputVariableReaderConf;
+
+		if ($this->_pEstateListInputVariableReaderConf === null) {
+			$this->_pEstateListInputVariableReaderConf =
+				new EstateListInputVariableReaderConfigFieldnames();
+		}
 	}
 
 
@@ -138,15 +144,15 @@ class DefaultFilterBuilderListView
 	{
 		$filterableFields = $this->_pDataListView->getFilterableFields();
 		$filter = array();
-		$pEstateInputVars = new EstateListInputVariableReader();
+		$pEstateInputVars = new EstateListInputVariableReader
+			($this->_pEstateListInputVariableReaderConf);
 
 		foreach ($filterableFields as $fieldInput) {
-			$fieldInformation = $this->_pFieldNames->getFieldInformation
-				($fieldInput, onOfficeSDK::MODULE_ESTATE);
-			$type = $fieldInformation['type'];
+			$type = $pEstateInputVars->getFieldType($fieldInput);
 			$value = $pEstateInputVars->getFieldValue($fieldInput);
 
-			if (is_null($value) || (is_string($value) && __String::getNew($value)->isEmpty())) {
+			if (is_null($value) || (is_string($value) &&
+				__String::getNew($value)->isEmpty())) {
 				continue;
 			}
 
@@ -185,8 +191,10 @@ class DefaultFilterBuilderListView
 		} elseif ($type === FieldTypes::FIELD_TYPE_MULTISELECT ||
 			$type === FieldTypes::FIELD_TYPE_SINGLESELECT) {
 			$fieldFilter []= array('op' => 'in', 'val' => $fieldValue);
+		} elseif ($type === FieldTypes::FIELD_TYPE_TEXT) {
+			$fieldFilter []= array('op' => 'like', 'val' => '%'.$fieldValue.'%');
 		} else {
-			$fieldFilter []= array('op' => 'in', 'val' => $fieldValue);
+			$fieldFilter []= array('op' => '=', 'val' => $fieldValue);
 		}
 
 		return $fieldFilter;
