@@ -21,7 +21,7 @@
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
-use onOffice\WPlugin\API\ApiClientActionGeneric;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 
 /**
  *
@@ -51,14 +51,14 @@ class TestClassAPIClientActionGenericReadAddress
 	/**
 	 *
 	 * @param array $apiResult
-	 * @return ApiClientActionGeneric
+	 * @return APIClientActionGeneric
 	 *
 	 */
 
 	private function sendRequest(array $apiResult)
 	{
 		$pSDKMocker = new SDKWrapperMocker();
-		$pApiCall = new ApiClientActionGeneric($pSDKMocker, onOfficeSDK::ACTION_ID_READ, 'address');
+		$pApiCall = new APIClientActionGeneric($pSDKMocker, onOfficeSDK::ACTION_ID_READ, 'address');
 		$parameters = array(
 			'recordids' => array(13, 37),
 			'data' => array('Name', 'KdNr', 'Vorname'),
