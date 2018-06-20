@@ -82,7 +82,7 @@ require('estatemap.php');
 
 	$estateMovieLinks = $pEstates->getEstateMovieLinks();
 	foreach ($estateMovieLinks as $movieLink) {
-		echo '<a href="'.esc_attr($movieLink['url']).'">'.esc_html($movieLink['title']).'</a><br>';
+		echo '<a href="'.esc_attr($movieLink['url']).'" title="'.esc_attr($movieLink['title']).'">'.esc_html($movieLink['title']).'</a><br>';
 	}
 
 	$movieOptions = array('width' => 500); // optional

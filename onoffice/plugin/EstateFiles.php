@@ -30,6 +30,9 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Types\ImageTypes;
+use onOffice\WPlugin\Types\MovieLinkTypes;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -122,7 +125,7 @@ class EstateFiles
 
 				$image = array(
 					'id' => $fileId,
-					'url' => $imageUrl,
+					'url' => $this->correctUrl($imageUrl),
 					'title' => $imageTitle,
 					'text' => $imageText,
 					'type' => $imageType,
@@ -136,6 +139,25 @@ class EstateFiles
 
 	/**
 	 *
+	 * @param string $url
+	 * @return string
+	 *
+	 */
+
+	private function correctUrl($url)
+	{
+		$pUrlStr = __String::getNew($url);
+		if (!$pUrlStr->startsWith('http://') && !$pUrlStr->startsWith('https://'))
+		{
+			$url = 'http://'.$url;
+		}
+
+		return $url;
+	}
+
+
+	/**
+	 *
 	 * @param int $estateId
 	 * @return array
 	 *
@@ -143,7 +165,7 @@ class EstateFiles
 
 	public function getEstatePictures( $estateId )
 	{
-		$callback = '\onOffice\WPlugin\Types\ImageTypes::isImageType';
+		$callback = ImageTypes::class.'::isImageType';
 		return $this->getFilesOfTypeByCallback($estateId, $callback);
 	}
 
@@ -157,7 +179,7 @@ class EstateFiles
 
 	public function getEstateMovieLinks( $estateId )
 	{
-		$callback = '\onOffice\WPlugin\Types\MovieLinkTypes::isMovieLink';
+		$callback = MovieLinkTypes::class.'::isMovieLink';
 		return $this->getFilesOfTypeByCallback($estateId, $callback);
 	}
 
