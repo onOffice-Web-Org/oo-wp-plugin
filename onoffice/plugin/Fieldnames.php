@@ -536,7 +536,7 @@ class Fieldnames
 
 	public function getFieldInformation($field, $module)
 	{
-		return $row = $this->getRow($module, $field);
+		return $this->getRow($module, $field);
 	}
 
 

@@ -29,10 +29,13 @@
 namespace onOffice\WPlugin;
 
 use Exception;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierFactory;
@@ -99,8 +102,7 @@ class ContentFilter
 			try {
 				$pDetailView = DataDetailViewHandler::getDetailView();
 
-				if ($pDetailView->getName() === $attributes['view'])
-				{
+				if ($pDetailView->getName() === $attributes['view']) {
 					$pTemplate = new Template($pDetailView->getTemplate());
 					$pEstateDetail = $this->preloadSingleEstate($pDetailView, $attributes['units']);
 					$pTemplate->setEstateList($pEstateDetail);
@@ -111,8 +113,8 @@ class ContentFilter
 				$pListViewFactory = new DataListViewFactory();
 				$pListView = $pListViewFactory->getListViewByName($attributes['view']);
 
-				if (is_object($pListView) && $pListView->getName() === $attributes['view'])
-				{
+				if (is_object($pListView) && $pListView->getName() === $attributes['view']) {
+					$this->setAllowedGetParametersEstate($pListView);
 					$pTemplate = new Template($pListView->getTemplate());
 					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
 
@@ -129,6 +131,39 @@ class ContentFilter
 				return $this->logErrorAndDisplayMessage($pException);
 			}
 			return __('Estates view not found.', 'onoffice');
+		}
+	}
+
+
+	/**
+	 *
+	 * @param DataListView $pDataView
+	 *
+	 */
+
+	private function setAllowedGetParametersEstate(DataListView $pDataView)
+	{
+		$pFieldNames = new Fieldnames();
+		$pFieldNames->loadLanguage();
+		$pSearchParameters = SearchParameters::getInstance();
+
+		foreach ($pDataView->getFilterableFields() as $filterableField) {
+			$fieldInfo = $pFieldNames->getFieldInformation
+				($filterableField, onOfficeSDK::MODULE_ESTATE);
+
+			if ($fieldInfo === null) {
+				continue;
+			}
+
+			$type = $fieldInfo['type'];
+
+			if (Types\FieldTypes::isNumericType($type) ||
+				Types\FieldTypes::isDateOrDateTime($type)) {
+				$pSearchParameters->addAllowedGetParameter($filterableField.'__von');
+				$pSearchParameters->addAllowedGetParameter($filterableField.'__bis');
+			}
+
+			$pSearchParameters->addAllowedGetParameter($filterableField);
 		}
 	}
 
@@ -188,7 +223,7 @@ class ContentFilter
 		$addressListName = $attributes['view'];
 
 		$pDataListFactory = new DataListViewFactoryAddress();
-		/* @var $pAddressListView DataView\DataListViewAddress */
+		/* @var $pAddressListView DataListViewAddress */
 		$pAddressListView = $pDataListFactory->getListViewByName($addressListName);
 
 		$pFieldnames = new Fieldnames();
@@ -214,7 +249,7 @@ class ContentFilter
 	{
 		try {
 			$pImpressum = Impressum::getInstance();
-			if ( count($attributesInput)== 1 ) {
+			if ( count($attributesInput) == 1 ) {
 				$attribute = $attributesInput[0];
 				$impressumValue = $pImpressum->getDataByKey($attribute);
 

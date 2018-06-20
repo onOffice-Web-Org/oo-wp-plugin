@@ -191,7 +191,7 @@ class SearchParameters {
 	 *
 	 */
 
-	private function geturl ($i ) {
+	private function geturl( $i ) {
 		$url = trailingslashit(get_permalink()) . user_trailingslashit($i, 'single_paged');
 		return add_query_arg($this->getParameters(), $url);
 	}
