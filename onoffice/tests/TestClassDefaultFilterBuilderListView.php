@@ -150,7 +150,7 @@ class TestClassDefaultFilterBuilderListView
 	public function testInputVarsScalar()
 	{
 		$pDataListView = new DataListView(1, 'test');
-		$pDataListView->setFilterableFields(['kaufpreis', 'mietpreis', 'testtext']);
+		$pDataListView->setFilterableFields(['kaufpreis', 'mietpreis', 'testtext', 'bezugsfrei']);
 
 		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
@@ -160,10 +160,13 @@ class TestClassDefaultFilterBuilderListView
 			('mietpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('testtext', $module, FieldTypes::FIELD_TYPE_TEXT);
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('bezugsfrei', $module, FieldTypes::FIELD_TYPE_DATETIME);
 
 		$pEstateListInputVariableReaderConfig->setValue('kaufpreis', '999.99');
 		$pEstateListInputVariableReaderConfig->setValue('mietpreis', '350.50');
 		$pEstateListInputVariableReaderConfig->setValue('testtext', 'hello');
+		$pEstateListInputVariableReaderConfig->setValue('bezugsfrei', '27.03.1998 12:47:00');
 		$pInstance = new DefaultFilterBuilderListView($pDataListView,
 			$pEstateListInputVariableReaderConfig);
 
@@ -192,6 +195,12 @@ class TestClassDefaultFilterBuilderListView
 					'val' => '%hello%',
 				],
 			],
+			'bezugsfrei' => [
+				[
+					'op' => '=',
+					'val' => '1998-03-27 12:47:00',
+				],
+			],
 		];
 
 		$this->assertEquals($expected, $pInstance->buildFilter());
@@ -205,7 +214,9 @@ class TestClassDefaultFilterBuilderListView
 	public function testInputVarsRange()
 	{
 		$pDataListView = new DataListView(1, 'test');
-		$pDataListView->setFilterableFields(['kaufpreis', 'mietpreis', 'anzahl_zimmer']);
+		$pDataListView->setFilterableFields([
+			'kaufpreis', 'mietpreis', 'anzahl_zimmer', 'bezugsfrei'
+		]);
 
 		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
@@ -215,11 +226,16 @@ class TestClassDefaultFilterBuilderListView
 			('mietpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('anzahl_zimmer', $module, FieldTypes::FIELD_TYPE_INTEGER);
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('bezugsfrei', $module, FieldTypes::FIELD_TYPE_DATETIME);
 
 		$pEstateListInputVariableReaderConfig->setValue('kaufpreis__von', '100000');
 		$pEstateListInputVariableReaderConfig->setValue('mietpreis__bis', '350.50');
 		$pEstateListInputVariableReaderConfig->setValue('anzahl_zimmer__von', '3');
 		$pEstateListInputVariableReaderConfig->setValue('anzahl_zimmer__bis', '10');
+		$pEstateListInputVariableReaderConfig->setValue('anzahl_zimmer__bis', '10');
+		$pEstateListInputVariableReaderConfig->setValue('bezugsfrei__von', '01.01.2017 00:00:00');
+		$pEstateListInputVariableReaderConfig->setValue('bezugsfrei__bis', '01.02.2017 23:59:00');
 		$pInstance = new DefaultFilterBuilderListView($pDataListView,
 			$pEstateListInputVariableReaderConfig);
 
@@ -252,7 +268,18 @@ class TestClassDefaultFilterBuilderListView
 					'val' => 10,
 				],
 			],
+			'bezugsfrei' => [
+				[
+					'op' => '>=',
+					'val' => '2017-01-01 00:00:00',
+				],
+				[
+					'op' => '<=',
+					'val' => '2017-02-01 23:59:00',
+				],
+			],
 		];
+
 		$this->assertEquals($expected, $pInstance->buildFilter());
 	}
 

@@ -21,6 +21,9 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DateTime;
+use DateTimeZone;
+use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
@@ -67,7 +70,8 @@ class EstateListInputVariableReader
 		$type = $this->getFieldType($field);
 		$fieldInputName = $field;
 		$fieldValue = null;
-		if (FieldTypes::isNumericType($type)) {
+		if (FieldTypes::isNumericType($type) ||
+			FieldTypes::isDateOrDateTime($type)) {
 			$fieldInputNameFrom = $fieldInputName.'__von';
 			$fieldInputNameTo = $fieldInputName.'__bis';
 			$fieldValueFrom = $this->getValueByFullInputNameAndType($fieldInputNameFrom, $type);
@@ -131,6 +135,11 @@ class EstateListInputVariableReader
 			case FieldTypes::FIELD_TYPE_BOOLEAN:
 				$value = $this->parseBool($value);
 				break;
+
+			case FieldTypes::FIELD_TYPE_DATE:
+			case FieldTypes::FIELD_TYPE_DATETIME:
+				$value = $this->parseDate($value);
+				break;
 		}
 
 		return $value;
@@ -175,6 +184,31 @@ class EstateListInputVariableReader
 		}
 
 		return $boolString === 'y';
+	}
+
+
+	/**
+	 *
+	 * @param string $dateString
+	 * @return int
+	 *
+	 */
+
+	private function parseDate(string $dateString)
+	{
+		if (__String::getNew($dateString)->isEmpty()) {
+			return null;
+		}
+
+		$pTimezoneBerlin = new DateTimeZone('Europe/Berlin');
+
+		try {
+			$pDateTime = new DateTime($dateString.' '.$this->_pConfig->getTimezoneString());
+			$pDateTime->setTimezone($pTimezoneBerlin);
+			return $pDateTime->format('Y-m-d H:i:s');
+		} catch (Exception $pE) {
+			return null;
+		}
 	}
 
 

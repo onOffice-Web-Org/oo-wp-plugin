@@ -141,6 +141,73 @@ class TestClassEstateListInputVariableReader
 	 *
 	 */
 
+	public function testDate()
+	{
+		$this->switchLocale('de_DE');
+
+		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$module = onOfficeSDK::MODULE_ESTATE;
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('testdate', $module, FieldTypes::FIELD_TYPE_DATE);
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('testdatetime', $module, FieldTypes::FIELD_TYPE_DATETIME);
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('otherdatetime', $module, FieldTypes::FIELD_TYPE_DATETIME);
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('datetimebroken', $module, FieldTypes::FIELD_TYPE_DATETIME);
+		$pEstateListInputVariableReaderConfig->setValue('testdate', '14.09.2014');
+		$pEstateListInputVariableReaderConfig->setValue('testdatetime', '28.06.2018 14:01:00');
+		$pEstateListInputVariableReaderConfig->setValue('otherdatetime__von', '12.07.2018 16:00:00');
+		$pEstateListInputVariableReaderConfig->setValue('otherdatetime__bis', '12.07.2018 22:00:00');
+		$pEstateListInputVariableReaderConfig->setValue('datetimebroken', 'asdf');
+
+		$pEstateListInputVariableReader = new EstateListInputVariableReader
+			($pEstateListInputVariableReaderConfig);
+
+		$valueTestdate = $pEstateListInputVariableReader->getFieldValue('testdate');
+		$valueDateTime = $pEstateListInputVariableReader->getFieldValue('testdatetime');
+		$valueOtherDateTime = $pEstateListInputVariableReader->getFieldValue('otherdatetime');
+		$valueDateTimeBroken = $pEstateListInputVariableReader->getFieldValue('datetimebroken');
+
+		$this->assertEquals('2014-09-14 00:00:00', $valueTestdate);
+		$this->assertEquals('2018-06-28 14:01:00', $valueDateTime);
+		$this->assertEquals(['2018-07-12 16:00:00', '2018-07-12 22:00:00'], $valueOtherDateTime);
+		$this->assertNull($valueDateTimeBroken);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testTzSwitch()
+	{
+		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pEstateListInputVariableReaderConfig->setTimezoneString('Europe/Berlin');
+
+		$module = onOfficeSDK::MODULE_ESTATE;
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('testdate', $module, FieldTypes::FIELD_TYPE_DATETIME);
+		$pEstateListInputVariableReaderConfig->setValue('testdate', '28.06.2018 14:01:00');
+
+		$pEstateListInputVariableReader = new EstateListInputVariableReader
+			($pEstateListInputVariableReaderConfig);
+
+		$valueTestdate = $pEstateListInputVariableReader->getFieldValue('testdate');
+
+		$this->assertEquals('2018-06-28 14:01:00', $valueTestdate);
+
+		$pEstateListInputVariableReaderConfig->setTimezoneString('America/New_York');
+		$pEstateListInputVariableReaderConfig->setValue('testdate', '28.06.2018 14:01:00');
+		$valueTestdateGa = $pEstateListInputVariableReader->getFieldValue('testdate');
+		$this->assertEquals('2018-06-28 20:01:00', $valueTestdateGa);
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testFloatUSLocale()
 	{
 		$this->switchLocale('en_US');

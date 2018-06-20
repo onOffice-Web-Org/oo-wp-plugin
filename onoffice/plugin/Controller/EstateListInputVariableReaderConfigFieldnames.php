@@ -84,4 +84,16 @@ class EstateListInputVariableReaderConfigFieldnames
 
 		return $value;
 	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getTimezoneString(): string
+	{
+		return get_option('timezone_string');
+	}
 }

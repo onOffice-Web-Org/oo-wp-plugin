@@ -112,4 +112,17 @@ abstract class FieldTypes
 	{
 		return in_array($type, self::$_numericTypes, true);
 	}
+
+
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
+
+	static public function isDateOrDateTime($type)
+	{
+		return $type === self::FIELD_TYPE_DATE || $type === self::FIELD_TYPE_DATETIME;
+	}
 }

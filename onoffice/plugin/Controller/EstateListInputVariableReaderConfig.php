@@ -53,4 +53,13 @@ interface EstateListInputVariableReaderConfig
 	 */
 
 	public function getValue(string $name, int $filters, int $options);
+
+
+	/**
+	 *
+	 * @return string such as Europe/Berlin
+	 *
+	 */
+
+	public function getTimezoneString(): string;
 }

@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin;
 
+use DateTime;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateListInputVariableReader;
@@ -739,8 +740,7 @@ class EstateList
 		$fieldInformation = $this->_pFieldnames->getFieldInformation
 			($fieldInput, onOfficeSDK::MODULE_ESTATE);
 		$value = $this->_pEstateListInputVariableReader->getFieldValue($fieldInput);
-		$fieldInformation['value'] = $this->formatValue($value);
-
+		$fieldInformation['value'] = $this->formatValue($value, $fieldInformation['type']);
 		return $fieldInformation;
 	}
 
@@ -748,16 +748,28 @@ class EstateList
 	/**
 	 *
 	 * @param mixed $value
+	 * @param string $type
 	 * @return type
 	 *
 	 */
 
-	private function formatValue($value)
+	private function formatValue($value, $type)
 	{
 		if (is_float($value)) {
 			return number_format_i18n($value, 2);
 		} elseif (is_array($value)) {
-			$value = array_map(array($this, __FUNCTION__), $value);
+			$value = array_map(function($val) use ($type) {
+				return $this->formatValue($val, $type);
+			}, $value);
+		} elseif (Types\FieldTypes::isDateOrDateTime($type) && $value != '') {
+			if ($type === Types\FieldTypes::FIELD_TYPE_DATETIME) {
+				$format = __('Y/m/d g:i:s a', 'onoffice');
+			} else {
+				$format = __('Y/m/d', 'onoffice');
+			}
+
+			$pDate = new DateTime($value.' Europe/Berlin');
+			$value = date_i18n($format, $pDate->getTimestamp(), true);
 		}
 		return $value;
 	}

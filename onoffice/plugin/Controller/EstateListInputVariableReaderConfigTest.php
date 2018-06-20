@@ -37,6 +37,9 @@ class EstateListInputVariableReaderConfigTest
 	/** @var array */
 	private $_values = [];
 
+	/** @var string */
+	private $_timezoneStr = 'Europe/Berlin';
+
 
 	/**
 	 *
@@ -114,5 +117,29 @@ class EstateListInputVariableReaderConfigTest
 	public function setValue(string $field, string $value)
 	{
 		$this->_values[$field] = $value;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getTimezoneString(): string
+	{
+		return $this->_timezoneStr;
+	}
+
+
+	/**
+	 *
+	 * @param string $timezoneStr
+	 *
+	 */
+
+	public function setTimezoneString(string $timezoneStr)
+	{
+		$this->_timezoneStr = $timezoneStr;
 	}
 }

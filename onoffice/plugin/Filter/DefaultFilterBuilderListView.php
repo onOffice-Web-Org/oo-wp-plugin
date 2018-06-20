@@ -176,7 +176,8 @@ class DefaultFilterBuilderListView
 	{
 		$fieldFilter = array();
 
-		if (FieldTypes::isNumericType($type)) {
+		if (FieldTypes::isNumericType($type) ||
+			FieldTypes::isDateOrDateTime($type)) {
 			if (!is_array($fieldValue)) {
 				$fieldFilter []= array('op' => '=', 'val' => $fieldValue);
 			} else {
