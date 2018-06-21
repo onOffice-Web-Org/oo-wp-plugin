@@ -28,4 +28,13 @@ $config['localemap'] = array(
 	'fallback' => 'DEU',
 );
 
-$config['api'] = array();
+$config['api'] = array(
+	'server' => 'https://localhost/api/',
+	'apiversion' => 'latest',
+	'curl_options' => array
+		(
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYHOST => false,
+			CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+		),
+);

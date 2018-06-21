@@ -20,6 +20,7 @@
  */
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\tests\WP_UnitTest_Localized;
 use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfigTest;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
@@ -35,12 +36,8 @@ use onOffice\WPlugin\Types\FieldTypes;
  */
 
 class TestClassDefaultFilterBuilderListView
-	extends WP_UnitTestCase
+	extends WP_UnitTest_Localized
 {
-	/** @var string */
-	private $_localeBackup = null;
-
-
 	/**
 	 *
 	 */
@@ -48,10 +45,7 @@ class TestClassDefaultFilterBuilderListView
 	public function setUp()
 	{
 		parent::setUp();
-		$this->_localeBackup = get_locale();
-		$pLocaleSwitcher = new WP_Locale_Switcher();
-		$pLocaleSwitcher->init();
-		$pLocaleSwitcher->switch_to_locale('en_US');
+		$this->switchLocale('en_US');
 	}
 
 
@@ -365,17 +359,5 @@ class TestClassDefaultFilterBuilderListView
 			],
 		];
 		$this->assertEquals($expected, $pInstance->buildFilter());
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function tearDown()
-	{
-		parent::tearDown();
-		$pLocaleSwitcher = new WP_Locale_Switcher();
-		$pLocaleSwitcher->switch_to_locale($this->_localeBackup);
 	}
 }

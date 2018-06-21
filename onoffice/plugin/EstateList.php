@@ -33,6 +33,7 @@ use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use onOffice\WPlugin\Gui\DateTimeFormatter;
 use onOffice\WPlugin\SDKWrapper;
 
 /**
@@ -762,14 +763,14 @@ class EstateList
 				return $this->formatValue($val, $type);
 			}, $value);
 		} elseif (Types\FieldTypes::isDateOrDateTime($type) && $value != '') {
+			$format = DateTimeFormatter::SHORT|DateTimeFormatter::ADD_DATE;
 			if ($type === Types\FieldTypes::FIELD_TYPE_DATETIME) {
-				$format = __('Y/m/d g:i:s a', 'onoffice');
-			} else {
-				$format = __('Y/m/d', 'onoffice');
+				$format |= DateTimeFormatter::ADD_TIME;
 			}
 
 			$pDate = new DateTime($value.' Europe/Berlin');
-			$value = date_i18n($format, $pDate->getTimestamp(), true);
+			$pDateTimeFormatter = new DateTimeFormatter();
+			$value = $pDateTimeFormatter->formatByTimestamp($format, $pDate->getTimestamp());
 		}
 		return $value;
 	}

@@ -20,6 +20,7 @@
  */
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\tests\WP_UnitTest_Localized;
 use onOffice\WPlugin\Controller\EstateListInputVariableReader;
 use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfigTest;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -34,40 +35,8 @@ use onOffice\WPlugin\Types\FieldTypes;
  */
 
 class TestClassEstateListInputVariableReader
-	extends WP_UnitTestCase
+	extends WP_UnitTest_Localized
 {
-	/** @var string */
-	private $_localeBackup = null;
-
-
-	/**
-	 *
-	 */
-
-	public function setUp()
-	{
-		parent::setUp();
-		$this->_localeBackup = get_locale();
-
-		$this->switchLocale('de_DE');
-	}
-
-
-	/**
-	 *
-	 * @param string $locale
-	 * @return bool
-	 *
-	 */
-
-	private function switchLocale(string $locale)
-	{
-		$pLocaleSwitcher = new WP_Locale_Switcher();
-		$pLocaleSwitcher->init();
-		return $pLocaleSwitcher->switch_to_locale($locale);
-	}
-
-
 	/**
 	 *
 	 */
@@ -270,16 +239,5 @@ class TestClassEstateListInputVariableReader
 		$this->assertTrue($pEstateListInputVariableReader->getFieldValue('kabel_sat_tv'));
 		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'n');
 		$this->assertFalse($pEstateListInputVariableReader->getFieldValue('kabel_sat_tv'));
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function tearDown()
-	{
-		parent::tearDown();
-		$this->switchLocale($this->_localeBackup);
 	}
 }
