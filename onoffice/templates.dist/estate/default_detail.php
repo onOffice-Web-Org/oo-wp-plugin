@@ -27,7 +27,7 @@
 require('estatemap.php');
 
 ?>
-<h1>Detailansicht!</h1>
+<h1><?php esc_html_e('Detail View', 'onoffice') ?></h1>
 
 <?php
 	$pEstates->resetEstateIterator();
@@ -58,21 +58,30 @@ require('estatemap.php');
 			$mobilePhoneNumbers = $contactData->offsetExists('mobile') ? $contactData->getValueRaw('mobile') : array();
 			if (count($mobilePhoneNumbers) > 0) :
 			?>
-				<li>Mobil: <?php echo esc_html(array_shift($mobilePhoneNumbers)); ?></li>
+				<li>
+					<?php esc_html_e('Phone (mobile): ', 'onoffice'); ?>
+					<?php echo esc_html(array_shift($mobilePhoneNumbers)); ?>
+				</li>
 			<?php endif; ?>
 			<?php
 			$businessPhoneNumbers = $contactData->offsetExists('phonebusiness') ?
 				$contactData->getValueRaw('phonebusiness') : array();
 			if (count($businessPhoneNumbers) > 0) :
 			?>
-				<li>phone business: <?php echo esc_html(array_shift($businessPhoneNumbers)); ?></li>
+				<li>
+					<?php esc_html_e('Phone (business): ', 'onoffice'); ?>
+					<?php echo esc_html(array_shift($businessPhoneNumbers)); ?>
+				</li>
 			<?php endif; ?>
 			<?php
 			$businessEmailAddresses = $contactData->offsetExists('emailbusiness') ?
 				$contactData->getValueRaw('emailbusiness') : array();
 			if (count($businessEmailAddresses) > 0) :
 			?>
-				<li>email business: <?php echo esc_html(array_shift($businessEmailAddresses)); ?></li>
+				<li>
+					<?php esc_html_e('E-Mail (business): ', 'onoffice'); ?>
+					<?php echo esc_html(array_shift($businessEmailAddresses)); ?>
+				</li>
 			<?php endif; ?>
 		</ul>
 
@@ -82,7 +91,8 @@ require('estatemap.php');
 
 	$estateMovieLinks = $pEstates->getEstateMovieLinks();
 	foreach ($estateMovieLinks as $movieLink) {
-		echo '<a href="'.esc_attr($movieLink['url']).'" title="'.esc_attr($movieLink['title']).'">'.esc_html($movieLink['title']).'</a><br>';
+		echo '<a href="'.esc_attr($movieLink['url']).'" title="'.esc_attr($movieLink['title']).'">'
+			.esc_html($movieLink['title']).'</a><br>';
 	}
 
 	$movieOptions = array('width' => 500); // optional
@@ -101,8 +111,10 @@ require('estatemap.php');
 	<?php endforeach; ?>
 
 	<?php if ($pEstates->getDataView()->getExpose() != ''): ?>
-		<h2>Dokumente</h2>
-		<a href="<?php echo $pEstates->getDocument(); ?>">PDF-Exposé</a>
+		<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
+		<a href="<?php echo $pEstates->getDocument(); ?>">
+			<?php esc_html_e('PDF expose', 'onoffice'); ?>
+		</a>
 	<?php endif; ?>
 
 <?php endwhile; ?>

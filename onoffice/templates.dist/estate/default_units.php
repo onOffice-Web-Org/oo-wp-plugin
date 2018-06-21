@@ -26,7 +26,7 @@
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
 ?>
-<h2>Einheiten!</h2>
+<h2><?php esc_html_e('Entities', 'onoffice');?></h2>
 <?php while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
@@ -36,13 +36,13 @@
 		<?php echo $pEstates->getFieldLabel( $field ) .': '.$value; ?><br>
 
 	<?php endforeach; ?>
-	<h3>Einheit-ASP:</h3>
+	<h3><?php esc_html_e('Contact person of entity:', 'onoffice');?></h3>
 	<?php foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
 	<ul>
-		<b>ASP: <?php echo $contactData['Vorname']; ?> <?php echo $contactData['Name']; ?></b>
-		<li>Telefon: <?php echo $contactData['defaultphone']; ?></li>
-		<li>Telefax: <?php echo $contactData['defaultfax']; ?></li>
-		<li>E-Mail: <?php echo $contactData['defaultemail']; ?></li>
+		<b><?php echo $contactData['Vorname']; ?> <?php echo $contactData['Name']; ?></b>
+		<li><?php esc_html_e('Phone:', 'onoffice');?><?php echo $contactData['defaultphone']; ?></li>
+		<li><?php esc_html_e('Fax:', 'onoffice');?> <?php echo $contactData['defaultfax']; ?></li>
+		<li<?php esc_html_e('E-Mail:', 'onoffice');?> <?php echo $contactData['defaultemail']; ?></li>
 	</ul>
 <?php endforeach; ?>
 <br>

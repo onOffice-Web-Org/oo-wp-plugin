@@ -44,13 +44,13 @@ require('estatemap.php');
 		onOffice.addFavoriteButtonLabel = function(i, element) {
 			var estateId = $(element).attr('data-onoffice-estateid');
 			if (!onofficeFavorites.favoriteExists(estateId)) {
-				$(element).text('<?php echo esc_js('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>');
+				$(element).text('<?php echo esc_js(__('Add to '.Favorites::getFavorizationLabel(), 'onoffice')); ?>');
 				$(element).on('click', function() {
 					onofficeFavorites.add(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
 				});
 			} else {
-				$(element).text('<?php echo esc_js('Remove from '.Favorites::getFavorizationLabel(), 'onoffice'); ?>');
+				$(element).text('<?php echo esc_js(__('Remove from '.Favorites::getFavorizationLabel(), 'onoffice')); ?>');
 				$(element).on('click', function() {
 					onofficeFavorites.remove(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
@@ -61,9 +61,9 @@ require('estatemap.php');
 	});
 </script>
 <?php endif ?>
-<h1>Übersicht der dargestellten Objekte</h1>
+<h1><?php esc_html_e('Overview of Estates', 'template', 'onoffice'); ?></h1>
 
-<p>Insgesamt <?php echo $pEstates->getEstateOverallCount(); ?> Objekte gefunden.</p>
+<p><?php echo sprintf(esc_html_x('Found %d estates over all.', 'template', 'onoffice'), $pEstates->getEstateOverallCount()); ?></p>
 
 <?php
 $pEstates->resetEstateIterator();
@@ -72,7 +72,7 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 ?>
 
 <p>
-	<a href="<?php echo $pEstates->getEstateLink(); ?>">Zur Detailansicht</a><br>
+	<a href="<?php echo $pEstates->getEstateLink(); ?>"><?php esc_html_e('Show Details', 'onoffice'); ?></a><br>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
 			continue;
@@ -87,7 +87,8 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 	<?php
 	foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
 	<p>
-		<b>ASP: <?php echo $contactData['Vorname']; ?> <?php echo $contactData['Name']; ?></b><br>
+		<b><?php esc_html_e('Contact person: ', 'onoffice'); ?>
+			<?php echo $contactData['Vorname']; ?> <?php echo $contactData['Name']; ?></b><br>
 		<img src="<?php echo $contactData['imageUrl']; ?>">
 		<ul>
 			<?php // either use the phone number flagged as default (add `default*` to config) ... ?>
@@ -101,33 +102,36 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 			$mobilePhoneNumbers = $contactData->offsetExists('mobile') ? $contactData->getValueRaw('mobile') : array();
 			if (count($mobilePhoneNumbers) > 0) :
 			?>
-				<li>Mobil: <?php echo esc_html(array_shift($mobilePhoneNumbers)); ?></li>
+				<li><?php esc_html_e('Mobile Phone: ', 'onoffice'); ?>
+					<?php echo esc_html(array_shift($mobilePhoneNumbers)); ?></li>
 			<?php endif; ?>
 			<?php
 			$businessPhoneNumbers = $contactData->offsetExists('phonebusiness') ?
 				$contactData->getValueRaw('phonebusiness') : array();
 			if (count($businessPhoneNumbers) > 0) :
 			?>
-				<li>phone business: <?php echo esc_html(array_shift($businessPhoneNumbers)); ?></li>
+				<li><?php esc_html_e('Phone (business): ', 'onoffice'); ?>
+					<?php echo esc_html(array_shift($businessPhoneNumbers)); ?></li>
 			<?php endif; ?>
 			<?php
 			$businessEmailAddresses = $contactData->offsetExists('emailbusiness') ?
 				$contactData->getValueRaw('emailbusiness') : array();
 			if (count($businessEmailAddresses) > 0) :
 			?>
-				<li>email business: <?php echo esc_html(array_shift($businessEmailAddresses)); ?></li>
+				<li><?php esc_html_e('E-Mail (business): ', 'onoffice'); ?>
+					<?php echo esc_html(array_shift($businessEmailAddresses)); ?></li>
 			<?php endif; ?>
 		</ul>
 	</p>
 	<?php endforeach; ?>
 
-	<p><b>Kontaktformular:</b>
+	<p><b><?php esc_html_e('Contact form: ', 'onoffice'); ?></b>
 		<?php
 			try {
 				$pForm = new \onOffice\WPlugin\Form('Contactform', \onOffice\WPlugin\Form::TYPE_CONTACT);
 				include( __DIR__ . "/../form/defaultform.php" );
 			} catch (\onOffice\WPlugin\DataFormConfiguration\UnknownFormException $pE) {
-				echo '(Formular nicht verfügbar)';
+				echo __('(Form is not available)', 'onoffice');
 			}
 		?>
 	</p>

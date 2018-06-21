@@ -59,13 +59,13 @@ foreach ($visible as $inputName => $properties) :
 		echo '<fieldset>
     <input type="radio" id="'.esc_attr($inputName).'_u" name="'.esc_attr($inputName).'" value="u"
 		'.($selectedValue === null ? ' checked' : '').'>
-    <label for="'.esc_attr($inputName).'_u">Keine Angabe</label>
+    <label for="'.esc_attr($inputName).'_u">'.esc_html('Not Specified', 'onoffice').'</label>
     <input type="radio" id="'.esc_attr($inputName).'_y" name="'.esc_attr($inputName).'" value="y"
 		'.($selectedValue === true  ? 'checked' : '').'>
-    <label for="'.esc_attr($inputName).'_y">Ja</label>
+    <label for="'.esc_attr($inputName).'_y">'.esc_html('Yes', 'onoffice').'</label>
     <input type="radio" id="'.esc_attr($inputName).'_n" name="'.esc_attr($inputName).'" value="n"
 		'.($selectedValue === false ? 'checked' : '').'>
-    <label for="'.esc_attr($inputName).'_n">Nein</label>
+    <label for="'.esc_attr($inputName).'_n">'.esc_html('No', 'onoffice').'</label>
   </fieldset>';
 	} elseif ( in_array($properties['type'], $multiSelectableTypes) &&
 		$inputName !== 'regionaler_zusatz' ) {
@@ -93,10 +93,10 @@ foreach ($visible as $inputName => $properties) :
 	} elseif ( FieldTypes::isNumericType( $properties['type'] ) ||
 		FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 		FieldTypes::FIELD_TYPE_DATE === $properties['type']) {
-		echo 'von: ';
+		esc_html_e('From: ', 'onoffice');
 		echo '<input name="'.esc_attr($inputName).'__von" type="text" ';
 		echo 'value="'.esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '').'"><br>';
-		echo 'bis: ';
+		esc_html_e('Up to: ', 'onoffice');
 		echo '<input name="'.esc_attr($inputName).'__bis" type="text" ';
 		echo 'value="'.esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '').'"><br>';
 	} else {
@@ -109,6 +109,6 @@ foreach ($visible as $inputName => $properties) :
 endforeach;
 ?>
 
-	<input type="submit" value="<?php esc_attr_e('Abschicken', 'onoffice'); ?>">
+	<input type="submit" value="<?php echo esc_attr__('Send', 'onoffice'); ?>">
 </form>
 <br>
