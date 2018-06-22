@@ -45,6 +45,7 @@ class TestClassAPIClientActionGenericReadEstate
 
 		$this->assertTrue($pApiCall->getResultStatus());
 		$this->assertEquals($this->getExpectedRecordResult(), $pApiCall->getResultRecords());
+		$this->assertEquals(['cntabsolute' => 1173], $pApiCall->getResultMeta());
 	}
 
 

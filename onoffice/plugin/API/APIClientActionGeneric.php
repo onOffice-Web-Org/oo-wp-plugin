@@ -121,6 +121,21 @@ class APIClientActionGeneric
 
 	/**
 	 *
+	 * @return array
+	 *
+	 */
+
+	public function getResultMeta()
+	{
+		if ($this->getResultStatus()) {
+			$result = $this->getResult();
+			return $result['data']['meta'] ?? null;
+		}
+	}
+
+
+	/**
+	 *
 	 * @param array $result
 	 *
 	 */

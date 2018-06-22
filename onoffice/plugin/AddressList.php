@@ -103,15 +103,21 @@ class AddressList
 
 	/**
 	 *
+	 * @global int $numpages
+	 * @global bool $multipage
+	 * @global int $page
+	 * @global bool $more
 	 * @param DataListViewAddress $pDataListViewAddress
-	 * @param int $page
+	 * @param int $inputPage
 	 *
 	 */
 
-	public function loadAddresses(DataListViewAddress $pDataListViewAddress, $page = 1)
+	public function loadAddresses(DataListViewAddress $pDataListViewAddress, $inputPage = 1)
 	{
+		global $numpages, $multipage, $page, $more;
+
 		$pDataListViewToApi = new DataListViewAddressToAPIParameters($pDataListViewAddress);
-		$pDataListViewToApi->setPage($page);
+		$pDataListViewToApi->setPage($inputPage);
 		$parameters = $pDataListViewToApi->buildParameters();
 
 		$pApiCall = new APIClientActionGeneric
@@ -123,6 +129,13 @@ class AddressList
 		if ($pApiCall->getResultStatus() === true) {
 			$records = $pApiCall->getResultRecords();
 			$this->fillAddressesById($records);
+
+			$resultMeta = $pApiCall->getResultMeta();
+			$numpages = ceil($resultMeta['cntabsolute']/$pDataListViewAddress->getRecordsPerPage());
+
+			$multipage = $numpages > 1;
+			$more = true;
+			$page = $inputPage;
 		}
 	}
 
