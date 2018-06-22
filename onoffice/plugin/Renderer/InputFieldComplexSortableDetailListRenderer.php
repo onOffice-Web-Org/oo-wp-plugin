@@ -105,7 +105,7 @@ class InputFieldComplexSortableDetailListRenderer
 		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
 
 		if ($label == null) {
-			$label = $inactiveFields[$key];
+			$label = isset($inactiveFields[$key]) ? $inactiveFields[$key] : null;
 			$deactivatedStyle = ' style="color:red;" ';
 			$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
 		}
