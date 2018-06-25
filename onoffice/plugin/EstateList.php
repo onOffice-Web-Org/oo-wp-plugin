@@ -543,7 +543,7 @@ class EstateList {
 
 	public function getEstatePictureText( $imageId ) {
 		$currentEstate = $this->_currentEstate['id'];
-		return $this->_pEstateImages->getEstatePuctureText($imageId, $currentEstate);
+		return $this->_pEstateImages->getEstatePictureText($imageId, $currentEstate);
 	}
 
 
@@ -556,7 +556,7 @@ class EstateList {
 
 	public function getEstatePictureValues( $imageId ) {
 		$currentEstate = $this->_currentEstate['id'];
-		return $this->_pEstateImages->getEstatePuctureValues($imageId, $currentEstate);
+		return $this->_pEstateImages->getEstatePictureValues($imageId, $currentEstate);
 	}
 
 

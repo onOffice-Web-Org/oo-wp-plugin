@@ -28,6 +28,7 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 
 /**
@@ -61,16 +62,20 @@ class EstateImages {
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\SDKWrapper $pSDKWrapper
+	 * @param SDKWrapper $pSDKWrapper
 	 * @param array $estateIds
 	 *
 	 */
 
 	public function registerRequest( SDKWrapper $pSDKWrapper, array $estateIds ) {
+		$pLanguage = new Language();
+		$language = $pLanguage->convertLanguage('auto');
+
 		$this->_handleEstatePictures = $pSDKWrapper->addRequest(
 			onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
 				'estateids' => array_values($estateIds),
 				'categories' => $this->_pictureCategories,
+				'language' => $language,
 			)
 		);
 	}
@@ -78,7 +83,7 @@ class EstateImages {
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\SDKWrapper $pSDKWrapper
+	 * @param SDKWrapper $pSDKWrapper
 	 *
 	 */
 
@@ -92,13 +97,13 @@ class EstateImages {
 	/**
 	 *
 	 * @param type $responseArrayEstatePictures
-	 * @throws \onOffice\SDK\Exception\HttpFetchNoResultException
+	 * @throws HttpFetchNoResultException
 	 *
 	 */
 
 	private function collectEstatePictures( $responseArrayEstatePictures ) {
 		if ( ! isset( $responseArrayEstatePictures['data']['records'] ) ) {
-			throw new \onOffice\SDK\Exception\HttpFetchNoResultException();
+			throw new HttpFetchNoResultException();
 		}
 
 		$records = $responseArrayEstatePictures['data']['records'];
