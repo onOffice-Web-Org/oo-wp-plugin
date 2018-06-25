@@ -230,7 +230,7 @@ class ContentFilter
 		$pFieldnames->loadLanguage();
 		$pAddressList = new AddressList($pFieldnames);
 
-		$pAddressList->loadAddresses($pAddressListView);
+		$pAddressList->loadAddresses($pAddressListView, $page);
 		$templateName = $pAddressListView->getTemplate();
 		$pTemplate = new Template($templateName);
 		$pTemplate->setAddressList($pAddressList);
