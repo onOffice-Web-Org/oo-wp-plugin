@@ -260,6 +260,24 @@ class AddressList
 	}
 
 
+	/**
+	 *
+	 * @param string $field
+	 * @return string
+	 *
+	 */
+
+	public function getFieldType($field)
+	{
+		$pFieldnames = $this->_pFieldnames;
+
+		if ($pFieldnames !== null) {
+			$fieldInformation = $pFieldnames->getFieldInformation($field, onOfficeSDK::MODULE_ADDRESS);
+			return $fieldInformation['type'];
+		}
+	}
+
+
 	/** @param SDKWrapper $pSDKWrapper */
 	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
 		{ $this->_pSDKWrapper = $pSDKWrapper; }

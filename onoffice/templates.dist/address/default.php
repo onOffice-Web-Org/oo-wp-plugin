@@ -19,13 +19,16 @@
  *
  */
 
+use onOffice\WPlugin\AddressList;
+use onOffice\WPlugin\Types\FieldTypes;
+
 /**
  *
  *  Default template for address lists
  *
  */
 
-/* @var $pAddressList onOffice\WPlugin\AddressList */
+/* @var $pAddressList AddressList */
 foreach ($pAddressList->getRows() as $escapedValues) {
 	$imageUrl = $escapedValues['imageUrl'];
 	unset($escapedValues['imageUrl']);
@@ -33,6 +36,9 @@ foreach ($pAddressList->getRows() as $escapedValues) {
 	echo 'Bild: ', $imageUrl, '<br>';
 
 	foreach ($escapedValues as $field => $value) {
+		if ($pAddressList->getFieldType($field) === FieldTypes::FIELD_TYPE_BLOB) {
+			continue;
+		}
 		$fieldLabel = $pAddressList->getFieldLabel($field);
 		echo $fieldLabel, ': ', $value, '<br>';
 	}
