@@ -80,6 +80,7 @@ class EstateFiles
 			onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
 				'estateids' => array_values($estateIds),
 				'categories' => $this->_pictureCategories,
+				'language' => Language::getDefault(),
 			)
 		);
 	}

@@ -144,6 +144,7 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
 		<img src="<?php echo $pEstates->getEstatePictureUrl( $id, array('width' => 400, 'height' => 300) ); ?>">
 	</a>
+	<?php echo esc_html( $pEstates->getEstatePictureText($id) ); ?>
 	<?php endforeach; ?>
 </p>
 
