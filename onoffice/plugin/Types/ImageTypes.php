@@ -48,16 +48,13 @@ class ImageTypes
 	const GROUNDPLAN = 'Grundriss';
 
 	/** */
+	const PANORAMA = 'Panorama';
+
+	/** */
 	const LOCATION_MAP = 'Lageplan';
 
 	/** */
-	const CITY_MAP = 'Stadtplan';
-
-	/** */
 	const ENERGY_PASS_RANGE = 'Epass_Skala';
-
-	/** */
-	const FINANCE_EXAMPLE = 'Finanzierungsbeispiel';
 
 	/** @var array */
 	static private $_imageTypes = array
@@ -65,11 +62,10 @@ class ImageTypes
 			self::TITLE => 'Cover Photo',
 			self::PHOTO => 'Photo',
 			self::PHOTO_BIG => 'Photo (big)',
+			self::PANORAMA => 'Panorama',
 			self::GROUNDPLAN => 'Ground Plan',
 			self::LOCATION_MAP => 'Location Map',
-			self::CITY_MAP => 'City Map',
 			self::ENERGY_PASS_RANGE => 'Energy-Pass Range',
-			self::FINANCE_EXAMPLE => 'Finance Example',
 		);
 
 
