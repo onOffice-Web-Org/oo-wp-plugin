@@ -146,6 +146,8 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 	</a>
 	<?php echo esc_html( $pEstates->getEstatePictureText($id) ); ?>
 	<?php endforeach; ?>
+
+	<?php echo $pEstates->getEstateUnits( ); ?>
 </p>
 
 <?php if (Favorites::isFavorizationEnabled()): ?>

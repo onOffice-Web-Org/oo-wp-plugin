@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -37,6 +38,30 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 class FormModelBuilderDBEstateUnitListSettings
 	extends FormModelBuilderDBEstateListSettings
 {
+	/** @var string[] */
+	private static $_defaultFields = [
+		'objekttitel',
+		'objektart',
+		'objekttyp',
+		'vermarktungsart',
+		'plz',
+		'ort',
+		'bundesland',
+		'objektnr_extern',
+		'wohnflaeche',
+		'grundstuecksflaeche',
+		'nutzflaeche',
+		'anzahl_zimmer',
+		'anzahl_badezimmer',
+		'kaufpreis',
+		'kaltmiete',
+		'objektbeschreibung',
+		'lage',
+		'ausstatt_beschr',
+		'sonstige_angaben'
+	];
+
+
 	/**
 	 *
 	 * @param int $listViewId
@@ -46,11 +71,14 @@ class FormModelBuilderDBEstateUnitListSettings
 
 	public function generate($listViewId = null)
 	{
-		if ($listViewId !== null)
-		{
+		if ($listViewId !== null) {
 			$pRecordReadManager = new RecordManagerReadListViewEstate();
 			$values = $pRecordReadManager->getRowById($listViewId);
 			$this->setValues($values);
+		} else {
+			$this->setValues(array(
+				DataListView::FIELDS => self::$_defaultFields,
+			));
 		}
 
 		$pFormModel = new FormModel();
