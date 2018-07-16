@@ -128,7 +128,7 @@ class AdminPageAddressListSettings
 		$pFormModelFilterRecords = new FormModel();
 		$pFormModelFilterRecords->setPageSlug($this->getPageSlug());
 		$pFormModelFilterRecords->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
-		$pFormModelFilterRecords->setLabel(__('Records & Filter', 'onoffice'));
+		$pFormModelFilterRecords->setLabel(__('Filter & Records', 'onoffice'));
 		$pFormModelFilterRecords->addInputModel($pInputModelFilter);
 		$pFormModelFilterRecords->addInputModel($pInputModelRecordCount);
 		$pFormModelFilterRecords->addInputModel($pInputModelSortBy);
