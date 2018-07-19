@@ -26,23 +26,17 @@ $pages = $pForm->getPages();
 $addressValues = array();
 $estateValues = array();
 
-if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
-{
+if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo 'SUCCESS!';
-}
-else
-{
-	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)
-	{
+} else {
+	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 		echo 'ERROR!';
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
-	foreach ( $pForm->getInputFields() as $input => $table )
-	{
-
-		if ( $pForm->isMissingField( $input )  && $pForm->getFormStatus() == onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING)
-		{
+	foreach ( $pForm->getInputFields() as $input => $table ) {
+		if ( $pForm->isMissingField( $input )  &&
+			$pForm->getFormStatus() == onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			echo $pForm->getFieldLabel( $input ).' - Angabe fehlt, bitte ausfüllen!<br>';
 		}
 
@@ -55,42 +49,41 @@ else
 
 		$typeCurrentInput = $pForm->getFieldType( $input );
 
-		if ( in_array( $typeCurrentInput, $selectTypes, true ) )
-		{
+		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
 			$line = $pForm->getFieldLabel( $input ).': ';
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );
 			$line .= '<select size="1" name="'.$input.'">';
 
-			foreach ( $permittedValues as $key => $value )
-			{
-				if ( is_array( $selectedValue ) )
-				{
+			foreach ( $permittedValues as $key => $value ) {
+				if ( is_array( $selectedValue ) ) {
 					$isSelected = in_array( $key, $selectedValue, true );
-				}
-				else
-				{
+				} else {
 					$isSelected = $selectedValue == $key;
 				}
 				$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'
 					.esc_html($value).'</option>';
 			}
 			$line .= '</select>';
-		}
-		else
-		{
-			$line .= $pForm->getFieldLabel( $input ).': <input name="'.$input.'" value="'
-					.$pForm->getFieldValue( $input ).'">';
+		} else {
+			$inputType = 'text';
+			$value = 'value="'.$pForm->getFieldValue( $input ).'"';
+
+			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+				$inputType = 'checkbox';
+				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
+			}
+
+			$line .= $pForm->getFieldLabel( $input ).': ';
+			$line .= '<input type="'.$inputType.'" name="'.esc_attr($input).'" '.$value.'><br>';
 		}
 
-		if ($table == 'address')
-		{
+		if ($table == 'address') {
 			$addressValues []= $line;
 		}
 
-		if ($table == 'estate')
-		{
+		if ($table == 'estate') {
 			$estateValues []= $line;
 		}
 	}
@@ -132,19 +125,14 @@ function zurueck(pages) {
 			<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
 			<div id="inhalt">
 				<?php
-					if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)
-					{
+					if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 						echo 'ERROR!';
 					}
 
-					for ($i = 1; $i <= $pages; $i++)
-					{
-						if ($i == 1)
-						{
+					for ($i = 1; $i <= $pages; $i++) {
+						if ($i == 1) {
 							$displayValue = 'block';
-						}
-						else
-						{
+						} else {
 							$displayValue = 'none';
 						}
 						echo '<div id="'.$i.'" style="display:'.$displayValue.'">';
