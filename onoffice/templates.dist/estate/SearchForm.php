@@ -19,7 +19,7 @@
  *
  */
 
-require __DIR__.DIRECTORY_SEPARATOR.'../fields.php';
+require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'fields.php';
 
 $visible = $pEstates->getVisibleFilterableFields();
 
