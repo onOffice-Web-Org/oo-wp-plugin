@@ -45,10 +45,30 @@ class DataDetailView
 	const ADDRESSFIELDS = 'addressfields';
 
 	/** @var string[] */
-	private $_fields = array();
+	private $_fields = [
+		'objekttitel',
+		'objektart',
+		'objekttyp',
+		'vermarktungsart',
+		'plz',
+		'ort',
+		'bundesland',
+		'objektnr_extern',
+		'wohnflaeche',
+		'grundstuecksflaeche',
+		'nutzflaeche',
+		'anzahl_zimmer',
+		'anzahl_badezimmer',
+		'kaufpreis',
+		'kaltmiete',
+		'objektbeschreibung',
+		'lage',
+		'ausstatt_beschr',
+		'sonstige_angaben',
+	];
 
 	/** @var string[] */
-	private $_addressFields = array(
+	private $_addressFields = [
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -58,10 +78,10 @@ class DataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
-	);
+	];
 
 	/** @var string[] */
-	private $_pictureTypes = array();
+	private $_pictureTypes = [];
 
 	/** @var string */
 	private $_template = '';
