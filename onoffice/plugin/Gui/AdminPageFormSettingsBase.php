@@ -236,7 +236,7 @@ abstract class AdminPageFormSettingsBase
 	{
 		return array(
 			self::GET_PARAM_TYPE => $this->getType(),
-			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was Saved.', 'onoffice'),
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was saved.', 'onoffice'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make '
 					.'sure the name of the form is unique.', 'onoffice'),
 			self::ENQUEUE_DATA_MERGE => array(

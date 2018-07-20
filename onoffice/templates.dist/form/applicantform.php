@@ -41,8 +41,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR)
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
-foreach ( $pForm->getInputFields() as $input => $table )
-{
+foreach ( $pForm->getInputFields() as $input => $table ) {
 	$line = null;
 
 	$selectTypes = array(
@@ -51,16 +50,17 @@ foreach ( $pForm->getInputFields() as $input => $table )
 	);
 
 	$typeCurrentInput = $pForm->getFieldType( $input );
+	$isRequired = $pForm->isRequiredField( $input );
+	$addition = $isRequired ? '*' : '';
 
 	if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-		$line = $pForm->getFieldLabel( $input ).': ';
+		$line = $pForm->getFieldLabel( $input ).$addition.': ';
 
 		$permittedValues = $pForm->getPermittedValues( $input, true );
 		$selectedValue = $pForm->getFieldValue( $input, true );
 		$line .= '<select size="1" name="'.$input.'">';
 
-		foreach ( $permittedValues as $key => $value )
-		{
+		foreach ( $permittedValues as $key => $value ) {
 			if ( is_array( $selectedValue ) ) {
 				$isSelected = in_array( $key, $selectedValue, true );
 			} else {
@@ -69,9 +69,7 @@ foreach ( $pForm->getInputFields() as $input => $table )
 			$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
 		}
 		$line .= '</select>';
-	}
-	else
-	{
+	} else {
 		$inputType = 'text';
 		$valueTag = 'value="'.$pForm->getFieldValue( $input ).'"';
 
@@ -82,14 +80,14 @@ foreach ( $pForm->getInputFields() as $input => $table )
 
 		if ($pForm->inRangeSearchcriteriaInfos($input) &&
 			count($pForm->getSearchcriteriaRangeInfosForField($input)) > 0) {
-			$line .= $pForm->getFieldLabel( $input ).': ';
+			$line .= $pForm->getFieldLabel( $input ).$addition.': ';
 
 			foreach ($pForm->getSearchcriteriaRangeInfosForField($input) as $key => $value) {
 				$line .= '<input type="'.$inputType.'" value="'
 					.$pForm->getFieldValue( $key ).'" name="'.$key.'" placeholder="'.$value.'" '.$valueTag.'> ';
 			}
 		} else {
-			$line .= $pForm->getFieldLabel( $input ).': <input type="'.$inputType.'" name="'.$input.'" value="'
+			$line .= $pForm->getFieldLabel( $input ).$addition.': <input type="'.$inputType.'" name="'.$input.'" value="'
 				.$pForm->getFieldValue( $input ).'" '.$valueTag.'>';
 		}
 	}

@@ -71,7 +71,7 @@ class FormPostInterest
 			if (false !== $responseAddress) {
 				$responseSearchcriteria = $this->createSearchcriteria($pFormData, $responseAddress);
 
-				if ($responseSearchcriteria && null != $recipient && null != $subject) {
+				if ($responseSearchcriteria && null != $recipient) {
 					$response = $this->sendEmail($pFormData, $recipient, $subject);
 				}
 			}

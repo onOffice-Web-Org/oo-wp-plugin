@@ -49,7 +49,9 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$typeCurrentInput = $pForm->getFieldType( $input );
 
 		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-			$line = $pForm->getFieldLabel( $input ).': ';
+			$isRequired = $pForm->isRequiredField( $input );
+			$addition = $isRequired ? '*' : '';
+			$line = $pForm->getFieldLabel( $input ).$addition.': ';
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );

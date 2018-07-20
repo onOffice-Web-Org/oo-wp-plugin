@@ -42,10 +42,10 @@ class AdminPageFormSettingsMain
 
 	/** @var array */
 	private $_mappingTypeClass = array(
-		Form::TYPE_CONTACT => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
-		Form::TYPE_APPLICANT_SEARCH => '\onOffice\WPlugin\Gui\AdminPageFormSettingsApplicantSearch',
-		Form::TYPE_INTEREST => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
-		Form::TYPE_OWNER => '\onOffice\WPlugin\Gui\AdminPageFormSettingsContact',
+		Form::TYPE_CONTACT => AdminPageFormSettingsContact::class,
+		Form::TYPE_APPLICANT_SEARCH => AdminPageFormSettingsApplicantSearch::class,
+		Form::TYPE_INTEREST => AdminPageFormSettingsInterestOwner::class,
+		Form::TYPE_OWNER => AdminPageFormSettingsInterestOwner::class,
 	);
 
 	/** @var AdminPageFormSettingsBase */
@@ -60,13 +60,13 @@ class AdminPageFormSettingsMain
 	 *
 	 */
 
-	private function initSubClass($type, $id = null)
+	private function initSubClass(string $type = null, int $id = null)
 	{
 		if ($this->_pInstance !== null) {
 			return;
 		}
 
-		if ($id != null) {
+		if (!empty($id)) {
 			$pDataFormConfigFactory = new DataFormConfigurationFactory();
 			$pFormConfiguration = $pDataFormConfigFactory->loadByFormId($id);
 			$type = $pFormConfiguration->getFormType();
@@ -114,7 +114,7 @@ class AdminPageFormSettingsMain
 	 *
 	 */
 
-	private function configureAdminPage(AdminPageFormSettingsBase $pAdminPage, $type)
+	private function configureAdminPage(AdminPageFormSettingsBase $pAdminPage, string $type)
 	{
 		$pAdminPage->setType($type);
 
@@ -175,7 +175,7 @@ class AdminPageFormSettingsMain
 	 *
 	 */
 
-	private function getClassNameByType($type)
+	private function getClassNameByType(string $type)
 	{
 		$result = null;
 
@@ -225,7 +225,7 @@ class AdminPageFormSettingsMain
 	 *
 	 */
 
-	public function getEnqueueData()
+	public function getEnqueueData(): array
 	{
 		return $this->_pInstance->getEnqueueData();
 	}

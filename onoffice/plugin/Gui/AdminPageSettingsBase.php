@@ -188,7 +188,7 @@ abstract class AdminPageSettingsBase
 		$this->buildForms();
 		$action = filter_input(INPUT_POST, 'action');
 		$nonce = filter_input(INPUT_POST, 'nonce');
-		$recordId = filter_input(INPUT_POST, self::POST_RECORD_ID);
+		$recordId = (int)filter_input(INPUT_POST, self::POST_RECORD_ID);
 		$this->validate($recordId);
 
 		if (!wp_verify_nonce($nonce, $action)) {
@@ -218,14 +218,34 @@ abstract class AdminPageSettingsBase
 		$checkResult = $this->checkFixedValues($row);
 		$pResultObject = new stdClass();
 		$pResultObject->result = false;
+		$pResultObject->record_id = $recordId;
 
 		if ($checkResult) {
 			$this->updateValues($row, $pResultObject, $recordId);
 		}
 
+		$pResultObject->messageKey = $this->getResponseMessagekey($pResultObject->result);
+
 		echo json_encode($pResultObject);
 
 		wp_die();
+	}
+
+
+	/**
+	 *
+	 * @param bool $result
+	 * @return string
+	 *
+	 */
+
+	protected function getResponseMessagekey($result)
+	{
+		if ($result) {
+			return self::VIEW_SAVE_SUCCESSFUL_MESSAGE;
+		}
+
+		return self::VIEW_SAVE_FAIL_MESSAGE;
 	}
 
 
