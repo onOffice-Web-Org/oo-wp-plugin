@@ -444,6 +444,7 @@ class EstateList {
 
 	/**
 	 *
+	 * @global \Sitepress $sitepress From WPML plugin
 	 * @return string
 	 *
 	 */
@@ -470,7 +471,17 @@ class EstateList {
 
 		// _default
 		if ( substr( $foreignViewConfigName, 0, 1) == '_' ) {
-			$fullLink = site_url().'/'.$foreignViewConfigView.'/'.$estate.'/';
+			if (defined('ICL_LANGUAGE_CODE')) {
+				global $sitepress;
+				$defaultLanguage = $sitepress->get_default_language();
+				if (ICL_LANGUAGE_CODE != $defaultLanguage ) {
+					$fullLink = site_url().'/'.ICL_LANGUAGE_CODE.'/'.$foreignViewConfigView.'/'.$estate.'/';
+				} else {
+					$fullLink = site_url().'/'.$foreignViewConfigView.'/'.$estate.'/';
+				}
+			} else {
+				$fullLink = site_url().'/'.$foreignViewConfigView.'/'.$estate.'/';
+			}
 		} else {
 			$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
 			$detailpageid = $estateConfig[$foreignViewConfigName]['views'][$foreignViewConfigView]['pageid'];
