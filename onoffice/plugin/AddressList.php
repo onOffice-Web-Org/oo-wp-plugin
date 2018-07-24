@@ -90,6 +90,8 @@ class AddressList
 		$parameters = array(
 			'recordids' => $addressIds,
 			'data' => $fields,
+			'outputlanguage' => Language::getDefault(),
+			'formatoutput' => true,
 		);
 		$pApiCall->setParameters($parameters);
 		$pApiCall->addRequestToQueue();
@@ -152,6 +154,7 @@ class AddressList
 			$elements = $address['elements'];
 
 			$additionalContactData = $this->collectAdditionalContactData($elements);
+			unset($elements['id']);
 			$this->_adressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
 	}

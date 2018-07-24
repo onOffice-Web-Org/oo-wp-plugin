@@ -40,6 +40,6 @@ foreach ($pAddressList->getRows() as $escapedValues) {
 			continue;
 		}
 		$fieldLabel = $pAddressList->getFieldLabel($field);
-		echo $fieldLabel, ': ', $value, '<br>';
+		echo $fieldLabel, ': ', (is_array($value) ? implode(', ',$value) : $value), '<br>';
 	}
 }

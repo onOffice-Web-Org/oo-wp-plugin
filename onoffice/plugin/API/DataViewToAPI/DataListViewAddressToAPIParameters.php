@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\API\DataViewToAPI;
 
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddress;
+use onOffice\WPlugin\Language;
 
 
 /**
@@ -75,6 +76,8 @@ class DataListViewAddressToAPIParameters
 			'sortorder' => $pDataListViewAddress->getSortorder(),
 			'filter' => $pDefaultFilterBuilder->buildFilter(),
 			'filterid' => $pDataListViewAddress->getFilterId(),
+			'outputlanguage' => Language::getDefault(),
+			'formatoutput' => true,
 		);
 
 		if ($pDataListViewAddress->getShowPhoto()) {

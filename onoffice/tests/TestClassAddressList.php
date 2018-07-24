@@ -85,13 +85,11 @@ class TestClassAddressList
 				'Name' => 'Firestone',
 				'KdNr' => 9,
 				'Vorname' => 'Fred',
-				'id' => 13,
 			),
 			37 => array(
 				'Name' => 'Fleißig',
 				'KdNr' => 12,
 				'Vorname' => 'Heinrich',
-				'id' => 37,
 			),
 		);
 	}
@@ -110,6 +108,8 @@ class TestClassAddressList
 		$parameters = array(
 			'recordids' => array(13, 37),
 			'data' => array('Name', 'KdNr', 'Vorname'),
+			'outputlanguage' => onOffice\WPlugin\Language::getDefault(),
+			'formatoutput' => true,
 		);
 
 		$pSDKWrapper->addResponseByParameters
