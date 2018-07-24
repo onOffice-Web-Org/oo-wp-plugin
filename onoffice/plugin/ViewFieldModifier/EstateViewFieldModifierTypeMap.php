@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\EstateViewFieldModifier;
+namespace onOffice\WPlugin\ViewFieldModifier;
 
 /**
  *
@@ -28,7 +28,7 @@ namespace onOffice\WPlugin\EstateViewFieldModifier;
  *
  */
 
-class EstateViewFieldModifierTypeDefault
+class EstateViewFieldModifierTypeMap
 	extends EstateViewFieldModifierTypeEstateGeoBase
 {
 	/**
@@ -39,7 +39,15 @@ class EstateViewFieldModifierTypeDefault
 
 	public function getAPIFields(): array
 	{
-		return [];
+		$parent = parent::getAPIFields();
+		$mapSpecific = array(
+			'showGoogleMap',
+			'strasse',
+			'hausnummer',
+			'objekttitel',
+		);
+
+		return array_merge($parent, $mapSpecific);
 	}
 
 
@@ -51,24 +59,12 @@ class EstateViewFieldModifierTypeDefault
 
 	public function getVisibleFields(): array
 	{
-		return [];
-	}
-
-
-	/**
-	 *
-	 * @param array $record
-	 * @return array
-	 *
-	 */
-
-	public function reduceRecord(array $record): array
-	{
-		// do not use isset() since value may be NULL
-		if (array_key_exists('mainLangId', $record)) {
-			unset($record['mainLangId']);
-		}
-
-		return parent::reduceRecord($record);
+		return [
+			'showGoogleMap',
+			'laengengrad',
+			'breitengrad',
+			'virtualAddress',
+			'objekttitel',
+		];
 	}
 }

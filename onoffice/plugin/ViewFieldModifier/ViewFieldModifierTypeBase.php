@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\EstateViewFieldModifier;
+namespace onOffice\WPlugin\ViewFieldModifier;
 
 /**
  *
@@ -28,8 +28,7 @@ namespace onOffice\WPlugin\EstateViewFieldModifier;
  *
  */
 
-class EstateViewFieldModifierTypeTitle
-	implements EstateViewFieldModifierTypeBase
+interface ViewFieldModifierTypeBase
 {
 	/**
 	 *
@@ -37,40 +36,25 @@ class EstateViewFieldModifierTypeTitle
 	 *
 	 */
 
-	public function getAPIFields(): array
-	{
-		return [
-			'objekttitel',
-			'objektart',
-			'vermarktungsart',
-			'ort',
-			'objektnr_extern',
-		];
-	}
+	public function getAPIFields(): array;
 
 
 	/**
 	 *
-	 * @return array
+	 * @return array Fields visible from within the templates
+	 * Must be a subset of getAPIFields().
 	 *
 	 */
 
-	public function getVisibleFields(): array
-	{
-		return $this->getAPIFields();
-	}
+	public function getVisibleFields(): array;
 
 
 	/**
 	 *
-	 * @param array $record
-	 * @return array
+	 * @param array $record The record as associative array
+	 * @return array The new record
 	 *
 	 */
 
-	public function reduceRecord(array $record): array
-	{
-		// nothing to do
-		return $record;
-	}
+	public function reduceRecord(array $record): array;
 }

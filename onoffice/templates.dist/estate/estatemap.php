@@ -27,7 +27,7 @@
  */
 
 use onOffice\WPlugin\EstateList;
-use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypes;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /* @var $pEstates EstateList */
 $pEstates->resetEstateIterator();

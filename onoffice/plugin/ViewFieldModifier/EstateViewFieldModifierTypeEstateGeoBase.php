@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\EstateViewFieldModifier;
+namespace onOffice\WPlugin\ViewFieldModifier;
 
 use onOffice\WPlugin\Utility\__String;
 
@@ -31,7 +31,7 @@ use onOffice\WPlugin\Utility\__String;
  */
 
 abstract class EstateViewFieldModifierTypeEstateGeoBase
-	implements EstateViewFieldModifierTypeBase
+	implements ViewFieldModifierTypeBase
 {
 	/**
 	 *

@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\EstateViewFieldModifier;
+namespace onOffice\WPlugin\ViewFieldModifier;
 
 /**
  *
@@ -29,6 +29,7 @@ namespace onOffice\WPlugin\EstateViewFieldModifier;
  */
 
 class EstateViewFieldModifierTypes
+	implements ViewFieldModifierTypes
 {
 	/** */
 	const MODIFIER_TYPE_DEFAULT = 'modifierTypeDefault';
@@ -41,7 +42,7 @@ class EstateViewFieldModifierTypes
 
 
 	/** @var array */
-	private static $_mapping = [
+	private $_mapping = [
 		self::MODIFIER_TYPE_DEFAULT => EstateViewFieldModifierTypeDefault::class,
 		self::MODIFIER_TYPE_MAP => EstateViewFieldModifierTypeMap::class,
 		self::MODIFIER_TYPE_TITLE => EstateViewFieldModifierTypeTitle::class,
@@ -54,8 +55,8 @@ class EstateViewFieldModifierTypes
 	 *
 	 */
 
-	public static function getMapping(): array
+	public function getMapping(): array
 	{
-		return self::$_mapping;
+		return $this->_mapping;
 	}
 }

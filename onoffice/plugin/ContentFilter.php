@@ -38,8 +38,8 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierFactory;
-use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypes;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Utility\__String;
@@ -387,7 +387,8 @@ class ContentFilter
 		$pEstateList = $this->preloadSingleEstate($pDetailView, null);
 		$modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE;
 		$pEstateIterator = $pEstateList->estateIterator($modifier);
-		$pEstateFieldModifier = EstateViewFieldModifierFactory::create($modifier);
+		$pViewFieldModifierFactory = new ViewFieldModifierFactory(onOfficeSDK::MODULE_ESTATE);
+		$pEstateFieldModifier = $pViewFieldModifierFactory->create($modifier);
 		$fieldsForTitle = $pEstateFieldModifier->getVisibleFields();
 
 		if ($pEstateIterator) {

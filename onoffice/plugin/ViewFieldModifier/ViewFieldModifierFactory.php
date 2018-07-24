@@ -19,7 +19,9 @@
  *
  */
 
-namespace onOffice\WPlugin\EstateViewFieldModifier;
+namespace onOffice\WPlugin\ViewFieldModifier;
+
+use onOffice\SDK\onOfficeSDK;
 
 /**
  *
@@ -28,22 +30,76 @@ namespace onOffice\WPlugin\EstateViewFieldModifier;
  *
  */
 
-class EstateViewFieldModifierFactory
+class ViewFieldModifierFactory
 {
+	/** @var array */
+	private $_moduleToTypeClass = [
+		onOfficeSDK::MODULE_ESTATE => EstateViewFieldModifierTypes::class,
+	];
+
+	/** @var string */
+	private $_module = null;
+
+
 	/**
 	 *
-	 * @param string $type
-	 * @return EstateViewFieldModifier
+	 * @param string $module
 	 *
 	 */
 
-	public static function create(string $type)
+	public function __construct(string $module)
 	{
-		$mapping = EstateViewFieldModifierTypes::getMapping();
+		$this->_module = $module;
+	}
+
+
+	/**
+	 *
+	 * @param string $type
+	 * @return ViewFieldModifierTypeBase
+	 *
+	 */
+
+	public function create(string $type)
+	{
+		$mapping = $this->getMapping();
 
 		if (isset($mapping[$type])) {
 			return new $mapping[$type];
 		}
+
 		return null;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	private function getMappingClass()
+	{
+		return $this->_moduleToTypeClass[$this->_module] ?? null;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getMapping(): array
+	{
+		$mappingClass = $this->getMappingClass();
+		$mapping = [];
+
+		if ($mappingClass !== null) {
+			$pViewFieldModifierTypes = new $mappingClass();
+			$mapping = $pViewFieldModifierTypes->getMapping();
+		}
+
+		return $mapping;
 	}
 }

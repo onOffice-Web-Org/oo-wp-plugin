@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\EstateViewFieldModifier;
+namespace onOffice\WPlugin\ViewFieldModifier;
 
 /**
  *
@@ -28,7 +28,8 @@ namespace onOffice\WPlugin\EstateViewFieldModifier;
  *
  */
 
-interface EstateViewFieldModifierTypeBase
+class EstateViewFieldModifierTypeDefault
+	extends EstateViewFieldModifierTypeEstateGeoBase
 {
 	/**
 	 *
@@ -36,25 +37,38 @@ interface EstateViewFieldModifierTypeBase
 	 *
 	 */
 
-	public function getAPIFields(): array;
+	public function getAPIFields(): array
+	{
+		return [];
+	}
 
 
 	/**
 	 *
-	 * @return array Fields visible from within the templates
-	 * Must be a subset of getAPIFields().
+	 * @return array
 	 *
 	 */
 
-	public function getVisibleFields(): array;
+	public function getVisibleFields(): array
+	{
+		return [];
+	}
 
 
 	/**
 	 *
-	 * @param array $record The record as associative array
-	 * @return array The new record
+	 * @param array $record
+	 * @return array
 	 *
 	 */
 
-	public function reduceRecord(array $record): array;
+	public function reduceRecord(array $record): array
+	{
+		// do not use isset() since value may be NULL
+		if (array_key_exists('mainLangId', $record)) {
+			unset($record['mainLangId']);
+		}
+
+		return parent::reduceRecord($record);
+	}
 }

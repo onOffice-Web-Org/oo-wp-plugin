@@ -19,9 +19,9 @@
  *
  */
 
-namespace onOffice\WPlugin\EstateViewFieldModifier;
+namespace onOffice\WPlugin\ViewFieldModifier;
 
-use onOffice\WPlugin\DataView\DataView;
+use Exception;
 
 /**
  *
@@ -30,31 +30,31 @@ use onOffice\WPlugin\DataView\DataView;
  *
  */
 
-class EstateFieldModifierHandler
+class ViewFieldModifierHandler
 {
-	/** @var DataView */
-	private $_pDataView = null;
+	/** @var array */
+	private $_modifierMapping = [];
 
-	/** @var EstateViewFieldModifierTypeBase */
+	/** @var array */
+	private $_viewFields = [];
+
+	/** @var ViewFieldModifierTypeBase */
 	private $_pModifier = null;
 
 
 	/**
 	 *
-	 * @param DataView $pDataView
-	 * @param string $modifier
-	 * @throws Exception
+	 * @param array $viewFields
+	 * @param string $module
 	 *
 	 */
 
-	public function __construct(DataView $pDataView, string $modifier)
+	public function __construct(array $viewFields, string $module, string $modifier = '')
 	{
-		$this->_pDataView = $pDataView;
-		$this->_pModifier = EstateViewFieldModifierFactory::create($modifier);
-
-		if (is_null($this->_pModifier)) {
-			throw new Exception('Unknown Modifier');
-		}
+		$this->_viewFields = $viewFields;
+		$pViewFieldModifierFactory = new ViewFieldModifierFactory($module);
+		$this->_modifierMapping = $pViewFieldModifierFactory->getMapping();
+		$this->_pModifier = $pViewFieldModifierFactory->create($modifier);
 	}
 
 
@@ -62,19 +62,24 @@ class EstateFieldModifierHandler
 	 *
 	 * @param array $record
 	 * @return array
+	 * @throws Exception
 	 *
 	 */
 
 	public function processRecord(array $record): array
 	{
+		if ($this->_pModifier === null) {
+			throw new Exception('Unknown Modifier');
+		}
+
 		$newRecord = $this->_pModifier->reduceRecord($record);
-		$allExtraFields = self::getAllAPIFields();
+		$allExtraFields = $this->getAllAPIFields();
 		$extraFieldsModifier = $this->_pModifier->getAPIFields();
 		$extraFieldsForRemoval = array_diff($allExtraFields, $extraFieldsModifier);
 
 		foreach (array_keys($newRecord) as $key) {
 			if (in_array($key, $extraFieldsForRemoval) &&
-				!in_array($key, $this->_pDataView->getFields()) &&
+				!in_array($key, $this->_viewFields) &&
 				!in_array($key, $this->_pModifier->getVisibleFields())) {
 				unset($newRecord[$key]);
 			}
@@ -90,12 +95,11 @@ class EstateFieldModifierHandler
 	 *
 	 */
 
-	static public function getAllAPIFields(): array
+	public function getAllAPIFields(): array
 	{
-		$mapping = EstateViewFieldModifierTypes::getMapping();
-		$apiFields = array();
+		$apiFields = [];
 
-		foreach ($mapping as $class) {
+		foreach ($this->_modifierMapping as $class) {
 			$pInstance = new $class;
 			/* @var $pInstance EstateViewFieldModifier */
 			$apiFields = array_merge($apiFields, $pInstance->getAPIFields());

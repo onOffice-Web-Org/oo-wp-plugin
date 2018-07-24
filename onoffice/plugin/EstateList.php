@@ -28,8 +28,8 @@ use onOffice\WPlugin\Controller\EstateListInputVariableReader;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
-use onOffice\WPlugin\EstateViewFieldModifier\EstateFieldModifierHandler;
-use onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypes;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
@@ -251,7 +251,11 @@ class EstateList
 		$numRecordsPerPage = $this->getRecordsPerPage();
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		$this->_currentEstatePage = $currentPage;
-		$extraFields = EstateFieldModifierHandler::getAllAPIFields();
+
+		$pFieldModifierHandler = new ViewFieldModifierHandler
+			($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
+
+		$extraFields = $pFieldModifierHandler->getAllAPIFields();
 
 		$requestParams = array(
 			'data' => array_unique(array_merge($pListView->getFields(), $extraFields)),
@@ -408,7 +412,8 @@ class EstateList
 			$numpages = $this->_numEstatePages;
 		}
 
-		$pEstateFieldModifierHandler = new EstateFieldModifierHandler($this->_pDataView, $modifier);
+		$pEstateFieldModifierHandler = new ViewFieldModifierHandler
+			($this->_pDataView->getFields(), onOfficeSDK::MODULE_ESTATE, $modifier);
 
 		$currentRecord = each( $this->_responseArray['data']['records'] );
 
