@@ -47,7 +47,7 @@ class EstateFieldModifierHandler
 	 *
 	 */
 
-	public function __construct(DataView $pDataView, $modifier)
+	public function __construct(DataView $pDataView, string $modifier)
 	{
 		$this->_pDataView = $pDataView;
 		$this->_pModifier = EstateViewFieldModifierFactory::create($modifier);
@@ -65,10 +65,10 @@ class EstateFieldModifierHandler
 	 *
 	 */
 
-	public function processRecord(array $record)
+	public function processRecord(array $record): array
 	{
 		$newRecord = $this->_pModifier->reduceRecord($record);
-		$allExtraFields = $this->getAllAPIFields();
+		$allExtraFields = self::getAllAPIFields();
 		$extraFieldsModifier = $this->_pModifier->getAPIFields();
 		$extraFieldsForRemoval = array_diff($allExtraFields, $extraFieldsModifier);
 
@@ -90,7 +90,7 @@ class EstateFieldModifierHandler
 	 *
 	 */
 
-	static public function getAllAPIFields()
+	static public function getAllAPIFields(): array
 	{
 		$mapping = EstateViewFieldModifierTypes::getMapping();
 		$apiFields = array();

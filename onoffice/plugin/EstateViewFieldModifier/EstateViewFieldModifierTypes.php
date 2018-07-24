@@ -41,11 +41,11 @@ class EstateViewFieldModifierTypes
 
 
 	/** @var array */
-	private static $_mapping = array(
-		self::MODIFIER_TYPE_DEFAULT => '\onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypeDefault',
-		self::MODIFIER_TYPE_MAP => '\onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypeMap',
-		self::MODIFIER_TYPE_TITLE => '\onOffice\WPlugin\EstateViewFieldModifier\EstateViewFieldModifierTypeTitle',
-	);
+	private static $_mapping = [
+		self::MODIFIER_TYPE_DEFAULT => EstateViewFieldModifierTypeDefault::class,
+		self::MODIFIER_TYPE_MAP => EstateViewFieldModifierTypeMap::class,
+		self::MODIFIER_TYPE_TITLE => EstateViewFieldModifierTypeTitle::class,
+	];
 
 
 	/**
@@ -54,7 +54,7 @@ class EstateViewFieldModifierTypes
 	 *
 	 */
 
-	public static function getMapping()
+	public static function getMapping(): array
 	{
 		return self::$_mapping;
 	}

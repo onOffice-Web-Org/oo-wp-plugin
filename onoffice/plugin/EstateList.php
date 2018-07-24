@@ -387,6 +387,7 @@ class EstateList
 
 	/**
 	 *
+	 * @param string $modifier
 	 * @return ArrayContainerEscape
 	 *
 	 */

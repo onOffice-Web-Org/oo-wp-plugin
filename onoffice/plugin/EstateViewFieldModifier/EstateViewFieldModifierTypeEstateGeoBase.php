@@ -39,9 +39,9 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 	 *
 	 */
 
-	public function getAPIFields()
+	public function getAPIFields(): array
 	{
-		return array(
+		return [
 			'virtualStreet',
 			'virtualHouseNumber',
 			'laengengrad',
@@ -51,7 +51,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 			'virtualLongitude',
 			'objektadresse_freigeben',
 			'strasse',
-		);
+		];
 	}
 
 
@@ -61,9 +61,9 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 	 *
 	 */
 
-	public function getVisibleFields()
+	public function getVisibleFields(): array
 	{
-		return array();
+		return [];
 	}
 
 
@@ -74,7 +74,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 	 *
 	 */
 
-	public function reduceRecord(array $record)
+	public function reduceRecord(array $record): array
 	{
 		if (1 == $record['virtualAddress']) {
 			if (isset($record['strasse'])) {

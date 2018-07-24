@@ -37,15 +37,15 @@ class EstateViewFieldModifierTypeTitle
 	 *
 	 */
 
-	public function getAPIFields()
+	public function getAPIFields(): array
 	{
-		return array(
+		return [
 			'objekttitel',
 			'objektart',
 			'vermarktungsart',
 			'ort',
 			'objektnr_extern',
-		);
+		];
 	}
 
 
@@ -55,7 +55,7 @@ class EstateViewFieldModifierTypeTitle
 	 *
 	 */
 
-	public function getVisibleFields()
+	public function getVisibleFields(): array
 	{
 		return $this->getAPIFields();
 	}
@@ -68,7 +68,7 @@ class EstateViewFieldModifierTypeTitle
 	 *
 	 */
 
-	public function reduceRecord(array $record)
+	public function reduceRecord(array $record): array
 	{
 		// nothing to do
 		return $record;

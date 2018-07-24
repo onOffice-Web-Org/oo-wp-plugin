@@ -36,7 +36,7 @@ interface EstateViewFieldModifierTypeBase
 	 *
 	 */
 
-	public function getAPIFields();
+	public function getAPIFields(): array;
 
 
 	/**
@@ -46,7 +46,7 @@ interface EstateViewFieldModifierTypeBase
 	 *
 	 */
 
-	public function getVisibleFields();
+	public function getVisibleFields(): array;
 
 
 	/**
@@ -56,5 +56,5 @@ interface EstateViewFieldModifierTypeBase
 	 *
 	 */
 
-	public function reduceRecord(array $record);
+	public function reduceRecord(array $record): array;
 }

@@ -37,9 +37,9 @@ class EstateViewFieldModifierTypeDefault
 	 *
 	 */
 
-	public function getAPIFields()
+	public function getAPIFields(): array
 	{
-		return array();
+		return [];
 	}
 
 
@@ -49,9 +49,9 @@ class EstateViewFieldModifierTypeDefault
 	 *
 	 */
 
-	public function getVisibleFields()
+	public function getVisibleFields(): array
 	{
-		return array();
+		return [];
 	}
 
 
@@ -62,7 +62,7 @@ class EstateViewFieldModifierTypeDefault
 	 *
 	 */
 
-	public function reduceRecord(array $record)
+	public function reduceRecord(array $record): array
 	{
 		// do not use isset() since value may be NULL
 		if (array_key_exists('mainLangId', $record)) {

@@ -37,7 +37,7 @@ class EstateViewFieldModifierTypeMap
 	 *
 	 */
 
-	public function getAPIFields()
+	public function getAPIFields(): array
 	{
 		$parent = parent::getAPIFields();
 		$mapSpecific = array(
@@ -57,14 +57,14 @@ class EstateViewFieldModifierTypeMap
 	 *
 	 */
 
-	public function getVisibleFields()
+	public function getVisibleFields(): array
 	{
-		return array(
+		return [
 			'showGoogleMap',
 			'laengengrad',
 			'breitengrad',
 			'virtualAddress',
 			'objekttitel',
-		);
+		];
 	}
 }

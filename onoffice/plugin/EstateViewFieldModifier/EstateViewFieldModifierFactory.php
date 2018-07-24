@@ -37,7 +37,7 @@ class EstateViewFieldModifierFactory
 	 *
 	 */
 
-	public static function create($type)
+	public static function create(string $type)
 	{
 		$mapping = EstateViewFieldModifierTypes::getMapping();
 
