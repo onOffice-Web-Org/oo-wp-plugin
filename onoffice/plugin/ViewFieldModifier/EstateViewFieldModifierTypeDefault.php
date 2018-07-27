@@ -39,19 +39,10 @@ class EstateViewFieldModifierTypeDefault
 
 	public function getAPIFields(): array
 	{
-		return [];
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getVisibleFields(): array
-	{
-		return [];
+		return array_merge($this->getViewFields(), [
+			'virtualAddress',
+			'objektadresse_freigeben',
+		]);
 	}
 
 

@@ -33,6 +33,20 @@ use onOffice\WPlugin\Utility\__String;
 abstract class EstateViewFieldModifierTypeEstateGeoBase
 	implements ViewFieldModifierTypeBase
 {
+	/** @var array */
+	private $_viewFields = [];
+
+	/**
+	 *
+	 * @param array $viewFields
+	 *
+	 */
+
+	public function __construct(array $viewFields)
+	{
+		$this->_viewFields = $viewFields;
+	}
+
 	/**
 	 *
 	 * @return array
@@ -41,7 +55,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 
 	public function getAPIFields(): array
 	{
-		return [
+		$geoSpecific = [
 			'virtualStreet',
 			'virtualHouseNumber',
 			'laengengrad',
@@ -52,6 +66,8 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 			'objektadresse_freigeben',
 			'strasse',
 		];
+
+		return array_merge($this->_viewFields, $geoSpecific);
 	}
 
 
@@ -63,7 +79,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 
 	public function getVisibleFields(): array
 	{
-		return [];
+		return $this->_viewFields;
 	}
 
 
@@ -100,4 +116,9 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 
 		return $record;
 	}
+
+
+	/** @return array */
+	protected function getViewFields(): array
+		{ return $this->_viewFields; }
 }

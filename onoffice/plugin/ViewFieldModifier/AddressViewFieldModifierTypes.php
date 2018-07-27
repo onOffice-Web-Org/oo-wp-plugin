@@ -28,27 +28,17 @@ namespace onOffice\WPlugin\ViewFieldModifier;
  *
  */
 
-class EstateViewFieldModifierTypeMap
-	extends EstateViewFieldModifierTypeEstateGeoBase
+class AddressViewFieldModifierTypes
+	implements ViewFieldModifierTypes
 {
-	/**
-	 *
-	 * @return array
-	 *
-	 */
+	/** */
+	const MODIFIER_TYPE_DEFAULT = 'modifierTypeDefault';
 
-	public function getAPIFields(): array
-	{
-		$parent = parent::getAPIFields();
-		$mapSpecific = [
-			'showGoogleMap',
-			'strasse',
-			'hausnummer',
-			'objekttitel',
-		];
 
-		return $this->merge($parent, $mapSpecific);
-	}
+	/** @var array */
+	private $_mapping = [
+		self::MODIFIER_TYPE_DEFAULT => AddressViewFieldModifierTypeDefault::class,
+	];
 
 
 	/**
@@ -57,30 +47,8 @@ class EstateViewFieldModifierTypeMap
 	 *
 	 */
 
-	public function getVisibleFields(): array
+	public function getMapping(): array
 	{
-		$mapFields = [
-			'showGoogleMap',
-			'laengengrad',
-			'breitengrad',
-			'virtualAddress',
-			'objekttitel',
-		];
-
-		return $this->merge($mapFields, parent::getVisibleFields());
-	}
-
-
-	/**
-	 *
-	 * @param array $array1
-	 * @param array $array2
-	 * @return array
-	 *
-	 */
-
-	private function merge(array $array1, array $array2): array
-	{
-		return array_values(array_unique(array_merge($array1, $array2)));
+		return $this->_mapping;
 	}
 }

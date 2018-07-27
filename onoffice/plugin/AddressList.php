@@ -34,6 +34,8 @@ use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 
 /**
  *
@@ -42,7 +44,7 @@ use onOffice\WPlugin\Utility\__String;
 class AddressList
 {
 	/** @var string[] */
-	private static $_specialContactData = array(
+	private static $_specialContactData = [
 		'mobile',
 		'phoneprivate',
 		'phonebusiness',
@@ -50,17 +52,20 @@ class AddressList
 		'emailprivate',
 		'emailbusiness',
 		'email',
-	);
+	];
 
 
 	/** @var array */
-	private $_adressesById = array();
+	private $_adressesById = [];
 
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
+
+	/** @var array */
+	private $_fields = [];
 
 
 	/**
@@ -87,18 +92,19 @@ class AddressList
 	{
 		$pApiCall = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
-		$parameters = array(
+		$parameters = [
 			'recordids' => $addressIds,
 			'data' => $fields,
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
-		);
+		];
 		$pApiCall->setParameters($parameters);
 		$pApiCall->addRequestToQueue();
 		$this->_pSDKWrapper->sendRequests();
 		if ($pApiCall->getResultStatus() === true) {
 			$records = $pApiCall->getResultRecords();
 			$this->fillAddressesById($records);
+			$this->_fields = $fields;
 		}
 	}
 
@@ -117,10 +123,14 @@ class AddressList
 	public function loadAddresses(DataListViewAddress $pDataListViewAddress, $inputPage = 1)
 	{
 		global $numpages, $multipage, $page, $more;
+		$this->_fields = $pDataListViewAddress->getFields();
+		$pModifier = $this->generateRecordModifier();
 
 		$pDataListViewToApi = new DataListViewAddressToAPIParameters($pDataListViewAddress);
 		$pDataListViewToApi->setPage($inputPage);
-		$parameters = $pDataListViewToApi->buildParameters();
+
+		$apiOnlyFields = $pModifier->getAllAPIFields();
+		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields);
 
 		$pApiCall = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
@@ -139,6 +149,20 @@ class AddressList
 			$more = true;
 			$page = $inputPage;
 		}
+	}
+
+
+	/**
+	 *
+	 * @return ViewFieldModifierHandler
+	 *
+	 */
+
+	private function generateRecordModifier(): ViewFieldModifierHandler
+	{
+		$pAddressFieldModifierHandler = new ViewFieldModifierHandler($this->_fields,
+			onOfficeSDK::MODULE_ADDRESS, AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
+		return $pAddressFieldModifierHandler;
 	}
 
 
@@ -169,7 +193,7 @@ class AddressList
 
 	private function collectAdditionalContactData(array $elements)
 	{
-		$additionalContactData = array();
+		$additionalContactData = [];
 		foreach ($elements as $key => $value) {
 			foreach (self::$_specialContactData as $startString) {
 				if (__String::getNew($key)->startsWith($startString)) {
@@ -215,8 +239,10 @@ class AddressList
 	public function getRows($raw = false)
 	{
 		$pAddressList = $this;
-		return array_map(function($values) use ($pAddressList, $raw) {
-			return $pAddressList->getArrayContainerByRow($raw, $values);
+		$pAddressFieldModifier = $this->generateRecordModifier();
+		return array_map(function($values) use ($pAddressFieldModifier, $pAddressList, $raw) {
+			$valuesNew = $pAddressFieldModifier->processRecord($values);
+			return $pAddressList->getArrayContainerByRow($raw, $valuesNew);
 		}, $this->_adressesById);
 	}
 
@@ -275,7 +301,8 @@ class AddressList
 		$pFieldnames = $this->_pFieldnames;
 
 		if ($pFieldnames !== null) {
-			$fieldInformation = $pFieldnames->getFieldInformation($field, onOfficeSDK::MODULE_ADDRESS);
+			$fieldInformation = $pFieldnames->getFieldInformation($field,
+				onOfficeSDK::MODULE_ADDRESS);
 			return $fieldInformation['type'];
 		}
 	}

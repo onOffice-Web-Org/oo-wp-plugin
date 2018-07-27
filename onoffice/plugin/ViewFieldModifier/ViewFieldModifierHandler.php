@@ -54,7 +54,7 @@ class ViewFieldModifierHandler
 		$this->_viewFields = $viewFields;
 		$pViewFieldModifierFactory = new ViewFieldModifierFactory($module);
 		$this->_modifierMapping = $pViewFieldModifierFactory->getMapping();
-		$this->_pModifier = $pViewFieldModifierFactory->create($modifier);
+		$this->_pModifier = $pViewFieldModifierFactory->create($modifier, $viewFields);
 	}
 
 
@@ -73,19 +73,11 @@ class ViewFieldModifierHandler
 		}
 
 		$newRecord = $this->_pModifier->reduceRecord($record);
-		$allExtraFields = $this->getAllAPIFields();
-		$extraFieldsModifier = $this->_pModifier->getAPIFields();
-		$extraFieldsForRemoval = array_diff($allExtraFields, $extraFieldsModifier);
 
-		foreach (array_keys($newRecord) as $key) {
-			if (in_array($key, $extraFieldsForRemoval) &&
-				!in_array($key, $this->_viewFields) &&
-				!in_array($key, $this->_pModifier->getVisibleFields())) {
-				unset($newRecord[$key]);
-			}
-		}
+		$intersection = array_intersect_key
+			($newRecord, array_flip($this->_pModifier->getVisibleFields()));
 
-		return $newRecord;
+		return $intersection;
 	}
 
 
@@ -100,11 +92,11 @@ class ViewFieldModifierHandler
 		$apiFields = [];
 
 		foreach ($this->_modifierMapping as $class) {
-			$pInstance = new $class;
-			/* @var $pInstance EstateViewFieldModifier */
+			$pInstance = new $class($this->_viewFields);
+			/* @var $pInstance ViewFieldModifierTypeBase */
 			$apiFields = array_merge($apiFields, $pInstance->getAPIFields());
 		}
 
-		return $apiFields;
+		return array_values(array_unique($apiFields));
 	}
 }

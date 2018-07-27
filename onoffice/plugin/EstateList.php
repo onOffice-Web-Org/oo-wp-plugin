@@ -206,11 +206,13 @@ class EstateList
 
 	public function registerContactPersonCall( SDKWrapper $pSDKWrapper, array $estateIds)
 	{
-		$this->_handleEstateContactPerson = $pSDKWrapper->addRequest(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
-				'parentids' => array_keys($estateIds),
-				'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
-			)
-		);
+		$parameters = [
+			'parentids' => array_keys($estateIds),
+			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
+		];
+
+		$this->_handleEstateContactPerson = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', $parameters);
 	}
 
 
@@ -225,7 +227,7 @@ class EstateList
 	{
 		$responseArrayContactPerson = $pSDKWrapper->getRequestResponse
 			($this->_handleEstateContactPerson);
-		$this->collectEstateContactPerson( $responseArrayContactPerson, $estateIds );
+		$this->collectEstateContactPerson($responseArrayContactPerson, $estateIds);
 	}
 
 
@@ -252,13 +254,11 @@ class EstateList
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
 		$this->_currentEstatePage = $currentPage;
 
-		$pFieldModifierHandler = new ViewFieldModifierHandler
-			($pListView->getFields(), onOfficeSDK::MODULE_ESTATE);
-
-		$extraFields = $pFieldModifierHandler->getAllAPIFields();
+		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
+			onOfficeSDK::MODULE_ESTATE);
 
 		$requestParams = array(
-			'data' => array_unique(array_merge($pListView->getFields(), $extraFields)),
+			'data' => $pFieldModifierHandler->getAllAPIFields(),
 			'filter' => $filter,
 			'estatelanguage' => $language,
 			'outputlanguage' => $language,

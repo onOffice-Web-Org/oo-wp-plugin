@@ -31,6 +31,21 @@ namespace onOffice\WPlugin\ViewFieldModifier;
 class EstateViewFieldModifierTypeTitle
 	implements ViewFieldModifierTypeBase
 {
+	/** @var array */
+	private $_viewFields = [];
+
+	/**
+	 *
+	 * @param array $viewFields
+	 *
+	 */
+
+	public function __construct(array $viewFields)
+	{
+		$this->_viewFields = $viewFields;
+	}
+
+
 	/**
 	 *
 	 * @return array
@@ -39,13 +54,15 @@ class EstateViewFieldModifierTypeTitle
 
 	public function getAPIFields(): array
 	{
-		return [
+		$titleFields = [
 			'objekttitel',
 			'objektart',
 			'vermarktungsart',
 			'ort',
 			'objektnr_extern',
 		];
+
+		return array_values(array_unique(array_merge($this->_viewFields, $titleFields)));
 	}
 
 

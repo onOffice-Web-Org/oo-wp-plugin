@@ -19,68 +19,28 @@
  *
  */
 
-namespace onOffice\WPlugin\ViewFieldModifier;
+use onOffice\tests\ViewFieldModifierTypesTestBase;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /**
  *
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
  *
+ * @covers onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes
+ *
  */
 
-class EstateViewFieldModifierTypeMap
-	extends EstateViewFieldModifierTypeEstateGeoBase
+class TestClassEstateViewFieldModifierTypes
+	extends ViewFieldModifierTypesTestBase
 {
 	/**
 	 *
-	 * @return array
-	 *
 	 */
 
-	public function getAPIFields(): array
+	public function setUp()
 	{
-		$parent = parent::getAPIFields();
-		$mapSpecific = [
-			'showGoogleMap',
-			'strasse',
-			'hausnummer',
-			'objekttitel',
-		];
-
-		return $this->merge($parent, $mapSpecific);
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getVisibleFields(): array
-	{
-		$mapFields = [
-			'showGoogleMap',
-			'laengengrad',
-			'breitengrad',
-			'virtualAddress',
-			'objekttitel',
-		];
-
-		return $this->merge($mapFields, parent::getVisibleFields());
-	}
-
-
-	/**
-	 *
-	 * @param array $array1
-	 * @param array $array2
-	 * @return array
-	 *
-	 */
-
-	private function merge(array $array1, array $array2): array
-	{
-		return array_values(array_unique(array_merge($array1, $array2)));
+		parent::setUp();
+		$this->setViewFieldModifierTypes(new EstateViewFieldModifierTypes);
 	}
 }

@@ -34,6 +34,7 @@ class ViewFieldModifierFactory
 {
 	/** @var array */
 	private $_moduleToTypeClass = [
+		onOfficeSDK::MODULE_ADDRESS => AddressViewFieldModifierTypes::class,
 		onOfficeSDK::MODULE_ESTATE => EstateViewFieldModifierTypes::class,
 	];
 
@@ -56,16 +57,17 @@ class ViewFieldModifierFactory
 	/**
 	 *
 	 * @param string $type
+	 * @param array $viewFields
 	 * @return ViewFieldModifierTypeBase
 	 *
 	 */
 
-	public function create(string $type)
+	public function create(string $type, array $viewFields = [])
 	{
 		$mapping = $this->getMapping();
 
 		if (isset($mapping[$type])) {
-			return new $mapping[$type];
+			return new $mapping[$type]($viewFields);
 		}
 
 		return null;

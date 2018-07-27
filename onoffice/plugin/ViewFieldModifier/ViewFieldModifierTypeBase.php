@@ -32,6 +32,14 @@ interface ViewFieldModifierTypeBase
 {
 	/**
 	 *
+	 * @param array $viewFields Fields requested by the view
+	 *
+	 */
+
+	public function __construct(array $viewFields);
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */

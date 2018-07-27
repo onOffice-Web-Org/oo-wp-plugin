@@ -57,11 +57,12 @@ class DataListViewAddressToAPIParameters
 
 	/**
 	 *
+	 * @param array $fields
 	 * @return array
 	 *
 	 */
 
-	public function buildParameters()
+	public function buildParameters(array $fields)
 	{
 		$pDataListViewAddress = $this->getDataListView();
 		$offset = ($this->_page - 1) * $pDataListViewAddress->getRecordsPerPage();
@@ -69,7 +70,7 @@ class DataListViewAddressToAPIParameters
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListViewAddress();
 
 		$parameters = array(
-			'data' => $pDataListViewAddress->getFields(),
+			'data' => $fields,
 			'listoffset' => $offset,
 			'listlimit' => $limit,
 			'sortby' => $pDataListViewAddress->getSortby(),
