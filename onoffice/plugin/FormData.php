@@ -244,9 +244,9 @@ class FormData
 	}
 
 
-	/** @param string[] $missingFields */
-	public function setRequiredFields( array $missingFields )
-		{ $this->_requiredFields = $missingFields; }
+	/** @param string[] $requiredFields */
+	public function setRequiredFields( array $requiredFields )
+		{ $this->_requiredFields = $requiredFields; }
 
 	/** @return array */
 	public function getRequiredFields()

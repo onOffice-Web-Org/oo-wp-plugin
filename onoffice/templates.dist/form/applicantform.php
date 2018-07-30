@@ -32,12 +32,17 @@ $searchcriteriaValues = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
 {
-	echo 'SUCCESS!';
+	echo '<p>SUCCESS!</p>';
 }
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR)
 {
-	echo 'ERROR!';
+	echo '<p>ERROR!</p>';
+}
+
+if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING)
+{
+	echo '<p>Missing Fields!</p>';
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */

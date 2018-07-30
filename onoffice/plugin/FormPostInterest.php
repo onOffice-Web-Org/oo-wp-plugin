@@ -52,7 +52,7 @@ class FormPostInterest
 		$formFields = $pFormConfiguration->getInputs();
 		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
 
-		$formData = array_intersect_key($_POST, $newFormFields);
+		$formData = array_filter(array_intersect_key($_POST, $newFormFields));
 		$recipient = $pFormConfiguration->getRecipient();
 		$subject = $pFormConfiguration->getSubject();
 		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
@@ -70,8 +70,9 @@ class FormPostInterest
 
 			if (false !== $responseAddress) {
 				$responseSearchcriteria = $this->createSearchcriteria($pFormData, $responseAddress);
-
-				if ($responseSearchcriteria && null != $recipient) {
+				if ($recipient == null) {
+					$response = $responseSearchcriteria;
+				} elseif ($responseSearchcriteria) {
 					$response = $this->sendEmail($pFormData, $recipient, $subject);
 				}
 			}
