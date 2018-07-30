@@ -23,6 +23,6 @@
 <h2>Ihre Kontaktdaten</h2>
 <p>
 	<div>
-	<?php echo implode('<br/>', $addressValues); ?>
+	<?php echo implode('<br>', $addressValues); ?>
 	</div>
 </p>

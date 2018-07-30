@@ -222,11 +222,12 @@ abstract class FormPost {
 	/**
 	 *
 	 * @param array $inputFormFields
+	 * @param bool $intAsRange
 	 * @return array
 	 *
 	 */
 
-	protected function getFormFieldsConsiderSearchcriteria($inputFormFields)
+	protected function getFormFieldsConsiderSearchcriteria($inputFormFields, $intAsRange = true)
 	{
 		$pSDKWrapper = new SDKWrapper();
 		$handle = $pSDKWrapper->addRequest(
@@ -236,30 +237,28 @@ abstract class FormPost {
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
 		foreach ($response['data']['records'] as $tableValues) {
-			$felder = $tableValues['elements'];
+			$fields = $tableValues['elements'];
 
 			// new
-			if ($felder['name'] == 'Umkreis' &&
+			if ($fields['name'] == 'Umkreis' &&
 				array_key_exists('Umkreis', $inputFormFields)) {
 				unset($inputFormFields['Umkreis']);
 
-				foreach ($felder['fields'] as $field) {
+				foreach ($fields['fields'] as $field) {
 					$inputFormFields[$field['id']] = 'searchcriteria';
 				}
 			} else {
-				foreach ($felder['fields'] as $field)
+				foreach ($fields['fields'] as $field)
 				{
-					if (array_key_exists('rangefield', $field) &&
-						$field['rangefield'] == true) {
-						if (array_key_exists($field['id'], $inputFormFields)) {
-							unset($inputFormFields[$field['id']]);
+					if (($field['rangefield'] ?? false) &&
+						isset($inputFormFields[$field['id']]) && $intAsRange) {
+						unset($inputFormFields[$field['id']]);
 
-							$inputFormFields[$field['id'].self::RANGE_VON] = 'searchcriteria';
-							$inputFormFields[$field['id'].self::RANGE_BIS] = 'searchcriteria';
+						$inputFormFields[$field['id'].self::RANGE_VON] = 'searchcriteria';
+						$inputFormFields[$field['id'].self::RANGE_BIS] = 'searchcriteria';
 
-							$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_VON] = $field['id'];
-							$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_BIS] = $field['id'];
-						}
+						$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_VON] = $field['id'];
+						$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_BIS] = $field['id'];
 					}
 				}
 			}

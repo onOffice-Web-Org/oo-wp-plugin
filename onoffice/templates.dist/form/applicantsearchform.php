@@ -18,6 +18,8 @@
  *
  */
 
+$pathComponents = [ONOFFICE_PLUGIN_DIR, 'templates.dist', 'fields.php'];
+require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 
 ?>
 <form method="post">
@@ -73,15 +75,15 @@
 
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
+		$selectedValue = $pForm->getFieldValue( $input, true );
 
 		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
 			echo $pForm->getFieldLabel( $input ).':<br>';
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
-			$selectedValue = $pForm->getFieldValue( $input, true );
 
 			echo '<select size="1" name="'.$input.'">';
-			echo  '<option value="">'.esc_html('Keine Angabe').'</option>';
+			echo '<option value="">'.esc_html('Keine Angabe').'</option>';
 
 			foreach ( $permittedValues as $key => $value ) {
 				if ( is_array( $selectedValue ) ) {
@@ -90,20 +92,22 @@
 					$isSelected = $selectedValue == $key;
 				}
 
-				echo  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
+				echo '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
 			}
 			echo '</select><br>';
 		} else {
-			if ($pForm->inRangeSearchcriteriaInfos($input) &&
-				count($pForm->getSearchcriteriaRangeInfosForField($input)) > 0) {
-				echo $pForm->getFieldLabel( $input ).':<br>';
-
-				foreach ($pForm->getSearchcriteriaRangeInfosForField($input) as $key => $value) {
-					echo '<input name="'.$key.'" placeholder="'.$value.'" value="'.$pForm->getFieldValue($key).'"> ';
+			echo $pForm->getFieldLabel( $input ).$addition.': <br>';
+			if ($input == 'regionaler_zusatz') {
+				echo '<select size="1" name="'.esc_html($input).'">';
+				$pRegionController = new \onOffice\WPlugin\Region\RegionController();
+				$regions = $pRegionController->getRegions();
+				foreach ($regions as $pRegion) {
+					/* @var $pRegion Region */
+					printRegion( $pRegion, [$selectedValue] );
 				}
-				echo '<br>';
+				echo '</select><br>';
 			} else {
-				echo $pForm->getFieldLabel( $input ).$addition.': <input type="text" name="'.$input.'" value="'
+				echo '<input type="text" name="'.$input.'" value="'
 					.$pForm->getFieldValue( $input ).'"><br>';
 			}
 		}
@@ -172,7 +176,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 					$value = $permittedValues[$value];
 				}
 
-				echo '<span>'.$realName.': '.$value.'</span><br>';
+				echo '<span>'.$realName.': '.(is_array($value) ? implode(', ', $value) : $value).'</span><br>';
 			}
 		}
 

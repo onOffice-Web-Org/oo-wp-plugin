@@ -22,6 +22,6 @@
 <h2>Angaben zu Ihrem Eigentum</h2>
 <p>
 	<div>
-	<?php echo implode('<br/>', $estateValues); ?>
+	<?php echo implode('<br>', $estateValues); ?>
 	</div>
 </p>

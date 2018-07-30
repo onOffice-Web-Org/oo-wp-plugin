@@ -55,7 +55,7 @@ class FormPostApplicantSearch
 		/* @var $pFormConfig DataFormConfigurationApplicantSearch */
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$formFields = $pFormConfig->getInputs();
-		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
+		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields, false);
 
 		$formData = array_intersect_key($_POST, $newFormFields);
 		$limitResults = $pFormConfig->getLimitResults();
