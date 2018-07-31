@@ -42,10 +42,10 @@ class FormData
 	private $_formNo = null;
 
 	/** @var array */
-	private $_requiredFields = array();
+	private $_requiredFields = [];
 
 	/** @var array */
-	private $_values = array();
+	private $_values = [];
 
 	/** @var string */
 	private $_status = null;
@@ -57,10 +57,10 @@ class FormData
 	private $_formtype = null;
 
 	/** @var array */
-	private $_configFields = array();
+	private $_configFields = [];
 
 	/** @var array */
-	private $_responseFieldsValues = array();
+	private $_responseFieldsValues = [];
 
 	/** @var DataFormConfiguration */
 	private $_pDataFormConfiguration = null;
@@ -83,32 +83,20 @@ class FormData
 
 	/**
 	 *
-	 * @param array $configFields
-	 *
-	 */
-
-	public function setConfigFields($configFields)
-	{
-		$this->_configFields = $configFields;
-	}
-
-
-	/**
-	 *
 	 * @return array
 	 *
 	 */
 
 	public function getMissingFields()
 	{
-		$missing = array();
+		$missing = [];
 
 		if ( $this->_formSent ) {
 			$filledFormData = array_filter( $this->_values );
 			$requiredFields = array_flip( $this->_requiredFields );
 			$filled = array_intersect_key( $filledFormData, $requiredFields );
-			$missing = array_diff_key( $requiredFields, $filled );
-			$missing = array_keys( $missing );
+			$missingKeyValues = array_diff_key( $requiredFields, $filled );
+			$missing = array_keys( $missingKeyValues );
 		}
 
 		return $missing;
@@ -124,7 +112,7 @@ class FormData
 	public function getAddressData()
 	{
 		$inputs = $this->_configFields;
-		$addressData = array();
+		$addressData = [];
 
 		foreach ($this->_values as $input => $value) {
 			$inputConfigName = $this->getFieldNameOfInput($input);
@@ -146,7 +134,7 @@ class FormData
 	public function getAddressDataForApiCall()
 	{
 		$inputs = $this->_configFields;
-		$addressData = array();
+		$addressData = [];
 
 		foreach ($this->_values as $input => $value) {
 			$inputConfigName = $this->getFieldNameOfInput($input);
@@ -208,7 +196,7 @@ class FormData
 	public function getEstateData()
 	{
 		$inputs = $this->_configFields;
-		$estateData = array();
+		$estateData = [];
 
 		foreach ($this->_values as $input => $value) {
 			$inputConfigName = $this->getFieldNameOfInput($input);
@@ -230,7 +218,7 @@ class FormData
 	public function getSearchcriteriaData()
 	{
 		$inputs = $this->_configFields;
-		$searchcriteriaData = array();
+		$searchcriteriaData = [];
 
 		foreach ($this->_values as $input => $value) {
 			$inputConfigName = $this->getFieldNameOfInput($input);
