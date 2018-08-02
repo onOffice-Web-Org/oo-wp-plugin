@@ -360,10 +360,15 @@ class ContentFilter
 
 	public function registerScripts()
 	{
-		wp_register_script( 'google-maps', 'https://maps.googleapis.com/maps/api/js' );
-		wp_register_script( 'gmapsinit', plugins_url( '/js/gmapsinit.js', __DIR__ ), array('google-maps') );
-		wp_register_script( 'jquery-latest', 'https://code.jquery.com/jquery-latest.js');
-		wp_register_script( 'onoffice-favorites', plugins_url( '/js/favorites.js', ONOFFICE_PLUGIN_DIR.'/index.php' ));
+		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+
+		wp_register_script('google-maps', 'https://maps.googleapis.com/maps/api/js');
+		wp_register_script('gmapsinit', plugins_url('/js/gmapsinit.js', $pluginPath), ['google-maps']);
+		wp_register_script('jquery-latest', 'https://code.jquery.com/jquery-latest.js');
+		wp_register_script('onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath));
+		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
+
+		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 	}
 
 
@@ -453,6 +458,9 @@ class ContentFilter
 		}
 
 		wp_enqueue_script('jquery-latest');
+
+		wp_enqueue_script('onoffice-multiselect', '', [], false, true);
+		wp_enqueue_style('onoffice-multiselect');
 	}
 
 

@@ -39,18 +39,14 @@ if (!function_exists('renderField')) {
 	  </fieldset>';
 		} elseif ( in_array($properties['type'], $multiSelectableTypes) &&
 			$inputName !== 'regionaler_zusatz' ) {
-			$permittedValues = $properties['permittedvalues'];
-			echo '<select size="5" name="'.esc_attr($inputName).'[]" multiple>';
-			foreach ( $permittedValues as $key => $value ) {
-				if ( is_array( $selectedValue ) ) {
-					$isSelected = in_array( $key, $selectedValue, true );
-				} else {
-					$isSelected = $selectedValue == $key;
-				}
-				echo '<option value="'.esc_attr($key).'"'.($isSelected ? ' selected' : '').'>';
-				echo esc_html($value).'</option>';
-			}
-			echo '</select>';
+				$permittedValues = $properties['permittedvalues'];
+				echo '<div id="ms2" data-name="'.esc_html($inputName).'" class="multiselect" data-values="'
+					.esc_html(json_encode($permittedValues)).'" data-selected="'
+					.esc_html(json_encode($selectedValue)).'">
+				<input type="button" class="onoffice-multiselect-edit" value="'
+					.esc_html__('Werte bearbeiten', 'onoffice').'">
+			</div>
+			';
 		} elseif ( $inputName === 'regionaler_zusatz' ) {
 			echo '<select size="5" name="'.esc_attr($inputName).'[]" multiple>';
 			$pRegionController = new RegionController();
