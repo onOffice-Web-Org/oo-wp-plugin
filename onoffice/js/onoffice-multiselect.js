@@ -34,23 +34,19 @@ var onOffice = onOffice || {};
 
 		this._element.appendChild(divPopup);
 
-		var divInputs = document.createElement('div');
-		divInputs.className = 'onoffice-multiselect-inputs';
-
-		this._element.appendChild(divInputs);
-	};
-
-	multiselect.prototype.toggle = function() {
-		var element = this._getChildDiv('onoffice-multiselect-popup');
-		element.hidden = !element.hidden;
+		this._displaySpan = document.createElement('span');
+		this._element.appendChild(this._displaySpan);
+		this.refreshlabel();
 	};
 
 	multiselect.prototype.show = function() {
 		this._getChildDiv('onoffice-multiselect-popup').hidden = false;
+		this.clearLabel();
 	};
 
 	multiselect.prototype.hide = function() {
 		this._getChildDiv('onoffice-multiselect-popup').hidden = true;
+		this.refreshlabel();
 	};
 
 	multiselect.prototype._getChildDiv = function(className) {
@@ -63,6 +59,35 @@ var onOffice = onOffice || {};
 		}
 
 		throw new Error('child div not found');
+	};
+
+
+	multiselect.prototype.refreshlabel = function() {
+		var selection = this._getSelection();
+		var labels = [];
+
+		for (var i in selection) {
+			var key = selection[i];
+			if (this._options[key] !== undefined) {
+				labels.push(this._options[key]);
+			}
+		}
+
+		this._displaySpan.textContent = labels.join(', ');
+	};
+
+
+	multiselect.prototype.clearLabel = function() {
+		this._displaySpan.textContent = '';
+	};
+
+
+	multiselect.prototype._getSelection = function() {
+		var childNodes = this._getChildDiv('onoffice-multiselect-popup').childNodes;
+		var elements = [].slice.call(childNodes);
+		var inputs = elements.filter(element =>
+			element.nodeName === 'INPUT' && element.type === 'checkbox' && element.checked);
+		return inputs.map(element => element.value);
 	};
 
 	onOffice.multiselect = multiselect;
