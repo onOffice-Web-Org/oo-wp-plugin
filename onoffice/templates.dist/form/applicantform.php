@@ -49,20 +49,16 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIE
 foreach ( $pForm->getInputFields() as $input => $table ) {
 	$line = null;
 
-	$selectTypes = array(
-		\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
-		\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
-	);
-
 	$typeCurrentInput = $pForm->getFieldType( $input );
+	$isSearchcriteriaField = $pForm->isSearchcriteriaField($input);
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
+	$permittedValues = $pForm->getPermittedValues( $input, true );
+	$selectedValue = $pForm->getFieldValue( $input, true );
+	$line = $pForm->getFieldLabel( $input ).$addition.': ';
 
-	if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-		$line = $pForm->getFieldLabel( $input ).$addition.': ';
-
-		$permittedValues = $pForm->getPermittedValues( $input, true );
-		$selectedValue = $pForm->getFieldValue( $input, true );
+	if ( \onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
+		!$isSearchcriteriaField ) {
 		$line .= '<select size="1" name="'.$input.'">';
 
 		foreach ( $permittedValues as $key => $value ) {
@@ -71,9 +67,19 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 			} else {
 				$isSelected = $selectedValue == $key;
 			}
-			$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
+			$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'
+				.esc_html($value).'</option>';
 		}
+
 		$line .= '</select>';
+	} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
+			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
+				$isSearchcriteriaField)) {
+		$line .= '<br><div data-name="'.esc_html($input).'" class="multiselect" data-values="'
+			.esc_html(json_encode($permittedValues)).'" data-selected="'
+			.esc_html(json_encode($selectedValue)).'">
+			<input type="button" class="onoffice-multiselect-edit" value="'
+			.esc_html__('Werte bearbeiten', 'onoffice').'"></div>';
 	} else {
 		$inputType = 'text';
 		$valueTag = 'value="'.$pForm->getFieldValue( $input ).'"';
@@ -85,14 +91,13 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 		if ($pForm->inRangeSearchcriteriaInfos($input) &&
 			count($pForm->getSearchcriteriaRangeInfosForField($input)) > 0) {
-			$line .= $pForm->getFieldLabel( $input ).$addition.': ';
 
 			foreach ($pForm->getSearchcriteriaRangeInfosForField($input) as $key => $value) {
 				$line .= '<input type="'.$inputType.'" value="'
 					.$pForm->getFieldValue( $key ).'" name="'.$key.'" placeholder="'.$value.'" '.$valueTag.'> ';
 			}
 		} else {
-			$line .= $pForm->getFieldLabel( $input ).$addition.': <input type="'.$inputType.'" name="'.$input.'" value="'
+			$line .= '<input type="'.$inputType.'" name="'.$input.'" value="'
 				.$pForm->getFieldValue( $input ).'" '.$valueTag.'>';
 		}
 	}

@@ -9,6 +9,7 @@ var onOffice = onOffice || {};
 		this._load(preselected);
 	};
 
+
 	multiselect.prototype._load = function(preselected) {
 		var divPopup = document.createElement('div');
 		divPopup.hidden = true;
@@ -24,7 +25,7 @@ var onOffice = onOffice || {};
 
 			output += '<label for=cb' + checkboxCounter + '>' +
 				'<input type="checkbox" name=' + this._name + '[] value="' + key + '" ' +
-				checked + ' id=cb'+ checkboxCounter +'>' + value + '</label>';
+				checked + ' id=cb' + checkboxCounter + '>' + value + '</label>';
 		}
 
 		divPopup.innerHTML = output;
@@ -43,15 +44,18 @@ var onOffice = onOffice || {};
 		this.refreshlabel();
 	};
 
+
 	multiselect.prototype.show = function() {
 		this._getChildDiv('onoffice-multiselect-popup').hidden = false;
 		this.hideLabel();
 	};
 
+
 	multiselect.prototype.hide = function() {
 		this._getChildDiv('onoffice-multiselect-popup').hidden = true;
 		this.refreshlabel();
 	};
+
 
 	multiselect.prototype._getChildDiv = function(className) {
 		var childnodes = [].slice.call(this._element.childNodes);
@@ -126,7 +130,9 @@ var onOffice = onOffice || {};
 		var editButtonArray = subElements.filter(element =>
 			element.className === 'onoffice-multiselect-edit');
 		var button = editButtonArray.pop();
-		button.onclick = () => instance.show();
+		button.onclick = ((instance) => {
+			return () => instance.show();
+		})(instance);
 	}
 })();
 

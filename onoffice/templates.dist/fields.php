@@ -40,7 +40,7 @@ if (!function_exists('renderField')) {
 		} elseif ( in_array($properties['type'], $multiSelectableTypes) &&
 			$inputName !== 'regionaler_zusatz' ) {
 				$permittedValues = $properties['permittedvalues'];
-				echo '<div id="ms2" data-name="'.esc_html($inputName).'" class="multiselect" data-values="'
+				echo '<div data-name="'.esc_html($inputName).'" class="multiselect" data-values="'
 					.esc_html(json_encode($permittedValues)).'" data-selected="'
 					.esc_html(json_encode($selectedValue)).'">
 				<input type="button" class="onoffice-multiselect-edit" value="'

@@ -43,6 +43,19 @@ require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
+		if ( in_array( $input, array('message', 'Id') ) ) {
+			continue;
+		}
+
+		if ( $pForm->isMissingField( $input ) ) {
+			echo 'Bitte ausfüllen! ';
+		}
+
+		$isRequired = $pForm->isRequiredField( $input );
+		$addition = $isRequired ? '*' : '';
+		echo $pForm->getFieldLabel( $input ).$addition.': <br>';
+
+		$permittedValues = $pForm->getPermittedValues( $input, true );
 		if ($input == 'Umkreis') {
 			echo '<br>'
 			. '<fieldset>'
@@ -73,30 +86,15 @@ require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 
 		$typeCurrentInput = $pForm->getFieldType( $input );
 
-		$isRequired = $pForm->isRequiredField( $input );
-		$addition = $isRequired ? '*' : '';
 		$selectedValue = $pForm->getFieldValue( $input, true );
 
 		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-			echo $pForm->getFieldLabel( $input ).':<br>';
-
-			$permittedValues = $pForm->getPermittedValues( $input, true );
-
-			echo '<select size="1" name="'.$input.'">';
-			echo '<option value="">'.esc_html('Keine Angabe').'</option>';
-
-			foreach ( $permittedValues as $key => $value ) {
-				if ( is_array( $selectedValue ) ) {
-					$isSelected = in_array( $key, $selectedValue );
-				} else {
-					$isSelected = $selectedValue == $key;
-				}
-
-				echo '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
-			}
-			echo '</select><br>';
+			echo '<div data-name="'.esc_html($input).'" class="multiselect" data-values="'
+				.esc_html(json_encode($permittedValues)).'" data-selected="'
+				.esc_html(json_encode($selectedValue)).'">
+				<input type="button" class="onoffice-multiselect-edit" value="'
+				.esc_html__('Werte bearbeiten', 'onoffice').'"> </div>';
 		} else {
-			echo $pForm->getFieldLabel( $input ).$addition.': <br>';
 			if ($input == 'regionaler_zusatz') {
 				echo '<select size="1" name="'.esc_html($input).'">';
 				$pRegionController = new \onOffice\WPlugin\Region\RegionController();
@@ -112,13 +110,7 @@ require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 			}
 		}
 
-		if ( $pForm->isMissingField( $input ) ) {
-			echo 'Bitte ausfüllen!';
-		}
-
-		if ( in_array( $input, array('message', 'Id') ) ) {
-			continue;
-		}
+		echo '<br>';
 	}
 
 ?>
