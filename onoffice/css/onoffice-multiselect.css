@@ -1,7 +1,26 @@
 .multiselect {
 	display: inline-block;
-};
+	margin: 0;
+}
 
 .onoffice-multiselect-popup {
 	position: relative;
-};
+	padding-top: 10px;
+}
+
+.onoffice-multiselect-popup > label {
+  display: block;
+  padding-left: 15px;
+  margin-bottom: -2px;
+  font-weight: 400;
+}
+
+.onoffice-multiselect-popup > input[type=checkbox] {
+  vertical-align: bottom;
+  position: relative;
+  *overflow: hidden;
+}
+
+.onoffice-multiselect-popup > input[type=button] {
+  margin-top: 10px;
+}

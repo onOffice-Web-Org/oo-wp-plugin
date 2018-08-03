@@ -1,5 +1,7 @@
 var onOffice = onOffice || {};
 (() => {
+	var checkboxCounter = checkboxCounter || 0;
+
 	function multiselect(element, options, preselected) {
 		this._element = typeof(element) === 'string' ? document.getElementById(element) : element;
 		this._options = options || {};
@@ -16,11 +18,13 @@ var onOffice = onOffice || {};
 		preselected = preselected || [];
 
 		for (var key in this._options) {
+			checkboxCounter++;
 			var value = this._options[key];
 			var checked = preselected.indexOf(key) >= 0 ? ' checked' : '';
 
-			output += '<input type="checkbox" name=' + this._name + '[] value="' + key +
-				'" ' + checked + '>' + value + '<br>';
+			output += '<label for=cb' + checkboxCounter + '>' +
+				'<input type="checkbox" name=' + this._name + '[] value="' + key + '" ' +
+				checked + ' id=cb'+ checkboxCounter +'>' + value + '</label>';
 		}
 
 		divPopup.innerHTML = output;
@@ -41,7 +45,7 @@ var onOffice = onOffice || {};
 
 	multiselect.prototype.show = function() {
 		this._getChildDiv('onoffice-multiselect-popup').hidden = false;
-		this.clearLabel();
+		this.hideLabel();
 	};
 
 	multiselect.prototype.hide = function() {
@@ -50,7 +54,7 @@ var onOffice = onOffice || {};
 	};
 
 	multiselect.prototype._getChildDiv = function(className) {
-		var childnodes = Array.prototype.slice.call(this._element.childNodes);
+		var childnodes = [].slice.call(this._element.childNodes);
 		var divs = childnodes.filter(element =>
 			element.nodeName.toLowerCase() === 'div' && element.className === className);
 
@@ -74,20 +78,26 @@ var onOffice = onOffice || {};
 		}
 
 		this._displaySpan.textContent = labels.join(', ');
+		this.showLabel();
 	};
 
 
-	multiselect.prototype.clearLabel = function() {
-		this._displaySpan.textContent = '';
+	multiselect.prototype.hideLabel = function() {
+		this._displaySpan.hidden = true;
+	};
+
+
+	multiselect.prototype.showLabel = function() {
+		this._displaySpan.hidden = false;
 	};
 
 
 	multiselect.prototype._getSelection = function() {
 		var childNodes = this._getChildDiv('onoffice-multiselect-popup').childNodes;
 		var elements = [].slice.call(childNodes);
-		var inputs = elements.filter(element =>
-			element.nodeName === 'INPUT' && element.type === 'checkbox' && element.checked);
-		return inputs.map(element => element.value);
+		var inputs = elements.filter(element => element.nodeName === 'LABEL' &&
+			element.childNodes[0].type === 'checkbox' && element.childNodes[0].checked);
+		return inputs.map(element => element.childNodes[0].value);
 	};
 
 	onOffice.multiselect = multiselect;
