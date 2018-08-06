@@ -1,5 +1,5 @@
 var onOffice = onOffice || {};
-(() => {
+(function() {
 	var checkboxCounter = checkboxCounter || 0;
 
 	function multiselect(element, options, preselected) {
@@ -29,11 +29,14 @@ var onOffice = onOffice || {};
 		}
 
 		divPopup.innerHTML = output;
+		var parent = this;
 
 		var button = document.createElement('input');
 		button.type = 'button';
 		button.value = 'OK';
-		button.onclick = () => this.hide();
+		button.onclick = function() {
+			parent.hide();
+		};
 
 		divPopup.appendChild(button);
 
@@ -59,8 +62,10 @@ var onOffice = onOffice || {};
 
 	multiselect.prototype._getChildDiv = function(className) {
 		var childnodes = [].slice.call(this._element.childNodes);
-		var divs = childnodes.filter(element =>
-			element.nodeName.toLowerCase() === 'div' && element.className === className);
+		var divs = childnodes.filter(function(element) {
+			return element.nodeName.toLowerCase() === 'div' &&
+				element.className === className;
+		});
 
 		if (divs.length > 0) {
 			return divs[0];
@@ -99,9 +104,15 @@ var onOffice = onOffice || {};
 	multiselect.prototype._getSelection = function() {
 		var childNodes = this._getChildDiv('onoffice-multiselect-popup').childNodes;
 		var elements = [].slice.call(childNodes);
-		var inputs = elements.filter(element => element.nodeName === 'LABEL' &&
-			element.childNodes[0].type === 'checkbox' && element.childNodes[0].checked);
-		return inputs.map(element => element.childNodes[0].value);
+		var inputs = elements.filter(function(element) {
+			return element.nodeName === 'LABEL' &&
+				element.childNodes[0].type === 'checkbox' &&
+				element.childNodes[0].checked;
+		});
+
+		return inputs.map(function(element) {
+			return element.childNodes[0].value;
+		});
 	};
 
 	onOffice.multiselect = multiselect;
@@ -127,11 +138,14 @@ var onOffice = onOffice || {};
 
 		var instance = new onOffice.multiselect(element, values, presetValues);
 		var subElements = [].slice.call(element.children);
-		var editButtonArray = subElements.filter(element =>
-			element.className === 'onoffice-multiselect-edit');
+		var editButtonArray = subElements.filter(function(element) {
+			return element.className === 'onoffice-multiselect-edit';
+		});
 		var button = editButtonArray.pop();
-		button.onclick = ((instance) => {
-			return () => instance.show();
+		button.onclick = (function(instance) {
+			return function() {
+				instance.show();
+			};
 		})(instance);
 	}
 })();
