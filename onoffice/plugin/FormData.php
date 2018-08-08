@@ -193,28 +193,6 @@ class FormData
 	 *
 	 */
 
-	public function getEstateData()
-	{
-		$inputs = $this->_configFields;
-		$estateData = [];
-
-		foreach ($this->_values as $input => $value) {
-			$inputConfigName = $this->getFieldNameOfInput($input);
-
-			if (onOfficeSDK::MODULE_ESTATE === $inputs[$inputConfigName]) {
-				$estateData[$input] = $value;
-			}
-		}
-		return $estateData;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
 	public function getSearchcriteriaData()
 	{
 		$inputs = $this->_configFields;

@@ -54,7 +54,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );
-			$line .= '<select size="1" name="'.$input.'">';
+			$line .= '<select size="1" name="'.esc_html($input).'">';
 
 			foreach ( $permittedValues as $key => $value ) {
 				if ( is_array( $selectedValue ) ) {
@@ -62,7 +62,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				} else {
 					$isSelected = $selectedValue == $key;
 				}
-				$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'
+				$line .= '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'
 					.esc_html($value).'</option>';
 			}
 			$line .= '</select>';
@@ -73,6 +73,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'checkbox';
 				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
+				$value .= ' value="y"';
 			}
 
 			$line .= $pForm->getFieldLabel( $input ).': ';

@@ -206,25 +206,6 @@ class TestClassFormData
 	 *
 	 */
 
-	public function testGetEstateData()
-	{
-		$estateData = $this->_pFormData->getEstateData();
-
-		$expectation = [
-			'testInput4' => 'Another Test',
-			'testInput5' => 8237383.99,
-			'testInput6' => 47,
-			'testInput7' => ['test1', 'test2'],
-		];
-
-		$this->assertEquals($expectation, $estateData);
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testGetSetFormSent()
 	{
 		$this->assertFalse($this->_pFormData->getFormSent());

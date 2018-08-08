@@ -28,10 +28,12 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\EstateListInputVariableReader;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
@@ -40,6 +42,10 @@ use onOffice\WPlugin\FormPost;
 class FormPostOwner
 	extends FormPost
 {
+	/** @var FormData */
+	private $_pFormData = null;
+
+
 	/**
 	 *
 	 * @param FormData $pFormData
@@ -50,6 +56,7 @@ class FormPostOwner
 	{
 		/* @var $pDataFormConfiguration DataFormConfigurationOwner */
 		$pDataFormConfiguration = $pFormData->getDataFormConfiguration();
+		$this->_pFormData = $pFormData;
 
 		$recipient = $pDataFormConfiguration->getRecipient();
 		$subject = $pDataFormConfiguration->getSubject();
@@ -62,19 +69,20 @@ class FormPostOwner
 		} else {
 			$response = false;
 
-			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
-			$responseEstate = $this->modifyOrCreateEstate($pFormData);
+			$responseAddress = $this->createOrCompleteAddress($checkduplicate);
+			$responseEstate = $this->createEstate();
 
 			if ($responseAddress !== false &&
 				$responseEstate !== false) {
 				$response = $this->createOwnerRelation($responseEstate, $responseAddress);
 			}
 
-			if (null != $recipient && null != $subject && $responseEstate && $responseAddress) {
-				$response = $this->sendContactRequest( $pFormData, $recipient, $subject, $responseEstate ) && $response;
+			if (null != $recipient && $responseEstate && $responseAddress) {
+				$response = $response &&
+					$this->sendContactRequest($recipient, $responseEstate, $subject);
 			}
 
-			if ( $response && $responseEstate && $responseAddress ) {
+			if ($response) {
 				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
 			} else {
 				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
@@ -85,15 +93,14 @@ class FormPostOwner
 
 	/**
 	 *
-	 * @param FormData $pFormData
 	 * @param bool $mergeExisting
 	 * @return bool
 	 *
 	 */
 
-	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )
+	private function createOrCompleteAddress($mergeExisting = false)
 	{
-		$requestParams = $pFormData->getAddressDataForApiCall();
+		$requestParams = $this->_pFormData->getAddressDataForApiCall();
 		$requestParams['checkDuplicate'] = $mergeExisting;
 
 		$pSDKWrapper = new SDKWrapper();
@@ -115,14 +122,14 @@ class FormPostOwner
 
 	/**
 	 *
-	 * @param array $estateValues
 	 * @return bool
 	 *
 	 */
 
-	private function createEstate( $estateValues)
+	private function createEstate()
 	{
-		$requestParams = array('data' => $estateValues);
+		$estateValues = $this->getEstateData();
+		$requestParams = ['data' => $estateValues];
 
 		$pSDKWrapper = new SDKWrapper();
 		$handle = $pSDKWrapper->addRequest
@@ -141,57 +148,32 @@ class FormPostOwner
 	}
 
 
-
 	/**
 	 *
-	 * @param int $estateId
-	 * @param array $estateValues
-	 * @return mixed
+	 * @return array
 	 *
 	 */
 
-	private function updateEstate($estateId, $estateValues)
+	public function getEstateData()
 	{
-		$requestParams = array('data' => $estateValues);
+		$pFormData = $this->_pFormData;
+		$pEstateListInputVariableReader = new EstateListInputVariableReader();
+		$configFields = $pFormData->getDataFormConfiguration()->getInputs();
+		$submitFields = array_keys($pFormData->getValues());
 
-		$pSDKWrapper = new SDKWrapper();
-		$handle = $pSDKWrapper->addFullRequest
-			(onOfficeSDK::ACTION_ID_MODIFY, 'estate', $estateId, $requestParams);
+		$estateFields = array_filter($submitFields, function($key) use ($configFields) {
+			return onOfficeSDK::MODULE_ESTATE === $configFields[$key];
+		});
 
-		$pSDKWrapper->sendRequests();
-
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		if (isset( $response['data']['records'] ) &&
-			count( $response['data']['records'] ) > 0) {
-			return $estateId;
+		foreach ($estateFields as $input) {
+			if ($pEstateListInputVariableReader->getFieldType($input) === FieldTypes::FIELD_TYPE_MULTISELECT) {
+				$estateData[$input] []= $pEstateListInputVariableReader->getFieldValue($input);
+			} else {
+				$estateData[$input] = $pEstateListInputVariableReader->getFieldValue($input);
+			}
 		}
 
-		return false;
-	}
-
-
-	/**
-	 *
-	 * @param FormData $pFormData
-	 * @return mixed
-	 *
-	 */
-
-	private function modifyOrCreateEstate(FormData $pFormData)
-	{
-		$estateValues = $pFormData->getEstateData();
-		$estateId = isset( $estateValues['Id'] ) ? $estateValues['Id'] : null;
-		$result = null;
-
-		if (null != $estateId) {
-			unset($estateValues['Id']);
-			$result = $this->updateEstate($estateId, $estateValues);
-		} else {
-			$result = $this->createEstate($estateValues);
-		}
-
-		return $result;
+		return $estateData;
 	}
 
 
@@ -229,18 +211,17 @@ class FormPostOwner
 
 	/**
 	 *
-	 * @param FormData $pFormData
 	 * @param string $recipient
-	 * @param string $subject
 	 * @param int $estateId
+	 * @param string $subject
 	 * @return bool
 	 *
 	 */
 
-	private function sendContactRequest(FormData $pFormData, $recipient, $subject, $estateId)
+	private function sendContactRequest($recipient, $estateId, $subject = null)
 	{
-		$addressData = $pFormData->getAddressData();
-		$values = $pFormData->getValues();
+		$addressData = $this->_pFormData->getAddressData();
+		$values = $this->_pFormData->getValues();
 		$message = isset( $values['message'] ) ? $values['message'] : null;
 
 		$requestParams = array(
@@ -249,7 +230,7 @@ class FormPostOwner
 			'message' => $message,
 			'subject' => $subject,
 			'referrer' => filter_input( INPUT_SERVER, 'REQUEST_URI' ),
-			'formtype' => $pFormData->getFormtype(),
+			'formtype' => $this->_pFormData->getFormtype(),
 		);
 
 		if ( null != $recipient ) {

@@ -74,6 +74,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'checkbox';
 				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
+				$value .= ' value="y"';
 			}
 
 			$line .= $pForm->getFieldLabel( $input ).': ';
