@@ -44,7 +44,7 @@ if (!function_exists('renderField')) {
 					.esc_html(json_encode($permittedValues)).'" data-selected="'
 					.esc_html(json_encode($selectedValue)).'">
 				<input type="button" class="onoffice-multiselect-edit" value="'
-					.esc_html__('Werte bearbeiten', 'onoffice').'">
+					.esc_html__('Edit values', 'onoffice').'">
 			</div>
 			';
 		} elseif ( $inputName === 'regionaler_zusatz' ) {

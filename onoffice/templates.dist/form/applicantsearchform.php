@@ -93,7 +93,7 @@ require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 				.esc_html(json_encode($permittedValues)).'" data-selected="'
 				.esc_html(json_encode($selectedValue)).'">
 				<input type="button" class="onoffice-multiselect-edit" value="'
-				.esc_html__('Werte bearbeiten', 'onoffice').'"> </div>';
+				.esc_html__('Edit values', 'onoffice').'"> </div>';
 		} else {
 			if ($input == 'regionaler_zusatz') {
 				echo '<select size="1" name="'.esc_html($input).'">';
