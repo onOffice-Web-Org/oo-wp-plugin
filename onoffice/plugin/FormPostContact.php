@@ -120,31 +120,6 @@ class FormPostContact
 	}
 
 
-	/**
-	 *
-	 * @param FormData $pFormData
-	 * @param bool $mergeExisting
-	 * @return bool
-	 *
-	 */
-
-	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )
-	{
-		$requestParams = $pFormData->getAddressData();
-		$requestParams['checkDuplicate'] = $mergeExisting;
-
-		$pSDKWrapper = new SDKWrapper();
-		$handle = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
-		$pSDKWrapper->sendRequests();
-
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		$result = isset( $response['data']['records'] ) &&
-				count( $response['data']['records'] ) > 0;
-		return $result;
-	}
-
 	/** @return string */
 	static protected function getFormType()
 		{ return Form::TYPE_CONTACT; }

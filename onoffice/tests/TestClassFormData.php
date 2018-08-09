@@ -186,26 +186,6 @@ class TestClassFormData
 	 *
 	 */
 
-	public function testGetAddressDataForApiCall()
-	{
-		$addressData = $this->_pFormData->getAddressDataForApiCall();
-		$expectation = [
-			'testInput1' => 'Test',
-			'testInput3__von' => 3.1415,
-			'testInput3__bis' => 15,
-			'phone' => '0815 8374374',
-			'email' => 'test-wp@my-onoffice.com',
-			'fax' => '0815 83748937',
-		];
-
-		$this->assertEquals($expectation, $addressData);
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testGetSetFormSent()
 	{
 		$this->assertFalse($this->_pFormData->getFormSent());

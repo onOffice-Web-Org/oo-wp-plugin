@@ -30,8 +30,10 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
@@ -265,6 +267,85 @@ abstract class FormPost {
 		}
 
 		return $inputFormFields;
+	}
+
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @param bool $mergeExisting
+	 * @return bool
+	 *
+	 */
+
+	protected function createOrCompleteAddress(FormData $pFormData, $mergeExisting = false)
+	{
+		$pFieldNames = new Fieldnames();
+		$pFieldNames->loadLanguage();
+		$requestParams = $this->getAddressDataForApiCall($pFormData, $pFieldNames);
+		$requestParams['checkDuplicate'] = $mergeExisting;
+
+		$pSDKWrapper = new SDKWrapper();
+
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper,
+			onOfficeSDK::ACTION_ID_CREATE, 'address');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
+		$pSDKWrapper->sendRequests();
+
+		if ($pApiClientAction->getResultStatus() === true) {
+			$result = $pApiClientAction->getResultRecords();
+			return $result[0]['id'];
+		}
+
+		return false;
+	}
+
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @param Fieldnames $pFieldnames
+	 * @return array
+	 *
+	 */
+
+	private function getAddressDataForApiCall(FormData $pFormData, Fieldnames $pFieldnames)
+	{
+		$inputs = $pFormData->getDataFormConfiguration()->getInputs();
+		$addressData = [];
+		$values = $pFormData->getValues();
+
+		foreach ($values as $input => $value) {
+			if (onOfficeSDK::MODULE_ADDRESS !== $inputs[$input]) {
+				continue;
+			}
+
+			switch ($input)
+			{
+				case 'Telefon1':
+					$input = 'phone';
+					break;
+
+				case 'Email':
+					$input = 'email';
+					break;
+
+				case 'Telefax1':
+					$input = 'fax';
+					break;
+			}
+
+			if ($pFieldnames->getType($input, onOfficeSDK::MODULE_ADDRESS) ===
+				FieldTypes::FIELD_TYPE_MULTISELECT &&
+				!is_array($value)) {
+				$addressData[$input] = [$value];
+			} else {
+				$addressData[$input] = $value;
+			}
+		}
+
+		return $addressData;
 	}
 
 

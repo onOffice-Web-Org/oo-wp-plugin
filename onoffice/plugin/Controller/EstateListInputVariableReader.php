@@ -162,9 +162,9 @@ class EstateListInputVariableReader
 
 		global $wp_locale;
 		$stringThousand = __String::getNew($floatString)->replace
-			($wp_locale->number_format['thousands_sep'] , '');
+			($wp_locale->number_format['thousands_sep'], '');
 		$stringDec = __String::getNew($stringThousand)->replace
-			($wp_locale->number_format['decimal_point'] , '.');
+			($wp_locale->number_format['decimal_point'], '.');
 
 		return floatval($stringDec);
 	}

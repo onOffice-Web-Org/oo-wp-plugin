@@ -40,10 +40,10 @@ class DataFormConfigurationFactory
 	/** @var array */
 	private $_formClassMapping = array
 		(
-			Form::TYPE_CONTACT => 'DataFormConfigurationContact',
-			Form::TYPE_OWNER => 'DataFormConfigurationOwner',
-			Form::TYPE_INTEREST => 'DataFormConfigurationInterest',
-			Form::TYPE_APPLICANT_SEARCH => 'DataFormConfigurationApplicantSearch',
+			Form::TYPE_CONTACT => DataFormConfigurationContact::class,
+			Form::TYPE_OWNER => DataFormConfigurationOwner::class,
+			Form::TYPE_INTEREST => DataFormConfigurationInterest::class,
+			Form::TYPE_APPLICANT_SEARCH => DataFormConfigurationApplicantSearch::class,
 		);
 
 
@@ -73,7 +73,7 @@ class DataFormConfigurationFactory
 			throw new UnknownFormException;
 		}
 
-		$class = __NAMESPACE__.'\\'.$this->_formClassMapping[$this->_type];
+		$class = $this->_formClassMapping[$this->_type];
 		/* @var $pConfig DataFormConfiguration */
 		$pConfig = new $class;
 		$pConfig->setFormType($this->_type);

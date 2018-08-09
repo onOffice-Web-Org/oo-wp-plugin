@@ -40,11 +40,11 @@ class FormPostHandler
 {
 	/** @var array */
 	static private $_formPostClassesByType = array(
-		Form::TYPE_CONTACT => '\onOffice\WPlugin\FormPostContact',
-		Form::TYPE_OWNER => '\onOffice\WPlugin\FormPostOwner',
-		Form::TYPE_INTEREST => '\onOffice\WPlugin\FormPostInterest',
-		Form::TYPE_APPLICANT_SEARCH => '\onOffice\WPlugin\FormPostApplicantSearch',
-		Form::TYPE_FREE => '\onOffice\WPlugin\FormPostFree',
+		Form::TYPE_CONTACT => FormPostContact::class,
+		Form::TYPE_OWNER => FormPostOwner::class,
+		Form::TYPE_INTEREST => FormPostInterest::class,
+		Form::TYPE_APPLICANT_SEARCH => FormPostApplicantSearch::class,
+		Form::TYPE_FREE => FormPostFree::class,
 	);
 
 

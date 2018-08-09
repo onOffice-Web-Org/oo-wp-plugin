@@ -127,45 +127,6 @@ class FormData
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	public function getAddressDataForApiCall()
-	{
-		$inputs = $this->_configFields;
-		$addressData = [];
-
-		foreach ($this->_values as $input => $value) {
-			$inputConfigName = $this->getFieldNameOfInput($input);
-
-			if (onOfficeSDK::MODULE_ADDRESS === $inputs[$inputConfigName]) {
-
-				switch ($input)
-				{
-					case 'Telefon1':
-						$input = 'phone';
-						break;
-
-					case 'Email':
-						$input = 'email';
-						break;
-
-					case 'Telefax1':
-						$input = 'fax';
-						break;
-				}
-
-				$addressData[$input] = $value;
-			}
-		}
-
-		return $addressData;
-	}
-
-
-	/**
-	 *
 	 * SearchCriteria fields have the suffixes `__von` and `__bis`
 	 *
 	 * @param string $input

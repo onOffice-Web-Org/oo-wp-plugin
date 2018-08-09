@@ -69,7 +69,7 @@ class FormPostOwner
 		} else {
 			$response = false;
 
-			$responseAddress = $this->createOrCompleteAddress($checkduplicate);
+			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
 			$responseEstate = $this->createEstate();
 
 			if ($responseAddress !== false &&
@@ -88,35 +88,6 @@ class FormPostOwner
 				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
 			}
 		}
-	}
-
-
-	/**
-	 *
-	 * @param bool $mergeExisting
-	 * @return bool
-	 *
-	 */
-
-	private function createOrCompleteAddress($mergeExisting = false)
-	{
-		$requestParams = $this->_pFormData->getAddressDataForApiCall();
-		$requestParams['checkDuplicate'] = $mergeExisting;
-
-		$pSDKWrapper = new SDKWrapper();
-		$handle = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
-		$pSDKWrapper->sendRequests();
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		$result = isset( $response['data']['records'] ) &&
-			count( $response['data']['records'] ) > 0;
-
-		if ($result) {
-			return $response['data']['records'][0]['id'];
-		}
-
-		return false;
 	}
 
 
@@ -157,7 +128,7 @@ class FormPostOwner
 	public function getEstateData()
 	{
 		$pFormData = $this->_pFormData;
-		$pEstateListInputVariableReader = new EstateListInputVariableReader();
+		$pInputVariableReader = new EstateListInputVariableReader();
 		$configFields = $pFormData->getDataFormConfiguration()->getInputs();
 		$submitFields = array_keys($pFormData->getValues());
 
@@ -166,10 +137,13 @@ class FormPostOwner
 		});
 
 		foreach ($estateFields as $input) {
-			if ($pEstateListInputVariableReader->getFieldType($input) === FieldTypes::FIELD_TYPE_MULTISELECT) {
-				$estateData[$input] []= $pEstateListInputVariableReader->getFieldValue($input);
+			$value = $pInputVariableReader->getFieldValue($input);
+
+			if ($pInputVariableReader->getFieldType($input) === FieldTypes::FIELD_TYPE_MULTISELECT &&
+				!is_array($value)) {
+				$estateData[$input] = [$value];
 			} else {
-				$estateData[$input] = $pEstateListInputVariableReader->getFieldValue($input);
+				$estateData[$input] = $value;
 			}
 		}
 
