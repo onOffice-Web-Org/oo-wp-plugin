@@ -28,6 +28,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
@@ -125,16 +126,16 @@ class FormPostOwner
 		$estateValues = $this->getEstateData();
 		$requestParams = ['data' => $estateValues];
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
-		$handle = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_CREATE, 'estate', $requestParams );
+
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE,
+			'estate');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+		$records = $pApiClientAction->getResultRecords();
 
-		$result = isset( $response['data']['records'] ) &&
-			count( $response['data']['records'] ) > 0;
-
-		if ($result) {
-			return $response['data']['records'][0]['id'];
+		if ($records !== null && $records !== []) {
+			return $records[0]['id'];
 		}
 
 		return false;
@@ -183,25 +184,20 @@ class FormPostOwner
 
 	private function createOwnerRelation($estateId, $addressId)
 	{
-		$requestParams = [
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
+
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'relation');
+		$pApiClientAction->setParameters([
 			'relationtype' => onOfficeSDK::RELATION_TYPE_ESTATE_ADDRESS_OWNER,
 			'parentid' => $estateId,
 			'childid' => $addressId,
-		];
+		]);
 
-		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'relation', $requestParams );
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		$result = isset($response['status']) &&
-			$response['status']['errorcode'] == 0 &&
-			$response['status']['message'] == 'OK';
-
-
-		return $result;
+		return $pApiClientAction->getResultStatus();
 	}
 
 
@@ -218,7 +214,7 @@ class FormPostOwner
 	{
 		$addressData = $this->_pFormData->getAddressData();
 		$values = $this->_pFormData->getValues();
-		$message = isset( $values['message'] ) ? $values['message'] : null;
+		$message = $values['message'] ?? null;
 
 		$requestParams = [
 			'addressdata' => $addressData,
@@ -234,14 +230,18 @@ class FormPostOwner
 		}
 
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
-		$handle = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_DO,
+			'contactaddress');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+		$result = false;
 
-		$result = isset( $response['data']['records'][0]['elements']['success'] ) &&
-			'success' == $response['data']['records'][0]['elements']['success'];
+		if ($pApiClientAction->getResultStatus()) {
+			$resultRecords = $pApiClientAction->getResultRecords();
+			$result = ($resultRecords[0]['elements']['success'] ?? '') === 'success';
+		}
 
 		return $result;
 	}
