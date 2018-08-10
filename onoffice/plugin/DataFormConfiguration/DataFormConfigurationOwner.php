@@ -47,6 +47,7 @@ class DataFormConfigurationOwner
 			'Ort' => onOfficeSDK::MODULE_ADDRESS,
 			'Telefon1' => onOfficeSDK::MODULE_ADDRESS,
 			'Email' => onOfficeSDK::MODULE_ADDRESS,
+			'vermarktungsart' => onOfficeSDK::MODULE_ESTATE,
 			'objektart' => onOfficeSDK::MODULE_ESTATE,
 			'objekttyp' => onOfficeSDK::MODULE_ESTATE,
 			'wohnflaeche' => onOfficeSDK::MODULE_ESTATE,
@@ -54,6 +55,8 @@ class DataFormConfigurationOwner
 			'ort' => onOfficeSDK::MODULE_ESTATE,
 			'message' => null,
 		));
+
+		$this->setRequiredFields(['Email', 'Name', 'vermarktungsart']);
 	}
 
 
