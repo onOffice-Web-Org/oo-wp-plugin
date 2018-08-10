@@ -120,14 +120,13 @@ class AdminPageFormSettingsMain
 
 		switch ($type) {
 			case Form::TYPE_INTEREST:
-				/* @var $pAdminPage AdminPageFormSettingsContact */
+				/* @var $pAdminPage AdminPageFormSettingsInterestOwner */
 				$pAdminPage->setShowSearchCriteriaFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
 				break;
 			case Form::TYPE_OWNER:
-				/* @var $pAdminPage AdminPageFormSettingsContact */
-				$pAdminPage->setShowPagesOption(true);
+				/* @var $pAdminPage AdminPageFormSettingsInterestOwner */
 				$pAdminPage->setShowEstateFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway

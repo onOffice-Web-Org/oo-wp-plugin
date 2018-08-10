@@ -21,8 +21,6 @@
 
 add_thickbox();
 
-$pages = $pForm->getPages();
-
 $addressValues = array();
 $estateValues = array();
 
@@ -92,66 +90,56 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 ?>
 
 <script>
-function weiter(pages) {
-	for (var i = 1; i <= pages; i++) {
-		if ($('#' + i).is(':visible')) {
-			if (i < pages) {
-				$('#' + i).hide();
-				i++;
-				$('#' + i).show();
-				break;
-			}
-		}
-	}
-}
-
-function zurueck(pages) {
-	for (var i = pages; i>= 1; i--) {
-		if ($('#' + i).is(':visible')) {
-			if (i > 1) {
-				$('#' + i).hide();
-				i--;
-				$('#' + i).show();
-				break;
-			}
-		}
-	}
-}
+	$(document).ready(function() {
+		var oOPaging = new onOffice.paging('leadform');
+		oOPaging.setup();
+	});
 </script>
 
-<div id="my-content-id" style="display:none;">
+<div id="onoffice-lead" style="display:none;">
 	<p>
 		<form name="leadgenerator" action="" method="post">
 			<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
-			<div id="inhalt">
+			<div id="leadform">
 				<?php
 					if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 						echo 'ERROR!';
 					}
-
-					for ($i = 1; $i <= $pages; $i++) {
-						if ($i == 1) {
-							$displayValue = 'block';
-						} else {
-							$displayValue = 'none';
-						}
-						echo '<div id="'.$i.'" style="display:'.$displayValue.'">';
-							include('includes/ownerleadgeneratorform_'.$i.'.php');
-						echo '</div>';
-					}
 				?>
+
+				<div class="lead-lightbox lead-page-1">
+					<h2><?php echo esc_html__('Your contact details', 'onoffice'); ?></h2>
+					<p>
+						<div>
+						<?php echo implode('<br>', $addressValues); ?>
+						</div>
+					</p>
+				</div>
+
+				<div class="lead-lightbox lead-page-2">
+					<h2><?php echo esc_html__('Information about your property', 'onoffice'); ?></h2>
+					<p>
+						<div>
+						<?php echo implode('<br>', $estateValues); ?>
+						</div>
+					</p>
+					<p>
+						<input type="submit" value="<?php echo esc_html__('Send', 'onoffice'); ?>" style="float:right;">
+					</p>
+				</div>
+
+				<span class="leadform-back" style="float:left; cursor:pointer;">
+					<?php echo esc_html__('Back', 'onoffice'); ?>
+				</span>
+				<span class="leadform-forward" style="float:right; cursor:pointer;">
+					<?php echo esc_html__('Next', 'onoffice'); ?>
+				</span>
 			</div>
-			<br/>
-			<div style="width: 500px">
-				<div id="back"  style="float:left; cursor:pointer;" onclick="zurueck(<?php echo $pages; ?>)">Zur&uuml;ck</div>
-				<div id="vor"  style="float:right; cursor:pointer;" onclick="weiter(<?php echo $pages; ?>)">Weiter</div>
-			</div>
-			<p>
-			<div id="buttonSubmit" style="clear:both"><input type="submit" value="GO!"></div>
-		   </p>
 		</form>
-     </p>
+	</p>
 </div>
 
-<a href="#TB_inline?width=700&height=650&inlineId=my-content-id" class="thickbox">Zum Formular...</a>
+<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead" class="thickbox">
+	<?php echo esc_html__('Open the Form', 'onoffice'); ?>
+</a>

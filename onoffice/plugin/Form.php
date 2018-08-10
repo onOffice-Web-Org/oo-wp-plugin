@@ -61,9 +61,6 @@ class Form
 	/** @var FormData */
 	private $_pFormData = null;
 
-	/** @var int */
-	private $_pages = 1;
-
 	/**
 	 *
 	 * @param string $formName
@@ -71,7 +68,8 @@ class Form
 	 *
 	 */
 
-	public function __construct( $formName, $type ) {
+	public function __construct( $formName, $type )
+	{
 		$language = Language::getDefault();
 		$this->_pFieldnames = new Fieldnames($language);
 		$this->_pFieldnames->loadLanguage();
@@ -89,7 +87,6 @@ class Form
 			$this->_pFormData->setFormtype( $pFormConfig->getFormType() );
 			$this->_pFormData->setFormSent(false);
 		}
-		$this->setPages();
 	}
 
 
@@ -100,7 +97,8 @@ class Form
 	 *
 	 */
 
-	private function getModuleOfField($field) {
+	private function getModuleOfField($field)
+	{
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$inputs = $pDataFormConfiguration->getInputs();
 		$module = null;
@@ -117,7 +115,8 @@ class Form
 	 *
 	 */
 
-	public function getInputFields() {
+	public function getInputFields()
+	{
 		$inputs = $this->getDataFormConfiguration()->getInputs();
 		return $inputs;
 	}
@@ -129,7 +128,8 @@ class Form
 	 *
 	 */
 
-	public function getRequiredFields() {
+	public function getRequiredFields()
+	{
 		$requiredFields = $this->getDataFormConfiguration()->getRequiredFields();
 		return $requiredFields;
 	}
@@ -142,7 +142,8 @@ class Form
 	 *
 	 */
 
-	public function isRequiredField( $field ) {
+	public function isRequiredField( $field )
+	{
 		$requiredFields = $this->getRequiredFields();
 		return in_array($field, $requiredFields);
 	}
@@ -154,7 +155,8 @@ class Form
 	 *
 	 */
 
-	private function getDataFormConfiguration() {
+	private function getDataFormConfiguration()
+	{
 		return $this->_pFormData->getDataFormConfiguration();
 	}
 
@@ -165,7 +167,8 @@ class Form
 	 *
 	 */
 
-	public function getFormStatus() {
+	public function getFormStatus()
+	{
 		return $this->_pFormData->getStatus();
 	}
 
@@ -179,7 +182,8 @@ class Form
 	 *
 	 */
 
-	public function getFieldLabel( $field, $raw = false ) {
+	public function getFieldLabel( $field, $raw = false )
+	{
 		$module = $this->getModuleOfField($field);
 		$label = $this->_pFieldnames->getFieldLabel( $field, $module);
 
@@ -198,7 +202,8 @@ class Form
 	 *
 	 */
 
-	public function isSearchcriteriaField( $field ) {
+	public function isSearchcriteriaField( $field )
+	{
 		$module = $this->getModuleOfField($field);
 		return $module === onOfficeSDK::MODULE_SEARCHCRITERIA;
 	}
@@ -211,7 +216,8 @@ class Form
 	 *
 	 */
 
-	public function inRangeSearchcriteriaInfos( $field ) {
+	public function inRangeSearchcriteriaInfos( $field )
+	{
 		$module = $this->getModuleOfField($field);
 
 		return $module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
@@ -225,7 +231,8 @@ class Form
 	 *
 	 */
 
-	public function getSearchcriteriaRangeInfos() {
+	public function getSearchcriteriaRangeInfos()
+	{
 		return $this->_pFieldnames->getSearchcriteriaRangeInfos();
 	}
 
@@ -236,7 +243,8 @@ class Form
 	 *
 	 */
 
-	public function getUmkreisFields(){
+	public function getUmkreisFields()
+	{
 		return $this->_pFieldnames->getUmkreisFields();
 	}
 
@@ -248,7 +256,8 @@ class Form
 	 *
 	 */
 
-	public function getSearchcriteriaRangeInfosForField( $field ) {
+	public function getSearchcriteriaRangeInfosForField( $field )
+	{
 		$returnValues = array();
 		$module = $this->getModuleOfField($field);
 
@@ -269,7 +278,8 @@ class Form
 	 *
 	 */
 
-	public function getUmkreisValuesForField( $field ) {
+	public function getUmkreisValuesForField( $field )
+	{
 		$returnValues = array();
 		$module = $this->getModuleOfField($field);
 
@@ -292,7 +302,8 @@ class Form
 	 *
 	 */
 
-	public function getPermittedValues( $field, $raw = false ) {
+	public function getPermittedValues( $field, $raw = false )
+	{
 		$module = $this->getModuleOfField($field);
 		$fieldType = $this->getFieldType( $field );
 		$isMultiselectOrSingleselect = in_array( $fieldType,
@@ -319,7 +330,8 @@ class Form
 	 *
 	 */
 
-	public function getFieldType( $field ) {
+	public function getFieldType( $field )
+	{
 		$module = $this->getModuleOfField($field);
 		$fieldType = $this->_pFieldnames->getType( $field, $module);
 		return $fieldType;
@@ -333,7 +345,8 @@ class Form
 	 *
 	 */
 
-	private function escapePermittedValues( array $keyValues ) {
+	private function escapePermittedValues( array $keyValues )
+	{
 		$result = array();
 
 		foreach ( $keyValues as $key => $value ) {
@@ -353,7 +366,8 @@ class Form
 	 *
 	 */
 
-	public function getFieldValue( $field, $raw = false, $forceEvenIfSuccess = false ) {
+	public function getFieldValue( $field, $raw = false, $forceEvenIfSuccess = false )
+	{
 		$values = $this->_pFormData->getValues();
 		$fieldValue = isset( $values[$field] ) ? $values[$field] : '';
 
@@ -377,7 +391,8 @@ class Form
 	 *
 	 */
 
-	public function getMessageForField( $field, $message ) {
+	public function getMessageForField( $field, $message )
+	{
 		if ( in_array($field, $this->_pFormData->getMissingFields(), true ) ) {
 			return esc_html($message);
 		}
@@ -392,7 +407,8 @@ class Form
 	 *
 	 */
 
-	public function isMissingField( $field ) {
+	public function isMissingField( $field )
+	{
 		return $this->_pFormData->getFormSent() &&
 			in_array( $field, $this->_pFormData->getMissingFields(), true );
 	}
@@ -404,7 +420,8 @@ class Form
 	 *
 	 */
 
-	public function getFormNo() {
+	public function getFormNo()
+	{
 		return esc_html($this->_formNo);
 	}
 
@@ -415,28 +432,9 @@ class Form
 	 *
 	 */
 
-	public function getFormId() {
+	public function getFormId()
+	{
 		return esc_html($this->getDataFormConfiguration()->getFormName());
-	}
-
-
-	/**
-	 *
-	 * Only for Owner forms
-	 *
-	 */
-
-	private function setPages() {
-		$pDataFormConfig = $this->getDataFormConfiguration();
-
-		if ($pDataFormConfig->getFormType() === Form::TYPE_OWNER) {
-			// todo
-			$pages = $pDataFormConfig->getPages();
-
-			if ($pages > 0) {
-				$this->_pages = $pages;
-			}
-		}
 	}
 
 
@@ -457,11 +455,6 @@ class Form
 
 		return $formTypes;
 	}
-
-
-	/** @return int */
-	public function getPages()
-		{ return $this->_pages; }
 
 	/** @return array */
 	public function getResponseFieldsValues()

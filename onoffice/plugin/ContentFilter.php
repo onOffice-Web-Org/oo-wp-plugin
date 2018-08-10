@@ -369,6 +369,7 @@ class ContentFilter
 		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
 
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+		wp_register_script('onoffice-leadform', plugins_url('/js/onoffice-leadform.js', $pluginPath), 'jquery', false, true);
 	}
 
 
@@ -461,6 +462,7 @@ class ContentFilter
 
 		wp_enqueue_script('onoffice-multiselect', '', [], false, true);
 		wp_enqueue_style('onoffice-multiselect');
+		wp_enqueue_script('onoffice-leadform');
 	}
 
 
