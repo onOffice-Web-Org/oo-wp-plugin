@@ -29,7 +29,6 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 
@@ -95,14 +94,14 @@ class FormPostContact
 		$estateId = isset( $values['Id'] ) ? $values['Id'] : null;
 		$message = isset( $values['message'] ) ? $values['message'] : null;
 
-		$requestParams = array(
+		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
 			'message' => $message,
 			'subject' => $subject,
 			'referrer' => filter_input( INPUT_SERVER, 'REQUEST_URI' ),
 			'formtype' => $pFormData->getFormtype(),
-		);
+		];
 
 		if ( null != $recipient ) {
 			$requestParams['recipient'] = $recipient;
@@ -118,9 +117,4 @@ class FormPostContact
 			'success' == $response['data']['records'][0]['elements']['success'];
 		return $result;
 	}
-
-
-	/** @return string */
-	static protected function getFormType()
-		{ return Form::TYPE_CONTACT; }
 }

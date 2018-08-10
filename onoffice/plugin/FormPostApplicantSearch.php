@@ -23,7 +23,6 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
-use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 
@@ -91,19 +90,18 @@ class FormPostApplicantSearch
 
 	private function getApplicants(FormData $pFormData, $limitResults)
 	{
-		$found = array();
+		$found = [];
 		$searchData = $this->editFormValuesForApiCall($pFormData->getValues());
 		$searchFields = array_keys($searchData);
 		$searchcrieriaRangeFields = $this->getSearchcriteriaRangeFields();
 
-		$requestParams = array
-			(
-				'searchdata' => $searchData,
-				'outputall' => true,
-				'groupbyaddress' => true,
-				'limit' => $limitResults,
-				'offset' => 0,
-			);
+		$requestParams = [
+			'searchdata' => $searchData,
+			'outputall' => true,
+			'groupbyaddress' => true,
+			'limit' => $limitResults,
+			'offset' => 0,
+		];
 
 		$pSDKWrapper = new SDKWrapper();
 		$handle = $pSDKWrapper->addFullRequest
@@ -116,13 +114,13 @@ class FormPostApplicantSearch
 			count($response['data']['records']) > 0;
 
 		if ($result) {
-			$addressIds = array();
+			$addressIds = [];
 
 			foreach ($response['data']['records'] as $record) {
 				$addressId = $record['elements']['adresse'];
 				$addressIds []= $addressId;
 				$elements = $record['elements'];
-				$searchParameters = array();
+				$searchParameters = [];
 
 				foreach ($elements as $key => $value) {
 					if ($this->isSearchcriteriaRangeField($key)) {
@@ -154,7 +152,7 @@ class FormPostApplicantSearch
 									$bisValue = 0;
 								}
 							}
-							$searchParameters[$origName] = array($vonValue, $bisValue);
+							$searchParameters[$origName] = [$vonValue, $bisValue];
 						}
 					} else {
 						if (in_array($key, $searchFields)) {
@@ -184,12 +182,12 @@ class FormPostApplicantSearch
 	private function setKdNr($applicants)
 	{
 		$adressIds = array_keys($applicants);
-		$interessenten = array();
+		$interessenten = [];
 
-		$requestParams = array(
+		$requestParams = [
 			'recordids' => $adressIds,
-			'data' => array('KdNr'),
-		);
+			'data' => ['KdNr'],
+		];
 
 		$pSDKWrapper = new SDKWrapper();
 		$handle = $pSDKWrapper->addRequest(
@@ -223,7 +221,7 @@ class FormPostApplicantSearch
 
 	private function editFormValuesForApiCall($formValues)
 	{
-		$result = array();
+		$result = [];
 		$searchcrieriaRangeFields = $this->getSearchcriteriaRangeFields();
 
 		foreach ($formValues as $name => $value) {
@@ -268,8 +266,4 @@ class FormPostApplicantSearch
 
 		return $result;
 	}
-
-	/** @return string */
-	static protected function getFormType()
-		{ return Form::TYPE_APPLICANT_SEARCH; }
 }

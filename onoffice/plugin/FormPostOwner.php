@@ -28,9 +28,10 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Controller\EstateListInputVariableReader;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
-use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Form\FormPostConfiguration;
+use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
+use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -44,6 +45,29 @@ class FormPostOwner
 {
 	/** @var FormData */
 	private $_pFormData = null;
+
+	/** @var FormPostOwnerConfiguration */
+	private $_pFormPostOwnerConfiguration = null;
+
+
+	/**
+	 *
+	 * @param FormPostConfiguration $pFormPostConfiguration
+	 * @param FormPostOwnerConfiguration $pFormPostOwnerConfiguration
+	 *
+	 */
+
+	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
+		FormPostOwnerConfiguration $pFormPostOwnerConfiguration = null)
+	{
+		if ($pFormPostOwnerConfiguration === null) {
+			$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationDefault();
+		}
+
+		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
+
+		parent::__construct($pFormPostConfiguration);
+	}
 
 
 	/**
@@ -68,7 +92,6 @@ class FormPostOwner
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
 		} else {
 			$response = false;
-
 			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
 			$responseEstate = $this->createEstate();
 
@@ -101,8 +124,7 @@ class FormPostOwner
 	{
 		$estateValues = $this->getEstateData();
 		$requestParams = ['data' => $estateValues];
-
-		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 		$handle = $pSDKWrapper->addRequest
 			(onOfficeSDK::ACTION_ID_CREATE, 'estate', $requestParams );
 		$pSDKWrapper->sendRequests();
@@ -128,7 +150,7 @@ class FormPostOwner
 	public function getEstateData()
 	{
 		$pFormData = $this->_pFormData;
-		$pInputVariableReader = new EstateListInputVariableReader();
+		$pInputVariableReader = $this->_pFormPostOwnerConfiguration->getEstateListInputVariableReader();
 		$configFields = $pFormData->getDataFormConfiguration()->getInputs();
 		$submitFields = array_keys($pFormData->getValues());
 
@@ -161,13 +183,13 @@ class FormPostOwner
 
 	private function createOwnerRelation($estateId, $addressId)
 	{
-		$requestParams = array(
+		$requestParams = [
 			'relationtype' => onOfficeSDK::RELATION_TYPE_ESTATE_ADDRESS_OWNER,
 			'parentid' => $estateId,
 			'childid' => $addressId,
-		);
+		];
 
-		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 		$handle = $pSDKWrapper->addRequest(
 				onOfficeSDK::ACTION_ID_CREATE, 'relation', $requestParams );
 		$pSDKWrapper->sendRequests();
@@ -198,20 +220,20 @@ class FormPostOwner
 		$values = $this->_pFormData->getValues();
 		$message = isset( $values['message'] ) ? $values['message'] : null;
 
-		$requestParams = array(
+		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
 			'message' => $message,
 			'subject' => $subject,
-			'referrer' => filter_input( INPUT_SERVER, 'REQUEST_URI' ),
+			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
 			'formtype' => $this->_pFormData->getFormtype(),
-		);
+		];
 
 		if ( null != $recipient ) {
 			$requestParams['recipient'] = $recipient;
 		}
 
-		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 		$handle = $pSDKWrapper->addRequest
 			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
 		$pSDKWrapper->sendRequests();
@@ -223,9 +245,4 @@ class FormPostOwner
 
 		return $result;
 	}
-
-
-	/** @return string */
-	static protected function getFormType()
-		{ return Form::TYPE_OWNER; }
 }

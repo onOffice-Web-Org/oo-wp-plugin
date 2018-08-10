@@ -28,10 +28,11 @@
 
 namespace onOffice\WPlugin;
 
-use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Form\FormPostConfiguration;
+use onOffice\WPlugin\Form\FormPostConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\Types\FieldTypes;
 
@@ -69,57 +70,28 @@ abstract class FormPost {
 	private static $_formNo = 0;
 
 	/** @var array */
-	private $_formDataInstances = array();
+	private $_formDataInstances = [];
 
 	/** @var array */
-	private $_searchcriteriaRangeFields = array();
+	private $_searchcriteriaRangeFields = [];
 
-	/** @var FormPost */
-	private static $_pInstances = null;
-
-
-	/**
-	 *
-	 * @return FormPost
-	 *
-	 */
-
-	public static function getInstance() {
-		$formType = static::getFormType();
-		if ( !isset( self::$_pInstances[$formType] ) ) {
-			self::$_pInstances[$formType] = new static;
-		}
-
-		return self::$_pInstances[$formType];
-	}
+	/** @var FormPostConfiguration */
+	private $_pFormPostConfiguration = null;
 
 
 	/**
 	 *
-	 */
-
-	protected function __construct() { }
-
-
-	/**
+	 * @param FormPostConfiguration $pFormPostConfiguration
 	 *
 	 */
 
-	protected function __clone() { }
-
-
-	/**
-	 *
-	 * Use it like this: static::getFormType()
-	 * @throws Exception
-	 *
-	 */
-
-	static protected function getFormType()
+	public function __construct(FormPostConfiguration $pFormPostConfiguration = null)
 	{
-		throw new Exception('getFormType must be overridden');
+		if ($pFormPostConfiguration === null) {
+			$pFormPostConfiguration = new FormPostConfigurationDefault();
+		}
+		$this->_pFormPostConfiguration = $pFormPostConfiguration;
 	}
-
 
 	/**
 	 *
@@ -148,7 +120,8 @@ abstract class FormPost {
 	protected function buildFormData(DataFormConfiguration $pFormConfig, $formNo)
 	{
 		$formFields = $pFormConfig->getInputs();
-		$formData = array_intersect_key( $_POST, $formFields );
+		$postVariables = $this->_pFormPostConfiguration->getPostVars();
+		$formData = array_intersect_key( $postVariables, $formFields );
 		$pFormData = new FormData( $pFormConfig, $formNo );
 		$pFormData->setRequiredFields( $pFormConfig->getRequiredFields() );
 		$pFormData->setFormtype( $pFormConfig->getFormType() );
@@ -231,7 +204,7 @@ abstract class FormPost {
 
 	protected function getFormFieldsConsiderSearchcriteria($inputFormFields, $intAsRange = true)
 	{
-		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
 		$handle = $pSDKWrapper->addRequest(
 				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields');
 		$pSDKWrapper->sendRequests();
@@ -280,12 +253,9 @@ abstract class FormPost {
 
 	protected function createOrCompleteAddress(FormData $pFormData, $mergeExisting = false)
 	{
-		$pFieldNames = new Fieldnames();
-		$pFieldNames->loadLanguage();
-		$requestParams = $this->getAddressDataForApiCall($pFormData, $pFieldNames);
+		$requestParams = $this->getAddressDataForApiCall($pFormData);
 		$requestParams['checkDuplicate'] = $mergeExisting;
-
-		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
 
 		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper,
 			onOfficeSDK::ACTION_ID_CREATE, 'address');
@@ -295,7 +265,7 @@ abstract class FormPost {
 
 		if ($pApiClientAction->getResultStatus() === true) {
 			$result = $pApiClientAction->getResultRecords();
-			return $result[0]['id'];
+			return $result[0]['id'] ?? false;
 		}
 
 		return false;
@@ -305,12 +275,11 @@ abstract class FormPost {
 	/**
 	 *
 	 * @param FormData $pFormData
-	 * @param Fieldnames $pFieldnames
 	 * @return array
 	 *
 	 */
 
-	private function getAddressDataForApiCall(FormData $pFormData, Fieldnames $pFieldnames)
+	private function getAddressDataForApiCall(FormData $pFormData)
 	{
 		$inputs = $pFormData->getDataFormConfiguration()->getInputs();
 		$addressData = [];
@@ -320,6 +289,8 @@ abstract class FormPost {
 			if (onOfficeSDK::MODULE_ADDRESS !== $inputs[$input]) {
 				continue;
 			}
+
+			$fieldType = $this->_pFormPostConfiguration->getTypeForInput($input, $inputs[$input]);
 
 			switch ($input)
 			{
@@ -336,9 +307,7 @@ abstract class FormPost {
 					break;
 			}
 
-			if ($pFieldnames->getType($input, onOfficeSDK::MODULE_ADDRESS) ===
-				FieldTypes::FIELD_TYPE_MULTISELECT &&
-				!is_array($value)) {
+			if ($fieldType === FieldTypes::FIELD_TYPE_MULTISELECT && !is_array($value)) {
 				$addressData[$input] = [$value];
 			} else {
 				$addressData[$input] = $value;

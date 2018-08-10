@@ -44,7 +44,6 @@ class FormPostHandler
 		Form::TYPE_OWNER => FormPostOwner::class,
 		Form::TYPE_INTEREST => FormPostInterest::class,
 		Form::TYPE_APPLICANT_SEARCH => FormPostApplicantSearch::class,
-		Form::TYPE_FREE => FormPostFree::class,
 	);
 
 
@@ -100,14 +99,11 @@ class FormPostHandler
 
 	static private function create($formType)
 	{
-		$class = self::$_formPostClassesByType[Form::TYPE_FREE];
-
-		if (array_key_exists($formType, self::$_formPostClassesByType)) {
+		if (isset(self::$_formPostClassesByType[$formType])) {
 			$class = self::$_formPostClassesByType[$formType];
+			self::$_instances[$formType] = new $class;
 		} else {
-			$formType = Form::TYPE_FREE;
+			throw new Exception('Unknown Form Type');
 		}
-
-		self::$_instances[$formType] = $class::getInstance();
 	}
 }

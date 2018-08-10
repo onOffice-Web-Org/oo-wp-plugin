@@ -23,7 +23,6 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
-use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 
@@ -109,14 +108,14 @@ ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite eing
 Herzliche Grüße
 Ihr onOffice Team';
 
-		$requestParams = array(
+		$requestParams = [
 			'anonymousEmailidentity' => true,
 			'body' => $body,
 			'subject' => $subject,
 			'replyto' => $mailInteressent,
-		);
+		];
 
-		$requestParams['receiver'] = array($recipient);
+		$requestParams['receiver'] = [$recipient];
 
 		$pSDKWrapper = new SDKWrapper();
 		$handle = $pSDKWrapper->addRequest
@@ -142,7 +141,10 @@ Ihr onOffice Team';
 
 	private function createSearchcriteria(FormData $pFormData, $addressId)
 	{
-		$requestParams = array('data' => $pFormData->getSearchcriteriaData());
+		$requestParams = [
+			'data' => $pFormData->getSearchcriteriaData(),
+		];
+
 		$requestParams['addressid'] = $addressId;
 
 		$pSDKWrapper = new SDKWrapper();
@@ -157,9 +159,4 @@ Ihr onOffice Team';
 
 		return $result;
 	}
-
-
-	/** @return string */
-	static protected function getFormType()
-		{ return Form::TYPE_INTEREST; }
 }
