@@ -43,9 +43,6 @@ class Form
 	/** choose this to create a contact form */
 	const TYPE_CONTACT = 'contact';
 
-	/** @deprecated choose this if you'd like to control by yourself */
-	const TYPE_FREE = 'free';
-
 	/** choose this to create an owner form */
 	const TYPE_OWNER = 'owner';
 
