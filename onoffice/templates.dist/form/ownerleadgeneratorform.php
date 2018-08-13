@@ -23,6 +23,7 @@ add_thickbox();
 
 $addressValues = array();
 $estateValues = array();
+$miscValues = array();
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo 'SUCCESS!';
@@ -38,7 +39,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			echo $pForm->getFieldLabel( $input ).' - Angabe fehlt, bitte ausfüllen!<br>';
 		}
 
-		$line = null;
+		$line = '';
 
 		$selectTypes = array(
 			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
@@ -46,9 +47,11 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		);
 
 		$typeCurrentInput = $pForm->getFieldType( $input );
+		$isRequired = $pForm->isRequiredField( $input );
+		$addition = $isRequired ? '*' : '';
 
 		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-			$line = $pForm->getFieldLabel( $input ).': ';
+			$line = $pForm->getFieldLabel( $input ).$addition.': ';
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );
@@ -74,16 +77,16 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				$value .= ' value="y"';
 			}
 
-			$line .= $pForm->getFieldLabel( $input ).': ';
+			$line .= $pForm->getFieldLabel( $input ).$addition.': ';
 			$line .= '<input type="'.$inputType.'" name="'.esc_attr($input).'" '.$value.'><br>';
 		}
 
 		if ($table == 'address') {
 			$addressValues []= $line;
-		}
-
-		if ($table == 'estate') {
+		} elseif ($table == 'estate') {
 			$estateValues []= $line;
+		} else {
+			$miscValues []= $line;
 		}
 	}
 }
@@ -111,18 +114,17 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				<div class="lead-lightbox lead-page-1">
 					<h2><?php echo esc_html__('Your contact details', 'onoffice'); ?></h2>
 					<p>
-						<div>
 						<?php echo implode('<br>', $addressValues); ?>
-						</div>
 					</p>
 				</div>
 
 				<div class="lead-lightbox lead-page-2">
 					<h2><?php echo esc_html__('Information about your property', 'onoffice'); ?></h2>
 					<p>
-						<div>
 						<?php echo implode('<br>', $estateValues); ?>
-						</div>
+					</p>
+					<p>
+						<?php echo implode('<br>', $miscValues); ?>
 					</p>
 					<p>
 						<input type="submit" value="<?php echo esc_html__('Send', 'onoffice'); ?>" style="float:right;">
