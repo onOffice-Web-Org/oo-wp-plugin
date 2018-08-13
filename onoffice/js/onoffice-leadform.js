@@ -2,12 +2,19 @@ var onOffice = onOffice || {};
 
 (function($) {
 	var paging = function(parentDiv) {
+		this._pageClass = 'lead-lightbox';
 		this._parentDiv = parentDiv;
 		this._pages = $('#' + parentDiv + ' .lead-lightbox').length;
-		this._hideAllButFirst();
+		this.hideAllButNth(1);
+		this._formId = null;
 	};
 
+
 	paging.prototype.forward = function() {
+		if (this.checkBeforeForward() === false) {
+			return;
+		}
+
 		for (var i = 1; i < this._pages; i++) {
 			var current = $('#' + this._parentDiv + ' .lead-page-' + i);
 			var next = $('#' + this._parentDiv + ' .lead-page-' + (i + 1));
@@ -23,6 +30,7 @@ var onOffice = onOffice || {};
 
 		}
 	};
+
 
 	paging.prototype.back = function() {
 		for (var i = this._pages; i > 1; i--) {
@@ -40,13 +48,47 @@ var onOffice = onOffice || {};
 		}
 	};
 
-	paging.prototype._hideAllButFirst = function() {
-		$('#' + this._parentDiv + ' .lead-lightbox').each(function(_, element) {
+
+	paging.prototype.checkBeforeForward = function() {
+		if (this._formId !== null) {
+			var formElement = document.getElementById(this._formId);
+			if (!this.forwardAllowed()) {
+				try {
+					formElement.reportValidity();
+				} finally {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	};
+
+
+	paging.prototype.forwardAllowed = function() {
+		var result = true;
+		var currentPage = $('#' + this._parentDiv + ' .' + this._pageClass + ':visible');
+		currentPage.find('input:required').each(function(_, input) {
+			result = result && input.checkValidity();
+		});
+		return result;
+	};
+
+
+	paging.prototype.hideAllButNth = function(n) {
+		var allPagesSelector = this.getAllPagesSelector();
+		$(allPagesSelector).each(function(_, element) {
 			$(element).hide();
 		});
 
-		$('#' + this._parentDiv + ' .lead-page-1').show();
+		$('#' + this._parentDiv + ' .lead-page-' + n).show();
 	};
+
+
+	paging.prototype.getAllPagesSelector = function() {
+		return '#' + this._parentDiv + ' .' + this._pageClass;
+	};
+
 
 	paging.prototype.setup = function() {
 		var me = this;
@@ -66,9 +108,16 @@ var onOffice = onOffice || {};
 		return $('#' + this._parentDiv + ' .leadform-forward').first();
 	};
 
+
 	paging.prototype._getButtonBack = function() {
 		return $('#' + this._parentDiv + ' .leadform-back').first();
 	};
+
+
+	paging.prototype.setFormId = function(formId) {
+		this._formId = formId || null;
+	};
+
 
 	onOffice.paging = paging;
 })($);

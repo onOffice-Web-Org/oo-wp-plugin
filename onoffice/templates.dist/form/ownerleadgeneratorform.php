@@ -49,13 +49,14 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$typeCurrentInput = $pForm->getFieldType( $input );
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
+		$requiredAttribute = $isRequired ? ' required' : '';
 
 		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
 			$line = $pForm->getFieldLabel( $input ).$addition.': ';
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );
-			$line .= '<select size="1" name="'.esc_html($input).'">';
+			$line .= '<select size="1" name="'.esc_html($input).'"'.$requiredAttribute.'>';
 
 			foreach ( $permittedValues as $key => $value ) {
 				if ( is_array( $selectedValue ) ) {
@@ -78,7 +79,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			}
 
 			$line .= $pForm->getFieldLabel( $input ).$addition.': ';
-			$line .= '<input type="'.$inputType.'" name="'.esc_attr($input).'" '.$value.'><br>';
+			$line .= '<input type="'.$inputType.'" name="'.esc_attr($input).'" '.$value.$requiredAttribute.'><br>';
 		}
 
 		if ($table == 'address') {
@@ -95,13 +96,14 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 <script>
 	$(document).ready(function() {
 		var oOPaging = new onOffice.paging('leadform');
+		oOPaging.setFormId('leadgeneratorform');
 		oOPaging.setup();
 	});
 </script>
 
 <div id="onoffice-lead" style="display:none;">
 	<p>
-		<form name="leadgenerator" action="" method="post">
+		<form name="leadgenerator" action="" method="post" id="leadgeneratorform">
 			<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
 			<div id="leadform">
