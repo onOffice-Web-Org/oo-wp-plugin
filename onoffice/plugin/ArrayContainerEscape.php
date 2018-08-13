@@ -68,6 +68,23 @@ class ArrayContainerEscape extends ArrayContainer {
 
 	/**
 	 *
+	 * @return mixed
+	 *
+	 */
+
+	public function current() {
+		$callback = Escape::getCallbackByEscaping( $this->_escaping );
+		$value = parent::current();
+		if (is_array($value)) {
+			return array_map($callback, $value);
+		}
+
+		return call_user_func( $callback, $value);
+	}
+
+
+	/**
+	 *
 	 * @param mixed $key
 	 * @param string $escaping
 	 * @return string

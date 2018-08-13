@@ -41,8 +41,8 @@ class TestClassArrayContainerEscape
 
 	public function testEmpty()
 	{
-		$pArrayContainerEscape = new ArrayContainerEscape(array());
-		$this->assertFalse($pArrayContainerEscape->current());
+		$pArrayContainerEscape = new ArrayContainerEscape([]);
+		$this->assertEmpty($pArrayContainerEscape->current());
 		$this->assertEmpty($pArrayContainerEscape->getValue(8));
 		$this->assertEmpty($pArrayContainerEscape->getValue('bla'));
 		$this->assertEmpty($pArrayContainerEscape->getValue(0, Escape::URL));
@@ -64,7 +64,7 @@ class TestClassArrayContainerEscape
 	public function testData()
 	{
 		$testUrl = 'http://hello.de/world ![[ test.asdf';
-		$pArrayContainerEscape = new ArrayContainerEscape(array(
+		$pArrayContainerEscape = new ArrayContainerEscape([
 			'Bob' => 'Alice',
 			'html' => '<html>"',
 			3 => '42',
@@ -74,7 +74,7 @@ class TestClassArrayContainerEscape
 			),
 			'js' => '"\'"',
 			'url' => $testUrl,
-		));
+		]);
 
 		$this->assertEquals('Alice', $pArrayContainerEscape->current());
 		$this->assertEquals('Alice', $pArrayContainerEscape->getValue('Bob', Escape::HTML));
@@ -83,8 +83,7 @@ class TestClassArrayContainerEscape
 		$pArrayContainerEscape->next();
 		$this->assertTrue($pArrayContainerEscape->valid());
 
-		// current() does not escape
-		$this->assertEquals('<html>"', $pArrayContainerEscape->current());
+		$this->assertEquals('&lt;html&gt;&quot;', $pArrayContainerEscape->current());
 
 		// actual escaping
 		$this->assertEquals('&lt;html&gt;&quot;', $pArrayContainerEscape->getValue('html'));
@@ -93,7 +92,7 @@ class TestClassArrayContainerEscape
 		$this->assertEquals(esc_js('"\'"'), $pArrayContainerEscape->getValue('js', Escape::JS));
 		$this->assertEquals(esc_url($testUrl), $pArrayContainerEscape->getValue('url', Escape::URL));
 		$this->assertEquals('&lt;html&gt;&quot;', $pArrayContainerEscape->offsetGet('html'));
-		$this->assertEquals(array('cube', 'cylinder'), $pArrayContainerEscape->getValueRaw('sphere'));
+		$this->assertEquals(['cube', 'cylinder'], $pArrayContainerEscape->getValueRaw('sphere'));
 
 		$pArrayContainerEscape->offsetSet('foo', 'bar');
 		$this->assertEquals('bar', $pArrayContainerEscape->offsetGet('foo'));
@@ -109,15 +108,38 @@ class TestClassArrayContainerEscape
 
 	/**
 	 *
+	 */
+
+	public function testIterator()
+	{
+		$pArrayContainerEscape = new ArrayContainerEscape([
+			'html' => '<script>"',
+			'test' => 'other',
+		]);
+
+		$expected = [
+			'html' => '&lt;script&gt;&quot;',
+			'test' => 'other',
+		];
+
+		foreach ($pArrayContainerEscape as $key => $value) {
+			$this->assertNotEmpty($key);
+			$this->assertEquals($expected[$key], $value);
+		}
+	}
+
+
+	/**
+	 *
 	 * @expectedException \Exception
 	 *
 	 */
 
 	public function testException()
 	{
-		$pArrayContainerEscape = new ArrayContainerEscape(array(
+		$pArrayContainerEscape = new ArrayContainerEscape([
 			'asd' => 'hello',
-		));
+		]);
 
 		// must throw an \Exception
 		$pArrayContainerEscape->getValue('asd', 'NoSuchEscaping');
