@@ -19,31 +19,37 @@
  *
  */
 
+use onOffice\WPlugin\Form;
+use onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\Types\FieldTypes;
+
 add_thickbox();
 
 $addressValues = array();
 $estateValues = array();
 $miscValues = array();
 
-if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo 'SUCCESS!';
+if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
+	esc_html_e('The form was sent successfully.', 'onoffice');
+	echo '<br>';
 } else {
-	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo 'ERROR!';
+	if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
+		esc_html_e('There was an error sending the form.', 'onoffice');
+		echo '<br>';
 	}
 
-	/* @var $pForm \onOffice\WPlugin\Form */
+	/* @var $pForm Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ( $pForm->isMissingField( $input )  &&
-			$pForm->getFormStatus() == onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
-			echo $pForm->getFieldLabel( $input ).' - Angabe fehlt, bitte ausfüllen!<br>';
+			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
+			echo sprintf(__('Please enter a value for %s.', 'onoffice'), $pForm->getFieldLabel( $input )).'<br>';
 		}
 
 		$line = '';
 
 		$selectTypes = array(
-			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
-			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
+			FieldTypes::FIELD_TYPE_MULTISELECT,
+			FieldTypes::FIELD_TYPE_SINGLESELECT,
 		);
 
 		$typeCurrentInput = $pForm->getFieldType( $input );
@@ -72,7 +78,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$inputType = 'text';
 			$value = 'value="'.$pForm->getFieldValue( $input ).'"';
 
-			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+			if ($typeCurrentInput == FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'checkbox';
 				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
 				$value .= ' value="y"';
@@ -108,7 +114,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
 			<div id="leadform">
 				<?php
-					if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
+					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
 						echo 'ERROR!';
 					}
 				?>
@@ -144,6 +150,14 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	</p>
 </div>
 
-<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead" class="thickbox">
-	<?php echo esc_html__('Open the Form', 'onoffice'); ?>
-</a>
+<?php
+
+if (in_array($pForm->getFormStatus(), [
+		null,
+		FormPost::MESSAGE_ERROR,
+		FormPost::MESSAGE_REQUIRED_FIELDS_MISSING,
+	])) {
+	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead" class="thickbox">';
+	echo esc_html__('Open the Form', 'onoffice');
+	echo '</a>';
+}
