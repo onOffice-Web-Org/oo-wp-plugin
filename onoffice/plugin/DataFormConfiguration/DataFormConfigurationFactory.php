@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\DataFormConfiguration;
 
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\Record\RecordManagerReadForm;
 
 /**
  *
@@ -36,26 +35,36 @@ class DataFormConfigurationFactory
 	/** @var string */
 	private $_type = null;
 
+	/** @var DataFormConfigurationFactoryDependencyBase */
+	private $_pDependencyConfig = null;
+
 
 	/** @var array */
-	private $_formClassMapping = array
-		(
-			Form::TYPE_CONTACT => DataFormConfigurationContact::class,
-			Form::TYPE_OWNER => DataFormConfigurationOwner::class,
-			Form::TYPE_INTEREST => DataFormConfigurationInterest::class,
-			Form::TYPE_APPLICANT_SEARCH => DataFormConfigurationApplicantSearch::class,
-		);
+	private $_formClassMapping = [
+		Form::TYPE_CONTACT => DataFormConfigurationContact::class,
+		Form::TYPE_OWNER => DataFormConfigurationOwner::class,
+		Form::TYPE_INTEREST => DataFormConfigurationInterest::class,
+		Form::TYPE_APPLICANT_SEARCH => DataFormConfigurationApplicantSearch::class,
+	];
 
 
 	/**
 	 *
 	 * @param string $type Optional when loading by ID/name
+	 * @param DataFormConfigurationFactoryDependencyBase $pDependencyConfig
 	 *
 	 */
 
-	public function __construct($type = null)
+	public function __construct(string $type = null,
+		DataFormConfigurationFactoryDependencyConfigBase $pDependencyConfig = null)
 	{
 		$this->_type = $type;
+
+		if ($pDependencyConfig === null) {
+			$pDependencyConfig = new DataFormConfigurationFactoryDependencyConfigDefault();
+		}
+
+		$this->_pDependencyConfig = $pDependencyConfig;
 	}
 
 
@@ -67,9 +76,9 @@ class DataFormConfigurationFactory
 	 *
 	 */
 
-	public function createEmpty($setDefaultFields = true)
+	public function createEmpty(bool $setDefaultFields = true)
 	{
-		if (!array_key_exists($this->_type, $this->_formClassMapping)) {
+		if (!isset($this->_formClassMapping[$this->_type])) {
 			throw new UnknownFormException;
 		}
 
@@ -93,14 +102,12 @@ class DataFormConfigurationFactory
 	 *
 	 */
 
-	public function loadByFormId($formId)
+	public function loadByFormId(int $formId)
 	{
-		$pRecordManagerRead = new RecordManagerReadForm();
-
-		$rowMain = $pRecordManagerRead->getRowById($formId);
+		$rowMain = $this->_pDependencyConfig->getMainRowById($formId);
 		$this->_type = $rowMain['form_type'];
 		$pConfig = $this->createByRow($rowMain);
-		$rowFields = $pRecordManagerRead->readFieldsByFormId($formId);
+		$rowFields = $this->_pDependencyConfig->getFieldsByFormId($formId);
 
 		foreach ($rowFields as $fieldRow) {
 			$this->configureFieldsByRow($fieldRow, $pConfig);
@@ -119,10 +126,9 @@ class DataFormConfigurationFactory
 	 *
 	 */
 
-	public function loadByFormName($name)
+	public function loadByFormName(string $name)
 	{
-		$pRecordManagerRead = new RecordManagerReadForm();
-		$rowMain = $pRecordManagerRead->getRowByName($name);
+		$rowMain = $this->_pDependencyConfig->getMainRowByName($name);
 
 		if ($rowMain === null) {
 			throw new UnknownFormException($name);
@@ -131,7 +137,7 @@ class DataFormConfigurationFactory
 		$this->_type = $rowMain['form_type'];
 		$formId = $rowMain['form_id'];
 		$pConfig = $this->createByRow($rowMain);
-		$rowFields = $pRecordManagerRead->readFieldsByFormId($formId);
+		$rowFields = $this->_pDependencyConfig->getFieldsByFormId($formId);
 
 		foreach ($rowFields as $fieldRow) {
 			$this->configureFieldsByRow($fieldRow, $pConfig);
@@ -148,7 +154,7 @@ class DataFormConfigurationFactory
 	 *
 	 */
 
-	public function createByRow(array $row)
+	private function createByRow(array $row)
 	{
 		$pConfig = $this->createEmpty(false);
 		$this->configureGeneral($row, $pConfig);
@@ -179,7 +185,7 @@ class DataFormConfigurationFactory
 	 *
 	 */
 
-	private function configureFieldsByRow($row, DataFormConfiguration $pFormConfiguration)
+	private function configureFieldsByRow(array $row, DataFormConfiguration $pFormConfiguration)
 	{
 		$fieldName = $row['fieldname'];
 		$module = $row['module'];
@@ -203,6 +209,7 @@ class DataFormConfigurationFactory
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCreateAddress((bool)$row['createaddress']);
+		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 	}
 
 
@@ -249,7 +256,7 @@ class DataFormConfigurationFactory
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setPages($row['pages']);
-		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
+		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 	}
 
 
