@@ -81,8 +81,8 @@ class FormPostHandler
 		$formNo = filter_input(INPUT_POST, 'oo_formno', FILTER_SANITIZE_NUMBER_INT);
 
 		if ( ! is_null( $formName ) ) {
-			$pDatatFormConfigFactory = new DataFormConfigurationFactory();
-			$pFormConfig = $pDatatFormConfigFactory->loadByFormName($formName);
+			$pDataFormConfigFactory = new DataFormConfigurationFactory();
+			$pFormConfig = $pDataFormConfigFactory->loadByFormName($formName);
 			$formType = $pFormConfig->getFormType();
 
 			$pFormPostInstance = self::getInstance($formType);

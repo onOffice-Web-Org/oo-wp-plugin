@@ -202,6 +202,7 @@ class DataFormConfigurationFactory
 	{
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setSubject($row['subject']);
+		$pConfig->setCreateAddress((bool)$row['createaddress']);
 	}
 
 
