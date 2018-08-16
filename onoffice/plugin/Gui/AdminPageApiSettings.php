@@ -21,7 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Model;
+use onOffice\WPlugin\Model\FormModel;
+use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 
 /**
@@ -34,10 +35,6 @@ use onOffice\WPlugin\Renderer\InputModelRenderer;
 class AdminPageApiSettings
 	extends AdminPage
 {
-	/** @var string */
-	private $_inputApiSecretGroupSlugName = null;
-
-
 	/**
 	 *
 	 * @param string $pageSlug
@@ -46,28 +43,73 @@ class AdminPageApiSettings
 
 	public function __construct($pageSlug)
 	{
+		parent::__construct($pageSlug);
+		$this->addFormModelAPI();
+		$this->addFormModelGoogleCaptcha();
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function addFormModelAPI()
+	{
 		$labelKey = __('API token', 'onoffice');
 		$labelSecret = __('API secret', 'onoffice');
-		$pInputModelApiKey = new Model\InputModelOption('onoffice-settings', 'apikey', $labelKey, 'string');
+		$pInputModelApiKey = new InputModelOption('onoffice-settings', 'apikey', $labelKey, 'string');
 		$optionNameKey = $pInputModelApiKey->getIdentifier();
 		$pInputModelApiKey->setValue(get_option($optionNameKey));
-		$pInputModelApiSecret = new Model\InputModelOption('onoffice-settings', 'apisecret', $labelSecret, 'string');
+		$pInputModelApiSecret = new InputModelOption('onoffice-settings', 'apisecret', $labelSecret, 'string');
 		$pInputModelApiSecret->setIsPassword(true);
-		$pInputModelApiSecret->setSanitizeCallback(array($this, 'checkPassword'));
 		$optionNameSecret = $pInputModelApiSecret->getIdentifier();
+		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
+			return $this->checkPassword($password, $optionNameSecret);
+		});
 		$pInputModelApiSecret->setValue(get_option($optionNameSecret, $pInputModelApiSecret->getDefault()));
-		$this->_inputApiSecretGroupSlugName = $pInputModelApiSecret->getIdentifier();
 
-		$pFormModel = new Model\FormModel();
+		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelApiSecret);
 		$pFormModel->addInputModel($pInputModelApiKey);
 		$pFormModel->setGroupSlug('onoffice-api');
-		$pFormModel->setPageSlug($pageSlug);
+		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('API settings', 'onoffice'));
 
 		$this->addFormModel($pFormModel);
+	}
 
-		parent::__construct($pageSlug);
+
+	/**
+	 *
+	 */
+
+	private function addFormModelGoogleCaptcha()
+	{
+		$labelSiteKey = __('Site Key', 'onoffice');
+		$labelSecretKey = __('Secret Key', 'onoffice');
+		$pInputModelCaptchaSiteKey = new InputModelOption
+			('onoffice-settings', 'captcha-sitekey', $labelSiteKey, 'string');
+		$optionNameKey = $pInputModelCaptchaSiteKey->getIdentifier();
+		$pInputModelCaptchaSiteKey->setValue(get_option($optionNameKey));
+		$pInputModelCaptchaPageSecret = new InputModelOption
+			('onoffice-settings', 'captcha-secretkey', $labelSecretKey, 'string');
+		$pInputModelCaptchaPageSecret->setIsPassword(true);
+		$optionNameSecret = $pInputModelCaptchaPageSecret->getIdentifier();
+		$pInputModelCaptchaPageSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
+			return $this->checkPassword($password, $optionNameSecret);
+		});
+
+		$pInputModelCaptchaPageSecret->setValue
+			(get_option($optionNameSecret, $pInputModelCaptchaPageSecret->getDefault()));
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelCaptchaSiteKey);
+		$pFormModel->addInputModel($pInputModelCaptchaPageSecret);
+		$pFormModel->setGroupSlug('onoffice-google-recaptcha');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('Google reCAPTCHA', 'onoffice'));
+
+		$this->addFormModel($pFormModel);
 	}
 
 
@@ -78,9 +120,9 @@ class AdminPageApiSettings
 	 *
 	 */
 
-	public function checkPassword($password)
+	public function checkPassword($password, $optionName)
 	{
-		return $password != '' ? $password : get_option($this->_inputApiSecretGroupSlugName);
+		return $password != '' ? $password : get_option($optionName);
 	}
 
 
