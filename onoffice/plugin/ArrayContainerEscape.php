@@ -62,7 +62,14 @@ class ArrayContainerEscape extends ArrayContainer {
 
 	public function offsetGet( $offset ) {
 		$callback = Escape::getCallbackByEscaping( $this->_escaping );
-		return call_user_func( $callback, parent::offsetGet( $offset ) );
+
+		$value = parent::offsetGet( $offset );
+
+		if (is_array($value)) {
+			return array_map($callback, $value);
+		}
+
+		return call_user_func($callback, $value);
 	}
 
 
@@ -97,6 +104,12 @@ class ArrayContainerEscape extends ArrayContainer {
 		}
 
 		$callback = Escape::getCallbackByEscaping( $escaping );
-		return call_user_func( $callback, parent::getValue( $key ) );
+		$value = parent::getValue($key);
+
+		if (is_array($value)) {
+			return array_map($callback, $value);
+		}
+
+		return call_user_func($callback, $value);
 	}
 }

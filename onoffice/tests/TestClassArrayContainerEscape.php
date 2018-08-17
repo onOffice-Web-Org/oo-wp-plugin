@@ -69,7 +69,7 @@ class TestClassArrayContainerEscape
 			'html' => '<html>"',
 			3 => '42',
 			'sphere' => array(
-				'cube',
+				'cube<',
 				'cylinder',
 			),
 			'js' => '"\'"',
@@ -92,7 +92,9 @@ class TestClassArrayContainerEscape
 		$this->assertEquals(esc_js('"\'"'), $pArrayContainerEscape->getValue('js', Escape::JS));
 		$this->assertEquals(esc_url($testUrl), $pArrayContainerEscape->getValue('url', Escape::URL));
 		$this->assertEquals('&lt;html&gt;&quot;', $pArrayContainerEscape->offsetGet('html'));
-		$this->assertEquals(['cube', 'cylinder'], $pArrayContainerEscape->getValueRaw('sphere'));
+		$this->assertEquals(['cube<', 'cylinder'], $pArrayContainerEscape->getValueRaw('sphere'));
+		$this->assertEquals(['cube&lt;', 'cylinder'], $pArrayContainerEscape['sphere']);
+		$this->assertEquals(['cube&lt;', 'cylinder'], $pArrayContainerEscape->getValue('sphere'));
 
 		$pArrayContainerEscape->offsetSet('foo', 'bar');
 		$this->assertEquals('bar', $pArrayContainerEscape->offsetGet('foo'));
@@ -115,11 +117,19 @@ class TestClassArrayContainerEscape
 		$pArrayContainerEscape = new ArrayContainerEscape([
 			'html' => '<script>"',
 			'test' => 'other',
+			'anArray' => [
+				'value1<',
+				'value2',
+			],
 		]);
 
 		$expected = [
 			'html' => '&lt;script&gt;&quot;',
 			'test' => 'other',
+			'anArray' => [
+				'value1&lt;',
+				'value2',
+			]
 		];
 
 		foreach ($pArrayContainerEscape as $key => $value) {
@@ -131,7 +141,7 @@ class TestClassArrayContainerEscape
 
 	/**
 	 *
-	 * @expectedException \Exception
+	 * @expectedException Exception
 	 *
 	 */
 
