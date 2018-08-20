@@ -23,6 +23,9 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
+use onOffice\WPlugin\Form\FormPostConfiguration;
+use onOffice\WPlugin\Form\FormPostInterestConfiguration;
+use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 
@@ -38,6 +41,30 @@ use onOffice\WPlugin\FormPost;
 class FormPostInterest
 	extends FormPost
 {
+	/** @var FormPostInterestConfiguration */
+	private $_pFormPostInterestConfiguration = null;
+
+
+	/**
+	 *
+	 * @param FormPostConfiguration $pFormPostConfiguration
+	 * @param FormPostInterestConfiguration $pFormPostInterestConfiguration
+	 *
+	 */
+
+	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
+		FormPostInterestConfiguration $pFormPostInterestConfiguration = null)
+	{
+		parent::__construct($pFormPostConfiguration);
+
+		if ($pFormPostInterestConfiguration === null) {
+			$pFormPostInterestConfiguration = new FormPostInterestConfigurationDefault();
+		}
+
+		$this->_pFormPostInterestConfiguration = $pFormPostInterestConfiguration;
+	}
+
+
 	/**
 	 *
 	 * @param FormData $pFormData
@@ -51,7 +78,9 @@ class FormPostInterest
 		$formFields = $pFormConfiguration->getInputs();
 		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
 
-		$formData = array_filter(array_intersect_key($_POST, $newFormFields));
+		$postValues = $this->_pFormPostInterestConfiguration->getPostValues();
+
+		$formData = array_filter(array_intersect_key($postValues, $newFormFields));
 		$recipient = $pFormConfiguration->getRecipient();
 		$subject = $pFormConfiguration->getSubject();
 		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
@@ -97,16 +126,16 @@ class FormPostInterest
 	private function sendEmail(FormData $pFormData, $recipient, $subject = null)
 	{
 		$addressData = $pFormData->getAddressData();
-		$name = isset($addressData['Name']) ? $addressData['Name'] : null;
-		$vorname = isset($addressData['Vorname']) ? $addressData['Vorname'] : null;
-		$mailInteressent = isset($addressData['Email']) ? $addressData['Email'] : null;
+		$name = $addressData['Name'] ?? null;
+		$firstName = $addressData['Vorname'] ?? null;
+		$mailInteressent = $addressData['Email'] ?? null;
 
-		$body = 'Sehr geehrte Damen und Herren,'."\n\n".'
-
-ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite eingetragen. Die Adresse ('.$vorname.' '.$name.') wurde bereits in Ihrem System eingetragen.'."\n\n".'
-
-Herzliche Grüße
-Ihr onOffice Team';
+		$body = 'Sehr geehrte Damen und Herren,'."\n\n"
+				.'ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite '
+				.'eingetragen. Die Adresse ('.$firstName.' '.$name.') wurde bereits in Ihrem System '
+				.'eingetragen.'."\n\n"
+				.'Herzliche Grüße'."\n"
+				.'Ihr onOffice Team';
 
 		$requestParams = [
 			'anonymousEmailidentity' => true,
@@ -117,7 +146,7 @@ Ihr onOffice Team';
 
 		$requestParams['receiver'] = [$recipient];
 
-		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
 		$handle = $pSDKWrapper->addRequest
 			(onOfficeSDK::ACTION_ID_DO, 'sendmail', $requestParams);
 		$pSDKWrapper->sendRequests();
@@ -147,7 +176,7 @@ Ihr onOffice Team';
 
 		$requestParams['addressid'] = $addressId;
 
-		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
 		$handle = $pSDKWrapper->addRequest(
 			onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria', $requestParams);
 		$pSDKWrapper->sendRequests();

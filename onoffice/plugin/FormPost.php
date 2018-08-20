@@ -286,31 +286,32 @@ abstract class FormPost {
 		$values = $pFormData->getValues();
 
 		foreach ($values as $input => $value) {
-			if (onOfficeSDK::MODULE_ADDRESS !== $inputs[$input]) {
+			$inputName = $pFormData->getFieldNameOfInput($input);
+			if (onOfficeSDK::MODULE_ADDRESS !== $inputs[$inputName]) {
 				continue;
 			}
 
-			$fieldType = $this->_pFormPostConfiguration->getTypeForInput($input, $inputs[$input]);
+			$fieldType = $this->_pFormPostConfiguration->getTypeForInput($input, $inputs[$inputName]);
 
-			switch ($input)
+			switch ($inputName)
 			{
 				case 'Telefon1':
-					$input = 'phone';
+					$inputName = 'phone';
 					break;
 
 				case 'Email':
-					$input = 'email';
+					$inputName = 'email';
 					break;
 
 				case 'Telefax1':
-					$input = 'fax';
+					$inputName = 'fax';
 					break;
 			}
 
 			if ($fieldType === FieldTypes::FIELD_TYPE_MULTISELECT && !is_array($value)) {
-				$addressData[$input] = [$value];
+				$addressData[$inputName] = [$value];
 			} else {
-				$addressData[$input] = $value;
+				$addressData[$inputName] = $value;
 			}
 		}
 

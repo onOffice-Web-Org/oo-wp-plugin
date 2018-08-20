@@ -134,7 +134,7 @@ class FormData
 	 *
 	 */
 
-	private function getFieldNameOfInput($input)
+	public function getFieldNameOfInput($input)
 	{
 		$inputConfigName = $input;
 		$pInputStr = __String::getNew($input);
