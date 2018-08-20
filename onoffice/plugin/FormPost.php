@@ -119,7 +119,7 @@ abstract class FormPost {
 
 	protected function buildFormData(DataFormConfiguration $pFormConfig, $formNo)
 	{
-		$formFields = $pFormConfig->getInputs();
+		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$postVariables = $this->_pFormPostConfiguration->getPostVars();
 		$formData = array_intersect_key( $postVariables, $formFields );
 		$pFormData = new FormData( $pFormConfig, $formNo );
@@ -128,6 +128,19 @@ abstract class FormPost {
 		$pFormData->setValues( $formData );
 
 		return $pFormData;
+	}
+
+
+	/**
+	 *
+	 * @param DataFormConfiguration $pFormConfig
+	 * @return string[]
+	 *
+	 */
+
+	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
+	{
+		return $pFormConfig->getInputs();
 	}
 
 

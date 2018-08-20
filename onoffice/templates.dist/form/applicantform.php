@@ -57,8 +57,8 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$selectedValue = $pForm->getFieldValue( $input, true );
 	$line = $pForm->getFieldLabel( $input ).$addition.': ';
 
-	if ( \onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
-		!$isSearchcriteriaField ) {
+	if ( (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
+		!$isSearchcriteriaField) || $input == 'objektart' ) {
 		$line .= '<select size="1" name="'.$input.'">';
 
 		foreach ( $permittedValues as $key => $value ) {

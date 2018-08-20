@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfiguration;
@@ -75,19 +77,9 @@ class FormPostInterest
 	{
 		/* @var $pFormConfiguration DataFormConfigurationInterest */
 		$pFormConfiguration = $pFormData->getDataFormConfiguration();
-		$formFields = $pFormConfiguration->getInputs();
-		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
-
-		$postValues = $this->_pFormPostInterestConfiguration->getPostValues();
-
-		$formData = array_filter(array_intersect_key($postValues, $newFormFields));
 		$recipient = $pFormConfiguration->getRecipient();
 		$subject = $pFormConfiguration->getSubject();
 		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
-
-		$this->setFormDataInstances($pFormData);
-		$pFormData->setValues( $formData );
-
 		$missingFields = $pFormData->getMissingFields();
 
 		if (count($missingFields) > 0) {
@@ -111,6 +103,20 @@ class FormPostInterest
 				$pFormData->setStatus(FormPost::MESSAGE_ERROR);
 			}
 		}
+	}
+
+
+	/**
+	 *
+	 * @param DataFormConfiguration $pFormConfig
+	 * @return array
+	 *
+	 */
+
+	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
+	{
+		$formFields = $pFormConfig->getInputs();
+		return $this->getFormFieldsConsiderSearchcriteria($formFields);
 	}
 
 
@@ -142,21 +148,17 @@ class FormPostInterest
 			'body' => $body,
 			'subject' => $subject,
 			'replyto' => $mailInteressent,
+			'receiver' => [$recipient],
 		];
 
-		$requestParams['receiver'] = [$recipient];
-
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
-		$handle = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_DO, 'sendmail', $requestParams);
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'sendmail');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		$result = isset($response['data']['records']) &&
-			count($response['data']['records']) > 0;
-
-		return $result;
+		return $pApiClientAction->getResultStatus();
 	}
 
 
@@ -172,20 +174,17 @@ class FormPostInterest
 	{
 		$requestParams = [
 			'data' => $pFormData->getSearchcriteriaData(),
+			'addressid' => $addressId,
 		];
 
-		$requestParams['addressid'] = $addressId;
-
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
-		$handle = $pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria', $requestParams);
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria');
+
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		$result = isset($response['data']['records']) &&
-			count($response['data']['records']) > 0;
-
-		return $result;
+		return $pApiClientAction->getResultStatus();
 	}
 }

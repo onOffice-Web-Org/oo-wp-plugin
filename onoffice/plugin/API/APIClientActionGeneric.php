@@ -99,8 +99,15 @@ class APIClientActionGeneric
 
 	public function getResultStatus()
 	{
-		$result = $this->getResult();
-		return is_array($result) && isset($result['data']['records']);
+		$resultApi = $this->getResult();
+		$result = false;
+
+		if (is_array($resultApi)) {
+			$errorcode = $resultApi['status']['errorcode'] ?? 500;
+			$result = $errorcode === 0 && isset($resultApi['data']['records']);
+		}
+
+		return $result;
 	}
 
 
