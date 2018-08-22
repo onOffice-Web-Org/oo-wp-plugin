@@ -76,13 +76,15 @@ class TestClassAPIClientActionGenericReadAddress
 
 	/**
 	 *
+	 * @expectedException \onOffice\WPlugin\API\APIEmptyResultException
+	 *
 	 */
 
 	public function testSendRequestEmptyResponse()
 	{
 		$pApiCall = $this->sendRequest(array());
 		$this->assertFalse($pApiCall->getResultStatus());
-		$this->assertNull($pApiCall->getResultRecords());
+		$pApiCall->getResultRecords();
 	}
 
 

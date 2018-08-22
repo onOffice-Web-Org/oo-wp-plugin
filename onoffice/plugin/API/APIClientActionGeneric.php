@@ -109,31 +109,37 @@ class APIClientActionGeneric
 
 	/**
 	 *
-	 * @return array|null
+	 * @return array
+	 * @throws APIEmptyResultException
 	 *
 	 */
 
-	public function getResultRecords()
+	public function getResultRecords(): array
 	{
 		if ($this->getResultStatus()) {
 			$result = $this->getResult();
 			return $result['data']['records'];
 		}
+
+		throw new APIEmptyResultException();
 	}
 
 
 	/**
 	 *
-	 * @return array|null
+	 * @return array
+	 * @throws APIEmptyResultException
 	 *
 	 */
 
-	public function getResultMeta()
+	public function getResultMeta(): array
 	{
 		if ($this->getResultStatus()) {
 			$result = $this->getResult();
-			return $result['data']['meta'] ?? null;
+			return $result['data']['meta'] ?? [];
 		}
+
+		throw new APIEmptyResultException();
 	}
 
 

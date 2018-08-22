@@ -34,10 +34,11 @@ class ApiClientActionGetPdf
 	/**
 	 *
 	 * @return array
+	 * @throws APIEmptyResultException
 	 *
 	 */
 
-	public function getResultRecords()
+	public function getResultRecords(): array
 	{
 		if ($this->getResultStatus()) {
 			$result = $this->getResult();
@@ -51,9 +52,11 @@ class ApiClientActionGetPdf
 			}
 
 			if ($document !== false) {
-				return $document;
+				return [$document];
 			}
 		}
+
+		throw new APIEmptyResultException();
 	}
 
 
@@ -85,7 +88,8 @@ class ApiClientActionGetPdf
 
 	/**
 	 *
-	 * @return string|null
+	 * @return string
+	 * @throws APIEmptyResultException
 	 *
 	 */
 
@@ -96,5 +100,7 @@ class ApiClientActionGetPdf
 		if ($this->getMimeTypeStatus()) {
 			return $result['data']['records'][0]['elements']['type'];
 		}
+
+		throw new APIEmptyResultException();
 	}
 }

@@ -44,7 +44,7 @@ class TestClassAPIClientActionGetPdf
 		$pApiCall = $this->sendRequest($this->getResponseGetByRecordId());
 
 		$this->assertTrue($pApiCall->getResultStatus());
-		$this->assertEquals($this->getExpectedRecordResult(), md5($pApiCall->getResultRecords()));
+		$this->assertEquals($this->getExpectedRecordResult(), md5($pApiCall->getResultRecords()[0]));
 	}
 
 
@@ -78,13 +78,15 @@ class TestClassAPIClientActionGetPdf
 
 	/**
 	 *
+	 * @expectedException \onOffice\WPlugin\API\APIEmptyResultException
+	 *
 	 */
 
 	public function testSendRequestEmptyResponse()
 	{
 		$pApiCall = $this->sendRequest(array());
 		$this->assertFalse($pApiCall->getResultStatus());
-		$this->assertNull($pApiCall->getResultRecords());
+		$pApiCall->getResultRecords();
 	}
 
 

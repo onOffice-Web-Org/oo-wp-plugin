@@ -132,9 +132,9 @@ class FormPostOwner
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
-		$records = $pApiClientAction->getResultRecords();
 
-		if ($records !== null && $records !== []) {
+		if ($pApiClientAction->getResultStatus()) {
+			$records = $pApiClientAction->getResultRecords();
 			return $records[0]['id'];
 		}
 

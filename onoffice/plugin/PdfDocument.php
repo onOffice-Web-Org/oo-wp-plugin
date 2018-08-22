@@ -91,9 +91,10 @@ class PdfDocument
 		$pApiClientAction->addRequestToQueue();
 		$pSdkWrapper->sendRequests();
 
-		$this->_mimeType = $pApiClientAction->getMimeTypeResult();
-		$this->_documentBinary = $pApiClientAction->getResultRecords();
-
+		if ($pApiClientAction->getResultStatus()) {
+			$this->_mimeType = $pApiClientAction->getMimeTypeResult();
+			$this->_documentBinary = $pApiClientAction->getResultRecords()[0];
+		}
 		return $this->_documentBinary !== null && $this->_mimeType !== null;
 	}
 
