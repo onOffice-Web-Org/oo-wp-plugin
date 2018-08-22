@@ -87,14 +87,20 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		}
 	}
 
-	$isRequiredMessage = $pForm->isRequiredField( 'message' );
-	$additionMessage = $isRequiredMessage ? '*' : '';
+	if (array_key_exists('message', $pForm->getInputFields())):
+		$isRequiredMessage = $pForm->isRequiredField( 'message' );
+		$additionMessage = $isRequiredMessage ? '*' : '';
 ?>
 
-	Nachricht<?php echo $additionMessage; ?>:<br>
-	<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
+		Nachricht<?php echo $additionMessage; ?>:<br>
+		<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
 
-	<input type="submit" value="GO!">
+<?php
+	endif;
+?>
+
+		<input type="submit" value="GO!">
+
 <?php
 }
 ?>
