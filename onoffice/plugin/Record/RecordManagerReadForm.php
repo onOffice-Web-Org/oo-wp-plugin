@@ -21,6 +21,11 @@
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use const ARRAY_A;
+use const OBJECT;
+use function esc_sql;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -73,6 +78,8 @@ class RecordManagerReadForm
 	 * @param string $formName
 	 * @return array
 	 *
+	 * @throws UnknownFormException
+	 *
 	 */
 
 	public function getRowByName($formName)
@@ -85,6 +92,10 @@ class RecordManagerReadForm
 				WHERE `name` = '".esc_sql($formName)."'";
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		if ($result === null) {
+			throw new UnknownFormException($formName);
+		}
 
 		return $result;
 	}

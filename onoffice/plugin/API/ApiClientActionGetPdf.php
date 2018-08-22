@@ -63,7 +63,7 @@ class ApiClientActionGetPdf
 	 *
 	 */
 
-	public function getResultStatus()
+	public function getResultStatus(): bool
 	{
 		$result = $this->getResult();
 		return is_array($result) && isset($result['data']['records'][0]['elements']['document']);
@@ -76,7 +76,7 @@ class ApiClientActionGetPdf
 	 *
 	 */
 
-	public function getMimeTypeStatus()
+	public function getMimeTypeStatus(): bool
 	{
 		$result = $this->getResult();
 		return isset($result['data']['records'][0]['elements']['type']);
@@ -85,7 +85,7 @@ class ApiClientActionGetPdf
 
 	/**
 	 *
-	 * @return string
+	 * @return string|null
 	 *
 	 */
 

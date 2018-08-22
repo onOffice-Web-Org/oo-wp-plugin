@@ -36,13 +36,13 @@ class SDKWrapperMocker
 	extends SDKWrapper
 {
 	/** @var array */
-	private $_requests = array();
+	private $_requests = [];
 
 	/** @var array */
-	private $_responses = array();
+	private $_responses = [];
 
 	/** @var array */
-	private $_callbacksAfterSend = array();
+	private $_callbacksAfterSend = [];
 
 	/** @var bool */
 	private $_requestSent = false;
@@ -67,7 +67,7 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	public function addRequest($actionId, $resourceType, $parameters = array())
+	public function addRequest(string $actionId, string $resourceType, array $parameters = [])
 	{
 		return $this->addFullRequest($actionId, $resourceType, '', $parameters);
 	}
@@ -84,7 +84,8 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	public function addFullRequest($actionId, $resourceType, $resourceId, $parameters = array(), $identifier = null)
+	public function addFullRequest(string $actionId, string $resourceType, string $resourceId,
+		array $parameters = [], $identifier = null)
 	{
 		$requestStr = $this->stringifyRequest
 			($actionId, $resourceType, $resourceId, $parameters, $identifier);
@@ -102,7 +103,7 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	public function addRequestByApiAction(APIClientActionGeneric $pApiAction)
+	public function addRequestByApiAction(APIClientActionGeneric $pApiAction): int
 	{
 		$actionId = $pApiAction->getActionId();
 		$resourceId = $pApiAction->getResourceId();
@@ -132,7 +133,8 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	private function stringifyRequest($actionId, $resourceType, $resourceId, $parameters, $identifier)
+	private function stringifyRequest(string $actionId, string $resourceType, string $resourceId,
+		array $parameters, $identifier)
 	{
 		$params = array($actionId, $resourceType, $resourceId, $parameters, $identifier);
 		return json_encode($params);
@@ -171,8 +173,8 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	public function addResponseByParameters(
-		$actionId, $resourceType, $resourceId, array $parameters, $identifier, array $response)
+	public function addResponseByParameters(string $actionId, string $resourceType,
+		string $resourceId, array $parameters, $identifier, array $response)
 	{
 		$requestStr = $this->stringifyRequest
 			($actionId, $resourceType, $resourceId, $parameters, $identifier);
@@ -188,7 +190,7 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	public function getRequestArray()
+	public function getRequestArray(): array
 	{
 		return $this->_requests;
 	}
@@ -202,7 +204,7 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	public function getResponseArray()
+	public function getResponseArray(): array
 	{
 		return $this->_responses;
 	}
@@ -230,7 +232,7 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	public function getRequestResponse($handle)
+	public function getRequestResponse(int $handle): array
 	{
 		$response = null;
 
@@ -245,12 +247,14 @@ class SDKWrapperMocker
 
 	/**
 	 *
-	 * @return DBCache
+	 * @return DBCache[]
 	 *
 	 */
 
-	public function getCache()
+	public function getCache(): array
 	{
-		return new DBCache(array('ttl' => 3600));
+		return [
+			new DBCache(array('ttl' => 3600)),
+		];
 	}
 }

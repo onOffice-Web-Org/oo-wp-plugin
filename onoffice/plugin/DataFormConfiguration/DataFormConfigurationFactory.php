@@ -122,17 +122,11 @@ class DataFormConfigurationFactory
 	 * @param string $name
 	 * @return DataFormConfiguration
 	 *
-	 * @throws UnknownFormException
-	 *
 	 */
 
 	public function loadByFormName(string $name)
 	{
 		$rowMain = $this->_pDependencyConfig->getMainRowByName($name);
-
-		if ($rowMain === null) {
-			throw new UnknownFormException($name);
-		}
 
 		$this->_type = $rowMain['form_type'];
 		$formId = $rowMain['form_id'];

@@ -50,13 +50,13 @@ class SDKWrapper
 	private $_token = '';
 
 	/** @var array */
-	private $_curlOptions = array();
+	private $_curlOptions = [];
 
 	/** @var string */
 	private $_server = null;
 
 	/** @var array */
-	private $_callbacksAfterSend = array();
+	private $_callbacksAfterSend = [];
 
 
 	/**
@@ -85,22 +85,21 @@ class SDKWrapper
 	 *
 	 */
 
-	private function readConfig()
+	private function readConfig(): array
 	{
-		$localconfig = array(
+		$localconfig = [
 			'token' => get_option('onoffice-settings-apikey'),
 			'secret' => get_option('onoffice-settings-apisecret'),
 			'apiversion' => 'latest',
-			'cache' => array(
+			'cache' => [
 				new DBCache( array('ttl' => 3600) ),
-			),
+			],
 			'server' => 'https://api.onoffice.de/api/',
-			'curl_options' => array
-				(
-					CURLOPT_SSL_VERIFYPEER => true,
-					CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
-				),
-		);
+			'curl_options' => [
+				CURLOPT_SSL_VERIFYPEER => true,
+				CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+			],
+		];
 
 		$configUser = ConfigWrapper::getInstance()->getConfigByKey('api');
 
@@ -123,7 +122,7 @@ class SDKWrapper
 	 *
 	 */
 
-	public function addRequest( $actionId, $resourceType, $parameters = array() )
+	public function addRequest(string $actionId, string $resourceType, array $parameters = [])
 	{
 		return $this->_pSDK->callGeneric( $actionId, $resourceType, $parameters );
 	}
@@ -140,7 +139,8 @@ class SDKWrapper
 	 *
 	 */
 
-	public function addFullRequest($actionId, $resourceType, $resourceId, $parameters = array(), $identifier = null)
+	public function addFullRequest(string $actionId, string $resourceType, string $resourceId,
+		array $parameters = [], $identifier = null)
 	{
 		return $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
 	}
@@ -153,7 +153,7 @@ class SDKWrapper
 	 *
 	 */
 
-	public function addRequestByApiAction(APIClientActionGeneric $pApiAction)
+	public function addRequestByApiAction(APIClientActionGeneric $pApiAction): int
 	{
 		$actionId = $pApiAction->getActionId();
 		$resourceId = $pApiAction->getResourceId();
@@ -194,9 +194,9 @@ class SDKWrapper
 	 *
 	 */
 
-	public function getRequestResponse( $handle )
+	public function getRequestResponse(int $handle): array
 	{
-		return $this->_pSDK->getResponseArray( $handle );
+		return $this->_pSDK->getResponseArray($handle);
 	}
 
 
@@ -206,7 +206,7 @@ class SDKWrapper
 	 *
 	 */
 
-	public function getCache()
+	public function getCache(): array
 	{
 		$config = $this->readConfig();
 		return $config['cache'];

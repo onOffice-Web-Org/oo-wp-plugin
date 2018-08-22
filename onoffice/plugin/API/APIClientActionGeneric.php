@@ -54,7 +54,7 @@ class APIClientActionGeneric
 	private $_resultCallback = null;
 
 	/** @var array */
-	private $_result = array();
+	private $_result = [];
 
 
 	/**
@@ -65,7 +65,7 @@ class APIClientActionGeneric
 	 *
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper, $actionId, $resourceType)
+	public function __construct(SDKWrapper $pSDKWrapper, string $actionId, string $resourceType)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->setResultCallback(array($this, 'onAfterExecution'));
@@ -97,15 +97,11 @@ class APIClientActionGeneric
 	 *
 	 */
 
-	public function getResultStatus()
+	public function getResultStatus(): bool
 	{
 		$resultApi = $this->getResult();
-		$result = false;
-
-		if (is_array($resultApi)) {
-			$errorcode = $resultApi['status']['errorcode'] ?? 500;
-			$result = $errorcode === 0 && isset($resultApi['data']['records']);
-		}
+		$errorcode = $resultApi['status']['errorcode'] ?? 500;
+		$result = $errorcode === 0 && isset($resultApi['data']['records']);
 
 		return $result;
 	}
@@ -113,7 +109,7 @@ class APIClientActionGeneric
 
 	/**
 	 *
-	 * @return array
+	 * @return array|null
 	 *
 	 */
 
@@ -128,7 +124,7 @@ class APIClientActionGeneric
 
 	/**
 	 *
-	 * @return array
+	 * @return array|null
 	 *
 	 */
 
@@ -147,34 +143,34 @@ class APIClientActionGeneric
 	 *
 	 */
 
-	public function onAfterExecution($result)
+	public function onAfterExecution(array $result)
 	{
 		$this->setResult($result);
 	}
 
 
 	/** @return string */
-	public function getActionId()
+	public function getActionId(): string
 		{ return $this->_actionId; }
 
 	/** @return string */
-	public function getResourceType()
+	public function getResourceType(): string
 		{ return $this->_resourceType; }
 
 	/** @return string */
-	public function getResourceId()
+	public function getResourceId(): string
 		{ return $this->_resourceId; }
 
 	/** @param string $actionId */
-	protected function setActionId($actionId)
+	protected function setActionId(string $actionId)
 		{ $this->_actionId = $actionId; }
 
 	/** @param string $resourceType */
-	protected function setResourceType($resourceType)
+	protected function setResourceType(string $resourceType)
 		{ $this->_resourceType = $resourceType; }
 
 	/** @param string $resourceId */
-	public function setResourceId($resourceId)
+	public function setResourceId(string $resourceId)
 		{ $this->_resourceId = $resourceId; }
 
 	/** @param array $parameters */
@@ -182,26 +178,26 @@ class APIClientActionGeneric
 		{ $this->_parameters = $parameters; }
 
 	/** @return array */
-	public function getParameters()
+	public function getParameters(): array
 		{ return $this->_parameters; }
 
 	/** @return SDKWrapper */
-	protected function getSDKWrapper()
+	protected function getSDKWrapper(): SDKWrapper
 		{ return $this->_pSDKWrapper; }
 
 	/** @param array $result */
-	protected function setResult($result)
+	protected function setResult(array $result)
 		{ $this->_result = $result; }
 
 	/** @return array */
-	protected function getResult()
+	protected function getResult(): array
 		{ return $this->_result; }
 
 	/** @return callable */
-	public function getResultCallback()
+	public function getResultCallback(): callable
 		{ return $this->_resultCallback; }
 
 	/** @param callable $resultCallback */
-	protected function setResultCallback($resultCallback)
+	protected function setResultCallback(callable $resultCallback)
 		{ $this->_resultCallback = $resultCallback; }
 }
