@@ -70,7 +70,13 @@ abstract class Installer
 			$dbversion = 3.0;
 		}
 
-		update_option( 'oo_plugin_db_version', $dbversion );
+		if ($dbversion == 3.0) {
+			// new column: captcha
+			dbDelta( self::getCreateQueryForms() );
+			$dbversion = 4;
+		}
+
+		update_option( 'oo_plugin_db_version', $dbversion, false);
 
 		$pContentFilter = new ContentFilter();
 		$pContentFilter->addCustomRewriteTags();
@@ -158,6 +164,7 @@ abstract class Installer
 			`limitresults` int,
 			`checkduplicates` tinyint(1) NOT NULL DEFAULT '0',
 			`pages` int NOT NULL DEFAULT '0',
+			`captcha` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

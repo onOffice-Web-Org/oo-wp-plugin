@@ -60,7 +60,7 @@ class TestClassInstaller
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count(self::$_createQueries));
 
 		$dbversion = get_option('oo_plugin_db_version', null);
-		$this->assertEquals(3, $dbversion);
+		$this->assertEquals(4, $dbversion);
 	}
 
 
@@ -79,10 +79,20 @@ class TestClassInstaller
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count(self::$_dropQueries));
 
 		// assert that as many tables have been removed as have been created
-		$this->assertEquals(count(self::$_createQueries), count(self::$_dropQueries));
+		$uniqueCreateQueries = array_unique(self::$_createQueries);
+		$uniqueDropQueries = array_unique(self::$_dropQueries);
+
+		$this->assertEquals(count($uniqueCreateQueries), count($uniqueDropQueries));
 
 		$dbversion = get_option('oo_plugin_db_version', null);
 		$this->assertNull($dbversion);
+
+		$this->assertFalse(get_option('oo_plugin_db_version'));
+		$this->assertFalse(get_option('onoffice-default-view'));
+		$this->assertFalse(get_option('onoffice-favorization-enableFav'));
+		$this->assertFalse(get_option('onoffice-favorization-favButtonLabelFav'));
+		$this->assertFalse(get_option('onoffice-settings-apisecret'));
+		$this->assertFalse(get_option('onoffice-settings-apikey'));
 	}
 
 
@@ -117,22 +127,5 @@ class TestClassInstaller
 		}
 
 		return $query;
-	}
-
-
-	/**
-	 *
-	 * @depends testUninstall
-	 *
-	 */
-
-	public function testOptionRemoval()
-	{
-		$this->assertFalse(get_option('oo_plugin_db_version'));
-		$this->assertFalse(get_option('onoffice-default-view'));
-		$this->assertFalse(get_option('onoffice-favorization-enableFav'));
-		$this->assertFalse(get_option('onoffice-favorization-favButtonLabelFav'));
-		$this->assertFalse(get_option('onoffice-settings-apisecret'));
-		$this->assertFalse(get_option('onoffice-settings-apikey'));
 	}
 }
