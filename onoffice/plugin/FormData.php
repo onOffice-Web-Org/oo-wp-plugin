@@ -28,22 +28,24 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Utility\__String;
+
 /**
  *
  */
 
-class FormData {
-	/** @var string */
-	private $_formId = null;
-
+class FormData
+{
 	/** @var int */
 	private $_formNo = null;
 
 	/** @var array */
-	private $_requiredFields = array();
+	private $_requiredFields = [];
 
 	/** @var array */
-	private $_values = array();
+	private $_values = [];
 
 	/** @var string */
 	private $_status = null;
@@ -55,35 +57,27 @@ class FormData {
 	private $_formtype = null;
 
 	/** @var array */
-	private $_configFields = array();
+	private $_configFields = [];
 
 	/** @var array */
-	private $_responseFieldsValues = array();
+	private $_responseFieldsValues = [];
+
+	/** @var DataFormConfiguration */
+	private $_pDataFormConfiguration = null;
+
 
 	/**
 	 *
-	 * @param string $formId
+	 * @param DataFormConfiguration $pDataFormConfiguration
 	 * @param int $formNo
 	 *
 	 */
 
-	public function __construct( $formId, $formNo ) {
-		$this->_formId = $formId;
+	public function __construct( DataFormConfiguration $pDataFormConfiguration, $formNo )
+	{
+		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 		$this->_formNo = $formNo;
-
-		$config = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$this->_configFields = $config[$this->_formId]['inputs'];
-	}
-
-
-	/**
-	 *
-	 * @param array $configFields
-	 *
-	 */
-
-	public function setConfigFields($configFields)	{
-		$this->_configFields = $configFields;
+		$this->_configFields = $this->_pDataFormConfiguration->getInputs();
 	}
 
 
@@ -93,15 +87,16 @@ class FormData {
 	 *
 	 */
 
-	public function getMissingFields() {
-		$missing = array();
+	public function getMissingFields()
+	{
+		$missing = [];
 
-		if ( ! $this->_formSent ) {
+		if ( $this->_formSent ) {
 			$filledFormData = array_filter( $this->_values );
 			$requiredFields = array_flip( $this->_requiredFields );
 			$filled = array_intersect_key( $filledFormData, $requiredFields );
-			$missing = array_diff_key( $requiredFields, $filled );
-			$missing = array_keys( $missing );
+			$missingKeyValues = array_diff_key( $requiredFields, $filled );
+			$missing = array_keys( $missingKeyValues );
 		}
 
 		return $missing;
@@ -114,12 +109,15 @@ class FormData {
 	 *
 	 */
 
-	public function getAddressData() {
+	public function getAddressData()
+	{
 		$inputs = $this->_configFields;
-		$addressData = array();
+		$addressData = [];
 
 		foreach ($this->_values as $input => $value) {
-			if ('address' === $inputs[$input]) {
+			$inputConfigName = $this->getFieldNameOfInput($input);
+
+			if (onOfficeSDK::MODULE_ADDRESS === $inputs[$inputConfigName]) {
 				$addressData[$input] = $value;
 			}
 		}
@@ -129,37 +127,24 @@ class FormData {
 
 	/**
 	 *
-	 * @return array
+	 * SearchCriteria fields have the suffixes `__von` and `__bis`
+	 *
+	 * @param string $input
+	 * @return string
 	 *
 	 */
 
-	public function getAddressDataForApiCall() {
-		$inputs = $this->_configFields;
-		$addressData = array();
+	public function getFieldNameOfInput($input)
+	{
+		$inputConfigName = $input;
+		$pInputStr = __String::getNew($input);
 
-		foreach ($this->_values as $input => $value) {
-			if ('address' === $inputs[$input]) {
-
-				switch ($input)
-				{
-					case 'Telefon1':
-						$input = 'phone';
-						break;
-
-					case 'Email':
-						$input = 'email';
-						break;
-
-					case 'Telefax1':
-						$input = 'fax';
-						break;
-				}
-
-				$addressData[$input] = $value;
-			}
+		if ($pInputStr->endsWith('__von') ||
+			$pInputStr->endsWith('__bis')) {
+			$inputConfigName = $pInputStr->sub(0, -5);
 		}
 
-		return $addressData;
+		return $inputConfigName;
 	}
 
 
@@ -169,31 +154,15 @@ class FormData {
 	 *
 	 */
 
-	public function getEstateData() {
+	public function getSearchcriteriaData()
+	{
 		$inputs = $this->_configFields;
-		$estateData = array();
+		$searchcriteriaData = [];
 
 		foreach ($this->_values as $input => $value) {
-			if ('estate' === $inputs[$input]) {
-				$estateData[$input] = $value;
-			}
-		}
-		return $estateData;
-	}
+			$inputConfigName = $this->getFieldNameOfInput($input);
 
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getSearchcriteriaData() {
-		$inputs = $this->_configFields;
-		$searchcriteriaData = array();
-
-		foreach ($this->_values as $input => $value) {
-			if ('searchcriteria' === $inputs[$input]) {
+			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputs[$inputConfigName]) {
 				$searchcriteriaData[$input] = $value;
 			}
 		}
@@ -202,9 +171,9 @@ class FormData {
 	}
 
 
-	/** @param string[] $missingFields */
-	public function setRequiredFields( array $missingFields )
-		{ $this->_requiredFields = $missingFields; }
+	/** @param string[] $requiredFields */
+	public function setRequiredFields( array $requiredFields )
+		{ $this->_requiredFields = $requiredFields; }
 
 	/** @return array */
 	public function getRequiredFields()
@@ -214,7 +183,7 @@ class FormData {
 	public function setValues( array $values )
 		{ $this->_values = $values; }
 
-	/** @return values */
+	/** @return array */
 	public function getValues()
 		{ return $this->_values; }
 
@@ -226,7 +195,7 @@ class FormData {
 	public function getStatus()
 		{ return $this->_status; }
 
-	/**	@param bool $formSent */
+	/**	@param bool $formSent Whether the Form was sent using GET or POST yet */
 	public function setFormSent( $formSent )
 		{ $this->_formSent = (bool) $formSent; }
 
@@ -249,4 +218,12 @@ class FormData {
 	/** @return array */
 	public function getResponseFieldsValues()
 		{ return $this->_responseFieldsValues; }
+
+	/** @return DataFormConfiguration */
+	public function getDataFormConfiguration()
+		{ return $this->_pDataFormConfiguration; }
+
+	/** @return int */
+	public function getFormNo()
+		{ return $this->_formNo; }
 }

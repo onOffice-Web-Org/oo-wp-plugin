@@ -28,27 +28,56 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
+use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 
 /**
  *
  */
 
-class AddressList {
-	/** @var array */
-	private $_adressesById = array();
+class AddressList
+{
+	/** @var string[] */
+	private static $_specialContactData = [
+		'mobile',
+		'phoneprivate',
+		'phonebusiness',
+		'phone',
+		'emailprivate',
+		'emailbusiness',
+		'email',
+	];
 
-	/** @var \onOffice\WPlugin\SDKWrapper */
+
+	/** @var array */
+	private $_adressesById = [];
+
+	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
+
+	/** @var Fieldnames */
+	private $_pFieldnames = null;
+
+	/** @var array */
+	private $_fields = [];
 
 
 	/**
 	 *
+	 * @param Fieldnames $pFieldnames
+	 *
 	 */
 
-	public function __construct() {
+	public function __construct(Fieldnames $pFieldnames = null)
+	{
 		$this->_pSDKWrapper = new SDKWrapper();
+		$this->_pFieldnames = $pFieldnames;
 	}
 
 
@@ -59,109 +88,125 @@ class AddressList {
 	 *
 	 */
 
-	public function loadAdressesById( array $addressIds, array $fields ) {
-		$handleReadAddresses = $this->_pSDKWrapper->addRequest( onOfficeSDK::ACTION_ID_READ, 'address', array(
-				'recordids' => $addressIds,
-				'data' => $fields,
-			)
-		);
-
+	public function loadAdressesById(array $addressIds, array $fields)
+	{
+		$pApiCall = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$parameters = [
+			'recordids' => $addressIds,
+			'data' => $fields,
+			'outputlanguage' => Language::getDefault(),
+			'formatoutput' => true,
+		];
+		$pApiCall->setParameters($parameters);
+		$pApiCall->addRequestToQueue();
 		$this->_pSDKWrapper->sendRequests();
-		$responseRaw = $this->_pSDKWrapper->getRequestResponse( $handleReadAddresses );
-
-		$this->fillAddressesById( $responseRaw );
+		if ($pApiCall->getResultStatus() === true) {
+			$records = $pApiCall->getResultRecords();
+			$this->fillAddressesById($records);
+			$this->_fields = $fields;
+		}
 	}
 
 
 	/**
 	 *
-	 * @param array $responseRaw
-	 * @return null
+	 * @global int $numpages
+	 * @global bool $multipage
+	 * @global int $page
+	 * @global bool $more
+	 * @param DataListViewAddress $pDataListViewAddress
+	 * @param int $inputPage
 	 *
 	 */
 
-	private function fillAddressesById( $responseRaw ) {
-		if ( empty( $responseRaw['data']['records'] ) ) {
-			return;
+	public function loadAddresses(DataListViewAddress $pDataListViewAddress, $inputPage = 1)
+	{
+		global $numpages, $multipage, $page, $more;
+		$this->_fields = $pDataListViewAddress->getFields();
+		$pModifier = $this->generateRecordModifier();
+
+		$pDataListViewToApi = new DataListViewAddressToAPIParameters($pDataListViewAddress);
+		$pDataListViewToApi->setPage($inputPage);
+
+		$apiOnlyFields = $pModifier->getAllAPIFields();
+		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields);
+
+		$pApiCall = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$pApiCall->setParameters($parameters);
+		$pApiCall->addRequestToQueue();
+		$this->_pSDKWrapper->sendRequests();
+
+		if ($pApiCall->getResultStatus() === true) {
+			$records = $pApiCall->getResultRecords();
+			$this->fillAddressesById($records);
+
+			$resultMeta = $pApiCall->getResultMeta();
+			$numpages = ceil($resultMeta['cntabsolute']/$pDataListViewAddress->getRecordsPerPage());
+
+			$multipage = $numpages > 1;
+			$more = true;
+			$page = $inputPage;
 		}
+	}
 
-		$data = $responseRaw['data']['records'];
 
-		foreach ( $data as $address ) {
+	/**
+	 *
+	 * @return ViewFieldModifierHandler
+	 *
+	 */
+
+	private function generateRecordModifier(): ViewFieldModifierHandler
+	{
+		$pAddressFieldModifierHandler = new ViewFieldModifierHandler($this->_fields,
+			onOfficeSDK::MODULE_ADDRESS, AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
+		return $pAddressFieldModifierHandler;
+	}
+
+
+	/**
+	 *
+	 * @param array $records
+	 *
+	 */
+
+	private function fillAddressesById(array $records)
+	{
+		foreach ($records as $address) {
 			$elements = $address['elements'];
-			$mobilePhoneNumbers = array();
-			$privatePhoneNumbers = array();
-			$businessPhoneNumbers = array();
-			$genericPhoneNumbers = array();
-			$privateEmailAddresses = array();
-			$businessEmailAddresses = array();
-			$genericEmailAddresses = array();
 
-			foreach ($elements as $key => $value) {
-				// comes into response if `mobile` was requested
-				if (strpos($key, 'mobile') === 0) {
-					$mobilePhoneNumbers []= $value;
-				}
-
-				// kinds of phone numbers if `phone` was requested
-				if (strpos($key, 'phoneprivate') === 0) {
-					$privatePhoneNumbers []= $value;
-				}
-
-				if (strpos($key, 'phonebusiness') === 0) {
-					$businessPhoneNumbers []= $value;
-				}
-
-				if (strpos($key, 'phone') === 0) {
-					$genericPhoneNumbers []= $value;
-				}
-
-				// kinds of email addresses if `email` was requested
-				if (strpos($key, 'emailprivate') === 0) {
-					$privateEmailAddresses []= $value;
-				}
-
-				if (strpos($key, 'emailbusiness') === 0) {
-					$businessEmailAddresses []= $value;
-				}
-
-				if (strpos($key, 'email') === 0) {
-					$genericEmailAddresses []= $value;
-				}
-			}
-
-			// phone
-			if (count($mobilePhoneNumbers) > 0) {
-				$elements['mobile'] = $mobilePhoneNumbers;
-			}
-
-			if (count($businessPhoneNumbers) > 0) {
-				$elements['phonebusiness'] = $businessPhoneNumbers;
-			}
-
-			if (count($privatePhoneNumbers) > 0) {
-				$elements['phoneprivate'] = $privatePhoneNumbers;
-			}
-
-			if (count($genericPhoneNumbers) > 0) {
-				$elements['phone'] = $genericPhoneNumbers;
-			}
-
-			// email
-			if (count($genericEmailAddresses) > 0) {
-				$elements['email'] = $genericEmailAddresses;
-			}
-
-			if (count($businessEmailAddresses) > 0) {
-				$elements['emailbusiness'] = $businessEmailAddresses;
-			}
-
-			if (count($privateEmailAddresses) > 0) {
-				$elements['emailprivate'] = $privateEmailAddresses;
-			}
-
-			$this->_adressesById[$address['id']] = $elements;
+			$additionalContactData = $this->collectAdditionalContactData($elements);
+			unset($elements['id']);
+			$this->_adressesById[$address['id']] = array_merge($elements, $additionalContactData);
 		}
+	}
+
+
+	/**
+	 *
+	 * @param array $elements
+	 * @return array
+	 *
+	 */
+
+	private function collectAdditionalContactData(array $elements)
+	{
+		$additionalContactData = [];
+		foreach ($elements as $key => $value) {
+			foreach (self::$_specialContactData as $startString) {
+				if (__String::getNew($key)->startsWith($startString)) {
+					if (!isset($additionalContactData[$startString])) {
+						$additionalContactData[$startString] = array();
+					}
+
+					$additionalContactData[$startString] []= $value;
+				}
+			}
+		}
+
+		return $additionalContactData;
 	}
 
 
@@ -172,11 +217,102 @@ class AddressList {
 	 *
 	 */
 
-	public function getAddressById( $id ) {
-		if ( ! array_key_exists( $id, $this->_adressesById ) ) {
-			return array();
+	public function getAddressById($id)
+	{
+		$result = array();
+
+		if (isset($this->_adressesById[$id])) {
+			$result = $this->_adressesById[$id];
 		}
 
-		return $this->_adressesById[$id];
+		return $result;
 	}
+
+
+	/**
+	 *
+	 * @param bool $raw
+	 * @return array
+	 *
+	 */
+
+	public function getRows($raw = false)
+	{
+		$pAddressList = $this;
+		$pAddressFieldModifier = $this->generateRecordModifier();
+		return array_map(function($values) use ($pAddressFieldModifier, $pAddressList, $raw) {
+			$valuesNew = $pAddressFieldModifier->processRecord($values);
+			return $pAddressList->getArrayContainerByRow($raw, $valuesNew);
+		}, $this->_adressesById);
+	}
+
+
+	/**
+	 *
+	 * @param bool $raw
+	 * @param array $row
+	 * @return ArrayContainerEscape
+	 *
+	 */
+
+	public function getArrayContainerByRow($raw, array $row)
+	{
+		$pArrayContainer = null;
+
+		if ($raw) {
+			$pArrayContainer = new ArrayContainer($row);
+		} else {
+			$pArrayContainer = new ArrayContainerEscape($row);
+		}
+
+		return $pArrayContainer;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @param bool $raw
+	 * @return string
+	 *
+	 */
+
+	public function getFieldLabel($field, $raw = false)
+	{
+		$label = $field;
+		$pFieldnames = $this->_pFieldnames;
+
+		if ($pFieldnames !== null) {
+			$label = $pFieldnames->getFieldLabel($field, onOfficeSDK::MODULE_ADDRESS);
+		}
+		return $raw ? $label : esc_html($label);
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return string
+	 *
+	 */
+
+	public function getFieldType($field)
+	{
+		$pFieldnames = $this->_pFieldnames;
+
+		if ($pFieldnames !== null) {
+			$fieldInformation = $pFieldnames->getFieldInformation($field,
+				onOfficeSDK::MODULE_ADDRESS);
+			return $fieldInformation['type'];
+		}
+	}
+
+
+	/** @param SDKWrapper $pSDKWrapper */
+	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
+		{ $this->_pSDKWrapper = $pSDKWrapper; }
+
+	/** @return SDKWrapper */
+	public function getSDKWrapper()
+		{ return $this->_pSDKWrapper; }
 }

@@ -74,6 +74,16 @@ class ConfigWrapper {
 		return ABSPATH . 'wp-content/plugins/onoffice-personalized';
 	}
 
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public static function getTemplateBasePath() {
+		return ABSPATH . 'wp-content/plugins';
+	}
+
 
 	/**
 	 *

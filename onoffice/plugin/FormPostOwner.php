@@ -27,156 +27,115 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\Form;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
+use onOffice\WPlugin\Form\FormPostConfiguration;
+use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
+use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
-use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
- * Description of FormPostOwner
- *
  */
+
 class FormPostOwner
 	extends FormPost
 {
-	/** @var FormPost */
-	private static $_pInstance = null;
+	/** @var FormData */
+	private $_pFormData = null;
 
-	/**
-	 *
-	 * @return FormPost
-	 *
-	 */
-
-	public static function getInstance() {
-		if ( is_null( self::$_pInstance ) ) {
-			self::$_pInstance = new static;
-		}
-
-		return self::$_pInstance;
-	}
-
-
-	/**	 */
-	private function __construct() { }
-
-
-	/** @return string */
-	protected function getFormType()
-	{ return Form::TYPE_OWNER; }
+	/** @var FormPostOwnerConfiguration */
+	private $_pFormPostOwnerConfiguration = null;
 
 
 	/**
 	 *
-	 * @param string $prefix
-	 * @param string $formNo
+	 * @param FormPostConfiguration $pFormPostConfiguration
+	 * @param FormPostOwnerConfiguration $pFormPostOwnerConfiguration
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix( $prefix, $formNo = null )
+	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
+		FormPostOwnerConfiguration $pFormPostOwnerConfiguration = null)
 	{
-		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$recipient = null;
-		$subject = null;
-		$saveInDb = false;
-		$checkduplicate = false;
-
-		$configByPrefix = $formConfig[$prefix];
-		$formFields = $configByPrefix['inputs'];
-
-		$formData = array_intersect_key( $_POST, $formFields );
-		$pFormData = new FormData( $prefix, $formNo );
-		$pFormData->setRequiredFields( $configByPrefix['required'] );
-		$pFormData->setFormtype( $configByPrefix['formtype'] );
-
-		if ( isset( $configByPrefix['recipient'] ) ) {
-			$recipient = $configByPrefix['recipient'];
+		if ($pFormPostOwnerConfiguration === null) {
+			$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationDefault();
 		}
 
-		if ( isset( $configByPrefix['subject'] ) ) {
-			$subject = $configByPrefix['subject'];
-		}
+		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
 
-		if ( isset( $configByPrefix['saveInDb']))
-		{
-			$saveInDb = $configByPrefix['saveInDb'];
-		}
-
-		if ( isset( $configByPrefix['checkduplicate']))
-		{
-			$checkduplicate = $configByPrefix['checkduplicate'];
-		}
-
-		$this->setFormDataInstances($prefix, $formNo, $pFormData);
-		$pFormData->setValues( $formData );
-
-		$missingFields = $pFormData->getMissingFields();
-
-		if ( count( $missingFields ) > 0  )
-		{
-			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
-		}
-		else
-		{
-			$response = false;
-
-			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
-			$responseEstate = $this->modifyOrCreateEstate($pFormData);
-
-			if ($responseAddress !== false &&
-				$responseEstate !== false)
-			{
-				$response = $this->createOwnerRelation($responseEstate, $responseAddress);
-			}
-
-			$pFormData->setFormSent( true );
-
-			if (null != $recipient && null != $subject)
-			{
-				$response = $this->sendContactRequest( $pFormData, $recipient, $subject, $responseEstate) && $response;
-			}
-
-			if ( true === $response )
-			{
-				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
-			}
-			else
-			{
-				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
-			}
-		}
-
+		parent::__construct($pFormPostConfiguration);
 	}
+
 
 	/**
 	 *
 	 * @param FormData $pFormData
-	 * @param bool $mergeExisting
+	 *
+	 */
+
+	protected function analyseFormContentByPrefix(FormData $pFormData)
+	{
+		/* @var $pDataFormConfiguration DataFormConfigurationOwner */
+		$pDataFormConfiguration = $pFormData->getDataFormConfiguration();
+		$this->_pFormData = $pFormData;
+
+		$recipient = $pDataFormConfiguration->getRecipient();
+		$subject = $pDataFormConfiguration->getSubject();
+		$checkduplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
+
+		$missingFields = $pFormData->getMissingFields();
+
+		if ( count( $missingFields ) > 0 ) {
+			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
+		} else {
+			$response = false;
+			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
+			$responseEstate = $this->createEstate();
+
+			if ($responseAddress !== false &&
+				$responseEstate !== false) {
+				$response = $this->createOwnerRelation($responseEstate, $responseAddress);
+			}
+
+			if (null != $recipient && $responseEstate && $responseAddress) {
+				$response = $response &&
+					$this->sendContactRequest($recipient, $responseEstate, $subject);
+			}
+
+			if ($response) {
+				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
+			} else {
+				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
+			}
+		}
+	}
+
+
+	/**
+	 *
 	 * @return bool
 	 *
 	 */
 
-	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )
+	private function createEstate()
 	{
-		$requestParams = $pFormData->getAddressDataForApiCall();
-		$requestParams['checkDuplicate'] = $mergeExisting;
+		$estateValues = $this->getEstateData();
+		$requestParams = ['data' => $estateValues];
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE,
+			'estate');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		$result = isset( $response['data']['records'] ) &&
-				count( $response['data']['records'] ) > 0;
-
-		if ($result)
-		{
-			return $response['data']['records'][0]['id'];
+		if ($pApiClientAction->getResultStatus()) {
+			$records = $pApiClientAction->getResultRecords();
+			return $records[0]['id'];
 		}
 
 		return false;
@@ -185,172 +144,105 @@ class FormPostOwner
 
 	/**
 	 *
-	 * @param array $estateValues
-	 * @return null
+	 * @return array
 	 *
 	 */
 
-	private function createEstate( $estateValues)
+	public function getEstateData()
 	{
-		$result = null;
-		$requestParams = array('data' => $estateValues);
+		$pFormData = $this->_pFormData;
+		$pInputVariableReader = $this->_pFormPostOwnerConfiguration->getEstateListInputVariableReader();
+		$configFields = $pFormData->getDataFormConfiguration()->getInputs();
+		$submitFields = array_keys($pFormData->getValues());
 
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'estate', $requestParams );
-		$pSDKWrapper->sendRequests();
+		$estateFields = array_filter($submitFields, function($key) use ($configFields) {
+			return onOfficeSDK::MODULE_ESTATE === $configFields[$key];
+		});
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+		foreach ($estateFields as $input) {
+			$value = $pInputVariableReader->getFieldValue($input);
 
-		$result = isset( $response['data']['records'] ) &&
-				count( $response['data']['records'] ) > 0;
-
-		if ($result)
-		{
-			return $response['data']['records'][0]['id'];
+			if ($pInputVariableReader->getFieldType($input) === FieldTypes::FIELD_TYPE_MULTISELECT &&
+				!is_array($value)) {
+				$estateData[$input] = [$value];
+			} else {
+				$estateData[$input] = $value;
+			}
 		}
 
-		return false;
-	}
-
-
-
-	/**
-	 *
-	 * @param type $estateId
-	 * @param type $estateValues
-	 * @return mixed
-	 *
-	 */
-
-	private function updateEstate($estateId, $estateValues)
-	{
-		$requestParams = array('data' => $estateValues);
-
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-		$handle = $pSDKWrapper->addFullRequest(
-				onOfficeSDK::ACTION_ID_MODIFY, 'estate', $estateId, $requestParams );
-
-		$pSDKWrapper->sendRequests();
-
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		if (isset( $response['data']['records'] ) &&
-			count( $response['data']['records'] ) > 0)
-		{
-			return $estateId;
-		}
-
-		return false;
-	}
-
-
-
-	/**
-	 *
-	 * @param \onOffice\WPlugin\FormData $pFormData
-	 * @return mixed
-	 */
-	private function modifyOrCreateEstate(FormData $pFormData)
-	{
-		$estateValues = $pFormData->getEstateData();
-		$estateId = isset( $estateValues['Id'] ) ? $estateValues['Id'] : null;
-		$result = null;
-
-		if (null != $estateId)
-		{
-			unset($estateValues['Id']);
-			$result = $this->updateEstate($estateId, $estateValues);
-		}
-		else
-		{
-			$result = $this->createEstate($estateValues);
-		}
-
-		return $result;
+		return $estateData;
 	}
 
 
 	/**
 	 *
-	 * @param type $estateId
-	 * @param type $addressId
+	 * @param int $estateId
+	 * @param int $addressId
 	 * @return bool $result
 	 *
 	 */
 
 	private function createOwnerRelation($estateId, $addressId)
 	{
-		$result = false;
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 
-		$requestParams = array
-			(
-				'relationtype' => onOfficeSDK::RELATION_TYPE_ESTATE_ADDRESS_OWNER,
-				'parentid' => $estateId,
-				'childid' => $addressId,
-			);
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'relation');
+		$pApiClientAction->setParameters([
+			'relationtype' => onOfficeSDK::RELATION_TYPE_ESTATE_ADDRESS_OWNER,
+			'parentid' => $estateId,
+			'childid' => $addressId,
+		]);
 
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'relation', $requestParams );
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		if (isset($response['status']))
-		{
-			if ($response['status']['errorcode'] == 0 &&
-				$response['status']['message'] == 'OK')
-			{
-				$result = true;
-			}
-		}
-
-		return $result;
+		return $pApiClientAction->getResultStatus();
 	}
+
 
 	/**
 	 *
-	 * @param FormData $pFormData
+	 * @param string $recipient
+	 * @param int $estateId
+	 * @param string $subject
 	 * @return bool
 	 *
 	 */
 
-	private function sendContactRequest( FormData $pFormData, $recipient = null, $subject = null, $estateId) {
-		$addressData = $pFormData->getAddressData();
-		$values = $pFormData->getValues();
-		$message = isset( $values['message'] ) ? $values['message'] : null;
+	private function sendContactRequest($recipient, $estateId, $subject = null)
+	{
+		$addressData = $this->_pFormData->getAddressData();
+		$values = $this->_pFormData->getValues();
+		$message = $values['message'] ?? null;
 
-		$requestParams = array(
+		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
 			'message' => $message,
 			'subject' => $subject,
-			'referrer' => filter_input( INPUT_SERVER, 'REQUEST_URI' ),
-			'formtype' => $pFormData->getFormtype(),
-		);
+			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
+			'formtype' => $this->_pFormData->getFormtype(),
+		];
 
 		if ( null != $recipient ) {
 			$requestParams['recipient'] = $recipient;
 		}
 
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_DO,
+			'contactaddress');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+		$result = false;
 
-		$result = isset( $response['data']['records'][0]['elements']['success'] ) &&
-			'success' == $response['data']['records'][0]['elements']['success'];
+		if ($pApiClientAction->getResultStatus()) {
+			$resultRecords = $pApiClientAction->getResultRecords();
+			$result = ($resultRecords[0]['elements']['success'] ?? '') === 'success';
+		}
 
 		return $result;
 	}
 }
-?>

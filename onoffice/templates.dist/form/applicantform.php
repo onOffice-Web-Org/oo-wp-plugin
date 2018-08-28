@@ -30,81 +30,87 @@
 $addressValues = array();
 $searchcriteriaValues = array();
 
-if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
+if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
 {
-	echo 'SUCCESS!';
+	echo '<p>SUCCESS!</p>';
 }
 
-if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)
+if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR)
 {
-	echo 'ERROR!';
+	echo '<p>ERROR!</p>';
+}
+
+if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING)
+{
+	echo '<p>Missing Fields!</p>';
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
-foreach ( $pForm->getInputFields() as $input => $table )
-{
+foreach ( $pForm->getInputFields() as $input => $table ) {
 	$line = null;
 
-	$selectTypes = array(
-		onOffice\WPlugin\FieldType::FIELD_TYPE_MULTISELECT,
-		onOffice\WPlugin\FieldType::FIELD_TYPE_SINGLESELECT,
-	);
-
 	$typeCurrentInput = $pForm->getFieldType( $input );
+	$isSearchcriteriaField = $pForm->isSearchcriteriaField($input);
+	$isRequired = $pForm->isRequiredField( $input );
+	$addition = $isRequired ? '*' : '';
+	$permittedValues = $pForm->getPermittedValues( $input, true );
+	$selectedValue = $pForm->getFieldValue( $input, true );
+	$line = $pForm->getFieldLabel( $input ).$addition.': ';
 
-	if ( in_array( $typeCurrentInput, $selectTypes, true ) )
-	{
-		$line = $pForm->getFieldLabel( $input ).': ';
-
-		$permittedValues = $pForm->getPermittedValues( $input, true );
-		$selectedValue = $pForm->getFieldValue( $input, true );
+	if ( (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
+		!$isSearchcriteriaField) || $input == 'objektart' ) {
 		$line .= '<select size="1" name="'.$input.'">';
 
-		foreach ( $permittedValues as $key => $value )
-		{
-			if ( is_array( $selectedValue ) )
-			{
+		foreach ( $permittedValues as $key => $value ) {
+			if ( is_array( $selectedValue ) ) {
 				$isSelected = in_array( $key, $selectedValue, true );
-			}
-			else
-			{
+			} else {
 				$isSelected = $selectedValue == $key;
 			}
-			$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
+			$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'
+				.esc_html($value).'</option>';
 		}
+
 		$line .= '</select>';
-	}
-	else
-	{
+	} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
+			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
+				$isSearchcriteriaField)) {
+		$line .= '<br><div data-name="'.esc_html($input).'" class="multiselect" data-values="'
+			.esc_html(json_encode($permittedValues)).'" data-selected="'
+			.esc_html(json_encode($selectedValue)).'">
+			<input type="button" class="onoffice-multiselect-edit" value="'
+			.esc_html__('Edit values', 'onoffice').'"></div>';
+	} else {
+		$inputType = 'text';
+		$valueTag = 'value="'.$pForm->getFieldValue( $input ).'"';
+
+		if ($pForm->getFieldType($input) == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+			$inputType = 'checkbox';
+			$valueTag = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
+		}
+
 		if ($pForm->inRangeSearchcriteriaInfos($input) &&
-			count($pForm->getSearchcriteriaRangeInfosForField($input)) > 0)
-		{
-			$line .= $pForm->getFieldLabel( $input ).': ';
+			count($pForm->getSearchcriteriaRangeInfosForField($input)) > 0) {
 
-			foreach ($pForm->getSearchcriteriaRangeInfosForField($input) as $key => $value)
-			{
-				$line .= '<input name="'.$key.'" placeholder="'.$value.'"> ';
+			foreach ($pForm->getSearchcriteriaRangeInfosForField($input) as $key => $value) {
+				$line .= '<input type="'.$inputType.'" value="'
+					.$pForm->getFieldValue( $key ).'" name="'.$key.'" placeholder="'.$value.'" '.$valueTag.'> ';
 			}
-		}
-		else
-		{
-			$line .= $pForm->getFieldLabel( $input ).': <input name="'.$input.'" value="'
-					.$pForm->getFieldValue( $input ).'">';
+		} else {
+			$line .= '<input type="'.$inputType.'" name="'.$input.'" value="'
+				.$pForm->getFieldValue( $input ).'" '.$valueTag.'>';
 		}
 	}
 
-	if ( $pForm->isMissingField( $input ) )
-	{
+	if ( $pForm->isMissingField( $input ) ) {
 		$line .= '<span>Bitte ausfüllen!</span>';
 	}
 
-	if ($table == 'address')
-	{
+	if ($table == 'address') {
 		$addressValues []= $line;
 	}
 
-	if ($table == 'searchcriteria')
-	{
+	if ($table == 'searchcriteria') {
 		$searchcriteriaValues []= $line;
 	}
 }
@@ -114,13 +120,13 @@ foreach ( $pForm->getInputFields() as $input => $table )
 	<p>
 	<h1>Ihre Kontaktdaten</h1>
 		<div>
-			<?php echo implode('<br/>', $addressValues); ?>
+			<?php echo implode('<br>', $addressValues); ?>
 		</div>
 	</p>
 	<p>
 	<h1>Ihre Suchkriterien</h1>
 		<div>
-			<?php echo implode('<br/>', $searchcriteriaValues) ?>
+			<?php echo implode('<br>', $searchcriteriaValues) ?>
 		</div>
 	</p>
 	<div>

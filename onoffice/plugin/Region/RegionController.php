@@ -29,17 +29,15 @@
 
 namespace onOffice\WPlugin\Region;
 
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Language;
+use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
  */
 
 class RegionController {
-	/** @var string */
-	private $_language = null;
-
 	/** @var array */
 	private $_regions = null;
 
@@ -50,9 +48,7 @@ class RegionController {
 	 *
 	 */
 
-	public function __construct( $language ) {
-		$this->_language = $language;
-
+	public function __construct() {
 		if ( is_null( $this->_regions ) ) {
 			$this->fetchRegions();
 		}
@@ -78,7 +74,7 @@ class RegionController {
 	 *
 	 * @param array $regionList
 	 * @param bool $level1
-	 * @return \onOffice\WPlugin\Region\Region[]
+	 * @return Region[]
 	 *
 	 */
 
@@ -97,7 +93,7 @@ class RegionController {
 			$state = $elements['state'];
 			$country = $elements['country'];
 
-			$pRegion = new Region( $id, $this->_language );
+			$pRegion = new Region( $id, Language::getDefault() );
 			$pRegion->setName( $name );
 			$pRegion->setDescription( $description );
 			$pRegion->setPostalCodes( $postalCodes );
@@ -128,8 +124,8 @@ class RegionController {
 	/**
 	 *
 	 * @param string $key
-	 * @param \onOffice\WPlugin\Region\Region $pParentRegion
-	 * @return \onOffice\WPlugin\Region\Region
+	 * @param Region $pParentRegion
+	 * @return Region
 	 *
 	 */
 
@@ -176,7 +172,7 @@ class RegionController {
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\Region\Region $pRegion
+	 * @param Region $pRegion
 	 * @return string[]
 	 *
 	 */

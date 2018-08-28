@@ -24,11 +24,16 @@
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
-	<?php if ( isset( $pEstates ) ) : ?>
-		<input type="hidden" name="Id" value="<?php echo $pEstates->getCurrentEstateId(); ?>">
+	<?php if ( isset( $estateId ) ) : ?>
+	<input type="hidden" name="Id" value="<?php echo $estateId; ?>">
 	<?php endif; ?>
 
 <?php
+
+$selectTypes = array(
+	\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
+	\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
+);
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo 'SUCCESS!';
@@ -47,21 +52,55 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 
+		$typeCurrentInput = $pForm->getFieldType( $input );
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
+		echo $pForm->getFieldLabel( $input ).$addition.': ';
 
-		echo $pForm->getFieldLabel( $input ).$addition.': <input type="text" name="'.$input.'" value="'
-			.$pForm->getFieldValue( $input ).'"><br>';
+		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
+			$line = $pForm->getFieldLabel( $input ).': ';
+
+			$permittedValues = $pForm->getPermittedValues( $input, true );
+			$selectedValue = $pForm->getFieldValue( $input, true );
+			echo '<select size="1" name="'.esc_attr($input).'">';
+
+			foreach ( $permittedValues as $key => $value ) {
+				if ( is_array( $selectedValue ) ) {
+					$isSelected = in_array( $key, $selectedValue, true );
+				} else {
+					$isSelected = $selectedValue == $key;
+				}
+				echo '<option value="'.esc_attr($key).'"'.($isSelected ? ' selected' : '').'>'
+					.esc_html($value).'</option>';
+			}
+			echo '</select><br>';
+		} else {
+			$inputType = 'text';
+			$value = 'value="'.$pForm->getFieldValue( $input ).'"';
+
+			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+				$inputType = 'checkbox';
+				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
+			}
+
+			echo '<input type="'.$inputType.'" name="'.esc_html($input).'" '.$value.'><br>';
+		}
 	}
 
-	$isRequiredMessage = $pForm->isRequiredField( 'message' );
-	$additionMessage = $isRequiredMessage ? '*' : '';
+	if (array_key_exists('message', $pForm->getInputFields())):
+		$isRequiredMessage = $pForm->isRequiredField( 'message' );
+		$additionMessage = $isRequiredMessage ? '*' : '';
 ?>
 
-	Nachricht<?php echo $additionMessage; ?>:<br>
-	<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
+		Nachricht<?php echo $additionMessage; ?>:<br>
+		<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
 
-	<input type="submit" value="GO!">
+<?php
+	endif;
+?>
+
+		<input type="submit" value="GO!">
+
 <?php
 }
 ?>

@@ -16,8 +16,7 @@ Installation
 1. move the plugin directory to wordpress plugin directory
 2. create a new plugin folder called "onoffice-personalized"
 3. copy the folder "templates.dist" to "onoffice-personalized/templates"
-4. copy "api-config.dist.php" to "onoffice-personalized/api-config.php"
-5. copy "config.php" to "onoffice-personalized/"
+4. copy "config.php" to "onoffice-personalized/"
 
 step by step, as shell commands:
 
@@ -26,7 +25,6 @@ cp onoffice-wp-plugin <wordpress-dir>/wp-content/plugins/onoffice # onoffice-wp-
 mkdir <wordpress-dir>/wp-content/plugins/onoffice-personalized
 cd <wordpress-dir>/wp-content/plugins/
 cp -R onoffice/templates.dist/ onoffice-personalized/templates
-cp onoffice/api-config.dist.php onoffice-personalized/api-config.php
 cp onoffice/config.php onoffice-personalized/
 ```
 
@@ -81,7 +79,7 @@ This project is licensed under both GNU AGPLv3 and GNU GPLv3:
 Contact
 -------
 
-onOffice Software AG
+onOffice GmbH
 Charlottenburger Allee 5
 52068 Aachen
 Germany

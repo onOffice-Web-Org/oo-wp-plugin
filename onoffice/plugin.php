@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2017 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -20,21 +20,28 @@
  */
 
 /*
-Plugin Name: onOffice Plugin
-Plugin URI: http://www.onoffice.com/
-Description: onOffice Plugin (just for testing)
-Author: onOffice Software AG
-Author URI: http://en.onoffice.com/
-Version: 1.0
+Plugin Name: onOffice direct
+Author: onOffice GmbH
+Author URI: https://en.onoffice.com/
+Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
+Version: 2.0
+License: AGPL 3+
+License URI: https://www.gnu.org/licenses/agpl-3.0
+Text Domain: onoffice
+Domain Path: /languages
 */
 
 defined( 'ABSPATH' ) or die();
 
 include 'Psr4AutoloaderClass.php';
 
+define('ONOFFICE_PLUGIN_DIR', __DIR__);
+
+use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
-use onOffice\WPlugin\FormPostHandler;
+use onOffice\WPlugin\Controller\AdminViewController;
+use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
 
@@ -45,24 +52,45 @@ $pAutoloader->addNamespace( 'onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plu
 $pAutoloader->register();
 
 $pContentFilter = new ContentFilter();
-$pFormPost = FormPostHandler::getInstance();
+$pAdminViewController = new AdminViewController();
+$pDetailViewPostSaveController = new DetailViewPostSaveController();
 $pSearchParams = SearchParameters::getInstance();
 $pSearchParams->setParameters( $_GET );
 
 add_action( 'init', array($pContentFilter, 'addCustomRewriteTags') );
 add_action( 'init', array($pContentFilter, 'addCustomRewriteRules') );
-add_action( 'init', array($pFormPost, 'initialCheck') );
+add_action( 'init', '\onOffice\WPlugin\FormPostHandler::initialCheck' );
+add_action( 'admin_menu', array($pAdminViewController, 'register_menu') );
+add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_ajax') );
+add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_css') );
+add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueueExtraJs') );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'registerScripts'), 9 );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
+add_action( 'save_post', array($pDetailViewPostSaveController, 'onSavePost') );
+add_action( 'wp_trash_post', array($pDetailViewPostSaveController, 'onMoveTrash') );
 add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
 
-add_filter( 'the_posts', array($pContentFilter, 'filter_the_posts') );
-add_filter( 'the_content', array($pContentFilter, 'filter_the_content') );
-add_filter( 'wp_link_pages_link', array($pSearchParams, 'linkPagesLink'), 10, 2);
+add_action( 'init', array($pAdminViewController, 'onInit') );
+add_action( 'admin_init', array($pAdminViewController, 'add_ajax_actions') );
+
+add_filter( 'wp_link_pages_link', array($pSearchParams, 'linkPagesLink'), 10, 2 );
 add_filter( 'wp_link_pages_args', array($pSearchParams, 'populateDefaultLinkParams') );
 
-register_activation_hook( __FILE__, 'oo_plugin_install' );
-register_uninstall_hook( __FILE__, 'oo_plugin_deinstall' );
+// "Settings" link in plugins list
+add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), array($pAdminViewController, 'pluginSettingsLink') );
+
+add_shortcode( 'oo_address', array($pContentFilter, 'renderAddressShortCodes') );
+add_shortcode( 'oo_estate', array($pContentFilter, 'registerEstateShortCodes') );
+add_shortcode( 'oo_form', array($pContentFilter, 'renderFormsShortCodes') );
+add_shortcode( 'oo_basicdata', array($pContentFilter, 'renderImpressumShortCodes'));
+
+add_filter( 'widget_text_content', array($pContentFilter, 'renderWidgetImpressum') );
+add_filter( 'widget_title', array($pContentFilter, 'renderWidgetImpressum') );
+add_filter( 'document_title_parts', array($pContentFilter, 'setTitle'), 10, 2 );
+
+register_activation_hook( __FILE__, '\onOffice\WPlugin\Installer::install' );
+register_deactivation_hook( __FILE__, '\onOffice\WPlugin\Installer::deactivate' );
+register_uninstall_hook( __FILE__, '\onOffice\WPlugin\Installer::deinstall' );
 
 if ( ! wp_next_scheduled( 'oo_cache_cleanup' ) ) {
 	wp_schedule_event( time(), 'hourly', 'oo_cache_cleanup' );
@@ -80,73 +108,7 @@ function ooCacheCleanup() {
 	$cacheInstances = $pSDKWrapper->getCache();
 
 	foreach ( $cacheInstances as $pCacheInstance) {
-		/* @var $cacheInstance \onOffice\SDK\Cache\onOfficeSDKCache */
+		/* @var $cacheInstance onOfficeSDKCache */
 		$pCacheInstance->cleanup();
 	}
-}
-
-
-/**
- *
- * Callback for plugin activation hook
- *
- * @global \wpdb $wpdb
- *
- */
-
-function oo_plugin_install() {
-	global $wpdb;
-	$tableName = $wpdb->prefix."oo_plugin_cache";
-	$charsetCollate = $wpdb->get_charset_collate();
-
-	$sql = "CREATE TABLE $tableName (
-		cache_id bigint(20) NOT NULL AUTO_INCREMENT,
-		cache_parameters text NOT NULL,
-		cache_parameters_hashed varchar(32) NOT NULL,
-		cache_response mediumtext NOT NULL,
-		cache_created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		PRIMARY KEY  (cache_id),
-		UNIQUE KEY cache_parameters_hashed (cache_parameters_hashed),
-		KEY cache_created (cache_created)
-	) $charsetCollate;";
-
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	dbDelta( $sql );
-	add_option( "oo_plugin_db_version", "1.0" );
-
-	$pContentFilter = new ContentFilter();
-	$pContentFilter->addCustomRewriteTags();
-	$pContentFilter->addCustomRewriteRules();
-	oo_flushRules();
-}
-
-
-/**
- *
- * @global WP_Rewrite $wp_rewrite
- *
- */
-
-function oo_flushRules() {
-	global $wp_rewrite;
-	$wp_rewrite->flush_rules(false);
-}
-
-
-/**
- *
- * Callback for plugin uninstall hook
- *
- * @global \wpdb $wpdb
- *
- */
-
-function oo_plugin_deinstall() {
-	global $wpdb;
-	$table = $wpdb->prefix."oo_plugin_cache";
-	delete_option('oo_plugin_db_version');
-
-	$wpdb->query("DROP TABLE IF EXISTS $table");
-
-	oo_flushRules();
 }

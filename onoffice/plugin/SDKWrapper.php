@@ -28,15 +28,19 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Cache\DBCache;
 
 
 /**
  *
  */
 
-class SDKWrapper {
-	/** @var \onOffice\SDK\onOfficeSDK */
+class SDKWrapper
+{
+	/** @var onOfficeSDK */
 	private $_pSDK = null;
 
 	/** @var string */
@@ -46,17 +50,21 @@ class SDKWrapper {
 	private $_token = '';
 
 	/** @var array */
-	private $_curlOptions = array();
+	private $_curlOptions = [];
 
 	/** @var string */
 	private $_server = null;
+
+	/** @var array */
+	private $_callbacksAfterSend = [];
 
 
 	/**
 	 *
 	 */
 
-	public function __construct() {
+	public function __construct()
+	{
 		$config = $this->readConfig();
 
 		$this->_pSDK = new onOfficeSDK();
@@ -77,23 +85,29 @@ class SDKWrapper {
 	 *
 	 */
 
-	private function readConfig() {
-		$localconfig = array(
-			'token' => '',
-			'secret' => '',
-			'apiversion' => '1.5',
-			'cache' => array(),
+	private function readConfig(): array
+	{
+		$localconfig = [
+			'token' => get_option('onoffice-settings-apikey'),
+			'secret' => get_option('onoffice-settings-apisecret'),
+			'apiversion' => 'latest',
+			'cache' => [
+				new DBCache( array('ttl' => 3600) ),
+			],
 			'server' => 'https://api.onoffice.de/api/',
-			'curl_options' => array
-				(
-					'CURLOPT_SSL_VERIFYPEER' => true,
-					'CURLOPT_PROTOCOLS'		=> 'CURLPROTO_HTTPS',
-				),
-		);
+			'curl_options' => [
+				CURLOPT_SSL_VERIFYPEER => true,
+				CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+			],
+		];
 
-		include ConfigWrapper::getSubPluginPath() . '/api-config.php';
+		$configUser = ConfigWrapper::getInstance()->getConfigByKey('api');
 
-		$config = array_merge($localconfig, $config);
+		if ($configUser === null) {
+			$configUser = array();
+		}
+
+		$config = array_merge($localconfig, $configUser);
 
 		return $config;
 	}
@@ -108,7 +122,8 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function addRequest( $actionId, $resourceType, $parameters = array() ) {
+	public function addRequest(string $actionId, string $resourceType, array $parameters = [])
+	{
 		return $this->_pSDK->callGeneric( $actionId, $resourceType, $parameters );
 	}
 
@@ -120,12 +135,40 @@ class SDKWrapper {
 	 * @param int $resourceId
 	 * @param array $parameters
 	 * @param string $identifier
-	 * @return handle
+	 * @return int handle
 	 *
 	 */
 
-	public function addFullRequest($actionId, $resourceType, $resourceId, $parameters = array(), $identifier = null) {
+	public function addFullRequest(string $actionId, string $resourceType, string $resourceId,
+		array $parameters = [], $identifier = null)
+	{
 		return $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
+	}
+
+
+	/**
+	 *
+	 * @param APIClientActionGeneric $pApiAction
+	 * @return int
+	 *
+	 */
+
+	public function addRequestByApiAction(APIClientActionGeneric $pApiAction): int
+	{
+		$actionId = $pApiAction->getActionId();
+		$resourceId = $pApiAction->getResourceId();
+		$identifier = null;
+		$resourceType = $pApiAction->getResourceType();
+		$parameters = $pApiAction->getParameters();
+		$callback = $pApiAction->getResultCallback();
+
+		$id = $this->_pSDK->call($actionId, $resourceId, $identifier, $resourceType, $parameters);
+
+		if ($callback !== null) {
+			$this->_callbacksAfterSend[$id] = $callback;
+		}
+
+		return $id;
 	}
 
 
@@ -133,8 +176,14 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function sendRequests() {
+	public function sendRequests()
+	{
 		$this->_pSDK->sendRequests( $this->_token, $this->_secret );
+
+		foreach ($this->_callbacksAfterSend as $handle => $callback) {
+			$response = $this->getRequestResponse($handle);
+			call_user_func($callback, $response);
+		}
 	}
 
 
@@ -145,28 +194,21 @@ class SDKWrapper {
 	 *
 	 */
 
-	public function getRequestResponse( $handle ) {
-		return $this->_pSDK->getResponseArray( $handle );
+	public function getRequestResponse(int $handle): array
+	{
+		return $this->_pSDK->getResponseArray($handle);
 	}
 
 
 	/**
 	 *
-	 * @return \onOffice\SDK\Cache\onOfficeSDKCache[]
+	 * @return onOfficeSDKCache[]
 	 *
 	 */
 
-	public function getCache() {
+	public function getCache(): array
+	{
 		$config = $this->readConfig();
 		return $config['cache'];
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function removeCacheInstances() {
-		$this->_pSDK->removeCacheInstances();
 	}
 }

@@ -21,7 +21,11 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\DataView\DataListViewFactory;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderUnitList;
 
 /**
  *
@@ -31,24 +35,22 @@ class EstateUnits {
 	/** @var array */
 	private $_estateUnits = array();
 
-	/** @var string */
-	private $_config = null;
+	/** @var DataListView */
+	private $_pDataListView = null;
 
-	/** @var string */
-	private $_view = null;
-
-	/** @var int */
-	private $_recordsPerPage = null;
 
 	/**
 	 *
 	 * @param int[] $estateIds
+	 * @param string $viewName
 	 *
 	 */
 
-	 public function __construct( $estateIds, $configName, $configView ) {
-		$this->_config = $configName;
-		$this->_view = $configView;
+	 public function __construct( $estateIds, $viewName ) {
+		$pDataListViewFactory = new DataListViewFactory();
+		$this->_pDataListView = $pDataListViewFactory->getListViewByName(
+			$viewName, DataListView::LISTVIEW_TYPE_UNITS );
+
 		$pSDKWrapper = new SDKWrapper();
 		$handleGetEstateUnits = $pSDKWrapper->addRequest(
 			onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', array(
@@ -61,19 +63,19 @@ class EstateUnits {
 
 		$responseArrayEstateUnits = $pSDKWrapper->getRequestResponse( $handleGetEstateUnits );
 		$this->evaluateEstateUnits( $responseArrayEstateUnits );
-	 }
+	}
 
 
 	 /**
 	 *
-	 * @param type $responseArrayEstateUnits
-	 * @throws \onOffice\SDK\Exception\HttpFetchNoResultException
+	 * @param array $responseArrayEstateUnits
+	 * @throws HttpFetchNoResultException
 	 *
 	 */
 
 	private function evaluateEstateUnits( $responseArrayEstateUnits ) {
 		if ( ! isset( $responseArrayEstateUnits['data']['records'] ) ) {
-			throw new \onOffice\SDK\Exception\HttpFetchNoResultException();
+			throw new HttpFetchNoResultException();
 		}
 
 		$records = $responseArrayEstateUnits['data']['records'];
@@ -119,17 +121,6 @@ class EstateUnits {
 
 	/**
 	 *
-	 * @param int $count
-	 *
-	 */
-
-	public function setRecordsPerPage( $count ) {
-		$this->_recordsPerPage = $count;
-	}
-
-
-	/**
-	 *
 	 * @param int $estateId
 	 * @return string
 	 *
@@ -137,20 +128,22 @@ class EstateUnits {
 
 	public function generateHtmlOutput( $estateId ) {
 		$units = $this->getEstateUnits( $estateId );
+		$random = $this->_pDataListView->getRandom();
 
-		$filter = array(
-			'Id' => array(
-				array( 'op' => 'in', 'val' => $units ),
-			),
-		);
+		if ($random) {
+			// shuffle() twice: once here and once in EstateList
+			shuffle($units);
+		}
 
-		$estateConfig = ConfigWrapper::getInstance()->getConfigByKey( 'estate' );
-		$templateName = $estateConfig[$this->_config]['views'][$this->_view]['template'];
+		$pEstateList = new EstateList( $this->_pDataListView );
+		$pEstateList->setShuffleResult($random);
+		$pDefaultFilterBuilder = new DefaultFilterBuilderUnitList();
+		$pDefaultFilterBuilder->setUnitIds( $units );
+		$pEstateList->setDefaultFilterBuilder( $pDefaultFilterBuilder );
+		$pEstateList->loadEstates( 1 );
 
-		$pEstateList = new EstateList( $this->_config, $this->_view );
-		$pEstateList->loadEstates( 1, $filter );
-
-		$pTemplate = new Template( $templateName, 'estate', 'default' );
+		$templateName = $this->_pDataListView->getTemplate();
+		$pTemplate = new Template( $templateName );
 		$pTemplate->setEstateList( $pEstateList );
 		$htmlOutput = $pTemplate->render();
 

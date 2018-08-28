@@ -22,7 +22,7 @@
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software AG
+ * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -34,17 +34,30 @@ namespace onOffice\WPlugin;
 
 class Template
 {
-	/** @var \onOffice\WPlugin\EstateList */
+	/** */
+	const KEY_ESTATELIST = 'estatelist';
+
+	/** */
+	const KEY_FORM = 'form';
+
+	/** */
+	const KEY_BASICDATA = 'basicdata';
+
+	/** */
+	const KEY_ADDRESSLIST = 'addresslist';
+
+
+	/** @var EstateList */
 	private $_pEstateList = null;
 
 	/** @var string */
 	private $_templateName = null;
 
-	/** @var string */
-	private $_dirName = null;
-
-	/** @var \onOffice\WPlugin\Form */
+	/** @var Form */
 	private $_pForm = null;
+
+	/** @var AddressList */
+	private $_pAddressList = null;
 
 
 	/**
@@ -54,35 +67,9 @@ class Template
 	 *
 	 */
 
-	public function __construct( $templateName, $dirName, $defaultTemplateName ) {
+	public function __construct($templateName)
+	{
 		$this->_templateName = $templateName;
-		$this->_dirName = $dirName;
-
-		if ( ! file_exists( $this->getFilePath() ) ) {
-			$this->_templateName = $defaultTemplateName;
-		}
-	}
-
-
-	/**
-	 *
-	 * @param \onOffice\WPlugin\EstateList $pEstateList
-	 *
-	 */
-
-	public function setEstateList( EstateList $pEstateList ) {
-		$this->_pEstateList = $pEstateList;
-	}
-
-
-	/**
-	 *
-	 * @param \onOffice\WPlugin\Form $pForm
-	 *
-	 */
-
-	public function setForm( Form $pForm ) {
-		$this->_pForm = $pForm;
 	}
 
 
@@ -92,33 +79,43 @@ class Template
 	 *
 	 */
 
-	public function render() {
-		$result = $this->getIncludeContents();
+	public function render()
+	{
+		$templateData = array(
+			self::KEY_FORM => $this->_pForm,
+			self::KEY_ESTATELIST => $this->_pEstateList,
+			self::KEY_BASICDATA => Impressum::getInstance(),
+			self::KEY_ADDRESSLIST => $this->_pAddressList,
+		);
+		$filename = $this->buildFilePath();
 
+		$result = '';
+		if ( file_exists( $filename ) ) {
+			$result = self::getIncludeContents($templateData, $filename);
+		}
 		return $result;
 	}
 
 
 	/**
 	 *
+	 * Method that provides important variables to template
+	 * Must not expose $this
+	 *
 	 * @return string
 	 *
 	 */
 
-	private function getIncludeContents() {
-
-		$filename = $this->getFilePath();
-
-		if ( file_exists( $filename ) ) {
-			ob_start();
-			// vars which might be used in template
-			$pEstates = $this->_pEstateList;
-			$pForm = $this->_pForm;
-			include $filename;
-			return ob_get_clean();
-		}
-
-		return '';
+	private static function getIncludeContents(array $templateData, $templatePath)
+	{
+		// vars which might be used in template
+		$pEstates = $templateData[self::KEY_ESTATELIST];
+		$pForm = $templateData[self::KEY_FORM];
+		$pBasicData = $templateData[self::KEY_BASICDATA];
+		$pAddressList = $templateData[self::KEY_ADDRESSLIST];
+		ob_start();
+		include $templatePath;
+		return ob_get_clean();
 	}
 
 
@@ -129,7 +126,20 @@ class Template
 	 *
 	 */
 
-	private function getFilePath() {
-		return ConfigWrapper::getSubPluginPath() . '/templates/' . $this->_dirName . '/'. $this->_templateName.'.php';
+	private function buildFilePath()
+	{
+		return ConfigWrapper::getTemplateBasePath().'/'.$this->_templateName;
 	}
+
+	/** @param AddressList $pAddressList */
+	public function setAddressList(AddressList $pAddressList)
+		{ $this->_pAddressList = $pAddressList; }
+
+	/** @param EstateList $pEstateList */
+	public function setEstateList(EstateList $pEstateList)
+		{ $this->_pEstateList = $pEstateList; }
+
+	/** @param Form $pForm */
+	public function setForm(Form $pForm)
+		{ $this->_pForm = $pForm; }
 }

@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin;
 
+use Exception;
+
 /**
  *
  */
@@ -30,6 +32,12 @@ class Favorites
 	/** */
 	const COOKIE_NAME = 'onoffice_favorites';
 
+	/** Constant for setting: call it "Favorize" */
+	const KEY_SETTING_FAVORIZE = 0;
+
+	/** Constant for setting: call it "Memorize" */
+	const KEY_SETTING_MEMORIZE = 1;
+
 
 	/**
 	 *
@@ -38,13 +46,81 @@ class Favorites
 	 */
 
 	static public function getAllFavorizedIds() {
-		$jsonIds = isset($_COOKIE[self::COOKIE_NAME]) ? $_COOKIE[self::COOKIE_NAME] : null;
-		$favorites = array(0);
+		$jsonIds = filter_input(INPUT_COOKIE, self::COOKIE_NAME, FILTER_UNSAFE_RAW);
+		$favoriteIds = array(0);
 
 		if ($jsonIds !== null) {
-			$favorites = json_decode($jsonIds);
+			try
+			{
+				$favorites = json_decode($jsonIds);
+			}
+			catch (Exception $pE)
+			{
+				$favorites = array(0);
+			}
+
+			$favoriteIds = array_filter($favorites, 'is_numeric');
 		}
 
-		return $favorites;
+		if ($favoriteIds === array()) {
+			$favoriteIds = array(0);
+		}
+
+		return $favoriteIds;
+	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	static public function isFavorizationEnabled() {
+		return get_option('onoffice-favorization-enableFav', false);
+	}
+
+
+	/**
+	 *
+	 * @return int value of KEY_SETTING_* constant
+	 *
+	 */
+
+	static public function getFavorizationLabel() {
+		if (!self::isFavorizationEnabled()) {
+			return null;
+		}
+
+		$id = get_option('onoffice-favorization-favButtonLabelFav', self::KEY_SETTING_FAVORIZE);
+
+		switch ($id) {
+			case self::KEY_SETTING_FAVORIZE:
+				return 'Favorites';
+			case self::KEY_SETTING_MEMORIZE:
+				return 'Watchlist';
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	static public function registerScripts() {
+		if (self::isFavorizationEnabled()) {
+			wp_register_script( 'onoffice-favorites', plugins_url( '/js/favorites.js', ONOFFICE_PLUGIN_DIR ) );
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function includeScripts() {
+		if (self::isFavorizationEnabled()) {
+			wp_enqueue_script( 'onoffice-favorites' );
+		}
 	}
 }

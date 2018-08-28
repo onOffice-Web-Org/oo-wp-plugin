@@ -28,15 +28,20 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\FormData;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Form\FormPostConfiguration;
+use onOffice\WPlugin\Form\FormPostConfigurationDefault;
+use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
  *
  * Terminology used in this class:
  *
- * - prefix: the prefix of the input form. Must be the name of a config index for a form
+ * - prefix: the prefix of the input form. Must be the name of a form
  * - form No.: Every input's name consists of the prefix + form no to make multiple forms on
  *				one page possible.
  *				The Form No must be incremented at every new form output.
@@ -62,93 +67,90 @@ abstract class FormPost {
 
 
 	/** @var int */
-	private $_formNo = 0;
+	private static $_formNo = 0;
 
 	/** @var array */
-	private $_formDataInstances = array();
+	private $_formDataInstances = [];
 
 	/** @var array */
-	private $_searchcriteriaRangeFields = array();
+	private $_searchcriteriaRangeFields = [];
+
+	/** @var FormPostConfiguration */
+	private $_pFormPostConfiguration = null;
 
 
 	/**
 	 *
-	 */
-
-	private function __clone() { }
-
-
-	/**
-	 */
-	abstract protected function getFormType();
-
-	/**
-	 *
-	 * @param string $postvar
-	 * @param int $validate one or more of the PHP FILTER_* constants
-	 * @return mixed
+	 * @param FormPostConfiguration $pFormPostConfiguration
 	 *
 	 */
 
-	public static function getPostValue($postvar, $validate = FILTER_DEFAULT) {
-		$value = filter_input( INPUT_POST, $postvar, $validate );
-
-		if ( false === $value ) {
-			$value = null;
+	public function __construct(FormPostConfiguration $pFormPostConfiguration = null)
+	{
+		if ($pFormPostConfiguration === null) {
+			$pFormPostConfiguration = new FormPostConfigurationDefault();
 		}
-
-		return $value;
+		$this->_pFormPostConfiguration = $pFormPostConfiguration;
 	}
 
-
 	/**
 	 *
-	 * @param string $getVar
-	 * @param int $validate one or more of the PHP FILTER_* constants
-	 * @return mixed
-	 *
-	 */
-
-	public static function getGetValue($getVar, $validate = FILTER_DEFAULT, $whitelist = true) {
-		$value = filter_input( INPUT_GET, $getVar, $validate );
-
-		if ( false === $value ) {
-			$value = null;
-		}
-
-		if ( $whitelist ) {
-			SearchParameters::getInstance()->addAllowedGetParameter( $getVar );
-		}
-
-		return $value;
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function initialCheck() {
-		if ( array_key_exists( 'oo_formid', $_POST ) ) {
-			$formNo = null;
-
-			if ( array_key_exists( 'oo_formno', $_POST ) ) {
-				$formNo = $_POST['oo_formno'];
-			}
-
-			$this->analyseFormContentByPrefix( $_POST['oo_formid'], $formNo );
-		}
-	}
-
-
-	/**
-	 *
-	 * @param string $prefix
+	 * @param DataFormConfiguration $pConfig
 	 * @param int $formNo
 	 *
 	 */
 
-	abstract protected function analyseFormContentByPrefix( $prefix, $formNo = null );
+	public function initialCheck(DataFormConfiguration $pConfig, $formNo = null)
+	{
+		$pFormData = $this->buildFormData( $pConfig, $formNo );
+		$pFormData->setFormSent(true);
+		$this->setFormDataInstances( $pFormData );
+		$this->analyseFormContentByPrefix( $pFormData );
+	}
+
+
+	/**
+	 *
+	 * @param DataFormConfiguration $pFormConfig
+	 * @param int $formNo
+	 * @return FormData
+	 *
+	 */
+
+	protected function buildFormData(DataFormConfiguration $pFormConfig, $formNo)
+	{
+		$formFields = $this->getAllowedPostVars($pFormConfig);
+		$postVariables = $this->_pFormPostConfiguration->getPostVars();
+		$formData = array_intersect_key( $postVariables, $formFields );
+		$pFormData = new FormData( $pFormConfig, $formNo );
+		$pFormData->setRequiredFields( $pFormConfig->getRequiredFields() );
+		$pFormData->setFormtype( $pFormConfig->getFormType() );
+		$pFormData->setValues( $formData );
+
+		return $pFormData;
+	}
+
+
+	/**
+	 *
+	 * @param DataFormConfiguration $pFormConfig
+	 * @return string[]
+	 *
+	 */
+
+	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
+	{
+		return $pFormConfig->getInputs();
+	}
+
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 *
+	 */
+
+	abstract protected function analyseFormContentByPrefix(FormData $pFormData);
 
 
 	/**
@@ -159,7 +161,8 @@ abstract class FormPost {
 	 *
 	 */
 
-	public function getFormDataInstance( $prefix, $formNo ) {
+	public function getFormDataInstance( $prefix, $formNo )
+	{
 		if ( isset( $this->_formDataInstances[$prefix][$formNo] ) ) {
 			return $this->_formDataInstances[$prefix][$formNo];
 		}
@@ -170,13 +173,14 @@ abstract class FormPost {
 
 	/**
 	 *
-	 * @param string $prefix
-	 * @param string $formNo
 	 * @param FormData $pFormData
 	 *
 	 */
 
-	public function setFormDataInstances( $prefix, $formNo, $pFormData ){
+	public function setFormDataInstances( FormData $pFormData )
+	{
+		$formNo = $pFormData->getFormNo();
+		$prefix = $pFormData->getDataFormConfiguration()->getFormName();
 		$this->_formDataInstances[$prefix][$formNo] = $pFormData;
 	}
 
@@ -185,8 +189,9 @@ abstract class FormPost {
 	 *
 	 */
 
-	public function incrementFormNo() {
-		$this->_formNo++;
+	public static function incrementFormNo()
+	{
+		self::$_formNo++;
 	}
 
 
@@ -196,76 +201,134 @@ abstract class FormPost {
 	 *
 	 */
 
-	public function getFormNo() {
-		return $this->_formNo;
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function resetFormNo() {
-		$this->_formNo = 0;
+	public function getFormNo()
+	{
+		return self::$_formNo;
 	}
 
 
 	/**
 	 *
 	 * @param array $inputFormFields
+	 * @param bool $intAsRange
 	 * @return array
 	 *
 	 */
 
-	protected function getFormFieldsConsiderSearchcriteria($inputFormFields) {
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
+	protected function getFormFieldsConsiderSearchcriteria($inputFormFields, $intAsRange = true)
+	{
+		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
 		$handle = $pSDKWrapper->addRequest(
 				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields');
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse( $handle );
 
-		foreach ($response['data']['records'] as $tableValues)
-		{
-			$felder = $tableValues['elements'];
+		foreach ($response['data']['records'] as $tableValues) {
+			$fields = $tableValues['elements'];
 
 			// new
-			if ($felder['name'] == 'Umkreis' &&
-				array_key_exists('Umkreis', $inputFormFields))
-			{
+			if ($fields['name'] == 'Umkreis' &&
+				array_key_exists('Umkreis', $inputFormFields)) {
 				unset($inputFormFields['Umkreis']);
 
-				foreach ($felder['fields'] as $field)
-				{
+				foreach ($fields['fields'] as $field) {
 					$inputFormFields[$field['id']] = 'searchcriteria';
 				}
-			}
-			else
-			{
-				foreach ($felder['fields'] as $field)
+			} else {
+				foreach ($fields['fields'] as $field)
 				{
-					if (array_key_exists('rangefield', $field) &&
-						$field['rangefield'] == true)
-					{
-						if (array_key_exists($field['id'], $inputFormFields))
-						{
-							unset($inputFormFields[$field['id']]);
+					if (($field['rangefield'] ?? false) &&
+						isset($inputFormFields[$field['id']]) && $intAsRange) {
+						unset($inputFormFields[$field['id']]);
 
-							$inputFormFields[$field['id'].self::RANGE_VON] = 'searchcriteria';
-							$inputFormFields[$field['id'].self::RANGE_BIS] = 'searchcriteria';
+						$inputFormFields[$field['id'].self::RANGE_VON] = 'searchcriteria';
+						$inputFormFields[$field['id'].self::RANGE_BIS] = 'searchcriteria';
 
-							$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_VON] = $field['id'];
-							$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_BIS] = $field['id'];
-						}
+						$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_VON] = $field['id'];
+						$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_BIS] = $field['id'];
 					}
 				}
 			}
-
 		}
 
 		return $inputFormFields;
+	}
+
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @param bool $mergeExisting
+	 * @return bool
+	 *
+	 */
+
+	protected function createOrCompleteAddress(FormData $pFormData, $mergeExisting = false)
+	{
+		$requestParams = $this->getAddressDataForApiCall($pFormData);
+		$requestParams['checkDuplicate'] = $mergeExisting;
+		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
+
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper,
+			onOfficeSDK::ACTION_ID_CREATE, 'address');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
+		$pSDKWrapper->sendRequests();
+
+		if ($pApiClientAction->getResultStatus() === true) {
+			$result = $pApiClientAction->getResultRecords();
+			return $result[0]['id'] ?? false;
+		}
+
+		return false;
+	}
+
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @return array
+	 *
+	 */
+
+	private function getAddressDataForApiCall(FormData $pFormData)
+	{
+		$inputs = $pFormData->getDataFormConfiguration()->getInputs();
+		$addressData = [];
+		$values = $pFormData->getValues();
+
+		foreach ($values as $input => $value) {
+			$inputName = $pFormData->getFieldNameOfInput($input);
+			if (onOfficeSDK::MODULE_ADDRESS !== $inputs[$inputName]) {
+				continue;
+			}
+
+			$fieldType = $this->_pFormPostConfiguration->getTypeForInput($input, $inputs[$inputName]);
+
+			switch ($inputName)
+			{
+				case 'Telefon1':
+					$inputName = 'phone';
+					break;
+
+				case 'Email':
+					$inputName = 'email';
+					break;
+
+				case 'Telefax1':
+					$inputName = 'fax';
+					break;
+			}
+
+			if ($fieldType === FieldTypes::FIELD_TYPE_MULTISELECT && !is_array($value)) {
+				$addressData[$inputName] = [$value];
+			} else {
+				$addressData[$inputName] = $value;
+			}
+		}
+
+		return $addressData;
 	}
 
 
@@ -291,8 +354,7 @@ abstract class FormPost {
 
 	protected function getVonRangeFieldname($field)
 	{
-		if (in_array($field, $this->_searchcriteriaRangeFields))
-		{
+		if (in_array($field, $this->_searchcriteriaRangeFields)) {
 			return $field.self::RANGE_VON;
 		}
 
@@ -309,8 +371,7 @@ abstract class FormPost {
 
 	protected function getBisRangeFieldname($field)
 	{
-		if (in_array($field, $this->_searchcriteriaRangeFields))
-		{
+		if (in_array($field, $this->_searchcriteriaRangeFields)) {
 			return $field.self::RANGE_BIS;
 		}
 

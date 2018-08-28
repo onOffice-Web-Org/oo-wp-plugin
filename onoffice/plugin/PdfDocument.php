@@ -29,13 +29,14 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\ApiClientActionGetPdf;
 
 /**
  *
  */
 
-class PdfDocument {
-
+class PdfDocument
+{
 	/** @var int */
 	private $_estateId = null;
 
@@ -54,6 +55,9 @@ class PdfDocument {
 	/** @var string */
 	private $_template = null;
 
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
+
 
 	/**
 	 *
@@ -61,10 +65,12 @@ class PdfDocument {
 	 *
 	 */
 
-	public function __construct( $estateId, $language, $template ) {
+	public function __construct($estateId, $language, $template)
+	{
 		$this->_estateId = $estateId;
 		$this->_language = $language;
 		$this->_template = $template;
+		$this->_pSDKWrapper = new SDKWrapper();
 	}
 
 
@@ -74,126 +80,78 @@ class PdfDocument {
 	 *
 	 */
 
-	public function fetch() {
-		$parameters = array(
+	public function fetch()
+	{
+		$pSdkWrapper = $this->_pSDKWrapper;
+		$parameters = $this->getParameters();
+
+		$pApiClientAction = new ApiClientActionGetPdf
+			($pSdkWrapper, onOfficeSDK::ACTION_ID_GET, 'pdf');
+		$pApiClientAction->setParameters($parameters);
+		$pApiClientAction->addRequestToQueue();
+		$pSdkWrapper->sendRequests();
+
+		if ($pApiClientAction->getResultStatus()) {
+			$this->_mimeType = $pApiClientAction->getMimeTypeResult();
+			$this->_documentBinary = $pApiClientAction->getResultRecords()[0];
+		}
+		return $this->_documentBinary !== null && $this->_mimeType !== null;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getParameters()
+	{
+		return array(
 			'estateid' => $this->_estateId,
 			'language' => $this->_language,
 			'gzcompress' => true,
 			'template' => $this->_template,
 		);
-
-		$pSdkWrapper = new SDKWrapper();
-		$handlePdf = $pSdkWrapper->addRequest( onOfficeSDK::ACTION_ID_GET, 'pdf', $parameters );
-		$pSdkWrapper->sendRequests();
-
-		$response = $pSdkWrapper->getRequestResponse( $handlePdf );
-
-		if ( isset( $response['data']['records'][0]['elements'] ) ) {
-			$documentApiPath = $response['data']['records'][0]['elements'];
-			$documentBase64 = $documentApiPath['document'];
-			$documentGzip = base64_decode( $documentBase64 );
-			$document = gzuncompress( $documentGzip );
-
-			if ( $document === false ) {
-				return false;
-			}
-			$this->_documentBinary = $document;
-		} else {
-			return false;
-		}
-
-		if ( isset( $response['data']['records'][0]['elements'] ) ) {
-			$this->_mimeType = $response['data']['records'][0]['elements']['type'];
-		}
-
-		return true;
 	}
 
+	/** @param int $addressId */
+	public function setAddressId($addressId)
+		{ $this->_addressId = $addressId; }
 
-	/**
-	 *
-	 * @param int $addressId
-	 *
-	 */
+	/** @return int */
+	public function getAddressId()
+		{ return $this->_addressId; }
 
-	public function setAddressId( $addressId ) {
-		$this->_addressId = $addressId;
-	}
+	/** @param int $estateId */
+	public function setEstateId($estateId)
+		{ $this->_estateId = $estateId; }
 
+	/** @return int */
+	public function getEstateId()
+		{ return $this->_estateId; }
 
-	/**
-	 *
-	 * @return int
-	 *
-	 */
+	/** @param string $language */
+	public function setLanguage($language)
+		{ $this->_language = $language; }
 
-	public function getAddressId() {
-		return $this->_addressId;
-	}
+	/** @return string */
+	public function getLanguage()
+		{ return $this->_language; }
 
+	/** @return string binary */
+	public function getDocumentBinary()
+		{ return $this->_documentBinary; }
 
-	/**
-	 *
-	 * @param int $estateId
-	 *
-	 */
+	/** @return string */
+	public function getMimeType()
+		{ return $this->_mimeType; }
 
-	public function setEstateId( $estateId ) {
-		$this->_estateId = $estateId;
-	}
+	/** @return SDKWrapper */
+	public function getSDKWrapper()
+		{ return $this->_pSDKWrapper; }
 
-
-	/**
-	 *
-	 * @return int
-	 *
-	 */
-
-	public function getEstateId() {
-		return $this->_estateId;
-	}
-
-
-	/**
-	 *
-	 * @param string $language
-	 *
-	 */
-
-	public function setLanguage( $language ) {
-		$this->_language = $language;
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getLanguage() {
-		return $this->_language;
-	}
-
-
-	/**
-	 *
-	 * @return string binary
-	 *
-	 */
-
-	public function getDocumentBinary() {
-		return $this->_documentBinary;
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getMimeType() {
-		return $this->_mimeType;
-	}
+	/** @param SDKWrapper $pSDKWrapper*/
+	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
+		{ $this->_pSDKWrapper = $pSDKWrapper; }
 }

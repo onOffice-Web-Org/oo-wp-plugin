@@ -24,22 +24,29 @@
  * @copyright 2003-2016, onOffice(R) Software AG
  *
  */
+
 namespace onOffice\WPlugin;
 
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
-use onOffice\WPlugin\FormPostFree;
-use onOffice\WPlugin\FormPostInterest;
-use onOffice\WPlugin\FormPostApplicant;
-use onOffice\WPlugin\FormPostOwner;
 
 /**
  *
- * Description of FormPostHandler
- *
  */
+
 class FormPostHandler
 {
+	/** @var array */
+	static private $_formPostClassesByType = array(
+		Form::TYPE_CONTACT => FormPostContact::class,
+		Form::TYPE_OWNER => FormPostOwner::class,
+		Form::TYPE_INTEREST => FormPostInterest::class,
+		Form::TYPE_APPLICANT_SEARCH => FormPostApplicantSearch::class,
+	);
+
+
 	/** @var array */
 	static private $_instances = array();
 
@@ -50,63 +57,53 @@ class FormPostHandler
 	 *
 	 */
 
-	static public function getInstance()
+	static public function getInstance($type)
 	{
-		$configByPrefix = \onOffice\WPlugin\Form::TYPE_FREE;
-
-		if ( array_key_exists( 'oo_formid', $_POST ) )
-		{
-			$formNo = null;
-
-			if ( array_key_exists( 'oo_formno', $_POST ) )
-			{
-				$formNo = $_POST['oo_formno'];
-			}
-
-			$formId = $_POST['oo_formid'];
-			$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-			$configByPrefix = $formConfig[$formId]['formtype'];
+		if (!array_key_exists($type, Form::getFormTypesLabeled())) {
+			throw new UnknownFormException($type);
 		}
 
-		if (!array_key_exists($configByPrefix, self::$_instances))
-		{
-			self::create($configByPrefix);
+		if (!array_key_exists($type, self::$_instances)) {
+			self::create($type);
 		}
 
-		return self::$_instances[$configByPrefix];
+		return self::$_instances[$type];
 	}
 
 
 	/**
 	 *
-	 * @param string $configByPrefix
+	 */
+
+	static public function initialCheck()
+	{
+		$formName = filter_input(INPUT_POST, 'oo_formid', FILTER_SANITIZE_STRING);
+		$formNo = filter_input(INPUT_POST, 'oo_formno', FILTER_SANITIZE_NUMBER_INT);
+
+		if ( ! is_null( $formName ) ) {
+			$pDataFormConfigFactory = new DataFormConfigurationFactory();
+			$pFormConfig = $pDataFormConfigFactory->loadByFormName($formName);
+			$formType = $pFormConfig->getFormType();
+
+			$pFormPostInstance = self::getInstance($formType);
+			$pFormPostInstance->initialCheck($pFormConfig, $formNo);
+		}
+	}
+
+
+	/**
+	 *
+	 * @param string $formType
 	 *
 	 */
-	static private function create($configByPrefix)
+
+	static private function create($formType)
 	{
-		switch ($configByPrefix)
-		{
-			case Form::TYPE_CONTACT:
-				self::$_instances[Form::TYPE_CONTACT] = FormPostInterest::getInstance();
-				break;
-
-			case Form::TYPE_OWNER:
-				self::$_instances[Form::TYPE_OWNER] = FormPostOwner::getInstance();
-				break;
-
-			case Form::TYPE_INTEREST:
-				self::$_instances[Form::TYPE_INTEREST] = FormPostApplicant::getInstance();
-				break;
-
-			case Form::TYPE_APPLICANT_SEARCH:
-				self::$_instances[Form::TYPE_APPLICANT_SEARCH] = FormPostApplicantSearch::getInstance();
-				break;
-
-			default:
-				self::$_instances[Form::TYPE_FREE] = FormPostFree::getInstance();
-				break;
+		if (isset(self::$_formPostClassesByType[$formType])) {
+			$class = self::$_formPostClassesByType[$formType];
+			self::$_instances[$formType] = new $class;
+		} else {
+			throw new Exception('Unknown Form Type');
 		}
 	}
 }
-
-?>

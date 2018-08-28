@@ -18,6 +18,8 @@
  *
  */
 
+$pathComponents = [ONOFFICE_PLUGIN_DIR, 'templates.dist', 'fields.php'];
+require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 
 ?>
 <form method="post">
@@ -31,194 +33,165 @@
 <?php
 
 	$selectTypes = array(
-			onOffice\WPlugin\FieldType::FIELD_TYPE_MULTISELECT,
-			onOffice\WPlugin\FieldType::FIELD_TYPE_SINGLESELECT,
+			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
+			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
 		);
 
-	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)
-	{
+	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 		echo 'ERROR!';
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
-	foreach ( $pForm->getInputFields() as $input => $table )
-	{
-		if ($input == 'Umkreis')
-		{
-			echo '<br>'
-			. '<fieldset>'
-			. '<legend>Umkreissuche:</legend>';
+	foreach ( $pForm->getInputFields() as $input => $table ) {
+		if ( in_array( $input, array('message', 'Id') ) ) {
+			continue;
+		}
 
-			foreach($pForm->getUmkreisFields() as $key => $values)
-			{
+		if ( $pForm->isMissingField( $input ) ) {
+			echo '<span class="onoffice-pleasefill">Bitte ausfüllen!</span>';
+		}
+
+		$isRequired = $pForm->isRequiredField( $input );
+		$addition = $isRequired ? '*' : '';
+		$inputAddition = $isRequired ? ' required' : '';
+		echo $pForm->getFieldLabel( $input ).$addition.': <br>';
+
+		$permittedValues = $pForm->getPermittedValues( $input, true );
+
+		if ($input == 'Umkreis') {
+			echo '<br>'
+				.'<fieldset>'
+				.'<legend>Umkreissuche:</legend>';
+
+			foreach ($pForm->getUmkreisFields() as $key => $values) {
 				echo $values['label'].':<br>';
 
-				if (in_array($values['type'], $selectTypes))
-				{
+				if (in_array($values['type'], $selectTypes)) {
 					$permittedValues = $values['permittedvalues'];
 
 					echo '<select size="1" name="'.$key.'">';
 					echo  '<option value="">'.esc_html('Keine Angabe').'</option>';
 
-					foreach ( $permittedValues as $countryCode => $countryName )
-					{
-						echo  '<option value="'.esc_html($countryCode).'">'.esc_html($countryName).'</option>';
+					foreach ( $permittedValues as $countryCode => $countryName ) {
+						echo '<option value="'.esc_html($countryCode).'">'
+							.esc_html($countryName).'</option>';
 					}
 
 					echo '</select><br>';
-				}
-				else
-				{
-					echo '<input type="text" name="'.$key.'" value="'.$pForm->getFieldValue( $key ).'"> <br>';
+				} else {
+					echo '<input type="text" name="'.esc_html($key).'" value="'
+						.$pForm->getFieldValue( $key ).'"'.$inputAddition.'> <br>';
 				}
 			}
-			echo '</fieldset>';
 
+			echo '</fieldset>';
 			continue;
 		}
 
 		$typeCurrentInput = $pForm->getFieldType( $input );
 
-		$isRequired = $pForm->isRequiredField( $input );
-		$addition = $isRequired ? '*' : '';
+		$selectedValue = $pForm->getFieldValue( $input, true );
 
-		if ( in_array( $typeCurrentInput, $selectTypes, true ) )
-		{
-			echo $pForm->getFieldLabel( $input ).':<br>';
-
-			$permittedValues = $pForm->getPermittedValues( $input, true );
-			$selectedValue = $pForm->getFieldValue( $input, true );
-
-			echo '<select size="1" name="'.$input.'">';
-			echo  '<option value="">'.esc_html('Keine Angabe').'</option>';
-
-			foreach ( $permittedValues as $key => $value )
-			{
-				if ( is_array( $selectedValue ) )
-				{
-					$isSelected = in_array( $key, $selectedValue );
+		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
+			echo '<div data-name="'.esc_html($input).'" class="multiselect" data-values="'
+				.esc_html(json_encode($permittedValues)).'" data-selected="'
+				.esc_html(json_encode($selectedValue)).'">
+				<input type="button" class="onoffice-multiselect-edit" value="'
+				.esc_html__('Edit values', 'onoffice').'"> </div>';
+		} else {
+			if ($input == 'regionaler_zusatz') {
+				echo '<select size="1" name="'.esc_html($input).'">';
+				$pRegionController = new \onOffice\WPlugin\Region\RegionController();
+				$regions = $pRegionController->getRegions();
+				foreach ($regions as $pRegion) {
+					/* @var $pRegion Region */
+					printRegion( $pRegion, [$selectedValue] );
 				}
-				else
-				{
-					$isSelected = $selectedValue == $key;
-				}
-
-				echo  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
-			}
-			echo '</select><br>';
-		}
-		else
-		{
-			if ($pForm->inRangeSearchcriteriaInfos($input) &&
-				count($pForm->getSearchcriteriaRangeInfosForField($input)) > 0)
-			{
-				echo $pForm->getFieldLabel( $input ).':<br>';
-
-				foreach ($pForm->getSearchcriteriaRangeInfosForField($input) as $key => $value)
-				{
-					echo '<input name="'.$key.'" placeholder="'.$value.'" value="'.$pForm->getFieldValue($key).'"> ';
-				}
-				echo '<br>';
-			}
-			else
-			{
-				echo $pForm->getFieldLabel( $input ).$addition.': <input type="text" name="'.$input.'" value="'
-					.$pForm->getFieldValue( $input ).'"><br>';
+				echo '</select><br>';
+			} else {
+				echo '<input type="text" name="'.$input.'" value="'
+					.$pForm->getFieldValue( $input ).'"'.$inputAddition.'><br>';
 			}
 		}
 
-		if ( $pForm->isMissingField( $input ) )
-		{
-			echo 'Bitte ausfüllen!';
-		}
-
-		if ( in_array( $input, array('message', 'Id') ) )
-		{
-			continue;
-		}
+		echo '<br>';
 	}
 
 ?>
 
-	<br><input type="submit" value="Interessenten suchen">
+	<br><input type="submit" value="<?php esc_attr_e('Search for Prospective Buyers', 'onoffice'); ?>">
 <?php
 
-if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
-{
+if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$applicants = $pForm->getResponseFieldsValues();
 	$rangeFields = array_keys($pForm->getSearchcriteriaRangeInfos());
 	$umkreisFields = $pForm->getUmkreisFields();
-	$countResults = count(array_keys($applicants)); // Anzahl Ergebnisse
+	$countResults = count(array_keys($applicants));
 
 	echo '<p>';
-	echo '<br> <span><b>Anzahl Ergebnisse: '.$countResults.'</b></span><br>';
+	echo '<br><span>'.esc_html(
+			sprintf(_n(
+				'%s Prospective Buyer', '%s Prospective Buyers', $countResults, 'onoffice'),
+					number_format_i18n($countResults))).'</span><br>';
 
-	foreach ($applicants as $address => $searchdata)	{
-
-		echo '<br><span><b>Interessentprofil '.$address.'</b></span><br>';
+	foreach ($applicants as $address => $searchdata) {
+		echo '<br>';
+		echo '<span>'.esc_html(sprintf(__('Customer ref. number %s', 'onoffice'), $address)).'</span>';
+		echo '<br>';
 		$umkreis = array();
 
-		foreach ($searchdata as $name => $value)
-		{
-			if (in_array($name, $rangeFields))//von-bis felder
-			{
+		foreach ($searchdata as $name => $value) {
+			if (in_array($name, $rangeFields)) {
 				$realName = $pForm->getFieldLabel($name);
 
-				if (is_array($value))
-				{
+				if (is_array($value)) {
 					echo '<span>';
-					if ($value[0] > 0)
-					{
-						echo $realName .' min. '.$value[0].'<br>';
+					if ($value[0] > 0) {
+						echo $realName.' min. '.$value[0].'<br>';
 					}
 
-					if ($value[1] > 0)
-					{
+					if ($value[1] > 0) {
 						echo $realName.' max. '.$value[1];
 					}
 					echo '</span><br>';
 				}
-			}
-			elseif (in_array($name, array_keys($umkreisFields)))//Umkreissuche-felder
-			{
+			} elseif (in_array($name, array_keys($umkreisFields))) {
 				$typeCurrentInput = $umkreisFields[$name]['type'];
-				if (in_array($typeCurrentInput, $selectTypes))
-				{
-					$permittedValues = $umkreisFields[$name]['permittedvalues'];
-					$value = $permittedValues[$value];
-				}
-				$realName = $umkreisFields[$name]['label'];
 
+				$realName = $umkreisFields[$name]['label'];
 				$umkreis[$realName] = $value;
 
-				if ($name == 'range' && $value > 0)
-				{
+				if ($name == 'range' && $value > 0) {
 					$umkreis[$realName] .= 'km Umkreis';
 				}
-			}
-			else //normale felder
-			{
+			} else {
 				$realName = $pForm->getFieldLabel($name);
 				$typeCurrentInput = $pForm->getFieldType( $name );
+			}
 
-				if ( in_array( $typeCurrentInput, $selectTypes, true ) )
-				{
-					$permittedValues = $pForm->getPermittedValues( $name, true );
+			if ($name !== 'regionaler_zusatz') {
+				if (in_array($typeCurrentInput, $selectTypes)) {
+					$permittedValues = $pForm->getPermittedValues($name);
 					$value = $permittedValues[$value];
 				}
-
-				echo '<span>'.$realName.': '.$value.'</span><br>';
+			} else {
+				$pRegionController = new \onOffice\WPlugin\Region\RegionController();
+				$pRegion = $pRegionController->getRegionByKey(array_pop($value));
+				/* @var $pRegion \onOffice\WPlugin\Region\Region */
+				if ($pRegion !== null) {
+					$value = esc_html($pRegion->getName());
+				}
 			}
+
+			echo '<span>'.$realName.': '.(is_array($value) ? implode(', ', $value) : $value).'</span><br>';
 		}
 
-		if (count($umkreis) > 0)
-		{
+		if (count($umkreis) > 0) {
 			echo '<span><i>'.implode(' ', array_values($umkreis)).'</i></span><br>';
 		}
 	}
 	echo '</p>';
-
 }
-die;
+
 ?>
 </form>

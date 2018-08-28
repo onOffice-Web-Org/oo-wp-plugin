@@ -1,0 +1,157 @@
+#onoffice-ajax .metabox-holder .postbox-container .postbox p {
+	display: block;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox label {
+	float: left;
+	margin-right: 12pt;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox input,
+#onoffice-ajax .metabox-holder .postbox-container .postbox select {
+	float: right;
+	max-width: 230px;
+}
+
+#onoffice-ajax input[name=oopluginlistviewsaddress-name],
+#onoffice-ajax input[name=oopluginlistviews-name],
+#onoffice-ajax input[name=oopluginforms-name] {
+	font-size: 1.7em;
+	padding: 3px 8px;
+	width: 100%;
+}
+
+#onoffice-ajax #post-body.columns-2 input[name=oopluginlistviews-name],
+#onoffice-ajax #post-body.columns-2 input[name=oopluginforms-name] {
+	width: 100%;
+}
+
+#onoffice-ajax h2.hndle {
+	background: #fafafa;
+}
+
+body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
+	width: 49%;
+	margin-right: 0;
+}
+
+#onoffice-ajax #poststuff .metabox-holder.columns-2 #postbox-container-2 {
+    width: 49%;
+}
+
+#onoffice-ajax #poststuff #post-body-content {
+    width: 100%;
+	margin: 0;
+}
+
+#onoffice-ajax #poststuff #post-body.columns-2 #side-sortables {
+    width: 100%;
+}
+
+#onoffice-ajax #listSettings {
+	width: 49%;
+}
+
+body #onoffice-ajax span.viewusage {
+	font-size: 1.2em;
+	position: relative;
+	margin-bottom: 20px;
+	display: inline-block;
+}
+
+body #onoffice-ajax span.viewusage .italic {
+	font-style: italic;
+}
+
+.fieldsSortable{
+	float: right;
+	min-height: 320px;
+	width: 49%;
+	background: #fff;
+}
+
+#sortableFieldsList .menu-item-bar{
+	display: block;
+	padding-left: 5px;
+}
+
+#sortableFieldsList .menu-item-settings .submitdelete {
+	text-align: right;
+	display:block;
+	width: 98%;
+}
+
+#listSettings .accordion-section-title:hover{
+	cursor: inherit;
+}
+
+#sortableFieldsList .menu-item-settings{
+	display: block;
+	position: relative;
+	margin-left: 5px;
+	clear: both;
+}
+
+#sortableFieldsList .item-delete-link{
+	padding-right: 10px;
+}
+
+#listSettings .accordion-section-content > .inside > p {
+	max-height: 200px;
+	padding: 2px;
+	overflow-y: auto;
+}
+
+#listSettings .accordion-section-content {
+	padding: 0;
+}
+
+#sortableFieldsList .menu-item-settings-name{
+	font-style: italic;
+}
+
+#listSettings p:empty {
+	display: none;
+}
+
+.fieldsSortable .item-edit:before {
+    margin-top: 10px;
+    margin-left: 4px;
+    width: 20px;
+    border-radius: 50%;
+    text-indent: -1px;
+
+	content: "\f140";
+    font: 400 20px/1 dashicons;
+    speak: none;
+    display: block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-decoration: none!important;
+}
+
+.fieldsSortable .item-edit {
+    position: absolute;
+    right: -20px;
+    top: 0;
+    display: block;
+    width: 30px;
+    height: 40px;
+    outline: 0;
+}
+
+#menu-item-dummy_key {
+	display: none;
+}
+
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p {
+	line-height: 1em;
+}
+
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p input {
+	margin-right: 10px;
+	float: right;
+}
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p label {
+	float: left;
+}

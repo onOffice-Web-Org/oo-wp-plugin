@@ -18,108 +18,61 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+namespace onOffice\WPlugin;
+
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\FormPost;
+
+
 /**
+ *
+ * Applicant search form
  *
  * @url http://www.onoffice.de
  * @copyright 2003-2016, onOffice(R) Software AG
  *
  */
 
-namespace onOffice\WPlugin;
-
-use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\Form;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
-use onOffice\SDK\onOfficeSDK;
-
 class FormPostApplicantSearch
 	extends FormPost
 {
-
 	/** */
 	const LIMIT_RESULTS = 100;
 
 
-	/** @var FormPost */
-	private static $_pInstance = null;
-
-
 	/**
 	 *
-	 * @return FormPost
+	 * @param FormData $pFormData
 	 *
 	 */
 
-	public static function getInstance() {
-		if (is_null(self::$_pInstance)) {
-			self::$_pInstance = new static;
-		}
-
-		return self::$_pInstance;
-	}
-
-
-	/**
-	 *
-	 */
-
-	private function __construct() {}
-
-	/** @return string */
-	protected function getFormType() {
-		return Form::TYPE_APPLICANT_SEARCH;
-	}
-
-
-	/**
-	 *
-	 * @param string $prefix
-	 * @param in $formNo
-	 *
-	 */
-
-	protected function analyseFormContentByPrefix($prefix, $formNo = null) {
-		$formConfig = ConfigWrapper::getInstance()->getConfigByKey('forms');
-
-		$configByPrefix = $formConfig[$prefix];
-		$formFields = $configByPrefix['inputs'];
-
-		$limitResults = self::LIMIT_RESULTS;
-
-		if (array_key_exists('limitResults', $configByPrefix))
-		{
-			if ($configByPrefix['limitResults'] > 0)
-			{
-				$limitResults = $configByPrefix['limitResults'];
-			}
-		}
-
-		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields);
+	protected function analyseFormContentByPrefix(FormData $pFormData)
+	{
+		/* @var $pFormConfig DataFormConfigurationApplicantSearch */
+		$pFormConfig = $pFormData->getDataFormConfiguration();
+		$formFields = $pFormConfig->getInputs();
+		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields, false);
 
 		$formData = array_intersect_key($_POST, $newFormFields);
+		$limitResults = $pFormConfig->getLimitResults();
 
-		$pFormData = new FormData($prefix, $formNo);
-		$pFormData->setRequiredFields($configByPrefix['required']);
-		$pFormData->setFormtype($configByPrefix['formtype']);
-
-		$this->setFormDataInstances($prefix, $formNo, $pFormData);
+		if ($limitResults <= 0) {
+			$limitResults = self::LIMIT_RESULTS;
+		}
 
 		$pFormData->setValues($formData);
 
 		$missingFields = $pFormData->getMissingFields();
 
-		if (count($missingFields) > 0)
-		{
+		if (count($missingFields) > 0) {
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
-		}
-		else
-		{
-			$response = false;
+		} else {
 			$interessenten = $this->getApplicants($pFormData, $limitResults);
 
-			if (is_array($interessenten) && count($interessenten) > 0)
-			{
+			if (is_array($interessenten)) {
 				$pFormData->setResponseFieldsValues($interessenten);
 				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
 			}
@@ -129,7 +82,7 @@ class FormPostApplicantSearch
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\FormData $pFormData
+	 * @param FormData $pFormData
 	 * @param int $limitResults
 	 * @return array
 	 *
@@ -137,54 +90,44 @@ class FormPostApplicantSearch
 
 	private function getApplicants(FormData $pFormData, $limitResults)
 	{
-		$found = array();
+		$found = [];
 		$searchData = $this->editFormValuesForApiCall($pFormData->getValues());
-
 		$searchFields = array_keys($searchData);
 		$searchcrieriaRangeFields = $this->getSearchcriteriaRangeFields();
 
-		$requestParams = array
-			(
-				'searchdata' => $searchData,
-				'outputall' => true,
-				'groupbyaddress' => true,
-				'limit' => $limitResults,
-				'offset' => 0,
-			);
+		$requestParams = [
+			'searchdata' => $searchData,
+			'outputall' => true,
+			'groupbyaddress' => true,
+			'limit' => $limitResults,
+			'offset' => 0,
+		];
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addFullRequest(
-				onOfficeSDK::ACTION_ID_GET, 'search', 'searchcriteria', $requestParams);
+		$handle = $pSDKWrapper->addFullRequest
+			(onOfficeSDK::ACTION_ID_GET, 'search', 'searchcriteria', $requestParams);
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse($handle);
 
 		$result = isset($response['data']['records']) &&
-				count($response['data']['records']) > 0;
+			count($response['data']['records']) > 0;
 
-		if ($result)
-		{
-			$addressIds = array();
+		if ($result) {
+			$addressIds = [];
 
-			foreach ($response['data']['records'] as $record)
-			{
+			foreach ($response['data']['records'] as $record) {
 				$addressId = $record['elements']['adresse'];
 				$addressIds []= $addressId;
 				$elements = $record['elements'];
-				$searchParameters = array();
+				$searchParameters = [];
 
-				foreach ($elements as $key => $value)
-				{
-					if ($this->isSearchcriteriaRangeField($key))
-					{
+				foreach ($elements as $key => $value) {
+					if ($this->isSearchcriteriaRangeField($key)) {
 						$origName = $searchcrieriaRangeFields[$key];
 
-						if (in_array($origName, $searchFields))
-						{
-							if (array_key_exists($origName, $searchParameters))
-							{
+						if (in_array($origName, $searchFields)) {
+							if (array_key_exists($origName, $searchParameters)) {
 								continue;
 							}
 
@@ -194,43 +137,33 @@ class FormPostApplicantSearch
 							$vonValue = 0;
 							$bisValue = 0;
 
-							if (array_key_exists($vonFieldname, $elements))
-							{
+							if (array_key_exists($vonFieldname, $elements)) {
 								$vonValue = $elements[$vonFieldname];
 
-								if (null == $vonValue)
-								{
+								if (null == $vonValue) {
 									$vonValue = 0;
 								}
 							}
 
-							if (array_key_exists($bisFieldname, $elements))
-							{
+							if (array_key_exists($bisFieldname, $elements)) {
 								$bisValue = $elements[$bisFieldname];
 
-								if (null == $bisValue)
-								{
+								if (null == $bisValue) {
 									$bisValue = 0;
 								}
 							}
-
-							$searchParameters[$origName] = array($vonValue, $bisValue);
+							$searchParameters[$origName] = [$vonValue, $bisValue];
 						}
-					}
-					else
-					{
-						if (in_array($key, $searchFields))
-						{
+					} else {
+						if (in_array($key, $searchFields)) {
 							$searchParameters[$key] = $value;
 						}
 					}
 				}
-
 				$found[$addressId] = $searchParameters;
 			}
 
-			if (count($found) > 0)
-			{
+			if (count($found) > 0) {
 				$found = $this->setKdNr($found);
 			}
 		}
@@ -249,18 +182,14 @@ class FormPostApplicantSearch
 	private function setKdNr($applicants)
 	{
 		$adressIds = array_keys($applicants);
-		$interessenten = array();
+		$interessenten = [];
 
-
-		$requestParams = array
-			(
-				'recordids' => $adressIds,
-				'data' => array('KdNr'),
-			);
+		$requestParams = [
+			'recordids' => $adressIds,
+			'data' => ['KdNr'],
+		];
 
 		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
 		$handle = $pSDKWrapper->addRequest(
 				onOfficeSDK::ACTION_ID_READ, 'address', $requestParams);
 		$pSDKWrapper->sendRequests();
@@ -270,12 +199,10 @@ class FormPostApplicantSearch
 		$result = isset($response['data']['records']) &&
 				count($response['data']['records']) > 0;
 
-		if ($result)
-		{
+		if ($result) {
 			$records = $response['data']['records'];
 
-			foreach ($records as $record)
-			{
+			foreach ($records as $record) {
 				$elements = $record['elements'];
 				$interessenten[$elements['KdNr']] = $applicants[$elements['id']];
 			}
@@ -294,17 +221,14 @@ class FormPostApplicantSearch
 
 	private function editFormValuesForApiCall($formValues)
 	{
-		$result = array();
+		$result = [];
 		$searchcrieriaRangeFields = $this->getSearchcriteriaRangeFields();
 
-		foreach ($formValues as $name => $value)
-		{
-			if ($this->isSearchcriteriaRangeField($name))
-			{
+		foreach ($formValues as $name => $value) {
+			if ($this->isSearchcriteriaRangeField($name)) {
 				$origName = $searchcrieriaRangeFields[$name];
 
-				if (array_key_exists($origName, $result))
-				{
+				if (array_key_exists($origName, $result)) {
 					continue;
 				}
 
@@ -314,35 +238,27 @@ class FormPostApplicantSearch
 				$vonValue = 0;
 				$bisValue = 0;
 
-				if (array_key_exists($vonFieldname, $formValues))
-				{
+				if (array_key_exists($vonFieldname, $formValues)) {
 					$vonValue = $formValues[$vonFieldname];
 
-					if (null == $vonValue)
-					{
+					if (null == $vonValue) {
 						$vonValue = 0;
 					}
 				}
 
-				if (array_key_exists($bisFieldname, $formValues))
-				{
+				if (array_key_exists($bisFieldname, $formValues)) {
 					$bisValue = $formValues[$bisFieldname];
 
-					if (null == $bisValue)
-					{
+					if (null == $bisValue) {
 						$bisValue = 0;
 					}
 				}
 
-				if ($vonValue > 0 || $bisValue > 0)
-				{
+				if ($vonValue > 0 || $bisValue > 0) {
 					$result[$origName] = array($vonValue, $bisValue);
 				}
-			}
-			else
-			{
-				if (null != $value)
-				{
+			} else {
+				if (null != $value) {
 					$result[$name] = $value;
 				}
 			}

@@ -30,80 +30,77 @@
 $addressValues = array();
 $estateValues = array();
 
-if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
-{
+if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo 'SUCCESS!';
-}
-else
-{
-	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)
-	{
+} else {
+	if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 		echo 'ERROR!';
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
-	foreach ( $pForm->getInputFields() as $input => $table )
-	{
+	foreach ( $pForm->getInputFields() as $input => $table ) {
 		$line = null;
 
 		$selectTypes = array(
-			onOffice\WPlugin\FieldType::FIELD_TYPE_MULTISELECT,
-			onOffice\WPlugin\FieldType::FIELD_TYPE_SINGLESELECT,
+			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
+			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
 		);
 
 		$typeCurrentInput = $pForm->getFieldType( $input );
 
-		if ( in_array( $typeCurrentInput, $selectTypes, true ) )
-		{
-			$line = $pForm->getFieldLabel( $input ).': ';
+		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
+			$isRequired = $pForm->isRequiredField( $input );
+			$addition = $isRequired ? '*' : '';
+			$line = $pForm->getFieldLabel( $input ).$addition.': ';
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );
-			$line .= '<select size="1" name="'.$input.'>';
+			$line .= '<select size="1" name="'.esc_attr($input).'">';
 
-			foreach ( $permittedValues as $key => $value )
-			{
-				if ( is_array( $selectedValue ) )
-				{
+			foreach ( $permittedValues as $key => $value ) {
+				if ( is_array( $selectedValue ) ) {
 					$isSelected = in_array( $key, $selectedValue, true );
-				}
-				else
-				{
+				} else {
 					$isSelected = $selectedValue == $key;
 				}
-				$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
+				$line .=  '<option value="'.esc_attr($key).'"'.($isSelected ? ' selected' : '').'>'
+					.esc_html($value).'</option>';
 			}
 			$line .= '</select>';
-		}
-		else
-		{
-			$line .= $pForm->getFieldLabel( $input ).': <input name="'.$input.'" value="'
-					.$pForm->getFieldValue( $input ).'">';
+		} else {
+			$inputType = 'text';
+			$value = 'value="'.$pForm->getFieldValue( $input ).'"';
+
+			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+				$inputType = 'checkbox';
+				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
+				$value .= ' value="y"';
+			}
+
+			$line .= $pForm->getFieldLabel( $input ).': ';
+			$line .= '<input type="'.$inputType.'" name="'.esc_attr($input).'" '.$value.'><br>';
 		}
 
-		if ( $pForm->isMissingField( $input ) )
-		{
-			$line .= '<span>Bitte ausfüllen!</span>';
+		if ( $pForm->isMissingField( $input ) ) {
+			$line .= ' <span>Bitte ausfüllen!</span>';
 		}
 
-		if ($table == 'address')
-		{
+		if ($table == 'address') {
 			$addressValues []= $line;
 		}
 
-		if ($table == 'estate')
-		{
+		if ($table == 'estate') {
 			$estateValues []= $line;
 		}
 	}
 
 	echo '<h2>Ihre Kontaktdaten</h2>'
 		.'<p>';
-	echo implode('<br/>', $addressValues);
+	echo implode('<br>', $addressValues);
 	echo '</p>
 		<h2>Angaben zu Ihrem Eigentum</h2>
 		<p>';
-	echo implode('<br/>', $estateValues);
+	echo implode('<br>', $estateValues);
 	echo '</p>';
 
 ?>

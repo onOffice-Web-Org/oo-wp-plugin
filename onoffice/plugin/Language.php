@@ -34,96 +34,23 @@ namespace onOffice\WPlugin;
 
 class Language
 {
-	/** @var array */
-	private $_config = null;
-
-
 	/**
 	 *
-	 */
-
-	public function __construct()
-	{
-		$this->reloadConfig();
-	}
-
-
-	/**
-	 *
-	 * @param string $configIndex
-	 * @param string $view
 	 * @return string
 	 *
 	 */
 
-	public function getLanguageForEstateSingle($configIndex, $view)
-	{
-		$estateLang = $this->_config['estate'][$configIndex]['views'][$view]['language'];
-		return $this->convertLanguage($estateLang);
-	}
+	static public function getDefault() {
+		$config = ConfigWrapper::getInstance()->getConfig();
+		$languageMapping = $config['localemap'];
+		$currentLocale = get_locale();
+		$language = $languageMapping['fallback'];
 
-
-	/**
-	 *
-	 * @param string $configIndex
-	 * @return string
-	 *
-	 */
-
-	public function getLanguageForEstateList($configIndex)
-	{
-		$estateLang = $this->_config['estate'][$configIndex]['views']['list']['language'];
-		return $this->convertLanguage($estateLang);
-	}
-
-
-	/**
-	 *
-	 * @param string $formName
-	 * @return string
-	 *
-	 */
-
-	public function getLanguageForForm($formName)
-	{
-		$estateLang = $this->_config['forms'][$formName]['language'];
-		return $this->convertLanguage($estateLang);
-	}
-
-
-	/**
-	 *
-	 * @param string $language
-	 * @return string
-	 *
-	 */
-
-	public function convertLanguage($language)
-	{
-		if ($language == 'auto')
+		if (array_key_exists($currentLocale, $languageMapping))
 		{
-			$languageMapping = $this->_config['localemap'];
-			$currentLocale = get_locale();
-
-			if (array_key_exists($currentLocale, $languageMapping))
-			{
-				$language = $languageMapping[$currentLocale];
-			}
-			else
-			{
-				$language = $languageMapping['fallback'];
-			}
+			$language = $languageMapping[$currentLocale];
 		}
+
 		return $language;
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function reloadConfig()
-	{
-		$this->_config = ConfigWrapper::getInstance()->getConfig();
 	}
 }

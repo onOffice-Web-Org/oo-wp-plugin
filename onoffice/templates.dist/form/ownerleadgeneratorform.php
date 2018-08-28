@@ -19,157 +19,145 @@
  *
  */
 
-add_thickbox();
+use onOffice\WPlugin\Form;
+use onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\Types\FieldTypes;
 
-$pages = $pForm->getPages();
+add_thickbox();
 
 $addressValues = array();
 $estateValues = array();
+$miscValues = array();
 
-if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
-{
-	echo 'SUCCESS!';
-}
-else
-{
-	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)
-	{
-		echo 'ERROR!';
+if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
+	esc_html_e('The form was sent successfully.', 'onoffice');
+	echo '<br>';
+} else {
+	if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
+		esc_html_e('There was an error sending the form.', 'onoffice');
+		echo '<br>';
 	}
 
-	/* @var $pForm \onOffice\WPlugin\Form */
-	foreach ( $pForm->getInputFields() as $input => $table )
-	{
-
-		if ( $pForm->isMissingField( $input )  && $pForm->getFormStatus() == onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING)
-		{
-			echo $pForm->getFieldLabel( $input ).' - Angabe fehlt, bitte ausfüllen!<br>';
+	/* @var $pForm Form */
+	foreach ( $pForm->getInputFields() as $input => $table ) {
+		if ( $pForm->isMissingField( $input )  &&
+			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
+			echo sprintf(__('Please enter a value for %s.', 'onoffice'), $pForm->getFieldLabel( $input )).'<br>';
 		}
 
-		$line = null;
+		$line = '';
 
 		$selectTypes = array(
-			onOffice\WPlugin\FieldType::FIELD_TYPE_MULTISELECT,
-			onOffice\WPlugin\FieldType::FIELD_TYPE_SINGLESELECT,
+			FieldTypes::FIELD_TYPE_MULTISELECT,
+			FieldTypes::FIELD_TYPE_SINGLESELECT,
 		);
 
 		$typeCurrentInput = $pForm->getFieldType( $input );
+		$isRequired = $pForm->isRequiredField( $input );
+		$addition = $isRequired ? '*' : '';
+		$requiredAttribute = $isRequired ? ' required' : '';
 
-		if ( in_array( $typeCurrentInput, $selectTypes, true ) )
-		{
-			$line = $pForm->getFieldLabel( $input ).': ';
+		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
+			$line = $pForm->getFieldLabel( $input ).$addition.': ';
 
 			$permittedValues = $pForm->getPermittedValues( $input, true );
 			$selectedValue = $pForm->getFieldValue( $input, true );
-			$line .= '<select size="1" name="'.$input.'>';
+			$line .= '<select size="1" name="'.esc_html($input).'"'.$requiredAttribute.'>';
 
-			foreach ( $permittedValues as $key => $value )
-			{
-				if ( is_array( $selectedValue ) )
-				{
+			foreach ( $permittedValues as $key => $value ) {
+				if ( is_array( $selectedValue ) ) {
 					$isSelected = in_array( $key, $selectedValue, true );
-				}
-				else
-				{
+				} else {
 					$isSelected = $selectedValue == $key;
 				}
-				$line .=  '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
+				$line .= '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'
+					.esc_html($value).'</option>';
 			}
 			$line .= '</select>';
-		}
-		else
-		{
-			$line .= $pForm->getFieldLabel( $input ).': <input name="'.$input.'" value="'
-					.$pForm->getFieldValue( $input ).'">';
+		} else {
+			$inputType = 'text';
+			$value = 'value="'.$pForm->getFieldValue( $input ).'"';
+
+			if ($typeCurrentInput == FieldTypes::FIELD_TYPE_BOOLEAN) {
+				$inputType = 'checkbox';
+				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
+				$value .= ' value="y"';
+			}
+
+			$line .= $pForm->getFieldLabel( $input ).$addition.': ';
+			$line .= '<input type="'.$inputType.'" name="'.esc_attr($input).'" '.$value.$requiredAttribute.'><br>';
 		}
 
-		if ($table == 'address')
-		{
+		if ($table == 'address') {
 			$addressValues []= $line;
-		}
-
-		if ($table == 'estate')
-		{
+		} elseif ($table == 'estate') {
 			$estateValues []= $line;
+		} else {
+			$miscValues []= $line;
 		}
 	}
 }
 ?>
 
 <script>
-function weiter(pages)
-{
-	for (i=1; i<= pages; i++)
-	{
-		if ($('#'+i).is(':visible'))
-		{
-			if (i < pages)
-			{
-				$('#'+i).hide();
-				i++;
-				$('#'+i).show();
-				break;
-			}
-		}
-	}
-}
-
-function zurueck(pages)
-{
-	for (i=pages; i>= 1; i--)
-	{
-		if ($('#'+i).is(':visible'))
-		{
-			if (i > 1)
-			{
-				$('#'+i).hide();
-				i--;
-				$('#'+i).show();
-				break;
-			}
-		}
-	}
-}
+	$(document).ready(function() {
+		var oOPaging = new onOffice.paging('leadform');
+		oOPaging.setFormId('leadgeneratorform');
+		oOPaging.setup();
+	});
 </script>
 
-<div id="my-content-id" style="display:none;">
+<div id="onoffice-lead" style="display:none;">
 	<p>
-		<form name="leadgenerator" action="" method="post">
+		<form name="leadgenerator" action="" method="post" id="leadgeneratorform">
 			<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
-			<div id="inhalt">
+			<div id="leadform">
 				<?php
-					if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR)
-					{
+					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
 						echo 'ERROR!';
 					}
-
-					for ($i = 1; $i <= $pages; $i++)
-					{
-						if ($i == 1)
-						{
-							$displayValue = 'block';
-						}
-						else
-						{
-							$displayValue = 'none';
-						}
-						echo '<div id="'.$i.'" style="display:'.$displayValue.'">';
-							include('includes/ownerleadgeneratorform_'.$i.'.php');
-						echo '</div>';
-					}
 				?>
+
+				<div class="lead-lightbox lead-page-1">
+					<h2><?php echo esc_html__('Your contact details', 'onoffice'); ?></h2>
+					<p>
+						<?php echo implode('<br>', $addressValues); ?>
+					</p>
+				</div>
+
+				<div class="lead-lightbox lead-page-2">
+					<h2><?php echo esc_html__('Information about your property', 'onoffice'); ?></h2>
+					<p>
+						<?php echo implode('<br>', $estateValues); ?>
+					</p>
+					<p>
+						<?php echo implode('<br>', $miscValues); ?>
+					</p>
+					<p>
+						<input type="submit" value="<?php echo esc_html__('Send', 'onoffice'); ?>" style="float:right;">
+					</p>
+				</div>
+
+				<span class="leadform-back" style="float:left; cursor:pointer;">
+					<?php echo esc_html__('Back', 'onoffice'); ?>
+				</span>
+				<span class="leadform-forward" style="float:right; cursor:pointer;">
+					<?php echo esc_html__('Next', 'onoffice'); ?>
+				</span>
 			</div>
-			<br/>
-			<div style="width:500">
-				<div id="back"  style="float:left; cursor:pointer;" onclick="zurueck(<?php echo $pages; ?>)">Zur&uuml;ck</div>
-				<div id="vor"  style="float:right; cursor:pointer;" onclick="weiter(<?php echo $pages; ?>)">Weiter</div>
-			</div>
-			<p>
-			<div id="buttonSubmit" style="clear:both"><input type="submit" value="GO!"></div>
-		   </p>
 		</form>
-     </p>
+	</p>
 </div>
 
-<a href="#TB_inline?width=700&height=650&inlineId=my-content-id" class="thickbox">Zum Formular...</a>
+<?php
+
+if (in_array($pForm->getFormStatus(), [
+		null,
+		FormPost::MESSAGE_ERROR,
+		FormPost::MESSAGE_REQUIRED_FIELDS_MISSING,
+	])) {
+	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead" class="thickbox">';
+	echo esc_html__('Open the Form', 'onoffice');
+	echo '</a>';
+}

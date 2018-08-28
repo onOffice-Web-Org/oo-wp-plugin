@@ -28,16 +28,124 @@
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
  */
 
-class Fieldnames {
-	/** @var Fieldnames */
-	static private $_pInstance = null;
+class Fieldnames
+{
+
+	/**
+	 *
+	 * @var array
+	 * "label" key needs to be translated
+	 *
+	 */
+
+	private static $_apiReadOnlyFields = array(
+		onOfficeSDK::MODULE_ADDRESS => array(
+			'imageUrl' => array(
+				'type' => FieldTypes::FIELD_TYPE_TEXT,
+				'length' => null,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Image',
+			),
+			'phone' => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Phone',
+			),
+			'email' => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 80,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'E-Mail',
+			),
+			'fax' => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Fax',
+			),
+			'mobile' => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Mobile',
+			),
+			'defaultphone' => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Phone',
+			),
+			'defaultemail' => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 80,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'E-Mail',
+			),
+			'defaultfax' => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 40,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Fax',
+			),
+		),
+		onOfficeSDK::MODULE_SEARCHCRITERIA => array(
+			'krit_bemerkung_oeffentlich' => array(
+				'type' => FieldTypes::FIELD_TYPE_TEXT,
+				'length' => null,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Comment',
+			),
+		),
+	);
+
+	/** @var array */
+	private static $_readOnlyFieldsAnnotations = array(
+		onOfficeSDK::MODULE_ADDRESS => array(
+			'defaultphone' => 'Phone (Marked as default in onOffice)',
+			'defaultemail' => 'E-Mail (Marked as default in onOffice)',
+			'defaultfax' => 'Fax (Marked as default in onOffice)',
+		),
+		onOfficeSDK::MODULE_SEARCHCRITERIA => array(
+			'krit_bemerkung_oeffentlich' => 'Search Criteria Comment (external)',
+		),
+	);
+
+	/** @var array */
+	private static $_defaultSortByFields = array(
+		onOfficeSDK::MODULE_ADDRESS => array(
+			'KdNr',
+			'Eintragsdatum',
+			'Name',
+		),
+		onOfficeSDK::MODULE_ESTATE => array(
+			'kaufpreis',
+			'kaltmiete',
+			'pacht',
+			'wohnflaeche',
+			'anzahl_zimmer',
+			'ort',
+			'grundstuecksflaeche',
+			'gesamtflaeche',
+		),
+	);
 
 	/** @var array */
 	private $_fieldList = array();
@@ -48,33 +156,11 @@ class Fieldnames {
 	/** @var array */
 	private $_umkreisFields = array();
 
-	/**
-	 *
-	 */
+	/** @var string */
+	private $_language = null;
 
-	private function __construct() {}
-
-
-	/**
-	 *
-	 */
-
-	private function __clone() {}
-
-
-	/**
-	 *
-	 * @return Fieldnames
-	 *
-	 */
-
-	static public function getInstance() {
-		if (is_null(self::$_pInstance)) {
-			self::$_pInstance = new static();
-		}
-
-		return self::$_pInstance;
-	}
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
 
 
 	/**
@@ -83,103 +169,108 @@ class Fieldnames {
 	 *
 	 */
 
-	public function loadLanguage( $language ) {
-		if ( $this->hasLanguageCached( $language ) ) {
-			return;
+	public function __construct($language = null)
+	{
+		if ($language == null) {
+			$this->_language = Language::getDefault();
+		} else {
+			$this->_language = $language;
 		}
 
+		$this->_pSDKWrapper = new SDKWrapper();
+	}
+
+
+	/**
+	 *
+	 * @param bool $showOnlyInactive
+	 *
+	 */
+
+	public function loadLanguage($showOnlyInactive = false)
+	{
 		$parametersGetFieldList = array(
-			'labels' => 1,
-			'language' => $language,
-			'modules' => array
-				(
-					'address',
-					'estate',
-				),
+			'labels' => true,
+			'showContent' => true,
+			'showTable' => true,
+			'language' => $this->_language,
+			'modules' => array(
+				onOfficeSDK::MODULE_ADDRESS,
+				onOfficeSDK::MODULE_ESTATE,
+			),
 		);
 
-		$pSDKWrapper = new SDKWrapper();
+		if ($showOnlyInactive) {
+			$parametersGetFieldList['showOnlyInactive'] = true;
+		}
+
+		$pSDKWrapper = $this->_pSDKWrapper;
 		$handleGetFields = $pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList );
+			onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList);
+
+		$requestParamsSearchCriteria = array(
+			'language' => $this->_language,
+			'additionalTranslations' => true,
+		);
+
+		$handleSearchCriteria = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', $requestParamsSearchCriteria);
+
 		$pSDKWrapper->sendRequests();
 
-		$responseArrayFieldList = $pSDKWrapper->getRequestResponse( $handleGetFields );
+		$responseArrayFieldList = $pSDKWrapper->getRequestResponse($handleGetFields);
 		$fieldList = $responseArrayFieldList['data']['records'];
 
-		$this->createFieldList( $fieldList, $language );
-		$this->completeFieldListWithSearchcriteria( $language );
+		$this->createFieldList( $fieldList );
+		$this->completeFieldListWithSearchcriteria($handleSearchCriteria);
 	}
 
 
 	/**
 	 *
-	 * @param string $language
+	 * @param int $handle
 	 *
 	 */
 
-	private function completeFieldListWithSearchcriteria( $language ) {
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-		$requestParameter = array
-			(
-				'language' => $language,
-				'additionalTranslations' => true,
-			);
+	private function completeFieldListWithSearchcriteria($handle)
+	{
+		$response = $this->_pSDKWrapper->getRequestResponse($handle);
 
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', $requestParameter);
-		$pSDKWrapper->sendRequests();
+		foreach ($response['data']['records'] as $tableValues) {
+			$fields = $tableValues['elements'];
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+			foreach ($fields['fields'] as $field) {
+				$fieldId = $field['id'];
 
-		foreach ($response['data']['records'] as $tableValues)
-		{
-			$felder = $tableValues['elements'];
-
-			foreach ($felder['fields'] as $field)
-			{
 				$fieldProperties = array();
 				$fieldProperties['type'] = $field['type'];
 				$fieldProperties['label'] = $field['name'];
 				$fieldProperties['default'] = null;
 				$fieldProperties['permittedvalues'] = array();
+				$fieldProperties['content'] = __('Search Criteria', 'onoffice');
+				$fieldProperties['module'] = onOfficeSDK::MODULE_SEARCHCRITERIA;
 
-				if (array_key_exists('default', $field))
-				{
+				if (isset($field['default'])) {
 					$fieldProperties['default'] = $field['default'];
 				}
 
-				if (array_key_exists('values', $field))
-				{
+				if (isset($field['values'])) {
 					$fieldProperties['permittedvalues'] = $field['values'];
 				}
 
-				if (array_key_exists('rangefield', $field) &&
+				if (isset($field['rangefield']) &&
 					$field['rangefield'] == true &&
-					array_key_exists('additionalTranslations', $field))
-				{
-					$this->_searchcriteriaRangeInfos[$field['id']] = array();
-
-					foreach ($field['additionalTranslations'] as $key => $value)
-					{
-						$this->_searchcriteriaRangeInfos[$field['id']][$key] = $value;
-					}
+					isset($field['additionalTranslations'])) {
+					$this->_searchcriteriaRangeInfos[$fieldId] = $field['additionalTranslations'];
 				}
 
-				if ($felder['name'] == 'Umkreis')
-				{
-					$this->_umkreisFields[$field['id']] = $fieldProperties;
+				if ($fields['name'] == 'Umkreis') {
+					$this->_umkreisFields[$fieldId] = $fieldProperties;
 				}
 
-				$this->_fieldList[$language]['searchcriteria'][$field['id']] = $fieldProperties;
+				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldId] = $fieldProperties;
 			}
 		}
-		$this->_fieldList[$language]['searchcriteria']['krit_bemerkung'] = array(
-			'type' => 'freetext',
-			'permittedvalues' => array(),
-			'default' => null,
-			'label' => __('Comment', 'onoffice'),
-		);
 	}
 
 
@@ -190,8 +281,9 @@ class Fieldnames {
 	 *
 	 */
 
-	public function inRangeSearchcriteriaInfos($field)	{
-		return array_key_exists($field, $this->_searchcriteriaRangeInfos);
+	public function inRangeSearchcriteriaInfos($field)
+	{
+		return isset($this->_searchcriteriaRangeInfos[$field]);
 	}
 
 
@@ -202,8 +294,9 @@ class Fieldnames {
 	 *
 	 */
 
-	public function isUmkreisField($field){
-		return array_key_exists($field, $this->_umkreisFields);
+	public function isUmkreisField($field)
+	{
+		return isset($this->_umkreisFields[$field]);
 	}
 
 
@@ -214,12 +307,11 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getUmkreisValuesForField($field){
-
+	public function getUmkreisValuesForField($field)
+	{
 		$infos = array();
 
-		if (array_key_exists($field, $this->_umkreisFields))
-		{
+		if (isset($this->_umkreisFields[$field])) {
 			$infos = $this->_umkreisFields[$field];
 		}
 
@@ -234,11 +326,11 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getRangeSearchcriteriaInfosForField($field)	{
+	public function getRangeSearchcriteriaInfosForField($field)
+	{
 		$infos = array();
 
-		if (array_key_exists($field, $this->_searchcriteriaRangeInfos))
-		{
+		if (isset($this->_searchcriteriaRangeInfos[$field])) {
 			$infos = $this->_searchcriteriaRangeInfos[$field];
 		}
 
@@ -252,7 +344,8 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getUmkreisFields(){
+	public function getUmkreisFields()
+	{
 		return $this->_umkreisFields;
 	}
 
@@ -263,50 +356,50 @@ class Fieldnames {
 	 *
 	 */
 
-	public function getSearchcriteriaRangeInfos() {
+	public function getSearchcriteriaRangeInfos()
+	{
 		return $this->_searchcriteriaRangeInfos;
 	}
 
 
 	/**
 	 *
-	 * @param string $language
+	 * @param array $fieldResult
 	 *
 	 */
 
-	public function loadLanguageIfNotCached( $language ) {
-		if ( ! $this->hasLanguageCached( $language ) ) {
-			$this->loadLanguage( $language );
+	private function createFieldList(array $fieldResult)
+	{
+		foreach ($fieldResult as $moduleProperties) {
+			if (!isset($moduleProperties['elements'])) {
+				continue;
+			}
+
+			$module = $moduleProperties['id'];
+
+			foreach ($moduleProperties['elements'] as $fieldName => $fieldProperties) {
+				if ( 'label' == $fieldName ) {
+					continue;
+				}
+
+				$fieldProperties['module'] = $module;
+				$this->_fieldList[$module][$fieldName] = $fieldProperties;
+			}
 		}
 	}
 
 
 	/**
 	 *
-	 * @param array $fieldResult
-	 * @param string $language
-	 * @return null
+	 * @param string $fieldname
+	 * @param string $module
+	 * @return bool
 	 *
 	 */
 
-	private function createFieldList( $fieldResult, $language ) {
-		if ( count( $fieldResult ) == 0 ) {
-			return;
-		}
-
-		foreach ( $fieldResult as $moduleProperties ) {
-			if ( ! array_key_exists( 'elements', $moduleProperties ) ) {
-				continue;
-			}
-
-			foreach ( $moduleProperties['elements'] as $fieldName => $fieldProperties ) {
-				if ( 'label' == $fieldName ) {
-					continue;
-				}
-
-				$this->_fieldList[$language][$moduleProperties['id']][$fieldName] = $fieldProperties;
-			}
-		}
+	public function getModuleContainsField($fieldname, $module)
+	{
+		return isset($this->_fieldList[$module][$fieldname]);
 	}
 
 
@@ -314,18 +407,18 @@ class Fieldnames {
 	 *
 	 * @param string $field
 	 * @param string $module recordType
-	 * @param string $language
 	 *
 	 * @return string
 	 *
 	 */
 
-	public function getFieldLabel( $field, $module, $language ) {
+	public function getFieldLabel($field, $module)
+	{
 		$fieldNewName = $field;
+		$row = $this->getRow($module, $field);
 
-		if ( isset( $this->_fieldList[$language][$module] ) &&
-			array_key_exists( $field, $this->_fieldList[$language][$module] ) ) {
-			$fieldNewName = $this->_fieldList[$language][$module][$field]['label'];
+		if (!is_null($row)) {
+			$fieldNewName = $row['label'];
 		}
 
 		return $fieldNewName;
@@ -334,15 +427,85 @@ class Fieldnames {
 
 	/**
 	 *
+	 * @param string $module recordType
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getFieldList($module, $addApiOnlyFields = false, $annotated = false)
+	{
+		$fieldList = array();
+		if (isset( $this->_fieldList[$module])) {
+			$fieldList = $this->_fieldList[$module];
+		}
+
+		if ($addApiOnlyFields) {
+			$extraFields = array();
+			$extraFieldsUntranslated = $this->getExtraFields($module, $annotated);
+
+			foreach ($extraFieldsUntranslated as $field => $options) {
+				$newOptions = $options;
+				$newOptions['label'] = __($options['label'], 'onoffice');
+				$extraFields[$field] = $newOptions;
+			}
+
+			$fieldList = array_merge($fieldList, $extraFields);
+		}
+
+		return $fieldList;
+	}
+
+
+	/**
+	 *
+	 * @param string $module
+	 * @param string $annotated
+	 * @return array
+	 *
+	 */
+
+	private function getExtraFields($module, $annotated)
+	{
+		$extraFields = array();
+		$hasApiFields = isset(self::$_apiReadOnlyFields[$module]);
+
+		if ($hasApiFields) {
+			$extraFields = self::$_apiReadOnlyFields[$module];
+			array_walk($extraFields, function(&$array) {
+				$array['content'] = __('Form Specific Fields', 'onoffice');
+			});
+		}
+
+		if ($annotated && isset(self::$_readOnlyFieldsAnnotations[$module])) {
+			$annotatedFields = array();
+			foreach ($extraFields as $field => $option) {
+				if (isset(self::$_readOnlyFieldsAnnotations[$module][$field])) {
+					$option['label'] = self::$_readOnlyFieldsAnnotations[$module][$field];
+					$annotatedFields[$field] = $option;
+				}
+			}
+			$extraFields = array_merge($extraFields, $annotatedFields);
+		}
+
+		return $extraFields;
+	}
+
+
+	/**
+	 *
 	 * @param string $fieldName
 	 * @param string $module
-	 * @param string $language
 	 * @return string
 	 *
 	 */
 
-	public function getType( $fieldName, $module, $language ) {
-		return $this->_fieldList[$language][$module][$fieldName]['type'];
+	public function getType($fieldName, $module)
+	{
+		$row = $this->getRow($module, $fieldName);
+		if (!is_null($row)) {
+			return $row['type'];
+		}
 	}
 
 
@@ -350,24 +513,76 @@ class Fieldnames {
 	 *
 	 * @param string $inputField
 	 * @param string $module
-	 * @param string $language
 	 * @return string
 	 *
 	 */
 
-	public function getPermittedValues( $inputField, $module, $language ) {
-		return $this->_fieldList[$language][$module][$inputField]['permittedvalues'];
+	public function getPermittedValues($inputField, $module)
+	{
+		$row = $this->getRow($module, $inputField);
+		if (!is_null($row)) {
+			return $row['permittedvalues'];
+		}
 	}
 
 
 	/**
 	 *
-	 * @param string $language
-	 * @return bool
+	 * @param string $field
+	 * @param string $module
+	 * @return array
 	 *
 	 */
 
-	public function hasLanguageCached( $language ) {
-		return array_key_exists( $language, $this->_fieldList );
+	public function getFieldInformation($field, $module)
+	{
+		return $this->getRow($module, $field);
 	}
+
+
+	/**
+	 *
+	 * @param string $module
+	 * @param string $field
+	 * @return array
+	 *
+	 */
+
+	private function getRow($module, $field)
+	{
+		if (isset($this->_fieldList[$module][$field])) {
+			return $this->_fieldList[$module][$field];
+		} elseif (isset(self::$_apiReadOnlyFields[$module][$field])) {
+			return self::$_apiReadOnlyFields[$module][$field];
+		}
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	static public function getDefaultSortByFields($module)
+	{
+		if (isset(self::$_defaultSortByFields[$module])) {
+			return self::$_defaultSortByFields[$module];
+		}
+
+		return array();
+	}
+
+
+	/** @return string */
+	public function getLanguage()
+		{ return $this->_language; }
+
+	/** @return SDKWrapper */
+	public function getSDKWrapper()
+		{ return $this->_pSDKWrapper; }
+
+	/** @param SDKWrapper $pSDKWrapper */
+	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
+		{ $this->_pSDKWrapper = $pSDKWrapper; }
 }

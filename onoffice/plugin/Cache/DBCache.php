@@ -33,7 +33,9 @@ use onOffice\SDK\Cache\onOfficeSDKCache;
  *
  */
 
-class DBCache implements onOfficeSDKCache {
+class DBCache
+	implements onOfficeSDKCache
+{
 	/** @var wpdb */
 	private $_pWpdb = null;
 
@@ -48,7 +50,8 @@ class DBCache implements onOfficeSDKCache {
 	 *
 	 */
 
-	public function __construct(array $options) {
+	public function __construct(array $options)
+	{
 		global $wpdb;
 		$this->_pWpdb = $wpdb;
 		$this->_options = $options;
@@ -61,7 +64,8 @@ class DBCache implements onOfficeSDKCache {
 	 *
 	 */
 
-	private function getCacheMaxAge() {
+	private function getCacheMaxAge()
+	{
 		return time() - $this->_options['ttl'];
 	}
 
@@ -73,7 +77,8 @@ class DBCache implements onOfficeSDKCache {
 	 *
 	 */
 
-	private function getParametersHashed( array $parameters ) {
+	private function getParametersHashed( array $parameters )
+	{
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
 		$parametersHashed = md5( $parametersSerialized );
 		return $parametersHashed;
@@ -87,7 +92,8 @@ class DBCache implements onOfficeSDKCache {
 	 *
 	 */
 
-	private function getParametersSerialized( array $parameters ) {
+	private function getParametersSerialized( array $parameters )
+	{
 		ksort( $parameters );
 		$parametersSerialized = serialize( $parameters );
 		return $parametersSerialized;
@@ -101,7 +107,8 @@ class DBCache implements onOfficeSDKCache {
 	 *
 	 */
 
-	public function getHttpResponseByParameterArray( array $parameters ) {
+	public function getHttpResponseByParameterArray( array $parameters )
+	{
 		$parametersHashed = $this->getParametersHashed( $parameters );
 		$cacheMaxAge = $this->getCacheMaxAge();
 
@@ -123,7 +130,8 @@ class DBCache implements onOfficeSDKCache {
 	 *
 	 */
 
-	public function write( array $parameters, $value ) {
+	public function write( array $parameters, $value )
+	{
 		$parametersHashed = $this->getParametersHashed( $parameters );
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
 
@@ -147,7 +155,8 @@ class DBCache implements onOfficeSDKCache {
 	 *
 	 */
 
-	public function cleanup() {
+	public function cleanup()
+	{
 		$cacheMaxAge = $this->getCacheMaxAge();
 		$this->_pWpdb->query( $this->_pWpdb->prepare( "
 				DELETE
@@ -156,7 +165,7 @@ class DBCache implements onOfficeSDKCache {
 				", $cacheMaxAge )
 		);
 	}
-	
+
 
 	/**
 	 *

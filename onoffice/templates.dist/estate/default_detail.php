@@ -23,21 +23,22 @@
  *  Default template
  */
 
-use onOffice\WPlugin\PdfDocumentType;
-
 /* @var $pEstates onOffice\WPlugin\EstateList */
+require('estatemap.php');
 
 ?>
-<h1>Detailansicht!</h1>
+<h1><?php esc_html_e('Detail View', 'onoffice') ?></h1>
 
-<?php while ( $currentEstate = $pEstates->estateIterator() ) : ?>
-	<?php echo $pEstates->getEstateUnits( $pEstates->getCurrentEstateId(), 'unitlist', 'units' );?>
+<?php
+	$pEstates->resetEstateIterator();
+	while ( $currentEstate = $pEstates->estateIterator() ) : ?>
+	<?php echo $pEstates->getEstateUnits( ); ?>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
 			continue;
 		}
 	?>
-		<?php echo $pEstates->getFieldLabel( $field ) .': '.$value; ?><br>
+		<?php echo $pEstates->getFieldLabel( $field ) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
 
 	<?php endforeach; ?>
 
@@ -57,27 +58,50 @@ use onOffice\WPlugin\PdfDocumentType;
 			$mobilePhoneNumbers = $contactData->offsetExists('mobile') ? $contactData->getValueRaw('mobile') : array();
 			if (count($mobilePhoneNumbers) > 0) :
 			?>
-				<li>Mobil: <?php echo esc_html(array_shift($mobilePhoneNumbers)); ?></li>
+				<li>
+					<?php esc_html_e('Phone (mobile): ', 'onoffice'); ?>
+					<?php echo esc_html(array_shift($mobilePhoneNumbers)); ?>
+				</li>
 			<?php endif; ?>
 			<?php
 			$businessPhoneNumbers = $contactData->offsetExists('phonebusiness') ?
 				$contactData->getValueRaw('phonebusiness') : array();
 			if (count($businessPhoneNumbers) > 0) :
 			?>
-				<li>phone business: <?php echo esc_html(array_shift($businessPhoneNumbers)); ?></li>
+				<li>
+					<?php esc_html_e('Phone (business): ', 'onoffice'); ?>
+					<?php echo esc_html(array_shift($businessPhoneNumbers)); ?>
+				</li>
 			<?php endif; ?>
 			<?php
 			$businessEmailAddresses = $contactData->offsetExists('emailbusiness') ?
 				$contactData->getValueRaw('emailbusiness') : array();
 			if (count($businessEmailAddresses) > 0) :
 			?>
-				<li>email business: <?php echo esc_html(array_shift($businessEmailAddresses)); ?></li>
+				<li>
+					<?php esc_html_e('E-Mail (business): ', 'onoffice'); ?>
+					<?php echo esc_html(array_shift($businessEmailAddresses)); ?>
+				</li>
 			<?php endif; ?>
 		</ul>
 
 	<?php endforeach; ?>
 
 	<?php
+
+	$estateMovieLinks = $pEstates->getEstateMovieLinks();
+	foreach ($estateMovieLinks as $movieLink) {
+		echo '<a href="'.esc_attr($movieLink['url']).'" title="'.esc_attr($movieLink['title']).'">'
+			.esc_html($movieLink['title']).'</a><br>';
+	}
+
+	$movieOptions = array('width' => 500); // optional
+
+	foreach ($pEstates->getMovieEmbedPlayers($movieOptions) as $movieInfos) {
+		echo '<h3>'.esc_html($movieInfos['title']).'</h3>';
+		echo $movieInfos['player'];
+	}
+
 	$estatePictures = $pEstates->getEstatePictures();
 	foreach ( $estatePictures as $id ) : ?>
 	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
@@ -86,28 +110,11 @@ use onOffice\WPlugin\PdfDocumentType;
 	</a>
 	<?php endforeach; ?>
 
-		<?php
-			$position = array(
-				'lat' => (float) $currentEstate['breitengrad'],
-				'lng' => (float) $currentEstate['laengengrad'],
-			);
-			$title = $currentEstate['objekttitel'];
-
-			if ( 1 == $currentEstate['showGoogleMap'] ) {
-				$pMaps = new onOffice\WPlugin\Maps\GoogleMap();
-
-				// if you want the marker to be always visible, change the 3rd arg to true
-				$pMaps->addNewMarker(
-					$position['lng'], $position['lat'], ! $currentEstate['virtualAddress'], $title );
-				$pMaps->setZoom(16);
-				echo $pMaps->render();
-			}
-		?>
-
-	<h2>Dokumente</h2>
-	<?php
-		$document = $pEstates->getDocument( PdfDocumentType::EXPOSE_SHORT_DESIGN01 );
-	?>
-	<a href="<?php echo $document; ?>">PDF-Exposé</a>
+	<?php if ($pEstates->getDataView()->getExpose() != ''): ?>
+		<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
+		<a href="<?php echo $pEstates->getDocument(); ?>">
+			<?php esc_html_e('PDF expose', 'onoffice'); ?>
+		</a>
+	<?php endif; ?>
 
 <?php endwhile; ?>

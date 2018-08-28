@@ -28,6 +28,8 @@
 
 namespace onOffice\WPlugin;
 
+use Exception;
+
 /**
  *
  */

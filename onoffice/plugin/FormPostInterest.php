@@ -18,183 +18,173 @@
  *
  */
 
+
+namespace onOffice\WPlugin;
+
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
+use onOffice\WPlugin\Form\FormPostConfiguration;
+use onOffice\WPlugin\Form\FormPostInterestConfiguration;
+use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
+use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\FormPost;
+
 /**
+ *
+ * Applicant form. A person registers itself and leaves his/her search criteria
  *
  * @url http://www.onoffice.de
  * @copyright 2003-2016, onOffice(R) Software AG
  *
  */
 
-namespace onOffice\WPlugin;
-
-use onOffice\WPlugin\Form;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
-use onOffice\SDK\onOfficeSDK;
-
-/**
- *
- * Description of FormPostInterest
- *
- */
 class FormPostInterest
 	extends FormPost
 {
-	/** @var FormPost */
-	private static $_pInstance = null;
+	/** @var FormPostInterestConfiguration */
+	private $_pFormPostInterestConfiguration = null;
+
 
 	/**
 	 *
-	 * @return FormPost
+	 * @param FormPostConfiguration $pFormPostConfiguration
+	 * @param FormPostInterestConfiguration $pFormPostInterestConfiguration
 	 *
 	 */
 
-	public static function getInstance() {
-		if ( is_null( self::$_pInstance ) ) {
-			self::$_pInstance = new static;
+	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
+		FormPostInterestConfiguration $pFormPostInterestConfiguration = null)
+	{
+		parent::__construct($pFormPostConfiguration);
+
+		if ($pFormPostInterestConfiguration === null) {
+			$pFormPostInterestConfiguration = new FormPostInterestConfigurationDefault();
 		}
 
-		return self::$_pInstance;
+		$this->_pFormPostInterestConfiguration = $pFormPostInterestConfiguration;
 	}
 
 
-	/**	 */
-	private function __construct() { }
-
-
-	/** @return string */
-	protected function getFormType()
-	{ return Form::TYPE_CONTACT; }
-
-
 	/**
 	 *
-	 * @param string $prefix
-	 * @param int $formNo
+	 * @param FormData $pFormData
 	 *
 	 */
 
-	protected function analyseFormContentByPrefix( $prefix, $formNo = null ){
-		$formConfig = ConfigWrapper::getInstance()->getConfigByKey( 'forms' );
-		$recipient = null;
-		$subject = null;
-
-		$configByPrefix = $formConfig[$prefix];
-		$formFields = $configByPrefix['inputs'];
-
-		$formData = array_intersect_key( $_POST, $formFields );
-		$pFormData = new FormData( $prefix, $formNo );
-		$pFormData->setRequiredFields( $configByPrefix['required'] );
-		$pFormData->setFormtype( $configByPrefix['formtype'] );
-
-		if ( isset( $configByPrefix['recipient'] ) ) {
-			$recipient = $configByPrefix['recipient'];
-		}
-
-		if ( isset( $configByPrefix['subject'] ) ) {
-			$subject = $configByPrefix['subject'];
-		}
-
-		$this->setFormDataInstances($prefix, $formNo, $pFormData);
-		$pFormData->setValues( $formData );
-
+	protected function analyseFormContentByPrefix(FormData $pFormData)
+	{
+		/* @var $pFormConfiguration DataFormConfigurationInterest */
+		$pFormConfiguration = $pFormData->getDataFormConfiguration();
+		$recipient = $pFormConfiguration->getRecipient();
+		$subject = $pFormConfiguration->getSubject();
+		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
 		$missingFields = $pFormData->getMissingFields();
 
-		if ( count( $missingFields ) > 0 ) {
-			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
+		if (count($missingFields) > 0) {
+			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
 		} else {
-			if ( array_key_exists( 'createaddress', $configByPrefix ) &&
-				$configByPrefix['createaddress'] ) {
-				$checkDuplicate = true;
-				if (array_key_exists( 'checkduplicate', $configByPrefix ) &&
-					!$configByPrefix['checkduplicate']) {
-					$checkDuplicate = false;
+			$response = false;
+			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
+
+			if (false !== $responseAddress) {
+				$responseSearchcriteria = $this->createSearchcriteria($pFormData, $responseAddress);
+				if ($recipient == null) {
+					$response = $responseSearchcriteria;
+				} elseif ($responseSearchcriteria) {
+					$response = $this->sendEmail($pFormData, $recipient, $subject);
 				}
-				$responseNewAddress = $this->createOrCompleteAddress( $pFormData, $checkDuplicate );
-				$response = $responseNewAddress;
-			} else	{
-				$response = true;
 			}
 
-			$pFormData->setFormSent( true );
-			$response = $this->sendContactRequest( $pFormData, $recipient, $subject ) && $response;
-
-			if ( true === $response ) {
-				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
+			if (true === $response) {
+				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
 			} else {
-				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
+				$pFormData->setStatus(FormPost::MESSAGE_ERROR);
 			}
 		}
 	}
 
-	/**
-	 *
-	 * @param FormData $pFormData
-	 * @return bool
-	 *
-	 */
-
-	private function sendContactRequest( FormData $pFormData, $recipient = null, $subject = null ) {
-		$addressData = $pFormData->getAddressData();
-		$values = $pFormData->getValues();
-		$estateId = isset( $values['Id'] ) ? $values['Id'] : null;
-		$message = isset( $values['message'] ) ? $values['message'] : null;
-
-		$requestParams = array(
-			'addressdata' => $addressData,
-			'estateid' => $estateId,
-			'message' => $message,
-			'subject' => $subject,
-			'referrer' => filter_input( INPUT_SERVER, 'REQUEST_URI' ),
-			'formtype' => $pFormData->getFormtype(),
-		);
-
-		if ( null != $recipient ) {
-			$requestParams['recipient'] = $recipient;
-		}
-
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
-		$pSDKWrapper->sendRequests();
-
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		$result = isset( $response['data']['records'][0]['elements']['success'] ) &&
-			'success' == $response['data']['records'][0]['elements']['success'];
-		return $result;
-	}
-
 
 	/**
 	 *
-	 * @param FormData $pFormData
-	 * @param bool $mergeExisting
-	 * @return bool
+	 * @param DataFormConfiguration $pFormConfig
+	 * @return array
 	 *
 	 */
 
-	private function createOrCompleteAddress( FormData $pFormData, $mergeExisting = false )
+	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
 	{
-		$requestParams = $pFormData->getAddressData();
-		$requestParams['checkDuplicate'] = $mergeExisting;
-
-		$pSDKWrapper = new SDKWrapper();
-		$pSDKWrapper->removeCacheInstances();
-
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_CREATE, 'address', $requestParams );
-		$pSDKWrapper->sendRequests();
-
-		$response = $pSDKWrapper->getRequestResponse( $handle );
-
-		$result = isset( $response['data']['records'] ) &&
-				count( $response['data']['records'] ) > 0;
-		return $result;
+		$formFields = $pFormConfig->getInputs();
+		return $this->getFormFieldsConsiderSearchcriteria($formFields);
 	}
 
-}
 
-?>
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @param string $recipient
+	 * @param string $subject
+	 * @return bool
+	 *
+	 */
+
+	private function sendEmail(FormData $pFormData, $recipient, $subject = null)
+	{
+		$addressData = $pFormData->getAddressData();
+		$name = $addressData['Name'] ?? null;
+		$firstName = $addressData['Vorname'] ?? null;
+		$mailInteressent = $addressData['Email'] ?? null;
+
+		$body = 'Sehr geehrte Damen und Herren,'."\n\n"
+				.'ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite '
+				.'eingetragen. Die Adresse ('.$firstName.' '.$name.') wurde bereits in Ihrem System '
+				.'eingetragen.'."\n\n"
+				.'Herzliche Grüße'."\n"
+				.'Ihr onOffice Team';
+
+		$requestParams = [
+			'anonymousEmailidentity' => true,
+			'body' => $body,
+			'subject' => $subject,
+			'replyto' => $mailInteressent,
+			'receiver' => [$recipient],
+		];
+
+		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'sendmail');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
+		$pSDKWrapper->sendRequests();
+
+		return $pApiClientAction->getResultStatus();
+	}
+
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @param int $addressId
+	 * @return bool
+	 *
+	 */
+
+	private function createSearchcriteria(FormData $pFormData, $addressId)
+	{
+		$requestParams = [
+			'data' => $pFormData->getSearchcriteriaData(),
+			'addressid' => $addressId,
+		];
+
+		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria');
+
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
+		$pSDKWrapper->sendRequests();
+
+		return $pApiClientAction->getResultStatus();
+	}
+}

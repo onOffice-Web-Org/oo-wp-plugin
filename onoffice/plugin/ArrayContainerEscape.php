@@ -28,6 +28,7 @@
 
 namespace onOffice\WPlugin;
 
+use Exception;
 use onOffice\WPlugin\Escape;
 
 /**
@@ -102,7 +103,7 @@ class ArrayContainerEscape extends ArrayContainer {
 			$escaping = $this->_escaping;
 		}
 
-		$callback = Escape::getCallbackByEscaping( $this->_escaping );
+		$callback = Escape::getCallbackByEscaping( $escaping );
 		$value = parent::getValue($key);
 
 		if (is_array($value)) {
