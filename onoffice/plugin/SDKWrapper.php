@@ -196,7 +196,8 @@ class SDKWrapper
 
 	public function getRequestResponse(int $handle): array
 	{
-		return $this->_pSDK->getResponseArray($handle);
+		$response = $this->_pSDK->getResponseArray($handle);
+		return $response ?? [];
 	}
 
 
