@@ -60,13 +60,10 @@ class InputModelRenderer
 		$pForm = $this->_pFormModel;
 
 		add_settings_section($pForm->getGroupSlug(), $pForm->getLabel(),
-			function(){}, $pForm->getPageSlug());
-		settings_fields($pForm->getGroupSlug());
+			function() {}, $pForm->getPageSlug());
 
-		foreach ($pForm->getInputModel() as $pInputModel)
-		{
+		foreach ($pForm->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel);
-
 			add_settings_field( $pInputModel->getIdentifier(), $pInputModel->getLabel(),
 				array($pInputField, 'render'), $pForm->getPageSlug(), $pForm->getGroupSlug() );
 		}
@@ -109,19 +106,15 @@ class InputModelRenderer
 	{
 		$pForm = $this->_pFormModel;
 
-		foreach ($pForm->getInputModel() as $pInputModel)
-		{
-			if ($pInputModel instanceof InputModelOption)
-			{
-				register_setting( $pForm->getGroupSlug(), $pInputModel->getIdentifier(),
-					array
-					(
-						'type' => $pInputModel->getType(),
-						'description' => $pInputModel->getDescription(),
-						'sanitize_callback' => $pInputModel->getSanitizeCallback(),
-						'show_in_rest' => $pInputModel->getShowInRest(),
-						'default' => $pInputModel->getDefault(),
-					));
+		foreach ($pForm->getInputModel() as $pInputModel) {
+			if ($pInputModel instanceof InputModelOption) {
+				register_setting($pForm->getPageSlug(), $pInputModel->getIdentifier(), [
+					'type' => $pInputModel->getType(),
+					'description' => $pInputModel->getDescription(),
+					'sanitize_callback' => $pInputModel->getSanitizeCallback(),
+					'show_in_rest' => $pInputModel->getShowInRest(),
+					'default' => $pInputModel->getDefault(),
+				]);
 			}
 		}
 	}

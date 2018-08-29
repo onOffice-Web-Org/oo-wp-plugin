@@ -90,6 +90,7 @@ class AdminPageModules
 			$pFormBuilder->buildForm();
 		}
 
+		settings_fields($this->getPageSlug());
 		do_settings_sections( $this->getPageSlug() );
 
 		submit_button();
