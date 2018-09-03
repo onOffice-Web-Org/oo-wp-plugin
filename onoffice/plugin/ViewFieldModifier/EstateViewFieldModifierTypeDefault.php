@@ -62,4 +62,25 @@ class EstateViewFieldModifierTypeDefault
 
 		return parent::reduceRecord($record);
 	}
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getVisibleFields(): array
+	{
+		$viewFields = parent::getViewFields();
+
+		if (in_array('geoPosition', $viewFields)) {
+			$pos = array_search('geoPosition', $viewFields);
+
+			unset($viewFields[$pos]);
+			$viewFields []= 'breitengrad';
+			$viewFields []= 'laengengrad';
+		}
+
+		return $viewFields;
+	}
 }

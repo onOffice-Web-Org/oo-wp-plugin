@@ -257,8 +257,24 @@ class EstateList
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE);
 
+		$dataFields = $pFieldModifierHandler->getAllAPIFields();
+
+		$pGeoPosition = new GeoPosition();
+
+		if (in_array(GeoPosition::FIELD_GEO_POSITION, $dataFields))	{
+			$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $dataFields);
+			unset($dataFields[$pos]);
+			$dataFields []= 'laengengrad';
+			$dataFields []= 'breitengrad';
+		}
+
+
+		$inputValues = $this->getGeoSearchValues();
+		$requestGeoSearchParameters =
+				$pGeoPosition->createGeoRangeSearchParameterRequest($inputValues);
+
 		$requestParams = array(
-			'data' => $pFieldModifierHandler->getAllAPIFields(),
+			'data' => $dataFields,
 			'filter' => $filter,
 			'estatelanguage' => $language,
 			'outputlanguage' => $language,
@@ -270,7 +286,34 @@ class EstateList
 
 		$requestParams = ($requestParams + $this->addExtraParams());
 
+		if (null != $requestGeoSearchParameters) {
+			$requestParams['georangesearch'] = $requestGeoSearchParameters;
+		}
+
 		return $requestParams;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getGeoSearchValues()
+	{
+		$pEstateInputReader =
+				new Controller\EstateListInputVariableReader();
+
+		$inputValues = array();
+		$pGeoPosition = new GeoPosition();
+
+		foreach ($pGeoPosition->getEstateSearchFields() as $key) {
+			$inputValues[$key] = $pEstateInputReader->getFieldValue(
+					$key, FILTER_SANITIZE_STRING, FILTER_FORCE_ARRAY);
+		}
+
+		return $inputValues;
 	}
 
 
@@ -727,10 +770,34 @@ class EstateList
 
 		$fieldsArray = array_combine($visibleFilterable, $visibleFilterable);
 		$this->_pEstateListInputVariableReader = new EstateListInputVariableReader();
+		$fieldsArray = $this->editForGeoPosition($fieldsArray);
 
 		$result = array_map(array($this, 'getFieldInformationForEstateField'), $fieldsArray);
 
 		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param array $fieldsArray
+	 * @return array
+	 *
+	 */
+
+	private function editForGeoPosition(array $fieldsArray):array
+	{
+		if (array_key_exists(GeoPosition::FIELD_GEO_POSITION, $fieldsArray)) {
+			$pGeoPosition = new GeoPosition();
+
+			$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $fieldsArray);
+			unset($fieldsArray[$pos]);
+
+			$geoFields = $pGeoPosition->getEstateSearchFields();
+			$fieldsArray = array_merge($fieldsArray, array_combine($geoFields, $geoFields));
+		}
+
+		return $fieldsArray;
 	}
 
 

@@ -30,6 +30,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\FieldTypes;
 
 /**
@@ -112,6 +113,61 @@ class Fieldnames
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Comment',
+			),
+			GeoPosition::FIELD_GEO_POSITION => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 250,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Geo Position',
+				'content' => 'Search Criteria',
+			),
+		),
+		onOfficeSDK::MODULE_ESTATE => array(
+			GeoPosition::FIELD_GEO_POSITION => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 250,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Geo Position',
+				'content' => 'Geografische-Angaben',
+			),
+
+			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => array(
+				'type' => FieldTypes::FIELD_TYPE_SINGLESELECT,
+				'length' => 250,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Land',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+			),
+			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 3,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Radius (km)',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+			),
+			GeoPosition::ESTATE_LIST_SEARCH_STREET => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 250,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'Strasse',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+			),
+			GeoPosition::ESTATE_LIST_SEARCH_ZIP => array(
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 10,
+				'permittedvalues' => array(),
+				'default' => null,
+				'label' => 'PLZ',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
 			),
 		),
 	);
@@ -223,6 +279,46 @@ class Fieldnames
 
 		$this->createFieldList( $fieldList );
 		$this->completeFieldListWithSearchcriteria($handleSearchCriteria);
+		$this->setPermittedValuesForEstateSearchFields();
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function loadEstateSearchGeoPositionFields()
+	{
+		$pGeoPosition = new GeoPosition();
+		$geoPositionSearchFields = $pGeoPosition->getEstateSearchFields();
+
+		foreach ($geoPositionSearchFields as $field) {
+			$this->_fieldList[onOfficeSDK::MODULE_ESTATE][$field] =
+					$_apiReadOnlyFields[onOfficeSDK::MODULE_ESTATE][$field];
+		}
+	}
+
+
+
+	/**
+	 *
+	 */
+	private function setPermittedValuesForEstateSearchFields()
+	{
+		$permittedValuesLand = null;
+
+		if (array_key_exists('range_land', $this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA])) {
+			$permittedValuesLand =
+					$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA]['range_land']['permittedvalues'];
+
+		}
+		elseif (array_key_exists('land', $this->_fieldList[onOfficeSDK::MODULE_ESTATE])) {
+			$permittedValuesLand =
+					$this->_fieldList[onOfficeSDK::MODULE_ESTATE]['land']['permittedvalues'];
+		}
+
+		self::$_apiReadOnlyFields[onOfficeSDK::MODULE_ESTATE][GeoPosition::ESTATE_LIST_SEARCH_COUNTRY]['permittedvalues'] =
+				$permittedValuesLand;
 	}
 
 
@@ -433,7 +529,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getFieldList($module, $addApiOnlyFields = false, $annotated = false)
+	public function getFieldList($module, $addApiOnlyFields = false, $annotated = false, $modus = null)
 	{
 		$fieldList = array();
 		if (isset( $this->_fieldList[$module])) {
@@ -451,6 +547,11 @@ class Fieldnames
 			}
 
 			$fieldList = array_merge($fieldList, $extraFields);
+		}
+
+		if ($modus != null)	{
+			$pGeoPosition = new GeoPosition();
+			$fieldList = $pGeoPosition->transform($fieldList, $modus);
 		}
 
 		return $fieldList;
@@ -473,7 +574,12 @@ class Fieldnames
 		if ($hasApiFields) {
 			$extraFields = self::$_apiReadOnlyFields[$module];
 			array_walk($extraFields, function(&$array) {
-				$array['content'] = __('Form Specific Fields', 'onoffice');
+				if ($array['content'] == null) {
+					$array['content'] = __('Form Specific Fields', 'onoffice');
+				}
+				else {
+					$array['content'] = __($array['content'], 'onoffice');
+				}
 			});
 		}
 

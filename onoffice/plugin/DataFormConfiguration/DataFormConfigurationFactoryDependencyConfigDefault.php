@@ -49,6 +49,18 @@ class DataFormConfigurationFactoryDependencyConfigDefault
 
 	/**
 	 *
+	 * @param bool $forAdminInterface
+	 *
+	 */
+
+	public function setAdminInterface(bool $forAdminInterface)
+	{
+		$this->_pRecordManagerRead->setForadminInterface($forAdminInterface);
+	}
+
+
+	/**
+	 *
 	 * @param int $formId
 	 * @return array
 	 *

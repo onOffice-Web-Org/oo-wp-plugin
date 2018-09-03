@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
+use onOffice\WPlugin\DataFormConfiguration;
 use onOffice\WPlugin\Form;
 
 /**
@@ -35,7 +36,7 @@ class DataFormConfigurationFactory
 	/** @var string */
 	private $_type = null;
 
-	/** @var DataFormConfigurationFactoryDependencyBase */
+	/** @var DataFormConfigurationFactoryDependencyConfigBase */
 	private $_pDependencyConfig = null;
 
 
@@ -65,6 +66,18 @@ class DataFormConfigurationFactory
 		}
 
 		$this->_pDependencyConfig = $pDependencyConfig;
+	}
+
+
+	/**
+	 *
+	 * @param bool $adminInterface
+	 *
+	 */
+
+	public function setIsAdminInterface(bool $adminInterface)
+	{
+		$this->_pDependencyConfig->setAdminInterface($adminInterface);
 	}
 
 
@@ -179,7 +192,8 @@ class DataFormConfigurationFactory
 	 *
 	 */
 
-	private function configureFieldsByRow(array $row, DataFormConfiguration $pFormConfiguration)
+	private function configureFieldsByRow(array $row,
+		DataFormConfiguration\DataFormConfiguration $pFormConfiguration)
 	{
 		$fieldName = $row['fieldname'];
 		$module = $row['module'];
@@ -214,7 +228,8 @@ class DataFormConfigurationFactory
 	 *
 	 */
 
-	private function configureGeneral(array $row, DataFormConfiguration $pConfig)
+	private function configureGeneral(array $row,
+			DataFormConfiguration\DataFormConfiguration $pConfig)
 	{
 		$pConfig->setFormName($row['name']);
 		$pConfig->setTemplate($row['template']);

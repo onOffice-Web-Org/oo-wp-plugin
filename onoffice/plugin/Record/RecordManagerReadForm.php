@@ -21,7 +21,9 @@
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\GeoPosition;
 use const ARRAY_A;
 use const OBJECT;
 use function esc_sql;
@@ -36,6 +38,11 @@ use function esc_sql;
 class RecordManagerReadForm
 	extends RecordManagerRead
 {
+
+	/** @var bool */
+	private $_forAdminInterface = false;
+
+
 	/**
 	 *
 	 */
@@ -45,6 +52,16 @@ class RecordManagerReadForm
 		$this->setMainTable(self::TABLENAME_FORMS);
 		$this->setIdColumnMain('form_id');
 	}
+
+
+	/**
+	 *
+	 * @param bool $forAdminInterface
+	 *
+	 */
+
+	public function setForadminInterface(bool $forAdminInterface)
+		{ $this->_forAdminInterface = $forAdminInterface; }
 
 
 	/**
@@ -119,6 +136,51 @@ class RecordManagerReadForm
 				ORDER BY `order` ASC";
 
 		$result = $pWpDb->get_results($sqlFields, ARRAY_A);
+
+		if (!$this->_forAdminInterface) {
+			$result = $this->readFieldsForNonAdminInterface($result);
+		}
+
+		return $result;
+	}
+
+
+
+	/**
+	 *
+	 * @param array $result
+	 * @return array
+	 *
+	 */
+
+	private function readFieldsForNonAdminInterface($result)
+	{
+		$pGeoPosition = new GeoPosition();
+
+		foreach ($result as $id => $row) {
+			if ($row['fieldname'] == 'geoPosition' &&
+				$row['module'] === onOfficeSDK::MODULE_SEARCHCRITERIA) {
+				$formId = $row['form_id'];
+				$required = $row['required'];
+
+				unset($result[$id]);
+
+				$geoPositionSettings = $pGeoPosition->getSettingsGeoPositionFields(onOfficeSDK::MODULE_SEARCHCRITERIA);
+
+				foreach ($geoPositionSettings as $field) {
+					$geoPositionField = [
+						'form_id' => $formId,
+						'required' => $required,
+						'fieldname' => $field,
+						'fieldlabel' => null,
+						'module' => 'searchcriteria',
+						'individual_fieldname' => 0,
+					];
+
+					$result []= $geoPositionField;
+				}
+			}
+		}
 
 		return $result;
 	}

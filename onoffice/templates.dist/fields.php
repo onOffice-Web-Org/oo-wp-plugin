@@ -16,6 +16,21 @@ if ( ! function_exists( 'printRegion') ) {
 	}
 }
 
+if ( ! function_exists( 'printCountry' )) {
+	function printCountry ($values, $selectedValue)	{
+		echo '<option value="">'.esc_html('Not Specified', 'onoffice').'</option>';
+		foreach ($values as $key => $name)
+		{
+			$selected = null;
+			if ($key == $selectedValue)
+			{
+				$selected = 'selected';
+			}
+			echo '<option value="'.esc_attr($key).'" '.$selected.'>'.esc_html($name).'</option>';
+		}
+	}
+}
+
 if (!function_exists('renderField')) {
 	function renderField($inputName, array $properties) {
 		$multiSelectableTypes = array(
@@ -38,7 +53,8 @@ if (!function_exists('renderField')) {
 		<label for="'.esc_attr($inputName).'_n">'.esc_html('No', 'onoffice').'</label>
 	  </fieldset>';
 		} elseif ( in_array($properties['type'], $multiSelectableTypes) &&
-			$inputName !== 'regionaler_zusatz' ) {
+			$inputName !== 'regionaler_zusatz' &&
+			$inputName != 'country') {
 				$permittedValues = $properties['permittedvalues'];
 				echo '<div data-name="'.esc_html($inputName).'" class="multiselect" data-values="'
 					.esc_html(json_encode($permittedValues)).'" data-selected="'
@@ -56,7 +72,13 @@ if (!function_exists('renderField')) {
 				printRegion( $pRegion, $selectedValue );
 			}
 			echo '</select>';
-		} elseif ( FieldTypes::isNumericType( $properties['type'] ) ||
+		}
+		elseif ( $inputName === 'country' )	{
+			echo '<select size="1" name="'.esc_attr($inputName).'">';
+			printCountry($properties['permittedvalues'], $selectedValue);
+			echo '</select>';
+		}
+		elseif ( FieldTypes::isNumericType( $properties['type'] ) ||
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']) {
 			esc_html_e('From: ', 'onoffice');

@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
@@ -125,8 +126,16 @@ abstract class AdminPageAjax
 	{
 		$pFieldnames = new Fieldnames();
 		$pFieldnames->loadLanguage();
+		$modus = null;
 
-		$fieldnames = $pFieldnames->getFieldList($module, $extraFields, $extraFields);
+		if ($module == onOfficeSDK::MODULE_ESTATE) {
+			$modus = \onOffice\WPlugin\GeoPosition::MODUS_TYPE_ADMIN_INTERFACE;
+		}
+		elseif ($module == onOfficeSDK::MODULE_SEARCHCRITERIA) {
+			$modus = \onOffice\WPlugin\GeoPosition::MODUS_TYPE_ADMIN_SEARCH_CRITERIA;
+		}
+
+		$fieldnames = $pFieldnames->getFieldList($module, $extraFields, $extraFields, $modus);
 		$resultByContent = array();
 		$categories = array();
 

@@ -57,4 +57,13 @@ interface DataFormConfigurationFactoryDependencyConfigBase
 	 */
 
 	public function getMainRowById(int $formId): array;
+
+
+	/**
+	 *
+	 * @param bool $isAdminInterface
+	 *
+	 */
+
+	public function setAdminInterface(bool $isAdminInterface);
 }

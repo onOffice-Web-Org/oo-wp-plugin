@@ -167,6 +167,7 @@ class FormModelBuilderDBForm
 
 		if ($formId !== null) {
 			$pRecordReadManager = new RecordManagerReadForm();
+			$pFactory->setIsAdminInterface(true);
 			$values = $pRecordReadManager->getRowById($formId);
 			$pDataFormConfiguration = $pFactory->loadByFormId($formId);
 		} else {

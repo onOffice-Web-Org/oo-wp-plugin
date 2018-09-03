@@ -40,6 +40,9 @@ class DataFormConfigurationFactoryDependencyConfigTest
 	/** @var array */
 	private $_mainRowsByName = [];
 
+	/** @var bool */
+	private $_isAdminInterface = false;
+
 
 	/**
 	 *
@@ -116,5 +119,29 @@ class DataFormConfigurationFactoryDependencyConfigTest
 	public function setFieldsByFormId(int $formId, array $fields)
 	{
 		$this->_fieldsByFormId[$formId] = $fields;
+	}
+
+
+	/**
+	 *
+	 * @param bool $isAdminInterface
+	 *
+	 */
+
+	public function setAdminInterface(bool $isAdminInterface)
+	{
+		$this->_isAdminInterface = $isAdminInterface;
+	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function getIsAdminInterface(): bool
+	{
+		return $this->_isAdminInterface;
 	}
 }
