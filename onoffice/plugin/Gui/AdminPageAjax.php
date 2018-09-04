@@ -23,10 +23,12 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\HtmlIdGenerator;
+
 
 /**
  *
@@ -129,10 +131,10 @@ abstract class AdminPageAjax
 		$modus = null;
 
 		if ($module == onOfficeSDK::MODULE_ESTATE) {
-			$modus = \onOffice\WPlugin\GeoPosition::MODUS_TYPE_ADMIN_INTERFACE;
+			$modus = GeoPosition::MODE_TYPE_ADMIN_INTERFACE;
 		}
 		elseif ($module == onOfficeSDK::MODULE_SEARCHCRITERIA) {
-			$modus = \onOffice\WPlugin\GeoPosition::MODUS_TYPE_ADMIN_SEARCH_CRITERIA;
+			$modus = GeoPosition::MODE_TYPE_ADMIN_SEARCH_CRITERIA;
 		}
 
 		$fieldnames = $pFieldnames->getFieldList($module, $extraFields, $extraFields, $modus);

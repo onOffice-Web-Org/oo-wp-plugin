@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,6 +19,12 @@
  *
  */
 
+namespace onOffice\WPlugin;
+
+use Exception;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Types\FieldTypes;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -26,20 +32,13 @@
  *
  */
 
-namespace onOffice\WPlugin;
-
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfigFieldnames;
-
 class GeoPosition
 {
 	/** */
-	const MODUS_TYPE_ADMIN_INTERFACE = 'adminInterface';
+	const MODE_TYPE_ADMIN_INTERFACE = 'adminInterface';
 
 	/** */
-	const MODUS_TYPE_ADMIN_SEARCH_CRITERIA = 'adminSearchCriteria';
+	const MODE_TYPE_ADMIN_SEARCH_CRITERIA = 'adminSearchCriteria';
 
 	/** */
 	const FIELD_GEO_POSITION = 'geoPosition';
@@ -58,86 +57,78 @@ class GeoPosition
 
 
 	/** @var array */
-	private static $_geoPositionSettings =  array(
-		onOfficeSDK::MODULE_ESTATE => array
-			(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Geo Position',
-				'content' => 'Geografische-Angaben',
-			),
-		onOfficeSDK::MODULE_SEARCHCRITERIA => array
-			(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Geo Position',
-				'content' => 'Search Criteria',
-			),
-		);
+	private $_geoPositionSettings = [
+		onOfficeSDK::MODULE_ESTATE => [
+			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length' => 250,
+			'permittedvalues' => array(),
+			'default' => null,
+			'label' => 'Geo Position',
+			'content' => 'Geografische-Angaben',
+		],
+		onOfficeSDK::MODULE_SEARCHCRITERIA => [
+			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length' => 250,
+			'permittedvalues' => array(),
+			'default' => null,
+			'label' => 'Geo Position',
+			'content' => 'Search Criteria',
+		],
+	];
 
 	/** @var array */
-	private static $_settingsGeoPositionFields = array(
-		onOfficeSDK::MODULE_ESTATE => array(
-			'fields' => array(
-				'laengengrad',
-				'breitengrad',
-				),
-		),
-		onOfficeSDK::MODULE_SEARCHCRITERIA => array(
-			'fields' => array(
-				'range_land',
-				'range_plz',
-				'range_strasse',
-				'range',
-			),
-		),
-	);
+	private $_settingsGeoPositionFields = [
+		onOfficeSDK::MODULE_ESTATE => [
+			'laengengrad',
+			'breitengrad',
+		],
+		onOfficeSDK::MODULE_SEARCHCRITERIA => [
+			'range_land',
+			'range_plz',
+			'range_strasse',
+			'range',
+		],
+	];
 
 
 	/** @var array */
-	private static $_estateSearchFields = array(
+	private $_estateSearchFields = [
 		self::ESTATE_LIST_SEARCH_COUNTRY,
 		self::ESTATE_LIST_SEARCH_ZIP,
 		self::ESTATE_LIST_SEARCH_STREET,
 		self::ESTATE_LIST_SEARCH_RADIUS,
-	);
+	];
 
 
 	/** @var array */
-	private static $_requiredRequestFields = array(
+	private $_requiredRequestFields = [
 		self::ESTATE_LIST_SEARCH_COUNTRY,
 		self::ESTATE_LIST_SEARCH_ZIP,
 		self::ESTATE_LIST_SEARCH_RADIUS,
-	);
+	];
 
-	public function __construct()
-		{ }
 
 	/**
 	 *
 	 * @param array $fieldList
-	 * @param string $modus
+	 * @param string $mode
 	 * @return array
+	 * @throws Exception
 	 *
 	 */
 
-	public function transform(array $fieldList, string $modus):array
+	public function transform(array $fieldList, string $mode): array
 	{
-		$newFieldList = array();
+		$modeToModule = [
+			self::MODE_TYPE_ADMIN_INTERFACE => onOfficeSDK::MODULE_ESTATE,
+			self::MODE_TYPE_ADMIN_SEARCH_CRITERIA => onOfficeSDK::MODULE_SEARCHCRITERIA,
+		];
 
-		switch ($modus)	{
-			case self::MODUS_TYPE_ADMIN_INTERFACE:
-				$newFieldList = $this->transformAdminInterface($fieldList);
-				break;
-
-			case self::MODUS_TYPE_ADMIN_SEARCH_CRITERIA:
-				$newFieldList = $this->transformAdminSearchCriteria($fieldList);
-				break;
+		if (!isset($modeToModule[$mode])) {
+			throw new Exception('Unknown Mode!');
 		}
+
+		$newFieldList = $this->transformAdmin($fieldList, $modeToModule[$mode]);
 
 		return $newFieldList;
 	}
@@ -150,55 +141,42 @@ class GeoPosition
 	 *
 	 */
 
-	private function transformAdminInterface(array $fieldList):array
+	private function transformAdmin(array $fieldList, string $module): array
 	{
-		$geoPositionCounter = 0;
-		$module = onOfficeSDK::MODULE_ESTATE;
+		$geoPositionFields = $this->_settingsGeoPositionFields[$module];
+		$allFields = array_keys($fieldList);
 
-		foreach ($fieldList as $fieldName => $properties) {
-			if (in_array($fieldName, self::$_settingsGeoPositionFields[$module]['fields']))	{
-				$geoPositionCounter++;
-			}
-		}
+		$hasAllGeoPosFields = array_intersect($geoPositionFields, $allFields) == $geoPositionFields;
 
-
-		if ($geoPositionCounter == count(self::$_settingsGeoPositionFields[$module]['fields']))	{
-			foreach (self::$_settingsGeoPositionFields[$module]['fields'] as $field) {
-				unset($fieldList[$field]);
-			}
-
-			$fieldList[self::FIELD_GEO_POSITION] = self::$_geoPositionSettings[$module];
+		if ($hasAllGeoPosFields) {
+			$fieldList = array_diff_key($fieldList, array_flip($geoPositionFields));
+			$fieldList[self::FIELD_GEO_POSITION] = $this->_geoPositionSettings[$module];
 		}
 
 		return $fieldList;
 	}
 
 
-
 	/**
 	 *
-	 * @param array $fieldList
+	 * @param array $inputs
 	 * @return array
 	 *
 	 */
 
-	private function transformAdminSearchCriteria(array $fieldList):array
+	public function createGeoRangeSearchParameterRequest(array $inputs): array
 	{
-		$counter = 0;
-		$module = onOfficeSDK::MODULE_SEARCHCRITERIA;
+		$inputValues = [];
 
-		foreach ($fieldList as $fieldName => $properties) {
-			if (in_array($fieldName, self::$_settingsGeoPositionFields[$module]['fields']))	{
-				unset($fieldList[$fieldName]);
-				$counter++;
+		foreach ($inputs as $key => $values) {
+			$inputValues[$key] = $values;
+
+			if (in_array($key, $this->_requiredRequestFields) && empty($values)) {
+				return [];
 			}
 		}
 
-		if ($counter == count(self::$_settingsGeoPositionFields[$module]['fields'])) {
-			$fieldList[self::FIELD_GEO_POSITION] = self::$_geoPositionSettings[$module];
-		}
-
-		return $fieldList;
+		return $inputValues;
 	}
 
 
@@ -209,43 +187,13 @@ class GeoPosition
 	 *
 	 */
 
-	public function getSettingsGeoPositionFields(string $module):array
+	public function getSettingsGeoPositionFields(string $module): array
 	{
-		$result = array();
-
-		if (array_key_exists($module, self::$_settingsGeoPositionFields)) {
-			$result = self::$_settingsGeoPositionFields[$module]['fields'];
-		}
-
-		return $result;
+		return $this->_settingsGeoPositionFields[$module] ?? [];
 	}
 
 
 	/** @return array */
 	public function getEstateSearchFields()
-		{ return self::$_estateSearchFields; }
-
-
-	/**
-	 *
-	 * @param array $inputs
-	 * @return array
-	 *
-	 */
-
-	public function createGeoRangeSearchParameterRequest(array $inputs)
-	{
-		$inputValues = array();
-
-		foreach ($inputs as $key => $values) {
-			$inputValues[$key] = $values;
-
-			if (in_array($key, self::$_requiredRequestFields) &&
-				$inputValues[$key] == '') {
-				return null;
-			}
-		}
-
-		return $inputValues;
-	}
+		{ return $this->_estateSearchFields; }
 }

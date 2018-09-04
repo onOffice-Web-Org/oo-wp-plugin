@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,6 +19,11 @@
  *
  */
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\GeoPosition;
+
+
 /**
  *
  * @url http://www.onoffice.de
@@ -26,16 +31,9 @@
  *
  */
 
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\GeoPosition;
-
-
 class TestClassGeoPosition
 	extends WP_UnitTestCase
 {
-
-
 	/**
 	 *
 	 */
@@ -44,82 +42,75 @@ class TestClassGeoPosition
 	{
 		$pGeoPosition = $this->getGeoPosition();
 
-		$values1 = array
-				(
-					'laengengrad' => array
-					(
-						"type" =>  "float",
-						"length" =>  NULL,
-						"permittedvalues" =>  NULL,
-						"default" =>  NULL,
-						"label" =>  "Längengrad",
-						"tablename" =>  "ObjGeo",
-						"content" =>   "Geografische-Angaben",
-						"module" => "estate",
-					),
-					'breitengrad' => array
-					(
-						"type" =>  "float",
-						"length" =>  NULL,
-						"permittedvalues" =>  NULL,
-						"default" =>  NULL,
-						"label" =>  "Breitengrad",
-						"tablename" =>  "ObjGeo",
-						"content" =>   "Geografische-Angaben",
-						"module" => "estate",
-					),
-				);
+		$values1 = [
+			'laengengrad' => [
+				'type' => 'float',
+				'length' => null,
+				'permittedvalues' => null,
+				'default' => null,
+				'label' => 'Längengrad',
+				'tablename' => 'ObjGeo',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+			],
+			'breitengrad' => [
+				'type' => 'float',
+				'length' => null,
+				'permittedvalues' => null,
+				'default' => null,
+				'label' => 'Breitengrad',
+				'tablename' => 'ObjGeo',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+			],
+		];
 
-		$values2 = array
-				(
-					'range_land' => array
-						(
-							"type" => FieldTypes::FIELD_TYPE_SINGLESELECT,
-							"label" => "Land",
-							"default" => NULL,
-							"permittedValues" => [],
-							"content" => "Search Criteria",
-							"module" => "searchcriteria",
-						),
-					'range_plz' => array
-						(
-							"type" => FieldTypes::FIELD_TYPE_VARCHAR,
-							"label" => "PLZ",
-							"default" => NULL,
-							"permittedValues" => [],
-							"content" => "Search Criteria",
-							"module" => "searchcriteria",
-						),
-					'range_strasse' => array
-						(
-							"type" => FieldTypes::FIELD_TYPE_VARCHAR,
-							"label" => "Straße",
-							"default" => NULL,
-							"permittedValues" => [],
-							"content" => "Search Criteria",
-							"module" => "searchcriteria",
-						),
-					'range' => array
-						(
-							"type" => FieldTypes::FIELD_TYPE_VARCHAR,
-							"label" => "Umkreis (km)",
-							"default" => NULL,
-							"permittedValues" => [],
-							"content" => "Search Criteria",
-							"module" => "searchcriteria",
-						),
-				);
+		$values2 = [
+			'range_land' => [
+				'type' => FieldTypes::FIELD_TYPE_SINGLESELECT,
+				'label' => 'Land',
+				'default' => null,
+				'permittedValues' => [],
+				'content' => 'Search Criteria',
+				'module' => 'searchcriteria',
+			],
+			'range_plz' => [
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'label' => 'PLZ',
+				'default' => null,
+				'permittedValues' => [],
+				'content' => 'Search Criteria',
+				'module' => 'searchcriteria',
+			],
+			'range_strasse' => [
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'label' => 'Straße',
+				'default' => null,
+				'permittedValues' => [],
+				'content' => 'Search Criteria',
+				'module' => 'searchcriteria',
+			],
+			'range' => [
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'label' => 'Umkreis (km)',
+				'default' => null,
+				'permittedValues' => [],
+				'content' => 'Search Criteria',
+				'module' => 'searchcriteria',
+			],
+		];
 
 		$result1 = $pGeoPosition->transform($values1, 'adminInterface');
-		$expectedResult1 = array('geoPosition' => array
-			(
+		$expectedResult1 = [
+			'geoPosition' => [
 				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
 				'length' => 250,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Geo Position',
 				'content' => 'Geografische-Angaben',
-			));
+			],
+		];
 
 		foreach ($expectedResult1 as $key => $values) {
 			$this->assertArrayHasKey($key, $result1);
@@ -132,15 +123,16 @@ class TestClassGeoPosition
 
 
 		$result2 = $pGeoPosition->transform($values2, 'adminSearchCriteria');
-		$expectedResult2 = array('geoPosition' => array
-			(
+		$expectedResult2 = [
+			'geoPosition' => [
 				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
 				'length' => 250,
 				'permittedvalues' => [],
 				'default' => null,
 				'label' => 'Geo Position',
 				'content' => 'Search Criteria',
-			));
+			],
+		];
 
 
 		foreach ($expectedResult2 as $key => $values) {
@@ -210,15 +202,14 @@ class TestClassGeoPosition
 	public function testGetEstateSearchFields()
 	{
 		$pGeoPosition = $this->getGeoPosition();
-
 		$result = $pGeoPosition->getEstateSearchFields();
 
-		$expectedValue = array(
+		$expectedValue = [
 			'country',
 			'zip',
 			'street',
 			'radius',
-		);
+		];
 
 		foreach ($expectedValue as $key => $value) {
 			$this->assertEquals($value, $result[$key]);
@@ -232,8 +223,7 @@ class TestClassGeoPosition
 
 	public function testCreateGeoRangeSearchParameterRequest()
 	{
-		$values =
-		[
+		$values = [
 			'country' => 'DEU',
 			'zip' => '52068',
 			'street' => 'Charlottenburger Allee',

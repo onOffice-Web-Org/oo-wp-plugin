@@ -286,7 +286,7 @@ class EstateList
 
 		$requestParams = ($requestParams + $this->addExtraParams());
 
-		if (null != $requestGeoSearchParameters) {
+		if ($requestGeoSearchParameters !== []) {
 			$requestParams['georangesearch'] = $requestGeoSearchParameters;
 		}
 
