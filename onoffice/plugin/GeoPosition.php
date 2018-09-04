@@ -125,12 +125,11 @@ class GeoPosition
 	 *
 	 */
 
-	public function transform($fieldList, $modus)
+	public function transform(array $fieldList, string $modus):array
 	{
 		$newFieldList = array();
 
-		switch ($modus)
-		{
+		switch ($modus)	{
 			case self::MODUS_TYPE_ADMIN_INTERFACE:
 				$newFieldList = $this->transformAdminInterface($fieldList);
 				break;
@@ -151,24 +150,20 @@ class GeoPosition
 	 *
 	 */
 
-	private function transformAdminInterface($fieldList)
+	private function transformAdminInterface(array $fieldList):array
 	{
 		$geoPositionCounter = 0;
 		$module = onOfficeSDK::MODULE_ESTATE;
 
-		foreach ($fieldList as $fieldName => $properties)
-		{
-			if (in_array($fieldName, self::$_settingsGeoPositionFields[$module]['fields']))
-			{
+		foreach ($fieldList as $fieldName => $properties) {
+			if (in_array($fieldName, self::$_settingsGeoPositionFields[$module]['fields']))	{
 				$geoPositionCounter++;
 			}
 		}
 
 
-		if ($geoPositionCounter == count(self::$_settingsGeoPositionFields[$module]['fields']))
-		{
-			foreach (self::$_settingsGeoPositionFields[$module]['fields'] as $field)
-			{
+		if ($geoPositionCounter == count(self::$_settingsGeoPositionFields[$module]['fields']))	{
+			foreach (self::$_settingsGeoPositionFields[$module]['fields'] as $field) {
 				unset($fieldList[$field]);
 			}
 
@@ -187,22 +182,19 @@ class GeoPosition
 	 *
 	 */
 
-	private function transformAdminSearchCriteria($fieldList)
+	private function transformAdminSearchCriteria(array $fieldList):array
 	{
 		$counter = 0;
 		$module = onOfficeSDK::MODULE_SEARCHCRITERIA;
 
-		foreach ($fieldList as $fieldName => $properties)
-		{
-			if (in_array($fieldName, self::$_settingsGeoPositionFields[$module]['fields']))
-			{
+		foreach ($fieldList as $fieldName => $properties) {
+			if (in_array($fieldName, self::$_settingsGeoPositionFields[$module]['fields']))	{
 				unset($fieldList[$fieldName]);
 				$counter++;
 			}
 		}
 
-		if ($counter == count(self::$_settingsGeoPositionFields[$module]['fields']))
-		{
+		if ($counter == count(self::$_settingsGeoPositionFields[$module]['fields'])) {
 			$fieldList[self::FIELD_GEO_POSITION] = self::$_geoPositionSettings[$module];
 		}
 
@@ -217,12 +209,11 @@ class GeoPosition
 	 *
 	 */
 
-	public function getSettingsGeoPositionFields($module)
+	public function getSettingsGeoPositionFields(string $module):array
 	{
 		$result = array();
 
-		if (array_key_exists($module, self::$_settingsGeoPositionFields))
-		{
+		if (array_key_exists($module, self::$_settingsGeoPositionFields)) {
 			$result = self::$_settingsGeoPositionFields[$module]['fields'];
 		}
 
@@ -237,46 +228,24 @@ class GeoPosition
 
 	/**
 	 *
-	 * @return array|null
+	 * @param array $inputs
+	 * @return array
 	 *
 	 */
 
-	/*public function createGeoRangeSearchParameterRequest()
-	{
-		$pEstateConfigInputReader =
-				//new EstateListInputVariableReaderConfigFieldnames();
-				new Controller\EstateListInputVariableReader();
-
-		$inputValues = array();
-
-		foreach ($this->getEstateSearchFields() as $key)
-		{
-			$inputValues[$key] = $pEstateConfigInputReader->getValue($key, FILTER_SANITIZE_STRING, FILTER_FORCE_ARRAY);
-
-			if (in_array($key, self::$_requiredRequestFields) &&
-				$inputValues[$key] == '')
-			{
-				return null;
-			}
-		}
-		return $inputValues;
-	}*/
-
-	public function createGeoRangeSearchParameterRequest($inputs)
+	public function createGeoRangeSearchParameterRequest(array $inputs)
 	{
 		$inputValues = array();
 
-		foreach ($inputs as $key => $values)
-		{
+		foreach ($inputs as $key => $values) {
 			$inputValues[$key] = $values;
 
 			if (in_array($key, self::$_requiredRequestFields) &&
-				$inputValues[$key] == '')
-			{
+				$inputValues[$key] == '') {
 				return null;
 			}
 		}
-		
+
 		return $inputValues;
 	}
 }
