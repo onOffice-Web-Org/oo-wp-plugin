@@ -44,6 +44,12 @@ class FormPostConfigurationTest
 	/** @var array */
 	private $_fieldTypes = [];
 
+	/** @var string */
+	private $_captchaSecret = '';
+
+	/** @var string */
+	private $_postvarCaptchaToken = '';
+
 
 	/**
 	 *
@@ -136,5 +142,53 @@ class FormPostConfigurationTest
 	public function addPostVariableString(string $key, string $value)
 	{
 		$this->_postVariables[$key] = $value;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getCaptchaSecret(): string
+	{
+		return $this->_captchaSecret;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getPostvarCaptchaToken(): string
+	{
+		return $this->_postvarCaptchaToken;
+	}
+
+
+	/**
+	 *
+	 * @param string $captchaSecret
+	 *
+	 */
+
+	public function setCaptchaSecret(string $captchaSecret)
+	{
+		$this->_captchaSecret = $captchaSecret;
+	}
+
+
+	/**
+	 *
+	 * @param string $postvarCaptchaToken
+	 *
+	 */
+
+	public function setPostvarCaptchaToken(string $postvarCaptchaToken)
+	{
+		$this->_postvarCaptchaToken = $postvarCaptchaToken;
 	}
 }

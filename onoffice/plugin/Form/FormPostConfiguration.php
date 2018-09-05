@@ -59,4 +59,22 @@ interface FormPostConfiguration
 	 */
 
 	public function getTypeForInput(string $input, string $module): string;
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getPostvarCaptchaToken(): string;
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getCaptchaSecret(): string;
 }

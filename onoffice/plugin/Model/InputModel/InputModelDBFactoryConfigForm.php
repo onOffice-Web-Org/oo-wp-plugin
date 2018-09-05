@@ -51,6 +51,9 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_CHECKDUPLICATES = 'formCheckDuplicates';
 
 	/** */
+	const INPUT_FORM_REQUIRES_CAPTCHA = 'formRequiresCaptcha';
+
+	/** */
 	const INPUT_FORM_REQUIRED = 'formRequired';
 
 	/** */
@@ -96,6 +99,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_CHECKDUPLICATES => array(
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'checkduplicates',
+		),
+		self::INPUT_FORM_REQUIRES_CAPTCHA => array(
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'captcha',
 		),
 		self::INPUT_FORM_PAGES => array(
 			self::KEY_TABLE => 'oo_plugin_forms',

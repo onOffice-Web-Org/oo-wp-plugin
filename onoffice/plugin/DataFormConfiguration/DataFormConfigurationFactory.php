@@ -233,6 +233,7 @@ class DataFormConfigurationFactory
 	{
 		$pConfig->setFormName($row['name']);
 		$pConfig->setTemplate($row['template']);
+		$pConfig->setCaptcha($row['captcha']);
 
 		if (array_key_exists('form_type', $row)) {
 			$pConfig->setFormType($row['form_type']);

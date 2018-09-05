@@ -36,6 +36,9 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 	if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
 		esc_html_e('There was an error sending the form.', 'onoffice');
 		echo '<br>';
+	} elseif ($pForm->getFormStatus() === FormPost::MESSAGE_RECAPTCHA_SPAM) {
+		esc_html_e('The form wasn\'t sent because spam was detected.', 'onoffice');
+		echo '<br>';
 	}
 
 	/* @var $pForm Form */
@@ -135,7 +138,12 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 						<?php echo implode('<br>', $miscValues); ?>
 					</p>
 					<p>
-						<input type="submit" value="<?php echo esc_html__('Send', 'onoffice'); ?>" style="float:right;">
+						<div style="float:right">
+							<?php
+							$pForm->setGenericSetting('formId', 'leadgeneratorform');
+							include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+							?>
+						</div>
 					</p>
 				</div>
 

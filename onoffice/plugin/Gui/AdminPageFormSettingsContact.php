@@ -58,12 +58,14 @@ class AdminPageFormSettingsContact
 
 		$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
 		$pInputModelSubject = $pFormModelBuilder->createInputModelSubject();
+		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice'));
 		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
+		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 
 		if ($this->_showCreateAddress) {
 			$pInputModelCreateAddress = $pFormModelBuilder->createInputModelCreateAddress();

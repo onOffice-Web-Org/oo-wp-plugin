@@ -21,7 +21,7 @@
 
 ?>
 
-<form method="post">
+<form method="post" id="onoffice-form">
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
@@ -103,10 +103,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo implode('<br>', $estateValues);
 	echo '</p>';
 
-?>
-
-	<input type="submit" value="GO!">
-<?php
+	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>
 

@@ -44,11 +44,14 @@ class AdminPageFormSettingsApplicantSearch
 		$pFormModelBuilder = $this->getFormModelBuilder();
 
 		$pInputModelResultLimit = $pFormModelBuilder->createInputModelResultLimit();
+		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
+
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice'));
 		$pFormModelFormSpecific->addInputModel($pInputModelResultLimit);
+		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 		$this->addFormModel($pFormModelFormSpecific);
 
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);

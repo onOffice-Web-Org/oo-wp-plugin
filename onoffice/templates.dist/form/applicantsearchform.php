@@ -22,7 +22,7 @@ $pathComponents = [ONOFFICE_PLUGIN_DIR, 'templates.dist', 'fields.php'];
 require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 
 ?>
-<form method="post">
+<form method="post" id="onoffice-form">
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
@@ -32,95 +32,94 @@ require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 
 <?php
 
-	$selectTypes = array(
-			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
-			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
-		);
+$selectTypes = array(
+		\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
+		\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
+	);
 
-	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo 'ERROR!';
+if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
+	echo 'ERROR!';
+}
+
+/* @var $pForm \onOffice\WPlugin\Form */
+foreach ( $pForm->getInputFields() as $input => $table ) {
+	if ( in_array( $input, array('message', 'Id') ) ) {
+		continue;
 	}
 
-	/* @var $pForm \onOffice\WPlugin\Form */
-	foreach ( $pForm->getInputFields() as $input => $table ) {
-		if ( in_array( $input, array('message', 'Id') ) ) {
-			continue;
-		}
+	if ( $pForm->isMissingField( $input ) ) {
+		echo '<span class="onoffice-pleasefill">Bitte ausfüllen!</span>';
+	}
 
-		if ( $pForm->isMissingField( $input ) ) {
-			echo '<span class="onoffice-pleasefill">Bitte ausfüllen!</span>';
-		}
+	$isRequired = $pForm->isRequiredField( $input );
+	$addition = $isRequired ? '*' : '';
+	$inputAddition = $isRequired ? ' required' : '';
+	echo $pForm->getFieldLabel( $input ).$addition.': <br>';
 
-		$isRequired = $pForm->isRequiredField( $input );
-		$addition = $isRequired ? '*' : '';
-		$inputAddition = $isRequired ? ' required' : '';
-		echo $pForm->getFieldLabel( $input ).$addition.': <br>';
+	$permittedValues = $pForm->getPermittedValues( $input, true );
 
-		$permittedValues = $pForm->getPermittedValues( $input, true );
+	if ($input == 'Umkreis') {
+		echo '<br>'
+			.'<fieldset>'
+			.'<legend>Umkreissuche:</legend>';
 
-		if ($input == 'Umkreis') {
-			echo '<br>'
-				.'<fieldset>'
-				.'<legend>Umkreissuche:</legend>';
+		foreach ($pForm->getUmkreisFields() as $key => $values) {
+			echo $values['label'].':<br>';
 
-			foreach ($pForm->getUmkreisFields() as $key => $values) {
-				echo $values['label'].':<br>';
+			if (in_array($values['type'], $selectTypes)) {
+				$permittedValues = $values['permittedvalues'];
 
-				if (in_array($values['type'], $selectTypes)) {
-					$permittedValues = $values['permittedvalues'];
+				echo '<select size="1" name="'.$key.'">';
+				echo  '<option value="">'.esc_html('Keine Angabe').'</option>';
 
-					echo '<select size="1" name="'.$key.'">';
-					echo  '<option value="">'.esc_html('Keine Angabe').'</option>';
-
-					foreach ( $permittedValues as $countryCode => $countryName ) {
-						echo '<option value="'.esc_html($countryCode).'">'
-							.esc_html($countryName).'</option>';
-					}
-
-					echo '</select><br>';
-				} else {
-					echo '<input type="text" name="'.esc_html($key).'" value="'
-						.$pForm->getFieldValue( $key ).'"'.$inputAddition.'> <br>';
+				foreach ( $permittedValues as $countryCode => $countryName ) {
+					echo '<option value="'.esc_html($countryCode).'">'
+						.esc_html($countryName).'</option>';
 				}
-			}
 
-			echo '</fieldset>';
-			continue;
-		}
-
-		$typeCurrentInput = $pForm->getFieldType( $input );
-
-		$selectedValue = $pForm->getFieldValue( $input, true );
-
-		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-			echo '<div data-name="'.esc_html($input).'" class="multiselect" data-values="'
-				.esc_html(json_encode($permittedValues)).'" data-selected="'
-				.esc_html(json_encode($selectedValue)).'">
-				<input type="button" class="onoffice-multiselect-edit" value="'
-				.esc_html__('Edit values', 'onoffice').'"> </div>';
-		} else {
-			if ($input == 'regionaler_zusatz') {
-				echo '<select size="1" name="'.esc_html($input).'">';
-				$pRegionController = new \onOffice\WPlugin\Region\RegionController();
-				$regions = $pRegionController->getRegions();
-				foreach ($regions as $pRegion) {
-					/* @var $pRegion Region */
-					printRegion( $pRegion, [$selectedValue] );
-				}
 				echo '</select><br>';
 			} else {
-				echo '<input type="text" name="'.$input.'" value="'
-					.$pForm->getFieldValue( $input ).'"'.$inputAddition.'><br>';
+				echo '<input type="text" name="'.esc_html($key).'" value="'
+					.$pForm->getFieldValue( $key ).'"'.$inputAddition.'> <br>';
 			}
 		}
 
-		echo '<br>';
+		echo '</fieldset>';
+		continue;
 	}
 
-?>
+	$typeCurrentInput = $pForm->getFieldType( $input );
 
-	<br><input type="submit" value="<?php esc_attr_e('Search for Prospective Buyers', 'onoffice'); ?>">
-<?php
+	$selectedValue = $pForm->getFieldValue( $input, true );
+
+	if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
+		echo '<div data-name="'.esc_html($input).'" class="multiselect" data-values="'
+			.esc_html(json_encode($permittedValues)).'" data-selected="'
+			.esc_html(json_encode($selectedValue)).'">
+			<input type="button" class="onoffice-multiselect-edit" value="'
+			.esc_html__('Edit values', 'onoffice').'"> </div>';
+	} else {
+		if ($input == 'regionaler_zusatz') {
+			echo '<select size="1" name="'.esc_html($input).'">';
+			$pRegionController = new \onOffice\WPlugin\Region\RegionController();
+			$regions = $pRegionController->getRegions();
+			foreach ($regions as $pRegion) {
+				/* @var $pRegion Region */
+				printRegion( $pRegion, [$selectedValue] );
+			}
+			echo '</select><br>';
+		} else {
+			echo '<input type="text" name="'.$input.'" value="'
+				.$pForm->getFieldValue( $input ).'"'.$inputAddition.'><br>';
+		}
+	}
+
+	echo '<br>';
+}
+
+$pForm->setGenericSetting('submitButtonLabel', __('Search for Prospective Buyers', 'onoffice'));
+include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+echo '<br>';
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$applicants = $pForm->getResponseFieldsValues();

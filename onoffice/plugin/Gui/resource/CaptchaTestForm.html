@@ -1,0 +1,32 @@
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+function onSubmit(captchaResponse) {
+	var url = %1$s;
+	jQuery.post(
+		url, {
+			'action': 'check_captcha_data',
+			'g-recaptcha-response': captchaResponse
+		},
+		function(response) {
+			var translations = %2$s;
+			var resultdiv = document.getElementById('captcha-result');
+			var result = JSON.parse(response);
+
+			if (result.result) {
+				resultdiv.textContent = translations.response_ok;
+			} else {
+				resultdiv.textContent = translations.response_error + ' ';
+				for (var i in result['error-codes']) {
+					var error = result['error-codes'][i];
+					if (error in translations) {
+						resultdiv.textContent += translations[error];
+						break;
+					}
+				}
+			}
+		}
+	);
+}
+</script>
+<button class="g-recaptcha button" data-sitekey="%3$s" data-callback="onSubmit">Test Keys</button>
+<div id="captcha-result"></div>

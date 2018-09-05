@@ -85,4 +85,28 @@ class FormPostConfigurationDefault
 	{
 		return $this->_pFieldNames->getType($input, $module);
 	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getPostvarCaptchaToken(): string
+	{
+		return filter_input(INPUT_POST, CaptchaHandler::RECAPTCHA_RESPONSE_PARAM);
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getCaptchaSecret(): string
+	{
+		return get_option('onoffice-settings-captcha-secretkey', '');
+	}
 }

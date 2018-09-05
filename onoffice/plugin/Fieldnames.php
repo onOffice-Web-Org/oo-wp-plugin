@@ -294,7 +294,7 @@ class Fieldnames
 
 		foreach ($geoPositionSearchFields as $field) {
 			$this->_fieldList[onOfficeSDK::MODULE_ESTATE][$field] =
-					$_apiReadOnlyFields[onOfficeSDK::MODULE_ESTATE][$field];
+				self::$_apiReadOnlyFields[onOfficeSDK::MODULE_ESTATE][$field];
 		}
 	}
 
@@ -574,12 +574,8 @@ class Fieldnames
 		if ($hasApiFields) {
 			$extraFields = self::$_apiReadOnlyFields[$module];
 			array_walk($extraFields, function(&$array) {
-				if ($array['content'] == null) {
-					$array['content'] = __('Form Specific Fields', 'onoffice');
-				}
-				else {
-					$array['content'] = __($array['content'], 'onoffice');
-				}
+				$newContent = $array['content'] ?? 'Form Specific Fields';
+				$array['content'] = __($newContent, 'onoffice');
 			});
 		}
 

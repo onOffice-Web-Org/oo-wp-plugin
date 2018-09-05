@@ -35,22 +35,25 @@ class DataFormConfiguration
 
 
 	/** @var string */
-	private $_formType = null;
+	private $_formType = '';
 
 	/** @var string */
-	private $_formName = null;
+	private $_formName = '';
 
 	/** @var array */
-	private $_requiredFields = array();
+	private $_requiredFields = [];
 
 	/** @var string */
 	private $_language = '';
 
 	/** @var array */
-	private $_inputs = array();
+	private $_inputs = [];
 
 	/** @var string */
 	private $_template = '';
+
+	/** @var bool */
+	private $_captcha = false;
 
 
 	/**
@@ -63,23 +66,23 @@ class DataFormConfiguration
 		{}
 
 	/** @return string */
-	public function getFormType()
+	public function getFormType(): string
 		{ return $this->_formType; }
 
 	/** @return array */
-	public function getRequiredFields()
+	public function getRequiredFields(): array
 		{ return $this->_requiredFields; }
 
 	/** @return string */
-	public function getLanguage()
+	public function getLanguage(): string
 		{ return $this->_language; }
 
 	/** @return array */
-	public function getInputs()
+	public function getInputs(): array
 		{ return $this->_inputs; }
 
 	/** @param string $formType */
-	public function setFormType($formType)
+	public function setFormType(string $formType)
 		{ $this->_formType = $formType; }
 
 	/** @param array $requiredFields */
@@ -87,7 +90,7 @@ class DataFormConfiguration
 		{ $this->_requiredFields = $requiredFields; }
 
 	/** @param string $language */
-	public function setLanguage($language)
+	public function setLanguage(string $language)
 		{ $this->_language = $language; }
 
 	/** @param array $inputs */
@@ -95,7 +98,7 @@ class DataFormConfiguration
 		{ $this->_inputs = $inputs; }
 
 	/** @param string $requiredField */
-	public function addRequiredField($requiredField)
+	public function addRequiredField(string $requiredField)
 		{ $this->_requiredFields []= $requiredField; }
 
 	/**
@@ -105,22 +108,30 @@ class DataFormConfiguration
 	 *
 	 */
 
-	public function addInput($input, $module = null)
+	public function addInput(string $input, $module = null)
 		{ $this->_inputs[$input] = $module; }
 
 	/** @return string */
-	public function getTemplate()
+	public function getTemplate(): string
 		{ return $this->_template; }
 
 	/** @param string $template */
-	public function setTemplate($template)
+	public function setTemplate(string $template)
 		{ $this->_template = $template; }
 
 	/** @return string */
-	public function getFormName()
+	public function getFormName(): string
 		{ return $this->_formName; }
 
 	/** @param string $formName */
-	public function setFormName($formName)
+	public function setFormName(string $formName)
 		{ $this->_formName = $formName; }
+
+	/** @return bool */
+	public function getCaptcha(): bool
+		{ return $this->_captcha; }
+
+	/** @param bool $captcha */
+	public function setCaptcha(bool $captcha)
+		{ $this->_captcha = $captcha; }
 }

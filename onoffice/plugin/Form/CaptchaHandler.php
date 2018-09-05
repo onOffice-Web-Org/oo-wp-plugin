@@ -38,22 +38,25 @@ class CaptchaHandler
 
 
 	/** @var string */
-	private $_token = '';
+	private $_captchaResponse = '';
 
 	/** @var string */
 	private $_secret = '';
 
+	/** @var array */
+	private $_errorCodes = [];
+
 
 	/**
 	 *
-	 * @param string $token
+	 * @param string $captchaResponse
 	 * @param string $secret
 	 *
 	 */
 
-	public function __construct(string $token, string $secret)
+	public function __construct(string $captchaResponse, string $secret)
 	{
-		$this->_token = $token;
+		$this->_captchaResponse = $captchaResponse;
 		$this->_secret = $secret;
 	}
 
@@ -66,14 +69,11 @@ class CaptchaHandler
 
 	public function checkCaptcha(): bool
 	{
-		$returnVal = false;
-
-		if ($this->_token !== '') {
-			$url = $this->buildFullUrl();
-			$curlResource = curl_init($url);
-			$response = curl_exec($curlResource);
-			$returnVal = $this->getResult($response);
-		}
+		$url = $this->buildFullUrl();
+		$curlResource = curl_init($url);
+		curl_setopt($curlResource, CURLOPT_RETURNTRANSFER, true);
+		$response = curl_exec($curlResource);
+		$returnVal = $this->getResult($response);
 
 		return $returnVal;
 	}
@@ -89,7 +89,7 @@ class CaptchaHandler
 	{
 		$parameters = http_build_query([
 			'secret' => $this->_secret,
-			'response' => $this->_token,
+			'response' => $this->_captchaResponse,
 		]);
 
 		$url = self::SITE_VERIFY_URL.'?'.$parameters;
@@ -108,6 +108,19 @@ class CaptchaHandler
 	public function getResult(string $response): bool
 	{
 		$result = json_decode($response, true);
+		$this->_errorCodes = $result['error-codes'] ?? [];
 		return $result['success'] ?? false;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getErrorCodes(): array
+	{
+		return $this->_errorCodes;
 	}
 }

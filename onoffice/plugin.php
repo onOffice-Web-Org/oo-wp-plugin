@@ -42,6 +42,7 @@ use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
+use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
 
@@ -64,6 +65,7 @@ add_action( 'admin_menu', array($pAdminViewController, 'register_menu') );
 add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_ajax') );
 add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueue_css') );
 add_action( 'admin_enqueue_scripts', array($pAdminViewController, 'enqueueExtraJs') );
+add_action( 'wp_enqueue_scripts', [CaptchaDataChecker::class, 'registerScripts'] );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'registerScripts'), 9 );
 add_action( 'wp_enqueue_scripts', array($pContentFilter, 'includeScripts') );
 add_action( 'save_post', array($pDetailViewPostSaveController, 'onSavePost') );
@@ -72,6 +74,7 @@ add_action( 'oo_cache_cleanup', 'ooCacheCleanup' );
 
 add_action( 'init', array($pAdminViewController, 'onInit') );
 add_action( 'admin_init', array($pAdminViewController, 'add_ajax_actions') );
+add_action( 'admin_init', [CaptchaDataChecker::class, 'addHook'] );
 
 add_filter( 'wp_link_pages_link', array($pSearchParams, 'linkPagesLink'), 10, 2 );
 add_filter( 'wp_link_pages_args', array($pSearchParams, 'populateDefaultLinkParams') );

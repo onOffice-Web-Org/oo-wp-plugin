@@ -225,6 +225,7 @@ class TestClassDataFormConfigurationFactory
 			$this->assertEquals($fieldsArrayFlat, $pDataFormConfiguration->getInputs());
 			$this->assertEquals(['Vorname', 'Name'], $pDataFormConfiguration->getRequiredFields());
 			$this->assertEquals('testtemplate.php', $pDataFormConfiguration->getTemplate());
+			$this->assertTrue($pDataFormConfiguration->getCaptcha());
 
 			switch ($formType) {
 				case Form::TYPE_CONTACT:
@@ -323,6 +324,7 @@ class TestClassDataFormConfigurationFactory
 			'limitresults' => '30',
 			'checkduplicates' => '1',
 			'pages' => '3',
+			'captcha' => '1',
 		];
 	}
 }

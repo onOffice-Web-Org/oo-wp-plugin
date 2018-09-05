@@ -24,6 +24,19 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
+use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_action;
+use function admin_url;
+use function do_settings_sections;
+use function esc_attr;
+use function esc_html;
+use function get_option;
+use function json_encode;
+use function plugins_url;
+use function settings_fields;
+use function submit_button;
+use function wp_nonce_field;
 
 /**
  *
@@ -108,6 +121,9 @@ class AdminPageApiSettings
 		$pFormModel->setGroupSlug('onoffice-google-recaptcha');
 		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('Google reCAPTCHA', 'onoffice'));
+		$pFormModel->setTextCallback(function() {
+			$this->renderTestFormReCaptcha();
+		});
 
 		$this->addFormModel($pFormModel);
 	}
@@ -136,6 +152,38 @@ class AdminPageApiSettings
 
 		if ($cacheClean === 'success') {
 			add_action( 'admin_notices', [$this, 'displayCacheClearSuccess']);
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function renderTestFormReCaptcha()
+	{
+		$tokenOptions = get_option('onoffice-settings-captcha-sitekey', '');
+		$secretOptions = get_option('onoffice-settings-captcha-secretkey', '');
+		$stringTranslations = [
+			'response_ok' => __('The keys are OK.', 'onoffice'),
+			'response_error' => __('There was an error:', 'onoffice'),
+			'missing-input-secret' => __('The secret parameter is missing.', 'onoffice'),
+			'invalid-input-secret' => __('The secret parameter is invalid or malformed.', 'onoffice'),
+			'missing-input-response' => __('The response parameter is missing.', 'onoffice'),
+			'invalid-input-response' => __('The response parameter is invalid or malformed.', 'onoffice'),
+			'bad-request' => __('The request is invalid or malformed.', 'onoffice'),
+		];
+
+		if ($tokenOptions !== '' && $secretOptions !== '') {
+			$template = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'resource'
+				.DIRECTORY_SEPARATOR.'CaptchaTestForm.html');
+			printf($template,
+				json_encode(admin_url('admin-ajax.php')),
+				json_encode($stringTranslations),
+				esc_html($tokenOptions));
+		} else {
+			echo __('In order to use Google reCAPTCHA, you need to provide your keys. '
+				.'You\'re free to enable it in the form settings for later use.', 'onoffice');
 		}
 	}
 

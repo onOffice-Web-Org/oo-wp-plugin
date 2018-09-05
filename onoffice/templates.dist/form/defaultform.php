@@ -20,8 +20,8 @@
  */
 
 ?>
-<form method="post">
 
+<form method="post" id="onoffice-form">
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
 	<?php if ( isset( $estateId ) ) : ?>
@@ -40,6 +40,8 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 } else {
 	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 		echo 'ERROR!';
+	} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
+		echo 'Spam detected!';
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
@@ -97,11 +99,8 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 <?php
 	endif;
-?>
 
-		<input type="submit" value="GO!">
-
-<?php
+	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>
 </form>

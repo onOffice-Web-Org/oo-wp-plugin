@@ -62,6 +62,10 @@ class Form
 	/** @var FormData */
 	private $_pFormData = null;
 
+	/** @var array */
+	private $_genericSettings = [];
+
+
 	/**
 	 *
 	 * @param string $formName
@@ -71,6 +75,8 @@ class Form
 
 	public function __construct( $formName, $type )
 	{
+		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice'));
+		$this->setGenericSetting('formId', 'onoffice-form');
 		$language = Language::getDefault();
 		$this->_pFieldnames = new Fieldnames($language);
 		$this->_pFieldnames->loadLanguage();
@@ -328,23 +334,25 @@ class Form
 	 * @param string $field
 	 * @param bool $raw
 	 *
-	 * @return string
+	 * @return array
 	 *
 	 */
 
-	public function getPermittedValues( $field, $raw = false )
+	public function getPermittedValues($field, $raw = false): array
 	{
 		$module = $this->getModuleOfField($field);
 		$fieldType = $this->getFieldType( $field );
-		$isMultiselectOrSingleselect = in_array( $fieldType,
-			array(FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT), true );
+		$isMultiselectOrSingleselect = in_array($fieldType, [
+			FieldTypes::FIELD_TYPE_MULTISELECT,
+			FieldTypes::FIELD_TYPE_SINGLESELECT,
+		], true );
 
-		$result = null;
+		$result = [];
 
-		if ( $isMultiselectOrSingleselect ) {
-			$result = $this->_pFieldnames->getPermittedValues( $field, $module);
+		if ($isMultiselectOrSingleselect) {
+			$result = $this->_pFieldnames->getPermittedValues($field, $module);
 
-			if ( false === $raw ) {
+			if (!$raw) {
 				$result = $this->escapePermittedValues($result);
 			}
 		}
@@ -465,6 +473,44 @@ class Form
 	public function getFormId()
 	{
 		return esc_html($this->getDataFormConfiguration()->getFormName());
+	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function needsReCaptcha(): bool
+	{
+		return $this->getDataFormConfiguration()->getCaptcha();
+	}
+
+
+	/**
+	 *
+	 * @param string $settingName
+	 * @return string
+	 *
+	 */
+
+	public function getGenericSetting(string $settingName)
+	{
+		return $this->_genericSettings[$settingName] ?? null;
+	}
+
+
+	/**
+	 *
+	 * @param string $settingName
+	 * @param string $value
+	 *
+	 */
+
+	public function setGenericSetting(string $settingName, $value)
+	{
+		$this->_genericSettings[$settingName] = $value;
 	}
 
 

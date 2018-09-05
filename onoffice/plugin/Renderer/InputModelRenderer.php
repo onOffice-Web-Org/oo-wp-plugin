@@ -60,7 +60,7 @@ class InputModelRenderer
 		$pForm = $this->_pFormModel;
 
 		add_settings_section($pForm->getGroupSlug(), $pForm->getLabel(),
-			function() {}, $pForm->getPageSlug());
+			$pForm->getTextCallback(), $pForm->getPageSlug());
 
 		foreach ($pForm->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel);

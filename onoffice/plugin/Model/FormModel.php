@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Model;
 
+use Closure;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -40,10 +42,24 @@ class FormModel
 	private $_label = null;
 
 	/** @var InputModelBase[] */
-	private $_inputModels = array();
+	private $_inputModels = [];
 
 	/** @var bool Use this if you need the value but displaying is discouraged */
 	private $_isInvisibleForm = false;
+
+	/** @var Closure */
+	private $_pTextCallback = null;
+
+
+	/**
+	 *
+	 */
+
+	public function __construct()
+	{
+		$this->_pTextCallback = function() {};
+	}
+
 
 	/** @param InputModelBase $pInputModel */
 	public function addInputModel(InputModelBase $pInputModel)
@@ -57,7 +73,7 @@ class FormModel
 	public function setGroupSlug($groupSlug)
 		{ $this->_groupSlug = $groupSlug; }
 
-	/** @return onOffice\WPlugin\Model\InputModelBase */
+	/** @return InputModelBase */
 	public function getInputModel()
 		{ return $this->_inputModels; }
 
@@ -84,4 +100,12 @@ class FormModel
 	/** @param bool $isInvisibleForm */
 	public function setIsInvisibleForm($isInvisibleForm)
 		{ $this->_isInvisibleForm = (bool)$isInvisibleForm; }
+
+	/** @return Closure */
+	public function getTextCallback(): Closure
+		{ return $this->_pTextCallback; }
+
+	/** @param Closure $pTextCallback */
+	public function setTextCallback(Closure $pTextCallback)
+		{ $this->_pTextCallback = $pTextCallback; }
 }

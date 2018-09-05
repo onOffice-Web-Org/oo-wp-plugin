@@ -317,6 +317,33 @@ class FormModelBuilderDBForm
 	 *
 	 */
 
+	public function createInputModelCaptchaRequired(): InputModelDB
+	{
+		$addition = '';
+
+		if (get_option('onoffice-settings-captcha-sitekey', '') === '') {
+			$addition = __('(won\'t work until set up globally)', 'onoffice');
+		}
+
+		$labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice'), $addition);
+		$selectedValue = $this->getValue('captcha');
+
+		$pInputModelFormRequiresCaptcha = $this->getInputModelDBFactory()->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRES_CAPTCHA, $labelRequiresCaptcha);
+		$pInputModelFormRequiresCaptcha->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelFormRequiresCaptcha->setValue($selectedValue);
+		$pInputModelFormRequiresCaptcha->setValuesAvailable(1);
+
+		return $pInputModelFormRequiresCaptcha;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
 	public function createInputModelCheckDuplicates()
 	{
 		$labelCheckDuplicates = __('Check for Duplicates', 'onoffice');

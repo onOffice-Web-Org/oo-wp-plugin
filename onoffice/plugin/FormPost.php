@@ -31,6 +31,7 @@ namespace onOffice\WPlugin;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostConfigurationDefault;
 use onOffice\WPlugin\FormData;
@@ -49,7 +50,8 @@ use onOffice\WPlugin\Types\FieldTypes;
  *
  */
 
-abstract class FormPost {
+abstract class FormPost
+{
 	/** */
 	const MESSAGE_SUCCESS = 'success';
 
@@ -58,6 +60,9 @@ abstract class FormPost {
 
 	/** */
 	const MESSAGE_ERROR = 'error';
+
+	/** */
+	const MESSAGE_RECAPTCHA_SPAM = 'recaptchaSpam';
 
 	/** */
 	const RANGE_VON = '__von';
@@ -93,6 +98,7 @@ abstract class FormPost {
 		$this->_pFormPostConfiguration = $pFormPostConfiguration;
 	}
 
+
 	/**
 	 *
 	 * @param DataFormConfiguration $pConfig
@@ -102,10 +108,38 @@ abstract class FormPost {
 
 	public function initialCheck(DataFormConfiguration $pConfig, $formNo = null)
 	{
-		$pFormData = $this->buildFormData( $pConfig, $formNo );
+		$pFormData = $this->buildFormData($pConfig, $formNo);
 		$pFormData->setFormSent(true);
-		$this->setFormDataInstances( $pFormData );
-		$this->analyseFormContentByPrefix( $pFormData );
+		$this->setFormDataInstances($pFormData);
+
+		if ($pFormData->getMissingFields() === []) {
+			if (!$this->checkCaptcha($pConfig)) {
+				$pFormData->setStatus(self::MESSAGE_RECAPTCHA_SPAM);
+				return;
+			}
+		}
+
+		$this->analyseFormContentByPrefix($pFormData);
+	}
+
+
+	/**
+	 *
+	 * @param DataFormConfiguration $pConfig
+	 * @return bool
+	 *
+	 */
+
+	private function checkCaptcha(DataFormConfiguration $pConfig): bool
+	{
+		if ($pConfig->getCaptcha()) {
+			$token = $this->_pFormPostConfiguration->getPostvarCaptchaToken();
+			$secret = $this->_pFormPostConfiguration->getCaptchaSecret();
+			$pCaptchaHandler = new CaptchaHandler($token, $secret);
+			return $pCaptchaHandler->checkCaptcha();
+		} else {
+			return true;
+		}
 	}
 
 
@@ -117,15 +151,15 @@ abstract class FormPost {
 	 *
 	 */
 
-	protected function buildFormData(DataFormConfiguration $pFormConfig, $formNo)
+	protected function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
 	{
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$postVariables = $this->_pFormPostConfiguration->getPostVars();
-		$formData = array_intersect_key( $postVariables, $formFields );
-		$pFormData = new FormData( $pFormConfig, $formNo );
-		$pFormData->setRequiredFields( $pFormConfig->getRequiredFields() );
-		$pFormData->setFormtype( $pFormConfig->getFormType() );
-		$pFormData->setValues( $formData );
+		$formData = array_intersect_key($postVariables, $formFields);
+		$pFormData = new FormData($pFormConfig, $formNo);
+		$pFormData->setRequiredFields($pFormConfig->getRequiredFields());
+		$pFormData->setFormtype($pFormConfig->getFormType());
+		$pFormData->setValues($formData);
 
 		return $pFormData;
 	}
@@ -161,9 +195,9 @@ abstract class FormPost {
 	 *
 	 */
 
-	public function getFormDataInstance( $prefix, $formNo )
+	public function getFormDataInstance(string $prefix, $formNo)
 	{
-		if ( isset( $this->_formDataInstances[$prefix][$formNo] ) ) {
+		if (isset($this->_formDataInstances[$prefix][$formNo])) {
 			return $this->_formDataInstances[$prefix][$formNo];
 		}
 
@@ -177,7 +211,7 @@ abstract class FormPost {
 	 *
 	 */
 
-	public function setFormDataInstances( FormData $pFormData )
+	public function setFormDataInstances(FormData $pFormData)
 	{
 		$formNo = $pFormData->getFormNo();
 		$prefix = $pFormData->getDataFormConfiguration()->getFormName();
@@ -352,7 +386,7 @@ abstract class FormPost {
 	 *
 	 */
 
-	protected function getVonRangeFieldname($field)
+	protected function getVonRangeFieldname(string $field)
 	{
 		if (in_array($field, $this->_searchcriteriaRangeFields)) {
 			return $field.self::RANGE_VON;
@@ -369,7 +403,7 @@ abstract class FormPost {
 	 *
 	 */
 
-	protected function getBisRangeFieldname($field)
+	protected function getBisRangeFieldname(string $field)
 	{
 		if (in_array($field, $this->_searchcriteriaRangeFields)) {
 			return $field.self::RANGE_BIS;
@@ -380,6 +414,6 @@ abstract class FormPost {
 
 
 	/** @return array */
-	protected function getSearchcriteriaRangeFields()
+	protected function getSearchcriteriaRangeFields(): array
 		{ return $this->_searchcriteriaRangeFields; }
 }

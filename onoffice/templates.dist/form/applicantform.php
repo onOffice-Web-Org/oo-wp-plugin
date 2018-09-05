@@ -20,7 +20,7 @@
 
 ?>
 
-<form method="post">
+<form method="post" id="onoffice-form">
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
@@ -131,6 +131,6 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		</div>
 	</p>
 	<div>
-		<input type="submit" value="GO!">
+		<?php include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php'); ?>
 	</div>
 </form>

@@ -79,4 +79,27 @@ class TestClassCaptchaHandler
 		$responseTrue = '{"success": true}';
 		$this->assertTrue($pCaptchaHandler->getResult($responseTrue));
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetErrorCodes()
+	{
+		$pCaptchaHandler = new CaptchaHandler('testtoken', 'testsecret');
+		$errorCodes = [
+			'missing-input-secret',
+			'invalid-input-secret',
+		];
+
+		$response = [
+			'success' => false,
+			'error-codes' => $errorCodes,
+		];
+
+		$responseJson = json_encode($response);
+		$pCaptchaHandler->getResult($responseJson);
+		$this->assertEquals($errorCodes, $pCaptchaHandler->getErrorCodes());
+	}
 }
