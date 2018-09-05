@@ -23,7 +23,7 @@
 require '../../../wp-load.php';
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\ApiClientActionGeneric;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
@@ -71,7 +71,7 @@ $parametersGetEstate = array(
 );
 
 $pSDKWrapper = new SDKWrapper();
-$pApiClientAction = new ApiClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
+$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 $pApiClientAction->setParameters($parametersGetEstate);
 $pApiClientAction->addRequestToQueue();
 
