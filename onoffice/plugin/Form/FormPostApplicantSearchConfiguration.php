@@ -39,13 +39,4 @@ interface FormPostApplicantSearchConfiguration
 	 */
 
 	public function getSDKWrapper(): SDKWrapper;
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getPostValues(): array;
 }

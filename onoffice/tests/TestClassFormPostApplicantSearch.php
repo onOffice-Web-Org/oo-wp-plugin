@@ -41,6 +41,9 @@ class TestClassFormPostApplicantSearch
 	/** @var FormPostApplicantSearchConfigurationTest */
 	private $_pTestConfigurationApplicantSearch = null;
 
+	/** @var FormPostConfigurationTest */
+	private $_pFormPostConfigurationTest = null;
+
 	/** @var FormPostApplicantSearch */
 	private $_pFormPostApplicantSearch = null;
 
@@ -54,22 +57,22 @@ class TestClassFormPostApplicantSearch
 
 	public function setUp()
 	{
-		$pTestConfiguration = new FormPostConfigurationTest();
+		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest();
 		$pSDKWrapperMocker = $this->setupSDKWrapperMocker();
-		$pTestConfiguration->setSDKWrapper($pSDKWrapperMocker);
-
-		$this->setupDataFormConfiguration();
-
-		$this->_pTestConfigurationApplicantSearch = new FormPostApplicantSearchConfigurationTest();
-		$this->_pTestConfigurationApplicantSearch->setSDKWrapper($pSDKWrapperMocker);
-		$this->_pTestConfigurationApplicantSearch->setPostValues([
+		$this->_pFormPostConfigurationTest->setSDKWrapper($pSDKWrapperMocker);
+		$this->_pFormPostConfigurationTest->setPostVariables([
 			'objektart' => 'haus',
 			'vermarktungsart' => 'kauf',
 			'kaufpreis' => '200000',
 			'wohnflaeche' => '800',
 		]);
 
-		$this->_pFormPostApplicantSearch = new FormPostApplicantSearch($pTestConfiguration,
+		$this->setupDataFormConfiguration();
+
+		$this->_pTestConfigurationApplicantSearch = new FormPostApplicantSearchConfigurationTest();
+		$this->_pTestConfigurationApplicantSearch->setSDKWrapper($pSDKWrapperMocker);
+
+		$this->_pFormPostApplicantSearch = new FormPostApplicantSearch($this->_pFormPostConfigurationTest,
 			$this->_pTestConfigurationApplicantSearch);
 
 		parent::setUp();
@@ -197,7 +200,7 @@ class TestClassFormPostApplicantSearch
 
 	public function testRequiredFields()
 	{
-		$this->_pTestConfigurationApplicantSearch->setPostValues([
+		$this->_pFormPostConfigurationTest->setPostVariables([
 			'vermarktungsart' => 'kauf',
 		]);
 
@@ -212,6 +215,6 @@ class TestClassFormPostApplicantSearch
 			'wohnflaeche',
 		];
 
-		$this->assertEquals($missingFieldsExpectation, $missingFieldsResult);
+		$this->assertEqualSets($missingFieldsExpectation, $missingFieldsResult);
 	}
 }

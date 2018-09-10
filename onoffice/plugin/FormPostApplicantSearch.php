@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
@@ -76,31 +78,36 @@ class FormPostApplicantSearch
 	{
 		/* @var $pFormConfig DataFormConfigurationApplicantSearch */
 		$pFormConfig = $pFormData->getDataFormConfiguration();
-		$formFields = $pFormConfig->getInputs();
-		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields, false);
-
-		$formData = array_intersect_key
-			($this->_pFormPostApplicantSearchConfiguration->getPostValues(), $newFormFields);
 		$limitResults = $pFormConfig->getLimitResults();
 
 		if ($limitResults <= 0) {
 			$limitResults = self::LIMIT_RESULTS;
 		}
 
-		$pFormData->setValues($formData);
-
-		$missingFields = $pFormData->getMissingFields();
-
-		if (count($missingFields) > 0) {
+		if ($pFormData->getMissingFields() !== []) {
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
 		} else {
-			$interessenten = $this->getApplicants($pFormData, $limitResults);
+			$applicants = $this->getApplicants($pFormData, $limitResults);
 
-			if (is_array($interessenten)) {
-				$pFormData->setResponseFieldsValues($interessenten);
+			if (is_array($applicants)) {
+				$pFormData->setResponseFieldsValues($applicants);
 				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
 			}
 		}
+	}
+
+
+	/**
+	 *
+	 * @param DataFormConfiguration $pFormConfig
+	 * @return array
+	 *
+	 */
+
+	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
+	{
+		$formFields = parent::getAllowedPostVars($pFormConfig);
+		return $this->getFormFieldsConsiderSearchcriteria($formFields, false);
 	}
 
 
@@ -112,7 +119,7 @@ class FormPostApplicantSearch
 	 *
 	 */
 
-	private function getApplicants(FormData $pFormData, $limitResults)
+	private function getApplicants(FormData $pFormData, $limitResults): array
 	{
 		$found = [];
 		$searchData = $this->editFormValuesForApiCall($pFormData->getValues());
@@ -128,68 +135,65 @@ class FormPostApplicantSearch
 		];
 
 		$pSDKWrapper = $this->_pFormPostApplicantSearchConfiguration->getSDKWrapper();
-		$handle = $pSDKWrapper->addFullRequest(onOfficeSDK::ACTION_ID_GET, 'search',
-			'searchcriteria', $requestParams);
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'search');
+		$pApiClientAction->setResourceId('searchcriteria');
+		$pApiClientAction->setParameters($requestParams);
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse($handle);
+		if (!$pApiClientAction->getResultStatus()) {
+			// Exception?
+			return [];
+		}
 
-		$result = isset($response['data']['records']) &&
-			count($response['data']['records']) > 0;
+		$response = $pApiClientAction->getResultRecords();
 
-		if ($result) {
-			$addressIds = [];
+		foreach ($response as $record) {
+			$addressId = $record['elements']['adresse'];
+			$elements = $record['elements'];
+			$searchParameters = [];
 
-			foreach ($response['data']['records'] as $record) {
-				$addressId = $record['elements']['adresse'];
-				$addressIds []= $addressId;
-				$elements = $record['elements'];
-				$searchParameters = [];
+			foreach ($elements as $key => $value) {
+				if ($this->isSearchcriteriaRangeField($key)) {
+					$origName = $searchcrieriaRangeFields[$key];
 
-				foreach ($elements as $key => $value) {
-					if ($this->isSearchcriteriaRangeField($key)) {
-						$origName = $searchcrieriaRangeFields[$key];
-
-						if (in_array($origName, $searchFields)) {
-							if (array_key_exists($origName, $searchParameters)) {
-								continue;
-							}
-
-							$vonFieldname = $this->getVonRangeFieldname($origName);
-							$bisFieldname = $this->getBisRangeFieldname($origName);
-
-							$vonValue = 0;
-							$bisValue = 0;
-
-							if (array_key_exists($vonFieldname, $elements)) {
-								$vonValue = $elements[$vonFieldname];
-
-								if (null == $vonValue) {
-									$vonValue = 0;
-								}
-							}
-
-							if (array_key_exists($bisFieldname, $elements)) {
-								$bisValue = $elements[$bisFieldname];
-
-								if (null == $bisValue) {
-									$bisValue = 0;
-								}
-							}
-							$searchParameters[$origName] = [$vonValue, $bisValue];
+					if (in_array($origName, $searchFields)) {
+						if (array_key_exists($origName, $searchParameters)) {
+							continue;
 						}
-					} else {
-						if (in_array($key, $searchFields)) {
-							$searchParameters[$key] = $value;
+
+						$vonFieldname = $this->getVonRangeFieldname($origName);
+						$bisFieldname = $this->getBisRangeFieldname($origName);
+
+						$vonValue = 0;
+						$bisValue = 0;
+
+						if (array_key_exists($vonFieldname, $elements)) {
+							$vonValue = $elements[$vonFieldname];
+
+							if (null == $vonValue) {
+								$vonValue = 0;
+							}
 						}
+
+						if (array_key_exists($bisFieldname, $elements)) {
+							$bisValue = $elements[$bisFieldname];
+
+							if (null == $bisValue) {
+								$bisValue = 0;
+							}
+						}
+						$searchParameters[$origName] = [$vonValue, $bisValue];
 					}
+				} elseif (in_array($key, $searchFields)) {
+					$searchParameters[$key] = $value;
 				}
-				$found[$addressId] = $searchParameters;
 			}
+			$found[$addressId] = $searchParameters;
+		}
 
-			if (count($found) > 0) {
-				$found = $this->setKdNr($found);
-			}
+		if ($found !== []) {
+			$found = $this->setKdNr($found);
 		}
 
 		return $found;
@@ -203,35 +207,30 @@ class FormPostApplicantSearch
 	 *
 	 */
 
-	private function setKdNr($applicants)
+	private function setKdNr(array $applicants): array
 	{
 		$adressIds = array_keys($applicants);
-		$interessenten = [];
+		$pSDKWrapper = $this->_pFormPostApplicantSearchConfiguration->getSDKWrapper();
 
-		$requestParams = [
+		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$pApiClientAction->setParameters([
 			'recordids' => $adressIds,
 			'data' => ['KdNr'],
-		];
-
-		$pSDKWrapper = $this->_pFormPostApplicantSearchConfiguration->getSDKWrapper();
-		$handle = $pSDKWrapper->addRequest(onOfficeSDK::ACTION_ID_READ, 'address', $requestParams);
+		]);
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse($handle);
-
-		$result = isset($response['data']['records']) &&
-				count($response['data']['records']) > 0;
-
-		if ($result) {
-			$records = $response['data']['records'];
+		$results = [];
+		if ($pApiClientAction->getResultStatus()) {
+			$records = $pApiClientAction->getResultRecords();
 
 			foreach ($records as $record) {
 				$elements = $record['elements'];
-				$interessenten[$elements['KdNr']] = $applicants[$elements['id']];
+				$results[$elements['KdNr']] = $applicants[$elements['id']];
 			}
 		}
 
-		return $interessenten;
+		return $results;
 	}
 
 

@@ -49,18 +49,6 @@ class FormPostApplicantSearchConfigurationDefault
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	public function getPostValues(): array
-	{
-		return $_POST;
-	}
-
-
-	/**
-	 *
 	 * @return SDKWrapper
 	 *
 	 */

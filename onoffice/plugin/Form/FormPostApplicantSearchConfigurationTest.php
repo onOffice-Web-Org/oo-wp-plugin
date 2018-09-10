@@ -33,24 +33,12 @@ use onOffice\WPlugin\SDKWrapper;
 class FormPostApplicantSearchConfigurationTest
 	implements FormPostApplicantSearchConfiguration
 {
-	/** @var array */
-	private $_postValues = [];
-
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
-
-
-	/** @return array */
-	public function getPostValues(): array
-		{ return $this->_postValues; }
 
 	/** @return SDKWrapper */
 	public function getSDKWrapper(): SDKWrapper
 		{ return $this->_pSDKWrapper; }
-
-	/** @param array $postValues */
-	public function setPostValues(array $postValues)
-		{ $this->_postValues = $postValues; }
 
 	/** @param SDKWrapper $pSDKWrapper */
 	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
