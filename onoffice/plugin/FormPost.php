@@ -77,9 +77,6 @@ abstract class FormPost
 	/** @var array */
 	private $_formDataInstances = [];
 
-	/** @var array */
-	private $_searchcriteriaRangeFields = [];
-
 	/** @var FormPostConfiguration */
 	private $_pFormPostConfiguration = null;
 
@@ -278,9 +275,6 @@ abstract class FormPost
 
 						$inputFormFields[$field['id'].self::RANGE_VON] = 'searchcriteria';
 						$inputFormFields[$field['id'].self::RANGE_BIS] = 'searchcriteria';
-
-						$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_VON] = $field['id'];
-						$this->_searchcriteriaRangeFields[$field['id'].self::RANGE_BIS] = $field['id'];
 					}
 				}
 			}
@@ -364,56 +358,4 @@ abstract class FormPost
 
 		return $addressData;
 	}
-
-
-	/**
-	 *
-	 * @param string $fieldVonBis
-	 * @return boolean
-	 *
-	 */
-
-	protected function isSearchcriteriaRangeField($fieldVonBis)
-	{
-		return array_key_exists($fieldVonBis, $this->_searchcriteriaRangeFields);
-	}
-
-
-	/**
-	 *
-	 * @param string $field
-	 * @return null|string
-	 *
-	 */
-
-	protected function getVonRangeFieldname(string $field)
-	{
-		if (in_array($field, $this->_searchcriteriaRangeFields)) {
-			return $field.self::RANGE_VON;
-		}
-
-		return null;
-	}
-
-
-	/**
-	 *
-	 * @param string $field
-	 * @return null|string
-	 *
-	 */
-
-	protected function getBisRangeFieldname(string $field)
-	{
-		if (in_array($field, $this->_searchcriteriaRangeFields)) {
-			return $field.self::RANGE_BIS;
-		}
-
-		return null;
-	}
-
-
-	/** @return array */
-	protected function getSearchcriteriaRangeFields(): array
-		{ return $this->_searchcriteriaRangeFields; }
 }

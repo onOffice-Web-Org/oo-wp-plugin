@@ -144,7 +144,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				$realName = $pForm->getFieldLabel($name);
 
 				if (is_array($value)) {
-					echo '<span>';
 					if ($value[0] > 0) {
 						echo $realName.' min. '.$value[0].'<br>';
 					}
@@ -152,7 +151,8 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 					if ($value[1] > 0) {
 						echo $realName.' max. '.$value[1];
 					}
-					echo '</span><br>';
+					echo '<br>';
+					continue;
 				}
 			} elseif (in_array($name, array_keys($umkreisFields))) {
 				$typeCurrentInput = $umkreisFields[$name]['type'];
@@ -168,13 +168,15 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				$typeCurrentInput = $pForm->getFieldType( $name );
 			}
 
-			if ($name !== 'regionaler_zusatz') {
+			if (in_array($pForm->getFieldType($name), $selectTypes) &&
+				$name !== 'regionaler_zusatz') {
 				if (in_array($typeCurrentInput, $selectTypes)) {
 					$permittedValues = $pForm->getPermittedValues($name);
 					$value = $permittedValues[$value];
 				}
-			} else {
+			} else if ($name === 'regionaler_zusatz') {
 				$pRegionController = new \onOffice\WPlugin\Region\RegionController();
+
 				$pRegion = $pRegionController->getRegionByKey(array_pop($value));
 				/* @var $pRegion \onOffice\WPlugin\Region\Region */
 				if ($pRegion !== null) {

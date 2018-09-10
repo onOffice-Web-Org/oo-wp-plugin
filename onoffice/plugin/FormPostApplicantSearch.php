@@ -30,6 +30,7 @@ use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\Utility\__String;
 
 
 /**
@@ -121,11 +122,7 @@ class FormPostApplicantSearch
 
 	private function getApplicants(FormData $pFormData, $limitResults): array
 	{
-		$found = [];
 		$searchData = $this->editFormValuesForApiCall($pFormData->getValues());
-		$searchFields = array_keys($searchData);
-		$searchcrieriaRangeFields = $this->getSearchcriteriaRangeFields();
-
 		$requestParams = [
 			'searchdata' => $searchData,
 			'outputall' => true,
@@ -146,50 +143,13 @@ class FormPostApplicantSearch
 			return [];
 		}
 
+		$found = [];
 		$response = $pApiClientAction->getResultRecords();
+		$viewFields = $pFormData->getDataFormConfiguration()->getInputs();
 
 		foreach ($response as $record) {
 			$addressId = $record['elements']['adresse'];
-			$elements = $record['elements'];
-			$searchParameters = [];
-
-			foreach ($elements as $key => $value) {
-				if ($this->isSearchcriteriaRangeField($key)) {
-					$origName = $searchcrieriaRangeFields[$key];
-
-					if (in_array($origName, $searchFields)) {
-						if (array_key_exists($origName, $searchParameters)) {
-							continue;
-						}
-
-						$vonFieldname = $this->getVonRangeFieldname($origName);
-						$bisFieldname = $this->getBisRangeFieldname($origName);
-
-						$vonValue = 0;
-						$bisValue = 0;
-
-						if (array_key_exists($vonFieldname, $elements)) {
-							$vonValue = $elements[$vonFieldname];
-
-							if (null == $vonValue) {
-								$vonValue = 0;
-							}
-						}
-
-						if (array_key_exists($bisFieldname, $elements)) {
-							$bisValue = $elements[$bisFieldname];
-
-							if (null == $bisValue) {
-								$bisValue = 0;
-							}
-						}
-						$searchParameters[$origName] = [$vonValue, $bisValue];
-					}
-				} elseif (in_array($key, $searchFields)) {
-					$searchParameters[$key] = $value;
-				}
-			}
-			$found[$addressId] = $searchParameters;
+			$found[$addressId] = $this->collectSearchParametersForRecord($record, $viewFields);
 		}
 
 		if ($found !== []) {
@@ -197,6 +157,39 @@ class FormPostApplicantSearch
 		}
 
 		return $found;
+	}
+
+
+	/**
+	 *
+	 * @param array $record
+	 * @param array $viewFields
+	 * @return array
+	 *
+	 */
+
+	private function collectSearchParametersForRecord(array $record, array $viewFields): array
+	{
+		$elements = $record['elements'];
+		$searchParameters = [];
+
+		foreach ($elements as $key => $value) {
+			$origName = $this->getOriginalFieldNameByRangeField($key);
+			if (!array_key_exists($origName, $viewFields)) {
+				continue;
+			}
+
+			if ($this->isSearchcriteriaRangeField($key)) {
+				$vonValue = $elements[$origName.self::RANGE_VON] ?? 0;
+				$bisValue = $elements[$origName.self::RANGE_BIS] ?? 0;
+
+				$searchParameters[$origName] = [$vonValue, $bisValue];
+			} else {
+				$searchParameters[$origName] = $value;
+			}
+		}
+
+		return $searchParameters;
 	}
 
 
@@ -241,14 +234,13 @@ class FormPostApplicantSearch
 	 *
 	 */
 
-	private function editFormValuesForApiCall($formValues)
+	private function editFormValuesForApiCall(array $formValues): array
 	{
 		$result = [];
-		$searchcrieriaRangeFields = $this->getSearchcriteriaRangeFields();
 
 		foreach ($formValues as $name => $value) {
 			if ($this->isSearchcriteriaRangeField($name)) {
-				$origName = $searchcrieriaRangeFields[$name];
+				$origName = $this->getOriginalFieldNameByRangeField($name);
 
 				if (isset($result[$origName])) {
 					continue;
@@ -287,5 +279,36 @@ class FormPostApplicantSearch
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param string $rangeField
+	 * @return bool
+	 *
+	 */
+
+	private function isSearchcriteriaRangeField(string $rangeField): bool
+	{
+		$pString = __String::getNew($rangeField);
+		return $pString->endsWith('__von') || $pString->endsWith('__bis');
+	}
+
+
+	/**
+	 *
+	 * @param string $rangeField
+	 * @return string
+	 *
+	 */
+
+	private function getOriginalFieldNameByRangeField(string $rangeField): string
+	{
+		if (!$this->isSearchcriteriaRangeField($rangeField)) {
+			return $rangeField;
+		}
+		$pString = __String::getNew($rangeField);
+		return $pString->sub(0, -5);
 	}
 }

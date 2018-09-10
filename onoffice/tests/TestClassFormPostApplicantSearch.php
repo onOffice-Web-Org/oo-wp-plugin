@@ -183,10 +183,14 @@ class TestClassFormPostApplicantSearch
 			51 => [
 				'objektart' => 'haus',
 				'vermarktungsart' => 'kauf',
+				'kaufpreis' => [0, 200000.00],
+				'wohnflaeche' => [30.00, 200.00],
 			],
 			62 => [
 				'objektart' => 'haus',
 				'vermarktungsart' => 'kauf',
+				'kaufpreis' => [160000.00, 250000.00],
+				'wohnflaeche' => [67.00, 100.00],
 			],
 		];
 
