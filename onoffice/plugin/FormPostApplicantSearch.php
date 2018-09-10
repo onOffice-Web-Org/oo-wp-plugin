@@ -23,6 +23,9 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
+use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
+use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 
@@ -42,6 +45,26 @@ class FormPostApplicantSearch
 	/** */
 	const LIMIT_RESULTS = 100;
 
+	/** @var FormPostApplicantSearchConfiguration */
+	private $_pFormPostApplicantSearchConfiguration = null;
+
+
+	/**
+	 *
+	 * @param FormPostConfiguration $pFormPostConfiguration
+	 * @param FormPostApplicantSearchConfiguration $pFormPostApplicantSearchConfiguration
+	 *
+	 */
+
+	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
+		FormPostApplicantSearchConfiguration $pFormPostApplicantSearchConfiguration = null)
+	{
+		$this->_pFormPostApplicantSearchConfiguration = $pFormPostApplicantSearchConfiguration ??
+			new FormPostApplicantSearchConfigurationDefault();
+
+		parent::__construct($pFormPostConfiguration);
+	}
+
 
 	/**
 	 *
@@ -56,7 +79,8 @@ class FormPostApplicantSearch
 		$formFields = $pFormConfig->getInputs();
 		$newFormFields = $this->getFormFieldsConsiderSearchcriteria($formFields, false);
 
-		$formData = array_intersect_key($_POST, $newFormFields);
+		$formData = array_intersect_key
+			($this->_pFormPostApplicantSearchConfiguration->getPostValues(), $newFormFields);
 		$limitResults = $pFormConfig->getLimitResults();
 
 		if ($limitResults <= 0) {
@@ -103,9 +127,9 @@ class FormPostApplicantSearch
 			'offset' => 0,
 		];
 
-		$pSDKWrapper = new SDKWrapper();
-		$handle = $pSDKWrapper->addFullRequest
-			(onOfficeSDK::ACTION_ID_GET, 'search', 'searchcriteria', $requestParams);
+		$pSDKWrapper = $this->_pFormPostApplicantSearchConfiguration->getSDKWrapper();
+		$handle = $pSDKWrapper->addFullRequest(onOfficeSDK::ACTION_ID_GET, 'search',
+			'searchcriteria', $requestParams);
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse($handle);
@@ -189,9 +213,8 @@ class FormPostApplicantSearch
 			'data' => ['KdNr'],
 		];
 
-		$pSDKWrapper = new SDKWrapper();
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_READ, 'address', $requestParams);
+		$pSDKWrapper = $this->_pFormPostApplicantSearchConfiguration->getSDKWrapper();
+		$handle = $pSDKWrapper->addRequest(onOfficeSDK::ACTION_ID_READ, 'address', $requestParams);
 		$pSDKWrapper->sendRequests();
 
 		$response = $pSDKWrapper->getRequestResponse($handle);
@@ -228,7 +251,7 @@ class FormPostApplicantSearch
 			if ($this->isSearchcriteriaRangeField($name)) {
 				$origName = $searchcrieriaRangeFields[$name];
 
-				if (array_key_exists($origName, $result)) {
+				if (isset($result[$origName])) {
 					continue;
 				}
 
@@ -255,7 +278,7 @@ class FormPostApplicantSearch
 				}
 
 				if ($vonValue > 0 || $bisValue > 0) {
-					$result[$origName] = array($vonValue, $bisValue);
+					$result[$origName] = [$vonValue, $bisValue];
 				}
 			} else {
 				if (null != $value) {

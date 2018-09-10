@@ -1,0 +1,59 @@
+{
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+	"resourceid": "searchcriteria",
+	"resourcetype": "search",
+	"cacheable": true,
+	"identifier": "",
+	"data": {
+		"meta": {
+			"cntabsolute": 2
+		},
+		"records": [
+			{
+				"id": 69,
+				"type": "searchcriteria",
+				"elements": {
+					"Id": "69",
+					"adresse": "122",
+					"objektart": "haus",
+					"vermarktungsart": "kauf",
+					"kaufpreis__bis": "200000.00",
+					"range_breitengrad": "0.00000",
+					"range_laengengrad": "0.00000",
+					"range_land": "DEU",
+					"regionaler_zusatz": [
+						"openGeoDb_Region_26882"
+					],
+					"wohnflaeche__von": "30.00",
+					"wohnflaeche__bis": "200.00"
+				}
+			},
+			{
+				"id": 91,
+				"type": "searchcriteria",
+				"elements": {
+					"Id": "91",
+					"adresse": "169",
+					"objektart": "haus",
+					"vermarktungsart": "kauf",
+					"kaufpreis__von": "160000.00",
+					"kaufpreis__bis": "250000.00",
+					"range_breitengrad": "50.79110",
+					"range_laengengrad": "6.09616",
+					"range_plz": "52070",
+					"range_ort": "Aachen",
+					"range_strasse": "Elisabethstr",
+					"range_hausnummer": "1",
+					"range": "30",
+					"range_land": "DEU",
+					"wohnflaeche__von": "67.00",
+					"wohnflaeche__bis": "100.00"
+				}
+			}
+		]
+	},
+	"status": {
+		"errorcode": 0,
+		"message": "OK"
+	}
+}
