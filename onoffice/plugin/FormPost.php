@@ -249,33 +249,21 @@ abstract class FormPost
 	protected function getFormFieldsConsiderSearchcriteria($inputFormFields, $intAsRange = true)
 	{
 		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields');
-		$pSDKWrapper->sendRequests();
+		$pFieldnames = new Fieldnames();
+		$pFieldnames->setSDKWrapper($pSDKWrapper);
+		$pFieldnames->loadLanguage();
+		$fieldList = $pFieldnames->getFieldList(onOfficeSDK::MODULE_SEARCHCRITERIA);
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+		$fields = array_unique(array_keys($fieldList));
+		$module = array_fill(0, count($fields), 'searchcriteria');
+		$inputFormFields += array_combine($fields, $module);
 
-		foreach ($response['data']['records'] as $tableValues) {
-			$fields = $tableValues['elements'];
-
-			// new
-			if ($fields['name'] == 'Umkreis' &&
-				array_key_exists('Umkreis', $inputFormFields)) {
-				unset($inputFormFields['Umkreis']);
-
-				foreach ($fields['fields'] as $field) {
-					$inputFormFields[$field['id']] = 'searchcriteria';
-				}
-			} else {
-				foreach ($fields['fields'] as $field)
-				{
-					if (($field['rangefield'] ?? false) &&
-						isset($inputFormFields[$field['id']]) && $intAsRange) {
-						unset($inputFormFields[$field['id']]);
-
-						$inputFormFields[$field['id'].self::RANGE_VON] = 'searchcriteria';
-						$inputFormFields[$field['id'].self::RANGE_BIS] = 'searchcriteria';
-					}
+		if ($intAsRange) {
+			foreach ($fieldList as $name => $properties) {
+				if (FieldTypes::isRangeType($properties['type'])) {
+					unset($inputFormFields[$name]);
+					$inputFormFields[$name.self::RANGE_VON] = 'searchcriteria';
+					$inputFormFields[$name.self::RANGE_BIS] = 'searchcriteria';
 				}
 			}
 		}

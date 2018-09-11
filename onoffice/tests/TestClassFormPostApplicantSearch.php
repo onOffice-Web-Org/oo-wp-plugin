@@ -87,9 +87,9 @@ class TestClassFormPostApplicantSearch
 
 	private function setupSDKWrapperMocker(): SDKWrapperMocker
 	{
-		$searchCriteriaFieldsResponse = file_get_contents
-			(__DIR__.'/resources/ApiResponseGetSearchcriteriaFields.json');
-		$responseArraySearchCriteriaFields = json_decode($searchCriteriaFieldsResponse, true);
+		$searchCriteriaFieldsResponseEng = file_get_contents
+			(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json');
+		$responseArraySearchCriteriaFieldsENG = json_decode($searchCriteriaFieldsResponseEng, true);
 		$searchSearchCriteriaResponse = file_get_contents
 			(__DIR__.'/resources/FormPostApplicantSearch/ApiResponseGetSearchSearchCriteria.json');
 		$responseSearchSearchCriteria = json_decode($searchSearchCriteriaResponse, true);
@@ -98,10 +98,6 @@ class TestClassFormPostApplicantSearch
 		$responseReadAddress = json_decode($readAddressResponse, true);
 
 		$pSDKWrapperMocker = new SDKWrapperMocker();
-		$pSDKWrapperMocker->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '', [], null,
-				$responseArraySearchCriteriaFields);
-
 		$searchSearchcriteriaParameter = [
 			'searchdata' => [
 				'objektart' => 'haus',
@@ -126,6 +122,25 @@ class TestClassFormPostApplicantSearch
 
 		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'address', '',
 			$readAddressParameters, null, $responseReadAddress);
+
+		$pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '', [
+				'language' => 'ENG',
+				'additionalTranslations' => true,
+			], null, $responseArraySearchCriteriaFieldsENG);
+
+		$fieldsResponse = file_get_contents
+			(__DIR__.'/resources/ApiResponseGetFields.json');
+		$responseArrayFields = json_decode($fieldsResponse, true);
+		$pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_GET, 'fields', '', [
+				'labels' => true,
+					'showContent' => true,
+					'showTable' => true,
+					'language' => 'ENG',
+					'modules' => ['address', 'estate'],
+			], null, $responseArrayFields);
+
 		return $pSDKWrapperMocker;
 	}
 

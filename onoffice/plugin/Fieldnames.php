@@ -405,13 +405,7 @@ class Fieldnames
 
 	public function getUmkreisValuesForField($field)
 	{
-		$infos = array();
-
-		if (isset($this->_umkreisFields[$field])) {
-			$infos = $this->_umkreisFields[$field];
-		}
-
-		return $infos;
+		return $this->_umkreisFields[$field] ?? [];
 	}
 
 
@@ -424,13 +418,7 @@ class Fieldnames
 
 	public function getRangeSearchcriteriaInfosForField($field)
 	{
-		$infos = array();
-
-		if (isset($this->_searchcriteriaRangeInfos[$field])) {
-			$infos = $this->_searchcriteriaRangeInfos[$field];
-		}
-
-		return $infos;
+		return $this->_searchcriteriaRangeInfos[$field] ?? [];
 	}
 
 

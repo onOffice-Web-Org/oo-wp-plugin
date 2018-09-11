@@ -68,7 +68,7 @@ abstract class FieldTypes
 
 
 	/** @var array */
-	private static $_inputVarSanitizers = array(
+	private static $_inputVarSanitizers = [
 		self::FIELD_TYPE_MULTISELECT => FILTER_SANITIZE_STRING,
 		self::FIELD_TYPE_SINGLESELECT => FILTER_SANITIZE_STRING,
 		self::FIELD_TYPE_TEXT => FILTER_SANITIZE_STRING,
@@ -79,14 +79,24 @@ abstract class FieldTypes
 		self::FIELD_TYPE_DATE => FILTER_SANITIZE_STRING,
 		self::FIELD_TYPE_BLOB => FILTER_UNSAFE_RAW,
 		self::FIELD_TYPE_DATETIME => FILTER_SANITIZE_STRING,
-	);
+	];
 
 
 	/** @var array */
-	private static $_numericTypes = array(
+	private static $_numericTypes = [
 		self::FIELD_TYPE_INTEGER,
 		self::FIELD_TYPE_FLOAT,
-	);
+	];
+
+
+	/** @var string[] */
+	private static $_rangeTypes = [
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal',
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float',
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
+		FieldTypes::FIELD_TYPE_FLOAT,
+		FieldTypes::FIELD_TYPE_INTEGER,
+	];
 
 
 	/**
@@ -95,7 +105,7 @@ abstract class FieldTypes
 	 *
 	 */
 
-	static public function getInputVarSanitizers()
+	static public function getInputVarSanitizers(): array
 	{
 		return self::$_inputVarSanitizers;
 	}
@@ -108,7 +118,7 @@ abstract class FieldTypes
 	 *
 	 */
 
-	static public function isNumericType($type)
+	static public function isNumericType(string $type): bool
 	{
 		return in_array($type, self::$_numericTypes, true);
 	}
@@ -124,5 +134,18 @@ abstract class FieldTypes
 	static public function isDateOrDateTime($type)
 	{
 		return $type === self::FIELD_TYPE_DATE || $type === self::FIELD_TYPE_DATETIME;
+	}
+
+
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
+
+	static public function isRangeType(string $type): bool
+	{
+		return in_array($type, self::$_rangeTypes);
 	}
 }

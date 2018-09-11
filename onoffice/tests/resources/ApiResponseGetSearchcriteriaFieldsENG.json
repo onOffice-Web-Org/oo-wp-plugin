@@ -1,0 +1,372 @@
+ {
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+	"resourceid": "",
+	"resourcetype": "searchCriteriaFields",
+	"cacheable": true,
+	"identifier": "",
+	"data": {
+		"meta": {
+			"cntabsolute": null
+		},
+		"records": [
+			{
+				"id": 0,
+				"type": "",
+				"elements": {
+					"name": "Geografische-Angaben",
+					"fields": [
+						{
+							"id": "regionaler_zusatz",
+							"name": "Regional addition",
+							"position": 1,
+							"type": "displayLive"
+						},
+						{
+							"id": "plz",
+							"name": "Postal code",
+							"position": 9,
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar"
+						},
+						{
+							"id": "ort",
+							"name": "Town",
+							"position": 10,
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar"
+						},
+						{
+							"id": "strasse",
+							"name": "Street",
+							"position": 11,
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar"
+						}
+					]
+				}
+			},
+			{
+				"id": 1,
+				"type": "",
+				"elements": {
+					"name": "Kategorie",
+					"fields": [
+						{
+							"id": "vermarktungsart",
+							"name": "Type of transaction",
+							"position": 2,
+							"ko": "true",
+							"type": "singleselect",
+							"default": null,
+							"values": {
+								"kauf": "Purchase",
+								"miete": "Rent",
+								"pacht": "Lease",
+								"erbpacht": "Long lease"
+							}
+						},
+						{
+							"id": "objektart",
+							"name": "Property class",
+							"position": 3,
+							"ko": "true",
+							"type": "singleselect",
+							"default": null,
+							"values": {
+								"zimmer": "Rooms",
+								"haus": "House",
+								"wohnung": "Apartment",
+								"grundstueck": "Site",
+								"buero_praxen": "Offices",
+								"einzelhandel": "Commercial \/ Retail",
+								"gastgewerbe": "Hospitality industry",
+								"hallen_lager_prod": "Halls\/warehouse\/workshops",
+								"land_und_forstwirtschaft": "Agriculture and forestry",
+								"freizeitimmbilien_gewerblich": "Leisure property (commercial)",
+								"sonstige": "Miscellaneous"
+							}
+						},
+						{
+							"id": "objekttyp",
+							"name": "Property type",
+							"position": 4,
+							"type": "singleselect",
+							"default": null,
+							"values": {
+								"stellplatz": "Parking",
+								"garage_sonstige": "Garage \/ Other",
+								"eigentumswohnung": "Condominium",
+								"ein_mehrfamilienhaus": "Single \/ Multiple family home",
+								"gewerbe_anlage": "Commercial \/ Investment",
+								"grundstueck": "Site",
+								"carport": "Carport",
+								"doppelgarage": "Double garage",
+								"duplex": "Duplex",
+								"tiefgarage": "Underground garage",
+								"bootsliegeplatz": "Mooring",
+								"rohdachboden": "Undeveloped attic",
+								"seeliegenschaft": "Lakefront property",
+								"jagdrevier": "Hunting reserve",
+								"parkplatz_strom": "Parking with electricity",
+								"hausbau_zweifamilienhaus": "Duplex",
+								"tiefgaragenstellplatz": "Underground parking",
+								"parken_parkhaus": "Parking garage",
+								"einzelgarage": "Single garage",
+								"freizeitanlage": "Leisure facility",
+								"einraumlokal": "Single room bar",
+								"raucherlokal": "Bar for smokers",
+								"praxisflaeche": "Office space",
+								"gewerbepark": "Industrial park",
+								"buerozentrum": "Office centre",
+								"bungalow": "Bungalow",
+								"einfamilienhausMitEinliegerwohnung": "Single family home with granny flat",
+								"zimmer": "Rooms",
+								"hochparterre": "Mezzanine floor",
+								"blockhaus": "Blockhouse",
+								"hausbau_reihenhaus": "Terraced house",
+								"hausbau_mehrfamilienhaus": "Apartment building",
+								"hausbau_landhaus": "Cottage",
+								"holzhaus": "Wooden house",
+								"fachwerkhaus": "Timbered house",
+								"hausbau_einfamilienhaus": "Single family home",
+								"doppelhaus": "Duplex",
+								"hausbau_bungalow": "Bungalow",
+								"hausbau_villa": "Villa",
+								"ausstellungsflaeche": "Exhibition space",
+								"mehrfamilienhaus": "Apartment building",
+								"industriehalle": "Industrial hall",
+								"wohn_und_geschaeftshaus": "Business premises with living accomodation",
+								"industriehalle_und_freiflaeche": "Industrial hall and open area",
+								"geschaeftshaus": "Commercial Building",
+								"kuehlhaus": "Cold storage",
+								"buerogebaeude": "Office building",
+								"sb_maerkte": "SB markets",
+								"kuehlregallager": "Refrigerated warehouse",
+								"einkaufscentren": "Shopping centres",
+								"lager_mit_freiflaeche": "Warehouse with open area",
+								"lagerflaeche": "Storage space",
+								"wohnanlagen": "Residential complexes",
+								"lagerhalle": "Warehouse",
+								"verbrauchermaerkte": "Convenience stores",
+								"speditionslager": "Depots",
+								"industrieanlagen": "Industrial facilities",
+								"anwesen": "Estate",
+								"barbetrieb": "Bar service",
+								"cafe": "Caf\u00e9",
+								"loft": "Loft",
+								"atelier": "Atelier",
+								"bueroetage": "Office floor",
+								"buero_und_lager": "Office and Storage buildings",
+								"praxisetage": "Office floor",
+								"praxishaus": "Medical centre",
+								"gewerbezentrum": "Business Centre",
+								"factory_outlet": "Factory outlet",
+								"kaufhaus": "Department store",
+								"kiosk": "Convenience store",
+								"sb_markt": "Self-service market",
+								"verkaufssflaeche": "Area to be sold",
+								"verkaufshalle": "Sales hall",
+								"diskothek": "Discotheque",
+								"gaestehaus": "Inn",
+								"gaststaette": "Restaurant",
+								"hotelanwesen": "Hotel property",
+								"hotel_garni": "Hotel Garni",
+								"restaurant": "Restaurant",
+								"sportanlage": "Sports facility",
+								"vergnuegungsparks_und_center": "Amusement parks and centers",
+								"halle": "Hall",
+								"lager": "Warehouse",
+								"produktion": "Manufacturing",
+								"werkstatt": "Workshop",
+								"hochregallager": "High-bay warehouse",
+								"service": "Service",
+								"freiflaechen": "Open areas",
+								"dachgeschoss": "Attic",
+								"maisonette": "Maisonnette",
+								"loft-studio-atelier": "Loft\/Studio\/Atelier",
+								"penthouse": "Penthouse",
+								"terrassen": "Terrace",
+								"etage": "Apartment",
+								"erdgeschoss": "Ground floor",
+								"souterrain": "Basement",
+								"reihenhaus": "Terraced house",
+								"reihenend": "End townhouse",
+								"reihenmittel": "Central townhouse",
+								"reiheneck": "Corner townhouse",
+								"doppelhaushaelfte": "Semi-detached house",
+								"einfamilienhaus": "Single family home",
+								"stadthaus": "Townhouse",
+								"villa": "Villa",
+								"resthof": "Farmstead",
+								"bauernhaus": "Farmhouse",
+								"landhaus": "Cottage",
+								"schloss": "Castle",
+								"zweifamilienhaus": "Duplex",
+								"ferienhaus": "Holiday home",
+								"berghuette": "Mountain hut",
+								"chalet": "Chalet",
+								"strandhaus": "Beach house",
+								"wohnen": "Residential",
+								"gewerbe": "Commercial",
+								"industrie": "Industry",
+								"land_forstwirtschaft": "Agriculture and forestry",
+								"freizeit": "Leisure",
+								"gemischt": "Mixed",
+								"sondernutzung": "Special use",
+								"bueroflaeche": "Office space",
+								"buerohaus": "Office building",
+								"praxis": "Office",
+								"ladenlokal": "Shop",
+								"einzelhandelsladen": "Retail store",
+								"verbrauchermarkt": "Consumer market",
+								"einkaufszentrum": "Shopping centre",
+								"gastronomie": "Gastronomy",
+								"gastronomie_und_wohnung": "Gastronomy and living",
+								"pensionen": "Pension",
+								"hotels": "Hotels",
+								"weitere_beherbergungsbetriebe": "Other accommodation establishments",
+								"landwirtschaftliche_betriebe": "Agricultural businesses",
+								"bauernhof": "Farm",
+								"aussiedlerhof": "Evacuee yard",
+								"viehwirtschaft": "Livestock industry",
+								"jagd_und_forstwirtschaft": "Hunting and forestry",
+								"teich_und_fischwirtschaft": "Fishing industry",
+								"scheunen": "Barns",
+								"reiterhoefe": "Equestrian farms",
+								"sonstige_landwirtschaftsimmobilien": "Other agricultural property",
+								"parkhaus": "Parking garage",
+								"tankstelle": "Gas station",
+								"sonstige": "Miscellaneous",
+								"gewerbeeinheit": "Commercial unit",
+								"gewerbeanwesen": "Commercial property",
+								"wohnanlage": "Residential complex"
+							}
+						}
+					]
+				}
+			},
+			{
+				"id": 2,
+				"type": "",
+				"elements": {
+					"name": "Preise",
+					"fields": [
+						{
+							"id": "kaufpreis",
+							"name": "Purchase price",
+							"position": 5,
+							"ko": "true",
+							"rangefield": "true",
+							"additionalTranslations": {
+								"kaufpreis__von": "min. Sales price",
+								"kaufpreis__bis": "max. Sales price"
+							},
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal",
+							"vermarktungsarten": "kauf"
+						},
+						{
+							"id": "kaltmiete",
+							"name": "Rent",
+							"position": 6,
+							"ko": "true",
+							"rangefield": "true",
+							"additionalTranslations": {
+								"kaltmiete__von": "Kaltmiete von",
+								"kaltmiete__bis": "Kaltmiete bis"
+							},
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal",
+							"objektarten": ",wohnung,haus,grundstueck,buero_praxen,einzelhandel,gastgewerbe,hallen_lager_prod,land_und_forstwirtschaft,sonstige,zinshaus_renditeobjekt,freizeitimmbilien_gewerblich,zimmer,hausbau,zwangsversteigerung,parken",
+							"nutzungsarten": ",wohnen,gewerbe,anlage,waz",
+							"vermarktungsarten": "miete"
+						},
+						{
+							"id": "ust_satz_bk",
+							"name": "Ust. -Satz BK",
+							"position": 7,
+							"rangefield": "true",
+							"additionalTranslations": {
+								"ust_satz_bk__von": "Ust. -Satz BK von",
+								"ust_satz_bk__bis": "Ust. -Satz BK bis"
+							},
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal",
+							"vermarktungsarten": "kauf"
+						}
+					]
+				}
+			},
+			{
+				"id": 3,
+				"type": "",
+				"elements": {
+					"name": "Fl\u00e4chen",
+					"fields": [
+						{
+							"id": "wohnflaeche",
+							"name": "Living area",
+							"position": 8,
+							"rangefield": "true",
+							"additionalTranslations": {
+								"wohnflaeche__von": "Living space from",
+								"wohnflaeche__bis": "Living space (max)"
+							},
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float",
+							"objektarten": "wohnung,haus,waz,hallen_lager_prod,zimmer"
+						}
+					]
+				}
+			},
+			{
+				"id": 4,
+				"type": "",
+				"elements": {
+					"name": "Umkreis",
+					"fields": [
+						{
+							"id": "range_plz",
+							"name": "Postal code",
+							"position": 0,
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar"
+						},
+						{
+							"id": "range_ort",
+							"name": "Town",
+							"position": 0,
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar"
+						},
+						{
+							"id": "range_strasse",
+							"name": "Street",
+							"position": 0,
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar"
+						},
+						{
+							"id": "range_hausnummer",
+							"name": "House no.",
+							"position": 0,
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar"
+						},
+						{
+							"id": "range",
+							"name": "within a radius of (km)",
+							"position": 0,
+							"type": "urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar"
+						},
+						{
+							"id": "range_land",
+							"name": "Country",
+							"position": 0,
+							"type": "singleselect",
+							"default": null,
+							"values": {
+								"AUT": "Austria",
+								"BEL": "Belgium",
+								"DEU": "Germany"
+							}
+						}
+					]
+				}
+			}
+		]
+	},
+	"status": {
+		"errorcode": 0,
+		"message": "OK"
+	}
+}

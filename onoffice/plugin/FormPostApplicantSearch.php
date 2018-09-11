@@ -122,9 +122,8 @@ class FormPostApplicantSearch
 
 	private function getApplicants(FormData $pFormData, $limitResults): array
 	{
-		$searchData = $this->editFormValuesForApiCall($pFormData->getValues());
 		$requestParams = [
-			'searchdata' => $searchData,
+			'searchdata' => $pFormData->getValues(),
 			'outputall' => true,
 			'groupbyaddress' => true,
 			'limit' => $limitResults,
@@ -224,61 +223,6 @@ class FormPostApplicantSearch
 		}
 
 		return $results;
-	}
-
-
-	/**
-	 *
-	 * @param array $formValues
-	 * @return array
-	 *
-	 */
-
-	private function editFormValuesForApiCall(array $formValues): array
-	{
-		$result = [];
-
-		foreach ($formValues as $name => $value) {
-			if ($this->isSearchcriteriaRangeField($name)) {
-				$origName = $this->getOriginalFieldNameByRangeField($name);
-
-				if (isset($result[$origName])) {
-					continue;
-				}
-
-				$vonFieldname = $this->getVonRangeFieldname($origName);
-				$bisFieldname = $this->getBisRangeFieldname($origName);
-
-				$vonValue = 0;
-				$bisValue = 0;
-
-				if (array_key_exists($vonFieldname, $formValues)) {
-					$vonValue = $formValues[$vonFieldname];
-
-					if (null == $vonValue) {
-						$vonValue = 0;
-					}
-				}
-
-				if (array_key_exists($bisFieldname, $formValues)) {
-					$bisValue = $formValues[$bisFieldname];
-
-					if (null == $bisValue) {
-						$bisValue = 0;
-					}
-				}
-
-				if ($vonValue > 0 || $bisValue > 0) {
-					$result[$origName] = [$vonValue, $bisValue];
-				}
-			} else {
-				if (null != $value) {
-					$result[$name] = $value;
-				}
-			}
-		}
-
-		return $result;
 	}
 
 

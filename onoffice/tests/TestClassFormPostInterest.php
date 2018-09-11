@@ -55,12 +55,26 @@ class TestClassFormPostInterest
 
 	public function setUp()
 	{
-		$searchCriteriaFieldsResponse = file_get_contents
-			(__DIR__.'/resources/ApiResponseGetSearchcriteriaFields.json');
-		$responseArray = json_decode($searchCriteriaFieldsResponse, true);
+		$searchCriteriaFieldsResponseENG = file_get_contents
+			(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json');
+		$responseArrayENG = json_decode($searchCriteriaFieldsResponseENG, true);
 		$pSDKWrapperMocker = new SDKWrapperMocker();
 		$pSDKWrapperMocker->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '', [], null, $responseArray);
+			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '', [
+				'language' => 'ENG',
+				'additionalTranslations' => true,
+			], null, $responseArrayENG);
+		$fieldsResponse = file_get_contents
+			(__DIR__.'/resources/ApiResponseGetFields.json');
+		$responseArrayFields = json_decode($fieldsResponse, true);
+		$pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_GET, 'fields', '', [
+			'labels' => true,
+					'showContent' => true,
+					'showTable' => true,
+					'language' => 'ENG',
+					'modules' => ['address', 'estate'],
+			], null, $responseArrayFields);
 
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest();
 		$this->_pFormPostConfiguration->setSDKWrapper($pSDKWrapperMocker);
