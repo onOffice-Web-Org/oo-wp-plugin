@@ -28,6 +28,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
@@ -79,21 +80,19 @@ class FormPostContact
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfig->getRecipient();
 		$subject = $pFormConfig->getSubject();
-
 		$missingFields = $pFormData->getMissingFields();
 
 		if ($missingFields !== []) {
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
 		} else {
+			$responseNewAddress = true;
+
 			if ($pFormConfig->getCreateAddress()) {
 				$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
 				$responseNewAddress = $this->createOrCompleteAddress($pFormData, $checkDuplicate);
-				$response = $responseNewAddress;
-			} else {
-				$response = true;
 			}
 
-			$response = $this->sendContactRequest($pFormData, $recipient, $subject) && $response;
+			$response = $this->sendContactRequest($pFormData, $recipient, $subject) && $responseNewAddress;
 
 			if (true === $response) {
 				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
@@ -113,15 +112,11 @@ class FormPostContact
 
 	private function sendContactRequest(FormData $pFormData, $recipient = null, $subject = null): bool
 	{
-		$addressData = $pFormData->getAddressData();
 		$values = $pFormData->getValues();
-		$estateId = $values['Id'] ?? null;
-		$message = $values['message'] ?? null;
-
 		$requestParams = [
-			'addressdata' => $addressData,
-			'estateid' => $estateId,
-			'message' => $message,
+			'addressdata' => $pFormData->getAddressData(),
+			'estateid' => $values['Id'] ?? null,
+			'message' => $values['message'] ?? null,
 			'subject' => $subject,
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
@@ -132,13 +127,12 @@ class FormPostContact
 		}
 
 		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
-		$handle = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams);
-		$pSDKWrapper->sendRequests();
-		$response = $pSDKWrapper->getRequestResponse($handle);
 
-		$result = isset($response['data']['records'][0]['elements']['success']) &&
-			'success' == $response['data']['records'][0]['elements']['success'];
-		return $result;
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
+		$pAPIClientAction->setParameters($requestParams);
+		$pAPIClientAction->addRequestToQueue();
+		$pSDKWrapper->sendRequests();
+		return $pAPIClientAction->getResultStatus();
 	}
 }
