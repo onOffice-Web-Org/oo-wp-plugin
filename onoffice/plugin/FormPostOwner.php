@@ -61,11 +61,8 @@ class FormPostOwner
 	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
 		FormPostOwnerConfiguration $pFormPostOwnerConfiguration = null)
 	{
-		if ($pFormPostOwnerConfiguration === null) {
-			$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationDefault();
-		}
-
-		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
+		$this->_pFormPostOwnerConfiguration =
+			$pFormPostOwnerConfiguration ?? new FormPostOwnerConfigurationDefault();
 
 		parent::__construct($pFormPostConfiguration);
 	}

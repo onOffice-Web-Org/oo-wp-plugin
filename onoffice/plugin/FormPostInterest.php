@@ -58,12 +58,8 @@ class FormPostInterest
 		FormPostInterestConfiguration $pFormPostInterestConfiguration = null)
 	{
 		parent::__construct($pFormPostConfiguration);
-
-		if ($pFormPostInterestConfiguration === null) {
-			$pFormPostInterestConfiguration = new FormPostInterestConfigurationDefault();
-		}
-
-		$this->_pFormPostInterestConfiguration = $pFormPostInterestConfiguration;
+		$this->_pFormPostInterestConfiguration =
+			$pFormPostInterestConfiguration ?? new FormPostInterestConfigurationDefault();
 	}
 
 

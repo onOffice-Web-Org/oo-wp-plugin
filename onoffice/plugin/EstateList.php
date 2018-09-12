@@ -28,13 +28,13 @@ use onOffice\WPlugin\Controller\EstateListInputVariableReader;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
-use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Gui\DateTimeFormatter;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 
 /**
  *
@@ -302,15 +302,14 @@ class EstateList
 
 	private function getGeoSearchValues()
 	{
-		$pEstateInputReader =
-				new Controller\EstateListInputVariableReader();
+		$pEstateInputReader = new EstateListInputVariableReader();
 
-		$inputValues = array();
+		$inputValues = [];
 		$pGeoPosition = new GeoPosition();
 
 		foreach ($pGeoPosition->getEstateSearchFields() as $key) {
 			$inputValues[$key] = $pEstateInputReader->getFieldValue(
-					$key, FILTER_SANITIZE_STRING, FILTER_FORCE_ARRAY);
+				$key, FILTER_SANITIZE_STRING, FILTER_FORCE_ARRAY);
 		}
 
 		return $inputValues;

@@ -89,10 +89,7 @@ abstract class FormPost
 
 	public function __construct(FormPostConfiguration $pFormPostConfiguration = null)
 	{
-		if ($pFormPostConfiguration === null) {
-			$pFormPostConfiguration = new FormPostConfigurationDefault();
-		}
-		$this->_pFormPostConfiguration = $pFormPostConfiguration;
+		$this->_pFormPostConfiguration = $pFormPostConfiguration ?? new FormPostConfigurationDefault;
 	}
 
 
@@ -148,7 +145,7 @@ abstract class FormPost
 	 *
 	 */
 
-	protected function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
+	private function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
 	{
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$postVariables = $this->_pFormPostConfiguration->getPostVars();
@@ -241,12 +238,12 @@ abstract class FormPost
 	/**
 	 *
 	 * @param array $inputFormFields
-	 * @param bool $intAsRange
+	 * @param bool $numberAsRange
 	 * @return array
 	 *
 	 */
 
-	protected function getFormFieldsConsiderSearchcriteria($inputFormFields, $intAsRange = true)
+	protected function getFormFieldsConsiderSearchcriteria($inputFormFields, $numberAsRange = true)
 	{
 		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
 		$pFieldnames = new Fieldnames();
@@ -258,7 +255,7 @@ abstract class FormPost
 		$module = array_fill(0, count($fields), 'searchcriteria');
 		$inputFormFields += array_combine($fields, $module);
 
-		if ($intAsRange) {
+		if ($numberAsRange) {
 			foreach ($fieldList as $name => $properties) {
 				if (FieldTypes::isRangeType($properties['type'])) {
 					unset($inputFormFields[$name]);
