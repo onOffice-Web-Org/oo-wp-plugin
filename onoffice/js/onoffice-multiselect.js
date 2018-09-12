@@ -86,7 +86,7 @@ var onOffice = onOffice || {};
 			}
 		}
 
-		this._displaySpan.textContent = labels.join(', ');
+		this._displaySpan.textContent = ' ' + labels.join(', ');
 		this.showLabel();
 	};
 
