@@ -1,0 +1,25 @@
+{
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:do",
+	"resourceid": "",
+	"resourcetype": "contactaddress",
+	"cacheable": false,
+	"identifier": "",
+	"data": {
+		"meta": {
+			"cntabsolute": null
+		},
+		"records": [
+			{
+				"id": 0,
+				"type": "",
+				"elements": {
+					"success": "success"
+				}
+			}
+		]
+	},
+	"status": {
+		"errorcode": 0,
+		"message": "OK"
+	}
+}

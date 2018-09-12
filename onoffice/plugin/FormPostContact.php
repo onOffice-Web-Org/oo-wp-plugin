@@ -29,6 +29,9 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Form\FormPostConfiguration;
+use onOffice\WPlugin\Form\FormPostContactConfiguration;
+use onOffice\WPlugin\Form\FormPostContactConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 
@@ -43,6 +46,27 @@ use onOffice\WPlugin\FormPost;
 class FormPostContact
 	extends FormPost
 {
+	/** @var FormPostContactConfiguration */
+	private $_pFormPostContactConfiguration = null;
+
+
+	/**
+	 *
+	 * @param FormPostConfiguration $pFormPostConfiguration
+	 * @param FormPostContactConfiguration $pFormPostContactConfiguration
+	 *
+	 */
+
+	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
+		FormPostContactConfiguration $pFormPostContactConfiguration = null)
+	{
+		$this->_pFormPostContactConfiguration =
+			$pFormPostContactConfiguration ?? new FormPostContactConfigurationDefault();
+
+		parent::__construct($pFormPostConfiguration);
+	}
+
+
 	/**
 	 *
 	 * @param DataFormConfiguration $pFormConfig
@@ -58,23 +82,23 @@ class FormPostContact
 
 		$missingFields = $pFormData->getMissingFields();
 
-		if ( count( $missingFields ) > 0 ) {
-			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
+		if ($missingFields !== []) {
+			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
 		} else {
-			if ( $pFormConfig->getCreateAddress() ) {
+			if ($pFormConfig->getCreateAddress()) {
 				$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
-				$responseNewAddress = $this->createOrCompleteAddress( $pFormData, $checkDuplicate );
+				$responseNewAddress = $this->createOrCompleteAddress($pFormData, $checkDuplicate);
 				$response = $responseNewAddress;
-			} else	{
+			} else {
 				$response = true;
 			}
 
-			$response = $this->sendContactRequest( $pFormData, $recipient, $subject ) && $response;
+			$response = $this->sendContactRequest($pFormData, $recipient, $subject) && $response;
 
-			if ( true === $response ) {
-				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
+			if (true === $response) {
+				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
 			} else {
-				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
+				$pFormData->setStatus(FormPost::MESSAGE_ERROR);
 			}
 		}
 	}
@@ -87,33 +111,33 @@ class FormPostContact
 	 *
 	 */
 
-	private function sendContactRequest( FormData $pFormData, $recipient = null, $subject = null )
+	private function sendContactRequest(FormData $pFormData, $recipient = null, $subject = null): bool
 	{
 		$addressData = $pFormData->getAddressData();
 		$values = $pFormData->getValues();
-		$estateId = isset( $values['Id'] ) ? $values['Id'] : null;
-		$message = isset( $values['message'] ) ? $values['message'] : null;
+		$estateId = $values['Id'] ?? null;
+		$message = $values['message'] ?? null;
 
 		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
 			'message' => $message,
 			'subject' => $subject,
-			'referrer' => filter_input( INPUT_SERVER, 'REQUEST_URI' ),
+			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
 		];
 
-		if ( null != $recipient ) {
+		if (null != $recipient) {
 			$requestParams['recipient'] = $recipient;
 		}
 
-		$pSDKWrapper = new SDKWrapper();
+		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
 		$handle = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams );
+			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', $requestParams);
 		$pSDKWrapper->sendRequests();
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+		$response = $pSDKWrapper->getRequestResponse($handle);
 
-		$result = isset( $response['data']['records'][0]['elements']['success'] ) &&
+		$result = isset($response['data']['records'][0]['elements']['success']) &&
 			'success' == $response['data']['records'][0]['elements']['success'];
 		return $result;
 	}
