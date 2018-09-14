@@ -144,7 +144,7 @@ class Fieldnames
 			),
 			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => array(
 				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 3,
+				'length' => 5,
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Radius (km)',
