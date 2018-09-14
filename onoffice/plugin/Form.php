@@ -73,7 +73,7 @@ class Form
 	 *
 	 */
 
-	public function __construct( $formName, $type )
+	public function __construct(string $formName, string $type)
 	{
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice'));
 		$this->setGenericSetting('formId', 'onoffice-form');
@@ -104,7 +104,7 @@ class Form
 	 *
 	 */
 
-	private function getModuleOfField($field)
+	private function getModuleOfField(string $field)
 	{
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$inputs = $pDataFormConfiguration->getInputs();
@@ -122,7 +122,7 @@ class Form
 	 *
 	 */
 
-	public function getInputFields()
+	public function getInputFields(): array
 	{
 		$inputs = $this->getDataFormConfiguration()->getInputs();
 		return $inputs;
@@ -135,7 +135,7 @@ class Form
 	 *
 	 */
 
-	public function getRequiredFields()
+	public function getRequiredFields(): array
 	{
 		$requiredFields = $this->getDataFormConfiguration()->getRequiredFields();
 		$requiredFields = $this->executeGeoPositionFix($requiredFields);
@@ -146,12 +146,12 @@ class Form
 
 	/**
 	 *
-	 * @param type $requiredFields
-	 * @return type
+	 * @param array $requiredFields
+	 * @return array
 	 *
 	 */
 
-	private function executeGeoPositionFix($requiredFields)
+	private function executeGeoPositionFix(array $requiredFields): array
 	{
 		if (in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields))	{
 			$pGeoPosition = new GeoPosition();
@@ -171,7 +171,7 @@ class Form
 	 *
 	 */
 
-	public function isRequiredField( $field )
+	public function isRequiredField(string $field): bool
 	{
 		$requiredFields = $this->getRequiredFields();
 		$pGeoPosition = new GeoPosition();
@@ -218,10 +218,10 @@ class Form
 	 *
 	 */
 
-	public function getFieldLabel( $field, $raw = false )
+	public function getFieldLabel(string $field, $raw = false): string
 	{
 		$module = $this->getModuleOfField($field);
-		$label = $this->_pFieldnames->getFieldLabel( $field, $module);
+		$label = $this->_pFieldnames->getFieldLabel($field, $module);
 
 		if (false === $raw) {
 			$label = esc_html($label);
@@ -238,7 +238,7 @@ class Form
 	 *
 	 */
 
-	public function isSearchcriteriaField( $field )
+	public function isSearchcriteriaField(string $field): bool
 	{
 		$module = $this->getModuleOfField($field);
 		return $module === onOfficeSDK::MODULE_SEARCHCRITERIA;
@@ -252,7 +252,7 @@ class Form
 	 *
 	 */
 
-	public function inRangeSearchcriteriaInfos( $field )
+	public function inRangeSearchcriteriaInfos(string $field): bool
 	{
 		$module = $this->getModuleOfField($field);
 
@@ -267,7 +267,7 @@ class Form
 	 *
 	 */
 
-	public function getSearchcriteriaRangeInfos()
+	public function getSearchcriteriaRangeInfos(): array
 	{
 		return $this->_pFieldnames->getSearchcriteriaRangeInfos();
 	}
@@ -279,7 +279,7 @@ class Form
 	 *
 	 */
 
-	public function getUmkreisFields()
+	public function getUmkreisFields(): array
 	{
 		return $this->_pFieldnames->getUmkreisFields();
 	}
@@ -292,9 +292,9 @@ class Form
 	 *
 	 */
 
-	public function getSearchcriteriaRangeInfosForField( $field )
+	public function getSearchcriteriaRangeInfosForField(string $field): array
 	{
-		$returnValues = array();
+		$returnValues = [];
 		$module = $this->getModuleOfField($field);
 
 		if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA &&

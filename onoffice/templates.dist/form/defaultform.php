@@ -19,6 +19,8 @@
  *
  */
 
+include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
+
 ?>
 
 <form method="post" id="onoffice-form">
@@ -54,39 +56,10 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			continue;
 		}
 
-		$typeCurrentInput = $pForm->getFieldType( $input );
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
-		echo $pForm->getFieldLabel( $input ).$addition.': ';
-
-		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-			$line = $pForm->getFieldLabel( $input ).': ';
-
-			$permittedValues = $pForm->getPermittedValues( $input, true );
-			$selectedValue = $pForm->getFieldValue( $input, true );
-			echo '<select size="1" name="'.esc_attr($input).'">';
-
-			foreach ( $permittedValues as $key => $value ) {
-				if ( is_array( $selectedValue ) ) {
-					$isSelected = in_array( $key, $selectedValue, true );
-				} else {
-					$isSelected = $selectedValue == $key;
-				}
-				echo '<option value="'.esc_attr($key).'"'.($isSelected ? ' selected' : '').'>'
-					.esc_html($value).'</option>';
-			}
-			echo '</select><br>';
-		} else {
-			$inputType = 'text';
-			$value = 'value="'.$pForm->getFieldValue( $input ).'"';
-
-			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
-				$inputType = 'checkbox';
-				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
-			}
-
-			echo '<input type="'.$inputType.'" name="'.esc_html($input).'" '.$value.'><br>';
-		}
+		echo $pForm->getFieldLabel($input).$addition.': ';
+		echo renderSingleField($input, $pForm);
 	}
 
 	if (array_key_exists('message', $pForm->getInputFields())):

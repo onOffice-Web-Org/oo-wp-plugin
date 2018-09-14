@@ -64,13 +64,13 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 			.'<legend>Umkreissuche:</legend>';
 
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
-			echo $values['label'].':<br>';
+			echo esc_html($values['label']).':<br>';
 
 			if (in_array($values['type'], $selectTypes)) {
 				$permittedValues = $values['permittedvalues'];
 
 				echo '<select size="1" name="'.$key.'">';
-				echo  '<option value="">'.esc_html('Keine Angabe').'</option>';
+				echo '<option value="">'.esc_html('Keine Angabe').'</option>';
 
 				foreach ( $permittedValues as $countryCode => $countryName ) {
 					echo '<option value="'.esc_html($countryCode).'">'

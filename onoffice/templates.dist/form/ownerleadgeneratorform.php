@@ -21,7 +21,8 @@
 
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
-use onOffice\WPlugin\Types\FieldTypes;
+
+include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 add_thickbox();
 
@@ -48,48 +49,10 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			echo sprintf(__('Please enter a value for %s.', 'onoffice'), $pForm->getFieldLabel( $input )).'<br>';
 		}
 
-		$line = '';
-
-		$selectTypes = array(
-			FieldTypes::FIELD_TYPE_MULTISELECT,
-			FieldTypes::FIELD_TYPE_SINGLESELECT,
-		);
-
-		$typeCurrentInput = $pForm->getFieldType( $input );
-		$isRequired = $pForm->isRequiredField( $input );
+		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
-		$requiredAttribute = $isRequired ? ' required' : '';
-
-		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-			$line = $pForm->getFieldLabel( $input ).$addition.': ';
-
-			$permittedValues = $pForm->getPermittedValues( $input, true );
-			$selectedValue = $pForm->getFieldValue( $input, true );
-			$line .= '<select size="1" name="'.esc_html($input).'"'.$requiredAttribute.'>';
-
-			foreach ( $permittedValues as $key => $value ) {
-				if ( is_array( $selectedValue ) ) {
-					$isSelected = in_array( $key, $selectedValue, true );
-				} else {
-					$isSelected = $selectedValue == $key;
-				}
-				$line .= '<option value="'.esc_html($key).'"'.($isSelected ? ' selected' : '').'>'
-					.esc_html($value).'</option>';
-			}
-			$line .= '</select>';
-		} else {
-			$inputType = 'text';
-			$value = 'value="'.$pForm->getFieldValue( $input ).'"';
-
-			if ($typeCurrentInput == FieldTypes::FIELD_TYPE_BOOLEAN) {
-				$inputType = 'checkbox';
-				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
-				$value .= ' value="y"';
-			}
-
-			$line .= $pForm->getFieldLabel( $input ).$addition.': ';
-			$line .= '<input type="'.$inputType.'" name="'.esc_attr($input).'" '.$value.$requiredAttribute.'><br>';
-		}
+		$line = $pForm->getFieldLabel($input).$addition.': ';
+		$line .= renderSingleField($input, $pForm);
 
 		if ($table == 'address') {
 			$addressValues []= $line;

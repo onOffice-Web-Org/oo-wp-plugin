@@ -22,16 +22,30 @@
 $key = get_option('onoffice-settings-captcha-sitekey', '');
 
 if ($pForm->needsReCaptcha() && $key !== '') {
+	$formId = $pForm->getGenericSetting('formId');
 ?>
 	<script>
 		function onSubmit() {
-			document.getElementById(<?php echo json_encode($pForm->getGenericSetting('formId')); ?>).submit();
+			var element = document.getElementById(<?php echo json_encode($formId); ?>);
+			element.submit();
 		}
 	</script>
 
-	<button class="g-recaptcha"
-			data-sitekey="<?php echo esc_attr($key); ?>"
-			data-callback="onSubmit"><?php echo esc_html($pForm->getGenericSetting('submitButtonLabel')); ?></button>
+	<div id='recaptcha' class="g-recaptcha"
+		data-sitekey="<?php echo esc_attr($key); ?>"
+		data-callback="onSubmit"
+		data-size="invisible"></div>
+	<button class="submit_button"><?php echo esc_html($pForm->getGenericSetting('submitButtonLabel')); ?></button>
+	<script>
+	(function() {
+		var formId = <?php echo json_encode($formId); ?>;
+		var formElement = document.getElementById(formId);
+		var submitButtonElement = formElement.getElementsByClassName('submit_button')[0];
+		onOffice.captchaControl(formElement, submitButtonElement);
+	})();
+
+
+	</script>
 <?php
 } else {
 ?>

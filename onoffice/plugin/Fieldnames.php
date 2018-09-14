@@ -377,7 +377,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function inRangeSearchcriteriaInfos($field)
+	public function inRangeSearchcriteriaInfos(string $field): bool
 	{
 		return isset($this->_searchcriteriaRangeInfos[$field]);
 	}
@@ -390,7 +390,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function isUmkreisField($field)
+	public function isUmkreisField(string $field): bool
 	{
 		return isset($this->_umkreisFields[$field]);
 	}
@@ -403,7 +403,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getUmkreisValuesForField($field)
+	public function getUmkreisValuesForField(string $field): array
 	{
 		return $this->_umkreisFields[$field] ?? [];
 	}
@@ -416,7 +416,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getRangeSearchcriteriaInfosForField($field)
+	public function getRangeSearchcriteriaInfosForField(string $field): array
 	{
 		return $this->_searchcriteriaRangeInfos[$field] ?? [];
 	}
@@ -428,7 +428,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getUmkreisFields()
+	public function getUmkreisFields(): array
 	{
 		return $this->_umkreisFields;
 	}
@@ -440,7 +440,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getSearchcriteriaRangeInfos()
+	public function getSearchcriteriaRangeInfos(): array
 	{
 		return $this->_searchcriteriaRangeInfos;
 	}
@@ -481,7 +481,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getModuleContainsField($fieldname, $module)
+	public function getModuleContainsField(string $fieldname, string $module): bool
 	{
 		return isset($this->_fieldList[$module][$fieldname]);
 	}
@@ -496,7 +496,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getFieldLabel($field, $module)
+	public function getFieldLabel(string $field, string $module): string
 	{
 		$fieldNewName = $field;
 		$row = $this->getRow($module, $field);
@@ -517,9 +517,9 @@ class Fieldnames
 	 *
 	 */
 
-	public function getFieldList($module, $addApiOnlyFields = false, $annotated = false, $modus = null)
+	public function getFieldList($module, $addApiOnlyFields = false, $annotated = false, $modus = null): array
 	{
-		$fieldList = array();
+		$fieldList = [];
 		if (isset( $this->_fieldList[$module])) {
 			$fieldList = $this->_fieldList[$module];
 		}
@@ -549,14 +549,14 @@ class Fieldnames
 	/**
 	 *
 	 * @param string $module
-	 * @param string $annotated
+	 * @param bool $annotated
 	 * @return array
 	 *
 	 */
 
-	private function getExtraFields($module, $annotated)
+	private function getExtraFields(string $module, bool $annotated): array
 	{
-		$extraFields = array();
+		$extraFields = [];
 		$hasApiFields = isset(self::$_apiReadOnlyFields[$module]);
 
 		if ($hasApiFields) {
@@ -607,7 +607,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getPermittedValues($inputField, $module)
+	public function getPermittedValues(string $inputField, string $module)
 	{
 		$row = $this->getRow($module, $inputField);
 		if (!is_null($row)) {
@@ -624,7 +624,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getFieldInformation($field, $module)
+	public function getFieldInformation(string $field, string $module): array
 	{
 		return $this->getRow($module, $field);
 	}
@@ -654,22 +654,22 @@ class Fieldnames
 	 *
 	 */
 
-	static public function getDefaultSortByFields($module)
+	static public function getDefaultSortByFields(string $module): array
 	{
 		if (isset(self::$_defaultSortByFields[$module])) {
 			return self::$_defaultSortByFields[$module];
 		}
 
-		return array();
+		return [];
 	}
 
 
 	/** @return string */
-	public function getLanguage()
+	public function getLanguage(): string
 		{ return $this->_language; }
 
 	/** @return SDKWrapper */
-	public function getSDKWrapper()
+	public function getSDKWrapper(): SDKWrapper
 		{ return $this->_pSDKWrapper; }
 
 	/** @param SDKWrapper $pSDKWrapper */

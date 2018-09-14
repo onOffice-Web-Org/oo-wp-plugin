@@ -19,6 +19,8 @@
  *
  */
 
+include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
+
 ?>
 
 <form method="post" id="onoffice-form">
@@ -39,47 +41,10 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
-		$line = null;
-
-		$selectTypes = array(
-			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
-			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
-		);
-
-		$typeCurrentInput = $pForm->getFieldType( $input );
-
-		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-			$isRequired = $pForm->isRequiredField( $input );
-			$addition = $isRequired ? '*' : '';
-			$line = $pForm->getFieldLabel( $input ).$addition.': ';
-
-			$permittedValues = $pForm->getPermittedValues( $input, true );
-			$selectedValue = $pForm->getFieldValue( $input, true );
-			$line .= '<select size="1" name="'.esc_attr($input).'">';
-
-			foreach ( $permittedValues as $key => $value ) {
-				if ( is_array( $selectedValue ) ) {
-					$isSelected = in_array( $key, $selectedValue, true );
-				} else {
-					$isSelected = $selectedValue == $key;
-				}
-				$line .=  '<option value="'.esc_attr($key).'"'.($isSelected ? ' selected' : '').'>'
-					.esc_html($value).'</option>';
-			}
-			$line .= '</select>';
-		} else {
-			$inputType = 'text';
-			$value = 'value="'.$pForm->getFieldValue( $input ).'"';
-
-			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
-				$inputType = 'checkbox';
-				$value = $pForm->getFieldValue( $input, true ) == 1 ? 'checked="checked"' : '';
-				$value .= ' value="y"';
-			}
-
-			$line .= $pForm->getFieldLabel( $input ).': ';
-			$line .= '<input type="'.$inputType.'" name="'.esc_attr($input).'" '.$value.'><br>';
-		}
+		$isRequired = $pForm->isRequiredField($input);
+		$addition = $isRequired ? '*' : '';
+		$line = $pForm->getFieldLabel($input).$addition.': ';
+		$line .= renderSingleField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
 			$line .= ' <span>Bitte ausfüllen!</span>';
