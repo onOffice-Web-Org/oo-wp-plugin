@@ -481,7 +481,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getModuleContainsField(string $fieldname, string $module): bool
+	public function getModuleContainsField(string $fieldname, $module): bool
 	{
 		return isset($this->_fieldList[$module][$fieldname]);
 	}
@@ -554,7 +554,7 @@ class Fieldnames
 	 *
 	 */
 
-	private function getExtraFields(string $module, bool $annotated): array
+	private function getExtraFields($module, bool $annotated): array
 	{
 		$extraFields = [];
 		$hasApiFields = isset(self::$_apiReadOnlyFields[$module]);

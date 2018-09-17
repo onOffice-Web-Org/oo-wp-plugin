@@ -32,11 +32,6 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 <?php
 
-$selectTypes = array(
-	\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
-	\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
-);
-
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo 'SUCCESS!';
 } else {
@@ -59,7 +54,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
 		echo $pForm->getFieldLabel($input).$addition.': ';
-		echo renderSingleField($input, $pForm);
+		echo renderSingleField($input, $pForm).'<br>';
 	}
 
 	if (array_key_exists('message', $pForm->getInputFields())):
@@ -73,6 +68,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 <?php
 	endif;
 
+	echo '<br>';
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>

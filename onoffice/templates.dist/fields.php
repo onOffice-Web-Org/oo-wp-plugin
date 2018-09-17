@@ -109,44 +109,45 @@ if (!function_exists('renderSingleField')) {
 	function renderSingleField(string $fieldName, onOffice\WPlugin\Form $pForm): string
 	{
 		$output = '';
-		$selectTypes = array(
-			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT,
-			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT,
-		);
-
-		$typeCurrentInput = $pForm->getFieldType( $fieldName );
-		$isRequired = $pForm->isRequiredField( $fieldName );
+		$typeCurrentInput = $pForm->getFieldType($fieldName);
+		$isRequired = $pForm->isRequiredField($fieldName);
 		$requiredAttribute = $isRequired ? 'required ' : '';
+		$permittedValues = $pForm->getPermittedValues($fieldName, true);
+		$selectedValue = $pForm->getFieldValue($fieldName, true);
 
-		if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-			$permittedValues = $pForm->getPermittedValues( $fieldName, true );
-			$selectedValue = $pForm->getFieldValue( $fieldName, true );
-			$output .= '<select size="1" name="'.esc_attr($fieldName).'">';
-
-			foreach ( $permittedValues as $key => $value ) {
-				if ( is_array( $selectedValue ) ) {
-					$isSelected = in_array( $key, $selectedValue, true );
+		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput ||
+			in_array($fieldName, array('objektart', 'range_land'))) {
+			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
+			foreach ($permittedValues as $key => $value) {
+				if (is_array($selectedValue)) {
+					$isSelected = in_array($key, $selectedValue, true);
 				} else {
 					$isSelected = $selectedValue == $key;
 				}
 				$output .= '<option value="'.esc_attr($key).'"'.($isSelected ? ' selected' : '').'>'
 					.esc_html($value).'</option>';
 			}
-			$output .= '</select><br>';
+			$output .= '</select>';
+		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput) {
+			$output .= '<div data-name="'.esc_attr($fieldName).'" class="multiselect" data-values="'
+				.esc_attr(json_encode($permittedValues)).'" data-selected="'
+				.esc_attr(json_encode($selectedValue)).'">
+				<input type="button" class="onoffice-multiselect-edit" value="'
+					.esc_html__('Edit values', 'onoffice').'"></div>';
 		} else {
 			$inputType = 'type="text" ';
-			$value = 'value="'.$pForm->getFieldValue( $fieldName ).'"';
+			$value = 'value="'.$pForm->getFieldValue($fieldName).'"';
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
-				$value = $pForm->getFieldValue( $fieldName, true ) == 1 ? 'checked="checked"' : '';
+				$value = $pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '';
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT) {
 				$inputType = 'type="number" step="0.1" ';
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER) {
 				$inputType = 'type="number" step="1" ';
 			}
 
-			$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_html($fieldName).'" '.$value.'><br>';
+			$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_html($fieldName).'" '.$value.'>';
 		}
 		return $output;
 	}

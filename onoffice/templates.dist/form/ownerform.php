@@ -59,6 +59,15 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		}
 	}
 
+	if (array_key_exists('message', $pForm->getInputFields())) {
+		$isRequiredMessage = $pForm->isRequiredField( 'message' );
+		$additionMessage = $isRequiredMessage ? '*' : '';
+
+		$messageInput = __('Message', 'onoffice').$additionMessage.':<br>
+		<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
+		$addressValues []= $messageInput;
+	}
+
 	echo '<h2>Ihre Kontaktdaten</h2>'
 		.'<p>';
 	echo implode('<br>', $addressValues);

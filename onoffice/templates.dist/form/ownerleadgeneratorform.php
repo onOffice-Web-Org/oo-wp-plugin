@@ -62,6 +62,15 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			$miscValues []= $line;
 		}
 	}
+
+	if (array_key_exists('message', $pForm->getInputFields())) {
+		$isRequiredMessage = $pForm->isRequiredField( 'message' );
+		$additionMessage = $isRequiredMessage ? '*' : '';
+
+		$messageInput = __('Message', 'onoffice').$additionMessage.':<br>
+		<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
+		$addressValues []= $messageInput;
+	}
 }
 ?>
 
