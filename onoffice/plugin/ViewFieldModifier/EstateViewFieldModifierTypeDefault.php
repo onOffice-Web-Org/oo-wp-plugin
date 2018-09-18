@@ -42,6 +42,11 @@ class EstateViewFieldModifierTypeDefault
 		return array_merge($this->getViewFields(), [
 			'virtualAddress',
 			'objektadresse_freigeben',
+
+			// for `vermarktungsstatus`
+			'reserviert',
+			'verkauft',
+			'vermarktungsart',
 		]);
 	}
 
@@ -60,8 +65,39 @@ class EstateViewFieldModifierTypeDefault
 			unset($record['mainLangId']);
 		}
 
+		$record['vermarktungsstatus'] = $this->buildMarketingStatus($record);
+
 		return parent::reduceRecord($record);
 	}
+
+
+	/**
+	 *
+	 * @param array $record
+	 * @return string
+	 *
+	 */
+
+	private function buildMarketingStatus(array $record): string
+	{
+		$booked = $record['reserviert'];
+		$sold = $record['verkauft'];
+		$vermarktungsart = $record['vermarktungsart'];
+		$value = __('open', 'onoffice');
+
+		if (1 == $booked && 0 == $sold) {
+			$value = __('booked', 'onoffice');
+		} elseif (1 == $sold) {
+			if ('kauf' == $vermarktungsart) {
+				$value = __('sold', 'onoffice');
+			} else {
+				$value = __('leased', 'onoffice');
+			}
+		}
+
+		return $value;
+	}
+
 
 	/**
 	 *

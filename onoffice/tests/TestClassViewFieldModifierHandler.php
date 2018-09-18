@@ -58,6 +58,9 @@ class TestClassViewFieldModifierHandler
 		'vermarktungsart' => 'kauf',
 		'ort' => 'Aachen',
 		'objektnr_extern' => 'JJ1337',
+		'reserviert' => '1',
+		'verkauft' => '1',
+		'vermarktungsart' => 'kauf',
 	];
 
 
@@ -73,6 +76,9 @@ class TestClassViewFieldModifierHandler
 			'laengengrad',
 			'virtualAddress',
 			'objektadresse_freigeben',
+			'reserviert',
+			'verkauft',
+			'vermarktungsart',
 			'virtualStreet',
 			'virtualHouseNumber',
 			'breitengrad',
@@ -83,7 +89,6 @@ class TestClassViewFieldModifierHandler
 			'hausnummer',
 			'objekttitel',
 			'objektart',
-			'vermarktungsart',
 			'ort',
 			'objektnr_extern',
 			// add more in case more Modifiers get added

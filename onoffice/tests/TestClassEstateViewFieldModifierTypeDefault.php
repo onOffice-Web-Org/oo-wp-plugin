@@ -46,6 +46,9 @@ class TestClassEstateViewFieldModifierTypeDefault
 		'objektadresse_freigeben' => 0,
 		'laengengrad' => 12.9458485,
 		'breitengrad' => 53.12323,
+		'reserviert' => '1',
+		'verkauft' => '1',
+		'vermarktungsart' => 'kauf',
 	];
 
 
@@ -60,6 +63,9 @@ class TestClassEstateViewFieldModifierTypeDefault
 		$defaultApiFields = [
 			'virtualAddress',
 			'objektadresse_freigeben',
+			'reserviert',
+			'verkauft',
+			'vermarktungsart',
 		];
 
 		$this->assertEquals($defaultApiFields, $pEstateViewFieldModifierTypeDefault->getAPIFields());
@@ -82,6 +88,10 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'objektadresse_freigeben' => 0,
 			'laengengrad' => 0,
 			'breitengrad' => 0,
+			'reserviert' => '1',
+			'verkauft' => '1',
+			'vermarktungsart' => 'kauf',
+			'vermarktungsstatus' => 'sold',
 		];
 
 		$newRow = $pEstateViewFieldModifierTypeDefault->reduceRecord($this->_exampleRecord);
@@ -120,7 +130,67 @@ class TestClassEstateViewFieldModifierTypeDefault
 		$apiFieldsExpect = $fieldList;
 		$apiFieldsExpect []= 'virtualAddress';
 		$apiFieldsExpect []= 'objektadresse_freigeben';
+		$apiFieldsExpect []= 'reserviert';
+		$apiFieldsExpect []= 'verkauft';
+		$apiFieldsExpect []= 'vermarktungsart';
 
 		$this->assertEquals($apiFieldsExpect, $pEstateViewFieldModifierTypeDefault->getAPIFields());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testVermarktungsstatus()
+	{
+		$this->buildRowForVermarktungsstatus(false, false, 'kauf', 'open');
+		$this->buildRowForVermarktungsstatus(false, true, 'kauf', 'sold');
+		$this->buildRowForVermarktungsstatus(true, false, 'kauf', 'booked');
+		$this->buildRowForVermarktungsstatus(true, true, 'kauf', 'sold');
+		$this->buildRowForVermarktungsstatus(false, false, 'miete', 'open');
+		$this->buildRowForVermarktungsstatus(false, true, 'miete', 'leased');
+		$this->buildRowForVermarktungsstatus(true, false, 'miete', 'booked');
+		$this->buildRowForVermarktungsstatus(true, true, 'miete', 'leased');
+	}
+
+
+	/**
+	 *
+	 * @param bool $reserviert
+	 * @param bool $verkauft
+	 * @param string $vermarktungsart
+	 * @param string $expectation
+	 *
+	 */
+
+	private function buildRowForVermarktungsstatus(bool $reserviert,
+		bool $verkauft, string $vermarktungsart, string $expectation)
+	{
+		$fieldList = [
+			'testfield1',
+		];
+
+		$inputRecords = $this->_exampleRecord;
+		$inputRecords['reserviert'] = strval((int)$reserviert);
+		$inputRecords['verkauft'] = strval((int)$verkauft);
+		$inputRecords['vermarktungsart'] = $vermarktungsart;
+
+		$pEstateViewFieldModifierTypeDefault = new EstateViewFieldModifierTypeDefault($fieldList);
+		$result = $pEstateViewFieldModifierTypeDefault->reduceRecord($inputRecords);
+		$expectedResult = [
+			'testField1' => true,
+			'test_field2' => 'Example string',
+			'multiselectfield' => ['Value 1', 'Value 2', 'Value 3'],
+			'virtualAddress' => 0,
+			'objektadresse_freigeben' => 0,
+			'laengengrad' => 0,
+			'breitengrad' => 0,
+			'vermarktungsstatus' => $expectation,
+			'reserviert' => strval((int)$reserviert),
+			'verkauft' => strval((int)$verkauft),
+			'vermarktungsart' => $vermarktungsart,
+		];
+		$this->assertEquals($expectedResult, $result);
 	}
 }

@@ -259,19 +259,12 @@ class EstateList
 
 		$dataFields = $pFieldModifierHandler->getAllAPIFields();
 
-		$pGeoPosition = new GeoPosition();
-
 		if (in_array(GeoPosition::FIELD_GEO_POSITION, $dataFields))	{
 			$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $dataFields);
 			unset($dataFields[$pos]);
 			$dataFields []= 'laengengrad';
 			$dataFields []= 'breitengrad';
 		}
-
-
-		$inputValues = $this->getGeoSearchValues();
-		$requestGeoSearchParameters =
-				$pGeoPosition->createGeoRangeSearchParameterRequest($inputValues);
 
 		$requestParams = array(
 			'data' => $dataFields,
@@ -284,11 +277,7 @@ class EstateList
 			'addMainLangId' => true,
 		);
 
-		$requestParams = ($requestParams + $this->addExtraParams());
-
-		if ($requestGeoSearchParameters !== []) {
-			$requestParams['georangesearch'] = $requestGeoSearchParameters;
-		}
+		$requestParams += $this->addExtraParams();
 
 		return $requestParams;
 	}
@@ -337,6 +326,16 @@ class EstateList
 
 		if ($pListView->getFilterId() != null) {
 			$requestParams['filterid'] = $pListView->getFilterId();
+		}
+
+		$pGeoPosition = new GeoPosition();
+		$geoInputValues = $this->getGeoSearchValues();
+
+		$requestGeoSearchParameters = $pGeoPosition->createGeoRangeSearchParameterRequest
+			($geoInputValues);
+
+		if ($requestGeoSearchParameters !== []) {
+			$requestParams['georangesearch'] = $requestGeoSearchParameters;
 		}
 
 		return $requestParams;
@@ -455,7 +454,7 @@ class EstateList
 		}
 
 		$pEstateFieldModifierHandler = new ViewFieldModifierHandler
-			($this->_pDataView->getFields(), onOfficeSDK::MODULE_ESTATE, $modifier);
+			($this->getFieldsForDataViewModifierHandler(), onOfficeSDK::MODULE_ESTATE, $modifier);
 
 		$currentRecord = each( $this->_responseArray['data']['records'] );
 
@@ -478,6 +477,23 @@ class EstateList
 		}
 
 		return false;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getFieldsForDataViewModifierHandler(): array
+	{
+		$fields = $this->_pDataView->getFields();
+		if ($this->getShowEstateMarketingStatus()) {
+			$fields []= 'vermarktungsstatus';
+		}
+
+		return $fields;
 	}
 
 
@@ -855,6 +871,19 @@ class EstateList
 	public function resetEstateIterator()
 	{
 		reset( $this->_responseArray['data']['records'] );
+	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function getShowEstateMarketingStatus(): bool
+	{
+		return $this->_pDataView instanceof DataListView &&
+			$this->_pDataView->getShowStatus();
 	}
 
 
