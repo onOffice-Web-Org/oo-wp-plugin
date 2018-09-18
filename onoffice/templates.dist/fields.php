@@ -114,9 +114,10 @@ if (!function_exists('renderSingleField')) {
 		$requiredAttribute = $isRequired ? 'required ' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
+		$isSearchcriteriaField = $pForm->isSearchcriteriaField($fieldName);
 
-		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput ||
-			in_array($fieldName, array('objektart', 'range_land'))) {
+		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput &&
+			!$isSearchcriteriaField) || in_array($fieldName, array('objektart', 'range_land'))) {
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
@@ -128,7 +129,9 @@ if (!function_exists('renderSingleField')) {
 					.esc_html($value).'</option>';
 			}
 			$output .= '</select>';
-		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput) {
+		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
+			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
+			$isSearchcriteriaField)) {
 			$output .= '<div data-name="'.esc_attr($fieldName).'" class="multiselect" data-values="'
 				.esc_attr(json_encode($permittedValues)).'" data-selected="'
 				.esc_attr(json_encode($selectedValue)).'">
@@ -141,13 +144,27 @@ if (!function_exists('renderSingleField')) {
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
 				$value = 'value="1" '.($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
-			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT) {
+			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
+				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float') {
 				$inputType = 'type="number" step="0.1" ';
-			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER) {
+			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER ||
+					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal') {
 				$inputType = 'type="number" step="1" ';
 			}
 
-			$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_html($fieldName).'" '.$value.'>';
+			if ($pForm->inRangeSearchcriteriaInfos($fieldName) &&
+				count($pForm->getSearchcriteriaRangeInfosForField($fieldName)) > 0) {
+
+				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
+					$value = 'value="'.$pForm->getFieldValue($key).'"';
+					$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($key).'" '
+						.$value.' placeholder="'.esc_attr($rangeDescription).'">';
+				}
+			} else {
+				$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($fieldName).'" '.$value.'>';
+			}
+
+
 		}
 		return $output;
 	}
