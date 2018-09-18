@@ -140,7 +140,7 @@ if (!function_exists('renderSingleField')) {
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
-				$value = $pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '';
+				$value = 'value="1" '.($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT) {
 				$inputType = 'type="number" step="0.1" ';
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER) {

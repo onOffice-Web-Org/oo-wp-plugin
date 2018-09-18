@@ -75,6 +75,7 @@ class TestClassFormPostContact
 		$this->_pFormPostConfiguration->addInputType($module, 'Plz', FieldTypes::FIELD_TYPE_INTEGER);
 		$this->_pFormPostConfiguration->addInputType($module, 'Ort', FieldTypes::FIELD_TYPE_VARCHAR);
 		$this->_pFormPostConfiguration->addInputType($module, 'Telefon1', FieldTypes::FIELD_TYPE_VARCHAR);
+		$this->_pFormPostConfiguration->addInputType($module, 'AGB_akzeptiert', FieldTypes::FIELD_TYPE_BOOLEAN);
 
 		$this->configureSDKWrapperForContactAddress();
 		$this->configureSDKWrapperForCreateAddress();
@@ -98,6 +99,7 @@ class TestClassFormPostContact
 				'Plz' => '52068',
 				'Ort' => 'Aachen',
 				'Telefon1' => '0815/2345677',
+				'AGB_akzeptiert' => '1',
 			],
 
 			'estateid' => null,
@@ -131,6 +133,7 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
+			'AGB_akzeptiert' => '1',
 			'checkDuplicate' => true,
 		];
 
@@ -158,6 +161,7 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
+			'AGB_akzeptiert' => '1',
 			'checkDuplicate' => false,
 		];
 
@@ -257,6 +261,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->addInput('Plz', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('Ort', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('Telefon1', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->setRecipient('test@my-onoffice.com');
 		$pDataFormConfiguration->setCreateAddress(false);
 		$pDataFormConfiguration->setFormType(Form::TYPE_CONTACT);
@@ -283,6 +288,7 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'Telefon1' => '0815/2345677',
+			'AGB_akzeptiert' => '1',
 		];
 	}
 }
