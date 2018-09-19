@@ -146,7 +146,7 @@ if (!function_exists('renderSingleField')) {
 				$value = 'value="1" '.($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float') {
-				$inputType = 'type="number" step="0.1" ';
+				$inputType = 'type="number" step="0.01" ';
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER ||
 					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal') {
 				$inputType = 'type="number" step="1" ';
