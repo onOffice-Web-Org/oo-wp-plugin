@@ -151,15 +151,7 @@ abstract class FormModelBuilderDB
 		$labelRecordsPerPage = __('Records per Page', 'onoffice');
 		$pInputModelRecordsPerPage = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_RECORDS_PER_PAGE, $labelRecordsPerPage);
-		$pInputModelRecordsPerPage->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-		$pInputModelRecordsPerPage->setValuesAvailable(array(
-				'5' => '5',
-				'9' => '9',
-				'10' => '10',
-				'12' => '12',
-				'15' => '15'
-			)
-		);
+		$pInputModelRecordsPerPage->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelRecordsPerPage->setValue($this->getValue('recordsPerPage'));
 
 		return $pInputModelRecordsPerPage;
