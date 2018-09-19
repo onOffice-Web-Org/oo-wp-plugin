@@ -95,7 +95,7 @@ class FormPostConfigurationDefault
 
 	public function getPostvarCaptchaToken(): string
 	{
-		return filter_input(INPUT_POST, CaptchaHandler::RECAPTCHA_RESPONSE_PARAM);
+		return filter_input(INPUT_POST, CaptchaHandler::RECAPTCHA_RESPONSE_PARAM) ?? '';
 	}
 
 
