@@ -106,7 +106,7 @@ if (!function_exists('renderFieldRange')) {
 }
 
 if (!function_exists('renderSingleField')) {
-	function renderSingleField(string $fieldName, onOffice\WPlugin\Form $pForm): string
+	function renderSingleField(string $fieldName, onOffice\WPlugin\Form $pForm, bool $searchCriteriaRange = true): string
 	{
 		$output = '';
 		$typeCurrentInput = $pForm->getFieldType($fieldName);
@@ -114,10 +114,10 @@ if (!function_exists('renderSingleField')) {
 		$requiredAttribute = $isRequired ? 'required ' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
-		$isSearchcriteriaField = $pForm->isSearchcriteriaField($fieldName);
+		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 
 		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput &&
-			!$isSearchcriteriaField) || in_array($fieldName, array('objektart', 'range_land'))) {
+			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land'))) {
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
@@ -131,7 +131,7 @@ if (!function_exists('renderSingleField')) {
 			$output .= '</select>';
 		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
-			$isSearchcriteriaField)) {
+			$isRangeValue)) {
 			$output .= '<div data-name="'.esc_attr($fieldName).'" class="multiselect" data-values="'
 				.esc_attr(json_encode($permittedValues)).'" data-selected="'
 				.esc_attr(json_encode($selectedValue)).'">
@@ -139,7 +139,7 @@ if (!function_exists('renderSingleField')) {
 					.esc_html__('Edit values', 'onoffice').'"></div>';
 		} else {
 			$inputType = 'type="text" ';
-			$value = 'value="'.$pForm->getFieldValue($fieldName).'"';
+			$value = 'value="'.esc_attr($pForm->getFieldValue($fieldName, true)).'"';
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
@@ -152,11 +152,11 @@ if (!function_exists('renderSingleField')) {
 				$inputType = 'type="number" step="1" ';
 			}
 
-			if ($pForm->inRangeSearchcriteriaInfos($fieldName) &&
+			if ($isRangeValue && $pForm->inRangeSearchcriteriaInfos($fieldName) &&
 				count($pForm->getSearchcriteriaRangeInfosForField($fieldName)) > 0) {
 
 				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
-					$value = 'value="'.$pForm->getFieldValue($key).'"';
+					$value = 'value="'.esc_attr($pForm->getFieldValue($key, true)).'"';
 					$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($key).'" '
 						.$value.' placeholder="'.esc_attr($rangeDescription).'">';
 				}

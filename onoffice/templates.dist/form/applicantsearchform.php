@@ -86,32 +86,18 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 		echo '</fieldset>';
 		continue;
-	}
-
-	$typeCurrentInput = $pForm->getFieldType( $input );
-
-	$selectedValue = $pForm->getFieldValue( $input, true );
-
-	if ( in_array( $typeCurrentInput, $selectTypes, true ) ) {
-		echo '<div data-name="'.esc_html($input).'" class="multiselect" data-values="'
-			.esc_html(json_encode($permittedValues)).'" data-selected="'
-			.esc_html(json_encode($selectedValue)).'">
-			<input type="button" class="onoffice-multiselect-edit" value="'
-			.esc_html__('Edit values', 'onoffice').'"> </div>';
-	} else {
-		if ($input == 'regionaler_zusatz') {
-			echo '<select size="1" name="'.esc_html($input).'">';
-			$pRegionController = new \onOffice\WPlugin\Region\RegionController();
-			$regions = $pRegionController->getRegions();
-			foreach ($regions as $pRegion) {
-				/* @var $pRegion Region */
-				printRegion( $pRegion, [$selectedValue] );
-			}
-			echo '</select><br>';
-		} else {
-			echo '<input type="text" name="'.$input.'" value="'
-				.$pForm->getFieldValue( $input ).'"'.$inputAddition.'><br>';
+	} elseif ($input === 'regionaler_zusatz') {
+		echo '<select size="1" name="'.esc_html($input).'">';
+		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
+		$regions = $pRegionController->getRegions();
+		$selectedValue = $pForm->getFieldValue( $input, true );
+		foreach ($regions as $pRegion) {
+			/* @var $pRegion Region */
+			printRegion( $pRegion, [$selectedValue] );
 		}
+		echo '</select><br>';
+	} else {
+		echo renderSingleField($input, $pForm, false);
 	}
 
 	echo '<br>';
