@@ -191,4 +191,16 @@ class FormPostConfigurationTest
 	{
 		$this->_postvarCaptchaToken = $postvarCaptchaToken;
 	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function isCaptchaSetup(): bool
+	{
+		return true;
+	}
 }

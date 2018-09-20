@@ -126,7 +126,7 @@ abstract class FormPost
 
 	private function checkCaptcha(DataFormConfiguration $pConfig): bool
 	{
-		if ($pConfig->getCaptcha()) {
+		if ($pConfig->getCaptcha() && $this->_pFormPostConfiguration->isCaptchaSetup()) {
 			$token = $this->_pFormPostConfiguration->getPostvarCaptchaToken();
 			$secret = $this->_pFormPostConfiguration->getCaptchaSecret();
 			$pCaptchaHandler = new CaptchaHandler($token, $secret);

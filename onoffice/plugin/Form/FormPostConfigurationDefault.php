@@ -109,4 +109,16 @@ class FormPostConfigurationDefault
 	{
 		return get_option('onoffice-settings-captcha-secretkey', '');
 	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function isCaptchaSetup(): bool
+	{
+		return get_option('onoffice-settings-captcha-sitekey', '') !== '';
+	}
 }

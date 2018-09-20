@@ -77,4 +77,13 @@ interface FormPostConfiguration
 	 */
 
 	public function getCaptchaSecret(): string;
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function isCaptchaSetup(): bool;
 }
