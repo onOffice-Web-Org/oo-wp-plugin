@@ -305,7 +305,7 @@ class AdminPageEstateDetail
 		$valuesPrefixless = $pInputModelDBAdapterArray->generateValuesArray();
 		$pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($valuesPrefixless);
 
-		$result = DataDetailViewHandler::saveDetailView($pDataDetailView);
+		$result = $pDataDetailViewHandler->saveDetailView($pDataDetailView);
 
 		$resultObject = new stdClass();
 		$resultObject->result = $result;

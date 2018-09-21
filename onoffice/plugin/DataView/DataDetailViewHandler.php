@@ -61,7 +61,7 @@ class DataDetailViewHandler
 	 *
 	 */
 
-	static public function saveDetailView(DataDetailView $pDataDetailView)
+	public function saveDetailView(DataDetailView $pDataDetailView)
 	{
 		$result = null;
 

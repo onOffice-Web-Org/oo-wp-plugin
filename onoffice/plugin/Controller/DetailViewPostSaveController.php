@@ -62,7 +62,7 @@ class DetailViewPostSaveController
 
 			if ($viewContained) {
 				$pDetailView->setPageId($postId);
-				DataDetailViewHandler::saveDetailView($pDetailView);
+				$pDataDetailViewHandler->saveDetailView($pDetailView);
 				$pContentFilter->addCustomRewriteRules();
 				flush_rewrite_rules();
 
@@ -72,7 +72,7 @@ class DetailViewPostSaveController
 
 				if ($detailInPreviousRev || $pDetailView->getPageId() === $postId) {
 					$pDetailView->setPageId(null);
-					DataDetailViewHandler::saveDetailView($pDetailView);
+					$pDataDetailViewHandler->saveDetailView($pDetailView);
 					$pContentFilter->addCustomRewriteRules();
 					flush_rewrite_rules();
 				}
@@ -97,7 +97,7 @@ class DetailViewPostSaveController
 
 		if ($pDetailView->getPageId() == $postId) {
 			$pDetailView->setPageId(null);
-			DataDetailViewHandler::saveDetailView($pDetailView);
+			$pDataDetailViewHandler->saveDetailView($pDetailView);
 			flush_rewrite_rules();
 		}
 	}
