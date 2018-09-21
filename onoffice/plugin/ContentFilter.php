@@ -66,7 +66,7 @@ class ContentFilter
 	 */
 
 	public function addCustomRewriteRules() {
-		$pDetailView = DataDetailViewHandler::getDetailView();
+		$pDetailView = $this->getEstateDetailView();
 		$detailPageId = $pDetailView->getPageId();
 
 		if ($detailPageId != null) {
@@ -100,7 +100,7 @@ class ContentFilter
 
 		if ($attributes['view'] !== null) {
 			try {
-				$pDetailView = DataDetailViewHandler::getDetailView();
+				$pDetailView = $this->getEstateDetailView();
 
 				if ($pDetailView->getName() === $attributes['view']) {
 					$pTemplate = new Template($pDetailView->getTemplate());
@@ -390,7 +390,7 @@ class ContentFilter
 			return $title;
 		}
 
-		$pDetailView = DataDetailViewHandler::getDetailView();
+		$pDetailView = $this->getEstateDetailView();
 		$pEstateList = $this->preloadSingleEstate($pDetailView, null);
 		$modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE;
 		$pEstateIterator = $pEstateList->estateIterator($modifier);
@@ -478,5 +478,18 @@ class ContentFilter
 	private function getFileUrl( $fileName )
 	{
 		return plugins_url( 'onoffice/templates/default/'. $fileName );
+	}
+
+
+	/**
+	 *
+	 * @return DataDetailView
+	 *
+	 */
+
+	private function getEstateDetailView(): DataDetailView
+	{
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		return $pDataDetailViewHandler->getDetailView();
 	}
 }

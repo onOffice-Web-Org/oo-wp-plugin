@@ -52,7 +52,8 @@ class DetailViewPostSaveController
 		$isRevision = wp_is_post_revision($pPost);
 
 		if (!$isRevision) {
-			$pDetailView = DataDetailViewHandler::getDetailView();
+			$pDataDetailViewHandler = new DataDetailViewHandler();
+			$pDetailView = $pDataDetailViewHandler->getDetailView();
 
 			$detailViewName = $pDetailView->getName();
 			$postContent = $pPost->post_content;
@@ -91,7 +92,8 @@ class DetailViewPostSaveController
 	 */
 
 	public function onMoveTrash($postId) {
-		$pDetailView = DataDetailViewHandler::getDetailView();
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
 
 		if ($pDetailView->getPageId() == $postId) {
 			$pDetailView->setPageId(null);

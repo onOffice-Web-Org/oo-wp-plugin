@@ -74,7 +74,8 @@ class AdminPageEstateDetail
 
 	public function renderContent()
 	{
-		$pDataView = DataDetailViewHandler::getDetailView();
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDataView = $pDataDetailViewHandler->getDetailView();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
 
@@ -300,8 +301,9 @@ class AdminPageEstateDetail
 			}
 		}
 
+		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$valuesPrefixless = $pInputModelDBAdapterArray->generateValuesArray();
-		$pDataDetailView = DataDetailViewHandler::createDetailViewByValues($valuesPrefixless);
+		$pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($valuesPrefixless);
 
 		$result = DataDetailViewHandler::saveDetailView($pDataDetailView);
 

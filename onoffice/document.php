@@ -40,7 +40,8 @@ if (null === $estateId || null === $configIndex) {
 }
 
 try {
-	$pView = DataDetailViewHandler::getDetailView();
+	$pDataDetailViewHandler = new DataDetailViewHandler();
+	$pView = $pDataDetailViewHandler->getDetailView();
 	$isDetailView = $configIndex === $pView->getName();
 	if (!$isDetailView) {
 		$pEstateConfigFactory = new DataListViewFactory();

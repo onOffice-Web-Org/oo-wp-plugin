@@ -532,7 +532,8 @@ class EstateList
 
 	public function getEstateLink()
 	{
-		$pDetailView = DataDetailViewHandler::getDetailView();
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
 		$pageId = $pDetailView->getPageId();
 		$fullLink = '#';
 

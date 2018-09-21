@@ -63,7 +63,8 @@ class FormModelBuilderEstateDetailSettings
 	public function generate()
 	{
 		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView($this->getPageSlug());
-		$this->_pDataDetailView = DataDetailViewHandler::getDetailView();
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$this->_pDataDetailView = $pDataDetailViewHandler->getDetailView();
 
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Detail View', 'onoffice'));
