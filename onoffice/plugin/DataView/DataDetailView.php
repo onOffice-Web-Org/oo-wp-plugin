@@ -87,41 +87,41 @@ class DataDetailView
 	private $_template = '';
 
 	/** @var string */
-	private $_expose = null;
+	private $_expose = '';
 
 	/** @var int */
-	private $_pageId = null;
+	private $_pageId = 0;
 
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
 
 	/** @return array */
-	public function getFields()
+	public function getFields(): array
 		{ return $this->_fields; }
 
 	/** @return array */
-	public function getPictureTypes()
+	public function getPictureTypes(): array
 		{ return $this->_pictureTypes; }
 
 	/** @return string */
-	public function getTemplate()
+	public function getTemplate(): string
 		{ return $this->_template; }
 
 	/** @return string */
-	public function getExpose()
+	public function getExpose(): string
 		{ return $this->_expose; }
 
 	/** @return string */
-	public function getName()
+	public function getName(): string
 		{ return 'detail'; }
 
 	/** @return string[] */
-	public function getAddressFields()
+	public function getAddressFields(): array
 		{ return $this->_addressFields; }
 
 	/** @return int */
-	public function getPageId()
+	public function getPageId(): int
 		{ return $this->_pageId; }
 
 	/** @param array $fields */
@@ -133,15 +133,15 @@ class DataDetailView
 		{ $this->_pictureTypes = $pictureTypes; }
 
 	/** @param string $template */
-	public function setTemplate($template)
+	public function setTemplate(string $template)
 		{ $this->_template = $template; }
 
 	/** @param string $expose */
-	public function setExpose($expose)
+	public function setExpose(string $expose)
 		{ $this->_expose = $expose; }
 
 	/** @param int $pageId */
-	public function setPageId($pageId)
+	public function setPageId(int $pageId)
 		{ $this->_pageId = $pageId; }
 
 	/** @var string[] $addressFields */
@@ -149,10 +149,10 @@ class DataDetailView
 		{ $this->_addressFields = $addressFields; }
 
 	/** @return int */
-	public function getMovieLinks()
-		{ return (int)$this->_movieLinks; }
+	public function getMovieLinks(): int
+		{ return $this->_movieLinks; }
 
 	/** @param int $movieLinks */
-	public function setMovieLinks($movieLinks)
-		{ $this->_movieLinks = (int)$movieLinks; }
+	public function setMovieLinks(int $movieLinks)
+		{ $this->_movieLinks = $movieLinks; }
 }

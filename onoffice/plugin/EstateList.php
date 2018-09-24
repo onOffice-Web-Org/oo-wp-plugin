@@ -537,7 +537,7 @@ class EstateList
 		$pageId = $pDetailView->getPageId();
 		$fullLink = '#';
 
-		if ($pageId != null) {
+		if ($pageId !== 0) {
 			$estate = $this->_currentEstate['mainId'];
 			$fullLink = get_page_link($pageId).$estate;
 		}

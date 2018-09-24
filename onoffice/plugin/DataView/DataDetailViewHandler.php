@@ -21,6 +21,11 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Types\MovieLinkTypes;
+use onOffice\WPlugin\WP\WPOptionWrapperBase;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+
+
 /**
  *
  * @url http://www.onoffice.de
@@ -33,6 +38,22 @@ class DataDetailViewHandler
 	/** */
 	const DEFAULT_VIEW_OPTION_KEY = 'onoffice-default-view';
 
+	/** @var WPOptionWrapperBase */
+	private $_pWPOptionWrapper = null;
+
+
+	/**
+	 *
+	 * @param WPOptionWrapperBase $pWPOptionWrapper
+	 *
+	 */
+
+	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
+	{
+		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
+	}
+
+
 	/**
 	 *
 	 * @return DataDetailView
@@ -43,7 +64,7 @@ class DataDetailViewHandler
 	{
 		$optionKey = self::DEFAULT_VIEW_OPTION_KEY;
 		$pAlternate = new DataDetailView();
-		$pResult = get_option($optionKey, $pAlternate);
+		$pResult = $this->_pWPOptionWrapper->getOption($optionKey, $pAlternate);
 
 		if ($pResult == null)
 		{
@@ -57,22 +78,25 @@ class DataDetailViewHandler
 	/**
 	 *
 	 * @param DataDetailView $pDataDetailView
-	 * @return bool
+	 * @throws DataViewSaveException
 	 *
 	 */
 
 	public function saveDetailView(DataDetailView $pDataDetailView)
 	{
-		$result = null;
+		$result = false;
+		$pWpOptionsWrapper = $this->_pWPOptionWrapper;
+		$viewOptionKey = self::DEFAULT_VIEW_OPTION_KEY;
 
-		if (get_option(self::DEFAULT_VIEW_OPTION_KEY) !== false) {
-			update_option(self::DEFAULT_VIEW_OPTION_KEY, $pDataDetailView);
-			$result = true;
+		if ($pWpOptionsWrapper->getOption($viewOptionKey) !== false) {
+			$result = $pWpOptionsWrapper->updateOption($viewOptionKey, $pDataDetailView);
 		} else {
-			$result = add_option(self::DEFAULT_VIEW_OPTION_KEY, $pDataDetailView);
+			$result = $pWpOptionsWrapper->addOption($viewOptionKey, $pDataDetailView);
 		}
 
-		return true;
+		if (!$result) {
+			throw new DataViewSaveException;
+		}
 	}
 
 
@@ -86,31 +110,12 @@ class DataDetailViewHandler
 	public function createDetailViewByValues(array $row)
 	{
 		$pDataDetailView = $this->getDetailView();
-		$pDataDetailView->setTemplate(self::getValue($row, 'template'));
-		$pDataDetailView->setFields(self::getValue($row, DataDetailView::FIELDS, array()));
-		$pDataDetailView->setPictureTypes(self::getValue($row, DataDetailView::PICTURES, array()));
-		$pDataDetailView->setExpose(self::getValue($row, 'expose'));
-		$pDataDetailView->setAddressFields(self::getValue($row, DataDetailView::ADDRESSFIELDS));
-		$pDataDetailView->setMovieLinks(self::getValue($row, 'movielinks'));
+		$pDataDetailView->setTemplate($row['template'] ?? '');
+		$pDataDetailView->setFields($row[DataDetailView::FIELDS] ?? []);
+		$pDataDetailView->setPictureTypes($row[DataDetailView::PICTURES] ?? []);
+		$pDataDetailView->setExpose($row['expose'] ?? '');
+		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
+		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
 		return $pDataDetailView;
-	}
-
-
-	/**
-	 *
-	 * @param array $array
-	 * @param mixed $key
-	 * @param mixed $default
-	 * @return mixed
-	 *
-	 */
-
-	static private function getValue(array $array, $key, $default = null)
-	{
-		if (isset($array[$key])) {
-			return $array[$key];
-		}
-
-		return $default;
 	}
 }

@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use Exception;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -28,23 +30,8 @@ namespace onOffice\WPlugin\DataView;
  *
  */
 
-interface DataView
+class DataViewSaveException
+	extends Exception
 {
-	/** @return array */
-	public function getFields(): array;
 
-	/** @return array */
-	public function getPictureTypes(): array;
-
-	/** @return string */
-	public function getTemplate(): string;
-
-	/** @return string */
-	public function getExpose(): string;
-
-	/** @return string */
-	public function getName(): string;
-
-	/** @return array */
-	public function getAddressFields(): array;
 }

@@ -95,8 +95,8 @@ class DetailViewPostSaveController
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDetailView = $pDataDetailViewHandler->getDetailView();
 
-		if ($pDetailView->getPageId() == $postId) {
-			$pDetailView->setPageId(null);
+		if ($pDetailView->getPageId() === (int)$postId) {
+			$pDetailView->setPageId(0);
 			$pDataDetailViewHandler->saveDetailView($pDetailView);
 			flush_rewrite_rules();
 		}

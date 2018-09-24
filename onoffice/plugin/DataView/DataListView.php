@@ -120,15 +120,15 @@ class DataListView
 		{ return $this->_id; }
 
 	/** @return string */
-	public function getName()
+	public function getName(): string
 		{ return $this->_name; }
 
 	/** @return array */
-	public function getFields()
+	public function getFields(): array
 		{ return $this->_fields; }
 
 	/** @return array */
-	public function getPictureTypes()
+	public function getPictureTypes(): array
 		{ return $this->_pictureTypes; }
 
 	/** @return string */
@@ -156,15 +156,15 @@ class DataListView
 		{ return $this->_recordsPerPage; }
 
 	/** @return string */
-	public function getTemplate()
+	public function getTemplate(): string
 		{ return $this->_template; }
 
 	/** @return string */
-	public function getExpose()
+	public function getExpose(): string
 		{ return $this->_expose; }
 
 	/** @return array */
-	public function getAddressFields()
+	public function getAddressFields(): array
 		{ return $this->_addressFields; }
 
 	/** @param bool $random */
