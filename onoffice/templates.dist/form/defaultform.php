@@ -54,7 +54,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
 		echo $pForm->getFieldLabel($input).$addition.': ';
-		echo renderSingleField($input, $pForm).'<br>';
+		echo renderFormField($input, $pForm).'<br>';
 	}
 
 	if (array_key_exists('message', $pForm->getInputFields())):

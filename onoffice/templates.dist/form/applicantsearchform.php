@@ -97,7 +97,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		}
 		echo '</select><br>';
 	} else {
-		echo renderSingleField($input, $pForm, false);
+		echo renderFormField($input, $pForm, false);
 	}
 
 	echo '<br>';

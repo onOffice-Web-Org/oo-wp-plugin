@@ -37,7 +37,7 @@ foreach ($visible as $inputName => $properties) :
 	echo '<p>';
 	echo esc_html($properties['label']).': ';
 	echo '<br>';
-	renderFieldRange($inputName, $properties);
+	renderFieldEstateSearch($inputName, $properties);
 	echo '</p>';
 endforeach;
 ?>

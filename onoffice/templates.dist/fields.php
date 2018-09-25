@@ -31,8 +31,8 @@ if ( ! function_exists( 'printCountry' )) {
 	}
 }
 
-if (!function_exists('renderFieldRange')) {
-	function renderFieldRange(string $inputName, array $properties) {
+if (!function_exists('renderFieldEstateSearch')) {
+	function renderFieldEstateSearch(string $inputName, array $properties) {
 		$multiSelectableTypes = array(
 			FieldTypes::FIELD_TYPE_SINGLESELECT,
 			FieldTypes::FIELD_TYPE_MULTISELECT,
@@ -46,6 +46,11 @@ if (!function_exists('renderFieldRange')) {
 			$inputType = 'type="number" step="1" ';
 		} elseif ($properties['type'] === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_DATE) {
 			$inputType = 'type="date" ';
+		}
+
+		if ($inputName == "radius")
+		{
+			$inputType = 'type="number" step="1" ';
 		}
 
 		if ( $properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN ) {
@@ -105,8 +110,8 @@ if (!function_exists('renderFieldRange')) {
 	}
 }
 
-if (!function_exists('renderSingleField')) {
-	function renderSingleField(string $fieldName, onOffice\WPlugin\Form $pForm, bool $searchCriteriaRange = true): string
+if (!function_exists('renderFormField')) {
+	function renderFormField(string $fieldName, onOffice\WPlugin\Form $pForm, bool $searchCriteriaRange = true): string
 	{
 		$output = '';
 		$typeCurrentInput = $pForm->getFieldType($fieldName);
@@ -148,7 +153,8 @@ if (!function_exists('renderSingleField')) {
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float') {
 				$inputType = 'type="number" step="0.01" ';
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER ||
-					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal') {
+					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal' ||
+					$fieldName == 'range') {
 				$inputType = 'type="number" step="1" ';
 			}
 

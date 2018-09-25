@@ -44,7 +44,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
 		$line = $pForm->getFieldLabel($input).$addition.': ';
-		$line .= renderSingleField($input, $pForm);
+		$line .= renderFormField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
 			$line .= ' <span>Bitte ausfüllen!</span>';
