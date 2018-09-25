@@ -78,24 +78,18 @@ class DataDetailViewHandler
 	/**
 	 *
 	 * @param DataDetailView $pDataDetailView
-	 * @throws DataViewSaveException
 	 *
 	 */
 
 	public function saveDetailView(DataDetailView $pDataDetailView)
 	{
-		$result = false;
 		$pWpOptionsWrapper = $this->_pWPOptionWrapper;
 		$viewOptionKey = self::DEFAULT_VIEW_OPTION_KEY;
 
 		if ($pWpOptionsWrapper->getOption($viewOptionKey) !== false) {
-			$result = $pWpOptionsWrapper->updateOption($viewOptionKey, $pDataDetailView);
+			$pWpOptionsWrapper->updateOption($viewOptionKey, $pDataDetailView);
 		} else {
-			$result = $pWpOptionsWrapper->addOption($viewOptionKey, $pDataDetailView);
-		}
-
-		if (!$result) {
-			throw new DataViewSaveException;
+			$pWpOptionsWrapper->addOption($viewOptionKey, $pDataDetailView);
 		}
 	}
 
@@ -116,6 +110,17 @@ class DataDetailViewHandler
 		$pDataDetailView->setExpose($row['expose'] ?? '');
 		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
 		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
+		$pDataViewSimilar = $pDataDetailView->getDataViewSimilarEstates();
+		$pDataViewSimilar->setSameEstateKind($row[DataViewSimilarEstates::FIELD_SAME_KIND] ??
+			$pDataViewSimilar->getSameEstateKind());
+		$pDataViewSimilar->setSameMarketingMethod($row[DataViewSimilarEstates::FIELD_SAME_MARKETING_METHOD] ??
+			$pDataViewSimilar->getSameMarketingMethod());
+		$pDataViewSimilar->setSamePostalCode($row[DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE] ??
+			$pDataViewSimilar->getSamePostalCode());
+		$pDataViewSimilar->setRadius($row[DataViewSimilarEstates::FIELD_RADIUS] ??
+			$pDataViewSimilar->getRadius());
+		$pDataViewSimilar->setAmount($row[DataViewSimilarEstates::FIELD_AMOUNT] ??
+			$pDataViewSimilar->getAmount());
 		return $pDataDetailView;
 	}
 }

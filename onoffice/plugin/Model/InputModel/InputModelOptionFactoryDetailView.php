@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Model\InputModel;
 
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Model\InputModelOption;
 
 /**
@@ -52,6 +53,21 @@ class InputModelOptionFactoryDetailView
 	const INPUT_FIELD_CONTACTDATA_ONLY = DataDetailView::ADDRESSFIELDS;
 
 	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND = DataViewSimilarEstates::FIELD_SAME_KIND;
+
+	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_SAME_MARKETING_METHOD = DataViewSimilarEstates::FIELD_SAME_MARKETING_METHOD;
+
+	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE = DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE;
+
+	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_RADIUS = DataViewSimilarEstates::FIELD_RADIUS;
+
+	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_AMOUNT = DataViewSimilarEstates::FIELD_AMOUNT;
+
+	/** */
 	const KEY_TYPE = 'type';
 
 	/** @var string */
@@ -59,26 +75,41 @@ class InputModelOptionFactoryDetailView
 
 
 	/** @var array */
-	private $_inputConfig = array(
-		self::INPUT_EXPOSE => array(
+	private $_inputConfig = [
+		self::INPUT_EXPOSE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		),
-		self::INPUT_TEMPLATE => array(
+		],
+		self::INPUT_TEMPLATE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		),
-		self::INPUT_PICTURE_TYPE => array(
+		],
+		self::INPUT_PICTURE_TYPE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		),
-		self::INPUT_FIELD_CONFIG => array(
+		],
+		self::INPUT_FIELD_CONFIG => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		),
-		self::INPUT_FIELD_CONTACTDATA_ONLY => array(
+		],
+		self::INPUT_FIELD_CONTACTDATA_ONLY => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		),
-		self::INPUT_MOVIE_LINKS => array(
+		],
+		self::INPUT_MOVIE_LINKS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		),
-	);
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_MARKETING_METHOD => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_RADIUS => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+		],
+	];
 
 
 	/**
@@ -106,7 +137,7 @@ class InputModelOptionFactoryDetailView
 	{
 		$pInstance = null;
 
-		if (array_key_exists($name, $this->_inputConfig))
+		if (isset($this->_inputConfig[$name]))
 		{
 			$config = $this->_inputConfig[$name];
 			$type = $config[self::KEY_TYPE];

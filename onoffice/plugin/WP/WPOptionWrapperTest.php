@@ -93,12 +93,11 @@ class WPOptionWrapperTest
 
 	public function updateOption(string $option, $value, bool $autoload = null): bool
 	{
-		$success = false;
+		$valueChanged = $this->_options[$option] !== $value;
 		if (isset($this->_options[$option])) {
-			$success = true;
 			$this->_options[$option] = $value;
 		}
 
-		return $success;
+		return $valueChanged;
 	}
 }

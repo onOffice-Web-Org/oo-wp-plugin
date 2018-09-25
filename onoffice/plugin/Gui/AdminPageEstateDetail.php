@@ -60,6 +60,9 @@ class AdminPageEstateDetail
 	const FORM_VIEW_ADDITIONAL_MEDIA = 'viewdocumenttypes';
 
 	/** */
+	const FORM_VIEW_SIMILAR_ESTATES = 'viewsimilarestates';
+
+	/** */
 	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
 
 	/** */
@@ -183,13 +186,16 @@ class AdminPageEstateDetail
 	private function generateMetaBoxes()
 	{
 		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
-		$this->createMetaBoxByForm($pFormPictureTypes, 'normal');
+		$this->createMetaBoxByForm($pFormPictureTypes, 'side');
 
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
 
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
-		$this->createMetaBoxByForm($pFormDocumentTypes, 'normal');
+		$this->createMetaBoxByForm($pFormDocumentTypes, 'side');
+
+		$pFormSimilarEstates = $this->getFormModelByGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
+		$this->createMetaBoxByForm($pFormSimilarEstates, 'normal');
 	}
 
 	/**
@@ -260,6 +266,23 @@ class AdminPageEstateDetail
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$pFormModelDocumentTypes->addInputModel($pInputModelMovieLinks);
 		$this->addFormModel($pFormModelDocumentTypes);
+
+		$pInputModelSimilarEstatesEstateKind = $pFormModelBuilder->createInputModelSimilarEstateKind();
+		$pInputModelSimilarEstatesMarketingMethod = $pFormModelBuilder->createInputModelSimilarEstateMarketingMethod();
+		$pInputModelSimilarEstatesSamePostalCode = $pFormModelBuilder->createInputModelSameEstatePostalCode();
+		$pInputModelSimilarEstatesRadius = $pFormModelBuilder->createInputModelSameEstateRadius();
+		$pInputModelSimilarEstatesAmount = $pFormModelBuilder->createInputModelSameEstateAmount();
+
+		$pFormModelSimilarEstates = new FormModel();
+		$pFormModelSimilarEstates->setPageSlug($this->getPageSlug());
+		$pFormModelSimilarEstates->setGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
+		$pFormModelSimilarEstates->setLabel(__('Similar Estates', 'onoffice'));
+		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesEstateKind);
+		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesMarketingMethod);
+		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesSamePostalCode);
+		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesRadius);
+		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesAmount);
+		$this->addFormModel($pFormModelSimilarEstates);
 
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,

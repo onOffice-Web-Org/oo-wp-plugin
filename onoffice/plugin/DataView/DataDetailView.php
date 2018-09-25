@@ -95,6 +95,31 @@ class DataDetailView
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
+	/** @var DataViewSimilarEstates */
+	private $_pDataViewSimilarEstates = null;
+
+
+	/**
+	 *
+	 */
+
+	public function __construct()
+	{
+		$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function __wakeup()
+	{
+		if ($this->_pDataViewSimilarEstates === null) {
+			$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
+		}
+	}
+
 
 	/** @return array */
 	public function getFields(): array
@@ -155,4 +180,12 @@ class DataDetailView
 	/** @param int $movieLinks */
 	public function setMovieLinks(int $movieLinks)
 		{ $this->_movieLinks = $movieLinks; }
+
+	/** @return DataViewSimilarEstates */
+	public function getDataViewSimilarEstates(): DataViewSimilarEstates
+		{ return $this->_pDataViewSimilarEstates; }
+
+	/** @param DataViewSimilarEstates $pDataViewSimilarEstates */
+	public function setDataViewSimilarEstates(DataViewSimilarEstates $pDataViewSimilarEstates)
+		{ $this->_pDataViewSimilarEstates = $pDataViewSimilarEstates; }
 }

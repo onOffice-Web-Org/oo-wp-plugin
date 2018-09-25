@@ -44,13 +44,7 @@ class Language
 		$config = ConfigWrapper::getInstance()->getConfig();
 		$languageMapping = $config['localemap'];
 		$currentLocale = get_locale();
-		$language = $languageMapping['fallback'];
-
-		if (array_key_exists($currentLocale, $languageMapping))
-		{
-			$language = $languageMapping[$currentLocale];
-		}
-
+		$language = $languageMapping[$currentLocale] ?? $languageMapping['fallback'] ?? 'DEU';
 		return $language;
 	}
 }
