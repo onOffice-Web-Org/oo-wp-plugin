@@ -121,6 +121,11 @@ if (!function_exists('renderFormField')) {
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 
+		if ($fieldName == 'range')
+		{
+			$typeCurrentInput = onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER;
+		}
+
 		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput &&
 			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land'))) {
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
@@ -153,8 +158,7 @@ if (!function_exists('renderFormField')) {
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float') {
 				$inputType = 'type="number" step="0.01" ';
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER ||
-					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal' ||
-					$fieldName == 'range') {
+					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal') {
 				$inputType = 'type="number" step="1" ';
 			}
 
