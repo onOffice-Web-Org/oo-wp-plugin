@@ -37,12 +37,12 @@ class DefaultFilterBuilderListViewAddress
 	 *
 	 */
 
-	public function buildFilter()
+	public function buildFilter(): array
 	{
-		return array(
-			'homepage_veroeffentlichen' => array(
-				array('op' => '=', 'val' => 1),
-			),
-		);
+		return [
+			'homepage_veroeffentlichen' => [
+				['op' => '=', 'val' => 1],
+			],
+		];
 	}
 }

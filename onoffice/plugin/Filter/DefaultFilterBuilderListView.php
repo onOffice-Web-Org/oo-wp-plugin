@@ -46,11 +46,11 @@ class DefaultFilterBuilderListView
 	private $_pEstateListInputVariableReaderConf = null;
 
 	/** @var array */
-	private $_defaultFilter = array(
-		'veroeffentlichen' => array(
-			array('op' => '=', 'val' => 1),
-		),
-	);
+	private $_defaultFilter = [
+		'veroeffentlichen' => [
+			['op' => '=', 'val' => 1],
+		],
+	];
 
 
 
@@ -80,7 +80,7 @@ class DefaultFilterBuilderListView
 	 *
 	 */
 
-	public function buildFilter()
+	public function buildFilter(): array
 	{
 		$fieldFilter = $this->getPostFieldsFilter();
 		$filter = array_merge($this->_defaultFilter, $fieldFilter);
@@ -104,14 +104,14 @@ class DefaultFilterBuilderListView
 	 *
 	 */
 
-	private function getFavoritesFilter()
+	private function getFavoritesFilter(): array
 	{
 		$ids = Favorites::getAllFavorizedIds();
 
 		$filter = $this->_defaultFilter;
-		$filter['Id'] = array(
-			array('op' => 'in', 'val' => $ids),
-		);
+		$filter['Id'] = [
+			['op' => 'in', 'val' => $ids],
+		];
 
 		return $filter;
 	}
@@ -123,12 +123,12 @@ class DefaultFilterBuilderListView
 	 *
 	 */
 
-	private function getReferenceViewFilter()
+	private function getReferenceViewFilter(): array
 	{
 		$filter = $this->_defaultFilter;
-		$filter['referenz'] = array(
-			array('op' => '=', 'val' => 1),
-		);
+		$filter['referenz'] = [
+			['op' => '=', 'val' => 1],
+		];
 
 		return $filter;
 	}
@@ -140,10 +140,10 @@ class DefaultFilterBuilderListView
 	 *
 	 */
 
-	private function getPostFieldsFilter()
+	private function getPostFieldsFilter(): array
 	{
 		$filterableFields = $this->_pDataListView->getFilterableFields();
-		$filter = array();
+		$filter = [];
 		$pEstateInputVars = new EstateListInputVariableReader
 			($this->_pEstateListInputVariableReaderConf);
 
@@ -151,8 +151,7 @@ class DefaultFilterBuilderListView
 			$type = $pEstateInputVars->getFieldType($fieldInput);
 			$value = $pEstateInputVars->getFieldValue($fieldInput);
 
-			if (is_null($value) || (is_string($value) &&
-				__String::getNew($value)->isEmpty())) {
+			if (is_null($value) || (is_string($value) && __String::getNew($value)->isEmpty())) {
 				continue;
 			}
 
@@ -172,30 +171,29 @@ class DefaultFilterBuilderListView
 	 *
 	 */
 
-	private function getFieldFilter($fieldValue, $type)
+	private function getFieldFilter($fieldValue, string $type)
 	{
-		$fieldFilter = array();
+		$fieldFilter = [];
 
-		if (FieldTypes::isNumericType($type) ||
-			FieldTypes::isDateOrDateTime($type)) {
+		if (FieldTypes::isNumericType($type) || FieldTypes::isDateOrDateTime($type)) {
 			if (!is_array($fieldValue)) {
-				$fieldFilter []= array('op' => '=', 'val' => $fieldValue);
+				$fieldFilter []= ['op' => '=', 'val' => $fieldValue];
 			} else {
 				if (isset($fieldValue[0])) {
-					$fieldFilter []= array('op' => '>=', 'val' => $fieldValue[0]);
+					$fieldFilter []= ['op' => '>=', 'val' => $fieldValue[0]];
 				}
 
 				if (isset($fieldValue[1])) {
-					$fieldFilter []= array('op' => '<=', 'val' => $fieldValue[1]);
+					$fieldFilter []= ['op' => '<=', 'val' => $fieldValue[1]];
 				}
 			}
 		} elseif ($type === FieldTypes::FIELD_TYPE_MULTISELECT ||
 			$type === FieldTypes::FIELD_TYPE_SINGLESELECT) {
-			$fieldFilter []= array('op' => 'in', 'val' => $fieldValue);
+			$fieldFilter []= ['op' => 'in', 'val' => $fieldValue];
 		} elseif ($type === FieldTypes::FIELD_TYPE_TEXT) {
-			$fieldFilter []= array('op' => 'like', 'val' => '%'.$fieldValue.'%');
+			$fieldFilter []= ['op' => 'like', 'val' => '%'.$fieldValue.'%'];
 		} else {
-			$fieldFilter []= array('op' => '=', 'val' => $fieldValue);
+			$fieldFilter []= ['op' => '=', 'val' => $fieldValue];
 		}
 
 		return $fieldFilter;

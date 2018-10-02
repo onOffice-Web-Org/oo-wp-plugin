@@ -32,7 +32,7 @@ class DefaultFilterBuilderUnitList
 	implements DefaultFilterBuilder
 {
 	/** @var int[] */
-	private $_unitIds = array();
+	private $_unitIds = [];
 
 
 	/**
@@ -41,16 +41,16 @@ class DefaultFilterBuilderUnitList
 	 *
 	 */
 
-	public function buildFilter()
+	public function buildFilter(): array
 	{
-		return array(
-			'veroeffentlichen' => array(
-				array('op' => '=', 'val' => 1),
-			),
-			'Id' => array(
-				array('op' => 'in', 'val' => $this->_unitIds),
-			),
-		);
+		return [
+			'veroeffentlichen' => [
+				['op' => '=', 'val' => 1],
+			],
+			'Id' => [
+				['op' => 'in', 'val' => $this->_unitIds],
+			],
+		];
 	}
 
 	/** @param array $unitIds */
@@ -58,6 +58,6 @@ class DefaultFilterBuilderUnitList
 		{ $this->_unitIds = $unitIds; }
 
 	/** @return array */
-	public function getUnitIds()
+	public function getUnitIds(): array
 		{ return $this->_unitIds; }
 }

@@ -75,7 +75,6 @@ class EstateDetail
 	protected function getPreloadEstateFileCategories()
 	{
 		$fileCategories = parent::getPreloadEstateFileCategories();
-
 		$pDataView = $this->getDataView();
 
 		if (!$pDataView instanceof DataDetailView) {
@@ -134,7 +133,7 @@ class EstateDetail
 	 *
 	 */
 
-	public function getMovieEmbedPlayers($options = array())
+	public function getMovieEmbedPlayers($options = [])
 	{
 		$result = array();
 		$estateId = $this->getCurrentEstateId();
@@ -142,11 +141,10 @@ class EstateDetail
 		if ($this->getDataView()->getMovieLinks() === MovieLinkTypes::MOVIE_LINKS_PLAYER) {
 			$pWpEmbed = new WP_Embed();
 			$movieLinks = $this->getEstateFiles()->getEstateMovieLinks($estateId);
-			$allowedOptions = array_flip(array('width', 'height'));
+			$allowedOptions = array_flip(['width', 'height']);
 			$newOptions = array_intersect_key($options, $allowedOptions);
 
-			foreach ($movieLinks as $linkId => $properties)
-			{
+			foreach ($movieLinks as $linkId => $properties) {
 				$player = $pWpEmbed->shortcode($newOptions, $properties['url']);
 				$newProperties = $properties;
 				$newProperties['player'] = $player;
@@ -176,8 +174,8 @@ class EstateDetail
 	 *
 	 */
 
-	protected function addExtraParams()
+	protected function addExtraParams(): array
 	{
-		return array();
+		return [];
 	}
 }

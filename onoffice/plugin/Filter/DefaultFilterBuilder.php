@@ -36,5 +36,5 @@ interface DefaultFilterBuilder
 	 *
 	 */
 
-	public function buildFilter();
+	public function buildFilter(): array;
 }

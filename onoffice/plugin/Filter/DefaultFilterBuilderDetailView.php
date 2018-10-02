@@ -43,23 +43,23 @@ class DefaultFilterBuilderDetailView
 	 *
 	 */
 
-	public function buildFilter()
+	public function buildFilter(): array
 	{
-		if ($this->_estateId == null) {
+		if ($this->_estateId === null) {
 			throw new Exception('EstateId must not be null');
 		}
 
-		return array(
-			'veroeffentlichen' => array(
-				array('op' => '=', 'val' => 1),
-			),
-			'Id' => array(
-				array('op' => '=', 'val' => $this->_estateId),
-			),
-		);
+		return [
+			'veroeffentlichen' => [
+				['op' => '=', 'val' => 1],
+			],
+			'Id' => [
+				['op' => '=', 'val' => $this->_estateId],
+			],
+		];
 	}
 
 	/** @param int $estateId */
-	public function setEstateId($estateId)
-		{ $this->_estateId = (int)$estateId; }
+	public function setEstateId(int $estateId)
+		{ $this->_estateId = $estateId; }
 }

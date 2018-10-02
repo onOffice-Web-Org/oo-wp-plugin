@@ -289,11 +289,10 @@ class EstateList
 	 *
 	 */
 
-	private function getGeoSearchValues()
+	private function getGeoSearchValues(): array
 	{
-		$pEstateInputReader = new EstateListInputVariableReader();
-
 		$inputValues = [];
+		$pEstateInputReader = new EstateListInputVariableReader();
 		$pGeoPosition = new GeoPosition();
 
 		foreach ($pGeoPosition->getEstateSearchFields() as $key) {
@@ -311,7 +310,7 @@ class EstateList
 	 *
 	 */
 
-	protected function addExtraParams()
+	protected function addExtraParams(): array
 	{
 		$pListView = $this->_pDataView;
 		$requestParams = array();
@@ -897,7 +896,7 @@ class EstateList
 		{ return $this->_pDataView; }
 
 	/** @return DefaultFilterBuilder */
-	public function getDefaultFilterBuilder()
+	public function getDefaultFilterBuilder(): DefaultFilterBuilder
 		{ return $this->_pDefaultFilterBuilder; }
 
 	/** @param DefaultFilterBuilder $pDefaultFilterBuilder */

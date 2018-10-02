@@ -151,7 +151,7 @@ class DataListView
 	public function getListType()
 		{ return $this->_listType; }
 
-	/** @return itn */
+	/** @return int */
 	public function getRecordsPerPage()
 		{ return $this->_recordsPerPage; }
 
