@@ -84,7 +84,7 @@ class Template
 		$templateData = array(
 			self::KEY_FORM => $this->_pForm,
 			self::KEY_ESTATELIST => $this->_pEstateList,
-			self::KEY_BASICDATA => Impressum::getInstance(),
+			self::KEY_BASICDATA => new Impressum(),
 			self::KEY_ADDRESSLIST => $this->_pAddressList,
 		);
 		$filename = $this->buildFilePath();

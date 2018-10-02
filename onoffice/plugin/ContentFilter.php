@@ -248,7 +248,7 @@ class ContentFilter
 	public function renderImpressumShortCodes( $attributesInput )
 	{
 		try {
-			$pImpressum = Impressum::getInstance();
+			$pImpressum = new Impressum();
 			if ( count($attributesInput) == 1 ) {
 				$attribute = $attributesInput[0];
 				$impressumValue = $pImpressum->getDataByKey($attribute);

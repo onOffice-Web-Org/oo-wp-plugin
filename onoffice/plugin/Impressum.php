@@ -29,7 +29,9 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\ImpressumConfiguration;
+use onOffice\WPlugin\ImpressumConfigurationDefault;
 
 /**
  *
@@ -109,66 +111,47 @@ class Impressum
 	/** */
 	const KEY_CHAMBER = 'chamber';
 
-	/** @var Impressum */
-	static private $_pInstance = null;
-
 	/** @var array */
 	private $_data = array();
 
-	/** @var array */
-	private static $_keys = array
-		(
-			self::KEY_BANK,
-			self::KEY_BERUFSAUFSICHTSBEHOERDE,
-			self::KEY_BIC,
-			self::KEY_CHAMBER,
-			self::KEY_CITY,
-			self::KEY_COUNTRY,
-			self::KEY_COUNTRY,
-			self::KEY_EMAIL,
-			self::KEY_EMAIL,
-			self::KEY_FAX,
-			self::KEY_FIRMA,
-			self::KEY_FIRSTNAME,
-			self::KEY_HANDELSREGISTER,
-			self::KEY_HANDELSREGISTERNUMMER,
-			self::KEY_HOMEPAGE,
-			self::KEY_HOUSENUMBER,
-			self::KEY_IBAN,
-			self::KEY_LASTNAME,
-			self::KEY_MOBIL,
-			self::KEY_PHONE,
-			self::KEY_POSTCODE,
-			self::KEY_STATE,
-			self::KEY_STREET,
-			self::KEY_TITLE,
-			self::KEY_UST_ID,
-			self::KEY_VERTRETUNGSBERECHTIGTER,
-		);
+
+	/** @var ImpressumConfiguration */
+	private $_pImpressumConfiguration = null;
 
 	/**
 	 *
 	 */
 
-	private function __construct()
+	public function __construct(ImpressumConfiguration $pImpressumConfiguration = null)
 	{
 		$language = Language::getDefault();
-
-		$pSDKWrapper = new SDKWrapper();
 		$requestParameters = array('language' => $language);
-		$handle = $pSDKWrapper->addRequest(
-				onOfficeSDK::ACTION_ID_READ, 'impressum', $requestParameters);
 
+		$this->_pImpressumConfiguration =
+			$pImpressumConfiguration ?? new ImpressumConfigurationDefault();
+
+		$pSDKWrapper = $this->_pImpressumConfiguration->getSDKWrapper();
+
+		$pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'impressum');
+
+		$pApiClientAction->setParameters($requestParameters);
+		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
-		$response = $pSDKWrapper->getRequestResponse( $handle );
 
-		$this->_data = $response['data']['records'][0]['elements'];
+		$records = $pApiClientAction->getResultRecords();
+
+		if (is_array($records))
+		{
+			if (array_key_exists('0', $records))
+			{
+				if (array_key_exists('elements', $records['0']))
+				{
+					$this->_data = $records['0']['elements'];
+				}
+			}
+		}
 	}
-
-
-	/** @return array */
-	public function getData()
-	{ return $this->_data; }
 
 
 	/**
@@ -191,45 +174,7 @@ class Impressum
 	}
 
 
-	/**
-	 *
-	 * @return Impressum
-	 *
-	 */
-
-	public static function getInstance()
-	{
-		if (self::$_pInstance === null)
-		{
-			self::$_pInstance = new Impressum();
-		}
-
-		return self::$_pInstance;
-	}
-
-
-	/**
-	 *
-	 * @param string $templateString
-	 * @return string
-	 *
-	 */
-
-	public static function replaceAll($templateString)
-	{
-		$pInstance = self::getInstance();
-
-		$searchpattern = array();
-		$replacepattern = array();
-
-		foreach (self::$_keys as $key)
-		{
-			$searchpattern []= '/\[oo_basicdata '.$key.'\]/';
-			$replacepattern []= $pInstance->getDataByKey($key);
-		}
-
-		$template = preg_replace($searchpattern, $replacepattern, $templateString);
-
-		return $template;
-	}
+	/** @return array */
+	public function getData()
+		{ return $this->_data; }
 }
