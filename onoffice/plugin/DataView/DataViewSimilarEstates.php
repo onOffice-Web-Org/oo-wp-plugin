@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Types\ImageTypes;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -29,6 +31,7 @@ namespace onOffice\WPlugin\DataView;
  */
 
 class DataViewSimilarEstates
+	implements DataView
 {
 	/** */
 	const FIELD_SAME_KIND = 'same_kind';
@@ -101,4 +104,28 @@ class DataViewSimilarEstates
 	/** @return int */
 	public function getAmount(): int
 		{ return $this->_amount; }
+
+	/** @return array */
+	public function getAddressFields(): array
+		{ return []; }
+
+	/** @return string */
+	public function getExpose(): string
+		{ return ''; }
+
+	/** @return array */
+	public function getFields(): array
+		{ return ['Id', 'objekttitel']; }
+
+	/** @return string */
+	public function getName(): string
+		{ return 'SimilarEstates'; }
+
+	/** @return array */
+	public function getPictureTypes(): array
+		{ return [ImageTypes::TITLE]; }
+
+	/** @return string */
+	public function getTemplate(): string
+		{ return ''; }
 }

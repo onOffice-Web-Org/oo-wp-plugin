@@ -91,6 +91,8 @@ class TestClassViewFieldModifierHandler
 			'objektart',
 			'ort',
 			'objektnr_extern',
+			'plz',
+			'land',
 			// add more in case more Modifiers get added
 		];
 		$pViewFieldModifierHandler = new ViewFieldModifierHandler

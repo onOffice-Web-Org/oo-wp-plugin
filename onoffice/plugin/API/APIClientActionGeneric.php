@@ -81,13 +81,29 @@ class APIClientActionGeneric
 
 	protected function setSettings() {}
 
+
 	/**
+	 *
+	 * @return $this
 	 *
 	 */
 
 	public function addRequestToQueue()
 	{
 		$this->_requestHandle = $this->_pSDKWrapper->addRequestByApiAction($this);
+		return $this;
+	}
+
+
+	/**
+	 *
+	 * call addRequestToQueue() first
+	 *
+	 */
+
+	public function sendRequests()
+	{
+		$this->_pSDKWrapper->sendRequests();
 	}
 
 

@@ -21,6 +21,7 @@
  */
 
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use onOffice\WPlugin\Types\ImageTypes;
 
 /**
  *
@@ -64,5 +65,21 @@ class TestClassDataViewSimilarEstates
 		$this->assertTrue($pDataViewSimilarEstates->getSameMarketingMethod());
 		$pDataViewSimilarEstates->setSamePostalCode(true);
 		$this->assertTrue($pDataViewSimilarEstates->getSamePostalCode());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testOverriddenFields()
+	{
+		$pDataViewSimilarEstates = new DataViewSimilarEstates();
+		$this->assertEquals([], $pDataViewSimilarEstates->getAddressFields());
+		$this->assertEquals('', $pDataViewSimilarEstates->getExpose());
+		$this->assertEquals(['Id', 'objekttitel'], $pDataViewSimilarEstates->getFields());
+		$this->assertEquals('SimilarEstates', $pDataViewSimilarEstates->getName());
+		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
+		$this->assertEquals('', $pDataViewSimilarEstates->getTemplate());
 	}
 }

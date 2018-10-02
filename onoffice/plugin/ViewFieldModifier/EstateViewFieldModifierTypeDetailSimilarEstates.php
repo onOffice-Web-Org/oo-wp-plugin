@@ -28,29 +28,34 @@ namespace onOffice\WPlugin\ViewFieldModifier;
  *
  */
 
-class EstateViewFieldModifierTypes
-	implements ViewFieldModifierTypes
+class EstateViewFieldModifierTypeDetailSimilarEstates
+	implements ViewFieldModifierTypeBase
 {
 	/** */
-	const MODIFIER_TYPE_DEFAULT = 'modifierTypeDefault';
-
-	/** */
-	const MODIFIER_TYPE_MAP = 'modifierTypeMap';
-
-	/** */
-	const MODIFIER_TYPE_TITLE = 'modifierTypeTitle';
-
-	/** */
-	const MODIFIER_TYPE_DETAIL_SIMILAR_ESTATES = 'modifierTypeDetailSimilarEstates';
-
+	const NEW_FIELDS = [
+		'laengengrad',
+		'breitengrad',
+		'plz',
+		'vermarktungsart',
+		'objektart',
+		'strasse',
+		'land',
+	];
 
 	/** @var array */
-	private $_mapping = [
-		self::MODIFIER_TYPE_DEFAULT => EstateViewFieldModifierTypeDefault::class,
-		self::MODIFIER_TYPE_MAP => EstateViewFieldModifierTypeMap::class,
-		self::MODIFIER_TYPE_TITLE => EstateViewFieldModifierTypeTitle::class,
-		self::MODIFIER_TYPE_DETAIL_SIMILAR_ESTATES => EstateViewFieldModifierTypeDetailSimilarEstates::class,
-	];
+	private $_viewFields = [];
+
+
+	/**
+	 *
+	 * @param array $viewFields
+	 *
+	 */
+
+	public function __construct(array $viewFields)
+	{
+		$this->_viewFields = $viewFields;
+	}
 
 
 	/**
@@ -59,8 +64,33 @@ class EstateViewFieldModifierTypes
 	 *
 	 */
 
-	public function getMapping(): array
+	public function getAPIFields(): array
 	{
-		return $this->_mapping;
+		return array_unique(array_merge($this->_viewFields, self::NEW_FIELDS));
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getVisibleFields(): array
+	{
+		return $this->getAPIFields();
+	}
+
+
+	/**
+	 *
+	 * @param array $record
+	 * @return array
+	 *
+	 */
+
+	public function reduceRecord(array $record): array
+	{
+		return $record;
 	}
 }
