@@ -1,0 +1,48 @@
+{
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:read",
+	"resourceid": "",
+	"resourcetype": "impressum",
+	"cacheable": true,
+	"identifier": "",
+	"data": {
+		"meta": {
+			"cntabsolute": null
+		},
+		"records": [
+			{
+				"id": "impressum",
+				"type": null,
+				"elements": {
+					"title": "Frau",
+					"firstname": "Frauke",
+					"lastname": "Musterfrau",
+					"firma": "asd-Gruppe A",
+					"postcode": "52078",
+					"city": "Aachen",
+					"street": "Charlottenburger Allee",
+					"housenumber": "5",
+					"state": "Nordrhein-Westfalen",
+					"country": "Deutschland",
+					"phone": "0241 123 456",
+					"mobil": "0179 123 456",
+					"fax": "0241 789 456",
+					"email": "asd@onoffice.de",
+					"homepage": "www.asd.de",
+					"vertretungsberechtigter": "Vertretungsberechtigter",
+					"berufsaufsichtsbehoerde": "Berufsaufsichtsbehoerde",
+					"handelsregister": "HR12",
+					"handelsregisterNr": "123",
+					"ustId": "DE123456789",
+					"bank": "Musterbank",
+					"iban": "DE123456789",
+					"bic": "DETESTACD123",
+					"chamber": "12345"
+				}
+			}
+		]
+	},
+	"status": {
+		"errorcode": 0,
+		"message": "OK"
+	}
+}
