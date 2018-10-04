@@ -112,11 +112,11 @@ class Impressum
 	const KEY_CHAMBER = 'chamber';
 
 	/** @var array */
-	private $_data = array();
-
+	private $_data = [];
 
 	/** @var ImpressumConfiguration */
 	private $_pImpressumConfiguration = null;
+
 
 	/**
 	 *
@@ -124,9 +124,7 @@ class Impressum
 
 	public function __construct(ImpressumConfiguration $pImpressumConfiguration = null)
 	{
-		$language = Language::getDefault();
-		$requestParameters = array('language' => $language);
-
+		$requestParameters = ['language' => Language::getDefault()];
 		$this->_pImpressumConfiguration =
 			$pImpressumConfiguration ?? new ImpressumConfigurationDefault();
 
@@ -136,20 +134,11 @@ class Impressum
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'impressum');
 
 		$pApiClientAction->setParameters($requestParameters);
-		$pApiClientAction->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 
-		$records = $pApiClientAction->getResultRecords();
-
-		if (is_array($records))
-		{
-			if (array_key_exists('0', $records))
-			{
-				if (array_key_exists('elements', $records['0']))
-				{
-					$this->_data = $records['0']['elements'];
-				}
-			}
+		if ($pApiClientAction->getResultStatus()) {
+			$records = $pApiClientAction->getResultRecords();
+			$this->_data = $records[0]['elements'] ?? [];
 		}
 	}
 
@@ -161,20 +150,13 @@ class Impressum
 	 *
 	 */
 
-	public function getDataByKey($key)
+	public function getDataByKey(string $key): string
 	{
-		$returnValue = null;
-
-		if (array_key_exists($key, $this->_data))
-		{
-			$returnValue = $this->_data[$key];
-		}
-
-		return $returnValue;
+		return $returnValue = $this->_data[$key] ?? '';
 	}
 
 
 	/** @return array */
-	public function getData()
+	public function getData(): array
 		{ return $this->_data; }
 }

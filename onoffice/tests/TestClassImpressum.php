@@ -136,12 +136,22 @@ class TestClassImpressum
 			'chamber' => '12345',
 		];
 
-		foreach ($expectedValues as $key => $value)
-		{
+		foreach ($expectedValues as $key => $value) {
 			$expectedValue = $value;
 			$result = $this->_pImpressum->getDataByKey($key);
 
 			$this->assertEquals($expectedValue, $result);
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testUnknownValue()
+	{
+		$result = $this->_pImpressum->getDataByKey('unknownValue');
+		$this->assertEquals('', $result);
 	}
 }
