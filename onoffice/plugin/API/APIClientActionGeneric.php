@@ -39,16 +39,16 @@ class APIClientActionGeneric
 	private $_requestHandle = null;
 
 	/** @var string */
-	private $_actionId = null;
+	private $_actionId = '';
 
 	/** @var string */
-	private $_resourceType = null;
+	private $_resourceType = '';
 
 	/** @var string */
 	private $_resourceId = '';
 
 	/** @var array */
-	private $_parameters = array();
+	private $_parameters = [];
 
 	/** @var callable */
 	private $_resultCallback = null;
@@ -68,18 +68,10 @@ class APIClientActionGeneric
 	public function __construct(SDKWrapper $pSDKWrapper, string $actionId, string $resourceType)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
-		$this->setResultCallback(array($this, 'onAfterExecution'));
 		$this->setActionId($actionId);
 		$this->setResourceType($resourceType);
-		$this->setSettings();
+		$this->setResultCallback([$this, 'onAfterExecution']);
 	}
-
-
-	/**
-	 *
-	 */
-
-	protected function setSettings() {}
 
 
 	/**
@@ -88,7 +80,7 @@ class APIClientActionGeneric
 	 *
 	 */
 
-	public function addRequestToQueue()
+	public function addRequestToQueue(): APIClientActionGeneric
 	{
 		$this->_requestHandle = $this->_pSDKWrapper->addRequestByApiAction($this);
 		return $this;

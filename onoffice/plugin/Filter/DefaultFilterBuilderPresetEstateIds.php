@@ -28,11 +28,23 @@ namespace onOffice\WPlugin\Filter;
  *
  */
 
-class DefaultFilterBuilderUnitList
+class DefaultFilterBuilderPresetEstateIds
 	implements DefaultFilterBuilder
 {
 	/** @var int[] */
-	private $_unitIds = [];
+	private $_estateIds = [];
+
+
+	/**
+	 *
+	 * @param array $estateIds
+	 *
+	 */
+
+	public function __construct(array $estateIds)
+	{
+		$this->_estateIds = $estateIds;
+	}
 
 
 	/**
@@ -48,16 +60,12 @@ class DefaultFilterBuilderUnitList
 				['op' => '=', 'val' => 1],
 			],
 			'Id' => [
-				['op' => 'in', 'val' => $this->_unitIds],
+				['op' => 'in', 'val' => $this->_estateIds],
 			],
 		];
 	}
 
-	/** @param array $unitIds */
-	public function setUnitIds(array $unitIds)
-		{ $this->_unitIds = $unitIds; }
-
 	/** @return array */
-	public function getUnitIds(): array
-		{ return $this->_unitIds; }
+	public function getEstateIds(): array
+		{ return $this->_estateIds; }
 }
