@@ -120,6 +120,8 @@ class Impressum
 
 	/**
 	 *
+	 * @param ImpressumConfiguration $pImpressumConfiguration
+	 *
 	 */
 
 	public function __construct(ImpressumConfiguration $pImpressumConfiguration = null)
