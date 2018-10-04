@@ -81,7 +81,7 @@ class DataViewSimilarEstates
 	public function setRadius(int $radius)
 		{ $this->_radius = $radius; }
 
-	/** @param bool $amount */
+	/** @param int $amount */
 	public function setAmount(int $amount)
 		{ $this->_amount = $amount; }
 
