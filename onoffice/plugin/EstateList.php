@@ -24,9 +24,11 @@ namespace onOffice\WPlugin;
 use DateTime;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListInputVariableReader;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
@@ -35,6 +37,12 @@ use onOffice\WPlugin\Gui\DateTimeFormatter;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use function add_action;
+use function do_action;
+use function esc_url;
+use function get_page_link;
+use function number_format_i18n;
+use function plugin_dir_url;
 
 /**
  *
@@ -44,6 +52,7 @@ use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
  */
 
 class EstateList
+	implements EstateListBase
 {
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
@@ -156,7 +165,7 @@ class EstateList
 	 *
 	 */
 
-	public function loadEstates($currentPage = 1)
+	public function loadEstates(int $currentPage = 1)
 	{
 		$pSDKWrapper = $this->_pSDKWrapper;
 		$this->_pFieldnames->loadLanguage();
@@ -729,11 +738,16 @@ class EstateList
 		$htmlOutput = '';
 
 		if ($this->_unitsViewName !== null) {
-			$pEstateUnits = new EstateUnits( array($estateId), $this->_unitsViewName );
-			$unitCount = $pEstateUnits->getUnitCount( $estateId );
+			$pDataListViewFactory = new DataListViewFactory();
+			$pDataListView = $pDataListViewFactory->getListViewByName
+				($this->_unitsViewName, DataListView::LISTVIEW_TYPE_UNITS);
 
-			if ( $unitCount > 0 ) {
-				$htmlOutput = $pEstateUnits->generateHtmlOutput( $estateId );
+			$pEstateUnits = new EstateUnits($pDataListView);
+			$pEstateUnits->loadByMainEstateIds([$estateId]);
+			$unitCount = $pEstateUnits->getSubEstateCount($estateId);
+
+			if ($unitCount > 0) {
+				$htmlOutput = $pEstateUnits->generateHtmlOutput($estateId);
 			}
 		}
 
@@ -870,7 +884,7 @@ class EstateList
 
 	public function resetEstateIterator()
 	{
-		reset( $this->_responseArray['data']['records'] );
+		reset($this->_responseArray['data']['records']);
 	}
 
 
@@ -892,7 +906,7 @@ class EstateList
 		{ return $this->_pEstateFiles; }
 
 	/** @return DataView */
-	public function getDataView()
+	public function getDataView(): DataView
 		{ return $this->_pDataView; }
 
 	/** @return DefaultFilterBuilder */
@@ -912,10 +926,10 @@ class EstateList
 		{ $this->_unitsViewName = $unitsViewName; }
 
 	/** @return bool */
-	public function getShuffleResult()
+	public function getShuffleResult(): bool
 		{ return $this->_shuffleResult; }
 
 	/** @param bool $shuffleResult */
-	public function setShuffleResult($shuffleResult)
+	public function setShuffleResult(bool $shuffleResult)
 		{ $this->_shuffleResult = $shuffleResult; }
 }

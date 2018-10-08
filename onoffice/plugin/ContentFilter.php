@@ -38,12 +38,13 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
-use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
 use WP_Query;
+
 
 /**
  *
@@ -106,6 +107,7 @@ class ContentFilter
 					$pTemplate = new Template($pDetailView->getTemplate());
 					$pEstateDetail = $this->preloadSingleEstate($pDetailView, $attributes['units']);
 					$pTemplate->setEstateList($pEstateDetail);
+					$pTemplate->setImpressum(new Impressum);
 					$result = $pTemplate->render();
 					return $result;
 				}
@@ -122,6 +124,7 @@ class ContentFilter
 					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
 					$pEstateList->setUnitsViewName($attributes['units']);
 					$pTemplate->setEstateList($pEstateList);
+					$pTemplate->setImpressum(new Impressum);
 					$pEstateList->loadEstates($page);
 
 					$result = $pTemplate->render();
@@ -192,6 +195,7 @@ class ContentFilter
 				$pTemplate = new Template( $template );
 				$pForm = new Form( $formName, $pFormConfig->getFormType() );
 				$pTemplate->setForm( $pForm );
+				$pTemplate->setImpressum(new Impressum);
 				$htmlOutput = $pTemplate->render();
 				return $htmlOutput;
 			}
@@ -234,6 +238,7 @@ class ContentFilter
 		$templateName = $pAddressListView->getTemplate();
 		$pTemplate = new Template($templateName);
 		$pTemplate->setAddressList($pAddressList);
+		$pTemplate->setImpressum(new Impressum);
 		return $pTemplate->render();
 	}
 

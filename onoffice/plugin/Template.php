@@ -28,6 +28,8 @@
 
 namespace onOffice\WPlugin;
 
+use onOffice\WPlugin\Controller\EstateListBase;
+
 /**
  *
  */
@@ -47,7 +49,7 @@ class Template
 	const KEY_ADDRESSLIST = 'addresslist';
 
 
-	/** @var EstateList */
+	/** @var EstateListBase */
 	private $_pEstateList = null;
 
 	/** @var string */
@@ -58,6 +60,12 @@ class Template
 
 	/** @var AddressList */
 	private $_pAddressList = null;
+
+	/** @var Impressum */
+	private $_pImpressum = null;
+
+	/** @var string */
+	private $_templateBasePath = '';
 
 
 	/**
@@ -70,6 +78,7 @@ class Template
 	public function __construct($templateName)
 	{
 		$this->_templateName = $templateName;
+		$this->_templateBasePath = ConfigWrapper::getTemplateBasePath();
 	}
 
 
@@ -81,18 +90,19 @@ class Template
 
 	public function render()
 	{
-		$templateData = array(
+		$templateData = [
 			self::KEY_FORM => $this->_pForm,
 			self::KEY_ESTATELIST => $this->_pEstateList,
-			self::KEY_BASICDATA => new Impressum(),
+			self::KEY_BASICDATA => $this->_pImpressum,
 			self::KEY_ADDRESSLIST => $this->_pAddressList,
-		);
+		];
 		$filename = $this->buildFilePath();
-
 		$result = '';
-		if ( file_exists( $filename ) ) {
+
+		if (file_exists($filename)) {
 			$result = self::getIncludeContents($templateData, $filename);
 		}
+
 		return $result;
 	}
 
@@ -126,9 +136,9 @@ class Template
 	 *
 	 */
 
-	private function buildFilePath()
+	private function buildFilePath(): string
 	{
-		return ConfigWrapper::getTemplateBasePath().'/'.$this->_templateName;
+		return $this->_templateBasePath.'/'.$this->_templateName;
 	}
 
 	/** @param AddressList $pAddressList */
@@ -136,10 +146,18 @@ class Template
 		{ $this->_pAddressList = $pAddressList; }
 
 	/** @param EstateList $pEstateList */
-	public function setEstateList(EstateList $pEstateList)
+	public function setEstateList(EstateListBase $pEstateList)
 		{ $this->_pEstateList = $pEstateList; }
 
 	/** @param Form $pForm */
 	public function setForm(Form $pForm)
 		{ $this->_pForm = $pForm; }
+
+	/** @return Impressum */
+	public function getImpressum()
+		{ return $this->_pImpressum; }
+
+	/** @param Impressum $pImpressum */
+	public function setImpressum(Impressum $pImpressum)
+		{ $this->_pImpressum = $pImpressum; }
 }

@@ -28,12 +28,15 @@
 
 namespace onOffice\WPlugin;
 
+use const ABSPATH;
+
+
 /**
  *
  */
 
 class ConfigWrapper {
-	/** @var \onOffice\WPlugin\ConfigWrapper */
+	/** @var ConfigWrapper */
 	private static $_pInstance = null;
 
 	/** @var array */
@@ -42,12 +45,13 @@ class ConfigWrapper {
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\ConfigWrapper
+	 * @return ConfigWrapper
 	 *
 	 */
 
-	public static function getInstance() {
-		if ( null === self::$_pInstance ) {
+	public static function getInstance()
+	{
+		if (null === self::$_pInstance) {
 			self::$_pInstance = new static;
 		}
 
@@ -59,7 +63,8 @@ class ConfigWrapper {
 	 *
 	 */
 
-	private function __construct() {
+	private function __construct()
+	{
 		$this->_config = $this->readConfig();
 	}
 
@@ -70,9 +75,11 @@ class ConfigWrapper {
 	 *
 	 */
 
-	public static function getSubPluginPath() {
-		return ABSPATH . 'wp-content/plugins/onoffice-personalized';
+	public static function getSubPluginPath()
+	{
+		return ABSPATH.'wp-content/plugins/onoffice-personalized';
 	}
+
 
 	/**
 	 *
@@ -80,8 +87,9 @@ class ConfigWrapper {
 	 *
 	 */
 
-	public static function getTemplateBasePath() {
-		return ABSPATH . 'wp-content/plugins';
+	public static function getTemplateBasePath()
+	{
+		return ABSPATH.'wp-content/plugins';
 	}
 
 
@@ -91,13 +99,13 @@ class ConfigWrapper {
 	 *
 	 */
 
-	private function readConfig() {
-		$config = array();
+	private function readConfig()
+	{
+		$config = [];
+		$configFile = dirname(__FILE__).'/../config.php';
+		$configFilePersonalized = self::getSubPluginPath().'/config.php';
 
-		$configFile = dirname( __FILE__ ) . '/../config.php';
-		$configFilePersonalized = self::getSubPluginPath() . '/config.php';
-
-		if ( is_file( $configFilePersonalized ) ) {
+		if (is_file($configFilePersonalized)) {
 			include $configFilePersonalized;
 		} else {
 			include $configFile;
@@ -121,8 +129,9 @@ class ConfigWrapper {
 	 *
 	 */
 
-	public function getConfigByKey($key) {
-		if ( array_key_exists( $key, $this->_config ) ) {
+	public function getConfigByKey($key)
+	{
+		if (array_key_exists($key, $this->_config)) {
 			return $this->_config[$key];
 		}
 		return null;
@@ -135,7 +144,8 @@ class ConfigWrapper {
 	 *
 	 */
 
-	public function getConfig() {
+	public function getConfig()
+	{
 		return $this->_config;
 	}
 }

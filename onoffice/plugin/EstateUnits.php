@@ -23,58 +23,73 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\EstateMiniatureSubList;
+use onOffice\WPlugin\Controller\EstateUnitsConfigurationBase;
+use onOffice\WPlugin\Controller\EstateUnitsConfigurationDefault;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderPresetEstateIds;
 
 /**
  *
  */
 
-class EstateUnits {
+class EstateUnits
+	implements EstateMiniatureSubList
+{
 	/** @var array */
 	private $_estateUnits = [];
 
-	/** @var DataListView */
-	private $_pDataListView = null;
+	/** @var EstateUnitsConfigurationBase */
+	private $_pEstateUnitsConfiguration = null;
 
 
 	/**
 	 *
-	 * @param int[] $estateIds
-	 * @param string $viewName
+	 * @param DataListView $pDataListView
+	 * @param EstateUnitsConfigurationBase $pEstateUnitsConfiguration
 	 *
 	 */
 
-	 public function __construct($estateIds, $viewName) {
-		$pDataListViewFactory = new DataListViewFactory();
-		$this->_pDataListView = $pDataListViewFactory->getListViewByName
-			($viewName, DataListView::LISTVIEW_TYPE_UNITS );
+	public function __construct(DataListView $pDataListView,
+		EstateUnitsConfigurationBase $pEstateUnitsConfiguration = null)
+	{
+		$this->_pEstateUnitsConfiguration = $pEstateUnitsConfiguration ??
+			new EstateUnitsConfigurationDefault($pDataListView);
+		assert($pDataListView === $this->_pEstateUnitsConfiguration->getEstateList()->getDataView());
+	}
 
-		$pSDKWrapper = new SDKWrapper();
+
+	/**
+	 *
+	 * @param array $mainEstateIds
+	 *
+	 */
+
+	public function loadByMainEstateIds(array $mainEstateIds)
+	{
+		$pSDKWrapper = $this->_pEstateUnitsConfiguration->getSDKWrapper();
 		$handleGetEstateUnits = $pSDKWrapper->addRequest
 			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', [
 				'relationtype' => onOfficeSDK::RELATION_TYPE_COMPLEX_ESTATE_UNITS,
-				'parentids' => $estateIds,
+				'parentids' => $mainEstateIds,
 			]
 		);
 
 		$pSDKWrapper->sendRequests();
-
 		$responseArrayEstateUnits = $pSDKWrapper->getRequestResponse($handleGetEstateUnits);
 		$this->evaluateEstateUnits($responseArrayEstateUnits);
 	}
 
 
-	 /**
+	/**
 	 *
 	 * @param array $responseArrayEstateUnits
 	 * @throws HttpFetchNoResultException
 	 *
 	 */
 
-	private function evaluateEstateUnits($responseArrayEstateUnits) {
-		if (!isset( $responseArrayEstateUnits['data']['records'])) {
+	private function evaluateEstateUnits(array $responseArrayEstateUnits) {
+		if (!isset($responseArrayEstateUnits['data']['records'])) {
 			throw new HttpFetchNoResultException();
 		}
 
@@ -95,7 +110,7 @@ class EstateUnits {
 	 *
 	 */
 
-	public function getEstateUnits($estateId)
+	public function getSubEstateIds(int $estateId): array
 	{
 		return $this->_estateUnits[$estateId] ?? [];
 	}
@@ -108,9 +123,9 @@ class EstateUnits {
 	 *
 	 */
 
-	public function getUnitCount($estateId)
+	public function getSubEstateCount(int $estateId): int
 	{
-		$units = $this->getEstateUnits($estateId);
+		$units = $this->getSubEstateIds($estateId);
 		return count($units);
 	}
 
@@ -122,24 +137,25 @@ class EstateUnits {
 	 *
 	 */
 
-	public function generateHtmlOutput(int $mainEstateId)
+	public function generateHtmlOutput(int $mainEstateId): string
 	{
-		$units = $this->getEstateUnits($mainEstateId);
-		$random = $this->_pDataListView->getRandom();
+		$units = $this->getSubEstateIds($mainEstateId);
+		$pDataView = $this->_pEstateUnitsConfiguration->getEstateList()->getDataView();
+		$random = $pDataView->getRandom();
 
 		if ($random) {
 			// shuffle() twice: once here and once in EstateList
 			shuffle($units);
 		}
 
-		$pEstateList = new EstateList($this->_pDataListView);
+		$pEstateList = $this->_pEstateUnitsConfiguration->getEstateList();
 		$pEstateList->setShuffleResult($random);
 		$pDefaultFilterBuilder = new DefaultFilterBuilderPresetEstateIds($units);
 		$pEstateList->setDefaultFilterBuilder($pDefaultFilterBuilder);
 		$pEstateList->loadEstates(1);
 
-		$templateName = $this->_pDataListView->getTemplate();
-		$pTemplate = new Template($templateName);
+		$templateName = $pDataView->getTemplate();
+		$pTemplate = $this->_pEstateUnitsConfiguration->getTemplate($templateName);
 		$pTemplate->setEstateList($pEstateList);
 		$htmlOutput = $pTemplate->render();
 
