@@ -23,6 +23,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\EstateMiniatureSubList;
 use onOffice\WPlugin\Controller\EstateUnitsConfigurationBase;
 use onOffice\WPlugin\Controller\EstateUnitsConfigurationDefault;
@@ -62,43 +63,38 @@ class EstateUnits
 	/**
 	 *
 	 * @param array $mainEstateIds
+	 * @throws HttpFetchNoResultException
 	 *
 	 */
 
 	public function loadByMainEstateIds(array $mainEstateIds)
 	{
 		$pSDKWrapper = $this->_pEstateUnitsConfiguration->getSDKWrapper();
-		$handleGetEstateUnits = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', [
-				'relationtype' => onOfficeSDK::RELATION_TYPE_COMPLEX_ESTATE_UNITS,
-				'parentids' => $mainEstateIds,
-			]
-		);
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAPIClientAction->setParameters([
+			'relationtype' => onOfficeSDK::RELATION_TYPE_COMPLEX_ESTATE_UNITS,
+			'parentids' => $mainEstateIds,
+		]);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
 
-		$pSDKWrapper->sendRequests();
-		$responseArrayEstateUnits = $pSDKWrapper->getRequestResponse($handleGetEstateUnits);
-		$this->evaluateEstateUnits($responseArrayEstateUnits);
+		if (!$pAPIClientAction->getResultStatus()) {
+			throw new HttpFetchNoResultException();
+		}
+		$this->evaluateEstateUnits($pAPIClientAction->getResultRecords());
 	}
 
 
 	/**
 	 *
-	 * @param array $responseArrayEstateUnits
-	 * @throws HttpFetchNoResultException
+	 * @param array $records
 	 *
 	 */
 
-	private function evaluateEstateUnits(array $responseArrayEstateUnits) {
-		if (!isset($responseArrayEstateUnits['data']['records'])) {
-			throw new HttpFetchNoResultException();
-		}
-
-		$records = $responseArrayEstateUnits['data']['records'];
-
+	private function evaluateEstateUnits(array $records)
+	{
 		foreach ($records as $properties) {
-			foreach ($properties['elements'] as $complex => $units) {
-				$this->_estateUnits[$complex] = $units;
-			}
+			$this->_estateUnits = $properties['elements'];
 		}
 	}
 
