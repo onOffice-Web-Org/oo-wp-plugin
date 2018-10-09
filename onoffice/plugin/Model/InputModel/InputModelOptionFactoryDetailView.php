@@ -68,6 +68,9 @@ class InputModelOptionFactoryDetailView
 	const INPUT_FIELD_SIMILAR_ESTATES_AMOUNT = DataViewSimilarEstates::FIELD_AMOUNT;
 
 	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE = DataViewSimilarEstates::FIELD_SIMILAR_ESTATES_TEMPLATE;
+
+	/** */
 	const KEY_TYPE = 'type';
 
 	/** @var string */
@@ -108,6 +111,9 @@ class InputModelOptionFactoryDetailView
 		],
 		self::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 	];
 

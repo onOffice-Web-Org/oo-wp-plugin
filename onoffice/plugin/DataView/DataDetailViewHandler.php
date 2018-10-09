@@ -121,6 +121,8 @@ class DataDetailViewHandler
 			$pDataViewSimilar->getRadius());
 		$pDataViewSimilar->setRecordsPerPage($row[DataViewSimilarEstates::FIELD_AMOUNT] ??
 			$pDataViewSimilar->getRecordsPerPage());
+		$pDataViewSimilar->setTemplate($row[DataViewSimilarEstates::FIELD_SIMILAR_ESTATES_TEMPLATE] ??
+			$pDataViewSimilar->getTemplate());
 		return $pDataDetailView;
 	}
 }

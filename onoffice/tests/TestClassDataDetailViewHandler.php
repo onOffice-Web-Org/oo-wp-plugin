@@ -50,6 +50,7 @@ class TestClassDataDetailViewHandler
 		'expose' => 'testexposetype',
 		'addressfields' => ['Vorname', 'Name'],
 		'movielinks' => MovieLinkTypes::MOVIE_LINKS_PLAYER,
+		'similar_estates_template' => '/test/similar/template.php',
 	];
 
 
@@ -69,6 +70,8 @@ class TestClassDataDetailViewHandler
 		$this->assertEquals($pDataDetailview->getExpose(), $row['expose']);
 		$this->assertEquals($pDataDetailview->getAddressFields(), $row['addressfields']);
 		$this->assertEquals($pDataDetailview->getMovieLinks(), $row['movielinks']);
+		$this->assertEquals($pDataDetailview->getDataViewSimilarEstates()->getTemplate(),
+			$row['similar_estates_template']);
 	}
 
 

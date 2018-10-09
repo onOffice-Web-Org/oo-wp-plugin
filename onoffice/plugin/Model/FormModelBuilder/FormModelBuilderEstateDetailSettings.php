@@ -252,22 +252,41 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
+	 * @param string $field
 	 * @return InputModelDB
 	 *
 	 */
 
-	public function createInputModelTemplate()
+	public function createInputModelTemplate(string $field = InputModelOptionFactoryDetailView::INPUT_TEMPLATE)
 	{
 		$labelTemplate = __('Template', 'onoffice');
 
-		$pInputModelTemplate = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_TEMPLATE, $labelTemplate);
+		$pInputModelTemplate = $this->_pInputModelDetailViewFactory->create($field, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
-		$pInputModelTemplate->setValue($this->_pDataDetailView->getTemplate());
+		$pInputModelTemplate->setValue($this->getTemplateValueByField($field));
 
 		return $pInputModelTemplate;
+	}
+
+
+	/**
+	 *
+	 * @param string $field
+	 * @return string
+	 *
+	 */
+
+	private function getTemplateValueByField(string $field): string
+	{
+		switch ($field) {
+			case InputModelOptionFactoryDetailView::INPUT_TEMPLATE:
+				return $this->_pDataDetailView->getTemplate();
+			case InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE:
+				return $this->_pDataDetailView->getDataViewSimilarEstates()->getTemplate();
+			default:
+				return '';
+		}
 	}
 
 

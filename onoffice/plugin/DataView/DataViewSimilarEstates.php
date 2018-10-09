@@ -48,6 +48,9 @@ class DataViewSimilarEstates
 	/** */
 	const FIELD_AMOUNT = 'amount';
 
+	/** */
+	const FIELD_SIMILAR_ESTATES_TEMPLATE = 'similar_estates_template';
+
 
 	/** @var bool */
 	private $_sameEstateKind = false;

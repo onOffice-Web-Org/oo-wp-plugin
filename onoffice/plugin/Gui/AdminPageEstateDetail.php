@@ -21,10 +21,12 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
+use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
@@ -272,6 +274,8 @@ class AdminPageEstateDetail
 		$pInputModelSimilarEstatesSamePostalCode = $pFormModelBuilder->createInputModelSameEstatePostalCode();
 		$pInputModelSimilarEstatesRadius = $pFormModelBuilder->createInputModelSameEstateRadius();
 		$pInputModelSimilarEstatesAmount = $pFormModelBuilder->createInputModelSameEstateAmount();
+		$pInputModelSimilarEstatesTemplate = $pFormModelBuilder->createInputModelTemplate
+			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE);
 
 		$pFormModelSimilarEstates = new FormModel();
 		$pFormModelSimilarEstates->setPageSlug($this->getPageSlug());
@@ -282,6 +286,7 @@ class AdminPageEstateDetail
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesSamePostalCode);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesRadius);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesAmount);
+		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesTemplate);
 		$this->addFormModel($pFormModelSimilarEstates);
 
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
