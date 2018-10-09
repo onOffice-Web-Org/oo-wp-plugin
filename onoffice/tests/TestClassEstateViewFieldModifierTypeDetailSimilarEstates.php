@@ -42,6 +42,7 @@ class TestClassEstateViewFieldModifierTypeDetailSimilarEstates
 
 	/** @var array */
 	private $_expectedFieldResult = [
+		'Id',
 		'viewField1',
 		'viewField2',
 		'viewField3',

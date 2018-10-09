@@ -380,7 +380,7 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelAmount->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 
 		$pInputModelAmount->setValuesAvailable(1);
-		$pInputModelAmount->setValue($pDataViewSimilarEstates->getAmount());
+		$pInputModelAmount->setValue($pDataViewSimilarEstates->getRecordsPerPage());
 
 		return $pInputModelAmount;
 	}

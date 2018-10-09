@@ -119,8 +119,8 @@ class DataDetailViewHandler
 			$pDataViewSimilar->getSamePostalCode());
 		$pDataViewSimilar->setRadius($row[DataViewSimilarEstates::FIELD_RADIUS] ??
 			$pDataViewSimilar->getRadius());
-		$pDataViewSimilar->setAmount($row[DataViewSimilarEstates::FIELD_AMOUNT] ??
-			$pDataViewSimilar->getAmount());
+		$pDataViewSimilar->setRecordsPerPage($row[DataViewSimilarEstates::FIELD_AMOUNT] ??
+			$pDataViewSimilar->getRecordsPerPage());
 		return $pDataDetailView;
 	}
 }

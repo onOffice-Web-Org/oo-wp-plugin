@@ -113,7 +113,10 @@ objekttitel: Bürogebäude in Frankfurt
 
 
 		$this->_pEstateUnits = new EstateUnits($pDataView, $this->_pEstateUnitsConfiguration);
-		$this->_pEstateUnits->loadByMainEstateIds([300, 303]);
+		$pEstateList = new EstateListMocker(new DataListView(1, 'test'));
+		$pEstateList->loadEstates();
+		$pEstateList->setEstateData([300 => ['Id' => 300], 303 => ['Id' => 303]]);
+		$this->_pEstateUnits->loadByMainEstates($pEstateList);
 	}
 
 

@@ -44,7 +44,7 @@ class TestClassDataViewSimilarEstates
 		$this->assertEquals(false, $pDataViewSimilarEstates->getSameMarketingMethod());
 		$this->assertEquals(false, $pDataViewSimilarEstates->getSamePostalCode());
 		$this->assertEquals(10, $pDataViewSimilarEstates->getRadius());
-		$this->assertEquals(5, $pDataViewSimilarEstates->getAmount());
+		$this->assertEquals(5, $pDataViewSimilarEstates->getRecordsPerPage());
 	}
 
 
@@ -55,8 +55,8 @@ class TestClassDataViewSimilarEstates
 	public function testGetterSetter()
 	{
 		$pDataViewSimilarEstates = new DataViewSimilarEstates();
-		$pDataViewSimilarEstates->setAmount(17);
-		$this->assertEquals(17, $pDataViewSimilarEstates->getAmount());
+		$pDataViewSimilarEstates->setRecordsPerPage(17);
+		$this->assertEquals(17, $pDataViewSimilarEstates->getRecordsPerPage());
 		$pDataViewSimilarEstates->setRadius(23);
 		$this->assertEquals(23, $pDataViewSimilarEstates->getRadius());
 		$pDataViewSimilarEstates->setSameEstateKind(true);
@@ -65,6 +65,9 @@ class TestClassDataViewSimilarEstates
 		$this->assertTrue($pDataViewSimilarEstates->getSameMarketingMethod());
 		$pDataViewSimilarEstates->setSamePostalCode(true);
 		$this->assertTrue($pDataViewSimilarEstates->getSamePostalCode());
+		$this->assertEquals(['Id' => 'ASC'], $pDataViewSimilarEstates->getSortBy());
+		$this->assertNull($pDataViewSimilarEstates->getSortOrder());
+		$this->assertNull($pDataViewSimilarEstates->getFilterId());
 	}
 
 

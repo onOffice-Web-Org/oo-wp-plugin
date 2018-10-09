@@ -24,6 +24,7 @@ namespace onOffice\WPlugin;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateMiniatureSubList;
 use onOffice\WPlugin\Controller\EstateUnitsConfigurationBase;
 use onOffice\WPlugin\Controller\EstateUnitsConfigurationDefault;
@@ -62,19 +63,20 @@ class EstateUnits
 
 	/**
 	 *
-	 * @param array $mainEstateIds
+	 * @param EstateListBase $pEstateList
 	 * @throws HttpFetchNoResultException
 	 *
 	 */
 
-	public function loadByMainEstateIds(array $mainEstateIds)
+	public function loadByMainEstates(EstateListBase $pEstateList)
 	{
 		$pSDKWrapper = $this->_pEstateUnitsConfiguration->getSDKWrapper();
+
 		$pAPIClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
 		$pAPIClientAction->setParameters([
 			'relationtype' => onOfficeSDK::RELATION_TYPE_COMPLEX_ESTATE_UNITS,
-			'parentids' => $mainEstateIds,
+			'parentids' => $pEstateList->getEstateIds(),
 		]);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
 

@@ -496,7 +496,7 @@ class Fieldnames
 	 *
 	 */
 
-	public function getFieldLabel(string $field, string $module): string
+	public function getFieldLabel(string $field, $module): string
 	{
 		$fieldNewName = $field;
 		$row = $this->getRow($module, $field);

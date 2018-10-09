@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin;
 
 use Exception;
+use onOffice\WPlugin\Controller\EstateViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Types\MovieLinkTypes;
@@ -153,6 +154,23 @@ class EstateDetail
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getSimilarEstates(): string
+	{
+		/* @var $pDataView DataDetailView */
+		$pDataView = $this->getDataView();
+		$pDataViewSimilarEstates = $pDataView->getDataViewSimilarEstates();
+		$pSimilarEstates = new EstateViewSimilarEstates($pDataViewSimilarEstates);
+		$pSimilarEstates->loadByMainEstates(clone $this);
+		return $pSimilarEstates->generateHtmlOutput($this->_estateId);
 	}
 
 

@@ -23,7 +23,7 @@
  *  Default template
  */
 
-/* @var $pEstates onOffice\WPlugin\EstateList */
+/* @var $pEstates onOffice\WPlugin\EstateDetail */
 require('estatemap.php');
 
 ?>
@@ -33,6 +33,7 @@ require('estatemap.php');
 	$pEstates->resetEstateIterator();
 	while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 	<?php echo $pEstates->getEstateUnits( ); ?>
+	<?php echo $pEstates->getSimilarEstates(); ?>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
 			continue;

@@ -46,7 +46,7 @@ class TestClassFilterConfigurationSimilarEstates
 		parent::setUp();
 
 		$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
-		$this->_pDataViewSimilarEstates->setAmount(13);
+		$this->_pDataViewSimilarEstates->setRecordsPerPage(13);
 		$this->_pDataViewSimilarEstates->setRadius(80);
 		$this->_pDataViewSimilarEstates->setSameEstateKind(true);
 		$this->_pDataViewSimilarEstates->setSameMarketingMethod(true);

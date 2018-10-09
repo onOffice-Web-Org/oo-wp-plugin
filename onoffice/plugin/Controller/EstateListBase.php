@@ -64,6 +64,15 @@ interface EstateListBase
 
 	/**
 	 *
+	 * @return int[]
+	 *
+	 */
+
+	public function getEstateIds(): array;
+
+
+	/**
+	 *
 	 * resets internal iterator handle
 	 *
 	 */

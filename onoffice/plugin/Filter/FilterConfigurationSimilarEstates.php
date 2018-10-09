@@ -115,7 +115,7 @@ class FilterConfigurationSimilarEstates
 
 	public function getAmount(): int
 	{
-		return $this->_pDataViewSimilarEstates->getAmount();
+		return $this->_pDataViewSimilarEstates->getRecordsPerPage();
 	}
 
 

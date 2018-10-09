@@ -34,11 +34,11 @@ interface EstateMiniatureSubList
 	 *
 	 * load the actual data
 	 *
-	 * @param array $mainEstateIds
+	 * @param EstateListBase $pEstateList
 	 *
 	 */
 
-	public function loadByMainEstateIds(array $mainEstateIds);
+	public function loadByMainEstates(EstateListBase $pEstateList);
 
 	/**
 	 *

@@ -139,6 +139,32 @@ class TestClassDefaultFilterBuilderSimilarEstates
 	 *
 	 */
 
+	public function testExcludeIds()
+	{
+		$this->getDataViewSimilarEstates()->setSamePostalCode(true);
+		$pFilterBuilder = $this->_pDefaultFilterBuilderSimilarEstates;
+		$pFilterBuilder->setExcludeIds([13, 37]);
+		$filter = $pFilterBuilder->buildFilter();
+
+		$expectation = [
+			'veroeffentlichen' => [
+				['op' => '=', 'val' => 1],
+			],
+			'plz' => [
+				['op' => '=', 'val' => '52070'],
+			],
+			'Id' => [
+				['op' => 'not in', 'val' => [13, 37]],
+			],
+		];
+		$this->assertEquals($expectation, $filter);
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testBuildFilterCombined()
 	{
 		$this->getDataViewSimilarEstates()->setSameEstateKind(true);

@@ -34,6 +34,9 @@ class DefaultFilterBuilderSimilarEstates
 	/** @var FilterConfigurationSimilarEstates */
 	private $_pFilterConfigurationSimilarEstates = null;
 
+	/** @var int[] */
+	private $_excludeIds = [];
+
 
 	/**
 	 *
@@ -63,6 +66,7 @@ class DefaultFilterBuilderSimilarEstates
 
 		$pFilterConfiguration = $this->_pFilterConfigurationSimilarEstates;
 		$pDataListView = $pFilterConfiguration->getDataViewSimilarEstates();
+		$postalCode = $pFilterConfiguration->getPostalCode();
 
 		if ($pDataListView->getSameEstateKind()) {
 			$filter['objektart'] []= ['op' => '=', 'val' => $pFilterConfiguration->getEstateKind()];
@@ -72,10 +76,23 @@ class DefaultFilterBuilderSimilarEstates
 			$filter['vermarktungsart'] []= ['op' => '=', 'val' => $pFilterConfiguration->getMarketingMethod()];
 		}
 
-		if ($pDataListView->getSamePostalCode()) {
+		if ($pDataListView->getSamePostalCode() && $postalCode !== '') {
 			$filter['plz'] []= ['op' => '=', 'val' => $pFilterConfiguration->getPostalCode()];
+		}
+
+		if ($this->_excludeIds !== []) {
+			$filter['Id'] []= ['op' => 'not in', 'val' => $this->_excludeIds];
 		}
 
 		return $filter;
 	}
+
+
+	/** @return array */
+	public function getExcludeIds(): array
+		{ return $this->_excludeIds; }
+
+	/** @param array $excludeIds */
+	public function setExcludeIds(array $excludeIds)
+		{ $this->_excludeIds = $excludeIds; }
 }

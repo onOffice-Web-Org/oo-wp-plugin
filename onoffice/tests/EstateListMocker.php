@@ -75,6 +75,11 @@ class EstateListMocker
 	public function estateIterator()
 	{
 		$this->registerMethodCall(__METHOD__);
+
+		if (!$this->wasMethodCalled('loadEstates')) {
+			return false;
+		}
+
 		$estateValues = current($this->_estateData);
 		next($this->_estateData);
 
@@ -177,6 +182,22 @@ class EstateListMocker
 
 	/**
 	 *
+	 * @return array
+	 *
+	 */
+
+	public function getEstateIds(): array
+	{
+		$this->registerMethodCall(__METHOD__);
+		if (!$this->wasMethodCalled('loadEstates')) {
+			return [];
+		}
+		return array_keys($this->_estateData);
+	}
+
+
+	/**
+	 *
 	 * @param string $methodName
 	 * @return int
 	 *
@@ -199,7 +220,7 @@ class EstateListMocker
 
 	public function wasMethodCalled(string $methodName): bool
 	{
-		return in_array($methodName, $this->_methodCalls);
+		return in_array(static::class.'::'.$methodName, $this->_methodCalls);
 	}
 
 

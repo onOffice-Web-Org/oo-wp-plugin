@@ -40,6 +40,7 @@ class EstateViewFieldModifierTypeDetailSimilarEstates
 		'objektart',
 		'strasse',
 		'land',
+		'Id',
 	];
 
 	/** @var array */

@@ -62,7 +62,10 @@ class DataViewSimilarEstates
 	private $_radius = 10;
 
 	/** @var int */
-	private $_amount = 5;
+	private $_recordsPerPage = 5;
+
+	/** @var string */
+	private $_template = '';
 
 
 	/** @param bool $sameEstateKind */
@@ -81,9 +84,9 @@ class DataViewSimilarEstates
 	public function setRadius(int $radius)
 		{ $this->_radius = $radius; }
 
-	/** @param int $amount */
-	public function setAmount(int $amount)
-		{ $this->_amount = $amount; }
+	/** @param int $recordsPerPage */
+	public function setRecordsPerPage(int $recordsPerPage)
+		{ $this->_recordsPerPage = $recordsPerPage; }
 
 	/** @return bool */
 	public function getSameEstateKind(): bool
@@ -102,8 +105,8 @@ class DataViewSimilarEstates
 		{ return $this->_radius; }
 
 	/** @return int */
-	public function getAmount(): int
-		{ return $this->_amount; }
+	public function getRecordsPerPage(): int
+		{ return $this->_recordsPerPage; }
 
 	/** @return array */
 	public function getAddressFields(): array
@@ -127,5 +130,21 @@ class DataViewSimilarEstates
 
 	/** @return string */
 	public function getTemplate(): string
-		{ return ''; }
+		{ return $this->_template; }
+
+	/** @param string $template */
+	public function setTemplate(string $template)
+		{ $this->_template = $template; }
+
+	/** @return array */
+	public function getSortBy()
+		{ return ['Id' => 'ASC']; }
+
+	/** @return string */
+	public function getSortOrder()
+		{ return null; }
+
+	/** @return int */
+	public function getFilterId()
+		{ return null; }
 }

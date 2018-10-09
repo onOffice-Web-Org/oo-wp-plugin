@@ -61,7 +61,7 @@ require('estatemap.php');
 	});
 </script>
 <?php endif ?>
-<h1><?php esc_html_e('Overview of Estates', 'template', 'onoffice'); ?></h1>
+<h1><?php esc_html_e('Overview of Estates', 'onoffice'); ?></h1>
 
 <p><?php echo sprintf(esc_html_x('Found %d estates over all.', 'template', 'onoffice'), $pEstates->getEstateOverallCount()); ?></p>
 

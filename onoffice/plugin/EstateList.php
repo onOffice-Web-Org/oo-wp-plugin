@@ -33,6 +33,8 @@ use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use onOffice\WPlugin\Filter\GeoSearchBuilder;
+use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\Gui\DateTimeFormatter;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
@@ -99,6 +101,12 @@ class EstateList
 	/** @var EstateListInputVariableReader */
 	private $_pEstateListInputVariableReader = null;
 
+	/** @var GeoSearchBuilder */
+	private $_pGeoSearchBuilder = null;
+
+	/** @var bool */
+	private $_formatOutput = true;
+
 
 	/**
 	 *
@@ -112,6 +120,7 @@ class EstateList
 		$this->_pSDKWrapper = new SDKWrapper();
 		$this->_pFieldnames = new Fieldnames();
 		$this->_pAddressList = new AddressList();
+		$this->_pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
 		$this->_pDataView = $pDataView;
 	}
 
@@ -282,34 +291,13 @@ class EstateList
 			'outputlanguage' => $language,
 			'listlimit' => $numRecordsPerPage,
 			'listoffset' => $offset,
-			'formatoutput' => true,
+			'formatoutput' => $this->_formatOutput,
 			'addMainLangId' => true,
 		);
 
 		$requestParams += $this->addExtraParams();
 
 		return $requestParams;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function getGeoSearchValues(): array
-	{
-		$inputValues = [];
-		$pEstateInputReader = new EstateListInputVariableReader();
-		$pGeoPosition = new GeoPosition();
-
-		foreach ($pGeoPosition->getEstateSearchFields() as $key) {
-			$inputValues[$key] = $pEstateInputReader->getFieldValue(
-				$key, FILTER_SANITIZE_STRING, FILTER_FORCE_ARRAY);
-		}
-
-		return $inputValues;
 	}
 
 
@@ -336,14 +324,10 @@ class EstateList
 			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 
-		$pGeoPosition = new GeoPosition();
-		$geoInputValues = $this->getGeoSearchValues();
+		$parameters = $this->_pGeoSearchBuilder->buildParameters();
 
-		$requestGeoSearchParameters = $pGeoPosition->createGeoRangeSearchParameterRequest
-			($geoInputValues);
-
-		if ($requestGeoSearchParameters !== []) {
-			$requestParams['georangesearch'] = $requestGeoSearchParameters;
+		if ($parameters !== []) {
+			$requestParams['georangesearch'] = $parameters;
 		}
 
 		return $requestParams;
@@ -743,7 +727,7 @@ class EstateList
 				($this->_unitsViewName, DataListView::LISTVIEW_TYPE_UNITS);
 
 			$pEstateUnits = new EstateUnits($pDataListView);
-			$pEstateUnits->loadByMainEstateIds([$estateId]);
+			$pEstateUnits->loadByMainEstates($this);
 			$unitCount = $pEstateUnits->getSubEstateCount($estateId);
 
 			if ($unitCount > 0) {
@@ -901,6 +885,18 @@ class EstateList
 	}
 
 
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getEstateIds(): array
+	{
+		return array_column($this->_responseArray['data']['records'], 'id');
+	}
+
+
 	/** @return EstateFiles */
 	protected function getEstateFiles()
 		{ return $this->_pEstateFiles; }
@@ -932,4 +928,20 @@ class EstateList
 	/** @param bool $shuffleResult */
 	public function setShuffleResult(bool $shuffleResult)
 		{ $this->_shuffleResult = $shuffleResult; }
+
+	/** @return GeoSearchBuilder */
+	public function getGeoSearchBuilder(): GeoSearchBuilder
+		{ return $this->_pGeoSearchBuilder; }
+
+	/** @param GeoSearchBuilder $pGeoSearchBuilder */
+	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder)
+		{ $this->_pGeoSearchBuilder = $pGeoSearchBuilder; }
+
+	/** @return bool */
+	public function getFormatOutput(): bool
+		{ return $this->_formatOutput; }
+
+	/** @param bool $formatOutput */
+	public function setFormatOutput(bool $formatOutput)
+		{ $this->_formatOutput = $formatOutput; }
 }
