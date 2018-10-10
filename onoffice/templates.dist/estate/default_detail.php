@@ -33,7 +33,6 @@ require('estatemap.php');
 	$pEstates->resetEstateIterator();
 	while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 	<?php echo $pEstates->getEstateUnits( ); ?>
-	<?php echo $pEstates->getSimilarEstates(); ?>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
 			continue;
@@ -118,4 +117,5 @@ require('estatemap.php');
 		</a>
 	<?php endif; ?>
 
+	<?php echo $pEstates->getSimilarEstates(); ?>
 <?php endwhile; ?>

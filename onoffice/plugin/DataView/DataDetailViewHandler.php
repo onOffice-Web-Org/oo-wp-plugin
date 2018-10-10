@@ -111,12 +111,9 @@ class DataDetailViewHandler
 		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
 		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
 		$pDataViewSimilar = $pDataDetailView->getDataViewSimilarEstates();
-		$pDataViewSimilar->setSameEstateKind($row[DataViewSimilarEstates::FIELD_SAME_KIND] ??
-			$pDataViewSimilar->getSameEstateKind());
-		$pDataViewSimilar->setSameMarketingMethod($row[DataViewSimilarEstates::FIELD_SAME_MARKETING_METHOD] ??
-			$pDataViewSimilar->getSameMarketingMethod());
-		$pDataViewSimilar->setSamePostalCode($row[DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE] ??
-			$pDataViewSimilar->getSamePostalCode());
+		$pDataViewSimilar->setSameEstateKind($row[DataViewSimilarEstates::FIELD_SAME_KIND] ?? false);
+		$pDataViewSimilar->setSameMarketingMethod($row[DataViewSimilarEstates::FIELD_SAME_MARKETING_METHOD] ?? false);
+		$pDataViewSimilar->setSamePostalCode($row[DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE] ?? false);
 		$pDataViewSimilar->setRadius($row[DataViewSimilarEstates::FIELD_RADIUS] ??
 			$pDataViewSimilar->getRadius());
 		$pDataViewSimilar->setRecordsPerPage($row[DataViewSimilarEstates::FIELD_AMOUNT] ??

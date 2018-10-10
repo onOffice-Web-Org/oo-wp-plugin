@@ -169,7 +169,10 @@ class EstateDetail
 		$pDataView = $this->getDataView();
 		$pDataViewSimilarEstates = $pDataView->getDataViewSimilarEstates();
 		$pSimilarEstates = new EstateViewSimilarEstates($pDataViewSimilarEstates);
-		$pSimilarEstates->loadByMainEstates(clone $this);
+		$pCopyThis = clone $this;
+		$pCopyThis->setFormatOutput(false);
+		$pCopyThis->loadEstates();
+		$pSimilarEstates->loadByMainEstates($pCopyThis);
 		return $pSimilarEstates->generateHtmlOutput($this->_estateId);
 	}
 

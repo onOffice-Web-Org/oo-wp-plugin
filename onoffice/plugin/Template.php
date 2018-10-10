@@ -160,4 +160,12 @@ class Template
 	/** @param Impressum $pImpressum */
 	public function setImpressum(Impressum $pImpressum)
 		{ $this->_pImpressum = $pImpressum; }
+
+	/** @return string */
+	protected function getTemplateBasePath(): string
+		{ return $this->_templateBasePath; }
+
+	/** @param string $templateBasePath */
+	protected function setTemplateBasePath(string $templateBasePath)
+		{ $this->_templateBasePath = $templateBasePath; }
 }

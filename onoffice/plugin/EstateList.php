@@ -690,7 +690,7 @@ class EstateList
 	 *
 	 */
 
-	public function getCurrentEstateId()
+	public function getCurrentEstateId(): int
 	{
 		return $this->_currentEstate['id'];
 	}

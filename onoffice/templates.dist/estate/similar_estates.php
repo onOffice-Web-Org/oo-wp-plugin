@@ -1,12 +1,14 @@
-<h2><?php esc_html_e('Similar Estates', 'onoffice');?></h2>
-<?php while ( $currentEstate = $pEstates->estateIterator() ) : ?>
-	<?php foreach ( $currentEstate as $field => $value ) :
-		if ( is_numeric( $value ) && 0 == $value ) {
-			continue;
-		}
-	?>
-		<?php echo $pEstates->getFieldLabel( $field ) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
+<h2><?php esc_html_e('More Estates like this', 'onoffice');?></h2>
+<ul>
 
-	<?php endforeach; ?>
+<?php
+while ( $currentEstate = $pEstates->estateIterator() ) : ?>
+	<li>
+		<a href="<?php echo esc_url($pEstates->getEstateLink()); ?>">
+			<?php esc_html_e($currentEstate['objekttitel']); ?>
+		</a>
+	</li>
 <?php endwhile; ?>
+
+</ul>
 <br>

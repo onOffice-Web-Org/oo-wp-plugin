@@ -103,7 +103,7 @@ objekttitel: Bürogebäude in Frankfurt
 		$apiResponseGetUnitsArray = json_decode($apiResponseGetUnits, true);
 
 		$pDataView = new DataListView(1, 'test_units_view');
-		$pDataView->setTemplate('tests/resources/templates/unitlist.php');
+		$pDataView->setTemplate('resources/templates/unitlist.php');
 		$this->_pEstateUnitsConfiguration = new EstateUnitsConfigurationTest($pDataView);
 		$pSDKWrapperMocker = $this->_pEstateUnitsConfiguration->getSDKWrapper();
 		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', [

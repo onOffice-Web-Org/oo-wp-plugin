@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Controller;
 use onOffice\WPlugin\ArrayContainer;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
+use onOffice\WPlugin\Filter\GeoSearchBuilder;
 
 /**
  *
@@ -64,6 +65,15 @@ interface EstateListBase
 
 	/**
 	 *
+	 * @return int
+	 *
+	 */
+
+	public function getCurrentEstateId(): int;
+
+
+	/**
+	 *
 	 * @return int[]
 	 *
 	 */
@@ -96,6 +106,25 @@ interface EstateListBase
 	 */
 
 	public function setDefaultFilterBuilder(DefaultFilterBuilder $pDefaultFilterBuilder);
+
+
+
+	/**
+	 *
+	 * @return GeoSearchBuilder
+	 *
+	 */
+
+	public function getGeoSearchBuilder(): GeoSearchBuilder;
+
+
+	/**
+	 *
+	 * @param GeoSearchBuilder $pGeoSearchBuilder
+	 *
+	 */
+
+	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder);
 
 
 	/** @return DataView */

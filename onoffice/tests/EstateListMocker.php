@@ -25,6 +25,8 @@ use onOffice\WPlugin\ArrayContainer;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
+use onOffice\WPlugin\Filter\GeoSearchBuilder;
+use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
 
 /**
  *
@@ -51,6 +53,12 @@ class EstateListMocker
 	/** @var array */
 	private $_estateData = [];
 
+	/** @var int */
+	private $_currentEstateId = 0;
+
+	/** @var GeoSearchBuilder */
+	private $_pGeoSearchBuilder = null;
+
 
 	/**
 	 *
@@ -62,6 +70,7 @@ class EstateListMocker
 	{
 		$this->registerMethodCall(__METHOD__);
 		$this->_pDataView = $pDataView;
+		$this->_pGeoSearchBuilder = new GeoSearchBuilderEmpty();
 		$this->resetEstateIterator();
 	}
 
@@ -81,6 +90,7 @@ class EstateListMocker
 		}
 
 		$estateValues = current($this->_estateData);
+		$this->_currentEstateId = key($this->_estateData);
 		next($this->_estateData);
 
 		$pContainer = false;
@@ -193,6 +203,45 @@ class EstateListMocker
 			return [];
 		}
 		return array_keys($this->_estateData);
+	}
+
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	public function getCurrentEstateId(): int
+	{
+		$this->registerMethodCall(__METHOD__);
+		return $this->_currentEstateId;
+	}
+
+
+	/**
+	 *
+	 * @return GeoSearchBuilder
+	 *
+	 */
+
+	public function getGeoSearchBuilder(): GeoSearchBuilder
+	{
+		$this->registerMethodCall(__METHOD__);
+		return $this->_pGeoSearchBuilder;
+	}
+
+
+	/**
+	 *
+	 * @param GeoSearchBuilder $pGeoSearchBuilder
+	 *
+	 */
+
+	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder)
+	{
+		$this->registerMethodCall(__METHOD__);
+		$this->_pGeoSearchBuilder = $pGeoSearchBuilder;
 	}
 
 

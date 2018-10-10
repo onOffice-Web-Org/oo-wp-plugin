@@ -35,8 +35,8 @@ use onOffice\WPlugin\Template;
  *
  */
 
-class EstateUnitsConfigurationTest
-	implements EstateUnitsConfigurationBase
+class EstateViewSimilarEstatesEnvironmentTest
+	implements EstateViewSimilarEstatesEnvironment
 {
 	/** @var SDKWrapperMocker */
 	private $_pSDKWrapperMocker = null;
@@ -58,7 +58,6 @@ class EstateUnitsConfigurationTest
 
 	/**
 	 *
-	 * @param DataView $pDataView
 	 * @return EstateListMocker
 	 *
 	 */
@@ -84,7 +83,6 @@ class EstateUnitsConfigurationTest
 	/**
 	 *
 	 * @param string $templateName
-	 * @return Template
 	 *
 	 */
 
