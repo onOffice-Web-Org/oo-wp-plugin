@@ -53,6 +53,9 @@ class InputModelOptionFactoryDetailView
 	const INPUT_FIELD_CONTACTDATA_ONLY = DataDetailView::ADDRESSFIELDS;
 
 	/** */
+	const INPUT_FIELD_ENABLE_SIMILAR_ESTATES = DataDetailView::ENABLE_SIMILAR_ESTATES;
+
+	/** */
 	const INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND = DataViewSimilarEstates::FIELD_SAME_KIND;
 
 	/** */
@@ -114,6 +117,9 @@ class InputModelOptionFactoryDetailView
 		],
 		self::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_FIELD_ENABLE_SIMILAR_ESTATES => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
 	];
 

@@ -167,6 +167,11 @@ class EstateDetail
 	{
 		/* @var $pDataView DataDetailView */
 		$pDataView = $this->getDataView();
+
+		if (!$pDataView->getDataDetailViewActive()) {
+			return '';
+		}
+
 		$pDataViewSimilarEstates = $pDataView->getDataViewSimilarEstates();
 		$pSimilarEstates = new EstateViewSimilarEstates($pDataViewSimilarEstates);
 		$pCopyThis = clone $this;

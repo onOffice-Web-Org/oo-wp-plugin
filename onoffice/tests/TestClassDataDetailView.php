@@ -157,4 +157,18 @@ class TestClassDataDetailView
 		$pDataDetailView->setTemplate('/test/template1.test');
 		$this->assertEquals('/test/template1.test', $pDataDetailView->getTemplate());
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testEnableSimilarEstates()
+	{
+		$pDataDetailView = new DataDetailView();
+
+		$this->assertFalse($pDataDetailView->getDataDetailViewActive());
+		$pDataDetailView->setDataDetailViewActive(true);
+		$this->assertTrue($pDataDetailView->getDataDetailViewActive());
+	}
 }

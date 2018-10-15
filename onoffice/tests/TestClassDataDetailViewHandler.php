@@ -55,6 +55,7 @@ class TestClassDataDetailViewHandler
 		'same_maketing_method' => true,
 		'radius' => 35,
 		'amount' => 13,
+		'enablesimilarestates' => true,
 	];
 
 
@@ -68,19 +69,20 @@ class TestClassDataDetailViewHandler
 
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataDetailview = $pDataDetailViewHandler->createDetailViewByValues($row);
-		$this->assertEquals($pDataDetailview->getTemplate(), $row['template']);
-		$this->assertEquals($pDataDetailview->getFields(), $row['fields']);
-		$this->assertEquals($pDataDetailview->getPictureTypes(), $row['pictures']);
-		$this->assertEquals($pDataDetailview->getExpose(), $row['expose']);
-		$this->assertEquals($pDataDetailview->getAddressFields(), $row['addressfields']);
-		$this->assertEquals($pDataDetailview->getMovieLinks(), $row['movielinks']);
+		$this->assertEquals($row['template'], $pDataDetailview->getTemplate());
+		$this->assertEquals($row['fields'], $pDataDetailview->getFields());
+		$this->assertEquals($row['pictures'], $pDataDetailview->getPictureTypes());
+		$this->assertEquals($row['expose'], $pDataDetailview->getExpose());
+		$this->assertEquals($row['addressfields'], $pDataDetailview->getAddressFields());
+		$this->assertEquals($row['movielinks'], $pDataDetailview->getMovieLinks());
+		$this->assertEquals($row['enablesimilarestates'], $pDataDetailview->getDataDetailViewActive());
 		$pDataSimilar = $pDataDetailview->getDataViewSimilarEstates();
 
-		$this->assertEquals($pDataSimilar->getSameEstateKind(), $row['same_kind']);
-		$this->assertEquals($pDataSimilar->getSameMarketingMethod(), $row['same_maketing_method']);
-		$this->assertEquals($pDataSimilar->getSamePostalCode(), false); // missing -> bool
-		$this->assertEquals($pDataSimilar->getRadius(), $row['radius']);
-		$this->assertEquals($pDataSimilar->getRecordsPerPage(), $row['amount']);
+		$this->assertEquals($row['same_kind'], $pDataSimilar->getSameEstateKind());
+		$this->assertEquals($row['same_maketing_method'], $pDataSimilar->getSameMarketingMethod());
+		$this->assertFalse($pDataSimilar->getSamePostalCode()); // missing -> bool
+		$this->assertEquals($row['radius'], $pDataSimilar->getRadius());
+		$this->assertEquals($row['amount'], $pDataSimilar->getRecordsPerPage());
 	}
 
 

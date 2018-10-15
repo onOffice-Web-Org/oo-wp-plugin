@@ -81,6 +81,25 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 */
 
+	public function getCheckboxEnableSimilarEstates()
+	{
+		$labelExpose = __('Show Similar Estates', 'onoffice');
+		$pInputModelActivate = $this->_pInputModelDetailViewFactory->create
+			(InputModelOptionFactoryDetailView::INPUT_FIELD_ENABLE_SIMILAR_ESTATES, $labelExpose);
+		$pInputModelActivate->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelActivate->setValuesAvailable(1);
+		$pInputModelActivate->setValue($this->_pDataDetailView->getDataDetailViewActive());
+
+		return $pInputModelActivate;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
 	public function createInputModelPictureTypes()
 	{
 		$allPictureTypes = ImageTypes::getAllImageTypes();

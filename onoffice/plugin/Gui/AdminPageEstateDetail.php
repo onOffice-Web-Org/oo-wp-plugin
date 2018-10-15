@@ -276,11 +276,13 @@ class AdminPageEstateDetail
 		$pInputModelSimilarEstatesAmount = $pFormModelBuilder->createInputModelSameEstateAmount();
 		$pInputModelSimilarEstatesTemplate = $pFormModelBuilder->createInputModelTemplate
 			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE);
+		$pInputModelSimilarEstatesActivated = $pFormModelBuilder->getCheckboxEnableSimilarEstates();
 
 		$pFormModelSimilarEstates = new FormModel();
 		$pFormModelSimilarEstates->setPageSlug($this->getPageSlug());
 		$pFormModelSimilarEstates->setGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
 		$pFormModelSimilarEstates->setLabel(__('Similar Estates', 'onoffice'));
+		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesActivated);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesEstateKind);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesMarketingMethod);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesSamePostalCode);
