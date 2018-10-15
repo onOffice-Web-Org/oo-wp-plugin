@@ -49,6 +49,8 @@ class TestClassDefaultFilterBuilderSimilarEstates
 		parent::setUp();
 
 		$pDataViewEstates = new DataViewSimilarEstates();
+		$pDataViewEstates->setSameEstateKind(false);
+		$pDataViewEstates->setSameMarketingMethod(false);
 		$this->_pFilterConfigurationSimilarEstates = new FilterConfigurationSimilarEstates
 			($pDataViewEstates);
 		$this->_pDefaultFilterBuilderSimilarEstates = new DefaultFilterBuilderSimilarEstates

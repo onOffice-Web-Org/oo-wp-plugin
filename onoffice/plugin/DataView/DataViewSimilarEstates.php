@@ -53,10 +53,10 @@ class DataViewSimilarEstates
 
 
 	/** @var bool */
-	private $_sameEstateKind = false;
+	private $_sameEstateKind = true;
 
 	/** @var bool */
-	private $_sameMarketingMethod = false;
+	private $_sameMarketingMethod = true;
 
 	/** @var bool */
 	private $_samePostalCode = false;
