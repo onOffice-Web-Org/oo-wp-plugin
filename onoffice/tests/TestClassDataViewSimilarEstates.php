@@ -80,7 +80,8 @@ class TestClassDataViewSimilarEstates
 		$pDataViewSimilarEstates = new DataViewSimilarEstates();
 		$this->assertEquals([], $pDataViewSimilarEstates->getAddressFields());
 		$this->assertEquals('', $pDataViewSimilarEstates->getExpose());
-		$this->assertEquals(['Id', 'objekttitel'], $pDataViewSimilarEstates->getFields());
+		$this->assertEquals(['Id', 'objekttitel', 'objektnr_extern'],
+			$pDataViewSimilarEstates->getFields());
 		$this->assertEquals('SimilarEstates', $pDataViewSimilarEstates->getName());
 		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
 		$this->assertEquals('', $pDataViewSimilarEstates->getTemplate());

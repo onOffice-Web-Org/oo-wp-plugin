@@ -121,7 +121,7 @@ class DataViewSimilarEstates
 
 	/** @return array */
 	public function getFields(): array
-		{ return ['Id', 'objekttitel']; }
+		{ return ['Id', 'objekttitel', 'objektnr_extern']; }
 
 	/** @return string */
 	public function getName(): string
