@@ -56,7 +56,6 @@ class AdminPageFormSettingsMain
 	 *
 	 * @param string $type
 	 * @param int $id
-	 * @throws UnexpectedValueException
 	 *
 	 */
 
@@ -74,11 +73,6 @@ class AdminPageFormSettingsMain
 		}
 
 		$className = $this->getClassNameByType($type);
-
-		if ($className === null) {
-			throw new UnexpectedValueException($type);
-		}
-
 		$this->_pInstance = new $className($this->getPageSlug());
 		$this->configureAdminPage($this->_pInstance, $type);
 	}
@@ -139,6 +133,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowCheckDuplicates(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowMessageInput(true);
+				$pAdminPage->setShowNewsletterCheckbox(true);
 				break;
 			case Form::TYPE_APPLICANT_SEARCH:
 				/* @var $pAdminPage AdminPageFormSettingsApplicantSearch */
@@ -172,16 +167,16 @@ class AdminPageFormSettingsMain
 	 *
 	 * @param string $type
 	 * @return string
+	 * @throws Exception
 	 *
 	 */
 
-	private function getClassNameByType(string $type)
+	private function getClassNameByType(string $type): string
 	{
-		$result = null;
+		$result = $this->_mappingTypeClass[$type] ?? string;
 
-		if (isset($this->_mappingTypeClass[$type]))
-		{
-			$result = $this->_mappingTypeClass[$type];
+		if ($result === null) {
+			throw new UnexpectedValueException('Unknown class');
 		}
 
 		return $result;

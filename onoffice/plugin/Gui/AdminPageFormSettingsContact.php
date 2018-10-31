@@ -46,6 +46,9 @@ class AdminPageFormSettingsContact
 	/** @var bool */
 	private $_showCheckDuplicates = false;
 
+	/** @var bool */
+	private $_showNewsletterCheckbox = false;
+
 
 	/**
 	 *
@@ -80,6 +83,11 @@ class AdminPageFormSettingsContact
 		if ($this->_showPagesOption) {
 			$pInputModelPages = $pFormModelBuilder->createInputModelPages();
 			$pFormModelFormSpecific->addInputModel($pInputModelPages);
+		}
+
+		if ($this->_showNewsletterCheckbox) {
+			$pInputModelNewsletter = $pFormModelBuilder->createInputModelNewsletterCheckbox();
+			$pFormModelFormSpecific->addInputModel($pInputModelNewsletter);
 		}
 
 		$this->addFormModel($pFormModelFormSpecific);
@@ -138,34 +146,42 @@ class AdminPageFormSettingsContact
 
 
 	/** @return bool */
-	public function getShowPagesOption()
+	public function getShowPagesOption(): bool
 		{ return $this->_showPagesOption; }
 
 	/** @param bool $showPagesOption */
-	public function setShowPagesOption($showPagesOption)
-		{ $this->_showPagesOption = (bool)$showPagesOption; }
+	public function setShowPagesOption(bool $showPagesOption)
+		{ $this->_showPagesOption = $showPagesOption; }
 
 	/** @return bool */
-	public function getShowMessageInput()
+	public function getShowMessageInput(): bool
 		{ return $this->_showMessageInput; }
 
 	/** @param bool $showMessageInput */
-	public function setShowMessageInput($showMessageInput)
-		{ $this->_showMessageInput = (bool)$showMessageInput; }
+	public function setShowMessageInput(bool $showMessageInput)
+		{ $this->_showMessageInput = $showMessageInput; }
 
 	/** @return bool */
-	public function getShowCreateAddress()
+	public function getShowCreateAddress(): bool
 		{ return $this->_showCreateAddress; }
 
 	/** @return bool */
-	public function getShowCheckDuplicates()
+	public function getShowCheckDuplicates(): bool
 		{ return $this->_showCheckDuplicates; }
 
 	/** @param bool $showCreateAddress */
-	public function setShowCreateAddress($showCreateAddress)
-		{ $this->_showCreateAddress = (bool)$showCreateAddress; }
+	public function setShowCreateAddress(bool $showCreateAddress)
+		{ $this->_showCreateAddress = $showCreateAddress; }
 
 	/** @param bool $showCheckDuplicates */
-	public function setShowCheckDuplicates($showCheckDuplicates)
-		{ $this->_showCheckDuplicates = (bool)$showCheckDuplicates; }
+	public function setShowCheckDuplicates(bool $showCheckDuplicates)
+		{ $this->_showCheckDuplicates = $showCheckDuplicates; }
+
+	/** @return bool */
+	public function getShowNewsletterCheckbox(): bool
+		{ return $this->_showNewsletterCheckbox; }
+
+	/** @param bool $showNewsletterCheckbox */
+	public function setShowNewsletterCheckbox(bool $showNewsletterCheckbox)
+		{ $this->_showNewsletterCheckbox = $showNewsletterCheckbox; }
 }

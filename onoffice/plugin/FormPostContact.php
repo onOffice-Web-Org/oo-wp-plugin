@@ -72,6 +72,7 @@ class FormPostContact
 	 *
 	 * @param DataFormConfiguration $pFormConfig
 	 * @param int $formNo
+	 * @return void
 	 *
 	 */
 
@@ -81,24 +82,24 @@ class FormPostContact
 		$recipient = $pFormConfig->getRecipient();
 		$subject = $pFormConfig->getSubject();
 		$missingFields = $pFormData->getMissingFields();
+		$pFormData->setStatus(FormPost::MESSAGE_ERROR);
 
 		if ($missingFields !== []) {
 			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
-		} else {
-			$responseNewAddress = true;
+			return;
+		}
 
-			if ($pFormConfig->getCreateAddress()) {
-				$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
-				$responseNewAddress = $this->createOrCompleteAddress($pFormData, $checkDuplicate);
-			}
+		$responseNewAddress = true;
 
-			$response = $this->sendContactRequest($pFormData, $recipient, $subject) && $responseNewAddress;
+		if ($pFormConfig->getCreateAddress()) {
+			$responseNewAddress = $this->createAddress($pFormData);
+		}
 
-			if (true === $response) {
-				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
-			} else {
-				$pFormData->setStatus(FormPost::MESSAGE_ERROR);
-			}
+		$response = $this->sendContactRequest($pFormData, $recipient, $subject) &&
+			$responseNewAddress;
+
+		if (true === $response) {
+			$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
 		}
 	}
 
@@ -110,7 +111,40 @@ class FormPostContact
 	 *
 	 */
 
-	private function sendContactRequest(FormData $pFormData, $recipient = null, $subject = null): bool
+	private function createAddress(FormData $pFormData): bool
+	{
+		$pFormConfig = $pFormData->getDataFormConfiguration();
+		$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
+		$responseNewAddress = $this->createOrCompleteAddress($pFormData, $checkDuplicate);
+
+		if ($responseNewAddress === false) {
+			return false;
+		}
+
+		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
+			return true;
+		}
+
+		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'registerNewsletter');
+		$pAPIClientAction->setParameters(['register' => true]);
+		$pAPIClientAction->setResourceId($responseNewAddress);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		return $pAPIClientAction->getResultStatus();
+	}
+
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @return bool
+	 *
+	 */
+
+	private function sendContactRequest(FormData $pFormData, $recipient = null, $subject = null):
+		bool
 	{
 		$values = $pFormData->getValues();
 		$requestParams = [
@@ -131,8 +165,7 @@ class FormPostContact
 		$pAPIClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
 		$pAPIClientAction->setParameters($requestParams);
-		$pAPIClientAction->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
 		return $pAPIClientAction->getResultStatus();
 	}
 }

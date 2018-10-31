@@ -48,4 +48,13 @@ interface FormPostContactConfiguration
 	 */
 
 	public function getReferrer(): string;
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function getNewsletterAccepted(): bool;
 }

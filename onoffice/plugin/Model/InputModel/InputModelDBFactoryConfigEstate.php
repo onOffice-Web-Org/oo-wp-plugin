@@ -40,64 +40,64 @@ class InputModelDBFactoryConfigEstate
 
 
 	/** @var array */
-	private $_inputConfig = array(
-		InputModelDBFactory::INPUT_FILTERID => array(
+	private $_inputConfig = [
+		InputModelDBFactory::INPUT_FILTERID => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'filterId',
-		),
-		InputModelDBFactory::INPUT_LISTNAME => array(
+		],
+		InputModelDBFactory::INPUT_LISTNAME => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'name',
-		),
-		InputModelDBFactory::INPUT_RECORDS_PER_PAGE => array(
+		],
+		InputModelDBFactory::INPUT_RECORDS_PER_PAGE => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'recordsPerPage',
-		),
-		InputModelDBFactory::INPUT_SORTBY => array(
+		],
+		InputModelDBFactory::INPUT_SORTBY => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortby',
-		),
-		InputModelDBFactory::INPUT_SORTORDER => array(
+		],
+		InputModelDBFactory::INPUT_SORTORDER => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortorder',
-		),
-		InputModelDBFactory::INPUT_PICTURE_TYPE => array(
+		],
+		InputModelDBFactory::INPUT_PICTURE_TYPE => [
 			self::KEY_TABLE => 'oo_plugin_picturetypes',
 			self::KEY_FIELD => 'picturetype',
-		),
-		InputModelDBFactory::INPUT_TEMPLATE => array(
+		],
+		InputModelDBFactory::INPUT_TEMPLATE => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'template',
-		),
-		InputModelDBFactory::INPUT_LIST_TYPE => array(
+		],
+		InputModelDBFactory::INPUT_LIST_TYPE => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'list_type',
-		),
-		InputModelDBFactory::INPUT_SHOW_STATUS => array(
+		],
+		InputModelDBFactory::INPUT_SHOW_STATUS => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'show_status',
-		),
-		InputModelDBFactory::INPUT_EXPOSE => array(
+		],
+		InputModelDBFactory::INPUT_EXPOSE => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'expose',
-		),
-		InputModelDBFactory::INPUT_RANDOM_ORDER => array(
+		],
+		InputModelDBFactory::INPUT_RANDOM_ORDER => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'random',
-		),
-		InputModelDBFactory::INPUT_FIELD_CONFIG => array(
+		],
+		InputModelDBFactory::INPUT_FIELD_CONFIG => [
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'fieldname',
-		),
-		self::INPUT_FIELD_FILTERABLE => array(
+		],
+		self::INPUT_FIELD_FILTERABLE => [
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'filterable',
-		),
-		self::INPUT_FIELD_HIDDEN => array(
+		],
+		self::INPUT_FIELD_HIDDEN => [
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'hidden',
-		),
-	);
+		],
+	];
 
 
 	/**
@@ -106,7 +106,7 @@ class InputModelDBFactoryConfigEstate
 	 *
 	 */
 
-	public function getConfig()
+	public function getConfig(): array
 	{
 		return $this->_inputConfig;
 	}

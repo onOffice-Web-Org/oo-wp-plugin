@@ -34,40 +34,40 @@ class InputModelDBFactoryConfigAddress
 	implements InputModelDBFactoryConfigBase
 {
 	/** @var array */
-	private $_inputConfig = array(
-		InputModelDBFactory::INPUT_FILTERID => array(
+	private $_inputConfig = [
+		InputModelDBFactory::INPUT_FILTERID => [
 			self::KEY_TABLE => 'oo_plugin_listviews_address',
 			self::KEY_FIELD => 'filterId',
-		),
-		InputModelDBFactory::INPUT_LISTNAME => array(
+		],
+		InputModelDBFactory::INPUT_LISTNAME => [
 			self::KEY_TABLE => 'oo_plugin_listviews_address',
 			self::KEY_FIELD => 'name',
-		),
-		InputModelDBFactory::INPUT_RECORDS_PER_PAGE => array(
+		],
+		InputModelDBFactory::INPUT_RECORDS_PER_PAGE => [
 			self::KEY_TABLE => 'oo_plugin_listviews_address',
 			self::KEY_FIELD => 'recordsPerPage',
-		),
-		InputModelDBFactory::INPUT_SORTBY => array(
+		],
+		InputModelDBFactory::INPUT_SORTBY => [
 			self::KEY_TABLE => 'oo_plugin_listviews_address',
 			self::KEY_FIELD => 'sortby',
-		),
-		InputModelDBFactory::INPUT_SORTORDER => array(
+		],
+		InputModelDBFactory::INPUT_SORTORDER => [
 			self::KEY_TABLE => 'oo_plugin_listviews_address',
 			self::KEY_FIELD => 'sortorder',
-		),
-		InputModelDBFactory::INPUT_PICTURE_TYPE => array(
+		],
+		InputModelDBFactory::INPUT_PICTURE_TYPE => [
 			self::KEY_TABLE => 'oo_plugin_listviews_address',
 			self::KEY_FIELD => 'showPhoto',
-		),
-		InputModelDBFactory::INPUT_TEMPLATE => array(
+		],
+		InputModelDBFactory::INPUT_TEMPLATE => [
 			self::KEY_TABLE => 'oo_plugin_listviews_address',
 			self::KEY_FIELD => 'template',
-		),
-		InputModelDBFactory::INPUT_FIELD_CONFIG => array(
+		],
+		InputModelDBFactory::INPUT_FIELD_CONFIG => [
 			self::KEY_TABLE => 'oo_plugin_address_fieldconfig',
 			self::KEY_FIELD => 'fieldname',
-		),
-	);
+		],
+	];
 
 
 	/**
@@ -76,7 +76,7 @@ class InputModelDBFactoryConfigAddress
 	 *
 	 */
 
-	public function getConfig()
+	public function getConfig(): array
 	{
 		return $this->_inputConfig;
 	}

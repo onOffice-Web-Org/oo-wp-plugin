@@ -67,4 +67,14 @@ class FormPostContactConfigurationDefault
 	{
 		return filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '';
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function getNewsletterAccepted(): bool
+	{
+		return filter_input(INPUT_POST, 'newsletter_accept', FILTER_VALIDATE_BOOLEAN);
+	}
 }

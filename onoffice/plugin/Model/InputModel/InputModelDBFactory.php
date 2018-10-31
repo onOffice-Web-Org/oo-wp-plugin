@@ -100,7 +100,7 @@ class InputModelDBFactory
 		$pInstance = null;
 		$inputConfig = $this->_pInputModelDBFactoryConfig->getConfig();
 
-		if (array_key_exists($type, $inputConfig))
+		if (isset($inputConfig[$type]))
 		{
 			$config = $inputConfig[$type];
 			$table = $config[InputModelDBFactoryConfigBase::KEY_TABLE];

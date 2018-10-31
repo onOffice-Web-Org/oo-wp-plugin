@@ -43,5 +43,5 @@ interface InputModelDBFactoryConfigBase
 	 *
 	 */
 
-	public function getConfig();
+	public function getConfig(): array;
 }

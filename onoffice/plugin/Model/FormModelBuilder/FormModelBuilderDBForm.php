@@ -296,16 +296,12 @@ class FormModelBuilderDBForm
 	 *
 	 */
 
-	public function createInputModelCreateAddress()
+	public function createInputModelCreateAddress(): InputModelDB
 	{
 		$labelCreateAddress = __('Create Address', 'onoffice');
-		$selectedValue = $this->getValue('createaddress');
-
-		$pInputModelFormCreateAddress = $this->getInputModelDBFactory()->create
-			(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS, $labelCreateAddress);
-		$pInputModelFormCreateAddress->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModelFormCreateAddress->setValue($selectedValue);
-		$pInputModelFormCreateAddress->setValuesAvailable(1);
+		$selectedValue = $this->getValue('createaddress', false);
+		$pInputModelFormCreateAddress = $this->generateGenericCheckbox($labelCreateAddress,
+			InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS, $selectedValue);
 
 		return $pInputModelFormCreateAddress;
 	}
@@ -326,13 +322,9 @@ class FormModelBuilderDBForm
 		}
 
 		$labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice'), $addition);
-		$selectedValue = $this->getValue('captcha');
-
-		$pInputModelFormRequiresCaptcha = $this->getInputModelDBFactory()->create
-			(InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRES_CAPTCHA, $labelRequiresCaptcha);
-		$pInputModelFormRequiresCaptcha->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModelFormRequiresCaptcha->setValue($selectedValue);
-		$pInputModelFormRequiresCaptcha->setValuesAvailable(1);
+		$selectedValue = $this->getValue('captcha', false);
+		$pInputModelFormRequiresCaptcha = $this->generateGenericCheckbox($labelRequiresCaptcha,
+			InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRES_CAPTCHA, $selectedValue);
 
 		return $pInputModelFormRequiresCaptcha;
 	}
@@ -344,16 +336,12 @@ class FormModelBuilderDBForm
 	 *
 	 */
 
-	public function createInputModelCheckDuplicates()
+	public function createInputModelCheckDuplicates(): InputModelDB
 	{
 		$labelCheckDuplicates = __('Check for Duplicates', 'onoffice');
-		$selectedValue = $this->getValue('checkduplicates');
-
-		$pInputModelFormCheckDuplicates = $this->getInputModelDBFactory()->create
-			(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES, $labelCheckDuplicates);
-		$pInputModelFormCheckDuplicates->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModelFormCheckDuplicates->setValue($selectedValue);
-		$pInputModelFormCheckDuplicates->setValuesAvailable(1);
+		$selectedValue = $this->getValue('checkduplicates', false);
+		$pInputModelFormCheckDuplicates = $this->generateGenericCheckbox($labelCheckDuplicates,
+			InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES, $selectedValue);
 
 		return $pInputModelFormCheckDuplicates;
 	}
@@ -417,6 +405,46 @@ class FormModelBuilderDBForm
 		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsRequired'));
 
 		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @param string $label
+	 * @param string $type
+	 * @param bool $checked
+	 * @return InputModelDB
+	 * @throws Exception
+	 *
+	 */
+
+	private function generateGenericCheckbox(string $label, string $type, bool $checked):
+		InputModelDB
+	{
+		$pInputModel = $this->getInputModelDBFactory()->create($type, $label);
+		if ($pInputModel === null) {
+			throw new Exception('Unknown input model type');
+		}
+
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValue((int)$checked);
+		$pInputModel->setValuesAvailable(1);
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelNewsletterCheckbox(): InputModelDB
+	{
+		$label = __('Newsletter', 'onoffice');
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER;
+		$checked = $this->getValue('newsletter', false);
+		return $this->generateGenericCheckbox($label, $type, $checked);
 	}
 
 

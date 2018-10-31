@@ -108,10 +108,7 @@ class Form
 	{
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$inputs = $pDataFormConfiguration->getInputs();
-		$module = null;
-		if (isset($inputs[$field])) {
-			$module = $inputs[$field];
-		}
+		$module = $inputs[$field] ?? null;
 
 		return $module;
 	}
@@ -155,7 +152,8 @@ class Form
 	{
 		if (in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields))	{
 			$pGeoPosition = new GeoPosition();
-			$geoPositionFields = $pGeoPosition->getSettingsGeoPositionFields(onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$geoPositionFields = $pGeoPosition->getSettingsGeoPositionFields
+				(onOfficeSDK::MODULE_SEARCHCRITERIA);
 			unset($requiredFields[GeoPosition::FIELD_GEO_POSITION]);
 			$requiredFields = array_merge($requiredFields, $geoPositionFields);
 		}
@@ -176,8 +174,9 @@ class Form
 		$requiredFields = $this->getRequiredFields();
 		$pGeoPosition = new GeoPosition();
 
-		if (in_array($field, $pGeoPosition->getSettingsGeoPositionFields(onOfficeSDK::MODULE_SEARCHCRITERIA)) &&
-				in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields))	{
+		if (in_array($field, $pGeoPosition->getSettingsGeoPositionFields
+				(onOfficeSDK::MODULE_SEARCHCRITERIA)) &&
+					in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields)) {
 			return true;
 		}
 

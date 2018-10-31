@@ -247,6 +247,25 @@ class TestClassFormPostContact
 
 	/**
 	 *
+	 */
+
+	public function testSendWithNewAddressAndNewsletter()
+	{
+		$postVariables = $this->getPostVariables();
+
+		$this->_pFormPostConfiguration->setPostVariables($postVariables);
+		$this->_pFormPostContactConfiguration->setNewsletterAccepted(true);
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$pDataFormConfiguration->setCreateAddress(true);
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+
+
+	/**
+	 *
 	 * @return DataFormConfigurationContact
 	 *
 	 */
@@ -268,8 +287,38 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->setFormName('contactForm');
 		$pDataFormConfiguration->setSubject('¡A new Contact!');
 		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'Email']);
+		$this->mockNewsletterCall();
 
 		return $pDataFormConfiguration;
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function mockNewsletterCall()
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:do',
+			'resourceid' => '320',
+			'resourcetype' => 'registerNewsletter',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => [
+					'cntabsolute' => null,
+				],
+				'records' => []
+			],
+			'status' => [
+				'errorcode' => 0,
+				'message' => 'OK',
+			],
+		];
+
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_DO,
+			'registerNewsletter', '320', ['register' => true], null, $response);
 	}
 
 

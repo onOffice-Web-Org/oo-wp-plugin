@@ -65,62 +65,70 @@ class InputModelDBFactoryConfigForm
 	/** */
 	const INPUT_FORM_MODULE = 'formModule';
 
+	/** */
+	const INPUT_FORM_NEWSLETTER = 'newsletter';
+
 
 	/** @var array */
-	private $_inputConfig = array(
-		self::INPUT_FORM_NAME => array(
+	private $_inputConfig = [
+		self::INPUT_FORM_NAME => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'name',
-		),
-		InputModelDBFactory::INPUT_TEMPLATE => array(
+		],
+		InputModelDBFactory::INPUT_TEMPLATE => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'template',
-		),
-		self::INPUT_FORM_TYPE => array(
+		],
+		self::INPUT_FORM_TYPE => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'form_type',
-		),
-		self::INPUT_FORM_RECIPIENT => array(
+		],
+		self::INPUT_FORM_RECIPIENT => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'recipient',
-		),
-		self::INPUT_FORM_SUBJECT => array(
+		],
+		self::INPUT_FORM_SUBJECT => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'subject',
-		),
-		self::INPUT_FORM_CREATEADDRESS => array(
+		],
+		self::INPUT_FORM_CREATEADDRESS => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'createaddress',
-		),
-		self::INPUT_FORM_LIMIT_RESULTS => array(
+		],
+		self::INPUT_FORM_LIMIT_RESULTS => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'limitresults',
-		),
-		self::INPUT_FORM_CHECKDUPLICATES => array(
+		],
+		self::INPUT_FORM_CHECKDUPLICATES => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'checkduplicates',
-		),
-		self::INPUT_FORM_REQUIRES_CAPTCHA => array(
+		],
+		self::INPUT_FORM_REQUIRES_CAPTCHA => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'captcha',
-		),
-		self::INPUT_FORM_PAGES => array(
+		],
+		self::INPUT_FORM_PAGES => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'pages',
-		),
-		InputModelDBFactory::INPUT_FIELD_CONFIG => array(
+		],
+		self::INPUT_FORM_NEWSLETTER => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'newsletter',
+		],
+
+		InputModelDBFactory::INPUT_FIELD_CONFIG => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'fieldname',
-		),
-		self::INPUT_FORM_REQUIRED => array(
+		],
+		self::INPUT_FORM_REQUIRED => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'required',
-		),
-		self::INPUT_FORM_MODULE => array(
+		],
+		self::INPUT_FORM_MODULE => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'module',
-		),
-	);
+		],
+	];
 
 
 	/**
@@ -129,7 +137,7 @@ class InputModelDBFactoryConfigForm
 	 *
 	 */
 
-	public function getConfig()
+	public function getConfig(): array
 	{
 		return $this->_inputConfig;
 	}

@@ -318,26 +318,17 @@ abstract class FormPost
 			}
 
 			$fieldType = $this->_pFormPostConfiguration->getTypeForInput($input, $inputs[$inputName]);
+			$fieldNameAliases = [
+				'Telefon1' => 'phone',
+				'Email' => 'email',
+				'Telefax1' => 'fax',
+			];
 
-			switch ($inputName)
-			{
-				case 'Telefon1':
-					$inputName = 'phone';
-					break;
-
-				case 'Email':
-					$inputName = 'email';
-					break;
-
-				case 'Telefax1':
-					$inputName = 'fax';
-					break;
-			}
+			$fieldNameAliased = $fieldNameAliases[$inputName] ?? $inputName;
+			$addressData[$fieldNameAliased] = $value;
 
 			if ($fieldType === FieldTypes::FIELD_TYPE_MULTISELECT && !is_array($value)) {
-				$addressData[$inputName] = [$value];
-			} else {
-				$addressData[$inputName] = $value;
+				$addressData[$fieldNameAliased] = [$value];
 			}
 		}
 

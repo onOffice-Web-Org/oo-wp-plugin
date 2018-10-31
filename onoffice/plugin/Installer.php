@@ -76,6 +76,12 @@ abstract class Installer
 			$dbversion = 4;
 		}
 
+		if ($dbversion == 4.0) {
+			// new column: newsletter
+			dbDelta( self::getCreateQueryForms() );
+			$dbversion = 5;
+		}
+
 		update_option( 'oo_plugin_db_version', $dbversion, false);
 
 		$pContentFilter = new ContentFilter();
@@ -165,6 +171,7 @@ abstract class Installer
 			`checkduplicates` tinyint(1) NOT NULL DEFAULT '0',
 			`pages` int NOT NULL DEFAULT '0',
 			`captcha` tinyint(1) NOT NULL DEFAULT '0',
+			`newsletter` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

@@ -39,6 +39,9 @@ class FormPostContactConfigurationTest
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
+	/** @var bool */
+	private $_newsletterAccepted = false;
+
 
 	/**
 	 *
@@ -85,5 +88,29 @@ class FormPostContactConfigurationTest
 	public function setReferrer(string $referrer)
 	{
 		$this->_referrer = $referrer;
+	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function getNewsletterAccepted(): bool
+	{
+		return $this->_newsletterAccepted;
+	}
+
+
+	/**
+	 *
+	 * @param bool $newsletterAccepted
+	 *
+	 */
+
+	public function setNewsletterAccepted(bool $newsletterAccepted)
+	{
+		$this->_newsletterAccepted = $newsletterAccepted;
 	}
 }
