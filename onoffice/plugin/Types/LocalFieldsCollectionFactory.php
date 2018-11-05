@@ -100,9 +100,9 @@ class LocalFieldsCollectionFactory
 			],
 			'newsletter' => [
 				'type' => FieldTypes::FIELD_TYPE_BOOLEAN,
-				'length' => 40,
+				'length' => 0,
 				'permittedvalues' => [],
-				'default' => null,
+				'default' => false,
 				'label' => 'Newsletter',
 			],
 		],
@@ -190,6 +190,7 @@ class LocalFieldsCollectionFactory
 			$pLocalField->setLength($properties['length'] ?? 0);
 			$pLocalField->setPermittedvalues($properties['permittedvalues']);
 			$pLocalField->setCategory(__($properties['category'] ?? '', 'onoffice'));
+			$pLocalField->setType($properties['type']);
 			$pCollection->addField($pLocalField);
 		}
 

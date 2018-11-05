@@ -104,6 +104,7 @@ class TestClassDataFormConfigurationFactory
 					$this->assertEmpty($pDataFormConfiguration->getSubject());
 					$this->assertFalse($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertFalse($pDataFormConfiguration->getCreateAddress());
+					$this->assertFalse($pDataFormConfiguration->getNewsletterCheckbox());
 					break;
 				case Form::TYPE_OWNER:
 					/* @var $pDataFormConfiguration DataFormConfigurationOwner */
@@ -325,6 +326,7 @@ class TestClassDataFormConfigurationFactory
 			'checkduplicates' => '1',
 			'pages' => '3',
 			'captcha' => '1',
+			'newsletter' => '1',
 		];
 	}
 }

@@ -229,6 +229,7 @@ class Field
 	{
 		return [
 			'label' => $this->_label,
+			'type' => $this->_type,
 			'default' => $this->_default,
 			'length' => $this->_length === 0 ? null : $this->_length,
 			'permittedvalues' => $this->_permittedvalues,

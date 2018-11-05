@@ -218,6 +218,7 @@ class DataFormConfigurationFactory
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCreateAddress((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
+		$pConfig->setNewsletterCheckbox((bool)$row['newsletter']);
 	}
 
 

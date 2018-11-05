@@ -47,6 +47,9 @@ class DataFormConfigurationContact
 	/** @var string */
 	private $_recipient = null;
 
+	/** @var bool */
+	private $_newsletterCheckbox = false;
+
 
 	/**
 	 *
@@ -54,7 +57,7 @@ class DataFormConfigurationContact
 
 	public function setDefaultFields()
 	{
-		$this->setInputs(array(
+		$this->setInputs([
 			'Vorname' => onOfficeSDK::MODULE_ADDRESS,
 			'Name' => onOfficeSDK::MODULE_ADDRESS,
 			'Strasse' => onOfficeSDK::MODULE_ADDRESS,
@@ -63,16 +66,16 @@ class DataFormConfigurationContact
 			'Telefon1' => onOfficeSDK::MODULE_ADDRESS,
 			'Email' => onOfficeSDK::MODULE_ADDRESS,
 			'message' => null,
-		));
+		]);
 	}
 
 
 	/** @return bool */
-	public function getCreateAddress()
+	public function getCreateAddress(): bool
 		{ return $this->_createAddress; }
 
 	/** @return bool */
-	public function getCheckDuplicateOnCreateAddress()
+	public function getCheckDuplicateOnCreateAddress(): bool
 		{ return $this->_checkDuplicateOnCreateAddress; }
 
 	/** @return string */
@@ -84,11 +87,11 @@ class DataFormConfigurationContact
 		{ return $this->_recipient; }
 
 	/** @param bool $createAddress */
-	public function setCreateAddress($createAddress)
+	public function setCreateAddress(bool $createAddress)
 		{ $this->_createAddress = $createAddress; }
 
 	/** @param bool $checkDuplicateOnCreateAddress */
-	public function setCheckDuplicateOnCreateAddress($checkDuplicateOnCreateAddress)
+	public function setCheckDuplicateOnCreateAddress(bool $checkDuplicateOnCreateAddress)
 		{ $this->_checkDuplicateOnCreateAddress = $checkDuplicateOnCreateAddress; }
 
 	/** @param string $subject */
@@ -98,4 +101,12 @@ class DataFormConfigurationContact
 	/** @param string $recipient */
 	public function setRecipient($recipient)
 		{ $this->_recipient = $recipient; }
+
+	/** @return bool */
+	public function getNewsletterCheckbox(): bool
+		{ return $this->_newsletterCheckbox; }
+
+	/** @param bool $newsletterCheckbox */
+	public function setNewsletterCheckbox(bool $newsletterCheckbox)
+		{ $this->_newsletterCheckbox = $newsletterCheckbox; }
 }

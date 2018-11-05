@@ -75,6 +75,6 @@ class FormPostContactConfigurationDefault
 
 	public function getNewsletterAccepted(): bool
 	{
-		return filter_input(INPUT_POST, 'newsletter_accept', FILTER_VALIDATE_BOOLEAN);
+		return filter_input(INPUT_POST, 'newsletter', FILTER_VALIDATE_BOOLEAN) ?? false;
 	}
 }

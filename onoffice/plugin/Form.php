@@ -30,10 +30,13 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Types\FieldTypes;
+use function __;
+use function esc_html;
 
 /**
  *
@@ -77,7 +80,7 @@ class Form
 	{
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice'));
 		$this->setGenericSetting('formId', 'onoffice-form');
-		$this->_pFieldnames = new Fieldnames();
+		$this->_pFieldnames = new Fieldnames(true);
 		$this->_pFieldnames->loadLanguage();
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
@@ -105,8 +108,7 @@ class Form
 
 	private function getModuleOfField(string $field)
 	{
-		$pDataFormConfiguration = $this->getDataFormConfiguration();
-		$inputs = $pDataFormConfiguration->getInputs();
+		$inputs = $this->getInputFields();
 		$module = $inputs[$field] ?? null;
 
 		return $module;
@@ -121,7 +123,30 @@ class Form
 	public function getInputFields(): array
 	{
 		$inputs = $this->getDataFormConfiguration()->getInputs();
-		return $inputs;
+		$inputsAll = array_merge($inputs, $this->getFormSpecificFields());
+		return $inputsAll;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getFormSpecificFields(): array
+	{
+		$newFields = [];
+		$pDataFormConfiguration = $this->getDataFormConfiguration();
+
+		if ($pDataFormConfiguration->getFormType() === self::TYPE_CONTACT &&
+			$pDataFormConfiguration instanceof DataFormConfigurationContact) {
+			if ($pDataFormConfiguration->getNewsletterCheckbox()) {
+				$newFields['newsletter'] = onOfficeSDK::MODULE_ADDRESS;
+			}
+		}
+
+		return $newFields;
 	}
 
 

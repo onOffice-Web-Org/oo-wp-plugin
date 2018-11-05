@@ -78,6 +78,7 @@ class TestClassField
 		$pField = $this->getPrefilledField();
 		$expectation = [
 			'label' => 'A test',
+			'type' => 'date',
 			'default' => 'asd',
 			'length' => 13,
 			'permittedvalues' => ['test', 'asdf', 13, 37],

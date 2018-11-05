@@ -171,6 +171,7 @@ class Fieldnames
 		$this->createFieldList($fieldList);
 		$this->completeFieldListWithSearchcriteria($handleSearchCriteria);
 		$this->setPermittedValuesForEstateSearchFields();
+		$this->mergeFieldLists();
 	}
 
 
@@ -248,6 +249,27 @@ class Fieldnames
 				}
 
 				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldId] = $fieldProperties;
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function mergeFieldLists()
+	{
+		$modules = [
+			onOfficeSDK::MODULE_ADDRESS,
+			onOfficeSDK::MODULE_ESTATE,
+			onOfficeSDK::MODULE_SEARCHCRITERIA,
+		];
+
+		if ($this->_addApiOnlyFields) {
+			foreach ($modules as $module) {
+				$this->_fieldList[$module] = array_merge
+					($this->_fieldList[$module] ?? [], $this->getExtraFields($module));
 			}
 		}
 	}
@@ -376,15 +398,7 @@ class Fieldnames
 
 	public function getFieldList($module, string $mode = ''): array
 	{
-		$fieldList = [];
-		if (isset($this->_fieldList[$module])) {
-			$fieldList = $this->_fieldList[$module];
-		}
-
-		if ($this->_addApiOnlyFields) {
-			$extraFields = $this->getExtraFields($module);
-			$fieldList = array_merge($fieldList, $extraFields);
-		}
+		$fieldList = $this->_fieldList[$module] ?? [];
 
 		if ($mode !== '')	{
 			$pGeoPosition = new GeoPosition();
@@ -413,7 +427,7 @@ class Fieldnames
 				$newContent = $pField->getCategory() !== '' ?
 					$pField->getCategory() : __('Form Specific Fields', 'onoffice');
 				$pField->setCategory($newContent);
-				$extraFields[$pField->getName()] = $pField->getAsRow();
+				$extraFields[$pField->getName()] = $pField->getAsRow() + ['module' => $module];
 			}
 		}
 

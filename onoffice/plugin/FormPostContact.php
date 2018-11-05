@@ -122,6 +122,7 @@ class FormPostContact
 		}
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
+			// No subscription for newsletter, which is ok
 			return true;
 		}
 
