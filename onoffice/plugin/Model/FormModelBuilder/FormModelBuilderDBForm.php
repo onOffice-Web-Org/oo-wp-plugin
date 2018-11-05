@@ -65,7 +65,7 @@ class FormModelBuilderDBForm
 		$pConfigForm = new InputModelDBFactoryConfigForm();
 		$pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
 		$this->setInputModelDBFactory($pInputModelDBFactory);
-		$this->_pFieldNames = new Fieldnames();
+		$this->_pFieldNames = new Fieldnames(true, true);
 		$this->_pFieldNames->loadLanguage();
 	}
 
@@ -88,11 +88,11 @@ class FormModelBuilderDBForm
 
 		if (is_array($module)) {
 			foreach ($module as $submodule) {
-				$newFields = $this->_pFieldNames->getFieldList($submodule, true, true);
+				$newFields = $this->_pFieldNames->getFieldList($submodule);
 				$fieldNames = array_merge($fieldNames, $newFields);
 			}
 		} else {
-			$fieldNames = $this->_pFieldNames->getFieldList($module, true, true);
+			$fieldNames = $this->_pFieldNames->getFieldList($module);
 		}
 
 		$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());

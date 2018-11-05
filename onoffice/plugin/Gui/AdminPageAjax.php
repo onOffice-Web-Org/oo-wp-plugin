@@ -126,9 +126,9 @@ abstract class AdminPageAjax
 
 	protected function readFieldnamesByContent($module, $extraFields = false)
 	{
-		$pFieldnames = new Fieldnames();
+		$pFieldnames = new Fieldnames($extraFields, $extraFields);
 		$pFieldnames->loadLanguage();
-		$modus = null;
+		$modus = '';
 
 		if ($module == onOfficeSDK::MODULE_ESTATE) {
 			$modus = GeoPosition::MODE_TYPE_ADMIN_INTERFACE;
@@ -137,7 +137,7 @@ abstract class AdminPageAjax
 			$modus = GeoPosition::MODE_TYPE_ADMIN_SEARCH_CRITERIA;
 		}
 
-		$fieldnames = $pFieldnames->getFieldList($module, $extraFields, $extraFields, $modus);
+		$fieldnames = $pFieldnames->getFieldList($module, $modus);
 		$resultByContent = array();
 		$categories = array();
 

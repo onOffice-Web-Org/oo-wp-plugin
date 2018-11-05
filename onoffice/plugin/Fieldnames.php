@@ -87,16 +87,27 @@ class Fieldnames
 	/** @var Types\FieldsCollection[] */
 	private $_apiReadOnlyFieldCollections = [];
 
+	/** @var bool */
+	private $_addApiOnlyFields = false;
+
+	/** @var bool */
+	private $_addInternalAnnotations = false;
+
 
 	/**
 	 *
+	 * @param bool $addApiOnlyFields Adds special fields for API
+	 * @param bool $internalAnnotations Adds a more descriptive field label for admin page
+	 *
 	 */
 
-	public function __construct()
+	public function __construct(bool $addApiOnlyFields = false, bool $internalAnnotations = false)
 	{
 		$this->_language = Language::getDefault();
 		$this->_pSDKWrapper = new SDKWrapper();
 		$pCollectionFactory = new Types\LocalFieldsCollectionFactory();
+		$this->_addApiOnlyFields = $addApiOnlyFields;
+		$this->_addInternalAnnotations = $internalAnnotations;
 
 		$modules = [
 			onOfficeSDK::MODULE_ADDRESS,
@@ -378,27 +389,26 @@ class Fieldnames
 	/**
 	 *
 	 * @param string $module recordType
-	 * @todo: Move $addApiOnlyFields and $annotated into constructor
-	 *
+	 * @param string $mode
 	 * @return array
 	 *
 	 */
 
-	public function getFieldList($module, $addApiOnlyFields = false, $annotated = false, $modus = null): array
+	public function getFieldList($module, string $mode = ''): array
 	{
 		$fieldList = [];
 		if (isset( $this->_fieldList[$module])) {
 			$fieldList = $this->_fieldList[$module];
 		}
 
-		if ($addApiOnlyFields) {
-			$extraFields = $this->getExtraFields($module, $annotated);
+		if ($this->_addApiOnlyFields) {
+			$extraFields = $this->getExtraFields($module);
 			$fieldList = array_merge($fieldList, $extraFields);
 		}
 
-		if ($modus != null)	{
+		if ($mode !== '')	{
 			$pGeoPosition = new GeoPosition();
-			$fieldList = $pGeoPosition->transform($fieldList, $modus);
+			$fieldList = $pGeoPosition->transform($fieldList, $mode);
 		}
 
 		return $fieldList;
@@ -408,12 +418,11 @@ class Fieldnames
 	/**
 	 *
 	 * @param string $module
-	 * @param bool $annotated
 	 * @return array
 	 *
 	 */
 
-	private function getExtraFields($module, bool $annotated): array
+	private function getExtraFields($module): array
 	{
 		$extraFields = [];
 		$pFieldCollection = $module != '' ? $this->_apiReadOnlyFieldCollections[$module] : null;
@@ -428,7 +437,7 @@ class Fieldnames
 			}
 		}
 
-		if ($annotated && isset(self::$_readOnlyFieldsAnnotations[$module])) {
+		if ($this->_addInternalAnnotations && isset(self::$_readOnlyFieldsAnnotations[$module])) {
 			$annotatedFields = [];
 			foreach ($extraFields as $field => $option) {
 				if (isset(self::$_readOnlyFieldsAnnotations[$module][$field])) {
@@ -526,10 +535,6 @@ class Fieldnames
 		return [];
 	}
 
-
-	/** @return string */
-	public function getLanguage(): string
-		{ return $this->_language; }
 
 	/** @return SDKWrapper */
 	public function getSDKWrapper(): SDKWrapper

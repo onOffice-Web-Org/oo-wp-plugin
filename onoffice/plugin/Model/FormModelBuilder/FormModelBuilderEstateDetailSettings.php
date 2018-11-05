@@ -220,10 +220,10 @@ class FormModelBuilderEstateDetailSettings
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 
-		$pFieldnames = new Fieldnames();
+		$pFieldnames = new Fieldnames(true, true);
 		$pFieldnames->loadLanguage();
 
-		$fieldNames = $pFieldnames->getFieldList($module, true, true);
+		$fieldNames = $pFieldnames->getFieldList($module);
 		$fields = array();
 
 		if ($module == onOfficeSDK::MODULE_ADDRESS)

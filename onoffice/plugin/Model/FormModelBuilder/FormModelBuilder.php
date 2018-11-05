@@ -94,10 +94,10 @@ abstract class FormModelBuilder
 
 	protected function readFieldnames($module)
 	{
-		$pFieldnames = new Fieldnames();
+		$pFieldnames = new Fieldnames(true, true);
 		$pFieldnames->loadLanguage();
 
-		$fieldnames = $pFieldnames->getFieldList($module, true, true);
+		$fieldnames = $pFieldnames->getFieldList($module);
 		$result = array();
 
 		foreach ($fieldnames as $key => $properties)
@@ -151,18 +151,18 @@ abstract class FormModelBuilder
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
 
-		$pFieldnames = new Fieldnames();
+		$pFieldnames = new Fieldnames(true, true);
 		$pFieldnames->loadLanguage();
 
 		$fieldNames = array();
 
 		if (is_array($module)) {
 			foreach ($module as $submodule) {
-				$fieldNamesModule = $pFieldnames->getFieldList($submodule, true, true);
+				$fieldNamesModule = $pFieldnames->getFieldList($submodule);
 				$fieldNames = array_merge($fieldNames, $fieldNamesModule);
 			}
 		} else {
-			$fieldNames = $pFieldnames->getFieldList($module, true, true);
+			$fieldNames = $pFieldnames->getFieldList($module);
 		}
 
 		$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
