@@ -77,8 +77,7 @@ class Form
 	{
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice'));
 		$this->setGenericSetting('formId', 'onoffice-form');
-		$language = Language::getDefault();
-		$this->_pFieldnames = new Fieldnames($language);
+		$this->_pFieldnames = new Fieldnames();
 		$this->_pFieldnames->loadLanguage();
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();

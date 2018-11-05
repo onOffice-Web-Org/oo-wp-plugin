@@ -90,13 +90,11 @@ class Fieldnames
 
 	/**
 	 *
-	 * @param string $language
-	 *
 	 */
 
-	public function __construct($language = null)
+	public function __construct()
 	{
-		$this->_language = $language ?? Language::getDefault();
+		$this->_language = Language::getDefault();
 		$this->_pSDKWrapper = new SDKWrapper();
 		$pCollectionFactory = new Types\LocalFieldsCollectionFactory();
 
