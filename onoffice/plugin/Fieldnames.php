@@ -29,9 +29,8 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\GeoPosition;
-use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
@@ -39,159 +38,26 @@ use onOffice\WPlugin\Types\FieldTypes;
 
 class Fieldnames
 {
-
-	/**
-	 *
-	 * @var array
-	 * "label" key needs to be translated
-	 *
-	 */
-
-	private static $_apiReadOnlyFields = array(
-		onOfficeSDK::MODULE_ADDRESS => array(
-			'imageUrl' => array(
-				'type' => FieldTypes::FIELD_TYPE_TEXT,
-				'length' => null,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Image',
-			),
-			'phone' => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 40,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Phone',
-			),
-			'email' => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 80,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'E-Mail',
-			),
-			'fax' => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 40,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Fax',
-			),
-			'mobile' => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 40,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Mobile',
-			),
-			'defaultphone' => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 40,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Phone',
-			),
-			'defaultemail' => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 80,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'E-Mail',
-			),
-			'defaultfax' => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 40,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Fax',
-			),
-		),
-		onOfficeSDK::MODULE_SEARCHCRITERIA => array(
-			'krit_bemerkung_oeffentlich' => array(
-				'type' => FieldTypes::FIELD_TYPE_TEXT,
-				'length' => null,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Comment',
-			),
-			GeoPosition::FIELD_GEO_POSITION => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Geo Position',
-				'content' => 'Search Criteria',
-			),
-		),
-		onOfficeSDK::MODULE_ESTATE => array(
-			GeoPosition::FIELD_GEO_POSITION => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Geo Position',
-				'content' => 'Geografische-Angaben',
-			),
-
-			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => array(
-				'type' => FieldTypes::FIELD_TYPE_SINGLESELECT,
-				'length' => 250,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Land',
-				'content' => 'Geografische-Angaben',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			),
-			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 5,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Radius (km)',
-				'content' => 'Geografische-Angaben',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			),
-			GeoPosition::ESTATE_LIST_SEARCH_STREET => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Strasse',
-				'content' => 'Geografische-Angaben',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			),
-			GeoPosition::ESTATE_LIST_SEARCH_ZIP => array(
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 10,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'PLZ',
-				'content' => 'Geografische-Angaben',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			),
-		),
-	);
-
 	/** @var array */
-	private static $_readOnlyFieldsAnnotations = array(
-		onOfficeSDK::MODULE_ADDRESS => array(
+	private static $_readOnlyFieldsAnnotations = [
+		onOfficeSDK::MODULE_ADDRESS => [
 			'defaultphone' => 'Phone (Marked as default in onOffice)',
 			'defaultemail' => 'E-Mail (Marked as default in onOffice)',
 			'defaultfax' => 'Fax (Marked as default in onOffice)',
-		),
-		onOfficeSDK::MODULE_SEARCHCRITERIA => array(
+		],
+		onOfficeSDK::MODULE_SEARCHCRITERIA => [
 			'krit_bemerkung_oeffentlich' => 'Search Criteria Comment (external)',
-		),
-	);
+		],
+	];
 
 	/** @var array */
-	private static $_defaultSortByFields = array(
-		onOfficeSDK::MODULE_ADDRESS => array(
+	private static $_defaultSortByFields = [
+		onOfficeSDK::MODULE_ADDRESS => [
 			'KdNr',
 			'Eintragsdatum',
 			'Name',
-		),
-		onOfficeSDK::MODULE_ESTATE => array(
+		],
+		onOfficeSDK::MODULE_ESTATE => [
 			'kaufpreis',
 			'kaltmiete',
 			'pacht',
@@ -200,23 +66,26 @@ class Fieldnames
 			'ort',
 			'grundstuecksflaeche',
 			'gesamtflaeche',
-		),
-	);
+		],
+	];
 
 	/** @var array */
-	private $_fieldList = array();
+	private $_fieldList = [];
 
 	/** @var array */
-	private $_searchcriteriaRangeInfos = array();
+	private $_searchcriteriaRangeInfos = [];
 
 	/** @var array */
-	private $_umkreisFields = array();
+	private $_umkreisFields = [];
 
 	/** @var string */
 	private $_language = null;
 
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
+
+	/** @var Types\FieldsCollection[] */
+	private $_apiReadOnlyFieldCollections = [];
 
 
 	/**
@@ -227,13 +96,20 @@ class Fieldnames
 
 	public function __construct($language = null)
 	{
-		if ($language == null) {
-			$this->_language = Language::getDefault();
-		} else {
-			$this->_language = $language;
-		}
-
+		$this->_language = $language ?? Language::getDefault();
 		$this->_pSDKWrapper = new SDKWrapper();
+		$pCollectionFactory = new Types\LocalFieldsCollectionFactory();
+
+		$modules = [
+			onOfficeSDK::MODULE_ADDRESS,
+			onOfficeSDK::MODULE_ESTATE,
+			onOfficeSDK::MODULE_SEARCHCRITERIA,
+		];
+
+		foreach ($modules as $module) {
+			$this->_apiReadOnlyFieldCollections[$module] =
+				$pCollectionFactory->produceCollection($module);
+		}
 	}
 
 
@@ -245,29 +121,29 @@ class Fieldnames
 
 	public function loadLanguage($showOnlyInactive = false)
 	{
-		$parametersGetFieldList = array(
+		$parametersGetFieldList = [
 			'labels' => true,
 			'showContent' => true,
 			'showTable' => true,
 			'language' => $this->_language,
-			'modules' => array(
+			'modules' => [
 				onOfficeSDK::MODULE_ADDRESS,
 				onOfficeSDK::MODULE_ESTATE,
-			),
-		);
+			],
+		];
 
 		if ($showOnlyInactive) {
 			$parametersGetFieldList['showOnlyInactive'] = true;
 		}
 
 		$pSDKWrapper = $this->_pSDKWrapper;
-		$handleGetFields = $pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList);
+		$handleGetFields = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList);
 
-		$requestParamsSearchCriteria = array(
+		$requestParamsSearchCriteria = [
 			'language' => $this->_language,
 			'additionalTranslations' => true,
-		);
+		];
 
 		$handleSearchCriteria = $pSDKWrapper->addRequest
 			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', $requestParamsSearchCriteria);
@@ -277,7 +153,7 @@ class Fieldnames
 		$responseArrayFieldList = $pSDKWrapper->getRequestResponse($handleGetFields);
 		$fieldList = $responseArrayFieldList['data']['records'];
 
-		$this->createFieldList( $fieldList );
+		$this->createFieldList($fieldList);
 		$this->completeFieldListWithSearchcriteria($handleSearchCriteria);
 		$this->setPermittedValuesForEstateSearchFields();
 	}
@@ -291,34 +167,34 @@ class Fieldnames
 	{
 		$pGeoPosition = new GeoPosition();
 		$geoPositionSearchFields = $pGeoPosition->getEstateSearchFields();
+		$module = onOfficeSDK::MODULE_ESTATE;
+		$pCollection = $this->_apiReadOnlyFieldCollections[$module];
 
 		foreach ($geoPositionSearchFields as $field) {
-			$this->_fieldList[onOfficeSDK::MODULE_ESTATE][$field] =
-				self::$_apiReadOnlyFields[onOfficeSDK::MODULE_ESTATE][$field];
+			$this->_fieldList[$module][$field] = $pCollection->getByName($field)->getAsRow();
 		}
 	}
-
 
 
 	/**
 	 *
 	 */
+
 	private function setPermittedValuesForEstateSearchFields()
 	{
-		$permittedValuesLand = null;
+		$permittedValuesLand = [];
 
-		if (array_key_exists('range_land', $this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA])) {
+		if (isset($this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA]['range_land'])) {
 			$permittedValuesLand =
-					$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA]['range_land']['permittedvalues'];
-
-		}
-		elseif (array_key_exists('land', $this->_fieldList[onOfficeSDK::MODULE_ESTATE])) {
+				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA]['range_land']['permittedvalues'];
+		} elseif (isset($this->_fieldList[onOfficeSDK::MODULE_ESTATE]['land'])) {
 			$permittedValuesLand =
-					$this->_fieldList[onOfficeSDK::MODULE_ESTATE]['land']['permittedvalues'];
+				$this->_fieldList[onOfficeSDK::MODULE_ESTATE]['land']['permittedvalues'];
 		}
 
-		self::$_apiReadOnlyFields[onOfficeSDK::MODULE_ESTATE][GeoPosition::ESTATE_LIST_SEARCH_COUNTRY]['permittedvalues'] =
-				$permittedValuesLand;
+		$pCollection = $this->_apiReadOnlyFieldCollections[onOfficeSDK::MODULE_ESTATE];
+		$pCollection->getByName(GeoPosition::ESTATE_LIST_SEARCH_COUNTRY)->setPermittedvalues
+			($permittedValuesLand);
 	}
 
 
@@ -338,24 +214,16 @@ class Fieldnames
 			foreach ($fields['fields'] as $field) {
 				$fieldId = $field['id'];
 
-				$fieldProperties = array();
-				$fieldProperties['type'] = $field['type'];
-				$fieldProperties['label'] = $field['name'];
-				$fieldProperties['default'] = null;
-				$fieldProperties['permittedvalues'] = array();
-				$fieldProperties['content'] = __('Search Criteria', 'onoffice');
-				$fieldProperties['module'] = onOfficeSDK::MODULE_SEARCHCRITERIA;
+				$fieldProperties = [
+					'type' => $field['type'],
+					'label' => $field['name'],
+					'default' => $field['default'] ?? null,
+					'permittedvalues' => $field['values'] ?? [],
+					'content' => __('Search Criteria', 'onoffice'),
+					'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+				];
 
-				if (isset($field['default'])) {
-					$fieldProperties['default'] = $field['default'];
-				}
-
-				if (isset($field['values'])) {
-					$fieldProperties['permittedvalues'] = $field['values'];
-				}
-
-				if (isset($field['rangefield']) &&
-					$field['rangefield'] == true &&
+				if (($field['rangefield'] ?? false) &&
 					isset($field['additionalTranslations'])) {
 					$this->_searchcriteriaRangeInfos[$fieldId] = $field['additionalTranslations'];
 				}
@@ -512,6 +380,7 @@ class Fieldnames
 	/**
 	 *
 	 * @param string $module recordType
+	 * @todo: Move $addApiOnlyFields and $annotated into constructor
 	 *
 	 * @return array
 	 *
@@ -525,15 +394,7 @@ class Fieldnames
 		}
 
 		if ($addApiOnlyFields) {
-			$extraFields = array();
-			$extraFieldsUntranslated = $this->getExtraFields($module, $annotated);
-
-			foreach ($extraFieldsUntranslated as $field => $options) {
-				$newOptions = $options;
-				$newOptions['label'] = __($options['label'], 'onoffice');
-				$extraFields[$field] = $newOptions;
-			}
-
+			$extraFields = $this->getExtraFields($module, $annotated);
 			$fieldList = array_merge($fieldList, $extraFields);
 		}
 
@@ -557,18 +418,20 @@ class Fieldnames
 	private function getExtraFields($module, bool $annotated): array
 	{
 		$extraFields = [];
-		$hasApiFields = isset(self::$_apiReadOnlyFields[$module]);
+		$pFieldCollection = $module != '' ? $this->_apiReadOnlyFieldCollections[$module] : null;
 
-		if ($hasApiFields) {
-			$extraFields = self::$_apiReadOnlyFields[$module];
-			array_walk($extraFields, function(&$array) {
-				$newContent = $array['content'] ?? 'Form Specific Fields';
-				$array['content'] = __($newContent, 'onoffice');
-			});
+		if ($pFieldCollection !== null) {
+			$extraFieldsObject = $pFieldCollection->getAllFields();
+			foreach ($extraFieldsObject as $pField) {
+				$newContent = $pField->getCategory() !== '' ?
+					$pField->getCategory() : __('Form Specific Fields', 'onoffice');
+				$pField->setCategory($newContent);
+				$extraFields[$pField->getName()] = $pField->getAsRow();
+			}
 		}
 
 		if ($annotated && isset(self::$_readOnlyFieldsAnnotations[$module])) {
-			$annotatedFields = array();
+			$annotatedFields = [];
 			foreach ($extraFields as $field => $option) {
 				if (isset(self::$_readOnlyFieldsAnnotations[$module][$field])) {
 					$option['label'] = self::$_readOnlyFieldsAnnotations[$module][$field];
@@ -640,10 +503,12 @@ class Fieldnames
 
 	private function getRow($module, $field)
 	{
+		$pModuleCollection = $this->_apiReadOnlyFieldCollections[$module] ?? null;
+
 		if (isset($this->_fieldList[$module][$field])) {
 			return $this->_fieldList[$module][$field];
-		} elseif (isset(self::$_apiReadOnlyFields[$module][$field])) {
-			return self::$_apiReadOnlyFields[$module][$field];
+		} elseif ($pModuleCollection !== null && $pModuleCollection->containsField($field)) {
+			return $pModuleCollection->getByName($field)->getAsRow();
 		}
 	}
 
