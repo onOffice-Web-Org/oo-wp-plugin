@@ -93,21 +93,29 @@ class Fieldnames
 	/** @var bool */
 	private $_addInternalAnnotations = false;
 
+	/** @var bool */
+	private $_inactiveOnly = false;
+
 
 	/**
 	 *
 	 * @param bool $addApiOnlyFields Adds special fields for API
 	 * @param bool $internalAnnotations Adds a more descriptive field label for admin page
+	 * @param bool $inactiveOnly
 	 *
 	 */
 
-	public function __construct(bool $addApiOnlyFields = false, bool $internalAnnotations = false)
+	public function __construct(
+		bool $addApiOnlyFields = false,
+		bool $internalAnnotations = false,
+		bool $inactiveOnly = false)
 	{
 		$this->_language = Language::getDefault();
 		$this->_pSDKWrapper = new SDKWrapper();
 		$pCollectionFactory = new Types\LocalFieldsCollectionFactory();
 		$this->_addApiOnlyFields = $addApiOnlyFields;
 		$this->_addInternalAnnotations = $internalAnnotations;
+		$this->_inactiveOnly = $inactiveOnly;
 
 		$modules = [
 			onOfficeSDK::MODULE_ADDRESS,
@@ -124,11 +132,9 @@ class Fieldnames
 
 	/**
 	 *
-	 * @param bool $showOnlyInactive
-	 *
 	 */
 
-	public function loadLanguage($showOnlyInactive = false)
+	public function loadLanguage()
 	{
 		$parametersGetFieldList = [
 			'labels' => true,
@@ -141,7 +147,7 @@ class Fieldnames
 			],
 		];
 
-		if ($showOnlyInactive) {
+		if ($this->_inactiveOnly) {
 			$parametersGetFieldList['showOnlyInactive'] = true;
 		}
 
@@ -397,7 +403,7 @@ class Fieldnames
 	public function getFieldList($module, string $mode = ''): array
 	{
 		$fieldList = [];
-		if (isset( $this->_fieldList[$module])) {
+		if (isset($this->_fieldList[$module])) {
 			$fieldList = $this->_fieldList[$module];
 		}
 

@@ -147,8 +147,8 @@ class InputFieldComplexSortableDetailListRenderer
 	{
 		self::$_inactiveFields = array();
 
-		$pFieldnames = new Fieldnames();
-		$pFieldnames->loadLanguage(true);
+		$pFieldnames = new Fieldnames(false, false, true);
+		$pFieldnames->loadLanguage();
 
 		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
 
