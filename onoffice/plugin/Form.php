@@ -82,15 +82,15 @@ class Form
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();
-		$this->_pFormData = $pFormPost->getFormDataInstance( $formName, $this->_formNo );
+		$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
 
 		// no form sent
-		if ( is_null( $this->_pFormData ) ) {
+		if (is_null($this->_pFormData)) {
 			$pFormConfigFactory = new DataFormConfigurationFactory();
 			$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
-			$this->_pFormData = new FormData( $pFormConfig, $this->_formNo );
-			$this->_pFormData->setRequiredFields( $pFormConfig->getRequiredFields() );
-			$this->_pFormData->setFormtype( $pFormConfig->getFormType() );
+			$this->_pFormData = new FormData($pFormConfig, $this->_formNo);
+			$this->_pFormData->setRequiredFields($pFormConfig->getRequiredFields());
+			$this->_pFormData->setFormtype($pFormConfig->getFormType());
 			$this->_pFormData->setFormSent(false);
 		}
 	}
@@ -134,9 +134,9 @@ class Form
 	public function getRequiredFields(): array
 	{
 		$requiredFields = $this->getDataFormConfiguration()->getRequiredFields();
-		$requiredFields = $this->executeGeoPositionFix($requiredFields);
+		$requiredFieldsWithGeo = $this->executeGeoPositionFix($requiredFields);
 
-		return $requiredFields;
+		return $requiredFieldsWithGeo;
 	}
 
 
@@ -216,7 +216,7 @@ class Form
 	 *
 	 */
 
-	public function getFieldLabel(string $field, $raw = false): string
+	public function getFieldLabel(string $field, bool $raw = false): string
 	{
 		$module = $this->getModuleOfField($field);
 		$label = $this->_pFieldnames->getFieldLabel($field, $module);
@@ -296,31 +296,8 @@ class Form
 		$module = $this->getModuleOfField($field);
 
 		if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
-			$this->_pFieldnames->inRangeSearchcriteriaInfos($field))
-		{
+			$this->_pFieldnames->inRangeSearchcriteriaInfos($field)) {
 			$returnValues = $this->_pFieldnames->getRangeSearchcriteriaInfosForField($field);
-		}
-
-		return $returnValues;
-	}
-
-
-	/**
-	 *
-	 * @param string $field
-	 * @return array
-	 *
-	 */
-
-	public function getUmkreisValuesForField( $field )
-	{
-		$returnValues = array();
-		$module = $this->getModuleOfField($field);
-
-		if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
-			$this->_pFieldnames->isUmkreisField($field))
-		{
-			$returnValues = $this->_pFieldnames->getUmkreisValuesForField($field);
 		}
 
 		return $returnValues;
@@ -339,11 +316,11 @@ class Form
 	public function getPermittedValues($field, $raw = false): array
 	{
 		$module = $this->getModuleOfField($field);
-		$fieldType = $this->getFieldType( $field );
+		$fieldType = $this->getFieldType($field);
 		$isMultiselectOrSingleselect = in_array($fieldType, [
 			FieldTypes::FIELD_TYPE_MULTISELECT,
 			FieldTypes::FIELD_TYPE_SINGLESELECT,
-		], true );
+		], true);
 
 		$result = [];
 
@@ -366,10 +343,10 @@ class Form
 	 *
 	 */
 
-	public function getFieldType( $field )
+	public function getFieldType($field)
 	{
 		$module = $this->getModuleOfField($field);
-		$fieldType = $this->_pFieldnames->getType( $field, $module);
+		$fieldType = $this->_pFieldnames->getType($field, $module);
 		return $fieldType;
 	}
 
@@ -381,12 +358,12 @@ class Form
 	 *
 	 */
 
-	private function escapePermittedValues( array $keyValues )
+	private function escapePermittedValues(array $keyValues)
 	{
 		$result = array();
 
-		foreach ( $keyValues as $key => $value ) {
-			$result[esc_html( $key )] = esc_html( $value );
+		foreach ($keyValues as $key => $value) {
+			$result[esc_html($key)] = esc_html($value);
 		}
 
 		return $result;
@@ -402,19 +379,19 @@ class Form
 	 *
 	 */
 
-	public function getFieldValue( $field, $raw = false, $forceEvenIfSuccess = false )
+	public function getFieldValue($field, $raw = false, $forceEvenIfSuccess = false)
 	{
 		$values = $this->_pFormData->getValues();
-		$fieldValue = isset( $values[$field] ) ? $values[$field] : '';
+		$fieldValue = $values[$field] ?? '';
 
-		if ( ! $this->_pFormData->getFormSent() && ! $forceEvenIfSuccess ) {
+		if (!$this->_pFormData->getFormSent() && !$forceEvenIfSuccess) {
 			return '';
 		}
 
-		if ( $raw ) {
+		if ($raw) {
 			return $fieldValue;
 		} else {
-			return esc_html( $fieldValue );
+			return esc_html($fieldValue);
 		}
 	}
 
@@ -427,9 +404,9 @@ class Form
 	 *
 	 */
 
-	public function getMessageForField( $field, $message )
+	public function getMessageForField($field, $message)
 	{
-		if ( in_array($field, $this->_pFormData->getMissingFields(), true ) ) {
+		if (in_array($field, $this->_pFormData->getMissingFields(), true)) {
 			return esc_html($message);
 		}
 		return null;
@@ -443,10 +420,10 @@ class Form
 	 *
 	 */
 
-	public function isMissingField( $field )
+	public function isMissingField($field)
 	{
 		return $this->_pFormData->getFormSent() &&
-			in_array( $field, $this->_pFormData->getMissingFields(), true );
+			in_array($field, $this->_pFormData->getMissingFields(), true);
 	}
 
 

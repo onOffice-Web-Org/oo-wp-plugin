@@ -269,32 +269,6 @@ class Fieldnames
 	/**
 	 *
 	 * @param string $field
-	 * @return bool
-	 *
-	 */
-
-	public function isUmkreisField(string $field): bool
-	{
-		return isset($this->_umkreisFields[$field]);
-	}
-
-
-	/**
-	 *
-	 * @param atring $field
-	 * @return array
-	 *
-	 */
-
-	public function getUmkreisValuesForField(string $field): array
-	{
-		return $this->_umkreisFields[$field] ?? [];
-	}
-
-
-	/**
-	 *
-	 * @param string $field
 	 * @return array
 	 *
 	 */
