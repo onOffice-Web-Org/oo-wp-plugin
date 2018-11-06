@@ -38,6 +38,7 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Utility\__String;
@@ -151,10 +152,10 @@ class ContentFilter
 		$pSearchParameters = SearchParameters::getInstance();
 
 		foreach ($pDataView->getFilterableFields() as $filterableField) {
-			$fieldInfo = $pFieldNames->getFieldInformation
-				($filterableField, onOfficeSDK::MODULE_ESTATE);
-
-			if ($fieldInfo === null) {
+			try {
+				$fieldInfo = $pFieldNames->getFieldInformation
+					($filterableField, onOfficeSDK::MODULE_ESTATE);
+			} catch (UnknownFieldException $pException) {
 				continue;
 			}
 

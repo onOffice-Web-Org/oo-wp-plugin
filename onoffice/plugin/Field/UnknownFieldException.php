@@ -19,10 +19,6 @@
  *
  */
 
-namespace onOffice\WPlugin\Form;
-
-use onOffice\WPlugin\SDKWrapper;
-
 /**
  *
  * @url http://www.onoffice.de
@@ -30,69 +26,16 @@ use onOffice\WPlugin\SDKWrapper;
  *
  */
 
-interface FormPostConfiguration
+namespace onOffice\WPlugin\Field;
+
+use Exception;
+
+/**
+ *
+ */
+
+class UnknownFieldException
+	extends Exception
 {
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
 
-	public function getSDKWrapper(): SDKWrapper;
-
-
-	/**
-	 *
-	 * @return array all the post variables
-	 *
-	 */
-
-	public function getPostVars(): array;
-
-
-	/**
-	 *
-	 * @param string $input
-	 * @param string $module
-	 * @return string
-	 *
-	 */
-
-	public function getTypeForInput(string $input, string $module): string;
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getPostvarCaptchaToken(): string;
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getCaptchaSecret(): string;
-
-
-	/**
-	 *
-	 * @return bool
-	 *
-	 */
-
-	public function isCaptchaSetup(): bool;
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getSearchCriteriaFields(): array;
 }

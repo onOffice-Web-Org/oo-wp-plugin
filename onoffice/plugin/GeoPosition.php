@@ -61,18 +61,22 @@ class GeoPosition
 		onOfficeSDK::MODULE_ESTATE => [
 			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
 			'length' => 250,
-			'permittedvalues' => array(),
+			'permittedvalues' => [],
 			'default' => null,
 			'label' => 'Geo Position',
 			'content' => 'Geografische-Angaben',
+			'tablename' => '',
+			'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 		],
 		onOfficeSDK::MODULE_SEARCHCRITERIA => [
 			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
 			'length' => 250,
-			'permittedvalues' => array(),
+			'permittedvalues' => [],
 			'default' => null,
 			'label' => 'Geo Position',
 			'content' => 'Search Criteria',
+			'tablename' => '',
+			'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 		],
 	];
 

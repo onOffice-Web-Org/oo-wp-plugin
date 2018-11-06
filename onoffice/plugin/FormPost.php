@@ -245,11 +245,7 @@ abstract class FormPost
 
 	protected function getFormFieldsConsiderSearchcriteria($inputFormFields, $numberAsRange = true)
 	{
-		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
-		$pFieldnames = new Fieldnames();
-		$pFieldnames->setSDKWrapper($pSDKWrapper);
-		$pFieldnames->loadLanguage();
-		$fieldList = $pFieldnames->getFieldList(onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$fieldList = $this->_pFormPostConfiguration->getSearchCriteriaFields();
 
 		$fields = array_unique(array_keys($fieldList));
 		$module = array_fill(0, count($fields), 'searchcriteria');
@@ -286,8 +282,7 @@ abstract class FormPost
 		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper,
 			onOfficeSDK::ACTION_ID_CREATE, 'address');
 		$pApiClientAction->setParameters($requestParams);
-		$pApiClientAction->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 
 		if ($pApiClientAction->getResultStatus() === true) {
 			$result = $pApiClientAction->getResultRecords();

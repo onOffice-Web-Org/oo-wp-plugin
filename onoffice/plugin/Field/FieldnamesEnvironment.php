@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\Form;
+namespace onOffice\WPlugin\Field;
 
 use onOffice\WPlugin\SDKWrapper;
 
@@ -30,69 +30,22 @@ use onOffice\WPlugin\SDKWrapper;
  *
  */
 
-interface FormPostConfiguration
+interface FieldnamesEnvironment
 {
 	/**
 	 *
-	 * @return SDKWrapper
+	 * @return string
+	 *
+	 */
+
+	public function getLanguage(): string;
+
+
+	/**
+	 *
+	 * @returns SDKWrapper
 	 *
 	 */
 
 	public function getSDKWrapper(): SDKWrapper;
-
-
-	/**
-	 *
-	 * @return array all the post variables
-	 *
-	 */
-
-	public function getPostVars(): array;
-
-
-	/**
-	 *
-	 * @param string $input
-	 * @param string $module
-	 * @return string
-	 *
-	 */
-
-	public function getTypeForInput(string $input, string $module): string;
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getPostvarCaptchaToken(): string;
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getCaptchaSecret(): string;
-
-
-	/**
-	 *
-	 * @return bool
-	 *
-	 */
-
-	public function isCaptchaSetup(): bool;
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getSearchCriteriaFields(): array;
 }

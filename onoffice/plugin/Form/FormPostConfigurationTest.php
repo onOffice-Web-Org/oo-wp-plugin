@@ -203,4 +203,18 @@ class FormPostConfigurationTest
 	{
 		return true;
 	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getSearchCriteriaFields(): array
+	{
+		$jsonFile = ONOFFICE_PLUGIN_DIR.'/tests/resources/FormPostSearchCriteriaFields.json';
+		$jsonString = file_get_contents($jsonFile);
+		return json_decode($jsonString, true);
+	}
 }

@@ -29,8 +29,13 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\FieldnamesEnvironment;
+use onOffice\WPlugin\Field\FieldnamesEnvironmentDefault;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\GeoPosition;
-use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\LocalFieldsCollectionFactory;
+use function __;
 
 /**
  *
@@ -69,6 +74,9 @@ class Fieldnames
 		],
 	];
 
+	/** @var FieldnamesEnvironment */
+	private $_pEnvironment = null;
+
 	/** @var array */
 	private $_fieldList = [];
 
@@ -78,13 +86,7 @@ class Fieldnames
 	/** @var array */
 	private $_umkreisFields = [];
 
-	/** @var string */
-	private $_language = null;
-
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
-	/** @var Types\FieldsCollection[] */
+	/** @var FieldsCollection[] */
 	private $_apiReadOnlyFieldCollections = [];
 
 	/** @var bool */
@@ -108,11 +110,10 @@ class Fieldnames
 	public function __construct(
 		bool $addApiOnlyFields = false,
 		bool $internalAnnotations = false,
-		bool $inactiveOnly = false)
+		bool $inactiveOnly = false,
+		FieldnamesEnvironment $pEnvironment = null)
 	{
-		$this->_language = Language::getDefault();
-		$this->_pSDKWrapper = new SDKWrapper();
-		$pCollectionFactory = new Types\LocalFieldsCollectionFactory();
+		$this->_pEnvironment = $pEnvironment ?? new FieldnamesEnvironmentDefault();
 		$this->_addApiOnlyFields = $addApiOnlyFields;
 		$this->_addInternalAnnotations = $internalAnnotations;
 		$this->_inactiveOnly = $inactiveOnly;
@@ -122,6 +123,8 @@ class Fieldnames
 			onOfficeSDK::MODULE_ESTATE,
 			onOfficeSDK::MODULE_SEARCHCRITERIA,
 		];
+
+		$pCollectionFactory = new LocalFieldsCollectionFactory();
 
 		foreach ($modules as $module) {
 			$this->_apiReadOnlyFieldCollections[$module] =
@@ -140,7 +143,7 @@ class Fieldnames
 			'labels' => true,
 			'showContent' => true,
 			'showTable' => true,
-			'language' => $this->_language,
+			'language' => $this->_pEnvironment->getLanguage(),
 			'modules' => [
 				onOfficeSDK::MODULE_ADDRESS,
 				onOfficeSDK::MODULE_ESTATE,
@@ -151,12 +154,12 @@ class Fieldnames
 			$parametersGetFieldList['showOnlyInactive'] = true;
 		}
 
-		$pSDKWrapper = $this->_pSDKWrapper;
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$handleGetFields = $pSDKWrapper->addRequest
 			(onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList);
 
 		$requestParamsSearchCriteria = [
-			'language' => $this->_language,
+			'language' => $this->_pEnvironment->getLanguage(),
 			'additionalTranslations' => true,
 		];
 
@@ -187,7 +190,8 @@ class Fieldnames
 		$pCollection = $this->_apiReadOnlyFieldCollections[$module];
 
 		foreach ($geoPositionSearchFields as $field) {
-			$this->_fieldList[$module][$field] = $pCollection->getByName($field)->getAsRow();
+			$this->_fieldList[$module][$field] = $pCollection->getByName($field)
+				->getAsRow() + ['module' => $module];
 		}
 	}
 
@@ -222,7 +226,7 @@ class Fieldnames
 
 	private function completeFieldListWithSearchcriteria($handle)
 	{
-		$response = $this->_pSDKWrapper->getRequestResponse($handle);
+		$response = $this->_pEnvironment->getSDKWrapper()->getRequestResponse($handle);
 
 		foreach ($response['data']['records'] as $tableValues) {
 			$fields = $tableValues['elements'];
@@ -233,10 +237,12 @@ class Fieldnames
 				$fieldProperties = [
 					'type' => $field['type'],
 					'label' => $field['name'],
+					'length' => null,
 					'default' => $field['default'] ?? null,
 					'permittedvalues' => $field['values'] ?? [],
 					'content' => __('Search Criteria', 'onoffice'),
 					'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+					'tablename' => 'ObjSuchkriterien',
 				];
 
 				if (($field['rangefield'] ?? false) &&
@@ -377,11 +383,11 @@ class Fieldnames
 
 	public function getFieldLabel(string $field, $module): string
 	{
-		$fieldNewName = $field;
-		$row = $this->getRow($module, $field);
-
-		if (!is_null($row)) {
+		try {
+			$row = $this->getRow($module, $field);
 			$fieldNewName = $row['label'];
+		} catch (UnknownFieldException $pException) {
+			$fieldNewName = $field;
 		}
 
 		return $fieldNewName;
@@ -454,12 +460,10 @@ class Fieldnames
 	 *
 	 */
 
-	public function getType($fieldName, $module)
+	public function getType(string $fieldName, string $module): string
 	{
 		$row = $this->getRow($module, $fieldName);
-		if (!is_null($row)) {
-			return $row['type'];
-		}
+		return $row['type'];
 	}
 
 
@@ -467,16 +471,14 @@ class Fieldnames
 	 *
 	 * @param string $inputField
 	 * @param string $module
-	 * @return string
+	 * @return array
 	 *
 	 */
 
-	public function getPermittedValues(string $inputField, string $module)
+	public function getPermittedValues(string $inputField, string $module): array
 	{
 		$row = $this->getRow($module, $inputField);
-		if (!is_null($row)) {
-			return $row['permittedvalues'];
-		}
+		return $row['permittedvalues'] ?? [];
 	}
 
 
@@ -502,7 +504,7 @@ class Fieldnames
 	 *
 	 */
 
-	private function getRow($module, $field)
+	private function getRow($module, $field): array
 	{
 		$pModuleCollection = $this->_apiReadOnlyFieldCollections[$module] ?? null;
 
@@ -511,6 +513,8 @@ class Fieldnames
 		} elseif ($pModuleCollection !== null && $pModuleCollection->containsField($field)) {
 			return $pModuleCollection->getByName($field)->getAsRow();
 		}
+
+		throw new UnknownFieldException;
 	}
 
 
@@ -529,12 +533,15 @@ class Fieldnames
 		return [];
 	}
 
+	/** @return bool */
+	public function getAddApiOnlyFields(): bool
+		{ return $this->_addApiOnlyFields; }
 
-	/** @return SDKWrapper */
-	public function getSDKWrapper(): SDKWrapper
-		{ return $this->_pSDKWrapper; }
+	/** @return bool */
+	public function getAddInternalAnnotations(): bool
+		{ return $this->_addInternalAnnotations; }
 
-	/** @param SDKWrapper $pSDKWrapper */
-	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
-		{ $this->_pSDKWrapper = $pSDKWrapper; }
+	/** @return bool */
+	public function getInactiveOnly(): bool
+		{ return $this->_inactiveOnly; }
 }

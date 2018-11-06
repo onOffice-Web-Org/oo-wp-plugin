@@ -19,8 +19,9 @@
  *
  */
 
-namespace onOffice\WPlugin\Form;
+namespace onOffice\WPlugin\Field;
 
+use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\SDKWrapper;
 
 /**
@@ -30,69 +31,35 @@ use onOffice\WPlugin\SDKWrapper;
  *
  */
 
-interface FormPostConfiguration
+class FieldnamesEnvironmentTest
+	implements FieldnamesEnvironment
 {
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
+	/** @var string */
+	private $_language = 'ENG';
 
-	public function getSDKWrapper(): SDKWrapper;
+	/** @var SDKWrapperMocker */
+	private $_pSDKWrapper = null;
 
 
 	/**
 	 *
-	 * @return array all the post variables
-	 *
 	 */
 
-	public function getPostVars(): array;
+	public function __construct()
+	{
+		$this->_pSDKWrapper = new SDKWrapperMocker();
+	}
 
 
-	/**
-	 *
-	 * @param string $input
-	 * @param string $module
-	 * @return string
-	 *
-	 */
+	/** @return string */
+	public function getLanguage(): string
+		{ return $this->_language; }
 
-	public function getTypeForInput(string $input, string $module): string;
+	/** @param string $language */
+	public function setLanguage(string $language)
+		{ $this->_language = $language; }
 
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getPostvarCaptchaToken(): string;
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getCaptchaSecret(): string;
-
-
-	/**
-	 *
-	 * @return bool
-	 *
-	 */
-
-	public function isCaptchaSetup(): bool;
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getSearchCriteriaFields(): array;
+	/** @return SDKWrapperMocker */
+	public function getSDKWrapper(): SDKWrapper
+		{ return $this->_pSDKWrapper; }
 }

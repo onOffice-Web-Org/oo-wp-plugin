@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Form;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\SDKWrapper;
 
@@ -120,5 +121,19 @@ class FormPostConfigurationDefault
 	public function isCaptchaSetup(): bool
 	{
 		return get_option('onoffice-settings-captcha-sitekey', '') !== '';
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getSearchCriteriaFields(): array
+	{
+		$pFieldnames = new Fieldnames();
+		$pFieldnames->loadLanguage();
+		return $pFieldnames->getFieldList(onOfficeSDK::MODULE_SEARCHCRITERIA);
 	}
 }
