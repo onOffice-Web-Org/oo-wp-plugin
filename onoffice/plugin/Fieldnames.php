@@ -29,6 +29,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentDefault;
 use onOffice\WPlugin\Field\UnknownFieldException;
@@ -144,10 +145,7 @@ class Fieldnames
 			'showContent' => true,
 			'showTable' => true,
 			'language' => $this->_pEnvironment->getLanguage(),
-			'modules' => [
-				onOfficeSDK::MODULE_ADDRESS,
-				onOfficeSDK::MODULE_ESTATE,
-			],
+			'modules' => [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE],
 		];
 
 		if ($this->_inactiveOnly) {
@@ -155,24 +153,24 @@ class Fieldnames
 		}
 
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
-		$handleGetFields = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_GET, 'fields', $parametersGetFieldList);
 
-		$requestParamsSearchCriteria = [
+		$pApiClientActionFields = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
+		$pApiClientActionFields->setParameters($parametersGetFieldList);
+		$pApiClientActionFields->addRequestToQueue();
+
+		$pApiClientActionSearchCriteriaFields = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields');
+		$pApiClientActionSearchCriteriaFields->setParameters([
 			'language' => $this->_pEnvironment->getLanguage(),
 			'additionalTranslations' => true,
-		];
-
-		$handleSearchCriteria = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', $requestParamsSearchCriteria);
+		]);
+		$pApiClientActionSearchCriteriaFields->addRequestToQueue();
 
 		$pSDKWrapper->sendRequests();
 
-		$responseArrayFieldList = $pSDKWrapper->getRequestResponse($handleGetFields);
-		$fieldList = $responseArrayFieldList['data']['records'];
-
-		$this->createFieldList($fieldList);
-		$this->completeFieldListWithSearchcriteria($handleSearchCriteria);
+		$this->createFieldList($pApiClientActionFields);
+		$this->completeFieldListWithSearchcriteria($pApiClientActionSearchCriteriaFields);
 		$this->setPermittedValuesForEstateSearchFields();
 		$this->mergeFieldLists();
 	}
@@ -190,8 +188,8 @@ class Fieldnames
 		$pCollection = $this->_apiReadOnlyFieldCollections[$module];
 
 		foreach ($geoPositionSearchFields as $field) {
-			$this->_fieldList[$module][$field] = $pCollection->getByName($field)
-				->getAsRow() + ['module' => $module];
+			$pField = $pCollection->getByName($field);
+			$this->_fieldList[$module][$field] = $pField->getAsRow() + ['module' => $module];
 		}
 	}
 
@@ -220,15 +218,15 @@ class Fieldnames
 
 	/**
 	 *
-	 * @param int $handle
+	 * @param APIClientActionGeneric $pApiClientAction
 	 *
 	 */
 
-	private function completeFieldListWithSearchcriteria($handle)
+	private function completeFieldListWithSearchcriteria(APIClientActionGeneric $pApiClientAction)
 	{
-		$response = $this->_pEnvironment->getSDKWrapper()->getRequestResponse($handle);
+		$response = $pApiClientAction->getResultRecords();
 
-		foreach ($response['data']['records'] as $tableValues) {
+		foreach ($response as $tableValues) {
 			$fields = $tableValues['elements'];
 
 			foreach ($fields['fields'] as $field) {
@@ -333,21 +331,19 @@ class Fieldnames
 
 	/**
 	 *
-	 * @param array $fieldResult
+	 * @param APIClientActionGeneric $pApiClientAction
 	 *
 	 */
 
-	private function createFieldList(array $fieldResult)
+	private function createFieldList(APIClientActionGeneric $pApiClientAction)
 	{
-		foreach ($fieldResult as $moduleProperties) {
-			if (!isset($moduleProperties['elements'])) {
-				continue;
-			}
+		$fieldResult = $pApiClientAction->getResultRecords();
 
+		foreach ($fieldResult as $moduleProperties) {
 			$module = $moduleProperties['id'];
 
 			foreach ($moduleProperties['elements'] as $fieldName => $fieldProperties) {
-				if ( 'label' == $fieldName ) {
+				if ('label' == $fieldName) {
 					continue;
 				}
 
