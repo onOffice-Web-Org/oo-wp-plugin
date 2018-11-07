@@ -243,8 +243,7 @@ class Fieldnames
 					'tablename' => 'ObjSuchkriterien',
 				];
 
-				if (($field['rangefield'] ?? false) &&
-					isset($field['additionalTranslations'])) {
+				if (($field['rangefield'] ?? false) && isset($field['additionalTranslations'])) {
 					$this->_searchcriteriaRangeInfos[$fieldId] = $field['additionalTranslations'];
 				}
 
@@ -272,8 +271,7 @@ class Fieldnames
 
 		if ($this->_addApiOnlyFields) {
 			foreach ($modules as $module) {
-				$this->_fieldList[$module] = array_merge
-					($this->_fieldList[$module] ?? [], $this->getExtraFields($module));
+				$this->_fieldList[$module] += $this->getExtraFields($module);
 			}
 		}
 	}
@@ -341,12 +339,13 @@ class Fieldnames
 
 		foreach ($fieldResult as $moduleProperties) {
 			$module = $moduleProperties['id'];
+			$fieldArray = $moduleProperties['elements'];
 
-			foreach ($moduleProperties['elements'] as $fieldName => $fieldProperties) {
-				if ('label' == $fieldName) {
-					continue;
-				}
+			if (isset($fieldArray['label'])) {
+				unset($fieldArray['label']);
+			}
 
+			foreach ($fieldArray as $fieldName => $fieldProperties) {
 				$fieldProperties['module'] = $module;
 				$this->_fieldList[$module][$fieldName] = $fieldProperties;
 			}
@@ -382,7 +381,7 @@ class Fieldnames
 		try {
 			$row = $this->getRow($module, $field);
 			$fieldNewName = $row['label'];
-		} catch (UnknownFieldException $pException) {
+		} catch (UnknownFieldException $pE) {
 			$fieldNewName = $field;
 		}
 
@@ -421,16 +420,14 @@ class Fieldnames
 	private function getExtraFields($module): array
 	{
 		$extraFields = [];
-		$pFieldCollection = $module != '' ? $this->_apiReadOnlyFieldCollections[$module] : null;
+		$pFieldCollection = $this->getFieldsCollectionByModule($module);
+		$extraFieldsObject = $pFieldCollection->getAllFields();
 
-		if ($pFieldCollection !== null) {
-			$extraFieldsObject = $pFieldCollection->getAllFields();
-			foreach ($extraFieldsObject as $pField) {
-				$newContent = $pField->getCategory() !== '' ?
-					$pField->getCategory() : __('Form Specific Fields', 'onoffice');
-				$pField->setCategory($newContent);
-				$extraFields[$pField->getName()] = $pField->getAsRow() + ['module' => $module];
-			}
+		foreach ($extraFieldsObject as $pField) {
+			$newContent = $pField->getCategory() !== '' ?
+				$pField->getCategory() : __('Form Specific Fields', 'onoffice');
+			$pField->setCategory($newContent);
+			$extraFields[$pField->getName()] = $pField->getAsRow() + ['module' => $module];
 		}
 
 		if ($this->_addInternalAnnotations && isset(self::$_readOnlyFieldsAnnotations[$module])) {
@@ -445,6 +442,19 @@ class Fieldnames
 		}
 
 		return $extraFields;
+	}
+
+
+	/**
+	 *
+	 * @param string $module
+	 * @return FieldsCollection
+	 *
+	 */
+
+	private function getFieldsCollectionByModule(string $module): FieldsCollection
+	{
+		return $this->_apiReadOnlyFieldCollections[$module] ?? new FieldsCollection($module);
 	}
 
 
@@ -502,12 +512,8 @@ class Fieldnames
 
 	private function getRow($module, $field): array
 	{
-		$pModuleCollection = $this->_apiReadOnlyFieldCollections[$module] ?? null;
-
 		if (isset($this->_fieldList[$module][$field])) {
 			return $this->_fieldList[$module][$field];
-		} elseif ($pModuleCollection !== null && $pModuleCollection->containsField($field)) {
-			return $pModuleCollection->getByName($field)->getAsRow();
 		}
 
 		throw new UnknownFieldException;

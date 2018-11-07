@@ -81,20 +81,6 @@ class TestClassFieldnames
 		$this->assertFalse($pFieldnamesDefault->getAddInternalAnnotations());
 		$this->assertFalse($pFieldnamesDefault->getInactiveOnly());
 
-		$newsletterFieldExpectation = [
-			'label' => 'Newsletter',
-			'type' => 'boolean',
-			'default' => false,
-			'length' => null,
-			'permittedvalues' => [],
-			'content' => '',
-		];
-
-		// check if fields have been preloaded
-		$newsletterFieldResult = $pFieldnamesDefault->getFieldInformation
-			('newsletter', onOfficeSDK::MODULE_ADDRESS);
-		$this->assertEquals($newsletterFieldResult, $newsletterFieldExpectation);
-
 		$pFieldnames = $this->getNewFieldnames(true, true, true);
 		$this->assertTrue($pFieldnames->getAddApiOnlyFields());
 		$this->assertTrue($pFieldnames->getAddInternalAnnotations());
