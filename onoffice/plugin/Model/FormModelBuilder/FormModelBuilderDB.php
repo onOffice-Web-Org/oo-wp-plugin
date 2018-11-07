@@ -22,7 +22,7 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Field\FieldDefaultSorting;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -126,7 +126,8 @@ abstract class FormModelBuilderDB
 	private function getOnlyDefaultSortByFields($module)
 	{
 		$fieldnames = $this->readFieldnames($module);
-		$defaultFields = Fieldnames::getDefaultSortByFields($module);
+		$pDefaultSorting = new FieldDefaultSorting();
+		$defaultFields = $pDefaultSorting->getDefaultSortByFields($module);
 		natcasesort($fieldnames);
 		$defaultActiveFields = array();
 

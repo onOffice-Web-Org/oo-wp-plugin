@@ -56,24 +56,6 @@ class Fieldnames
 		],
 	];
 
-	/** @var array */
-	private static $_defaultSortByFields = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'KdNr',
-			'Eintragsdatum',
-			'Name',
-		],
-		onOfficeSDK::MODULE_ESTATE => [
-			'kaufpreis',
-			'kaltmiete',
-			'pacht',
-			'wohnflaeche',
-			'anzahl_zimmer',
-			'ort',
-			'grundstuecksflaeche',
-			'gesamtflaeche',
-		],
-	];
 
 	/** @var FieldnamesEnvironment */
 	private $_pEnvironment = null;
@@ -519,21 +501,6 @@ class Fieldnames
 		throw new UnknownFieldException;
 	}
 
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	static public function getDefaultSortByFields(string $module): array
-	{
-		if (isset(self::$_defaultSortByFields[$module])) {
-			return self::$_defaultSortByFields[$module];
-		}
-
-		return [];
-	}
 
 	/** @return bool */
 	public function getAddApiOnlyFields(): bool
