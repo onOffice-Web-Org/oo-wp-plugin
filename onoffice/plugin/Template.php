@@ -123,6 +123,7 @@ class Template
 		$pForm = $templateData[self::KEY_FORM];
 		$pBasicData = $templateData[self::KEY_BASICDATA];
 		$pAddressList = $templateData[self::KEY_ADDRESSLIST];
+		unset($templateData);
 		ob_start();
 		include $templatePath;
 		return ob_get_clean();

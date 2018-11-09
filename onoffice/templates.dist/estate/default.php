@@ -32,12 +32,9 @@ require 'SearchForm.php';
 
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
+require('map-osm.php');
 
-require('estatemap.php');
-
-?>
-
-<?php if (Favorites::isFavorizationEnabled()): ?>
+if (Favorites::isFavorizationEnabled()): ?>
 <script>
 	$(document).ready(function() {
 		onofficeFavorites = new onOffice.favorites(<?php echo json_encode(Favorites::COOKIE_NAME); ?>);
@@ -141,10 +138,10 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 	$estatePictures = $pEstates->getEstatePictures();
 
 	foreach ( $estatePictures as $id ) : ?>
-	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
-		<img src="<?php echo $pEstates->getEstatePictureUrl( $id, array('width' => 400, 'height' => 300) ); ?>">
-	</a>
-	<?php echo esc_html( $pEstates->getEstatePictureText($id) ); ?>
+		<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
+			<img src="<?php echo $pEstates->getEstatePictureUrl( $id, array('width' => 400, 'height' => 300) ); ?>">
+		</a>
+		<?php echo esc_html( $pEstates->getEstatePictureText($id) ); ?>
 	<?php endforeach; ?>
 
 	<?php echo $pEstates->getEstateUnits( ); ?>
@@ -152,11 +149,10 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 		<a href="<?php echo $pEstates->getDocument(); ?>">
 			<?php esc_html_e('PDF expose', 'onoffice'); ?>
 		</a>
-</p>
 
-<?php if (Favorites::isFavorizationEnabled()): ?>
-	<button data-onoffice-estateid="<?php echo $pEstates->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
-		<?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
-	</button>
-<?php endif ?>
+	<?php if (Favorites::isFavorizationEnabled()): ?>
+		<button data-onoffice-estateid="<?php echo $pEstates->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
+			<?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
+		</button>
+	<?php endif ?>
 <?php endwhile; ?>

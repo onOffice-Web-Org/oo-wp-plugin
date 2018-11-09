@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  *
  *    Copyright (C) 2018  onOffice GmbH
