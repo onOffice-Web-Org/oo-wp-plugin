@@ -72,10 +72,10 @@ class ContentFilter
 		$detailPageId = $pDetailView->getPageId();
 
 		if ($detailPageId != null) {
-			$pagename = get_page_uri( $detailPageId );
+			$pagename = get_page_uri($detailPageId);
 			$pageUrl = $this->rebuildSlugTaxonomy($detailPageId);
-			add_rewrite_rule( '^('.preg_quote( $pageUrl ).')/([0-9]+)/?$',
-				'index.php?pagename='.urlencode( $pagename ).'&view=$matches[1]&estate_id=$matches[2]','top' );
+			add_rewrite_rule('^('.preg_quote($pageUrl).')/([0-9]+)/?$',
+				'index.php?pagename='.urlencode($pagename).'&view=$matches[1]&estate_id=$matches[2]','top');
 		}
 	}
 
@@ -87,18 +87,18 @@ class ContentFilter
 	 *
 	 */
 
-	public function registerEstateShortCodes( $attributesInput )
+	public function registerEstateShortCodes($attributesInput)
 	{
 		global $wp_query;
 		$page = 1;
-		if ( ! empty( $wp_query->query_vars['page'] ) ) {
+		if (!empty($wp_query->query_vars['page'])) {
 			$page = $wp_query->query_vars['page'];
 		}
 
-		$attributes = shortcode_atts(array(
+		$attributes = shortcode_atts([
 			'view' => null,
 			'units' => null,
-		), $attributesInput);
+		], $attributesInput);
 
 		if ($attributes['view'] !== null) {
 			try {
@@ -179,11 +179,11 @@ class ContentFilter
 	 *
 	 */
 
-	public function renderFormsShortCodes( $attributesInput )
+	public function renderFormsShortCodes($attributesInput)
 	{
-		$attributes = shortcode_atts(array(
+		$attributes = shortcode_atts([
 			'form' => null,
-		), $attributesInput);
+		], $attributesInput);
 
 		$formName = $attributes['form'];
 
@@ -193,9 +193,9 @@ class ContentFilter
 				$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
 				/* @var $pFormConfig DataFormConfiguration */
 				$template = $pFormConfig->getTemplate();
-				$pTemplate = new Template( $template );
-				$pForm = new Form( $formName, $pFormConfig->getFormType() );
-				$pTemplate->setForm( $pForm );
+				$pTemplate = new Template($template);
+				$pForm = new Form($formName, $pFormConfig->getFormType());
+				$pTemplate->setForm($pForm);
 				$pTemplate->setImpressum(new Impressum);
 				$htmlOutput = $pTemplate->render();
 				return $htmlOutput;
@@ -214,17 +214,14 @@ class ContentFilter
 	 *
 	 */
 
-	public function renderAddressShortCodes( $attributesInput )
+	public function renderAddressShortCodes($attributesInput)
 	{
 		global $wp_query;
-		$page = 1;
-		if ( ! empty( $wp_query->query_vars['page'] ) ) {
-			$page = $wp_query->query_vars['page'];
-		}
+		$page = $wp_query->query_vars['page'] ?? 1;
 
-		$attributes = shortcode_atts(array(
+		$attributes = shortcode_atts([
 			'view' => null,
-		), $attributesInput);
+		], $attributesInput);
 		$addressListName = $attributes['view'];
 
 		$pDataListFactory = new DataListViewFactoryAddress();
@@ -251,11 +248,11 @@ class ContentFilter
 	 *
 	 */
 
-	public function renderImpressumShortCodes( $attributesInput )
+	public function renderImpressumShortCodes($attributesInput)
 	{
 		try {
 			$pImpressum = new Impressum();
-			if ( count($attributesInput) == 1 ) {
+			if (count($attributesInput) == 1) {
 				$attribute = $attributesInput[0];
 				$impressumValue = $pImpressum->getDataByKey($attribute);
 
@@ -276,7 +273,7 @@ class ContentFilter
 
 	public function renderWidgetImpressum($text)
 	{
-		add_shortcode( 'oo_basicdata', array($this, 'renderImpressumShortCodes'));
+		add_shortcode('oo_basicdata', [$this, 'renderImpressumShortCodes']);
 		return do_shortcode($text);
 	}
 
@@ -288,19 +285,19 @@ class ContentFilter
 	 *
 	 */
 
-	private function rebuildSlugTaxonomy( $page )
+	private function rebuildSlugTaxonomy($page)
 	{
-		$pPost = get_post( $page );
+		$pPost = get_post($page);
 
 		if ($pPost === null) {
 			return;
 		}
 
 		$listpermalink = $pPost->post_name;
-		$parent = wp_get_post_parent_id( $page );
+		$parent = wp_get_post_parent_id($page);
 
-		if ( $parent ) {
-			$listpermalink = $this->rebuildSlugTaxonomy( $parent ).'/'.$listpermalink;
+		if ($parent) {
+			$listpermalink = $this->rebuildSlugTaxonomy($parent).'/'.$listpermalink;
 		}
 
 		return $listpermalink;
@@ -314,11 +311,11 @@ class ContentFilter
 	 *
 	 */
 
-	public function logErrorAndDisplayMessage( Exception $pException )
+	public function logErrorAndDisplayMessage(Exception $pException)
 	{
 		$output = '';
 
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		if (defined('WP_DEBUG') && WP_DEBUG) {
 			$output = '<pre>'
 					. '<u><strong>[onOffice-Plugin]</strong> Ein Fehler ist aufgetreten:</u><p>'
 					.esc_html((string) $pException).'</pre></p>';
@@ -343,10 +340,7 @@ class ContentFilter
 	{
 		global $wp_query;
 
-		$estateId = 0;
-		if ( ! empty( $wp_query->query_vars['estate_id'] ) ) {
-			$estateId = $wp_query->query_vars['estate_id'];
-		}
+		$estateId = $wp_query->query_vars['estate_id'] ?? 0;
 
 		$pDefaultFilterBuilder = new DefaultFilterBuilderDetailView();
 		$pDefaultFilterBuilder->setEstateId($estateId);
@@ -407,7 +401,7 @@ class ContentFilter
 		$fieldsForTitle = $pEstateFieldModifier->getVisibleFields();
 
 		if ($pEstateIterator) {
-			$fetchedValues = array_map(array($pEstateIterator, 'getValueRaw'), $fieldsForTitle);
+			$fetchedValues = array_map([$pEstateIterator, 'getValueRaw'], $fieldsForTitle);
 			$values = array_combine($fieldsForTitle, $fetchedValues);
 
 			$pEstateList->resetEstateIterator();
@@ -453,20 +447,20 @@ class ContentFilter
 
 	public function includeScripts()
 	{
-		wp_enqueue_script( 'gmapsinit' );
+		wp_enqueue_script('gmapsinit');
 		wp_enqueue_script('leaflet-script');
 		wp_enqueue_style('leaflet-style');
 
-		if ( is_file( plugin_dir_path( __FILE__ ).'../templates/default/style.css' ) ) {
-			wp_enqueue_style( 'onoffice-template-style.css', $this->getFileUrl( 'style.css' ) );
+		if (is_file(plugin_dir_path(__FILE__).'../templates/default/style.css')) {
+			wp_enqueue_style('onoffice-template-style.css', $this->getFileUrl('style.css'));
 		}
 
-		if ( is_file( plugin_dir_path( __FILE__ ).'../templates/default/script.js' ) ) {
-			wp_enqueue_style( 'onoffice-template-script.js', $this->getFileUrl( 'script.js' ) );
+		if (is_file(plugin_dir_path(__FILE__).'../templates/default/script.js')) {
+			wp_enqueue_style('onoffice-template-script.js', $this->getFileUrl('script.js'));
 		}
 
 		if (Favorites::isFavorizationEnabled()) {
-			wp_enqueue_script( 'onoffice-favorites' );
+			wp_enqueue_script('onoffice-favorites');
 		}
 
 		wp_enqueue_script('jquery-latest');
@@ -485,9 +479,9 @@ class ContentFilter
 	 *
 	 */
 
-	private function getFileUrl( $fileName )
+	private function getFileUrl($fileName)
 	{
-		return plugins_url( 'onoffice/templates/default/'. $fileName );
+		return plugins_url('onoffice/templates/default/'.$fileName);
 	}
 
 
