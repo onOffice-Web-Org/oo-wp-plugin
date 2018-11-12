@@ -61,7 +61,8 @@ while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::
 (function() {
 	var estateMarkers = <?php echo json_encode($estateData); ?>;
 	var map = L.map('map', {
-		zoom: 13
+		center: [50.8, 10.0],
+		zoom: 5
 	});
 	L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
 
