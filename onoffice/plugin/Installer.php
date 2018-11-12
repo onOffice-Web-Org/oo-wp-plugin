@@ -413,6 +413,7 @@ abstract class Installer
 		delete_option('onoffice-default-view');
 		delete_option('onoffice-favorization-enableFav');
 		delete_option('onoffice-favorization-favButtonLabelFav');
+		delete_option('onoffice-maps-mapprovider');
 		delete_option('onoffice-settings-apisecret');
 		delete_option('onoffice-settings-apikey');
 

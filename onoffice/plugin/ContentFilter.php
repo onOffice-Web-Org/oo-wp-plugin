@@ -41,10 +41,30 @@ use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
+use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_Query;
+use const ONOFFICE_PLUGIN_DIR;
+use const WP_DEBUG;
+use function __;
+use function add_rewrite_rule;
+use function add_rewrite_tag;
+use function add_shortcode;
+use function do_shortcode;
+use function esc_html;
+use function get_page_uri;
+use function get_post;
+use function plugin_dir_path;
+use function plugins_url;
+use function shortcode_atts;
+use function wp_enqueue_script;
+use function wp_enqueue_style;
+use function wp_get_post_parent_id;
+use function wp_register_script;
+use function wp_register_style;
 
 
 /**
@@ -362,8 +382,6 @@ class ContentFilter
 	{
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 
-		wp_register_script('google-maps', 'https://maps.googleapis.com/maps/api/js');
-		wp_register_script('gmapsinit', plugins_url('/js/gmapsinit.js', $pluginPath), ['google-maps']);
 		wp_register_script('jquery-latest', 'https://code.jquery.com/jquery-latest.js');
 		wp_register_script('onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath));
 		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
@@ -371,8 +389,9 @@ class ContentFilter
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 		wp_register_style('onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath));
 		wp_register_script('onoffice-leadform', plugins_url('/js/onoffice-leadform.js', $pluginPath), 'jquery', false, true);
-		wp_register_style('leaflet-style', plugins_url('/third_party/leaflet/leaflet.css', $pluginPath));
-		wp_register_script('leaflet-script', plugins_url('/third_party/leaflet/leaflet.js', $pluginPath));
+
+		$pScriptLoaderMap = new ScriptLoaderMap();
+		$pScriptLoaderMap->register(new WPScriptStyleDefault);
 	}
 
 
@@ -447,10 +466,6 @@ class ContentFilter
 
 	public function includeScripts()
 	{
-		wp_enqueue_script('gmapsinit');
-		wp_enqueue_script('leaflet-script');
-		wp_enqueue_style('leaflet-style');
-
 		if (is_file(plugin_dir_path(__FILE__).'../templates/default/style.css')) {
 			wp_enqueue_style('onoffice-template-style.css', $this->getFileUrl('style.css'));
 		}
@@ -469,6 +484,9 @@ class ContentFilter
 		wp_enqueue_style('onoffice-multiselect');
 		wp_enqueue_script('onoffice-leadform');
 		wp_enqueue_style('onoffice-forms');
+
+		$pScriptLoaderMap = new ScriptLoaderMap();
+		$pScriptLoaderMap->enqueue(new WPScriptStyleDefault);
 	}
 
 
