@@ -21,7 +21,7 @@
 
 /**
  *
- *  Map template
+ *  Map template for Google Maps
  *
  */
 

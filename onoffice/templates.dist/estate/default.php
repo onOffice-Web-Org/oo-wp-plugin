@@ -32,7 +32,7 @@ require 'SearchForm.php';
 
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
-require('map-osm.php');
+require('map/map.php');
 
 if (Favorites::isFavorizationEnabled()): ?>
 <script>

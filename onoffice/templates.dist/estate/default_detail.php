@@ -26,7 +26,7 @@
  */
 
 /* @var $pEstates onOffice\WPlugin\EstateDetail */
-require('map-osm.php');
+require('map/map.php');
 
 ?>
 <h1><?php esc_html_e('Detail View', 'onoffice') ?></h1>
