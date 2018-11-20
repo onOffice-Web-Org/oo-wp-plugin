@@ -170,6 +170,15 @@ class LocalFieldsCollectionFactory
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 		],
+		'' => [
+			'message' => [
+				'type' => FieldTypes::FIELD_TYPE_TEXT,
+				'length' => null,
+				'permittedvalues' => [],
+				'default' => null,
+				'label' => 'Message',
+			],
+		],
 	];
 
 

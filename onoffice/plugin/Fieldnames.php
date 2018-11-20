@@ -105,6 +105,7 @@ class Fieldnames
 			onOfficeSDK::MODULE_ADDRESS,
 			onOfficeSDK::MODULE_ESTATE,
 			onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'',
 		];
 
 		$pCollectionFactory = new LocalFieldsCollectionFactory();
@@ -249,7 +250,10 @@ class Fieldnames
 			onOfficeSDK::MODULE_ADDRESS,
 			onOfficeSDK::MODULE_ESTATE,
 			onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'',
 		];
+
+		$this->_fieldList[''] = [];
 
 		if ($this->_addApiOnlyFields) {
 			foreach ($modules as $module) {
@@ -489,6 +493,7 @@ class Fieldnames
 	 * @param string $module
 	 * @param string $field
 	 * @return array
+	 * @throws UnknownFieldException
 	 *
 	 */
 
