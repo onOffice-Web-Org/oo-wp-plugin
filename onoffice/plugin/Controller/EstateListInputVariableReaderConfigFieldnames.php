@@ -43,7 +43,8 @@ class EstateListInputVariableReaderConfigFieldnames
 
 	public function __construct()
 	{
-		$this->_pFieldnames = new Fieldnames();
+		$this->_pFieldnames = new Fieldnames(true);
+
 		$this->_pFieldnames->loadEstateSearchGeoPositionFields();
 		$this->_pFieldnames->loadLanguage();
 	}

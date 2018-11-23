@@ -118,7 +118,7 @@ class EstateList
 	public function __construct(DataView $pDataView)
 	{
 		$this->_pSDKWrapper = new SDKWrapper();
-		$this->_pFieldnames = new Fieldnames();
+		$this->_pFieldnames = new Fieldnames(true);
 		$this->_pAddressList = new AddressList();
 		$this->_pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
 		$this->_pDataView = $pDataView;
