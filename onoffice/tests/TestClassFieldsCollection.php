@@ -38,8 +38,8 @@ class TestClassFieldsCollection
 
 	public function testGetModule()
 	{
-		$pCollection = new FieldsCollection('testmodule');
-		$this->assertEquals('testmodule', $pCollection->getModule());
+		$pCollection = new FieldsCollection();
+		$this->assertEquals([], $pCollection->getAllFields());
 	}
 
 
@@ -49,15 +49,15 @@ class TestClassFieldsCollection
 
 	public function testAddGetFields()
 	{
-		$pCollection = new FieldsCollection('testmodule');
+		$pCollection = new FieldsCollection();
 		$this->assertEquals([], $pCollection->getAllFields());
-		$pField1 = new Field('testField1');
-		$pField2 = new Field('testField2');
+		$pField1 = new Field('testField1', 'testModule');
+		$pField2 = new Field('testField2', 'testModule');
 
 		$pCollection->addField($pField1);
 		$pCollection->addField($pField2);
 
-		$this->assertEquals(['testField1' => $pField1, 'testField2' => $pField2],
+		$this->assertEquals([$pField1, $pField2],
 			$pCollection->getAllFields());
 	}
 
@@ -66,31 +66,12 @@ class TestClassFieldsCollection
 	 *
 	 */
 
-	public function testGetByName()
+	public function testContainsFieldByModule()
 	{
-		$pCollection = new FieldsCollection('testmodule');
-		$pField1 = new Field('John');
-		$pField2 = new Field('Eric');
-		$pField3 = new Field('Sylvia');
-
-		$pCollection->addField($pField1);
-		$pCollection->addField($pField2);
-		$pCollection->addField($pField3);
-		$this->assertEquals($pField2, $pCollection->getByName('Eric'));
-	}
-
-
-	/**
-	 *
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Field not in collection
-	 *
-	 */
-
-	public function testGetNonExistentField()
-	{
-		$pCollection = new FieldsCollection('testmodule');
-		$pCollection->addField(new Field('John'));
-		$pCollection->getByName('Eric');
+		$pCollection = new FieldsCollection();
+		$pCollection->addField(new Field('John', 'testModuleA'));
+		$this->assertFalse($pCollection->containsFieldByModule('testModuleB', 'John'));
+		$this->assertTrue($pCollection->containsFieldByModule('testModuleA', 'John'));
+		$this->assertFalse($pCollection->containsFieldByModule('other', 'Fred'));
 	}
 }

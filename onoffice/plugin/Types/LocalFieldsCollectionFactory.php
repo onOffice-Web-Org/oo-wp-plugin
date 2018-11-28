@@ -194,7 +194,7 @@ class LocalFieldsCollectionFactory
 		$pCollection = new FieldsCollection($module);
 
 		foreach ($fields as $name => $properties) {
-			$pLocalField = new Field($name, __($properties['label'] ?? '', 'onoffice'));
+			$pLocalField = new Field($name, $module, __($properties['label'] ?? '', 'onoffice'));
 			$pLocalField->setDefault($properties['default']);
 			$pLocalField->setLength($properties['length'] ?? 0);
 			$pLocalField->setPermittedvalues($properties['permittedvalues']);

@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Types;
 
+use function __;
+
 /**
  *
  */
@@ -48,17 +50,22 @@ class Field
 	/** @var string */
 	private $_category = '';
 
+	/** @var string */
+	private $_module = '';
+
 
 	/**
 	 *
 	 * @param string $name
+	 * @param string $module
 	 * @param string $label
 	 *
 	 */
 
-	public function __construct(string $name, string $label = '')
+	public function __construct(string $name, string $module, string $label = '')
 	{
 		$this->_name = $name;
+		$this->_module = $module;
 		$this->_label = $label;
 	}
 
@@ -221,6 +228,18 @@ class Field
 
 	/**
 	 *
+	 * @return string
+	 *
+	 */
+
+	public function getModule(): string
+	{
+		return $this->_module;
+	}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */
@@ -234,6 +253,26 @@ class Field
 			'length' => $this->_length === 0 ? null : $this->_length,
 			'permittedvalues' => $this->_permittedvalues,
 			'content' => $this->_category,
+			'module' => $this->_module,
 		];
+	}
+
+
+	/**
+	 *
+	 * @param string $fieldName
+	 * @param array $row
+	 * @return Field
+	 *
+	 */
+
+	public static function createByRow(string $fieldName, array $row): Field
+	{
+		$pField = new Field($fieldName, $row['module'] ?? '', __($row['label'], 'onoffice'));
+		$pField->setDefault($row['default'] ?? null);
+		$pField->setLength($row['length'] ?? 0);
+		$pField->setPermittedvalues($row['permittedvalues'] ?? []);
+		$pField->setType($row['type']);
+		return $pField;
 	}
 }

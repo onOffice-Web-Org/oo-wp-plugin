@@ -38,8 +38,9 @@ class TestClassField
 
 	public function testDefaults()
 	{
-		$pField = new Field('testField123');
+		$pField = new Field('testField123', 'testModule');
 		$this->assertEquals('testField123', $pField->getName());
+		$this->assertEquals('testModule', $pField->getModule());
 		$this->assertEquals('', $pField->getCategory());
 		$this->assertEquals(null, $pField->getDefault());
 		$this->assertEquals('', $pField->getLabel());
@@ -77,6 +78,7 @@ class TestClassField
 	{
 		$pField = $this->getPrefilledField();
 		$expectation = [
+			'module' => 'testModuleA',
 			'label' => 'A test',
 			'type' => 'date',
 			'default' => 'asd',
@@ -101,7 +103,7 @@ class TestClassField
 
 	private function getPrefilledField(): Field
 	{
-		$pField = new Field('testField123', 'A test');
+		$pField = new Field('testField123', 'testModuleA', 'A test');
 		$pField->setCategory('asdf');
 		$pField->setDefault('asd');
 		$pField->setLength(13);

@@ -21,31 +21,20 @@
 
 namespace onOffice\WPlugin\Types;
 
-use Exception;
+use onOffice\WPlugin\Field\FieldModuleCollection;
+use onOffice\WPlugin\Field\UnknownFieldException;
 
 /**
  *
  */
 
-class FieldsCollection
+class FieldsCollection implements FieldModuleCollection
 {
 	/** @var array */
 	private $_fields = [];
 
-	/** @var string */
-	private $_module = '';
-
-
-	/**
-	 *
-	 * @param string $module
-	 *
-	 */
-
-	public function __construct(string $module)
-	{
-		$this->_module = $module;
-	}
+	/** @var array */
+	private $_fieldsByModule = [];
 
 
 	/**
@@ -56,25 +45,10 @@ class FieldsCollection
 
 	public function addField(Field $pField)
 	{
-		$this->_fields[$pField->getName()] = $pField;
-	}
-
-
-	/**
-	 *
-	 * @param string $name
-	 * @return Field
-	 * @throws Exception
-	 *
-	 */
-
-	public function getByName(string $name): Field
-	{
-		if (!isset($this->_fields[$name])) {
-			throw new Exception('Field not in collection');
-		}
-
-		return $this->_fields[$name];
+		$name = $pField->getName();
+		$module = $pField->getModule();
+		$this->_fields []= $pField;
+		$this->_fieldsByModule[$module][$name] = $pField;
 	}
 
 
@@ -85,9 +59,9 @@ class FieldsCollection
 	 *
 	 */
 
-	public function containsField(string $name): bool
+	public function containsFieldByModule(string $module, string $name): bool
 	{
-		return isset($this->_fields[$name]);
+		return isset($this->_fieldsByModule[$module][$name]);
 	}
 
 
@@ -105,12 +79,21 @@ class FieldsCollection
 
 	/**
 	 *
-	 * @return string
+	 * @param string $module
+	 * @param string $name
+	 * @return Field
+	 * @throws UnknownFieldException
 	 *
 	 */
 
-	public function getModule(): string
+	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
-		return $this->_module;
+		$pField = $this->_fieldsByModule[$module][$name] ?? null;
+
+		if ($pField === null) {
+			throw new UnknownFieldException();
+		}
+
+		return $pField;
 	}
 }
