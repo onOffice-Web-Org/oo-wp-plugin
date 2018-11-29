@@ -27,6 +27,8 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\TemplateCall;
 use onOffice\WPlugin\Utility\__String;
+use const ONOFFICE_PLUGIN_DIR;
+use function plugin_dir_path;
 
 /**
  *
@@ -47,6 +49,9 @@ abstract class FormModelBuilder
 
 	/** @var array */
 	private $_additionalFields = array();
+
+	/** @var Fieldnames */
+	private $_pFieldnames = null;
 
 
 	/**
@@ -88,16 +93,14 @@ abstract class FormModelBuilder
 
 	/**
 	 *
+	 * @param string $module
 	 * @return array
 	 *
 	 */
 
 	protected function readFieldnames($module)
 	{
-		$pFieldnames = new Fieldnames(true, true);
-		$pFieldnames->loadLanguage();
-
-		$fieldnames = $pFieldnames->getFieldList($module);
+		$fieldnames = $this->_pFieldnames->getFieldList($module);
 		$result = array();
 
 		foreach ($fieldnames as $key => $properties)
@@ -150,19 +153,15 @@ abstract class FormModelBuilder
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-
-		$pFieldnames = new Fieldnames(true, true);
-		$pFieldnames->loadLanguage();
-
 		$fieldNames = array();
 
 		if (is_array($module)) {
 			foreach ($module as $submodule) {
-				$fieldNamesModule = $pFieldnames->getFieldList($submodule);
+				$fieldNamesModule = $this->_pFieldnames->getFieldList($submodule);
 				$fieldNames = array_merge($fieldNames, $fieldNamesModule);
 			}
 		} else {
-			$fieldNames = $pFieldnames->getFieldList($module);
+			$fieldNames = $this->_pFieldnames->getFieldList($module);
 		}
 
 		$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
@@ -217,6 +216,14 @@ abstract class FormModelBuilder
 
 	abstract public function createInputModelFieldsConfigByCategory
 		($category, $fieldNames, $categoryLabel);
+
+	/** @return Fieldnames */
+	protected function getFieldnames(): Fieldnames
+		{ return $this->_pFieldnames; }
+
+	/** @param Fieldnames $pFieldnames */
+	protected function setFieldnames(Fieldnames $pFieldnames)
+		{ $this->_pFieldnames = $pFieldnames; }
 
 	/** @return string */
 	public function getPageSlug()

@@ -24,6 +24,10 @@ namespace onOffice\WPlugin\Gui;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Field\FieldModuleCollection;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
@@ -31,7 +35,32 @@ use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
+use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
+use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_action;
+use function add_screen_option;
+use function do_accordion_sections;
+use function do_action;
+use function do_meta_boxes;
+use function do_settings_sections;
+use function edit_post_link;
+use function esc_attr;
+use function esc_attr_e;
+use function esc_html;
+use function esc_html__;
+use function get_current_screen;
+use function get_the_title;
+use function json_decode;
+use function json_encode;
+use function plugin_dir_url;
+use function submit_button;
+use function wp_die;
+use function wp_enqueue_script;
+use function wp_nonce_field;
+use function wp_register_script;
+use function wp_verify_nonce;
 
 /**
  *
@@ -223,7 +252,7 @@ class AdminPageEstateDetail
 	protected function generateAccordionBoxesContactPerson()
 	{
 		$fieldNamesContactData = array_keys($this->readFieldnamesByContent
-			(onOfficeSDK::MODULE_ADDRESS, true));
+			(onOfficeSDK::MODULE_ADDRESS, $this->getAddressFieldsConfiguration()));
 
 		foreach ($fieldNamesContactData as $content)
 		{
@@ -291,14 +320,31 @@ class AdminPageEstateDetail
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesTemplate);
 		$this->addFormModel($pFormModelSimilarEstates);
 
-		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
+		$pFieldsConfiguration = new FieldModuleCollectionDecoratorInternalAnnotations
+			(new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection()));
+
+		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, $pFieldsConfiguration);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
 			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldNames);
 
 		$fieldNamesContactPerson =  $this->readFieldnamesByContent
-			(onOfficeSDK::MODULE_ADDRESS, true);
+			(onOfficeSDK::MODULE_ADDRESS, $this->getAddressFieldsConfiguration());
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS,
 			self::FORM_VIEW_CONTACT_DATA_FIELDS, $pFormModelBuilder, $fieldNamesContactPerson);
+	}
+
+
+	/**
+	 *
+	 * @return FieldModuleCollection
+	 *
+	 */
+
+	private function getAddressFieldsConfiguration(): FieldModuleCollection
+	{
+		return new FieldModuleCollectionDecoratorInternalAnnotations
+			(new FieldModuleCollectionDecoratorGeoPosition
+				(new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection())));
 	}
 
 

@@ -22,6 +22,10 @@ namespace onOffice\WPlugin\Renderer;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Types\FieldsCollection;
+use function __;
+use function esc_attr;
+use function esc_html;
 
 
 /**
@@ -147,7 +151,7 @@ class InputFieldComplexSortableDetailListRenderer
 	{
 		self::$_inactiveFields = array();
 
-		$pFieldnames = new Fieldnames(false, false, true);
+		$pFieldnames = new Fieldnames(new FieldsCollection(), true);
 		$pFieldnames->loadLanguage();
 
 		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);

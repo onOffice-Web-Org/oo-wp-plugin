@@ -24,12 +24,20 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
+use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_screen_option;
+use function plugin_dir_url;
+use function wp_enqueue_script;
+use function wp_register_script;
 
 /**
  *
@@ -117,7 +125,8 @@ class AdminPageEstateListSettings
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
 
-		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
+		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
+		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, $pFieldCollection);
 
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
 		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ESTATE), $pFormModelBuilder);
@@ -152,7 +161,9 @@ class AdminPageEstateListSettings
 	{
 		$this->cleanPreviousBoxes();
 		$module = onOfficeSDK::MODULE_ESTATE;
-		$fieldNames = array_keys($this->readFieldnamesByContent($module));
+
+		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
+		$fieldNames = array_keys($this->readFieldnamesByContent($module, $pFieldCollection));
 
 		foreach ($fieldNames as $category) {
 			$slug = $this->generateGroupSlugByModuleCategory($module, $category);

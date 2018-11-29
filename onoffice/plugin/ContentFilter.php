@@ -38,6 +38,7 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
@@ -167,7 +168,7 @@ class ContentFilter
 
 	private function setAllowedGetParametersEstate(DataListView $pDataView)
 	{
-		$pFieldNames = new Fieldnames();
+		$pFieldNames = new Fieldnames(new Types\FieldsCollection());
 		$pFieldNames->loadLanguage();
 		$pSearchParameters = SearchParameters::getInstance();
 
@@ -209,7 +210,7 @@ class ContentFilter
 
 		try {
 			if ($formName !== null) {
-				$pFormConfigFactory = new DataFormConfigurationFactory(null);
+				$pFormConfigFactory = new DataFormConfigurationFactory();
 				$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
 				/* @var $pFormConfig DataFormConfiguration */
 				$template = $pFormConfig->getTemplate();
@@ -248,7 +249,10 @@ class ContentFilter
 		/* @var $pAddressListView DataListViewAddress */
 		$pAddressListView = $pDataListFactory->getListViewByName($addressListName);
 
-		$pFieldnames = new Fieldnames();
+		$pFieldCollection = new FieldModuleCollectionDecoratorReadAddress
+			(new Types\FieldsCollection());
+
+		$pFieldnames = new Fieldnames($pFieldCollection);
 		$pFieldnames->loadLanguage();
 		$pAddressList = new AddressList($pFieldnames);
 

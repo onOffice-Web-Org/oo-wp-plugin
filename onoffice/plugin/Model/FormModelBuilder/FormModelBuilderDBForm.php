@@ -24,6 +24,10 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
@@ -35,6 +39,9 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Translation\ModuleTranslation;
+use onOffice\WPlugin\Types\FieldsCollection;
+use function __;
+use function get_option;
 
 /**
  *
@@ -65,7 +72,12 @@ class FormModelBuilderDBForm
 		$pConfigForm = new InputModelDBFactoryConfigForm();
 		$pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
 		$this->setInputModelDBFactory($pInputModelDBFactory);
-		$this->_pFieldNames = new Fieldnames(true, true);
+
+		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
+			(new FieldModuleCollectionDecoratorSearchcriteria
+				(new FieldModuleCollectionDecoratorFormContact
+					(new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection()))));
+		$this->_pFieldNames = new Fieldnames($pFieldCollection);
 		$this->_pFieldNames->loadLanguage();
 	}
 
@@ -95,11 +107,11 @@ class FormModelBuilderDBForm
 			$fieldNames = $this->_pFieldNames->getFieldList($module);
 		}
 
-		$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
+		$fieldNamesResult = array_merge($fieldNames, $this->getAdditionalFields());
 
 		$this->_formModules = is_array($module) ? $module : array($module);
 
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesResult);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS);
 
 		if (null == $fields)

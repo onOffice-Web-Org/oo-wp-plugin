@@ -272,6 +272,7 @@ class Field
 		$pField->setDefault($row['default'] ?? null);
 		$pField->setLength($row['length'] ?? 0);
 		$pField->setPermittedvalues($row['permittedvalues'] ?? []);
+		$pField->setCategory($row['content'] ?? '');
 		$pField->setType($row['type']);
 		return $pField;
 	}

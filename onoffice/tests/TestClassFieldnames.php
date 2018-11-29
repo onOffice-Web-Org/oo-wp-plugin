@@ -21,9 +21,13 @@
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
+use onOffice\WPlugin\Field\FieldModuleCollection;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Types\FieldsCollection;
 
 /**
  *
@@ -77,13 +81,9 @@ class TestClassFieldnames
 	public function testConstruct()
 	{
 		$pFieldnamesDefault = $this->getNewFieldnames();
-		$this->assertFalse($pFieldnamesDefault->getAddApiOnlyFields());
-		$this->assertFalse($pFieldnamesDefault->getAddInternalAnnotations());
 		$this->assertFalse($pFieldnamesDefault->getInactiveOnly());
 
-		$pFieldnames = $this->getNewFieldnames(true, true, true);
-		$this->assertTrue($pFieldnames->getAddApiOnlyFields());
-		$this->assertTrue($pFieldnames->getAddInternalAnnotations());
+		$pFieldnames = $this->getNewFieldnames(null, true);
 		$this->assertTrue($pFieldnames->getInactiveOnly());
 	}
 
@@ -255,7 +255,10 @@ class TestClassFieldnames
 		$this->assertFalse($pFieldnames->getModuleContainsField('newsletter', $moduleAddress));
 		$this->assertFalse($pFieldnames->getModuleContainsField('defaultphone', $moduleAddress));
 
-		$pFieldnamesWithApiOnly = $this->getNewFieldnames(true);
+		$pFieldsCollection = new FieldModuleCollectionDecoratorReadAddress
+			(new FieldModuleCollectionDecoratorFormContact(new FieldsCollection()));
+
+		$pFieldnamesWithApiOnly = $this->getNewFieldnames($pFieldsCollection);
 		$pFieldnamesWithApiOnly->loadLanguage();
 		$this->assertTrue($pFieldnamesWithApiOnly->getModuleContainsField('newsletter', $moduleAddress));
 		$this->assertTrue($pFieldnamesWithApiOnly->getModuleContainsField('defaultphone', $moduleAddress));
@@ -348,11 +351,17 @@ class TestClassFieldnames
 
 	public function testGetType()
 	{
-		$pFieldnames = $this->getNewFieldnames(true);
-		$pFieldnames->loadLanguage();
-		$this->assertEquals('float', $pFieldnames->getType('kaufpreis', onOfficeSDK::MODULE_ESTATE));
-		$this->assertEquals('multiselect', $pFieldnames->getType('ArtDaten', onOfficeSDK::MODULE_ADDRESS));
-		$this->assertEquals('boolean', $pFieldnames->getType('newsletter', onOfficeSDK::MODULE_ADDRESS));
+		$pFieldnamesDefault = $this->getNewFieldnames(new FieldsCollection());
+		$pFieldnamesDefault->loadLanguage();
+		$this->assertEquals('float', $pFieldnamesDefault->getType('kaufpreis', onOfficeSDK::MODULE_ESTATE));
+		$this->assertEquals('multiselect', $pFieldnamesDefault->getType('ArtDaten', onOfficeSDK::MODULE_ADDRESS));
+
+		$pFieldnamesContact = $this->getNewFieldnames
+			(new FieldModuleCollectionDecoratorFormContact(new FieldsCollection()));
+		$pFieldnamesContact->loadLanguage();
+		$this->assertEquals('float', $pFieldnamesContact->getType('kaufpreis', onOfficeSDK::MODULE_ESTATE));
+		$this->assertEquals('multiselect', $pFieldnamesContact->getType('ArtDaten', onOfficeSDK::MODULE_ADDRESS));
+		$this->assertEquals('boolean', $pFieldnamesContact->getType('newsletter', onOfficeSDK::MODULE_ADDRESS));
 	}
 
 
@@ -430,12 +439,15 @@ class TestClassFieldnames
 	 */
 
 	private function getNewFieldnames(
-		bool $addApiOnlyFields = false,
-		bool $internalAnnotations = false,
+		FieldModuleCollection $pExtraFieldsCollection = null,
 		bool $inactiveOnly = false): Fieldnames
 	{
-		$pFieldnames = new Fieldnames($addApiOnlyFields, $internalAnnotations, $inactiveOnly,
-			$this->_pFieldnamesEnvironment);
+		if ($pExtraFieldsCollection === null) {
+			$pExtraFieldsCollection = new FieldsCollection();
+		}
+
+		$pFieldnames = new Fieldnames
+			($pExtraFieldsCollection, $inactiveOnly, $this->_pFieldnamesEnvironment);
 		return $pFieldnames;
 	}
 }

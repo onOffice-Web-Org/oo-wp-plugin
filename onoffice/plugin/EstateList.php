@@ -30,6 +30,7 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataView;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
@@ -118,7 +119,8 @@ class EstateList
 	public function __construct(DataView $pDataView)
 	{
 		$this->_pSDKWrapper = new SDKWrapper();
-		$this->_pFieldnames = new Fieldnames(true);
+		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPosition(new Types\FieldsCollection());
+		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 		$this->_pAddressList = new AddressList();
 		$this->_pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
 		$this->_pDataView = $pDataView;

@@ -32,6 +32,9 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -80,7 +83,10 @@ class Form
 	{
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice'));
 		$this->setGenericSetting('formId', 'onoffice-form');
-		$this->_pFieldnames = new Fieldnames(true);
+		$pFieldsCollection = new FieldModuleCollectionDecoratorFormContact
+			(new FieldModuleCollectionDecoratorSearchcriteria
+				(new FieldModuleCollectionDecoratorGeoPosition(new Types\FieldsCollection())));
+		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 		$this->_pFieldnames->loadLanguage();
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();

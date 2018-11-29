@@ -22,12 +22,16 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
+use onOffice\WPlugin\Types\FieldsCollection;
+use function __;
 
 /**
  *
@@ -51,6 +55,11 @@ class FormModelBuilderDBAddress
 		$pInputModelDBFactoryConfig = new InputModelDBFactoryConfigAddress();
 		$pInputModelDBFactory = new InputModelDBFactory($pInputModelDBFactoryConfig);
 		$this->setInputModelDBFactory($pInputModelDBFactory);
+
+		$pFieldsCollection = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
+		$pFieldnames = new Fieldnames($pFieldsCollection);
+		$pFieldnames->loadLanguage();
+		$this->setFieldnames($pFieldnames);
 	}
 
 

@@ -25,6 +25,9 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
@@ -32,8 +35,10 @@ use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use function __;
 
 /**
  *
@@ -52,6 +57,24 @@ class FormModelBuilderEstateDetailSettings
 
 	/** @var DataDetailView */
 	private $_pDataDetailView = null;
+
+
+	/**
+	 *
+	 * @param string $pageSlug
+	 *
+	 */
+
+	public function __construct($pageSlug)
+	{
+		parent::__construct($pageSlug);
+		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
+			(new FieldModuleCollectionDecoratorReadAddress
+				(new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection())));
+		$pFieldnames = new Fieldnames($pFieldCollection);
+		$pFieldnames->loadLanguage();
+		$this->setFieldnames($pFieldnames);
+	}
 
 
 	/**
@@ -219,9 +242,7 @@ class FormModelBuilderEstateDetailSettings
 		}
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-
-		$pFieldnames = new Fieldnames(true, true);
-		$pFieldnames->loadLanguage();
+		$pFieldnames = $this->getFieldnames();
 
 		$fieldNames = $pFieldnames->getFieldList($module);
 		$fields = array();

@@ -23,6 +23,8 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm;
@@ -32,7 +34,15 @@ use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\ModuleTranslation;
+use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
+use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_screen_option;
+use function esc_sql;
+use function plugin_dir_url;
+use function wp_enqueue_script;
+use function wp_register_script;
 
 /**
  *
@@ -311,21 +321,24 @@ abstract class AdminPageFormSettingsBase
 		$this->cleanPreviousBoxes();
 		$fieldNames = array();
 		$settings = array();
+		$pDefaultFieldsCollection = new FieldsCollection();
 
 		if ($this->_showEstateFields) {
-			$settings[onOfficeSDK::MODULE_ESTATE] = false;
+			$settings[onOfficeSDK::MODULE_ESTATE] = $pDefaultFieldsCollection;
 		}
 
 		if ($this->_showAddressFields) {
-			$settings[onOfficeSDK::MODULE_ADDRESS] = false;
+			$settings[onOfficeSDK::MODULE_ADDRESS] = $pDefaultFieldsCollection;
 		}
 
 		if ($this->_showSearchCriteriaFields) {
-			$settings[onOfficeSDK::MODULE_SEARCHCRITERIA] = true;
+			$settings[onOfficeSDK::MODULE_SEARCHCRITERIA] =
+				new FieldModuleCollectionDecoratorInternalAnnotations
+					(new FieldModuleCollectionDecoratorSearchcriteria($pDefaultFieldsCollection));
 		}
 
-		foreach ($settings as $module => $getExtraFields) {
-			$fieldNames = array_keys($this->readFieldnamesByContent($module, $getExtraFields));
+		foreach ($settings as $module => $pFieldsCollection) {
+			$fieldNames = array_keys($this->readFieldnamesByContent($module, $pFieldsCollection));
 
 			foreach ($fieldNames as $category) {
 				$slug = $this->generateGroupSlugByModuleCategory($module, $category);
@@ -366,7 +379,10 @@ abstract class AdminPageFormSettingsBase
 		}
 
 		if ($this->_showSearchCriteriaFields) {
-			$fieldNamesSearchCriteria = $this->readFieldnamesByContent(onOfficeSDK::MODULE_SEARCHCRITERIA, true);
+			$pFieldsCollection = new FieldModuleCollectionDecoratorInternalAnnotations
+				(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection()));
+			$fieldNamesSearchCriteria = $this->readFieldnamesByContent
+				(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFieldsCollection);
 			$this->addFieldsConfiguration
 				(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormModelBuilder, $fieldNamesSearchCriteria, true);
 			$this->addSortableFieldModule(onOfficeSDK::MODULE_SEARCHCRITERIA);

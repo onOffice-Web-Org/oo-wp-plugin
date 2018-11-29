@@ -30,12 +30,11 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentDefault;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\GeoPosition;
-use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\LocalFieldsCollectionFactory;
 use function __;
 
 /**
@@ -44,19 +43,6 @@ use function __;
 
 class Fieldnames
 {
-	/** @var array */
-	private static $_readOnlyFieldsAnnotations = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'defaultphone' => 'Phone (Marked as default in onOffice)',
-			'defaultemail' => 'E-Mail (Marked as default in onOffice)',
-			'defaultfax' => 'Fax (Marked as default in onOffice)',
-		],
-		onOfficeSDK::MODULE_SEARCHCRITERIA => [
-			'krit_bemerkung_oeffentlich' => 'Search Criteria Comment (external)',
-		],
-	];
-
-
 	/** @var FieldnamesEnvironment */
 	private $_pEnvironment = null;
 
@@ -69,51 +55,28 @@ class Fieldnames
 	/** @var array */
 	private $_umkreisFields = [];
 
-	/** @var FieldsCollection[] */
-	private $_apiReadOnlyFieldCollections = [];
-
-	/** @var bool */
-	private $_addApiOnlyFields = false;
-
-	/** @var bool */
-	private $_addInternalAnnotations = false;
-
 	/** @var bool */
 	private $_inactiveOnly = false;
+
+	/** @var FieldModuleCollection */
+	private $_pExtraFieldsCollection = null;
 
 
 	/**
 	 *
-	 * @param bool $addApiOnlyFields Adds special fields for API
-	 * @param bool $internalAnnotations Adds a more descriptive field label for admin page
+	 * @param FieldModuleCollection $pExtraFieldsCollection
 	 * @param bool $inactiveOnly
 	 *
 	 */
 
 	public function __construct(
-		bool $addApiOnlyFields = false,
-		bool $internalAnnotations = false,
+		FieldModuleCollection $pExtraFieldsCollection,
 		bool $inactiveOnly = false,
 		FieldnamesEnvironment $pEnvironment = null)
 	{
-		$this->_pEnvironment = $pEnvironment ?? new FieldnamesEnvironmentDefault();
-		$this->_addApiOnlyFields = $addApiOnlyFields;
-		$this->_addInternalAnnotations = $internalAnnotations;
+		$this->_pExtraFieldsCollection = $pExtraFieldsCollection;
 		$this->_inactiveOnly = $inactiveOnly;
-
-		$modules = [
-			onOfficeSDK::MODULE_ADDRESS,
-			onOfficeSDK::MODULE_ESTATE,
-			onOfficeSDK::MODULE_SEARCHCRITERIA,
-			'',
-		];
-
-		$pCollectionFactory = new LocalFieldsCollectionFactory();
-
-		foreach ($modules as $module) {
-			$this->_apiReadOnlyFieldCollections[$module] =
-				$pCollectionFactory->produceCollection($module);
-		}
+		$this->_pEnvironment = $pEnvironment ?? new FieldnamesEnvironmentDefault();
 	}
 
 
@@ -168,11 +131,11 @@ class Fieldnames
 		$pGeoPosition = new GeoPosition();
 		$geoPositionSearchFields = $pGeoPosition->getEstateSearchFields();
 		$module = onOfficeSDK::MODULE_ESTATE;
-		$pCollection = $this->_apiReadOnlyFieldCollections[$module];
+		$pCollection = $this->_pExtraFieldsCollection;
 
 		foreach ($geoPositionSearchFields as $field) {
-			$pField = $pCollection->getByName($field);
-			$this->_fieldList[$module][$field] = $pField->getAsRow() + ['module' => $module];
+			$pField = $pCollection->getFieldByModuleAndName($module, $field);
+			$this->_fieldList[$module][$field] = $pField->getAsRow();
 		}
 	}
 
@@ -183,19 +146,16 @@ class Fieldnames
 
 	private function setPermittedValuesForEstateSearchFields()
 	{
-		$permittedValuesLand = [];
+		$pCollection = $this->_pExtraFieldsCollection;
+		$pField = $pCollection->getAllFields()[GeoPosition::ESTATE_LIST_SEARCH_COUNTRY] ?? null;
 
-		if (isset($this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA]['range_land'])) {
-			$permittedValuesLand =
-				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA]['range_land']['permittedvalues'];
-		} elseif (isset($this->_fieldList[onOfficeSDK::MODULE_ESTATE]['land'])) {
-			$permittedValuesLand =
-				$this->_fieldList[onOfficeSDK::MODULE_ESTATE]['land']['permittedvalues'];
+		if ($pField !== null) {
+			$countryField =
+				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA]['range_land'] ??
+				$this->_fieldList[onOfficeSDK::MODULE_ESTATE]['land'] ?? [];
+
+			$pField->setPermittedvalues($countryField['permittedvalues']);
 		}
-
-		$pCollection = $this->_apiReadOnlyFieldCollections[onOfficeSDK::MODULE_ESTATE];
-		$pCollection->getByName(GeoPosition::ESTATE_LIST_SEARCH_COUNTRY)->setPermittedvalues
-			($permittedValuesLand);
 	}
 
 
@@ -246,19 +206,10 @@ class Fieldnames
 
 	private function mergeFieldLists()
 	{
-		$modules = [
-			onOfficeSDK::MODULE_ADDRESS,
-			onOfficeSDK::MODULE_ESTATE,
-			onOfficeSDK::MODULE_SEARCHCRITERIA,
-			'',
-		];
+		$newFieldsByModule = $this->getExtraFields();
 
-		$this->_fieldList[''] = [];
-
-		if ($this->_addApiOnlyFields) {
-			foreach ($modules as $module) {
-				$this->_fieldList[$module] += $this->getExtraFields($module);
-			}
+		foreach ($newFieldsByModule as $module => $newFields) {
+			$this->_fieldList[$module] = array_merge($this->_fieldList[$module] ?? [], $newFields);
 		}
 	}
 
@@ -403,44 +354,19 @@ class Fieldnames
 	 *
 	 */
 
-	private function getExtraFields($module): array
+	private function getExtraFields(): array
 	{
 		$extraFields = [];
-		$pFieldCollection = $this->getFieldsCollectionByModule($module);
-		$extraFieldsObject = $pFieldCollection->getAllFields();
+		$extraFieldsObject = $this->_pExtraFieldsCollection->getAllFields();
 
 		foreach ($extraFieldsObject as $pField) {
 			$newContent = $pField->getCategory() !== '' ?
 				$pField->getCategory() : __('Form Specific Fields', 'onoffice');
 			$pField->setCategory($newContent);
-			$extraFields[$pField->getName()] = $pField->getAsRow() + ['module' => $module];
-		}
-
-		if ($this->_addInternalAnnotations && isset(self::$_readOnlyFieldsAnnotations[$module])) {
-			$annotatedFields = [];
-			foreach ($extraFields as $field => $option) {
-				if (isset(self::$_readOnlyFieldsAnnotations[$module][$field])) {
-					$option['label'] = self::$_readOnlyFieldsAnnotations[$module][$field];
-					$annotatedFields[$field] = $option;
-				}
-			}
-			$extraFields = array_merge($extraFields, $annotatedFields);
+			$extraFields[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
 		}
 
 		return $extraFields;
-	}
-
-
-	/**
-	 *
-	 * @param string $module
-	 * @return FieldsCollection
-	 *
-	 */
-
-	private function getFieldsCollectionByModule(string $module): FieldsCollection
-	{
-		return $this->_apiReadOnlyFieldCollections[$module] ?? new FieldsCollection($module);
 	}
 
 
@@ -506,14 +432,6 @@ class Fieldnames
 		throw new UnknownFieldException;
 	}
 
-
-	/** @return bool */
-	public function getAddApiOnlyFields(): bool
-		{ return $this->_addApiOnlyFields; }
-
-	/** @return bool */
-	public function getAddInternalAnnotations(): bool
-		{ return $this->_addInternalAnnotations; }
 
 	/** @return bool */
 	public function getInactiveOnly(): bool

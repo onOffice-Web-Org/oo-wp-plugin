@@ -22,12 +22,17 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\HtmlIdGenerator;
+use function add_meta_box;
+use function get_current_screen;
+use function is_admin;
 
 
 /**
@@ -119,14 +124,14 @@ abstract class AdminPageAjax
 	/**
 	 *
 	 * @param string $module
-	 * @param bool $extraFields
+	 * @param FieldModuleCollection $pFieldsCollection
 	 * @return array
 	 *
 	 */
 
-	protected function readFieldnamesByContent($module, $extraFields = false)
+	protected function readFieldnamesByContent($module, FieldModuleCollection $pFieldsCollection = null)
 	{
-		$pFieldnames = new Fieldnames($extraFields, $extraFields);
+		$pFieldnames = new Fieldnames($pFieldsCollection ?? new FieldsCollection());
 		$pFieldnames->loadLanguage();
 		$modus = '';
 

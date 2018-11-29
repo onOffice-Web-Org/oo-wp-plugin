@@ -24,6 +24,8 @@ namespace onOffice\WPlugin\Form;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\FieldsCollection;
+use function get_option;
 
 /**
  *
@@ -45,7 +47,7 @@ class FormPostConfigurationDefault
 
 	public function __construct()
 	{
-		$this->_pFieldNames = new Fieldnames();
+		$this->_pFieldNames = new Fieldnames(new FieldsCollection());
 		$this->_pFieldNames->loadLanguage();
 	}
 
@@ -132,7 +134,7 @@ class FormPostConfigurationDefault
 
 	public function getSearchCriteriaFields(): array
 	{
-		$pFieldnames = new Fieldnames();
+		$pFieldnames = new Fieldnames(new FieldsCollection());
 		$pFieldnames->loadLanguage();
 		return $pFieldnames->getFieldList(onOfficeSDK::MODULE_SEARCHCRITERIA);
 	}

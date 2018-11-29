@@ -21,7 +21,10 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
 use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Types\FieldsCollection;
+use function get_option;
 
 /**
  *
@@ -43,7 +46,8 @@ class EstateListInputVariableReaderConfigFieldnames
 
 	public function __construct()
 	{
-		$this->_pFieldnames = new Fieldnames(true);
+		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
+		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 
 		$this->_pFieldnames->loadEstateSearchGeoPositionFields();
 		$this->_pFieldnames->loadLanguage();
