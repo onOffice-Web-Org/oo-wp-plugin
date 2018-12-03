@@ -388,11 +388,14 @@ class AdminPageEstateDetail
 			$result = false;
 		}
 
-		$resultObject = new stdClass();
-		$resultObject->result = $result;
-		$resultObject->record_id = null;
+		$pResultObject = new stdClass();
+		$pResultObject->result = $result;
+		$pResultObject->record_id = null;
+		$pResultObject->messageKey = $pResultObject->result ?
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE :
+			self::VIEW_SAVE_FAIL_MESSAGE;
 
-		echo json_encode($resultObject);
+		echo json_encode($pResultObject);
 
 		wp_die();
 	}
