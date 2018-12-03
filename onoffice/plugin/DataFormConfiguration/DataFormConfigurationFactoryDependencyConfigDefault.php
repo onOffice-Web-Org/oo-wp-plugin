@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\DataFormConfiguration;
 
 use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\GeoPositionFormSettings;
 
 /**
  *
@@ -62,13 +63,14 @@ class DataFormConfigurationFactoryDependencyConfigDefault
 	/**
 	 *
 	 * @param int $formId
+	 * @param GeoPositionFormSettings $pGeoPositionFormSettings
 	 * @return array
 	 *
 	 */
 
-	public function getFieldsByFormId(int $formId): array
+	public function getFieldsByFormId(int $formId, GeoPositionFormSettings $pGeoPositionFormSettings): array
 	{
-		return $this->_pRecordManagerRead->readFieldsByFormId($formId);
+		return $this->_pRecordManagerRead->readFieldsByFormId($formId, $pGeoPositionFormSettings);
 	}
 
 

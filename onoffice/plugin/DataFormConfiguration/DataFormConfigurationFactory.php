@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\DataFormConfiguration;
 
 use onOffice\WPlugin\DataFormConfiguration;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\GeoPositionFormSettings;
 
 /**
  *
@@ -120,7 +121,8 @@ class DataFormConfigurationFactory
 		$rowMain = $this->_pDependencyConfig->getMainRowById($formId);
 		$this->_type = $rowMain['form_type'];
 		$pConfig = $this->createByRow($rowMain);
-		$rowFields = $this->_pDependencyConfig->getFieldsByFormId($formId);
+		$pGeoPositionFormSettings = new GeoPositionFormSettings($this->_type);
+		$rowFields = $this->_pDependencyConfig->getFieldsByFormId($formId, $pGeoPositionFormSettings);
 
 		foreach ($rowFields as $fieldRow) {
 			$this->configureFieldsByRow($fieldRow, $pConfig);
@@ -144,7 +146,10 @@ class DataFormConfigurationFactory
 		$this->_type = $rowMain['form_type'];
 		$formId = $rowMain['form_id'];
 		$pConfig = $this->createByRow($rowMain);
-		$rowFields = $this->_pDependencyConfig->getFieldsByFormId($formId);
+
+		$pGeoPositionFormSettings = new GeoPositionFormSettings($this->_type);
+
+		$rowFields = $this->_pDependencyConfig->getFieldsByFormId($formId, $pGeoPositionFormSettings);
 
 		foreach ($rowFields as $fieldRow) {
 			$this->configureFieldsByRow($fieldRow, $pConfig);

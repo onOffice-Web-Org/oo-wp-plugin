@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Record;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\GeoPositionFormSettings;
 use const ARRAY_A;
 use const OBJECT;
 use function esc_sql;
@@ -125,7 +126,7 @@ class RecordManagerReadForm
 	 *
 	 */
 
-	public function readFieldsByFormId($formId)
+	public function readFieldsByFormId($formId, $pGeoPositionFormSettings)
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
@@ -138,7 +139,7 @@ class RecordManagerReadForm
 		$result = $pWpDb->get_results($sqlFields, ARRAY_A);
 
 		if (!$this->_forAdminInterface) {
-			$result = $this->readFieldsForNonAdminInterface($result);
+			$result = $this->readFieldsForNonAdminInterface($result, $pGeoPositionFormSettings);
 		}
 
 		return $result;
@@ -153,7 +154,7 @@ class RecordManagerReadForm
 	 *
 	 */
 
-	private function readFieldsForNonAdminInterface($result)
+	private function readFieldsForNonAdminInterface($result, $pGeoPositionFormSettings)
 	{
 		$pGeoPosition = new GeoPosition();
 
@@ -165,7 +166,7 @@ class RecordManagerReadForm
 
 				unset($result[$id]);
 
-				$geoPositionSettings = $pGeoPosition->getSettingsGeoPositionFields(onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$geoPositionSettings = $pGeoPositionFormSettings->getSettings();
 
 				foreach ($geoPositionSettings as $field) {
 					$geoPositionField = [

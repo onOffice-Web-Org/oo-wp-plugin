@@ -94,6 +94,13 @@ class GeoPosition
 		],
 	];
 
+	/** @var array */
+	private $_settingsGeoPositionFieldsWhitoutRange = [
+		'range_land',
+		'range_plz',
+		'range_strasse',
+	];
+
 
 	/** @var array */
 	private $_estateSearchFields = [
@@ -194,6 +201,18 @@ class GeoPosition
 	public function getSettingsGeoPositionFields(string $module): array
 	{
 		return $this->_settingsGeoPositionFields[$module] ?? [];
+	}
+
+
+	/**
+	 *
+	 * @param string $module
+	 * @return array
+	 *
+	 */
+	public function getSettingsGeoPositionFieldsWithoutRadius(): array
+	{
+		return $this->_settingsGeoPositionFieldsWhitoutRange;
 	}
 
 

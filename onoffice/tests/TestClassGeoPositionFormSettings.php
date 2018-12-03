@@ -19,53 +19,50 @@
  *
  */
 
-namespace onOffice\WPlugin\DataFormConfiguration;
-
 use onOffice\WPlugin\GeoPositionFormSettings;
+use onOffice\WPlugin\Form;
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- */
-
-interface DataFormConfigurationFactoryDependencyConfigBase
+class TestClassGeoPositionFormSettings
+	extends WP_UnitTestCase
 {
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getFieldsByFormId(int $formId, GeoPositionFormSettings $pGeoPositionFormSettings): array;
-
 
 	/**
 	 *
-	 * @param string $name
-	 * @return array
-	 *
 	 */
 
-	public function getMainRowByName(string $name): array;
+	public function testForApplicantForm()
+	{
+		$pGeoPositionFromSettings = new GeoPositionFormSettings(Form::TYPE_APPLICANT_SEARCH);
+		$result = $pGeoPositionFromSettings->getSettings();
 
+		$values = [
+			'range_land',
+			'range_plz',
+			'range_strasse',];
 
-	/**
-	 *
-	 * @param int $formId
-	 * @return array
-	 *
-	 */
-
-	public function getMainRowById(int $formId): array;
+		foreach ($values as $key => $value) {
+			$this->assertEquals($value, $result[$key]);
+		}
+	}
 
 
 	/**
 	 *
-	 * @param bool $isAdminInterface
-	 *
 	 */
 
-	public function setAdminInterface(bool $isAdminInterface);
+	public function testForDefault()
+	{
+		$pGeoPositionFromSettings = new GeoPositionFormSettings(Form::TYPE_INTEREST);
+		$result = $pGeoPositionFromSettings->getSettings();
+
+		$values = [
+			'range_land',
+			'range_plz',
+			'range_strasse',
+			'range'];
+
+		foreach ($values as $key => $value) {
+			$this->assertEquals($value, $result[$key]);
+		}
+	}
 }

@@ -19,9 +19,10 @@
  *
  */
 
-namespace onOffice\WPlugin\DataFormConfiguration;
+namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\GeoPositionFormSettings;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Form;
 
 /**
  *
@@ -30,42 +31,47 @@ use onOffice\WPlugin\GeoPositionFormSettings;
  *
  */
 
-interface DataFormConfigurationFactoryDependencyConfigBase
+class GeoPositionFormSettings
 {
+	/** @var array */
+	private $_settings = [];
+
+	/** @var string */
+	private $_formType = null;
+
+
+
+	/**
+	 *
+	 * @param string $formType
+	 *
+	 */
+
+	public function __construct($formType)
+	{
+		$this->_formType = $formType;
+
+		$pGeoPosition = new GeoPosition();
+
+		switch ($formType)
+		{
+			case Form::TYPE_APPLICANT_SEARCH:
+				$this->_settings = $pGeoPosition->getSettingsGeoPositionFieldsWithoutRadius();
+				break;
+
+			default:
+				$this->_settings = $pGeoPosition->getSettingsGeoPositionFields(onOfficeSDK::MODULE_SEARCHCRITERIA);
+				break;
+		}
+	}
+
+
 	/**
 	 *
 	 * @return array
 	 *
 	 */
 
-	public function getFieldsByFormId(int $formId, GeoPositionFormSettings $pGeoPositionFormSettings): array;
-
-
-	/**
-	 *
-	 * @param string $name
-	 * @return array
-	 *
-	 */
-
-	public function getMainRowByName(string $name): array;
-
-
-	/**
-	 *
-	 * @param int $formId
-	 * @return array
-	 *
-	 */
-
-	public function getMainRowById(int $formId): array;
-
-
-	/**
-	 *
-	 * @param bool $isAdminInterface
-	 *
-	 */
-
-	public function setAdminInterface(bool $isAdminInterface);
+	public function getSettings()
+	{ return $this->_settings; }
 }

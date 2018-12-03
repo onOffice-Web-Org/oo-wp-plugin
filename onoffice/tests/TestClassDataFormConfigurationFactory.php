@@ -28,6 +28,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactoryDependenc
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\GeoPositionFormSettings;
 
 /**
  *
@@ -169,7 +170,8 @@ class TestClassDataFormConfigurationFactory
 				(array_column($fieldsArray, 'fieldname'), array_column($fieldsArray, 'module'));
 
 			$this->_pConfig->setFieldsByFormId($formId, $fieldsArray);
-			$pDataFormConfiguration = $this->_pDataFormConfigurationFactory->loadByFormId($formId);
+			$pGeoPositionFormSettings = new GeoPositionFormSettings($formType);
+			$pDataFormConfiguration = $this->_pDataFormConfigurationFactory->loadByFormId($formId, $pGeoPositionFormSettings);
 			$this->assertFactoryOutput($class, $formType, $pDataFormConfiguration, $formId,
 				$fieldsArrayFlat);
 

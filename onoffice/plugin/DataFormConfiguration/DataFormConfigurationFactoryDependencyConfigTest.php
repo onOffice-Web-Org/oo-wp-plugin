@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
+use onOffice\WPlugin\GeoPositionFormSettings;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -51,7 +53,7 @@ class DataFormConfigurationFactoryDependencyConfigTest
 	 *
 	 */
 
-	public function getFieldsByFormId(int $formId): array
+	public function getFieldsByFormId(int $formId, GeoPositionFormSettings $pGeoPositionFormSettings): array
 	{
 		return $this->_fieldsByFormId[$formId];
 	}
