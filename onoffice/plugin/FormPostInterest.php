@@ -23,6 +23,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Form\FormPostConfiguration;
@@ -76,28 +77,12 @@ class FormPostInterest
 		$recipient = $pFormConfiguration->getRecipient();
 		$subject = $pFormConfiguration->getSubject();
 		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
-		$missingFields = $pFormData->getMissingFields();
 
-		if (count($missingFields) > 0) {
-			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
-		} else {
-			$response = false;
-			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
+		$addressId = $this->createOrCompleteAddress($pFormData, $checkduplicate);
+		$this->createSearchcriteria($pFormData, $addressId);
 
-			if (false !== $responseAddress) {
-				$responseSearchcriteria = $this->createSearchcriteria($pFormData, $responseAddress);
-				if ($recipient == null) {
-					$response = $responseSearchcriteria;
-				} elseif ($responseSearchcriteria) {
-					$response = $this->sendEmail($pFormData, $recipient, $subject);
-				}
-			}
-
-			if (true === $response) {
-				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
-			} else {
-				$pFormData->setStatus(FormPost::MESSAGE_ERROR);
-			}
+		if ($recipient != null) {
+			$this->sendEmail($pFormData, $recipient, $subject);
 		}
 	}
 
@@ -121,11 +106,11 @@ class FormPostInterest
 	 * @param FormData $pFormData
 	 * @param string $recipient
 	 * @param string $subject
-	 * @return bool
+	 * @throws ApiClientException
 	 *
 	 */
 
-	private function sendEmail(FormData $pFormData, $recipient, $subject = null)
+	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
 	{
 		$addressData = $pFormData->getAddressData();
 		$name = $addressData['Name'] ?? null;
@@ -154,7 +139,9 @@ class FormPostInterest
 		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		return $pApiClientAction->getResultStatus();
+		if (!$pApiClientAction->getResultStatus()) {
+			throw new ApiClientException($pApiClientAction);
+		}
 	}
 
 
@@ -162,11 +149,10 @@ class FormPostInterest
 	 *
 	 * @param FormData $pFormData
 	 * @param int $addressId
-	 * @return bool
 	 *
 	 */
 
-	private function createSearchcriteria(FormData $pFormData, $addressId)
+	private function createSearchcriteria(FormData $pFormData, int $addressId)
 	{
 		$requestParams = [
 			'data' => $pFormData->getSearchcriteriaData(),
@@ -181,6 +167,8 @@ class FormPostInterest
 		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		return $pApiClientAction->getResultStatus();
+		if (!$pApiClientAction->getResultStatus()) {
+			throw new ApiClientException($pApiClientAction);
+		}
 	}
 }

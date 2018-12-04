@@ -30,6 +30,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormPostConfiguration;
@@ -97,6 +98,7 @@ abstract class FormPost
 	 *
 	 * @param DataFormConfiguration $pConfig
 	 * @param int $formNo
+	 * @return void
 	 *
 	 */
 
@@ -106,14 +108,20 @@ abstract class FormPost
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
 
-		if ($pFormData->getMissingFields() === []) {
-			if (!$this->checkCaptcha($pConfig)) {
-				$pFormData->setStatus(self::MESSAGE_RECAPTCHA_SPAM);
-				return;
-			}
+		if ($pFormData->getMissingFields() === [] && !$this->checkCaptcha($pConfig)) {
+			$pFormData->setStatus(self::MESSAGE_RECAPTCHA_SPAM);
+			return;
+		} elseif ($pFormData->getMissingFields() !== []) {
+			$pFormData->setStatus(self::MESSAGE_REQUIRED_FIELDS_MISSING);
+			return;
 		}
 
-		$this->analyseFormContentByPrefix($pFormData);
+		try {
+			$this->analyseFormContentByPrefix($pFormData);
+			$pFormData->setStatus(self::MESSAGE_SUCCESS);
+		} catch (ApiClientException $pException) {
+			$pFormData->setStatus(self::MESSAGE_ERROR);
+		}
 	}
 
 
@@ -243,7 +251,8 @@ abstract class FormPost
 	 *
 	 */
 
-	protected function getFormFieldsConsiderSearchcriteria($inputFormFields, $numberAsRange = true)
+	protected function getFormFieldsConsiderSearchcriteria(
+		array $inputFormFields, bool $numberAsRange = true)
 	{
 		$fieldList = $this->_pFormPostConfiguration->getSearchCriteriaFields();
 
@@ -269,11 +278,13 @@ abstract class FormPost
 	 *
 	 * @param FormData $pFormData
 	 * @param bool $mergeExisting
-	 * @return bool
+	 * @return int
+	 * @throws ApiClientException
 	 *
 	 */
 
-	protected function createOrCompleteAddress(FormData $pFormData, $mergeExisting = false)
+	protected function createOrCompleteAddress(
+		FormData $pFormData, bool $mergeExisting = false): int
 	{
 		$requestParams = $this->getAddressDataForApiCall($pFormData);
 		$requestParams['checkDuplicate'] = $mergeExisting;
@@ -286,10 +297,12 @@ abstract class FormPost
 
 		if ($pApiClientAction->getResultStatus() === true) {
 			$result = $pApiClientAction->getResultRecords();
-			return $result[0]['id'] ?? false;
+			if (isset($result[0]['id'])) {
+				return (int)$result[0]['id'];
+			}
 		}
 
-		return false;
+		throw new ApiClientException($pApiClientAction);
 	}
 
 
@@ -300,7 +313,7 @@ abstract class FormPost
 	 *
 	 */
 
-	private function getAddressDataForApiCall(FormData $pFormData)
+	private function getAddressDataForApiCall(FormData $pFormData): array
 	{
 		$inputs = $pFormData->getDataFormConfiguration()->getInputs();
 		$addressData = [];

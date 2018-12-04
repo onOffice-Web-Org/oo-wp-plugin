@@ -23,6 +23,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
@@ -85,16 +86,8 @@ class FormPostApplicantSearch
 			$limitResults = self::LIMIT_RESULTS;
 		}
 
-		if ($pFormData->getMissingFields() !== []) {
-			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING);
-		} else {
-			$applicants = $this->getApplicants($pFormData, $limitResults);
-
-			if (is_array($applicants)) {
-				$pFormData->setResponseFieldsValues($applicants);
-				$pFormData->setStatus(FormPost::MESSAGE_SUCCESS);
-			}
-		}
+		$applicants = $this->getApplicants($pFormData, $limitResults);
+		$pFormData->setResponseFieldsValues($applicants);
 	}
 
 
@@ -138,24 +131,24 @@ class FormPostApplicantSearch
 		$pSDKWrapper->sendRequests();
 
 		if (!$pApiClientAction->getResultStatus()) {
-			// Exception?
+			throw new ApiClientException($pApiClientAction);
+		}
+
+		$response = $pApiClientAction->getResultRecords();
+
+		if ($response === []) {
 			return [];
 		}
 
-		$found = [];
-		$response = $pApiClientAction->getResultRecords();
 		$viewFields = $pFormData->getDataFormConfiguration()->getInputs();
+		$foundApplicants = [];
 
 		foreach ($response as $record) {
 			$addressId = $record['elements']['adresse'];
-			$found[$addressId] = $this->collectSearchParametersForRecord($record, $viewFields);
+			$foundApplicants[$addressId] = $this->collectSearchParametersForRecord($record, $viewFields);
 		}
 
-		if ($found !== []) {
-			$found = $this->setKdNr($found);
-		}
-
-		return $found;
+		return $this->setKdNr($foundApplicants);
 	}
 
 
@@ -212,17 +205,18 @@ class FormPostApplicantSearch
 		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		$results = [];
 		if ($pApiClientAction->getResultStatus()) {
+			$results = [];
 			$records = $pApiClientAction->getResultRecords();
 
 			foreach ($records as $record) {
 				$elements = $record['elements'];
 				$results[$elements['KdNr']] = $applicants[$elements['id']];
 			}
+			return $results;
 		}
 
-		return $results;
+		throw new ApiClientException($pApiClientAction);
 	}
 
 

@@ -29,6 +29,7 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
@@ -84,41 +85,23 @@ class FormPostOwner
 		$subject = $pDataFormConfiguration->getSubject();
 		$checkduplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 
-		$missingFields = $pFormData->getMissingFields();
+		$addressId = $this->createOrCompleteAddress($pFormData, $checkduplicate);
+		$estateId = $this->createEstate();
+		$this->createOwnerRelation($estateId, $addressId);
 
-		if ( count( $missingFields ) > 0 ) {
-			$pFormData->setStatus(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING );
-		} else {
-			$response = false;
-			$responseAddress = $this->createOrCompleteAddress($pFormData, $checkduplicate);
-			$responseEstate = $this->createEstate();
-
-			if ($responseAddress !== false &&
-				$responseEstate !== false) {
-				$response = $this->createOwnerRelation($responseEstate, $responseAddress);
-			}
-
-			if (null != $recipient && $responseEstate && $responseAddress) {
-				$response = $response &&
-					$this->sendContactRequest($recipient, $responseEstate, $subject);
-			}
-
-			if ($response) {
-				$pFormData->setStatus( FormPost::MESSAGE_SUCCESS );
-			} else {
-				$pFormData->setStatus( FormPost::MESSAGE_ERROR );
-			}
+		if (null != $recipient) {
+			$this->sendContactRequest($recipient, $estateId, $subject);
 		}
 	}
 
 
 	/**
 	 *
-	 * @return bool
+	 * @return int
 	 *
 	 */
 
-	private function createEstate()
+	private function createEstate(): int
 	{
 		$estateValues = $this->getEstateData();
 		$requestParams = ['data' => $estateValues];
@@ -132,10 +115,12 @@ class FormPostOwner
 
 		if ($pApiClientAction->getResultStatus()) {
 			$records = $pApiClientAction->getResultRecords();
-			return $records[0]['id'];
+			if (isset($records[0]['id'])) {
+				return (int)$records[0]['id'];
+			}
 		}
 
-		return false;
+		throw new ApiClientException($pApiClientAction);
 	}
 
 
@@ -145,7 +130,7 @@ class FormPostOwner
 	 *
 	 */
 
-	public function getEstateData()
+	public function getEstateData(): array
 	{
 		$pFormData = $this->_pFormData;
 		$pInputVariableReader = $this->_pFormPostOwnerConfiguration->getEstateListInputVariableReader();
@@ -155,6 +140,8 @@ class FormPostOwner
 		$estateFields = array_filter($submitFields, function($key) use ($configFields) {
 			return onOfficeSDK::MODULE_ESTATE === $configFields[$key];
 		});
+
+		$estateData = [];
 
 		foreach ($estateFields as $input) {
 			$value = $pInputVariableReader->getFieldValue($input);
@@ -175,11 +162,11 @@ class FormPostOwner
 	 *
 	 * @param int $estateId
 	 * @param int $addressId
-	 * @return bool $result
+	 * @throws ApiClientException
 	 *
 	 */
 
-	private function createOwnerRelation($estateId, $addressId)
+	private function createOwnerRelation(int $estateId, int $addressId)
 	{
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 
@@ -194,7 +181,9 @@ class FormPostOwner
 		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
 
-		return $pApiClientAction->getResultStatus();
+		if (!$pApiClientAction->getResultStatus()) {
+			throw new ApiClientException($pApiClientAction);
+		}
 	}
 
 
@@ -203,11 +192,11 @@ class FormPostOwner
 	 * @param string $recipient
 	 * @param int $estateId
 	 * @param string $subject
-	 * @return bool
+	 * @throws ApiClientException
 	 *
 	 */
 
-	private function sendContactRequest($recipient, $estateId, $subject = null)
+	private function sendContactRequest(string $recipient, int $estateId, $subject = null)
 	{
 		$addressData = $this->_pFormData->getAddressData();
 		$values = $this->_pFormData->getValues();
@@ -222,7 +211,7 @@ class FormPostOwner
 			'formtype' => $this->_pFormData->getFormtype(),
 		];
 
-		if ( null != $recipient ) {
+		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
 		}
 
@@ -240,6 +229,8 @@ class FormPostOwner
 			$result = ($resultRecords[0]['elements']['success'] ?? '') === 'success';
 		}
 
-		return $result;
+		if (!$result) {
+			throw new ApiClientException($pApiClientAction);
+		}
 	}
 }
