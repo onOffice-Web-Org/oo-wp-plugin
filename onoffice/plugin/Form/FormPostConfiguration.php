@@ -95,4 +95,13 @@ interface FormPostConfiguration
 	 */
 
 	public function getSearchCriteriaFields(): array;
+
+
+	/**
+	 *
+	 * @param string $logString
+	 *
+	 */
+
+	public function log(string $logString);
 }

@@ -238,6 +238,7 @@ class TestClassFormPostOwner
 		$this->assertInstanceOf(FormData::class, $pFormData);
 		$this->assertTrue($pFormData->getFormSent());
 		$this->assertEquals(FormPost::MESSAGE_ERROR, $pFormData->getStatus());
+		$this->assertEquals(1, count($this->_pFormPostConfiguration->getLogEntries()));
 	}
 
 

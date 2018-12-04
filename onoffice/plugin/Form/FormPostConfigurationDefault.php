@@ -138,4 +138,16 @@ class FormPostConfigurationDefault
 		$pFieldnames->loadLanguage();
 		return $pFieldnames->getFieldList(onOfficeSDK::MODULE_SEARCHCRITERIA);
 	}
+
+
+	/**
+	 *
+	 * @param string $logString
+	 *
+	 */
+
+	public function log(string $logString)
+	{
+		error_log('[onOffice-Plugin]: Form error: '.$logString);
+	}
 }

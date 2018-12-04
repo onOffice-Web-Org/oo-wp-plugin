@@ -142,7 +142,7 @@ class TestClassFormPostInterest
 		$this->_pFormPostConfiguration->setPostVariables($postVariables);
 		$this->_pFormPostInterestConfiguration->setPostValues($postVariables);
 
-		foreach ($unsuccessfulCombinations as $values) {
+		foreach ($unsuccessfulCombinations as $index => $values) {
 			$this->addApiResponseCreateAddress($values[0]);
 			$this->addApiResponseCreateSearchCriteria($values[1]);
 			$this->addApiResponseSendMail($values[2]);
@@ -150,6 +150,7 @@ class TestClassFormPostInterest
 			$pFormData = $this->_pFormPostInterest->getFormDataInstance('interestform', 2);
 
 			$this->assertEquals(FormPost::MESSAGE_ERROR, $pFormData->getStatus());
+			$this->assertEquals($index + 1, count($this->_pFormPostConfiguration->getLogEntries()));
 		}
 	}
 

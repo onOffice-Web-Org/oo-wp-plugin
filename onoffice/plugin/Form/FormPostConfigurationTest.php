@@ -50,6 +50,9 @@ class FormPostConfigurationTest
 	/** @var string */
 	private $_postvarCaptchaToken = '';
 
+	/** @var array */
+	private $_logEntries = [];
+
 
 	/**
 	 *
@@ -216,5 +219,29 @@ class FormPostConfigurationTest
 		$jsonFile = ONOFFICE_PLUGIN_DIR.'/tests/resources/FormPostSearchCriteriaFields.json';
 		$jsonString = file_get_contents($jsonFile);
 		return json_decode($jsonString, true);
+	}
+
+
+	/**
+	 *
+	 * @param string $logString
+	 *
+	 */
+
+	public function log(string $logString)
+	{
+		$this->_logEntries []= $logString;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getLogEntries(): array
+	{
+		return $this->_logEntries;
 	}
 }

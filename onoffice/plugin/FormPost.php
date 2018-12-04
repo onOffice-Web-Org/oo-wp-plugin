@@ -28,6 +28,7 @@
 
 namespace onOffice\WPlugin;
 
+use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
@@ -119,8 +120,9 @@ abstract class FormPost
 		try {
 			$this->analyseFormContentByPrefix($pFormData);
 			$pFormData->setStatus(self::MESSAGE_SUCCESS);
-		} catch (ApiClientException $pException) {
+		} catch (Exception $pException) {
 			$pFormData->setStatus(self::MESSAGE_ERROR);
+			$this->_pFormPostConfiguration->log((string)$pException);
 		}
 	}
 
