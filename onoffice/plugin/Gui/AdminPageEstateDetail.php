@@ -156,7 +156,7 @@ class AdminPageEstateDetail
 		$this->generateAccordionBoxesContactPerson();
 		echo '</div>';
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
-		do_accordion_sections(get_current_screen()->id, 'side', null);
+		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
 		echo '</div>';
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
@@ -257,7 +257,7 @@ class AdminPageEstateDetail
 		foreach ($fieldNamesContactData as $content)
 		{
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug($content);
-			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+			$this->createMetaBoxByForm($pFormFieldsConfig, 'contactperson');
 		}
 	}
 
