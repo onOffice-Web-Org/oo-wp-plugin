@@ -87,7 +87,8 @@ class RecordManagerReadListViewAddress
 				WHERE `name` = '".esc_sql($name)."'";
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
-		$result['fields'] = $this->readFieldconfigByListviewId($result[$this->getIdColumnMain()]);
+		$resultFieldConfig = $this->readFieldconfigByListviewId($result[$this->getIdColumnMain()]);
+		$result['fields'] = array_column($resultFieldConfig, 'fieldname');
 
 		return $result;
 	}
@@ -105,12 +106,12 @@ class RecordManagerReadListViewAddress
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$sqlFields = "SELECT fieldname
+		$sqlFields = "SELECT *
 			FROM {$prefix}oo_plugin_address_fieldconfig
 			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($listviewId)."
 			ORDER BY `order` ASC";
 
-		$result = $pWpDb->get_col($sqlFields);
+		$result = $pWpDb->get_results($sqlFields, ARRAY_A);
 
 		return $result;
 	}

@@ -31,7 +31,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigBase;
  *
  */
 class InputModelDBFactoryConfigAddress
-	implements InputModelDBFactoryConfigBase
+	implements InputModelDBFactoryConfigBase, InputModelDBFactoryFilterableFields
 {
 	/** @var array */
 	private $_inputConfig = [
@@ -66,6 +66,14 @@ class InputModelDBFactoryConfigAddress
 		InputModelDBFactory::INPUT_FIELD_CONFIG => [
 			self::KEY_TABLE => 'oo_plugin_address_fieldconfig',
 			self::KEY_FIELD => 'fieldname',
+		],
+		self::INPUT_FIELD_FILTERABLE => [
+			self::KEY_TABLE => 'oo_plugin_address_fieldconfig',
+			self::KEY_FIELD => 'filterable',
+		],
+		self::INPUT_FIELD_HIDDEN => [
+			self::KEY_TABLE => 'oo_plugin_address_fieldconfig',
+			self::KEY_FIELD => 'hidden',
 		],
 	];
 

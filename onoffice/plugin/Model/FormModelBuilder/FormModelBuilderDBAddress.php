@@ -27,6 +27,8 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
@@ -73,7 +75,11 @@ class FormModelBuilderDBAddress
 		{
 			$pRecordReadManager = new RecordManagerReadListViewAddress();
 			$values = $pRecordReadManager->getRowById($listViewId);
-			$values['fields'] = $pRecordReadManager->readFieldconfigByListviewId($listViewId);
+			$resultByField = $pRecordReadManager->readFieldconfigByListviewId($listViewId);
+			$values['fields'] = array_column($resultByField, 'fieldname');
+
+			$values['filterable'] = $this->arrayColumnTrue($resultByField, 'filterable');
+			$values['hidden'] = $this->arrayColumnTrue($resultByField, 'hidden');
 			$this->setValues($values);
 		}
 
@@ -83,6 +89,21 @@ class FormModelBuilderDBAddress
 		$pFormModel->setPageSlug($this->getPageSlug());
 
 		return $pFormModel;
+	}
+
+
+	/**
+	 *
+	 * @param array $array
+	 * @param string $column
+	 * @return array
+	 *
+	 */
+
+	private function arrayColumnTrue(array $array, string $column): array
+	{
+		$columns = array_column($array, $column, 'fieldname');
+		return array_keys(array_filter($columns));
 	}
 
 
@@ -126,5 +147,103 @@ class FormModelBuilderDBAddress
 		$pInputModelPictureTypes->setValue((int)$pictureTypeSelected);
 
 		return $pInputModelPictureTypes;
+	}
+
+
+	/**
+	 *
+	 * @param type $module
+	 * @param type $htmlType
+	 * @return type
+	 *
+	 */
+
+	public function createSortableFieldList($module, $htmlType)
+	{
+		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
+		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
+		$pInputModelIsHidden = $this->getInputModelIsHidden();
+		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
+		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
+
+		return $pSortableFieldsList;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelIsFilterable()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigAddress();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Filterable', 'onoffice');
+		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback([$this, 'callbackValueInputModelIsFilterable']);
+
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelIsHidden()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigAddress();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Hidden', 'onoffice');
+		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback([$this, 'callbackValueInputModelIsHidden']);
+
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 * @return bool
+	 *
+	 */
+
+	public function callbackValueInputModelIsFilterable(InputModelBase $pInputModel, $key)
+	{
+		$valueFromConf = $this->getValue('filterable');
+		$filterableFields = is_array($valueFromConf) ? $valueFromConf : array();
+		$value = in_array($key, $filterableFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 * @return bool
+	 *
+	 */
+
+	public function callbackValueInputModelIsHidden(InputModelBase $pInputModel, $key)
+	{
+		$valueFromConf = $this->getValue('hidden');
+		$filterableFields = is_array($valueFromConf) ? $valueFromConf : array();
+		$value = in_array($key, $filterableFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
 	}
 }

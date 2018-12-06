@@ -30,15 +30,8 @@ namespace onOffice\WPlugin\Model\InputModel;
  */
 
 class InputModelDBFactoryConfigEstate
-	implements InputModelDBFactoryConfigBase
+	implements InputModelDBFactoryConfigBase, InputModelDBFactoryFilterableFields
 {
-	/** */
-	const INPUT_FIELD_FILTERABLE = 'inputfilterable';
-
-	/** If filterable, it can also be hidden */
-	const INPUT_FIELD_HIDDEN = 'inputhidden';
-
-
 	/** @var array */
 	private $_inputConfig = [
 		InputModelDBFactory::INPUT_FILTERID => [
