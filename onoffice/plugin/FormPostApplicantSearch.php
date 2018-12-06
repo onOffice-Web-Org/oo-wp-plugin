@@ -110,10 +110,11 @@ class FormPostApplicantSearch
 	 * @param FormData $pFormData
 	 * @param int $limitResults
 	 * @return array
+	 * @throws ApiClientException
 	 *
 	 */
 
-	private function getApplicants(FormData $pFormData, $limitResults): array
+	private function getApplicants(FormData $pFormData, int $limitResults): array
 	{
 		$requestParams = [
 			'searchdata' => $pFormData->getValues(),
@@ -167,7 +168,7 @@ class FormPostApplicantSearch
 
 		foreach ($elements as $key => $value) {
 			$origName = $this->getOriginalFieldNameByRangeField($key);
-			if (!array_key_exists($origName, $viewFields)) {
+			if (!isset($viewFields[$origName])) {
 				continue;
 			}
 

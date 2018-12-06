@@ -56,69 +56,68 @@ class RecordManagerFactory
 
 
 	/** @var array */
-	private static $_mapping = array(
-		self::TYPE_ADDRESS => array(
-			self::ACTION_READ => 'RecordManagerReadListViewAddress',
-			self::ACTION_INSERT => 'RecordManagerInsertGeneric',
-			self::ACTION_UPDATE => 'RecordManagerUpdateListViewAddress',
-			self::ACTION_DELETE => 'RecordManagerDeleteListViewAddress',
-		),
-		self::TYPE_ESTATE => array(
-			self::ACTION_READ => 'RecordManagerReadListViewEstate',
-			self::ACTION_INSERT => 'RecordManagerInsertGeneric',
-			self::ACTION_UPDATE => 'RecordManagerUpdateListViewEstate',
-			self::ACTION_DELETE => 'RecordManagerDeleteListViewEstate',
-		),
-		self::TYPE_FORM => array(
-			self::ACTION_READ => 'RecordManagerReadForm',
-			self::ACTION_INSERT => 'RecordManagerInsertGeneric',
-			self::ACTION_UPDATE => 'RecordManagerUpdateForm',
-			self::ACTION_DELETE => 'RecordManagerDeleteForm',
-		),
-	);
+	private static $_mapping = [
+		self::TYPE_ADDRESS => [
+			self::ACTION_READ => RecordManagerReadListViewAddress::class,
+			self::ACTION_INSERT => RecordManagerInsertGeneric::class,
+			self::ACTION_UPDATE => RecordManagerUpdateListViewAddress::class,
+			self::ACTION_DELETE => RecordManagerDeleteListViewAddress::class,
+		],
+		self::TYPE_ESTATE => [
+			self::ACTION_READ => RecordManagerReadListViewEstate::class,
+			self::ACTION_INSERT => RecordManagerInsertGeneric::class,
+			self::ACTION_UPDATE => RecordManagerUpdateListViewEstate::class,
+			self::ACTION_DELETE => RecordManagerDeleteListViewEstate::class,
+		],
+		self::TYPE_FORM => [
+			self::ACTION_READ => RecordManagerReadForm::class,
+			self::ACTION_INSERT => RecordManagerInsertGeneric::class,
+			self::ACTION_UPDATE => RecordManagerUpdateForm::class,
+			self::ACTION_DELETE => RecordManagerDeleteForm::class,
+		],
+	];
 
 
 	/** @var array */
-	private static $_genericClassTables = array(
+	private static $_genericClassTables = [
 		self::TYPE_ADDRESS => RecordManager::TABLENAME_LIST_VIEW_ADDRESS,
 		self::TYPE_ESTATE => RecordManager::TABLENAME_LIST_VIEW,
 		self::TYPE_FORM => RecordManager::TABLENAME_FORMS,
-	);
+	];
 
 
 	/**
 	 *
 	 * @param string $type
 	 * @param string $action
+	 * @param int $recordId
 	 * @return RecordManager
 	 * @throws Exception
 	 *
 	 */
 
-	public static function createByTypeAndAction($type, $action, $recordId = null)
+	public static function createByTypeAndAction(
+		string $type, string $action, int $recordId = null): RecordManager
 	{
 		$pInstance = null;
+		$className = self::$_mapping[$type][$action] ?? null;
 
-		if (isset(self::$_mapping[$type][$action])) {
-			$className = self::$_mapping[$type][$action];
-		} else {
+		if ($className === null) {
 			throw new Exception('Class not found in mapping. type='.$type.', action='.$action);
 		}
 
-		$classNamespacePrefixed = __NAMESPACE__.'\\'.$className;
-
-		if (__String::getNew($classNamespacePrefixed)->endsWith('Generic')) {
+		if (__String::getNew($className)->endsWith('Generic')) {
 			$mainTable = self::$_genericClassTables[$type];
 			if ($recordId !== null) {
-				$pInstance = new $classNamespacePrefixed($mainTable, $recordId);
+				$pInstance = new $className($mainTable, $recordId);
 			} else {
-				$pInstance = new $classNamespacePrefixed($mainTable);
+				$pInstance = new $className($mainTable);
 			}
 		} else {
 			if ($recordId !== null) {
-				$pInstance = new $classNamespacePrefixed($recordId);
+				$pInstance = new $className($recordId);
 			} else {
-				$pInstance = new $classNamespacePrefixed;
+				$pInstance = new $className;
 			}
 		}
 
