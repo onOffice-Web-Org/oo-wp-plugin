@@ -34,7 +34,7 @@ use onOffice\WPlugin\Record\RecordManager;
 class InputModelDBAdapterRow
 {
 	/** @var InputModelDB[] */
-	private $_inputModels = array();
+	private $_inputModels = [];
 
 
 	/**
@@ -46,45 +46,31 @@ class InputModelDBAdapterRow
 	 *
 	 */
 
-	private $_foreignKeys = array(
-		'oo_plugin_fieldconfig' => array(
+	private $_foreignKeys = [
+		'oo_plugin_fieldconfig' => [
 			'fieldconfig_id' => null,
-			'listview_id' => array('oo_plugin_listviews', 'listview_id'),
-		),
-
-		'oo_plugin_address_fieldconfig' => array(
+			'listview_id' => ['oo_plugin_listviews', 'listview_id'],
+		],
+		'oo_plugin_address_fieldconfig' => [
 			'address_fieldconfig_id' => null,
-			'listview_address_id' => array('oo_plugin_listviews_address', 'listview_address_id'),
-		),
-
-		'oo_plugin_picturetypes' => array(
+			'listview_address_id' => ['oo_plugin_listviews_address', 'listview_address_id'],
+		],
+		'oo_plugin_picturetypes' => [
 			'picturetype_id' => null,
-			'listview_id' => array('oo_plugin_listviews', 'listview_id'),
-		),
-
-		'oo_plugin_form_fieldconfig' => array(
+			'listview_id' => ['oo_plugin_listviews', 'listview_id'],
+		],
+		'oo_plugin_form_fieldconfig' => [
 			'form_fieldconfig_id' => null,
-			'form_id' => array('oo_plugin_forms', 'form_id'),
-		),
-	);
+			'form_id' => ['oo_plugin_forms', 'form_id'],
+		],
+	];
+
 
 	/** @var array */
-	private $_primaryKeys = array(
+	private $_primaryKeys = [
 		'oo_plugin_listviews' => 'listview_id',
 		'oo_plugin_forms' => 'form_id',
-	);
-
-
-	/**
-	 *
-	 * @param InputModelDB $pInputModelDB
-	 *
-	 */
-
-	public function addInputModelDB(InputModelDB $pInputModelDB)
-	{
-		$this->_inputModels []= $pInputModelDB;
-	}
+	];
 
 
 	/**
@@ -93,18 +79,18 @@ class InputModelDBAdapterRow
 	 *
 	 */
 
-	public function createUpdateValuesByTable() {
-		$valuesByTable = array();
+	public function createUpdateValuesByTable(): array
+	{
+		$valuesByTable = [];
 
-		foreach ($this->_inputModels as $pInputModel)
-		{
+		foreach ($this->_inputModels as $pInputModel) {
 			$table = $pInputModel->getTable();
 			$field = $pInputModel->getField();
 			$mainId = $pInputModel->getMainRecordId();
 			$value = $pInputModel->getValue();
 
-			if (!array_key_exists($table, $valuesByTable)) {
-				$valuesByTable[$table] = array();
+			if (!isset($valuesByTable[$table])) {
+				$valuesByTable[$table] = [];
 			}
 
 			if ($this->isForeignKey($table, $field)) {
@@ -118,7 +104,7 @@ class InputModelDBAdapterRow
 						$valuesByTable[$table][$id][$field] = RecordManager::postProcessValue
 							($subValue, $table, $field);
 						$mainColumn = $this->getMainForeignKeyColumnOfRelation($table);
-						if ($mainColumn !== null) {
+						if ($mainColumn !== '') {
 							$valuesByTable[$table][$id][$mainColumn] = $mainId;
 						}
 					}
@@ -141,10 +127,9 @@ class InputModelDBAdapterRow
 	 *
 	 */
 
-	private function isPrimaryKey($table, $key)
+	private function isPrimaryKey(string $table, string $key): bool
 	{
-		return array_key_exists($table, $this->_primaryKeys) &&
-			$this->_primaryKeys[$table] === $key;
+		return ($this->_primaryKeys[$table] ?? null) === $key;
 	}
 
 
@@ -156,38 +141,46 @@ class InputModelDBAdapterRow
 	 *
 	 */
 
-	private function isForeignKey($table, $field)
+	private function isForeignKey(string $table, string $field): bool
 	{
-		return array_key_exists($table, $this->_foreignKeys) &&
-			array_key_exists($field, $this->_foreignKeys[$table]);
+		return isset($this->_foreignKeys[$table][$field]);
 	}
 
 
 	/**
 	 *
 	 * @param string $relationTable
-	 * @return array
+	 * @return string
 	 *
 	 */
 
-	private function getMainForeignKeyColumnOfRelation($relationTable) {
-		$result = null;
+	private function getMainForeignKeyColumnOfRelation(string $relationTable): string
+	{
+		$foreignKey = $this->_foreignKeys[$relationTable] ?? [];
+		$possibleValues = array_filter($foreignKey); // without primary
+		$keyNames = array_keys($possibleValues);
+		$result = array_shift($keyNames);
 
-		if (isset($this->_foreignKeys[$relationTable])) {
-			$possibleValues = array_filter($this->_foreignKeys[$relationTable]); // without primary
-			$keyNames = array_keys($possibleValues);
-			$result = array_shift($keyNames);
-		}
-
-		return $result;
+		return $result ?? '';
 	}
 
 
+	/**
+	 *
+	 * @param InputModelDB $pInputModelDB
+	 *
+	 */
+
+	public function addInputModelDB(InputModelDB $pInputModelDB)
+	{
+		$this->_inputModels []= $pInputModelDB;
+	}
+
 	/** @return array */
-	public function getForeignKeys()
+	public function getForeignKeys(): array
 		{ return $this->_foreignKeys; }
 
 	/** @return array */
-	public function getPrimaryKeys()
+	public function getPrimaryKeys(): array
 		{ return $this->_primaryKeys; }
 }

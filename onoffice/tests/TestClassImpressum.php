@@ -19,6 +19,11 @@
  *
  */
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Impressum;
+use onOffice\WPlugin\ImpressumConfigurationTest;
+use onOffice\tests\SDKWrapperMocker;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -26,16 +31,9 @@
  *
  */
 
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Impressum;
-use onOffice\WPlugin\ImpressumConfigurationTest;
-use onOffice\tests\SDKWrapperMocker;
-
-
 class TestClassImpressum
 	extends WP_UnitTestCase
 {
-
 	/** @var Impressum */
 	private $_pImpressum = null;
 

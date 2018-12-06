@@ -175,7 +175,7 @@ class AdminPageEstateListSettings
 
 	/**
 	 *
-	 * Since checkbox are only being submitted if checked they need to be reorganized
+	 * Since checkboxes are only being submitted if checked they need to be reorganized
 	 * @todo Examine booleans automatically
 	 *
 	 * @param stdClass $values

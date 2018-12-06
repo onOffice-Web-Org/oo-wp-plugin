@@ -120,13 +120,14 @@ class AddressList
 	 *
 	 */
 
-	public function loadAddresses(DataListViewAddress $pDataListViewAddress, $inputPage = 1)
+	public function loadAddresses(DataListViewAddress $pDataListViewAddress, int $inputPage = 1)
 	{
 		global $numpages, $multipage, $page, $more;
 		$this->_fields = $pDataListViewAddress->getFields();
 		$pModifier = $this->generateRecordModifier();
 
 		$pDataListViewToApi = new DataListViewAddressToAPIParameters($pDataListViewAddress);
+		$inputPage = $inputPage === 0 ? 1 : $inputPage;
 		$pDataListViewToApi->setPage($inputPage);
 
 		$apiOnlyFields = $pModifier->getAllAPIFields();
