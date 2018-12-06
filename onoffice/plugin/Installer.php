@@ -82,6 +82,12 @@ abstract class Installer
 			$dbversion = 5;
 		}
 
+		if ($dbversion == 5.0) {
+			// new columns: filterable, hidden
+			dbDelta( self::getCreateQueryAddressFieldConfig() );
+			$dbversion = 6;
+		}
+
 		update_option( 'oo_plugin_db_version', $dbversion, false);
 
 		$pContentFilter = new ContentFilter();
@@ -248,6 +254,8 @@ abstract class Installer
 			`listview_address_id` int(11) NOT NULL,
 			`order` int(11) NOT NULL,
 			`fieldname` tinytext NOT NULL,
+			`filterable` tinyint(1) NOT NULL DEFAULT '0',
+			`hidden` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`address_fieldconfig_id`)
 		) $charsetCollate;";
 
