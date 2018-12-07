@@ -25,7 +25,7 @@ use DateTime;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateListBase;
-use onOffice\WPlugin\Controller\EstateListInputVariableReader;
+use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
@@ -99,7 +99,7 @@ class EstateList
 	/** @var bool */
 	private $_shuffleResult = false;
 
-	/** @var EstateListInputVariableReader */
+	/** @var InputVariableReader */
 	private $_pEstateListInputVariableReader = null;
 
 	/** @var GeoSearchBuilder */
@@ -784,7 +784,8 @@ class EstateList
 		$visibleFilterable = array_diff($filterable, $hidden);
 
 		$fieldsArray = array_combine($visibleFilterable, $visibleFilterable);
-		$this->_pEstateListInputVariableReader = new EstateListInputVariableReader();
+		$this->_pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE);
 		$fieldsArray = $this->editForGeoPosition($fieldsArray);
 
 		$result = array_map(array($this, 'getFieldInformationForEstateField'), $fieldsArray);

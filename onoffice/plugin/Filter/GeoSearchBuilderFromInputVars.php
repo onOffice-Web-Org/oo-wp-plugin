@@ -21,7 +21,8 @@
 
 namespace onOffice\WPlugin\Filter;
 
-use onOffice\WPlugin\Controller\EstateListInputVariableReader;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\GeoPosition;
 
 /**
@@ -34,20 +35,20 @@ use onOffice\WPlugin\GeoPosition;
 class GeoSearchBuilderFromInputVars
 	implements GeoSearchBuilder
 {
-	/** @var EstateListInputVariableReader */
+	/** @var InputVariableReader */
 	private $_pEstateListInputVariableReader = null;
 
 
 	/**
 	 *
-	 * @param EstateListInputVariableReader $pEstateListInputVariableReader
+	 * @param InputVariableReader $pEstateListInputVariableReader
 	 *
 	 */
 
-	public function __construct(EstateListInputVariableReader $pEstateListInputVariableReader = null)
+	public function __construct(InputVariableReader $pEstateListInputVariableReader = null)
 	{
 		$this->_pEstateListInputVariableReader = $pEstateListInputVariableReader ??
-			new EstateListInputVariableReader();
+			new InputVariableReader(onOfficeSDK::MODULE_ESTATE);
 	}
 
 

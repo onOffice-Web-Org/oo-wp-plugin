@@ -21,8 +21,8 @@
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\WP_UnitTest_Localized;
-use onOffice\WPlugin\Controller\EstateListInputVariableReader;
-use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfigTest;
+use onOffice\WPlugin\Controller\InputVariableReader;
+use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\Types\FieldTypes;
 
 /**
@@ -44,7 +44,7 @@ class TestClassEstateListInputVariableReader
 	public function testGetNumericSingle()
 	{
 		$this->switchLocale('de_DE');
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kaufpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
@@ -53,8 +53,8 @@ class TestClassEstateListInputVariableReader
 		$pEstateListInputVariableReaderConfig->setValue('kaufpreis', '399,99');
 		$pEstateListInputVariableReaderConfig->setValue('etage', '3');
 
-		$pEstateListInputVariableReader = new EstateListInputVariableReader
-			($pEstateListInputVariableReaderConfig);
+		$pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);
 
 		$valueKaufpreis = $pEstateListInputVariableReader->getFieldValue('kaufpreis');
 		$valueEtage = $pEstateListInputVariableReader->getFieldValue('etage');
@@ -72,7 +72,7 @@ class TestClassEstateListInputVariableReader
 	{
 		$this->switchLocale('de_DE');
 
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kaufpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
@@ -91,8 +91,8 @@ class TestClassEstateListInputVariableReader
 		$pEstateListInputVariableReaderConfig->setValue('kaltmiete__von', '1000');
 		$pEstateListInputVariableReaderConfig->setValue('kaltmiete__bis', '');
 
-		$pEstateListInputVariableReader = new EstateListInputVariableReader
-			($pEstateListInputVariableReaderConfig);
+		$pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);
 
 		$valueKaufpreis = $pEstateListInputVariableReader->getFieldValue('kaufpreis');
 		$valueEtage = $pEstateListInputVariableReader->getFieldValue('etage');
@@ -114,7 +114,7 @@ class TestClassEstateListInputVariableReader
 	{
 		$this->switchLocale('de_DE');
 
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('testdate', $module, FieldTypes::FIELD_TYPE_DATE);
@@ -130,8 +130,8 @@ class TestClassEstateListInputVariableReader
 		$pEstateListInputVariableReaderConfig->setValue('otherdatetime__bis', '12.07.2018 22:00:00');
 		$pEstateListInputVariableReaderConfig->setValue('datetimebroken', 'asdf');
 
-		$pEstateListInputVariableReader = new EstateListInputVariableReader
-			($pEstateListInputVariableReaderConfig);
+		$pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);
 
 		$valueTestdate = $pEstateListInputVariableReader->getFieldValue('testdate');
 		$valueDateTime = $pEstateListInputVariableReader->getFieldValue('testdatetime');
@@ -151,7 +151,7 @@ class TestClassEstateListInputVariableReader
 
 	public function testTzSwitch()
 	{
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$pEstateListInputVariableReaderConfig->setTimezoneString('Europe/Berlin');
 
 		$module = onOfficeSDK::MODULE_ESTATE;
@@ -159,8 +159,8 @@ class TestClassEstateListInputVariableReader
 			('testdate', $module, FieldTypes::FIELD_TYPE_DATETIME);
 		$pEstateListInputVariableReaderConfig->setValue('testdate', '28.06.2018 14:01:00');
 
-		$pEstateListInputVariableReader = new EstateListInputVariableReader
-			($pEstateListInputVariableReaderConfig);
+		$pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);
 
 		$valueTestdate = $pEstateListInputVariableReader->getFieldValue('testdate');
 
@@ -181,14 +181,14 @@ class TestClassEstateListInputVariableReader
 	{
 		$this->switchLocale('en_US');
 
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kaufpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
 		$pEstateListInputVariableReaderConfig->setValue('kaufpreis', '399.99');
 
-		$pEstateListInputVariableReader = new EstateListInputVariableReader
-			($pEstateListInputVariableReaderConfig);
+		$pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);
 
 		$valueKaufpreis = $pEstateListInputVariableReader->getFieldValue('kaufpreis');
 		$this->assertEquals(399.99, $valueKaufpreis);
@@ -201,7 +201,7 @@ class TestClassEstateListInputVariableReader
 
 	public function testArray()
 	{
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('individualTexts', $module, FieldTypes::FIELD_TYPE_TEXT);
@@ -210,8 +210,8 @@ class TestClassEstateListInputVariableReader
 
 		$pEstateListInputVariableReaderConfig->setValueArray('individualTexts', $values);
 
-		$pEstateListInputVariableReader = new EstateListInputVariableReader
-			($pEstateListInputVariableReaderConfig);
+		$pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);
 
 		$valueTexts = $pEstateListInputVariableReader->getFieldValue('individualTexts');
 		$this->assertEquals($values, $valueTexts);
@@ -224,15 +224,15 @@ class TestClassEstateListInputVariableReader
 
 	public function testBool()
 	{
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kabel_sat_tv', $module, FieldTypes::FIELD_TYPE_BOOLEAN);
 
 		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'u');
 
-		$pEstateListInputVariableReader = new EstateListInputVariableReader
-			($pEstateListInputVariableReaderConfig);
+		$pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);
 
 		$this->assertNull($pEstateListInputVariableReader->getFieldValue('kabel_sat_tv'));
 		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'y');

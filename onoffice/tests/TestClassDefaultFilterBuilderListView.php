@@ -21,7 +21,7 @@
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\WP_UnitTest_Localized;
-use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfigTest;
+use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -56,9 +56,8 @@ class TestClassDefaultFilterBuilderListView
 	public function testDefaultFilter()
 	{
 		$pDataListView = new DataListView(1, 'test');
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
-		$pInstance = new DefaultFilterBuilderListView($pDataListView,
-			$pEstateListInputVariableReaderConfig);
+		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -82,9 +81,8 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_REFERENCE);
 
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
-		$pInstance = new DefaultFilterBuilderListView($pDataListView,
-			$pEstateListInputVariableReaderConfig);
+		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -115,9 +113,8 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_FAVORITES);
 
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
-		$pInstance = new DefaultFilterBuilderListView($pDataListView,
-			$pEstateListInputVariableReaderConfig);
+		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -146,23 +143,22 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setFilterableFields(['kaufpreis', 'mietpreis', 'testtext', 'bezugsfrei']);
 
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('kaufpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('mietpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('testtext', $module, FieldTypes::FIELD_TYPE_TEXT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('bezugsfrei', $module, FieldTypes::FIELD_TYPE_DATETIME);
 
-		$pEstateListInputVariableReaderConfig->setValue('kaufpreis', '999.99');
-		$pEstateListInputVariableReaderConfig->setValue('mietpreis', '350.50');
-		$pEstateListInputVariableReaderConfig->setValue('testtext', 'hello');
-		$pEstateListInputVariableReaderConfig->setValue('bezugsfrei', '27.03.1998 12:47:00');
-		$pInstance = new DefaultFilterBuilderListView($pDataListView,
-			$pEstateListInputVariableReaderConfig);
+		$pInputVariableReaderConfig->setValue('kaufpreis', '999.99');
+		$pInputVariableReaderConfig->setValue('mietpreis', '350.50');
+		$pInputVariableReaderConfig->setValue('testtext', 'hello');
+		$pInputVariableReaderConfig->setValue('bezugsfrei', '27.03.1998 12:47:00');
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -212,26 +208,25 @@ class TestClassDefaultFilterBuilderListView
 			'kaufpreis', 'mietpreis', 'anzahl_zimmer', 'bezugsfrei'
 		]);
 
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('kaufpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('mietpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('anzahl_zimmer', $module, FieldTypes::FIELD_TYPE_INTEGER);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('bezugsfrei', $module, FieldTypes::FIELD_TYPE_DATETIME);
 
-		$pEstateListInputVariableReaderConfig->setValue('kaufpreis__von', '100000');
-		$pEstateListInputVariableReaderConfig->setValue('mietpreis__bis', '350.50');
-		$pEstateListInputVariableReaderConfig->setValue('anzahl_zimmer__von', '3');
-		$pEstateListInputVariableReaderConfig->setValue('anzahl_zimmer__bis', '10');
-		$pEstateListInputVariableReaderConfig->setValue('anzahl_zimmer__bis', '10');
-		$pEstateListInputVariableReaderConfig->setValue('bezugsfrei__von', '01.01.2017 00:00:00');
-		$pEstateListInputVariableReaderConfig->setValue('bezugsfrei__bis', '01.02.2017 23:59:00');
-		$pInstance = new DefaultFilterBuilderListView($pDataListView,
-			$pEstateListInputVariableReaderConfig);
+		$pInputVariableReaderConfig->setValue('kaufpreis__von', '100000');
+		$pInputVariableReaderConfig->setValue('mietpreis__bis', '350.50');
+		$pInputVariableReaderConfig->setValue('anzahl_zimmer__von', '3');
+		$pInputVariableReaderConfig->setValue('anzahl_zimmer__bis', '10');
+		$pInputVariableReaderConfig->setValue('anzahl_zimmer__bis', '10');
+		$pInputVariableReaderConfig->setValue('bezugsfrei__von', '01.01.2017 00:00:00');
+		$pInputVariableReaderConfig->setValue('bezugsfrei__bis', '01.02.2017 23:59:00');
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -287,16 +282,15 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setFilterableFields(['testtext', 'othertest']);
 
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('testtext', $module, FieldTypes::FIELD_TYPE_MULTISELECT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('othertest', $module, FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$pEstateListInputVariableReaderConfig->setValueArray('testtext', ['asd' , 'hello']);
-		$pEstateListInputVariableReaderConfig->setValueArray('othertest', ['bonjour' , 'salve']);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView,
-			$pEstateListInputVariableReaderConfig);
+		$pInputVariableReaderConfig->setValueArray('testtext', ['asd' , 'hello']);
+		$pInputVariableReaderConfig->setValueArray('othertest', ['bonjour' , 'salve']);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -333,22 +327,21 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView->setFilterableFields([
 			'testtext', 'othertest', 'text', 'number_int', 'number_float', 'bool']);
 
-		$pEstateListInputVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('testtext', $module, FieldTypes::FIELD_TYPE_MULTISELECT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('othertest', $module, FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('text', $module, FieldTypes::FIELD_TYPE_TEXT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('number_int', $module, FieldTypes::FIELD_TYPE_INTEGER);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('number_float', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+		$pInputVariableReaderConfig->setFieldTypeByModule
 			('bool', $module, FieldTypes::FIELD_TYPE_BOOLEAN);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView,
-			$pEstateListInputVariableReaderConfig);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
 
 		$expected = [
 			'veroeffentlichen' => [

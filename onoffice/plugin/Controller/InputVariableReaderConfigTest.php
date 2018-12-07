@@ -28,8 +28,8 @@ namespace onOffice\WPlugin\Controller;
  *
  */
 
-class EstateListInputVariableReaderConfigTest
-	implements EstateListInputVariableReaderConfig
+class InputVariableReaderConfigTest
+	implements InputVariableReaderConfig
 {
 	/** @var array */
 	private $_fieldTypes = [];

@@ -22,8 +22,8 @@
 namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Controller\EstateListInputVariableReader;
-use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfigTest;
+use onOffice\WPlugin\Controller\InputVariableReader;
+use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
@@ -38,7 +38,7 @@ use WP_UnitTestCase;
 class TestClassGeoSearchBuilderFromInputVars
 	extends WP_UnitTestCase
 {
-	/** @var EstateListInputVariableReaderConfigTest */
+	/** @var InputVariableReaderConfigTest */
 	private $_pVariableReaderConfig = null;
 
 	/** @var GeoSearchBuilderFromInputVars */
@@ -52,14 +52,15 @@ class TestClassGeoSearchBuilderFromInputVars
 	public function setUp()
 	{
 		parent::setUp();
-		$this->_pVariableReaderConfig = new EstateListInputVariableReaderConfigTest();
+		$this->_pVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$this->_pVariableReaderConfig->setFieldTypeByModule('street', $module, FieldTypes::FIELD_TYPE_VARCHAR);
 		$this->_pVariableReaderConfig->setFieldTypeByModule('radius', $module, FieldTypes::FIELD_TYPE_INTEGER);
 		$this->_pVariableReaderConfig->setFieldTypeByModule('ort', $module, FieldTypes::FIELD_TYPE_VARCHAR);
 		$this->_pVariableReaderConfig->setFieldTypeByModule('zip', $module, FieldTypes::FIELD_TYPE_VARCHAR);
 		$this->_pVariableReaderConfig->setFieldTypeByModule('country', $module, FieldTypes::FIELD_TYPE_VARCHAR);
-		$pEstateListVariableReader = new EstateListInputVariableReader($this->_pVariableReaderConfig);
+		$pEstateListVariableReader = new InputVariableReader(onOfficeSDK::MODULE_ESTATE,
+			$this->_pVariableReaderConfig);
 		$this->_pGeoSearchBuilderFromInputVars = new GeoSearchBuilderFromInputVars($pEstateListVariableReader);
 	}
 

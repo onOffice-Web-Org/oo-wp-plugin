@@ -30,7 +30,7 @@ namespace onOffice\WPlugin\Controller;
  *
  */
 
-interface EstateListInputVariableReaderConfig
+interface InputVariableReaderConfig
 {
 	/**
 	 *

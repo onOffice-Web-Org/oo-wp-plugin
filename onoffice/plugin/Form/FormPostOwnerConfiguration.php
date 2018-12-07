@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Form;
 
-use onOffice\WPlugin\Controller\EstateListInputVariableReader;
+use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\SDKWrapper;
 
 /**
@@ -44,11 +44,11 @@ interface FormPostOwnerConfiguration
 
 	/**
 	 *
-	 * @return EstateListInputVariableReader
+	 * @return InputVariableReader
 	 *
 	 */
 
-	public function getEstateListInputVariableReader(): EstateListInputVariableReader;
+	public function getEstateListInputVariableReader(): InputVariableReader;
 
 
 	/**

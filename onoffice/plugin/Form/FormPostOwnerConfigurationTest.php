@@ -21,8 +21,9 @@
 
 namespace onOffice\WPlugin\Form;
 
-use onOffice\WPlugin\Controller\EstateListInputVariableReader;
-use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfigTest;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\InputVariableReader;
+use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\SDKWrapper;
 
 /**
@@ -41,8 +42,8 @@ class FormPostOwnerConfigurationTest
 	/** @var string */
 	private $_referrer = '';
 
-	/** @var EstateListInputVariableReaderConfigTest */
-	private $_pEstateListInputVariableReaderConfigTest = null;
+	/** @var InputVariableReaderConfigTest */
+	private $_pInputVariableReaderConfigTest = null;
 
 
 	/**
@@ -51,20 +52,21 @@ class FormPostOwnerConfigurationTest
 
 	public function __construct()
 	{
-		$this->_pEstateListInputVariableReaderConfigTest =
-			new EstateListInputVariableReaderConfigTest();
+		$this->_pInputVariableReaderConfigTest =
+			new InputVariableReaderConfigTest();
 	}
 
 
 	/**
 	 *
-	 * @return EstateListInputVariableReader
+	 * @return InputVariableReader
 	 *
 	 */
 
-	public function getEstateListInputVariableReader(): EstateListInputVariableReader
+	public function getEstateListInputVariableReader(): InputVariableReader
 	{
-		return new EstateListInputVariableReader($this->_pEstateListInputVariableReaderConfigTest);
+		return new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConfigTest);
 	}
 
 
@@ -118,13 +120,12 @@ class FormPostOwnerConfigurationTest
 
 	/**
 	 *
-	 * @return EstateListInputVariableReaderConfigTest
+	 * @return InputVariableReaderConfigTest
 	 *
 	 */
 
-	public function getEstateListInputVariableReaderConfigTest():
-		EstateListInputVariableReaderConfigTest
+	public function getEstateListInputVariableReaderConfigTest(): InputVariableReaderConfigTest
 	{
-		return $this->_pEstateListInputVariableReaderConfigTest;
+		return $this->_pInputVariableReaderConfigTest;
 	}
 }

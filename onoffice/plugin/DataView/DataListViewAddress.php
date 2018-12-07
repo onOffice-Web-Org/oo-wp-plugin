@@ -31,31 +31,34 @@ namespace onOffice\WPlugin\DataView;
 class DataListViewAddress
 {
 	/** @var int */
-	private $_id = null;
+	private $_id = 0;
 
 	/** @var string */
-	private $_name = null;
+	private $_name = '';
 
 	/** @var string[] */
-	private $_fields = array();
+	private $_fields = [];
 
 	/** @var bool */
 	private $_showPhoto = false;
 
 	/** @var string */
-	private $_filterId = null;
+	private $_filterId = 0;
 
 	/** @var string */
-	private $_sortorder = null;
+	private $_sortorder = '';
 
 	/** @var string */
-	private $_sortby = null;
+	private $_sortby = '';
 
 	/** @var int */
 	private $_recordsPerPage = 5;
 
 	/** @var string */
 	private $_template = '';
+
+	/** @var array */
+	private $_filterableFields = [];
 
 
 	/**
@@ -65,7 +68,7 @@ class DataListViewAddress
 	 *
 	 */
 
-	public function __construct($id, $name)
+	public function __construct(int $id, string $name)
 	{
 		$this->_id = $id;
 		$this->_name = $name;
@@ -73,39 +76,39 @@ class DataListViewAddress
 
 
 	/** @return int */
-	public function getId()
+	public function getId(): int
 		{ return $this->_id; }
 
 	/** @return string */
-	public function getName()
+	public function getName(): string
 		{ return $this->_name; }
 
 	/** @return string[] */
-	public function getFields()
+	public function getFields(): array
 		{ return $this->_fields; }
 
 	/** @return bool */
-	public function getShowPhoto()
+	public function getShowPhoto(): bool
 		{ return $this->_showPhoto; }
 
 	/** @return int */
-	public function getFilterId()
+	public function getFilterId(): int
 		{ return $this->_filterId; }
 
 	/** @return string */
-	public function getSortorder()
+	public function getSortorder(): string
 		{ return $this->_sortorder; }
 
 	/** @return string */
-	public function getSortby()
+	public function getSortby(): string
 		{ return $this->_sortby; }
 
 	/** @return int */
-	public function getRecordsPerPage()
+	public function getRecordsPerPage(): int
 		{ return $this->_recordsPerPage; }
 
 	/** @return string */
-	public function getTemplate()
+	public function getTemplate(): string
 		{ return $this->_template; }
 
 	/** @param array $fields */
@@ -113,26 +116,32 @@ class DataListViewAddress
 		{ $this->_fields = $fields; }
 
 	/** @param bool $showPhoto */
-	public function setShowPhoto($showPhoto)
-		{ $this->_showPhoto = (bool)$showPhoto; }
+	public function setShowPhoto(bool $showPhoto)
+		{ $this->_showPhoto = $showPhoto; }
 
 	/** @param int $filterId */
-	public function setFilterId($filterId)
+	public function setFilterId(int $filterId)
 		{ $this->_filterId = $filterId; }
 
 	/** @param string $sortorder */
-	public function setSortorder($sortorder)
+	public function setSortorder(string $sortorder)
 		{ $this->_sortorder = $sortorder; }
 
 	/** @param string $sortby */
-	public function setSortby($sortby)
+	public function setSortby(string $sortby)
 		{ $this->_sortby = $sortby; }
 
 	/** @param int $recordsPerPage */
-	public function setRecordsPerPage($recordsPerPage)
+	public function setRecordsPerPage(int $recordsPerPage)
 		{ $this->_recordsPerPage = $recordsPerPage; }
 
 	/** @param string $template */
-	public function setTemplate($template)
+	public function setTemplate(string $template)
 		{ $this->_template = $template; }
+
+	public function getFilterableFields(): array
+		{ return $this->_filterableFields; }
+
+	public function setFilterableFields(array $filterableFields)
+		{ $this->_filterableFields = $filterableFields; }
 }

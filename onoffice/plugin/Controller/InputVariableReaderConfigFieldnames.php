@@ -33,8 +33,8 @@ use function get_option;
  *
  */
 
-class EstateListInputVariableReaderConfigFieldnames
-	implements EstateListInputVariableReaderConfig
+class InputVariableReaderConfigFieldnames
+	implements InputVariableReaderConfig
 {
 	/** @var Fieldnames */
 	private $_pFieldnames = null;

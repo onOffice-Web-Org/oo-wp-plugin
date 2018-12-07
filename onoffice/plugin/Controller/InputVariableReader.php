@@ -24,7 +24,6 @@ namespace onOffice\WPlugin\Controller;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 use WP_Locale;
@@ -36,25 +35,25 @@ use WP_Locale;
  *
  */
 
-class EstateListInputVariableReader
+class InputVariableReader
 {
-	/** @var EstateListInputVariableReaderConfig */
+	/** @var InputVariableReaderConfig */
 	private $_pConfig = null;
+
+	/** @var string */
+	private $_module = null;
 
 
 	/**
 	 *
-	 * @param EstateListInputVariableReaderConfig $pConfig
+	 * @param InputVariableReaderConfig $pConfig
 	 *
 	 */
 
-	public function __construct(EstateListInputVariableReaderConfig $pConfig = null)
+	public function __construct(string $module, InputVariableReaderConfig $pConfig = null)
 	{
-		$this->_pConfig = $pConfig;
-
-		if ($this->_pConfig === null) {
-			$this->_pConfig = new EstateListInputVariableReaderConfigFieldnames();
-		}
+		$this->_module = $module;
+		$this->_pConfig = $pConfig ?? new InputVariableReaderConfigFieldnames();
 	}
 
 
@@ -221,6 +220,6 @@ class EstateListInputVariableReader
 
 	public function getFieldType(string $fieldName): string
 	{
-		return $this->_pConfig->getFieldType($fieldName, onOfficeSDK::MODULE_ESTATE);
+		return $this->_pConfig->getFieldType($fieldName, $this->_module);
 	}
 }

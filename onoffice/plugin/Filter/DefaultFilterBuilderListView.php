@@ -21,9 +21,10 @@
 
 namespace onOffice\WPlugin\Filter;
 
-use onOffice\WPlugin\Controller\EstateListInputVariableReader;
-use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfig;
-use onOffice\WPlugin\Controller\EstateListInputVariableReaderConfigFieldnames;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\InputVariableReader;
+use onOffice\WPlugin\Controller\InputVariableReaderConfig;
+use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -42,8 +43,8 @@ class DefaultFilterBuilderListView
 	/** @var string */
 	private $_pDataListView = null;
 
-	/** @var EstateListInputVariableReaderConfig */
-	private $_pEstateListInputVariableReaderConf = null;
+	/** @var InputVariableReaderConfig */
+	private $_pInputVariableReaderConf = null;
 
 	/** @var array */
 	private $_defaultFilter = [
@@ -57,20 +58,16 @@ class DefaultFilterBuilderListView
 	/**
 	 *
 	 * @param DataListView $pDataListView
-	 * @param EstateListInputVariableReaderConfig $pEstateListInputVariableReaderConf
+	 * @param InputVariableReaderConfig $pInputVariableReaderConf
 	 *
 	 */
 
 	public function __construct(DataListView $pDataListView,
-		EstateListInputVariableReaderConfig $pEstateListInputVariableReaderConf = null)
+		InputVariableReaderConfig $pInputVariableReaderConf = null)
 	{
 		$this->_pDataListView = $pDataListView;
-		$this->_pEstateListInputVariableReaderConf = $pEstateListInputVariableReaderConf;
-
-		if ($this->_pEstateListInputVariableReaderConf === null) {
-			$this->_pEstateListInputVariableReaderConf =
-				new EstateListInputVariableReaderConfigFieldnames();
-		}
+		$this->_pInputVariableReaderConf = $pInputVariableReaderConf ??
+			new InputVariableReaderConfigFieldnames();
 	}
 
 
@@ -144,8 +141,8 @@ class DefaultFilterBuilderListView
 	{
 		$filterableFields = $this->_pDataListView->getFilterableFields();
 		$filter = [];
-		$pEstateInputVars = new EstateListInputVariableReader
-			($this->_pEstateListInputVariableReaderConf);
+		$pEstateInputVars = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConf);
 
 		foreach ($filterableFields as $fieldInput) {
 			$type = $pEstateInputVars->getFieldType($fieldInput);
@@ -171,7 +168,7 @@ class DefaultFilterBuilderListView
 	 *
 	 */
 
-	private function getFieldFilter($fieldValue, string $type)
+	private function getFieldFilter($fieldValue, string $type): array
 	{
 		$fieldFilter = [];
 
