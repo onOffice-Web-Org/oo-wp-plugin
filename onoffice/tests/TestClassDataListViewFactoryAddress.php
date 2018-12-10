@@ -21,6 +21,7 @@
  */
 
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 
 /**
  *
@@ -42,7 +43,7 @@ class TestClassDataListViewFactoryAddress
 	{
 		$pFactory = new DataListViewFactoryAddress();
 		$pRecordManagerRead = $pFactory->getRecordManagerRead();
-		$recordManagerType = '\onOffice\WPlugin\Record\RecordManagerReadListViewAddress';
+		$recordManagerType = RecordManagerReadListViewAddress::class;
 		$this->assertInstanceOf($recordManagerType, $pRecordManagerRead);
 	}
 
@@ -66,6 +67,8 @@ class TestClassDataListViewFactoryAddress
 		$this->assertEquals($row['sortby'], $pDataListViewAddress->getSortby());
 		$this->assertEquals($row['sortorder'], $pDataListViewAddress->getSortorder());
 		$this->assertEquals($row['template'], $pDataListViewAddress->getTemplate());
+		$this->assertEquals($row['filterable'], $pDataListViewAddress->getFilterableFields());
+		$this->assertEquals($row['hidden'], $pDataListViewAddress->getFilterableHiddenFields());
 	}
 
 
@@ -75,19 +78,21 @@ class TestClassDataListViewFactoryAddress
 	 *
 	 */
 
-	private function getTestRow()
+	private function getTestRow(): array
 	{
-		$row = array(
+		$row = [
 			'listview_address_id' => 1234,
 			'name' => 'testViewAsdfg23',
-			'fields' => array('field1', 'field2', 'field25'),
+			'fields' => ['field1', 'field2', 'field25'],
+			'filterable' => ['field2', 'field25'],
+			'hidden' => ['field25'],
 			'filterId' => 99,
 			'recordsPerPage' => 37,
 			'showPhoto' => true,
 			'sortby' => 'field25',
 			'sortorder' => 'DESC',
 			'template' => 'testtemplate',
-		);
+		];
 
 		return $row;
 	}

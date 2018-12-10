@@ -89,7 +89,8 @@ class RecordManagerReadListViewAddress
 		$result = $pWpDb->get_row($sql, ARRAY_A);
 		$resultFieldConfig = $this->readFieldconfigByListviewId($result[$this->getIdColumnMain()]);
 		$result['fields'] = array_column($resultFieldConfig, 'fieldname');
-
+		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));
+		$result['hidden'] = array_keys(array_filter(array_column($resultFieldConfig, 'hidden', 'fieldname')));
 		return $result;
 	}
 

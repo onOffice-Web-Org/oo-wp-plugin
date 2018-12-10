@@ -67,7 +67,7 @@ class DataListViewAddressToAPIParameters
 		$pDataListViewAddress = $this->getDataListView();
 		$offset = ($this->_page - 1) * $pDataListViewAddress->getRecordsPerPage();
 		$limit = $offset + $pDataListViewAddress->getRecordsPerPage();
-		$pDefaultFilterBuilder = new DefaultFilterBuilderListViewAddress();
+		$pDefaultFilterBuilder = new DefaultFilterBuilderListViewAddress($pDataListViewAddress);
 
 		$parameters = array(
 			'data' => $fields,

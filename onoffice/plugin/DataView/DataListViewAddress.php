@@ -60,6 +60,9 @@ class DataListViewAddress
 	/** @var array */
 	private $_filterableFields = [];
 
+	/** @var array */
+	private $_filterableHiddenFields = [];
+
 
 	/**
 	 *
@@ -139,9 +142,19 @@ class DataListViewAddress
 	public function setTemplate(string $template)
 		{ $this->_template = $template; }
 
+	/** @return array */
 	public function getFilterableFields(): array
 		{ return $this->_filterableFields; }
 
+	/** @param array $filterableFields */
 	public function setFilterableFields(array $filterableFields)
 		{ $this->_filterableFields = $filterableFields; }
+
+	/** @return array */
+	public function getFilterableHiddenFields(): array
+		{ return $this->_filterableHiddenFields; }
+
+	/** @param array $filterableHiddenFields */
+	public function setFilterableHiddenFields(array $filterableHiddenFields)
+	{ $this->_filterableHiddenFields = $filterableHiddenFields; }
 }

@@ -24,6 +24,7 @@ use onOffice\tests\WP_UnitTest_Localized;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\Types\FieldTypes;
 
 /**
@@ -57,7 +58,9 @@ class TestClassDefaultFilterBuilderListView
 	{
 		$pDataListView = new DataListView(1, 'test');
 		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
+		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
+			(onOfficeSDK::MODULE_ESTATE, false, $pInputVariableReaderConfig);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -82,7 +85,9 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_REFERENCE);
 
 		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
+		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
+			(onOfficeSDK::MODULE_ESTATE, false, $pInputVariableReaderConfig);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -114,7 +119,9 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_FAVORITES);
 
 		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
+		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
+			(onOfficeSDK::MODULE_ESTATE, false, $pInputVariableReaderConfig);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -138,159 +145,22 @@ class TestClassDefaultFilterBuilderListView
 	 *
 	 */
 
-	public function testInputVarsScalar()
-	{
-		$pDataListView = new DataListView(1, 'test');
-		$pDataListView->setFilterableFields(['kaufpreis', 'mietpreis', 'testtext', 'bezugsfrei']);
-
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$module = onOfficeSDK::MODULE_ESTATE;
-		$pInputVariableReaderConfig->setFieldTypeByModule
-			('kaufpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
-			('mietpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
-			('testtext', $module, FieldTypes::FIELD_TYPE_TEXT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
-			('bezugsfrei', $module, FieldTypes::FIELD_TYPE_DATETIME);
-
-		$pInputVariableReaderConfig->setValue('kaufpreis', '999.99');
-		$pInputVariableReaderConfig->setValue('mietpreis', '350.50');
-		$pInputVariableReaderConfig->setValue('testtext', 'hello');
-		$pInputVariableReaderConfig->setValue('bezugsfrei', '27.03.1998 12:47:00');
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
-
-		$expected = [
-			'veroeffentlichen' => [
-				[
-					'op' => '=',
-					'val' => 1,
-				],
-			],
-			'kaufpreis' => [
-				[
-					'op' => '=',
-					'val' => 999.99,
-				],
-			],
-			'mietpreis' => [
-				[
-					'op' => '=',
-					'val' => 350.50,
-				],
-			],
-			'testtext' => [
-				[
-					'op' => 'like',
-					'val' => '%hello%',
-				],
-			],
-			'bezugsfrei' => [
-				[
-					'op' => '=',
-					'val' => '1998-03-27 12:47:00',
-				],
-			],
-		];
-
-		$this->assertEquals($expected, $pInstance->buildFilter());
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testInputVarsRange()
-	{
-		$pDataListView = new DataListView(1, 'test');
-		$pDataListView->setFilterableFields([
-			'kaufpreis', 'mietpreis', 'anzahl_zimmer', 'bezugsfrei'
-		]);
-
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$module = onOfficeSDK::MODULE_ESTATE;
-		$pInputVariableReaderConfig->setFieldTypeByModule
-			('kaufpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
-			('mietpreis', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
-			('anzahl_zimmer', $module, FieldTypes::FIELD_TYPE_INTEGER);
-		$pInputVariableReaderConfig->setFieldTypeByModule
-			('bezugsfrei', $module, FieldTypes::FIELD_TYPE_DATETIME);
-
-		$pInputVariableReaderConfig->setValue('kaufpreis__von', '100000');
-		$pInputVariableReaderConfig->setValue('mietpreis__bis', '350.50');
-		$pInputVariableReaderConfig->setValue('anzahl_zimmer__von', '3');
-		$pInputVariableReaderConfig->setValue('anzahl_zimmer__bis', '10');
-		$pInputVariableReaderConfig->setValue('anzahl_zimmer__bis', '10');
-		$pInputVariableReaderConfig->setValue('bezugsfrei__von', '01.01.2017 00:00:00');
-		$pInputVariableReaderConfig->setValue('bezugsfrei__bis', '01.02.2017 23:59:00');
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
-
-		$expected = [
-			'veroeffentlichen' => [
-				[
-					'op' => '=',
-					'val' => 1,
-				],
-			],
-			'kaufpreis' => [
-				[
-					'op' => '>=',
-					'val' => 100000.,
-				],
-			],
-			'mietpreis' => [
-				[
-					'op' => '<=',
-					'val' => 350.5,
-				],
-			],
-			'anzahl_zimmer' => [
-				[
-					'op' => '>=',
-					'val' => 3,
-				],
-				[
-					'op' => '<=',
-					'val' => 10,
-				],
-			],
-			'bezugsfrei' => [
-				[
-					'op' => '>=',
-					'val' => '2017-01-01 00:00:00',
-				],
-				[
-					'op' => '<=',
-					'val' => '2017-02-01 23:59:00',
-				],
-			],
-		];
-
-		$this->assertEquals($expected, $pInstance->buildFilter());
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testInputVarsArray()
 	{
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setFilterableFields(['testtext', 'othertest']);
 
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
+		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
+		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
+			($module, false, $pInputVariableReaderConfig);
 		$pInputVariableReaderConfig->setFieldTypeByModule
 			('testtext', $module, FieldTypes::FIELD_TYPE_MULTISELECT);
 		$pInputVariableReaderConfig->setFieldTypeByModule
 			('othertest', $module, FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pInputVariableReaderConfig->setValueArray('testtext', ['asd' , 'hello']);
 		$pInputVariableReaderConfig->setValueArray('othertest', ['bonjour' , 'salve']);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -327,8 +197,10 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView->setFilterableFields([
 			'testtext', 'othertest', 'text', 'number_int', 'number_float', 'bool']);
 
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
 		$module = onOfficeSDK::MODULE_ESTATE;
+		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
+		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
+			($module, false, $pInputVariableReaderConfig);
 		$pInputVariableReaderConfig->setFieldTypeByModule
 			('testtext', $module, FieldTypes::FIELD_TYPE_MULTISELECT);
 		$pInputVariableReaderConfig->setFieldTypeByModule
@@ -341,7 +213,7 @@ class TestClassDefaultFilterBuilderListView
 			('number_float', $module, FieldTypes::FIELD_TYPE_FLOAT);
 		$pInputVariableReaderConfig->setFieldTypeByModule
 			('bool', $module, FieldTypes::FIELD_TYPE_BOOLEAN);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pInputVariableReaderConfig);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
 
 		$expected = [
 			'veroeffentlichen' => [

@@ -21,6 +21,10 @@
 
 namespace onOffice\WPlugin\Filter;
 
+use Exception;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataView\DataListViewAddress;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -31,6 +35,34 @@ namespace onOffice\WPlugin\Filter;
 class DefaultFilterBuilderListViewAddress
 	implements DefaultFilterBuilder
 {
+	/** @var DataListViewAddress */
+	private $_pDataListView = null;
+
+	/** @var FilterBuilderInputVariables */
+	private $_pFilterBuilderInputVars = null;
+
+
+	/**
+	 *
+	 * @param DataListViewAddress $pDataListView
+	 * @param FilterBuilderInputVariables $pFilterBuilder
+	 *
+	 */
+
+	public function __construct(
+		DataListViewAddress $pDataListView,
+		FilterBuilderInputVariables $pFilterBuilder = null)
+	{
+		$this->_pDataListView = $pDataListView;
+		$this->_pFilterBuilderInputVars = $pFilterBuilder ?? new FilterBuilderInputVariables
+			(onOfficeSDK::MODULE_ADDRESS, true);
+
+		if ($this->_pFilterBuilderInputVars->getModule() !== onOfficeSDK::MODULE_ADDRESS) {
+			throw new Exception('Module must be address.');
+		}
+	}
+
+
 	/**
 	 *
 	 * @return array
@@ -39,10 +71,15 @@ class DefaultFilterBuilderListViewAddress
 
 	public function buildFilter(): array
 	{
-		return [
+		$filterableFields = $this->_pDataListView->getFilterableFields();
+		$fieldFilter = $this->_pFilterBuilderInputVars->getPostFieldsFilter($filterableFields);
+
+		$defaultFilter = [
 			'homepage_veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
 			],
 		];
+
+		return array_merge($defaultFilter, $fieldFilter);
 	}
 }

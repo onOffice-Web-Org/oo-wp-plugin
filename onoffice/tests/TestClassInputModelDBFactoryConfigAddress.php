@@ -18,9 +18,10 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
 
 /**
  *
@@ -29,14 +30,13 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
  *
  */
 
-class TestClassInputModelDBFactoryConfigEstate
+class TestClassInputModelDBFactoryConfigAddress
 	extends TestClassInputModelDBFactoryConfigBase
 {
 	/** @var array */
 	private $_tableNames = [
-		'oo_plugin_listviews',
-		'oo_plugin_picturetypes',
-		'oo_plugin_fieldconfig',
+		'oo_plugin_address_fieldconfig',
+		'oo_plugin_listviews_address',
 	];
 
 
@@ -44,13 +44,9 @@ class TestClassInputModelDBFactoryConfigEstate
 	 *
 	 */
 
-	/**
-	 *
-	 */
-
 	public function __construct()
 	{
-		$this->setConcreteFactory(new InputModelDBFactoryConfigEstate());
+		$this->setConcreteFactory(new InputModelDBFactoryConfigAddress());
 		$this->setTableNames($this->_tableNames);
 	}
 }

@@ -21,14 +21,11 @@
 
 namespace onOffice\WPlugin\Filter;
 
+use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Controller\InputVariableReader;
-use onOffice\WPlugin\Controller\InputVariableReaderConfig;
-use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
-use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 
 /**
  *
@@ -40,11 +37,11 @@ use onOffice\WPlugin\Utility\__String;
 class DefaultFilterBuilderListView
 	implements DefaultFilterBuilder
 {
-	/** @var string */
+	/** @var DataListView */
 	private $_pDataListView = null;
 
-	/** @var InputVariableReaderConfig */
-	private $_pInputVariableReaderConf = null;
+	/** @var FilterBuilderInputVariables */
+	private $_pFilterBuilderInputVars = null;
 
 	/** @var array */
 	private $_defaultFilter = [
@@ -54,20 +51,24 @@ class DefaultFilterBuilderListView
 	];
 
 
-
 	/**
 	 *
 	 * @param DataListView $pDataListView
-	 * @param InputVariableReaderConfig $pInputVariableReaderConf
+	 * @param FilterBuilderInputVariables $pFilterBuilder
 	 *
 	 */
 
-	public function __construct(DataListView $pDataListView,
-		InputVariableReaderConfig $pInputVariableReaderConf = null)
+	public function __construct(
+		DataListView $pDataListView,
+		FilterBuilderInputVariables $pFilterBuilder = null)
 	{
 		$this->_pDataListView = $pDataListView;
-		$this->_pInputVariableReaderConf = $pInputVariableReaderConf ??
-			new InputVariableReaderConfigFieldnames();
+		$this->_pFilterBuilderInputVars = $pFilterBuilder ?? new FilterBuilderInputVariables
+			(onOfficeSDK::MODULE_ESTATE);
+
+		if ($this->_pFilterBuilderInputVars->getModule() !== onOfficeSDK::MODULE_ESTATE) {
+			throw new Exception('Module must be estate.');
+		}
 	}
 
 
@@ -79,7 +80,8 @@ class DefaultFilterBuilderListView
 
 	public function buildFilter(): array
 	{
-		$fieldFilter = $this->getPostFieldsFilter();
+		$filterableFields = $this->_pDataListView->getFilterableFields();
+		$fieldFilter = $this->_pFilterBuilderInputVars->getPostFieldsFilter($filterableFields);
 		$filter = array_merge($this->_defaultFilter, $fieldFilter);
 
 		switch ($this->_pDataListView->getListType()) {
@@ -128,71 +130,5 @@ class DefaultFilterBuilderListView
 		];
 
 		return $filter;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function getPostFieldsFilter(): array
-	{
-		$filterableFields = $this->_pDataListView->getFilterableFields();
-		$filter = [];
-		$pEstateInputVars = new InputVariableReader
-			(onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConf);
-
-		foreach ($filterableFields as $fieldInput) {
-			$type = $pEstateInputVars->getFieldType($fieldInput);
-			$value = $pEstateInputVars->getFieldValue($fieldInput);
-
-			if (is_null($value) || (is_string($value) && __String::getNew($value)->isEmpty())) {
-				continue;
-			}
-
-			$fieldFilter = $this->getFieldFilter($value, $type);
-			$filter[$fieldInput] = $fieldFilter;
-		}
-
-		return $filter;
-	}
-
-
-	/**
-	 *
-	 * @param string|array $fieldValue
-	 * @param string $type
-	 * @return array
-	 *
-	 */
-
-	private function getFieldFilter($fieldValue, string $type): array
-	{
-		$fieldFilter = [];
-
-		if (FieldTypes::isNumericType($type) || FieldTypes::isDateOrDateTime($type)) {
-			if (!is_array($fieldValue)) {
-				$fieldFilter []= ['op' => '=', 'val' => $fieldValue];
-			} else {
-				if (isset($fieldValue[0])) {
-					$fieldFilter []= ['op' => '>=', 'val' => $fieldValue[0]];
-				}
-
-				if (isset($fieldValue[1])) {
-					$fieldFilter []= ['op' => '<=', 'val' => $fieldValue[1]];
-				}
-			}
-		} elseif ($type === FieldTypes::FIELD_TYPE_MULTISELECT ||
-			$type === FieldTypes::FIELD_TYPE_SINGLESELECT) {
-			$fieldFilter []= ['op' => 'in', 'val' => $fieldValue];
-		} elseif ($type === FieldTypes::FIELD_TYPE_TEXT) {
-			$fieldFilter []= ['op' => 'like', 'val' => '%'.$fieldValue.'%'];
-		} else {
-			$fieldFilter []= ['op' => '=', 'val' => $fieldValue];
-		}
-
-		return $fieldFilter;
 	}
 }
