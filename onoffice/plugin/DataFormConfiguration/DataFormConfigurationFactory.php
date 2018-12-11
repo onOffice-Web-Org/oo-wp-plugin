@@ -207,6 +207,12 @@ class DataFormConfigurationFactory
 		if ($row['required'] == 1) {
 			$pFormConfiguration->addRequiredField($fieldName);
 		}
+
+		if (array_key_exists('availableOptions', $row))	{
+				if ($row['availableOptions'] == 1) {
+				$pFormConfiguration->addAvailableOptionsField($fieldName);
+			}
+		}
 	}
 
 

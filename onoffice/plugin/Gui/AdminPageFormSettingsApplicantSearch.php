@@ -23,6 +23,9 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelBase;
+use stdClass;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 
 /**
  *
@@ -71,5 +74,42 @@ class AdminPageFormSettingsApplicantSearch
 		$this->createMetaBoxByForm($pFormFormSpecific, 'side');
 
 		parent::generateMetaBoxes();
+	}
+
+
+	/**
+	 *
+	 * @param stdClass $values
+	 *
+	 */
+
+	protected function prepareValues(stdClass $values) {
+
+		parent::prepareValues($values);
+
+		$pInputModelFactory = new InputModelDBFactory(new InputModelDBFactoryConfigForm());
+		$pInputModelAvOpt = $pInputModelFactory->create
+			(InputModelDBFactoryConfigForm::INPUT_FORM_AVAILABLE_OPTIONS, 'availableOptions', true);
+		$identifierAvOpt = $pInputModelAvOpt->getIdentifier();
+
+		$pInputModelFieldName = $pInputModelFactory->create
+			(InputModelDBFactory::INPUT_FIELD_CONFIG, 'fields', true);
+		$identifierFieldName = $pInputModelFieldName->getIdentifier();
+
+		if (property_exists($values, $identifierAvOpt) &&
+			property_exists($values, $identifierFieldName)) {
+			$fieldsArray = (array)$values->$identifierFieldName;
+			$avOptFields = (array)$values->$identifierAvOpt;
+			$newAvOptFields = array_fill_keys(array_keys($fieldsArray), '0');
+
+			foreach ($avOptFields as $avOptField) {
+				$keyIndex = array_search($avOptField, $fieldsArray);
+				$newAvOptFields[$keyIndex] = '1';
+			}
+
+			$values->$identifierAvOpt = $newAvOptFields;
+		} else {
+			$values->$identifierAvOpt = array();
+		}
 	}
 }

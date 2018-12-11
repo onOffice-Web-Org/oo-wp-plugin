@@ -9,7 +9,8 @@ onOffice.checkboxAdmin = function() {
 
 		// view: estate list
 		"input[name^=oopluginfieldconfig-filterable]": [
-			"input[name^=oopluginfieldconfig-hidden]"
+			"input[name^=oopluginfieldconfig-hidden]",
+			"input[name^=oopluginfieldconfig-availableOptions]",
 		]
 	};
 };

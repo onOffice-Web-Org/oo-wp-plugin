@@ -88,6 +88,13 @@ abstract class Installer
 			$dbversion = 6;
 		}
 
+		if ($dbversion == 6.0) {
+			// new columns: availableOptions
+			dbDelta( self::getCreateQueryFieldConfig() );
+			dbDelta( self::getCreateQueryFormFieldConfig() );
+			$dbversion = 7;
+		}
+
 		update_option( 'oo_plugin_db_version', $dbversion, false);
 
 		$pContentFilter = new ContentFilter();
@@ -204,6 +211,7 @@ abstract class Installer
 			`fieldname` tinytext NOT NULL,
 			`filterable` tinyint(1) NOT NULL DEFAULT '0',
 			`hidden` tinyint(1) NOT NULL DEFAULT '0',
+			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`fieldconfig_id`)
 		) $charsetCollate;";
 
@@ -231,6 +239,7 @@ abstract class Installer
 			`module` tinytext NULL,
 			`individual_fieldname` tinyint(1) NOT NULL DEFAULT '0',
 			`required` tinyint(1) NOT NULL DEFAULT '0',
+			`availableOptions` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_fieldconfig_id`)
 		) $charsetCollate;";
 

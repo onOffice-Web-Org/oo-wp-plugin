@@ -55,6 +55,8 @@ class DataFormConfiguration
 	/** @var bool */
 	private $_captcha = false;
 
+	/** @var array */
+	private $_availableOptionsFields = [];
 
 	/**
 	 *
@@ -73,6 +75,9 @@ class DataFormConfiguration
 	public function getRequiredFields(): array
 		{ return $this->_requiredFields; }
 
+	public function getAvailableOptionsFields(): array
+		{ return $this->_availableOptionsFields; }
+
 	/** @return string */
 	public function getLanguage(): string
 		{ return $this->_language; }
@@ -89,6 +94,10 @@ class DataFormConfiguration
 	public function setRequiredFields(array $requiredFields)
 		{ $this->_requiredFields = $requiredFields; }
 
+	/** @param array $availableOptionsFields */
+	public function setAvailableOptionsFields(array $availableOptionsFields)
+		{ $this->_availableOptionsFields = $availableOptionsFields; }
+
 	/** @param string $language */
 	public function setLanguage(string $language)
 		{ $this->_language = $language; }
@@ -100,6 +109,10 @@ class DataFormConfiguration
 	/** @param string $requiredField */
 	public function addRequiredField(string $requiredField)
 		{ $this->_requiredFields []= $requiredField; }
+
+	/** @param string $availableOptionsField */
+	public function addAvailableOptionsField(string $availableOptionsField)
+		{ $this->_availableOptionsFields []= $availableOptionsField; }
 
 	/**
 	 *

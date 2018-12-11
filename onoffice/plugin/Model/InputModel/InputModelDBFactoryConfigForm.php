@@ -57,6 +57,9 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_REQUIRED = 'formRequired';
 
 	/** */
+	const INPUT_FORM_AVAILABLE_OPTIONS = 'formAvailableOptions';
+
+	/** */
 	const INPUT_FORM_LIMIT_RESULTS = 'formLimitResults';
 
 	/** */
@@ -127,6 +130,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_MODULE => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'module',
+		],
+		self::INPUT_FORM_AVAILABLE_OPTIONS => [
+			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
+			self::KEY_FIELD => 'availableOptions',
 		],
 	];
 

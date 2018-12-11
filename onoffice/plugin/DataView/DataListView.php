@@ -100,6 +100,9 @@ class DataListView
 	/** @var bool */
 	private $_random = false;
 
+	/** @var string[] */
+	private $_availableOptions = array();
+
 
 	/**
 	 *
@@ -234,4 +237,12 @@ class DataListView
 	/** @param array $hiddenFields */
 	public function setHiddenFields(array $hiddenFields)
 		{ $this->_hiddenFields = $hiddenFields; }
+
+	/** @param array $availableOptions */
+	public function setAvailableOptions(array $availableOptions)
+		{ $this->_availableOptions = $availableOptions; }
+
+	/** @return array */
+	public function getAvailableOptions()
+		{ return $this->_availableOptions; }
 }

@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Renderer;
 
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Renderer\InputFieldComplexSortableDetailListContentBase;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
@@ -38,11 +39,18 @@ class InputFieldComplexSortableDetailListContentDefault
 	 *
 	 */
 
-	public function render($key, $dummy)
+	public function render($key, $dummy, $type = null)
 	{
 		$pFormModel = new FormModel();
 
 		foreach ($this->getExtraInputModels() as $pInputModel) {
+
+			if (!in_array($type, [FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]) &&
+					$pInputModel->getField() == 'availableOptions')
+			{
+				continue;
+			}
+
 			$pInputModel->setIgnore($dummy);
 			$callbackValue = $pInputModel->getValueCallback();
 

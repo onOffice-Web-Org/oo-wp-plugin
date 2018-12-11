@@ -135,7 +135,7 @@ class InputFieldComplexSortableDetailListRenderer
 			.'<div class="menu-item-settings submitbox" style="display:none;">';
 
 			if ($this->_pContentRenderer !== null) {
-				$this->_pContentRenderer->render($key, $isDummy);
+				$this->_pContentRenderer->render($key, $isDummy, $this->_allFields[$key]['type']);
 			}
 
 		echo '</div>';

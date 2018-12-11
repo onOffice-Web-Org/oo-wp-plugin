@@ -51,7 +51,7 @@ abstract class InputFieldComplexSortableDetailListContentBase
 	 *
 	 */
 
-	abstract public function render($key, $dummy);
+	abstract public function render($key, $dummy, $type = null);
 
 
 	/** @return InputModelBase[] */

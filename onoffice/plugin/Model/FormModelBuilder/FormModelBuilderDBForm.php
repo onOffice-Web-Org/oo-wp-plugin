@@ -123,8 +123,10 @@ class FormModelBuilderDBForm
 
 		$pModule = $this->getInputModelModule();
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
+		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
+		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 
 		return $pInputModelFieldsConfig;
 	}
@@ -175,6 +177,7 @@ class FormModelBuilderDBForm
 
 		$values = array();
 		$values['fieldsRequired'] = array();
+		$values['fieldsAvailableOptions'] = array();
 		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
 		if ($formId !== null) {
@@ -188,6 +191,7 @@ class FormModelBuilderDBForm
 
 		$values[DataFormConfiguration::FIELDS] = array_keys($pDataFormConfiguration->getInputs());
 		$values['fieldsRequired'] = $pDataFormConfiguration->getRequiredFields();
+		$values['fieldsAvailableOptions'] = $pDataFormConfiguration->getAvailableOptionsFields();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -420,6 +424,20 @@ class FormModelBuilderDBForm
 	}
 
 
+	public function getInputModelIsAvailableOptions()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Available Options', 'onoffice');
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_AVAILABLE_OPTIONS;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsAvailableOptions'));
+
+		return $pInputModel;
+	}
+
 	/**
 	 *
 	 * @param string $label
@@ -472,6 +490,22 @@ class FormModelBuilderDBForm
 	{
 		$fieldsRequired = $this->getValue('fieldsRequired');
 		$value = in_array($key, $fieldsRequired);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 *
+	 */
+
+	public function callbackValueInputModelIsAvailableOptions(InputModelBase $pInputModel, string $key)
+	{
+		$fieldsAvOpt = $this->getValue('fieldsAvailableOptions');
+		$value = in_array($key, $fieldsAvOpt);
 		$pInputModel->setValue($value);
 		$pInputModel->setValuesAvailable($key);
 	}

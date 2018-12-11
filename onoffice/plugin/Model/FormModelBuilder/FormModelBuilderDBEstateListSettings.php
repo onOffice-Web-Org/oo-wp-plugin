@@ -143,6 +143,27 @@ class FormModelBuilderDBEstateListSettings
 	 *
 	 */
 
+	public function getInputModelAvailableOptions()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Available Options', 'onoffice');
+		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelAvailableOptions'));
+
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
 	public function getInputModelIsHidden()
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
@@ -196,6 +217,24 @@ class FormModelBuilderDBEstateListSettings
 
 	/**
 	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 *
+	 */
+
+	public function callbackValueInputModelAvailableOptions(InputModelBase $pInputModel, string $key)
+	{
+		$valueFromConf = $this->getValue('availableOptions');
+
+		$availableOptionsFields = is_array($valueFromConf) ? $valueFromConf : array();
+		$value = in_array($key, $availableOptionsFields);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+
+	/**
+	 *
 	 * @param string $module
 	 * @param string $htmlType
 	 * @return InputModelDB
@@ -207,8 +246,10 @@ class FormModelBuilderDBEstateListSettings
 		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
 		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
 		$pInputModelIsHidden = $this->getInputModelIsHidden();
+		$pInputModelIsAvailableOptions = $this->getInputModelAvailableOptions();
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
+		$pSortableFieldsList->addReferencedInputModel($pInputModelIsAvailableOptions);
 
 		return $pSortableFieldsList;
 	}

@@ -88,6 +88,7 @@ class RecordManagerReadListViewEstate
 			$result[DataView\DataListView::FIELDS] = $fields;
 			$result['filterable'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'filterable');
 			$result['hidden'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'hidden');
+			$result['availableOptions'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'availableOptions');
 		}
 
 		return $result;
@@ -148,6 +149,7 @@ class RecordManagerReadListViewEstate
 			$result[DataView\DataListView::FIELDS] = $fields;
 			$result['filterable'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'filterable');
 			$result['hidden'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'hidden');
+			$result['availableOptions'] = $this->getBooleanFieldValuesByFieldRow($fieldRows, 'availableOptions');
 
 		}
 

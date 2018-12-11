@@ -224,6 +224,27 @@ class AdminPageEstateListSettings
 		} else {
 			$values->$identifierHidden = array();
 		}
+
+		$pInputModelAvailableOptions = $pInputModelFactory->create
+			(InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS, 'availableOptions', true);
+		$identifierAvailableOptions = $pInputModelAvailableOptions->getIdentifier();
+
+		if (property_exists($values, $identifierAvailableOptions) &&
+			property_exists($values, $identifierFieldName))
+		{
+			$fieldsArray = (array)$values->$identifierFieldName;
+			$availableOptionsFields = (array)$values->$identifierAvailableOptions;
+			$newAvailableOptionsFields = array_fill_keys(array_keys($fieldsArray), '0');
+
+			foreach ($availableOptionsFields as $availableOptionsField) {
+				$keyIndex = array_search($availableOptionsField, $fieldsArray);
+				$newAvailableOptionsFields[$keyIndex] = '1';
+			}
+
+			$values->$identifierAvailableOptions = $newAvailableOptionsFields;
+		} else {
+			$values->$identifierAvailableOptions = array();
+		}
 	}
 
 
