@@ -24,9 +24,11 @@ namespace onOffice\WPlugin\Controller;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use onOffice\WPlugin\Gui\DateTimeFormatter;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 use WP_Locale;
+use function number_format_i18n;
 
 /**
  *
@@ -84,6 +86,51 @@ class InputVariableReader
 		}
 
 		return $fieldValue;
+	}
+
+
+	/**
+	 *
+	 * @param string $fieldInput
+	 *
+	 */
+
+	public function getFieldValueFormatted(string $fieldInput)
+	{
+		$fieldType = $this->getFieldType($fieldInput);
+		$value = $this->getFieldValue($fieldInput);
+		$valueFormatted = $this->formatValue($value, $fieldType);
+		return $valueFormatted;
+	}
+
+
+	/**
+	 *
+	 * @param string|value $value
+	 * @param string $type
+	 * @return string|array
+	 *
+	 */
+
+	private function formatValue($value, string $type)
+	{
+		if (is_float($value)) {
+			return number_format_i18n($value, 2);
+		} elseif (is_array($value)) {
+			$value = array_map(function($val) use ($type) {
+				return $this->formatValue($val, $type);
+			}, $value);
+		} elseif (FieldTypes::isDateOrDateTime($type) && $value != '') {
+			$format = DateTimeFormatter::SHORT|DateTimeFormatter::ADD_DATE;
+			if ($type === FieldTypes::FIELD_TYPE_DATETIME) {
+				$format |= DateTimeFormatter::ADD_TIME;
+			}
+
+			$pDate = new DateTime($value.' Europe/Berlin');
+			$pDateTimeFormatter = new DateTimeFormatter();
+			$value = $pDateTimeFormatter->formatByTimestamp($format, $pDate->getTimestamp());
+		}
+		return $value;
 	}
 
 

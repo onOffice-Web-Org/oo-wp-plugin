@@ -19,6 +19,8 @@
  *
  */
 
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\WP_UnitTest_Localized;
 use onOffice\WPlugin\Controller\InputVariableReader;
@@ -30,14 +32,14 @@ use onOffice\WPlugin\Types\FieldTypes;
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
  *
- * @covers \onOffice\WPlugin\Controller\EstateListInputVariableReader
- *
  */
 
 class TestClassEstateListInputVariableReader
 	extends WP_UnitTest_Localized
 {
 	/**
+	 *
+	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
 	 *
 	 */
 
@@ -65,6 +67,8 @@ class TestClassEstateListInputVariableReader
 
 
 	/**
+	 *
+	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
 	 *
 	 */
 
@@ -108,6 +112,8 @@ class TestClassEstateListInputVariableReader
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
+	 *
 	 */
 
 	public function testDate()
@@ -147,6 +153,8 @@ class TestClassEstateListInputVariableReader
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
+	 *
 	 */
 
 	public function testTzSwitch()
@@ -175,6 +183,8 @@ class TestClassEstateListInputVariableReader
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
+	 *
 	 */
 
 	public function testFloatUSLocale()
@@ -196,6 +206,8 @@ class TestClassEstateListInputVariableReader
 
 
 	/**
+	 *
+	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
 	 *
 	 */
 
@@ -220,6 +232,8 @@ class TestClassEstateListInputVariableReader
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
+	 *
 	 */
 
 	public function testBool()
@@ -239,5 +253,59 @@ class TestClassEstateListInputVariableReader
 		$this->assertTrue($pEstateListInputVariableReader->getFieldValue('kabel_sat_tv'));
 		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'n');
 		$this->assertFalse($pEstateListInputVariableReader->getFieldValue('kabel_sat_tv'));
+	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
+	 *
+	 */
+
+	public function testGetFieldValue()
+	{
+		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
+		$module = onOfficeSDK::MODULE_ESTATE;
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('kabel_sat_tv', $module, FieldTypes::FIELD_TYPE_BOOLEAN);
+
+		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'u');
+
+		$pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);
+		$this->assertEquals(null, $pEstateListInputVariableReader->getFieldValue('kabel_sat_tv'));
+
+		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'n');
+		$this->assertEquals(false, $pEstateListInputVariableReader->getFieldValue('kabel_sat_tv'));
+
+		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'y');
+		$this->assertEquals(true, $pEstateListInputVariableReader->getFieldValue('kabel_sat_tv'));
+	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValueFormatted
+	 *
+	 */
+
+	public function testGetFieldValueFormatted()
+	{
+		$pEstateListInputVariableReaderConfig = new InputVariableReaderConfigTest();
+		$module = onOfficeSDK::MODULE_ESTATE;
+		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
+			('kabel_sat_tv', $module, FieldTypes::FIELD_TYPE_BOOLEAN);
+
+		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'u');
+
+		$pEstateListInputVariableReader = new InputVariableReader
+			(onOfficeSDK::MODULE_ESTATE, $pEstateListInputVariableReaderConfig);
+		$this->assertEquals(null, $pEstateListInputVariableReader->getFieldValueFormatted('kabel_sat_tv'));
+
+		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'n');
+		$this->assertEquals(false, $pEstateListInputVariableReader->getFieldValueFormatted('kabel_sat_tv'));
+
+		$pEstateListInputVariableReaderConfig->setValue('kabel_sat_tv', 'y');
+		$this->assertEquals(true, $pEstateListInputVariableReader->getFieldValueFormatted('kabel_sat_tv'));
 	}
 }

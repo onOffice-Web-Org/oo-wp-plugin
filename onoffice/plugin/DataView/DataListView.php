@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\SDK\onOfficeSDK;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -29,7 +31,7 @@ namespace onOffice\WPlugin\DataView;
  */
 
 class DataListView
-	implements DataView
+	implements DataView, DataViewFilterableFields
 {
 	/** */
 	const PICTURES = 'pictures';
@@ -223,7 +225,7 @@ class DataListView
 		{ $this->_addressFields = $addressFields; }
 
 	/** @return array */
-	public function getFilterableFields()
+	public function getFilterableFields(): array
 		{ return $this->_filterableFields; }
 
 	/** @param array $filterableFields */
@@ -231,18 +233,22 @@ class DataListView
 		{ $this->_filterableFields = $filterableFields; }
 
 	/** @return array */
-	public function getHiddenFields()
+	public function getHiddenFields(): array
 		{ return $this->_hiddenFields; }
 
 	/** @param array $hiddenFields */
 	public function setHiddenFields(array $hiddenFields)
 		{ $this->_hiddenFields = $hiddenFields; }
 
+	/** @return string */
+	public function getModule(): string
+		{ return onOfficeSDK::MODULE_ESTATE; }
+
 	/** @param array $availableOptions */
 	public function setAvailableOptions(array $availableOptions)
 		{ $this->_availableOptions = $availableOptions; }
 
 	/** @return array */
-	public function getAvailableOptions()
+	public function getAvailableOptions(): array
 		{ return $this->_availableOptions; }
 }

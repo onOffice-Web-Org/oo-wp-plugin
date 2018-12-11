@@ -19,7 +19,11 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace onOffice\WPlugin\DataView;
+
+use onOffice\SDK\onOfficeSDK;
 
 /**
  *
@@ -29,6 +33,7 @@ namespace onOffice\WPlugin\DataView;
  */
 
 class DataListViewAddress
+	implements DataViewFilterableFields
 {
 	/** @var int */
 	private $_id = 0;
@@ -151,10 +156,14 @@ class DataListViewAddress
 		{ $this->_filterableFields = $filterableFields; }
 
 	/** @return array */
-	public function getFilterableHiddenFields(): array
+	public function getHiddenFields(): array
 		{ return $this->_filterableHiddenFields; }
 
 	/** @param array $filterableHiddenFields */
-	public function setFilterableHiddenFields(array $filterableHiddenFields)
-	{ $this->_filterableHiddenFields = $filterableHiddenFields; }
+	public function setHiddenFields(array $filterableHiddenFields)
+		{ $this->_filterableHiddenFields = $filterableHiddenFields; }
+
+	/** @return string */
+	public function getModule(): string
+		{ return onOfficeSDK::MODULE_ADDRESS; }
 }

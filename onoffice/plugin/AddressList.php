@@ -32,10 +32,12 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use function esc_html;
 
 /**
  *
@@ -64,8 +66,8 @@ class AddressList
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
-	/** @var array */
-	private $_fields = [];
+	/** @var DataListViewAddress */
+	private $_pDataViewAddress = null;
 
 
 	/**
@@ -78,6 +80,7 @@ class AddressList
 	{
 		$this->_pSDKWrapper = new SDKWrapper();
 		$this->_pFieldnames = $pFieldnames;
+		$this->_pDataViewAddress = new DataListViewAddress(0, 'default');
 	}
 
 
@@ -104,7 +107,7 @@ class AddressList
 		if ($pApiCall->getResultStatus() === true) {
 			$records = $pApiCall->getResultRecords();
 			$this->fillAddressesById($records);
-			$this->_fields = $fields;
+			$this->_pDataViewAddress->setFields($fields);
 		}
 	}
 
@@ -123,7 +126,7 @@ class AddressList
 	public function loadAddresses(DataListViewAddress $pDataListViewAddress, int $inputPage = 1)
 	{
 		global $numpages, $multipage, $page, $more;
-		$this->_fields = $pDataListViewAddress->getFields();
+		$this->_pDataViewAddress = $pDataListViewAddress;
 		$pModifier = $this->generateRecordModifier();
 
 		$pDataListViewToApi = new DataListViewAddressToAPIParameters($pDataListViewAddress);
@@ -161,7 +164,7 @@ class AddressList
 
 	private function generateRecordModifier(): ViewFieldModifierHandler
 	{
-		$pAddressFieldModifierHandler = new ViewFieldModifierHandler($this->_fields,
+		$pAddressFieldModifierHandler = new ViewFieldModifierHandler($this->_pDataViewAddress->getFields(),
 			onOfficeSDK::MODULE_ADDRESS, AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
 		return $pAddressFieldModifierHandler;
 	}
@@ -306,6 +309,27 @@ class AddressList
 				onOfficeSDK::MODULE_ADDRESS);
 			return $fieldInformation['type'];
 		}
+	}
+
+
+	/**
+	 *
+	 * @return string[] An array of visible fields
+	 *
+	 */
+
+	public function getVisibleFilterableFields(): array
+	{
+		$pDataListView = $this->_pDataViewAddress;
+		$pFilterableFields = new OutputFields($pDataListView);
+		$fieldsValues = $pFilterableFields->getVisibleFilterableFields();
+		$result = [];
+		foreach ($fieldsValues as $field => $value) {
+			$result[$field] = $this->_pFieldnames->getFieldInformation
+				($field, onOfficeSDK::MODULE_ADDRESS);
+			$result[$field]['value'] = $value;
+		}
+		return $result;
 	}
 
 

@@ -22,6 +22,9 @@
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Types\FieldTypes;
 
+// display search form
+require 'SearchFormAddress.php';
+
 /**
  *
  *  Default template for address lists

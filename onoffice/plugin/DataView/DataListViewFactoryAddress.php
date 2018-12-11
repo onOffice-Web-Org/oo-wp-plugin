@@ -61,7 +61,7 @@ class DataListViewFactoryAddress
 		$pDataListViewAddress->setSortorder($row['sortorder']);
 		$pDataListViewAddress->setTemplate($row['template']);
 		$pDataListViewAddress->setFilterableFields($row['filterable']);
-		$pDataListViewAddress->setFilterableHiddenFields($row['hidden']);
+		$pDataListViewAddress->setHiddenFields($row['hidden']);
 
 		return $pDataListViewAddress;
 	}

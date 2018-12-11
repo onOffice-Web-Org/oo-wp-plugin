@@ -21,22 +21,20 @@
 
 namespace onOffice\WPlugin;
 
-use DateTime;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateListBase;
-use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
-use onOffice\WPlugin\Gui\DateTimeFormatter;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
@@ -44,7 +42,6 @@ use function add_action;
 use function do_action;
 use function esc_url;
 use function get_page_link;
-use function number_format_i18n;
 use function plugin_dir_url;
 
 /**
@@ -64,19 +61,19 @@ class EstateList
 	private $_pFieldnames = null;
 
 	/** @var array */
-	private $_responseArray = array();
+	private $_responseArray = [];
 
 	/** @var EstateFiles */
 	private $_pEstateFiles = null;
 
 	/** @var array */
-	private $_currentEstate = array();
+	private $_currentEstate = [];
 
 	/** @var array */
-	private $_estateContacts = array();
+	private $_estateContacts = [];
 
 	/** @var AddressList */
-	private $_pAddressList = array();
+	private $_pAddressList = [];
 
 	/** @var int */
 	private $_currentEstatePage = 1;
@@ -98,9 +95,6 @@ class EstateList
 
 	/** @var bool */
 	private $_shuffleResult = false;
-
-	/** @var InputVariableReader */
-	private $_pEstateListInputVariableReader = null;
 
 	/** @var GeoSearchBuilder */
 	private $_pGeoSearchBuilder = null;
@@ -135,12 +129,12 @@ class EstateList
 
 	protected function getNumEstatePages()
 	{
-		if ( empty( $this->_responseArray['data']['meta']['cntabsolute'] ) ) {
+		if (empty($this->_responseArray['data']['meta']['cntabsolute'])) {
 			return null;
 		}
 
 		$recordNumOverAll = $this->_responseArray['data']['meta']['cntabsolute'];
-		$numEstatePages = ceil( $recordNumOverAll / $this->_pDataView->getRecordsPerPage() );
+		$numEstatePages = ceil($recordNumOverAll / $this->_pDataView->getRecordsPerPage());
 
 		return $numEstatePages;
 	}
@@ -181,23 +175,22 @@ class EstateList
 		$pSDKWrapper = $this->_pSDKWrapper;
 		$this->_pFieldnames->loadLanguage();
 
-		$parametersGetEstateList = $this->getEstateParameters( $currentPage );
+		$parametersGetEstateList = $this->getEstateParameters($currentPage);
 
 		$handleReadEstate = $this->_pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList );
+			onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList);
 		$this->_pSDKWrapper->sendRequests();
 
-		$responseArrayEstates = $this->_pSDKWrapper->getRequestResponse( $handleReadEstate );
+		$responseArrayEstates = $this->_pSDKWrapper->getRequestResponse($handleReadEstate);
 		$fileCategories = $this->getPreloadEstateFileCategories();
 
-		$this->_pEstateFiles = new EstateFiles( $fileCategories );
+		$this->_pEstateFiles = new EstateFiles($fileCategories);
+		$estateIds = $this->getEstateIdToForeignMapping($responseArrayEstates);
 
-		$estateIds = $this->getEstateIdToForeignMapping( $responseArrayEstates );
-
-		if ( count( $estateIds ) > 0 ) {
+		if ($estateIds !== []) {
 			$pSDKWrapper = new SDKWrapper();
-			add_action('oo_beforeEstateRelations', array($this, 'registerContactPersonCall'), 10, 2);
-			add_action('oo_afterEstateRelations', array($this, 'extractEstateContactPerson'), 10, 2);
+			add_action('oo_beforeEstateRelations', [$this, 'registerContactPersonCall'], 10, 2);
+			add_action('oo_afterEstateRelations', [$this, 'extractEstateContactPerson'], 10, 2);
 
 			do_action('oo_beforeEstateRelations', $pSDKWrapper, $estateIds);
 
@@ -208,7 +201,7 @@ class EstateList
 
 		$this->_responseArray = $responseArrayEstates;
 
-		if ( isset( $this->_responseArray['data']['records'] ) && $this->_shuffleResult ) {
+		if (isset($this->_responseArray['data']['records']) && $this->_shuffleResult) {
 			shuffle($this->_responseArray['data']['records']);
 		}
 
@@ -224,7 +217,7 @@ class EstateList
 	 *
 	 */
 
-	public function registerContactPersonCall( SDKWrapper $pSDKWrapper, array $estateIds)
+	public function registerContactPersonCall(SDKWrapper $pSDKWrapper, array $estateIds)
 	{
 		$parameters = [
 			'parentids' => array_keys($estateIds),
@@ -286,7 +279,7 @@ class EstateList
 			$dataFields []= 'breitengrad';
 		}
 
-		$requestParams = array(
+		$requestParams = [
 			'data' => $dataFields,
 			'filter' => $filter,
 			'estatelanguage' => $language,
@@ -295,7 +288,7 @@ class EstateList
 			'listoffset' => $offset,
 			'formatoutput' => $this->_formatOutput,
 			'addMainLangId' => true,
-		);
+		];
 
 		$requestParams += $this->addExtraParams();
 
@@ -312,9 +305,9 @@ class EstateList
 	protected function addExtraParams(): array
 	{
 		$pListView = $this->_pDataView;
-		$requestParams = array();
+		$requestParams = [];
 
-		if ($pListView->getSortby() !== null ) {
+		if ($pListView->getSortby() !== null) {
 			$requestParams['sortby'] = $pListView->getSortby();
 		}
 
@@ -326,10 +319,10 @@ class EstateList
 			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 
-		$parameters = $this->_pGeoSearchBuilder->buildParameters();
+		$geoRangeSearchParameters = $this->_pGeoSearchBuilder->buildParameters();
 
-		if ($parameters !== []) {
-			$requestParams['georangesearch'] = $parameters;
+		if ($geoRangeSearchParameters !== []) {
+			$requestParams['georangesearch'] = $geoRangeSearchParameters;
 		}
 
 		return $requestParams;
@@ -356,24 +349,23 @@ class EstateList
 	 *
 	 */
 
-	private function getEstateIdToForeignMapping( $estateResponseArray )
+	private function getEstateIdToForeignMapping($estateResponseArray)
 	{
-		if ( ! isset( $estateResponseArray['data']['records'] ) ) {
-			return array();
+		if (!isset($estateResponseArray['data']['records'])) {
+			return [];
 		}
 
 		$estateProperties = $estateResponseArray['data']['records'];
+		$estateIds = [];
 
-		$estateIds = array();
-
-		foreach ( $estateProperties as $estate ) {
-			if ( ! array_key_exists( 'id', $estate ) ) {
+		foreach ($estateProperties as $estate) {
+			if (!isset($estate['id'])) {
 				continue;
 			}
 
 			$elements = $estate['elements'];
 
-			if (array_key_exists('mainLangId', $elements) && $elements['mainLangId'] != null) {
+			if (isset($elements['mainLangId'])) {
 				$estateIds[$elements['mainLangId']] = $estate['id'];
 			} else {
 				$estateIds[$estate['id']] = $estate['id'];
@@ -392,34 +384,30 @@ class EstateList
 	 *
 	 */
 
-	private function collectEstateContactPerson( $responseArrayContacts, array $estateIds )
+	private function collectEstateContactPerson($responseArrayContacts, array $estateIds)
 	{
-		if ( ! isset( $responseArrayContacts['data']['records'][0]['elements'] ) ) {
-			return;
-		}
+		$records = $responseArrayContacts['data']['records'][0]['elements'] ?? [];
+		$allAddressIds = [];
 
-		$records = $responseArrayContacts['data']['records'][0]['elements'];
-		$allAddressIds = array();
-
-		foreach ( $records as $estateId => $adressIds ) {
-			if ( is_null( $adressIds ) ) {
+		foreach ($records as $estateId => $adressIds) {
+			if (is_null($adressIds)) {
 				continue;
 			}
 
-			if ( ! is_array( $adressIds ) ) {
-				$adressIds = array($adressIds);
+			if (!is_array($adressIds)) {
+				$adressIds = [$adressIds];
 			}
 
 			$subjectEstateId = $estateIds[$estateId];
 
 			$this->_estateContacts[$subjectEstateId] = $adressIds;
-			$allAddressIds = array_unique( array_merge( $allAddressIds, $adressIds ) );
+			$allAddressIds = array_unique(array_merge($allAddressIds, $adressIds));
 		}
 
 		$fields = $this->_pDataView->getAddressFields();
 
-		if ( count( $fields ) > 0 && count( $allAddressIds ) > 0 ) {
-			$this->_pAddressList->loadAdressesById( $allAddressIds, $fields );
+		if ($fields !== [] && $allAddressIds !== []) {
+			$this->_pAddressList->loadAdressesById($allAddressIds, $fields);
 		}
 	}
 
@@ -434,23 +422,23 @@ class EstateList
 	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
 		global $numpages, $multipage, $page, $more, $pages;
-		if ( ! isset( $this->_responseArray['data']['records'] ) ) {
+		if (!isset($this->_responseArray['data']['records'])) {
 			return false;
 		}
 
-		if ( null !== $this->_numEstatePages ) {
+		if (null !== $this->_numEstatePages) {
 			$multipage = true;
 
 			$page = $this->_currentEstatePage;
 			$more = true;
-			$pages = array();
+			$pages = [];
 			$numpages = $this->_numEstatePages;
 		}
 
 		$pEstateFieldModifierHandler = new ViewFieldModifierHandler
 			($this->getFieldsForDataViewModifierHandler(), onOfficeSDK::MODULE_ESTATE, $modifier);
 
-		$currentRecord = each( $this->_responseArray['data']['records'] );
+		$currentRecord = each($this->_responseArray['data']['records']);
 
 		$this->_currentEstate['id'] = $currentRecord['value']['id'];
 		$this->_currentEstate['type'] = $currentRecord['value']['type'];
@@ -462,10 +450,10 @@ class EstateList
 			$this->_currentEstate['mainId'] = $recordElements['mainLangId'];
 		}
 
-		if ( false !== $currentRecord ) {
+		if (false !== $currentRecord) {
 			$record = $currentRecord['value']['elements'];
 			$recordModified = $pEstateFieldModifierHandler->processRecord($record);
-			$pArrayContainer = new ArrayContainerEscape( $recordModified );
+			$pArrayContainer = new ArrayContainerEscape($recordModified);
 
 			return $pArrayContainer;
 		}
@@ -509,7 +497,7 @@ class EstateList
 	 *
 	 */
 
-	public function getFieldLabel( $field )
+	public function getFieldLabel($field): string
 	{
 		$recordType = $this->_currentEstate['type'];
 		$fieldNewName = $this->_pFieldnames->getFieldLabel($field, $recordType);
@@ -524,7 +512,7 @@ class EstateList
 	 *
 	 */
 
-	public function getEstateLink()
+	public function getEstateLink(): string
 	{
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDetailView = $pDataDetailViewHandler->getDetailView();
@@ -547,14 +535,14 @@ class EstateList
 	 *
 	 */
 
-	public function getEstatePictures( array $types = null )
+	public function getEstatePictures(array $types = null)
 	{
 		$estateId = $this->_currentEstate['id'];
-		$estateFiles = array();
-		$estateImages = $this->_pEstateFiles->getEstatePictures( $estateId );
+		$estateFiles = [];
+		$estateImages = $this->_pEstateFiles->getEstatePictures($estateId);
 
-		foreach ( $estateImages as $image ) {
-			if ( null !== $types && ! in_array( $image['type'], $types, true ) ) {
+		foreach ($estateImages as $image) {
+			if (null !== $types && !in_array($image['type'], $types, true)) {
 				continue;
 			}
 			$estateFiles []= $image['id'];
@@ -571,9 +559,9 @@ class EstateList
 	 *
 	 */
 
-	public function getEstateMovieLinks()
+	public function getEstateMovieLinks(): array
 	{
-		return array();
+		return [];
 	}
 
 
@@ -585,9 +573,9 @@ class EstateList
 	 *
 	 */
 
-	public function getMovieEmbedPlayers($options = array())
+	public function getMovieEmbedPlayers(array $options = []): array
 	{
-		return array();
+		return [];
 	}
 
 
@@ -599,7 +587,7 @@ class EstateList
 	 *
 	 */
 
-	public function getEstatePictureUrl( $imageId, array $options = null )
+	public function getEstatePictureUrl($imageId, array $options = null)
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstateFileUrl($imageId, $currentEstate, $options);
@@ -613,7 +601,7 @@ class EstateList
 	 *
 	 */
 
-	public function getEstatePictureTitle( $imageId )
+	public function getEstatePictureTitle($imageId)
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstatePictureTitle($imageId, $currentEstate);
@@ -627,7 +615,7 @@ class EstateList
 	 *
 	 */
 
-	public function getEstatePictureText( $imageId )
+	public function getEstatePictureText($imageId)
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstatePictureText($imageId, $currentEstate);
@@ -641,7 +629,7 @@ class EstateList
 	 *
 	 */
 
-	public function getEstatePictureValues( $imageId )
+	public function getEstatePictureValues($imageId)
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstatePictureValues($imageId, $currentEstate);
@@ -654,14 +642,10 @@ class EstateList
 	 *
 	 */
 
-	public function getEstateContactIds()
+	public function getEstateContactIds(): array
 	{
 		$recordId = $this->_currentEstate['id'];
-		if ( ! empty( $this->_estateContacts[$recordId] ) ) {
-			return $this->_estateContacts[$recordId];
-		}
-
-		return array();
+		return $this->_estateContacts[$recordId] ?? [];
 	}
 
 
@@ -674,11 +658,11 @@ class EstateList
 	public function getEstateContacts()
 	{
 		$addressIds = $this->getEstateContactIds();
-		$result = array();
+		$result = [];
 
-		foreach ( $addressIds as $addressId ) {
-			$currentAddressData = $this->_pAddressList->getAddressById( $addressId );
-			$pArrayContainerCurrentAddress = new ArrayContainerEscape( $currentAddressData );
+		foreach ($addressIds as $addressId) {
+			$currentAddressData = $this->_pAddressList->getAddressById($addressId);
+			$pArrayContainerCurrentAddress = new ArrayContainerEscape($currentAddressData);
 			$result []= $pArrayContainerCurrentAddress;
 		}
 
@@ -752,14 +736,14 @@ class EstateList
 		$language = Language::getDefault();
 
 		$estateId = $this->_currentEstate['mainId'];
-		$queryVars = array(
+		$queryVars = [
 			'estateid' => $estateId,
 			'language' => $language,
 			'configindex' => $this->_pDataView->getName(),
-		);
+		];
 
-		$documentlink = plugin_dir_url( __DIR__ ).'document.php?'.http_build_query( $queryVars );
-		return esc_url( $documentlink );
+		$documentlink = plugin_dir_url(__DIR__).'document.php?'.http_build_query($queryVars);
+		return esc_url($documentlink);
 	}
 
 
@@ -769,99 +753,16 @@ class EstateList
 	 *
 	 */
 
-	public function getVisibleFilterableFields()
+	public function getVisibleFilterableFields(): array
 	{
-		if (!$this->_pDataView instanceof DataListView) {
-			throw new Exception('Only list views are filterable!');
+		$pFilterableFields = new OutputFields($this->_pDataView);
+		$fieldsValues = $pFilterableFields->getVisibleFilterableFields();
+		$result = [];
+		foreach ($fieldsValues as $field => $value) {
+			$result[$field] = $this->_pFieldnames->getFieldInformation($field, onOfficeSDK::MODULE_ESTATE);
+			$result[$field]['value'] = $value;
 		}
-
-		$pDataListView = $this->_pDataView;
-
-		/* @var $pDataListView DataListView */
-		$filterable = $pDataListView->getFilterableFields();
-		$hidden = $pDataListView->getHiddenFields();
-
-		$visibleFilterable = array_diff($filterable, $hidden);
-
-		$fieldsArray = array_combine($visibleFilterable, $visibleFilterable);
-		$this->_pEstateListInputVariableReader = new InputVariableReader
-			(onOfficeSDK::MODULE_ESTATE);
-		$fieldsArray = $this->editForGeoPosition($fieldsArray);
-
-		$result = array_map(array($this, 'getFieldInformationForEstateField'), $fieldsArray);
-
 		return $result;
-	}
-
-
-	/**
-	 *
-	 * @param array $fieldsArray
-	 * @return array
-	 *
-	 */
-
-	private function editForGeoPosition(array $fieldsArray):array
-	{
-		if (array_key_exists(GeoPosition::FIELD_GEO_POSITION, $fieldsArray)) {
-			$pGeoPosition = new GeoPosition();
-
-			$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $fieldsArray);
-			unset($fieldsArray[$pos]);
-
-			$geoFields = $pGeoPosition->getEstateSearchFields();
-			$fieldsArray = array_merge($fieldsArray, array_combine($geoFields, $geoFields));
-		}
-
-		return $fieldsArray;
-	}
-
-
-	/**
-	 *
-	 * @internal for Callback only
-	 * @param string $fieldInput
-	 * @return array
-	 *
-	 */
-
-	public function getFieldInformationForEstateField($fieldInput)
-	{
-		$fieldInformation = $this->_pFieldnames->getFieldInformation
-			($fieldInput, onOfficeSDK::MODULE_ESTATE);
-		$value = $this->_pEstateListInputVariableReader->getFieldValue($fieldInput);
-		$fieldInformation['value'] = $this->formatValue($value, $fieldInformation['type']);
-		return $fieldInformation;
-	}
-
-
-	/**
-	 *
-	 * @param mixed $value
-	 * @param string $type
-	 * @return type
-	 *
-	 */
-
-	private function formatValue($value, $type)
-	{
-		if (is_float($value)) {
-			return number_format_i18n($value, 2);
-		} elseif (is_array($value)) {
-			$value = array_map(function($val) use ($type) {
-				return $this->formatValue($val, $type);
-			}, $value);
-		} elseif (Types\FieldTypes::isDateOrDateTime($type) && $value != '') {
-			$format = DateTimeFormatter::SHORT|DateTimeFormatter::ADD_DATE;
-			if ($type === Types\FieldTypes::FIELD_TYPE_DATETIME) {
-				$format |= DateTimeFormatter::ADD_TIME;
-			}
-
-			$pDate = new DateTime($value.' Europe/Berlin');
-			$pDateTimeFormatter = new DateTimeFormatter();
-			$value = $pDateTimeFormatter->formatByTimestamp($format, $pDate->getTimestamp());
-		}
-		return $value;
 	}
 
 

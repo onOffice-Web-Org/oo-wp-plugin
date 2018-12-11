@@ -68,7 +68,7 @@ class TestClassDataListViewFactoryAddress
 		$this->assertEquals($row['sortorder'], $pDataListViewAddress->getSortorder());
 		$this->assertEquals($row['template'], $pDataListViewAddress->getTemplate());
 		$this->assertEquals($row['filterable'], $pDataListViewAddress->getFilterableFields());
-		$this->assertEquals($row['hidden'], $pDataListViewAddress->getFilterableHiddenFields());
+		$this->assertEquals($row['hidden'], $pDataListViewAddress->getHiddenFields());
 	}
 
 
