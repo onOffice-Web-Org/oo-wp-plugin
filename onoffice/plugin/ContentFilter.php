@@ -40,6 +40,7 @@ use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
@@ -141,6 +142,13 @@ class ContentFilter
 					$this->setAllowedGetParametersEstate($pListView);
 					$pTemplate = new Template($pListView->getTemplate());
 					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
+					$availableOptionsEstates = $pListView->getAvailableOptions();
+
+					if ($availableOptionsEstates !== [])
+					{
+						DistinctFieldsChecker::registerScripts(onOfficeSDK::MODULE_ESTATE,
+								$availableOptionsEstates);
+					}
 
 					$pEstateList = new EstateList($pListView);
 					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
@@ -212,6 +220,18 @@ class ContentFilter
 			if ($formName !== null) {
 				$pFormConfigFactory = new DataFormConfigurationFactory();
 				$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
+
+				if ($pFormConfig->getFormType() == Form::TYPE_APPLICANT_SEARCH)
+				{
+					$availableOptionsFormApplicantSearch = $pFormConfig->getAvailableOptionsFields();
+
+					if ($availableOptionsFormApplicantSearch !== [])
+					{
+						DistinctFieldsChecker::registerScripts(onOfficeSDK::MODULE_SEARCHCRITERIA,
+								$availableOptionsFormApplicantSearch);
+					}
+				}
+
 				/* @var $pFormConfig DataFormConfiguration */
 				$template = $pFormConfig->getTemplate();
 				$pTemplate = new Template($template);

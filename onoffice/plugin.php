@@ -48,6 +48,9 @@ use onOffice\WPlugin\Installer;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
 
+
+use onOffice\WPlugin\Field\DistinctFieldsChecker;
+
 $pAutoloader = new Psr4AutoloaderClass();
 $pAutoloader->addNamespace('onOffice', __DIR__);
 $pAutoloader->addNamespace('onOffice\SDK', __DIR__.DIRECTORY_SEPARATOR.'SDK');
@@ -77,6 +80,8 @@ add_action('oo_cache_cleanup', 'ooCacheCleanup');
 add_action('init', [$pAdminViewController, 'onInit']);
 add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
+
+add_action( 'wp_ajax_addHook',[DistinctFieldsChecker::class, 'addHook']);
 
 add_filter('wp_link_pages_link', [$pSearchParams, 'linkPagesLink'], 10, 2);
 add_filter('wp_link_pages_args', [$pSearchParams, 'populateDefaultLinkParams']);
