@@ -28,7 +28,7 @@ use onOffice\WPlugin\AddressList;
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
  *
- * @covers AddressList
+ * @covers onOffice\WPlugin\AddressList
  *
  */
 

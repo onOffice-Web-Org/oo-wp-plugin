@@ -36,7 +36,7 @@ class TestClassInputModelDBAdapterRow
 {
 	/**
 	 *
-	 * @covers InputModelDBAdapterRow::getPrimaryKeys
+	 * @covers \onOffice\WPlugin\Model\InputModelDBAdapterRow::getPrimaryKeys
 	 *
 	 */
 
@@ -54,7 +54,7 @@ class TestClassInputModelDBAdapterRow
 
 	/**
 	 *
-	 * @covers InputModelDBAdapterRow::getForeignKeys
+	 * @covers \onOffice\WPlugin\Model\InputModelDBAdapterRow::getForeignKeys
 	 *
 	 */
 
@@ -83,8 +83,8 @@ class TestClassInputModelDBAdapterRow
 
 	/**
 	 *
-	 * @covers InputModelDBAdapterRow::addInputModelDB
-	 * @covers InputModelDBAdapterRow::createUpdateValuesByTable
+	 * @covers \onOffice\WPlugin\Model\InputModelDBAdapterRow::addInputModelDB
+	 * @covers \onOffice\WPlugin\Model\InputModelDBAdapterRow::createUpdateValuesByTable
 	 *
 	 */
 
@@ -123,7 +123,7 @@ class TestClassInputModelDBAdapterRow
 
 	/**
 	 *
-	 * @param InputModelDBAdapterRow $pInputModelDBAdapterRow
+	 * @param \onOffice\WPlugin\Model\InputModelDBAdapterRow $pInputModelDBAdapterRow
 	 *
 	 */
 

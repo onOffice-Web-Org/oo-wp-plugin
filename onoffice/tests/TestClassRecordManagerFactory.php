@@ -57,7 +57,7 @@ class TestClassRecordManagerFactory
 
 	/**
 	 *
-	 * @covers RecordManagerFactory::createByTypeAndAction
+	 * @covers onOffice\WPlugin\Record\RecordManagerFactory::createByTypeAndAction
 	 *
 	 */
 
@@ -95,7 +95,7 @@ class TestClassRecordManagerFactory
 
 	/**
 	 *
-	 * @covers RecordManagerFactory::getGenericClassTables
+	 * @covers onOffice\WPlugin\Record\RecordManagerFactory::getGenericClassTables
 	 *
 	 */
 

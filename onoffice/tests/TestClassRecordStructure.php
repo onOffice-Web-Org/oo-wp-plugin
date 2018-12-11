@@ -137,7 +137,7 @@ class TestClassRecordStructure
 
 	/**
 	 *
-	 * @covers RecordStructure::isNullAllowed
+	 * @covers onOffice\WPlugin\Record\RecordStructure::isNullAllowed
 	 *
 	 */
 
@@ -154,7 +154,7 @@ class TestClassRecordStructure
 
 	/**
 	 *
-	 * @covers RecordStructure::getEmptyValue
+	 * @covers onOffice\WPlugin\Record\RecordStructure::getEmptyValue
 	 *
 	 */
 
@@ -171,7 +171,7 @@ class TestClassRecordStructure
 
 	/**
 	 *
-	 * @covers RecordStructure::getFieldByTable
+	 * @covers onOffice\WPlugin\Record\RecordStructure::getFieldByTable
 	 *
 	 */
 

@@ -19,9 +19,12 @@
  *
  */
 
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Types\FieldTypes;
+use WP_UnitTestCase;
 
 
 /**
@@ -35,6 +38,8 @@ class TestClassGeoPosition
 	extends WP_UnitTestCase
 {
 	/**
+	 *
+	 * @covers onOffice\WPlugin\GeoPosition::transform
 	 *
 	 */
 
@@ -160,6 +165,8 @@ class TestClassGeoPosition
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\GeoPosition::getSettingsGeoPositionFields
+	 *
 	 */
 
 	public function testGetSettingsGeoPositionFields()
@@ -197,6 +204,8 @@ class TestClassGeoPosition
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\GeoPosition::getEstateSearchFields
+	 *
 	 */
 
 	public function testGetEstateSearchFields()
@@ -218,6 +227,8 @@ class TestClassGeoPosition
 
 
 	/**
+	 *
+	 * @covers onOffice\WPlugin\GeoPosition::createGeoRangeSearchParameterRequest
 	 *
 	 */
 

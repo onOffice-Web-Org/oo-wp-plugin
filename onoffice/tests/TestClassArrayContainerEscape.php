@@ -27,8 +27,6 @@ use onOffice\WPlugin\Escape;
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
  *
- * @covers ArrayContainerEscape
- *
  */
 
 class TestClassArrayContainerEscape

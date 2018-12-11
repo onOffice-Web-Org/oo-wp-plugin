@@ -28,8 +28,6 @@ use onOffice\WPlugin\API\ApiClientActionGetPdf;
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
  *
- * @covers APIClientActionGetPdf
- *
  */
 
 class TestClassAPIClientActionGetPdf

@@ -26,8 +26,6 @@ use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypeDefault;
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
  *
- * @covers AddressViewFieldModifierTypeDefault
- *
  */
 
 class TestClassAddressViewFieldModifierTypeDefault
