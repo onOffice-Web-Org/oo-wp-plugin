@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;

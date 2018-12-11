@@ -95,7 +95,7 @@ class GeoPosition
 	];
 
 	/** @var array */
-	private $_settingsGeoPositionFieldsWhitoutRange = [
+	private $_settingsGeoPositionFieldsWithoutRange = [
 		'range_land',
 		'range_plz',
 		'range_strasse',
@@ -210,9 +210,10 @@ class GeoPosition
 	 * @return array
 	 *
 	 */
+
 	public function getSettingsGeoPositionFieldsWithoutRadius(): array
 	{
-		return $this->_settingsGeoPositionFieldsWhitoutRange;
+		return $this->_settingsGeoPositionFieldsWithoutRange;
 	}
 
 

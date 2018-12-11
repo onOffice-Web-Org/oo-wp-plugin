@@ -62,10 +62,12 @@ class PdfDocument
 	/**
 	 *
 	 * @param int $estateId
+	 * @param string $language
+	 * @param string $template
 	 *
 	 */
 
-	public function __construct($estateId, $language, $template)
+	public function __construct(int $estateId, string $language, string $template)
 	{
 		$this->_estateId = $estateId;
 		$this->_language = $language;
@@ -80,7 +82,7 @@ class PdfDocument
 	 *
 	 */
 
-	public function fetch()
+	public function fetch(): bool
 	{
 		$pSdkWrapper = $this->_pSDKWrapper;
 		$parameters = $this->getParameters();
@@ -105,14 +107,14 @@ class PdfDocument
 	 *
 	 */
 
-	private function getParameters()
+	private function getParameters(): array
 	{
-		return array(
+		return [
 			'estateid' => $this->_estateId,
 			'language' => $this->_language,
 			'gzcompress' => true,
 			'template' => $this->_template,
-		);
+		];
 	}
 
 	/** @param int $addressId */
@@ -124,31 +126,31 @@ class PdfDocument
 		{ return $this->_addressId; }
 
 	/** @param int $estateId */
-	public function setEstateId($estateId)
+	public function setEstateId(int $estateId)
 		{ $this->_estateId = $estateId; }
 
 	/** @return int */
-	public function getEstateId()
+	public function getEstateId(): int
 		{ return $this->_estateId; }
 
 	/** @param string $language */
-	public function setLanguage($language)
+	public function setLanguage(string $language)
 		{ $this->_language = $language; }
 
 	/** @return string */
-	public function getLanguage()
+	public function getLanguage(): string
 		{ return $this->_language; }
 
 	/** @return string binary */
-	public function getDocumentBinary()
+	public function getDocumentBinary(): string
 		{ return $this->_documentBinary; }
 
 	/** @return string */
-	public function getMimeType()
+	public function getMimeType(): string
 		{ return $this->_mimeType; }
 
 	/** @return SDKWrapper */
-	public function getSDKWrapper()
+	public function getSDKWrapper(): SDKWrapper
 		{ return $this->_pSDKWrapper; }
 
 	/** @param SDKWrapper $pSDKWrapper*/

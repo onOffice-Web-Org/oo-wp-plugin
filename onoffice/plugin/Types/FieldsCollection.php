@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace onOffice\WPlugin\Types;
 
 use onOffice\WPlugin\Field\FieldModuleCollection;

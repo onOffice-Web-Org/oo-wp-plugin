@@ -18,13 +18,6 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2016, onOffice(R) Software AG
- *
- */
-
 namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
@@ -33,6 +26,9 @@ use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
 
 /**
+ *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2016, onOffice(R) Software AG
  *
  */
 
@@ -80,7 +76,7 @@ class FormPostHandler
 		$formName = filter_input(INPUT_POST, 'oo_formid', FILTER_SANITIZE_STRING);
 		$formNo = filter_input(INPUT_POST, 'oo_formno', FILTER_SANITIZE_NUMBER_INT);
 
-		if ( ! is_null( $formName ) ) {
+		if (!is_null($formName)) {
 			$pDataFormConfigFactory = new DataFormConfigurationFactory();
 			$pFormConfig = $pDataFormConfigFactory->loadByFormName($formName);
 			$formType = $pFormConfig->getFormType();

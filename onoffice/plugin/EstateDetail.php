@@ -114,7 +114,7 @@ class EstateDetail
 	 *
 	 */
 
-	public function getEstateMovieLinks()
+	public function getEstateMovieLinks(): array
 	{
 		$result = array();
 		$estateId = $this->getCurrentEstateId();
@@ -134,7 +134,7 @@ class EstateDetail
 	 *
 	 */
 
-	public function getMovieEmbedPlayers($options = [])
+	public function getMovieEmbedPlayers(array $options = []): array
 	{
 		$result = array();
 		$estateId = $this->getCurrentEstateId();
