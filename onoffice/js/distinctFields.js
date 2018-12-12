@@ -1,14 +1,59 @@
+var onOffice = onOffice || {};
+
 $(function() {
 
 		$(this).change(function(){
 			doIt(this);
 			});
 
+	function renderMultiselectable(element, values, preselected)
+	{
+		element.children().remove();
+		element.append("<input type='button' class='onoffice-multiselect-edit' value='Edit values'>");
 
+		var instance = new onOffice.multiselect(element[0], values, preselected);
+		var subElements = [].slice.call(element[0].children);
+		var editButtonArray = subElements.filter(function(element) {
+			return element.className === 'onoffice-multiselect-edit';
+		});
+		var button = editButtonArray.pop();
+		button.onclick = (function(instance) {
+			return function() {
+				instance.show();
+			};
+		})(instance);
+	}
+
+	function renderNonMultiselectable(index, values)
+	{
+		//console.log(cleanName);
+		var selectedWert = $("[name="+index+"]").val();
+		var element = $("[name="+index+"]");
+
+		if (!$.isEmptyObject(values))
+		{
+			element.children().remove();
+			element.removeProp('disabled');
+			element.append(new Option(notSpecifiedLabel, ''));
+
+			$.each(values, function( key, value){
+				element.append(new Option(value, key));
+				if (key == selectedWert)
+				{
+					$("[name="+index+"] option[value="+key+"]").attr('selected', true);
+				}
+			});
+		}
+		else
+		{
+			element.prop('disabled', 'disabled');
+		}
+	}
 
 	function doIt(myElement)
 	{
 		var inputValues = {};
+		var multiselectSelectedValues = {};
 
 		$('form input, form select').each(function(){
 
@@ -30,7 +75,14 @@ $(function() {
 						{
 							inputValues[this.name] = [];
 						}
+
 						inputValues[this.name].push($(this).val());
+
+						if (!(theKey in multiselectSelectedValues))
+						{
+							multiselectSelectedValues[this.name] = [];
+						}
+						multiselectSelectedValues[this.name].push($(this).val());
 					}
 				}
 				else if ($(this).is(":radio"))
@@ -64,26 +116,25 @@ $(function() {
 
 			$.each(dataJs, function(index, values){
 
-
-				var selectedWert = $("[name="+index+"]").val();
-
-				if (!$.isEmptyObject(values))
+				var cleanName = index.replace("[]", "");
+				if ($("[data-name="+cleanName+"]").length &&
+					!$.isEmptyObject(multiselectSelectedValues) &&
+					!(index in multiselectSelectedValues))
 				{
-					$("[name="+index+"]").children().remove();
-					$("[name="+index+"]").removeProp('disabled');
-					$("[name="+index+"]").append(new Option(notSpecifiedLabel, ''));
-
-					$.each(values, function( key, value){
-						$("[name="+index+"]").append(new Option(value, key));
-						if (key == selectedWert)
-						{
-							$("[name="+index+"] option[value="+key+"]").attr('selected', true);
-						}
-					});
+					multiselectSelectedValues[cleanName+"[]"] = []
 				}
-				else
+
+				if (!$.isEmptyObject(multiselectSelectedValues) &&
+						index in multiselectSelectedValues)
 				{
-					$("[name="+index+"]").prop('disabled', 'disabled');
+					var cleanName = index.replace("[]", "");
+					var element = $("[data-name="+cleanName+"]");
+
+					renderMultiselectable(element, values, multiselectSelectedValues[index]);
+				}
+				else if (index.indexOf("[]") === -1)
+				{
+					renderNonMultiselectable(index, values);
 				}
 			})
 		}, 'json');
