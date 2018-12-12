@@ -61,13 +61,32 @@ class BooleanValueToFieldList
 
 	/**
 	 *
-	 * @param string $type The constant from InputModelDBFactoryConfigX
-	 * @param array $fieldsArray
+	 * @return array
 	 *
 	 */
 
-	public function fillCheckboxValues(string $type, array $fieldsArray)
+	private function readFieldsArray(): array
 	{
+		$pInputModelFieldName = $this->_pInputModelFactory->create
+			(InputModelDBFactory::INPUT_FIELD_CONFIG, '', true);
+		$identifierFieldName = $pInputModelFieldName->getIdentifier();
+
+		if (!property_exists($this->_pValues, $identifierFieldName)) {
+			return [];
+		}
+		return $this->_pValues->$identifierFieldName;
+	}
+
+
+	/**
+	 *
+	 * @param string $type The constant from InputModelDBFactoryConfigX
+	 *
+	 */
+
+	public function fillCheckboxValues(string $type)
+	{
+		$fieldsArray = $this->readFieldsArray();
 		$pInputModel = $this->_pInputModelFactory->create($type, '', true);
 		$identifier = $pInputModel->getIdentifier();
 

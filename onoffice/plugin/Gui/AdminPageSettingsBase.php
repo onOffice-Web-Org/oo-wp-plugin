@@ -303,11 +303,11 @@ abstract class AdminPageSettingsBase
 
 	/**
 	 *
-	 * @param stdClass $values
+	 * @param stdClass $pValues
 	 *
 	 */
 
-	protected function prepareValues(stdClass $values) {}
+	protected function prepareValues(stdClass $pValues) {}
 
 
 	/**

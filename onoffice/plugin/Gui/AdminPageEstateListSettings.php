@@ -27,8 +27,8 @@ use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
+use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
@@ -178,73 +178,16 @@ class AdminPageEstateListSettings
 	 * Since checkboxes are only being submitted if checked they need to be reorganized
 	 * @todo Examine booleans automatically
 	 *
-	 * @param stdClass $values
+	 * @param stdClass $pValues
 	 *
 	 */
 
-	protected function prepareValues(stdClass $values) {
-		$pInputModelFactory = new InputModelDBFactory(new InputModelDBFactoryConfigEstate());
-		$pInputModelFilterable = $pInputModelFactory->create
-			(InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE, 'filterable', true);
-		$identifierFilterable = $pInputModelFilterable->getIdentifier();
-		$pInputModelFieldName = $pInputModelFactory->create
-			(InputModelDBFactory::INPUT_FIELD_CONFIG, 'fields', true);
-		$identifierFieldName = $pInputModelFieldName->getIdentifier();
-		if (property_exists($values, $identifierFilterable) &&
-			property_exists($values, $identifierFieldName)) {
-			$fieldsArray = (array)$values->$identifierFieldName;
-			$filterableFields = (array)$values->$identifierFilterable;
-			$newFilterableFields = array_fill_keys(array_keys($fieldsArray), '0');
-
-			foreach ($filterableFields as $requiredField) {
-				$keyIndex = array_search($requiredField, $fieldsArray);
-				$newFilterableFields[$keyIndex] = '1';
-			}
-
-			$values->$identifierFilterable = $newFilterableFields;
-		} else {
-			$values->$identifierFilterable = array();
-		}
-		$pInputModelHidden = $pInputModelFactory->create
-			(InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN, 'hidden', true);
-		$identifierHidden = $pInputModelHidden->getIdentifier();
-
-		if (property_exists($values, $identifierHidden) &&
-			property_exists($values, $identifierFieldName)) {
-			$fieldsArray = (array)$values->$identifierFieldName;
-			$hiddenFields = (array)$values->$identifierHidden;
-			$newHiddenFields = array_fill_keys(array_keys($fieldsArray), '0');
-
-			foreach ($hiddenFields as $hiddenField) {
-				$keyIndex = array_search($hiddenField, $fieldsArray);
-				$newHiddenFields[$keyIndex] = '1';
-			}
-
-			$values->$identifierHidden = $newHiddenFields;
-		} else {
-			$values->$identifierHidden = array();
-		}
-
-		$pInputModelAvailableOptions = $pInputModelFactory->create
-			(InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS, 'availableOptions', true);
-		$identifierAvailableOptions = $pInputModelAvailableOptions->getIdentifier();
-
-		if (property_exists($values, $identifierAvailableOptions) &&
-			property_exists($values, $identifierFieldName))
-		{
-			$fieldsArray = (array)$values->$identifierFieldName;
-			$availableOptionsFields = (array)$values->$identifierAvailableOptions;
-			$newAvailableOptionsFields = array_fill_keys(array_keys($fieldsArray), '0');
-
-			foreach ($availableOptionsFields as $availableOptionsField) {
-				$keyIndex = array_search($availableOptionsField, $fieldsArray);
-				$newAvailableOptionsFields[$keyIndex] = '1';
-			}
-
-			$values->$identifierAvailableOptions = $newAvailableOptionsFields;
-		} else {
-			$values->$identifierAvailableOptions = array();
-		}
+	protected function prepareValues(stdClass $pValues)
+	{
+		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigEstate, $pValues);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS);
 	}
 
 

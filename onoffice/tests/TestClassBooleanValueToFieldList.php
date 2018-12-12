@@ -55,8 +55,9 @@ class TestClassBooleanValueToFieldList
 
 		$hiddenFields = ['testField2', 'testField3'];
 		$pValues->{'oopluginaddressfieldconfig-hidden'} = $hiddenFields;
+		$pValues->{'oopluginaddressfieldconfig-fieldname'} = $this->_fieldsArray;
 		$pBooleanValueToFieldList->fillCheckboxValues
-			(InputModelDBFactoryConfigAddress::INPUT_FIELD_HIDDEN, $this->_fieldsArray);
+			(InputModelDBFactoryConfigAddress::INPUT_FIELD_HIDDEN);
 		$valuesArray = (array)$pValues->{'oopluginaddressfieldconfig-hidden'};
 		foreach ($valuesArray as $key => $value) {
 			$this->assertArrayHasKey($key, $this->_fieldsArray);
@@ -84,7 +85,7 @@ class TestClassBooleanValueToFieldList
 
 		// test unset
 		$pBooleanValueToFieldList->fillCheckboxValues
-			(InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE, $this->_fieldsArray);
+			(InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE);
 		$this->assertObjectHasAttribute('oopluginfieldconfig-filterable', $pValues);
 		$this->assertEquals([], $pValues->{'oopluginfieldconfig-filterable'});
 	}

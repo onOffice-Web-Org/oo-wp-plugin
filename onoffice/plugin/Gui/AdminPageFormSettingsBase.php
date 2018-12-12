@@ -28,8 +28,8 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm;
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
+use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
@@ -146,34 +146,14 @@ abstract class AdminPageFormSettingsBase
 	 *
 	 * Since checkbox are only being submitted if checked they need to be reorganized
 	 *
-	 * @param stdClass $values
+	 * @param stdClass $pValues
 	 *
 	 */
 
-	protected function prepareValues(stdClass $values) {
-		$pInputModelFactory = new InputModelDBFactory(new InputModelDBFactoryConfigForm());
-		$pInputModelRequired = $pInputModelFactory->create
-			(InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED, 'required', true);
-		$identifierRequired = $pInputModelRequired->getIdentifier();
-		$pInputModelFieldName = $pInputModelFactory->create
-			(InputModelDBFactory::INPUT_FIELD_CONFIG, 'fields', true);
-		$identifierFieldName = $pInputModelFieldName->getIdentifier();
-		// use order of fieldname-array, add required fields (which come in an array of names)
-		if (property_exists($values, $identifierRequired) &&
-			property_exists($values, $identifierFieldName)) {
-			$fieldsArray = (array)$values->$identifierFieldName;
-			$requiredFields = (array)$values->$identifierRequired;
-			$newRequiredFields = array_fill_keys(array_keys($fieldsArray), '0');
-
-			foreach ($requiredFields as $requiredField) {
-				$keyIndex = array_search($requiredField, $fieldsArray);
-				$newRequiredFields[$keyIndex] = '1';
-			}
-
-			$values->$identifierRequired = $newRequiredFields;
-		} else {
-			$values->$identifierRequired = array();
-		}
+	protected function prepareValues(stdClass $pValues)
+	{
+		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigForm, $pValues);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED);
 	}
 
 
