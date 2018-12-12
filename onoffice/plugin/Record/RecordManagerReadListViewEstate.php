@@ -103,13 +103,16 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	private function getBooleanFieldValuesByFieldRow(array $row, $booleanField)
+	private function getBooleanFieldValuesByFieldRow(array $row, string $booleanField): array
 	{
 		$fields = array_column($row, 'fieldname');
+		$resultBooleanField = array_column($row, $booleanField);
 
-		$filterable = array_column($row, $booleanField);
+		if ($resultBooleanField === []) {
+			return [];
+		}
 
-		$tmpFilterable = array_combine($fields, $filterable);
+		$tmpFilterable = array_combine($fields, $resultBooleanField);
 		$filterableFields = array_keys(array_filter($tmpFilterable));
 		return $filterableFields;
 	}

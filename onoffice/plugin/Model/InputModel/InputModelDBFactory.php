@@ -114,4 +114,9 @@ class InputModelDBFactory
 
 		return $pInstance;
 	}
+
+
+	/** @return InputModelDBFactoryConfigBase */
+	public function getInputModelDBFactoryConfig(): InputModelDBFactoryConfigBase
+		{ return $this->_pInputModelDBFactoryConfig; }
 }
