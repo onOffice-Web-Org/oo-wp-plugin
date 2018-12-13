@@ -35,6 +35,7 @@ use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentDefault;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 
 /**
@@ -126,36 +127,21 @@ class Fieldnames
 	 *
 	 */
 
-	public function loadEstateSearchGeoPositionFields()
-	{
-		$pGeoPosition = new GeoPosition();
-		$geoPositionSearchFields = $pGeoPosition->getEstateSearchFields();
-		$module = onOfficeSDK::MODULE_ESTATE;
-		$pCollection = $this->_pExtraFieldsCollection;
-
-		foreach ($geoPositionSearchFields as $field) {
-			$pField = $pCollection->getFieldByModuleAndName($module, $field);
-			$this->_fieldList[$module][$field] = $pField->getAsRow();
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
 	private function setPermittedValuesForEstateSearchFields()
 	{
 		$pCollection = $this->_pExtraFieldsCollection;
-		$pField = $pCollection->getAllFields()[GeoPosition::ESTATE_LIST_SEARCH_COUNTRY] ?? null;
+		$this->_pExtraFieldsCollection = new FieldsCollection();
+		array_map([$this->_pExtraFieldsCollection, 'addField'], $pCollection->getAllFields());
 
-		if ($pField !== null) {
+		try {
+			$pField = $this->_pExtraFieldsCollection->getFieldByModuleAndName
+				(onOfficeSDK::MODULE_ESTATE, GeoPosition::ESTATE_LIST_SEARCH_COUNTRY);
 			$countryField =
 				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA]['range_land'] ??
 				$this->_fieldList[onOfficeSDK::MODULE_ESTATE]['land'] ?? [];
 
 			$pField->setPermittedvalues($countryField['permittedvalues']);
-		}
+		} catch (UnknownFieldException $pException) {}
 	}
 
 

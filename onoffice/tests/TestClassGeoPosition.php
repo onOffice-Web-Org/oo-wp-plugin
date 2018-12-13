@@ -153,6 +153,20 @@ class TestClassGeoPosition
 
 	/**
 	 *
+	 * @expectedException \Exception
+	 * @expectedExceptionMessage Unknown Mode
+	 *
+	 */
+
+	public function testTransformUnknownMode()
+	{
+		$pGeoPosition = new GeoPosition();
+		$pGeoPosition->transform([], 'unknownMode');
+	}
+
+
+	/**
+	 *
 	 * @return GeoPosition
 	 *
 	 */

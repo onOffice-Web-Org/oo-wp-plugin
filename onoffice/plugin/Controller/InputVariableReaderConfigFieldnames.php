@@ -48,8 +48,6 @@ class InputVariableReaderConfigFieldnames
 	{
 		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
 		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
-
-		$this->_pFieldnames->loadEstateSearchGeoPositionFields();
 		$this->_pFieldnames->loadLanguage();
 	}
 

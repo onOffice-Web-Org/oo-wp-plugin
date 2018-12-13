@@ -38,9 +38,10 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\Field\DistinctFieldsChecker;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\UnknownFieldException;
-use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
@@ -176,7 +177,8 @@ class ContentFilter
 
 	private function setAllowedGetParametersEstate(DataListView $pDataView)
 	{
-		$pFieldNames = new Fieldnames(new Types\FieldsCollection());
+		$pFieldNames = new Fieldnames(new FieldModuleCollectionDecoratorGeoPosition
+			(new Types\FieldsCollection()));
 		$pFieldNames->loadLanguage();
 		$pSearchParameters = SearchParameters::getInstance();
 

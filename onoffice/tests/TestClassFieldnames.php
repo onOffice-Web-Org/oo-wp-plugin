@@ -23,6 +23,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\Fieldnames;
@@ -410,6 +411,25 @@ class TestClassFieldnames
 		$this->assertTrue($pFieldnames->inRangeSearchcriteriaInfos('wohnflaeche'));
 		$this->assertFalse($pFieldnames->inRangeSearchcriteriaInfos('Id'));
 		$this->assertFalse($pFieldnames->inRangeSearchcriteriaInfos('ort'));
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testMergeCountryForEstate()
+	{
+		$pCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
+		$pFieldNames = $this->getNewFieldnames($pCollection);
+		$pFieldNames->loadLanguage();
+		$expectedResult = [
+			'AUT' => 'Austria',
+			'BEL' => 'Belgium',
+			'DEU' => 'Germany',
+		];
+		$actualResult = $pFieldNames->getPermittedValues('country', onOfficeSDK::MODULE_ESTATE);
+		$this->assertEquals($expectedResult, $actualResult);
 	}
 
 
