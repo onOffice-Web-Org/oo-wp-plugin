@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\API\DataViewToAPI;
 
 use onOffice\WPlugin\DataView\DataListViewAddress;
@@ -41,6 +43,9 @@ class DataListViewAddressToAPIParameters
 	/** @var int */
 	private $_page = 1;
 
+	/** @var DefaultFilterBuilderListViewAddress */
+	private $_pDefaultFilterBuilderListViewAddress = null;
+
 
 	/**
 	 *
@@ -48,9 +53,12 @@ class DataListViewAddressToAPIParameters
 	 *
 	 */
 
-	public function __construct(DataListViewAddress $pDataListView)
+	public function __construct(DataListViewAddress $pDataListView,
+		DefaultFilterBuilderListViewAddress $pDefaultFilterBuilderListViewAddress = null)
 	{
 		$this->_pDataListView = $pDataListView;
+		$this->_pDefaultFilterBuilderListViewAddress =
+			$pDefaultFilterBuilderListViewAddress ?? new DefaultFilterBuilderListViewAddress($pDataListView);
 	}
 
 
@@ -62,12 +70,11 @@ class DataListViewAddressToAPIParameters
 	 *
 	 */
 
-	public function buildParameters(array $fields)
+	public function buildParameters(array $fields): array
 	{
 		$pDataListViewAddress = $this->getDataListView();
 		$offset = ($this->_page - 1) * $pDataListViewAddress->getRecordsPerPage();
 		$limit = $offset + $pDataListViewAddress->getRecordsPerPage();
-		$pDefaultFilterBuilder = new DefaultFilterBuilderListViewAddress($pDataListViewAddress);
 
 		$parameters = array(
 			'data' => $fields,
@@ -75,7 +82,7 @@ class DataListViewAddressToAPIParameters
 			'listlimit' => $limit,
 			'sortby' => $pDataListViewAddress->getSortby(),
 			'sortorder' => $pDataListViewAddress->getSortorder(),
-			'filter' => $pDefaultFilterBuilder->buildFilter(),
+			'filter' => $this->_pDefaultFilterBuilderListViewAddress->buildFilter(),
 			'filterid' => $pDataListViewAddress->getFilterId(),
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
@@ -90,14 +97,14 @@ class DataListViewAddressToAPIParameters
 
 
 	/** @return DataListViewAddress */
-	public function getDataListView()
+	public function getDataListView(): DataListViewAddress
 		{ return $this->_pDataListView; }
 
 	/** @return int */
-	public function getPage()
+	public function getPage(): int
 		{ return $this->_page; }
 
 	/** @param int $page */
-	public function setPage($page)
-		{ $this->_page = (int)$page; }
+	public function setPage(int $page)
+		{ $this->_page = $page; }
 }
