@@ -100,4 +100,38 @@ class TestClassAddressViewFieldModifierTypeDefault
 		$visibleFields = $pAddressViewFieldModifier->getVisibleFields();
 		$this->assertEquals($fieldListInput, $visibleFields);
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testReduceRecord()
+	{
+		$record = [
+			'testfield1' => 'asdf',
+			'test_field2' => 13,
+			'ind_348field_23782' => ['asd', 'fghj'],
+			'PLZ' => '52068',
+			'Ort' => 'Aachen',
+		];
+
+		$fieldListInput = [
+			'testfield1',
+			'test_field2',
+			'ind_348field_23782',
+			'PLZ-Ort',
+		];
+
+		$pAddressViewFieldModifier = new AddressViewFieldModifierTypeDefault($fieldListInput);
+		$result = $pAddressViewFieldModifier->reduceRecord($record);
+
+		$expectedResult = [
+			'testfield1' => 'asdf',
+			'test_field2' => 13,
+			'ind_348field_23782' => ['asd', 'fghj'],
+			'PLZ-Ort' => ['52068', 'Aachen'],
+		];
+		$this->assertEquals($expectedResult, $result);
+	}
 }

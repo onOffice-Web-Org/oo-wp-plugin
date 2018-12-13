@@ -164,7 +164,13 @@ class AddressList
 
 	private function generateRecordModifier(): ViewFieldModifierHandler
 	{
-		$pAddressFieldModifierHandler = new ViewFieldModifierHandler($this->_pDataViewAddress->getFields(),
+		$fields = $this->_pDataViewAddress->getFields();
+
+		if ($this->_pDataViewAddress->getShowPhoto()) {
+			$fields []= 'imageUrl';
+		}
+
+		$pAddressFieldModifierHandler = new ViewFieldModifierHandler($fields,
 			onOfficeSDK::MODULE_ADDRESS, AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
 		return $pAddressFieldModifierHandler;
 	}
