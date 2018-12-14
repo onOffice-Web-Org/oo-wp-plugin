@@ -21,8 +21,12 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Types\FieldsCollection;
+use function __;
 
 /**
  *
@@ -94,21 +98,24 @@ class AdminPageFormSettingsContact
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
 
 		if ($this->_showMessageInput) {
+			$pFieldCollection = new FieldModuleCollectionDecoratorFormContact(new FieldsCollection());
+			$pFieldNames = new Fieldnames($pFieldCollection);
+			$pFieldNames->loadLanguage();
 			$category = __('Form Specific Fields', 'onoffice');
 			$this->_additionalCategories[] = $category;
 
-			$fieldNameMessage = array($category => array(
-					'message' => __('Message', 'onoffice'),
-				),
-			);
+			$fieldNameMessage = [
+				$category => [
+					'message' => $pFieldNames->getFieldLabel('message', ''),
+				],
+			];
 			$this->addFieldsConfiguration(null, $pFormModelBuilder, $fieldNameMessage, true);
 			$this->addSortableFieldModule(null);
-			$pFormModelBuilder->setAdditionalFields(array(
-				'message' => array(
-					'content' => $category,
-					'label' => __('Message', 'onoffice'),
-				),
-			));
+
+			$messageField = [
+				'message' => $pFieldNames->getFieldInformation('message', ''),
+			];
+			$pFormModelBuilder->setAdditionalFields($messageField);
 		}
 
 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
