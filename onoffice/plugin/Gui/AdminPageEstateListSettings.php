@@ -221,10 +221,7 @@ class AdminPageEstateListSettings
 
 	public function doExtraEnqueues()
 	{
-		wp_register_script('oo-checkbox-js',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/checkbox.js', array('jquery'), '', true);
-		wp_enqueue_script('oo-checkbox-js');
-
 		parent::doExtraEnqueues();
+		wp_enqueue_script('oo-checkbox-js');
 	}
 }

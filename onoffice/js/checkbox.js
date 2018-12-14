@@ -2,6 +2,11 @@ var onOffice = onOffice || {};
 
 onOffice.checkboxAdmin = function() {
 	this._configuration = {
+		// view: address list
+		"input[name^=oopluginaddressfieldconfig-filterable]": [
+			"input[name^=oopluginaddressfieldconfig-hidden]"
+		],
+
 		// view: create new [contact] form
 		"input[name=oopluginforms-createaddress]": [
 			"input[name=oopluginforms-checkduplicates]"
@@ -10,7 +15,7 @@ onOffice.checkboxAdmin = function() {
 		// view: estate list
 		"input[name^=oopluginfieldconfig-filterable]": [
 			"input[name^=oopluginfieldconfig-hidden]",
-			"input[name^=oopluginfieldconfig-availableOptions]",
+			"input[name^=oopluginfieldconfig-availableOptions]"
 		]
 	};
 };

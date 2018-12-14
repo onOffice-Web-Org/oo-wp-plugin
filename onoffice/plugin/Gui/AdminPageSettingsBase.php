@@ -389,7 +389,10 @@ abstract class AdminPageSettingsBase
 	public function doExtraEnqueues()
 	{
 		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/admin.js',
-			array('jquery'), '', true);
+			['jquery'], '', true);
+
+		wp_register_script('oo-checkbox-js',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/checkbox.js', ['jquery'], '', true);
 
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');

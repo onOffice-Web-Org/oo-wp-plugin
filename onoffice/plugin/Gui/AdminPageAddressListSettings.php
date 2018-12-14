@@ -299,4 +299,15 @@ class AdminPageAddressListSettings
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 		);
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function doExtraEnqueues()
+	{
+		parent::doExtraEnqueues();
+		wp_enqueue_script('oo-checkbox-js');
+	}
 }
