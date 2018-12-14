@@ -129,12 +129,12 @@ class EstateList
 
 	protected function getNumEstatePages()
 	{
-		if (empty($this->_responseArray['data']['meta']['cntabsolute'])) {
+		if (!isset($this->_responseArray['data']['meta']['cntabsolute'])) {
 			return null;
 		}
 
 		$recordNumOverAll = $this->_responseArray['data']['meta']['cntabsolute'];
-		$numEstatePages = ceil($recordNumOverAll / $this->_pDataView->getRecordsPerPage());
+		$numEstatePages = (int)ceil($recordNumOverAll / $this->_pDataView->getRecordsPerPage());
 
 		return $numEstatePages;
 	}
@@ -421,7 +421,7 @@ class EstateList
 
 	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
-		global $numpages, $multipage, $page, $more, $pages;
+		global $numpages, $multipage, $page, $more;
 		if (!isset($this->_responseArray['data']['records'])) {
 			return false;
 		}
@@ -431,7 +431,6 @@ class EstateList
 
 			$page = $this->_currentEstatePage;
 			$more = true;
-			$pages = [];
 			$numpages = $this->_numEstatePages;
 		}
 
