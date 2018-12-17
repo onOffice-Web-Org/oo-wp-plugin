@@ -99,4 +99,17 @@ class WPScriptStyleDefault
 	{
 		return wp_register_style($handle, $src, $deps, $ver, $media);
 	}
+
+
+	/**
+	 *
+	 * @param string $handle
+	 * @param string $name
+	 * @param array $data
+	 *
+	 */
+
+	public function localizeScript(string $handle, string $name, array $data){
+		wp_localize_script($handle, $name, $data);
+	}
 }

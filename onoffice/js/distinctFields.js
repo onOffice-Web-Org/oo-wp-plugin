@@ -34,7 +34,7 @@ $(function() {
 		{
 			element.children().remove();
 			element.removeProp('disabled');
-			element.append(new Option(notSpecifiedLabel, ''));
+			element.append(new Option(notSpecifiedLabel[0], ''));
 
 			$.each(values, function( key, value){
 				element.append(new Option(value, key));
@@ -109,7 +109,9 @@ $(function() {
 
 		});
 
-		$.post(base_path, { field: myElement.name, inputValues: JSON.stringify(inputValues), module:module, distinctValues: distinctValues })
+
+
+		$.post(base_path[0], { field: myElement.name, inputValues: JSON.stringify(inputValues), module:module[0], distinctValues: distinctValues[0] })
 			.done(function( data ) {
 
 			var dataJs = JSON.parse(data);
@@ -117,6 +119,7 @@ $(function() {
 			$.each(dataJs, function(index, values){
 
 				var cleanName = index.replace("[]", "");
+
 				if ($("[data-name="+cleanName+"]").length &&
 					!$.isEmptyObject(multiselectSelectedValues) &&
 					!(index in multiselectSelectedValues))

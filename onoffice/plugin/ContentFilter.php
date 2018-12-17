@@ -147,7 +147,8 @@ class ContentFilter
 
 					if ($availableOptionsEstates !== [])
 					{
-						DistinctFieldsChecker::registerScripts(onOfficeSDK::MODULE_ESTATE,
+						$pDistinctFieldsChecker = new DistinctFieldsChecker();
+						$pDistinctFieldsChecker->registerScripts(onOfficeSDK::MODULE_ESTATE,
 								$availableOptionsEstates);
 					}
 
@@ -229,7 +230,8 @@ class ContentFilter
 
 					if ($availableOptionsFormApplicantSearch !== [])
 					{
-						DistinctFieldsChecker::registerScripts(onOfficeSDK::MODULE_SEARCHCRITERIA,
+						$pDistinctFieldsChecker = new DistinctFieldsChecker();
+						$pDistinctFieldsChecker->registerScripts(onOfficeSDK::MODULE_SEARCHCRITERIA,
 								$availableOptionsFormApplicantSearch);
 					}
 				}

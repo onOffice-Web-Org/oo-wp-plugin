@@ -22,13 +22,13 @@
 namespace onOffice\WPlugin\Field;
 
 use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Field\DistinctFieldsFilter;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerConfigurationDefault;
 
 
 /**
@@ -75,16 +75,20 @@ class DistinctFieldsHandler
 	/** @var array */
 	private $_distinctFields = [];
 
+
 	/**
+	 *
+	 * @param DistinctFieldsHandlerConfigurationDefault $pDistinctFieldsHandlerConfiguration
 	 *
 	 */
 
-	public function __construct()
+	public function __construct(DistinctFieldsHandlerConfiguration $pDistinctFieldsHandlerConfiguration = null)
 	{
-		$this->_pSDKWrapper = new SDKWrapper();
+		$pDistinctFieldsHandlerConfiguration == null &&
+				$pDistinctFieldsHandlerConfiguration = new DistinctFieldsHandlerConfigurationDefault();
 
-		$this->_pFieldnames = new Fieldnames(new FieldsCollection());
-		$this->_pFieldnames->loadLanguage();
+		$this->_pSDKWrapper = $pDistinctFieldsHandlerConfiguration->getSDKWrapper();
+		$this->_pFieldnames = $pDistinctFieldsHandlerConfiguration->getFieldnames();
 	}
 
 
@@ -100,6 +104,11 @@ class DistinctFieldsHandler
 	}
 
 
+	/** @return string */
+	public function getModule(): string
+		{ return $this->_module; }
+
+
 	/**
 	 *
 	 * @param array $distinctFields
@@ -112,6 +121,10 @@ class DistinctFieldsHandler
 	}
 
 
+	/** @return string */
+	public function getDistinctFields(): array
+		{ return $this->_distinctFields; }
+
 	/**
 	 *
 	 * @param array $inputValues
@@ -122,6 +135,11 @@ class DistinctFieldsHandler
 	{
 		$this->_inputValues = $inputValues;
 	}
+
+
+	/** @return string */
+	public function getInputValues(): array
+		{ return $this->_inputValues; }
 
 
 	/**
@@ -138,15 +156,45 @@ class DistinctFieldsHandler
 
 	/**
 	 *
+	 * @return array
+	 *
+	 */
+
+	public function getValues(): array
+	{ return $this->_values; }
+
+
+	/**
+	 *
+	 * @param string $field
+	 *
+	 */
+
+	private function editMultiselectableField($field)
+	{
+		if ($this->_module == onOfficeSDK::MODULE_ESTATE &&
+			in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
+			[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]))
+		{
+			$field .= '[]';
+		}
+
+		return $field;
+	}
+
+
+	/**
+	 *
 	 */
 
 	public function check()
 	{
 		$pSDKWrapper = $this->_pSDKWrapper;
+		$pFilter = new DistinctFieldsFilter($this->_pFieldnames, $this->_module);
 
 		foreach ($this->_distinctFields as $field)
 		{
-			$filter = $this->createFilterForField($field);
+			$filter = $pFilter->filter($field, $this->_inputValues);
 
 			$requestParams =
 			[
@@ -168,112 +216,9 @@ class DistinctFieldsHandler
 			if ($pApiClientAction->getResultStatus()) {
 
 				$records = $pApiClientAction->getResultRecords();
-
-				if ($this->_module == onOfficeSDK::MODULE_ESTATE &&
-					in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
-					[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]))
-				{
-					$field .= '[]';
-				}
-
+				$field = $this->editMultiselectableField($field);
 				$this->_values[$field] = $records[0]['elements'];
 			}
 		}
 	}
-
-
-	/**
-	 *
-	 * @param string $distinctField
-	 * @return array
-	 *
-	 */
-
-	private function createFilterForField($distinctField)
-	{
-		$filter = [];
-
-		foreach ($this->_inputValues as $key => $value)
-		{
-			if ($value == '' || $key == '' || $key == 's' || $key == 'oo_formid' || $key == 'oo_formno')
-			{
-				continue;
-			}
-
-			$pString = new __String($key);
-			$operator = null;
-			$field = null;
-			$key = $pString->replace('[]', '');
-
-			if ($pString->endsWith('__von'))
-			{
-				$operator = '>=';
-				$field = $pString->replace('__von', '');
-			}
-			elseif ($pString->endsWith('__bis'))
-			{
-				$operator = '<=';
-				$field = $pString->replace('__bis', '');
-			}
-			else
-			{
-				if (is_array($value))
-				{
-					$operator = 'in';
-				}
-				else
-				{
-					if ($this->_module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
-						in_array($this->_pFieldnames->getType($key, onOfficeSDK::MODULE_ESTATE),
-							[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]))
-					{
-						$operator = 'regexp';
-					}
-					else
-					{
-						$operator = '=';
-					}
-				}
-
-				$field = $key;
-			}
-
-			if ($field == $distinctField)
-			{
-				continue;
-			}
-			else
-			{
-				if ($this->_module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
-						in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
-							[FieldTypes::FIELD_TYPE_FLOAT, FieldTypes::FIELD_TYPE_INTEGER]))
-				{
-					if (!array_key_exists($field.'__von', $filter))
-					{
-						$filter[$field.'__von'] = [array('op' => '<=', 'val' => $value)];
-					}
-
-					if (!array_key_exists($field.'__bis', $filter))
-					{
-						$filter[$field.'__bis'] = [array('op' => '>=', 'val' => $value)];
-					}
-				}
-				else
-				{
-					$filter[$field] = [array('op' => $operator, 'val' => $value)];
-				}
-			}
-		}
-		return $filter;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getValues(): array
-	{ return $this->_values; }
 }

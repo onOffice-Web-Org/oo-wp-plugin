@@ -84,4 +84,15 @@ interface WPScriptStyleBase
 
 	public function registerStyle(string $handle, string $src, array $deps = [], $ver = false,
 		string $media = 'all'): bool;
+
+
+	/**
+	 *
+	 * @param string $handle
+	 * @param string $name
+	 * @param array $data
+	 *
+	 */
+
+	public function localizeScript(string $handle, string $name, array $data);
 }

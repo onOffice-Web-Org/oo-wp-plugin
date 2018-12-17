@@ -23,7 +23,10 @@ namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerConfigurationDefault;
+use onOffice\WPlugin\Field\DistinctFieldsCheckerEnvironment;
 use onOffice\WPlugin\GeoPosition;
+use const ONOFFICE_PLUGIN_DIR;
 
 /**
  *
@@ -43,6 +46,9 @@ class DistinctFieldsChecker
 	/** @var array */
 	private $_geoRangeValues = [];
 
+	/** @var DistinctFieldsCheckerEnvironment */
+	private $_pEnvironment = null;
+
 	/** @var array */
 	static private $_mapping =
 			[
@@ -51,6 +57,22 @@ class DistinctFieldsChecker
 				'range_strasse' => 'street',
 				'range' => 'radius',
 			];
+
+
+	/**
+	 *
+	 * @param DistinctFieldsCheckerEnvironment $pDistinctFieldsCheckerEnvironment
+	 *
+	 */
+
+	public function __construct(
+		DistinctFieldsCheckerEnvironment $pDistinctFieldsCheckerEnvironment = null)
+	{
+		$this->_pEnvironment =
+			$pDistinctFieldsCheckerEnvironment ?? new DistinctFieldsCheckerEnvironmentDefault();
+	}
+
+
 	/**
 	 *
 	 */
@@ -71,17 +93,17 @@ class DistinctFieldsChecker
 	 *
 	 */
 
-	public static function registerScripts(string $module, array $distinctFields)
+	public function registerScripts(string $module, array $distinctFields)
 	{
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+		$pScriptStyle = $this->_pEnvironment->getScriptStyle();
 
-		wp_register_script('setPossibleTypeValues', plugins_url('/js/distinctFields.js', $pluginPath));
-		wp_enqueue_script('setPossibleTypeValues', plugins_url('/js/distinctFields.js', $pluginPath).'/distinctFields.js');
-
-		wp_localize_script( 'setPossibleTypeValues', 'base_path',  plugins_url('/tools/distinctFields.php', $pluginPath));
-		wp_localize_script( 'setPossibleTypeValues', 'distinctValues', json_encode($distinctFields));
-		wp_localize_script( 'setPossibleTypeValues', 'module',  $module);
-		wp_localize_script( 'setPossibleTypeValues', 'notSpecifiedLabel',  esc_html('Not Specified', 'onoffice'));
+		$pScriptStyle->registerScript('setPossibleTypeValues', plugins_url('/js/distinctFields.js', $pluginPath));
+		$pScriptStyle->enqueueScript('setPossibleTypeValues', plugins_url('/js/distinctFields.js', $pluginPath).'/distinctFields.js');
+		$pScriptStyle->localizeScript('setPossibleTypeValues', 'base_path',  [plugins_url('/tools/distinctFields.php', $pluginPath)]);
+		$pScriptStyle->localizeScript('setPossibleTypeValues', 'distinctValues', [json_encode($distinctFields)]);
+		$pScriptStyle->localizeScript('setPossibleTypeValues', 'module',  [$module]);
+		$pScriptStyle->localizeScript('setPossibleTypeValues', 'notSpecifiedLabel',  [esc_html('Not Specified', 'onoffice')]);
 	}
 
 
@@ -91,12 +113,12 @@ class DistinctFieldsChecker
 
 	public function check()
 	{
-		$module = filter_input(INPUT_POST, DistinctFieldsHandler::PARAMETER_MODULE);
-		$inputValues = json_decode(filter_input(INPUT_POST, DistinctFieldsHandler::PARAMETER_INPUT_VALUES), true);
-		$this->_distinctFields = json_decode(filter_input(INPUT_POST, DistinctFieldsHandler::PARAMETER_DISTINCT_VALUES), true);
+		$module = $this->_pEnvironment->getModule();
+		$inputValues = $this->_pEnvironment->getInputValues();
+		$this->_distinctFields = $this->_pEnvironment->getDistinctValues();
 		$this->setInputValues($module, $inputValues);
 
-		$pDistinctFieldsHandler = new DistinctFieldsHandler();
+		$pDistinctFieldsHandler = new DistinctFieldsHandler(new DistinctFieldsHandlerConfigurationDefault());
 		$pDistinctFieldsHandler->setModule($module);
 		$pDistinctFieldsHandler->setDistinctFields($this->_distinctFields);
 		$pDistinctFieldsHandler->setInputValues($this->_fieldValues);

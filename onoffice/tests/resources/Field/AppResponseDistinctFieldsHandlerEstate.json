@@ -1,0 +1,34 @@
+{
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+			   "resourceid": "",
+			   "resourcetype": "distinctFields",
+			   "cacheable": true,
+			   "identifier": "",
+			   "data": {
+				   "meta": {
+					   "cntabsolute": null
+				   },
+				   "records": [
+					   {
+						   "id": 0,
+						   "type": "",
+						   "elements": {
+							   "etage": "Etagenwohnung",
+							   "maisonette": "Maisonette",
+							   "erdgeschoss": "Erdgeschosswohnung",
+							   "dachgeschoss": "Dachgeschoss",
+							   "rohdachboden": "Rohdachboden",
+							   "appartment": "Apartment",
+							   "terrassen": "Terrasse",
+							   "attikawohnung": "Attikawohnung",
+							   "hochparterre": "Hochparterre",
+							   "souterrain": "Souterrain"
+						   }
+					   }
+				   ]
+			   },
+			   "status": {
+				   "errorcode": 0,
+				   "message": "OK"
+			   }
+}
