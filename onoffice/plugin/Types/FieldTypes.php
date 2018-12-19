@@ -99,6 +99,12 @@ abstract class FieldTypes
 	];
 
 
+	/** @var string[] */
+	private static $_multipleSelectTypes = [
+		FieldTypes::FIELD_TYPE_MULTISELECT,
+		FieldTypes::FIELD_TYPE_SINGLESELECT,
+	];
+
 	/**
 	 *
 	 * @return array
@@ -147,5 +153,18 @@ abstract class FieldTypes
 	static public function isRangeType(string $type): bool
 	{
 		return in_array($type, self::$_rangeTypes);
+	}
+
+
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
+	
+	static public function isMultipleSelectType(string $type): bool
+	{
+		return in_array($type, self::$_multipleSelectTypes);
 	}
 }

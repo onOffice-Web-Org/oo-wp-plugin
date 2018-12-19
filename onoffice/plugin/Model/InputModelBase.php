@@ -93,6 +93,8 @@ abstract class InputModelBase
 	/** @var string */
 	private $_specialDivId = null;
 
+	/** @var string */
+	private $_oOModule = '';
 
 	/**
 	 *
@@ -197,4 +199,12 @@ abstract class InputModelBase
 	/** @return string */
 	public function getSpecialDivId()
 		{ return $this->_specialDivId; }
+
+	/** @param string $module */
+	public function setOoModule(string $module)
+		{ $this->_oOModule = $module; }
+
+	/** @return string */
+	public function getOoModule(): string
+		{ return $this->_oOModule; }
 }

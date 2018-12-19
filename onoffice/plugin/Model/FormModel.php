@@ -50,6 +50,9 @@ class FormModel
 	/** @var Closure */
 	private $_pTextCallback = null;
 
+	/** @var string */
+	private $_ooModule = '';
+
 
 	/**
 	 *
@@ -108,4 +111,12 @@ class FormModel
 	/** @param Closure $pTextCallback */
 	public function setTextCallback(Closure $pTextCallback)
 		{ $this->_pTextCallback = $pTextCallback; }
+
+	/** @param string $module */
+	public function setOoModule(string $module)
+		{ $this->_ooModule = $module; }
+
+	/** @return string */
+	public function getOoModule(): string
+		{ return $this->_ooModule; }
 }

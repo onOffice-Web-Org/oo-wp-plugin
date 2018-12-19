@@ -45,6 +45,9 @@ abstract class InputFieldRenderer
 	/** @var int */
 	private static $_guiId = 0;
 
+	/** @var string */
+	private $_oOModule = '';
+
 
 	/**
 	 *
@@ -158,4 +161,13 @@ abstract class InputFieldRenderer
 	/** @return string */
 	public function getType()
 		{ return $this->_type;}
+
+
+	/** @param string $module */
+	public function setOoModule(string $module)
+		{ $this->_oOModule = $module; }
+
+	/** @return string */
+	public function getOoModule(): string
+		{ return $this->_oOModule; }
 }

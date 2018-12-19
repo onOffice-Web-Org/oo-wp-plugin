@@ -58,15 +58,23 @@ jQuery(document).ready(function($){
 			var valElLabel = $(this).next().text();
 			var myLi = myLi = ulEl.find('#menu-item-' + valElName);
 			var module = $(this).attr('data-onoffice-module');
+
+			var optionsAvailable = '0';
+			
+			if ($(this).attr('onoffice-multipleSelectType'))
+			{
+				optionsAvailable = $(this).attr('onoffice-multipleSelectType');
+			}
+
 			if (myLi.length === 0) {
-				createNewFieldItem(valElName, valElLabel, category, module, label);
+				createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable);
 			}
 		});
 
 		return checkedFields;
 	};
 
-	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label) {
+	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable) {
 		var myLabel = $('#' + label);
 		var dummyKey;
 
@@ -80,6 +88,7 @@ jQuery(document).ready(function($){
 		}
 
 		var clonedElement = dummyKey.clone(true, true);
+
 		clonedElement.attr('id', 'menu-item-'+fieldName);
 		clonedElement.find('span.item-title:contains("dummy_label")').text(fieldLabel);
 		clonedElement.find('span.item-type:contains("dummy_category")').text(fieldCategory);
@@ -87,6 +96,12 @@ jQuery(document).ready(function($){
 		clonedElement.find('input[value=dummy_label]').val(fieldLabel);
 		clonedElement.find('span.menu-item-settings-name').text(fieldName);
 		clonedElement.find('input[data-onoffice-ignore=true]').removeAttr('data-onoffice-ignore');
+
+		if (optionsAvailable == '0')
+		{
+			var availableOptionEl = clonedElement.find('input[name="oopluginfieldconfig-availableOptions[]"]');
+			availableOptionEl.parent().remove();
+		}
 
 		if (module) {
 			var inputModule = clonedElement.find('input[name^=oopluginformfieldconfig-module]');

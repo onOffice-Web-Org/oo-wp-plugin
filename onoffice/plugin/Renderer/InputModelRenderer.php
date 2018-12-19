@@ -178,6 +178,7 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setId($pInputModel->getId());
 				$pInstance->setLabel($pInputModel->getLabel());
+				$pInstance->setOoModule($this->_pFormModel->getOoModule());
 				$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
 				if ($pInputModel->getSpecialDivId() != null) {
 					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());

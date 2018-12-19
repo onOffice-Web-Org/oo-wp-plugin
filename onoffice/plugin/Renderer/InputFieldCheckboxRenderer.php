@@ -21,6 +21,10 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -34,6 +38,8 @@ class InputFieldCheckboxRenderer
 	/** @var array */
 	private $_checkedValues = array();
 
+	/** @var array */
+	private $_fieldList = [];
 
 	/**
 	 *
@@ -50,19 +56,65 @@ class InputFieldCheckboxRenderer
 
 	/**
 	 *
+	 * @param string $key
+	 * @return bool
+	 *
+	 */
+
+	private function isMultipleSelect(string $key): bool
+	{
+		$returnValue = false;
+
+		if ($this->_fieldList != [])
+		{
+			if (array_key_exists($key, $this->_fieldList))
+			{
+				$type = $this->_fieldList[$key]['type'];
+				$returnValue = FieldTypes::isMultipleSelectType($type);
+			}
+		}
+
+		return $returnValue;
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function setFieldList()
+	{
+		$module = $this->getOoModule();
+
+		if ($module != '')
+		{
+			$pFieldnames = new Fieldnames(new FieldsCollection());
+			$pFieldnames->loadLanguage();
+			$this->_fieldList = $pFieldnames->getFieldList($module);
+		}
+	}
+
+
+	/**
+	 *
 	 */
 
 	public function render()
 	{
+		$this->setFieldList();
+
 		if (is_array($this->getValue()))
 		{
 			foreach ($this->getValue() as $key => $label)
 			{
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
+				$onofficeMultipleSelect = $this->isMultipleSelect($key) ? '1' : '0';
+
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 					.'" value="'.esc_html($key).'"'
 					.(in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
+					.' onoffice-multipleSelectType = "'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
 					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
 			}

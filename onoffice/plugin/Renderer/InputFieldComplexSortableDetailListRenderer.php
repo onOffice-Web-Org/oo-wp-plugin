@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Renderer;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use function __;
 use function esc_attr;
 use function esc_html;
@@ -80,12 +81,12 @@ class InputFieldComplexSortableDetailListRenderer
 		foreach ($fields as $key => $properties) {
 			$label = isset($properties['label']) ? $properties['label'] : null;
 			$category = isset($properties['content']) ? $properties['content'] : null;
-
-			$this->generateSelectableElement($key, $label, $category, $i);
+			$type = isset($properties['type']) ? $properties['type'] : null;
+			$this->generateSelectableElement($key, $label, $category, $i, $type);
 		}
 
 		// create hidden element for cloning
-		echo $this->generateSelectableElement('dummy_key', 'dummy_label', 'dummy_category', $i, true);
+		echo $this->generateSelectableElement('dummy_key', 'dummy_label', 'dummy_category', $i, FieldTypes::FIELD_TYPE_MULTISELECT, true);
 		echo '</ul>';
 	}
 
@@ -96,11 +97,12 @@ class InputFieldComplexSortableDetailListRenderer
 	 * @param string $label
 	 * @param string $category
 	 * @param int $iteration
+	 * @param string $type
 	 * @param bool $isDummy for javascript-side copying
 	 *
 	 */
 
-	private function generateSelectableElement($key, $label, $category, $iteration, $isDummy = false)
+	private function generateSelectableElement($key, $label, $category, $iteration, $type, $isDummy = false)
 	{
 		$inactiveFields = $this->getInactiveFields();
 
@@ -135,7 +137,7 @@ class InputFieldComplexSortableDetailListRenderer
 			.'<div class="menu-item-settings submitbox" style="display:none;">';
 
 			if ($this->_pContentRenderer !== null) {
-				$this->_pContentRenderer->render($key, $isDummy, $this->_allFields[$key]['type']);
+				$this->_pContentRenderer->render($key, $isDummy, $type);
 			}
 
 		echo '</div>';
