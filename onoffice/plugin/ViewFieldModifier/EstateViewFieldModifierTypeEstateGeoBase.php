@@ -71,7 +71,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 		];
 
 		$apiFields = array_merge($this->_viewFields, $geoSpecific);
-		return $this->editViewFieldsForApiGeoPosition($apiFields);
+		return array_unique($this->editViewFieldsForApiGeoPosition($apiFields));
 	}
 
 
@@ -113,7 +113,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 				$record['breitengrad'] = $record['virtualLatitude'];
 			}
 		} elseif (0 == $record['objektadresse_freigeben'] ||
-			__String::getNew($record['strasse'])->isEmpty()) {
+			__String::getNew($record['strasse'] ?? '')->isEmpty()) {
 			$record['laengengrad'] = 0;
 			$record['breitengrad'] = 0;
 			unset($record['strasse']);
