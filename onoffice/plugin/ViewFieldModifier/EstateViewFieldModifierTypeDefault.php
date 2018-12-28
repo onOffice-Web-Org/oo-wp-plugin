@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\ViewFieldModifier;
 
+use onOffice\WPlugin\Types\EstateStatusLabel;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -31,6 +33,24 @@ namespace onOffice\WPlugin\ViewFieldModifier;
 class EstateViewFieldModifierTypeDefault
 	extends EstateViewFieldModifierTypeEstateGeoBase
 {
+	/** @var EstateStatusLabel */
+	private $_pEstateStatusLabel = null;
+
+
+	/**
+	 *
+	 * @param array $viewFields
+	 * @param EstateStatusLabel $pEstateStatusLabel
+	 *
+	 */
+
+	public function __construct(array $viewFields, EstateStatusLabel $pEstateStatusLabel = null)
+	{
+		parent::__construct($viewFields);
+		$this->_pEstateStatusLabel = $pEstateStatusLabel ?? new EstateStatusLabel();
+	}
+
+
 	/**
 	 *
 	 * @return array
@@ -47,7 +67,7 @@ class EstateViewFieldModifierTypeDefault
 			'reserviert',
 			'verkauft',
 			'vermarktungsart',
-		]);
+		], $this->_pEstateStatusLabel->getFieldsByPrio());
 
 		return $this->editViewFieldsForApiGeoPosition($apiFields);
 	}
@@ -82,21 +102,18 @@ class EstateViewFieldModifierTypeDefault
 
 	private function buildMarketingStatus(array $record): string
 	{
-		$booked = $record['reserviert'];
-		$sold = $record['verkauft'];
-		$vermarktungsart = $record['vermarktungsart'];
-		$value = __('open', 'onoffice');
+		return $this->_pEstateStatusLabel->getLabel($record);
+	}
 
-		if (1 == $booked && 0 == $sold) {
-			$value = __('booked', 'onoffice');
-		} elseif (1 == $sold) {
-			if ('kauf' == $vermarktungsart) {
-				$value = __('sold', 'onoffice');
-			} else {
-				$value = __('leased', 'onoffice');
-			}
-		}
 
-		return $value;
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getVisibleFields(): array
+	{
+		return array_merge(parent::getVisibleFields(), ['vermarktungsstatus']);
 	}
 }

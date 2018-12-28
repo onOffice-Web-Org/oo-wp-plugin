@@ -20,7 +20,10 @@
  */
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeMap;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeTitle;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 
 /**
@@ -73,15 +76,13 @@ class TestClassViewFieldModifierHandler
 		$expectation = [
 			'test1',
 			'test2',
+			'breitengrad',
 			'laengengrad',
 			'virtualAddress',
-			'objektadresse_freigeben',
-			'reserviert',
-			'verkauft',
 			'vermarktungsart',
+			'objektadresse_freigeben',
 			'virtualStreet',
 			'virtualHouseNumber',
-			'breitengrad',
 			'virtualLatitude',
 			'virtualLongitude',
 			'strasse',
@@ -91,15 +92,11 @@ class TestClassViewFieldModifierHandler
 			'objektart',
 			'ort',
 			'objektnr_extern',
-			'plz',
-			'land',
-			'Id',
-			// add more in case more Modifiers get added
 		];
-		$pViewFieldModifierHandler = new ViewFieldModifierHandler
-			(['test1', 'test2', 'laengengrad'], onOfficeSDK::MODULE_ESTATE);
+		$pViewFieldModifierHandler = $this->getPreconfiguredHandler
+			(['test1', 'test2', 'laengengrad', 'geoPosition']);
 		$apiFields = $pViewFieldModifierHandler->getAllAPIFields();
-		$this->assertEquals($expectation, $apiFields);
+		$this->assertEqualSets($expectation, $apiFields);
 	}
 
 
@@ -130,14 +127,41 @@ class TestClassViewFieldModifierHandler
 				'testValueMulti 1',
 				'testValueMulti 2',
 			],
+			'virtualAddress' => '0',
+			'showGoogleMap' => 1,
+			'breitengrad' => 50,
 			'laengengrad' => 10,
+			'objekttitel' => 'Nice Estate',
 		];
 
-		$pViewFieldModifierHandler = new ViewFieldModifierHandler(['test1', 'test2', 'laengengrad'],
-			onOfficeSDK::MODULE_ESTATE, EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
+		$pViewFieldModifierHandler = $this->getPreconfiguredHandler(['test1', 'test2', 'laengengrad'],
+			EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
 		$newRecord = $pViewFieldModifierHandler->processRecord($this->_exampleRecord);
 
 		$this->assertEquals($expectation, $newRecord);
+	}
+
+
+	/**
+	 *
+	 * @param array $viewFields
+	 * @return ViewFieldModifierHandler
+	 *
+	 */
+
+	private function getPreconfiguredHandler(array $viewFields, string $modifier = ''): ViewFieldModifierHandler
+	{
+		$pFactory = $this->getMock(ViewFieldModifierFactory::class, ['getMapping'],
+			[onOfficeSDK::MODULE_ESTATE]);
+		$pFactory->expects($this->any())->method('getMapping')->will($this->returnValue([
+			EstateViewFieldModifierTypeMap::class,
+			EstateViewFieldModifierTypeTitle::class,
+		]));
+
+		$pHandler = new ViewFieldModifierHandler($viewFields, onOfficeSDK::MODULE_ESTATE, $modifier);
+		$pHandler->setViewFieldModifierFactory($pFactory);
+
+		return $pHandler;
 	}
 
 }

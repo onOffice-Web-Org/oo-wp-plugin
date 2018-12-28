@@ -22,6 +22,7 @@
 namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -37,8 +38,11 @@ use WP_UnitTestCase;
 class TestClassEstateStatusLabel
 	extends WP_UnitTestCase
 {
-	/** @var PHPUnit_Framework_MockObject_MockObject */
-	private $_pFieldnames = null;
+	/** @var Fieldnames */
+	private $_pFieldnamesInactive = null;
+
+	/** @var Fieldnames */
+	private $_pFieldnamesActive = null;
 
 
 	/**
@@ -49,8 +53,38 @@ class TestClassEstateStatusLabel
 
 	public function setUpFieldnames()
 	{
-		$this->_pFieldnames = $this->getMock
-			(Fieldnames::class, ['getFieldLabel', 'loadLanguage'], [new FieldsCollection()]);
+		$this->_pFieldnamesInactive = $this->getMock(Fieldnames::class,
+			['getFieldLabel', 'getFieldInformation', 'loadLanguage'], [new FieldsCollection()]);
+		$this->_pFieldnamesInactive->method('getFieldInformation')
+			->will($this->returnCallback(function($field, $module) {
+				if ($field === 'objekt_des_tages' || $module !== onOfficeSDK::MODULE_ESTATE) {
+					throw new UnknownFieldException;
+				}
+
+				return ['label' => $field.'-label'];
+			}));
+		$this->_pFieldnamesActive = $this->getMock(Fieldnames::class,
+			['getFieldLabel', 'getFieldInformation', 'loadLanguage'], [new FieldsCollection(), true]);
+		$this->_pFieldnamesActive
+			->method('getFieldInformation')
+			->will($this->returnValueMap([
+				[
+					'vermarktungsart',
+					onOfficeSDK::MODULE_ESTATE,
+					[
+						'permittedvalues' => [
+							'miete' => 'rent',
+							'kauf' => 'sale',
+						],
+					],
+
+				], [
+					'objekt_des_tages',
+					onOfficeSDK::MODULE_ESTATE,
+					['label' => 'objekt_des_tages-label'],
+
+				],
+			]));
 	}
 
 
@@ -60,10 +94,12 @@ class TestClassEstateStatusLabel
 
 	public function testConstruct()
 	{
-		$pEstateStatusLabel = new EstateStatusLabel(['asdf' => '1']);
-		$this->assertEquals(['asdf' => '1'], $pEstateStatusLabel->getEstateValues());
+		$pEstateStatusLabel = new EstateStatusLabel();
 		$this->assertGreaterThan(3, $pEstateStatusLabel->getFieldsByPrio());
-		$this->assertInstanceOf(Fieldnames::class, $pEstateStatusLabel->getFieldnames());
+		$this->assertInstanceOf(Fieldnames::class, $pEstateStatusLabel->getFieldnamesActive());
+		$this->assertInstanceOf(Fieldnames::class, $pEstateStatusLabel->getFieldnamesInactive());
+		$this->assertNotEquals($pEstateStatusLabel->getFieldnamesActive(),
+			$pEstateStatusLabel->getFieldnamesInActive());
 	}
 
 
@@ -88,13 +124,30 @@ class TestClassEstateStatusLabel
 			$valuePart = array_fill(0, count($fields), '0');
 			$values = array_combine($fields, $valuePart);
 			$values[$current] = '1';
+			$values['vermarktungsart'] = 'erbpacht';
 
 			$this->setUpFieldnames();
-			$this->_pFieldnames->expects($this->any())
-				->method('getFieldLabel')->with($this->equalTo($current), $this->equalTo(onOfficeSDK::MODULE_ESTATE))
-				->will($this->returnValue($current.'-label'));
-			$this->assertEquals($current.'-label', $this->getNewEstateStatusLabel($values)->getLabel());
+			$this->assertEquals($current.'-label', $this->getNewEstateStatusLabel()->getLabel($values));
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetLabelSoldForRent()
+	{
+		$values = [
+			'reserviert' => '0',
+			'verkauft' => '1',
+			'vermarktungsart' => 'sale',
+		];
+		$this->setUpFieldnames();
+		$this->assertEquals('sold', $this->getNewEstateStatusLabel()->getLabel($values));
+
+		$values['vermarktungsart'] = 'rent';
+		$this->assertEquals('leased', $this->getNewEstateStatusLabel()->getLabel($values));
 	}
 
 
@@ -104,20 +157,19 @@ class TestClassEstateStatusLabel
 
 	public function testGetLabelEmpty()
 	{
-		$this->assertEquals('', $this->getNewEstateStatusLabel([])->getLabel());
+		$this->assertEquals('', $this->getNewEstateStatusLabel()->getLabel([]));
 	}
 
 
 	/**
 	 *
-	 * @param array $values
 	 * @return EstateStatusLabel
 	 *
 	 */
 
-	private function getNewEstateStatusLabel(array $values): EstateStatusLabel
+	private function getNewEstateStatusLabel(): EstateStatusLabel
 	{
-		$pEstateStatusLabel = new EstateStatusLabel($values, $this->_pFieldnames);
+		$pEstateStatusLabel = new EstateStatusLabel($this->_pFieldnamesActive, $this->_pFieldnamesInactive);
 		return $pEstateStatusLabel;
 	}
 }

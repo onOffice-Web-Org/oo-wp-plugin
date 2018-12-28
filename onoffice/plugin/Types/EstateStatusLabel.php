@@ -22,7 +22,9 @@
 namespace onOffice\WPlugin\Types;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Fieldnames;
+use function __;
 
 /**
  *
@@ -31,7 +33,10 @@ use onOffice\WPlugin\Fieldnames;
 class EstateStatusLabel
 {
 	/** @var Fieldnames */
-	private $_pFieldnames = null;
+	private $_pFieldnamesActive = null;
+
+	/** @var Fieldnames */
+	private $_pFieldnamesInactive = null;
 
 	/** @var array */
 	private $_estateValues = [];
@@ -50,34 +55,87 @@ class EstateStatusLabel
 
 	/**
 	 *
-	 * @param array $estateValues
-	 * @param Fieldnames $pFieldnames
+	 * @param Fieldnames $pFieldnamesActive for testing
+	 * @param Fieldnames $pFieldnamesInactive for testing
 	 *
 	 */
 
-	public function __construct(array $estateValues, Fieldnames $pFieldnames = null)
+	public function __construct(Fieldnames $pFieldnamesActive = null, Fieldnames $pFieldnamesInactive = null)
 	{
-		$this->_estateValues = $estateValues;
-		$this->_pFieldnames = $pFieldnames ?? new Fieldnames(new FieldsCollection());
+		$this->_pFieldnamesActive = $pFieldnamesActive ?? new Fieldnames(new FieldsCollection());
+		$this->_pFieldnamesInactive = $pFieldnamesInactive ?? new Fieldnames(new FieldsCollection(), true);
 	}
 
 
 	/**
 	 *
+	 * @param array $estateValues
 	 * @return string
 	 *
 	 */
 
-	public function getLabel(): string
+	public function getLabel(array $estateValues): string
 	{
-		$this->_pFieldnames->loadLanguage();
+		$this->_estateValues = $estateValues;
+
 		foreach ($this->_fieldsByPrio as $key) {
 			if ($this->getBoolValue($key)) {
-				return $this->_pFieldnames->getFieldLabel($key, onOfficeSDK::MODULE_ESTATE);
+				return $this->processRecord($key);
 			}
 		}
 
 		return '';
+	}
+
+
+	/**
+	 *
+	 * @param string $key
+	 * @return string
+	 *
+	 */
+
+	private function processRecord(string $key): string
+	{
+		$this->_pFieldnamesActive->loadLanguage();
+		$this->_pFieldnamesInactive->loadLanguage();
+
+		$label = $this->getFieldLabel($key);
+		$info = $this->_pFieldnamesActive->getFieldInformation('vermarktungsart', onOfficeSDK::MODULE_ESTATE);
+
+		if ($key === 'verkauft') {
+			if ($this->_estateValues['vermarktungsart'] === $info['permittedvalues']['miete']) {
+				$label = __('leased', 'onoffice');
+			} elseif ($this->_estateValues['vermarktungsart'] === $info['permittedvalues']['kauf']) {
+				$label = __('sold', 'onoffice');
+			}
+		}
+
+		return $label;
+	}
+
+
+	/**
+	 *
+	 * @param string $key
+	 * @return string
+	 *
+	 */
+
+	private function getFieldLabel(string $key): string
+	{
+		$this->_pFieldnamesActive->loadLanguage();
+		$this->_pFieldnamesInactive->loadLanguage();
+
+		// those fields are usually disabled but some of them don't have to be
+		try {
+			$info = $this->_pFieldnamesInactive->getFieldInformation
+				($key, onOfficeSDK::MODULE_ESTATE);
+		} catch (UnknownFieldException $pE) {
+			$info = $this->_pFieldnamesActive->getFieldInformation
+				($key, onOfficeSDK::MODULE_ESTATE);
+		}
+		return $info['label'];
 	}
 
 
@@ -95,12 +153,12 @@ class EstateStatusLabel
 
 
 	/** @return Fieldnames */
-	public function getFieldnames(): Fieldnames
-		{ return $this->_pFieldnames; }
+	public function getFieldnamesActive(): Fieldnames
+		{ return $this->_pFieldnamesActive; }
 
-	/** @return array */
-	public function getEstateValues(): array
-		{ return $this->_estateValues; }
+	/** @return Fieldnames */
+	public function getFieldnamesInActive(): Fieldnames
+		{ return $this->_pFieldnamesInactive; }
 
 	/** @return array */
 	public function getFieldsByPrio(): array

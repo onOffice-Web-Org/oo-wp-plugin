@@ -19,6 +19,7 @@
  *
  */
 
+use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeDefault;
 
 /**
@@ -60,7 +61,7 @@ class TestClassEstateViewFieldModifierTypeDefault
 
 	public function testGetAPIFields()
 	{
-		$pEstateViewFieldModifierTypeDefault = new EstateViewFieldModifierTypeDefault([]);
+		$pEstateViewFieldModifierTypeDefault = $this->getNewInstance([]);
 
 		$defaultApiFields = [
 			'virtualAddress',
@@ -80,7 +81,7 @@ class TestClassEstateViewFieldModifierTypeDefault
 
 	public function testReduceRecord()
 	{
-		$pEstateViewFieldModifierTypeDefault = new EstateViewFieldModifierTypeDefault([]);
+		$pEstateViewFieldModifierTypeDefault = $this->getNewInstance([]);
 
 		$expectedResult = [
 			'testField1' => true,
@@ -93,7 +94,7 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'reserviert' => '1',
 			'verkauft' => '1',
 			'vermarktungsart' => 'kauf',
-			'vermarktungsstatus' => 'sold',
+			'vermarktungsstatus' => '',
 		];
 
 		$newRow = $pEstateViewFieldModifierTypeDefault->reduceRecord($this->_exampleRecord);
@@ -107,8 +108,8 @@ class TestClassEstateViewFieldModifierTypeDefault
 
 	public function testFieldListEmpty()
 	{
-		$pEstateViewFieldModifierTypeDefault = new EstateViewFieldModifierTypeDefault([]);
-		$this->assertEquals([], $pEstateViewFieldModifierTypeDefault->getVisibleFields());
+		$pEstateViewFieldModifierTypeDefault = $this->getNewInstance([]);
+		$this->assertEquals(['vermarktungsstatus'], $pEstateViewFieldModifierTypeDefault->getVisibleFields());
 	}
 
 
@@ -125,6 +126,7 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'Underscore_field11',
 			'laengengrad',
 			'breitengrad',
+			'vermarktungsstatus',
 		];
 
 		$pEstateViewFieldModifierTypeDefault = $this->getPreconfiguredFieldModifier();
@@ -173,62 +175,21 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'geoPosition',
 		];
 
-		return new EstateViewFieldModifierTypeDefault($fieldList);
-	}
-
-	/**
-	 *
-	 */
-
-	public function testVermarktungsstatus()
-	{
-		$this->buildRowForVermarktungsstatus(false, false, 'kauf', 'open');
-		$this->buildRowForVermarktungsstatus(false, true, 'kauf', 'sold');
-		$this->buildRowForVermarktungsstatus(true, false, 'kauf', 'booked');
-		$this->buildRowForVermarktungsstatus(true, true, 'kauf', 'sold');
-		$this->buildRowForVermarktungsstatus(false, false, 'miete', 'open');
-		$this->buildRowForVermarktungsstatus(false, true, 'miete', 'leased');
-		$this->buildRowForVermarktungsstatus(true, false, 'miete', 'booked');
-		$this->buildRowForVermarktungsstatus(true, true, 'miete', 'leased');
+		return $this->getNewInstance($fieldList);
 	}
 
 
 	/**
 	 *
-	 * @param bool $reserviert
-	 * @param bool $verkauft
-	 * @param string $vermarktungsart
-	 * @param string $expectation
+	 * @param array $viewFields
+	 * @return EstateViewFieldModifierTypeDefault
 	 *
 	 */
 
-	private function buildRowForVermarktungsstatus(bool $reserviert,
-		bool $verkauft, string $vermarktungsart, string $expectation)
+	private function getNewInstance(array $viewFields): EstateViewFieldModifierTypeDefault
 	{
-		$fieldList = [
-			'testfield1',
-		];
-
-		$inputRecords = $this->_exampleRecord;
-		$inputRecords['reserviert'] = strval((int)$reserviert);
-		$inputRecords['verkauft'] = strval((int)$verkauft);
-		$inputRecords['vermarktungsart'] = $vermarktungsart;
-
-		$pEstateViewFieldModifierTypeDefault = new EstateViewFieldModifierTypeDefault($fieldList);
-		$result = $pEstateViewFieldModifierTypeDefault->reduceRecord($inputRecords);
-		$expectedResult = [
-			'testField1' => true,
-			'test_field2' => 'Example string',
-			'multiselectfield' => ['Value 1', 'Value 2', 'Value 3'],
-			'virtualAddress' => 0,
-			'objektadresse_freigeben' => 0,
-			'laengengrad' => 0,
-			'breitengrad' => 0,
-			'vermarktungsstatus' => $expectation,
-			'reserviert' => strval((int)$reserviert),
-			'verkauft' => strval((int)$verkauft),
-			'vermarktungsart' => $vermarktungsart,
-		];
-		$this->assertEquals($expectedResult, $result);
+		$pEstateStatusLabel = $this->getMock(EstateStatusLabel::class,
+			['getLabel', 'getFieldsByPrio']);
+		return new EstateViewFieldModifierTypeDefault($viewFields, $pEstateStatusLabel);
 	}
 }

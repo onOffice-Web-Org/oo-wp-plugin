@@ -103,4 +103,9 @@ class ViewFieldModifierHandler
 		$fields = array_values(array_unique($apiFields));
 		return array_diff($fields, $this->_pViewFieldModifierFactory->getForbiddenAPIFields());
 	}
+
+
+	/** @param ViewFieldModifierFactory $pFactory */
+	public function setViewFieldModifierFactory(ViewFieldModifierFactory $pFactory)
+		{ $this->_pViewFieldModifierFactory = $pFactory; }
 }
