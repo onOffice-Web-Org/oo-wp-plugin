@@ -19,9 +19,12 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\ViewFieldModifier;
 
 use onOffice\SDK\onOfficeSDK;
+use UnexpectedValueException;
 
 /**
  *
@@ -59,30 +62,37 @@ class ViewFieldModifierFactory
 	 * @param string $type
 	 * @param array $viewFields
 	 * @return ViewFieldModifierTypeBase
+	 * @throws UnexpectedValueException
 	 *
 	 */
 
-	public function create(string $type, array $viewFields = [])
+	public function create(string $type, array $viewFields = []): ViewFieldModifierTypeBase
 	{
 		$mapping = $this->getMapping();
 
-		if (isset($mapping[$type])) {
-			return new $mapping[$type]($viewFields);
+		if (!isset($mapping[$type])) {
+			throw new UnexpectedValueException;
 		}
-
-		return null;
+		return new $mapping[$type]($viewFields);
 	}
 
 
 	/**
 	 *
 	 * @return string
+	 * @throws UnexpectedValueException
 	 *
 	 */
 
-	private function getMappingClass()
+	private function getMappingClass(): string
 	{
-		return $this->_moduleToTypeClass[$this->_module] ?? null;
+		$class = $this->_moduleToTypeClass[$this->_module] ?? null;
+
+		if ($class === null) {
+			throw new UnexpectedValueException;
+		}
+
+		return $class;
 	}
 
 
@@ -95,13 +105,21 @@ class ViewFieldModifierFactory
 	public function getMapping(): array
 	{
 		$mappingClass = $this->getMappingClass();
-		$mapping = [];
+		$pViewFieldModifierTypes = new $mappingClass();
+		return $pViewFieldModifierTypes->getMapping();
+	}
 
-		if ($mappingClass !== null) {
-			$pViewFieldModifierTypes = new $mappingClass();
-			$mapping = $pViewFieldModifierTypes->getMapping();
-		}
 
-		return $mapping;
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getForbiddenAPIFields(): array
+	{
+		$mappingClass = $this->getMappingClass();
+		$pViewFieldModifierTypes = new $mappingClass();
+		return $pViewFieldModifierTypes->getForbiddenAPIFields();
 	}
 }

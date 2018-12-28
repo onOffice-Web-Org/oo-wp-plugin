@@ -33,28 +33,31 @@ use Exception;
 class ViewFieldModifierHandler
 {
 	/** @var array */
-	private $_modifierMapping = [];
-
-	/** @var array */
 	private $_viewFields = [];
 
 	/** @var ViewFieldModifierTypeBase */
 	private $_pModifier = null;
+
+	/** @var ViewFieldModifierFactory */
+	private $_pViewFieldModifierFactory = null;
 
 
 	/**
 	 *
 	 * @param array $viewFields
 	 * @param string $module
+	 * @param string $modifier
 	 *
 	 */
 
 	public function __construct(array $viewFields, string $module, string $modifier = '')
 	{
 		$this->_viewFields = $viewFields;
-		$pViewFieldModifierFactory = new ViewFieldModifierFactory($module);
-		$this->_modifierMapping = $pViewFieldModifierFactory->getMapping();
-		$this->_pModifier = $pViewFieldModifierFactory->create($modifier, $viewFields);
+		$this->_pViewFieldModifierFactory = new ViewFieldModifierFactory($module);
+
+		if ($modifier !== '') {
+			$this->_pModifier = $this->_pViewFieldModifierFactory->create($modifier, $viewFields);
+		}
 	}
 
 
@@ -91,12 +94,13 @@ class ViewFieldModifierHandler
 	{
 		$apiFields = [];
 
-		foreach ($this->_modifierMapping as $class) {
+		foreach ($this->_pViewFieldModifierFactory->getMapping() as $class) {
 			$pInstance = new $class($this->_viewFields);
 			/* @var $pInstance ViewFieldModifierTypeBase */
 			$apiFields = array_merge($apiFields, $pInstance->getAPIFields());
 		}
 
-		return array_values(array_unique($apiFields));
+		$fields = array_values(array_unique($apiFields));
+		return array_diff($fields, $this->_pViewFieldModifierFactory->getForbiddenAPIFields());
 	}
 }

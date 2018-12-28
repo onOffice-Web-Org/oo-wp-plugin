@@ -270,17 +270,8 @@ class EstateList
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE);
 
-		$dataFields = $pFieldModifierHandler->getAllAPIFields();
-
-		if (in_array(GeoPosition::FIELD_GEO_POSITION, $dataFields))	{
-			$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $dataFields);
-			unset($dataFields[$pos]);
-			$dataFields []= 'laengengrad';
-			$dataFields []= 'breitengrad';
-		}
-
 		$requestParams = [
-			'data' => $dataFields,
+			'data' => $pFieldModifierHandler->getAllAPIFields(),
 			'filter' => $filter,
 			'estatelanguage' => $language,
 			'outputlanguage' => $language,
@@ -351,11 +342,7 @@ class EstateList
 
 	private function getEstateIdToForeignMapping($estateResponseArray)
 	{
-		if (!isset($estateResponseArray['data']['records'])) {
-			return [];
-		}
-
-		$estateProperties = $estateResponseArray['data']['records'];
+		$estateProperties = $estateResponseArray['data']['records'] ?? [];
 		$estateIds = [];
 
 		foreach ($estateProperties as $estate) {

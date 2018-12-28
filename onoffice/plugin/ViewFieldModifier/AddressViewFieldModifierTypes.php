@@ -51,4 +51,16 @@ class AddressViewFieldModifierTypes
 	{
 		return $this->_mapping;
 	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getForbiddenAPIFields(): array
+	{
+		return [];
+	}
 }

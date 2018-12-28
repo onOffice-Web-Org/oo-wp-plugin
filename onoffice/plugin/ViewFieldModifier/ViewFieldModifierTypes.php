@@ -37,4 +37,13 @@ interface ViewFieldModifierTypes
 	 */
 
 	public function getMapping(): array;
+
+
+	/**
+	 *
+	 * @return array fields to filter out
+	 *
+	 */
+
+	public function getForbiddenAPIFields(): array;
 }

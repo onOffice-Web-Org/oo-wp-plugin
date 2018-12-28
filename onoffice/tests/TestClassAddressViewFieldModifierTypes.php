@@ -43,4 +43,14 @@ class TestClassAddressViewFieldModifierTypes
 		parent::setUp();
 		$this->setViewFieldModifierTypes(new AddressViewFieldModifierTypes);
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetForbiddenAPIFields()
+	{
+		$this->assertEquals([], $this->getViewFieldModifierTypes()->getForbiddenAPIFields());
+	}
 }

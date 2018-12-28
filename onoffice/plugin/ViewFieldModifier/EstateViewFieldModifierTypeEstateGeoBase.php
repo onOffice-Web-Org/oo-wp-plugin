@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\ViewFieldModifier;
 
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Utility\__String;
 
 /**
@@ -36,6 +37,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 	/** @var array */
 	private $_viewFields = [];
 
+
 	/**
 	 *
 	 * @param array $viewFields
@@ -46,6 +48,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 	{
 		$this->_viewFields = $viewFields;
 	}
+
 
 	/**
 	 *
@@ -67,7 +70,8 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 			'strasse',
 		];
 
-		return array_merge($this->_viewFields, $geoSpecific);
+		$apiFields = array_merge($this->_viewFields, $geoSpecific);
+		return $this->editViewFieldsForApiGeoPosition($apiFields);
 	}
 
 
@@ -79,7 +83,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 
 	public function getVisibleFields(): array
 	{
-		return $this->_viewFields;
+		return $this->editViewFieldsForApiGeoPosition($this->_viewFields);
 	}
 
 
@@ -104,6 +108,7 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 			if (isset($record['laengengrad'])) {
 				$record['laengengrad'] = $record['virtualLongitude'];
 			}
+
 			if (isset($record['breitengrad'])) {
 				$record['breitengrad'] = $record['virtualLatitude'];
 			}
@@ -117,6 +122,27 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 		return $record;
 	}
 
+
+
+	/**
+	 *
+	 * @param array $viewFields
+	 * @return array
+	 *
+	 */
+
+	protected function editViewFieldsForApiGeoPosition(array $viewFields): array
+	{
+		$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $viewFields);
+
+		if ($pos !== false) {
+			unset($viewFields[$pos]);
+			$viewFields []= 'breitengrad';
+			$viewFields []= 'laengengrad';
+		}
+
+		return $viewFields;
+	}
 
 	/** @return array */
 	protected function getViewFields(): array

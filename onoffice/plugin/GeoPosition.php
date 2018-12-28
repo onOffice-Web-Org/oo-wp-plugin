@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin;
 
 use Exception;
@@ -204,20 +206,11 @@ class GeoPosition
 	}
 
 
-	/**
-	 *
-	 * @param string $module
-	 * @return array
-	 *
-	 */
-
+	/** @return array */
 	public function getSettingsGeoPositionFieldsWithoutRadius(): array
-	{
-		return $this->_settingsGeoPositionFieldsWithoutRange;
-	}
-
+		{ return $this->_settingsGeoPositionFieldsWithoutRange; }
 
 	/** @return array */
-	public function getEstateSearchFields()
+	public function getEstateSearchFields(): array
 		{ return $this->_estateSearchFields; }
 }

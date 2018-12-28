@@ -20,6 +20,7 @@
  */
 
 use onOffice\tests\ViewFieldModifierTypesTestBase;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /**
@@ -42,5 +43,17 @@ class TestClassEstateViewFieldModifierTypes
 	{
 		parent::setUp();
 		$this->setViewFieldModifierTypes(new EstateViewFieldModifierTypes);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetForbiddenAPIFields()
+	{
+		$pViewFieldModifierTypes = $this->getViewFieldModifierTypes();
+		$this->assertEquals([GeoPosition::FIELD_GEO_POSITION],
+			$pViewFieldModifierTypes->getForbiddenAPIFields());
 	}
 }

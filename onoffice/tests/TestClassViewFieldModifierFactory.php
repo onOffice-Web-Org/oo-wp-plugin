@@ -20,6 +20,7 @@
  */
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypeDefault;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeDefault;
@@ -32,8 +33,6 @@ use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
  *
  * @url http://www.onoffice.de
  * @copyright 2003-2018, onOffice(R) GmbH
- *
- * @covers onOffice\WPlugin\Record\RecordStructure
  *
  */
 
@@ -78,6 +77,32 @@ class TestClassViewFieldModifierFactory
 
 	/**
 	 *
+	 * @expectedException UnexpectedValueException
+	 *
+	 */
+
+	public function testCreateUnknown()
+	{
+		$pViewFieldModifierFactory = new ViewFieldModifierFactory(onOfficeSDK::MODULE_ESTATE);
+		$pViewFieldModifierFactory->create('unknown');
+	}
+
+
+	/**
+	 *
+	 * @expectedException UnexpectedValueException
+	 *
+	 */
+
+	public function testGetMappingClassUnknown()
+	{
+		$pViewFieldModifierFactory = new ViewFieldModifierFactory('unknownModule');
+		$pViewFieldModifierFactory->getMapping();
+	}
+
+
+	/**
+	 *
 	 */
 
 	public function testGetMappingAddress()
@@ -95,6 +120,21 @@ class TestClassViewFieldModifierFactory
 	{
 		$pViewFieldModifierFactory = new ViewFieldModifierFactory(onOfficeSDK::MODULE_ESTATE);
 		$this->checkMapping($pViewFieldModifierFactory);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetForbiddenAPIFields()
+	{
+		$pViewFieldModifierFactoryEstate = new ViewFieldModifierFactory(onOfficeSDK::MODULE_ESTATE);
+		$this->assertEquals([GeoPosition::FIELD_GEO_POSITION],
+			$pViewFieldModifierFactoryEstate->getForbiddenAPIFields());
+
+		$pViewFieldModifierFactoryAddress = new ViewFieldModifierFactory(onOfficeSDK::MODULE_ADDRESS);
+		$this->assertEquals([], $pViewFieldModifierFactoryAddress->getForbiddenAPIFields());
 	}
 
 

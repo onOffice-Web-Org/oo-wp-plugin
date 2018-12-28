@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\ViewFieldModifier;
 
+use onOffice\WPlugin\GeoPosition;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -62,5 +64,17 @@ class EstateViewFieldModifierTypes
 	public function getMapping(): array
 	{
 		return $this->_mapping;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getForbiddenAPIFields(): array
+	{
+		return [GeoPosition::FIELD_GEO_POSITION];
 	}
 }

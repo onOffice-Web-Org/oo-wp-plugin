@@ -39,7 +39,7 @@ class EstateViewFieldModifierTypeDefault
 
 	public function getAPIFields(): array
 	{
-		return array_merge($this->getViewFields(), [
+		$apiFields = array_merge($this->getViewFields(), [
 			'virtualAddress',
 			'objektadresse_freigeben',
 
@@ -48,6 +48,8 @@ class EstateViewFieldModifierTypeDefault
 			'verkauft',
 			'vermarktungsart',
 		]);
+
+		return $this->editViewFieldsForApiGeoPosition($apiFields);
 	}
 
 
@@ -96,27 +98,5 @@ class EstateViewFieldModifierTypeDefault
 		}
 
 		return $value;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getVisibleFields(): array
-	{
-		$viewFields = parent::getViewFields();
-
-		if (in_array('geoPosition', $viewFields)) {
-			$pos = array_search('geoPosition', $viewFields);
-
-			unset($viewFields[$pos]);
-			$viewFields []= 'breitengrad';
-			$viewFields []= 'laengengrad';
-		}
-
-		return $viewFields;
 	}
 }

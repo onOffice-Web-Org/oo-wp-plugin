@@ -27,6 +27,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeDefault;
  * @copyright 2003-2018, onOffice(R) GmbH
  *
  * @covers onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeDefault
+ * @uses onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeEstateGeoBase
  *
  */
 
@@ -35,6 +36,7 @@ class TestClassEstateViewFieldModifierTypeDefault
 {
 	/** @var array */
 	private $_exampleRecord = [
+		'mainLangId' => 123,
 		'testField1' => true,
 		'test_field2' => 'Example string',
 		'multiselectfield' => [
@@ -114,29 +116,65 @@ class TestClassEstateViewFieldModifierTypeDefault
 	 *
 	 */
 
-	public function testFieldList()
+	public function testGetVisibleFields()
+	{
+		$visibleFields = [
+			'testField1',
+			'anotherField',
+			'moreFields',
+			'Underscore_field11',
+			'laengengrad',
+			'breitengrad',
+		];
+
+		$pEstateViewFieldModifierTypeDefault = $this->getPreconfiguredFieldModifier();
+		$this->assertEqualSets($visibleFields, $pEstateViewFieldModifierTypeDefault->getVisibleFields());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetAPIFieldsWithGeo()
+	{
+		$apiFieldsExpect = [
+			'testField1',
+			'anotherField',
+			'moreFields',
+			'Underscore_field11',
+			'virtualAddress',
+			'objektadresse_freigeben',
+			'reserviert',
+			'verkauft',
+			'vermarktungsart',
+			'breitengrad',
+			'laengengrad',
+		];
+
+		$pEstateViewFieldModifierTypeDefault = $this->getPreconfiguredFieldModifier();
+		$this->assertEqualSets($apiFieldsExpect, $pEstateViewFieldModifierTypeDefault->getAPIFields());
+	}
+
+
+	/**
+	 *
+	 * @return EstateViewFieldModifierTypeDefault
+	 *
+	 */
+
+	private function getPreconfiguredFieldModifier(): EstateViewFieldModifierTypeDefault
 	{
 		$fieldList = [
 			'testField1',
 			'anotherField',
 			'moreFields',
 			'Underscore_field11',
+			'geoPosition',
 		];
 
-		$pEstateViewFieldModifierTypeDefault = new EstateViewFieldModifierTypeDefault($fieldList);
-		$this->assertEquals($fieldList, $pEstateViewFieldModifierTypeDefault->getVisibleFields());
-
-
-		$apiFieldsExpect = $fieldList;
-		$apiFieldsExpect []= 'virtualAddress';
-		$apiFieldsExpect []= 'objektadresse_freigeben';
-		$apiFieldsExpect []= 'reserviert';
-		$apiFieldsExpect []= 'verkauft';
-		$apiFieldsExpect []= 'vermarktungsart';
-
-		$this->assertEquals($apiFieldsExpect, $pEstateViewFieldModifierTypeDefault->getAPIFields());
+		return new EstateViewFieldModifierTypeDefault($fieldList);
 	}
-
 
 	/**
 	 *
