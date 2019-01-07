@@ -87,7 +87,9 @@ class EstateViewFieldModifierTypeDefault
 			unset($record['mainLangId']);
 		}
 
-		$record['vermarktungsstatus'] = $this->buildMarketingStatus($record);
+		if (in_array('vermarktungsstatus', $this->getViewFields())) {
+			$record['vermarktungsstatus'] = $this->buildMarketingStatus($record);
+		}
 
 		return parent::reduceRecord($record);
 	}
@@ -103,17 +105,5 @@ class EstateViewFieldModifierTypeDefault
 	private function buildMarketingStatus(array $record): string
 	{
 		return $this->_pEstateStatusLabel->getLabel($record);
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getVisibleFields(): array
-	{
-		return array_merge(parent::getVisibleFields(), ['vermarktungsstatus']);
 	}
 }

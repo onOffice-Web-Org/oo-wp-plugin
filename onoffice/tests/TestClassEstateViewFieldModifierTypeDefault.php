@@ -81,7 +81,7 @@ class TestClassEstateViewFieldModifierTypeDefault
 
 	public function testReduceRecord()
 	{
-		$pEstateViewFieldModifierTypeDefault = $this->getNewInstance([]);
+		$pEstateViewFieldModifierTypeDefault = $this->getNewInstance(['vermarktungsstatus']);
 
 		$expectedResult = [
 			'testField1' => true,
@@ -109,7 +109,7 @@ class TestClassEstateViewFieldModifierTypeDefault
 	public function testFieldListEmpty()
 	{
 		$pEstateViewFieldModifierTypeDefault = $this->getNewInstance([]);
-		$this->assertEquals(['vermarktungsstatus'], $pEstateViewFieldModifierTypeDefault->getVisibleFields());
+		$this->assertEquals([], $pEstateViewFieldModifierTypeDefault->getVisibleFields());
 	}
 
 
@@ -126,7 +126,6 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'Underscore_field11',
 			'laengengrad',
 			'breitengrad',
-			'vermarktungsstatus',
 		];
 
 		$pEstateViewFieldModifierTypeDefault = $this->getPreconfiguredFieldModifier();
