@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2016-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -25,12 +25,13 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software GmbH
+ * @copyright 2003-2019, onOffice(R) GmbH
  *
  */
 
@@ -66,24 +67,24 @@ class FilterCall
 
 	private function load()
 	{
-		$handle = $this->_pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_GET, 'filters', ['module' => $this->_module]);
-		$this->_pSDKWrapper->sendRequests();
-
-		$response = $this->_pSDKWrapper->getRequestResponse($handle);
-		$this->extractResponse($response);
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'filters');
+		$pApiClientAction->setParameters(['module' => $this->_module]);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$this->extractResponse($pApiClientAction);
 	}
 
 
 	/**
 	 *
-	 * @param array $response
+	 * @param APIClientActionGeneric $pApiClientAction
 	 *
 	 */
 
-	private function extractResponse(array $response)
+	private function extractResponse(APIClientActionGeneric $pApiClientAction)
 	{
-		$filters = $response['data']['records'];
+		$filters = $pApiClientAction->getResultRecords();
+		$this->_filters = [];
 
 		foreach ($filters as $filter) {
 			$elements = $filter['elements'];

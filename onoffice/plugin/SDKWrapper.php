@@ -115,6 +115,7 @@ class SDKWrapper
 
 	/**
 	 *
+	 * @deprecated since 2018
 	 * @param string $actionId
 	 * @param string $resourceType
 	 * @param array $parameters
