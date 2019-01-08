@@ -19,11 +19,13 @@
  *
  */
 
+declare (strict_types=1);
 
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\SDKWrapper;
+use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
@@ -35,29 +37,40 @@ use onOffice\SDK\onOfficeSDK;
 class FilterCall
 {
 	/** @var array */
-	private $_filters = array();
+	private $_filters = null;
+
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
+
+	/** @var string */
+	private $_module = null;
 
 
 	/**
 	 *
 	 * @param string $module
+	 * @param SDKWrapper $pSDKWrapper
 	 *
 	 */
 
-	public function __construct($module)
+	public function __construct(string $module, SDKWrapper $pSDKWrapper = null)
 	{
-		$pSDKWrapper = new SDKWrapper();
-		$requestParameter = array
-			(
-				'module' => $module,
-			);
+		$this->_pSDKWrapper = $pSDKWrapper ?? new SDKWrapper();
+		$this->_module = $module;
+	}
 
-		$handle = $pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_GET, 'filters', $requestParameter);
-		$pSDKWrapper->sendRequests();
 
-		$response = $pSDKWrapper->getRequestResponse( $handle );
+	/**
+	 *
+	 */
 
+	private function load()
+	{
+		$handle = $this->_pSDKWrapper->addRequest(
+			onOfficeSDK::ACTION_ID_GET, 'filters', ['module' => $this->_module]);
+		$this->_pSDKWrapper->sendRequests();
+
+		$response = $this->_pSDKWrapper->getRequestResponse($handle);
 		$this->extractResponse($response);
 	}
 
@@ -68,17 +81,15 @@ class FilterCall
 	 *
 	 */
 
-	private function extractResponse($response)
+	private function extractResponse(array $response)
 	{
 		$filters = $response['data']['records'];
 
-		foreach ($filters as $filter)
-		{
+		foreach ($filters as $filter) {
 			$elements = $filter['elements'];
 			$this->_filters[$filter['id']] = $elements['name'];
 		}
 	}
-
 
 
 	/**
@@ -87,8 +98,12 @@ class FilterCall
 	 *
 	 */
 
-	public function getFilters()
+	public function getFilters(): array
 	{
+		if ($this->_filters === null) {
+			$this->load();
+		}
+
 		return $this->_filters;
 	}
 
@@ -96,17 +111,27 @@ class FilterCall
 	/**
 	 *
 	 * @param int $id
-	 * @return bool
+	 * @return string
+	 * @throws Exception
 	 *
 	 */
 
-	public function getFilternameById($id)
+	public function getFilternameById(int $id): string
 	{
-		if (array_key_exists($id, $this->_filters))
-		{
-			return $this->_filters[$id];
+		$filters = $this->getFilters();
+		if (isset($filters[$id])) {
+			return $filters[$id];
 		}
 
-		return null;
+		throw new Exception('Unknown Filter '.$id);
 	}
+
+
+	/** @return string */
+	public function getModule(): string
+		{ return $this->_module; }
+
+	/** @return SDKWrapper */
+	public function getSDKWrapper(): SDKWrapper
+		{ return $this->_pSDKWrapper; }
 }

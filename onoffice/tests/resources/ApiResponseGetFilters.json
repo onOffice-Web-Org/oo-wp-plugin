@@ -1,0 +1,128 @@
+ {
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+	"resourceid": "",
+	"resourcetype": "filters",
+	"cacheable": true,
+	"identifier": "",
+	"data": {
+		"meta": {
+			"cntabsolute": 11
+		},
+		"records": [
+			{
+				"id": 87,
+				"type": "filter",
+				"elements": {
+					"scope": "office",
+					"name": "Einheiten",
+					"userId": null,
+					"groupId": 176
+				}
+			},
+			{
+				"id": 97,
+				"type": "filter",
+				"elements": {
+					"scope": "office",
+					"name": "Katharina",
+					"userId": null,
+					"groupId": 176
+				}
+			},
+			{
+				"id": 95,
+				"type": "filter",
+				"elements": {
+					"scope": "office",
+					"name": "Stammobjekte",
+					"userId": null,
+					"groupId": 176
+				}
+			},
+			{
+				"id": 1,
+				"type": "filter",
+				"elements": {
+					"scope": "public",
+					"name": "100.000 \u20ac - 300.000 \u20ac",
+					"userId": null,
+					"groupId": null
+				}
+			},
+			{
+				"id": 6,
+				"type": "filter",
+				"elements": {
+					"scope": "public",
+					"name": "aktive Objekte",
+					"userId": null,
+					"groupId": null
+				}
+			},
+			{
+				"id": 7,
+				"type": "filter",
+				"elements": {
+					"scope": "public",
+					"name": "Archivierte Immobilien",
+					"userId": null,
+					"groupId": null
+				}
+			},
+			{
+				"id": 18,
+				"type": "filter",
+				"elements": {
+					"scope": "public",
+					"name": "Billigwohnungen",
+					"userId": null,
+					"groupId": null
+				}
+			},
+			{
+				"id": 4,
+				"type": "filter",
+				"elements": {
+					"scope": "public",
+					"name": "Favoriten Objekte",
+					"userId": null,
+					"groupId": null
+				}
+			},
+			{
+				"id": 12,
+				"type": "filter",
+				"elements": {
+					"scope": "public",
+					"name": "Favoriten Objekte",
+					"userId": null,
+					"groupId": null
+				}
+			},
+			{
+				"id": 19,
+				"type": "filter",
+				"elements": {
+					"scope": "public",
+					"name": "Inaktive Immobilien",
+					"userId": null,
+					"groupId": null
+				}
+			},
+			{
+				"id": 14,
+				"type": "filter",
+				"elements": {
+					"scope": "public",
+					"name": "Meine Immobilien",
+					"userId": null,
+					"groupId": null
+				}
+			}
+		]
+	},
+	"status": {
+		"errorcode": 0,
+		"message": "OK"
+	}
+}

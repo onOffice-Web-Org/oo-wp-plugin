@@ -189,7 +189,11 @@ class EstateListTable extends ListTable
 
 	protected function column_filtername($pItem)
 	{
-		return $this->_pFilterCall->getFilternameById($pItem->filterId);
+		$filterName = '';
+		if ($pItem->filterId != 0) {
+			$filterName = $this->_pFilterCall->getFilternameById($pItem->filterId);
+		}
+		return $filterName;
 	}
 
 
