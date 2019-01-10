@@ -145,23 +145,16 @@ class DistinctFieldsChecker
 	{
 		$pGeoPosition = new GeoPosition();
 
-		if ($module == onOfficeSDK::MODULE_ESTATE)
-		{
-			foreach ($inputValues as $key => $values)
-			{
-				if (in_array($key, $pGeoPosition->getEstateSearchFields()))
-				{
+		if ($module === onOfficeSDK::MODULE_ESTATE) {
+			foreach ($inputValues as $key => $values) {
+				if (in_array($key, $pGeoPosition->getEstateSearchFields())) {
 					$this->_geoRangeValues[$key] = $values;
 					unset($inputValues[$key]);
 				}
 			}
-		}
-		elseif ($module == onOfficeSDK::MODULE_SEARCHCRITERIA)
-		{
-			foreach ($inputValues as $key => $values)
-			{
-				if (in_array($key, $pGeoPosition->getSettingsGeoPositionFields($module)))
-				{
+		} elseif ($module == onOfficeSDK::MODULE_SEARCHCRITERIA) {
+			foreach ($inputValues as $key => $values) {
+				if (in_array($key, $pGeoPosition->getSettingsGeoPositionFields($module))) {
 					$this->_geoRangeValues[self::$_mapping[$key]] = $values;
 					unset($inputValues[$key]);
 				}
@@ -172,7 +165,7 @@ class DistinctFieldsChecker
 	}
 
 
-	/** return  array */
-	public function getDistinctValuesFields()
-	{ return $this->_distinctFields; }
+	/** @return array */
+	public function getDistinctValuesFields(): array
+		{ return $this->_distinctFields; }
 }

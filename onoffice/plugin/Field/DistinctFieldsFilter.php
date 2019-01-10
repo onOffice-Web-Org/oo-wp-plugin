@@ -30,10 +30,10 @@ class DistinctFieldsFilter
 {
 
 
-	/**  */
+	/** */
 	const NOT_ALLOWED_KEYS = ['s', '', 'oo_formid', 'oo_formno'];
 
-	/**  */
+	/** */
 	const NOT_ALLOWED_VALUES = [''];
 
 
@@ -62,11 +62,11 @@ class DistinctFieldsFilter
 	 *
 	 */
 
-	private function isMultiselectableType(string $field):bool
+	private function isMultiselectableType(string $field): bool
 	{
 		return $this->_module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
-						in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
-							[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]);
+			in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
+				[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]);
 	}
 
 
@@ -78,10 +78,10 @@ class DistinctFieldsFilter
 	 *
 	 */
 
-	private function isNumericalType(string $field):bool
+	private function isNumericalType(string $field): bool
 	{
 		return in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
-							[FieldTypes::FIELD_TYPE_FLOAT, FieldTypes::FIELD_TYPE_INTEGER]);
+			[FieldTypes::FIELD_TYPE_FLOAT, FieldTypes::FIELD_TYPE_INTEGER]);
 	}
 
 
@@ -93,71 +93,48 @@ class DistinctFieldsFilter
 	 *
 	 */
 
-	public function filter(string $distinctField, array $inputValues):array
+	public function filter(string $distinctField, array $inputValues): array
 	{
 		$filter = [];
 
-		foreach ($inputValues as $key => $value)
-		{
-			if (in_array($key, self::NOT_ALLOWED_KEYS) ||
-				in_array($value, self::NOT_ALLOWED_VALUES))
-			{
+		foreach ($inputValues as $key => $value) {
+			if (in_array($key, self::NOT_ALLOWED_KEYS) || in_array($value, self::NOT_ALLOWED_VALUES)) {
 				continue;
 			}
 
-			$pString = new __String($key);
+			$pString = __String::getNew($key);
 			$operator = null;
 			$field = null;
 
 			$key = $pString->replace('[]', '');
 
-			if ($pString->endsWith('__von') &&
-				$this->_module == onOfficeSDK::MODULE_ESTATE)
-			{
+			if ($pString->endsWith('__von') && $this->_module == onOfficeSDK::MODULE_ESTATE) {
 				$operator = '>=';
 				$field = $pString->replace('__von', '');
 
-				if (array_key_exists($field, $filter) &&
-						$this->isNumericalType($field))
-				{
+				if (isset($filter[$field]) && $this->isNumericalType($field)) {
 					$operator = 'between';
 					$value1 = $value;
 					$value2 = $filter[$field][0]['val'];
-
 					$value = [$value1, $value2];
 				}
-			}
-			elseif ($pString->endsWith('__bis') &&
-					$this->_module == onOfficeSDK::MODULE_ESTATE)
-			{
+			} elseif ($pString->endsWith('__bis') && $this->_module == onOfficeSDK::MODULE_ESTATE) {
 				$operator = '<=';
 				$field = $pString->replace('__bis', '');
 
-				if (array_key_exists($field, $filter) &&
-						$this->isNumericalType($field))
-				{
+				if (isset($filter[$field]) && $this->isNumericalType($field)) {
 					$operator = 'between';
-
 					$value1 = $filter[$field][0]['val'];
 					$value2 = $value;
-
 					$value = [$value1, $value2];
 				}
-			}
-			else
-			{
-				if (is_array($value))
-				{
+			} else {
+				if (is_array($value)) {
 					$operator = 'in';
-				}
-				else
-				{
-					if ($this->isMultiselectableType($key))
-					{
+				} else {
+					if ($this->isMultiselectableType($key)) {
 						$operator = 'regexp';
-					}
-					else
-					{
+					} else {
 						$operator = '=';
 					}
 				}
@@ -165,27 +142,20 @@ class DistinctFieldsFilter
 				$field = $key;
 			}
 
-			if ($field == $distinctField)
-			{
+			if ($field === $distinctField) {
 				continue;
 			}
 
-			if ($this->isNumericalType($field) &&
-					$this->_module == onOfficeSDK::MODULE_SEARCHCRITERIA )
-			{
-				if (!array_key_exists($field.'__von', $filter))
-				{
-					$filter[$field.'__von'] = [array('op' => '<=', 'val' => $value)];
+			if ($this->isNumericalType($field) && $this->_module === onOfficeSDK::MODULE_SEARCHCRITERIA) {
+				if (!isset($filter[$field.'__von'])) {
+					$filter[$field.'__von'] = [['op' => '<=', 'val' => $value]];
 				}
 
-				if (!array_key_exists($field.'__bis', $filter))
-				{
-					$filter[$field.'__bis'] = [array('op' => '>=', 'val' => $value)];
+				if (!isset($filter[$field.'__bis'])) {
+					$filter[$field.'__bis'] = [['op' => '>=', 'val' => $value]];
 				}
-			}
-			else
-			{
-				$filter[$field] = [array('op' => $operator, 'val' => $value)];
+			} else {
+				$filter[$field] = [['op' => $operator, 'val' => $value]];
 			}
 		}
 
