@@ -209,7 +209,7 @@ class DistinctFieldsHandler
 				$requestParams['georangesearch'] = $this->_geoPositionFields;
 			}
 
-			$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'distinctFields');
+			$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'distinctValues');
 			$pApiClientAction->setParameters($requestParams);
 			$pApiClientAction->addRequestToQueue();
 			$pApiClientAction->sendRequests();

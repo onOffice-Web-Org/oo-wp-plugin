@@ -1,7 +1,7 @@
 {
 	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
 			   "resourceid": "",
-			   "resourcetype": "distinctFields",
+			   "resourcetype": "distinctValues",
 			   "cacheable": true,
 			   "identifier": "",
 			   "data": {

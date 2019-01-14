@@ -82,7 +82,7 @@ class TestClassDistinctFieldsHandler
 		$responseEstatesFields = json_decode($responseEstates, true);
 
 		$pSDKWrapperMocker->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_GET, 'distinctFields', '',
+			(onOfficeSDK::ACTION_ID_GET, 'distinctValues', '',
 			$parametersEstates, null, $responseEstatesFields);
 
 		$pExtraFieldsCollection = new FieldsCollection();
