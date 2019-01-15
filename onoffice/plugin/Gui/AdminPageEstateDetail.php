@@ -182,7 +182,7 @@ class AdminPageEstateDetail
 		echo '</div>';
 		echo '</div>';
 
-		do_settings_sections( $this->getPageSlug() );
+		do_settings_sections($this->getPageSlug());
 		submit_button(null, 'primary', 'send_ajax');
 
 		echo '<script>onOffice.ajaxSaver = new onOffice.ajaxSaver("onoffice-ajax");';

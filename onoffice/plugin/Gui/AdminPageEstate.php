@@ -21,6 +21,12 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use function __;
+use function add_query_arg;
+use function admin_url;
+use function esc_html;
+use function wp_die;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -48,9 +54,9 @@ class AdminPageEstate
 
 	/** @var string[] */
 	private $_subPageClassByTab = array(
-		self::PAGE_ESTATE_LIST => '\onOffice\WPlugin\Gui\AdminPageEstateList',
-		self::PAGE_ESTATE_DETAIL => '\onOffice\WPlugin\Gui\AdminPageEstateDetail',
-		self::PAGE_ESTATE_UNITS => '\onOffice\WPlugin\Gui\AdminPageEstateUnitList',
+		self::PAGE_ESTATE_LIST => AdminPageEstateList::class,
+		self::PAGE_ESTATE_DETAIL => AdminPageEstateDetail::class,
+		self::PAGE_ESTATE_UNITS => AdminPageEstateUnitList::class,
 	);
 
 	/** @var AdminPage */

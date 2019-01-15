@@ -32,12 +32,9 @@ use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
-use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_screen_option;
-use function plugin_dir_url;
 use function wp_enqueue_script;
-use function wp_register_script;
 
 /**
  *

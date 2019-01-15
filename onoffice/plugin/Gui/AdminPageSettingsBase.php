@@ -29,6 +29,23 @@ use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelDBAdapterRow;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use stdClass;
+use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_action;
+use function do_accordion_sections;
+use function do_action;
+use function do_meta_boxes;
+use function do_settings_sections;
+use function get_current_screen;
+use function json_decode;
+use function json_encode;
+use function plugin_dir_url;
+use function submit_button;
+use function wp_die;
+use function wp_enqueue_script;
+use function wp_nonce_field;
+use function wp_register_script;
+use function wp_verify_nonce;
 
 /**
  *
