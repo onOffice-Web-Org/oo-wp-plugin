@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\DataView\DataView;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Template;
 
 /**
@@ -50,15 +49,6 @@ interface EstateViewSimilarEstatesEnvironment
 	 */
 
 	public function getEstateList(): EstateListBase;
-
-
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
-
-	public function getSDKWrapper(): SDKWrapper;
 
 
 	/**

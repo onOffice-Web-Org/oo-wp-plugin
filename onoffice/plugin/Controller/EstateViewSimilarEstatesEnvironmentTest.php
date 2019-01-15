@@ -22,10 +22,8 @@
 namespace onOffice\WPlugin\Controller;
 
 use onOffice\tests\EstateListMocker;
-use onOffice\tests\SDKWrapperMocker;
 use onOffice\tests\TemplateMocker;
 use onOffice\WPlugin\DataView\DataView;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Template;
 
 /**
@@ -38,9 +36,6 @@ use onOffice\WPlugin\Template;
 class EstateViewSimilarEstatesEnvironmentTest
 	implements EstateViewSimilarEstatesEnvironment
 {
-	/** @var SDKWrapperMocker */
-	private $_pSDKWrapperMocker = null;
-
 	/** @var EstateListMocker */
 	private $_pEstateListMocker = null;
 
@@ -51,7 +46,6 @@ class EstateViewSimilarEstatesEnvironmentTest
 
 	public function __construct(DataView $pDataView)
 	{
-		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$this->_pEstateListMocker = new EstateListMocker($pDataView);
 	}
 
@@ -65,18 +59,6 @@ class EstateViewSimilarEstatesEnvironmentTest
 	public function getEstateList(): EstateListBase
 	{
 		return $this->_pEstateListMocker;
-	}
-
-
-	/**
-	 *
-	 * @return SDKWrapperMocker
-	 *
-	 */
-
-	public function getSDKWrapper(): SDKWrapper
-	{
-		return $this->_pSDKWrapperMocker;
 	}
 
 

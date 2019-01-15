@@ -23,7 +23,6 @@ namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\EstateList;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Template;
 
 /**
@@ -36,9 +35,6 @@ use onOffice\WPlugin\Template;
 class EstateViewSimilarEstatesEnvironmentDefault
 	implements EstateViewSimilarEstatesEnvironment
 {
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
 	/** @var EstateList */
 	private $_pEstateList = null;
 
@@ -46,13 +42,13 @@ class EstateViewSimilarEstatesEnvironmentDefault
 	/**
 	 *
 	 * @param DataView $pDataView
+	 * @param EstateListBase $pEstateList
 	 *
 	 */
 
-	public function __construct(DataView $pDataView)
+	public function __construct(DataView $pDataView, EstateListBase $pEstateList = null)
 	{
-		$this->_pSDKWrapper = new SDKWrapper();
-		$this->_pEstateList = new EstateList($pDataView);
+		$this->_pEstateList = $pEstateList ?? new EstateList($pDataView);
 		$this->_pEstateList->setFormatOutput(false);
 	}
 
@@ -66,18 +62,6 @@ class EstateViewSimilarEstatesEnvironmentDefault
 	public function getEstateList(): EstateListBase
 	{
 		return $this->_pEstateList;
-	}
-
-
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
-
-	public function getSDKWrapper(): SDKWrapper
-	{
-		return $this->_pSDKWrapper;
 	}
 
 

@@ -59,6 +59,9 @@ class EstateListMocker
 	/** @var GeoSearchBuilder */
 	private $_pGeoSearchBuilder = null;
 
+	/** @var bool */
+	private $_formatOutput = true;
+
 
 	/**
 	 *
@@ -295,4 +298,13 @@ class EstateListMocker
 	{
 		$this->_estateData = $estateData;
 	}
+
+
+	/** @return bool */
+	public function getFormatOutput(): bool
+		{ return $this->_formatOutput; }
+
+	/** @param bool $formatOutput */
+	public function setFormatOutput(bool $formatOutput)
+		{ $this->_formatOutput = $formatOutput; }
 }
