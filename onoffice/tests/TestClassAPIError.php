@@ -19,7 +19,7 @@
  *
  */
 
-namespace onOffice\WPlugin\API;
+use onOffice\WPlugin\API\APIError;
 
 /**
  *
@@ -28,6 +28,34 @@ namespace onOffice\WPlugin\API;
  *
  */
 
-class APIEmptyResultException
-	extends ApiClientException
-{}
+class TestClassAPIError
+	extends WP_UnitTestCase
+{
+	/**
+	 *
+	 */
+
+	public function testGetCredentialErrorCodes()
+	{
+		$pAPIError = new APIError();
+		$errorCodes = $pAPIError->getCredentialErrorCodes();
+		$expectedResult = [13, 22, 28, 30, 40, 41, 42, 43, 45, 47, 48, 49, 137];
+		$this->assertEquals($expectedResult, $errorCodes);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testIsCredentialErrorCode()
+	{
+		$pAPIError = new APIError();
+
+		$this->assertFalse($pAPIError->isCredentialError(0));
+		$this->assertFalse($pAPIError->isCredentialError(1));
+		$this->assertTrue($pAPIError->isCredentialError(13));
+		$this->assertTrue($pAPIError->isCredentialError(22));
+		$this->assertTrue($pAPIError->isCredentialError(28));
+	}
+}

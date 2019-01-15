@@ -1,0 +1,90 @@
+{
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+	"resourceid": "",
+	"resourcetype": "templates",
+	"cacheable": true,
+	"identifier": "",
+	"data": {
+		"meta": {
+			"cntabsolute": null
+		},
+		"records": [
+			{
+				"id": 0,
+				"type": "",
+				"elements": {
+					"identifier": "urn:onoffice-de-ns:smart:2.5:pdf:expose:kurz:design01Aushang",
+					"title": "Design01Aushang"
+				}
+			},
+			{
+				"id": 1,
+				"type": "",
+				"elements": {
+					"identifier": "urn:onoffice-de-ns:smart:2.5:pdf:expose:kurz:design01Expose",
+					"title": "Design01Expose (kurz)"
+				}
+			},
+			{
+				"id": 2,
+				"type": "",
+				"elements": {
+					"identifier": "urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:design01Expose",
+					"title": "Design01Expose (lang)"
+				}
+			},
+			{
+				"id": 3,
+				"type": "",
+				"elements": {
+					"identifier": "urn:onoffice-de-ns:smart:2.5:pdf:expose:kurz:design02Aushang",
+					"title": "Design02Aushang"
+				}
+			},
+			{
+				"id": 4,
+				"type": "",
+				"elements": {
+					"identifier": "urn:onoffice-de-ns:smart:2.5:pdf:expose:kurz:design02Expose",
+					"title": "Design02Expose (kurz)"
+				}
+			},
+			{
+				"id": 5,
+				"type": "",
+				"elements": {
+					"identifier": "urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:design02Expose",
+					"title": "Design02Expose (lang)"
+				}
+			},
+			{
+				"id": 6,
+				"type": "",
+				"elements": {
+					"identifier": "urn:onoffice-de-ns:smart:2.5:pdf:expose:kurz:objektnachweis",
+					"title": "Expos\u00e9 Objektnachweis"
+				}
+			},
+			{
+				"id": 7,
+				"type": "",
+				"elements": {
+					"identifier": "urn:onoffice-de-ns:smart:2.5:pdf:expose:kurz:landscape",
+					"title": "Expos\u00e9 Querformat (kurz)"
+				}
+			},
+			{
+				"id": 8,
+				"type": "",
+				"elements": {
+					"identifier": "urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:landscape",
+					"title": "Expos\u00e9 Querformat (lang)"
+				}
+			}
+		]
+	},
+	"status": {
+		"errorcode": 0,
+		"message": "OK"
+	}
+}

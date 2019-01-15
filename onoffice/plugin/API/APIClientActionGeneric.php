@@ -78,6 +78,19 @@ class APIClientActionGeneric
 
 	/**
 	 *
+	 * @return ApiClientException
+	 *
+	 */
+
+	private function generateException(): ApiClientException
+	{
+		$pExceptionFactory = new APIClientExceptionFactory();
+		return $pExceptionFactory->createExceptionByAPIClientAction($this);
+	}
+
+
+	/**
+	 *
 	 * @return $this
 	 *
 	 */
@@ -110,10 +123,22 @@ class APIClientActionGeneric
 	public function getResultStatus(): bool
 	{
 		$resultApi = $this->getResult();
-		$errorcode = $resultApi['status']['errorcode'] ?? 500;
-		$result = $errorcode === 0 && isset($resultApi['data']['records']);
+		$result = $this->getErrorCode() === 0 && isset($resultApi['data']['records']);
 
 		return $result;
+	}
+
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	public function getErrorCode(): int
+	{
+		$resultApi = $this->getResult();
+		return $resultApi['status']['errorcode'] ?? 500;
 	}
 
 
@@ -131,7 +156,7 @@ class APIClientActionGeneric
 			return $result['data']['records'];
 		}
 
-		throw new APIEmptyResultException();
+		throw $this->generateException();
 	}
 
 
@@ -149,7 +174,7 @@ class APIClientActionGeneric
 			return $result['data']['meta'] ?? [];
 		}
 
-		throw new APIEmptyResultException();
+		throw $this->generateException();
 	}
 
 
@@ -196,10 +221,6 @@ class APIClientActionGeneric
 	/** @return array */
 	public function getParameters(): array
 		{ return $this->_parameters; }
-
-	/** @return SDKWrapper */
-	protected function getSDKWrapper(): SDKWrapper
-		{ return $this->_pSDKWrapper; }
 
 	/** @param array $result */
 	protected function setResult(array $result)

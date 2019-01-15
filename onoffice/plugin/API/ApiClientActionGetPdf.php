@@ -56,7 +56,7 @@ class ApiClientActionGetPdf
 			}
 		}
 
-		throw new APIEmptyResultException();
+		throw new APIEmptyResultException($this);
 	}
 
 
@@ -101,6 +101,6 @@ class ApiClientActionGetPdf
 			return $result['data']['records'][0]['elements']['type'];
 		}
 
-		throw new APIEmptyResultException();
+		throw new APIEmptyResultException($this);
 	}
 }

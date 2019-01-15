@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin\Controller;
 
 use Exception;
+use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Gui\AdminPageAddressList;
 use onOffice\WPlugin\Gui\AdminPageAddressListSettings;
 use onOffice\WPlugin\Gui\AdminPageAjax;
@@ -34,8 +36,24 @@ use onOffice\WPlugin\Gui\AdminPageEstateUnitSettings;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\AdminPageFormSettingsMain;
 use onOffice\WPlugin\Gui\AdminPageModules;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use WP_Hook;
+use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_action;
+use function add_menu_page;
+use function add_submenu_page;
+use function admin_url;
+use function esc_attr;
+use function esc_html;
+use function get_admin_url;
+use function is_admin;
+use function plugins_url;
+use function wp_create_nonce;
+use function wp_enqueue_script;
+use function wp_enqueue_style;
+use function wp_localize_script;
 
 /**
  *
@@ -118,6 +136,8 @@ class AdminViewController
 
 	public function register_menu()
 	{
+		add_action('admin_notices', [$this, 'displayAPIError']);
+
 		// main page
 		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'), 'edit_pages',
 			$this->_pageSlug, function(){}, 'dashicons-admin-home');
@@ -307,8 +327,30 @@ class AdminViewController
 	public function pluginSettingsLink($links)
 	{
 		$url = get_admin_url().'admin.php?page='.$this->_pageSlug;
-		$settings_link = '<a href="'.$url.'">'.__( 'Settings', 'onoffice' ).'</a>';
-		array_unshift( $links, $settings_link );
+		$settings_link = '<a href="'.$url.'">'.__('Settings', 'onoffice').'</a>';
+		array_unshift($links, $settings_link);
 		return $links;
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function displayAPIError()
+	{
+		$pFieldnames = new Fieldnames(new FieldsCollection());
+
+		try {
+			$pFieldnames->loadLanguage();
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			$class = 'notice notice-error';
+			$label = __('API token and secret', 'onoffice');
+			$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+			$message = sprintf(esc_html(__('It looks like you did not enter any valid API '
+				.'credentials. Please consider reviewing your %s.', 'onoffice')), $loginCredentialsLink);
+
+			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		}
 	}
 }

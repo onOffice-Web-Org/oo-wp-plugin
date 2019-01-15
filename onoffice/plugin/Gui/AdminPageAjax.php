@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\GeoPosition;
@@ -33,6 +34,7 @@ use onOffice\WPlugin\Utility\HtmlIdGenerator;
 use function add_meta_box;
 use function get_current_screen;
 use function is_admin;
+use function wp_die;
 
 
 /**
@@ -72,7 +74,14 @@ abstract class AdminPageAjax
 			__String::getNew($pCurrentScreen->id)->contains('onoffice') &&
 			is_admin())
 		{
-			$this->buildForms();
+			try {
+				$this->buildForms();
+			} catch (APIClientCredentialsException $pCredentialsException) {
+				$label = __('login credentials', 'onoffice');
+				$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+				wp_die(sprintf(__('It looks like you did not enter any valid API credentials. '
+					.'Please go back and review your %s.', 'onoffice'), $loginCredentialsLink), 'onOffice plugin');
+			}
 		}
 	}
 
@@ -117,7 +126,7 @@ abstract class AdminPageAjax
 
 	public function getEnqueueData()
 	{
-		return array();
+		return [];
 	}
 
 
@@ -129,7 +138,7 @@ abstract class AdminPageAjax
 	 *
 	 */
 
-	protected function readFieldnamesByContent($module, FieldModuleCollection $pFieldsCollection = null)
+	protected function readFieldnamesByContent($module, FieldModuleCollection $pFieldsCollection = null): array
 	{
 		$pFieldnames = new Fieldnames($pFieldsCollection ?? new FieldsCollection());
 		$pFieldnames->loadLanguage();

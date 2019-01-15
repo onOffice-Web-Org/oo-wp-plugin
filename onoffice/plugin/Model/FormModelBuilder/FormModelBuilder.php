@@ -21,11 +21,12 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
+use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
-use onOffice\WPlugin\TemplateCall;
+use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Utility\__String;
 use const ONOFFICE_PLUGIN_DIR;
 use function plugin_dir_path;
@@ -100,12 +101,16 @@ abstract class FormModelBuilder
 
 	protected function readFieldnames($module)
 	{
-		$fieldnames = $this->_pFieldnames->getFieldList($module);
-		$result = array();
+		try {
+			$this->_pFieldnames->loadLanguage();
+			$fieldnames = $this->_pFieldnames->getFieldList($module);
+			$result = array();
 
-		foreach ($fieldnames as $key => $properties)
-		{
-			$result[$key] = $properties['label'];
+			foreach ($fieldnames as $key => $properties) {
+				$result[$key] = $properties['label'];
+			}
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			$result = [];
 		}
 
 		return $result;
@@ -153,18 +158,22 @@ abstract class FormModelBuilder
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-		$fieldNames = array();
+		$fieldNames = [];
 
-		if (is_array($module)) {
-			foreach ($module as $submodule) {
-				$fieldNamesModule = $this->_pFieldnames->getFieldList($submodule);
-				$fieldNames = array_merge($fieldNames, $fieldNamesModule);
+		try {
+			$this->_pFieldnames->loadLanguage();
+			if (is_array($module)) {
+				foreach ($module as $submodule) {
+					$fieldNamesModule = $this->_pFieldnames->getFieldList($submodule);
+					$fieldNames = array_merge($fieldNames, $fieldNamesModule);
+				}
+			} else {
+				$fieldNames = $this->_pFieldnames->getFieldList($module);
 			}
-		} else {
-			$fieldNames = $this->_pFieldnames->getFieldList($module);
-		}
 
-		$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
+			$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
+		} catch (APIClientCredentialsException $pCredentialsException) {}
+
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
 		$fields = $this->getValue(self::CONFIG_FIELDS);
@@ -187,8 +196,12 @@ abstract class FormModelBuilder
 
 	protected function readFilters($module)
 	{
-		$pFilterCall = new FilterCall($module);
-		return $pFilterCall->getFilters();
+		try {
+			$pFilterCall = new FilterCall($module);
+			return $pFilterCall->getFilters();
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			return [];
+		}
 	}
 
 
@@ -200,8 +213,13 @@ abstract class FormModelBuilder
 
 	protected function readExposes()
 	{
-		$pTemplateCall = new TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE);
-		return $pTemplateCall->getTemplates();
+		try {
+			$pTemplateCall = new TemplateCall();
+			$pTemplateCall->loadTemplates();
+			return $pTemplateCall->getTemplates();
+		} catch (APIClientCredentialsException $pException) {
+			return [];
+		}
 	}
 
 

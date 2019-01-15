@@ -53,7 +53,6 @@ abstract class FormModelBuilderDBEstate
 		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
 			(new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection()));
 		$pFieldnames = new Fieldnames($pFieldCollection);
-		$pFieldnames->loadLanguage();
 		$this->setFieldnames($pFieldnames);
 	}
 }
