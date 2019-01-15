@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui\Table;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
@@ -29,6 +30,17 @@ use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use WP_List_Table;
+use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function _e;
+use function admin_url;
+use function current_user_can;
+use function esc_html;
+use function esc_html__;
+use function esc_js;
+use function plugin_basename;
+use function plugin_dir_url;
+use function wp_nonce_url;
 
 /**
  *
@@ -190,8 +202,12 @@ class EstateListTable extends ListTable
 	protected function column_filtername($pItem)
 	{
 		$filterName = '';
-		if ($pItem->filterId != 0) {
-			$filterName = $this->_pFilterCall->getFilternameById($pItem->filterId);
+		try {
+			if ($pItem->filterId != 0) {
+				$filterName = $this->_pFilterCall->getFilternameById($pItem->filterId);
+			}
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			$filterName = __('(Needs valid API credentials)', 'onoffice');
 		}
 		return $filterName;
 	}
