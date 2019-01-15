@@ -21,12 +21,28 @@
 
 namespace onOffice\WPlugin\Gui\Table;
 
+use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use WP_List_Table;
+use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_query_arg;
+use function admin_url;
+use function current_user_can;
+use function esc_html;
+use function esc_html__;
+use function esc_js;
+use function esc_sql;
+use function esc_url;
+use function menu_page_url;
+use function number_format_i18n;
+use function plugin_basename;
+use function plugin_dir_url;
+use function wp_nonce_url;
 /**
  *
  * @url http://www.onoffice.de
@@ -164,7 +180,10 @@ class FormsTable
 
 	public function ajax_user_can()
 	{
-		return current_user_can( 'edit_pages' );
+		$pUserCapabilities = new UserCapabilities();
+		$roleEditForms = $pUserCapabilities->getCapabilityForRule
+			(UserCapabilities::RULE_EDIT_VIEW_FORM);
+		return current_user_can($roleEditForms);
 	}
 
 

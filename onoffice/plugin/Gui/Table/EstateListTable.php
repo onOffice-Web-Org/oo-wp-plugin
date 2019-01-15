@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui\Table;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
@@ -86,7 +87,10 @@ class EstateListTable extends ListTable
 
 	public function ajax_user_can()
 	{
-		return current_user_can( 'edit_pages' );
+		$pUserCapabilities = new UserCapabilities();
+		$roleEditEstates = $pUserCapabilities->getCapabilityForRule
+			(UserCapabilities::RULE_EDIT_VIEW_ESTATE);
+		return current_user_can($roleEditEstates);
 	}
 
 

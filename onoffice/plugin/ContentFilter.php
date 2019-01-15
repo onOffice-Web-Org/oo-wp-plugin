@@ -30,6 +30,7 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -51,11 +52,11 @@ use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_Query;
 use const ONOFFICE_PLUGIN_DIR;
-use const WP_DEBUG;
 use function __;
 use function add_rewrite_rule;
 use function add_rewrite_tag;
 use function add_shortcode;
+use function current_user_can;
 use function do_shortcode;
 use function esc_html;
 use function get_page_uri;
@@ -362,8 +363,10 @@ class ContentFilter
 	public function logErrorAndDisplayMessage(Exception $pException)
 	{
 		$output = '';
+		$pUserCapabilities = new UserCapabilities();
+		$roleDebugOutput = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_DEBUG_OUTPUT);
 
-		if (defined('WP_DEBUG') && WP_DEBUG) {
+		if (current_user_can($roleDebugOutput)) {
 			$output = '<pre>'
 					. '<u><strong>[onOffice-Plugin]</strong> Ein Fehler ist aufgetreten:</u><p>'
 					.esc_html((string) $pException).'</pre></p>';

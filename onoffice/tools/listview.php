@@ -19,6 +19,7 @@
  *
  */
 
+use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 
@@ -31,7 +32,10 @@ $redirectFile = wp_get_referer();
 $actionGet = filter_input(INPUT_GET, 'action');
 $actionPost = filter_input(INPUT_POST, 'action2', FILTER_FORCE_ARRAY|FILTER_NULL_ON_FAILURE);
 
-if (!current_user_can('edit_pages') || !(isset($actionGet) || isset($actionPost)) ) {
+$pUserCapabilities = new UserCapabilities();
+$roleEditEstateView = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_ESTATE);
+
+if (!current_user_can($roleEditEstateView) || !(isset($actionGet) || isset($actionPost)) ) {
 	wp_safe_redirect( add_query_arg( 'delete', 0, $redirectFile ) );
 }
 

@@ -137,19 +137,25 @@ class AdminViewController
 	public function register_menu()
 	{
 		add_action('admin_notices', [$this, 'displayAPIError']);
+		$pUserCapabilities = new UserCapabilities;
+		$roleMainPage = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_VIEW_MAIN_PAGE);
+		$roleAddress = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_ADDRESS);
+		$roleEstate = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_ESTATE);
+		$roleForm = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_FORM);
+		$roleModules = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_MODULES);
+		$roleSettings = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_SETTINGS);
 
 		// main page
-		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'), 'edit_pages',
-			$this->_pageSlug, function(){}, 'dashicons-admin-home');
+		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'),
+			$roleMainPage, $this->_pageSlug, function(){}, 'dashicons-admin-home');
 
 		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
-		add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'),
-			__('Addresses', 'onoffice'), 'edit_pages', $this->_pageSlug.'-addresses',
-			array($pAdminPageAddresses, 'render'));
+		add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'), __('Addresses', 'onoffice'),
+			$roleAddress, $this->_pageSlug.'-addresses', array($pAdminPageAddresses, 'render'));
 
 		// Estates
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),
-			__('Estates', 'onoffice'), 'edit_pages',
+			__('Estates', 'onoffice'), $roleEstate,
 			$this->_pageSlug.'-estates',  array($this->_pAdminPageEstates, 'render'));
 		add_action( 'load-'.$hookEstates, array($this->_pAdminPageEstates, 'handleAdminNotices'));
 		$pSelectedSubPage = $this->_pAdminPageEstates->getSelectedAdminPage();
@@ -160,11 +166,11 @@ class AdminViewController
 		// Forms
 		$pAdminPageFormList = new AdminPageFormList($this->_pageSlug);
 		$hookForms = add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
-			'edit_pages', $this->_pageSlug.'-forms', array($pAdminPageFormList, 'render'));
+			$roleForm, $this->_pageSlug.'-forms', array($pAdminPageFormList, 'render'));
 		add_action( 'load-'.$hookForms, array($pAdminPageFormList, 'handleAdminNotices'));
 
 		// Edit Form (hidden page)
-		$hookEditForm = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editform',
+		$hookEditForm = add_submenu_page(null, null, null, $roleForm, $this->_pageSlug.'-editform',
 			array($this->_pAdminPageFormSettings, 'render'));
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'initSubClassForGet'));
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'handleAdminNotices'));
@@ -173,23 +179,23 @@ class AdminViewController
 		// Modules
 		$pAdminPageModules = new AdminPageModules($this->_pageSlug);
 		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice'), __('Modules', 'onoffice'),
-			'edit_pages', $this->_pageSlug.'-modules', array($pAdminPageModules, 'render'));
+			$roleModules, $this->_pageSlug.'-modules', array($pAdminPageModules, 'render'));
 		add_action( 'admin_init', array($pAdminPageModules, 'registerForms'));
 
 		// Estates: edit list view (hidden page)
-		$hookEditList = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editlistview',
+		$hookEditList = add_submenu_page(null, null, null, $roleEstate, $this->_pageSlug.'-editlistview',
 			array($this->_pAdminListViewSettings, 'render'));
 		add_action( 'load-'.$hookEditList, array($this->_pAdminListViewSettings, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditList, array($this->_pAdminListViewSettings, 'checkForms'));
 
 		// Estates: edit list view (hidden page)
-		$hookEditUnitList = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editunitlist',
+		$hookEditUnitList = add_submenu_page(null, null, null, $roleEstate, $this->_pageSlug.'-editunitlist',
 			array($this->_pAdminUnitListSettings, 'render'));
 		add_action( 'load-'.$hookEditUnitList, array($this->_pAdminUnitListSettings, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditUnitList, array($this->_pAdminUnitListSettings, 'checkForms'));
 
 		// Address: edit list view (hidden page)
-		$hookEditAddressList = add_submenu_page(null, null, null, 'edit_pages', $this->_pageSlug.'-editlistviewaddress',
+		$hookEditAddressList = add_submenu_page(null, null, null, $roleEstate, $this->_pageSlug.'-editlistviewaddress',
 			array($this->_pAdminListViewSettingsAddress, 'render'));
 		add_action( 'load-'.$hookEditAddressList, array($this->_pAdminListViewSettingsAddress, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditAddressList, array($this->_pAdminListViewSettingsAddress, 'checkForms'));
@@ -197,7 +203,7 @@ class AdminViewController
 		// Settings
 		$pAdminSettingsPage = new AdminPageApiSettings($this->_pageSlug.'-settings');
 		$hookSettings = add_submenu_page( $this->_pageSlug, __('Settings', 'onoffice'),
-			__('Settings', 'onoffice'), 'edit_pages', $this->_pageSlug.'-settings',
+			__('Settings', 'onoffice'), $roleSettings, $this->_pageSlug.'-settings',
 			array($pAdminSettingsPage, 'render'));
 		add_action( 'admin_init', array($pAdminSettingsPage, 'registerForms'));
 		add_action( 'load-'.$hookSettings, array($pAdminSettingsPage, 'handleAdminNotices'));

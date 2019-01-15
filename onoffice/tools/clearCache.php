@@ -23,9 +23,12 @@
 // set up WP environment
 require '../../../../wp-load.php';
 
+use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\SDKWrapper;
+$pUserCapabilities = new UserCapabilities();
+$roleEditSettings = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_SETTINGS);
 
-if (!current_user_can('edit_pages') ||
+if (!current_user_can($roleEditSettings) ||
 	!array_key_exists('onoffice-cache-nonce', $_REQUEST) ||
 	!wp_verify_nonce( $_REQUEST['onoffice-cache-nonce'], 'onoffice-clear-cache' ))
 {

@@ -19,20 +19,25 @@
  *
  */
 
+use onOffice\WPlugin\Controller\UserCapabilities;
+use onOffice\WPlugin\Gui\Table\WP\ListTable;
+use onOffice\WPlugin\Record\RecordManagerDeleteForm;
 
 // set up WP environment
 require '../../../../wp-load.php';
 $redirectFile = admin_url('admin.php?page=onoffice-forms');
+$pUserCapabilities = new UserCapabilities;
+$roleEditForms = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_FORM);
 
-if (!current_user_can('edit_pages') ||
+if (!current_user_can($roleEditForms) ||
 	!(isset($_GET['action']) || isset($_POST['action2'])) )
 {
 	wp_safe_redirect( add_query_arg( 'delete', 0, $redirectFile ) );
 }
 
-$action = onOffice\WPlugin\Gui\Table\WP\ListTable::currentAction();
+$action = ListTable::currentAction();
 
-$pRecordManagerDelete = new \onOffice\WPlugin\Record\RecordManagerDeleteForm();
+$pRecordManagerDelete = new RecordManagerDeleteForm();
 
 switch ($action)
 {
