@@ -67,10 +67,10 @@ $(function() {
 				}
 				else if ($(this).is(":checkbox"))
 				{
-					if($(this).is(':checked'))
-					{
-						var theKey = this.name;
+					var theKey = this.name;
 
+					if ($(this).is(':checked'))
+					{
 						if (!(theKey in inputValues))
 						{
 							inputValues[this.name] = [];
@@ -83,6 +83,11 @@ $(function() {
 							multiselectSelectedValues[this.name] = [];
 						}
 						multiselectSelectedValues[this.name].push($(this).val());
+					}
+
+					if (!(this.name in multiselectSelectedValues))
+					{
+						multiselectSelectedValues[this.name] = [];
 					}
 				}
 				else if ($(this).is(":radio"))
@@ -108,8 +113,6 @@ $(function() {
 			}
 
 		});
-
-
 
 		$.post(base_path[0], { field: myElement.name, inputValues: JSON.stringify(inputValues), module:module[0], distinctValues: distinctValues[0] })
 			.done(function( data ) {
