@@ -30,6 +30,7 @@
 namespace onOffice\WPlugin\Region;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
 
@@ -37,19 +38,27 @@ use onOffice\WPlugin\SDKWrapper;
  *
  */
 
-class RegionController {
+class RegionController
+{
 	/** @var array */
-	private $_regions = null;
+	private $_regions = [];
+
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
 
 
 	/**
 	 *
-	 * @param string $language
+	 * @param bool $init
+	 * @param SDKWrapper $pSDKWrapper
 	 *
 	 */
 
-	public function __construct() {
-		if ( is_null( $this->_regions ) ) {
+	public function __construct(bool $init = true, SDKWrapper $pSDKWrapper = null)
+	{
+		$this->_pSDKWrapper = $pSDKWrapper ?? new SDKWrapper;
+
+		if ($init) {
 			$this->fetchRegions();
 		}
 	}
@@ -59,14 +68,13 @@ class RegionController {
 	 *
 	 */
 
-	private function fetchRegions() {
-		$pSdk = new SDKWrapper();
-		$regionHandle = $pSdk->addRequest( onOfficeSDK::ACTION_ID_GET, 'regions' );
-		$pSdk->sendRequests();
-
-		$response = $pSdk->getRequestResponse( $regionHandle );
-		$regionList = $response['data']['records'];
-		$this->_regions = $this->createRegionObjects( $regionList );
+	public function fetchRegions()
+	{
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'regions');
+		$pApiClientAction->setParameters(['language' => Language::getDefault()]);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$this->_regions = $this->createRegionObjects($pApiClientAction->getResultRecords());
 	}
 
 
@@ -78,32 +86,26 @@ class RegionController {
 	 *
 	 */
 
-	private function createRegionObjects( array $regionList, $level1 = true ) {
-		$regions = array();
-		foreach ( $regionList as $regionProperties ) {
-			if ( $level1 ) {
+	private function createRegionObjects(array $regionList, bool $level1 = true): array
+	{
+		$regions = [];
+		foreach ($regionList as $regionProperties) {
+			$elements = $regionProperties;
+			if ($level1) {
 				$elements = $regionProperties['elements'];
-			} else {
-				$elements = $regionProperties;
 			}
-			$id = $elements['id'];
-			$name = $elements['name'];
-			$description = $elements['description'];
-			$postalCodes = $elements['postalcodes'];
-			$state = $elements['state'];
-			$country = $elements['country'];
 
-			$pRegion = new Region( $id, Language::getDefault() );
-			$pRegion->setName( $name );
-			$pRegion->setDescription( $description );
-			$pRegion->setPostalCodes( $postalCodes );
-			$pRegion->setState( $state );
-			$pRegion->setCountry( $country );
+			$pRegion = new Region($elements['id'], Language::getDefault());
+			$pRegion->setName($elements['name'] ?? '');
+			$pRegion->setDescription($elements['description'] ?? '');
+			$pRegion->setPostalCodes($elements['postalcodes'] ?? []);
+			$pRegion->setState($elements['state'] ?? '');
+			$pRegion->setCountry($elements['country'] ?? '');
 
-			$children = $this->createRegionObjects( $elements['children'], false );
-			$pRegion->setChildren( $children );
+			$children = $this->createRegionObjects($elements['children'], false);
+			$pRegion->setChildren($children);
 
-			$regions[] = $pRegion;
+			$regions []= $pRegion;
 		}
 
 		return $regions;
@@ -116,7 +118,8 @@ class RegionController {
 	 *
 	 */
 
-	public function getRegions() {
+	public function getRegions(): array
+	{
 		return $this->_regions;
 	}
 
@@ -129,7 +132,8 @@ class RegionController {
 	 *
 	 */
 
-	public function getRegionByKey($key, Region $pParentRegion = null) {
+	public function getRegionByKey(string $key, Region $pParentRegion = null)
+	{
 		if ($pParentRegion === null) {
 			$outerLevel = $this->_regions;
 		} else {
@@ -159,14 +163,14 @@ class RegionController {
 	 *
 	 */
 
-	public function getSubRegionsByParentRegion($key)
+	public function getSubRegionsByParentRegion(string $key): array
 	{
 		$pRegion = $this->getRegionByKey($key);
-		if ($pRegion === null) {
-			return null;
+		if ($pRegion !== null) {
+			return $this->getRegionNamesOfChildRegions($pRegion);
 		}
 
-		return $this->getRegionNamesOfChildRegions($pRegion);
+		return [];
 	}
 
 
@@ -177,13 +181,26 @@ class RegionController {
 	 *
 	 */
 
-	private function getRegionNamesOfChildRegions(Region $pRegion) {
+	private function getRegionNamesOfChildRegions(Region $pRegion): array
+	{
 		$childRegions = array($pRegion->getId());
 		foreach ($pRegion->getChildren() as $pChildRegion) {
-			$childRegions = array_merge($childRegions, $this->getRegionNamesOfChildRegions
-				($pChildRegion));
+			$childRegions = array_merge($childRegions,
+				$this->getRegionNamesOfChildRegions($pChildRegion));
 		}
 
 		return $childRegions;
+	}
+
+
+	/**
+	 *
+	 * @return SDKWrapper
+	 *
+	 */
+
+	public function getSDKWrapper(): SDKWrapper
+	{
+		return $this->_pSDKWrapper;
 	}
 }

@@ -19,6 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\WPlugin\Region;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -26,37 +30,31 @@
  *
  */
 
-
-namespace onOffice\WPlugin\Region;
-
-/**
- *
- */
-
-class Region {
+class Region
+{
 	/** @var string */
 	private $_id = null;
 
 	/** @var string */
-	private $_name = null;
+	private $_name = '';
 
 	/** @var string */
-	private $_description = null;
+	private $_description = '';
 
 	/** @var string */
-	private $_language = null;
+	private $_language = '';
 
 	/** @var int[] */
-	private $_postalCodes = array();
+	private $_postalCodes = [];
 
 	/** @var string */
-	private $_state = null;
+	private $_state = '';
 
 	/** @var string */
-	private $_country = null;
+	private $_country = '';
 
 	/** @var Region[] */
-	private $_children = array();
+	private $_children = [];
 
 
 	/**
@@ -66,7 +64,8 @@ class Region {
 	 *
 	 */
 
-	public function __construct($id, $language) {
+	public function __construct(string $id, string $language)
+	{
 		$this->_id = $id;
 		$this->_language = $language;
 	}
@@ -78,7 +77,8 @@ class Region {
 	 *
 	 */
 
-	public function getId() {
+	public function getId(): string
+	{
 		return $this->_id;
 	}
 
@@ -89,7 +89,8 @@ class Region {
 	 *
 	 */
 
-	public function getName() {
+	public function getName(): string
+	{
 		return $this->_name;
 	}
 
@@ -100,7 +101,8 @@ class Region {
 	 *
 	 */
 
-	public function getDescription() {
+	public function getDescription(): string
+	{
 		return $this->_description;
 	}
 
@@ -111,7 +113,8 @@ class Region {
 	 *
 	 */
 
-	public function getLanguage() {
+	public function getLanguage(): string
+	{
 		return $this->_language;
 	}
 
@@ -122,7 +125,8 @@ class Region {
 	 *
 	 */
 
-	public function getPostalCodes() {
+	public function getPostalCodes(): array
+	{
 		return $this->_postalCodes;
 	}
 
@@ -133,7 +137,8 @@ class Region {
 	 *
 	 */
 
-	public function getState() {
+	public function getState(): string
+	{
 		return $this->_state;
 	}
 
@@ -144,7 +149,8 @@ class Region {
 	 *
 	 */
 
-	public function getCountry() {
+	public function getCountry(): string
+	{
 		return $this->_country;
 	}
 
@@ -155,7 +161,8 @@ class Region {
 	 *
 	 */
 
-	public function getChildren() {
+	public function getChildren(): array
+	{
 		return $this->_children;
 	}
 
@@ -166,7 +173,8 @@ class Region {
 	 *
 	 */
 
-	public function setName($name) {
+	public function setName(string $name)
+	{
 		$this->_name = $name;
 	}
 
@@ -177,18 +185,20 @@ class Region {
 	 *
 	 */
 
-	public function setDescription($description) {
+	public function setDescription(string $description)
+	{
 		$this->_description = $description;
 	}
 
 
 	/**
 	 *
-	 * @param int[] $postalcodes
+	 * @param array $postalcodes
 	 *
 	 */
 
-	public function setPostalCodes(array $postalcodes) {
+	public function setPostalCodes(array $postalcodes)
+	{
 		$this->_postalCodes = $postalcodes;
 	}
 
@@ -199,7 +209,8 @@ class Region {
 	 *
 	 */
 
-	public function setState($state) {
+	public function setState(string $state)
+	{
 		$this->_state = $state;
 	}
 
@@ -210,7 +221,8 @@ class Region {
 	 *
 	 */
 
-	public function setCountry($country) {
+	public function setCountry(string $country)
+	{
 		$this->_country = $country;
 	}
 
@@ -221,18 +233,8 @@ class Region {
 	 *
 	 */
 
-	public function setChildren(array $children) {
+	public function setChildren(array $children)
+	{
 		$this->_children = $children;
-	}
-
-
-	/**
-	 *
-	 * @param \onOffice\WPlugin\Region\Region $pChild
-	 *
-	 */
-
-	public function addChild(Region $pChild) {
-		$this->_children[] = $pChild;
 	}
 }
