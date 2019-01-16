@@ -30,6 +30,7 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
@@ -59,6 +60,7 @@ use function add_shortcode;
 use function current_user_can;
 use function do_shortcode;
 use function esc_html;
+use function esc_html__;
 use function get_page_uri;
 use function get_post;
 use function plugin_dir_path;
@@ -367,12 +369,19 @@ class ContentFilter
 		$roleDebugOutput = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_DEBUG_OUTPUT);
 
 		if (current_user_can($roleDebugOutput)) {
-			$output = '<pre>'
-					. '<u><strong>[onOffice-Plugin]</strong> Ein Fehler ist aufgetreten:</u><p>'
+			if ($pException instanceof APIClientCredentialsException) {
+				$output = sprintf('<h1>%s</h1>',
+					__('Please configure your onOffice API credentials first!', 'onoffice'));
+			} else {
+				$output = '<pre>'
+					.'<u><strong>[onOffice-Plugin]</strong> '
+					.esc_html__('An error occured:', 'onoffice').'</u><p>'
 					.esc_html((string) $pException).'</pre></p>';
+				error_log('[onOffice-Plugin]: '.strval($pException));
+			}
+		} else {
+			error_log('[onOffice-Plugin]: '.strval($pException));
 		}
-
-		error_log('[onOffice-Plugin]: '.strval($pException));
 
 		return $output;
 	}
