@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,18 +19,14 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2016, onOffice(R) Software AG
- *
- */
-
+declare (strict_types=1);
 
 namespace onOffice\WPlugin\Types;
 
-
 /**
+ *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2019, onOffice(R) GmbH
  *
  */
 
@@ -137,7 +133,7 @@ abstract class FieldTypes
 	 *
 	 */
 
-	static public function isDateOrDateTime($type)
+	static public function isDateOrDateTime(string $type): bool
 	{
 		return $type === self::FIELD_TYPE_DATE || $type === self::FIELD_TYPE_DATETIME;
 	}
@@ -162,7 +158,7 @@ abstract class FieldTypes
 	 * @return bool
 	 *
 	 */
-	
+
 	static public function isMultipleSelectType(string $type): bool
 	{
 		return in_array($type, self::$_multipleSelectTypes);

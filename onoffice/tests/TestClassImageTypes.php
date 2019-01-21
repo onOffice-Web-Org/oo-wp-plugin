@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,47 +19,40 @@
  *
  */
 
-declare (strict_types=1);
-
-namespace onOffice\WPlugin\Types;
+use onOffice\WPlugin\Types\ImageTypes;
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
+ * @copyright 2003-2019, onOffice(R) GmbH
  *
  */
 
-abstract class MovieLinkTypes
+class TestClassImageTypes
+	extends WP_UnitTestCase
 {
-	/** */
-	const MOVIE_LINKS_NONE = 0;
+	/**
+	 *
+	 */
 
-	/** */
-	const MOVIE_LINKS_LINK = 1;
-
-	/** */
-	const MOVIE_LINKS_PLAYER = 2;
-
-
-	/** */
-	const FILE_TYPE_MOVIE_LINK = 'Film-Link';
-
-	/** @var string[] */
-	private static $_movieLinkTypes = [
-		self::FILE_TYPE_MOVIE_LINK,
-	];
+	public function testIsImageType()
+	{
+		$this->assertTrue(ImageTypes::isImageType(ImageTypes::PHOTO));
+		$this->assertTrue(ImageTypes::isImageType(ImageTypes::ENERGY_PASS_RANGE));
+		$this->assertTrue(ImageTypes::isImageType(ImageTypes::PANORAMA));
+		$this->assertTrue(ImageTypes::isImageType(ImageTypes::PHOTO_BIG));
+		$this->assertFalse(ImageTypes::isImageType('unknown'));
+	}
 
 
 	/**
 	 *
-	 * @param string $type
-	 * @return bool
-	 *
 	 */
 
-	static public function isMovieLink(string $type): bool
+	public function testGetAllImageTypes()
 	{
-		return in_array($type, self::$_movieLinkTypes, true);
+		$pReflection = new ReflectionClass(ImageTypes::class);
+		$constants = $pReflection->getConstants();
+		$this->assertEqualSets($constants, array_keys(ImageTypes::getAllImageTypes()));
 	}
 }

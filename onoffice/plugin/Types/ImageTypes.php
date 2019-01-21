@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,16 +19,15 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2016, onOffice(R) Software AG
- *
- */
+
+declare (strict_types=1);
 
 namespace onOffice\WPlugin\Types;
 
 /**
+ *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2019, onOffice(R) GmbH
  *
  */
 
@@ -76,12 +75,12 @@ class ImageTypes
 	 *
 	 */
 
-	static public function isImageType($type)
+	static public function isImageType(string $type): bool
 	{
 		return isset(self::$_imageTypes[$type]);
 	}
 
 	/** @return array */
-	static public function getAllImageTypes()
+	static public function getAllImageTypes(): array
 		{ return self::$_imageTypes; }
 }
