@@ -45,6 +45,7 @@ class EstateStatusLabel
 	private $_fieldsByPrio = [
 		'reserviert',
 		'verkauft',
+		'exclusive',
 		'top_angebot',
 		'preisreduktion',
 		'courtage_frei',
@@ -105,7 +106,7 @@ class EstateStatusLabel
 
 		if ($key === 'verkauft') {
 			if ($this->_estateValues['vermarktungsart'] === $info['permittedvalues']['miete']) {
-				$label = __('leased', 'onoffice');
+				$label = __('rented', 'onoffice');
 			} elseif ($this->_estateValues['vermarktungsart'] === $info['permittedvalues']['kauf']) {
 				$label = __('sold', 'onoffice');
 			}

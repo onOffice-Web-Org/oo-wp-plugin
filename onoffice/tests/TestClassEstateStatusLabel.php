@@ -147,7 +147,7 @@ class TestClassEstateStatusLabel
 		$this->assertEquals('sold', $this->getNewEstateStatusLabel()->getLabel($values));
 
 		$values['vermarktungsart'] = 'rent';
-		$this->assertEquals('leased', $this->getNewEstateStatusLabel()->getLabel($values));
+		$this->assertEquals('rented', $this->getNewEstateStatusLabel()->getLabel($values));
 	}
 
 
