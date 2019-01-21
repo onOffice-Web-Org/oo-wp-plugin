@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2019 onOffice(R) GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software AG
+ * @copyright 2003-2019, onOffice(R) GmbH
  *
  */
 
@@ -140,7 +140,7 @@ class Fieldnames
 				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA]['range_land'] ??
 				$this->_fieldList[onOfficeSDK::MODULE_ESTATE]['land'] ?? [];
 
-			$pField->setPermittedvalues($countryField['permittedvalues']);
+			$pField->setPermittedvalues($countryField['permittedvalues'] ?? []);
 		} catch (UnknownFieldException $pException) {}
 	}
 
