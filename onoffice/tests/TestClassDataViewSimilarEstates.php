@@ -80,8 +80,21 @@ class TestClassDataViewSimilarEstates
 		$pDataViewSimilarEstates = new DataViewSimilarEstates();
 		$this->assertEquals([], $pDataViewSimilarEstates->getAddressFields());
 		$this->assertEquals('', $pDataViewSimilarEstates->getExpose());
-		$this->assertEquals(['Id', 'objekttitel', 'objektnr_extern'],
-			$pDataViewSimilarEstates->getFields());
+		$expectedFields = [
+			'Id',
+			'objekttitel',
+			'objektnr_extern',
+			'regionaler_zusatz',
+			'kaufpreis',
+			'wohnflaeche',
+			'anzahl_zimmer',
+			'kaltmiete',
+			'ort',
+			'plz',
+			'grundstuecksflaeche',
+			'nutzflaeche',
+		];
+		$this->assertEquals($expectedFields, $pDataViewSimilarEstates->getFields());
 		$this->assertEquals('SimilarEstates', $pDataViewSimilarEstates->getName());
 		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
 		$this->assertEquals('', $pDataViewSimilarEstates->getTemplate());

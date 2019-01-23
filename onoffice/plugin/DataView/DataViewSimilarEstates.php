@@ -121,7 +121,12 @@ class DataViewSimilarEstates
 
 	/** @return array */
 	public function getFields(): array
-		{ return ['Id', 'objekttitel', 'objektnr_extern']; }
+	{
+		return [
+			'Id', 'objekttitel', 'objektnr_extern', 'regionaler_zusatz', 'kaufpreis', 'wohnflaeche',
+			'anzahl_zimmer', 'kaltmiete', 'ort', 'plz', 'grundstuecksflaeche', 'nutzflaeche'
+		];
+	}
 
 	/** @return string */
 	public function getName(): string
