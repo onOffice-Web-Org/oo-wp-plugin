@@ -1,0 +1,29 @@
+{
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+	"resourceid": "",
+	"resourcetype": "idsfromrelation",
+	"cacheable": true,
+	"identifier": "",
+	"data": {
+		"meta": {
+			"cntabsolute": null
+		},
+		"records": [
+			{
+				"id": "relatedIds",
+				"type": "",
+				"elements": {
+					"15": [],
+					"1051": ["50"],
+					"1082": ["52"],
+					"1193": ["50"],
+					"1071": ["50"]
+				}
+			}
+		]
+	},
+	"status": {
+		"errorcode": 0,
+		"message": "OK"
+	}
+}

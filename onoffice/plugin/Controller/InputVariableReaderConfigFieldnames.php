@@ -39,6 +39,9 @@ class InputVariableReaderConfigFieldnames
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
+	/** @var bool */
+	private $_loadComplete = false;
+
 
 	/**
 	 *
@@ -48,7 +51,19 @@ class InputVariableReaderConfigFieldnames
 	{
 		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
 		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
-		$this->_pFieldnames->loadLanguage();
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function lazyLoad()
+	{
+		if (!$this->_loadComplete) {
+			$this->_pFieldnames->loadLanguage();
+			$this->_loadComplete = true;
+		}
 	}
 
 
@@ -62,6 +77,7 @@ class InputVariableReaderConfigFieldnames
 
 	public function getFieldType(string $field, string $module): string
 	{
+		$this->lazyLoad();
 		$fieldInformation = $this->_pFieldnames->getFieldInformation($field, $module);
 		return $fieldInformation['type'];
 	}

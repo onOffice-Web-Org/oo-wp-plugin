@@ -21,20 +21,15 @@
 
 namespace onOffice\WPlugin;
 
-use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateListBase;
-use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Controller\EstateListEnvironment;
+use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataView;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
 use onOffice\WPlugin\Field\OutputFields;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
-use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
-use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
@@ -54,12 +49,6 @@ use function plugin_dir_url;
 class EstateList
 	implements EstateListBase
 {
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
-	/** @var Fieldnames */
-	private $_pFieldnames = null;
-
 	/** @var array */
 	private $_responseArray = [];
 
@@ -71,9 +60,6 @@ class EstateList
 
 	/** @var array */
 	private $_estateContacts = [];
-
-	/** @var AddressList */
-	private $_pAddressList = [];
 
 	/** @var int */
 	private $_currentEstatePage = 1;
@@ -87,36 +73,29 @@ class EstateList
 	/** @var DataView */
 	private $_pDataView = null;
 
-	/** @var DefaultFilterBuilder */
-	private $_pDefaultFilterBuilder = null;
-
 	/** @var string */
 	private $_unitsViewName = null;
 
 	/** @var bool */
 	private $_shuffleResult = false;
 
-	/** @var GeoSearchBuilder */
-	private $_pGeoSearchBuilder = null;
-
 	/** @var bool */
 	private $_formatOutput = true;
+
+	/** @var EstateListEnvironment */
+	private $_pEnvironment =  null;
 
 
 	/**
 	 *
 	 * @param DataView $pDataView
-	 * @param DefaultFilterBuilder $pDefaultFilterBuilder
+	 * @param EstateListEnvironment $pEnvironment
 	 *
 	 */
 
-	public function __construct(DataView $pDataView)
+	public function __construct(DataView $pDataView, EstateListEnvironment $pEnvironment = null)
 	{
-		$this->_pSDKWrapper = new SDKWrapper();
-		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPosition(new Types\FieldsCollection());
-		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
-		$this->_pAddressList = new AddressList();
-		$this->_pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
+		$this->_pEnvironment = $pEnvironment ?? new EstateListEnvironmentDefault();
 		$this->_pDataView = $pDataView;
 	}
 
@@ -172,23 +151,22 @@ class EstateList
 
 	public function loadEstates(int $currentPage = 1)
 	{
-		$pSDKWrapper = $this->_pSDKWrapper;
-		$this->_pFieldnames->loadLanguage();
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+		$this->_pEnvironment->getFieldnames()->loadLanguage();
 
 		$parametersGetEstateList = $this->getEstateParameters($currentPage);
 
-		$handleReadEstate = $this->_pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList);
-		$this->_pSDKWrapper->sendRequests();
+		$handleReadEstate = $pSDKWrapper->addRequest
+			(onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList);
+		$pSDKWrapper->sendRequests();
 
-		$responseArrayEstates = $this->_pSDKWrapper->getRequestResponse($handleReadEstate);
+		$responseArrayEstates = $pSDKWrapper->getRequestResponse($handleReadEstate);
 		$fileCategories = $this->getPreloadEstateFileCategories();
 
-		$this->_pEstateFiles = new EstateFiles($fileCategories);
+		$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles($fileCategories);
 		$estateIds = $this->getEstateIdToForeignMapping($responseArrayEstates);
 
 		if ($estateIds !== []) {
-			$pSDKWrapper = new SDKWrapper();
 			add_action('oo_beforeEstateRelations', [$this, 'registerContactPersonCall'], 10, 2);
 			add_action('oo_afterEstateRelations', [$this, 'extractEstateContactPerson'], 10, 2);
 
@@ -202,7 +180,7 @@ class EstateList
 		$this->_responseArray = $responseArrayEstates;
 
 		if (isset($this->_responseArray['data']['records']) && $this->_shuffleResult) {
-			shuffle($this->_responseArray['data']['records']);
+			$this->_pEnvironment->shuffle($this->_responseArray['data']['records']);
 		}
 
 		$this->_numEstatePages = $this->getNumEstatePages();
@@ -255,13 +233,7 @@ class EstateList
 	{
 		$language = Language::getDefault();
 		$pListView = $this->_pDataView;
-		$pFilterBuilder = $this->_pDefaultFilterBuilder;
-
-		if ($pFilterBuilder === null) {
-			throw new Exception('$_pDefaultFilterBuilder must not be null');
-		}
-
-		$filter = $this->_pDefaultFilterBuilder->buildFilter();
+		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
 		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
@@ -310,26 +282,13 @@ class EstateList
 			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 
-		$geoRangeSearchParameters = $this->_pGeoSearchBuilder->buildParameters();
+		$geoRangeSearchParameters = $this->_pEnvironment->getGeoSearchBuilder()->buildParameters();
 
 		if ($geoRangeSearchParameters !== []) {
 			$requestParams['georangesearch'] = $geoRangeSearchParameters;
 		}
 
 		return $requestParams;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	protected function getDefaultFilter()
-	{
-		$pListViewFilterBuilder = new DefaultFilterBuilderListView($this->_pDataView);
-		return $pListViewFilterBuilder->buildFilter();
 	}
 
 
@@ -381,12 +340,7 @@ class EstateList
 				continue;
 			}
 
-			if (!is_array($adressIds)) {
-				$adressIds = [$adressIds];
-			}
-
 			$subjectEstateId = $estateIds[$estateId];
-
 			$this->_estateContacts[$subjectEstateId] = $adressIds;
 			$allAddressIds = array_unique(array_merge($allAddressIds, $adressIds));
 		}
@@ -394,7 +348,7 @@ class EstateList
 		$fields = $this->_pDataView->getAddressFields();
 
 		if ($fields !== [] && $allAddressIds !== []) {
-			$this->_pAddressList->loadAdressesById($allAddressIds, $fields);
+			$this->_pEnvironment->getAddressList()->loadAdressesById($allAddressIds, $fields);
 		}
 	}
 
@@ -427,7 +381,6 @@ class EstateList
 		$currentRecord = each($this->_responseArray['data']['records']);
 
 		$this->_currentEstate['id'] = $currentRecord['value']['id'];
-		$this->_currentEstate['type'] = $currentRecord['value']['type'];
 		$this->_currentEstate['mainId'] = $this->_currentEstate['id'];
 		$recordElements = $currentRecord['value']['elements'];
 
@@ -485,8 +438,8 @@ class EstateList
 
 	public function getFieldLabel($field): string
 	{
-		$recordType = $this->_currentEstate['type'];
-		$fieldNewName = $this->_pFieldnames->getFieldLabel($field, $recordType);
+		$recordType = onOfficeSDK::MODULE_ESTATE;
+		$fieldNewName = $this->_pEnvironment->getFieldnames()->getFieldLabel($field, $recordType);
 
 		return $fieldNewName;
 	}
@@ -500,9 +453,7 @@ class EstateList
 
 	public function getEstateLink(): string
 	{
-		$pDataDetailViewHandler = new DataDetailViewHandler();
-		$pDetailView = $pDataDetailViewHandler->getDetailView();
-		$pageId = $pDetailView->getPageId();
+		$pageId = $this->_pEnvironment->getDataDetailView()->getPageId();
 		$fullLink = '#';
 
 		if ($pageId !== 0) {
@@ -521,7 +472,7 @@ class EstateList
 	 *
 	 */
 
-	public function getEstatePictures(array $types = null)
+	public function	getEstatePictures(array $types = null)
 	{
 		$estateId = $this->_currentEstate['id'];
 		$estateFiles = [];
@@ -637,7 +588,7 @@ class EstateList
 
 	/**
 	 *
-	 * @return ArrayContainerEscape[]
+	 * @return array
 	 *
 	 */
 
@@ -647,7 +598,7 @@ class EstateList
 		$result = [];
 
 		foreach ($addressIds as $addressId) {
-			$currentAddressData = $this->_pAddressList->getAddressById($addressId);
+			$currentAddressData = $this->_pEnvironment->getAddressList()->getAddressById($addressId);
 			$pArrayContainerCurrentAddress = new ArrayContainerEscape($currentAddressData);
 			$result []= $pArrayContainerCurrentAddress;
 		}
@@ -694,11 +645,7 @@ class EstateList
 		$htmlOutput = '';
 
 		if ($this->_unitsViewName !== null) {
-			$pDataListViewFactory = new DataListViewFactory();
-			$pDataListView = $pDataListViewFactory->getListViewByName
-				($this->_unitsViewName, DataListView::LISTVIEW_TYPE_UNITS);
-
-			$pEstateUnits = new EstateUnits($pDataListView);
+			$pEstateUnits = $this->_pEnvironment->getEstateUnitsByName($this->_unitsViewName);
 			$pEstateUnits->loadByMainEstates($this);
 			$unitCount = $pEstateUnits->getSubEstateCount($estateId);
 
@@ -719,12 +666,9 @@ class EstateList
 
 	public function getDocument()
 	{
-		$language = Language::getDefault();
-
-		$estateId = $this->_currentEstate['mainId'];
 		$queryVars = [
-			'estateid' => $estateId,
-			'language' => $language,
+			'estateid' => $this->getCurrentMultiLangEstateMainId(),
+			'language' => Language::getDefault(),
 			'configindex' => $this->_pDataView->getName(),
 		];
 
@@ -741,11 +685,14 @@ class EstateList
 
 	public function getVisibleFilterableFields(): array
 	{
-		$pFilterableFields = new OutputFields($this->_pDataView);
-		$fieldsValues = $pFilterableFields->getVisibleFilterableFields();
+		$fieldsValues = $this->_pEnvironment
+			->getOutputFields($this->_pDataView)
+			->getVisibleFilterableFields();
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
-			$result[$field] = $this->_pFieldnames->getFieldInformation($field, onOfficeSDK::MODULE_ESTATE);
+			$result[$field] = $this->_pEnvironment
+				->getFieldnames()
+				->getFieldInformation($field, onOfficeSDK::MODULE_ESTATE);
 			$result[$field]['value'] = $value;
 		}
 		return $result;
@@ -797,11 +744,11 @@ class EstateList
 
 	/** @return DefaultFilterBuilder */
 	public function getDefaultFilterBuilder(): DefaultFilterBuilder
-		{ return $this->_pDefaultFilterBuilder; }
+		{ return $this->_pEnvironment->getDefaultFilterBuilder(); }
 
 	/** @param DefaultFilterBuilder $pDefaultFilterBuilder */
 	public function setDefaultFilterBuilder(DefaultFilterBuilder $pDefaultFilterBuilder)
-		{ $this->_pDefaultFilterBuilder = $pDefaultFilterBuilder; }
+		{ $this->_pEnvironment->setDefaultFilterBuilder($pDefaultFilterBuilder); }
 
 	/** @return string */
 	public function getUnitsViewName()
@@ -821,11 +768,11 @@ class EstateList
 
 	/** @return GeoSearchBuilder */
 	public function getGeoSearchBuilder(): GeoSearchBuilder
-		{ return $this->_pGeoSearchBuilder; }
+		{ return $this->_pEnvironment->getGeoSearchBuilder(); }
 
 	/** @param GeoSearchBuilder $pGeoSearchBuilder */
 	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder)
-		{ $this->_pGeoSearchBuilder = $pGeoSearchBuilder; }
+		{ $this->_pEnvironment->setGeoSearchBuilder($pGeoSearchBuilder); }
 
 	/** @return bool */
 	public function getFormatOutput(): bool
@@ -834,4 +781,8 @@ class EstateList
 	/** @param bool $formatOutput */
 	public function setFormatOutput(bool $formatOutput)
 		{ $this->_formatOutput = $formatOutput; }
+
+	/** @return EstateListEnvironment */
+	public function getEnvironment(): EstateListEnvironment
+		{ return $this->_pEnvironment; }
 }

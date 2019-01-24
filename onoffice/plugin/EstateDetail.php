@@ -24,7 +24,6 @@ namespace onOffice\WPlugin;
 use Exception;
 use onOffice\WPlugin\Controller\EstateViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
-use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use WP_Embed;
 
@@ -89,22 +88,6 @@ class EstateDetail
 		}
 
 		return $fileCategories;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	protected function getDefaultFilter()
-	{
-		$pListViewFilterBuilder = new DefaultFilterBuilderDetailView();
-		$pListViewFilterBuilder->setEstateId($this->_estateId);
-		$filter = $pListViewFilterBuilder->buildFilter();
-
-		return $filter;
 	}
 
 

@@ -60,7 +60,7 @@ class DataDetailViewHandler
 	 *
 	 */
 
-	public function getDetailView()
+	public function getDetailView(): DataDetailView
 	{
 		$optionKey = self::DEFAULT_VIEW_OPTION_KEY;
 		$pAlternate = new DataDetailView();
@@ -101,7 +101,7 @@ class DataDetailViewHandler
 	 *
 	 */
 
-	public function createDetailViewByValues(array $row)
+	public function createDetailViewByValues(array $row): DataDetailView
 	{
 		$pDataDetailView = $this->getDetailView();
 		$pDataDetailView->setTemplate($row['template'] ?? '');
