@@ -184,6 +184,7 @@ class EstateViewSimilarEstates
 		$pGenerator = $this->buildEstateParameters($pEstateList);
 
 		foreach ($pGenerator as $id => $pEstateListSub) {
+			$pEstateListSub->setFormatOutput(true);
 			$pEstateListSub->loadEstates();
 			$this->_estateListsByMainId[$id] = $pEstateListSub;
 		}

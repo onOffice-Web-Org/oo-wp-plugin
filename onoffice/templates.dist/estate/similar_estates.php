@@ -11,9 +11,18 @@ while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 				<img src="<?php echo $pEstates->getEstatePictureUrl
 					($id, ['width' => 200, 'height' => 100]); ?>">
 			<?php endforeach; ?>
-
-			<?php echo esc_html($currentEstate['objektnr_extern'].' – '.$currentEstate['objekttitel']); ?>
 		</a>
+		<p>
+			<?php
+			$fieldsForOutput = ['objektnr_extern', 'wohnflaeche', 'ort'];
+			echo $currentEstate['objekttitel'].'<br>';
+			foreach ($fieldsForOutput as $field) {
+				$value = $currentEstate[$field];
+				echo esc_html($pEstates->getFieldLabel($field).': '
+					.(is_array($value) ? implode(', ', $value) : $value)).'<br>';
+			}
+			?>
+		</p>
 	</li>
 <?php endwhile; ?>
 
