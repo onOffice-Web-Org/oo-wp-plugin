@@ -359,18 +359,16 @@ class EstateList
 		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
 			($this->getFieldsForDataViewModifierHandler(), $modifier);
 
-		$currentRecord = each($this->_records);
+		$currentRecord = current($this->_records);
+		next($this->_records);
 
-		$this->_currentEstate['id'] = $currentRecord['value']['id'];
-		$this->_currentEstate['mainId'] = $this->_currentEstate['id'];
-		$recordElements = $currentRecord['value']['elements'];
-
-		if (is_array($recordElements) && isset($recordElements['mainLangId'])) {
-			$this->_currentEstate['mainId'] = $recordElements['mainLangId'];
-		}
+		$this->_currentEstate['id'] = $currentRecord['id'];
+		$recordElements = $currentRecord['elements'];
+		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
+			$this->_currentEstate['id'];
 
 		if (false !== $currentRecord) {
-			$record = $currentRecord['value']['elements'];
+			$record = $currentRecord['elements'];
 			$recordModified = $pEstateFieldModifierHandler->processRecord($record);
 			$pArrayContainer = new ArrayContainerEscape($recordModified);
 
