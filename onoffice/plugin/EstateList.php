@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
@@ -49,7 +50,7 @@ class EstateList
 	implements EstateListBase
 {
 	/** @var array */
-	private $_responseArray = [];
+	private $_records = [];
 
 	/** @var EstateFiles */
 	private $_pEstateFiles = null;
@@ -84,6 +85,9 @@ class EstateList
 	/** @var EstateListEnvironment */
 	private $_pEnvironment =  null;
 
+	/** @var APIClientActionGeneric */
+	private $_pApiClientAction = null;
+
 
 	/**
 	 *
@@ -96,6 +100,9 @@ class EstateList
 	{
 		$this->_pEnvironment = $pEnvironment ?? new EstateListEnvironmentDefault();
 		$this->_pDataView = $pDataView;
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+		$this->_pApiClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 	}
 
 
@@ -107,11 +114,7 @@ class EstateList
 
 	protected function getNumEstatePages()
 	{
-		if (!isset($this->_responseArray['data']['meta']['cntabsolute'])) {
-			return null;
-		}
-
-		$recordNumOverAll = $this->_responseArray['data']['meta']['cntabsolute'];
+		$recordNumOverAll = $this->getEstateOverallCount();
 		$numEstatePages = (int)ceil($recordNumOverAll / $this->_pDataView->getRecordsPerPage());
 
 		return $numEstatePages;
@@ -150,20 +153,18 @@ class EstateList
 
 	public function loadEstates(int $currentPage = 1)
 	{
-		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 
-		$parametersGetEstateList = $this->getEstateParameters($currentPage);
+		$this->_pApiClientAction->setParameters($this->getEstateParameters($currentPage));
+		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
 
-		$handleReadEstate = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_READ, 'estate', $parametersGetEstateList);
-		$pSDKWrapper->sendRequests();
-
-		$responseArrayEstates = $pSDKWrapper->getRequestResponse($handleReadEstate);
+		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$fileCategories = $this->getPreloadEstateFileCategories();
 
 		$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles($fileCategories);
-		$estateIds = $this->getEstateIdToForeignMapping($responseArrayEstates);
+		$estateIds = $this->getEstateIdToForeignMapping($this->_records);
+
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 
 		if ($estateIds !== []) {
 			add_action('oo_beforeEstateRelations', [$this, 'registerContactPersonCall'], 10, 2);
@@ -176,10 +177,8 @@ class EstateList
 			do_action('oo_afterEstateRelations', $pSDKWrapper, $estateIds);
 		}
 
-		$this->_responseArray = $responseArrayEstates;
-
-		if (isset($this->_responseArray['data']['records']) && $this->_shuffleResult) {
-			$this->_pEnvironment->shuffle($this->_responseArray['data']['records']);
+		if ($this->_shuffleResult) {
+			$this->_pEnvironment->shuffle($this->_records);
 		}
 
 		$this->_numEstatePages = $this->getNumEstatePages();
@@ -300,21 +299,12 @@ class EstateList
 
 	private function getEstateIdToForeignMapping($estateResponseArray)
 	{
-		$estateProperties = $estateResponseArray['data']['records'] ?? [];
 		$estateIds = [];
 
-		foreach ($estateProperties as $estate) {
-			if (!isset($estate['id'])) {
-				continue;
-			}
-
+		foreach ($estateResponseArray as $estate) {
 			$elements = $estate['elements'];
-
-			if (isset($elements['mainLangId'])) {
-				$estateIds[$elements['mainLangId']] = $estate['id'];
-			} else {
-				$estateIds[$estate['id']] = $estate['id'];
-			}
+			$estateMainId = $elements['mainLangId'] ?? $estate['id'];
+			$estateIds[$estateMainId] = $estate['id'];
 		}
 
 		return $estateIds;
@@ -325,7 +315,6 @@ class EstateList
 	 *
 	 * @param array $responseArrayContacts
 	 * @param array $estateIds
-	 * @return null
 	 *
 	 */
 
@@ -335,10 +324,6 @@ class EstateList
 		$allAddressIds = [];
 
 		foreach ($records as $estateId => $adressIds) {
-			if (is_null($adressIds)) {
-				continue;
-			}
-
 			$subjectEstateId = $estateIds[$estateId];
 			$this->_estateContacts[$subjectEstateId] = $adressIds;
 			$allAddressIds = array_unique(array_merge($allAddressIds, $adressIds));
@@ -362,9 +347,6 @@ class EstateList
 	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
 		global $numpages, $multipage, $page, $more;
-		if (!isset($this->_responseArray['data']['records'])) {
-			return false;
-		}
 
 		if (null !== $this->_numEstatePages) {
 			$multipage = true;
@@ -374,17 +356,16 @@ class EstateList
 			$numpages = $this->_numEstatePages;
 		}
 
-		$pEstateFieldModifierHandler = new ViewFieldModifierHandler
-			($this->getFieldsForDataViewModifierHandler(), onOfficeSDK::MODULE_ESTATE, $modifier);
+		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
+			($this->getFieldsForDataViewModifierHandler(), $modifier);
 
-		$currentRecord = each($this->_responseArray['data']['records']);
+		$currentRecord = each($this->_records);
 
 		$this->_currentEstate['id'] = $currentRecord['value']['id'];
 		$this->_currentEstate['mainId'] = $this->_currentEstate['id'];
 		$recordElements = $currentRecord['value']['elements'];
 
-		if (is_array($recordElements) && array_key_exists('mainLangId', $recordElements) &&
-			$recordElements['mainLangId'] != null) {
+		if (is_array($recordElements) && isset($recordElements['mainLangId'])) {
 			$this->_currentEstate['mainId'] = $recordElements['mainLangId'];
 		}
 
@@ -425,7 +406,7 @@ class EstateList
 
 	public function getEstateOverallCount()
 	{
-		return $this->_responseArray['data']['meta']['cntabsolute'];
+		return $this->_pApiClientAction->getResultMeta()['cntabsolute'];
 	}
 
 
@@ -704,7 +685,7 @@ class EstateList
 
 	public function resetEstateIterator()
 	{
-		reset($this->_responseArray['data']['records']);
+		reset($this->_records);
 	}
 
 
@@ -729,7 +710,7 @@ class EstateList
 
 	public function getEstateIds(): array
 	{
-		return array_column($this->_responseArray['data']['records'], 'id');
+		return array_column($this->_records, 'id');
 	}
 
 

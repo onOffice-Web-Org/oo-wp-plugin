@@ -105,9 +105,9 @@ class TestClassEstateList
 	{
 		$this->_pEstateList->loadEstates();
 		$pClosureGetEstateResult = Closure::bind(function() {
-			return $this->_responseArray;
+			return $this->_records;
 		}, $this->_pEstateList, EstateList::class);
-		$this->assertCount(5, $pClosureGetEstateResult()['data']['records']);
+		$this->assertCount(5, $pClosureGetEstateResult());
 	}
 
 
@@ -663,6 +663,7 @@ class TestClassEstateList
 		$pDataView->setFilterId(12);
 		$pDataView->setPictureTypes(['Titelbild', 'Foto']);
 		$pDataView->setAddressFields(['Vorname', 'Name']);
+		$pDataView->setShowStatus(true);
 		return $pDataView;
 	}
 }

@@ -31,6 +31,7 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 
 /**
  *
@@ -150,4 +151,15 @@ interface EstateListEnvironment
 	 */
 
 	public function shuffle(array &$values);
+
+
+	/**
+	 *
+	 * @param array $fieldList
+	 * @param string $modifier
+	 * @return ViewFieldModifierHandler
+	 *
+	 */
+
+	public function getViewFieldModifierHandler(array $fieldList, string $modifier): ViewFieldModifierHandler;
 }

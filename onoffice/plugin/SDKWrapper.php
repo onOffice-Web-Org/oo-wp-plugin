@@ -170,6 +170,8 @@ class SDKWrapper
 			$response = $this->_pSDK->getResponseArray($handle) ?? $errors[$handle] ?? [];
 			call_user_func($callback, $response);
 		}
+
+		$this->_callbacksAfterSend = [];
 	}
 
 

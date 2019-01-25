@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
@@ -38,6 +39,7 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 
 /**
  *
@@ -236,5 +238,19 @@ class EstateListEnvironmentDefault
 	public function shuffle(array &$values)
 	{
 		shuffle($values);
+	}
+
+
+	/**
+	 *
+	 * @param array $fieldList
+	 * @param string $modifier
+	 * @return ViewFieldModifierHandler
+	 *
+	 */
+
+	public function getViewFieldModifierHandler(array $fieldList, string $modifier): ViewFieldModifierHandler
+	{
+		return new ViewFieldModifierHandler($fieldList, onOfficeSDK::MODULE_ESTATE, $modifier);
 	}
 }

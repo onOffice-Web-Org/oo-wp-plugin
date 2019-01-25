@@ -23,6 +23,7 @@ use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
@@ -30,6 +31,8 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
+use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 
 /**
  *
@@ -167,6 +170,18 @@ class TestClassEstateListEnvironmentDefault
 		$valuesShuffled = $values;
 		$this->_pSubject->shuffle($valuesShuffled);
 		$this->assertEqualSets($values, $valuesShuffled);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetViewFieldModifierHandler()
+	{
+		$pViewFieldModifierHandler = $this->_pSubject->getViewFieldModifierHandler
+			([], EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
+		$this->assertInstanceOf(ViewFieldModifierHandler::class, $pViewFieldModifierHandler);
 	}
 
 

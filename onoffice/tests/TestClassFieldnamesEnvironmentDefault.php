@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,45 +19,44 @@
  *
  */
 
-declare(strict_types=1);
+namespace onOffice\tests;
 
-namespace onOffice\WPlugin\Field;
-
-use onOffice\tests\SDKWrapperMocker;
+use onOffice\WPlugin\Field\FieldnamesEnvironmentDefault;
 use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
+ * @copyright 2003-2019, onOffice(R) GmbH
  *
  */
 
-class FieldnamesEnvironmentTest
-	implements FieldnamesEnvironment
+class TestClassFieldnamesEnvironmentDefault
+	extends WP_UnitTest_Localized
 {
-	/** @var string */
-	private $_language = 'ENG';
+	/**
+	 *
+	 */
 
-	/** @var SDKWrapperMocker */
-	private $_pSDKWrapper = null;
+	public function testGetSDKWrapper()
+	{
+		$pEnvironment = new FieldnamesEnvironmentDefault();
+		$this->assertInstanceOf(SDKWrapper::class, $pEnvironment->getSDKWrapper());
+	}
 
 
 	/**
 	 *
 	 */
 
-	public function __construct()
+	public function testGetLanguage()
 	{
-		$this->_pSDKWrapper = new SDKWrapperMocker();
+		$pEnvironment = new FieldnamesEnvironmentDefault();
+		$this->assertEquals('DEU', $pEnvironment->getLanguage());
+
+		$this->switchLocale('en_US');
+		$this->assertEquals('ENG', $pEnvironment->getLanguage());
+
+		$this->switchLocale('de_DE');
 	}
-
-
-	/** @return string */
-	public function getLanguage(): string
-		{ return $this->_language; }
-
-	/** @return SDKWrapperMocker */
-	public function getSDKWrapper(): SDKWrapper
-		{ return $this->_pSDKWrapper; }
 }
