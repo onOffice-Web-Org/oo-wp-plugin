@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,20 +19,26 @@
  *
  */
 
-use onOffice\WPlugin\Field\DistinctFieldsHandler;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerConfigurationTest;
-use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
+use onOffice\WPlugin\Field\DistinctFieldsHandler;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerConfigurationTest;
+use onOffice\WPlugin\Field\FieldnamesEnvironment;
+use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Types\FieldsCollection;
 
+/**
+ *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2019, onOffice(R) GmbH
+ *
+ */
 
 class TestClassDistinctFieldsHandler
 	extends WP_UnitTestCase
 {
-
-	/** FieldnamesEnvironment */
+	/** @var FieldnamesEnvironment */
 	private $_pFieldnamesEnvironment = null;
 
 	/** @var DistinctFieldsHandler */
@@ -56,6 +62,7 @@ class TestClassDistinctFieldsHandler
 		$pSDKWrapperMocker = $this->_pFieldnamesEnvironment->getSDKWrapper();
 		$responseGetFields = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetFields.json'), true);
+
 		/* @var $pSDKWrapperMocker SDKWrapperMocker */
 		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
 			$fieldParameters, null, $responseGetFields);
@@ -67,23 +74,21 @@ class TestClassDistinctFieldsHandler
 			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);
 
 		$parametersEstates = [
-			"language" => "ENG",
-			"module" => "estate",
-			"field" => "objekttyp",
-			"filter" => [
-				"objektart" => [["op" => "in", "val" => ["wohnung"]]],
-				"vermarktungsart" => [["op" => "in", "val" => ["kauf"]]]
+			'language' => 'ENG',
+			'module' => 'estate',
+			'field' => 'objekttyp',
+			'filter' => [
+				'objektart' => [['op' => 'in', 'val' => ['wohnung']]],
+				'vermarktungsart' => [['op' => 'in', 'val' => ['kauf']]]
 			]
 		];
-
 
 		$responseEstates =  file_get_contents
 			(__DIR__.'/resources/Field/AppResponseDistinctFieldsHandlerEstate.json');
 		$responseEstatesFields = json_decode($responseEstates, true);
 
-		$pSDKWrapperMocker->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_GET, 'distinctValues', '',
-			$parametersEstates, null, $responseEstatesFields);
+		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'distinctValues',
+			'', $parametersEstates, null, $responseEstatesFields);
 
 		$pExtraFieldsCollection = new FieldsCollection();
 
@@ -115,26 +120,25 @@ class TestClassDistinctFieldsHandler
 		$this->assertEquals($distinctFields, $this->_pInstance->getDistinctFields());
 
 		$inputValues = [
-			"objektart" => ["wohnung"],
-			"vermarktungsart" => ["kauf"]
-			];
+			'objektart' => ['wohnung'],
+			'vermarktungsart' => ['kauf']
+		];
 
 		$this->_pInstance->setInputValues($inputValues);
 		$this->assertEquals($inputValues, $this->_pInstance->getInputValues());
 
 		$values = [];
-		$values['objekttyp[]'] =
-		[
-			"etage" => "Etagenwohnung",
-			"maisonette" => "Maisonette",
-			"erdgeschoss" => "Erdgeschosswohnung",
-			"dachgeschoss" => "Dachgeschoss",
-			"rohdachboden" => "Rohdachboden",
-			"appartment" => "Apartment",
-			"terrassen" => "Terrasse",
-			"attikawohnung" => "Attikawohnung",
-			"hochparterre" => "Hochparterre",
-			"souterrain" => "Souterrain"
+		$values['objekttyp[]'] = [
+			'etage' => 'Etagenwohnung',
+			'maisonette' => 'Maisonette',
+			'erdgeschoss' => 'Erdgeschosswohnung',
+			'dachgeschoss' => 'Dachgeschoss',
+			'rohdachboden' => 'Rohdachboden',
+			'appartment' => 'Apartment',
+			'terrassen' => 'Terrasse',
+			'attikawohnung' => 'Attikawohnung',
+			'hochparterre' => 'Hochparterre',
+			'souterrain' => 'Souterrain',
 		];
 
 		$this->_pInstance->check();
