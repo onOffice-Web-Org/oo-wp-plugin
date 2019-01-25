@@ -214,7 +214,7 @@ class ContentFilter
 	 *
 	 */
 
-	public function renderFormsShortCodes($attributesInput)
+	public function renderFormsShortCodes(array $attributesInput)
 	{
 		$attributes = shortcode_atts([
 			'form' => null,
@@ -262,7 +262,7 @@ class ContentFilter
 	 *
 	 */
 
-	public function renderAddressShortCodes($attributesInput)
+	public function renderAddressShortCodes(array $attributesInput)
 	{
 		global $wp_query;
 		$page = $wp_query->query_vars['page'] ?? 1;
@@ -299,7 +299,7 @@ class ContentFilter
 	 *
 	 */
 
-	public function renderImpressumShortCodes($attributesInput)
+	public function renderImpressumShortCodes(array $attributesInput)
 	{
 		try {
 			$pImpressum = new Impressum();
