@@ -141,12 +141,12 @@ class TestClassEstateStatusLabel
 		$values = [
 			'reserviert' => '0',
 			'verkauft' => '1',
-			'vermarktungsart' => 'sale',
+			'vermarktungsart' => 'kauf',
 		];
 		$this->setUpFieldnames();
 		$this->assertEquals('sold', $this->getNewEstateStatusLabel()->getLabel($values));
 
-		$values['vermarktungsart'] = 'rent';
+		$values['vermarktungsart'] = 'miete';
 		$this->assertEquals('rented', $this->getNewEstateStatusLabel()->getLabel($values));
 	}
 

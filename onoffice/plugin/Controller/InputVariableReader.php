@@ -150,8 +150,30 @@ class InputVariableReader
 		// Important: don't use FILTER_NULL_ON_FAILURE
 		// https://github.com/php/php-src/blob/c03ee1923057b62666a6a4144a9b2920e38b8765/ext/filter/filter.c#L744-L753
 
-		$value = $this->_pConfig->getValue($fullInputName, $sanitizer, FILTER_FORCE_ARRAY);
+		$value = $this->getValue($fullInputName, $sanitizer);
 		return $this->parseValue($value, $type);
+	}
+
+
+	/**
+	 *
+	 * @param string $name
+	 * @param int $filters
+	 * @return mixed
+	 *
+	 */
+
+	private function getValue(string $name, int $filters)
+	{
+		$getValue = $this->_pConfig->getFilterVariable(INPUT_GET, $name, $filters);
+		$postValue = $this->_pConfig->getFilterVariable(INPUT_POST, $name, $filters);
+		$value = $getValue ?? $postValue;
+		if (is_array($value) && count($value) === 1 && key($value) === 0 &&
+			!$this->_pConfig->getIsRequestVarArray($name)) {
+			$value = $value[0];
+		}
+
+		return $value;
 	}
 
 
@@ -169,7 +191,7 @@ class InputVariableReader
 			return array_map(function($val) use ($type) {
 				return $this->parseValue($val, $type);
 			}, $value);
-		} else if ($value === null) {
+		} elseif ($value === null) {
 			return null;
 		}
 

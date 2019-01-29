@@ -78,6 +78,16 @@ class APIClientActionGeneric
 
 	/**
 	 *
+	 */
+
+	public function __clone()
+	{
+		$this->setResultCallback([$this, 'onAfterExecution']);
+	}
+
+
+	/**
+	 *
 	 * @return ApiClientException
 	 *
 	 */

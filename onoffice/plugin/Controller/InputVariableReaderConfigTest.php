@@ -71,31 +71,6 @@ class InputVariableReaderConfigTest
 
 	/**
 	 *
-	 * @param string $name
-	 * @param int $filters
-	 * @param int $options
-	 *
-	 */
-
-	public function getValue(string $name, int $filters, int $options)
-	{
-		if (!isset($this->_values[$name])) {
-			return null;
-		}
-		$valueRaw = $this->_values[$name];
-		$value = filter_var($valueRaw, $filters, $options);
-
-		if (is_array($value) && count($value) === 1 && key($value) === 0 &&
-			!is_array($valueRaw)) {
-			$value = $value[0];
-		}
-
-		return $value;
-	}
-
-
-	/**
-	 *
 	 * @param string $field
 	 * @param array $values
 	 *
@@ -141,5 +116,34 @@ class InputVariableReaderConfigTest
 	public function setTimezoneString(string $timezoneStr)
 	{
 		$this->_timezoneStr = $timezoneStr;
+	}
+
+
+	/**
+	 *
+	 * @param int $var
+	 * @param string $name
+	 * @param int $sanitizer
+	 * @return array
+	 *
+	 */
+
+	public function getFilterVariable(int $var, string $name, int $sanitizer)
+	{
+		$value = $this->_values[$name] ?? null;
+		return is_null($value) ? null : filter_var($value, $sanitizer, FILTER_FORCE_ARRAY);
+	}
+
+
+	/**
+	 *
+	 * @param string $name
+	 * @return bool
+	 *
+	 */
+
+	public function getIsRequestVarArray(string $name): bool
+	{
+		return is_array($this->_values[$name] ?? null);
 	}
 }

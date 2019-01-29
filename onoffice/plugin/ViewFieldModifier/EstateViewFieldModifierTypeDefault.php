@@ -67,7 +67,7 @@ class EstateViewFieldModifierTypeDefault
 			'reserviert',
 			'verkauft',
 			'vermarktungsart',
-		], $this->_pEstateStatusLabel->getFieldsByPrio());
+		]);
 
 		return $this->editViewFieldsForApiGeoPosition($apiFields);
 	}
@@ -87,23 +87,6 @@ class EstateViewFieldModifierTypeDefault
 			unset($record['mainLangId']);
 		}
 
-		if (in_array('vermarktungsstatus', $this->getViewFields())) {
-			$record['vermarktungsstatus'] = $this->buildMarketingStatus($record);
-		}
-
 		return parent::reduceRecord($record);
-	}
-
-
-	/**
-	 *
-	 * @param array $record
-	 * @return string
-	 *
-	 */
-
-	private function buildMarketingStatus(array $record): string
-	{
-		return $this->_pEstateStatusLabel->getLabel($record);
 	}
 }

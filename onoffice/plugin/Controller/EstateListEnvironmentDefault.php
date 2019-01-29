@@ -38,6 +38,7 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 
@@ -66,6 +67,9 @@ class EstateListEnvironmentDefault
 	/** @var DefaultFilterBuilder */
 	private $_pDefaultFilterBuilder = null;
 
+	/** @var EstateStatusLabel */
+	private $_pEstateStatusLabel = null;
+
 
 	/**
 	 *
@@ -78,6 +82,7 @@ class EstateListEnvironmentDefault
 		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 		$this->_pAddressList = new AddressList();
 		$this->_pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
+		$this->_pEstateStatusLabel = new EstateStatusLabel();
 	}
 
 
@@ -252,5 +257,17 @@ class EstateListEnvironmentDefault
 	public function getViewFieldModifierHandler(array $fieldList, string $modifier): ViewFieldModifierHandler
 	{
 		return new ViewFieldModifierHandler($fieldList, onOfficeSDK::MODULE_ESTATE, $modifier);
+	}
+
+
+	/**
+	 *
+	 * @return EstateStatusLabel
+	 *
+	 */
+
+	public function getEstateStatusLabel(): EstateStatusLabel
+	{
+		return $this->_pEstateStatusLabel;
 	}
 }

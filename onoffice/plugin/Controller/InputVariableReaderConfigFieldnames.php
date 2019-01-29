@@ -47,10 +47,15 @@ class InputVariableReaderConfigFieldnames
 	 *
 	 */
 
-	public function __construct()
+	public function __construct(Fieldnames $pFieldnames = null)
 	{
-		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
-		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
+		if ($pFieldnames === null) {
+			$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPosition
+				(new FieldsCollection());
+			$this->_pFieldnames = new Fieldnames($pFieldsCollection);
+		} else {
+			$this->_pFieldnames = $pFieldnames;
+		}
 	}
 
 
@@ -85,35 +90,43 @@ class InputVariableReaderConfigFieldnames
 
 	/**
 	 *
-	 * @param string $name
-	 * @param int $filters
-	 * @param int $options
-	 * @return mixed
-	 *
-	 */
-
-	public function getValue(string $name, int $filters, int $options)
-	{
-		$getValue = filter_input(INPUT_GET, $name, $filters, $options);
-		$postValue = filter_input(INPUT_POST, $name, $filters, $options);
-		$value = $getValue ? $getValue : $postValue;
-		if (is_array($value) && count($value) === 1 && key($value) === 0 &&
-			!is_array($_REQUEST[$name])) {
-			$value = $value[0];
-		}
-
-		return $value;
-	}
-
-
-	/**
-	 *
 	 * @return string
 	 *
 	 */
 
 	public function getTimezoneString(): string
 	{
-		return get_option('timezone_string');
+		return get_option('timezone_string', '');
+	}
+
+
+	/**
+	 *
+	 * @param int $var
+	 * @param string $name
+	 * @param int $sanitizer
+	 * @return array
+	 *
+	 */
+
+	public function getFilterVariable(int $var, string $name, int $sanitizer)
+	{
+		// filter_input() does not work in test environment
+		// @codeCoverageIgnoreStart
+		return filter_input($var, $name, $sanitizer, FILTER_FORCE_ARRAY);
+		// @codeCoverageIgnoreEnd
+	}
+
+
+	/**
+	 *
+	 * @param string $name
+	 * @return bool
+	 *
+	 */
+
+	public function getIsRequestVarArray(string $name): bool
+	{
+		return is_array($_REQUEST[$name] ?? null);
 	}
 }

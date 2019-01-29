@@ -31,6 +31,7 @@ use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function add_action;
@@ -51,6 +52,9 @@ class EstateList
 {
 	/** @var array */
 	private $_records = [];
+
+	/** @var array */
+	private $_recordsRaw = [];
 
 	/** @var EstateFiles */
 	private $_pEstateFiles = null;
@@ -154,11 +158,8 @@ class EstateList
 	public function loadEstates(int $currentPage = 1)
 	{
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
+		$this->loadRecords($currentPage);
 
-		$this->_pApiClientAction->setParameters($this->getEstateParameters($currentPage));
-		$this->_pApiClientAction->addRequestToQueue()->sendRequests();
-
-		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$fileCategories = $this->getPreloadEstateFileCategories();
 
 		$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles($fileCategories);
@@ -183,6 +184,31 @@ class EstateList
 
 		$this->_numEstatePages = $this->getNumEstatePages();
 		$this->resetEstateIterator();
+	}
+
+
+	/**
+	 *
+	 * @param int $currentPage
+	 *
+	 */
+
+	private function loadRecords(int $currentPage)
+	{
+		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
+		$this->_pApiClientAction->setParameters($estateParameters);
+		$this->_pApiClientAction->addRequestToQueue();
+
+		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
+		$estateParametersRaw['data'] = $this->_pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
+		$estateParametersRaw['data'] []= 'vermarktungsart';
+		$pApiClientActionRawValues = clone $this->_pApiClientAction;
+		$pApiClientActionRawValues->setParameters($estateParametersRaw);
+		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
+
+		$this->_records = $this->_pApiClientAction->getResultRecords();
+		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
+		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 	}
 
 
@@ -227,7 +253,7 @@ class EstateList
 	 *
 	 */
 
-	private function getEstateParameters($currentPage)
+	private function getEstateParameters(int $currentPage, bool $formatOutput)
 	{
 		$language = Language::getDefault();
 		$pListView = $this->_pDataView;
@@ -247,7 +273,7 @@ class EstateList
 			'outputlanguage' => $language,
 			'listlimit' => $numRecordsPerPage,
 			'listoffset' => $offset,
-			'formatoutput' => $this->_formatOutput,
+			'formatoutput' => $formatOutput,
 			'addMainLangId' => true,
 		];
 
@@ -357,7 +383,7 @@ class EstateList
 		}
 
 		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
-			($this->getFieldsForDataViewModifierHandler(), $modifier);
+			($this->_pDataView->getFields(), $modifier);
 
 		$currentRecord = current($this->_records);
 		next($this->_records);
@@ -367,32 +393,21 @@ class EstateList
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
 
-		if (false !== $currentRecord) {
-			$record = $currentRecord['elements'];
-			$recordModified = $pEstateFieldModifierHandler->processRecord($record);
-			$pArrayContainer = new ArrayContainerEscape($recordModified);
-
-			return $pArrayContainer;
+		if (false === $currentRecord) {
+			return false;
 		}
 
-		return false;
-	}
+		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
+		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
 
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function getFieldsForDataViewModifierHandler(): array
-	{
-		$fields = $this->_pDataView->getFields();
 		if ($this->getShowEstateMarketingStatus()) {
-			$fields []= 'vermarktungsstatus';
+			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
+			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
-		return $fields;
+		$pArrayContainer = new ArrayContainerEscape($recordModified);
+
+		return $pArrayContainer;
 	}
 
 

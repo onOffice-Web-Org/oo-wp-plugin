@@ -45,21 +45,31 @@ interface InputVariableReaderConfig
 
 	/**
 	 *
-	 * @param string $name
-	 * @param int $filters bitmask of filters
-	 * @param int $options bitmask of options
-	 * @return mixed
-	 *
-	 */
-
-	public function getValue(string $name, int $filters, int $options);
-
-
-	/**
-	 *
 	 * @return string such as Europe/Berlin
 	 *
 	 */
 
 	public function getTimezoneString(): string;
+
+
+	/**
+	 *
+	 * @param int $var
+	 * @param string $name
+	 * @param int $sanitizer
+	 * @return array
+	 *
+	 */
+
+	public function getFilterVariable(int $var, string $name, int $sanitizer);
+
+
+	/**
+	 *
+	 * @param string $name
+	 * @return bool
+	 *
+	 */
+
+	public function getIsRequestVarArray(string $name): bool;
 }

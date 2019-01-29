@@ -94,7 +94,6 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'reserviert' => '1',
 			'verkauft' => '1',
 			'vermarktungsart' => 'kauf',
-			'vermarktungsstatus' => '',
 		];
 
 		$newRow = $pEstateViewFieldModifierTypeDefault->reduceRecord($this->_exampleRecord);

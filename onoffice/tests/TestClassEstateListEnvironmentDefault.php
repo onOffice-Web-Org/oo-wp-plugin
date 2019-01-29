@@ -31,6 +31,7 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 
@@ -182,6 +183,16 @@ class TestClassEstateListEnvironmentDefault
 		$pViewFieldModifierHandler = $this->_pSubject->getViewFieldModifierHandler
 			([], EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
 		$this->assertInstanceOf(ViewFieldModifierHandler::class, $pViewFieldModifierHandler);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetEstateStatusLabel()
+	{
+		$this->assertInstanceOf(EstateStatusLabel::class, $this->_pSubject->getEstateStatusLabel());
 	}
 
 

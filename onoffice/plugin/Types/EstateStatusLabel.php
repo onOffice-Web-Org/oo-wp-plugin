@@ -43,14 +43,15 @@ class EstateStatusLabel
 
 	/** @var array */
 	private $_fieldsByPrio = [
+		'referenz',
 		'reserviert',
 		'verkauft',
 		'exclusive',
+		'neu',
 		'top_angebot',
 		'preisreduktion',
 		'courtage_frei',
 		'objekt_des_tages',
-		'neu',
 	];
 
 
@@ -100,14 +101,12 @@ class EstateStatusLabel
 	{
 		$this->_pFieldnamesActive->loadLanguage();
 		$this->_pFieldnamesInactive->loadLanguage();
-
 		$label = $this->getFieldLabel($key);
-		$info = $this->_pFieldnamesActive->getFieldInformation('vermarktungsart', onOfficeSDK::MODULE_ESTATE);
 
 		if ($key === 'verkauft') {
-			if ($this->_estateValues['vermarktungsart'] === $info['permittedvalues']['miete']) {
+			if ($this->_estateValues['vermarktungsart'] === 'miete') {
 				$label = __('rented', 'onoffice');
-			} elseif ($this->_estateValues['vermarktungsart'] === $info['permittedvalues']['kauf']) {
+			} elseif ($this->_estateValues['vermarktungsart'] === 'kauf') {
 				$label = __('sold', 'onoffice');
 			}
 		}

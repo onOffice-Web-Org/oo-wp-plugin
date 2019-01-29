@@ -36,6 +36,7 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderPresetEstateIds;
 use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
+use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
 
 /**
@@ -621,15 +622,21 @@ class TestClassEstateList
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 
-		$dataReadEstate = json_decode
+		$dataReadEstateFormatted = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENG.json'), true);
-		$responseReadEstate = $dataReadEstate['response'];
-		$parametersReadEstate = $dataReadEstate['parameters'];
+		$responseReadEstate = $dataReadEstateFormatted['response'];
+		$parametersReadEstate = $dataReadEstateFormatted['parameters'];
+		$dataReadEstateRaw = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGRaw.json'), true);
+		$responseReadEstateRaw = $dataReadEstateRaw['response'];
+		$parametersReadEstateRaw = $dataReadEstateRaw['parameters'];
 		$responseGetIdsFromRelation = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsfromrelation.json'), true);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', [
 				'parentids' => [15, 1051, 1082, 1193, 1071],
@@ -645,6 +652,19 @@ class TestClassEstateList
 		$pGeoSearchBuilder = $this->getMock(GeoSearchBuilderEmpty::class, ['buildParameters']);
 		$pGeoSearchBuilder->method('buildParameters')->willReturn(['radius' => 500, 'country' => 'DEU', 'zip' => '52068']);
 		$this->_pEnvironment->method('getGeoSearchBuilder')->willReturn($pGeoSearchBuilder);
+		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
+			($this->getMock(EstateStatusLabel::class, ['getFieldsByPrio', 'getLabel']));
+		$this->_pEnvironment->getEstateStatusLabel()->method('getFieldsByPrio')->willReturn([
+			'referenz',
+			'reserviert',
+			'verkauft',
+			'exclusive',
+			'neu',
+			'top_angebot',
+			'preisreduktion',
+			'courtage_frei',
+			'objekt_des_tages',
+		]);
 	}
 
 
