@@ -65,6 +65,8 @@ if (Favorites::isFavorizationEnabled()): ?>
 <?php
 $pEstates->resetEstateIterator();
 while ( $currentEstate = $pEstates->estateIterator() ) :
+	$marketingStatus = $currentEstate['vermarktungsstatus'];
+	unset($currentEstate['vermarktungsstatus']);
 	$estateId = $pEstates->getCurrentEstateId();
 ?>
 
@@ -136,12 +138,17 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 
 	<?php
 	$estatePictures = $pEstates->getEstatePictures();
+	foreach ( $estatePictures as $id ) :
+		$pictureValues = $pEstates->getEstatePictureValues( $id );
+		echo '<a href="'.$pictureValues['url'].'" class="estate-status">';
 
-	foreach ( $estatePictures as $id ) : ?>
-		<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
-			<img src="<?php echo $pEstates->getEstatePictureUrl( $id, array('width' => 400, 'height' => 300) ); ?>">
-		</a>
-		<?php echo esc_html( $pEstates->getEstatePictureText($id) ); ?>
+		if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
+			echo '<span>'.$marketingStatus.'</span>';
+		}
+		echo '<img src="'.$pEstates->getEstatePictureUrl( $id, array('width' => 400, 'height' => 300) ).'">';
+		echo '</a>';
+	?>
+		<?php echo esc_html( $pictureValues['text'] ); ?>
 	<?php endforeach; ?>
 
 	<?php echo $pEstates->getEstateUnits( ); ?>

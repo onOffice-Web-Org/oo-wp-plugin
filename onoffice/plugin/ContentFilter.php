@@ -377,11 +377,10 @@ class ContentFilter
 					.'<u><strong>[onOffice-Plugin]</strong> '
 					.esc_html__('An error occured:', 'onoffice').'</u><p>'
 					.esc_html((string) $pException).'</pre></p>';
-				error_log('[onOffice-Plugin]: '.strval($pException));
 			}
-		} else {
-			error_log('[onOffice-Plugin]: '.strval($pException));
 		}
+
+		error_log('[onOffice-Plugin]: '.strval($pException));
 
 		return $output;
 	}
@@ -426,6 +425,7 @@ class ContentFilter
 		wp_register_script('onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath));
 		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
 
+		wp_register_style('onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath));
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 		wp_register_style('onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath));
 		wp_register_script('onoffice-leadform', plugins_url('/js/onoffice-leadform.js', $pluginPath), 'jquery', false, true);
@@ -506,13 +506,7 @@ class ContentFilter
 
 	public function includeScripts()
 	{
-		if (is_file(plugin_dir_path(__FILE__).'../templates/default/style.css')) {
-			wp_enqueue_style('onoffice-template-style.css', $this->getFileUrl('style.css'));
-		}
-
-		if (is_file(plugin_dir_path(__FILE__).'../templates/default/script.js')) {
-			wp_enqueue_style('onoffice-template-script.js', $this->getFileUrl('script.js'));
-		}
+		wp_enqueue_style('onoffice-default');
 
 		if (Favorites::isFavorizationEnabled()) {
 			wp_enqueue_script('onoffice-favorites');
