@@ -88,8 +88,7 @@ class TestClassFilterCall
 
 	/**
 	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Unknown Filter
+	 * @expectedException onOffice\WPlugin\Controller\Exception\UnknownFilterException
 	 *
 	 */
 

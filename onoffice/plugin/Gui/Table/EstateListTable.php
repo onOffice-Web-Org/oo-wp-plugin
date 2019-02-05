@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui\Table;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\Controller\Exception\UnknownFilterException;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
@@ -212,6 +213,9 @@ class EstateListTable extends ListTable
 			}
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$filterName = __('(Needs valid API credentials)', 'onoffice');
+		} catch (UnknownFilterException $pFilterException) {
+			$filterName = sprintf(__('(Unknown Filter (ID: %s))', 'onoffice'),
+				$pFilterException->getFilterId());
 		}
 		return $filterName;
 	}

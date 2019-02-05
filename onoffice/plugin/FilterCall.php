@@ -23,9 +23,9 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin;
 
-use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Controller\Exception\UnknownFilterException;
 use onOffice\WPlugin\SDKWrapper;
 
 /**
@@ -113,7 +113,7 @@ class FilterCall
 	 *
 	 * @param int $id
 	 * @return string
-	 * @throws Exception
+	 * @throws UnknownFilterException
 	 *
 	 */
 
@@ -124,7 +124,9 @@ class FilterCall
 			return $filters[$id];
 		}
 
-		throw new Exception('Unknown Filter '.$id);
+		$pException = new UnknownFilterException();
+		$pException->setFilterId($id);
+		throw $pException;
 	}
 
 
