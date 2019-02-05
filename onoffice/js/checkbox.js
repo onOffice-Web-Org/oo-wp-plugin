@@ -9,7 +9,8 @@ onOffice.checkboxAdmin = function() {
 
 		// view: create new [contact] form
 		"input[name=oopluginforms-createaddress]": [
-			"input[name=oopluginforms-checkduplicates]"
+			"input[name=oopluginforms-checkduplicates]",
+			"input[name=oopluginforms-newsletter]"
 		],
 
 		// view: estate list
