@@ -102,13 +102,11 @@ class AddressList
 			'formatoutput' => true,
 		];
 		$pApiCall->setParameters($parameters);
-		$pApiCall->addRequestToQueue();
-		$this->_pSDKWrapper->sendRequests();
-		if ($pApiCall->getResultStatus() === true) {
-			$records = $pApiCall->getResultRecords();
-			$this->fillAddressesById($records);
-			$this->_pDataViewAddress->setFields($fields);
-		}
+		$pApiCall->addRequestToQueue()->sendRequests();
+
+		$records = $pApiCall->getResultRecords();
+		$this->fillAddressesById($records);
+		$this->_pDataViewAddress->setFields($fields);
 	}
 
 
@@ -142,17 +140,15 @@ class AddressList
 		$pApiCall->addRequestToQueue();
 		$this->_pSDKWrapper->sendRequests();
 
-		if ($pApiCall->getResultStatus() === true) {
-			$records = $pApiCall->getResultRecords();
-			$this->fillAddressesById($records);
+		$records = $pApiCall->getResultRecords();
+		$this->fillAddressesById($records);
 
-			$resultMeta = $pApiCall->getResultMeta();
-			$numpages = ceil($resultMeta['cntabsolute']/$pDataListViewAddress->getRecordsPerPage());
+		$resultMeta = $pApiCall->getResultMeta();
+		$numpages = ceil($resultMeta['cntabsolute']/$pDataListViewAddress->getRecordsPerPage());
 
-			$multipage = $numpages > 1;
-			$more = true;
-			$page = $inputPage;
-		}
+		$multipage = $numpages > 1;
+		$more = true;
+		$page = $inputPage;
 	}
 
 

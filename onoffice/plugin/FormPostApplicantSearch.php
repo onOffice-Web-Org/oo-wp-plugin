@@ -23,7 +23,6 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
-use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
@@ -110,7 +109,6 @@ class FormPostApplicantSearch
 	 * @param FormData $pFormData
 	 * @param int $limitResults
 	 * @return array
-	 * @throws ApiClientException
 	 *
 	 */
 
@@ -128,12 +126,7 @@ class FormPostApplicantSearch
 		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'search');
 		$pApiClientAction->setResourceId('searchcriteria');
 		$pApiClientAction->setParameters($requestParams);
-		$pApiClientAction->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
-
-		if (!$pApiClientAction->getResultStatus()) {
-			throw new ApiClientException($pApiClientAction);
-		}
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 
 		$response = $pApiClientAction->getResultRecords();
 
@@ -203,21 +196,17 @@ class FormPostApplicantSearch
 			'recordids' => $adressIds,
 			'data' => ['KdNr'],
 		]);
-		$pApiClientAction->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
 
-		if ($pApiClientAction->getResultStatus()) {
-			$results = [];
-			$records = $pApiClientAction->getResultRecords();
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$records = $pApiClientAction->getResultRecords();
+		$results = [];
 
-			foreach ($records as $record) {
-				$elements = $record['elements'];
-				$results[$elements['KdNr']] = $applicants[$elements['id']];
-			}
-			return $results;
+		foreach ($records as $record) {
+			$elements = $record['elements'];
+			$results[$elements['KdNr']] = $applicants[$elements['id']];
 		}
 
-		throw new ApiClientException($pApiClientAction);
+		return $results;
 	}
 
 
