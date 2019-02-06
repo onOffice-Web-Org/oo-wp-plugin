@@ -106,10 +106,12 @@ class WPScriptStyleDefault
 	 * @param string $handle
 	 * @param string $name
 	 * @param array $data
+	 * @return bool
 	 *
 	 */
 
-	public function localizeScript(string $handle, string $name, array $data){
-		wp_localize_script($handle, $name, $data);
+	public function localizeScript(string $handle, string $name, array $data): bool
+	{
+		return wp_localize_script($handle, $name, $data);
 	}
 }

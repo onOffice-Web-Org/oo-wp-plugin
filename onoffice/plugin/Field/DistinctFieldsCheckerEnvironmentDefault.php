@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Field;
 
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
+use function json_decode;
 
 /**
  *
@@ -41,6 +42,7 @@ class DistinctFieldsCheckerEnvironmentDefault
 	/**
 	 *
 	 */
+
 	public function __construct()
 	{
 		$this->_pScriptStyle = new WPScriptStyleDefault();
@@ -55,10 +57,8 @@ class DistinctFieldsCheckerEnvironmentDefault
 
 	public function getDistinctValues(): array
 	{
-		return json_decode(
-				filter_input(INPUT_POST, DistinctFieldsHandler::PARAMETER_DISTINCT_VALUES),
-					true)
-				?? [];
+		return filter_input
+			(INPUT_POST, DistinctFieldsHandler::PARAMETER_DISTINCT_VALUES, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
 	}
 
 
@@ -70,10 +70,8 @@ class DistinctFieldsCheckerEnvironmentDefault
 
 	public function getInputValues(): array
 	{
-		return json_decode(
-				filter_input(INPUT_POST, DistinctFieldsHandler::PARAMETER_INPUT_VALUES),
-					true)
-				?? [];
+		return json_decode(filter_input
+			(INPUT_POST, DistinctFieldsHandler::PARAMETER_INPUT_VALUES), true) ?? [];
 	}
 
 
@@ -84,7 +82,9 @@ class DistinctFieldsCheckerEnvironmentDefault
 	 */
 
 	public function getModule(): string
-	{ return filter_input(INPUT_POST, DistinctFieldsHandler::PARAMETER_MODULE) ?? '';}
+	{
+		return filter_input(INPUT_POST, DistinctFieldsHandler::PARAMETER_MODULE) ?? '';
+	}
 
 
 	/**
@@ -94,6 +94,5 @@ class DistinctFieldsCheckerEnvironmentDefault
 	 */
 
 	public function getScriptStyle(): WPScriptStyleBase
-	{ return $this->_pScriptStyle;	}
-
+		{ return $this->_pScriptStyle; }
 }

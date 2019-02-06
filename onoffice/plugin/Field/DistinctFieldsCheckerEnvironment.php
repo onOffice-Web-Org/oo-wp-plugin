@@ -30,11 +30,38 @@ use onOffice\WPlugin\WP\WPScriptStyleBase;
 
 interface DistinctFieldsCheckerEnvironment
 {
+	/**
+	 *
+	 * @return WPScriptStyleBase
+	 *
+	 */
+
 	public function getScriptStyle(): WPScriptStyleBase;
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
 
 	public function getModule(): string;
 
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
 	public function getDistinctValues(): array;
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
 
 	public function getInputValues(): array;
 }

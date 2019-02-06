@@ -31,6 +31,7 @@ use onOffice\WPlugin\WP\WPScriptStyleBase;
  * test configuration for DistinctFieldsChecker
  *
  */
+
 class DistinctFieldsCheckerEnvironmentTest
 	implements DistinctFieldsCheckerEnvironment
 {
@@ -54,7 +55,8 @@ class DistinctFieldsCheckerEnvironmentTest
 	 *
 	 */
 
-	public function getDistinctValues(): array {
+	public function getDistinctValues(): array
+	{
 		return $this->_distinctValues;
 	}
 
@@ -66,7 +68,9 @@ class DistinctFieldsCheckerEnvironmentTest
 	 */
 
 	public function setDistictValues(array $distinctValues)
-		{ $this->_distinctValues = $distinctValues; }
+	{
+		$this->_distinctValues = $distinctValues;
+	}
 
 
 	/**
@@ -75,7 +79,8 @@ class DistinctFieldsCheckerEnvironmentTest
 	 *
 	 */
 
-	public function getInputValues(): array {
+	public function getInputValues(): array
+	{
 		return $this->_inputValues;
 	}
 
@@ -87,7 +92,9 @@ class DistinctFieldsCheckerEnvironmentTest
 	 */
 
 	public function setInputValues(array $inputValues)
-		{ $this->_inputValues = $inputValues; }
+	{
+		$this->_inputValues = $inputValues;
+	}
 
 
 	/**
@@ -96,7 +103,8 @@ class DistinctFieldsCheckerEnvironmentTest
 	 *
 	 */
 
-	public function getModule(): string {
+	public function getModule(): string
+	{
 		return $this->_module;
 	}
 
@@ -108,7 +116,9 @@ class DistinctFieldsCheckerEnvironmentTest
 	 */
 
 	public function setModule(string $module)
-		{ $this->_module = $module; }
+	{
+		$this->_module = $module;
+	}
 
 
 	/**
@@ -118,7 +128,9 @@ class DistinctFieldsCheckerEnvironmentTest
 	 */
 
 	public function setScriptStyle(WPScriptStyleBase $pScriptStyle)
-		{ $this->_pScriptSytle = $pScriptStyle; }
+	{
+		$this->_pScriptSytle = $pScriptStyle;
+	}
 
 
 	/**
@@ -127,8 +139,8 @@ class DistinctFieldsCheckerEnvironmentTest
 	 *
 	 */
 
-	public function getScriptStyle(): WPScriptStyleBase {
+	public function getScriptStyle(): WPScriptStyleBase
+	{
 		return $this->_pScriptSytle;
 	}
-
 }

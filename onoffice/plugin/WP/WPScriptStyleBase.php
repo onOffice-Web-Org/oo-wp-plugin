@@ -91,8 +91,9 @@ interface WPScriptStyleBase
 	 * @param string $handle
 	 * @param string $name
 	 * @param array $data
+	 * @return bool
 	 *
 	 */
 
-	public function localizeScript(string $handle, string $name, array $data);
+	public function localizeScript(string $handle, string $name, array $data): bool;
 }

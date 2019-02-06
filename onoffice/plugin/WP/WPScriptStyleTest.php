@@ -233,16 +233,18 @@ class WPScriptStyleTest
 	 * @param string $handle
 	 * @param string $name
 	 * @param array $data
+	 * @return bool
 	 * @throws Exception
 	 *
 	 */
 
-	public function localizeScript(string $handle, string $name, array $data) {
+	public function localizeScript(string $handle, string $name, array $data): bool
+	{
 		if (!isset($this->_registeredScripts[$handle])) {
 			throw new Exception('Script '.$handle.' not registered');
 		}
 
 		$this->_localizedScript []= $handle;
+		return true;
 	}
-
 }

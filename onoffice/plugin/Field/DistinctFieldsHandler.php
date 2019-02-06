@@ -21,14 +21,12 @@
 
 namespace onOffice\WPlugin\Field;
 
-use onOffice\WPlugin\Fieldnames;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\Language;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Field\DistinctFieldsFilter;
 use onOffice\WPlugin\Field\DistinctFieldsHandlerConfigurationDefault;
+use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Types\FieldTypes;
 
 
 /**
@@ -56,24 +54,20 @@ class DistinctFieldsHandler
 	/** @var string */
 	private $_module = null;
 
-
 	/** @var array */
 	private $_inputValues = [];
 
 	/** @var array */
 	private $_values = [];
 
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
-	/** var Fieldnames */
-	private $_pFieldnames = null;
-
 	/** @var array */
 	private $_geoPositionFields = [];
 
 	/** @var array */
 	private $_distinctFields = [];
+
+	/** @var DistinctFieldsHandlerConfiguration */
+	private $_pDistinctFieldsHandlerConfiguration = null;
 
 
 	/**
@@ -84,11 +78,8 @@ class DistinctFieldsHandler
 
 	public function __construct(DistinctFieldsHandlerConfiguration $pDistinctFieldsHandlerConfiguration = null)
 	{
-		$pDistinctFieldsHandlerConfiguration == null &&
-				$pDistinctFieldsHandlerConfiguration = new DistinctFieldsHandlerConfigurationDefault();
-
-		$this->_pSDKWrapper = $pDistinctFieldsHandlerConfiguration->getSDKWrapper();
-		$this->_pFieldnames = $pDistinctFieldsHandlerConfiguration->getFieldnames();
+		$this->_pDistinctFieldsHandlerConfiguration =
+			$pDistinctFieldsHandlerConfiguration ?? new DistinctFieldsHandlerConfigurationDefault();
 	}
 
 
@@ -161,7 +152,7 @@ class DistinctFieldsHandler
 	 */
 
 	public function getValues(): array
-	{ return $this->_values; }
+		{ return $this->_values; }
 
 
 	/**
@@ -172,10 +163,11 @@ class DistinctFieldsHandler
 
 	private function editMultiselectableField($field)
 	{
+		$pFieldnames = $this->_pDistinctFieldsHandlerConfiguration->getFieldnames();
+		$fieldType = $pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE);
+
 		if ($this->_module == onOfficeSDK::MODULE_ESTATE &&
-			in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
-			[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]))
-		{
+			FieldTypes::isMultipleSelectType($fieldType)) {
 			$field .= '[]';
 		}
 
@@ -189,36 +181,66 @@ class DistinctFieldsHandler
 
 	public function check()
 	{
-		$pSDKWrapper = $this->_pSDKWrapper;
-		$pFilter = new DistinctFieldsFilter($this->_pFieldnames, $this->_module);
+		$apiClientActions = $this->retrieveValues();
 
-		foreach ($this->_distinctFields as $field)
-		{
-			$filter = $pFilter->filter($field, $this->_inputValues);
-
-			$requestParams =
-			[
-				'language' => Language::getDefault(),
-				'module' => $this->_module,
-				'field' => $field,
-				'filter' => $filter,
-			];
-
-			if (count($this->_geoPositionFields) > 0)
-			{
-				$requestParams['georangesearch'] = $this->_geoPositionFields;
-			}
-
-			$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'distinctValues');
-			$pApiClientAction->setParameters($requestParams);
-			$pApiClientAction->addRequestToQueue();
-			$pApiClientAction->sendRequests();
-			if ($pApiClientAction->getResultStatus()) {
-
-				$records = $pApiClientAction->getResultRecords();
-				$field = $this->editMultiselectableField($field);
-				$this->_values[$field] = $records[0]['elements'];
-			}
+		foreach ($this->_distinctFields as $field) {
+			$pApiClientAction = $apiClientActions[$field];
+			$records = $pApiClientAction->getResultRecords();
+			$field = $this->editMultiselectableField($field);
+			$this->_values[$field] = $records[0]['elements'];
 		}
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function retrieveValues(): array
+	{
+		$pSDKWrapper = $this->_pDistinctFieldsHandlerConfiguration->getSDKWrapper();
+		$pFieldnames = $this->_pDistinctFieldsHandlerConfiguration->getFieldnames();
+		$pFilter = new DistinctFieldsFilter($pFieldnames, $this->_module);
+		$apiClientActions = [];
+
+		foreach ($this->_distinctFields as $field) {
+			$requestParams = $this->buildParameters($pFilter, $field);
+			$pApiClientAction = new APIClientActionGeneric
+				($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'distinctValues');
+			$pApiClientAction->setParameters($requestParams);
+			$apiClientActions[$field] = $pApiClientAction;
+			$pApiClientAction->addRequestToQueue();
+		}
+
+		$pSDKWrapper->sendRequests();
+		return $apiClientActions;
+	}
+
+
+	/**
+	 *
+	 * @param DistinctFieldsFilter $pFilter
+	 * @param string $field
+	 * @return array
+	 *
+	 */
+
+	private function buildParameters(DistinctFieldsFilter $pFilter, string $field): array
+	{
+		$filter = $pFilter->filter($field, $this->_inputValues);
+		$requestParams = [
+			'language' => Language::getDefault(),
+			'module' => $this->_module,
+			'field' => $field,
+			'filter' => $filter,
+		];
+
+		if ($this->_geoPositionFields !== []) {
+			$requestParams['georangesearch'] = $this->_geoPositionFields;
+		}
+
+		return $requestParams;
 	}
 }

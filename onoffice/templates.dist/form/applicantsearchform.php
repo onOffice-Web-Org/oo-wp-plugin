@@ -158,7 +158,13 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				$name !== 'regionaler_zusatz') {
 				if (in_array($typeCurrentInput, $selectTypes)) {
 					$permittedValues = $pForm->getPermittedValues($name);
-					$value = $permittedValues[$value];
+
+					if (!is_array($value)) {
+						$value = $permittedValues[$value];
+					} else {
+						// multiple values selected in search criteria
+						$value = implode(', ', array_intersect_key($permittedValues, array_flip($value)));
+					}
 				}
 			} else if ($name === 'regionaler_zusatz') {
 				$pRegionController = new \onOffice\WPlugin\Region\RegionController();

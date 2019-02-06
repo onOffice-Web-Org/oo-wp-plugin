@@ -22,11 +22,13 @@
 namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Field\DistinctFieldsHandler;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerConfigurationDefault;
 use onOffice\WPlugin\Field\DistinctFieldsCheckerEnvironment;
+use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\GeoPosition;
 use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_action;
+use function plugins_url;
 
 /**
  *
@@ -97,13 +99,17 @@ class DistinctFieldsChecker
 	{
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$pScriptStyle = $this->_pEnvironment->getScriptStyle();
+		$values = [
+			'base_path' => plugins_url('/tools/distinctFields.php', $pluginPath),
+			'distinctValues' => $distinctFields,
+			'module' => $module,
+			'notSpecifiedLabel' => __('Not specified', 'onoffice'),
+			'editValuesLabel' => __('Edit values', 'onoffice'),
+		];
 
-		$pScriptStyle->registerScript('setPossibleTypeValues', plugins_url('/js/distinctFields.js', $pluginPath));
-		$pScriptStyle->enqueueScript('setPossibleTypeValues', plugins_url('/js/distinctFields.js', $pluginPath).'/distinctFields.js');
-		$pScriptStyle->localizeScript('setPossibleTypeValues', 'base_path',  [plugins_url('/tools/distinctFields.php', $pluginPath)]);
-		$pScriptStyle->localizeScript('setPossibleTypeValues', 'distinctValues', [json_encode($distinctFields)]);
-		$pScriptStyle->localizeScript('setPossibleTypeValues', 'module',  [$module]);
-		$pScriptStyle->localizeScript('setPossibleTypeValues', 'notSpecifiedLabel',  [esc_html('Not Specified', 'onoffice')]);
+		$pScriptStyle->registerScript('onoffice-distinctValues', plugins_url('/js/distinctFields.js', $pluginPath));
+		$pScriptStyle->enqueueScript('onoffice-distinctValues');
+		$pScriptStyle->localizeScript('onoffice-distinctValues', 'onoffice_distinctFields', $values);
 	}
 
 
@@ -111,25 +117,23 @@ class DistinctFieldsChecker
 	 *
 	 */
 
-	public function check()
+	public function check(): array
 	{
 		$module = $this->_pEnvironment->getModule();
 		$inputValues = $this->_pEnvironment->getInputValues();
 		$this->_distinctFields = $this->_pEnvironment->getDistinctValues();
+
 		$this->setInputValues($module, $inputValues);
 
-		$pDistinctFieldsHandler = new DistinctFieldsHandler(new DistinctFieldsHandlerConfigurationDefault());
+		$pDistinctFieldsHandler = new DistinctFieldsHandler();
 		$pDistinctFieldsHandler->setModule($module);
 		$pDistinctFieldsHandler->setDistinctFields($this->_distinctFields);
 		$pDistinctFieldsHandler->setInputValues($this->_fieldValues);
 		$pDistinctFieldsHandler->setGeoPositionFields($this->_geoRangeValues);
 
 		$pDistinctFieldsHandler->check();
-		$result = $pDistinctFieldsHandler->getValues();
 
-		echo json_encode($result);
-		die;
-		wp_die();
+		return $pDistinctFieldsHandler->getValues();
 	}
 
 
