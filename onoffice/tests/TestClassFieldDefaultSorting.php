@@ -54,6 +54,34 @@ class TestClassFieldDefaultSorting
 	 *
 	 */
 
+	public function testGetDefaultSortByFieldsEstate()
+	{
+		$pFieldDefaultSorting = new FieldDefaultSorting();
+		$sorting = $pFieldDefaultSorting->getDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
+		$expectation = [
+			'kaufpreis',
+			'kaltmiete',
+			'pacht',
+			'wohnflaeche',
+			'anzahl_zimmer',
+			'ort',
+			'grundstuecksflaeche',
+			'gesamtflaeche',
+			'erstellt_am',
+			'geandert_am',
+			'verkauft_am',
+			'letzte_aktion',
+			'objektnr_extern',
+		];
+
+		$this->assertEquals($expectation, $sorting);
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testGetDefaultSortByFieldsUnknownModule()
 	{
 		$pFieldDefaultSorting = new FieldDefaultSorting();

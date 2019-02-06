@@ -50,6 +50,11 @@ class FieldDefaultSorting
 			'ort',
 			'grundstuecksflaeche',
 			'gesamtflaeche',
+			'erstellt_am',
+			'geandert_am',
+			'verkauft_am',
+			'letzte_aktion',
+			'objektnr_extern',
 		],
 	];
 
