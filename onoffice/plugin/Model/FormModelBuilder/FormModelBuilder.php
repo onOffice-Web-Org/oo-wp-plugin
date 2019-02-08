@@ -27,6 +27,7 @@ use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Template\TemplateCall;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use const ONOFFICE_PLUGIN_DIR;
 use function plugin_dir_path;
@@ -95,16 +96,24 @@ abstract class FormModelBuilder
 	/**
 	 *
 	 * @param string $module
+	 * @param bool $withInactive
 	 * @return array
 	 *
 	 */
 
-	protected function readFieldnames($module)
+	protected function readFieldnames($module, bool $withInactive = false)
 	{
 		try {
 			$this->_pFieldnames->loadLanguage();
 			$fieldnames = $this->_pFieldnames->getFieldList($module);
-			$result = array();
+
+			if ($withInactive) {
+				$pFieldnamesInactive = new Fieldnames(new FieldsCollection(), true);
+				$pFieldnamesInactive->loadLanguage();
+				$fieldnames += $pFieldnamesInactive->getFieldList($module);
+			}
+
+			$result = [];
 
 			foreach ($fieldnames as $key => $properties) {
 				$result[$key] = $properties['label'];
