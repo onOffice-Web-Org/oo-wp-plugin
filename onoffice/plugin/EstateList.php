@@ -31,7 +31,6 @@ use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function add_action;
@@ -119,7 +118,10 @@ class EstateList
 	protected function getNumEstatePages()
 	{
 		$recordNumOverAll = $this->getEstateOverallCount();
-		$numEstatePages = (int)ceil($recordNumOverAll / $this->_pDataView->getRecordsPerPage());
+		$recordsPerPageView = $this->_pDataView->getRecordsPerPage();
+		// 20 is the default of API in case recordsPerPage <= 0
+		$recordsPerPage = $recordsPerPageView <= 0 ? 20 : $recordsPerPageView;
+		$numEstatePages = (int)ceil($recordNumOverAll / $recordsPerPage);
 
 		return $numEstatePages;
 	}

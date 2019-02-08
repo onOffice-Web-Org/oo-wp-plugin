@@ -182,7 +182,8 @@ class AdminPageEstateUnitSettings
 
 	protected function setFixedValues(array $row)
 	{
-		$row[RecordManager::TABLENAME_LIST_VIEW]['list_type'] = 'units';
-		return $row;
+		$rowCleanRecordsPerPage = $this->setRecordsPerPage($row);
+		$rowCleanRecordsPerPage[RecordManager::TABLENAME_LIST_VIEW]['list_type'] = 'units';
+		return $rowCleanRecordsPerPage;
 	}
 }

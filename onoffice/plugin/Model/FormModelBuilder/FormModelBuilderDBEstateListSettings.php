@@ -75,12 +75,16 @@ class FormModelBuilderDBEstateListSettings
 		{
 			$pRecordReadManager = new RecordManagerReadListViewEstate();
 			$values = $pRecordReadManager->getRowById($listViewId);
+			if ((int)$values['recordsPerPage'] === 0) {
+				$values['recordsPerPage'] = 20;
+			}
 			$this->setValues($values);
 		}
 		else
 		{
 			$this->setValues(array(
 				DataListView::FIELDS => self::$_defaultFields,
+				'recordsPerPage' => 20,
 			));
 		}
 
