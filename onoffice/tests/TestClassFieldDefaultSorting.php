@@ -68,7 +68,7 @@ class TestClassFieldDefaultSorting
 			'grundstuecksflaeche',
 			'gesamtflaeche',
 			'erstellt_am',
-			'geandert_am',
+			'geaendert_am',
 			'verkauft_am',
 			'letzte_aktion',
 			'objektnr_extern',

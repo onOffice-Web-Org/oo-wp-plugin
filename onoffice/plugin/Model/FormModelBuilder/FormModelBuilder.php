@@ -113,11 +113,8 @@ abstract class FormModelBuilder
 				$fieldnames += $pFieldnamesInactive->getFieldList($module);
 			}
 
-			$result = [];
-
-			foreach ($fieldnames as $key => $properties) {
-				$result[$key] = $properties['label'];
-			}
+			$resultLabel = array_column($fieldnames, 'label');
+			$result = array_combine(array_keys($fieldnames), $resultLabel);
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$result = [];
 		}
