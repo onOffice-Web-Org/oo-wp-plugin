@@ -110,14 +110,13 @@ class FormPostOwner
 		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE,
 			'estate');
 		$pApiClientAction->setParameters($requestParams);
-		$pApiClientAction->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 
-		if ($pApiClientAction->getResultStatus()) {
-			$records = $pApiClientAction->getResultRecords();
-			if (isset($records[0]['id'])) {
-				return (int)$records[0]['id'];
-			}
+		$records = $pApiClientAction->getResultRecords();
+		$estateId = (int)$records[0]['id'];
+
+		if ($estateId > 0) {
+			return $estateId;
 		}
 
 		throw new ApiClientException($pApiClientAction);
@@ -219,15 +218,10 @@ class FormPostOwner
 		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_DO,
 			'contactaddress');
 		$pApiClientAction->setParameters($requestParams);
-		$pApiClientAction->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 
-		$result = false;
-
-		if ($pApiClientAction->getResultStatus()) {
-			$resultRecords = $pApiClientAction->getResultRecords();
-			$result = ($resultRecords[0]['elements']['success'] ?? '') === 'success';
-		}
+		$resultRecords = $pApiClientAction->getResultRecords();
+		$result = ($resultRecords[0]['elements']['success'] ?? '') === 'success';
 
 		if (!$result) {
 			throw new ApiClientException($pApiClientAction);

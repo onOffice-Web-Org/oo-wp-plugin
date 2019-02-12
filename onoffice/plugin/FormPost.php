@@ -254,7 +254,7 @@ abstract class FormPost
 	 */
 
 	protected function getFormFieldsConsiderSearchcriteria(
-		array $inputFormFields, bool $numberAsRange = true)
+		array $inputFormFields, bool $numberAsRange = true): array
 	{
 		$fieldList = $this->_pFormPostConfiguration->getSearchCriteriaFields();
 
@@ -296,12 +296,11 @@ abstract class FormPost
 			onOfficeSDK::ACTION_ID_CREATE, 'address');
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$result = $pApiClientAction->getResultRecords();
+		$addressId = (int)$result[0]['id'];
 
-		if ($pApiClientAction->getResultStatus() === true) {
-			$result = $pApiClientAction->getResultRecords();
-			if (isset($result[0]['id'])) {
-				return (int)$result[0]['id'];
-			}
+		if ($addressId > 0) {
+			return $addressId;
 		}
 
 		throw new ApiClientException($pApiClientAction);
