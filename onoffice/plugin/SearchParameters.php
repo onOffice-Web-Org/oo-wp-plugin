@@ -28,14 +28,21 @@
 
 namespace onOffice\WPlugin;
 
+use function add_query_arg;
+use function esc_url;
+use function get_permalink;
+use function trailingslashit;
+use function user_trailingslashit;
+
 /**
  *
  * Singleton that holds submitted get parameters for the pagination
  *
  */
 
-class SearchParameters {
-	/** @var \onOffice\WPlugin\SearchParameters */
+class SearchParameters
+{
+	/** @var SearchParameters */
 	private static $_pInstance = null;
 
 	/** @var array */
@@ -59,12 +66,13 @@ class SearchParameters {
 
 	/**
 	 *
-	 * @return \onOffice\WPlugin\SearchParameters
+	 * @return SearchParameters
 	 *
 	 */
 
-	public static function getInstance() {
-		if ( self::$_pInstance === null ) {
+	public static function getInstance()
+	{
+		if (self::$_pInstance === null) {
 			self::$_pInstance = new static();
 		}
 
@@ -78,10 +86,11 @@ class SearchParameters {
 	 *
 	 */
 
-	public function getParameters() {
+	public function getParameters()
+	{
 		$parameters = $this->_parameters;
 
-		if ( $this->_filter ) {
+		if ($this->_filter) {
 			$parameters = array_filter($this->filterParameters( $parameters ));
 		}
 
@@ -95,7 +104,8 @@ class SearchParameters {
 	 *
 	 */
 
-	public function setParameters( array $parameters ) {
+	public function setParameters(array $parameters)
+	{
 		$this->_parameters = $parameters;
 	}
 
@@ -107,11 +117,12 @@ class SearchParameters {
 	 *
 	 */
 
-	private function filterParameters( $parameters ) {
-		$whitelist = array_merge( $this->_allowedGetParameters, array('oo_formid', 'oo_formno') );
-		$whitelistKey = array_flip( $whitelist );
+	private function filterParameters($parameters)
+	{
+		$whitelist = array_merge($this->_allowedGetParameters, ['oo_formid', 'oo_formno']);
+		$whitelistKey = array_flip($whitelist);
 
-		return array_intersect_key( $parameters, $whitelistKey );
+		return array_intersect_key($parameters, $whitelistKey);
 	}
 
 
@@ -122,7 +133,8 @@ class SearchParameters {
 	 *
 	 */
 
-	public function setParameter( $key, $value ) {
+	public function setParameter($key, $value)
+	{
 		$this->_parameters[$key] = $value;
 	}
 
@@ -141,24 +153,24 @@ class SearchParameters {
 	 *
 	 */
 
-	public function linkPagesLink( $link, $i = 1 ) {
+	public function linkPagesLink($link, $i = 1)
+	{
 		global $page, $more;
 
 		$linkparams = $this->_defaultLinkParams;
 		$output = '';
 
-		if ( 'number' == $linkparams['next_or_number'] ) {
-			$link = $linkparams['link_before'] . str_replace( '%', $i, $linkparams['pagelink'] )
-				. $linkparams['link_after'];
-			if ( $i != $page || ! $more && 1 == $page ) {
+		if ('number' == $linkparams['next_or_number']) {
+			$link = $linkparams['link_before'].str_replace('%', $i, $linkparams['pagelink'])
+				.$linkparams['link_after'];
+			if ($i != $page || ! $more && 1 == $page) {
 				$url = $this->geturl( $i );
-
-				$output .= '<a href="' . esc_url( $url ) . '">' . $link . '</a>';
+				$output .= '<a href="'.esc_url($url).'">'.$link.'</a>';
 			} else {
 				$output .= $link;
 			}
-		} elseif ( $more ) {
-			$output .= $this->getLinkSnippetForPage( $i, $page );
+		} elseif ($more) {
+			$output .= $this->getLinkSnippetForPage($i, $page);
 		}
 
 		return $output;
@@ -173,14 +185,15 @@ class SearchParameters {
 	 *
 	 */
 
-	private function getLinkSnippetForPage( $i, $page ) {
+	private function getLinkSnippetForPage($i, $page)
+	{
 		$linkparams = $this->_defaultLinkParams;
 
 		$key = $i < $page ? 'previouspagelink' : 'nextpagelink';
 
-		return '<a href="'.  esc_url( $this->geturl( $i ) ) .'">'
-			. $linkparams['link_before'] . $linkparams[$key]
-			. $linkparams['link_after'].'</a>';
+		return '<a href="'.esc_url($this->geturl($i)).'">'
+			.$linkparams['link_before'].$linkparams[$key]
+			.$linkparams['link_after'].'</a>';
 	}
 
 
@@ -191,8 +204,9 @@ class SearchParameters {
 	 *
 	 */
 
-	private function geturl( $i ) {
-		$url = trailingslashit(get_permalink()) . user_trailingslashit($i, 'single_paged');
+	private function geturl($i)
+	{
+		$url = trailingslashit(get_permalink()).user_trailingslashit($i, 'single_paged');
 		return add_query_arg($this->getParameters(), $url);
 	}
 
@@ -204,7 +218,8 @@ class SearchParameters {
 	 *
 	 */
 
-	public function populateDefaultLinkParams( $params ) {
+	public function populateDefaultLinkParams($params)
+	{
 		$this->_defaultLinkParams = $params;
 		return $params;
 	}
@@ -216,7 +231,8 @@ class SearchParameters {
 	 *
 	 */
 
-	public function setAllowedGetParameters( array $parameters ) {
+	public function setAllowedGetParameters(array $parameters)
+	{
 		$this->_allowedGetParameters = $parameters;
 	}
 
@@ -227,7 +243,8 @@ class SearchParameters {
 	 *
 	 */
 
-	public function addAllowedGetParameter( $key ) {
+	public function addAllowedGetParameter($key)
+	{
 		$this->_allowedGetParameters []= $key;
 	}
 
@@ -238,7 +255,8 @@ class SearchParameters {
 	 *
 	 */
 
-	public function enableFilter($enable) {
+	public function enableFilter($enable)
+	{
 		$this->_filter = (bool) $enable;
 	}
 }

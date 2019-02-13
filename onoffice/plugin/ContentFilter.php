@@ -63,7 +63,6 @@ use function esc_html;
 use function esc_html__;
 use function get_page_uri;
 use function get_post;
-use function plugin_dir_path;
 use function plugins_url;
 use function shortcode_atts;
 use function wp_enqueue_script;
@@ -185,12 +184,15 @@ class ContentFilter
 			(new Types\FieldsCollection()));
 		$pFieldNames->loadLanguage();
 		$pSearchParameters = SearchParameters::getInstance();
+		$filterableFieldsView = $pDataView->getFilterableFields();
+		$filterableFields = $this->setAllowedGetParametersEstateGeo($filterableFieldsView);
 
-		foreach ($pDataView->getFilterableFields() as $filterableField) {
+		foreach ($filterableFields as $filterableField) {
 			try {
 				$fieldInfo = $pFieldNames->getFieldInformation
 					($filterableField, onOfficeSDK::MODULE_ESTATE);
 			} catch (UnknownFieldException $pException) {
+				$this->logError($pException);
 				continue;
 			}
 
@@ -204,6 +206,27 @@ class ContentFilter
 
 			$pSearchParameters->addAllowedGetParameter($filterableField);
 		}
+	}
+
+
+	/**
+	 *
+	 * @param array $filterableFields
+	 * @return array
+	 *
+	 */
+
+	private function setAllowedGetParametersEstateGeo(array $filterableFields): array
+	{
+		if (in_array(GeoPosition::FIELD_GEO_POSITION, $filterableFields, true)) {
+			$pGeoPosition = new GeoPosition();
+			$geoPositionFields = $pGeoPosition->getEstateSearchFields();
+			foreach ($geoPositionFields as $geoPositionField) {
+				SearchParameters::getInstance()->addAllowedGetParameter($geoPositionField);
+			}
+			unset ($filterableFields[GeoPosition::FIELD_GEO_POSITION]);
+		}
+		return $filterableFields;
 	}
 
 
@@ -380,9 +403,21 @@ class ContentFilter
 			}
 		}
 
-		error_log('[onOffice-Plugin]: '.strval($pException));
+		$this->logError($pException);
 
 		return $output;
+	}
+
+
+	/**
+	 *
+	 * @param Exception $pException
+	 *
+	 */
+
+	public function logError(Exception $pException)
+	{
+		error_log('[onOffice-Plugin]: '.strval($pException));
 	}
 
 
@@ -521,19 +556,6 @@ class ContentFilter
 
 		$pScriptLoaderMap = new ScriptLoaderMap();
 		$pScriptLoaderMap->enqueue(new WPScriptStyleDefault);
-	}
-
-
-	/**
-	 *
-	 * @param string $fileName
-	 * @return string
-	 *
-	 */
-
-	private function getFileUrl($fileName)
-	{
-		return plugins_url('onoffice/templates/default/'.$fileName);
 	}
 
 

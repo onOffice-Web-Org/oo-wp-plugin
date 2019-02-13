@@ -61,20 +61,15 @@ class ApiClientException
 	public function __toString()
 	{
 		$pApiClientAction = $this->_pApiClientAction;
-		$messageFormat =
-			"actionId: %s,\n"
-			."resourceId: %s,\n"
-			."resourceType: %s,\n"
-			."parameters: %s\n";
-		$arguments = [
-			$pApiClientAction->getActionId(),
-			$pApiClientAction->getResourceId(),
-			$pApiClientAction->getResourceType(),
-			json_encode($pApiClientAction->getParameters(), JSON_PRETTY_PRINT),
+		$messageFormat = [
+			'actionid' => $pApiClientAction->getActionId(),
+			'resourceid' => $pApiClientAction->getResourceId(),
+			'resourcetype' => $pApiClientAction->getResourceType(),
+			'parameters' => $pApiClientAction->getParameters(),
 		];
 
-		$message = vsprintf($messageFormat, $arguments);
-		return $message.parent::__toString();
+		$message = json_encode($messageFormat, JSON_PRETTY_PRINT);
+		return $message."\n\n".parent::__toString();
 	}
 
 
