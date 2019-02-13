@@ -180,6 +180,9 @@ class GeoPosition
 	public function createGeoRangeSearchParameterRequest(array $inputs): array
 	{
 		$inputValues = [];
+		$radius = empty($inputs[self::ESTATE_LIST_SEARCH_RADIUS]) ? 10 :
+			$inputs[self::ESTATE_LIST_SEARCH_RADIUS];
+		$inputs[self::ESTATE_LIST_SEARCH_RADIUS] = $radius;
 
 		foreach ($inputs as $key => $values) {
 			$inputValues[$key] = $values;

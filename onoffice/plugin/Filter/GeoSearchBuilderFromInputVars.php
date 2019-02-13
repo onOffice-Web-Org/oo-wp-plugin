@@ -80,13 +80,11 @@ class GeoSearchBuilderFromInputVars
 
 	private function getGeoSearchValues(): array
 	{
-		$inputValues = [];
 		$pGeoPosition = new GeoPosition();
-
-		foreach ($pGeoPosition->getEstateSearchFields() as $key) {
-			$inputValues[$key] = $this->_pEstateListInputVariableReader->getFieldValue
-				($key, FILTER_SANITIZE_STRING, FILTER_FORCE_ARRAY);
-		}
+		$inputValues = array_flip($pGeoPosition->getEstateSearchFields());
+		array_walk($inputValues, function(&$value, $key) {
+			$value = $this->_pEstateListInputVariableReader->getFieldValue($key);
+		});
 
 		return $inputValues;
 	}
