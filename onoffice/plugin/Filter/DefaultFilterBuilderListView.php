@@ -66,7 +66,7 @@ class DefaultFilterBuilderListView
 	{
 		$this->_pDataListView = $pDataListView;
 		$this->_pFilterBuilderInputVars = $pFilterBuilder ?? new FilterBuilderInputVariables
-			(onOfficeSDK::MODULE_ESTATE);
+			(onOfficeSDK::MODULE_ESTATE, true);
 
 		if ($this->_pFilterBuilderInputVars->getModule() !== onOfficeSDK::MODULE_ESTATE) {
 			throw new Exception('Module must be estate.');

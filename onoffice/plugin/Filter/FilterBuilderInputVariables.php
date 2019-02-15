@@ -121,7 +121,8 @@ class FilterBuilderInputVariables
 		} elseif ($type === FieldTypes::FIELD_TYPE_MULTISELECT ||
 			$type === FieldTypes::FIELD_TYPE_SINGLESELECT) {
 			$fieldFilter []= ['op' => 'in', 'val' => $fieldValue];
-		} elseif ($type === FieldTypes::FIELD_TYPE_TEXT || $this->_fuzzySearch) {
+		} elseif ($type === FieldTypes::FIELD_TYPE_TEXT ||
+			($type === FieldTypes::FIELD_TYPE_VARCHAR && $this->_fuzzySearch)) {
 			$fieldFilter []= ['op' => 'like', 'val' => '%'.$fieldValue.'%'];
 		} else {
 			$fieldFilter []= ['op' => '=', 'val' => $fieldValue];

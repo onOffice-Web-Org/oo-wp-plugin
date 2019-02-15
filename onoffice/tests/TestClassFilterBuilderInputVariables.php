@@ -103,7 +103,7 @@ class TestClassFilterBuilderInputVariables
 	{
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setFilterableFields([
-			'kaufpreis', 'mietpreis', 'anzahl_zimmer', 'bezugsfrei'
+			'kaufpreis', 'mietpreis', 'anzahl_zimmer', 'bezugsfrei', 'ort', 'objektart', 'testvarchar',
 		]);
 
 		$module = onOfficeSDK::MODULE_ESTATE;
@@ -118,6 +118,12 @@ class TestClassFilterBuilderInputVariables
 			('anzahl_zimmer', $module, FieldTypes::FIELD_TYPE_INTEGER);
 		$pInputVariableReaderConfig->setFieldTypeByModule
 			('bezugsfrei', $module, FieldTypes::FIELD_TYPE_DATETIME);
+		$pInputVariableReaderConfig->setFieldTypeByModule
+			('ort', $module, FieldTypes::FIELD_TYPE_VARCHAR);
+		$pInputVariableReaderConfig->setFieldTypeByModule
+			('testvarchar', $module, FieldTypes::FIELD_TYPE_VARCHAR);
+		$pInputVariableReaderConfig->setFieldTypeByModule
+			('objektart', $module, FieldTypes::FIELD_TYPE_SINGLESELECT);
 
 		$pInputVariableReaderConfig->setValue('kaufpreis__von', '100000');
 		$pInputVariableReaderConfig->setValue('mietpreis__bis', '350,50');
@@ -126,6 +132,9 @@ class TestClassFilterBuilderInputVariables
 		$pInputVariableReaderConfig->setValue('anzahl_zimmer__bis', '10');
 		$pInputVariableReaderConfig->setValue('bezugsfrei__von', '01.01.2017 00:00:00');
 		$pInputVariableReaderConfig->setValue('bezugsfrei__bis', '01.02.2017 23:59:00');
+		$pInputVariableReaderConfig->setValue('ort', '');
+		$pInputVariableReaderConfig->setValue('objektart', 'haus');
+		$pInputVariableReaderConfig->setValue('testvarchar', 'hello');
 		$filterableFields = $pDataListView->getFilterableFields();
 
 		$expected = [
@@ -159,6 +168,18 @@ class TestClassFilterBuilderInputVariables
 				[
 					'op' => '<=',
 					'val' => '2017-02-01 23:59:00',
+				],
+			],
+			'objektart' => [
+				[
+					'op' => 'in',
+					'val' => 'haus',
+				],
+			],
+			'testvarchar' => [
+				[
+					'op' => '=',
+					'val' => 'hello',
 				],
 			],
 		];
