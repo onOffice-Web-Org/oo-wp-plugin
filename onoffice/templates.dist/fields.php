@@ -127,7 +127,7 @@ if (!function_exists('renderFormField')) {
 		}
 
 		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput &&
-			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land'))) {
+			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land', 'vermarktungsart'))) {
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
 			$output .=  '<option value="">'.esc_html('Not Specified', 'onoffice').'</option>';
 			foreach ($permittedValues as $key => $value) {
