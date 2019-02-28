@@ -32,6 +32,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
@@ -91,10 +92,11 @@ class Form
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();
-		$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
 
-		// no form sent
-		if (is_null($this->_pFormData)) {
+		try {
+			$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
+		} catch (UnknownFormException $pE) {
+			// no form sent
 			$pFormConfigFactory = new DataFormConfigurationFactory();
 			$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
 			$this->_pFormData = new FormData($pFormConfig, $this->_formNo);

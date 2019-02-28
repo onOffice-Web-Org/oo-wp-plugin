@@ -73,7 +73,7 @@ class FormData
 	 *
 	 */
 
-	public function __construct( DataFormConfiguration $pDataFormConfiguration, $formNo )
+	public function __construct(DataFormConfiguration $pDataFormConfiguration, $formNo)
 	{
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 		$this->_formNo = $formNo;
@@ -87,16 +87,16 @@ class FormData
 	 *
 	 */
 
-	public function getMissingFields()
+	public function getMissingFields(): array
 	{
 		$missing = [];
 
-		if ( $this->_formSent ) {
-			$filledFormData = array_filter( $this->_values );
-			$requiredFields = array_flip( $this->_requiredFields );
-			$filled = array_intersect_key( $filledFormData, $requiredFields );
-			$missingKeyValues = array_diff_key( $requiredFields, $filled );
-			$missing = array_keys( $missingKeyValues );
+		if ($this->_formSent) {
+			$filledFormData = array_filter($this->_values);
+			$requiredFields = array_flip($this->_requiredFields);
+			$filled = array_intersect_key($filledFormData, $requiredFields);
+			$missingKeyValues = array_diff_key($requiredFields, $filled);
+			$missing = array_keys($missingKeyValues);
 		}
 
 		return $missing;
@@ -109,15 +109,16 @@ class FormData
 	 *
 	 */
 
-	public function getAddressData()
+	public function getAddressData(): array
 	{
 		$inputs = $this->_configFields;
 		$addressData = [];
 
 		foreach ($this->_values as $input => $value) {
 			$inputConfigName = $this->getFieldNameOfInput($input);
+			$inputModule = $inputs[$inputConfigName] ?? null;
 
-			if (onOfficeSDK::MODULE_ADDRESS === $inputs[$inputConfigName]) {
+			if (onOfficeSDK::MODULE_ADDRESS === $inputModule) {
 				$addressData[$input] = $value;
 			}
 		}
@@ -134,7 +135,7 @@ class FormData
 	 *
 	 */
 
-	public function getFieldNameOfInput($input)
+	public function getFieldNameOfInput($input): string
 	{
 		$inputConfigName = $input;
 		$pInputStr = __String::getNew($input);
@@ -154,15 +155,16 @@ class FormData
 	 *
 	 */
 
-	public function getSearchcriteriaData()
+	public function getSearchcriteriaData(): array
 	{
 		$inputs = $this->_configFields;
 		$searchcriteriaData = [];
 
 		foreach ($this->_values as $input => $value) {
 			$inputConfigName = $this->getFieldNameOfInput($input);
+			$inputModule = $inputs[$inputConfigName] ?? null;
 
-			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputs[$inputConfigName]) {
+			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputModule) {
 				$searchcriteriaData[$input] = $value;
 			}
 		}
@@ -172,23 +174,23 @@ class FormData
 
 
 	/** @param string[] $requiredFields */
-	public function setRequiredFields( array $requiredFields )
+	public function setRequiredFields(array $requiredFields)
 		{ $this->_requiredFields = $requiredFields; }
 
 	/** @return array */
-	public function getRequiredFields()
+	public function getRequiredFields(): array
 		{ return $this->_requiredFields; }
 
 	/** @param array $values */
-	public function setValues( array $values )
+	public function setValues(array $values)
 		{ $this->_values = $values; }
 
 	/** @return array */
-	public function getValues()
+	public function getValues(): array
 		{ return $this->_values; }
 
 	/** @param string $status */
-	public function setStatus( $status )
+	public function setStatus($status)
 		{ $this->_status = $status; }
 
 	/** @return string */
@@ -196,15 +198,15 @@ class FormData
 		{ return $this->_status; }
 
 	/**	@param bool $formSent Whether the Form was sent using GET or POST yet */
-	public function setFormSent( $formSent )
-		{ $this->_formSent = (bool) $formSent; }
+	public function setFormSent(bool $formSent)
+		{ $this->_formSent = $formSent; }
 
 	/** @return bool */
-	public function getFormSent()
+	public function getFormSent(): bool
 		{ return $this->_formSent; }
 
 	/** @param string $formtype */
-	public function setFormtype($formtype)
+	public function setFormtype(string $formtype)
 		{ $this->_formtype = $formtype; }
 
 	/** @return string */
@@ -212,15 +214,15 @@ class FormData
 		{ return $this->_formtype; }
 
 	/** @param array $values */
-	public function setResponseFieldsValues($values)
+	public function setResponseFieldsValues(array $values)
 		{ $this->_responseFieldsValues = $values; }
 
 	/** @return array */
-	public function getResponseFieldsValues()
+	public function getResponseFieldsValues(): array
 		{ return $this->_responseFieldsValues; }
 
 	/** @return DataFormConfiguration */
-	public function getDataFormConfiguration()
+	public function getDataFormConfiguration(): DataFormConfiguration
 		{ return $this->_pDataFormConfiguration; }
 
 	/** @return int */

@@ -33,6 +33,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostConfigurationDefault;
@@ -196,16 +197,19 @@ abstract class FormPost
 	 * @param string $prefix
 	 * @param int $formNo
 	 * @return FormData
+	 * @throws UnknownFormException
 	 *
 	 */
 
-	public function getFormDataInstance(string $prefix, $formNo)
+	public function getFormDataInstance(string $prefix, $formNo): FormData
 	{
-		if (isset($this->_formDataInstances[$prefix][$formNo])) {
-			return $this->_formDataInstances[$prefix][$formNo];
+		$pInstance = $this->_formDataInstances[$prefix][$formNo] ?? null;
+
+		if ($pInstance !== null) {
+			return $pInstance;
 		}
 
-		return null;
+		throw new UnknownFormException;
 	}
 
 
@@ -316,22 +320,19 @@ abstract class FormPost
 
 	private function getAddressDataForApiCall(FormData $pFormData): array
 	{
-		$inputs = $pFormData->getDataFormConfiguration()->getInputs();
+		$fieldNameAliases = [
+			'Telefon1' => 'phone',
+			'Email' => 'email',
+			'Telefax1' => 'fax',
+		];
+
 		$addressData = [];
-		$values = $pFormData->getValues();
+		$addressFields = $pFormData->getAddressData();
 
-		foreach ($values as $input => $value) {
+		foreach ($addressFields as $input => $value) {
 			$inputName = $pFormData->getFieldNameOfInput($input);
-			if (onOfficeSDK::MODULE_ADDRESS !== $inputs[$inputName]) {
-				continue;
-			}
-
-			$fieldType = $this->_pFormPostConfiguration->getTypeForInput($input, $inputs[$inputName]);
-			$fieldNameAliases = [
-				'Telefon1' => 'phone',
-				'Email' => 'email',
-				'Telefax1' => 'fax',
-			];
+			$fieldType = $this->_pFormPostConfiguration->getTypeForInput
+				($input, onOfficeSDK::MODULE_ADDRESS);
 
 			$fieldNameAliased = $fieldNameAliases[$inputName] ?? $inputName;
 			$addressData[$fieldNameAliased] = $value;

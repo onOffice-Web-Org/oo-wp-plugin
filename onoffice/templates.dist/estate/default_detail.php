@@ -19,13 +19,15 @@
  *
  */
 
+use onOffice\WPlugin\EstateDetail;
+
 /**
  *
  *  Default template
  *
  */
 
-/* @var $pEstates onOffice\WPlugin\EstateDetail */
+/* @var $pEstates EstateDetail */
 require('map/map.php');
 
 ?>
@@ -75,7 +77,9 @@ require('map/map.php');
 					<?php echo esc_html(array_shift($businessPhoneNumbers)); ?>
 				</li>
 			<?php endif; ?>
+
 			<?php
+			echo 'Bild: ', $contactData->getValueRaw('imageUrl'), '<br>';
 			$businessEmailAddresses = $contactData->offsetExists('emailbusiness') ?
 				$contactData->getValueRaw('emailbusiness') : array();
 			if (count($businessEmailAddresses) > 0) :
@@ -118,6 +122,14 @@ require('map/map.php');
 			<?php esc_html_e('PDF expose', 'onoffice'); ?>
 		</a>
 	<?php endif; ?>
-
+	<?php
+		try {
+			$estateId = $pEstates->getCurrentEstateId();
+			$pForm = new \onOffice\WPlugin\Form('contact', \onOffice\WPlugin\Form::TYPE_CONTACT);
+			include( __DIR__ . "/../form/defaultform.php" );
+		} catch (\onOffice\WPlugin\DataFormConfiguration\UnknownFormException $pE) {
+			echo __('(Form is not available)', 'onoffice');
+		}
+	?>
 	<?php echo $pEstates->getSimilarEstates(); ?>
 <?php endwhile; ?>

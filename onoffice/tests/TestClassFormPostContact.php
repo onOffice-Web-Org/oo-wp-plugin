@@ -102,7 +102,7 @@ class TestClassFormPostContact
 				'AGB_akzeptiert' => '1',
 			],
 
-			'estateid' => null,
+			'estateid' => '1337',
 			'message' => null,
 			'subject' => '¡A new Contact!',
 			'referrer' => '/test/page',
@@ -338,6 +338,7 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'Telefon1' => '0815/2345677',
 			'AGB_akzeptiert' => '1',
+			'Id' => '1337',
 		];
 	}
 }

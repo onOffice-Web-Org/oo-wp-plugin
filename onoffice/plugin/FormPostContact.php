@@ -92,6 +92,19 @@ class FormPostContact
 
 	/**
 	 *
+	 * @param DataFormConfiguration $pFormConfig
+	 * @return array
+	 *
+	 */
+
+	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
+	{
+		return ['Id' => onOfficeSDK::MODULE_ESTATE] + parent::getAllowedPostVars($pFormConfig);
+	}
+
+
+	/**
+	 *
 	 * @param FormData $pFormData
 	 * @return void
 	 *
