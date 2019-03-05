@@ -142,16 +142,8 @@ abstract class AdminPageAjax
 	{
 		$pFieldnames = new Fieldnames($pFieldsCollection ?? new FieldsCollection());
 		$pFieldnames->loadLanguage();
-		$modus = '';
 
-		if ($module == onOfficeSDK::MODULE_ESTATE) {
-			$modus = GeoPosition::MODE_TYPE_ADMIN_INTERFACE;
-		}
-		elseif ($module == onOfficeSDK::MODULE_SEARCHCRITERIA) {
-			$modus = GeoPosition::MODE_TYPE_ADMIN_SEARCH_CRITERIA;
-		}
-
-		$fieldnames = $pFieldnames->getFieldList($module, $modus);
+		$fieldnames = $pFieldnames->getFieldList($module);
 		$resultByContent = array();
 		$categories = array();
 
