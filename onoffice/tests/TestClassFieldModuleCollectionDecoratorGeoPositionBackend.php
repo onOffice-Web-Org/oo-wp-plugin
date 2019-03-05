@@ -20,7 +20,7 @@
  */
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -32,7 +32,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
  *
  */
 
-class TestClassFieldModuleCollectionDecoratorGeoPosition
+class TestClassFieldModuleCollectionDecoratorGeoPositionBackend
 	extends WP_UnitTestCase
 {
 	/**
@@ -41,7 +41,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPosition
 
 	public function testGetAllFields()
 	{
-		$pDecorator = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
+		$pDecorator = new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection());
 		$this->assertEquals(2, count($pDecorator->getAllFields()));
 
 		$pCollectionFilled = new FieldsCollection();
@@ -49,7 +49,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPosition
 		$pCollectionFilled->addField(new Field('testField2', 'testModule'));
 		$pCollectionFilled->addField(new Field('testField3', 'testModule'));
 
-		$pDecoratorNew = new FieldModuleCollectionDecoratorGeoPosition($pCollectionFilled);
+		$pDecoratorNew = new FieldModuleCollectionDecoratorGeoPositionBackend($pCollectionFilled);
 		$this->assertEquals(5, count($pDecoratorNew->getAllFields()));
 	}
 
@@ -60,7 +60,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPosition
 
 	public function testContainsFieldByModule()
 	{
-		$pDecorator = new FieldModuleCollectionDecoratorGeoPosition($this->getPrefilledCollection());
+		$pDecorator = new FieldModuleCollectionDecoratorGeoPositionBackend($this->getPrefilledCollection());
 
 		$this->assertTrue($pDecorator->containsFieldByModule('testModuleA', 'testFieldB'));
 		$this->assertTrue($pDecorator->containsFieldByModule('testModuleB', 'testFieldB'));
@@ -78,7 +78,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPosition
 
 	public function testGetFieldByModuleAndName()
 	{
-		$pDecorator = new FieldModuleCollectionDecoratorGeoPosition($this->getPrefilledCollection());
+		$pDecorator = new FieldModuleCollectionDecoratorGeoPositionBackend($this->getPrefilledCollection());
 		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
 			(onOfficeSDK::MODULE_SEARCHCRITERIA, GeoPosition::FIELD_GEO_POSITION));
 		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName

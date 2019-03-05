@@ -25,7 +25,7 @@ use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\Fieldnames;
@@ -76,7 +76,7 @@ class FormModelBuilderDBForm
 		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
 			(new FieldModuleCollectionDecoratorSearchcriteria
 				(new FieldModuleCollectionDecoratorFormContact
-					(new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection()))));
+					(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection()))));
 		$this->_pFieldNames = new Fieldnames($pFieldCollection);
 		$this->_pFieldNames->loadLanguage();
 	}

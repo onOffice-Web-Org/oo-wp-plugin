@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
@@ -51,7 +51,7 @@ abstract class FormModelBuilderDBEstate
 		$this->setInputModelDBFactory(new InputModelDBFactory($pConfig));
 
 		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
-			(new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection()));
+			(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection()));
 		$pFieldnames = new Fieldnames($pFieldCollection);
 		$this->setFieldnames($pFieldnames);
 	}

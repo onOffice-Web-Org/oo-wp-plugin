@@ -25,7 +25,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Fieldnames;
@@ -70,7 +70,7 @@ class FormModelBuilderEstateDetailSettings
 		parent::__construct($pageSlug);
 		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
 			(new FieldModuleCollectionDecoratorReadAddress
-				(new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection())));
+				(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection())));
 		$pFieldnames = new Fieldnames($pFieldCollection);
 		$pFieldnames->loadLanguage();
 		$this->setFieldnames($pFieldnames);

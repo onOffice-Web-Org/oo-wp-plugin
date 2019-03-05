@@ -37,7 +37,7 @@ use function __;
  *
  */
 
-class FieldModuleCollectionDecoratorGeoPosition
+class FieldModuleCollectionDecoratorGeoPositionBackend
 	extends FieldModuleCollectionDecoratorAbstract
 {
 	/** @var array */

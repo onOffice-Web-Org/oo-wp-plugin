@@ -25,7 +25,7 @@ use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Field\FieldModuleCollection;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Model\FormModel;
@@ -321,7 +321,7 @@ class AdminPageEstateDetail
 		$this->addFormModel($pFormModelSimilarEstates);
 
 		$pFieldsConfiguration = new FieldModuleCollectionDecoratorInternalAnnotations
-			(new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection()));
+			(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection()));
 
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, $pFieldsConfiguration);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
@@ -343,7 +343,7 @@ class AdminPageEstateDetail
 	private function getAddressFieldsConfiguration(): FieldModuleCollection
 	{
 		return new FieldModuleCollectionDecoratorInternalAnnotations
-			(new FieldModuleCollectionDecoratorGeoPosition
+			(new FieldModuleCollectionDecoratorGeoPositionBackend
 				(new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection())));
 	}
 

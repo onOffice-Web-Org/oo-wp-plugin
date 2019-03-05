@@ -24,7 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
@@ -122,7 +122,7 @@ class AdminPageEstateListSettings
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
 
-		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
+		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection());
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, $pFieldCollection);
 
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
@@ -159,7 +159,7 @@ class AdminPageEstateListSettings
 		$this->cleanPreviousBoxes();
 		$module = onOfficeSDK::MODULE_ESTATE;
 
-		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
+		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection());
 		$fieldNames = array_keys($this->readFieldnamesByContent($module, $pFieldCollection));
 
 		foreach ($fieldNames as $category) {
