@@ -41,7 +41,7 @@ use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
@@ -180,7 +180,7 @@ class ContentFilter
 
 	private function setAllowedGetParametersEstate(DataListView $pDataView)
 	{
-		$pFieldNames = new Fieldnames(new FieldModuleCollectionDecoratorGeoPosition
+		$pFieldNames = new Fieldnames(new FieldModuleCollectionDecoratorGeoPositionFrontend
 			(new Types\FieldsCollection()));
 		$pFieldNames->loadLanguage();
 		$pSearchParameters = SearchParameters::getInstance();
@@ -258,7 +258,7 @@ class ContentFilter
 					{
 						$pDistinctFieldsChecker = new DistinctFieldsChecker();
 						$pDistinctFieldsChecker->registerScripts(onOfficeSDK::MODULE_SEARCHCRITERIA,
-								$availableOptionsFormApplicantSearch);
+							$availableOptionsFormApplicantSearch);
 					}
 				}
 
@@ -305,8 +305,8 @@ class ContentFilter
 		$pFieldnames = new Fieldnames($pFieldCollection);
 		$pFieldnames->loadLanguage();
 		$pAddressList = new AddressList($pFieldnames);
-
 		$pAddressList->loadAddresses($pAddressListView, $page);
+
 		$templateName = $pAddressListView->getTemplate();
 		$pTemplate = new Template($templateName);
 		$pTemplate->setAddressList($pAddressList);

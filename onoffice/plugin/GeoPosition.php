@@ -66,7 +66,6 @@ class GeoPosition
 			'permittedvalues' => [],
 			'default' => null,
 			'label' => 'Geo Position',
-			'content' => 'Geografische-Angaben',
 			'tablename' => '',
 			'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 		],

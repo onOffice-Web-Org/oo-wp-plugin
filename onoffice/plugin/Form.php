@@ -34,7 +34,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\GeoPosition;
@@ -86,7 +86,7 @@ class Form
 		$this->setGenericSetting('formId', 'onoffice-form');
 		$pFieldsCollection = new FieldModuleCollectionDecoratorFormContact
 			(new FieldModuleCollectionDecoratorSearchcriteria
-				(new FieldModuleCollectionDecoratorGeoPosition(new Types\FieldsCollection())));
+				(new FieldModuleCollectionDecoratorGeoPositionFrontend(new Types\FieldsCollection())));
 		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 		$this->_pFieldnames->loadLanguage();
 		$pFormPost = FormPostHandler::getInstance($type);

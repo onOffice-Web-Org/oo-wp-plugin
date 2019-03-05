@@ -23,7 +23,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\Fieldnames;
@@ -420,7 +420,7 @@ class TestClassFieldnames
 
 	public function testMergeCountryForEstate()
 	{
-		$pCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
+		$pCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection());
 		$pFieldNames = $this->getNewFieldnames($pCollection);
 		$pFieldNames->loadLanguage();
 		$expectedResult = [

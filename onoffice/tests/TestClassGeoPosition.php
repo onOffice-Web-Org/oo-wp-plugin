@@ -55,7 +55,6 @@ class TestClassGeoPosition
 				'default' => null,
 				'label' => 'Längengrad',
 				'tablename' => 'ObjGeo',
-				'content' => 'Geografische-Angaben',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 			'breitengrad' => [
@@ -65,7 +64,6 @@ class TestClassGeoPosition
 				'default' => null,
 				'label' => 'Breitengrad',
 				'tablename' => 'ObjGeo',
-				'content' => 'Geografische-Angaben',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 		];
@@ -113,7 +111,6 @@ class TestClassGeoPosition
 				'permittedvalues' => array(),
 				'default' => null,
 				'label' => 'Geo Position',
-				'content' => 'Geografische-Angaben',
 			],
 		];
 

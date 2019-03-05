@@ -148,7 +148,8 @@ class TestClassDefaultFilterBuilderListView
 	public function testInputVarsArray()
 	{
 		$pDataListView = new DataListView(1, 'test');
-		$pDataListView->setFilterableFields(['testtext', 'othertest']);
+		// geoPosition should get removed
+		$pDataListView->setFilterableFields(['testtext', 'othertest', 'geoPosition']);
 
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();

@@ -27,7 +27,6 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldTypes;
-use function __;
 
 
 /**
@@ -37,28 +36,47 @@ use function __;
  *
  */
 
-class FieldModuleCollectionDecoratorGeoPosition
+class FieldModuleCollectionDecoratorGeoPositionFrontend
 	extends FieldModuleCollectionDecoratorAbstract
 {
 	/** @var array */
 	private $_geoFields = [
-		onOfficeSDK::MODULE_SEARCHCRITERIA => [
-			GeoPosition::FIELD_GEO_POSITION => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Geo Position',
-				'content' => 'Search Criteria',
-			],
-		],
 		onOfficeSDK::MODULE_ESTATE => [
-			GeoPosition::FIELD_GEO_POSITION => [
+			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => [
+				'type' => FieldTypes::FIELD_TYPE_SINGLESELECT,
+				'length' => 250,
+				'permittedvalues' => [],
+				'default' => null,
+				'label' => 'Land',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+			],
+			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => [
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 5,
+				'permittedvalues' => [],
+				'default' => null,
+				'label' => 'Radius (km)',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+			],
+			GeoPosition::ESTATE_LIST_SEARCH_STREET => [
 				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
 				'length' => 250,
 				'permittedvalues' => [],
 				'default' => null,
-				'label' => 'Geo Position',
+				'label' => 'Strasse',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+			],
+			GeoPosition::ESTATE_LIST_SEARCH_ZIP => [
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 10,
+				'permittedvalues' => [],
+				'default' => null,
+				'label' => 'PLZ',
+				'content' => 'Geografische-Angaben',
+				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 		],
 	];
@@ -73,8 +91,6 @@ class FieldModuleCollectionDecoratorGeoPosition
 	public function __construct(FieldModuleCollection $pFieldModuleCollection)
 	{
 		parent::__construct($pFieldModuleCollection);
-		$this->_geoFields[onOfficeSDK::MODULE_ESTATE][GeoPosition::FIELD_GEO_POSITION]['content'] =
-			__('Geo Range Search', 'onoffice');
 	}
 
 

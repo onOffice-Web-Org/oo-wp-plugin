@@ -28,6 +28,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
+use onOffice\WPlugin\GeoPosition;
 
 /**
  *
@@ -83,6 +84,13 @@ class DefaultFilterBuilderListView
 	public function buildFilter(): array
 	{
 		$filterableFields = $this->_pDataListView->getFilterableFields();
+
+		// Geo position will be done later
+		if (in_array(GeoPosition::FIELD_GEO_POSITION, $filterableFields)) {
+			$position = array_search(GeoPosition::FIELD_GEO_POSITION, $filterableFields, true);
+			unset($filterableFields[$position]);
+		}
+
 		$fieldFilter = $this->_pFilterBuilderInputVars->getPostFieldsFilter($filterableFields);
 		$filter = array_merge($this->_defaultFilter, $fieldFilter);
 

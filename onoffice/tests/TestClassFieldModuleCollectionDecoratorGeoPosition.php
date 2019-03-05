@@ -42,7 +42,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPosition
 	public function testGetAllFields()
 	{
 		$pDecorator = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
-		$this->assertEquals(6, count($pDecorator->getAllFields()));
+		$this->assertEquals(2, count($pDecorator->getAllFields()));
 
 		$pCollectionFilled = new FieldsCollection();
 		$pCollectionFilled->addField(new Field('testField', 'testModule'));
@@ -50,7 +50,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPosition
 		$pCollectionFilled->addField(new Field('testField3', 'testModule'));
 
 		$pDecoratorNew = new FieldModuleCollectionDecoratorGeoPosition($pCollectionFilled);
-		$this->assertEquals(9, count($pDecoratorNew->getAllFields()));
+		$this->assertEquals(5, count($pDecoratorNew->getAllFields()));
 	}
 
 
@@ -68,14 +68,6 @@ class TestClassFieldModuleCollectionDecoratorGeoPosition
 			(onOfficeSDK::MODULE_SEARCHCRITERIA, GeoPosition::FIELD_GEO_POSITION));
 		$this->assertTrue($pDecorator->containsFieldByModule
 			(onOfficeSDK::MODULE_ESTATE, GeoPosition::FIELD_GEO_POSITION));
-		$this->assertTrue($pDecorator->containsFieldByModule
-			(onOfficeSDK::MODULE_ESTATE, GeoPosition::ESTATE_LIST_SEARCH_COUNTRY));
-		$this->assertTrue($pDecorator->containsFieldByModule
-			(onOfficeSDK::MODULE_ESTATE, GeoPosition::ESTATE_LIST_SEARCH_RADIUS));
-		$this->assertTrue($pDecorator->containsFieldByModule
-			(onOfficeSDK::MODULE_ESTATE, GeoPosition::ESTATE_LIST_SEARCH_STREET));
-		$this->assertTrue($pDecorator->containsFieldByModule
-			(onOfficeSDK::MODULE_ESTATE, GeoPosition::ESTATE_LIST_SEARCH_ZIP));
 		$this->assertFalse($pDecorator->containsFieldByModule('testModuleB', 'testFieldC'));
 	}
 
@@ -91,14 +83,6 @@ class TestClassFieldModuleCollectionDecoratorGeoPosition
 			(onOfficeSDK::MODULE_SEARCHCRITERIA, GeoPosition::FIELD_GEO_POSITION));
 		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
 			(onOfficeSDK::MODULE_ESTATE, GeoPosition::FIELD_GEO_POSITION));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			(onOfficeSDK::MODULE_ESTATE, GeoPosition::ESTATE_LIST_SEARCH_COUNTRY));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			(onOfficeSDK::MODULE_ESTATE, GeoPosition::ESTATE_LIST_SEARCH_RADIUS));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			(onOfficeSDK::MODULE_ESTATE, GeoPosition::ESTATE_LIST_SEARCH_STREET));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			(onOfficeSDK::MODULE_ESTATE, GeoPosition::ESTATE_LIST_SEARCH_ZIP));
 	}
 
 

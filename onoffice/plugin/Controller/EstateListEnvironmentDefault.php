@@ -31,7 +31,7 @@ use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\EstateUnits;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
@@ -78,7 +78,7 @@ class EstateListEnvironmentDefault
 	public function __construct()
 	{
 		$this->_pSDKWrapper = new SDKWrapper();
-		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPosition(new FieldsCollection());
+		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection());
 		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 		$this->_pAddressList = new AddressList();
 		$this->_pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();

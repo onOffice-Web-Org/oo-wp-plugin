@@ -21,7 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPosition;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function get_option;
@@ -50,7 +50,7 @@ class InputVariableReaderConfigFieldnames
 	public function __construct(Fieldnames $pFieldnames = null)
 	{
 		if ($pFieldnames === null) {
-			$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPosition
+			$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend
 				(new FieldsCollection());
 			$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 		} else {
