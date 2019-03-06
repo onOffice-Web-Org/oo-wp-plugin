@@ -324,7 +324,7 @@ class Fieldnames
 	{
 		$fieldList = $this->_fieldList[$module] ?? [];
 
-		if ($mode !== '')	{
+		if ($mode !== '') {
 			$pGeoPosition = new GeoPosition();
 			$fieldList = $pGeoPosition->transform($fieldList, $mode);
 		}

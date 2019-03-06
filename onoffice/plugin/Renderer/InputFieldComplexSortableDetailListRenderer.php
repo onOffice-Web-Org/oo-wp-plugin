@@ -18,6 +18,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace onOffice\WPlugin\Renderer;
 
 use onOffice\SDK\onOfficeSDK;
@@ -37,10 +38,10 @@ class InputFieldComplexSortableDetailListRenderer
 	extends InputFieldRenderer
 {
 	/** @var array */
-	private static $_inactiveFields = null;
+	private $_inactiveFields = [];
 
 	/** @var array */
-	private $_allFields = array();
+	private $_allFields = [];
 
 	/** @var InputFieldComplexSortableDetailListContentBase */
 	private $_pContentRenderer = null;
@@ -65,24 +66,25 @@ class InputFieldComplexSortableDetailListRenderer
 
 	public function render()
 	{
+		$this->readInactiveFields();
 		echo '<ul class="filter-fields-list" id="sortableFieldsList">';
 
 		$i = 1;
 
-		$fields = array();
+		$fields = [];
 		$values = $this->getValue();
 		$allFields = $values[0];
 
 		foreach ($allFields as $value) {
-			$fields[$value] = isset($this->_allFields[$value]) ?
-				$this->_allFields[$value] : array();
+			$fields[$value] = $this->_allFields[$value] ?? [];
 		}
 
 		foreach ($fields as $key => $properties) {
-			$label = isset($properties['label']) ? $properties['label'] : null;
-			$category = isset($properties['content']) ? $properties['content'] : null;
-			$type = isset($properties['type']) ? $properties['type'] : null;
+			$label = $properties['label'] ?? null;
+			$category = $properties['content'] ?? null;
+			$type = $properties['type'] ?? null;
 			$this->generateSelectableElement($key, $label, $category, $i, $type);
+			$i++;
 		}
 
 		// create hidden element for cloning
@@ -104,16 +106,16 @@ class InputFieldComplexSortableDetailListRenderer
 
 	private function generateSelectableElement($key, $label, $category, $iteration, $type, $isDummy = false)
 	{
-		$inactiveFields = $this->getInactiveFields();
+		$inactiveFields = $this->_inactiveFields;
 
 		$deactivatedStyle = null;
-		$deactivatedInTheSoftware = null;
+		$deactivatedInOnOffice = null;
 		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
 
 		if ($label == null) {
-			$label = isset($inactiveFields[$key]) ? $inactiveFields[$key] : null;
+			$label = $inactiveFields[$key] ?? null;
 			$deactivatedStyle = ' style="color:red;" ';
-			$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
+			$deactivatedInOnOffice = ' ('.__('Disabled in onOffice', 'onoffice').')';
 		}
 
 		echo '<li class="sortable-item" id="menu-item-'.esc_html($key).'">'
@@ -121,7 +123,7 @@ class InputFieldComplexSortableDetailListRenderer
 				.'<div class="menu-item-handle ui-sortable-handle">'
 					.'<span class="item-title" '.$deactivatedStyle.'>'
 						.esc_html($label)
-						.$deactivatedInTheSoftware
+						.esc_html($deactivatedInOnOffice)
 					.'</span>'
 					.'<span class="item-controls">'
 						.'<span class="item-type">'.esc_html($category).'</span>'
@@ -149,41 +151,18 @@ class InputFieldComplexSortableDetailListRenderer
 	 *
 	 */
 
-	protected function readInactiveFields()
+	private function readInactiveFields()
 	{
-		self::$_inactiveFields = array();
-
 		$pFieldnames = new Fieldnames(new FieldsCollection(), true);
 		$pFieldnames->loadLanguage();
-
 		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
-
-		foreach ($fieldnames as $key => $properties)
-		{
-			self::$_inactiveFields[$key] = $properties['label'];
-		}
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getInactiveFields()
-	{
-		if (null === self::$_inactiveFields)
-		{
-			$this->readInactiveFields();
-		}
-
-		return self::$_inactiveFields;
+		$oldKeys = array_keys($fieldnames);
+		$this->_inactiveFields = array_combine($oldKeys, array_column($fieldnames, 'label'));
 	}
 
 
 	/** @param array */
-	public function setAllFields($allFields)
+	public function setAllFields(array $allFields)
 		{ $this->_allFields = $allFields; }
 
 	/** @return InputFieldComplexSortableDetailListContentBase */
