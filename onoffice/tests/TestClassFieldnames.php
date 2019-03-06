@@ -222,22 +222,6 @@ class TestClassFieldnames
 	 *
 	 */
 
-	public function testGetFieldWithMode()
-	{
-		$module = onOfficeSDK::MODULE_SEARCHCRITERIA;
-		$pFieldnames = $this->getNewFieldnames();
-		$pFieldnames->loadLanguage();
-		$fieldList = $pFieldnames->getFieldList($module, GeoPosition::MODE_TYPE_ADMIN_SEARCH_CRITERIA);
-		$this->assertArrayHasKey('geoPosition', $fieldList);
-		$this->assertGreaterThanOrEqual(5, count($fieldList));
-		$this->checkFieldListStructure($fieldList, $module);
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testGetModuleContainsField()
 	{
 		$pFieldnames = $this->getNewFieldnames();

@@ -320,15 +320,9 @@ class Fieldnames
 	 *
 	 */
 
-	public function getFieldList($module, string $mode = ''): array
+	public function getFieldList($module): array
 	{
 		$fieldList = $this->_fieldList[$module] ?? [];
-
-		if ($mode !== '') {
-			$pGeoPosition = new GeoPosition();
-			$fieldList = $pGeoPosition->transform($fieldList, $mode);
-		}
-
 		return $fieldList;
 	}
 

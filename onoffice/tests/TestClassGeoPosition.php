@@ -23,7 +23,6 @@ namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\GeoPosition;
-use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
 
 
@@ -37,131 +36,6 @@ use WP_UnitTestCase;
 class TestClassGeoPosition
 	extends WP_UnitTestCase
 {
-	/**
-	 *
-	 * @covers onOffice\WPlugin\GeoPosition::transform
-	 *
-	 */
-
-	public function testTransform()
-	{
-		$pGeoPosition = $this->getGeoPosition();
-
-		$values1 = [
-			'laengengrad' => [
-				'type' => 'float',
-				'length' => null,
-				'permittedvalues' => null,
-				'default' => null,
-				'label' => 'Längengrad',
-				'tablename' => 'ObjGeo',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			],
-			'breitengrad' => [
-				'type' => 'float',
-				'length' => null,
-				'permittedvalues' => null,
-				'default' => null,
-				'label' => 'Breitengrad',
-				'tablename' => 'ObjGeo',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-			],
-		];
-
-		$values2 = [
-			'range_land' => [
-				'type' => FieldTypes::FIELD_TYPE_SINGLESELECT,
-				'label' => 'Land',
-				'default' => null,
-				'permittedValues' => [],
-				'content' => 'Search Criteria',
-				'module' => 'searchcriteria',
-			],
-			'range_plz' => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'label' => 'PLZ',
-				'default' => null,
-				'permittedValues' => [],
-				'content' => 'Search Criteria',
-				'module' => 'searchcriteria',
-			],
-			'range_strasse' => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'label' => 'Straße',
-				'default' => null,
-				'permittedValues' => [],
-				'content' => 'Search Criteria',
-				'module' => 'searchcriteria',
-			],
-			'range' => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'label' => 'Umkreis (km)',
-				'default' => null,
-				'permittedValues' => [],
-				'content' => 'Search Criteria',
-				'module' => 'searchcriteria',
-			],
-		];
-
-		$result1 = $pGeoPosition->transform($values1, 'adminInterface');
-		$expectedResult1 = [
-			'geoPosition' => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => array(),
-				'default' => null,
-				'label' => 'Geo Position',
-			],
-		];
-
-		foreach ($expectedResult1 as $key => $values) {
-			$this->assertArrayHasKey($key, $result1);
-			$result1Values = $result1[$key];
-
-			foreach ($values as $keyOfValue => $value) {
-				$this->assertEquals($value, $result1Values[$keyOfValue]);
-			}
-		}
-
-
-		$result2 = $pGeoPosition->transform($values2, 'adminSearchCriteria');
-		$expectedResult2 = [
-			'geoPosition' => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Geo Position',
-				'content' => 'Search Criteria',
-			],
-		];
-
-
-		foreach ($expectedResult2 as $key => $values) {
-			$this->assertArrayHasKey($key, $result2);
-			$result2Values = $result2[$key];
-
-			foreach ($values as $keyOfValue => $value) {
-				$this->assertEquals($value, $result2Values[$keyOfValue]);
-			}
-		}
-	}
-
-
-	/**
-	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Unknown Mode
-	 *
-	 */
-
-	public function testTransformUnknownMode()
-	{
-		$pGeoPosition = new GeoPosition();
-		$pGeoPosition->transform([], 'unknownMode');
-	}
-
-
 	/**
 	 *
 	 * @return GeoPosition

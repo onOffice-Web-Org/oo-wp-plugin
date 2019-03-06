@@ -23,9 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin;
 
-use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
@@ -57,29 +55,6 @@ class GeoPosition
 	/** */
 	const ESTATE_LIST_SEARCH_RADIUS = 'radius';
 
-
-	/** @var array */
-	private $_geoPositionSettings = [
-		onOfficeSDK::MODULE_ESTATE => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 250,
-			'permittedvalues' => [],
-			'default' => null,
-			'label' => 'Geo Position',
-			'tablename' => '',
-			'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
-		],
-		onOfficeSDK::MODULE_SEARCHCRITERIA => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 250,
-			'permittedvalues' => [],
-			'default' => null,
-			'label' => 'Geo Position',
-			'content' => 'Search Criteria',
-			'tablename' => '',
-			'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
-		],
-	];
 
 	/** @var array */
 	private $_settingsGeoPositionFields = [
@@ -118,55 +93,6 @@ class GeoPosition
 		self::ESTATE_LIST_SEARCH_ZIP,
 		self::ESTATE_LIST_SEARCH_RADIUS,
 	];
-
-
-	/**
-	 *
-	 * @param array $fieldList
-	 * @param string $mode
-	 * @return array
-	 * @throws Exception
-	 *
-	 */
-
-	public function transform(array $fieldList, string $mode): array
-	{
-		$modeToModule = [
-			self::MODE_TYPE_ADMIN_INTERFACE => onOfficeSDK::MODULE_ESTATE,
-			self::MODE_TYPE_ADMIN_SEARCH_CRITERIA => onOfficeSDK::MODULE_SEARCHCRITERIA,
-		];
-
-		if (!isset($modeToModule[$mode])) {
-			throw new Exception('Unknown Mode!');
-		}
-
-		$newFieldList = $this->transformAdmin($fieldList, $modeToModule[$mode]);
-
-		return $newFieldList;
-	}
-
-
-	/**
-	 *
-	 * @param array $fieldList
-	 * @return array
-	 *
-	 */
-
-	private function transformAdmin(array $fieldList, string $module): array
-	{
-		$geoPositionFields = $this->_settingsGeoPositionFields[$module];
-		$allFields = array_keys($fieldList);
-
-		$hasAllGeoPosFields = array_intersect($geoPositionFields, $allFields) == $geoPositionFields;
-
-		if ($hasAllGeoPosFields) {
-			$fieldList = array_diff_key($fieldList, array_flip($geoPositionFields));
-			$fieldList[self::FIELD_GEO_POSITION] = $this->_geoPositionSettings[$module];
-		}
-
-		return $fieldList;
-	}
 
 
 	/**
