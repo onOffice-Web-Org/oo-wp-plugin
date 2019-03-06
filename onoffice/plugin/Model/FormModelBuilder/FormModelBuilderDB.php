@@ -209,6 +209,6 @@ abstract class FormModelBuilderDB
 		{ $this->_pInputModelDBFactory = $pInputModelDBFactory; }
 
 	/** @return InputModelDBFactory */
-	protected function getInputModelDBFactory()
+	protected function getInputModelDBFactory(): InputModelDBFactory
 		{ return $this->_pInputModelDBFactory; }
 }

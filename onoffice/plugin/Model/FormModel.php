@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Model;
 
 use Closure;
@@ -33,13 +35,13 @@ use Closure;
 class FormModel
 {
 	/** @var string */
-	private $_groupSlug = null;
+	private $_groupSlug = '';
 
 	/** @var string */
-	private $_pageSlug = null;
+	private $_pageSlug = '';
 
 	/** @var string Label of section */
-	private $_label = null;
+	private $_label = '';
 
 	/** @var InputModelBase[] */
 	private $_inputModels = [];
@@ -69,40 +71,40 @@ class FormModel
 		{ $this->_inputModels []= $pInputModel; }
 
 	/** @return string */
-	public function getGroupSlug()
+	public function getGroupSlug(): string
 		{ return $this->_groupSlug; }
 
 	/** @param string $groupSlug */
-	public function setGroupSlug($groupSlug)
+	public function setGroupSlug(string $groupSlug)
 		{ $this->_groupSlug = $groupSlug; }
 
-	/** @return InputModelBase */
-	public function getInputModel()
+	/** @return InputModelBase[] */
+	public function getInputModel(): array
 		{ return $this->_inputModels; }
 
 	/** @return string */
-	public function getPageSlug()
+	public function getPageSlug(): string
 		{ return $this->_pageSlug; }
 
 	/** @return string */
-	public function getLabel()
+	public function getLabel(): string
 		{ return $this->_label; }
 
 	/** @param string $pageSlug */
-	public function setPageSlug($pageSlug)
+	public function setPageSlug(string $pageSlug)
 		{ $this->_pageSlug = $pageSlug; }
 
 	/** @param string $label */
-	public function setLabel($label)
+	public function setLabel(string $label)
 		{ $this->_label = $label; }
 
 	/** @return bool */
-	public function getIsInvisibleForm()
+	public function getIsInvisibleForm(): bool
 		{ return $this->_isInvisibleForm; }
 
 	/** @param bool $isInvisibleForm */
-	public function setIsInvisibleForm($isInvisibleForm)
-		{ $this->_isInvisibleForm = (bool)$isInvisibleForm; }
+	public function setIsInvisibleForm(bool $isInvisibleForm)
+		{ $this->_isInvisibleForm = $isInvisibleForm; }
 
 	/** @return Closure */
 	public function getTextCallback(): Closure
