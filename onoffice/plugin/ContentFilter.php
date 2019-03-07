@@ -218,13 +218,15 @@ class ContentFilter
 
 	private function setAllowedGetParametersEstateGeo(array $filterableFields): array
 	{
-		if (in_array(GeoPosition::FIELD_GEO_POSITION, $filterableFields, true)) {
+		$positionGeoPos = array_search(GeoPosition::FIELD_GEO_POSITION, $filterableFields, true);
+
+		if ($positionGeoPos !== false) {
 			$pGeoPosition = new GeoPosition();
 			$geoPositionFields = $pGeoPosition->getEstateSearchFields();
 			foreach ($geoPositionFields as $geoPositionField) {
 				SearchParameters::getInstance()->addAllowedGetParameter($geoPositionField);
 			}
-			unset ($filterableFields[GeoPosition::FIELD_GEO_POSITION]);
+			unset($filterableFields[$positionGeoPos]);
 		}
 		return $filterableFields;
 	}
