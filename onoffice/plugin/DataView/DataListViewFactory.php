@@ -55,7 +55,7 @@ class DataListViewFactory
 		$pListView = new DataListView($row['listview_id'], $row['name']);
 		$pListView->setExpose($row['expose']);
 		$pListView->setFields($row[DataListView::FIELDS]);
-		$pListView->setFilterId($row['filterId']);
+		$pListView->setFilterId($row['filterId'] ?? 0);
 		$pListView->setListType($row['list_type']);
 		$pListView->setPictureTypes($row[DataListView::PICTURES]);
 		$pListView->setShowStatus((bool)$row['show_status']);

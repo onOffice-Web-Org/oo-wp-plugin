@@ -296,15 +296,15 @@ class EstateList
 		$pListView = $this->_pDataView;
 		$requestParams = [];
 
-		if ($pListView->getSortby() !== null) {
+		if ($pListView->getSortby() !== '') {
 			$requestParams['sortby'] = $pListView->getSortby();
 		}
 
-		if ($pListView->getSortorder() !== null) {
+		if ($pListView->getSortorder() !== '') {
 			$requestParams['sortorder'] = $pListView->getSortorder();
 		}
 
-		if ($pListView->getFilterId() != null) {
+		if ($pListView->getFilterId() !== 0) {
 			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 

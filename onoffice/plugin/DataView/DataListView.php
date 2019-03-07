@@ -61,28 +61,28 @@ class DataListView
 	private $_name = null;
 
 	/** @var string[] */
-	private $_fields = array();
+	private $_fields = [];
 
 	/** @var string[] */
-	private $_filterableFields = array();
+	private $_filterableFields = [];
 
 	/** @var string[] */
-	private $_hiddenFields = array();
+	private $_hiddenFields = [];
 
 	/** @var string[] */
-	private $_pictureTypes = array();
+	private $_pictureTypes = [];
 
 	/** @var string[] */
-	private $_addressFields = array();
+	private $_addressFields = [];
 
 	/** @var string */
-	private $_filterId = null;
+	private $_filterId = 0;
 
 	/** @var string */
-	private $_sortorder = null;
+	private $_sortorder = '';
 
 	/** @var string */
-	private $_sortby = null;
+	private $_sortby = '';
 
 	/** @var int */
 	private $_recordsPerPage = 5;
@@ -91,19 +91,22 @@ class DataListView
 	private $_showStatus = false;
 
 	/** @var string */
-	private $_listType = null;
+	private $_listType = '';
 
 	/** @var string */
 	private $_template = '';
 
 	/** @var string */
-	private $_expose = null;
+	private $_expose = '';
 
 	/** @var bool */
 	private $_random = false;
 
 	/** @var string[] */
-	private $_availableOptions = array();
+	private $_availableOptions = [];
+
+	/** @var array */
+	private $_geoFields = [];
 
 
 	/**
@@ -113,7 +116,7 @@ class DataListView
 	 *
 	 */
 
-	public function __construct($id, $name)
+	public function __construct(int $id, string $name)
 	{
 		$this->_id = $id;
 		$this->_name = $name;
@@ -121,7 +124,7 @@ class DataListView
 
 
 	/** @return int */
-	public function getId()
+	public function getId(): int
 		{ return $this->_id; }
 
 	/** @return string */
@@ -137,27 +140,27 @@ class DataListView
 		{ return $this->_pictureTypes; }
 
 	/** @return string */
-	public function getFilterId()
+	public function getFilterId(): int
 		{ return $this->_filterId; }
 
 	/** @return string */
-	public function getSortorder()
+	public function getSortorder(): string
 		{ return $this->_sortorder; }
 
 	/** @return string */
-	public function getSortby()
+	public function getSortby(): string
 		{ return $this->_sortby; }
 
 	/** @return bool */
-	public function getShowStatus()
+	public function getShowStatus(): bool
 		{ return $this->_showStatus; }
 
 	/** @return string */
-	public function getListType()
+	public function getListType(): string
 		{ return $this->_listType; }
 
 	/** @return int */
-	public function getRecordsPerPage()
+	public function getRecordsPerPage(): int
 		{ return $this->_recordsPerPage; }
 
 	/** @return string */
@@ -173,11 +176,11 @@ class DataListView
 		{ return $this->_addressFields; }
 
 	/** @param bool $random */
-	public function setRandom($random)
+	public function setRandom(bool $random)
 		{ $this->_random = $random; }
 
 	/** @return bool */
-	public function getRandom()
+	public function getRandom(): bool
 		{ return $this->_random; }
 
 	/** @param array $fields */
@@ -189,35 +192,35 @@ class DataListView
 		{ $this->_pictureTypes = $pictureTypes; }
 
 	/** @param string $filterId */
-	public function setFilterId($filterId)
+	public function setFilterId(int $filterId)
 		{ $this->_filterId = $filterId; }
 
 	/** @param string $sortorder */
-	public function setSortorder($sortorder)
+	public function setSortorder(string $sortorder)
 		{ $this->_sortorder = $sortorder; }
 
 	/** @param string $sortby */
-	public function setSortby($sortby)
+	public function setSortby(string $sortby)
 		{ $this->_sortby = $sortby; }
 
 	/** @param bool $showStatus */
-	public function setShowStatus($showStatus)
+	public function setShowStatus(bool $showStatus)
 		{ $this->_showStatus = $showStatus; }
 
 	/** @param string $listType */
-	public function setListType($listType)
+	public function setListType(string $listType)
 		{ $this->_listType = $listType; }
 
 	/** @param string $template */
-	public function setTemplate($template)
+	public function setTemplate(string $template)
 		{ $this->_template = $template; }
 
 	/** @param string $expose */
-	public function setExpose($expose)
+	public function setExpose(string $expose)
 		{ $this->_expose = $expose; }
 
 	/** @param int $recordsPerPage */
-	public function setRecordsPerPage($recordsPerPage)
+	public function setRecordsPerPage(int $recordsPerPage)
 		{ $this->_recordsPerPage = $recordsPerPage; }
 
 	/** @param array $addressFields */
@@ -251,4 +254,12 @@ class DataListView
 	/** @return array */
 	public function getAvailableOptions(): array
 		{ return $this->_availableOptions; }
+
+	/** @param array $geoFields */
+	public function setGeoFields(array $geoFields)
+		{ $this->_geoFields = $geoFields; }
+
+	/** @return array */
+	public function getGeoFields(): array
+		{ return $this->_geoFields; }
 }
