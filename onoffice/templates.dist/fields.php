@@ -83,7 +83,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$regions = $pRegionController->getRegions();
 			foreach ($regions as $pRegion) {
 				/* @var $pRegion Region */
-				printRegion( $pRegion, $selectedValue );
+				printRegion( $pRegion, $selectedValue ?? [] );
 			}
 			echo '</select>';
 		}
