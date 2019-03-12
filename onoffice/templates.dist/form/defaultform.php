@@ -62,7 +62,9 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$additionMessage = $isRequiredMessage ? '*' : '';
 ?>
 
-		Nachricht<?php echo $additionMessage; ?>:<br>
+		<?php
+		esc_html_e('Message', 'onoffice');
+		echo $additionMessage; ?>:<br>
 		<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
 
 <?php

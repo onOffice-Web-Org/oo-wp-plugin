@@ -18,7 +18,7 @@ if ( ! function_exists( 'printRegion') ) {
 
 if ( ! function_exists( 'printCountry' )) {
 	function printCountry ($values, $selectedValue)	{
-		echo '<option value="">'.esc_html__('Not Specified', 'onoffice').'</option>';
+		echo '<option value="">'.esc_html__('Choose country', 'onoffice').'</option>';
 		foreach ($values as $key => $name)
 		{
 			$selected = null;
@@ -128,8 +128,9 @@ if (!function_exists('renderFormField')) {
 
 		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput &&
 			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land', 'vermarktungsart'))) {
+			$fieldLabel = $pForm->getFieldLabel($fieldName, true);
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
-			$output .=  '<option value="">'.esc_html__('Not Specified', 'onoffice').'</option>';
+			$output .= '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
 					$isSelected = in_array($key, $selectedValue, true);
