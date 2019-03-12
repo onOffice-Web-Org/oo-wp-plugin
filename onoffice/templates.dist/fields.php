@@ -18,7 +18,7 @@ if ( ! function_exists( 'printRegion') ) {
 
 if ( ! function_exists( 'printCountry' )) {
 	function printCountry ($values, $selectedValue)	{
-		echo '<option value="">'.esc_html('Not Specified', 'onoffice').'</option>';
+		echo '<option value="">'.esc_html__('Not Specified', 'onoffice').'</option>';
 		foreach ($values as $key => $name)
 		{
 			$selected = null;
@@ -58,13 +58,13 @@ if (!function_exists('renderFieldEstateSearch')) {
 			echo '<fieldset>
 		<input type="radio" id="'.esc_attr($inputName).'_u" name="'.esc_attr($inputName).'" value="u"
 			'.($selectedValue === null ? ' checked' : '').'>
-		<label for="'.esc_attr($inputName).'_u">'.esc_html('Not Specified', 'onoffice').'</label>
+		<label for="'.esc_attr($inputName).'_u">'.esc_html__('Not Specified', 'onoffice').'</label>
 		<input type="radio" id="'.esc_attr($inputName).'_y" name="'.esc_attr($inputName).'" value="y"
 			'.($selectedValue === true  ? 'checked' : '').'>
-		<label for="'.esc_attr($inputName).'_y">'.esc_html('Yes', 'onoffice').'</label>
+		<label for="'.esc_attr($inputName).'_y">'.esc_html__('Yes', 'onoffice').'</label>
 		<input type="radio" id="'.esc_attr($inputName).'_n" name="'.esc_attr($inputName).'" value="n"
 			'.($selectedValue === false ? 'checked' : '').'>
-		<label for="'.esc_attr($inputName).'_n">'.esc_html('No', 'onoffice').'</label>
+		<label for="'.esc_attr($inputName).'_n">'.esc_html__('No', 'onoffice').'</label>
 	  </fieldset>';
 		} elseif ( in_array($properties['type'], $multiSelectableTypes) &&
 			$inputName !== 'regionaler_zusatz' &&
@@ -129,7 +129,7 @@ if (!function_exists('renderFormField')) {
 		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput &&
 			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land', 'vermarktungsart'))) {
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
-			$output .=  '<option value="">'.esc_html('Not Specified', 'onoffice').'</option>';
+			$output .=  '<option value="">'.esc_html__('Not Specified', 'onoffice').'</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
 					$isSelected = in_array($key, $selectedValue, true);
