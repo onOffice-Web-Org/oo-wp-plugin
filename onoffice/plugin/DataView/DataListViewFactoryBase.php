@@ -40,11 +40,12 @@ abstract class DataListViewFactoryBase
 	 *
 	 * @param string $listViewName
 	 * @param string $type For forms only
-	 * @return DataListView
+	 * @return DataViewFilterableFields
+	 * @throws UnknownViewException
 	 *
 	 */
 
-	public function getListViewByName($listViewName, $type = null)
+	public function getListViewByName(string $listViewName, string $type = null): DataViewFilterableFields
 	{
 		$pRecordRead = $this->getRecordManagerRead();
 		$record = $pRecordRead->getRowByName($listViewName, $type);
@@ -60,17 +61,17 @@ abstract class DataListViewFactoryBase
 	/**
 	 *
 	 * @param array $row
-	 * @return object
+	 * @return DataViewFilterableFields
 	 *
 	 */
 
-	abstract public function createListViewByRow(array $row);
+	abstract public function createListViewByRow(array $row): DataViewFilterableFields;
 
 	/** @param RecordManagerRead $pRecordManagerRead */
 	protected function setRecordManagerRead(RecordManagerRead $pRecordManagerRead)
 		{ $this->_pRecordManagerRead = $pRecordManagerRead; }
 
 	/** @return RecordManagerRead */
-	public function getRecordManagerRead()
+	public function getRecordManagerRead(): RecordManagerRead
 		{ return $this->_pRecordManagerRead; }
 }

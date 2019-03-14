@@ -74,7 +74,7 @@ abstract class RecordManagerRead
 	 * @return array
 	 *
 	 */
-	
+
 	abstract public function getRowByName($name);
 
 

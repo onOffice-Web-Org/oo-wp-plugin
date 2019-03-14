@@ -50,7 +50,7 @@ class DataListViewFactoryAddress
 	 *
 	 */
 
-	public function createListViewByRow(array $row)
+	public function createListViewByRow(array $row): DataViewFilterableFields
 	{
 		$pDataListViewAddress = new DataListViewAddress($row['listview_address_id'], $row['name']);
 		$pDataListViewAddress->setFields($row['fields']);

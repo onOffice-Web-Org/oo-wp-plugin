@@ -52,7 +52,7 @@ class DataListViewFactory
 	 *
 	 */
 
-	public function createListViewByRow(array $row)
+	public function createListViewByRow(array $row): DataViewFilterableFields
 	{
 		$pListView = new DataListView($row['listview_id'], $row['name']);
 		$pListView->setExpose($row['expose']);
