@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 
 /**
@@ -67,6 +69,16 @@ class DataListViewFactory
 		$pListView->setFilterableFields($row['filterable']);
 		$pListView->setHiddenFields($row['hidden']);
 		$pListView->setAvailableOptions($row['availableOptions']);
+
+		$geoFieldsAll = [
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_STREET,
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_ZIP,
+		];
+
+		$geoFieldsActive = array_intersect_key($geoFieldsAll, $row);
+		$pListView->setGeoFields($geoFieldsActive);
 
 		return $pListView;
 	}

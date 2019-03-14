@@ -1,0 +1,101 @@
+<?php
+
+/**
+ *
+ *    Copyright (C) 2019 onOffice GmbH
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigBase;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
+use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
+use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelLabel;
+use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Utility\__String;
+
+/**
+ *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2019, onOffice(R) GmbH
+ *
+ */
+
+class TestClassInputModelBuilderGeoRange
+	extends WP_UnitTestCase
+{
+	/** @var InputModelBuilderGeoRange */
+	private $_pSubject = null;
+
+
+	/**
+	 *
+	 */
+
+	public function testBuild()
+	{
+		$pGenerator = $this->_pSubject->build();
+		$expectedFields = $this->getExpectedFields();
+
+		foreach ($pGenerator as $index => $pInputModel) {
+			if ($index % 2 === 0) {
+				$this->assertInstanceOf(InputModelLabel::class, $pInputModel);
+			} else {
+				$this->assertInstanceOf(InputModelDB::class, $pInputModel);
+				$field = $pInputModel->getField();
+				$this->assertContains($field, $expectedFields);
+				$arrayIndex = array_search($field, $expectedFields, true);
+				$this->assertNotFalse($arrayIndex);
+				unset($expectedFields[$arrayIndex]);
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getExpectedFields(): array
+	{
+		$pReflectionClass = new ReflectionClass(InputModelDBFactoryConfigGeoFields::class);
+		$allConstants = $pReflectionClass->getConstants();
+		$fieldnameConstants = array_filter($allConstants, function($constant) {
+			return __String::getNew($constant)->startsWith('FIELDNAME_');
+		}, ARRAY_FILTER_USE_KEY);
+
+		return $fieldnameConstants;
+	}
+
+
+	/**
+	 *
+	 * @before
+	 *
+	 */
+
+	public function prepare()
+	{
+		$values = [
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => '1',
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => '1',
+		];
+		$this->_pSubject = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE, $values);
+	}
+}

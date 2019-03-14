@@ -95,6 +95,13 @@ abstract class Installer
 			$dbversion = 7;
 		}
 
+		if ($dbversion == 7.0) {
+			// new columns: {country,zip,street,radius}_active
+			dbDelta( self::getCreateQueryListviews() );
+			dbDelta( self::getCreateQueryForms() );
+			$dbversion = 8;
+		}
+
 		update_option( 'oo_plugin_db_version', $dbversion, false);
 
 		$pContentFilter = new ContentFilter();
@@ -153,6 +160,10 @@ abstract class Installer
 			`expose` tinytext,
 			`recordsPerPage` INT( 10 ) NOT NULL DEFAULT '10',
 			`random` tinyint(1) NOT NULL DEFAULT '0',
+			`country_active` tinyint(1) NOT NULL DEFAULT '1',
+			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
+			`street_active` tinyint(1) NOT NULL DEFAULT '1',
+			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -185,6 +196,10 @@ abstract class Installer
 			`pages` int NOT NULL DEFAULT '0',
 			`captcha` tinyint(1) NOT NULL DEFAULT '0',
 			`newsletter` tinyint(1) NOT NULL DEFAULT '0',
+			`country_active` tinyint(1) NOT NULL DEFAULT '1',
+			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
+			`street_active` tinyint(1) NOT NULL DEFAULT '1',
+			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
