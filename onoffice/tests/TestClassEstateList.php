@@ -474,16 +474,20 @@ class TestClassEstateList
 		$this->_pEstateList->estateIterator();
 
 		// escaped url. The path is kind of broken in test environment.
-		$expectationEscapedEstate15 = 'http://example.org/wp-content/plugins/var/www/wp/wp-content/'
-			.'plugins/onoffice/document.php?estateid=15&#038;language=ENG&#038;configindex=test';
-		$this->assertEquals($expectationEscapedEstate15, $this->_pEstateList->getDocument());
+		$expectationEscapedEstate15 = '/onoffice/document.php?estateid=15&#038;language=ENG&#038;configindex=test';
+		$this->assertStringStartsWith('http://example.org/', $this->_pEstateList->getDocument());
+		$this->assertStringEndsWith($expectationEscapedEstate15, $this->_pEstateList->getDocument());
 
 		$this->_pEstateList->estateIterator();
-		$expectationEscapedEstate1051 = 'http://example.org/wp-content/plugins/var/www/wp/wp-content/'
-			.'plugins/onoffice/document.php?estateid=1051&#038;language=ENG&#038;configindex=test';
-		$this->assertEquals($expectationEscapedEstate1051, $this->_pEstateList->getDocument());
+		$this->assertStringStartsWith('http://example.org/', $this->_pEstateList->getDocument());
+		$expectationEscapedEstate1051 = '/onoffice/document.php?estateid=1051&#038;language=ENG&#038;configindex=test';
+		$this->assertStringEndsWith($expectationEscapedEstate1051, $this->_pEstateList->getDocument());
 	}
 
+
+	/**
+	 *
+	 */
 
 	public function testGetVisibleFilterableFields()
 	{
@@ -631,7 +635,7 @@ class TestClassEstateList
 		$responseReadEstateRaw = $dataReadEstateRaw['response'];
 		$parametersReadEstateRaw = $dataReadEstateRaw['parameters'];
 		$responseGetIdsFromRelation = json_decode
-			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsfromrelation.json'), true);
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsFromRelation.json'), true);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
