@@ -111,6 +111,15 @@ class TestClassEstateList
 		$this->assertCount(5, $pClosureGetEstateResult());
 	}
 
+	public function testLoadRandomEstates()
+	{
+		$pDataViewRandom = $this->getDataViewRandom();
+		$this->_pEstateList->loadEstates(1, $pDataViewRandom);
+		$pClosureGetEstateResult = Closure::bind(function() {
+			return $this->_records;
+		}, $this->_pEstateList, EstateList::class);
+		$this->assertCount(5, $pClosureGetEstateResult());
+	}
 
 	/**
 	 *
@@ -579,22 +588,6 @@ class TestClassEstateList
 	 *
 	 */
 
-	public function testShuffleResult()
-	{
-		$this->assertFalse($this->_pEstateList->getShuffleResult());
-
-		$this->_pEstateList->setShuffleResult(true);
-		$this->assertTrue($this->_pEstateList->getShuffleResult());
-
-		$this->_pEnvironment->expects($this->once())->method('shuffle')->with($this->anything());
-		$this->_pEstateList->loadEstates();
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testFormatOutput()
 	{
 		$this->assertTrue($this->_pEstateList->getFormatOutput());
@@ -688,6 +681,20 @@ class TestClassEstateList
 		$pDataView->setPictureTypes(['Titelbild', 'Foto']);
 		$pDataView->setAddressFields(['Vorname', 'Name']);
 		$pDataView->setShowStatus(true);
+		return $pDataView;
+	}
+
+
+	/**
+	 *
+	 * @return DataListView
+	 *
+	 */
+
+	private function getDataViewRandom(): DataListView
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setRandom(true);
 		return $pDataView;
 	}
 }

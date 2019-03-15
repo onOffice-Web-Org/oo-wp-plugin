@@ -80,9 +80,6 @@ class EstateList
 	private $_unitsViewName = null;
 
 	/** @var bool */
-	private $_shuffleResult = false;
-
-	/** @var bool */
 	private $_formatOutput = true;
 
 	/** @var EstateListEnvironment */
@@ -157,8 +154,13 @@ class EstateList
 	 *
 	 */
 
-	public function loadEstates(int $currentPage = 1)
+	public function loadEstates(int $currentPage = 1, $pDataListView = null)
 	{
+		if ($pDataListView === null)
+		{
+			$pDataListView = $this->_pDataView;
+		}
+
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$this->loadRecords($currentPage);
 
@@ -180,7 +182,7 @@ class EstateList
 			do_action('oo_afterEstateRelations', $pSDKWrapper, $estateIds);
 		}
 
-		if ($this->_shuffleResult) {
+		if ($pDataListView->getRandom()) {
 			$this->_pEnvironment->shuffle($this->_records);
 		}
 
@@ -262,8 +264,6 @@ class EstateList
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
-		$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
-		$this->_currentEstatePage = $currentPage;
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE);
@@ -274,10 +274,17 @@ class EstateList
 			'estatelanguage' => $language,
 			'outputlanguage' => $language,
 			'listlimit' => $numRecordsPerPage,
-			'listoffset' => $offset,
 			'formatoutput' => $formatOutput,
 			'addMainLangId' => true,
 		];
+
+		if (!$pListView->getRandom()) {
+			$offset = ( $currentPage - 1 ) * $numRecordsPerPage;
+			$this->_currentEstatePage = $currentPage;
+			$requestParams += [
+				'listoffset' => $offset
+			];
+		}
 
 		$requestParams += $this->addExtraParams();
 
@@ -296,7 +303,8 @@ class EstateList
 		$pListView = $this->_pDataView;
 		$requestParams = [];
 
-		if ($pListView->getSortby() !== '') {
+		if ($pListView->getSortby() !== '' &&
+				!$this->_pDataView->getRandom()) {
 			$requestParams['sortby'] = $pListView->getSortby();
 		}
 
@@ -376,7 +384,8 @@ class EstateList
 	{
 		global $numpages, $multipage, $page, $more;
 
-		if (null !== $this->_numEstatePages) {
+		if (null !== $this->_numEstatePages &&
+			!$this->_pDataView->getRandom()) {
 			$multipage = true;
 
 			$page = $this->_currentEstatePage;
@@ -752,14 +761,6 @@ class EstateList
 	/** @param string $unitsViewName */
 	public function setUnitsViewName($unitsViewName)
 		{ $this->_unitsViewName = $unitsViewName; }
-
-	/** @return bool */
-	public function getShuffleResult(): bool
-		{ return $this->_shuffleResult; }
-
-	/** @param bool $shuffleResult */
-	public function setShuffleResult(bool $shuffleResult)
-		{ $this->_shuffleResult = $shuffleResult; }
 
 	/** @return GeoSearchBuilder */
 	public function getGeoSearchBuilder(): GeoSearchBuilder

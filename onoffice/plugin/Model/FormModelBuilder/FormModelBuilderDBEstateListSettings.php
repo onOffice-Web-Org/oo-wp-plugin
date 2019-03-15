@@ -304,6 +304,26 @@ class FormModelBuilderDBEstateListSettings
 	 *
 	 */
 
+	public function createInputModelRandomSort()
+	{
+		$labelRandom = __('Random Order', 'onoffice');
+
+		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
+			(InputModelDBFactory::INPUT_RANDOM_ORDER, $labelRandom);
+		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowStatus->setValue($this->getValue('random'));
+		$pInputModelShowStatus->setValuesAvailable(1);
+
+		return $pInputModelShowStatus;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
 	public function createInputModelPictureTypes()
 	{
 		$allPictureTypes = ImageTypes::getAllImageTypes();

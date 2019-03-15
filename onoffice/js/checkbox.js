@@ -4,19 +4,46 @@ onOffice.checkboxAdmin = function() {
 	this._configuration = {
 		// view: address list
 		"input[name^=oopluginaddressfieldconfig-filterable]": [
-			"input[name^=oopluginaddressfieldconfig-hidden]"
+			{
+				element: "input[name^=oopluginaddressfieldconfig-hidden]",
+				invert: false
+			}
 		],
 
 		// view: create new [contact] form
 		"input[name=oopluginforms-createaddress]": [
-			"input[name=oopluginforms-checkduplicates]",
-			"input[name=oopluginforms-newsletter]"
+			{
+				element: "input[name=oopluginforms-checkduplicates]",
+				invert: false
+			},
+			{
+				element: "input[name=oopluginforms-newsletter]",
+				invert: false
+			}
 		],
 
 		// view: estate list
 		"input[name^=oopluginfieldconfig-filterable]": [
-			"input[name^=oopluginfieldconfig-hidden]",
-			"input[name^=oopluginfieldconfig-availableOptions]"
+			{
+				element: "input[name^=oopluginfieldconfig-hidden]",
+				invert: false
+			},
+			{
+				element: "input[name^=oopluginfieldconfig-availableOptions]",
+				invert: false
+			}
+		],
+
+		// view: estate list
+		"input[name=oopluginlistviews-random]": [
+			{
+				element: "select[name=oopluginlistviews-sortby]",
+				invert: true
+			},
+			{
+				element: "select[name=oopluginlistviews-sortorder]",
+				invert: true
+			}
 		]
 	};
 };
@@ -26,13 +53,23 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 	var toggleChild = function(receivers, mainElement) {
 		for (var i in receivers) {
 			var receiver = receivers[i];
-			var receiverElement = mainElement.parent().parent().find(receiver);
+			var receiverElement = mainElement.parent().parent().find(receiver.element);
+			var invert = receiver.invert;
 			if (receiverElement.length) {
 				if (mainElement.attr('checked')) {
-					receiverElement.removeAttr('disabled');
+					if (!invert) {
+						receiverElement.removeAttr('disabled');
+					} else {
+						receiverElement.attr('disabled', 'disabled');
+						receiverElement.removeAttr('checked');
+					}
 				} else {
-					receiverElement.attr('disabled', 'disabled');
-					receiverElement.removeAttr('checked');
+					if (!invert) {
+						receiverElement.attr('disabled', 'disabled');
+						receiverElement.removeAttr('checked');
+					} else {
+						receiverElement.removeAttr('disabled');
+					}
 				}
 			}
 		}

@@ -91,6 +91,7 @@ class AdminPageEstateListSettings
 		$pInputModelSortOrder = $pFormModelBuilder->createInputModelSortOrder();
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
+		$pInputModelRandomSort = $pFormModelBuilder->createInputModelRandomSort();
 		$pFormModelRecordsFilter = new FormModel();
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
 		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
@@ -101,6 +102,7 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
 		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
 		$pFormModelRecordsFilter->addInputModel($pInputModelShowStatus);
+		$pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
 		$this->addFormModel($pFormModelRecordsFilter);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');

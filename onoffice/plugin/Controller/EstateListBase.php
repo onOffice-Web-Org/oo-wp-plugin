@@ -129,11 +129,4 @@ interface EstateListBase
 
 	/** @return DataView */
 	public function getDataView(): DataView;
-
-
-	/** @return bool */
-	public function getShuffleResult(): bool;
-
-	/** @param bool $shuffleResult */
-	public function setShuffleResult(bool $shuffleResult);
 }
