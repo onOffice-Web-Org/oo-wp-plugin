@@ -83,6 +83,9 @@ abstract class FormPost
 	/** @var FormPostConfiguration */
 	private $_pFormPostConfiguration = null;
 
+	/** @var int */
+	private $_absolutCountResults = 0;
+
 
 	/**
 	 *
@@ -344,4 +347,14 @@ abstract class FormPost
 
 		return $addressData;
 	}
+
+
+	/** @param int $absolutCountResults */
+	protected function setAbsolutCountResults(int $absolutCountResults)
+		{ $this->_absolutCountResults = $absolutCountResults; }
+
+
+	/** @return int */
+	public function getAbsolutCountResults(): int
+		{ return $this->_absolutCountResults; }
 }

@@ -128,6 +128,9 @@ class FormPostApplicantSearch
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 
+		$resultMeta = $pApiClientAction->getResultMeta();
+		$this->setAbsolutCountResults($resultMeta['cntabsolute']);
+
 		$response = $pApiClientAction->getResultRecords();
 
 		if ($response === []) {

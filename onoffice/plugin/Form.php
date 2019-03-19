@@ -72,6 +72,9 @@ class Form
 	/** @var array */
 	private $_genericSettings = [];
 
+	/** @var int */
+	private $_countAbsolutResults = null;
+
 
 	/**
 	 *
@@ -95,6 +98,7 @@ class Form
 
 		try {
 			$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
+			$this->setCountAbsolutResults($pFormPost->getAbsolutCountResults());
 		} catch (UnknownFormException $pE) {
 			// no form sent
 			$pFormConfigFactory = new DataFormConfigurationFactory();
@@ -543,4 +547,14 @@ class Form
 	/** @return array */
 	public function getResponseFieldsValues()
 		{ return $this->_pFormData->getResponseFieldsValues(); }
+
+
+	/** @return int */
+	public function getCountAbsolutResults(): int
+		{ return $this->_countAbsolutResults; }
+
+
+	/** @var int $countAbsolut */
+	private function setCountAbsolutResults(int $countAbsolut)
+		{ $this->_countAbsolutResults = $countAbsolut; }
 }
