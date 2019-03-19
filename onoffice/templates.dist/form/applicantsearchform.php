@@ -111,7 +111,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$applicants = $pForm->getResponseFieldsValues();
 	$rangeFields = array_keys($pForm->getSearchcriteriaRangeInfos());
 	$umkreisFields = $pForm->getUmkreisFields();
-	$countResults = count(array_keys($applicants));
+	$countResults = $pForm->getCountAbsolutResults();
 
 	echo '<p>';
 	echo '<br><span>'.esc_html(
