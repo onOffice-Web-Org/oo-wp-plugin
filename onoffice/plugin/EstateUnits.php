@@ -147,7 +147,6 @@ class EstateUnits
 		}
 
 		$pEstateList = $this->_pEstateUnitsConfiguration->getEstateList();
-		$pEstateList->setShuffleResult($random);
 		$pDefaultFilterBuilder = new DefaultFilterBuilderPresetEstateIds($units);
 		$pEstateList->setDefaultFilterBuilder($pDefaultFilterBuilder);
 		$pEstateList->loadEstates(1);
