@@ -205,4 +205,9 @@ class DataDetailView
 	/** @param bool $dataDetailViewActive */
 	public function setDataDetailViewActive(bool $dataDetailViewActive)
 		{ $this->_dataDetailViewActive = $dataDetailViewActive; }
+
+	/** @return bool */
+	public function getRandom(): bool
+		{  return false; }
+
 }

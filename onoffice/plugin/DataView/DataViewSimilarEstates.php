@@ -155,4 +155,9 @@ class DataViewSimilarEstates
 	/** @return int */
 	public function getFilterId()
 		{ return null; }
+
+	/** @return bool */
+	public function getRandom(): bool
+	{ return false;	}
+
 }

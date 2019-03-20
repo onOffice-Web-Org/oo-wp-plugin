@@ -99,4 +99,15 @@ class TestClassDataViewSimilarEstates
 		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
 		$this->assertEquals('', $pDataViewSimilarEstates->getTemplate());
 	}
+
+
+	/**
+	 *
+	 */
+	
+	public function testRandom()
+	{
+		$pDataViewSimilarEstates = new DataViewSimilarEstates();
+		$this->assertEquals(false,$pDataViewSimilarEstates->getRandom());
+	}
 }

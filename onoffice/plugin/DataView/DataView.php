@@ -49,4 +49,7 @@ interface DataView
 
 	/** @return array */
 	public function getAddressFields(): array;
+
+	/** @return bool */
+	public function getRandom(): bool;
 }

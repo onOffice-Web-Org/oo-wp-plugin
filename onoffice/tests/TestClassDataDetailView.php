@@ -171,4 +171,17 @@ class TestClassDataDetailView
 		$pDataDetailView->setDataDetailViewActive(true);
 		$this->assertTrue($pDataDetailView->getDataDetailViewActive());
 	}
+
+
+
+	/**
+	 *
+	 */
+	
+	public function testRandom()
+	{
+		$pDataDetailView = new DataDetailView();
+		$this->assertFalse($pDataDetailView->getRandom());
+
+	}
 }
