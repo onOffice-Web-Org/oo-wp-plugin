@@ -77,7 +77,7 @@ class RecordManagerReadListViewEstate
 	 *
 	 */
 
-	public function getRowById($listviewId)
+	public function getRowById(int $listviewId): array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();

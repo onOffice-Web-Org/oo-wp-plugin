@@ -38,25 +38,25 @@ abstract class RecordManagerRead
 	private $_limit = 10;
 
 	/** @var int */
-	private $_rowsCountOverall = null;
+	private $_rowsCountOverall = 0;
 
 	/** @var object[] */
 	private $_foundRows = [];
 
 	/** @var string[] */
-	private $_columns = array();
+	private $_columns = [];
 
 	/** @var string[] */
-	private $_joins = array();
+	private $_joins = [];
 
 	/** @var string[] */
-	private $_where = array(1);
+	private $_where = [1];
 
 	/** @var string */
-	private $_mainTable = null;
+	private $_mainTable = '';
 
 	/** @var string */
-	private $_idColumnMain = null;
+	private $_idColumnMain = '';
 
 
 	/**
@@ -85,7 +85,7 @@ abstract class RecordManagerRead
 	 *
 	 */
 
-	public function addColumn($column, $alias = null)
+	public function addColumn(string $column, string $alias = null)
 	{
 		$columnArray = array(esc_sql($column));
 
@@ -105,7 +105,7 @@ abstract class RecordManagerRead
 	 *
 	 */
 
-	public function addColumnConst($column, $alias)
+	public function addColumnConst(string $column, string $alias)
 	{
 		$this->_columns []= "'".esc_sql($column)."' AS `".esc_sql($alias)."`";
 	}
@@ -120,7 +120,7 @@ abstract class RecordManagerRead
 	 *
 	 */
 
-	public function getRowById($recordId)
+	public function getRowById(int $recordId): array
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
@@ -137,70 +137,70 @@ abstract class RecordManagerRead
 
 
 	/** @return int */
-	public function getCountOverall()
+	public function getCountOverall(): int
 		{ return $this->_rowsCountOverall; }
 
 	/** @param int $countOverall */
-	protected function setCountOverall($countOverall)
+	protected function setCountOverall(int $countOverall)
 		{ $this->_rowsCountOverall = $countOverall; }
 
 	/** @param int $offset */
-	public function setOffset($offset)
-		{ $this->_offset = (int)$offset; }
+	public function setOffset(int $offset)
+		{ $this->_offset = $offset; }
 
 	/** @param int $limit */
-	public function setLimit($limit)
-		{ $this->_limit = (int)$limit; }
+	public function setLimit(int $limit)
+		{ $this->_limit = $limit; }
 
 	/** @param string $fullJoinStatement */
-	public function addJoin($fullJoinStatement)
+	public function addJoin(string $fullJoinStatement)
 		{ $this->_joins []= $fullJoinStatement; }
 
 	/** @param string $where */
-	public function addWhere($where)
+	public function addWhere(string $where)
 		{ $this->_where []= $where; }
 
 	/** @param array $foundRows */
-	protected function setFoundRows($foundRows)
+	protected function setFoundRows(array $foundRows)
 		{ $this->_foundRows = $foundRows; }
 
 	/** @return array */
-	protected function getFoundRows()
+	protected function getFoundRows(): array
 		{ return $this->_foundRows; }
 
 	/** @return string [] */
-	public function getColumns()
+	public function getColumns(): array
 		{ return $this->_columns;}
 
 	/** @return string [] */
-	public function getJoins()
+	public function getJoins(): array
 		{ return $this->_joins;}
 
 	/** @return int */
-	public function getOffset()
+	public function getOffset(): int
 		{ return $this->_offset; }
 
 	/** @return int */
-	public function getLimit()
+	public function getLimit(): int
 		{ return $this->_limit; }
 
 	/** @return string[] */
-	public function getWhere()
+	public function getWhere(): array
 		{ return $this->_where; }
 
 	/** @return string */
-	public function getMainTable()
+	public function getMainTable(): string
 		{ return $this->_mainTable; }
 
 	/** @param string $mainTable */
-	protected function setMainTable($mainTable)
+	protected function setMainTable(string $mainTable)
 		{ $this->_mainTable = $mainTable; }
 
 	/** @return string */
-	public function getIdColumnMain()
+	public function getIdColumnMain(): string
 		{ return $this->_idColumnMain; }
 
 	/** @param string $idColumnMain */
-	protected function setIdColumnMain($idColumnMain)
+	protected function setIdColumnMain(string $idColumnMain)
 		{ $this->_idColumnMain = $idColumnMain; }
 }
