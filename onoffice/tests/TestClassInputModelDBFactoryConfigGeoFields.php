@@ -82,7 +82,7 @@ class TestClassInputModelDBFactoryConfigGeoFields
 	public function testGetBooleanFields()
 	{
 		$pSubject = new InputModelDBFactoryConfigGeoFields(onOfficeSDK::MODULE_ESTATE);
-		$this->assertEquals($this->getExpectedFields(), $pSubject->getBooleanFields());
+		$this->assertEquals($this->getExpectedFields(), array_values($pSubject->getBooleanFields()));
 	}
 
 

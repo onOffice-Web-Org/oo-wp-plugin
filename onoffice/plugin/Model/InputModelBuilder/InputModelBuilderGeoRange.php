@@ -72,8 +72,8 @@ class InputModelBuilderGeoRange
 			$pInputModelGeoCountry = $this->_pInputModelFactory->create($field, $activeLabel);
 			$pInputModelGeoCountry->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 			$pInputModelGeoCountry->setValuesAvailable(1);
-			$isEnabled = $this->_values[$field] ?? 0;
-			$pInputModelGeoCountry->setValue($isEnabled);
+			$isEnabled = array_key_exists($field, $this->_values);
+			$pInputModelGeoCountry->setValue((int)$isEnabled);
 			yield $pInputModelGeoCountry;
 		}
 	}

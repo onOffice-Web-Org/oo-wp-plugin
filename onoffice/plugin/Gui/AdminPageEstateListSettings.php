@@ -22,18 +22,19 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
+use const ONOFFICE_FEATURE_CONFIGURE_GEO;
 use function __;
 use function add_screen_option;
 use function wp_enqueue_script;
@@ -130,11 +131,19 @@ class AdminPageEstateListSettings
 		$this->addFormModel($pFormModelDocumentTypes);
 
 		if (ONOFFICE_FEATURE_CONFIGURE_GEO) {
+			$activeFields = [];
+
+			if ($this->getListViewId() != 0) {
+				$pGeoPositionHandler = new GeoPositionFieldHandler
+					($this->getListViewId(), new RecordManagerReadListViewEstate());
+				$activeFields = $pGeoPositionHandler->getActiveFields();
+			}
+
 			$pFormModelGeoFields = new FormModel();
 			$pFormModelGeoFields->setPageSlug($this->getPageSlug());
 			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
 			$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
-			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE, []);
+			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE, $activeFields);
 			foreach ($pInputModelBuilderGeoRange->build() as $pInputModel) {
 				$pFormModelGeoFields->addInputModel($pInputModel);
 			}

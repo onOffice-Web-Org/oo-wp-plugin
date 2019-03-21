@@ -33,6 +33,16 @@ use onOffice\WPlugin\DataView;
 class RecordManagerReadListViewEstate
 	extends RecordManagerRead
 {
+	/**
+	 *
+	 */
+
+	public function __construct()
+	{
+		$this->setMainTable('oo_plugin_listviews');
+		$this->setIdColumnMain('listview_id');
+	}
+
 
 	/**
 	 *

@@ -41,7 +41,7 @@ abstract class RecordManagerRead
 	private $_rowsCountOverall = null;
 
 	/** @var object[] */
-	private $_foundRows = null;
+	private $_foundRows = [];
 
 	/** @var string[] */
 	private $_columns = array();
@@ -107,7 +107,7 @@ abstract class RecordManagerRead
 
 	public function addColumnConst($column, $alias)
 	{
-		$this->_columns []= "'".esc_sql($column)."' AS `".esc_sql($alias)."'";
+		$this->_columns []= "'".esc_sql($column)."' AS `".esc_sql($alias)."`";
 	}
 
 
@@ -169,27 +169,27 @@ abstract class RecordManagerRead
 		{ return $this->_foundRows; }
 
 	/** @return string [] */
-	protected function getColumns()
+	public function getColumns()
 		{ return $this->_columns;}
 
 	/** @return string [] */
-	protected function getJoins()
+	public function getJoins()
 		{ return $this->_joins;}
 
 	/** @return int */
-	protected function getOffset()
+	public function getOffset()
 		{ return $this->_offset; }
 
 	/** @return int */
-	protected function getLimit()
+	public function getLimit()
 		{ return $this->_limit; }
 
 	/** @return string[] */
-	protected function getWhere()
+	public function getWhere()
 		{ return $this->_where; }
 
 	/** @return string */
-	protected function getMainTable()
+	public function getMainTable()
 		{ return $this->_mainTable; }
 
 	/** @param string $mainTable */
@@ -197,7 +197,7 @@ abstract class RecordManagerRead
 		{ $this->_mainTable = $mainTable; }
 
 	/** @return string */
-	protected function getIdColumnMain()
+	public function getIdColumnMain()
 		{ return $this->_idColumnMain; }
 
 	/** @param string $idColumnMain */

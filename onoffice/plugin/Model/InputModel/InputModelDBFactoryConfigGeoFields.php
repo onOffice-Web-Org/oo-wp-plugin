@@ -120,10 +120,10 @@ class InputModelDBFactoryConfigGeoFields
 	public function getBooleanFields(): array
 	{
 		return [
-			self::FIELDNAME_COUNTRY_ACTIVE,
-			self::FIELDNAME_STREET_ACTIVE,
-			self::FIELDNAME_ZIP_ACTIVE,
-			self::FIELDNAME_RADIUS_ACTIVE,
+			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => self::FIELDNAME_COUNTRY_ACTIVE,
+			GeoPosition::ESTATE_LIST_SEARCH_STREET => self::FIELDNAME_STREET_ACTIVE,
+			GeoPosition::ESTATE_LIST_SEARCH_ZIP => self::FIELDNAME_ZIP_ACTIVE,
+			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => self::FIELDNAME_RADIUS_ACTIVE,
 		];
 	}
 }
