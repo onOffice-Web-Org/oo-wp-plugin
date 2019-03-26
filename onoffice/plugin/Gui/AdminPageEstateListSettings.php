@@ -131,19 +131,14 @@ class AdminPageEstateListSettings
 		$this->addFormModel($pFormModelDocumentTypes);
 
 		if (ONOFFICE_FEATURE_CONFIGURE_GEO) {
-			$activeFields = [];
-
-			if ($this->getListViewId() != 0) {
-				$pGeoPositionHandler = new GeoPositionFieldHandler
-					($this->getListViewId(), new RecordManagerReadListViewEstate());
-				$activeFields = $pGeoPositionHandler->getActiveFields();
-			}
+			$pGeoPositionHandler = new GeoPositionFieldHandler
+				($this->getListViewId() ?? 0, new RecordManagerReadListViewEstate());
 
 			$pFormModelGeoFields = new FormModel();
 			$pFormModelGeoFields->setPageSlug($this->getPageSlug());
 			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
 			$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
-			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE, $activeFields);
+			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE, $pGeoPositionHandler);
 			foreach ($pInputModelBuilderGeoRange->build() as $pInputModel) {
 				$pFormModelGeoFields->addInputModel($pInputModel);
 			}

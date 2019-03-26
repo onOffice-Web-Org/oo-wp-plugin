@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\DataView\DataListView;
@@ -41,6 +43,12 @@ class GeoPositionFieldHandler
 	/** @var RecordManagerRead */
 	private $_pRecordManager = null;
 
+	/** @var InputModelDBFactoryConfigGeoFields */
+	private $_pInputModelFactory = null;
+
+	/** @var array */
+	private $_records = [];
+
 
 	/**
 	 *
@@ -53,6 +61,36 @@ class GeoPositionFieldHandler
 	{
 		$this->_listViewId = $listviewId;
 		$this->_pRecordManager = $pRecordManagerRead;
+		$moduleByTable = array_search($this->_pRecordManager->getMainTable(),
+			InputModelDBFactoryConfigGeoFields::MODULE_TO_TABLE);
+		$this->_pInputModelFactory = new InputModelDBFactoryConfigGeoFields($moduleByTable);
+	}
+
+
+	/**
+	 *
+	 * Load values from DB.
+	 *
+	 * No-op if listview ID is 0
+	 *
+	 */
+
+	public function readValues()
+	{
+		if ($this->_listViewId !== 0) {
+			$booleanFields = $this->_pInputModelFactory->getBooleanFields();
+
+			array_map(function($column) {
+				$this->_pRecordManager->addColumn($column);
+			}, $booleanFields);
+			$this->_pRecordManager->addColumn('radius');
+
+			$idColumn = $this->_pRecordManager->getIdColumnMain();
+			$where = '`'.esc_sql($idColumn).'` = "'.esc_sql($this->_listViewId).'"';
+			$this->_pRecordManager->addWhere($where);
+
+			$this->_records = (array)($this->_pRecordManager->getRecords()[0] ?? []);
+		}
 	}
 
 
@@ -64,23 +102,21 @@ class GeoPositionFieldHandler
 
 	public function getActiveFields(): array
 	{
-		$moduleByTable = array_search($this->_pRecordManager->getMainTable(),
-			InputModelDBFactoryConfigGeoFields::MODULE_TO_TABLE);
-		$pInputModelFactory = new InputModelDBFactoryConfigGeoFields($moduleByTable);
-		$booleanFields = $pInputModelFactory->getBooleanFields();
-
-		array_map(function($column) {
-			$this->_pRecordManager->addColumn($column);
-		}, $booleanFields);
-
-		$idColumn = $this->_pRecordManager->getIdColumnMain();
-		$where = '`'.esc_sql($idColumn).'` = "'.esc_sql($this->_listViewId).'"';
-		$this->_pRecordManager->addWhere($where);
-		$records = (array)$this->_pRecordManager->getRecords()[0] ?? [];
-		$activeFields = array_filter($records, function($value) {
+		$activeFields = array_filter($this->_records, function($value) {
 			return $value === '1';
 		});
+
+		$booleanFields = $this->_pInputModelFactory->getBooleanFields();
 		$activeGeoFields = array_intersect_key(array_flip($booleanFields), $activeFields);
 		return $activeGeoFields;
 	}
+
+
+	/**  @return int */
+	public function getRadiusValue(): int
+		{ return intval($this->_records['radius'] ?? 0); }
+
+	/** @return int */
+	public function getListviewId(): int
+		{ return $this->_listViewId; }
 }

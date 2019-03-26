@@ -20,12 +20,11 @@
  */
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigBase;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelLabel;
-use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Utility\__String;
 
 /**
@@ -52,7 +51,7 @@ class TestClassInputModelBuilderGeoRange
 		$expectedFields = $this->getExpectedFields();
 
 		foreach ($pGenerator as $index => $pInputModel) {
-			if ($index % 2 === 0) {
+			if ($index % 2 === 0 && $index < 7) {
 				$this->assertInstanceOf(InputModelLabel::class, $pInputModel);
 			} else {
 				$this->assertInstanceOf(InputModelDB::class, $pInputModel);
@@ -96,6 +95,16 @@ class TestClassInputModelBuilderGeoRange
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => '1',
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => '1',
 		];
-		$this->_pSubject = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE, $values);
+
+		$pMockGeoPositionFieldHandler = $this->getMock(GeoPositionFieldHandler::class,
+			['getRadiusValue', 'getActiveFields', 'readValues'], [], '', false);
+		$pMockGeoPositionFieldHandler
+			->method('getRadiusValue')
+			->will($this->returnValue(10));
+		$pMockGeoPositionFieldHandler
+			->method('getActiveFields')
+			->will($this->returnValue($values));
+
+		$this->_pSubject = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE, $pMockGeoPositionFieldHandler);
 	}
 }

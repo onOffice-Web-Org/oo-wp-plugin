@@ -22,8 +22,10 @@
 namespace onOffice\WPlugin\Model\InputModelBuilder;
 
 use Generator;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
+use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
 use function __;
@@ -37,22 +39,23 @@ class InputModelBuilderGeoRange
 	/** @var InputModelDBFactory */
 	private $_pInputModelFactory = null;
 
-	/** @var array */
-	private $_values = [];
+	/** @var GeoPositionFieldHandler */
+	private $_pGeoPositionFieldHandler = null;
 
 
 	/**
 	 *
 	 * @param string $module
-	 * @param array $values
+	 * @param GeoPositionFieldHandler $pGeoPositionFieldHandler
 	 *
 	 */
 
-	public function __construct(string $module, array $values)
+	public function __construct(string $module, GeoPositionFieldHandler $pGeoPositionFieldHandler)
 	{
 		$pFactoryConfig = new InputModelDBFactoryConfigGeoFields($module);
 		$this->_pInputModelFactory = new InputModelDBFactory($pFactoryConfig);
-		$this->_values = $values;
+		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler;
+		$pGeoPositionFieldHandler->readValues();
 	}
 
 
@@ -66,16 +69,49 @@ class InputModelBuilderGeoRange
 	{
 		$activeFields = $this->getFieldnamesActiveCheckbox();
 		$activeLabel = __('Activate', 'onoffice');
+		$activeGeoFields = $this->_pGeoPositionFieldHandler->getActiveFields();
 
 		foreach ($activeFields as $field => $label) {
 			yield new InputModelLabel($label, null);
 			$pInputModelGeoCountry = $this->_pInputModelFactory->create($field, $activeLabel);
 			$pInputModelGeoCountry->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 			$pInputModelGeoCountry->setValuesAvailable(1);
-			$isEnabled = array_key_exists($field, $this->_values);
+			$isEnabled = array_key_exists($field, $activeGeoFields);
 			$pInputModelGeoCountry->setValue((int)$isEnabled);
 			yield $pInputModelGeoCountry;
 		}
+
+		yield $this->generateInputRadius();
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	private function generateInputRadius(): InputModelDB
+	{
+		$pInputModelRadius = $this->_pInputModelFactory->create
+			(InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS, __('Default Value for Radius', 'onoffice'));
+		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+
+		$valuesAvailable = [
+			0 => __('Not Specified', 'onoffice'),
+			1 => '1 km',
+			5 => '5 km',
+			10 => '10 km',
+			20 => '20 km',
+			50 => '50 km',
+			100 => '100 km',
+			200 => '200 km',
+		];
+
+		$pInputModelRadius->setValuesAvailable($valuesAvailable);
+		$pInputModelRadius->setValue($this->_pGeoPositionFieldHandler->getRadiusValue());
+
+		return $pInputModelRadius;
 	}
 
 

@@ -102,6 +102,13 @@ abstract class Installer
 			$dbversion = 8;
 		}
 
+		if ($dbversion == 8.0) {
+			// new columns: radius
+			dbDelta( self::getCreateQueryListviews() );
+			dbDelta( self::getCreateQueryForms() );
+			$dbversion = 9;
+		}
+
 		update_option( 'oo_plugin_db_version', $dbversion, false);
 
 		$pContentFilter = new ContentFilter();
@@ -164,6 +171,7 @@ abstract class Installer
 			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
 			`street_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
+			`radius` INT( 10 ) NULL DEFAULT NULL,
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -200,6 +208,7 @@ abstract class Installer
 			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
 			`street_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
+			`radius` INT( 10 ) NULL DEFAULT NULL,
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

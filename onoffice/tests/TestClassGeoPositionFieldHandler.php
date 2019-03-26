@@ -68,6 +68,7 @@ class TestClassGeoPositionFieldHandler
 	{
 		$pRecordManager = $this->getRecordManagerMock();
 		$pGeoPositionFieldHandler = new GeoPositionFieldHandler(3, $pRecordManager);
+		$pGeoPositionFieldHandler->readValues();
 		$this->assertCount(4, $pGeoPositionFieldHandler->getActiveFields());
 	}
 

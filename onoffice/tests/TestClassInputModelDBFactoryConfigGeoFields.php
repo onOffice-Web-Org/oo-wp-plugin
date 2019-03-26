@@ -82,7 +82,7 @@ class TestClassInputModelDBFactoryConfigGeoFields
 	public function testGetBooleanFields()
 	{
 		$pSubject = new InputModelDBFactoryConfigGeoFields(onOfficeSDK::MODULE_ESTATE);
-		$this->assertEquals($this->getExpectedFields(), array_values($pSubject->getBooleanFields()));
+		$this->assertEquals($this->getExpectedFields(true), array_values($pSubject->getBooleanFields()));
 	}
 
 
@@ -95,7 +95,7 @@ class TestClassInputModelDBFactoryConfigGeoFields
 
 	private function checkConfigForTableAndField(string $table, array $fields)
 	{
-		$constantValues = $this->getExpectedFields();
+		$constantValues = $this->getExpectedFields(false);
 		$tablesReference = array_fill(0, count($fields), $table);
 		$this->assertEquals(array_column($fields, InputModelDBFactoryConfigBase::KEY_FIELD), $constantValues);
 		$this->assertEquals(array_column($fields, InputModelDBFactoryConfigBase::KEY_TABLE), $tablesReference);
@@ -109,11 +109,12 @@ class TestClassInputModelDBFactoryConfigGeoFields
 	 *
 	 */
 
-	private function getExpectedFields(): array
+	private function getExpectedFields(bool $booleanFieldsOnly): array
 	{
 		$pReflection = new ReflectionClass(InputModelDBFactoryConfigGeoFields::class);
-		$constants = array_filter($pReflection->getConstants(), function($input) {
-			return __String::getNew($input)->startsWith('FIELDNAME_');
+		$constants = array_filter($pReflection->getConstants(), function($input) use ($booleanFieldsOnly) {
+			return __String::getNew($input)->startsWith('FIELDNAME_') &&
+				(!$booleanFieldsOnly || __String::getNew($input)->endsWith('_ACTIVE'));
 		}, ARRAY_FILTER_USE_KEY);
 		return array_values($constants);
 	}

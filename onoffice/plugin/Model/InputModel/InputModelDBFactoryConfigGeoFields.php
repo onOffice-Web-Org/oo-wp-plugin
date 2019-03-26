@@ -48,6 +48,10 @@ class InputModelDBFactoryConfigGeoFields
 	const FIELDNAME_RADIUS_ACTIVE = GeoPosition::ESTATE_LIST_SEARCH_RADIUS.self::SUFFIX_ACTIVE;
 
 	/** */
+	const FIELDNAME_RADIUS = GeoPosition::ESTATE_LIST_SEARCH_RADIUS;
+
+
+	/** */
 	const SUFFIX_ACTIVE = '_active';
 
 
@@ -106,6 +110,10 @@ class InputModelDBFactoryConfigGeoFields
 			self::FIELDNAME_RADIUS_ACTIVE => [
 				self::KEY_TABLE => $table,
 				self::KEY_FIELD => self::FIELDNAME_RADIUS_ACTIVE,
+			],
+			self::FIELDNAME_RADIUS => [
+				self::KEY_TABLE => $table,
+				self::KEY_FIELD => self::FIELDNAME_RADIUS,
 			],
 		];
 	}
