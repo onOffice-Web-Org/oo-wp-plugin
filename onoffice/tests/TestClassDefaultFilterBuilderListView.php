@@ -21,10 +21,13 @@
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\WP_UnitTest_Localized;
+use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewEnvironment;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
+use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\Types\FieldTypes;
 
 /**
@@ -39,6 +42,12 @@ use onOffice\WPlugin\Types\FieldTypes;
 class TestClassDefaultFilterBuilderListView
 	extends WP_UnitTest_Localized
 {
+	/** @var DefaultFilterBuilderListViewEnvironment */
+	private $_pEnvironment = null;
+
+	/** @var InputVariableReaderConfigTest */
+	private $_pInputVariableReaderConfig = null;
+
 	/**
 	 *
 	 */
@@ -52,15 +61,52 @@ class TestClassDefaultFilterBuilderListView
 
 	/**
 	 *
+	 * @before
+	 *
+	 */
+
+	public function prepareMock()
+	{
+		$pEnvironment = $this->getMock(DefaultFilterBuilderListViewEnvironment::class, [
+			'getFilterBuilderInputVariables',
+			'getInputVariableReader',
+			'getRegionController',
+		]);
+
+		$this->_pInputVariableReaderConfig = new InputVariableReaderConfigTest();
+
+		$pEnvironment
+			->method('getFilterBuilderInputVariables')
+			->will($this->returnValue($this->getMock(FilterBuilderInputVariables::class, null, [
+				onOfficeSDK::MODULE_ESTATE, true, $this->_pInputVariableReaderConfig])));
+		$pEnvironment
+			->method('getInputVariableReader')
+			->will($this->returnValue
+				($this->getMock(InputVariableReader::class, null,
+					[onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConfig])));
+		$pRegionControllerMock = $this->getMock(RegionController::class,
+				['fetchRegions', 'getSubRegionsByParentRegion'], [false]);
+		$pRegionControllerMock
+			->method('getSubRegionsByParentRegion')
+			->with('OstfriesischeInseln')
+			->will($this->returnValue
+				(['Norderney', 'Baltrum', 'Borkum', 'Juist', 'Langeoog', 'Spiekeroog', 'Wangerooge']));
+		$pEnvironment
+			->method('getRegionController')
+			->will($this->returnValue($pRegionControllerMock));
+
+		$this->_pEnvironment = $pEnvironment;
+	}
+
+
+	/**
+	 *
 	 */
 
 	public function testDefaultFilter()
 	{
 		$pDataListView = new DataListView(1, 'test');
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
-			(onOfficeSDK::MODULE_ESTATE, false, $pInputVariableReaderConfig);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -83,11 +129,7 @@ class TestClassDefaultFilterBuilderListView
 	{
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_REFERENCE);
-
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
-			(onOfficeSDK::MODULE_ESTATE, false, $pInputVariableReaderConfig);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -117,11 +159,7 @@ class TestClassDefaultFilterBuilderListView
 	{
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_FAVORITES);
-
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
-			(onOfficeSDK::MODULE_ESTATE, false, $pInputVariableReaderConfig);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -145,6 +183,55 @@ class TestClassDefaultFilterBuilderListView
 	 *
 	 */
 
+	public function testRegionForFavorites()
+	{
+		$pDataListView = new DataListView(1, 'test');
+		$pDataListView->setFilterableFields(['regionaler_zusatz']);
+		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_FAVORITES);
+
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
+			('regionaler_zusatz', onOfficeSDK::MODULE_ESTATE, FieldTypes::FIELD_TYPE_MULTISELECT);
+		$this->_pInputVariableReaderConfig->setValue('regionaler_zusatz', 'OstfriesischeInseln');
+
+		$expected = [
+			'veroeffentlichen' => [
+				[
+					'op' => '=',
+					'val' => 1,
+				],
+			],
+			'Id' => [
+				[
+					'op' => 'in',
+					'val' => [0],
+				],
+			],
+			'regionaler_zusatz' => [
+				[
+					'op' => 'in',
+					'val' => [
+						'Norderney',
+						'Baltrum',
+						'Borkum',
+						'Juist',
+						'Langeoog',
+						'Spiekeroog',
+						'Wangerooge',
+						'OstfriesischeInseln',
+					],
+				],
+			],
+		];
+
+		$this->assertEquals($expected, $pInstance->buildFilter());
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testInputVarsArray()
 	{
 		$pDataListView = new DataListView(1, 'test');
@@ -152,16 +239,13 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView->setFilterableFields(['testtext', 'othertest', 'geoPosition']);
 
 		$module = onOfficeSDK::MODULE_ESTATE;
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
-			($module, false, $pInputVariableReaderConfig);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('testtext', $module, FieldTypes::FIELD_TYPE_MULTISELECT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('othertest', $module, FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$pInputVariableReaderConfig->setValueArray('testtext', ['asd' , 'hello']);
-		$pInputVariableReaderConfig->setValueArray('othertest', ['bonjour' , 'salve']);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
+		$this->_pInputVariableReaderConfig->setValueArray('testtext', ['asd' , 'hello']);
+		$this->_pInputVariableReaderConfig->setValueArray('othertest', ['bonjour' , 'salve']);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -199,22 +283,19 @@ class TestClassDefaultFilterBuilderListView
 			'testtext', 'othertest', 'text', 'number_int', 'number_float', 'bool']);
 
 		$module = onOfficeSDK::MODULE_ESTATE;
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$pFilterBuilderInputVariables = new FilterBuilderInputVariables
-			($module, false, $pInputVariableReaderConfig);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('testtext', $module, FieldTypes::FIELD_TYPE_MULTISELECT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('othertest', $module, FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('text', $module, FieldTypes::FIELD_TYPE_TEXT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('number_int', $module, FieldTypes::FIELD_TYPE_INTEGER);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('number_float', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('bool', $module, FieldTypes::FIELD_TYPE_BOOLEAN);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFilterBuilderInputVariables);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [

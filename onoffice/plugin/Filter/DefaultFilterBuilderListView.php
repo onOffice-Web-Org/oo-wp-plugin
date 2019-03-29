@@ -27,7 +27,6 @@ use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
-use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\GeoPosition;
 
 /**
@@ -43,8 +42,8 @@ class DefaultFilterBuilderListView
 	/** @var DataListView */
 	private $_pDataListView = null;
 
-	/** @var FilterBuilderInputVariables */
-	private $_pFilterBuilderInputVars = null;
+	/** @var DefaultFilterBuilderListViewEnvironment */
+	private $_pEnvironment = null;
 
 	/** @var array */
 	private $_defaultFilter = [
@@ -57,21 +56,17 @@ class DefaultFilterBuilderListView
 	/**
 	 *
 	 * @param DataListView $pDataListView
-	 * @param FilterBuilderInputVariables $pFilterBuilder
+	 * @param DefaultFilterBuilderListViewEnvironment $pEnvironment
+	 * @throws Exception
 	 *
 	 */
 
 	public function __construct(
 		DataListView $pDataListView,
-		FilterBuilderInputVariables $pFilterBuilder = null)
+		DefaultFilterBuilderListViewEnvironment $pEnvironment = null)
 	{
 		$this->_pDataListView = $pDataListView;
-		$this->_pFilterBuilderInputVars = $pFilterBuilder ?? new FilterBuilderInputVariables
-			(onOfficeSDK::MODULE_ESTATE, true);
-
-		if ($this->_pFilterBuilderInputVars->getModule() !== onOfficeSDK::MODULE_ESTATE) {
-			throw new Exception('Module must be estate.');
-		}
+		$this->_pEnvironment = $pEnvironment ?? new DefaultFilterBuilderListViewEnvironmentDefault();
 	}
 
 
@@ -91,7 +86,7 @@ class DefaultFilterBuilderListView
 			unset($filterableFields[$position]);
 		}
 
-		$fieldFilter = $this->_pFilterBuilderInputVars->getPostFieldsFilter($filterableFields);
+		$fieldFilter = $this->_pEnvironment->getFilterBuilderInputVariables()->getPostFieldsFilter($filterableFields);
 		$filter = array_merge($this->_defaultFilter, $fieldFilter);
 
 		switch ($this->_pDataListView->getListType()) {
@@ -103,7 +98,40 @@ class DefaultFilterBuilderListView
 				break;
 		}
 
-		return $filter;
+		$filterWithRegion = $this->addSubRegionFilter($filter);
+
+		return $filterWithRegion;
+	}
+
+
+	/**
+	 *
+	 * @param array $baseFilter
+	 * @return array
+	 *
+	 */
+
+	private function addSubRegionFilter(array $baseFilter): array
+	{
+		if (in_array('regionaler_zusatz', $this->_pDataListView->getFilterableFields(), true)) {
+			$additionalRegions = [];
+			$pRegionController = $this->_pEnvironment->getRegionController();
+			$pRegionController->fetchRegions();
+			$regionValue = (array)$this->_pEnvironment
+				->getInputVariableReader()->getFieldValue('regionaler_zusatz');
+			foreach ($regionValue as $region) {
+				$additionalRegions = array_merge($additionalRegions,
+					$pRegionController->getSubRegionsByParentRegion($region));
+				$additionalRegions []= $region;
+			}
+
+			if ($additionalRegions !== []) {
+				$baseFilter['regionaler_zusatz'] = [
+					['op' => 'in', 'val' => $additionalRegions],
+				];
+			}
+		}
+		return $baseFilter;
 	}
 
 
