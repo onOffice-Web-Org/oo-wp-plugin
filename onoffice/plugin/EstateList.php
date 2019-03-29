@@ -303,8 +303,7 @@ class EstateList
 		$pListView = $this->_pDataView;
 		$requestParams = [];
 
-		if ($pListView->getSortby() !== '' &&
-				!$this->_pDataView->getRandom()) {
+		if ($pListView->getSortby() !== '' && !$this->_pDataView->getRandom()) {
 			$requestParams['sortby'] = $pListView->getSortby();
 		}
 
@@ -316,10 +315,12 @@ class EstateList
 			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 
-		$geoRangeSearchParameters = $this->_pEnvironment->getGeoSearchBuilder()->buildParameters();
+		if (in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFields(), true)) {
+			$geoRangeSearchParameters = $this->_pEnvironment->getGeoSearchBuilder()->buildParameters();
 
-		if ($geoRangeSearchParameters !== []) {
-			$requestParams['georangesearch'] = $geoRangeSearchParameters;
+			if ($geoRangeSearchParameters !== []) {
+				$requestParams['georangesearch'] = $geoRangeSearchParameters;
+			}
 		}
 
 		return $requestParams;

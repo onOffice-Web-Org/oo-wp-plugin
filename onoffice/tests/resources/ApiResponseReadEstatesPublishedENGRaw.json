@@ -28,12 +28,7 @@
 		"listoffset": 0,
 		"sortby": "Id",
 		"sortorder": "ASC",
-		"filterid": 12,
-		"georangesearch": {
-			"radius": 500,
-			"country": "DEU",
-			"zip": "52068"
-		}
+		"filterid": 12
 	},
 	"response": {
 		"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:read",
