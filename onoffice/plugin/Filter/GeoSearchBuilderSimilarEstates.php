@@ -116,9 +116,4 @@ class GeoSearchBuilderSimilarEstates
 
 		return $parameters;
 	}
-
-
-	/** @return DataViewSimilarEstates */
-	public function getDataViewSimilarEstates(): FilterConfigurationSimilarEstates
-		{ return $this->_pDataViewSimilarEstates; }
 }

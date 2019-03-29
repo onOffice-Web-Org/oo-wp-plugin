@@ -151,7 +151,7 @@ class ContentFilter
 					{
 						$pDistinctFieldsChecker = new DistinctFieldsChecker();
 						$pDistinctFieldsChecker->registerScripts(onOfficeSDK::MODULE_ESTATE,
-								$availableOptionsEstates);
+							$availableOptionsEstates);
 					}
 
 					$pEstateList = new EstateList($pListView);

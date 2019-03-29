@@ -160,6 +160,7 @@ class TestClassDefaultFilterBuilderSimilarEstates
 			],
 		];
 		$this->assertEquals($expectation, $filter);
+		$this->assertEquals([13, 37], $pFilterBuilder->getExcludeIds());
 	}
 
 
