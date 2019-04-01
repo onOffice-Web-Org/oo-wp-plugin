@@ -500,8 +500,7 @@ class TestClassEstateList
 
 	public function testGetVisibleFilterableFields()
 	{
-		$pDataView = $this->getDataView();
-		$pMockOutputFields = $this->getMock(OutputFields::class, ['getVisibleFilterableFields'], [$pDataView]);
+		$pMockOutputFields = $this->getMock(OutputFields::class, ['getVisibleFilterableFields'], [], '', false);
 		$pMockOutputFields->method('getVisibleFilterableFields')->willReturn(['objektart' => 'haus', 'objekttyp' => 'reihenhaus']);
 		$this->_pEnvironment->method('getOutputFields')->willReturn($pMockOutputFields);
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
@@ -43,6 +44,9 @@ class OutputFields
 	/** @var InputVariableReader */
 	private $_pInputVariableReader = null;
 
+	/** @var GeoPositionFieldHandler */
+	private $_pGeoPositionFieldHandler = null;
+
 
 	/**
 	 *
@@ -52,11 +56,13 @@ class OutputFields
 
 	public function __construct(
 		DataViewFilterableFields $pDataListView,
+		GeoPositionFieldHandler $pGeoPositionFieldHandler,
 		InputVariableReader $pInputVariableReader = null)
 	{
 		$this->_pDataView = $pDataListView;
 		$this->_pInputVariableReader = $pInputVariableReader ??
 			new InputVariableReader($pDataListView->getModule());
+		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler;
 	}
 
 
@@ -72,7 +78,10 @@ class OutputFields
 		$hidden = $this->_pDataView->getHiddenFields();
 
 		$fieldsArray = array_diff($filterable, $hidden);
-		$fieldsArrayGeo = $this->editForGeoPosition($fieldsArray);
+
+		if (in_array(GeoPosition::FIELD_GEO_POSITION, $fieldsArray)) {
+			$fieldsArrayGeo = $this->editForGeoPosition($fieldsArray);
+		}
 
 		$result = array_map(function($field) {
 			return $this->_pInputVariableReader->getFieldValueFormatted($field);
@@ -84,7 +93,6 @@ class OutputFields
 
 	/**
 	 *
-	 * @codeCoverageIgnore
 	 * @param array $fieldsArray
 	 * @return array
 	 *
@@ -94,18 +102,13 @@ class OutputFields
 	{
 		// phpunit cannot handle this
 		// @codeCoverageIgnoreStart
-		if (in_array(GeoPosition::FIELD_GEO_POSITION, $fieldsArray, true)) {
-			$pGeoPosition = new GeoPosition();
+		$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $fieldsArray);
+		unset($fieldsArray[$pos]);
 
-			$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $fieldsArray);
-			unset($fieldsArray[$pos]);
-
-			$geoFields = $pGeoPosition->getEstateSearchFields();
-			$fieldsArray = array_merge($fieldsArray, $geoFields);
-		}
+		$this->_pGeoPositionFieldHandler->readValues();
+		$geoFields = $this->_pGeoPositionFieldHandler->getActiveFields();
+		return array_merge($fieldsArray, $geoFields);
 		// @codeCoverageIgnoreEnd
-
-		return $fieldsArray;
 	}
 
 

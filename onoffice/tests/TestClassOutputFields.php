@@ -22,6 +22,7 @@
 namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\DataView\DataListViewAddress;
@@ -82,6 +83,12 @@ class TestClassOutputFields
 	}
 
 
+	/**
+	 *
+	 * @param InputVariableReaderConfigTest $pInputVariableReaderConfig
+	 *
+	 */
+
 	private function setValues(InputVariableReaderConfigTest $pInputVariableReaderConfig)
 	{
 		$pInputVariableReaderConfig->setValue('testField1', '2');
@@ -102,7 +109,8 @@ class TestClassOutputFields
 
 	public function testConstruct()
 	{
-		$pOutputFields = new OutputFields($this->_pDataListView, $this->_pInputVariableReader);
+		$pGeoPosition = $this->getMock(GeoPositionFieldHandler::class, [], [], '', false);
+		$pOutputFields = new OutputFields($this->_pDataListView, $pGeoPosition, $this->_pInputVariableReader);
 		$this->assertEquals($this->_pDataListView, $pOutputFields->getDataView());
 		$this->assertEquals($this->_pInputVariableReader, $pOutputFields->getInputVariableReader());
 
@@ -125,7 +133,14 @@ class TestClassOutputFields
 			'radius' => null,
 		];
 
-		$pOutputFields = new OutputFields($this->_pDataListView, $this->_pInputVariableReader);
+		$pGeoPosition = $this->getMock(GeoPositionFieldHandler::class, ['getActiveFields'], [], '', false);
+		$pGeoPosition->method('getActiveFields')->will($this->returnValue([
+			'country',
+			'zip',
+			'street',
+			'radius',
+		]));
+		$pOutputFields = new OutputFields($this->_pDataListView, $pGeoPosition, $this->_pInputVariableReader);
 		$this->assertEquals($expectation, $pOutputFields->getVisibleFilterableFields());
 	}
 }

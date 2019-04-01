@@ -36,6 +36,15 @@ interface DataViewFilterableFields
 {
 	/**
 	 *
+	 * @return int The ID of the listview
+	 *
+	 */
+
+	public function getId(): int;
+
+
+	/**
+	 *
 	 * @return string Module name
 	 *
 	 */

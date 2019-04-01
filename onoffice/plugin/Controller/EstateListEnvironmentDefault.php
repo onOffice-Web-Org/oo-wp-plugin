@@ -37,6 +37,7 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -230,7 +231,9 @@ class EstateListEnvironmentDefault
 
 	public function getOutputFields(DataViewFilterableFields $pDataView): OutputFields
 	{
-		return new OutputFields($pDataView);
+		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($pDataView->getId(),
+			new RecordManagerReadListViewEstate);
+		return new OutputFields($pDataView, $pGeoPositionFieldHandler);
 	}
 
 
