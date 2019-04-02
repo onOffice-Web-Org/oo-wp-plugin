@@ -48,7 +48,6 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'permittedvalues' => [],
 				'default' => null,
 				'label' => 'Land',
-				'content' => 'Geografische-Angaben',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => [
@@ -57,7 +56,6 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'permittedvalues' => [],
 				'default' => null,
 				'label' => 'Radius (km)',
-				'content' => 'Geografische-Angaben',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 			GeoPosition::ESTATE_LIST_SEARCH_STREET => [
@@ -66,7 +64,6 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'permittedvalues' => [],
 				'default' => null,
 				'label' => 'Strasse',
-				'content' => 'Geografische-Angaben',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 			GeoPosition::ESTATE_LIST_SEARCH_ZIP => [
@@ -75,7 +72,6 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'permittedvalues' => [],
 				'default' => null,
 				'label' => 'PLZ',
-				'content' => 'Geografische-Angaben',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 		],

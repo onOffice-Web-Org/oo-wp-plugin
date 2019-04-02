@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Filter;
 
-use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Types\GeoCoordinates;
 
 /**

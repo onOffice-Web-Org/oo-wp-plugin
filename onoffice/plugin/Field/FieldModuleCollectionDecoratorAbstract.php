@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\Field;
 
 use onOffice\WPlugin\Types\Field;
-use function __;
 
 /**
  *
@@ -100,31 +99,6 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
 		return $this->_pFieldModuleCollection->getFieldByModuleAndName($module, $name);
-	}
-
-
-	/**
-	 *
-	 * @param string $module
-	 * @param array $fields
-	 *
-	 */
-
-	protected function addFields(string $module, array $fields)
-	{
-		foreach ($fields as $fieldName => $fieldData) {
-			if ($this->containsFieldByModule($module, $fieldName)) {
-				continue;
-			}
-
-			$pField = new Field($fieldName, $module, __($fieldData['label'], 'onoffice'));
-			$pField->setDefault($fieldData['default'] ?? null);
-			$pField->setLength($fieldData['length'] ?? 0);
-			$pField->setPermittedvalues($fieldData['permittedvalues'] ?? []);
-			$pField->setType($fieldData['type']);
-
-			$this->addField($pField);
-		}
 	}
 
 

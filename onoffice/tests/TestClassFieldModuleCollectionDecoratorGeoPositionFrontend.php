@@ -48,6 +48,8 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionFrontend
 	public function prepare()
 	{
 		$pFieldModuleCollection = new FieldsCollection();
+		$pField = new Field('testFieldABC', onOfficeSDK::MODULE_ESTATE);
+		$pFieldModuleCollection->addField($pField);
 		$this->_pSubject = new FieldModuleCollectionDecoratorGeoPositionFrontend($pFieldModuleCollection);
 	}
 
@@ -59,7 +61,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionFrontend
 	public function testGetAllFields()
 	{
 		$allFields = $this->_pSubject->getAllFields();
-		$this->assertCount(4, $allFields);
+		$this->assertCount(5, $allFields);
 	}
 
 
@@ -98,6 +100,31 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionFrontend
 			$this->assertInstanceOf(Field::class, $pField);
 			$this->assertEquals($fieldName, $pField->getName());
 		}
+	}
+
+
+	/**
+	 *
+	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
+	 *
+	 */
+
+	public function testGetFieldByModuleAndNameUnknown()
+	{
+		$module = onOfficeSDK::MODULE_ESTATE;
+		$this->_pSubject->getFieldByModuleAndName($module, 'testasdf');
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetFieldByModuleAndNameParent()
+	{
+		$module = onOfficeSDK::MODULE_ESTATE;
+		$pField = $this->_pSubject->getFieldByModuleAndName($module, 'testFieldABC');
+		$this->assertInstanceOf(Field::class, $pField);
 	}
 
 
