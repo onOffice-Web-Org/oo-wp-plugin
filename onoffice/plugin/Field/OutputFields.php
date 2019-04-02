@@ -78,37 +78,23 @@ class OutputFields
 		$hidden = $this->_pDataView->getHiddenFields();
 
 		$fieldsArray = array_diff($filterable, $hidden);
-
-		if (in_array(GeoPosition::FIELD_GEO_POSITION, $fieldsArray)) {
-			$fieldsArrayGeo = $this->editForGeoPosition($fieldsArray);
+		$posGeo = array_search(GeoPosition::FIELD_GEO_POSITION, $fieldsArray);
+		$geoFields = [];
+		if ($posGeo !== false) {
+			unset($fieldsArray[$posGeo]);
+			$this->_pGeoPositionFieldHandler->readValues();
+			$geoFields = $this->_pGeoPositionFieldHandler->getActiveFieldsWithValue();
 		}
 
-		$result = array_map(function($field) {
-			return $this->_pInputVariableReader->getFieldValueFormatted($field);
-		}, $fieldsArrayGeo);
+		$allFields = array_merge($fieldsArray, array_keys($geoFields));
 
-		return array_combine($fieldsArrayGeo, $result);
-	}
+		$valuesDefault = array_map(function($field) use ($geoFields) {
+			return $this->_pInputVariableReader->getFieldValueFormatted($field) ?? $geoFields[$field] ?? null;
+		}, $allFields);
 
+		$resultDefault = array_combine($allFields, $valuesDefault);
 
-	/**
-	 *
-	 * @param array $fieldsArray
-	 * @return array
-	 *
-	 */
-
-	private function editForGeoPosition(array $fieldsArray): array
-	{
-		// phpunit cannot handle this
-		// @codeCoverageIgnoreStart
-		$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $fieldsArray);
-		unset($fieldsArray[$pos]);
-
-		$this->_pGeoPositionFieldHandler->readValues();
-		$geoFields = $this->_pGeoPositionFieldHandler->getActiveFields();
-		return array_merge($fieldsArray, $geoFields);
-		// @codeCoverageIgnoreEnd
+		return $resultDefault;
 	}
 
 

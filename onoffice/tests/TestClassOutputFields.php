@@ -27,6 +27,8 @@ use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Field\OutputFields;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
 
@@ -133,12 +135,15 @@ class TestClassOutputFields
 			'radius' => null,
 		];
 
-		$pGeoPosition = $this->getMock(GeoPositionFieldHandler::class, ['getActiveFields'], [], '', false);
+		$pMockRecordManager = $this->getMock(RecordManagerReadListViewEstate::class, [], [], '', false);
+		$pInputModelDBFactoryConfigGeoFields = new InputModelDBFactoryConfigGeoFields(onOfficeSDK::MODULE_ESTATE);
+		$pGeoPosition = $this->getMock(GeoPositionFieldHandler::class, ['getActiveFields'],
+			[3, $pMockRecordManager, $pInputModelDBFactoryConfigGeoFields]);
 		$pGeoPosition->method('getActiveFields')->will($this->returnValue([
-			'country',
-			'zip',
-			'street',
-			'radius',
+			'country_active' => 'country',
+			'zip_active' => 'zip',
+			'radius_active' => 'radius',
+			'street_active' => 'street',
 		]));
 		$pOutputFields = new OutputFields($this->_pDataListView, $pGeoPosition, $this->_pInputVariableReader);
 		$this->assertEquals($expectation, $pOutputFields->getVisibleFilterableFields());

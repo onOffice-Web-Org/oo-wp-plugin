@@ -24,8 +24,10 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Record\RecordManagerRead;
+use const ONOFFICE_FEATURE_CONFIGURE_GEO;
 use function esc_sql;
 
 /**
@@ -54,16 +56,20 @@ class GeoPositionFieldHandler
 	 *
 	 * @param int $listviewId
 	 * @param RecordManagerRead $pRecordManagerRead
+	 * @param InputModelDBFactoryConfigGeoFields $pInputModelDBFactoryConfigGeoFields
 	 *
 	 */
 
-	public function __construct(int $listviewId, RecordManagerRead $pRecordManagerRead)
+	public function __construct(int $listviewId,
+		RecordManagerRead $pRecordManagerRead,
+		InputModelDBFactoryConfigGeoFields $pInputModelDBFactoryConfigGeoFields = null)
 	{
 		$this->_listViewId = $listviewId;
 		$this->_pRecordManager = $pRecordManagerRead;
 		$moduleByTable = array_search($this->_pRecordManager->getMainTable(),
 			InputModelDBFactoryConfigGeoFields::MODULE_TO_TABLE);
-		$this->_pInputModelFactory = new InputModelDBFactoryConfigGeoFields($moduleByTable);
+		$this->_pInputModelFactory = $pInputModelDBFactoryConfigGeoFields ??
+			new InputModelDBFactoryConfigGeoFields($moduleByTable);
 	}
 
 
@@ -109,6 +115,24 @@ class GeoPositionFieldHandler
 		$booleanFields = $this->_pInputModelFactory->getBooleanFields();
 		$activeGeoFields = array_intersect_key(array_flip($booleanFields), $activeFields);
 		return $activeGeoFields;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getActiveFieldsWithValue(): array
+	{
+		$activeFields = array_values($this->getActiveFields());
+		$values = array_replace
+			(array_combine($activeFields , array_fill
+				(0, count($activeFields), null)), $this->_records);
+		$valuesDiff = array_diff_key
+			($values, array_flip($this->_pInputModelFactory->getBooleanFields()));
+		return $valuesDiff;
 	}
 
 

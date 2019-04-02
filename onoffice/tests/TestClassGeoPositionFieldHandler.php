@@ -75,6 +75,25 @@ class TestClassGeoPositionFieldHandler
 
 	/**
 	 *
+	 */
+
+	public function testGetActiveFieldsWithValue()
+	{
+		$pRecordManager = $this->getRecordManagerMock();
+		$pGeoPositionFieldHandler = new GeoPositionFieldHandler(3, $pRecordManager);
+		$pGeoPositionFieldHandler->readValues();
+		$this->assertCount(4, $pGeoPositionFieldHandler->getActiveFieldsWithValue());
+		$this->assertEquals([
+			'country' => null,
+			'zip' => null,
+			'street' => null,
+			'radius' => null,
+		], $pGeoPositionFieldHandler->getActiveFieldsWithValue());
+	}
+
+
+	/**
+	 *
 	 * @return RecordManagerRead
 	 *
 	 */
