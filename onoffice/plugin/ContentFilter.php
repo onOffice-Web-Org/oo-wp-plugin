@@ -300,14 +300,8 @@ class ContentFilter
 		$pDataListFactory = new DataListViewFactoryAddress();
 		/* @var $pAddressListView DataListViewAddress */
 		$pAddressListView = $pDataListFactory->getListViewByName($addressListName);
-
-		$pFieldCollection = new FieldModuleCollectionDecoratorReadAddress
-			(new Types\FieldsCollection());
-
-		$pFieldnames = new Fieldnames($pFieldCollection);
-		$pFieldnames->loadLanguage();
-		$pAddressList = new AddressList($pFieldnames);
-		$pAddressList->loadAddresses($pAddressListView, $page);
+		$pAddressList = (new AddressList())->withDataListViewAddress($pAddressListView);
+		$pAddressList->loadAddresses($page);
 
 		$templateName = $pAddressListView->getTemplate();
 		$pTemplate = new Template($templateName);

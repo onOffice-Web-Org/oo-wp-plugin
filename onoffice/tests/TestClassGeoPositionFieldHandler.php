@@ -25,6 +25,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Record\RecordManagerRead;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use stdClass;
 use WP_UnitTestCase;
 
@@ -89,6 +90,31 @@ class TestClassGeoPositionFieldHandler
 			'street' => null,
 			'radius' => null,
 		], $pGeoPositionFieldHandler->getActiveFieldsWithValue());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetRadiusValue()
+	{
+		$this->_pRecord[0]->radius = 15;
+		$pRecordManager = $this->getRecordManagerMock();
+		$pGeoPositionFieldHandler = new GeoPositionFieldHandler(3, $pRecordManager);
+		$pGeoPositionFieldHandler->readValues();
+		$this->assertEquals(15, $pGeoPositionFieldHandler->getRadiusValue());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetListviewId()
+	{
+		$pGeoPositionFieldHandler = new GeoPositionFieldHandler(9, new RecordManagerReadListViewEstate());
+		$this->assertEquals(9, $pGeoPositionFieldHandler->getListviewId());
 	}
 
 

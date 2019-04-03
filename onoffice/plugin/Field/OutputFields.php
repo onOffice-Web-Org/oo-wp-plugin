@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
-use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandlerBase;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
@@ -44,7 +44,7 @@ class OutputFields
 	/** @var InputVariableReader */
 	private $_pInputVariableReader = null;
 
-	/** @var GeoPositionFieldHandler */
+	/** @var GeoPositionFieldHandlerBase */
 	private $_pGeoPositionFieldHandler = null;
 
 
@@ -56,7 +56,7 @@ class OutputFields
 
 	public function __construct(
 		DataViewFilterableFields $pDataListView,
-		GeoPositionFieldHandler $pGeoPositionFieldHandler,
+		GeoPositionFieldHandlerBase $pGeoPositionFieldHandler,
 		InputVariableReader $pInputVariableReader = null)
 	{
 		$this->_pDataView = $pDataListView;

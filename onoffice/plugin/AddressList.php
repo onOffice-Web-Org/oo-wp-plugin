@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software AG
+ * @copyright 2003-2019, onOffice(R) GmbH
  *
  */
 
@@ -30,12 +30,10 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
-use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
+use onOffice\WPlugin\Controller\AddressListEnvironment;
+use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataListViewAddress;
-use onOffice\WPlugin\Field\OutputFields;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\__String;
-use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_html;
 
@@ -46,7 +44,7 @@ use function esc_html;
 class AddressList
 {
 	/** @var string[] */
-	private static $_specialContactData = [
+	private $_specialContactData = [
 		'mobile',
 		'phoneprivate',
 		'phonebusiness',
@@ -60,11 +58,8 @@ class AddressList
 	/** @var array */
 	private $_adressesById = [];
 
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
-	/** @var Fieldnames */
-	private $_pFieldnames = null;
+	/** @var AddressListEnvironment */
+	private $_pEnvironment = null;
 
 	/** @var DataListViewAddress */
 	private $_pDataViewAddress = null;
@@ -72,14 +67,13 @@ class AddressList
 
 	/**
 	 *
-	 * @param Fieldnames $pFieldnames
+	 * @param AddressListEnvironment $pEnvironment
 	 *
 	 */
 
-	public function __construct(Fieldnames $pFieldnames = null)
+	public function __construct(AddressListEnvironment $pEnvironment = null)
 	{
-		$this->_pSDKWrapper = new SDKWrapper();
-		$this->_pFieldnames = $pFieldnames;
+		$this->_pEnvironment = $pEnvironment ?? new AddressListEnvironmentDefault();
 		$this->_pDataViewAddress = new DataListViewAddress(0, 'default');
 	}
 
@@ -93,8 +87,9 @@ class AddressList
 
 	public function loadAdressesById(array $addressIds, array $fields)
 	{
+		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$pApiCall = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
 		$parameters = [
 			'recordids' => $addressIds,
 			'data' => $fields,
@@ -116,39 +111,38 @@ class AddressList
 	 * @global bool $multipage
 	 * @global int $page
 	 * @global bool $more
-	 * @param DataListViewAddress $pDataListViewAddress
 	 * @param int $inputPage
 	 *
 	 */
 
-	public function loadAddresses(DataListViewAddress $pDataListViewAddress, int $inputPage = 1)
+	public function loadAddresses(int $inputPage = 1)
 	{
 		global $numpages, $multipage, $page, $more;
-		$this->_pDataViewAddress = $pDataListViewAddress;
+		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$pModifier = $this->generateRecordModifier();
 
-		$pDataListViewToApi = new DataListViewAddressToAPIParameters($pDataListViewAddress);
-		$inputPage = $inputPage === 0 ? 1 : $inputPage;
-		$pDataListViewToApi->setPage($inputPage);
+		$pDataListViewToApi = $this->_pEnvironment
+			->getDataListViewAddressToAPIParameters($this->_pDataViewAddress);
+		$newPage = $inputPage === 0 ? 1 : $inputPage;
+		$pDataListViewToApi->setPage($newPage);
 
 		$apiOnlyFields = $pModifier->getAllAPIFields();
 		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields);
 
 		$pApiCall = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
 		$pApiCall->setParameters($parameters);
-		$pApiCall->addRequestToQueue();
-		$this->_pSDKWrapper->sendRequests();
+		$pApiCall->addRequestToQueue()->sendRequests();
 
 		$records = $pApiCall->getResultRecords();
 		$this->fillAddressesById($records);
 
 		$resultMeta = $pApiCall->getResultMeta();
-		$numpages = ceil($resultMeta['cntabsolute']/$pDataListViewAddress->getRecordsPerPage());
+		$numpages = ceil($resultMeta['cntabsolute']/$this->_pDataViewAddress->getRecordsPerPage());
 
 		$multipage = $numpages > 1;
 		$more = true;
-		$page = $inputPage;
+		$page = $newPage;
 	}
 
 
@@ -166,8 +160,7 @@ class AddressList
 			$fields []= 'imageUrl';
 		}
 
-		$pAddressFieldModifierHandler = new ViewFieldModifierHandler($fields,
-			onOfficeSDK::MODULE_ADDRESS, AddressViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT);
+		$pAddressFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler($fields);
 		return $pAddressFieldModifierHandler;
 	}
 
@@ -197,14 +190,14 @@ class AddressList
 	 *
 	 */
 
-	private function collectAdditionalContactData(array $elements)
+	private function collectAdditionalContactData(array $elements): array
 	{
 		$additionalContactData = [];
 		foreach ($elements as $key => $value) {
-			foreach (self::$_specialContactData as $startString) {
+			foreach ($this->_specialContactData as $startString) {
 				if (__String::getNew($key)->startsWith($startString)) {
 					if (!isset($additionalContactData[$startString])) {
-						$additionalContactData[$startString] = array();
+						$additionalContactData[$startString] = [];
 					}
 
 					$additionalContactData[$startString] []= $value;
@@ -223,15 +216,9 @@ class AddressList
 	 *
 	 */
 
-	public function getAddressById($id)
+	public function getAddressById($id): array
 	{
-		$result = array();
-
-		if (isset($this->_adressesById[$id])) {
-			$result = $this->_adressesById[$id];
-		}
-
-		return $result;
+		return $this->_adressesById[$id] ?? [];
 	}
 
 
@@ -242,13 +229,12 @@ class AddressList
 	 *
 	 */
 
-	public function getRows($raw = false)
+	public function getRows(bool $raw = false): array
 	{
-		$pAddressList = $this;
 		$pAddressFieldModifier = $this->generateRecordModifier();
-		return array_map(function($values) use ($pAddressFieldModifier, $pAddressList, $raw) {
+		return array_map(function($values) use ($pAddressFieldModifier, $raw) {
 			$valuesNew = $pAddressFieldModifier->processRecord($values);
-			return $pAddressList->getArrayContainerByRow($raw, $valuesNew);
+			return $this->getArrayContainerByRow($raw, $valuesNew);
 		}, $this->_adressesById);
 	}
 
@@ -261,7 +247,7 @@ class AddressList
 	 *
 	 */
 
-	public function getArrayContainerByRow($raw, array $row)
+	private function getArrayContainerByRow(bool $raw, array $row): ArrayContainer
 	{
 		$pArrayContainer = null;
 
@@ -283,14 +269,11 @@ class AddressList
 	 *
 	 */
 
-	public function getFieldLabel($field, $raw = false)
+	public function getFieldLabel($field, bool $raw = false): string
 	{
-		$label = $field;
-		$pFieldnames = $this->_pFieldnames;
+		$label = $this->_pEnvironment->getFieldnames()
+			->getFieldLabel($field, onOfficeSDK::MODULE_ADDRESS);
 
-		if ($pFieldnames !== null) {
-			$label = $pFieldnames->getFieldLabel($field, onOfficeSDK::MODULE_ADDRESS);
-		}
 		return $raw ? $label : esc_html($label);
 	}
 
@@ -302,15 +285,12 @@ class AddressList
 	 *
 	 */
 
-	public function getFieldType($field)
+	public function getFieldType($field): string
 	{
-		$pFieldnames = $this->_pFieldnames;
-
-		if ($pFieldnames !== null) {
-			$fieldInformation = $pFieldnames->getFieldInformation($field,
-				onOfficeSDK::MODULE_ADDRESS);
-			return $fieldInformation['type'];
-		}
+		$fieldInformation = $this->_pEnvironment
+			->getFieldnames()
+			->getFieldInformation($field, onOfficeSDK::MODULE_ADDRESS);
+		return $fieldInformation['type'];
 	}
 
 
@@ -323,23 +303,30 @@ class AddressList
 	public function getVisibleFilterableFields(): array
 	{
 		$pDataListView = $this->_pDataViewAddress;
-		$pFilterableFields = new OutputFields($pDataListView);
+		$pFilterableFields = $this->_pEnvironment->getOutputFields($pDataListView);
 		$fieldsValues = $pFilterableFields->getVisibleFilterableFields();
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
-			$result[$field] = $this->_pFieldnames->getFieldInformation
-				($field, onOfficeSDK::MODULE_ADDRESS);
+			$result[$field] = $this->_pEnvironment
+				->getFieldnames()
+				->getFieldInformation($field, onOfficeSDK::MODULE_ADDRESS);
 			$result[$field]['value'] = $value;
 		}
 		return $result;
 	}
 
 
-	/** @param SDKWrapper $pSDKWrapper */
-	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
-		{ $this->_pSDKWrapper = $pSDKWrapper; }
+	/**
+	 *
+	 * @param DataListViewAddress $pDataListViewAddress
+	 * @return AddressList
+	 *
+	 */
 
-	/** @return SDKWrapper */
-	public function getSDKWrapper()
-		{ return $this->_pSDKWrapper; }
+	public function withDataListViewAddress(DataListViewAddress $pDataListViewAddress): AddressList
+	{
+		$pAddressList = clone $this;
+		$pAddressList->_pDataViewAddress = $pDataListViewAddress;
+		return $pAddressList;
+	}
 }

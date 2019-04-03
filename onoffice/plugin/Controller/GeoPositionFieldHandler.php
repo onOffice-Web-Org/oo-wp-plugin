@@ -24,10 +24,8 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Record\RecordManagerRead;
-use const ONOFFICE_FEATURE_CONFIGURE_GEO;
 use function esc_sql;
 
 /**
@@ -38,6 +36,7 @@ use function esc_sql;
  */
 
 class GeoPositionFieldHandler
+	implements GeoPositionFieldHandlerBase
 {
 	/** @var DataListView */
 	private $_listViewId = 0;
