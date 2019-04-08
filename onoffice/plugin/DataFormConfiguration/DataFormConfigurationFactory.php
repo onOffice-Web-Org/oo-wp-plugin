@@ -295,38 +295,4 @@ class DataFormConfigurationFactory
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
 	}
-
-
-	/**
-	 *
-	 * @param array $rows rows from fieldconfig table
-	 * @param DataFormConfiguration $pConfig
-	 *
-	 */
-
-	public function addModulesByFields(array $rows, DataFormConfiguration $pConfig)
-	{
-		if (!array_key_exists('fieldname', $rows)) {
-			return;
-		}
-
-		foreach ($rows['fieldname'] as $fieldName) {
-			$module = null;
-			if (isset($rows['module'][$fieldName])) {
-				$module = $rows['module'][$fieldName];
-			}
-
-			$pConfig->addInput($fieldName, $module);
-
-			if (!isset($rows['required'])) {
-				continue;
-			}
-
-			$required = in_array($fieldName, $rows['required'], true);
-
-			if ($required) {
-				$pConfig->addRequiredField($fieldName);
-			}
-		}
-	}
 }
