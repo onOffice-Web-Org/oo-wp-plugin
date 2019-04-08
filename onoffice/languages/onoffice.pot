@@ -1,0 +1,909 @@
+# Copyright (C) 2019 onOffice GmbH
+# This file is distributed under the same license as the onOffice direct plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: onOffice direct 2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-04-03T12:31:27+02:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.1.0\n"
+"X-Domain: onoffice\n"
+
+#. Plugin Name of the plugin
+msgid "onOffice direct"
+msgstr ""
+
+#. Description of the plugin
+msgid "Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code."
+msgstr ""
+
+#. Author of the plugin
+msgid "onOffice GmbH"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://en.onoffice.com/"
+msgstr ""
+
+#: plugin/ContentFilter.php:170
+msgid "Estates view not found."
+msgstr ""
+
+#: plugin/ContentFilter.php:393
+msgid "Please configure your onOffice API credentials first!"
+msgstr ""
+
+#: plugin/ContentFilter.php:397
+msgid "An error occured:"
+msgstr ""
+
+#: plugin/ContentFilter.php:526
+msgid "%1$s (%2$s) in %3$s - %4$s"
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:149
+#: plugin/Gui/AdminPageAddressList.php:65
+#: plugin/Gui/AdminPageBase.php:82
+#: plugin/Gui/AdminPageEstateDetail.php:205
+#: plugin/Gui/AdminPageEstateList.php:67
+#: plugin/Gui/AdminPageEstateUnitList.php:63
+#: plugin/Gui/AdminPageFormList.php:183
+msgid "onOffice"
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:153
+#: plugin/Gui/AdminPageAddressList.php:43
+msgid "Addresses"
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:157
+#: plugin/Controller/AdminViewController.php:158
+msgid "Estates"
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:168
+#: plugin/Gui/AdminPageFormList.php:76
+msgid "Forms"
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:181
+msgid "Modules"
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:205
+#: plugin/Controller/AdminViewController.php:206
+#: plugin/Controller/AdminViewController.php:336
+msgid "Settings"
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:354
+msgid "API token and secret"
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:356
+msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
+msgstr ""
+
+#: plugin/Field/DistinctFieldsChecker.php:106
+msgid "Not specified"
+msgstr ""
+
+#: plugin/Field/DistinctFieldsChecker.php:107
+#: templates.dist/fields.php:77
+#: templates.dist/fields.php:151
+msgid "Edit values"
+msgstr ""
+
+#: plugin/Field/FieldModuleCollectionDecoratorGeoPositionBackend.php:77
+msgid "Geo Range Search"
+msgstr ""
+
+#: plugin/Fieldnames.php:170
+msgid "Search Criteria"
+msgstr ""
+
+#: plugin/Fieldnames.php:344
+#: plugin/Gui/AdminPageFormSettingsContact.php:104
+msgid "Form Specific Fields"
+msgstr ""
+
+#: plugin/Form.php:88
+msgid "Submit"
+msgstr ""
+
+#: plugin/Gui/AdminPageAddressList.php:74
+#: plugin/Gui/AdminPageEstateList.php:79
+#: plugin/Gui/AdminPageEstateUnitList.php:75
+#: plugin/Gui/AdminPageFormList.php:207
+msgid "Add New"
+msgstr ""
+
+#: plugin/Gui/AdminPageAddressListSettings.php:61
+msgid "Edit Address List"
+msgstr ""
+
+#: plugin/Gui/AdminPageAddressListSettings.php:98
+#: plugin/Gui/AdminPageEstateListSettings.php:85
+#: plugin/Gui/AdminPageEstateUnitSettings.php:70
+#: plugin/Gui/AdminPageFormSettingsBase.php:258
+msgid "choose name"
+msgstr ""
+
+#: plugin/Gui/AdminPageAddressListSettings.php:114
+#: plugin/Gui/AdminPageEstateDetail.php:279
+#: plugin/Gui/AdminPageEstateListSettings.php:113
+#: plugin/Gui/AdminPageEstateUnitSettings.php:88
+#: plugin/Gui/AdminPageFormSettingsBase.php:275
+msgid "Layout & Design"
+msgstr ""
+
+#: plugin/Gui/AdminPageAddressListSettings.php:134
+msgid "Filter & Records"
+msgstr ""
+
+#: plugin/Gui/AdminPageAddressListSettings.php:153
+#: plugin/Gui/AdminPageEstateDetail.php:287
+#: plugin/Gui/AdminPageEstateListSettings.php:121
+#: plugin/Gui/AdminPageEstateUnitSettings.php:96
+msgid "Photo Types"
+msgstr ""
+
+#: plugin/Gui/AdminPageAddressListSettings.php:296
+msgid "The address list was saved."
+msgstr ""
+
+#: plugin/Gui/AdminPageAddressListSettings.php:297
+msgid "There was a problem saving the list. Please make sure the name of the list is unique."
+msgstr ""
+
+#: plugin/Gui/AdminPageAjax.php:80
+msgid "login credentials"
+msgstr ""
+
+#: plugin/Gui/AdminPageAjax.php:82
+msgid "It looks like you did not enter any valid API credentials. Please go back and review your %s."
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:71
+msgid "API token"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:72
+msgid "API secret"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:89
+msgid "API settings"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:101
+msgid "Site Key"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:102
+msgid "Secret Key"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:123
+msgid "Google reCAPTCHA"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:168
+msgid "The keys are OK."
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:169
+msgid "There was an error:"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:170
+msgid "The secret parameter is missing."
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:171
+msgid "The secret parameter is invalid or malformed."
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:172
+msgid "The response parameter is missing."
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:173
+msgid "The response parameter is invalid or malformed."
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:174
+msgid "The request is invalid or malformed."
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:185
+msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:226
+msgid "The cache was cleaned."
+msgstr ""
+
+#: plugin/Gui/AdminPageEstate.php:75
+#: plugin/Gui/AdminPageEstateList.php:74
+msgid "List Views"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstate.php:76
+#: plugin/Gui/AdminPageEstateDetail.php:207
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:93
+#: templates.dist/estate/default_detail.php:34
+msgid "Detail View"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstate.php:77
+msgid "Unit Lists"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:124
+#: plugin/Gui/AdminPageEstateListSettings.php:64
+msgid "Edit List View"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:133
+msgid "Detail view in use on page "
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:135
+msgid "Edit Page"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:137
+msgid "Detail view is not in use yet. Insert this code on a page to get the detail view there:"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:163
+#: plugin/Gui/AdminPageEstateDetail.php:178
+#: plugin/Gui/AdminPageSettingsBase.php:181
+msgid "Fields"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:296
+msgid "Additional Media"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:313
+msgid "Similar Estates"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:449
+msgid "The detail view has been saved."
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:450
+msgid "There was a problem saving the detail view."
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateList.php:116
+msgid "%s list view has been deleted."
+msgid_plural "%s list views have been deleted."
+msgstr[0] ""
+
+#: plugin/Gui/AdminPageEstateList.php:131
+msgid "No list view was deleted."
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateList.php:144
+#: plugin/Gui/AdminPageFormList.php:164
+msgid "Are you sure you want to delete the selected items?"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateListSettings.php:99
+msgid "Filters & Records"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateListSettings.php:129
+#: plugin/Gui/AdminPageEstateUnitSettings.php:104
+msgid "Downloadable Documents"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateListSettings.php:140
+msgid "Geo Fields"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateListSettingsBase.php:161
+msgid "The view has been saved."
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateListSettingsBase.php:162
+msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types."
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateUnitList.php:70
+msgid "Units Lists"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateUnitSettings.php:51
+msgid "Edit Units View"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateUnitSettings.php:79
+msgid "Records"
+msgstr ""
+
+#: plugin/Gui/AdminPageFormList.php:136
+msgid "%s form has been deleted."
+msgid_plural "%s forms have been deleted."
+msgstr[0] ""
+
+#: plugin/Gui/AdminPageFormList.php:151
+msgid "No form was deleted."
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:56
+#: plugin/Gui/AdminPageFormSettingsContact.php:72
+msgid "Form Specific Options"
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsBase.php:95
+msgid "Edit Form"
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsBase.php:226
+msgid "The Form was saved."
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsBase.php:227
+msgid "There was a problem saving the form. Please make sure the name of the form is unique."
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsBase.php:235
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:551
+msgid "Module: %s"
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsInterestOwner.php:89
+msgid "Please provide an Email address!"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:69
+msgid "Enable Watchlist"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:70
+msgid "Expression used"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:81
+#: plugin/Gui/AdminPageModules.php:90
+msgid "Watchlist"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:82
+msgid "Favorise"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:105
+msgid "Map Provider"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:112
+msgid "OpenStreetMap"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:113
+msgid "Google Maps"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:120
+msgid "Maps"
+msgstr ""
+
+#: plugin/Gui/AdminPageSettingsBase.php:376
+msgid "Fields Configuration"
+msgstr ""
+
+#: plugin/Gui/Table/AddressListTable.php:99
+#: plugin/Gui/Table/AddressListTable.php:142
+#: plugin/Gui/Table/EstateListTable.php:138
+#: plugin/Gui/Table/EstateListTable.php:234
+#: plugin/Gui/Table/EstateUnitsTable.php:48
+#: plugin/Gui/Table/EstateUnitsTable.php:100
+msgid "Name of View"
+msgstr ""
+
+#: plugin/Gui/Table/AddressListTable.php:100
+#: plugin/Gui/Table/AddressListTable.php:143
+#: plugin/Gui/Table/EstateListTable.php:142
+#: plugin/Gui/Table/EstateListTable.php:238
+#: plugin/Gui/Table/EstateUnitsTable.php:49
+#: plugin/Gui/Table/EstateUnitsTable.php:102
+#: plugin/Gui/Table/FormsTable.php:128
+#: plugin/Gui/Table/FormsTable.php:153
+msgid "Shortcode"
+msgstr ""
+
+#: plugin/Gui/Table/EstateListTable.php:139
+#: plugin/Gui/Table/EstateListTable.php:235
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:118
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:108
+msgid "Filter"
+msgstr ""
+
+#: plugin/Gui/Table/EstateListTable.php:140
+#: plugin/Gui/Table/EstateListTable.php:236
+msgid "Show Status"
+msgstr ""
+
+#: plugin/Gui/Table/EstateListTable.php:141
+#: plugin/Gui/Table/EstateListTable.php:237
+#: plugin/Gui/Table/EstateUnitsTable.php:101
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:270
+msgid "Type of List"
+msgstr ""
+
+#: plugin/Gui/Table/EstateListTable.php:196
+#: templates.dist/fields.php:64
+msgid "Yes"
+msgstr ""
+
+#: plugin/Gui/Table/EstateListTable.php:196
+#: templates.dist/fields.php:67
+msgid "No"
+msgstr ""
+
+#: plugin/Gui/Table/EstateListTable.php:215
+msgid "(Needs valid API credentials)"
+msgstr ""
+
+#: plugin/Gui/Table/EstateListTable.php:217
+msgid "(Unknown Filter (ID: %s))"
+msgstr ""
+
+#: plugin/Gui/Table/FormsTable.php:126
+#: plugin/Gui/Table/FormsTable.php:151
+msgid "Name of Form"
+msgstr ""
+
+#: plugin/Gui/Table/FormsTable.php:127
+#: plugin/Gui/Table/FormsTable.php:152
+msgid "Type of Form"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:83
+msgid "View Name"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:104
+msgid "Sort by"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:152
+msgid "Records per Page"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:170
+msgid "Sort order"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:175
+msgid "Ascending"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:176
+msgid "Descending"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:302
+msgid "Template"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:87
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:92
+msgid "List View"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:141
+msgid "Passport Photo"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:183
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:133
+msgid "Filterable"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:204
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:175
+msgid "Hidden"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:154
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:431
+msgid "Available Options"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:289
+msgid "Show Estate Status"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:309
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:101
+msgid "Random Order"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:356
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:155
+msgid "PDF-Expose"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:378
+msgid "Default"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:379
+msgid "Reference Estates"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:380
+msgid "Favorites List"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:85
+msgid "Unit List"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:198
+msgid "Form"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:214
+msgid "Form Name"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:237
+msgid "Type of Form: "
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:260
+msgid ", Embed Code: "
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:276
+msgid "Recipient's E-Mail Address"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:283
+msgid "john.doe@example.com"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:297
+msgid "Subject (optional)"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:317
+msgid "Create Address"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:337
+msgid "(won't work until set up globally)"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
+msgid "Requires Captcha %s"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:357
+msgid "Check for Duplicates"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:374
+msgid "Result Limit"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:394
+msgid "Pages"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:416
+msgid "Required"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:474
+msgid "Newsletter"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:524
+msgid "Module"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:109
+msgid "Show Similar Estates"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:176
+msgid "Movie Links"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
+msgid "Disabled"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:183
+msgid "Link"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:184
+msgid "Player"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:343
+msgid "Same Kind of Estate"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:366
+msgid "Same Marketing Method"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:389
+msgid "Same Postal Code"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:412
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:130
+msgid "Radius"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:435
+msgid "Amount of Estates"
+msgstr ""
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:71
+msgid "Activate"
+msgstr ""
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:97
+msgid "Default Value for Radius"
+msgstr ""
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:101
+#: templates.dist/fields.php:61
+msgid "Not Specified"
+msgstr ""
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:127
+msgid "Country"
+msgstr ""
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:128
+msgid "Street"
+msgstr ""
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:129
+msgid "Postal Code"
+msgstr ""
+
+#: plugin/Renderer/InputFieldCheckboxButtonRenderer.php:66
+msgid "Add to List >>"
+msgstr ""
+
+#: plugin/Renderer/InputFieldComplexSortableDetailListContentDefault.php:65
+msgid "Key of Field:"
+msgstr ""
+
+#: plugin/Renderer/InputFieldComplexSortableDetailListContentDefault.php:70
+msgid "Delete"
+msgstr ""
+
+#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:118
+#: plugin/Renderer/InputFieldComplexSortableListRenderer.php:97
+msgid "Disabled in onOffice"
+msgstr ""
+
+#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:130
+msgid "Edit"
+msgstr ""
+
+#: plugin/Renderer/InputModelRenderer.php:199
+msgid "(Remains unchanged)"
+msgstr ""
+
+#: plugin/Translation/FormTranslation.php:53
+msgctxt "forms"
+msgid "All"
+msgid_plural "All"
+msgstr[0] ""
+
+#: plugin/Translation/FormTranslation.php:57
+msgctxt "forms"
+msgid "Contact Form"
+msgid_plural "Contact Forms"
+msgstr[0] ""
+
+#: plugin/Translation/FormTranslation.php:61
+msgctxt "forms"
+msgid "Interest Form"
+msgid_plural "Interest Forms"
+msgstr[0] ""
+
+#: plugin/Translation/FormTranslation.php:65
+msgctxt "forms"
+msgid "Owner Form"
+msgid_plural "Owner Forms"
+msgstr[0] ""
+
+#: plugin/Translation/FormTranslation.php:69
+msgctxt "forms"
+msgid "Applicant Search Form"
+msgid_plural "Applicant Search Forms"
+msgstr[0] ""
+
+#: plugin/Types/EstateStatusLabel.php:108
+msgid "rented"
+msgstr ""
+
+#: plugin/Types/EstateStatusLabel.php:110
+msgid "sold"
+msgstr ""
+
+#: templates.dist/address/SearchFormAddress.php:45
+#: templates.dist/estate/SearchForm.php:45
+msgid "Send"
+msgstr ""
+
+#: templates.dist/estate/default.php:44
+#: templates.dist/estate/default.php:162
+msgid "Add to "
+msgstr ""
+
+#: templates.dist/estate/default.php:50
+msgid "Remove from "
+msgstr ""
+
+#: templates.dist/estate/default.php:61
+msgid "Overview of Estates"
+msgstr ""
+
+#: templates.dist/estate/default.php:63
+msgctxt "template"
+msgid "Found %d estates over all."
+msgstr ""
+
+#: templates.dist/estate/default.php:74
+msgid "Show Details"
+msgstr ""
+
+#: templates.dist/estate/default.php:89
+msgid "Contact person: "
+msgstr ""
+
+#: templates.dist/estate/default.php:104
+msgid "Mobile Phone: "
+msgstr ""
+
+#: templates.dist/estate/default.php:112
+#: templates.dist/estate/default_detail.php:76
+msgid "Phone (business): "
+msgstr ""
+
+#: templates.dist/estate/default.php:120
+#: templates.dist/estate/default_detail.php:88
+msgid "E-Mail (business): "
+msgstr ""
+
+#: templates.dist/estate/default.php:127
+msgid "Contact form: "
+msgstr ""
+
+#: templates.dist/estate/default.php:133
+#: templates.dist/estate/default_detail.php:131
+msgid "(Form is not available)"
+msgstr ""
+
+#: templates.dist/estate/default.php:155
+#: templates.dist/estate/default_detail.php:120
+msgid "Documents"
+msgstr ""
+
+#: templates.dist/estate/default.php:157
+#: templates.dist/estate/default_detail.php:122
+msgid "PDF expose"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:66
+msgid "Phone (mobile): "
+msgstr ""
+
+#: templates.dist/estate/default_units.php:29
+msgid "Entities"
+msgstr ""
+
+#: templates.dist/estate/default_units.php:39
+msgid "Contact person of entity:"
+msgstr ""
+
+#: templates.dist/estate/default_units.php:43
+msgid "Phone:"
+msgstr ""
+
+#: templates.dist/estate/default_units.php:44
+msgid "Fax:"
+msgstr ""
+
+#: templates.dist/estate/default_units.php:45
+msgid "E-Mail:"
+msgstr ""
+
+#: templates.dist/estate/similar_estates.php:1
+msgid "More Estates like this"
+msgstr ""
+
+#: templates.dist/fields.php:21
+msgid "Choose country"
+msgstr ""
+
+#: templates.dist/fields.php:98
+msgid "From: "
+msgstr ""
+
+#: templates.dist/fields.php:101
+msgid "Up to: "
+msgstr ""
+
+#: templates.dist/fields.php:133
+msgid "Choose %s"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:106
+msgid "Search for Prospective Buyers"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:118
+msgid "%s Prospective Buyer"
+msgid_plural "%s Prospective Buyers"
+msgstr[0] ""
+
+#: templates.dist/form/applicantsearchform.php:124
+msgid "Customer ref. number %s"
+msgstr ""
+
+#: templates.dist/form/defaultform.php:66
+#: templates.dist/form/ownerform.php:66
+msgid "Message"
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:34
+msgid "The form was sent successfully."
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:38
+msgid "There was an error sending the form."
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:41
+msgid "The form wasn't sent because spam was detected."
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:49
+msgid "Please enter a value for %s."
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:89
+msgid "Your contact details"
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:96
+msgid "Information about your property"
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:114
+msgid "Back"
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:117
+msgid "Next"
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:132
+msgid "Open the Form"
+msgstr ""
