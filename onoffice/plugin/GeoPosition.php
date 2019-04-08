@@ -35,12 +35,6 @@ use onOffice\SDK\onOfficeSDK;
 class GeoPosition
 {
 	/** */
-	const MODE_TYPE_ADMIN_INTERFACE = 'adminInterface';
-
-	/** */
-	const MODE_TYPE_ADMIN_SEARCH_CRITERIA = 'adminSearchCriteria';
-
-	/** */
 	const FIELD_GEO_POSITION = 'geoPosition';
 
 	/** */
@@ -85,40 +79,6 @@ class GeoPosition
 		self::ESTATE_LIST_SEARCH_STREET,
 		self::ESTATE_LIST_SEARCH_RADIUS,
 	];
-
-
-	/** @var array */
-	private $_requiredRequestFields = [
-		self::ESTATE_LIST_SEARCH_COUNTRY,
-		self::ESTATE_LIST_SEARCH_ZIP,
-		self::ESTATE_LIST_SEARCH_RADIUS,
-	];
-
-
-	/**
-	 *
-	 * @param array $inputs
-	 * @return array
-	 *
-	 */
-
-	public function createGeoRangeSearchParameterRequest(array $inputs): array
-	{
-		$inputValues = [];
-		$radius = empty($inputs[self::ESTATE_LIST_SEARCH_RADIUS]) ? 10 :
-			$inputs[self::ESTATE_LIST_SEARCH_RADIUS];
-		$inputs[self::ESTATE_LIST_SEARCH_RADIUS] = $radius;
-
-		foreach ($inputs as $key => $values) {
-			$inputValues[$key] = $values;
-
-			if (in_array($key, $this->_requiredRequestFields) && empty($values)) {
-				return [];
-			}
-		}
-
-		return $inputValues;
-	}
 
 
 	/**

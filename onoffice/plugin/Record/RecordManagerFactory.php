@@ -125,6 +125,23 @@ class RecordManagerFactory
 	}
 
 
+	/**
+	 *
+	 * Fix to make this mockable
+	 *
+	 * @param string $type
+	 * @param string $action
+	 * @param int $recordId
+	 * @return \onOffice\WPlugin\Record\RecordManager
+	 *
+	 */
+
+	public function create(string $type, string $action, int $recordId = null): RecordManager
+	{
+		return self::createByTypeAndAction($type, $action, $recordId);
+	}
+
+
 	/** @return array */
 	static public function getGenericClassTables()
 		{ return self::$_genericClassTables; }

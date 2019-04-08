@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
@@ -131,15 +132,14 @@ class AdminPageEstateListSettings
 		$this->addFormModel($pFormModelDocumentTypes);
 
 		if (ONOFFICE_FEATURE_CONFIGURE_GEO) {
-			$pGeoPositionHandler = new GeoPositionFieldHandler
-				($this->getListViewId() ?? 0, new RecordManagerReadListViewEstate());
+			$pListView = new DataListView($this->getListViewId() ?? 0, '');
 
 			$pFormModelGeoFields = new FormModel();
 			$pFormModelGeoFields->setPageSlug($this->getPageSlug());
 			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
 			$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
-			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE, $pGeoPositionHandler);
-			foreach ($pInputModelBuilderGeoRange->build() as $pInputModel) {
+			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE);
+			foreach ($pInputModelBuilderGeoRange->build($pListView) as $pInputModel) {
 				$pFormModelGeoFields->addInputModel($pInputModel);
 			}
 

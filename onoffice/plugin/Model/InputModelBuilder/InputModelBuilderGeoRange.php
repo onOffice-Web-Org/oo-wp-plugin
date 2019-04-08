@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Model\InputModelBuilder;
 
 use Generator;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
+use onOffice\WPlugin\Controller\ViewProperty;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -47,15 +48,15 @@ class InputModelBuilderGeoRange
 	 *
 	 * @param string $module
 	 * @param GeoPositionFieldHandler $pGeoPositionFieldHandler
+	 * @param ViewProperty $pView
 	 *
 	 */
 
-	public function __construct(string $module, GeoPositionFieldHandler $pGeoPositionFieldHandler)
+	public function __construct(string $module, GeoPositionFieldHandler $pGeoPositionFieldHandler = null)
 	{
 		$pFactoryConfig = new InputModelDBFactoryConfigGeoFields($module);
 		$this->_pInputModelFactory = new InputModelDBFactory($pFactoryConfig);
-		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler;
-		$pGeoPositionFieldHandler->readValues();
+		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler ?? new GeoPositionFieldHandler();
 	}
 
 
@@ -65,8 +66,9 @@ class InputModelBuilderGeoRange
 	 *
 	 */
 
-	public function build(): Generator
+	public function build(ViewProperty $pView): Generator
 	{
+		$this->_pGeoPositionFieldHandler->readValues($pView);
 		$activeFields = $this->getFieldnamesActiveCheckbox();
 		$activeLabel = __('Activate', 'onoffice');
 		$activeGeoFields = $this->_pGeoPositionFieldHandler->getActiveFields();

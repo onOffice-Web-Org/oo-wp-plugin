@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\DataView;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\ViewProperty;
 
 /**
  *
@@ -33,7 +34,7 @@ use onOffice\SDK\onOfficeSDK;
  */
 
 class DataListViewAddress
-	implements DataViewFilterableFields
+	implements DataViewFilterableFields, ViewProperty
 {
 	/** @var int */
 	private $_id = 0;
@@ -166,4 +167,8 @@ class DataListViewAddress
 	/** @return string */
 	public function getModule(): string
 		{ return onOfficeSDK::MODULE_ADDRESS; }
+
+	/** @return string */
+	public function getViewType(): string
+		{ return ''; }
 }

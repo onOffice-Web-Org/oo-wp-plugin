@@ -82,7 +82,7 @@ class OutputFields
 		$geoFields = [];
 		if ($posGeo !== false) {
 			unset($fieldsArray[$posGeo]);
-			$this->_pGeoPositionFieldHandler->readValues();
+			$this->_pGeoPositionFieldHandler->readValues($this->_pDataView);
 			$geoFields = $this->_pGeoPositionFieldHandler->getActiveFieldsWithValue();
 		}
 

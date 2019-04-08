@@ -23,9 +23,9 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
-use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
-use onOffice\WPlugin\Record\RecordManagerRead;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use function esc_sql;
 
 /**
@@ -38,14 +38,14 @@ use function esc_sql;
 class GeoPositionFieldHandler
 	implements GeoPositionFieldHandlerBase
 {
-	/** @var DataListView */
+	/** @var DataViewFilterableFields */
 	private $_listViewId = 0;
 
-	/** @var RecordManagerRead */
-	private $_pRecordManager = null;
+	/** @var RecordManagerFactory */
+	private $_pRecordManagerFactory = null;
 
-	/** @var InputModelDBFactoryConfigGeoFields */
-	private $_pInputModelFactory = null;
+	/** @var array */
+	private $_booleanFields = [];
 
 	/** @var array */
 	private $_records = [];
@@ -54,48 +54,41 @@ class GeoPositionFieldHandler
 	/**
 	 *
 	 * @param int $listviewId
-	 * @param RecordManagerRead $pRecordManagerRead
+	 * @param RecordManagerFactory $pRecordManagerFactory
 	 * @param InputModelDBFactoryConfigGeoFields $pInputModelDBFactoryConfigGeoFields
 	 *
 	 */
 
-	public function __construct(int $listviewId,
-		RecordManagerRead $pRecordManagerRead,
-		InputModelDBFactoryConfigGeoFields $pInputModelDBFactoryConfigGeoFields = null)
+	public function __construct(
+		RecordManagerFactory $pRecordManagerFactory = null)
 	{
-		$this->_listViewId = $listviewId;
-		$this->_pRecordManager = $pRecordManagerRead;
-		$moduleByTable = array_search($this->_pRecordManager->getMainTable(),
-			InputModelDBFactoryConfigGeoFields::MODULE_TO_TABLE);
-		$this->_pInputModelFactory = $pInputModelDBFactoryConfigGeoFields ??
-			new InputModelDBFactoryConfigGeoFields($moduleByTable);
+		$this->_pRecordManagerFactory = $pRecordManagerFactory ?? new RecordManagerFactory();
 	}
 
 
 	/**
 	 *
-	 * Load values from DB.
-	 *
-	 * No-op if listview ID is 0
+	 * @param ViewProperty $pViewProperty
 	 *
 	 */
 
-	public function readValues()
+	public function readValues(ViewProperty $pViewProperty)
 	{
-		if ($this->_listViewId !== 0) {
-			$booleanFields = $this->_pInputModelFactory->getBooleanFields();
+		$pInputModelFactory = new InputModelDBFactoryConfigGeoFields($pViewProperty->getModule());
+		$pRecordManager = $this->_pRecordManagerFactory->create
+			($pViewProperty->getModule(), RecordManagerFactory::ACTION_READ, $pViewProperty->getId());
+		$this->_booleanFields = $pInputModelFactory->getBooleanFields();
 
-			array_map(function($column) {
-				$this->_pRecordManager->addColumn($column);
-			}, $booleanFields);
-			$this->_pRecordManager->addColumn('radius');
+		array_map(function($column) use ($pRecordManager) {
+			$pRecordManager->addColumn($column);
+		}, $this->_booleanFields);
+		$pRecordManager->addColumn('radius');
 
-			$idColumn = $this->_pRecordManager->getIdColumnMain();
-			$where = '`'.esc_sql($idColumn).'` = "'.esc_sql($this->_listViewId).'"';
-			$this->_pRecordManager->addWhere($where);
+		$idColumn = $pRecordManager->getIdColumnMain();
+		$where = '`'.esc_sql($idColumn).'` = "'.esc_sql($pViewProperty->getId()).'"';
+		$pRecordManager->addWhere($where);
 
-			$this->_records = (array)($this->_pRecordManager->getRecords()[0] ?? []);
-		}
+		$this->_records = (array)($pRecordManager->getRecords()[0] ?? []);
 	}
 
 
@@ -111,8 +104,7 @@ class GeoPositionFieldHandler
 			return $value === '1';
 		});
 
-		$booleanFields = $this->_pInputModelFactory->getBooleanFields();
-		$activeGeoFields = array_intersect_key(array_flip($booleanFields), $activeFields);
+		$activeGeoFields = array_intersect_key(array_flip($this->_booleanFields), $activeFields);
 		return $activeGeoFields;
 	}
 
@@ -129,8 +121,7 @@ class GeoPositionFieldHandler
 		$values = array_replace
 			(array_combine($activeFields , array_fill
 				(0, count($activeFields), null)), $this->_records);
-		$valuesDiff = array_diff_key
-			($values, array_flip($this->_pInputModelFactory->getBooleanFields()));
+		$valuesDiff = array_diff_key($values, array_flip($this->_booleanFields));
 		return $valuesDiff;
 	}
 

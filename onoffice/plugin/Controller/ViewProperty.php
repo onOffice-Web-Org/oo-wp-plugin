@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,33 +19,42 @@
  *
  */
 
-declare (strict_types=1);
-
 namespace onOffice\WPlugin\Controller;
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
+ * @copyright 2003-2019, onOffice(R) GmbH
  *
  */
 
-interface GeoPositionFieldHandlerBase
+interface ViewProperty
 {
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getActiveFields(): array;
 
 
 	/**
 	 *
-	 * @return array
+	 * @return int
 	 *
 	 */
 
-	public function getActiveFieldsWithValue(): array;
+	public function getId(): int;
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getModule(): string;
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getViewType(): string;
 }

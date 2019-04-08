@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\DataView;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\ViewProperty;
 
 /**
  *
@@ -31,7 +32,7 @@ use onOffice\SDK\onOfficeSDK;
  */
 
 class DataListView
-	implements DataView, DataViewFilterableFields
+	implements DataView, DataViewFilterableFields, ViewProperty
 {
 	/** */
 	const PICTURES = 'pictures';
@@ -262,4 +263,8 @@ class DataListView
 	/** @return array */
 	public function getGeoFields(): array
 		{ return $this->_geoFields; }
+
+	/** @return string */
+	public function getViewType(): string
+		{ return $this->_listType; }
 }
