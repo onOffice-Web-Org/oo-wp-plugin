@@ -36,6 +36,7 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderPresetEstateIds;
 use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
 
@@ -58,7 +59,7 @@ class TestClassEstateList
 	/** @var SDKWrapperMocker */
 	private $_pSDKWrapperMocker = null;
 
-
+	/** @var array */
 	private $_estatePicturesByEstateId = [
 		15 => [
 			2 => [
@@ -111,6 +112,11 @@ class TestClassEstateList
 		$this->assertCount(5, $pClosureGetEstateResult());
 	}
 
+
+	/**
+	 *
+	 */
+
 	public function testLoadRandomEstates()
 	{
 		$pDataViewRandom = $this->getDataViewRandom();
@@ -120,6 +126,7 @@ class TestClassEstateList
 		}, $this->_pEstateList, EstateList::class);
 		$this->assertCount(5, $pClosureGetEstateResult());
 	}
+
 
 	/**
 	 *
@@ -601,7 +608,7 @@ class TestClassEstateList
 
 	public function testGeoSearchBuilder()
 	{
-		$pNewGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
+		$pNewGeoSearchBuilder = $this->getMock(GeoSearchBuilderFromInputVars::class);
 		$this->assertInstanceOf(GeoSearchBuilderEmpty::class, $this->_pEstateList->getGeoSearchBuilder());
 		$this->_pEnvironment->expects($this->once())->method('setGeoSearchBuilder')->with($pNewGeoSearchBuilder);
 		$this->_pEstateList->setGeoSearchBuilder($pNewGeoSearchBuilder);
@@ -680,6 +687,7 @@ class TestClassEstateList
 		$pDataView->setPictureTypes(['Titelbild', 'Foto']);
 		$pDataView->setAddressFields(['Vorname', 'Name']);
 		$pDataView->setShowStatus(true);
+		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
 		return $pDataView;
 	}
 

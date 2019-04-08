@@ -27,7 +27,7 @@ use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Field\OutputFields;
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
@@ -136,9 +136,17 @@ class TestClassOutputFields
 		];
 
 		$pMockRecordManager = $this->getMock(RecordManagerReadListViewEstate::class, [], [], '', false);
-		$pInputModelDBFactoryConfigGeoFields = new InputModelDBFactoryConfigGeoFields(onOfficeSDK::MODULE_ESTATE);
-		$pGeoPosition = $this->getMock(GeoPositionFieldHandler::class, ['getActiveFields'],
-			[3, $pMockRecordManager, $pInputModelDBFactoryConfigGeoFields]);
+		$pMockRecordManagerFactory = $this->getMockBuilder(RecordManagerFactory::class)
+			->setMethods(['create'])
+			->getMock();
+		$pMockRecordManagerFactory->method('create')
+			->with(onOfficeSDK::MODULE_ADDRESS, RecordManagerFactory::ACTION_READ, $this->anything())
+			->will($this->returnValue($pMockRecordManager));
+
+		$pGeoPosition = $this->getMockBuilder(GeoPositionFieldHandler::class)
+				->setMethods(['getActiveFields'])
+				->setConstructorArgs([$pMockRecordManagerFactory])
+				->getMock();
 		$pGeoPosition->method('getActiveFields')->will($this->returnValue([
 			'country_active' => 'country',
 			'zip_active' => 'zip',
