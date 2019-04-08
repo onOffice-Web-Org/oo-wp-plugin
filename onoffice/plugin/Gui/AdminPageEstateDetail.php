@@ -130,8 +130,8 @@ class AdminPageEstateDetail
 
 		echo '<span class="viewusage">';
 		if ($pageId != null) {
-			esc_attr_e('Detail view in use on page ', 'onoffice');
-			echo '<span class="italic">'.esc_html(get_the_title($pageId)).'</span>';
+			printf(esc_attr(__('Detail view in use on page %s', 'onoffice')),
+				'<span class="italic">'.esc_html(get_the_title($pageId)).'</span>');
 			edit_post_link(__('Edit Page', 'onoffice'), ' ', '', $pageId);
 		} else {
 			esc_attr_e('Detail view is not in use yet. '
