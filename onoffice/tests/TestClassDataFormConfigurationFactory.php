@@ -24,6 +24,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactoryDependencyConfigDefault;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactoryDependencyConfigTest;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
@@ -57,12 +58,12 @@ class TestClassDataFormConfigurationFactory
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
-		parent::setUp();
-
 		$this->_pConfig = new DataFormConfigurationFactoryDependencyConfigTest();
 		$this->_pDataFormConfigurationFactory = new DataFormConfigurationFactory(null, $this->_pConfig);
 	}
@@ -70,7 +71,22 @@ class TestClassDataFormConfigurationFactory
 
 	/**
 	 *
-	 * @expectedException \onOffice\WPlugin\DataFormConfiguration\UnknownFormException
+	 */
+
+	public function testConstruct()
+	{
+		$pDataFormConfigurationFactory = new DataFormConfigurationFactory('testType');
+		$pClosureGetEnvironment = Closure::bind(function() {
+			 return $this->_pDependencyConfig;
+		}, $pDataFormConfigurationFactory, DataFormConfigurationFactory::class);
+		$this->assertInstanceOf
+			(DataFormConfigurationFactoryDependencyConfigDefault::class, $pClosureGetEnvironment());
+	}
+
+
+	/**
+	 *
+	 * @expectedException onOffice\WPlugin\DataFormConfiguration\UnknownFormException
 	 *
 	 */
 
@@ -150,6 +166,20 @@ class TestClassDataFormConfigurationFactory
 				$this->assertNotEmpty($pDataFormConfiguration->getInputs());
 			}
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testIsAdminInterface()
+	{
+		$pDataFormConfigurationFactory = new DataFormConfigurationFactory
+				(Form::TYPE_CONTACT, $this->_pConfig);
+		$this->assertFalse($this->_pConfig->getIsAdminInterface());
+		$pDataFormConfigurationFactory->setIsAdminInterface(true);
+		$this->assertTrue($this->_pConfig->getIsAdminInterface());
 	}
 
 
@@ -237,6 +267,7 @@ class TestClassDataFormConfigurationFactory
 					$this->assertEquals('A Subject', $pDataFormConfiguration->getSubject());
 					$this->assertTrue($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertTrue($pDataFormConfiguration->getCreateAddress());
+					$this->assertEquals(['contactSpecialField1'], $pDataFormConfiguration->getAvailableOptionsFields());
 					break;
 				case Form::TYPE_OWNER:
 					/* @var $pDataFormConfiguration DataFormConfigurationOwner */
@@ -244,6 +275,7 @@ class TestClassDataFormConfigurationFactory
 					$this->assertTrue($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertEquals('A Subject', $pDataFormConfiguration->getSubject());
 					$this->assertEquals('test@my-onoffice.com', $pDataFormConfiguration->getRecipient());
+					$this->assertEquals(['ownerSpecialField1'], $pDataFormConfiguration->getAvailableOptionsFields());
 					break;
 				case Form::TYPE_INTEREST:
 					/* @var $pDataFormConfiguration DataFormConfigurationInterest */
@@ -278,6 +310,7 @@ class TestClassDataFormConfigurationFactory
 				'fieldlabel' => 'First Name',
 				'module' => onOfficeSDK::MODULE_ADDRESS,
 				'individual_fieldname' => '0',
+				'availableOptions' => '0',
 				'required' => '1',
 			],
 			[
@@ -288,6 +321,7 @@ class TestClassDataFormConfigurationFactory
 				'fieldlabel' => 'Name',
 				'module' => onOfficeSDK::MODULE_ADDRESS,
 				'individual_fieldname' => '0',
+				'availableOptions' => '0',
 				'required' => '1',
 			],
 			[
@@ -298,6 +332,7 @@ class TestClassDataFormConfigurationFactory
 				'fieldlabel' => $formType.' Special Field 1',
 				'module' => onOfficeSDK::MODULE_ADDRESS,
 				'individual_fieldname' => '0',
+				'availableOptions' => '1',
 				'required' => '0',
 			],
 		];
@@ -329,6 +364,7 @@ class TestClassDataFormConfigurationFactory
 			'pages' => '3',
 			'captcha' => '1',
 			'newsletter' => '1',
+			'availableOptions' => '1',
 		];
 	}
 }

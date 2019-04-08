@@ -55,6 +55,8 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setFormType(Form::TYPE_INTEREST);
 		$pDataFormConfiguration->setLanguage('ENG');
 		$pDataFormConfiguration->setTemplate('test/testtemplate.php');
+		$pDataFormConfiguration->setAvailableOptionsFields(['test1', 'test2']);
+		$pDataFormConfiguration->addAvailableOptionsField('test3');
 
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 	}
@@ -82,6 +84,8 @@ class TestClassDataFormConfiguration
 		$this->assertEquals('ENG', $pDataFormConfiguration->getLanguage());
 		$this->assertEquals(['test2'], $pDataFormConfiguration->getRequiredFields());
 		$this->assertEquals('test/testtemplate.php', $pDataFormConfiguration->getTemplate());
+		$this->assertEquals(['test1', 'test2', 'test3'],
+			$pDataFormConfiguration->getAvailableOptionsFields());
 	}
 
 
@@ -115,5 +119,6 @@ class TestClassDataFormConfiguration
 		// does nothing in this class
 		$pDataFormConfiguration->setDefaultFields();
 		$this->assertEquals([], $pDataFormConfiguration->getInputs());
+		$this->assertEquals([], $pDataFormConfiguration->getAvailableOptionsFields());
 	}
 }
