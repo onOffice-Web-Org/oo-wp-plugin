@@ -109,30 +109,4 @@ class TestClassGeoPosition
 			$this->assertEquals($value, $result[$key]);
 		}
 	}
-
-
-	/**
-	 *
-	 * @covers onOffice\WPlugin\GeoPosition::createGeoRangeSearchParameterRequest
-	 *
-	 */
-
-	public function testCreateGeoRangeSearchParameterRequest()
-	{
-		$values = [
-			'country' => 'DEU',
-			'zip' => '52068',
-			'street' => 'Charlottenburger Allee',
-			'radius' => 25,
-		];
-
-		$expectedValues = $values;
-
-		$pGeoPosition = new GeoPosition();
-		$result = $pGeoPosition->createGeoRangeSearchParameterRequest($values);
-
-		foreach ($expectedValues as $key => $value)	{
-			$this->assertEquals($value, $result[$key]);
-		}
-	}
 }

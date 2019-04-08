@@ -21,6 +21,7 @@
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -47,7 +48,8 @@ class TestClassInputModelBuilderGeoRange
 
 	public function testBuild()
 	{
-		$pGenerator = $this->_pSubject->build();
+		$pView = new DataListView(13, 'test');
+		$pGenerator = $this->_pSubject->build($pView);
 		$expectedFields = $this->getExpectedFields();
 
 		foreach ($pGenerator as $index => $pInputModel) {
@@ -96,8 +98,9 @@ class TestClassInputModelBuilderGeoRange
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => '1',
 		];
 
-		$pMockGeoPositionFieldHandler = $this->getMock(GeoPositionFieldHandler::class,
-			['getRadiusValue', 'getActiveFields', 'readValues'], [], '', false);
+		$pMockGeoPositionFieldHandler = $this->getMockBuilder(GeoPositionFieldHandler::class)
+			->setMethods(['getRadiusValue', 'getActiveFields', 'readValues'])
+			->getMock();
 		$pMockGeoPositionFieldHandler
 			->method('getRadiusValue')
 			->will($this->returnValue(10));

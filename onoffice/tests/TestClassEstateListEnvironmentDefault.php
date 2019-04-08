@@ -23,7 +23,6 @@ use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
@@ -85,6 +84,7 @@ class TestClassEstateListEnvironmentDefault
 
 	public function testGetGeoSearchBuilder()
 	{
+		$this->_pSubject->setGeoSearchBuilder(new GeoSearchBuilderFromInputVars());
 		$this->assertInstanceOf(GeoSearchBuilderFromInputVars::class,
 			$this->_pSubject->getGeoSearchBuilder());
 	}
