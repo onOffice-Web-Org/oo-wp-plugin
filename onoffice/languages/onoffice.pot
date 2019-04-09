@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-04-03T12:31:27+02:00\n"
+"POT-Creation-Date: 2019-04-09T12:59:45+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.1.0\n"
 "X-Domain: onoffice\n"
@@ -34,15 +34,15 @@ msgstr ""
 msgid "Estates view not found."
 msgstr ""
 
-#: plugin/ContentFilter.php:393
+#: plugin/ContentFilter.php:398
 msgid "Please configure your onOffice API credentials first!"
 msgstr ""
 
-#: plugin/ContentFilter.php:397
+#: plugin/ContentFilter.php:402
 msgid "An error occured:"
 msgstr ""
 
-#: plugin/ContentFilter.php:526
+#: plugin/ContentFilter.php:531
 msgid "%1$s (%2$s) in %3$s - %4$s"
 msgstr ""
 
@@ -251,7 +251,7 @@ msgid "Edit List View"
 msgstr ""
 
 #: plugin/Gui/AdminPageEstateDetail.php:133
-msgid "Detail view in use on page "
+msgid "Detail view in use on page %s"
 msgstr ""
 
 #: plugin/Gui/AdminPageEstateDetail.php:135
@@ -681,6 +681,10 @@ msgstr ""
 
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:129
 msgid "Postal Code"
+msgstr ""
+
+#: plugin/Record/RecordManagerReadListViewAddress.php:93
+msgid "unknown address list name"
 msgstr ""
 
 #: plugin/Renderer/InputFieldCheckboxButtonRenderer.php:66

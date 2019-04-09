@@ -4,25 +4,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice direct 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-04-03T12:31:27+02:00\n"
-"PO-Revision-Date: 2019-04-08 12:20+0200\n"
-"X-Generator: Poedit 2.2.1\n"
-"X-Domain: onoffice\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"POT-Creation-Date: 2019-04-09T12:59:45+02:00\n"
+"PO-Revision-Date: 2019-04-09 13:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Domain: onoffice\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
 msgid "onOffice direct"
 msgstr "onOffice direct"
 
 #. Description of the plugin
-msgid "Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code."
-msgstr "Ihre Verbindung zu onOffice: Dieses Plugin erlaubt Ihnen einen schnellen Zugriff zu Immobilien und Formularen - es wird keine zusätzliche Synchronisation der Software gebraucht. Für mehr Informationen kontaktieren Sie support@onoffice.de."
+msgid ""
+"Your connection to onOffice: This plugin enables you to have quick access to "
+"estates and forms – no additional sync with the software is needed. Consult "
+"support@onoffice.de for source code."
+msgstr ""
+"Ihre Verbindung zu onOffice: Dieses Plugin erlaubt Ihnen einen schnellen "
+"Zugriff zu Immobilien und Formularen - es wird keine zusätzliche "
+"Synchronisation der Software gebraucht. Für mehr Informationen kontaktieren "
+"Sie support@onoffice.de."
 
 #. Author of the plugin
 msgid "onOffice GmbH"
@@ -36,15 +43,15 @@ msgstr "https://de.onoffice.com/"
 msgid "Estates view not found."
 msgstr "Immobilienansicht nicht gefunden."
 
-#: plugin/ContentFilter.php:393
+#: plugin/ContentFilter.php:398
 msgid "Please configure your onOffice API credentials first!"
 msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
 
-#: plugin/ContentFilter.php:397
+#: plugin/ContentFilter.php:402
 msgid "An error occured:"
 msgstr "Ein fehler ist aufgetreten:"
 
-#: plugin/ContentFilter.php:526
+#: plugin/ContentFilter.php:531
 msgid "%1$s (%2$s) in %3$s - %4$s"
 msgstr "%1$s (%2$s) in %3$s - %4$s"
 
@@ -87,8 +94,12 @@ msgid "API token and secret"
 msgstr "API-Token und Secret"
 
 #: plugin/Controller/AdminViewController.php:356
-msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
-msgstr "Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte überprüfen Sie Ihr %s."
+msgid ""
+"It looks like you did not enter any valid API credentials. Please consider "
+"reviewing your %s."
+msgstr ""
+"Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte überprüfen Sie "
+"Ihr %s."
 
 #: plugin/Field/DistinctFieldsChecker.php:106
 msgid "Not specified"
@@ -156,16 +167,24 @@ msgid "The address list was saved."
 msgstr "Die Adressliste wurde gespeichert."
 
 #: plugin/Gui/AdminPageAddressListSettings.php:297
-msgid "There was a problem saving the list. Please make sure the name of the list is unique."
-msgstr "Beim Speichern der Liste ist ein Fehler aufgetreten. Bitte vergewissern Sie sich, dass der Name noch nicht vergeben ist."
+msgid ""
+"There was a problem saving the list. Please make sure the name of the list "
+"is unique."
+msgstr ""
+"Beim Speichern der Liste ist ein Fehler aufgetreten. Bitte vergewissern Sie "
+"sich, dass der Name noch nicht vergeben ist."
 
 #: plugin/Gui/AdminPageAjax.php:80
 msgid "login credentials"
 msgstr "Zugangsdaten"
 
 #: plugin/Gui/AdminPageAjax.php:82
-msgid "It looks like you did not enter any valid API credentials. Please go back and review your %s."
-msgstr "Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte gehen Sie zurück und prüfen Ihr %s."
+msgid ""
+"It looks like you did not enter any valid API credentials. Please go back "
+"and review your %s."
+msgstr ""
+"Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte gehen Sie zurück "
+"und prüfen Ihr %s."
 
 #: plugin/Gui/AdminPageApiSettings.php:71
 msgid "API token"
@@ -220,8 +239,13 @@ msgid "The request is invalid or malformed."
 msgstr "Die Anfrage ist nicht gültig."
 
 #: plugin/Gui/AdminPageApiSettings.php:185
-msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
-msgstr "Um Google reCAPTCHA benutzen zu können, müssen Sie Ihre Keys hinterlegen. Sie können reCAPTCHA jedoch schon für die spätere Verwendung in den Formularen aktivieren."
+msgid ""
+"In order to use Google reCAPTCHA, you need to provide your keys. You're free "
+"to enable it in the form settings for later use."
+msgstr ""
+"Um Google reCAPTCHA benutzen zu können, müssen Sie Ihre Keys hinterlegen. "
+"Sie können reCAPTCHA jedoch schon für die spätere Verwendung in den "
+"Formularen aktivieren."
 
 #: plugin/Gui/AdminPageApiSettings.php:226
 msgid "The cache was cleaned."
@@ -255,8 +279,12 @@ msgid "Edit Page"
 msgstr "Seite bearbeiten"
 
 #: plugin/Gui/AdminPageEstateDetail.php:137
-msgid "Detail view is not in use yet. Insert this code on a page to get the detail view there:"
-msgstr "Die Detailansicht wird gerade nicht verwendet. Fügen Sie diesen Code auf einer Seite ein, um die Detailansicht dort zu sehen:"
+msgid ""
+"Detail view is not in use yet. Insert this code on a page to get the detail "
+"view there:"
+msgstr ""
+"Die Detailansicht wird gerade nicht verwendet. Fügen Sie diesen Code auf "
+"einer Seite ein, um die Detailansicht dort zu sehen:"
 
 #: plugin/Gui/AdminPageEstateDetail.php:163
 #: plugin/Gui/AdminPageEstateDetail.php:178
@@ -312,8 +340,13 @@ msgid "The view has been saved."
 msgstr "Die Ansicht wurde gespeichert."
 
 #: plugin/Gui/AdminPageEstateListSettingsBase.php:162
-msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types."
-msgstr "Beim Speichern der Ansicht ist ein Fehler aufgetreten. Bitte stellen Sie sicher, dass keine andere Ansicht mit diesem Namen existiert, auch wenn sie einen anderen Typen hat."
+msgid ""
+"There was a problem saving the view. Please make sure the name of the view "
+"is unique, even across all estate list types."
+msgstr ""
+"Beim Speichern der Ansicht ist ein Fehler aufgetreten. Bitte stellen Sie "
+"sicher, dass keine andere Ansicht mit diesem Namen existiert, auch wenn sie "
+"einen anderen Typen hat."
 
 #: plugin/Gui/AdminPageEstateUnitList.php:70
 msgid "Units Lists"
@@ -351,8 +384,12 @@ msgid "The Form was saved."
 msgstr "Das Formular wurde gespeichert."
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:227
-msgid "There was a problem saving the form. Please make sure the name of the form is unique."
-msgstr "Es ist einen Fehler beim Speichern des Formulars aufgetreten. Bitte prüfen Sie, ob der Formularname eindeutig ist."
+msgid ""
+"There was a problem saving the form. Please make sure the name of the form "
+"is unique."
+msgstr ""
+"Es ist einen Fehler beim Speichern des Formulars aufgetreten. Bitte prüfen "
+"Sie, ob der Formularname eindeutig ist."
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:235
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:551
@@ -674,6 +711,10 @@ msgstr "Straße"
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
+#: plugin/Record/RecordManagerReadListViewAddress.php:93
+msgid "unknown address list name"
+msgstr "Unbekannter Adresslistenname"
+
 #: plugin/Renderer/InputFieldCheckboxButtonRenderer.php:66
 msgid "Add to List >>"
 msgstr "Hinzufügen >>"
@@ -877,7 +918,8 @@ msgstr "Beim Senden ist ein Fehler aufgetreten."
 
 #: templates.dist/form/ownerleadgeneratorform.php:41
 msgid "The form wasn't sent because spam was detected."
-msgstr "Das Formular wurde nicht abgeschickt, da der Verdacht auf Spam besteht."
+msgstr ""
+"Das Formular wurde nicht abgeschickt, da der Verdacht auf Spam besteht."
 
 #: templates.dist/form/ownerleadgeneratorform.php:49
 msgid "Please enter a value for %s."
