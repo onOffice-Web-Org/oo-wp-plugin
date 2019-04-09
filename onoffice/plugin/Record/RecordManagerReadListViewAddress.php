@@ -87,6 +87,12 @@ class RecordManagerReadListViewAddress
 				WHERE `name` = '".esc_sql($name)."'";
 
 		$result = $pWpDb->get_row($sql, ARRAY_A);
+
+		if ($result === null)
+		{
+			throw new \Exception(__('unknown address list name', 'onoffice'));
+		}
+
 		$resultFieldConfig = $this->readFieldconfigByListviewId($result[$this->getIdColumnMain()]);
 		$result['fields'] = array_column($resultFieldConfig, 'fieldname');
 		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));

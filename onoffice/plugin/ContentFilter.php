@@ -296,17 +296,22 @@ class ContentFilter
 		], $attributesInput);
 		$addressListName = $attributes['view'];
 
-		$pDataListFactory = new DataListViewFactoryAddress();
-		/* @var $pAddressListView DataListViewAddress */
-		$pAddressListView = $pDataListFactory->getListViewByName($addressListName);
-		$pAddressList = (new AddressList())->withDataListViewAddress($pAddressListView);
-		$pAddressList->loadAddresses($page);
+		try
+		{
+			$pDataListFactory = new DataListViewFactoryAddress();
+			/* @var $pAddressListView DataListViewAddress */
+			$pAddressListView = $pDataListFactory->getListViewByName($addressListName);
+			$pAddressList = (new AddressList())->withDataListViewAddress($pAddressListView);
+			$pAddressList->loadAddresses($page);
 
-		$templateName = $pAddressListView->getTemplate();
-		$pTemplate = new Template($templateName);
-		$pTemplate->setAddressList($pAddressList);
-		$pTemplate->setImpressum(new Impressum);
-		return $pTemplate->render();
+			$templateName = $pAddressListView->getTemplate();
+			$pTemplate = new Template($templateName);
+			$pTemplate->setAddressList($pAddressList);
+			$pTemplate->setImpressum(new Impressum);
+			return $pTemplate->render();
+		} catch (Exception $pException) {
+				return $this->logErrorAndDisplayMessage($pException);
+			}
 	}
 
 
