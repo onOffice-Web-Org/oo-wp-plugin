@@ -92,11 +92,16 @@ class DistinctFieldsChecker
 	 *
 	 * @param string $module
 	 * @param array $distinctFields
+	 * @return void
 	 *
 	 */
 
 	public function registerScripts(string $module, array $distinctFields)
 	{
+		if ($distinctFields === []) {
+			return;
+		}
+
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$pScriptStyle = $this->_pEnvironment->getScriptStyle();
 		$values = [

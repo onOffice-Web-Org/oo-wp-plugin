@@ -320,10 +320,14 @@ class EstateList
 			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 
-		$geoRangeSearchParameters = $this->_pGeoSearchBuilder->buildParameters();
+		// only do georange search if requested in listview configuration
+		if ($pListView instanceof DataViewFilterableFields &&
+			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true)) {
+			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
 
-		if ($geoRangeSearchParameters !== []) {
-			$requestParams['georangesearch'] = $geoRangeSearchParameters;
+			if ($geoRangeSearchParameters !== []) {
+				$requestParams['georangesearch'] = $geoRangeSearchParameters;
+			}
 		}
 
 		return $requestParams;

@@ -146,13 +146,9 @@ class ContentFilter
 					$pTemplate = new Template($pListView->getTemplate());
 					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
 					$availableOptionsEstates = $pListView->getAvailableOptions();
-
-					if ($availableOptionsEstates !== [])
-					{
-						$pDistinctFieldsChecker = new DistinctFieldsChecker();
-						$pDistinctFieldsChecker->registerScripts(onOfficeSDK::MODULE_ESTATE,
-							$availableOptionsEstates);
-					}
+					$pDistinctFieldsChecker = new DistinctFieldsChecker();
+					$pDistinctFieldsChecker->registerScripts(onOfficeSDK::MODULE_ESTATE,
+						$availableOptionsEstates);
 
 					$pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
 					$pGeoSearchBuilder->setViewProperty($pListView);
