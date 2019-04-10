@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\EstateUnits;
@@ -77,15 +78,6 @@ interface EstateListEnvironment
 	 */
 
 	public function getGeoSearchBuilder(): GeoSearchBuilder;
-
-
-	/**
-	 *
-	 * @param GeoSearchBuilder $pGeoSearchBuilder
-	 *
-	 */
-
-	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder);
 
 
 	/**

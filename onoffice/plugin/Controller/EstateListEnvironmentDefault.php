@@ -36,7 +36,7 @@ use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
-use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
+use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -60,9 +60,6 @@ class EstateListEnvironmentDefault
 
 	/** @var AddressList */
 	private $_pAddressList = null;
-
-	/** @var GeoSearchBuilderFromInputVars */
-	private $_pGeoSearchBuilder = null;
 
 	/** @var DefaultFilterBuilder */
 	private $_pDefaultFilterBuilder = null;
@@ -130,7 +127,7 @@ class EstateListEnvironmentDefault
 
 	public function getGeoSearchBuilder(): GeoSearchBuilder
 	{
-		return $this->_pGeoSearchBuilder;
+		return new GeoSearchBuilderEmpty();
 	}
 
 
@@ -143,18 +140,6 @@ class EstateListEnvironmentDefault
 	public function getSDKWrapper(): SDKWrapper
 	{
 		return $this->_pSDKWrapper;
-	}
-
-
-	/**
-	 *
-	 * @param GeoSearchBuilder $pGeoSearchBuilder
-	 *
-	 */
-
-	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder)
-	{
-		$this->_pGeoSearchBuilder = $pGeoSearchBuilder;
 	}
 
 
