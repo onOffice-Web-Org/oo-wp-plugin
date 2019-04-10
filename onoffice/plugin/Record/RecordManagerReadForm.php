@@ -24,7 +24,6 @@ namespace onOffice\WPlugin\Record;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\GeoPosition;
-use onOffice\WPlugin\GeoPositionFormSettings;
 use const ARRAY_A;
 use const OBJECT;
 use function esc_sql;

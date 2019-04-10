@@ -36,7 +36,7 @@ class DefaultFilterBuilderDetailView
 	implements DefaultFilterBuilder
 {
 	/** @var int */
-	private $_estateId = null;
+	private $_estateId = 0;
 
 
 	/**
@@ -47,8 +47,8 @@ class DefaultFilterBuilderDetailView
 
 	public function buildFilter(): array
 	{
-		if ($this->_estateId === null) {
-			throw new Exception('EstateId must not be null');
+		if ($this->_estateId === 0) {
+			throw new Exception('EstateId must not be 0');
 		}
 
 		return [
@@ -64,4 +64,8 @@ class DefaultFilterBuilderDetailView
 	/** @param int $estateId */
 	public function setEstateId(int $estateId)
 		{ $this->_estateId = $estateId; }
+
+	/** @return int $estateId */
+	public function getEstateId(): int
+		{ return $this->_estateId; }
 }

@@ -158,6 +158,5 @@ class DataViewSimilarEstates
 
 	/** @return bool */
 	public function getRandom(): bool
-	{ return false;	}
-
+		{ return false;	}
 }

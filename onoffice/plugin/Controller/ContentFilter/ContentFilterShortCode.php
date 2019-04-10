@@ -19,14 +19,23 @@
  *
  */
 
-namespace onOffice\WPlugin\Controller;
+namespace onOffice\WPlugin\Controller\ContentFilter;
 
 /**
- * Description of ContentFilterBase
  *
- * @author ana
+ * @url http://www.onoffice.de
+ * @copyright 2003-2019, onOffice(R) GmbH
+ *
  */
+
 interface ContentFilterShortCode
 {
+	/**
+	 *
+	 * @param array $attributesInput
+	 * @return string The new content
+	 *
+	 */
+
 	public function replaceShortCodes(array $attributesInput): string;
 }

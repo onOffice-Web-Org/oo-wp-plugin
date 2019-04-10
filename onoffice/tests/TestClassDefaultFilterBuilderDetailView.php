@@ -37,7 +37,7 @@ class TestClassDefaultFilterBuilderDetailView
 	/**
 	 *
 	 * @expectedException \Exception
-	 * @expectedExceptionMessage EstateId must not be null
+	 * @expectedExceptionMessage EstateId must not be 0
 	 *
 	 */
 
@@ -73,5 +73,18 @@ class TestClassDefaultFilterBuilderDetailView
 			],
 		];
 		$this->assertEquals($expectation, $filterResult);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetterSetter()
+	{
+		$pInstance = new DefaultFilterBuilderDetailView();
+		$this->assertEquals(0, $pInstance->getEstateId());
+		$pInstance->setEstateId(13);
+		$this->assertEquals(13, $pInstance->getEstateId());
 	}
 }
