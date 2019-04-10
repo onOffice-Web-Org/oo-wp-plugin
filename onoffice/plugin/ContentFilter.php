@@ -45,6 +45,7 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
@@ -153,9 +154,14 @@ class ContentFilter
 							$availableOptionsEstates);
 					}
 
+					$pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
+					$pGeoSearchBuilder->setViewProperty($pListView);
+
 					$pEstateList = new EstateList($pListView);
 					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
 					$pEstateList->setUnitsViewName($attributes['units']);
+					$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
+
 					$pTemplate->setEstateList($pEstateList);
 					$pTemplate->setImpressum(new Impressum);
 					$pEstateList->loadEstates($page);

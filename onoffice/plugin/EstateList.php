@@ -320,13 +320,10 @@ class EstateList
 			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 
-		if ($pListView instanceof DataViewFilterableFields &&
-			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true)) {
-			$geoRangeSearchParameters = $this->_pGeoSearchBuilder->buildParameters();
+		$geoRangeSearchParameters = $this->_pGeoSearchBuilder->buildParameters();
 
-			if ($geoRangeSearchParameters !== []) {
-				$requestParams['georangesearch'] = $geoRangeSearchParameters;
-			}
+		if ($geoRangeSearchParameters !== []) {
+			$requestParams['georangesearch'] = $geoRangeSearchParameters;
 		}
 
 		return $requestParams;
