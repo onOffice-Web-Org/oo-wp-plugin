@@ -610,8 +610,8 @@ class TestClassEstateList
 	{
 		$pNewGeoSearchBuilder = $this->getMock(GeoSearchBuilderFromInputVars::class);
 		$this->assertInstanceOf(GeoSearchBuilderEmpty::class, $this->_pEstateList->getGeoSearchBuilder());
-		$this->_pEnvironment->expects($this->once())->method('setGeoSearchBuilder')->with($pNewGeoSearchBuilder);
 		$this->_pEstateList->setGeoSearchBuilder($pNewGeoSearchBuilder);
+		$this->assertInstanceOf(GeoSearchBuilderFromInputVars::class, $this->_pEstateList->getGeoSearchBuilder());
 	}
 
 
@@ -654,6 +654,7 @@ class TestClassEstateList
 
 		$pGeoSearchBuilder = $this->getMock(GeoSearchBuilderEmpty::class, ['buildParameters']);
 		$pGeoSearchBuilder->method('buildParameters')->willReturn(['radius' => 500, 'country' => 'DEU', 'zip' => '52068']);
+		$this->_pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 		$this->_pEnvironment->method('getGeoSearchBuilder')->willReturn($pGeoSearchBuilder);
 		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
 			($this->getMock(EstateStatusLabel::class, ['getFieldsByPrio', 'getLabel']));

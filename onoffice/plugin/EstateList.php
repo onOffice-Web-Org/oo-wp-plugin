@@ -28,9 +28,9 @@ use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
+use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
-use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
@@ -89,6 +89,9 @@ class EstateList
 	/** @var APIClientActionGeneric */
 	private $_pApiClientAction = null;
 
+	/** @var GeoSearchBuilder */
+	private $_pGeoSearchBuilder = null;
+
 
 	/**
 	 *
@@ -104,9 +107,7 @@ class EstateList
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$this->_pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
-		$pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
-		$pGeoSearchBuilder->setViewProperty($pDataView);
-		$this->_pEnvironment->setGeoSearchBuilder($pGeoSearchBuilder);
+		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 	}
 
 
@@ -319,8 +320,9 @@ class EstateList
 			$requestParams['filterid'] = $pListView->getFilterId();
 		}
 
-		if (in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true)) {
-			$geoRangeSearchParameters = $this->_pEnvironment->getGeoSearchBuilder()->buildParameters();
+		if ($pListView instanceof DataViewFilterableFields &&
+			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true)) {
+			$geoRangeSearchParameters = $this->_pGeoSearchBuilder->buildParameters();
 
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
@@ -653,7 +655,7 @@ class EstateList
 		$estateId = $this->getCurrentMultiLangEstateMainId();
 		$htmlOutput = '';
 
-		if ($this->_unitsViewName !== null) {
+		if ($this->_unitsViewName != null) {
 			$pEstateUnits = $this->_pEnvironment->getEstateUnitsByName($this->_unitsViewName);
 			$pEstateUnits->loadByMainEstates($this);
 			$unitCount = $pEstateUnits->getSubEstateCount($estateId);
@@ -769,11 +771,11 @@ class EstateList
 
 	/** @return GeoSearchBuilder */
 	public function getGeoSearchBuilder(): GeoSearchBuilder
-		{ return $this->_pEnvironment->getGeoSearchBuilder(); }
+		{ return $this->_pGeoSearchBuilder; }
 
 	/** @param GeoSearchBuilder $pGeoSearchBuilder */
 	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder)
-		{ $this->_pEnvironment->setGeoSearchBuilder($pGeoSearchBuilder); }
+		{ $this->_pGeoSearchBuilder = $pGeoSearchBuilder; }
 
 	/** @return bool */
 	public function getFormatOutput(): bool

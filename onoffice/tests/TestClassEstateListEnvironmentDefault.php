@@ -28,7 +28,6 @@ use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
-use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
@@ -84,8 +83,7 @@ class TestClassEstateListEnvironmentDefault
 
 	public function testGetGeoSearchBuilder()
 	{
-		$this->_pSubject->setGeoSearchBuilder(new GeoSearchBuilderFromInputVars());
-		$this->assertInstanceOf(GeoSearchBuilderFromInputVars::class,
+		$this->assertInstanceOf(GeoSearchBuilderEmpty::class,
 			$this->_pSubject->getGeoSearchBuilder());
 	}
 
@@ -97,19 +95,6 @@ class TestClassEstateListEnvironmentDefault
 	public function testGetSDKWrapper()
 	{
 		$this->assertInstanceOf(SDKWrapper::class, $this->_pSubject->getSDKWrapper());
-	}
-
-
-	/**
-	 *
-	 * @depends testGetGeoSearchBuilder
-	 *
-	 */
-
-	public function testSetGeoSearchBuilder()
-	{
-		$this->_pSubject->setGeoSearchBuilder(new GeoSearchBuilderEmpty);
-		$this->assertInstanceOf(GeoSearchBuilderEmpty::class, $this->_pSubject->getGeoSearchBuilder());
 	}
 
 
