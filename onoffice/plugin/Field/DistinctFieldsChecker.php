@@ -51,27 +51,16 @@ class DistinctFieldsChecker
 	/** @var DistinctFieldsCheckerEnvironment */
 	private $_pEnvironment = null;
 
-	/** @var array */
-	static private $_mapping =
-			[
-				'range_land' => 'country',
-				'range_plz' => 'zip',
-				'range_strasse' => 'street',
-				'range' => 'radius',
-			];
-
 
 	/**
 	 *
-	 * @param DistinctFieldsCheckerEnvironment $pDistinctFieldsCheckerEnvironment
+	 * @param DistinctFieldsCheckerEnvironment $pEnvironment
 	 *
 	 */
 
-	public function __construct(
-		DistinctFieldsCheckerEnvironment $pDistinctFieldsCheckerEnvironment = null)
+	public function __construct(DistinctFieldsCheckerEnvironment $pEnvironment = null)
 	{
-		$this->_pEnvironment =
-			$pDistinctFieldsCheckerEnvironment ?? new DistinctFieldsCheckerEnvironmentDefault();
+		$this->_pEnvironment = $pEnvironment ?? new DistinctFieldsCheckerEnvironmentDefault();
 	}
 
 
@@ -162,9 +151,10 @@ class DistinctFieldsChecker
 				}
 			}
 		} elseif ($module == onOfficeSDK::MODULE_SEARCHCRITERIA) {
+			$mapping = array_flip($pGeoPosition->getSearchCriteriaFields());
 			foreach ($inputValues as $key => $values) {
-				if (in_array($key, $pGeoPosition->getSettingsGeoPositionFields($module))) {
-					$this->_geoRangeValues[self::$_mapping[$key]] = $values;
+				if (isset($mapping[$key])) {
+					$this->_geoRangeValues[$mapping[$key]] = $values;
 					unset($inputValues[$key]);
 				}
 			}

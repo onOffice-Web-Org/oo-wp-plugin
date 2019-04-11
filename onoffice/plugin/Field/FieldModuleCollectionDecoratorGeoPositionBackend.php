@@ -49,7 +49,6 @@ class FieldModuleCollectionDecoratorGeoPositionBackend
 				'permittedvalues' => [],
 				'default' => null,
 				'label' => 'Geo Position',
-				'content' => 'Search Criteria',
 			],
 		],
 		onOfficeSDK::MODULE_ESTATE => [

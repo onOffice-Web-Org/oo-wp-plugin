@@ -20,16 +20,16 @@
  */
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactoryDependencyConfigDefault;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactoryDependencyConfigTest;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\GeoPositionFormSettings;
+use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 
 /**
  *
@@ -41,11 +41,8 @@ use onOffice\WPlugin\GeoPositionFormSettings;
 class TestClassDataFormConfigurationFactory
 	extends WP_UnitTestCase
 {
-	/** @var DataFormConfigurationFactory object to be tested */
+	/** @var DataFormConfigurationFactory */
 	private $_pDataFormConfigurationFactory = null;
-
-	/** @var DataFormConfigurationFactoryDependencyConfigTest */
-	private $_pConfig = null;
 
 	/** @var array */
 	private $_formTypes = [
@@ -54,6 +51,12 @@ class TestClassDataFormConfigurationFactory
 		Form::TYPE_INTEREST => DataFormConfigurationInterest::class,
 		Form::TYPE_APPLICANT_SEARCH => DataFormConfigurationApplicantSearch::class,
 	];
+
+	/** @var RecordManagerReadForm */
+	private $_pRecordManagerReadForm = null;
+
+	/** @var GeoPositionFieldHandler */
+	private $_pGeoPositionFieldHandler = null;
 
 
 	/**
@@ -64,8 +67,42 @@ class TestClassDataFormConfigurationFactory
 
 	public function prepare()
 	{
-		$this->_pConfig = new DataFormConfigurationFactoryDependencyConfigTest();
-		$this->_pDataFormConfigurationFactory = new DataFormConfigurationFactory(null, $this->_pConfig);
+		$this->_pRecordManagerReadForm = $this->getMockBuilder(RecordManagerReadForm::class)
+			->getMock();
+		$this->_pGeoPositionFieldHandler = $this->getMockBuilder(GeoPositionFieldHandler::class)
+			->getMock();
+
+		$this->_pRecordManagerReadForm->method('getRowById')->will($this->returnValueMap([
+			[1, $this->getBaseRow(1, Form::TYPE_CONTACT)],
+			[2, $this->getBaseRow(2, Form::TYPE_OWNER)],
+			[3, $this->getBaseRow(3, Form::TYPE_INTEREST)],
+			[4, $this->getBaseRow(4, Form::TYPE_APPLICANT_SEARCH)],
+			[5, $this->getBaseRow(5, Form::TYPE_APPLICANT_SEARCH)],
+			[6, $this->getBaseRow(6, Form::TYPE_INTEREST)],
+		]));
+		$this->_pRecordManagerReadForm->method('readFieldsByFormId')->will($this->returnValueMap([
+			[1, $this->getBasicFieldsArray(1, Form::TYPE_CONTACT)],
+			[2, $this->getBasicFieldsArray(2, Form::TYPE_OWNER)],
+			[3, $this->getBasicFieldsArray(3, Form::TYPE_INTEREST)],
+			[4, $this->getBasicFieldsArray(4, Form::TYPE_APPLICANT_SEARCH)],
+			[5, $this->getBasicFieldsArrayWithGeo(5, Form::TYPE_APPLICANT_SEARCH)],
+			[6, $this->getBasicFieldsArrayWithGeo(6, Form::TYPE_INTEREST)],
+		]));
+		$this->_pRecordManagerReadForm->method('getRowByName')->will($this->returnValueMap([
+			['testForm1', $this->getBaseRow(1, Form::TYPE_CONTACT)],
+			['testForm2', $this->getBaseRow(2, Form::TYPE_OWNER)],
+			['testForm3', $this->getBaseRow(3, Form::TYPE_INTEREST)],
+			['testForm4', $this->getBaseRow(4, Form::TYPE_APPLICANT_SEARCH)],
+		]));
+
+		$this->_pGeoPositionFieldHandler->method('getActiveFields')->will($this->returnValue([
+			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
+			GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
+			GeoPosition::ESTATE_LIST_SEARCH_ZIP,
+		]));
+
+		$this->_pDataFormConfigurationFactory = new DataFormConfigurationFactory
+			(null, $this->_pRecordManagerReadForm, $this->_pGeoPositionFieldHandler);
 	}
 
 
@@ -76,11 +113,7 @@ class TestClassDataFormConfigurationFactory
 	public function testConstruct()
 	{
 		$pDataFormConfigurationFactory = new DataFormConfigurationFactory('testType');
-		$pClosureGetEnvironment = Closure::bind(function() {
-			 return $this->_pDependencyConfig;
-		}, $pDataFormConfigurationFactory, DataFormConfigurationFactory::class);
-		$this->assertInstanceOf
-			(DataFormConfigurationFactoryDependencyConfigDefault::class, $pClosureGetEnvironment());
+		$this->assertInstanceOf(DataFormConfigurationFactory::class, $pDataFormConfigurationFactory);
 	}
 
 
@@ -103,7 +136,7 @@ class TestClassDataFormConfigurationFactory
 	public function testCreateEmptyNoDefaults()
 	{
 		foreach ($this->_formTypes as $formType => $class) {
-			$pDataFormConfigurationFactory = new DataFormConfigurationFactory($formType, $this->_pConfig);
+			$pDataFormConfigurationFactory = $this->_pDataFormConfigurationFactory->withType($formType);
 			$pDataFormConfiguration = $pDataFormConfigurationFactory->createEmpty(false);
 
 			$this->assertInstanceOf($class, $pDataFormConfiguration);
@@ -152,8 +185,7 @@ class TestClassDataFormConfigurationFactory
 	public function testCreateEmptyWithDefaults()
 	{
 		foreach ($this->_formTypes as $formType => $class) {
-			$pDataFormConfigurationFactory = new DataFormConfigurationFactory
-				($formType, $this->_pConfig);
+			$pDataFormConfigurationFactory = $this->_pDataFormConfigurationFactory->withType($formType);
 			$pDataFormConfiguration = $pDataFormConfigurationFactory->createEmpty();
 
 			$this->assertInstanceOf($class, $pDataFormConfiguration);
@@ -175,11 +207,10 @@ class TestClassDataFormConfigurationFactory
 
 	public function testIsAdminInterface()
 	{
-		$pDataFormConfigurationFactory = new DataFormConfigurationFactory
-				(Form::TYPE_CONTACT, $this->_pConfig);
-		$this->assertFalse($this->_pConfig->getIsAdminInterface());
+		$pDataFormConfigurationFactory = $this->_pDataFormConfigurationFactory;
+		$this->assertFalse($pDataFormConfigurationFactory->getIsAdminInterface());
 		$pDataFormConfigurationFactory->setIsAdminInterface(true);
-		$this->assertTrue($this->_pConfig->getIsAdminInterface());
+		$this->assertTrue($pDataFormConfigurationFactory->getIsAdminInterface());
 	}
 
 
@@ -191,17 +222,11 @@ class TestClassDataFormConfigurationFactory
 	{
 		$formId = 1;
 		foreach ($this->_formTypes as $formType => $class) {
-			$baseRow = $this->getBaseRow($formId, $formType);
-
-			$this->_pConfig->addMainRowById($formId, $baseRow);
-
-			$fieldsArray = $this->getBasicFieldsArray($formType, $formId);
+			$fieldsArray = $this->getBasicFieldsArray($formId, $formType);
 			$fieldsArrayFlat = array_combine
 				(array_column($fieldsArray, 'fieldname'), array_column($fieldsArray, 'module'));
-
-			$this->_pConfig->setFieldsByFormId($formId, $fieldsArray);
-			$pGeoPositionFormSettings = new GeoPositionFormSettings($formType);
-			$pDataFormConfiguration = $this->_pDataFormConfigurationFactory->loadByFormId($formId, $pGeoPositionFormSettings);
+			$pDataFormConfiguration = $this->_pDataFormConfigurationFactory
+				->loadByFormId($formId);
 			$this->assertFactoryOutput($class, $formType, $pDataFormConfiguration, $formId,
 				$fieldsArrayFlat);
 
@@ -220,21 +245,41 @@ class TestClassDataFormConfigurationFactory
 		$idToFormType = array_combine($ids, array_keys($this->_formTypes));
 
 		foreach ($idToFormType as $formId => $formType) {
-			$baseRow = $this->getBaseRow($formId, $formType);
-			$this->_pConfig->addMainRowByName('testForm'.$formId, $baseRow);
-
 			$class = $this->_formTypes[$formType];
-
-			$fieldsArray = $this->getBasicFieldsArray($formType, $formId);
+			$fieldsArray = $this->getBasicFieldsArray($formId, $formType);
 			$fieldsArrayFlat = array_combine
 				(array_column($fieldsArray, 'fieldname'), array_column($fieldsArray, 'module'));
 
-			$this->_pConfig->setFieldsByFormId($formId, $fieldsArray);
 			$pDataFormConfiguration = $this->_pDataFormConfigurationFactory->loadByFormName
 				('testForm'.$formId);
 			$this->assertFactoryOutput($class, $formType, $pDataFormConfiguration, $formId,
 				$fieldsArrayFlat);
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGeoPositionSetting()
+	{
+		$this->_pDataFormConfigurationFactory->setIsAdminInterface(false);
+		$pDataFormConfigurationApplicant = $this->_pDataFormConfigurationFactory->loadByFormId(5);
+		$expectedFields = [
+			'Vorname' => 'address',
+			'Name' => 'address',
+			'applicantsearchSpecialField1' => 'address',
+			'range_land' => 'address',
+			'range_plz' => 'address',
+		];
+		$this->assertEquals($expectedFields, $pDataFormConfigurationApplicant->getInputs());
+
+		$pDataFormConfiguration = $this->_pDataFormConfigurationFactory->loadByFormId(6);
+		$expectedFields['range'] = 'address';
+		$expectedFields['interestSpecialField1'] = 'address';
+		unset($expectedFields['applicantsearchSpecialField1']);
+		$this->assertEquals($expectedFields, $pDataFormConfiguration->getInputs());
 	}
 
 
@@ -293,13 +338,13 @@ class TestClassDataFormConfigurationFactory
 
 	/**
 	 *
-	 * @param string $formType
 	 * @param int $formId
+	 * @param string $formType
 	 * @return array
 	 *
 	 */
 
-	private function getBasicFieldsArray(string $formType, int $formId): array
+	private function getBasicFieldsArray(int $formId, string $formType): array
 	{
 		$fields = [
 			[
@@ -340,6 +385,26 @@ class TestClassDataFormConfigurationFactory
 		return $fields;
 	}
 
+
+	/**
+	 *
+	 * @param int $formId
+	 * @param string $formType
+	 * @return string
+	 *
+	 */
+
+	private function getBasicFieldsArrayWithGeo(int $formId, string $formType)
+	{
+		$fields = $this->getBasicFieldsArray($formId, $formType);
+		$geoField = $fields[0];
+		$geoField['form_fieldconfig_id'] = count($fields) + 1;
+		$geoField['fieldname'] = GeoPosition::FIELD_GEO_POSITION;
+		$geoField['fieldlabel'] = 'Geo Position';
+		$geoField['required'] = '0';
+		$fields []= $geoField;
+		return $fields;
+	}
 
 	/**
 	 *

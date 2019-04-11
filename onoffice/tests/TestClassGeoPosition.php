@@ -57,20 +57,6 @@ class TestClassGeoPosition
 	public function testGetSettingsGeoPositionFields()
 	{
 		$pGeoPosition = $this->getGeoPosition();
-
-		$value1 = onOfficeSDK::MODULE_ESTATE;
-		$result1 = $pGeoPosition->getSettingsGeoPositionFields($value1);
-		$expectedValue1 = array
-			(
-				'laengengrad',
-				'breitengrad',
-			);
-
-		foreach ($expectedValue1 as $key => $value) {
-			$this->assertEquals($value, $result1[$key]);
-		}
-
-
 		$value2 = onOfficeSDK::MODULE_SEARCHCRITERIA;
 		$result2 = $pGeoPosition->getSettingsGeoPositionFields($value2);
 		$expectedValue2 = array

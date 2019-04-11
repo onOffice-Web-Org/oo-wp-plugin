@@ -52,23 +52,12 @@ class GeoPosition
 
 	/** @var array */
 	private $_settingsGeoPositionFields = [
-		onOfficeSDK::MODULE_ESTATE => [
-			'laengengrad',
-			'breitengrad',
-		],
 		onOfficeSDK::MODULE_SEARCHCRITERIA => [
 			'range_land',
 			'range_plz',
 			'range_strasse',
 			'range',
 		],
-	];
-
-	/** @var array */
-	private $_settingsGeoPositionFieldsWithoutRange = [
-		'range_land',
-		'range_plz',
-		'range_strasse',
 	];
 
 
@@ -78,6 +67,15 @@ class GeoPosition
 		self::ESTATE_LIST_SEARCH_ZIP,
 		self::ESTATE_LIST_SEARCH_STREET,
 		self::ESTATE_LIST_SEARCH_RADIUS,
+	];
+
+
+	/** @var array */
+	private $_searchcriteriaFields = [
+		self::ESTATE_LIST_SEARCH_COUNTRY => 'range_land',
+		self::ESTATE_LIST_SEARCH_ZIP => 'range_plz',
+		self::ESTATE_LIST_SEARCH_STREET => 'range_strasse',
+		self::ESTATE_LIST_SEARCH_RADIUS => 'range',
 	];
 
 
@@ -95,10 +93,10 @@ class GeoPosition
 
 
 	/** @return array */
-	public function getSettingsGeoPositionFieldsWithoutRadius(): array
-		{ return $this->_settingsGeoPositionFieldsWithoutRange; }
-
-	/** @return array */
 	public function getEstateSearchFields(): array
 		{ return $this->_estateSearchFields; }
+
+	/** @return array */
+	public function getSearchCriteriaFields(): array
+		{ return $this->_searchcriteriaFields; }
 }

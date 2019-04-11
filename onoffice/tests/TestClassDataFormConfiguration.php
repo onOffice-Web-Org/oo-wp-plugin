@@ -57,6 +57,7 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setTemplate('test/testtemplate.php');
 		$pDataFormConfiguration->setAvailableOptionsFields(['test1', 'test2']);
 		$pDataFormConfiguration->addAvailableOptionsField('test3');
+		$pDataFormConfiguration->setId(3);
 
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 	}
@@ -86,6 +87,9 @@ class TestClassDataFormConfiguration
 		$this->assertEquals('test/testtemplate.php', $pDataFormConfiguration->getTemplate());
 		$this->assertEquals(['test1', 'test2', 'test3'],
 			$pDataFormConfiguration->getAvailableOptionsFields());
+		$this->assertEquals(3, $pDataFormConfiguration->getId());
+		$this->assertEquals(Form::TYPE_INTEREST, $pDataFormConfiguration->getViewType());
+		$this->assertEquals('form', $pDataFormConfiguration->getModule());
 	}
 
 

@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
+use onOffice\WPlugin\Controller\ViewProperty;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -29,6 +31,7 @@ namespace onOffice\WPlugin\DataFormConfiguration;
  */
 
 class DataFormConfiguration
+	implements ViewProperty
 {
 	/** */
 	const FIELDS = 'fields';
@@ -54,6 +57,9 @@ class DataFormConfiguration
 
 	/** @var bool */
 	private $_captcha = false;
+
+	/** @var int The Form ID */
+	private $_id = 0;
 
 	/** @var array */
 	private $_availableOptionsFields = [];
@@ -147,4 +153,20 @@ class DataFormConfiguration
 	/** @param bool $captcha */
 	public function setCaptcha(bool $captcha)
 		{ $this->_captcha = $captcha; }
+
+	/** @return int */
+	public function getId(): int
+		{ return $this->_id; }
+
+	/** @return string */
+	public function getModule(): string
+		{ return 'form'; }
+
+	/** @return string */
+	public function getViewType(): string
+		{ return $this->_formType; }
+
+	/** @param int $id */
+	public function setId(int $id)
+		{ $this->_id = $id; }
 }

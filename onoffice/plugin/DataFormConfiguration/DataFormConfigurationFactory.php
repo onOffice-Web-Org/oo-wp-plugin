@@ -21,9 +21,11 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataFormConfiguration;
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\GeoPositionFormSettings;
+use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 
 /**
  *
@@ -37,8 +39,14 @@ class DataFormConfigurationFactory
 	/** @var string */
 	private $_type = null;
 
-	/** @var DataFormConfigurationFactoryDependencyConfigBase */
-	private $_pDependencyConfig = null;
+	/** @var RecordManagerReadForm */
+	private $_pRecordManagerRead = null;
+
+	/** @var GeoPositionFieldHandler */
+	private $_pGeoPositionFieldHandler = null;
+
+	/** @var bool */
+	private $_isAdminInterface = false;
 
 
 	/** @var array */
@@ -53,20 +61,17 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param string $type Optional when loading by ID/name
-	 * @param DataFormConfigurationFactoryDependencyBase $pDependencyConfig
+	 * @param RecordManagerReadForm $pRecordManagerReadForm
 	 *
 	 */
 
 	public function __construct(string $type = null,
-		DataFormConfigurationFactoryDependencyConfigBase $pDependencyConfig = null)
+		RecordManagerReadForm $pRecordManagerReadForm = null,
+		GeoPositionFieldHandler $pGeoPositionFieldHandler = null)
 	{
 		$this->_type = $type;
-
-		if ($pDependencyConfig === null) {
-			$pDependencyConfig = new DataFormConfigurationFactoryDependencyConfigDefault();
-		}
-
-		$this->_pDependencyConfig = $pDependencyConfig;
+		$this->_pRecordManagerRead = $pRecordManagerReadForm ?? new RecordManagerReadForm();
+		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler ?? new GeoPositionFieldHandler();
 	}
 
 
@@ -78,7 +83,19 @@ class DataFormConfigurationFactory
 
 	public function setIsAdminInterface(bool $adminInterface)
 	{
-		$this->_pDependencyConfig->setAdminInterface($adminInterface);
+		$this->_isAdminInterface = $adminInterface;
+	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function getIsAdminInterface(): bool
+	{
+		return $this->_isAdminInterface;
 	}
 
 
@@ -118,16 +135,9 @@ class DataFormConfigurationFactory
 
 	public function loadByFormId(int $formId)
 	{
-		$rowMain = $this->_pDependencyConfig->getMainRowById($formId);
+		$rowMain = $this->_pRecordManagerRead->getRowById($formId);
 		$this->_type = $rowMain['form_type'];
 		$pConfig = $this->createByRow($rowMain);
-		$pGeoPositionFormSettings = new GeoPositionFormSettings($this->_type);
-		$rowFields = $this->_pDependencyConfig->getFieldsByFormId($formId, $pGeoPositionFormSettings);
-
-		foreach ($rowFields as $fieldRow) {
-			$this->configureFieldsByRow($fieldRow, $pConfig);
-		}
-
 		return $pConfig;
 	}
 
@@ -141,20 +151,9 @@ class DataFormConfigurationFactory
 
 	public function loadByFormName(string $name)
 	{
-		$rowMain = $this->_pDependencyConfig->getMainRowByName($name);
-
+		$rowMain = $this->_pRecordManagerRead->getRowByName($name);
 		$this->_type = $rowMain['form_type'];
-		$formId = $rowMain['form_id'];
 		$pConfig = $this->createByRow($rowMain);
-
-		$pGeoPositionFormSettings = new GeoPositionFormSettings($this->_type);
-
-		$rowFields = $this->_pDependencyConfig->getFieldsByFormId($formId, $pGeoPositionFormSettings);
-
-		foreach ($rowFields as $fieldRow) {
-			$this->configureFieldsByRow($fieldRow, $pConfig);
-		}
-
 		return $pConfig;
 	}
 
@@ -186,6 +185,15 @@ class DataFormConfigurationFactory
 				break;
 		}
 
+		$formId = $row['form_id'];
+		$rowFields = $this->_pRecordManagerRead->readFieldsByFormId($formId);
+		$this->_pGeoPositionFieldHandler->readValues($pConfig);
+		$rowFields = $this->configureGeoFields($rowFields);
+
+		foreach ($rowFields as $fieldRow) {
+			$this->configureFieldsByRow($fieldRow, $pConfig);
+		}
+
 		return $pConfig;
 	}
 
@@ -208,11 +216,51 @@ class DataFormConfigurationFactory
 			$pFormConfiguration->addRequiredField($fieldName);
 		}
 
-		if (array_key_exists('availableOptions', $row))	{
-				if ($row['availableOptions'] == 1) {
-				$pFormConfiguration->addAvailableOptionsField($fieldName);
-			}
+		if (array_key_exists('availableOptions', $row) && $row['availableOptions'] == 1) {
+			$pFormConfiguration->addAvailableOptionsField($fieldName);
 		}
+	}
+
+
+	/**
+	 *
+	 * @param array $result
+	 * @return array
+	 *
+	 */
+
+	private function configureGeoFields(array $result): array
+	{
+		$arrayPosition = array_search(GeoPosition::FIELD_GEO_POSITION, array_column($result, 'fieldname'));
+		if ($arrayPosition === false || $this->_isAdminInterface) {
+			return $result;
+		}
+
+		$row = $result[$arrayPosition];
+		unset($result[$arrayPosition]);
+
+		$formId = $row['form_id'];
+		$required = $row['required'];
+		$geoPositionSettings = $this->_pGeoPositionFieldHandler->getActiveFields();
+		$fieldMapping = (new GeoPosition)->getSearchCriteriaFields();
+
+		foreach ($geoPositionSettings as $field) {
+			if ($this->_type === Form::TYPE_APPLICANT_SEARCH && $field === GeoPosition::ESTATE_LIST_SEARCH_RADIUS) {
+				continue;
+			}
+			$geoPositionField = [
+				'form_id' => $formId,
+				'required' => $required,
+				'fieldname' => $fieldMapping[$field],
+				'fieldlabel' => null,
+				'module' => $row['module'],
+				'individual_fieldname' => 0,
+			];
+
+			$result []= $geoPositionField;
+		}
+
+		return $result;
 	}
 
 
@@ -246,6 +294,7 @@ class DataFormConfigurationFactory
 		$pConfig->setFormName($row['name']);
 		$pConfig->setTemplate($row['template']);
 		$pConfig->setCaptcha($row['captcha']);
+		$pConfig->setId($row['form_id']);
 
 		if (array_key_exists('form_type', $row)) {
 			$pConfig->setFormType($row['form_type']);
@@ -295,4 +344,20 @@ class DataFormConfigurationFactory
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
 	}
+
+
+	/**
+	 *
+	 * @param string $type
+	 * @return DataFormConfigurationFactory
+	 *
+	 */
+
+	public function withType(string $type): DataFormConfigurationFactory
+	{
+		$pClone = clone $this;
+		$pClone->_type = $type;
+		return $pClone;
+	}
+
 }

@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\Model\FormModel;
@@ -309,9 +310,9 @@ abstract class AdminPageFormSettingsBase
 		}
 
 		if ($this->_showSearchCriteriaFields) {
-			$settings[onOfficeSDK::MODULE_SEARCHCRITERIA] =
-				new FieldModuleCollectionDecoratorInternalAnnotations
-					(new FieldModuleCollectionDecoratorSearchcriteria($pDefaultFieldsCollection));
+			$settings[onOfficeSDK::MODULE_SEARCHCRITERIA] = new FieldModuleCollectionDecoratorGeoPositionBackend
+				(new FieldModuleCollectionDecoratorInternalAnnotations
+					(new FieldModuleCollectionDecoratorSearchcriteria($pDefaultFieldsCollection)));
 		}
 
 		foreach ($settings as $module => $pFieldsCollection) {
@@ -356,8 +357,9 @@ abstract class AdminPageFormSettingsBase
 		}
 
 		if ($this->_showSearchCriteriaFields) {
-			$pFieldsCollection = new FieldModuleCollectionDecoratorInternalAnnotations
-				(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection()));
+			$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionBackend
+				(new FieldModuleCollectionDecoratorInternalAnnotations
+					(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection())));
 			$fieldNamesSearchCriteria = $this->readFieldnamesByContent
 				(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFieldsCollection);
 			$this->addFieldsConfiguration
