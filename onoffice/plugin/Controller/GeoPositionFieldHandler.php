@@ -38,9 +38,6 @@ use function esc_sql;
 class GeoPositionFieldHandler
 	implements GeoPositionFieldHandlerBase
 {
-	/** @var DataViewFilterableFields */
-	private $_listViewId = 0;
-
 	/** @var RecordManagerFactory */
 	private $_pRecordManagerFactory = null;
 
@@ -129,8 +126,4 @@ class GeoPositionFieldHandler
 	/**  @return int */
 	public function getRadiusValue(): int
 		{ return intval($this->_records['radius'] ?? 0); }
-
-	/** @return int */
-	public function getListviewId(): int
-		{ return $this->_listViewId; }
 }

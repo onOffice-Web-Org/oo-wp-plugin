@@ -187,4 +187,28 @@ class EstateDetail
 	{
 		return [];
 	}
+
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	public function getEstateId(): int
+	{
+		return $this->_estateId;
+	}
+
+
+	/**
+	 *
+	 * @param int $estateId
+	 *
+	 */
+
+	public function setEstateId(int $estateId)
+	{
+		$this->_estateId = $estateId;
+	}
 }

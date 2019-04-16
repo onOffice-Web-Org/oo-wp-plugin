@@ -42,14 +42,12 @@ use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
+use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
-
-
-use onOffice\WPlugin\Field\DistinctFieldsChecker;
 
 $pAutoloader = new Psr4AutoloaderClass();
 $pAutoloader->addNamespace('onOffice', __DIR__);
@@ -83,7 +81,7 @@ add_action('init', [$pAdminViewController, 'onInit']);
 add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 
-add_action( 'wp_ajax_addHook',[DistinctFieldsChecker::class, 'addHook']);
+add_action( 'wp_ajax_addHook', [DistinctFieldsChecker::class, 'addHook']);
 
 add_action( 'plugins_loaded', 'my_plugin_load_plugin_textdomain' );
 
