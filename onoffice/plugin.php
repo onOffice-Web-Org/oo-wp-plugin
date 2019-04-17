@@ -48,6 +48,7 @@ use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
+use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
 
 $pAutoloader = new Psr4AutoloaderClass();
 $pAutoloader->addNamespace('onOffice', __DIR__);
@@ -58,6 +59,7 @@ $pAutoloader->register();
 define('ONOFFICE_FEATURE_CONFIGURE_GEO', filter_input(INPUT_SERVER, 'SERVER_NAME') === 'localhost');
 
 $pContentFilter = new ContentFilter();
+$pContentFilterAddress = new ContentFilterShortCodeAddress();
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = new DetailViewPostSaveController();
 $pSearchParams = SearchParameters::getInstance();
@@ -91,7 +93,8 @@ add_filter('wp_link_pages_args', [$pSearchParams, 'populateDefaultLinkParams']);
 // "Settings" link in plugins list
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewController, 'pluginSettingsLink']);
 
-add_shortcode('oo_address', [$pContentFilter, 'renderAddressShortCodes']);
+
+add_shortcode('oo_address', [$pContentFilterAddress, 'replaceShortCodes']);
 add_shortcode('oo_estate', [$pContentFilter, 'registerEstateShortCodes']);
 add_shortcode('oo_form', [$pContentFilter, 'renderFormsShortCodes']);
 add_shortcode('oo_basicdata', [$pContentFilter, 'renderImpressumShortCodes']);

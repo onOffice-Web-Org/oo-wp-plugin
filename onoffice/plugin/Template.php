@@ -75,7 +75,7 @@ class Template
 	 *
 	 */
 
-	public function __construct($templateName)
+	public function __construct(string $templateName)
 	{
 		$this->_templateName = $templateName;
 		$this->_templateBasePath = ConfigWrapper::getTemplateBasePath();
@@ -88,7 +88,7 @@ class Template
 	 *
 	 */
 
-	public function render()
+	public function render(): string
 	{
 		$templateData = [
 			self::KEY_FORM => $this->_pForm,
