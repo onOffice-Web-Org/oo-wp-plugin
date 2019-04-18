@@ -38,6 +38,9 @@ class ScriptLoaderMapGoogleMaps
 	/** @var string */
 	private $_pluginPath = '';
 
+	/** @var string */
+	private $_key = null;
+
 
 	/**
 	 *
@@ -48,6 +51,7 @@ class ScriptLoaderMapGoogleMaps
 	public function __construct(string $pluginUrl = null)
 	{
 		$this->_pluginPath = $pluginUrl ?? ONOFFICE_PLUGIN_DIR.'/index.php';
+		$this->_key = get_option('onoffice-settings-googlemaps-key');
 	}
 
 
@@ -71,7 +75,14 @@ class ScriptLoaderMapGoogleMaps
 
 	public function register(WPScriptStyleBase $pWPScriptStyle)
 	{
-		$pWPScriptStyle->registerScript('google-maps', 'https://maps.googleapis.com/maps/api/js');
+		$url = 'https://maps.googleapis.com/maps/api/js';
+
+		if ($this->_key != null)
+		{
+			$url .= '?key='.urlencode($this->_key);
+		}
+
+		$pWPScriptStyle->registerScript('google-maps', $url);
 		$pWPScriptStyle->registerScript('gmapsinit',
 			plugins_url('/js/gmapsinit.js', $this->_pluginPath), ['google-maps']);
 	}
