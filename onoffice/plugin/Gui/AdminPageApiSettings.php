@@ -59,6 +59,7 @@ class AdminPageApiSettings
 		parent::__construct($pageSlug);
 		$this->addFormModelAPI();
 		$this->addFormModelGoogleCaptcha();
+		$this->addFormModelGoogleMapsKey();
 	}
 
 
@@ -128,6 +129,27 @@ class AdminPageApiSettings
 		$this->addFormModel($pFormModel);
 	}
 
+
+	/**
+	 *
+	 */
+
+	private function addFormModelGoogleMapsKey()
+	{
+		$labelgoogleMapsKey = __('Google Maps Key', 'onoffice');
+		$pInputModelGoogleMapsKey = new InputModelOption
+				('onoffice-settings', 'googlemaps-key', $labelgoogleMapsKey, 'string');
+		$optionMapKey = $pInputModelGoogleMapsKey->getIdentifier();
+		$pInputModelGoogleMapsKey->setValue(get_option($optionMapKey));
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelGoogleMapsKey);
+		$pFormModel->setGroupSlug('onoffice-google-maps-key');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('Google Maps Key', 'onoffice'));
+
+		$this->addFormModel($pFormModel);
+	}
 
 	/**
 	 *
