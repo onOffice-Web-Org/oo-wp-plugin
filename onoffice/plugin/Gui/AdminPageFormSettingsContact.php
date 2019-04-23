@@ -21,10 +21,14 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 
@@ -35,6 +39,9 @@ use function __;
 class AdminPageFormSettingsContact
 	extends AdminPageFormSettingsBase
 {
+	/** */
+	const FORM_VIEW_GEOFIELDS = 'geofields';
+
 	/** @var bool */
 	private $_showPagesOption = false;
 
@@ -52,6 +59,9 @@ class AdminPageFormSettingsContact
 
 	/** @var bool */
 	private $_showNewsletterCheckbox = false;
+
+	/** @var bool */
+	private $_showGeoPositionSettings = false;
 
 
 	/**
@@ -95,8 +105,24 @@ class AdminPageFormSettingsContact
 		}
 
 		$this->addFormModel($pFormModelFormSpecific);
+		$this->buildGeoPositionSettings();
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
+		$this->buildMessagesInput($pFormModelBuilder);
 
+
+		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
+			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+	}
+
+
+	/**
+	 *
+	 * @param FormModelBuilder $pFormModelBuilder
+	 *
+	 */
+
+	private function buildMessagesInput(FormModelBuilder $pFormModelBuilder)
+	{
 		if ($this->_showMessageInput) {
 			$pFieldCollection = new FieldModuleCollectionDecoratorFormContact(new FieldsCollection());
 			$pFieldNames = new Fieldnames($pFieldCollection);
@@ -117,9 +143,30 @@ class AdminPageFormSettingsContact
 			];
 			$pFormModelBuilder->setAdditionalFields($messageField);
 		}
+	}
 
-		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
-			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+
+	/**
+	 *
+	 */
+
+	private function buildGeoPositionSettings()
+	{
+		if ($this->_showGeoPositionSettings) {
+			$pDataFormConfiguration = new DataFormConfiguration;
+			$pDataFormConfiguration->setId($this->getListViewId() ?? 0);
+
+			$pFormModelGeoFields = new FormModel();
+			$pFormModelGeoFields->setPageSlug($this->getPageSlug());
+			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
+			$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
+			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_SEARCHCRITERIA);
+			foreach ($pInputModelBuilderGeoRange->build($pDataFormConfiguration) as $pInputModel) {
+				$pFormModelGeoFields->addInputModel($pInputModel);
+			}
+
+			$this->addFormModel($pFormModelGeoFields);
+		}
 	}
 
 
@@ -131,6 +178,11 @@ class AdminPageFormSettingsContact
 	{
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$this->createMetaBoxByForm($pFormFormSpecific, 'side');
+
+		if ($this->_showGeoPositionSettings) {
+			$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
+			$this->createMetaBoxByForm($pFormGeoPosition, 'side');
+		}
 
 		parent::generateMetaBoxes();
 	}
@@ -191,4 +243,12 @@ class AdminPageFormSettingsContact
 	/** @param bool $showNewsletterCheckbox */
 	public function setShowNewsletterCheckbox(bool $showNewsletterCheckbox)
 		{ $this->_showNewsletterCheckbox = $showNewsletterCheckbox; }
+
+	/** @return bool */
+	public function getShowGeoPositionSettings(): bool
+		{ return $this->_showGeoPositionSettings; }
+
+	/** @param bool $showGeoPositionSettings */
+	public function setShowGeoPositionSettings(bool $showGeoPositionSettings)
+		{ $this->_showGeoPositionSettings = $showGeoPositionSettings; }
 }

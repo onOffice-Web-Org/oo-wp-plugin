@@ -119,6 +119,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowSearchCriteriaFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
+				$pAdminPage->setShowGeoPositionSettings(ONOFFICE_FEATURE_CONFIGURE_GEO);
 				break;
 			case Form::TYPE_OWNER:
 				/* @var $pAdminPage AdminPageFormSettingsInterestOwner */

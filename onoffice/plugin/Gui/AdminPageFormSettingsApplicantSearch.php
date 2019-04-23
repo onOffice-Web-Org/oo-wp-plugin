@@ -21,11 +21,15 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use stdClass;
+use const ONOFFICE_FEATURE_CONFIGURE_GEO;
 use function __;
 
 /**
@@ -38,6 +42,10 @@ use function __;
 class AdminPageFormSettingsApplicantSearch
 	extends AdminPageFormSettingsBase
 {
+	/** */
+	const FORM_VIEW_GEOFIELDS = 'geofields';
+
+
 	/**
 	 *
 	 */
@@ -58,6 +66,22 @@ class AdminPageFormSettingsApplicantSearch
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 		$this->addFormModel($pFormModelFormSpecific);
 
+		if (ONOFFICE_FEATURE_CONFIGURE_GEO) {
+			$pDataFormConfiguration = new DataFormConfigurationApplicantSearch;
+			$pDataFormConfiguration->setId($this->getListViewId() ?? 0);
+
+			$pFormModelGeoFields = new FormModel();
+			$pFormModelGeoFields->setPageSlug($this->getPageSlug());
+			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
+			$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
+			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_SEARCHCRITERIA);
+			foreach ($pInputModelBuilderGeoRange->build($pDataFormConfiguration) as $pInputModel) {
+				$pFormModelGeoFields->addInputModel($pInputModel);
+			}
+
+			$this->addFormModel($pFormModelGeoFields);
+		}
+
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
 
 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
@@ -73,6 +97,11 @@ class AdminPageFormSettingsApplicantSearch
 	{
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$this->createMetaBoxByForm($pFormFormSpecific, 'side');
+
+		if (ONOFFICE_FEATURE_CONFIGURE_GEO) {
+			$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
+			$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
+		}
 
 		parent::generateMetaBoxes();
 	}
