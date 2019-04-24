@@ -21,16 +21,15 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\HtmlIdGenerator;
+use function __;
 use function add_meta_box;
 use function get_current_screen;
 use function is_admin;
@@ -79,6 +78,7 @@ abstract class AdminPageAjax
 			} catch (APIClientCredentialsException $pCredentialsException) {
 				$label = __('login credentials', 'onoffice');
 				$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+				/* translators: %s will be replaced with the link to the login credentials page. */
 				wp_die(sprintf(__('It looks like you did not enter any valid API credentials. '
 					.'Please go back and review your %s.', 'onoffice'), $loginCredentialsLink), 'onOffice plugin');
 			}

@@ -214,6 +214,7 @@ class EstateListTable extends ListTable
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$filterName = __('(Needs valid API credentials)', 'onoffice');
 		} catch (UnknownFilterException $pFilterException) {
+			/* translators: %s will be replaced with a number. */
 			$filterName = sprintf(__('(Unknown Filter (ID: %s))', 'onoffice'),
 				$pFilterException->getFilterId());
 		}

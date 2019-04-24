@@ -233,6 +233,7 @@ abstract class AdminPageFormSettingsBase
 				),
 			AdminPageSettingsBase::POST_RECORD_ID => (int)$this->getListViewId(),
 			self::MODULE_LABELS => ModuleTranslation::getAllLabelsSingular(true),
+			/* translators: %s is a translated module name */
 			self::FIELD_MODULE => __('Module: %s', 'onoffice'),
 		);
 	}

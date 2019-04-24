@@ -113,11 +113,12 @@ class AdminPageEstateList
 	{
 		$class = 'notice notice-success is-dismissible';
 
-		$message = sprintf( _n( '%s list view has been deleted.', '%s list views have been deleted.',
-			$this->_itemsDeleted, 'onoffice' ),
-				number_format_i18n( $this->_itemsDeleted ) );
+		/* translators: %s will be replaced with a number. */
+		$message = sprintf(_n('%s list view has been deleted.', '%s list views have been deleted.',
+			$this->_itemsDeleted, 'onoffice'),
+				number_format_i18n($this->_itemsDeleted));
 
-		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
 	}
 
 
@@ -128,9 +129,9 @@ class AdminPageEstateList
 	public function displayListViewDeleteError()
 	{
 		$class = 'notice notice-error is-dismissible';
-		$message = __( 'No list view was deleted.', 'onoffice' );
+		$message = __('No list view was deleted.', 'onoffice');
 
-		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
 	}
 
 

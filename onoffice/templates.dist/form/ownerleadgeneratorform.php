@@ -46,6 +46,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
+			/* translators: %s will be replaced with a translated field name. */
 			echo sprintf(__('Please enter a value for %s.', 'onoffice'), $pForm->getFieldLabel( $input )).'<br>';
 		}
 

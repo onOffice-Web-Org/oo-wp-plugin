@@ -337,6 +337,9 @@ class FormModelBuilderDBForm
 			$addition = __('(won\'t work until set up globally)', 'onoffice');
 		}
 
+		/* translators: %s will be replaced with the translation of
+			'(won't work until set up globally)', if captcha hasn't been set up appropriately yet,
+			or blank otherwise. */
 		$labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice'), $addition);
 		$selectedValue = $this->getValue('captcha', false);
 		$pInputModelFormRequiresCaptcha = $this->generateGenericCheckbox($labelRequiresCaptcha,

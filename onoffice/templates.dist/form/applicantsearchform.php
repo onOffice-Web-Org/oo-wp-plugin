@@ -116,11 +116,13 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo '<p>';
 	echo '<br><span>'.esc_html(
 			sprintf(_n(
+				/* translators: %s will be replaced with a number. */
 				'%s Prospective Buyer', '%s Prospective Buyers', $countResults, 'onoffice'),
 					number_format_i18n($countResults))).'</span><br>';
 
 	foreach ($applicants as $address => $searchdata) {
 		echo '<br>';
+		/* translators: %s will be replaced with a customer reference number. */
 		echo '<span>'.esc_html(sprintf(__('Customer ref. number %s', 'onoffice'), $address)).'</span>';
 		echo '<br>';
 		$umkreis = array();

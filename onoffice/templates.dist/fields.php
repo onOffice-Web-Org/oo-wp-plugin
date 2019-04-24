@@ -130,6 +130,7 @@ if (!function_exists('renderFormField')) {
 			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land', 'vermarktungsart'))) {
 			$fieldLabel = $pForm->getFieldLabel($fieldName, true);
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
+			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {

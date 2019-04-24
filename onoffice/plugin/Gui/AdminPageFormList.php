@@ -133,11 +133,12 @@ class AdminPageFormList
 	{
 		$class = 'notice notice-success is-dismissible';
 
-		$message = sprintf( _n( '%s form has been deleted.', '%s forms have been deleted.',
-			$this->_itemsDeleted, 'onoffice' ),
-				number_format_i18n( $this->_itemsDeleted ) );
+		/* translators: %s will be replaced with a number. */
+		$message = sprintf(_n('%s form has been deleted.', '%s forms have been deleted.',
+			$this->_itemsDeleted, 'onoffice'),
+				number_format_i18n($this->_itemsDeleted));
 
-		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
 	}
 
 

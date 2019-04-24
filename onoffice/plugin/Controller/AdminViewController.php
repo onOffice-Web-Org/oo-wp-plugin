@@ -353,6 +353,7 @@ class AdminViewController
 			$class = 'notice notice-error';
 			$label = __('API token and secret', 'onoffice');
 			$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+			/* translators: %s will be replaced with the translation of 'API token and secret'. */
 			$message = sprintf(esc_html(__('It looks like you did not enter any valid API '
 				.'credentials. Please consider reviewing your %s.', 'onoffice')), $loginCredentialsLink);
 

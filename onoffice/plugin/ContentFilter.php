@@ -490,6 +490,9 @@ class ContentFilter
 			$estateMarketing = $values['vermarktungsart'];
 			$estateCity = $values['ort'];
 			$estateNo = $values['objektnr_extern'];
+			/* translators: %1$s is the kind of estate, %2$s the markting type,
+							%3$s the city, %4$s is the estate number.
+							Example: Einfamilienhaus (Kauf) in Aachen - JJ12345 */
 			$format = __('%1$s (%2$s) in %3$s - %4$s', 'onoffice');
 			$pageTitle = sprintf($format, $estateKind, $estateMarketing, $estateCity, $estateNo);
 		}

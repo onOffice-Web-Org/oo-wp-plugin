@@ -130,6 +130,7 @@ class AdminPageEstateDetail
 
 		echo '<span class="viewusage">';
 		if ($pageId != null) {
+			/* translators: %s will be replaced with a link to the appropriate page. */
 			printf(esc_attr(__('Detail view in use on page %s', 'onoffice')),
 				'<span class="italic">'.esc_html(get_the_title($pageId)).'</span>');
 			edit_post_link(__('Edit Page', 'onoffice'), ' ', '', $pageId);
