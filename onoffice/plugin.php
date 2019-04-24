@@ -85,7 +85,9 @@ add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 
 add_action( 'wp_ajax_addHook', [DistinctFieldsChecker::class, 'addHook']);
 
-add_action( 'plugins_loaded', 'my_plugin_load_plugin_textdomain' );
+add_action( 'plugins_loaded', function() {
+	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR).'/languages');
+});
 
 add_filter('wp_link_pages_link', [$pSearchParams, 'linkPagesLink'], 10, 2);
 add_filter('wp_link_pages_args', [$pSearchParams, 'populateDefaultLinkParams']);
@@ -126,15 +128,4 @@ function ooCacheCleanup() {
 		/* @var $cacheInstance onOfficeSDKCache */
 		$pCacheInstance->cleanup();
 	}
-}
-
-
-/**
- *
- * loading text domain
- *
- */
-
-function my_plugin_load_plugin_textdomain(){
-	load_plugin_textdomain('onoffice', FALSE, basename( dirname(__FILE__)).'/languages');
 }

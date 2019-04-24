@@ -72,6 +72,6 @@ interface ContentFilterShortCodeAddressEnvironment
 	/**
 	 *
 	 */
-	
+
 	public function getPage(): int;
 }

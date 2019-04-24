@@ -22,14 +22,11 @@
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use Exception;
-use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
-use onOffice\WPlugin\DataView\DataListViewAddress;
-use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
+use function shortcode_atts;
 
 /**
  *
@@ -39,21 +36,10 @@ use onOffice\WPlugin\Template;
 
 class ContentFilterShortCodeAddress
 	extends ContentFilter
-		implements ContentFilterShortCode
+	implements ContentFilterShortCode
 {
-
 	/** @var ContentFilterShortCodeAddressEnvironment */
 	private $_pEnvironment = null;
-
-	/** @var DataListViewFactoryAddress */
-	private $_pDataListFactory = null;
-
-	/** @var AddressList */
-	private $_pAddressList = null;
-
-	/** @var Impressum */
-	private $_pImpressum = null;
-
 
 
 	/**
@@ -64,23 +50,12 @@ class ContentFilterShortCodeAddress
 
 	public function __construct(ContentFilterShortCodeAddressEnvironment $pEnvironment = null)
 	{
-		if ($pEnvironment === null)
-		{
-			$this->_pEnvironment = new ContentFilterShortCodeAddressEnvironmentDefault();
-		}
-		else
-		{
-			$this->_pEnvironment = $pEnvironment;
-		}
-
-		$this->_pDataListFactory = $this->_pEnvironment->getDataListFactory();
-		$this->_pImpressum = $this->_pEnvironment->getImpressum();
+		$this->_pEnvironment = $pEnvironment ?? new ContentFilterShortCodeAddressEnvironmentDefault();
 	}
 
 
 	/**
 	 *
-	 * @global WP_Query $wp_query
 	 * @param array $attributesInput
 	 * @return string
 	 *
@@ -113,44 +88,15 @@ class ContentFilterShortCodeAddress
 
 	private function createTemplate(string $addressListName, int $page = 1): Template
 	{
-		$templateName = $this->getTemplateName($addressListName, $page);
-
-		$pTemplate = $this->_pEnvironment->getTemplate($templateName);
-		$pTemplate->setAddressList($this->_pAddressList);
-		$pTemplate->setImpressum($this->_pImpressum);
-
-		return $pTemplate;
-	}
-
-
-	/**
-	 *
-	 * @param string $addressListName
-	 * @param int $page
-	 * @return string
-	 *
-	 */
-
-	private function getTemplateName(string $addressListName, int $page = 1): string
-	{
-		$pAddressListView = $this->_pDataListFactory->getListViewByName($addressListName);
-		$this->buildAddressList($pAddressListView, $page);
+		$pAddressListView = $this->_pEnvironment->getDataListFactory()->getListViewByName($addressListName);
+		$pAddressList = $this->_pEnvironment->createAddressList($pAddressListView);
+		$pAddressList->loadAddresses($page);
 		$templateName = $pAddressListView->getTemplate();
 
-		return $templateName;
-	}
+		$pTemplate = $this->_pEnvironment->getTemplate($templateName);
+		$pTemplate->setAddressList($pAddressList);
+		$pTemplate->setImpressum($this->_pEnvironment->getImpressum());
 
-
-	/**
-	 *
-	 * @param type $pAddressListView
-	 * @param type $page
-	 *
-	 */
-
-	private function buildAddressList(DataListViewAddress $pAddressListView, int $page)
-	{
-		$this->_pAddressList = $this->_pEnvironment->createAddressList($pAddressListView);
-		$this->_pAddressList->loadAddresses($page);
+		return $pTemplate;
 	}
 }

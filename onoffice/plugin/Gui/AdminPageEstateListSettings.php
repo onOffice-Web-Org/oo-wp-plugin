@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;

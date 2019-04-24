@@ -21,14 +21,15 @@
 
 namespace onOffice\tests;
 
+use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentTest;
-use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\DataView\DataListViewAddress;
-use onOffice\WPlugin\Template;
-use onOffice\WPlugin\AddressList;
+use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Impressum;
+use onOffice\WPlugin\Template;
+use WP_UnitTestCase;
 
 /**
  *
@@ -37,7 +38,7 @@ use onOffice\WPlugin\Impressum;
  */
 
 class TestClassContentFilterShortCodeAddress
-	extends \WP_UnitTestCase
+	extends WP_UnitTestCase
 {
 
 	/** @var ContentFilterShortCodeAddressEnvironmentTest */
@@ -73,7 +74,8 @@ class TestClassContentFilterShortCodeAddress
 				->setMethods(['getListViewByName'])
 				->disableOriginalConstructor()
 				->getMock();
-		$pMockDataListViewFactoryAddress->method('getListViewByName')->will($this->returnValue($pDataListViewAddress));
+		$pMockDataListViewFactoryAddress->method('getListViewByName')->will
+			($this->returnValue($pDataListViewAddress));
 
 		$this->_pEnvironment
 				->method('getDataListFactory')
