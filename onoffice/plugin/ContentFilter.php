@@ -37,9 +37,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactory;
-use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\UnknownFieldException;
@@ -277,43 +275,6 @@ class ContentFilter
 		} catch (Exception $pException) {
 			return $this->logErrorAndDisplayMessage($pException);
 		}
-	}
-
-
-	/**
-	 *
-	 * @global WP_Query $wp_query
-	 * @param array $attributesInput
-	 * @return string
-	 *
-	 */
-
-	public function renderAddressShortCodes(array $attributesInput)
-	{
-		global $wp_query;
-		$page = $wp_query->query_vars['page'] ?? 1;
-
-		$attributes = shortcode_atts([
-			'view' => null,
-		], $attributesInput);
-		$addressListName = $attributes['view'];
-
-		try
-		{
-			$pDataListFactory = new DataListViewFactoryAddress();
-			/* @var $pAddressListView DataListViewAddress */
-			$pAddressListView = $pDataListFactory->getListViewByName($addressListName);
-			$pAddressList = (new AddressList())->withDataListViewAddress($pAddressListView);
-			$pAddressList->loadAddresses($page);
-
-			$templateName = $pAddressListView->getTemplate();
-			$pTemplate = new Template($templateName);
-			$pTemplate->setAddressList($pAddressList);
-			$pTemplate->setImpressum(new Impressum);
-			return $pTemplate->render();
-		} catch (Exception $pException) {
-				return $this->logErrorAndDisplayMessage($pException);
-			}
 	}
 
 
