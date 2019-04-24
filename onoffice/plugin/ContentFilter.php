@@ -30,8 +30,6 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\APIClientCredentialsException;
-use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -46,6 +44,7 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
@@ -55,10 +54,7 @@ use function __;
 use function add_rewrite_rule;
 use function add_rewrite_tag;
 use function add_shortcode;
-use function current_user_can;
 use function do_shortcode;
-use function esc_html;
-use function esc_html__;
 use function get_page_uri;
 use function get_post;
 use function plugins_url;
@@ -76,6 +72,20 @@ use function wp_register_style;
 
 class ContentFilter
 {
+	/** @var Logger */
+	private $_pLogger = null;
+
+
+	/**
+	 *
+	 */
+
+	public function __construct()
+	{
+		$this->_pLogger = new Logger;
+	}
+
+
 	/**
 	 *
 	 */
@@ -164,7 +174,7 @@ class ContentFilter
 					return $result;
 				}
 			} catch (Exception $pException) {
-				return $this->logErrorAndDisplayMessage($pException);
+				return $this->_pLogger->logErrorAndDisplayMessage($pException);
 			}
 			return __('Estates view not found.', 'onoffice');
 		}
@@ -191,7 +201,7 @@ class ContentFilter
 				$fieldInfo = $pFieldNames->getFieldInformation
 					($filterableField, onOfficeSDK::MODULE_ESTATE);
 			} catch (UnknownFieldException $pException) {
-				$this->logError($pException);
+				$this->$this->_pLogger->logError($pException);
 				continue;
 			}
 
@@ -273,7 +283,7 @@ class ContentFilter
 				return $htmlOutput;
 			}
 		} catch (Exception $pException) {
-			return $this->logErrorAndDisplayMessage($pException);
+			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
 	}
 
@@ -296,7 +306,7 @@ class ContentFilter
 				return $impressumValue;
 			}
 		} catch (Exception $pException) {
-			return $this->logErrorAndDisplayMessage($pException);
+			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
 	}
 
@@ -338,49 +348,6 @@ class ContentFilter
 		}
 
 		return $listpermalink;
-	}
-
-
-	/**
-	 *
-	 * @param Exception $pException
-	 * @return string
-	 *
-	 */
-
-	public function logErrorAndDisplayMessage(Exception $pException)
-	{
-		$output = '';
-		$pUserCapabilities = new UserCapabilities();
-		$roleDebugOutput = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_DEBUG_OUTPUT);
-
-		if (current_user_can($roleDebugOutput)) {
-			if ($pException instanceof APIClientCredentialsException) {
-				$output = sprintf('<h1>%s</h1>',
-					__('Please configure your onOffice API credentials first!', 'onoffice'));
-			} else {
-				$output = '<pre>'
-					.'<u><strong>[onOffice-Plugin]</strong> '
-					.esc_html__('An error occured:', 'onoffice').'</u><p>'
-					.esc_html((string) $pException).'</pre></p>';
-			}
-		}
-
-		$this->logError($pException);
-
-		return $output;
-	}
-
-
-	/**
-	 *
-	 * @param Exception $pException
-	 *
-	 */
-
-	public function logError(Exception $pException)
-	{
-		error_log('[onOffice-Plugin]: '.strval($pException));
 	}
 
 

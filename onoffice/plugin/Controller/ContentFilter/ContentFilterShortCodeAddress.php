@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use Exception;
-use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\Template;
@@ -35,7 +34,6 @@ use function shortcode_atts;
  */
 
 class ContentFilterShortCodeAddress
-	extends ContentFilter
 	implements ContentFilterShortCode
 {
 	/** @var ContentFilterShortCodeAddressEnvironment */
@@ -74,7 +72,7 @@ class ContentFilterShortCodeAddress
 			$pTemplate = $this->createTemplate($addressListName, $page);
 			return $pTemplate->render();
 		} catch (Exception $pException) {
-			return $this->logErrorAndDisplayMessage($pException);
+			return $this->_pEnvironment->getLogger()->logErrorAndDisplayMessage($pException);
 		}
 	}
 

@@ -27,6 +27,7 @@ use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
+use onOffice\WPlugin\Utility\Logger;
 
 
 /**
@@ -45,6 +46,9 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 	/** @var AddressList */
 	private $_pAddressList = null;
 
+	/** @var Logger */
+	private $_pLogger = null;
+
 	/**
 	 *
 	 */
@@ -52,6 +56,7 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 	public function __construct()
 	{
 		$this->_pDataListFactory = new DataListViewFactoryAddress();
+		$this->_pLogger = new Logger();
 	}
 
 
@@ -119,4 +124,15 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 		return new Impressum();
 	}
 
+
+	/**
+	 *
+	 * @return Logger
+	 *
+	 */
+
+	public function getLogger(): Logger
+	{
+		return $this->_pLogger;
+	}
 }
