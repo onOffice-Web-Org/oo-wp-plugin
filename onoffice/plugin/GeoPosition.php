@@ -44,6 +44,9 @@ class GeoPosition
 	const ESTATE_LIST_SEARCH_ZIP = 'zip';
 
 	/** */
+	const ESTATE_LIST_SEARCH_CITY = 'city';
+
+	/** */
 	const ESTATE_LIST_SEARCH_STREET = 'street';
 
 	/** */
@@ -55,6 +58,7 @@ class GeoPosition
 		onOfficeSDK::MODULE_SEARCHCRITERIA => [
 			'range_land',
 			'range_plz',
+			'range_ort',
 			'range_strasse',
 			'range',
 		],
@@ -65,6 +69,7 @@ class GeoPosition
 	private $_estateSearchFields = [
 		self::ESTATE_LIST_SEARCH_COUNTRY,
 		self::ESTATE_LIST_SEARCH_ZIP,
+		self::ESTATE_LIST_SEARCH_CITY,
 		self::ESTATE_LIST_SEARCH_STREET,
 		self::ESTATE_LIST_SEARCH_RADIUS,
 	];
@@ -74,6 +79,7 @@ class GeoPosition
 	private $_searchcriteriaFields = [
 		self::ESTATE_LIST_SEARCH_COUNTRY => 'range_land',
 		self::ESTATE_LIST_SEARCH_ZIP => 'range_plz',
+		self::ESTATE_LIST_SEARCH_CITY => 'range_ort',
 		self::ESTATE_LIST_SEARCH_STREET => 'range_strasse',
 		self::ESTATE_LIST_SEARCH_RADIUS => 'range',
 	];

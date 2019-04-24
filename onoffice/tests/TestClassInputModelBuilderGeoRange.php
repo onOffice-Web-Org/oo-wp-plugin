@@ -51,9 +51,10 @@ class TestClassInputModelBuilderGeoRange
 		$pView = new DataListView(13, 'test');
 		$pGenerator = $this->_pSubject->build($pView);
 		$expectedFields = $this->getExpectedFields();
+		$amountBooleanFields = $this->getAmountOfBooleanGeoFields();
 
 		foreach ($pGenerator as $index => $pInputModel) {
-			if ($index % 2 === 0 && $index < 7) {
+			if ($index % 2 === 0 && $index < ($amountBooleanFields * 2)) {
 				$this->assertInstanceOf(InputModelLabel::class, $pInputModel);
 			} else {
 				$this->assertInstanceOf(InputModelDB::class, $pInputModel);
@@ -82,6 +83,19 @@ class TestClassInputModelBuilderGeoRange
 		}, ARRAY_FILTER_USE_KEY);
 
 		return $fieldnameConstants;
+	}
+
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	private function getAmountOfBooleanGeoFields(): int
+	{
+		$pGeoFieldFactory = new InputModelDBFactoryConfigGeoFields(onOfficeSDK::MODULE_ESTATE);
+		return count($pGeoFieldFactory->getBooleanFields());
 	}
 
 

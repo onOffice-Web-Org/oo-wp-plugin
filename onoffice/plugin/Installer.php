@@ -109,6 +109,13 @@ abstract class Installer
 			$dbversion = 9;
 		}
 
+		if ($dbversion == 9.0) {
+			// new columns: city_active
+			dbDelta( self::getCreateQueryListviews() );
+			dbDelta( self::getCreateQueryForms() );
+			$dbversion = 10;
+		}
+
 		update_option( 'oo_plugin_db_version', $dbversion, false);
 
 		$pContentFilter = new ContentFilter();
@@ -169,6 +176,7 @@ abstract class Installer
 			`random` tinyint(1) NOT NULL DEFAULT '0',
 			`country_active` tinyint(1) NOT NULL DEFAULT '1',
 			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
+			`city_active` tinyint(1) NOT NULL DEFAULT '0',
 			`street_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius` INT( 10 ) NULL DEFAULT NULL,
@@ -206,6 +214,7 @@ abstract class Installer
 			`newsletter` tinyint(1) NOT NULL DEFAULT '0',
 			`country_active` tinyint(1) NOT NULL DEFAULT '1',
 			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
+			`city_active` tinyint(1) NOT NULL DEFAULT '0',
 			`street_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius` INT( 10 ) NULL DEFAULT NULL,
@@ -416,7 +425,9 @@ abstract class Installer
 
 	static public function deactivate()
 	{
+		// @codeCoverageIgnoreStart
 		self::flushRules();
+		// @codeCoverageIgnoreEnd
 	}
 
 

@@ -27,7 +27,6 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerRead;
-use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use stdClass;
 use WP_UnitTestCase;
 
@@ -42,8 +41,8 @@ use WP_UnitTestCase;
 class TestClassGeoPositionFieldHandler
 	extends WP_UnitTestCase
 {
-	/** @var stdClass */
-	private $_pRecord = null;
+	/** @var stdClass[] */
+	private $_record = null;
 
 	/** @var RecordManagerFactory */
 	private $_pRecordManagerFactory = null;
@@ -62,7 +61,7 @@ class TestClassGeoPositionFieldHandler
 		$values = array_fill(0, count($fields), '1');
 		$valuesFull = array_combine($fields, $values);
 		$pRecord = (object)$valuesFull;
-		$this->_pRecord = [$pRecord];
+		$this->_record = [$pRecord];
 		$this->_pRecordManagerFactory = $this->getMockBuilder(RecordManagerFactory::class)
 			->setMethods(['create'])
 			->getMock();
@@ -81,7 +80,7 @@ class TestClassGeoPositionFieldHandler
 		$pView = new DataListView(3, 'test');
 		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
 		$pGeoPositionFieldHandler->readValues($pView);
-		$this->assertCount(4, $pGeoPositionFieldHandler->getActiveFields());
+		$this->assertCount(5, $pGeoPositionFieldHandler->getActiveFields());
 	}
 
 
@@ -94,12 +93,13 @@ class TestClassGeoPositionFieldHandler
 		$pView = new DataListView(3, 'test');
 		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
 		$pGeoPositionFieldHandler->readValues($pView);
-		$this->assertCount(4, $pGeoPositionFieldHandler->getActiveFieldsWithValue());
+		$this->assertCount(5, $pGeoPositionFieldHandler->getActiveFieldsWithValue());
 		$this->assertEquals([
 			'country' => null,
 			'zip' => null,
 			'street' => null,
 			'radius' => null,
+			'city' => null,
 		], $pGeoPositionFieldHandler->getActiveFieldsWithValue());
 	}
 
@@ -110,7 +110,7 @@ class TestClassGeoPositionFieldHandler
 
 	public function testGetRadiusValue()
 	{
-		$this->_pRecord[0]->radius = 15;
+		$this->_record[0]->radius = 15;
 		$pView = new DataListView(3, 'test');
 		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
 		$pGeoPositionFieldHandler->readValues($pView);
@@ -130,7 +130,7 @@ class TestClassGeoPositionFieldHandler
 			['getMainTable', 'getIdColumnMain', 'getRecords', 'getRowByName', 'addWhere']);
 		$pRecordManager->method('getMainTable')->will($this->returnValue('oo_plugin_listviews'));
 		$pRecordManager->method('getIdColumnMain')->will($this->returnValue('listview_id'));
-		$pRecordManager->method('getRecords')->will($this->returnValue($this->_pRecord));
+		$pRecordManager->method('getRecords')->will($this->returnValue($this->_record));
 		$pRecordManager->expects($this->once())->method('addWhere')->with('`listview_id` = "3"');
 
 		return $pRecordManager;

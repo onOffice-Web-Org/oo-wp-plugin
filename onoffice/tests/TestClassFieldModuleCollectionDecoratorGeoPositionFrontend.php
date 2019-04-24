@@ -61,7 +61,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionFrontend
 	public function testGetAllFields()
 	{
 		$allFields = $this->_pSubject->getAllFields();
-		$this->assertCount(5, $allFields);
+		$this->assertCount(6, $allFields);
 	}
 
 
@@ -76,6 +76,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionFrontend
 		$this->assertFalse($pSubject->containsFieldByModule($module, GeoPosition::FIELD_GEO_POSITION));
 		$this->assertTrue($pSubject->containsFieldByModule($module, GeoPosition::ESTATE_LIST_SEARCH_COUNTRY));
 		$this->assertTrue($pSubject->containsFieldByModule($module, GeoPosition::ESTATE_LIST_SEARCH_RADIUS));
+		$this->assertTrue($pSubject->containsFieldByModule($module, GeoPosition::ESTATE_LIST_SEARCH_CITY));
 		$this->assertTrue($pSubject->containsFieldByModule($module, GeoPosition::ESTATE_LIST_SEARCH_STREET));
 		$this->assertTrue($pSubject->containsFieldByModule($module, GeoPosition::ESTATE_LIST_SEARCH_ZIP));
 	}
@@ -91,6 +92,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionFrontend
 		$fields = [
 			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
 			GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
+			GeoPosition::ESTATE_LIST_SEARCH_CITY,
 			GeoPosition::ESTATE_LIST_SEARCH_STREET,
 			GeoPosition::ESTATE_LIST_SEARCH_ZIP,
 		];

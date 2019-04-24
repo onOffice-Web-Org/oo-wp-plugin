@@ -81,7 +81,8 @@ class GeoSearchBuilderFromInputVars
 		$inputs[GeoPosition::ESTATE_LIST_SEARCH_RADIUS] = $radius;
 
 		if (empty($inputs[GeoPosition::ESTATE_LIST_SEARCH_COUNTRY]) ||
-			empty($inputs[GeoPosition::ESTATE_LIST_SEARCH_ZIP])) {
+			(empty($inputs[GeoPosition::ESTATE_LIST_SEARCH_CITY]) &&
+			 empty($inputs[GeoPosition::ESTATE_LIST_SEARCH_ZIP]))) {
 			return [];
 		}
 

@@ -36,15 +36,19 @@ use WP_UnitTestCase;
 class TestClassGeoPosition
 	extends WP_UnitTestCase
 {
+	/** @var GeoPosition */
+	private $_pGeoPosition = null;
+
+
 	/**
 	 *
-	 * @return GeoPosition
+	 * @before
 	 *
 	 */
 
-	public function getGeoPosition()
+	public function prepare()
 	{
-		return new GeoPosition();
+		$this->_pGeoPosition = new GeoPosition();
 	}
 
 
@@ -56,13 +60,13 @@ class TestClassGeoPosition
 
 	public function testGetSettingsGeoPositionFields()
 	{
-		$pGeoPosition = $this->getGeoPosition();
-		$value2 = onOfficeSDK::MODULE_SEARCHCRITERIA;
-		$result2 = $pGeoPosition->getSettingsGeoPositionFields($value2);
+		$module = onOfficeSDK::MODULE_SEARCHCRITERIA;
+		$result2 = $this->_pGeoPosition->getSettingsGeoPositionFields($module);
 		$expectedValue2 = array
 			(
 				'range_land',
 				'range_plz',
+				'range_ort',
 				'range_strasse',
 				'range',
 			);
@@ -81,12 +85,11 @@ class TestClassGeoPosition
 
 	public function testGetEstateSearchFields()
 	{
-		$pGeoPosition = $this->getGeoPosition();
-		$result = $pGeoPosition->getEstateSearchFields();
-
+		$result = $this->_pGeoPosition->getEstateSearchFields();
 		$expectedValue = [
 			'country',
 			'zip',
+			'city',
 			'street',
 			'radius',
 		];

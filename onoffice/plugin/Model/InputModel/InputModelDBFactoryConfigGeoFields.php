@@ -45,6 +45,9 @@ class InputModelDBFactoryConfigGeoFields
 	const FIELDNAME_ZIP_ACTIVE = GeoPosition::ESTATE_LIST_SEARCH_ZIP.self::SUFFIX_ACTIVE;
 
 	/** */
+	const FIELDNAME_CITY_ACTIVE = GeoPosition::ESTATE_LIST_SEARCH_CITY.self::SUFFIX_ACTIVE;
+
+	/** */
 	const FIELDNAME_RADIUS_ACTIVE = GeoPosition::ESTATE_LIST_SEARCH_RADIUS.self::SUFFIX_ACTIVE;
 
 	/** */
@@ -107,6 +110,10 @@ class InputModelDBFactoryConfigGeoFields
 				self::KEY_TABLE => $table,
 				self::KEY_FIELD => self::FIELDNAME_ZIP_ACTIVE,
 			],
+			self::FIELDNAME_CITY_ACTIVE => [
+				self::KEY_TABLE => $table,
+				self::KEY_FIELD => self::FIELDNAME_CITY_ACTIVE,
+			],
 			self::FIELDNAME_RADIUS_ACTIVE => [
 				self::KEY_TABLE => $table,
 				self::KEY_FIELD => self::FIELDNAME_RADIUS_ACTIVE,
@@ -131,6 +138,7 @@ class InputModelDBFactoryConfigGeoFields
 			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => self::FIELDNAME_COUNTRY_ACTIVE,
 			GeoPosition::ESTATE_LIST_SEARCH_STREET => self::FIELDNAME_STREET_ACTIVE,
 			GeoPosition::ESTATE_LIST_SEARCH_ZIP => self::FIELDNAME_ZIP_ACTIVE,
+			GeoPosition::ESTATE_LIST_SEARCH_CITY => self::FIELDNAME_CITY_ACTIVE,
 			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => self::FIELDNAME_RADIUS_ACTIVE,
 		];
 	}

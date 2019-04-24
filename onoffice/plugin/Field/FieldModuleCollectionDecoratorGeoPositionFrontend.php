@@ -74,6 +74,14 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'label' => 'PLZ',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
+			GeoPosition::ESTATE_LIST_SEARCH_CITY => [
+				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+				'length' => 250,
+				'permittedvalues' => [],
+				'default' => null,
+				'label' => 'Ort',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+			],
 		],
 	];
 
