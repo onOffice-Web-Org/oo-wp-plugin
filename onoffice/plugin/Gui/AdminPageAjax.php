@@ -107,7 +107,7 @@ abstract class AdminPageAjax
 		}
 
 		$callback =  array($pInputModelRenderer, 'buildForAjax');
-		add_meta_box($formIdHtmlFriendly, $formLabel, $callback, $screenId, $position, 'default' );
+		add_meta_box($formIdHtmlFriendly, $formLabel, $callback, $screenId, $position, 'default');
 	}
 
 

@@ -182,13 +182,7 @@ abstract class FormModelBuilder
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
-		$fields = $this->getValue(self::CONFIG_FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array();
-		}
-
+		$fields = $this->getValue(self::CONFIG_FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
 		return $pInputModelFieldsConfig;
 	}

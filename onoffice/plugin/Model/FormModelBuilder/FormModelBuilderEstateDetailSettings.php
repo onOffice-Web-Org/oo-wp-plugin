@@ -228,24 +228,19 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 */
 
-	public function createSortableFieldList($module, $htmlType)
+	public function createSortableFieldList(string $module, string $htmlType)
 	{
-		if ($module == onOfficeSDK::MODULE_ESTATE)
-		{
-			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
-				InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
-		}
-		elseif ($module == onOfficeSDK::MODULE_ADDRESS)
-		{
-			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
-				InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
+		$fields = [];
+
+		if ($module == onOfficeSDK::MODULE_ESTATE) {
+			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
+				(InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
+		} elseif ($module == onOfficeSDK::MODULE_ADDRESS) {
+			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
+				(InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
 		}
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-		$pFieldnames = $this->getFieldnames();
-
-		$fieldNames = $pFieldnames->getFieldList($module);
-		$fields = array();
 
 		if ($module == onOfficeSDK::MODULE_ADDRESS)
 		{
@@ -256,14 +251,8 @@ class FormModelBuilderEstateDetailSettings
 			$fields = $this->_pDataDetailView->getFields();
 		}
 
+		$fieldNames = $this->getFieldnames()->getFieldList($module);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-
-
-		if (null == $fields)
-		{
-			$fields = array();
-		}
-
 		$pInputModelFieldsConfig->setValue($fields);
 		return $pInputModelFieldsConfig;
 	}
