@@ -70,12 +70,10 @@ class InputModelBuilderGeoRange
 	{
 		$this->_pGeoPositionFieldHandler->readValues($pView);
 		$activeFields = $this->getFieldnamesActiveCheckbox();
-		$activeLabel = __('Activate', 'onoffice');
 		$activeGeoFields = $this->_pGeoPositionFieldHandler->getActiveFields();
 
 		foreach ($activeFields as $field => $label) {
-			yield new InputModelLabel($label, null);
-			$pInputModelGeoCountry = $this->_pInputModelFactory->create($field, $activeLabel);
+			$pInputModelGeoCountry = $this->_pInputModelFactory->create($field, $label);
 			$pInputModelGeoCountry->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 			$pInputModelGeoCountry->setValuesAvailable(1);
 			$isEnabled = array_key_exists($field, $activeGeoFields);

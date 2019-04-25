@@ -25,7 +25,6 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Model\InputModelDB;
-use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Utility\__String;
 
 /**
@@ -51,19 +50,14 @@ class TestClassInputModelBuilderGeoRange
 		$pView = new DataListView(13, 'test');
 		$pGenerator = $this->_pSubject->build($pView);
 		$expectedFields = $this->getExpectedFields();
-		$amountBooleanFields = $this->getAmountOfBooleanGeoFields();
 
-		foreach ($pGenerator as $index => $pInputModel) {
-			if ($index % 2 === 0 && $index < ($amountBooleanFields * 2)) {
-				$this->assertInstanceOf(InputModelLabel::class, $pInputModel);
-			} else {
-				$this->assertInstanceOf(InputModelDB::class, $pInputModel);
-				$field = $pInputModel->getField();
-				$this->assertContains($field, $expectedFields);
-				$arrayIndex = array_search($field, $expectedFields, true);
-				$this->assertNotFalse($arrayIndex);
-				unset($expectedFields[$arrayIndex]);
-			}
+		foreach ($pGenerator as $pInputModel) {
+			$this->assertInstanceOf(InputModelDB::class, $pInputModel);
+			$field = $pInputModel->getField();
+			$this->assertContains($field, $expectedFields);
+			$arrayIndex = array_search($field, $expectedFields, true);
+			$this->assertNotFalse($arrayIndex);
+			unset($expectedFields[$arrayIndex]);
 		}
 	}
 
@@ -83,19 +77,6 @@ class TestClassInputModelBuilderGeoRange
 		}, ARRAY_FILTER_USE_KEY);
 
 		return $fieldnameConstants;
-	}
-
-
-	/**
-	 *
-	 * @return int
-	 *
-	 */
-
-	private function getAmountOfBooleanGeoFields(): int
-	{
-		$pGeoFieldFactory = new InputModelDBFactoryConfigGeoFields(onOfficeSDK::MODULE_ESTATE);
-		return count($pGeoFieldFactory->getBooleanFields());
 	}
 
 
