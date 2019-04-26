@@ -95,25 +95,14 @@ abstract class Installer
 			$dbversion = 7;
 		}
 
-		if ($dbversion == 7.0) {
-			// new columns: {country,zip,street,radius}_active
+		if ($dbversion >= 7.0 && $dbversion <= 10) {
+			// version 8: new columns: {country,zip,street,radius}_active
+			// version 9: new columns: radius
+			// version 10 new columns: city_active
+			// version 11: new columns: geo_order
 			dbDelta( self::getCreateQueryListviews() );
 			dbDelta( self::getCreateQueryForms() );
-			$dbversion = 8;
-		}
-
-		if ($dbversion == 8.0) {
-			// new columns: radius
-			dbDelta( self::getCreateQueryListviews() );
-			dbDelta( self::getCreateQueryForms() );
-			$dbversion = 9;
-		}
-
-		if ($dbversion == 9.0) {
-			// new columns: city_active
-			dbDelta( self::getCreateQueryListviews() );
-			dbDelta( self::getCreateQueryForms() );
-			$dbversion = 10;
+			$dbversion = 11;
 		}
 
 		update_option( 'oo_plugin_db_version', $dbversion, false);
@@ -180,6 +169,7 @@ abstract class Installer
 			`street_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius` INT( 10 ) NULL DEFAULT NULL,
+			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -218,6 +208,7 @@ abstract class Installer
 			`street_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius` INT( 10 ) NULL DEFAULT NULL,
+			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -427,8 +418,7 @@ abstract class Installer
 	{
 		// @codeCoverageIgnoreStart
 		self::flushRules();
-		// @codeCoverageIgnoreEnd
-	}
+	} // @codeCoverageIgnoreEnd
 
 
 	/**

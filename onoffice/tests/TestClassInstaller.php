@@ -40,47 +40,50 @@ class TestClassInstaller
 	const NUM_NEW_TABLES = 7;
 
 	/** @var string[] */
-	private static $_createQueries = array();
+	private $_createQueries = [];
 
 	/** @var string[] */
-	private static $_dropQueries = array();
+	private $_dropQueries = [];
+
 
 	/**
 	 *
-	 * @global wpdb $wpdb
+	 * @return array
 	 *
 	 */
 
-	public function testInstall()
+	public function testInstall(): array
 	{
-		add_filter('query', array($this, 'saveCreateQuery'), 1);
+		add_filter('query', [$this, 'saveCreateQuery'], 1);
 		Installer::install();
-		remove_filter('query', array($this, 'saveCreateQuery'), 1);
+		remove_filter('query', [$this, 'saveCreateQuery'], 1);
 
-		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count(self::$_createQueries));
+		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = get_option('oo_plugin_db_version', null);
-		$this->assertEquals(10, $dbversion);
+		$this->assertEquals(11, $dbversion);
+		return $this->_createQueries;
 	}
 
 
 	/**
 	 *
 	 * @depends testInstall
+	 * @param array $createQueries from testInstall test.
 	 *
 	 */
 
-	public function testUninstall()
+	public function testUninstall(array $createQueries)
 	{
-		add_filter('query', array($this, 'saveDropQuery'), 1);
+		add_filter('query', [$this, 'saveDropQuery'], 1);
 		Installer::deinstall();
-		remove_filter('query', array($this, 'saveDropQuery'), 1);
+		remove_filter('query', [$this, 'saveDropQuery'], 1);
 
-		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count(self::$_dropQueries));
+		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_dropQueries));
 
 		// assert that as many tables have been removed as have been created
-		$uniqueCreateQueries = array_unique(self::$_createQueries);
-		$uniqueDropQueries = array_unique(self::$_dropQueries);
+		$uniqueCreateQueries = array_unique($createQueries);
+		$uniqueDropQueries = array_unique($this->_dropQueries);
 
 		$this->assertEquals(count($uniqueCreateQueries), count($uniqueDropQueries));
 
@@ -103,10 +106,10 @@ class TestClassInstaller
 	 *
 	 */
 
-	public function saveCreateQuery($query)
+	public function saveCreateQuery(string $query): string
 	{
 		if (__String::getNew($query)->startsWith('CREATE TABLE')) {
-			self::$_createQueries []= $query;
+			$this->_createQueries []= $query;
 		}
 
 		return $query;
@@ -120,10 +123,10 @@ class TestClassInstaller
 	 *
 	 */
 
-	public function saveDropQuery($query)
+	public function saveDropQuery(string $query): string
 	{
 		if (__String::getNew($query)->startsWith('DROP TABLE')) {
-			self::$_dropQueries []= $query;
+			$this->_dropQueries []= $query;
 		}
 
 		return $query;

@@ -228,7 +228,7 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 */
 
-	public function createSortableFieldList(string $module, string $htmlType)
+	public function createSortableFieldList($module, $htmlType)
 	{
 		$fields = [];
 
