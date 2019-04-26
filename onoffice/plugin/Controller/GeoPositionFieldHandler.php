@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
-use onOffice\WPlugin\DataView\DataViewFilterableFields;
+use LogicException;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use function esc_sql;
@@ -80,6 +80,7 @@ class GeoPositionFieldHandler
 			$pRecordManager->addColumn($column);
 		}, $this->_booleanFields);
 		$pRecordManager->addColumn('radius');
+		$pRecordManager->addColumn('geo_order');
 
 		$idColumn = $pRecordManager->getIdColumnMain();
 		$where = '`'.esc_sql($idColumn).'` = "'.esc_sql($pViewProperty->getId()).'"';
@@ -91,7 +92,7 @@ class GeoPositionFieldHandler
 
 	/**
 	 *
-	 * @return array
+	 * @return array The active fields in correct order
 	 *
 	 */
 
@@ -101,7 +102,9 @@ class GeoPositionFieldHandler
 			return $value === '1';
 		});
 
-		$activeGeoFields = array_intersect_key(array_flip($this->_booleanFields), $activeFields);
+		$geoFieldsOrdered = $this->getGeoFieldsOrdered();
+		$booleanFieldsActive = array_merge(array_flip($geoFieldsOrdered), $this->_booleanFields);
+		$activeGeoFields = array_intersect_key(array_flip($booleanFieldsActive), $activeFields);
 		return $activeGeoFields;
 	}
 
@@ -114,14 +117,37 @@ class GeoPositionFieldHandler
 
 	public function getActiveFieldsWithValue(): array
 	{
-		$activeFields = array_values($this->getActiveFields());
-		$values = array_replace
-			(array_combine($activeFields , array_fill
-				(0, count($activeFields), null)), $this->_records);
-		$valuesDiff = array_diff_key($values, array_flip($this->_booleanFields));
-		return $valuesDiff;
+		$values = [];
+		$activeFields = $this->getActiveFields();
+
+		foreach ($activeFields as $field) {
+			$values[$field] = $this->_records[$field] ?? null;
+		}
+
+		return $values;
 	}
 
+
+	/**
+	 *
+	 * @return array
+	 * @throws LogicException
+	 *
+	 */
+
+	public function getGeoFieldsOrdered(): array
+	{
+		$geoFieldsString = $this->_records['geo_order'] ?? '';
+		$geoFieldsArray = array_filter(explode(',', $geoFieldsString));
+
+		// new array must contain all possible geo fields
+		if ($geoFieldsString !== '' &&
+			array_diff(array_keys($this->_booleanFields), $geoFieldsArray) !== []) {
+			throw new LogicException;
+		}
+
+		return $geoFieldsArray;
+	}
 
 	/**  @return int */
 	public function getRadiusValue(): int

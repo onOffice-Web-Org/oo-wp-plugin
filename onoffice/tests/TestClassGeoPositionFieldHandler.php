@@ -75,12 +75,17 @@ class TestClassGeoPositionFieldHandler
 	 *
 	 */
 
-	public function testGetActiveFields()
+	public function testGetActiveFieldsRespectingOrder()
 	{
+		$this->_record[0]->geo_order = 'street,country,radius,zip,city';
+
 		$pView = new DataListView(3, 'test');
 		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
 		$pGeoPositionFieldHandler->readValues($pView);
-		$this->assertCount(5, $pGeoPositionFieldHandler->getActiveFields());
+		$activeFields = $pGeoPositionFieldHandler->getActiveFields();
+		$this->assertCount(5, $activeFields);
+		// same order is important here
+		$this->assertEquals(['street', 'country', 'radius', 'zip', 'city'], array_values($activeFields));
 	}
 
 
@@ -90,9 +95,12 @@ class TestClassGeoPositionFieldHandler
 
 	public function testGetActiveFieldsWithValue()
 	{
+		$this->_record[0]->geo_order = 'street,country,radius,zip,city';
+
 		$pView = new DataListView(3, 'test');
 		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
 		$pGeoPositionFieldHandler->readValues($pView);
+
 		$this->assertCount(5, $pGeoPositionFieldHandler->getActiveFieldsWithValue());
 		$this->assertEquals([
 			'country' => null,
@@ -115,6 +123,57 @@ class TestClassGeoPositionFieldHandler
 		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
 		$pGeoPositionFieldHandler->readValues($pView);
 		$this->assertEquals(15, $pGeoPositionFieldHandler->getRadiusValue());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetGeoFieldsOrdered()
+	{
+		$this->_record[0]->geo_order = 'country,street,radius,zip,city';
+
+		$pView = new DataListView(3, 'test');
+		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
+		$pGeoPositionFieldHandler->readValues($pView);
+
+		$this->assertEquals(['country', 'street', 'radius', 'zip', 'city'],
+			$pGeoPositionFieldHandler->getGeoFieldsOrdered());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetGeoFieldsOrderedEmptyOrder()
+	{
+		// extra case
+		$this->_record[0]->geo_order = '';
+		$pView = new DataListView(3, 'test');
+		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
+		$pGeoPositionFieldHandler->readValues($pView);
+		$this->assertEquals([], $pGeoPositionFieldHandler->getGeoFieldsOrdered());
+	}
+
+
+	/**
+	 *
+	 * @expectedException \LogicException
+	 *
+	 */
+
+	public function testGetGeoFieldsLogicException()
+	{
+		// radius missing
+		$this->_record[0]->geo_order = 'country,street,zip,city';
+
+		$pView = new DataListView(3, 'test');
+		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
+		$pGeoPositionFieldHandler->readValues($pView);
+
+		$pGeoPositionFieldHandler->getGeoFieldsOrdered();
 	}
 
 
