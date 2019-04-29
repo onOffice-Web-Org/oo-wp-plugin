@@ -29,6 +29,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
@@ -187,9 +188,9 @@ class Form
 	private function executeGeoPositionFix(array $requiredFields): array
 	{
 		if (in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields))	{
-			$pGeoPosition = new GeoPosition();
-			$geoPositionFields = $pGeoPosition->getSettingsGeoPositionFields
-				(onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$pGeoPosition = new GeoPositionFieldHandler();
+			$pGeoPosition->readValues($this->getDataFormConfiguration());
+			$geoPositionFields = $pGeoPosition->getActiveFields();
 			unset($requiredFields[GeoPosition::FIELD_GEO_POSITION]);
 			$requiredFields = array_merge($requiredFields, $geoPositionFields);
 		}
@@ -208,11 +209,11 @@ class Form
 	public function isRequiredField(string $field): bool
 	{
 		$requiredFields = $this->getRequiredFields();
-		$pGeoPosition = new GeoPosition();
+		$pGeoPosition = new GeoPositionFieldHandler();
+		$pGeoPosition->readValues($this->getDataFormConfiguration());
 
-		if (in_array($field, $pGeoPosition->getSettingsGeoPositionFields
-				(onOfficeSDK::MODULE_SEARCHCRITERIA)) &&
-					in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields)) {
+		if (in_array($field, $pGeoPosition->getActiveFields()) &&
+			in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields)) {
 			return true;
 		}
 

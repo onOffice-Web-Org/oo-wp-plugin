@@ -19,16 +19,22 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Model\InputModelBuilder;
 
 use Generator;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\ViewProperty;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Model\InputModelDB;
-use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 
 /**
@@ -43,20 +49,48 @@ class InputModelBuilderGeoRange
 	/** @var GeoPositionFieldHandler */
 	private $_pGeoPositionFieldHandler = null;
 
+	/** @var Fieldnames */
+	private $_pFieldnames = null;
+
+	/** @var string */
+	private $_module = '';
+
+	/** @var array */
+	private $_geoOrderOptionsTemplate = [
+		[
+			GeoPosition::ESTATE_LIST_SEARCH_STREET,
+			GeoPosition::ESTATE_LIST_SEARCH_ZIP,
+			GeoPosition::ESTATE_LIST_SEARCH_CITY,
+			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
+			GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
+		],
+		[
+			GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
+			GeoPosition::ESTATE_LIST_SEARCH_STREET,
+			GeoPosition::ESTATE_LIST_SEARCH_ZIP,
+			GeoPosition::ESTATE_LIST_SEARCH_CITY,
+			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
+		],
+	];
+
+
 
 	/**
 	 *
 	 * @param string $module
 	 * @param GeoPositionFieldHandler $pGeoPositionFieldHandler
-	 * @param ViewProperty $pView
+	 * @param Fieldnames $pFieldnames
 	 *
 	 */
 
-	public function __construct(string $module, GeoPositionFieldHandler $pGeoPositionFieldHandler = null)
+	public function __construct(string $module, GeoPositionFieldHandler $pGeoPositionFieldHandler = null, Fieldnames $pFieldnames = null)
 	{
 		$pFactoryConfig = new InputModelDBFactoryConfigGeoFields($module);
 		$this->_pInputModelFactory = new InputModelDBFactory($pFactoryConfig);
 		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler ?? new GeoPositionFieldHandler();
+		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection());
+		$this->_pFieldnames = $pFieldnames ?? new Fieldnames($pFieldsCollection);
+		$this->_module = $module;
 	}
 
 
@@ -76,12 +110,13 @@ class InputModelBuilderGeoRange
 			$pInputModelGeoCountry = $this->_pInputModelFactory->create($field, $label);
 			$pInputModelGeoCountry->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 			$pInputModelGeoCountry->setValuesAvailable(1);
-			$isEnabled = array_key_exists($field, $activeGeoFields);
+			$isEnabled = isset($activeGeoFields[$field]);
 			$pInputModelGeoCountry->setValue((int)$isEnabled);
 			yield $pInputModelGeoCountry;
 		}
 
 		yield $this->generateInputRadius();
+		yield $this->generateInputOrder();
 	}
 
 
@@ -117,6 +152,56 @@ class InputModelBuilderGeoRange
 
 	/**
 	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	private function generateInputOrder(): InputModelDB
+	{
+		$options = [];
+		$this->_pFieldnames->loadLanguage();
+
+		foreach ($this->_geoOrderOptionsTemplate as $keysOrdered) {
+			$optionLabelParts = [];
+			foreach ($keysOrdered as $key) {
+				$label = $this->getGeoFieldLabel($key);
+				$optionLabelParts []= $label;
+			}
+			$option = implode(',', $keysOrdered);
+			$options[$option] = implode(', ', $optionLabelParts);
+		}
+
+		$pInputModelRadius = $this->_pInputModelFactory->create
+			(InputModelDBFactoryConfigGeoFields::FIELDNAME_GEO_ORDER, __('Order', 'onoffice'));
+		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelRadius->setValuesAvailable($options);
+		$pInputModelRadius->setValue($this->_pGeoPositionFieldHandler->getRadiusValue());
+		return $pInputModelRadius;
+	}
+
+
+	/**
+	 *
+	 * Heads up: This method does not call Fieldnames::loadLanguage()
+	 *
+	 * @param string $key
+	 * @return string
+	 *
+	 */
+
+	private function getGeoFieldLabel(string $key): string
+	{
+		if ($this->_module === onOfficeSDK::MODULE_SEARCHCRITERIA) {
+			$searchCriteriaMapping = (new GeoPosition())->getSearchCriteriaFields();
+			$key = $searchCriteriaMapping[$key];
+		}
+
+		return $this->_pFieldnames->getFieldLabel($key, $this->_module);
+	}
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */
@@ -125,10 +210,22 @@ class InputModelBuilderGeoRange
 	{
 		return [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => __('Country', 'onoffice'),
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => __('Street', 'onoffice'),
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE => __('Postal Code', 'onoffice'),
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_CITY_ACTIVE => __('City', 'onoffice'),
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => __('Street', 'onoffice'),
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE => __('Radius', 'onoffice'),
 		];
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getModule(): string
+	{
+		return $this->_module;
 	}
 }
