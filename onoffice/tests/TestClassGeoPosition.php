@@ -21,7 +21,6 @@
 
 namespace onOffice\tests;
 
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\GeoPosition;
 use WP_UnitTestCase;
 
@@ -49,31 +48,6 @@ class TestClassGeoPosition
 	public function prepare()
 	{
 		$this->_pGeoPosition = new GeoPosition();
-	}
-
-
-	/**
-	 *
-	 * @covers onOffice\WPlugin\GeoPosition::getSettingsGeoPositionFields
-	 *
-	 */
-
-	public function testGetSettingsGeoPositionFields()
-	{
-		$module = onOfficeSDK::MODULE_SEARCHCRITERIA;
-		$result2 = $this->_pGeoPosition->getSettingsGeoPositionFields($module);
-		$expectedValue2 = array
-			(
-				'range_land',
-				'range_plz',
-				'range_ort',
-				'range_strasse',
-				'range',
-			);
-
-		foreach ($expectedValue2 as $key => $value)	{
-			$this->assertEquals($value, $result2[$key]);
-		}
 	}
 
 

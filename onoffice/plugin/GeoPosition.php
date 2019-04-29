@@ -23,8 +23,6 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin;
 
-use onOffice\SDK\onOfficeSDK;
-
 /**
  *
  * @url http://www.onoffice.de
@@ -54,18 +52,6 @@ class GeoPosition
 
 
 	/** @var array */
-	private $_settingsGeoPositionFields = [
-		onOfficeSDK::MODULE_SEARCHCRITERIA => [
-			'range_land',
-			'range_plz',
-			'range_ort',
-			'range_strasse',
-			'range',
-		],
-	];
-
-
-	/** @var array */
 	private $_estateSearchFields = [
 		self::ESTATE_LIST_SEARCH_COUNTRY,
 		self::ESTATE_LIST_SEARCH_ZIP,
@@ -83,19 +69,6 @@ class GeoPosition
 		self::ESTATE_LIST_SEARCH_STREET => 'range_strasse',
 		self::ESTATE_LIST_SEARCH_RADIUS => 'range',
 	];
-
-
-	/**
-	 *
-	 * @param string $module
-	 * @return array
-	 *
-	 */
-
-	public function getSettingsGeoPositionFields(string $module): array
-	{
-		return $this->_settingsGeoPositionFields[$module] ?? [];
-	}
 
 
 	/** @return array */
