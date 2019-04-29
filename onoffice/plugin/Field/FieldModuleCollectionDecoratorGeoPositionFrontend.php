@@ -47,7 +47,7 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'length' => 250,
 				'permittedvalues' => [],
 				'default' => null,
-				'label' => 'Land',
+				'label' => 'Country',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => [
@@ -63,7 +63,7 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'length' => 250,
 				'permittedvalues' => [],
 				'default' => null,
-				'label' => 'Strasse',
+				'label' => 'Street',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 			GeoPosition::ESTATE_LIST_SEARCH_ZIP => [
@@ -71,7 +71,7 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'length' => 10,
 				'permittedvalues' => [],
 				'default' => null,
-				'label' => 'PLZ',
+				'label' => 'Postal Code',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 			GeoPosition::ESTATE_LIST_SEARCH_CITY => [
@@ -79,7 +79,7 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'length' => 250,
 				'permittedvalues' => [],
 				'default' => null,
-				'label' => 'Ort',
+				'label' => 'City',
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 		],
