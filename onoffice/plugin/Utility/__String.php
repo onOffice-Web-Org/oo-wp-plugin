@@ -40,7 +40,7 @@ class __String
 	 *
 	 */
 
-	public function __construct($string)
+	public function __construct(string $string)
 	{
 		$this->_string = $string;
 	}
@@ -53,9 +53,9 @@ class __String
 	 *
 	 */
 
-	static public function getNew($string)
+	static public function getNew($string): self
 	{
-		return new static($string);
+		return new static($string ?? '');
 	}
 
 
@@ -67,7 +67,7 @@ class __String
 	 *
 	 */
 
-	public function replace($search, $replace)
+	public function replace(string $search, string $replace): string
 	{
 		return str_replace($search, $replace, $this->_string);
 	}
@@ -75,14 +75,16 @@ class __String
 
 	/**
 	 *
-	 * @param mixed $chars
+	 * @param array $chars
 	 * @return string
 	 *
 	 */
 
-	public function remove($chars)
+	public function remove(array $chars): string
 	{
-		return $this->replace($chars, '');
+		$charArrayInput = $this->split();
+		$diff = array_diff($charArrayInput, $chars);
+		return implode('', $diff);
 	}
 
 
@@ -93,7 +95,7 @@ class __String
 	 *
 	 */
 
-	public function keep($chars)
+	public function keep(string $chars): string
 	{
 		$charArrayInput = $this->split();
 		$charArrayWhitelist = __String::getNew($chars)->split();
@@ -108,7 +110,7 @@ class __String
 	 *
 	 */
 
-	public function split()
+	public function split(): array
 	{
 		return str_split($this->_string);
 	}
@@ -120,7 +122,7 @@ class __String
 	 *
 	 */
 
-	public function length()
+	public function length(): int
 	{
 		return mb_strlen($this->_string);
 	}
@@ -132,9 +134,9 @@ class __String
 	 *
 	 */
 
-	public function isEmpty()
+	public function isEmpty(): bool
 	{
-		return $this->_string == '';
+		return $this->_string === '';
 	}
 
 
@@ -145,7 +147,7 @@ class __String
 	 *
 	 */
 
-	public function endsWith($subStr)
+	public function endsWith(string $subStr): bool
 	{
 		$pStringSub = __String::getNew($subStr);
 		return mb_strrpos($this->_string, $subStr) === $this->length() - $pStringSub->length();
@@ -159,7 +161,7 @@ class __String
 	 *
 	 */
 
-	public function startsWith($subStr)
+	public function startsWith(string $subStr): bool
 	{
 		return mb_strrpos($this->_string, $subStr) === 0;
 	}
@@ -173,7 +175,7 @@ class __String
 	 *
 	 */
 
-	public function sub($start, $length = null)
+	public function sub(int $start, int $length = null): string
 	{
 		return mb_substr($this->_string, $start, $length);
 	}
@@ -187,7 +189,7 @@ class __String
 	 *
 	 */
 
-	public function contains($subString, $offset = 0)
+	public function contains(string $subString, int $offset = 0): bool
 	{
 		return mb_strpos($this->_string, $subString, $offset) !== false;
 	}
@@ -199,7 +201,7 @@ class __String
 	 *
 	 */
 
-	public function binLength()
+	public function binLength(): int
 	{
 		return strlen($this->_string);
 	}
@@ -211,7 +213,7 @@ class __String
 	 *
 	 */
 
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->_string;
 	}
