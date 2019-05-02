@@ -175,7 +175,8 @@ class InputModelBuilderGeoRange
 			(InputModelDBFactoryConfigGeoFields::FIELDNAME_GEO_ORDER, __('Order', 'onoffice'));
 		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelRadius->setValuesAvailable($options);
-		$pInputModelRadius->setValue($this->_pGeoPositionFieldHandler->getRadiusValue());
+		$geoFieldOrderValue = implode(',', $this->_pGeoPositionFieldHandler->getGeoFieldsOrdered());
+		$pInputModelRadius->setValue($geoFieldOrderValue);
 		return $pInputModelRadius;
 	}
 
