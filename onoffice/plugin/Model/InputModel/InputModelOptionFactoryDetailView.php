@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Model\InputModel;
 
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\InputModelOption;
 
 /**
@@ -130,7 +131,7 @@ class InputModelOptionFactoryDetailView
 	 *
 	 */
 
-	public function __construct($optionGroup)
+	public function __construct(string $optionGroup)
 	{
 		$this->_optionGroup = $optionGroup;
 	}
@@ -142,21 +143,21 @@ class InputModelOptionFactoryDetailView
 	 * @param string $label
 	 * @param bool $multi
 	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
 	 *
 	 */
 
-	public function create($name, $label, $multi = false)
+	public function create(string $name, $label, bool $multi = false): InputModelOption
 	{
-		$pInstance = null;
-
-		if (isset($this->_inputConfig[$name]))
-		{
-			$config = $this->_inputConfig[$name];
-			$type = $config[self::KEY_TYPE];
-
-			$pInstance = new InputModelOption($this->_optionGroup, $name, $label, $type);
-			$pInstance->setIsMulti($multi);
+		if (!isset($this->_inputConfig[$name])) {
+			throw new ExceptionInputModelMissingField($name);
 		}
+
+		$config = $this->_inputConfig[$name];
+		$type = $config[self::KEY_TYPE];
+
+		$pInstance = new InputModelOption($this->_optionGroup, $name, $label, $type);
+		$pInstance->setIsMulti($multi);
 
 		return $pInstance;
 	}

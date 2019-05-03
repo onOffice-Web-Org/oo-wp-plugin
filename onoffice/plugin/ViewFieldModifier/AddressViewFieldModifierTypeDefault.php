@@ -118,7 +118,7 @@ class AddressViewFieldModifierTypeDefault
 
 	private function getCompundingFields(): array
 	{
-		return array_filter($this->_viewFields, function($field) {
+		return array_filter($this->_viewFields, function($field): bool {
 			return __String::getNew($field)->contains('-');
 		});
 	}

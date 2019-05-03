@@ -232,7 +232,7 @@ class AddressList
 	public function getRows(bool $raw = false): array
 	{
 		$pAddressFieldModifier = $this->generateRecordModifier();
-		return array_map(function($values) use ($pAddressFieldModifier, $raw) {
+		return array_map(function($values) use ($pAddressFieldModifier, $raw): ArrayContainer {
 			$valuesNew = $pAddressFieldModifier->processRecord($values);
 			return $this->getArrayContainerByRow($raw, $valuesNew);
 		}, $this->_adressesById);

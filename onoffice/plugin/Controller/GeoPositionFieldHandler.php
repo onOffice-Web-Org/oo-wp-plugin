@@ -98,7 +98,7 @@ class GeoPositionFieldHandler
 
 	public function getActiveFields(): array
 	{
-		$activeFields = array_filter($this->_records, function($value) {
+		$activeFields = array_filter($this->_records, function($value): bool {
 			return $value === '1';
 		});
 

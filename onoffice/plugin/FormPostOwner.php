@@ -136,7 +136,7 @@ class FormPostOwner
 		$configFields = $pFormData->getDataFormConfiguration()->getInputs();
 		$submitFields = array_keys($pFormData->getValues());
 
-		$estateFields = array_filter($submitFields, function($key) use ($configFields) {
+		$estateFields = array_filter($submitFields, function($key) use ($configFields): bool {
 			return onOfficeSDK::MODULE_ESTATE === $configFields[$key];
 		});
 
