@@ -22,6 +22,7 @@
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
@@ -97,6 +98,24 @@ class TestClassAPIClientActionGenericReadAddress
 		$pApiCall = $this->sendRequest(array());
 		$this->assertFalse($pApiCall->getResultStatus());
 		$pApiCall->getResultMeta();
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testWithActionIdAndResourceType()
+	{
+		$pSDKWrapper = new SDKWrapper();
+		$pApiClientActionOriginal = new APIClientActionGeneric($pSDKWrapper, 'testId', 'testType');
+		$this->assertEquals('testId', $pApiClientActionOriginal->getActionId());
+		$this->assertEquals('testType', $pApiClientActionOriginal->getResourceType());
+		$this->assertSame($pSDKWrapper, $pApiClientActionOriginal->getSDKWrapper());
+		$pApiClientActionCopy = $pApiClientActionOriginal->withActionIdAndResourceType('otherAction', 'otherResource');
+		$this->assertEquals('otherAction', $pApiClientActionCopy->getActionId());
+		$this->assertEquals('otherResource', $pApiClientActionCopy->getResourceType());
+		$this->assertSame($pSDKWrapper, $pApiClientActionCopy->getSDKWrapper());
 	}
 
 

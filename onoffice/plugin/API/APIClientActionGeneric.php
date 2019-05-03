@@ -200,6 +200,23 @@ class APIClientActionGeneric
 	}
 
 
+	/**
+	 *
+	 * @param string $actionId
+	 * @param string $resourceType
+	 * @return self
+	 *
+	 */
+
+	public function withActionIdAndResourceType(string $actionId, string $resourceType): self
+	{
+		$pAPIClientAction = clone $this;
+		$pAPIClientAction->setActionId($actionId);
+		$pAPIClientAction->setResourceType($resourceType);
+		return $pAPIClientAction;
+	}
+
+
 	/** @return string */
 	public function getActionId(): string
 		{ return $this->_actionId; }
@@ -247,4 +264,8 @@ class APIClientActionGeneric
 	/** @param callable $resultCallback */
 	protected function setResultCallback(callable $resultCallback)
 		{ $this->_resultCallback = $resultCallback; }
+
+	/** @return SDKWrapper */
+	public function getSDKWrapper(): SDKWrapper
+		{ return $this->_pSDKWrapper; }
 }
