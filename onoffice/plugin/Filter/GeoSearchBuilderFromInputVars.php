@@ -153,7 +153,7 @@ class GeoSearchBuilderFromInputVars
 			'formatoutput' => false,
 			'data' => ['country'],
 		]);
-		$pApiClientAction->sendRequests();
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 		return $pApiClientAction->getResultRecords()[0]['elements']['country'];
 	}
 

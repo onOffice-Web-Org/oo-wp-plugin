@@ -82,7 +82,7 @@ class TestClassGeoSearchBuilderFromInputVars
 
 		$this->_pAPIClientActionMock = $this->getMockBuilder(APIClientActionGeneric::class)
 			->setConstructorArgs([new SDKWrapperMocker(), '', ''])
-			->setMethods(['getResultRecords', 'withActionIdAndResourceType'])
+			->setMethods(['getResultRecords', 'withActionIdAndResourceType', 'addRequestToQueue'])
 			->getMock();
 
 		$this->_pGeoSearchBuilderFromInputVars = new GeoSearchBuilderFromInputVars
@@ -159,6 +159,9 @@ class TestClassGeoSearchBuilderFromInputVars
 		$this->_pAPIClientActionMock->expects($this->once())
 				->method('withActionIdAndResourceType')
 				->with(onOfficeSDK::ACTION_ID_READ, 'impressum')
+				->will($this->returnSelf());
+		$this->_pAPIClientActionMock->expects($this->once())
+				->method('addRequestToQueue')
 				->will($this->returnSelf());
 		$this->setActiveFields(['country']);
 		$this->_pAPIClientActionMock->method('getResultRecords')->will
