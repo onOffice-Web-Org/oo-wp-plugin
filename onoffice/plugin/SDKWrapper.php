@@ -68,8 +68,8 @@ class SDKWrapper
 		$config = $this->readConfig();
 
 		$this->_pSDK = new onOfficeSDK();
-		$this->_pSDK->setApiVersion( $config['apiversion'] );
-		$this->_pSDK->setCaches( $config['cache'] );
+		$this->_pSDK->setApiVersion($config['apiversion']);
+		$this->_pSDK->setCaches($config['cache']);
 		$this->_token = $config['token'];
 		$this->_secret = $config['secret'];
 		$this->_curlOptions = $config['curl_options'];
@@ -92,7 +92,7 @@ class SDKWrapper
 			'secret' => get_option('onoffice-settings-apisecret'),
 			'apiversion' => 'latest',
 			'cache' => [
-				new DBCache( array('ttl' => 3600) ),
+				new DBCache(['ttl' => 3600]),
 			],
 			'server' => 'https://api.onoffice.de/api/',
 			'curl_options' => [
@@ -101,12 +101,7 @@ class SDKWrapper
 			],
 		];
 
-		$configUser = ConfigWrapper::getInstance()->getConfigByKey('api');
-
-		if ($configUser === null) {
-			$configUser = array();
-		}
-
+		$configUser = ConfigWrapper::getInstance()->getConfigByKey('api') ?? [];
 		$config = array_merge($localconfig, $configUser);
 
 		return $config;
@@ -163,7 +158,7 @@ class SDKWrapper
 
 	public function sendRequests()
 	{
-		$this->_pSDK->sendRequests( $this->_token, $this->_secret );
+		$this->_pSDK->sendRequests($this->_token, $this->_secret);
 		$errors = $this->_pSDK->getErrors();
 
 		foreach ($this->_callbacksAfterSend as $handle => $callback) {
