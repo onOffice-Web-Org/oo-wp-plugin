@@ -21,7 +21,9 @@
 
 namespace onOffice\tests;
 
+use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
@@ -48,6 +50,12 @@ class TestClassGeoSearchBuilderFromInputVars
 	/** @var GeoSearchBuilderFromInputVars */
 	private $_pGeoSearchBuilderFromInputVars = null;
 
+	/** @var APIClientActionGeneric */
+	private $_pAPIClientActionMock = null;
+
+	/** @var GeoPositionFieldHandler */
+	private $_pGeoPositionFieldHandler = null;
+
 
 	/**
 	 *
@@ -68,23 +76,17 @@ class TestClassGeoSearchBuilderFromInputVars
 			$this->_pVariableReaderConfig);
 		$pDataView = new DataListView(13, 'test');
 
-		$pGeoPositionFieldHandler = $this->getMockBuilder(GeoPositionFieldHandler::class)
+		$this->_pGeoPositionFieldHandler = $this->getMockBuilder(GeoPositionFieldHandler::class)
 			->setMethods(['readValues', 'getActiveFields', 'getActiveFieldsWithValue'])
 			->getMock();
-		$pGeoPositionFieldHandler->method('getActiveFields')->will($this->returnValue([
-			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE,
-			GeoPosition::ESTATE_LIST_SEARCH_STREET => InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE,
-			GeoPosition::ESTATE_LIST_SEARCH_ZIP => InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE,
-			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE,
-		]));
-		$pGeoPositionFieldHandler->method('getActiveFieldsWithValue')->will($this->returnValue([
-			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => 'DEU',
-			GeoPosition::ESTATE_LIST_SEARCH_STREET => null,
-			GeoPosition::ESTATE_LIST_SEARCH_ZIP => null,
-			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => 20,
-		]));
 
-		$this->_pGeoSearchBuilderFromInputVars = new GeoSearchBuilderFromInputVars($pEstateListVariableReader, $pGeoPositionFieldHandler);
+		$this->_pAPIClientActionMock = $this->getMockBuilder(APIClientActionGeneric::class)
+			->setConstructorArgs([new SDKWrapperMocker(), '', ''])
+			->setMethods(['getResultRecords', 'withActionIdAndResourceType'])
+			->getMock();
+
+		$this->_pGeoSearchBuilderFromInputVars = new GeoSearchBuilderFromInputVars
+			($pEstateListVariableReader, $this->_pGeoPositionFieldHandler, $this->_pAPIClientActionMock);
 		$this->_pGeoSearchBuilderFromInputVars->setViewProperty($pDataView);
 	}
 
@@ -95,6 +97,7 @@ class TestClassGeoSearchBuilderFromInputVars
 
 	public function testBuildParameters()
 	{
+		$this->setActiveFields();
 		$this->_pVariableReaderConfig->setValue('street', 'Charlottenburger Allee');
 		$this->_pVariableReaderConfig->setValue('radius', 20);
 		$this->_pVariableReaderConfig->setValue('zip', '52068');
@@ -117,6 +120,7 @@ class TestClassGeoSearchBuilderFromInputVars
 
 	public function testBuildParametersIncomplete()
 	{
+		$this->setActiveFields();
 		$this->_pVariableReaderConfig->setValue('country', '');
 		$this->_pVariableReaderConfig->setValue('radius', 20);
 		$this->_pVariableReaderConfig->setValue('zip', '52068');
@@ -131,6 +135,7 @@ class TestClassGeoSearchBuilderFromInputVars
 
 	public function testMissingRadiusParameter()
 	{
+		$this->setActiveFields();
 		$this->_pVariableReaderConfig->setValue('street', 'Teststr');
 		$this->_pVariableReaderConfig->setValue('radius', 10);
 		$this->_pVariableReaderConfig->setValue('zip', '52072');
@@ -147,7 +152,34 @@ class TestClassGeoSearchBuilderFromInputVars
 
 	/**
 	 *
-	 * @expectedException \Exception
+	 */
+
+	public function testMissingCountryParameter()
+	{
+		$this->_pAPIClientActionMock->expects($this->once())
+				->method('withActionIdAndResourceType')
+				->with(onOfficeSDK::ACTION_ID_READ, 'impressum')
+				->will($this->returnSelf());
+		$this->setActiveFields(['country']);
+		$this->_pAPIClientActionMock->method('getResultRecords')->will
+			($this->returnValue([0 => ['elements' => ['country' => 'FRA']]]));
+		$this->_pVariableReaderConfig->setValue('street', 'Teststr');
+		$this->_pVariableReaderConfig->setValue('radius', 10);
+		$this->_pVariableReaderConfig->setValue('zip', '52072');
+		$parameters = $this->_pGeoSearchBuilderFromInputVars->buildParameters();
+
+		$this->assertEquals([
+			'country' => 'FRA',
+			'zip' => '52072',
+			'street' => 'Teststr',
+			'radius' => 10,
+		], $parameters);
+	}
+
+
+	/**
+	 *
+	 * @expectedException Exception
 	 * @expectedExceptionMessage pView cannot be null
 	 *
 	 */
@@ -156,5 +188,37 @@ class TestClassGeoSearchBuilderFromInputVars
 	{
 		$pGeoSearchBuilderFromInputVars = new GeoSearchBuilderFromInputVars();
 		$pGeoSearchBuilderFromInputVars->buildParameters();
+	}
+
+
+	/**
+	 *
+	 * @param array $blacklist
+	 *
+	 */
+
+	private function setActiveFields(array $blacklist = [])
+	{
+		$activeFieldsDefault = [
+			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE,
+			GeoPosition::ESTATE_LIST_SEARCH_STREET => InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE,
+			GeoPosition::ESTATE_LIST_SEARCH_ZIP => InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE,
+			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE,
+		];
+
+		$activeFieldsWithValuesDefault = [
+			GeoPosition::ESTATE_LIST_SEARCH_COUNTRY => 'DEU',
+			GeoPosition::ESTATE_LIST_SEARCH_STREET => null,
+			GeoPosition::ESTATE_LIST_SEARCH_ZIP => null,
+			GeoPosition::ESTATE_LIST_SEARCH_RADIUS => 20,
+		];
+
+		$activeFields = array_diff_key($activeFieldsDefault, array_flip($blacklist));
+		$activeFieldsWithValues = array_diff_key($activeFieldsWithValuesDefault, array_flip($blacklist));
+
+		$this->_pGeoPositionFieldHandler->method('getActiveFields')
+			->will($this->returnValue($activeFields));
+		$this->_pGeoPositionFieldHandler->method('getActiveFieldsWithValue')
+			->will($this->returnValue($activeFieldsWithValues));
 	}
 }

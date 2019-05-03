@@ -25,10 +25,12 @@ namespace onOffice\WPlugin\Filter;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\ViewProperty;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
@@ -46,6 +48,9 @@ class GeoSearchBuilderFromInputVars
 	/** @var InputVariableReader */
 	private $_pEstateListInputVariableReader = null;
 
+	/** @var APIClientActionGeneric */
+	private $_pAPIClientActionGeneric = null;
+
 	/** @var ViewProperty */
 	private $_pView = null;
 
@@ -58,12 +63,15 @@ class GeoSearchBuilderFromInputVars
 
 	public function __construct(
 		InputVariableReader $pEstateListInputVariableReader = null,
-		GeoPositionFieldHandler $pGeoPositionFieldHandler = null)
+		GeoPositionFieldHandler $pGeoPositionFieldHandler = null,
+		APIClientActionGeneric $pAPIClientActionGeneric = null)
 	{
 		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler;
 		$this->_pEstateListInputVariableReader = $pEstateListInputVariableReader ??
 			new InputVariableReader(onOfficeSDK::MODULE_ESTATE);
 		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler ?? new GeoPositionFieldHandler();
+		$this->_pAPIClientActionGeneric = $pAPIClientActionGeneric ?? new APIClientActionGeneric
+			(new SDKWrapper(), '', '');
 	}
 
 
@@ -79,6 +87,9 @@ class GeoSearchBuilderFromInputVars
 		$radius = $inputs[GeoPosition::ESTATE_LIST_SEARCH_RADIUS] ??
 			$this->_pGeoPositionFieldHandler->getRadiusValue();
 		$inputs[GeoPosition::ESTATE_LIST_SEARCH_RADIUS] = $radius;
+		$country = $inputs[GeoPosition::ESTATE_LIST_SEARCH_COUNTRY] ??
+			$this->readDefaultCountryValue();
+		$inputs[GeoPosition::ESTATE_LIST_SEARCH_COUNTRY] = $country;
 
 		if (empty($inputs[GeoPosition::ESTATE_LIST_SEARCH_COUNTRY]) ||
 			(empty($inputs[GeoPosition::ESTATE_LIST_SEARCH_CITY]) &&
@@ -126,6 +137,26 @@ class GeoSearchBuilderFromInputVars
 
 		return $inputValues;
 	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	private function readDefaultCountryValue(): string
+	{
+		$pApiClientAction = $this->_pAPIClientActionGeneric->withActionIdAndResourceType
+			(onOfficeSDK::ACTION_ID_READ, 'impressum');
+		$pApiClientAction->setParameters([
+			'formatoutput' => false,
+			'data' => ['country'],
+		]);
+		$pApiClientAction->sendRequests();
+		return $pApiClientAction->getResultRecords()[0]['elements']['country'];
+	}
+
 
 	/** @param ViewProperty $pViewProperty */
 	public function setViewProperty(ViewProperty $pViewProperty)
