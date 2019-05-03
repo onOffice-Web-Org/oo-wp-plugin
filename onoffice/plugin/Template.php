@@ -48,6 +48,9 @@ class Template
 	/** */
 	const KEY_ADDRESSLIST = 'addresslist';
 
+	/** */
+	const TEMPLATE_BASE_PATH = ABSPATH.'wp-content/plugins';
+
 
 	/** @var EstateListBase */
 	private $_pEstateList = null;
@@ -65,7 +68,7 @@ class Template
 	private $_pImpressum = null;
 
 	/** @var string */
-	private $_templateBasePath = '';
+	private $_templateBasePath = self::TEMPLATE_BASE_PATH;
 
 
 	/**
@@ -78,7 +81,6 @@ class Template
 	public function __construct(string $templateName)
 	{
 		$this->_templateName = $templateName;
-		$this->_templateBasePath = ConfigWrapper::getTemplateBasePath();
 	}
 
 

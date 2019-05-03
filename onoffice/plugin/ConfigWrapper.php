@@ -75,21 +75,9 @@ class ConfigWrapper {
 	 *
 	 */
 
-	public static function getSubPluginPath()
+	private static function getSubPluginPath()
 	{
 		return ABSPATH.'wp-content/plugins/onoffice-personalized';
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public static function getTemplateBasePath()
-	{
-		return ABSPATH.'wp-content/plugins';
 	}
 
 
@@ -131,21 +119,6 @@ class ConfigWrapper {
 
 	public function getConfigByKey($key)
 	{
-		if (array_key_exists($key, $this->_config)) {
-			return $this->_config[$key];
-		}
-		return null;
-	}
-
-
-	/**
-	 *
-	 * @return mixed
-	 *
-	 */
-
-	public function getConfig()
-	{
-		return $this->_config;
+		return $this->_config[$key] ?? null;
 	}
 }

@@ -41,8 +41,7 @@ class Language
 	 */
 
 	static public function getDefault() {
-		$config = ConfigWrapper::getInstance()->getConfig();
-		$languageMapping = $config['localemap'];
+		$languageMapping = ConfigWrapper::getInstance()->getConfigByKey('localemap');
 		$currentLocale = get_locale();
 		$language = $languageMapping[$currentLocale] ?? $languageMapping['fallback'] ?? 'DEU';
 		return $language;
