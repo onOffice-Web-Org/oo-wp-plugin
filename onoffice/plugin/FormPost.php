@@ -126,7 +126,7 @@ abstract class FormPost
 			$pFormData->setStatus(self::MESSAGE_SUCCESS);
 		} catch (Exception $pException) {
 			$pFormData->setStatus(self::MESSAGE_ERROR);
-			$this->_pFormPostConfiguration->log((string)$pException);
+			$this->_pFormPostConfiguration->getLogger()->logError($pException);
 		}
 	}
 
@@ -140,9 +140,12 @@ abstract class FormPost
 
 	private function checkCaptcha(DataFormConfiguration $pConfig): bool
 	{
-		if ($pConfig->getCaptcha() && $this->_pFormPostConfiguration->isCaptchaSetup()) {
+		$pWPOptionsWrapper = $this->_pFormPostConfiguration->getWPOptionsWrapper();
+		$isCaptchaSetup = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-sitekey', '') !== '';
+
+		if ($pConfig->getCaptcha() && $isCaptchaSetup) {
 			$token = $this->_pFormPostConfiguration->getPostvarCaptchaToken();
-			$secret = $this->_pFormPostConfiguration->getCaptchaSecret();
+			$secret = $pWPOptionsWrapper->getOption('onoffice-settings-captcha-secretkey', '');
 			$pCaptchaHandler = new CaptchaHandler($token, $secret);
 			return $pCaptchaHandler->checkCaptcha();
 		} else {
@@ -263,7 +266,8 @@ abstract class FormPost
 	protected function getFormFieldsConsiderSearchcriteria(
 		array $inputFormFields, bool $numberAsRange = true): array
 	{
-		$fieldList = $this->_pFormPostConfiguration->getSearchCriteriaFields();
+		$fieldList = $this->_pFormPostConfiguration->getFieldnames()
+			->getFieldList(onOfficeSDK::MODULE_SEARCHCRITERIA);
 
 		$fields = array_unique(array_keys($fieldList));
 		$module = array_fill(0, count($fields), 'searchcriteria');
@@ -334,7 +338,7 @@ abstract class FormPost
 
 		foreach ($addressFields as $input => $value) {
 			$inputName = $pFormData->getFieldNameOfInput($input);
-			$fieldType = $this->_pFormPostConfiguration->getTypeForInput
+			$fieldType = $this->_pFormPostConfiguration->getFieldnames()->getType
 				($input, onOfficeSDK::MODULE_ADDRESS);
 
 			$fieldNameAliased = $fieldNameAliases[$inputName] ?? $inputName;

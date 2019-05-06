@@ -23,6 +23,7 @@ namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
@@ -30,7 +31,9 @@ use onOffice\WPlugin\Form\FormPostOwnerConfigurationTest;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostOwner;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
 
 /**
@@ -61,7 +64,6 @@ class TestClassFormPostOwner
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$this->_pFormPostConfiguration = $this->createNewFormPostConfigurationTest();
-
 
 		$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationTest();
 		$pFormPostOwnerConfiguration->setSDKWrapper($this->_pSDKWrapperMocker);
@@ -116,27 +118,26 @@ class TestClassFormPostOwner
 		$moduleAddress = onOfficeSDK::MODULE_ADDRESS;
 		$moduleEstate = onOfficeSDK::MODULE_ESTATE;
 
-		$pFormPostConfiguration = new FormPostConfigurationTest();
-		$pFormPostConfiguration->addInputType
-			($moduleAddress, 'Vorname', FieldTypes::FIELD_TYPE_VARCHAR);
-		$pFormPostConfiguration->addInputType
-			($moduleAddress, 'Name', FieldTypes::FIELD_TYPE_VARCHAR);
-		$pFormPostConfiguration->addInputType
-			($moduleAddress, 'ArtDaten', FieldTypes::FIELD_TYPE_MULTISELECT);
-		$pFormPostConfiguration->addInputType
-			($moduleAddress, 'Telefon1', FieldTypes::FIELD_TYPE_TEXT);
-		$pFormPostConfiguration->addInputType
-			($moduleEstate, 'objektart', FieldTypes::FIELD_TYPE_VARCHAR);
-		$pFormPostConfiguration->addInputType
-			($moduleEstate, 'objekttyp', FieldTypes::FIELD_TYPE_VARCHAR);
-		$pFormPostConfiguration->addInputType
-			($moduleEstate, 'energieausweistyp', FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$pFormPostConfiguration->addInputType
-			($moduleEstate, 'wohnflaeche', FieldTypes::FIELD_TYPE_INTEGER);
-		$pFormPostConfiguration->addInputType
-			($moduleEstate, 'kabel_sat_tv', FieldTypes::FIELD_TYPE_BOOLEAN);
-		$pFormPostConfiguration->addInputType
-			($moduleEstate, 'kabel_sat_tv', FieldTypes::FIELD_TYPE_BOOLEAN);
+
+		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->setConstructorArgs([new FieldsCollection()])
+			->getMock();
+		$pLogger = $this->getMock(Logger::class);
+
+		$pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
+		$valueMap = [
+			['Vorname', $moduleAddress, FieldTypes::FIELD_TYPE_VARCHAR],
+			['Name', $moduleAddress, FieldTypes::FIELD_TYPE_VARCHAR],
+			['ArtDaten', $moduleAddress, FieldTypes::FIELD_TYPE_MULTISELECT],
+			['Telefon1', $moduleAddress, FieldTypes::FIELD_TYPE_TEXT],
+			['objektart', $moduleEstate, FieldTypes::FIELD_TYPE_VARCHAR],
+			['objekttyp', $moduleEstate, FieldTypes::FIELD_TYPE_VARCHAR],
+			['energieausweistyp', $moduleEstate, FieldTypes::FIELD_TYPE_SINGLESELECT],
+			['wohnflaeche', $moduleEstate, FieldTypes::FIELD_TYPE_INTEGER],
+			['kabel_sat_tv', $moduleEstate, FieldTypes::FIELD_TYPE_BOOLEAN],
+			['kabel_sat_tv', $moduleEstate, FieldTypes::FIELD_TYPE_BOOLEAN],
+		];
+		$pFieldnames->method('getType')->will($this->returnValueMap($valueMap));
 		$pFormPostConfiguration->setSDKWrapper($this->_pSDKWrapperMocker);
 		return $pFormPostConfiguration;
 	}
@@ -231,6 +232,8 @@ class TestClassFormPostOwner
 
 		$this->prepareMockerForAddressCreationNoSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
+		$this->_pFormPostConfiguration->getLogger()->expects($this->once())->method('logError');
+
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 3);
 
@@ -238,7 +241,6 @@ class TestClassFormPostOwner
 		$this->assertInstanceOf(FormData::class, $pFormData);
 		$this->assertTrue($pFormData->getFormSent());
 		$this->assertEquals(FormPost::MESSAGE_ERROR, $pFormData->getStatus());
-		$this->assertEquals(1, count($this->_pFormPostConfiguration->getLogEntries()));
 	}
 
 

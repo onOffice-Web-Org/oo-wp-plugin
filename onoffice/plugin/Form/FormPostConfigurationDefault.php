@@ -21,11 +21,12 @@
 
 namespace onOffice\WPlugin\Form;
 
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
-use function get_option;
+use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPOptionWrapperBase;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 
 /**
  *
@@ -78,20 +79,6 @@ class FormPostConfigurationDefault
 
 	/**
 	 *
-	 * @param string $input
-	 * @param string $module
-	 * @return string
-	 *
-	 */
-
-	public function getTypeForInput(string $input, string $module): string
-	{
-		return $this->_pFieldNames->getType($input, $module);
-	}
-
-
-	/**
-	 *
 	 * @return string
 	 *
 	 */
@@ -104,50 +91,36 @@ class FormPostConfigurationDefault
 
 	/**
 	 *
-	 * @return string
+	 * @return Fieldnames
 	 *
 	 */
 
-	public function getCaptchaSecret(): string
+	public function getFieldnames(): Fieldnames
 	{
-		return get_option('onoffice-settings-captcha-secretkey', '');
+		return $this->_pFieldNames;
 	}
 
 
 	/**
 	 *
-	 * @return bool
+	 * @return Logger
 	 *
 	 */
 
-	public function isCaptchaSetup(): bool
+	public function getLogger(): Logger
 	{
-		return get_option('onoffice-settings-captcha-sitekey', '') !== '';
+		return new Logger;
 	}
 
 
 	/**
 	 *
-	 * @return array
+	 * @return WPOptionWrapperBase
 	 *
 	 */
 
-	public function getSearchCriteriaFields(): array
+	public function getWPOptionsWrapper(): WPOptionWrapperBase
 	{
-		$pFieldnames = new Fieldnames(new FieldsCollection());
-		$pFieldnames->loadLanguage();
-		return $pFieldnames->getFieldList(onOfficeSDK::MODULE_SEARCHCRITERIA);
-	}
-
-
-	/**
-	 *
-	 * @param string $logString
-	 *
-	 */
-
-	public function log(string $logString)
-	{
-		error_log('[onOffice-Plugin]: Form error: '.$logString);
+		return new WPOptionWrapperDefault;
 	}
 }

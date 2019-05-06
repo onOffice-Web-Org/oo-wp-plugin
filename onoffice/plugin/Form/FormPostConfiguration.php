@@ -21,7 +21,10 @@
 
 namespace onOffice\WPlugin\Form;
 
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPOptionWrapperBase;
 
 /**
  *
@@ -52,17 +55,6 @@ interface FormPostConfiguration
 
 	/**
 	 *
-	 * @param string $input
-	 * @param string $module
-	 * @return string
-	 *
-	 */
-
-	public function getTypeForInput(string $input, string $module): string;
-
-
-	/**
-	 *
 	 * @return string
 	 *
 	 */
@@ -72,36 +64,27 @@ interface FormPostConfiguration
 
 	/**
 	 *
-	 * @return string
+	 * @return Logger
 	 *
 	 */
 
-	public function getCaptchaSecret(): string;
+	public function getLogger(): Logger;
 
 
 	/**
 	 *
-	 * @return bool
+	 * @return Fieldnames
 	 *
 	 */
 
-	public function isCaptchaSetup(): bool;
+	public function getFieldnames(): Fieldnames;
 
 
 	/**
 	 *
-	 * @return array
+	 * @return WPOptionWrapperBase
 	 *
 	 */
 
-	public function getSearchCriteriaFields(): array;
-
-
-	/**
-	 *
-	 * @param string $logString
-	 *
-	 */
-
-	public function log(string $logString);
+	public function getWPOptionsWrapper(): WPOptionWrapperBase;
 }

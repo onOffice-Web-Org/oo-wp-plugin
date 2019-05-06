@@ -22,12 +22,15 @@
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostInterest;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\Logger;
 
 /**
  *
@@ -51,10 +54,23 @@ class TestClassFormPostInterest
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
+		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->setConstructorArgs([new FieldsCollection()])
+			->getMock();
+		$pLogger = $this->getMock(Logger::class);
+
+		$jsonFile = ONOFFICE_PLUGIN_DIR.'/tests/resources/FormPostSearchCriteriaFields.json';
+		$jsonString = file_get_contents($jsonFile);
+		$searchCriteriaFields = json_decode($jsonString, true);
+
+		$pFieldnames->method('getFieldList')->with(onOfficeSDK::MODULE_SEARCHCRITERIA)->will($this->returnValue($searchCriteriaFields));
+
 		$searchCriteriaFieldsResponseENG = file_get_contents
 			(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json');
 		$responseArrayENG = json_decode($searchCriteriaFieldsResponseENG, true);
@@ -76,7 +92,7 @@ class TestClassFormPostInterest
 					'modules' => ['address', 'estate'],
 			], null, $responseArrayFields);
 
-		$this->_pFormPostConfiguration = new FormPostConfigurationTest();
+		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
 		$this->_pFormPostConfiguration->setSDKWrapper($pSDKWrapperMocker);
 
 		$this->_pFormPostInterestConfiguration = new FormPostInterestConfigurationTest();
@@ -141,8 +157,10 @@ class TestClassFormPostInterest
 
 		$this->_pFormPostConfiguration->setPostVariables($postVariables);
 		$this->_pFormPostInterestConfiguration->setPostValues($postVariables);
+		$this->_pFormPostConfiguration->getLogger()
+			->expects($this->exactly(count($unsuccessfulCombinations)))->method('logError');
 
-		foreach ($unsuccessfulCombinations as $index => $values) {
+		foreach ($unsuccessfulCombinations as $values) {
 			$this->addApiResponseCreateAddress($values[0]);
 			$this->addApiResponseCreateSearchCriteria($values[1]);
 			$this->addApiResponseSendMail($values[2]);
@@ -150,7 +168,6 @@ class TestClassFormPostInterest
 			$pFormData = $this->_pFormPostInterest->getFormDataInstance('interestform', 2);
 
 			$this->assertEquals(FormPost::MESSAGE_ERROR, $pFormData->getStatus());
-			$this->assertEquals($index + 1, count($this->_pFormPostConfiguration->getLogEntries()));
 		}
 	}
 
@@ -196,14 +213,14 @@ class TestClassFormPostInterest
 		$pConfig->setTemplate('testtemplate.php');
 		$pConfig->setFormType(Form::TYPE_INTEREST);
 
-		$this->_pFormPostConfiguration->addInputType
-			(onOfficeSDK::MODULE_ADDRESS, 'Vorname', FieldTypes::FIELD_TYPE_VARCHAR);
-		$this->_pFormPostConfiguration->addInputType
-			(onOfficeSDK::MODULE_ADDRESS, 'Name', FieldTypes::FIELD_TYPE_VARCHAR);
-		$this->_pFormPostConfiguration->addInputType
-			(onOfficeSDK::MODULE_SEARCHCRITERIA, 'vermarktungsart', FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$this->_pFormPostConfiguration->addInputType
-			(onOfficeSDK::MODULE_SEARCHCRITERIA, 'kaufpreis', FieldTypes::FIELD_TYPE_FLOAT);
+		$valueMap = [
+			['Vorname', onOfficeSDK::MODULE_ADDRESS, FieldTypes::FIELD_TYPE_VARCHAR],
+			['Name', onOfficeSDK::MODULE_ADDRESS, FieldTypes::FIELD_TYPE_VARCHAR],
+			['vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA, FieldTypes::FIELD_TYPE_SINGLESELECT],
+			['kaufpreis', onOfficeSDK::MODULE_SEARCHCRITERIA, FieldTypes::FIELD_TYPE_FLOAT],
+		];
+
+		$this->_pFormPostConfiguration->getFieldnames()->method('getType')->will($this->returnValueMap($valueMap));
 
 		return $pConfig;
 	}

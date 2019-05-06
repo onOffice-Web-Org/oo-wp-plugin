@@ -21,8 +21,11 @@
 
 namespace onOffice\WPlugin\Form;
 
-use Exception;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPOptionWrapperBase;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 
 
 /**
@@ -41,17 +44,32 @@ class FormPostConfigurationTest
 	/** @var array */
 	private $_postVariables = [];
 
-	/** @var array */
-	private $_fieldTypes = [];
-
-	/** @var string */
-	private $_captchaSecret = '';
-
 	/** @var string */
 	private $_postvarCaptchaToken = '';
 
-	/** @var array */
-	private $_logEntries = [];
+	/** @var Fieldnames */
+	private $_pFieldnames = null;
+
+	/** @var Logger */
+	private $_pLogger = null;
+
+	/** @var WPOptionWrapperTest */
+	private $_pWPOptionsWrapper = null;
+
+
+	/**
+	 *
+	 * @param Fieldnames $pFieldnames
+	 * @param Logger $pLogger
+	 *
+	 */
+
+	public function __construct(Fieldnames $pFieldnames, Logger $pLogger)
+	{
+		$this->_pWPOptionsWrapper = new WPOptionWrapperTest;
+		$this->_pFieldnames = $pFieldnames;
+		$this->_pLogger = $pLogger;
+	}
 
 
 	/**
@@ -104,39 +122,6 @@ class FormPostConfigurationTest
 
 	/**
 	 *
-	 * @param string $input
-	 * @param string $module
-	 * @return string
-	 * @throws Exception
-	 *
-	 */
-
-	public function getTypeForInput(string $input, string $module): string
-	{
-		if (isset($this->_fieldTypes[$module][$input])) {
-			return $this->_fieldTypes[$module][$input];
-		}
-
-		throw new Exception('Type for field '.$input.' in module '.$module.' was not set');
-	}
-
-
-	/**
-	 *
-	 * @param string $module
-	 * @param string $input
-	 * @param string $type
-	 *
-	 */
-
-	public function addInputType(string $module, string $input, string $type)
-	{
-		$this->_fieldTypes[$module][$input] = $type;
-	}
-
-
-	/**
-	 *
 	 * @param string $key
 	 * @param string $value
 	 *
@@ -145,42 +130,6 @@ class FormPostConfigurationTest
 	public function addPostVariableString(string $key, string $value)
 	{
 		$this->_postVariables[$key] = $value;
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getCaptchaSecret(): string
-	{
-		return $this->_captchaSecret;
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getPostvarCaptchaToken(): string
-	{
-		return $this->_postvarCaptchaToken;
-	}
-
-
-	/**
-	 *
-	 * @param string $captchaSecret
-	 *
-	 */
-
-	public function setCaptchaSecret(string $captchaSecret)
-	{
-		$this->_captchaSecret = $captchaSecret;
 	}
 
 
@@ -198,50 +147,48 @@ class FormPostConfigurationTest
 
 	/**
 	 *
-	 * @return bool
+	 * @return Fieldnames
 	 *
 	 */
 
-	public function isCaptchaSetup(): bool
+	public function getFieldnames(): Fieldnames
 	{
-		return true;
+		return $this->_pFieldnames;
 	}
 
 
 	/**
 	 *
-	 * @return array
+	 * @return Logger
 	 *
 	 */
 
-	public function getSearchCriteriaFields(): array
+	public function getLogger(): Logger
 	{
-		$jsonFile = ONOFFICE_PLUGIN_DIR.'/tests/resources/FormPostSearchCriteriaFields.json';
-		$jsonString = file_get_contents($jsonFile);
-		return json_decode($jsonString, true);
+		return $this->_pLogger;
 	}
 
 
 	/**
 	 *
-	 * @param string $logString
+	 * @return string
 	 *
 	 */
 
-	public function log(string $logString)
+	public function getPostvarCaptchaToken(): string
 	{
-		$this->_logEntries []= $logString;
+		return $this->_postvarCaptchaToken;
 	}
 
 
 	/**
 	 *
-	 * @return array
+	 * @return WPOptionWrapperBase
 	 *
 	 */
 
-	public function getLogEntries(): array
+	public function getWPOptionsWrapper(): WPOptionWrapperBase
 	{
-		return $this->_logEntries;
+		return $this->_pWPOptionsWrapper;
 	}
 }

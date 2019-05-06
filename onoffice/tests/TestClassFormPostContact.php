@@ -22,12 +22,15 @@
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\Form\FormPostContactConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostContact;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\Logger;
 
 /**
  *
@@ -54,13 +57,19 @@ class TestClassFormPostContact
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
+		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->setConstructorArgs([new FieldsCollection()])
+			->getMock();
+		$pLogger = $this->getMock(Logger::class);
 
-		$this->_pFormPostConfiguration = new FormPostConfigurationTest();
+		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
 		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest
 			($this->_pSDKWrapperMocker);
 		$this->_pFormPostContactConfiguration->setReferrer('/test/page');
@@ -69,13 +78,16 @@ class TestClassFormPostContact
 			$this->_pFormPostContactConfiguration);
 
 		$module = onOfficeSDK::MODULE_ADDRESS;
-		$this->_pFormPostConfiguration->addInputType($module, 'Vorname', FieldTypes::FIELD_TYPE_VARCHAR);
-		$this->_pFormPostConfiguration->addInputType($module, 'Name', FieldTypes::FIELD_TYPE_VARCHAR);
-		$this->_pFormPostConfiguration->addInputType($module, 'Email', FieldTypes::FIELD_TYPE_VARCHAR);
-		$this->_pFormPostConfiguration->addInputType($module, 'Plz', FieldTypes::FIELD_TYPE_INTEGER);
-		$this->_pFormPostConfiguration->addInputType($module, 'Ort', FieldTypes::FIELD_TYPE_VARCHAR);
-		$this->_pFormPostConfiguration->addInputType($module, 'Telefon1', FieldTypes::FIELD_TYPE_VARCHAR);
-		$this->_pFormPostConfiguration->addInputType($module, 'AGB_akzeptiert', FieldTypes::FIELD_TYPE_BOOLEAN);
+		$valueMap = [
+			['Vorname', $module, FieldTypes::FIELD_TYPE_VARCHAR],
+			['Name', $module, FieldTypes::FIELD_TYPE_VARCHAR],
+			['Email', $module, FieldTypes::FIELD_TYPE_VARCHAR],
+			['Plz', $module, FieldTypes::FIELD_TYPE_INTEGER],
+			['Ort', $module, FieldTypes::FIELD_TYPE_VARCHAR],
+			['Telefon1', $module, FieldTypes::FIELD_TYPE_VARCHAR],
+			['AGB_akzeptiert', $module, FieldTypes::FIELD_TYPE_BOOLEAN],
+		];
+		$this->_pFormPostConfiguration->getFieldnames()->method('getType')->will($this->returnValueMap($valueMap));
 
 		$this->configureSDKWrapperForContactAddress();
 		$this->configureSDKWrapperForCreateAddress();

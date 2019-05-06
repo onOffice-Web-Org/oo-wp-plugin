@@ -22,11 +22,14 @@
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationTest;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostApplicantSearch;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Utility\Logger;
 
 /**
  *
@@ -53,11 +56,18 @@ class TestClassFormPostApplicantSearch
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
-		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest();
+		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->setConstructorArgs([new FieldsCollection()])
+			->getMock();
+		$pLogger = $this->getMock(Logger::class);
+
+		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pFieldnames, $pLogger);
 		$pSDKWrapperMocker = $this->setupSDKWrapperMocker();
 		$this->_pFormPostConfigurationTest->setSDKWrapper($pSDKWrapperMocker);
 		$this->_pFormPostConfigurationTest->setPostVariables([
@@ -74,8 +84,6 @@ class TestClassFormPostApplicantSearch
 
 		$this->_pFormPostApplicantSearch = new FormPostApplicantSearch($this->_pFormPostConfigurationTest,
 			$this->_pTestConfigurationApplicantSearch);
-
-		parent::setUp();
 	}
 
 
