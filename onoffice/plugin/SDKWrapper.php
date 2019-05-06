@@ -32,6 +32,8 @@ use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Cache\DBCache;
+use onOffice\WPlugin\WP\WPOptionWrapperBase;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 
 
 /**
@@ -43,39 +45,38 @@ class SDKWrapper
 	/** @var onOfficeSDK */
 	private $_pSDK = null;
 
-	/** @var string */
-	private $_secret = '';
-
-	/** @var string */
-	private $_token = '';
-
-	/** @var array */
-	private $_curlOptions = [];
-
-	/** @var string */
-	private $_server = null;
-
 	/** @var array */
 	private $_callbacksAfterSend = [];
+
+	/** @var WPOptionWrapperDefault */
+	private $_pWPOptionWrapper = null;
+
+	/** @var array */
+	private $_caches = [];
 
 
 	/**
 	 *
+	 * @param onOfficeSDK $pSDK
+	 * @param WPOptionWrapperBase $pWPOptionWrapper
+	 *
 	 */
 
-	public function __construct()
+	public function __construct(
+		onOfficeSDK $pSDK = null,
+		WPOptionWrapperBase $pWPOptionWrapper = null)
 	{
-		$config = $this->readConfig();
+		$this->_pSDK = $pSDK ?? new onOfficeSDK();
+		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
 
-		$this->_pSDK = new onOfficeSDK();
+		$this->_caches = [
+			new DBCache(['ttl' => 3600]),
+		];
+		$config = $this->readConfig();
+		$this->_pSDK->setCaches($this->_caches);
+		$this->_pSDK->setApiServer($config['server']);
 		$this->_pSDK->setApiVersion($config['apiversion']);
-		$this->_pSDK->setCaches($config['cache']);
-		$this->_token = $config['token'];
-		$this->_secret = $config['secret'];
-		$this->_curlOptions = $config['curl_options'];
-		$this->_server = $config['server'];
-		$this->_pSDK->setApiServer($this->_server);
-		$this->_pSDK->setApiCurlOptions($this->_curlOptions);
+		$this->_pSDK->setApiCurlOptions($config['curl_options']);
 	}
 
 
@@ -88,12 +89,7 @@ class SDKWrapper
 	private function readConfig(): array
 	{
 		$localconfig = [
-			'token' => get_option('onoffice-settings-apikey'),
-			'secret' => get_option('onoffice-settings-apisecret'),
 			'apiversion' => 'latest',
-			'cache' => [
-				new DBCache(['ttl' => 3600]),
-			],
 			'server' => 'https://api.onoffice.de/api/',
 			'curl_options' => [
 				CURLOPT_SSL_VERIFYPEER => true,
@@ -158,7 +154,10 @@ class SDKWrapper
 
 	public function sendRequests()
 	{
-		$this->_pSDK->sendRequests($this->_token, $this->_secret);
+		$pOptionsWrapper = $this->_pWPOptionWrapper;
+		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
+		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
+		$this->_pSDK->sendRequests($token, $secret);
 		$errors = $this->_pSDK->getErrors();
 
 		foreach ($this->_callbacksAfterSend as $handle => $callback) {
@@ -193,7 +192,30 @@ class SDKWrapper
 
 	public function getCache(): array
 	{
-		$config = $this->readConfig();
-		return $config['cache'];
+		return $this->_caches;
+	}
+
+
+	/**
+	 *
+	 * @return onOfficeSDK
+	 *
+	 */
+
+	public function getSDK(): onOfficeSDK
+	{
+		return $this->_pSDK;
+	}
+
+
+	/**
+	 *
+	 * @return WPOptionWrapperBase
+	 *
+	 */
+
+	public function getWPOptionWrapper(): WPOptionWrapperBase
+	{
+		return $this->_pWPOptionWrapper;
 	}
 }
