@@ -69,6 +69,7 @@ class CaptchaHandler
 
 	public function checkCaptcha(): bool
 	{
+		// @codeCoverageIgnoreStart
 		$url = $this->buildFullUrl();
 		$curlResource = curl_init($url);
 		curl_setopt($curlResource, CURLOPT_RETURNTRANSFER, true);
@@ -76,7 +77,7 @@ class CaptchaHandler
 		$returnVal = $this->getResult($response);
 
 		return $returnVal;
-	}
+	} // @codeCoverageIgnoreEnd
 
 
 	/**

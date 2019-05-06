@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,68 +19,67 @@
  *
  */
 
-namespace onOffice\WPlugin\Form;
+declare (strict_types=1);
+
+namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\InputVariableReader;
+use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
+use WP_UnitTestCase;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
-class FormPostOwnerConfigurationDefault
-	implements FormPostOwnerConfiguration
+class TestClassFormPostOwnerConfigurationDefault
+	extends WP_UnitTestCase
 {
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	/** @var FormPostOwnerConfigurationDefault */
+	private $_pSubject = null;
 
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function __construct()
+	public function prepare()
 	{
-		$this->_pSDKWrapper = new SDKWrapper();
+		$this->_pSubject = new FormPostOwnerConfigurationDefault();
 	}
 
 
 	/**
 	 *
-	 * @return InputVariableReader
-	 *
 	 */
 
-	public function getEstateListInputVariableReader(): InputVariableReader
+	public function testGetEstateListInputVariableReader()
 	{
-		return new InputVariableReader(onOfficeSDK::MODULE_ESTATE);
+		$pVariableReader = $this->_pSubject->getEstateListInputVariableReader();
+		$this->assertInstanceOf(InputVariableReader::class, $pVariableReader);
+		$this->assertEquals(onOfficeSDK::MODULE_ESTATE, $pVariableReader->getModule());
 	}
 
 
 	/**
 	 *
-	 * @return string
-	 *
 	 */
 
-	public function getReferrer(): string
+	public function testGetReferrer()
 	{
-		return filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '';
+		$this->assertEquals('', $this->_pSubject->getReferrer());
 	}
 
 
 	/**
 	 *
-	 * @return SDKWrapper
-	 *
 	 */
 
-	public function getSDKWrapper(): SDKWrapper
+	public function testGetSDKWrapper()
 	{
-		return $this->_pSDKWrapper;
+		$this->assertInstanceOf(SDKWrapper::class, $this->_pSubject->getSDKWrapper());
 	}
 }

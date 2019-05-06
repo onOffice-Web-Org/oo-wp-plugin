@@ -291,4 +291,16 @@ class InputVariableReader
 	{
 		return $this->_pConfig->getFieldType($fieldName, $this->_module);
 	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getModule(): string
+	{
+		return $this->_module;
+	}
 }

@@ -49,7 +49,6 @@ class FormPostConfigurationDefault
 	public function __construct()
 	{
 		$this->_pFieldNames = new Fieldnames(new FieldsCollection());
-		$this->_pFieldNames->loadLanguage();
 	}
 
 

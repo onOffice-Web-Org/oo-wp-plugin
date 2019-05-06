@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,66 +19,54 @@
  *
  */
 
-namespace onOffice\WPlugin\Form;
+declare (strict_types=1);
 
+namespace onOffice\tests;
+
+use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
+use WP_UnitTestCase;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
-class FormPostContactConfigurationDefault
-	implements FormPostContactConfiguration
+class TestClassFormPostInterestConfigurationDefault
+	extends WP_UnitTestCase
 {
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	/** @var FormPostInterestConfigurationDefault */
+	private $_pSubject = null;
 
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function __construct()
+	public function prepare()
 	{
-		$this->_pSDKWrapper = new SDKWrapper();
+		$this->_pSubject = new FormPostInterestConfigurationDefault();
 	}
 
 
 	/**
 	 *
-	 * @return SDKWrapper
-	 *
 	 */
 
-	public function getSDKWrapper(): SDKWrapper
+	public function testGetPostValues()
 	{
-		return $this->_pSDKWrapper;
+		$_POST = ['test' => 'asdfpost'];
+		$this->assertEquals(['test' => 'asdfpost'], $this->_pSubject->getPostValues());
 	}
 
 
 	/**
 	 *
-	 * @return string
-	 *
 	 */
 
-	public function getReferrer(): string
+	public function testGetSDKWrapper()
 	{
-		return filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '';
-	}
-
-
-	/**
-	 *
-	 * @return bool
-	 *
-	 */
-
-	public function getNewsletterAccepted(): bool
-	{
-		return filter_input(INPUT_POST, 'newsletter', FILTER_VALIDATE_BOOLEAN) ?? false;
+		$this->assertInstanceOf(SDKWrapper::class, $this->_pSubject->getSDKWrapper());
 	}
 }
