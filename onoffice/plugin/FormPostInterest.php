@@ -130,6 +130,8 @@ class FormPostInterest
 			'subject' => $subject,
 			'replyto' => $mailInteressent,
 			'receiver' => [$recipient],
+			'X-Original-From' => $mailInteressent,
+			'saveToAgentsLog' => false,
 		];
 
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();

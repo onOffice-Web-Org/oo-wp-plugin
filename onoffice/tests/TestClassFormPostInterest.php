@@ -69,7 +69,8 @@ class TestClassFormPostInterest
 		$jsonString = file_get_contents($jsonFile);
 		$searchCriteriaFields = json_decode($jsonString, true);
 
-		$pFieldnames->method('getFieldList')->with(onOfficeSDK::MODULE_SEARCHCRITERIA)->will($this->returnValue($searchCriteriaFields));
+		$pFieldnames->method('getFieldList')->with(onOfficeSDK::MODULE_SEARCHCRITERIA)
+			->will($this->returnValue($searchCriteriaFields));
 
 		$searchCriteriaFieldsResponseENG = file_get_contents
 			(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json');
@@ -113,6 +114,7 @@ class TestClassFormPostInterest
 		$postVariables = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
+			'Email' => 'john@doemail.com',
 			'vermarktungsart' => 'kauf',
 			'kaufpreis__von' => '200000.00',
 			'kaufpreis__bis' => '800000.00',
@@ -140,6 +142,7 @@ class TestClassFormPostInterest
 		$postVariables = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
+			'Email' => 'john@doemail.com',
 			'vermarktungsart' => 'kauf',
 			'kaufpreis__von' => '200000.00',
 			'kaufpreis__bis' => '800000.00',
@@ -204,6 +207,7 @@ class TestClassFormPostInterest
 		$pConfig = new DataFormConfigurationInterest();
 		$pConfig->addInput('Vorname', onOfficeSDK::MODULE_ADDRESS);
 		$pConfig->addInput('Name', onOfficeSDK::MODULE_ADDRESS);
+		$pConfig->addInput('Email', onOfficeSDK::MODULE_ADDRESS);
 		$pConfig->addInput('vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pConfig->addInput('kaufpreis', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pConfig->setFormName('interestform');
@@ -216,6 +220,7 @@ class TestClassFormPostInterest
 		$valueMap = [
 			['Vorname', onOfficeSDK::MODULE_ADDRESS, FieldTypes::FIELD_TYPE_VARCHAR],
 			['Name', onOfficeSDK::MODULE_ADDRESS, FieldTypes::FIELD_TYPE_VARCHAR],
+			['Email', onOfficeSDK::MODULE_ADDRESS, FieldTypes::FIELD_TYPE_VARCHAR],
 			['vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA, FieldTypes::FIELD_TYPE_SINGLESELECT],
 			['kaufpreis', onOfficeSDK::MODULE_SEARCHCRITERIA, FieldTypes::FIELD_TYPE_FLOAT],
 		];
@@ -239,6 +244,7 @@ class TestClassFormPostInterest
 		$parameters = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
+			'email' => 'john@doemail.com',
 			'checkDuplicate' => false,
 		];
 
@@ -347,10 +353,12 @@ class TestClassFormPostInterest
 				.'Herzliche Grüße'."\n"
 				.'Ihr onOffice Team',
 			'subject' => 'Interest',
-			'replyto' => null,
+			'replyto' => 'john@doemail.com',
 			'receiver' => [
 				'test@my-onoffice.com',
 			],
+			'X-Original-From' => 'john@doemail.com',
+			'saveToAgentsLog' => false,
 		];
 
 		$response = [
