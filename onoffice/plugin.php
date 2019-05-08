@@ -56,7 +56,9 @@ $pAutoloader->addNamespace('onOffice\SDK', implode(DIRECTORY_SEPARATOR, [__DIR__
 $pAutoloader->addNamespace('onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plugin');
 $pAutoloader->register();
 
-define('ONOFFICE_FEATURE_CONFIGURE_GEO', filter_input(INPUT_SERVER, 'SERVER_NAME') === 'localhost');
+if (!defined('ONOFFICE_FEATURE_CONFIGURE_GEO')) {
+	define('ONOFFICE_FEATURE_CONFIGURE_GEO', filter_input(INPUT_SERVER, 'SERVER_NAME') === 'localhost');
+}
 
 $pContentFilter = new ContentFilter();
 $pContentFilterAddress = new ContentFilterShortCodeAddress();
