@@ -59,17 +59,18 @@ class LinkBuilderPage
 	/**
 	 *
 	 * @param string $contactFormPath
+	 * @param bool $preserveEstateContext
 	 * @return string
 	 *
 	 */
 
-	public function buildLinkByPath(string $contactFormPath): string
+	public function buildLinkByPath(string $contactFormPath, bool $preserveEstateContext): string
 	{
 		$pPost = $this->_pWPPageWrapper->getPageByPath($contactFormPath);
 		$link = $this->_pWPPageWrapper->getPageLinkByPost($pPost);
 		$estateId = (int)$this->_pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
 
-		if ($estateId !== 0) {
+		if ($preserveEstateContext && $estateId !== 0) {
 			$link = add_query_arg('estate_id', $estateId, $link);
 		}
 

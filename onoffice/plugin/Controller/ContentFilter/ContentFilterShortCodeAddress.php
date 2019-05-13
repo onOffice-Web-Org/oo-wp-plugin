@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use Exception;
@@ -81,6 +83,7 @@ class ContentFilterShortCodeAddress
 	 *
 	 * @param string $addressListName
 	 * @param int $page
+	 * @return Template
 	 *
 	 */
 

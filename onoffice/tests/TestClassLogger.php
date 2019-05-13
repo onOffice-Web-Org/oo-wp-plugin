@@ -97,7 +97,7 @@ class TestClassLogger
 			->disableOriginalConstructor()
 			->getMock();
 		$pException = new APIClientCredentialsException($pApiClientAction);
-		$expectation = '<h1>Please configure your onOffice API credentials first!</h1>';
+		$expectation = '<big><strong>Please configure your onOffice API credentials first!</strong></big>';
 
 		$this->assertEquals($expectation, $this->_pLogger->logErrorAndDisplayMessage($pException));
 	}

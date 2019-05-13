@@ -54,7 +54,7 @@ class TestClassLinkBuilderPage
 			->setMethods(['get'])
 			->getMock();
 		$pWPQuery->method('get')
-			->with('estate_id', 0)->will($this->onConsecutiveCalls('123', '0'));
+			->with('estate_id', 0)->will($this->onConsecutiveCalls('123', '0', '123'));
 
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
 			->setMethods(['getWPQuery'])
@@ -108,9 +108,11 @@ class TestClassLinkBuilderPage
 
 	public function testBuildLinkByPath()
 	{
-		$resultWithEstate = $this->_pSubject->buildLinkByPath('hello');
+		$resultWithEstate = $this->_pSubject->buildLinkByPath('hello', true);
 		$this->assertEquals('hello?estate_id=123', $resultWithEstate);
-		$resultWithoutEstate = $this->_pSubject->buildLinkByPath('hello');
+		$resultWithoutEstate = $this->_pSubject->buildLinkByPath('hello', true);
 		$this->assertEquals('hello', $resultWithoutEstate);
+		$resultWithoutEstateContext = $this->_pSubject->buildLinkByPath('hello', false);
+		$this->assertEquals('hello', $resultWithoutEstateContext);
 	}
 }

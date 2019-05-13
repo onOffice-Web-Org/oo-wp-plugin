@@ -19,29 +19,23 @@
  *
  */
 
-namespace onOffice\WPlugin\WP;
+declare (strict_types=1);
 
-use Exception;
-use onOffice\WPlugin\Controller\Exception\ExceptionPrettyPrintable;
-use function __;
+namespace onOffice\WPlugin\Controller\Exception;
 
 /**
  *
+ * pretty-print an exception by returning a one-line translated string
+ *
  */
 
-class UnknownPageException
-	extends Exception
-	implements ExceptionPrettyPrintable
+interface ExceptionPrettyPrintable
 {
 	/**
 	 *
-	 * @return string
+	 * @return string The translated error message
 	 *
 	 */
 
-	public function printFormatted(): string
-	{
-		/* translators: %s is the path of a page. */
-		return sprintf(__('Bad path "%s". The Page was not found.', 'onoffice'), $this->message);
-	}
+	public function printFormatted(): string;
 }

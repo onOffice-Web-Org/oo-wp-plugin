@@ -19,29 +19,31 @@
  *
  */
 
-namespace onOffice\WPlugin\WP;
+declare (strict_types=1);
 
-use Exception;
-use onOffice\WPlugin\Controller\Exception\ExceptionPrettyPrintable;
-use function __;
+namespace onOffice\tests;
+
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\SDKWrapper;
+use WP_UnitTestCase;
 
 /**
  *
  */
 
-class UnknownPageException
-	extends Exception
-	implements ExceptionPrettyPrintable
+class TestClassAPIClientCredentialsException
+	extends WP_UnitTestCase
 {
 	/**
 	 *
-	 * @return string
-	 *
 	 */
 
-	public function printFormatted(): string
+	public function testPrintFormatted()
 	{
-		/* translators: %s is the path of a page. */
-		return sprintf(__('Bad path "%s". The Page was not found.', 'onoffice'), $this->message);
+		$pAPIClientAction = new APIClientActionGeneric(new SDKWrapper, '', '');
+		$pException = new APIClientCredentialsException($pAPIClientAction);
+		$this->assertEquals('Please configure your onOffice API credentials first!',
+			$pException->printFormatted());
 	}
 }

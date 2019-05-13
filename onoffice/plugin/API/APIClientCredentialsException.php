@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\API;
 
+use onOffice\WPlugin\Controller\Exception\ExceptionPrettyPrintable;
+use function __;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -32,4 +35,16 @@ namespace onOffice\WPlugin\API;
 
 class APIClientCredentialsException
 	extends ApiClientException
-{}
+	implements ExceptionPrettyPrintable
+{
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function printFormatted(): string
+	{
+		return __('Please configure your onOffice API credentials first!', 'onoffice');
+	}
+}

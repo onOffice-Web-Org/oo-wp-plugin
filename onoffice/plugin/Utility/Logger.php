@@ -19,12 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Utility;
 
 use Exception;
-use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\Controller\Exception\ExceptionPrettyPrintable;
 use onOffice\WPlugin\Controller\UserCapabilities;
-use function __;
 use function current_user_can;
 use function esc_html;
 use function esc_html__;
@@ -60,16 +61,16 @@ class Logger
 	 *
 	 */
 
-	public function logErrorAndDisplayMessage(Exception $pException)
+	public function logErrorAndDisplayMessage(Exception $pException): string
 	{
 		$output = '';
 		$pUserCapabilities = $this->_pEnvironment->getUserCapabilities();
 		$roleDebugOutput = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_DEBUG_OUTPUT);
 
 		if (current_user_can($roleDebugOutput)) {
-			if ($pException instanceof APIClientCredentialsException) {
-				$output = sprintf('<h1>%s</h1>',
-					__('Please configure your onOffice API credentials first!', 'onoffice'));
+			if ($pException instanceof ExceptionPrettyPrintable) {
+				$output = sprintf('<big><strong>%s</strong></big>',
+					esc_html($pException->printFormatted()));
 			} else {
 				$output = '<pre>'
 					.'<u><strong>[onOffice-Plugin]</strong> '
