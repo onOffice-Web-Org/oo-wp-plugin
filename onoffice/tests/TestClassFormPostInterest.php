@@ -63,7 +63,7 @@ class TestClassFormPostInterest
 		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
 			->setConstructorArgs([new FieldsCollection()])
 			->getMock();
-		$pLogger = $this->getMock(Logger::class);
+		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$jsonFile = ONOFFICE_PLUGIN_DIR.'/tests/resources/FormPostSearchCriteriaFields.json';
 		$jsonString = file_get_contents($jsonFile);

@@ -66,7 +66,7 @@ class TestClassImpressum
 
 	public function testGetData()
 	{
-		$result = $this->_pImpressum->getData();
+		$result = $this->_pImpressum->load()->getData();
 
 		$expectedValues = [
 			'title' => 'Frau',
@@ -107,6 +107,7 @@ class TestClassImpressum
 
 	public function testGetDataByKey()
 	{
+		$this->_pImpressum->load();
 		$expectedValues = [
 			'title' => 'Frau',
 			'firstname' => 'Frauke',
@@ -149,6 +150,7 @@ class TestClassImpressum
 
 	public function testUnknownValue()
 	{
+		$this->_pImpressum->load();
 		$result = $this->_pImpressum->getDataByKey('unknownValue');
 		$this->assertEquals('', $result);
 	}

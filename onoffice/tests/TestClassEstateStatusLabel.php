@@ -53,8 +53,10 @@ class TestClassEstateStatusLabel
 
 	public function setUpFieldnames()
 	{
-		$this->_pFieldnamesInactive = $this->getMock(Fieldnames::class,
-			['getFieldLabel', 'getFieldInformation', 'loadLanguage'], [new FieldsCollection()]);
+		$this->_pFieldnamesInactive = $this->getMockBuilder(Fieldnames::class)
+			->setMethods(['getFieldLabel', 'getFieldInformation', 'loadLanguage'])
+			->setConstructorArgs([new FieldsCollection()])
+			->getMock();
 		$this->_pFieldnamesInactive->method('getFieldInformation')
 			->will($this->returnCallback(function($field, $module) {
 				if ($field === 'objekt_des_tages' || $module !== onOfficeSDK::MODULE_ESTATE) {
@@ -63,8 +65,10 @@ class TestClassEstateStatusLabel
 
 				return ['label' => $field.'-label'];
 			}));
-		$this->_pFieldnamesActive = $this->getMock(Fieldnames::class,
-			['getFieldLabel', 'getFieldInformation', 'loadLanguage'], [new FieldsCollection(), true]);
+		$this->_pFieldnamesActive = $this->getMockBuilder(Fieldnames::class)
+			->setMethods(['getFieldLabel', 'getFieldInformation', 'loadLanguage'])
+			->setConstructorArgs([new FieldsCollection(), true])
+			->getMock();
 		$this->_pFieldnamesActive
 			->method('getFieldInformation')
 			->will($this->returnValueMap([

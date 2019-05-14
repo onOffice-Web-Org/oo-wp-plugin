@@ -35,7 +35,7 @@ class TestClassScriptLoaderMapGoogleMaps
 	/** @var array */
 	private $_scriptsExpectation = [
 		'google-maps' => [
-			'src' => 'https://maps.googleapis.com/maps/api/js',
+			'src' => 'https://maps.googleapis.com/maps/api/js?',
 			'deps' => [],
 			'ver' => false,
 			'inFooter' => false,

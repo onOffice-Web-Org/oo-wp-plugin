@@ -175,7 +175,10 @@ class TestClassEstateList
 	public function testGetFieldLabel()
 	{
 		$pFields = new FieldsCollection();
-		$pFieldnamesMock = $this->getMock(Fieldnames::class, ['getFieldLabel'], [$pFields]);
+		$pFieldnamesMock = $this->getMockBuilder(Fieldnames::class)
+			->setMethods(['getFieldLabel'])
+			->setConstructorArgs([$pFields])
+			->getMock();
 		$pFieldnamesMock->method('getFieldLabel')->with(
 				$this->equalTo('testfield'), $this->equalTo(onOfficeSDK::MODULE_ESTATE))
 			->will($this->returnValue('Test Field'));
@@ -240,7 +243,10 @@ class TestClassEstateList
 
 	public function testGetEstatePictures()
 	{
-		$pEstatePicturesMock = $this->getMock(EstateFiles::class, ['registerRequest', 'parseRequest', 'getEstatePictures'], [$this->getDataView()->getPictureTypes()]);
+		$pEstatePicturesMock = $this->getMockBuilder(EstateFiles::class)
+			->setMethods(['registerRequest', 'parseRequest', 'getEstatePictures'])
+			->setConstructorArgs([$this->getDataView()->getPictureTypes()])
+			->getMock();
 		$pEstatePicturesMock->method('getEstatePictures')->with(15)->willReturn($this->_estatePicturesByEstateId[15]);
 		$this->_pEnvironment->method('getEstateFiles')->with($this->getDataView()->getPictureTypes())->will($this->returnValue($pEstatePicturesMock));
 
@@ -261,8 +267,10 @@ class TestClassEstateList
 
 	public function testGetEstatePictureUrl()
 	{
-		$pEstatePicturesMock = $this->getMock(EstateFiles::class,
-			['registerRequest', 'parseRequest', 'getEstatePictures', 'getEstateFileUrl'], [$this->getDataView()->getPictureTypes()]);
+		$pEstatePicturesMock = $this->getMockBuilder(EstateFiles::class)
+			->setMethods(['registerRequest', 'parseRequest', 'getEstatePictures', 'getEstateFileUrl'])
+			->setConstructorArgs([$this->getDataView()->getPictureTypes()])
+			->getMock();
 		$pEstatePicturesMock
 			->expects($this->at(2))
 			->method('getEstateFileUrl')
@@ -335,8 +343,10 @@ class TestClassEstateList
 
 	private function doTestGetEstatePictureMethodGeneric(string $methodName, array $expectedResults)
 	{
-		$pEstatePicturesMock = $this->getMock(EstateFiles::class,
-			['registerRequest', 'parseRequest', 'getEstatePictures', $methodName], [$this->getDataView()->getPictureTypes()]);
+		$pEstatePicturesMock = $this->getMockBuilder(EstateFiles::class)
+			->setMethods(['registerRequest', 'parseRequest', 'getEstatePictures', $methodName])
+			->setConstructorArgs([$this->getDataView()->getPictureTypes()])
+			->getMock();
 		$pEstatePicturesMock
 			->expects($this->at(2))
 			->method($methodName)
@@ -387,7 +397,9 @@ class TestClassEstateList
 			['50', ['Vorname' => 'John', 'Name' => 'Doe']],
 			['52', ['Vorname' => 'Max', 'Name' => 'Mustermann']],
 		];
-		$pAddressDataMock = $this->getMock(AddressList::class, ['__construct', 'getAddressById', 'loadAdressesById']);
+		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
+			->setMethods(['__construct', 'getAddressById', 'loadAdressesById'])
+			->getMock();
 		$pAddressDataMock->expects($this->once())->method('loadAdressesById')->with([50, 52], ['Vorname', 'Name']);
 		$pAddressDataMock->method('getAddressById')->will($this->returnValueMap($valueMap));
 		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
@@ -442,12 +454,15 @@ class TestClassEstateList
 	public function testGetEstateUnits()
 	{
 		$pDataListView = new DataListView(1, 'defaultUnits');
-		$pEstateUnitsMock = $this->getMock(EstateUnits::class, [
-			'getEstateUnitsByName',
-			'loadByMainEstates',
-			'getSubEstateCount',
-			'generateHtmlOutput',
-		], [$pDataListView]);
+		$pEstateUnitsMock = $this->getMockBuilder(EstateUnits::class)
+			->setMethods([
+				'getEstateUnitsByName',
+				'loadByMainEstates',
+				'getSubEstateCount',
+				'generateHtmlOutput',
+			])
+			->setConstructorArgs([$pDataListView])
+			->getMock();
 		$pEstateUnitsMock
 			->expects($this->once())
 			->method('loadByMainEstates')
@@ -507,7 +522,10 @@ class TestClassEstateList
 
 	public function testGetVisibleFilterableFields()
 	{
-		$pMockOutputFields = $this->getMock(OutputFields::class, ['getVisibleFilterableFields'], [], '', false);
+		$pMockOutputFields = $this->getMockBuilder(OutputFields::class)
+			->setMethods(['getVisibleFilterableFields'])
+			->disableOriginalConstructor()
+			->getMock();
 		$pMockOutputFields->method('getVisibleFilterableFields')->willReturn(['objektart' => 'haus', 'objekttyp' => 'reihenhaus']);
 		$this->_pEnvironment->method('getOutputFields')->willReturn($pMockOutputFields);
 
@@ -517,7 +535,10 @@ class TestClassEstateList
 		];
 
 		$pFieldsCollection = new FieldsCollection();
-		$pMockFieldnames = $this->getMock(Fieldnames::class, ['getFieldInformation'], [$pFieldsCollection]);
+		$pMockFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->setMethods(['getFieldInformation'])
+			->setConstructorArgs([$pFieldsCollection])
+			->getMock();
 		$pMockFieldnames->method('getFieldInformation')->will($this->returnValueMap($valueMap));
 		$this->_pEnvironment->method('getFieldnames')->willReturn($pMockFieldnames);
 
@@ -608,7 +629,7 @@ class TestClassEstateList
 
 	public function testGeoSearchBuilder()
 	{
-		$pNewGeoSearchBuilder = $this->getMock(GeoSearchBuilderFromInputVars::class);
+		$pNewGeoSearchBuilder = $this->getMockBuilder(GeoSearchBuilderFromInputVars::class)->getMock();
 		$this->assertInstanceOf(GeoSearchBuilderEmpty::class, $this->_pEstateList->getGeoSearchBuilder());
 		$this->_pEstateList->setGeoSearchBuilder($pNewGeoSearchBuilder);
 		$this->assertInstanceOf(GeoSearchBuilderFromInputVars::class, $this->_pEstateList->getGeoSearchBuilder());
@@ -645,19 +666,19 @@ class TestClassEstateList
 				'parentids' => [15, 1051, 1082, 1193, 1071],
 				'relationtype' => 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:contactPerson'
 			], null, $responseGetIdsFromRelation);
-		$this->_pEnvironment = $this->getMock(EstateListEnvironment::class);
+		$this->_pEnvironment = $this->getMockBuilder(EstateListEnvironment::class)->getMock();
 		$this->_pEnvironment->method('getSDKWrapper')->willReturn($this->_pSDKWrapperMocker);
 		$pDataListView = $this->getDataView();
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
 		$this->_pEstateList = new EstateList($pDataListView, $this->_pEnvironment);
 
-		$pGeoSearchBuilder = $this->getMock(GeoSearchBuilderEmpty::class, ['buildParameters']);
+		$pGeoSearchBuilder = $this->getMockBuilder(GeoSearchBuilderEmpty::class)->setMethods(['buildParameters'])->getMock();
 		$pGeoSearchBuilder->method('buildParameters')->willReturn(['radius' => 500, 'country' => 'DEU', 'zip' => '52068']);
 		$this->_pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 		$this->_pEnvironment->method('getGeoSearchBuilder')->willReturn($pGeoSearchBuilder);
 		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
-			($this->getMock(EstateStatusLabel::class, ['getFieldsByPrio', 'getLabel']));
+			($this->getMockBuilder(EstateStatusLabel::class)->setMethods(['getFieldsByPrio', 'getLabel'])->getMock());
 		$this->_pEnvironment->getEstateStatusLabel()->method('getFieldsByPrio')->willReturn([
 			'referenz',
 			'reserviert',

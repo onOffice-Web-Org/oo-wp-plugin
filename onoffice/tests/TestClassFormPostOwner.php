@@ -122,7 +122,7 @@ class TestClassFormPostOwner
 		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
 			->setConstructorArgs([new FieldsCollection()])
 			->getMock();
-		$pLogger = $this->getMock(Logger::class);
+		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
 		$valueMap = [

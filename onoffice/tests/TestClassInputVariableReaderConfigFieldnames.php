@@ -132,8 +132,10 @@ class TestClassInputVariableReaderConfigFieldnames
 
 	public function prepare()
 	{
-		$this->_pFieldnames = $this->getMock
-			(Fieldnames::class, ['__construct', 'getFieldInformation', 'loadLanguage'], [new FieldsCollection()]);
+		$this->_pFieldnames = $this->getMockBuilder(Fieldnames::class)
+			->setMethods(['__construct', 'getFieldInformation', 'loadLanguage'])
+			->setConstructorArgs([new FieldsCollection()])
+			->getMock();
 		$this->_pFieldnames->method('getFieldInformation')->will($this->returnValueMap([
 			['test1', 'estate', ['type' => 'string']],
 			['test2', 'estate', ['type' => 'int']],

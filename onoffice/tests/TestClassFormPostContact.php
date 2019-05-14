@@ -67,7 +67,7 @@ class TestClassFormPostContact
 		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
 			->setConstructorArgs([new FieldsCollection()])
 			->getMock();
-		$pLogger = $this->getMock(Logger::class);
+		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
 		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest

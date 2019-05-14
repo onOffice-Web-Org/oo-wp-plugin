@@ -67,25 +67,33 @@ class TestClassDefaultFilterBuilderListView
 
 	public function prepareMock()
 	{
-		$pEnvironment = $this->getMock(DefaultFilterBuilderListViewEnvironment::class, [
-			'getFilterBuilderInputVariables',
-			'getInputVariableReader',
-			'getRegionController',
-		]);
+		$pEnvironment = $this->getMockBuilder(DefaultFilterBuilderListViewEnvironment::class)
+			->setMethods([
+				'getFilterBuilderInputVariables',
+				'getInputVariableReader',
+				'getRegionController',
+			])
+			->getMock();
 
 		$this->_pInputVariableReaderConfig = new InputVariableReaderConfigTest();
 
 		$pEnvironment
 			->method('getFilterBuilderInputVariables')
-			->will($this->returnValue($this->getMock(FilterBuilderInputVariables::class, null, [
-				onOfficeSDK::MODULE_ESTATE, true, $this->_pInputVariableReaderConfig])));
+			->will($this->returnValue($this->getMockBuilder(FilterBuilderInputVariables::class)
+				->setConstructorArgs([
+					onOfficeSDK::MODULE_ESTATE, true, $this->_pInputVariableReaderConfig])
+				->getMock()));
 		$pEnvironment
 			->method('getInputVariableReader')
 			->will($this->returnValue
-				($this->getMock(InputVariableReader::class, null,
-					[onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConfig])));
-		$pRegionControllerMock = $this->getMock(RegionController::class,
-				['fetchRegions', 'getSubRegionsByParentRegion'], [false]);
+				($this->getMockBuilder(InputVariableReader::class)
+					->setConstructorArgs(
+					[onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConfig])
+					->getMock()));
+		$pRegionControllerMock = $this->getMockBuilder(RegionController::class)
+			->setMethods(['fetchRegions', 'getSubRegionsByParentRegion'])
+			->setConstructorArgs([false])
+			->getMock();
 		$pRegionControllerMock
 			->method('getSubRegionsByParentRegion')
 			->with('OstfriesischeInseln')

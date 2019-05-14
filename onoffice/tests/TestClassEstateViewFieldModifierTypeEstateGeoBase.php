@@ -39,7 +39,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 	public function testGetApiFields()
 	{
 		$viewFields = [GeoPosition::FIELD_GEO_POSITION, 'testField'];
-		$pViewFieldModifier = $this->createMock($viewFields);
+		$pViewFieldModifier = $this->generateMockObject($viewFields);
 		$result = $pViewFieldModifier->getAPIFields();
 		$expectedResult = [
 			'testField',
@@ -64,7 +64,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 	public function testGetVisibleFields()
 	{
 		$viewFields = [GeoPosition::FIELD_GEO_POSITION, 'testField'];
-		$pViewFieldModifier = $this->createMock($viewFields);
+		$pViewFieldModifier = $this->generateMockObject($viewFields);
 
 		$expectedVisibleFields = ['breitengrad', 'laengengrad', 'testField'];
 		$this->assertEqualSets($expectedVisibleFields, $pViewFieldModifier->getVisibleFields());
@@ -78,7 +78,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 	public function testReduceRecordVirtual()
 	{
 		$viewFields = [GeoPosition::FIELD_GEO_POSITION, 'testField'];
-		$pViewFieldModifier = $this->createMock($viewFields);
+		$pViewFieldModifier = $this->generateMockObject($viewFields);
 
 		$record = [
 			'virtualAddress' => '1',
@@ -115,7 +115,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 	public function testReduceRecordHideAddress()
 	{
 		$viewFields = [GeoPosition::FIELD_GEO_POSITION, 'testField'];
-		$pViewFieldModifier = $this->createMock($viewFields);
+		$pViewFieldModifier = $this->generateMockObject($viewFields);
 
 		$record = [
 			'virtualAddress' => '0',
@@ -149,7 +149,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 	public function testGetViewFields()
 	{
 		$viewFields = [GeoPosition::FIELD_GEO_POSITION, 'testField'];
-		$pViewFieldModifier = $this->createMock($viewFields);
+		$pViewFieldModifier = $this->generateMockObject($viewFields);
 
 		$pClosure = function() {return $this->getViewFields();};
 		$result = Closure::bind($pClosure, $pViewFieldModifier,
@@ -165,7 +165,7 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 	 *
 	 */
 
-	private function createMock(array $viewFields): EstateViewFieldModifierTypeEstateGeoBase
+	private function generateMockObject(array $viewFields): EstateViewFieldModifierTypeEstateGeoBase
 	{
 		return $this->getMockForAbstractClass
 			(EstateViewFieldModifierTypeEstateGeoBase::class, [$viewFields]);

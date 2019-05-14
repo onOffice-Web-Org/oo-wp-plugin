@@ -104,7 +104,7 @@ class TestClassAddressList
 		$pMockFieldnames = $this->getMockBuilder(Fieldnames::class)
 			->setMethods(['getFieldLabel', 'loadLanguage', 'getFieldInformation'])
 			->setConstructorArgs([new FieldsCollection(), false,
-				$this->getMock(FieldnamesEnvironment::class)])
+				$this->getMockBuilder(FieldnamesEnvironment::class)->getMock()])
 			->getMock();
 		$module = onOfficeSDK::MODULE_ADDRESS;
 		$pMockFieldnames->method('getFieldLabel')->will($this->returnValueMap([
@@ -128,7 +128,7 @@ class TestClassAddressList
 		$pMockOutputFields->method('getVisibleFilterableFields')
 			->will($this->returnValue(['KdNr' => 4, 'Vorname' => null, 'Name' => 'Stefansson']));
 
-		$pMockConfig = $this->getMock(AddressListEnvironment::class);
+		$pMockConfig = $this->getMockBuilder(AddressListEnvironment::class)->getMock();
 		$pMockConfig->method('getSDKWrapper')->will($this->returnValue($pSDKWrapper));
 		$pMockConfig->method('getViewFieldModifierHandler')
 			->will($this->returnValue($pMockViewFieldModifierHandler));

@@ -87,10 +87,12 @@ class TestClassDataListViewFactoryBase
 
 	public function prepare()
 	{
-		$pMockDataListViewFactoryBase = $this->getMock(DataListViewFactoryBase::class,
-			['createListViewByRow']);
-		$this->_pMockRecordManagerRead = $this->getMock(RecordManagerRead::class,
-			['getRowByName', 'getRecords']);
+		$pMockDataListViewFactoryBase = $this->getMockBuilder(DataListViewFactoryBase::class)
+			->setMethods(['createListViewByRow'])
+			->getMock();
+		$this->_pMockRecordManagerRead = $this->getMockBuilder(RecordManagerRead::class)
+			->setMethods(['getRowByName', 'getRecords'])
+			->getMock();
 		$pNewRecordFinder = $this->_pMockRecordManagerRead;
 
 		Closure::bind(function() use ($pNewRecordFinder) {

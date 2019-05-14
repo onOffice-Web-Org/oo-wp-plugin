@@ -56,7 +56,7 @@ class TestClassLogger
 
 	public function prepare()
 	{
-		$this->_pEnvironment = $this->getMock(LoggerEnvironment::class);
+		$this->_pEnvironment = $this->getMockBuilder(LoggerEnvironment::class)->getMock();
 		$this->_pEnvironment->expects($this->once())->method('log')->with($this->anything());
 
 		$pUserCapabilities = $this->getMockBuilder(UserCapabilities::class)

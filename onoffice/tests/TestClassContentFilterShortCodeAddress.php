@@ -74,7 +74,7 @@ class TestClassContentFilterShortCodeAddress
 
 		$this->_pEnvironment
 				->method('createAddressList')
-				->will($this->returnValue($this->getMock(AddressList::class)));
+				->will($this->returnValue($this->getMockBuilder(AddressList::class)->getMock()));
 
 		$pMockDataListViewFactoryAddress = $this->getMockBuilder(DataListViewFactoryAddress::class)
 				->setMethods(['getListViewByName'])
@@ -115,8 +115,8 @@ class TestClassContentFilterShortCodeAddress
 	{
 		$pTemplateMock = $this->_pEnvironment->getTemplate('adressList-01');
 		$pTemplateMock->expects($this->once())->method('setImpressum')->with($this->_pEnvironment->getImpressum());
-		$pTemplateMock->expects($this->once())->method('setAddressList')->with($this->getMock(AddressList::class));
-
+		$pTemplateMock->expects($this->once())->method('setAddressList')
+			->with($this->getMockBuilder(AddressList::class)->getMock());
 
 		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress($this->_pEnvironment);
 		$result = $pConfigFilterShortCodeAddress->replaceShortCodes(['view' => 'adressList-01']);

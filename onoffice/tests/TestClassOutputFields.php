@@ -111,7 +111,9 @@ class TestClassOutputFields
 
 	public function testConstruct()
 	{
-		$pGeoPosition = $this->getMock(GeoPositionFieldHandler::class, [], [], '', false);
+		$pGeoPosition = $this->getMockBuilder(GeoPositionFieldHandler::class)
+			->disableOriginalConstructor()
+			->getMock();
 		$pOutputFields = new OutputFields($this->_pDataListView, $pGeoPosition, $this->_pInputVariableReader);
 		$this->assertEquals($this->_pDataListView, $pOutputFields->getDataView());
 		$this->assertEquals($this->_pInputVariableReader, $pOutputFields->getInputVariableReader());
@@ -135,7 +137,9 @@ class TestClassOutputFields
 			'radius' => null,
 		];
 
-		$pMockRecordManager = $this->getMock(RecordManagerReadListViewEstate::class, [], [], '', false);
+		$pMockRecordManager = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
+			->disableOriginalConstructor()
+			->getMock();
 		$pMockRecordManagerFactory = $this->getMockBuilder(RecordManagerFactory::class)
 			->setMethods(['create'])
 			->getMock();
