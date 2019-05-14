@@ -96,7 +96,7 @@ class TestClassWPPageWrapper
 	public function testGetPageLinkByPost()
 	{
 		$pPost = get_post($this->_postId);
-		$expectedLink = 'http://example.org/onoffice-test-post/';
-		$this->assertEquals($expectedLink, $this->_pSubject->getPageLinkByPost($pPost));
+		$expectedLink = 'http://example.org/onoffice-test-post';
+		$this->assertStringStartsWith($expectedLink, $this->_pSubject->getPageLinkByPost($pPost));
 	}
 }

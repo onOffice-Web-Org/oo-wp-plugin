@@ -19,6 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\WP_UnitTest_Localized;
 use onOffice\WPlugin\Controller\InputVariableReader;
@@ -80,15 +84,15 @@ class TestClassDefaultFilterBuilderListView
 		$pEnvironment
 			->method('getFilterBuilderInputVariables')
 			->will($this->returnValue($this->getMockBuilder(FilterBuilderInputVariables::class)
-				->setConstructorArgs([
-					onOfficeSDK::MODULE_ESTATE, true, $this->_pInputVariableReaderConfig])
+				->setConstructorArgs([onOfficeSDK::MODULE_ESTATE, true, $this->_pInputVariableReaderConfig])
+				->setMethods()
 				->getMock()));
 		$pEnvironment
 			->method('getInputVariableReader')
-			->will($this->returnValue
-				($this->getMockBuilder(InputVariableReader::class)
-					->setConstructorArgs(
-					[onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConfig])
+			->will($this->returnValue(
+				$this->getMockBuilder(InputVariableReader::class)
+					->setConstructorArgs([onOfficeSDK::MODULE_ESTATE, $this->_pInputVariableReaderConfig])
+					->setMethods()
 					->getMock()));
 		$pRegionControllerMock = $this->getMockBuilder(RegionController::class)
 			->setMethods(['fetchRegions', 'getSubRegionsByParentRegion'])
@@ -197,10 +201,10 @@ class TestClassDefaultFilterBuilderListView
 		$pDataListView->setFilterableFields(['regionaler_zusatz']);
 		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_FAVORITES);
 
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
 		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('regionaler_zusatz', onOfficeSDK::MODULE_ESTATE, FieldTypes::FIELD_TYPE_MULTISELECT);
 		$this->_pInputVariableReaderConfig->setValue('regionaler_zusatz', 'OstfriesischeInseln');
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [

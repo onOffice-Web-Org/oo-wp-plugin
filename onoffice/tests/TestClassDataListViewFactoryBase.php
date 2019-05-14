@@ -19,9 +19,16 @@
  *
  */
 
+declare (Strict_types=1);
+
+namespace onOffice\tests;
+
+use Closure;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactoryBase;
+use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\Record\RecordManagerRead;
+use WP_UnitTestCase;
 
 /**
  *
@@ -48,7 +55,8 @@ class TestClassDataListViewFactoryBase
 		$this->_pMockRecordManagerRead
 			->method('getRowByName')
 			->will($this->returnValue(['name' => 'test']));
-		$this->_pMockDataListViewFactoryBase->getListViewByName('test');
+		$pResult = $this->_pMockDataListViewFactoryBase->getListViewByName('test');
+		$this->assertInstanceOf(DataViewFilterableFields::class, $pResult);
 	}
 
 

@@ -19,12 +19,16 @@
  *
  */
 
+declare (strict_types=1);
 
+namespace onOffice\tests;
+
+use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Field\DistinctFieldsCheckerEnvironment;
 use onOffice\WPlugin\Field\DistinctFieldsCheckerEnvironmentTest;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use onOffice\WPlugin\WP\WPScriptStyleTest;
-use onOffice\WPlugin\Field\DistinctFieldsChecker;
+use WP_UnitTestCase;
 
 /**
  *
@@ -41,21 +45,27 @@ class TestClassDistinctFieldsChecker
 	/** @var WPScriptStyleBase */
 	private $_pWScriptStyle = null;
 
+	/** @var DistinctFieldsChecker */
 	private $_pChecker = null;
 
 
+	/**
+	 *
+	 * @before
+	 *
+	 */
 
-	public function setUp()
+	public function prepare()
 	{
 		$inputValues = [
-			"" => "Send",
-			"country" => "",
-			"objektart[]" => ['wohnung'],
-			"radius" => "",
-			"vermarktungsart[]" => ['kauf', 'miete'],
-			"wohnflaeche__bis" => "300",
-			"wohnflaeche__von" => "100",
-			];
+			'' => 'Send',
+			'country' => '',
+			'objektart[]' => ['wohnung'],
+			"radius" => '',
+			'vermarktungsart[]' => ['kauf', 'miete'],
+			'wohnflaeche__bis' => '300',
+			'wohnflaeche__von' => '100',
+		];
 
 		$this->_pTestEnvironment = new DistinctFieldsCheckerEnvironmentTest();
 		$this->_pTestEnvironment->setModule('estate');
@@ -64,26 +74,6 @@ class TestClassDistinctFieldsChecker
 		$this->_pTestEnvironment->setScriptStyle(new WPScriptStyleTest());
 
 		$this->_pWScriptStyle = $this->_pTestEnvironment->getScriptStyle();
-
 		$this->_pChecker = new DistinctFieldsChecker($this->_pTestEnvironment);
-
-		parent::setUp();
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testRegisterScripts()
-	{
-		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-
-		$this->_pWScriptStyle->registerScript('setPossibleTypeValues', plugins_url('/js/distinctFields.js', $pluginPath));
-		$this->_pWScriptStyle->enqueueScript('setPossibleTypeValues', plugins_url('/js/distinctFields.js', $pluginPath).'/distinctFields.js');
-		$this->_pWScriptStyle->localizeScript('setPossibleTypeValues', 'base_path',  [plugins_url('/tools/distinctFields.php', $pluginPath)]);
-		$this->_pWScriptStyle->localizeScript('setPossibleTypeValues', 'distinctValues', [json_encode($this->_pTestEnvironment->getDistinctValues())]);
-		$this->_pWScriptStyle->localizeScript('setPossibleTypeValues', 'module',  [$this->_pTestEnvironment->getModule()]);
-		$this->_pWScriptStyle->localizeScript('setPossibleTypeValues', 'notSpecifiedLabel',  [esc_html('Not Specified', 'onoffice')]);
 	}
 }

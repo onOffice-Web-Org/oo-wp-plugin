@@ -18,6 +18,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
@@ -42,13 +45,11 @@ class TestClassInputModelDBFactoryConfigEstate
 
 	/**
 	 *
-	 */
-
-	/**
+	 * @before
 	 *
 	 */
 
-	public function __construct()
+	public function prepare()
 	{
 		$this->setConcreteFactory(new InputModelDBFactoryConfigEstate());
 		$this->setTableNames($this->_tableNames);

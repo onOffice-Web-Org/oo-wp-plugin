@@ -69,7 +69,7 @@ class TestClassFieldModuleCollectionDecoratorInternalAnnotations
 		$pDecoratorAddress = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection);
 		$pDecoratorAnnotated = new FieldModuleCollectionDecoratorInternalAnnotations($pDecoratorAddress);
 
-		$this->assertEquals(count($pDecoratorAddress), count($pDecoratorAnnotated));
+		$this->assertEquals(count($pDecoratorAddress->getAllFields()), count($pDecoratorAnnotated->getAllFields()));
 		$newFieldAnnotations = $pDecoratorAnnotated->getFieldAnnotations();
 
 		foreach ($pDecoratorAnnotated->getAllFields() as $pField) {

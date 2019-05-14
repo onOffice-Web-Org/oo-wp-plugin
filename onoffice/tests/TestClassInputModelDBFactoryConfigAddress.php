@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
@@ -42,9 +44,11 @@ class TestClassInputModelDBFactoryConfigAddress
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function __construct()
+	public function prepare()
 	{
 		$this->setConcreteFactory(new InputModelDBFactoryConfigAddress());
 		$this->setTableNames($this->_tableNames);
