@@ -71,6 +71,9 @@ class InputModelDBFactoryConfigForm
 	/** */
 	const INPUT_FORM_NEWSLETTER = 'newsletter';
 
+	/** */
+	const INPUT_FORM_ESTATE_CONTEXT_AS_HEADING = 'show_estate_context';
+
 
 	/** @var array */
 	private $_inputConfig = [
@@ -117,6 +120,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_NEWSLETTER => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'newsletter',
+		],
+		self::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'show_estate_context',
 		],
 
 		InputModelDBFactory::INPUT_FIELD_CONFIG => [

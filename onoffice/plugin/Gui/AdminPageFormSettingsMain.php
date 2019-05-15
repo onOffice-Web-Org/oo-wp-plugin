@@ -41,12 +41,12 @@ class AdminPageFormSettingsMain
 	const PARAM_FORMID = 'id';
 
 	/** @var array */
-	private $_mappingTypeClass = array(
+	private $_mappingTypeClass = [
 		Form::TYPE_CONTACT => AdminPageFormSettingsContact::class,
 		Form::TYPE_APPLICANT_SEARCH => AdminPageFormSettingsApplicantSearch::class,
 		Form::TYPE_INTEREST => AdminPageFormSettingsInterestOwner::class,
 		Form::TYPE_OWNER => AdminPageFormSettingsInterestOwner::class,
-	);
+	];
 
 	/** @var AdminPageFormSettingsBase */
 	private $_pInstance = null;
@@ -135,6 +135,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowMessageInput(true);
 				$pAdminPage->setShowNewsletterCheckbox(true);
+				$pAdminPage->setShowEstateContextCheckbox(true);
 				break;
 			case Form::TYPE_APPLICANT_SEARCH:
 				/* @var $pAdminPage AdminPageFormSettingsApplicantSearch */

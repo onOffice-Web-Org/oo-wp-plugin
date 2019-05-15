@@ -27,8 +27,13 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
+use onOffice\WPlugin\Model\InputModel\InputModelConfigurationFormContact;
+use onOffice\WPlugin\Model\InputModel\InputModelDBBuilderGeneric;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 
@@ -63,6 +68,9 @@ class AdminPageFormSettingsContact
 	/** @var bool */
 	private $_showGeoPositionSettings = false;
 
+	/** @var bool */
+	private $_showEstateContextCheckbox = false;
+
 
 	/**
 	 *
@@ -72,6 +80,16 @@ class AdminPageFormSettingsContact
 	{
 		parent::buildForms();
 		$pFormModelBuilder = $this->getFormModelBuilder();
+		$pConfigForm = new InputModelDBFactoryConfigForm();
+		$pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
+		$pInputModelConfiguration = new InputModelConfigurationFormContact();
+		$pInputModelBuilder = new InputModelDBBuilderGeneric($pInputModelDBFactory, $pInputModelConfiguration);
+		$pRecordReadManager = new RecordManagerReadForm();
+
+		if ($this->getListViewId() != null) {
+			$values = $pRecordReadManager->getRowById($this->getListViewId());
+			$pInputModelBuilder->setValues($values);
+		}
 
 		$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
 		$pInputModelSubject = $pFormModelBuilder->createInputModelSubject();
@@ -102,6 +120,12 @@ class AdminPageFormSettingsContact
 		if ($this->_showNewsletterCheckbox) {
 			$pInputModelNewsletter = $pFormModelBuilder->createInputModelNewsletterCheckbox();
 			$pFormModelFormSpecific->addInputModel($pInputModelNewsletter);
+		}
+
+		if ($this->_showEstateContextCheckbox) {
+			$pInputModelShowEstateContext = $pInputModelBuilder->build
+				(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING);
+			$pFormModelFormSpecific->addInputModel($pInputModelShowEstateContext);
 		}
 
 		$this->addFormModel($pFormModelFormSpecific);
@@ -251,4 +275,12 @@ class AdminPageFormSettingsContact
 	/** @param bool $showGeoPositionSettings */
 	public function setShowGeoPositionSettings(bool $showGeoPositionSettings)
 		{ $this->_showGeoPositionSettings = $showGeoPositionSettings; }
+
+	/** @return bool */
+	public function getShowEstateContextCheckbox(): bool
+		{ return $this->_showEstateContextCheckbox; }
+
+	/** @param bool $showEstateContextCheckbox */
+	public function setShowEstateContextCheckbox(bool $showEstateContextCheckbox)
+		{ $this->_showEstateContextCheckbox = $showEstateContextCheckbox; }
 }

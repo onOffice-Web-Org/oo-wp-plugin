@@ -248,7 +248,7 @@ abstract class FormModelBuilder
 		{ return $this->_pageSlug; }
 
 	/** @param array $values */
-	protected function setValues(array $values)
+	public function setValues(array $values)
 		{ $this->_values = $values; }
 
 	/** @return array */
