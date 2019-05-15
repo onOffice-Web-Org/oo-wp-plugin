@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\Filter;
 
 use Exception;
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\GeoPosition;
