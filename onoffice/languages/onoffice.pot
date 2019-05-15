@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-04-24T15:33:13+02:00\n"
+"POT-Creation-Date: 2019-05-15T16:07:56+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.1.0\n"
 "X-Domain: onoffice\n"
@@ -30,12 +30,18 @@ msgstr ""
 msgid "https://en.onoffice.com/"
 msgstr ""
 
+#: plugin/API/APIClientCredentialsException.php:48
+msgid "Please configure your onOffice API credentials first!"
+msgstr ""
+
 #: plugin/ContentFilter.php:179
+#: plugin/Controller/ContentFilter/ContentFilterEstate.php:84
 msgid "Estates view not found."
 msgstr ""
 
 #. translators: %1$s is the kind of estate, %2$s the markting type, %3$s the city, %4$s is the estate number. Example: Einfamilienhaus (Kauf) in Aachen - JJ12345
 #: plugin/ContentFilter.php:463
+#: plugin/Controller/ContentFilter/ContentFilterEstate.php:304
 msgid "%1$s (%2$s) in %3$s - %4$s"
 msgstr ""
 
@@ -102,11 +108,11 @@ msgid "Search Criteria"
 msgstr ""
 
 #: plugin/Fieldnames.php:344
-#: plugin/Gui/AdminPageFormSettingsContact.php:130
+#: plugin/Gui/AdminPageFormSettingsContact.php:154
 msgid "Form Specific Fields"
 msgstr ""
 
-#: plugin/Form.php:88
+#: plugin/Form.php:89
 msgid "Submit"
 msgstr ""
 
@@ -311,7 +317,7 @@ msgstr ""
 
 #: plugin/Gui/AdminPageEstateListSettings.php:139
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:76
-#: plugin/Gui/AdminPageFormSettingsContact.php:162
+#: plugin/Gui/AdminPageFormSettingsContact.php:186
 msgid "Geo Fields"
 msgstr ""
 
@@ -346,7 +352,7 @@ msgid "No form was deleted."
 msgstr ""
 
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:64
-#: plugin/Gui/AdminPageFormSettingsContact.php:82
+#: plugin/Gui/AdminPageFormSettingsContact.php:100
 msgid "Form Specific Options"
 msgstr ""
 
@@ -364,7 +370,7 @@ msgstr ""
 
 #. translators: %s is a translated module name
 #: plugin/Gui/AdminPageFormSettingsBase.php:237
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:554
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:567
 msgid "Module: %s"
 msgstr ""
 
@@ -502,7 +508,7 @@ msgid "Descending"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:302
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:291
 msgid "Template"
 msgstr ""
 
@@ -526,7 +532,7 @@ msgid "Hidden"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:154
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:434
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:445
 msgid "Available Options"
 msgstr ""
 
@@ -576,52 +582,52 @@ msgstr ""
 msgid ", Embed Code: "
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:276
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:277
 msgid "Recipient's E-Mail Address"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:283
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:284
 msgid "john.doe@example.com"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:297
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:299
 msgid "Subject (optional)"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:317
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:320
 msgid "Create Address"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:337
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
 msgid "(won't work until set up globally)"
 msgstr ""
 
 #. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:343
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:346
 msgid "Requires Captcha %s"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:360
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:364
 msgid "Check for Duplicates"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:377
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:381
 msgid "Result Limit"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:397
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:402
 msgid "Pages"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:419
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:424
 msgid "Required"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:477
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:490
 msgid "Newsletter"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:527
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:540
 msgid "Module"
 msgstr ""
 
@@ -645,54 +651,58 @@ msgstr ""
 msgid "Player"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:343
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:332
 msgid "Same Kind of Estate"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:366
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:355
 msgid "Same Marketing Method"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:389
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:378
 msgid "Same Postal Code"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:412
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:133
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:401
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:217
 msgid "Radius"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:435
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:424
 msgid "Amount of Estates"
 msgstr ""
 
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:73
-msgid "Activate"
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:51
+msgid "Set Estate Context as Heading"
 msgstr ""
 
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:99
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:132
 msgid "Default Value for Radius"
 msgstr ""
 
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:103
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:136
 #: templates.dist/fields.php:61
 msgid "Not Specified"
 msgstr ""
 
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:129
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:175
+msgid "Order"
+msgstr ""
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:213
 msgid "Country"
 msgstr ""
 
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:130
-msgid "Street"
-msgstr ""
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:131
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:214
 msgid "Postal Code"
 msgstr ""
 
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:132
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:215
 msgid "City"
+msgstr ""
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:216
+msgid "Street"
 msgstr ""
 
 #: plugin/Record/RecordManagerReadListViewAddress.php:93
@@ -762,12 +772,13 @@ msgstr ""
 msgid "sold"
 msgstr ""
 
-#: plugin/Utility/Logger.php:72
-msgid "Please configure your onOffice API credentials first!"
+#: plugin/Utility/Logger.php:77
+msgid "An error occured:"
 msgstr ""
 
-#: plugin/Utility/Logger.php:76
-msgid "An error occured:"
+#. translators: %s is the path of a page.
+#: plugin/WP/UnknownPageException.php:45
+msgid "Bad path \"%s\". The Page was not found."
 msgstr ""
 
 #: templates.dist/address/SearchFormAddress.php:45
@@ -895,7 +906,7 @@ msgstr[0] ""
 msgid "Customer ref. number %s"
 msgstr ""
 
-#: templates.dist/form/defaultform.php:66
+#: templates.dist/form/defaultform.php:68
 #: templates.dist/form/ownerform.php:66
 msgid "Message"
 msgstr ""
