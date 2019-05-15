@@ -289,7 +289,7 @@ class DataFormConfigurationFactory
 	 */
 
 	private function configureGeneral(array $row,
-			DataFormConfiguration\DataFormConfiguration $pConfig)
+		DataFormConfiguration\DataFormConfiguration $pConfig)
 	{
 		$pConfig->setFormName($row['name']);
 		$pConfig->setTemplate($row['template']);
@@ -359,5 +359,4 @@ class DataFormConfigurationFactory
 		$pClone->_type = $type;
 		return $pClone;
 	}
-
 }

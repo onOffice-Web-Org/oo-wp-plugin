@@ -61,9 +61,9 @@ class InputModelLabel
 	 *
 	 */
 
-	public function getIdentifier()
+	public function getIdentifier(): string
 	{
-		return null;
+		return '';
 	}
 
 

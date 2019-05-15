@@ -102,7 +102,7 @@ abstract class InputModelBase
 	 *
 	 */
 
-	abstract public function getIdentifier();
+	abstract public function getIdentifier(): string;
 
 	/** @param string $htmlType */
 	public function setHtmlType($htmlType)

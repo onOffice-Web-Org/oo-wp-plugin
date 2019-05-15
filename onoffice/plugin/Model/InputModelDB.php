@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Model;
+
 use onOffice\WPlugin\Utility\__String;
 
 /**
@@ -33,16 +36,16 @@ class InputModelDB
 	extends InputModelBase
 {
 	/** @var string Table without prefix */
-	private $_table = null;
+	private $_table = '';
 
 	/** @var string */
-	private $_field = null;
+	private $_field = '';
 
 	/** @var int */
-	private $_mainRecordId = null;
+	private $_mainRecordId = 0;
 
 	/** @var string */
-	private $_module = null;
+	private $_module = '';
 
 	/** @var bool */
 	private $_ignore = false;
@@ -68,7 +71,7 @@ class InputModelDB
 	 *
 	 */
 
-	public function getIdentifier()
+	public function getIdentifier(): string
 	{
 		if (__String::getNew($this->_table)->isEmpty() ||
 			__String::getNew($this->_field)->isEmpty()) {
@@ -83,42 +86,42 @@ class InputModelDB
 
 
 	/** @return string */
-	public function getTable()
+	public function getTable(): string
 		{ return $this->_table; }
 
 	/** @return string */
-	public function getField()
+	public function getField(): string
 		{ return $this->_field; }
 
 	/** @return int */
-	public function getMainRecordId()
+	public function getMainRecordId(): int
 		{ return $this->_mainRecordId; }
 
 	/** @param string $table */
-	public function setTable($table)
+	public function setTable(string $table)
 		{ $this->_table = $table; }
 
-	/** @param string $field*/
-	public function setField($field)
+	/** @param string $field */
+	public function setField(string $field)
 		{ $this->_field = $field; }
 
 	/** @param int $mainRecordId */
-	public function setMainRecordId($mainRecordId)
+	public function setMainRecordId(int $mainRecordId)
 		{ $this->_mainRecordId = $mainRecordId; }
 
 	/** @return string */
-	public function getModule()
+	public function getModule(): string
 		{ return $this->_module; }
 
 	/** @param string $module */
-	public function setModule($module)
+	public function setModule(string $module)
 		{ $this->_module = $module; }
 
 	/** @return bool */
-	public function getIgnore()
+	public function getIgnore(): bool
 		{ return $this->_ignore; }
 
 	/** @param bool $ignore */
-	public function setIgnore($ignore)
+	public function setIgnore(bool $ignore)
 		{ $this->_ignore = $ignore; }
 }

@@ -99,7 +99,7 @@ class InputModelOption
 	 *
 	 */
 
-	public function getIdentifier()
+	public function getIdentifier(): string
 	{
 		return $this->getOptionGroup().'-'.$this->getName();
 	}
