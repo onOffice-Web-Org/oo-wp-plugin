@@ -95,14 +95,15 @@ abstract class Installer
 			$dbversion = 7;
 		}
 
-		if ($dbversion >= 7.0 && $dbversion <= 10) {
+		if ($dbversion >= 7.0 && $dbversion <= 11) {
 			// version 8: new columns: {country,zip,street,radius}_active
 			// version 9: new columns: radius
 			// version 10 new columns: city_active
 			// version 11: new columns: geo_order
+			// version 12: new column in getCreateQueryForms: show_estate_context
 			dbDelta( self::getCreateQueryListviews() );
 			dbDelta( self::getCreateQueryForms() );
-			$dbversion = 11;
+			$dbversion = 12;
 		}
 
 		update_option( 'oo_plugin_db_version', $dbversion, false);
@@ -209,6 +210,7 @@ abstract class Installer
 			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
+			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

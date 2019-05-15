@@ -61,7 +61,7 @@ class TestClassInstaller
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = get_option('oo_plugin_db_version', null);
-		$this->assertEquals(11, $dbversion);
+		$this->assertEquals(12, $dbversion);
 		return $this->_createQueries;
 	}
 
