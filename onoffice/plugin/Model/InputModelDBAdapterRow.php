@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Model;
 
 use onOffice\WPlugin\Model\InputModelDB;

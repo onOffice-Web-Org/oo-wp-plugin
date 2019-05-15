@@ -109,6 +109,10 @@ class TestClassInputModelDBAdapterRow
 		), $values['oo_plugin_forms'], true);
 
 		$this->assertArraySubset(array(
+			'form_id' => [3],
+		), $values['oo_plugin_forms'], true);
+
+		$this->assertArraySubset(array(
 			array (
 			  'fieldname' => 'test',
 			  'listview_address_id' => 1337,
@@ -147,6 +151,11 @@ class TestClassInputModelDBAdapterRow
 		$pInputModelDBforeign->setMainRecordId(1337);
 		$pInputModelDBforeign->setValue(array('test', 'hello'));
 
+		$pInputModelDBforeign2 = new InputModelDB('test', 'Test');
+		$pInputModelDBforeign2->setTable('oo_plugin_form_fieldconfig');
+		$pInputModelDBforeign2->setField('form_id');
+		$pInputModelDBforeign2->setMainRecordId(3);
+
 		$pInputModelDBNullValue = new InputModelDB('test', 'Test');
 		$pInputModelDBNullValue->setTable('oo_plugin_forms');
 		$pInputModelDBNullValue->setField('createaddress');
@@ -155,6 +164,7 @@ class TestClassInputModelDBAdapterRow
 
 		$pInputModelDBAdapterRow->addInputModelDB($pInputModelDBfictional);
 		$pInputModelDBAdapterRow->addInputModelDB($pInputModelDBfictional1);
+		$pInputModelDBAdapterRow->addInputModelDB($pInputModelDBforeign2);
 		$pInputModelDBAdapterRow->addInputModelDB($pInputModelDBforeign);
 		$pInputModelDBAdapterRow->addInputModelDB($pInputModelDBNullValue);
 	}
