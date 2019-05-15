@@ -93,7 +93,7 @@ class InputModelDBBuilderGeneric
 	{
 		if ($fieldConfig[InputModelConfiguration::KEY_HTMLTYPE] === InputModelOption::HTML_TYPE_CHECKBOX) {
 			$pInputModel->setValuesAvailable(1);
-			$pInputModel->setValue((int)($this->_values[$pInputModel->getName()] ?? 0));
+			$pInputModel->setValue((int)($this->_values[$pInputModel->getField()] ?? 0));
 		}
 	}
 

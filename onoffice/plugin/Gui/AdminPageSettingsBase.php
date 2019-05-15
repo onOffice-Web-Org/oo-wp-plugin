@@ -344,7 +344,7 @@ abstract class AdminPageSettingsBase
 			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
 				($slug, $fields, $category);
 			if ($addModule) {
-				$pInputModelFieldsConfig->setModule($module);
+				$pInputModelFieldsConfig->setModule($module ?? '');
 			}
 
 			$pFormModelFieldsConfig = new Model\FormModel();

@@ -56,14 +56,15 @@ class TestClassInputModelDBBuilderGeneric
 
 	public function prepare()
 	{
-		$inputModelName = InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING;
+		$inputModelField = InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING;
 		$this->_pInputModelDBFactory = $this->getMockBuilder(InputModelDBFactory::class)
 			->setConstructorArgs([new InputModelDBFactoryConfigForm()])
 			->getMock();
-		$pInputModel = new InputModelDB($inputModelName, 'asdf');
+		$pInputModel = new InputModelDB('testname', 'asdf');
+		$pInputModel->setField($inputModelField);
 
 		$this->_pInputModelDBFactory->method('create')
-			->with($inputModelName, $this->anything(), false)
+			->with($inputModelField, $this->anything(), false)
 			->will($this->returnValue($pInputModel));
 
 		$this->_pInputModelConfiguration = new InputModelConfigurationFormContact();
@@ -81,7 +82,8 @@ class TestClassInputModelDBBuilderGeneric
 	{
 		$pResult = $this->_pInputModelDBBuilderGeneric->build
 			(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING);
-		$this->assertEquals(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING, $pResult->getName());
+		$this->assertEquals(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING,
+			$pResult->getField());
 		$this->assertEquals('asdf', $pResult->getLabel());
 		$this->assertEquals('checkbox', $pResult->getHtmlType());
 		$this->assertEquals(1, $pResult->getValuesAvailable());
