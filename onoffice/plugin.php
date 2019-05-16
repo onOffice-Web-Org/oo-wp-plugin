@@ -42,6 +42,7 @@ use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
+use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeForm;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeLink;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
@@ -64,6 +65,7 @@ if (!defined('ONOFFICE_FEATURE_CONFIGURE_GEO')) {
 $pContentFilter = new ContentFilter();
 $pContentFilterAddress = new ContentFilterShortCodeAddress();
 $pContentFilterLink = new ContentFilterShortCodeLink();
+$pContentFilterForm = new ContentFilterShortCodeForm();
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = new DetailViewPostSaveController();
 $pSearchParams = SearchParameters::getInstance();
@@ -103,7 +105,7 @@ add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewControl
 add_shortcode('oo_address', [$pContentFilterAddress, 'replaceShortCodes']);
 add_shortcode('oo_link', [$pContentFilterLink, 'replaceShortCodes']);
 add_shortcode('oo_estate', [$pContentFilter, 'registerEstateShortCodes']);
-add_shortcode('oo_form', [$pContentFilter, 'renderFormsShortCodes']);
+add_shortcode('oo_form', [$pContentFilterForm, 'replaceShortCodes']);
 add_shortcode('oo_basicdata', [$pContentFilter, 'renderImpressumShortCodes']);
 
 add_filter('widget_text_content', [$pContentFilter, 'renderWidgetImpressum']);

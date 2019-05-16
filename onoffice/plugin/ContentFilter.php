@@ -30,8 +30,6 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
@@ -238,53 +236,6 @@ class ContentFilter
 			unset($filterableFields[$positionGeoPos]);
 		}
 		return $filterableFields;
-	}
-
-
-	/**
-	 *
-	 * @param array $attributesInput
-	 * @return string
-	 *
-	 */
-
-	public function renderFormsShortCodes(array $attributesInput)
-	{
-		$attributes = shortcode_atts([
-			'form' => null,
-		], $attributesInput);
-
-		$formName = $attributes['form'];
-
-		try {
-			if ($formName !== null) {
-				$pFormConfigFactory = new DataFormConfigurationFactory();
-				$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
-
-				if ($pFormConfig->getFormType() == Form::TYPE_APPLICANT_SEARCH)
-				{
-					$availableOptionsFormApplicantSearch = $pFormConfig->getAvailableOptionsFields();
-
-					if ($availableOptionsFormApplicantSearch !== [])
-					{
-						$pDistinctFieldsChecker = new DistinctFieldsChecker();
-						$pDistinctFieldsChecker->registerScripts(onOfficeSDK::MODULE_SEARCHCRITERIA,
-							$availableOptionsFormApplicantSearch);
-					}
-				}
-
-				/* @var $pFormConfig DataFormConfiguration */
-				$template = $pFormConfig->getTemplate();
-				$pTemplate = new Template($template);
-				$pForm = new Form($formName, $pFormConfig->getFormType());
-				$pTemplate->setForm($pForm);
-				$pTemplate->setImpressum(new Impressum);
-				$htmlOutput = $pTemplate->render();
-				return $htmlOutput;
-			}
-		} catch (Exception $pException) {
-			return $this->_pLogger->logErrorAndDisplayMessage($pException);
-		}
 	}
 
 
