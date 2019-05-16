@@ -29,6 +29,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\Controller\EstateListBase;
+use const ABSPATH;
 
 /**
  *
@@ -144,31 +145,96 @@ class Template
 		return $this->_templateBasePath.'/'.$this->_templateName;
 	}
 
-	/** @param AddressList $pAddressList */
-	public function setAddressList(AddressList $pAddressList)
-		{ $this->_pAddressList = $pAddressList; }
 
-	/** @param EstateList $pEstateList */
-	public function setEstateList(EstateListBase $pEstateList)
-		{ $this->_pEstateList = $pEstateList; }
+	/**
+	 *
+	 * @param string $templateName
+	 * @return self
+	 *
+	 */
 
-	/** @param Form $pForm */
-	public function setForm(Form $pForm)
-		{ $this->_pForm = $pForm; }
+	public function withTemplateName(string $templateName): self
+	{
+		$pNewTemplate = clone $this;
+		$pNewTemplate->_templateName = $templateName;
+		return $pNewTemplate;
+	}
+
+
+	/**
+	 *
+	 * @param Impressum $pImpressum
+	 * @return $this
+	 *
+	 */
+
+	public function setImpressum(Impressum $pImpressum): self
+	{
+		$this->_pImpressum = $pImpressum;
+		return $this;
+	}
+
+
+	/**
+	 *
+	 * @param Form $pForm
+	 * @return $this
+	 *
+	 */
+
+	public function setForm(Form $pForm): self
+	{
+		$this->_pForm = $pForm;
+		return $this;
+	}
+
+
+	/**
+	 *
+	 * @param AddressList $pAddressList
+	 * @return $this
+	 *
+	 */
+
+	public function setAddressList(AddressList $pAddressList): self
+	{
+		$this->_pAddressList = $pAddressList;
+		return $this;
+	}
+
+
+	/**
+	 *
+	 * @param EstateList $pEstateList
+	 * @return $this
+	 *
+	 */
+
+	public function setEstateList(EstateListBase $pEstateList): self
+	{
+		$this->_pEstateList = $pEstateList;
+		return $this;
+	}
+
+
+	/**
+	 *
+	 * @param string $templateBasePath
+	 * @return $this
+	 *
+	 */
+
+	protected function setTemplateBasePath(string $templateBasePath): self
+	{
+		$this->_templateBasePath = $templateBasePath;
+		return $this;
+	}
 
 	/** @return Impressum */
 	public function getImpressum()
 		{ return $this->_pImpressum; }
 
-	/** @param Impressum $pImpressum */
-	public function setImpressum(Impressum $pImpressum)
-		{ $this->_pImpressum = $pImpressum; }
-
 	/** @return string */
 	protected function getTemplateBasePath(): string
 		{ return $this->_templateBasePath; }
-
-	/** @param string $templateBasePath */
-	protected function setTemplateBasePath(string $templateBasePath)
-		{ $this->_templateBasePath = $templateBasePath; }
 }
