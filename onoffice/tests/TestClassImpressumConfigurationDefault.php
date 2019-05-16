@@ -19,8 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\ImpressumConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
+use WP_UnitTestCase;
 
 /**
  *

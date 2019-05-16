@@ -19,9 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderSimilarEstates;
 use onOffice\WPlugin\Filter\FilterConfigurationSimilarEstates;
+use WP_UnitTestCase;
 
 /**
  *

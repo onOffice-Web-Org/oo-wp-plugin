@@ -19,9 +19,16 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use Closure;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use TypeError;
+use WP_UnitTestCase;
 
 /**
  *
@@ -177,7 +184,7 @@ class TestClassDataDetailView
 	/**
 	 *
 	 */
-	
+
 	public function testRandom()
 	{
 		$pDataDetailView = new DataDetailView();

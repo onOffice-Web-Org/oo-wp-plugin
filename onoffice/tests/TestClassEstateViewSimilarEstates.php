@@ -19,11 +19,16 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\tests\EstateListMocker;
 use onOffice\WPlugin\Controller\EstateViewSimilarEstates;
 use onOffice\WPlugin\Controller\EstateViewSimilarEstatesEnvironmentTest;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use WP_UnitTestCase;
 
 /**
  *

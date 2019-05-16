@@ -19,6 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
@@ -31,6 +35,9 @@ use onOffice\WPlugin\FormPostInterest;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
+use WP_UnitTestCase;
+use const ONOFFICE_PLUGIN_DIR;
+use function json_decode;
 
 /**
  *

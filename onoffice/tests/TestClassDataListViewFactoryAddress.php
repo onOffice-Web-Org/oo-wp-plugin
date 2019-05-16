@@ -20,8 +20,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
+use WP_UnitTestCase;
 
 /**
  *

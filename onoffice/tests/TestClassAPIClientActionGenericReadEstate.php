@@ -19,9 +19,15 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\API\ApiClientActionGeneric;
+use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *

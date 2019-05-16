@@ -19,7 +19,12 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
+use WP_UnitTestCase;
 
 
 /**

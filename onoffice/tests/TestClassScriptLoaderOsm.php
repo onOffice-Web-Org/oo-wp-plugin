@@ -19,8 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMapOsm;
 use onOffice\WPlugin\WP\WPScriptStyleTest;
+use WP_UnitTestCase;
 
 /**
  *

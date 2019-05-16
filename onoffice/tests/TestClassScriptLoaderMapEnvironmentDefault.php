@@ -19,8 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMapEnvironmentDefault;
 use onOffice\WPlugin\Types\MapProvider;
+use WP_UnitTestCase;
 
 /**
  *

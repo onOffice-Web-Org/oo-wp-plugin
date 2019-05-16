@@ -19,6 +19,11 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use Closure;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\API\APIClientActionGeneric;
@@ -27,6 +32,7 @@ use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIClientExceptionFactory;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\API\APIError;
+use WP_UnitTestCase;
 
 /**
  *

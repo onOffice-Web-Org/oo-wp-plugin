@@ -19,7 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\Types\MapProvider;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use WP_UnitTestCase;
 
 /**
  *
@@ -37,7 +43,7 @@ class TestClassMapProvider
 
 	public function testGetActiveMapProvider()
 	{
-		$pOptionWrapper = new onOffice\WPlugin\WP\WPOptionWrapperTest();
+		$pOptionWrapper = new WPOptionWrapperTest();
 
 		$pMapProvider = new MapProvider($pOptionWrapper);
 		$this->assertEquals(MapProvider::PROVIDER_DEFAULT, $pMapProvider->getActiveMapProvider());

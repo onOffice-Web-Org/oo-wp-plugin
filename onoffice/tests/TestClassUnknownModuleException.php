@@ -19,8 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
+use WP_UnitTestCase;
 
 /**
  *

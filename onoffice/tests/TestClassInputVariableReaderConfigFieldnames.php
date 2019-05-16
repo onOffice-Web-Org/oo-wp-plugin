@@ -19,9 +19,16 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use Closure;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
+use WP_UnitTestCase;
+use function update_option;
 
 /**
  *

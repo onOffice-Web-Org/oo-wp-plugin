@@ -19,8 +19,16 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\Installer;
 use onOffice\WPlugin\Utility\__String;
+use WP_UnitTestCase;
+use function add_filter;
+use function get_option;
+use function remove_filter;
 
 /**
  *

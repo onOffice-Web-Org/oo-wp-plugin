@@ -19,9 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\SDKWrapper;
+use WP_UnitTestCase;
 
 /**
  *
@@ -42,7 +47,7 @@ class TestClassApiClientException
 		$pApiClientAction = $this->getNewApiClientAction('testActionId', 'testResourceType');
 
 		$pException = new ApiClientException($pApiClientAction);
-		$this->assertInstanceOf(Exception::class, $pException);
+		$this->assertInstanceOf(\Exception::class, $pException);
 	}
 
 

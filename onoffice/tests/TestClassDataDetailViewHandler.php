@@ -19,11 +19,16 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use WP_UnitTestCase;
 
 /**
  *

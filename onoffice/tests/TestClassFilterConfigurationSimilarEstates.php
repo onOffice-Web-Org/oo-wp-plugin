@@ -19,9 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Filter\FilterConfigurationSimilarEstates;
 use onOffice\WPlugin\Types\GeoCoordinates;
+use WP_UnitTestCase;
 
 /**
  *

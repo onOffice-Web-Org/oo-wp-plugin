@@ -19,8 +19,15 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Escape;
+use WP_UnitTestCase;
+use function esc_js;
+use function esc_url;
 
 /**
  *
@@ -139,7 +146,7 @@ class TestClassArrayContainerEscape
 
 	/**
 	 *
-	 * @expectedException Exception
+	 * @expectedException \Exception
 	 *
 	 */
 

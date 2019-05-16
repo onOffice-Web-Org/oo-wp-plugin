@@ -19,6 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
@@ -27,6 +31,8 @@ use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
+use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *

@@ -19,6 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
@@ -30,6 +34,8 @@ use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostApplicantSearch;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\Logger;
+use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *

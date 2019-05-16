@@ -19,11 +19,17 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\SDKWrapper;
+use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *

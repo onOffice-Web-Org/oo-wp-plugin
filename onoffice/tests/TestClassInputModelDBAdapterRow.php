@@ -19,8 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelDBAdapterRow;
+use WP_UnitTestCase;
 
 /**
  *
@@ -127,7 +132,7 @@ class TestClassInputModelDBAdapterRow
 
 	/**
 	 *
-	 * @param \onOffice\WPlugin\Model\InputModelDBAdapterRow $pInputModelDBAdapterRow
+	 * @param InputModelDBAdapterRow $pInputModelDBAdapterRow
 	 *
 	 */
 

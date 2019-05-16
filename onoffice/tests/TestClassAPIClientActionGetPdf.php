@@ -19,9 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\API\ApiClientActionGetPdf;
+use WP_UnitTestCase;
 
 /**
  *

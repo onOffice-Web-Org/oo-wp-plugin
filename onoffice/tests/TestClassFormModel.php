@@ -19,9 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelDB;
+use WP_UnitTestCase;
 
 /**
  *

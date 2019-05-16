@@ -19,6 +19,11 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use Nette\Utils\DateTime;
 use onOffice\tests\WP_UnitTest_Localized;
 use onOffice\WPlugin\Gui\DateTimeFormatter;
 

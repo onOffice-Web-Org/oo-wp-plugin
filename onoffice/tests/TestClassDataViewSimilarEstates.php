@@ -20,8 +20,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Types\ImageTypes;
+use WP_UnitTestCase;
 
 /**
  *
@@ -104,7 +109,7 @@ class TestClassDataViewSimilarEstates
 	/**
 	 *
 	 */
-	
+
 	public function testRandom()
 	{
 		$pDataViewSimilarEstates = new DataViewSimilarEstates();

@@ -19,9 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Renderer\InputFieldLabelRenderer;
 use onOffice\WPlugin\Renderer\InputFieldRenderer;
+use WP_UnitTestCase;
 
 /**
  *

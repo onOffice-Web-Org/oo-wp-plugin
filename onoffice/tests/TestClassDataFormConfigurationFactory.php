@@ -19,6 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
@@ -30,6 +34,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
+use WP_UnitTestCase;
 
 /**
  *

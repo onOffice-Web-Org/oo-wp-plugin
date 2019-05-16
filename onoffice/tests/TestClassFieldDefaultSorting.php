@@ -19,8 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\FieldDefaultSorting;
+use WP_UnitTestCase;
 
 /**
  *

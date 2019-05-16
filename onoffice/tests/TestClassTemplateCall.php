@@ -19,10 +19,16 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Template\TemplateCall;
+use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *

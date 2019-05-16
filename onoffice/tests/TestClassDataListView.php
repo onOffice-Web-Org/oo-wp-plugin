@@ -19,8 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
+use WP_UnitTestCase;
 
 /**
  *

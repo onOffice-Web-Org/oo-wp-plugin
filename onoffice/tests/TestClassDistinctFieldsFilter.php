@@ -19,11 +19,17 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\DistinctFieldsFilter;
+use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
-use onOffice\SDK\onOfficeSDK;
+use WP_UnitTestCase;
+use function json_decode;
 
 
 class TestClassDistinctFieldsFilter

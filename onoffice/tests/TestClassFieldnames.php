@@ -19,6 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\Field\FieldModuleCollection;
@@ -27,8 +31,9 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\FieldsCollection;
+use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *

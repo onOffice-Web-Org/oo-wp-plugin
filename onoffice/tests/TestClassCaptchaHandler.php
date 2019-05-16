@@ -19,7 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use Closure;
 use onOffice\WPlugin\Form\CaptchaHandler;
+use WP_UnitTestCase;
+use function json_encode;
 
 /**
  *

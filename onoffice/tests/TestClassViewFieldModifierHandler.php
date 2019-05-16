@@ -19,12 +19,17 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeMap;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeTitle;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use WP_UnitTestCase;
 
 /**
  *
@@ -102,7 +107,7 @@ class TestClassViewFieldModifierHandler
 
 	/**
 	 *
-	 * @expectedException Exception
+	 * @expectedException \Exception
 	 * @expectedExceptionMessage Unknown Modifier
 	 *
 	 */

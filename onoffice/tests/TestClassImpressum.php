@@ -19,10 +19,16 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
+use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\ImpressumConfigurationTest;
-use onOffice\tests\SDKWrapperMocker;
+use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *

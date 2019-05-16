@@ -19,7 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\Types\FieldTypes;
+use ReflectionClass;
+use WP_UnitTestCase;
 
 /**
  *

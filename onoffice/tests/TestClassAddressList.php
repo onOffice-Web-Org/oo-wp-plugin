@@ -19,6 +19,11 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use Closure;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\AddressList;
@@ -33,6 +38,8 @@ use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *
@@ -202,7 +209,7 @@ class TestClassAddressList
 
 	public function testLoadAddresses()
 	{
-		$pAddressView = new DataListViewAddress('3', 'testView');
+		$pAddressView = new DataListViewAddress(3, 'testView');
 		$pAddressView->setShowPhoto(true);
 
 		$pAddressList = $this->_pAddressList->withDataListViewAddress($pAddressView);

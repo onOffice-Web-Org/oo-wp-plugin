@@ -19,6 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypeDefault;
@@ -28,6 +32,7 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeMap;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeTitle;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
+use WP_UnitTestCase;
 
 /**
  *
@@ -77,7 +82,7 @@ class TestClassViewFieldModifierFactory
 
 	/**
 	 *
-	 * @expectedException UnexpectedValueException
+	 * @expectedException \UnexpectedValueException
 	 *
 	 */
 
@@ -90,7 +95,7 @@ class TestClassViewFieldModifierFactory
 
 	/**
 	 *
-	 * @expectedException UnexpectedValueException
+	 * @expectedException \UnexpectedValueException
 	 *
 	 */
 

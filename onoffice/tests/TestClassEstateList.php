@@ -19,6 +19,11 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use Closure;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\AddressList;
@@ -39,6 +44,9 @@ use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
+use WP_Rewrite;
+use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *
@@ -53,7 +61,7 @@ class TestClassEstateList
 	/** @var EstateList */
 	private $_pEstateList = null;
 
-	/** @var PHPUnit_Framework_MockObject_MockObject */
+	/** @var EstateListEnvironment */
 	private $_pEnvironment = null;
 
 	/** @var SDKWrapperMocker */

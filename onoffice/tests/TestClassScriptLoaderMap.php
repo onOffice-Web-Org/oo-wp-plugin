@@ -19,12 +19,17 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMapEnvironmentTest;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMapGoogleMaps;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMapOsm;
 use onOffice\WPlugin\Types\MapProvider;
 use onOffice\WPlugin\WP\WPScriptStyleTest;
+use WP_UnitTestCase;
 
 /**
  *

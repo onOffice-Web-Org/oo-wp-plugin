@@ -19,8 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
+use WP_UnitTestCase;
 
 /**
  *

@@ -19,8 +19,13 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeDefault;
+use WP_UnitTestCase;
 
 /**
  *

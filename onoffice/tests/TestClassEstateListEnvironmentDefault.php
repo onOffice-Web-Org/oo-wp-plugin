@@ -19,6 +19,10 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -32,6 +36,7 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use WP_UnitTestCase;
 
 /**
  *
