@@ -25,7 +25,7 @@ namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
-use onOffice\WPlugin\API\ApiClientActionGeneric;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -63,7 +63,7 @@ class TestClassAPIClientActionGenericReadEstate
 	private function sendRequest(array $apiResult)
 	{
 		$pSDKMocker = new SDKWrapperMocker();
-		$pApiCall = new ApiClientActionGeneric($pSDKMocker, onOfficeSDK::ACTION_ID_READ, 'estate');
+		$pApiCall = new APIClientActionGeneric($pSDKMocker, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$parameters = array(
 			'data' => array('kaufpreis', 'lage'),
 			'listlimit' => 2,

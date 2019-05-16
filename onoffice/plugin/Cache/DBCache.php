@@ -28,6 +28,7 @@
 namespace onOffice\WPlugin\Cache;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
+use wpdb;
 
 /**
  *
@@ -46,7 +47,7 @@ class DBCache
 	/**
 	 *
 	 * @param array $options
-	 * @global \wpdb $wpdb
+	 * @global wpdb $wpdb
 	 *
 	 */
 

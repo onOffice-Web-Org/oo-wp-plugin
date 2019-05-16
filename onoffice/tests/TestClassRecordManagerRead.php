@@ -23,6 +23,8 @@ namespace onOffice\tests;
 
 use Closure;
 use onOffice\WPlugin\Record\RecordManagerRead;
+use ReflectionClass;
+use ReflectionMethod;
 use stdClass;
 use WP_UnitTestCase;
 
@@ -51,6 +53,22 @@ class TestClassRecordManagerRead
 		$this->_pSubject = $this->getMockBuilder(RecordManagerRead::class)
 			->setMethods(['getRecords', 'getRowByName'])
 			->getMock();
+	}
+
+
+	/**
+	 *
+	 * @param string $methodName
+	 * @return ReflectionMethod
+	 *
+	 */
+
+	private function getNonPublicMethod(string $methodName): ReflectionMethod
+	{
+		$pClass = new ReflectionClass(RecordManagerRead::class);
+		$pMethod = $pClass->getMethod($methodName);
+		$pMethod->setAccessible(true);
+		return $pMethod;
 	}
 
 
@@ -93,9 +111,7 @@ class TestClassRecordManagerRead
 	public function testCountOverall()
 	{
 		$this->assertEquals(0, $this->_pSubject->getCountOverall());
-		$this->executeClosureInContext(function() {
-			$this->setCountOverall(13);
-		});
+		$this->getNonPublicMethod('setCountOverall')->invokeArgs($this->_pSubject, [13]);
 		$this->assertEquals(13, $this->_pSubject->getCountOverall());
 	}
 
@@ -160,9 +176,7 @@ class TestClassRecordManagerRead
 		$this->assertEquals([], $pClosureGetRecords());
 
 		$newExpectedResult = [new stdClass()];
-		$this->executeClosureInContext(function() use ($newExpectedResult) {
-			$this->setFoundRows($newExpectedResult);
-		});
+		$this->getNonPublicMethod('setFoundRows')->invokeArgs($this->_pSubject, [$newExpectedResult]);
 		$this->assertEquals($newExpectedResult, $pClosureGetRecords());
 	}
 
@@ -174,9 +188,7 @@ class TestClassRecordManagerRead
 	public function testIdColumnMain()
 	{
 		$this->assertEquals('', $this->_pSubject->getIdColumnMain());
-		$this->executeClosureInContext(function() {
-			$this->setIdColumnMain('listview_id');
-		});
+		$this->getNonPublicMethod('setIdColumnMain')->invokeArgs($this->_pSubject, ['listview_id']);
 		$this->assertEquals('listview_id', $this->_pSubject->getIdColumnMain());
 	}
 
@@ -188,21 +200,7 @@ class TestClassRecordManagerRead
 	public function testMainTable()
 	{
 		$this->assertEquals('', $this->_pSubject->getMainTable());
-		$this->executeClosureInContext(function() {
-			$this->setMainTable('listviews');
-		});
+		$this->getNonPublicMethod('setMainTable')->invokeArgs($this->_pSubject, ['listviews']);
 		$this->assertEquals('listviews', $this->_pSubject->getMainTable());
-	}
-
-
-	/**
-	 *
-	 * @param Closure $pClosure
-	 *
-	 */
-
-	private function executeClosureInContext(Closure $pClosure)
-	{
-		Closure::bind($pClosure, $this->_pSubject, RecordManagerRead::class)();
 	}
 }

@@ -43,6 +43,9 @@ class AdminPageFormList
 	/** @var FormsTable */
 	private $_pFormsTable = null;
 
+	/** @var int */
+	private $_itemsDeleted = 0;
+
 
 	/**
 	 *

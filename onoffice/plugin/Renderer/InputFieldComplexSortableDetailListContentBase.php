@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use onOffice\WPlugin\Model\InputModelBase;
+
 /**
  *
  */
@@ -30,8 +32,8 @@ abstract class InputFieldComplexSortableDetailListContentBase
 	/** @var int */
 	private static $_id = 0;
 
-	/** @var InputModelBase[] */
-	private $_extraInputModels = array();
+	/** @var array */
+	private $_extraInputModels = [];
 
 
 	/**
@@ -54,7 +56,7 @@ abstract class InputFieldComplexSortableDetailListContentBase
 	abstract public function render($key, $dummy, $type = null);
 
 
-	/** @return InputModelBase[] */
+	/** @return array */
 	public function getExtraInputModels()
 		{ return $this->_extraInputModels; }
 

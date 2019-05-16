@@ -120,7 +120,7 @@ abstract class AdminPageSettingsBase
 	 *
 	 */
 
-	abstract protected function validate();
+	abstract protected function validate($recordId = null);
 
 
 	/**

@@ -103,7 +103,7 @@ class DataFormConfigurationFactory
 	 *
 	 * @param bool $setDefaultFields
 	 * @throws UnknownFormException
-	 * @return DataFormConfiguration
+	 * @return DataFormConfiguration\DataFormConfiguration
 	 *
 	 */
 
@@ -129,7 +129,7 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param int $formId
-	 * @return DataFormConfiguration
+	 * @return DataFormConfiguration\DataFormConfiguration
 	 *
 	 */
 
@@ -145,7 +145,7 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param string $name
-	 * @return DataFormConfiguration
+	 * @return DataFormConfiguration\DataFormConfiguration
 	 *
 	 */
 
@@ -161,7 +161,7 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param array $row
-	 * @return DataFormConfiguration
+	 * @return DataFormConfiguration\DataFormConfiguration
 	 *
 	 */
 

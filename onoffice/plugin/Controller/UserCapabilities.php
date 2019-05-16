@@ -51,7 +51,7 @@ class UserCapabilities
 	const RULE_EDIT_SETTINGS = 'editSettings';
 
 	/** */
-	const RULE_DEBUG_OUTPUT = 'editSettings';
+	const RULE_DEBUG_OUTPUT = 'debugOutput';
 
 	/** @var array */
 	private $_ruleToCapability = [

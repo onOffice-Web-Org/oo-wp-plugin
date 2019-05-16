@@ -28,8 +28,6 @@ use onOffice\WPlugin\Types\FieldTypes;
 
 class DistinctFieldsFilter
 {
-
-
 	/** */
 	const NOT_ALLOWED_KEYS = ['s', '', 'oo_formid', 'oo_formno'];
 
@@ -39,6 +37,9 @@ class DistinctFieldsFilter
 
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
+
+	/** @var string */
+	private $_module = '';
 
 
 	/**

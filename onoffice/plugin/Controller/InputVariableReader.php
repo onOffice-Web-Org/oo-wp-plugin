@@ -106,7 +106,7 @@ class InputVariableReader
 
 	/**
 	 *
-	 * @param string|value $value
+	 * @param string|array|float $value
 	 * @param string $type
 	 * @return string|array
 	 *

@@ -32,10 +32,8 @@ use WP_UnitTestCase;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
- *
  */
+
 class TestClassDataListViewFactoryBase
 	extends WP_UnitTestCase
 {

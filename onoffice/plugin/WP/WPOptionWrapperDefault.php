@@ -55,7 +55,7 @@ class WPOptionWrapperDefault
 	 *
 	 * @param string $option
 	 * @param mixed $default
-	 * @return type
+	 * @return mixed
 	 *
 	 */
 

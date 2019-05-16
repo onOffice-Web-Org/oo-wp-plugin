@@ -151,7 +151,7 @@ class ArrayContainer implements \ArrayAccess, \Iterator {
 	 *
 	 * Forced by Iterator interface
 	 *
-	 * @return type
+	 * @return mixed
 	 *
 	 */
 

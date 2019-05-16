@@ -87,7 +87,7 @@ class TestClassAPIClientExceptionFactory
 		$pSDKWrapper = new SDKWrapperMocker();
 		$this->_pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'filters');
-		$this->_pFactory = new APIClientExceptionFactory($this->_pApiClientAction);
+		$this->_pFactory = new APIClientExceptionFactory();
 		$this->setReturnCode(0);
 	}
 

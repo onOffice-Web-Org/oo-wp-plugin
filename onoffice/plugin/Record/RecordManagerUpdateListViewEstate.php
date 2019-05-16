@@ -53,14 +53,14 @@ class RecordManagerUpdateListViewEstate
 			'random' => $pDataViewList->getRandom(),
 		);
 
-		$tableRow = array(
+		$tableRow = [
 			self::TABLENAME_LIST_VIEW => $row,
 			self::TABLENAME_PICTURETYPES => $pDataViewList->getPictureTypes(),
 			self::TABLENAME_FIELDCONFIG => $pDataViewList->getFields(),
 			self::TABLENAME_LISTVIEW_CONTACTPERSON => $pDataViewList->getAddressFields(),
-		);
+		];
 
-		return $this->updateByRow($this->getRecordId(), $tableRow);
+		return $this->updateByRow($tableRow);
 	}
 
 
