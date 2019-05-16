@@ -21,12 +21,14 @@
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
-use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\AddressList;
-use onOffice\WPlugin\Template;
+use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
+use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Impressum;
+use onOffice\WPlugin\Template;
+use onOffice\WPlugin\Utility\Logger;
+use WP_UnitTestCase;
 
 /**
  *
@@ -35,7 +37,7 @@ use onOffice\WPlugin\Impressum;
  */
 
 class TestClassContentFilterShortCodeAddressEnvironmentDefault
-	extends \WP_UnitTestCase
+	extends WP_UnitTestCase
 {
 
 	/** @var ContentFilterShortCodeAddressEnvironmentDefault */
@@ -110,5 +112,16 @@ class TestClassContentFilterShortCodeAddressEnvironmentDefault
 		$pImpressumResult = $this->_pEnvironment->getImpressum();
 
 		$this->assertInstanceOf(Impressum::class, $pImpressumResult);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetLogger()
+	{
+		$pLoggerResult = $this->_pEnvironment->getLogger();
+		$this->assertInstanceOf(Logger::class, $pLoggerResult);
 	}
 }

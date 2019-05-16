@@ -152,9 +152,9 @@ class FormModelBuilderDBAddress
 
 	/**
 	 *
-	 * @param type $module
-	 * @param type $htmlType
-	 * @return type
+	 * @param string $module
+	 * @param string $htmlType
+	 * @return InputModelDB
 	 *
 	 */
 

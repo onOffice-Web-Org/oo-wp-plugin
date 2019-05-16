@@ -99,7 +99,7 @@ class FormPostHandler
 			$class = self::$_formPostClassesByType[$formType];
 			self::$_instances[$formType] = new $class;
 		} else {
-			throw new Exception('Unknown Form Type');
+			throw new \Exception('Unknown Form Type');
 		}
 	}
 }

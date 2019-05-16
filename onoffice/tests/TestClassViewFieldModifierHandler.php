@@ -63,7 +63,6 @@ class TestClassViewFieldModifierHandler
 		'hausnummer' => '5',
 		'objekttitel' => 'Nice Estate',
 		'objektart' => 'haus',
-		'vermarktungsart' => 'kauf',
 		'ort' => 'Aachen',
 		'objektnr_extern' => 'JJ1337',
 		'reserviert' => '1',

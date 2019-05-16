@@ -22,6 +22,9 @@
 namespace onOffice\WPlugin\Gui\Table\WP;
 
 use WP_List_Table;
+use const ABSPATH;
+use function __;
+use function _e;
 
 if (!class_exists('WP_List_Table')){
 	require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );

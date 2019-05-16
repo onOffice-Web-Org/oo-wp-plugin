@@ -81,6 +81,7 @@ class DataFormConfiguration
 	public function getRequiredFields(): array
 		{ return $this->_requiredFields; }
 
+	/** @return array */
 	public function getAvailableOptionsFields(): array
 		{ return $this->_availableOptionsFields; }
 

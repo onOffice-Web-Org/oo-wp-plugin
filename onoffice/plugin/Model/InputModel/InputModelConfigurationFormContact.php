@@ -24,7 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Model\InputModel;
 
 use onOffice\WPlugin\Model\InputModelOption;
-use const __;
+use function __;
 
 /**
  *
