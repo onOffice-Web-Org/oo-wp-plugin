@@ -21,7 +21,7 @@
 
 declare (strict_types=1);
 
-namespace onOffice\WPlugin;
+namespace onOffice\tests;
 
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeLink;
 use onOffice\WPlugin\Controller\ContentFilter\LinkBuilderPage;

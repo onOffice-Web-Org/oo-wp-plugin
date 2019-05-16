@@ -19,7 +19,12 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeDetailSimilarEstates;
+use WP_UnitTestCase;
 
 /**
  *

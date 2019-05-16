@@ -19,11 +19,16 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewEnvironmentDefault;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\Region\RegionController;
+use WP_UnitTestCase;
 
 /**
  *

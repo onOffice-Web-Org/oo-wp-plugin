@@ -19,8 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use Closure;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeEstateGeoBase;
+use WP_UnitTestCase;
 
 /**
  *
