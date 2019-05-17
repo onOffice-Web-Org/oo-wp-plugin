@@ -395,11 +395,11 @@ class TestClassDataFormConfigurationFactory
 	 *
 	 * @param int $formId
 	 * @param string $formType
-	 * @return string
+	 * @return array
 	 *
 	 */
 
-	private function getBasicFieldsArrayWithGeo(int $formId, string $formType)
+	private function getBasicFieldsArrayWithGeo(int $formId, string $formType): array
 	{
 		$fields = $this->getBasicFieldsArray($formId, $formType);
 		$geoField = $fields[0];
@@ -435,6 +435,7 @@ class TestClassDataFormConfigurationFactory
 			'captcha' => '1',
 			'newsletter' => '1',
 			'availableOptions' => '1',
+			'show_estate_context' => '0',
 		];
 	}
 }

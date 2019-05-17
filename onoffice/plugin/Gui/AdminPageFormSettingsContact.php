@@ -47,9 +47,6 @@ class AdminPageFormSettingsContact
 	/** */
 	const FORM_VIEW_GEOFIELDS = 'geofields';
 
-	/** @var bool */
-	private $_showPagesOption = false;
-
 	/** @var bool message field has no module */
 	private $_showMessageInput = false;
 
@@ -92,7 +89,7 @@ class AdminPageFormSettingsContact
 		}
 
 		$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
-		$pInputModelSubject = $pFormModelBuilder->createInputModelSubject();
+		$pInputModelSubject = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT);
 		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
@@ -103,29 +100,23 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 
 		if ($this->_showCreateAddress) {
-			$pInputModelCreateAddress = $pFormModelBuilder->createInputModelCreateAddress();
-			$pFormModelFormSpecific->addInputModel($pInputModelCreateAddress);
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS);
+			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
 		if ($this->_showCheckDuplicates) {
-			$pInputModelCheckDuplicates = $pFormModelBuilder->createInputModelCheckDuplicates();
-			$pFormModelFormSpecific->addInputModel($pInputModelCheckDuplicates);
-		}
-
-		if ($this->_showPagesOption) {
-			$pInputModelPages = $pFormModelBuilder->createInputModelPages();
-			$pFormModelFormSpecific->addInputModel($pInputModelPages);
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
+			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
 		if ($this->_showNewsletterCheckbox) {
-			$pInputModelNewsletter = $pFormModelBuilder->createInputModelNewsletterCheckbox();
-			$pFormModelFormSpecific->addInputModel($pInputModelNewsletter);
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER);
+			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
 		if ($this->_showEstateContextCheckbox) {
-			$pInputModelShowEstateContext = $pInputModelBuilder->build
-				(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING);
-			$pFormModelFormSpecific->addInputModel($pInputModelShowEstateContext);
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING);
+			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
 		$this->addFormModel($pFormModelFormSpecific);
@@ -226,15 +217,6 @@ class AdminPageFormSettingsContact
 			$this->createMetaBoxByForm($pFormFieldsConfigCategory, 'side');
 		}
 	}
-
-
-	/** @return bool */
-	public function getShowPagesOption(): bool
-		{ return $this->_showPagesOption; }
-
-	/** @param bool $showPagesOption */
-	public function setShowPagesOption(bool $showPagesOption)
-		{ $this->_showPagesOption = $showPagesOption; }
 
 	/** @return bool */
 	public function getShowMessageInput(): bool

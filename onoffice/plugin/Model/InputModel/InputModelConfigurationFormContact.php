@@ -38,6 +38,18 @@ class InputModelConfigurationFormContact
 		InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING => [
 			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
 		],
+		InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER => [
+			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
+		],
+		InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES => [
+			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
+		],
+		InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS => [
+			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
+		],
+		InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT => [
+			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_TEXT,
+		],
 	];
 
 
@@ -49,6 +61,14 @@ class InputModelConfigurationFormContact
 	{
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING]
 			[self::KEY_LABEL] = __('Set Estate Context as Heading', 'onoffice');
+		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER]
+			[self::KEY_LABEL] = __('Newsletter', 'onoffice');
+		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES]
+			[self::KEY_LABEL] = __('Check for Duplicates', 'onoffice');
+		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS]
+			[self::KEY_LABEL] = __('Create Address', 'onoffice');
+		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT]
+			[self::KEY_LABEL] = __('Subject (optional)', 'onoffice');
 	}
 
 

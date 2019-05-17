@@ -292,43 +292,6 @@ class FormModelBuilderDBForm
 	 *
 	 */
 
-	public function createInputModelSubject()
-	{
-		$labelSubject = __('Subject (optional)', 'onoffice');
-		$selectedSubject = $this->getValue('subject');
-
-		$pInputModelFormSubject = $this->getInputModelDBFactory()->create
-			(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT, $labelSubject);
-		$pInputModelFormSubject->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
-		$pInputModelFormSubject->setValue($selectedSubject);
-
-		return $pInputModelFormSubject;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelCreateAddress(): InputModelDB
-	{
-		$labelCreateAddress = __('Create Address', 'onoffice');
-		$selectedValue = $this->getValue('createaddress', false);
-		$pInputModelFormCreateAddress = $this->generateGenericCheckbox($labelCreateAddress,
-			InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS, $selectedValue);
-
-		return $pInputModelFormCreateAddress;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
 	public function createInputModelCaptchaRequired(): InputModelDB
 	{
 		$addition = '';
@@ -346,23 +309,6 @@ class FormModelBuilderDBForm
 			InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRES_CAPTCHA, $selectedValue);
 
 		return $pInputModelFormRequiresCaptcha;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelCheckDuplicates(): InputModelDB
-	{
-		$labelCheckDuplicates = __('Check for Duplicates', 'onoffice');
-		$selectedValue = $this->getValue('checkduplicates', false);
-		$pInputModelFormCheckDuplicates = $this->generateGenericCheckbox($labelCheckDuplicates,
-			InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES, $selectedValue);
-
-		return $pInputModelFormCheckDuplicates;
 	}
 
 
@@ -392,26 +338,6 @@ class FormModelBuilderDBForm
 	 *
 	 */
 
-	public function createInputModelPages()
-	{
-		$labelPages = __('Pages', 'onoffice');
-		$selectedValue = $this->getValue('pages');
-
-		$pInputModelFormPages = $this->getInputModelDBFactory()->create
-			(InputModelDBFactoryConfigForm::INPUT_FORM_PAGES, $labelPages);
-		$pInputModelFormPages->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
-		$pInputModelFormPages->setValue($selectedValue);
-
-		return $pInputModelFormPages;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
 	public function getInputModelIsRequired()
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
@@ -427,6 +353,12 @@ class FormModelBuilderDBForm
 	}
 
 
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
 	public function getInputModelIsAvailableOptions()
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
@@ -440,6 +372,7 @@ class FormModelBuilderDBForm
 
 		return $pInputModel;
 	}
+
 
 	/**
 	 *
@@ -463,21 +396,6 @@ class FormModelBuilderDBForm
 		$pInputModel->setValue((int)$checked);
 		$pInputModel->setValuesAvailable(1);
 		return $pInputModel;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelNewsletterCheckbox(): InputModelDB
-	{
-		$label = __('Newsletter', 'onoffice');
-		$type = InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER;
-		$checked = $this->getValue('newsletter', false);
-		return $this->generateGenericCheckbox($label, $type, $checked);
 	}
 
 

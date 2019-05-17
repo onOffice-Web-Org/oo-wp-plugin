@@ -91,9 +91,13 @@ class InputModelDBBuilderGeneric
 
 	private function configureForHtmlType(InputModelDB $pInputModel, array $fieldConfig)
 	{
+		$value = $this->_values[$pInputModel->getField()] ?? null;
+
 		if ($fieldConfig[InputModelConfiguration::KEY_HTMLTYPE] === InputModelOption::HTML_TYPE_CHECKBOX) {
 			$pInputModel->setValuesAvailable(1);
-			$pInputModel->setValue((int)($this->_values[$pInputModel->getField()] ?? 0));
+			$pInputModel->setValue((int)($value));
+		} else {
+			$pInputModel->setValue($value);
 		}
 	}
 
