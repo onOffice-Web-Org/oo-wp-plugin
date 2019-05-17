@@ -56,16 +56,17 @@ class TestClassInputModelDBBuilderGeneric
 
 	public function prepare()
 	{
-		$inputModelField = InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING;
 		$this->_pInputModelDBFactory = $this->getMockBuilder(InputModelDBFactory::class)
 			->setConstructorArgs([new InputModelDBFactoryConfigForm()])
 			->getMock();
-		$pInputModel = new InputModelDB('testname', 'asdf');
-		$pInputModel->setField($inputModelField);
 
 		$this->_pInputModelDBFactory->method('create')
-			->with($inputModelField, $this->anything(), false)
-			->will($this->returnValue($pInputModel));
+			->with($this->anything(), $this->anything(), false)
+			->will($this->returnCallback(function(string $fieldName, string $label): InputModelDB {
+				$pInputModel = new InputModelDB('testname', $label);
+				$pInputModel->setField($fieldName);
+				return $pInputModel;
+			}));
 
 		$this->_pInputModelConfiguration = new InputModelConfigurationFormContact();
 
@@ -78,16 +79,33 @@ class TestClassInputModelDBBuilderGeneric
 	 *
 	 */
 
-	public function testBuild()
+	public function testBuildCheckBox()
 	{
 		$pResult = $this->_pInputModelDBBuilderGeneric->build
 			(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING);
 		$this->assertEquals(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING,
 			$pResult->getField());
-		$this->assertEquals('asdf', $pResult->getLabel());
+		$this->assertEquals('Set Estate Context as Heading', $pResult->getLabel());
 		$this->assertEquals('checkbox', $pResult->getHtmlType());
 		$this->assertEquals(1, $pResult->getValuesAvailable());
 		$this->assertEquals(0, $pResult->getValue());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testBuildOther()
+	{
+		$pResult = $this->_pInputModelDBBuilderGeneric->build
+			(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT);
+		$this->assertEquals(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT,
+			$pResult->getField());
+		$this->assertEquals('Subject (optional)', $pResult->getLabel());
+		$this->assertEquals('text', $pResult->getHtmlType());
+		$this->assertEquals([], $pResult->getValuesAvailable());
+		$this->assertEquals('', $pResult->getValue());
 	}
 
 
