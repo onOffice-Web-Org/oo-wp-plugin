@@ -23,11 +23,11 @@ declare (Strict_types=1);
 
 namespace onOffice\tests;
 
-use Closure;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactoryBase;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\Record\RecordManagerRead;
+use ReflectionMethod;
 use WP_UnitTestCase;
 
 /**
@@ -101,10 +101,9 @@ class TestClassDataListViewFactoryBase
 			->getMock();
 		$pNewRecordFinder = $this->_pMockRecordManagerRead;
 
-		Closure::bind(function() use ($pNewRecordFinder) {
-			$this->setRecordManagerRead($pNewRecordFinder);
-		}, $pMockDataListViewFactoryBase, DataListViewFactoryBase::class)();
-
+		$pReflectionMethod = new ReflectionMethod($pMockDataListViewFactoryBase, 'setRecordManagerRead');
+		$pReflectionMethod->setAccessible(true);
+		$pReflectionMethod->invokeArgs($pMockDataListViewFactoryBase, [$pNewRecordFinder]);
 		$this->_pMockDataListViewFactoryBase = $pMockDataListViewFactoryBase;
 	}
 }

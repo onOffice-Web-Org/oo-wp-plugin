@@ -23,9 +23,9 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use Closure;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeEstateGeoBase;
+use ReflectionMethod;
 use WP_UnitTestCase;
 
 /**
@@ -156,10 +156,9 @@ class TestClassEstateViewFieldModifierTypeEstateGeoBase
 	{
 		$viewFields = [GeoPosition::FIELD_GEO_POSITION, 'testField'];
 		$pViewFieldModifier = $this->generateMockObject($viewFields);
-
-		$pClosure = function() {return $this->getViewFields();};
-		$result = Closure::bind($pClosure, $pViewFieldModifier,
-			EstateViewFieldModifierTypeEstateGeoBase::class)();
+		$pReflectionMethod = new ReflectionMethod($pViewFieldModifier, 'getViewFields');
+		$pReflectionMethod->setAccessible(true);
+		$result = $pReflectionMethod->invoke($pViewFieldModifier);
 		$this->assertEquals($viewFields, $result);
 	}
 
