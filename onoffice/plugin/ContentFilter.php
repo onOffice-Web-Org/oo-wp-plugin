@@ -30,6 +30,7 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\EstateTitleBuilder;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
@@ -43,8 +44,7 @@ use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
-use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierFactory;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_Query;
 use const ONOFFICE_PLUGIN_DIR;
@@ -353,7 +353,6 @@ class ContentFilter
 
 	/**
 	 *
-	 * @global WP_Query $wp_query
 	 * @param array $title see Wordpress internal function wp_get_document_title()
 	 * @return string
 	 *
@@ -361,61 +360,29 @@ class ContentFilter
 
 	public function setTitle(array $title)
 	{
-		global $wp_query;
-
-		if (!isset($wp_query->query_vars['estate_id'])) {
+		$estateId = (int)(new WPQueryWrapper())->getWPQuery()->get('estate_id', 0);
+		if ($estateId === 0) {
 			return $title;
 		}
 
-		$pDetailView = $this->getEstateDetailView();
-		$pEstateList = $this->preloadSingleEstate($pDetailView, null);
-		$modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE;
-		$pEstateIterator = $pEstateList->estateIterator($modifier);
-		$pViewFieldModifierFactory = new ViewFieldModifierFactory(onOfficeSDK::MODULE_ESTATE);
-		$pEstateFieldModifier = $pViewFieldModifierFactory->create($modifier);
-		$fieldsForTitle = $pEstateFieldModifier->getVisibleFields();
-
-		if ($pEstateIterator) {
-			$fetchedValues = array_map([$pEstateIterator, 'getValueRaw'], $fieldsForTitle);
-			$values = array_combine($fieldsForTitle, $fetchedValues);
-
-			$pEstateList->resetEstateIterator();
-			$title['title'] = $this->buildEstateTitle($values);
-		}
-
-		return $title;
-	}
-
-
-	/**
-	 *
-	 * @param array $values
-	 * @return string
-	 *
-	 */
-
-	private function buildEstateTitle(array $values)
-	{
-		$pageTitle = null;
-		$estateTitle = $values['objekttitel'];
-		$titleLength = __String::getNew($estateTitle)->length();
+		$newTitleValue = '';
+		$pEstateTitleBuilder = new EstateTitleBuilder();
+		$titleFull = $pEstateTitleBuilder->buildTitle($estateId, '%1$s');
+		$titleLength = __String::getNew($titleFull)->length();
 
 		if ($titleLength > 0 && $titleLength < 70) {
-			$pageTitle = $estateTitle;
+			$newTitleValue = $titleFull;
 		} else {
-			// Objektart (Vermarktungsart) in Ort - Objektnummer
-			$estateKind = $values['objektart'];
-			$estateMarketing = $values['vermarktungsart'];
-			$estateCity = $values['ort'];
-			$estateNo = $values['objektnr_extern'];
-			/* translators: %1$s is the kind of estate, %2$s the markting type,
-							%3$s the city, %4$s is the estate number.
-							Example: Einfamilienhaus (Kauf) in Aachen - JJ12345 */
-			$format = __('%1$s (%2$s) in %3$s - %4$s', 'onoffice');
-			$pageTitle = sprintf($format, $estateKind, $estateMarketing, $estateCity, $estateNo);
+			/* translators: %2$s is the kind of estate, %3$s the markting type,
+							%4$s the city, %5$s is the estate number.
+							Example: House (Sale) in Aachen - JJ12345 */
+			$format = __('%2$s (%3$s) in %4$s - %5$s', 'onoffice');
+			$newTitleValue = $pEstateTitleBuilder->buildTitle($estateId, $format);
 		}
 
-		return $pageTitle;
+		$title['title'] = $newTitleValue;
+
+		return $title;
 	}
 
 

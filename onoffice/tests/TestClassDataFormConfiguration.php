@@ -44,12 +44,12 @@ class TestClassDataFormConfiguration
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
-		parent::setUp();
-
 		$pDataFormConfiguration = new DataFormConfiguration();
 		$pDataFormConfiguration->addInput('test1');
 		$pDataFormConfiguration->addInput('test2', onOfficeSDK::MODULE_ESTATE);
@@ -63,6 +63,7 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setAvailableOptionsFields(['test1', 'test2']);
 		$pDataFormConfiguration->addAvailableOptionsField('test3');
 		$pDataFormConfiguration->setId(3);
+		$pDataFormConfiguration->setShowEstateContext(true);
 
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 	}
@@ -95,6 +96,7 @@ class TestClassDataFormConfiguration
 		$this->assertEquals(3, $pDataFormConfiguration->getId());
 		$this->assertEquals(Form::TYPE_INTEREST, $pDataFormConfiguration->getViewType());
 		$this->assertEquals('form', $pDataFormConfiguration->getModule());
+		$this->assertTrue($pDataFormConfiguration->getShowEstateContext());
 	}
 
 
@@ -129,5 +131,6 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setDefaultFields();
 		$this->assertEquals([], $pDataFormConfiguration->getInputs());
 		$this->assertEquals([], $pDataFormConfiguration->getAvailableOptionsFields());
+		$this->assertFalse($pDataFormConfiguration->getShowEstateContext());
 	}
 }

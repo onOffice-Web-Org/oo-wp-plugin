@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\EstateTitleBuilder;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
@@ -33,6 +34,7 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use function __;
 use function esc_html;
 
@@ -455,6 +457,26 @@ class Form
 	{
 		return $this->_pFormData->getFormSent() &&
 			in_array($field, $this->_pFormData->getMissingFields(), true);
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getEstateContextLabel(): string
+	{
+		$result = '';
+		$estateId = (int)(new WPQueryWrapper)->getWPQuery()->get('estate_id', 0);
+		if ($this->getDataFormConfiguration()->getShowEstateContext() && $estateId !== 0) {
+			$pEstateTitleBuilder = new EstateTitleBuilder();
+			/* translators: %1$s is the estate title, %5$s is the estate ID */
+			$format = __('Your Inquiry about Real Estate “%1$s” (%5$s)');
+			$result = $pEstateTitleBuilder->buildTitle($estateId, $format);
+		}
+		return esc_html($result);
 	}
 
 

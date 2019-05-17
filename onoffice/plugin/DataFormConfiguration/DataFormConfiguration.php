@@ -64,6 +64,9 @@ class DataFormConfiguration
 	/** @var array */
 	private $_availableOptionsFields = [];
 
+	/** @var bool */
+	private $_showEstateContext = false;
+
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -121,6 +124,11 @@ class DataFormConfiguration
 	public function addAvailableOptionsField(string $availableOptionsField)
 		{ $this->_availableOptionsFields []= $availableOptionsField; }
 
+	/** @param bool $showEstateContext */
+	public function setShowEstateContext(bool $showEstateContext)
+		{ $this->_showEstateContext = $showEstateContext; }
+
+
 	/**
 	 *
 	 * @param string $input
@@ -170,4 +178,8 @@ class DataFormConfiguration
 	/** @param int $id */
 	public function setId(int $id)
 		{ $this->_id = $id; }
+
+	/** @return bool */
+	public function getShowEstateContext(): bool
+		{ return $this->_showEstateContext; }
 }

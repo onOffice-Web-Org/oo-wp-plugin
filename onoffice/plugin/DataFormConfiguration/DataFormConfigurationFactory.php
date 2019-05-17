@@ -278,6 +278,7 @@ class DataFormConfigurationFactory
 		$pConfig->setCreateAddress((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 		$pConfig->setNewsletterCheckbox((bool)$row['newsletter']);
+		$pConfig->setShowEstateContext((bool)$row['show_estate_context']);
 	}
 
 
