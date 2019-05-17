@@ -1,0 +1,22 @@
+parameters:
+	level: 0
+	paths:
+		- plugin
+		- tests
+	excludes_analyse:
+		- SDK
+		- '/tmp/wordpress/'
+		- 'tests/bootstrap.php'
+		- 'tests/resources/'
+	autoload_files:
+		- 'tests/bootstrap.php'
+		- '/tmp/wordpress/wp-admin/includes/upgrade.php'
+	ignoreErrors:
+		# Badly declared variadic functions
+		- '#Function add_query_arg invoked with [0-9]+ parameters, 0 required#'
+		- '#Function do_action invoked with [0-9]+ parameters, 1-2 required#'
+		-
+			message: '#[a-zA-Z0-9\\_]+::__construct\(\) does not call parent constructor from [a-zA-Z0-9\\_]+#'
+			path: '%currentWorkingDirectory%/tests/*Mocker.php'
+includes:
+	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
