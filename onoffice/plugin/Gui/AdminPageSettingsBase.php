@@ -224,7 +224,7 @@ abstract class AdminPageSettingsBase
 					$identifier = $pInputModel->getIdentifier();
 					$value = isset($values->$identifier) ? $values->$identifier : null;
 					$pInputModel->setValue($value);
-					$pInputModel->setMainRecordId($mainRecordId);
+					$pInputModel->setMainRecordId($mainRecordId ?? 0);
 					$pInputModelDBAdapterRow->addInputModelDB($pInputModel);
 				}
 			}
@@ -428,7 +428,7 @@ abstract class AdminPageSettingsBase
 	{
 		if (array_key_exists($table, $row)) {
 			array_walk($row[$table], function (&$value, $key) {
-				$value['order'] = $key + 1;
+				$value['order'] = (int)$key + 1;
 			});
 		}
 		return $row;
