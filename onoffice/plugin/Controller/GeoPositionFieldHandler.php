@@ -86,7 +86,7 @@ class GeoPositionFieldHandler
 		$where = '`'.esc_sql($idColumn).'` = "'.esc_sql($pViewProperty->getId()).'"';
 		$pRecordManager->addWhere($where);
 
-		$this->_records = (array)($pRecordManager->getRecords()[0] ?? []);
+		$this->_records = (array)($pRecordManager->getRecords()[0] ?? $this->getDefaultConfiguration());
 	}
 
 
@@ -148,6 +148,21 @@ class GeoPositionFieldHandler
 
 		return $geoFieldsArray;
 	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function getDefaultConfiguration(): array
+	{
+		$defaultFields = array_flip($this->_booleanFields);
+		unset($defaultFields[InputModelDBFactoryConfigGeoFields::FIELDNAME_CITY_ACTIVE]);
+		return array_combine(array_keys($defaultFields), array_fill(0, count($defaultFields), '1'));
+	}
+
 
 	/**  @return int */
 	public function getRadiusValue(): int

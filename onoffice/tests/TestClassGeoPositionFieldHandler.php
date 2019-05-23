@@ -91,9 +91,11 @@ class TestClassGeoPositionFieldHandler
 
 	/**
 	 *
+	 * @return GeoPositionFieldHandler
+	 *
 	 */
 
-	public function testGetActiveFieldsWithValue()
+	public function testGetActiveFieldsWithValue(): GeoPositionFieldHandler
 	{
 		$this->_record[0]->geo_order = 'street,country,radius,zip,city';
 
@@ -109,6 +111,8 @@ class TestClassGeoPositionFieldHandler
 			'radius' => null,
 			'city' => null,
 		], $pGeoPositionFieldHandler->getActiveFieldsWithValue());
+
+		return $pGeoPositionFieldHandler;
 	}
 
 
@@ -179,6 +183,26 @@ class TestClassGeoPositionFieldHandler
 
 	/**
 	 *
+	 * @depends testGetActiveFieldsWithValue
+	 *
+	 */
+
+	public function testDefaultValues(GeoPositionFieldHandler $pGeoPositionFieldHandler)
+	{
+		$pView = new DataListView(0, 'test');
+		$pGeoPositionFieldHandler->readValues($pView);
+		$this->assertEquals([
+			'street_active' => 'street',
+			'country_active' => 'country',
+			'radius_active' => 'radius',
+			'zip_active' => 'zip',
+			// no city
+		], $pGeoPositionFieldHandler->getActiveFields());
+	}
+
+
+	/**
+	 *
 	 * @return RecordManagerRead
 	 *
 	 */
@@ -190,8 +214,7 @@ class TestClassGeoPositionFieldHandler
 			->getMock();
 		$pRecordManager->method('getMainTable')->will($this->returnValue('oo_plugin_listviews'));
 		$pRecordManager->method('getIdColumnMain')->will($this->returnValue('listview_id'));
-		$pRecordManager->method('getRecords')->will($this->returnValue($this->_record));
-		$pRecordManager->expects($this->once())->method('addWhere')->with('`listview_id` = "3"');
+		$pRecordManager->method('getRecords')->will($this->onConsecutiveCalls($this->_record, []));
 
 		return $pRecordManager;
 	}
