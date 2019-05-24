@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller;
 
 use LogicException;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use function esc_sql;
@@ -158,9 +159,12 @@ class GeoPositionFieldHandler
 
 	private function getDefaultConfiguration(): array
 	{
-		$defaultFields = array_flip($this->_booleanFields);
-		unset($defaultFields[InputModelDBFactoryConfigGeoFields::FIELDNAME_CITY_ACTIVE]);
-		return array_combine(array_keys($defaultFields), array_fill(0, count($defaultFields), '1'));
+		$defaultActive = [
+			GeoPosition::ESTATE_LIST_SEARCH_ZIP,
+			GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
+		];
+		$intersection = array_intersect_key($this->_booleanFields, array_flip($defaultActive));
+		return array_combine($intersection, array_fill(0, count($intersection), '1'));
 	}
 
 

@@ -192,11 +192,8 @@ class TestClassGeoPositionFieldHandler
 		$pView = new DataListView(0, 'test');
 		$pGeoPositionFieldHandler->readValues($pView);
 		$this->assertEquals([
-			'street_active' => 'street',
-			'country_active' => 'country',
 			'radius_active' => 'radius',
 			'zip_active' => 'zip',
-			// no city
 		], $pGeoPositionFieldHandler->getActiveFields());
 	}
 
