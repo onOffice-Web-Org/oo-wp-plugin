@@ -37,11 +37,13 @@ class DataListViewFactory
 {
 	/**
 	 *
+	 * @param RecordManagerReadListViewEstate $pRecordManagerReadListViewEstate
+	 *
 	 */
 
-	public function __construct()
+	public function __construct(RecordManagerReadListViewEstate $pRecordManagerReadListViewEstate = null)
 	{
-		$this->setRecordManagerRead(new RecordManagerReadListViewEstate());
+		$this->setRecordManagerRead($pRecordManagerReadListViewEstate ?? new RecordManagerReadListViewEstate());
 	}
 
 
