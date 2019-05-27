@@ -33,6 +33,22 @@ use onOffice\WPlugin\Controller\UserCapabilities;
 class LoggerEnvironmentDefault
 	implements LoggerEnvironment
 {
+	/** @var UserCapabilities */
+	private $_pUserCapabilities = null;
+
+
+	/**
+	 *
+	 * @param UserCapabilities $pUserCapabilities
+	 *
+	 */
+
+	public function __construct(UserCapabilities $pUserCapabilities = null)
+	{
+		$this->_pUserCapabilities = $pUserCapabilities ?? new UserCapabilities();
+	}
+
+
 	/**
 	 *
 	 * @return UserCapabilities
@@ -41,7 +57,7 @@ class LoggerEnvironmentDefault
 
 	public function getUserCapabilities(): UserCapabilities
 	{
-		return new UserCapabilities();
+		return $this->_pUserCapabilities;
 	}
 
 
