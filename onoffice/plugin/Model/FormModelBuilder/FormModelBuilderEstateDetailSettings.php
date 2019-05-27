@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
@@ -235,22 +236,16 @@ class FormModelBuilderEstateDetailSettings
 		if ($module == onOfficeSDK::MODULE_ESTATE) {
 			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
 				(InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
+			$fields = $this->_pDataDetailView->getFields();
 		} elseif ($module == onOfficeSDK::MODULE_ADDRESS) {
 			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
 				(InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
+			$fields = $this->_pDataDetailView->getAddressFields();
+		} else {
+			throw new UnknownModuleException();
 		}
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-
-		if ($module == onOfficeSDK::MODULE_ADDRESS)
-		{
-			$fields = $this->_pDataDetailView->getAddressFields();
-		}
-		elseif ($module == onOfficeSDK::MODULE_ESTATE)
-		{
-			$fields = $this->_pDataDetailView->getFields();
-		}
-
 		$fieldNames = $this->getFieldnames()->getFieldList($module);
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$pInputModelFieldsConfig->setValue($fields);

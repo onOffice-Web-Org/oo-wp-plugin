@@ -301,20 +301,21 @@ abstract class AdminPageSettingsBase
 	 * @param string $column
 	 * @param array $values
 	 * @param int $recordId
+	 * @return array
 	 *
 	 */
 
-	protected function prepareRelationValues($table, $column, array $values, $recordId)
+	protected function prepareRelationValues($table, $column, array $values, $recordId): array
 	{
-		if (isset($values[$table])) {
-			array_walk($values[$table], function (&$value, $key) use ($column, $recordId) {
-				if (array_key_exists($column, $value)) {
-					$value[$column] = $recordId;
-				}
-			});
-		}
+		$valuesTable = $values[$table] ?? [];
 
-		return $values;
+		array_walk($valuesTable, function (&$value, $key) use ($column, $recordId) {
+			if (is_array($value) && array_key_exists($column, $value)) {
+				$value[$column] = $recordId;
+			}
+		});
+
+		return $valuesTable;
 	}
 
 

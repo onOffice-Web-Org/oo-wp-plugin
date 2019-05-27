@@ -51,7 +51,7 @@ class ScriptLoaderMapGoogleMaps
 	public function __construct(string $pluginUrl = null)
 	{
 		$this->_pluginPath = $pluginUrl ?? ONOFFICE_PLUGIN_DIR.'/index.php';
-		$this->_key = get_option('onoffice-settings-googlemaps-key');
+		$this->_key = get_option('onoffice-settings-googlemaps-key', null);
 	}
 
 
@@ -75,13 +75,7 @@ class ScriptLoaderMapGoogleMaps
 
 	public function register(WPScriptStyleBase $pWPScriptStyle)
 	{
-		$url = 'https://maps.googleapis.com/maps/api/js';
-
-		if ($this->_key != null)
-		{
-			$url .= '?key='.urlencode($this->_key);
-		}
-
+		$url = 'https://maps.googleapis.com/maps/api/js?'.http_build_query(['key' => $this->_key]);
 		$pWPScriptStyle->registerScript('google-maps', $url);
 		$pWPScriptStyle->registerScript('gmapsinit',
 			plugins_url('/js/gmapsinit.js', $this->_pluginPath), ['google-maps']);

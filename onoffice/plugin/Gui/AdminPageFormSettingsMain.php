@@ -175,7 +175,7 @@ class AdminPageFormSettingsMain
 
 	private function getClassNameByType(string $type): string
 	{
-		$result = $this->_mappingTypeClass[$type] ?? string;
+		$result = $this->_mappingTypeClass[$type] ?? null;
 
 		if ($result === null) {
 			throw new UnexpectedValueException('Unknown class');
