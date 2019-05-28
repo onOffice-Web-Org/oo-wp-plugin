@@ -44,16 +44,16 @@ use function esc_html;
 
 class Form
 {
-	/** choose this to create a contact form */
+	/** contact form */
 	const TYPE_CONTACT = 'contact';
 
-	/** choose this to create an owner form */
+	/** owner form */
 	const TYPE_OWNER = 'owner';
 
-	/** choose this to create an aplicant form (with searchcriterias)*/
+	/** applicant form (with search criteria) */
 	const TYPE_INTEREST = 'interest';
 
-	/** choose this to create an applicant-search form */
+	/** applicant-search form */
 	const TYPE_APPLICANT_SEARCH = 'applicantsearch';
 
 	/** @var Fieldnames */
@@ -453,7 +453,7 @@ class Form
 	 *
 	 */
 
-	public function isMissingField($field)
+	public function isMissingField($field): bool
 	{
 		return $this->_pFormData->getFormSent() &&
 			in_array($field, $this->_pFormData->getMissingFields(), true);
@@ -473,7 +473,7 @@ class Form
 		if ($this->getDataFormConfiguration()->getShowEstateContext() && $estateId !== 0) {
 			$pEstateTitleBuilder = new EstateTitleBuilder();
 			/* translators: %1$s is the estate title, %5$s is the estate ID */
-			$format = __('Your Inquiry about Real Estate “%1$s” (%5$s)');
+			$format = __('Your Inquiry about Real Estate “%1$s” (%5$s)', 'onoffice');
 			$result = $pEstateTitleBuilder->buildTitle($estateId, $format);
 		}
 		return esc_html($result);
