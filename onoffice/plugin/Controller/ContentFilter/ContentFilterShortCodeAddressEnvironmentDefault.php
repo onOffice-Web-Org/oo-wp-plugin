@@ -102,26 +102,15 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 
 	/**
 	 *
-	 * @param string $templateName
 	 * @return Template
 	 *
 	 */
 
-	public function getTemplate(string $templateName): Template
+	public function getTemplate(): Template
 	{
-		return new Template($templateName);
-	}
-
-
-	/**
-	 *
-	 * @return Impressum
-	 *
-	 */
-
-	public function getImpressum(): Impressum
-	{
-		return new Impressum();
+		$pTemplate = new Template('');
+		$pTemplate->setImpressum(new Impressum);
+		return $pTemplate;
 	}
 
 

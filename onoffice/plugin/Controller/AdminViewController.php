@@ -72,7 +72,7 @@ class AdminViewController
 
 	/** @var AdminPageEstateListSettings */
 	private $_pAdminListViewSettings = null;
-	
+
 	/** @var AdminPageAddressListSettings */
 	private $_pAdminListViewSettingsAddress = null;
 

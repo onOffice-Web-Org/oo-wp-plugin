@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2016-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -16,13 +16,6 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software AG
  *
  */
 
@@ -42,6 +35,8 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -51,7 +46,6 @@ use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_rewrite_rule;
 use function add_rewrite_tag;
-use function add_shortcode;
 use function do_shortcode;
 use function get_page_uri;
 use function get_post;
@@ -139,7 +133,7 @@ class ContentFilter
 					$pTemplate = new Template($pDetailView->getTemplate());
 					$pEstateDetail = $this->preloadSingleEstate($pDetailView, $attributes['units']);
 					$pTemplate->setEstateList($pEstateDetail);
-					$pTemplate->setImpressum(new Impressum);
+					$pTemplate->setImpressum((new Impressum)->load());
 					$result = $pTemplate->render();
 					return $result;
 				}
@@ -165,7 +159,7 @@ class ContentFilter
 					$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 
 					$pTemplate->setEstateList($pEstateList);
-					$pTemplate->setImpressum(new Impressum);
+					$pTemplate->setImpressum((new Impressum)->load());
 					$pEstateList->loadEstates($page);
 
 					$result = $pTemplate->render();
@@ -187,8 +181,8 @@ class ContentFilter
 
 	private function setAllowedGetParametersEstate(DataListView $pDataView)
 	{
-		$pFieldNames = new Fieldnames(new FieldModuleCollectionDecoratorGeoPositionFrontend
-			(new Types\FieldsCollection()));
+		$pFieldNames = new Fieldnames
+			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection()));
 		$pFieldNames->loadLanguage();
 		$pSearchParameters = SearchParameters::getInstance();
 		$filterableFieldsView = $pDataView->getFilterableFields();
@@ -205,8 +199,8 @@ class ContentFilter
 
 			$type = $fieldInfo['type'];
 
-			if (Types\FieldTypes::isNumericType($type) ||
-				Types\FieldTypes::isDateOrDateTime($type)) {
+			if (FieldTypes::isNumericType($type) ||
+				FieldTypes::isDateOrDateTime($type)) {
 				$pSearchParameters->addAllowedGetParameter($filterableField.'__von');
 				$pSearchParameters->addAllowedGetParameter($filterableField.'__bis');
 			}
@@ -241,29 +235,6 @@ class ContentFilter
 
 	/**
 	 *
-	 * @param array $attributesInput
-	 * @return string
-	 *
-	 */
-
-	public function renderImpressumShortCodes(array $attributesInput)
-	{
-		try {
-			$pImpressum = new Impressum();
-			if (count($attributesInput) == 1) {
-				$attribute = $attributesInput[0];
-				$impressumValue = $pImpressum->getDataByKey($attribute);
-
-				return $impressumValue;
-			}
-		} catch (Exception $pException) {
-			return $this->_pLogger->logErrorAndDisplayMessage($pException);
-		}
-	}
-
-
-	/**
-	 *
 	 * @param string $text
 	 * @return string
 	 *
@@ -271,7 +242,6 @@ class ContentFilter
 
 	public function renderWidgetImpressum($text)
 	{
-		add_shortcode('oo_basicdata', [$this, 'renderImpressumShortCodes']);
 		return do_shortcode($text);
 	}
 

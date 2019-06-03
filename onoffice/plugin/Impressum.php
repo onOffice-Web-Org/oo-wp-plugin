@@ -19,12 +19,7 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- */
+declare (strict_types=1);
 
 namespace onOffice\WPlugin;
 
@@ -117,6 +112,9 @@ class Impressum
 	/** @var ImpressumConfiguration */
 	private $_pImpressumConfiguration = null;
 
+	/** @var bool */
+	private $_doneLoading = false;
+
 
 	/**
 	 *
@@ -126,22 +124,33 @@ class Impressum
 
 	public function __construct(ImpressumConfiguration $pImpressumConfiguration = null)
 	{
-		$requestParameters = ['language' => Language::getDefault()];
 		$this->_pImpressumConfiguration =
 			$pImpressumConfiguration ?? new ImpressumConfigurationDefault();
+	}
 
-		$pSDKWrapper = $this->_pImpressumConfiguration->getSDKWrapper();
 
-		$pApiClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'impressum');
+	/**
+	 *
+	 * @return $this
+	 *
+	 */
 
-		$pApiClientAction->setParameters($requestParameters);
-		$pApiClientAction->addRequestToQueue()->sendRequests();
+	public function load(): self
+	{
+		if (!$this->_doneLoading) {
+			$requestParameters = ['language' => Language::getDefault()];
+			$pSDKWrapper = $this->_pImpressumConfiguration->getSDKWrapper();
 
-		if ($pApiClientAction->getResultStatus()) {
+			$pApiClientAction = new APIClientActionGeneric
+				($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'impressum');
+
+			$pApiClientAction->setParameters($requestParameters);
+			$pApiClientAction->addRequestToQueue()->sendRequests();
 			$records = $pApiClientAction->getResultRecords();
 			$this->_data = $records[0]['elements'] ?? [];
+			$this->_doneLoading = true;
 		}
+		return $this;
 	}
 
 

@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeForm;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
@@ -73,9 +74,10 @@ class TestClassContentFilterShortCodeForm
 	{
 		$pTemplate = $this->getMockBuilder(Template::class)
 			->setConstructorArgs([''])
-			->setMethods(['render'])
+			->setMethods(['render', 'getImpressum'])
 			->getMock();
 		$pTemplate->method('render')->will($this->returnValue('testResult'));
+		$pTemplate->method('getImpressum')->will($this->returnValue($this->getMockBuilder(Impressum::class)->getMock()));
 		$pDataFormConfigurationFactory = $this->getMockBuilder(DataFormConfigurationFactory::class)
 			->getMock();
 		$pLogger = $this->getMockBuilder(Logger::class)
@@ -130,7 +132,7 @@ class TestClassContentFilterShortCodeForm
 	public function testReplaceShortCodesWithError()
 	{
 		$pDataFormConfigFactory = $this->_pContentFilterShortCodeForm->getDataFormConfigurationFactory();
-		$pException = new \Exception('error');
+		$pException = new Exception('error');
 		$pDataFormConfigFactory->expects($this->once())->method('loadByFormName')->with($this->anything())
 			->will($this->throwException($pException));
 		$pLogger = $this->_pContentFilterShortCodeForm->getLogger();

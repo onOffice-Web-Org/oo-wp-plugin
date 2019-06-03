@@ -109,6 +109,7 @@ class ContentFilterShortCodeForm
 
 			/* @var $pFormConfig DataFormConfiguration */
 			$template = $pFormConfig->getTemplate();
+			$this->_pTemplate->getImpressum()->load();
 			$pTemplate = $this->_pTemplate->withTemplateName($template);
 			$pForm = $this->_pFormBuilder->build($formName, $pFormConfig->getFormType());
 			return $pTemplate->setForm($pForm)->render();

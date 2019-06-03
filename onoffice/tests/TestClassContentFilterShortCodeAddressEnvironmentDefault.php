@@ -25,7 +25,6 @@ use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
@@ -52,7 +51,7 @@ class TestClassContentFilterShortCodeAddressEnvironmentDefault
 
 	public function prepare()
 	{
-		$this->_pEnvironment = new ContentFilterShortCodeAddressEnvironmentDefault();
+		$this->_pEnvironment = new ContentFilterShortCodeAddressEnvironmentDefault(new Template(''));
 	}
 
 
@@ -97,21 +96,9 @@ class TestClassContentFilterShortCodeAddressEnvironmentDefault
 
 	public function testGetTemplate()
 	{
-		$pTemplateResult = $this->_pEnvironment->getTemplate('templateName');
+		$pTemplateResult = $this->_pEnvironment->getTemplate();
 
 		$this->assertInstanceOf(Template::class, $pTemplateResult);
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testGetImpressum()
-	{
-		$pImpressumResult = $this->_pEnvironment->getImpressum();
-
-		$this->assertInstanceOf(Impressum::class, $pImpressumResult);
 	}
 
 

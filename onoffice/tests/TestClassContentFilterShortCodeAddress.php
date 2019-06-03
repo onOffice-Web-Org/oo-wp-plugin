@@ -26,7 +26,6 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
 use WP_UnitTestCase;
 
@@ -54,56 +53,38 @@ class TestClassContentFilterShortCodeAddress
 	public function prepare()
 	{
 		$this->_pEnvironment = $this->getMockBuilder(ContentFilterShortCodeAddressEnvironment::class)
-				->setMethods([
-					'createAddressList',
-					'getDataListFactory',
-					'getTemplate',
-					'getImpressum',
-					'getPage',
-					'getLogger',
-				])
-				->getMock();
+			->setMethods([
+				'createAddressList',
+				'getDataListFactory',
+				'getTemplate',
+				'getImpressum',
+				'getPage',
+				'getLogger',
+			])
+			->getMock();
 
 
 		$pTemplateMock =  $this->getMockBuilder(Template::class)
-				->setConstructorArgs(['adressList-01'])
-				->getMock();
+			->setConstructorArgs(['adressList-01'])
+			->getMock();
 
 		$pDataListViewAddress = new DataListViewAddress(1, 'test');
 		$pDataListViewAddress->setTemplate('adressList-01');
 
-		$this->_pEnvironment
-				->method('createAddressList')
-				->will($this->returnValue($this->getMockBuilder(AddressList::class)->getMock()));
+		$this->_pEnvironment->method('createAddressList')
+			->will($this->returnValue($this->getMockBuilder(AddressList::class)->getMock()));
 
 		$pMockDataListViewFactoryAddress = $this->getMockBuilder(DataListViewFactoryAddress::class)
-				->setMethods(['getListViewByName'])
-				->disableOriginalConstructor()
-				->getMock();
+			->setMethods(['getListViewByName'])
+			->disableOriginalConstructor()
+			->getMock();
 		$pMockDataListViewFactoryAddress->method('getListViewByName')->will
 			($this->returnValue($pDataListViewAddress));
 
-		$this->_pEnvironment
-				->method('getDataListFactory')
-				->will($this->returnValue($pMockDataListViewFactoryAddress));
-
-		$this->_pEnvironment
-				->method('getTemplate')
-				->with('adressList-01')
-				->will($this->returnValue($pTemplateMock));
-
-		$pImpressumMock = $this->getMockBuilder(Impressum::class)
-				->disableOriginalConstructor()
-				->getMock();
-
-		$this->_pEnvironment
-				->method('getImpressum')
-				->will($this->returnValue($pImpressumMock));
-
-		$this->_pEnvironment
-				->method('getPage')
-				->will($this->returnValue(1));
-
+		$this->_pEnvironment->method('getDataListFactory')
+			->will($this->returnValue($pMockDataListViewFactoryAddress));
+		$this->_pEnvironment->method('getTemplate')->will($this->returnValue($pTemplateMock));
+		$this->_pEnvironment->method('getPage')->will($this->returnValue(1));
 	}
 
 
@@ -114,9 +95,10 @@ class TestClassContentFilterShortCodeAddress
 	public function testReplaceShortCodes()
 	{
 		$pTemplateMock = $this->_pEnvironment->getTemplate('adressList-01');
-		$pTemplateMock->expects($this->once())->method('setImpressum')->with($this->_pEnvironment->getImpressum());
 		$pTemplateMock->expects($this->once())->method('setAddressList')
 			->with($this->getMockBuilder(AddressList::class)->getMock());
+		$pTemplateMock->expects($this->once())->method('withTemplateName')->with('adressList-01')
+			->will($this->returnSelf());
 
 		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress($this->_pEnvironment);
 		$result = $pConfigFilterShortCodeAddress->replaceShortCodes(['view' => 'adressList-01']);

@@ -93,10 +93,8 @@ class ContentFilterShortCodeAddress
 		$pAddressList = $this->_pEnvironment->createAddressList($pAddressListView);
 		$pAddressList->loadAddresses($page);
 		$templateName = $pAddressListView->getTemplate();
-
-		$pTemplate = $this->_pEnvironment->getTemplate($templateName);
+		$pTemplate = $this->_pEnvironment->getTemplate()->withTemplateName($templateName);
 		$pTemplate->setAddressList($pAddressList);
-		$pTemplate->setImpressum($this->_pEnvironment->getImpressum());
 
 		return $pTemplate;
 	}

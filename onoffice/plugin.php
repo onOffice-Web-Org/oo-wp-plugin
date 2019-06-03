@@ -43,6 +43,7 @@ use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeForm;
+use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeImprint;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeLink;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
@@ -66,6 +67,7 @@ $pContentFilter = new ContentFilter();
 $pContentFilterAddress = new ContentFilterShortCodeAddress();
 $pContentFilterLink = new ContentFilterShortCodeLink();
 $pContentFilterForm = new ContentFilterShortCodeForm();
+$pContentFilterImprint = new ContentFilterShortCodeImprint();
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = new DetailViewPostSaveController();
 $pSearchParams = SearchParameters::getInstance();
@@ -89,9 +91,9 @@ add_action('init', [$pAdminViewController, 'onInit']);
 add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 
-add_action( 'wp_ajax_addHook', [DistinctFieldsChecker::class, 'addHook']);
+add_action('wp_ajax_addHook', [DistinctFieldsChecker::class, 'addHook']);
 
-add_action( 'plugins_loaded', function() {
+add_action('plugins_loaded', function() {
 	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR).'/languages');
 });
 
@@ -106,9 +108,8 @@ add_shortcode('oo_address', [$pContentFilterAddress, 'replaceShortCodes']);
 add_shortcode('oo_link', [$pContentFilterLink, 'replaceShortCodes']);
 add_shortcode('oo_estate', [$pContentFilter, 'registerEstateShortCodes']);
 add_shortcode('oo_form', [$pContentFilterForm, 'replaceShortCodes']);
-add_shortcode('oo_basicdata', [$pContentFilter, 'renderImpressumShortCodes']);
+add_shortcode('oo_basicdata', [$pContentFilterImprint, 'replaceShortCodes']);
 
-add_filter('widget_text_content', [$pContentFilter, 'renderWidgetImpressum']);
 add_filter('widget_title', [$pContentFilter, 'renderWidgetImpressum']);
 add_filter('document_title_parts', [$pContentFilter, 'setTitle'], 10, 2);
 
