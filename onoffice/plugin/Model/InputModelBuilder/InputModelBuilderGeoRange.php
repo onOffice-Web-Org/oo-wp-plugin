@@ -24,11 +24,9 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Model\InputModelBuilder;
 
 use Generator;
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\ViewProperty;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
@@ -49,8 +47,8 @@ class InputModelBuilderGeoRange
 	/** @var GeoPositionFieldHandler */
 	private $_pGeoPositionFieldHandler = null;
 
-	/** @var Fieldnames */
-	private $_pFieldnames = null;
+	/** @var FieldModuleCollectionDecoratorGeoPositionFrontend */
+	private $_pFieldsCollection = null;
 
 	/** @var string */
 	private $_module = '';
@@ -79,17 +77,19 @@ class InputModelBuilderGeoRange
 	 *
 	 * @param string $module
 	 * @param GeoPositionFieldHandler $pGeoPositionFieldHandler
-	 * @param Fieldnames $pFieldnames
+	 * @param FieldModuleCollectionDecoratorGeoPositionFrontend $pFieldsCollection
 	 *
 	 */
 
-	public function __construct(string $module, GeoPositionFieldHandler $pGeoPositionFieldHandler = null, Fieldnames $pFieldnames = null)
+	public function __construct(string $module,
+		GeoPositionFieldHandler $pGeoPositionFieldHandler = null,
+		FieldModuleCollectionDecoratorGeoPositionFrontend $pFieldsCollection = null)
 	{
 		$pFactoryConfig = new InputModelDBFactoryConfigGeoFields($module);
 		$this->_pInputModelFactory = new InputModelDBFactory($pFactoryConfig);
 		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler ?? new GeoPositionFieldHandler();
-		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection());
-		$this->_pFieldnames = $pFieldnames ?? new Fieldnames($pFieldsCollection);
+		$this->_pFieldsCollection = $pFieldsCollection ??
+			new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
 		$this->_module = $module;
 	}
 
@@ -159,7 +159,6 @@ class InputModelBuilderGeoRange
 	private function generateInputOrder(): InputModelDB
 	{
 		$options = [];
-		$this->_pFieldnames->loadLanguage();
 
 		foreach ($this->_geoOrderOptionsTemplate as $keysOrdered) {
 			$optionLabelParts = [];
@@ -183,8 +182,6 @@ class InputModelBuilderGeoRange
 
 	/**
 	 *
-	 * Heads up: This method does not call Fieldnames::loadLanguage()
-	 *
 	 * @param string $key
 	 * @return string
 	 *
@@ -192,12 +189,7 @@ class InputModelBuilderGeoRange
 
 	private function getGeoFieldLabel(string $key): string
 	{
-		if ($this->_module === onOfficeSDK::MODULE_SEARCHCRITERIA) {
-			$searchCriteriaMapping = (new GeoPosition())->getSearchCriteriaFields();
-			$key = $searchCriteriaMapping[$key];
-		}
-
-		return $this->_pFieldnames->getFieldLabel($key, $this->_module);
+		return $this->_pFieldsCollection->getFieldByModuleAndName($this->_module, $key)->getLabel();
 	}
 
 

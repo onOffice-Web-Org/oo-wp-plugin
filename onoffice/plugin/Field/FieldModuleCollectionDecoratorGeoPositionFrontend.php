@@ -95,6 +95,7 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 	public function __construct(FieldModuleCollection $pFieldModuleCollection)
 	{
 		parent::__construct($pFieldModuleCollection);
+		$this->_geoFields[onOfficeSDK::MODULE_SEARCHCRITERIA] = $this->_geoFields[onOfficeSDK::MODULE_ESTATE];
 	}
 
 
