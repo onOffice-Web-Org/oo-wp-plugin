@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,6 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\InputModel\InputModelConfigurationFormContact;
@@ -140,23 +139,17 @@ class AdminPageFormSettingsContact
 	{
 		if ($this->_showMessageInput) {
 			$pFieldCollection = new FieldModuleCollectionDecoratorFormContact(new FieldsCollection());
-			$pFieldNames = new Fieldnames($pFieldCollection);
-			$pFieldNames->loadLanguage();
 			$category = __('Form Specific Fields', 'onoffice');
-			$this->_additionalCategories[] = $category;
+			$this->_additionalCategories []= $category;
+			$pFieldMessage = $pFieldCollection->getFieldByModuleAndName('', 'message');
 
 			$fieldNameMessage = [
 				$category => [
-					'message' => $pFieldNames->getFieldLabel('message', ''),
+					'message' => $pFieldMessage->getLabel(),
 				],
 			];
 			$this->addFieldsConfiguration(null, $pFormModelBuilder, $fieldNameMessage, true);
 			$this->addSortableFieldModule(null);
-
-			$messageField = [
-				'message' => $pFieldNames->getFieldInformation('message', ''),
-			];
-			$pFormModelBuilder->setAdditionalFields($messageField);
 		}
 	}
 

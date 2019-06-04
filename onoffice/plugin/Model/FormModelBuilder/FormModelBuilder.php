@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -48,9 +48,6 @@ abstract class FormModelBuilder
 
 	/** @var array */
 	private $_values = array();
-
-	/** @var array */
-	private $_additionalFields = array();
 
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
@@ -177,7 +174,6 @@ abstract class FormModelBuilder
 				$fieldNames = $this->_pFieldnames->getFieldList($module);
 			}
 
-			$fieldNames = array_merge($fieldNames, $this->getAdditionalFields());
 		} catch (APIClientCredentialsException $pCredentialsException) {}
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
@@ -250,12 +246,4 @@ abstract class FormModelBuilder
 	/** @param array $values */
 	public function setValues(array $values)
 		{ $this->_values = $values; }
-
-	/** @return array */
-	public function getAdditionalFields()
-		{ return $this->_additionalFields; }
-
-	/** @param array $additionalFields */
-	public function setAdditionalFields($additionalFields)
-		{ $this->_additionalFields = $additionalFields; }
 }
