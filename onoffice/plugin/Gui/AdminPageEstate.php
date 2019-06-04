@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use function __;
 use function add_query_arg;
 use function admin_url;
@@ -152,9 +154,8 @@ class AdminPageEstate
 
 	private function getAdminPageForTab($tab)
 	{
-		if (!array_key_exists($tab, $this->_subPageClassByTab))
-		{
-			wp_die('Missing class!');
+		if (!isset($this->_subPageClassByTab[$tab])) {
+			$tab = self::PAGE_ESTATE_LIST;
 		}
 
 		$className = $this->_subPageClassByTab[$tab];

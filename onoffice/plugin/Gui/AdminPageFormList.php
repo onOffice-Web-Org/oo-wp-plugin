@@ -21,11 +21,27 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use Exception;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\WP\WPQueryWrapper;
+use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function _n;
+use function add_action;
+use function add_query_arg;
+use function admin_url;
+use function esc_attr;
+use function esc_html;
+use function esc_html__;
+use function number_format_i18n;
+use function plugin_basename;
+use function plugin_dir_url;
+use function plugins_url;
+use function wp_enqueue_script;
+use function wp_localize_script;
+use function wp_register_script;
 
 /**
  *
@@ -60,8 +76,11 @@ class AdminPageFormList
 		$tab = $this->getTab();
 		$this->_pFormsTable = new FormsTable();
 		$pFormTranslation = new FormTranslation();
+		$pWPQueryWrapper = new WPQueryWrapper();
+		$pWPQuery = $pWPQueryWrapper->getWPQuery();
 
-		if (!__String::getNew($tab)->isEmpty() &&
+		if (__String::getNew($pWPQuery->get('page', ''))->startsWith('onoffice-') &&
+			!__String::getNew($tab)->isEmpty() &&
 			!array_key_exists($tab, $pFormTranslation->getFormConfig())) {
 			throw new Exception('Unknown Form type');
 		}
