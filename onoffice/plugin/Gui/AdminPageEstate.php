@@ -21,13 +21,10 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Utility\__String;
-use onOffice\WPlugin\WP\WPQueryWrapper;
 use function __;
 use function add_query_arg;
 use function admin_url;
 use function esc_html;
-use function wp_die;
 
 /**
  *
