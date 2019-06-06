@@ -98,4 +98,18 @@ class FieldsCollection implements FieldModuleCollection
 
 		return $pField;
 	}
+
+
+	/**
+	 *
+	 * @param self $pFieldsCollection
+	 *
+	 */
+
+	public function merge(self $pFieldsCollection)
+	{
+		foreach ($pFieldsCollection->getAllFields() as $pField) {
+			$this->addField($pField);
+		}
+	}
 }

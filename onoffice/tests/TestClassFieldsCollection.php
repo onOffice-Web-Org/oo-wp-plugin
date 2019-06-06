@@ -79,4 +79,32 @@ class TestClassFieldsCollection
 		$this->assertTrue($pCollection->containsFieldByModule('testModuleA', 'John'));
 		$this->assertFalse($pCollection->containsFieldByModule('other', 'Fred'));
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testMerge()
+	{
+		$pCollectionMain = new FieldsCollection();
+		$pCollectionMain->addField(new Field('Michael', 'testModuleA'));
+		$pCollectionMain->addField(new Field('Elton', 'testModuleA'));
+		$pCollectionMain->addField(new Field('Marilyn', 'testModuleB'));
+
+		$pCollectionSub = new FieldsCollection();
+		$pCollectionSub->addField(new Field('Steve', 'testModuleA'));
+		$pCollectionSub->addField(new Field('Dennis', 'testModuleB'));
+		$pCollectionSub->addField(new Field('Bill', 'testModuleB'));
+
+		$pCollectionMain->merge($pCollectionSub);
+
+		$this->assertCount(6, $pCollectionMain->getAllFields());
+		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleA', 'Michael'));
+		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleA', 'Elton'));
+		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleA', 'Steve'));
+		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleB', 'Marilyn'));
+		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleB', 'Dennis'));
+		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleB', 'Bill'));
+	}
 }
