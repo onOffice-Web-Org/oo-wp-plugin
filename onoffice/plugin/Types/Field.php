@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Types;
 
 use function __;
@@ -52,6 +54,12 @@ class Field
 
 	/** @var string */
 	private $_module = '';
+
+	/** @var bool */
+	private $_isRangeField = false;
+
+	/** @var array */
+	private $_rangeFieldTranslations = [];
 
 
 	/**
@@ -240,6 +248,55 @@ class Field
 
 	/**
 	 *
+	 * @return bool
+	 *
+	 */
+
+	public function getIsRangeField(): bool
+	{
+		return $this->_isRangeField;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getRangeFieldTranslations(): array
+	{
+		return $this->_rangeFieldTranslations;
+	}
+
+
+	/**
+	 *
+	 * @param bool $isRangeField
+	 *
+	 */
+
+	public function setIsRangeField(bool $isRangeField)
+	{
+		$this->_isRangeField = $isRangeField;
+	}
+
+
+	/**
+	 *
+	 * @param array $rangeFieldTranslations
+	 *
+	 */
+
+	public function setRangeFieldTranslations(array $rangeFieldTranslations)
+	{
+		$this->_rangeFieldTranslations = $rangeFieldTranslations;
+	}
+
+
+
+	/**
+	 *
 	 * @return array
 	 *
 	 */
@@ -254,6 +311,8 @@ class Field
 			'permittedvalues' => $this->_permittedvalues,
 			'content' => $this->_category,
 			'module' => $this->_module,
+			'rangefield' => $this->_isRangeField,
+			'additionalTranslations' => $this->_rangeFieldTranslations,
 		];
 	}
 
@@ -274,6 +333,8 @@ class Field
 		$pField->setPermittedvalues($row['permittedvalues'] ?? []);
 		$pField->setCategory($row['content'] ?? '');
 		$pField->setType($row['type']);
+		$pField->setIsRangeField((bool)($row['rangefield'] ?? false));
+		$pField->setRangeFieldTranslations($row['additionalTranslations'] ?? []);
 		return $pField;
 	}
 }

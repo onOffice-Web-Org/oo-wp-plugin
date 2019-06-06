@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2018-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -47,11 +47,13 @@ class TestClassField
 		$this->assertEquals('testField123', $pField->getName());
 		$this->assertEquals('testModule', $pField->getModule());
 		$this->assertEquals('', $pField->getCategory());
-		$this->assertEquals(null, $pField->getDefault());
+		$this->assertNull($pField->getDefault());
 		$this->assertEquals('', $pField->getLabel());
 		$this->assertEquals(0, $pField->getLength());
-		$this->assertEquals([], $pField->getPermittedvalues());
+		$this->assertEmpty($pField->getPermittedvalues());
 		$this->assertEquals(FieldTypes::FIELD_TYPE_VARCHAR, $pField->getType());
+		$this->assertFalse($pField->getIsRangeField());
+		$this->assertEmpty($pField->getRangeFieldTranslations());
 	}
 
 
@@ -68,6 +70,11 @@ class TestClassField
 		$this->assertEquals(13, $pField->getLength());
 		$this->assertEquals(['test', 'asdf', 13, 37], $pField->getPermittedvalues());
 		$this->assertEquals(FieldTypes::FIELD_TYPE_DATE, $pField->getType());
+		$this->assertTrue($pField->getIsRangeField());
+		$this->assertSame([
+			'testField123__von' => 'testField123 from',
+			'testField123__bis' => 'testField123 up to',
+		], $pField->getRangeFieldTranslations());
 	}
 
 
@@ -90,6 +97,11 @@ class TestClassField
 			'length' => 13,
 			'permittedvalues' => ['test', 'asdf', 13, 37],
 			'content' => 'asdf',
+			'rangefield' => true,
+			'additionalTranslations' => [
+				'testField123__von' => 'testField123 from',
+				'testField123__bis' => 'testField123 up to',
+			],
 		];
 		$this->assertEquals($expectation, $pField->getAsRow());
 
@@ -114,6 +126,11 @@ class TestClassField
 		$pField->setLength(13);
 		$pField->setPermittedvalues(['test', 'asdf', 13, 37]);
 		$pField->setType(FieldTypes::FIELD_TYPE_DATE);
+		$pField->setIsRangeField(true);
+		$pField->setRangeFieldTranslations([
+			'testField123__von' => 'testField123 from',
+			'testField123__bis' => 'testField123 up to',
+		]);
 		return $pField;
 	}
 }
