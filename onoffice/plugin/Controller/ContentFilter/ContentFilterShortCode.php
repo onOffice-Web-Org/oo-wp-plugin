@@ -38,4 +38,13 @@ interface ContentFilterShortCode
 	 */
 
 	public function replaceShortCodes(array $attributesInput): string;
+
+
+	/**
+	 *
+	 * @return string Name of the tag
+	 *
+	 */
+
+	public function getTag(): string;
 }

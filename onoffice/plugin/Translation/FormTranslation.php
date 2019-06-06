@@ -85,7 +85,7 @@ class FormTranslation
 	public function getPluralTranslationForForm($formType, $count)
 	{
 		$formConfig = $this->getFormConfig();
-		$label = $formConfig[$formType];
+		$label = $formConfig[$formType] ?? null;
 
 		return translate_nooped_plural($label[self::SUB_LABEL], $count, 'onoffice');
 	}

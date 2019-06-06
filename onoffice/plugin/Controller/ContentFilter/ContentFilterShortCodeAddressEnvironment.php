@@ -22,10 +22,10 @@
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use onOffice\WPlugin\AddressList;
-use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 
 /**
@@ -39,12 +39,11 @@ interface ContentFilterShortCodeAddressEnvironment
 
 	/**
 	 *
-	 * @param DataListViewAddress $pAddressListView
 	 * @return AddressList
 	 *
 	 */
 
-	public function createAddressList(DataListViewAddress $pAddressListView): AddressList;
+	public function createAddressList(): AddressList;
 
 
 	/**
@@ -67,18 +66,18 @@ interface ContentFilterShortCodeAddressEnvironment
 
 	/**
 	 *
-	 * @return int
-	 *
-	 */
-
-	public function getPage(): int;
-
-
-	/**
-	 *
 	 * @return Logger
 	 *
 	 */
 
 	public function getLogger(): Logger;
+
+
+	/**
+	 *
+	 * @return WPQueryWrapper
+	 *
+	 */
+
+	public function getWPQueryWrapper(): WPQueryWrapper;
 }

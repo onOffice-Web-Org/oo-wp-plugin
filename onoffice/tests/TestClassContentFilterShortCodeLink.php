@@ -102,4 +102,14 @@ class TestClassContentFilterShortCodeLink
 
 		$this->assertEquals('https://localhost/estates/?estate_id=1337', $result);
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetTag()
+	{
+		$this->assertEquals('oo_link', $this->_pSubject->getTag());
+	}
 }

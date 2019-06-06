@@ -177,4 +177,16 @@ class ContentFilterShortCodeForm
 	{
 		return $this->_pFormBuilder;
 	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getTag(): string
+	{
+		return 'oo_form';
+	}
 }

@@ -19,15 +19,17 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
-use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 
 /**
@@ -39,15 +41,12 @@ use onOffice\WPlugin\Utility\Logger;
 class ContentFilterShortCodeAddressEnvironmentDefault
 	implements ContentFilterShortCodeAddressEnvironment
 {
-
 	/** @var DataListViewFactoryAddress */
 	private $_pDataListFactory = null;
 
-	/** @var AddressList */
-	private $_pAddressList = null;
-
 	/** @var Logger */
 	private $_pLogger = null;
+
 
 	/**
 	 *
@@ -67,36 +66,20 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 	 */
 
 	public function getDataListFactory(): DataListViewFactoryAddress
-		{ return $this->_pDataListFactory; }
-
-
-	/**
-	 *
-	 * @param type $pAddressListView
-	 * @return AddressList
-	 *
-	 */
-
-	public function createAddressList(DataListViewAddress $pAddressListView): AddressList
 	{
-		$this->_pAddressList = (new AddressList())->withDataListViewAddress($pAddressListView);
-		return $this->_pAddressList;
+		return $this->_pDataListFactory;
 	}
 
 
 	/**
 	 *
-	 * @global type $wp_query
-	 * @return int
+	 * @return AddressList
 	 *
 	 */
 
-	public function getPage(): int
+	public function createAddressList(): AddressList
 	{
-		global $wp_query;
-		$page = $wp_query->query_vars['page'] ?? 1;
-
-		return $page;
+		return new AddressList();
 	}
 
 
@@ -109,8 +92,7 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 	public function getTemplate(): Template
 	{
 		$pTemplate = new Template('');
-		$pTemplate->setImpressum(new Impressum);
-		return $pTemplate;
+		return $pTemplate->setImpressum(new Impressum);
 	}
 
 
@@ -123,5 +105,17 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 	public function getLogger(): Logger
 	{
 		return $this->_pLogger;
+	}
+
+
+	/**
+	 *
+	 * @return WPQueryWrapper
+	 *
+	 */
+
+	public function getWPQueryWrapper(): WPQueryWrapper
+	{
+		return new WPQueryWrapper();
 	}
 }

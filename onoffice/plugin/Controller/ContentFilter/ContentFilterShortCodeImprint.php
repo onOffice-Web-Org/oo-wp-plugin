@@ -77,4 +77,16 @@ class ContentFilterShortCodeImprint
 		}
 		return $value;
 	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getTag(): string
+	{
+		return 'oo_basicdata';
+	}
 }

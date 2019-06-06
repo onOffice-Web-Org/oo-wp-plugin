@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
 use onOffice\WPlugin\AddressList;
@@ -27,6 +29,7 @@ use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
 
 /**
@@ -51,7 +54,7 @@ class TestClassContentFilterShortCodeAddressEnvironmentDefault
 
 	public function prepare()
 	{
-		$this->_pEnvironment = new ContentFilterShortCodeAddressEnvironmentDefault(new Template(''));
+		$this->_pEnvironment = new ContentFilterShortCodeAddressEnvironmentDefault();
 	}
 
 
@@ -84,9 +87,9 @@ class TestClassContentFilterShortCodeAddressEnvironmentDefault
 	 *
 	 */
 
-	public function testGetPage()
+	public function testGetWPQueryWrapper()
 	{
-		$this->assertEquals(1, $this->_pEnvironment->getPage());
+		$this->assertInstanceOf(WPQueryWrapper::class, $this->_pEnvironment->getWPQueryWrapper());
 	}
 
 

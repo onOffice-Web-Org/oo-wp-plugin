@@ -56,7 +56,7 @@ class TestClassContentFilterShortCodeImprint
 	public function prepare()
 	{
 		$this->_pImpressum = $this->getMockBuilder(Impressum::class)
-			->disableOriginalConstructor()
+			->setMethods(['load', 'getDataByKey'])
 			->getMock();
 		$this->_pLogger = $this->getMockBuilder(Logger::class)
 			->getMock();
@@ -71,6 +71,7 @@ class TestClassContentFilterShortCodeImprint
 
 	public function testReplaceShortCodes()
 	{
+		$this->addLoadMethod();
 		$this->_pImpressum->method('getDataByKey')->will($this->returnValueMap([
 			['asd', 'testResult1'],
 			['test', 'testResult2'],
@@ -88,6 +89,7 @@ class TestClassContentFilterShortCodeImprint
 
 	public function testReplaceShortCodesEmpty()
 	{
+		$this->addLoadMethod();
 		$this->assertEquals('', $this->_pContentFilterShortCodeImprint->replaceShortCodes([]));
 		$this->assertEquals('',
 			$this->_pContentFilterShortCodeImprint->replaceShortCodes(['asd', 'test']));
@@ -100,6 +102,7 @@ class TestClassContentFilterShortCodeImprint
 
 	public function testReplaceShortCodesException()
 	{
+		$this->addLoadMethod();
 		$pException = new Exception('test');
 		$this->_pImpressum->method('getDataByKey')->will($this->throwException($pException));
 		$this->_pLogger->expects($this->once())
@@ -108,5 +111,28 @@ class TestClassContentFilterShortCodeImprint
 			->will($this->returnValue('Caught Exception'));
 		$this->assertEquals('Caught Exception',
 			$this->_pContentFilterShortCodeImprint->replaceShortCodes(['boom']));
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetTag()
+	{
+		$this->assertEquals('oo_basicdata', $this->_pContentFilterShortCodeImprint->getTag());
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function addLoadMethod()
+	{
+		$this->_pImpressum
+			->expects($this->atLeastOnce())
+			->method('load')
+			->will($this->returnSelf());
 	}
 }

@@ -79,4 +79,16 @@ class ContentFilterShortCodeLink
 			return $this->_pLogger->logErrorAndDisplayMessage($pUnknownPageException);
 		}
 	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getTag(): string
+	{
+		return 'oo_link';
+	}
 }

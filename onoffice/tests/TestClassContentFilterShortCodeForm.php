@@ -141,4 +141,14 @@ class TestClassContentFilterShortCodeForm
 		$this->assertEquals('Got Exception',
 			$this->_pContentFilterShortCodeForm->replaceShortCodes(['form' => 'unknown']));
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetTag()
+	{
+		$this->assertEquals('oo_form', $this->_pContentFilterShortCodeForm->getTag());
+	}
 }

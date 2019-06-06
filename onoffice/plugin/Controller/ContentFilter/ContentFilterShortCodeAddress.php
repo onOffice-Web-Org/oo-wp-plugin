@@ -63,15 +63,13 @@ class ContentFilterShortCodeAddress
 
 	public function replaceShortCodes(array $attributesInput): string
 	{
-		$page = $this->_pEnvironment->getPage();
-
 		$attributes = shortcode_atts([
 			'view' => null,
 		], $attributesInput);
 		$addressListName = $attributes['view'];
 
 		try {
-			$pTemplate = $this->createTemplate($addressListName, $page);
+			$pTemplate = $this->createTemplate($addressListName);
 			return $pTemplate->render();
 		} catch (Exception $pException) {
 			return $this->_pEnvironment->getLogger()->logErrorAndDisplayMessage($pException);
@@ -82,20 +80,32 @@ class ContentFilterShortCodeAddress
 	/**
 	 *
 	 * @param string $addressListName
-	 * @param int $page
 	 * @return Template
 	 *
 	 */
 
-	private function createTemplate(string $addressListName, int $page = 1): Template
+	private function createTemplate(string $addressListName): Template
 	{
+		$page = $this->_pEnvironment->getWPQueryWrapper()->getWPQuery()->get('page', 1);
 		$pAddressListView = $this->_pEnvironment->getDataListFactory()->getListViewByName($addressListName);
-		$pAddressList = $this->_pEnvironment->createAddressList($pAddressListView);
+		$pAddressList = $this->_pEnvironment->createAddressList()->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
-		$templateName = $pAddressListView->getTemplate();
+		$templateName = $pAddressListView->getTemplate(); // name
 		$pTemplate = $this->_pEnvironment->getTemplate()->withTemplateName($templateName);
 		$pTemplate->setAddressList($pAddressList);
 
 		return $pTemplate;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getTag(): string
+	{
+		return 'oo_address';
 	}
 }
