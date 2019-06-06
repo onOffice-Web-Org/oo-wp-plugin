@@ -78,13 +78,13 @@ class TestClassFieldLoaderGeneric
 			$actualModule = $fieldProperties['module'];
 			$this->assertContains($actualModule,
 				[onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE], 'Module: '.$actualModule);
-			$this->arrayHasKey('module', $fieldProperties);
-			$this->arrayHasKey('label', $fieldProperties);
-			$this->arrayHasKey('type', $fieldProperties);
-			$this->arrayHasKey('default', $fieldProperties);
-			$this->arrayHasKey('length', $fieldProperties);
-			$this->arrayHasKey('permittedvalues', $fieldProperties);
-			$this->arrayHasKey('content', $fieldProperties);
+			$this->assertArrayHasKey('module', $fieldProperties);
+			$this->assertArrayHasKey('label', $fieldProperties);
+			$this->assertArrayHasKey('type', $fieldProperties);
+			$this->assertArrayHasKey('default', $fieldProperties);
+			$this->assertArrayHasKey('length', $fieldProperties);
+			$this->assertArrayHasKey('permittedvalues', $fieldProperties);
+			$this->assertArrayHasKey('content', $fieldProperties);
 		}
 	}
 }
