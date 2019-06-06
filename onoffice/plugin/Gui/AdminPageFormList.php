@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use Exception;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Translation\FormTranslation;
