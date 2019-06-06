@@ -100,12 +100,10 @@ class TestClassAPIClientExceptionFactory
 
 	private function setReturnCode(int $code)
 	{
-		$pClosureSet = function(int $code) {
-			$this->_result['status']['errorcode'] = $code;
-		};
-
-		$pClosureExec = Closure::bind
-			($pClosureSet, $this->_pApiClientAction, APIClientActionGeneric::class);
-		$pClosureExec($code);
+		$this->_pApiClientAction->onAfterExecution([
+			'status' => [
+				'errorcode' => $code,
+			],
+		]);
 	}
 }
