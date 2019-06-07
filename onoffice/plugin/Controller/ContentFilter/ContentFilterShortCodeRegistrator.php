@@ -23,63 +23,38 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
-use onOffice\WPlugin\AddressList;
-use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\Template;
-use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\WP\WPQueryWrapper;
-
+use function add_shortcode;
 
 /**
  *
- * interface for ContentFilterShortCodeAddressEnvironment
- *
  */
 
-interface ContentFilterShortCodeAddressEnvironment
+class ContentFilterShortCodeRegistrator
 {
-
-	/**
-	 *
-	 * @return AddressList
-	 *
-	 */
-
-	public function createAddressList(): AddressList;
+	/** @var ContentFilterShortCodeBuilder */
+	private $_pBuilder = null;
 
 
 	/**
 	 *
-	 * @return DataListViewFactoryAddress
+	 * @param ContentFilterShortCodeBuilder $pBuilder
 	 *
 	 */
 
-	public function getDataListFactory(): DataListViewFactoryAddress;
+	public function __construct(ContentFilterShortCodeBuilder $pBuilder)
+	{
+		$this->_pBuilder = $pBuilder;
+	}
 
 
 	/**
 	 *
-	 * @return Template
-	 *
 	 */
 
-	public function getTemplate(): Template;
-
-
-	/**
-	 *
-	 * @return Logger
-	 *
-	 */
-
-	public function getLogger(): Logger;
-
-
-	/**
-	 *
-	 * @return WPQueryWrapper
-	 *
-	 */
-
-	public function getWPQueryWrapper(): WPQueryWrapper;
+	public function register()
+	{
+		foreach ($this->_pBuilder->buildAllContentFilterShortCodes() as $pInstance) {
+			add_shortcode($pInstance->getTag(), [$pInstance, 'replaceShortCodes']);
+		}
+	}
 }

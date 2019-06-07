@@ -23,63 +23,61 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
-use onOffice\WPlugin\AddressList;
-use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\Template;
-use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\WP\WPQueryWrapper;
-
+use DI\Container;
+use Generator;
 
 /**
  *
- * interface for ContentFilterShortCodeAddressEnvironment
- *
  */
 
-interface ContentFilterShortCodeAddressEnvironment
+class ContentFilterShortCodeBuilder
 {
+	/** @var Container */
+	private $_pContainer = null;
 
-	/**
-	 *
-	 * @return AddressList
-	 *
-	 */
-
-	public function createAddressList(): AddressList;
-
-
-	/**
-	 *
-	 * @return DataListViewFactoryAddress
-	 *
-	 */
-
-	public function getDataListFactory(): DataListViewFactoryAddress;
+	/** @var array */
+	private $_classes = [
+		ContentFilterShortCodeAddress::class,
+		ContentFilterShortCodeForm::class,
+		ContentFilterShortCodeImprint::class,
+		ContentFilterShortCodeLink::class,
+	];
 
 
 	/**
 	 *
-	 * @return Template
+	 * @param Container $pContainer
 	 *
 	 */
 
-	public function getTemplate(): Template;
+	public function __construct(Container $pContainer)
+	{
+		$this->_pContainer = $pContainer;
+	}
 
 
 	/**
 	 *
-	 * @return Logger
+	 * @return Generator
 	 *
 	 */
 
-	public function getLogger(): Logger;
+	public function buildAllContentFilterShortCodes(): Generator
+	{
+		foreach ($this->_classes as $classname) {
+			yield $this->_pContainer->get($classname);
+		}
+	}
 
 
 	/**
 	 *
-	 * @return WPQueryWrapper
+	 * @return array
 	 *
 	 */
 
-	public function getWPQueryWrapper(): WPQueryWrapper;
+	public function getClasses(): array
+	{
+		return $this->_classes;
+	}
 }

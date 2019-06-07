@@ -41,10 +41,7 @@ use DI\ContainerBuilder;
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeForm;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeImprint;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeLink;
+use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
@@ -62,10 +59,6 @@ $pDIBuilder->addDefinitions(ONOFFICE_PLUGIN_DIR.DIRECTORY_SEPARATOR.'di-config.p
 $pDI = $pDIBuilder->build();
 
 $pContentFilter = new ContentFilter();
-$pContentFilterAddress = new ContentFilterShortCodeAddress();
-$pContentFilterLink = new ContentFilterShortCodeLink();
-$pContentFilterForm = new ContentFilterShortCodeForm();
-$pContentFilterImprint = new ContentFilterShortCodeImprint();
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = new DetailViewPostSaveController();
 $pSearchParams = SearchParameters::getInstance();
@@ -101,12 +94,9 @@ add_filter('wp_link_pages_args', [$pSearchParams, 'populateDefaultLinkParams']);
 // "Settings" link in plugins list
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewController, 'pluginSettingsLink']);
 
-
-add_shortcode('oo_address', [$pContentFilterAddress, 'replaceShortCodes']);
-add_shortcode('oo_link', [$pContentFilterLink, 'replaceShortCodes']);
 add_shortcode('oo_estate', [$pContentFilter, 'registerEstateShortCodes']);
-add_shortcode('oo_form', [$pContentFilterForm, 'replaceShortCodes']);
-add_shortcode('oo_basicdata', [$pContentFilterImprint, 'replaceShortCodes']);
+
+$pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 
 add_filter('widget_title', [$pContentFilter, 'renderWidgetImpressum']);
 add_filter('document_title_parts', [$pContentFilter, 'setTitle'], 10, 2);
