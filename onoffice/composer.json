@@ -13,5 +13,9 @@
 		 "psr-4": {
 			"onOffice\\tests\\": "tests/"
 		}
+	},
+	"require": {
+		"php": ">=7.0.0",
+		"php-di/php-di": "^6.0"
 	}
 }
