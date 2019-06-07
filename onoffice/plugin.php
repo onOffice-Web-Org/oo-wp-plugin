@@ -33,12 +33,12 @@ Domain Path: /languages
 
 defined( 'ABSPATH' ) or die();
 
-include 'Psr4AutoloaderClass.php';
+require 'vendor/autoload.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
+use DI\ContainerBuilder;
 use onOffice\SDK\Cache\onOfficeSDKCache;
-use onOffice\SDK\Psr4AutoloaderClass;
 use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
@@ -53,15 +53,13 @@ use onOffice\WPlugin\Installer;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
 
-$pAutoloader = new Psr4AutoloaderClass();
-$pAutoloader->addNamespace('onOffice', __DIR__);
-$pAutoloader->addNamespace('onOffice\SDK', implode(DIRECTORY_SEPARATOR, [__DIR__, 'SDK', 'trunk', 'SDK']));
-$pAutoloader->addNamespace('onOffice\WPlugin', __DIR__.DIRECTORY_SEPARATOR.'plugin');
-$pAutoloader->register();
-
 if (!defined('ONOFFICE_FEATURE_CONFIGURE_GEO')) {
 	define('ONOFFICE_FEATURE_CONFIGURE_GEO', filter_input(INPUT_SERVER, 'SERVER_NAME') === 'localhost');
 }
+
+$pDIBuilder = new ContainerBuilder();
+$pDIBuilder->addDefinitions(ONOFFICE_PLUGIN_DIR.DIRECTORY_SEPARATOR.'di-config.php');
+$pDI = $pDIBuilder->build();
 
 $pContentFilter = new ContentFilter();
 $pContentFilterAddress = new ContentFilterShortCodeAddress();
