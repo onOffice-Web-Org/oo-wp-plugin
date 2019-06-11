@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldLoaderSearchCriteria;
 use onOffice\WPlugin\Field\Collection\FieldRowConverterSearchCriteria;
+use onOffice\WPlugin\GeoPosition;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -68,7 +69,8 @@ class TestClassFieldLoaderSearchCriteria
 	public function testLoad()
 	{
 		$result = iterator_to_array($this->_pFieldLoaderSearchCriteria->load());
-		$this->assertCount(17, $result);
+		$this->assertCount(12, $result);
+		$this->assertArrayHasKey(GeoPosition::FIELD_GEO_POSITION, $result);
 
 		foreach ($result as $fieldname => $fieldProperties) {
 			$this->assertInternalType('string', $fieldname);

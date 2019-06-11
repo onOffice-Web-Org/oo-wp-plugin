@@ -27,6 +27,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -47,6 +48,22 @@ class TestClassInputModelBuilderGeoRange
 {
 	/** @var InputModelBuilderGeoRange */
 	private $_pSubject = null;
+
+
+	/**
+	 *
+	 */
+
+	public function testConstruct()
+	{
+		$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE);
+		$this->assertInstanceOf(GeoPositionFieldHandler::class,
+			$pInputModelBuilderGeoRange->getGeoPositionFieldHandler());
+		$this->assertInstanceOf(InputModelDBFactory::class,
+			$pInputModelBuilderGeoRange->getInputModelFactory());
+		$this->assertInstanceOf(FieldModuleCollectionDecoratorGeoPositionFrontend::class,
+			$pInputModelBuilderGeoRange->getFieldsCollection());
+	}
 
 
 	/**
@@ -92,7 +109,6 @@ class TestClassInputModelBuilderGeoRange
 			$this->assertEquals('geo_order', $pInputModelGeo->getField());
 			$this->assertEquals('Order', $pInputModelGeo->getLabel());
 			$this->assertEquals($expectation, $pInputModelGeo->getValuesAvailable());
-			$this->assertEquals($module, $this->_pSubject->getModule());
 		}
 	}
 

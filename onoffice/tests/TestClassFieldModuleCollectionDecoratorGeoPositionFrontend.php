@@ -67,6 +67,13 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionFrontend
 	{
 		$allFields = $this->_pSubject->getAllFields();
 		$this->assertCount(11, $allFields);
+
+		foreach ($allFields as $pField) {
+			$this->assertInstanceOf(Field::class, $pField);
+			if ($pField->getModule() === onOfficeSDK::MODULE_SEARCHCRITERIA) {
+				$this->assertStringStartsWith('range', $pField->getName());
+			}
+		}
 	}
 
 

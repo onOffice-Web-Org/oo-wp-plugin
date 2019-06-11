@@ -26,8 +26,11 @@ namespace onOffice\WPlugin\Field\Collection;
 use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\FieldTypes;
+use function __;
 
 
 /**
@@ -81,7 +84,8 @@ class FieldLoaderSearchCriteria
 
 		foreach ($fields as $category) {
 			if ($category['name'] === 'Umkreis') {
-				// ...
+				yield GeoPosition::FIELD_GEO_POSITION => $this->buildGeoPositionField();
+				continue;
 			}
 
 			foreach ($category['fields'] as $row) {
@@ -89,5 +93,21 @@ class FieldLoaderSearchCriteria
 				yield $rowConverted['id'] => $rowConverted;
 			}
 		}
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function buildGeoPositionField(): array
+	{
+		$field = [
+			'name' => __('Geo Position', 'onoffice'),
+			'type' => FieldTypes::FIELD_TYPE_FLOAT,
+		];
+		return $this->_pRowConverter->convertRow($field);
 	}
 }

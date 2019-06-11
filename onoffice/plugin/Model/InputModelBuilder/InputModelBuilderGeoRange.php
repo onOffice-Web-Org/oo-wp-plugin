@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Model\InputModelBuilder;
 
 use Generator;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\ViewProperty;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
@@ -49,9 +50,6 @@ class InputModelBuilderGeoRange
 
 	/** @var FieldModuleCollectionDecoratorGeoPositionFrontend */
 	private $_pFieldsCollection = null;
-
-	/** @var string */
-	private $_module = '';
 
 	/** @var array */
 	private $_geoOrderOptionsTemplate = [
@@ -90,7 +88,6 @@ class InputModelBuilderGeoRange
 		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler ?? new GeoPositionFieldHandler();
 		$this->_pFieldsCollection = $pFieldsCollection ??
 			new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
-		$this->_module = $module;
 	}
 
 
@@ -189,7 +186,10 @@ class InputModelBuilderGeoRange
 
 	private function getGeoFieldLabel(string $key): string
 	{
-		return $this->_pFieldsCollection->getFieldByModuleAndName($this->_module, $key)->getLabel();
+		// labels are equal for estate and search criteria
+		return $this->_pFieldsCollection
+			->getFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, $key)
+			->getLabel();
 	}
 
 
@@ -213,12 +213,38 @@ class InputModelBuilderGeoRange
 
 	/**
 	 *
-	 * @return string
+	 * @return InputModelDBFactory
 	 *
 	 */
 
-	public function getModule(): string
+	public function getInputModelFactory(): InputModelDBFactory
 	{
-		return $this->_module;
+		return $this->_pInputModelFactory;
 	}
+
+
+	/**
+	 *
+	 * @return GeoPositionFieldHandler
+	 *
+	 */
+
+	public function getGeoPositionFieldHandler(): GeoPositionFieldHandler
+	{
+		return $this->_pGeoPositionFieldHandler;
+	}
+
+
+	/**
+	 *
+	 * @return FieldModuleCollectionDecoratorGeoPositionFrontend
+	 *
+	 */
+
+	public function getFieldsCollection(): FieldModuleCollectionDecoratorGeoPositionFrontend
+	{
+		return $this->_pFieldsCollection;
+	}
+
+
 }
