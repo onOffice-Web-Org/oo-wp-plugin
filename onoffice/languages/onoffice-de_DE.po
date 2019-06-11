@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: onOffice direct 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice\n"
 "POT-Creation-Date: 2019-05-28T11:46:11+02:00\n"
-"PO-Revision-Date: 2019-05-28 11:52+0200\n"
+"PO-Revision-Date: 2019-06-11 13:59+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -746,7 +746,7 @@ msgstr "Immobilienansicht nicht gefunden."
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/ContentFilter.php:379
 msgid "%2$s (%3$s) in %4$s - %5$s"
-msgstr "%1$s (%2$s) in %3$s - %4$s"
+msgstr "%2$s (%3$s) in %4$s - %5$s"
 
 #: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:118
 #: plugin/Renderer/InputFieldComplexSortableListRenderer.php:97
