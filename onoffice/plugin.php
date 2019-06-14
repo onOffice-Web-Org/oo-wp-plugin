@@ -54,8 +54,10 @@ if (!defined('ONOFFICE_FEATURE_CONFIGURE_GEO')) {
 	define('ONOFFICE_FEATURE_CONFIGURE_GEO', filter_input(INPUT_SERVER, 'SERVER_NAME') === 'localhost');
 }
 
+define('ONOFFICE_DI_CONFIG_PATH', ONOFFICE_PLUGIN_DIR.DIRECTORY_SEPARATOR.'di-config.php');
+
 $pDIBuilder = new ContainerBuilder();
-$pDIBuilder->addDefinitions(ONOFFICE_PLUGIN_DIR.DIRECTORY_SEPARATOR.'di-config.php');
+$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 $pDI = $pDIBuilder->build();
 
 $pContentFilter = new ContentFilter();
