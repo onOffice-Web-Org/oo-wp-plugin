@@ -132,6 +132,8 @@ abstract class AdminPageAjax
 
 	/**
 	 *
+	 * @deprecated use FieldsCollectionToContentFieldLabelArrayConverter instead
+	 *
 	 * @param string $module
 	 * @param FieldModuleCollection $pFieldsCollection
 	 * @return array
