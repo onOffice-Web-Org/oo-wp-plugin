@@ -1,5 +1,5 @@
 parameters:
-	level: 1
+	level: 2
 	paths:
 		- plugin
 		- tests
@@ -15,5 +15,11 @@ parameters:
 		-
 			message: '#[a-zA-Z0-9\\_]+::__construct\(\) does not call parent constructor from [a-zA-Z0-9\\_]+#'
 			path: '%currentWorkingDirectory%/tests/*Mocker.php'
+		-
+			message: '#Call to an undefined method [a-zA-Z0-9\\_]+::expects\(\)#'
+			path: '%currentWorkingDirectory%/tests/*.php'
+		-
+			message: '#Call to an undefined method [a-zA-Z0-9\\_]+::method\(\)#'
+			path: '%currentWorkingDirectory%/tests/*.php'
 includes:
 	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
