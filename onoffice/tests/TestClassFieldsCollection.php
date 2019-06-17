@@ -87,24 +87,100 @@ class TestClassFieldsCollection
 
 	public function testMerge()
 	{
-		$pCollectionMain = new FieldsCollection();
-		$pCollectionMain->addField(new Field('Michael', 'testModuleA'));
-		$pCollectionMain->addField(new Field('Elton', 'testModuleA'));
-		$pCollectionMain->addField(new Field('Marilyn', 'testModuleB'));
+		$pCollectionMain = $this->createPrefilledFieldsCollection();
+
+		$pFieldSteve = new Field('Steve', 'testModuleA');
+		$pFieldSteve->setCategory('Apple');
 
 		$pCollectionSub = new FieldsCollection();
-		$pCollectionSub->addField(new Field('Steve', 'testModuleA'));
+		$pCollectionSub->addField($pFieldSteve);
 		$pCollectionSub->addField(new Field('Dennis', 'testModuleB'));
-		$pCollectionSub->addField(new Field('Bill', 'testModuleB'));
+		$pCollectionSub->addField(new Field('Brian', 'testModuleB'));
 
-		$pCollectionMain->merge($pCollectionSub);
+		$pCollectionMain->merge($pCollectionSub, 'Bell');
 
 		$this->assertCount(6, $pCollectionMain->getAllFields());
 		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleA', 'Michael'));
 		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleA', 'Elton'));
-		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleA', 'Steve'));
 		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleB', 'Marilyn'));
-		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleB', 'Dennis'));
-		$this->assertTrue($pCollectionMain->containsFieldByModule('testModuleB', 'Bill'));
+
+		$this->assertEquals('Apple', $pCollectionMain->getFieldByModuleAndName('testModuleA', 'Steve')->getCategory());
+		$this->assertEquals('Bell', $pCollectionMain->getFieldByModuleAndName('testModuleB', 'Dennis')->getCategory());
+		$this->assertEquals('Bell', $pCollectionMain->getFieldByModuleAndName('testModuleB', 'Brian')->getCategory());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetFieldsByModule()
+	{
+		$pCollection = $this->createPrefilledFieldsCollection();
+		$fieldsByModule = $pCollection->getFieldsByModule('testModuleA');
+		$expectedResult = [
+			'Michael' => new Field('Michael', 'testModuleA'),
+			'Elton' => new Field('Elton', 'testModuleA'),
+		];
+		$this->assertEquals($expectedResult, $fieldsByModule);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testRemoveFieldByModuleAndName()
+	{
+		$pCollection = $this->createPrefilledFieldsCollection();
+		$this->assertTrue($pCollection->containsFieldByModule('testModuleB', 'Marilyn'));
+		$this->assertEquals([
+			new Field('Michael', 'testModuleA'),
+			new Field('Elton', 'testModuleA'),
+			new Field('Marilyn', 'testModuleB'),
+		], $pCollection->getAllFields());
+		$this->assertEquals([
+			'Marilyn' => new Field('Marilyn', 'testModuleB'),
+		], $pCollection->getFieldsByModule('testModuleB'));
+
+		$pCollection->removeFieldByModuleAndName('testModuleB', 'Marilyn');
+
+		$this->assertFalse($pCollection->containsFieldByModule('testModuleB', 'Marilyn'));
+		$this->assertEquals([
+			new Field('Michael', 'testModuleA'),
+			new Field('Elton', 'testModuleA'),
+		], $pCollection->getAllFields());
+
+		$this->assertEquals([], $pCollection->getFieldsByModule('testModuleB'));
+	}
+
+
+	/**
+	 *
+	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
+	 *
+	 */
+
+	public function testRemoveFieldByModuleAndNameUnknownField()
+	{
+		$pCollection = $this->createPrefilledFieldsCollection();
+		// Exception expected, because Marilyn is in testModuleB
+		$pCollection->removeFieldByModuleAndName('testModuleA', 'Marilyn');
+	}
+
+
+	/**
+	 *
+	 * @return FieldsCollection
+	 *
+	 */
+
+	private function createPrefilledFieldsCollection(): FieldsCollection
+	{
+		$pCollection = new FieldsCollection();
+		$pCollection->addField(new Field('Michael', 'testModuleA'));
+		$pCollection->addField(new Field('Elton', 'testModuleA'));
+		$pCollection->addField(new Field('Marilyn', 'testModuleB'));
+		return $pCollection;
 	}
 }

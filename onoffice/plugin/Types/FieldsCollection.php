@@ -102,14 +102,58 @@ class FieldsCollection implements FieldModuleCollection
 
 	/**
 	 *
-	 * @param self $pFieldsCollection
+	 * @param FieldModuleCollection $pFieldsCollection
+	 * @param string $fallbackCategoryName
 	 *
 	 */
 
-	public function merge(self $pFieldsCollection)
+	public function merge(FieldModuleCollection $pFieldsCollection, string $fallbackCategoryName = '')
 	{
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
-			$this->addField($pField);
+			$pFieldCopy = clone $pField;
+			if ($pFieldCopy->getCategory() === '') {
+				$pFieldCopy->setCategory($fallbackCategoryName);
+			}
+
+			$this->addField($pFieldCopy);
 		}
+	}
+
+
+	/**
+	 *
+	 * @param string $module
+	 * @return array
+	 *
+	 */
+
+	public function getFieldsByModule(string $module): array
+	{
+		return $this->_fieldsByModule[$module] ?? [];
+	}
+
+
+	/**
+	 *
+	 * @param string $module
+	 * @param string $name
+	 * @return Field the removed Field
+	 * @throws UnknownFieldException
+	 *
+	 */
+
+	public function removeFieldByModuleAndName(string $module, string $name): Field
+	{
+		$pField = $this->_fieldsByModule[$module][$name] ?? null;
+
+		if ($pField === null) {
+			throw new UnknownFieldException();
+		}
+
+		unset($this->_fieldsByModule[$module][$name]);
+		$index = array_search($pField, $this->_fields, true);
+
+		unset($this->_fields[$index]);
+		return $pField;
 	}
 }
