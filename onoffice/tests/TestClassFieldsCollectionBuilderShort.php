@@ -78,11 +78,6 @@ class TestClassFieldsCollectionBuilderShort
 	];
 
 
-	private $_expectedFieldsFormBackend = [
-
-	];
-
-
 	/**
 	 *
 	 * @before
