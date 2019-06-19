@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
@@ -28,13 +29,14 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function esc_html;
 
@@ -56,9 +58,6 @@ class Form
 	/** applicant-search form */
 	const TYPE_APPLICANT_SEARCH = 'applicantsearch';
 
-	/** @var Fieldnames */
-	private $_pFieldnames = null;
-
 	/** @var int */
 	private $_formNo = null;
 
@@ -70,6 +69,9 @@ class Form
 
 	/** @var int */
 	private $_countAbsolutResults = null;
+
+	/** @var FieldsCollection */
+	private $_pFieldsCollection = null;
 
 
 	/**
@@ -83,11 +85,17 @@ class Form
 	{
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice'));
 		$this->setGenericSetting('formId', 'onoffice-form');
-		$pFieldsCollection = new FieldModuleCollectionDecoratorFormContact
-			(new FieldModuleCollectionDecoratorSearchcriteria
-				(new FieldModuleCollectionDecoratorGeoPositionFrontend(new Types\FieldsCollection())));
-		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
-		$this->_pFieldnames->loadLanguage();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+
+		$this->_pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($this->_pFieldsCollection)
+			->addFieldsSearchCriteria($this->_pFieldsCollection)
+			->addFieldsFormFrontend($this->_pFieldsCollection);
+
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();
@@ -121,6 +129,7 @@ class Form
 
 		return $module;
 	}
+
 
 	/**
 	 *
@@ -252,7 +261,7 @@ class Form
 	public function getFieldLabel(string $field, bool $raw = false): string
 	{
 		$module = $this->getModuleOfField($field);
-		$label = $this->_pFieldnames->getFieldLabel($field, $module);
+		$label = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field)->getLabel();
 
 		if (false === $raw) {
 			$label = esc_html($label);
@@ -288,7 +297,7 @@ class Form
 		$module = $this->getModuleOfField($field);
 
 		return $module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
-			$this->_pFieldnames->inRangeSearchcriteriaInfos($field);
+			$this->_pFieldsCollection->getFieldByModuleAndName($module, $field)->getIsRangeField();
 	}
 
 
@@ -300,7 +309,18 @@ class Form
 
 	public function getSearchcriteriaRangeInfos(): array
 	{
-		return $this->_pFieldnames->getSearchcriteriaRangeInfos();
+		$allFields = $this->_pFieldsCollection->getAllFields();
+		$rangeInfos = [];
+
+		/* @var $pField Field */
+		foreach ($allFields as $pField) {
+			if ($pField->getModule() === onOfficeSDK::MODULE_SEARCHCRITERIA &&
+				$pField->getIsRangeField()) {
+				$rangeInfos[$pField->getName()] = $pField->getRangeFieldTranslations();
+			}
+		}
+
+		return $rangeInfos;
 	}
 
 
@@ -312,7 +332,17 @@ class Form
 
 	public function getUmkreisFields(): array
 	{
-		return $this->_pFieldnames->getUmkreisFields();
+		$result = [];
+		$searchCriteriaFields = $this->_pFieldsCollection
+			->getFieldsByModule(onOfficeSDK::MODULE_SEARCHCRITERIA);
+
+		foreach ($searchCriteriaFields as $pField) {
+			if ($pField->isRangeField()) {
+				$result[$pField->getName()] = $pField->getAsRow();
+			}
+		}
+
+		return $result;
 	}
 
 
@@ -328,9 +358,9 @@ class Form
 		$returnValues = [];
 		$module = $this->getModuleOfField($field);
 
-		if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
-			$this->_pFieldnames->inRangeSearchcriteriaInfos($field)) {
-			$returnValues = $this->_pFieldnames->getRangeSearchcriteriaInfosForField($field);
+		if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA) {
+			$pField = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field);
+			$returnValues = $pField->getRangeFieldTranslations();
 		}
 
 		return $returnValues;
@@ -358,7 +388,9 @@ class Form
 		$result = [];
 
 		if ($isMultiselectOrSingleselect) {
-			$result = $this->_pFieldnames->getPermittedValues($field, $module);
+			$result = $this->_pFieldsCollection
+				->getFieldByModuleAndName($module, $field)
+				->getPermittedvalues();
 
 			if (!$raw) {
 				$result = $this->escapePermittedValues($result);
@@ -376,11 +408,10 @@ class Form
 	 *
 	 */
 
-	public function getFieldType($field)
+	public function getFieldType($field): string
 	{
 		$module = $this->getModuleOfField($field);
-		$fieldType = $this->_pFieldnames->getType($field, $module);
-		return $fieldType;
+		return $this->_pFieldsCollection->getFieldByModuleAndName($module, $field)->getType();
 	}
 
 
@@ -391,9 +422,9 @@ class Form
 	 *
 	 */
 
-	private function escapePermittedValues(array $keyValues)
+	private function escapePermittedValues(array $keyValues): array
 	{
-		$result = array();
+		$result = [];
 
 		foreach ($keyValues as $key => $value) {
 			$result[esc_html($key)] = esc_html($value);

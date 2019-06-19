@@ -21,11 +21,11 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm;
@@ -37,6 +37,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
+use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_screen_option;
 use function esc_sql;
@@ -298,33 +299,61 @@ abstract class AdminPageFormSettingsBase
 	protected function generateAccordionBoxes()
 	{
 		$this->cleanPreviousBoxes();
-		$fieldNames = array();
-		$settings = array();
-		$pDefaultFieldsCollection = new FieldsCollection();
+		$pDefaultFieldsCollection = $this->readFields();
+		$modules = [];
 
 		if ($this->_showEstateFields) {
-			$settings[onOfficeSDK::MODULE_ESTATE] = $pDefaultFieldsCollection;
+			$modules []= onOfficeSDK::MODULE_ESTATE;
 		}
 
 		if ($this->_showAddressFields) {
-			$settings[onOfficeSDK::MODULE_ADDRESS] = $pDefaultFieldsCollection;
+			$modules []= onOfficeSDK::MODULE_ADDRESS;
 		}
 
 		if ($this->_showSearchCriteriaFields) {
-			$settings[onOfficeSDK::MODULE_SEARCHCRITERIA] = new FieldModuleCollectionDecoratorGeoPositionBackend
-				(new FieldModuleCollectionDecoratorInternalAnnotations
-					(new FieldModuleCollectionDecoratorSearchcriteria($pDefaultFieldsCollection)));
+			$modules []= onOfficeSDK::MODULE_SEARCHCRITERIA;
 		}
 
-		foreach ($settings as $module => $pFieldsCollection) {
-			$fieldNames = array_keys($this->readFieldnamesByContent($module, $pFieldsCollection));
+		$pFieldsCollectionConverter = new FieldsCollectionToContentFieldLabelArrayConverter();
 
-			foreach ($fieldNames as $category) {
+		foreach ($modules as $module) {
+			$fieldNames = $pFieldsCollectionConverter->convert($pDefaultFieldsCollection, $module);
+
+			foreach (array_keys($fieldNames) as $category) {
 				$slug = $this->generateGroupSlugByModuleCategory($module, $category);
 				$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
 				$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 			}
 		}
+	}
+
+
+	/**
+	 *
+	 * @return FieldsCollection
+	 *
+	 */
+
+	private function readFields(): FieldsCollection
+	{
+		$pDIBuilder = new ContainerBuilder;
+		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIBuilder->build();
+
+		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pDefaultFieldsCollection = new FieldsCollection();
+
+		if ($this->_showEstateFields || $this->_showAddressFields) {
+			$pFieldsCollectionBuilder->addFieldsAddressEstate($pDefaultFieldsCollection);
+		}
+
+		if ($this->_showSearchCriteriaFields) {
+			$pFieldsCollectionBuilder
+				->addFieldsSearchCriteria($pDefaultFieldsCollection)
+				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection);
+		}
+
+		return $pDefaultFieldsCollection;
 	}
 
 
@@ -343,30 +372,37 @@ abstract class AdminPageFormSettingsBase
 
 	protected function addFieldConfigurationForMainModules(FormModelBuilder $pFormModelBuilder)
 	{
+		$pFieldsCollection = $this->readFields();
+
 		if ($this->_showEstateFields) {
-			$fieldNamesEstate = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
-			$this->addFieldsConfiguration
-				(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNamesEstate, true);
-			$this->addSortableFieldModule(onOfficeSDK::MODULE_ESTATE);
+			$this->addFieldConfigurationByModule($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
 		}
 
 		if ($this->_showAddressFields) {
-			$fieldNamesAddress = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
-			$this->addFieldsConfiguration
-				(onOfficeSDK::MODULE_ADDRESS, $pFormModelBuilder, $fieldNamesAddress, true);
-			$this->addSortableFieldModule(onOfficeSDK::MODULE_ADDRESS);
+			$this->addFieldConfigurationByModule($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
 		}
 
 		if ($this->_showSearchCriteriaFields) {
-			$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionBackend
-				(new FieldModuleCollectionDecoratorInternalAnnotations
-					(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection())));
-			$fieldNamesSearchCriteria = $this->readFieldnamesByContent
-				(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFieldsCollection);
-			$this->addFieldsConfiguration
-				(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormModelBuilder, $fieldNamesSearchCriteria, true);
-			$this->addSortableFieldModule(onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$this->addFieldConfigurationByModule($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_SEARCHCRITERIA);
 		}
+	}
+
+
+	/**
+	 *
+	 * @param FormModelBuilder $pFormModelBuilder
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $module
+	 *
+	 */
+
+	private function addFieldConfigurationByModule(
+		FormModelBuilder $pFormModelBuilder, FieldsCollection $pFieldsCollection, string $module)
+	{
+		$pFieldsCollectionConverter = new FieldsCollectionToContentFieldLabelArrayConverter();
+		$fieldNames = $pFieldsCollectionConverter->convert($pFieldsCollection, $module);
+		$this->addFieldsConfiguration($module, $pFormModelBuilder, $fieldNames, true);
+		$this->addSortableFieldModule($module);
 	}
 
 

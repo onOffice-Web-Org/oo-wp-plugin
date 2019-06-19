@@ -21,9 +21,12 @@
 
 namespace onOffice\WPlugin\Renderer;
 
-use onOffice\WPlugin\Fieldnames;
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use const ONOFFICE_DI_CONFIG_PATH;
+use function esc_html;
 
 /**
  *
@@ -38,8 +41,8 @@ class InputFieldCheckboxRenderer
 	/** @var array */
 	private $_checkedValues = array();
 
-	/** @var array */
-	private $_fieldList = [];
+	/** @var FieldsCollection */
+	private $_pFieldsCollection = null;
 
 	/**
 	 *
@@ -64,14 +67,11 @@ class InputFieldCheckboxRenderer
 	private function isMultipleSelect(string $key): bool
 	{
 		$returnValue = false;
+		$module = $this->getOoModule();
 
-		if ($this->_fieldList != [])
-		{
-			if (array_key_exists($key, $this->_fieldList))
-			{
-				$type = $this->_fieldList[$key]['type'];
-				$returnValue = FieldTypes::isMultipleSelectType($type);
-			}
+		if ($this->_pFieldsCollection->containsFieldByModule($module, $key)) {
+			$type = $this->_pFieldsCollection->getFieldByModuleAndName($module, $key)->getType();
+			$returnValue = FieldTypes::isMultipleSelectType($type);
 		}
 
 		return $returnValue;
@@ -84,14 +84,15 @@ class InputFieldCheckboxRenderer
 
 	private function setFieldList()
 	{
-		$module = $this->getOoModule();
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$this->_pFieldsCollection = new FieldsCollection();
 
-		if ($module != '')
-		{
-			$pFieldnames = new Fieldnames(new FieldsCollection());
-			$pFieldnames->loadLanguage();
-			$this->_fieldList = $pFieldnames->getFieldList($module);
-		}
+		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder
+			->addFieldsAddressEstate($this->_pFieldsCollection)
+			->addFieldsSearchCriteria($this->_pFieldsCollection);
 	}
 
 
@@ -103,10 +104,8 @@ class InputFieldCheckboxRenderer
 	{
 		$this->setFieldList();
 
-		if (is_array($this->getValue()))
-		{
-			foreach ($this->getValue() as $key => $label)
-			{
+		if (is_array($this->getValue())) {
+			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
 				$onofficeMultipleSelect = $this->isMultipleSelect($key) ? '1' : '0';
 
@@ -118,9 +117,7 @@ class InputFieldCheckboxRenderer
 					.' id="'.esc_html($inputId).'">'
 					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
 			}
-		}
-		else
-		{
+		} else {
 			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 				.'" value="'.esc_html($this->getValue()).'"'
 				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')

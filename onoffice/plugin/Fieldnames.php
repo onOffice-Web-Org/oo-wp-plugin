@@ -40,6 +40,8 @@ use function __;
 
 /**
  *
+ * @deprecated use FieldsCollection + builders instead
+ *
  */
 
 class Fieldnames

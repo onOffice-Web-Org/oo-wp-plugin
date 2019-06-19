@@ -21,14 +21,11 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
+use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
-use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
@@ -53,11 +50,8 @@ class FormModelBuilderDBForm
 	/** @var string */
 	private $_formType = null;
 
-	/** @var Fieldnames */
-	private $_pFieldNames = null;
-
 	/** @var array */
-	private $_formModules = array();
+	private $_formModules = [];
 
 
 	/**
@@ -72,13 +66,6 @@ class FormModelBuilderDBForm
 		$pConfigForm = new InputModelDBFactoryConfigForm();
 		$pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
 		$this->setInputModelDBFactory($pInputModelDBFactory);
-
-		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
-			(new FieldModuleCollectionDecoratorSearchcriteria
-				(new FieldModuleCollectionDecoratorFormContact
-					(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection()))));
-		$this->_pFieldNames = new Fieldnames($pFieldCollection);
-		$this->_pFieldNames->loadLanguage();
 	}
 
 
@@ -96,27 +83,28 @@ class FormModelBuilderDBForm
 			InputModelDBFactory::INPUT_FIELD_CONFIG, null, true);
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-		$fieldNames = array();
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = [];
 
 		if (is_array($module)) {
+			$this->_formModules = $module;
 			foreach ($module as $submodule) {
-				$newFields = $this->_pFieldNames->getFieldList($submodule);
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
 				$fieldNames = array_merge($fieldNames, $newFields);
 			}
 		} else {
-			$fieldNames = $this->_pFieldNames->getFieldList($module);
+			$this->_formModules = [$module];
+			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
 		}
 
-		$this->_formModules = is_array($module) ? $module : array($module);
+		$fieldnamesArray = [];
 
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-		$fields = $this->getValue(DataFormConfiguration::FIELDS);
-
-		if (null == $fields)
-		{
-			$fields = array();
+		foreach ($fieldNames as $pField) {
+			$fieldnamesArray[$pField->getName()] = $pField->getAsRow();
 		}
 
+		$pInputModelFieldsConfig->setValuesAvailable($fieldnamesArray);
+		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
 
 		$pModule = $this->getInputModelModule();
@@ -127,6 +115,29 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 
 		return $pInputModelFieldsConfig;
+	}
+
+
+	/**
+	 *
+	 * @return FieldsCollection
+	 *
+	 */
+
+	private function getFieldsCollection(): FieldsCollection
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+
+		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollection = new FieldsCollection();
+
+		$pFieldsCollectionBuilder
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsSearchCriteria($pFieldsCollection)
+			->addFieldsFormBackend($pFieldsCollection);
+		return $pFieldsCollection;
 	}
 
 
@@ -460,8 +471,9 @@ class FormModelBuilderDBForm
 	public function callbackValueInputModelModule(InputModelBase $pInputModel, $key)
 	{
 		$module = null;
+		$pFieldsCollection = $this->getFieldsCollection();
 		foreach ($this->_formModules as $formModule) {
-			if ($this->_pFieldNames->getModuleContainsField($key, $formModule)) {
+			if ($pFieldsCollection->containsFieldByModule($formModule, $key)) {
 				$module = $formModule;
 				break;
 			}
