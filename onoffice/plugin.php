@@ -68,7 +68,12 @@ $pSearchParams->setParameters($_GET);
 
 add_action('init', [$pContentFilter, 'addCustomRewriteTags']);
 add_action('init', [$pContentFilter, 'addCustomRewriteRules']);
-add_action('init', [FormPostHandler::class, 'initialCheck']);
+
+// This hook [wp] is one effective place to perform any high-level filtering or validation,
+// following queries, but before WordPress does any routing, processing, or handling.
+// https://codex.wordpress.org/Plugin_API/Action_Reference/wp
+add_action('wp', [FormPostHandler::class, 'initialCheck']);
+
 add_action('admin_menu', [$pAdminViewController, 'register_menu']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);

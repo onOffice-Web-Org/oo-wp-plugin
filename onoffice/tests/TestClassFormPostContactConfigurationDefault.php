@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Form\FormPostContactConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
 
 /**
@@ -77,5 +78,15 @@ class TestClassFormPostContactConfigurationDefault
 	public function testGetNewsletterAccepted()
 	{
 		$this->assertFalse($this->_pSubject->getNewsletterAccepted());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetWPQueryWrapper()
+	{
+		$this->assertInstanceOf(WPQueryWrapper::class, $this->_pSubject->getWPQueryWrapper());
 	}
 }

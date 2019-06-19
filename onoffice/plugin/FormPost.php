@@ -107,7 +107,7 @@ abstract class FormPost
 	 *
 	 */
 
-	public function initialCheck(DataFormConfiguration $pConfig, $formNo = null)
+	public function initialCheck(DataFormConfiguration $pConfig, int $formNo)
 	{
 		$this->_pFormPostConfiguration->getFieldnames()->loadLanguage();
 

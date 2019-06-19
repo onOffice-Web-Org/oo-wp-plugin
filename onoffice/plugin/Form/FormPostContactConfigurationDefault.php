@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 /**
  *
@@ -36,6 +37,9 @@ class FormPostContactConfigurationDefault
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
+	/** @var WPQueryWrapper */
+	private $_pWPQueryWrapper = null;
+
 
 	/**
 	 *
@@ -44,6 +48,7 @@ class FormPostContactConfigurationDefault
 	public function __construct()
 	{
 		$this->_pSDKWrapper = new SDKWrapper();
+		$this->_pWPQueryWrapper = new WPQueryWrapper();
 	}
 
 
@@ -80,5 +85,17 @@ class FormPostContactConfigurationDefault
 	public function getNewsletterAccepted(): bool
 	{
 		return filter_input(INPUT_POST, 'newsletter', FILTER_VALIDATE_BOOLEAN) ?? false;
+	}
+
+
+	/**
+	 *
+	 * @return WPQueryWrapper
+	 *
+	 */
+
+	public function getWPQueryWrapper(): WPQueryWrapper
+	{
+		return $this->_pWPQueryWrapper;
 	}
 }

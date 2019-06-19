@@ -1,7 +1,7 @@
 <?php
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2016-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -25,22 +25,20 @@ use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
 
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2016, onOffice(R) Software AG
  *
  */
 
 class FormPostHandler
 {
 	/** @var array */
-	static private $_formPostClassesByType = array(
+	static private $_formPostClassesByType = [
 		Form::TYPE_CONTACT => FormPostContact::class,
 		Form::TYPE_OWNER => FormPostOwner::class,
 		Form::TYPE_INTEREST => FormPostInterest::class,
 		Form::TYPE_APPLICANT_SEARCH => FormPostApplicantSearch::class,
-	);
+	];
 
 
 	/** @var array */
@@ -53,9 +51,9 @@ class FormPostHandler
 	 *
 	 */
 
-	static public function getInstance($type)
+	static public function getInstance(string $type)
 	{
-		if (!array_key_exists($type, Form::getFormTypesLabeled())) {
+		if (!isset(self::$_formPostClassesByType[$type])) {
 			throw new UnknownFormException($type);
 		}
 
@@ -76,7 +74,7 @@ class FormPostHandler
 		$formName = filter_input(INPUT_POST, 'oo_formid', FILTER_SANITIZE_STRING);
 		$formNo = filter_input(INPUT_POST, 'oo_formno', FILTER_SANITIZE_NUMBER_INT);
 
-		if (!is_null($formName)) {
+		if ($formName !== null && $formNo !== null) {
 			$pDataFormConfigFactory = new DataFormConfigurationFactory();
 			$pFormConfig = $pDataFormConfigFactory->loadByFormName($formName);
 			$formType = $pFormConfig->getFormType();

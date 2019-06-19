@@ -35,6 +35,7 @@ use onOffice\WPlugin\FormPostContact;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -76,8 +77,10 @@ class TestClassFormPostContact
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
+		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
+			->getMock();
 		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest
-			($this->_pSDKWrapperMocker);
+			($this->_pSDKWrapperMocker, $pWPQueryWrapper);
 		$this->_pFormPostContactConfiguration->setReferrer('/test/page');
 		$this->_pFormPostConfiguration->setSDKWrapper($this->_pSDKWrapperMocker);
 		$this->_pFormPostContact = new FormPostContact($this->_pFormPostConfiguration,

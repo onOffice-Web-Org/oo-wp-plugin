@@ -1,7 +1,8 @@
 <?php
+
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2016-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -18,13 +19,6 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2016, onOffice(R) Software AG
- *
- */
-
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
@@ -36,6 +30,7 @@ use onOffice\WPlugin\Form\FormPostContactConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
+
 
 /**
  *
@@ -146,9 +141,10 @@ class FormPostContact
 	private function sendContactRequest(FormData $pFormData, string $recipient = '', $subject = null)
 	{
 		$values = $pFormData->getValues();
+		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$requestParams = [
 			'addressdata' => $pFormData->getAddressData(),
-			'estateid' => $values['Id'] ?? null,
+			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $values['message'] ?? null,
 			'subject' => $subject,
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),

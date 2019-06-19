@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 /**
  *
@@ -57,4 +58,13 @@ interface FormPostContactConfiguration
 	 */
 
 	public function getNewsletterAccepted(): bool;
+
+
+	/**
+	 *
+	 * @return WPQueryWrapper
+	 *
+	 */
+
+	public function getWPQueryWrapper(): WPQueryWrapper;
 }
