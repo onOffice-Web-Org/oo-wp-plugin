@@ -187,10 +187,11 @@ abstract class AdminPageFormSettingsBase
 			$result = ($recordId != null);
 
 			if ($result) {
-				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_FORMS);
-				$row = $this->prepareRelationValues
+				$rowFieldConfig = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_FORMS);
+				$rowFieldConfig = $this->prepareRelationValues
 					(RecordManager::TABLENAME_FIELDCONFIG_FORMS, 'form_id', $row, $recordId);
-				$pRecordManagerInsertForm->insertAdditionalValues($row);
+				$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] = $rowFieldConfig;
+				$result = $pRecordManagerInsertForm->insertAdditionalValues($row);
 			}
 		}
 
