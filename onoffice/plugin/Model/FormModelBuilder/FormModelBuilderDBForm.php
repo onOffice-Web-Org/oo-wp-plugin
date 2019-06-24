@@ -89,7 +89,7 @@ class FormModelBuilderDBForm
 		if (is_array($module)) {
 			$this->_formModules = $module;
 			foreach ($module as $submodule) {
-				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule ?? '');
 				$fieldNames = array_merge($fieldNames, $newFields);
 			}
 		} else {
@@ -473,7 +473,7 @@ class FormModelBuilderDBForm
 		$module = null;
 		$pFieldsCollection = $this->getFieldsCollection();
 		foreach ($this->_formModules as $formModule) {
-			if ($pFieldsCollection->containsFieldByModule($formModule, $key)) {
+			if ($pFieldsCollection->containsFieldByModule($formModule ?? '', $key)) {
 				$module = $formModule;
 				break;
 			}
