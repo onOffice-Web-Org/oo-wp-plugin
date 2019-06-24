@@ -106,7 +106,7 @@ class TestClassContentFilterShortCodeAddress
 
 	public function testReplaceShortCodes()
 	{
-		$pTemplateMock = $this->_pEnvironment->getTemplate('adressList-01');
+		$pTemplateMock = $this->_pEnvironment->getTemplate();
 		$pTemplateMock->expects($this->once())->method('setAddressList')
 			->with($this->anything());
 		$pTemplateMock->expects($this->once())->method('withTemplateName')->with('adressList-01')

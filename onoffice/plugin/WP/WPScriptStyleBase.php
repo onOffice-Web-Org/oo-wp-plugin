@@ -35,7 +35,7 @@ interface WPScriptStyleBase
 	 * @param string $handle
 	 * @param string $src
 	 * @param array $deps
-	 * @param string $ver
+	 * @param string|bool|null $ver
 	 * @param bool $inFooter
 	 *
 	 */
@@ -49,7 +49,7 @@ interface WPScriptStyleBase
 	 * @param string $handle
 	 * @param string $src
 	 * @param array $deps
-	 * @param string $ver
+	 * @param string|bool|null $ver
 	 * @param string $media
 	 *
 	 */
@@ -63,7 +63,7 @@ interface WPScriptStyleBase
 	 * @param string $handle
 	 * @param string $src
 	 * @param array $deps
-	 * @param string $ver
+	 * @param string|bool|null $ver
 	 * @param bool $inFooter
 	 *
 	 */
@@ -77,7 +77,7 @@ interface WPScriptStyleBase
 	 * @param string $handle
 	 * @param string $src
 	 * @param array $deps
-	 * @param string $ver
+	 * @param string|bool|null $ver
 	 * @param string $media
 	 *
 	 */

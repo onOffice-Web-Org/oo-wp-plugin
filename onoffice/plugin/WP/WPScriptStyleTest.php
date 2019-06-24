@@ -53,7 +53,7 @@ class WPScriptStyleTest
 	 * @param string $handle
 	 * @param string $src
 	 * @param array $deps
-	 * @param string $ver
+	 * @param string|bool|null $ver
 	 * @param bool $inFooter
 	 * @throws Exception
 	 *
@@ -75,7 +75,7 @@ class WPScriptStyleTest
 	 * @param string $handle
 	 * @param string $src
 	 * @param array $deps
-	 * @param string $ver
+	 * @param string|bool|null $ver
 	 * @param string $media
 	 * @throws Exception
 	 *
@@ -97,7 +97,7 @@ class WPScriptStyleTest
 	 * @param string $handle
 	 * @param string $src
 	 * @param array $deps
-	 * @param string $ver
+	 * @param string|bool|null $ver
 	 * @param bool $inFooter
 	 * @return bool
 	 * @throws Exception
@@ -120,7 +120,7 @@ class WPScriptStyleTest
 	 * @param string $handle
 	 * @param string $src
 	 * @param array $deps
-	 * @param string $ver
+	 * @param string|bool|null $ver
 	 * @param string $media
 	 * @return bool
 	 * @throws Exception

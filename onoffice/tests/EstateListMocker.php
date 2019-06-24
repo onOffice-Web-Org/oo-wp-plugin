@@ -120,8 +120,6 @@ class EstateListMocker
 
 	/**
 	 *
-	 * @param int $amount
-	 *
 	 */
 
 	public function loadEstates()
@@ -251,7 +249,7 @@ class EstateListMocker
 	/**
 	 *
 	 * @param string $methodName
-	 * @return int
+	 * @return bool
 	 *
 	 */
 

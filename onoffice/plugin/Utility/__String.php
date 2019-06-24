@@ -61,8 +61,8 @@ class __String
 
 	/**
 	 *
-	 * @param mixed $search
-	 * @param mixed $replace
+	 * @param string $search
+	 * @param string $replace
 	 * @return string
 	 *
 	 */

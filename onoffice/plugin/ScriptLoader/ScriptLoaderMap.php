@@ -43,7 +43,7 @@ class ScriptLoaderMap
 
 	/**
 	 *
-	 * @param WPScriptStyleBase $pScriptloaderMapEnvironment
+	 * @param ScriptLoaderMapEnvironment $pScriptloaderMapEnvironment
 	 *
 	 */
 

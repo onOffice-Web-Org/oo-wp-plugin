@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -16,13 +16,6 @@
  *
  *    You should have received a copy of the GNU Affero General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -75,7 +68,6 @@ class Template
 	/**
 	 *
 	 * @param string $templateName
-	 * @param string $defaultTemplateName
 	 *
 	 */
 
@@ -115,6 +107,8 @@ class Template
 	 * Method that provides important variables to template
 	 * Must not expose $this
 	 *
+	 * @param array $templateData
+	 * @param string $templatePath
 	 * @return string
 	 *
 	 */
@@ -135,7 +129,6 @@ class Template
 
 	/**
 	 *
-	 * @param string $templateName
 	 * @return string
 	 *
 	 */

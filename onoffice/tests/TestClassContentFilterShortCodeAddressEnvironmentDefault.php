@@ -74,12 +74,7 @@ class TestClassContentFilterShortCodeAddressEnvironmentDefault
 
 	public function testCreateAddressList()
 	{
-		$pAddressListView = $this->getMockBuilder(DataListViewAddress::class)
-				->setConstructorArgs([1, 'test'])
-				->getMock();
-		$pResult = $this->_pEnvironment->createAddressList($pAddressListView);
-
-		$this->assertInstanceOf(AddressList::class, $pResult);
+		$this->assertInstanceOf(AddressList::class, $this->_pEnvironment->createAddressList());
 	}
 
 
