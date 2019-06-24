@@ -158,7 +158,7 @@ class EstateUnitsTable extends ListTable
 
 	/**
 	 *
-	 * @param string $pItem
+	 * @param object $pItem
 	 * @return string
 	 *
 	 */

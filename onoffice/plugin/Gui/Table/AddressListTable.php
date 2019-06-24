@@ -104,7 +104,7 @@ class AddressListTable
 
 	/**
 	 *
-	 * @param string $pItem
+	 * @param object $pItem
 	 * @return string
 	 *
 	 */

@@ -67,8 +67,6 @@ class AdminPageEstateListSettings
 
 	/**
 	 *
-	 * @return bool
-	 *
 	 */
 
 	protected function buildForms()

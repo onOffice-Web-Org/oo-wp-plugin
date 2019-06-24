@@ -66,8 +66,7 @@ class FormPostContact
 
 	/**
 	 *
-	 * @param DataFormConfiguration $pFormConfig
-	 * @param int $formNo
+	 * @param FormData $pFormData
 	 *
 	 */
 

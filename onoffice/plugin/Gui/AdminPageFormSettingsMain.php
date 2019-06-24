@@ -169,7 +169,7 @@ class AdminPageFormSettingsMain
 	 *
 	 * @param string $type
 	 * @return string
-	 * @throws Exception
+	 * @throws UnexpectedValueException
 	 *
 	 */
 

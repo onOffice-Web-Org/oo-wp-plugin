@@ -243,7 +243,7 @@ class EstateListTable extends ListTable
 
 	/**
 	 *
-	 * @param string $pItem
+	 * @param object $pItem
 	 * @return string
 	 *
 	 */

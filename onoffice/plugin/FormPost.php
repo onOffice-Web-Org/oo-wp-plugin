@@ -273,7 +273,12 @@ abstract class FormPost
 
 		$fields = array_unique(array_keys($fieldList));
 		$module = array_fill(0, count($fields), 'searchcriteria');
-		$inputFormFields += array_combine($fields, $module);
+
+		$fieldsModulesCombined = array_combine($fields, $module);
+
+		if ($fieldsModulesCombined !== false) {
+			$inputFormFields += $fieldsModulesCombined;
+		}
 
 		if ($numberAsRange) {
 			foreach ($fieldList as $name => $properties) {

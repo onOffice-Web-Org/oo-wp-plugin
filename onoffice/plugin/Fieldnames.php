@@ -316,8 +316,7 @@ class Fieldnames
 
 	/**
 	 *
-	 * @param string $module recordType
-	 * @param string $mode
+	 * @param string $module record type
 	 * @return array
 	 *
 	 */
@@ -331,7 +330,6 @@ class Fieldnames
 
 	/**
 	 *
-	 * @param string $module
 	 * @return array
 	 *
 	 */

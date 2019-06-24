@@ -247,7 +247,7 @@ class AdminPageAddressListSettings
 
 	/**
 	 *
-	 * @return null
+	 * @return void
 	 * @throws UnknownViewException
 	 *
 	 */

@@ -189,7 +189,7 @@ class FormsTable
 
 	/**
 	 *
-	 * @param string $pItem
+	 * @param object $pItem
 	 * @return string
 	 *
 	 */
