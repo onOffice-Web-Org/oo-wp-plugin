@@ -685,9 +685,10 @@ class TestClassEstateList
 		$pGeoSearchBuilder->method('buildParameters')->willReturn(['radius' => 500, 'country' => 'DEU', 'zip' => '52068']);
 		$this->_pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 		$this->_pEnvironment->method('getGeoSearchBuilder')->willReturn($pGeoSearchBuilder);
-		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
-			($this->getMockBuilder(EstateStatusLabel::class)->setMethods(['getFieldsByPrio', 'getLabel'])->getMock());
-		$this->_pEnvironment->getEstateStatusLabel()->method('getFieldsByPrio')->willReturn([
+		$pEstateStatusLabel = $this->getMockBuilder(EstateStatusLabel::class)
+			->setMethods(['getFieldsByPrio', 'getLabel'])
+			->getMock();
+		$pEstateStatusLabel->method('getFieldsByPrio')->willReturn([
 			'referenz',
 			'reserviert',
 			'verkauft',
@@ -698,6 +699,8 @@ class TestClassEstateList
 			'courtage_frei',
 			'objekt_des_tages',
 		]);
+		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
+			($pEstateStatusLabel);
 	}
 
 

@@ -440,8 +440,7 @@ class TestClassFieldnames
 
 	/**
 	 *
-	 * @param bool $addApiOnlyFields
-	 * @param bool $internalAnnotations
+	 * @param FieldModuleCollection $pExtraFieldsCollection
 	 * @param bool $inactiveOnly
 	 * @return Fieldnames
 	 *

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +18,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
@@ -39,7 +42,7 @@ abstract class TestClassInputModelDBFactoryConfigBase
 	/** @var array */
 	private $_tableNames = [];
 
-	/** @var InputModelDBFactoryFilterableFields */
+	/** @var InputModelDBFactoryConfigBase */
 	private $_pConcreteFactory = null;
 
 
@@ -85,11 +88,11 @@ abstract class TestClassInputModelDBFactoryConfigBase
 
 	/**
 	 *
-	 * @return string
+	 * @return InputModelDBFactoryConfigBase
 	 *
 	 */
 
-	public function getConcreteFactory(): InputModelDBFactoryFilterableFields
+	public function getConcreteFactory(): InputModelDBFactoryConfigBase
 	{
 		return $this->_pConcreteFactory;
 	}
@@ -109,11 +112,11 @@ abstract class TestClassInputModelDBFactoryConfigBase
 
 	/**
 	 *
-	 * @param InputModelDBFactory $pConcreteFactory
+	 * @param InputModelDBFactoryConfigBase $pConcreteFactory
 	 *
 	 */
 
-	public function setConcreteFactory(InputModelDBFactoryFilterableFields $pConcreteFactory)
+	public function setConcreteFactory(InputModelDBFactoryConfigBase $pConcreteFactory)
 	{
 		$this->_pConcreteFactory = $pConcreteFactory;
 	}

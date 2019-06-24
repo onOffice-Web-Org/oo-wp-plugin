@@ -19,10 +19,11 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Controller\EstateUnitsConfigurationBase;
 use onOffice\WPlugin\Controller\EstateUnitsConfigurationTest;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\EstateUnits;
@@ -42,7 +43,7 @@ use function json_decode;
 class TestClassEstateUnits
 	extends WP_UnitTestCase
 {
-	/** @var EstateUnitsConfigurationBase */
+	/** @var EstateUnitsConfigurationTest */
 	private $_pEstateUnitsConfiguration = null;
 
 	/** @var EstateUnits */
