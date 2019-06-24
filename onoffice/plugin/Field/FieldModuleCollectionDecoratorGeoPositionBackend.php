@@ -42,15 +42,9 @@ class FieldModuleCollectionDecoratorGeoPositionBackend
 {
 	/** @var array */
 	private $_geoFields = [
-		onOfficeSDK::MODULE_SEARCHCRITERIA => [
-			GeoPosition::FIELD_GEO_POSITION => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Geo Position',
-			],
-		],
+		// geoPosition for searchcriteria gets added by FieldLoaderSearchCriteria.
+		// Reading geoPosition for estate in FieldLoaderGeneric is not possible right now
+		// since FieldLoader/Collections must co-exist with Fieldnames which never added the field.
 		onOfficeSDK::MODULE_ESTATE => [
 			GeoPosition::FIELD_GEO_POSITION => [
 				'type' => FieldTypes::FIELD_TYPE_VARCHAR,

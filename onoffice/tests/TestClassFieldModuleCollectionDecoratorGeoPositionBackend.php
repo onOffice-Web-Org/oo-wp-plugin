@@ -32,9 +32,6 @@ use WP_UnitTestCase;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 class TestClassFieldModuleCollectionDecoratorGeoPositionBackend
@@ -47,7 +44,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionBackend
 	public function testGetAllFields()
 	{
 		$pDecorator = new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection());
-		$this->assertEquals(2, count($pDecorator->getAllFields()));
+		$this->assertEquals(1, count($pDecorator->getAllFields()));
 
 		$pCollectionFilled = new FieldsCollection();
 		$pCollectionFilled->addField(new Field('testField', 'testModule'));
@@ -55,7 +52,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionBackend
 		$pCollectionFilled->addField(new Field('testField3', 'testModule'));
 
 		$pDecoratorNew = new FieldModuleCollectionDecoratorGeoPositionBackend($pCollectionFilled);
-		$this->assertEquals(5, count($pDecoratorNew->getAllFields()));
+		$this->assertEquals(4, count($pDecoratorNew->getAllFields()));
 	}
 
 
@@ -70,8 +67,6 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionBackend
 		$this->assertTrue($pDecorator->containsFieldByModule('testModuleA', 'testFieldB'));
 		$this->assertTrue($pDecorator->containsFieldByModule('testModuleB', 'testFieldB'));
 		$this->assertTrue($pDecorator->containsFieldByModule
-			(onOfficeSDK::MODULE_SEARCHCRITERIA, GeoPosition::FIELD_GEO_POSITION));
-		$this->assertTrue($pDecorator->containsFieldByModule
 			(onOfficeSDK::MODULE_ESTATE, GeoPosition::FIELD_GEO_POSITION));
 		$this->assertFalse($pDecorator->containsFieldByModule('testModuleB', 'testFieldC'));
 	}
@@ -85,7 +80,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionBackend
 	{
 		$pDecorator = new FieldModuleCollectionDecoratorGeoPositionBackend($this->getPrefilledCollection());
 		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			(onOfficeSDK::MODULE_SEARCHCRITERIA, GeoPosition::FIELD_GEO_POSITION));
+			('testModuleA', 'testFieldA'));
 		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
 			(onOfficeSDK::MODULE_ESTATE, GeoPosition::FIELD_GEO_POSITION));
 	}
