@@ -161,7 +161,7 @@ class InputFieldComplexSortableDetailListRenderer
 	}
 
 
-	/** @param array */
+	/** @param array $allFields */
 	public function setAllFields(array $allFields)
 		{ $this->_allFields = $allFields; }
 

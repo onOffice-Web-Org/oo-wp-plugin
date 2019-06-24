@@ -66,7 +66,6 @@ class RecordManagerUpdateListViewEstate
 
 	/**
 	 *
-	 * @param int $listviewId
 	 * @param array $tableRow
 	 * @return bool success
 	 *

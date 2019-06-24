@@ -412,7 +412,6 @@ class FormModelBuilderDBForm
 	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key Name of input
-	 * @return bool
 	 *
 	 */
 

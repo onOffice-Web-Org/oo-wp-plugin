@@ -57,7 +57,7 @@ class InputModelLabel
 
 	/**
 	 *
-	 * @return null
+	 * @return string
 	 *
 	 */
 

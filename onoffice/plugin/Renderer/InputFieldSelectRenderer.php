@@ -84,7 +84,7 @@ class InputFieldSelectRenderer
 		{ $this->_selectedValue = $selectedValue; }
 
 
-	/** @param string $selectedValue */
+	/** @return string */
 	public function getSelectedValue()
 		{ return $this->_selectedValue; }
 }

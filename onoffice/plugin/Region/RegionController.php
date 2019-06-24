@@ -128,7 +128,7 @@ class RegionController
 	 *
 	 * @param string $key
 	 * @param Region $pParentRegion
-	 * @return Region
+	 * @return Region|null
 	 *
 	 */
 
@@ -153,6 +153,7 @@ class RegionController
 				return $pResult;
 			}
 		}
+		return null;
 	}
 
 

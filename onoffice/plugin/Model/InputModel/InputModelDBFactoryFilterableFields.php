@@ -30,7 +30,7 @@ namespace onOffice\WPlugin\Model\InputModel;
 
 interface InputModelDBFactoryFilterableFields
 {
-		/** */
+	/** */
 	const INPUT_FIELD_FILTERABLE = 'inputfilterable';
 
 	/** If filterable, it can also be hidden */

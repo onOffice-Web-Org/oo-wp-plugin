@@ -59,7 +59,6 @@ class RecordManagerUpdateListViewAddress
 	/**
 	 *
 	 * @param array $tableRow
-	 * @param int $mainRecordId
 	 * @return bool
 	 *
 	 */

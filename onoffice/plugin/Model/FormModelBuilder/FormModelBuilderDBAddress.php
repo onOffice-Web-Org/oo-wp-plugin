@@ -216,7 +216,6 @@ class FormModelBuilderDBAddress
 	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key Name of input
-	 * @return bool
 	 *
 	 */
 
@@ -234,7 +233,6 @@ class FormModelBuilderDBAddress
 	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key Name of input
-	 * @return bool
 	 *
 	 */
 
