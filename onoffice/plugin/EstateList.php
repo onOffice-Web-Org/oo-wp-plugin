@@ -645,8 +645,6 @@ class EstateList
 
 	/**
 	 *
-	 * @param string $unitViewName
-	 * @param int $estateId
 	 * @return string
 	 *
 	 */

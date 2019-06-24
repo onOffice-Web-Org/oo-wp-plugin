@@ -23,7 +23,6 @@ namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataDetailView;
-use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\EstateUnits;

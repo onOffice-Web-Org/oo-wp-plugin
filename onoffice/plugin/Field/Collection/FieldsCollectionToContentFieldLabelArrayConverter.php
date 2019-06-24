@@ -42,6 +42,7 @@ class FieldsCollectionToContentFieldLabelArrayConverter
 	public function convert(FieldsCollection $pFieldsCollection, string $module): array
 	{
 		$result = [];
+		$categories = [];
 
 		foreach ($pFieldsCollection->getFieldsByModule($module) as $key => $pField) {
 			$content = $pField->getCategory();

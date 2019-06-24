@@ -76,7 +76,7 @@ class DataListView
 	/** @var string[] */
 	private $_addressFields = [];
 
-	/** @var string */
+	/** @var int */
 	private $_filterId = 0;
 
 	/** @var string */
@@ -140,7 +140,7 @@ class DataListView
 	public function getPictureTypes(): array
 		{ return $this->_pictureTypes; }
 
-	/** @return string */
+	/** @return int */
 	public function getFilterId(): int
 		{ return $this->_filterId; }
 
@@ -192,7 +192,7 @@ class DataListView
 	public function setPictureTypes(array $pictureTypes)
 		{ $this->_pictureTypes = $pictureTypes; }
 
-	/** @param string $filterId */
+	/** @param int $filterId */
 	public function setFilterId(int $filterId)
 		{ $this->_filterId = $filterId; }
 

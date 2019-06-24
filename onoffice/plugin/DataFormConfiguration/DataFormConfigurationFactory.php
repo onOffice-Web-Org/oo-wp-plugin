@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -28,9 +28,6 @@ use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -201,7 +198,7 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param array $row
-	 * @param DataFormConfiguration $pFormConfiguration
+	 * @param DataFormConfiguration\DataFormConfiguration $pFormConfiguration
 	 *
 	 */
 
@@ -267,7 +264,7 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param array $row
-	 * @param DataFormConfiguration $pConfig
+	 * @param DataFormConfigurationContact $pConfig
 	 *
 	 */
 
@@ -285,7 +282,7 @@ class DataFormConfigurationFactory
 	/**
 	 *
 	 * @param array $row
-	 * @param DataFormConfiguration $pConfig
+	 * @param DataFormConfiguration\DataFormConfiguration $pConfig
 	 *
 	 */
 

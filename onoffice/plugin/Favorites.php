@@ -83,7 +83,7 @@ class Favorites
 
 	/**
 	 *
-	 * @return int value of KEY_SETTING_* constant
+	 * @return string|null
 	 *
 	 */
 
@@ -99,6 +99,8 @@ class Favorites
 				return 'Favorites';
 			case self::KEY_SETTING_MEMORIZE:
 				return 'Watchlist';
+			default:
+				return null;
 		}
 	}
 

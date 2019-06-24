@@ -149,7 +149,7 @@ class EstateUnits
 		$pEstateList = $this->_pEstateUnitsConfiguration->getEstateList();
 		$pDefaultFilterBuilder = new DefaultFilterBuilderPresetEstateIds($units);
 		$pEstateList->setDefaultFilterBuilder($pDefaultFilterBuilder);
-		$pEstateList->loadEstates(1);
+		$pEstateList->loadEstates();
 
 		$templateName = $pDataView->getTemplate();
 		$pTemplate = $this->_pEstateUnitsConfiguration->getTemplate($templateName);

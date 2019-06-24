@@ -58,7 +58,6 @@ class EstateUnitsConfigurationTest
 
 	/**
 	 *
-	 * @param DataView $pDataView
 	 * @return EstateListMocker
 	 *
 	 */

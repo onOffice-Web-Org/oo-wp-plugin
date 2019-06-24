@@ -38,7 +38,7 @@ class DetailViewPostSaveController
 	/**
 	 *
 	 * @param int $postId
-	 * @return null
+	 * @return void
 	 *
 	 */
 

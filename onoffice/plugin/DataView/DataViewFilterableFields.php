@@ -68,4 +68,13 @@ interface DataViewFilterableFields
 	 */
 
 	public function getHiddenFields(): array;
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getTemplate(): string;
 }
