@@ -19,13 +19,6 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
- *
- */
-
 namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
@@ -52,12 +45,6 @@ class Fieldnames
 	/** @var array */
 	private $_fieldList = [];
 
-	/** @var array */
-	private $_searchcriteriaRangeInfos = [];
-
-	/** @var array */
-	private $_umkreisFields = [];
-
 	/** @var bool */
 	private $_inactiveOnly = false;
 
@@ -69,6 +56,7 @@ class Fieldnames
 	 *
 	 * @param FieldModuleCollection $pExtraFieldsCollection
 	 * @param bool $inactiveOnly
+	 * @param FieldnamesEnvironment $pEnvironment
 	 *
 	 */
 
@@ -174,14 +162,6 @@ class Fieldnames
 					'tablename' => 'ObjSuchkriterien',
 				];
 
-				if (($field['rangefield'] ?? false) && isset($field['additionalTranslations'])) {
-					$this->_searchcriteriaRangeInfos[$fieldId] = $field['additionalTranslations'];
-				}
-
-				if ($fields['name'] == 'Umkreis') {
-					$this->_umkreisFields[$fieldId] = $fieldProperties;
-				}
-
 				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldId] = $fieldProperties;
 			}
 		}
@@ -199,56 +179,6 @@ class Fieldnames
 		foreach ($newFieldsByModule as $module => $newFields) {
 			$this->_fieldList[$module] = array_merge($this->_fieldList[$module] ?? [], $newFields);
 		}
-	}
-
-
-	/**
-	 *
-	 * @param string $field
-	 * @return bool
-	 *
-	 */
-
-	public function inRangeSearchcriteriaInfos(string $field): bool
-	{
-		return isset($this->_searchcriteriaRangeInfos[$field]);
-	}
-
-
-	/**
-	 *
-	 * @param string $field
-	 * @return array
-	 *
-	 */
-
-	public function getRangeSearchcriteriaInfosForField(string $field): array
-	{
-		return $this->_searchcriteriaRangeInfos[$field] ?? [];
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getUmkreisFields(): array
-	{
-		return $this->_umkreisFields;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getSearchcriteriaRangeInfos(): array
-	{
-		return $this->_searchcriteriaRangeInfos;
 	}
 
 

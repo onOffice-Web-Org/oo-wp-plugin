@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2016-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -572,24 +572,6 @@ class Form
 		$this->_genericSettings[$settingName] = $value;
 	}
 
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	static public function getFormTypesLabeled()
-	{
-		$formTypes = array(
-			self::TYPE_CONTACT => 'Contact Form',
-			self::TYPE_APPLICANT_SEARCH => 'Applicant Search',
-			self::TYPE_INTEREST => 'Applicant Form with Search Criteria',
-			self::TYPE_OWNER => 'Owner\'s Form',
-		);
-
-		return $formTypes;
-	}
 
 	/** @return array */
 	public function getResponseFieldsValues()

@@ -287,58 +287,6 @@ class TestClassFieldnames
 	 *
 	 */
 
-	public function testGetRangeSearchcriteriaInfosForField()
-	{
-		$pFieldnames = $this->getNewFieldnames();
-		$pFieldnames->loadLanguage();
-
-		$kaufpreisRangeExpectation = [
-			'kaufpreis__von' => 'min. Sales price',
-			'kaufpreis__bis' => 'max. Sales price',
-		];
-
-		$kaufpreisRangeResult = $pFieldnames->getRangeSearchcriteriaInfosForField('kaufpreis');
-		$this->assertEquals($kaufpreisRangeExpectation, $kaufpreisRangeResult);
-		$this->assertEquals([], $pFieldnames->getRangeSearchcriteriaInfosForField('Vorname'));
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testGetSearchcriteriaRangeInfos()
-	{
-		$pFieldnames = $this->getNewFieldnames();
-		$pFieldnames->loadLanguage();
-
-		$expectation = [
-			'kaufpreis' => [
-				'kaufpreis__von' => 'min. Sales price',
-				'kaufpreis__bis' => 'max. Sales price',
-			],
-			'kaltmiete' => [
-				'kaltmiete__von' => 'Kaltmiete von',
-				'kaltmiete__bis' => 'Kaltmiete bis',
-			],
-			'ust_satz_bk' => [
-				'ust_satz_bk__von' => 'Ust. -Satz BK von',
-				'ust_satz_bk__bis' => 'Ust. -Satz BK bis',
-			],
-			'wohnflaeche' => [
-				'wohnflaeche__von' => 'Living space from',
-				'wohnflaeche__bis' => 'Living space (max)',
-			],
-		];
-
-		$this->assertEquals($expectation, $pFieldnames->getSearchcriteriaRangeInfos());
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testGetType()
 	{
 		$pFieldnamesDefault = $this->getNewFieldnames(new FieldsCollection());
@@ -366,40 +314,6 @@ class TestClassFieldnames
 		$pFieldnames = $this->getNewFieldnames();
 		$pFieldnames->loadLanguage();
 		$pFieldnames->getType('Unknown', onOfficeSDK::MODULE_ADDRESS);
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testGetUmkreisFields()
-	{
-		$pFieldnames = $this->getNewFieldnames();
-		$pFieldnames->loadLanguage();
-		$rangeFields = $pFieldnames->getUmkreisFields();
-		$this->assertArrayHasKey('range_plz', $rangeFields);
-		$this->assertArrayHasKey('range_ort', $rangeFields);
-		$this->assertArrayHasKey('range_strasse', $rangeFields);
-		$this->assertArrayHasKey('range_hausnummer', $rangeFields);
-		$this->assertArrayHasKey('range', $rangeFields);
-		$this->assertArrayHasKey('range_land', $rangeFields);
-		$this->checkFieldListStructure($rangeFields, onOfficeSDK::MODULE_SEARCHCRITERIA);
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testInRangeSearchcriteriaInfos()
-	{
-		$pFieldnames = $this->getNewFieldnames();
-		$pFieldnames->loadLanguage();
-		$this->assertTrue($pFieldnames->inRangeSearchcriteriaInfos('kaufpreis'));
-		$this->assertTrue($pFieldnames->inRangeSearchcriteriaInfos('wohnflaeche'));
-		$this->assertFalse($pFieldnames->inRangeSearchcriteriaInfos('Id'));
-		$this->assertFalse($pFieldnames->inRangeSearchcriteriaInfos('ort'));
 	}
 
 
