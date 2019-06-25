@@ -25,15 +25,22 @@ namespace onOffice\tests;
 
 use DI\Container;
 use Generator;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\Collection\FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo;
 use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
 use onOffice\WPlugin\Field\Collection\FieldLoaderSearchCriteria;
 use onOffice\WPlugin\Field\Collection\FieldRowConverterSearchCriteria;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
+use function json_decode;
 
 
 /**
+ *
+ * @covers onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort::<private>
+ * @covers onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort::__construct
  *
  */
 
@@ -96,13 +103,24 @@ class TestClassFieldsCollectionBuilderShort
 		}));
 
 		$pFieldLoaderSearchCriteria = $this->getMockBuilder(FieldLoaderSearchCriteria::class)
-			->setConstructorArgs([new SDKWrapperMocker(), new FieldRowConverterSearchCriteria()])
+			->setConstructorArgs([
+					new SDKWrapper(),
+					new FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo(new FieldRowConverterSearchCriteria()),
+				])
 			->setMethods(['load'])
 			->getMock();
 		$pFieldLoaderSearchCriteria->method('load')->will($this->returnCallback(function(): Generator {
 			yield from $this->_exampleRowsByModule['searchcriteria'];
 		}));
 
+		$pSDKWrapper = new SDKWrapperMocker();
+		$searchCriteriaFieldsParameters = ['language' => 'ENG', 'additionalTranslations' => true];
+		$responseGetSearchcriteriaFields = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json'), true);
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '',
+			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);
+
+		$pContainer->set(SDKWrapper::class, $pSDKWrapper);
 		$pContainer->set(FieldLoaderGeneric::class, $pFieldLoaderGeneric);
 		$pContainer->set(FieldLoaderSearchCriteria::class, $pFieldLoaderSearchCriteria);
 		$this->_pSubject = new FieldsCollectionBuilderShort($pContainer);
@@ -110,6 +128,8 @@ class TestClassFieldsCollectionBuilderShort
 
 
 	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort::addFieldsAddressEstate
 	 *
 	 */
 
@@ -125,17 +145,21 @@ class TestClassFieldsCollectionBuilderShort
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort::addFieldsSearchCriteria
+	 *
 	 */
 
 	public function testAddFieldsSearchCriteria()
 	{
 		$pFieldsCollection = new FieldsCollection();
 		$this->assertSame($this->_pSubject, $this->_pSubject->addFieldsSearchCriteria($pFieldsCollection));
-		$this->assertCount(1, $pFieldsCollection->getAllFields());
+		$this->assertCount(11, $pFieldsCollection->getAllFields());
 	}
 
 
 	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort::addFieldsFormBackend
 	 *
 	 */
 
@@ -149,17 +173,21 @@ class TestClassFieldsCollectionBuilderShort
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort::addFieldsFormFrontend
+	 *
 	 */
 
 	public function testAddFieldsFormFrontend()
 	{
 		$pFieldsCollection = new FieldsCollection();
 		$this->assertSame($this->_pSubject, $this->_pSubject->addFieldsFormFrontend($pFieldsCollection));
-		$this->assertCount(13, $pFieldsCollection->getAllFields());
+		$this->assertCount(9, $pFieldsCollection->getAllFields());
 	}
 
 
 	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort::addFieldsSearchCriteriaSpecificBackend
 	 *
 	 */
 
@@ -187,6 +215,6 @@ class TestClassFieldsCollectionBuilderShort
 			->addFieldsFormFrontend($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsSearchCriteriaSpecificBackend($pFieldsCollection);
-		$this->assertCount(22, $pFieldsCollection->getAllFields());
+		$this->assertCount(28, $pFieldsCollection->getAllFields());
 	}
 }

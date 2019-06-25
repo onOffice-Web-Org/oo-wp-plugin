@@ -26,11 +26,8 @@ namespace onOffice\WPlugin\Field\Collection;
 use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
-use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Types\FieldTypes;
-use function __;
 
 
 /**
@@ -43,23 +40,23 @@ class FieldLoaderSearchCriteria
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
-	/** @var FieldRowConverterSearchCriteria */
-	private $_pRowConverter = null;
+	/** @var FieldCategoryToFieldConverter */
+	private $_pCategoryConverter = null;
 
 
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
-	 * @param FieldRowConverterSearchCriteria $pFieldRowConverter
+	 * @param FieldCategoryToFieldConverter $pFieldCategoryConverter
 	 *
 	 */
 
 	public function __construct(
 		SDKWrapper $pSDKWrapper,
-		FieldRowConverterSearchCriteria $pFieldRowConverter)
+		FieldCategoryToFieldConverter $pFieldCategoryConverter)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
-		$this->_pRowConverter = $pFieldRowConverter;
+		$this->_pCategoryConverter = $pFieldCategoryConverter;
 	}
 
 
@@ -80,34 +77,10 @@ class FieldLoaderSearchCriteria
 		$pApiClientActionSearchCriteriaFields->addRequestToQueue()->sendRequests();
 
 		$result = $pApiClientActionSearchCriteriaFields->getResultRecords();
-		$fields = array_column($result, 'elements');
+		$responseElements = array_column($result, 'elements');
 
-		foreach ($fields as $category) {
-			if ($category['name'] === 'Umkreis') {
-				yield GeoPosition::FIELD_GEO_POSITION => $this->buildGeoPositionField();
-				continue;
-			}
-
-			foreach ($category['fields'] as $row) {
-				$rowConverted = $this->_pRowConverter->convertRow($row);
-				yield $rowConverted['id'] => $rowConverted;
-			}
+		foreach ($responseElements as $category) {
+			yield from $this->_pCategoryConverter->convertCategory($category);
 		}
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function buildGeoPositionField(): array
-	{
-		$field = [
-			'name' => __('Geo Position', 'onoffice'),
-			'type' => FieldTypes::FIELD_TYPE_FLOAT,
-		];
-		return $this->_pRowConverter->convertRow($field);
 	}
 }

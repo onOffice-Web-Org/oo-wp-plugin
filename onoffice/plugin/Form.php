@@ -337,7 +337,8 @@ class Form
 			->getFieldsByModule(onOfficeSDK::MODULE_SEARCHCRITERIA);
 
 		foreach ($searchCriteriaFields as $pField) {
-			if ($pField->isRangeField()) {
+			/* @var $pField Field */
+			if ($pField->getIsRangeField()) {
 				$result[$pField->getName()] = $pField->getAsRow();
 			}
 		}
@@ -359,8 +360,9 @@ class Form
 		$module = $this->getModuleOfField($field);
 
 		if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA) {
-			$pField = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field);
-			$returnValues = $pField->getRangeFieldTranslations();
+			$returnValues = $this->_pFieldsCollection
+				->getFieldByModuleAndName($module, $field)
+				->getRangeFieldTranslations();
 		}
 
 		return $returnValues;

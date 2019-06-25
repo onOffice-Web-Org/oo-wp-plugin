@@ -66,7 +66,7 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionFrontend
 	public function testGetAllFields()
 	{
 		$allFields = $this->_pSubject->getAllFields();
-		$this->assertCount(11, $allFields);
+		$this->assertCount(6, $allFields);
 
 		foreach ($allFields as $pField) {
 			$this->assertInstanceOf(Field::class, $pField);

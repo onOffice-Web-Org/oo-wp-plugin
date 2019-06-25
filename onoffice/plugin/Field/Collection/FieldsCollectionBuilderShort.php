@@ -25,8 +25,6 @@ namespace onOffice\WPlugin\Field\Collection;
 
 use DI\Container;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -81,9 +79,8 @@ class FieldsCollectionBuilderShort
 
 	public function addFieldsSearchCriteria(FieldsCollection $pFieldsCollection): self
 	{
-		$pFieldLoader = $this->_pContainer->get(FieldLoaderSearchCriteria::class);
-		$pFieldsCollectionSearchCriteria = $this->_pContainer->get(FieldsCollectionBuilder::class)
-			->buildFieldsCollection($pFieldLoader);
+		$pFieldLoaderNoGeo = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo::class);
+		$pFieldsCollectionSearchCriteria = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldLoaderNoGeo);
 		$pFieldsCollection->merge($pFieldsCollectionSearchCriteria);
 		return $this;
 	}
@@ -100,9 +97,11 @@ class FieldsCollectionBuilderShort
 	{
 		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorInternalAnnotations
 			(new FieldModuleCollectionDecoratorSearchcriteria
-				(new FieldModuleCollectionDecoratorFormContact
-					(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection))));
+				(new FieldModuleCollectionDecoratorFormContact(new FieldsCollection)));
 		$pFieldsCollection->merge($pFieldsCollectionTmp);
+		$pFieldCategoryConverterGeoPos = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoBackend::class);
+		$pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
+		$pFieldsCollection->merge($pFieldsCollectionGeo);
 		return $this;
 	}
 
@@ -117,10 +116,27 @@ class FieldsCollectionBuilderShort
 	public function addFieldsFormFrontend(FieldsCollection $pFieldsCollection): self
 	{
 		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorFormContact
-			(new FieldModuleCollectionDecoratorSearchcriteria
-				(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection)));
+			(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection));
 		$pFieldsCollection->merge($pFieldsCollectionTmp);
+		$pFieldCategoryConverterGeoPos = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoFrontend::class);
+		$pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
+		$pFieldsCollection->merge($pFieldsCollectionGeo);
 		return $this;
+	}
+
+
+	/**
+	 *
+	 * @param FieldCategoryToFieldConverter $pConverter
+	 * @return FieldsCollection
+	 *
+	 */
+
+	private function buildSearchcriteriaFieldsCollectionByFieldLoader(FieldCategoryToFieldConverter $pConverter): FieldsCollection
+	{
+		$pFieldLoader = $this->_pContainer->make(FieldLoaderSearchCriteria::class, ['pFieldCategoryConverter' => $pConverter]);
+		return $this->_pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
 	}
 
 
@@ -133,10 +149,13 @@ class FieldsCollectionBuilderShort
 
 	public function addFieldsSearchCriteriaSpecificBackend(FieldsCollection $pFieldsCollection): self
 	{
-		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorGeoPositionBackend
-				(new FieldModuleCollectionDecoratorInternalAnnotations
-					(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection)));
+		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorInternalAnnotations
+			(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection));
 		$pFieldsCollection->merge($pFieldsCollectionTmp, __('Form Specific Fields', 'onoffice'));
+		$pFieldCategoryConverterGeoPos = $this->_pContainer->get
+			(FieldCategoryToFieldConverterSearchCriteriaGeoBackend::class);
+		$pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
+		$pFieldsCollection->merge($pFieldsCollectionGeo);
 		return $this;
 	}
 }
