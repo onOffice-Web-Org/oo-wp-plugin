@@ -83,48 +83,6 @@ class FieldModuleCollectionDecoratorGeoPositionFrontend
 				'module' => onOfficeSDK::MODULE_ESTATE,
 			],
 		],
-		onOfficeSDK::MODULE_SEARCHCRITERIA => [
-			'range_land' => [
-				'type' => FieldTypes::FIELD_TYPE_SINGLESELECT,
-				'length' => 250,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Country',
-				'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
-			],
-			'range' => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 5,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Radius (km)',
-				'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
-			],
-			'range_strasse' => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Street',
-				'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
-			],
-			'range_plz' => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 10,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Postal Code',
-				'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
-			],
-			'range_ort' => [
-				'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-				'length' => 250,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'City',
-				'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
-			],
-		],
 	];
 
 
