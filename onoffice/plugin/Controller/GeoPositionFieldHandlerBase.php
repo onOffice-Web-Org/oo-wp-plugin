@@ -48,4 +48,12 @@ interface GeoPositionFieldHandlerBase
 	 */
 
 	public function getActiveFieldsWithValue(): array;
+
+
+	/**
+	 *
+	 */
+
+	public function readValues(ViewProperty $pViewProperty);
+
 }

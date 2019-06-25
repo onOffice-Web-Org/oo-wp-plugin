@@ -112,7 +112,7 @@ class DistinctFieldsHandler
 	}
 
 
-	/** @return string */
+	/** @return array */
 	public function getDistinctFields(): array
 		{ return $this->_distinctFields; }
 
@@ -128,7 +128,7 @@ class DistinctFieldsHandler
 	}
 
 
-	/** @return string */
+	/** @return array */
 	public function getInputValues(): array
 		{ return $this->_inputValues; }
 

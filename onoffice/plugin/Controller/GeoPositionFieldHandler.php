@@ -51,9 +51,7 @@ class GeoPositionFieldHandler
 
 	/**
 	 *
-	 * @param int $listviewId
 	 * @param RecordManagerFactory $pRecordManagerFactory
-	 * @param InputModelDBFactoryConfigGeoFields $pInputModelDBFactoryConfigGeoFields
 	 *
 	 */
 

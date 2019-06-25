@@ -59,6 +59,6 @@ class GeoPositionFieldHandlerEmpty
 	 *
 	 */
 
-	public function readValues()
+	public function readValues(ViewProperty $pViewProperty)
 		{}
 }

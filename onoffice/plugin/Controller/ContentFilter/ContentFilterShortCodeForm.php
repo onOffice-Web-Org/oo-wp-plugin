@@ -65,6 +65,7 @@ class ContentFilterShortCodeForm
 	 * @param DataFormConfigurationFactory $pDataFormConfigurationFactory
 	 * @param Logger $pLogger
 	 * @param DistinctFieldsChecker $pDistinctFieldsChecker
+	 * @param FormBuilder $pFormBuilder
 	 *
 	 */
 

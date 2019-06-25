@@ -19,9 +19,12 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Controller\GeoPositionFieldHandlerEmpty;
+use onOffice\WPlugin\Controller\ViewProperty;
 use WP_UnitTestCase;
 
 
@@ -47,8 +50,10 @@ class TestClassGeoPositionFieldHandlerEmpty
 
 	public function prepare()
 	{
+		$pViewProperty = $this->getMockBuilder(ViewProperty::class)
+			->getMock();
 		$this->_pGeoPositionFieldHandlerEmpty = new GeoPositionFieldHandlerEmpty();
-		$this->_pGeoPositionFieldHandlerEmpty->readValues();
+		$this->_pGeoPositionFieldHandlerEmpty->readValues($pViewProperty);
 	}
 
 
