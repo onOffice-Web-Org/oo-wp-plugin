@@ -28,7 +28,6 @@ use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -267,11 +266,21 @@ class TestClassFieldnames
 		$pFieldNames = $this->getNewFieldnames($pCollection);
 		$pFieldNames->loadLanguage();
 		$expectedResult = [
-			'AUT' => 'Austria',
-			'BEL' => 'Belgium',
-			'DEU' => 'Germany',
+			'label' => 'Country',
+			'type' => 'singleselect',
+			'default' => null,
+			'length' => 250,
+			'permittedvalues' => [
+				'AUT' => 'Austria',
+				'BEL' => 'Belgium',
+				'DEU' => 'Germany',
+			],
+			'content' => 'Form Specific Fields',
+			'module' => 'estate',
+			'rangefield' => false,
+			'additionalTranslations' => [],
 		];
-		$actualResult = $pFieldNames->getPermittedValues('country', onOfficeSDK::MODULE_ESTATE);
+		$actualResult = $pFieldNames->getFieldInformation('country', onOfficeSDK::MODULE_ESTATE);
 		$this->assertEquals($expectedResult, $actualResult);
 	}
 
