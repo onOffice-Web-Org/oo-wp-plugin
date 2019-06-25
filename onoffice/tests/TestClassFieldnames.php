@@ -227,66 +227,6 @@ class TestClassFieldnames
 	 *
 	 */
 
-	public function testGetModuleContainsField()
-	{
-		$pFieldnames = $this->getNewFieldnames();
-		$pFieldnames->loadLanguage();
-		$moduleEstate = onOfficeSDK::MODULE_ESTATE;
-		$moduleAddress = onOfficeSDK::MODULE_ADDRESS;
-		$moduleSearchCriteria = onOfficeSDK::MODULE_SEARCHCRITERIA;
-		$this->assertTrue($pFieldnames->getModuleContainsField('kaufpreis', $moduleEstate));
-		$this->assertTrue($pFieldnames->getModuleContainsField('kaufpreis', $moduleSearchCriteria));
-		$this->assertFalse($pFieldnames->getModuleContainsField('kaufpreis__von', $moduleSearchCriteria));
-		$this->assertTrue($pFieldnames->getModuleContainsField('Vorname', $moduleAddress));
-		$this->assertTrue($pFieldnames->getModuleContainsField('Beziehung', $moduleAddress));
-		$this->assertTrue($pFieldnames->getModuleContainsField('range_ort', $moduleSearchCriteria));
-		$this->assertTrue($pFieldnames->getModuleContainsField('range', $moduleSearchCriteria));
-
-		$this->assertFalse($pFieldnames->getModuleContainsField('newsletter', $moduleAddress));
-		$this->assertFalse($pFieldnames->getModuleContainsField('defaultphone', $moduleAddress));
-
-		$pFieldsCollection = new FieldModuleCollectionDecoratorReadAddress
-			(new FieldModuleCollectionDecoratorFormContact(new FieldsCollection()));
-
-		$pFieldnamesWithApiOnly = $this->getNewFieldnames($pFieldsCollection);
-		$pFieldnamesWithApiOnly->loadLanguage();
-		$this->assertTrue($pFieldnamesWithApiOnly->getModuleContainsField('newsletter', $moduleAddress));
-		$this->assertTrue($pFieldnamesWithApiOnly->getModuleContainsField('defaultphone', $moduleAddress));
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testGetPermittedValues()
-	{
-		$pFieldnames = $this->getNewFieldnames();
-		$pFieldnames->loadLanguage();
-		$resultBefeuerung = $pFieldnames->getPermittedValues('befeuerung', onOfficeSDK::MODULE_ESTATE);
-
-		$expectationBefeuerung = [
-			'luftwp' => 'air/water heat pump',
-			'pellet' => 'Pellet',
-			'oel' => 'Oil',
-			'gas' => 'Gas',
-			'elektro' => 'Electrical',
-			'alternativ' => 'Alternative',
-			'solar' => 'Solar',
-			'erdwaerme' => 'Geothermal',
-		];
-
-		$this->assertEquals($expectationBefeuerung, $resultBefeuerung);
-
-		$resultNoSelect = $pFieldnames->getPermittedValues('Vorname', onOfficeSDK::MODULE_ADDRESS);
-		$this->assertEquals([], $resultNoSelect);
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testGetType()
 	{
 		$pFieldnamesDefault = $this->getNewFieldnames(new FieldsCollection());

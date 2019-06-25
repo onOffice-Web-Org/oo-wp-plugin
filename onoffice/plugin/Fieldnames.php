@@ -210,23 +210,8 @@ class Fieldnames
 
 	/**
 	 *
-	 * @param string $fieldname
-	 * @param string $module
-	 * @return bool
-	 *
-	 */
-
-	public function getModuleContainsField(string $fieldname, $module): bool
-	{
-		return isset($this->_fieldList[$module][$fieldname]);
-	}
-
-
-	/**
-	 *
 	 * @param string $field
 	 * @param string $module recordType
-	 *
 	 * @return string
 	 *
 	 */
@@ -292,21 +277,6 @@ class Fieldnames
 	{
 		$row = $this->getRow($module, $fieldName);
 		return $row['type'];
-	}
-
-
-	/**
-	 *
-	 * @param string $inputField
-	 * @param string $module
-	 * @return array
-	 *
-	 */
-
-	public function getPermittedValues(string $inputField, string $module): array
-	{
-		$row = $this->getRow($module, $inputField);
-		return $row['permittedvalues'] ?? [];
 	}
 
 
