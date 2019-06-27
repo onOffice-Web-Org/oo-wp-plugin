@@ -25,6 +25,16 @@ namespace onOffice;
 
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
+use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
+use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
+use onOffice\WPlugin\Form\FormPostConfiguration;
+use onOffice\WPlugin\Form\FormPostConfigurationDefault;
+use onOffice\WPlugin\Form\FormPostContactConfiguration;
+use onOffice\WPlugin\Form\FormPostContactConfigurationDefault;
+use onOffice\WPlugin\Form\FormPostInterestConfiguration;
+use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
+use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
+use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
 use function DI\autowire;
@@ -34,6 +44,10 @@ return [
 	Template::class => autowire()
 		->constructorParameter('templateName', '')
 		->method('setImpressum', get(Impressum::class)),
-	ContentFilterShortCodeAddressEnvironment::class =>
-		autowire(ContentFilterShortCodeAddressEnvironmentDefault::class),
+	ContentFilterShortCodeAddressEnvironment::class => autowire(ContentFilterShortCodeAddressEnvironmentDefault::class),
+	FormPostConfiguration::class => autowire(FormPostConfigurationDefault::class),
+	FormPostOwnerConfiguration::class => autowire(FormPostOwnerConfigurationDefault::class),
+	FormPostContactConfiguration::class => autowire(FormPostContactConfigurationDefault::class),
+	FormPostInterestConfiguration::class => autowire(FormPostInterestConfigurationDefault::class),
+	FormPostApplicantSearchConfiguration::class => autowire(FormPostApplicantSearchConfigurationDefault::class),
 ];
