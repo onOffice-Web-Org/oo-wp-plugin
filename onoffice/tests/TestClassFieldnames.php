@@ -50,9 +50,11 @@ class TestClassFieldnames
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
 		$this->_pFieldnamesEnvironment = new FieldnamesEnvironmentTest();
 		$fieldParameters = [
@@ -68,14 +70,6 @@ class TestClassFieldnames
 		/* @var $pSDKWrapperMocker SDKWrapperMocker */
 		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
 			$fieldParameters, null, $responseGetFields);
-
-		$searchCriteriaFieldsParameters = ['language' => 'ENG', 'additionalTranslations' => true];
-		$responseGetSearchcriteriaFields = json_decode
-			(file_get_contents(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json'), true);
-		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '',
-			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);
-
-		parent::setUp();
 	}
 
 
@@ -203,9 +197,6 @@ class TestClassFieldnames
 
 		$labelFirstname = $pFieldnames->getFieldLabel('Vorname', onOfficeSDK::MODULE_ADDRESS);
 		$this->assertEquals('First name', $labelFirstname);
-
-		$labelRegion = $pFieldnames->getFieldLabel('regionaler_zusatz', onOfficeSDK::MODULE_SEARCHCRITERIA);
-		$this->assertEquals('Regional addition', $labelRegion);
 	}
 
 
@@ -296,7 +287,6 @@ class TestClassFieldnames
 		return [
 			onOfficeSDK::MODULE_ADDRESS,
 			onOfficeSDK::MODULE_ESTATE,
-			onOfficeSDK::MODULE_SEARCHCRITERIA,
 		];
 	}
 

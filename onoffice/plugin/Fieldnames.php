@@ -95,19 +95,9 @@ class Fieldnames
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
 		$pApiClientActionFields->setParameters($parametersGetFieldList);
 		$pApiClientActionFields->addRequestToQueue();
-
-		$pApiClientActionSearchCriteriaFields = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields');
-		$pApiClientActionSearchCriteriaFields->setParameters([
-			'language' => $this->_pEnvironment->getLanguage(),
-			'additionalTranslations' => true,
-		]);
-		$pApiClientActionSearchCriteriaFields->addRequestToQueue();
-
 		$pSDKWrapper->sendRequests();
 
 		$this->createFieldList($pApiClientActionFields);
-		$this->completeFieldListWithSearchcriteria($pApiClientActionSearchCriteriaFields);
 		$this->setPermittedValuesForEstateSearchFields();
 		$this->mergeFieldLists();
 	}
@@ -132,39 +122,6 @@ class Fieldnames
 
 			$pField->setPermittedvalues($countryField['permittedvalues'] ?? []);
 		} catch (UnknownFieldException $pException) {}
-	}
-
-
-	/**
-	 *
-	 * @param APIClientActionGeneric $pApiClientAction
-	 *
-	 */
-
-	private function completeFieldListWithSearchcriteria(APIClientActionGeneric $pApiClientAction)
-	{
-		$response = $pApiClientAction->getResultRecords();
-
-		foreach ($response as $tableValues) {
-			$fields = $tableValues['elements'];
-
-			foreach ($fields['fields'] as $field) {
-				$fieldId = $field['id'];
-
-				$fieldProperties = [
-					'type' => $field['type'],
-					'label' => $field['name'],
-					'length' => null,
-					'default' => $field['default'] ?? null,
-					'permittedvalues' => $field['values'] ?? [],
-					'content' => __('Search Criteria', 'onoffice'),
-					'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
-					'tablename' => 'ObjSuchkriterien',
-				];
-
-				$this->_fieldList[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldId] = $fieldProperties;
-			}
-		}
 	}
 
 
