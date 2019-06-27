@@ -23,12 +23,14 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationTest;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostApplicantSearch;
@@ -47,9 +49,6 @@ use function json_decode;
 class TestClassFormPostApplicantSearch
 	extends WP_UnitTestCase
 {
-	/** @var FormPostApplicantSearchConfigurationTest */
-	private $_pTestConfigurationApplicantSearch = null;
-
 	/** @var FormPostConfigurationTest */
 	private $_pFormPostConfigurationTest = null;
 
@@ -84,11 +83,14 @@ class TestClassFormPostApplicantSearch
 
 		$this->setupDataFormConfiguration();
 
-		$this->_pTestConfigurationApplicantSearch = new FormPostApplicantSearchConfigurationTest();
-		$this->_pTestConfigurationApplicantSearch->setSDKWrapper($pSDKWrapperMocker);
+		$pSearchcriteriaFields = $this->getMockBuilder(SearchcriteriaFields::class)
+			->setConstructorArgs([new FieldsCollectionBuilderShort(new Container)])
+			->setMethods(['getFormFields'])
+			->getMock();
+		$pSearchcriteriaFields->method('getFormFields')->with($this->anything())->will($this->returnArgument(0));
 
 		$this->_pFormPostApplicantSearch = new FormPostApplicantSearch($this->_pFormPostConfigurationTest,
-			$this->_pTestConfigurationApplicantSearch);
+			$pSDKWrapperMocker, $pSearchcriteriaFields);
 	}
 
 

@@ -87,13 +87,11 @@ class SearchcriteriaFields
 		$newFormFields = $this->generateFieldModuleArray($pFieldsCollection, $inputFormFields);
 		$fieldList = $pFieldsCollection->getFieldsByModule(onOfficeSDK::MODULE_SEARCHCRITERIA);
 
-		if (true) {
-			foreach ($fieldList as $name => $pField) {
-				if (FieldTypes::isRangeType($pField->getType())) {
-					unset($newFormFields[$name]);
-					$newFormFields[$name.self::RANGE_FROM] = onOfficeSDK::MODULE_SEARCHCRITERIA;
-					$newFormFields[$name.self::RANGE_UPTO] = onOfficeSDK::MODULE_SEARCHCRITERIA;
-				}
+		foreach ($fieldList as $name => $pField) {
+			if (FieldTypes::isRangeType($pField->getType())) {
+				unset($newFormFields[$name]);
+				$newFormFields[$name.self::RANGE_FROM] = onOfficeSDK::MODULE_SEARCHCRITERIA;
+				$newFormFields[$name.self::RANGE_UPTO] = onOfficeSDK::MODULE_SEARCHCRITERIA;
 			}
 		}
 

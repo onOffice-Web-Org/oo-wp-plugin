@@ -25,7 +25,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
-use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
@@ -47,21 +47,28 @@ class FormPostApplicantSearch
 	/** */
 	const LIMIT_RESULTS = 100;
 
-	/** @var FormPostApplicantSearchConfiguration */
-	private $_pFormPostApplicantSearchConfiguration = null;
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
+
+	/** @var SearchcriteriaFields */
+	private $_pSearchcriteriaFields = null;
 
 
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
-	 * @param FormPostApplicantSearchConfiguration $pFormPostApplicantSearchConfiguration
+	 * @param SDKWrapper $pSDKWrapper
+	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 *
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration,
-		FormPostApplicantSearchConfiguration $pFormPostApplicantSearchConfiguration)
+	public function __construct(
+		FormPostConfiguration $pFormPostConfiguration,
+		SDKWrapper $pSDKWrapper,
+		SearchcriteriaFields $pSearchcriteriaFields)
 	{
-		$this->_pFormPostApplicantSearchConfiguration = $pFormPostApplicantSearchConfiguration;
+		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
 
 		parent::__construct($pFormPostConfiguration);
 	}
@@ -98,7 +105,7 @@ class FormPostApplicantSearch
 	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
 	{
 		$formFields = parent::getAllowedPostVars($pFormConfig);
-		return $this->getFormFieldsConsiderSearchcriteria($formFields, false);
+		return $this->_pSearchcriteriaFields->getFormFields($formFields);
 	}
 
 
@@ -120,8 +127,7 @@ class FormPostApplicantSearch
 			'offset' => 0,
 		];
 
-		$pSDKWrapper = $this->_pFormPostApplicantSearchConfiguration->getSDKWrapper();
-		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'search');
+		$pApiClientAction = new APIClientActionGeneric($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'search');
 		$pApiClientAction->setResourceId('searchcriteria');
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
@@ -167,8 +173,8 @@ class FormPostApplicantSearch
 			}
 
 			if ($this->isSearchcriteriaRangeField($key)) {
-				$vonValue = $elements[$origName.self::RANGE_VON] ?? 0;
-				$bisValue = $elements[$origName.self::RANGE_BIS] ?? 0;
+				$vonValue = $elements[$origName.SearchcriteriaFields::RANGE_FROM] ?? 0;
+				$bisValue = $elements[$origName.SearchcriteriaFields::RANGE_UPTO] ?? 0;
 
 				$searchParameters[$origName] = [$vonValue, $bisValue];
 			} else {
@@ -190,9 +196,8 @@ class FormPostApplicantSearch
 	private function setKdNr(array $applicants): array
 	{
 		$adressIds = array_keys($applicants);
-		$pSDKWrapper = $this->_pFormPostApplicantSearchConfiguration->getSDKWrapper();
-
-		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'address');
 		$pApiClientAction->setParameters([
 			'recordids' => $adressIds,
 			'data' => ['KdNr'],
