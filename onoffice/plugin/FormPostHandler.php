@@ -20,10 +20,12 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormPost;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 
 /**
@@ -42,7 +44,7 @@ class FormPostHandler
 
 
 	/** @var array */
-	static private $_instances = array();
+	static private $_instances = [];
 
 
 	/**
@@ -57,8 +59,11 @@ class FormPostHandler
 			throw new UnknownFormException($type);
 		}
 
-		if (!array_key_exists($type, self::$_instances)) {
-			self::create($type);
+		if (!isset(self::$_instances[$type])) {
+			$pDIBuilder = new ContainerBuilder();
+			$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			$pDI = $pDIBuilder->build();
+			self::$_instances[$type] = $pDI->make(self::$_formPostClassesByType[$type]);
 		}
 
 		return self::$_instances[$type];
@@ -81,23 +86,6 @@ class FormPostHandler
 
 			$pFormPostInstance = self::getInstance($formType);
 			$pFormPostInstance->initialCheck($pFormConfig, $formNo);
-		}
-	}
-
-
-	/**
-	 *
-	 * @param string $formType
-	 *
-	 */
-
-	static private function create($formType)
-	{
-		if (isset(self::$_formPostClassesByType[$formType])) {
-			$class = self::$_formPostClassesByType[$formType];
-			self::$_instances[$formType] = new $class;
-		} else {
-			throw new \Exception('Unknown Form Type');
 		}
 	}
 }
