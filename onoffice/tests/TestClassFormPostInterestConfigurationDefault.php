@@ -23,6 +23,9 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
@@ -46,7 +49,9 @@ class TestClassFormPostInterestConfigurationDefault
 
 	public function prepare()
 	{
-		$this->_pSubject = new FormPostInterestConfigurationDefault();
+		$this->_pSubject = new FormPostInterestConfigurationDefault
+			(new SDKWrapper(), new FormAddressCreator
+				(new SDKWrapper, new FieldsCollectionBuilderShort(new Container())));
 	}
 
 
@@ -68,5 +73,15 @@ class TestClassFormPostInterestConfigurationDefault
 	public function testGetSDKWrapper()
 	{
 		$this->assertInstanceOf(SDKWrapper::class, $this->_pSubject->getSDKWrapper());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetFormAddressCreator()
+	{
+		$this->assertInstanceOf(FormAddressCreator::class, $this->_pSubject->getFormAddressCreator());
 	}
 }
