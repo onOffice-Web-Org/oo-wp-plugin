@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin\Form;
 
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 
@@ -59,15 +58,6 @@ interface FormPostConfiguration
 	 */
 
 	public function getLogger(): Logger;
-
-
-	/**
-	 *
-	 * @return Fieldnames
-	 *
-	 */
-
-	public function getFieldnames(): Fieldnames;
 
 
 	/**

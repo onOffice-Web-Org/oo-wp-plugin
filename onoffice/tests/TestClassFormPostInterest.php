@@ -29,7 +29,6 @@ use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
@@ -37,11 +36,8 @@ use onOffice\WPlugin\Form\FormPostInterestConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostInterest;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
-use const ONOFFICE_PLUGIN_DIR;
 use function json_decode;
 
 /**
@@ -75,17 +71,7 @@ class TestClassFormPostInterest
 
 	public function prepare()
 	{
-		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setConstructorArgs([new FieldsCollection()])
-			->getMock();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
-
-		$jsonFile = ONOFFICE_PLUGIN_DIR.'/tests/resources/FormPostSearchCriteriaFields.json';
-		$jsonString = file_get_contents($jsonFile);
-		$searchCriteriaFields = json_decode($jsonString, true);
-
-		$pFieldnames->method('getFieldList')->with(onOfficeSDK::MODULE_SEARCHCRITERIA)
-			->will($this->returnValue($searchCriteriaFields));
 
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$fieldsResponse = file_get_contents
@@ -118,8 +104,7 @@ class TestClassFormPostInterest
 			'kaufpreis__bis' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 		]));
 
-		$this->_pFormPostConfiguration = new FormPostConfigurationTest
-			($pFieldnames, $pLogger);
+		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
 		$this->_pFormPostInterestConfiguration = new FormPostInterestConfigurationTest
 			($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields);
 
@@ -240,16 +225,6 @@ class TestClassFormPostInterest
 		$pConfig->setSubject('Interest');
 		$pConfig->setTemplate('testtemplate.php');
 		$pConfig->setFormType(Form::TYPE_INTEREST);
-
-		$valueMap = [
-			['Vorname', onOfficeSDK::MODULE_ADDRESS, FieldTypes::FIELD_TYPE_VARCHAR],
-			['Name', onOfficeSDK::MODULE_ADDRESS, FieldTypes::FIELD_TYPE_VARCHAR],
-			['Email', onOfficeSDK::MODULE_ADDRESS, FieldTypes::FIELD_TYPE_VARCHAR],
-			['vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA, FieldTypes::FIELD_TYPE_SINGLESELECT],
-			['kaufpreis', onOfficeSDK::MODULE_SEARCHCRITERIA, FieldTypes::FIELD_TYPE_FLOAT],
-		];
-
-		$this->_pFormPostConfiguration->getFieldnames()->method('getType')->will($this->returnValueMap($valueMap));
 
 		return $pConfig;
 	}

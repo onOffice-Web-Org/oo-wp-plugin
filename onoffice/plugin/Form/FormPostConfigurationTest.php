@@ -43,9 +43,6 @@ class FormPostConfigurationTest
 	/** @var string */
 	private $_postvarCaptchaToken = '';
 
-	/** @var Fieldnames */
-	private $_pFieldnames = null;
-
 	/** @var Logger */
 	private $_pLogger = null;
 
@@ -60,10 +57,9 @@ class FormPostConfigurationTest
 	 *
 	 */
 
-	public function __construct(Fieldnames $pFieldnames, Logger $pLogger)
+	public function __construct(Logger $pLogger)
 	{
 		$this->_pWPOptionsWrapper = new WPOptionWrapperTest;
-		$this->_pFieldnames = $pFieldnames;
 		$this->_pLogger = $pLogger;
 	}
 
@@ -114,18 +110,6 @@ class FormPostConfigurationTest
 	public function setPostvarCaptchaToken(string $postvarCaptchaToken)
 	{
 		$this->_postvarCaptchaToken = $postvarCaptchaToken;
-	}
-
-
-	/**
-	 *
-	 * @return Fieldnames
-	 *
-	 */
-
-	public function getFieldnames(): Fieldnames
-	{
-		return $this->_pFieldnames;
 	}
 
 

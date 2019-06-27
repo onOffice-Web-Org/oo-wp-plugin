@@ -23,9 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form\FormPostConfigurationDefault;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use WP_UnitTestCase;
@@ -71,16 +69,6 @@ class TestClassFormPostConfigurationDefault
 	{
 		$_POST = [];
 		$this->assertEquals('', $this->_pSubject->getPostvarCaptchaToken());
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testGetFieldnames()
-	{
-		$this->assertInstanceOf(Fieldnames::class, $this->_pSubject->getFieldnames());
 	}
 
 

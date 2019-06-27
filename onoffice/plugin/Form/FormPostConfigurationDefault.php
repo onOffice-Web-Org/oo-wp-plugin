@@ -21,8 +21,6 @@
 
 namespace onOffice\WPlugin\Form;
 
-use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
@@ -37,20 +35,6 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 class FormPostConfigurationDefault
 	implements FormPostConfiguration
 {
-	/** @var Fieldnames */
-	private $_pFieldNames = null;
-
-
-	/**
-	 *
-	 */
-
-	public function __construct()
-	{
-		$this->_pFieldNames = new Fieldnames(new FieldsCollection());
-	}
-
-
 	/**
 	 *
 	 * @return array
@@ -72,18 +56,6 @@ class FormPostConfigurationDefault
 	public function getPostvarCaptchaToken(): string
 	{
 		return filter_input(INPUT_POST, CaptchaHandler::RECAPTCHA_RESPONSE_PARAM) ?? '';
-	}
-
-
-	/**
-	 *
-	 * @return Fieldnames
-	 *
-	 */
-
-	public function getFieldnames(): Fieldnames
-	{
-		return $this->_pFieldNames;
 	}
 
 

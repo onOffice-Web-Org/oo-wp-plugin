@@ -19,13 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
 use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
@@ -35,16 +36,13 @@ use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostOwner;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
 use function json_decode;
 
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -126,29 +124,9 @@ class TestClassFormPostOwner
 
 	private function createNewFormPostConfigurationTest(): FormPostConfigurationTest
 	{
-		$moduleAddress = onOfficeSDK::MODULE_ADDRESS;
-		$moduleEstate = onOfficeSDK::MODULE_ESTATE;
-
-
-		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setConstructorArgs([new FieldsCollection()])
-			->getMock();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
-		$pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
-		$valueMap = [
-			['Vorname', $moduleAddress, FieldTypes::FIELD_TYPE_VARCHAR],
-			['Name', $moduleAddress, FieldTypes::FIELD_TYPE_VARCHAR],
-			['ArtDaten', $moduleAddress, FieldTypes::FIELD_TYPE_MULTISELECT],
-			['Telefon1', $moduleAddress, FieldTypes::FIELD_TYPE_TEXT],
-			['objektart', $moduleEstate, FieldTypes::FIELD_TYPE_VARCHAR],
-			['objekttyp', $moduleEstate, FieldTypes::FIELD_TYPE_VARCHAR],
-			['energieausweistyp', $moduleEstate, FieldTypes::FIELD_TYPE_SINGLESELECT],
-			['wohnflaeche', $moduleEstate, FieldTypes::FIELD_TYPE_INTEGER],
-			['kabel_sat_tv', $moduleEstate, FieldTypes::FIELD_TYPE_BOOLEAN],
-			['kabel_sat_tv', $moduleEstate, FieldTypes::FIELD_TYPE_BOOLEAN],
-		];
-		$pFieldnames->method('getType')->will($this->returnValueMap($valueMap));
+		$pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
 		return $pFormPostConfiguration;
 	}
 

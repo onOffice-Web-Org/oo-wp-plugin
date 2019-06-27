@@ -28,7 +28,6 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
@@ -36,8 +35,6 @@ use onOffice\WPlugin\Form\FormPostContactConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostContact;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
@@ -75,12 +72,9 @@ class TestClassFormPostContact
 	public function prepare()
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
-		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setConstructorArgs([new FieldsCollection()])
-			->getMock();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
-		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
+		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
 			->getMock();
 		$pContainer = new Container;
@@ -92,18 +86,6 @@ class TestClassFormPostContact
 		$this->_pFormPostContactConfiguration->setReferrer('/test/page');
 		$this->_pFormPostContact = new FormPostContact($this->_pFormPostConfiguration,
 			$this->_pFormPostContactConfiguration);
-
-		$module = onOfficeSDK::MODULE_ADDRESS;
-		$valueMap = [
-			['Vorname', $module, FieldTypes::FIELD_TYPE_VARCHAR],
-			['Name', $module, FieldTypes::FIELD_TYPE_VARCHAR],
-			['Email', $module, FieldTypes::FIELD_TYPE_VARCHAR],
-			['Plz', $module, FieldTypes::FIELD_TYPE_INTEGER],
-			['Ort', $module, FieldTypes::FIELD_TYPE_VARCHAR],
-			['Telefon1', $module, FieldTypes::FIELD_TYPE_VARCHAR],
-			['AGB_akzeptiert', $module, FieldTypes::FIELD_TYPE_BOOLEAN],
-		];
-		$this->_pFormPostConfiguration->getFieldnames()->method('getType')->will($this->returnValueMap($valueMap));
 
 		$this->configureSDKWrapperForContactAddress();
 		$this->configureSDKWrapperForCreateAddress();

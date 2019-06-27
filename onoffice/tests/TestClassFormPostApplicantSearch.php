@@ -29,12 +29,10 @@ use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostApplicantSearch;
-use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
 use function json_decode;
@@ -67,12 +65,9 @@ class TestClassFormPostApplicantSearch
 
 	public function prepare()
 	{
-		$pFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setConstructorArgs([new FieldsCollection()])
-			->getMock();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
-		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pFieldnames, $pLogger);
+		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pLogger);
 		$pSDKWrapperMocker = $this->setupSDKWrapperMocker();
 		$this->_pFormPostConfigurationTest->setPostVariables([
 			'objektart' => 'haus',
