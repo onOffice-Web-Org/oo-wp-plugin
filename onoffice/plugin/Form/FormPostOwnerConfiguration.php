@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Controller\InputVariableReader;
@@ -58,4 +60,13 @@ interface FormPostOwnerConfiguration
 	 */
 
 	public function getReferrer(): string;
+
+
+	/**
+	 *
+	 * @return FormAddressCreator
+	 *
+	 */
+
+	public function getFormAddressCreator(): FormAddressCreator;
 }

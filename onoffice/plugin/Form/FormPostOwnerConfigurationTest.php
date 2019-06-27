@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Form;
 
 use onOffice\SDK\onOfficeSDK;
@@ -45,15 +47,19 @@ class FormPostOwnerConfigurationTest
 	/** @var InputVariableReaderConfigTest */
 	private $_pInputVariableReaderConfigTest = null;
 
+	/** @var FormAddressCreator */
+	private $_pFormAddressCreator = null;
+
 
 	/**
 	 *
 	 */
 
-	public function __construct()
+	public function __construct(SDKWrapper $pSDKWrapper, FormAddressCreator $pFormAddressCreator)
 	{
-		$this->_pInputVariableReaderConfigTest =
-			new InputVariableReaderConfigTest();
+		$this->_pInputVariableReaderConfigTest = new InputVariableReaderConfigTest();
+		$this->_pFormAddressCreator = $pFormAddressCreator;
+		$this->_pSDKWrapper = $pSDKWrapper;
 	}
 
 
@@ -108,18 +114,6 @@ class FormPostOwnerConfigurationTest
 
 	/**
 	 *
-	 * @param SDKWrapper $pSDKWrapper
-	 *
-	 */
-
-	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
-	{
-		$this->_pSDKWrapper = $pSDKWrapper;
-	}
-
-
-	/**
-	 *
 	 * @return InputVariableReaderConfigTest
 	 *
 	 */
@@ -127,5 +121,17 @@ class FormPostOwnerConfigurationTest
 	public function getEstateListInputVariableReaderConfigTest(): InputVariableReaderConfigTest
 	{
 		return $this->_pInputVariableReaderConfigTest;
+	}
+
+
+	/**
+	 *
+	 * @return FormAddressCreator
+	 *
+	 */
+
+	public function getFormAddressCreator(): FormAddressCreator
+	{
+		return $this->_pFormAddressCreator;
 	}
 }

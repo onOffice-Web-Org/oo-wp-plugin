@@ -33,7 +33,6 @@ use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
-use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -59,11 +58,10 @@ class FormPostOwner
 	 *
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
-		FormPostOwnerConfiguration $pFormPostOwnerConfiguration = null)
+	public function __construct(FormPostConfiguration $pFormPostConfiguration,
+		FormPostOwnerConfiguration $pFormPostOwnerConfiguration)
 	{
-		$this->_pFormPostOwnerConfiguration =
-			$pFormPostOwnerConfiguration ?? new FormPostOwnerConfigurationDefault();
+		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
 
 		parent::__construct($pFormPostConfiguration);
 	}
@@ -85,7 +83,8 @@ class FormPostOwner
 		$subject = $pDataFormConfiguration->getSubject();
 		$checkduplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
 
-		$addressId = $this->createOrCompleteAddress($pFormData, $checkduplicate);
+		$addressId = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
+			->createOrCompleteAddress($pFormData, $checkduplicate);
 		$estateId = $this->createEstate();
 		$this->createOwnerRelation($estateId, $addressId);
 

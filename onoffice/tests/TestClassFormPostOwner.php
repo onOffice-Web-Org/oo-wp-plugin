@@ -21,20 +21,25 @@
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationTest;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostOwner;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
+use function json_decode;
 
 /**
  *
@@ -58,18 +63,24 @@ class TestClassFormPostOwner
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$this->_pFormPostConfiguration = $this->createNewFormPostConfigurationTest();
+		$this->prepareSDKWrapperForFieldsAddressEstate();
 
-		$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationTest();
-		$pFormPostOwnerConfiguration->setSDKWrapper($this->_pSDKWrapperMocker);
+		$pContainer = new Container;
+		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
+			new FieldsCollectionBuilderShort($pContainer));
+		$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationTest
+			($this->_pSDKWrapperMocker, $pFormAddressCreator);
 		$pFormPostOwnerConfiguration->setReferrer('/test/page/1');
 		$this->configureEstateListInputVariableReaderConfig($pFormPostOwnerConfiguration);
-
 
 		$this->_pFormPostOwner = new FormPostOwner($this->_pFormPostConfiguration,
 			$pFormPostOwnerConfiguration);
@@ -83,7 +94,7 @@ class TestClassFormPostOwner
 	 */
 
 	private function configureEstateListInputVariableReaderConfig
-		(Form\FormPostOwnerConfiguration $pFormPostOwnerConfiguration)
+		(FormPostOwnerConfiguration $pFormPostOwnerConfiguration)
 	{
 		$moduleEstate = onOfficeSDK::MODULE_ESTATE;
 
@@ -138,7 +149,6 @@ class TestClassFormPostOwner
 			['kabel_sat_tv', $moduleEstate, FieldTypes::FIELD_TYPE_BOOLEAN],
 		];
 		$pFieldnames->method('getType')->will($this->returnValueMap($valueMap));
-		$pFormPostConfiguration->setSDKWrapper($this->_pSDKWrapperMocker);
 		return $pFormPostConfiguration;
 	}
 
@@ -181,6 +191,7 @@ class TestClassFormPostOwner
 			'kabel_sat_tv' => true,
 		];
 
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
 		$this->assertEquals($estateData, $this->_pFormPostOwner->getEstateData());
 	}
 
@@ -274,6 +285,28 @@ class TestClassFormPostOwner
 		$this->assertInstanceOf(FormData::class, $pFormData);
 		$this->assertTrue($pFormData->getFormSent());
 		$this->assertEquals(FormPost::MESSAGE_ERROR, $pFormData->getStatus());
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	private function prepareSDKWrapperForFieldsAddressEstate()
+	{
+		$fieldParameters = [
+			'labels' => true,
+			'showContent' => true,
+			'showTable' => true,
+			'language' => 'ENG',
+			'modules' => ['address', 'estate'],
+		];
+
+		$responseGetFields = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetFields.json'), true);
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+			$fieldParameters, null, $responseGetFields);
 	}
 
 

@@ -23,8 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\InputVariableReader;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
@@ -48,7 +51,9 @@ class TestClassFormPostOwnerConfigurationDefault
 
 	public function prepare()
 	{
-		$this->_pSubject = new FormPostOwnerConfigurationDefault();
+		$this->_pSubject = new FormPostOwnerConfigurationDefault
+			(new SDKWrapper(), new FormAddressCreator(new SDKWrapper,
+				new FieldsCollectionBuilderShort(new Container())));
 	}
 
 
@@ -81,5 +86,15 @@ class TestClassFormPostOwnerConfigurationDefault
 	public function testGetSDKWrapper()
 	{
 		$this->assertInstanceOf(SDKWrapper::class, $this->_pSubject->getSDKWrapper());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetFormAddressCreator()
+	{
+		$this->assertInstanceOf(FormAddressCreator::class, $this->_pSubject->getFormAddressCreator());
 	}
 }
