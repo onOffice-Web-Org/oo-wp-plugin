@@ -75,7 +75,6 @@ class TestClassFormPostApplicantSearch
 
 		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pFieldnames, $pLogger);
 		$pSDKWrapperMocker = $this->setupSDKWrapperMocker();
-		$this->_pFormPostConfigurationTest->setSDKWrapper($pSDKWrapperMocker);
 		$this->_pFormPostConfigurationTest->setPostVariables([
 			'objektart' => 'haus',
 			'vermarktungsart' => 'kauf',

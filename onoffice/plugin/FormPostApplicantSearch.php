@@ -26,7 +26,6 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
-use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
@@ -59,11 +58,10 @@ class FormPostApplicantSearch
 	 *
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
-		FormPostApplicantSearchConfiguration $pFormPostApplicantSearchConfiguration = null)
+	public function __construct(FormPostConfiguration $pFormPostConfiguration,
+		FormPostApplicantSearchConfiguration $pFormPostApplicantSearchConfiguration)
 	{
-		$this->_pFormPostApplicantSearchConfiguration = $pFormPostApplicantSearchConfiguration ??
-			new FormPostApplicantSearchConfigurationDefault();
+		$this->_pFormPostApplicantSearchConfiguration = $pFormPostApplicantSearchConfiguration;
 
 		parent::__construct($pFormPostConfiguration);
 	}

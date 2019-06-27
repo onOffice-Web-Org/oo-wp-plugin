@@ -56,16 +56,6 @@ class TestClassFormPostConfigurationDefault
 	 *
 	 */
 
-	public function testGetSDKWrapper()
-	{
-		$this->assertInstanceOf(SDKWrapper::class, $this->_pSubject->getSDKWrapper());
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testGetPostVars()
 	{
 		$_POST = ['asdf' => 'test'];
