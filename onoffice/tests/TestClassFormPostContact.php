@@ -23,15 +23,19 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\Form\FormPostContactConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostContact;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
@@ -79,10 +83,13 @@ class TestClassFormPostContact
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
 			->getMock();
+		$pContainer = new Container;
+		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
+			new FieldsCollectionBuilderShort($pContainer));
 		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest
-			($this->_pSDKWrapperMocker, $pWPQueryWrapper);
+			($this->_pSDKWrapperMocker, $pWPQueryWrapper, $pFormAddressCreator);
 		$this->_pFormPostContactConfiguration->setReferrer('/test/page');
-		$this->_pFormPostConfiguration->setSDKWrapper($this->_pSDKWrapperMocker);
 		$this->_pFormPostContact = new FormPostContact($this->_pFormPostConfiguration,
 			$this->_pFormPostContactConfiguration);
 
@@ -101,6 +108,7 @@ class TestClassFormPostContact
 		$this->configureSDKWrapperForContactAddress();
 		$this->configureSDKWrapperForCreateAddress();
 		$this->configureSDKWrapperForCreateAddressWithDuplicateCheck();
+		$this->configureSDKWrapperForFieldsAddressEstate();
 	}
 
 
@@ -110,8 +118,6 @@ class TestClassFormPostContact
 
 	private function configureSDKWrapperForContactAddress()
 	{
-		$actionId = onOfficeSDK::ACTION_ID_DO;
-		$resourceType = 'contactaddress';
 		$parameters = [
 			'addressdata' => [
 				'Vorname' => 'John',
@@ -122,7 +128,6 @@ class TestClassFormPostContact
 				'Telefon1' => '0815/2345677',
 				'AGB_akzeptiert' => '1',
 			],
-
 			'estateid' => '1337',
 			'message' => null,
 			'subject' => '¡A new Contact!',
@@ -135,7 +140,29 @@ class TestClassFormPostContact
 		$response = json_decode($responseJson, true);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
-			($actionId, $resourceType, '', $parameters, null, $response);
+			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', '', $parameters, null, $response);
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperForFieldsAddressEstate()
+	{
+		$fieldParameters = [
+			'labels' => true,
+			'showContent' => true,
+			'showTable' => true,
+			'language' => 'ENG',
+			'modules' => ['address', 'estate'],
+		];
+
+		$responseGetFields = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetFields.json'), true);
+		/* @var $pSDKWrapperMocker SDKWrapperMocker */
+		$this->_pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+			$fieldParameters, null, $responseGetFields);
 	}
 
 
@@ -145,8 +172,6 @@ class TestClassFormPostContact
 
 	private function configureSDKWrapperForCreateAddress()
 	{
-		$actionId = onOfficeSDK::ACTION_ID_CREATE;
-		$resourceType = 'address';
 		$parameters = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
@@ -158,12 +183,12 @@ class TestClassFormPostContact
 			'checkDuplicate' => true,
 		];
 
-		$responseJson = file_get_contents(__DIR__
-			.'/resources/FormPostContact/ApiResponseCreateAddress.json');
+		$responseJson = file_get_contents
+			(__DIR__.'/resources/FormPostContact/ApiResponseCreateAddress.json');
 		$response = json_decode($responseJson, true);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
-			($actionId, $resourceType, '', $parameters, null, $response);
+			(onOfficeSDK::ACTION_ID_CREATE, 'address', '', $parameters, null, $response);
 	}
 
 
@@ -173,8 +198,6 @@ class TestClassFormPostContact
 
 	private function configureSDKWrapperForCreateAddressWithDuplicateCheck()
 	{
-		$actionId = onOfficeSDK::ACTION_ID_CREATE;
-		$resourceType = 'address';
 		$parameters = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
@@ -186,12 +209,12 @@ class TestClassFormPostContact
 			'checkDuplicate' => false,
 		];
 
-		$responseJson = file_get_contents(__DIR__
-			.'/resources/FormPostContact/ApiResponseCreateAddress.json');
+		$responseJson = file_get_contents
+			(__DIR__.'/resources/FormPostContact/ApiResponseCreateAddress.json');
 		$response = json_decode($responseJson, true);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
-			($actionId, $resourceType, '', $parameters, null, $response);
+			(onOfficeSDK::ACTION_ID_CREATE, 'address', '', $parameters, null, $response);
 	}
 
 

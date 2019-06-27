@@ -67,4 +67,13 @@ interface FormPostContactConfiguration
 	 */
 
 	public function getWPQueryWrapper(): WPQueryWrapper;
+
+
+	/**
+	 *
+	 * @return FormAddressCreator
+	 *
+	 */
+
+	public function getFormAddressCreator(): FormAddressCreator;
 }

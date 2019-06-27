@@ -27,7 +27,6 @@ use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
-use onOffice\WPlugin\Form\FormPostContactConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 
@@ -54,11 +53,10 @@ class FormPostContact
 	 *
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
-		FormPostContactConfiguration $pFormPostContactConfiguration = null)
+	public function __construct(FormPostConfiguration $pFormPostConfiguration,
+		FormPostContactConfiguration $pFormPostContactConfiguration)
 	{
-		$this->_pFormPostContactConfiguration =
-			$pFormPostContactConfiguration ?? new FormPostContactConfigurationDefault();
+		$this->_pFormPostContactConfiguration = $pFormPostContactConfiguration;
 
 		parent::__construct($pFormPostConfiguration);
 	}
@@ -108,7 +106,8 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
-		$addressId = $this->createOrCompleteAddress($pFormData, $checkDuplicate);
+		$addressId = $this->_pFormPostContactConfiguration->getFormAddressCreator()
+			->createOrCompleteAddress($pFormData, $checkDuplicate);
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
 			// No subscription for newsletter, which is ok

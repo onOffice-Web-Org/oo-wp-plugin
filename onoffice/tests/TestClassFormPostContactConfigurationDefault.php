@@ -23,6 +23,9 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostContactConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -47,7 +50,9 @@ class TestClassFormPostContactConfigurationDefault
 
 	public function prepare()
 	{
-		$this->_pSubject = new FormPostContactConfigurationDefault();
+		$this->_pSubject = new FormPostContactConfigurationDefault
+			(new SDKWrapper, new WPQueryWrapper(), new FormAddressCreator(new SDKWrapper,
+				new FieldsCollectionBuilderShort(new Container)));
 	}
 
 
@@ -88,5 +93,15 @@ class TestClassFormPostContactConfigurationDefault
 	public function testGetWPQueryWrapper()
 	{
 		$this->assertInstanceOf(WPQueryWrapper::class, $this->_pSubject->getWPQueryWrapper());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetFormAddressCreator()
+	{
+		$this->assertInstanceOf(FormAddressCreator::class, $this->_pSubject->getFormAddressCreator());
 	}
 }

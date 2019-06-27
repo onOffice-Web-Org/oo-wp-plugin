@@ -46,18 +46,26 @@ class FormPostContactConfigurationTest
 	/** @var WPQueryWrapper */
 	private $_pWPQueryWrapper = null;
 
+	/** @var FormAddressCreator */
+	private $_pFormAddressCreator = null;
+
 
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param WPQueryWrapper $pWPQueryWrapper
+	 * @param FormAddressCreator $pFormAddressCreator
 	 *
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper, WPQueryWrapper $pWPQueryWrapper)
+	public function __construct(
+		SDKWrapper $pSDKWrapper,
+		WPQueryWrapper $pWPQueryWrapper,
+		FormAddressCreator $pFormAddressCreator)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
+		$this->_pFormAddressCreator = $pFormAddressCreator;
 	}
 
 
@@ -130,5 +138,17 @@ class FormPostContactConfigurationTest
 	public function getWPQueryWrapper(): WPQueryWrapper
 	{
 		return $this->_pWPQueryWrapper;
+	}
+
+
+	/**
+	 *
+	 * @return FormAddressCreator
+	 *
+	 */
+
+	public function getFormAddressCreator(): FormAddressCreator
+	{
+		return $this->_pFormAddressCreator;
 	}
 }
