@@ -30,13 +30,10 @@ namespace onOffice\WPlugin;
 
 use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\APIClientActionGeneric;
-use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormPostConfiguration;
-use onOffice\WPlugin\Form\FormPostConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\Types\FieldTypes;
 
@@ -93,9 +90,9 @@ abstract class FormPost
 	 *
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration = null)
+	public function __construct(FormPostConfiguration $pFormPostConfiguration)
 	{
-		$this->_pFormPostConfiguration = $pFormPostConfiguration ?? new FormPostConfigurationDefault;
+		$this->_pFormPostConfiguration = $pFormPostConfiguration;
 	}
 
 
@@ -291,72 +288,6 @@ abstract class FormPost
 		}
 
 		return $inputFormFields;
-	}
-
-
-	/**
-	 *
-	 * @param FormData $pFormData
-	 * @param bool $mergeExisting
-	 * @return int
-	 * @throws ApiClientException
-	 *
-	 */
-
-	protected function createOrCompleteAddress(
-		FormData $pFormData, bool $mergeExisting = false): int
-	{
-		$requestParams = $this->getAddressDataForApiCall($pFormData);
-		$requestParams['checkDuplicate'] = $mergeExisting;
-		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
-
-		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper,
-			onOfficeSDK::ACTION_ID_CREATE, 'address');
-		$pApiClientAction->setParameters($requestParams);
-		$pApiClientAction->addRequestToQueue()->sendRequests();
-		$result = $pApiClientAction->getResultRecords();
-		$addressId = (int)$result[0]['id'];
-
-		if ($addressId > 0) {
-			return $addressId;
-		}
-
-		throw new ApiClientException($pApiClientAction);
-	}
-
-
-	/**
-	 *
-	 * @param FormData $pFormData
-	 * @return array
-	 *
-	 */
-
-	private function getAddressDataForApiCall(FormData $pFormData): array
-	{
-		$fieldNameAliases = [
-			'Telefon1' => 'phone',
-			'Email' => 'email',
-			'Telefax1' => 'fax',
-		];
-
-		$addressData = [];
-		$addressFields = $pFormData->getAddressData();
-
-		foreach ($addressFields as $input => $value) {
-			$inputName = $pFormData->getFieldNameOfInput($input);
-			$fieldType = $this->_pFormPostConfiguration->getFieldnames()->getType
-				($input, onOfficeSDK::MODULE_ADDRESS);
-
-			$fieldNameAliased = $fieldNameAliases[$inputName] ?? $inputName;
-			$addressData[$fieldNameAliased] = $value;
-
-			if ($fieldType === FieldTypes::FIELD_TYPE_MULTISELECT && !is_array($value)) {
-				$addressData[$fieldNameAliased] = [$value];
-			}
-		}
-
-		return $addressData;
 	}
 
 

@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -49,18 +48,6 @@ class FormPostConfigurationDefault
 	public function __construct()
 	{
 		$this->_pFieldNames = new Fieldnames(new FieldsCollection());
-	}
-
-
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
-
-	public function getSDKWrapper(): SDKWrapper
-	{
-		return new SDKWrapper();
 	}
 
 

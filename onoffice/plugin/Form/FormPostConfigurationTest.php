@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
@@ -38,9 +37,6 @@ use onOffice\WPlugin\WP\WPOptionWrapperTest;
 class FormPostConfigurationTest
 	implements FormPostConfiguration
 {
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
 	/** @var array */
 	private $_postVariables = [];
 
@@ -74,18 +70,6 @@ class FormPostConfigurationTest
 
 	/**
 	 *
-	 * @return SDKWrapper
-	 *
-	 */
-
-	public function getSDKWrapper(): SDKWrapper
-	{
-		return $this->_pSDKWrapper;
-	}
-
-
-	/**
-	 *
 	 * @return array
 	 *
 	 */
@@ -93,18 +77,6 @@ class FormPostConfigurationTest
 	public function getPostVars(): array
 	{
 		return $this->_postVariables;
-	}
-
-
-	/**
-	 *
-	 * @param SDKWrapper $pSDKWrapper
-	 *
-	 */
-
-	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
-	{
-		$this->_pSDKWrapper = $pSDKWrapper;
 	}
 
 

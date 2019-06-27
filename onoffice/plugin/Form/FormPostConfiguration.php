@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 
@@ -35,15 +34,6 @@ use onOffice\WPlugin\WP\WPOptionWrapperBase;
 
 interface FormPostConfiguration
 {
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
-
-	public function getSDKWrapper(): SDKWrapper;
-
-
 	/**
 	 *
 	 * @return array all the post variables
