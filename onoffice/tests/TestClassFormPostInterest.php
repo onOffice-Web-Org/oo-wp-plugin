@@ -28,6 +28,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormAddressCreator;
@@ -86,15 +87,7 @@ class TestClassFormPostInterest
 		$pFieldnames->method('getFieldList')->with(onOfficeSDK::MODULE_SEARCHCRITERIA)
 			->will($this->returnValue($searchCriteriaFields));
 
-		$searchCriteriaFieldsResponseENG = file_get_contents
-			(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json');
-		$responseArrayENG = json_decode($searchCriteriaFieldsResponseENG, true);
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
-		$this->_pSDKWrapperMocker->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '', [
-				'language' => 'ENG',
-				'additionalTranslations' => true,
-			], null, $responseArrayENG);
 		$fieldsResponse = file_get_contents
 			(__DIR__.'/resources/ApiResponseGetFields.json');
 		$responseArrayFields = json_decode($fieldsResponse, true);
@@ -112,9 +105,23 @@ class TestClassFormPostInterest
 		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
 			new FieldsCollectionBuilderShort($pContainer));
 
-		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
+		$pSearchcriteriaFields = $this->getMockBuilder(SearchcriteriaFields::class)
+			->setMethods(['getFormFieldsWithRangeFields'])
+			->setConstructorArgs([new FieldsCollectionBuilderShort(new Container())])
+			->getMock();
+		$pSearchcriteriaFields->method('getFormFieldsWithRangeFields')->will($this->returnValue([
+			'Vorname' => onOfficeSDK::MODULE_ADDRESS,
+			'Name' => onOfficeSDK::MODULE_ADDRESS,
+			'Email' => onOfficeSDK::MODULE_ADDRESS,
+			'vermarktungsart' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'kaufpreis__von' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'kaufpreis__bis' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+		]));
+
+		$this->_pFormPostConfiguration = new FormPostConfigurationTest
+			($pFieldnames, $pLogger);
 		$this->_pFormPostInterestConfiguration = new FormPostInterestConfigurationTest
-			($this->_pSDKWrapperMocker, $pFormAddressCreator);
+			($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields);
 
 		$this->_pFormPostInterest = new FormPostInterest($this->_pFormPostConfiguration,
 			$this->_pFormPostInterestConfiguration);

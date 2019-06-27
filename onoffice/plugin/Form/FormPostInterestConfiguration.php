@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Form;
 
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\SDKWrapper;
 
 /**
@@ -59,4 +60,13 @@ interface FormPostInterestConfiguration
 	 */
 
 	public function getFormAddressCreator(): FormAddressCreator;
+
+
+	/**
+	 *
+	 * @return SearchcriteriaFields
+	 *
+	 */
+
+	public function getSearchcriteriaFields(): SearchcriteriaFields;
 }

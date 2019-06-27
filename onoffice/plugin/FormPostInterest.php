@@ -94,7 +94,8 @@ class FormPostInterest
 	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
 	{
 		$formFields = parent::getAllowedPostVars($pFormConfig);
-		return $this->getFormFieldsConsiderSearchcriteria($formFields);
+		return $this->_pFormPostInterestConfiguration->getSearchcriteriaFields()
+			->getFormFieldsWithRangeFields($formFields);
 	}
 
 

@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Form;
 
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\SDKWrapper;
 
 
@@ -45,6 +46,9 @@ class FormPostInterestConfigurationTest
 	/** @var FormAddressCreator */
 	private $_pFormAddressCreator = null;
 
+	/** @var SearchcriteriaFields */
+	private $_pSearchcriteriaFields = null;
+
 
 	/**
 	 *
@@ -53,10 +57,14 @@ class FormPostInterestConfigurationTest
 	 *
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper, FormAddressCreator $pFormAddressCreator)
+	public function __construct(
+		SDKWrapper $pSDKWrapper,
+		FormAddressCreator $pFormAddressCreator,
+		SearchcriteriaFields $pSearchcriteriaFields)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pFormAddressCreator = $pFormAddressCreator;
+		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
 	}
 
 
@@ -105,5 +113,17 @@ class FormPostInterestConfigurationTest
 	public function getFormAddressCreator(): FormAddressCreator
 	{
 		return $this->_pFormAddressCreator;
+	}
+
+
+	/**
+	 *
+	 * @return SearchcriteriaFields
+	 *
+	 */
+
+	public function getSearchcriteriaFields(): SearchcriteriaFields
+	{
+		return $this->_pSearchcriteriaFields;
 	}
 }

@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use DI\Container;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
@@ -49,9 +50,10 @@ class TestClassFormPostInterestConfigurationDefault
 
 	public function prepare()
 	{
-		$this->_pSubject = new FormPostInterestConfigurationDefault
-			(new SDKWrapper(), new FormAddressCreator
-				(new SDKWrapper, new FieldsCollectionBuilderShort(new Container())));
+		$pFieldsCollectionBuilder = new FieldsCollectionBuilderShort(new Container());
+		$this->_pSubject = new FormPostInterestConfigurationDefault(new SDKWrapper(),
+			new FormAddressCreator(new SDKWrapper, $pFieldsCollectionBuilder),
+			new SearchcriteriaFields($pFieldsCollectionBuilder));
 	}
 
 
@@ -83,5 +85,15 @@ class TestClassFormPostInterestConfigurationDefault
 	public function testGetFormAddressCreator()
 	{
 		$this->assertInstanceOf(FormAddressCreator::class, $this->_pSubject->getFormAddressCreator());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetSearchcriteriaFields()
+	{
+		$this->assertInstanceOf(SearchcriteriaFields::class, $this->_pSubject->getSearchcriteriaFields());
 	}
 }

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2016-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,23 +19,14 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2016, onOffice(R) Software AG
- *
- */
-
 namespace onOffice\WPlugin;
 
 use Exception;
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
@@ -63,13 +54,6 @@ abstract class FormPost
 
 	/** */
 	const MESSAGE_RECAPTCHA_SPAM = 'recaptchaSpam';
-
-	/** */
-	const RANGE_VON = '__von';
-
-	/** */
-	const RANGE_BIS = '__bis';
-
 
 	/** @var int */
 	private static $_formNo = 0;
@@ -106,8 +90,6 @@ abstract class FormPost
 
 	public function initialCheck(DataFormConfiguration $pConfig, int $formNo)
 	{
-		$this->_pFormPostConfiguration->getFieldnames()->loadLanguage();
-
 		$pFormData = $this->buildFormData($pConfig, $formNo);
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
@@ -254,47 +236,9 @@ abstract class FormPost
 	}
 
 
-	/**
-	 *
-	 * @param array $inputFormFields
-	 * @param bool $numberAsRange
-	 * @return array
-	 *
-	 */
-
-	protected function getFormFieldsConsiderSearchcriteria(
-		array $inputFormFields, bool $numberAsRange = true): array
-	{
-		$fieldList = $this->_pFormPostConfiguration->getFieldnames()
-			->getFieldList(onOfficeSDK::MODULE_SEARCHCRITERIA);
-
-		$fields = array_unique(array_keys($fieldList));
-		$module = array_fill(0, count($fields), 'searchcriteria');
-
-		$fieldsModulesCombined = array_combine($fields, $module);
-
-		if ($fieldsModulesCombined !== false) {
-			$inputFormFields += $fieldsModulesCombined;
-		}
-
-		if ($numberAsRange) {
-			foreach ($fieldList as $name => $properties) {
-				if (FieldTypes::isRangeType($properties['type'])) {
-					unset($inputFormFields[$name]);
-					$inputFormFields[$name.self::RANGE_VON] = 'searchcriteria';
-					$inputFormFields[$name.self::RANGE_BIS] = 'searchcriteria';
-				}
-			}
-		}
-
-		return $inputFormFields;
-	}
-
-
 	/** @param int $absolutCountResults */
 	protected function setAbsolutCountResults(int $absolutCountResults)
 		{ $this->_absolutCountResults = $absolutCountResults; }
-
 
 	/** @return int */
 	public function getAbsolutCountResults(): int
