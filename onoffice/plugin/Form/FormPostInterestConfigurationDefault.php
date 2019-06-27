@@ -19,14 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\SDKWrapper;
 
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -36,14 +36,21 @@ class FormPostInterestConfigurationDefault
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
+	/** @var FormAddressCreator */
+	private $_pFormAddressCreator = null;
+
 
 	/**
 	 *
+	 * @param SDKWrapper $pSDKWrapper
+	 * @param FormAddressCreator $pFormAddressCreator
+	 *
 	 */
 
-	public function __construct()
+	public function __construct(SDKWrapper $pSDKWrapper, FormAddressCreator $pFormAddressCreator)
 	{
-		$this->_pSDKWrapper = new SDKWrapper();
+		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->_pFormAddressCreator = $pFormAddressCreator;
 	}
 
 
@@ -68,5 +75,17 @@ class FormPostInterestConfigurationDefault
 	public function getSDKWrapper(): SDKWrapper
 	{
 		return $this->_pSDKWrapper;
+	}
+
+
+	/**
+	 *
+	 * @return FormAddressCreator
+	 *
+	 */
+
+	public function getFormAddressCreator(): FormAddressCreator
+	{
+		return $this->_pFormAddressCreator;
 	}
 }

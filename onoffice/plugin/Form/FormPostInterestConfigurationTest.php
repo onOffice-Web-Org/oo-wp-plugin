@@ -19,9 +19,12 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\SDKWrapper;
+
 
 /**
  *
@@ -38,6 +41,23 @@ class FormPostInterestConfigurationTest
 
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
+
+	/** @var FormAddressCreator */
+	private $_pFormAddressCreator = null;
+
+
+	/**
+	 *
+	 * @param SDKWrapper $pSDKWrapper
+	 * @param FormAddressCreator $pFormAddressCreator
+	 *
+	 */
+
+	public function __construct(SDKWrapper $pSDKWrapper, FormAddressCreator $pFormAddressCreator)
+	{
+		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->_pFormAddressCreator = $pFormAddressCreator;
+	}
 
 
 	/**
@@ -66,18 +86,6 @@ class FormPostInterestConfigurationTest
 
 	/**
 	 *
-	 * @param SDKWrapper $pSDKWrapper
-	 *
-	 */
-
-	public function setSDKWrapper(SDKWrapper $pSDKWrapper)
-	{
-		$this->_pSDKWrapper = $pSDKWrapper;
-	}
-
-
-	/**
-	 *
 	 * @param array $postValues
 	 *
 	 */
@@ -85,5 +93,17 @@ class FormPostInterestConfigurationTest
 	public function setPostValues(array $postValues)
 	{
 		$this->_postValues = $postValues;
+	}
+
+
+	/**
+	 *
+	 * @return FormAddressCreator
+	 *
+	 */
+
+	public function getFormAddressCreator(): FormAddressCreator
+	{
+		return $this->_pFormAddressCreator;
 	}
 }

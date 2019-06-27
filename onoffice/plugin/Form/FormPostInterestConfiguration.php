@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\SDKWrapper;
@@ -48,4 +50,13 @@ interface FormPostInterestConfiguration
 	 */
 
 	public function getPostValues(): array;
+
+
+	/**
+	 *
+	 * @return FormAddressCreator
+	 *
+	 */
+
+	public function getFormAddressCreator(): FormAddressCreator;
 }

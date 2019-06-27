@@ -23,15 +23,19 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostInterest;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
@@ -58,6 +62,9 @@ class TestClassFormPostInterest
 	/** @var FormPostInterest */
 	private $_pFormPostInterest = null;
 
+	/** @var SDKWrapperMocker */
+	private $_pSDKWrapperMocker = null;
+
 
 	/**
 	 *
@@ -82,8 +89,8 @@ class TestClassFormPostInterest
 		$searchCriteriaFieldsResponseENG = file_get_contents
 			(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json');
 		$responseArrayENG = json_decode($searchCriteriaFieldsResponseENG, true);
-		$pSDKWrapperMocker = new SDKWrapperMocker();
-		$pSDKWrapperMocker->addResponseByParameters
+		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
+		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '', [
 				'language' => 'ENG',
 				'additionalTranslations' => true,
@@ -91,7 +98,7 @@ class TestClassFormPostInterest
 		$fieldsResponse = file_get_contents
 			(__DIR__.'/resources/ApiResponseGetFields.json');
 		$responseArrayFields = json_decode($fieldsResponse, true);
-		$pSDKWrapperMocker->addResponseByParameters
+		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', [
 			'labels' => true,
 					'showContent' => true,
@@ -100,11 +107,14 @@ class TestClassFormPostInterest
 					'modules' => ['address', 'estate'],
 			], null, $responseArrayFields);
 
-		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
-		$this->_pFormPostConfiguration->setSDKWrapper($pSDKWrapperMocker);
+		$pContainer = new Container;
+		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
+			new FieldsCollectionBuilderShort($pContainer));
 
-		$this->_pFormPostInterestConfiguration = new FormPostInterestConfigurationTest();
-		$this->_pFormPostInterestConfiguration->setSDKWrapper($pSDKWrapperMocker);
+		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pFieldnames, $pLogger);
+		$this->_pFormPostInterestConfiguration = new FormPostInterestConfigurationTest
+			($this->_pSDKWrapperMocker, $pFormAddressCreator);
 
 		$this->_pFormPostInterest = new FormPostInterest($this->_pFormPostConfiguration,
 			$this->_pFormPostInterestConfiguration);
@@ -246,8 +256,6 @@ class TestClassFormPostInterest
 
 	private function addApiResponseCreateAddress(bool $success)
 	{
-		/* @var $pSDKWrapper SDKWrapperMocker */
-		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
 		$parameters = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
@@ -283,7 +291,7 @@ class TestClassFormPostInterest
 			$response = $this->getUnsuccessfulResponse(onOfficeSDK::ACTION_ID_CREATE, 'address');
 		}
 
-		$pSDKWrapper->addResponseByParameters
+		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_CREATE, 'address', '', $parameters, null, $response);
 	}
 
@@ -296,8 +304,6 @@ class TestClassFormPostInterest
 
 	private function addApiResponseCreateSearchCriteria(bool $success)
 	{
-		/* @var $pSDKWrapper SDKWrapperMocker */
-		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
 		$parameters = [
 			'data' => [
 				'vermarktungsart' => 'kauf',
@@ -336,7 +342,7 @@ class TestClassFormPostInterest
 				(onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria');
 		}
 
-		$pSDKWrapper->addResponseByParameters
+		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria', '', $parameters, null, $response);
 	}
 
@@ -349,8 +355,6 @@ class TestClassFormPostInterest
 
 	private function addApiResponseSendMail(bool $success)
 	{
-		/* @var $pSDKWrapper SDKWrapperMocker */
-		$pSDKWrapper = $this->_pFormPostConfiguration->getSDKWrapper();
 		$parameters = [
 			'anonymousEmailidentity' => true,
 			'body' => 'Sehr geehrte Damen und Herren,'."\n\n"
@@ -399,7 +403,7 @@ class TestClassFormPostInterest
 			$response = $this->getUnsuccessfulResponse(onOfficeSDK::ACTION_ID_DO, 'sendmail');
 		}
 
-		$pSDKWrapper->addResponseByParameters
+		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_DO, 'sendmail', '', $parameters, null, $response);
 	}
 

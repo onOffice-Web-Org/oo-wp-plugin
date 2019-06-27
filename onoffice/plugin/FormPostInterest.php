@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *    Copyright (C) 2016 onOffice Software AG
@@ -28,16 +29,12 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfiguration;
-use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 
 /**
  *
  * Applicant form. A person registers itself and leaves his/her search criteria
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2016, onOffice(R) Software AG
  *
  */
 
@@ -55,12 +52,11 @@ class FormPostInterest
 	 *
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration = null,
-		FormPostInterestConfiguration $pFormPostInterestConfiguration = null)
+	public function __construct(FormPostConfiguration $pFormPostConfiguration,
+		FormPostInterestConfiguration $pFormPostInterestConfiguration)
 	{
 		parent::__construct($pFormPostConfiguration);
-		$this->_pFormPostInterestConfiguration =
-			$pFormPostInterestConfiguration ?? new FormPostInterestConfigurationDefault();
+		$this->_pFormPostInterestConfiguration = $pFormPostInterestConfiguration;
 	}
 
 
@@ -78,7 +74,8 @@ class FormPostInterest
 		$subject = $pFormConfiguration->getSubject();
 		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
 
-		$addressId = $this->createOrCompleteAddress($pFormData, $checkduplicate);
+		$addressId = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
+			->createOrCompleteAddress($pFormData, $checkduplicate);
 		$this->createSearchcriteria($pFormData, $addressId);
 
 		if ($recipient != null) {
@@ -138,8 +135,7 @@ class FormPostInterest
 		$pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'sendmail');
 		$pApiClientAction->setParameters($requestParams);
-		$pApiClientAction->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
+		$pApiClientAction->addRequestToQueue()->sendRequests();
 
 		if (!$pApiClientAction->getResultStatus()) {
 			throw new ApiClientException($pApiClientAction);
