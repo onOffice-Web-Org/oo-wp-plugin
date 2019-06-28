@@ -51,23 +51,30 @@ jQuery(document).ready(function($){
 		var category = $(but).attr('data-onoffice-category');
 		var checkedFields = [];
 		var inputConfigFields = $('#' + categoryShort).find('input.onoffice-possible-input:checked');
-		var ulEl = $('#sortableFieldsList');
 
 		$(inputConfigFields).each(function(index) {
 			var valElName = $(this).val();
 			var valElLabel = $(this).next().text();
-			var myLi = myLi = ulEl.find('#menu-item-' + valElName);
 			var module = $(this).attr('data-onoffice-module');
 
 			var optionsAvailable = '0';
-			
-			if ($(this).attr('onoffice-multipleSelectType'))
-			{
+
+			if ($(this).attr('onoffice-multipleSelectType')) {
 				optionsAvailable = $(this).attr('onoffice-multipleSelectType');
 			}
 
-			if (myLi.length === 0) {
-				createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable);
+			if ($('#sortableFieldsList').find('#menu-item-' + valElName).length === 0) {
+				var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable);
+                var event = new CustomEvent('addFieldItem', {
+                    detail: {
+                        fieldname: valElName,
+                        fieldlabel: valElLabel,
+                        category,
+                        module,
+                        item: clonedItem
+                    }
+                });
+                document.dispatchEvent(event);
 			}
 		});
 
@@ -78,12 +85,9 @@ jQuery(document).ready(function($){
 		var myLabel = $('#' + label);
 		var dummyKey;
 
-		if (myLabel.length)
-		{
+		if (myLabel.length) {
 			dummyKey = myLabel.find('#menu-item-dummy_key');
-		}
-		else
-		{
+		} else {
 			dummyKey = $('#menu-item-dummy_key');
 		}
 
@@ -97,8 +101,7 @@ jQuery(document).ready(function($){
 		clonedElement.find('span.menu-item-settings-name').text(fieldName);
 		clonedElement.find('input[data-onoffice-ignore=true]').removeAttr('data-onoffice-ignore');
 
-		if (optionsAvailable == '0')
-		{
+		if (optionsAvailable == '0') {
 			var availableOptionEl = clonedElement.find('input[name="oopluginfieldconfig-availableOptions[]"]');
 			availableOptionEl.parent().remove();
 		}
@@ -118,6 +121,7 @@ jQuery(document).ready(function($){
 		}
 		clonedElement.show();
 		dummyKey.parent().append(clonedElement);
+        return clonedElement[0];
 	};
 });
 
