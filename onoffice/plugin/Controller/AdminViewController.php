@@ -235,7 +235,9 @@ class AdminViewController
 
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
 		wp_enqueue_script('onoffice-ajax-settings',
-			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), array('jquery'));
+			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery']);
+		wp_enqueue_script('onoffice-geofieldbox',
+			plugins_url('/js/geofieldbox.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
 
 		wp_localize_script('onoffice-ajax-settings', 'onOffice_loc_settings', $ajaxData);
 	}
@@ -335,8 +337,8 @@ class AdminViewController
 
 	public function pluginSettingsLink($links)
 	{
-		$url = get_admin_url().'admin.php?page='.$this->_pageSlug;
-		$settings_link = '<a href="'.$url.'">'.__('Settings', 'onoffice').'</a>';
+		$url = get_admin_url().'admin.php?'.http_build_query(['page' => $this->_pageSlug]);
+		$settings_link = '<a href="'.esc_html($url).'">'.esc_html__('Settings', 'onoffice').'</a>';
 		array_unshift($links, $settings_link);
 		return $links;
 	}
