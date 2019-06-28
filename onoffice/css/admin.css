@@ -85,15 +85,19 @@ body #onoffice-ajax span.viewusage .italic {
 	cursor: inherit;
 }
 
-#sortableFieldsList .menu-item-settings{
+#sortableFieldsList .menu-item-settings {
 	display: block;
 	position: relative;
 	margin-left: 5px;
 	clear: both;
 }
 
-#sortableFieldsList .item-delete-link{
+#sortableFieldsList .item-delete-link {
 	padding-right: 10px;
+}
+
+#sortableFieldsList .item-delete-link:hover {
+	cursor: pointer;
 }
 
 #listSettings .accordion-section-content > .inside > p {
@@ -106,7 +110,7 @@ body #onoffice-ajax span.viewusage .italic {
 	padding: 0;
 }
 
-#sortableFieldsList .menu-item-settings-name{
+#sortableFieldsList .menu-item-settings-name {
 	font-style: italic;
 }
 
