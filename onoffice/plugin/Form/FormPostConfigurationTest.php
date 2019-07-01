@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin\Form;
 
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
@@ -52,7 +51,6 @@ class FormPostConfigurationTest
 
 	/**
 	 *
-	 * @param Fieldnames $pFieldnames
 	 * @param Logger $pLogger
 	 *
 	 */

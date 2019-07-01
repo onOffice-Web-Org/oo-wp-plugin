@@ -61,7 +61,6 @@ class SearchcriteriaFields
 	/**
 	 *
 	 * @param array $inputFormFields
-	 * @param bool $numberAsRange
 	 * @return array
 	 *
 	 */
@@ -76,7 +75,6 @@ class SearchcriteriaFields
 	/**
 	 *
 	 * @param array $inputFormFields
-	 * @param bool $numberAsRange
 	 * @return array
 	 *
 	 */
