@@ -35,6 +35,22 @@ use WP_Post;
 
 class DetailViewPostSaveController
 {
+	/** @var ContentFilter */
+	private $_pContentFilter = null;
+
+
+	/**
+	 *
+	 * @param ContentFilter $pContentFilter
+	 *
+	 */
+
+	public function __construct(ContentFilter $pContentFilter)
+	{
+		$this->_pContentFilter = $pContentFilter;
+	}
+
+
 	/**
 	 *
 	 * @param int $postId
@@ -57,13 +73,12 @@ class DetailViewPostSaveController
 
 			$detailViewName = $pDetailView->getName();
 			$postContent = $pPost->post_content;
-			$pContentFilter = new ContentFilter();
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
 			if ($viewContained) {
 				$pDetailView->setPageId($postId);
 				$pDataDetailViewHandler->saveDetailView($pDetailView);
-				$pContentFilter->addCustomRewriteRules();
+				$this->_pContentFilter->addCustomRewriteRules();
 				flush_rewrite_rules();
 
 			} elseif ($pDetailView->getPageId() != null) {
@@ -73,7 +88,7 @@ class DetailViewPostSaveController
 				if ($detailInPreviousRev || $pDetailView->getPageId() === $postId) {
 					$pDetailView->setPageId(null);
 					$pDataDetailViewHandler->saveDetailView($pDetailView);
-					$pContentFilter->addCustomRewriteRules();
+					$this->_pContentFilter->addCustomRewriteRules();
 					flush_rewrite_rules();
 				}
 			}

@@ -60,9 +60,9 @@ $pDIBuilder = new ContainerBuilder();
 $pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 $pDI = $pDIBuilder->build();
 
-$pContentFilter = new ContentFilter();
+$pContentFilter = $pDI->get(ContentFilter::class);
 $pAdminViewController = new AdminViewController();
-$pDetailViewPostSaveController = new DetailViewPostSaveController();
+$pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
 $pSearchParams = SearchParameters::getInstance();
 $pSearchParams->setParameters($_GET);
 

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2018-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -40,22 +40,41 @@ class TestClassScriptLoaderOsm
 	/** @var array */
 	private $_scriptsExpectation = [
 		'leaflet-script' => [
-			'src' => 'http://example.org/wp-content/plugins/onoffice-test/third_party/leaflet/leaflet.js',
 			'deps' => [],
 			'ver' => false,
 			'inFooter' => false,
 		],
 	];
 
+
 	/** @var array */
 	private $_stylesExpectation = [
 		'leaflet-style' => [
-			'src' => 'http://example.org/wp-content/plugins/onoffice-test/third_party/leaflet/leaflet.css',
 			'deps' => [],
 			'ver' => false,
 			'media' => 'all',
 		],
 	];
+
+
+	/** @var WPScriptStyleTest */
+	private $_pWPScriptStyle = null;
+
+	/** @var ScriptLoaderMapOsm */
+	private $_pSubject = null;
+
+
+	/**
+	 *
+	 * @before
+	 *
+	 */
+
+	public function prepare()
+	{
+		$this->_pWPScriptStyle = new WPScriptStyleTest();
+		$this->_pSubject = new ScriptLoaderMapOsm($this->_pWPScriptStyle);
+	}
 
 
 	/**
@@ -64,12 +83,15 @@ class TestClassScriptLoaderOsm
 
 	public function testRegister()
 	{
-		$pWPScriptStyle = new WPScriptStyleTest();
-
-		$pScriptLoader = new ScriptLoaderMapOsm('/onoffice-test/index.php');
-		$pScriptLoader->register($pWPScriptStyle);
-		$this->assertEquals($this->_scriptsExpectation, $pWPScriptStyle->getRegisteredScripts());
-		$this->assertEquals($this->_stylesExpectation, $pWPScriptStyle->getRegisteredStyles());
+		$this->_pSubject->register();
+		$registeredScripts = $this->_pWPScriptStyle->getRegisteredScripts();
+		$registeredStyles = $this->_pWPScriptStyle->getRegisteredStyles();
+		$this->assertArraySubset($this->_stylesExpectation, $registeredStyles);
+		$this->assertArraySubset($this->_scriptsExpectation, $registeredScripts);
+		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['leaflet-script']['src']);
+		$this->assertStringEndsWith('/onoffice/third_party/leaflet/leaflet.js', $registeredScripts['leaflet-script']['src']);
+		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredStyles['leaflet-style']['src']);
+		$this->assertStringEndsWith('/onoffice/third_party/leaflet/leaflet.css', $registeredStyles['leaflet-style']['src']);
 	}
 
 
@@ -79,12 +101,9 @@ class TestClassScriptLoaderOsm
 
 	public function testEnqueue()
 	{
-		$pWPScriptStyle = new WPScriptStyleTest();
-
-		$pScriptLoader = new ScriptLoaderMapOsm('/onoffice-test/index.php');
-		$pScriptLoader->register($pWPScriptStyle);
-		$pScriptLoader->enqueue($pWPScriptStyle);
-		$this->assertEquals(['leaflet-script'], $pWPScriptStyle->getEnqueuedScripts());
-		$this->assertEquals(['leaflet-style'], $pWPScriptStyle->getEnqueuedStyles());
+		$this->_pSubject->register();
+		$this->_pSubject->enqueue();
+		$this->assertEquals(['leaflet-script'], $this->_pWPScriptStyle->getEnqueuedScripts());
+		$this->assertEquals(['leaflet-style'], $this->_pWPScriptStyle->getEnqueuedStyles());
 	}
 }

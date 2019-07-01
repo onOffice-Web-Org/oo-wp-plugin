@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2018-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,10 +19,12 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\ScriptLoader;
 
 use onOffice\WPlugin\Types\MapProvider;
-use onOffice\WPlugin\WP\WPScriptStyleBase;
+
 
 /**
  *
@@ -34,57 +36,46 @@ use onOffice\WPlugin\WP\WPScriptStyleBase;
 class ScriptLoaderMap
 	implements ScriptLoader
 {
-	/** @var ScriptLoaderMapEnvironment */
-	private $_pScriptLoaderMapEnvironment = null;
+	/** @var ScriptLoaderMapFactory */
+	private $_pScriptLoaderMapFactory = null;
 
-	/** @var ScriptLoader */
-	private $_pSpecificMapLoader = null;
+	/** @var MapProvider */
+	private $_pMapProvider = null;
 
 
 	/**
 	 *
-	 * @param ScriptLoaderMapEnvironment $pScriptloaderMapEnvironment
+	 * @param MapProvider $pMapProvider
+	 * @param ScriptLoaderMapFactory $pFactory
 	 *
 	 */
 
-	public function __construct(ScriptLoaderMapEnvironment $pScriptloaderMapEnvironment = null)
+	public function __construct(
+		MapProvider $pMapProvider,
+		ScriptLoaderMapFactory $pFactory)
 	{
-		$this->_pScriptLoaderMapEnvironment = $pScriptloaderMapEnvironment ??
-			new ScriptLoaderMapEnvironmentDefault();
-
-		switch ($this->_pScriptLoaderMapEnvironment->getMapProvider()) {
-			case MapProvider::GOOGLE_MAPS:
-				$this->_pSpecificMapLoader = new ScriptLoaderMapGoogleMaps();
-				break;
-			case MapProvider::OPEN_STREET_MAPS:
-			default:
-				$this->_pSpecificMapLoader = new ScriptLoaderMapOsm();
-				break;
-		}
+		$this->_pMapProvider = $pMapProvider;
+		$this->_pScriptLoaderMapFactory = $pFactory;
 	}
 
 
 	/**
 	 *
-	 * @param WPScriptStyleBase $pWPScriptStyle
-	 *
 	 */
 
-	public function enqueue(WPScriptStyleBase $pWPScriptStyle)
+	public function enqueue()
 	{
-		$this->_pSpecificMapLoader->enqueue($pWPScriptStyle);
+		$this->getSpecificMapLoader()->enqueue();
 	}
 
 
 	/**
 	 *
-	 * @param WPScriptStyleBase $pWPScriptStyle
-	 *
 	 */
 
-	public function register(WPScriptStyleBase $pWPScriptStyle)
+	public function register()
 	{
-		$this->_pSpecificMapLoader->register($pWPScriptStyle);
+		$this->getSpecificMapLoader()->register();
 	}
 
 
@@ -94,8 +85,8 @@ class ScriptLoaderMap
 	 *
 	 */
 
-	public function getSpecificMapLoader(): ScriptLoader
+	private function getSpecificMapLoader(): ScriptLoader
 	{
-		return $this->_pSpecificMapLoader;
+		return $this->_pScriptLoaderMapFactory->buildForMapProvider($this->_pMapProvider);
 	}
 }

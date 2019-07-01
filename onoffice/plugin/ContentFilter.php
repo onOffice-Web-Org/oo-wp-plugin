@@ -40,7 +40,6 @@ use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_Query;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
@@ -67,14 +66,21 @@ class ContentFilter
 	/** @var Logger */
 	private $_pLogger = null;
 
+	/** @var ScriptLoaderMap */
+	private $_pScriptLoaderMap = null;
+
 
 	/**
 	 *
+	 * @param Logger $pLogger
+	 * @param ScriptLoaderMap $pScriptLoaderMap
+	 *
 	 */
 
-	public function __construct()
+	public function __construct(Logger $pLogger, ScriptLoaderMap $pScriptLoaderMap)
 	{
-		$this->_pLogger = new Logger;
+		$this->_pLogger = $pLogger;
+		$this->_pScriptLoaderMap = $pScriptLoaderMap;
 	}
 
 
@@ -316,8 +322,7 @@ class ContentFilter
 		wp_register_style('onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath));
 		wp_register_script('onoffice-leadform', plugins_url('/js/onoffice-leadform.js', $pluginPath), 'jquery', false, true);
 
-		$pScriptLoaderMap = new ScriptLoaderMap();
-		$pScriptLoaderMap->register(new WPScriptStyleDefault);
+		$this->_pScriptLoaderMap->register();
 	}
 
 
@@ -375,8 +380,7 @@ class ContentFilter
 		wp_enqueue_script('onoffice-leadform');
 		wp_enqueue_style('onoffice-forms');
 
-		$pScriptLoaderMap = new ScriptLoaderMap();
-		$pScriptLoaderMap->enqueue(new WPScriptStyleDefault);
+		$this->_pScriptLoaderMap->enqueue();
 	}
 
 

@@ -22,6 +22,21 @@
 
 namespace onOffice\WPlugin;
 
+use DI\Container;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderMapFactory;
+use onOffice\WPlugin\Types\MapProvider;
+use onOffice\WPlugin\Utility\Logger;
+use WP_Rewrite;
+use wpdb;
+use const ABSPATH;
+use function add_option;
+use function dbDelta;
+use function delete_option;
+use function esc_sql;
+use function get_option;
+use function update_option;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -108,7 +123,8 @@ abstract class Installer
 
 		update_option( 'oo_plugin_db_version', $dbversion, false);
 
-		$pContentFilter = new ContentFilter();
+		$pContentFilter = new ContentFilter(new Logger(), new ScriptLoaderMap
+			(new MapProvider(), new ScriptLoaderMapFactory(new Container)));
 		$pContentFilter->addCustomRewriteTags();
 		$pContentFilter->addCustomRewriteRules();
 		self::flushRules();
@@ -386,7 +402,7 @@ abstract class Installer
 
 	/**
 	 *
-	 * @global \wpdb $wpdb
+	 * @global wpdb $wpdb
 	 * @return string
 	 *
 	 */
@@ -400,7 +416,7 @@ abstract class Installer
 
 	/**
 	 *
-	 * @global \wpdb $wpdb
+	 * @global wpdb $wpdb
 	 * @return string
 	 *
 	 */
@@ -427,7 +443,7 @@ abstract class Installer
 	 *
 	 * Callback for plugin uninstall hook
 	 *
-	 * @global \wpdb $wpdb
+	 * @global wpdb $wpdb
 	 *
 	 */
 

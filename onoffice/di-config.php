@@ -37,6 +37,10 @@ use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
+use onOffice\WPlugin\WP\WPOptionWrapperBase;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\WP\WPScriptStyleBase;
+use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use function DI\autowire;
 use function DI\get;
 
@@ -50,4 +54,6 @@ return [
 	FormPostContactConfiguration::class => autowire(FormPostContactConfigurationDefault::class),
 	FormPostInterestConfiguration::class => autowire(FormPostInterestConfigurationDefault::class),
 	FormPostApplicantSearchConfiguration::class => autowire(FormPostApplicantSearchConfigurationDefault::class),
+	WPScriptStyleBase::class => autowire(WPScriptStyleDefault::class),
+	WPOptionWrapperBase::class => autowire(WPOptionWrapperDefault::class),
 ];

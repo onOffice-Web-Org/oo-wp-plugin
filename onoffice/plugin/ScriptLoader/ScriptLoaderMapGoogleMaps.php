@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2018-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,8 +19,11 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\ScriptLoader;
 
+use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use const ONOFFICE_PLUGIN_DIR;
 use function plugins_url;
@@ -35,49 +38,49 @@ use function plugins_url;
 class ScriptLoaderMapGoogleMaps
 	implements ScriptLoader
 {
-	/** @var string */
-	private $_pluginPath = '';
+	/** @var WPScriptStyleBase */
+	private $_pWPScriptStyle = null;
 
-	/** @var string */
-	private $_key = null;
-
-
-	/**
-	 *
-	 * @param string $pluginUrl
-	 *
-	 */
-
-	public function __construct(string $pluginUrl = null)
-	{
-		$this->_pluginPath = $pluginUrl ?? ONOFFICE_PLUGIN_DIR.'/index.php';
-		$this->_key = get_option('onoffice-settings-googlemaps-key', null);
-	}
+	/** @var WPOptionWrapperBase */
+	private $_pWPOptionWrapper = null;
 
 
 	/**
 	 *
 	 * @param WPScriptStyleBase $pWPScriptStyle
+	 * @param WPOptionWrapperBase $pWPOptionWrapper
 	 *
 	 */
 
-	public function enqueue(WPScriptStyleBase $pWPScriptStyle)
+	public function __construct(
+		WPScriptStyleBase $pWPScriptStyle,
+		WPOptionWrapperBase $pWPOptionWrapper)
 	{
-		$pWPScriptStyle->enqueueScript('gmapsinit');
+		$this->_pWPOptionWrapper = $pWPOptionWrapper;
+		$this->_pWPScriptStyle = $pWPScriptStyle;
 	}
 
 
 	/**
 	 *
-	 * @param WPScriptStyleBase $pWPScriptStyle
+	 */
+
+	public function enqueue()
+	{
+		$this->_pWPScriptStyle->enqueueScript('gmapsinit');
+	}
+
+
+	/**
 	 *
 	 */
 
-	public function register(WPScriptStyleBase $pWPScriptStyle)
+	public function register()
 	{
-		$url = 'https://maps.googleapis.com/maps/api/js?'.http_build_query(['key' => $this->_key]);
-		$pWPScriptStyle->registerScript('google-maps', $url);
-		$pWPScriptStyle->registerScript('gmapsinit',
-			plugins_url('/js/gmapsinit.js', $this->_pluginPath), ['google-maps']);
+		$key = $this->_pWPOptionWrapper->getOption('onoffice-settings-googlemaps-key', null);
+		$url = 'https://maps.googleapis.com/maps/api/js?'.http_build_query(['key' => $key]);
+		$this->_pWPScriptStyle->registerScript('google-maps', $url);
+		$this->_pWPScriptStyle->registerScript('gmapsinit',
+			plugins_url('/js/gmapsinit.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['google-maps']);
 	}
 }

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2018-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,9 +19,9 @@
  *
  */
 
-namespace onOffice\WPlugin\ScriptLoader;
+declare (strict_types=1);
 
-use onOffice\WPlugin\WP\WPScriptStyleBase;
+namespace onOffice\WPlugin\ScriptLoader;
 
 /**
  *
@@ -34,18 +34,14 @@ interface ScriptLoader
 {
 	/**
 	 *
-	 * @param WPScriptStyleBase $pWPScriptStyle
-	 *
 	 */
 
-	public function register(WPScriptStyleBase $pWPScriptStyle);
+	public function register();
 
 
 	/**
 	 *
-	 * @param WPScriptStyleBase $pWPScriptStyle
-	 *
 	 */
 
-	public function enqueue(WPScriptStyleBase $pWPScriptStyle);
+	public function enqueue();
 }

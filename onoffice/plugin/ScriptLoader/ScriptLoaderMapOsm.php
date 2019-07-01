@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2018-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +18,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+declare (strict_types=1);
 
 namespace onOffice\WPlugin\ScriptLoader;
 
@@ -35,21 +37,8 @@ use function plugins_url;
 class ScriptLoaderMapOsm
 	implements ScriptLoader
 {
-	/** @var string */
-	private $_pluginPath = '';
-
-
-	/**
-	 *
-	 * @param string $pluginUrl
-	 *
-	 */
-
-	public function __construct(string $pluginUrl = null)
-	{
-		$this->_pluginPath = $pluginUrl ?? ONOFFICE_PLUGIN_DIR.'/index.php';
-	}
-
+	/** @var WPScriptStyleBase */
+	private $_pWPScriptStyle = null;
 
 	/**
 	 *
@@ -57,25 +46,33 @@ class ScriptLoaderMapOsm
 	 *
 	 */
 
-	public function enqueue(WPScriptStyleBase $pWPScriptStyle)
+	public function __construct(WPScriptStyleBase $pWPScriptStyle)
 	{
-		$pWPScriptStyle->enqueueScript('leaflet-script');
-		$pWPScriptStyle->enqueueStyle('leaflet-style');
+		$this->_pWPScriptStyle = $pWPScriptStyle;
 	}
 
 
 	/**
 	 *
-	 * @param WPScriptStyleBase $pWPScriptStyle
+	 */
+
+	public function enqueue()
+	{
+		$this->_pWPScriptStyle->enqueueScript('leaflet-script');
+		$this->_pWPScriptStyle->enqueueStyle('leaflet-style');
+	}
+
+
+	/**
 	 *
 	 */
 
-	public function register(WPScriptStyleBase $pWPScriptStyle)
+	public function register()
 	{
-		$pWPScriptStyle->registerStyle('leaflet-style',
-			plugins_url('/third_party/leaflet/leaflet.css', $this->_pluginPath));
+		$this->_pWPScriptStyle->registerStyle('leaflet-style',
+			plugins_url('/third_party/leaflet/leaflet.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
 
-		$pWPScriptStyle->registerScript('leaflet-script',
-			plugins_url('/third_party/leaflet/leaflet.js', $this->_pluginPath));
+		$this->_pWPScriptStyle->registerScript('leaflet-script',
+			plugins_url('/third_party/leaflet/leaflet.js', ONOFFICE_PLUGIN_DIR.'/index.php'));
 	}
 }
