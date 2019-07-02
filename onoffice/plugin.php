@@ -81,8 +81,6 @@ add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
 add_action('wp_enqueue_scripts', [CaptchaDataChecker::class, 'registerScripts']);
-add_action('wp_enqueue_scripts', [$pScriptLoader, 'register'], 9);
-add_action('wp_enqueue_scripts', [$pScriptLoader, 'enqueue']);
 add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
 add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 add_action('oo_cache_cleanup', 'ooCacheCleanup');

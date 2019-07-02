@@ -57,6 +57,13 @@ class ScriptLoaderRegistrator
 	public function generate(): self
 	{
 		$this->_scriptLoader = iterator_to_array($this->_pBuilder->build());
+		add_action('wp_enqueue_scripts', function() {
+			$this->register();
+		}, 9);
+
+		add_action('wp_enqueue_scripts', function() {
+			$this->enqueue();
+		});
 		return $this;
 	}
 
