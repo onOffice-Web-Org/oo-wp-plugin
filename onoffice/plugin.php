@@ -105,7 +105,6 @@ add_shortcode('oo_estate', [$pContentFilter, 'registerEstateShortCodes']);
 
 $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 
-add_filter('widget_title', [$pContentFilter, 'renderWidgetImpressum']);
 add_filter('document_title_parts', [$pContentFilter, 'setTitle'], 10, 2);
 
 register_activation_hook(__FILE__, [Installer::class, 'install']);

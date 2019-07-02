@@ -235,19 +235,6 @@ class ContentFilter
 
 	/**
 	 *
-	 * @param string $text
-	 * @return string
-	 *
-	 */
-
-	public function renderWidgetImpressum($text)
-	{
-		return do_shortcode($text);
-	}
-
-
-	/**
-	 *
 	 * @param int $page
 	 * @return string
 	 *
