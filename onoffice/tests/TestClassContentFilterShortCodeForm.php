@@ -30,7 +30,6 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
@@ -55,8 +54,6 @@ class TestClassContentFilterShortCodeForm
 		$pInstance = new ContentFilterShortCodeForm();
 		$pTemplate = $pInstance->getTemplate();
 		$this->assertInstanceOf(Template::class, $pTemplate);
-		// should have been set by ContentFilterShortCodeForm
-		$this->assertInstanceOf(Impressum::class, $pTemplate->getImpressum());
 		$this->assertInstanceOf(Logger::class, $pInstance->getLogger());
 		$this->assertInstanceOf(DataFormConfigurationFactory::class, $pInstance->getDataFormConfigurationFactory());
 		$this->assertInstanceOf(DistinctFieldsChecker::class, $pInstance->getDistinctFieldsChecker());
@@ -77,7 +74,6 @@ class TestClassContentFilterShortCodeForm
 			->setMethods(['render', 'getImpressum'])
 			->getMock();
 		$pTemplate->method('render')->will($this->returnValue('testResult'));
-		$pTemplate->method('getImpressum')->will($this->returnValue($this->getMockBuilder(Impressum::class)->getMock()));
 		$pDataFormConfigurationFactory = $this->getMockBuilder(DataFormConfigurationFactory::class)
 			->getMock();
 		$pLogger = $this->getMockBuilder(Logger::class)

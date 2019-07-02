@@ -45,13 +45,14 @@ class ContentFilterShortCodeImprint
 	/**
 	 *
 	 * @param Impressum $pImpressum
+	 * @param Logger $pLogger
 	 *
 	 */
 
-	public function __construct(Impressum $pImpressum = null, Logger $pLogger = null)
+	public function __construct(Impressum $pImpressum, Logger $pLogger)
 	{
-		$this->_pImpressum = $pImpressum ?? new Impressum;
-		$this->_pLogger = $pLogger ?? new Logger;
+		$this->_pImpressum = $pImpressum;
+		$this->_pLogger = $pLogger;
 	}
 
 

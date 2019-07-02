@@ -31,7 +31,6 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormBuilder;
-use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use function shortcode_atts;
@@ -55,7 +54,7 @@ class ContentFilterShortCodeForm
 	/** @var DistinctFieldsChecker */
 	private $_pDistinctFieldsChecker = null;
 
-	/** @var Form\FormBuilder */
+	/** @var FormBuilder */
 	private $_pFormBuilder = null;
 
 
@@ -76,7 +75,7 @@ class ContentFilterShortCodeForm
 		DistinctFieldsChecker $pDistinctFieldsChecker = null,
 		FormBuilder $pFormBuilder = null)
 	{
-		$this->_pTemplate = $pTemplate ?? (new Template(''))->setImpressum(new Impressum);
+		$this->_pTemplate = $pTemplate ?? new Template('');
 		$this->_pLogger = $pLogger ?? new Logger;
 		$this->_pDataFormConfigurationFactory = $pDataFormConfigurationFactory ?? new DataFormConfigurationFactory;
 		$this->_pDistinctFieldsChecker = $pDistinctFieldsChecker ?? new DistinctFieldsChecker();
@@ -110,7 +109,6 @@ class ContentFilterShortCodeForm
 
 			/* @var $pFormConfig DataFormConfiguration */
 			$template = $pFormConfig->getTemplate();
-			$this->_pTemplate->getImpressum()->load();
 			$pTemplate = $this->_pTemplate->withTemplateName($template);
 			$pForm = $this->_pFormBuilder->build($formName, $pFormConfig->getFormType());
 			return $pTemplate->setForm($pForm)->render();

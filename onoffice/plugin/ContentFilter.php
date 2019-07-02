@@ -44,7 +44,6 @@ use WP_Query;
 use function __;
 use function add_rewrite_rule;
 use function add_rewrite_tag;
-use function do_shortcode;
 use function get_page_uri;
 use function get_post;
 use function shortcode_atts;
@@ -133,7 +132,6 @@ class ContentFilter
 					$pTemplate = new Template($pDetailView->getTemplate());
 					$pEstateDetail = $this->preloadSingleEstate($pDetailView, $attributes['units']);
 					$pTemplate->setEstateList($pEstateDetail);
-					$pTemplate->setImpressum((new Impressum)->load());
 					$result = $pTemplate->render();
 					return $result;
 				}
@@ -159,7 +157,6 @@ class ContentFilter
 					$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 
 					$pTemplate->setEstateList($pEstateList);
-					$pTemplate->setImpressum((new Impressum)->load());
 					$pEstateList->loadEstates($page);
 
 					$result = $pTemplate->render();

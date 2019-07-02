@@ -26,7 +26,6 @@ namespace onOffice\WPlugin\Controller\ContentFilter;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -91,8 +90,7 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 
 	public function getTemplate(): Template
 	{
-		$pTemplate = new Template('');
-		return $pTemplate->setImpressum(new Impressum);
+		return new Template('');
 	}
 
 

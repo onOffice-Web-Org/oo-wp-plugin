@@ -37,9 +37,6 @@ class Template
 	const KEY_FORM = 'form';
 
 	/** */
-	const KEY_BASICDATA = 'basicdata';
-
-	/** */
 	const KEY_ADDRESSLIST = 'addresslist';
 
 	/** */
@@ -57,9 +54,6 @@ class Template
 
 	/** @var AddressList */
 	private $_pAddressList = null;
-
-	/** @var Impressum */
-	private $_pImpressum = null;
 
 	/** @var string */
 	private $_templateBasePath = self::TEMPLATE_BASE_PATH;
@@ -88,7 +82,6 @@ class Template
 		$templateData = [
 			self::KEY_FORM => $this->_pForm,
 			self::KEY_ESTATELIST => $this->_pEstateList,
-			self::KEY_BASICDATA => $this->_pImpressum,
 			self::KEY_ADDRESSLIST => $this->_pAddressList,
 		];
 		$filename = $this->buildFilePath();
@@ -118,7 +111,6 @@ class Template
 		// vars which might be used in template
 		$pEstates = $templateData[self::KEY_ESTATELIST];
 		$pForm = $templateData[self::KEY_FORM];
-		$pBasicData = $templateData[self::KEY_BASICDATA];
 		$pAddressList = $templateData[self::KEY_ADDRESSLIST];
 		unset($templateData);
 		ob_start();
@@ -151,20 +143,6 @@ class Template
 		$pNewTemplate = clone $this;
 		$pNewTemplate->_templateName = $templateName;
 		return $pNewTemplate;
-	}
-
-
-	/**
-	 *
-	 * @param Impressum $pImpressum
-	 * @return $this
-	 *
-	 */
-
-	public function setImpressum(Impressum $pImpressum): self
-	{
-		$this->_pImpressum = $pImpressum;
-		return $this;
 	}
 
 
@@ -222,10 +200,6 @@ class Template
 		$this->_templateBasePath = $templateBasePath;
 		return $this;
 	}
-
-	/** @return Impressum */
-	public function getImpressum()
-		{ return $this->_pImpressum; }
 
 	/** @return string */
 	protected function getTemplateBasePath(): string

@@ -35,7 +35,6 @@ use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
-use onOffice\WPlugin\Impressum;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
@@ -46,12 +45,10 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use function DI\autowire;
-use function DI\get;
 
 return [
 	Template::class => autowire()
-		->constructorParameter('templateName', '')
-		->method('setImpressum', get(Impressum::class)),
+		->constructorParameter('templateName', ''),
 	ContentFilterShortCodeAddressEnvironment::class => autowire(ContentFilterShortCodeAddressEnvironmentDefault::class),
 	FormPostConfiguration::class => autowire(FormPostConfigurationDefault::class),
 	FormPostOwnerConfiguration::class => autowire(FormPostOwnerConfigurationDefault::class),
