@@ -36,6 +36,10 @@ use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\Impressum;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
+use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
@@ -56,4 +60,6 @@ return [
 	FormPostApplicantSearchConfiguration::class => autowire(FormPostApplicantSearchConfigurationDefault::class),
 	WPScriptStyleBase::class => autowire(WPScriptStyleDefault::class),
 	WPOptionWrapperBase::class => autowire(WPOptionWrapperDefault::class),
+	ScriptLoaderBuilderConfig::class => autowire(ScriptLoaderBuilderConfigDefault::class),
+	ScriptLoaderGenericConfiguration::class => autowire(ScriptLoaderGenericConfigurationDefault::class),
 ];

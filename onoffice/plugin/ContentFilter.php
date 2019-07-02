@@ -41,20 +41,14 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_Query;
-use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_rewrite_rule;
 use function add_rewrite_tag;
 use function do_shortcode;
 use function get_page_uri;
 use function get_post;
-use function plugins_url;
 use function shortcode_atts;
-use function wp_enqueue_script;
-use function wp_enqueue_style;
 use function wp_get_post_parent_id;
-use function wp_register_script;
-use function wp_register_style;
 
 
 /**
@@ -307,27 +301,6 @@ class ContentFilter
 
 	/**
 	 *
-	 */
-
-	public function registerScripts()
-	{
-		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-
-		wp_register_script('jquery-latest', 'https://code.jquery.com/jquery-latest.js');
-		wp_register_script('onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath));
-		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
-
-		wp_register_style('onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath));
-		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
-		wp_register_style('onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath));
-		wp_register_script('onoffice-leadform', plugins_url('/js/onoffice-leadform.js', $pluginPath), 'jquery', false, true);
-
-		$this->_pScriptLoaderMap->register();
-	}
-
-
-	/**
-	 *
 	 * @param array $title see Wordpress internal function wp_get_document_title()
 	 * @return string
 	 *
@@ -358,29 +331,6 @@ class ContentFilter
 		$title['title'] = $newTitleValue;
 
 		return $title;
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function includeScripts()
-	{
-		wp_enqueue_style('onoffice-default');
-
-		if (Favorites::isFavorizationEnabled()) {
-			wp_enqueue_script('onoffice-favorites');
-		}
-
-		wp_enqueue_script('jquery-latest');
-
-		wp_enqueue_script('onoffice-multiselect', '', [], false, true);
-		wp_enqueue_style('onoffice-multiselect');
-		wp_enqueue_script('onoffice-leadform');
-		wp_enqueue_style('onoffice-forms');
-
-		$this->_pScriptLoaderMap->enqueue();
 	}
 
 
