@@ -1,87 +1,46 @@
-onOffice plugin for WordPress
-=============================
+# onOffice plugin for WordPress
 
-This plugin allows a website owner to illustrate estate data from onOffice enterprise
-edition in a Wordpress site.
+This plugin allows you to illustrate real estates from onOffice enterprise edition in a WordPress site.
 
-Data is being transfered from the onOffice API.
-
-Please note this is an early development version and there's neither an installer, nor a
-graphical administration interface for this.
+In contrast to other real estate WordPress-plugins, this one does not use any file transfer. All data gets transferred using the onOffice API instead.
 
 
-Installation
-------------
+## Installation (for Developers)
 
-1. move the plugin directory to wordpress plugin directory
-2. create a new plugin folder called "onoffice-personalized"
-3. copy the folder "templates.dist" to "onoffice-personalized/templates"
-4. copy "config.php" to "onoffice-personalized/"
+1. Move the plugin directory into a new subdirectory inside the WordPress plugins directory (`wp-content/plugins/`)
+2. Create a new plugin folder called `onoffice-personalized`.
+3. Copy the folder `templates.dist` to `onoffice-personalized/templates`. This is where the newly created individual templates will go.
+4. Login into your WordPress page as an administrator and go to the plugins list by navigating to `Plugins` » `Installed Plugins`. You should be able to see and activate the onOffice direct plugin. If no API token or secret have been saved so far, a notification will show up at the top. Clicking the link will bring you to the appropriate configuration page.
+5. Start editing inside the new `onoffice-personalized` folder.
 
-step by step, as shell commands:
+** IMPORTANT **: Albeit it is safe to disable the plugin, DELETING IT WILL WIPE ALL PLUGIN-RELATED DATA FROM THE DATABASE. WE DO NOT PROVIDE ANY WARRANTY FOR DATA LOSS!
 
-```
-cp onoffice-wp-plugin <wordpress-dir>/wp-content/plugins/onoffice # onoffice-wp-plugin is this directory
-mkdir <wordpress-dir>/wp-content/plugins/onoffice-personalized
-cd <wordpress-dir>/wp-content/plugins/
-cp -R onoffice/templates.dist/ onoffice-personalized/templates
-cp onoffice/config.php onoffice-personalized/
-```
+### Getting API Access
 
+Contact us by phone (+49 241 446860) or email (support@onoffice.com). 
 
-Getting API Access
-------------------
+Proceed to the next step once you've got an API token and secret.
 
-Contact us: +49 241 44686 0 or support@onoffice.com
+### Configuration Basics
 
+#### A First Example: Creating a New Estate List 
+In order to create a new estate list, go to "onOffice" » "Estates" and press "Add New". **Give the new list a name**, pick the desired settings and click "Save Changes" at the bottom of the page. Going back to the estate list overview will show you the shortcode (i.e. `[oo_estate view="my new view"]`. Paste this into a new page and open the preview. The new list of estates should be embedded.
 
-Configuration Basics
---------------------
+An extensive documentation will soon be provided separately.
 
-- API token and secret, as well as the cache configuration are located in api-config.php
-- the `$config` array is split into these layers:
-
-```
-- estate
--- unit
---- filter
---- documents
---- views
----- view
------ data (estate fields to fetch from API)
------ contactdata (address fields to fetch from API)
------ pictures
------ language
------ pageid (representing the view's content)
------ template
------ formname
-- forms
--- <form name>
---- inputs
---- formtype
---- language
---- recipient (optional, but recommended)
---- createaddress (optional boolean value whether to create an address)
---- required (array of required fields)
-```
-
-Templates are being put into the module directory (currently estate or form) inside the `templates`
-directory. The filename is always `<templatename>.php`
-
-License
--------
+## License
 
 This project is licensed under both GNU AGPLv3 and GNU GPLv3:
  - the plugin itself is licensed under GNU AGPLv3. See LICENSE-agpl-3.0.txt.
  - config files and default templates are licensed under GNU GPLv3. See LICENSE-gpl.txt.
 
 
-Contact
--------
+## Contact
 
 onOffice GmbH
 Charlottenburger Allee 5
 52068 Aachen
 Germany
 
-support@onoffice.com
+[support@onoffice.com](mailto://support@onoffice.com)
++49 241 44686
