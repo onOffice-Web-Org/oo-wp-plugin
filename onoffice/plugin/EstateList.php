@@ -156,10 +156,11 @@ class EstateList
 	/**
 	 *
 	 * @param int $currentPage
+	 * @param DataView $pDataListView
 	 *
 	 */
 
-	public function loadEstates(int $currentPage = 1, $pDataListView = null)
+	public function loadEstates(int $currentPage = 1, DataView $pDataListView = null)
 	{
 		if ($pDataListView === null)
 		{

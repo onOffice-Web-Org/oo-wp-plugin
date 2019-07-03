@@ -51,6 +51,11 @@ class ScriptLoaderGeneric
 		$this->_pConfiguration = $pConfiguration;
 	}
 
+
+	/**
+	 *
+	 */
+
 	public function enqueue()
 	{
 		/* @var $pIncludeModel IncludeFileModel */
@@ -61,6 +66,11 @@ class ScriptLoaderGeneric
 			wp_enqueue_style($pIncludeModel->getIdentifier());
 		}
 	}
+
+
+	/**
+	 *
+	 */
 
 	public function register()
 	{
