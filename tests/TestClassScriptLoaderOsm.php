@@ -89,9 +89,9 @@ class TestClassScriptLoaderOsm
 		$this->assertArraySubset($this->_stylesExpectation, $registeredStyles);
 		$this->assertArraySubset($this->_scriptsExpectation, $registeredScripts);
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['leaflet-script']['src']);
-		$this->assertStringEndsWith('/onoffice/third_party/leaflet/leaflet.js', $registeredScripts['leaflet-script']['src']);
+		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet.js', $registeredScripts['leaflet-script']['src']);
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredStyles['leaflet-style']['src']);
-		$this->assertStringEndsWith('/onoffice/third_party/leaflet/leaflet.css', $registeredStyles['leaflet-style']['src']);
+		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet.css', $registeredStyles['leaflet-style']['src']);
 	}
 
 
