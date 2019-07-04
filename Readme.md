@@ -1,4 +1,5 @@
-# onOffice plugin for WordPress
+# onOffice plugin for WordPress 
+[![Build Status](https://travis-ci.org/onOfficeGmbH/oo-wp-plugin.svg?branch=master)](https://travis-ci.org/onOfficeGmbH/oo-wp-plugin)
 
 This plugin allows you to illustrate real estates from onOffice enterprise edition in a WordPress site.
 
