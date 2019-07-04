@@ -7,7 +7,7 @@ In contrast to other real estate WordPress-plugins, this one does not use any fi
 
 ## Installation (for Developers)
 
-1. Clone this repository.
+1. Clone this repository recursively: `git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git`.
 2. Install the development dependencies: `composer install`.
 3. Move the plugin directory into a new subdirectory inside the WordPress plugins directory (`wp-content/plugins/`)
 4. Create a new plugin folder called `onoffice-personalized`.

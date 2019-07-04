@@ -5,7 +5,7 @@
 	},
 	"autoload": {
 		 "psr-4": {
-			"onOffice\\SDK\\": "SDK/trunk/SDK/",
+			"onOffice\\SDK\\": "SDK/SDK/",
 			"onOffice\\WPlugin\\": "plugin/"
 		}
 	},
