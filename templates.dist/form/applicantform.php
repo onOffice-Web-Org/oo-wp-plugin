@@ -1,7 +1,7 @@
 <?php
 /**
  *
- *    Copyright (C) 2016  onOffice Software AG
+ *    Copyright (C) 2016-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 ?>
-
 <form method="post" id="onoffice-form">
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
@@ -32,18 +31,11 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 $addressValues = array();
 $searchcriteriaValues = array();
 
-if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS)
-{
+if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo '<p>SUCCESS!</p>';
-}
-
-if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR)
-{
+} elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
 	echo '<p>ERROR!</p>';
-}
-
-if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING)
-{
+} elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 	echo '<p>Missing Fields!</p>';
 }
 
@@ -67,6 +59,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 }
 
+if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 ?>
 	<p>
@@ -84,4 +77,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	<div>
 		<?php include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php'); ?>
 	</div>
+<?php
+}
+?>
 </form>
