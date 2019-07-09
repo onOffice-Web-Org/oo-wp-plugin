@@ -1,5 +1,5 @@
 === onOffice direct ===
-Contributors: jayay
+Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.3
