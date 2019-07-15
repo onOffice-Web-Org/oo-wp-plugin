@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -20,13 +20,12 @@
  */
 
 namespace onOffice\WPlugin\Gui;
+
 use onOffice\WPlugin\Gui\AdminPage;
 use onOffice\WPlugin\Gui\Table\EstateListTable;
+use const ONOFFICE_PLUGIN_DIR;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -73,10 +72,10 @@ class AdminPageEstateList
 
 		echo ' › '.esc_html__('List Views', 'onoffice');
 
-		$new_link = admin_url('admin.php?page=onoffice-editlistview');
+		$newLink = admin_url('admin.php?page=onoffice-editlistview');
 
 		echo '</h1>';
-		echo '<a href="'.$new_link.'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
+		echo '<a href="'.esc_attr($newLink).'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 

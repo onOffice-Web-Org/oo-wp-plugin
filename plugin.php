@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -51,10 +51,6 @@ use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
 
-if (!defined('ONOFFICE_FEATURE_CONFIGURE_GEO')) {
-	define('ONOFFICE_FEATURE_CONFIGURE_GEO', filter_input(INPUT_SERVER, 'SERVER_NAME') === 'localhost');
-}
-
 define('ONOFFICE_DI_CONFIG_PATH', ONOFFICE_PLUGIN_DIR.DIRECTORY_SEPARATOR.'di-config.php');
 
 $pDIBuilder = new ContainerBuilder();
@@ -86,6 +82,9 @@ add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 add_action('oo_cache_cleanup', 'ooCacheCleanup');
 
 add_action('init', [$pAdminViewController, 'onInit']);
+add_action('init', function() use ($pAdminViewController) {
+	$pAdminViewController->disableHideMetaboxes();
+}, 11);
 add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 
