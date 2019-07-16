@@ -48,63 +48,43 @@ class InputFieldComplexSortableListRenderer
 		echo '<ul class="filter-fields-list">';
 		$i = 1;
 
-		$fields = array();
+		$fields = [];
 		$allFields = $this->getValue();
-		$deactivatedFields = array();
+		$deactivatedFields = [];
 
-		foreach ($this->getCheckedValues() as $name)
-		{
-			if (array_key_exists($name, $allFields))
-			{
+		foreach ($this->getCheckedValues() as $name) {
+			if (isset($allFields[$name])) {
 				$fields[$name] = $allFields[$name];
-			}
-			else
-			{
-				if ($this->_inactiveFields == null)
-				{
-					$this->readInactiveFields();
-				}
+			} else {
+				$this->readInactiveFields();
 
-				if (array_key_exists($name, $this->_inactiveFields))
-				{
+				if (isset($this->_inactiveFields[$name])) {
 					$fields[$name] = $this->_inactiveFields[$name];
 					$deactivatedFields []= $name;
 				}
 			}
 		}
 
-		foreach ($allFields as $val => $title)
-		{
-			if (!in_array($val, $this->getCheckedValues()))
-			{
-				$fields[$val] = $title;
-			}
-		}
+		foreach ($fields as $key => $label) {
+			$checked = '';
+			$deactivatedStyle = '';
+			$deactivatedInTheSoftware = '';
 
-		foreach ($fields as $key => $label)
-		{
-			$checked = null;
-			$deactivatedStyle = null;
-			$deactivatedInTheSoftware = null;
+			if (in_array($key, $this->getCheckedValues())) {
+				$checked = ' checked="checked" ';
 
-			if (in_array($key, $this->getCheckedValues()))
-			{
-				$checked = ' checked = "checked" ';
-
-				if (in_array($key, $deactivatedFields))
-				{
+				if (in_array($key, $deactivatedFields)) {
 					$deactivatedStyle = ' style="color:red;" ';
 					$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
 				}
 			}
 
-			$inputId = 'label'.$this->getGuiId().'b'.$key;
 			echo '<li class="sortable-item" '.$deactivatedStyle.'>'
 					.'<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName()).'[]'
 						.'" value="'.esc_html($key).'"'
 						.$checked
 						.$this->renderAdditionalAttributes()
-						.' id="'.esc_html($inputId).'">'
+						.' id="'.esc_html('label'.$this->getGuiId().'b'.$key).'">'
 						.esc_html($label)
 						.$deactivatedInTheSoftware
 					.'<input type="hidden" name="filter_fields_order'.$i.'[id]" value="'.$i.'">'
@@ -123,18 +103,19 @@ class InputFieldComplexSortableListRenderer
 	 *
 	 */
 
-	protected function readInactiveFields()
+	private function readInactiveFields()
 	{
-		$this->_inactiveFields = array();
+		if ($this->_inactiveFields === null) {
+			$this->_inactiveFields = [];
 
-		$pFieldnames = new Fieldnames(new FieldsCollection(), true);
-		$pFieldnames->loadLanguage();
+			$pFieldnames = new Fieldnames(new FieldsCollection(), true);
+			$pFieldnames->loadLanguage();
 
-		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
+			$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
 
-		foreach ($fieldnames as $key => $properties)
-		{
-			$this->_inactiveFields[$key] = $properties['label'];
+			foreach ($fieldnames as $key => $properties) {
+				$this->_inactiveFields[$key] = $properties['label'];
+			}
 		}
 	}
 

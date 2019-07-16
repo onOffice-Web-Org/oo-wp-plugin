@@ -127,7 +127,7 @@ class InputFieldComplexSortableDetailListRenderer
 					.'</span>'
 					.'<span class="item-controls">'
 						.'<span class="item-type">'.esc_html($category).'</span>'
-						.'<a class="item-edit"><span class="screen-reader-text">'.__('Edit', 'onoffice').'</span></a>'
+						.'<a class="item-edit"><span class="screen-reader-text">'.esc_html__('Edit', 'onoffice').'</span></a>'
 					.'</span>'
 					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[id]" value="'.esc_html($iteration).'">'
 					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[name]" value="'.esc_html($label).'">'
