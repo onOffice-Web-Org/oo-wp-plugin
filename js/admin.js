@@ -82,7 +82,7 @@ jQuery(document).ready(function($){
 	};
 
 	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable) {
-		var myLabel = $('#' + label);
+		var myLabel = label ? $('#' + label) : {};
 		var dummyKey;
 
 		if (myLabel.length) {
@@ -102,7 +102,8 @@ jQuery(document).ready(function($){
 		clonedElement.find('input[data-onoffice-ignore=true]').removeAttr('data-onoffice-ignore');
 
 		if (optionsAvailable == '0') {
-			var availableOptionEl = clonedElement.find('input[name="oopluginfieldconfig-availableOptions[]"]');
+            var selectors = ['oopluginformfieldconfig-availableOptions', 'oopluginfieldconfig-availableOptions'];
+			var availableOptionEl = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			availableOptionEl.parent().remove();
 		}
 

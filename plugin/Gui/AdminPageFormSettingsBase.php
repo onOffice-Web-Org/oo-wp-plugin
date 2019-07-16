@@ -323,6 +323,7 @@ abstract class AdminPageFormSettingsBase
 			foreach (array_keys($fieldNames) as $category) {
 				$slug = $this->generateGroupSlugByModuleCategory($module, $category);
 				$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
+				$pFormFieldsConfig->setOoModule($module);
 				$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
 			}
 		}
