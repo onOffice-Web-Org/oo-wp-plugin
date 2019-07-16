@@ -21,12 +21,16 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
  *
@@ -66,6 +70,12 @@ abstract class FormPost
 
 	/** @var int */
 	private $_absolutCountResults = 0;
+
+	/** @var FieldsCollection */
+	private $_pFieldsCollection = null;
+
+	/** @var CompoundFields */
+	private $_pCompoundFields = null;
 
 
 	/**
@@ -145,11 +155,29 @@ abstract class FormPost
 
 	private function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
 	{
+		//$pContainerBuilder = new ContainerBuilder;
+		//$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		//$pContainer = $pContainerBuilder->build();
+
+		$this->_pFieldsCollection = new FieldsCollection();
+		//$pFieldBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldBuilderShort = $this->_pFormPostConfiguration->getFieldsCollectionBuilderShort();
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($this->_pFieldsCollection)
+			->addFieldsSearchCriteria($this->_pFieldsCollection)
+			->addFieldsFormFrontend($this->_pFieldsCollection);
+
+		//$this->_pCompoundFields = $pContainer->get(CompoundFields::class);
+		$this->_pCompoundFields = $this->_pFormPostConfiguration->getCompoundFields();
+		$requiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getRequiredFields());
+		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());
+		$pFormConfig->setInputs($inputs);
+
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$postVariables = $this->_pFormPostConfiguration->getPostVars();
 		$formData = array_intersect_key($postVariables, $formFields);
 		$pFormData = new FormData($pFormConfig, $formNo);
-		$pFormData->setRequiredFields($pFormConfig->getRequiredFields());
+		$pFormData->setRequiredFields($requiredFields);
 		$pFormData->setFormtype($pFormConfig->getFormType());
 		$pFormData->setValues($formData);
 
@@ -166,7 +194,8 @@ abstract class FormPost
 
 	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
 	{
-		return $pFormConfig->getInputs();
+		$inputs = $pFormConfig->getInputs();
+		return $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $inputs);
 	}
 
 

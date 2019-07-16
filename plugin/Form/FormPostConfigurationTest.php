@@ -24,6 +24,9 @@ namespace onOffice\WPlugin\Form;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\CompoundFields;
+use DI\Container;
 
 
 /**
@@ -48,6 +51,12 @@ class FormPostConfigurationTest
 	/** @var WPOptionWrapperTest */
 	private $_pWPOptionsWrapper = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
+
+	/** @var CompoundFields */
+	private $_pCompoundFields = null;
+
 
 	/**
 	 *
@@ -59,6 +68,8 @@ class FormPostConfigurationTest
 	{
 		$this->_pWPOptionsWrapper = new WPOptionWrapperTest;
 		$this->_pLogger = $pLogger;
+		$this->_pCompoundFields = new CompoundFields();
+		$this->_pFieldsCollectionBuilderShort = new FieldsCollectionBuilderShort(new Container());
 	}
 
 
@@ -144,5 +155,29 @@ class FormPostConfigurationTest
 	public function getWPOptionsWrapper(): WPOptionWrapperBase
 	{
 		return $this->_pWPOptionsWrapper;
+	}
+
+
+	/**
+	 *
+	 * @return CompoundFields
+	 *
+	 */
+
+	public function getCompoundFields(): CompoundFields
+	{
+		return $this->_pCompoundFields;
+	}
+
+
+	/**
+	 *
+	 * @return FieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
+	{
+		return $this->_pFieldsCollectionBuilderShort;
 	}
 }

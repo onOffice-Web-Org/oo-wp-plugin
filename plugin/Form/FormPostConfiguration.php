@@ -23,6 +23,8 @@ namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\CompoundFields;
 
 /**
  *
@@ -67,4 +69,23 @@ interface FormPostConfiguration
 	 */
 
 	public function getWPOptionsWrapper(): WPOptionWrapperBase;
+
+
+
+	/**
+	 *
+	 * @return FieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort;
+
+
+	/**
+	 *
+	 * @return CompoundFields
+	 *
+	 */
+	
+	public function getCompoundFields(): CompoundFields;
 }

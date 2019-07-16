@@ -102,6 +102,7 @@ class TestClassField
 				'testField123__von' => 'testField123 from',
 				'testField123__bis' => 'testField123 up to',
 			],
+			'compoundFields' => [],
 		];
 		$this->assertEquals($expectation, $pField->getAsRow());
 

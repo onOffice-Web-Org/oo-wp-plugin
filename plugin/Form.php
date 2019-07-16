@@ -36,6 +36,7 @@ use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\Field\CompoundFields;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function esc_html;
@@ -73,6 +74,9 @@ class Form
 	/** @var FieldsCollection */
 	private $_pFieldsCollection = null;
 
+	/** @var CompoundFields */
+	private $_pCompoundFields = null;
+
 
 	/**
 	 *
@@ -96,6 +100,8 @@ class Form
 			->addFieldsSearchCriteria($this->_pFieldsCollection)
 			->addFieldsFormFrontend($this->_pFieldsCollection);
 
+		$this->_pCompoundFields = $pContainer->get(CompoundFields::class);
+
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();
@@ -108,7 +114,7 @@ class Form
 			$pFormConfigFactory = new DataFormConfigurationFactory();
 			$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
 			$this->_pFormData = new FormData($pFormConfig, $this->_formNo);
-			$this->_pFormData->setRequiredFields($pFormConfig->getRequiredFields());
+			$this->_pFormData->setRequiredFields($this->getRequiredFields());
 			$this->_pFormData->setFormtype($pFormConfig->getFormType());
 			$this->_pFormData->setFormSent(false);
 		}
@@ -140,7 +146,9 @@ class Form
 	public function getInputFields(): array
 	{
 		$inputs = $this->getDataFormConfiguration()->getInputs();
-		$inputsAll = array_merge($inputs, $this->getFormSpecificFields());
+		$allInputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $inputs);
+		$inputsAll = array_merge($allInputs, $this->getFormSpecificFields());
+
 		return $inputsAll;
 	}
 
@@ -176,7 +184,8 @@ class Form
 	public function getRequiredFields(): array
 	{
 		$requiredFields = $this->getDataFormConfiguration()->getRequiredFields();
-		$requiredFieldsWithGeo = $this->executeGeoPositionFix($requiredFields);
+		$allRequiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $requiredFields);
+		$requiredFieldsWithGeo = $this->executeGeoPositionFix($allRequiredFields);
 
 		return $requiredFieldsWithGeo;
 	}

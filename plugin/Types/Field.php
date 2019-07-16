@@ -61,6 +61,9 @@ class Field
 	/** @var array */
 	private $_rangeFieldTranslations = [];
 
+	/** @var array */
+	private $_compoundFields = [];
+
 
 	/**
 	 *
@@ -294,6 +297,27 @@ class Field
 	}
 
 
+	/**
+	 *
+	 * @param array $compoundFields
+	 *
+	 */
+
+	public function setCompoundFields(array $compoundFields)
+	{
+		$this->_compoundFields = $compoundFields;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getCompoundFields(): array
+		{ return $this->_compoundFields; }
+
 
 	/**
 	 *
@@ -313,6 +337,7 @@ class Field
 			'module' => $this->_module,
 			'rangefield' => $this->_isRangeField,
 			'additionalTranslations' => $this->_rangeFieldTranslations,
+			'compoundFields' => $this->_compoundFields,
 		];
 	}
 
@@ -335,6 +360,7 @@ class Field
 		$pField->setType($row['type']);
 		$pField->setIsRangeField((bool)($row['rangefield'] ?? false));
 		$pField->setRangeFieldTranslations($row['additionalTranslations'] ?? []);
+		$pField->setCompoundFields($row['compoundFields'] ?? []);
 		return $pField;
 	}
 }
