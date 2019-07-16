@@ -57,10 +57,10 @@ jQuery(document).ready(function($){
 			var valElLabel = $(this).next().text();
 			var module = $(this).attr('data-onoffice-module');
 
-			var optionsAvailable = '0';
+			var optionsAvailable = false;
 
 			if ($(this).attr('onoffice-multipleSelectType')) {
-				optionsAvailable = $(this).attr('onoffice-multipleSelectType');
+				optionsAvailable = $(this).attr('onoffice-multipleSelectType') === '1';
 			}
 
 			if ($('#sortableFieldsList').find('#menu-item-' + valElName).length === 0) {
@@ -101,7 +101,7 @@ jQuery(document).ready(function($){
 		clonedElement.find('span.menu-item-settings-name').text(fieldName);
 		clonedElement.find('input[data-onoffice-ignore=true]').removeAttr('data-onoffice-ignore');
 
-		if (optionsAvailable == '0') {
+		if (!optionsAvailable) {
             var selectors = ['oopluginformfieldconfig-availableOptions', 'oopluginfieldconfig-availableOptions'];
 			var availableOptionEl = clonedElement.find('input[name^=' + selectors.join('],input[name^=') + ']');
 			availableOptionEl.parent().remove();
