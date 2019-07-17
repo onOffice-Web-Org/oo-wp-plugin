@@ -54,6 +54,7 @@ class TestClassField
 		$this->assertEquals(FieldTypes::FIELD_TYPE_VARCHAR, $pField->getType());
 		$this->assertFalse($pField->getIsRangeField());
 		$this->assertEmpty($pField->getRangeFieldTranslations());
+		$this->assertEmpty($pField->getCompoundFields());
 	}
 
 
@@ -75,6 +76,8 @@ class TestClassField
 			'testField123__von' => 'testField123 from',
 			'testField123__bis' => 'testField123 up to',
 		], $pField->getRangeFieldTranslations());
+		$this->assertSame(['Anrede-Titel' => ['Anrede', 'Titel']], $pField->getCompoundFields());
+
 	}
 
 
@@ -102,7 +105,7 @@ class TestClassField
 				'testField123__von' => 'testField123 from',
 				'testField123__bis' => 'testField123 up to',
 			],
-			'compoundFields' => [],
+			'compoundFields' => ['Anrede-Titel' => ['Anrede', 'Titel']],
 		];
 		$this->assertEquals($expectation, $pField->getAsRow());
 
@@ -131,6 +134,9 @@ class TestClassField
 		$pField->setRangeFieldTranslations([
 			'testField123__von' => 'testField123 from',
 			'testField123__bis' => 'testField123 up to',
+		]);
+		$pField->setCompoundFields([
+			'Anrede-Titel' => ['Anrede', 'Titel'],
 		]);
 		return $pField;
 	}
