@@ -34,6 +34,7 @@ use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostApplicantSearch;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\Field\CompoundFields;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -67,6 +68,12 @@ class TestClassFormPostApplicantSearch
 	{
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setConstructorArgs([new Container()])
+				->getMock();
+
+		$pCompoundFields = new CompoundFields();
+
 		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pLogger);
 		$pSDKWrapperMocker = $this->setupSDKWrapperMocker();
 		$this->_pFormPostConfigurationTest->setPostVariables([
@@ -75,6 +82,9 @@ class TestClassFormPostApplicantSearch
 			'kaufpreis' => '200000',
 			'wohnflaeche' => '800',
 		]);
+
+		$this->_pFormPostConfigurationTest->setCompoundFields($pCompoundFields);
+		$this->_pFormPostConfigurationTest->setFieldsCollectionBuilderShort($pFieldsCollectionBuilderShort);
 
 		$this->setupDataFormConfiguration();
 

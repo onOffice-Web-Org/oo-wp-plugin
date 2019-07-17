@@ -68,8 +68,6 @@ class FormPostConfigurationTest
 	{
 		$this->_pWPOptionsWrapper = new WPOptionWrapperTest;
 		$this->_pLogger = $pLogger;
-		$this->_pCompoundFields = new CompoundFields();
-		$this->_pFieldsCollectionBuilderShort = new FieldsCollectionBuilderShort(new Container());
 	}
 
 
@@ -179,5 +177,29 @@ class FormPostConfigurationTest
 	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
 	{
 		return $this->_pFieldsCollectionBuilderShort;
+	}
+
+
+	/**
+	 *
+	 * @param CompoundFields $pCompoundFields
+	 *
+	 */
+
+	public function setCompoundFields(CompoundFields $pCompoundFields)
+	{
+		$this->_pCompoundFields = $pCompoundFields;
+	}
+
+
+	/**
+	 *
+	 * @param FieldsCollectionBuilderShort $pBuilder
+	 *
+	 */
+
+	public function setFieldsCollectionBuilderShort(FieldsCollectionBuilderShort $pBuilder)
+	{
+		$this->_pFieldsCollectionBuilderShort = $pBuilder;
 	}
 }

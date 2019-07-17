@@ -37,6 +37,7 @@ use onOffice\WPlugin\FormPostContact;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\Field\CompoundFields;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -74,6 +75,11 @@ class TestClassFormPostContact
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
+		$pCompoundFields = new CompoundFields();
+		$pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setConstructorArgs([new Container()])
+				->getMock();
+
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
 			->getMock();
@@ -81,6 +87,10 @@ class TestClassFormPostContact
 		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
 		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
 			new FieldsCollectionBuilderShort($pContainer));
+
+		$this->_pFormPostConfiguration->setCompoundFields($pCompoundFields);
+		$this->_pFormPostConfiguration->setFieldsCollectionBuilderShort($pBuilderShort);
+
 		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest
 			($this->_pSDKWrapperMocker, $pWPQueryWrapper, $pFormAddressCreator);
 		$this->_pFormPostContactConfiguration->setReferrer('/test/page');

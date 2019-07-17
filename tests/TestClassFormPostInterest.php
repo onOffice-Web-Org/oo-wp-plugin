@@ -37,6 +37,7 @@ use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostInterest;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\Field\CompoundFields;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -105,6 +106,11 @@ class TestClassFormPostInterest
 		]));
 
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
+		$this->_pFormPostConfiguration->setCompoundFields(new CompoundFields());
+		$pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setConstructorArgs([new Container()])
+				->getMock();
+		$this->_pFormPostConfiguration->setFieldsCollectionBuilderShort($pBuilderShort);
 		$this->_pFormPostInterestConfiguration = new FormPostInterestConfigurationTest
 			($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields);
 

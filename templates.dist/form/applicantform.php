@@ -52,8 +52,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
 	$line = $pForm->getFieldLabel( $input ).$addition.': ';
-	$pFieldRenderer = new onOffice\WPlugin\Form\FormFieldRenderer($pForm, $input);
-	$line .= $pFieldRenderer->render();
+	$line .= renderFormField($input, $pForm);
 
 	if ( $pForm->isMissingField( $input ) ) {
 		$line .= sprintf('<span>%s</span>', esc_html__('Bitte ausfüllen!', 'onoffice'));

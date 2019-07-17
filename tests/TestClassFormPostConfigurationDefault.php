@@ -95,4 +95,29 @@ class TestClassFormPostConfigurationDefault
 	{
 		$this->assertInstanceOf(WPOptionWrapperDefault::class, $this->_pSubject->getWPOptionsWrapper());
 	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Form\FormPostConfigurationDefault::getFieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function testGetFieldsCollectionBuilderShort()
+	{
+		$this->assertInstanceOf(FieldsCollectionBuilderShort::class, $this->_pSubject->getFieldsCollectionBuilderShort());
+	}
+
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Form\FormPostConfigurationDefault::getCompoundFields
+	 *
+	 */
+
+	public function testGetCompoundFields()
+	{
+		$this->assertInstanceOf(CompoundFields::class, $this->_pSubject->getCompoundFields());
+	}
 }
