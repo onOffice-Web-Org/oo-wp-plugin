@@ -146,8 +146,8 @@ class Form
 	public function getInputFields(): array
 	{
 		$inputs = $this->getDataFormConfiguration()->getInputs();
-		$allInputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $inputs);
-		$inputsAll = array_merge($allInputs, $this->getFormSpecificFields());
+		$inputsSplitCompound = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $inputs);
+		$inputsAll = array_merge($inputsSplitCompound, $this->getFormSpecificFields());
 
 		return $inputsAll;
 	}
@@ -184,8 +184,8 @@ class Form
 	public function getRequiredFields(): array
 	{
 		$requiredFields = $this->getDataFormConfiguration()->getRequiredFields();
-		$allRequiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $requiredFields);
-		$requiredFieldsWithGeo = $this->executeGeoPositionFix($allRequiredFields);
+		$requiredFieldsSplitCompound = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $requiredFields);
+		$requiredFieldsWithGeo = $this->executeGeoPositionFix($requiredFieldsSplitCompound);
 
 		return $requiredFieldsWithGeo;
 	}

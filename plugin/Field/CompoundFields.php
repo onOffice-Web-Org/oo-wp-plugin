@@ -27,7 +27,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 
 /**
  *
- * founds out all compound fields
+ * finds all compound fields
  *
  */
 
@@ -44,10 +44,8 @@ class CompoundFields
 		$fields = $pFieldsCollection->getAllFields();
 		$result = [];
 
-		foreach ($fields as $pField)
-		{
-			if ($pField->getCompoundFields() !== [])
-			{
+		foreach ($fields as $pField) {
+			if ($pField->getCompoundFields() !== []) {
 				$result[$pField->getName()] = $pField->getCompoundFields();
 			}
 		}
@@ -97,8 +95,7 @@ class CompoundFields
 		foreach ($fields as $fieldname => $module) {
 			if (isset($compoundFields[$fieldname])) {
 				$result = $this->createNew($result, $compoundFields[$fieldname], $module);
-			}
-			else {
+			} else {
 				$result[$fieldname] = $module;
 			}
 		}
