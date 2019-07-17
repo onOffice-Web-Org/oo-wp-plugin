@@ -55,12 +55,33 @@ The supported kinds of forms are
 
 = 2.0 =
 * Stable version of the plugin, including a backend GUI
+* All settings available in version 1.0 of the plugin have been integrated into the new GUI.
 * New templates with centralized output function per field-type
 * Removed "free forms".
 * Uses WordPress options and DB to save settings
+* Has translations of UI texts
+* Amount of estate detail views has been limited to one due to SEO reasons (duplicate content is not wanted)
+* Estate lists can now be filtered by a filter set up in onOffice.
+* Added ability to mark fields as filterable which will display a HTML input in the search form for the list
+* A new type of list for addresses (such as a the agency's team) was added including a search for addresses
+* The shortcode [oo_basicdata] was added to output information about the customer. It can be used on pages and the text widget.
+* The estate detail view now has a better title, depending on what information about the estate is given
+* A view that shows similar estates can now be added to the front end.
+* Estates can now be added to a list of favorites for later review.
+* A movie-link that was set in onOffice can now be displayed as a player (or clickable link) in WordPress.
+* The proximity search was enhanced
+* OpenStreetMap map provider was added
+* Double opt-in for newsletter activation is now available in the interested party form
+* The plugin has been tested on PHP 7.2
 
 = 1.0 =
 * First version of the plugin without a GUI
+* Create estate lists + views + detail views
+* Create forms of these kinds: contact form, owner form, interest form, applicant search form or a free form
+* Added optional Google Maps overview of all estates for every estate view
+* Ability to output estate images has been added
+* Added ability to create expose PDFs
+* Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
 
