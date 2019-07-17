@@ -155,19 +155,13 @@ abstract class FormPost
 
 	private function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
 	{
-		//$pContainerBuilder = new ContainerBuilder;
-		//$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		//$pContainer = $pContainerBuilder->build();
-
 		$this->_pFieldsCollection = new FieldsCollection();
-		//$pFieldBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort = $this->_pFormPostConfiguration->getFieldsCollectionBuilderShort();
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($this->_pFieldsCollection)
 			->addFieldsSearchCriteria($this->_pFieldsCollection)
 			->addFieldsFormFrontend($this->_pFieldsCollection);
 
-		//$this->_pCompoundFields = $pContainer->get(CompoundFields::class);
 		$this->_pCompoundFields = $this->_pFormPostConfiguration->getCompoundFields();
 		$requiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getRequiredFields());
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());
