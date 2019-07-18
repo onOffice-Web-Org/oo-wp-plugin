@@ -17,6 +17,8 @@ matrix:
       env: WP_VERSION=latest
     - php: 7.1
       env: WP_VERSION=latest
+    - php: 7.0
+      env: WP_VERSION=latest
 
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -36,5 +38,4 @@ script:
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
       vendor/bin/phpunit
-      WP_MULTISITE=1 vendor/bin/phpunit
     fi
