@@ -36,7 +36,7 @@ use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function esc_html;
@@ -74,7 +74,7 @@ class Form
 	/** @var FieldsCollection */
 	private $_pFieldsCollection = null;
 
-	/** @var CompoundFields */
+	/** @var CompoundFieldsFilter */
 	private $_pCompoundFields = null;
 
 
@@ -100,7 +100,7 @@ class Form
 			->addFieldsSearchCriteria($this->_pFieldsCollection)
 			->addFieldsFormFrontend($this->_pFieldsCollection);
 
-		$this->_pCompoundFields = $pContainer->get(CompoundFields::class);
+		$this->_pCompoundFields = $pContainer->get(CompoundFieldsFilter::class);
 
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();

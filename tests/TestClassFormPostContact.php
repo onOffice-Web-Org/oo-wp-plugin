@@ -37,7 +37,7 @@ use onOffice\WPlugin\FormPostContact;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -75,7 +75,7 @@ class TestClassFormPostContact
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
-		$pCompoundFields = new CompoundFields();
+		$pCompoundFields = new CompoundFieldsFilter();
 		$pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 				->setConstructorArgs([new Container()])
 				->getMock();

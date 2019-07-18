@@ -38,7 +38,7 @@ use onOffice\WPlugin\FormPostOwner;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -132,7 +132,7 @@ class TestClassFormPostOwner
 				->setConstructorArgs([new Container()])
 				->getMock();
 
-		$pCompoundFields = new CompoundFields();
+		$pCompoundFields = new CompoundFieldsFilter();
 
 		$pFormPostConfiguration->setCompoundFields($pCompoundFields);
 		$pFormPostConfiguration->setFieldsCollectionBuilderShort($pBuilderShort);

@@ -28,7 +28,7 @@ use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
@@ -74,7 +74,7 @@ abstract class FormPost
 	/** @var FieldsCollection */
 	private $_pFieldsCollection = null;
 
-	/** @var CompoundFields */
+	/** @var CompoundFieldsFilter */
 	private $_pCompoundFields = null;
 
 

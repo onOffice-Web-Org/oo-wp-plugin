@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\Field;
 use WP_UnitTestCase;
@@ -39,7 +39,7 @@ class TestClassCompoundFields
 	/** @var FieldsCollection */
 	private $_pFieldsCollection = null;
 
-	/** @var CompoundFields */
+	/** @var CompoundFieldsFilter */
 	private $_pCompoundFields = null;
 
 	/** @var array */
@@ -74,7 +74,7 @@ class TestClassCompoundFields
 
 	public function prepare()
 	{
-		$this->_pCompoundFields = new CompoundFields();
+		$this->_pCompoundFields = new CompoundFieldsFilter();
 		$this->_pFieldsCollection = new FieldsCollection();
 		$pFieldAnredeTitel = new Field('Anrede-Titel', 'address', 'Anrede-Titel');
 		$pFieldAnredeTitel->setCompoundFields(['Anrede', 'Titel']);

@@ -31,7 +31,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
  *
  */
 
-class CompoundFields
+class CompoundFieldsFilter
 {
 	/**
 	 *

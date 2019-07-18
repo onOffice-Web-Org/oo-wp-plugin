@@ -28,7 +28,7 @@ use onOffice\WPlugin\Form\FormPostConfigurationDefault;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
 
 /**
@@ -50,7 +50,7 @@ class TestClassFormPostConfigurationDefault
 	public function prepare()
 	{
 		$pFieldsCollectionBuildershort = new FieldsCollectionBuilderShort(new Container());
-		$pCompoundFields = new CompoundFields();
+		$pCompoundFields = new CompoundFieldsFilter();
 		$this->_pSubject = new FormPostConfigurationDefault($pFieldsCollectionBuildershort, $pCompoundFields);
 	}
 
@@ -118,6 +118,6 @@ class TestClassFormPostConfigurationDefault
 
 	public function testGetCompoundFields()
 	{
-		$this->assertInstanceOf(CompoundFields::class, $this->_pSubject->getCompoundFields());
+		$this->assertInstanceOf(CompoundFieldsFilter::class, $this->_pSubject->getCompoundFields());
 	}
 }

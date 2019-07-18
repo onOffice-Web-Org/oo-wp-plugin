@@ -25,7 +25,7 @@ use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use DI\Container;
 
 
@@ -54,7 +54,7 @@ class FormPostConfigurationTest
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort = null;
 
-	/** @var CompoundFields */
+	/** @var CompoundFieldsFilter */
 	private $_pCompoundFields = null;
 
 
@@ -158,11 +158,11 @@ class FormPostConfigurationTest
 
 	/**
 	 *
-	 * @return CompoundFields
+	 * @return CompoundFieldsFilter
 	 *
 	 */
 
-	public function getCompoundFields(): CompoundFields
+	public function getCompoundFields(): CompoundFieldsFilter
 	{
 		return $this->_pCompoundFields;
 	}
@@ -182,11 +182,11 @@ class FormPostConfigurationTest
 
 	/**
 	 *
-	 * @param CompoundFields $pCompoundFields
+	 * @param CompoundFieldsFilter $pCompoundFields
 	 *
 	 */
 
-	public function setCompoundFields(CompoundFields $pCompoundFields)
+	public function setCompoundFields(CompoundFieldsFilter $pCompoundFields)
 	{
 		$this->_pCompoundFields = $pCompoundFields;
 	}

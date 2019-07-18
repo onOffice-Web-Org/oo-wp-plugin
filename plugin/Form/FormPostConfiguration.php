@@ -24,7 +24,7 @@ namespace onOffice\WPlugin\Form;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 
 /**
  *
@@ -83,9 +83,9 @@ interface FormPostConfiguration
 
 	/**
 	 *
-	 * @return CompoundFields
+	 * @return CompoundFieldsFilter
 	 *
 	 */
 	
-	public function getCompoundFields(): CompoundFields;
+	public function getCompoundFields(): CompoundFieldsFilter;
 }

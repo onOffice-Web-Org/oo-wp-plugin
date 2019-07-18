@@ -34,7 +34,7 @@ use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostApplicantSearch;
 use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\Field\CompoundFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -72,7 +72,7 @@ class TestClassFormPostApplicantSearch
 				->setConstructorArgs([new Container()])
 				->getMock();
 
-		$pCompoundFields = new CompoundFields();
+		$pCompoundFields = new CompoundFieldsFilter();
 
 		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pLogger);
 		$pSDKWrapperMocker = $this->setupSDKWrapperMocker();
