@@ -31,7 +31,7 @@ use WP_UnitTestCase;
 
 /**
  *
- * Test of class CompoundFields
+ * Test of class CompoundFieldsFilter
  *
  * @author ana
  *
@@ -88,7 +88,7 @@ class TestClassCompoundFieldsFilter
 
 	/**
 	 *
-	 * @covers onOffice\WPlugin\Field\CompoundFields::buildCompoundFields
+	 * @covers onOffice\WPlugin\Field\CompoundFieldsFilter::buildCompoundFields
 	 *
 	 */
 
@@ -103,8 +103,8 @@ class TestClassCompoundFieldsFilter
 
 	/**
 	 *
-	 * @covers onOffice\WPlugin\Field\CompoundFields::mergeFields
-	 * @covers onOffice\WPlugin\Field\CompoundFields::createNew
+	 * @covers onOffice\WPlugin\Field\CompoundFieldsFilter::mergeFields
+	 * @covers onOffice\WPlugin\Field\CompoundFieldsFilter::createNew
 	 *
 	 */
 
@@ -118,8 +118,8 @@ class TestClassCompoundFieldsFilter
 
 	/**
 	 *
-	 * @covers onOffice\WPlugin\Field\CompoundFields::mergeAssocFields
-	 * @covers onOffice\WPlugin\Field\CompoundFields::createNew
+	 * @covers onOffice\WPlugin\Field\CompoundFieldsFilter::mergeAssocFields
+	 * @covers onOffice\WPlugin\Field\CompoundFieldsFilter::createNew
 	 *
 	 */
 
