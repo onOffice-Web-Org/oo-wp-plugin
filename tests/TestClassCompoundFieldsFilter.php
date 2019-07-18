@@ -37,7 +37,7 @@ use WP_UnitTestCase;
  *
  */
 
-class TestClassCompoundFields
+class TestClassCompoundFieldsFilter
 	extends WP_UnitTestCase
 {
 	/** @var FieldsCollection */
