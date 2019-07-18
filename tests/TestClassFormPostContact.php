@@ -299,6 +299,7 @@ class TestClassFormPostContact
 	private function getNewDataFormConfiguration(): DataFormConfigurationContact
 	{
 		$pDataFormConfiguration = new DataFormConfigurationContact();
+		$pDataFormConfiguration->addInput('Anrede', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('Vorname', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('Name', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('Email', onOfficeSDK::MODULE_ADDRESS);
@@ -365,6 +366,7 @@ class TestClassFormPostContact
 			'Telefon1' => '0815/2345677',
 			'AGB_akzeptiert' => '1',
 			'Id' => '1337',
+			'Anrede' => '',
 		];
 	}
 }

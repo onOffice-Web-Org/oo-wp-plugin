@@ -146,7 +146,13 @@ abstract class FormPost
 	private function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
 	{
 		$formFields = $this->getAllowedPostVars($pFormConfig);
-		$postVariables = $this->_pFormPostConfiguration->getPostVars();
+		$postVariables = array_filter($this->_pFormPostConfiguration->getPostVars(), function($value): bool {
+			// $value can be either string or array
+			if (is_string($value)) {
+				return trim($value) !== '';
+			}
+			return true;
+		});
 		$formData = array_intersect_key($postVariables, $formFields);
 		$pFormData = new FormData($pFormConfig, $formNo);
 		$pFormData->setRequiredFields($pFormConfig->getRequiredFields());
