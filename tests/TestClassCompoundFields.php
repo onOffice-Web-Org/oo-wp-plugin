@@ -28,11 +28,15 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\Field;
 use WP_UnitTestCase;
 
+
 /**
- * Description of TestClassCompoundFields
+ *
+ * Test of class CompoundFields
  *
  * @author ana
+ *
  */
+
 class TestClassCompoundFields
 	extends WP_UnitTestCase
 {
@@ -43,27 +47,24 @@ class TestClassCompoundFields
 	private $_pCompoundFields = null;
 
 	/** @var array */
-	private $_expectedResultMerge =
-		[
-			'Name',
-			'Anrede',
-			'Titel',
-		];
+	private $_expectedResultMerge = [
+		'Name',
+		'Anrede',
+		'Titel',
+	];
 
 	/** @var array */
-	private $_expectedResultAssocMerge =
-		[
-			'Anrede' => 'address',
-			'Titel' => 'address',
-			'Name' => 'address',
-		];
+	private $_expectedResultAssocMerge = [
+		'Anrede' => 'address',
+		'Titel' => 'address',
+		'Name' => 'address',
+	];
 
 	/** @var array */
-	private $_fields =
-		[
-			'Anrede-Titel' => 'address',
-			'Name' => 'address',
-		];
+	private $_fields = [
+		'Anrede-Titel' => 'address',
+		'Name' => 'address',
+	];
 
 
 	/**
@@ -103,6 +104,7 @@ class TestClassCompoundFields
 	/**
 	 *
 	 * @covers onOffice\WPlugin\Field\CompoundFields::mergeFields
+	 * @covers onOffice\WPlugin\Field\CompoundFields::createNew
 	 *
 	 */
 
@@ -117,6 +119,7 @@ class TestClassCompoundFields
 	/**
 	 *
 	 * @covers onOffice\WPlugin\Field\CompoundFields::mergeAssocFields
+	 * @covers onOffice\WPlugin\Field\CompoundFields::createNew
 	 *
 	 */
 

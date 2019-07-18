@@ -316,7 +316,9 @@ class Field
 	 */
 
 	public function getCompoundFields(): array
-		{ return $this->_compoundFields; }
+	{
+		return $this->_compoundFields;
+	}
 
 
 	/**
