@@ -4,40 +4,56 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.3
 Stable tag: 2.0
-Requires PHP: 7.1
+Requires PHP: 7.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
-Allows you to illustrate real estates from onOffice enterprise edition in a WordPress site.
+Integrate real estates, contact forms and contact persons from the onOffice Software into your WordPress website.
 
 == Description ==
 
-This plugin allows your WordPress page to interact with your onOffice enterprise CRM.
-Not only can you create pages to show off your real estates for sale or rent, this plugin allows you
-to create different kinds forms whose data is going to be saved in your version of onOffice enterprise.
+Integrate real estates, contact forms and contact persons from the onOffice Software into your website. Thanks to shortcodes, the plugin is compatible with every WordPress theme.
 
-This plugin does not deal with any kind of manual FTP filetransfer. Rather than that it will tranfer
-all the data it needs through the onOffice API.
+The plugin includes three modules:
+* real estates
+* addresses
+* forms
 
-In detail the plugin can show
+Using a short code, you bring real estates, addresses or forms to your website - you are as flexible in design as you are used to from onOffice.
 
-* lists of addresses and estates
-** estates with a predefined filter such as rent, sale or marked as a reference (or any other filter)
-** entities of estate complexes
-* A detail view for any published estate
-* lists of published addresses, such as your company's team
+The user-friendly plugin enables a quick link between onOffice and your WordPress page: Present real estate and your team on the website and generate leads via forms. You stay in control and are 100% flexible.
 
-The supported kinds of forms are
+= Real estate =
+Create lists, design the real estate presentation and offer synopsis for downloading with a few easy steps.
 
-* Contact forms: allows a visitor to contact you
-* Owner form: Gives an owner the ability to contact you for the sale of his/her estate
-* Prospective buyers can leave information on what kind of estate they are looking for
-* Search for prospective buyers
+* **Publication**: One click in the software is enough to publish the property on your WordPress website.
+* **List view**: Present your properties in clear lists. It is entirely up to you which properties are represented. The lists can be inserted anywhere on the website using short codes.
+* **Detailed view**: Comfortably structure the detail view with checkboxes and drag&drop and easily determine which information is displayed.
+
+= Addresses =
+The website is your business card on the internet. Create trust with a professional self-presentation.
+* **Team presentation**: The address module accesses the data of the employees. The address display is ideal for presenting the team.
+
+= Forms =
+Simplify data maintenance: The information from forms is automatically transmitted to onOffice by the plugin.
+
+* **Contact**: Classic contact form in which the user enters his message and contact information.
+* **Interested parties**: Proactively serve prospective customers! The prospective customer states the contact data and their search desire. Address and search criteria are created directly in onOffice and provided with suitable offers.
+* **Owner**: Acquire new orders with your website! In addition to the contact details, the owner provides information about the property. Address and property can be processed immediately in onOffice.
+* **Search for interested parties**: Convince potential sellers! Show that you have suitable prospects in your inventory. The interested parties are displayed together with the search criteria (but without personal data).
+
+= Further features =
+The plugin offers further practical functions with which you can further professionalize your web presence.
+
+* User-friendly watch list or favorites function
+* Two card types: OpenStreetMap or Google Maps
+* Show all linked media per address / property
+
 
 == Installation ==
 
 1. Clone the repository recursively: `git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git`.
-2. Install the development dependencies: `composer install`.
+2. Install the dependencies: `composer install --no-dev`.
 3. Move the plugin directory into a new subdirectory inside the WordPress `plugins` directory (`wp-content/plugins/`)
 4. Create a new plugin folder called `onoffice-personalized`.
 5. Copy the folder `templates.dist` to `onoffice-personalized/templates`. This is where the newly created individual templates will go.
