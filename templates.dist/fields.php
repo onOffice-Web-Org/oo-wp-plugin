@@ -78,14 +78,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 			</div>
 			';
 		} elseif ( $inputName === 'regionaler_zusatz' ) {
-			echo '<select size="5" name="'.esc_attr($inputName).'[]" multiple>';
-			$pRegionController = new RegionController();
-			$regions = $pRegionController->getRegions();
-			foreach ($regions as $pRegion) {
-				/* @var $pRegion Region */
-				printRegion( $pRegion, $selectedValue ?? [] );
-			}
-			echo '</select>';
+			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label']);
 		}
 		elseif ( $inputName === 'country' )	{
 			echo '<select size="1" name="'.esc_attr($inputName).'">';
@@ -120,6 +113,7 @@ if (!function_exists('renderFormField')) {
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
+		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
 
 		if ($fieldName == 'range')
 		{
@@ -128,7 +122,6 @@ if (!function_exists('renderFormField')) {
 
 		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput &&
 			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land', 'vermarktungsart'))) {
-			$fieldLabel = $pForm->getFieldLabel($fieldName, true);
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
@@ -142,6 +135,8 @@ if (!function_exists('renderFormField')) {
 					.esc_html($value).'</option>';
 			}
 			$output .= '</select>';
+		} elseif ($fieldName === 'regionaler_zusatz') {
+			$output .= renderRegionalAddition($fieldName, [$selectedValue], false, $fieldLabel);
 		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
 			$isRangeValue)) {
@@ -179,6 +174,28 @@ if (!function_exists('renderFormField')) {
 
 
 		}
+		return $output;
+	}
+}
+
+
+if (!function_exists('renderRegionalAddition')) {
+	function renderRegionalAddition(string $inputName, array $selectedValue, bool $multiple, string $fieldLabel): string
+	{
+		$output = '';
+		$name = esc_attr($inputName).($multiple ? '[]' : '');
+		$multipleAttr = $multiple ? 'multiple size="5"' : 'size="1"';
+		$output .= '<select name="'.$name.'" '.$multipleAttr.'>';
+		$pRegionController = new RegionController();
+		$regions = $pRegionController->getRegions();
+		ob_start();
+		foreach ($regions as $pRegion) {
+			echo '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
+			/* @var $pRegion Region */
+			printRegion( $pRegion, $selectedValue ?? [] );
+		}
+		$output .= ob_get_clean();
+		$output .= '</select>';
 		return $output;
 	}
 }
