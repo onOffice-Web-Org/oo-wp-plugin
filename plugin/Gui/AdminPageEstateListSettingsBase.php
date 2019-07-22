@@ -87,12 +87,14 @@ abstract class AdminPageEstateListSettingsBase
 			$result = ($recordId != null);
 			if ($result) {
 				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG);
-				$row = $this->prepareRelationValues
-					(RecordManager::TABLENAME_FIELDCONFIG, 'listview_id', $row, $recordId);
-				$row = $this->prepareRelationValues
-					(RecordManager::TABLENAME_LISTVIEW_CONTACTPERSON, 'listview_id', $row, $recordId);
-				$row = $this->prepareRelationValues
-					(RecordManager::TABLENAME_PICTURETYPES, 'listview_id', $row, $recordId);
+				$row = [
+					RecordManager::TABLENAME_FIELDCONFIG => $this->prepareRelationValues
+						(RecordManager::TABLENAME_FIELDCONFIG, 'listview_id', $row, $recordId),
+					RecordManager::TABLENAME_LISTVIEW_CONTACTPERSON => $this->prepareRelationValues
+						(RecordManager::TABLENAME_LISTVIEW_CONTACTPERSON, 'listview_id', $row, $recordId),
+					RecordManager::TABLENAME_PICTURETYPES => $this->prepareRelationValues
+						(RecordManager::TABLENAME_PICTURETYPES, 'listview_id', $row, $recordId),
+				];
 
 				$pInsert->insertAdditionalValues($row);
 			}
