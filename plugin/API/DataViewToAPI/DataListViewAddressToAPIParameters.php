@@ -23,9 +23,12 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\API\DataViewToAPI;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddress;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 
 /**
@@ -57,8 +60,17 @@ class DataListViewAddressToAPIParameters
 		DefaultFilterBuilderListViewAddress $pDefaultFilterBuilderListViewAddress = null)
 	{
 		$this->_pDataListView = $pDataListView;
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+
+		$pFieldBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pCompoundFields = $pContainer->get(CompoundFieldsFilter::class);
+
 		$this->_pDefaultFilterBuilderListViewAddress =
-			$pDefaultFilterBuilderListViewAddress ?? new DefaultFilterBuilderListViewAddress($pDataListView);
+			$pDefaultFilterBuilderListViewAddress ??
+				new DefaultFilterBuilderListViewAddress($pDataListView, $pFieldBuilderShort, $pCompoundFields);
 	}
 
 

@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use Closure;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
@@ -38,6 +39,7 @@ use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -141,6 +143,12 @@ class TestClassAddressList
 			->will($this->returnValue($pMockViewFieldModifierHandler));
 		$pMockConfig->method('getFieldnames')->will($this->returnValue($pMockFieldnames));
 		$pMockConfig->method('getOutputFields')->will($this->returnValue($pMockOutputFields));
+
+		$pBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setConstructorArgs([new Container()])
+				->getMock();
+
+		$pMockConfig->method('getFieldsCollectionBuilderShort')->willReturn($pBuilderMock);
 
 		$this->_pAddressList = new AddressList($pMockConfig);
 	}

@@ -120,4 +120,32 @@ class CompoundFieldsFilter
 		}
 		return $result;
 	}
+
+
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param array $fields
+	 * @return array
+	 *
+	 */
+
+	public function mergeListFilterableFields(FieldsCollection $pFieldsCollection, array $fields): array
+	{
+		$compoundFields = $this->buildCompoundFields($pFieldsCollection);
+		$result = [];
+
+		foreach ($fields as $fieldname => $value) {
+			if (isset($compoundFields[$fieldname])) {
+				foreach ($compoundFields[$fieldname] as $name) {
+					$result[$name] = $value;
+				}
+			} else {
+				$result[$fieldname] = $value;
+			}
+		}
+
+		return $result;
+	}
 }

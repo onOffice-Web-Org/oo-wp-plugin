@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
@@ -33,6 +34,8 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
  *
@@ -53,6 +56,12 @@ class AddressListEnvironmentDefault
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsBuilderShort = null;
+
+	/** @var CompoundFieldsFilter */
+	private $_pCompoundFieldsFilter = null;
+
 
 	/**
 	 *
@@ -63,6 +72,11 @@ class AddressListEnvironmentDefault
 		$pFieldCollection = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
 		$this->_pFieldnames = new Fieldnames($pFieldCollection);
 		$this->_pSDKWrapper = new SDKWrapper();
+
+		$pContainer = new Container();
+
+		$this->_pCompoundFieldsFilter = $pContainer->get(CompoundFieldsFilter::class);
+		$this->_pFieldsBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
 	}
 
 
@@ -93,6 +107,18 @@ class AddressListEnvironmentDefault
 
 	/**
 	 *
+	 * @return FieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
+	{
+		return $this->_pFieldsBuilderShort;
+	}
+
+
+	/**
+	 *
 	 * @param DataListViewAddress $pListView
 	 * @return OutputFields
 	 *
@@ -100,7 +126,10 @@ class AddressListEnvironmentDefault
 
 	public function getOutputFields(DataListViewAddress $pListView): OutputFields
 	{
-		return new OutputFields($pListView, new GeoPositionFieldHandlerEmpty());
+		return new OutputFields(
+				$pListView,
+				new GeoPositionFieldHandlerEmpty(),
+				$this->_pCompoundFieldsFilter);
 	}
 
 

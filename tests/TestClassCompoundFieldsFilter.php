@@ -129,4 +129,21 @@ class TestClassCompoundFieldsFilter
 
 		$this->assertEquals($this->_expectedResultAssocMerge, $result);
 	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\CompoundFieldsFilter::mergeListFilterableFields
+	 *
+	 */
+
+	public function testMergeListFilterableFields()
+	{
+		$testdata = ['Anrede-Titel' => null];
+
+		$expectedData = ['Anrede' => null, 'Titel' => null];
+		$result = $this->_pCompoundFields->mergeListFilterableFields($this->_pFieldsCollection, $testdata);
+
+		$this->assertEquals($expectedData, $result);
+	}
 }

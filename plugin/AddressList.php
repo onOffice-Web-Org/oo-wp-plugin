@@ -35,6 +35,7 @@ use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\Types\FieldsCollection;
 use function esc_html;
 
 /**
@@ -304,7 +305,11 @@ class AddressList
 	{
 		$pDataListView = $this->_pDataViewAddress;
 		$pFilterableFields = $this->_pEnvironment->getOutputFields($pDataListView);
-		$fieldsValues = $pFilterableFields->getVisibleFilterableFields();
+		/** @var FieldsCollectionBuilderShort $pBuilderShort */
+		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
+		$pFieldsCollection = new FieldsCollection();
+		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$fieldsValues = $pFilterableFields->getVisibleFilterableFields($pFieldsCollection);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $this->_pEnvironment

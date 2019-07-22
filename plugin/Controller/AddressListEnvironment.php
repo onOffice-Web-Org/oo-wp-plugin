@@ -29,6 +29,7 @@ use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
  *
@@ -86,4 +87,14 @@ interface AddressListEnvironment
 	 */
 
 	public function getViewFieldModifierHandler(array $fields): ViewFieldModifierHandler;
+
+
+
+	/**
+	 *
+	 * @return FieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort;
 }
