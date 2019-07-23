@@ -21,10 +21,15 @@
 
 namespace onOffice\tests;
 
-use onOffice\tests\DefaultFilterBuilderListViewAddressMocker;
+use DI\ContainerBuilder;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
+use onOffice\WPlugin\Filter\FilterBuilderInputVariablesFactory;
 use WP_UnitTestCase;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -36,37 +41,20 @@ use WP_UnitTestCase;
 class TestClassDataListViewAddressToAPIParameters
 	extends WP_UnitTestCase
 {
+
+	/** @var DataListViewAddressToAPIParameters */
+	private $_pDataListViewAddressToAPIParameters = null;
+
+	/** @var DataListViewAddress */
+	private $_pDataListViewAddress = null;
+
+
 	/** @var array */
 	private $_filter = [
 		'testField' => ['op' => '=', 'val' => 1],
 		'testField2' => ['op' => 'like', 'val' => 'a%'],
 	];
 
-
-	/**
-	 *
-	 */
-
-	public function testConstruct()
-	{
-		$pDataListViewAddressToAPIParameters = $this->getNewDataListViewToAPIParameters();
-		$pDataListViewAddress = $pDataListViewAddressToAPIParameters->getDataListView();
-		$this->assertEquals($pDataListViewAddress, $pDataListViewAddressToAPIParameters->getDataListView());
-		$this->assertEquals(1, $pDataListViewAddressToAPIParameters->getPage());
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testSetPage()
-	{
-		$pDataListViewAddressToAPIParameters = $this->getNewDataListViewToAPIParameters();
-		$this->assertEquals(1, $pDataListViewAddressToAPIParameters->getPage());
-		$pDataListViewAddressToAPIParameters->setPage(2);
-		$this->assertEquals(2, $pDataListViewAddressToAPIParameters->getPage());
-	}
 
 
 	/**
@@ -75,9 +63,9 @@ class TestClassDataListViewAddressToAPIParameters
 
 	public function testBuildParameters()
 	{
-		$pDataListViewAddressToAPIParameters = $this->getNewDataListViewToAPIParameters();
-		$pDataAddressList = $pDataListViewAddressToAPIParameters->getDataListView();
-		$result = $pDataListViewAddressToAPIParameters->buildParameters($pDataAddressList->getFields());
+		$result = $this->_pDataListViewAddressToAPIParameters->buildParameters(
+				['Vorname', 'Name', 'Zusatz1'], $this->_pDataListViewAddress, 1);
+
 		$expectedResult = [
 			'data' => ['Vorname', 'Name', 'Zusatz1'],
 			'listoffset' => 0,
@@ -100,10 +88,10 @@ class TestClassDataListViewAddressToAPIParameters
 
 	public function testBuildParametersImage()
 	{
-		$pDataListViewAddressToAPIParameters = $this->getNewDataListViewToAPIParameters();
-		$pDataAddressList = $pDataListViewAddressToAPIParameters->getDataListView();
-		$pDataAddressList->setShowPhoto(true);
-		$result = $pDataListViewAddressToAPIParameters->buildParameters($pDataAddressList->getFields());
+		$this->_pDataListViewAddress->setShowPhoto(true);
+		$result = $this->_pDataListViewAddressToAPIParameters->buildParameters(
+				['Vorname', 'Name', 'Zusatz1'], $this->_pDataListViewAddress, 1);
+
 		$expectedResult = [
 			'data' => ['Vorname', 'Name', 'Zusatz1', 'imageUrl'],
 			'listoffset' => 0,
@@ -122,27 +110,40 @@ class TestClassDataListViewAddressToAPIParameters
 
 	/**
 	 *
-	 * @return DataListViewAddressToAPIParameters
+	 * @before
 	 *
 	 */
 
-	private function getNewDataListViewToAPIParameters(): DataListViewAddressToAPIParameters
+	public function prepare()
 	{
-		$pDataListViewAddress = new DataListViewAddress(1, 'test');
-		$pDataListViewAddress->setFields(['Vorname', 'Name', 'Zusatz1']);
-		$pDataListViewAddress->setSortby('Vorname');
-		$pDataListViewAddress->setSortorder('desc');
-		$pDataListViewAddress->setFilterId(12);
-		$pDataListViewAddress->setRecordsPerPage(15);
+		$this->_pDataListViewAddress = new DataListViewAddress(1, 'test');
+		$this->_pDataListViewAddress->setFields(['Vorname', 'Name', 'Zusatz1']);
+		$this->_pDataListViewAddress->setSortby('Vorname');
+		$this->_pDataListViewAddress->setSortorder('desc');
+		$this->_pDataListViewAddress->setFilterId(12);
+		$this->_pDataListViewAddress->setRecordsPerPage(15);
+
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
 
 		$filter = [
 			'testField' => ['op' => '=', 'val' => 1],
 			'testField2' => ['op' => 'like', 'val' => 'a%'],
 		];
 
+		$pFieldsCollectionBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFilterBuilderFactory = $pContainer->get(FilterBuilderInputVariablesFactory::class);
+		$pCompoundFieldsFilter = $pContainer->get(CompoundFieldsFilter::class);
+
+		$pFactory = $this->getMockBuilder(DefaultFilterBuilderListViewAddressFactory::class)
+				->setConstructorArgs([$pFieldsCollectionBuilderShort, $pCompoundFieldsFilter, $pFilterBuilderFactory])
+				->getMock();
+
 		$pDefaultFilterBuilderListViewAddress = new DefaultFilterBuilderListViewAddressMocker($filter);
-		$pDataListViewAddressToAPIParameters = new DataListViewAddressToAPIParameters
-			($pDataListViewAddress, $pDefaultFilterBuilderListViewAddress);
-		return $pDataListViewAddressToAPIParameters;
+
+		$pFactory->method('create')->with($this->_pDataListViewAddress)->will($this->returnValue($pDefaultFilterBuilderListViewAddress));
+
+		$this->_pDataListViewAddressToAPIParameters = new DataListViewAddressToAPIParameters($pFactory);
 	}
 }

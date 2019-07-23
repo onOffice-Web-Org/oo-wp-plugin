@@ -25,11 +25,12 @@ namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
  *
@@ -72,11 +73,11 @@ interface AddressListEnvironment
 
 	/**
 	 *
-	 * @return DataListViewAddressToAPIParameters
+	 * @param FilterBuilderInputVariables $pFilterBuilder
 	 *
 	 */
 
-	public function getDataListViewAddressToAPIParameters(DataListViewAddress $pListView): DataListViewAddressToAPIParameters;
+	public function getDataListViewAddressToAPIParameters(): DataListViewAddressToAPIParameters;
 
 
 	/**

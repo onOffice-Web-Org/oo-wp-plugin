@@ -25,6 +25,8 @@ namespace onOffice;
 
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
+use onOffice\WPlugin\Controller\InputVariableReaderConfig;
+use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostConfiguration;
@@ -59,4 +61,5 @@ return [
 	WPOptionWrapperBase::class => autowire(WPOptionWrapperDefault::class),
 	ScriptLoaderBuilderConfig::class => autowire(ScriptLoaderBuilderConfigDefault::class),
 	ScriptLoaderGenericConfiguration::class => autowire(ScriptLoaderGenericConfigurationDefault::class),
+	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 ];

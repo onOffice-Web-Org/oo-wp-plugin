@@ -33,9 +33,10 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\Types\FieldsCollection;
 use function esc_html;
 
 /**
@@ -122,13 +123,11 @@ class AddressList
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$pModifier = $this->generateRecordModifier();
 
-		$pDataListViewToApi = $this->_pEnvironment
-			->getDataListViewAddressToAPIParameters($this->_pDataViewAddress);
-		$newPage = $inputPage === 0 ? 1 : $inputPage;
-		$pDataListViewToApi->setPage($newPage);
+		$pDataListViewToApi = $this->_pEnvironment->getDataListViewAddressToAPIParameters();
 
+		$newPage = $inputPage === 0 ? 1 : $inputPage;
 		$apiOnlyFields = $pModifier->getAllAPIFields();
-		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields);
+		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage);
 
 		$pApiCall = new APIClientActionGeneric
 			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
