@@ -29,7 +29,7 @@ use onOffice\WPlugin\Types\FieldTypes;
 class DistinctFieldsFilter
 {
 	/** */
-	const NOT_ALLOWED_KEYS = ['s', '', 'oo_formid', 'oo_formno'];
+	const NOT_ALLOWED_KEYS = ['s', '', 'oo_formid', 'oo_formno', 'Id'];
 
 	/** */
 	const NOT_ALLOWED_VALUES = [''];
