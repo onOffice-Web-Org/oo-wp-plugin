@@ -283,6 +283,21 @@ abstract class AdminPageSettingsBase
 
 	/**
 	 *
+	 * @param array $row
+	 * @param string $mainTableName
+	 * @return array
+	 *
+	 */
+
+	protected function setRecordsPerPage(array $row, string $mainTableName): array
+	{
+		$recordsPerPage = (int)$row[$mainTableName]['recordsPerPage'];
+		$row[$mainTableName]['recordsPerPage'] = $recordsPerPage > 0 ? $recordsPerPage : 20;
+		return $row;
+	}
+
+	/**
+	 *
 	 * @param string $module
 	 * @param string $category
 	 * @return string

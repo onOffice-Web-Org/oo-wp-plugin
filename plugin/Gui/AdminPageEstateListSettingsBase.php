@@ -130,24 +130,8 @@ abstract class AdminPageEstateListSettingsBase
 
 	protected function setFixedValues(array $row)
 	{
-		$rowCleanRecordsPerPage = $this->setRecordsPerPage($row);
+		$rowCleanRecordsPerPage = $this->setRecordsPerPage($row, RecordManager::TABLENAME_LIST_VIEW);
 		return $this->addOrderValues($rowCleanRecordsPerPage, RecordManager::TABLENAME_FIELDCONFIG);
-	}
-
-
-	/**
-	 *
-	 * @param array $row
-	 * @return array
-	 *
-	 */
-
-	protected function setRecordsPerPage(array $row): array
-	{
-		$recordsPerPage = (int)$row[RecordManager::TABLENAME_LIST_VIEW]['recordsPerPage'];
-		$row[RecordManager::TABLENAME_LIST_VIEW]['recordsPerPage'] =
-			$recordsPerPage > 0 ? $recordsPerPage : 20;
-		return $row;
 	}
 
 

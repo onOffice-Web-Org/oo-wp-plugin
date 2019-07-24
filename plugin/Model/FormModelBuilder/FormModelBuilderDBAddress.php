@@ -71,6 +71,9 @@ class FormModelBuilderDBAddress
 
 	public function generate($listViewId = null)
 	{
+		$this->setValues([
+			'recordsPerPage' => 20,
+		]);
 		if ($listViewId !== null)
 		{
 			$pRecordReadManager = new RecordManagerReadListViewAddress();
@@ -80,6 +83,9 @@ class FormModelBuilderDBAddress
 
 			$values['filterable'] = $this->arrayColumnTrue($resultByField, 'filterable');
 			$values['hidden'] = $this->arrayColumnTrue($resultByField, 'hidden');
+			if ((int)$values['recordsPerPage'] === 0) {
+				$values['recordsPerPage'] = 20;
+			}
 			$this->setValues($values);
 		}
 

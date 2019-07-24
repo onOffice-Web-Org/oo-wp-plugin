@@ -241,7 +241,8 @@ class AdminPageAddressListSettings
 
 	protected function setFixedValues(array $row)
 	{
-		return $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
+		$rowFixedRecordsPerPage = $this->setRecordsPerPage($row, RecordManager::TABLENAME_LIST_VIEW_ADDRESS);
+		return $this->addOrderValues($rowFixedRecordsPerPage, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
 	}
 
 
