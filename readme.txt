@@ -61,7 +61,7 @@ The plugin offers further practical functions with which you can further profess
 7. Start editing inside the new onoffice-personalized folder.
 
 
-**IMPORTANT**: Albeit it is safe to disable the plugin, DELETING IT WILL WIPE ALL PLUGIN-RELATED DATA FROM THE DATABASE. WE DO NOT PROVIDE ANY WARRANTY FOR DATA LOSS!
+**IMPORTANT**: Although it is safe to disable the plugin, DELETING IT WILL WIPE ALL PLUGIN-RELATED DATA FROM THE DATABASE. WE DO NOT PROVIDE ANY WARRANTY FOR DATA LOSS!
 
 == Frequently Asked Questions ==
 
@@ -115,4 +115,11 @@ Removed
 This is the recommended version. Version 1 is not supported anymore.
 
 == Arbitrary section ==
+
+= Development =
+
+Development takes place in our [Github repository](https://github.com/onOfficeGmbH/oo-wp-plugin).
+
+= Legal =
+
 onOffice Terms and Conditions: https://en.onoffice.com/terms-and-conditions.xhtml
