@@ -168,11 +168,11 @@ class TestClassOutputFields
 			'street_active' => 'street',
 		]));
 
-		$pCompoundFieldsMcoker = $this->getMockBuilder(CompoundFieldsFilter::class)
+		$pCompoundFieldsMocker = $this->getMockBuilder(CompoundFieldsFilter::class)
 				->setMethods(['mergeListFilterableFields'])
 				->getMock();
 
-		$pCompoundFieldsMcoker->method('mergeListFilterableFields')->will($this->returnValue(
+		$pCompoundFieldsMocker->method('mergeListFilterableFields')->will($this->returnValue(
 				$expectation));
 
 		$pFieldsCollection =  $this->getMockBuilder(FieldsCollection::class)->getMock();
@@ -180,7 +180,7 @@ class TestClassOutputFields
 		$pOutputFields = new OutputFields(
 				$this->_pDataListView,
 				$pGeoPosition,
-				$pCompoundFieldsMcoker,
+				$pCompoundFieldsMocker,
 				$this->_pInputVariableReader);
 		$this->assertEquals($expectation, $pOutputFields->getVisibleFilterableFields($pFieldsCollection));
 	}
