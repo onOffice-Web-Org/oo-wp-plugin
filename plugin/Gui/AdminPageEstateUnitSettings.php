@@ -21,13 +21,14 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use onOffice\WPlugin\Model;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
-use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Model;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings;
+use onOffice\WPlugin\Record\RecordManager;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+
 
 /**
  *
@@ -182,7 +183,7 @@ class AdminPageEstateUnitSettings
 
 	protected function setFixedValues(array $row)
 	{
-		$rowCleanRecordsPerPage = $this->setRecordsPerPage($row);
+		$rowCleanRecordsPerPage = $this->setRecordsPerPage($row, RecordManager::TABLENAME_LIST_VIEW);
 		$rowCleanRecordsPerPage[RecordManager::TABLENAME_LIST_VIEW]['list_type'] = 'units';
 		return $rowCleanRecordsPerPage;
 	}
