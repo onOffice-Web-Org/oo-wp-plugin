@@ -42,6 +42,10 @@ use onOffice\WPlugin\Types\ImageTypes;
 class FormModelBuilderDBEstateListSettings
 	extends FormModelBuilderDBEstate
 {
+	/** */
+	const DEFAULT_RECORDS_PER_PAGE = 20;
+
+
 	/** @var string[] */
 	private static $_defaultFields = array(
 		'objekttitel',
@@ -76,7 +80,7 @@ class FormModelBuilderDBEstateListSettings
 			$pRecordReadManager = new RecordManagerReadListViewEstate();
 			$values = $pRecordReadManager->getRowById($listViewId);
 			if ((int)$values['recordsPerPage'] === 0) {
-				$values['recordsPerPage'] = 20;
+				$values['recordsPerPage'] = self::DEFAULT_RECORDS_PER_PAGE;
 			}
 			$this->setValues($values);
 		}
@@ -84,7 +88,7 @@ class FormModelBuilderDBEstateListSettings
 		{
 			$this->setValues(array(
 				DataListView::FIELDS => self::$_defaultFields,
-				'recordsPerPage' => 20,
+				'recordsPerPage' => self::DEFAULT_RECORDS_PER_PAGE,
 			));
 		}
 

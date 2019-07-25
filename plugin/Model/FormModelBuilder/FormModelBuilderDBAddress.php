@@ -45,6 +45,10 @@ use function __;
 class FormModelBuilderDBAddress
 	extends FormModelBuilderDB
 {
+	/** */
+	const DEFAULT_RECORDS_PER_PAGE = 20;
+
+
 	/**
 	 *
 	 * @param string $pageSlug
@@ -72,7 +76,7 @@ class FormModelBuilderDBAddress
 	public function generate($listViewId = null)
 	{
 		$this->setValues([
-			'recordsPerPage' => 20,
+			'recordsPerPage' => self::DEFAULT_RECORDS_PER_PAGE,
 		]);
 		if ($listViewId !== null)
 		{
@@ -80,11 +84,11 @@ class FormModelBuilderDBAddress
 			$values = $pRecordReadManager->getRowById($listViewId);
 			$resultByField = $pRecordReadManager->readFieldconfigByListviewId($listViewId);
 			$values['fields'] = array_column($resultByField, 'fieldname');
-
 			$values['filterable'] = $this->arrayColumnTrue($resultByField, 'filterable');
 			$values['hidden'] = $this->arrayColumnTrue($resultByField, 'hidden');
+
 			if ((int)$values['recordsPerPage'] === 0) {
-				$values['recordsPerPage'] = 20;
+				$values['recordsPerPage'] = self::DEFAULT_RECORDS_PER_PAGE;
 			}
 			$this->setValues($values);
 		}
