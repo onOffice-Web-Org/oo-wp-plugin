@@ -32,6 +32,7 @@ use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -107,10 +108,14 @@ class Form
 			// no form sent
 			$pFormConfigFactory = new DataFormConfigurationFactory();
 			$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
+			$pGeoPositionDefaults = new GeoPositionFieldHandler(new RecordManagerFactory());
+			$pGeoPositionDefaults->readValues($pFormConfig);
+
 			$this->_pFormData = new FormData($pFormConfig, $this->_formNo);
 			$this->_pFormData->setRequiredFields($pFormConfig->getRequiredFields());
 			$this->_pFormData->setFormtype($pFormConfig->getFormType());
 			$this->_pFormData->setFormSent(false);
+			$this->_pFormData->setValues(['range' => $pGeoPositionDefaults->getRadiusValue()]);
 		}
 	}
 
@@ -440,19 +445,14 @@ class Form
 	 *
 	 * @param string $field
 	 * @param bool $raw
-	 * @param bool $forceEvenIfSuccess
 	 * @return string
 	 *
 	 */
 
-	public function getFieldValue($field, $raw = false, $forceEvenIfSuccess = false)
+	public function getFieldValue($field, $raw = false)
 	{
 		$values = $this->_pFormData->getValues();
 		$fieldValue = $values[$field] ?? '';
-
-		if (!$this->_pFormData->getFormSent() && !$forceEvenIfSuccess) {
-			return '';
-		}
 
 		if ($raw) {
 			return $fieldValue;
