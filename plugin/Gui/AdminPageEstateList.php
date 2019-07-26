@@ -20,8 +20,11 @@
  */
 
 namespace onOffice\WPlugin\Gui;
+
 use onOffice\WPlugin\Gui\AdminPage;
 use onOffice\WPlugin\Gui\Table\EstateListTable;
+use onOffice\WPlugin\Record\RecordManagerFactory;
+use const ONOFFICE_PLUGIN_DIR;
 
 /**
  *
@@ -44,7 +47,7 @@ class AdminPageEstateList
 	public function renderContent()
 	{
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
+			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php?type='.RecordManagerFactory::TYPE_ESTATE;
 
 		$pTable = new EstateListTable();
 		$pTable->prepare_items();

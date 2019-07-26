@@ -45,7 +45,7 @@ $actionSelected = ListTable::currentAction();
 
 switch ($actionSelected) {
 	case 'bulk_delete':
-		$listpages = filter_input(INPUT_POST, 'listpage', FILTER_FORCE_ARRAY);
+		$listpages = filter_input(INPUT_POST, 'listpage', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		check_admin_referer('bulk-listpages');
 		$pRecordManagerDelete->deleteByIds($listpages);
 

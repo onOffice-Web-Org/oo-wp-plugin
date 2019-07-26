@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Gui\Table\AddressListTable;
+use onOffice\WPlugin\Record\RecordManagerFactory;
+use const ONOFFICE_PLUGIN_DIR;
 
 /**
  *
@@ -42,7 +44,7 @@ class AdminPageAddressList
 		$pTable = new AddressListTable();
 		$this->generatePageMainTitle(__('Addresses', 'onoffice'));
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
+			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php?type='.RecordManagerFactory::TYPE_ADDRESS;
 
 		$pTable->prepare_items();
 		echo '<p>';
