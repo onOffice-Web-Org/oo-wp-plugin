@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Model\InputModelBase;
@@ -64,6 +65,7 @@ class AdminPageFormSettingsApplicantSearch
 
 		$pDataFormConfiguration = new DataFormConfigurationApplicantSearch;
 		$pDataFormConfiguration->setId($this->getListViewId() ?? 0);
+		$pDataFormConfiguration->setFormType(Form::TYPE_APPLICANT_SEARCH);
 
 		$pFormModelGeoFields = new FormModel();
 		$pFormModelGeoFields->setPageSlug($this->getPageSlug());

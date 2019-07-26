@@ -25,8 +25,10 @@ namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
@@ -75,14 +77,38 @@ class TestClassInputModelBuilderGeoRange
 		$pView = new DataListView(13, 'test');
 		$pGenerator = $this->_pSubject->build($pView);
 		$expectedFields = $this->getExpectedFields();
+		$outputCount = 0;
 
 		foreach ($pGenerator as $pInputModel) {
+			$outputCount++;
 			$this->assertInstanceOf(InputModelDB::class, $pInputModel);
 			$field = $pInputModel->getField();
 			$this->assertContains($field, $expectedFields);
 			$arrayIndex = array_search($field, $expectedFields, true);
 			$this->assertNotFalse($arrayIndex);
 			unset($expectedFields[$arrayIndex]);
+		}
+		$this->assertEquals(7, $outputCount);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testBuildForApplicantSearchForm()
+	{
+		$pView = new DataFormConfigurationApplicantSearch();
+		$pView->setFormType(Form::TYPE_APPLICANT_SEARCH);
+		$pView->setId(14);
+		$models = iterator_to_array($this->_pSubject->build($pView));
+		$this->assertCount(4, $models);
+
+		foreach ($models as $pInputModel) {
+			$this->assertNotEquals(InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE, $pInputModel->getField());
+
+			// remove this assertion if more get added
+			$this->assertNotEquals(InputModelDBFactoryConfigGeoFields::FIELDNAME_GEO_ORDER, $pInputModel->getField());
 		}
 	}
 
