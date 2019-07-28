@@ -22,7 +22,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
+use DI\ContainerBuilder;
 use Generator;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeBuilder;
 use WP_UnitTestCase;
@@ -46,7 +46,9 @@ class TestClassContentFilterShortCodeBuilder
 
 	public function prepare()
 	{
-		$pContainer = new Container();
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
 		$this->_pSubject = new ContentFilterShortCodeBuilder($pContainer);
 	}
 

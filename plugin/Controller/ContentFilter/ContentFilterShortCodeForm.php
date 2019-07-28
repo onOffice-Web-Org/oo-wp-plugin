@@ -69,17 +69,17 @@ class ContentFilterShortCodeForm
 	 */
 
 	public function __construct(
-		Template $pTemplate = null,
-		DataFormConfigurationFactory $pDataFormConfigurationFactory = null,
-		Logger $pLogger = null,
-		DistinctFieldsChecker $pDistinctFieldsChecker = null,
-		FormBuilder $pFormBuilder = null)
+		Template $pTemplate,
+		DataFormConfigurationFactory $pDataFormConfigurationFactory,
+		Logger $pLogger,
+		DistinctFieldsChecker $pDistinctFieldsChecker,
+		FormBuilder $pFormBuilder)
 	{
-		$this->_pTemplate = $pTemplate ?? new Template('');
-		$this->_pLogger = $pLogger ?? new Logger;
-		$this->_pDataFormConfigurationFactory = $pDataFormConfigurationFactory ?? new DataFormConfigurationFactory;
-		$this->_pDistinctFieldsChecker = $pDistinctFieldsChecker ?? new DistinctFieldsChecker();
-		$this->_pFormBuilder = $pFormBuilder ?? new FormBuilder();
+		$this->_pTemplate = $pTemplate;
+		$this->_pLogger = $pLogger;
+		$this->_pDataFormConfigurationFactory = $pDataFormConfigurationFactory;
+		$this->_pDistinctFieldsChecker = $pDistinctFieldsChecker;
+		$this->_pFormBuilder = $pFormBuilder;
 	}
 
 
@@ -115,66 +115,6 @@ class ContentFilterShortCodeForm
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
-	}
-
-
-	/**
-	 *
-	 * @return Logger
-	 *
-	 */
-
-	public function getLogger(): Logger
-	{
-		return $this->_pLogger;
-	}
-
-
-	/**
-	 *
-	 * @return DataFormConfigurationFactory
-	 *
-	 */
-
-	public function getDataFormConfigurationFactory(): DataFormConfigurationFactory
-	{
-		return $this->_pDataFormConfigurationFactory;
-	}
-
-
-	/**
-	 *
-	 * @return Template
-	 *
-	 */
-
-	public function getTemplate(): Template
-	{
-		return $this->_pTemplate;
-	}
-
-
-	/**
-	 *
-	 * @return DistinctFieldsChecker
-	 *
-	 */
-
-	public function getDistinctFieldsChecker(): DistinctFieldsChecker
-	{
-		return $this->_pDistinctFieldsChecker;
-	}
-
-
-	/**
-	 *
-	 * @return FormBuilder
-	 *
-	 */
-
-	public function getFormBuilder(): FormBuilder
-	{
-		return $this->_pFormBuilder;
 	}
 
 

@@ -48,11 +48,11 @@ class ContentFilterShortCodeLink
 	 */
 
 	public function __construct(
-		Logger $pLogger = null,
-		LinkBuilderPage $pLinkBuilderContact = null)
+		Logger $pLogger,
+		LinkBuilderPage $pLinkBuilderContact)
 	{
-		$this->_pLogger = $pLogger ?? new Logger;
-		$this->_pLinkBuilderPage = $pLinkBuilderContact ?? new LinkBuilderPage();
+		$this->_pLogger = $pLogger;
+		$this->_pLinkBuilderPage = $pLinkBuilderContact;
 	}
 
 

@@ -48,9 +48,9 @@ class ContentFilterShortCodeAddress
 	 *
 	 */
 
-	public function __construct(ContentFilterShortCodeAddressEnvironment $pEnvironment = null)
+	public function __construct(ContentFilterShortCodeAddressEnvironment $pEnvironment)
 	{
-		$this->_pEnvironment = $pEnvironment ?? new ContentFilterShortCodeAddressEnvironmentDefault();
+		$this->_pEnvironment = $pEnvironment;
 	}
 
 

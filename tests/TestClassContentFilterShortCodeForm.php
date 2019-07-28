@@ -44,21 +44,20 @@ class TestClassContentFilterShortCodeForm
 	/** @var ContentFilterShortCodeForm */
 	private $_pContentFilterShortCodeForm = null;
 
+	/** @var Template */
+	private $_pTemplate = null;
 
-	/**
-	 *
-	 */
+	/** @var Logger */
+	private $_pLogger = null;
 
-	public function testDefaultConstructor()
-	{
-		$pInstance = new ContentFilterShortCodeForm();
-		$pTemplate = $pInstance->getTemplate();
-		$this->assertInstanceOf(Template::class, $pTemplate);
-		$this->assertInstanceOf(Logger::class, $pInstance->getLogger());
-		$this->assertInstanceOf(DataFormConfigurationFactory::class, $pInstance->getDataFormConfigurationFactory());
-		$this->assertInstanceOf(DistinctFieldsChecker::class, $pInstance->getDistinctFieldsChecker());
-		$this->assertInstanceOf(Form\FormBuilder::class, $pInstance->getFormBuilder());
-	}
+	/** @var DataFormConfigurationFactory */
+	private $_pDataFormConfigurationFactory = null;
+
+	/** @var DistinctFieldsChecker */
+	private $_pDistinctFieldsChecker = null;
+
+	/** @var Form\FormBuilder */
+	private $_pFormBuilder = null;
 
 
 	/**
@@ -69,21 +68,21 @@ class TestClassContentFilterShortCodeForm
 
 	public function prepare()
 	{
-		$pTemplate = $this->getMockBuilder(Template::class)
+		$this->_pTemplate = $this->getMockBuilder(Template::class)
 			->setConstructorArgs([''])
 			->setMethods(['render', 'getImpressum'])
 			->getMock();
-		$pTemplate->method('render')->will($this->returnValue('testResult'));
-		$pDataFormConfigurationFactory = $this->getMockBuilder(DataFormConfigurationFactory::class)
+		$this->_pTemplate->method('render')->will($this->returnValue('testResult'));
+		$this->_pDataFormConfigurationFactory = $this->getMockBuilder(DataFormConfigurationFactory::class)
 			->getMock();
-		$pLogger = $this->getMockBuilder(Logger::class)
+		$this->_pLogger = $this->getMockBuilder(Logger::class)
 			->getMock();
-		$pDistinctFieldsChecker = $this->getMockBuilder(DistinctFieldsChecker::class)
+		$this->_pDistinctFieldsChecker = $this->getMockBuilder(DistinctFieldsChecker::class)
 			->getMock();
-		$pFormBuilder = $this->getMockBuilder(Form\FormBuilder::class)
+		$this->_pFormBuilder = $this->getMockBuilder(Form\FormBuilder::class)
 			->getMock();
 		$this->_pContentFilterShortCodeForm = new ContentFilterShortCodeForm
-			($pTemplate, $pDataFormConfigurationFactory, $pLogger, $pDistinctFieldsChecker, $pFormBuilder);
+			($this->_pTemplate, $this->_pDataFormConfigurationFactory, $this->_pLogger, $this->_pDistinctFieldsChecker, $this->_pFormBuilder);
 	}
 
 
@@ -96,23 +95,20 @@ class TestClassContentFilterShortCodeForm
 		$pDataFormConfiguration = new DataFormConfigurationContact();
 		$pDataFormConfiguration->setFormType(Form::TYPE_APPLICANT_SEARCH);
 		$pDataFormConfiguration->setAvailableOptionsFields(['asdf']);
-		$pDistinctFieldsChecker = $this->_pContentFilterShortCodeForm->getDistinctFieldsChecker();
-		$pDistinctFieldsChecker
+		$this->_pDistinctFieldsChecker
 			->expects($this->once())
 			->method('registerScripts')
 			->with(onOfficeSDK::MODULE_SEARCHCRITERIA, ['asdf']);
-		$pDataFormConfigurationFactory = $this->_pContentFilterShortCodeForm->getDataFormConfigurationFactory();
-		$pDataFormConfigurationFactory
+		$this->_pDataFormConfigurationFactory
 			->expects($this->once())
 			->method('loadByFormName')
 			->with('testcontactform')
 			->will($this->returnValue($pDataFormConfiguration));
 
-		$pFormBuilder = $this->_pContentFilterShortCodeForm->getFormBuilder();
 		$pForm = $this->getMockBuilder(Form::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$pFormBuilder->expects($this->once())
+		$this->_pFormBuilder->expects($this->once())
 			->method('build')->with('testcontactform', 'applicantsearch')
 			->will($this->returnValue($pForm));
 
@@ -127,12 +123,10 @@ class TestClassContentFilterShortCodeForm
 
 	public function testReplaceShortCodesWithError()
 	{
-		$pDataFormConfigFactory = $this->_pContentFilterShortCodeForm->getDataFormConfigurationFactory();
 		$pException = new Exception('error');
-		$pDataFormConfigFactory->expects($this->once())->method('loadByFormName')->with($this->anything())
+		$this->_pDataFormConfigurationFactory->expects($this->once())->method('loadByFormName')->with($this->anything())
 			->will($this->throwException($pException));
-		$pLogger = $this->_pContentFilterShortCodeForm->getLogger();
-		$pLogger->expects($this->once())->method('logErrorAndDisplayMessage')->with($pException)
+		$this->_pLogger->expects($this->once())->method('logErrorAndDisplayMessage')->with($pException)
 			->will($this->returnValue('Got Exception'));
 		$this->assertEquals('Got Exception',
 			$this->_pContentFilterShortCodeForm->replaceShortCodes(['form' => 'unknown']));
