@@ -38,15 +38,12 @@ class AdminNoticeHandlerListViewDeletion
 
 	public function handleListView(int $deletedCount): string
 	{
- 		if ($deletedCount > 0)
-		{
+ 		if ($deletedCount > 0) {
 			/* translators: %s will be replaced with a number. */
 			$message = sprintf(_n('%s list view has been deleted.', '%s list views have been deleted.',
 				$deletedCount, 'onoffice'), number_format_i18n($deletedCount));
 			return $this->displayListViewDeleteSuccess($message);
-		}
-		else
-		{
+		} else {
 			return $this->displayListViewDeleteError(__('No list view was deleted.', 'onoffice'));
 		}
 	}
@@ -61,15 +58,12 @@ class AdminNoticeHandlerListViewDeletion
 
 	public function handleFormView(int $deletedCount): string
 	{
-		if ($deletedCount > 0)
-		{
+		if ($deletedCount > 0) {
 			/* translators: %s will be replaced with a number. */
 			$message = sprintf(_n('%s form has been deleted.', '%s forms have been deleted.',
 				$deletedCount, 'onoffice'), number_format_i18n($deletedCount));
 			return $this->displayListViewDeleteSuccess($message);
-		}
-		else
-		{
+		} else {
 			return $this->displayListViewDeleteError(__('No form was deleted.', 'onoffice'));
 		}
 	}
