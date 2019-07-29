@@ -41,19 +41,19 @@ $pRecordManagerDelete = new RecordManagerDeleteForm();
 
 switch ($action)
 {
-case 'bulk_delete':
-	$formIds = filter_input(INPUT_POST, 'form', FILTER_SANITIZE_NUMBER_INT, FILTER_REQUIRE_ARRAY);
-	check_admin_referer('bulk-forms');
-	$pRecordManagerDelete->deleteByIds($formIds);
+	case 'bulk_delete':
+		$formIds = filter_input(INPUT_POST, 'form', FILTER_SANITIZE_NUMBER_INT, FILTER_REQUIRE_ARRAY) ?? [];
+		check_admin_referer('bulk-forms');
+		$pRecordManagerDelete->deleteByIds($formIds);
 
-	wp_safe_redirect( add_query_arg( 'delete', count($formIds), $redirectFile ) );
-	break;
+		wp_safe_redirect( add_query_arg( 'delete', count($formIds), $redirectFile ) );
+		break;
 
-case 'delete':
-	$formId = filter_input(INPUT_GET, 'form_id', FILTER_SANITIZE_NUMBER_INT);
-	check_admin_referer('delete-form_'.$formId);
-	$pRecordManagerDelete->deleteByIds(array($formId));
+	case 'delete':
+		$formId = filter_input(INPUT_GET, 'form_id', FILTER_SANITIZE_NUMBER_INT);
+		check_admin_referer('delete-form_'.$formId);
+		$pRecordManagerDelete->deleteByIds([$formId]);
 
-	wp_safe_redirect( add_query_arg( 'delete', 1, $redirectFile ) );
-	break;
+		wp_safe_redirect( add_query_arg( 'delete', 1, $redirectFile ) );
+		break;
 }

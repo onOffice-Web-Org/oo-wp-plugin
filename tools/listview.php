@@ -45,7 +45,7 @@ $actionSelected = ListTable::currentAction();
 
 switch ($actionSelected) {
 	case 'bulk_delete':
-		$listpages = filter_input(INPUT_POST, 'listpage', FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+		$listpages = filter_input(INPUT_POST, 'listpage', FILTER_DEFAULT, FILTER_FORCE_ARRAY) ?? [];
 		check_admin_referer('bulk-listpages');
 		$pRecordManagerDelete->deleteByIds($listpages);
 
@@ -53,10 +53,14 @@ switch ($actionSelected) {
 		break;
 
 	case 'delete':
-		$listId = filter_input(INPUT_GET, 'list_id');
+		$listId = filter_input(INPUT_GET, 'list_id', FILTER_SANITIZE_NUMBER_INT);
 		check_admin_referer('delete-listview_'.$listId);
 		$pRecordManagerDelete->deleteByIds(array($listId));
 
 		wp_safe_redirect( add_query_arg( 'delete', 1, $redirectFile ) );
+		break;
+
+	default:
+		wp_safe_redirect( add_query_arg( 'delete', 0, $redirectFile ) );
 		break;
 }
