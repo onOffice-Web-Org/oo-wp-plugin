@@ -297,8 +297,9 @@ class EstateListTable extends ListTable
 			.wp_nonce_url($actionFile.'?action=delete&list_id='.$pItem->ID.'&type='
 				.RecordManagerFactory::TYPE_ESTATE, 'delete-listview_'.$pItem->ID)
 			."' onclick=\"if ( confirm( '"
-			.esc_js(sprintf(__(
-			"You are about to delete this listview '%s'\n  'Cancel' to stop, 'OK' to delete."), $pItem->name))
+			.esc_js(sprintf(
+			/* translators: %s is the name of the list view. */
+			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice'), $pItem->name))
 			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
 		return $this->row_actions( $actions );
 	}

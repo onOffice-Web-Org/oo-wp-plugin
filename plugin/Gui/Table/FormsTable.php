@@ -261,8 +261,9 @@ class FormsTable
 		$actions['delete'] = "<a class='submitdelete' href='"
 			.wp_nonce_url($actionFile.'?action=delete&form_id='.$pItem->ID, 'delete-form_'.$pItem->ID)
 			."' onclick=\"if ( confirm( '"
-			.esc_js(sprintf(__(
-			"You are about to delete the form '%s'\n  'Cancel' to stop, 'OK' to delete."), $pItem->name))
+			.esc_js(sprintf(
+			/* translators: %s is the name of the form. */
+			__("You are about to delete the form '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice'), $pItem->name))
 			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
 		return $this->row_actions( $actions );
 	}

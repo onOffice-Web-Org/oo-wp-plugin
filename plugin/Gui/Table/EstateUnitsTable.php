@@ -165,8 +165,9 @@ class EstateUnitsTable extends ListTable
 		$actions['delete'] = "<a class='submitdelete' href='"
 			.wp_nonce_url($actionFile.'?action=delete&list_id='.$pItem->ID, 'delete-listview_'.$pItem->ID)
 			."' onclick=\"if ( confirm( '"
-			.esc_js(sprintf(__(
-			"You are about to delete this unit view '%s'\n  'Cancel' to stop, 'OK' to delete."), $pItem->name))
+			.esc_js(sprintf(
+			/* translators: %s is the name of the unit view. */
+			__("You are about to delete the unit view '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice'), $pItem->name))
 			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
 		return $this->row_actions( $actions );
 	}
