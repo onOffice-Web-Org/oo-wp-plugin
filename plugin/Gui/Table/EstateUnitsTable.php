@@ -37,6 +37,22 @@ class EstateUnitsTable extends ListTable
 	/** @var int */
 	private $_itemsPerPage = 10;
 
+
+	/**
+	 *
+	 * @param array $args
+	 *
+	 */
+
+	public function __construct($args = [])
+	{
+		parent::__construct(array(
+			'singular' => 'listpage',
+			'plural' => 'listpages',
+			'screen' => isset($args['screen']) ? $args['screen'] : null,
+		));
+	}
+
 	/**
 	 *
 	 */

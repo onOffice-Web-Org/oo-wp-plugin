@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Gui\Table\AddressListTable;
+use onOffice\WPlugin\Record\RecordManagerFactory;
+use const ONOFFICE_PLUGIN_DIR;
 
 /**
  *
@@ -42,7 +44,7 @@ class AdminPageAddressList
 		$pTable = new AddressListTable();
 		$this->generatePageMainTitle(__('Addresses', 'onoffice'));
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
+			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php?type='.RecordManagerFactory::TYPE_ADDRESS;
 
 		$pTable->prepare_items();
 		echo '<p>';
@@ -73,5 +75,22 @@ class AdminPageAddressList
 		$newLink = admin_url('admin.php?page=onoffice-editlistviewaddress');
 		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
 		echo '<hr class="wp-header-end">';
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function handleAdminNotices()
+	{
+		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
+
+		if ($itemsDeleted !== null && $itemsDeleted !== false) {
+			add_action('admin_notices', function() use ($itemsDeleted) {
+				$pHandler = new AdminNoticeHandlerListViewDeletion();
+				echo $pHandler->handleListView($itemsDeleted);
+			});
+		}
 	}
 }

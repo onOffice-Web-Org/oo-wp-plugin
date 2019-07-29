@@ -150,8 +150,9 @@ class AdminViewController
 			$roleMainPage, $this->_pageSlug, function(){}, 'dashicons-admin-home');
 
 		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
-		add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'), __('Addresses', 'onoffice'),
+		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'), __('Addresses', 'onoffice'),
 			$roleAddress, $this->_pageSlug.'-addresses', array($pAdminPageAddresses, 'render'));
+		add_action('load-'.$hookAddresses, [$pAdminPageAddresses, 'handleAdminNotices']);
 
 		// Estates
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),

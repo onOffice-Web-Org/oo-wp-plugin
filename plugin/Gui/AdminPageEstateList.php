@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Gui\AdminPage;
 use onOffice\WPlugin\Gui\Table\EstateListTable;
+use onOffice\WPlugin\Record\RecordManagerFactory;
 use const ONOFFICE_PLUGIN_DIR;
 
 /**
@@ -32,10 +33,6 @@ use const ONOFFICE_PLUGIN_DIR;
 class AdminPageEstateList
 	extends AdminPage
 {
-	/** @var int */
-	private $_itemsDeleted = null;
-
-
 	/**
 	 *
 	 */
@@ -43,7 +40,7 @@ class AdminPageEstateList
 	public function renderContent()
 	{
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
+			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php?type='.RecordManagerFactory::TYPE_ESTATE;
 
 		$pTable = new EstateListTable();
 		$pTable->prepare_items();
@@ -86,51 +83,14 @@ class AdminPageEstateList
 
 	public function handleAdminNotices()
 	{
-		$this->_itemsDeleted = filter_input(INPUT_GET, 'delete');
+		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
 
-		if ($this->_itemsDeleted === null || $this->_itemsDeleted === false)
-		{
-			return;
+		if ($itemsDeleted !== null && $itemsDeleted !== false) {
+			add_action('admin_notices', function() use ($itemsDeleted) {
+				$pHandler = new AdminNoticeHandlerListViewDeletion();
+				echo $pHandler->handleListView($itemsDeleted);
+			});
 		}
-
-		if ($this->_itemsDeleted > 0)
-		{
-			add_action( 'admin_notices', array($this, 'displayListViewDeleteSuccess') );
-		}
-		else
-		{
-			add_action( 'admin_notices', array($this, 'displayListViewDeleteError') );
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function displayListViewDeleteSuccess()
-	{
-		$class = 'notice notice-success is-dismissible';
-
-		/* translators: %s will be replaced with a number. */
-		$message = sprintf(_n('%s list view has been deleted.', '%s list views have been deleted.',
-			$this->_itemsDeleted, 'onoffice'),
-				number_format_i18n($this->_itemsDeleted));
-
-		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function displayListViewDeleteError()
-	{
-		$class = 'notice notice-error is-dismissible';
-		$message = __('No list view was deleted.', 'onoffice');
-
-		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
 	}
 
 

@@ -29,14 +29,11 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
-use function _n;
 use function add_action;
 use function add_query_arg;
 use function admin_url;
-use function esc_attr;
 use function esc_html;
 use function esc_html__;
-use function number_format_i18n;
 use function plugin_basename;
 use function plugin_dir_url;
 use function plugins_url;
@@ -59,9 +56,6 @@ class AdminPageFormList
 
 	/** @var FormsTable */
 	private $_pFormsTable = null;
-
-	/** @var int */
-	private $_itemsDeleted = 0;
 
 
 	/**
@@ -130,51 +124,14 @@ class AdminPageFormList
 
 	public function handleAdminNotices()
 	{
-		$this->_itemsDeleted = filter_input(INPUT_GET, 'delete');
+		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
 
-		if ($this->_itemsDeleted === null || $this->_itemsDeleted === false)
-		{
-			return;
+		if ($itemsDeleted !== null && $itemsDeleted !== false) {
+			add_action('admin_notices', function() use ($itemsDeleted) {
+				$pHandler = new AdminNoticeHandlerListViewDeletion();
+				echo $pHandler->handleFormView($itemsDeleted);
+			});
 		}
-
-		if ($this->_itemsDeleted > 0)
-		{
-			add_action( 'admin_notices', array($this, 'displayFormDeleteSuccess') );
-		}
-		else
-		{
-			add_action( 'admin_notices', array($this, 'displayFormDeleteError') );
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function displayFormDeleteSuccess()
-	{
-		$class = 'notice notice-success is-dismissible';
-
-		/* translators: %s will be replaced with a number. */
-		$message = sprintf(_n('%s form has been deleted.', '%s forms have been deleted.',
-			$this->_itemsDeleted, 'onoffice'),
-				number_format_i18n($this->_itemsDeleted));
-
-		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function displayFormDeleteError()
-	{
-		$class = 'notice notice-error is-dismissible';
-		$message = __( 'No form was deleted.', 'onoffice' );
-
-		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 	}
 
 
