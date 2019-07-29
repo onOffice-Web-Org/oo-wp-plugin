@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller;
 
 use LogicException;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Record\RecordManagerFactory;
@@ -74,6 +75,10 @@ class GeoPositionFieldHandler
 		$pRecordManager = $this->_pRecordManagerFactory->create
 			($pViewProperty->getModule(), RecordManagerFactory::ACTION_READ, $pViewProperty->getId());
 		$this->_booleanFields = $pInputModelFactory->getBooleanFields();
+
+		if ($pViewProperty->getViewType() === Form::TYPE_APPLICANT_SEARCH) {
+			unset($this->_booleanFields[GeoPosition::ESTATE_LIST_SEARCH_RADIUS]);
+		}
 
 		array_map(function($column) use ($pRecordManager) {
 			$pRecordManager->addColumn($column);

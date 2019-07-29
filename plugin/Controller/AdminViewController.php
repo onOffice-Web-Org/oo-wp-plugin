@@ -57,9 +57,6 @@ use function wp_localize_script;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
 class AdminViewController
@@ -258,6 +255,23 @@ class AdminViewController
 
 			add_action( 'wp_ajax_'.$hook, array($this->_ajaxHooks[$hook], 'ajax_action'));
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function disableHideMetaboxes()
+	{
+		$hookNames = array_map(function(string $value): string {
+			return 'metaboxhidden_'.$value;
+		}, array_keys($this->_ajaxHooks));
+
+		// never auto-hide metaboxes (such as geo-position box)
+		add_filter('update_user_metadata', function ($null, $userId, $metaKey) use ($hookNames) {
+			return (in_array($metaKey, $hookNames)) ?: null;
+		}, 10, 3);
 	}
 
 

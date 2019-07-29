@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,6 @@ use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
-use const ONOFFICE_FEATURE_CONFIGURE_GEO;
 use function __;
 use function add_screen_option;
 use function wp_enqueue_script;
@@ -128,26 +127,24 @@ class AdminPageEstateListSettings
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
 
-		if (ONOFFICE_FEATURE_CONFIGURE_GEO) {
-			$pListView = new DataListView($this->getListViewId() ?? 0, '');
+		$pListView = new DataListView($this->getListViewId() ?? 0, '');
 
-			$pFormModelGeoFields = new FormModel();
-			$pFormModelGeoFields->setPageSlug($this->getPageSlug());
+		$pFormModelGeoFields = new FormModel();
+		$pFormModelGeoFields->setPageSlug($this->getPageSlug());
 			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
-			$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
-			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE);
-			foreach ($pInputModelBuilderGeoRange->build($pListView) as $pInputModel) {
-				$pFormModelGeoFields->addInputModel($pInputModel);
-			}
-
-			$this->addFormModel($pFormModelGeoFields);
+		$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
+		$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE);
+		foreach ($pInputModelBuilderGeoRange->build($pListView) as $pInputModel) {
+			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
+
+		$this->addFormModel($pFormModelGeoFields);
 
 		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection());
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, $pFieldCollection);
 
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
-		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ESTATE), $pFormModelBuilder);
+		$this->addSortableFieldsList([onOfficeSDK::MODULE_ESTATE], $pFormModelBuilder);
 	}
 
 
@@ -169,10 +166,8 @@ class AdminPageEstateListSettings
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'normal');
 
-		if (ONOFFICE_FEATURE_CONFIGURE_GEO) {
-			$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
-			$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
-		}
+		$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
+		$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
 	}
 
 

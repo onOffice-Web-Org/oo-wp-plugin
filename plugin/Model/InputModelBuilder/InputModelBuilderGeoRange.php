@@ -28,6 +28,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\ViewProperty;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
@@ -38,21 +39,16 @@ use function __;
 
 /**
  *
+ * Builds InputModel instances for the back-end box of Geo Fields.
+ *
+ * Note that Applicant Forms don't have a radius.
+ *
  */
 
 class InputModelBuilderGeoRange
 {
-	/** @var InputModelDBFactory */
-	private $_pInputModelFactory = null;
-
-	/** @var GeoPositionFieldHandler */
-	private $_pGeoPositionFieldHandler = null;
-
-	/** @var FieldModuleCollectionDecoratorGeoPositionFrontend */
-	private $_pFieldsCollection = null;
-
 	/** @var array */
-	private $_geoOrderOptionsTemplate = [
+	const GEO_ORDER_OOPTIONS_TEMPLATE = [
 		[
 			GeoPosition::ESTATE_LIST_SEARCH_STREET,
 			GeoPosition::ESTATE_LIST_SEARCH_ZIP,
@@ -69,6 +65,15 @@ class InputModelBuilderGeoRange
 		],
 	];
 
+
+	/** @var InputModelDBFactory */
+	private $_pInputModelFactory = null;
+
+	/** @var GeoPositionFieldHandler */
+	private $_pGeoPositionFieldHandler = null;
+
+	/** @var FieldModuleCollectionDecoratorGeoPositionFrontend */
+	private $_pFieldsCollection = null;
 
 
 	/**
@@ -100,7 +105,7 @@ class InputModelBuilderGeoRange
 	public function build(ViewProperty $pView): Generator
 	{
 		$this->_pGeoPositionFieldHandler->readValues($pView);
-		$activeFields = $this->getFieldnamesActiveCheckbox();
+		$activeFields = $this->getFieldnamesActiveCheckbox($pView);
 		$activeGeoFields = $this->_pGeoPositionFieldHandler->getActiveFields();
 
 		foreach ($activeFields as $field => $label) {
@@ -112,8 +117,10 @@ class InputModelBuilderGeoRange
 			yield $pInputModelGeoCountry;
 		}
 
-		yield $this->generateInputRadius();
-		yield $this->generateInputOrder();
+		if ($pView->getViewType() !== Form::TYPE_APPLICANT_SEARCH) {
+			yield $this->generateInputRadius();
+		}
+		yield from $this->generateInputOrder($pView);
 	}
 
 
@@ -149,15 +156,16 @@ class InputModelBuilderGeoRange
 
 	/**
 	 *
-	 * @return InputModelDB
+	 * @param ViewProperty $pView
+	 * @return array<InputModelDB> Array containing an InputModelDB if > 1 settings for the sorting are available
 	 *
 	 */
 
-	private function generateInputOrder(): InputModelDB
+	private function generateInputOrder(ViewProperty $pView): array
 	{
 		$options = [];
 
-		foreach ($this->_geoOrderOptionsTemplate as $keysOrdered) {
+		foreach ($this->filterGeoOrderOptionsTemplateByView($pView) as $keysOrdered) {
 			$optionLabelParts = [];
 			foreach ($keysOrdered as $key) {
 				$label = $this->getGeoFieldLabel($key);
@@ -167,13 +175,17 @@ class InputModelBuilderGeoRange
 			$options[$option] = implode(', ', $optionLabelParts);
 		}
 
+		if (count($options) === 1) {
+			return [];
+		}
+
 		$pInputModelRadius = $this->_pInputModelFactory->create
 			(InputModelDBFactoryConfigGeoFields::FIELDNAME_GEO_ORDER, __('Order', 'onoffice'));
 		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelRadius->setValuesAvailable($options);
 		$geoFieldOrderValue = implode(',', $this->_pGeoPositionFieldHandler->getGeoFieldsOrdered());
 		$pInputModelRadius->setValue($geoFieldOrderValue);
-		return $pInputModelRadius;
+		return [$pInputModelRadius];
 	}
 
 
@@ -195,19 +207,49 @@ class InputModelBuilderGeoRange
 
 	/**
 	 *
+	 * @param ViewProperty $pView
 	 * @return array
 	 *
 	 */
 
-	private function getFieldnamesActiveCheckbox(): array
+	private function filterGeoOrderOptionsTemplateByView(ViewProperty $pView): array
 	{
-		return [
+		$geoOrderOptions = self::GEO_ORDER_OOPTIONS_TEMPLATE;
+
+		if ($pView->getViewType() === Form::TYPE_APPLICANT_SEARCH) {
+			foreach ($geoOrderOptions as &$values) {
+				$result = array_search(GeoPosition::ESTATE_LIST_SEARCH_RADIUS, $values);
+				if ($result !== false) {
+					unset($values[$result]);
+				}
+			}
+		}
+
+		return $geoOrderOptions;
+	}
+
+
+	/**
+	 *
+	 * @param ViewProperty $pView
+	 * @return array
+	 *
+	 */
+
+	private function getFieldnamesActiveCheckbox(ViewProperty $pView): array
+	{
+		$fieldnames = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => __('Country', 'onoffice'),
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE => __('Postal Code', 'onoffice'),
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_CITY_ACTIVE => __('City', 'onoffice'),
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => __('Street', 'onoffice'),
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE => __('Radius', 'onoffice'),
 		];
+
+		if ($pView->getViewType() !== Form::TYPE_APPLICANT_SEARCH) {
+			$fieldnames[InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE] = __('Radius', 'onoffice');
+		}
+
+		return $fieldnames;
 	}
 
 
@@ -245,6 +287,4 @@ class InputModelBuilderGeoRange
 	{
 		return $this->_pFieldsCollection;
 	}
-
-
 }

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2018-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -23,19 +23,16 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use stdClass;
-use const ONOFFICE_FEATURE_CONFIGURE_GEO;
 use function __;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -66,24 +63,21 @@ class AdminPageFormSettingsApplicantSearch
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 		$this->addFormModel($pFormModelFormSpecific);
 
-		if (ONOFFICE_FEATURE_CONFIGURE_GEO) {
-			$pDataFormConfiguration = new DataFormConfigurationApplicantSearch;
-			$pDataFormConfiguration->setId($this->getListViewId() ?? 0);
+		$pDataFormConfiguration = new DataFormConfigurationApplicantSearch;
+		$pDataFormConfiguration->setId($this->getListViewId() ?? 0);
+		$pDataFormConfiguration->setFormType(Form::TYPE_APPLICANT_SEARCH);
 
-			$pFormModelGeoFields = new FormModel();
-			$pFormModelGeoFields->setPageSlug($this->getPageSlug());
-			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
-			$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
-			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_SEARCHCRITERIA);
-			foreach ($pInputModelBuilderGeoRange->build($pDataFormConfiguration) as $pInputModel) {
-				$pFormModelGeoFields->addInputModel($pInputModel);
-			}
-
-			$this->addFormModel($pFormModelGeoFields);
+		$pFormModelGeoFields = new FormModel();
+		$pFormModelGeoFields->setPageSlug($this->getPageSlug());
+		$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
+		$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
+		$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_SEARCHCRITERIA);
+		foreach ($pInputModelBuilderGeoRange->build($pDataFormConfiguration) as $pInputModel) {
+			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
 
+		$this->addFormModel($pFormModelGeoFields);
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
-
 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
 	}
@@ -98,10 +92,8 @@ class AdminPageFormSettingsApplicantSearch
 		$pFormFormSpecific = $this->getFormModelByGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$this->createMetaBoxByForm($pFormFormSpecific, 'side');
 
-		if (ONOFFICE_FEATURE_CONFIGURE_GEO) {
-			$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
-			$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
-		}
+		$pFormGeoPosition = $this->getFormModelByGroupSlug(self::FORM_VIEW_GEOFIELDS);
+		$this->createMetaBoxByForm($pFormGeoPosition, 'normal');
 
 		parent::generateMetaBoxes();
 	}
