@@ -121,6 +121,12 @@ abstract class Installer
 			$dbversion = 12;
 		}
 
+		if ($dbversion == 12) {
+			dbDelta( self::getCreateQueryFieldConfigDefaults() );
+			dbDelta( self::getCreateQueryFieldConfigDefaultsValues() );
+			$dbversion = 13;
+		}
+
 		update_option( 'oo_plugin_db_version', $dbversion, false);
 
 		$pContentFilter = new ContentFilter(new Logger(), new ScriptLoaderMap
@@ -365,6 +371,51 @@ abstract class Installer
 	 *
 	 */
 
+	static private function getCreateQueryFieldConfigDefaults()
+	{
+		$prefix = self::getPrefix();
+		$charsetCollate = self::getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig_form_defaults";
+		$sql = "CREATE TABLE $tableName (
+			`defaults_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`defaults_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	static private function getCreateQueryFieldConfigDefaultsValues()
+	{
+		$prefix = self::getPrefix();
+		$charsetCollate = self::getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig_form_defaults_values";
+		$sql = "CREATE TABLE $tableName (
+			`defaults_values_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`defaults_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			PRIMARY KEY (`defaults_values_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
 	static private function getCreateQueryListViewsAddress()
 	{
 		$prefix = self::getPrefix();
@@ -462,6 +513,8 @@ abstract class Installer
 			$prefix."oo_plugin_listview_contactperson",
 			$prefix."oo_plugin_listviews_address",
 			$prefix."oo_plugin_address_fieldconfig",
+			$prefix."oo_plugin_fieldconfig_form_defaults",
+			$prefix."oo_plugin_fieldconfig_form_defaults_values",
 		);
 
 		foreach ($tables as $table)
