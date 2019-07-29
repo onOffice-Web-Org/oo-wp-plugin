@@ -22,12 +22,13 @@
 namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
+use onOffice\WPlugin\WP\WPScriptStyleDefault;
 
 require '../../../../wp-load.php';
 
 header('Content-Type: application/json');
 
-$pDistinctFieldsChecker = new DistinctFieldsChecker();
+$pDistinctFieldsChecker = new DistinctFieldsChecker(new RequestVariablesSanitizer(), new WPScriptStyleDefault());
 
 $value = $pDistinctFieldsChecker->check();
 echo json_encode($value);

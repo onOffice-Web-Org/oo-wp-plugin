@@ -148,6 +148,18 @@ class DistinctFieldsHandler
 	/**
 	 *
 	 * @return array
+	 * 
+	 */
+
+	public function getGeoPositionFields()
+	{
+		return $this->_geoPositionFields;
+	}
+
+
+	/**
+	 *
+	 * @return array
 	 *
 	 */
 

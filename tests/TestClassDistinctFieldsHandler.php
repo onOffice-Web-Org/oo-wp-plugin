@@ -53,9 +53,11 @@ class TestClassDistinctFieldsHandler
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
 		$this->_pFieldnamesEnvironment = new FieldnamesEnvironmentTest();
 		$fieldParameters = [
@@ -86,7 +88,8 @@ class TestClassDistinctFieldsHandler
 			'filter' => [
 				'objektart' => [['op' => 'in', 'val' => ['wohnung']]],
 				'vermarktungsart' => [['op' => 'in', 'val' => ['kauf']]]
-			]
+			],
+			'georangesearch' => ['range']
 		];
 
 		$responseEstates =  file_get_contents
@@ -106,25 +109,59 @@ class TestClassDistinctFieldsHandler
 		$pConfigTest->setSDKWrapper($pSDKWrapperMocker);
 		$pConfigTest->setFieldnames($pFieldnames);
 		$this->_pInstance = new DistinctFieldsHandler($pConfigTest);
-
-		parent::setUp();
 	}
 
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::__construct
+	 *
 	 */
 
-	public function testCheck()
+	public function checkConstruct()
 	{
-		$module = 'estate';
-		$this->_pInstance->setModule($module);
-		$this->assertEquals($module, $this->_pInstance->getModule());
+		$this->assertInstanceOf($this->_pInstance, DistinctFieldsHandler::class);
+	}
 
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::setModule
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::getModule
+	 *
+	 */
+
+	public function testSetModule()
+	{
+		$this->_pInstance->setModule('estate');
+		$this->assertEquals($this->_pInstance->getModule(), 'estate');
+	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::setDistinctFields
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::getDistinctFields
+	 *
+	 */
+
+	public function testSetDistinctFields()
+	{
 		$distinctFields = ['objekttyp'];
 		$this->_pInstance->setDistinctFields($distinctFields);
 		$this->assertEquals($distinctFields, $this->_pInstance->getDistinctFields());
+	}
 
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::setInputValues
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::getInputValues
+	 *
+	 */
+
+	public function testsetInputValues()
+	{
 		$inputValues = [
 			'objektart' => ['wohnung'],
 			'vermarktungsart' => ['kauf']
@@ -132,8 +169,51 @@ class TestClassDistinctFieldsHandler
 
 		$this->_pInstance->setInputValues($inputValues);
 		$this->assertEquals($inputValues, $this->_pInstance->getInputValues());
+	}
 
+
+	/**
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::setGeoPositionFields
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::getGeoPositionFields
+	 *
+	 */
+
+	public function testSetGeoPositionFields()
+	{
+		$geoFields = ['range'];
+		$this->_pInstance->setGeoPositionFields($geoFields);
+		$this->assertEquals($this->_pInstance->getGeoPositionFields(), $geoFields);
+
+		$geoFields = [];
+		$this->_pInstance->setGeoPositionFields($geoFields);
+		$this->assertEquals($this->_pInstance->getGeoPositionFields(), $geoFields);
+	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::check
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::retrieveValues
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::buildParameters
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::editMultiselectableField
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::getValues
+	 *
+	 */
+
+	public function testCheck()
+	{
+		$this->_pInstance->setModule('estate');
+		$this->_pInstance->setDistinctFields(['objekttyp']);
+		$this->_pInstance->setGeoPositionFields(['range']);
+
+		$inputValues = [
+			'objektart' => ['wohnung'],
+			'vermarktungsart' => ['kauf']
+		];
+
+		$this->_pInstance->setInputValues($inputValues);
 		$values = [];
+
 		$values['objekttyp[]'] = [
 			'etage' => 'Etagenwohnung',
 			'maisonette' => 'Maisonette',
@@ -148,5 +228,6 @@ class TestClassDistinctFieldsHandler
 		];
 
 		$this->_pInstance->check();
+		$this->assertEquals($this->_pInstance->getValues(), $values);
 	}
 }

@@ -35,6 +35,7 @@ use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
+use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;

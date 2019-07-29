@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -22,9 +22,10 @@
 namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Field\DistinctFieldsCheckerEnvironment;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\RequestVariablesSanitizer;
+use onOffice\WPlugin\WP\WPScriptStyleBase;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_action;
@@ -48,31 +49,84 @@ class DistinctFieldsChecker
 	/** @var array */
 	private $_geoRangeValues = [];
 
-	/** @var DistinctFieldsCheckerEnvironment */
-	private $_pEnvironment = null;
+	/** @varRequestVariablesSanitizer */
+	private $_pRequestVariables = null;
+
+	/** @var WPScriptStyleBase */
+	private $_pScriptStyle = null;
 
 
 	/**
 	 *
-	 * @param DistinctFieldsCheckerEnvironment $pEnvironment
+	 * @param RequestVariablesSanitizer $pRequestVariables
+	 * @param WPScriptStyleBase $pScriptStyle
 	 *
 	 */
 
-	public function __construct(DistinctFieldsCheckerEnvironment $pEnvironment = null)
+	public function __construct
+			(RequestVariablesSanitizer $pRequestVariables, WPScriptStyleBase $pScriptStyle)
 	{
-		$this->_pEnvironment = $pEnvironment ?? new DistinctFieldsCheckerEnvironmentDefault();
+		$this->_pRequestVariables = $pRequestVariables;
+		$this->_pScriptStyle = $pScriptStyle;
 	}
 
 
 	/**
 	 *
+	 * @return array
+	 *
 	 */
 
-	public static function addHook()
+	public function getDistinctValues(): array
+	{
+		return $this->_pRequestVariables->getFilteredPost(
+				DistinctFieldsHandler::PARAMETER_DISTINCT_VALUES, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getInputValues(): array
+	{
+		return json_decode($this->_pRequestVariables->getFilteredPost(
+				DistinctFieldsHandler::PARAMETER_INPUT_VALUES), true) ?? [];
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getModule(): string
+	{
+		return $this->_pRequestVariables->getFilteredPost(DistinctFieldsHandler::PARAMETER_MODULE) ?? '';
+	}
+
+
+	/**
+	 *
+	 * @return WPScriptStyleBase
+	 *
+	 */
+
+	public function getScriptStyle(): WPScriptStyleBase
+		{ return $this->_pScriptStyle; }
+
+
+	/**
+	 *
+	 */
+
+	public function addHook()
 	{
 		add_action('wp_ajax_check_sandbox_data', function() {
-			$pDistinctFieldsChecker = new DistinctFieldsChecker();
-			$pDistinctFieldsChecker->check();
+			$this->check();
 		});
 	}
 
@@ -92,7 +146,7 @@ class DistinctFieldsChecker
 		}
 
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		$pScriptStyle = $this->_pEnvironment->getScriptStyle();
+		$pScriptStyle = $this->_pScriptStyle;
 		$values = [
 			'base_path' => plugins_url('/tools/distinctFields.php', $pluginPath),
 			'distinctValues' => $distinctFields,
@@ -113,9 +167,9 @@ class DistinctFieldsChecker
 
 	public function check(): array
 	{
-		$module = $this->_pEnvironment->getModule();
-		$inputValues = $this->_pEnvironment->getInputValues();
-		$this->_distinctFields = $this->_pEnvironment->getDistinctValues();
+		$module = $this->getModule();
+		$inputValues = $this->getInputValues();
+		$this->_distinctFields = $this->getDistinctValues();
 
 		$this->setInputValues($module, $inputValues);
 

@@ -31,8 +31,10 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormBuilder;
+use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use function shortcode_atts;
 
 /**
@@ -78,7 +80,7 @@ class ContentFilterShortCodeForm
 		$this->_pTemplate = $pTemplate ?? new Template('');
 		$this->_pLogger = $pLogger ?? new Logger;
 		$this->_pDataFormConfigurationFactory = $pDataFormConfigurationFactory ?? new DataFormConfigurationFactory;
-		$this->_pDistinctFieldsChecker = $pDistinctFieldsChecker ?? new DistinctFieldsChecker();
+		$this->_pDistinctFieldsChecker = $pDistinctFieldsChecker ?? new DistinctFieldsChecker(new RequestVariablesSanitizer(), new WPScriptStyleDefault);
 		$this->_pFormBuilder = $pFormBuilder ?? new FormBuilder();
 	}
 

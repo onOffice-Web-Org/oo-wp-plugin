@@ -89,7 +89,9 @@ add_action('init', [$pAdminViewController, 'onInit']);
 add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 
-add_action('wp_ajax_addHook', [DistinctFieldsChecker::class, 'addHook']);
+add_action('wp_ajax_addHook', function() use ($pDI) {
+	$pDI->get(DistinctFieldsChecker::class)->addHook();
+});
 
 add_action('plugins_loaded', function() {
 	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR).'/languages');
