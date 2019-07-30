@@ -70,6 +70,7 @@ class RequestVariablesSanitizer
 
 	private function getFiltered(array $inputVariable, string $name, int $filter, int $option = null)
 	{
-		return filter_var($inputVariable[$name] ?? null, $filter, $option);
+		$variable = stripslashes_deep($inputVariable[$name] ?? null);
+		return filter_var($variable, $filter, $option);
 	}
 }

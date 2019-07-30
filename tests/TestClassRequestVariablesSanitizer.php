@@ -37,17 +37,18 @@ class TestClassRequestVariablesSanitizer
 	 * @covers onOffice\WPlugin\RequestVariablesSanitizer::getFilteredGet
 	 * @covers onOffice\WPlugin\RequestVariablesSanitizer::getFiltered
 	 *
+	 * WordPress: Auto adds slashes to $_POST, $_GET, $_REQUEST, $_COOKIE
+	 *
 	 */
 
 	public function testGetFilteredGet()
 	{
-		$_GET = ['abc' => 'abc', 'qwe' => 1];
+		$_GET = ['abc' => '\*abc', 'qwe' => 1];
 
 		$pInstance = new RequestVariablesSanitizer();
-		$expectedResult = $pInstance->getFilteredGet('abc');
-		$result = 'abc';
+		$result = $pInstance->getFilteredGet('abc');
 
-		$this->assertEquals($expectedResult, $result);
+		$this->assertEquals('*abc', $result);
 	}
 
 
@@ -64,9 +65,8 @@ class TestClassRequestVariablesSanitizer
 		$_POST = ['abc' => 'abc', 'qwe' => 1];
 
 		$pInstance = new RequestVariablesSanitizer();
-		$expectedResult = $pInstance->getFilteredPost('abc');
-		$result = 'abc';
+		$result = $pInstance->getFilteredPost('abc');
 
-		$this->assertEquals($expectedResult, $result);
+		$this->assertEquals('abc', $result);
 	}
 }

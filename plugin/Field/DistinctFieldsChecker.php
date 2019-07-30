@@ -49,7 +49,7 @@ class DistinctFieldsChecker
 	/** @var array */
 	private $_geoRangeValues = [];
 
-	/** @varRequestVariablesSanitizer */
+	/** @var RequestVariablesSanitizer */
 	private $_pRequestVariables = null;
 
 	/** @var WPScriptStyleBase */
