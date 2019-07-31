@@ -21,15 +21,30 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsChecker;
+use onOffice\WPlugin\Field\DistinctFieldsHandler;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 require '../../../../wp-load.php';
 
 header('Content-Type: application/json');
 
-$pDistinctFieldsChecker = new DistinctFieldsChecker(new RequestVariablesSanitizer(), new WPScriptStyleDefault());
 
-$value = $pDistinctFieldsChecker->check();
+$pContainerBuilder = new ContainerBuilder;
+$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+$pContainer = $pContainerBuilder->build();
+$pFieldsCollectionBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+
+$pDistinctFieldsChecker = new DistinctFieldsChecker(new RequestVariablesSanitizer(), new WPScriptStyleDefault());
+$pHandlerEnvironment = $pDistinctFieldsChecker->createHandlerEnvironment();
+
+$pDistinctFieldsHandler = new DistinctFieldsHandler(new SDKWrapper(), $pFieldsCollectionBuilderShort, $pHandlerEnvironment);
+$pDistinctFieldsHandler->check();
+$value = $pDistinctFieldsHandler->getValues();
+
 echo json_encode($value);
 die;

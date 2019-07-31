@@ -21,10 +21,11 @@
 
 namespace onOffice\WPlugin\Field;
 
-use onOffice\WPlugin\Fieldnames;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\__String;
 
 class DistinctFieldsFilter
 {
@@ -35,8 +36,8 @@ class DistinctFieldsFilter
 	const NOT_ALLOWED_VALUES = [''];
 
 
-	/** @var Fieldnames */
-	private $_pFieldnames = null;
+	/** @var FieldsCollection */
+	private $_pFieldsCollection = null;
 
 	/** @var string */
 	private $_module = '';
@@ -44,14 +45,16 @@ class DistinctFieldsFilter
 
 	/**
 	 *
-	 * @param Fieldnames $pFieldnames
+	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 * @param string $module
 	 *
 	 */
 
-	public function __construct(Fieldnames $pFieldnames, string $module)
+	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort, string $module)
 	{
-		$this->_pFieldnames = $pFieldnames;
+		$this->_pFieldsCollection = new FieldsCollection();
+		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($this->_pFieldsCollection);
+		$pFieldsCollectionBuilderShort->addFieldsSearchCriteria($this->_pFieldsCollection);
 		$this->_module = $module;
 	}
 
@@ -65,8 +68,9 @@ class DistinctFieldsFilter
 
 	private function isMultiselectableType(string $field): bool
 	{
+		$pField = $this->_pFieldsCollection->getFieldByModuleAndName($this->_module, $field);
 		return $this->_module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
-			in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
+			in_array($pField->getType(),
 				[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]);
 	}
 
@@ -81,7 +85,8 @@ class DistinctFieldsFilter
 
 	private function isNumericalType(string $field): bool
 	{
-		return in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
+		$pField = $this->_pFieldsCollection->getFieldByModuleAndName($this->_module, $field);
+		return in_array($pField->getType(),
 			[FieldTypes::FIELD_TYPE_FLOAT, FieldTypes::FIELD_TYPE_INTEGER]);
 	}
 

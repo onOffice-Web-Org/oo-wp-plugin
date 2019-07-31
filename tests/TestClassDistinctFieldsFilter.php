@@ -23,11 +23,14 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsFilter;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
-use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -39,12 +42,17 @@ class TestClassDistinctFieldsFilter
 	/** FieldnamesEnvironment */
 	private $_pFieldnamesEnvironment = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
+
+
 
 	/**
+	 * @before
 	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
 		$this->_pFieldnamesEnvironment = new FieldnamesEnvironmentTest();
 		$fieldParameters = [
@@ -67,14 +75,51 @@ class TestClassDistinctFieldsFilter
 		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '',
 			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);
 
-		parent::setUp();
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				$pField2 = new Field('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
+				$pField2->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldsCollection->addField($pField2);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+			$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('objektart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				$pField2 = new Field('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
+				$pField2->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldsCollection->addField($pField2);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
 	}
 
 
-	/** */
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::filter
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::isNumericalType
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::isMultiselectableType
+	 *
+	 */
+
 	public function testFilterEstates()
 	{
-		$module = 'estate';
 		$inputValues =
 			[
 				"" => "Send",
@@ -89,19 +134,29 @@ class TestClassDistinctFieldsFilter
 				"wohnflaeche" => [["op" => "between", "val" => ["100", "300"]]],
 			];
 
-		$pFieldnames = new Fieldnames(new FieldsCollection(), false, $this->_pFieldnamesEnvironment);
-		$pFieldnames->loadLanguage();
-		$pInstance = new DistinctFieldsFilter($pFieldnames, $module);
-		$result = $pInstance->filter('objekttyp', $inputValues);
-
-		$this->assertEquals($result, $expectedResult);
+		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort, 'estate');
+		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues));
 	}
 
 
-	/** */
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::filter
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::isNumericalType
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::isMultiselectableType
+	 *
+	 */
+
 	public function testFilterSearchcriteria()
 	{
-		$module = 'searchcriteria';
+		$expectedResult =
+			[
+			"objektart" =>
+				[
+					["op" => "regexp",
+					"val" => "haus"]
+				]
+			];
 
 		$inputValues =
 			["oo_formid" => "applicant-search-form-1",
@@ -114,19 +169,8 @@ class TestClassDistinctFieldsFilter
 				"range_plz" => "",
 				"range_strasse" => "",
 				"" => "Search+for+Prospective+Buyers"];
-		$expectedResult =
-			[
-			"objektart" =>
-				[
-					["op" => "regexp",
-					"val" => "haus"]
-				]
-			];
 
-		$pFieldnames = new Fieldnames(new FieldsCollection(), false, $this->_pFieldnamesEnvironment);
-		$pFieldnames->loadLanguage();
-		$pInstance = new DistinctFieldsFilter($pFieldnames, $module);
-		$result = $pInstance->filter('objekttyp', $inputValues);
-		$this->assertEquals($result, $expectedResult);
+		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort, 'searchcriteria');
+		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues));
 	}
 }

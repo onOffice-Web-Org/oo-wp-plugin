@@ -163,9 +163,11 @@ class DistinctFieldsChecker
 
 	/**
 	 *
+	 * @return DistinctFieldsHandlerEnvironment
+	 *
 	 */
 
-	public function check(): array
+	public function createHandlerEnvironment()
 	{
 		$module = $this->getModule();
 		$inputValues = $this->getInputValues();
@@ -173,17 +175,14 @@ class DistinctFieldsChecker
 
 		$this->setInputValues($module, $inputValues);
 
-		$pDistinctFieldsHandler = new DistinctFieldsHandler();
-		$pDistinctFieldsHandler->setModule($module);
-		$pDistinctFieldsHandler->setDistinctFields($this->_distinctFields);
-		$pDistinctFieldsHandler->setInputValues($this->_fieldValues);
-		$pDistinctFieldsHandler->setGeoPositionFields($this->_geoRangeValues);
+		$pHandlerEnvironment = new DistinctFieldsHandlerEnvironment();
+		$pHandlerEnvironment->setModule($module);
+		$pHandlerEnvironment->setDistinctFields($this->_distinctFields);
+		$pHandlerEnvironment->setInputValues($this->_fieldValues);
+		$pHandlerEnvironment->setGeoPositionFields($this->_geoRangeValues);
 
-		$pDistinctFieldsHandler->check();
-
-		return $pDistinctFieldsHandler->getValues();
+		return $pHandlerEnvironment;
 	}
-
 
 
 	/**
