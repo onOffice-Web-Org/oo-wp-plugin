@@ -3,7 +3,6 @@ Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.3
-Stable tag: 2.0
 Requires PHP: 7.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -73,8 +72,8 @@ The plugin offers further practical functions with which you can further profess
 
 Stable version of the plugin, including a backend GUI
 
-Changes
--------
+**Changes**
+
 * All settings available in version 1.0 of the plugin were integrated into the new UI.
 * Translations for UI texts were added
 * Settings are saved using WordPress options and DB
@@ -84,8 +83,8 @@ Changes
 * The proximity search can be added to a form
 * The plugin has been tested on PHP 7.2
 
-New
----
+**New**
+
 * Estate lists can be filtered by a filter set up in onOffice.
 * Ability to mark fields as filterable for use in the search form of a list
 * Type of list for addresses including a search for addresses
@@ -96,8 +95,8 @@ New
 * OpenStreetMap map provider
 * Double opt-in for newsletter activation for the interested party form
 
-Removed
--------
+**Removed**
+
 * Custom forms
 
 = 1.0 =

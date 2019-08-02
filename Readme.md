@@ -3,10 +3,7 @@
 
 Integrate real estates, contact forms and contact persons from the onOffice Software into your WordPress website.
 
-In contrast to other real estate WordPress-plugins, this one does not use any file transfer. All data gets transferred using the onOffice API instead.
-
-
-## Installation (for Developers)
+## Installation (for Development)
 
 1. Clone this repository recursively: `git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git`.
 2. Install the development dependencies: `composer install`.
@@ -20,11 +17,17 @@ In contrast to other real estate WordPress-plugins, this one does not use any fi
 
 ### Getting API Access
 
-Contact us by phone (+49 241 446860) or email (support@onoffice.com).
+Request your own (onOffice trial version)[https://onoffice.com/]
+
+Contact us by phone (+49 241 446860) or email (support@onoffice.com) for questions concerning onOffice enterprise edition.
+Consult apisupport@onoffice.com in regards to questions about our API or plugin development workflow.
 
 Proceed to the next step once you've got an API token and secret.
 
 ### Configuration Basics
+
+In comparison to other real estate WordPress-plugins, this one does not use any file transfer via FTP but from the onOffice API.
+This also means, you need to enter your API credentials before configuring anything else.
 
 #### A First Example: Creating a New Estate List
 In order to create a new estate list, go to "onOffice" » "Estates" and press "Add New". **Give the new list a name**, pick the desired settings and click "Save Changes" at the bottom of the page. Going back to the estate list overview will show you the shortcode (i.e. `[oo_estate view="my new view"]`. Paste this into a new page and open the preview. The new list of estates should be embedded.
@@ -45,5 +48,5 @@ Charlottenburger Allee 5
 52068 Aachen
 Germany
 
-Email: [support@onoffice.com](mailto://support@onoffice.com)
-Phone: +49 241 44686 0
+[support@onoffice.com](mailto://support@onoffice.com)
++49 241 446860
