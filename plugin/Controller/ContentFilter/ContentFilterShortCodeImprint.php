@@ -68,10 +68,10 @@ class ContentFilterShortCodeImprint
 		$value = '';
 
 		try {
-			$this->_pImpressum->load();
+			$values = $this->_pImpressum->load();
 			if (count($attributesInput) === 1) {
 				$attribute = $attributesInput[0];
-				$value = $this->_pImpressum->getDataByKey($attribute);
+				$value = $values[$attribute] ?? '';
 			}
 		} catch (Exception $pException) {
 			$value = $this->_pLogger->logErrorAndDisplayMessage($pException);

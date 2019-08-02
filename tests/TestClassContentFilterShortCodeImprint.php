@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use Exception;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeImprint;
 use onOffice\WPlugin\Impressum;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
 
@@ -56,7 +57,8 @@ class TestClassContentFilterShortCodeImprint
 	public function prepare()
 	{
 		$this->_pImpressum = $this->getMockBuilder(Impressum::class)
-			->setMethods(['load', 'getDataByKey'])
+			->setConstructorArgs([new SDKWrapper()])
+			->setMethods(['load'])
 			->getMock();
 		$this->_pLogger = $this->getMockBuilder(Logger::class)
 			->getMock();
@@ -72,10 +74,7 @@ class TestClassContentFilterShortCodeImprint
 	public function testReplaceShortCodes()
 	{
 		$this->addLoadMethod();
-		$this->_pImpressum->method('getDataByKey')->will($this->returnValueMap([
-			['asd', 'testResult1'],
-			['test', 'testResult2'],
-		]));
+
 		$this->assertEquals('testResult1',
 			$this->_pContentFilterShortCodeImprint->replaceShortCodes(['asd']));
 		$this->assertEquals('testResult2',
@@ -104,7 +103,7 @@ class TestClassContentFilterShortCodeImprint
 	{
 		$this->addLoadMethod();
 		$pException = new Exception('test');
-		$this->_pImpressum->method('getDataByKey')->will($this->throwException($pException));
+		$this->_pImpressum->method('load')->will($this->throwException($pException));
 		$this->_pLogger->expects($this->once())
 			->method('logErrorAndDisplayMessage')
 			->with($pException)
@@ -130,9 +129,9 @@ class TestClassContentFilterShortCodeImprint
 
 	private function addLoadMethod()
 	{
-		$this->_pImpressum
-			->expects($this->atLeastOnce())
-			->method('load')
-			->will($this->returnSelf());
+		$this->_pImpressum->method('load')->will($this->returnValue([
+			'asd' => 'testResult1',
+			'test' => 'testResult2',
+		]));
 	}
 }

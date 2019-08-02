@@ -26,7 +26,6 @@ namespace onOffice\tests;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\Impressum;
-use onOffice\WPlugin\ImpressumConfigurationTest;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -59,10 +58,7 @@ class TestClassImpressum
 		$pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'impressum', '', ['language' => 'ENG'], null, $response);
 
-		$pImpressumConfigurationTest = new ImpressumConfigurationTest();
-		$pImpressumConfigurationTest->setSDKWrapper($pSDKWrapperMocker);
-
-		$this->_pImpressum = new Impressum($pImpressumConfigurationTest);
+		$this->_pImpressum = new Impressum($pSDKWrapperMocker);
 	}
 
 
@@ -72,7 +68,7 @@ class TestClassImpressum
 
 	public function testGetData()
 	{
-		$result = $this->_pImpressum->load()->getData();
+		$result = $this->_pImpressum->load();
 
 		$expectedValues = [
 			'title' => 'Frau',
@@ -101,63 +97,6 @@ class TestClassImpressum
 			'chamber' => '12345',
 		];
 
-		foreach ($expectedValues as $key => $value) {
-			$this->assertEquals($value, $result[$key]);
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testGetDataByKey()
-	{
-		$this->_pImpressum->load();
-		$expectedValues = [
-			'title' => 'Frau',
-			'firstname' => 'Frauke',
-			'lastname' => 'Musterfrau',
-			'firma' => 'asd-Gruppe A',
-			'postcode' => '52078',
-			'city' => 'Aachen',
-			'street' => 'Charlottenburger Allee',
-			'housenumber' => '5',
-			'state' => 'Nordrhein-Westfalen',
-			'country' => 'Deutschland',
-			'phone' => '0241 123 456',
-			'mobil' => '0179 123 456',
-			'fax' => '0241 789 456',
-			'email' => 'asd@onoffice.de',
-			'homepage' => 'www.asd.de',
-			'vertretungsberechtigter' => 'Vertretungsberechtigter',
-			'berufsaufsichtsbehoerde' => 'Berufsaufsichtsbehoerde',
-			'handelsregister' => 'HR12',
-			'handelsregisterNr' => '123',
-			'ustId' => 'DE123456789',
-			'bank' => 'Musterbank',
-			'iban' => 'DE123456789',
-			'bic' => 'DETESTACD123',
-			'chamber' => '12345',
-		];
-
-		foreach ($expectedValues as $key => $value) {
-			$expectedValue = $value;
-			$result = $this->_pImpressum->getDataByKey($key);
-
-			$this->assertEquals($expectedValue, $result);
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function testUnknownValue()
-	{
-		$this->_pImpressum->load();
-		$result = $this->_pImpressum->getDataByKey('unknownValue');
-		$this->assertEquals('', $result);
+		$this->assertEquals($expectedValues, $result);
 	}
 }

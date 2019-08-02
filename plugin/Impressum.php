@@ -25,8 +25,6 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
-use onOffice\WPlugin\ImpressumConfiguration;
-use onOffice\WPlugin\ImpressumConfigurationDefault;
 
 /**
  *
@@ -106,68 +104,36 @@ class Impressum
 	/** */
 	const KEY_CHAMBER = 'chamber';
 
-	/** @var array */
-	private $_data = [];
-
-	/** @var ImpressumConfiguration */
-	private $_pImpressumConfiguration = null;
-
-	/** @var bool */
-	private $_doneLoading = false;
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
 
 
 	/**
 	 *
-	 * @param ImpressumConfiguration $pImpressumConfiguration
+	 * @param SDKWrapper $pSDKWrapper
 	 *
 	 */
 
-	public function __construct(ImpressumConfiguration $pImpressumConfiguration = null)
+	public function __construct(SDKWrapper $pSDKWrapper)
 	{
-		$this->_pImpressumConfiguration =
-			$pImpressumConfiguration ?? new ImpressumConfigurationDefault();
+		$this->_pSDKWrapper = $pSDKWrapper;
 	}
 
 
 	/**
 	 *
-	 * @return $this
+	 * @return array
 	 *
 	 */
 
-	public function load(): self
+	public function load(): array
 	{
-		if (!$this->_doneLoading) {
-			$requestParameters = ['language' => Language::getDefault()];
-			$pSDKWrapper = $this->_pImpressumConfiguration->getSDKWrapper();
+		$pApiClientAction = new APIClientActionGeneric
+			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'impressum');
 
-			$pApiClientAction = new APIClientActionGeneric
-				($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'impressum');
-
-			$pApiClientAction->setParameters($requestParameters);
-			$pApiClientAction->addRequestToQueue()->sendRequests();
-			$records = $pApiClientAction->getResultRecords();
-			$this->_data = $records[0]['elements'] ?? [];
-			$this->_doneLoading = true;
-		}
-		return $this;
+		$pApiClientAction->setParameters(['language' => Language::getDefault()]);
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$records = $pApiClientAction->getResultRecords();
+		return $records[0]['elements'] ?? [];
 	}
-
-
-	/**
-	 *
-	 * @param string $key
-	 * @return string
-	 *
-	 */
-
-	public function getDataByKey(string $key): string
-	{
-		return $returnValue = $this->_data[$key] ?? '';
-	}
-
-
-	/** @return array */
-	public function getData(): array
-		{ return $this->_data; }
 }
