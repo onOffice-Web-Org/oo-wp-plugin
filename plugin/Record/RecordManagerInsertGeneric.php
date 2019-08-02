@@ -19,7 +19,11 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Record;
+
+use wpdb;
 
 /**
  *
@@ -34,16 +38,21 @@ class RecordManagerInsertGeneric
 	/** @var string */
 	private $_mainTableName = null;
 
+	/** @var wpdb */
+	private $_pWPDB = null;
+
 
 	/**
 	 *
 	 * @param string $mainTableName
+	 * @param \onOffice\WPlugin\Record\wpdb $pWPDB
 	 *
 	 */
 
-	public function __construct($mainTableName)
+	public function __construct(string $mainTableName, wpdb $pWPDB = null)
 	{
 		$this->_mainTableName = $mainTableName;
+		$this->_pWPDB = $pWPDB ?? $this->getWpdb();
 	}
 
 
@@ -51,12 +60,12 @@ class RecordManagerInsertGeneric
 	 *
 	 * @param array $values
 	 * @return int
+	 * @throws RecordManagerInsertException
 	 *
 	 */
 
-	public function insertByRow($values)
+	public function insertByRow(array $values): int
 	{
-		$pWpDb = $this->getWpdb();
 		$row = $values[$this->_mainTableName];
 		$tableName = $this->_mainTableName;
 
@@ -64,35 +73,31 @@ class RecordManagerInsertGeneric
 			$value = RecordManager::postProcessValue($value, $tableName, $field);
 		});
 
-		$pWpDb->insert($pWpDb->prefix.$this->_mainTableName, $row);
-		$formId = $pWpDb->insert_id;
+		if (false === $this->_pWPDB->insert($this->_pWPDB->prefix.$this->_mainTableName, $row)) {
+			throw new RecordManagerInsertException();
+		}
 
-		return $formId;
+		return $this->_pWPDB->insert_id;
 	}
 
 
 	/**
 	 *
 	 * @param array $values
-	 * @return bool
+	 * @throws RecordManagerInsertException
 	 *
 	 */
 
 	public function insertAdditionalValues(array $values)
 	{
-		$pWpDb = $this->getWpdb();
-
 		unset($values[$this->_mainTableName]);
-		$result = true;
-
 		foreach ($values as $table => $tablevalues) {
 			foreach ($tablevalues as $tablerow) {
-				if (is_array($tablerow)) {
-					$result = $result && $pWpDb->insert($pWpDb->prefix.$table, $tablerow);
+				if (is_array($tablerow) && false === $this->_pWPDB->insert
+					($this->_pWPDB->prefix.$table, $tablerow)) {
+					throw new RecordManagerInsertException();
 				}
 			}
 		}
-
-		return $result;
 	}
 }

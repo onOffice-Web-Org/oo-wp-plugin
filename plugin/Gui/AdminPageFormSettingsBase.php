@@ -33,6 +33,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -183,15 +184,19 @@ abstract class AdminPageFormSettingsBase
 			$action = RecordManagerFactory::ACTION_INSERT;
 			// insert
 			$pRecordManagerInsertForm = RecordManagerFactory::createByTypeAndAction($type, $action);
-			$recordId = $pRecordManagerInsertForm->insertByRow($row);
-			$result = ($recordId != null);
 
-			if ($result) {
+			try {
+				$recordId = $pRecordManagerInsertForm->insertByRow($row);
+
 				$rowFieldConfig = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_FORMS);
 				$rowFieldConfig = $this->prepareRelationValues
 					(RecordManager::TABLENAME_FIELDCONFIG_FORMS, 'form_id', $row, $recordId);
 				$row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] = $rowFieldConfig;
-				$result = $pRecordManagerInsertForm->insertAdditionalValues($row);
+				$pRecordManagerInsertForm->insertAdditionalValues($row);
+				$result = true;
+			} catch (RecordManagerInsertException $pException) {
+				$result = false;
+				$recordId = null;
 			}
 		}
 
