@@ -30,11 +30,13 @@ use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerUpdateListViewAddress;
 use stdClass;
 use function __;
+use function wp_enqueue_script;
 
 /**
  *
@@ -214,16 +216,18 @@ class AdminPageAddressListSettings
 			$action = RecordManagerFactory::ACTION_INSERT;
 			/* @var $pRecordManagerInsert RecordManagerInsertGeneric */
 			$pRecordManagerInsert = RecordManagerFactory::createByTypeAndAction($type, $action);
-			$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
 
-			$recordId = $pRecordManagerInsert->insertByRow($row);
-			$result = $recordId != null;
+			try {
+				$recordId = $pRecordManagerInsert->insertByRow($row);
 
-			if ($result) {
-				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG);
+				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
 				$row = $this->prepareRelationValues(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS,
 					'listview_address_id', $row, $recordId);
 				$pRecordManagerInsert->insertAdditionalValues($row);
+				$result = true;
+			} catch (RecordManagerInsertException $pException) {
+				$result = false;
+				$recordId = null;
 			}
 		}
 

@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\Record\RecordManagerInsertException;
 use stdClass;
 use function __;
 
@@ -83,9 +84,10 @@ abstract class AdminPageEstateListSettingsBase
 		} else {
 			$action = RecordManagerFactory::ACTION_INSERT;
 			$pInsert = RecordManagerFactory::createByTypeAndAction($type, $action);
-			$recordId = $pInsert->insertByRow($row);
-			$result = ($recordId != null);
-			if ($result) {
+
+			try {
+				$recordId = $pInsert->insertByRow($row);
+
 				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG);
 				$row = [
 					RecordManager::TABLENAME_FIELDCONFIG => $this->prepareRelationValues
@@ -97,6 +99,10 @@ abstract class AdminPageEstateListSettingsBase
 				];
 
 				$pInsert->insertAdditionalValues($row);
+				$result = true;
+			} catch (RecordManagerInsertException $pException) {
+				$result = false;
+				$recordId = null;
 			}
 		}
 

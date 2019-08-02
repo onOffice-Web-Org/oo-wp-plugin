@@ -132,13 +132,26 @@ class RecordManagerFactory
 	 * @param string $type
 	 * @param string $action
 	 * @param int $recordId
-	 * @return \onOffice\WPlugin\Record\RecordManager
+	 * @return RecordManager
 	 *
 	 */
 
 	public function create(string $type, string $action, int $recordId = null): RecordManager
 	{
 		return self::createByTypeAndAction($type, $action, $recordId);
+	}
+
+
+	/**
+	 *
+	 * @param string $mainTableName
+	 * @return RecordManagerInsertGeneric
+	 *
+	 */
+
+	public function createRecordManagerInsertGeneric(string $mainTableName): RecordManagerInsertGeneric
+	{
+		return new RecordManagerInsertGeneric($mainTableName);
 	}
 
 
