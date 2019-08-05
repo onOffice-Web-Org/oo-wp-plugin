@@ -28,7 +28,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeForm;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\DistinctFieldsChecker;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Template;
@@ -58,7 +58,7 @@ class TestClassContentFilterShortCodeForm
 		$this->assertInstanceOf(Template::class, $pTemplate);
 		$this->assertInstanceOf(Logger::class, $pInstance->getLogger());
 		$this->assertInstanceOf(DataFormConfigurationFactory::class, $pInstance->getDataFormConfigurationFactory());
-		$this->assertInstanceOf(DistinctFieldsChecker::class, $pInstance->getDistinctFieldsChecker());
+		$this->assertInstanceOf(DistinctFieldsHandlerModelBuilder::class, $pInstance->getDistinctFieldsChecker());
 		$this->assertInstanceOf(Form\FormBuilder::class, $pInstance->getFormBuilder());
 	}
 
@@ -80,7 +80,7 @@ class TestClassContentFilterShortCodeForm
 			->getMock();
 		$pLogger = $this->getMockBuilder(Logger::class)
 			->getMock();
-		$pDistinctFieldsChecker = $this->getMockBuilder(DistinctFieldsChecker::class)
+		$pDistinctFieldsChecker = $this->getMockBuilder(DistinctFieldsHandlerModelBuilder::class)
 			->setConstructorArgs([new RequestVariablesSanitizer(), new WPScriptStyleDefault()])
 			->getMock();
 		$pFormBuilder = $this->getMockBuilder(Form\FormBuilder::class)

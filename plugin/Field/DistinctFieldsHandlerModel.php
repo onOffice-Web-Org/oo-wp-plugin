@@ -25,7 +25,7 @@ namespace onOffice\WPlugin\Field;
  *
  */
 
-class DistinctFieldsHandlerEnvironment
+class DistinctFieldsHandlerModel
 {
 	/** @var string */
 	private $_module = null;
@@ -116,6 +116,6 @@ class DistinctFieldsHandlerEnvironment
 	 */
 
 	public function getGeoPositionFields(): array
-	{ return $this->_geoPositionFields; }
+		{ return $this->_geoPositionFields; }
 
 }

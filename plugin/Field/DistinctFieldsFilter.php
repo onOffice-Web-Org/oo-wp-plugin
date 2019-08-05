@@ -23,9 +23,14 @@ namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
+
+/**
+ *
+ */
 
 class DistinctFieldsFilter
 {
@@ -36,40 +41,33 @@ class DistinctFieldsFilter
 	const NOT_ALLOWED_VALUES = [''];
 
 
-	/** @var FieldsCollection */
-	private $_pFieldsCollection = null;
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
-	/** @var string */
-	private $_module = '';
 
 
 	/**
 	 *
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
-	 * @param string $module
 	 *
 	 */
 
-	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort, string $module)
+	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort)
 	{
-		$this->_pFieldsCollection = new FieldsCollection();
-		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($this->_pFieldsCollection);
-		$pFieldsCollectionBuilderShort->addFieldsSearchCriteria($this->_pFieldsCollection);
-		$this->_module = $module;
+		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
 
 	/**
 	 *
-	 * @param string $field
+	 * @param Field $pField
 	 * @return bool
 	 *
 	 */
 
-	private function isMultiselectableType(string $field): bool
+	private function isMultiselectableType(Field $pField): bool
 	{
-		$pField = $this->_pFieldsCollection->getFieldByModuleAndName($this->_module, $field);
-		return $this->_module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
+		return $pField->getModule() == onOfficeSDK::MODULE_SEARCHCRITERIA &&
 			in_array($pField->getType(),
 				[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]);
 	}
@@ -78,30 +76,21 @@ class DistinctFieldsFilter
 
 	/**
 	 *
-	 * @param string $field
-	 * @return bool
-	 *
-	 */
-
-	private function isNumericalType(string $field): bool
-	{
-		$pField = $this->_pFieldsCollection->getFieldByModuleAndName($this->_module, $field);
-		return in_array($pField->getType(),
-			[FieldTypes::FIELD_TYPE_FLOAT, FieldTypes::FIELD_TYPE_INTEGER]);
-	}
-
-
-	/**
-	 *
 	 * @param string $distinctField
 	 * @param array $inputValues
+	 * @param string $module
 	 * @return array
 	 *
 	 */
 
-	public function filter(string $distinctField, array $inputValues): array
+	public function filter(string $distinctField, array $inputValues, string $module): array
 	{
 		$filter = [];
+
+		$pFieldsCollection = new FieldsCollection();
+
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($pFieldsCollection);
 
 		foreach ($inputValues as $key => $value) {
 			if (in_array($key, self::NOT_ALLOWED_KEYS) || in_array($value, self::NOT_ALLOWED_VALUES)) {
@@ -112,23 +101,26 @@ class DistinctFieldsFilter
 			$operator = null;
 			$field = null;
 
+
 			$key = $pString->replace('[]', '');
 
-			if ($pString->endsWith('__von') && $this->_module == onOfficeSDK::MODULE_ESTATE) {
+			if ($pString->endsWith('__von') && $module == onOfficeSDK::MODULE_ESTATE) {
 				$operator = '>=';
 				$field = $pString->replace('__von', '');
+				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $field);
 
-				if (isset($filter[$field]) && $this->isNumericalType($field)) {
+				if (isset($filter[$field]) && FieldTypes::isNumericType($pField->getType())) {
 					$operator = 'between';
 					$value1 = $value;
 					$value2 = $filter[$field][0]['val'];
 					$value = [$value1, $value2];
 				}
-			} elseif ($pString->endsWith('__bis') && $this->_module == onOfficeSDK::MODULE_ESTATE) {
+			} elseif ($pString->endsWith('__bis') && $module == onOfficeSDK::MODULE_ESTATE) {
 				$operator = '<=';
 				$field = $pString->replace('__bis', '');
+				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $field);
 
-				if (isset($filter[$field]) && $this->isNumericalType($field)) {
+				if (isset($filter[$field]) && FieldTypes::isNumericType($pField->getType())) {
 					$operator = 'between';
 					$value1 = $filter[$field][0]['val'];
 					$value2 = $value;
@@ -138,7 +130,8 @@ class DistinctFieldsFilter
 				if (is_array($value)) {
 					$operator = 'in';
 				} else {
-					if ($this->isMultiselectableType($key)) {
+					$pField = $pFieldsCollection->getFieldByModuleAndName($module, $key);
+					if ($this->isMultiselectableType($pField)) {
 						$operator = 'regexp';
 					} else {
 						$operator = '=';
@@ -152,7 +145,8 @@ class DistinctFieldsFilter
 				continue;
 			}
 
-			if ($this->isNumericalType($field) && $this->_module === onOfficeSDK::MODULE_SEARCHCRITERIA) {
+			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $field);
+			if (FieldTypes::isNumericType($pField->getType()) && $module === onOfficeSDK::MODULE_SEARCHCRITERIA) {
 				if (!isset($filter[$field.'__von'])) {
 					$filter[$field.'__von'] = [['op' => '<=', 'val' => $value]];
 				}

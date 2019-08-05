@@ -40,7 +40,7 @@ class TestClassDistinctFieldsFilter
 {
 
 	/** FieldnamesEnvironment */
-	private $_pFieldnamesEnvironment = null;
+	//private $_pFieldnamesEnvironment = null;
 
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort = null;
@@ -54,7 +54,7 @@ class TestClassDistinctFieldsFilter
 
 	public function prepare()
 	{
-		$this->_pFieldnamesEnvironment = new FieldnamesEnvironmentTest();
+		/*$this->_pFieldnamesEnvironment = new FieldnamesEnvironmentTest();
 		$fieldParameters = [
 			'labels' => true,
 			'showContent' => true,
@@ -65,7 +65,7 @@ class TestClassDistinctFieldsFilter
 		$pSDKWrapperMocker = $this->_pFieldnamesEnvironment->getSDKWrapper();
 		$responseGetFields = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetFields.json'), true);
-		/* @var $pSDKWrapperMocker SDKWrapperMocker */
+
 		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
 			$fieldParameters, null, $responseGetFields);
 
@@ -73,7 +73,7 @@ class TestClassDistinctFieldsFilter
 		$responseGetSearchcriteriaFields = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json'), true);
 		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '',
-			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);
+			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);*/
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
@@ -113,7 +113,6 @@ class TestClassDistinctFieldsFilter
 	/**
 	 *
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::filter
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::isNumericalType
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::isMultiselectableType
 	 *
 	 */
@@ -134,15 +133,14 @@ class TestClassDistinctFieldsFilter
 				"wohnflaeche" => [["op" => "between", "val" => ["100", "300"]]],
 			];
 
-		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort, 'estate');
-		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues));
+		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
+		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues, 'estate'));
 	}
 
 
 	/**
 	 *
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::filter
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::isNumericalType
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsFilter::isMultiselectableType
 	 *
 	 */
@@ -170,7 +168,7 @@ class TestClassDistinctFieldsFilter
 				"range_strasse" => "",
 				"" => "Search+for+Prospective+Buyers"];
 
-		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort, 'searchcriteria');
-		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues));
+		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
+		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues, 'searchcriteria'));
 	}
 }

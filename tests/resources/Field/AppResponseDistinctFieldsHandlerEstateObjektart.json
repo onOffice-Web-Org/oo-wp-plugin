@@ -13,9 +13,11 @@
 						   "id": 0,
 						   "type": "",
 						   "elements": {
-							   "wohnen": "Wohnen",
-							   "waz": "WAZ",
-							   "anlage": "Anlage"
+							   "haus": "Haus",
+							   "wohnung": "Wohnung",
+							   "grundstueck": "Grundstück",
+							   "sonstige": "Sonstige",
+							   "gastgewerbe": "Gastgewerbe"
 						   }
 					   }
 				   ]

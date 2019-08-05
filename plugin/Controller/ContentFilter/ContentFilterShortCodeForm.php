@@ -28,7 +28,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\DistinctFieldsChecker;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormBuilder;
 use onOffice\WPlugin\RequestVariablesSanitizer;
@@ -53,7 +53,7 @@ class ContentFilterShortCodeForm
 	/** @var Template */
 	private $_pTemplate = null;
 
-	/** @var DistinctFieldsChecker */
+	/** @var DistinctFieldsHandlerModelBuilder */
 	private $_pDistinctFieldsChecker = null;
 
 	/** @var FormBuilder */
@@ -65,7 +65,7 @@ class ContentFilterShortCodeForm
 	 * @param Template $pTemplate
 	 * @param DataFormConfigurationFactory $pDataFormConfigurationFactory
 	 * @param Logger $pLogger
-	 * @param DistinctFieldsChecker $pDistinctFieldsChecker
+	 * @param DistinctFieldsHandlerModelBuilder $pDistinctFieldsChecker
 	 * @param FormBuilder $pFormBuilder
 	 *
 	 */
@@ -74,13 +74,13 @@ class ContentFilterShortCodeForm
 		Template $pTemplate = null,
 		DataFormConfigurationFactory $pDataFormConfigurationFactory = null,
 		Logger $pLogger = null,
-		DistinctFieldsChecker $pDistinctFieldsChecker = null,
+		DistinctFieldsHandlerModelBuilder $pDistinctFieldsChecker = null,
 		FormBuilder $pFormBuilder = null)
 	{
 		$this->_pTemplate = $pTemplate ?? new Template('');
 		$this->_pLogger = $pLogger ?? new Logger;
 		$this->_pDataFormConfigurationFactory = $pDataFormConfigurationFactory ?? new DataFormConfigurationFactory;
-		$this->_pDistinctFieldsChecker = $pDistinctFieldsChecker ?? new DistinctFieldsChecker(new RequestVariablesSanitizer(), new WPScriptStyleDefault);
+		$this->_pDistinctFieldsChecker = $pDistinctFieldsChecker ?? new DistinctFieldsHandlerModelBuilder(new RequestVariablesSanitizer(), new WPScriptStyleDefault);
 		$this->_pFormBuilder = $pFormBuilder ?? new FormBuilder();
 	}
 
@@ -158,11 +158,11 @@ class ContentFilterShortCodeForm
 
 	/**
 	 *
-	 * @return DistinctFieldsChecker
+	 * @return DistinctFieldsHandlerModelBuilder
 	 *
 	 */
 
-	public function getDistinctFieldsChecker(): DistinctFieldsChecker
+	public function getDistinctFieldsChecker(): DistinctFieldsHandlerModelBuilder
 	{
 		return $this->_pDistinctFieldsChecker;
 	}

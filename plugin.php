@@ -43,7 +43,6 @@ use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
-use onOffice\WPlugin\Field\DistinctFieldsChecker;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer;
@@ -88,10 +87,6 @@ add_action('oo_cache_cleanup', 'ooCacheCleanup');
 add_action('init', [$pAdminViewController, 'onInit']);
 add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
-
-add_action('wp_ajax_addHook', function() use ($pDI) {
-	$pDI->get(DistinctFieldsChecker::class)->addHook();
-});
 
 add_action('plugins_loaded', function() {
 	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR).'/languages');

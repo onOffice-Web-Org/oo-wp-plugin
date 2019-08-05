@@ -28,7 +28,7 @@ use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
-use function add_action;
+use function json_decode;
 use function plugins_url;
 
 /**
@@ -38,17 +38,8 @@ use function plugins_url;
  *
  */
 
-class DistinctFieldsChecker
+class DistinctFieldsHandlerModelBuilder
 {
-	/** @var array */
-	private $_fieldValues = [];
-
-	/** @var array */
-	private $_distinctFields = [];
-
-	/** @var array */
-	private $_geoRangeValues = [];
-
 	/** @var RequestVariablesSanitizer */
 	private $_pRequestVariables = null;
 
@@ -121,18 +112,6 @@ class DistinctFieldsChecker
 
 	/**
 	 *
-	 */
-
-	public function addHook()
-	{
-		add_action('wp_ajax_check_sandbox_data', function() {
-			$this->check();
-		});
-	}
-
-
-	/**
-	 *
 	 * @param string $module
 	 * @param array $distinctFields
 	 * @return void
@@ -163,25 +142,26 @@ class DistinctFieldsChecker
 
 	/**
 	 *
-	 * @return DistinctFieldsHandlerEnvironment
+	 * @return DistinctFieldsHandlerModel
 	 *
 	 */
 
-	public function createHandlerEnvironment()
+	public function buildDataModel()
 	{
 		$module = $this->getModule();
-		$inputValues = $this->getInputValues();
-		$this->_distinctFields = $this->getDistinctValues();
+		$inputValuesRaw = $this->getInputValues();
 
-		$this->setInputValues($module, $inputValues);
+		$allInputValues = $this->buildInputValuesForModule($module, $inputValuesRaw);
+		$inputValues = $allInputValues['inputValues'];
+		$geoValues = $allInputValues['geoValues'];
 
-		$pHandlerEnvironment = new DistinctFieldsHandlerEnvironment();
-		$pHandlerEnvironment->setModule($module);
-		$pHandlerEnvironment->setDistinctFields($this->_distinctFields);
-		$pHandlerEnvironment->setInputValues($this->_fieldValues);
-		$pHandlerEnvironment->setGeoPositionFields($this->_geoRangeValues);
+		$pDataModel = new DistinctFieldsHandlerModel();
+		$pDataModel->setModule($this->getModule());
+		$pDataModel->setDistinctFields($this->getDistinctValues());
+		$pDataModel->setInputValues($inputValues);
+		$pDataModel->setGeoPositionFields($geoValues);
 
-		return $pHandlerEnvironment;
+		return $pDataModel;
 	}
 
 
@@ -189,17 +169,19 @@ class DistinctFieldsChecker
 	 *
 	 * @param string $module
 	 * @param array $inputValues
+	 * @return array
 	 *
 	 */
 
-	private function setInputValues(string $module, array $inputValues)
+	private function buildInputValuesForModule(string $module, array $inputValues): array
 	{
 		$pGeoPosition = new GeoPosition();
+		$geoRangeValues = [];
 
 		if ($module === onOfficeSDK::MODULE_ESTATE) {
 			foreach ($inputValues as $key => $values) {
 				if (in_array($key, $pGeoPosition->getEstateSearchFields())) {
-					$this->_geoRangeValues[$key] = $values;
+					$geoRangeValues[$key] = $values;
 					unset($inputValues[$key]);
 				}
 			}
@@ -207,17 +189,12 @@ class DistinctFieldsChecker
 			$mapping = array_flip($pGeoPosition->getSearchCriteriaFields());
 			foreach ($inputValues as $key => $values) {
 				if (isset($mapping[$key])) {
-					$this->_geoRangeValues[$mapping[$key]] = $values;
+					$geoRangeValues[$mapping[$key]] = $values;
 					unset($inputValues[$key]);
 				}
 			}
 		}
 
-		$this->_fieldValues = $inputValues;
+		return ['inputValues' => $inputValues, 'geoValues' => $geoRangeValues];
 	}
-
-
-	/** @return array */
-	public function getDistinctValuesFields(): array
-		{ return $this->_distinctFields; }
 }
