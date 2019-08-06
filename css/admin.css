@@ -161,25 +161,6 @@ div.fieldsSortable #sortableFieldsList div.menu-item-settings p label {
 	float: left;
 }
 
-body.toplevel_page_onoffice {
-	counter-reset: h2counter;
-}
-
-body.toplevel_page_onoffice .card h1 {
-	counter-reset: h2counter;
-}
-
-body.toplevel_page_onoffice .card h2:before {
-	content: counter(h2counter) ".\0000a0\0000a0";
-	counter-increment: h2counter;
-	counter-reset: h3counter;
-}
-
-body.toplevel_page_onoffice .card h3:before {
-	content: counter(h2counter) "." counter(h3counter) ".\0000a0\0000a0";
-	counter-increment: h3counter;
-}
-
 body.toplevel_page_onoffice .card {
 	max-width: 720px;
 	display: inline-block;
@@ -195,7 +176,8 @@ body.toplevel_page_onoffice #madeby {
     box-sizing: border-box;
     position: relative;
     top: 25px;
-	color: #a0a0a0;font-style: italic;
+	color: #a0a0a0;
+	font-style: italic;
 }
 
 body.toplevel_page_onoffice #madeby .heart {
@@ -212,4 +194,8 @@ body.toplevel_page_onoffice img.logo {
     border-width: 0 1px 1px 1px;
     border-style: solid;
     border-color: #e5e5e5;
+}
+
+body.toplevel_page_onoffice .card h3 {
+	font-size: 1.15em;
 }
