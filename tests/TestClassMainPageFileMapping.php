@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,56 +19,30 @@
  *
  */
 
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use onOffice\WPlugin\Controller\MainPageFileMapping;
+use WP_UnitTestCase;
+
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) Software AG
  *
  */
 
-namespace onOffice\WPlugin;
-
-/**
- *
- */
-
-class Language
+class TestClassMainPageFileMapping
+	extends WP_UnitTestCase
 {
 	/**
 	 *
-	 * @return string
-	 *
 	 */
 
-	static public function getDefault()
+	public function testGetMapping()
 	{
-		$languageMapping = ConfigWrapper::getInstance()->getConfigByKey('localemap');
-		$currentLocale = get_locale();
-		$language = $languageMapping[$currentLocale] ?? $languageMapping['fallback'] ?? 'DEU';
-		return $language;
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getLocale(): string
-	{
-		return get_locale();
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getOnOfficeLanguage(): string
-	{
-		return self::getDefault();
+		$pMainPageFileMapping = new MainPageFileMapping();
+		$mapping = $pMainPageFileMapping->getMapping();
+		$this->assertGreaterThanOrEqual(1, $mapping);
+		$this->assertArrayHasKey('de_DE', $mapping);
 	}
 }

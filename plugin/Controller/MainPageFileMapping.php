@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,56 +19,30 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) Software AG
- *
- */
+declare (strict_types=1);
 
-namespace onOffice\WPlugin;
+namespace onOffice\WPlugin\Controller;
 
 /**
  *
  */
 
-class Language
+class MainPageFileMapping
 {
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	static public function getDefault()
-	{
-		$languageMapping = ConfigWrapper::getInstance()->getConfigByKey('localemap');
-		$currentLocale = get_locale();
-		$language = $languageMapping[$currentLocale] ?? $languageMapping['fallback'] ?? 'DEU';
-		return $language;
-	}
+	/** */
+	const PATH_ROOT = ONOFFICE_PLUGIN_DIR.'/plugin/Gui/resource/mainPage/';
 
 
 	/**
 	 *
-	 * @return string
+	 * @return array
 	 *
 	 */
 
-	public function getLocale(): string
+	public function getMapping(): array
 	{
-		return get_locale();
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getOnOfficeLanguage(): string
-	{
-		return self::getDefault();
+		return [
+			'de_DE' => self::PATH_ROOT.'de_DE.html',
+		];
 	}
 }

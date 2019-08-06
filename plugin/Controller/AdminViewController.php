@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\Fieldnames;
@@ -39,14 +40,17 @@ use onOffice\WPlugin\Gui\AdminPageModules;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use WP_Hook;
+use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_action;
+use function add_filter;
 use function add_menu_page;
 use function add_submenu_page;
 use function admin_url;
 use function esc_attr;
 use function esc_html;
+use function esc_html__;
 use function get_admin_url;
 use function is_admin;
 use function plugins_url;
@@ -147,7 +151,11 @@ class AdminViewController
 
 		// main page
 		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'),
-			$roleMainPage, $this->_pageSlug, function(){}, 'dashicons-admin-home');
+			$roleMainPage, $this->_pageSlug, function() {
+				$pDIBuilder = new ContainerBuilder();
+				$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+				echo $pDIBuilder->build()->get(MainPage::class)->render();
+			}, 'dashicons-admin-home');
 
 		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
 		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'), __('Addresses', 'onoffice'),

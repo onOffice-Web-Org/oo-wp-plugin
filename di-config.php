@@ -25,6 +25,8 @@ namespace onOffice;
 
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
+use onOffice\WPlugin\Filesystem\Filesystem;
+use onOffice\WPlugin\Filesystem\FilesystemDirect;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostConfiguration;
@@ -59,4 +61,5 @@ return [
 	WPOptionWrapperBase::class => autowire(WPOptionWrapperDefault::class),
 	ScriptLoaderBuilderConfig::class => autowire(ScriptLoaderBuilderConfigDefault::class),
 	ScriptLoaderGenericConfiguration::class => autowire(ScriptLoaderGenericConfigurationDefault::class),
+	Filesystem::class => autowire(FilesystemDirect::class),
 ];

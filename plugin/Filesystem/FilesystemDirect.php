@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,56 +19,32 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) Software AG
- *
- */
+declare (strict_types=1);
 
-namespace onOffice\WPlugin;
+namespace onOffice\WPlugin\Filesystem;
+
 
 /**
  *
  */
 
-class Language
+class FilesystemDirect
+	implements Filesystem
 {
 	/**
 	 *
+	 * @param string $file
 	 * @return string
+	 * @throws FilesystemException
 	 *
 	 */
 
-	static public function getDefault()
+	public function getContents(string $file): string
 	{
-		$languageMapping = ConfigWrapper::getInstance()->getConfigByKey('localemap');
-		$currentLocale = get_locale();
-		$language = $languageMapping[$currentLocale] ?? $languageMapping['fallback'] ?? 'DEU';
-		return $language;
-	}
+		if (is_file($file) && is_readable($file)) {
+			return file_get_contents($file);
+		}
 
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getLocale(): string
-	{
-		return get_locale();
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getOnOfficeLanguage(): string
-	{
-		return self::getDefault();
+		throw new FilesystemException('File not found or not readable');
 	}
 }

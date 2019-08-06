@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,56 +19,54 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) Software AG
- *
- */
+declare (strict_types=1);
 
-namespace onOffice\WPlugin;
+namespace onOffice\tests;
+
+use onOffice\WPlugin\Language;
+use WP_UnitTestCase;
 
 /**
  *
  */
 
-class Language
+class TestClassLanguage
+	extends WP_UnitTestCase
 {
 	/**
 	 *
-	 * @return string
+	 * @covers \onOffice\WPlugin\Language::getDefault
 	 *
 	 */
 
-	static public function getDefault()
+	public function testGetDefault()
 	{
-		$languageMapping = ConfigWrapper::getInstance()->getConfigByKey('localemap');
-		$currentLocale = get_locale();
-		$language = $languageMapping[$currentLocale] ?? $languageMapping['fallback'] ?? 'DEU';
-		return $language;
+		$this->assertEquals('ENG', Language::getDefault());
 	}
 
 
 	/**
 	 *
-	 * @return string
+	 * @covers \onOffice\WPlugin\Language::getOnOfficeLanguage
 	 *
 	 */
 
-	public function getLocale(): string
+	public function testGetOnOfficeLanguage()
 	{
-		return get_locale();
+		$pLanguage = new Language();
+		$this->assertEquals('ENG', $pLanguage->getOnOfficeLanguage());
 	}
 
 
 	/**
 	 *
-	 * @return string
+	 * @covers \onOffice\WPlugin\Language::getLocale
 	 *
 	 */
 
-	public function getOnOfficeLanguage(): string
+	public function testGetLocale()
 	{
-		return self::getDefault();
+		$pLanguage = new Language();
+		$this->assertEquals('en_US', $pLanguage->getLocale());
 	}
 }
