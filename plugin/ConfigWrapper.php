@@ -90,7 +90,7 @@ class ConfigWrapper {
 	private function readConfig()
 	{
 		$config = [];
-		$configFile = dirname(__FILE__).'/../config.php';
+		$configFile = dirname(__FILE__).'/../config/config.php';
 		$configFilePersonalized = self::getSubPluginPath().'/config.php';
 
 		if (is_file($configFilePersonalized)) {

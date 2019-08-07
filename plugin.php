@@ -51,7 +51,7 @@ use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
 
-define('ONOFFICE_DI_CONFIG_PATH', ONOFFICE_PLUGIN_DIR.DIRECTORY_SEPARATOR.'di-config.php');
+define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
 
 $pDIBuilder = new ContainerBuilder();
 $pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -60,7 +60,7 @@ $pDI = $pDIBuilder->build();
 $pContentFilter = $pDI->get(ContentFilter::class);
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
-$pScriptLoader = $pDI->get(ScriptLoaderRegistrator::class)->generate();
+$pDI->get(ScriptLoaderRegistrator::class)->generate();
 $pSearchParams = SearchParameters::getInstance();
 $pSearchParams->setParameters($_GET);
 
