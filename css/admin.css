@@ -169,13 +169,13 @@ body.toplevel_page_onoffice .card {
 
 body.toplevel_page_onoffice #madeby {
 	max-width: 720px;
-    display: block;
-    text-align: center;
-    min-width: 255px;
-    height: 20px;
-    box-sizing: border-box;
-    position: relative;
-    top: 25px;
+	display: block;
+	text-align: center;
+	min-width: 255px;
+	height: 20px;
+	box-sizing: border-box;
+	position: relative;
+	top: 25px;
 	color: #a0a0a0;
 	font-style: italic;
 }
@@ -186,14 +186,14 @@ body.toplevel_page_onoffice #madeby .heart {
 
 body.toplevel_page_onoffice img.logo {
 	max-width: 720px;
-    display: block;
-    position: relative;
-    box-shadow: 0 1px 1px rgba(0,0,0,.04);
-    background: #fff;
-    box-sizing: border-box;
-    border-width: 0 1px 1px 1px;
-    border-style: solid;
-    border-color: #e5e5e5;
+	display: block;
+	position: relative;
+	box-shadow: 0 1px 1px rgba(0,0,0,.04);
+	background: #fff;
+	box-sizing: border-box;
+	border-width: 0 1px 1px 1px;
+	border-style: solid;
+	border-color: #e5e5e5;
 }
 
 body.toplevel_page_onoffice .card h3 {
