@@ -28,7 +28,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\DistinctFieldsChecker;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormBuilder;
 use onOffice\WPlugin\Template;
@@ -51,7 +51,7 @@ class ContentFilterShortCodeForm
 	/** @var Template */
 	private $_pTemplate = null;
 
-	/** @var DistinctFieldsChecker */
+	/** @var DistinctFieldsHandlerModelBuilder */
 	private $_pDistinctFieldsChecker = null;
 
 	/** @var FormBuilder */
@@ -63,7 +63,7 @@ class ContentFilterShortCodeForm
 	 * @param Template $pTemplate
 	 * @param DataFormConfigurationFactory $pDataFormConfigurationFactory
 	 * @param Logger $pLogger
-	 * @param DistinctFieldsChecker $pDistinctFieldsChecker
+	 * @param DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder
 	 * @param FormBuilder $pFormBuilder
 	 *
 	 */
@@ -72,13 +72,13 @@ class ContentFilterShortCodeForm
 		Template $pTemplate,
 		DataFormConfigurationFactory $pDataFormConfigurationFactory,
 		Logger $pLogger,
-		DistinctFieldsChecker $pDistinctFieldsChecker,
+		DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder,
 		FormBuilder $pFormBuilder)
 	{
 		$this->_pTemplate = $pTemplate;
 		$this->_pLogger = $pLogger;
 		$this->_pDataFormConfigurationFactory = $pDataFormConfigurationFactory;
-		$this->_pDistinctFieldsChecker = $pDistinctFieldsChecker;
+		$this->_pDistinctFieldsChecker = $pDistinctFieldsHandlerModelBuilder;
 		$this->_pFormBuilder = $pFormBuilder;
 	}
 
@@ -102,9 +102,8 @@ class ContentFilterShortCodeForm
 			$pFormConfig = $this->_pDataFormConfigurationFactory->loadByFormName($formName);
 
 			if ($pFormConfig->getFormType() == Form::TYPE_APPLICANT_SEARCH) {
-				$availableOptionsFormApplicantSearch = $pFormConfig->getAvailableOptionsFields();
 				$this->_pDistinctFieldsChecker->registerScripts
-					(onOfficeSDK::MODULE_SEARCHCRITERIA, $availableOptionsFormApplicantSearch);
+					(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormConfig->getAvailableOptionsFields());
 			}
 
 			/* @var $pFormConfig DataFormConfiguration */

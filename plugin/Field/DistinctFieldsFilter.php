@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,12 +19,20 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Field;
 
-use onOffice\WPlugin\Fieldnames;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\__String;
+
+/**
+ *
+ */
 
 class DistinctFieldsFilter
 {
@@ -35,54 +43,51 @@ class DistinctFieldsFilter
 	const NOT_ALLOWED_VALUES = [''];
 
 
-	/** @var Fieldnames */
-	private $_pFieldnames = null;
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
-	/** @var string */
-	private $_module = '';
 
 
 	/**
 	 *
-	 * @param Fieldnames $pFieldnames
-	 * @param string $module
+	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 *
 	 */
 
-	public function __construct(Fieldnames $pFieldnames, string $module)
+	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort)
 	{
-		$this->_pFieldnames = $pFieldnames;
-		$this->_module = $module;
+		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
 
 	/**
 	 *
-	 * @param string $field
+	 * @param Field $pField
 	 * @return bool
 	 *
 	 */
 
-	private function isMultiselectableType(string $field): bool
+	private function isMultiselectableType(Field $pField): bool
 	{
-		return $this->_module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
-			in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
-				[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]);
+		return $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT ||
+			($pField->getModule() === onOfficeSDK::MODULE_SEARCHCRITERIA &&
+			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT);
 	}
-
 
 
 	/**
 	 *
-	 * @param string $field
-	 * @return bool
+	 * @param string $key
+	 * @param string $distinctField
+	 * @return boolean
 	 *
 	 */
 
-	private function isNumericalType(string $field): bool
+	public function isDistinctField(string $key, string $distinctField)
 	{
-		return in_array($this->_pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE),
-			[FieldTypes::FIELD_TYPE_FLOAT, FieldTypes::FIELD_TYPE_INTEGER]);
+		$field = str_replace(['[]','__von', '__bis'], '', $key);
+
+		return $field === $distinctField;
 	}
 
 
@@ -90,76 +95,125 @@ class DistinctFieldsFilter
 	 *
 	 * @param string $distinctField
 	 * @param array $inputValues
-	 * @return array
+	 * @param string $module
 	 *
 	 */
 
-	public function filter(string $distinctField, array $inputValues): array
+	public function filter(string $distinctField, array $inputValues, string $module): array
 	{
 		$filter = [];
+		$pFieldsCollection = new FieldsCollection();
+
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($pFieldsCollection);
 
 		foreach ($inputValues as $key => $value) {
-			if (in_array($key, self::NOT_ALLOWED_KEYS) || in_array($value, self::NOT_ALLOWED_VALUES)) {
+			if (in_array($key, self::NOT_ALLOWED_KEYS) ||
+				in_array($value, self::NOT_ALLOWED_VALUES) ||
+				$this->isDistinctField($key, $distinctField)) {
 				continue;
 			}
 
 			$pString = __String::getNew($key);
-			$operator = null;
-			$field = null;
-
 			$key = $pString->replace('[]', '');
 
-			if ($pString->endsWith('__von') && $this->_module == onOfficeSDK::MODULE_ESTATE) {
-				$operator = '>=';
+			if ($pString->endsWith('__von') && $module == onOfficeSDK::MODULE_ESTATE){
 				$field = $pString->replace('__von', '');
-
-				if (isset($filter[$field]) && $this->isNumericalType($field)) {
-					$operator = 'between';
-					$value1 = $value;
-					$value2 = $filter[$field][0]['val'];
-					$value = [$value1, $value2];
-				}
-			} elseif ($pString->endsWith('__bis') && $this->_module == onOfficeSDK::MODULE_ESTATE) {
-				$operator = '<=';
+				$filter[$field] = [$this->filterForEstateVon($filter, $key, $value)];
+			} elseif ($pString->endsWith('__bis') && $module == onOfficeSDK::MODULE_ESTATE){
 				$field = $pString->replace('__bis', '');
-
-				if (isset($filter[$field]) && $this->isNumericalType($field)) {
-					$operator = 'between';
-					$value1 = $filter[$field][0]['val'];
-					$value2 = $value;
-					$value = [$value1, $value2];
-				}
+				$filter[$field] = [$this->filterForEstateBis($filter, $key, $value)];
 			} else {
-				if (is_array($value)) {
-					$operator = 'in';
-				} else {
-					if ($this->isMultiselectableType($key)) {
-						$operator = 'regexp';
-					} else {
-						$operator = '=';
-					}
-				}
-
+				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $key);
 				$field = $key;
-			}
 
-			if ($field === $distinctField) {
-				continue;
-			}
+				if ($module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
+						FieldTypes::isRangeType($pField->getType())) {
+					if (!isset($filter[$field.'__von'])) {
+						$filter[$field.'__von'] = [['op' => '<=', 'val' => $value]];
+					}
 
-			if ($this->isNumericalType($field) && $this->_module === onOfficeSDK::MODULE_SEARCHCRITERIA) {
-				if (!isset($filter[$field.'__von'])) {
-					$filter[$field.'__von'] = [['op' => '<=', 'val' => $value]];
+					if (!isset($filter[$field.'__bis'])) {
+						$filter[$field.'__bis'] = [['op' => '>=', 'val' => $value]];
+					}
+				} else {
+					$filter[$field] = [$this->createDefaultFilter($pField, $value)];
 				}
-
-				if (!isset($filter[$field.'__bis'])) {
-					$filter[$field.'__bis'] = [['op' => '>=', 'val' => $value]];
-				}
-			} else {
-				$filter[$field] = [['op' => $operator, 'val' => $value]];
 			}
 		}
 
 		return $filter;
+	}
+
+
+	/**
+	 *
+	 * @param Field $pField
+	 * @param mixed $value
+	 * @return array
+	 *
+	 */
+
+	private function createDefaultFilter(Field $pField, $value)
+	{
+		$filter = [];
+
+		if ($this->isMultiselectableType($pField) || is_array($value)) {
+			$filter = ['op' => 'in', 'val' => $value];
+		} else {
+			$filter = ['op' => '=', 'val'=> $value];
+		}
+
+		return $filter;
+	}
+
+
+	/**
+	 *
+	 * @param array $filter
+	 * @param string $field
+	 * @param mixed $value
+	 * @return array
+	 *
+	 */
+
+	private function filterForEstateVon(array $filter, string $field, $value)
+	{
+		$operator = '>=';
+		$field = __String::getNew($field)->replace('__von', '');
+
+		if (isset($filter[$field])) {
+			$operator = 'between';
+			$value1 = $value;
+			$value2 = $filter[$field][0]['val'];
+			$value = [$value1, $value2];
+		}
+
+		return ['op' => $operator, 'val' => $value];
+	}
+
+
+	/**
+	 *
+	 * @param array $filter
+	 * @param string $field
+	 * @param mixed $value
+	 * @return array
+	 *
+	 */
+
+	private function filterForEstateBis(array $filter, string $field, $value)
+	{
+		$operator = '<=';
+		$field = __String::getNew($field)->replace('__bis', '');
+
+		if (isset($filter[$field])) {
+			$operator = 'between';
+			$value1 = $filter[$field][0]['val'];
+			$value2 = $value;
+			$value = [$value1, $value2];
+		}
+
+		return ['op' => $operator, 'val' => $value];
 	}
 }

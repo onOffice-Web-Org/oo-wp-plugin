@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,62 +19,94 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Field\DistinctFieldsCheckerEnvironment;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\RequestVariablesSanitizer;
+use onOffice\WPlugin\WP\WPScriptStyleBase;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
-use function add_action;
+use function json_decode;
 use function plugins_url;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
-class DistinctFieldsChecker
+class DistinctFieldsHandlerModelBuilder
 {
-	/** @var array */
-	private $_fieldValues = [];
+	/** @var RequestVariablesSanitizer */
+	private $_pRequestVariables = null;
 
-	/** @var array */
-	private $_distinctFields = [];
-
-	/** @var array */
-	private $_geoRangeValues = [];
-
-	/** @var DistinctFieldsCheckerEnvironment */
-	private $_pEnvironment = null;
+	/** @var WPScriptStyleBase */
+	private $_pScriptStyle = null;
 
 
 	/**
 	 *
-	 * @param DistinctFieldsCheckerEnvironment $pEnvironment
+	 * @param RequestVariablesSanitizer $pRequestVariables
+	 * @param WPScriptStyleBase $pScriptStyle
 	 *
 	 */
 
-	public function __construct(DistinctFieldsCheckerEnvironment $pEnvironment = null)
+	public function __construct(
+		RequestVariablesSanitizer $pRequestVariables, WPScriptStyleBase $pScriptStyle)
 	{
-		$this->_pEnvironment = $pEnvironment ?? new DistinctFieldsCheckerEnvironmentDefault();
+		$this->_pRequestVariables = $pRequestVariables;
+		$this->_pScriptStyle = $pScriptStyle;
 	}
 
 
 	/**
 	 *
+	 * @return array
+	 *
 	 */
 
-	public static function addHook()
+	public function getDistinctValues(): array
 	{
-		add_action('wp_ajax_check_sandbox_data', function() {
-			$pDistinctFieldsChecker = new DistinctFieldsChecker();
-			$pDistinctFieldsChecker->check();
-		});
+		return $this->_pRequestVariables->getFilteredPost(
+				DistinctFieldsHandler::PARAMETER_DISTINCT_VALUES, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
 	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getInputValues(): array
+	{
+		return json_decode($this->_pRequestVariables->getFilteredPost(
+				DistinctFieldsHandler::PARAMETER_INPUT_VALUES), true) ?? [];
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getModule(): string
+	{
+		return $this->_pRequestVariables->getFilteredPost(DistinctFieldsHandler::PARAMETER_MODULE) ?? '';
+	}
+
+
+	/**
+	 *
+	 * @return WPScriptStyleBase
+	 *
+	 */
+
+	public function getScriptStyle(): WPScriptStyleBase
+		{ return $this->_pScriptStyle; }
 
 
 	/**
@@ -92,7 +124,7 @@ class DistinctFieldsChecker
 		}
 
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		$pScriptStyle = $this->_pEnvironment->getScriptStyle();
+		$pScriptStyle = $this->_pScriptStyle;
 		$values = [
 			'base_path' => plugins_url('/tools/distinctFields.php', $pluginPath),
 			'distinctValues' => $distinctFields,
@@ -109,44 +141,46 @@ class DistinctFieldsChecker
 
 	/**
 	 *
+	 * @return DistinctFieldsHandlerModel
+	 *
 	 */
 
-	public function check(): array
+	public function buildDataModel(): DistinctFieldsHandlerModel
 	{
-		$module = $this->_pEnvironment->getModule();
-		$inputValues = $this->_pEnvironment->getInputValues();
-		$this->_distinctFields = $this->_pEnvironment->getDistinctValues();
+		$module = $this->getModule();
+		$inputValuesRaw = $this->getInputValues();
 
-		$this->setInputValues($module, $inputValues);
+		$allInputValues = $this->buildInputValuesForModule($module, $inputValuesRaw);
+		$inputValues = $allInputValues['inputValues'];
+		$geoValues = $allInputValues['geoValues'];
 
-		$pDistinctFieldsHandler = new DistinctFieldsHandler();
-		$pDistinctFieldsHandler->setModule($module);
-		$pDistinctFieldsHandler->setDistinctFields($this->_distinctFields);
-		$pDistinctFieldsHandler->setInputValues($this->_fieldValues);
-		$pDistinctFieldsHandler->setGeoPositionFields($this->_geoRangeValues);
+		$pDataModel = new DistinctFieldsHandlerModel();
+		$pDataModel->setModule($this->getModule());
+		$pDataModel->setDistinctFields($this->getDistinctValues());
+		$pDataModel->setInputValues($inputValues);
+		$pDataModel->setGeoPositionFields($geoValues);
 
-		$pDistinctFieldsHandler->check();
-
-		return $pDistinctFieldsHandler->getValues();
+		return $pDataModel;
 	}
-
 
 
 	/**
 	 *
 	 * @param string $module
 	 * @param array $inputValues
+	 * @return array
 	 *
 	 */
 
-	private function setInputValues(string $module, array $inputValues)
+	private function buildInputValuesForModule(string $module, array $inputValues): array
 	{
 		$pGeoPosition = new GeoPosition();
+		$geoRangeValues = [];
 
 		if ($module === onOfficeSDK::MODULE_ESTATE) {
 			foreach ($inputValues as $key => $values) {
 				if (in_array($key, $pGeoPosition->getEstateSearchFields())) {
-					$this->_geoRangeValues[$key] = $values;
+					$geoRangeValues[$key] = $values;
 					unset($inputValues[$key]);
 				}
 			}
@@ -154,17 +188,12 @@ class DistinctFieldsChecker
 			$mapping = array_flip($pGeoPosition->getSearchCriteriaFields());
 			foreach ($inputValues as $key => $values) {
 				if (isset($mapping[$key])) {
-					$this->_geoRangeValues[$mapping[$key]] = $values;
+					$geoRangeValues[$mapping[$key]] = $values;
 					unset($inputValues[$key]);
 				}
 			}
 		}
 
-		$this->_fieldValues = $inputValues;
+		return ['inputValues' => $inputValues, 'geoValues' => $geoRangeValues];
 	}
-
-
-	/** @return array */
-	public function getDistinctValuesFields(): array
-		{ return $this->_distinctFields; }
 }

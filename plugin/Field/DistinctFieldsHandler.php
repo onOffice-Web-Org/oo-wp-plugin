@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,20 +19,23 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsFilter;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerConfigurationDefault;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -51,122 +54,55 @@ class DistinctFieldsHandler
 	const PARAMETER_MODULE = 'module';
 
 
-	/** @var string */
-	private $_module = null;
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
 
-	/** @var array */
-	private $_inputValues = [];
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
-	/** @var array */
-	private $_values = [];
+	/** @var DistinctFieldsHandlerModelBuilder */
+	private $_pDistinctFieldsHandlerModelBuilder = null;
 
-	/** @var array */
-	private $_geoPositionFields = [];
-
-	/** @var array */
-	private $_distinctFields = [];
-
-	/** @var DistinctFieldsHandlerConfiguration */
-	private $_pDistinctFieldsHandlerConfiguration = null;
+	/** @var DistinctFieldsFilter */
+	private $_pDistinctFieldsFilter = null;
 
 
 	/**
 	 *
-	 * @param DistinctFieldsHandlerConfigurationDefault $pDistinctFieldsHandlerConfiguration
+	 * @param DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder
+	 * @param SDKWrapper $pSDKWrapper
+	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
+	 * @param DistinctFieldsFilter $pDistinctFieldsFilter
 	 *
 	 */
 
-	public function __construct(DistinctFieldsHandlerConfiguration $pDistinctFieldsHandlerConfiguration = null)
+	public function __construct(
+		DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder,
+		SDKWrapper $pSDKWrapper,
+		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
+		DistinctFieldsFilter $pDistinctFieldsFilter)
 	{
-		$this->_pDistinctFieldsHandlerConfiguration =
-			$pDistinctFieldsHandlerConfiguration ?? new DistinctFieldsHandlerConfigurationDefault();
+		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
+		$this->_pDistinctFieldsHandlerModelBuilder = $pDistinctFieldsHandlerModelBuilder;
+		$this->_pDistinctFieldsFilter = $pDistinctFieldsFilter;
 	}
-
-
-	/**
-	 *
-	 * @param string $module
-	 *
-	 */
-
-	public function setModule(string $module)
-	{
-		$this->_module = $module;
-	}
-
-
-	/** @return string */
-	public function getModule(): string
-		{ return $this->_module; }
-
-
-	/**
-	 *
-	 * @param array $distinctFields
-	 *
-	 */
-
-	public function setDistinctFields(array $distinctFields)
-	{
-		$this->_distinctFields = $distinctFields;
-	}
-
-
-	/** @return array */
-	public function getDistinctFields(): array
-		{ return $this->_distinctFields; }
-
-	/**
-	 *
-	 * @param array $inputValues
-	 *
-	 */
-
-	public function setInputValues(array $inputValues)
-	{
-		$this->_inputValues = $inputValues;
-	}
-
-
-	/** @return array */
-	public function getInputValues(): array
-		{ return $this->_inputValues; }
-
-
-	/**
-	 *
-	 * @param array $geoPositionFields
-	 *
-	 */
-
-	public function setGeoPositionFields(array $geoPositionFields)
-	{
-		$this->_geoPositionFields = $geoPositionFields;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getValues(): array
-		{ return $this->_values; }
 
 
 	/**
 	 *
 	 * @param string $field
+	 * @param Field $pField
+	 * @return string
 	 *
 	 */
 
-	private function editMultiselectableField($field)
+	private function editMultiselectableField(Field $pField)
 	{
-		$pFieldnames = $this->_pDistinctFieldsHandlerConfiguration->getFieldnames();
-		$fieldType = $pFieldnames->getType($field, onOfficeSDK::MODULE_ESTATE);
+		$fieldType = $pField->getType();
+		$field = $pField->getName();
 
-		if ($this->_module == onOfficeSDK::MODULE_ESTATE &&
+		if ($pField->getModule() == onOfficeSDK::MODULE_ESTATE &&
 			FieldTypes::isMultipleSelectType($fieldType)) {
 			$field .= '[]';
 		}
@@ -177,68 +113,77 @@ class DistinctFieldsHandler
 
 	/**
 	 *
+	 * @return array
+	 *
 	 */
 
-	public function check()
+	public function check(): array
 	{
-		$apiClientActions = $this->retrieveValues();
+		$pFieldsCollection = new FieldsCollection();
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($pFieldsCollection);
 
-		foreach ($this->_distinctFields as $field) {
+		$pModel = $this->_pDistinctFieldsHandlerModelBuilder->buildDataModel();
+		$apiClientActions = $this->retrieveValues($pModel);
+		$values = [];
+
+		foreach ($pModel->getDistinctFields() as $field) {
+			$pField = $pFieldsCollection->getFieldByModuleAndName($pModel->getModule(), $field);
 			$pApiClientAction = $apiClientActions[$field];
 			$records = $pApiClientAction->getResultRecords();
-			$field = $this->editMultiselectableField($field);
-			$this->_values[$field] = $records[0]['elements'];
+			$field = $this->editMultiselectableField($pField);
+			$values[$field] = $records[0]['elements'];
 		}
+
+		return $values;
 	}
 
 
 	/**
 	 *
+	 * @param DistinctFieldsHandlerModel $pModel
 	 * @return array
 	 *
 	 */
 
-	private function retrieveValues(): array
+	private function retrieveValues(DistinctFieldsHandlerModel $pModel): array
 	{
-		$pSDKWrapper = $this->_pDistinctFieldsHandlerConfiguration->getSDKWrapper();
-		$pFieldnames = $this->_pDistinctFieldsHandlerConfiguration->getFieldnames();
-		$pFilter = new DistinctFieldsFilter($pFieldnames, $this->_module);
 		$apiClientActions = [];
 
-		foreach ($this->_distinctFields as $field) {
-			$requestParams = $this->buildParameters($pFilter, $field);
+		foreach ($pModel->getDistinctFields() as $field) {
+			$requestParams = $this->buildParameters($field, $pModel);
 			$pApiClientAction = new APIClientActionGeneric
-				($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'distinctValues');
+				($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'distinctValues');
 			$pApiClientAction->setParameters($requestParams);
 			$apiClientActions[$field] = $pApiClientAction;
 			$pApiClientAction->addRequestToQueue();
 		}
 
-		$pSDKWrapper->sendRequests();
+		$this->_pSDKWrapper->sendRequests();
 		return $apiClientActions;
 	}
 
 
 	/**
 	 *
-	 * @param DistinctFieldsFilter $pFilter
 	 * @param string $field
+	 * @param DistinctFieldsHandlerModel $pModel
 	 * @return array
 	 *
 	 */
 
-	private function buildParameters(DistinctFieldsFilter $pFilter, string $field): array
+	private function buildParameters(string $field, DistinctFieldsHandlerModel $pModel): array
 	{
-		$filter = $pFilter->filter($field, $this->_inputValues);
+		$filter = $this->_pDistinctFieldsFilter->filter($field, $pModel->getInputValues(), $pModel->getModule());
 		$requestParams = [
 			'language' => Language::getDefault(),
-			'module' => $this->_module,
+			'module' => $pModel->getModule(),
 			'field' => $field,
 			'filter' => $filter,
 		];
 
-		if ($this->_geoPositionFields !== []) {
-			$requestParams['georangesearch'] = $this->_geoPositionFields;
+		if ($pModel->getGeoPositionFields() !== []) {
+			$requestParams['georangesearch'] = $pModel->getGeoPositionFields();
 		}
 
 		return $requestParams;

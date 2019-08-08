@@ -19,16 +19,23 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin;
 
-use onOffice\WPlugin\Field\DistinctFieldsChecker;
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Field\DistinctFieldsHandler;
+use const ONOFFICE_DI_CONFIG_PATH;
+use function json_encode;
 
 require '../../../../wp-load.php';
 
 header('Content-Type: application/json');
 
-$pDistinctFieldsChecker = new DistinctFieldsChecker();
+$pContainerBuilder = new ContainerBuilder;
+$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+$pContainer = $pContainerBuilder->build();
+$value = $pContainer->get(DistinctFieldsHandler::class)->check();
 
-$value = $pDistinctFieldsChecker->check();
 echo json_encode($value);
 die;

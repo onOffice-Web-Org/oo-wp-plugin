@@ -28,10 +28,12 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeForm;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\DistinctFieldsChecker;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_UnitTestCase;
 
 /**
@@ -77,7 +79,9 @@ class TestClassContentFilterShortCodeForm
 			->getMock();
 		$this->_pLogger = $this->getMockBuilder(Logger::class)
 			->getMock();
-		$this->_pDistinctFieldsChecker = $this->getMockBuilder(DistinctFieldsChecker::class)
+
+		$this->_pDistinctFieldsChecker = $this->getMockBuilder(DistinctFieldsHandlerModelBuilder::class)
+			->setConstructorArgs([new RequestVariablesSanitizer(), new WPScriptStyleDefault()])
 			->getMock();
 		$this->_pFormBuilder = $this->getMockBuilder(Form\FormBuilder::class)
 			->getMock();

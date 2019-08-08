@@ -23,130 +23,167 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\DistinctFieldsFilter;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerConfigurationTest;
-use onOffice\WPlugin\Field\FieldnamesEnvironment;
-use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
-use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
+use onOffice\WPlugin\RequestVariablesSanitizer;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_UnitTestCase;
 use function json_decode;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
+ * Test for class DistinctFieldsHandler
  *
  */
 
 class TestClassDistinctFieldsHandler
 	extends WP_UnitTestCase
 {
-	/** @var FieldnamesEnvironment */
-	private $_pFieldnamesEnvironment = null;
-
 	/** @var DistinctFieldsHandler */
 	private $_pInstance = null;
+
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
 
 	/**
 	 *
+	 * @before
+	 *
 	 */
 
-	public function setUp()
+	public function prepare()
 	{
-		$this->_pFieldnamesEnvironment = new FieldnamesEnvironmentTest();
-		$fieldParameters = [
-			'labels' => true,
-			'showContent' => true,
-			'showTable' => true,
-			'language' => 'ENG',
-			'modules' => ['address', 'estate'],
-		];
-		$pSDKWrapperMocker = $this->_pFieldnamesEnvironment->getSDKWrapper();
-		$responseGetFields = json_decode
-			(file_get_contents(__DIR__.'/resources/ApiResponseGetFields.json'), true);
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setConstructorArgs([new Container])
+			->getMock();
 
-		/* @var $pSDKWrapperMocker SDKWrapperMocker */
-		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
-			$fieldParameters, null, $responseGetFields);
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pFieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+				$pFieldObjektart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldObjektart);
 
-		$searchCriteriaFieldsParameters = ['language' => 'ENG', 'additionalTranslations' => true];
-		$responseGetSearchcriteriaFields = json_decode
-			(file_get_contents(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json'), true);
-		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '',
-			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);
+				$pFieldNutzungsart = new Field('nutzungsart', onOfficeSDK::MODULE_ESTATE);
+				$pFieldNutzungsart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldNutzungsart);
 
-		$parametersEstates = [
-			'language' => 'ENG',
-			'module' => 'estate',
-			'field' => 'objekttyp',
-			'filter' => [
-				'objektart' => [['op' => 'in', 'val' => ['wohnung']]],
-				'vermarktungsart' => [['op' => 'in', 'val' => ['kauf']]]
-			]
-		];
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
 
-		$responseEstates =  file_get_contents
-			(__DIR__.'/resources/Field/AppResponseDistinctFieldsHandlerEstate.json');
-		$responseEstatesFields = json_decode($responseEstates, true);
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('objektart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
 
-		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'distinctValues',
-			'', $parametersEstates, null, $responseEstatesFields);
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
 
-		$pExtraFieldsCollection = new FieldsCollection();
+		$pRequestVariables = new RequestVariablesSanitizer();
+		$pScriptStyle = new WPScriptStyleDefault();
+		$pModelBuilder = new DistinctFieldsHandlerModelBuilder($pRequestVariables, $pScriptStyle);
+		$pDistinctFieldsFilter = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
+		$pSDKWrapperMocker = $this->buildSDKWrapper();
 
-		$pFieldnames = new Fieldnames
-			($pExtraFieldsCollection, false, $this->_pFieldnamesEnvironment);
-		$pFieldnames->loadLanguage();
-
-		$pConfigTest = new DistinctFieldsHandlerConfigurationTest();
-		$pConfigTest->setSDKWrapper($pSDKWrapperMocker);
-		$pConfigTest->setFieldnames($pFieldnames);
-		$this->_pInstance = new DistinctFieldsHandler($pConfigTest);
-
-		parent::setUp();
+		$this->_pInstance = new DistinctFieldsHandler(
+				$pModelBuilder, $pSDKWrapperMocker, $this->_pFieldsCollectionBuilderShort, $pDistinctFieldsFilter);
 	}
 
 
 	/**
 	 *
+	 * @return SDKWrapperMocker
+	 *
+	 */
+
+	private function buildSDKWrapper(): SDKWrapperMocker
+	{
+		$pSDKWrapperMocker = new SDKWrapperMocker();
+
+		$parametersEstatesObjektart = [
+			'language' => 'ENG',
+			'module' => 'estate',
+			'field' => 'objektart',
+			'filter' => [
+				'nutzungsart' => [['op' => 'in', 'val' => ['wohnen']]]
+			],
+			'georangesearch' => ['radius' => '0']
+		];
+
+		$parametersEstates = [
+			'language' => 'ENG',
+			'module' => 'estate',
+			'field' => 'nutzungsart',
+			'filter' => [
+				'objektart' => [['op' => 'in', 'val' => ['haus']]]
+			],
+			'georangesearch' => ['radius' => '0']
+		];
+
+		$responseEstates = file_get_contents
+			(__DIR__.'/resources/Field/AppResponseDistinctFieldsHandlerEstate.json');
+		$responseEstatesFields = json_decode($responseEstates, true);
+
+		$responseEstatesObjektart = file_get_contents
+			(__DIR__.'/resources/Field/AppResponseDistinctFieldsHandlerEstateObjektart.json');
+		$responseEstatesFieldsObjektart = json_decode($responseEstatesObjektart, true);
+
+		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'distinctValues',
+			'', $parametersEstates, null, $responseEstatesFields);
+
+		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'distinctValues',
+			'', $parametersEstatesObjektart, null, $responseEstatesFieldsObjektart);
+		return $pSDKWrapperMocker;
+	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::__construct
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::check
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::retrieveValues
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::buildParameters
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::editMultiselectableField
+	 *
 	 */
 
 	public function testCheck()
 	{
-		$module = 'estate';
-		$this->_pInstance->setModule($module);
-		$this->assertEquals($module, $this->_pInstance->getModule());
-
-		$distinctFields = ['objekttyp'];
-		$this->_pInstance->setDistinctFields($distinctFields);
-		$this->assertEquals($distinctFields, $this->_pInstance->getDistinctFields());
-
-		$inputValues = [
-			'objektart' => ['wohnung'],
-			'vermarktungsart' => ['kauf']
+		$_POST = [
+			'field' => 'objektart[]',
+			'inputValues' => '{\\"\\":\\"OK\\",\\"nutzungsart[]\\":[\\"wohnen\\"],\\"objektart[]\\":[\\"haus\\"],\\"radius\\":\\"0\\",\\"oo_formid\\":\\"contactform\\",\\"oo_formno\\":\\"10\\",\\"Id\\":\\"2370\\"}',
+			'module' => 'estate',
+			'distinctValues' => ['nutzungsart','objektart'],
 		];
 
-		$this->_pInstance->setInputValues($inputValues);
-		$this->assertEquals($inputValues, $this->_pInstance->getInputValues());
-
-		$values = [];
-		$values['objekttyp[]'] = [
-			'etage' => 'Etagenwohnung',
-			'maisonette' => 'Maisonette',
-			'erdgeschoss' => 'Erdgeschosswohnung',
-			'dachgeschoss' => 'Dachgeschoss',
-			'rohdachboden' => 'Rohdachboden',
-			'appartment' => 'Apartment',
-			'terrassen' => 'Terrasse',
-			'attikawohnung' => 'Attikawohnung',
-			'hochparterre' => 'Hochparterre',
-			'souterrain' => 'Souterrain',
+		$expectedValues = [
+			'nutzungsart[]' => [
+				'wohnen' => 'Wohnen',
+				'waz' => 'WAZ',
+				'anlage' => 'Anlage'
+			],
+			'objektart[]' => [
+				'haus' => 'Haus',
+				'wohnung' => 'Wohnung',
+				'grundstueck' => 'Grundstück',
+				'sonstige' => 'Sonstige',
+				'gastgewerbe' => 'Gastgewerbe'
+			]
 		];
 
 		$this->_pInstance->check();
+		$this->assertEquals($expectedValues, $this->_pInstance->check());
 	}
 }
