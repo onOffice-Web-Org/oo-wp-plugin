@@ -81,7 +81,7 @@ class ViewFieldModifierHandler
 			($newRecord, array_flip($this->_pModifier->getVisibleFields()));
 
 		$fields = array_merge(
-				array_flip(array_keys( array_flip($this->_pModifier->getVisibleFields()))),
+				array_flip(array_values($this->_pModifier->getVisibleFields())),
 				$intersection);
 
 		return $fields;
