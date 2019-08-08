@@ -69,9 +69,9 @@ class DistinctFieldsFilter
 
 	private function isMultiselectableType(Field $pField): bool
 	{
-		return $pField->getModule() == onOfficeSDK::MODULE_SEARCHCRITERIA &&
-			in_array($pField->getType(),
-				[FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]);
+		return $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT ||
+			($pField->getModule() === onOfficeSDK::MODULE_SEARCHCRITERIA &&
+			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT);
 	}
 
 
@@ -149,7 +149,7 @@ class DistinctFieldsFilter
 	/**
 	 *
 	 * @param Field $pField
-	 * @param type $value
+	 * @param mixed $value
 	 * @return array
 	 *
 	 */
@@ -158,9 +158,7 @@ class DistinctFieldsFilter
 	{
 		$filter = [];
 
-		if ($this->isMultiselectableType($pField)){
-			$filter = ['op' => 'regexp', 'val' => $value];
-		} elseif (is_array($value)) {
+		if ($this->isMultiselectableType($pField) || is_array($value)) {
 			$filter = ['op' => 'in', 'val' => $value];
 		} else {
 			$filter = ['op' => '=', 'val'=> $value];
@@ -207,8 +205,7 @@ class DistinctFieldsFilter
 	private function filterForEstateBis(array $filter, string $field, $value)
 	{
 		$operator = '<=';
-		$pString = __String::getNew($field);
-		$field = $pString->replace('__bis', '');
+		$field = __String::getNew($field)->replace('__bis', '');
 
 		if (isset($filter[$field])) {
 			$operator = 'between';

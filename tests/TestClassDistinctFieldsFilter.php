@@ -68,6 +68,10 @@ class TestClassDistinctFieldsFilter
 				$pField2->setType(FieldTypes::FIELD_TYPE_FLOAT);
 				$pFieldsCollection->addField($pField2);
 
+				$pFieldKaufpreis = new Field('kaufpreis', onOfficeSDK::MODULE_ESTATE);
+				$pFieldKaufpreis->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldsCollection->addField($pFieldKaufpreis);
+
 				$pField3 = new Field('ort', onOfficeSDK::MODULE_ESTATE);
 				$pField3->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($pField3);
@@ -113,12 +117,15 @@ class TestClassDistinctFieldsFilter
 			'objektart[]' => ['haus'],
 			'wohnflaeche__von' => '100',
 			'wohnflaeche__bis' => '300',
+			'kaufpreis__bis' => '300000',
+			'kaufpreis__von' => '100000',
 			'ort' => 'Aachen',
 		];
 
 		$expectedResult = [
 			'objektart' => [['op' => 'in', 'val' => ['haus']]],
 			'wohnflaeche' => [['op' => 'between', 'val' => ['100', '300']]],
+			'kaufpreis' => [['op' => 'between', 'val' => ['100000', '300000']]],
 			'ort' => [['op' => '=', 'val' => 'Aachen']]
 		];
 
@@ -137,14 +144,12 @@ class TestClassDistinctFieldsFilter
 	public function testFilterSearchcriteria()
 	{
 		$expectedResult = [
-			'objektart' =>
-				[
-					['op' => 'regexp',
-					'val' => 'haus']
-				],
+			'objektart' => [
+				['op' => 'in', 'val' => 'haus']
+			],
 			'wohnflaeche__von' => [['op' => '<=', 'val' => 100]],
 			'wohnflaeche__bis' => [['op' => '>=', 'val' => 100]],
-			'boden' => [['op' => 'regexp', 'val' => ['marmor']]],
+			'boden' => [['op' => 'in', 'val' => ['marmor']]],
 		];
 
 		$inputValues = [
