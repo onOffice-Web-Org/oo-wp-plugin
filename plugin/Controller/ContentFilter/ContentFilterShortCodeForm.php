@@ -52,7 +52,7 @@ class ContentFilterShortCodeForm
 	private $_pTemplate = null;
 
 	/** @var DistinctFieldsHandlerModelBuilder */
-	private $_pDistinctFieldsChecker = null;
+	private $_pDistinctFieldsHandlerModelBuilder = null;
 
 	/** @var FormBuilder */
 	private $_pFormBuilder = null;
@@ -78,7 +78,7 @@ class ContentFilterShortCodeForm
 		$this->_pTemplate = $pTemplate;
 		$this->_pLogger = $pLogger;
 		$this->_pDataFormConfigurationFactory = $pDataFormConfigurationFactory;
-		$this->_pDistinctFieldsChecker = $pDistinctFieldsHandlerModelBuilder;
+		$this->_pDistinctFieldsHandlerModelBuilder = $pDistinctFieldsHandlerModelBuilder;
 		$this->_pFormBuilder = $pFormBuilder;
 	}
 
@@ -102,7 +102,7 @@ class ContentFilterShortCodeForm
 			$pFormConfig = $this->_pDataFormConfigurationFactory->loadByFormName($formName);
 
 			if ($pFormConfig->getFormType() == Form::TYPE_APPLICANT_SEARCH) {
-				$this->_pDistinctFieldsChecker->registerScripts
+				$this->_pDistinctFieldsHandlerModelBuilder->registerScripts
 					(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormConfig->getAvailableOptionsFields());
 			}
 
