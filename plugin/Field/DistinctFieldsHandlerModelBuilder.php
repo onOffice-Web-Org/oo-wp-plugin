@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;
@@ -32,9 +34,6 @@ use function json_decode;
 use function plugins_url;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -54,8 +53,8 @@ class DistinctFieldsHandlerModelBuilder
 	 *
 	 */
 
-	public function __construct
-			(RequestVariablesSanitizer $pRequestVariables, WPScriptStyleBase $pScriptStyle)
+	public function __construct(
+		RequestVariablesSanitizer $pRequestVariables, WPScriptStyleBase $pScriptStyle)
 	{
 		$this->_pRequestVariables = $pRequestVariables;
 		$this->_pScriptStyle = $pScriptStyle;
@@ -146,7 +145,7 @@ class DistinctFieldsHandlerModelBuilder
 	 *
 	 */
 
-	public function buildDataModel()
+	public function buildDataModel(): DistinctFieldsHandlerModel
 	{
 		$module = $this->getModule();
 		$inputValuesRaw = $this->getInputValues();

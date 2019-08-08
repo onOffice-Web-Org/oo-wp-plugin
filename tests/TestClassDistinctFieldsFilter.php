@@ -27,21 +27,19 @@ use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsFilter;
-use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
-use function json_decode;
 
+
+/**
+ *
+ */
 
 class TestClassDistinctFieldsFilter
 	extends WP_UnitTestCase
 {
-
-	/** FieldnamesEnvironment */
-	//private $_pFieldnamesEnvironment = null;
-
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort = null;
 
@@ -110,21 +108,19 @@ class TestClassDistinctFieldsFilter
 
 	public function testFilterEstates()
 	{
-		$inputValues =
-			[
-				"" => "Send",
-				"objektart[]" => ["haus"],
-				"wohnflaeche__von" => "100",
-				"wohnflaeche__bis" => "300",
-				"ort" => "Aachen",
-			];
+		$inputValues = [
+			'' => 'Send',
+			'objektart[]' => ['haus'],
+			'wohnflaeche__von' => '100',
+			'wohnflaeche__bis' => '300',
+			'ort' => 'Aachen',
+		];
 
-		$expectedResult =
-			[
-				"objektart" => [["op" => "in", "val" => ["haus"]]],
-				"wohnflaeche" => [["op" => "between", "val" => ["100", "300"]]],
-				"ort" => [["op" => "=", "val" => "Aachen"]]
-			];
+		$expectedResult = [
+			'objektart' => [['op' => 'in', 'val' => ['haus']]],
+			'wohnflaeche' => [['op' => 'between', 'val' => ['100', '300']]],
+			'ort' => [['op' => '=', 'val' => 'Aachen']]
+		];
 
 		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
 		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues, 'estate'));
@@ -140,30 +136,30 @@ class TestClassDistinctFieldsFilter
 
 	public function testFilterSearchcriteria()
 	{
-		$expectedResult =
-			[
-			"objektart" =>
+		$expectedResult = [
+			'objektart' =>
 				[
-					["op" => "regexp",
-					"val" => "haus"]
+					['op' => 'regexp',
+					'val' => 'haus']
 				],
-			"wohnflaeche__von" => [["op" => "<=", "val" => 100]],
-			"wohnflaeche__bis" => [["op" => ">=", "val" => 100]],
-			"boden" => [["op" => "regexp", "val" => ["marmor"]]],
-			];
+			'wohnflaeche__von' => [['op' => '<=', 'val' => 100]],
+			'wohnflaeche__bis' => [['op' => '>=', 'val' => 100]],
+			'boden' => [['op' => 'regexp', 'val' => ['marmor']]],
+		];
 
-		$inputValues =
-			["oo_formid" => "applicant-search-form-1",
-				"oo_formno" => "1",
-				"objektart" => "haus",
-				"objekttyp" => "",
-				"vermarktungsart" => "",
-				"wohnflaeche" => "100",
-				"boden[]" => ["marmor"],
-				"range_land" => "",
-				"range_plz" => "",
-				"range_strasse" => "",
-				"" => "Search+for+Prospective+Buyers"];
+		$inputValues = [
+			'oo_formid' => 'applicant-search-form-1',
+			'oo_formno' => '1',
+			'objektart' => 'haus',
+			'objekttyp' => '',
+			'vermarktungsart' => '',
+			'wohnflaeche' => '100',
+			'boden[]' => ['marmor'],
+			'range_land' => '',
+			'range_plz' => '',
+			'range_strasse' => '',
+			'' => 'Search+for+Prospective+Buyers',
+		];
 
 		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
 		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues, 'searchcriteria'));

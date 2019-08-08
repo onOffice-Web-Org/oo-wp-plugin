@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Field;
 
 /**
@@ -28,7 +30,7 @@ namespace onOffice\WPlugin\Field;
 class DistinctFieldsHandlerModel
 {
 	/** @var string */
-	private $_module = null;
+	private $_module = '';
 
 	/** @var array */
 	private $_distinctFields = [];

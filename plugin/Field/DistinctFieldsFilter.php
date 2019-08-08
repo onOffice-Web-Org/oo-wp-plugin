@@ -19,6 +19,8 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;
@@ -118,12 +120,10 @@ class DistinctFieldsFilter
 			if ($pString->endsWith('__von') && $module == onOfficeSDK::MODULE_ESTATE){
 				$field = $pString->replace('__von', '');
 				$filter[$field] = [$this->filterForEstateVon($filter, $key, $value)];
-			}
-			elseif ($pString->endsWith('__bis') && $module == onOfficeSDK::MODULE_ESTATE){
+			} elseif ($pString->endsWith('__bis') && $module == onOfficeSDK::MODULE_ESTATE){
 				$field = $pString->replace('__bis', '');
 				$filter[$field] = [$this->filterForEstateBis($filter, $key, $value)];
-			}
-			else {
+			} else {
 				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $key);
 				$field = $key;
 
@@ -136,8 +136,7 @@ class DistinctFieldsFilter
 					if (!isset($filter[$field.'__bis'])) {
 						$filter[$field.'__bis'] = [['op' => '>=', 'val' => $value]];
 					}
-				}
-				else {
+				} else {
 					$filter[$field] = [$this->createDefaultFilter($pField, $value)];
 				}
 			}
@@ -159,14 +158,11 @@ class DistinctFieldsFilter
 	{
 		$filter = [];
 
-		if($this->isMultiselectableType($pField)){
+		if ($this->isMultiselectableType($pField)){
 			$filter = ['op' => 'regexp', 'val' => $value];
-		}
-		elseif (is_array($value))
-		{
+		} elseif (is_array($value)) {
 			$filter = ['op' => 'in', 'val' => $value];
-		}
-		else {
+		} else {
 			$filter = ['op' => '=', 'val'=> $value];
 		}
 
@@ -186,11 +182,9 @@ class DistinctFieldsFilter
 	private function filterForEstateVon(array $filter, string $field, $value)
 	{
 		$operator = '>=';
-		$pString = __String::getNew($field);
-		$field = $pString->replace('__von', '');
+		$field = __String::getNew($field)->replace('__von', '');
 
-		if (isset($filter[$field]))
-		{
+		if (isset($filter[$field])) {
 			$operator = 'between';
 			$value1 = $value;
 			$value2 = $filter[$field][0]['val'];
@@ -216,8 +210,7 @@ class DistinctFieldsFilter
 		$pString = __String::getNew($field);
 		$field = $pString->replace('__bis', '');
 
-		if (isset($filter[$field]))
-		{
+		if (isset($filter[$field])) {
 			$operator = 'between';
 			$value1 = $filter[$field][0]['val'];
 			$value2 = $value;

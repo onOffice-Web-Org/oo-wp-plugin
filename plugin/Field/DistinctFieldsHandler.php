@@ -55,7 +55,7 @@ class DistinctFieldsHandler
 
 
 	/** @var SDKWrapper */
-	private $_pSdkWrapper = null;
+	private $_pSDKWrapper = null;
 
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort = null;
@@ -82,8 +82,7 @@ class DistinctFieldsHandler
 		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
 		DistinctFieldsFilter $pDistinctFieldsFilter)
 	{
-		$this->_pSdkWrapper = $pSDKWrapper;
-
+		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 		$this->_pDistinctFieldsHandlerModelBuilder = $pDistinctFieldsHandlerModelBuilder;
 		$this->_pDistinctFieldsFilter = $pDistinctFieldsFilter;
@@ -154,13 +153,13 @@ class DistinctFieldsHandler
 		foreach ($pModel->getDistinctFields() as $field) {
 			$requestParams = $this->buildParameters($field, $pModel);
 			$pApiClientAction = new APIClientActionGeneric
-				($this->_pSdkWrapper, onOfficeSDK::ACTION_ID_GET, 'distinctValues');
+				($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'distinctValues');
 			$pApiClientAction->setParameters($requestParams);
 			$apiClientActions[$field] = $pApiClientAction;
 			$pApiClientAction->addRequestToQueue();
 		}
 
-		$this->_pSdkWrapper->sendRequests();
+		$this->_pSDKWrapper->sendRequests();
 		return $apiClientActions;
 	}
 

@@ -37,7 +37,6 @@ use WP_UnitTestCase;
 class TestClassDistinctFieldsHandlerModelBuilder
 	extends WP_UnitTestCase
 {
-
 	/** @var DistinctFieldsHandlerModelBuilder */
 	private $_pInstance = null;
 
@@ -50,7 +49,8 @@ class TestClassDistinctFieldsHandlerModelBuilder
 
 	public function prepare()
 	{
-		$this->_pInstance = new DistinctFieldsHandlerModelBuilder(new RequestVariablesSanitizer(), new WPScriptStyleDefault());
+		$this->_pInstance = new DistinctFieldsHandlerModelBuilder
+			(new RequestVariablesSanitizer(), new WPScriptStyleDefault());
 	}
 
 

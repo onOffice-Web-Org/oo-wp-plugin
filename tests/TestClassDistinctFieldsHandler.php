@@ -40,13 +40,13 @@ use function json_decode;
 
 /**
  *
+ * Test for class DistinctFieldsHandler
  *
  */
 
 class TestClassDistinctFieldsHandler
 	extends WP_UnitTestCase
 {
-
 	/** @var DistinctFieldsHandler */
 	private $_pInstance = null;
 
@@ -61,6 +61,54 @@ class TestClassDistinctFieldsHandler
 	 */
 
 	public function prepare()
+	{
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pFieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+				$pFieldObjektart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldObjektart);
+
+				$pFieldNutzungsart = new Field('nutzungsart', onOfficeSDK::MODULE_ESTATE);
+				$pFieldNutzungsart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldNutzungsart);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('objektart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+		$pRequestVariables = new RequestVariablesSanitizer();
+		$pScriptStyle = new WPScriptStyleDefault();
+		$pModelBuilder = new DistinctFieldsHandlerModelBuilder($pRequestVariables, $pScriptStyle);
+		$pDistinctFieldsFilter = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
+		$pSDKWrapperMocker = $this->buildSDKWrapper();
+
+		$this->_pInstance = new DistinctFieldsHandler(
+				$pModelBuilder, $pSDKWrapperMocker, $this->_pFieldsCollectionBuilderShort, $pDistinctFieldsFilter);
+	}
+
+
+	/**
+	 *
+	 * @return SDKWrapperMocker
+	 *
+	 */
+
+	private function buildSDKWrapper(): SDKWrapperMocker
 	{
 		$pSDKWrapperMocker = new SDKWrapperMocker();
 
@@ -84,11 +132,11 @@ class TestClassDistinctFieldsHandler
 			'georangesearch' => ['radius' => '0']
 		];
 
-		$responseEstates =  file_get_contents
+		$responseEstates = file_get_contents
 			(__DIR__.'/resources/Field/AppResponseDistinctFieldsHandlerEstate.json');
 		$responseEstatesFields = json_decode($responseEstates, true);
 
-		$responseEstatesObjektart =  file_get_contents
+		$responseEstatesObjektart = file_get_contents
 			(__DIR__.'/resources/Field/AppResponseDistinctFieldsHandlerEstateObjektart.json');
 		$responseEstatesFieldsObjektart = json_decode($responseEstatesObjektart, true);
 
@@ -97,48 +145,13 @@ class TestClassDistinctFieldsHandler
 
 		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'distinctValues',
 			'', $parametersEstatesObjektart, null, $responseEstatesFieldsObjektart);
-
-		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
-			->setConstructorArgs([new Container])
-			->getMock();
-
-		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
-			->with($this->anything())
-			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
-				$pField1 = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
-				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pFieldsCollection->addField($pField1);
-
-				$pField4 = new Field('nutzungsart', onOfficeSDK::MODULE_ESTATE);
-				$pField4->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pFieldsCollection->addField($pField4);
-
-				return $this->_pFieldsCollectionBuilderShort;
-			}));
-
-			$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
-			->with($this->anything())
-			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
-				$pField1 = new Field('objektart', onOfficeSDK::MODULE_SEARCHCRITERIA);
-				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pFieldsCollection->addField($pField1);
-
-				return $this->_pFieldsCollectionBuilderShort;
-			}));
-
-		$pRequestVariables = new RequestVariablesSanitizer();
-		$pScriptStyle = new WPScriptStyleDefault();
-		$pModelBuilder = new DistinctFieldsHandlerModelBuilder($pRequestVariables, $pScriptStyle);
-		$pDistinctFieldsFilter = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
-
-		$this->_pInstance = new DistinctFieldsHandler(
-				$pModelBuilder, $pSDKWrapperMocker, $this->_pFieldsCollectionBuilderShort, $pDistinctFieldsFilter);
+		return $pSDKWrapperMocker;
 	}
 
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::__construct
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::check
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::retrieveValues
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandler::buildParameters
@@ -152,17 +165,16 @@ class TestClassDistinctFieldsHandler
 			'field' => 'objektart[]',
 			'inputValues' => '{\\"\\":\\"OK\\",\\"nutzungsart[]\\":[\\"wohnen\\"],\\"objektart[]\\":[\\"haus\\"],\\"radius\\":\\"0\\",\\"oo_formid\\":\\"contactform\\",\\"oo_formno\\":\\"10\\",\\"Id\\":\\"2370\\"}',
 			'module' => 'estate',
-			'distinctValues' =>['nutzungsart','objektart']];
+			'distinctValues' => ['nutzungsart','objektart'],
+		];
 
 		$expectedValues = [
-			'nutzungsart[]' =>
-			[
+			'nutzungsart[]' => [
 				'wohnen' => 'Wohnen',
 				'waz' => 'WAZ',
 				'anlage' => 'Anlage'
 			],
-			'objektart[]' =>
-			[
+			'objektart[]' => [
 				'haus' => 'Haus',
 				'wohnung' => 'Wohnung',
 				'grundstueck' => 'Grundstück',

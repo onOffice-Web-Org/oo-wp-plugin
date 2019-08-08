@@ -56,6 +56,10 @@ class TestClassDistinctFieldsHandlerModel
 	public function testConstruct()
 	{
 		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $this->_pInstance);
+		$this->assertEmpty($this->_pInstance->getDistinctFields());
+		$this->assertEmpty($this->_pInstance->getGeoPositionFields());
+		$this->assertEmpty($this->_pInstance->getInputValues());
+		$this->assertEmpty($this->_pInstance->getModule());
 	}
 
 
