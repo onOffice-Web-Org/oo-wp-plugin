@@ -104,9 +104,8 @@ class ContentFilterShortCodeForm
 			$pFormConfig = $this->_pDataFormConfigurationFactory->loadByFormName($formName);
 
 			if ($pFormConfig->getFormType() == Form::TYPE_APPLICANT_SEARCH) {
-				$availableOptionsFormApplicantSearch = $pFormConfig->getAvailableOptionsFields();
 				$this->_pDistinctFieldsChecker->registerScripts
-					(onOfficeSDK::MODULE_SEARCHCRITERIA, $availableOptionsFormApplicantSearch);
+					(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormConfig->getAvailableOptionsFields());
 			}
 
 			/* @var $pFormConfig DataFormConfiguration */

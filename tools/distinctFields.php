@@ -32,7 +32,6 @@ require '../../../../wp-load.php';
 
 header('Content-Type: application/json');
 
-//var_export($_POST); die;
 $pContainerBuilder = new ContainerBuilder;
 $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 $pContainer = $pContainerBuilder->build();

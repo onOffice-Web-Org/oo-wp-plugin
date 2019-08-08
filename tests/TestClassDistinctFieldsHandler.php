@@ -30,8 +30,6 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsFilter;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
-use onOffice\WPlugin\Field\FieldnamesEnvironment;
-use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -48,24 +46,6 @@ use function json_decode;
 class TestClassDistinctFieldsHandler
 	extends WP_UnitTestCase
 {
-
-	/** */
-	const INPUT_VALUES = [
-			'objektart' => ['wohnung'],
-			'vermarktungsart' => ['kauf']
-		];
-
-	/** */
-	const DISTINCT_FIELDS = ['objekttyp'];
-
-	/** */
-	const GEO_POSITION_FIELDS = ['range'];
-
-	/** */
-	const MODULE = 'estate';
-
-	/** @var FieldnamesEnvironment */
-	private $_pFieldnamesEnvironment = null;
 
 	/** @var DistinctFieldsHandler */
 	private $_pInstance = null;
@@ -130,14 +110,6 @@ class TestClassDistinctFieldsHandler
 				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 				$pFieldsCollection->addField($pField1);
 
-				$pField2 = new Field('vermarktungsart', onOfficeSDK::MODULE_ESTATE);
-				$pField2->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pFieldsCollection->addField($pField2);
-
-				$pField3 = new Field('objekttyp', onOfficeSDK::MODULE_ESTATE);
-				$pField3->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pFieldsCollection->addField($pField3);
-
 				$pField4 = new Field('nutzungsart', onOfficeSDK::MODULE_ESTATE);
 				$pField4->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 				$pFieldsCollection->addField($pField4);
@@ -152,9 +124,6 @@ class TestClassDistinctFieldsHandler
 				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 				$pFieldsCollection->addField($pField1);
 
-				$pField2 = new Field('vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA);
-				$pField2->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pFieldsCollection->addField($pField2);
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
