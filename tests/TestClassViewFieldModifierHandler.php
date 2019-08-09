@@ -126,23 +126,23 @@ class TestClassViewFieldModifierHandler
 	public function testDefaultModifierReduceRecord()
 	{
 		$expectation = [
+			'showGoogleMap' => 1,
+			'laengengrad' => 10,
+			'breitengrad' => 50,
+			'virtualAddress' => 0,
+			'objekttitel' => 'Nice Estate',
 			'test1' => 'testvalue 1',
 			'test2' => [
 				'testValueMulti 1',
 				'testValueMulti 2',
 			],
-			'virtualAddress' => '0',
-			'showGoogleMap' => 1,
-			'breitengrad' => 50,
-			'laengengrad' => 10,
-			'objekttitel' => 'Nice Estate',
 		];
 
 		$pViewFieldModifierHandler = $this->getPreconfiguredHandler(['test1', 'test2', 'laengengrad'],
 			EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
 		$newRecord = $pViewFieldModifierHandler->processRecord($this->_exampleRecord);
 
-		$this->assertEquals($expectation, $newRecord);
+		$this->assertSame($expectation, $newRecord);
 	}
 
 
