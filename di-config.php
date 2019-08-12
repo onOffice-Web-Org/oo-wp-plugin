@@ -44,6 +44,7 @@ use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
+use wpdb;
 use function DI\autowire;
 
 return [
@@ -59,4 +60,8 @@ return [
 	WPOptionWrapperBase::class => autowire(WPOptionWrapperDefault::class),
 	ScriptLoaderBuilderConfig::class => autowire(ScriptLoaderBuilderConfigDefault::class),
 	ScriptLoaderGenericConfiguration::class => autowire(ScriptLoaderGenericConfigurationDefault::class),
+	wpdb::class => function() {
+		global $wpdb;
+		return $wpdb;
+	},
 ];

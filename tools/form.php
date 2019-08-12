@@ -19,14 +19,20 @@
  *
  */
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerDeleteForm;
 
 // set up WP environment
 require '../../../../wp-load.php';
+
 $redirectFile = admin_url('admin.php?page=onoffice-forms');
-$pUserCapabilities = new UserCapabilities;
+$pDIContainerBuilder = new ContainerBuilder();
+$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+$pContainer = $pDIContainerBuilder->build();
+
+$pUserCapabilities = $pContainer->get(UserCapabilities::class);
 $roleEditForms = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_FORM);
 
 if (!current_user_can($roleEditForms) ||
@@ -37,7 +43,7 @@ if (!current_user_can($roleEditForms) ||
 
 $action = ListTable::currentAction();
 
-$pRecordManagerDelete = new RecordManagerDeleteForm();
+$pRecordManagerDelete = $pContainer->get(RecordManagerDeleteForm::class);
 
 switch ($action)
 {

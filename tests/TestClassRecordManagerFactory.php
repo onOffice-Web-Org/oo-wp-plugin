@@ -24,13 +24,20 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Record\RecordManager;
+use onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Record\RecordManagerUpdateForm;
+use onOffice\WPlugin\Record\RecordManagerUpdateListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerUpdateListViewEstate;
 use WP_UnitTestCase;
 
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -38,26 +45,25 @@ class TestClassRecordManagerFactory
 	extends WP_UnitTestCase
 {
 	/** @var array */
-	private static $_combinations = array(
-		RecordManagerFactory::TYPE_ADDRESS => array(
-			RecordManagerFactory::ACTION_READ => '\onOffice\WPlugin\Record\RecordManagerReadListViewAddress',
-			RecordManagerFactory::ACTION_INSERT => '\onOffice\WPlugin\Record\RecordManagerInsertGeneric',
-			RecordManagerFactory::ACTION_UPDATE => '\onOffice\WPlugin\Record\RecordManagerUpdateListViewAddress',
-			RecordManagerFactory::ACTION_DELETE => '\onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress',
-		),
-		RecordManagerFactory::TYPE_ESTATE => array(
-			RecordManagerFactory::ACTION_READ => '\onOffice\WPlugin\Record\RecordManagerReadListViewEstate',
-			RecordManagerFactory::ACTION_INSERT => '\onOffice\WPlugin\Record\RecordManagerInsertGeneric',
-			RecordManagerFactory::ACTION_UPDATE => '\onOffice\WPlugin\Record\RecordManagerUpdateListViewEstate',
-			RecordManagerFactory::ACTION_DELETE => '\onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate',
-		),
-		RecordManagerFactory::TYPE_FORM => array(
-			RecordManagerFactory::ACTION_READ => '\onOffice\WPlugin\Record\RecordManagerReadForm',
-			RecordManagerFactory::ACTION_INSERT => '\onOffice\WPlugin\Record\RecordManagerInsertGeneric',
-			RecordManagerFactory::ACTION_UPDATE => '\onOffice\WPlugin\Record\RecordManagerUpdateForm',
-			RecordManagerFactory::ACTION_DELETE => '\onOffice\WPlugin\Record\RecordManagerDeleteForm',
-		),
-	);
+	private $_combinations = [
+		RecordManagerFactory::TYPE_ADDRESS => [
+			RecordManagerFactory::ACTION_READ => RecordManagerReadListViewAddress::class,
+			RecordManagerFactory::ACTION_INSERT => RecordManagerInsertGeneric::class,
+			RecordManagerFactory::ACTION_UPDATE => RecordManagerUpdateListViewAddress::class,
+			RecordManagerFactory::ACTION_DELETE => RecordManagerDeleteListViewAddress::class,
+		],
+		RecordManagerFactory::TYPE_ESTATE => [
+			RecordManagerFactory::ACTION_READ => RecordManagerReadListViewEstate::class,
+			RecordManagerFactory::ACTION_INSERT => RecordManagerInsertGeneric::class,
+			RecordManagerFactory::ACTION_UPDATE => RecordManagerUpdateListViewEstate::class,
+			RecordManagerFactory::ACTION_DELETE => RecordManagerDeleteListViewEstate::class,
+		],
+		RecordManagerFactory::TYPE_FORM => [
+			RecordManagerFactory::ACTION_READ => RecordManagerReadForm::class,
+			RecordManagerFactory::ACTION_INSERT => RecordManagerInsertGeneric::class,
+			RecordManagerFactory::ACTION_UPDATE => RecordManagerUpdateForm::class,
+		],
+	];
 
 
 	/**
@@ -68,7 +74,7 @@ class TestClassRecordManagerFactory
 
 	public function testCreateByTypeAndAction()
 	{
-		foreach (self::$_combinations as $type => $actionClass) {
+		foreach ($this->_combinations as $type => $actionClass) {
 			foreach ($actionClass as $action => $class) {
 				$this->execute($type, $action, $class);
 			}
@@ -106,11 +112,11 @@ class TestClassRecordManagerFactory
 
 	public function testGetGenericClassTables()
 	{
-		$expected = array(
+		$expected = [
 			RecordManagerFactory::TYPE_ADDRESS => RecordManager::TABLENAME_LIST_VIEW_ADDRESS,
 			RecordManagerFactory::TYPE_ESTATE => RecordManager::TABLENAME_LIST_VIEW,
 			RecordManagerFactory::TYPE_FORM => RecordManager::TABLENAME_FORMS,
-		);
+		];
 
 		$genericTables = RecordManagerFactory::getGenericClassTables();
 		$this->assertEquals($expected, $genericTables);

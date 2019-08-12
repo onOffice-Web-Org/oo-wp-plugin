@@ -73,7 +73,6 @@ class RecordManagerFactory
 			self::ACTION_READ => RecordManagerReadForm::class,
 			self::ACTION_INSERT => RecordManagerInsertGeneric::class,
 			self::ACTION_UPDATE => RecordManagerUpdateForm::class,
-			self::ACTION_DELETE => RecordManagerDeleteForm::class,
 		],
 	];
 

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,18 +19,37 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Record;
 
+use wpdb;
+use function esc_sql;
+
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
 class RecordManagerDeleteForm
 	extends RecordManagerDelete
 {
+	/** @var wpdb */
+	private $_pWPDB = null;
+
+
+	/**
+	 *
+	 * @param wpdb $pWpdb
+	 *
+	 */
+
+	public function __construct(wpdb $pWpdb)
+	{
+		$this->_pWPDB = $pWpdb;
+	}
+
+
 	/**
 	 *
 	 * @param array $ids
@@ -39,33 +58,24 @@ class RecordManagerDeleteForm
 
 	public function deleteByIds(array $ids)
 	{
-		$prefix = $this->getTablePrefix();
-		$pWpdb = $this->getWpdb();
+		$prefix = $this->_pWPDB->prefix;
+		$pWpdb = $this->_pWPDB;
 
-		foreach ($ids as $id)
-		{
-			$pWpdb->delete($prefix.'oo_plugin_forms', array('form_id' => $id));
-			$pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', array('form_id' => $id));
+		foreach ($ids as $id) {
+			$pWpdb->delete($prefix.'oo_plugin_forms', ['form_id' => $id]);
+			$pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', ['form_id' => $id]);
+			$defaultIds = $pWpdb->get_col(
+				"SELECT defaults_id "
+				."FROM {$prefix}oo_plugin_fieldconfig_form_defaults "
+				."WHERE form_id = '".esc_sql($id)."'");
+
+			if ($defaultIds !== []) {
+				$stringPlaceholders = array_fill(0, count($defaultIds), '%d');
+				$placeHolders = implode(', ', $stringPlaceholders);
+				$pWpdb->query($pWpdb->prepare("DELETE FROM {$prefix}oo_plugin_fieldconfig_form_defaults_values "
+					."WHERE defaults_id IN ($placeHolders)", $defaultIds));
+			}
+			$pWpdb->delete($prefix.'oo_plugin_fieldconfig_form_defaults', ['form_id' => $id]);
 		}
-	}
-
-
-	/**
-	 *
-	 * @param int $formId
-	 * @param array $fieldNames
-	 * @return bool
-	 *
-	 */
-
-	public function deleteFieldConfigEntriesByNames($formId, array $fieldNames)
-	{
-		$prefix = $this->getTablePrefix();
-		$pWpdb = $this->getWpdb();
-		return $pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', array(
-				'form_id' => $formId,
-				'fieldname' => $fieldNames,
-			)
-		);
 	}
 }
