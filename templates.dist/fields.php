@@ -151,7 +151,7 @@ if (!function_exists('renderFormField')) {
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
-				$value = 'value="1" '.($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
+				$value = 'value="y" '.($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float') {
 				$inputType = 'type="number" step="0.01" ';
