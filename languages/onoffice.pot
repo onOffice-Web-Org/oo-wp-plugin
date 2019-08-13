@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-07-29T15:27:50+02:00\n"
+"POT-Creation-Date: 2019-08-13T12:00:06+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.2.0\n"
 "X-Domain: onoffice\n"
@@ -34,16 +34,16 @@ msgstr ""
 msgid "Please configure your onOffice API credentials first!"
 msgstr ""
 
-#: plugin/ContentFilter.php:168
+#: plugin/ContentFilter.php:169
 msgid "Estates view not found."
 msgstr ""
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
-#: plugin/ContentFilter.php:311
+#: plugin/ContentFilter.php:312
 msgid "%2$s (%3$s) in %4$s - %5$s"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:149
+#: plugin/Controller/AdminViewController.php:153
 #: plugin/Gui/AdminPageAddressList.php:67
 #: plugin/Gui/AdminPageBase.php:82
 #: plugin/Gui/AdminPageEstateDetail.php:206
@@ -53,37 +53,37 @@ msgstr ""
 msgid "onOffice"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:153
+#: plugin/Controller/AdminViewController.php:161
 #: plugin/Gui/AdminPageAddressList.php:45
 msgid "Addresses"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:158
-#: plugin/Controller/AdminViewController.php:159
+#: plugin/Controller/AdminViewController.php:166
+#: plugin/Controller/AdminViewController.php:167
 msgid "Estates"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:169
+#: plugin/Controller/AdminViewController.php:177
 #: plugin/Gui/AdminPageFormList.php:93
 msgid "Forms"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:182
+#: plugin/Controller/AdminViewController.php:190
 msgid "Modules"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:206
-#: plugin/Controller/AdminViewController.php:207
-#: plugin/Controller/AdminViewController.php:356
+#: plugin/Controller/AdminViewController.php:214
+#: plugin/Controller/AdminViewController.php:215
+#: plugin/Controller/AdminViewController.php:364
 msgid "Settings"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:374
+#: plugin/Controller/AdminViewController.php:382
 msgid "API token and secret"
 msgstr ""
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:377
+#: plugin/Controller/AdminViewController.php:385
 msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
 msgstr ""
 
@@ -101,11 +101,11 @@ msgstr ""
 msgid "Form Specific Fields"
 msgstr ""
 
-#: plugin/Field/DistinctFieldsChecker.php:100
+#: plugin/Field/DistinctFieldsHandlerModelBuilder.php:132
 msgid "Not specified"
 msgstr ""
 
-#: plugin/Field/DistinctFieldsChecker.php:101
+#: plugin/Field/DistinctFieldsHandlerModelBuilder.php:133
 #: templates.dist/fields.php:77
 #: templates.dist/fields.php:147
 msgid "Edit values"
@@ -153,41 +153,41 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:61
+#: plugin/Gui/AdminPageAddressListSettings.php:63
 msgid "Edit Address List"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:98
+#: plugin/Gui/AdminPageAddressListSettings.php:100
 #: plugin/Gui/AdminPageEstateListSettings.php:82
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:262
+#: plugin/Gui/AdminPageFormSettingsBase.php:267
 msgid "choose name"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:114
+#: plugin/Gui/AdminPageAddressListSettings.php:116
 #: plugin/Gui/AdminPageEstateDetail.php:280
 #: plugin/Gui/AdminPageEstateListSettings.php:110
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
-#: plugin/Gui/AdminPageFormSettingsBase.php:279
+#: plugin/Gui/AdminPageFormSettingsBase.php:284
 msgid "Layout & Design"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:134
+#: plugin/Gui/AdminPageAddressListSettings.php:136
 msgid "Filter & Records"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:153
+#: plugin/Gui/AdminPageAddressListSettings.php:155
 #: plugin/Gui/AdminPageEstateDetail.php:288
 #: plugin/Gui/AdminPageEstateListSettings.php:118
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:297
+#: plugin/Gui/AdminPageAddressListSettings.php:301
 msgid "The address list was saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:298
+#: plugin/Gui/AdminPageAddressListSettings.php:302
 msgid "There was a problem saving the list. Please make sure the name of the list is unique."
 msgstr ""
 
@@ -341,11 +341,11 @@ msgstr ""
 msgid "Geo Fields"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateListSettingsBase.php:147
+#: plugin/Gui/AdminPageEstateListSettingsBase.php:153
 msgid "The view has been saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateListSettingsBase.php:148
+#: plugin/Gui/AdminPageEstateListSettingsBase.php:154
 msgid "There was a problem saving the view. Please make sure the name of the view is unique, even across all estate list types."
 msgstr ""
 
@@ -366,20 +366,20 @@ msgstr ""
 msgid "Form Specific Options"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:97
+#: plugin/Gui/AdminPageFormSettingsBase.php:98
 msgid "Edit Form"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:229
+#: plugin/Gui/AdminPageFormSettingsBase.php:234
 msgid "The Form was saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:230
+#: plugin/Gui/AdminPageFormSettingsBase.php:235
 msgid "There was a problem saving the form. Please make sure the name of the form is unique."
 msgstr ""
 
 #. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:239
+#: plugin/Gui/AdminPageFormSettingsBase.php:244
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:481
 msgid "Module: %s"
 msgstr ""
@@ -445,7 +445,6 @@ msgstr ""
 msgid "Shortcode"
 msgstr ""
 
-#. translators: %s is the name of the address list view.
 #. translators: %s is the name of the list view.
 #: plugin/Gui/Table/AddressListTable.php:187
 #: plugin/Gui/Table/EstateListTable.php:302

@@ -183,9 +183,9 @@ class AddressListTable
 				.RecordManagerFactory::TYPE_ADDRESS, 'delete-listview_'.$pItem->ID)
 			."' onclick=\"if ( confirm( '"
 			.esc_js(sprintf(
-			/* translators: %s is the name of the address list view. */
+			/* translators: %s is the name of the list view. */
 			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice'), $pItem->name))
-			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
+			."' ) ) { return true; }return false;\">".__('Delete')."</a>";
 		return $this->row_actions( $actions );
 	}
 }
