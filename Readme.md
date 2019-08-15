@@ -10,19 +10,19 @@ Integrate real estates, contact forms and contact persons from the onOffice Soft
 3. Move the plugin directory into a new subdirectory inside the WordPress plugins directory (`wp-content/plugins/`)
 4. Create a new plugin folder called `onoffice-personalized`.
 5. Copy the folder `templates.dist` to `onoffice-personalized/templates`. This is where the newly created individual templates will go.
-6. Login into your WordPress page as an administrator and go to the plugins list by navigating to `Plugins` » `Installed Plugins`. You should be able to see and activate the onOffice direct plugin. If no API token or secret have been saved so far, a notification will show up at the top. Clicking the link will bring you to the appropriate configuration page.
+6. Login into your WordPress page as an administrator and go to the plugins list by navigating to `Plugins` » `Installed Plugins`. You should be able to see and activate the onOffice Website Plugin. If no API token or secret have been saved so far, a notification will show up at the top. Clicking the link will bring you to the appropriate configuration page.
 7. Start editing inside the new `onoffice-personalized` folder.
 
 ** IMPORTANT **: Although it is safe to disable the plugin, DELETING IT WILL WIPE ALL PLUGIN-RELATED DATA FROM THE DATABASE. WE DO NOT PROVIDE ANY WARRANTY FOR DATA LOSS!
 
 ### Getting API Access
 
-Request your own (onOffice trial version)[https://onoffice.com/]
+Request your own [onOffice trial version](https://onoffice.com/)
 
 Contact us by phone (+49 241 446860) or email (support@onoffice.com) for questions concerning onOffice enterprise edition.
 Consult apisupport@onoffice.com in regards to questions about our API or plugin development workflow.
 
-Proceed to the next step once you've got an API token and secret.
+Proceed to the next step once you have got an API token and secret.
 
 ### Configuration Basics
 
@@ -43,10 +43,10 @@ This project is licensed under both GNU AGPLv3 and GNU GPLv3:
 
 ## Contact
 
-onOffice GmbH
-Charlottenburger Allee 5
-52068 Aachen
+onOffice GmbH\
+Charlottenburger Allee 5\
+52068 Aachen\
 Germany
 
-[support@onoffice.com](mailto://support@onoffice.com)
+[support@onoffice.com](mailto://support@onoffice.com)\
 +49 241 446860

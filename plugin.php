@@ -20,7 +20,7 @@
  */
 
 /*
-Plugin Name: onOffice direct
+Plugin Name: onOffice Website Plugin
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.

@@ -1,4 +1,4 @@
-=== onOffice direct ===
+=== onOffice Website Plugin ===
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
@@ -56,7 +56,7 @@ The plugin offers further practical functions with which you can further profess
 3. Move the plugin directory into a new subdirectory inside the WordPress `plugins` directory (`wp-content/plugins/`)
 4. Create a new plugin folder called `onoffice-personalized`.
 5. Copy the folder `templates.dist` to `onoffice-personalized/templates`. This is where the newly created individual templates will go.
-6. Login into your WordPress page as an administrator and go to the plugins list by navigating to Plugins » Installed Plugins. You should be able to see and activate the onOffice direct plugin. If no API token or secret have been saved so far, a notification will show up at the top. Clicking the link will bring you to the appropriate configuration page.
+6. Login into your WordPress page as an administrator and go to the plugins list by navigating to Plugins » Installed Plugins. You should be able to see and activate the onOffice Website Plugin. If no API token or secret have been saved so far, a notification will show up at the top. Clicking the link will bring you to the appropriate configuration page.
 7. Start editing inside the new onoffice-personalized folder.
 
 
