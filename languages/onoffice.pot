@@ -1,21 +1,21 @@
 # Copyright (C) 2019 onOffice GmbH
-# This file is distributed under the same license as the onOffice Website Plugin plugin.
+# This file is distributed under the same license as the onOffice for WP-Websites plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice Website Plugin 2.0\n"
+"Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-08-15T11:45:58+02:00\n"
+"POT-Creation-Date: 2019-08-15T16:27:17+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.2.0\n"
 "X-Domain: onoffice\n"
 
 #. Plugin Name of the plugin
-msgid "onOffice Website Plugin"
+msgid "onOffice for WP-Websites"
 msgstr ""
 
 #. Description of the plugin

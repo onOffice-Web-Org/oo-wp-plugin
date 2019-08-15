@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice direct 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2019-08-15T11:45:58+02:00\n"
-"PO-Revision-Date: 2019-08-15 12:25+0200\n"
+"POT-Creation-Date: 2019-08-15T16:27:17+02:00\n"
+"PO-Revision-Date: 2019-08-15 16:41+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
-msgid "onOffice Website Plugin"
-msgstr "onOffice Website Plugin"
+msgid "onOffice for WP-Websites"
+msgstr "onOffice für WP-Websites"
 
 #. Description of the plugin
 msgid ""
