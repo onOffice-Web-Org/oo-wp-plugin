@@ -147,4 +147,7 @@ var onOffice = onOffice || {};
 
 
 	onOffice.paging = paging;
-})($);
+})(jQuery);
+
+// for use within the form
+$ = jQuery;

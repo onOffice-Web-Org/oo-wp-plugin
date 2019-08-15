@@ -1,7 +1,7 @@
 var onOffice = onOffice || {};
 
-$(function() {
-
+jQuery(function() {
+    var $ = jQuery;
 	$(this).change(function() {
 		doIt(this);
 	});

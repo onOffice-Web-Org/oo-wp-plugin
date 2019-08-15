@@ -89,3 +89,6 @@ onOffice.favorites = function(cookieName) {
 		}
 	};
 }).call(onOffice.favorites.prototype);
+
+// export $ globally since jquery-latest is not in use anymore
+$ = jQuery;

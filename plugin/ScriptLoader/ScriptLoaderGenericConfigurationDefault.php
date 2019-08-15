@@ -47,8 +47,6 @@ class ScriptLoaderGenericConfigurationDefault
 		$style = IncludeFileModel::TYPE_STYLE;
 
 		$values = [
-			new IncludeFileModel($script, 'jquery-latest', 'https://code.jquery.com/jquery-latest.js'),
-
 			(new IncludeFileModel($script, 'onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath)))
 				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-leadform', plugins_url('/js/onoffice-leadform.js', $pluginPath)))
@@ -61,7 +59,8 @@ class ScriptLoaderGenericConfigurationDefault
 		];
 
 		if (Favorites::isFavorizationEnabled()) {
-			$values []= new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath));
+			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath)))
+				->setDependencies(['jquery']);
 		}
 
 		return $values;

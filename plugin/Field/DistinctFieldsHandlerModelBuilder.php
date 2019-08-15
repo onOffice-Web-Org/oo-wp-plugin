@@ -133,7 +133,7 @@ class DistinctFieldsHandlerModelBuilder
 			'editValuesLabel' => __('Edit values', 'onoffice'),
 		];
 
-		$pScriptStyle->registerScript('onoffice-distinctValues', plugins_url('/js/distinctFields.js', $pluginPath));
+		$pScriptStyle->registerScript('onoffice-distinctValues', plugins_url('/js/distinctFields.js', $pluginPath), ['jquery']);
 		$pScriptStyle->enqueueScript('onoffice-distinctValues');
 		$pScriptStyle->localizeScript('onoffice-distinctValues', 'onoffice_distinctFields', $values);
 	}
