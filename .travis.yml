@@ -14,7 +14,7 @@ cache:
 matrix:
   include:
     - php: 7.0
-      env: WP_VERSION=latest
+      env: WP_VERSION=latest CODECOV=1
     - php: 7.1
       env: WP_VERSION=latest
     - php: 7.2
@@ -23,19 +23,21 @@ matrix:
 before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - |
-    if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
-      phpenv config-rm xdebug.ini
-    else
-      echo "xdebug.ini does not exist"
-    fi
-  - |
     if [[ ! -z "$WP_VERSION" ]] ; then
       bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
       composer install
     fi
 
 script:
+  - mkdir -p build/logs
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
-      vendor/bin/phpunit
+        if [[ -z "$CODECOV" ]] ; then
+            vendor/bin/phpunit
+        else
+            vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+        fi
     fi
+
+after_success:
+  - travis_retry php vendor/bin/php-coveralls
