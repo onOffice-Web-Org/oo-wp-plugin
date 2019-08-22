@@ -43,6 +43,7 @@ use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
+use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer;
@@ -120,3 +121,10 @@ add_action('pre_update_option', function($value, $option) use ($pDI) {
 	}
 	return $value;
 }, 10, 2);
+
+$pDistinctFieldsClosure = function() use ($pDI) {
+	wp_send_json($pDI->get(DistinctFieldsHandler::class)->check());
+};
+
+add_action('wp_ajax_nopriv_distinctfields', $pDistinctFieldsClosure);
+add_action('wp_ajax_distinctfields', $pDistinctFieldsClosure);

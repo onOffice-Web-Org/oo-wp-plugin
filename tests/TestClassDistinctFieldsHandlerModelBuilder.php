@@ -67,20 +67,19 @@ class TestClassDistinctFieldsHandlerModelBuilder
 
 	public function testForEstate()
 	{
-		$inputValues =
-			[
-				"" => "OK",
-				"nutzungsart[]" => ["wohnen"],
-				"radius" => "0",
-				"oo_formid" => 'contactform',
-				"oo_formno" => '10',
-				"Id" => '2370'
-			];
-
+		$inputValues = [
+			'' => 'OK',
+			'nutzungsart[]' => ['wohnen'],
+			'oo_formid' => 'contactform',
+			'oo_formno' => '10',
+			'Id' => '2370'
+		];
 
 		$_POST = [
 			'field' => 'nutzungsart[]',
-			'inputValues' => '{\\"\\":\\"OK\\",\\"nutzungsart[]\\":[\\"wohnen\\"],\\"radius\\":\\"0\\",\\"oo_formid\\":\\"contactform\\",\\"oo_formno\\":\\"10\\",\\"Id\\":\\"2370\\"}',
+			'inputValues' => '{\\"\\":\\"OK\\",\\"nutzungsart[]\\":[\\"wohnen\\"],'
+				.'\\"radius\\":\\"0\\",\\"oo_formid\\":\\"contactform\\",\\"oo_formno\\":\\"10\\",'
+				.'\\"Id\\":\\"2370\\"}',
 			'module' => 'estate',
 			'distinctValues' => ['nutzungsart', 'objektart'],
 		];
@@ -89,9 +88,36 @@ class TestClassDistinctFieldsHandlerModelBuilder
 
 		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $pResultModel);
 		$this->assertEquals('estate', $this->_pInstance->getModule());
-		$this->assertEquals(['nutzungsart', 'objektart'], $this->_pInstance->getDistinctValues());
-		$this->assertEquals($inputValues, $this->_pInstance->getInputValues());
+		$this->assertEquals(['nutzungsart', 'objektart'], $pResultModel->getDistinctFields());
 		$this->assertEquals(['radius' => '0'], $pResultModel->getGeoPositionFields());
+		$this->assertEquals($inputValues, $pResultModel->getInputValues());
+
+		$this->assertInstanceOf(WPScriptStyleDefault::class, $this->_pInstance->getScriptStyle());
+	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildDataModel
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildInputValuesForModule
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getModule
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getDistinctValues
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getInputValues
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getScriptStyle
+	 *
+	 */
+
+	public function testForEstateWithEmptyPost()
+	{
+		$_POST = [];
+
+		$pResultModel = $this->_pInstance->buildDataModel();
+
+		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $pResultModel);
+		$this->assertEmpty($this->_pInstance->getModule());
+		$this->assertEmpty($pResultModel->getDistinctFields());
+		$this->assertEmpty($pResultModel->getInputValues());
+		$this->assertEmpty($pResultModel->getGeoPositionFields());
 		$this->assertInstanceOf(WPScriptStyleDefault::class, $this->_pInstance->getScriptStyle());
 	}
 
@@ -107,29 +133,30 @@ class TestClassDistinctFieldsHandlerModelBuilder
 	{
 		$_POST = [
 			'field' => 'objektart',
-			'inputValues' => '{\\"oo_formid\\":\\"applsearchform\\",\\"oo_formno\\":\\"1\\",\\"wohnflaeche\\":\\"\\",\\"anzahl_zimmer\\":\\"\\",\\"objektart\\":\\"haus\\",\\"objekttyp\\":\\"\\",\\"kaltmiete\\":\\"\\",\\"range_plz\\":\\"\\"}',
+			'inputValues' => '{\\"oo_formid\\":\\"applsearchform\\",\\"oo_formno\\":\\"1\\",'
+				.'\\"wohnflaeche\\":\\"\\",\\"anzahl_zimmer\\":\\"\\",\\"objektart\\":\\"haus\\",'
+				.'\\"objekttyp\\":\\"\\",\\"kaltmiete\\":\\"\\",\\"range_plz\\":\\"52068\\"}',
 			'module' => 'searchcriteria',
 			'distinctValues' =>	['objektart', 'objekttyp'],
-		  ];
+		];
 
 		$inputValues = [
-			"oo_formid" => 'applsearchform',
-			"oo_formno" => '1',
-			"wohnflaeche" => '',
-			"anzahl_zimmer" => '',
-			"objektart" => 'haus',
-			"objekttyp" => '',
-			"kaltmiete" => '',
-			"range_plz" => '',
+			'oo_formid' => 'applsearchform',
+			'oo_formno' => '1',
+			'wohnflaeche' => '',
+			'anzahl_zimmer' => '',
+			'objektart' => 'haus',
+			'objekttyp' => '',
+			'kaltmiete' => '',
 		];
 
 		$pResultModel = $this->_pInstance->buildDataModel();
 
 		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $pResultModel);
 		$this->assertEquals('searchcriteria', $this->_pInstance->getModule());
-		$this->assertEquals(['objektart', 'objekttyp'], $this->_pInstance->getDistinctValues());
-		$this->assertEquals($inputValues, $this->_pInstance->getInputValues());
-		$this->assertEquals(['zip' => ''], $pResultModel->getGeoPositionFields());
+		$this->assertEquals(['objektart', 'objekttyp'], $pResultModel->getDistinctFields());
+		$this->assertEquals($inputValues, $pResultModel->getInputValues());
+		$this->assertEquals(['zip' => '52068'], $pResultModel->getGeoPositionFields());
 		$this->assertInstanceOf(WPScriptStyleDefault::class, $this->_pInstance->getScriptStyle());
 	}
 }

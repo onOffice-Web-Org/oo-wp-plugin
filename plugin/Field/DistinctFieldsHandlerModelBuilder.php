@@ -67,10 +67,15 @@ class DistinctFieldsHandlerModelBuilder
 	 *
 	 */
 
-	public function getDistinctValues(): array
+	private function getDistinctValues(): array
 	{
-		return $this->_pRequestVariables->getFilteredPost(
-				DistinctFieldsHandler::PARAMETER_DISTINCT_VALUES, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+		$values = $this->_pRequestVariables->getFilteredPost
+			(DistinctFieldsHandler::PARAMETER_DISTINCT_VALUES,
+				FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+		if ($values === false) {
+			$values = [];
+		}
+		return $values;
 	}
 
 
@@ -80,10 +85,10 @@ class DistinctFieldsHandlerModelBuilder
 	 *
 	 */
 
-	public function getInputValues(): array
+	private function getInputValues(): array
 	{
-		return json_decode($this->_pRequestVariables->getFilteredPost(
-				DistinctFieldsHandler::PARAMETER_INPUT_VALUES), true) ?? [];
+		return json_decode($this->_pRequestVariables->getFilteredPost
+			(DistinctFieldsHandler::PARAMETER_INPUT_VALUES), true) ?? [];
 	}
 
 
@@ -106,7 +111,9 @@ class DistinctFieldsHandlerModelBuilder
 	 */
 
 	public function getScriptStyle(): WPScriptStyleBase
-		{ return $this->_pScriptStyle; }
+	{
+		return $this->_pScriptStyle;
+	}
 
 
 	/**
@@ -126,7 +133,7 @@ class DistinctFieldsHandlerModelBuilder
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$pScriptStyle = $this->_pScriptStyle;
 		$values = [
-			'base_path' => plugins_url('/tools/distinctFields.php', $pluginPath),
+			'base_path' => add_query_arg('action', 'distinctfields', admin_url('admin-ajax.php')),
 			'distinctValues' => $distinctFields,
 			'module' => $module,
 			'notSpecifiedLabel' => __('Not specified', 'onoffice'),
