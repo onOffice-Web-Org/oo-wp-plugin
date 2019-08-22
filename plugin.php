@@ -38,7 +38,7 @@ require 'vendor/autoload.php';
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
 use DI\ContainerBuilder;
-use onOffice\SDK\Cache\onOfficeSDKCache;
+use onOffice\WPlugin\Cache\CacheHandler;
 use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
@@ -47,8 +47,8 @@ use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
-use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\SearchParameters;
+use onOffice\WPlugin\Utility\__String;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
 
@@ -78,7 +78,9 @@ add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
 add_action('wp_enqueue_scripts', [CaptchaDataChecker::class, 'registerScripts']);
 add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
 add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
-add_action('oo_cache_cleanup', 'ooCacheCleanup');
+add_action('oo_cache_cleanup', function() use ($pDI) {
+	$pDI->get(CacheHandler::class)->clean();
+});
 
 add_action('init', [$pAdminViewController, 'onInit']);
 add_action('init', function() use ($pAdminViewController) {
@@ -111,19 +113,10 @@ if (!wp_next_scheduled('oo_cache_cleanup')) {
 	wp_schedule_event(time(), 'hourly', 'oo_cache_cleanup');
 }
 
-
-/**
- *
- * Callback for cron job
- *
- */
-
-function ooCacheCleanup() {
-	$pSDKWrapper = new SDKWrapper();
-	$cacheInstances = $pSDKWrapper->getCache();
-
-	foreach ($cacheInstances as $pCacheInstance) {
-		/* @var $cacheInstance onOfficeSDKCache */
-		$pCacheInstance->cleanup();
+// Gets triggered before we know if it has to be updated at all, so that no value has to be changed
+add_action('pre_update_option', function($value, $option) use ($pDI) {
+	if (__String::getNew($option)->startsWith('onoffice')) {
+		$pDI->get(CacheHandler::class)->clear();
 	}
-}
+	return $value;
+}, 10, 2);

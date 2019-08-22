@@ -24,19 +24,15 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
-use const ONOFFICE_PLUGIN_DIR;
 use function __;
-use function add_action;
 use function admin_url;
 use function do_settings_sections;
 use function esc_attr;
 use function esc_html;
 use function get_option;
 use function json_encode;
-use function plugins_url;
 use function settings_fields;
 use function submit_button;
-use function wp_nonce_field;
 
 /**
  *
@@ -168,20 +164,6 @@ class AdminPageApiSettings
 	 *
 	 */
 
-	public function handleAdminNotices()
-	{
-		$cacheClean = filter_input(INPUT_GET, 'cache-refresh');
-
-		if ($cacheClean === 'success') {
-			add_action( 'admin_notices', [$this, 'displayCacheClearSuccess']);
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function renderTestFormReCaptcha()
 	{
 		$tokenOptions = get_option('onoffice-settings-captcha-sitekey', '');
@@ -229,11 +211,6 @@ class AdminPageApiSettings
 		do_settings_sections($this->getPageSlug());
 
 		submit_button();
-		echo '</form>';
-
-		echo '<form method="post" action="'.plugins_url('/tools/clearCache.php', ONOFFICE_PLUGIN_DIR.'/plugin.php').'">';
-		wp_nonce_field('onoffice-clear-cache', 'onoffice-cache-nonce');
-		submit_button(__('Clear cache'), 'delete');
 		echo '</form>';
 	}
 
