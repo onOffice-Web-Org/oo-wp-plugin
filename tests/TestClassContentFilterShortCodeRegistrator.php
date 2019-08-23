@@ -58,8 +58,12 @@ class TestClassContentFilterShortCodeRegistrator
 			->will($this->returnCallback(function(): Generator {
 				$pContentFilterShortCode1 = $this->getMockBuilder(ContentFilterShortCode::class)->getMock();
 				$pContentFilterShortCode1->method('getTag')->will($this->returnValue('test1'));
-				$pContentFilterShortCode2 = $this->getMockBuilder(ContentFilterShortCode::class)->getMock();;
+				$pContentFilterShortCode1->expects($this->once())
+					->method('replaceShortCodes')->with([''])->will($this->returnValue('testText1'));
+				$pContentFilterShortCode2 = $this->getMockBuilder(ContentFilterShortCode::class)->getMock();
 				$pContentFilterShortCode2->method('getTag')->will($this->returnValue('test2'));
+				$pContentFilterShortCode2->expects($this->once())
+					->method('replaceShortCodes')->with(['a' => 'b'])->will($this->returnValue('testText2'));
 				yield $pContentFilterShortCode1;
 				yield $pContentFilterShortCode2;
 			}));
@@ -81,6 +85,7 @@ class TestClassContentFilterShortCodeRegistrator
 
 		$this->assertArrayHasKey('test1', $diff);
 		$this->assertArrayHasKey('test2', $diff);
+		$this->assertEquals('testText1 / testText2', do_shortcode('[test1] / [test2 a=b]'));
 	}
 
 
