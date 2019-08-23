@@ -102,6 +102,8 @@ class ContentFilter
 			add_rewrite_rule('^('.preg_quote($pageUrl).')/([0-9]+)/?$',
 				'index.php?pagename='.urlencode($pagename).'&view=$matches[1]&estate_id=$matches[2]','top');
 		}
+
+		add_rewrite_rule('^distinctfields-json/?$', 'index.php?distinctfields_json=1', 'top');
 	}
 
 

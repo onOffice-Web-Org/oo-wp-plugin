@@ -122,9 +122,13 @@ add_action('pre_update_option', function($value, $option) use ($pDI) {
 	return $value;
 }, 10, 2);
 
-$pDistinctFieldsClosure = function() use ($pDI) {
-	wp_send_json($pDI->get(DistinctFieldsHandler::class)->check());
-};
+add_filter('query_vars', function(array $query_vars): array {
+    $query_vars []= 'distinctfields_json';
+    return $query_vars;
+});
 
-add_action('wp_ajax_nopriv_distinctfields', $pDistinctFieldsClosure);
-add_action('wp_ajax_distinctfields', $pDistinctFieldsClosure);
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+    if (isset($pWP->query_vars['distinctfields_json'])) {
+		wp_send_json($pDI->get(DistinctFieldsHandler::class)->check());
+    }
+});
