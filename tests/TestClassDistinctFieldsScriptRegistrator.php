@@ -18,6 +18,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 declare (strict_types=1);
 
 namespace onOffice\tests;
@@ -68,7 +69,7 @@ class TestClassDistinctFieldsScriptRegistrator
 			'onoffice-distinctValues' => [
 				'name' => 'onoffice_distinctFields',
 				'data' => [
-					'base_path' => 'http://example.org/wp-admin/admin-ajax.php?action=distinctfields',
+					'base_path' => 'http://example.org/distinctfields-json',
 					'distinctValues' => self::DISTINCT_FIELDS,
 					'module' => 'estate',
 					'notSpecifiedLabel' => 'Not specified',

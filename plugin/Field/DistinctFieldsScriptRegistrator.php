@@ -73,7 +73,7 @@ class DistinctFieldsScriptRegistrator
 			plugins_url('/js/distinctFields.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery']);
 		$this->_pScriptStyle->enqueueScript('onoffice-distinctValues');
 		$this->_pScriptStyle->localizeScript('onoffice-distinctValues', 'onoffice_distinctFields', [
-			'base_path' => add_query_arg('action', 'distinctfields', get_site_url(null, '/distinctfields-json')),
+			'base_path' => get_site_url(null, '/distinctfields-json'),
 			'distinctValues' => $distinctFields,
 			'module' => $module,
 			'notSpecifiedLabel' => __('Not specified', 'onoffice'),
