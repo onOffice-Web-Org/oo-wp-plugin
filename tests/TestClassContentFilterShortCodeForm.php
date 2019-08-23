@@ -28,9 +28,8 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeForm;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
+use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
@@ -56,7 +55,7 @@ class TestClassContentFilterShortCodeForm
 	private $_pDataFormConfigurationFactory = null;
 
 	/** @var DistinctFieldsChecker */
-	private $_pDistinctFieldsChecker = null;
+	private $_pDistinctFieldsScriptLoader = null;
 
 	/** @var Form\FormBuilder */
 	private $_pFormBuilder = null;
@@ -80,13 +79,14 @@ class TestClassContentFilterShortCodeForm
 		$this->_pLogger = $this->getMockBuilder(Logger::class)
 			->getMock();
 
-		$this->_pDistinctFieldsChecker = $this->getMockBuilder(DistinctFieldsHandlerModelBuilder::class)
-			->setConstructorArgs([new RequestVariablesSanitizer(), new WPScriptStyleDefault()])
+		$this->_pDistinctFieldsScriptLoader = $this->getMockBuilder(DistinctFieldsScriptRegistrator::class)
+			->setConstructorArgs([new WPScriptStyleDefault()])
 			->getMock();
 		$this->_pFormBuilder = $this->getMockBuilder(Form\FormBuilder::class)
 			->getMock();
 		$this->_pContentFilterShortCodeForm = new ContentFilterShortCodeForm
-			($this->_pTemplate, $this->_pDataFormConfigurationFactory, $this->_pLogger, $this->_pDistinctFieldsChecker, $this->_pFormBuilder);
+			($this->_pTemplate, $this->_pDataFormConfigurationFactory, $this->_pLogger,
+				$this->_pDistinctFieldsScriptLoader, $this->_pFormBuilder);
 	}
 
 
@@ -99,7 +99,7 @@ class TestClassContentFilterShortCodeForm
 		$pDataFormConfiguration = new DataFormConfigurationContact();
 		$pDataFormConfiguration->setFormType(Form::TYPE_APPLICANT_SEARCH);
 		$pDataFormConfiguration->setAvailableOptionsFields(['asdf']);
-		$this->_pDistinctFieldsChecker
+		$this->_pDistinctFieldsScriptLoader
 			->expects($this->once())
 			->method('registerScripts')
 			->with(onOfficeSDK::MODULE_SEARCHCRITERIA, ['asdf']);

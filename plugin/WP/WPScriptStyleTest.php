@@ -46,7 +46,7 @@ class WPScriptStyleTest
 	private $_enqueuedStyles = [];
 
 	/** @var array */
-	private $_localizedScript = [];
+	private $_localizedScripts = [];
 
 	/**
 	 *
@@ -244,7 +244,19 @@ class WPScriptStyleTest
 			throw new Exception('Script '.$handle.' not registered');
 		}
 
-		$this->_localizedScript []= $handle;
+		$this->_localizedScripts[$handle] = ['name' => $name, 'data' => $data];
 		return true;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getLocalizedScripts(): array
+	{
+		return $this->_localizedScripts;
 	}
 }

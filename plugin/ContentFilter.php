@@ -28,7 +28,7 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
+use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
@@ -145,7 +145,8 @@ class ContentFilter
 					$pTemplate = new Template($pListView->getTemplate());
 					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
 					$availableOptionsEstates = $pListView->getAvailableOptions();
-					$pDistinctFieldsChecker = new DistinctFieldsHandlerModelBuilder(new RequestVariablesSanitizer(), new WPScriptStyleDefault);
+					$pDistinctFieldsChecker = new DistinctFieldsScriptRegistrator
+						(new WPScriptStyleDefault);
 					$pDistinctFieldsChecker->registerScripts(onOfficeSDK::MODULE_ESTATE,
 						$availableOptionsEstates);
 

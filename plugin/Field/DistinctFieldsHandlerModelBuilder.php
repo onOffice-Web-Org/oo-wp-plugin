@@ -28,10 +28,7 @@ use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
-use const ONOFFICE_PLUGIN_DIR;
-use function __;
 use function json_decode;
-use function plugins_url;
 
 /**
  *
@@ -42,9 +39,6 @@ class DistinctFieldsHandlerModelBuilder
 	/** @var RequestVariablesSanitizer */
 	private $_pRequestVariables = null;
 
-	/** @var WPScriptStyleBase */
-	private $_pScriptStyle = null;
-
 
 	/**
 	 *
@@ -54,10 +48,9 @@ class DistinctFieldsHandlerModelBuilder
 	 */
 
 	public function __construct(
-		RequestVariablesSanitizer $pRequestVariables, WPScriptStyleBase $pScriptStyle)
+		RequestVariablesSanitizer $pRequestVariables)
 	{
 		$this->_pRequestVariables = $pRequestVariables;
-		$this->_pScriptStyle = $pScriptStyle;
 	}
 
 
@@ -94,67 +87,13 @@ class DistinctFieldsHandlerModelBuilder
 
 	/**
 	 *
-	 * @return string
-	 *
-	 */
-
-	public function getModule(): string
-	{
-		return $this->_pRequestVariables->getFilteredPost(DistinctFieldsHandler::PARAMETER_MODULE) ?? '';
-	}
-
-
-	/**
-	 *
-	 * @return WPScriptStyleBase
-	 *
-	 */
-
-	public function getScriptStyle(): WPScriptStyleBase
-	{
-		return $this->_pScriptStyle;
-	}
-
-
-	/**
-	 *
-	 * @param string $module
-	 * @param array $distinctFields
-	 * @return void
-	 *
-	 */
-
-	public function registerScripts(string $module, array $distinctFields)
-	{
-		if ($distinctFields === []) {
-			return;
-		}
-
-		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		$pScriptStyle = $this->_pScriptStyle;
-		$values = [
-			'base_path' => add_query_arg('action', 'distinctfields', admin_url('admin-ajax.php')),
-			'distinctValues' => $distinctFields,
-			'module' => $module,
-			'notSpecifiedLabel' => __('Not specified', 'onoffice'),
-			'editValuesLabel' => __('Edit values', 'onoffice'),
-		];
-
-		$pScriptStyle->registerScript('onoffice-distinctValues', plugins_url('/js/distinctFields.js', $pluginPath), ['jquery']);
-		$pScriptStyle->enqueueScript('onoffice-distinctValues');
-		$pScriptStyle->localizeScript('onoffice-distinctValues', 'onoffice_distinctFields', $values);
-	}
-
-
-	/**
-	 *
 	 * @return DistinctFieldsHandlerModel
 	 *
 	 */
 
 	public function buildDataModel(): DistinctFieldsHandlerModel
 	{
-		$module = $this->getModule();
+		$module = $this->_pRequestVariables->getFilteredPost(DistinctFieldsHandler::PARAMETER_MODULE) ?? '';
 		$inputValuesRaw = $this->getInputValues();
 
 		$allInputValues = $this->buildInputValuesForModule($module, $inputValuesRaw);
@@ -162,7 +101,7 @@ class DistinctFieldsHandlerModelBuilder
 		$geoValues = $allInputValues['geoValues'];
 
 		$pDataModel = new DistinctFieldsHandlerModel();
-		$pDataModel->setModule($this->getModule());
+		$pDataModel->setModule($module);
 		$pDataModel->setDistinctFields($this->getDistinctValues());
 		$pDataModel->setInputValues($inputValues);
 		$pDataModel->setGeoPositionFields($geoValues);

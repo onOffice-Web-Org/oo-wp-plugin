@@ -26,7 +26,6 @@ namespace onOffice\tests;
 use onOffice\WPlugin\Field\DistinctFieldsHandlerModel;
 use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\RequestVariablesSanitizer;
-use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_UnitTestCase;
 
 
@@ -49,19 +48,17 @@ class TestClassDistinctFieldsHandlerModelBuilder
 
 	public function prepare()
 	{
-		$this->_pInstance = new DistinctFieldsHandlerModelBuilder
-			(new RequestVariablesSanitizer(), new WPScriptStyleDefault());
+		$this->_pInstance = new DistinctFieldsHandlerModelBuilder(new RequestVariablesSanitizer());
 	}
 
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::__construct
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildDataModel
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildInputValuesForModule
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getModule
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getDistinctValues
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getInputValues
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getScriptStyle
 	 *
 	 */
 
@@ -87,23 +84,20 @@ class TestClassDistinctFieldsHandlerModelBuilder
 		$pResultModel = $this->_pInstance->buildDataModel();
 
 		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $pResultModel);
-		$this->assertEquals('estate', $this->_pInstance->getModule());
+		$this->assertEquals('estate', $pResultModel->getModule());
 		$this->assertEquals(['nutzungsart', 'objektart'], $pResultModel->getDistinctFields());
 		$this->assertEquals(['radius' => '0'], $pResultModel->getGeoPositionFields());
 		$this->assertEquals($inputValues, $pResultModel->getInputValues());
-
-		$this->assertInstanceOf(WPScriptStyleDefault::class, $this->_pInstance->getScriptStyle());
 	}
 
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::__construct
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildDataModel
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildInputValuesForModule
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getModule
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getDistinctValues
 	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getInputValues
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getScriptStyle
 	 *
 	 */
 
@@ -114,11 +108,10 @@ class TestClassDistinctFieldsHandlerModelBuilder
 		$pResultModel = $this->_pInstance->buildDataModel();
 
 		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $pResultModel);
-		$this->assertEmpty($this->_pInstance->getModule());
+		$this->assertEmpty($pResultModel->getModule());
 		$this->assertEmpty($pResultModel->getDistinctFields());
 		$this->assertEmpty($pResultModel->getInputValues());
 		$this->assertEmpty($pResultModel->getGeoPositionFields());
-		$this->assertInstanceOf(WPScriptStyleDefault::class, $this->_pInstance->getScriptStyle());
 	}
 
 
@@ -153,10 +146,9 @@ class TestClassDistinctFieldsHandlerModelBuilder
 		$pResultModel = $this->_pInstance->buildDataModel();
 
 		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $pResultModel);
-		$this->assertEquals('searchcriteria', $this->_pInstance->getModule());
+		$this->assertEquals('searchcriteria', $pResultModel->getModule());
 		$this->assertEquals(['objektart', 'objekttyp'], $pResultModel->getDistinctFields());
 		$this->assertEquals($inputValues, $pResultModel->getInputValues());
 		$this->assertEquals(['zip' => '52068'], $pResultModel->getGeoPositionFields());
-		$this->assertInstanceOf(WPScriptStyleDefault::class, $this->_pInstance->getScriptStyle());
 	}
 }

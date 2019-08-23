@@ -28,7 +28,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
+use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormBuilder;
 use onOffice\WPlugin\Template;
@@ -51,8 +51,8 @@ class ContentFilterShortCodeForm
 	/** @var Template */
 	private $_pTemplate = null;
 
-	/** @var DistinctFieldsHandlerModelBuilder */
-	private $_pDistinctFieldsHandlerModelBuilder = null;
+	/** @var DistinctFieldsScriptRegistrator */
+	private $_pDistinctFieldsScriptRegistrator = null;
 
 	/** @var FormBuilder */
 	private $_pFormBuilder = null;
@@ -63,7 +63,7 @@ class ContentFilterShortCodeForm
 	 * @param Template $pTemplate
 	 * @param DataFormConfigurationFactory $pDataFormConfigurationFactory
 	 * @param Logger $pLogger
-	 * @param DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder
+	 * @param DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator
 	 * @param FormBuilder $pFormBuilder
 	 *
 	 */
@@ -72,13 +72,13 @@ class ContentFilterShortCodeForm
 		Template $pTemplate,
 		DataFormConfigurationFactory $pDataFormConfigurationFactory,
 		Logger $pLogger,
-		DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder,
+		DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator,
 		FormBuilder $pFormBuilder)
 	{
 		$this->_pTemplate = $pTemplate;
 		$this->_pLogger = $pLogger;
 		$this->_pDataFormConfigurationFactory = $pDataFormConfigurationFactory;
-		$this->_pDistinctFieldsHandlerModelBuilder = $pDistinctFieldsHandlerModelBuilder;
+		$this->_pDistinctFieldsScriptRegistrator = $pDistinctFieldsScriptRegistrator;
 		$this->_pFormBuilder = $pFormBuilder;
 	}
 
@@ -102,7 +102,7 @@ class ContentFilterShortCodeForm
 			$pFormConfig = $this->_pDataFormConfigurationFactory->loadByFormName($formName);
 
 			if ($pFormConfig->getFormType() == Form::TYPE_APPLICANT_SEARCH) {
-				$this->_pDistinctFieldsHandlerModelBuilder->registerScripts
+				$this->_pDistinctFieldsScriptRegistrator->registerScripts
 					(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormConfig->getAvailableOptionsFields());
 			}
 

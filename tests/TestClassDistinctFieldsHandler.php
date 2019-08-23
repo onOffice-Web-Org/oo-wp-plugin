@@ -92,8 +92,7 @@ class TestClassDistinctFieldsHandler
 			}));
 
 		$pRequestVariables = new RequestVariablesSanitizer();
-		$pScriptStyle = new WPScriptStyleDefault();
-		$pModelBuilder = new DistinctFieldsHandlerModelBuilder($pRequestVariables, $pScriptStyle);
+		$pModelBuilder = new DistinctFieldsHandlerModelBuilder($pRequestVariables);
 		$pDistinctFieldsFilter = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
 		$pSDKWrapperMocker = $this->buildSDKWrapper();
 

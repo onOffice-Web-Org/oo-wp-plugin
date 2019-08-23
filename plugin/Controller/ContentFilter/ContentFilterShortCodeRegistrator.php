@@ -54,7 +54,10 @@ class ContentFilterShortCodeRegistrator
 	public function register()
 	{
 		foreach ($this->_pBuilder->buildAllContentFilterShortCodes() as $pInstance) {
-			add_shortcode($pInstance->getTag(), [$pInstance, 'replaceShortCodes']);
+			/* @var $pInstance ContentFilterShortCode */
+			add_shortcode($pInstance->getTag(), function(array $attributesInput) use ($pInstance) {
+				return $pInstance->replaceShortCodes($attributesInput);
+			});
 		}
 	}
 }
