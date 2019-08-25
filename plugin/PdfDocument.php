@@ -40,9 +40,6 @@ class PdfDocument
 	/** @var int */
 	private $_estateId = null;
 
-	/** @var int */
-	private $_addressId = null;
-
 	/** @var string */
 	private $_language = null;
 
@@ -116,14 +113,6 @@ class PdfDocument
 			'template' => $this->_template,
 		];
 	}
-
-	/** @param int $addressId */
-	public function setAddressId($addressId)
-		{ $this->_addressId = $addressId; }
-
-	/** @return int */
-	public function getAddressId()
-		{ return $this->_addressId; }
 
 	/** @param int $estateId */
 	public function setEstateId(int $estateId)
