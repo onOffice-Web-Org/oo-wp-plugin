@@ -47,6 +47,9 @@ use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer;
+use onOffice\WPlugin\PDF\PdfDocumentModel;
+use onOffice\WPlugin\PDF\PdfDocumentModelValidationException;
+use onOffice\WPlugin\PDF\PdfDownload;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\SearchParameters;
 use onOffice\WPlugin\Utility\__String;
@@ -124,11 +127,30 @@ add_action('pre_update_option', function($value, $option) use ($pDI) {
 
 add_filter('query_vars', function(array $query_vars): array {
     $query_vars []= 'distinctfields_json';
+    $query_vars []= 'document_pdf';
     return $query_vars;
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
     if (isset($pWP->query_vars['distinctfields_json'])) {
 		wp_send_json($pDI->get(DistinctFieldsHandler::class)->check());
+    }
+});
+
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+    if (isset($pWP->query_vars['document_pdf'])) {
+		try {
+			$pPdfDocumentModel = new PdfDocumentModel($pWP->query_vars['estate_id'] ?? 0, $pWP->query_vars['view'] ?? '');
+			/* @var $pPdfDownload PdfDownload */
+			$pPdfDownload = $pDI->get(PdfDownload::class);
+			$pDocumentResponse = $pPdfDownload->download($pPdfDocumentModel);
+			header('Content-Type: '.$pDocumentResponse->getMimetype());
+			header('Content-Disposition: attachment; filename="document_'.$pPdfDocumentModel->getEstateId().'.pdf"');
+			echo $pDocumentResponse->getBinary();
+		} catch (PdfDocumentModelValidationException $pEx) {
+			$pWP->handle_404();
+			include( get_query_template( '404' ) );
+			die();
+		}
     }
 });

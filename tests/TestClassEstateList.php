@@ -511,16 +511,10 @@ class TestClassEstateList
 	{
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
-
-		// escaped url. The path is kind of broken in test environment.
-		$expectationEscapedEstate15 = getcwd().'/document.php?estateid=15&#038;language=ENG&#038;configindex=test';
-		$this->assertStringStartsWith('http://example.org/', $this->_pEstateList->getDocument());
-		$this->assertStringEndsWith($expectationEscapedEstate15, $this->_pEstateList->getDocument());
+		$this->assertEquals('http://example.org/document-pdf/test/15', $this->_pEstateList->getDocument());
 
 		$this->_pEstateList->estateIterator();
-		$this->assertStringStartsWith('http://example.org/', $this->_pEstateList->getDocument());
-		$expectationEscapedEstate1051 = getcwd().'/document.php?estateid=1051&#038;language=ENG&#038;configindex=test';
-		$this->assertStringEndsWith($expectationEscapedEstate1051, $this->_pEstateList->getDocument());
+		$this->assertEquals('http://example.org/document-pdf/test/1051', $this->_pEstateList->getDocument());
 	}
 
 

@@ -104,6 +104,7 @@ class ContentFilter
 		}
 
 		add_rewrite_rule('^distinctfields-json/?$', 'index.php?distinctfields_json=1', 'top');
+		add_rewrite_rule('^document-pdf/([^\/]+)/([0-9]+)/?$', 'index.php?document_pdf=1&view=$matches[1]&estate_id=$matches[2]', 'top');
 	}
 
 

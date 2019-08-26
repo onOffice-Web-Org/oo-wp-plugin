@@ -677,13 +677,7 @@ class EstateList
 
 	public function getDocument()
 	{
-		$queryVars = [
-			'estateid' => $this->getCurrentMultiLangEstateMainId(),
-			'language' => Language::getDefault(),
-			'configindex' => $this->_pDataView->getName(),
-		];
-
-		$documentlink = plugin_dir_url(__DIR__).'document.php?'.http_build_query($queryVars);
+		$documentlink = home_url('document-pdf/'.$this->_pDataView->getName().'/'.$this->getCurrentMultiLangEstateMainId());
 		return esc_url($documentlink);
 	}
 

@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice;
 
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientActionGetPdf;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
 use onOffice\WPlugin\Filesystem\Filesystem;
@@ -37,7 +39,6 @@ use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
-use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
@@ -52,6 +53,12 @@ use function DI\autowire;
 return [
 	Template::class => autowire()
 		->constructorParameter('templateName', ''),
+	ApiClientActionGetPdf::class => autowire()
+		->constructorParameter('actionId', '')
+		->constructorParameter('resourceType', ''),
+	APIClientActionGeneric::class => autowire()
+		->constructorParameter('actionId', '')
+		->constructorParameter('resourceType', ''),
 	ContentFilterShortCodeAddressEnvironment::class => autowire(ContentFilterShortCodeAddressEnvironmentDefault::class),
 	FormPostConfiguration::class => autowire(FormPostConfigurationDefault::class),
 	FormPostOwnerConfiguration::class => autowire(FormPostOwnerConfigurationDefault::class),
