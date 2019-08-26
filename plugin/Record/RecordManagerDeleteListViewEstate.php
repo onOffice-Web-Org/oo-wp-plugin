@@ -29,7 +29,8 @@ namespace onOffice\WPlugin\Record;
  */
 
 class RecordManagerDeleteListViewEstate
-	extends RecordManagerDelete
+	extends RecordManager
+	implements RecordManagerDelete
 {
 	/**
 	 *

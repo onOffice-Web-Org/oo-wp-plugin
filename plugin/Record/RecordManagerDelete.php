@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,18 +19,21 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Record;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
-abstract class RecordManagerDelete
-	extends RecordManager
+interface RecordManagerDelete
 {
-	/** */
-	abstract public function deleteByIds(array $ids);
+	/**
+	 *
+	 * @param array $ids
+	 *
+	 */
+
+	public function deleteByIds(array $ids);
 }

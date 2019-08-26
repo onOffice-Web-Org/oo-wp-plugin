@@ -59,6 +59,8 @@ abstract class RecordManager
 
 	/**
 	 *
+	 * @deprecated get wpdb via DI
+	 *
 	 * @return string
 	 *
 	 */
@@ -70,6 +72,8 @@ abstract class RecordManager
 
 
 	/**
+	 *
+	 * @deprecated get wpdb via DI
 	 *
 	 * @global wpdb $wpdb
 	 * @return wpdb

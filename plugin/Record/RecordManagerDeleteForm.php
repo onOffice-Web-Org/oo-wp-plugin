@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,18 +19,36 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Record;
 
+use wpdb;
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
 class RecordManagerDeleteForm
-	extends RecordManagerDelete
+	extends RecordManager
+	implements RecordManagerDelete
 {
+	/** @var wpdb */
+	private $_pWPDB;
+
+
+	/**
+	 *
+	 * @param wpdb $pWPDB
+	 *
+	 */
+
+	public function __construct(wpdb $pWPDB)
+	{
+		$this->_pWPDB = $pWPDB;
+	}
+
+
 	/**
 	 *
 	 * @param array $ids
@@ -39,33 +57,11 @@ class RecordManagerDeleteForm
 
 	public function deleteByIds(array $ids)
 	{
-		$prefix = $this->getTablePrefix();
-		$pWpdb = $this->getWpdb();
+		$prefix = $this->_pWPDB->prefix;
 
-		foreach ($ids as $id)
-		{
-			$pWpdb->delete($prefix.'oo_plugin_forms', array('form_id' => $id));
-			$pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', array('form_id' => $id));
+		foreach ($ids as $id) {
+			$this->_pWPDB->delete($prefix.'oo_plugin_forms', ['form_id' => $id]);
+			$this->_pWPDB->delete($prefix.'oo_plugin_form_fieldconfig', ['form_id' => $id]);
 		}
-	}
-
-
-	/**
-	 *
-	 * @param int $formId
-	 * @param array $fieldNames
-	 * @return bool
-	 *
-	 */
-
-	public function deleteFieldConfigEntriesByNames($formId, array $fieldNames)
-	{
-		$prefix = $this->getTablePrefix();
-		$pWpdb = $this->getWpdb();
-		return $pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', array(
-				'form_id' => $formId,
-				'fieldname' => $fieldNames,
-			)
-		);
 	}
 }

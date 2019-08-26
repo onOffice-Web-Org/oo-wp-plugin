@@ -21,8 +21,10 @@
 
 namespace onOffice\WPlugin\Record;
 
+use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Utility\__String;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -117,7 +119,10 @@ class RecordManagerFactory
 			if ($recordId !== null) {
 				$pInstance = new $className($recordId);
 			} else {
-				$pInstance = new $className;
+				$pDIBuilder = new ContainerBuilder();
+				$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+				$pDI = $pDIBuilder->build();
+				$pInstance = $pDI->get($className);
 			}
 		}
 
