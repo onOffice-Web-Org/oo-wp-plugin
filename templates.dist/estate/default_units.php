@@ -33,7 +33,7 @@
 			continue;
 		}
 	?>
-		<?php echo $pEstates->getFieldLabel( $field ) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
+		<?php echo $pEstates->getFieldLabel( $field ) .': '.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)); ?><br>
 
 	<?php endforeach; ?>
 	<h3><?php esc_html_e('Contact person of entity:', 'onoffice');?></h3>

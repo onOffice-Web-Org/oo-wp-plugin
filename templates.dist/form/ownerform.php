@@ -33,10 +33,10 @@ $addressValues = array();
 $estateValues = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo __('SUCCESS!', 'onoffice');
+	echo esc_html__('SUCCESS!', 'onoffice');
 } else {
 	if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo __('ERROR!', 'onoffice');
+		echo esc_html__('ERROR!', 'onoffice');
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
@@ -47,7 +47,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$line .= renderFormField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
-			$line .= ' <span>'.__('Bitte ausfüllen!', 'onoffice').'</span>';
+			$line .= ' <span>'.esc_html__('Bitte ausfüllen!', 'onoffice').'</span>';
 		}
 
 		if ($table == 'address') {
@@ -63,30 +63,21 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$isRequiredMessage = $pForm->isRequiredField( 'message' );
 		$additionMessage = $isRequiredMessage ? '*' : '';
 
-		$messageInput = __('Message', 'onoffice').$additionMessage.':<br>
+		$messageInput = esc_html__('Message', 'onoffice').$additionMessage.':<br>
 		<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
 		$addressValues []= $messageInput;
 	}
 
-	echo '<h2>Ihre Kontaktdaten</h2>'
+	echo '<h2>'.esc_html__('Ihre Kontaktdaten', 'onoffice').'</h2>'
 		.'<p>';
 	echo implode('<br>', $addressValues);
 	echo '</p>
-		<h2>'.__('Angaben zu Ihrem Eigentum', 'onoffice').'</h2>
+		<h2>'.esc_html__('Angaben zu Ihrem Eigentum', 'onoffice').'</h2>
 		<p>';
 	echo implode('<br>', $estateValues);
 	echo '</p>';
 
-	$fileFormSubmit = ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php';
-
-	if (file_exists($fileFormSubmit))
-	{
-		include($fileFormSubmit);
-	}
-	else
-	{
-		echo '<br>'.$fileFormSubmit.' does not exist.';
-	}
+	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>
 

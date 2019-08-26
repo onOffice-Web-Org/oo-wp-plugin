@@ -19,7 +19,7 @@ while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 			foreach ($fieldsForOutput as $field) {
 				$value = $currentEstate[$field];
 				echo esc_html($pEstates->getFieldLabel($field).': '
-					.(is_array($value) ? implode(', ', $value) : $value)).'<br>';
+					.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))).'<br>';
 			}
 			?>
 		</p>

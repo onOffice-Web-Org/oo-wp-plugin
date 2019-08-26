@@ -38,7 +38,7 @@ $selectTypes = array(
 	);
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo 'ERROR!';
+	echo esc_html__('ERROR!', 'onoffice');
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
@@ -48,7 +48,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ( $pForm->isMissingField( $input ) ) {
-		echo '<span class="onoffice-pleasefill">'.__('Bitte ausfüllen!', 'onoffice').'</span>';
+		echo '<span class="onoffice-pleasefill">'.esc_html__('Bitte ausfüllen!', 'onoffice').'</span>';
 	}
 
 	$isRequired = $pForm->isRequiredField( $input );
@@ -61,7 +61,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	if ($input == 'Umkreis') {
 		echo '<br>'
 			.'<fieldset>'
-			.'<legend>'.__('Umkreissuche:', 'onoffice').'</legend>';
+			.'<legend>'.esc_html__('Umkreissuche:', 'onoffice').'</legend>';
 
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
 			echo esc_html($values['label']).':<br>';
@@ -103,17 +103,9 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	echo '<br>';
 }
 
-$pForm->setGenericSetting('submitButtonLabel', __('Search for Prospective Buyers', 'onoffice'));
-$formSubmitFile = ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php';
+$pForm->setGenericSetting('submitButtonLabel', esc_html__('Search for Prospective Buyers', 'onoffice'));
+include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 
-if (file_exists($formSubmitFile))
-{
-	include($formSubmitFile);
-}
- else {
-	echo $formSubmitFile.' not found';
-
- }
 echo '<br>';
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
@@ -142,11 +134,11 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 				if (is_array($value)) {
 					if ($value[0] > 0) {
-						echo esc_html($realName).' min. '.$value[0].'<br>';
+						echo $realName.' min. '.$value[0].'<br>';
 					}
 
 					if ($value[1] > 0) {
-						echo esc_html($realName).' max. '.$value[1];
+						echo $realName.' max. '.$value[1];
 					}
 					echo '<br>';
 					continue;

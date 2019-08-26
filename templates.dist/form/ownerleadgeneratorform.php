@@ -82,24 +82,24 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			<div id="leadform">
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
-						echo __('ERROR!', 'onoffice');
+						echo esc_html__('ERROR!', 'onoffice');
 					}
 				?>
 
 				<div class="lead-lightbox lead-page-1">
 					<h2><?php echo esc_html__('Your contact details', 'onoffice'); ?></h2>
 					<p>
-						<?php echo esc_html(implode('<br>', $addressValues)); ?>
+						<?php echo implode('<br>', $addressValues); ?>
 					</p>
 				</div>
 
 				<div class="lead-lightbox lead-page-2">
 					<h2><?php echo esc_html__('Information about your property', 'onoffice'); ?></h2>
 					<p>
-						<?php echo esc_html(implode('<br>', $estateValues)); ?>
+						<?php echo implode('<br>', $estateValues); ?>
 					</p>
 					<p>
-						<?php echo esc_html(implode('<br>', $miscValues)); ?>
+						<?php echo implode('<br>', $miscValues); ?>
 					</p>
 					<p>
 						<div style="float:right">

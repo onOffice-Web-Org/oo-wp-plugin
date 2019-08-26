@@ -37,18 +37,18 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 <?php
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo 'SUCCESS!';
+	echo esc_html__('SUCCESS!', 'onoffice');
 } else {
 	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo 'ERROR!';
+		echo esc_html__('ERROR!', 'onoffice');
 	} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-		echo 'Spam detected!';
+		echo esc_html__('Spam detected!', 'onoffice');
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ( $pForm->isMissingField( $input ) ) {
-			echo __('Bitte ausfüllen!', 'onoffice');
+			echo esc_html__('Bitte ausfüllen!', 'onoffice');
 		}
 
 		if ( in_array( $input, array('message', 'Id') ) ) {
@@ -69,23 +69,14 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		<?php
 		esc_html_e('Message', 'onoffice');
 		echo $additionMessage; ?>:<br>
-		<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
+		<textarea name="message"><?php echo esc_html($pForm->getFieldValue( 'message' )); ?></textarea><br>
 
 <?php
 	endif;
 
 	echo '<br>';
 
-	$formSubmitButton = ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php';
-
-	if (file_exists($formSubmitButton))
-	{
-		include($formSubmitButton);
-	}
-	else
-	{
-		echo '<br>'.$formSubmitButton.' does not work';
-	}
+	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>
 </form>

@@ -81,7 +81,7 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 		}
 	?>
 
-		<?php echo esc_html($pEstates->getFieldLabel( $field )) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
+		<?php echo esc_html($pEstates->getFieldLabel( $field )) .': '.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)); ?><br>
 
 	<?php endforeach; ?>
 
@@ -133,7 +133,7 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 				$pForm = new \onOffice\WPlugin\Form('Contactform', \onOffice\WPlugin\Form::TYPE_CONTACT);
 				include( __DIR__ . "/../form/defaultform.php" );
 			} catch (\onOffice\WPlugin\DataFormConfiguration\UnknownFormException $pE) {
-				echo __('(Form is not available)', 'onoffice');
+				echo esc_html__('(Form is not available)', 'onoffice');
 			}
 		?>
 	</p>

@@ -32,11 +32,11 @@ $addressValues = array();
 $searchcriteriaValues = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo '<p>'.__('SUCCESS!', 'onoffice').'</p>';
+	echo '<p>'.esc_html__('SUCCESS!', 'onoffice').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo '<p>'.__('ERROR!', 'onoffice').'</p>';
+	echo '<p>'.esc_html__('ERROR!', 'onoffice').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
-	echo '<p>'.__('Missing Fields!', 'onoffice').'</p>';
+	echo '<p>'.esc_html__('Missing Fields!', 'onoffice').'</p>';
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
@@ -47,7 +47,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$line .= renderFormField($input, $pForm);
 
 	if ( $pForm->isMissingField( $input ) ) {
-		$line .= '<span>'.__('Bitte ausfüllen!', 'onoffice').'</span>';
+		$line .= '<span>'.esc_html__('Bitte ausfüllen!', 'onoffice').'</span>';
 	}
 
 	if ($table == 'address') {
@@ -76,12 +76,7 @@ if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	</p>
 	<div>
 		<?php
-			$file = ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php';
-
-			if (file_exists($file))
-			{
-				include($file);
-			}
+			include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 		 ?>
 	</div>
 <?php

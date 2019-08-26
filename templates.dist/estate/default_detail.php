@@ -50,7 +50,7 @@ require('map/map.php');
 	<?php
 	foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
 		<ul>
-			<b> <?php echo __('ASP', 'onoffice').': '.esc_html($contactData['Vorname']); ?> <?php echo esc_html($contactData['Name']); ?></b>
+			<b> <?php echo esc_html__('ASP', 'onoffice').': '.esc_html($contactData['Vorname']); ?> <?php echo esc_html($contactData['Name']); ?></b>
 			<?php // either use the phone number flagged as default (add `default*` to config) ... ?>
 			<!--<li>Telefon: <?php // echo $contactData['defaultphone']; ?></li>-->
 			<!--<li>Telefax: <?php // echo $contactData['defaultfax']; ?></li>-->
@@ -128,7 +128,7 @@ require('map/map.php');
 			$pForm = new \onOffice\WPlugin\Form('contact', \onOffice\WPlugin\Form::TYPE_CONTACT);
 			include( __DIR__ . "/../form/defaultform.php" );
 		} catch (\onOffice\WPlugin\DataFormConfiguration\UnknownFormException $pE) {
-			echo __('(Form is not available)', 'onoffice');
+			echo esc_html__('(Form is not available)', 'onoffice');
 		}
 	?>
 	<?php echo $pEstates->getSimilarEstates(); ?>
