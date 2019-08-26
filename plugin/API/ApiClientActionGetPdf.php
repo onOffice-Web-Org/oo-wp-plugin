@@ -93,7 +93,7 @@ class ApiClientActionGetPdf
 	 *
 	 */
 
-	public function getMimeTypeResult()
+	public function getMimeTypeResult(): string
 	{
 		$result = $this->getResult();
 
