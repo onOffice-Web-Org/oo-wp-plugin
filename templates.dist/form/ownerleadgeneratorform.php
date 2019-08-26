@@ -47,7 +47,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			/* translators: %s will be replaced with a translated field name. */
-			echo sprintf(__('Please enter a value for %s.', 'onoffice'), $pForm->getFieldLabel( $input )).'<br>';
+			echo sprintf(__('Please enter a value for %s.', 'onoffice'), esc_html($pForm->getFieldLabel( $input ))).'<br>';
 		}
 
 		$isRequired = $pForm->isRequiredField($input);
@@ -77,29 +77,29 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 <div id="onoffice-lead" style="display:none;">
 	<p>
 		<form name="leadgenerator" action="" method="post" id="leadgeneratorform">
-			<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
-			<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
+			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
+			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
 			<div id="leadform">
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
-						echo 'ERROR!';
+						echo __('ERROR!', 'onoffice');
 					}
 				?>
 
 				<div class="lead-lightbox lead-page-1">
 					<h2><?php echo esc_html__('Your contact details', 'onoffice'); ?></h2>
 					<p>
-						<?php echo implode('<br>', $addressValues); ?>
+						<?php echo esc_html(implode('<br>', $addressValues)); ?>
 					</p>
 				</div>
 
 				<div class="lead-lightbox lead-page-2">
 					<h2><?php echo esc_html__('Information about your property', 'onoffice'); ?></h2>
 					<p>
-						<?php echo implode('<br>', $estateValues); ?>
+						<?php echo esc_html(implode('<br>', $estateValues)); ?>
 					</p>
 					<p>
-						<?php echo implode('<br>', $miscValues); ?>
+						<?php echo esc_html(implode('<br>', $miscValues)); ?>
 					</p>
 					<p>
 						<div style="float:right">

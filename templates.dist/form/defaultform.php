@@ -31,7 +31,7 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
 	<?php if ( isset( $estateId ) ) : ?>
-	<input type="hidden" name="Id" value="<?php echo $estateId; ?>">
+	<input type="hidden" name="Id" value="<?php echo esc_attr($estateId); ?>">
 	<?php endif; ?>
 
 <?php
@@ -48,7 +48,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ( $pForm->isMissingField( $input ) ) {
-			echo 'Bitte ausfüllen!';
+			echo __('Bitte ausfüllen!', 'onoffice');
 		}
 
 		if ( in_array( $input, array('message', 'Id') ) ) {
@@ -75,7 +75,17 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	endif;
 
 	echo '<br>';
-	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+
+	$formSubmitButton = ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php';
+
+	if (file_exists($formSubmitButton))
+	{
+		include($formSubmitButton);
+	}
+	else
+	{
+		echo '<br>'.$formSubmitButton.' does not work';
+	}
 }
 ?>
 </form>

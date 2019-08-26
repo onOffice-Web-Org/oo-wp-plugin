@@ -81,7 +81,7 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 		}
 	?>
 
-		<?php echo $pEstates->getFieldLabel( $field ) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
+		<?php echo esc_html($pEstates->getFieldLabel( $field )) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
 
 	<?php endforeach; ?>
 
@@ -90,7 +90,7 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 	foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
 	<p>
 		<b><?php esc_html_e('Contact person: ', 'onoffice'); ?>
-			<?php echo $contactData['Vorname']; ?> <?php echo $contactData['Name']; ?></b><br>
+			<?php echo esc_html($contactData['Vorname']); ?> <?php echo esc_html($contactData['Name']); ?></b><br>
 		<img src="<?php echo $contactData['imageUrl']; ?>">
 		<ul>
 			<?php // either use the phone number flagged as default (add `default*` to config) ... ?>
@@ -143,12 +143,12 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 	$estatePictures = $pEstates->getEstatePictures();
 	foreach ( $estatePictures as $id ) :
 		$pictureValues = $pEstates->getEstatePictureValues( $id );
-		echo '<a href="'.$pictureValues['url'].'" class="estate-status">';
+		echo '<a href="'.esc_url($pictureValues['url']).'" class="estate-status">';
 
 		if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
-			echo '<span>'.$marketingStatus.'</span>';
+			echo '<span>'.esc_html($marketingStatus).'</span>';
 		}
-		echo '<img src="'.$pEstates->getEstatePictureUrl( $id, array('width' => 400, 'height' => 300) ).'">';
+		echo '<img src="'.esc_url($pEstates->getEstatePictureUrl( $id, array('width' => 400, 'height' => 300) )).'">';
 		echo '</a>';
 	?>
 		<?php echo esc_html( $pictureValues['text'] ); ?>
@@ -156,7 +156,7 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 
 	<?php echo $pEstates->getEstateUnits( ); ?>
 	<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
-		<a href="<?php echo $pEstates->getDocument(); ?>">
+		<a href="<?php echo esc_url($pEstates->getDocument()); ?>">
 			<?php esc_html_e('PDF expose', 'onoffice'); ?>
 		</a>
 

@@ -144,7 +144,7 @@ class FormPostContact
 			'addressdata' => $pFormData->getAddressData(),
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $values['message'] ?? null,
-			'subject' => $subject,
+			'subject' => sanitize_text_field($subject),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
 		];

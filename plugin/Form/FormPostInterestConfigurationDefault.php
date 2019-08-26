@@ -71,7 +71,7 @@ class FormPostInterestConfigurationDefault
 
 	public function getPostValues(): array
 	{
-		return $_POST;
+		return sanitize_post($_POST, 'db');
 	}
 
 

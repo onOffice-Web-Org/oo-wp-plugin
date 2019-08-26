@@ -117,7 +117,7 @@ class FormPostInterest
 
 		$body = 'Sehr geehrte Damen und Herren,'."\n\n"
 				.'ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite '
-				.'eingetragen. Die Adresse ('.$firstName.' '.$name.') wurde bereits in Ihrem System '
+				.'eingetragen. Die Adresse ('.sanitize_text_field($firstName).' '.sanitize_text_field($name).') wurde bereits in Ihrem System '
 				.'eingetragen.'."\n\n"
 				.'Herzliche Grüße'."\n"
 				.'Ihr onOffice Team';
@@ -125,10 +125,10 @@ class FormPostInterest
 		$requestParams = [
 			'anonymousEmailidentity' => true,
 			'body' => $body,
-			'subject' => $subject,
-			'replyto' => $mailInteressent,
-			'receiver' => [$recipient],
-			'X-Original-From' => $mailInteressent,
+			'subject' => sanitize_text_field($subject),
+			'replyto' => sanitize_email($mailInteressent),
+			'receiver' => [sanitize_email($recipient)],
+			'X-Original-From' => sanitize_email($mailInteressent),
 			'saveToAgentsLog' => false,
 		];
 

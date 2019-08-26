@@ -33,10 +33,10 @@ $addressValues = array();
 $estateValues = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo 'SUCCESS!';
+	echo __('SUCCESS!', 'onoffice');
 } else {
 	if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo 'ERROR!';
+		echo __('ERROR!', 'onoffice');
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
@@ -47,7 +47,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$line .= renderFormField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
-			$line .= ' <span>Bitte ausfüllen!</span>';
+			$line .= ' <span>'.__('Bitte ausfüllen!', 'onoffice').'</span>';
 		}
 
 		if ($table == 'address') {
@@ -72,12 +72,21 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		.'<p>';
 	echo implode('<br>', $addressValues);
 	echo '</p>
-		<h2>Angaben zu Ihrem Eigentum</h2>
+		<h2>'.__('Angaben zu Ihrem Eigentum', 'onoffice').'</h2>
 		<p>';
 	echo implode('<br>', $estateValues);
 	echo '</p>';
 
-	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+	$fileFormSubmit = ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php';
+
+	if (file_exists($fileFormSubmit))
+	{
+		include($fileFormSubmit);
+	}
+	else
+	{
+		echo '<br>'.$fileFormSubmit.' does not exist.';
+	}
 }
 ?>
 

@@ -27,7 +27,7 @@ require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
 	<?php if ( isset( $currentEstate ) ) : ?>
-	<input type="hidden" name="Id" value="<?php echo $currentEstate['Id']; ?>">
+	<input type="hidden" name="Id" value="<?php echo esc_attr($currentEstate['Id']); ?>">
 	<?php endif; ?>
 
 <?php
@@ -48,20 +48,20 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ( $pForm->isMissingField( $input ) ) {
-		echo '<span class="onoffice-pleasefill">Bitte ausfüllen!</span>';
+		echo '<span class="onoffice-pleasefill">'.__('Bitte ausfüllen!', 'onoffice').'</span>';
 	}
 
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
 	$inputAddition = $isRequired ? ' required' : '';
-	echo $pForm->getFieldLabel( $input ).$addition.': <br>';
+	echo esc_html($pForm->getFieldLabel( $input )).$addition.': <br>';
 
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
 	if ($input == 'Umkreis') {
 		echo '<br>'
 			.'<fieldset>'
-			.'<legend>Umkreissuche:</legend>';
+			.'<legend>'.__('Umkreissuche:', 'onoffice').'</legend>';
 
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
 			echo esc_html($values['label']).':<br>';
@@ -73,14 +73,14 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 				echo '<option value="">'.esc_html('Keine Angabe').'</option>';
 
 				foreach ( $permittedValues as $countryCode => $countryName ) {
-					echo '<option value="'.esc_html($countryCode).'">'
+					echo '<option value="'.esc_attr($countryCode).'">'
 						.esc_html($countryName).'</option>';
 				}
 
 				echo '</select><br>';
 			} else {
 				echo '<input type="text" name="'.esc_html($key).'" value="'
-					.$pForm->getFieldValue( $key ).'"'.$inputAddition.'> <br>';
+					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'> <br>';
 			}
 		}
 
@@ -104,7 +104,16 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 }
 
 $pForm->setGenericSetting('submitButtonLabel', __('Search for Prospective Buyers', 'onoffice'));
-include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+$formSubmitFile = ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php';
+
+if (file_exists($formSubmitFile))
+{
+	include($formSubmitFile);
+}
+ else {
+	echo $formSubmitFile.' not found';
+
+ }
 echo '<br>';
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
@@ -133,11 +142,11 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 				if (is_array($value)) {
 					if ($value[0] > 0) {
-						echo $realName.' min. '.$value[0].'<br>';
+						echo esc_html($realName).' min. '.$value[0].'<br>';
 					}
 
 					if ($value[1] > 0) {
-						echo $realName.' max. '.$value[1];
+						echo esc_html($realName).' max. '.$value[1];
 					}
 					echo '<br>';
 					continue;
@@ -178,7 +187,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				}
 			}
 
-			echo '<span>'.$realName.': '.(is_array($value) ? implode(', ', $value) : $value).'</span><br>';
+			echo '<span>'.esc_html($realName).': '.(is_array($value) ? implode(', ', $value) : $value).'</span><br>';
 		}
 
 		if (count($umkreis) > 0) {

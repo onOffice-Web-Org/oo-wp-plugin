@@ -43,7 +43,7 @@ class FormPostConfigurationDefault
 
 	public function getPostVars(): array
 	{
-		return $_POST;
+		return sanitize_post($_POST, 'db');
 	}
 
 

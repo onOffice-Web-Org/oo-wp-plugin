@@ -42,7 +42,7 @@ require('map/map.php');
 			continue;
 		}
 	?>
-		<?php echo $pEstates->getFieldLabel( $field ) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
+		<?php echo esc_html($pEstates->getFieldLabel( $field )) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
 
 	<?php endforeach; ?>
 
@@ -50,7 +50,7 @@ require('map/map.php');
 	<?php
 	foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
 		<ul>
-			<b>ASP: <?php echo $contactData['Vorname']; ?> <?php echo $contactData['Name']; ?></b>
+			<b> <?php echo __('ASP', 'onoffice').': '.esc_html($contactData['Vorname']); ?> <?php echo esc_html($contactData['Name']); ?></b>
 			<?php // either use the phone number flagged as default (add `default*` to config) ... ?>
 			<!--<li>Telefon: <?php // echo $contactData['defaultphone']; ?></li>-->
 			<!--<li>Telefax: <?php // echo $contactData['defaultfax']; ?></li>-->
@@ -111,7 +111,7 @@ require('map/map.php');
 	$estatePictures = $pEstates->getEstatePictures();
 	foreach ( $estatePictures as $id ) : ?>
 	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
-		<img src="<?php echo $pEstates->getEstatePictureUrl( $id, array('width' => 300, 'height' => 400) ); ?>">
+		<img src="<?php echo esc_url($pEstates->getEstatePictureUrl( $id, array('width' => 300, 'height' => 400) )); ?>">
 		<?php echo $pEstates->getEstatePictureTitle($id).'<br>'; ?>
 	</a>
 	<?php endforeach; ?>

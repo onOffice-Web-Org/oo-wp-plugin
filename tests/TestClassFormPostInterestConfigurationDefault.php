@@ -64,7 +64,7 @@ class TestClassFormPostInterestConfigurationDefault
 	public function testGetPostValues()
 	{
 		$_POST = ['test' => 'asdfpost'];
-		$this->assertEquals(['test' => 'asdfpost'], $this->_pSubject->getPostValues());
+		$this->assertEquals('asdfpost', $this->_pSubject->getPostValues()['test']);
 	}
 
 

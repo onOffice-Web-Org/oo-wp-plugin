@@ -8,8 +8,8 @@ while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 			<?php
 			$estatePictures = $pEstates->getEstatePictures();
 			foreach ($estatePictures as $id) : ?>
-				<img src="<?php echo $pEstates->getEstatePictureUrl
-					($id, ['width' => 200, 'height' => 100]); ?>">
+				<img src="<?php echo esc_url($pEstates->getEstatePictureUrl
+					($id, ['width' => 200, 'height' => 100])); ?>">
 			<?php endforeach; ?>
 		</a>
 		<p>
