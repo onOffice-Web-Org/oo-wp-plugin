@@ -79,18 +79,10 @@ class PdfDocumentModelValidator
 	{
 		$pModelClone = clone $pModel;
 		try {
-			$filter = $this->buildFilter($pModelClone);
+			$parametersGetEstate = $this->buildParameters($pModelClone);
 		} catch (UnknownViewException $pEx) {
 			throw new PdfDocumentModelValidationException('', 0, $pEx);
 		}
-
-		// append ID to filter in order to make sure viewing this document is allowed
-		$parametersGetEstate = [
-			'data' => ['Id'],
-			'filter' => $filter,
-			'estatelanguage' => $pModelClone->getLanguage(),
-			'formatoutput' => 0,
-		];
 
 		$pApiClientAction = $this->_pAPIClientActionGeneric
 			->withActionIdAndResourceType(onOfficeSDK::ACTION_ID_READ, 'estate');
@@ -113,8 +105,14 @@ class PdfDocumentModelValidator
 	 *
 	 */
 
-	private function buildFilter(PdfDocumentModel $pModel): array
+	private function buildParameters(PdfDocumentModel $pModel): array
 	{
+		$parametersGetEstate = [
+			'data' => ['Id'],
+			'estatelanguage' => $pModel->getLanguage(),
+			'formatoutput' => 0,
+		];
+
 		$pView = $this->_pDataDetailViewHandler->getDetailView();
 		$isDetailView = $pModel->getViewName() === $pView->getName();
 
@@ -124,12 +122,16 @@ class PdfDocumentModelValidator
 			$pDefaultFilterBuilder->setEstateId($pModel->getEstateId());
 			$filter = $pDefaultFilterBuilder->buildFilter();
 		} else {
+			 /* @var $pView \onOffice\WPlugin\DataView\DataListView */
 			$pView = $this->_pDataListViewFactory->getListViewByName($pModel->getViewName());
 			$pModel->setTemplate($pView->getExpose());
 			$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pView);
 			$filter = $pDefaultFilterBuilder->buildFilter();
 			$filter['Id'][] = ['op' => '=', 'val' => $pModel->getEstateId()];
+			$parametersGetEstate['filterid'] = $pView->getFilterId();
 		}
-		return $filter;
+
+		$parametersGetEstate['filter'] = $filter;
+		return $parametersGetEstate;
 	}
 }

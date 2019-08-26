@@ -63,7 +63,8 @@ class TestClassPdfDocumentModelValidator
 	{
 		$this->_pAPIClientAction = $this->getMockBuilder(APIClientActionGeneric::class)
 			->setConstructorArgs([new SDKWrapper(), '', ''])
-			->setMethods(['getResultStatus', 'getResultRecords', 'withActionIdAndResourceType', 'sendRequests'])
+			->setMethods(['getResultStatus', 'getResultRecords', 'withActionIdAndResourceType',
+				'sendRequests', 'setParameters'])
 			->getMock();
 		$pDetailView = new DataDetailView();
 		$pDetailView->setExpose('testdetailexpose');
@@ -89,6 +90,21 @@ class TestClassPdfDocumentModelValidator
 			->with(onOfficeSDK::ACTION_ID_READ, 'estate')
 			->will($this->returnSelf());
 		$this->_pAPIClientAction->expects($this->once())->method('getResultStatus')->will($this->returnValue(true));
+		$this->_pAPIClientAction->expects($this->once())->method('setParameters')->with([
+			'data' => ['Id'],
+			'estatelanguage' => 'ENG',
+			'formatoutput' => 0,
+			'filter' => [
+				'veroeffentlichen' => [[
+					'op' => '=',
+					'val' => '1',
+				]],
+				'Id' => [[
+					'op' => '=',
+					'val' => '13',
+				]],
+			],
+		]);
 		$this->_pAPIClientAction->expects($this->once())->method('getResultRecords')->will($this->returnValue([
 			0 => [
 				'Id' => '13',
@@ -114,6 +130,22 @@ class TestClassPdfDocumentModelValidator
 			->with(onOfficeSDK::ACTION_ID_READ, 'estate')
 			->will($this->returnSelf());
 		$this->_pAPIClientAction->expects($this->once())->method('getResultStatus')->will($this->returnValue(true));
+		$this->_pAPIClientAction->expects($this->once())->method('setParameters')->with([
+			'data' => ['Id'],
+			'estatelanguage' => 'ENG',
+			'formatoutput' => 0,
+			'filter' => [
+				'veroeffentlichen' => [[
+					'op' => '=',
+					'val' => '1',
+				]],
+				'Id' => [[
+					'op' => '=',
+					'val' => '13',
+				]],
+			],
+			'filterid' => 11,
+		]);
 		$this->_pAPIClientAction->expects($this->once())->method('getResultRecords')->will($this->returnValue([
 			0 => [
 				'Id' => '13',
@@ -121,6 +153,7 @@ class TestClassPdfDocumentModelValidator
 		]));
 
 		$pDataListview = new DataListView(13, 'list');
+		$pDataListview->setFilterId(11);
 		$pDataListview->setExpose('testexpose');
 		$this->_pDataListviewFactory->expects($this->once())->method('getListViewByName')->with('list')
 			->will($this->returnValue($pDataListview));
