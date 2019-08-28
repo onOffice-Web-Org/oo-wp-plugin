@@ -139,6 +139,14 @@ abstract class AdminPageBase
 	public function doExtraEnqueues()
 		{}
 
+
+	/**
+	 *
+	 */
+
+	public function preOutput()
+		{}
+
 	/** @return FormModel[] */
 	public function getFormModels()
 		{ return $this->_formModels; }

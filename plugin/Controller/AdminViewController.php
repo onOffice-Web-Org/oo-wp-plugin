@@ -177,6 +177,7 @@ class AdminViewController
 		$hookForms = add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
 			$roleForm, $this->_pageSlug.'-forms', array($pAdminPageFormList, 'render'));
 		add_action( 'load-'.$hookForms, array($pAdminPageFormList, 'handleAdminNotices'));
+		add_action('current_screen', [$pAdminPageFormList, 'preOutput']);
 
 		// Edit Form (hidden page)
 		$hookEditForm = add_submenu_page(null, null, null, $roleForm, $this->_pageSlug.'-editform',

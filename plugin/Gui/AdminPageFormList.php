@@ -21,30 +21,29 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Form\BulkFormDelete;
 use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_action;
+use function add_filter;
 use function add_query_arg;
 use function admin_url;
-use function esc_html;
+use function check_admin_referer;
 use function esc_html__;
-use function plugin_basename;
-use function plugin_dir_url;
 use function plugins_url;
 use function wp_enqueue_script;
 use function wp_localize_script;
 use function wp_register_script;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -69,17 +68,19 @@ class AdminPageFormList
 		parent::__construct($pageSlug);
 
 		$tab = $this->getTab();
-		$this->_pFormsTable = new FormsTable();
 		$pFormTranslation = new FormTranslation();
 		$pWPQueryWrapper = new WPQueryWrapper();
 		$pWPQuery = $pWPQueryWrapper->getWPQuery();
 
 		if (__String::getNew($pWPQuery->get('page', ''))->startsWith('onoffice-') &&
 			!__String::getNew($tab)->isEmpty() &&
-			!array_key_exists($tab, $pFormTranslation->getFormConfig())) {
-			throw new Exception('Unknown Form type');
+			!array_key_exists($tab, $pFormTranslation->getFormConfig()))
+		{
+				throw new Exception('Unknown Form type');
 		}
 
+
+		$this->_pFormsTable = new FormsTable();
 		$this->_pFormsTable->setListType($tab);
 	}
 
@@ -91,12 +92,10 @@ class AdminPageFormList
 	public function renderContent()
 	{
 		$this->generatePageMainTitle(__('Forms', 'onoffice'));
-		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/form.php';
 
 		$this->_pFormsTable->prepare_items();
 		echo '<p>';
-		echo '<form method="post" action="'.esc_html($actionFile).'">';
+		echo '<form method="post">';
 		echo $this->_pFormsTable->views();
 		$this->_pFormsTable->display();
 		echo '</form>';
@@ -155,6 +154,19 @@ class AdminPageFormList
 
 	/**
 	 *
+	 */
+
+	public function preOutput()
+	{
+		$this->registerDeleteAction();
+		$this->_pFormsTable->process_bulk_action();
+
+		parent::preOutput();
+	}
+
+
+	/**
+	 *
 	 * @param string $subTitle
 	 *
 	 */
@@ -172,21 +184,59 @@ class AdminPageFormList
 		$pFormTranslation = new FormTranslation();
 		$translation = $pFormTranslation->getPluralTranslationForForm($tab, 1);
 
-		if ($subTitle != '')
-		{
+		if ($subTitle != '') {
 			echo ' › '.esc_html__($subTitle, 'onoffice'). ' › '.$translation;
 		}
 
 		$typeParam = AdminPageFormSettingsMain::GET_PARAM_TYPE;
-
-		$new_link = add_query_arg($typeParam, $tab, admin_url('admin.php?page=onoffice-editform'));
+		$newLink = add_query_arg($typeParam, $tab, admin_url('admin.php?page=onoffice-editform'));
 
 		echo '</h1>';
 
 		if ($tab !== 'all') {
-			echo '<a href="'.$new_link.'" class="page-title-action">'
+			echo '<a href="'.$newLink.'" class="page-title-action">'
 				.esc_html__('Add New', 'onoffice').'</a>';
 		}
 		echo '<hr class="wp-header-end">';
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function registerDeleteAction()
+	{
+		$pClosureDeleteForm = function(string $redirect_to, string $doaction, array $post_ids): string {
+			return $this->deleteRecord($redirect_to, $doaction, $post_ids);
+		};
+
+		add_filter('handle_bulk_actions-onoffice_page_onoffice-forms', $pClosureDeleteForm, 10, 3);
+	}
+
+
+	/**
+	 *
+	 * @param string $redirectTo
+	 * @param string $doaction
+	 * @param array $postIds
+	 * @return string
+	 *
+	 */
+
+	private function deleteRecord(string $redirectTo, string $doaction, array $postIds): string
+	{
+		$pDIBuilder = new ContainerBuilder();
+		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pDI = $pDIBuilder->build();
+		$pBulkFormDelete = $pDI->get(BulkFormDelete::class);
+
+		if (in_array($doaction, ['delete', 'bulk_delete'])) {
+			check_admin_referer('bulk-forms');
+			$itemsDeleted = $pBulkFormDelete->delete($doaction, $postIds);
+			$redirectTo = add_query_arg('delete', $itemsDeleted, admin_url('admin.php?page=onoffice-forms'));
+		}
+
+		return $redirectTo;
 	}
 }

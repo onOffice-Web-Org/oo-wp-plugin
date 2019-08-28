@@ -28,7 +28,6 @@ use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use WP_List_Table;
-use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_query_arg;
 use function admin_url;
@@ -40,8 +39,6 @@ use function esc_sql;
 use function esc_url;
 use function menu_page_url;
 use function number_format_i18n;
-use function plugin_basename;
-use function plugin_dir_url;
 use function wp_nonce_url;
 /**
  *
@@ -253,13 +250,10 @@ class FormsTable
 		$formIdParam = AdminPageEstateListSettingsBase::GET_PARAM_VIEWID;
 		$editLink = add_query_arg($formIdParam, $pItem->ID, admin_url('admin.php?page=onoffice-editform'));
 
-		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/form.php';
-
-		$actions = array();
-		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';
+		$actions = [];
+		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit').'</a>';
 		$actions['delete'] = "<a class='submitdelete' href='"
-			.wp_nonce_url($actionFile.'?action=delete&form_id='.$pItem->ID, 'delete-form_'.$pItem->ID)
+			.wp_nonce_url(admin_url('admin.php').'?page=onoffice-forms&action=bulk_delete&form[]='.$pItem->ID, 'bulk-forms')
 			."' onclick=\"if ( confirm( '"
 			.esc_js(sprintf(
 			/* translators: %s is the name of the form. */
