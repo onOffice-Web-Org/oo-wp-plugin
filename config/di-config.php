@@ -44,6 +44,8 @@ use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
 use onOffice\WPlugin\Template;
+use onOffice\WPlugin\WP\WPNonceWrapper;
+use onOffice\WPlugin\WP\WPNonceWrapperDefault;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
@@ -75,4 +77,5 @@ return [
 		global $wpdb;
 		return $wpdb;
 	},
+	WPNonceWrapper::class => autowire(WPNonceWrapperDefault::class),
 ];
