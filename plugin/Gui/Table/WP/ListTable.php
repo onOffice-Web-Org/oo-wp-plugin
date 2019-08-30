@@ -75,34 +75,6 @@ abstract class ListTable extends WP_List_Table
 	 *
 	 */
 
-	public function process_bulk_action()
-	{
-		$this->prepare_items();
-		$nonce = filter_input(INPUT_POST, '_wpnonce', FILTER_DEFAULT) ??
-			filter_input(INPUT_GET, '_wpnonce', FILTER_DEFAULT);
-		$nonceaction = 'bulk-'.$this->_args['plural'];
-		$recordIds = filter_input(INPUT_POST, $this->_args['singular'], FILTER_VALIDATE_INT, FILTER_FORCE_ARRAY) ??
-			filter_input(INPUT_GET, $this->_args['singular'], FILTER_VALIDATE_INT, FILTER_FORCE_ARRAY) ?? [];
-
-        if ($nonce !== null) {
-			$action = $this->current_action();
-            if (wp_verify_nonce($nonce, $nonceaction)) {
-				$screen = get_current_screen()->id;
-				$recordIds = array_map('absint', $recordIds);
-				$redirect_to = apply_filters('handle_bulk_actions-'.$screen, wp_get_referer(), $action, $recordIds);
-			}
-
-			if (!empty($redirect_to)) {
-				wp_safe_redirect($redirect_to);
-			}
-        }
-    }
-
-
-	/**
-	 *
-	 */
-
 	public function no_items()
 	{
 		_e( 'No items found.' );

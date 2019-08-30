@@ -39,14 +39,12 @@ class TestClassWPNonceWrapperDefault
 {
 	/**
 	 *
-	 * @expectedException \onOffice\WPlugin\WP\WPRefererException
-	 *
 	 */
 
 	public function testGetRefererInvalid()
 	{
 		$pWPNonceWrapperDefault = new WPNonceWrapperDefault();
-		$pWPNonceWrapperDefault->getReferer();
+		$this->assertEmpty($pWPNonceWrapperDefault->getReferer());
 	}
 
 

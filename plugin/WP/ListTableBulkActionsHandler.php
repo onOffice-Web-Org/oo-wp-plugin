@@ -27,7 +27,6 @@ use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPNonceWrapper;
-use onOffice\WPlugin\WP\WPNonceWrapperDefault;
 use function apply_filters;
 
 /**
@@ -39,7 +38,7 @@ class ListTableBulkActionsHandler
 	/** @var RequestVariablesSanitizer */
 	private $_pRequestVariableSanitizer;
 
-	/** @var WPNonceWrapperDefault */
+	/** @var WPNonceWrapper */
 	private $_pWPNonceWrapper;
 
 	/** @var WPScreenWrapper */
@@ -104,8 +103,10 @@ class ListTableBulkActionsHandler
 
 	private function getWPNonce(): string
 	{
-		return $this->_pRequestVariableSanitizer->getFilteredPost('_wpnonce', FILTER_DEFAULT) ??
-			$this->_pRequestVariableSanitizer->getFilteredGet('_wpnonce', FILTER_DEFAULT) ?? '';
+		return $this->_pRequestVariableSanitizer->getFilteredPost
+			('_wpnonce', FILTER_DEFAULT, FILTER_FLAG_EMPTY_STRING_NULL) ??
+			$this->_pRequestVariableSanitizer->getFilteredGet
+				('_wpnonce', FILTER_DEFAULT, FILTER_FLAG_EMPTY_STRING_NULL) ?? '';
 	}
 
 
@@ -119,9 +120,9 @@ class ListTableBulkActionsHandler
 	private function getRecordIds(string $name): array
 	{
 		$recordIds = $this->_pRequestVariableSanitizer->getFilteredPost
-			($name, FILTER_VALIDATE_INT, FILTER_FORCE_ARRAY) ??
+			($name, FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY|FILTER_NULL_ON_FAILURE) ??
 			$this->_pRequestVariableSanitizer->getFilteredGet
-				($name, FILTER_VALIDATE_INT, FILTER_FORCE_ARRAY) ?? [];
+				($name, FILTER_VALIDATE_INT, FILTER_REQUIRE_ARRAY|FILTER_NULL_ON_FAILURE) ?? [];
 		return array_map('absint', $recordIds);
 	}
 }

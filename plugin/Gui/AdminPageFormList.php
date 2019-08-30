@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Form;
@@ -28,7 +29,9 @@ use onOffice\WPlugin\Form\BulkFormDelete;
 use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\WP\WPScreenWrapper;
 use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
@@ -76,7 +79,7 @@ class AdminPageFormList
 			!__String::getNew($tab)->isEmpty() &&
 			!array_key_exists($tab, $pFormTranslation->getFormConfig()))
 		{
-				throw new Exception('Unknown Form type');
+			throw new Exception('Unknown Form type');
 		}
 
 
@@ -158,8 +161,15 @@ class AdminPageFormList
 
 	public function preOutput()
 	{
-		$this->registerDeleteAction();
-		$this->_pFormsTable->process_bulk_action();
+		$this->_pFormsTable->prepare_items();
+		$pDIBuilder = new ContainerBuilder();
+		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pDI = $pDIBuilder->build();
+		$this->registerDeleteAction($pDI);
+
+		/* @var $pWPBulkActionHandler ListTableBulkActionsHandler */
+		$pWPBulkActionHandler = $pDI->get(ListTableBulkActionsHandler::class);
+		$pWPBulkActionHandler->processBulkAction($this->_pFormsTable);
 
 		parent::preOutput();
 	}
@@ -203,40 +213,26 @@ class AdminPageFormList
 
 	/**
 	 *
+	 * @param Container $pDI
+	 *
 	 */
 
-	private function registerDeleteAction()
+	private function registerDeleteAction(Container $pDI)
 	{
-		$pClosureDeleteForm = function(string $redirect_to, string $doaction, array $post_ids): string {
-			return $this->deleteRecord($redirect_to, $doaction, $post_ids);
+		$pBulkFormDelete = $pDI->get(BulkFormDelete::class);
+		$pClosureDeleteForm = function(string $redirectTo, string $doaction, array $formIds)
+			use ($pBulkFormDelete): string
+		{
+			if (in_array($doaction, ['delete', 'bulk_delete'])) {
+				check_admin_referer('bulk-forms');
+				$itemsDeleted = $pBulkFormDelete->delete($doaction, $formIds);
+				$redirectTo = add_query_arg('delete', $itemsDeleted,
+					admin_url('admin.php?page=onoffice-forms'));
+			}
+			return $redirectTo;
 		};
 
-		add_filter('handle_bulk_actions-onoffice_page_onoffice-forms', $pClosureDeleteForm, 10, 3);
-	}
-
-
-	/**
-	 *
-	 * @param string $redirectTo
-	 * @param string $doaction
-	 * @param array $postIds
-	 * @return string
-	 *
-	 */
-
-	private function deleteRecord(string $redirectTo, string $doaction, array $postIds): string
-	{
-		$pDIBuilder = new ContainerBuilder();
-		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pDI = $pDIBuilder->build();
-		$pBulkFormDelete = $pDI->get(BulkFormDelete::class);
-
-		if (in_array($doaction, ['delete', 'bulk_delete'])) {
-			check_admin_referer('bulk-forms');
-			$itemsDeleted = $pBulkFormDelete->delete($doaction, $postIds);
-			$redirectTo = add_query_arg('delete', $itemsDeleted, admin_url('admin.php?page=onoffice-forms'));
-		}
-
-		return $redirectTo;
+		$screenId = $pDI->get(WPScreenWrapper::class)->getID();
+		add_filter('handle_bulk_actions-'.$screenId, $pClosureDeleteForm, 10, 3);
 	}
 }

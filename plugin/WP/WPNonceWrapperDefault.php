@@ -37,7 +37,6 @@ class WPNonceWrapperDefault
 	/**
 	 *
 	 * @return string
-	 * @throws WPRefererException
 	 *
 	 */
 
@@ -46,7 +45,7 @@ class WPNonceWrapperDefault
 		$referer = wp_get_referer();
 
 		if ($referer === false) {
-			throw new WPRefererException();
+			$referer = '';
 		}
 
 		return $referer;

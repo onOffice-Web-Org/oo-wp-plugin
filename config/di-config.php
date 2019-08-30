@@ -48,6 +48,8 @@ use onOffice\WPlugin\WP\WPNonceWrapper;
 use onOffice\WPlugin\WP\WPNonceWrapperDefault;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\WP\WPScreenWrapper;
+use onOffice\WPlugin\WP\WPScreenWrapperDefault;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use wpdb;
@@ -78,4 +80,5 @@ return [
 		return $wpdb;
 	},
 	WPNonceWrapper::class => autowire(WPNonceWrapperDefault::class),
+	WPScreenWrapper::class => autowire(WPScreenWrapperDefault::class),
 ];
