@@ -67,8 +67,7 @@ abstract class FormModelBuilder
 
 	protected function getValue(string $key, $default = null)
 	{
-		if (isset($this->_values[$key]))
-		{
+		if (isset($this->_values[$key])) {
 			return $this->_values[$key];
 		}
 
@@ -123,8 +122,7 @@ abstract class FormModelBuilder
 		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
 		$templates = array();
 
-		foreach ($templatesAll as $value)
-		{
+		foreach ($templatesAll as $value) {
 			$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
 			$templates[$value] = $value;
 		}
