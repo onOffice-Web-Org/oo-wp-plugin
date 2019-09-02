@@ -19,14 +19,16 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Translation;
 
 use onOffice\WPlugin\Form;
+use function _nx_noop;
+use function translate_nooped_plural;
+
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -39,7 +41,7 @@ class FormTranslation
 	const SUB_DB_VALUE = 'dbValue';
 
 	/** @var array */
-	private $_formConfig = null;
+	private $_formConfig;
 
 
 	/**
@@ -48,29 +50,28 @@ class FormTranslation
 
 	public function __construct()
 	{
-		$this->_formConfig = array(
-			'all' => array(
+		$this->_formConfig = [
+			'all' => [
 				self::SUB_LABEL => _nx_noop('All', 'All', 'forms', 'onoffice'),
 				self::SUB_DB_VALUE => null,
-			),
-			Form::TYPE_CONTACT => array(
+			],
+			Form::TYPE_CONTACT => [
 				self::SUB_LABEL => _nx_noop('Contact Form', 'Contact Forms', 'forms', 'onoffice'),
 				self::SUB_DB_VALUE => Form::TYPE_CONTACT,
-			),
-			Form::TYPE_INTEREST => array(
+			],
+			Form::TYPE_INTEREST => [
 				self::SUB_LABEL => _nx_noop('Interest Form', 'Interest Forms', 'forms', 'onoffice'),
 				self::SUB_DB_VALUE => Form::TYPE_INTEREST,
-			),
-			Form::TYPE_OWNER => array(
+			],
+			Form::TYPE_OWNER => [
 				self::SUB_LABEL => _nx_noop('Owner Form', 'Owner Forms', 'forms', 'onoffice'),
 				self::SUB_DB_VALUE => Form::TYPE_OWNER,
-			),
-			Form::TYPE_APPLICANT_SEARCH => array(
+			],
+			Form::TYPE_APPLICANT_SEARCH => [
 				self::SUB_LABEL => _nx_noop('Applicant Search Form', 'Applicant Search Forms', 'forms', 'onoffice'),
 				self::SUB_DB_VALUE => Form::TYPE_APPLICANT_SEARCH,
-			),
-		);
-
+			],
+		];
 	}
 
 
@@ -82,7 +83,7 @@ class FormTranslation
 	 *
 	 */
 
-	public function getPluralTranslationForForm($formType, $count)
+	public function getPluralTranslationForForm(string $formType, int $count): string
 	{
 		$formConfig = $this->getFormConfig();
 		$label = $formConfig[$formType] ?? null;
@@ -91,6 +92,6 @@ class FormTranslation
 	}
 
 	/** @return array */
-	public function getFormConfig()
+	public function getFormConfig(): array
 		{ return $this->_formConfig; }
 }

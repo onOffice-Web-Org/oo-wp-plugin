@@ -28,17 +28,14 @@ use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\Types\FieldTypes;
-use WP_UnitTestCase;
+
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
 class TestClassFilterBuilderInputVariables
-	extends WP_UnitTestCase
+	extends WP_UnitTest_Localized
 {
 	/**
 	 *

@@ -19,24 +19,41 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
-use WP_Locale_Switcher;
+use Exception;
 use WP_UnitTestCase;
+use const ONOFFICE_PLUGIN_DIR;
+use function determine_locale;
+use function is_textdomain_loaded;
+use function load_textdomain;
+use function restore_current_locale;
+use function switch_to_locale;
+use function unload_textdomain;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
+ * @backupGlobals disabled
  *
  */
 
 abstract class WP_UnitTest_Localized
 	extends WP_UnitTestCase
 {
-	/** @var string */
-	private $_localeBackup = null;
+	/** @var bool */
+	private $_localeSwitched = false;
 
+
+	/**
+	 *
+	 */
+
+	public static function setUpBeforeClass()
+	{
+		parent::setUpBeforeClass();
+	}
 
 	/**
 	 *
@@ -45,24 +62,35 @@ abstract class WP_UnitTest_Localized
 	public function setUp()
 	{
 		parent::setUp();
-		$this->_localeBackup = get_locale();
-
 		$this->switchLocale('de_DE');
 	}
 
 
 	/**
 	 *
-	 * @param string $locale
-	 * @return bool
+	 * @global array $l10n
+	 * @param string $newLocale
+	 * @throws Exception
 	 *
 	 */
 
-	protected function switchLocale(string $locale)
+	protected function switchLocale(string $newLocale)
 	{
-		$pLocaleSwitcher = new WP_Locale_Switcher();
-		$pLocaleSwitcher->init();
-		return $pLocaleSwitcher->switch_to_locale($locale);
+		global $l10n;
+
+		if (!is_textdomain_loaded('onoffice') && $newLocale !== 'en_US') {
+			load_textdomain('onoffice', ONOFFICE_PLUGIN_DIR.'/languages/onoffice-'.$newLocale.'.mo');
+			if (!array_key_exists('onoffice', $l10n ?? [])) {
+				throw new Exception('Textdomain not added');
+			}
+		}
+
+		if (determine_locale() !== $newLocale) {
+			if (!switch_to_locale($newLocale)) {
+				throw new Exception('Failed to switch locale '.$newLocale);
+			}
+			$this->_localeSwitched = true;
+		}
 	}
 
 
@@ -72,7 +100,19 @@ abstract class WP_UnitTest_Localized
 
 	public function tearDown()
 	{
+		if ($this->_localeSwitched) {
+			restore_current_locale();
+		}
 		parent::tearDown();
-		$this->switchLocale($this->_localeBackup);
+	}
+
+	/**
+	 *
+	 */
+
+	public static function tearDownAfterClass()
+	{
+		unload_textdomain('onoffice');
+		parent::tearDownAfterClass();
 	}
 }
