@@ -68,12 +68,13 @@ class FormModelBuilderDBEstateListSettings
 
 	/**
 	 *
+	 * @param string $pageSlug
 	 * @param int $listViewId
 	 * @return FormModel
 	 *
 	 */
 
-	public function generate($listViewId = null)
+	public function generate(string $pageSlug, $listViewId = null): FormModel
 	{
 		if ($listViewId !== null)
 		{
@@ -95,7 +96,7 @@ class FormModelBuilderDBEstateListSettings
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('List View', 'onoffice'));
 		$pFormModel->setGroupSlug('onoffice-listview-settings-main');
-		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setPageSlug($pageSlug);
 
 		return $pFormModel;
 	}

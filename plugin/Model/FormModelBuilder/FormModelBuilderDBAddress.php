@@ -51,13 +51,10 @@ class FormModelBuilderDBAddress
 
 	/**
 	 *
-	 * @param string $pageSlug
-	 *
 	 */
 
-	public function __construct($pageSlug)
+	public function __construct()
 	{
-		parent::__construct($pageSlug);
 		$pInputModelDBFactoryConfig = new InputModelDBFactoryConfigAddress();
 		$pInputModelDBFactory = new InputModelDBFactory($pInputModelDBFactoryConfig);
 		$this->setInputModelDBFactory($pInputModelDBFactory);
@@ -73,7 +70,7 @@ class FormModelBuilderDBAddress
 	 *
 	 */
 
-	public function generate($listViewId = null)
+	public function generate(string $pageSlug, $listViewId = null): FormModel
 	{
 		$this->setValues([
 			'recordsPerPage' => self::DEFAULT_RECORDS_PER_PAGE,
@@ -96,7 +93,7 @@ class FormModelBuilderDBAddress
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('List View', 'onoffice'));
 		$pFormModel->setGroupSlug('onoffice-listview-address-settings-main');
-		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setPageSlug($pageSlug);
 
 		return $pFormModel;
 	}

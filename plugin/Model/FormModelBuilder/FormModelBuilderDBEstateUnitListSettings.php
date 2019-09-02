@@ -64,12 +64,13 @@ class FormModelBuilderDBEstateUnitListSettings
 
 	/**
 	 *
+	 * @param string $pageSlug
 	 * @param int $listViewId
 	 * @return FormModel
 	 *
 	 */
 
-	public function generate($listViewId = null)
+	public function generate(string $pageSlug, $listViewId = null): FormModel
 	{
 		if ($listViewId !== null) {
 			$pRecordReadManager = new RecordManagerReadListViewEstate();
@@ -84,7 +85,7 @@ class FormModelBuilderDBEstateUnitListSettings
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Unit List', 'onoffice'));
 		$pFormModel->setGroupSlug('onoffice-unitlist-settings');
-		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setPageSlug($pageSlug);
 
 		return $pFormModel;
 	}

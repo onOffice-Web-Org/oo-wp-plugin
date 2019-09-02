@@ -71,8 +71,8 @@ class AdminPageEstateListSettings
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$pFormModelBuilder = new FormModelBuilderDBEstateListSettings($this->getPageSlug());
-		$pFormModel = $pFormModelBuilder->generate($this->getListViewId());
+		$pFormModelBuilder = new FormModelBuilderDBEstateListSettings();
+		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);
 
 		$pInputModelName = $pFormModelBuilder->createInputModelName();

@@ -70,8 +70,8 @@ class AdminPageAddressListSettings
 
 	protected function buildForms()
 	{
-		$this->_pFormModelBuilderAddress = new FormModelBuilderDBAddress($this->getPageSlug());
-		$pFormModel = $this->_pFormModelBuilderAddress->generate($this->getListViewId());
+		$this->_pFormModelBuilderAddress = new FormModelBuilderDBAddress();
+		$pFormModel = $this->_pFormModelBuilderAddress->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);
 
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);

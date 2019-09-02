@@ -40,13 +40,10 @@ abstract class FormModelBuilderDBEstate
 {
 	/**
 	 *
-	 * @param string $pageSlug
-	 *
 	 */
 
-	public function __construct($pageSlug)
+	public function __construct()
 	{
-		parent::__construct($pageSlug);
 		$pConfig = new InputModelDBFactoryConfigEstate();
 		$this->setInputModelDBFactory(new InputModelDBFactory($pConfig));
 

@@ -269,8 +269,8 @@ class AdminPageEstateDetail
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$pFormModelBuilder = new FormModelBuilderEstateDetailSettings($this->getPageSlug());
-		$pFormModel = $pFormModelBuilder->generate();
+		$pFormModelBuilder = new FormModelBuilderEstateDetailSettings();
+		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug());
 		$this->addFormModel($pFormModel);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
