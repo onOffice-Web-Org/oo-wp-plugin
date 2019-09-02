@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice direct 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2019-08-15T16:27:17+02:00\n"
-"PO-Revision-Date: 2019-08-15 16:41+0200\n"
+"POT-Creation-Date: 2019-09-02T16:20:44+02:00\n"
+"PO-Revision-Date: 2019-09-02 16:24+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -43,12 +43,12 @@ msgstr "https://de.onoffice.com/"
 msgid "Please configure your onOffice API credentials first!"
 msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
 
-#: plugin/ContentFilter.php:169
+#: plugin/ContentFilter.php:173
 msgid "Estates view not found."
 msgstr "Immobilienansicht nicht gefunden."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
-#: plugin/ContentFilter.php:312
+#: plugin/ContentFilter.php:316
 msgid "%2$s (%3$s) in %4$s - %5$s"
 msgstr "%2$s (%3$s) in %4$s - %5$s"
 
@@ -57,7 +57,7 @@ msgstr "%2$s (%3$s) in %4$s - %5$s"
 #: plugin/Gui/AdminPageEstateDetail.php:206
 #: plugin/Gui/AdminPageEstateList.php:63
 #: plugin/Gui/AdminPageEstateUnitList.php:65
-#: plugin/Gui/AdminPageFormList.php:164
+#: plugin/Gui/AdminPageFormList.php:186
 msgid "onOffice"
 msgstr "onOffice"
 
@@ -72,26 +72,26 @@ msgid "Estates"
 msgstr "Immobilien"
 
 #: plugin/Controller/AdminViewController.php:177
-#: plugin/Gui/AdminPageFormList.php:93
+#: plugin/Gui/AdminPageFormList.php:97
 msgid "Forms"
 msgstr "Formulare"
 
-#: plugin/Controller/AdminViewController.php:190
+#: plugin/Controller/AdminViewController.php:191
 msgid "Modules"
 msgstr "Module"
 
-#: plugin/Controller/AdminViewController.php:214
 #: plugin/Controller/AdminViewController.php:215
-#: plugin/Controller/AdminViewController.php:364
+#: plugin/Controller/AdminViewController.php:216
+#: plugin/Controller/AdminViewController.php:365
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: plugin/Controller/AdminViewController.php:382
+#: plugin/Controller/AdminViewController.php:383
 msgid "API token and secret"
 msgstr "API-Token und Secret"
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:385
+#: plugin/Controller/AdminViewController.php:386
 msgid ""
 "It looks like you did not enter any valid API credentials. Please consider "
 "reviewing your %s."
@@ -112,11 +112,11 @@ msgstr "Suchkriterium"
 msgid "Form Specific Fields"
 msgstr "Formspezifische Felder"
 
-#: plugin/Field/DistinctFieldsHandlerModelBuilder.php:132
+#: plugin/Field/DistinctFieldsScriptRegistrator.php:79
 msgid "Not specified"
 msgstr "Keine Angaben"
 
-#: plugin/Field/DistinctFieldsHandlerModelBuilder.php:133
+#: plugin/Field/DistinctFieldsScriptRegistrator.php:80
 #: templates.dist/fields.php:77 templates.dist/fields.php:147
 msgid "Edit values"
 msgstr "Werte bearbeiten"
@@ -158,7 +158,7 @@ msgstr "Formular wurde nicht gelöscht."
 
 #: plugin/Gui/AdminPageAddressList.php:76 plugin/Gui/AdminPageEstateList.php:75
 #: plugin/Gui/AdminPageEstateUnitList.php:77
-#: plugin/Gui/AdminPageFormList.php:188
+#: plugin/Gui/AdminPageFormList.php:208
 msgid "Add New"
 msgstr "Neu"
 
@@ -217,64 +217,64 @@ msgstr ""
 "Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte gehen Sie zurück "
 "und prüfen Ihr %s."
 
-#: plugin/Gui/AdminPageApiSettings.php:72
+#: plugin/Gui/AdminPageApiSettings.php:68
 msgid "API token"
 msgstr "API-Token"
 
-#: plugin/Gui/AdminPageApiSettings.php:73
+#: plugin/Gui/AdminPageApiSettings.php:69
 msgid "API secret"
 msgstr "API-Secret"
 
-#: plugin/Gui/AdminPageApiSettings.php:90
+#: plugin/Gui/AdminPageApiSettings.php:86
 msgid "API settings"
 msgstr "API Einstellungen"
 
-#: plugin/Gui/AdminPageApiSettings.php:102
+#: plugin/Gui/AdminPageApiSettings.php:98
 msgid "Site Key"
 msgstr "Site Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:103
+#: plugin/Gui/AdminPageApiSettings.php:99
 msgid "Secret Key"
 msgstr "Secret Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:124
+#: plugin/Gui/AdminPageApiSettings.php:120
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:139
-#: plugin/Gui/AdminPageApiSettings.php:149
+#: plugin/Gui/AdminPageApiSettings.php:135
+#: plugin/Gui/AdminPageApiSettings.php:145
 msgid "Google Maps Key"
 msgstr "Google Maps-Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:190
+#: plugin/Gui/AdminPageApiSettings.php:172
 msgid "The keys are OK."
 msgstr "Die Keys sind OK."
 
-#: plugin/Gui/AdminPageApiSettings.php:191
+#: plugin/Gui/AdminPageApiSettings.php:173
 msgid "There was an error:"
 msgstr "Ein Fehler ist aufgetreten:"
 
-#: plugin/Gui/AdminPageApiSettings.php:192
+#: plugin/Gui/AdminPageApiSettings.php:174
 msgid "The secret parameter is missing."
 msgstr "Der Secret-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:193
+#: plugin/Gui/AdminPageApiSettings.php:175
 msgid "The secret parameter is invalid or malformed."
 msgstr "Der Secret-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:194
+#: plugin/Gui/AdminPageApiSettings.php:176
 msgid "The response parameter is missing."
 msgstr "Der reponse-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:195
+#: plugin/Gui/AdminPageApiSettings.php:177
 msgid "The response parameter is invalid or malformed."
 msgstr "Der response-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:196
+#: plugin/Gui/AdminPageApiSettings.php:178
 msgid "The request is invalid or malformed."
 msgstr "Die Anfrage ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:207
+#: plugin/Gui/AdminPageApiSettings.php:189
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -283,7 +283,7 @@ msgstr ""
 "Sie können reCAPTCHA jedoch schon für die spätere Verwendung in den "
 "Formularen aktivieren."
 
-#: plugin/Gui/AdminPageApiSettings.php:248
+#: plugin/Gui/AdminPageApiSettings.php:225
 msgid "The cache was cleaned."
 msgstr "Der Cache wurde geleert."
 
@@ -345,7 +345,7 @@ msgstr "Die Detailansicht wurde gespeichert."
 msgid "There was a problem saving the detail view."
 msgstr "Es ist einen Fehler beim Speichern der Detailansicht aufgetreten."
 
-#: plugin/Gui/AdminPageEstateList.php:104 plugin/Gui/AdminPageFormList.php:145
+#: plugin/Gui/AdminPageEstateList.php:104 plugin/Gui/AdminPageFormList.php:147
 msgid "Are you sure you want to delete the selected items?"
 msgstr "Möchten Sie das ausgewählte Element wirklich löschen?"
 
@@ -471,7 +471,7 @@ msgstr "Name der Ansicht"
 #: plugin/Gui/Table/EstateListTable.php:239
 #: plugin/Gui/Table/EstateUnitsTable.php:65
 #: plugin/Gui/Table/EstateUnitsTable.php:118
-#: plugin/Gui/Table/FormsTable.php:128 plugin/Gui/Table/FormsTable.php:153
+#: plugin/Gui/Table/FormsTable.php:125 plugin/Gui/Table/FormsTable.php:150
 msgid "Shortcode"
 msgstr "Shortcode"
 
@@ -530,16 +530,16 @@ msgstr ""
 "Sie sind dabei, die Einheitenliste '%s' zu löschen.\n"
 "Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
-#: plugin/Gui/Table/FormsTable.php:126 plugin/Gui/Table/FormsTable.php:151
+#: plugin/Gui/Table/FormsTable.php:123 plugin/Gui/Table/FormsTable.php:148
 msgid "Name of Form"
 msgstr "Formularname"
 
-#: plugin/Gui/Table/FormsTable.php:127 plugin/Gui/Table/FormsTable.php:152
+#: plugin/Gui/Table/FormsTable.php:124 plugin/Gui/Table/FormsTable.php:149
 msgid "Type of Form"
 msgstr "Formularart"
 
 #. translators: %s is the name of the form.
-#: plugin/Gui/Table/FormsTable.php:266
+#: plugin/Gui/Table/FormsTable.php:260
 msgid ""
 "You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -794,40 +794,61 @@ msgstr "Bearbeiten"
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
-#: plugin/Translation/FormTranslation.php:53
+#: plugin/Translation/FormTranslation.php:55
 msgctxt "forms"
 msgid "All"
 msgid_plural "All"
 msgstr[0] "Alle"
 msgstr[1] "Alle"
 
-#: plugin/Translation/FormTranslation.php:57
+#: plugin/Translation/FormTranslation.php:59
 msgctxt "forms"
 msgid "Contact Form"
 msgid_plural "Contact Forms"
 msgstr[0] "Kontaktformular"
 msgstr[1] "Kontaktformulare"
 
-#: plugin/Translation/FormTranslation.php:61
+#: plugin/Translation/FormTranslation.php:63
 msgctxt "forms"
 msgid "Interest Form"
 msgid_plural "Interest Forms"
 msgstr[0] "Interessentenformular"
 msgstr[1] "Interessentenformulare"
 
-#: plugin/Translation/FormTranslation.php:65
+#: plugin/Translation/FormTranslation.php:67
 msgctxt "forms"
 msgid "Owner Form"
 msgid_plural "Owner Forms"
 msgstr[0] "Eigentümerformular"
 msgstr[1] "Eigentümerformulare"
 
-#: plugin/Translation/FormTranslation.php:69
+#: plugin/Translation/FormTranslation.php:71
 msgctxt "forms"
 msgid "Applicant Search Form"
 msgid_plural "Applicant Search Forms"
 msgstr[0] "Interessentensuchformular"
 msgstr[1] "Interessentensuchformulare"
+
+#: plugin/Translation/ModuleTranslation.php:79
+msgctxt "modules"
+msgid "Address"
+msgid_plural "Addresses"
+msgstr[0] "Adresse"
+msgstr[1] "Adressen"
+
+#: plugin/Translation/ModuleTranslation.php:80
+msgctxt "modules"
+msgid "Estate"
+msgid_plural "Estates"
+msgstr[0] "Immobilie"
+msgstr[1] "Immobilien"
+
+#: plugin/Translation/ModuleTranslation.php:81
+msgctxt "modules"
+msgid "Search Criteria"
+msgid_plural "Search Criteria"
+msgstr[0] "Suchkriterium"
+msgstr[1] "Suchkriterien"
 
 #: plugin/Types/EstateStatusLabel.php:108
 msgid "rented"

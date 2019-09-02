@@ -19,27 +19,19 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Translation;
 
 use onOffice\SDK\onOfficeSDK;
 
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
 class ModuleTranslation
 {
-	/** @var array */
-	private static $_moduleTranslationSingular = array(
-		onOfficeSDK::MODULE_ADDRESS => 'Address',
-		onOfficeSDK::MODULE_ESTATE => 'Estate',
-		onOfficeSDK::MODULE_SEARCHCRITERIA => 'Search Criteria',
-	);
-
-
 	/**
 	 *
 	 * @param string $module
@@ -47,45 +39,46 @@ class ModuleTranslation
 	 *
 	 */
 
-	public static function getLabelSingular($module)
+	public static function getLabelSingular(string $module): string
 	{
-		$result = null;
-		if (array_key_exists($module, self::$_moduleTranslationSingular)) {
-			$result = self::$_moduleTranslationSingular[$module];
+		$noopedPlural = self::getModuleTranslations()[$module] ?? [];
+
+		if ($noopedPlural !== []) {
+			return translate_nooped_plural($noopedPlural, 1, 'onoffice');
 		}
-		return $result;
+
+		return '';
 	}
 
 
 	/**
 	 *
-	 * @param bool $translate
 	 * @return array
 	 *
 	 */
 
-	public static function getAllLabelsSingular($translate = false)
+	public static function getAllLabelsSingular(): array
 	{
-		$result = null;
-		if ($translate) {
-			$result = array_map(__CLASS__.'::translateValue', self::$_moduleTranslationSingular);
-		} else {
-			$result = self::$_moduleTranslationSingular;
-		}
+		$result = array_map(function(array $value): string {
+			return translate_nooped_plural($value, 1, 'onoffice');
+		}, self::getModuleTranslations());
+
 		return $result;
 	}
 
 
 	/**
 	 *
-	 * @internal for callback in method getAllLabelsSingular() only
-	 * @param string $value
-	 * @return string
+	 * @return array
 	 *
 	 */
 
-	public static function translateValue($value)
+	private static function getModuleTranslations(): array
 	{
-		return __($value, 'onoffice');
+		return [
+			onOfficeSDK::MODULE_ADDRESS => _nx_noop('Address', 'Addresses', 'modules', 'onoffice'),
+			onOfficeSDK::MODULE_ESTATE => _nx_noop('Estate', 'Estates', 'modules', 'onoffice'),
+			onOfficeSDK::MODULE_SEARCHCRITERIA => _nx_noop('Search Criteria', 'Search Criteria', 'modules', 'onoffice'),
+		];
 	}
 }
