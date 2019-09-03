@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,12 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Record;
 
+use wpdb;
+
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -32,6 +34,21 @@ class RecordManagerDeleteListViewEstate
 	extends RecordManager
 	implements RecordManagerDelete
 {
+	/** @var wpdb */
+	private $_pWPDB;
+
+
+	/**
+	 *
+	 * @param wpdb $pWPDB
+	 *
+	 */
+
+	public function __construct(wpdb $pWPDB)
+	{
+		$this->_pWPDB = $pWPDB;
+	}
+
 	/**
 	 *
 	 * @param array $ids
@@ -40,15 +57,13 @@ class RecordManagerDeleteListViewEstate
 
 	public function deleteByIds(array $ids)
 	{
-		$prefix = $this->getTablePrefix();
-		$pWpdb = $this->getWpdb();
+		$prefix = $this->_pWPDB->prefix;
 
-		foreach ($ids as $id)
-		{
-			$pWpdb->delete($prefix.'oo_plugin_listviews', array('listview_id' => $id));
-			$pWpdb->delete($prefix.'oo_plugin_fieldconfig', array('listview_id' => $id));
-			$pWpdb->delete($prefix.'oo_plugin_picturetypes', array('listview_id' => $id));
-			$pWpdb->delete($prefix.'oo_plugin_listview_contactperson', array('listview_id' => $id));
+		foreach ($ids as $id) {
+			$this->_pWPDB->delete($prefix.'oo_plugin_listviews', ['listview_id' => $id]);
+			$this->_pWPDB->delete($prefix.'oo_plugin_fieldconfig', ['listview_id' => $id]);
+			$this->_pWPDB->delete($prefix.'oo_plugin_picturetypes', ['listview_id' => $id]);
+			$this->_pWPDB->delete($prefix.'oo_plugin_listview_contactperson', ['listview_id' => $id]);
 		}
 	}
 }
