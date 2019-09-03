@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2018-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,12 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\WPlugin\Record;
 
+use wpdb;
+
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -32,6 +34,22 @@ class RecordManagerDeleteListViewAddress
 	extends RecordManager
 	implements RecordManagerDelete
 {
+	/** @var wpdb */
+	private $_pWPDB;
+
+
+	/**
+	 *
+	 * @param wpdb $pWPDB
+	 *
+	 */
+
+	public function __construct(wpdb $pWPDB)
+	{
+		$this->_pWPDB = $pWPDB;
+	}
+
+
 	/**
 	 *
 	 * @param array $ids
@@ -40,13 +58,12 @@ class RecordManagerDeleteListViewAddress
 
 	public function deleteByIds(array $ids)
 	{
-		$prefix = $this->getTablePrefix();
-		$pWpdb = $this->getWpdb();
+		$prefix = $this->_pWPDB->prefix;
+		$pWpdb = $this->_pWPDB;
 
-		foreach ($ids as $id)
-		{
-			$pWpdb->delete($prefix.'oo_plugin_listviews_address', array('listview_address_id' => $id));
-			$pWpdb->delete($prefix.'oo_plugin_address_fieldconfig', array('listview_address_id' => $id));
+		foreach ($ids as $id) {
+			$pWpdb->delete($prefix.'oo_plugin_listviews_address', ['listview_address_id' => $id]);
+			$pWpdb->delete($prefix.'oo_plugin_address_fieldconfig', ['listview_address_id' => $id]);
 		}
 	}
 }
