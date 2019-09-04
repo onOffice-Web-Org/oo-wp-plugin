@@ -24,9 +24,11 @@ namespace onOffice\WPlugin\Gui;
 use DI\Container;
 use DI\ContainerBuilder;
 use Exception;
+use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\Form\BulkFormDelete;
+use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\Table\FormsTable;
+use onOffice\WPlugin\Record\RecordManagerDeleteForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
@@ -219,13 +221,17 @@ class AdminPageFormList
 
 	private function registerDeleteAction(Container $pDI)
 	{
-		$pBulkFormDelete = $pDI->get(BulkFormDelete::class);
+		/* @var $pBulkDeleteRecord BulkDeleteRecord */
+		$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
+		/* @var $pRecordManagerDeleteForm RecordManagerDeleteForm */
+		$pRecordManagerDeleteForm = $pDI->get(RecordManagerDeleteForm::class);
 		$pClosureDeleteForm = function(string $redirectTo, string $doaction, array $formIds)
-			use ($pBulkFormDelete): string
+			use ($pBulkDeleteRecord, $pRecordManagerDeleteForm): string
 		{
 			if (in_array($doaction, ['delete', 'bulk_delete'])) {
 				check_admin_referer('bulk-forms');
-				$itemsDeleted = $pBulkFormDelete->delete($doaction, $formIds);
+				$capability = UserCapabilities::RULE_EDIT_VIEW_FORM;
+				$itemsDeleted = $pBulkDeleteRecord->delete($pRecordManagerDeleteForm, $capability, $formIds);
 				$redirectTo = add_query_arg('delete', $itemsDeleted,
 					admin_url('admin.php?page=onoffice-forms'));
 			}

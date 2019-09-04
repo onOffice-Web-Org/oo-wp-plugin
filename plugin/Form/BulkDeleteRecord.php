@@ -25,64 +25,46 @@ namespace onOffice\WPlugin\Form;
 
 use Exception;
 use onOffice\WPlugin\Controller\UserCapabilities;
-use onOffice\WPlugin\Record\RecordManagerDeleteForm;
-use onOffice\WPlugin\WP\WPQueryWrapper;
-use function current_user_can;
+use onOffice\WPlugin\Record\RecordManagerDelete;
 
 /**
  *
  */
 
-class BulkFormDelete
+class BulkDeleteRecord
 {
-	/** @var RecordManagerDeleteForm */
-	private $_pRecordManagerDeleteForm;
-
-	/** @var WPQueryWrapper */
-	private $_pWPQueryWrapper;
-
 	/** @var UserCapabilities */
 	private $_pUserCapabilities;
 
 
 	/**
 	 *
-	 * @param RecordManagerDeleteForm $pRecordManagerDeleteForm
-	 * @param WPQueryWrapper $pWPQueryWrapper
 	 * @param UserCapabilities $pUserCapabilities
 	 *
 	 */
 
 	public function __construct(
-		RecordManagerDeleteForm $pRecordManagerDeleteForm,
-		WPQueryWrapper $pWPQueryWrapper,
 		UserCapabilities $pUserCapabilities)
 	{
-		$this->_pRecordManagerDeleteForm = $pRecordManagerDeleteForm;
-		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 		$this->_pUserCapabilities = $pUserCapabilities;
 	}
 
 
 	/**
 	 *
+	 * @param RecordManagerDelete $pRecordManagerDelete
+	 * @param string $capability
+	 * @param array $records
 	 * @return int
-	 * @throws Exception
 	 *
 	 */
 
-	public function delete(string $action, array $records): int
+	public function delete(RecordManagerDelete $pRecordManagerDelete, string $capability, array $records): int
 	{
-		$this->doPreChecks();
+		$this->doPreChecks($capability);
 
-		switch ($action) {
-			case 'delete':
-			case 'bulk_delete':
-				$this->_pRecordManagerDeleteForm->deleteByIds($records);
-				return count($records);
-		}
-
-		return 0;
+		$pRecordManagerDelete->deleteByIds($records);
+		return count($records);
 	}
 
 
@@ -92,12 +74,8 @@ class BulkFormDelete
 	 *
 	 */
 
-	private function doPreChecks()
+	private function doPreChecks(string $capability)
 	{
-		$roleEditForms = $this->_pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_FORM);
-
-		if (!current_user_can($roleEditForms)) {
-			throw new Exception('Not allowed');
-		}
+		$this->_pUserCapabilities->checkIfCurrentUserCan($capability);
 	}
 }

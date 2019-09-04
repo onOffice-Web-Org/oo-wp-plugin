@@ -25,11 +25,10 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Controller\UserCapabilities;
 use WP_UnitTestCase;
+use function wp_get_current_user;
+
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
  *
  */
 
@@ -64,5 +63,44 @@ class TestClassUserCapabilities
 	{
 		$pUserCapabilities = new UserCapabilities();
 		$pUserCapabilities->getCapabilityForRule('unknown');
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testCheckIfCurrentUserCanSuccess()
+	{
+		wp_get_current_user()->add_cap('edit_pages');
+		$pUserCapabilities = new UserCapabilities();
+		$this->assertNull($pUserCapabilities->checkIfCurrentUserCan(UserCapabilities::RULE_EDIT_VIEW_FORM));
+	}
+
+
+	/**
+	 *
+	 * @expectedException \onOffice\WPlugin\Controller\Exception\UserCapabilitiesException
+	 *
+	 */
+
+	public function testCheckIfCurrentUserCanFail()
+	{
+		wp_get_current_user()->remove_cap('edit_pages');
+
+		$pUserCapabilities = new UserCapabilities();
+		$pUserCapabilities->checkIfCurrentUserCan(UserCapabilities::RULE_EDIT_VIEW_FORM);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function tearDown()
+	{
+		wp_get_current_user()->remove_cap('edit_pages');
+
+		parent::tearDown();
 	}
 }

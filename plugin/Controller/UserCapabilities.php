@@ -23,7 +23,9 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use onOffice\WPlugin\Controller\Exception\UserCapabilitiesException;
 use UnexpectedValueException;
+use function current_user_can;
 
 /**
  *
@@ -84,5 +86,22 @@ class UserCapabilities
 		}
 
 		throw new UnexpectedValueException($rule);
+	}
+
+
+	/**
+	 *
+	 * @param string $rule
+	 * @throws UserCapabilitiesException
+	 *
+	 */
+
+	public function checkIfCurrentUserCan(string $rule)
+	{
+		$capability = $this->getCapabilityForRule($rule);
+
+		if (!current_user_can($capability)) {
+			throw new UserCapabilitiesException();
+		}
 	}
 }
