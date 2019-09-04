@@ -53,9 +53,6 @@ class TestClassFormPostInterest
 	/** @var FormPostConfigurationTest */
 	private $_pFormPostConfiguration = null;
 
-	/** @var FormPostInterestConfigurationTest */
-	private $_pFormPostInterestConfiguration = null;
-
 	/** @var FormPostInterest */
 	private $_pFormPostInterest = null;
 
@@ -105,11 +102,11 @@ class TestClassFormPostInterest
 		]));
 
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
-		$this->_pFormPostInterestConfiguration = new FormPostInterestConfigurationTest
+		$pFormPostInterestConfiguration = new FormPostInterestConfigurationTest
 			($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields);
 
 		$this->_pFormPostInterest = new FormPostInterest($this->_pFormPostConfiguration,
-			$this->_pFormPostInterestConfiguration);
+			$pFormPostInterestConfiguration);
 	}
 
 
@@ -130,7 +127,6 @@ class TestClassFormPostInterest
 		];
 
 		$this->_pFormPostConfiguration->setPostVariables($postVariables);
-		$this->_pFormPostInterestConfiguration->setPostValues($postVariables);
 		$this->addApiResponseCreateAddress(true);
 		$this->addApiResponseCreateSearchCriteria(true);
 		$this->addApiResponseSendMail(true);
@@ -168,7 +164,6 @@ class TestClassFormPostInterest
 		];
 
 		$this->_pFormPostConfiguration->setPostVariables($postVariables);
-		$this->_pFormPostInterestConfiguration->setPostValues($postVariables);
 		$this->_pFormPostConfiguration->getLogger()
 			->expects($this->exactly(count($unsuccessfulCombinations)))->method('logError');
 
@@ -194,9 +189,8 @@ class TestClassFormPostInterest
 		$postValues = [
 			'Vorname' => 'John',
 		];
-		$this->_pFormPostConfiguration->setPostVariables($postValues);
-		$this->_pFormPostInterestConfiguration->setPostValues($postValues);
 
+		$this->_pFormPostConfiguration->setPostVariables($postValues);
 		$this->_pFormPostInterest->initialCheck($pConfig, 3);
 		$pFormData = $this->_pFormPostInterest->getFormDataInstance('interestform', 3);
 

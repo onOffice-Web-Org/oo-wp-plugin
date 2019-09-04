@@ -37,9 +37,6 @@ use onOffice\WPlugin\SDKWrapper;
 class FormPostInterestConfigurationTest
 	implements FormPostInterestConfiguration
 {
-	/** @var array */
-	private $_postValues = [];
-
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
@@ -70,18 +67,6 @@ class FormPostInterestConfigurationTest
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	public function getPostValues(): array
-	{
-		return $this->_postValues;
-	}
-
-
-	/**
-	 *
 	 * @return SDKWrapper
 	 *
 	 */
@@ -89,18 +74,6 @@ class FormPostInterestConfigurationTest
 	public function getSDKWrapper(): SDKWrapper
 	{
 		return $this->_pSDKWrapper;
-	}
-
-
-	/**
-	 *
-	 * @param array $postValues
-	 *
-	 */
-
-	public function setPostValues(array $postValues)
-	{
-		$this->_postValues = $postValues;
 	}
 
 
