@@ -468,7 +468,7 @@ class FormModelBuilderDBForm
 
 	public function callbackValueInputModelModule(InputModelBase $pInputModel, $key)
 	{
-		$module = null;
+		$module = '';
 		$pFieldsCollection = $this->getFieldsCollection();
 		foreach ($this->_formModules as $formModule) {
 			if ($pFieldsCollection->containsFieldByModule($formModule ?? '', $key)) {
@@ -476,7 +476,7 @@ class FormModelBuilderDBForm
 				break;
 			}
 		}
-		$moduleTranslated = __(ModuleTranslation::getLabelSingular($module), 'onoffice');
+		$moduleTranslated = __(ModuleTranslation::getLabelSingular($module ?? ''), 'onoffice');
 		$label = sprintf(__('Module: %s', 'onoffice'), $moduleTranslated);
 		$pInputModel->setLabel($label);
 		$pInputModel->setValue($module);
