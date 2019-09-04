@@ -47,18 +47,18 @@ class ListTableBulkActionsHandler
 
 	/**
 	 *
-	 * @param RequestVariablesSanitizer $pRequestVariableSanizer
+	 * @param RequestVariablesSanitizer $pRequestVariableSanitizer
 	 * @param WPNonceWrapper $pWPNonceWrapper
 	 * @param WPScreenWrapper $pWPScreenWrapper
 	 *
 	 */
 
 	public function __construct(
-		RequestVariablesSanitizer $pRequestVariableSanizer,
+		RequestVariablesSanitizer $pRequestVariableSanitizer,
 		WPNonceWrapper $pWPNonceWrapper,
 		WPScreenWrapper $pWPScreenWrapper)
 	{
-		$this->_pRequestVariableSanitizer = $pRequestVariableSanizer;
+		$this->_pRequestVariableSanitizer = $pRequestVariableSanitizer;
 		$this->_pWPNonceWrapper = $pWPNonceWrapper;
 		$this->_pWPScreenWrapper = $pWPScreenWrapper;
 	}
