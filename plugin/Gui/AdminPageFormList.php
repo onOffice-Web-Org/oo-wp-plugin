@@ -83,10 +83,6 @@ class AdminPageFormList
 		{
 			throw new Exception('Unknown Form type');
 		}
-
-
-		$this->_pFormsTable = new FormsTable();
-		$this->_pFormsTable->setListType($tab);
 	}
 
 
@@ -163,6 +159,8 @@ class AdminPageFormList
 
 	public function preOutput()
 	{
+		$this->_pFormsTable = new FormsTable();
+		$this->_pFormsTable->setListType($this->getTab());
 		$this->_pFormsTable->prepare_items();
 		$pDIBuilder = new ContainerBuilder();
 		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
