@@ -28,7 +28,9 @@ use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\WP\WPNonceWrapper;
 use onOffice\WPlugin\WP\WPScreenWrapper;
+use WP_List_Table;
 use WP_UnitTestCase;
+use function add_filter;
 
 
 /**
@@ -106,9 +108,25 @@ class TestClassListTableBulkActionsHandler
 			return 'https://example.org/cde';
 		}, 10, 3);
 
-		$pListTableBulkActionsHandler->processBulkAction($pListTable);
+		add_filter('handle_bulk_actions-table-'.__CLASS__, function() use ($pListTable): WP_List_Table {
+			return $pListTable;
+		});
+
+		$pListTableBulkActionsHandler->processBulkAction();
 
 		$this->assertSame($expectsCallbackCall, $functionCalled);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testEmptyTable()
+	{
+		$pListTableBulkActionsHandler = new ListTableBulkActionsHandler
+			($this->_pRequestVariablesSanitizer, $this->_pWPNonceWrapper, $this->_pWPScreenWrapper);
+		$this->assertNull($pListTableBulkActionsHandler->processBulkAction());
 	}
 
 

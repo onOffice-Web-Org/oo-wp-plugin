@@ -23,7 +23,6 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\WP;
 
-use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPNonceWrapper;
@@ -66,13 +65,19 @@ class ListTableBulkActionsHandler
 
 	/**
 	 *
-	 * @param ListTable $pListTable
 	 * @return void
 	 *
 	 */
 
-	public function processBulkAction(ListTable $pListTable)
+	public function processBulkAction()
 	{
+		$currentScreen = $this->_pWPScreenWrapper->getID();
+		$pListTable = apply_filters('handle_bulk_actions-table-'.$currentScreen, null);
+
+		if (!is_object($pListTable)) {
+			return;
+		}
+
 		$pListTable->prepare_items();
 		$args = $pListTable->getArgs();
 		$nonce = $this->getWPNonce();
@@ -86,8 +91,7 @@ class ListTableBulkActionsHandler
 
 		$this->_pWPNonceWrapper->verify($nonce, $nonceaction);
 		$referer = $this->_pWPNonceWrapper->getReferer();
-		$screen = $this->_pWPScreenWrapper->getID();
-		$redirectTo = apply_filters('handle_bulk_actions-'.$screen, $referer, $action, $recordIds);
+		$redirectTo = apply_filters('handle_bulk_actions-'.$currentScreen, $referer, $action, $recordIds);
 
 		if (!__String::getNew($redirectTo)->isEmpty()) {
 			$this->_pWPNonceWrapper->safeRedirect($redirectTo);

@@ -21,10 +21,27 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Controller\UserCapabilities;
+use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\AdminPage;
 use onOffice\WPlugin\Gui\Table\EstateListTable;
-use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
+use WP_List_Table;
+use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_action;
+use function add_filter;
+use function add_query_arg;
+use function admin_url;
+use function check_admin_referer;
+use function esc_attr;
+use function esc_html__;
+use function plugins_url;
+use function wp_enqueue_script;
+use function wp_localize_script;
+use function wp_register_script;
 
 /**
  *
@@ -33,20 +50,20 @@ use const ONOFFICE_PLUGIN_DIR;
 class AdminPageEstateList
 	extends AdminPage
 {
+	/** @var EstateListTable */
+	private $_pEstateListTable;
+
+
 	/**
 	 *
 	 */
 
 	public function renderContent()
 	{
-		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php?type='.RecordManagerFactory::TYPE_ESTATE;
-
-		$pTable = new EstateListTable();
-		$pTable->prepare_items();
+		$this->_pEstateListTable->prepare_items();
 		echo '<p>';
-		echo '<form method="post" action="'.esc_html($actionFile).'">';
-		$pTable->display();
+		echo '<form method="post">';
+		$this->_pEstateListTable->display();
 		echo '</form>';
 		echo '</p>';
 	}
@@ -109,5 +126,41 @@ class AdminPageEstateList
 
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
 		wp_enqueue_script('onoffice-bulk-actions');
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function preOutput()
+	{
+		$this->_pEstateListTable = new EstateListTable();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pDI = $pContainerBuilder->build();
+
+		$pClosureDeleteEstate = function(string $redirectTo, string $doaction, array $estateIds)
+			use ($pDI): string
+		{
+			/* @var $pBulkDeleteRecord BulkDeleteRecord */
+			$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
+			/* @var $pRecordManagerDelete RecordManagerDeleteListViewEstate */
+			$pRecordManagerDelete = $pDI->get(RecordManagerDeleteListViewEstate::class);
+			if (in_array($doaction, ['delete', 'bulk_delete'])) {
+				check_admin_referer('bulk-'.$this->_pEstateListTable->getArgs()['plural']);
+				$itemsDeleted = $pBulkDeleteRecord->delete
+					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ESTATE, $estateIds);
+				$redirectTo = add_query_arg('delete', $itemsDeleted,
+					admin_url('admin.php?page=onoffice-estates'));
+			}
+			return $redirectTo;
+		};
+
+		add_filter('handle_bulk_actions-onoffice_page_onoffice-estates', $pClosureDeleteEstate, 10, 3);
+		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): WP_List_Table {
+			return $this->_pEstateListTable;
+		}, 10);
+		parent::preOutput();
 	}
 }

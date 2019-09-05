@@ -33,7 +33,7 @@ use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-use onOffice\WPlugin\WP\WPScreenWrapper;
+use WP_List_Table;
 use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
@@ -171,7 +171,7 @@ class AdminPageFormList
 
 		/* @var $pWPBulkActionHandler ListTableBulkActionsHandler */
 		$pWPBulkActionHandler = $pDI->get(ListTableBulkActionsHandler::class);
-		$pWPBulkActionHandler->processBulkAction($this->_pFormsTable);
+		$pWPBulkActionHandler->processBulkAction();
 
 		parent::preOutput();
 	}
@@ -221,13 +221,13 @@ class AdminPageFormList
 
 	private function registerDeleteAction(Container $pDI)
 	{
-		/* @var $pBulkDeleteRecord BulkDeleteRecord */
-		$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
-		/* @var $pRecordManagerDeleteForm RecordManagerDeleteForm */
-		$pRecordManagerDeleteForm = $pDI->get(RecordManagerDeleteForm::class);
 		$pClosureDeleteForm = function(string $redirectTo, string $doaction, array $formIds)
-			use ($pBulkDeleteRecord, $pRecordManagerDeleteForm): string
+			use ($pDI): string
 		{
+			/* @var $pBulkDeleteRecord BulkDeleteRecord */
+			$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
+			/* @var $pRecordManagerDeleteForm RecordManagerDeleteForm */
+			$pRecordManagerDeleteForm = $pDI->get(RecordManagerDeleteForm::class);
 			if (in_array($doaction, ['delete', 'bulk_delete'])) {
 				check_admin_referer('bulk-forms');
 				$capability = UserCapabilities::RULE_EDIT_VIEW_FORM;
@@ -238,7 +238,9 @@ class AdminPageFormList
 			return $redirectTo;
 		};
 
-		$screenId = $pDI->get(WPScreenWrapper::class)->getID();
-		add_filter('handle_bulk_actions-'.$screenId, $pClosureDeleteForm, 10, 3);
+		add_filter('handle_bulk_actions-onoffice_page_onoffice-forms', $pClosureDeleteForm, 10, 3);
+		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-forms', function(): WP_List_Table {
+			return $this->_pFormsTable;
+		});
 	}
 }

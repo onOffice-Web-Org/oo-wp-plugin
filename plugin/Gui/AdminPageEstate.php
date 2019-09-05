@@ -184,6 +184,17 @@ class AdminPageEstate
 
 	/**
 	 *
+	 */
+
+	public function preOutput()
+	{
+		$this->_pSelectedTab->preOutput();
+		parent::preOutput();
+	}
+
+
+	/**
+	 *
 	 * @return AdminPage
 	 *
 	 */
