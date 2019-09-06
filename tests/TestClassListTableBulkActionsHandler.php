@@ -28,7 +28,6 @@ use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\WP\WPNonceWrapper;
 use onOffice\WPlugin\WP\WPScreenWrapper;
-use WP_List_Table;
 use WP_UnitTestCase;
 use function add_filter;
 
@@ -99,7 +98,7 @@ class TestClassListTableBulkActionsHandler
 		}
 
 		$functionCalled = false;
-		add_filter('handle_bulk_actions-'.__CLASS__, function(string $referer, \WP_List_Table $pListTable, array $recordIds)
+		add_filter('handle_bulk_actions-'.__CLASS__, function(string $referer, ListTable $pListTable, array $recordIds)
 			use (&$functionCalled): string {
 			$functionCalled = true;
 			$this->assertEquals('https://example.org/abc', $referer);
@@ -108,7 +107,7 @@ class TestClassListTableBulkActionsHandler
 			return 'https://example.org/cde';
 		}, 10, 3);
 
-		add_filter('handle_bulk_actions-table-'.__CLASS__, function() use ($pListTable): WP_List_Table {
+		add_filter('handle_bulk_actions-table-'.__CLASS__, function() use ($pListTable): ListTable {
 			return $pListTable;
 		});
 

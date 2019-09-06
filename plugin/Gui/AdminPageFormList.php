@@ -33,7 +33,6 @@ use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-use WP_List_Table;
 use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
@@ -219,7 +218,7 @@ class AdminPageFormList
 
 	private function registerDeleteAction(Container $pDI)
 	{
-		$pClosureDeleteForm = function(string $redirectTo, WP_List_Table $pTable, array $formIds)
+		$pClosureDeleteForm = function(string $redirectTo, Table\WP\ListTable $pTable, array $formIds)
 			use ($pDI): string
 		{
 			/* @var $pBulkDeleteRecord BulkDeleteRecord */
@@ -237,7 +236,7 @@ class AdminPageFormList
 		};
 
 		add_filter('handle_bulk_actions-onoffice_page_onoffice-forms', $pClosureDeleteForm, 10, 3);
-		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-forms', function(): WP_List_Table {
+		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-forms', function(): Table\WP\ListTable {
 			return $this->_pFormsTable;
 		});
 	}

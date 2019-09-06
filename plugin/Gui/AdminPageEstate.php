@@ -25,7 +25,6 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
-use WP_List_Table;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_action;
@@ -211,7 +210,7 @@ class AdminPageEstate
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pDI = $pContainerBuilder->build();
 
-		$pClosureDeleteEstate = function(string $redirectTo, WP_List_Table $pTable, array $estateIds)
+		$pClosureDeleteEstate = function(string $redirectTo, Table\WP\ListTable $pTable, array $estateIds)
 			use ($pDI): string
 		{
 			/* @var $pBulkDeleteRecord BulkDeleteRecord */

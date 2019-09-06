@@ -23,10 +23,8 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Gui\AdminPage;
 use onOffice\WPlugin\Gui\Table\EstateListTable;
-use WP_List_Table;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
-use function add_action;
 use function add_filter;
 use function admin_url;
 use function esc_attr;
@@ -112,7 +110,7 @@ class AdminPageEstateList
 	public function preOutput()
 	{
 		$this->_pEstateListTable = new EstateListTable();
-		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): WP_List_Table {
+		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): Table\WP\ListTable {
 			return $this->_pEstateListTable;
 		}, 10);
 		parent::preOutput();

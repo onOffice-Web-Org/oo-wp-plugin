@@ -153,6 +153,7 @@ class AdminViewController
 		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'), __('Addresses', 'onoffice'),
 			$roleAddress, $this->_pageSlug.'-addresses', array($pAdminPageAddresses, 'render'));
 		add_action('load-'.$hookAddresses, [$pAdminPageAddresses, 'handleAdminNotices']);
+		add_action('current_screen', [$pAdminPageAddresses, 'preOutput']);
 
 		// Estates
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),

@@ -21,9 +21,20 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Controller\UserCapabilities;
+use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\Table\AddressListTable;
-use onOffice\WPlugin\Record\RecordManagerFactory;
-use const ONOFFICE_PLUGIN_DIR;
+use onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress;
+use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
+use const ONOFFICE_DI_CONFIG_PATH;
+use function __;
+use function add_action;
+use function add_filter;
+use function add_query_arg;
+use function admin_url;
+use function check_admin_referer;
+use function esc_html__;
 
 /**
  *
@@ -35,22 +46,22 @@ use const ONOFFICE_PLUGIN_DIR;
 class AdminPageAddressList
 	extends AdminPage
 {
+	/** @var AddressListTable */
+	private $_pAddressListTable = null;
+
+
 	/**
 	 *
 	 */
 
 	public function renderContent()
 	{
-		$pTable = new AddressListTable();
 		$this->generatePageMainTitle(__('Addresses', 'onoffice'));
-		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php?type='.RecordManagerFactory::TYPE_ADDRESS;
-
-		$pTable->prepare_items();
+		$this->_pAddressListTable->prepare_items();
 		echo '<p>';
-		echo '<form method="post" action="'.esc_html($actionFile).'">';
-		echo $pTable->views();
-		$pTable->display();
+		echo '<form method="post">';
+		echo $this->_pAddressListTable->views();
+		$this->_pAddressListTable->display();
 		echo '</form>';
 		echo '</p>';
 	}
@@ -92,5 +103,41 @@ class AdminPageAddressList
 				echo $pHandler->handleListView($itemsDeleted);
 			});
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function preOutput()
+	{
+		$this->_pAddressListTable = new AddressListTable();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pDI = $pContainerBuilder->build();
+		$pClosureDeleteAddress = function(string $redirectTo, Table\WP\ListTable $pTable, array $recordIds)
+			use ($pDI): string
+		{
+			/* @var $pBulkDeleteRecord BulkDeleteRecord */
+			$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
+			/* @var $pRecordManagerDelete RecordManagerDeleteListViewEstate */
+			$pRecordManagerDelete = $pDI->get(RecordManagerDeleteListViewAddress::class);
+			if (in_array($pTable->current_action(), ['delete', 'bulk_delete'])) {
+				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
+				$itemsDeleted = $pBulkDeleteRecord->delete
+					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ADDRESS, $recordIds);
+				$redirectTo = add_query_arg(['delete' => $itemsDeleted],
+					admin_url('admin.php?page=onoffice-addresses'));
+			}
+			return $redirectTo;
+		};
+
+		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDeleteAddress, 10, 3);
+		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-addresses', function(): Table\WP\ListTable {
+			return $this->_pAddressListTable;
+		});
+
+		parent::preOutput();
 	}
 }
