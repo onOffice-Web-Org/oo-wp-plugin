@@ -46,13 +46,13 @@ class AddressListTable
 	 *
 	 */
 
-	public function __construct($args = array())
+	public function __construct($args = [])
 	{
-		parent::__construct(array(
+		parent::__construct([
 			'singular' => 'listpage',
 			'plural' => 'listpages',
-			'screen' => isset($args['screen']) ? $args['screen'] : null,
-		));
+			'screen' => $args['screen'] ?? null,
+		]);
 
 		$this->_itemsPerPage = $this->get_items_per_page('onoffice-address-listview_per_page', 10);
 	}
@@ -78,11 +78,11 @@ class AddressListTable
 		$this->setItems($pRecordRead->getRecords());
 		$itemsCount = $pRecordRead->getCountOverall();
 
-		$this->set_pagination_args(array(
+		$this->set_pagination_args([
 			'total_items' => $itemsCount,
 			'per_page'    => $this->_itemsPerPage,
 			'total_pages' => ceil($itemsCount / 10)
-		));
+		]);
 	}
 
 
@@ -94,11 +94,11 @@ class AddressListTable
 
 	public function get_columns()
 	{
-		return array(
+		return [
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of View', 'onoffice'),
 			'shortcode' => __('Shortcode', 'onoffice'),
-		);
+		];
 	}
 
 
@@ -137,17 +137,17 @@ class AddressListTable
 
 	public function prepare_items()
 	{
-		$columns = array(
+		$columns = [
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of View', 'onoffice'),
 			'shortcode' => __('Shortcode', 'onoffice'),
-		);
+		];
 
-		$hidden = array('ID');
-		$sortable = array();
+		$hidden = ['ID'];
+		$sortable = [];
 
-		$this->_column_headers = array($columns, $hidden, $sortable,
-			$this->get_default_primary_column_name());
+		$this->_column_headers = [$columns, $hidden, $sortable,
+			$this->get_default_primary_column_name()];
 
 		$this->fillData();
 	}
@@ -176,7 +176,7 @@ class AddressListTable
 		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
 			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
 
-		$actions = array();
+		$actions = [];
 		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';
 		$actions['delete'] = "<a class='submitdelete' href='"
 			.wp_nonce_url($actionFile.'?action=delete&list_id='.$pItem->ID.'&type='
