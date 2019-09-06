@@ -21,9 +21,18 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Controller\UserCapabilities;
+use onOffice\WPlugin\Form\BulkDeleteRecord;
+use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
+use WP_List_Table;
+use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
+use function add_action;
+use function add_filter;
 use function add_query_arg;
 use function admin_url;
+use function check_admin_referer;
 use function esc_html;
 
 /**
@@ -169,6 +178,14 @@ class AdminPageEstate
 	public function handleAdminNotices()
 	{
 		$this->_pSelectedTab->handleAdminNotices();
+		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
+
+		if ($itemsDeleted !== null && $itemsDeleted !== false) {
+			add_action('admin_notices', function() use ($itemsDeleted) {
+				$pHandler = new AdminNoticeHandlerListViewDeletion();
+				echo $pHandler->handleListView($itemsDeleted);
+			});
+		}
 	}
 
 
@@ -189,6 +206,30 @@ class AdminPageEstate
 	public function preOutput()
 	{
 		$this->_pSelectedTab->preOutput();
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pDI = $pContainerBuilder->build();
+
+		$pClosureDeleteEstate = function(string $redirectTo, WP_List_Table $pTable, array $estateIds)
+			use ($pDI): string
+		{
+			/* @var $pBulkDeleteRecord BulkDeleteRecord */
+			$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
+			/* @var $pRecordManagerDelete RecordManagerDeleteListViewEstate */
+			$pRecordManagerDelete = $pDI->get(RecordManagerDeleteListViewEstate::class);
+			if (in_array($pTable->current_action(), ['delete', 'bulk_delete'])) {
+				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
+				$itemsDeleted = $pBulkDeleteRecord->delete
+					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ESTATE, $estateIds);
+				$redirectTo = add_query_arg(['delete' => $itemsDeleted, 'tab' => $this->getSelectedTab()],
+					admin_url('admin.php?page=onoffice-estates'));
+			}
+			return $redirectTo;
+		};
+
+		add_filter('handle_bulk_actions-onoffice_page_onoffice-estates', $pClosureDeleteEstate, 10, 3);
+
 		parent::preOutput();
 	}
 

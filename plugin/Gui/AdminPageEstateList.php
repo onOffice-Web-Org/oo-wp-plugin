@@ -21,21 +21,14 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use DI\ContainerBuilder;
-use onOffice\WPlugin\Controller\UserCapabilities;
-use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\AdminPage;
 use onOffice\WPlugin\Gui\Table\EstateListTable;
-use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
 use WP_List_Table;
-use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_action;
 use function add_filter;
-use function add_query_arg;
 use function admin_url;
-use function check_admin_referer;
 use function esc_attr;
 use function esc_html__;
 use function plugins_url;
@@ -98,23 +91,6 @@ class AdminPageEstateList
 	 *
 	 */
 
-	public function handleAdminNotices()
-	{
-		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
-
-		if ($itemsDeleted !== null && $itemsDeleted !== false) {
-			add_action('admin_notices', function() use ($itemsDeleted) {
-				$pHandler = new AdminNoticeHandlerListViewDeletion();
-				echo $pHandler->handleListView($itemsDeleted);
-			});
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function doExtraEnqueues()
 	{
 		$translation = array(
@@ -136,28 +112,6 @@ class AdminPageEstateList
 	public function preOutput()
 	{
 		$this->_pEstateListTable = new EstateListTable();
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pDI = $pContainerBuilder->build();
-
-		$pClosureDeleteEstate = function(string $redirectTo, string $doaction, array $estateIds)
-			use ($pDI): string
-		{
-			/* @var $pBulkDeleteRecord BulkDeleteRecord */
-			$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
-			/* @var $pRecordManagerDelete RecordManagerDeleteListViewEstate */
-			$pRecordManagerDelete = $pDI->get(RecordManagerDeleteListViewEstate::class);
-			if (in_array($doaction, ['delete', 'bulk_delete'])) {
-				check_admin_referer('bulk-'.$this->_pEstateListTable->getArgs()['plural']);
-				$itemsDeleted = $pBulkDeleteRecord->delete
-					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ESTATE, $estateIds);
-				$redirectTo = add_query_arg('delete', $itemsDeleted,
-					admin_url('admin.php?page=onoffice-estates'));
-			}
-			return $redirectTo;
-		};
-
-		add_filter('handle_bulk_actions-onoffice_page_onoffice-estates', $pClosureDeleteEstate, 10, 3);
 		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): WP_List_Table {
 			return $this->_pEstateListTable;
 		}, 10);

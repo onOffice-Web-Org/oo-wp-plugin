@@ -99,11 +99,11 @@ class TestClassListTableBulkActionsHandler
 		}
 
 		$functionCalled = false;
-		add_filter('handle_bulk_actions-'.__CLASS__, function(string $referer, string $action, array $recordIds)
+		add_filter('handle_bulk_actions-'.__CLASS__, function(string $referer, \WP_List_Table $pListTable, array $recordIds)
 			use (&$functionCalled): string {
 			$functionCalled = true;
 			$this->assertEquals('https://example.org/abc', $referer);
-			$this->assertEquals('bulk_delete', $action);
+			$this->assertEquals('bulk_delete', $pListTable->current_action());
 			$this->assertEquals([13], $recordIds);
 			return 'https://example.org/cde';
 		}, 10, 3);
@@ -145,7 +145,8 @@ class TestClassListTableBulkActionsHandler
 		$pListTable->method('getArgs')
 			->will($this->returnValue(['singular' => 'form', 'plural' => 'forms']));
 		$pListTable->method('current_action')
-			->will($this->onConsecutiveCalls('bulk_delete', false));
+			// gets called twice
+			->will($this->onConsecutiveCalls('bulk_delete', 'bulk_delete', false, false));
 		return [
 			[$pListTable, true],
 			[$pListTable, false],

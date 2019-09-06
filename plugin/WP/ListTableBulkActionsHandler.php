@@ -91,7 +91,7 @@ class ListTableBulkActionsHandler
 
 		$this->_pWPNonceWrapper->verify($nonce, $nonceaction);
 		$referer = $this->_pWPNonceWrapper->getReferer();
-		$redirectTo = apply_filters('handle_bulk_actions-'.$currentScreen, $referer, $action, $recordIds);
+		$redirectTo = apply_filters('handle_bulk_actions-'.$currentScreen, $referer, $pListTable, $recordIds);
 
 		if (!__String::getNew($redirectTo)->isEmpty()) {
 			$this->_pWPNonceWrapper->safeRedirect($redirectTo);

@@ -22,8 +22,10 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Gui\Table\EstateUnitsTable;
-use onOffice\WPlugin\Record\RecordManagerFactory;
-use const ONOFFICE_PLUGIN_DIR;
+use WP_List_Table;
+use function add_filter;
+use function admin_url;
+use function esc_html__;
 
 /**
  *
@@ -35,20 +37,19 @@ use const ONOFFICE_PLUGIN_DIR;
 class AdminPageEstateUnitList
 	extends AdminPage
 {
+	/** @var EstateUnitsTable */
+	private $_pEstateUnitsTable = null;
+
 	/**
 	 *
 	 */
 
 	public function renderContent()
 	{
-		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php?type='.RecordManagerFactory::TYPE_ESTATE;
-
-		$pTable = new EstateUnitsTable();
-		$pTable->prepare_items();
+		$this->_pEstateUnitsTable->prepare_items();
 		echo '<p>';
-		echo '<form method="post" action="'.esc_html($actionFile).'">';
-		$pTable->display();
+		echo '<form method="post">';
+		$this->_pEstateUnitsTable->display();
 		echo '</form>';
 		echo '</p>';
 	}
@@ -76,5 +77,21 @@ class AdminPageEstateUnitList
 		echo '</h1>';
 		echo '<a href="'.$new_link.'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
 		echo '<hr class="wp-header-end">';
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function preOutput()
+	{
+		$this->_pEstateUnitsTable = new EstateUnitsTable();
+		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): WP_List_Table {
+			return $this->_pEstateUnitsTable;
+		}, 10);
+		// callback can be same as in estate list view,
+		// since it's the same screen and kind of records
+		parent::preOutput();
 	}
 }

@@ -219,14 +219,14 @@ class AdminPageFormList
 
 	private function registerDeleteAction(Container $pDI)
 	{
-		$pClosureDeleteForm = function(string $redirectTo, string $doaction, array $formIds)
+		$pClosureDeleteForm = function(string $redirectTo, WP_List_Table $pTable, array $formIds)
 			use ($pDI): string
 		{
 			/* @var $pBulkDeleteRecord BulkDeleteRecord */
 			$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
 			/* @var $pRecordManagerDeleteForm RecordManagerDeleteForm */
 			$pRecordManagerDeleteForm = $pDI->get(RecordManagerDeleteForm::class);
-			if (in_array($doaction, ['delete', 'bulk_delete'])) {
+			if (in_array($pTable->current_action(), ['delete', 'bulk_delete'])) {
 				check_admin_referer('bulk-forms');
 				$capability = UserCapabilities::RULE_EDIT_VIEW_FORM;
 				$itemsDeleted = $pBulkDeleteRecord->delete($pRecordManagerDeleteForm, $capability, $formIds);

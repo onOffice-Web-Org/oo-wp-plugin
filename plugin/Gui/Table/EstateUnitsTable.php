@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -25,10 +25,8 @@ use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -47,9 +45,9 @@ class EstateUnitsTable extends ListTable
 	public function __construct($args = [])
 	{
 		parent::__construct(array(
-			'singular' => 'listpage',
-			'plural' => 'listpages',
-			'screen' => isset($args['screen']) ? $args['screen'] : null,
+			'singular' => 'estatelist',
+			'plural' => 'estatelists',
+			'screen' => $args['screen'] ?? null,
 		));
 	}
 
@@ -157,13 +155,10 @@ class EstateUnitsTable extends ListTable
 		$viewIdParam = AdminPageEstateListSettingsBase::GET_PARAM_VIEWID;
 		$editLink = admin_url('admin.php?page=onoffice-editunitlist&'.$viewIdParam.'='.$pItem->ID);
 
-		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php';
-
-		$actions = array();
+		$actions = [];
 		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';
 		$actions['delete'] = "<a class='submitdelete' href='"
-			.wp_nonce_url($actionFile.'?action=delete&list_id='.$pItem->ID, 'delete-listview_'.$pItem->ID)
+			.wp_nonce_url(admin_url('admin.php').'?page=onoffice-estates&tab=units&action=bulk_delete&estatelist[]='.$pItem->ID, 'bulk-estatelists')
 			."' onclick=\"if ( confirm( '"
 			.esc_js(sprintf(
 			/* translators: %s is the name of the unit view. */
