@@ -155,10 +155,12 @@ while ( $currentEstate = $pEstates->estateIterator() ) :
 	<?php endforeach; ?>
 
 	<?php echo $pEstates->getEstateUnits( ); ?>
-	<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
+	<?php if ($pEstates->getDocument() !== ''): ?>
+		<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
 		<a href="<?php echo $pEstates->getDocument(); ?>">
 			<?php esc_html_e('PDF expose', 'onoffice'); ?>
 		</a>
+	<?php endif; ?>
 
 	<?php if (Favorites::isFavorizationEnabled()): ?>
 		<button data-onoffice-estateid="<?php echo $pEstates->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">

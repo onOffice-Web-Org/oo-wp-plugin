@@ -677,8 +677,13 @@ class EstateList
 
 	public function getDocument()
 	{
-		$documentlink = home_url('document-pdf/'.$this->_pDataView->getName().'/'.$this->getCurrentMultiLangEstateMainId());
-		return esc_url($documentlink);
+		$document = '';
+		if ($this->_pDataView->getExpose() !== '') {
+			$documentlink = home_url('document-pdf/'.$this->_pDataView->getName()
+				.'/'.$this->getCurrentMultiLangEstateMainId());
+			$document = esc_url($documentlink);
+		}
+		return $document;
 	}
 
 
