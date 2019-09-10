@@ -96,9 +96,9 @@ class TestClassFormFieldValidator
 
 	/**
 	 *
-	 * @covers onOffice\WPlugin\FormFieldSanitizer::sanitize
-	 * @covers onOffice\WPlugin\FormFieldSanitizer::sanitizeField
-	 * @covers onOffice\WPlugin\FormFieldSanitizer::sanitizeByType
+	 * @covers onOffice\WPlugin\FormFieldSanitizer::validate
+	 * @covers onOffice\WPlugin\FormFieldSanitizer::validateField
+	 * @covers onOffice\WPlugin\FormFieldSanitizer::validateByType
 	 *
 	 */
 
