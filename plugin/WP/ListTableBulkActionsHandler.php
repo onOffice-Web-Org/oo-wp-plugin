@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\WP;
 
+use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPNonceWrapper;
@@ -72,19 +73,18 @@ class ListTableBulkActionsHandler
 	public function processBulkAction()
 	{
 		$currentScreen = $this->_pWPScreenWrapper->getID();
+		/* @var $pListTable ListTable */
 		$pListTable = apply_filters('handle_bulk_actions-table-'.$currentScreen, null);
 
 		if (!is_object($pListTable)) {
 			return;
 		}
 
-		$pListTable->prepare_items();
 		$args = $pListTable->getArgs();
 		$nonce = $this->getWPNonce();
 		$nonceaction = 'bulk-'.$args['plural'];
 		$recordIds = $this->getRecordIds($args['singular']);
 		$action = $pListTable->current_action();
-
 		if ($action === false) {
 			return;
 		}

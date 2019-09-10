@@ -32,7 +32,6 @@ use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use WP_List_Table;
 use function __;
-use function _e;
 use function admin_url;
 use function current_user_can;
 use function esc_html;
@@ -113,11 +112,11 @@ class EstateListTable extends ListTable
 		$this->setItems($pRecordRead->getRecords());
 		$itemsCount = $pRecordRead->getCountOverall();
 
-		$this->set_pagination_args( array(
+		$this->set_pagination_args([
 			'total_items' => $itemsCount,
-			'per_page'    => $this->_itemsPerPage,
-			'total_pages' => ceil($itemsCount / 10)
-		) );
+			'per_page' => $this->_itemsPerPage,
+			'total_pages' => ceil($itemsCount / 10),
+		]);
 	}
 
 
@@ -127,20 +126,20 @@ class EstateListTable extends ListTable
 
 	public function prepare_items()
 	{
-		$columns = array(
+		$columns = [
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of View', 'onoffice'),
 			'filtername' => __('Filter', 'onoffice'),
 			'show_status' => __('Show Status', 'onoffice'),
 			'list_type' => __('Type of List', 'onoffice'),
 			'shortcode' => __('Shortcode', 'onoffice'),
-		);
+		];
 
-		$hidden = array('ID', 'filterId');
-		$sortable = array();
+		$hidden = ['ID', 'filterId'];
+		$sortable = [];
 
-		$this->_column_headers = array($columns, $hidden, $sortable,
-			$this->get_default_primary_column_name());
+		$this->_column_headers = [$columns, $hidden, $sortable,
+			$this->get_default_primary_column_name()];
 
 		$this->fillData();
 	}
@@ -148,33 +147,16 @@ class EstateListTable extends ListTable
 
 	/**
 	 *
-	 */
-
-	public function no_items()
-	{
-		_e( 'No items found.' );
-	}
-
-
-	/**
-	 *
 	 * @param object $pItem
-	 * @return string
+	 * @return string|null
 	 *
 	 */
 
 	protected function column_list_type($pItem)
 	{
 		$listTypes = FormModelBuilderDBEstateListSettings::getListViewLabels();
-		$selectedTypeLabel = null;
 		$selectedType = $pItem->list_type;
-
-		if (array_key_exists($selectedType, $listTypes))
-		{
-			$selectedTypeLabel = $listTypes[$selectedType];
-		}
-
-		return $selectedTypeLabel;
+		return $listTypes[$selectedType] ?? null;
 	}
 
 
@@ -224,14 +206,14 @@ class EstateListTable extends ListTable
 
 	public function get_columns()
 	{
-		return array(
+		return [
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of View', 'onoffice'),
 			'filtername' => __('Filter', 'onoffice'),
 			'show_status' => __('Show Status', 'onoffice'),
 			'list_type' => __('Type of List', 'onoffice'),
 			'shortcode' => __('Shortcode', 'onoffice'),
-		);
+		];
 	}
 
 
@@ -282,14 +264,14 @@ class EstateListTable extends ListTable
 			admin_url('admin.php?page=onoffice-editlistview'));
 
 		$actions = [];
-		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';
+		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit').'</a>';
 		$actions['delete'] = "<a class='submitdelete' href='"
-			.wp_nonce_url(admin_url('admin.php').'?page=onoffice-estates&action=bulk_delete&estatelist[]='.$pItem->ID, 'bulk-estatelists')
+			. esc_attr(wp_nonce_url(admin_url('admin.php').'?page=onoffice-estates&action=bulk_delete&estatelist[]='.$pItem->ID, 'bulk-estatelists'))
 			."' onclick=\"if ( confirm( '"
 			.esc_js(sprintf(
 			/* translators: %s is the name of the list view. */
 			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice'), $pItem->name))
-			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
+			."' ) ) { return true;}return false;\">" . esc_html__('Delete') . "</a>";
 		return $this->row_actions($actions);
 	}
 }

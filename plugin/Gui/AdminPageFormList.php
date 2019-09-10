@@ -31,7 +31,6 @@ use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Record\RecordManagerDeleteForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
-use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
@@ -160,15 +159,10 @@ class AdminPageFormList
 	{
 		$this->_pFormsTable = new FormsTable();
 		$this->_pFormsTable->setListType($this->getTab());
-		$this->_pFormsTable->prepare_items();
 		$pDIBuilder = new ContainerBuilder();
 		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pDI = $pDIBuilder->build();
 		$this->registerDeleteAction($pDI);
-
-		/* @var $pWPBulkActionHandler ListTableBulkActionsHandler */
-		$pWPBulkActionHandler = $pDI->get(ListTableBulkActionsHandler::class);
-		$pWPBulkActionHandler->processBulkAction();
 
 		parent::preOutput();
 	}
