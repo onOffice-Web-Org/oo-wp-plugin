@@ -73,9 +73,14 @@ class RecordManagerInsertGeneric
 			$value = RecordManager::postProcessValue($value, $tableName, $field);
 		});
 
+		$suppressErrors = $this->_pWPDB->suppress_errors();
+
 		if (false === $this->_pWPDB->insert($this->_pWPDB->prefix.$this->_mainTableName, $row)) {
+			$this->_pWPDB->suppress_errors($suppressErrors);
 			throw new RecordManagerInsertException();
 		}
+
+		$this->_pWPDB->suppress_errors($suppressErrors);
 
 		return $this->_pWPDB->insert_id;
 	}
@@ -91,13 +96,18 @@ class RecordManagerInsertGeneric
 	public function insertAdditionalValues(array $values)
 	{
 		unset($values[$this->_mainTableName]);
+		$suppressErrors = $this->_pWPDB->suppress_errors();
+
 		foreach ($values as $table => $tablevalues) {
 			foreach ($tablevalues as $tablerow) {
 				if (is_array($tablerow) && false === $this->_pWPDB->insert
 					($this->_pWPDB->prefix.$table, $tablerow)) {
+					$this->_pWPDB->suppress_errors($suppressErrors);
 					throw new RecordManagerInsertException();
 				}
 			}
 		}
+
+		$this->_pWPDB->suppress_errors($suppressErrors);
 	}
 }

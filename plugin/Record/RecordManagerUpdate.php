@@ -51,7 +51,7 @@ abstract class RecordManagerUpdate
 	 *
 	 */
 
-	abstract public function updateByRow($tableRow);
+	abstract public function updateByRow(array $tableRow): bool;
 
 
 	/** @return int */

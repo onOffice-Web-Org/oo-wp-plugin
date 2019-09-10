@@ -110,11 +110,7 @@ class RecordManagerFactory
 
 		if (__String::getNew($className)->endsWith('Generic')) {
 			$mainTable = self::$_genericClassTables[$type];
-			if ($recordId !== null) {
-				$pInstance = new $className($mainTable, $recordId);
-			} else {
-				$pInstance = new $className($mainTable);
-			}
+			$pInstance = new $className($mainTable);
 		} else {
 			if ($recordId !== null) {
 				$pInstance = new $className($recordId);
