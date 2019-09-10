@@ -22,7 +22,7 @@
 
 declare (strict_types=1);
 
-namespace onOffice\WPlugin;
+namespace onOffice\WPlugin\Form;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -61,8 +61,6 @@ class FormFieldValidator
 	{
 		$this->_pFieldsCollection = new FieldsCollection();
 		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
-
-
 	}
 
 

@@ -26,7 +26,7 @@ namespace onOffice\tests;
 use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\FormFieldValidator;
+use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -96,13 +96,13 @@ class TestClassFormFieldValidator
 
 	/**
 	 *
-	 * @covers onOffice\WPlugin\FormFieldSanitizer::validate
-	 * @covers onOffice\WPlugin\FormFieldSanitizer::validateField
-	 * @covers onOffice\WPlugin\FormFieldSanitizer::validateByType
+	 * @covers onOffice\WPlugin\Form\FormFieldValidator::validate
+	 * @covers onOffice\WPlugin\Form\FormFieldValidator::validateField
+	 * @covers onOffice\WPlugin\Form\FormFieldValidator::validateByType
 	 *
 	 */
 
-	public function testSanitize()
+	public function testValidate()
 	{
 		$data = [
 			'Vorname' => 'Max',
