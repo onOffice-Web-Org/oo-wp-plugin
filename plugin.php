@@ -46,6 +46,7 @@ use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer;
+use onOffice\WPlugin\Sandbox;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\SearchParameters;
 use onOffice\WPlugin\Utility\__String;
@@ -61,7 +62,11 @@ $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
 $pSearchParams = SearchParameters::getInstance();
-$pSearchParams->setParameters($_GET);
+$getVariables = (array)filter_input_array(INPUT_GET, FILTER_DEFAULT);
+$pSearchParams->setParameters($getVariables);
+//$pSearchParams->setParameters($_GET);
+
+$pSandbox = new Sandbox();
 
 add_action('init', [$pContentFilter, 'addCustomRewriteTags']);
 add_action('init', [$pContentFilter, 'addCustomRewriteRules']);
@@ -92,12 +97,19 @@ add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 add_action('plugins_loaded', function() {
 	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR).'/languages');
 });
+//var_dump(get_permalink());
+//$post       = get_post();
+//var_dump($post);
+//$pWpPost = WP_Post::get_instance($post_id);
+//$pWpPost->filter($filter);
 
 add_filter('wp_link_pages_link', [$pSearchParams, 'linkPagesLink'], 10, 2);
 add_filter('wp_link_pages_args', [$pSearchParams, 'populateDefaultLinkParams']);
 
 // "Settings" link in plugins list
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewController, 'pluginSettingsLink']);
+//add_filter('the_content', [$pSandbox, 'defineReqVars']);
+add_action('wp_loaded', [$pSandbox, 'registerReqVars']);
 
 add_shortcode('oo_estate', [$pContentFilter, 'registerEstateShortCodes']);
 
