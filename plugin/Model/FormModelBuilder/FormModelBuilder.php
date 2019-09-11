@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\FilterCall;
+use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Template\TemplateCall;
@@ -43,9 +44,6 @@ abstract class FormModelBuilder
 {
 	const CONFIG_FIELDS = 'fields';
 
-	/** @var string */
-	private $_pageSlug = null;
-
 	/** @var array */
 	private $_values = array();
 
@@ -55,21 +53,9 @@ abstract class FormModelBuilder
 
 	/**
 	 *
-	 * @param string $pageSlug
-	 *
 	 */
 
-	public function __construct($pageSlug)
-	{
-		$this->_pageSlug = $pageSlug;
-	}
-
-
-	/**
-	 *
-	 */
-
-	abstract public function generate();
+	abstract public function generate(string $pageSlug): FormModel;
 
 
 	/**
@@ -81,8 +67,7 @@ abstract class FormModelBuilder
 
 	protected function getValue(string $key, $default = null)
 	{
-		if (isset($this->_values[$key]))
-		{
+		if (isset($this->_values[$key])) {
 			return $this->_values[$key];
 		}
 
@@ -137,8 +122,7 @@ abstract class FormModelBuilder
 		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
 		$templates = array();
 
-		foreach ($templatesAll as $value)
-		{
+		foreach ($templatesAll as $value) {
 			$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
 			$templates[$value] = $value;
 		}
@@ -238,10 +222,6 @@ abstract class FormModelBuilder
 	/** @param Fieldnames $pFieldnames */
 	protected function setFieldnames(Fieldnames $pFieldnames)
 		{ $this->_pFieldnames = $pFieldnames; }
-
-	/** @return string */
-	public function getPageSlug()
-		{ return $this->_pageSlug; }
 
 	/** @param array $values */
 	public function setValues(array $values)

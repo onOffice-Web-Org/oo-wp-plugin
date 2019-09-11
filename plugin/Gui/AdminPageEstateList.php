@@ -23,8 +23,16 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\Gui\AdminPage;
 use onOffice\WPlugin\Gui\Table\EstateListTable;
-use onOffice\WPlugin\Record\RecordManagerFactory;
 use const ONOFFICE_PLUGIN_DIR;
+use function __;
+use function add_filter;
+use function admin_url;
+use function esc_attr;
+use function esc_html__;
+use function plugins_url;
+use function wp_enqueue_script;
+use function wp_localize_script;
+use function wp_register_script;
 
 /**
  *
@@ -33,20 +41,20 @@ use const ONOFFICE_PLUGIN_DIR;
 class AdminPageEstateList
 	extends AdminPage
 {
+	/** @var EstateListTable */
+	private $_pEstateListTable;
+
+
 	/**
 	 *
 	 */
 
 	public function renderContent()
 	{
-		$actionFile = plugin_dir_url(ONOFFICE_PLUGIN_DIR).
-			plugin_basename(ONOFFICE_PLUGIN_DIR).'/tools/listview.php?type='.RecordManagerFactory::TYPE_ESTATE;
-
-		$pTable = new EstateListTable();
-		$pTable->prepare_items();
+		$this->_pEstateListTable->prepare_items();
 		echo '<p>';
-		echo '<form method="post" action="'.esc_html($actionFile).'">';
-		$pTable->display();
+		echo '<form method="post">';
+		$this->_pEstateListTable->display();
 		echo '</form>';
 		echo '</p>';
 	}
@@ -81,23 +89,6 @@ class AdminPageEstateList
 	 *
 	 */
 
-	public function handleAdminNotices()
-	{
-		$itemsDeleted = filter_input(INPUT_GET, 'delete', FILTER_SANITIZE_NUMBER_INT);
-
-		if ($itemsDeleted !== null && $itemsDeleted !== false) {
-			add_action('admin_notices', function() use ($itemsDeleted) {
-				$pHandler = new AdminNoticeHandlerListViewDeletion();
-				echo $pHandler->handleListView($itemsDeleted);
-			});
-		}
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function doExtraEnqueues()
 	{
 		$translation = array(
@@ -109,5 +100,19 @@ class AdminPageEstateList
 
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
 		wp_enqueue_script('onoffice-bulk-actions');
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function preOutput()
+	{
+		$this->_pEstateListTable = new EstateListTable();
+		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): Table\WP\ListTable {
+			return $this->_pEstateListTable;
+		}, 10);
+		parent::preOutput();
 	}
 }

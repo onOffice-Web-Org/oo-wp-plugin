@@ -22,11 +22,17 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
+use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Types\FieldsCollection;
+use function __;
 
 /**
  *
@@ -64,12 +70,13 @@ class FormModelBuilderDBEstateUnitListSettings
 
 	/**
 	 *
+	 * @param string $pageSlug
 	 * @param int $listViewId
 	 * @return FormModel
 	 *
 	 */
 
-	public function generate($listViewId = null)
+	public function generate(string $pageSlug, $listViewId = null): FormModel
 	{
 		if ($listViewId !== null) {
 			$pRecordReadManager = new RecordManagerReadListViewEstate();
@@ -84,7 +91,7 @@ class FormModelBuilderDBEstateUnitListSettings
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Unit List', 'onoffice'));
 		$pFormModel->setGroupSlug('onoffice-unitlist-settings');
-		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setPageSlug($pageSlug);
 
 		return $pFormModel;
 	}

@@ -35,13 +35,15 @@ class RecordManagerUpdateForm
 	 *
 	 */
 
-	public function updateByRow($tableRow)
+	public function updateByRow(array $tableRow): bool
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$whereFormConfigTable = array('form_id' => $this->getRecordId());
+		$whereFormConfigTable = ['form_id' => $this->getRecordId()];
+		$suppressErrors = $pWpDb->suppress_errors();
 		$result = $pWpDb->update($prefix.self::TABLENAME_FORMS, $tableRow, $whereFormConfigTable);
+		$pWpDb->suppress_errors($suppressErrors);
 
 		return $result !== false;
 	}
@@ -54,11 +56,11 @@ class RecordManagerUpdateForm
 	 *
 	 */
 
-	public function updateFieldConfigByRow(array $fieldConfig)
+	public function updateFieldConfigByRow(array $fieldConfig): bool
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-		$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG_FORMS, array('form_id' => $this->getRecordId()));
+		$pWpDb->delete($prefix.self::TABLENAME_FIELDCONFIG_FORMS, ['form_id' => $this->getRecordId()]);
 
 		$result = true;
 

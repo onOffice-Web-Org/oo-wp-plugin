@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2018-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -23,18 +23,15 @@ namespace onOffice\WPlugin\Record;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
 class RecordManagerUpdateListViewAddress
 	extends RecordManagerUpdate
 {
 	/** @var array */
-	private $_addressRelationTables = array(
+	private $_addressRelationTables = [
 		self::TABLENAME_FIELDCONFIG_ADDRESS => 'listview_address_id',
-	);
+	];
 
 
 	/**
@@ -44,13 +41,15 @@ class RecordManagerUpdateListViewAddress
 	 *
 	 */
 
-	public function updateByRow($tableRow)
+	public function updateByRow(array $tableRow): bool
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
 
-		$whereListViewTable = array('listview_address_id' => $this->getRecordId());
+		$whereListViewTable = ['listview_address_id' => $this->getRecordId()];
+		$suppressErrors = $pWpDb->suppress_errors();
 		$result = $pWpDb->update($prefix.self::TABLENAME_LIST_VIEW_ADDRESS, $tableRow, $whereListViewTable);
+		$pWpDb->suppress_errors($suppressErrors);
 
 		return $result !== false;
 	}
@@ -63,7 +62,7 @@ class RecordManagerUpdateListViewAddress
 	 *
 	 */
 
-	public function updateRelations($tableRow)
+	public function updateRelations(array $tableRow): bool
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
@@ -71,7 +70,7 @@ class RecordManagerUpdateListViewAddress
 
 		foreach ($this->_addressRelationTables as $table => $foreignKey) {
 			if (isset($tableRow[$table])) {
-				$whereCondition = array($foreignKey => $this->getRecordId());
+				$whereCondition = [$foreignKey => $this->getRecordId()];
 				$pWpDb->delete($prefix.$table, $whereCondition);
 				$newRecords = $tableRow[$table];
 				$result = $result && $this->insertNewRecords($newRecords, $table);
@@ -89,7 +88,7 @@ class RecordManagerUpdateListViewAddress
 	 *
 	 */
 
-	private function insertNewRecords(array $records, $table)
+	private function insertNewRecords(array $records, string $table): bool
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();

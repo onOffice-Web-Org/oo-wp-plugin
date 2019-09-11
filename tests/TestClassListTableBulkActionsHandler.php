@@ -29,6 +29,7 @@ use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use onOffice\WPlugin\WP\WPNonceWrapper;
 use onOffice\WPlugin\WP\WPScreenWrapper;
 use WP_UnitTestCase;
+use function add_filter;
 
 
 /**
@@ -97,18 +98,34 @@ class TestClassListTableBulkActionsHandler
 		}
 
 		$functionCalled = false;
-		add_filter('handle_bulk_actions-'.__CLASS__, function(string $referer, string $action, array $recordIds)
+		add_filter('handle_bulk_actions-'.__CLASS__, function(string $referer, ListTable $pListTable, array $recordIds)
 			use (&$functionCalled): string {
 			$functionCalled = true;
 			$this->assertEquals('https://example.org/abc', $referer);
-			$this->assertEquals('bulk_delete', $action);
+			$this->assertEquals('bulk_delete', $pListTable->current_action());
 			$this->assertEquals([13], $recordIds);
 			return 'https://example.org/cde';
 		}, 10, 3);
 
-		$pListTableBulkActionsHandler->processBulkAction($pListTable);
+		add_filter('handle_bulk_actions-table-'.__CLASS__, function() use ($pListTable): ListTable {
+			return $pListTable;
+		});
+
+		$pListTableBulkActionsHandler->processBulkAction();
 
 		$this->assertSame($expectsCallbackCall, $functionCalled);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testEmptyTable()
+	{
+		$pListTableBulkActionsHandler = new ListTableBulkActionsHandler
+			($this->_pRequestVariablesSanitizer, $this->_pWPNonceWrapper, $this->_pWPScreenWrapper);
+		$this->assertNull($pListTableBulkActionsHandler->processBulkAction());
 	}
 
 
@@ -127,7 +144,8 @@ class TestClassListTableBulkActionsHandler
 		$pListTable->method('getArgs')
 			->will($this->returnValue(['singular' => 'form', 'plural' => 'forms']));
 		$pListTable->method('current_action')
-			->will($this->onConsecutiveCalls('bulk_delete', false));
+			// gets called twice
+			->will($this->onConsecutiveCalls('bulk_delete', 'bulk_delete', false, false));
 		return [
 			[$pListTable, true],
 			[$pListTable, false],

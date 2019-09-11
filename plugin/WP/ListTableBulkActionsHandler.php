@@ -47,18 +47,18 @@ class ListTableBulkActionsHandler
 
 	/**
 	 *
-	 * @param RequestVariablesSanitizer $pRequestVariableSanizer
+	 * @param RequestVariablesSanitizer $pRequestVariableSanitizer
 	 * @param WPNonceWrapper $pWPNonceWrapper
 	 * @param WPScreenWrapper $pWPScreenWrapper
 	 *
 	 */
 
 	public function __construct(
-		RequestVariablesSanitizer $pRequestVariableSanizer,
+		RequestVariablesSanitizer $pRequestVariableSanitizer,
 		WPNonceWrapper $pWPNonceWrapper,
 		WPScreenWrapper $pWPScreenWrapper)
 	{
-		$this->_pRequestVariableSanitizer = $pRequestVariableSanizer;
+		$this->_pRequestVariableSanitizer = $pRequestVariableSanitizer;
 		$this->_pWPNonceWrapper = $pWPNonceWrapper;
 		$this->_pWPScreenWrapper = $pWPScreenWrapper;
 	}
@@ -66,28 +66,32 @@ class ListTableBulkActionsHandler
 
 	/**
 	 *
-	 * @param ListTable $pListTable
 	 * @return void
 	 *
 	 */
 
-	public function processBulkAction(ListTable $pListTable)
+	public function processBulkAction()
 	{
-		$pListTable->prepare_items();
+		$currentScreen = $this->_pWPScreenWrapper->getID();
+		/* @var $pListTable ListTable */
+		$pListTable = apply_filters('handle_bulk_actions-table-'.$currentScreen, null);
+
+		if (!is_object($pListTable)) {
+			return;
+		}
+
 		$args = $pListTable->getArgs();
 		$nonce = $this->getWPNonce();
 		$nonceaction = 'bulk-'.$args['plural'];
 		$recordIds = $this->getRecordIds($args['singular']);
 		$action = $pListTable->current_action();
-
 		if ($action === false) {
 			return;
 		}
 
 		$this->_pWPNonceWrapper->verify($nonce, $nonceaction);
 		$referer = $this->_pWPNonceWrapper->getReferer();
-		$screen = $this->_pWPScreenWrapper->getID();
-		$redirectTo = apply_filters('handle_bulk_actions-'.$screen, $referer, $action, $recordIds);
+		$redirectTo = apply_filters('handle_bulk_actions-'.$currentScreen, $referer, $pListTable, $recordIds);
 
 		if (!__String::getNew($redirectTo)->isEmpty()) {
 			$this->_pWPNonceWrapper->safeRedirect($redirectTo);

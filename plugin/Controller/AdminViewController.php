@@ -39,6 +39,7 @@ use onOffice\WPlugin\Gui\AdminPageFormSettingsMain;
 use onOffice\WPlugin\Gui\AdminPageModules;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use WP_Hook;
 use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
@@ -66,7 +67,7 @@ use function wp_localize_script;
 class AdminViewController
 {
 	/** @var string */
-	private $_pageSlug = null;
+	private $_pageSlug = 'onoffice';
 
 	/** @var string[] */
 	private $_ajaxHooks = array();
@@ -85,16 +86,6 @@ class AdminViewController
 
 	/** @var AdminPageFormSettingsMain */
 	private $_pAdminPageFormSettings = null;
-
-
-	/**
-	 *
-	 */
-
-	public function __construct()
-	{
-		$this->_pageSlug = 'onoffice';
-	}
 
 
 	/**
@@ -148,19 +139,21 @@ class AdminViewController
 		$roleForm = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_FORM);
 		$roleModules = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_MODULES);
 		$roleSettings = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_SETTINGS);
+		$pDIBuilder = new ContainerBuilder();
+		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pDI = $pDIBuilder->build();
 
 		// main page
 		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'),
-			$roleMainPage, $this->_pageSlug, function() {
-				$pDIBuilder = new ContainerBuilder();
-				$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-				echo $pDIBuilder->build()->get(MainPage::class)->render();
+			$roleMainPage, $this->_pageSlug, function() use ($pDI) {
+				echo $pDI->get(MainPage::class)->render();
 			}, 'dashicons-admin-home');
 
 		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
 		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'), __('Addresses', 'onoffice'),
 			$roleAddress, $this->_pageSlug.'-addresses', array($pAdminPageAddresses, 'render'));
 		add_action('load-'.$hookAddresses, [$pAdminPageAddresses, 'handleAdminNotices']);
+		add_action('current_screen', [$pAdminPageAddresses, 'preOutput']);
 
 		// Estates
 		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),
@@ -171,6 +164,7 @@ class AdminViewController
 		if ($pSelectedSubPage instanceof AdminPageAjax) {
 			add_action( 'load-'.$hookEstates, array($pSelectedSubPage, 'checkForms'));
 		}
+		add_action('current_screen', [$this->_pAdminPageEstates, 'preOutput']);
 
 		// Forms
 		$pAdminPageFormList = new AdminPageFormList($this->_pageSlug);
@@ -217,6 +211,12 @@ class AdminViewController
 			array($pAdminSettingsPage, 'render'));
 		add_action( 'admin_init', array($pAdminSettingsPage, 'registerForms'));
 		add_action( 'load-'.$hookSettings, array($pAdminSettingsPage, 'handleAdminNotices'));
+
+		add_action('current_screen', function() use ($pDI) {
+			/* @var $pWPBulkActionHandler ListTableBulkActionsHandler */
+			$pWPBulkActionHandler = $pDI->get(ListTableBulkActionsHandler::class);
+			$pWPBulkActionHandler->processBulkAction();
+		}, 11);
 	}
 
 
@@ -307,8 +307,7 @@ class AdminViewController
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
 
-			if ($pObject !== null)
-			{
+			if ($pObject !== null) {
 				$pObject->doExtraEnqueues();
 			}
 		}
@@ -331,15 +330,12 @@ class AdminViewController
 		global $wp_filter;
 		$fullHook = $hook;
 
-		if (isset($wp_filter[$fullHook]))
-		{
+		if (isset($wp_filter[$fullHook])) {
 			/* @var $pWpHook WP_Hook */
 			$pWpHook = $wp_filter[$fullHook];
 
-			foreach ($pWpHook->callbacks as $priority => $settingsPriorized)
-			{
-				foreach ($settingsPriorized as $settings)
-				{
+			foreach ($pWpHook->callbacks as $priority => $settingsPriorized) {
+				foreach ($settingsPriorized as $settings) {
 					$pObject = isset($settings['function']) && is_array($settings['function']) ?
 						$settings['function'][0] : null;
 					if ($pObject !== null) {

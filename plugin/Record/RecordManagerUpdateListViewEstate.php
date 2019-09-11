@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -25,9 +25,6 @@ use onOffice\WPlugin\DataView\DataListView;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
 class RecordManagerUpdateListViewEstate
@@ -40,9 +37,9 @@ class RecordManagerUpdateListViewEstate
 	 *
 	 */
 
-	public function updateByDataListView(DataListView $pDataViewList)
+	public function updateByDataListView(DataListView $pDataViewList): bool
 	{
-		$row = array(
+		$row = [
 			'name' => $pDataViewList->getName(),
 			'sortby' => $pDataViewList->getSortby(),
 			'sortorder' => $pDataViewList->getSortOrder(),
@@ -51,7 +48,7 @@ class RecordManagerUpdateListViewEstate
 			'template' => $pDataViewList->getTemplate(),
 			'recordsPerPage' => $pDataViewList->getRecordsPerPage(),
 			'random' => $pDataViewList->getRandom(),
-		);
+		];
 
 		$tableRow = [
 			self::TABLENAME_LIST_VIEW => $row,
@@ -71,13 +68,15 @@ class RecordManagerUpdateListViewEstate
 	 *
 	 */
 
-	public function updateByRow($tableRow)
+	public function updateByRow(array $tableRow): bool
 	{
 		$prefix = $this->getTablePrefix();
 		$pWpDb = $this->getWpdb();
-		$whereListviewTable = array('listview_id' => $this->getRecordId());
+		$suppressErrors = $pWpDb->suppress_errors();
+		$whereListviewTable = ['listview_id' => $this->getRecordId()];
 		$result = $pWpDb->update($prefix.self::TABLENAME_LIST_VIEW,
 			$tableRow[self::TABLENAME_LIST_VIEW], $whereListviewTable);
+		$pWpDb->suppress_errors($suppressErrors);
 
 		if (array_key_exists(self::TABLENAME_FIELDCONFIG, $tableRow)) {
 			$fields = $tableRow[self::TABLENAME_FIELDCONFIG];

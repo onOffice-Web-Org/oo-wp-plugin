@@ -24,19 +24,19 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Controller\UserCapabilities;
-use onOffice\WPlugin\Form\BulkFormDelete;
+use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Record\RecordManagerDeleteForm;
-use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
+
 
 /**
  *
  */
 
-class TestClassBulkFormDelete
+class TestClassBulkDeleteRecord
 	extends WP_UnitTestCase
 {
-	/** @var BulkFormDelete */
+	/** @var BulkDeleteRecord */
 	private $_pSubject = null;
 
 	/** @var RecordManagerDeleteForm */
@@ -44,9 +44,6 @@ class TestClassBulkFormDelete
 
 	/** @var UserCapabilities */
 	private $_pUserCapabilities = null;
-
-	/** @var WPQueryWrapper */
-	private $_pWPQueryWrapper = null;
 
 
 	/**
@@ -60,13 +57,11 @@ class TestClassBulkFormDelete
 		$this->_pRecordManagerDeleteForm = $this->getMockBuilder(RecordManagerDeleteForm::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$this->_pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)->getMock();
 		$this->_pUserCapabilities = $this->getMockBuilder(UserCapabilities::class)
-			->setMethods(['getCapabilityForRule'])
+			->setMethods(['checkIfCurrentUserCan'])
 			->getMock();
 
-		$this->_pSubject = new BulkFormDelete
-			($this->_pRecordManagerDeleteForm, $this->_pWPQueryWrapper, $this->_pUserCapabilities);
+		$this->_pSubject = new BulkDeleteRecord($this->_pUserCapabilities);
 	}
 
 
@@ -76,38 +71,27 @@ class TestClassBulkFormDelete
 
 	public function testDelete()
 	{
-		wp_get_current_user()->add_role('edit_pages');
-		$this->_pUserCapabilities->expects($this->exactly(3))->method('getCapabilityForRule')
-			->will($this->returnValue('edit_pages'));
-		$this->assertSame(2, $this->_pSubject->delete('bulk_delete', [13, 14]));
-		$this->assertSame(1, $this->_pSubject->delete('delete', [11]));
-		$this->assertSame(0, $this->_pSubject->delete('asdf', [11]));
+		$this->_pUserCapabilities->expects($this->exactly(2))->method('checkIfCurrentUserCan')
+			->with(UserCapabilities::RULE_EDIT_VIEW_FORM);
+		$this->assertSame(2, $this->_pSubject->delete($this->_pRecordManagerDeleteForm,
+			UserCapabilities::RULE_EDIT_VIEW_FORM, [13, 14]));
+		$this->assertSame(1, $this->_pSubject->delete($this->_pRecordManagerDeleteForm,
+			UserCapabilities::RULE_EDIT_VIEW_FORM, [11]));
 	}
 
 
 	/**
 	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Not allowed
+	 * @expectedException \onOffice\WPlugin\Controller\Exception\UserCapabilitiesException
 	 *
 	 */
 
 	public function testDeleteNoRight()
 	{
-		$this->_pUserCapabilities->method('getCapabilityForRule')
-			->will($this->returnValue('other_role'));
-		$this->_pSubject->delete('bulk_delete', [13, 14]);
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function tearDown()
-	{
-		wp_get_current_user()->remove_role('edit_pages');
-
-		parent::tearDown();
+		$pException = new \onOffice\WPlugin\Controller\Exception\UserCapabilitiesException();
+		$this->_pUserCapabilities->method('checkIfCurrentUserCan')
+			->with(UserCapabilities::RULE_EDIT_VIEW_FORM)
+			->will($this->throwException($pException));
+		$this->_pSubject->delete($this->_pRecordManagerDeleteForm, UserCapabilities::RULE_EDIT_VIEW_FORM, [13, 14]);
 	}
 }

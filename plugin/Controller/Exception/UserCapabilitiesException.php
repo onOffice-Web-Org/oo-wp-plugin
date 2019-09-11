@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -21,43 +21,15 @@
 
 declare (strict_types=1);
 
-namespace onOffice\WPlugin\Form;
+namespace onOffice\WPlugin\Controller\Exception;
 
-use onOffice\WPlugin\Field\SearchcriteriaFields;
-use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
-interface FormPostInterestConfiguration
+class UserCapabilitiesException
+	extends \Exception
 {
-	/**
-	 *
-	 * @return SDKWrapper
-	 *
-	 */
 
-	public function getSDKWrapper(): SDKWrapper;
-
-
-	/**
-	 *
-	 * @return FormAddressCreator
-	 *
-	 */
-
-	public function getFormAddressCreator(): FormAddressCreator;
-
-
-	/**
-	 *
-	 * @return SearchcriteriaFields
-	 *
-	 */
-
-	public function getSearchcriteriaFields(): SearchcriteriaFields;
 }

@@ -60,8 +60,8 @@ class AdminPageEstateUnitSettings
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$pFormModelBuilder = new FormModelBuilderDBEstateUnitListSettings($this->getPageSlug());
-		$pFormModel = $pFormModelBuilder->generate($this->getListViewId());
+		$pFormModelBuilder = new FormModelBuilderDBEstateUnitListSettings();
+		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);
 
 		$pInputModelName = $pFormModelBuilder->createInputModelName();

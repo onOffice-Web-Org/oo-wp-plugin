@@ -71,6 +71,7 @@ class FormsTable
 	{
 		$args['singular'] = 'form';
 		$args['plural'] = 'forms';
+		$args['screen'] = get_current_screen()->id;
 		parent::__construct($args);
 
 		$this->_itemsPerPage = $this->get_items_per_page('onoffice-forms-forms_per_page', 10);

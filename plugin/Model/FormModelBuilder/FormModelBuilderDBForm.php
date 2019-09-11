@@ -56,13 +56,10 @@ class FormModelBuilderDBForm
 
 	/**
 	 *
-	 * @param string $pageSlug
-	 *
 	 */
 
-	public function __construct($pageSlug)
+	public function __construct()
 	{
-		parent::__construct($pageSlug);
 		$pConfigForm = new InputModelDBFactoryConfigForm();
 		$pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
 		$this->setInputModelDBFactory($pInputModelDBFactory);
@@ -173,12 +170,14 @@ class FormModelBuilderDBForm
 
 	/**
 	 *
+	 * @param string $pageSlug
 	 * @param int $formId
 	 * @return FormModel
+	 * @throws Exception
 	 *
 	 */
 
-	public function generate($formId = null)
+	public function generate(string $pageSlug, $formId = null): FormModel
 	{
 		if ($this->_formType === null) {
 			throw new Exception('formType must be set!');
@@ -206,7 +205,7 @@ class FormModelBuilderDBForm
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Form', 'onoffice'));
 		$pFormModel->setGroupSlug('onoffice-form-settings');
-		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setPageSlug($pageSlug);
 
 		return $pFormModel;
 	}

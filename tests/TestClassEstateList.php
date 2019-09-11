@@ -522,6 +522,21 @@ class TestClassEstateList
 	 *
 	 */
 
+	public function testGetDocumentEmpty()
+	{
+		$pEstateList = new EstateList(new DataListView(13, 'test'));
+		$pEstateList->estateIterator();
+		$this->assertEmpty($pEstateList->getDocument());
+
+		$pEstateList->estateIterator();
+		$this->assertEmpty($pEstateList->getDocument());
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testGetVisibleFilterableFields()
 	{
 		$pMockOutputFields = $this->getMockBuilder(OutputFields::class)
@@ -715,6 +730,7 @@ class TestClassEstateList
 		$pDataView->setAddressFields(['Vorname', 'Name']);
 		$pDataView->setShowStatus(true);
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
+		$pDataView->setExpose('testExpose');
 		return $pDataView;
 	}
 

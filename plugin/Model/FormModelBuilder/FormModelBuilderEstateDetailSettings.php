@@ -62,13 +62,10 @@ class FormModelBuilderEstateDetailSettings
 
 	/**
 	 *
-	 * @param string $pageSlug
-	 *
 	 */
 
-	public function __construct($pageSlug)
+	public function __construct()
 	{
-		parent::__construct($pageSlug);
 		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
 			(new FieldModuleCollectionDecoratorReadAddress
 				(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection())));
@@ -84,16 +81,16 @@ class FormModelBuilderEstateDetailSettings
 	 *
 	 */
 
-	public function generate()
+	public function generate(string $pageSlug): FormModel
 	{
-		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView($this->getPageSlug());
+		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView($pageSlug);
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$this->_pDataDetailView = $pDataDetailViewHandler->getDetailView();
 
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Detail View', 'onoffice'));
 		$pFormModel->setGroupSlug('onoffice-detailview-settings-main');
-		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setPageSlug($pageSlug);
 
 		return $pFormModel;
 	}

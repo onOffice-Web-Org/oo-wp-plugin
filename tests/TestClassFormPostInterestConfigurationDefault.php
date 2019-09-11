@@ -61,17 +61,6 @@ class TestClassFormPostInterestConfigurationDefault
 	 *
 	 */
 
-	public function testGetPostValues()
-	{
-		$_POST = ['test' => 'asdfpost'];
-		$this->assertEquals(['test' => 'asdfpost'], $this->_pSubject->getPostValues());
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testGetSDKWrapper()
 	{
 		$this->assertInstanceOf(SDKWrapper::class, $this->_pSubject->getSDKWrapper());
