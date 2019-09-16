@@ -103,28 +103,6 @@ class RecordManagerReadForm
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	/*public function getFormIds(): array
-	{
-		$prefix = $this->getTablePrefix();
-		$pWpDb = $this->getWpdb();
-
-		$sql = "SELECT
-				`id`
-				FROM
-				{$prefix}oo_plugin_forms";
-
-		$result = $pWpDb->get_results($sql, ARRAY_A);
-
-		return $result;
-	}*/
-
-
-	/**
-	 *
 	 * @param int $formId
 	 * @return array
 	 *

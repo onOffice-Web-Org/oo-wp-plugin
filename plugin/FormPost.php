@@ -154,7 +154,8 @@ abstract class FormPost
 
 	private function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
 	{
-		$pFormFieldValidator = new FormFieldValidator($this->_pBuilderShort);
+		$pFormFieldValidator = new FormFieldValidator($this->_pBuilderShort,
+				new RequestVariablesSanitizer);
 
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields);

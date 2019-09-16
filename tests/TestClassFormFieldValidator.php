@@ -27,6 +27,7 @@ use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form\FormFieldValidator;
+use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -93,7 +94,7 @@ class TestClassFormFieldValidator
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
-			$this->_pInstance = new FormFieldValidator($this->_pFieldsCollectionBuilderShort);
+			$this->_pInstance = new FormFieldValidator($this->_pFieldsCollectionBuilderShort, new RequestVariablesSanitizer);
 	}
 
 
