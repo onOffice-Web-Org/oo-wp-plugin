@@ -76,6 +76,10 @@ class TestClassFormFieldValidator
 				$pFieldWohnfl->setType(FieldTypes::FIELD_TYPE_FLOAT);
 				$pFieldsCollection->addField($pFieldWohnfl);
 
+				$pFieldAnzBadezi = new Field('anzahl_badezimmer', onOfficeSDK::MODULE_ESTATE);
+				$pFieldAnzBadezi->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldsCollection->addField($pFieldAnzBadezi);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -96,18 +100,27 @@ class TestClassFormFieldValidator
 
 	/**
 	 *
-	 * @covers onOffice\WPlugin\Form\FormFieldValidator::validate
-	 * @covers onOffice\WPlugin\Form\FormFieldValidator::validateField
-	 * @covers onOffice\WPlugin\Form\FormFieldValidator::validateByType
+	 * @covers onOffice\WPlugin\Form\FormFieldValidator::getValidatedValues
+	 * @covers onOffice\WPlugin\Form\FormFieldValidator::isEmptyValue
+	 * @covers onOffice\WPlugin\Form\FormFieldValidator::getTypeByFieldname
+	 * @covers onOffice\WPlugin\Form\FormFieldValidator::getValueFromRequest
 	 *
 	 */
 
-	public function testValidate()
+	public function testGetValidatedValues()
 	{
-		$data = [
+		$_POST = [
 			'Vorname' => 'Max',
 			'anzahl_zimmer' => '5.9',
 			'wohnflaeche' => '105.4',
+			'anzahl_badezimmer' => '',
+		];
+
+		$data = [
+			'Vorname' => 'address',
+			'anzahl_zimmer' => 'estate',
+			'wohnflaeche' => 'estate',
+			'anzahl_badezimmer' => 'estate',
 		];
 
 		$expectedData = [
@@ -116,6 +129,6 @@ class TestClassFormFieldValidator
 			'wohnflaeche' => 105.4,
 		];
 
-		$this->assertEquals($expectedData, $this->_pInstance->validate($data));
+		$this->assertEquals($expectedData, $this->_pInstance->getValidatedValues($data));
 	}
 }

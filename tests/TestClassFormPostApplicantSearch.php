@@ -33,6 +33,9 @@ use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostApplicantSearch;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
 use function json_decode;
@@ -56,6 +59,8 @@ class TestClassFormPostApplicantSearch
 	/** @var DataFormConfigurationApplicantSearch */
 	private $_pDataFormConfiguration = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
 	/**
 	 *
@@ -67,14 +72,53 @@ class TestClassFormPostApplicantSearch
 	{
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+
+				$pField1 = new Field('asd', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+
+				$FieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+				$FieldObjektart->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldsCollection->addField($FieldObjektart);
+
+				$FieldVermarktungsart = new Field('vermarktungsart', onOfficeSDK::MODULE_ESTATE);
+				$FieldVermarktungsart->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldsCollection->addField($FieldVermarktungsart);
+
+				$pFieldWohnfl = new Field('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
+				$pFieldWohnfl->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldsCollection->addField($pFieldWohnfl);
+
+				$pFieldKabelSatTv = new Field('kaufpreis', onOfficeSDK::MODULE_ESTATE);
+				$pFieldKabelSatTv->setType(FieldTypes::FIELD_TYPE_INTEGER);
+				$pFieldsCollection->addField($pFieldKabelSatTv);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
 		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pLogger);
 		$pSDKWrapperMocker = $this->setupSDKWrapperMocker();
-		$this->_pFormPostConfigurationTest->setPostVariables([
+		$_POST = [
 			'objektart' => 'haus',
 			'vermarktungsart' => 'kauf',
 			'kaufpreis' => '200000',
 			'wohnflaeche' => '800',
-		]);
+		];
 
 		$this->setupDataFormConfiguration();
 
@@ -85,7 +129,7 @@ class TestClassFormPostApplicantSearch
 		$pSearchcriteriaFields->method('getFormFields')->with($this->anything())->will($this->returnArgument(0));
 
 		$this->_pFormPostApplicantSearch = new FormPostApplicantSearch($this->_pFormPostConfigurationTest,
-			$pSDKWrapperMocker, $pSearchcriteriaFields);
+			$pSDKWrapperMocker, $pSearchcriteriaFields, $this->_pFieldsCollectionBuilderShort);
 	}
 
 
@@ -112,8 +156,8 @@ class TestClassFormPostApplicantSearch
 			'searchdata' => [
 				'objektart' => 'haus',
 				'vermarktungsart' => 'kauf',
-				'kaufpreis' => '200000',
-				'wohnflaeche' => '800',
+				'kaufpreis' => 200000,
+				'wohnflaeche' => 800,
 			],
 			'outputall' => true,
 			'groupbyaddress' => true,
@@ -186,6 +230,13 @@ class TestClassFormPostApplicantSearch
 
 	public function testGeneral()
 	{
+		$_POST = [
+			'objektart' => 'haus',
+			'vermarktungsart' => 'kauf',
+			'kaufpreis' => '200000',
+			'wohnflaeche' => '800',
+		];
+
 		$this->_pFormPostApplicantSearch->initialCheck($this->_pDataFormConfiguration, 2);
 		$pFormData = $this->_pFormPostApplicantSearch->getFormDataInstance(Form::TYPE_APPLICANT_SEARCH, 2);
 
@@ -200,6 +251,13 @@ class TestClassFormPostApplicantSearch
 
 	public function testApplicantResult()
 	{
+		$_POST = [
+			'objektart' => 'haus',
+			'vermarktungsart' => 'kauf',
+			'kaufpreis' => '200000',
+			'wohnflaeche' => '800',
+		];
+
 		$this->_pFormPostApplicantSearch->initialCheck($this->_pDataFormConfiguration, 2);
 		$pFormData = $this->_pFormPostApplicantSearch->getFormDataInstance(Form::TYPE_APPLICANT_SEARCH, 2);
 
@@ -229,9 +287,9 @@ class TestClassFormPostApplicantSearch
 
 	public function testRequiredFields()
 	{
-		$this->_pFormPostConfigurationTest->setPostVariables([
+		$_POST = [
 			'vermarktungsart' => 'kauf',
-		]);
+		];
 
 		$this->_pFormPostApplicantSearch->initialCheck($this->_pDataFormConfiguration, 2);
 		$pFormData = $this->_pFormPostApplicantSearch->getFormDataInstance(Form::TYPE_APPLICANT_SEARCH, 2);

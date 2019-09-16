@@ -27,10 +27,13 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
+use function sanitize_email;
+use function sanitize_text_field;
 
 /**
  *
@@ -49,13 +52,15 @@ class FormPostInterest
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostInterestConfiguration $pFormPostInterestConfiguration
+	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 *
 	 */
 
 	public function __construct(FormPostConfiguration $pFormPostConfiguration,
-		FormPostInterestConfiguration $pFormPostInterestConfiguration)
+		FormPostInterestConfiguration $pFormPostInterestConfiguration,
+		FieldsCollectionBuilderShort $pBuilderShort)
 	{
-		parent::__construct($pFormPostConfiguration);
+		parent::__construct($pFormPostConfiguration, $pBuilderShort);
 		$this->_pFormPostInterestConfiguration = $pFormPostInterestConfiguration;
 	}
 

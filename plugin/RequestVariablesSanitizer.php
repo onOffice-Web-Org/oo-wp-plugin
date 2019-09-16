@@ -32,12 +32,12 @@ class RequestVariablesSanitizer
 	 *
 	 * @param string $name
 	 * @param int $filter
-	 * @param int $option
+	 * @param int|array $option
 	 * @return mixed
 	 *
 	 */
 
-	public function getFilteredGet(string $name, int $filter = FILTER_DEFAULT, int $option = null)
+	public function getFilteredGet(string $name, int $filter = FILTER_DEFAULT, $option = null)
 	{
 		return $this->getFiltered($_GET, $name, $filter, $option);
 	}
@@ -47,12 +47,12 @@ class RequestVariablesSanitizer
 	 *
 	 * @param string $name
 	 * @param int $filter
-	 * @param int $option
+	 * @param int|array $option
 	 * @return mixed
 	 *
 	 */
 
-	public function getFilteredPost(string $name, int $filter = FILTER_DEFAULT, int $option = null)
+	public function getFilteredPost(string $name, int $filter = FILTER_DEFAULT, $option = null)
 	{
 		return $this->getFiltered($_POST, $name, $filter, $option);
 	}
@@ -63,12 +63,12 @@ class RequestVariablesSanitizer
 	 * @param array $inputVariable
 	 * @param string $name
 	 * @param int $filter
-	 * @param int $option
+	 * @param int|array $option
 	 * @return mixed
 	 *
 	 */
 
-	private function getFiltered(array $inputVariable, string $name, int $filter, int $option = null)
+	private function getFiltered(array $inputVariable, string $name, int $filter, $option = null)
 	{
 		$variable = stripslashes_deep($inputVariable[$name] ?? null);
 		return filter_var($variable, $filter, $option);

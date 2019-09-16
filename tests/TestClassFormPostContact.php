@@ -37,6 +37,9 @@ use onOffice\WPlugin\FormPostContact;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -62,6 +65,8 @@ class TestClassFormPostContact
 	/** @var SDKWrapperMocker */
 	private $_pSDKWrapperMocker = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
 	/**
 	 *
@@ -81,11 +86,70 @@ class TestClassFormPostContact
 		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
 		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
 			new FieldsCollectionBuilderShort($pContainer));
+
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+
+				$pField1 = new Field('asd', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pFieldVorname = new Field('Vorname', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldVorname->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldVorname);
+
+				$pFieldName = new Field('Name', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldName->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldName);
+
+				$pFieldEmail = new Field('Email', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldEmail->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldEmail);
+
+				$pFieldPlz = new Field('Plz', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldPlz->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldPlz);
+
+				$FieldOrt = new Field('Ort', onOfficeSDK::MODULE_ADDRESS);
+				$FieldOrt->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($FieldOrt);
+
+				$FieldTelefon1 = new Field('Telefon1', onOfficeSDK::MODULE_ADDRESS);
+				$FieldTelefon1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($FieldTelefon1);
+
+				$pFieldAgbAkzeptiert = new Field('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldAgbAkzeptiert->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pFieldsCollection->addField($pFieldAgbAkzeptiert);
+
+				$pFieldId = new Field('Id', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldId->setType(FieldTypes::FIELD_TYPE_INTEGER);
+				$pFieldsCollection->addField($pFieldId);
+
+				$pFieldAnrede = new Field('Anrede', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldAnrede->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldsCollection->addField($pFieldAnrede);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
 		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest
 			($this->_pSDKWrapperMocker, $pWPQueryWrapper, $pFormAddressCreator);
 		$this->_pFormPostContactConfiguration->setReferrer('/test/page');
 		$this->_pFormPostContact = new FormPostContact($this->_pFormPostConfiguration,
-			$this->_pFormPostContactConfiguration);
+			$this->_pFormPostContactConfiguration, $this->_pFieldsCollectionBuilderShort);
 
 		$this->configureSDKWrapperForContactAddress();
 		$this->configureSDKWrapperForCreateAddress();
@@ -223,9 +287,8 @@ class TestClassFormPostContact
 
 	public function testSendWithoutNewAddress()
 	{
-		$postVariables = $this->getPostVariables();
+		$_POST = $this->getPostVariables();
 
-		$this->_pFormPostConfiguration->setPostVariables($postVariables);
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
@@ -240,9 +303,8 @@ class TestClassFormPostContact
 
 	public function testSendWithNewAddress()
 	{
-		$postVariables = $this->getPostVariables();
+		$_POST = $this->getPostVariables();
 
-		$this->_pFormPostConfiguration->setPostVariables($postVariables);
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
@@ -258,9 +320,8 @@ class TestClassFormPostContact
 
 	public function testSendWithNewAddressAndCheckDuplicate()
 	{
-		$postVariables = $this->getPostVariables();
+		$_POST = $this->getPostVariables();
 
-		$this->_pFormPostConfiguration->setPostVariables($postVariables);
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);
 		$pDataFormConfiguration->setCheckDuplicateOnCreateAddress(true);
@@ -277,9 +338,8 @@ class TestClassFormPostContact
 
 	public function testSendWithNewAddressAndNewsletter()
 	{
-		$postVariables = $this->getPostVariables();
+		$_POST = $this->getPostVariables();
 
-		$this->_pFormPostConfiguration->setPostVariables($postVariables);
 		$this->_pFormPostContactConfiguration->setNewsletterAccepted(true);
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);

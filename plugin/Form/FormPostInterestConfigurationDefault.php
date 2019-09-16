@@ -65,18 +65,6 @@ class FormPostInterestConfigurationDefault
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	public function getPostValues(): array
-	{
-		return sanitize_post($_POST, 'db');
-	}
-
-
-	/**
-	 *
 	 * @return SDKWrapper
 	 *
 	 */

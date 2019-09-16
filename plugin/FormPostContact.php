@@ -25,10 +25,12 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
+use function sanitize_text_field;
 
 
 /**
@@ -50,15 +52,17 @@ class FormPostContact
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostContactConfiguration $pFormPostContactConfiguration
+	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 *
 	 */
 
 	public function __construct(FormPostConfiguration $pFormPostConfiguration,
-		FormPostContactConfiguration $pFormPostContactConfiguration)
+		FormPostContactConfiguration $pFormPostContactConfiguration,
+		FieldsCollectionBuilderShort $pBuilderShort)
 	{
 		$this->_pFormPostContactConfiguration = $pFormPostContactConfiguration;
 
-		parent::__construct($pFormPostConfiguration);
+		parent::__construct($pFormPostConfiguration, $pBuilderShort);
 	}
 
 

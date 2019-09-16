@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\Form;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 
@@ -41,15 +42,11 @@ class FormFieldValidator
 	/** @var FieldsCollection */
 	private $_pFieldsCollection = null;
 
+	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort = null;
 
-
-	/** @var array */
-	static private $_possibleModules = [
-		onOfficeSDK::MODULE_ADDRESS,
-		onOfficeSDK::MODULE_ESTATE,
-		onOfficeSDK::MODULE_SEARCHCRITERIA,
-	];
+	/** @var RequestVariablesSanitizer */
+	private $_pRequestSanitizer = null;
 
 	/**
 	 *
@@ -66,21 +63,28 @@ class FormFieldValidator
 
 	/**
 	 *
-	 * @param array $formData
+	 * @param array $formFields
 	 * @return array
 	 *
 	 */
 
-	public function validate(array $formData): array
+	public function getValidatedValues(array $formFields): array
 	{
 		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($this->_pFieldsCollection);
 		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($this->_pFieldsCollection);
+		$this->_pRequestSanitizer = new RequestVariablesSanitizer;
 
 		$sanitizedData = [];
 
-		foreach ($formData as $key => $value)
-		{
-			$sanitizedData[$key] = $this->validateField($key, $value);
+		foreach ($formFields as $fieldName => $module){
+			if (!$this->isEmptyValue($fieldName)){
+				$dataType = FieldTypes::FIELD_TYPE_VARCHAR;
+				if ($module != null)
+				{
+					$dataType = $this->getTypeByFieldname($fieldName, $module);
+				}
+				$sanitizedData[$fieldName] = $this->getValueFromRequest($dataType, $fieldName);
+			}
 		}
 
 		return $sanitizedData;
@@ -89,63 +93,70 @@ class FormFieldValidator
 
 	/**
 	 *
-	 * @param string $fieldname
-	 * @param mixed $value
-	 * @return mixed
+	 * @param type $fieldName
+	 * @return bool
 	 *
 	 */
 
-	private function validateField(string $fieldname, $value)
+	private function isEmptyValue(string $fieldName): bool
 	{
-		foreach (self::$_possibleModules as $module)
-		{
-			if ($this->_pFieldsCollection->containsFieldByModule($module, $fieldname))
-			{
-				$pField = $this->_pFieldsCollection->getFieldByModuleAndName($module, $fieldname);
-				$type = $pField->getType();
+		$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_SANITIZE_STRING);
 
-				$value = $this->validateByType($value, $type);
-				break;
-			}
-		}
-		return $value;
+		return trim($value) === '';
 	}
 
 
 	/**
 	 *
-	 * @param mixed $value
-	 * @param string $type
+	 * @param string $fieldname
+	 * @return string
+	 *
+	 */
+
+	private function getTypeByFieldname(string $fieldname, string $module): string
+	{
+		$type = FieldTypes::FIELD_TYPE_VARCHAR;
+
+		if ($this->_pFieldsCollection->containsFieldByModule($module, $fieldname)){
+			$pField = $this->_pFieldsCollection->getFieldByModuleAndName($module, $fieldname);
+			$type = $pField->getType();
+		}
+
+		return $type;
+	}
+
+
+	/**
+	 *
+	 * @param string $dataType
+	 * @param string $fieldName
 	 * @return mixed
 	 *
 	 */
 
-	private function validateByType($value, string $type)
+	private function getValueFromRequest(string $dataType, string $fieldName)
 	{
 		$filter = FILTER_DEFAULT;
-
 		$filters = FieldTypes::getInputVarSanitizers();
 
-		if (array_key_exists($type, $filters))
-		{
-			$filter = $filters[$type];
+		if (array_key_exists($dataType, $filters)){
+			$filter = $filters[$dataType];
 		}
 
-		$options = null;
-
-		if ($filter === FILTER_VALIDATE_INT)
-		{
-			$options = ['options' => ['default' => intval($value)]];
-			$returnValue = filter_var($value, $filter, $options);
+		if ($filter === FILTER_VALIDATE_INT){
+			$filter = FILTER_SANITIZE_STRING;
 		}
-		else
-		{
-			$returnValue = filter_var($value, $filter);
 
-			if ($type == FieldTypes::FIELD_TYPE_FLOAT)
-			{
+		$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, $filter);
+
+		switch ($dataType){
+			case FieldTypes::FIELD_TYPE_INTEGER:
+				$returnValue = (int) $returnValue;
+				break;
+
+			case FieldTypes::FIELD_TYPE_FLOAT:
 				$returnValue = (float) $returnValue;
-			}
+				break;
 		}
 
 		return $returnValue;

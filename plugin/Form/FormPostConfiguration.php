@@ -33,14 +33,6 @@ use onOffice\WPlugin\WP\WPOptionWrapperBase;
 
 interface FormPostConfiguration
 {
-	/**
-	 *
-	 * @return array all the post variables
-	 *
-	 */
-
-	public function getPostVars(): array;
-
 
 	/**
 	 *

@@ -35,6 +35,9 @@ use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostInterest;
+use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
@@ -62,6 +65,8 @@ class TestClassFormPostInterest
 	/** @var SDKWrapperMocker */
 	private $_pSDKWrapperMocker = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
 	/**
 	 *
@@ -104,12 +109,53 @@ class TestClassFormPostInterest
 			'kaufpreis__bis' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 		]));
 
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+
+				$pField1 = new Field('vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				$pField2 = new Field('kaufpreis__von', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField2->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldsCollection->addField($pField2);
+
+				$pField3 = new Field('kaufpreis__bis', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField3->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldsCollection->addField($pField3);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+			$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pFieldVorname = new Field('Vorname', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldVorname->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldVorname);
+
+				$pFieldName = new Field('Name', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldName->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldName);
+
+				$pFieldEmail = new Field('Email', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldEmail->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldEmail);
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
 		$this->_pFormPostInterestConfiguration = new FormPostInterestConfigurationTest
 			($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields);
 
 		$this->_pFormPostInterest = new FormPostInterest($this->_pFormPostConfiguration,
-			$this->_pFormPostInterestConfiguration);
+			$this->_pFormPostInterestConfiguration, $this->_pFieldsCollectionBuilderShort);
 	}
 
 
@@ -119,8 +165,7 @@ class TestClassFormPostInterest
 
 	public function testInitialCheck()
 	{
-		$pConfig = $this->getNewDataFormConfigurationInterest();
-		$postVariables = [
+		$_POST = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
 			'Email' => 'john@doemail.com',
@@ -129,8 +174,8 @@ class TestClassFormPostInterest
 			'kaufpreis__bis' => '800000.00',
 		];
 
-		$this->_pFormPostConfiguration->setPostVariables($postVariables);
-		$this->_pFormPostInterestConfiguration->setPostValues($postVariables);
+		$pConfig = $this->getNewDataFormConfigurationInterest();
+
 		$this->addApiResponseCreateAddress(true);
 		$this->addApiResponseCreateSearchCriteria(true);
 		$this->addApiResponseSendMail(true);
@@ -148,7 +193,7 @@ class TestClassFormPostInterest
 	public function testUnsuccessful()
 	{
 		$pConfig = $this->getNewDataFormConfigurationInterest();
-		$postVariables = [
+		$_POST = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
 			'Email' => 'john@doemail.com',
@@ -167,8 +212,6 @@ class TestClassFormPostInterest
 			[true, true, false],
 		];
 
-		$this->_pFormPostConfiguration->setPostVariables($postVariables);
-		$this->_pFormPostInterestConfiguration->setPostValues($postVariables);
 		$this->_pFormPostConfiguration->getLogger()
 			->expects($this->exactly(count($unsuccessfulCombinations)))->method('logError');
 
@@ -191,11 +234,9 @@ class TestClassFormPostInterest
 	public function testMissingFields()
 	{
 		$pConfig = $this->getNewDataFormConfigurationInterest();
-		$postValues = [
+		$_POST = [
 			'Vorname' => 'John',
 		];
-		$this->_pFormPostConfiguration->setPostVariables($postValues);
-		$this->_pFormPostInterestConfiguration->setPostValues($postValues);
 
 		$this->_pFormPostInterest->initialCheck($pConfig, 3);
 		$pFormData = $this->_pFormPostInterest->getFormDataInstance('interestform', 3);
@@ -289,8 +330,8 @@ class TestClassFormPostInterest
 		$parameters = [
 			'data' => [
 				'vermarktungsart' => 'kauf',
-				'kaufpreis__von' => '200000.00',
-				'kaufpreis__bis' => '800000.00',
+				'kaufpreis__von' => 200000.00,
+				'kaufpreis__bis' => 800000.00,
 			],
 			'addressid' => 294,
 		];

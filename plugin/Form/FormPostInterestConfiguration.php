@@ -46,15 +46,6 @@ interface FormPostInterestConfiguration
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	public function getPostValues(): array;
-
-
-	/**
-	 *
 	 * @return FormAddressCreator
 	 *
 	 */
