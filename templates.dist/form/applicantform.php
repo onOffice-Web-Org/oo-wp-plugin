@@ -47,7 +47,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$line .= renderFormField($input, $pForm);
 
 	if ( $pForm->isMissingField( $input ) ) {
-		$line .= '<span>'.esc_html__('Bitte ausfüllen!', 'onoffice').'</span>';
+		$line .= '<span>'.esc_html__('Please fill in', 'onoffice').'</span>';
 	}
 
 	if ($table == 'address') {

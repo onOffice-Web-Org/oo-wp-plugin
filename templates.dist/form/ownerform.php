@@ -47,7 +47,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$line .= renderFormField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
-			$line .= ' <span>'.esc_html__('Bitte ausfüllen!', 'onoffice').'</span>';
+			$line .= ' <span>'.esc_html__('Please fill in!', 'onoffice').'</span>';
 		}
 
 		if ($table == 'address') {
@@ -68,11 +68,11 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$addressValues []= $messageInput;
 	}
 
-	echo '<h2>'.esc_html__('Ihre Kontaktdaten', 'onoffice').'</h2>'
+	echo '<h2>'.esc_html__('Your contact details', 'onoffice').'</h2>'
 		.'<p>';
 	echo implode('<br>', $addressValues);
 	echo '</p>
-		<h2>'.esc_html__('Angaben zu Ihrem Eigentum', 'onoffice').'</h2>
+		<h2>'.esc_html__('Information about your property', 'onoffice').'</h2>
 		<p>';
 	echo implode('<br>', $estateValues);
 	echo '</p>';

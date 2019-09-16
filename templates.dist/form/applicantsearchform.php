@@ -48,7 +48,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ( $pForm->isMissingField( $input ) ) {
-		echo '<span class="onoffice-pleasefill">'.esc_html__('Bitte ausfüllen!', 'onoffice').'</span>';
+		echo '<span class="onoffice-pleasefill">'.esc_html__('Please fill in!', 'onoffice').'</span>';
 	}
 
 	$isRequired = $pForm->isRequiredField( $input );
@@ -61,7 +61,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	if ($input == 'Umkreis') {
 		echo '<br>'
 			.'<fieldset>'
-			.'<legend>'.esc_html__('Umkreissuche:', 'onoffice').'</legend>';
+			.'<legend>'.esc_html__('search within distance of:', 'onoffice').'</legend>';
 
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
 			echo esc_html($values['label']).':<br>';
@@ -70,7 +70,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 				$permittedValues = $values['permittedvalues'];
 
 				echo '<select size="1" name="'.$key.'">';
-				echo '<option value="">'.esc_html('Keine Angabe').'</option>';
+				echo '<option value="">'.esc_html('not specified').'</option>';
 
 				foreach ( $permittedValues as $countryCode => $countryName ) {
 					echo '<option value="'.esc_attr($countryCode).'">'
@@ -150,7 +150,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				$umkreis[$realName] = $value;
 
 				if ($name == 'range' && $value > 0) {
-					$umkreis[$realName] .= 'km Umkreis';
+					$umkreis[$realName] .= esc_html('km distance');
 				}
 			} else {
 				$realName = $pForm->getFieldLabel($name);

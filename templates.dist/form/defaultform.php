@@ -48,7 +48,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ( $pForm->isMissingField( $input ) ) {
-			echo esc_html__('Bitte ausfüllen!', 'onoffice');
+			echo esc_html__('Please fill in!', 'onoffice');
 		}
 
 		if ( in_array( $input, array('message', 'Id') ) ) {
@@ -69,7 +69,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		<?php
 		esc_html_e('Message', 'onoffice');
 		echo $additionMessage; ?>:<br>
-		<textarea name="message"><?php echo esc_html($pForm->getFieldValue( 'message' )); ?></textarea><br>
+		<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
 
 <?php
 	endif;
