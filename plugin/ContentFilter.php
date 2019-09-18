@@ -179,12 +179,22 @@ class ContentFilter
 
 	private function setAllowedGetParametersEstate(DataListView $pDataView)
 	{
+		global $wp_query;
+		$valuesGetter = [];
+		$pRequestVariableSanitizer = new RequestVariablesSanitizer();
+
 		$pFieldNames = new Fieldnames
 			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection()));
 		$pFieldNames->loadLanguage();
-		$pSearchParameters = SearchParameters::getInstance();
+		$pSearchParameters = new SearchParameters();
 		$filterableFieldsView = $pDataView->getFilterableFields();
 		$filterableFields = $this->setAllowedGetParametersEstateGeo($filterableFieldsView);
+
+		foreach ($filterableFields as $filterableField) {
+			$value = $pRequestVariableSanitizer->getFilteredGet($filterableField);
+			$valuesGetter[$filterableField] = $value;
+			$wp_query->set($filterableField, $value);
+		}
 
 		foreach ($filterableFields as $filterableField) {
 			try {
@@ -205,6 +215,11 @@ class ContentFilter
 
 			$pSearchParameters->addAllowedGetParameter($filterableField);
 		}
+
+		$pSearchParameters->setParameters($valuesGetter);
+
+		add_filter('wp_link_pages_link', [$pSearchParameters, 'linkPagesLink'], 10, 2);
+		add_filter('wp_link_pages_args', [$pSearchParameters, 'populateDefaultLinkParams']);
 	}
 
 
@@ -223,7 +238,7 @@ class ContentFilter
 			$pGeoPosition = new GeoPosition();
 			$geoPositionFields = $pGeoPosition->getEstateSearchFields();
 			foreach ($geoPositionFields as $geoPositionField) {
-				SearchParameters::getInstance()->addAllowedGetParameter($geoPositionField);
+				$filterableFields []= $geoPositionField;
 			}
 			unset($filterableFields[$positionGeoPos]);
 		}

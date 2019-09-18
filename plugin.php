@@ -47,7 +47,6 @@ use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
-use onOffice\WPlugin\SearchParameters;
 use onOffice\WPlugin\Utility\__String;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
@@ -60,8 +59,6 @@ $pContentFilter = $pDI->get(ContentFilter::class);
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
-$pSearchParams = SearchParameters::getInstance();
-$pSearchParams->setParameters($_GET);
 
 add_action('init', [$pContentFilter, 'addCustomRewriteTags']);
 add_action('init', [$pContentFilter, 'addCustomRewriteRules']);
@@ -92,9 +89,6 @@ add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 add_action('plugins_loaded', function() {
 	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR).'/languages');
 });
-
-add_filter('wp_link_pages_link', [$pSearchParams, 'linkPagesLink'], 10, 2);
-add_filter('wp_link_pages_args', [$pSearchParams, 'populateDefaultLinkParams']);
 
 // "Settings" link in plugins list
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewController, 'pluginSettingsLink']);

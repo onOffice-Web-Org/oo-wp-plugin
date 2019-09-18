@@ -42,9 +42,6 @@ use function user_trailingslashit;
 
 class SearchParameters
 {
-	/** @var SearchParameters */
-	private static $_pInstance = null;
-
 	/** @var array */
 	private $_parameters = array();
 
@@ -57,28 +54,6 @@ class SearchParameters
 	/** @var bool */
 	private $_filter = true;
 
-	/** */
-	private function __construct() {}
-
-	/** */
-	private function __clone() {}
-
-
-	/**
-	 *
-	 * @return SearchParameters
-	 *
-	 */
-
-	public static function getInstance()
-	{
-		if (self::$_pInstance === null) {
-			self::$_pInstance = new static();
-		}
-
-		return self::$_pInstance;
-	}
-
 
 	/**
 	 *
@@ -86,7 +61,7 @@ class SearchParameters
 	 *
 	 */
 
-	public function getParameters()
+	public function getParameters(): array
 	{
 		$parameters = $this->_parameters;
 
@@ -117,7 +92,7 @@ class SearchParameters
 	 *
 	 */
 
-	private function filterParameters($parameters)
+	private function filterParameters(array $parameters): array
 	{
 		$whitelist = array_merge($this->_allowedGetParameters, ['oo_formid', 'oo_formno']);
 		$whitelistKey = array_flip($whitelist);
@@ -153,7 +128,7 @@ class SearchParameters
 	 *
 	 */
 
-	public function linkPagesLink($link, $i = 1)
+	public function linkPagesLink($link, $i = 1): string
 	{
 		global $page, $more;
 
@@ -185,7 +160,7 @@ class SearchParameters
 	 *
 	 */
 
-	private function getLinkSnippetForPage($i, $page)
+	private function getLinkSnippetForPage($i, $page): string
 	{
 		$linkparams = $this->_defaultLinkParams;
 
@@ -204,7 +179,7 @@ class SearchParameters
 	 *
 	 */
 
-	private function geturl($i)
+	private function geturl($i): string
 	{
 		$url = trailingslashit(get_permalink()).user_trailingslashit($i, 'single_paged');
 		return add_query_arg($this->getParameters(), $url);
@@ -218,7 +193,7 @@ class SearchParameters
 	 *
 	 */
 
-	public function populateDefaultLinkParams($params)
+	public function populateDefaultLinkParams($params): array
 	{
 		$this->_defaultLinkParams = $params;
 		return $params;
@@ -259,4 +234,19 @@ class SearchParameters
 	{
 		$this->_filter = (bool) $enable;
 	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getAllowedGetParameters(): array
+		{ return $this->_allowedGetParameters;	}
+
+
+	/** @return bool */
+	public function getFilter(): bool
+		{ return $this->_filter; }
 }
