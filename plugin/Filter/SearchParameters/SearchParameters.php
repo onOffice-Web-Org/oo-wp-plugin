@@ -23,7 +23,6 @@
 namespace onOffice\WPlugin\Filter\SearchParameters;
 
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
-
 use function add_query_arg;
 use function esc_url;
 use function get_permalink;
@@ -38,51 +37,6 @@ use function user_trailingslashit;
 
 class SearchParameters
 {
-	/** @var array */
-	private $_parameters = array();
-
-	/** @var array */
-	private $_defaultLinkParams = array();
-
-	/** @var array */
-	private $_allowedGetParameters = array();
-
-	/** @var bool */
-	private $_filter = true;
-
-
-
-	/**
-	 *
-	 * @param SearchParametersModel $pModel
-	 *
-	 */
-
-	public function __construct(SearchParametersModel $pModel)
-	{
-		$this->_parameters  = $pModel->getParameters();
-		$this->_allowedGetParameters = $pModel->getAllowedGetParameters();
-		$this->_filter = $pModel->getFilter();
-	}
-
-	/**
-	 *
-	 * @param array $params
-	 * @return array
-	 *
-	 */
-
-	public function populateDefaultLinkParams($params): array
-	{
-		$this->_defaultLinkParams = $params;
-		return $params;
-	}
-
-
-	/** @return array */
-	public function getDefaultLinkParameters(): array
-		{ return $this->_defaultLinkParams; }
-
 
 	/**
 	 *
@@ -98,24 +52,24 @@ class SearchParameters
 	 *
 	 */
 
-	public function linkPagesLink($link, $i = 1): string
+	public function linkPagesLink(string $link, int $i, SearchParametersModel $pModel): string
 	{
 		global $page, $more;
 
-		$linkparams = $this->_defaultLinkParams;
+		$linkparams = $pModel->getDefaultLinkParams();
 		$output = '';
 
 		if ('number' == $linkparams['next_or_number']) {
 			$link = $linkparams['link_before'].str_replace('%', $i, $linkparams['pagelink'])
 				.$linkparams['link_after'];
 			if ($i != $page || ! $more && 1 == $page) {
-				$url = $this->geturl( $i );
+				$url = $this->geturl( $i, $pModel->getParameters() );
 				$output .= '<a href="'.esc_url($url).'">'.$link.'</a>';
 			} else {
 				$output .= $link;
 			}
 		} elseif ($more) {
-			$output .= $this->getLinkSnippetForPage($i, $page);
+			$output .= $this->getLinkSnippetForPage($i, $page, $linkparams, $pModel);
 		}
 
 		return $output;
@@ -126,17 +80,17 @@ class SearchParameters
 	 *
 	 * @param int $i
 	 * @param int $page
+	 * @param array $linkparams
+	 * @param  SearchParametersModel $pModel
 	 * @return string
 	 *
 	 */
 
-	private function getLinkSnippetForPage($i, $page): string
+	private function getLinkSnippetForPage(int $i, int $page, array $linkparams, SearchParametersModel $pModel): string
 	{
-		$linkparams = $this->_defaultLinkParams;
-
 		$key = $i < $page ? 'previouspagelink' : 'nextpagelink';
 
-		return '<a href="'.esc_url($this->geturl($i)).'">'
+		return '<a href="'.esc_url($this->geturl($i, $pModel->getParameters())).'">'
 			.$linkparams['link_before'].$linkparams[$key]
 			.$linkparams['link_after'].'</a>';
 	}
@@ -145,13 +99,14 @@ class SearchParameters
 	/**
 	 *
 	 * @param int $i
+	 * @param array $parameters
 	 * @return string
 	 *
 	 */
 
-	public function geturl($i): string
+	private function geturl($i, array $parameters): string
 	{
 		$url = trailingslashit(get_permalink()).user_trailingslashit($i, 'single_paged');
-		return add_query_arg($this->_parameters, $url);
+		return add_query_arg($parameters, $url);
 	}
 }

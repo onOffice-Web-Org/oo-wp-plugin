@@ -219,10 +219,12 @@ class ContentFilter
 		}
 
 		$pModel->setParameters($valuesGetter);
-		$pSearchParameters = new SearchParameters($pModel);
+		$pSearchParameters = new SearchParameters();
 
-		add_filter('wp_link_pages_link', [$pSearchParameters, 'linkPagesLink'], 10, 2);
-		add_filter('wp_link_pages_args', [$pSearchParameters, 'populateDefaultLinkParams']);
+		add_filter('wp_link_pages_link', function(string $link, int $i) use($pModel, $pSearchParameters): string {
+			return $pSearchParameters->linkPagesLink($link, $i, $pModel);
+		}, 10, 2);
+		add_filter('wp_link_pages_args', [$pModel, 'populateDefaultLinkParams']);
 	}
 
 

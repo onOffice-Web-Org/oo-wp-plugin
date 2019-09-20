@@ -28,13 +28,13 @@ namespace onOffice\WPlugin\Filter\SearchParameters;
 class SearchParametersModel
 {
 	/** @var array */
-	private $_parameters = array();
+	private $_parameters = [];
 
 	/** @var array */
-	private $_allowedGetParameters = array();
+	private $_allowedGetParameters = [];
 
-	/** @var bool */
-	private $_filter = true;
+	/** @var array */
+	private $_defaultLinkParams = [];
 
 
 	/**
@@ -70,14 +70,27 @@ class SearchParametersModel
 
 	public function getParameters(): array
 	{
-		$parameters = $this->_parameters;
-
-		if ($this->_filter) {
-			$parameters = array_filter($this->filterParameters( $parameters ));
-		}
-
-		return $parameters;
+		return array_filter($this->filterParameters( $this->_parameters ));
 	}
+
+
+	/**
+	 *
+	 * @param array $params
+	 * @return array
+	 *
+	 */
+
+	public function populateDefaultLinkParams($params): array
+	{
+		$this->_defaultLinkParams = $params;
+		return $params;
+	}
+
+
+	/** @return array */
+	public function getDefaultLinkParams(): array
+	 { return $this->_defaultLinkParams; }
 
 
 	/**
@@ -106,18 +119,8 @@ class SearchParametersModel
 		{ $this->_allowedGetParameters []= $key;}
 
 
-	/** @param bool $enable */
-	public function enableFilter($enable)
-		{ $this->_filter = (bool) $enable;}
-
-
 	/** @return array */
 	public function getAllowedGetParameters(): array
 		{ return $this->_allowedGetParameters;	}
-
-
-	/** @return bool */
-	public function getFilter(): bool
-		{ return $this->_filter; }
 
 }

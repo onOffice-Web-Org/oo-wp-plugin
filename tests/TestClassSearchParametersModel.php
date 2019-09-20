@@ -35,7 +35,6 @@ class TestClassSearchParametersModel
 	 *
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::setParameter
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::getParameters
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::enableFilter
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::filterParameters
 	 *
 	 */
@@ -45,10 +44,6 @@ class TestClassSearchParametersModel
 		$pInstance = new SearchParametersModel();
 		$pInstance->setParameter('asd', 'valueAsd');
 
-		$pInstance->enableFilter(false);
-		$this->assertEquals(['asd' => 'valueAsd'], $pInstance->getParameters());
-
-		$pInstance->enableFilter(true);
 		$this->assertEquals([], $pInstance->getParameters());
 	}
 
@@ -57,7 +52,6 @@ class TestClassSearchParametersModel
 	 *
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::setParameters
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::getParameters
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::enableFilter
 	 *
 	 */
 
@@ -65,9 +59,8 @@ class TestClassSearchParametersModel
 	{
 		$pInstance = new SearchParametersModel();
 		$pInstance->setParameters(['asd' => 'qwer']);
-		$pInstance->enableFilter(false);
 
-		$this->assertEquals(['asd' => 'qwer'], $pInstance->getParameters());
+		$this->assertEquals([], $pInstance->getParameters());
 	}
 
 
@@ -105,16 +98,15 @@ class TestClassSearchParametersModel
 
 	/**
 	 *
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::enableFilter
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::getFilter
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::populateDefaultLinkParams
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::getDefaultLinkParams
 	 *
 	 */
-
-	public function testEnableFilter()
+	public function testPopulateDefaultLinkParams()
 	{
 		$pInstance = new SearchParametersModel();
-		$pInstance->enableFilter(true);
+		$pInstance->populateDefaultLinkParams(['asd' => 'qwer']);
 
-		$this->assertEquals(true, $pInstance->getFilter());
+		$this->assertEquals(['asd' => 'qwer'], $pInstance->getDefaultLinkParams());
 	}
 }

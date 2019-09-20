@@ -58,36 +58,7 @@ class TestClassSearchParameters
 
 	/**
 	 *
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::__construct
-	 *
-	 */
-
-	public function testConstruct()
-	{
-		$pInstance = new SearchParameters($this->_pModel);
-		$this->assertInstanceOf(SearchParameters::class, $pInstance);
-	}
-
-
-	/**
-	 *
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::populateDefaultLinkParams
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::getDefaultLinkParameters
-	 *
-	 */
-
-	public function testPopulateDefaultLinkParams()
-	{
-		$pInstance = new SearchParameters($this->_pModel);
-		$this->assertEquals(['asd'], $pInstance->populateDefaultLinkParams(['asd']));
-		$this->assertEquals(['asd'], $pInstance->getDefaultLinkParameters(['asd']));
-	}
-
-
-	/**
-	 *
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::linkPagesLink
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::populateDefaultLinkParams
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::getLinkSnippetForPage
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::geturl
 	 *
@@ -108,13 +79,15 @@ class TestClassSearchParameters
 			'pagelink' => '%',
 			'echo' => 1];
 
-		$pInstance = new SearchParameters($this->_pModel);
-		$pInstance->populateDefaultLinkParams($params);
-		$this->assertEquals($params, $pInstance->getDefaultLinkParameters());
-		$this->assertEquals('<a href="/1?ort=Aachen">1</a>', $pInstance->linkPagesLink('asd'));
+		$pInstance = new SearchParameters();
+		$this->_pModel->populateDefaultLinkParams($params);
+		$this->assertEquals('<a href="/1?ort=Aachen">1</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
 
 		global $more;
 		$more = true;
+
+		global $page;
+		$page = 1;
 
 		$params = [
 			'before' => '<div class="page-links">Seiten:',
@@ -129,8 +102,8 @@ class TestClassSearchParameters
 			'pagelink' => '%',
 			'echo' => 1];
 
-		$pInstance = new SearchParameters($this->_pModel);
-		$pInstance->populateDefaultLinkParams($params);
-		$this->assertEquals('<a href="/1?ort=Aachen">Nächste Seite</a>', $pInstance->linkPagesLink('asd'));
+		$pInstance = new SearchParameters();
+		$this->_pModel->populateDefaultLinkParams($params);
+		$this->assertEquals('<a href="/1?ort=Aachen">Nächste Seite</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
 	}
 }
