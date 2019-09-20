@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,14 +19,10 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software AG
- *
- */
 
-namespace onOffice\WPlugin;
+namespace onOffice\WPlugin\Filter\SearchParameters;
+
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 
 use function add_query_arg;
 use function esc_url;
@@ -36,7 +32,7 @@ use function user_trailingslashit;
 
 /**
  *
- * Singleton that holds submitted get parameters for the pagination
+ * class that holds submitted get parameters for the pagination
  *
  */
 
@@ -55,63 +51,37 @@ class SearchParameters
 	private $_filter = true;
 
 
+
 	/**
 	 *
+	 * @param SearchParametersModel $pModel
+	 *
+	 */
+
+	public function __construct(SearchParametersModel $pModel)
+	{
+		$this->_parameters  = $pModel->getParameters();
+		$this->_allowedGetParameters = $pModel->getAllowedGetParameters();
+		$this->_filter = $pModel->getFilter();
+	}
+
+	/**
+	 *
+	 * @param array $params
 	 * @return array
 	 *
 	 */
 
-	public function getParameters(): array
+	public function populateDefaultLinkParams($params): array
 	{
-		$parameters = $this->_parameters;
-
-		if ($this->_filter) {
-			$parameters = array_filter($this->filterParameters( $parameters ));
-		}
-
-		return $parameters;
+		$this->_defaultLinkParams = $params;
+		return $params;
 	}
 
 
-	/**
-	 *
-	 * @param array $parameters
-	 *
-	 */
-
-	public function setParameters(array $parameters)
-	{
-		$this->_parameters = $parameters;
-	}
-
-
-	/**
-	 *
-	 * @param array $parameters
-	 * @return array
-	 *
-	 */
-
-	private function filterParameters(array $parameters): array
-	{
-		$whitelist = array_merge($this->_allowedGetParameters, ['oo_formid', 'oo_formno']);
-		$whitelistKey = array_flip($whitelist);
-
-		return array_intersect_key($parameters, $whitelistKey);
-	}
-
-
-	/**
-	 *
-	 * @param string $key
-	 * @param string $value
-	 *
-	 */
-
-	public function setParameter($key, $value)
-	{
-		$this->_parameters[$key] = $value;
-	}
+	/** @return array */
+	public function getDefaultLinkParameters(): array
+		{ return $this->_defaultLinkParams; }
 
 
 	/**
@@ -179,74 +149,9 @@ class SearchParameters
 	 *
 	 */
 
-	private function geturl($i): string
+	public function geturl($i): string
 	{
 		$url = trailingslashit(get_permalink()).user_trailingslashit($i, 'single_paged');
-		return add_query_arg($this->getParameters(), $url);
+		return add_query_arg($this->_parameters, $url);
 	}
-
-
-	/**
-	 *
-	 * @param array $params
-	 * @return array
-	 *
-	 */
-
-	public function populateDefaultLinkParams($params): array
-	{
-		$this->_defaultLinkParams = $params;
-		return $params;
-	}
-
-
-	/**
-	 *
-	 * @param array $parameters
-	 *
-	 */
-
-	public function setAllowedGetParameters(array $parameters)
-	{
-		$this->_allowedGetParameters = $parameters;
-	}
-
-
-	/**
-	 *
-	 * @param string $key
-	 *
-	 */
-
-	public function addAllowedGetParameter($key)
-	{
-		$this->_allowedGetParameters []= $key;
-	}
-
-
-	/**
-	 *
-	 * @param bool $enable
-	 *
-	 */
-
-	public function enableFilter($enable)
-	{
-		$this->_filter = (bool) $enable;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getAllowedGetParameters(): array
-		{ return $this->_allowedGetParameters;	}
-
-
-	/** @return bool */
-	public function getFilter(): bool
-		{ return $this->_filter; }
 }

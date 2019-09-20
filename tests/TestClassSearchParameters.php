@@ -23,7 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\SearchParameters;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use WP_UnitTestCase;
 
 
@@ -37,50 +38,99 @@ class TestClassSearchParameters
 	extends WP_UnitTestCase
 {
 
+	/** @var SearchParamsModel */
+	private $_pModel = null;
+
+
 	/**
+	 *
+	 * @before
 	 *
 	 */
 
-	public function testSetParameter()
+	public function prepare()
 	{
-		$pInstance = new SearchParameters();
-		$pInstance->setParameter('asd', 'valueAsd');
-		$pInstance->enableFilter(false);
-
-		$this->assertEquals(['asd' => 'valueAsd'], $pInstance->getParameters());
+		$this->_pModel = new SearchParametersModel();
+		$this->_pModel->setParameters(['ort' => 'Aachen']);
+		$this->_pModel->setAllowedGetParameters(['ort']);
 	}
 
 
-	public function testAddAllowedGetParameter()
-	{
-		$pInstance = new SearchParameters();
-		$pInstance->addAllowedGetParameter('asd');
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::__construct
+	 *
+	 */
 
-		$this->assertEquals(['asd'], $pInstance->getAllowedGetParameters());
+	public function testConstruct()
+	{
+		$pInstance = new SearchParameters($this->_pModel);
+		$this->assertInstanceOf(SearchParameters::class, $pInstance);
 	}
 
 
-	public function testSetAllowedGetParametes()
-	{
-		$pInstance = new SearchParameters();
-		$pInstance->setAllowedGetParameters(['asd']);
-
-		$this->assertEquals(['asd'], $pInstance->getAllowedGetParameters());
-	}
-
-
-	public function testEnableFilter()
-	{
-		$pInstance = new SearchParameters();
-		$pInstance->enableFilter(true);
-
-		$this->assertEquals(true, $pInstance->getFilter());
-	}
-
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::populateDefaultLinkParams
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::getDefaultLinkParameters
+	 *
+	 */
 
 	public function testPopulateDefaultLinkParams()
 	{
-		$pInstance = new SearchParameters();
+		$pInstance = new SearchParameters($this->_pModel);
 		$this->assertEquals(['asd'], $pInstance->populateDefaultLinkParams(['asd']));
+		$this->assertEquals(['asd'], $pInstance->getDefaultLinkParameters(['asd']));
+	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::linkPagesLink
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::populateDefaultLinkParams
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::getLinkSnippetForPage
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::geturl
+	 *
+	 */
+
+	public function testLinkPagesLink()
+	{
+		$params = [
+			'before' => '<div class="page-links">Seiten:',
+			'after' => '</div>',
+			'link_before' => '',
+			'link_after' => '' ,
+			'aria_current' => 'page',
+			'next_or_number' => 'number',
+			'separator' => ' ',
+			'nextpagelink' => 'Nächste Seite',
+			'previouspagelink' => 'Vorherige Seite',
+			'pagelink' => '%',
+			'echo' => 1];
+
+		$pInstance = new SearchParameters($this->_pModel);
+		$pInstance->populateDefaultLinkParams($params);
+		$this->assertEquals($params, $pInstance->getDefaultLinkParameters());
+		$this->assertEquals('<a href="/1?ort=Aachen">1</a>', $pInstance->linkPagesLink('asd'));
+
+		global $more;
+		$more = true;
+
+		$params = [
+			'before' => '<div class="page-links">Seiten:',
+			'after' => '</div>',
+			'link_before' => '',
+			'link_after' => '' ,
+			'aria_current' => 'page',
+			'next_or_number' => '',
+			'separator' => ' ',
+			'nextpagelink' => 'Nächste Seite',
+			'previouspagelink' => 'Vorherige Seite',
+			'pagelink' => '%',
+			'echo' => 1];
+
+		$pInstance = new SearchParameters($this->_pModel);
+		$pInstance->populateDefaultLinkParams($params);
+		$this->assertEquals('<a href="/1?ort=Aachen">Nächste Seite</a>', $pInstance->linkPagesLink('asd'));
 	}
 }

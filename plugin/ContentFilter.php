@@ -41,6 +41,8 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use WP_Query;
 use function __;
 use function add_rewrite_rule;
@@ -186,7 +188,7 @@ class ContentFilter
 		$pFieldNames = new Fieldnames
 			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection()));
 		$pFieldNames->loadLanguage();
-		$pSearchParameters = new SearchParameters();
+		$pModel = new SearchParametersModel();
 		$filterableFieldsView = $pDataView->getFilterableFields();
 		$filterableFields = $this->setAllowedGetParametersEstateGeo($filterableFieldsView);
 
@@ -209,14 +211,15 @@ class ContentFilter
 
 			if (FieldTypes::isNumericType($type) ||
 				FieldTypes::isDateOrDateTime($type)) {
-				$pSearchParameters->addAllowedGetParameter($filterableField.'__von');
-				$pSearchParameters->addAllowedGetParameter($filterableField.'__bis');
+				$pModel->addAllowedGetParameter($filterableField.'__von');
+				$pModel->addAllowedGetParameter($filterableField.'__bis');
 			}
 
-			$pSearchParameters->addAllowedGetParameter($filterableField);
+			$pModel->addAllowedGetParameter($filterableField);
 		}
 
-		$pSearchParameters->setParameters($valuesGetter);
+		$pModel->setParameters($valuesGetter);
+		$pSearchParameters = new SearchParameters($pModel);
 
 		add_filter('wp_link_pages_link', [$pSearchParameters, 'linkPagesLink'], 10, 2);
 		add_filter('wp_link_pages_args', [$pSearchParameters, 'populateDefaultLinkParams']);
