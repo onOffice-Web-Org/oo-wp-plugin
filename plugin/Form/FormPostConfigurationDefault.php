@@ -35,17 +35,6 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 class FormPostConfigurationDefault
 	implements FormPostConfiguration
 {
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getPostVars(): array
-	{
-		return $_POST;
-	}
-
 
 	/**
 	 *

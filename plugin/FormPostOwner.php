@@ -31,6 +31,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\FormData;
@@ -55,15 +56,17 @@ class FormPostOwner
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostOwnerConfiguration $pFormPostOwnerConfiguration
+	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 *
 	 */
 
 	public function __construct(FormPostConfiguration $pFormPostConfiguration,
-		FormPostOwnerConfiguration $pFormPostOwnerConfiguration)
+		FormPostOwnerConfiguration $pFormPostOwnerConfiguration,
+		FieldsCollectionBuilderShort $pBuilderShort)
 	{
 		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
 
-		parent::__construct($pFormPostConfiguration);
+		parent::__construct($pFormPostConfiguration, $pBuilderShort);
 	}
 
 

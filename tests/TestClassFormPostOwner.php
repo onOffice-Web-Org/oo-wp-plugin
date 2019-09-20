@@ -38,6 +38,8 @@ use onOffice\WPlugin\FormPostOwner;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\Field;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -58,6 +60,8 @@ class TestClassFormPostOwner
 	/** @var FormPostConfigurationTest */
 	private $_pFormPostConfiguration = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
 
 	/**
 	 *
@@ -71,6 +75,64 @@ class TestClassFormPostOwner
 		$this->_pFormPostConfiguration = $this->createNewFormPostConfigurationTest();
 		$this->prepareSDKWrapperForFieldsAddressEstate();
 
+		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+
+				$pField1 = new Field('asd', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pFieldVorname = new Field('Vorname', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldVorname->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldVorname);
+
+				$pFieldName = new Field('Name', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldName->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldName);
+
+				$pFieldArtDaten = new Field('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldArtDaten->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldArtDaten);
+
+				$pFieldTel1 = new Field('Telefon1', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldTel1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldTel1);
+
+				$FieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+				$FieldObjektart->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldsCollection->addField($FieldObjektart);
+
+				$FieldObjekttyp = new Field('objekttyp', onOfficeSDK::MODULE_ESTATE);
+				$FieldObjekttyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldsCollection->addField($FieldObjekttyp);
+
+				$pFieldEnergieausweistyp = new Field('energieausweistyp', onOfficeSDK::MODULE_ESTATE);
+				$pFieldEnergieausweistyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldsCollection->addField($pFieldEnergieausweistyp);
+
+				$pFieldWohnfl = new Field('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
+				$pFieldWohnfl->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldsCollection->addField($pFieldWohnfl);
+
+				$pFieldKabelSatTv = new Field('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
+				$pFieldKabelSatTv->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pFieldsCollection->addField($pFieldKabelSatTv);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
 		$pContainer = new Container;
 		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
 		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
@@ -81,7 +143,7 @@ class TestClassFormPostOwner
 		$this->configureEstateListInputVariableReaderConfig($pFormPostOwnerConfiguration);
 
 		$this->_pFormPostOwner = new FormPostOwner($this->_pFormPostConfiguration,
-			$pFormPostOwnerConfiguration);
+			$pFormPostOwnerConfiguration, $this->_pFieldsCollectionBuilderShort);
 	}
 
 
@@ -137,7 +199,7 @@ class TestClassFormPostOwner
 
 	public function testInitialCheckSuccess()
 	{
-		$this->_pFormPostConfiguration->setPostVariables([
+		$_POST = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
 			'ArtDaten' => 'Eigentümer',
@@ -148,7 +210,7 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
-		]);
+		];
 
 		$this->prepareMockerForAddressCreationSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
@@ -206,7 +268,7 @@ class TestClassFormPostOwner
 
 	public function testInitialCheckUnsuccessfulAddressCreation()
 	{
-		$this->_pFormPostConfiguration->setPostVariables([
+		$_POST = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
 			'ArtDaten' => 'Eigentümer',
@@ -217,7 +279,7 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
-		]);
+		];
 
 		$this->prepareMockerForAddressCreationNoSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
@@ -241,7 +303,7 @@ class TestClassFormPostOwner
 
 	public function testInitialCheckUnsuccessfulEstateCreation()
 	{
-		$this->_pFormPostConfiguration->setPostVariables([
+		$_POST = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
 			'ArtDaten' => 'Eigentümer',
@@ -252,7 +314,7 @@ class TestClassFormPostOwner
 			'wohnflaeche' => 800,
 			'kabel_sat_tv' => 'y',
 			'message' => 'Hello! I am interested in selling my property!',
-		]);
+		];
 
 		$this->prepareMockerForAddressCreationSuccess();
 		$this->prepareMockerForEstateCreationNoSuccess();

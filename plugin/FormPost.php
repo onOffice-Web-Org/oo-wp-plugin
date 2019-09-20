@@ -21,12 +21,16 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form\CaptchaHandler;
+use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -64,6 +68,9 @@ abstract class FormPost
 	/** @var FormPostConfiguration */
 	private $_pFormPostConfiguration = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pBuilderShort = null;
+
 	/** @var int */
 	private $_absolutCountResults = 0;
 
@@ -71,12 +78,14 @@ abstract class FormPost
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
+	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 *
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration)
+	public function __construct(FormPostConfiguration $pFormPostConfiguration, FieldsCollectionBuilderShort $pBuilderShort)
 	{
 		$this->_pFormPostConfiguration = $pFormPostConfiguration;
+		$this->_pBuilderShort = $pBuilderShort;
 	}
 
 
@@ -145,15 +154,11 @@ abstract class FormPost
 
 	private function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
 	{
+		$pFormFieldValidator = new FormFieldValidator($this->_pBuilderShort,
+				new RequestVariablesSanitizer);
+
 		$formFields = $this->getAllowedPostVars($pFormConfig);
-		$postVariables = array_filter($this->_pFormPostConfiguration->getPostVars(), function($value): bool {
-			// $value can be either string or array
-			if (is_string($value)) {
-				return trim($value) !== '';
-			}
-			return true;
-		});
-		$formData = array_intersect_key($postVariables, $formFields);
+		$formData = $pFormFieldValidator->getValidatedValues($formFields);
 		$pFormData = new FormData($pFormConfig, $formNo);
 		$pFormData->setRequiredFields($pFormConfig->getRequiredFields());
 		$pFormData->setFormtype($pFormConfig->getFormType());

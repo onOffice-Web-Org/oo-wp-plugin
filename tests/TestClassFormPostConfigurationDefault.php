@@ -54,17 +54,6 @@ class TestClassFormPostConfigurationDefault
 	 *
 	 */
 
-	public function testGetPostVars()
-	{
-		$_POST = ['asdf' => 'test'];
-		$this->assertEquals(['asdf' => 'test'], $this->_pSubject->getPostVars());
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testGetPostvarCaptchaToken()
 	{
 		$_POST = [];

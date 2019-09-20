@@ -41,6 +41,8 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use WP_Query;
 use function __;
 use function add_rewrite_rule;
@@ -183,10 +185,12 @@ class ContentFilter
 
 	private function setAllowedGetParametersEstate(DataListView $pDataView)
 	{
+		$pRequestVariableSanitizer = new RequestVariablesSanitizer();
+
 		$pFieldNames = new Fieldnames
 			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection()));
 		$pFieldNames->loadLanguage();
-		$pSearchParameters = SearchParameters::getInstance();
+		$pModel = new SearchParametersModel();
 		$filterableFieldsView = $pDataView->getFilterableFields();
 		$filterableFields = $this->setAllowedGetParametersEstateGeo($filterableFieldsView);
 
@@ -199,16 +203,25 @@ class ContentFilter
 				continue;
 			}
 
+			$pModel->setParameter
+				($filterableField, $pRequestVariableSanitizer->getFilteredGet($filterableField));
+
 			$type = $fieldInfo['type'];
 
 			if (FieldTypes::isNumericType($type) ||
 				FieldTypes::isDateOrDateTime($type)) {
-				$pSearchParameters->addAllowedGetParameter($filterableField.'__von');
-				$pSearchParameters->addAllowedGetParameter($filterableField.'__bis');
+				$pModel->addAllowedGetParameter($filterableField.'__von');
+				$pModel->addAllowedGetParameter($filterableField.'__bis');
 			}
 
-			$pSearchParameters->addAllowedGetParameter($filterableField);
+			$pModel->addAllowedGetParameter($filterableField);
 		}
+
+		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pModel): string {
+			$pSearchParameters = new SearchParameters();
+			return $pSearchParameters->linkPagesLink($link, $i, $pModel);
+		}, 10, 2);
+		add_filter('wp_link_pages_args', [$pModel, 'populateDefaultLinkParams']);
 	}
 
 
@@ -227,7 +240,7 @@ class ContentFilter
 			$pGeoPosition = new GeoPosition();
 			$geoPositionFields = $pGeoPosition->getEstateSearchFields();
 			foreach ($geoPositionFields as $geoPositionField) {
-				SearchParameters::getInstance()->addAllowedGetParameter($geoPositionField);
+				$filterableFields []= $geoPositionField;
 			}
 			unset($filterableFields[$positionGeoPos]);
 		}

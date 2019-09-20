@@ -8,8 +8,8 @@ while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 			<?php
 			$estatePictures = $pEstates->getEstatePictures();
 			foreach ($estatePictures as $id) : ?>
-				<img src="<?php echo $pEstates->getEstatePictureUrl
-					($id, ['width' => 200, 'height' => 100]); ?>">
+				<img src="<?php echo esc_url($pEstates->getEstatePictureUrl
+					($id, ['width' => 200, 'height' => 100])); ?>">
 			<?php endforeach; ?>
 		</a>
 		<p>
@@ -19,7 +19,7 @@ while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 			foreach ($fieldsForOutput as $field) {
 				$value = $currentEstate[$field];
 				echo esc_html($pEstates->getFieldLabel($field).': '
-					.(is_array($value) ? implode(', ', $value) : $value)).'<br>';
+					.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))).'<br>';
 			}
 			?>
 		</p>

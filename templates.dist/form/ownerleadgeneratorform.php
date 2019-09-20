@@ -47,7 +47,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			/* translators: %s will be replaced with a translated field name. */
-			echo sprintf(__('Please enter a value for %s.', 'onoffice'), $pForm->getFieldLabel( $input )).'<br>';
+			echo sprintf(__('Please enter a value for %s.', 'onoffice'), esc_html($pForm->getFieldLabel( $input ))).'<br>';
 		}
 
 		$isRequired = $pForm->isRequiredField($input);
@@ -77,12 +77,12 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 <div id="onoffice-lead" style="display:none;">
 	<p>
 		<form name="leadgenerator" action="" method="post" id="leadgeneratorform">
-			<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
-			<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
+			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
+			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
 			<div id="leadform">
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
-						echo 'ERROR!';
+						echo esc_html__('ERROR!', 'onoffice');
 					}
 				?>
 

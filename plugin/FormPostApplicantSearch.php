@@ -25,6 +25,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
@@ -59,18 +60,20 @@ class FormPostApplicantSearch
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
+	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 *
 	 */
 
 	public function __construct(
 		FormPostConfiguration $pFormPostConfiguration,
 		SDKWrapper $pSDKWrapper,
-		SearchcriteriaFields $pSearchcriteriaFields)
+		SearchcriteriaFields $pSearchcriteriaFields,
+		FieldsCollectionBuilderShort $pBuilderShort)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
 
-		parent::__construct($pFormPostConfiguration);
+		parent::__construct($pFormPostConfiguration, $pBuilderShort);
 	}
 
 

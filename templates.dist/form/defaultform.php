@@ -31,24 +31,24 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
 	<?php if ( isset( $estateId ) ) : ?>
-	<input type="hidden" name="Id" value="<?php echo $estateId; ?>">
+	<input type="hidden" name="Id" value="<?php echo esc_attr($estateId); ?>">
 	<?php endif; ?>
 
 <?php
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo 'SUCCESS!';
+	echo esc_html__('SUCCESS!', 'onoffice');
 } else {
 	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo 'ERROR!';
+		echo esc_html__('ERROR!', 'onoffice');
 	} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-		echo 'Spam detected!';
+		echo esc_html__('Spam detected!', 'onoffice');
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ( $pForm->isMissingField( $input ) ) {
-			echo 'Bitte ausfüllen!';
+			echo esc_html__('Please fill in!', 'onoffice');
 		}
 
 		if ( in_array( $input, array('message', 'Id') ) ) {
@@ -75,6 +75,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	endif;
 
 	echo '<br>';
+
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>

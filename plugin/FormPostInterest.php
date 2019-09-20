@@ -27,10 +27,13 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
+use function sanitize_email;
+use function sanitize_text_field;
 
 /**
  *
@@ -49,13 +52,15 @@ class FormPostInterest
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostInterestConfiguration $pFormPostInterestConfiguration
+	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 *
 	 */
 
 	public function __construct(FormPostConfiguration $pFormPostConfiguration,
-		FormPostInterestConfiguration $pFormPostInterestConfiguration)
+		FormPostInterestConfiguration $pFormPostInterestConfiguration,
+		FieldsCollectionBuilderShort $pBuilderShort)
 	{
-		parent::__construct($pFormPostConfiguration);
+		parent::__construct($pFormPostConfiguration, $pBuilderShort);
 		$this->_pFormPostInterestConfiguration = $pFormPostInterestConfiguration;
 	}
 
@@ -117,7 +122,7 @@ class FormPostInterest
 
 		$body = 'Sehr geehrte Damen und Herren,'."\n\n"
 				.'ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite '
-				.'eingetragen. Die Adresse ('.$firstName.' '.$name.') wurde bereits in Ihrem System '
+				.'eingetragen. Die Adresse ('.sanitize_text_field($firstName).' '.sanitize_text_field($name).') wurde bereits in Ihrem System '
 				.'eingetragen.'."\n\n"
 				.'Herzliche Grüße'."\n"
 				.'Ihr onOffice Team';
@@ -125,10 +130,10 @@ class FormPostInterest
 		$requestParams = [
 			'anonymousEmailidentity' => true,
 			'body' => $body,
-			'subject' => $subject,
-			'replyto' => $mailInteressent,
-			'receiver' => [$recipient],
-			'X-Original-From' => $mailInteressent,
+			'subject' => sanitize_text_field($subject),
+			'replyto' => sanitize_email($mailInteressent),
+			'receiver' => [sanitize_email($recipient)],
+			'X-Original-From' => sanitize_email($mailInteressent),
 			'saveToAgentsLog' => false,
 		];
 
