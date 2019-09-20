@@ -25,6 +25,10 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Filter\SearchParameters;
 
 
+/**
+ *
+ */
+
 class SearchParametersModel
 {
 	/** @var array */
@@ -90,7 +94,7 @@ class SearchParametersModel
 
 	/** @return array */
 	public function getDefaultLinkParams(): array
-	 { return $this->_defaultLinkParams; }
+		{ return $this->_defaultLinkParams; }
 
 
 	/**
@@ -113,14 +117,11 @@ class SearchParametersModel
 	public function setAllowedGetParameters(array $parameters)
 		{ $this->_allowedGetParameters = $parameters; }
 
-
 	/** @param string $key */
 	public function addAllowedGetParameter($key)
 		{ $this->_allowedGetParameters []= $key;}
 
-
 	/** @return array */
 	public function getAllowedGetParameters(): array
-		{ return $this->_allowedGetParameters;	}
-
+		{ return $this->_allowedGetParameters; }
 }

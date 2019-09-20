@@ -181,7 +181,6 @@ class ContentFilter
 
 	private function setAllowedGetParametersEstate(DataListView $pDataView)
 	{
-		$valuesGetter = [];
 		$pRequestVariableSanitizer = new RequestVariablesSanitizer();
 
 		$pFieldNames = new Fieldnames
@@ -192,10 +191,6 @@ class ContentFilter
 		$filterableFields = $this->setAllowedGetParametersEstateGeo($filterableFieldsView);
 
 		foreach ($filterableFields as $filterableField) {
-			$valuesGetter[$filterableField] = $pRequestVariableSanitizer->getFilteredGet($filterableField);
-		}
-
-		foreach ($filterableFields as $filterableField) {
 			try {
 				$fieldInfo = $pFieldNames->getFieldInformation
 					($filterableField, onOfficeSDK::MODULE_ESTATE);
@@ -203,6 +198,9 @@ class ContentFilter
 				$this->$this->_pLogger->logError($pException);
 				continue;
 			}
+
+			$pModel->setParameter
+				($filterableField, $pRequestVariableSanitizer->getFilteredGet($filterableField));
 
 			$type = $fieldInfo['type'];
 
@@ -214,8 +212,6 @@ class ContentFilter
 
 			$pModel->addAllowedGetParameter($filterableField);
 		}
-
-		$pModel->setParameters($valuesGetter);
 
 		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pModel): string {
 			$pSearchParameters = new SearchParameters();
