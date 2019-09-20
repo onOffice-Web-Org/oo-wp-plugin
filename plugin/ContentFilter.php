@@ -181,7 +181,6 @@ class ContentFilter
 
 	private function setAllowedGetParametersEstate(DataListView $pDataView)
 	{
-		global $wp_query;
 		$valuesGetter = [];
 		$pRequestVariableSanitizer = new RequestVariablesSanitizer();
 
@@ -193,9 +192,7 @@ class ContentFilter
 		$filterableFields = $this->setAllowedGetParametersEstateGeo($filterableFieldsView);
 
 		foreach ($filterableFields as $filterableField) {
-			$value = $pRequestVariableSanitizer->getFilteredGet($filterableField);
-			$valuesGetter[$filterableField] = $value;
-			$wp_query->set($filterableField, $value);
+			$valuesGetter[$filterableField] = $pRequestVariableSanitizer->getFilteredGet($filterableField);
 		}
 
 		foreach ($filterableFields as $filterableField) {
@@ -219,9 +216,9 @@ class ContentFilter
 		}
 
 		$pModel->setParameters($valuesGetter);
-		$pSearchParameters = new SearchParameters();
 
-		add_filter('wp_link_pages_link', function(string $link, int $i) use($pModel, $pSearchParameters): string {
+		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pModel): string {
+			$pSearchParameters = new SearchParameters();
 			return $pSearchParameters->linkPagesLink($link, $i, $pModel);
 		}, 10, 2);
 		add_filter('wp_link_pages_args', [$pModel, 'populateDefaultLinkParams']);
