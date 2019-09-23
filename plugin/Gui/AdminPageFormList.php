@@ -108,12 +108,10 @@ class AdminPageFormList
 	 *
 	 */
 
-	private function getTab()
+	private function getTab(): string
 	{
-		$getParamType = filter_input(INPUT_GET, self::PARAM_TYPE);
-		return $getParamType;
+		return filter_input(INPUT_GET, self::PARAM_TYPE) ?? 'all';
 	}
-
 
 
 	/**
@@ -179,10 +177,6 @@ class AdminPageFormList
 		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
 
 		$tab = $this->getTab();
-
-		if ($tab == null) {
-			$tab = Form::TYPE_CONTACT;
-		}
 
 		$pFormTranslation = new FormTranslation();
 		$translation = $pFormTranslation->getPluralTranslationForForm($tab, 1);
