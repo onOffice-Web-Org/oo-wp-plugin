@@ -79,7 +79,7 @@ abstract class AdminPageFormSettingsBase
 	private $_showSearchCriteriaFields = false;
 
 	/** @var array */
-	private $_sortableFieldModules = array();
+	private $_sortableFieldModules = [];
 
 	/** @var string */
 	private $_type = null;
@@ -443,7 +443,7 @@ abstract class AdminPageFormSettingsBase
 		{ return $this->_type; }
 
 	/** @param string $type */
-	public function setType($type)
+	public function setType(string $type)
 		{ $this->_type = $type; }
 
 	/** @return FormModelBuilder */
@@ -471,14 +471,14 @@ abstract class AdminPageFormSettingsBase
 		{ return $this->_showSearchCriteriaFields; }
 
 	/** @param bool $showEstateFields */
-	public function setShowEstateFields($showEstateFields)
-		{ $this->_showEstateFields = (bool)$showEstateFields; }
+	public function setShowEstateFields(bool $showEstateFields)
+		{ $this->_showEstateFields = $showEstateFields; }
 
 	/** @param bool $showAddressFields */
-	public function setShowAddressFields($showAddressFields)
-		{ $this->_showAddressFields = (bool)$showAddressFields; }
+	public function setShowAddressFields(bool $showAddressFields)
+		{ $this->_showAddressFields = $showAddressFields; }
 
 	/** @param bool $showSearchCriteriaFields */
-	public function setShowSearchCriteriaFields($showSearchCriteriaFields)
-		{ $this->_showSearchCriteriaFields = (bool)$showSearchCriteriaFields; }
+	public function setShowSearchCriteriaFields(bool $showSearchCriteriaFields)
+		{ $this->_showSearchCriteriaFields = $showSearchCriteriaFields; }
 }
