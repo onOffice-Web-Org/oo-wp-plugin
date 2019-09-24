@@ -55,23 +55,23 @@ class InputFieldComplexSortableDetailListContentDefault
 	/**
 	 *
 	 * @param string $key
-	 * @param bool $dummy
+	 * @param bool $isDummy
+	 * @param string $type
 	 *
 	 */
 
-	public function render($key, $dummy, $type = null)
+	public function render(string $key, bool $isDummy, string $type = null)
 	{
 		$pFormModel = new FormModel();
 
 		foreach ($this->_extraInputModels as $pInputModel) {
-
 			if (!in_array($type, [FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]) &&
 				$pInputModel->getField() == 'availableOptions')
 			{
 				continue;
 			}
 
-			$pInputModel->setIgnore($dummy);
+			$pInputModel->setIgnore($isDummy);
 			$callbackValue = $pInputModel->getValueCallback();
 
 			if ($callbackValue !== null) {
@@ -92,7 +92,7 @@ class InputFieldComplexSortableDetailListContentDefault
 
 
 	/** @return array */
-	public function getExtraInputModels()
+	public function getExtraInputModels(): array
 		{ return $this->_extraInputModels; }
 
 	/** @param InputModelBase $pInputModel */

@@ -37,6 +37,8 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
+use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function get_option;
 
@@ -108,6 +110,7 @@ class FormModelBuilderDBForm
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
+		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($fieldNames));
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 
@@ -384,6 +387,29 @@ class FormModelBuilderDBForm
 
 	/**
 	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelDefaultValue(array $fieldnames): InputModelDB
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$label = __('Default Value', 'onoffice');
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_VALUE;
+
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
+		$pInputModel->setValueCallback(function(InputModelBase $pInputModel, string $key) use ($fieldnames) {
+			$this->callbackValueInputModelDefaultValue($pInputModel, $key, $fieldnames);
+		});
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
 	 * @param string $label
 	 * @param string $type
 	 * @param bool $checked
@@ -436,6 +462,47 @@ class FormModelBuilderDBForm
 		$value = in_array($key, $fieldsAvOpt);
 		$pInputModel->setValue($value);
 		$pInputModel->setValuesAvailable($key);
+	}
+
+
+	/**
+	 *
+	 * @param InputModelBase $pInputModel
+	 * @param string $key
+	 * @param array $fieldnames
+	 *
+	 */
+
+	public function callbackValueInputModelDefaultValue(
+		InputModelBase $pInputModel,
+		string $key,
+		array $fieldnames)
+	{
+		$fieldsDefaultValue = $this->getValue('defaultvalue')[$key] ?? [];
+		$value = in_array($key, $fieldsDefaultValue);
+		$pInputModel->setValue($value);
+
+		$mapping = [
+			FieldTypes::FIELD_TYPE_TEXT => InputModelOption::HTML_TYPE_TEXT,
+			FieldTypes::FIELD_TYPE_VARCHAR=> InputModelOption::HTML_TYPE_TEXT,
+			FieldTypes::FIELD_TYPE_DATE=> InputModelOption::HTML_TYPE_TEXT,
+			FieldTypes::FIELD_TYPE_DATETIME=> InputModelOption::HTML_TYPE_TEXT,
+			FieldTypes::FIELD_TYPE_FLOAT=> InputModelOption::HTML_TYPE_TEXT,
+			FieldTypes::FIELD_TYPE_INTEGER=> InputModelOption::HTML_TYPE_TEXT,
+			FieldTypes::FIELD_TYPE_MULTISELECT=> InputModelOption::HTML_TYPE_SELECT,
+			FieldTypes::FIELD_TYPE_SINGLESELECT=> InputModelOption::HTML_TYPE_SELECT,
+			FieldTypes::FIELD_TYPE_BOOLEAN=> InputModelOption::HTML_TYPE_CHECKBOX,
+		];
+		$pField = $fieldnames[$key] ?? null;
+		$type = InputModelOption::HTML_TYPE_TEXT;
+		$pInputModel->setValuesAvailable([]);
+		/* @var $pField \onOffice\WPlugin\Types\Field */
+		if ($pField !== null) {
+			$type = $mapping[$pField->getType()] ?? InputModelOption::HTML_TYPE_TEXT;
+			$pInputModel->setValuesAvailable(['' => ''] + $pField->getPermittedvalues());
+		}
+
+		$pInputModel->setHtmlType($type);
 	}
 
 
