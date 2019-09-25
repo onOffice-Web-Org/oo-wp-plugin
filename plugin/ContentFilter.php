@@ -203,8 +203,16 @@ class ContentFilter
 				continue;
 			}
 
-			$pModel->setParameter
-				($filterableField, $pRequestVariableSanitizer->getFilteredGet($filterableField));
+			if (FieldTypes::isMultipleSelectType($fieldInfo['type']))
+			{
+				$pModel->setParameterArray
+					($filterableField, $pRequestVariableSanitizer->getFilteredGet($filterableField, FILTER_DEFAULT, FILTER_FORCE_ARRAY));
+			}
+			else
+			{
+				$pModel->setParameter
+					($filterableField, $pRequestVariableSanitizer->getFilteredGet($filterableField));
+			}
 
 			$type = $fieldInfo['type'];
 

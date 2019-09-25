@@ -66,6 +66,29 @@ class TestClassSearchParametersModel
 
 	/**
 	 *
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::setParameterArray
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::getParameters
+	 *
+	 */
+
+	public function testSetParameterArray()
+	{
+		$pInstance = new SearchParametersModel();
+		$pInstance->setParameterArray('asd', ['val1', 'val2']);
+		$pInstance->setAllowedGetParameters(['asd']);
+
+		$this->assertEquals(['asd' => ['val1', 'val2']], $pInstance->getParameters());
+
+		$pInstance = new SearchParametersModel();
+		$pInstance->setParameterArray('asd', ['']);
+		$pInstance->setAllowedGetParameters(['asd']);
+
+		$this->assertEquals([], $pInstance->getParameters());
+	}
+
+
+	/**
+	 *
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::addAllowedGetParameter
 	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel::getAllowedGetParameters
 	 *

@@ -60,9 +60,24 @@ class SearchParametersModel
 	 *
 	 */
 
-	public function setParameter($key, $value)
+	public function setParameter(string $key, $value)
 	{
 		$this->_parameters[$key] = $value;
+	}
+
+
+	/**
+	 *
+	 * @param string $key
+	 * @param array $values
+	 *
+	 */
+
+	public function setParameterArray(string $key, array $values)
+	{
+		if (array_filter($values) !== []) {
+			$this->_parameters[$key] = array_filter($values);
+		}
 	}
 
 
