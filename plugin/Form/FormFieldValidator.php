@@ -25,6 +25,9 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -75,10 +78,8 @@ class FormFieldValidator
 		$sanitizedData = [];
 
 		foreach ($formFields as $fieldName => $module) {
-			$dataType = FieldTypes::FIELD_TYPE_VARCHAR;
-			if ($module != null) {
-				$dataType = $this->getTypeByFieldname($pFieldsCollection, $fieldName, $module);
-			}
+			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $fieldName);
+			$dataType = $pField->getType();
 
 			if (!$this->isEmptyValue($fieldName, $dataType)) {
 				$sanitizedData[$fieldName] = $this->getValueFromRequest($dataType, $fieldName);
@@ -107,27 +108,6 @@ class FormFieldValidator
 			$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 			return array_filter($value) === [];
 		}
-	}
-
-
-	/**
-	 *
-	 * @param FieldsCollection $pFieldsCollection
-	 * @param string $fieldname
-	 * @return string
-	 *
-	 */
-
-	private function getTypeByFieldname(FieldsCollection $pFieldsCollection, string $fieldname, string $module): string
-	{
-		$type = FieldTypes::FIELD_TYPE_VARCHAR;
-
-		if ($pFieldsCollection->containsFieldByModule($module, $fieldname)) {
-			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $fieldname);
-			$type = $pField->getType();
-		}
-
-		return $type;
 	}
 
 

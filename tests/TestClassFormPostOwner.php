@@ -136,7 +136,7 @@ class TestClassFormPostOwner
 		$this->_pFieldsCollectionBuilderShort->method('addFieldsFormFrontend')
 				->with($this->anything())
 				->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
-			$pField1 = new Field('region_plz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$pField1 = new Field('message', '');
 			$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 			$pFieldsCollection->addField($pField1);
 
@@ -632,7 +632,7 @@ class TestClassFormPostOwner
 		$pDataFormConfiguration->addInput('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
 		$pDataFormConfiguration->addInput('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
 		$pDataFormConfiguration->addInput('kabel_sat_tv', onOfficeSDK::MODULE_ESTATE);
-		$pDataFormConfiguration->addInput('message', null);
+		$pDataFormConfiguration->addInput('message', '');
 
 		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'objektart']);
 

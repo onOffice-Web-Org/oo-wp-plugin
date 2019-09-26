@@ -122,9 +122,13 @@ class TestClassFormPostContact
 				$pFieldPlz->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($pFieldPlz);
 
-				$FieldOrt = new Field('Ort', onOfficeSDK::MODULE_ADDRESS);
-				$FieldOrt->setType(FieldTypes::FIELD_TYPE_VARCHAR);
-				$pFieldsCollection->addField($FieldOrt);
+				$pFieldOrt = new Field('Ort', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldOrt->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldOrt);
+
+				$pFieldStrasse = new Field('Strasse', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldStrasse->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldStrasse);
 
 				$FieldTelefon1 = new Field('Telefon1', onOfficeSDK::MODULE_ADDRESS);
 				$FieldTelefon1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
@@ -134,9 +138,13 @@ class TestClassFormPostContact
 				$pFieldAgbAkzeptiert->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
 				$pFieldsCollection->addField($pFieldAgbAkzeptiert);
 
-				$pFieldId = new Field('Id', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldId = new Field('ID', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldId->setType(FieldTypes::FIELD_TYPE_INTEGER);
 				$pFieldsCollection->addField($pFieldId);
+
+				$pFieldIdEstate = new Field('Id', onOfficeSDK::MODULE_ESTATE);
+				$pFieldIdEstate->setType(FieldTypes::FIELD_TYPE_INTEGER);
+				$pFieldsCollection->addField($pFieldIdEstate);
 
 				$pFieldAnrede = new Field('Anrede', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldAnrede->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
@@ -184,7 +192,7 @@ class TestClassFormPostContact
 				'Telefon1' => '0815/2345677',
 				'AGB_akzeptiert' => '1',
 			],
-			'estateid' => '1337',
+			'estateid' => 1337,
 			'message' => null,
 			'subject' => '¡A new Contact!',
 			'referrer' => '/test/page',
