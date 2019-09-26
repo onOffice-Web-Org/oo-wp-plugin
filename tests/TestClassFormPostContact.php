@@ -88,7 +88,7 @@ class TestClassFormPostContact
 			new FieldsCollectionBuilderShort($pContainer));
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
@@ -141,6 +141,16 @@ class TestClassFormPostContact
 				$pFieldAnrede = new Field('Anrede', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldAnrede->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 				$pFieldsCollection->addField($pFieldAnrede);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+			$this->_pFieldsCollectionBuilderShort->method('addFieldsFormFrontend')
+					->with($this->anything())
+					->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('region_plz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pField1);
 
 				return $this->_pFieldsCollectionBuilderShort;
 			}));

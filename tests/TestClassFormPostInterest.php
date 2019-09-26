@@ -107,7 +107,7 @@ class TestClassFormPostInterest
 		]));
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
@@ -144,6 +144,16 @@ class TestClassFormPostInterest
 				$pFieldEmail = new Field('Email', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldEmail->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($pFieldEmail);
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+			$this->_pFieldsCollectionBuilderShort->method('addFieldsFormFrontend')
+					->with($this->anything())
+					->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('region_plz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pField1);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -326,7 +336,7 @@ class TestClassFormPostInterest
 	{
 		$parameters = [
 			'data' => [
-				'vermarktungsart' => 'kauf',
+				'vermarktungsart' => ['kauf'],
 				'kaufpreis__von' => 200000.00,
 				'kaufpreis__bis' => 800000.00,
 			],

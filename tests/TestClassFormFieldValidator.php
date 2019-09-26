@@ -58,7 +58,7 @@ class TestClassFormFieldValidator
 	public function prepare()
 	{
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
@@ -84,11 +84,21 @@ class TestClassFormFieldValidator
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
-			$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
 			->with($this->anything())
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
 				$pField1 = new Field('objektart', onOfficeSDK::MODULE_SEARCHCRITERIA);
 				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+			$this->_pFieldsCollectionBuilderShort->method('addFieldsFormFrontend')
+					->with($this->anything())
+					->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('region_plz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($pField1);
 
 				return $this->_pFieldsCollectionBuilderShort;

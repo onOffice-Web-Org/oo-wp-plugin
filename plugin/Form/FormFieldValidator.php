@@ -70,15 +70,17 @@ class FormFieldValidator
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($pFieldsCollection);
+		$this->_pFieldsCollectionBuilderShort->addFieldsFormFrontend($pFieldsCollection);
 
 		$sanitizedData = [];
 
 		foreach ($formFields as $fieldName => $module) {
-			if (!$this->isEmptyValue($fieldName)) {
-				$dataType = FieldTypes::FIELD_TYPE_VARCHAR;
-				if ($module != null) {
-					$dataType = $this->getTypeByFieldname($pFieldsCollection, $fieldName, $module);
-				}
+			$dataType = FieldTypes::FIELD_TYPE_VARCHAR;
+			if ($module != null) {
+				$dataType = $this->getTypeByFieldname($pFieldsCollection, $fieldName, $module);
+			}
+
+			if (!$this->isEmptyValue($fieldName, $dataType)) {
 				$sanitizedData[$fieldName] = $this->getValueFromRequest($dataType, $fieldName);
 			}
 		}
@@ -90,15 +92,21 @@ class FormFieldValidator
 	/**
 	 *
 	 * @param string $fieldName
+	 * @param string $type
 	 * @return bool
 	 *
 	 */
 
-	private function isEmptyValue(string $fieldName): bool
+	private function isEmptyValue(string $fieldName, string $type = null): bool
 	{
-		$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_SANITIZE_STRING);
-
-		return trim($value) === '';
+		if ($type != FieldTypes::FIELD_TYPE_MULTISELECT) {
+			$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_SANITIZE_STRING);
+			return trim($value) === '';
+		}
+		else {
+			$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+			return array_filter($value) === [];
+		}
 	}
 
 
@@ -144,7 +152,12 @@ class FormFieldValidator
 			$filter = FILTER_SANITIZE_STRING;
 		}
 
-		$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, $filter);
+		if ($dataType == FieldTypes::FIELD_TYPE_MULTISELECT){
+			$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+		}
+		else {
+			$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, $filter);
+		}
 
 		switch ($dataType) {
 			case FieldTypes::FIELD_TYPE_INTEGER:

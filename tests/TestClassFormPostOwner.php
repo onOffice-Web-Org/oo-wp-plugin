@@ -76,7 +76,7 @@ class TestClassFormPostOwner
 		$this->prepareSDKWrapperForFieldsAddressEstate();
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
@@ -132,6 +132,16 @@ class TestClassFormPostOwner
 
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsFormFrontend')
+				->with($this->anything())
+				->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+			$pField1 = new Field('region_plz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+			$pFieldsCollection->addField($pField1);
+
+			return $this->_pFieldsCollectionBuilderShort;
+		}));
 
 		$pContainer = new Container;
 		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
@@ -559,7 +569,7 @@ class TestClassFormPostOwner
 			'addressdata' => [
 				'Vorname' => 'John',
 				'Name' => 'Doe',
-				'ArtDaten' => 'Eigentümer',
+				'ArtDaten' => ['Eigentümer'],
 				'Telefon1' => '0815 234567890',
 			],
 			'estateid' => 5590,

@@ -73,7 +73,7 @@ class TestClassFormPostApplicantSearch
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 
@@ -107,6 +107,16 @@ class TestClassFormPostApplicantSearch
 				$pFieldKabelSatTv = new Field('kaufpreis', onOfficeSDK::MODULE_ESTATE);
 				$pFieldKabelSatTv->setType(FieldTypes::FIELD_TYPE_INTEGER);
 				$pFieldsCollection->addField($pFieldKabelSatTv);
+
+				return $this->_pFieldsCollectionBuilderShort;
+			}));
+
+		$this->_pFieldsCollectionBuilderShort->method('addFieldsFormFrontend')
+					->with($this->anything())
+					->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pField1 = new Field('region_plz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pField1);
 
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
