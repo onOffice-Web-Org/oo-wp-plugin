@@ -113,7 +113,6 @@ class TestClassFormFieldValidator
 	 *
 	 * @covers onOffice\WPlugin\Form\FormFieldValidator::getValidatedValues
 	 * @covers onOffice\WPlugin\Form\FormFieldValidator::isEmptyValue
-	 * @covers onOffice\WPlugin\Form\FormFieldValidator::getTypeByFieldname
 	 * @covers onOffice\WPlugin\Form\FormFieldValidator::getValueFromRequest
 	 *
 	 */
