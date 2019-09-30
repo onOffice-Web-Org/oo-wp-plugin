@@ -169,7 +169,7 @@ class FormPostInterest
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
 		$pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria');
-//var_dump(json_encode($requestParams));
+
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();

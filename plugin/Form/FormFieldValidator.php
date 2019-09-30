@@ -114,14 +114,11 @@ class FormFieldValidator
 	{
 		$returnValue = $value;
 
-		if (FieldTypes::isMultipleSelectType($pField->getType()))
-		{
+		if (FieldTypes::isMultipleSelectType($pField->getType())) {
 			if (is_array($value) && $value != []) {
 				$returnValue = array_intersect($value, array_keys($pField->getPermittedvalues()));
-			} else {
-				if (in_array($value, array_keys($pField->getPermittedvalues()))) {
-					$returnValue = $value;
-				}
+			} elseif (in_array($value, array_keys($pField->getPermittedvalues()))){
+				$returnValue = $value;
 			}
 		}
 		return $returnValue;
@@ -157,14 +154,8 @@ class FormFieldValidator
 
 	private function isMultipleSingleSelectAllowed(string $fieldName, string $module): bool
 	{
-		$returnValue = false;
-
-		if ($module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
-				in_array($fieldName, $this->_multipleSingleSelectAllowed)) {
-			$returnValue = true;
-		}
-
-		return $returnValue;
+		return $module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
+				in_array($fieldName, $this->_multipleSingleSelectAllowed);
 	}
 
 
