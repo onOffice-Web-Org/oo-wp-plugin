@@ -116,15 +116,17 @@ class TestClassFormPostInterest
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
 
 				$pField1 = new Field('vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setPermittedvalues(['kauf' => 'Kauf', 'miete' => 'Miete']);
 				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 				$pFieldsCollection->addField($pField1);
 
-				$pField2 = new Field('kaufpreis__von', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField2 = new Field('kaufpreis', onOfficeSDK::MODULE_SEARCHCRITERIA);
 				$pField2->setType(FieldTypes::FIELD_TYPE_FLOAT);
 				$pFieldsCollection->addField($pField2);
 
-				$pField3 = new Field('kaufpreis__bis', onOfficeSDK::MODULE_SEARCHCRITERIA);
-				$pField3->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pField3 = new Field('objekttyp', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField3->setPermittedvalues(['reihenendhaus' => 'Reihenendhaus', 'reihenhaus' => 'Reihenhaus']);
+				$pField3->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 				$pFieldsCollection->addField($pField3);
 
 				return $this->_pFieldsCollectionBuilderShort;
@@ -162,7 +164,7 @@ class TestClassFormPostInterest
 			($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields);
 
 		$this->_pFormPostInterest = new FormPostInterest($this->_pFormPostConfiguration,
-			$pFormPostInterestConfiguration, $this->_pFieldsCollectionBuilderShort);
+			$pFormPostInterestConfiguration, $this->_pFieldsCollectionBuilderShort, $pSearchcriteriaFields);
 	}
 
 
@@ -179,6 +181,7 @@ class TestClassFormPostInterest
 			'vermarktungsart' => 'kauf',
 			'kaufpreis__von' => '200000.00',
 			'kaufpreis__bis' => '800000.00',
+			'objekttyp' => ['reihenendhaus', 'reihenhaus'],
 		];
 
 		$pConfig = $this->getNewDataFormConfigurationInterest();

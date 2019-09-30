@@ -32,6 +32,7 @@ use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use function sanitize_email;
 use function sanitize_text_field;
 
@@ -53,14 +54,16 @@ class FormPostInterest
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostInterestConfiguration $pFormPostInterestConfiguration
 	 * @param FieldsCollectionBuilderShort $pBuilderShort
+	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 *
 	 */
 
 	public function __construct(FormPostConfiguration $pFormPostConfiguration,
 		FormPostInterestConfiguration $pFormPostInterestConfiguration,
-		FieldsCollectionBuilderShort $pBuilderShort)
+		FieldsCollectionBuilderShort $pBuilderShort,
+		SearchcriteriaFields $pSearchcriteriaFields)
 	{
-		parent::__construct($pFormPostConfiguration, $pBuilderShort);
+		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
 		$this->_pFormPostInterestConfiguration = $pFormPostInterestConfiguration;
 	}
 
@@ -166,7 +169,7 @@ class FormPostInterest
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
 		$pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'searchcriteria');
-
+//var_dump(json_encode($requestParams));
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();

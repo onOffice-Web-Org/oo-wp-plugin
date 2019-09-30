@@ -27,7 +27,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
-
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -55,6 +55,29 @@ class SearchcriteriaFields
 	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilder)
 	{
 		$this->_pFieldsCollectionBuilder = $pFieldsCollectionBuilder;
+	}
+
+
+	/**
+	 *
+	 * SearchCriteria fields have the suffixes `__von` and `__bis`
+	 *
+	 * @param string $input
+	 * @return string
+	 *
+	 */
+
+	public function getFieldNameOfInput($input): string
+	{
+		$inputConfigName = $input;
+		$pInputStr = __String::getNew($input);
+
+		if ($pInputStr->endsWith('__von') ||
+			$pInputStr->endsWith('__bis')) {
+			$inputConfigName = $pInputStr->sub(0, -5);
+		}
+
+		return $inputConfigName;
 	}
 
 

@@ -21,16 +21,15 @@
 
 namespace onOffice\WPlugin;
 
-use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\FormData;
-use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -74,18 +73,25 @@ abstract class FormPost
 	/** @var int */
 	private $_absolutCountResults = 0;
 
+	/** @var SearchcriteriaFields */
+	private $_pSearchcriteriaFields = null;
+
 
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FieldsCollectionBuilderShort $pBuilderShort
+	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 *
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration, FieldsCollectionBuilderShort $pBuilderShort)
+	public function __construct(FormPostConfiguration $pFormPostConfiguration,
+			FieldsCollectionBuilderShort $pBuilderShort,
+			SearchcriteriaFields $pSearchcriteriaFields)
 	{
 		$this->_pFormPostConfiguration = $pFormPostConfiguration;
 		$this->_pBuilderShort = $pBuilderShort;
+		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
 	}
 
 
@@ -155,7 +161,7 @@ abstract class FormPost
 	private function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
 	{
 		$pFormFieldValidator = new FormFieldValidator($this->_pBuilderShort,
-				new RequestVariablesSanitizer);
+				new RequestVariablesSanitizer, $this->_pSearchcriteriaFields);
 
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields);

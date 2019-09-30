@@ -40,6 +40,7 @@ use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -163,11 +164,13 @@ class TestClassFormPostContact
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
+		$pSearchciteriaFields = $pContainer->get(SearchcriteriaFields::class);
+
 		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest
 			($this->_pSDKWrapperMocker, $pWPQueryWrapper, $pFormAddressCreator);
 		$this->_pFormPostContactConfiguration->setReferrer('/test/page');
 		$this->_pFormPostContact = new FormPostContact($this->_pFormPostConfiguration,
-			$this->_pFormPostContactConfiguration, $this->_pFieldsCollectionBuilderShort);
+			$this->_pFormPostContactConfiguration, $this->_pFieldsCollectionBuilderShort,$pSearchciteriaFields);
 
 		$this->configureSDKWrapperForContactAddress();
 		$this->configureSDKWrapperForCreateAddress();

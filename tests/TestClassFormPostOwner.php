@@ -27,6 +27,7 @@ use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
@@ -36,10 +37,10 @@ use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostOwner;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\Field;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -103,6 +104,7 @@ class TestClassFormPostOwner
 				$pFieldsCollection->addField($pFieldName);
 
 				$pFieldArtDaten = new Field('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldArtDaten->setPermittedvalues(['Eigentümer' => 'Eigentümer', 'asd' => 'asd']);
 				$pFieldArtDaten->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 				$pFieldsCollection->addField($pFieldArtDaten);
 
@@ -111,15 +113,18 @@ class TestClassFormPostOwner
 				$pFieldsCollection->addField($pFieldTel1);
 
 				$FieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+				$FieldObjektart->setPermittedvalues(['haus' => 'Haus', 'wohnung' => 'Wohnung']);
 				$FieldObjektart->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 				$pFieldsCollection->addField($FieldObjektart);
 
 				$FieldObjekttyp = new Field('objekttyp', onOfficeSDK::MODULE_ESTATE);
+				$FieldObjekttyp->setPermittedvalues(['stadthaus' => 'Stadthaus', 'reihenhaus' => 'Reihenhaus']);
 				$FieldObjekttyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 				$pFieldsCollection->addField($FieldObjekttyp);
 
 				$pFieldEnergieausweistyp = new Field('energieausweistyp', onOfficeSDK::MODULE_ESTATE);
 				$pFieldEnergieausweistyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldEnergieausweistyp->setPermittedvalues(['Bedarfsausweis' => 'Bedarfsausweis']);
 				$pFieldsCollection->addField($pFieldEnergieausweistyp);
 
 				$pFieldWohnfl = new Field('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
@@ -145,6 +150,7 @@ class TestClassFormPostOwner
 
 		$pContainer = new Container;
 		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$pSearchcriteriaFields = $pContainer->get(SearchcriteriaFields::class);
 		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
 			new FieldsCollectionBuilderShort($pContainer));
 		$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationTest
@@ -153,7 +159,7 @@ class TestClassFormPostOwner
 		$this->configureEstateListInputVariableReaderConfig($pFormPostOwnerConfiguration);
 
 		$this->_pFormPostOwner = new FormPostOwner($this->_pFormPostConfiguration,
-			$pFormPostOwnerConfiguration, $this->_pFieldsCollectionBuilderShort);
+			$pFormPostOwnerConfiguration, $this->_pFieldsCollectionBuilderShort, $pSearchcriteriaFields);
 	}
 
 

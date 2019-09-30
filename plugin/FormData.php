@@ -28,9 +28,12 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
+use const ONOFFICE_DI_CONFIG_PATH;
+
 
 /**
  *
@@ -113,9 +116,13 @@ class FormData
 	{
 		$inputs = $this->_configFields;
 		$addressData = [];
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pSearchcriteriaFields = $pContainer->get(SearchcriteriaFields::class);
 
 		foreach ($this->_values as $input => $value) {
-			$inputConfigName = $this->getFieldNameOfInput($input);
+			$inputConfigName = $pSearchcriteriaFields->getFieldNameOfInput($input);
 			$inputModule = $inputs[$inputConfigName] ?? null;
 
 			if (onOfficeSDK::MODULE_ADDRESS === $inputModule) {
@@ -123,29 +130,6 @@ class FormData
 			}
 		}
 		return $addressData;
-	}
-
-
-	/**
-	 *
-	 * SearchCriteria fields have the suffixes `__von` and `__bis`
-	 *
-	 * @param string $input
-	 * @return string
-	 *
-	 */
-
-	public function getFieldNameOfInput($input): string
-	{
-		$inputConfigName = $input;
-		$pInputStr = __String::getNew($input);
-
-		if ($pInputStr->endsWith('__von') ||
-			$pInputStr->endsWith('__bis')) {
-			$inputConfigName = $pInputStr->sub(0, -5);
-		}
-
-		return $inputConfigName;
 	}
 
 
@@ -160,8 +144,13 @@ class FormData
 		$inputs = $this->_configFields;
 		$searchcriteriaData = [];
 
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pSearchcriteriaFields = $pContainer->get(SearchcriteriaFields::class);
+
 		foreach ($this->_values as $input => $value) {
-			$inputConfigName = $this->getFieldNameOfInput($input);
+			$inputConfigName = $pSearchcriteriaFields->getFieldNameOfInput($input);
 			$inputModule = $inputs[$inputConfigName] ?? null;
 
 			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputModule) {

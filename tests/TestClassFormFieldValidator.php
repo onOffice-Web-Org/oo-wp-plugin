@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\Field;
@@ -77,6 +78,11 @@ class TestClassFormFieldValidator
 				$pFieldWohnfl->setType(FieldTypes::FIELD_TYPE_FLOAT);
 				$pFieldsCollection->addField($pFieldWohnfl);
 
+				$pFieldBad = new Field('bad', onOfficeSDK::MODULE_ESTATE);
+				$pFieldBad->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldBad->setPermittedvalues(['wanne' => 'Wanne', 'fenster' => 'Fenster', 'bidet' => 'Bidet']);
+				$pFieldsCollection->addField($pFieldBad);
+
 				$pFieldAnzBadezi = new Field('anzahl_badezimmer', onOfficeSDK::MODULE_ESTATE);
 				$pFieldAnzBadezi->setType(FieldTypes::FIELD_TYPE_FLOAT);
 				$pFieldsCollection->addField($pFieldAnzBadezi);
@@ -87,7 +93,8 @@ class TestClassFormFieldValidator
 		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
 			->with($this->anything())
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
-				$pField1 = new Field('objektart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1 = new Field('objekttyp', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setPermittedvalues(['reihenendhaus' => 'Reihenendhaus', 'stadthaus' => 'Stadthaus']);
 				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 				$pFieldsCollection->addField($pField1);
 
@@ -104,7 +111,9 @@ class TestClassFormFieldValidator
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
-			$this->_pInstance = new FormFieldValidator($this->_pFieldsCollectionBuilderShort, new RequestVariablesSanitizer);
+			$pSeachrcriteriaFields = new SearchcriteriaFields($this->_pFieldsCollectionBuilderShort);
+
+			$this->_pInstance = new FormFieldValidator($this->_pFieldsCollectionBuilderShort, new RequestVariablesSanitizer, $pSeachrcriteriaFields);
 	}
 
 
@@ -114,6 +123,7 @@ class TestClassFormFieldValidator
 	 * @covers onOffice\WPlugin\Form\FormFieldValidator::getValidatedValues
 	 * @covers onOffice\WPlugin\Form\FormFieldValidator::isEmptyValue
 	 * @covers onOffice\WPlugin\Form\FormFieldValidator::getValueFromRequest
+	 * @covers onOffice\WPlugin\Form\FormFieldValidator::isMultipleSingleSelectAllowed
 	 *
 	 */
 
@@ -124,6 +134,8 @@ class TestClassFormFieldValidator
 			'anzahl_zimmer' => '5.9',
 			'wohnflaeche' => '105.4',
 			'anzahl_badezimmer' => '',
+			'bad' => ['wanne', 'fenster'],
+			'objekttyp' => ['reihenendhaus','stadthaus'],
 		];
 
 		$data = [
@@ -131,12 +143,16 @@ class TestClassFormFieldValidator
 			'anzahl_zimmer' => 'estate',
 			'wohnflaeche' => 'estate',
 			'anzahl_badezimmer' => 'estate',
+			'bad' => 'estate',
+			'objekttyp' => 'searchcriteria',
 		];
 
 		$expectedData = [
 			'Vorname' => 'Max',
 			'anzahl_zimmer' => 5,
 			'wohnflaeche' => 105.4,
+			'bad' => ['wanne', 'fenster'],
+			'objekttyp' => ['reihenendhaus','stadthaus']
 		];
 
 		$this->assertEquals($expectedData, $this->_pInstance->getValidatedValues($data));

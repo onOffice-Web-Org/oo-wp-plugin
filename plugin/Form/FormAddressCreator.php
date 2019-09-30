@@ -113,8 +113,7 @@ class FormAddressCreator
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 
-		foreach ($addressFields as $input => $value) {
-			$inputName = $pFormData->getFieldNameOfInput($input);
+		foreach ($addressFields as $inputName => $value) {
 			$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ADDRESS, $inputName);
 			$fieldNameAliased = $fieldNameAliases[$inputName] ?? $inputName;
 			$addressData[$fieldNameAliased] = $value;

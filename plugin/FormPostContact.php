@@ -26,6 +26,7 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
 use onOffice\WPlugin\FormData;
@@ -53,16 +54,18 @@ class FormPostContact
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostContactConfiguration $pFormPostContactConfiguration
 	 * @param FieldsCollectionBuilderShort $pBuilderShort
+	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 *
 	 */
 
 	public function __construct(FormPostConfiguration $pFormPostConfiguration,
 		FormPostContactConfiguration $pFormPostContactConfiguration,
-		FieldsCollectionBuilderShort $pBuilderShort)
+		FieldsCollectionBuilderShort $pBuilderShort,
+		SearchcriteriaFields $pSearchcriteriaFields)
 	{
 		$this->_pFormPostContactConfiguration = $pFormPostContactConfiguration;
 
-		parent::__construct($pFormPostConfiguration, $pBuilderShort);
+		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
 	}
 
 

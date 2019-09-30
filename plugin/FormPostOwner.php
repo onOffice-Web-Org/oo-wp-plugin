@@ -32,6 +32,7 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\FormData;
@@ -57,16 +58,18 @@ class FormPostOwner
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostOwnerConfiguration $pFormPostOwnerConfiguration
 	 * @param FieldsCollectionBuilderShort $pBuilderShort
+	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 *
 	 */
 
 	public function __construct(FormPostConfiguration $pFormPostConfiguration,
 		FormPostOwnerConfiguration $pFormPostOwnerConfiguration,
-		FieldsCollectionBuilderShort $pBuilderShort)
+		FieldsCollectionBuilderShort $pBuilderShort,
+		SearchcriteriaFields $pSearchcriteriaFields)
 	{
 		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
 
-		parent::__construct($pFormPostConfiguration, $pBuilderShort);
+		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
 	}
 
 

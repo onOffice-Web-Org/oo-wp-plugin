@@ -24,11 +24,11 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Form;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
-use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\RequestVariablesSanitizer;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 
@@ -46,6 +46,14 @@ class FormFieldValidator
 	/** @var RequestVariablesSanitizer */
 	private $_pRequestSanitizer;
 
+	/** @var SearchcriteriaFields */
+	private $_pSearchcriteriaFields = null;
+
+	/** @var array */
+	private $_multipleSingleSelectAllowed = [
+		'objekttyp',
+	];
+
 	/**
 	 *
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
@@ -54,10 +62,12 @@ class FormFieldValidator
 	 */
 
 	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
-			RequestVariablesSanitizer $pRequestSanitizer)
+			RequestVariablesSanitizer $pRequestSanitizer,
+			SearchcriteriaFields $pSearchcriteriaFields)
 	{
 		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 		$this->_pRequestSanitizer = $pRequestSanitizer;
+		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
 	}
 
 
@@ -78,17 +88,44 @@ class FormFieldValidator
 		$sanitizedData = [];
 
 		foreach ($formFields as $fieldName => $module) {
-			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $fieldName);
+			$name = $this->_pSearchcriteriaFields->getFieldNameOfInput($fieldName);
+			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $name);
 			$dataType = $pField->getType();
 
 			if (!$this->isEmptyValue($fieldName, $dataType)) {
-				$sanitizedData[$fieldName] = $this->getValueFromRequest($dataType, $fieldName);
+				$value = $this->getValueFromRequest($dataType, $fieldName, $module);
+				$sanitizedData[$fieldName] = $this->getValidatedValue($value, $pField);
 			}
 		}
 
 		return $sanitizedData;
 	}
 
+
+	/**
+	 *
+	 * @param mixed $value
+	 * @param Field $pField
+	 * @return mixed
+	 *
+	 */
+
+	private function getValidatedValue($value, Field $pField)
+	{
+		$returnValue = $value;
+
+		if (FieldTypes::isMultipleSelectType($pField->getType()))
+		{
+			if (is_array($value) && $value != []) {
+				$returnValue = array_intersect($value, array_keys($pField->getPermittedvalues()));
+			} else {
+				if (in_array($value, array_keys($pField->getPermittedvalues()))) {
+					$returnValue = $value;
+				}
+			}
+		}
+		return $returnValue;
+	}
 
 	/**
 	 *
@@ -100,14 +137,34 @@ class FormFieldValidator
 
 	private function isEmptyValue(string $fieldName, string $type = null): bool
 	{
-		if ($type != FieldTypes::FIELD_TYPE_MULTISELECT) {
+		if (FieldTypes::isMultipleSelectType($type)) {
+			$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_DEFAULT, FILTER_FORCE_ARRAY);
+			return array_filter($value) === [];
+		} else {
 			$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_SANITIZE_STRING);
 			return trim($value) === '';
 		}
-		else {
-			$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-			return array_filter($value) === [];
+	}
+
+
+	/**
+	 *
+	 * @param string $fieldName
+	 * @param string $module
+	 * @return bool
+	 *
+	 */
+
+	private function isMultipleSingleSelectAllowed(string $fieldName, string $module): bool
+	{
+		$returnValue = false;
+
+		if ($module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
+				in_array($fieldName, $this->_multipleSingleSelectAllowed)) {
+			$returnValue = true;
 		}
+
+		return $returnValue;
 	}
 
 
@@ -119,7 +176,7 @@ class FormFieldValidator
 	 *
 	 */
 
-	private function getValueFromRequest(string $dataType, string $fieldName)
+	private function getValueFromRequest(string $dataType, string $fieldName, string $module)
 	{
 		$filter = FILTER_DEFAULT;
 		$filters = FieldTypes::getInputVarSanitizers();
@@ -132,7 +189,8 @@ class FormFieldValidator
 			$filter = FILTER_SANITIZE_STRING;
 		}
 
-		if ($dataType == FieldTypes::FIELD_TYPE_MULTISELECT){
+		if ($dataType == FieldTypes::FIELD_TYPE_MULTISELECT ||
+			$this->isMultipleSingleSelectAllowed($fieldName, $module)){
 			$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 		}
 		else {

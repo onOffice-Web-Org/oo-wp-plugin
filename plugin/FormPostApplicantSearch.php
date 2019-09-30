@@ -73,7 +73,7 @@ class FormPostApplicantSearch
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
 
-		parent::__construct($pFormPostConfiguration, $pBuilderShort);
+		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
 	}
 
 
