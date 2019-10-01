@@ -21,9 +21,11 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Types\FieldTypes;
+use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function esc_html;
 use function esc_html__;
@@ -81,11 +83,15 @@ class InputFieldComplexSortableDetailListContentDefault
 			$pFormModel->addInputModel($pInputModel);
 		}
 
-		$pInputModelRenderer = new InputModelRenderer($pFormModel);
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		/* @var $pInputModelRenderer InputModelRenderer */
+		$pInputModelRenderer = $pContainer->get(InputModelRenderer::class);
 		echo '<p class="wp-clearfix"><label class="howto">'.esc_html__('Key of Field:', 'onoffice')
 				.'&nbsp;</label><span class="menu-item-settings-name">'.esc_html($key).'</span></p>';
 
-		$pInputModelRenderer->buildForAjax();
+		$pInputModelRenderer->buildForAjax($pFormModel);
 
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}

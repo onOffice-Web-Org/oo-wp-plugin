@@ -39,55 +39,40 @@ use function register_setting;
 
 class InputModelRenderer
 {
-	/** @var FormModel */
-	private $_pFormModel = null;
-
-
 	/**
 	 *
 	 * @param FormModel $pFormModel
 	 *
 	 */
 
-	public function __construct(FormModel $pFormModel)
+	public function buildForm(FormModel $pFormModel)
 	{
-		$this->_pFormModel = $pFormModel;
-	}
+		add_settings_section($pFormModel->getGroupSlug(), $pFormModel->getLabel(),
+			$pFormModel->getTextCallback(), $pFormModel->getPageSlug());
 
-
-	/**
-	 *
-	 */
-
-	public function buildForm()
-	{
-		$pForm = $this->_pFormModel;
-
-		add_settings_section($pForm->getGroupSlug(), $pForm->getLabel(),
-			$pForm->getTextCallback(), $pForm->getPageSlug());
-
-		foreach ($pForm->getInputModel() as $pInputModel) {
-			$pInputField = $this->createInputField($pInputModel);
-			add_settings_field( $pInputModel->getIdentifier(), $pInputModel->getLabel(),
-				[$pInputField, 'render'], $pForm->getPageSlug(), $pForm->getGroupSlug() );
+		foreach ($pFormModel->getInputModel() as $pInputModel) {
+			$pInputField = $this->createInputField($pInputModel, $pFormModel);
+			add_settings_field($pInputModel->getIdentifier(), $pInputModel->getLabel(),
+				[$pInputField, 'render'], $pFormModel->getPageSlug(), $pFormModel->getGroupSlug());
 		}
 	}
 
 
 	/**
 	 *
+	 * @param FormModel $pFormModel
+	 * @return void
+	 *
 	 */
 
-	public function buildForAjax()
+	public function buildForAjax(FormModel $pFormModel)
 	{
-		$pForm = $this->_pFormModel;
-
-		if ($pForm->getIsInvisibleForm()) {
+		if ($pFormModel->getIsInvisibleForm()) {
 			return;
 		}
 
-		foreach ($pForm->getInputModel() as $pInputModel) {
-			$pInputField = $this->createInputField($pInputModel);
+		foreach ($pFormModel->getInputModel() as $pInputModel) {
+			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL) {
 				echo '<p id="" class="wp-clearfix">';
 				echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
@@ -104,15 +89,15 @@ class InputModelRenderer
 
 	/**
 	 *
+	 * @param FormModel $pFormModel
+	 *
 	 */
 
-	public function registerFields()
+	public function registerFields(FormModel $pFormModel)
 	{
-		$pForm = $this->_pFormModel;
-
-		foreach ($pForm->getInputModel() as $pInputModel) {
+		foreach ($pFormModel->getInputModel() as $pInputModel) {
 			if ($pInputModel instanceof InputModelOption) {
-				register_setting($pForm->getPageSlug(), $pInputModel->getIdentifier(), [
+				register_setting($pFormModel->getPageSlug(), $pInputModel->getIdentifier(), [
 					'type' => $pInputModel->getType(),
 					'description' => $pInputModel->getDescription(),
 					'sanitize_callback' => $pInputModel->getSanitizeCallback(),
@@ -127,11 +112,12 @@ class InputModelRenderer
 	/**
 	 *
 	 * @param InputModelBase $pInputModel
-	 * @return InputFieldRenderer
+	 * @param FormModel $pFormModel
+	 * @return InputFieldLabelRenderer
 	 *
 	 */
 
-	private function createInputField(InputModelBase $pInputModel)
+	private function createInputField(InputModelBase $pInputModel, FormModel $pFormModel)
 	{
 		$pInstance = null;
 		$onOfficeInputFields = true;
@@ -173,7 +159,7 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setId($pInputModel->getId());
 				$pInstance->setLabel($pInputModel->getLabel());
-				$pInstance->setOoModule($this->_pFormModel->getOoModule());
+				$pInstance->setOoModule($pFormModel->getOoModule());
 				$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
 				if ($pInputModel->getSpecialDivId() != null) {
 					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
@@ -262,13 +248,4 @@ class InputModelRenderer
 
 		return $name;
 	}
-
-
-	/** @return FormModel */
-	public function getFormModel(): FormModel
-		{ return $this->_pFormModel; }
-
-	/** @param FormModel $pFormModel */
-	public function setFormModel(FormModel $pFormModel)
-		{ $this->_pFormModel = $pFormModel; }
 }
