@@ -1,0 +1,148 @@
+<?php
+
+/**
+ *
+ *    Copyright (C) 2019 onOffice GmbH
+ *
+ *    This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU Affero General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU Affero General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Affero General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+declare (strict_types=1);
+
+namespace onOffice\WPlugin\Field\DefaultValue;
+
+use onOffice\WPlugin\Record\RecordManagerFactory;
+
+
+/**
+ *
+ */
+
+class DefaultValueCreate
+{
+	/** */
+	const TABLE_DEFAULTS = 'oo_fieldconfig_form_defaults';
+
+	/** */
+	const TABLE_DEFAULTS_VALUES = 'oo_fieldconfig_form_defaults_values';
+
+
+	/** @var RecordManagerFactory */
+	private $_pRecordManagerFactory = null;
+
+
+	/**
+	 *
+	 * @param RecordManagerFactory $pRecordManagerFactory
+	 *
+	 */
+
+	public function __construct(RecordManagerFactory $pRecordManagerFactory)
+	{
+		$this->_pRecordManagerFactory = $pRecordManagerFactory;
+	}
+
+
+	/**
+	 *
+	 * @param DefaultValueModelSingleselect $pDataModel
+	 *
+	 */
+
+	public function createForSingleselect(DefaultValueModelSingleselect $pDataModel): int
+	{
+		$defaultsId = $this->createBase($pDataModel);
+		$this->writeDatabaseValueSingle($defaultsId, $pDataModel->getValue());
+		return $defaultsId;
+	}
+
+
+	/**
+	 *
+	 * @param DefaultValueModelSingleselect $pDataModel
+	 *
+	 */
+
+	public function createForMultiselect(DefaultValueModelMultiselect $pDataModel): int
+	{
+		$defaultsId = $this->createBase($pDataModel);
+
+		foreach ($pDataModel->getValues() as $value) {
+			$this->writeDatabaseValueSingle($defaultsId, $value);
+		}
+
+		return $defaultsId;
+	}
+
+
+	/**
+	 *
+	 * @param DefaultValueModelBase $pDataModel
+	 * @return int
+	 *
+	 */
+
+	private function createBase(DefaultValueModelBase $pDataModel): int
+	{
+		$field = $pDataModel->getField()->getName();
+		$defaultsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field);
+		$pDataModel->setDefaultsId($defaultsId);
+		return $defaultsId;
+	}
+
+
+	/**
+	 *
+	 * Step one: write oo_fieldconfig_form_defaults
+	 *
+	 * @param int $formId
+	 * @param string $field
+	 * @return int
+	 * @throws DefaultValueSaveException
+	 *
+	 */
+
+	private function writeDatabaseGeneral(int $formId, string $field): int
+	{
+		$pRecordManager = $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_DEFAULTS);
+		$values = [
+			'form_id' => $formId,
+			'fieldname' => $field,
+		];
+		return $pRecordManager->insertByRow($values);
+	}
+
+
+	/**
+	 *
+	 * step two: write to oo_fieldconfig_form_defaults_values
+	 *
+	 * @param int $defaultsId
+	 * @param string $value
+	 * @param string $locale
+	 *
+	 */
+
+	private function writeDatabaseValueSingle(int $defaultsId, string $value, string $locale = '')
+	{
+		$pRecordManager = $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_DEFAULTS_VALUES);
+		$values = [
+			'defaults_id' => $defaultsId,
+			'locale' => $locale,
+			'value' => $value,
+		];
+		$pRecordManager->insertByRow($values);
+	}
+}

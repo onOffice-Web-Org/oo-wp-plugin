@@ -22,36 +22,56 @@
 namespace onOffice\WPlugin\Renderer;
 
 use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Renderer\InputFieldComplexSortableDetailListContentBase;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Types\FieldTypes;
+use function __;
+use function esc_html;
+use function esc_html__;
 
 /**
  *
  */
 
 class InputFieldComplexSortableDetailListContentDefault
-	extends InputFieldComplexSortableDetailListContentBase
 {
+	/** @var int */
+	private static $_id = 0;
+
+	/** @var array */
+	private $_extraInputModels = [];
+
+
+
 	/**
-	 *
-	 * @param string $key
-	 * @param bool $dummy
 	 *
 	 */
 
-	public function render($key, $dummy, $type = null)
+	public function __construct()
+	{
+		self::$_id++;
+	}
+
+
+	/**
+	 *
+	 * @param string $key
+	 * @param bool $isDummy
+	 * @param string $type
+	 *
+	 */
+
+	public function render(string $key, bool $isDummy, string $type = null)
 	{
 		$pFormModel = new FormModel();
 
-		foreach ($this->getExtraInputModels() as $pInputModel) {
-
+		foreach ($this->_extraInputModels as $pInputModel) {
 			if (!in_array($type, [FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]) &&
-					$pInputModel->getField() == 'availableOptions')
+				$pInputModel->getField() == 'availableOptions')
 			{
 				continue;
 			}
 
-			$pInputModel->setIgnore($dummy);
+			$pInputModel->setIgnore($isDummy);
 			$callbackValue = $pInputModel->getValueCallback();
 
 			if ($callbackValue !== null) {
@@ -69,4 +89,17 @@ class InputFieldComplexSortableDetailListContentDefault
 
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}
+
+
+	/** @return array */
+	public function getExtraInputModels(): array
+		{ return $this->_extraInputModels; }
+
+	/** @param InputModelBase $pInputModel */
+	public function addExtraInputModel(InputModelBase $pInputModel)
+		{ $this->_extraInputModels []= $pInputModel; }
+
+	/** @var InputModelBase[] $extraInputModels */
+	public function setExtraInputModels(array $extraInputModels)
+		{ $this->_extraInputModels = $extraInputModels; }
 }

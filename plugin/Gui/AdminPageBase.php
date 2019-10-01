@@ -110,15 +110,9 @@ abstract class AdminPageBase
 	 *
 	 */
 
-	public function getFormModelByGroupSlug($groupSlug)
+	public function getFormModelByGroupSlug(string $groupSlug)
 	{
-		$pFormModel = null;
-
-		if (array_key_exists($groupSlug, $this->_formModels)) {
-			$pFormModel = $this->_formModels[$groupSlug];
-		}
-
-		return $pFormModel;
+		return $this->_formModels[$groupSlug] ?? null;
 	}
 
 

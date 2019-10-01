@@ -43,7 +43,7 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @var array */
 	private $_allFields = [];
 
-	/** @var InputFieldComplexSortableDetailListContentBase */
+	/** @var InputFieldComplexSortableDetailListContentDefault */
 	private $_pContentRenderer = null;
 
 
@@ -165,11 +165,11 @@ class InputFieldComplexSortableDetailListRenderer
 	public function setAllFields(array $allFields)
 		{ $this->_allFields = $allFields; }
 
-	/** @return InputFieldComplexSortableDetailListContentBase */
+	/** @return InputFieldComplexSortableDetailListContentDefault */
 	public function getContentRenderer()
 		{ return $this->_pContentRenderer; }
 
-	/** @param InputFieldComplexSortableDetailListContentBase $pContentRenderer */
-	public function setContentRenderer(InputFieldComplexSortableDetailListContentBase $pContentRenderer)
+	/** @param InputFieldComplexSortableDetailListContentDefault $pContentRenderer */
+	public function setContentRenderer(InputFieldComplexSortableDetailListContentDefault $pContentRenderer)
 		{ $this->_pContentRenderer = $pContentRenderer; }
 }
