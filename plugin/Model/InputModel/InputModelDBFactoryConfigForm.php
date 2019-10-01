@@ -146,7 +146,7 @@ class InputModelDBFactoryConfigForm
 			self::KEY_FIELD => 'availableOptions',
 		],
 		self::INPUT_FORM_DEFAULT_VALUE => [
-			self::KEY_TABLE => 'plugin_fieldconfig_form_defaults_values',
+			self::KEY_TABLE => 'oo_plugin_fieldconfig_form_defaults_values',
 			self::KEY_FIELD => 'value',
 		],
 	];
