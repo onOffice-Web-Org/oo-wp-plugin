@@ -39,10 +39,8 @@ class InputFieldCheckboxRenderer
 	extends InputFieldRenderer
 {
 	/** @var array */
-	private $_checkedValues = array();
+	private $_checkedValues = [];
 
-	/** @var FieldsCollection */
-	private $_pFieldsCollection = null;
 
 	/**
 	 *
@@ -64,13 +62,13 @@ class InputFieldCheckboxRenderer
 	 *
 	 */
 
-	private function isMultipleSelect(string $key): bool
+	private function isMultipleSelect(string $key, FieldsCollection $pFieldsCollection): bool
 	{
 		$returnValue = false;
 		$module = $this->getOoModule();
 
-		if ($this->_pFieldsCollection->containsFieldByModule($module, $key)) {
-			$type = $this->_pFieldsCollection->getFieldByModuleAndName($module, $key)->getType();
+		if ($pFieldsCollection->containsFieldByModule($module, $key)) {
+			$type = $pFieldsCollection->getFieldByModuleAndName($module, $key)->getType();
 			$returnValue = FieldTypes::isMultipleSelectType($type);
 		}
 
@@ -80,19 +78,22 @@ class InputFieldCheckboxRenderer
 
 	/**
 	 *
+	 * @return FieldsCollection
+	 *
 	 */
 
-	private function setFieldList()
+	private function buildFieldsCollection(): FieldsCollection
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pDIContainerBuilder->build();
-		$this->_pFieldsCollection = new FieldsCollection();
+		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldsCollectionBuilder
-			->addFieldsAddressEstate($this->_pFieldsCollection)
-			->addFieldsSearchCriteria($this->_pFieldsCollection);
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsSearchCriteria($pFieldsCollection);
+		return $pFieldsCollection;
 	}
 
 
@@ -102,12 +103,12 @@ class InputFieldCheckboxRenderer
 
 	public function render()
 	{
-		$this->setFieldList();
+		$pFieldsCollection = $this->buildFieldsCollection();
 
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
-				$onofficeMultipleSelect = $this->isMultipleSelect($key) ? '1' : '0';
+				$onofficeMultipleSelect = $this->isMultipleSelect($key, $pFieldsCollection) ? '1' : '0';
 
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 					.'" value="'.esc_html($key).'"'
