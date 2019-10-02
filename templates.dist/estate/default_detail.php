@@ -28,14 +28,12 @@ use onOffice\WPlugin\EstateDetail;
  */
 
 /* @var $pEstates EstateDetail */
+$pEstates->resetEstateIterator();
+	while ( $currentEstate = $pEstates->estateIterator() ) :
 require('map/map.php');
 
 ?>
 <h1><?php esc_html_e('Detail View', 'onoffice') ?></h1>
-
-<?php
-	$pEstates->resetEstateIterator();
-	while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 	<?php echo $pEstates->getEstateUnits( ); ?>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {

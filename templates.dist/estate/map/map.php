@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018  onOffice GmbH
+ *    Copyright (C) 2019  onOffice Software
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
  *
  */
 
+use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\Types\MapProvider;
 
 /**
@@ -31,10 +32,24 @@ $pMapProvider = new MapProvider();
 
 switch ($pMapProvider->getActiveMapProvider()) {
 	case MapProvider::GOOGLE_MAPS:
-		include 'map-google.php';
+		if (get_class($pEstates) == EstateDetail::class)
+		{
+			include 'map-google-detail.php';
+		}
+		else
+		{
+			include 'map-google.php';
+		}
 		break;
 
 	case MapProvider::OPEN_STREET_MAPS:
-		include 'map-osm.php';
+		if (get_class($pEstates) == EstateDetail::class)
+		{
+			include 'map-osm-detail.php';
+		}
+		else
+		{
+			include('map-osm.php');
+		}
 		break;
 }
