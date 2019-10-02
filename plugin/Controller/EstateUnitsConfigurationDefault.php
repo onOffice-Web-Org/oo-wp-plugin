@@ -21,10 +21,12 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Template;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -36,11 +38,11 @@ use onOffice\WPlugin\Template;
 class EstateUnitsConfigurationDefault
 	implements EstateUnitsConfigurationBase
 {
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
 	/** @var EstateList */
 	private $_pEstateList = null;
+
+	/** @var Container */
+	private $_pContainer;
 
 
 	/**
@@ -49,7 +51,9 @@ class EstateUnitsConfigurationDefault
 
 	public function __construct(DataView $pDataView)
 	{
-		$this->_pSDKWrapper = new SDKWrapper();
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pDIContainerBuilder->build();
 		$this->_pEstateList = new EstateList($pDataView);
 	}
 
@@ -74,7 +78,7 @@ class EstateUnitsConfigurationDefault
 
 	public function getSDKWrapper(): SDKWrapper
 	{
-		return $this->_pSDKWrapper;
+		return $this->_pContainer->get(SDKWrapper::class);
 	}
 
 
@@ -87,6 +91,6 @@ class EstateUnitsConfigurationDefault
 
 	public function getTemplate(string $templateName): Template
 	{
-		return new Template($templateName);
+		return $this->_pContainer->get(Template::class)->withTemplateName($templateName);
 	}
 }

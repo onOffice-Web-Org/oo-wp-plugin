@@ -23,12 +23,14 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 
 /**
@@ -43,8 +45,8 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 	/** @var DataListViewFactoryAddress */
 	private $_pDataListFactory = null;
 
-	/** @var Logger */
-	private $_pLogger = null;
+	/** @var Container */
+	private $_pContainer = null;
 
 
 	/**
@@ -54,7 +56,9 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 	public function __construct()
 	{
 		$this->_pDataListFactory = new DataListViewFactoryAddress();
-		$this->_pLogger = new Logger();
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pDIContainerBuilder->build();
 	}
 
 
@@ -90,7 +94,7 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 
 	public function getTemplate(): Template
 	{
-		return new Template('');
+		return $this->_pContainer->get(Template::class);
 	}
 
 
@@ -102,7 +106,7 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 
 	public function getLogger(): Logger
 	{
-		return $this->_pLogger;
+		return $this->_pContainer->get(Logger::class);
 	}
 
 
@@ -114,6 +118,6 @@ class ContentFilterShortCodeAddressEnvironmentDefault
 
 	public function getWPQueryWrapper(): WPQueryWrapper
 	{
-		return new WPQueryWrapper();
+		return $this->_pContainer->get(WPQueryWrapper::class);
 	}
 }

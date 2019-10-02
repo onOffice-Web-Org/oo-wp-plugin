@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin;
 
 use Exception;
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -44,6 +45,7 @@ use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use WP_Query;
+use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_rewrite_rule;
 use function add_rewrite_tag;
@@ -120,6 +122,10 @@ class ContentFilter
 	public function registerEstateShortCodes($attributesInput)
 	{
 		global $wp_query;
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+
 		$page = 1;
 		if (!empty($wp_query->query_vars['page'])) {
 			$page = $wp_query->query_vars['page'];
@@ -135,7 +141,8 @@ class ContentFilter
 				$pDetailView = $this->getEstateDetailView();
 
 				if ($pDetailView->getName() === $attributes['view']) {
-					$pTemplate = new Template($pDetailView->getTemplate());
+					/* @var $pTemplate Template */
+					$pTemplate = $pContainer->get(Template::class)->withTemplateName($pDetailView->getTemplate());
 					$pEstateDetail = $this->preloadSingleEstate($pDetailView, $attributes['units']);
 					$pTemplate->setEstateList($pEstateDetail);
 					$result = $pTemplate->render();
@@ -147,7 +154,8 @@ class ContentFilter
 
 				if (is_object($pListView) && $pListView->getName() === $attributes['view']) {
 					$this->setAllowedGetParametersEstate($pListView);
-					$pTemplate = new Template($pListView->getTemplate());
+					/* @var $pTemplate Template */
+					$pTemplate = $pContainer->get(Template::class)->withTemplateName($pListView->getTemplate());
 					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
 					$availableOptionsEstates = $pListView->getAvailableOptions();
 					$pDistinctFieldsChecker = new DistinctFieldsScriptRegistrator
