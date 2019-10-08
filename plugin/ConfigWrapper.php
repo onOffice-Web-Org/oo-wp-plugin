@@ -28,7 +28,7 @@
 
 namespace onOffice\WPlugin;
 
-use const ABSPATH;
+use const WP_PLUGIN_DIR;
 
 
 /**
