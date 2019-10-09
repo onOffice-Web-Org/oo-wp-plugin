@@ -13,6 +13,18 @@ Integrate real estates, contact forms and contact persons from the onOffice Soft
 6. Login into your WordPress page as an administrator and go to the plugins list by navigating to `Plugins` » `Installed Plugins`. You should be able to see and activate the onOffice for WP-Websites plugin. If no API token or secret have been saved so far, a notification will show up at the top. Clicking the link will bring you to the appropriate configuration page.
 7. Start editing inside the new `onoffice-personalized` folder.
 
+## Building a Release
+
+The included Makefile can be used to generate a release. This strips down configuration files for several development tools, as well as unit tests.
+Composer is still required.
+
+```
+git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git
+PREFIX=/tmp make release
+```
+
+This will generate the directory /tmp/onoffice with the plugin data. If you need a zip file, execute `make zip`.
+
 ** IMPORTANT **: Although it is safe to disable the plugin, DELETING IT WILL WIPE ALL PLUGIN-RELATED DATA FROM THE DATABASE. WE DO NOT PROVIDE ANY WARRANTY FOR DATA LOSS!
 
 ### Getting API Access
