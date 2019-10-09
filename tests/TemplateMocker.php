@@ -19,40 +19,20 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Template;
-use const ABSPATH;
-
 
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
 class TemplateMocker
 	extends Template
 {
-	const TEMPLATE_BASE_PATH = ABSPATH.'wp-content/plugins';
-
-	private $_templateBasePath = self::TEMPLATE_BASE_PATH;
-
-	/**
-	 *
-	 * @param string $templateName
-	 *
-	 */
-
-	public function __construct($templateName)
-	{
-		parent::__construct($templateName);
-		$newDirectory = realpath(__DIR__);
-		$this->setTemplateBasePath($newDirectory);
-	}
-
 	/**
 	 *
 	 * @return string
@@ -61,24 +41,6 @@ class TemplateMocker
 
 	protected function buildFilePath(): string
 	{
-		return $this->_templateBasePath.'/'.$this->getTemplateName();
+		return realpath(__DIR__).'/'.$this->getTemplateName();
 	}
-
-	/**
-	 *
-	 * @param string $templateBasePath
-	 * @return $this
-	 *
-	 */
-
-	protected function setTemplateBasePath(string $templateBasePath): self
-	{
-		$this->_templateBasePath = $templateBasePath;
-		return $this;
-	}
-
-
-	/** @return string */
-	protected function getTemplateBasePath(): string
-		{ return $this->_templateBasePath; }
 }
