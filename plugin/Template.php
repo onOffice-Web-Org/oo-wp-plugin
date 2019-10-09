@@ -22,7 +22,7 @@
 namespace onOffice\WPlugin;
 
 use onOffice\WPlugin\Controller\EstateListBase;
-use const ABSPATH;
+use const WP_PLUGIN_DIR;
 
 /**
  *
@@ -39,10 +39,6 @@ class Template
 	/** */
 	const KEY_ADDRESSLIST = 'addresslist';
 
-	/** */
-	const TEMPLATE_BASE_PATH = ABSPATH.'wp-content/plugins';
-
-
 	/** @var EstateListBase */
 	private $_pEstateList = null;
 
@@ -54,9 +50,6 @@ class Template
 
 	/** @var AddressList */
 	private $_pAddressList = null;
-
-	/** @var string */
-	private $_templateBasePath = self::TEMPLATE_BASE_PATH;
 
 
 	/**
@@ -127,7 +120,7 @@ class Template
 
 	private function buildFilePath(): string
 	{
-		return $this->_templateBasePath.'/'.$this->_templateName;
+		return WP_PLUGIN_DIR.'/'.$this->_templateName;
 	}
 
 
@@ -187,21 +180,4 @@ class Template
 		return $this;
 	}
 
-
-	/**
-	 *
-	 * @param string $templateBasePath
-	 * @return $this
-	 *
-	 */
-
-	protected function setTemplateBasePath(string $templateBasePath): self
-	{
-		$this->_templateBasePath = $templateBasePath;
-		return $this;
-	}
-
-	/** @return string */
-	protected function getTemplateBasePath(): string
-		{ return $this->_templateBasePath; }
 }
