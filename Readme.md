@@ -3,17 +3,14 @@
 
 Integrate real estates, contact forms and contact persons from the onOffice Software into your WordPress website.
 
-## Installation (for Development)
+## Installation
 
-1. Clone this repository recursively: `git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git`.
-2. Install the development dependencies: `composer install`.
-3. Move the plugin directory into a new subdirectory inside the WordPress plugins directory (`wp-content/plugins/`)
-4. Create a new plugin folder called `onoffice-personalized`.
-5. Copy the folder `templates.dist` to `onoffice-personalized/templates`. This is where the newly created individual templates will go.
-6. Login into your WordPress page as an administrator and go to the plugins list by navigating to `Plugins` » `Installed Plugins`. You should be able to see and activate the onOffice for WP-Websites plugin. If no API token or secret have been saved so far, a notification will show up at the top. Clicking the link will bring you to the appropriate configuration page.
-7. Start editing inside the new `onoffice-personalized` folder.
+### For Development
 
-## Building a Release
+* Clone this repository recursively: `git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git`.
+* Install the development dependencies: `composer install`.
+
+### Building a Release
 
 The included Makefile can be used to generate a release. This strips down configuration files for several development tools, as well as unit tests.
 Composer is still required.
@@ -25,7 +22,15 @@ PREFIX=/tmp make release
 
 This will generate the directory /tmp/onoffice with the plugin data. If you need a zip file, execute `make zip`.
 
-** IMPORTANT **: Although it is safe to disable the plugin, DELETING IT WILL WIPE ALL PLUGIN-RELATED DATA FROM THE DATABASE. WE DO NOT PROVIDE ANY WARRANTY FOR DATA LOSS!
+## Getting Started
+
+1. Move the plugin directory into a new subdirectory inside the WordPress plugins directory (`wp-content/plugins/`)
+2. Create a new plugin folder called `onoffice-personalized`.
+3. Copy the folder `templates.dist` to `onoffice-personalized/templates`. This is where the newly created individual templates will go.
+4. Login into your WordPress page as an administrator and go to the plugins list by navigating to `Plugins` » `Installed Plugins`. You should be able to see and activate the onOffice for WP-Websites plugin. If no API token or secret have been saved so far, a notification will show up at the top. Clicking the link will bring you to the appropriate configuration page.
+5. Start editing inside the new `onoffice-personalized` folder.
+
+**IMPORTANT**: Although it is safe to disable the plugin, DELETING IT WILL WIPE ALL PLUGIN-RELATED DATA FROM THE DATABASE. WE DO NOT PROVIDE ANY WARRANTY FOR DATA LOSS!
 
 ### Getting API Access
 
