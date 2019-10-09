@@ -88,6 +88,11 @@ class Template
 	}
 
 
+	/** @return string */
+	protected function getTemplateName(): string
+	{ return $this->_templateName; }
+
+
 	/**
 	 *
 	 * Method that provides important variables to template
@@ -118,7 +123,7 @@ class Template
 	 *
 	 */
 
-	private function buildFilePath(): string
+	protected function buildFilePath(): string
 	{
 		return WP_PLUGIN_DIR.'/'.$this->_templateName;
 	}
