@@ -28,7 +28,7 @@
 
 namespace onOffice\WPlugin;
 
-use const ABSPATH;
+use const WP_PLUGIN_DIR;
 
 
 /**
@@ -77,7 +77,7 @@ class ConfigWrapper {
 
 	private static function getSubPluginPath()
 	{
-		return ABSPATH.'wp-content/plugins/onoffice-personalized';
+		return WP_PLUGIN_DIR.'onoffice-personalized';
 	}
 
 

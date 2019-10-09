@@ -19,14 +19,14 @@
  *
  */
 
+declare (strict_types=1);
+
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Template;
 
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -35,14 +35,12 @@ class TemplateMocker
 {
 	/**
 	 *
-	 * @param string $templateName
+	 * @return string
 	 *
 	 */
 
-	public function __construct($templateName)
+	protected function buildFilePath(): string
 	{
-		parent::__construct($templateName);
-		$newDirectory = realpath(__DIR__);
-		$this->setTemplateBasePath($newDirectory);
+		return realpath(__DIR__).'/'.$this->getTemplateName();
 	}
 }
