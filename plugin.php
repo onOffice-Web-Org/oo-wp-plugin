@@ -151,7 +151,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
-	$estateId = $pWP->query_vars['estate_id'] ?? '0';
+	$estateId = $pWP->query_vars['estate_id'] ?? '';
 	/** @var EstateIdRequestGuard $pEstateIdGuard */
 	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
 
