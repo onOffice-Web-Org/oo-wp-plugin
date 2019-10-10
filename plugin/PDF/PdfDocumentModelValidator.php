@@ -53,6 +53,8 @@ class PdfDocumentModelValidator
 	/**
 	 *
 	 * @param APIClientActionGeneric $pAPIClientActionGeneric
+	 * @param DataDetailViewHandler $pDataDetailViewHandler
+	 * @param DataListViewFactory $pDataListViewFactory
 	 *
 	 */
 
