@@ -151,13 +151,16 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
-	$estateId = $pWP->query_vars['estate_id'] ?? 0;
+	$estateId = $pWP->query_vars['estate_id'] ?? '0';
 	/** @var EstateIdRequestGuard $pEstateIdGuard */
 	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
 
-	if ($estateId !== 0 && !$pEstateIdGuard->isValid($estateId)) {
-		$pWP->handle_404();
-		include(get_query_template('404'));
-		die();
+	if ($estateId !== '') {
+		$estateId = (int)$estateId;
+		if ($estateId === 0 || !$pEstateIdGuard->isValid($estateId)) {
+			$pWP->handle_404();
+			include(get_query_template('404'));
+			die();
+		}
 	}
 });
