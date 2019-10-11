@@ -429,6 +429,15 @@ abstract class AdminPageSettingsBase
 
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');
+
+		wp_register_script('chosen-prism',
+				plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/third_party/chosen/docsupport/prism.js', ['jquery'], '', true);
+
+		wp_register_script('chosen-init',
+				plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/third_party/chosen/docsupport/init.js', ['jquery'], '', true);
+
+		wp_enqueue_script('chosen-prism');
+		wp_enqueue_script('chosen-init');
 	}
 
 

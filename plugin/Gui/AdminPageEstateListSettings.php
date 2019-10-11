@@ -90,17 +90,35 @@ class AdminPageEstateListSettings
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pInputModelRandomSort = $pFormModelBuilder->createInputModelRandomSort();
+
+		$pInputModelSortBySetting = $pFormModelBuilder->createInputModelSortBySetting();
+		$pInputModelSortByChosen = $pFormModelBuilder->createInputModelSortByChosen();
+		$pInputModelSortByDefault = $pFormModelBuilder->createInputModelSortByDefault();
+		$pInputModelSortByspec = $pFormModelBuilder->createInputModelSortBySpec();
+
 		$pFormModelRecordsFilter = new FormModel();
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
 		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice'));
 		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
+
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortBySetting);
+
+		if ($pInputModelSortBySetting->getValue() == '1') {
+			$pFormModelRecordsFilter->addInputModel($pInputModelSortByChosen);
+			$pFormModelRecordsFilter->addInputModel($pInputModelSortByDefault);
+			$pFormModelRecordsFilter->addInputModel($pInputModelSortByspec);
+		}
+		else
+		{
+			$pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
+			$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
+			$pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
+		}
+
 		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
 		$pFormModelRecordsFilter->addInputModel($pInputModelShowStatus);
-		$pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
 		$this->addFormModel($pFormModelRecordsFilter);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');

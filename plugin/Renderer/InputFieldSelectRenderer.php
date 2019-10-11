@@ -34,8 +34,8 @@ class InputFieldSelectRenderer
 	/** @var bool */
 	private $_multiple = false;
 
-	/** @var string */
-	private $_selectedValue = null;
+	/** @var array */
+	private $_selectedValue = [];
 
 	/**
 	 *
@@ -64,7 +64,7 @@ class InputFieldSelectRenderer
 		foreach ($this->getValue() as $key => $label)
 		{
 			echo '<option value="'.esc_html($key).'" '
-				.($key == $this->_selectedValue ? ' selected="selected" ' : null)
+				.(in_array($key, $this->_selectedValue) ? ' selected="selected" ' : null)
 				.' >'
 				.esc_html($label)
 				.'</option>';
@@ -76,15 +76,15 @@ class InputFieldSelectRenderer
 
 	/**
 	 *
-	 * @param string $selectedValue
+	 * @param array $selectedValue
 	 *
 	 */
 
 	public function setSelectedValue($selectedValue)
-		{ $this->_selectedValue = $selectedValue; }
+		{ $this->_selectedValue = (array($selectedValue)); }
 
 
-	/** @return string */
+	/** @return array */
 	public function getSelectedValue()
 		{ return $this->_selectedValue; }
 }

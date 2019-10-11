@@ -223,6 +223,13 @@ class InputModelRenderer
 				$pInstance->setValueEnclosure($pInputModel->getValueEnclosure());
 
 				break;
+
+			case InputModelBase::HTML_TYPE_CHOSEN:
+				$pInstance = new InputFieldChosenRenderer(
+						$pInputModel->getIdentifier(),
+						$pInputModel->getValuesAvailable());
+				$pInstance->setSelectedValue($pInputModel->getValue());
+				break;
 		}
 
 		if ($pInstance !== null) {

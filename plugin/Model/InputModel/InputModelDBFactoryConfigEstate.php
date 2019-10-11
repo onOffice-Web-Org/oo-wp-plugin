@@ -94,6 +94,31 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_fieldconfig',
 			self::KEY_FIELD => 'availableOptions',
 		],
+
+		InputModelDBFactory::INPUT_SORT_BY_SETTING => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'sortBySetting',
+		],
+
+		InputModelDBFactory::INPUT_SORT_BY_USER_SELECTION => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'sortByUserSelection',
+		],
+
+		InputModelDBFactory::INPUT_SORT_BY_CHOSEN => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'sortByChosen',
+		],
+
+		InputModelDBFactory::INPUT_SORT_BY_DEFAULT => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'sortByDefault',
+		],
+
+		InputModelDBFactory::INPUT_SORT_BY_USER_DEFINED_DIRECTION => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'sortByUserDefinedDirection',
+		],
 	];
 
 
