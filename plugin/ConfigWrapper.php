@@ -77,7 +77,7 @@ class ConfigWrapper {
 
 	private static function getSubPluginPath()
 	{
-		return WP_PLUGIN_DIR.'onoffice-personalized';
+		return WP_PLUGIN_DIR.'/onoffice-personalized';
 	}
 
 
