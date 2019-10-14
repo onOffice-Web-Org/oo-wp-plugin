@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# Deploys a tag of the plugin into the WP SVN.
+#
+# needs the package `subversion-tools` on Ubuntu
+
+TAG_PATH=tags
+TRUNK_PATH=trunk
+PREFIX=/tmp
+PPWDt=`pwd`
+TAG_PREFIX="v"
+NEW_TAG=${1#"$TAG_PREFIX"}
+
+if [ -z $SVNURL ]; then
+	>&2 echo "Env variable SVNURL is missing"
+	exit 1
+fi
+
+if [ ! -z $NEW_TAG ]; then
+	grep "= $NEW_TAG =" readme.txt > /dev/null
+	CHANGELOG_ENTRY_EXISTS=$?
+	if [ $CHANGELOG_ENTRY_EXISTS -ne 0 ]; then
+		>&2 echo "Missing changelog entry for tag $NEW_TAG"
+		exit 2
+	fi
+fi
+
+make release
+cd /tmp/onoffice
+
+if [ ! -z "$NEW_TAG" -a "$2" = "--stable" ]; then
+	ed readme.txt <<EDSCRIPT
+7
+i
+Stable tag: $NEW_TAG
+.
+w
+q
+EDSCRIPT
+fi
+
+cd $PPWDt
+svn_load_dirs -svn_username=$SVN_USER -svn_password=$SVN_PASSWORD -no_auto_exe -p "${PPWDt}/bin/svn-config.conf" -no_user_input ${SVNURL} ${TRUNK_PATH} /tmp/onoffice
+
+echo $? was the return value 
+
+rm -rf /tmp/svn_load_dirs*
+svn info "${SVNURL}${TAG_PATH}/$NEW_TAG" > /dev/null 2>&1 || \
+	svn copy --username ${SVN_USER} --password ${SVN_PASSWORD} --non-interactive "${SVNURL}/${TRUNK_PATH}" "${SVNURL}${TAG_PATH}/$NEW_TAG" -m "Create tag '$NEW_TAG'"
+exit $?
