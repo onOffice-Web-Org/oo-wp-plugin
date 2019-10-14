@@ -68,7 +68,7 @@ The plugin offers further practical functions with which you can further profess
 
 == Changelog ==
 
-= 2.0 =
+= 2.0.0 =
 
 Stable version of the plugin, including a backend GUI
 
