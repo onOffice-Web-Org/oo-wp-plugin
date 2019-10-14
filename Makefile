@@ -3,7 +3,7 @@ ifeq ($(PREFIX),)
 endif
 
 ifeq ($(OO_PLUGIN_VERSION),)
-	VERSION := $(shell git describe --tags --always)
+	OO_PLUGIN_VERSION := $(shell git describe --tags --always)
 endif
 
 .PHONY: clean-zip clean-target clean release
