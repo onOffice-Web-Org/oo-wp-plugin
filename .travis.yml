@@ -10,9 +10,14 @@ notifications:
 cache:
   directories:
     - $HOME/.composer/cache
-    
+
 env:
     - secure: "KUX/tUyFdlFU8GNxCjU5h/83v+caIx9UaxD8Zknm0mqJfxInwa0AqicoqToefLGAYL/Bf9igVho5SXiORgNkKBpt6eRvdy2T05xH2IZQwteEIIUfXxhi5k8nAMqNrefFANJfTdUsQ1u0YbXZgKgDgIYR4fjCt3vlp/svMyRCaJE5HTuFHD4I5fJTQOd7heOpugP2hvGNOILjSW9H6BVpTKkeZjnQsMGsQQbfUAYsWD7xsP1enoSMrVILlPtW1uaXHxkNEbQ5dNoiC0zz5hqG0T/LIBIYWjePa77N4EP8upTFmQIdAc+2rQH1lQhb+ectYCjTc3g+amHCb+tbWfAb+LP4leqGleD9lAPZLUnz42INeBncsoZZgr7arqw+qXDnQDJy86C333PubhsaWhs4KePzGznqmnj7d97T5iv6Cv1QkJzj13OUC/mGwfZBLA/mzX2kJWu785DCzXlWgu77pq3ocIBCEFJ5qMq8O9GdzPMou5Vlw4B26zZ3CwEU/Ghro9F9fmBVlanMhQiUjwf2tn67pjpqRnYVnLhKN3Ir8MaXi+wLvil3f5ZXY9mBLk/GTB5Ibh5ydGGomH+g7OWZy6ylNnc/uQm7wy5hlHOdXrscKMn53wkR9v12hrH90u1XMJ0WW4eRHiLl66lNln9RhnJUpr9/1DEALmiy2jFQTrQ="
+
+addons:
+  apt:
+    packages:
+    - subversion-tools
 
 matrix:
   include:
