@@ -14,6 +14,7 @@ Integrate real estates, contact forms and contact persons from the onOffice Soft
 Integrate real estates, contact forms and contact persons from the onOffice Software into your website. Thanks to shortcodes, the plugin is compatible with every WordPress theme.
 
 The plugin includes three modules:
+
 * real estates
 * addresses
 * forms
@@ -27,10 +28,11 @@ Create lists, design the real estate presentation and offer synopsis for downloa
 
 * **Publication**: One click in the software is enough to publish the property on your WordPress website.
 * **List view**: Present your properties in clear lists. It is entirely up to you which properties are represented. The lists can be inserted anywhere on the website using short codes.
-* **Detailed view**: Comfortably structure the detail view with checkboxes and drag&drop and easily determine which information is displayed.
+* **Detailed view**: Comfortably structure the detail view with checkboxes and drag & drop and easily determine which information is displayed.
 
 = Addresses =
 The website is your business card on the internet. Create trust with a professional self-presentation.
+
 * **Team presentation**: The address module accesses the data of the employees. The address display is ideal for presenting the team.
 
 = Forms =
@@ -45,7 +47,7 @@ Simplify data maintenance: The information from forms is automatically transmitt
 The plugin offers further practical functions with which you can further professionalize your web presence.
 
 * User-friendly watch list or favorites function
-* Two card types: OpenStreetMap or Google Maps
+* Two map types: OpenStreetMap or Google Maps
 * Show all linked media per address / property
 
 
