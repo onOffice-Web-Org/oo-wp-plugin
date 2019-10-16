@@ -42,9 +42,9 @@ fi
 cd $PPWDt
 svn_load_dirs -svn_username="${SVN_USER}" -svn_password="${SVN_PASSWORD}" -no_auto_exe -p "${PPWDt}/bin/svn-config.conf" -no_user_input ${SVNURL} ${TRUNK_PATH} /tmp/onoffice
 
-echo $? was the return value 
+echo $? was the return value
 
 rm -rf /tmp/svn_load_dirs*
 svn info "${SVNURL}${TAG_PATH}/$NEW_TAG" > /dev/null 2>&1 || \
-	svn copy --username "${SVN_USER}" --password "${SVN_PASSWORD}" --non-interactive --no-auth-cache "${SVNURL}/${TRUNK_PATH}" "${SVNURL}${TAG_PATH}/$NEW_TAG" -m "Create tag '$NEW_TAG'"
+	svn copy --username "${SVN_USER}" --password "${SVN_PASSWORD}" --non-interactive "${SVNURL}/${TRUNK_PATH}" "${SVNURL}${TAG_PATH}/$NEW_TAG" -m "Create tag '$NEW_TAG'"
 exit $?
