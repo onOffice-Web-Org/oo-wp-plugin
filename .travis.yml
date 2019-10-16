@@ -1,6 +1,9 @@
-dist: trusty
+dist: xenial
 
 language: php
+
+services:
+  - mysql
 
 notifications:
   email:
@@ -22,7 +25,7 @@ addons:
 matrix:
   include:
     - php: 7.0
-      env: WP_VERSION=latest CODECOV=1
+      env: WP_VERSION=latest CODECOV=1 DEPLOY=1
     - php: 7.1
       env: WP_VERSION=latest
     - php: 7.2
@@ -56,3 +59,4 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+    condition: "$DEPLOY = 1"
