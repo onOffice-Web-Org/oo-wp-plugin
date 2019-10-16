@@ -46,5 +46,5 @@ echo $? was the return value
 
 rm -rf /tmp/svn_load_dirs*
 svn info "${SVNURL}${TAG_PATH}/$NEW_TAG" > /dev/null 2>&1 || \
-	svn copy --username "${SVN_USER}" --password "${SVN_PASSWORD}" --non-interactive "${SVNURL}/${TRUNK_PATH}" "${SVNURL}${TAG_PATH}/$NEW_TAG" -m "Create tag '$NEW_TAG'"
+	svn copy --username "${SVN_USER}" --password "${SVN_PASSWORD}" --non-interactive "${SVNURL}/${TRUNK_PATH}" "${SVNURL}/${TAG_PATH}/$NEW_TAG" -m "Create tag '$NEW_TAG'"
 exit $?
