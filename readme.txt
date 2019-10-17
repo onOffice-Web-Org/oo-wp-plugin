@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.1.0 =
+
+**New**
+
+* Splitting of compound fields into their particular components, i.e. "Anrede-Titel" into "Anrede" and "Titel" for search forms
+
 = 2.0.0 =
 
 Stable version of the plugin, including a backend GUI
@@ -115,7 +121,10 @@ Stable version of the plugin, including a backend GUI
 
 == Upgrade Notice ==
 
-= 2.0 =
+= 2.1.0 =
+Support for compound fields (such as "Anrede-Titel") in forms was added in this version.
+
+= 2.0.0 =
 This is the recommended version. Version 1 is not supported anymore.
 
 == Arbitrary section ==
