@@ -21,12 +21,11 @@
 
 namespace onOffice\WPlugin\Form;
 
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\CompoundFieldsFilter;
-use DI\Container;
 
 
 /**
@@ -39,9 +38,6 @@ use DI\Container;
 class FormPostConfigurationTest
 	implements FormPostConfiguration
 {
-	/** @var array */
-	private $_postVariables = [];
-
 	/** @var string */
 	private $_postvarCaptchaToken = '';
 
@@ -68,43 +64,6 @@ class FormPostConfigurationTest
 	{
 		$this->_pWPOptionsWrapper = new WPOptionWrapperTest;
 		$this->_pLogger = $pLogger;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getPostVars(): array
-	{
-		return $this->_postVariables;
-	}
-
-
-	/**
-	 *
-	 * @param array $postVariables
-	 *
-	 */
-
-	public function setPostVariables(array $postVariables)
-	{
-		$this->_postVariables = $postVariables;
-	}
-
-
-	/**
-	 *
-	 * @param string $key
-	 * @param string $value
-	 *
-	 */
-
-	public function addPostVariableString(string $key, string $value)
-	{
-		$this->_postVariables[$key] = $value;
 	}
 
 

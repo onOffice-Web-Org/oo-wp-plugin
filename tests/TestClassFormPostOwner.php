@@ -268,14 +268,6 @@ class TestClassFormPostOwner
 
 	public function testInitialCheckMissingFields()
 	{
-		$this->_pFormPostConfiguration->setPostVariables([
-			'Vorname' => 'John',
-			// missing Name
-			'ArtDaten' => 'Eigentümer',
-			'objektart' => 'haus',
-			'kabel_sat_tv' => 'y',
-		]);
-
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 3);
 

@@ -78,6 +78,6 @@ interface FormPostConfiguration
 	 * @return CompoundFieldsFilter
 	 *
 	 */
-	
+
 	public function getCompoundFields(): CompoundFieldsFilter;
 }
