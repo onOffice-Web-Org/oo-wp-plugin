@@ -71,6 +71,10 @@ class DataListViewFactory
 		$pListView->setFilterableFields($row['filterable']);
 		$pListView->setHiddenFields($row['hidden']);
 		$pListView->setAvailableOptions($row['availableOptions']);
+		$pListView->setSortBySetting((int)$row['sortBySetting']);
+		$pListView->setSortByUserDefinedDefault($row['sortByUserDefinedDefault']);
+		$pListView->setSortByUserDefinedDirection($row['sortByUserDefinedDirection']);
+		$pListView->setSortByValuesUserDefined(explode(',', $row['sortByValuesUserDefined']));
 
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,

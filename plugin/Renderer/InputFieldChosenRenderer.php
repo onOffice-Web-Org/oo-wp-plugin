@@ -28,23 +28,35 @@ class InputFieldChosenRenderer
 	//put your code here
 	public function render()
 	{
-		$output = '<select name="'.esc_html($this->getName())
-					.'" class="chosen-select" '
+		$output = '<select name="'.esc_html($this->getName()).'"'
 					.$this->renderAdditionalAttributes()
 					.' id="'.esc_html($this->getGuiId()).'"'
-					.' multiple>';
+					.' multiple >';
 
-				foreach ($this->getValue() as $key => $label) {
-					$selected = null;
-					if (in_array($key, $this->getSelectedValue())) {
-						$selected = 'selected="selected"';
-					}
-					$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
-				}
+		foreach ($this->getValue() as $key => $label) {
+			$selected = null;
+			if (in_array($key, $this->getSelectedValue())) {
+				$selected = 'selected="selected"';
+			}
+			$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
+		}
 
 		$output .= '</select>';
 
 		echo $output;
 	}
 
+	/**
+	 *
+	 * @param string $selectedValue
+	 *
+	 */
+
+	public function setSelectedValue($selectedValue)
+		{ $this->_selectedValue = explode(',', $selectedValue); }
+
+
+	/** @return array */
+	public function getSelectedValue()
+		{ return $this->_selectedValue; }
 }

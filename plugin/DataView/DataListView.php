@@ -109,6 +109,18 @@ class DataListView
 	/** @var array */
 	private $_geoFields = [];
 
+	/** @var int */
+	private $_sortBySetting = 0;
+
+	/** @var array */
+	private $_sortByValuesUserDefined = [];
+
+	/** @var string */
+	private $_sortByUserDefinedDefault = null;
+
+	/** @var int */
+	private $_sortByUserDefinedDirection = 0;
+
 
 	/**
 	 *
@@ -267,4 +279,36 @@ class DataListView
 	/** @return string */
 	public function getViewType(): string
 		{ return $this->_listType; }
+
+	/** @param int $sortBySetting */
+	public function setSortBySetting(int $sortBySetting)
+		{ $this->_sortBySetting = $sortBySetting; }
+
+	/** @return int */
+	public function getSortBySetting(): int
+		{ return $this->_sortBySetting;	}
+
+	/** @param array $values */
+	public function setSortByValuesUserDefined(array $values)
+		{ $this->_sortByValuesUserDefined = $values; }
+
+	/** @return string */
+	public function getSortByValuesUserDefined(): string
+		{ return implode(',', $this->_sortByValuesUserDefined); }
+
+	/** @param string $value */
+	public function setSortByUserDefinedDefault(string $value)
+		{ $this->_sortByUserDefinedDefault = $value; }
+
+	/** @return string */
+	public function getSortByUserDefinedDefault(): string
+		{ return $this->_sortByUserDefinedDefault; }
+
+	/** @param int $direction */
+	public function setSortByUserDefinedDirection(int $direction)
+		{ $this->_sortByUserDefinedDirection = $direction; }
+
+	/** @return int */
+	public function getSortByUserDefinedDirection(): int
+		{ return $this->_sortByUserDefinedDirection; }
 }

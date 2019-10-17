@@ -226,8 +226,9 @@ class InputModelRenderer
 
 			case InputModelBase::HTML_TYPE_CHOSEN:
 				$pInstance = new InputFieldChosenRenderer(
-						$pInputModel->getIdentifier(),
-						$pInputModel->getValuesAvailable());
+					$pInputModel->getIdentifier(),
+					$pInputModel->getValuesAvailable());
+				$pInstance->addAdditionalAttribute('class', 'chosen-select');
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				break;
 		}

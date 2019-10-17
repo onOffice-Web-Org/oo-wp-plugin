@@ -48,6 +48,10 @@ class RecordManagerUpdateListViewEstate
 			'template' => $pDataViewList->getTemplate(),
 			'recordsPerPage' => $pDataViewList->getRecordsPerPage(),
 			'random' => $pDataViewList->getRandom(),
+			'sortBySetting' => $pDataViewList->getSortBySetting(),
+			'sortByValuesUserDefined' => $pDataViewList->getSortByValuesUserDefined(),
+			'sortByUserDefinedDefault' => $pDataViewList->getSortByUserDefinedDefault(),
+			'sortByUserDefinedDirection' => $pDataViewList->getSortByUserDefinedDirection(),
 		];
 
 		$tableRow = [

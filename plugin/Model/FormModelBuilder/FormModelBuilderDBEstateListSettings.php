@@ -435,11 +435,11 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$label = __('Sort by', 'onoffice');
 		$pInputModel = $this->getInputModelDBFactory()->create
-				(InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label);
+				(InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
 		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
 		$pInputModel->setValuesAvailable($fieldnames);
-		$pInputModel->setValue($pInputModel->getValue());
+		$pInputModel->setValue($this->getValue($pInputModel->getField()));
 		return $pInputModel;
 	}
 

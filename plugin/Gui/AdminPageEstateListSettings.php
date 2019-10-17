@@ -102,20 +102,13 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice'));
 		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
-
 		$pFormModelRecordsFilter->addInputModel($pInputModelSortBySetting);
-
-		if ($pInputModelSortBySetting->getValue() == '1') {
-			$pFormModelRecordsFilter->addInputModel($pInputModelSortByChosen);
-			$pFormModelRecordsFilter->addInputModel($pInputModelSortByDefault);
-			$pFormModelRecordsFilter->addInputModel($pInputModelSortByspec);
-		}
-		else
-		{
-			$pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
-			$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
-			$pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
-		}
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortByChosen);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortByDefault);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortByspec);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
+		$pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
 
 		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
 		$pFormModelRecordsFilter->addInputModel($pInputModelShowStatus);
