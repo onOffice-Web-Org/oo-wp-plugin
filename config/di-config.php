@@ -29,6 +29,8 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvir
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
 use onOffice\WPlugin\Filesystem\Filesystem;
 use onOffice\WPlugin\Filesystem\FilesystemDirect;
+use onOffice\WPlugin\Controller\InputVariableReaderConfig;
+use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
 use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostConfiguration;
@@ -81,4 +83,5 @@ return [
 	},
 	WPNonceWrapper::class => autowire(WPNonceWrapperDefault::class),
 	WPScreenWrapper::class => autowire(WPScreenWrapperDefault::class),
+	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 ];

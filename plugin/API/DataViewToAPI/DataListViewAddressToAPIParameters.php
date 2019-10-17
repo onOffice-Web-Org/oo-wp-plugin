@@ -24,7 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\API\DataViewToAPI;
 
 use onOffice\WPlugin\DataView\DataListViewAddress;
-use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddress;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddressFactory;
 use onOffice\WPlugin\Language;
 
 
@@ -37,28 +37,19 @@ use onOffice\WPlugin\Language;
 
 class DataListViewAddressToAPIParameters
 {
-	/** @var DataListViewAddress */
-	private $_pDataListView = null;
-
-	/** @var int */
-	private $_page = 1;
-
-	/** @var DefaultFilterBuilderListViewAddress */
-	private $_pDefaultFilterBuilderListViewAddress = null;
+	/** @var DefaultFilterBuilderListViewAddressFactory */
+	private $_pFilterBuilderFactory = null;
 
 
 	/**
 	 *
-	 * @param DataListViewAddress $pDataListView
+	 * @param DefaultFilterBuilderListViewAddressFactory $pFilterBuilderFactory
 	 *
 	 */
 
-	public function __construct(DataListViewAddress $pDataListView,
-		DefaultFilterBuilderListViewAddress $pDefaultFilterBuilderListViewAddress = null)
+	public function __construct(DefaultFilterBuilderListViewAddressFactory $pFilterBuilderFactory)
 	{
-		$this->_pDataListView = $pDataListView;
-		$this->_pDefaultFilterBuilderListViewAddress =
-			$pDefaultFilterBuilderListViewAddress ?? new DefaultFilterBuilderListViewAddress($pDataListView);
+		$this->_pFilterBuilderFactory = $pFilterBuilderFactory;
 	}
 
 
@@ -66,45 +57,39 @@ class DataListViewAddressToAPIParameters
 	/**
 	 *
 	 * @param array $fields
+	 * @param DataListViewAddress $pDataListView
+	 * @param int $page
 	 * @return array
-	 *
 	 */
 
-	public function buildParameters(array $fields): array
+	public function buildParameters(array $fields, DataListViewAddress $pDataListView, int $page): array
 	{
-		$pDataListViewAddress = $this->getDataListView();
-		$offset = ($this->_page - 1) * $pDataListViewAddress->getRecordsPerPage();
-		$limit = $pDataListViewAddress->getRecordsPerPage();
+		$pBuilderListViewAddress = $this->_pFilterBuilderFactory->create($pDataListView);
+
+		$offset = 0;
+
+		if ($page > 0) {
+			$offset = ($page - 1) * $pDataListView->getRecordsPerPage();
+		}
+
+		$limit = $pDataListView->getRecordsPerPage();
 
 		$parameters = array(
 			'data' => $fields,
 			'listoffset' => $offset,
 			'listlimit' => $limit,
-			'sortby' => $pDataListViewAddress->getSortby(),
-			'sortorder' => $pDataListViewAddress->getSortorder(),
-			'filter' => $this->_pDefaultFilterBuilderListViewAddress->buildFilter(),
-			'filterid' => $pDataListViewAddress->getFilterId(),
+			'sortby' => $pDataListView->getSortby(),
+			'sortorder' => $pDataListView->getSortorder(),
+			'filter' => $pBuilderListViewAddress->buildFilter(),
+			'filterid' => $pDataListView->getFilterId(),
 			'outputlanguage' => Language::getDefault(),
 			'formatoutput' => true,
 		);
 
-		if ($pDataListViewAddress->getShowPhoto()) {
+		if ($pDataListView->getShowPhoto()) {
 			$parameters['data'] []= 'imageUrl';
 		}
 
 		return $parameters;
 	}
-
-
-	/** @return DataListViewAddress */
-	public function getDataListView(): DataListViewAddress
-		{ return $this->_pDataListView; }
-
-	/** @return int */
-	public function getPage(): int
-		{ return $this->_page; }
-
-	/** @param int $page */
-	public function setPage(int $page)
-		{ $this->_page = $page; }
 }

@@ -23,9 +23,12 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\WPlugin\Form\FormPostConfigurationDefault;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
 
 /**
@@ -46,7 +49,9 @@ class TestClassFormPostConfigurationDefault
 
 	public function prepare()
 	{
-		$this->_pSubject = new FormPostConfigurationDefault();
+		$pFieldsCollectionBuildershort = new FieldsCollectionBuilderShort(new Container());
+		$pCompoundFields = new CompoundFieldsFilter();
+		$this->_pSubject = new FormPostConfigurationDefault($pFieldsCollectionBuildershort, $pCompoundFields);
 	}
 
 
@@ -78,5 +83,30 @@ class TestClassFormPostConfigurationDefault
 	public function testGetWPOptionsWrapper()
 	{
 		$this->assertInstanceOf(WPOptionWrapperDefault::class, $this->_pSubject->getWPOptionsWrapper());
+	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Form\FormPostConfigurationDefault::getFieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function testGetFieldsCollectionBuilderShort()
+	{
+		$this->assertInstanceOf(FieldsCollectionBuilderShort::class, $this->_pSubject->getFieldsCollectionBuilderShort());
+	}
+
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Form\FormPostConfigurationDefault::getCompoundFields
+	 *
+	 */
+
+	public function testGetCompoundFields()
+	{
+		$this->assertInstanceOf(CompoundFieldsFilter::class, $this->_pSubject->getCompoundFields());
 	}
 }

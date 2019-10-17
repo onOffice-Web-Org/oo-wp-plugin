@@ -28,11 +28,10 @@ use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use onOffice\WPlugin\Types\FieldsCollection;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -47,22 +46,29 @@ class OutputFields
 	/** @var GeoPositionFieldHandlerBase */
 	private $_pGeoPositionFieldHandler = null;
 
+	/** @var CompoundFieldsFilter */
+	private $_pCompoundFieldsFilter = null;
 
 	/**
 	 *
-	 * @param DataListView $pDataListView
-	 *
+	 * @param DataViewFilterableFields $pDataListView
+	 * @param GeoPositionFieldHandlerBase $pGeoPositionFieldHandler
+	 * @param CompoundFieldsFilter $pCompoundFieldsFilter
+	 * @param InputVariableReader $pInputVariableReader
+	 * 
 	 */
 
 	public function __construct(
 		DataViewFilterableFields $pDataListView,
 		GeoPositionFieldHandlerBase $pGeoPositionFieldHandler,
+		CompoundFieldsFilter $pCompoundFieldsFilter,
 		InputVariableReader $pInputVariableReader = null)
 	{
 		$this->_pDataView = $pDataListView;
 		$this->_pInputVariableReader = $pInputVariableReader ??
 			new InputVariableReader($pDataListView->getModule());
 		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler;
+		$this->_pCompoundFieldsFilter = $pCompoundFieldsFilter;
 	}
 
 
@@ -72,7 +78,7 @@ class OutputFields
 	 *
 	 */
 
-	public function getVisibleFilterableFields(): array
+	public function getVisibleFilterableFields(FieldsCollection $pFieldsCollection): array
 	{
 		$filterable = $this->_pDataView->getFilterableFields();
 		$hidden = $this->_pDataView->getHiddenFields();
@@ -94,7 +100,10 @@ class OutputFields
 
 		$resultDefault = array_combine($allFields, $valuesDefault);
 
-		return $resultDefault;
+		$result = $this->_pCompoundFieldsFilter->mergeListFilterableFields(
+				$pFieldsCollection, $resultDefault);
+
+		return $result;
 	}
 
 
