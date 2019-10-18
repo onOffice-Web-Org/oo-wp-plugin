@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -33,6 +33,29 @@ use onOffice\WPlugin\Template;
 class TemplateMocker
 	extends Template
 {
+	/** @var string */
+	private $_dir = null;
+
+
+	/**
+	 *
+	 * @param string $templateName
+	 * @param string $dir
+	 *
+	 */
+
+	public function __construct(string $templateName, string $dir = null)
+	{
+		parent::__construct($templateName);
+
+		if ($dir != null) {
+			$this->_dir = $dir;
+		} else {
+			$this->_dir = realpath(__DIR__);
+		}
+	}
+
+
 	/**
 	 *
 	 * @return string
@@ -41,6 +64,6 @@ class TemplateMocker
 
 	protected function buildFilePath(): string
 	{
-		return realpath(__DIR__).'/'.$this->getTemplateName();
+		return $this->_dir.'/'.$this->getTemplateName();
 	}
 }

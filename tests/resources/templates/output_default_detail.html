@@ -1,0 +1,69 @@
+
+<div id="map" style="width: 600px; height: 400px;"></div>
+
+<script>
+(function() {
+	var estateMarkers = [];
+	var map = L.map('map', {
+		center: [50.8, 10.0],
+		zoom: 5
+	});
+	L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
+
+	var group = new L.featureGroup();
+
+	for (i in estateMarkers) {
+		var estate = estateMarkers[i];
+		var marker = L.marker(estate.latlng, estate.options);
+		marker.bindPopup(estate.options.title);
+		group.addLayer(marker);
+		if (estate.visible) {
+			marker.addTo(map);
+		}
+		// only extend map boundaries by new coordinates, if not visible
+	}
+
+	map.fitBounds(group.getBounds());
+})();
+</script>
+<h1>Detail View</h1>
+				label-objekttitel: flach begrüntes Grundstück<br>
+
+			label-objektart: Grundstück<br>
+
+			label-objekttyp: Wohnen<br>
+
+			label-vermarktungsart: Kauf<br>
+
+			label-plz: 52078<br>
+
+			label-ort: Aachen<br>
+
+			label-objektnr_extern: AP001<br>
+
+			label-grundstuecksflaeche: ca. 5.400 m²<br>
+
+			label-kaufpreis: 80.000,00 €<br>
+
+			label-objektbeschreibung: große Freifläche<br>
+
+			label-lage: Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.<br>
+
+			label-ausstatt_beschr: teilweise mit einer alten Mauer aus Findlingen umgeben<br>
+
+			label-sonstige_angaben: Vereinbaren sie noch heute einen Besichttgungstermin<br>
+
+			<ul>
+			<b> Contact person: Ana Petrova Ivanova</b>
+						<li>Telefon: </li>
+			<li>Telefax: </li>
+			<li>E-Mail: </li>
+									
+			Bild: <br>		</ul>
+
+	
+	<a href="https://asd.de" title="test movie">test movie</a><br>	<a href="https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg">
+		<img src="https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg">
+		Fotolia_3286409_Subscription_XL<br>	</a>
+	
+			

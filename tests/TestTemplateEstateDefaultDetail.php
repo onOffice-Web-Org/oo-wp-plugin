@@ -25,14 +25,13 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\EstateDetail;
-use onOffice\WPlugin\Template;
 use WP_UnitTestCase;
 
 /**
  *
  */
 
-class TestClassTemplate
+class TestTemplateEstateDefaultDetail
 	extends WP_UnitTestCase
 {
 	/** @var EstateDetail */
@@ -85,22 +84,13 @@ class TestClassTemplate
 
 		$pArrayContainerEstateDetail = new ArrayContainerEscape($estateData);
 
-		$this->_pEstate->method('setEstateId')->with(52);
-		$this->_pEstate->method('estateIterator')->willReturn($pArrayContainerEstateDetail);
+		$this->_pEstate->setEstateId(52);
+		$this->_pEstate->method('estateIterator')->will($this->onConsecutiveCalls($pArrayContainerEstateDetail, false));
 
-		$this->_pEstate->method('getFieldLabel')->with('objekttitel')->willReturn('Objekttitel');
-		$this->_pEstate->method('getFieldLabel')->with('objektart')->willReturn('Objektart');
-		$this->_pEstate->method('getFieldLabel')->with('objekttyp')->willReturn('Objekttyp');
-		$this->_pEstate->method('getFieldLabel')->with('vermarktungsart')->willReturn('Vermarktungsart');
-		$this->_pEstate->method('getFieldLabel')->with('ort')->willReturn('Ort');
-		$this->_pEstate->method('getFieldLabel')->with('plz')->willReturn('PLZ');
-		$this->_pEstate->method('getFieldLabel')->with('objektnr_extern')->willReturn('externe Objnr');
-		$this->_pEstate->method('getFieldLabel')->with('grundstuecksflaeche')->willReturn('Grundstücksgröße');
-		$this->_pEstate->method('getFieldLabel')->with('kaufpreis')->willReturn('Kaufpreis');
-		$this->_pEstate->method('getFieldLabel')->with('objektbeschreibung')->willReturn('Beschreibung');
-		$this->_pEstate->method('getFieldLabel')->with('lage')->willReturn('Lage');
-		$this->_pEstate->method('getFieldLabel')->with('ausstatt_beschr')->willReturn('Ausstattung Beschreibung');
-		$this->_pEstate->method('getFieldLabel')->with('sonstige_angaben')->willReturn('Sonstige Angaben');
+		$this->_pEstate->method('getFieldLabel')->with($this->anything())
+			->will($this->returnCallback(function(string $field): string {
+				return 'label-'.$field;
+			}));
 
 		$contactData = [
 			'Name' => 'Petrova Ivanova',
@@ -135,9 +125,11 @@ class TestClassTemplate
 
 	public function testRender()
 	{
-		$pTemplate = new Template('oo-wp-plugin/templates.dist/estate/default_detail.php');
+		$pTemplate = new TemplateMocker('templates.dist/estate/default_detail.php', '/mnt/oo-wp-plugin');
 		$pTemplate->setEstateList($this->_pEstate);
 		$output = $pTemplate->render();
-		$this->assertEquals('', $output);
+		$expected = file_get_contents(realpath(__DIR__).'/resources/templates/output_default_detail.html');
+
+		$this->assertEquals($expected, $output);
 	}
 }

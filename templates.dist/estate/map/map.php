@@ -19,7 +19,6 @@
  *
  */
 
-use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\Types\MapProvider;
 
 /**
@@ -32,24 +31,10 @@ $pMapProvider = new MapProvider();
 
 switch ($pMapProvider->getActiveMapProvider()) {
 	case MapProvider::GOOGLE_MAPS:
-		if (get_class($pEstates) == EstateDetail::class)
-		{
-			include 'map-google-detail.php';
-		}
-		else
-		{
-			include 'map-google.php';
-		}
+		include 'map-google.php';
 		break;
 
 	case MapProvider::OPEN_STREET_MAPS:
-		if (get_class($pEstates) == EstateDetail::class)
-		{
-			include 'map-osm-detail.php';
-		}
-		else
-		{
-			include('map-osm.php');
-		}
+		include('map-osm.php');
 		break;
 }
