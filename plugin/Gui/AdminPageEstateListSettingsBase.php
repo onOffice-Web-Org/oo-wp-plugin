@@ -65,7 +65,7 @@ abstract class AdminPageEstateListSettingsBase
 	 */
 
 	protected function updateValues(array $row, stdClass $pResult, $recordId = null)
-	{var_dump($row);
+	{
 		$result = false;
 		$pDummyDetailView = new DataDetailView();
 		$type = RecordManagerFactory::TYPE_ESTATE;
