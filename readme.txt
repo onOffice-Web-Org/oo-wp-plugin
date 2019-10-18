@@ -14,6 +14,7 @@ Integrate real estates, contact forms and contact persons from the onOffice Soft
 Integrate real estates, contact forms and contact persons from the onOffice Software into your website. Thanks to shortcodes, the plugin is compatible with every WordPress theme.
 
 The plugin includes three modules:
+
 * real estates
 * addresses
 * forms
@@ -27,10 +28,11 @@ Create lists, design the real estate presentation and offer synopsis for downloa
 
 * **Publication**: One click in the software is enough to publish the property on your WordPress website.
 * **List view**: Present your properties in clear lists. It is entirely up to you which properties are represented. The lists can be inserted anywhere on the website using short codes.
-* **Detailed view**: Comfortably structure the detail view with checkboxes and drag&drop and easily determine which information is displayed.
+* **Detailed view**: Comfortably structure the detail view with checkboxes and drag & drop and easily determine which information is displayed.
 
 = Addresses =
 The website is your business card on the internet. Create trust with a professional self-presentation.
+
 * **Team presentation**: The address module accesses the data of the employees. The address display is ideal for presenting the team.
 
 = Forms =
@@ -45,19 +47,22 @@ Simplify data maintenance: The information from forms is automatically transmitt
 The plugin offers further practical functions with which you can further professionalize your web presence.
 
 * User-friendly watch list or favorites function
-* Two card types: OpenStreetMap or Google Maps
+* Two map types: OpenStreetMap or Google Maps
 * Show all linked media per address / property
 
 
 == Installation ==
 
-1. Clone the repository recursively: `git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git`.
-2. Install the dependencies: `composer install --no-dev`.
-3. Move the plugin directory into a new subdirectory inside the WordPress `plugins` directory (`wp-content/plugins/`)
-4. Create a new plugin folder called `onoffice-personalized`.
-5. Copy the folder `templates.dist` to `onoffice-personalized/templates`. This is where the newly created individual templates will go.
-6. Login into your WordPress page as an administrator and go to the plugins list by navigating to Plugins » Installed Plugins. You should be able to see and activate the onOffice for WP-Websites plugin. If no API token or secret have been saved so far, a notification will show up at the top. Clicking the link will bring you to the appropriate configuration page.
-7. Start editing inside the new onoffice-personalized folder.
+= Automatic =
+Install the plugin from the plugins back-end page of your WordPress website.
+
+= Manual =
+Go to our page on the [WordPress Plugin Directory](https://wordpress.org/plugins/onoffice-for-wp-websites/) and [download the zip](https://downloads.wordpress.org/plugin/onoffice-for-wp-websites.zip). Upload the new zip to your WordPress website.
+
+= Create the directory for individual templates =
+[Download the zip](https://downloads.wordpress.org/plugin/onoffice-for-wp-websites.zip) and copy the contents of the `templates.dist` directory to a subfolder `templates` of a new plugin folder named `onoffice-personalized`.
+
+Start editing inside the `onoffice-personalized` folder.
 
 
 **IMPORTANT**: Although it is safe to disable the plugin, DELETING IT WILL WIPE ALL PLUGIN-RELATED DATA FROM THE DATABASE. WE DO NOT PROVIDE ANY WARRANTY FOR DATA LOSS!
@@ -68,7 +73,7 @@ The plugin offers further practical functions with which you can further profess
 
 == Changelog ==
 
-= 2.0 =
+= 2.0.0 =
 
 Stable version of the plugin, including a backend GUI
 

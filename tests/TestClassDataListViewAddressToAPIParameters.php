@@ -145,4 +145,32 @@ class TestClassDataListViewAddressToAPIParameters
 			($pDataListViewAddress, $pDefaultFilterBuilderListViewAddress);
 		return $pDataListViewAddressToAPIParameters;
 	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters::buildParameters
+	 *
+	 */
+
+	public function testBuildParametersWithPageGreaterThanOne()
+	{
+		$pDataListViewAddressToAPIParameters = $this->getNewDataListViewToAPIParameters();
+		$pDataAddressList = $pDataListViewAddressToAPIParameters->getDataListView();
+		$pDataListViewAddressToAPIParameters->setPage(3);
+		$result = $pDataListViewAddressToAPIParameters->buildParameters($pDataAddressList->getFields());
+		$expectedResult = [
+			'data' => ['Vorname', 'Name', 'Zusatz1'],
+			'listoffset' => 30,
+			'listlimit' => 15,
+			'sortby' => 'Vorname',
+			'sortorder' => 'desc',
+			'filter' => $this->_filter,
+			'filterid' => 12,
+			'outputlanguage' => 'ENG',
+			'formatoutput' => true,
+		];
+
+		$this->assertEquals($expectedResult, $result);
+	}
 }

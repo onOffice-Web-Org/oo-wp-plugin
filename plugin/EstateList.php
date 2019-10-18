@@ -38,7 +38,7 @@ use function add_action;
 use function do_action;
 use function esc_url;
 use function get_page_link;
-use function plugin_dir_url;
+use function home_url;
 
 /**
  *

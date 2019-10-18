@@ -50,6 +50,7 @@ use onOffice\WPlugin\Installer;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
 use onOffice\WPlugin\PDF\PdfDocumentModelValidationException;
 use onOffice\WPlugin\PDF\PdfDownload;
+use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\Utility\__String;
 
@@ -132,7 +133,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
-    if (isset($pWP->query_vars['document_pdf'])) {
+	if (isset($pWP->query_vars['document_pdf'])) {
 		try {
 			$pPdfDocumentModel = new PdfDocumentModel($pWP->query_vars['estate_id'] ?? 0, $pWP->query_vars['view'] ?? '');
 			/* @var $pPdfDownload PdfDownload */
@@ -143,8 +144,23 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			echo $pDocumentResponse->getBinary();
 		} catch (PdfDocumentModelValidationException $pEx) {
 			$pWP->handle_404();
-			include( get_query_template( '404' ) );
+			include(get_query_template('404'));
 			die();
 		}
-    }
+	}
+});
+
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+	$estateId = $pWP->query_vars['estate_id'] ?? '';
+	/** @var EstateIdRequestGuard $pEstateIdGuard */
+	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
+
+	if ($estateId !== '') {
+		$estateId = (int)$estateId;
+		if ($estateId === 0 || !$pEstateIdGuard->isValid($estateId)) {
+			$pWP->handle_404();
+			include(get_query_template('404'));
+			die();
+		}
+	}
 });
