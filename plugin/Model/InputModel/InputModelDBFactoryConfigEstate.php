@@ -101,8 +101,8 @@ class InputModelDBFactoryConfigEstate
 		],
 
 		InputModelDBFactory::INPUT_SORT_BY_CHOSEN => [
-			self::KEY_TABLE => 'oo_plugin_listviews',
-			self::KEY_FIELD => 'sortByValuesUserDefined',
+			self::KEY_TABLE => 'oo_plugin_sortbyuservalues',
+			self::KEY_FIELD => 'sortbyuservalue',
 		],
 
 		InputModelDBFactory::INPUT_SORT_BY_DEFAULT => [

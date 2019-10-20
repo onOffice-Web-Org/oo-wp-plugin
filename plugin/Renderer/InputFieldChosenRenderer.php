@@ -48,12 +48,12 @@ class InputFieldChosenRenderer
 
 	/**
 	 *
-	 * @param string $selectedValue
+	 * @param array $selectedValue
 	 *
 	 */
 
 	public function setSelectedValue($selectedValue)
-		{ $this->_selectedValue = explode(',', $selectedValue); }
+		{ $this->_selectedValue = $selectedValue; }
 
 
 	/** @return array */

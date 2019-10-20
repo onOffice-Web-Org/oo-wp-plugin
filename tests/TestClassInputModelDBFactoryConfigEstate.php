@@ -40,6 +40,7 @@ class TestClassInputModelDBFactoryConfigEstate
 		'oo_plugin_listviews',
 		'oo_plugin_picturetypes',
 		'oo_plugin_fieldconfig',
+		'oo_plugin_sortbyuservalues',
 	];
 
 

@@ -49,7 +49,6 @@ class RecordManagerUpdateListViewEstate
 			'recordsPerPage' => $pDataViewList->getRecordsPerPage(),
 			'random' => $pDataViewList->getRandom(),
 			'sortBySetting' => $pDataViewList->getSortBySetting(),
-			'sortByValuesUserDefined' => $pDataViewList->getSortByValuesUserDefined(),
 			'sortByUserDefinedDefault' => $pDataViewList->getSortByUserDefinedDefault(),
 			'sortByUserDefinedDirection' => $pDataViewList->getSortByUserDefinedDirection(),
 		];
@@ -57,6 +56,7 @@ class RecordManagerUpdateListViewEstate
 		$tableRow = [
 			self::TABLENAME_LIST_VIEW => $row,
 			self::TABLENAME_PICTURETYPES => $pDataViewList->getPictureTypes(),
+			self::TABLENAME_SORTBYUSERVALUES => $pDataViewList->getSortByUserValues(),
 			self::TABLENAME_FIELDCONFIG => $pDataViewList->getFields(),
 			self::TABLENAME_LISTVIEW_CONTACTPERSON => $pDataViewList->getAddressFields(),
 		];
@@ -98,6 +98,17 @@ class RecordManagerUpdateListViewEstate
 				$table = $prefix.self::TABLENAME_PICTURETYPES;
 				if (is_array($pictureRow)) {
 					$pWpDb->insert($table, $pictureRow);
+				}
+			}
+		}
+
+		if (array_key_exists(self::TABLENAME_SORTBYUSERVALUES, $tableRow)) {
+			$sortbyuservalues = $tableRow[self::TABLENAME_SORTBYUSERVALUES];
+			$pWpDb->delete($prefix.self::TABLENAME_SORTBYUSERVALUES, $whereListviewTable);
+			foreach ($sortbyuservalues as $sortbyuservaluesRow) {
+				$table = $prefix.self::TABLENAME_SORTBYUSERVALUES;
+				if (is_array($sortbyuservaluesRow)) {
+					$pWpDb->insert($table, $sortbyuservaluesRow);
 				}
 			}
 		}

@@ -76,15 +76,15 @@ class InputFieldSelectRenderer
 
 	/**
 	 *
-	 * @param array $selectedValue
+	 * @param string $selectedValue
 	 *
 	 */
 
 	public function setSelectedValue($selectedValue)
-		{ $this->_selectedValue = (array($selectedValue)); }
+		{ $this->_selectedValue = $selectedValue; }
 
 
-	/** @return array */
+	/** @return string */
 	public function getSelectedValue()
 		{ return $this->_selectedValue; }
 }

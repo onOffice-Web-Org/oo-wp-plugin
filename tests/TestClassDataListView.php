@@ -209,6 +209,18 @@ class TestClassDataListView
 	 *
 	 */
 
+	public function testSortByUserValues()
+	{
+		$this->assertEquals([], $this->_pSubject->getSortByUserValues());
+		$this->_pSubject->setSortByUserValues(['kaufpreis', 'wohnflaeche']);
+		$this->assertEquals(['kaufpreis', 'wohnflaeche'], $this->_pSubject->getSortByUserValues());
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testRandom()
 	{
 		$this->assertFalse($this->_pSubject->getRandom());

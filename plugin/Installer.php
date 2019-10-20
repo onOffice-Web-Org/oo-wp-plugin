@@ -121,6 +121,12 @@ abstract class Installer
 			$dbversion = 12;
 		}
 
+		if ( $dbversion == 12)
+		{
+			dbDelta( self::getCreateQuerySortByUserValues() );
+			$dbversion = 13;
+		}
+
 		update_option( 'oo_plugin_db_version', $dbversion, false);
 
 		$pContentFilter = new ContentFilter(new Logger(), new ScriptLoaderMap
@@ -188,7 +194,6 @@ abstract class Installer
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`sortBySetting` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
-			`sortByValuesUserDefined` TEXT NULL DEFAULT NULL COMMENT 'Sortierkriterium',
 			`sortByUserDefinedDefault` VARCHAR(200) NULL DEFAULT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
 			PRIMARY KEY (`listview_id`),
@@ -362,6 +367,27 @@ abstract class Installer
 		return $sql;
 	}
 
+		/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	static private function getCreateQuerySortByUserValues()
+	{
+		$prefix = self::getPrefix();
+		$charsetCollate = self::getCharsetCollate();
+		$tableName = $prefix."oo_plugin_sortbyuservalues";
+		$sql = "CREATE TABLE $tableName (
+			`sortbyvalue_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`listview_id` int(11) NOT NULL,
+			`sortbyuservalue` varchar(100) NOT NULL,
+			PRIMARY KEY (`sortbyvalue_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
 
 	/**
 	 *
@@ -466,6 +492,7 @@ abstract class Installer
 			$prefix."oo_plugin_listview_contactperson",
 			$prefix."oo_plugin_listviews_address",
 			$prefix."oo_plugin_address_fieldconfig",
+			$prefix."oo_plugin_sortbyuservalues",
 		);
 
 		foreach ($tables as $table)

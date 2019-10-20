@@ -74,7 +74,7 @@ class DataListViewFactory
 		$pListView->setSortBySetting((int)$row['sortBySetting']);
 		$pListView->setSortByUserDefinedDefault($row['sortByUserDefinedDefault']);
 		$pListView->setSortByUserDefinedDirection($row['sortByUserDefinedDirection']);
-		$pListView->setSortByValuesUserDefined(explode(',', $row['sortByValuesUserDefined']));
+		$pListView->setSortByUserValues($row[DataListView::SORT_BY_USER_VALUES]);
 
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,

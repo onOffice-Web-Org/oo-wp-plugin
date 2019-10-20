@@ -39,6 +39,9 @@ abstract class RecordManager
 	const TABLENAME_PICTURETYPES = 'oo_plugin_picturetypes';
 
 	/** */
+	const TABLENAME_SORTBYUSERVALUES = 'oo_plugin_sortbyuservalues';
+
+	/** */
 	const TABLENAME_FIELDCONFIG = 'oo_plugin_fieldconfig';
 
 	/** */

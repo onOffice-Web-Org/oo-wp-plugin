@@ -59,7 +59,7 @@ class TestClassDataListViewFactory
 		'sortBySetting' => 1,
 		'sortByUserDefinedDefault' => 'kaufpreis',
 		'sortByUserDefinedDirection' => 1,
-		'sortByValuesUserDefined' => 'kaufpreis,anzahl_zimmer',
+		'sortbyuservalues' => ['kaufpreis,anzahl_zimmer'],
 	];
 
 	/**
@@ -102,7 +102,7 @@ class TestClassDataListViewFactory
 		$this->assertEquals($this->_baseRow['sortBySetting'], $pDataListView->getSortBySetting());
 		$this->assertEquals($this->_baseRow['sortByUserDefinedDefault'], $pDataListView->getSortByUserDefinedDefault());
 		$this->assertEquals($this->_baseRow['sortByUserDefinedDirection'], $pDataListView->getSortByUserDefinedDirection());
-		$this->assertEquals($this->_baseRow['sortByValuesUserDefined'], $pDataListView->getSortByValuesUserDefined());
+		$this->assertEquals($this->_baseRow['sortbyuservalues'], $pDataListView->getSortByUserValues());
 		$pDataListView->getFilterableFields();
 	}
 }

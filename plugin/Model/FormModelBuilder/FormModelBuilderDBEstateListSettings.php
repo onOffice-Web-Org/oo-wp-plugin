@@ -439,7 +439,12 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
 		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
 		$pInputModel->setValuesAvailable($fieldnames);
-		$pInputModel->setValue($this->getValue($pInputModel->getField()));
+		$value = $this->getValue(DataListView::SORT_BY_USER_VALUES);
+
+		if ($value == null) {
+			$value = [];
+		}
+		$pInputModel->setValue($value);
 		return $pInputModel;
 	}
 

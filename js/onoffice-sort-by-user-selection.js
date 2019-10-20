@@ -2,7 +2,7 @@ var onOffice = onOffice || {};
 
 onOffice.sortByUserSelection = function(){
 	var sortbynames = ['oopluginlistviews-sortByUserDefinedDefault',
-		'oopluginlistviews-sortByValuesUserDefined',
+		'oopluginsortbyuservalues-sortbyuservalue',
 		'oopluginlistviews-sortByUserDefinedDirection',
 		'oopluginlistviews-sortby'];
 

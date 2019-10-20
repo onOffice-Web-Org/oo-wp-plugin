@@ -55,6 +55,9 @@ class DataListView
 	/** */
 	const LISTVIEW_TYPE_UNITS = 'units';
 
+	/** */
+	const SORT_BY_USER_VALUES = 'sortbyuservalues';
+
 	/** @var int */
 	private $_id = null;
 
@@ -113,7 +116,7 @@ class DataListView
 	private $_sortBySetting = 0;
 
 	/** @var array */
-	private $_sortByValuesUserDefined = [];
+	private $_sortbyuservalues = [];
 
 	/** @var string */
 	private $_sortByUserDefinedDefault = null;
@@ -289,12 +292,12 @@ class DataListView
 		{ return $this->_sortBySetting;	}
 
 	/** @param array $values */
-	public function setSortByValuesUserDefined(array $values)
-		{ $this->_sortByValuesUserDefined = $values; }
+	public function setSortByUserValues(array $values)
+		{ $this->_sortbyuservalues = $values; }
 
-	/** @return string */
-	public function getSortByValuesUserDefined(): string
-		{ return implode(',', $this->_sortByValuesUserDefined); }
+	/** @return array */
+	public function getSortByUserValues(): array
+		{ return $this->_sortbyuservalues; }
 
 	/** @param string $value */
 	public function setSortByUserDefinedDefault(string $value)
