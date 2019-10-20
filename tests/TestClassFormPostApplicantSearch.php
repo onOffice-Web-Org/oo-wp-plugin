@@ -37,6 +37,7 @@ use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -121,6 +122,12 @@ class TestClassFormPostApplicantSearch
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setConstructorArgs([new Container()])
+				->getMock();
+
+		$pCompoundFields = new CompoundFieldsFilter();
+
 		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pLogger);
 		$pSDKWrapperMocker = $this->setupSDKWrapperMocker();
 		$_POST = [
@@ -129,6 +136,9 @@ class TestClassFormPostApplicantSearch
 			'kaufpreis' => '200000',
 			'wohnflaeche' => '800',
 		];
+
+		$this->_pFormPostConfigurationTest->setCompoundFields($pCompoundFields);
+		$this->_pFormPostConfigurationTest->setFieldsCollectionBuilderShort($pFieldsCollectionBuilderShort);
 
 		$this->setupDataFormConfiguration();
 

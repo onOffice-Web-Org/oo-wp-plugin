@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Form;
 
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
@@ -36,9 +38,6 @@ use onOffice\WPlugin\WP\WPOptionWrapperTest;
 class FormPostConfigurationTest
 	implements FormPostConfiguration
 {
-	/** @var array */
-	private $_postVariables = [];
-
 	/** @var string */
 	private $_postvarCaptchaToken = '';
 
@@ -47,6 +46,12 @@ class FormPostConfigurationTest
 
 	/** @var WPOptionWrapperTest */
 	private $_pWPOptionsWrapper = null;
+
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort = null;
+
+	/** @var CompoundFieldsFilter */
+	private $_pCompoundFields = null;
 
 
 	/**
@@ -59,43 +64,6 @@ class FormPostConfigurationTest
 	{
 		$this->_pWPOptionsWrapper = new WPOptionWrapperTest;
 		$this->_pLogger = $pLogger;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	public function getPostVars(): array
-	{
-		return $this->_postVariables;
-	}
-
-
-	/**
-	 *
-	 * @param array $postVariables
-	 *
-	 */
-
-	public function setPostVariables(array $postVariables)
-	{
-		$this->_postVariables = $postVariables;
-	}
-
-
-	/**
-	 *
-	 * @param string $key
-	 * @param string $value
-	 *
-	 */
-
-	public function addPostVariableString(string $key, string $value)
-	{
-		$this->_postVariables[$key] = $value;
 	}
 
 
@@ -144,5 +112,53 @@ class FormPostConfigurationTest
 	public function getWPOptionsWrapper(): WPOptionWrapperBase
 	{
 		return $this->_pWPOptionsWrapper;
+	}
+
+
+	/**
+	 *
+	 * @return CompoundFieldsFilter
+	 *
+	 */
+
+	public function getCompoundFields(): CompoundFieldsFilter
+	{
+		return $this->_pCompoundFields;
+	}
+
+
+	/**
+	 *
+	 * @return FieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
+	{
+		return $this->_pFieldsCollectionBuilderShort;
+	}
+
+
+	/**
+	 *
+	 * @param CompoundFieldsFilter $pCompoundFields
+	 *
+	 */
+
+	public function setCompoundFields(CompoundFieldsFilter $pCompoundFields)
+	{
+		$this->_pCompoundFields = $pCompoundFields;
+	}
+
+
+	/**
+	 *
+	 * @param FieldsCollectionBuilderShort $pBuilder
+	 *
+	 */
+
+	public function setFieldsCollectionBuilderShort(FieldsCollectionBuilderShort $pBuilder)
+	{
+		$this->_pFieldsCollectionBuilderShort = $pBuilder;
 	}
 }

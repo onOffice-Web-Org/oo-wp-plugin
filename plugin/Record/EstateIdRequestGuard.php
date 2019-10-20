@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -21,26 +21,45 @@
 
 declare (strict_types=1);
 
-namespace onOffice\tests;
+namespace onOffice\WPlugin\Record;
 
-use onOffice\WPlugin\Template;
-
+use onOffice\WPlugin\Factory\EstateDetailFactory;
 
 /**
  *
+ * Checks if an estate ID exists
+ *
  */
 
-class TemplateMocker
-	extends Template
+class EstateIdRequestGuard
 {
+	/** @var EstateDetailFactory */
+	private $_pEstateDetailFactory;
+
+
 	/**
 	 *
-	 * @return string
+	 * @param EstateDetailFactory $pEstateDetailFactory
 	 *
 	 */
 
-	protected function buildFilePath(): string
+	public function __construct(EstateDetailFactory $pEstateDetailFactory)
 	{
-		return realpath(__DIR__).'/'.$this->getTemplateName();
+		$this->_pEstateDetailFactory = $pEstateDetailFactory;
+	}
+
+
+	/**
+	 *
+	 * @param int $estateId
+	 * @return bool
+	 *
+	 */
+
+	public function isValid(int $estateId): bool
+	{
+		$pEstateDetail = $this->_pEstateDetailFactory->createEstateDetail($estateId);
+		$pEstateDetail->loadEstates();
+		return $pEstateDetail->estateIterator() !== false;
 	}
 }

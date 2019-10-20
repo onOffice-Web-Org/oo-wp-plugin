@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -41,6 +42,8 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
  *
@@ -67,6 +70,12 @@ class EstateListEnvironmentDefault
 	/** @var EstateStatusLabel */
 	private $_pEstateStatusLabel = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pBuilderShort = null;
+
+	/** @var CompoundFieldsFilter */
+	private $_pCompoundFieldsFilter = null;
+
 
 	/**
 	 *
@@ -79,6 +88,25 @@ class EstateListEnvironmentDefault
 		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 		$this->_pAddressList = new AddressList();
 		$this->_pEstateStatusLabel = new EstateStatusLabel();
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+
+		$this->_pCompoundFieldsFilter = $pContainer->get(CompoundFieldsFilter::class);
+		$this->_pBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+	}
+
+
+	/**
+	 *
+	 * @return FieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
+	{
+		return $this->_pBuilderShort;
 	}
 
 
@@ -215,7 +243,7 @@ class EstateListEnvironmentDefault
 	public function getOutputFields(DataViewFilterableFields $pDataView): OutputFields
 	{
 		$pGeoPositionFieldHandler = new GeoPositionFieldHandler();
-		return new OutputFields($pDataView, $pGeoPositionFieldHandler);
+		return new OutputFields($pDataView, $pGeoPositionFieldHandler, $this->_pCompoundFieldsFilter);
 	}
 
 

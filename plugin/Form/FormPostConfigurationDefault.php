@@ -24,6 +24,8 @@ namespace onOffice\WPlugin\Form;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 
 /**
  *
@@ -35,6 +37,27 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 class FormPostConfigurationDefault
 	implements FormPostConfiguration
 {
+	/** @var FieldsCollectionBuilderShort*/
+	private $_pFieldsCollectionBuilderShort = null;
+
+	/** @var CompoundFieldsFilter */
+	private $_pCompoundFields = null;
+
+
+	/**
+	 *
+	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
+	 * @param CompoundFieldsFilter $pCompoundFields
+	 *
+	 */
+
+	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
+			CompoundFieldsFilter $pCompoundFields)
+	{
+		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
+		$this->_pCompoundFields = $pCompoundFields;
+	}
+
 
 	/**
 	 *
@@ -69,5 +92,29 @@ class FormPostConfigurationDefault
 	public function getWPOptionsWrapper(): WPOptionWrapperBase
 	{
 		return new WPOptionWrapperDefault;
+	}
+
+
+	/**
+	 *
+	 * @return FieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
+	{
+		return $this->_pFieldsCollectionBuilderShort;
+	}
+
+
+	/**
+	 *
+	 * @return CompoundFieldsFilter
+	 *
+	 */
+
+	public function getCompoundFields(): CompoundFieldsFilter
+	{
+		return $this->_pCompoundFields;
 	}
 }

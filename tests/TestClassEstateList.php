@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use Closure;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\SDKWrapperMocker;
@@ -44,6 +45,7 @@ use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -571,6 +573,13 @@ class TestClassEstateList
 				'value' => 'reihenhaus',
 			],
 		];
+
+		$pBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setConstructorArgs([new Container()])
+				->getMock();
+
+		$this->_pEnvironment->method('getFieldsCollectionBuilderShort')->willReturn($pBuilderMock);
+
 		$this->assertEquals($expectation, $this->_pEstateList->getVisibleFilterableFields());
 	}
 

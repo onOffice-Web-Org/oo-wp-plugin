@@ -41,6 +41,8 @@ use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
+
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -79,6 +81,11 @@ class TestClassFormPostContact
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
+
+		$pCompoundFields = new CompoundFieldsFilter();
+		$pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setConstructorArgs([new Container()])
+				->getMock();
 
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
@@ -165,6 +172,9 @@ class TestClassFormPostContact
 			}));
 
 		$pSearchciteriaFields = $pContainer->get(SearchcriteriaFields::class);
+
+		$this->_pFormPostConfiguration->setCompoundFields($pCompoundFields);
+		$this->_pFormPostConfiguration->setFieldsCollectionBuilderShort($pBuilderShort);
 
 		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest
 			($this->_pSDKWrapperMocker, $pWPQueryWrapper, $pFormAddressCreator);

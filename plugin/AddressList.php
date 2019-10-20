@@ -33,6 +33,8 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_html;
@@ -121,13 +123,11 @@ class AddressList
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$pModifier = $this->generateRecordModifier();
 
-		$pDataListViewToApi = $this->_pEnvironment
-			->getDataListViewAddressToAPIParameters($this->_pDataViewAddress);
-		$newPage = $inputPage === 0 ? 1 : $inputPage;
-		$pDataListViewToApi->setPage($newPage);
+		$pDataListViewToApi = $this->_pEnvironment->getDataListViewAddressToAPIParameters();
 
+		$newPage = $inputPage === 0 ? 1 : $inputPage;
 		$apiOnlyFields = $pModifier->getAllAPIFields();
-		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields);
+		$parameters = $pDataListViewToApi->buildParameters($apiOnlyFields, $this->_pDataViewAddress, $newPage);
 
 		$pApiCall = new APIClientActionGeneric
 			($this->_pEnvironment->getSDKWrapper(), onOfficeSDK::ACTION_ID_READ, 'address');
@@ -304,7 +304,11 @@ class AddressList
 	{
 		$pDataListView = $this->_pDataViewAddress;
 		$pFilterableFields = $this->_pEnvironment->getOutputFields($pDataListView);
-		$fieldsValues = $pFilterableFields->getVisibleFilterableFields();
+		/** @var FieldsCollectionBuilderShort $pBuilderShort */
+		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
+		$pFieldsCollection = new FieldsCollection();
+		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$fieldsValues = $pFilterableFields->getVisibleFilterableFields($pFieldsCollection);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $this->_pEnvironment

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,28 +19,44 @@
  *
  */
 
-declare (strict_types=1);
+declare(strict_types=1);
 
-namespace onOffice\tests;
+namespace onOffice\WPlugin\Filter;
 
-use onOffice\WPlugin\Template;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 
 
 /**
  *
  */
 
-class TemplateMocker
-	extends Template
+class FilterBuilderInputVariablesFactory
 {
+	/** @var InputVariableReaderConfig */
+	private $_pInputVariableReaderConfig = null;
+
+
 	/**
 	 *
-	 * @return string
+	 * @param InputVariableReaderConfig $pInputVariableReaderConfig
 	 *
 	 */
 
-	protected function buildFilePath(): string
+	public function __construct(InputVariableReaderConfig $pInputVariableReaderConfig)
 	{
-		return realpath(__DIR__).'/'.$this->getTemplateName();
+		$this->_pInputVariableReaderConfig = $pInputVariableReaderConfig;
+	}
+
+
+	/**
+	 *
+	 * @return FilterBuilderInputVariables
+	 *
+	 */
+
+	public function createForAddress()
+	{
+		return new FilterBuilderInputVariables(onOfficeSDK::MODULE_ADDRESS, false, $this->_pInputVariableReaderConfig);
 	}
 }

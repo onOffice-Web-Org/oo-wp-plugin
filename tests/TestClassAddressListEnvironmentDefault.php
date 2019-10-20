@@ -24,6 +24,7 @@ namespace onOffice\tests;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\SDKWrapper;
@@ -74,8 +75,6 @@ class TestClassAddressListEnvironmentDefault
 			->getDataListViewAddressToAPIParameters($this->_pListView);
 		$this->assertInstanceOf(DataListViewAddressToAPIParameters::class,
 			$pDataListViewAddressToAPIParameters);
-		$this->assertEquals($this->_pListView,
-			$pDataListViewAddressToAPIParameters->getDataListView());
 	}
 
 
@@ -121,5 +120,17 @@ class TestClassAddressListEnvironmentDefault
 		$pViewFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
 			($this->_pListView->getFields());
 		$this->assertInstanceOf(ViewFieldModifierHandler::class, $pViewFieldModifierHandler);
+	}
+
+
+	/**
+	 *
+	 * @covers onOffice\WPlugin\Controller\AddressListEnvironmentDefault::getFieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function testGetFieldsCollectionBuilderShort()
+	{
+		$this->assertInstanceOf(FieldsCollectionBuilderShort::class, $this->_pEnvironment->getFieldsCollectionBuilderShort());
 	}
 }

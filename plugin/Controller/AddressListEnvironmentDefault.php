@@ -23,12 +23,16 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\DataView\DataListViewAddress;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
@@ -53,6 +57,12 @@ class AddressListEnvironmentDefault
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
+	/** @var CompoundFieldsFilter */
+	private $_pDataListViewAddressToAPIParameters = null;
+
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsBuilderShort = null;
+
 
 	/**
 	 *
@@ -63,19 +73,25 @@ class AddressListEnvironmentDefault
 		$pFieldCollection = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
 		$this->_pFieldnames = new Fieldnames($pFieldCollection);
 		$this->_pSDKWrapper = new SDKWrapper();
+
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$this->_pDataListViewAddressToAPIParameters = $pContainer->get(DataListViewAddressToAPIParameters::class);
+		$this->_pFieldsBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
 	}
 
 
 	/**
 	 *
-	 * @param DataListViewAddress $pListView
+	 * @param FilterBuilderInputVariables $pFilterBuilder
 	 * @return DataListViewAddressToAPIParameters
 	 *
 	 */
 
-	public function getDataListViewAddressToAPIParameters(DataListViewAddress $pListView): DataListViewAddressToAPIParameters
+	public function getDataListViewAddressToAPIParameters(): DataListViewAddressToAPIParameters
 	{
-		return new DataListViewAddressToAPIParameters($pListView);
+		return $this->_pDataListViewAddressToAPIParameters;
 	}
 
 
@@ -93,6 +109,18 @@ class AddressListEnvironmentDefault
 
 	/**
 	 *
+	 * @return FieldsCollectionBuilderShort
+	 *
+	 */
+
+	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
+	{
+		return $this->_pFieldsBuilderShort;
+	}
+
+
+	/**
+	 *
 	 * @param DataListViewAddress $pListView
 	 * @return OutputFields
 	 *
@@ -100,7 +128,10 @@ class AddressListEnvironmentDefault
 
 	public function getOutputFields(DataListViewAddress $pListView): OutputFields
 	{
-		return new OutputFields($pListView, new GeoPositionFieldHandlerEmpty());
+		return new OutputFields(
+				$pListView,
+				new GeoPositionFieldHandlerEmpty(),
+				new CompoundFieldsFilter());
 	}
 
 

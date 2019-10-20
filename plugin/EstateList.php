@@ -34,11 +34,12 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\Types\FieldsCollection;
 use function add_action;
 use function do_action;
 use function esc_url;
 use function get_page_link;
-use function plugin_dir_url;
+use function home_url;
 
 /**
  *
@@ -695,9 +696,12 @@ class EstateList
 
 	public function getVisibleFilterableFields(): array
 	{
+		$pFieldsCollection = new FieldsCollection();
+		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
+		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$fieldsValues = $this->_pEnvironment
 			->getOutputFields($this->_pDataView)
-			->getVisibleFilterableFields();
+			->getVisibleFilterableFields($pFieldsCollection);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $this->_pEnvironment
