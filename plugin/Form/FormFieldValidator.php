@@ -52,6 +52,7 @@ class FormFieldValidator
 	/** @var array */
 	private $_multipleSingleSelectAllowed = [
 		'objekttyp',
+		'regionaler_zusatz',
 	];
 
 	/**
@@ -114,7 +115,8 @@ class FormFieldValidator
 	{
 		$returnValue = $value;
 
-		if (FieldTypes::isMultipleSelectType($pField->getType())) {
+		if (FieldTypes::isMultipleSelectType($pField->getType()) &&
+			!FieldTypes::isRegZusatzSearchcritTypes($pField->getType())) {
 			if (is_array($value) && $value != []) {
 				$returnValue = array_intersect($value, array_keys($pField->getPermittedvalues()));
 			} elseif (in_array($value, array_keys($pField->getPermittedvalues()))){

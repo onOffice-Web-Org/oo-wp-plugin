@@ -98,6 +98,10 @@ class TestClassFormFieldValidator
 				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 				$pFieldsCollection->addField($pField1);
 
+				$pFieldRegZusatz = new Field('regionaler_zusatz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pFieldRegZusatz->setType('displayAll');
+				$pFieldsCollection->addField($pFieldRegZusatz);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -136,6 +140,7 @@ class TestClassFormFieldValidator
 			'anzahl_badezimmer' => '',
 			'bad' => ['wanne', 'fenster'],
 			'objekttyp' => ['reihenendhaus','stadthaus'],
+			'regionaler_zusatz' => ['regZusatz1', 'regZusatz2'],
 		];
 
 		$data = [
@@ -145,6 +150,7 @@ class TestClassFormFieldValidator
 			'anzahl_badezimmer' => 'estate',
 			'bad' => 'estate',
 			'objekttyp' => 'searchcriteria',
+			'regionaler_zusatz' => 'searchcriteria',
 		];
 
 		$expectedData = [
@@ -152,7 +158,8 @@ class TestClassFormFieldValidator
 			'anzahl_zimmer' => 5,
 			'wohnflaeche' => 105.4,
 			'bad' => ['wanne', 'fenster'],
-			'objekttyp' => ['reihenendhaus','stadthaus']
+			'objekttyp' => ['reihenendhaus','stadthaus'],
+			'regionaler_zusatz' => ['regZusatz1', 'regZusatz2'],
 		];
 
 		$this->assertEquals($expectedData, $this->_pInstance->getValidatedValues($data));
