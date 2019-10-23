@@ -461,8 +461,19 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_DEFAULT, $label);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModel->setValue($this->getValue($pInputModel->getField()));
+		$values = $this->getValue(DataListView::SORT_BY_USER_VALUES);
+
+		if ($values == null) {
+			$values = [];
+		}
 		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
-		$pInputModel->setValuesAvailable($fieldnames);
+		$defaultValues = [];
+
+		foreach ($values as $value)	{
+			$defaultValues[$value] = $fieldnames[$value];
+		}
+
+		$pInputModel->setValuesAvailable($defaultValues);
 		return $pInputModel;
 	}
 

@@ -47,6 +47,7 @@ onOffice.ajaxSaver = function(outerDiv) {
 					message + '</p></div>');
 
 				onOffice.sortByUserSelection();
+				onOffice.generateSortByUserDefinedDefault();
 
 			} else {
 				$('#onoffice-notice-wrapper').append('<div class="notice notice-error is-dismissible"><p>' +

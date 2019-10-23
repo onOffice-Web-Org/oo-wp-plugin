@@ -64,7 +64,7 @@ class InputFieldSelectRenderer
 		foreach ($this->getValue() as $key => $label)
 		{
 			echo '<option value="'.esc_html($key).'" '
-				.(in_array($key, $this->_selectedValue) ? ' selected="selected" ' : null)
+				.($key == $this->_selectedValue ? ' selected="selected" ' : null)
 				.' >'
 				.esc_html($label)
 				.'</option>';
