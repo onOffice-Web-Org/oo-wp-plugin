@@ -75,9 +75,10 @@ class InputFieldComplexSortableDetailListContentDefault
 
 			$pInputModel->setIgnore($isDummy);
 			$callbackValue = $pInputModel->getValueCallback();
+			$module = $pInputModel->getOoModule();
 
 			if ($callbackValue !== null) {
-				call_user_func($callbackValue, $pInputModel, $key);
+				call_user_func($callbackValue, $pInputModel, $key, $module);
 			}
 
 			$pFormModel->addInputModel($pInputModel);

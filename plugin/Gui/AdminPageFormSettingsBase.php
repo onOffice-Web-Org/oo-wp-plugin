@@ -421,6 +421,7 @@ abstract class AdminPageFormSettingsBase
 	{
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
+		wp_enqueue_script('onoffice-default-form-values-js');
 	}
 
 

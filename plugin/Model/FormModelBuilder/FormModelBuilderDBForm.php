@@ -26,6 +26,7 @@ use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
@@ -36,11 +37,16 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Translation\ModuleTranslation;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use const ABSPATH;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
+use function get_available_languages;
+use function get_locale;
 use function get_option;
+use function wp_get_available_translations;
 
 /**
  *
@@ -111,6 +117,7 @@ class FormModelBuilderDBForm
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($fieldNames));
+		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 
@@ -410,6 +417,47 @@ class FormModelBuilderDBForm
 
 	/**
 	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelDefaultValueLanguageSwitch(): InputModelDB
+	{
+		$pInputModel = new InputModelDB('defaultvalue_newlang', __('Add language', 'onoffice'));
+		$pInputModel->setTable('language');
+		$pInputModel->setField('language');
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+		$languagesKeys = array_merge(['', 'en_US'], get_available_languages());
+		$languagesKeysRelevant = array_diff($languagesKeys, [get_locale()]);
+		require_once(ABSPATH.'wp-admin/includes/translation-install.php');
+		$translations = wp_get_available_translations() + ['en_US' => ['native_name' => 'English (United States)']];
+		$languages = array_combine($languagesKeysRelevant, array_map(function(string $key) use ($translations): string {
+			return $translations[$key]['native_name'] ?? '';
+		}, $languagesKeysRelevant));
+		natcasesort($languages);
+		$pInputModel->setValuesAvailable(array_diff($languages, [get_locale()]));
+		$pFieldsCollection = $this->getFieldsCollection();
+		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $module) use ($pFieldsCollection) {
+			try {
+				/** @var Field $pField */
+				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $key);
+				$isTextType = $pField->getType() === FieldTypes::FIELD_TYPE_TEXT || $pField->getType() === FieldTypes::FIELD_TYPE_VARCHAR;
+			} catch (UnknownFieldException $ex) {
+				$isTextType = false;
+			}
+
+			if ($isTextType) {
+				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+				$pInputModel->setLabel('');
+			}
+		});
+
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
 	 * @param string $label
 	 * @param string $type
 	 * @param bool $checked
@@ -496,7 +544,7 @@ class FormModelBuilderDBForm
 		$pField = $fieldnames[$key] ?? null;
 		$type = InputModelOption::HTML_TYPE_TEXT;
 		$pInputModel->setValuesAvailable([]);
-		/* @var $pField \onOffice\WPlugin\Types\Field */
+		/* @var $pField Field */
 		if ($pField !== null) {
 			$type = $mapping[$pField->getType()] ?? InputModelOption::HTML_TYPE_TEXT;
 			$pInputModel->setValuesAvailable(['' => ''] + $pField->getPermittedvalues());
@@ -520,7 +568,9 @@ class FormModelBuilderDBForm
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_MODULE;
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
-		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelModule'));
+		$pInputModel->setValueCallback(function(InputModelBase $pInputModel, string $key) {
+			$this->callbackValueInputModelModule($pInputModel, $key);
+		});
 
 		return $pInputModel;
 	}
@@ -533,7 +583,7 @@ class FormModelBuilderDBForm
 	 *
 	 */
 
-	public function callbackValueInputModelModule(InputModelBase $pInputModel, $key)
+	private function callbackValueInputModelModule(InputModelBase $pInputModel, string $key)
 	{
 		$module = '';
 		$pFieldsCollection = $this->getFieldsCollection();
