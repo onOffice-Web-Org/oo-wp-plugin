@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueCreate;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 use onOffice\WPlugin\Types\Field;
@@ -116,5 +117,31 @@ class TestClassDefaultValueCreate
 		$pDefaultValue->setValues(['123', 'abc']);
 		$this->assertEquals(12, $this->_pSubject->createForMultiselect($pDefaultValue));
 		$this->assertEquals(12, $pDefaultValue->getDefaultsId());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testCreateForText()
+	{
+		$this->_pRecordManagerInsertGeneric->expects($this->exactly(3))->method('insertByRow')
+			->will($this->returnCallback(function(array $values) {
+				$valuesConf = [
+					121 => ['form_id' => 14, 'fieldname' => 'testField2'],
+					130 => ['defaults_id' => 121, 'locale' => 'de_DE', 'value' => 'Aachen'],
+					56 => ['defaults_id' => 121, 'locale' => 'fr_BE', 'value' => 'Aix-la-Chapelle'],
+				];
+				$returnValue = array_search($values, $valuesConf);
+				return $returnValue ?: 0;
+			}));
+		$pField = new Field('testField2', 'testModule2');
+		$pDefaultValues = new DefaultValueModelText(14, $pField);
+		$pDefaultValues->addValueByLocale('de_DE', 'Aachen');
+		$pDefaultValues->addValueByLocale('fr_BE', 'Aix-la-Chapelle');
+		$resultId = $this->_pSubject->createForText($pDefaultValues);
+		$this->assertEquals(121, $resultId);
+		$this->assertEquals(121, $pDefaultValues->getDefaultsId());
 	}
 }

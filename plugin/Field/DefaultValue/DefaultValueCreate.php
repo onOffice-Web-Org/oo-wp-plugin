@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\DefaultValue;
 
 use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 
 
 /**
@@ -40,7 +41,7 @@ class DefaultValueCreate
 
 
 	/** @var RecordManagerFactory */
-	private $_pRecordManagerFactory = null;
+	private $_pRecordManagerFactory;
 
 
 	/**
@@ -52,6 +53,25 @@ class DefaultValueCreate
 	public function __construct(RecordManagerFactory $pRecordManagerFactory)
 	{
 		$this->_pRecordManagerFactory = $pRecordManagerFactory;
+	}
+
+
+	/**
+	 *
+	 * @param DefaultValueModelText $pDataModel
+	 * @return int
+	 *
+	 */
+
+	public function createForText(DefaultValueModelText $pDataModel): int
+	{
+		$defaultsId = $this->createBase($pDataModel);
+
+		foreach ($pDataModel->getValuesByLocale() as $locale => $value) {
+			$this->writeDatabaseValueSingle($defaultsId, $value, $locale);
+		}
+
+		return $defaultsId;
 	}
 
 
@@ -116,7 +136,7 @@ class DefaultValueCreate
 
 	private function writeDatabaseGeneral(int $formId, string $field): int
 	{
-		$pRecordManager = $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_DEFAULTS);
+		$pRecordManager = $this->createRecordManagerDefaultsValues();
 		$values = [
 			'form_id' => $formId,
 			'fieldname' => $field,
@@ -137,12 +157,36 @@ class DefaultValueCreate
 
 	private function writeDatabaseValueSingle(int $defaultsId, string $value, string $locale = '')
 	{
-		$pRecordManager = $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_DEFAULTS_VALUES);
+		$pRecordManager = $this->createRecordManagerDefaults();
 		$values = [
 			'defaults_id' => $defaultsId,
 			'locale' => $locale,
 			'value' => $value,
 		];
 		$pRecordManager->insertByRow($values);
+	}
+
+
+	/**
+	 *
+	 * @return RecordManagerInsertGeneric
+	 *
+	 */
+
+	private function createRecordManagerDefaults(): RecordManagerInsertGeneric
+	{
+		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_DEFAULTS);
+	}
+
+
+	/**
+	 *
+	 * @return RecordManagerInsertGeneric
+	 *
+	 */
+
+	private function createRecordManagerDefaultsValues(): RecordManagerInsertGeneric
+	{
+		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_DEFAULTS_VALUES);
 	}
 }
