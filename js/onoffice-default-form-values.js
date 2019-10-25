@@ -11,13 +11,35 @@ if (window.NodeList && !NodeList.prototype.forEach) {
         var mainInput = element.parentElement.parentElement.querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value].onoffice-input');
         var fieldname = element.parentElement.parentElement.parentElement.querySelector('span.menu-item-settings-name').textContent;
         mainInput.name = 'defaultvalue-lang[' + fieldname + '][native]';
+        var predefinedValues = onOffice_loc_settings.defaultvalues || {};
+
+        (function() {
+            if (predefinedValues[fieldname] !== undefined) {
+                for (var lang in predefinedValues[fieldname]) {
+                    var relevantOption = element.querySelector('option[value=' + lang +']');
+                    if (lang !== 'native') {
+                        var clone = generateClone(mainInput, lang);
+                        var label = generateLabel(relevantOption.text || '', clone);
+                        var deleteButton = generateDeleteButton(element, lang);
+                        var paragraph = generateParagraph(label, clone, deleteButton);
+                        mainInput.parentNode.parentNode.insertBefore(paragraph, element.parentNode);
+                        element.backupLanguageSelection[lang] = relevantOption;
+                        element.options[relevantOption.index] = null;
+                    }
+
+                    var targetInput = element.parentElement.parentElement.querySelector(
+                        'input[name="defaultvalue-lang[' + fieldname + '][' + lang + ']"]');
+                    targetInput.value = predefinedValues[fieldname][lang];
+                }
+            }
+        })();
 
         element.addEventListener('change', function(event) {
             var value = event.srcElement.value || '';
 
             if (value !== '') {
                 var clone = generateClone(mainInput, value);
-                var label = generateLabel(event.srcElement, clone);
+                var label = generateLabel(event.srcElement.selectedOptions[0].text, clone);
                 var deleteButton = generateDeleteButton(event.srcElement, value);
                 var paragraph = generateParagraph(label, clone, deleteButton);
 
@@ -38,12 +60,12 @@ if (window.NodeList && !NodeList.prototype.forEach) {
               return clone;
         }
 
-        function generateLabel(srcElement, clone) {
+        function generateLabel(labelText, clone) {
             var label = document.createElement('label');
                 label.classList = ['howto'];
                 label.htmlFor = clone.id;
                 label.style.minWidth = 'min-content';
-                label.textContent = srcElement.selectedOptions[0].text;
+                label.textContent = labelText;
             return label;
         }
 
