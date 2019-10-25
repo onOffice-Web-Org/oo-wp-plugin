@@ -436,17 +436,10 @@ class FormModelBuilderDBForm
 		}, $languagesKeysRelevant));
 		natcasesort($languages);
 		$pInputModel->setValuesAvailable(array_diff($languages, [get_locale()]));
-		$pFieldsCollection = $this->getFieldsCollection();
-		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $module) use ($pFieldsCollection) {
-			try {
-				/** @var Field $pField */
-				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $key);
-				$isTextType = $pField->getType() === FieldTypes::FIELD_TYPE_TEXT || $pField->getType() === FieldTypes::FIELD_TYPE_VARCHAR;
-			} catch (UnknownFieldException $ex) {
-				$isTextType = false;
-			}
+		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
+			$isTextType = in_array($type, [FieldTypes::FIELD_TYPE_TEXT, FieldTypes::FIELD_TYPE_VARCHAR], true);
 
-			if ($isTextType) {
+			if (!$isTextType) {
 				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
 				$pInputModel->setLabel('');
 			}

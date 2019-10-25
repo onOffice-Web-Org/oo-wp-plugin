@@ -112,7 +112,7 @@ class InputFieldCheckboxRenderer
 
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 					.'" value="'.esc_html($key).'"'
-					.(in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
+					.(is_array($this->_checkedValues) && in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
 					.' onoffice-multipleSelectType = "'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
