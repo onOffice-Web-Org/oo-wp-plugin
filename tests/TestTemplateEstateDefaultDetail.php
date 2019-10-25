@@ -125,7 +125,7 @@ class TestTemplateEstateDefaultDetail
 
 	public function testRender()
 	{
-		$pTemplate = new TemplateMocker('templates.dist/estate/default_detail.php', '/mnt/oo-wp-plugin');
+		$pTemplate = new TemplateMocker('templates.dist/estate/default_detail.php', getcwd());
 		$pTemplate->setEstateList($this->_pEstate);
 		$output = $pTemplate->render();
 		$expected = file_get_contents(__DIR__.'/resources/templates/output_default_detail.html');

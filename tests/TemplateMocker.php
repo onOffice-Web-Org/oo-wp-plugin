@@ -48,11 +48,7 @@ class TemplateMocker
 	{
 		parent::__construct($templateName);
 
-		if ($dir != null) {
-			$this->_dir = $dir;
-		} else {
-			$this->_dir = realpath(__DIR__);
-		}
+		$this->_dir = $dir ?? realpath(__DIR__);
 	}
 
 
