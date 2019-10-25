@@ -128,7 +128,7 @@ class TestTemplateEstateDefaultDetail
 		$pTemplate = new TemplateMocker('templates.dist/estate/default_detail.php', '/mnt/oo-wp-plugin');
 		$pTemplate->setEstateList($this->_pEstate);
 		$output = $pTemplate->render();
-		$expected = file_get_contents(realpath(__DIR__).'/resources/templates/output_default_detail.html');
+		$expected = file_get_contents(__DIR__.'/resources/templates/output_default_detail.html');
 
 		$this->assertEquals($expected, $output);
 	}
