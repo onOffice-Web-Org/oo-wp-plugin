@@ -41,6 +41,7 @@ use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -205,6 +206,15 @@ class TestClassFormPostOwner
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
+		$pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->setConstructorArgs([new Container()])
+				->getMock();
+
+		$pCompoundFields = new CompoundFieldsFilter();
+
+		$pFormPostConfiguration->setCompoundFields($pCompoundFields);
+		$pFormPostConfiguration->setFieldsCollectionBuilderShort($pBuilderShort);
+
 		return $pFormPostConfiguration;
 	}
 
@@ -258,14 +268,6 @@ class TestClassFormPostOwner
 
 	public function testInitialCheckMissingFields()
 	{
-		$this->_pFormPostConfiguration->setPostVariables([
-			'Vorname' => 'John',
-			// missing Name
-			'ArtDaten' => 'Eigentümer',
-			'objektart' => 'haus',
-			'kabel_sat_tv' => 'y',
-		]);
-
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 3);
 

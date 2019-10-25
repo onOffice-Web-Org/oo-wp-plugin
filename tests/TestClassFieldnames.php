@@ -270,6 +270,7 @@ class TestClassFieldnames
 			'module' => 'estate',
 			'rangefield' => false,
 			'additionalTranslations' => [],
+			'compoundFields' => [],
 		];
 		$actualResult = $pFieldNames->getFieldInformation('country', onOfficeSDK::MODULE_ESTATE);
 		$this->assertEquals($expectedResult, $actualResult);

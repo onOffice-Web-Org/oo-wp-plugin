@@ -30,6 +30,8 @@ use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
 
 /**
@@ -114,7 +116,15 @@ class TestClassOutputFields
 		$pGeoPosition = $this->getMockBuilder(GeoPositionFieldHandler::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$pOutputFields = new OutputFields($this->_pDataListView, $pGeoPosition, $this->_pInputVariableReader);
+
+		$pCompoundFields = new CompoundFieldsFilter();
+
+		$pOutputFields = new OutputFields(
+				$this->_pDataListView,
+				$pGeoPosition,
+				$pCompoundFields,
+				$this->_pInputVariableReader);
+
 		$this->assertEquals($this->_pDataListView, $pOutputFields->getDataView());
 		$this->assertEquals($this->_pInputVariableReader, $pOutputFields->getInputVariableReader());
 
@@ -157,7 +167,21 @@ class TestClassOutputFields
 			'radius_active' => 'radius',
 			'street_active' => 'street',
 		]));
-		$pOutputFields = new OutputFields($this->_pDataListView, $pGeoPosition, $this->_pInputVariableReader);
-		$this->assertEquals($expectation, $pOutputFields->getVisibleFilterableFields());
+
+		$pCompoundFieldsMocker = $this->getMockBuilder(CompoundFieldsFilter::class)
+				->setMethods(['mergeListFilterableFields'])
+				->getMock();
+
+		$pCompoundFieldsMocker->method('mergeListFilterableFields')->will($this->returnValue(
+				$expectation));
+
+		$pFieldsCollection =  $this->getMockBuilder(FieldsCollection::class)->getMock();
+
+		$pOutputFields = new OutputFields(
+				$this->_pDataListView,
+				$pGeoPosition,
+				$pCompoundFieldsMocker,
+				$this->_pInputVariableReader);
+		$this->assertEquals($expectation, $pOutputFields->getVisibleFilterableFields($pFieldsCollection));
 	}
 }
