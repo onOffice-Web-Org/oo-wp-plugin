@@ -440,7 +440,7 @@ class AdminPageEstateDetail
 	 *
 	 */
 
-	public function getEnqueueData()
+	public function getEnqueueData(): array
 	{
 		return array(
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The detail view has been saved.', 'onoffice'),

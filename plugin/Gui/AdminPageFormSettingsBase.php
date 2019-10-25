@@ -227,7 +227,7 @@ abstract class AdminPageFormSettingsBase
 	 *
 	 */
 
-	public function getEnqueueData()
+	public function getEnqueueData(): array
 	{
 		return array(
 			self::GET_PARAM_TYPE => $this->getType(),

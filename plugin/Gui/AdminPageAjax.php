@@ -120,7 +120,7 @@ abstract class AdminPageAjax
 	 *
 	 */
 
-	public function getEnqueueData()
+	public function getEnqueueData(): array
 	{
 		return [];
 	}
