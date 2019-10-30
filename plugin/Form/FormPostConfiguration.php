@@ -26,9 +26,6 @@ use onOffice\WPlugin\WP\WPOptionWrapperBase;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 interface FormPostConfiguration

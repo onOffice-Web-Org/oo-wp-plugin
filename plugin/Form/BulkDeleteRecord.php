@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Form;
 
 use Exception;
+use onOffice\WPlugin\Controller\Exception\UserCapabilitiesException;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Record\RecordManagerDelete;
 
@@ -57,6 +58,8 @@ class BulkDeleteRecord
 	 * @param array $records
 	 * @return int
 	 *
+	 * @throws Exception
+	 *
 	 */
 
 	public function delete(RecordManagerDelete $pRecordManagerDelete, string $capability, array $records): int
@@ -70,7 +73,8 @@ class BulkDeleteRecord
 
 	/**
 	 *
-	 * @throws Exception
+	 * @param string $capability
+	 * @throws UserCapabilitiesException
 	 *
 	 */
 

@@ -27,9 +27,6 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 class FormPostConfigurationDefault

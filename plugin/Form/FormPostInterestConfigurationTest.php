@@ -29,28 +29,26 @@ use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 class FormPostInterestConfigurationTest
 	implements FormPostInterestConfiguration
 {
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var FormAddressCreator */
-	private $_pFormAddressCreator = null;
+	private $_pFormAddressCreator;
 
 	/** @var SearchcriteriaFields */
-	private $_pSearchcriteriaFields = null;
+	private $_pSearchcriteriaFields;
 
 
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param FormAddressCreator $pFormAddressCreator
+	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 *
 	 */
 
