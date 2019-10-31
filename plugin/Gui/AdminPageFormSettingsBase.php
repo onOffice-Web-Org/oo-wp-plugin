@@ -22,10 +22,14 @@
 namespace onOffice\WPlugin\Gui;
 
 use DI\ContainerBuilder;
+use Generator;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm;
@@ -68,6 +72,10 @@ abstract class AdminPageFormSettingsBase
 
 	/** */
 	const GET_PARAM_TYPE = 'type';
+
+	/** */
+	const DEFAULT_VALUES = 'defaultvalues';
+
 
 	/** @var bool */
 	private $_showEstateFields = false;
@@ -229,20 +237,67 @@ abstract class AdminPageFormSettingsBase
 
 	public function getEnqueueData(): array
 	{
-		return array(
+		return [
 			self::GET_PARAM_TYPE => $this->getType(),
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was saved.', 'onoffice'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make '
-					.'sure the name of the form is unique.', 'onoffice'),
-			self::ENQUEUE_DATA_MERGE => array(
-					AdminPageSettingsBase::POST_RECORD_ID,
-					self::GET_PARAM_TYPE,
-				),
+				.'sure the name of the form is unique.', 'onoffice'),
+			self::ENQUEUE_DATA_MERGE => [
+				AdminPageSettingsBase::POST_RECORD_ID,
+				self::GET_PARAM_TYPE,
+			],
 			AdminPageSettingsBase::POST_RECORD_ID => (int)$this->getListViewId(),
 			self::MODULE_LABELS => ModuleTranslation::getAllLabelsSingular(true),
 			/* translators: %s is a translated module name */
 			self::FIELD_MODULE => __('Module: %s', 'onoffice'),
-		);
+			self::DEFAULT_VALUES => $this->readDefaultValues(),
+		];
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	private function readDefaultValues(): array
+	{
+		$result = [];
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		/** @var DefaultValueModelToOutputConverter $pDefaultValueConverter */
+		$pDefaultValueConverter = $pContainer->get(DefaultValueModelToOutputConverter::class);
+
+		$pDataFormConfigurationFactory = new DataFormConfigurationFactory();
+		/** @var DataFormConfiguration $pDataFormConfiguration */
+		$pDataFormConfiguration = $pDataFormConfigurationFactory->loadByFormId($this->getListViewId());
+
+		foreach ($this->getFieldsGenerator($pDataFormConfiguration) as $pField) {
+			$result[$pField->getName()] = $pDefaultValueConverter->getConvertedField
+				((int)$this->getListViewId(), $pField);
+		}
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @param DataFormConfiguration $pDataFormConfiguration
+	 * @return Generator
+	 *
+	 */
+
+	private function getFieldsGenerator(DataFormConfiguration $pDataFormConfiguration): Generator
+	{
+		$pFieldsCollection = $this->readFields();
+
+		foreach ($pDataFormConfiguration->getInputs() as $field => $module) {
+			if ($pFieldsCollection->containsFieldByModule($module, $field)) {
+				yield $pFieldsCollection->getFieldByModuleAndName($module, $field);
+			}
+		}
 	}
 
 
