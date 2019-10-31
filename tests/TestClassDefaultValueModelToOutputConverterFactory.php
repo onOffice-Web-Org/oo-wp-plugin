@@ -29,8 +29,9 @@ use DI\NotFoundException;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterFactory;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterText;
+use WP_UnitTestCase;
 
-class TestClassDefaultValueModelToOutputConverterFactory extends \WP_UnitTestCase
+class TestClassDefaultValueModelToOutputConverterFactory extends WP_UnitTestCase
 {
 	/** @var DefaultValueModelToOutputConverterFactory */
 	private $_pSubject = null;
