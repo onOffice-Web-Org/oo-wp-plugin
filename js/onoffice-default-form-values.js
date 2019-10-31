@@ -6,35 +6,41 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 }
 
 (function() {
+    var predefinedValues = onOffice_loc_settings.defaultvalues || {};
+
+    // plaintext
     document.querySelectorAll('select[name=language-language].onoffice-input').forEach(function(element) {
         element.backupLanguageSelection = {};
         var mainInput = element.parentElement.parentElement.querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value].onoffice-input');
         var fieldname = element.parentElement.parentElement.parentElement.querySelector('span.menu-item-settings-name').textContent;
         mainInput.name = 'defaultvalue-lang[' + fieldname + '][native]';
-        var predefinedValues = onOffice_loc_settings.defaultvalues || {};
 
         (function() {
             if (predefinedValues[fieldname] !== undefined) {
-                for (var lang in predefinedValues[fieldname]) {
-                    var relevantOption = element.querySelector('option[value=' + lang +']');
-                    if (lang !== 'native') {
-                        var clone = generateClone(mainInput, lang);
-                        var label = generateLabel(relevantOption.text || '', clone);
-                        var deleteButton = generateDeleteButton(element, lang);
-                        var paragraph = generateParagraph(label, clone, deleteButton);
-                        mainInput.parentNode.parentNode.insertBefore(paragraph, element.parentNode);
-                        element.backupLanguageSelection[lang] = relevantOption;
-                        element.options[relevantOption.index] = null;
-                    }
+                var predefinedValuesIsObject = (typeof predefinedValues[fieldname] === 'object') &&
+                   !Array.isArray(predefinedValues[fieldname]);
+                if (predefinedValuesIsObject) {
+                    for (var lang in predefinedValues[fieldname]) {
+                        var relevantOption = element.querySelector('option[value=' + lang +']');
+                        if (lang !== 'native') {
+                            var clone = generateClone(mainInput, lang);
+                            var label = generateLabel(relevantOption.text || '', clone);
+                            var deleteButton = generateDeleteButton(element, lang);
+                            var paragraph = generateParagraph(label, clone, deleteButton);
+                            mainInput.parentNode.parentNode.insertBefore(paragraph, element.parentNode);
+                            element.backupLanguageSelection[lang] = relevantOption;
+                            element.options[relevantOption.index] = null;
+                        }
 
-                    var targetInput = element.parentElement.parentElement.querySelector(
-                        'input[name="defaultvalue-lang[' + fieldname + '][' + lang + ']"]');
-                    targetInput.value = predefinedValues[fieldname][lang];
+                        var targetInput = element.parentElement.parentElement.querySelector(
+                            'input[name="defaultvalue-lang[' + fieldname + '][' + lang + ']"]');
+                        targetInput.value = predefinedValues[fieldname][lang];
+                    }
                 }
             }
         })();
 
-        element.addEventListener('change', function(event) {
+            element.addEventListener('change', function(event) {
             var value = event.srcElement.value || '';
 
             if (value !== '') {
@@ -95,6 +101,18 @@ if (window.NodeList && !NodeList.prototype.forEach) {
             paragraph.appendChild(clone);
             paragraph.appendChild(deleteButton);
             return paragraph;
+        }
+    });
+
+    // single-select
+    document.querySelectorAll('select[name^=oopluginfieldconfigformdefaultsvalues-value]').forEach(function(mainInput) {
+        var fieldName = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name').textContent;
+
+        var predefinedValuesIsArray = (typeof predefinedValues[fieldName] === 'object') &&
+            Array.isArray(predefinedValues[fieldName]);
+
+        if (predefinedValuesIsArray) {
+            mainInput.value = predefinedValues[fieldName][0];
         }
     });
 })();
