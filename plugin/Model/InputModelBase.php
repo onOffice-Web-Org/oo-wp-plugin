@@ -87,7 +87,7 @@ abstract class InputModelBase
 	/** @var array For referenced input models only */
 	private $_valueCallback = null;
 
-	/** @var InputModelBase */
+	/** @var InputModelBase[] */
 	private $_referencedInputModels = array();
 
 	/** @var string */

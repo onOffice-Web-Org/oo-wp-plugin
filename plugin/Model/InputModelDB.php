@@ -23,12 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Model;
 
+use Exception;
 use onOffice\WPlugin\Utility\__String;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -64,10 +62,11 @@ class InputModelDB
 		$this->setLabel($label);
 	}
 
-
 	/**
 	 *
 	 * @return string
+	 *
+	 * @throws Exception
 	 *
 	 */
 
@@ -75,7 +74,7 @@ class InputModelDB
 	{
 		if (__String::getNew($this->_table)->isEmpty() ||
 			__String::getNew($this->_field)->isEmpty()) {
-			throw new \Exception('Table and field must be set');
+			throw new Exception('Table and field must be set');
 		}
 
 		$identifier = $this->_table.'-'.$this->_field;
