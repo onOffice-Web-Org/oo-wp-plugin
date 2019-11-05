@@ -20,12 +20,10 @@
  */
 
 namespace onOffice\WPlugin\Gui;
+
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -38,10 +36,11 @@ abstract class AdminPage
 
 	public function registerForms()
 	{
-		foreach ($this->getFormModels() as $pFormModel)
-		{
-			$pFormBuilder = new InputModelRenderer($pFormModel);
-			$pFormBuilder->registerFields();
+		/* @var $pInputModelRenderer InputModelRenderer */
+		$pInputModelRenderer = $this->getContainer()->get(InputModelRenderer::class);
+
+		foreach ($this->getFormModels() as $pFormModel) {
+			$pInputModelRenderer->registerFields($pFormModel);
 		}
 	}
 }

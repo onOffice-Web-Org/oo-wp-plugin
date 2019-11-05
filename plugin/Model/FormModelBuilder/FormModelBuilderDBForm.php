@@ -21,24 +21,37 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
+use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderDefaultValue;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Translation\ModuleTranslation;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\WP\InstalledLanguageReader;
+use const ABSPATH;
+use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
+use function get_available_languages;
+use function get_locale;
 use function get_option;
+use function wp_get_available_translations;
 
 /**
  *
@@ -53,25 +66,28 @@ class FormModelBuilderDBForm
 	/** @var array */
 	private $_formModules = [];
 
+	/** @var Container */
+	private $_pContainer;
 
 	/**
-	 *
+	 * @param Container $pContainer
 	 */
 
-	public function __construct()
+	public function __construct(Container $pContainer)
 	{
 		$pConfigForm = new InputModelDBFactoryConfigForm();
 		$pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
+		$this->_pContainer = $pContainer;
 		$this->setInputModelDBFactory($pInputModelDBFactory);
 	}
-
 
 	/**
 	 *
 	 * @param string $module
 	 * @param string $htmlType
 	 * @return InputModelDB
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function createSortableFieldList($module, $htmlType)
@@ -94,13 +110,15 @@ class FormModelBuilderDBForm
 			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
 		}
 
-		$fieldnamesArray = [];
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
 
 		foreach ($fieldNames as $pField) {
-			$fieldnamesArray[$pField->getName()] = $pField->getAsRow();
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
 		}
 
-		$pInputModelFieldsConfig->setValuesAvailable($fieldnamesArray);
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pInputModelFieldsConfig->setValue($fields);
 
@@ -108,17 +126,19 @@ class FormModelBuilderDBForm
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
+		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
+		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 
 		return $pInputModelFieldsConfig;
 	}
 
-
 	/**
 	 *
 	 * @return FieldsCollection
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	private function getFieldsCollection(): FieldsCollection
@@ -156,12 +176,7 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 		$pInputModelFieldsConfig->setId($category);
 		$pInputModelFieldsConfig->setLabel($categoryLabel);
-		$fields = $this->getValue(DataFormConfiguration::FIELDS);
-
-		if (null == $fields) {
-			$fields = array();
-		}
-
+		$fields = $this->getValue(DataFormConfiguration::FIELDS, []);
 		$pInputModelFieldsConfig->setValue($fields);
 
 		return $pInputModelFieldsConfig;
@@ -293,11 +308,11 @@ class FormModelBuilderDBForm
 		return $pInputModelFormRecipient;
 	}
 
-
 	/**
 	 *
 	 * @return InputModelDB
 	 *
+	 * @throws Exception
 	 */
 
 	public function createInputModelCaptchaRequired(): InputModelDB
@@ -381,6 +396,49 @@ class FormModelBuilderDBForm
 		return $pInputModel;
 	}
 
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return InputModelDB
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	private function getInputModelDefaultValue(FieldsCollection $pFieldsCollection): InputModelDB
+	{
+		$pInputModelBuilder = $this->_pContainer->get(InputModelBuilderDefaultValue::class);
+		return $pInputModelBuilder->createInputModelDefaultValue($pFieldsCollection, $this->getValue('defaultvalue', []));
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function getInputModelDefaultValueLanguageSwitch(): InputModelDB
+	{
+		$pInputModel = new InputModelDB('defaultvalue_newlang', __('Add language', 'onoffice'));
+		$pInputModel->setTable('language');
+		$pInputModel->setField('language');
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+
+		$pLanguageReader = new InstalledLanguageReader;
+		$languages = ['' => ''] + $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
+		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
+			$isTextType = in_array($type, [FieldTypes::FIELD_TYPE_TEXT, FieldTypes::FIELD_TYPE_VARCHAR], true);
+
+			if (!$isTextType) {
+				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+				$pInputModel->setLabel('');
+			}
+		});
+
+		return $pInputModel;
+	}
+
 
 	/**
 	 *
@@ -453,20 +511,22 @@ class FormModelBuilderDBForm
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_MODULE;
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
-		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelModule'));
+		$pInputModel->setValueCallback(function(InputModelBase $pInputModel, string $key) {
+			$this->callbackValueInputModelModule($pInputModel, $key);
+		});
 
 		return $pInputModel;
 	}
-
 
 	/**
 	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
-	public function callbackValueInputModelModule(InputModelBase $pInputModel, $key)
+	private function callbackValueInputModelModule(InputModelBase $pInputModel, string $key)
 	{
 		$module = '';
 		$pFieldsCollection = $this->getFieldsCollection();

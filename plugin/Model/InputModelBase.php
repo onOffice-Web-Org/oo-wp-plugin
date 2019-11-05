@@ -87,7 +87,7 @@ abstract class InputModelBase
 	/** @var array For referenced input models only */
 	private $_valueCallback = null;
 
-	/** @var InputModelBase */
+	/** @var InputModelBase[] */
 	private $_referencedInputModels = array();
 
 	/** @var string */
@@ -177,11 +177,11 @@ abstract class InputModelBase
 		{ return $this->_id; }
 
 	/** @return array */
-	public function getValueCallback()
+	public function getValueCallback(): callable
 		{ return $this->_valueCallback; }
 
-	/** @param array|string $valueCallback */
-	public function setValueCallback($valueCallback)
+	/** @param callable $valueCallback */
+	public function setValueCallback(callable $valueCallback)
 		{ $this->_valueCallback = $valueCallback; }
 
 	/** @param InputModelBase $pReferencedInputModel */

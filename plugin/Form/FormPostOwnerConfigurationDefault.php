@@ -29,19 +29,16 @@ use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 class FormPostOwnerConfigurationDefault
 	implements FormPostOwnerConfiguration
 {
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var FormAddressCreator */
-	private $_pFormAddressCreator = null;
+	private $_pFormAddressCreator;
 
 
 	/**

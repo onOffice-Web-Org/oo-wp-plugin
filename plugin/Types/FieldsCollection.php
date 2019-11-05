@@ -56,6 +56,7 @@ class FieldsCollection implements FieldModuleCollection
 
 	/**
 	 *
+	 * @param string $module
 	 * @param string $name
 	 * @return bool
 	 *
@@ -110,6 +111,7 @@ class FieldsCollection implements FieldModuleCollection
 	public function merge(FieldModuleCollection $pFieldsCollection, string $fallbackCategoryName = '')
 	{
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
+			/** @var $pFieldCopy Field */
 			$pFieldCopy = clone $pField;
 			if ($pFieldCopy->getCategory() === '') {
 				$pFieldCopy->setCategory($fallbackCategoryName);
@@ -130,6 +132,40 @@ class FieldsCollection implements FieldModuleCollection
 	public function getFieldsByModule(string $module): array
 	{
 		return $this->_fieldsByModule[$module] ?? [];
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getAllFieldsKeyedUnsafe(): array
+	{
+		$keys = array_map(function(Field $pField): string {
+			return $pField->getName();
+		}, $this->_fields);
+		return array_combine($keys, $this->_fields);
+	}
+
+	/**
+	 *
+	 * @param string $fieldName
+	 * @return Field
+	 * @throws UnknownFieldException
+	 *
+	 */
+
+	public function getFieldByKeyUnsafe(string $fieldName): Field
+	{
+		$pField = $this->getAllFieldsKeyedUnsafe()[$fieldName] ?? null;
+
+		if ($pField === null) {
+			throw new UnknownFieldException();
+		}
+
+		return $pField;
 	}
 
 

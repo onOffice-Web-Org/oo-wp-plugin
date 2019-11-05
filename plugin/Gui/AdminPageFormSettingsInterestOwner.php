@@ -83,7 +83,7 @@ class AdminPageFormSettingsInterestOwner
 	 *
 	 */
 
-	public function getEnqueueData()
+	public function getEnqueueData(): array
 	{
 		$returnArray = parent::getEnqueueData();
 		$returnArray[self::VIEW_SAVE_FAIL_NO_MAIL] = __('Please provide an Email address!',
