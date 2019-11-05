@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\DefaultValue;
 
 use onOffice\WPlugin\Record\RecordManagerFactory;
+use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 
 
@@ -60,7 +61,7 @@ class DefaultValueCreate
 	 *
 	 * @param DefaultValueModelText $pDataModel
 	 * @return int
-	 *
+	 * @throws RecordManagerInsertException
 	 */
 
 	public function createForText(DefaultValueModelText $pDataModel): int
@@ -74,11 +75,12 @@ class DefaultValueCreate
 		return $defaultsId;
 	}
 
-
 	/**
 	 *
 	 * @param DefaultValueModelSingleselect $pDataModel
 	 *
+	 * @return int
+	 * @throws RecordManagerInsertException
 	 */
 
 	public function createForSingleselect(DefaultValueModelSingleselect $pDataModel): int
@@ -91,7 +93,10 @@ class DefaultValueCreate
 
 	/**
 	 *
-	 * @param DefaultValueModelSingleselect $pDataModel
+	 * @param DefaultValueModelMultiselect $pDataModel
+	 *
+	 * @return int
+	 * @throws RecordManagerInsertException
 	 *
 	 */
 
@@ -112,6 +117,8 @@ class DefaultValueCreate
 	 * @param DefaultValueModelBase $pDataModel
 	 * @return int
 	 *
+	 * @throws RecordManagerInsertException
+	 *
 	 */
 
 	private function createBase(DefaultValueModelBase $pDataModel): int
@@ -130,7 +137,7 @@ class DefaultValueCreate
 	 * @param int $formId
 	 * @param string $field
 	 * @return int
-	 * @throws DefaultValueSaveException
+	 * @throws RecordManagerInsertException
 	 *
 	 */
 
@@ -152,6 +159,8 @@ class DefaultValueCreate
 	 * @param int $defaultsId
 	 * @param string $value
 	 * @param string $locale
+	 *
+	 * @throws RecordManagerInsertException
 	 *
 	 */
 
