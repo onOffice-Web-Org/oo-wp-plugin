@@ -309,8 +309,11 @@ abstract class AdminPageFormSettingsBase
 
 	protected function buildForms()
 	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$this->_pFormModelBuilder = new FormModelBuilderDBForm();
+		$this->_pFormModelBuilder = $pContainer->get(FormModelBuilderDBForm::class);
 		$this->_pFormModelBuilder->setFormType($this->getType());
 		$pFormModel = $this->_pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);

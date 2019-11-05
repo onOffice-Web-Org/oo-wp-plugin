@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -28,10 +29,12 @@ use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderDefaultValue;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
@@ -63,15 +66,18 @@ class FormModelBuilderDBForm
 	/** @var array */
 	private $_formModules = [];
 
+	/** @var Container */
+	private $_pContainer;
 
 	/**
-	 *
+	 * @param Container $pContainer
 	 */
 
-	public function __construct()
+	public function __construct(Container $pContainer)
 	{
 		$pConfigForm = new InputModelDBFactoryConfigForm();
 		$pInputModelDBFactory = new InputModelDBFactory($pConfigForm);
+		$this->_pContainer = $pContainer;
 		$this->setInputModelDBFactory($pInputModelDBFactory);
 	}
 
@@ -105,9 +111,11 @@ class FormModelBuilderDBForm
 		}
 
 		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
 
 		foreach ($fieldNames as $pField) {
 			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
 		}
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
@@ -118,7 +126,7 @@ class FormModelBuilderDBForm
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
-		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($fieldNames));
+		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
@@ -390,24 +398,16 @@ class FormModelBuilderDBForm
 
 	/**
 	 *
-	 * @param array $fieldNames
+	 * @param FieldsCollection $pFieldsCollection
 	 * @return InputModelDB
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
-	public function getInputModelDefaultValue(array $fieldNames): InputModelDB
+	private function getInputModelDefaultValue(FieldsCollection $pFieldsCollection): InputModelDB
 	{
-		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
-		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Default Value', 'onoffice');
-		$type = InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_VALUE;
-
-		/* @var $pInputModel InputModelDB */
-		$pInputModel = $pInputModelFactory->create($type, $label, true);
-		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
-		$pInputModel->setValueCallback(function(InputModelBase $pInputModel, string $key) use ($fieldNames) {
-			$this->callbackValueInputModelDefaultValue($pInputModel, $key, $fieldNames);
-		});
-		return $pInputModel;
+		$pInputModelBuilder = $this->_pContainer->get(InputModelBuilderDefaultValue::class);
+		return $pInputModelBuilder->createInputModelDefaultValue($pFieldsCollection, $this->getValue('defaultvalue', []));
 	}
 
 
@@ -494,47 +494,6 @@ class FormModelBuilderDBForm
 		$value = in_array($key, $fieldsAvOpt);
 		$pInputModel->setValue($value);
 		$pInputModel->setValuesAvailable($key);
-	}
-
-
-	/**
-	 *
-	 * @param InputModelBase $pInputModel
-	 * @param string $key
-	 * @param array $fieldnames
-	 *
-	 */
-
-	public function callbackValueInputModelDefaultValue(
-		InputModelBase $pInputModel,
-		string $key,
-		array $fieldnames)
-	{
-		$fieldsDefaultValue = $this->getValue('defaultvalue')[$key] ?? [];
-		$value = in_array($key, $fieldsDefaultValue);
-		$pInputModel->setValue($value);
-
-		$mapping = [
-			FieldTypes::FIELD_TYPE_TEXT => InputModelOption::HTML_TYPE_TEXT,
-			FieldTypes::FIELD_TYPE_VARCHAR=> InputModelOption::HTML_TYPE_TEXT,
-			FieldTypes::FIELD_TYPE_DATE=> InputModelOption::HTML_TYPE_TEXT,
-			FieldTypes::FIELD_TYPE_DATETIME=> InputModelOption::HTML_TYPE_TEXT,
-			FieldTypes::FIELD_TYPE_FLOAT=> InputModelOption::HTML_TYPE_TEXT,
-			FieldTypes::FIELD_TYPE_INTEGER=> InputModelOption::HTML_TYPE_TEXT,
-			FieldTypes::FIELD_TYPE_MULTISELECT=> InputModelOption::HTML_TYPE_SELECT,
-			FieldTypes::FIELD_TYPE_SINGLESELECT=> InputModelOption::HTML_TYPE_SELECT,
-			FieldTypes::FIELD_TYPE_BOOLEAN=> InputModelOption::HTML_TYPE_CHECKBOX,
-		];
-		$pField = $fieldnames[$key] ?? null;
-		$type = InputModelOption::HTML_TYPE_TEXT;
-		$pInputModel->setValuesAvailable([]);
-		/* @var $pField Field */
-		if ($pField !== null) {
-			$type = $mapping[$pField->getType()] ?? InputModelOption::HTML_TYPE_TEXT;
-			$pInputModel->setValuesAvailable(['' => ''] + $pField->getPermittedvalues());
-		}
-
-		$pInputModel->setHtmlType($type);
 	}
 
 
