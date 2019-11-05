@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.1.1 =
+
+**Fixes**
+
+* Prevent WordPress from throwing an error on the onOffice >> Modules page if no correct API account data are given.
+
 = 2.1.0 =
 
 **New**
@@ -120,6 +126,9 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+= 2.1.1 =
+Fixes the "Modules" page if no valid API credentials are given.
 
 = 2.1.0 =
 Support for compound fields (such as "Anrede-Titel") in forms was added in this version.
