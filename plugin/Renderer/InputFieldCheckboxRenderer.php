@@ -22,16 +22,16 @@
 namespace onOffice\WPlugin\Renderer;
 
 use DI\ContainerBuilder;
+use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function esc_html;
 
+
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -39,10 +39,10 @@ class InputFieldCheckboxRenderer
 	extends InputFieldRenderer
 {
 	/** @var array */
-	private $_checkedValues = array();
+	private $_checkedValues = [];
 
 	/** @var FieldsCollection */
-	private $_pFieldsCollection = null;
+	private $_pFieldsCollection;
 
 	/**
 	 *
@@ -54,6 +54,7 @@ class InputFieldCheckboxRenderer
 	public function __construct($name, $value)
 	{
 		parent::__construct('checkbox', $name, $value);
+		$this->_pFieldsCollection = new FieldsCollection();
 	}
 
 
@@ -66,15 +67,14 @@ class InputFieldCheckboxRenderer
 
 	private function isMultipleSelect(string $key): bool
 	{
-		$returnValue = false;
 		$module = $this->getOoModule();
 
-		if ($this->_pFieldsCollection->containsFieldByModule($module, $key)) {
+		try {
 			$type = $this->_pFieldsCollection->getFieldByModuleAndName($module, $key)->getType();
-			$returnValue = FieldTypes::isMultipleSelectType($type);
+			return FieldTypes::isMultipleSelectType($type);
+		} catch (UnknownFieldException $pEx) {
+			return false;
 		}
-
-		return $returnValue;
 	}
 
 
@@ -82,17 +82,19 @@ class InputFieldCheckboxRenderer
 	 *
 	 */
 
-	private function setFieldList()
+	private function buildFieldsCollection()
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pDIContainerBuilder->build();
-		$this->_pFieldsCollection = new FieldsCollection();
 
+		/** @var FieldsCollectionBuilderShort $pFieldsCollectionBuilder */
 		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
-		$pFieldsCollectionBuilder
-			->addFieldsAddressEstate($this->_pFieldsCollection)
-			->addFieldsSearchCriteria($this->_pFieldsCollection);
+		try {
+			$pFieldsCollectionBuilder
+				->addFieldsAddressEstate($this->_pFieldsCollection)
+				->addFieldsSearchCriteria($this->_pFieldsCollection);
+		} catch (APIClientCredentialsException $pEx) {}
 	}
 
 
@@ -102,7 +104,7 @@ class InputFieldCheckboxRenderer
 
 	public function render()
 	{
-		$this->setFieldList();
+		$this->buildFieldsCollection();
 
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
