@@ -66,11 +66,11 @@ class DefaultValueDelete
 		$this->_pRecordManagerDeleteForm->deleteByIds([$formId]);
 	}
 
-
 	/**
 	 *
 	 * @param int $defaultId
 	 *
+	 * @throws DefaultValueDeleteException
 	 */
 
 	public function deleteSingleDefaultValueById(int $defaultId)
@@ -83,12 +83,12 @@ class DefaultValueDelete
 		}
 	}
 
-
 	/**
 	 *
 	 * @param int $formId
 	 * @param string $fieldname
 	 *
+	 * @throws DefaultValueDeleteException
 	 */
 
 	public function deleteSingleDefaultValueByFieldname(int $formId, string $fieldname, string $locale = null)
