@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\EstateListBase;
@@ -35,6 +36,9 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Controller\SortList\SortListBuilder;
+use onOffice\WPlugin\Controller\SortList\SortListDataModel;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use function add_action;
 use function do_action;
 use function esc_url;
@@ -92,6 +96,9 @@ class EstateList
 
 	/** @var GeoSearchBuilder */
 	private $_pGeoSearchBuilder = null;
+
+	/** @var SortListDataModel */
+	private $_pSortListModel = null;
 
 
 	/**
@@ -311,11 +318,11 @@ class EstateList
 		$requestParams = [];
 
 		if ($pListView->getSortby() !== '' && !$this->_pDataView->getRandom()) {
-			$requestParams['sortby'] = $pListView->getSortby();
+			$requestParams['sortby'] = $this->estimateSortby();
 		}
 
 		if ($pListView->getSortorder() !== '') {
-			$requestParams['sortorder'] = $pListView->getSortorder();
+			$requestParams['sortorder'] = $this->estimateSortorder();
 		}
 
 		if ($pListView->getFilterId() !== 0) {
@@ -791,4 +798,46 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
+
+	/**
+	 * @param SortListDataModel $pSortListDataModel
+	 */
+	public function setSortListDataModel(SortListDataModel $pSortListDataModel)
+	{
+		$this->_pSortListModel = $pSortListDataModel;
+	}
+
+	/**
+	 * @return SortListDataModel
+	 */
+	public function getSortListDataModel(): SortListDataModel
+	{
+		return $this->_pSortListModel;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function estimateSortorder(): string
+	{
+		$sortorder = $this->_pDataView->getSortorder();
+
+		if ($this->_pSortListModel !== null) {
+			$sortorder = $this->_pSortListModel->getSelectedSortorder();
+		}
+		return $sortorder;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function estimateSortby(): string
+	{
+		$sortby = $this->_pDataView->getSortBy();
+
+		if ($this->_pSortListModel !== null) {
+			$sortby = $this->_pSortListModel->getSelectedSortby();
+		}
+		return $sortby;
+	}
 }

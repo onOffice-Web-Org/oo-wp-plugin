@@ -119,10 +119,13 @@ class DataListView
 	private $_sortbyuservalues = [];
 
 	/** @var string */
-	private $_sortByUserDefinedDefault = null;
+	private $_sortByUserDefinedDefault = '';
 
 	/** @var int */
 	private $_sortByUserDefinedDirection = 0;
+
+	/** @var bool */
+	private $_adjustableSorting = false;
 
 
 	/**
@@ -314,4 +317,20 @@ class DataListView
 	/** @return int */
 	public function getSortByUserDefinedDirection(): int
 		{ return $this->_sortByUserDefinedDirection; }
+
+	/**
+	 * @param bool $adjustable
+	 */
+	public function setAdjustableSorting(bool $adjustable)
+	{
+		$this->_adjustableSorting = $adjustable;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isAdjustableSorting(): bool
+	{
+		return $this->_adjustableSorting;
+	}
 }
