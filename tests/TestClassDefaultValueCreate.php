@@ -79,10 +79,11 @@ class TestClassDefaultValueCreate
 		$this->_pRecordManagerFactory->expects($this->exactly(2))->method('createRecordManagerInsertGeneric');
 		$this->_pRecordManagerInsertGeneric->expects($this->exactly(2))->method('insertByRow')
 			->will($this->returnCallback(function(array $values) {
-				if ($values === ['form_id' => 3, 'fieldname' => 'testField1']) {
+				if ($values === ['oo_plugin_fieldconfig_form_defaults' => ['form_id' => 3, 'fieldname' => 'testField1']]) {
 					return 13;
 				}
-				if ($values === ['defaults_id' => 13, 'locale' => '', 'value' => 'testDefaultValue']) {
+				if ($values === ['oo_plugin_fieldconfig_form_defaults_values' => [
+						'defaults_id' => 13, 'locale' => '', 'value' => 'testDefaultValue']]) {
 					return 37;
 				}
 				return 0;
@@ -105,9 +106,9 @@ class TestClassDefaultValueCreate
 		$this->_pRecordManagerInsertGeneric->expects($this->exactly(3))->method('insertByRow')
 				->will($this->returnCallback(function(array $values) {
 				$valuesConf = [
-					12 => ['form_id' => 14, 'fieldname' => 'testField2'],
-					55 => ['defaults_id' => 12, 'locale' => '', 'value' => '123'],
-					56 => ['defaults_id' => 12, 'locale' => '', 'value' => 'abc'],
+					12 => ['oo_plugin_fieldconfig_form_defaults' => ['form_id' => 14, 'fieldname' => 'testField2']],
+					55 => ['oo_plugin_fieldconfig_form_defaults_values' => ['defaults_id' => 12, 'locale' => '', 'value' => '123']],
+					56 => ['oo_plugin_fieldconfig_form_defaults_values' => ['defaults_id' => 12, 'locale' => '', 'value' => 'abc']],
 				];
 				$returnValue = array_search($values, $valuesConf);
 				return $returnValue ?: 0;
@@ -129,9 +130,13 @@ class TestClassDefaultValueCreate
 		$this->_pRecordManagerInsertGeneric->expects($this->exactly(3))->method('insertByRow')
 			->will($this->returnCallback(function(array $values) {
 				$valuesConf = [
-					121 => ['form_id' => 14, 'fieldname' => 'testField2'],
-					130 => ['defaults_id' => 121, 'locale' => 'de_DE', 'value' => 'Aachen'],
-					56 => ['defaults_id' => 121, 'locale' => 'fr_BE', 'value' => 'Aix-la-Chapelle'],
+					121 => ['oo_plugin_fieldconfig_form_defaults' => ['form_id' => 14, 'fieldname' => 'testField2']],
+					130 => ['oo_plugin_fieldconfig_form_defaults_values' => [
+						'defaults_id' => 121, 'locale' => 'de_DE', 'value' => 'Aachen']
+					],
+					56 => ['oo_plugin_fieldconfig_form_defaults_values' => [
+						'defaults_id' => 121, 'locale' => 'fr_BE', 'value' => 'Aix-la-Chapelle']
+					],
 				];
 				$returnValue = array_search($values, $valuesConf);
 				return $returnValue ?: 0;

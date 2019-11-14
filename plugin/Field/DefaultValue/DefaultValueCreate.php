@@ -35,10 +35,10 @@ use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 class DefaultValueCreate
 {
 	/** */
-	const TABLE_DEFAULTS = 'oo_fieldconfig_form_defaults';
+	const TABLE_DEFAULTS = 'oo_plugin_fieldconfig_form_defaults';
 
 	/** */
-	const TABLE_DEFAULTS_VALUES = 'oo_fieldconfig_form_defaults_values';
+	const TABLE_DEFAULTS_VALUES = 'oo_plugin_fieldconfig_form_defaults_values';
 
 
 	/** @var RecordManagerFactory */
@@ -143,12 +143,12 @@ class DefaultValueCreate
 
 	private function writeDatabaseGeneral(int $formId, string $field): int
 	{
-		$pRecordManager = $this->createRecordManagerDefaultsValues();
+		$pRecordManager = $this->createRecordManagerDefaults();
 		$values = [
 			'form_id' => $formId,
 			'fieldname' => $field,
 		];
-		return $pRecordManager->insertByRow($values);
+		return $pRecordManager->insertByRow([self::TABLE_DEFAULTS => $values]);
 	}
 
 
@@ -166,13 +166,13 @@ class DefaultValueCreate
 
 	private function writeDatabaseValueSingle(int $defaultsId, string $value, string $locale = '')
 	{
-		$pRecordManager = $this->createRecordManagerDefaults();
+		$pRecordManager = $this->createRecordManagerDefaultsValues();
 		$values = [
 			'defaults_id' => $defaultsId,
 			'locale' => $locale,
 			'value' => $value,
 		];
-		$pRecordManager->insertByRow($values);
+		$pRecordManager->insertByRow([self::TABLE_DEFAULTS_VALUES => $values]);
 	}
 
 
