@@ -44,7 +44,7 @@ class SortListRenderer
 
 
 	/** @var array */
-	static private $_sortorderDirectionMapping = [
+	const SORT_ORDER_MAPPING = [
 		0 => [
 			SortListTypes::SORTORDER_ASC => self::DIRECTION_TYPE_LOWEST_FIRST,
 			SortListTypes::SORTORDER_DESC => self::DIRECTION_TYPE_HIGHEST_FIRST,
@@ -80,7 +80,7 @@ class SortListRenderer
 	 */
 	private function estimateDirectionLabelBySortorder(SortListDataModel $pSortListModel, string $sortorder): string
 	{
-		$sortorderDirectionLabel = self::$_sortorderDirectionMapping[$pSortListModel->getSortbyUserDirection()][$sortorder];
+		$sortorderDirectionLabel = self::SORT_ORDER_MAPPING[$pSortListModel->getSortbyUserDirection()][$sortorder];
 		return esc_html($sortorderDirectionLabel, 'onoffice');
 	}
 

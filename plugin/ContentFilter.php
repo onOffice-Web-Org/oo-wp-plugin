@@ -154,9 +154,10 @@ class ContentFilter
 					$pDIContainerBuilder = new ContainerBuilder;
 					$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 					$pContainer = $pDIContainerBuilder->build();
-					$pFieldsCollectionBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
-					$pSortListBuilder = new SortListBuilder;
-					$pSortListModel = $pSortListBuilder->build($pListView, $pFieldsCollectionBuilderShort);
+					$pSortListBuilder = $pContainer->get(SortListBuilder::class);
+					$pSortListModel = $pSortListBuilder->build($pListView);
+					$pListView->setSortby($pSortListModel->getSelectedSortby());
+					$pListView->setSortorder($pSortListModel->getSelectedSortorder());
 
 					$this->setAllowedGetParametersEstate($pListView, $pSortListModel);
 					$pTemplate = new Template($pListView->getTemplate());
@@ -174,7 +175,6 @@ class ContentFilter
 					$pEstateList->setDefaultFilterBuilder($pListViewFilterBuilder);
 					$pEstateList->setUnitsViewName($attributes['units']);
 					$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
-					$pEstateList->setSortListDataModel($pSortListModel);
 
 					$pTemplate->setEstateList($pEstateList);
 					$pEstateList->loadEstates($page);

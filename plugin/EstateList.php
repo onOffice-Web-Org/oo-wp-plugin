@@ -97,9 +97,6 @@ class EstateList
 	/** @var GeoSearchBuilder */
 	private $_pGeoSearchBuilder = null;
 
-	/** @var SortListDataModel */
-	private $_pSortListModel = null;
-
 
 	/**
 	 *
@@ -318,11 +315,11 @@ class EstateList
 		$requestParams = [];
 
 		if ($pListView->getSortby() !== '' && !$this->_pDataView->getRandom()) {
-			$requestParams['sortby'] = $this->estimateSortby();
+			$requestParams['sortby'] =  $pListView->getSortBy();
 		}
 
 		if ($pListView->getSortorder() !== '') {
-			$requestParams['sortorder'] = $this->estimateSortorder();
+			$requestParams['sortorder'] =$pListView->getSortorder();
 		}
 
 		if ($pListView->getFilterId() !== 0) {
@@ -798,46 +795,4 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
-
-	/**
-	 * @param SortListDataModel $pSortListDataModel
-	 */
-	public function setSortListDataModel(SortListDataModel $pSortListDataModel)
-	{
-		$this->_pSortListModel = $pSortListDataModel;
-	}
-
-	/**
-	 * @return SortListDataModel
-	 */
-	public function getSortListDataModel(): SortListDataModel
-	{
-		return $this->_pSortListModel;
-	}
-
-	/**
-	 * @return string
-	 */
-	private function estimateSortorder(): string
-	{
-		$sortorder = $this->_pDataView->getSortorder();
-
-		if ($this->_pSortListModel !== null) {
-			$sortorder = $this->_pSortListModel->getSelectedSortorder();
-		}
-		return $sortorder;
-	}
-
-	/**
-	 * @return string
-	 */
-	private function estimateSortby(): string
-	{
-		$sortby = $this->_pDataView->getSortBy();
-
-		if ($this->_pSortListModel !== null) {
-			$sortby = $this->_pSortListModel->getSelectedSortby();
-		}
-		return $sortby;
-	}
 }

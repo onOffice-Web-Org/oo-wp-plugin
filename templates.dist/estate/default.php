@@ -26,11 +26,8 @@
  */
 
 use onOffice\WPlugin\Favorites;
-use onOffice\WPlugin\Renderer\SortListRenderer;
 
-$pSortListRenderer = new SortListRenderer;
-$sortSelector = $pSortListRenderer->createHtmlSelector($pEstates->getSortListDataModel());
-echo '<div>'.$sortSelector.'</div>';
+echo '<div>'.$generateSortDropDown().'</div>';
 
 // display search form
 require 'SearchForm.php';

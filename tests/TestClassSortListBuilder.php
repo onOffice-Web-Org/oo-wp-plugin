@@ -31,7 +31,6 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
 
 class TestClassSortListBuilder
@@ -86,8 +85,8 @@ class TestClassSortListBuilder
 	 */
 	public function testBuild()
 	{
-		$pBuilder = new SortListBuilder;
-		$pModelAdj = $pBuilder->build($this->_pListView, $this->_pBuilder);
+		$pBuilder = new SortListBuilder($this->_pBuilder);
+		$pModelAdj = $pBuilder->build($this->_pListView);
 		$this->assertInstanceOf(SortListDataModel::class, $pModelAdj);
 		$this->assertEquals(['kaltmiete' => 'Kaltmiete', 'kaufpreis' => 'Kaufpreis'], $pModelAdj->getSortByUserValues());
 		$this->assertEquals('kaltmiete', $pModelAdj->getSelectedSortby());
@@ -109,10 +108,28 @@ class TestClassSortListBuilder
 	public function testBuildWithRequestVars()
 	{
 		$_GET = ['sortby' => 'kaufpreis', 'sortorder' => 'DESC'];
-		$pBuilder = new SortListBuilder;
-		$pModelAdj = $pBuilder->build($this->_pListView, $this->_pBuilder);
+		$pBuilder = new SortListBuilder($this->_pBuilder);
+		$pModelAdj = $pBuilder->build($this->_pListView);
 		$this->assertInstanceOf(SortListDataModel::class, $pModelAdj);
 		$this->assertEquals('kaufpreis', $pModelAdj->getSelectedSortby());
 		$this->assertEquals('DESC', $pModelAdj->getSelectedSortorder());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Controller\SortList\SortListBuilder::build
+	 * @covers onOffice\WPlugin\Controller\SortList\SortListBuilder::estimateAdjustable
+	 * @covers onOffice\WPlugin\Controller\SortList\SortListBuilder::estimateSortbyDefault
+	 * @covers onOffice\WPlugin\Controller\SortList\SortListBuilder::estimateSortByValues
+	 * @covers onOffice\WPlugin\Controller\SortList\SortListBuilder::estimateAdjustableSelectedSortby
+	 * @covers onOffice\WPlugin\Controller\SortList\SortListBuilder::estimateAdjustableSelectedSortorder
+	 */
+	public function testBuildWithoutSortByDefault()
+	{
+		$pBuilder = new SortListBuilder($this->_pBuilder);
+		$this->_pListView->setSortByUserDefinedDefault('');
+		$pModelAdj = $pBuilder->build($this->_pListView);
+		$this->assertInstanceOf(SortListDataModel::class, $pModelAdj);
+		$this->assertEquals('kaltmiete', $pModelAdj->getSelectedSortby());
+		$this->assertEquals('ASC', $pModelAdj->getSelectedSortorder());
 	}
 }

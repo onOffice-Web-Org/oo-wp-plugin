@@ -24,18 +24,29 @@ namespace onOffice\WPlugin\Controller\SortList;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\FieldsCollection;
 
 class SortListBuilder
 {
+	/** @var FieldsCollectionBuilderShort */
+	private $_pBuilderShort;
+
+	/**
+	 * @param FieldsCollectionBuilderShort $pBuilderShort
+	 */
+	public function __construct(FieldsCollectionBuilderShort $pBuilderShort)
+	{
+		$this->_pBuilderShort = $pBuilderShort;
+	}
+
 	/**
 	 * @param DataListView $pListView
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @return SortListDataModel
-	 * @throws \onOffice\WPlugin\Field\UnknownFieldException
+	 * @throws UnknownFieldException
 	 */
-	public function build(DataListView $pListView, FieldsCollectionBuilderShort $pBuilderShort): SortListDataModel
+	public function build(DataListView $pListView): SortListDataModel
 	{
 		$pSortListDataModel = new SortListDataModel();
 
@@ -48,7 +59,7 @@ class SortListBuilder
 
 		$pSortListDataModel->setSortbyUserDirection($pListView->getSortByUserDefinedDirection());
 
-		$sortbyValues = $this->estimateSortByValues($pBuilderShort, $pListView->getSortByUserValues());
+		$sortbyValues = $this->estimateSortByValues($pListView->getSortByUserValues());
 		$pSortListDataModel->setSortByUserValues($sortbyValues);
 
 		if ($pSortListDataModel->isAdjustableSorting())	{
@@ -98,15 +109,14 @@ class SortListBuilder
 	}
 
 	/**
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param array $sortByUserValues
 	 * @return array
-	 * @throws \onOffice\WPlugin\Field\UnknownFieldException
+	 * @throws UnknownFieldException
 	 */
-	private function estimateSortByValues(FieldsCollectionBuilderShort $pBuilderShort, array $sortByUserValues): array
+	private function estimateSortByValues(array $sortByUserValues): array
 	{
 		$pFieldsCollection = new FieldsCollection();
-		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$this->_pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$sortbyValues = [];
 
 		foreach ($sortByUserValues as $sortByField) {
