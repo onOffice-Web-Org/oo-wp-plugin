@@ -56,7 +56,7 @@ class DefaultValueModelToOutputConverterText
 	 *
 	 */
 
-	public function convert(DefaultValueModelText $pDefaultValueModel): array
+	public function convertToRow(DefaultValueModelText $pDefaultValueModel): array
 	{
 		$valuesByLocale = $pDefaultValueModel->getValuesByLocale();
 		$currentLocale = $this->_pLanguage->getLocale();

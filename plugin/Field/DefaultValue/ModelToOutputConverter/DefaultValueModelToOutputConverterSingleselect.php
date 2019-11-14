@@ -39,7 +39,7 @@ class DefaultValueModelToOutputConverterSingleselect
 	 *
 	 */
 
-	public function convert(DefaultValueModelSingleselect $pDefaultValueModel): array
+	public function convertToRow(DefaultValueModelSingleselect $pDefaultValueModel): array
 	{
 		return [$pDefaultValueModel->getValue()];
 	}

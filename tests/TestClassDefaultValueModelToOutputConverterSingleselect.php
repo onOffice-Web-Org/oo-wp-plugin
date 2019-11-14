@@ -48,7 +48,7 @@ class TestClassDefaultValueModelToOutputConverterSingleselect
 	public function testConvert(DefaultValueModelSingleselect $pDataModel, array $expectation)
 	{
 		$pConverter = new DefaultValueModelToOutputConverterSingleselect();
-		$result = $pConverter->convert($pDataModel);
+		$result = $pConverter->convertToRow($pDataModel);
 		$this->assertEquals($expectation, $result);
 	}
 

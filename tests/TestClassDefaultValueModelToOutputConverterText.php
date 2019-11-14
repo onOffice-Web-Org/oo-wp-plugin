@@ -82,7 +82,7 @@ class TestClassDefaultValueModelToOutputConverterText
 	{
 		$this->_pLanguage->expects($this->once())->method('getLocale')->will($this->returnValue($currentLocale));
 		$pConverter = new DefaultValueModelToOutputConverterText($this->_pLanguage);
-		$result = $pConverter->convert($pModel);
+		$result = $pConverter->convertToRow($pModel);
 		$this->assertEquals($expectation, $result);
 	}
 

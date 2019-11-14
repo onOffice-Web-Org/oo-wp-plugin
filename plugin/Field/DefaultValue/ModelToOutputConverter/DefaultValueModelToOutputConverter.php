@@ -98,7 +98,7 @@ class DefaultValueModelToOutputConverter
 	{
 		$pModel = $this->_pDefaultValueReader->readDefaultValuesSingleselect($formId, $pField);
 		$pConverter = $this->_pOutputConverterFactory->createForSingleSelect();
-		return $pConverter->convert($pModel);
+		return $pConverter->convertToRow($pModel);
 	}
 
 
@@ -116,6 +116,6 @@ class DefaultValueModelToOutputConverter
 	{
 		$pModel = $this->_pDefaultValueReader->readDefaultValuesText($formId, $pField);
 		$pConverter = $this->_pOutputConverterFactory->createForText();
-		return $pConverter->convert($pModel);
+		return $pConverter->convertToRow($pModel);
 	}
 }
