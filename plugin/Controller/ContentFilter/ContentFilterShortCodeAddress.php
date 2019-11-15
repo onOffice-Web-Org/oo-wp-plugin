@@ -24,9 +24,11 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use Exception;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
+use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Template;
+use onOffice\WPlugin\Types\FieldTypes;
 use function shortcode_atts;
 
 /**
@@ -90,11 +92,42 @@ class ContentFilterShortCodeAddress
 		$pAddressListView = $this->_pEnvironment->getDataListFactory()->getListViewByName($addressListName);
 		$pAddressList = $this->_pEnvironment->createAddressList()->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
+		$this->setPaginationParameters($pAddressList->getVisibleFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
 		$pTemplate = $this->_pEnvironment->getTemplate()->withTemplateName($templateName);
 		$pTemplate->setAddressList($pAddressList);
 
 		return $pTemplate;
+	}
+
+
+	/**
+	 * @param array $filterableFields
+	 */
+	private function setPaginationParameters(array $filterableFields)
+	{
+		$pRequestVariableSanitizer = new RequestVariablesSanitizer();
+		$pModel = new SearchParametersModel();
+
+		foreach ($filterableFields as $fieldName => $filterableField) {
+			$type = $filterableField['type'];
+
+			if (FieldTypes::isMultipleSelectType($type)) {
+				$pModel->setParameterArray($fieldName, $pRequestVariableSanitizer->getFilteredGet($fieldName,
+					FILTER_DEFAULT, FILTER_FORCE_ARRAY));
+			}
+			else {
+				$pModel->setParameter($fieldName, $pRequestVariableSanitizer->getFilteredGet($fieldName));
+			}
+
+			$pModel->addAllowedGetParameter($fieldName);
+		}
+
+		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pModel): string {
+			$pSearchParameters = new SearchParameters();
+			return $pSearchParameters->linkPagesLink($link, $i, $pModel);
+		}, 10, 2);
+		add_filter('wp_link_pages_args', [$pModel, 'populateDefaultLinkParams']);
 	}
 
 
