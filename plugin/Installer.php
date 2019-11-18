@@ -121,10 +121,10 @@ abstract class Installer
 			$dbversion = 12;
 		}
 
-		if ( $dbversion == 12)
-		{
+		if ( $dbversion == 12 || $dbversion == 13)	{
+			dbDelta( self::getCreateQueryListviews() );
 			dbDelta( self::getCreateQuerySortByUserValues() );
-			$dbversion = 13;
+			$dbversion = 14;
 		}
 
 		update_option( 'oo_plugin_db_version', $dbversion, false);
