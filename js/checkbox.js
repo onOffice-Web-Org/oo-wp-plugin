@@ -43,6 +43,22 @@ onOffice.checkboxAdmin = function() {
 			{
 				element: "select[name=oopluginlistviews-sortorder]",
 				invert: true
+			},
+			{
+				element: "input[class=chosen-search-input]",
+				invert: true
+			},
+			{
+				element: "input[name=oopluginlistviews-sortBySetting]",
+				invert: true
+			},
+			{
+				element: "select[name=oopluginlistviews-sortByUserDefinedDefault]",
+				invert: true
+			},
+			{
+				element: "select[name=oopluginlistviews-sortByUserDefinedDirection]",
+				invert: true
 			}
 		]
 	};
