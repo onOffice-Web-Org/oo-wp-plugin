@@ -138,7 +138,7 @@ class SortListRenderer
 			foreach ($possibleSortorders as $sortorder) {
 				$optionValue = $this->createOptionValue($value, $sortorder);
 				$selected = ($selectedValue == $optionValue) ? ' selected' : '';
-				$htmlString .= '<option value="'.$optionValue.'" '.$selected.'>'.$this->createOptionLabel($pSortListModel, $label, $sortorder).'<option>';
+				$htmlString .= '<option value="'.$optionValue.'" '.$selected.'>'.$this->createOptionLabel($pSortListModel, $label, $sortorder).'</option>';
 			}
 		}
 
