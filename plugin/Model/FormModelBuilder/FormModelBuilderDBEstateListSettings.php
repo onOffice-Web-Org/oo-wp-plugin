@@ -487,11 +487,11 @@ class FormModelBuilderDBEstateListSettings
 	public function createInputModelSortBySpec()
 	{
 		$userDefinedSortDirectionValues = [
-			'0' =>  __('highestFirst/lowestFirst', 'onoffice'),
-			'1' => __('descending/ascending', 'onoffice'),
+			'0' =>  __('lowestFirst/highestFirst', 'onoffice'),
+			'1' => __('ascending/descending', 'onoffice'),
 		];
 
-		$label = __('Sort Direction', 'onoffice');
+		$label = __('Formulation of sorting directions', 'onoffice');
 		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_USER_DEFINED_DIRECTION, $label);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModel->setValue($this->getValue($pInputModel->getField()));
