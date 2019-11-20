@@ -115,6 +115,57 @@ class TestClassField
 		$this->assertEquals($expectation, $pField->getAsRow());
 	}
 
+	/**
+	 * @see ticket #1560699
+	 */
+	public function testCreateByRowWithEmptyLabel()
+	{
+		$row = [
+			'module' => 'testModuleA',
+			'label' => null,
+			'type' => 'date',
+			'default' => 'asd',
+			'length' => 13,
+			'permittedvalues' => ['test', 'asdf', 13, 37],
+			'content' => 'asdf',
+			'rangefield' => true,
+			'additionalTranslations' => [
+				'testField123__von' => 'testField123 from',
+				'testField123__bis' => 'testField123 up to',
+			],
+			'compoundFields' => ['Anrede-Titel' => ['Anrede', 'Titel']],
+		];
+		$pField1 = Field::createByRow('testField1Name', $row);
+		$this->assertEquals('(testField1Name)', $pField1->getLabel());
+		$row['label'] = '';
+		$pField2 = Field::createByRow('testField2Name', $row);
+		$this->assertEquals('(testField2Name)', $pField2->getLabel());
+	}
+
+	/**
+	 *
+	 */
+	public function testCreateByRow()
+	{
+		$row = [
+			'module' => 'testModuleA',
+			'label' => 'testField1Label',
+			'type' => 'date',
+			'default' => 'asd',
+			'length' => 13,
+			'permittedvalues' => ['test', 'asdf', 13, 37],
+			'content' => 'asdf',
+			'rangefield' => true,
+			'additionalTranslations' => [
+				'testField123__von' => 'testField123 from',
+				'testField123__bis' => 'testField123 up to',
+			],
+			'compoundFields' => ['Anrede-Titel' => ['Anrede', 'Titel']],
+		];
+		$pField = Field::createByRow('testField1Name', $row);
+		$this->assertEquals($row, $pField->getAsRow());
+	}
+
 
 	/**
 	 *
