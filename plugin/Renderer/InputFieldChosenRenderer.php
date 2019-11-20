@@ -45,18 +45,4 @@ class InputFieldChosenRenderer
 
 		echo $output;
 	}
-
-	/**
-	 *
-	 * @param array $selectedValue
-	 *
-	 */
-
-	public function setSelectedValue($selectedValue)
-		{ $this->_selectedValue = $selectedValue; }
-
-
-	/** @return array */
-	public function getSelectedValue()
-		{ return $this->_selectedValue; }
 }

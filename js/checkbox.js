@@ -45,7 +45,7 @@ onOffice.checkboxAdmin = function() {
 				invert: true
 			},
 			{
-				element: "input[class=chosen-search-input]",
+				element: "select[name=oopluginsortbyuservalues-sortbyuservalue]",
 				invert: true
 			},
 			{
@@ -72,12 +72,16 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 			var receiverElement = mainElement.parent().parent().find(receiver.element);
 			var invert = receiver.invert;
 			if (receiverElement.length) {
+				var isChosen = receiverElement[0].classList.contains("chosen-select");
 				if (mainElement.attr('checked')) {
 					if (!invert) {
 						receiverElement.removeAttr('disabled');
 					} else {
 						receiverElement.attr('disabled', 'disabled');
 						receiverElement.removeAttr('checked');
+						if (isChosen) {
+							receiverElement.trigger("chosen:updated");
+						}
 					}
 				} else {
 					if (!invert) {
@@ -85,6 +89,9 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 						receiverElement.removeAttr('checked');
 					} else {
 						receiverElement.removeAttr('disabled');
+						if (isChosen) {
+							receiverElement.trigger("chosen:updated");
+						}
 					}
 				}
 			}
