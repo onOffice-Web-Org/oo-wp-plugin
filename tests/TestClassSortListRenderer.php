@@ -71,11 +71,12 @@ class TestClassSortListRenderer
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createOptionLabel
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createOptionValue
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createSelectedValue
-	 *  @covers onOffice\WPlugin\Renderer\SortListRenderer::createHtml
+	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::getSortOrderMapping
+	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createHtml
 	 */
 	public function testAdjustableWithDefault()
 	{
-		$expected = '<select name="userDefinedSelection" id="onofficeSortListSelector"><option value="kaltmiete#ASC" >Kaltmiete ascending</option><option value="kaltmiete#DESC" >Kaltmiete descending</option><option value="kaufpreis#ASC"  selected>Kaufpreis ascending</option><option value="kaufpreis#DESC" >Kaufpreis descending</option></select>';
+		$expected = '<select name="userDefinedSelection" id="onofficeSortListSelector"><option value="kaltmiete#ASC" >Kaltmiete (ascending)</option><option value="kaltmiete#DESC" >Kaltmiete (descending)</option><option value="kaufpreis#ASC"  selected>Kaufpreis (ascending)</option><option value="kaufpreis#DESC" >Kaufpreis (descending)</option></select>';
 
 		$pSortListRenderer = new SortListRenderer;
 		$this->assertEquals($expected, $pSortListRenderer->createHtmlSelector($this->_pSortListModelAdjustable));
@@ -101,12 +102,13 @@ class TestClassSortListRenderer
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createOptionLabel
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createOptionValue
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createSelectedValue
-	 *  @covers onOffice\WPlugin\Renderer\SortListRenderer::createHtml
+	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::getSortOrderMapping
+	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createHtml
 	 */
 	public function testAdjustableFromRequestVars()
 	{
 		$_GET = ['sortby' => 'kaltmiete', 'sortorder' => 'DESC'];
-		$expected = '<select name="userDefinedSelection" id="onofficeSortListSelector"><option value="kaltmiete#ASC" >Kaltmiete ascending</option><option value="kaltmiete#DESC" >Kaltmiete descending</option><option value="kaufpreis#ASC"  selected>Kaufpreis ascending</option><option value="kaufpreis#DESC" >Kaufpreis descending</option></select>';
+		$expected = '<select name="userDefinedSelection" id="onofficeSortListSelector"><option value="kaltmiete#ASC" >Kaltmiete (ascending)</option><option value="kaltmiete#DESC" >Kaltmiete (descending)</option><option value="kaufpreis#ASC"  selected>Kaufpreis (ascending)</option><option value="kaufpreis#DESC" >Kaufpreis (descending)</option></select>';
 
 		$pSortListRenderer = new SortListRenderer;
 		$this->assertEquals($expected, $pSortListRenderer->createHtmlSelector($this->_pSortListModelAdjustable));

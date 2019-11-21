@@ -47,7 +47,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$line .= renderFormField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
-			$line .= ' <span>'.esc_html__('Please fill in!', 'onoffice').'</span>';
+			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice').'</span>';
 		}
 
 		if ($table == 'address') {

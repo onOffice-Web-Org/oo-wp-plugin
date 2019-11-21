@@ -4,15 +4,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice direct 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2019-09-02T16:20:44+02:00\n"
-"PO-Revision-Date: 2019-09-02 16:24+0200\n"
+"POT-Creation-Date: 2019-11-21T09:10:31+01:00\n"
+"PO-Revision-Date: 2019-11-21 09:24+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.1\n"
 "X-Domain: onoffice\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -43,55 +43,55 @@ msgstr "https://de.onoffice.com/"
 msgid "Please configure your onOffice API credentials first!"
 msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
 
-#: plugin/ContentFilter.php:173
+#: plugin/ContentFilter.php:188
 msgid "Estates view not found."
 msgstr "Immobilienansicht nicht gefunden."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
-#: plugin/ContentFilter.php:316
+#: plugin/ContentFilter.php:352
 msgid "%2$s (%3$s) in %4$s - %5$s"
 msgstr "%2$s (%3$s) in %4$s - %5$s"
 
-#: plugin/Controller/AdminViewController.php:153
-#: plugin/Gui/AdminPageAddressList.php:67 plugin/Gui/AdminPageBase.php:82
+#: plugin/Controller/AdminViewController.php:147
+#: plugin/Gui/AdminPageAddressList.php:78 plugin/Gui/AdminPageBase.php:82
 #: plugin/Gui/AdminPageEstateDetail.php:206
-#: plugin/Gui/AdminPageEstateList.php:63
-#: plugin/Gui/AdminPageEstateUnitList.php:65
-#: plugin/Gui/AdminPageFormList.php:186
+#: plugin/Gui/AdminPageEstateList.php:71
+#: plugin/Gui/AdminPageEstateUnitList.php:66
+#: plugin/Gui/AdminPageFormList.php:177
 msgid "onOffice"
 msgstr "onOffice"
 
-#: plugin/Controller/AdminViewController.php:161
-#: plugin/Gui/AdminPageAddressList.php:45
+#: plugin/Controller/AdminViewController.php:153
+#: plugin/Gui/AdminPageAddressList.php:59
 msgid "Addresses"
 msgstr "Adressen"
 
-#: plugin/Controller/AdminViewController.php:166
-#: plugin/Controller/AdminViewController.php:167
+#: plugin/Controller/AdminViewController.php:159
+#: plugin/Controller/AdminViewController.php:160
 msgid "Estates"
 msgstr "Immobilien"
 
-#: plugin/Controller/AdminViewController.php:177
-#: plugin/Gui/AdminPageFormList.php:97
+#: plugin/Controller/AdminViewController.php:171
+#: plugin/Gui/AdminPageFormList.php:93
 msgid "Forms"
 msgstr "Formulare"
 
-#: plugin/Controller/AdminViewController.php:191
+#: plugin/Controller/AdminViewController.php:185
 msgid "Modules"
 msgstr "Module"
 
-#: plugin/Controller/AdminViewController.php:215
-#: plugin/Controller/AdminViewController.php:216
-#: plugin/Controller/AdminViewController.php:365
+#: plugin/Controller/AdminViewController.php:209
+#: plugin/Controller/AdminViewController.php:210
+#: plugin/Controller/AdminViewController.php:364
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: plugin/Controller/AdminViewController.php:383
+#: plugin/Controller/AdminViewController.php:382
 msgid "API token and secret"
 msgstr "API-Token und Secret"
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:386
+#: plugin/Controller/AdminViewController.php:385
 msgid ""
 "It looks like you did not enter any valid API credentials. Please consider "
 "reviewing your %s."
@@ -125,12 +125,12 @@ msgstr "Werte bearbeiten"
 msgid "Geo Range Search"
 msgstr "Umkreissuche"
 
-#: plugin/Form.php:87
+#: plugin/Form.php:91
 msgid "Submit"
 msgstr "Absenden"
 
 #. translators: %1$s is the estate title, %5$s is the estate ID
-#: plugin/Form.php:509
+#: plugin/Form.php:518
 msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
 msgstr "Ihre Anfrage zu der Immobilie „%1$s“ (%5$s)"
 
@@ -156,9 +156,9 @@ msgstr[1] "%s Formulare wurden gelöscht."
 msgid "No form was deleted."
 msgstr "Formular wurde nicht gelöscht."
 
-#: plugin/Gui/AdminPageAddressList.php:76 plugin/Gui/AdminPageEstateList.php:75
-#: plugin/Gui/AdminPageEstateUnitList.php:77
-#: plugin/Gui/AdminPageFormList.php:208
+#: plugin/Gui/AdminPageAddressList.php:87 plugin/Gui/AdminPageEstateList.php:83
+#: plugin/Gui/AdminPageEstateUnitList.php:78
+#: plugin/Gui/AdminPageFormList.php:195
 msgid "Add New"
 msgstr "Neu"
 
@@ -175,7 +175,7 @@ msgstr "Name auswählen"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:116
 #: plugin/Gui/AdminPageEstateDetail.php:280
-#: plugin/Gui/AdminPageEstateListSettings.php:110
+#: plugin/Gui/AdminPageEstateListSettings.php:121
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
 #: plugin/Gui/AdminPageFormSettingsBase.php:284
 msgid "Layout & Design"
@@ -187,7 +187,7 @@ msgstr "Filter & Datensätze"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:155
 #: plugin/Gui/AdminPageEstateDetail.php:288
-#: plugin/Gui/AdminPageEstateListSettings.php:118
+#: plugin/Gui/AdminPageEstateListSettings.php:129
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
 msgstr "Fotoarten"
@@ -287,17 +287,17 @@ msgstr ""
 msgid "The cache was cleaned."
 msgstr "Der Cache wurde geleert."
 
-#: plugin/Gui/AdminPageEstate.php:74 plugin/Gui/AdminPageEstateList.php:70
+#: plugin/Gui/AdminPageEstate.php:82 plugin/Gui/AdminPageEstateList.php:78
 msgid "List Views"
 msgstr "Listenansichten"
 
-#: plugin/Gui/AdminPageEstate.php:75 plugin/Gui/AdminPageEstateDetail.php:208
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:94
+#: plugin/Gui/AdminPageEstate.php:83 plugin/Gui/AdminPageEstateDetail.php:208
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:91
 #: templates.dist/estate/default_detail.php:34
 msgid "Detail View"
 msgstr "Detailansicht"
 
-#: plugin/Gui/AdminPageEstate.php:76
+#: plugin/Gui/AdminPageEstate.php:84
 msgid "Unit Lists"
 msgstr "Einheitenlisten"
 
@@ -345,30 +345,30 @@ msgstr "Die Detailansicht wurde gespeichert."
 msgid "There was a problem saving the detail view."
 msgstr "Es ist einen Fehler beim Speichern der Detailansicht aufgetreten."
 
-#: plugin/Gui/AdminPageEstateList.php:104 plugin/Gui/AdminPageFormList.php:147
+#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:141
 msgid "Are you sure you want to delete the selected items?"
 msgstr "Möchten Sie das ausgewählte Element wirklich löschen?"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:96
+#: plugin/Gui/AdminPageEstateListSettings.php:102
 msgid "Filters & Records"
 msgstr "Filter & Datensätze"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:126
+#: plugin/Gui/AdminPageEstateListSettings.php:137
 #: plugin/Gui/AdminPageEstateUnitSettings.php:105
 msgid "Downloadable Documents"
 msgstr "Dokumente zum Herunterladen"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:135
+#: plugin/Gui/AdminPageEstateListSettings.php:146
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
 #: plugin/Gui/AdminPageFormSettingsContact.php:170
 msgid "Geo Fields"
 msgstr "Umkreisfelder"
 
-#: plugin/Gui/AdminPageEstateListSettingsBase.php:153
+#: plugin/Gui/AdminPageEstateListSettingsBase.php:155
 msgid "The view has been saved."
 msgstr "Die Ansicht wurde gespeichert."
 
-#: plugin/Gui/AdminPageEstateListSettingsBase.php:154
+#: plugin/Gui/AdminPageEstateListSettingsBase.php:156
 msgid ""
 "There was a problem saving the view. Please make sure the name of the view "
 "is unique, even across all estate list types."
@@ -377,7 +377,7 @@ msgstr ""
 "sicher, dass keine andere Ansicht mit diesem Namen existiert, auch wenn sie "
 "einen anderen Typen hat."
 
-#: plugin/Gui/AdminPageEstateUnitList.php:72
+#: plugin/Gui/AdminPageEstateUnitList.php:73
 msgid "Units Lists"
 msgstr "Einheitenlisten"
 
@@ -412,7 +412,7 @@ msgstr ""
 
 #. translators: %s is a translated module name
 #: plugin/Gui/AdminPageFormSettingsBase.php:244
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:481
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:480
 msgid "Module: %s"
 msgstr "Modul: %s"
 
@@ -456,28 +456,28 @@ msgstr "Karten"
 msgid "Fields Configuration"
 msgstr "Feldeinstellungen"
 
-#: plugin/Gui/Table/AddressListTable.php:99
-#: plugin/Gui/Table/AddressListTable.php:142
-#: plugin/Gui/Table/EstateListTable.php:138
-#: plugin/Gui/Table/EstateListTable.php:235
-#: plugin/Gui/Table/EstateUnitsTable.php:64
-#: plugin/Gui/Table/EstateUnitsTable.php:116
+#: plugin/Gui/Table/AddressListTable.php:103
+#: plugin/Gui/Table/AddressListTable.php:146
+#: plugin/Gui/Table/EstateListTable.php:131
+#: plugin/Gui/Table/EstateListTable.php:211
+#: plugin/Gui/Table/EstateUnitsTable.php:62
+#: plugin/Gui/Table/EstateUnitsTable.php:114
 msgid "Name of View"
 msgstr "Name der Ansicht"
 
-#: plugin/Gui/Table/AddressListTable.php:100
-#: plugin/Gui/Table/AddressListTable.php:143
-#: plugin/Gui/Table/EstateListTable.php:142
-#: plugin/Gui/Table/EstateListTable.php:239
-#: plugin/Gui/Table/EstateUnitsTable.php:65
-#: plugin/Gui/Table/EstateUnitsTable.php:118
-#: plugin/Gui/Table/FormsTable.php:125 plugin/Gui/Table/FormsTable.php:150
+#: plugin/Gui/Table/AddressListTable.php:104
+#: plugin/Gui/Table/AddressListTable.php:147
+#: plugin/Gui/Table/EstateListTable.php:135
+#: plugin/Gui/Table/EstateListTable.php:215
+#: plugin/Gui/Table/EstateUnitsTable.php:63
+#: plugin/Gui/Table/EstateUnitsTable.php:116
+#: plugin/Gui/Table/FormsTable.php:126 plugin/Gui/Table/FormsTable.php:151
 msgid "Shortcode"
 msgstr "Shortcode"
 
 #. translators: %s is the name of the list view.
-#: plugin/Gui/Table/AddressListTable.php:187
-#: plugin/Gui/Table/EstateListTable.php:302
+#: plugin/Gui/Table/AddressListTable.php:185
+#: plugin/Gui/Table/EstateListTable.php:273
 msgid ""
 "You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -485,44 +485,44 @@ msgstr ""
 "Sie sind dabei, die Listenansicht '%s' zu löschen.\n"
 "Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
-#: plugin/Gui/Table/EstateListTable.php:139
-#: plugin/Gui/Table/EstateListTable.php:236
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:128
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:112
+#: plugin/Gui/Table/EstateListTable.php:132
+#: plugin/Gui/Table/EstateListTable.php:212
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:125
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:134
 msgid "Filter"
 msgstr "Filter"
 
-#: plugin/Gui/Table/EstateListTable.php:140
-#: plugin/Gui/Table/EstateListTable.php:237
+#: plugin/Gui/Table/EstateListTable.php:133
+#: plugin/Gui/Table/EstateListTable.php:213
 msgid "Show Status"
 msgstr "Status anzeigen"
 
-#: plugin/Gui/Table/EstateListTable.php:141
-#: plugin/Gui/Table/EstateListTable.php:238
-#: plugin/Gui/Table/EstateUnitsTable.php:117
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:272
+#: plugin/Gui/Table/EstateListTable.php:134
+#: plugin/Gui/Table/EstateListTable.php:214
+#: plugin/Gui/Table/EstateUnitsTable.php:115
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:294
 msgid "Type of List"
 msgstr "Listenart"
 
-#: plugin/Gui/Table/EstateListTable.php:196 templates.dist/fields.php:64
+#: plugin/Gui/Table/EstateListTable.php:172 templates.dist/fields.php:64
 msgid "Yes"
 msgstr "Ja"
 
-#: plugin/Gui/Table/EstateListTable.php:196 templates.dist/fields.php:67
+#: plugin/Gui/Table/EstateListTable.php:172 templates.dist/fields.php:67
 msgid "No"
 msgstr "Nein"
 
-#: plugin/Gui/Table/EstateListTable.php:215
+#: plugin/Gui/Table/EstateListTable.php:191
 msgid "(Needs valid API credentials)"
 msgstr "(Benötigt gültige API-Zugangsdaten)"
 
 #. translators: %s will be replaced with a number.
-#: plugin/Gui/Table/EstateListTable.php:218
+#: plugin/Gui/Table/EstateListTable.php:194
 msgid "(Unknown Filter (ID: %s))"
 msgstr "(Unbekannter Filter (ID: %s))"
 
 #. translators: %s is the name of the unit view.
-#: plugin/Gui/Table/EstateUnitsTable.php:170
+#: plugin/Gui/Table/EstateUnitsTable.php:165
 msgid ""
 "You are about to delete the unit view '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -530,16 +530,16 @@ msgstr ""
 "Sie sind dabei, die Einheitenliste '%s' zu löschen.\n"
 "Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
-#: plugin/Gui/Table/FormsTable.php:123 plugin/Gui/Table/FormsTable.php:148
+#: plugin/Gui/Table/FormsTable.php:124 plugin/Gui/Table/FormsTable.php:149
 msgid "Name of Form"
 msgstr "Formularname"
 
-#: plugin/Gui/Table/FormsTable.php:124 plugin/Gui/Table/FormsTable.php:149
+#: plugin/Gui/Table/FormsTable.php:125 plugin/Gui/Table/FormsTable.php:150
 msgid "Type of Form"
 msgstr "Formularart"
 
 #. translators: %s is the name of the form.
-#: plugin/Gui/Table/FormsTable.php:260
+#: plugin/Gui/Table/FormsTable.php:261
 msgid ""
 "You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -552,6 +552,7 @@ msgid "View Name"
 msgstr "Name der Ansicht"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:104
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:436
 msgid "Sort by"
 msgstr "Sortierkriterium"
 
@@ -572,147 +573,167 @@ msgid "Descending"
 msgstr "Absteigend"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:286
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:283
 msgid "Template"
 msgstr "Template"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:97
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:96
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:118
 msgid "List View"
 msgstr "Listenansicht"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:151
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:148
 msgid "Passport Photo"
 msgstr "Passfoto"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:137
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:190
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:159
 msgid "Filterable"
 msgstr "Filterbar"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:214
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:179
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:211
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:201
 msgid "Hidden"
 msgstr "Unsichtbar"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:158
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:375
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:180
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:374
 msgid "Available Options"
 msgstr "Abhängigkeiten auflösen"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:291
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:313
 msgid "Show Estate Status"
 msgstr "Immobilienstatus anzeigen"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:311
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:101
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:333
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:108
 msgid "Random Order"
 msgstr "Zufällige Reihenfolge"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:358
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:156
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:380
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:153
 msgid "PDF-Expose"
 msgstr "PDF-Exposé"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:380
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:402
 msgid "Default"
 msgstr "Standard"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:381
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:403
 msgid "Reference Estates"
 msgstr "Referenzimmobilien"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:382
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:404
 msgid "Favorites List"
 msgstr "Favoritenliste"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:85
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:417
+msgid "Sort by User Selection"
+msgstr "Sortierung nach Benutzerauswahl"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:460
+msgid "Standard Sort"
+msgstr "Standardsortierung"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:490
+msgid "lowest First/ highest First"
+msgstr "niedrigste zuerst/ höchste zuerst"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:491
+msgid "ascending/ descending"
+msgstr "aufsteigend/ absteigend"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:494
+msgid "Formulation of sorting directions"
+msgstr "Formulierung der Sortierrichtungen"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:92
 msgid "Unit List"
 msgstr "Einheitenliste"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:207
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:206
 msgid "Form"
 msgstr "Formular"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:223
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:222
 msgid "Form Name"
 msgstr "Formularname"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:246
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:245
 msgid "Type of Form: "
 msgstr "Formularart: "
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:269
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:268
 msgid ", Embed Code: "
 msgstr ", Embed Code: "
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:285
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:284
 msgid "Recipient's E-Mail Address"
 msgstr "E-Mail-Adresse des Empfängers"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:292
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:291
 msgid "john.doe@example.com"
 msgstr "max.mustermann@beispiel.com"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:309
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:308
 msgid "(won't work until set up globally)"
 msgstr "(funktioniert erst nach der Einrichtung)"
 
 #. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:315
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:314
 msgid "Requires Captcha %s"
 msgstr "Benötigt Captcha %s"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:332
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:331
 msgid "Result Limit"
 msgstr "Maximale Ergebnisanzahl"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:354
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:353
 msgid "Required"
 msgstr "Pflichtangabe"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:453
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:452
 msgid "Module"
 msgstr "Modul"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:110
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:107
 msgid "Show Similar Estates"
 msgstr "Zeige ähnliche Immobilien"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:177
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:174
 msgid "Movie Links"
 msgstr "Film-Links"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:183
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:180
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:184
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:181
 msgid "Link"
 msgstr "Link"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:185
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
 msgid "Player"
 msgstr "Player"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:327
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:324
 msgid "Same Kind of Estate"
 msgstr "Gleiche Immobilienart"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:350
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:347
 msgid "Same Marketing Method"
 msgstr "Gleiche Vermarktungsart"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:373
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:370
 msgid "Same Postal Code"
 msgstr "Gleiche Postleitzahl"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:396
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:393
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:249
 msgid "Radius"
 msgstr "Umkreis"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:419
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:416
 msgid "Amount of Estates"
 msgstr "Anzahl Immobilien"
 
@@ -794,6 +815,22 @@ msgstr "Bearbeiten"
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
+#: plugin/Renderer/SortListRenderer.php:63
+msgid "lowest first"
+msgstr "niedrigste zuerst"
+
+#: plugin/Renderer/SortListRenderer.php:64
+msgid "highest first"
+msgstr "höchste zuerst"
+
+#: plugin/Renderer/SortListRenderer.php:67
+msgid "ascending"
+msgstr "aufsteigend"
+
+#: plugin/Renderer/SortListRenderer.php:68
+msgid "descending"
+msgstr "absteigend"
+
 #: plugin/Translation/FormTranslation.php:55
 msgctxt "forms"
 msgid "All"
@@ -867,69 +904,77 @@ msgstr "Ein Fehler ist aufgetreten:"
 msgid "Bad path \"%s\". The Page was not found."
 msgstr "Der Pfad „%s“ ist ungültig. Die Seite wurde nicht gefunden."
 
+#: templates.dist/address/default.php:39
+msgid "Picture: "
+msgstr "Foto:"
+
 #: templates.dist/address/SearchFormAddress.php:45
 #: templates.dist/estate/SearchForm.php:45
 msgid "Send"
 msgstr "Absenden"
 
-#: templates.dist/estate/default.php:44 templates.dist/estate/default.php:165
+#: templates.dist/estate/default.php:46 templates.dist/estate/default.php:169
 msgid "Add to "
 msgstr "Hinzufügen zu "
 
-#: templates.dist/estate/default.php:50
+#: templates.dist/estate/default.php:52
 msgid "Remove from "
 msgstr "Löschen von "
 
-#: templates.dist/estate/default.php:61
+#: templates.dist/estate/default.php:63
 msgid "Overview of Estates"
 msgstr "Immobilienübersicht"
 
 #. translators: %d will be replaced with a number.
-#: templates.dist/estate/default.php:65
+#: templates.dist/estate/default.php:67
 msgctxt "template"
 msgid "Found %d estates over all."
 msgstr "Insgesamt %d Immobilien gefunden."
 
-#: templates.dist/estate/default.php:77
+#: templates.dist/estate/default.php:79
 msgid "Show Details"
 msgstr "Details anzeigen"
 
-#: templates.dist/estate/default.php:92
+#: templates.dist/estate/default.php:94
 msgid "Contact person: "
 msgstr "Ansprechpartner: "
 
-#: templates.dist/estate/default.php:107
+#: templates.dist/estate/default.php:109
 msgid "Mobile Phone: "
 msgstr "Mobilnummer: "
 
-#: templates.dist/estate/default.php:115
+#: templates.dist/estate/default.php:117
 #: templates.dist/estate/default_detail.php:76
 msgid "Phone (business): "
 msgstr "Telefon (geschäftlich): "
 
-#: templates.dist/estate/default.php:123
+#: templates.dist/estate/default.php:125
 #: templates.dist/estate/default_detail.php:88
 msgid "E-Mail (business): "
 msgstr "E-Mail (geschäftlich): "
 
-#: templates.dist/estate/default.php:130
+#: templates.dist/estate/default.php:132
 msgid "Contact form: "
 msgstr "Kontaktformular: "
 
-#: templates.dist/estate/default.php:136
+#: templates.dist/estate/default.php:138
 #: templates.dist/estate/default_detail.php:131
 msgid "(Form is not available)"
 msgstr "(Formular ist nicht verfügbar)"
 
-#: templates.dist/estate/default.php:158
+#: templates.dist/estate/default.php:161
 #: templates.dist/estate/default_detail.php:120
 msgid "Documents"
 msgstr "Dokumente"
 
-#: templates.dist/estate/default.php:160
+#: templates.dist/estate/default.php:163
 #: templates.dist/estate/default_detail.php:122
 msgid "PDF expose"
 msgstr "PDF-Exposé"
+
+#: templates.dist/estate/default_detail.php:53
+msgid "Contact person"
+msgstr "Ansprechpartner"
 
 #: templates.dist/estate/default_detail.php:66
 msgid "Phone (mobile): "
@@ -976,25 +1021,69 @@ msgstr "Bis: "
 msgid "Choose %s"
 msgstr "%s auswählen"
 
+#: templates.dist/form/applicantform.php:35
+#: templates.dist/form/defaultform.php:40 templates.dist/form/ownerform.php:36
+msgid "SUCCESS!"
+msgstr "ERFORLG!"
+
+#: templates.dist/form/applicantform.php:37
+#: templates.dist/form/applicantsearchform.php:41
+#: templates.dist/form/defaultform.php:43 templates.dist/form/ownerform.php:39
+#: templates.dist/form/ownerleadgeneratorform.php:85
+msgid "ERROR!"
+msgstr "FEHLER!"
+
+#: templates.dist/form/applicantform.php:39
+msgid "Missing Fields!"
+msgstr "Fehlende Felder!"
+
+#: templates.dist/form/applicantform.php:50
+#: templates.dist/form/ownerform.php:50
+msgid "Please fill in"
+msgstr "Bitte ausfüllen"
+
+#: templates.dist/form/applicantsearchform.php:51
+#: templates.dist/form/defaultform.php:51
+msgid "Please fill in!"
+msgstr "Bitte ausfüllen!"
+
+#: templates.dist/form/applicantsearchform.php:64
+msgid "search within distance of:"
+msgstr "Suche innerhalb ein Radius von:"
+
 #: templates.dist/form/applicantsearchform.php:106
 msgid "Search for Prospective Buyers"
 msgstr "Suche nach potenziellen Käufern"
 
 #. translators: %s will be replaced with a number.
-#: templates.dist/form/applicantsearchform.php:118
+#: templates.dist/form/applicantsearchform.php:119
 msgid "%s Prospective Buyer"
 msgid_plural "%s Prospective Buyers"
 msgstr[0] "%s potenzieller Käufer"
 msgstr[1] "%s potenzielle Käufer"
 
 #. translators: %s will be replaced with a customer reference number.
-#: templates.dist/form/applicantsearchform.php:126
+#: templates.dist/form/applicantsearchform.php:127
 msgid "Customer ref. number %s"
 msgstr "Kundennummer %s"
+
+#: templates.dist/form/defaultform.php:45
+msgid "Spam detected!"
+msgstr "Spam gefunden!"
 
 #: templates.dist/form/defaultform.php:70 templates.dist/form/ownerform.php:66
 msgid "Message"
 msgstr "Nachricht"
+
+#: templates.dist/form/ownerform.php:71
+#: templates.dist/form/ownerleadgeneratorform.php:90
+msgid "Your contact details"
+msgstr "Ihre Kontaktdaten"
+
+#: templates.dist/form/ownerform.php:75
+#: templates.dist/form/ownerleadgeneratorform.php:97
+msgid "Information about your property"
+msgstr "Angaben zu Ihrem Eigentum"
 
 #: templates.dist/form/ownerleadgeneratorform.php:34
 msgid "The form was sent successfully."
@@ -1013,14 +1102,6 @@ msgstr ""
 #: templates.dist/form/ownerleadgeneratorform.php:50
 msgid "Please enter a value for %s."
 msgstr "Bitte geben Sie einen Wert für %s ein."
-
-#: templates.dist/form/ownerleadgeneratorform.php:90
-msgid "Your contact details"
-msgstr "Ihre Kontaktdaten"
-
-#: templates.dist/form/ownerleadgeneratorform.php:97
-msgid "Information about your property"
-msgstr "Angaben zu Ihrem Eigentum"
 
 #: templates.dist/form/ownerleadgeneratorform.php:115
 msgid "Back"

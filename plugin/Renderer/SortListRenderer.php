@@ -29,31 +29,9 @@ use function esc_html;
 
 class SortListRenderer
 {
-
-	/** */
-	const DIRECTION_TYPE_HIGHEST_FIRST = 'highest first';
-    /** */
-	const DIRECTION_TYPE_LOWEST_FIRST = 'lowest first';
-    /** */
-	const DIRECTION_TYPE_ASCENDING = 'ascending';
-    /** */
-	const DIRECTION_TYPE_DESCENDING = 'descending';
-
 	/** */
 	const ELEMENT_ID = 'onofficeSortListSelector';
 
-
-	/** @var array */
-	const SORT_ORDER_MAPPING = [
-		0 => [
-			SortListTypes::SORTORDER_ASC => self::DIRECTION_TYPE_LOWEST_FIRST,
-			SortListTypes::SORTORDER_DESC => self::DIRECTION_TYPE_HIGHEST_FIRST,
-		],
-		1 => [
-			SortListTypes::SORTORDER_ASC => self::DIRECTION_TYPE_ASCENDING,
-			SortListTypes::SORTORDER_DESC => self::DIRECTION_TYPE_DESCENDING,
-		],
-	];
 
 
 
@@ -74,14 +52,35 @@ class SortListRenderer
 	}
 
 	/**
+	 * @param int $sortByUserDirection
+	 * @param string $sortorder
+	 * @return string
+	 */
+	private function getSortOrderMapping(int $sortByUserDirection, string $sortorder): string
+	{
+		$mapping = [
+			0 => [
+				SortListTypes::SORTORDER_ASC => __('lowest first', 'onoffice'),
+				SortListTypes::SORTORDER_DESC => __('highest first', 'onoffice'),
+			],
+			1 => [
+				SortListTypes::SORTORDER_ASC => __('ascending', 'onoffice'),
+				SortListTypes::SORTORDER_DESC => __('descending', 'onoffice'),
+			],
+		];
+
+		return $mapping[$sortByUserDirection][$sortorder];
+	}
+
+	/**
 	 * @param SortListDataModel $pSortListModel
 	 * @param string $sortorder
 	 * @return string
 	 */
 	private function estimateDirectionLabelBySortorder(SortListDataModel $pSortListModel, string $sortorder): string
 	{
-		$sortorderDirectionLabel = self::SORT_ORDER_MAPPING[$pSortListModel->getSortbyUserDirection()][$sortorder];
-		return esc_html($sortorderDirectionLabel, 'onoffice');
+		$sortorderDirectionLabel = $this->getSortOrderMapping($pSortListModel->getSortbyUserDirection(), $sortorder);
+		return esc_html($sortorderDirectionLabel);
 	}
 
 	/**
@@ -93,7 +92,7 @@ class SortListRenderer
 	private function createOptionLabel(SortListDataModel $pSortListModel, string $sortby, string $sortorder): string
     {
     	$sortOrderDirectionLabel = $this->estimateDirectionLabelBySortorder($pSortListModel, $sortorder);
-		return esc_html($sortby, 'onoffice').' '.$sortOrderDirectionLabel;
+		return esc_html($sortby).' ('.$sortOrderDirectionLabel.')';
     }
 
 	/**
