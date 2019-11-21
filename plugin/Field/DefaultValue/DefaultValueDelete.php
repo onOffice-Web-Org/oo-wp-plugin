@@ -24,7 +24,6 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\DefaultValue;
 
 use onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException;
-use onOffice\WPlugin\Record\RecordManagerDeleteForm;
 use wpdb;
 
 
@@ -34,45 +33,35 @@ use wpdb;
 
 class DefaultValueDelete
 {
-	/** @var RecordManagerDeleteForm */
-	private $_pRecordManagerDeleteForm;
-
 	/** @var wpdb */
 	private $_pWPDB;
 
-
 	/**
-	 *
-	 * @param RecordManagerDeleteForm $pRecordManager
 	 * @param wpdb $pWPDB
-	 *
 	 */
-
-	public function __construct(RecordManagerDeleteForm $pRecordManager, wpdb $pWPDB)
+	public function __construct(wpdb $pWPDB)
 	{
-		$this->_pRecordManagerDeleteForm = $pRecordManager;
 		$this->_pWPDB = $pWPDB;
 	}
 
-
 	/**
-	 *
 	 * @param int $formId
-	 *
+	 * @throws DefaultValueDeleteException
 	 */
-
 	public function deleteAllByFormId(int $formId)
 	{
-		$this->_pRecordManagerDeleteForm->deleteByIds([$formId]);
+		$query = $this->getBaseDeleteQuery()." WHERE "
+			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.form_id = %d";
+
+		if (false === $this->_pWPDB->query($this->_pWPDB->prepare($query, $formId))) {
+			throw new DefaultValueDeleteException();
+		}
 	}
 
 	/**
-	 *
 	 * @param int $defaultId
-	 *
 	 * @throws DefaultValueDeleteException
 	 */
-
 	public function deleteSingleDefaultValueById(int $defaultId)
 	{
 		$query = $this->getBaseDeleteQuery()." WHERE "
@@ -84,13 +73,10 @@ class DefaultValueDelete
 	}
 
 	/**
-	 *
 	 * @param int $formId
 	 * @param string $fieldname
-	 *
 	 * @throws DefaultValueDeleteException
 	 */
-
 	public function deleteSingleDefaultValueByFieldname(int $formId, string $fieldname, string $locale = null)
 	{
 		$query = $this->getBaseDeleteQuery()." WHERE "
@@ -103,13 +89,9 @@ class DefaultValueDelete
 		}
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
 	private function getBaseDeleteQuery(): string
 	{
 		$prefix = $this->_pWPDB->prefix;

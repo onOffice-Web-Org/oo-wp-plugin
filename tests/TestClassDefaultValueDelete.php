@@ -39,49 +39,42 @@ class TestClassDefaultValueDelete
 	/** @var DefaultValueDelete */
 	private $_pSubject = null;
 
-	/** @var RecordManagerDeleteForm */
-	private $_pRecordManagerDeleteForm = null;
-
 	/** @var wpdb */
 	private $_pWPDB = null;
 
-
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
-		$this->_pRecordManagerDeleteForm = $this->getMockBuilder(RecordManagerDeleteForm::class)
-			->setMethods(['deleteByIds'])
-			->disableOriginalConstructor()
-			->getMock();
 		$this->_pWPDB = $this->getMockBuilder(wpdb::class)
 			->setMethods(['query', 'prepare'])
 			->disableOriginalConstructor()
 			->getMock();
 		$this->_pWPDB->prefix = 'wp_test_';
-		$this->_pSubject = new DefaultValueDelete($this->_pRecordManagerDeleteForm, $this->_pWPDB);
+		$this->_pSubject = new DefaultValueDelete($this->_pWPDB);
 	}
-
 
 	/**
 	 *
 	 */
-
 	public function testDeleteAllByFormId()
 	{
-		$this->_pRecordManagerDeleteForm->expects($this->once())->method('deleteByIds')->with([13]);
+		$expectedQuery = "DELETE wp_test_oo_plugin_fieldconfig_form_defaults, wp_test_oo_plugin_fieldconfig_form_defaults_values "
+			. "FROM wp_test_oo_plugin_fieldconfig_form_defaults "
+			. "INNER JOIN wp_test_oo_plugin_fieldconfig_form_defaults_values "
+			. "ON wp_test_oo_plugin_fieldconfig_form_defaults.defaults_id = wp_test_oo_plugin_fieldconfig_form_defaults_values.defaults_id WHERE "
+			. "wp_test_oo_plugin_fieldconfig_form_defaults.form_id = %d";
+		$this->_pWPDB->expects($this->once())->method('prepare')
+			->with($expectedQuery, 13)
+			->will($this->returnValue('testQuery'));
+		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(true));
 		$this->_pSubject->deleteAllByFormId(13);
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function testDeleteSingleDefaultValueByFieldname()
 	{
 		$expectedQuery = "DELETE wp_test_oo_plugin_fieldconfig_form_defaults, wp_test_oo_plugin_fieldconfig_form_defaults_values "
@@ -98,13 +91,9 @@ class TestClassDefaultValueDelete
 		$this->_pSubject->deleteSingleDefaultValueByFieldname(13, 'objektart', 'de_DE');
 	}
 
-
 	/**
-	 *
 	 * @expectedException \onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException
-	 *
 	 */
-
 	public function testDeleteSingleDefaultValueByFieldnameFailure()
 	{
 		$this->_pWPDB->expects($this->once())->method('prepare')
@@ -113,11 +102,9 @@ class TestClassDefaultValueDelete
 		$this->_pSubject->deleteSingleDefaultValueByFieldname(13, 'objektart', 'de_DE');
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function testDeleteSingleDefaultValueById()
 	{
 		$expectedQuery = "DELETE wp_test_oo_plugin_fieldconfig_form_defaults, wp_test_oo_plugin_fieldconfig_form_defaults_values "
@@ -130,13 +117,9 @@ class TestClassDefaultValueDelete
 		$this->_pSubject->deleteSingleDefaultValueById(1337);
 	}
 
-
 	/**
-	 *
 	 * @expectedException \onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException
-	 *
 	 */
-
 	public function testDeleteSingleDefaultValueByIdFailure()
 	{
 		$this->_pWPDB->expects($this->once())->method('prepare')->will($this->returnValue('testQuery2'));
