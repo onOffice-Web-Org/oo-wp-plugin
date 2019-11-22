@@ -487,8 +487,8 @@ class FormModelBuilderDBEstateListSettings
 	public function createInputModelSortBySpec()
 	{
 		$userDefinedSortDirectionValues = [
-			'0' =>  __('lowest First/ highest First', 'onoffice'),
-			'1' => __('ascending/ descending', 'onoffice'),
+			'0' => __('lowest First / highest First', 'onoffice'),
+			'1' => __('ascending / descending', 'onoffice'),
 		];
 
 		$label = __('Formulation of sorting directions', 'onoffice');
