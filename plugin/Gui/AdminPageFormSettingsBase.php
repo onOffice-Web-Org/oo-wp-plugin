@@ -21,8 +21,6 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use DI\Container;
-use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -55,7 +53,6 @@ use function __;
 use function add_screen_option;
 use function esc_sql;
 use function wp_enqueue_script;
-use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -101,9 +98,6 @@ abstract class AdminPageFormSettingsBase
 	/** @var FormModelBuilderDBForm */
 	private $_pFormModelBuilder = null;
 
-	/** @var Container */
-	private $_pContainer;
-
 	/**
 	 * @param string $pageSlug
 	 * @throws Exception
@@ -113,9 +107,6 @@ abstract class AdminPageFormSettingsBase
 	{
 		$this->setPageTitle(__('Edit Form', 'onoffice'));
 		parent::__construct($pageSlug);
-		$pDiContainerBuilder = new ContainerBuilder;
-		$pDiContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$this->_pContainer = $pDiContainerBuilder->build();
 	}
 
 
@@ -282,7 +273,7 @@ abstract class AdminPageFormSettingsBase
 	{
 		$result = [];
 		/** @var DefaultValueModelToOutputConverter $pDefaultValueConverter */
-		$pDefaultValueConverter = $this->_pContainer->get(DefaultValueModelToOutputConverter::class);
+		$pDefaultValueConverter = $this->getContainer()->get(DefaultValueModelToOutputConverter::class);
 
 		$pDataFormConfigurationFactory = new DataFormConfigurationFactory();
 		/** @var DataFormConfiguration $pDataFormConfiguration */
@@ -326,7 +317,7 @@ abstract class AdminPageFormSettingsBase
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$this->_pFormModelBuilder = $this->_pContainer->get(FormModelBuilderDBForm::class);
+		$this->_pFormModelBuilder = $this->getContainer()->get(FormModelBuilderDBForm::class);
 		$this->_pFormModelBuilder->setFormType($this->getType());
 		$pFormModel = $this->_pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);
@@ -414,7 +405,7 @@ abstract class AdminPageFormSettingsBase
 
 	private function readFields(): FieldsCollection
 	{
-		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pDefaultFieldsCollection = new FieldsCollection();
 
 		if ($this->_showEstateFields || $this->_showAddressFields) {
@@ -499,14 +490,14 @@ abstract class AdminPageFormSettingsBase
 		$fieldNamesSelected = array_column($fields, 'fieldname');
 
 		/** @var FieldsCollectionBuilderFromNamesForm $pFieldsCollectionBuilder */
-		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderFromNamesForm::class);
+		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesForm::class);
 		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollection($fieldNamesSelected);
 
 		/** @var DefaultValueDelete $pDefaultValueDelete */
-		$pDefaultValueDelete = $this->_pContainer->get(DefaultValueDelete::class);
+		$pDefaultValueDelete = $this->getContainer()->get(DefaultValueDelete::class);
 		$pDefaultValueDelete->deleteAllByFormId($recordId);
 
-		$pDefaultValueSave = $this->_pContainer->get(DefaultValueRowSaver::class);
+		$pDefaultValueSave = $this->getContainer()->get(DefaultValueRowSaver::class);
 		$pDefaultValueSave->saveDefaultValues($recordId,
 			$row['oo_plugin_fieldconfig_form_defaults_values'] ?? [], $pFieldsCollectionCurrent);
 	}
