@@ -27,12 +27,10 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientActionGetPdf;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
-use onOffice\WPlugin\Filesystem\Filesystem;
-use onOffice\WPlugin\Filesystem\FilesystemDirect;
 use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
-use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
-use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
+use onOffice\WPlugin\Filesystem\Filesystem;
+use onOffice\WPlugin\Filesystem\FilesystemDirect;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
@@ -71,7 +69,6 @@ return [
 	FormPostOwnerConfiguration::class => autowire(FormPostOwnerConfigurationDefault::class),
 	FormPostContactConfiguration::class => autowire(FormPostContactConfigurationDefault::class),
 	FormPostInterestConfiguration::class => autowire(FormPostInterestConfigurationDefault::class),
-	FormPostApplicantSearchConfiguration::class => autowire(FormPostApplicantSearchConfigurationDefault::class),
 	WPScriptStyleBase::class => autowire(WPScriptStyleDefault::class),
 	WPOptionWrapperBase::class => autowire(WPOptionWrapperDefault::class),
 	ScriptLoaderBuilderConfig::class => autowire(ScriptLoaderBuilderConfigDefault::class),
