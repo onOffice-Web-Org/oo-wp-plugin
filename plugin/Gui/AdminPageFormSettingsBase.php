@@ -507,8 +507,6 @@ abstract class AdminPageFormSettingsBase
 		$pDefaultValueDelete->deleteAllByFormId($recordId);
 
 		$pDefaultValueSave = $this->_pContainer->get(DefaultValueRowSaver::class);
-		$values = $row['oo_plugin_fieldconfig_form_defaults_values'];
-		var_dump($values);
 		$pDefaultValueSave->saveDefaultValues($recordId,
 			$row['oo_plugin_fieldconfig_form_defaults_values'] ?? [], $pFieldsCollectionCurrent);
 	}
