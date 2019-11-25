@@ -287,4 +287,14 @@ class TestClassDataListView
 		$this->_pSubject->setTemplate('/path/to/template');
 		$this->assertEquals('/path/to/template', $this->_pSubject->getTemplate());
 	}
+
+	/**
+	 * @covers \onOffice\WPlugin\DataView\DataListView::setAdjustableSorting
+	 * @covers \onOffice\WPlugin\DataView\DataListView::isAdjustableSorting
+	 */
+	public function testAdjustableSorting()
+	{
+		$this->_pSubject->setAdjustableSorting(true);
+		$this->assertTrue($this->_pSubject->isAdjustableSorting());
+	}
 }
