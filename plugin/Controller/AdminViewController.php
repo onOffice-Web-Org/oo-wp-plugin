@@ -293,6 +293,9 @@ class AdminViewController
 	{
 		wp_enqueue_style('onoffice-admin-css',
 			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
+
+		wp_enqueue_style('chosen-admin-css',
+			plugins_url('/third_party/chosen/chosen.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
 	}
 
 

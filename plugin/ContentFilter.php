@@ -21,19 +21,26 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
+use onOffice\WPlugin\Controller\SortList\SortListBuilder;
+use onOffice\WPlugin\Controller\SortList\SortListDataModel;
+use onOffice\WPlugin\Controller\SortList\SortListTypes;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -41,8 +48,6 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
-use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
-use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use WP_Query;
 use function __;
 use function add_rewrite_rule;
@@ -51,7 +56,7 @@ use function get_page_uri;
 use function get_post;
 use function shortcode_atts;
 use function wp_get_post_parent_id;
-
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -146,7 +151,15 @@ class ContentFilter
 				$pListView = $pListViewFactory->getListViewByName($attributes['view']);
 
 				if (is_object($pListView) && $pListView->getName() === $attributes['view']) {
-					$this->setAllowedGetParametersEstate($pListView);
+					$pDIContainerBuilder = new ContainerBuilder;
+					$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+					$pContainer = $pDIContainerBuilder->build();
+					$pSortListBuilder = $pContainer->get(SortListBuilder::class);
+					$pSortListModel = $pSortListBuilder->build($pListView);
+					$pListView->setSortby($pSortListModel->getSelectedSortby());
+					$pListView->setSortorder($pSortListModel->getSelectedSortorder());
+
+					$this->setAllowedGetParametersEstate($pListView, $pSortListModel);
 					$pTemplate = new Template($pListView->getTemplate());
 					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
 					$availableOptionsEstates = $pListView->getAvailableOptions();
@@ -176,14 +189,11 @@ class ContentFilter
 		}
 	}
 
-
 	/**
-	 *
 	 * @param DataListView $pDataView
-	 *
+	 * @param SortListDataModel $pSortListDataModel
 	 */
-
-	private function setAllowedGetParametersEstate(DataListView $pDataView)
+	private function setAllowedGetParametersEstate(DataListView $pDataView, SortListDataModel $pSortListDataModel)
 	{
 		$pRequestVariableSanitizer = new RequestVariablesSanitizer();
 
@@ -221,6 +231,13 @@ class ContentFilter
 			}
 
 			$pModel->addAllowedGetParameter($filterableField);
+		}
+
+		if ($pSortListDataModel->isAdjustableSorting())	{
+			foreach (SortListTypes::getSortUrlPrameter() as $urlParameter) {
+				$pModel->addAllowedGetParameter($urlParameter);
+				$pModel->setParameter($urlParameter, $pRequestVariableSanitizer->getFilteredGet($urlParameter));
+			}
 		}
 
 		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pModel): string {

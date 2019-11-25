@@ -115,8 +115,24 @@ class TestClassFieldnames
 		foreach ($this->getFullModuleList() as $module) {
 			$fieldListOfModule = $pFieldnames->getFieldList($module);
 			$this->assertTrue(count($fieldListOfModule) > 0);
-				$this->checkFieldListStructure($fieldListOfModule, $module);
+			$this->checkFieldListStructure($fieldListOfModule, $module);
 		}
+	}
+
+	/**
+	 * @see ticket #1560699
+	 */
+	public function testGetFieldsWithEmptyLabelUseNameInParenthesis()
+	{
+		$pFieldnames = $this->getNewFieldnames();
+		$pFieldnames->loadLanguage();
+
+		$label = $pFieldnames->getFieldLabel
+			('EmptyLabelField', onOfficeSDK::MODULE_ADDRESS);
+			$this->assertEquals('(EmptyLabelField)', $label);
+		$fieldInformation = $pFieldnames->getFieldInformation
+			('EmptyLabelField', onOfficeSDK::MODULE_ADDRESS);
+			$this->assertEquals('(EmptyLabelField)', $fieldInformation['label']);
 	}
 
 

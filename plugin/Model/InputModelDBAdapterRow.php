@@ -65,6 +65,11 @@ class InputModelDBAdapterRow
 			'form_fieldconfig_id' => null,
 			'form_id' => ['oo_plugin_forms', 'form_id'],
 		],
+
+		'oo_plugin_sortbyuservalues' => [
+			'sortbyvalue_id' => null,
+			'listview_id' => ['oo_plugin_listviews', 'listview_id'],
+		],
 	];
 
 

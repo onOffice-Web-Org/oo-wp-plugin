@@ -404,4 +404,98 @@ class FormModelBuilderDBEstateListSettings
 			DataListView::LISTVIEW_TYPE_FAVORITES => __('Favorites List', 'onoffice'),
 		);
 	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelSortBySetting()
+	{
+		$label = __('Sort by User Selection', 'onoffice');
+		$pInputModel = $this->getInputModelDBFactory()->create
+				(InputModelDBFactory::INPUT_SORT_BY_SETTING, $label);
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValue($this->getValue($pInputModel->getField()));
+		$pInputModel->setValuesAvailable(1);
+
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelSortByChosen()
+	{
+		$label = __('Sort by', 'onoffice');
+		$pInputModel = $this->getInputModelDBFactory()->create
+				(InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true);
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
+		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
+		$pInputModel->setValuesAvailable($fieldnames);
+		$value = $this->getValue(DataListView::SORT_BY_USER_VALUES);
+
+		if ($value == null) {
+			$value = [];
+		}
+		$pInputModel->setValue($value);
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelSortByDefault()
+	{
+		$label = __('Standard Sort', 'onoffice');
+		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_DEFAULT, $label);
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModel->setValue($this->getValue($pInputModel->getField()));
+		$values = $this->getValue(DataListView::SORT_BY_USER_VALUES);
+
+		if ($values == null) {
+			$values = [];
+		}
+		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
+		$defaultValues = [];
+
+		foreach ($values as $value)	{
+			$defaultValues[$value] = $fieldnames[$value];
+		}
+
+		$pInputModel->setValuesAvailable($defaultValues);
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelSortBySpec()
+	{
+		$userDefinedSortDirectionValues = [
+			'0' => __('lowest First / highest First', 'onoffice'),
+			'1' => __('ascending / descending', 'onoffice'),
+		];
+
+		$label = __('Formulation of sorting directions', 'onoffice');
+		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_USER_DEFINED_DIRECTION, $label);
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModel->setValue($this->getValue($pInputModel->getField()));
+		$pInputModel->setValuesAvailable($userDefinedSortDirectionValues);
+		return $pInputModel;
+	}
 }

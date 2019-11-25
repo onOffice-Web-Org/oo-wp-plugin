@@ -21,7 +21,10 @@
 
 namespace onOffice\WPlugin;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\EstateListBase;
+use onOffice\WPlugin\Template\TemplateCallbackBuilder;
 use const WP_PLUGIN_DIR;
 
 /**
@@ -81,7 +84,10 @@ class Template
 		$result = '';
 
 		if (file_exists($filename)) {
-			$result = self::getIncludeContents($templateData, $filename);
+			$pDIContainerBuilder = new ContainerBuilder;
+			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			$pContainer = $pDIContainerBuilder->build();
+			$result = self::getIncludeContents($templateData, $filename, $pContainer);
 		}
 
 		return $result;
@@ -92,7 +98,6 @@ class Template
 	protected function getTemplateName(): string
 	{ return $this->_templateName; }
 
-
 	/**
 	 *
 	 * Method that provides important variables to template
@@ -100,17 +105,23 @@ class Template
 	 *
 	 * @param array $templateData
 	 * @param string $templatePath
+	 * @param Container $pContainer
 	 * @return string
-	 *
 	 */
 
-	private static function getIncludeContents(array $templateData, $templatePath)
+	private static function getIncludeContents(array $templateData, $templatePath, Container $pContainer)
 	{
 		// vars which might be used in template
 		$pEstates = $templateData[self::KEY_ESTATELIST];
 		$pForm = $templateData[self::KEY_FORM];
 		$pAddressList = $templateData[self::KEY_ADDRESSLIST];
+		/** @var TemplateCallbackBuilder $pTemplateCallback */
+		$pTemplateCallback = $pContainer->get(TemplateCallbackBuilder::class);
+		$generateSortDropDown = $pTemplateCallback->buildCallbackListSortDropDown($pEstates);
 		unset($templateData);
+		unset($pTemplateCallback);
+		unset($pContainer);
+
 		ob_start();
 		include $templatePath;
 		return ob_get_clean();
