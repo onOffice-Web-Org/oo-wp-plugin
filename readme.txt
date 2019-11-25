@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.2.0 =
+
+** New **
+
+* Option to choose whether the estate list should be pre-sorted or sortable by a condition selected by the user in the front-end.
+
 = 2.1.2 =
 
 ** Fixes **
@@ -132,6 +138,9 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+= 2.2.0 =
+Estate views can be sorted by the user in the front-end.
 
 = 2.1.2 =
 Supports fields with empty labels.
