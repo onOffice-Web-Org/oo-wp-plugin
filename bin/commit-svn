@@ -47,9 +47,28 @@ TEMPDIR_CHECKOUT=`mktemp -d`
 >&2 echo "TEMPDIR_CHECKOUT is $TEMPDIR_CHECKOUT"
 
 svn co "${SVNURL}/${TRUNK_PATH}" "$TEMPDIR_CHECKOUT" || exit 4;
-svn import "$RELEASE_DIR/onoffice" "${SVNURL}/${TAG_PATH}/$NEW_TAG" --non-interactive -m "Create tag '$NEW_TAG'" --username "${SVN_USER}" --password "${SVN_PASSWORD}" || exit 5;
-svn merge --ignore-ancestry "${SVNURL}/${TRUNK_PATH}" "${SVNURL}/${TAG_PATH}/$NEW_TAG" "$TEMPDIR_CHECKOUT" || exit 6;
-cd "$TEMPDIR_CHECKOUT"
-svn commit -m "Update trunk to tag '$NEW_TAG'" --non-interactive --username "${SVN_USER}" --password "${SVN_PASSWORD}" || exit 7;
+
+cd "$TEMPDIR_CHECKOUT";
+
+WD=`pwd`
+
+if [ "${WD%%/tmp/*}" ]; then
+	>&2 echo "Not working in /tmp/, exiting! tmp dir is: $TEMPDIR_CHECKOUT";
+	exit 5
+fi
+
+find . ! -path './.svn' ! -path './.svn/*' ! -path '.' ! -path '.svn' -type d -exec rm -rf {} +
+find . ! -path './.svn/*' ! -path '.' ! -path '.svn/*' -type f -exec rm -f {} +
+
+cp -R $RELEASE_DIR/onoffice/* .
+
+svn add . --force
+
+# remove deleted files
+# xargs -r is a GNU extension
+svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
+
+svn commit -m "Import tag '$NEW_TAG' to trunk" --non-interactive --username "${SVN_USER}" --password "${SVN_PASSWORD}" || exit 6;
+svn copy --username "${SVN_USER}" --password "${SVN_PASSWORD}" --non-interactive "${SVNURL}/${TRUNK_PATH}" "${SVNURL}/${TAG_PATH}/$NEW_TAG" -m "Create tag '$NEW_TAG'"
 
 exit $?
