@@ -23,12 +23,13 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
+use DI\ContainerBuilder;
 use Exception;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
-use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
-use onOffice\WPlugin\RequestVariablesSanitizer;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
 use onOffice\WPlugin\Template;
-use onOffice\WPlugin\Types\FieldTypes;
 use function shortcode_atts;
 
 /**
@@ -43,16 +44,26 @@ class ContentFilterShortCodeAddress
 	/** @var ContentFilterShortCodeAddressEnvironment */
 	private $_pEnvironment = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pBuilderShort;
+
+	/** @var SearchParametersModelBuilder */
+	private $_pSearchParametersModelBuilder;
 
 	/**
 	 *
 	 * @param ContentFilterShortCodeAddressEnvironment $pEnvironment
-	 *
+	 * @param FieldsCollectionBuilderShort $pBuilderShort
+	 * @param SearchParametersModelBuilder $pSearchParametersModelBuilder
 	 */
 
-	public function __construct(ContentFilterShortCodeAddressEnvironment $pEnvironment)
+	public function __construct(ContentFilterShortCodeAddressEnvironment $pEnvironment,
+		FieldsCollectionBuilderShort $pBuilderShort,
+		SearchParametersModelBuilder $pSearchParametersModelBuilder )
 	{
 		$this->_pEnvironment = $pEnvironment;
+		$this->_pBuilderShort = $pBuilderShort;
+		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 	}
 
 
@@ -78,12 +89,13 @@ class ContentFilterShortCodeAddress
 		}
 	}
 
-
 	/**
-	 *
 	 * @param string $addressListName
 	 * @return Template
-	 *
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\DataView\UnknownViewException
+	 * @throws \onOffice\WPlugin\Field\UnknownFieldException
 	 */
 
 	private function createTemplate(string $addressListName): Template
@@ -92,7 +104,7 @@ class ContentFilterShortCodeAddress
 		$pAddressListView = $this->_pEnvironment->getDataListFactory()->getListViewByName($addressListName);
 		$pAddressList = $this->_pEnvironment->createAddressList()->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
-		$this->setPaginationParameters($pAddressList->getVisibleFilterableFields());
+		$this->setAllowedGetParameters($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
 		$pTemplate = $this->_pEnvironment->getTemplate()->withTemplateName($templateName);
 		$pTemplate->setAddressList($pAddressList);
@@ -100,28 +112,16 @@ class ContentFilterShortCodeAddress
 		return $pTemplate;
 	}
 
-
 	/**
 	 * @param array $filterableFields
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Field\UnknownFieldException
 	 */
-	private function setPaginationParameters(array $filterableFields)
+	private function setAllowedGetParameters(array $filterableFields)
 	{
-		$pRequestVariableSanitizer = new RequestVariablesSanitizer();
-		$pModel = new SearchParametersModel();
-
-		foreach ($filterableFields as $fieldName => $filterableField) {
-			$type = $filterableField['type'];
-
-			if (FieldTypes::isMultipleSelectType($type)) {
-				$pModel->setParameterArray($fieldName, $pRequestVariableSanitizer->getFilteredGet($fieldName,
-					FILTER_DEFAULT, FILTER_FORCE_ARRAY));
-			}
-			else {
-				$pModel->setParameter($fieldName, $pRequestVariableSanitizer->getFilteredGet($fieldName));
-			}
-
-			$pModel->addAllowedGetParameter($fieldName);
-		}
+		$pModel = $this->_pSearchParametersModelBuilder->build(
+			$filterableFields, onOfficeSDK::MODULE_ADDRESS, $this->_pBuilderShort);
 
 		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pModel): string {
 			$pSearchParameters = new SearchParameters();

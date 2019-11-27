@@ -80,6 +80,7 @@ class TestClassContentFilterShortCodeAddress
 
 		$pDataListViewAddress = new DataListViewAddress(1, 'test');
 		$pDataListViewAddress->setTemplate('adressList-01');
+		$pDataListViewAddress->setFilterableFields(['Ort']);
 
 		$this->_pEnvironment->method('createAddressList')
 			->will($this->returnValue($this->getMockBuilder(AddressList::class)->getMock()));

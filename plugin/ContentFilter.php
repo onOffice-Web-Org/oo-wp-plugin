@@ -41,6 +41,7 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -197,41 +198,15 @@ class ContentFilter
 	{
 		$pRequestVariableSanitizer = new RequestVariablesSanitizer();
 
-		$pFieldNames = new Fieldnames
-			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection()));
-		$pFieldNames->loadLanguage();
-		$pModel = new SearchParametersModel();
 		$filterableFieldsView = $pDataView->getFilterableFields();
 		$filterableFields = $this->setAllowedGetParametersEstateGeo($filterableFieldsView);
 
-		foreach ($filterableFields as $filterableField) {
-			try {
-				$fieldInfo = $pFieldNames->getFieldInformation
-					($filterableField, onOfficeSDK::MODULE_ESTATE);
-			} catch (UnknownFieldException $pException) {
-				$this->$this->_pLogger->logError($pException);
-				continue;
-			}
-
-			if (FieldTypes::isMultipleSelectType($fieldInfo['type'])) {
-				$pModel->setParameterArray
-					($filterableField, $pRequestVariableSanitizer->getFilteredGet($filterableField, FILTER_DEFAULT, FILTER_FORCE_ARRAY));
-			}
-			else {
-				$pModel->setParameter
-					($filterableField, $pRequestVariableSanitizer->getFilteredGet($filterableField));
-			}
-
-			$type = $fieldInfo['type'];
-
-			if (FieldTypes::isNumericType($type) ||
-				FieldTypes::isDateOrDateTime($type)) {
-				$pModel->addAllowedGetParameter($filterableField.'__von');
-				$pModel->addAllowedGetParameter($filterableField.'__bis');
-			}
-
-			$pModel->addAllowedGetParameter($filterableField);
-		}
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pSearchParametersModelBuilder = $pContainer->get(SearchParametersModelBuilder::class);
+		$pModel = $pSearchParametersModelBuilder->build($filterableFields, onOfficeSDK::MODULE_ESTATE, $pBuilderShort);
 
 		if ($pSortListDataModel->isAdjustableSorting())	{
 			foreach (SortListTypes::getSortUrlPrameter() as $urlParameter) {
