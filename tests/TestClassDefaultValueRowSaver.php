@@ -110,12 +110,26 @@ class TestClassDefaultValueRowSaver
 	 * @throws RecordManagerInsertException
 	 * @throws UnknownFieldException
 	 */
-	public function testSaveDefaultValuesNumericRange()
+	public function testSaveDefaultValuesInteger()
 	{
 		$this->_pDefaultValueCreate->expects($this->once())->method('createForNumericRange');
 		$pFieldsCollection = $this->buildFieldsCollection();
 		$this->_pSubject->saveDefaultValues(13, [
-			'testNumericRange' => self::EXAMPLE_RECORDS['testNumericRange'],
+			'testInteger' => self::EXAMPLE_RECORDS['testNumericRange'],
+		], $pFieldsCollection);
+	}
+
+
+	/**
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+	public function testSaveDefaultValuesFloat()
+	{
+		$this->_pDefaultValueCreate->expects($this->once())->method('createForNumericRange');
+		$pFieldsCollection = $this->buildFieldsCollection();
+		$this->_pSubject->saveDefaultValues(13, [
+			'testFloat' => self::EXAMPLE_RECORDS['testNumericRange'],
 		], $pFieldsCollection);
 	}
 
@@ -134,9 +148,12 @@ class TestClassDefaultValueRowSaver
 		$pFieldText = new Field('testText', onOfficeSDK::MODULE_ESTATE);
 		$pFieldText->setType(FieldTypes::FIELD_TYPE_TEXT);
 		$pFieldsCollection->addField($pFieldText);
-		$pFieldNumeric = new Field('testNumericRange', onOfficeSDK::MODULE_ESTATE);
-		$pFieldNumeric->setType(FieldTypes::FIELD_TYPE_INTEGER);
-		$pFieldsCollection->addField($pFieldNumeric);
+		$pFieldInteger = new Field('testInteger', onOfficeSDK::MODULE_ESTATE);
+		$pFieldInteger->setType(FieldTypes::FIELD_TYPE_INTEGER);
+		$pFieldsCollection->addField($pFieldInteger);
+		$pFieldFloat = new Field('testFloat', onOfficeSDK::MODULE_ESTATE);
+		$pFieldFloat->setType(FieldTypes::FIELD_TYPE_FLOAT);
+		$pFieldsCollection->addField($pFieldFloat);
 		return $pFieldsCollection;
 	}
 }
