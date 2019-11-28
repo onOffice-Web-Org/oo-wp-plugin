@@ -19,26 +19,30 @@
  *
  */
 
-namespace onOffice\tests;
+declare(strict_types=1);
 
-use onOffice\WPlugin\Installer\Installer;
-use WP_UnitTestCase;
+namespace onOffice\WPlugin\Installer;
 
-class TestClassInstaller
-	extends WP_UnitTestCase
+use wpdb;
+
+interface DatabaseChangesInterface
 {
 	/**
-	 * @covers onOffice\WPlugin\Installer\Installer::deinstall
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 *
 	 */
-	public function testDeinstall()
-	{
-		Installer::deinstall();
-		$this->assertFalse(get_option('onoffice-default-view'));
-		$this->assertFalse(get_option('onoffice-favorization-enableFav'));
-		$this->assertFalse(get_option('onoffice-favorization-favButtonLabelFav'));
-		$this->assertFalse(get_option('onoffice-settings-apisecret'));
-		$this->assertFalse(get_option('onoffice-settings-apikey'));
-	}
+	public function install();
+
+	/**
+	 * @return mixed
+	 */
+	public function getDbVersion();
+
+	/**
+	 *
+	 * Callback for plugin uninstall hook
+	 *
+	 * @global wpdb $wpdb
+	 *
+	 */
+	public function deinstall();
 }
