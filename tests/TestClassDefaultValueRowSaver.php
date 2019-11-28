@@ -43,6 +43,7 @@ class TestClassDefaultValueRowSaver
 			'native' => 'testEN',
 			'de_DE' => 'testDE',
 		],
+		'testNumericRange' => [3, 1337],
 	];
 
 	/** @var DefaultValueRowSaver */
@@ -106,6 +107,19 @@ class TestClassDefaultValueRowSaver
 	}
 
 	/**
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+	public function testSaveDefaultValuesNumericRange()
+	{
+		$this->_pDefaultValueCreate->expects($this->once())->method('createForNumericRange');
+		$pFieldsCollection = $this->buildFieldsCollection();
+		$this->_pSubject->saveDefaultValues(13, [
+			'testNumericRange' => self::EXAMPLE_RECORDS['testNumericRange'],
+		], $pFieldsCollection);
+	}
+
+	/**
 	 * @return FieldsCollection
 	 */
 	private function buildFieldsCollection(): FieldsCollection
@@ -120,6 +134,9 @@ class TestClassDefaultValueRowSaver
 		$pFieldText = new Field('testText', onOfficeSDK::MODULE_ESTATE);
 		$pFieldText->setType(FieldTypes::FIELD_TYPE_TEXT);
 		$pFieldsCollection->addField($pFieldText);
+		$pFieldNumeric = new Field('testNumericRange', onOfficeSDK::MODULE_ESTATE);
+		$pFieldNumeric->setType(FieldTypes::FIELD_TYPE_INTEGER);
+		$pFieldsCollection->addField($pFieldNumeric);
 		return $pFieldsCollection;
 	}
 }

@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use Generator;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueRead;
@@ -122,7 +123,6 @@ class TestClassDefaultValueRead
 		$this->assertEquals($pReference, $pResult);
 	}
 
-
 	/**
 	 *
 	 * @return Generator
@@ -157,5 +157,46 @@ class TestClassDefaultValueRead
 			],
 		];
 		yield [13, $rows, $pReference2];
+	}
+
+	/**
+	 * @dataProvider dataProviderNumericRange
+	 * @param int $formId
+	 * @param array $rows
+	 * @param DefaultValueModelNumericRange $pReference
+	 */
+	public function testReadDefaultValuesNumericRange(int $formId, array $rows, DefaultValueModelNumericRange $pReference)
+	{
+		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
+		$pField = new Field('testField', 'testModule');
+
+		$pResult = $this->_pSubject->readDefaultValuesNumericRange($formId, $pField);
+		$this->assertInstanceOf(DefaultValueModelNumericRange::class, $pResult);
+		$this->assertEquals($pReference, $pResult);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function dataProviderNumericRange(): array
+	{
+		$pField = new Field('testField', 'testModule');
+		$pReference1 = new DefaultValueModelNumericRange(13, $pField);
+		$pReference1->setValueFrom(.5);
+		$pReference1->setValueTo(1337.7);
+		$row = [
+			(object)[
+				'defaults_id' => 1333,
+				'locale' => '',
+				'value' => .5,
+			], (object)[
+				'defaults_id' => 1344,
+				'value' => 1337.7,
+				'locale' => '',
+			],
+		];
+		return [
+			[13, $row, $pReference1],
+		];
 	}
 }

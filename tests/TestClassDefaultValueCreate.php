@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueCreate;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
 use onOffice\WPlugin\Record\RecordManagerFactory;
@@ -148,5 +149,31 @@ class TestClassDefaultValueCreate
 		$resultId = $this->_pSubject->createForText($pDefaultValues);
 		$this->assertEquals(121, $resultId);
 		$this->assertEquals(121, $pDefaultValues->getDefaultsId());
+	}
+
+
+	public function testCreateForNumericRange()
+	{
+		$this->_pRecordManagerInsertGeneric->expects($this->exactly(3))->method('insertByRow')
+			->will($this->returnCallback(function(array $values) {
+				$valuesConf = [
+					122 => ['oo_plugin_fieldconfig_form_defaults' => ['form_id' => 14, 'fieldname' => 'testField3']],
+					130 => ['oo_plugin_fieldconfig_form_defaults_values' => [
+						'defaults_id' => 121, 'locale' => '', 'value' => '1332.2']
+					],
+					56 => ['oo_plugin_fieldconfig_form_defaults_values' => [
+						'defaults_id' => 121, 'locale' => '', 'value' => '1333.3']
+					],
+				];
+				$returnValue = array_search($values, $valuesConf);
+				return $returnValue ?: 0;
+			}));
+		$pField = new Field('testField3', 'testModule2');
+		$pDefaultValues = new DefaultValueModelNumericRange(14, $pField);
+		$pDefaultValues->setValueFrom(1332.2);
+		$pDefaultValues->setValueTo(1333.3);
+		$resultId = $this->_pSubject->createForNumericRange($pDefaultValues);
+		$this->assertEquals(122, $resultId);
+		$this->assertEquals(122, $pDefaultValues->getDefaultsId());
 	}
 }

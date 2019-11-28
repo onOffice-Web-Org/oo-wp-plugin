@@ -90,6 +90,19 @@ class DefaultValueCreate
 		return $defaultsId;
 	}
 
+	/**
+	 * @param DefaultValueModelNumericRange $pDataModel
+	 * @return int
+	 * @throws RecordManagerInsertException
+	 */
+	public function createForNumericRange(DefaultValueModelNumericRange $pDataModel): int
+	{
+		$defaultsId = $this->createBase($pDataModel);
+		$this->writeDatabaseValueSingle($defaultsId, (string)$pDataModel->getValueFrom());
+		$this->writeDatabaseValueSingle($defaultsId, (string)$pDataModel->getValueTo());
+		return $defaultsId;
+	}
+
 
 	/**
 	 *

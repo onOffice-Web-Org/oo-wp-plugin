@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter;
 
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueCreate;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
 use onOffice\WPlugin\Field\UnknownFieldException;
@@ -92,6 +93,10 @@ class DefaultValueRowSaver
 			case FieldTypes::FIELD_TYPE_VARCHAR:
 				$this->saveText($formId, $pField, $values);
 				break;
+			case FieldTypes::FIELD_TYPE_INTEGER:
+			case FieldTypes::FIELD_TYPE_FLOAT:
+				$this->saveNumericRange($formId, $pField, $values);
+				break;
 		}
 	}
 
@@ -123,6 +128,20 @@ class DefaultValueRowSaver
 			$this->addLocaleToModelForText($pModel, $locale, $value);
 		}
 		$this->_pDefaultValueCreate->createForText($pModel);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @param array $values
+	 * @throws RecordManagerInsertException
+	 */
+	private function saveNumericRange(int $formId, Field $pField, array $values)
+	{
+		$pModel = new DefaultValueModelNumericRange($formId, $pField);
+		$pModel->setValueFrom((float)$values[0] ?? .0);
+		$pModel->setValueTo((float)$values[1] ?? .0);
+		$this->_pDefaultValueCreate->createForNumericRange($pModel);
 	}
 
 	/**

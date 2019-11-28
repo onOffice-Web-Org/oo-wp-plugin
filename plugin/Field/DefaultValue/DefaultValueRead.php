@@ -93,6 +93,21 @@ class DefaultValueRead
 		return $pDataModel;
 	}
 
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @return DefaultValueModelNumericRange
+	 */
+	public function readDefaultValuesNumericRange(int $formId, Field $pField): DefaultValueModelNumericRange
+	{
+		$query = $this->createBaseQuery($formId, $pField);
+		$rows = $this->_pWPDB->get_results($query, OBJECT);
+		$pDataModel = new DefaultValueModelNumericRange($formId, $pField);
+
+		$pDataModel->setValueFrom($rows[0]->value);
+		$pDataModel->setValueTo($rows[1]->value);
+		return $pDataModel;
+	}
 
 	/**
 	 *
@@ -101,7 +116,6 @@ class DefaultValueRead
 	 * @return string
 	 *
 	 */
-
 	private function createBaseQuery(int $formId, Field $pField): string
 	{
 		$prefix = $this->_pWPDB->prefix;
