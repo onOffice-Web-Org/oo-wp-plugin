@@ -23,7 +23,6 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
-use DI\ContainerBuilder;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -92,19 +91,14 @@ class ContentFilterShortCodeAddress
 	/**
 	 * @param string $addressListName
 	 * @return Template
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
-	 * @throws \onOffice\WPlugin\DataView\UnknownViewException
-	 * @throws \onOffice\WPlugin\Field\UnknownFieldException
 	 */
-
 	private function createTemplate(string $addressListName): Template
 	{
 		$page = $this->_pEnvironment->getWPQueryWrapper()->getWPQuery()->get('page', 1);
 		$pAddressListView = $this->_pEnvironment->getDataListFactory()->getListViewByName($addressListName);
 		$pAddressList = $this->_pEnvironment->createAddressList()->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
-		$this->setAllowedGetParameters($pAddressListView->getFilterableFields());
+		$this->estimateAllowedGetParameters($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
 		$pTemplate = $this->_pEnvironment->getTemplate()->withTemplateName($templateName);
 		$pTemplate->setAddressList($pAddressList);
@@ -114,11 +108,8 @@ class ContentFilterShortCodeAddress
 
 	/**
 	 * @param array $filterableFields
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
-	 * @throws \onOffice\WPlugin\Field\UnknownFieldException
 	 */
-	private function setAllowedGetParameters(array $filterableFields)
+	private function estimateAllowedGetParameters(array $filterableFields)
 	{
 		$pModel = $this->_pSearchParametersModelBuilder->build(
 			$filterableFields, onOfficeSDK::MODULE_ADDRESS, $this->_pBuilderShort);

@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Filter\SearchParameters;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
@@ -62,7 +63,7 @@ class SearchParametersModelBuilder
 	 * @param string $module
 	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @return SearchParametersModel
-	 * @throws \onOffice\WPlugin\Field\UnknownFieldException
+	 * @throws UnknownFieldException
 	 */
 	public function build(array $filterableFields, string $module, FieldsCollectionBuilderShort $pBuilderShort): SearchParametersModel
 	{
@@ -97,6 +98,8 @@ class SearchParametersModelBuilder
 					 FieldTypes::isDateOrDateTime($type))) {
 				$pModel->addAllowedGetParameter($field.'__von');
 				$pModel->addAllowedGetParameter($field.'__bis');
+				$pModel->setParameter($field.'__bis', $this->_pRequestVariablesSanitizer->getFilteredGet($field.'__bis'));
+				$pModel->setParameter($field.'__von', $this->_pRequestVariablesSanitizer->getFilteredGet($field.'__von'));
 			}
 
 			$pModel->addAllowedGetParameter($field);

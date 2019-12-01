@@ -86,6 +86,10 @@ class TestClassSearchParametersModelBuilder
 				$pFieldOrtEstate = new Field('ort', onOfficeSDK::MODULE_ESTATE);
 				$pFieldOrtEstate->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($pFieldOrtEstate);
+
+				$pFieldKaufpreis = new Field('kaufpreis', onOfficeSDK::MODULE_ESTATE);
+				$pFieldKaufpreis->setType(FieldTypes::FIELD_TYPE_INTEGER);
+				$pFieldsCollection->addField($pFieldKaufpreis);
 				return $this->_pBuilderShort;
 			}));
 	}
@@ -110,17 +114,31 @@ class TestClassSearchParametersModelBuilder
 	}
 
 	/**
-	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
+	 *  @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder::build
 	 */
 	public function testBuildWithUnknownField()
 	{
 		$_GET = [
-			'Anrede' => ['Herr','Frau', 'Firma'],
+			'Anrede' => ['Herr', 'Frau', 'Firma'],
 			'Titel' => '',
-			'Ort' => 'Aachen',
+			'Ort' => 'Aachen'
 		];
 
 		$pInstance = new SearchParametersModelBuilder($this->_pCompoundFields, $this->_pRequestVariablesSanitizer, $this->_pLogger);
-		$pInstance->build(['Anrede-Titel', 'Ort'], onOfficeSDK::MODULE_ADDRESS, $this->_pBuilderShort);
+		$pModel = $pInstance->build(['asd', 'Ort'], onOfficeSDK::MODULE_ADDRESS, $this->_pBuilderShort);
+		$this->assertEquals(['Ort' => 'Aachen'], $pModel->getParameters());
+	}
+
+	public function testBuildEstateNumField()
+	{
+		$_GET = [
+			'kaufpreis__von'=> '10000',
+			'kaufpreis__bis'=> '20000',
+		];
+
+		$pInstance = new SearchParametersModelBuilder($this->_pCompoundFields, $this->_pRequestVariablesSanitizer, $this->_pLogger);
+		$pModel = $pInstance->build(['asd', 'Ort', 'kaufpreis'], onOfficeSDK::MODULE_ESTATE, $this->_pBuilderShort);
+		$this->assertEquals(['kaufpreis__von', 'kaufpreis__bis', 'kaufpreis'], $pModel->getAllowedGetParameters());
+		$this->assertEquals(['kaufpreis__von'=> '10000','kaufpreis__bis'=> '20000',], $pModel->getParameters());
 	}
 }

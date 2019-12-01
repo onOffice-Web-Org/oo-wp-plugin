@@ -23,15 +23,22 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use Exception;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use WP_Query;
 use WP_UnitTestCase;
 
@@ -48,7 +55,11 @@ class TestClassContentFilterShortCodeAddress
 	/** @var ContentFilterShortCodeAddressEnvironment */
 	private $_pEnvironment = null;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pBuilderShort;
 
+	/** @var SearchParametersModelBuilder */
+	private $_pSearchParametersModelBuilder;
 
 	/**
 	 *
@@ -104,6 +115,44 @@ class TestClassContentFilterShortCodeAddress
 			$pWPQueryWrapperMock->method('getWPQuery')->will($this->returnValue($pWPQueryMock));
 		$this->_pEnvironment->method('getWPQueryWrapper')->will($this->returnValue
 			($pWPQueryWrapperMock));
+
+		$this->_pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate'])
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$this->_pBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+				$pFieldAnrede = new Field('Anrede', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldAnrede->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldAnrede);
+
+				$pFieldTitle = new Field('Titel', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldTitle->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldTitle);
+
+				$pFieldOrt = new Field('Ort', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldOrt->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldOrt);
+
+				$pFieldNutzungsart = new Field('nutzungsart', onOfficeSDK::MODULE_ESTATE);
+				$pFieldNutzungsart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldNutzungsart);
+
+				$pFieldOrtEstate = new Field('ort', onOfficeSDK::MODULE_ESTATE);
+				$pFieldOrtEstate->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pFieldOrtEstate);
+				return $this->_pBuilderShort;
+			}));
+
+		$this->_pSearchParametersModelBuilder = $this->getMockBuilder(SearchParametersModelBuilder::class)
+			->setMethods(['build'])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$pSearchParametersModel = new SearchParametersModel();
+		$this->_pSearchParametersModelBuilder->method('build')->with($this->anything())->willReturn($pSearchParametersModel);
 	}
 
 
@@ -121,7 +170,8 @@ class TestClassContentFilterShortCodeAddress
 		$pTemplateMock->expects($this->once())->method('withTemplateName')->with('adressList-01')
 			->will($this->returnSelf());
 
-		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress($this->_pEnvironment);
+		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress(
+			$this->_pEnvironment, $this->_pBuilderShort, $this->_pSearchParametersModelBuilder);
 		$result = $pConfigFilterShortCodeAddress->replaceShortCodes(['view' => 'adressList-01']);
 		$this->assertEquals('I am the returned text.', $result);
 	}
@@ -139,7 +189,8 @@ class TestClassContentFilterShortCodeAddress
 		$pLogger = $this->_pEnvironment->getLogger();
 		$pLogger->expects($this->once())->method('logErrorAndDisplayMessage')
 			->with($pException)->will($this->returnValue('Exception caught'));
-		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress($this->_pEnvironment);
+		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress(
+			$this->_pEnvironment, $this->_pBuilderShort, $this->_pSearchParametersModelBuilder);
 		$result = $pConfigFilterShortCodeAddress->replaceShortCodes(['view' => 'testException']);
 		$this->assertEquals('Exception caught', $result);
 	}
@@ -151,7 +202,8 @@ class TestClassContentFilterShortCodeAddress
 
 	public function testGetTag()
 	{
-		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress($this->_pEnvironment);
+		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress(
+			$this->_pEnvironment, $this->_pBuilderShort, $this->_pSearchParametersModelBuilder);
 		$this->assertEquals('oo_address', $pConfigFilterShortCodeAddress->getTag());
 	}
 }
