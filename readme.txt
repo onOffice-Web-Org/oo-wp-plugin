@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.2.1 =
+
+** Fixes **
+
+* Migration of database changes introduced in version 2.2.0.
+
 = 2.2.0 =
 
 ** New **
@@ -138,6 +144,9 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+= 2.2.1 =
+Fixes the migration of the database changes introduced in version 2.2.0.
 
 = 2.2.0 =
 Estate views can be sorted by the user in the front-end.
