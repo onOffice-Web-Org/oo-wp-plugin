@@ -21,12 +21,13 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\WPlugin\Model\FormModel;
+use const ONOFFICE_DI_CONFIG_PATH;
+use function esc_html__;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -38,6 +39,9 @@ abstract class AdminPageBase
 	/** @var FormModel[] */
 	private $_formModels = array();
 
+	/** @var Container */
+	private $_pContainer;
+
 	/**
 	 *
 	 * @param string $pageSlug
@@ -47,6 +51,9 @@ abstract class AdminPageBase
 	public function __construct($pageSlug)
 	{
 		$this->_pageSlug = $pageSlug;
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pDIContainerBuilder->build();
 	}
 
 
@@ -110,15 +117,9 @@ abstract class AdminPageBase
 	 *
 	 */
 
-	public function getFormModelByGroupSlug($groupSlug)
+	public function getFormModelByGroupSlug(string $groupSlug)
 	{
-		$pFormModel = null;
-
-		if (array_key_exists($groupSlug, $this->_formModels)) {
-			$pFormModel = $this->_formModels[$groupSlug];
-		}
-
-		return $pFormModel;
+		return $this->_formModels[$groupSlug] ?? null;
 	}
 
 
@@ -138,6 +139,17 @@ abstract class AdminPageBase
 
 	public function doExtraEnqueues()
 		{}
+
+	/**
+	 *
+	 * @return Container
+	 *
+	 */
+
+	protected function getContainer(): Container
+	{
+		return $this->_pContainer;
+	}
 
 
 	/**

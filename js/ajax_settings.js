@@ -69,7 +69,8 @@ onOffice.ajaxSaver = function(outerDiv) {
 				return;
 			}
 
-			var inputContainsArray = inputNameFull.match(/\[\]$/);
+			var inputContainsArray = /\[\]$/.test(inputNameFull);
+			var inputContainsObject = /\[[^\]]*\]$/.test(inputNameFull);
 
 			if (inputContainsArray) { // array
 				inputName = inputNameFull.replace(/\[\]$/, '');
@@ -77,6 +78,23 @@ onOffice.ajaxSaver = function(outerDiv) {
 					values[inputName] = [];
 				}
 				values[inputName].push(elementValue);
+			} else if (inputContainsObject) {
+				var inputNameArray = inputNameFull.match(/([^\[]+)/)[0];
+				if (values[inputNameArray] === undefined) {
+					values[inputNameArray] = {};
+				}
+				var nestedParameterName = inputNameFull.match(/\[(.+)\]$/)[1];
+				var nestedParameters = nestedParameterName.split('][');
+				var recentObject = values[inputNameArray];
+
+				for (var i in nestedParameters) {
+					if (i !== ((nestedParameters.length - 1) + "")) {
+						recentObject[nestedParameters[i]] = recentObject[nestedParameters[i]] || {};
+						recentObject = recentObject[nestedParameters[i]];
+					} else {
+						recentObject[nestedParameters[i]] = elementValue;
+					}
+				}
 			} else {
 				values[inputName] = elementValue;
 			}

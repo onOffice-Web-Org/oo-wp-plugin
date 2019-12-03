@@ -27,6 +27,7 @@ namespace onOffice\WPlugin\Form;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -58,6 +59,7 @@ class FormFieldValidator
 	 *
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 * @param RequestVariablesSanitizer $pRequestSanitizer
+	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 *
 	 */
 
@@ -75,6 +77,8 @@ class FormFieldValidator
 	 *
 	 * @param array $formFields
 	 * @return array
+	 *
+	 * @throws UnknownFieldException
 	 *
 	 */
 
@@ -163,6 +167,7 @@ class FormFieldValidator
 	 *
 	 * @param string $dataType
 	 * @param string $fieldName
+	 * @param string $module
 	 * @return mixed
 	 *
 	 */

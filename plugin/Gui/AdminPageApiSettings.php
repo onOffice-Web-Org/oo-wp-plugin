@@ -36,9 +36,6 @@ use function submit_button;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
 class AdminPageApiSettings
@@ -202,9 +199,11 @@ class AdminPageApiSettings
 
 		echo '<form method="post" action="options.php">';
 
+		/* @var $pInputModelRenderer InputModelRenderer */
+		$pInputModelRenderer = $this->getContainer()->get(InputModelRenderer::class);
+
 		foreach ($this->getFormModels() as $pFormModel) {
-			$pFormBuilder = new InputModelRenderer($pFormModel);
-			$pFormBuilder->buildForm();
+			$pInputModelRenderer->buildForm($pFormModel);
 		}
 
 		settings_fields($this->getPageSlug());

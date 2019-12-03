@@ -73,7 +73,7 @@ class TestClassDatabaseChanges
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Installer\DatabaseChanges::install
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::install
 	 */
 
 	public function testInstall(): array
@@ -84,7 +84,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(14, $dbversion);
+		$this->assertEquals(15, $dbversion);
 		return $this->_createQueries;
 	}
 

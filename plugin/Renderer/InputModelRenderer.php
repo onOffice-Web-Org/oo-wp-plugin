@@ -26,64 +26,53 @@ use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Utility\__String;
+use function __;
+use function add_settings_field;
+use function add_settings_section;
+use function esc_html;
+use function esc_html__;
+use function register_setting;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
 class InputModelRenderer
 {
-	/** @var FormModel */
-	private $_pFormModel = null;
-
 	/**
 	 *
 	 * @param FormModel $pFormModel
 	 *
 	 */
 
-	public function __construct(FormModel $pFormModel = null)
+	public function buildForm(FormModel $pFormModel)
 	{
-		$this->_pFormModel = $pFormModel;
-	}
+		add_settings_section($pFormModel->getGroupSlug(), $pFormModel->getLabel(),
+			$pFormModel->getTextCallback(), $pFormModel->getPageSlug());
 
-
-	/**
-	 *
-	 */
-
-	public function buildForm()
-	{
-		$pForm = $this->_pFormModel;
-
-		add_settings_section($pForm->getGroupSlug(), $pForm->getLabel(),
-			$pForm->getTextCallback(), $pForm->getPageSlug());
-
-		foreach ($pForm->getInputModel() as $pInputModel) {
-			$pInputField = $this->createInputField($pInputModel);
-			add_settings_field( $pInputModel->getIdentifier(), $pInputModel->getLabel(),
-				array($pInputField, 'render'), $pForm->getPageSlug(), $pForm->getGroupSlug() );
+		foreach ($pFormModel->getInputModel() as $pInputModel) {
+			$pInputField = $this->createInputField($pInputModel, $pFormModel);
+			add_settings_field($pInputModel->getIdentifier(), $pInputModel->getLabel(),
+				[$pInputField, 'render'], $pFormModel->getPageSlug(), $pFormModel->getGroupSlug());
 		}
 	}
 
 
 	/**
 	 *
+	 * @param FormModel $pFormModel
+	 * @return void
+	 *
 	 */
 
-	public function buildForAjax()
+	public function buildForAjax(FormModel $pFormModel)
 	{
-		$pForm = $this->_pFormModel;
-
-		if ($pForm->getIsInvisibleForm()) {
+		if ($pFormModel->getIsInvisibleForm()) {
 			return;
 		}
 
-		foreach ($pForm->getInputModel() as $pInputModel) {
-			$pInputField = $this->createInputField($pInputModel);
+		foreach ($pFormModel->getInputModel() as $pInputModel) {
+			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL) {
 				echo '<p id="" class="wp-clearfix">';
 				echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
@@ -100,15 +89,15 @@ class InputModelRenderer
 
 	/**
 	 *
+	 * @param FormModel $pFormModel
+	 *
 	 */
 
-	public function registerFields()
+	public function registerFields(FormModel $pFormModel)
 	{
-		$pForm = $this->_pFormModel;
-
-		foreach ($pForm->getInputModel() as $pInputModel) {
+		foreach ($pFormModel->getInputModel() as $pInputModel) {
 			if ($pInputModel instanceof InputModelOption) {
-				register_setting($pForm->getPageSlug(), $pInputModel->getIdentifier(), [
+				register_setting($pFormModel->getPageSlug(), $pInputModel->getIdentifier(), [
 					'type' => $pInputModel->getType(),
 					'description' => $pInputModel->getDescription(),
 					'sanitize_callback' => $pInputModel->getSanitizeCallback(),
@@ -123,62 +112,54 @@ class InputModelRenderer
 	/**
 	 *
 	 * @param InputModelBase $pInputModel
-	 * @return InputFieldRenderer
+	 * @param FormModel $pFormModel
+	 * @return InputFieldLabelRenderer
 	 *
 	 */
 
-	private function createInputField(InputModelBase $pInputModel)
+	private function createInputField(InputModelBase $pInputModel, FormModel $pFormModel)
 	{
 		$pInstance = null;
 		$onOfficeInputFields = true;
+		$elementName = $this->getHtmlElementName($pInputModel);
 
 		switch ($pInputModel->getHtmlType())
 		{
 			case InputModelOption::HTML_TYPE_SELECT:
-				$pInstance = new InputFieldSelectRenderer($pInputModel->getIdentifier(),
-				$pInputModel->getValuesAvailable());
+				$pInstance = new InputFieldSelectRenderer($elementName,
+					$pInputModel->getValuesAvailable());
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				break;
 
 			case InputModelOption::HTML_TYPE_CHECKBOX:
-				$name = $pInputModel->getIdentifier();
-				if ($pInputModel->getIsMulti()) {
-					$name .= '[]';
-				}
-				$pInstance = new InputFieldCheckboxRenderer($name,
-				$pInputModel->getValuesAvailable());
+				$pInstance = new InputFieldCheckboxRenderer($elementName,
+					$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				break;
 
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST:
-				$name = $pInputModel->getIdentifier();
-				$pInstance = new InputFieldComplexSortableListRenderer($name,
+				$pInstance = new InputFieldComplexSortableListRenderer($elementName,
 				$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				break;
 
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST:
-				$name = $pInputModel->getIdentifier();
 				$pContent = new InputFieldComplexSortableDetailListContentDefault();
 				$pContent->setExtraInputModels($pInputModel->getReferencedInputModels());
-				$pInstance = new InputFieldComplexSortableDetailListRenderer($name,
-						array($pInputModel->getValue()));
+				$pInstance = new InputFieldComplexSortableDetailListRenderer($elementName,
+					[$pInputModel->getValue()]);
 				$pInstance->setContentRenderer($pContent);
 				$pInstance->setAllFields($pInputModel->getValuesAvailable());
 				break;
 
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
-				$name = $pInputModel->getIdentifier();
 				$onOfficeInputFields = false;
-				if ($pInputModel->getIsMulti()) {
-					$name .= '[]';
-				}
-				$pInstance = new InputFieldCheckboxButtonRenderer($name,
-				$pInputModel->getValuesAvailable());
+				$pInstance = new InputFieldCheckboxButtonRenderer($elementName,
+					$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setId($pInputModel->getId());
 				$pInstance->setLabel($pInputModel->getLabel());
-				$pInstance->setOoModule($this->_pFormModel->getOoModule());
+				$pInstance->setOoModule($pFormModel->getOoModule());
 				$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
 				if ($pInputModel->getSpecialDivId() != null) {
 					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
@@ -186,13 +167,13 @@ class InputModelRenderer
 				break;
 
 			case InputModelOption::HTML_TYPE_RADIO:
-				$pInstance = new InputFieldRadioRenderer($pInputModel->getIdentifier(),
-				$pInputModel->getValuesAvailable());
+				$pInstance = new InputFieldRadioRenderer($elementName,
+					$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValue($pInputModel->getValue());
 				break;
 
 			case InputModelOption::HTML_TYPE_TEXT:
-				$pInstance = new InputFieldTextRenderer('text', $pInputModel->getIdentifier());
+				$pInstance = new InputFieldTextRenderer('text', $elementName);
 				$pInstance->addAdditionalAttribute('size', '50');
 				if ($pInputModel->getIsPassword()) {
 					$pInstance->addAdditionalAttribute('placeholder',
@@ -207,18 +188,14 @@ class InputModelRenderer
 
 				break;
 			case InputModelOption::HTML_TYPE_HIDDEN:
-				$name = $pInputModel->getIdentifier();
-				if ($pInputModel->getIsMulti()) {
-					$name .= '[]';
-				}
-				$pInstance = new InputFieldTextRenderer('hidden', $name);
+				$pInstance = new InputFieldTextRenderer('hidden', $elementName);
 				$pInstance->setValue($pInputModel->getValue());
 
 				break;
 
 			case InputModelBase::HTML_TYPE_LABEL:
 				$pInstance = new InputFieldLabelRenderer
-					(null, $pInputModel->getIdentifier(), $pInputModel->getValue());
+					(null, $elementName, $pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
 				$pInstance->setValueEnclosure($pInputModel->getValueEnclosure());
 
@@ -247,19 +224,36 @@ class InputModelRenderer
 				if ($pInputModel->getIgnore()) {
 					$pInstance->addAdditionalAttribute('data-onoffice-ignore', 'true');
 				}
-
 			}
 		}
-
 
 		return $pInstance;
 	}
 
-	/** @return FormModel */
-	public function getFormModel()
-		{ return $this->_pFormModel; }
 
-	/** @param FormModel $pFormModel */
-	public function setFormModel(FormModel $pFormModel)
-		{ $this->_pFormModel = $pFormModel; }
+	/**
+	 *
+	 * @param InputModel $pInputModel
+	 * @return string New name of HTML element, with brackets if multi == true
+	 *
+	 */
+
+	private function getHtmlElementName(InputModelBase $pInputModel): string
+	{
+		$name = $pInputModel->getIdentifier();
+		switch ($pInputModel->getHtmlType())
+		{
+			case InputModelOption::HTML_TYPE_SELECT:
+			case InputModelOption::HTML_TYPE_CHECKBOX:
+			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
+			case InputModelOption::HTML_TYPE_TEXT:
+			case InputModelOption::HTML_TYPE_HIDDEN:
+				if ($pInputModel->getIsMulti()) {
+					$name .= '[]';
+				}
+				break;
+		}
+
+		return $name;
+	}
 }

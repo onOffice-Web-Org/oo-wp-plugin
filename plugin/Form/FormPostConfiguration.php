@@ -28,9 +28,6 @@ use onOffice\WPlugin\Field\CompoundFieldsFilter;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 interface FormPostConfiguration

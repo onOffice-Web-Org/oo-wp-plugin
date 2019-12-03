@@ -21,11 +21,22 @@
 
 namespace onOffice\WPlugin\Gui;
 
-use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
+use Exception;
+use Generator;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesForm;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueDelete;
+use onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueRowSaver;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm;
@@ -38,16 +49,12 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
-use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_screen_option;
 use function esc_sql;
 use function wp_enqueue_script;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
@@ -69,6 +76,10 @@ abstract class AdminPageFormSettingsBase
 	/** */
 	const GET_PARAM_TYPE = 'type';
 
+	/** */
+	const DEFAULT_VALUES = 'defaultvalues';
+
+
 	/** @var bool */
 	private $_showEstateFields = false;
 
@@ -79,7 +90,7 @@ abstract class AdminPageFormSettingsBase
 	private $_showSearchCriteriaFields = false;
 
 	/** @var array */
-	private $_sortableFieldModules = array();
+	private $_sortableFieldModules = [];
 
 	/** @var string */
 	private $_type = null;
@@ -88,9 +99,8 @@ abstract class AdminPageFormSettingsBase
 	private $_pFormModelBuilder = null;
 
 	/**
-	 *
 	 * @param string $pageSlug
-	 *
+	 * @throws Exception
 	 */
 
 	public function __construct($pageSlug)
@@ -156,13 +166,13 @@ abstract class AdminPageFormSettingsBase
 		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED);
 	}
 
-
 	/**
 	 *
 	 * @param array $row
 	 * @param stdClass $pResult
 	 * @param int $recordId
 	 *
+	 * @throws Exception
 	 */
 
 	protected function updateValues(array $row, stdClass $pResult, $recordId = null)
@@ -200,6 +210,10 @@ abstract class AdminPageFormSettingsBase
 			}
 		}
 
+		if ($result) {
+			$this->saveDefaultValues($recordId, $row);
+		}
+
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;
 	}
@@ -220,29 +234,77 @@ abstract class AdminPageFormSettingsBase
 		return $row;
 	}
 
+	/**
+	 *
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+
+	public function getEnqueueData(): array
+	{
+		return [
+			self::GET_PARAM_TYPE => $this->getType(),
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was saved.', 'onoffice'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make '
+				.'sure the name of the form is unique.', 'onoffice'),
+			self::ENQUEUE_DATA_MERGE => [
+				AdminPageSettingsBase::POST_RECORD_ID,
+				self::GET_PARAM_TYPE,
+			],
+			AdminPageSettingsBase::POST_RECORD_ID => (int)$this->getListViewId(),
+			self::MODULE_LABELS => ModuleTranslation::getAllLabelsSingular(),
+			/* translators: %s is a translated module name */
+			self::FIELD_MODULE => __('Module: %s', 'onoffice'),
+			self::DEFAULT_VALUES => $this->readDefaultValues(),
+		];
+	}
 
 	/**
 	 *
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
 
-	public function getEnqueueData()
+	private function readDefaultValues(): array
 	{
-		return array(
-			self::GET_PARAM_TYPE => $this->getType(),
-			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was saved.', 'onoffice'),
-			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make '
-					.'sure the name of the form is unique.', 'onoffice'),
-			self::ENQUEUE_DATA_MERGE => array(
-					AdminPageSettingsBase::POST_RECORD_ID,
-					self::GET_PARAM_TYPE,
-				),
-			AdminPageSettingsBase::POST_RECORD_ID => (int)$this->getListViewId(),
-			self::MODULE_LABELS => ModuleTranslation::getAllLabelsSingular(true),
-			/* translators: %s is a translated module name */
-			self::FIELD_MODULE => __('Module: %s', 'onoffice'),
-		);
+		$result = [];
+		/** @var DefaultValueModelToOutputConverter $pDefaultValueConverter */
+		$pDefaultValueConverter = $this->getContainer()->get(DefaultValueModelToOutputConverter::class);
+
+		$pDataFormConfigurationFactory = new DataFormConfigurationFactory();
+		/** @var DataFormConfiguration $pDataFormConfiguration */
+		$pDataFormConfiguration = $pDataFormConfigurationFactory->loadByFormId($this->getListViewId());
+
+		foreach ($this->getFieldsGenerator($pDataFormConfiguration) as $pField) {
+			$result[$pField->getName()] = $pDefaultValueConverter->getConvertedField
+				((int)$this->getListViewId(), $pField);
+		}
+		return $result;
+	}
+
+	/**
+	 *
+	 * @param DataFormConfiguration $pDataFormConfiguration
+	 * @return Generator
+	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+
+	private function getFieldsGenerator(DataFormConfiguration $pDataFormConfiguration): Generator
+	{
+		$pFieldsCollection = $this->readFields();
+
+		foreach ($pDataFormConfiguration->getInputs() as $field => $module) {
+			if ($pFieldsCollection->containsFieldByModule($module, $field)) {
+				yield $pFieldsCollection->getFieldByModuleAndName($module, $field);
+			}
+		}
 	}
 
 
@@ -255,7 +317,7 @@ abstract class AdminPageFormSettingsBase
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
-		$this->_pFormModelBuilder = new FormModelBuilderDBForm();
+		$this->_pFormModelBuilder = $this->getContainer()->get(FormModelBuilderDBForm::class);
 		$this->_pFormModelBuilder->setFormType($this->getType());
 		$pFormModel = $this->_pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);
@@ -334,20 +396,16 @@ abstract class AdminPageFormSettingsBase
 		}
 	}
 
-
 	/**
 	 *
 	 * @return FieldsCollection
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	private function readFields(): FieldsCollection
 	{
-		$pDIBuilder = new ContainerBuilder;
-		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIBuilder->build();
-
-		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pDefaultFieldsCollection = new FieldsCollection();
 
 		if ($this->_showEstateFields || $this->_showAddressFields) {
@@ -363,18 +421,20 @@ abstract class AdminPageFormSettingsBase
 		return $pDefaultFieldsCollection;
 	}
 
-
 	/**
 	 *
 	 * Call this in method `buildForms` of overriding class
 	 *
 	 * Don't forget to call
 	 * <code>
-	 * 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
-	 *			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
+	 *        $this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
+	 *            InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST_FORM);
 	 * </code>
 	 * afterwards.
 	 *
+	 * @param FormModelBuilder $pFormModelBuilder
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	protected function addFieldConfigurationForMainModules(FormModelBuilder $pFormModelBuilder)
@@ -382,15 +442,18 @@ abstract class AdminPageFormSettingsBase
 		$pFieldsCollection = $this->readFields();
 
 		if ($this->_showEstateFields) {
-			$this->addFieldConfigurationByModule($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
+			$this->addFieldConfigurationByModule
+				($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
 		}
 
 		if ($this->_showAddressFields) {
-			$this->addFieldConfigurationByModule($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
+			$this->addFieldConfigurationByModule
+				($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
 		}
 
 		if ($this->_showSearchCriteriaFields) {
-			$this->addFieldConfigurationByModule($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_SEARCHCRITERIA);
+			$this->addFieldConfigurationByModule
+				($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_SEARCHCRITERIA);
 		}
 	}
 
@@ -412,6 +475,33 @@ abstract class AdminPageFormSettingsBase
 		$this->addSortableFieldModule($module);
 	}
 
+	/**
+	 * @param int $recordId
+	 * @param array $row
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 * @throws DefaultValueDeleteException
+	 */
+	private function saveDefaultValues(int $recordId, array $row)
+	{
+		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] ?? [];
+		$fieldNamesSelected = array_column($fields, 'fieldname');
+
+		/** @var FieldsCollectionBuilderFromNamesForm $pFieldsCollectionBuilder */
+		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesForm::class);
+		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollection($fieldNamesSelected);
+
+		/** @var DefaultValueDelete $pDefaultValueDelete */
+		$pDefaultValueDelete = $this->getContainer()->get(DefaultValueDelete::class);
+		$pDefaultValueDelete->deleteAllByFormId($recordId);
+
+		$pDefaultValueSave = $this->getContainer()->get(DefaultValueRowSaver::class);
+		$pDefaultValueSave->saveDefaultValues($recordId,
+			$row['oo_plugin_fieldconfig_form_defaults_values'] ?? [], $pFieldsCollectionCurrent);
+	}
+
 
 	/**
 	 *
@@ -421,21 +511,7 @@ abstract class AdminPageFormSettingsBase
 	{
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
-	}
-
-
-	/**
-	 *
-	 * @param string $module
-	 *
-	 */
-
-	protected function removeSortableFieldModule($module)
-	{
-		if (in_array($module, $this->_sortableFieldModules)) {
-			$key = array_search($module, $this->_sortableFieldModules);
-			unset($this->_sortableFieldModules[$key]);
-		}
+		wp_enqueue_script('onoffice-default-form-values-js');
 	}
 
 	/** @return string */
@@ -443,7 +519,7 @@ abstract class AdminPageFormSettingsBase
 		{ return $this->_type; }
 
 	/** @param string $type */
-	public function setType($type)
+	public function setType(string $type)
 		{ $this->_type = $type; }
 
 	/** @return FormModelBuilder */
@@ -458,27 +534,15 @@ abstract class AdminPageFormSettingsBase
 	protected function getSortableFieldModules()
 		{ return $this->_sortableFieldModules; }
 
-	/** @return bool */
-	public function getShowEstateFields()
-		{ return $this->_showEstateFields; }
-
-	/** @return bool */
-	public function getShowAddressFields()
-		{ return $this->_showAddressFields; }
-
-	/** @return bool */
-	public function getShowSearchCriteriaFields()
-		{ return $this->_showSearchCriteriaFields; }
-
 	/** @param bool $showEstateFields */
-	public function setShowEstateFields($showEstateFields)
-		{ $this->_showEstateFields = (bool)$showEstateFields; }
+	public function setShowEstateFields(bool $showEstateFields)
+		{ $this->_showEstateFields = $showEstateFields; }
 
 	/** @param bool $showAddressFields */
-	public function setShowAddressFields($showAddressFields)
-		{ $this->_showAddressFields = (bool)$showAddressFields; }
+	public function setShowAddressFields(bool $showAddressFields)
+		{ $this->_showAddressFields = $showAddressFields; }
 
 	/** @param bool $showSearchCriteriaFields */
-	public function setShowSearchCriteriaFields($showSearchCriteriaFields)
-		{ $this->_showSearchCriteriaFields = (bool)$showSearchCriteriaFields; }
+	public function setShowSearchCriteriaFields(bool $showSearchCriteriaFields)
+		{ $this->_showSearchCriteriaFields = $showSearchCriteriaFields; }
 }
