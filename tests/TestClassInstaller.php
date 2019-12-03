@@ -28,7 +28,53 @@ class TestClassInstaller
 	extends WP_UnitTestCase
 {
 	/**
-	 * @covers onOffice\WPlugin\Installer\Installer::deinstall
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+
+	public function testInstall()
+	{
+		global $wp_rewrite;
+		$wp_rewrite->permalink_structure = '%postname%';
+		$wp_rewrite->rewritecode = [];
+		$wp_rewrite->rewritereplace = [];
+		$wp_rewrite->queryreplace = [];
+		$wp_rewrite->extra_rules_top = [];
+		$this->assertArrayNotHasKey('^distinctfields-json/?$', $wp_rewrite->rewrite_rules());
+		$this->assertArrayNotHasKey('^document-pdf/([^\/]+)/([0-9]+)/?$', $wp_rewrite->rewrite_rules());
+		Installer::install();
+		$this->assertNotEmpty($wp_rewrite->rewritecode);
+		$this->assertNotEmpty($wp_rewrite->rewritereplace);
+		$this->assertNotEmpty($wp_rewrite->queryreplace);
+		$this->assertNotEmpty($wp_rewrite->extra_rules_top);
+		$this->assertNotEmpty($wp_rewrite->rewrite_rules());
+		$this->assertArrayHasKey('^distinctfields-json/?$', $wp_rewrite->rewrite_rules());
+		$this->assertArrayHasKey('^document-pdf/([^\/]+)/([0-9]+)/?$', $wp_rewrite->rewrite_rules());
+	}
+
+	/**
+	 * @depends testInstall
+	 * @preserveGlobalState disabled
+	 */
+	public function testDeactivate()
+	{
+		global $wp_rewrite;
+		$wp_rewrite->permalink_structure = '%postname%';
+		Installer::install();
+
+		// make rewrite rules outdated
+		$wp_rewrite->extra_rules_top = [];
+		$wp_rewrite->extra_rules = [];
+
+		$rewriteRulesBefore = get_option('rewrite_rules');
+
+		// should refresh rewrite rules
+		Installer::deactivate();
+		$rewriteRulesAfter = get_option('rewrite_rules');
+		$this->assertNotSame($rewriteRulesBefore, $rewriteRulesAfter);
+	}
+
+	/**
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */

@@ -85,9 +85,8 @@ class Installer
 
 	static public function deactivate()
 	{
-		// @codeCoverageIgnoreStart
 		self::flushRules();
-	} // @codeCoverageIgnoreEnd
+	}
 
 	/**
 	 * @return Container
