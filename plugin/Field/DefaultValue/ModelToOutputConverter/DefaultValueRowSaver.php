@@ -84,6 +84,11 @@ class DefaultValueRowSaver
 	 */
 	private function saveForFoundType(int $formId, Field $pField, $values)
 	{
+		if ($pField->getIsRangeField()) {
+			$this->saveNumericRange($formId, $pField, $values);
+			return;
+		}
+
 		switch ($pField->getType()) {
 			case FieldTypes::FIELD_TYPE_SINGLESELECT:
 			case FieldTypes::FIELD_TYPE_MULTISELECT:
@@ -92,10 +97,6 @@ class DefaultValueRowSaver
 			case FieldTypes::FIELD_TYPE_TEXT:
 			case FieldTypes::FIELD_TYPE_VARCHAR:
 				$this->saveText($formId, $pField, $values);
-				break;
-			case FieldTypes::FIELD_TYPE_INTEGER:
-			case FieldTypes::FIELD_TYPE_FLOAT:
-				$this->saveNumericRange($formId, $pField, $values);
 				break;
 		}
 	}
@@ -139,8 +140,8 @@ class DefaultValueRowSaver
 	private function saveNumericRange(int $formId, Field $pField, array $values)
 	{
 		$pModel = new DefaultValueModelNumericRange($formId, $pField);
-		$pModel->setValueFrom((float)$values[0] ?? .0);
-		$pModel->setValueTo((float)$values[1] ?? .0);
+		$pModel->setValueFrom(floatval($values['min'] ?? .0));
+		$pModel->setValueTo(floatval($values['max'] ?? .0));
 		$this->_pDefaultValueCreate->createForNumericRange($pModel);
 	}
 

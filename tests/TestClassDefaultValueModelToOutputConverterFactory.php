@@ -27,6 +27,7 @@ use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterFactory;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterText;
 use WP_UnitTestCase;
@@ -76,5 +77,15 @@ class TestClassDefaultValueModelToOutputConverterFactory extends WP_UnitTestCase
 	{
 		$pConverter = $this->_pSubject->createForSingleSelect();
 		$this->assertInstanceOf(DefaultValueModelToOutputConverterSingleselect::class, $pConverter);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testCreateForNumericRange()
+	{
+		$pConverter = $this->_pSubject->createForNumericRange();
+		$this->assertInstanceOf(DefaultValueModelToOutputConverterNumericRange::class, $pConverter);
 	}
 }

@@ -73,4 +73,14 @@ class DefaultValueModelToOutputConverterFactory
 	{
 		return $this->_pContainer->get(DefaultValueModelToOutputConverterText::class);
 	}
+
+	/**
+	 * @return DefaultValueModelToOutputConverterNumericRange
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function createForNumericRange(): DefaultValueModelToOutputConverterNumericRange
+	{
+		return $this->_pContainer->get(DefaultValueModelToOutputConverterNumericRange::class);
+	}
 }

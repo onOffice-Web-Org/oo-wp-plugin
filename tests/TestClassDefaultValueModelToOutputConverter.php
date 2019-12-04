@@ -27,6 +27,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueRead;
@@ -75,17 +76,14 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 
 
 	/**
-	 *
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * @expectedException \UnexpectedValueException
-	 *
 	 */
-
 	public function testGetConvertedFieldForUnknownFieldType()
 	{
 		$this->_pField->setType('unknown');
-		$this->_pSubject->getConvertedField(13, $this->_pField);
+		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
+		$this->assertEmpty($result);
 	}
 
 
@@ -164,5 +162,36 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 			->method('readDefaultValuesSingleselect')->will($this->returnValue($pSingleSelectFieldModel));
 		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
 		$this->assertEquals(['Monday'], $result);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testGetConvertedFieldForNonEmptyNumericRangeField()
+	{
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_FLOAT);
+		$this->_pField->setIsRangeField(true);
+		$pRangeFieldModel = new DefaultValueModelNumericRange(13, $this->_pField);
+		$pRangeFieldModel->setValueFrom(11.);
+		$pRangeFieldModel->setValueTo(14.);
+
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultValuesNumericRange')->will($this->returnValue($pRangeFieldModel));
+		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
+		$this->assertEquals(['min' => 11.0, 'max' => 14.0], $result);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testGetConvertedFieldForEmptyNumericRangeField()
+	{
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_FLOAT);
+		$this->_pField->setIsRangeField(true);
+		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
+		$this->assertEquals(['min' => .0, 'max' => .0], $result);
 	}
 }

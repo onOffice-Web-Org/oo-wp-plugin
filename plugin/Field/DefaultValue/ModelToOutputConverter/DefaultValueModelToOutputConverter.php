@@ -71,16 +71,20 @@ class DefaultValueModelToOutputConverter
 
 	public function getConvertedField(int $formId, Field $pField): array
 	{
+		if ($pField->getIsRangeField()) {
+			return $this->convertNumericRange($formId, $pField);
+		}
+
 		switch ($pField->getType()) {
 			case FieldTypes::FIELD_TYPE_SINGLESELECT:
 			case FieldTypes::FIELD_TYPE_MULTISELECT:
 				return $this->convertSingleSelect($formId, $pField);
+
 			case FieldTypes::FIELD_TYPE_TEXT:
 			case FieldTypes::FIELD_TYPE_VARCHAR:
 				return $this->convertText($formId, $pField);
 		}
-
-		throw new UnexpectedValueException();
+		return [];
 	}
 
 
@@ -116,6 +120,20 @@ class DefaultValueModelToOutputConverter
 	{
 		$pModel = $this->_pDefaultValueReader->readDefaultValuesText($formId, $pField);
 		$pConverter = $this->_pOutputConverterFactory->createForText();
+		return $pConverter->convertToRow($pModel);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function convertNumericRange(int $formId, Field $pField): array
+	{
+		$pModel = $this->_pDefaultValueReader->readDefaultValuesNumericRange($formId, $pField);
+		$pConverter = $this->_pOutputConverterFactory->createForNumericRange();
 		return $pConverter->convertToRow($pModel);
 	}
 }

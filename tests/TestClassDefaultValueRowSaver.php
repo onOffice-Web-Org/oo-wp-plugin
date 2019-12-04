@@ -43,7 +43,10 @@ class TestClassDefaultValueRowSaver
 			'native' => 'testEN',
 			'de_DE' => 'testDE',
 		],
-		'testNumericRange' => [3, 1337],
+		'testNumericRange1' => ['min' => 3, 'max' => 1337],
+		'testNumericRange2' => ['min' => 3],
+		'testNumericRange3' => ['max' => 4],
+		'testNumericRange4' => [],
 	];
 
 	/** @var DefaultValueRowSaver */
@@ -110,26 +113,64 @@ class TestClassDefaultValueRowSaver
 	 * @throws RecordManagerInsertException
 	 * @throws UnknownFieldException
 	 */
-	public function testSaveDefaultValuesInteger()
+	public function testSaveDefaultValuesIntegerRange()
 	{
 		$this->_pDefaultValueCreate->expects($this->once())->method('createForNumericRange');
 		$pFieldsCollection = $this->buildFieldsCollection();
 		$this->_pSubject->saveDefaultValues(13, [
-			'testInteger' => self::EXAMPLE_RECORDS['testNumericRange'],
+			'testInteger' => self::EXAMPLE_RECORDS['testNumericRange1'],
 		], $pFieldsCollection);
 	}
-
 
 	/**
 	 * @throws RecordManagerInsertException
 	 * @throws UnknownFieldException
 	 */
-	public function testSaveDefaultValuesFloat()
+	public function testSaveDefaultValuesIntegerRangeMinOnly()
 	{
 		$this->_pDefaultValueCreate->expects($this->once())->method('createForNumericRange');
 		$pFieldsCollection = $this->buildFieldsCollection();
 		$this->_pSubject->saveDefaultValues(13, [
-			'testFloat' => self::EXAMPLE_RECORDS['testNumericRange'],
+			'testInteger' => self::EXAMPLE_RECORDS['testNumericRange2'],
+		], $pFieldsCollection);
+	}
+
+	/**
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+	public function testSaveDefaultValuesIntegerRangeMaxOnly()
+	{
+		$this->_pDefaultValueCreate->expects($this->once())->method('createForNumericRange');
+		$pFieldsCollection = $this->buildFieldsCollection();
+		$this->_pSubject->saveDefaultValues(13, [
+			'testInteger' => self::EXAMPLE_RECORDS['testNumericRange3'],
+		], $pFieldsCollection);
+	}
+
+	/**
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+	public function testSaveDefaultValuesIntegerRangeEmpty()
+	{
+		$this->_pDefaultValueCreate->expects($this->never())->method('createForNumericRange');
+		$pFieldsCollection = $this->buildFieldsCollection();
+		$this->_pSubject->saveDefaultValues(13, [
+			'testInteger' => self::EXAMPLE_RECORDS['testNumericRange4'],
+		], $pFieldsCollection);
+	}
+
+	/**
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+	public function testSaveDefaultValuesFloatRange()
+	{
+		$this->_pDefaultValueCreate->expects($this->once())->method('createForNumericRange');
+		$pFieldsCollection = $this->buildFieldsCollection();
+		$this->_pSubject->saveDefaultValues(13, [
+			'testFloat' => self::EXAMPLE_RECORDS['testNumericRange1'],
 		], $pFieldsCollection);
 	}
 
@@ -149,9 +190,11 @@ class TestClassDefaultValueRowSaver
 		$pFieldText->setType(FieldTypes::FIELD_TYPE_TEXT);
 		$pFieldsCollection->addField($pFieldText);
 		$pFieldInteger = new Field('testInteger', onOfficeSDK::MODULE_ESTATE);
+		$pFieldInteger->setIsRangeField(true);
 		$pFieldInteger->setType(FieldTypes::FIELD_TYPE_INTEGER);
 		$pFieldsCollection->addField($pFieldInteger);
 		$pFieldFloat = new Field('testFloat', onOfficeSDK::MODULE_ESTATE);
+		$pFieldFloat->setIsRangeField(true);
 		$pFieldFloat->setType(FieldTypes::FIELD_TYPE_FLOAT);
 		$pFieldsCollection->addField($pFieldFloat);
 		return $pFieldsCollection;
