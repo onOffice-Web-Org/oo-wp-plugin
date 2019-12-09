@@ -258,7 +258,27 @@ abstract class AdminPageFormSettingsBase
 			/* translators: %s is a translated module name */
 			self::FIELD_MODULE => __('Module: %s', 'onoffice'),
 			self::DEFAULT_VALUES => $this->readDefaultValues(),
+			'fieldList' => $this->getFieldList(),
 		];
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getFieldList(): array
+	{
+		$result = [];
+		$pFieldsCollection = new FieldsCollection;
+		/** @var FieldsCollectionBuilderShort $pFieldsCollectionBuilder */
+		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder->addFieldsAddressEstate($pFieldsCollection);
+		$pFieldsCollectionBuilder->addFieldsSearchCriteria($pFieldsCollection);
+		foreach ($pFieldsCollection->getAllFields() as $pField) {
+			$result[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
+		}
+		return $result;
 	}
 
 	/**

@@ -104,8 +104,8 @@ class DefaultValueRead
 		$rows = $this->_pWPDB->get_results($query, OBJECT);
 		$pDataModel = new DefaultValueModelNumericRange($formId, $pField);
 
-		$pDataModel->setValueFrom($rows[0]->value);
-		$pDataModel->setValueTo($rows[1]->value);
+		$pDataModel->setValueFrom((float)$rows[0]->value);
+		$pDataModel->setValueTo((float)$rows[1]->value);
 		return $pDataModel;
 	}
 

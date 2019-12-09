@@ -91,7 +91,7 @@ class TestClassInputModelBuilderDefaultValue
 		yield [$pExpectedInputModelSingleSelect, FieldTypes::FIELD_TYPE_SINGLESELECT, [], []];
 
 		$pExpectedInputModelSingleSelect = new InputModelDB('testInput', 'testLabel');
-		$pExpectedInputModelSingleSelect->setHtmlType(InputModelDB::HTML_TYPE_CHECKBOX);
+		$pExpectedInputModelSingleSelect->setHtmlType(InputModelDB::HTML_TYPE_SELECT);
 		$pExpectedInputModelSingleSelect->setValue(['n']);
 		$pExpectedInputModelSingleSelect->setValuesAvailable(['n' => '', 'y' => 'MySpace', '' => '']);
 		yield [

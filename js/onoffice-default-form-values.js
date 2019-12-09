@@ -115,4 +115,32 @@ if (window.NodeList && !NodeList.prototype.forEach) {
             mainInput.value = predefinedValues[fieldName][0];
         }
     });
+
+    // numeric range
+    document.querySelectorAll('input[name^=oopluginfieldconfigformdefaultsvalues-value]').forEach(function (mainInput) {
+        var fieldName = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name').textContent;
+        var fieldList = onOffice_loc_settings.fieldList || {};
+        var fieldDefinition = {};
+        for (var module in fieldList) {
+            if (fieldList[module][fieldName] !== undefined) {
+                fieldDefinition = fieldList[module][fieldName];
+            }
+        }
+
+        if (!fieldDefinition.rangefield) {
+            return;
+        }
+
+        mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + '][min]';
+        var mainInputClone = mainInput.cloneNode(true);
+        mainInputClone.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + '][max]';
+        mainInput.parentElement.appendChild(mainInputClone);
+        var predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
+            !Array.isArray(predefinedValues[fieldName]);
+
+        if (predefinedValuesIsObject) {
+            mainInput.value = predefinedValues[fieldName]['min'] || '';
+            mainInputClone.value = predefinedValues[fieldName]['max'] || '';
+        }
+    });
 })();

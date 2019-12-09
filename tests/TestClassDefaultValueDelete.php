@@ -24,10 +24,9 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueDelete;
-use onOffice\WPlugin\Record\RecordManagerDeleteForm;
+use onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException;
 use WP_UnitTestCase;
 use wpdb;
-
 
 /**
  *
@@ -56,7 +55,7 @@ class TestClassDefaultValueDelete
 	}
 
 	/**
-	 *
+	 * @throws DefaultValueDeleteException
 	 */
 	public function testDeleteAllByFormId()
 	{
@@ -73,7 +72,18 @@ class TestClassDefaultValueDelete
 	}
 
 	/**
-	 *
+	 * @throws DefaultValueDeleteException
+	 */
+	public function testDeleteAllByFormIdWithError()
+	{
+		$this->expectException(DefaultValueDeleteException::class);
+		$this->_pWPDB->expects($this->once())->method('query')
+			->will($this->returnValue(false));
+		$this->_pSubject->deleteAllByFormId(13);
+	}
+
+	/**
+	 * @throws DefaultValueDeleteException
 	 */
 	public function testDeleteSingleDefaultValueByFieldname()
 	{
@@ -92,18 +102,20 @@ class TestClassDefaultValueDelete
 	}
 
 	/**
-	 * @expectedException \onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException
+	 * @throws DefaultValueDeleteException
 	 */
 	public function testDeleteSingleDefaultValueByFieldnameFailure()
 	{
+		$this->expectException(DefaultValueDeleteException::class);
 		$this->_pWPDB->expects($this->once())->method('prepare')
 			->will($this->returnValue('testQuery'));
 		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(false));
 		$this->_pSubject->deleteSingleDefaultValueByFieldname(13, 'objektart', 'de_DE');
+
 	}
 
 	/**
-	 *
+	 * @throws DefaultValueDeleteException
 	 */
 	public function testDeleteSingleDefaultValueById()
 	{
@@ -118,10 +130,11 @@ class TestClassDefaultValueDelete
 	}
 
 	/**
-	 * @expectedException \onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException
+	 * @throws DefaultValueDeleteException
 	 */
 	public function testDeleteSingleDefaultValueByIdFailure()
 	{
+		$this->expectException(DefaultValueDeleteException::class);
 		$this->_pWPDB->expects($this->once())->method('prepare')->will($this->returnValue('testQuery2'));
 		$this->_pWPDB->expects($this->once())->method('query')->with('testQuery2')->will($this->returnValue(false));
 		$this->_pSubject->deleteSingleDefaultValueById(1337);
