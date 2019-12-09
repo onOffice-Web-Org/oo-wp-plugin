@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use Generator;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
@@ -103,6 +104,51 @@ class TestClassDefaultValueRead
 		];
 	}
 
+	/**
+	 * @dataProvider dataProviderMultiSelect
+	 * @param int $formId
+	 * @param array $rows
+	 * @param DefaultValueModelMultiselect $pReference
+	 */
+	public function testReadDefaultValuesMultiSelect(int $formId, array $rows, DefaultValueModelMultiselect $pReference)
+	{
+		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
+		$pField = new Field('testField', 'testModule');
+		$pResult = $this->_pSubject->readDefaultValuesMultiSelect($formId, $pField);
+		$this->assertInstanceOf(DefaultValueModelMultiselect::class, $pResult);
+		$this->assertEquals($pReference, $pResult);
+	}
+
+	/**
+	 * @return Generator
+	 */
+	public function dataProviderMultiSelect(): Generator
+	{
+		$pField = new Field('testField', 'testModule');
+
+		$rows = [];
+		$pReference1 = new DefaultValueModelMultiselect(12, $pField);
+		yield [12, $rows, $pReference1];
+		$pReference2 = new DefaultValueModelMultiselect(13, $pField);
+		$pReference2->setValues(['Spider Man', 'Superman', 'Batman']);
+
+		$rows = [
+			[
+				'defaults_id' => 1337,
+				'locale' => '',
+				'value' => 'Spider Man',
+			], [
+				'defaults_id' => 1338,
+				'locale' => '',
+				'value' => 'Superman',
+			], [
+				'defaults_id' => 1339,
+				'locale' => '',
+				'value' => 'Batman',
+			],
+		];
+		yield [13, $rows, $pReference2];
+	}
 
 	/**
 	 *

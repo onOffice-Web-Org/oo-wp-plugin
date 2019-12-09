@@ -42,25 +42,18 @@ class DefaultValueRead
 
 
 	/**
-	 *
 	 * @param wpdb $pWPDB
-	 *
 	 */
-
 	public function __construct(wpdb $pWPDB)
 	{
 		$this->_pWPDB = $pWPDB;
 	}
 
-
 	/**
-	 *
 	 * @param int $formId
 	 * @param Field $pField
 	 * @return DefaultValueModelSingleselect
-	 *
 	 */
-
 	public function readDefaultValuesSingleselect(int $formId, Field $pField): DefaultValueModelSingleselect
 	{
 		$query = $this->createBaseQuery($formId, $pField);
@@ -71,15 +64,26 @@ class DefaultValueRead
 		return $pDataModel;
 	}
 
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @return DefaultValueModelMultiselect
+	 */
+	public function readDefaultValuesMultiSelect(int $formId, Field $pField): DefaultValueModelMultiselect
+	{
+		$query = $this->createBaseQuery($formId, $pField);
+		$rows = $this->_pWPDB->get_results($query, ARRAY_A);
+		$values = array_column($rows, 'value');
+		$pDataModel = new DefaultValueModelMultiselect($formId, $pField);
+		$pDataModel->setValues($values);
+		return $pDataModel;
+	}
 
 	/**
-	 *
 	 * @param int $formId
 	 * @param Field $pField
 	 * @return DefaultValueModelText
-	 *
 	 */
-
 	public function readDefaultValuesText(int $formId, Field $pField): DefaultValueModelText
 	{
 		$query = $this->createBaseQuery($formId, $pField);
@@ -110,11 +114,9 @@ class DefaultValueRead
 	}
 
 	/**
-	 *
 	 * @param int $formId
 	 * @param Field $pField
 	 * @return string
-	 *
 	 */
 	private function createBaseQuery(int $formId, Field $pField): string
 	{

@@ -28,7 +28,6 @@ use DI\NotFoundException;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueRead;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldTypes;
-use UnexpectedValueException;
 
 /**
  *
@@ -77,8 +76,9 @@ class DefaultValueModelToOutputConverter
 
 		switch ($pField->getType()) {
 			case FieldTypes::FIELD_TYPE_SINGLESELECT:
-			case FieldTypes::FIELD_TYPE_MULTISELECT:
 				return $this->convertSingleSelect($formId, $pField);
+			case FieldTypes::FIELD_TYPE_MULTISELECT:
+				return $this->convertMultiSelect($formId, $pField);
 
 			case FieldTypes::FIELD_TYPE_TEXT:
 			case FieldTypes::FIELD_TYPE_VARCHAR:
@@ -105,17 +105,27 @@ class DefaultValueModelToOutputConverter
 		return $pConverter->convertToRow($pModel);
 	}
 
-
 	/**
-	 *
 	 * @param int $formId
 	 * @param Field $pField
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 *
 	 */
+	private function convertMultiSelect(int $formId, Field $pField): array
+	{
+		$pModel = $this->_pDefaultValueReader->readDefaultValuesMultiSelect($formId, $pField);
+		$pConverter = $this->_pOutputConverterFactory->createForMultiSelect();
+		return $pConverter->convertToRow($pModel);
+	}
 
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
 	private function convertText(int $formId, Field $pField): array
 	{
 		$pModel = $this->_pDefaultValueReader->readDefaultValuesText($formId, $pField);

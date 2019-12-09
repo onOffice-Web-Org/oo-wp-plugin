@@ -27,6 +27,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
@@ -136,22 +137,46 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 	 *
 	 */
 
-	public function testGetConvertedFieldForEmptySelectField()
+	public function testGetConvertedFieldForEmptySingleSelectField()
 	{
 		$this->_pField->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
 		$this->assertEquals([''], $result);
 	}
 
-
 	/**
-	 *
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 *
 	 */
+	public function testGetConvertedFieldForEmptyMultiSelectField()
+	{
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
+		$this->assertSame([], $result);
+	}
 
-	public function testGetConvertedFieldForNonEmptySelectField()
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testGetConvertedFieldForNonEmptyMultiSelectField()
+	{
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+		$pMultiSelectFieldModel = new DefaultValueModelMultiselect(13, $this->_pField);
+		$pMultiSelectFieldModel->setValues(['Monday', 'Tuesday', 'Wednesday', 'Saturday']);
+
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultValuesMultiSelect')->will($this->returnValue($pMultiSelectFieldModel));
+		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
+		$this->assertEquals(['Monday', 'Tuesday', 'Wednesday', 'Saturday'], $result);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testGetConvertedFieldForNonEmptySingleSelectField()
 	{
 		$this->_pField->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pSingleSelectFieldModel = new DefaultValueModelSingleselect(13, $this->_pField);

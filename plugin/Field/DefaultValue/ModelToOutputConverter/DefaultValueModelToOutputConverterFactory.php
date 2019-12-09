@@ -60,6 +60,15 @@ class DefaultValueModelToOutputConverterFactory
 		return $this->_pContainer->get(DefaultValueModelToOutputConverterSingleselect::class);
 	}
 
+	/**
+	 * @return DefaultValueModelToOutputConverterMultiSelect
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function createForMultiSelect(): DefaultValueModelToOutputConverterMultiSelect
+	{
+		return $this->_pContainer->get(DefaultValueModelToOutputConverterMultiSelect::class);
+	}
 
 	/**
 	 *
