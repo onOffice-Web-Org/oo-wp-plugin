@@ -128,6 +128,7 @@ class TestTemplateEstateDefaultDetail
 		$pTemplate = new TemplateMocker('templates.dist/estate/default_detail.php', getcwd());
 		$pTemplate->setEstateList($this->_pEstate);
 		$output = $pTemplate->render();
+		//file_put_contents(__DIR__.'/resources/templates/output_default_detail.html', $output);
 		$expected = file_get_contents(__DIR__.'/resources/templates/output_default_detail.html');
 
 		$this->assertEquals($expected, $output);
