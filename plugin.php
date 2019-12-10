@@ -21,6 +21,7 @@
 
 /*
 Plugin Name: onOffice for WP-Websites
+Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
@@ -46,7 +47,8 @@ use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
-use onOffice\WPlugin\Installer;
+use onOffice\WPlugin\Installer\Installer;
+use onOffice\WPlugin\Installer\DatabaseChangesInterface;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
 use onOffice\WPlugin\PDF\PdfDocumentModelValidationException;
 use onOffice\WPlugin\PDF\PdfDownload;
@@ -64,6 +66,12 @@ $pContentFilter = $pDI->get(ContentFilter::class);
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
+
+add_action('plugins_loaded', function() use ($pDI) {
+	/** @var DatabaseChanges $pDbChanges */
+	$pDbChanges = $pDI->get(DatabaseChangesInterface::class);
+	$pDbChanges->install();
+});
 
 add_action('init', [$pContentFilter, 'addCustomRewriteTags']);
 add_action('init', [$pContentFilter, 'addCustomRewriteRules']);
@@ -164,3 +172,5 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 		}
 	}
 });
+
+return $pDI;

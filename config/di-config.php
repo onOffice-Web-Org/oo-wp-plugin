@@ -27,12 +27,10 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientActionGetPdf;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
-use onOffice\WPlugin\Filesystem\Filesystem;
-use onOffice\WPlugin\Filesystem\FilesystemDirect;
 use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
-use onOffice\WPlugin\Form\FormPostApplicantSearchConfiguration;
-use onOffice\WPlugin\Form\FormPostApplicantSearchConfigurationDefault;
+use onOffice\WPlugin\Filesystem\Filesystem;
+use onOffice\WPlugin\Filesystem\FilesystemDirect;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
@@ -41,6 +39,8 @@ use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\Installer\DatabaseChangesInterface;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
@@ -71,7 +71,6 @@ return [
 	FormPostOwnerConfiguration::class => autowire(FormPostOwnerConfigurationDefault::class),
 	FormPostContactConfiguration::class => autowire(FormPostContactConfigurationDefault::class),
 	FormPostInterestConfiguration::class => autowire(FormPostInterestConfigurationDefault::class),
-	FormPostApplicantSearchConfiguration::class => autowire(FormPostApplicantSearchConfigurationDefault::class),
 	WPScriptStyleBase::class => autowire(WPScriptStyleDefault::class),
 	WPOptionWrapperBase::class => autowire(WPOptionWrapperDefault::class),
 	ScriptLoaderBuilderConfig::class => autowire(ScriptLoaderBuilderConfigDefault::class),
@@ -84,4 +83,5 @@ return [
 	WPNonceWrapper::class => autowire(WPNonceWrapperDefault::class),
 	WPScreenWrapper::class => autowire(WPScreenWrapperDefault::class),
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
+	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
 ];

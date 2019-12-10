@@ -83,7 +83,13 @@ abstract class InputFieldRenderer
 
 	public function addAdditionalAttribute($name, $value)
 	{
-		$this->_additionalAttributes[$name] = $value;
+		if (array_key_exists($name, $this->_additionalAttributes) &&
+				$this->_additionalAttributes[$name] != '' &&
+				$name == 'class') {
+			$this->_additionalAttributes[$name] .= ' '.$value;
+		} else {
+			$this->_additionalAttributes[$name] = $value;
+		}
 	}
 
 
@@ -120,10 +126,8 @@ abstract class InputFieldRenderer
 	{
 		$outputValues = array();
 
-		if (count($this->_additionalAttributes) > 0)
-		{
-			foreach ($this->_additionalAttributes as $name => $value)
-			{
+		if (count($this->_additionalAttributes) > 0) {
+			foreach ($this->_additionalAttributes as $name => $value) {
 				$outputValues []= esc_html($name).'="'.esc_html($value).'"';
 			}
 		}

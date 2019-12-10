@@ -209,6 +209,18 @@ class TestClassDataListView
 	 *
 	 */
 
+	public function testSortByUserValues()
+	{
+		$this->assertEquals([], $this->_pSubject->getSortByUserValues());
+		$this->_pSubject->setSortByUserValues(['kaufpreis', 'wohnflaeche']);
+		$this->assertEquals(['kaufpreis', 'wohnflaeche'], $this->_pSubject->getSortByUserValues());
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testRandom()
 	{
 		$this->assertFalse($this->_pSubject->getRandom());
@@ -274,5 +286,15 @@ class TestClassDataListView
 		$this->assertEquals('', $this->_pSubject->getTemplate());
 		$this->_pSubject->setTemplate('/path/to/template');
 		$this->assertEquals('/path/to/template', $this->_pSubject->getTemplate());
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\DataView\DataListView::setAdjustableSorting
+	 * @covers \onOffice\WPlugin\DataView\DataListView::isAdjustableSorting
+	 */
+	public function testAdjustableSorting()
+	{
+		$this->_pSubject->setAdjustableSorting(true);
+		$this->assertTrue($this->_pSubject->isAdjustableSorting());
 	}
 }

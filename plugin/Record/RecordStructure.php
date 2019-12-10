@@ -103,6 +103,12 @@ class RecordStructure
 				self::EMPTY_VALUE => '',
 			),
 		),
+		RecordManager::TABLENAME_SORTBYUSERVALUES => array(
+			'sortbyuservalue' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		),
 		RecordManager::TABLENAME_LIST_VIEW_ADDRESS => array(
 			'name' => array(
 				self::NULL_ALLOWED => false,

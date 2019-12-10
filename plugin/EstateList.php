@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\EstateListBase;
@@ -35,6 +36,9 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Controller\SortList\SortListBuilder;
+use onOffice\WPlugin\Controller\SortList\SortListDataModel;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use function add_action;
 use function do_action;
 use function esc_url;
@@ -311,11 +315,11 @@ class EstateList
 		$requestParams = [];
 
 		if ($pListView->getSortby() !== '' && !$this->_pDataView->getRandom()) {
-			$requestParams['sortby'] = $pListView->getSortby();
+			$requestParams['sortby'] =  $pListView->getSortBy();
 		}
 
 		if ($pListView->getSortorder() !== '') {
-			$requestParams['sortorder'] = $pListView->getSortorder();
+			$requestParams['sortorder'] =$pListView->getSortorder();
 		}
 
 		if ($pListView->getFilterId() !== 0) {

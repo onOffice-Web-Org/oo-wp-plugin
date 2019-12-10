@@ -27,6 +27,8 @@
 
 use onOffice\WPlugin\Favorites;
 
+echo '<div>'.$generateSortDropDown().'</div>';
+
 // display search form
 require 'SearchForm.php';
 

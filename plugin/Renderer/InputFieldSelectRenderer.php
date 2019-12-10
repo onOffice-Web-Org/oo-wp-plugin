@@ -34,8 +34,8 @@ class InputFieldSelectRenderer
 	/** @var bool */
 	private $_multiple = false;
 
-	/** @var string */
-	private $_selectedValue = null;
+	/** @var array */
+	private $_selectedValue = [];
 
 	/**
 	 *

@@ -22,6 +22,10 @@
 namespace onOffice\WPlugin\Record;
 
 use onOffice\WPlugin\DataView;
+use onOffice\WPlugin\DataView\DataListView;
+use const ARRAY_A;
+use const OBJECT;
+use function esc_sql;
 
 /**
  *
@@ -90,7 +94,8 @@ class RecordManagerReadListViewEstate
 
 		if ($result !== null)
 		{
-			$result[DataView\DataListView::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
+			$result[DataListView::PICTURES] = $this->getPictureTypesByListviewId($listviewId);
+			$result[DataListView::SORT_BY_USER_VALUES] = $this->getSortbauservaluesByListviewId($listviewId);
 
 			$fieldRows = $this->getFieldconfigByListviewId($listviewId);
 			$fields = array_column($fieldRows, 'fieldname');
@@ -155,6 +160,7 @@ class RecordManagerReadListViewEstate
 		{
 			$id = $result['listview_id'];
 			$result[DataView\DataListView::PICTURES] = $this->getPictureTypesByListviewId($id);
+			$result[DataView\DataListView::SORT_BY_USER_VALUES] = $this->getSortbauservaluesByListviewId($id);
 
 			$fieldRows = $this->getFieldconfigByListviewId($id);
 			$fields = array_column($fieldRows, 'fieldname');
@@ -197,6 +203,34 @@ class RecordManagerReadListViewEstate
 		return $result;
 	}
 
+
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+
+	private function readSortbyuservaluesNyListviewId(int $listviewId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlSortbyuservalues = "SELECT `sortbyuservalue`
+				FROM {$prefix}oo_plugin_sortbyuservalues
+				WHERE `listview_id` = ".esc_sql($listviewId);
+
+		$sortbyuservalue = $pWpDb->get_col($sqlSortbyuservalues);
+		$result = array();
+
+		if (is_array($sortbyuservalue))
+		{
+			$result = $sortbyuservalue;
+		}
+
+		return $result;
+	}
 
 
 	/**
@@ -291,6 +325,18 @@ class RecordManagerReadListViewEstate
 		return $this->readPicturetypesByListviewId($listviewId);
 	}
 
+
+	/**
+	 *
+	 * @param int $listviewId
+	 * @return array
+	 *
+	 */
+
+	public function getSortbauservaluesByListviewId(int $listviewId): array
+	{
+		return $this->readSortbyuservaluesNyListviewId($listviewId);
+	}
 
 
 	/**

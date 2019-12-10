@@ -123,7 +123,7 @@ abstract class FormModelBuilderDB
 	 *
 	 */
 
-	private function getOnlyDefaultSortByFields($module)
+	public function getOnlyDefaultSortByFields($module)
 	{
 		$fieldnames = $this->readFieldnames($module, true);
 		$pDefaultSorting = new FieldDefaultSorting();

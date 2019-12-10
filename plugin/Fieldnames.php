@@ -29,6 +29,7 @@ use onOffice\WPlugin\Field\FieldnamesEnvironmentDefault;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use function __;
 
 /**
@@ -138,11 +139,9 @@ class Fieldnames
 		}
 	}
 
-
 	/**
-	 *
 	 * @param APIClientActionGeneric $pApiClientAction
-	 *
+	 * @throws API\APIEmptyResultException
 	 */
 
 	private function createFieldList(APIClientActionGeneric $pApiClientAction)
@@ -159,6 +158,10 @@ class Fieldnames
 
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
 				$fieldProperties['module'] = $module;
+				if (($fieldProperties['label'] ?? '') === '') {
+					$fieldProperties['label'] = sprintf('(%s)', $fieldName);
+				}
+
 				$this->_fieldList[$module][$fieldName] = $fieldProperties;
 			}
 		}
@@ -221,30 +224,25 @@ class Fieldnames
 		return $extraFields;
 	}
 
-
 	/**
-	 *
 	 * @param string $fieldName
 	 * @param string $module
 	 * @return string
-	 *
+	 * @throws UnknownFieldException
 	 */
-
 	public function getType(string $fieldName, string $module): string
 	{
 		$row = $this->getRow($module, $fieldName);
 		return $row['type'];
 	}
 
-
 	/**
 	 *
 	 * @param string $field
 	 * @param string $module
 	 * @return array
-	 *
+	 * @throws UnknownFieldException
 	 */
-
 	public function getFieldInformation(string $field, string $module): array
 	{
 		return $this->getRow($module, $field);

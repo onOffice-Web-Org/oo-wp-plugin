@@ -113,6 +113,9 @@ class TestClassRecordStructure
 		RecordManager::TABLENAME_PICTURETYPES => array(
 			'picturetype' => '',
 		),
+		RecordManager::TABLENAME_SORTBYUSERVALUES => array(
+			'sortbyuservalue' => '',
+		),
 		RecordManager::TABLENAME_LIST_VIEW_ADDRESS => array(
 			'name' => null,
 			'filterId' => null,

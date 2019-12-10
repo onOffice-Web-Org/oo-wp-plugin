@@ -163,6 +163,15 @@
 						"tablename": "Stammdaten",
 						"content": "Personal details"
 					},
+					"EmptyLabelField": {
+						"type": "varchar",
+						"length": 80,
+						"permittedvalues": null,
+						"default": null,
+						"label": "",
+						"tablename": "Stammdaten",
+						"content": "Personal details"
+					},
 					"Briefanrede": {
 						"type": "text",
 						"length": null,

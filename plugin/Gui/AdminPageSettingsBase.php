@@ -427,8 +427,26 @@ abstract class AdminPageSettingsBase
 		wp_register_script('oo-checkbox-js',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/checkbox.js', ['jquery'], '', true);
 
+		wp_register_script('oo-sort-by-user-selection',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-sort-by-user-selection.js', ['jquery'], '', true);
+
+		wp_enqueue_script('oo-sort-by-user-selection');
+
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');
+
+		wp_register_script('chosen-jquery',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/chosen.jquery.js', ['jquery'], '', true);
+
+		wp_register_script('chosen-prism',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/prism.js', ['jquery'], '', true);
+
+		wp_register_script('chosen-init',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/init.js', ['jquery'], '', true);
+
+		wp_enqueue_script('chosen-jquery');
+		wp_enqueue_script('chosen-prism');
+		wp_enqueue_script('chosen-init');
 	}
 
 
