@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice Software AG
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,13 +19,6 @@
  *
  */
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) Software AG
- *
- */
-
 namespace onOffice\WPlugin;
 
 /**
@@ -35,38 +28,74 @@ namespace onOffice\WPlugin;
 class Language
 {
 	/**
-	 *
-	 * @return string
-	 *
+	 * @var array
+	 * @see https://make.wordpress.org/polyglots/teams/
 	 */
-
-	static public function getDefault()
-	{
-		$languageMapping = ConfigWrapper::getInstance()->getConfigByKey('localemap');
-		$currentLocale = get_locale();
-		$language = $languageMapping[$currentLocale] ?? $languageMapping['fallback'] ?? 'DEU';
-		return $language;
-	}
-
+	const LOCALE_MAPPING = [
+		'de' => 'DEU',
+		'de_DE' => 'DEU',
+		'de_DE_formal' => 'DEU',
+		'de_CH' => 'CHE',
+		'de_CH_informal' => 'CHE',
+		'en' => 'ENG',
+		'en_GB' => 'ENG',
+		'en_US' => 'ENG',
+		'nl_BE' => 'BEL',
+		'nl_NL' => 'NLD',
+		'nl_NL_formal' => 'NLD',
+		'fr_BE' => 'FRA',
+		'fr_CA' => 'FRA',
+		'fr_FR' => 'FRA',
+		'el' => 'GRC',
+		'it_IT' => 'ITA',
+		'lb_LU' => 'LUX',
+		'pl_PL' => 'POL',
+		'pt_PT' => 'PRT',
+		'ro_RO' => 'ROU',
+		'ru_RU' => 'RUS',
+		'sl_SI' => 'SVN',
+		'es_AR' => 'ESP',
+		'es_CL' => 'CHI',
+		'es_CO' => 'ESP',
+		'es_MX' => 'ESP',
+		'es_PE' => 'ESP',
+		'es_PR' => 'ESP',
+		'es_ES' => 'ESP',
+		'es_VE' => 'ESP',
+		'ca' => 'CAT',
+		'sv_SE' => 'SWE',
+		'tr_TR' => 'TUR',
+		'fi' => 'FIN',
+		'cs_CZ' => 'CZE',
+		'hr' => 'HRV',
+		'zh_CN' => 'CHN',
+		'bg_BG' => 'BGR',
+		'ar' => 'SAU',
+		'da_DK' => 'DNK',
+		'nn_NO' => 'NOR',
+	];
 
 	/**
-	 *
 	 * @return string
-	 *
 	 */
+	static public function getDefault(): string
+	{
+		$languageMapping = self::LOCALE_MAPPING;
+		$currentLocale = get_locale();
+		return $languageMapping[$currentLocale] ?? 'DEU';
+	}
 
+	/**
+	 * @return string
+	 */
 	public function getLocale(): string
 	{
 		return get_locale();
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
 	public function getOnOfficeLanguage(): string
 	{
 		return self::getDefault();
