@@ -49,7 +49,7 @@ This also means, you need to enter your API credentials before configuring anyth
 #### A First Example: Creating a New Estate List
 In order to create a new estate list, go to "onOffice" » "Estates" and press "Add New". **Give the new list a name**, pick the desired settings and click "Save Changes" at the bottom of the page. Going back to the estate list overview will show you the shortcode (i.e. `[oo_estate view="my new view"]`. Paste this into a new page and open the preview. The new list of estates should be embedded.
 
-An extensive documentation will soon be provided separately.
+An extensive documentation can be found at [wpplugindoc.onoffice.de (German)](https://wpplugindoc.onoffice.de).
 
 ## License
 

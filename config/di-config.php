@@ -39,6 +39,8 @@ use onOffice\WPlugin\Form\FormPostInterestConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\Installer\DatabaseChangesInterface;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
@@ -81,4 +83,5 @@ return [
 	WPNonceWrapper::class => autowire(WPNonceWrapperDefault::class),
 	WPScreenWrapper::class => autowire(WPScreenWrapperDefault::class),
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
+	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
 ];

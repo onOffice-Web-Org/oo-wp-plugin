@@ -1,8 +1,6 @@
 #!/bin/sh
 
 # Deploys a tag of the plugin into the WP SVN.
-#
-# needs the package `subversion-tools` on Ubuntu
 
 TAG_PATH=tags
 TRUNK_PATH=trunk
@@ -16,19 +14,25 @@ if [ -z $SVNURL ]; then
 	exit 1
 fi
 
-if [ ! -z $NEW_TAG ]; then
-	grep "= $NEW_TAG =" readme.txt > /dev/null
-	CHANGELOG_ENTRY_EXISTS=$?
-	if [ $CHANGELOG_ENTRY_EXISTS -ne 0 ]; then
-		>&2 echo "Missing changelog entry for tag $NEW_TAG"
-		exit 2
-	fi
+if [ -z $NEW_TAG ]; then
+	>&2 echo "Tag argument is missing"
+	exit 2
 fi
 
-make release
-cd /tmp/onoffice
+grep "= $NEW_TAG =" readme.txt > /dev/null
 
-if [ ! -z "$NEW_TAG" -a "$2" = "--stable" ]; then
+if [ $? -ne 0 ]; then
+	>&2 echo "Missing changelog entry for tag $NEW_TAG"
+	exit 3
+fi
+
+RELEASE_DIR=`mktemp -d`
+>&2 echo "RELEASE_DIR is $RELEASE_DIR"
+
+PREFIX=$RELEASE_DIR make release
+cd "$RELEASE_DIR/onoffice"
+
+if [ "$2" = "--stable" ]; then
 	ed readme.txt <<EDSCRIPT
 7
 i
@@ -39,12 +43,32 @@ q
 EDSCRIPT
 fi
 
-cd $PPWDt
-svn_load_dirs -svn_username="${SVN_USER}" -svn_password="${SVN_PASSWORD}" -no_auto_exe -p "${PPWDt}/bin/svn-config.conf" -no_user_input ${SVNURL} ${TRUNK_PATH} /tmp/onoffice
+TEMPDIR_CHECKOUT=`mktemp -d`
+>&2 echo "TEMPDIR_CHECKOUT is $TEMPDIR_CHECKOUT"
 
-echo $? was the return value
+svn co "${SVNURL}/${TRUNK_PATH}" "$TEMPDIR_CHECKOUT" || exit 4;
 
-rm -rf /tmp/svn_load_dirs*
-svn info "${SVNURL}${TAG_PATH}/$NEW_TAG" > /dev/null 2>&1 || \
-	svn copy --username "${SVN_USER}" --password "${SVN_PASSWORD}" --non-interactive "${SVNURL}/${TRUNK_PATH}" "${SVNURL}/${TAG_PATH}/$NEW_TAG" -m "Create tag '$NEW_TAG'"
+cd "$TEMPDIR_CHECKOUT";
+
+WD=`pwd`
+
+if [ "${WD%%/tmp/*}" ]; then
+	>&2 echo "Not working in /tmp/, exiting! tmp dir is: $TEMPDIR_CHECKOUT";
+	exit 5
+fi
+
+find . ! -path './.svn' ! -path './.svn/*' ! -path '.' ! -path '.svn' -type d -exec rm -rf {} +
+find . ! -path './.svn/*' ! -path '.' ! -path '.svn/*' -type f -exec rm -f {} +
+
+cp -R $RELEASE_DIR/onoffice/* .
+
+svn add . --force
+
+# remove deleted files
+# xargs -r is a GNU extension
+svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
+
+svn commit -m "Import tag '$NEW_TAG' to trunk" --non-interactive --username "${SVN_USER}" --password "${SVN_PASSWORD}" || exit 6;
+svn copy --username "${SVN_USER}" --password "${SVN_PASSWORD}" --non-interactive "${SVNURL}/${TRUNK_PATH}" "${SVNURL}/${TAG_PATH}/$NEW_TAG" -m "Create tag '$NEW_TAG'"
+
 exit $?

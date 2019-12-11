@@ -67,6 +67,18 @@ class InputModelDBFactory
 	const INPUT_EXPOSE = 'expose';
 
 	/** */
+	const INPUT_SORT_BY_SETTING = 'sortBySetting';
+
+	/** */
+	const INPUT_SORT_BY_CHOSEN = 'sortbyuservalue';
+
+	/** */
+	const INPUT_SORT_BY_DEFAULT = 'sortByDefault';
+
+	/** */
+	const INPUT_SORT_BY_USER_DEFINED_DIRECTION = 'sortByUserDefinedDirection';
+
+	/** */
 	const INPUT_FIELD_CONFIG = 'fieldConfig';
 
 
