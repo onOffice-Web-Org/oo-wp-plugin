@@ -73,6 +73,18 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.2.2 =
+
+** Fixes **
+
+* Remove contact form from default estate list template.
+* Fix variable name collision in estate detail and map template.
+* Add missing languages to the language mapping.
+
+** Changes **
+
+* The Regional Addition can now be used as both single select or multi select field.
+
 = 2.2.1 =
 
 ** Fixes **
@@ -144,6 +156,9 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+= 2.2.2 =
+Various bug fixes.
 
 = 2.2.1 =
 Fixes the migration of the database changes introduced in version 2.2.0.
