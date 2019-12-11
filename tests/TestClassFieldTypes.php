@@ -103,4 +103,16 @@ class TestClassFieldTypes
 		$this->assertTrue(FieldTypes::isMultipleSelectType(FieldTypes::FIELD_TYPE_MULTISELECT));
 		$this->assertFalse(FieldTypes::isMultipleSelectType(FieldTypes::FIELD_TYPE_VARCHAR));
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testIsRegZusatzSearchcritTypes()
+	{
+		$this->assertTrue(FieldTypes::isRegZusatzSearchcritTypes('displayAll'));
+		$this->assertTrue(FieldTypes::isRegZusatzSearchcritTypes('displayLive'));
+		$this->assertTrue(FieldTypes::isRegZusatzSearchcritTypes('limitExceeded'));
+	}
 }
