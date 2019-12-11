@@ -97,10 +97,7 @@ class SDKWrapper
 			],
 		];
 
-		$configUser = ConfigWrapper::getInstance()->getConfigByKey('api') ?? [];
-		$config = array_merge($localconfig, $configUser);
-
-		return $config;
+		return $localconfig;
 	}
 
 
