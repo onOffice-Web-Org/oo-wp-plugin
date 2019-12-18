@@ -63,45 +63,73 @@ onOffice.ajaxSaver = function(outerDiv) {
 		this._outerDiv.find('.onoffice-input:not([data-onoffice-ignore=true])').each(function(i, elem) {
 			var inputNameFull = $(elem).attr('name');
 			var inputName = inputNameFull;
+			if (inputName === "dummy_key") {
+			    return;
+            }
 			var elementValue = proto._getValueOfElement(elem);
 
 			if (elementValue === null) {
 				return;
 			}
 
-			var inputContainsArray = /\[\]$/.test(inputNameFull);
-			var inputContainsObject = /\[[^\]]*\]$/.test(inputNameFull);
+            var inputContainsArray = /\[\]$/.test(inputNameFull);
+            var inputContainsObject = /\[[^\]]+\]/.test(inputNameFull);
 
-			if (inputContainsArray) { // array
-				inputName = inputNameFull.replace(/\[\]$/, '');
-				if (values[inputName] === undefined) {
-					values[inputName] = [];
-				}
-				values[inputName].push(elementValue);
-			} else if (inputContainsObject) {
-				var inputNameArray = inputNameFull.match(/([^\[]+)/)[0];
-				if (values[inputNameArray] === undefined) {
-					values[inputNameArray] = {};
-				}
-				var nestedParameterName = inputNameFull.match(/\[(.+)\]$/)[1];
-				var nestedParameters = nestedParameterName.split('][');
-				var recentObject = values[inputNameArray];
+            if (inputContainsArray) {
+                inputName = inputNameFull.match(/(.+)\[\]/)[1];
+                var previousEntry = proto._getValueOfNestedObjectByKeys(inputNameFull, values) || [];
+                previousEntry.push(elementValue);
+                elementValue = previousEntry;
+            }
 
-				for (var i in nestedParameters) {
-					if (i !== ((nestedParameters.length - 1) + "")) {
-						recentObject[nestedParameters[i]] = recentObject[nestedParameters[i]] || {};
-						recentObject = recentObject[nestedParameters[i]];
-					} else {
-						recentObject[nestedParameters[i]] = elementValue;
-					}
-				}
-			} else {
-				values[inputName] = elementValue;
-			}
-		});
+            if (inputContainsObject) {
+                var nestedParameters = proto._getNestedParameterNamesOfString(inputNameFull);
+                var recentObject = values;
+
+                nestedParameters.forEach(function(parameter, i) {
+                    if (i !== (nestedParameters.length - 1)) {
+                        recentObject[parameter] = recentObject[parameter] || {};
+                        recentObject = recentObject[parameter];
+                    } else {
+                        recentObject[parameter] = elementValue;
+                    }
+                });
+            } else {
+                values[inputName] = elementValue;
+            }
+        });
 
 		return values;
 	};
+
+	this._getNestedParameterNamesOfString = function(string) {
+        var inputNameArray = string.match(/([^\[]+)/)[0];
+
+        var nestedParameterNameMatch = string.match(/\[(.+)\]/);
+        var result = [inputNameArray];
+
+        if (nestedParameterNameMatch) {
+            var nestedParameterName = nestedParameterNameMatch[1];
+            result.concat(nestedParameterName.split('][').filter(function(value) {
+                return value !== "";
+            }));
+        }
+        return result;
+    };
+
+	this._getValueOfNestedObjectByKeys = function(nestedName, object) {
+        var nestedParameters = this._getNestedParameterNamesOfString(nestedName);
+        var recentObject = object;
+        nestedParameters.forEach(function(parameter, i) {
+            if (i !== (nestedParameters.length - 1)) {
+                recentObject[parameter] = recentObject[parameter] || {};
+                recentObject = recentObject[parameter];
+            } else {
+                recentObject = recentObject[parameter] || [];
+            }
+        });
+        return recentObject;
+    };
 
 	this._getValueOfElement = function(element) {
 		var value = null;

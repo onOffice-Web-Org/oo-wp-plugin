@@ -532,6 +532,12 @@ abstract class AdminPageFormSettingsBase
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
 		wp_enqueue_script('onoffice-default-form-values-js');
+		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+
+		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
+		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+		wp_enqueue_script('onoffice-multiselect');
+		wp_enqueue_style('onoffice-multiselect');
 	}
 
 	/** @return string */

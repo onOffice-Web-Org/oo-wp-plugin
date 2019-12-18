@@ -1,11 +1,12 @@
 onOffice = onOffice || {};
+onOffice.default_values_inputs_converted = onOffice.default_values_inputs_converted || [];
 
 // polyfill
 if (window.NodeList && !NodeList.prototype.forEach) {
     NodeList.prototype.forEach = Array.prototype.forEach;
 }
 
-(function () {
+onOffice.default_values_input_converter = function () {
     var predefinedValues = onOffice_loc_settings.defaultvalues || {};
 
     // plaintext
@@ -13,6 +14,10 @@ if (window.NodeList && !NodeList.prototype.forEach) {
         element.backupLanguageSelection = {};
         var mainInput = element.parentElement.parentElement.querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value].onoffice-input');
         var fieldname = element.parentElement.parentElement.parentElement.querySelector('span.menu-item-settings-name').textContent;
+        if (onOffice.default_values_inputs_converted.indexOf(fieldname) !== -1) {
+            return;
+        }
+        onOffice.default_values_inputs_converted.push(fieldname);
         mainInput.name = 'defaultvalue-lang[' + fieldname + '][native]';
 
         (function () {
@@ -106,7 +111,16 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
     // single-select
     document.querySelectorAll('select[name^=oopluginfieldconfigformdefaultsvalues-value]').forEach(function (mainInput) {
-        var fieldName = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name').textContent;
+        var mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
+        if (mainElement === null) {
+            return;
+        }
+
+        var fieldName = mainElement.textContent;
+        if (onOffice.default_values_inputs_converted.indexOf(fieldName) !== -1) {
+            return;
+        }
+        onOffice.default_values_inputs_converted.push(fieldName);
         mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
         var predefinedValuesIsArray = (typeof predefinedValues[fieldName] === 'object') &&
             Array.isArray(predefinedValues[fieldName]);
@@ -114,11 +128,56 @@ if (window.NodeList && !NodeList.prototype.forEach) {
         if (predefinedValuesIsArray) {
             mainInput.value = predefinedValues[fieldName][0];
         }
+
+        var fieldList = onOffice_loc_settings.fieldList || {};
+        var fieldDefinition = {};
+        for (var module in fieldList) {
+            if (fieldList[module][fieldName] !== undefined) {
+                fieldDefinition = fieldList[module][fieldName];
+            }
+        }
+
+        if (fieldDefinition.type === "multiselect") {
+            var parent = mainInput.parentElement;
+            mainInput.remove();
+
+            var div = document.createElement('div');
+            div.setAttribute('data-name', 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + '][]');
+            div.classList.add('multiselect');
+
+            var button = document.createElement('input');
+            button.setAttribute('type', 'button');
+            button.setAttribute('value', 'Edit Values!!1!');
+            button.classList.add('onoffice-multiselect-edit');
+            div.appendChild(button);
+
+            parent.appendChild(div);
+
+            var multiselectOptions = {
+                name_is_array: true,
+                cb_class: 'onoffice-input'
+            };
+            var multiselect = new onOffice.multiselect(div, fieldDefinition.permittedvalues,
+                onOffice_loc_settings.defaultvalues[fieldName] || [], multiselectOptions);
+            button.onclick = (function(multiselect) {
+                return function() {
+                    multiselect.show();
+                };
+            })(multiselect);
+        }
     });
 
     // numeric range
     document.querySelectorAll('input[name^=oopluginfieldconfigformdefaultsvalues-value]').forEach(function (mainInput) {
-        var fieldName = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name').textContent;
+        var mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
+        if (mainElement === null) {
+            return;
+        }
+        var fieldName = mainElement.textContent;
+        if (onOffice.default_values_inputs_converted.indexOf(fieldName) !== -1) {
+            return;
+        }
+        onOffice.default_values_inputs_converted.push(fieldName);
         var fieldList = onOffice_loc_settings.fieldList || {};
         var fieldDefinition = {};
         for (var module in fieldList) {
@@ -143,4 +202,6 @@ if (window.NodeList && !NodeList.prototype.forEach) {
             mainInputClone.value = predefinedValues[fieldName]['max'] || '';
         }
     });
-})();
+};
+
+onOffice.default_values_input_converter();
