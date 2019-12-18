@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter;
 
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueCreate;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelText;
@@ -91,8 +92,10 @@ class DefaultValueRowSaver
 
 		switch ($pField->getType()) {
 			case FieldTypes::FIELD_TYPE_SINGLESELECT:
-			case FieldTypes::FIELD_TYPE_MULTISELECT:
 				$this->saveSingleSelect($formId, $pField, $values);
+				break;
+			case FieldTypes::FIELD_TYPE_MULTISELECT:
+				$this->saveMultiSelect($formId, $pField, $values);
 				break;
 			case FieldTypes::FIELD_TYPE_TEXT:
 			case FieldTypes::FIELD_TYPE_VARCHAR:
@@ -112,6 +115,19 @@ class DefaultValueRowSaver
 		$pModel = new DefaultValueModelSingleselect($formId, $pField);
 		$pModel->setValue($value);
 		$this->_pDefaultValueCreate->createForSingleselect($pModel);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @param array $values
+	 * @throws RecordManagerInsertException
+	 */
+	private function saveMultiSelect(int $formId, Field $pField, array $values)
+	{
+		$pModel = new DefaultValueModelMultiselect($formId, $pField);
+		$pModel->setValues($values);
+		$this->_pDefaultValueCreate->createForMultiselect($pModel);
 	}
 
 	/**
