@@ -39,6 +39,7 @@ class TestClassDefaultValueRowSaver
 	/** @var array */
 	const EXAMPLE_RECORDS = [
 		'testSingleselect' => 'singlevalue',
+		'testMultiSelect' => ['value1', 'value3'],
 		'testText' => [
 			'native' => 'testEN',
 			'de_DE' => 'testDE',
@@ -175,6 +176,19 @@ class TestClassDefaultValueRowSaver
 	}
 
 	/**
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+	public function testSaveDefaultValuesMultiSelect()
+	{
+		$this->_pDefaultValueCreate->expects($this->once())->method('createForMultiSelect');
+		$pFieldsCollection = $this->buildFieldsCollection();
+		$this->_pSubject->saveDefaultValues(13, [
+			'testMultiSelect' => self::EXAMPLE_RECORDS['testMultiSelect'],
+		], $pFieldsCollection);
+	}
+
+	/**
 	 * @return FieldsCollection
 	 */
 	private function buildFieldsCollection(): FieldsCollection
@@ -197,6 +211,10 @@ class TestClassDefaultValueRowSaver
 		$pFieldFloat->setIsRangeField(true);
 		$pFieldFloat->setType(FieldTypes::FIELD_TYPE_FLOAT);
 		$pFieldsCollection->addField($pFieldFloat);
+		$pFieldMultiSelect = new Field('testMultiSelect', onOfficeSDK::MODULE_ESTATE);
+		$pFieldMultiSelect->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+		$pFieldMultiSelect->setPermittedvalues(['value1', 'value2', 'value3']);
+		$pFieldsCollection->addField($pFieldMultiSelect);
 		return $pFieldsCollection;
 	}
 }

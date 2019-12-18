@@ -108,9 +108,9 @@ onOffice.ajaxSaver = function(outerDiv) {
         var nestedParameterNameMatch = string.match(/\[(.+)\]/);
         var result = [inputNameArray];
 
-        if (nestedParameterNameMatch) {
+        if (nestedParameterNameMatch && nestedParameterNameMatch[1]) {
             var nestedParameterName = nestedParameterNameMatch[1];
-            result.concat(nestedParameterName.split('][').filter(function(value) {
+            result = result.concat(nestedParameterName.split('][').filter(function(value) {
                 return value !== "";
             }));
         }
