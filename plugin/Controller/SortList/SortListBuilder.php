@@ -120,8 +120,10 @@ class SortListBuilder
 		$sortbyValues = [];
 
 		foreach ($sortByUserValues as $sortByField) {
-			$sortbyValues[$sortByField] = $pFieldsCollection->getFieldByModuleAndName(
-				onOfficeSDK::MODULE_ESTATE, $sortByField)->getLabel();
+			if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $sortByField)) {
+				$sortbyValues[$sortByField] = $pFieldsCollection->getFieldByModuleAndName(
+					onOfficeSDK::MODULE_ESTATE, $sortByField)->getLabel();
+			}
 		}
 		return $sortbyValues;
 	}
