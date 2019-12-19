@@ -74,6 +74,9 @@ abstract class AdminPageFormSettingsBase
 	const FIELD_MODULE = 'fieldmodule';
 
 	/** */
+	const FIELD_MULTISELECT_EDIT_VALUES = 'field_multiselect_edit_values';
+
+	/** */
 	const GET_PARAM_TYPE = 'type';
 
 	/** */
@@ -257,6 +260,7 @@ abstract class AdminPageFormSettingsBase
 			self::MODULE_LABELS => ModuleTranslation::getAllLabelsSingular(),
 			/* translators: %s is a translated module name */
 			self::FIELD_MODULE => __('Module: %s', 'onoffice'),
+			self::FIELD_MULTISELECT_EDIT_VALUES => __('Edit Values', 'onoffice'),
 			self::DEFAULT_VALUES => $this->readDefaultValues(),
 			'fieldList' => $this->getFieldList(),
 		];

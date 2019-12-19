@@ -147,7 +147,7 @@ onOffice.default_values_input_converter = function () {
 
             var button = document.createElement('input');
             button.setAttribute('type', 'button');
-            button.setAttribute('value', 'Edit Values!!1!');
+            button.setAttribute('value', onOffice_loc_settings.field_multiselect_edit_values);
             button.classList.add('onoffice-multiselect-edit');
             div.appendChild(button);
 
