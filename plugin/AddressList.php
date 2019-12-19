@@ -160,6 +160,10 @@ class AddressList
 			$fields []= 'imageUrl';
 		}
 
+		// only active fields
+		$fields = array_intersect($fields,
+			array_keys($this->_pEnvironment->getFieldnames()->getFieldList(onOfficeSDK::MODULE_ADDRESS)));
+
 		$pAddressFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler($fields);
 		return $pAddressFieldModifierHandler;
 	}
@@ -277,12 +281,10 @@ class AddressList
 		return $raw ? $label : esc_html($label);
 	}
 
-
 	/**
-	 *
-	 * @param string $field
+	 * @param $field
 	 * @return string
-	 *
+	 * @throws Field\UnknownFieldException
 	 */
 
 	public function getFieldType($field): string
