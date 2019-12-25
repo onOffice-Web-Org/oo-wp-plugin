@@ -32,7 +32,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 14;
+	const MAX_VERSION = 15;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -126,6 +126,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta( $this->getCreateQuerySortByUserValues() );
 			$dbversion = 14;
 		}
+
+		if ( $dbversion == 14) {
+			dbDelta($this->updateSortByUserDefinedDefault());
+			$dbversion = 15;
+		}
+
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
@@ -413,6 +419,22 @@ class DatabaseChanges implements DatabaseChangesInterface
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+
+	private function updateSortByUserDefinedDefault()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix."oo_plugin_listviews";
+
+		$sql = "UPDATE $tableName 
+				SET `sortByUserDefinedDefault` = CONCAT(`sortByUserDefinedDefault`, '#ASC') 
+				WHERE sortByUserDefinedDefault != ''";
 
 		return $sql;
 	}
