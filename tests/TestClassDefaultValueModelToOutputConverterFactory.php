@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterBool;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterFactory;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterMultiSelect;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterNumericRange;
@@ -33,18 +34,16 @@ use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModel
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterText;
 use WP_UnitTestCase;
 
-class TestClassDefaultValueModelToOutputConverterFactory extends WP_UnitTestCase
+class TestClassDefaultValueModelToOutputConverterFactory
+	extends WP_UnitTestCase
 {
 	/** @var DefaultValueModelToOutputConverterFactory */
 	private $_pSubject = null;
 
 
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$pDIContainerBuilder = new ContainerBuilder();
@@ -53,14 +52,10 @@ class TestClassDefaultValueModelToOutputConverterFactory extends WP_UnitTestCase
 		$this->_pSubject = $pContainer->get(DefaultValueModelToOutputConverterFactory::class);
 	}
 
-
 	/**
-	 *
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 *
 	 */
-
 	public function testCreateForText()
 	{
 		$pConverter = $this->_pSubject->createForText();
@@ -68,12 +63,9 @@ class TestClassDefaultValueModelToOutputConverterFactory extends WP_UnitTestCase
 	}
 
 	/**
-	 *
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 *
 	 */
-
 	public function testCreateForSingleSelect()
 	{
 		$pConverter = $this->_pSubject->createForSingleSelect();
@@ -98,5 +90,15 @@ class TestClassDefaultValueModelToOutputConverterFactory extends WP_UnitTestCase
 	{
 		$pConverter = $this->_pSubject->createForMultiSelect();
 		$this->assertInstanceOf(DefaultValueModelToOutputConverterMultiSelect::class, $pConverter);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testCreateForBool()
+	{
+		$pConverter = $this->_pSubject->createForBool();
+		$this->assertInstanceOf(DefaultValueModelToOutputConverterBool::class, $pConverter);
 	}
 }

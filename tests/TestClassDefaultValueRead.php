@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use Generator;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
@@ -243,6 +244,35 @@ class TestClassDefaultValueRead
 		];
 		return [
 			[13, $row, $pReference1],
+		];
+	}
+
+	/**
+	 * @dataProvider dataProviderBool
+	 * @param int $formId
+	 * @param array $row
+	 * @param bool $expectedResult
+	 */
+	public function testReadDefaultValuesBool(int $formId, array $row, bool $expectedResult)
+	{
+		$this->_pWPDBMock->expects($this->once())->method('get_row')->will($this->returnValue($row));
+		$pField = new Field('testField', 'testModule');
+		$pExpectedDataModel = new DefaultValueModelBool($formId, $pField);
+		$pExpectedDataModel->setValue($expectedResult);
+		$pExpectedDataModel->setDefaultsId((int)$row['defaults_id']);
+		$pResult = $this->_pSubject->readDefaultValuesBool($formId, $pField);
+		$this->assertInstanceOf(DefaultValueModelBool::class, $pResult);
+		$this->assertEquals($pExpectedDataModel, $pResult);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function dataProviderBool(): array
+	{
+		return [
+			[123, ['defaults_id' => '1334', 'value' => '0'], false],
+			[123, ['defaults_id' => '1334', 'value' => '1'], true],
 		];
 	}
 }

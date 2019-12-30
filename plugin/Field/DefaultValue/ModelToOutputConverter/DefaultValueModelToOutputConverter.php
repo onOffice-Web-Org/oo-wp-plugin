@@ -79,7 +79,8 @@ class DefaultValueModelToOutputConverter
 				return $this->convertSingleSelect($formId, $pField);
 			case FieldTypes::FIELD_TYPE_MULTISELECT:
 				return $this->convertMultiSelect($formId, $pField);
-
+			case FieldTypes::FIELD_TYPE_BOOLEAN:
+				return $this->convertBoolean($formId, $pField);
 			case FieldTypes::FIELD_TYPE_TEXT:
 			case FieldTypes::FIELD_TYPE_VARCHAR:
 				return $this->convertText($formId, $pField);
@@ -144,6 +145,20 @@ class DefaultValueModelToOutputConverter
 	{
 		$pModel = $this->_pDefaultValueReader->readDefaultValuesNumericRange($formId, $pField);
 		$pConverter = $this->_pOutputConverterFactory->createForNumericRange();
+		return $pConverter->convertToRow($pModel);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function convertBoolean(int $formId, Field $pField): array
+	{
+		$pModel = $this->_pDefaultValueReader->readDefaultValuesBool($formId, $pField);
+		$pConverter = $this->_pOutputConverterFactory->createForBool();
 		return $pConverter->convertToRow($pModel);
 	}
 }

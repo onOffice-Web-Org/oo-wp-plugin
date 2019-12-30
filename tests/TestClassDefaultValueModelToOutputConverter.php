@@ -27,6 +27,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
@@ -102,14 +103,38 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 		$this->assertEmpty($result);
 	}
 
-
 	/**
-	 *
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 *
 	 */
+	public function testGetConvertedFieldForBoolField()
+	{
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
+		$this->assertEquals(['0'], $result);
+	}
 
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testGetConvertedFieldForNonEmptyBoolField()
+	{
+		$this->_pField->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+		$pBoolFieldModel = new DefaultValueModelBool(13, $this->_pField);
+		$pBoolFieldModel->setValue(true);
+
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultValuesBool')->will($this->returnValue($pBoolFieldModel));
+		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
+		$this->assertEquals(['1'], $result);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
 	public function testGetConvertedFieldForNonEmptyTextField()
 	{
 		$this->_pField->setType(FieldTypes::FIELD_TYPE_TEXT);

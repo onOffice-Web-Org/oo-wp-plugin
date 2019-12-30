@@ -92,4 +92,14 @@ class DefaultValueModelToOutputConverterFactory
 	{
 		return $this->_pContainer->get(DefaultValueModelToOutputConverterNumericRange::class);
 	}
+
+	/**
+	 * @return DefaultValueModelToOutputConverterBool
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function createForBool(): DefaultValueModelToOutputConverterBool
+	{
+		return $this->_pContainer->get(DefaultValueModelToOutputConverterBool::class);
+	}
 }

@@ -82,6 +82,21 @@ class DefaultValueRead
 	/**
 	 * @param int $formId
 	 * @param Field $pField
+	 * @return DefaultValueModelBool
+	 */
+	public function readDefaultValuesBool(int $formId, Field $pField): DefaultValueModelBool
+	{
+		$query = $this->createBaseQuery($formId, $pField);
+		$row = $this->_pWPDB->get_row($query, ARRAY_A);
+		$pDataModel = new DefaultValueModelBool($formId, $pField);
+		$pDataModel->setDefaultsId((int)$row['defaults_id'] ?? 0);
+		$pDataModel->setValue((bool)intval($row['value']));
+		return $pDataModel;
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
 	 * @return DefaultValueModelText
 	 */
 	public function readDefaultValuesText(int $formId, Field $pField): DefaultValueModelText
