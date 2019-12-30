@@ -48,6 +48,7 @@ use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use stdClass;
 use function __;
 use function add_screen_option;
@@ -281,6 +282,12 @@ abstract class AdminPageFormSettingsBase
 		$pFieldsCollectionBuilder->addFieldsSearchCriteria($pFieldsCollection);
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
 			$result[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
+			if ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
+				$result[$pField->getModule()][$pField->getName()]['permittedvalues'] = [
+					'0' => __('No', 'onoffice'),
+					'1' => __('Yes', 'onoffice'),
+				];
+			}
 		}
 		return $result;
 	}

@@ -109,7 +109,7 @@ onOffice.default_values_input_converter = function () {
         }
     });
 
-    // single-select
+    // single-select, multi-select, boolean
     document.querySelectorAll('select[name^=oopluginfieldconfigformdefaultsvalues-value]').forEach(function (mainInput) {
         var mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
         if (mainElement === null) {
@@ -164,6 +164,11 @@ onOffice.default_values_input_converter = function () {
                     multiselect.show();
                 };
             })(multiselect);
+        } else if (fieldDefinition.type === "boolean") {
+            mainInput.innerHTML = ""; // remove options
+            mainInput.options.add(new Option(fieldDefinition.permittedvalues[0], '0'));
+            mainInput.options.add(new Option(fieldDefinition.permittedvalues[1], '1'));
+            mainInput.selectedIndex = onOffice_loc_settings.defaultvalues[fieldName] || '0';
         }
     });
 
