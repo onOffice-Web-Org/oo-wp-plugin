@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueCreate;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
@@ -151,7 +152,9 @@ class TestClassDefaultValueCreate
 		$this->assertEquals(121, $pDefaultValues->getDefaultsId());
 	}
 
-
+	/**
+	 * @throws \onOffice\WPlugin\Record\RecordManagerInsertException
+	 */
 	public function testCreateForNumericRange()
 	{
 		$this->_pRecordManagerInsertGeneric->expects($this->exactly(3))->method('insertByRow')
@@ -175,5 +178,29 @@ class TestClassDefaultValueCreate
 		$resultId = $this->_pSubject->createForNumericRange($pDefaultValues);
 		$this->assertEquals(122, $resultId);
 		$this->assertEquals(122, $pDefaultValues->getDefaultsId());
+	}
+
+	/**
+	 * @throws \onOffice\WPlugin\Record\RecordManagerInsertException
+	 */
+	public function testCreateForBool()
+	{
+		$this->_pRecordManagerInsertGeneric->expects($this->exactly(2))->method('insertByRow')
+			->will($this->returnCallback(function(array $values) {
+				$valuesConf = [
+					123 => ['oo_plugin_fieldconfig_form_defaults' => ['form_id' => 14, 'fieldname' => 'testField4']],
+					130 => ['oo_plugin_fieldconfig_form_defaults_values' => [
+						'defaults_id' => 121, 'locale' => '', 'value' => '1']
+					],
+				];
+				$returnValue = array_search($values, $valuesConf);
+				return $returnValue ?: 0;
+			}));
+		$pField = new Field('testField4', 'testModule2');
+		$pDefaultValues = new DefaultValueModelBool(14, $pField);
+		$pDefaultValues->setValue(true);
+		$resultId = $this->_pSubject->createForBool($pDefaultValues);
+		$this->assertEquals(123, $resultId);
+		$this->assertEquals(123, $pDefaultValues->getDefaultsId());
 	}
 }

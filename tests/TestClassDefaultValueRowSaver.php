@@ -48,6 +48,7 @@ class TestClassDefaultValueRowSaver
 		'testNumericRange2' => ['min' => 3],
 		'testNumericRange3' => ['max' => 4],
 		'testNumericRange4' => [],
+		'testBoolFalse' => '0',
 	];
 
 	/** @var DefaultValueRowSaver */
@@ -189,6 +190,19 @@ class TestClassDefaultValueRowSaver
 	}
 
 	/**
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+	public function testSaveDefaultValuesBoolFalse()
+	{
+		$this->_pDefaultValueCreate->expects($this->once())->method('createForBool');
+		$pFieldsCollection = $this->buildFieldsCollection();
+		$this->_pSubject->saveDefaultValues(13, [
+			'testBool' => self::EXAMPLE_RECORDS['testBoolFalse'],
+		], $pFieldsCollection);
+	}
+
+	/**
 	 * @return FieldsCollection
 	 */
 	private function buildFieldsCollection(): FieldsCollection
@@ -211,6 +225,9 @@ class TestClassDefaultValueRowSaver
 		$pFieldFloat->setIsRangeField(true);
 		$pFieldFloat->setType(FieldTypes::FIELD_TYPE_FLOAT);
 		$pFieldsCollection->addField($pFieldFloat);
+		$pFieldBool = new Field('testBool', onOfficeSDK::MODULE_ESTATE);
+		$pFieldBool->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+		$pFieldsCollection->addField($pFieldBool);
 		$pFieldMultiSelect = new Field('testMultiSelect', onOfficeSDK::MODULE_ESTATE);
 		$pFieldMultiSelect->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 		$pFieldMultiSelect->setPermittedvalues(['value1', 'value2', 'value3']);

@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter;
 
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueCreate;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
@@ -70,7 +71,7 @@ class DefaultValueRowSaver
 	{
 		foreach ($row as $field => $values) {
 			$values = is_object($values) ? (array) $values : $values;
-			if (!empty($values)) {
+			if ($values !== [] && $values !== '') {
 				$pField = $pUsedFieldsCollection->getFieldByKeyUnsafe($field);
 				$this->saveForFoundType($formId, $pField, $values);
 			}
@@ -97,6 +98,9 @@ class DefaultValueRowSaver
 			case FieldTypes::FIELD_TYPE_MULTISELECT:
 				$this->saveMultiSelect($formId, $pField, $values);
 				break;
+			case FieldTypes::FIELD_TYPE_BOOLEAN:
+				$this->saveBool($formId, $pField, $values);
+				break;
 			case FieldTypes::FIELD_TYPE_TEXT:
 			case FieldTypes::FIELD_TYPE_VARCHAR:
 				$this->saveText($formId, $pField, $values);
@@ -115,6 +119,19 @@ class DefaultValueRowSaver
 		$pModel = new DefaultValueModelSingleselect($formId, $pField);
 		$pModel->setValue($value);
 		$this->_pDefaultValueCreate->createForSingleselect($pModel);
+	}
+
+	/**
+	 * @param int $formId
+	 * @param Field $pField
+	 * @param string $value
+	 * @throws RecordManagerInsertException
+	 */
+	private function saveBool(int $formId, Field $pField, string $value)
+	{
+		$pModel = new DefaultValueModelBool($formId, $pField);
+		$pModel->setValue((bool)$value);
+		$this->_pDefaultValueCreate->createForBool($pModel);
 	}
 
 	/**
