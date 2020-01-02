@@ -46,14 +46,21 @@ class DefaultValueDelete
 
 	/**
 	 * @param int $formId
+	 * @param array $fieldNames
 	 * @throws DefaultValueDeleteException
 	 */
-	public function deleteAllByFormId(int $formId)
+	public function deleteByFormIdAndFieldNames(int $formId, array $fieldNames)
 	{
-		$query = $this->getBaseDeleteQuery()." WHERE "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.form_id = %d";
+		if ($fieldNames === []) {
+			return;
+		}
 
-		if (false === $this->_pWPDB->query($this->_pWPDB->prepare($query, $formId))) {
+		$fieldNamesString = sprintf("'%s'", implode("', '", esc_sql($fieldNames)));
+		$query = $this->getBaseDeleteQuery()." WHERE "
+			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.form_id = %d AND "
+			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.fieldname IN(%s)";
+
+		if (!$this->_pWPDB->query($this->_pWPDB->prepare($query, $formId, $fieldNamesString))) {
 			throw new DefaultValueDeleteException();
 		}
 	}

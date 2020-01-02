@@ -526,7 +526,7 @@ abstract class AdminPageFormSettingsBase
 
 		/** @var DefaultValueDelete $pDefaultValueDelete */
 		$pDefaultValueDelete = $this->getContainer()->get(DefaultValueDelete::class);
-		$pDefaultValueDelete->deleteAllByFormId($recordId);
+		$pDefaultValueDelete->deleteByFormIdAndFieldNames($recordId, $fieldNamesSelected);
 
 		$pDefaultValueSave = $this->getContainer()->get(DefaultValueRowSaver::class);
 		$pDefaultValueSave->saveDefaultValues($recordId,

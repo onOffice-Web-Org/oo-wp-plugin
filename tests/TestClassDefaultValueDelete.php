@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use Generator;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueDelete;
 use onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException;
 use WP_UnitTestCase;
@@ -57,34 +58,6 @@ class TestClassDefaultValueDelete
 	/**
 	 * @throws DefaultValueDeleteException
 	 */
-	public function testDeleteAllByFormId()
-	{
-		$expectedQuery = "DELETE wp_test_oo_plugin_fieldconfig_form_defaults, wp_test_oo_plugin_fieldconfig_form_defaults_values "
-			. "FROM wp_test_oo_plugin_fieldconfig_form_defaults "
-			. "INNER JOIN wp_test_oo_plugin_fieldconfig_form_defaults_values "
-			. "ON wp_test_oo_plugin_fieldconfig_form_defaults.defaults_id = wp_test_oo_plugin_fieldconfig_form_defaults_values.defaults_id WHERE "
-			. "wp_test_oo_plugin_fieldconfig_form_defaults.form_id = %d";
-		$this->_pWPDB->expects($this->once())->method('prepare')
-			->with($expectedQuery, 13)
-			->will($this->returnValue('testQuery'));
-		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(true));
-		$this->_pSubject->deleteAllByFormId(13);
-	}
-
-	/**
-	 * @throws DefaultValueDeleteException
-	 */
-	public function testDeleteAllByFormIdWithError()
-	{
-		$this->expectException(DefaultValueDeleteException::class);
-		$this->_pWPDB->expects($this->once())->method('query')
-			->will($this->returnValue(false));
-		$this->_pSubject->deleteAllByFormId(13);
-	}
-
-	/**
-	 * @throws DefaultValueDeleteException
-	 */
 	public function testDeleteSingleDefaultValueByFieldname()
 	{
 		$expectedQuery = "DELETE wp_test_oo_plugin_fieldconfig_form_defaults, wp_test_oo_plugin_fieldconfig_form_defaults_values "
@@ -99,6 +72,57 @@ class TestClassDefaultValueDelete
 			->will($this->returnValue('testQuery'));
 		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(true));
 		$this->_pSubject->deleteSingleDefaultValueByFieldname(13, 'objektart', 'de_DE');
+	}
+
+	/**
+	 * @throws DefaultValueDeleteException
+	 */
+	public function testDeleteByFormIdAndFieldNamesEmptyFieldlist()
+	{
+		$this->_pWPDB->expects($this->never())->method('query');
+		$this->_pSubject->deleteByFormIdAndFieldNames(13, []);
+	}
+
+	/**
+	 * @throws DefaultValueDeleteException
+	 */
+	public function testDeleteByFormIdAndFieldNames()
+	{
+		$expectedQuery = "DELETE wp_test_oo_plugin_fieldconfig_form_defaults, wp_test_oo_plugin_fieldconfig_form_defaults_values "
+			."FROM wp_test_oo_plugin_fieldconfig_form_defaults "
+			."INNER JOIN wp_test_oo_plugin_fieldconfig_form_defaults_values "
+			."ON wp_test_oo_plugin_fieldconfig_form_defaults.defaults_id = wp_test_oo_plugin_fieldconfig_form_defaults_values.defaults_id WHERE "
+			."wp_test_oo_plugin_fieldconfig_form_defaults.form_id = %d AND "
+			."wp_test_oo_plugin_fieldconfig_form_defaults.fieldname IN(%s)";
+		$this->_pWPDB->expects($this->once())->method('prepare')
+			->with($expectedQuery, 13, "'testField1', 'testField2'")
+			->will($this->returnValue('testQuery'));
+		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(true));
+
+		$this->_pSubject->deleteByFormIdAndFieldNames(13, ['testField1', 'testField2']);
+	}
+
+	/**
+	 * @dataProvider dataProviderDeleteByFormIdAndFieldNamesFailure
+	 * @param mixed $returnValue
+	 * @throws DefaultValueDeleteException
+	 */
+	public function testDeleteByFormIdAndFieldNamesFailureFalse($returnValue)
+	{
+		$this->expectException(DefaultValueDeleteException::class);
+		$this->_pWPDB->expects($this->once())->method('prepare')
+			->will($this->returnValue('testQuery'));
+		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue($returnValue));
+		$this->_pSubject->deleteByFormIdAndFieldNames(13, ['testField2']);
+	}
+
+	/**
+	 * @return Generator
+	 */
+	public function dataProviderDeleteByFormIdAndFieldNamesFailure(): Generator
+	{
+		yield [false];
+		yield [0];
 	}
 
 	/**
