@@ -128,7 +128,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ( $dbversion == 14) {
-			dbDelta($this->updateSortByUserDefinedDefault());
+			$this->updateSortByUserDefinedDefault();
 			$dbversion = 15;
 		}
 
@@ -423,8 +423,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+
 	/**
-	 * @return string
+	 *
 	 */
 
 	private function updateSortByUserDefinedDefault()
@@ -432,11 +433,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$prefix = $this->getPrefix();
 		$tableName = $prefix."oo_plugin_listviews";
 
-		$sql = "UPDATE $tableName 
+		$this->_pWPDB->query("UPDATE $tableName 
 				SET `sortByUserDefinedDefault` = CONCAT(`sortByUserDefinedDefault`, '#ASC') 
-				WHERE sortByUserDefinedDefault != ''";
+				WHERE sortByUserDefinedDefault != ''");
 
-		return $sql;
 	}
 
 
