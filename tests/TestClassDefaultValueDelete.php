@@ -92,12 +92,9 @@ class TestClassDefaultValueDelete
 			."FROM wp_test_oo_plugin_fieldconfig_form_defaults "
 			."INNER JOIN wp_test_oo_plugin_fieldconfig_form_defaults_values "
 			."ON wp_test_oo_plugin_fieldconfig_form_defaults.defaults_id = wp_test_oo_plugin_fieldconfig_form_defaults_values.defaults_id WHERE "
-			."wp_test_oo_plugin_fieldconfig_form_defaults.form_id = %d AND "
-			."wp_test_oo_plugin_fieldconfig_form_defaults.fieldname IN(%s)";
-		$this->_pWPDB->expects($this->once())->method('prepare')
-			->with($expectedQuery, 13, "'testField1', 'testField2'")
-			->will($this->returnValue('testQuery'));
-		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(true));
+			."wp_test_oo_plugin_fieldconfig_form_defaults.form_id = '13' AND "
+			."wp_test_oo_plugin_fieldconfig_form_defaults.fieldname IN('testField1', 'testField2')";
+		$this->_pWPDB->expects($this->once())->method('query')->with($expectedQuery)->will($this->returnValue(true));
 
 		$this->_pSubject->deleteByFormIdAndFieldNames(13, ['testField1', 'testField2']);
 	}
@@ -110,8 +107,6 @@ class TestClassDefaultValueDelete
 	public function testDeleteByFormIdAndFieldNamesFailureFalse($returnValue)
 	{
 		$this->expectException(DefaultValueDeleteException::class);
-		$this->_pWPDB->expects($this->once())->method('prepare')
-			->will($this->returnValue('testQuery'));
 		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue($returnValue));
 		$this->_pSubject->deleteByFormIdAndFieldNames(13, ['testField2']);
 	}

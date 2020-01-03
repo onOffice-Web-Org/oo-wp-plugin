@@ -37,6 +37,7 @@ use onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueRowSaver;
 use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm;
@@ -49,6 +50,7 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\WP\InstalledLanguageReader;
 use stdClass;
 use function __;
 use function add_screen_option;
@@ -243,11 +245,12 @@ abstract class AdminPageFormSettingsBase
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * @throws UnknownFieldException
 	 */
 
 	public function getEnqueueData(): array
 	{
+		/** @var Language $pInstalledLanguageReader */
+		$pLanguage = $this->getContainer()->get(Language::class);
 		return [
 			self::GET_PARAM_TYPE => $this->getType(),
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was saved.', 'onoffice'),
@@ -264,7 +267,21 @@ abstract class AdminPageFormSettingsBase
 			self::FIELD_MULTISELECT_EDIT_VALUES => __('Edit Values', 'onoffice'),
 			self::DEFAULT_VALUES => $this->readDefaultValues(),
 			'fieldList' => $this->getFieldList(),
+			'installed_wp_languages' => $this->getInstalledLanguages(),
+			'language_native' => $pLanguage->getLocale(),
 		];
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getInstalledLanguages(): array
+	{
+		/** @var InstalledLanguageReader $pInstalledLanguageReader */
+		$pInstalledLanguageReader = $this->getContainer()->get(InstalledLanguageReader::class);
+		return $pInstalledLanguageReader->readAvailableLanguageNamesUsingNativeName();
 	}
 
 	/**
@@ -293,49 +310,21 @@ abstract class AdminPageFormSettingsBase
 	}
 
 	/**
-	 *
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * @throws UnknownFieldException
 	 */
-
 	private function readDefaultValues(): array
 	{
 		$result = [];
 		/** @var DefaultValueModelToOutputConverter $pDefaultValueConverter */
 		$pDefaultValueConverter = $this->getContainer()->get(DefaultValueModelToOutputConverter::class);
 
-		$pDataFormConfigurationFactory = new DataFormConfigurationFactory();
-		/** @var DataFormConfiguration $pDataFormConfiguration */
-		$pDataFormConfiguration = $pDataFormConfigurationFactory->loadByFormId($this->getListViewId());
-
-		foreach ($this->getFieldsGenerator($pDataFormConfiguration) as $pField) {
+		foreach ($this->readFields()->getAllFields() as $pField) {
 			$result[$pField->getName()] = $pDefaultValueConverter->getConvertedField
 				((int)$this->getListViewId(), $pField);
 		}
 		return $result;
-	}
-
-	/**
-	 *
-	 * @param DataFormConfiguration $pDataFormConfiguration
-	 * @return Generator
-	 *
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws UnknownFieldException
-	 */
-
-	private function getFieldsGenerator(DataFormConfiguration $pDataFormConfiguration): Generator
-	{
-		$pFieldsCollection = $this->readFields();
-
-		foreach ($pDataFormConfiguration->getInputs() as $field => $module) {
-			if ($pFieldsCollection->containsFieldByModule($module, $field)) {
-				yield $pFieldsCollection->getFieldByModuleAndName($module, $field);
-			}
-		}
 	}
 
 

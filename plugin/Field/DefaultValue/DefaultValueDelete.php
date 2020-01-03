@@ -55,12 +55,13 @@ class DefaultValueDelete
 			return;
 		}
 
-		$fieldNamesString = sprintf("'%s'", implode("', '", esc_sql($fieldNames)));
 		$query = $this->getBaseDeleteQuery()." WHERE "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.form_id = %d AND "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.fieldname IN(%s)";
+			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.form_id = '".esc_sql($formId)."' AND "
+			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.fieldname IN('"
+			.implode("', '", esc_sql($fieldNames))
+			."')";
 
-		if (!$this->_pWPDB->query($this->_pWPDB->prepare($query, $formId, $fieldNamesString))) {
+		if (!$this->_pWPDB->query($query)) {
 			throw new DefaultValueDeleteException();
 		}
 	}

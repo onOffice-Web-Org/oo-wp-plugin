@@ -130,7 +130,7 @@ onOffice.default_values_input_converter = function () {
         }
 
         var fieldList = onOffice_loc_settings.fieldList || {};
-        var fieldDefinition = {};
+        var fieldDefinition = getFieldDefinition(fieldName);
         for (var module in fieldList) {
             if (fieldList[module][fieldName] !== undefined) {
                 fieldDefinition = fieldList[module][fieldName];
@@ -183,13 +183,7 @@ onOffice.default_values_input_converter = function () {
             return;
         }
         onOffice.default_values_inputs_converted.push(fieldName);
-        var fieldList = onOffice_loc_settings.fieldList || {};
-        var fieldDefinition = {};
-        for (var module in fieldList) {
-            if (fieldList[module][fieldName] !== undefined) {
-                fieldDefinition = fieldList[module][fieldName];
-            }
-        }
+        var fieldDefinition = getFieldDefinition(fieldName);
 
         if (!fieldDefinition.rangefield) {
             return;
@@ -208,5 +202,81 @@ onOffice.default_values_input_converter = function () {
         }
     });
 };
+
+onOffice.js_field_count = onOffice.js_field_count || 0;
+
+document.addEventListener("addFieldItem", function(e) {
+    var fieldName = e.detail.fieldname;
+    var p = document.createElement('p');
+    p.classList.add(['wp-clearfix']);
+    var fieldDefinition = getFieldDefinition(fieldName);
+
+    if (fieldDefinition.type === 'varchar' || fieldDefinition.type === 'text') {
+        var select = document.createElement('select');
+        select.id = 'select_js_' + onOffice.js_field_count;
+        select.name = 'language-language';
+        select.className = 'onoffice-input';
+
+        select.options.add(new Option('', ''));
+        var keys = Object.keys(onOffice_loc_settings.installed_wp_languages);
+        keys.forEach(function (k) {
+            var v = onOffice_loc_settings.installed_wp_languages[k];
+            if (k === onOffice_loc_settings.language_native) {
+                k = 'native';
+            }
+            select.options.add(new Option(v, k));
+        });
+
+        onOffice.js_field_count += 1;
+        select.options.selectedIndex = 0;
+
+        var label = document.createElement('label');
+        label.htmlFor = select.id;
+        label.className = 'howto';
+        label.textContent = 'Add language';
+        p.appendChild(label);
+        p.appendChild(select);
+    } else if (fieldDefinition.type === 'singleselect') {
+        var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value]');
+        var select = document.createElement('select');
+        select.id = 'select_js_' + onOffice.js_field_count;
+        select.name = 'oopluginfieldconfigformdefaultsvalues-value[]';
+        select.className = 'onoffice-input';
+
+        select.options.add(new Option('', ''));
+        var keys = Object.keys(fieldDefinition.permittedvalues);
+        keys.forEach(function (k) {
+            var v = fieldDefinition.permittedvalues[k];
+            select.options.add(new Option(v, k));
+            if (k === fieldDefinition.selectedvalue) {
+                select.selectedIndex = select.options.length - 1;
+            }
+        });
+
+        onOffice.js_field_count += 1;
+        select.options.selectedIndex = 0;
+        element.parentNode.replaceChild(select, element);
+    }
+
+    var paragraph = e.detail.item.querySelectorAll('.menu-item-settings p')[2];
+    paragraph.parentNode.insertBefore(p, paragraph.nextSibling);
+
+    var index = onOffice.default_values_inputs_converted.indexOf(fieldName);
+    if (index !== -1) {
+        delete onOffice.default_values_inputs_converted[index];
+    }
+
+    onOffice.default_values_input_converter();
+});
+
+function getFieldDefinition(fieldName) {
+    var fieldList = onOffice_loc_settings.fieldList || {};
+    for (var module in fieldList) {
+        if (fieldList[module][fieldName] !== undefined) {
+            return fieldList[module][fieldName];
+        }
+    }
+    return {};
+}
 
 onOffice.default_values_input_converter();

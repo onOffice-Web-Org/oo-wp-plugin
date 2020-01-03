@@ -78,7 +78,22 @@ onOffice.ajaxSaver = function(outerDiv) {
             if (inputContainsArray) {
                 inputName = inputNameFull.match(/(.+)\[\]/)[1];
                 var previousEntry = proto._getValueOfNestedObjectByKeys(inputNameFull, values) || [];
-                previousEntry.push(elementValue);
+
+                if (Array.isArray(previousEntry)) {
+                    previousEntry.push(elementValue);
+                } else {
+                    // get highest numeric key
+                    var highestKey = Object.keys(previousEntry).reduce(function(a, b) {
+                        return parseInt(a,10) > parseInt(b,10) ? a : b
+                    });
+
+                    if (isNaN(highestKey)) {
+                        highestKey = -1;
+                    }
+
+                    previousEntry[highestKey+1] = elementValue;
+                }
+
                 elementValue = previousEntry;
             }
 
