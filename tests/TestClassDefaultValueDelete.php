@@ -100,24 +100,13 @@ class TestClassDefaultValueDelete
 	}
 
 	/**
-	 * @dataProvider dataProviderDeleteByFormIdAndFieldNamesFailure
-	 * @param mixed $returnValue
 	 * @throws DefaultValueDeleteException
 	 */
-	public function testDeleteByFormIdAndFieldNamesFailureFalse($returnValue)
+	public function testDeleteByFormIdAndFieldNamesFailureFalse()
 	{
 		$this->expectException(DefaultValueDeleteException::class);
-		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue($returnValue));
+		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(false));
 		$this->_pSubject->deleteByFormIdAndFieldNames(13, ['testField2']);
-	}
-
-	/**
-	 * @return Generator
-	 */
-	public function dataProviderDeleteByFormIdAndFieldNamesFailure(): Generator
-	{
-		yield [false];
-		yield [0];
 	}
 
 	/**

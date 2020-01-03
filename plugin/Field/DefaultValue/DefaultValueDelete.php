@@ -61,7 +61,7 @@ class DefaultValueDelete
 			.implode("', '", esc_sql($fieldNames))
 			."')";
 
-		if (!$this->_pWPDB->query($query)) {
+		if (false === $this->_pWPDB->query($query)) {
 			throw new DefaultValueDeleteException();
 		}
 	}
@@ -92,7 +92,7 @@ class DefaultValueDelete
 			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.fieldname = %s AND "
 			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.locale = %s";
 
-		if (!$this->_pWPDB->query($this->_pWPDB->prepare($query, $formId, $fieldname, $locale))) {
+		if (false === $this->_pWPDB->query($this->_pWPDB->prepare($query, $formId, $fieldname, $locale))) {
 			throw new DefaultValueDeleteException();
 		}
 	}
