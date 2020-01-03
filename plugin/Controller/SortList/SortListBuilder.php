@@ -65,7 +65,7 @@ class SortListBuilder
 		if ($pSortListDataModel->isAdjustableSorting())	{
 			$pSortListDataModel->setSelectedSortby($this->estimateAdjustableSelectedSortby($sortbyDefault,
 				$pSortListDataModel->getSortByUserValues()));
-			$pSortListDataModel->setSelectedSortorder($this->estimateAdjustableSelectedSortorder());
+			$pSortListDataModel->setSelectedSortorder($this->estimateAdjustableSelectedSortorder($sortbyDefault));
 		} else {
 			$pSortListDataModel->setSelectedSortby($pListView->getSortby());
 			$pSortListDataModel->setSelectedSortorder($pListView->getSortorder());
@@ -139,24 +139,63 @@ class SortListBuilder
 		if ($sortby != '' && $pValidator->isSortbyValide($sortby, $sortbyUserValues)) {
 			$selectedSortBy = $sortby;
 		} else {
-			$selectedSortBy = $default;
+			$selectedSortBy = $this->extractDefaultSortBy($default);
 		}
 		return $selectedSortBy;
 	}
 
 	/**
+	 * @param string $default
 	 * @return string
 	 */
-	private function estimateAdjustableSelectedSortorder(): string
+	private function extractDefaultSortDirection(string $default): string
+	{
+		$returnValue = SortListTypes::SORTORDER_ASC;
+
+		if ($default != '') {
+			$values = explode(SortListTypes::SORT_BY_USER_DEFINED_DEFAULT_DELIMITER, $default);
+			$returnValue = $values[1];
+		}
+
+		return $returnValue;
+	}
+
+	/**
+	 * @param string $default
+	 * @return string
+	 */
+	private function extractDefaultSortBy(string $default): string
+	{
+		$returnValue = '';
+
+		if ($default != '') {
+			$values = explode(SortListTypes::SORT_BY_USER_DEFINED_DEFAULT_DELIMITER, $default);
+			$returnValue = $values[0];
+		}
+
+		return $returnValue;
+	}
+
+
+	/**
+	 * @param string $sortbyDefault
+	 * @return string
+	 */
+	private function estimateAdjustableSelectedSortorder(string $sortbyDefault): string
 	{
 		$pRequestVariables = new RequestVariablesSanitizer();
 		$sortorder = $pRequestVariables->getFilteredGet(SortListTypes::SORT_ORDER) ?? '';
 		$pValidator = new SortListValidator;
 
+		if (count(explode('#', $sortbyDefault)) == 1)
+		{
+			$sortbyDefault .= '#ASC';
+		}
+
 		if ($sortorder != null && $pValidator->isSortorderValide($sortorder)) {
 			$selectedSortOrder = $sortorder;
 		} else {
-			$selectedSortOrder = SortListTypes::SORTORDER_ASC;
+			$selectedSortOrder = $this->extractDefaultSortDirection($sortbyDefault);
 		}
 		return $selectedSortOrder;
 	}

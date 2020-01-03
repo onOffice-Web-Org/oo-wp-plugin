@@ -25,15 +25,28 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
 use WP_UnitTestCase;
+use function __;
 
 class TestClassSortListTypes
 	extends WP_UnitTestCase
 {
+	/**
+	 * @covers \onOffice\WPlugin\Controller\SortList\SortListTypes::getSortUrlPrameter
+	 */
 	public function testGetSortUrlParameter()
 	{
 		$expectedValues = ['sortorder', 'sortby'];
 		$value = SortListTypes::getSortUrlPrameter();
 
 		$this->assertEqualSets($expectedValues, $value);
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Controller\SortList\SortListTypes::getSortOrderMapping
+	 */
+	public function testGetSortOrderMapping()
+	{
+		$this->assertEquals( __('ascending', 'onoffice'), SortListTypes::getSortOrderMapping(1, 'ASC'));
+		$this->assertEquals( __('highest first', 'onoffice'), SortListTypes::getSortOrderMapping(0, 'DESC'));
 	}
 }

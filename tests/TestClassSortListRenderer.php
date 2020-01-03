@@ -71,7 +71,6 @@ class TestClassSortListRenderer
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createOptionLabel
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createOptionValue
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createSelectedValue
-	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::getSortOrderMapping
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createHtml
 	 */
 	public function testAdjustableWithDefault()
@@ -102,7 +101,6 @@ class TestClassSortListRenderer
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createOptionLabel
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createOptionValue
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createSelectedValue
-	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::getSortOrderMapping
 	 * @covers onOffice\WPlugin\Renderer\SortListRenderer::createHtml
 	 */
 	public function testAdjustableFromRequestVars()
