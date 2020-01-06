@@ -45,14 +45,13 @@ class SortListTypes
 		return [self::SORT_BY, self::SORT_ORDER];
 	}
 
+
 	/**
-	 * @param int $sortByUserDirection
-	 * @param string $sortorder
-	 * @return string
+	 * @return array
 	 */
-	static public function getSortOrderMapping(int $sortByUserDirection, string $sortorder): string
+	static public function getSortOrder(): array
 	{
-		$mapping = [
+		return [
 			0 => [
 				SortListTypes::SORTORDER_ASC => __('lowest first', 'onoffice'),
 				SortListTypes::SORTORDER_DESC => __('highest first', 'onoffice'),
@@ -62,6 +61,16 @@ class SortListTypes
 				SortListTypes::SORTORDER_DESC => __('descending', 'onoffice'),
 			],
 		];
+	}
+
+	/**
+	 * @param int $sortByUserDirection
+	 * @param string $sortorder
+	 * @return string
+	 */
+	static public function getSortOrderMapping(int $sortByUserDirection, string $sortorder): string
+	{
+		$mapping = self::getSortOrder();
 
 		return $mapping[$sortByUserDirection][$sortorder];
 	}

@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\SortList\SortListTypes;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
@@ -253,5 +254,10 @@ class AdminPageEstateListSettings
 	{
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
+
+		$translations = SortListTypes::getSortOrder();
+
+		wp_localize_script('oo-sort-by-user-selection', 'onoffice_mapping_translations', $translations);
+		wp_enqueue_script('oo-sort-by-user-selection');
 	}
 }

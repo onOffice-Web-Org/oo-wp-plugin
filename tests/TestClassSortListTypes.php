@@ -49,4 +49,23 @@ class TestClassSortListTypes
 		$this->assertEquals( __('ascending', 'onoffice'), SortListTypes::getSortOrderMapping(1, 'ASC'));
 		$this->assertEquals( __('highest first', 'onoffice'), SortListTypes::getSortOrderMapping(0, 'DESC'));
 	}
+
+	/**
+	 *  @covers \onOffice\WPlugin\Controller\SortList\SortListTypes::getSortOrder
+	 */
+	public function testGetSortOrder()
+	{
+		$expectedValue = [
+			0 => [
+				'ASC' => __('lowest first', 'onoffice'),
+				'DESC' => __('highest first', 'onoffice'),
+			],
+			1 => [
+				'ASC' => __('ascending', 'onoffice'),
+				'DESC' => __('descending', 'onoffice'),
+			],
+		];
+
+		$this->assertEquals($expectedValue, SortListTypes::getSortOrder());
+	}
 }
