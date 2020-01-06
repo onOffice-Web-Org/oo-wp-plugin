@@ -187,6 +187,12 @@ class RecordStructure
 				self::EMPTY_VALUE => 0,
 			),
 		),
+		'oo_plugin_fieldconfig_form_defaults_values' => [
+			'value' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		],
 	);
 
 

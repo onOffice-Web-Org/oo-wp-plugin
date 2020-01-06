@@ -34,9 +34,6 @@ use function submit_button;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 class AdminPageModules
@@ -133,10 +130,11 @@ class AdminPageModules
 
 		echo '<form method="post" action="options.php">';
 
-		foreach ($this->getFormModels() as $pFormModel)
-		{
-			$pFormBuilder = new InputModelRenderer($pFormModel);
-			$pFormBuilder->buildForm();
+		/* @var $pInputModelRenderer InputModelRenderer */
+		$pInputModelRenderer = $this->getContainer()->get(InputModelRenderer::class);
+
+		foreach ($this->getFormModels() as $pFormModel) {
+			$pInputModelRenderer->buildForm($pFormModel);
 		}
 
 		settings_fields($this->getPageSlug());

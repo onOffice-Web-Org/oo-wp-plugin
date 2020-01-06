@@ -49,9 +49,6 @@ use function wp_verify_nonce;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
 abstract class AdminPageSettingsBase
@@ -144,11 +141,10 @@ abstract class AdminPageSettingsBase
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
 
+		/* @var $pInputModelRenderer InputModelRenderer */
+		$pInputModelRenderer = $this->getContainer()->get(InputModelRenderer::class);
 		$pFormViewName = $this->getFormModelByGroupSlug(self::FORM_RECORD_NAME);
-		$pInputRendererViewName = new InputModelRenderer($pFormViewName);
-
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
-		$pRendererSortablefields = new InputModelRenderer($pFormViewSortableFields);
 
 		wp_nonce_field( $this->getPageSlug() );
 
@@ -160,7 +156,7 @@ abstract class AdminPageSettingsBase
 		echo '<div id="post-body" class="metabox-holder columns-'
 			.(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
 		echo '<div id="post-body-content">';
-		$pInputRendererViewName->buildForAjax();
+		$pInputModelRenderer->buildForAjax($pFormViewName);
 		echo '</div>';
 		echo '<div class="postbox-container" id="postbox-container-1">';
 		do_meta_boxes(get_current_screen()->id, 'normal', null );
@@ -179,7 +175,7 @@ abstract class AdminPageSettingsBase
 		echo '</div>';
 		echo '<div class="fieldsSortable postbox">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
-		$pRendererSortablefields->buildForAjax();
+		$pInputModelRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
 		echo '</div>';
@@ -236,6 +232,9 @@ abstract class AdminPageSettingsBase
 		$pResultObject = new stdClass();
 		$pResultObject->result = false;
 		$pResultObject->record_id = $recordId;
+		$row['oo_plugin_fieldconfig_form_defaults_values'] =
+			((array)($row['oo_plugin_fieldconfig_form_defaults_values']['value']) ?? []) +
+			(array)($values->{'defaultvalue-lang'}) ?? [];
 
 		if ($checkResult) {
 			$this->updateValues($row, $pResultObject, $recordId);
@@ -426,6 +425,8 @@ abstract class AdminPageSettingsBase
 
 		wp_register_script('oo-checkbox-js',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/checkbox.js', ['jquery'], '', true);
+		wp_register_script('onoffice-default-form-values-js',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-default-form-values.js', ['onoffice-multiselect'], '', true);
 
 		wp_register_script('oo-sort-by-user-selection',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-sort-by-user-selection.js', ['jquery'], '', true);

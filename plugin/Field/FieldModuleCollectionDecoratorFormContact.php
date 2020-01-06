@@ -29,9 +29,6 @@ use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 class FieldModuleCollectionDecoratorFormContact

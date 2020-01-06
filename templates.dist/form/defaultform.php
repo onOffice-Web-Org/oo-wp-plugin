@@ -24,7 +24,10 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 ?>
 
 <h3>
-	<?php echo $pForm->getEstateContextLabel(); ?>
+	<?php
+   /** @var \onOffice\WPlugin\Form $pForm */
+    echo $pForm->getEstateContextLabel();
+    ?>
 </h3>
 
 <form method="post" id="onoffice-form">

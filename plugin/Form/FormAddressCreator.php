@@ -27,11 +27,11 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
-
 
 /**
  *
@@ -40,10 +40,10 @@ use onOffice\WPlugin\Types\FieldTypes;
 class FormAddressCreator
 {
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var FieldsCollectionBuilderShort */
-	private $_pFieldsCollectionBuilderShort = null;
+	private $_pFieldsCollectionBuilderShort;
 
 
 	/**
@@ -62,13 +62,13 @@ class FormAddressCreator
 	}
 
 
-
 	/**
 	 *
 	 * @param FormData $pFormData
 	 * @param bool $mergeExisting
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
+	 * @throws UnknownFieldException
 	 *
 	 */
 
@@ -97,6 +97,8 @@ class FormAddressCreator
 	 *
 	 * @param FormData $pFormData
 	 * @return array
+	 *
+	 * @throws UnknownFieldException
 	 *
 	 */
 
