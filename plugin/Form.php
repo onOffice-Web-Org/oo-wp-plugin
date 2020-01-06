@@ -70,7 +70,7 @@ class Form
 	private $_genericSettings = [];
 
 	/** @var int */
-	private $_countAbsolutResults = null;
+	private $_countAbsoluteResults = null;
 
 	/** @var FieldsCollection */
 	private $_pFieldsCollection = null;
@@ -109,7 +109,7 @@ class Form
 
 		try {
 			$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
-			$this->setCountAbsolutResults($pFormPost->getAbsolutCountResults());
+			$this->setCountAbsoluteResults($pFormPost->getAbsolutCountResults());
 		} catch (UnknownFormException $pE) {
 			// no form sent
 			$pFormConfigFactory = new DataFormConfigurationFactory();
@@ -416,7 +416,6 @@ class Form
 		return $result;
 	}
 
-
 	/**
 	 *
 	 * @param string $field
@@ -469,24 +468,6 @@ class Form
 			return esc_html($fieldValue);
 		}
 	}
-
-
-	/**
-	 *
-	 * @param string $field
-	 * @param string $message
-	 * @return string
-	 *
-	 */
-
-	public function getMessageForField($field, $message)
-	{
-		if (in_array($field, $this->_pFormData->getMissingFields(), true)) {
-			return esc_html($message);
-		}
-		return null;
-	}
-
 
 	/**
 	 *
@@ -591,10 +572,10 @@ class Form
 
 	/** @return int */
 	public function getCountAbsolutResults(): int
-		{ return $this->_countAbsolutResults; }
+		{ return $this->_countAbsoluteResults; }
 
 
-	/** @var int $countAbsolut */
-	private function setCountAbsolutResults(int $countAbsolut)
-		{ $this->_countAbsolutResults = $countAbsolut; }
+	/** @var int $countAbsolute */
+	private function setCountAbsoluteResults(int $countAbsolute)
+		{ $this->_countAbsoluteResults = $countAbsolute; }
 }
