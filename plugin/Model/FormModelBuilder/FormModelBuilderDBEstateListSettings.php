@@ -470,7 +470,9 @@ class FormModelBuilderDBEstateListSettings
 		$defaultValues = [];
 
 		foreach ($values as $value)	{
-			$defaultValues[$value] = $fieldnames[$value];
+			if (array_key_exists($value, $fieldnames)) {
+				$defaultValues[$value] = $fieldnames[$value];
+			}
 		}
 
 		$pInputModel->setValuesAvailable($defaultValues);
