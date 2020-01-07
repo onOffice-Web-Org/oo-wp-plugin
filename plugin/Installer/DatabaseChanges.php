@@ -435,8 +435,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		$this->_pWPDB->query("UPDATE $tableName 
 				SET `sortByUserDefinedDefault` = CONCAT(`sortByUserDefinedDefault`, '#ASC') 
-				WHERE sortByUserDefinedDefault != ''");
-
+				WHERE `sortByUserDefinedDefault` != '' AND
+				`sortByUserDefinedDefault`  NOT LIKE '%#ASC' AND 
+				`sortByUserDefinedDefault` NOT LIKE '%#DESC'");
 	}
 
 
