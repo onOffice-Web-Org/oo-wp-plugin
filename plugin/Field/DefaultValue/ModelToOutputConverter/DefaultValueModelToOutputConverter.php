@@ -75,8 +75,10 @@ class DefaultValueModelToOutputConverter
 		}
 
 		switch ($pField->getType()) {
+			case FieldTypes::FIELD_TYPE_FLOAT:
+			case FieldTypes::FIELD_TYPE_INTEGER:
 			case FieldTypes::FIELD_TYPE_SINGLESELECT:
-				return $this->convertSingleSelect($formId, $pField);
+				return $this->convertGeneric($formId, $pField);
 			case FieldTypes::FIELD_TYPE_MULTISELECT:
 				return $this->convertMultiSelect($formId, $pField);
 			case FieldTypes::FIELD_TYPE_BOOLEAN:
@@ -99,7 +101,7 @@ class DefaultValueModelToOutputConverter
 	 *
 	 */
 
-	private function convertSingleSelect(int $formId, Field $pField): array
+	private function convertGeneric(int $formId, Field $pField): array
 	{
 		$pModel = $this->_pDefaultValueReader->readDefaultValuesSingleselect($formId, $pField);
 		$pConverter = $this->_pOutputConverterFactory->createForSingleSelect();

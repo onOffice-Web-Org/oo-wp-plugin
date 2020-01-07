@@ -172,7 +172,7 @@ onOffice.default_values_input_converter = function () {
         }
     });
 
-    // numeric range
+    // numeric range, int, float
     document.querySelectorAll('input[name^=oopluginfieldconfigformdefaultsvalues-value]').forEach(function (mainInput) {
         var mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
         if (mainElement === null) {
@@ -185,7 +185,8 @@ onOffice.default_values_input_converter = function () {
         onOffice.default_values_inputs_converted.push(fieldName);
         var fieldDefinition = getFieldDefinition(fieldName);
 
-        if (!fieldDefinition.rangefield) {
+        if (!fieldDefinition.rangefield && (fieldDefinition.type === 'integer' || fieldDefinition.type === 'float')) {
+            mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
             return;
         }
 

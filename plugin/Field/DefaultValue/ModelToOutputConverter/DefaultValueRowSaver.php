@@ -92,8 +92,10 @@ class DefaultValueRowSaver
 		}
 
 		switch ($pField->getType()) {
+			case FieldTypes::FIELD_TYPE_INTEGER:
+			case FieldTypes::FIELD_TYPE_FLOAT:
 			case FieldTypes::FIELD_TYPE_SINGLESELECT:
-				$this->saveSingleSelect($formId, $pField, $values);
+				$this->saveGeneric($formId, $pField, $values);
 				break;
 			case FieldTypes::FIELD_TYPE_MULTISELECT:
 				$this->saveMultiSelect($formId, $pField, $values);
@@ -114,7 +116,7 @@ class DefaultValueRowSaver
 	 * @param string $value
 	 * @throws RecordManagerInsertException
 	 */
-	private function saveSingleSelect(int $formId, Field $pField, string $value)
+	private function saveGeneric(int $formId, Field $pField, string $value)
 	{
 		$pModel = new DefaultValueModelSingleselect($formId, $pField);
 		$pModel->setValue($value);
