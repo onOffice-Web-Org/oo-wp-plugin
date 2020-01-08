@@ -75,6 +75,8 @@ class DefaultValueModelToOutputConverter
 		}
 
 		switch ($pField->getType()) {
+			case FieldTypes::FIELD_TYPE_DATETIME:
+			case FieldTypes::FIELD_TYPE_DATE:
 			case FieldTypes::FIELD_TYPE_FLOAT:
 			case FieldTypes::FIELD_TYPE_INTEGER:
 			case FieldTypes::FIELD_TYPE_SINGLESELECT:
