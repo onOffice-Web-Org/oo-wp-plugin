@@ -185,7 +185,8 @@ onOffice.default_values_input_converter = function () {
         onOffice.default_values_inputs_converted.push(fieldName);
         var fieldDefinition = getFieldDefinition(fieldName);
 
-        if (!fieldDefinition.rangefield && (fieldDefinition.type === 'integer' || fieldDefinition.type === 'float')) {
+        if (!fieldDefinition.rangefield &&
+            ['integer', 'float', 'date'].indexOf(fieldDefinition.type) >= 0) {
             mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
             mainInput.value = predefinedValues[fieldName][0] || '';
             return;

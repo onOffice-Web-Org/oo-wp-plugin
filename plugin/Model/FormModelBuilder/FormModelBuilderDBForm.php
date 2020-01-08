@@ -29,7 +29,6 @@ use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
@@ -41,17 +40,13 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Translation\ModuleTranslation;
-use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
-use const ABSPATH;
-use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
-use function get_available_languages;
 use function get_locale;
 use function get_option;
-use function wp_get_available_translations;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -422,7 +417,6 @@ class FormModelBuilderDBForm
 		$pInputModel = new InputModelDB('defaultvalue_newlang', __('Add language', 'onoffice'));
 		$pInputModel->setTable('language');
 		$pInputModel->setField('language');
-		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 
 		$pLanguageReader = new InstalledLanguageReader;
 		$languages = ['' => ''] + $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
@@ -433,6 +427,9 @@ class FormModelBuilderDBForm
 			if (!$isTextType) {
 				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
 				$pInputModel->setLabel('');
+			} else {
+				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+				$pInputModel->setLabel(__('Add language', 'onoffice'));
 			}
 		});
 
