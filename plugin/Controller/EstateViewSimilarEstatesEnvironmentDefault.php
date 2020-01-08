@@ -21,9 +21,12 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\Template;
+
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
@@ -38,6 +41,8 @@ class EstateViewSimilarEstatesEnvironmentDefault
 	/** @var EstateList */
 	private $_pEstateList = null;
 
+	/** @var Container */
+	private $_pContainer = null;
 
 	/**
 	 *
@@ -50,6 +55,9 @@ class EstateViewSimilarEstatesEnvironmentDefault
 	{
 		$this->_pEstateList = $pEstateList ?? new EstateList($pDataView);
 		$this->_pEstateList->setFormatOutput(false);
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pDIContainerBuilder->build();
 	}
 
 
@@ -74,6 +82,6 @@ class EstateViewSimilarEstatesEnvironmentDefault
 
 	public function getTemplate(string $templateName): Template
 	{
-		return new Template($templateName);
+		return $this->_pContainer->get(Template::class)->withTemplateName($templateName);
 	}
 }

@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\SortList\SortListTypes;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
@@ -460,8 +461,12 @@ class FormModelBuilderDBEstateListSettings
 		$label = __('Standard Sort', 'onoffice');
 		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_DEFAULT, $label);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-		$pInputModel->setValue($this->getValue($pInputModel->getField()));
+
+		$selectedValue = $this->getValue($pInputModel->getField());
+		$pInputModel->setValue($selectedValue);
 		$values = $this->getValue(DataListView::SORT_BY_USER_VALUES);
+
+		$sortBySpec = $this->getValue(InputModelDBFactory::INPUT_SORT_BY_USER_DEFINED_DIRECTION);
 
 		if ($values == null) {
 			$values = [];
@@ -470,7 +475,15 @@ class FormModelBuilderDBEstateListSettings
 		$defaultValues = [];
 
 		foreach ($values as $value)	{
-			$defaultValues[$value] = $fieldnames[$value];
+			if (array_key_exists($value, $fieldnames)) {
+				$defaultValues[$value.'#'.SortListTypes::SORTORDER_ASC] =
+					$fieldnames[$value].' ('.SortListTypes::getSortOrderMapping(
+						$sortBySpec, SortListTypes::SORTORDER_ASC).')';
+
+				$defaultValues[$value.'#'.SortListTypes::SORTORDER_DESC] =
+					$fieldnames[$value].' ('.SortListTypes::getSortOrderMapping(
+						$sortBySpec, SortListTypes::SORTORDER_DESC).')';
+			}			
 		}
 
 		$pInputModel->setValuesAvailable($defaultValues);

@@ -52,7 +52,7 @@ class TestClassSortListBuilder
 		$this->_pListView->setSortby('kaufpreis');
 		$this->_pListView->setSortorder('DESC');
 		$this->_pListView->setSortBySetting(1);
-		$this->_pListView->setSortByUserDefinedDefault('kaltmiete');
+		$this->_pListView->setSortByUserDefinedDefault('kaltmiete#ASC');
 		$this->_pListView->setSortByUserDefinedDirection(1);
 
 		$this->_pBuilder = $this->getMockBuilder(FieldsCollectionBuilderShort::class)

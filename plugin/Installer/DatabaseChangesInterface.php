@@ -19,47 +19,30 @@
  *
  */
 
-declare (strict_types=1);
+declare(strict_types=1);
 
-namespace onOffice\tests;
+namespace onOffice\WPlugin\Installer;
 
-use onOffice\WPlugin\Template;
+use wpdb;
 
-
-/**
- *
- */
-
-class TemplateMocker
-	extends Template
+interface DatabaseChangesInterface
 {
-	/** @var string */
-	private $_dir = null;
+	/**
+	 *
+	 */
+	public function install();
 
+	/**
+	 * @return mixed
+	 */
+	public function getDbVersion();
 
 	/**
 	 *
-	 * @param string $templateName
-	 * @param string $dir
+	 * Callback for plugin uninstall hook
+	 *
+	 * @global wpdb $wpdb
 	 *
 	 */
-
-	public function __construct(string $templateName, string $dir = null)
-	{
-		parent::__construct($templateName);
-
-		$this->_dir = $dir ?? realpath(__DIR__);
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	protected function buildFilePath(): string
-	{
-		return $this->_dir.'/'.$this->getTemplateName();
-	}
+	public function deinstall();
 }

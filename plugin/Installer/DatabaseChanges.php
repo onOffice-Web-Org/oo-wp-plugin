@@ -1,9 +1,8 @@
 <?php
 
-
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -20,93 +19,94 @@
  *
  */
 
-namespace onOffice\WPlugin;
+declare(strict_types=1);
 
-use DI\Container;
-use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
-use onOffice\WPlugin\ScriptLoader\ScriptLoaderMapFactory;
-use onOffice\WPlugin\Types\MapProvider;
-use onOffice\WPlugin\Utility\Logger;
-use WP_Rewrite;
+namespace onOffice\WPlugin\Installer;
+
+use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
-use const ABSPATH;
-use function add_option;
 use function dbDelta;
-use function delete_option;
 use function esc_sql;
-use function get_option;
-use function update_option;
+use const ABSPATH;
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
- * Creates tables and sets options
- * Also removes them
- *
- */
-
-abstract class Installer
+class DatabaseChanges implements DatabaseChangesInterface
 {
+	/** @var int */
+	const MAX_VERSION = 15;
+
+	/** @var WPOptionWrapperBase */
+	private $_pWpOption;
+
+	/** @var wpdb */
+	private $_pWPDB;
+
+	/**
+	 * @param WPOptionWrapperBase $pWpOption
+	 */
+	public function __construct(WPOptionWrapperBase $pWpOption, \wpdb $pWPDB)
+	{
+		$this->_pWpOption = $pWpOption;
+		$this->_pWPDB = $pWPDB;
+	}
+
 	/**
 	 *
-	 * Callback for plugin activation hook
-	 *
 	 */
-
-	static public function install()
+	public function install()
 	{
+		if (get_site_option('oo_plugin_db_version') == DatabaseChanges::MAX_VERSION) {
+			return;
+		}
 		// If you are modifying this, please also make sure to edit the test
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		$dbversion = get_option('oo_plugin_db_version', null);
+		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
 
 		if ($dbversion === null) {
-			dbDelta( self::getCreateQueryCache() );
+			dbDelta( $this->getCreateQueryCache() );
 
 			$dbversion = 1.0;
-			add_option( 'oo_plugin_db_version', $dbversion, '', false );
+			$this->_pWpOption->addOption( 'oo_plugin_db_version', $dbversion, true );
 		}
 
 		if ($dbversion == 1.0) {
-			dbDelta( self::getCreateQueryListviews() );
-			dbDelta( self::getCreateQueryFieldConfig() );
-			dbDelta( self::getCreateQueryPictureTypes() );
-			dbDelta( self::getCreateQueryListViewContactPerson() );
-			dbDelta( self::getCreateQueryForms() );
-			dbDelta( self::getCreateQueryFormFieldConfig() );
+			dbDelta( $this->getCreateQueryListviews() );
+			dbDelta( $this->getCreateQueryFieldConfig() );
+			dbDelta( $this->getCreateQueryPictureTypes() );
+			dbDelta( $this->getCreateQueryListViewContactPerson() );
+			dbDelta( $this->getCreateQueryForms() );
+			dbDelta( $this->getCreateQueryFormFieldConfig() );
 
 			$dbversion = 2.0;
 		}
 
 		if ($dbversion == 2.0) {
-			dbDelta( self::getCreateQueryListViewsAddress() );
-			dbDelta( self::getCreateQueryAddressFieldConfig() );
+			dbDelta( $this->getCreateQueryListViewsAddress() );
+			dbDelta( $this->getCreateQueryAddressFieldConfig() );
 			$dbversion = 3.0;
 		}
 
 		if ($dbversion == 3.0) {
 			// new column: captcha
-			dbDelta( self::getCreateQueryForms() );
+			dbDelta( $this->getCreateQueryForms() );
 			$dbversion = 4;
 		}
 
 		if ($dbversion == 4.0) {
 			// new column: newsletter
-			dbDelta( self::getCreateQueryForms() );
+			dbDelta( $this->getCreateQueryForms() );
 			$dbversion = 5;
 		}
 
 		if ($dbversion == 5.0) {
 			// new columns: filterable, hidden
-			dbDelta( self::getCreateQueryAddressFieldConfig() );
+			dbDelta( $this->getCreateQueryAddressFieldConfig() );
 			$dbversion = 6;
 		}
 
 		if ($dbversion == 6.0) {
 			// new columns: availableOptions
-			dbDelta( self::getCreateQueryFieldConfig() );
-			dbDelta( self::getCreateQueryFormFieldConfig() );
+			dbDelta( $this->getCreateQueryFieldConfig() );
+			dbDelta( $this->getCreateQueryFormFieldConfig() );
 			$dbversion = 7;
 		}
 
@@ -116,26 +116,33 @@ abstract class Installer
 			// version 10 new columns: city_active
 			// version 11: new columns: geo_order
 			// version 12: new column in getCreateQueryForms: show_estate_context
-			dbDelta( self::getCreateQueryListviews() );
-			dbDelta( self::getCreateQueryForms() );
+			dbDelta( $this->getCreateQueryListviews() );
+			dbDelta( $this->getCreateQueryForms() );
 			$dbversion = 12;
 		}
 
 		if ( $dbversion == 12 || $dbversion == 13)	{
-			dbDelta( self::getCreateQueryListviews() );
-			dbDelta( self::getCreateQuerySortByUserValues() );
+			dbDelta( $this->getCreateQueryListviews() );
+			dbDelta( $this->getCreateQuerySortByUserValues() );
 			$dbversion = 14;
 		}
 
-		update_option( 'oo_plugin_db_version', $dbversion, false);
+		if ( $dbversion == 14) {
+			$this->updateSortByUserDefinedDefault();
+			$dbversion = 15;
+		}
 
-		$pContentFilter = new ContentFilter(new Logger(), new ScriptLoaderMap
-			(new MapProvider(), new ScriptLoaderMapFactory(new Container)));
-		$pContentFilter->addCustomRewriteTags();
-		$pContentFilter->addCustomRewriteRules();
-		self::flushRules();
+
+		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
+	/**
+	 * @return mixed
+	 */
+	public function getDbVersion()
+	{
+		return $this->_pWpOption->getOption('oo_plugin_db_version', null);
+	}
 
 	/**
 	 *
@@ -143,10 +150,10 @@ abstract class Installer
 	 *
 	 */
 
-	static private function getCreateQueryCache()
+	private function getCreateQueryCache()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_cache";
 		$sql = "CREATE TABLE $tableName (
 			cache_id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -169,10 +176,10 @@ abstract class Installer
 	 *
 	 */
 
-	static private function getCreateQueryListviews()
+	private function getCreateQueryListviews()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_listviews";
 		$sql = "CREATE TABLE $tableName (
 			`listview_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -210,10 +217,10 @@ abstract class Installer
 	 *
 	 */
 
-	static private function getCreateQueryForms()
+	private function getCreateQueryForms()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_forms";
 		$sql = "CREATE TABLE $tableName (
 			`form_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -250,10 +257,10 @@ abstract class Installer
 	 *
 	 */
 
-	static private function getCreateQueryFieldConfig()
+	private function getCreateQueryFieldConfig()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_fieldconfig";
 		$sql = "CREATE TABLE $tableName (
 			`fieldconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -276,10 +283,10 @@ abstract class Installer
 	 *
 	 */
 
-	static private function getCreateQueryFormFieldConfig()
+	private function getCreateQueryFormFieldConfig()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_form_fieldconfig";
 		$sql = "CREATE TABLE $tableName (
 			`form_fieldconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -304,10 +311,10 @@ abstract class Installer
 	 *
 	 */
 
-	static private function getCreateQueryAddressFieldConfig()
+	private function getCreateQueryAddressFieldConfig()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_address_fieldconfig";
 		$sql = "CREATE TABLE $tableName (
 			`address_fieldconfig_id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -329,10 +336,10 @@ abstract class Installer
 	 *
 	 */
 
-	static private function getCreateQueryListViewContactPerson()
+	private function getCreateQueryListViewContactPerson()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_listview_contactperson";
 		$sql = "CREATE TABLE $tableName (
 				`contactperson_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -352,10 +359,10 @@ abstract class Installer
 	 *
 	 */
 
-	static private function getCreateQueryPictureTypes()
+	private function getCreateQueryPictureTypes()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_picturetypes";
 		$sql = "CREATE TABLE $tableName (
 			`picturetype_id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -367,16 +374,16 @@ abstract class Installer
 		return $sql;
 	}
 
-		/**
+	/**
 	 *
 	 * @return string
 	 *
 	 */
 
-	static private function getCreateQuerySortByUserValues()
+	private function getCreateQuerySortByUserValues()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_sortbyuservalues";
 		$sql = "CREATE TABLE $tableName (
 			`sortbyvalue_id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -395,10 +402,10 @@ abstract class Installer
 	 *
 	 */
 
-	static private function getCreateQueryListViewsAddress()
+	private function getCreateQueryListViewsAddress()
 	{
-		$prefix = self::getPrefix();
-		$charsetCollate = self::getCharsetCollate();
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix."oo_plugin_listviews_address";
 		$sql = "CREATE TABLE $tableName (
 			`listview_address_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -419,54 +426,43 @@ abstract class Installer
 
 	/**
 	 *
-	 * @global WP_Rewrite $wp_rewrite
-	 *
 	 */
 
-	static private function flushRules()
+	private function updateSortByUserDefinedDefault()
 	{
-		global $wp_rewrite;
-		$wp_rewrite->flush_rules(false);
+		$prefix = $this->getPrefix();
+		$tableName = $prefix."oo_plugin_listviews";
+
+		$this->_pWPDB->query("UPDATE $tableName 
+				SET `sortByUserDefinedDefault` = CONCAT(`sortByUserDefinedDefault`, '#ASC') 
+				WHERE `sortByUserDefinedDefault` != '' AND
+				`sortByUserDefinedDefault`  NOT LIKE '%#ASC' AND 
+				`sortByUserDefinedDefault` NOT LIKE '%#DESC'");
 	}
 
 
 	/**
 	 *
-	 * @global wpdb $wpdb
 	 * @return string
 	 *
 	 */
 
-	static private function getPrefix()
+	private function getPrefix()
 	{
-		global $wpdb;
-		return $wpdb->prefix;
+		return $this->_pWPDB->prefix;
 	}
 
 
 	/**
 	 *
-	 * @global wpdb $wpdb
 	 * @return string
 	 *
 	 */
 
-	static private function getCharsetCollate()
+	private function getCharsetCollate()
 	{
-		global $wpdb;
-		return $wpdb->get_charset_collate();
+		return $this->_pWPDB->get_charset_collate();
 	}
-
-
-	/**
-	 *
-	 */
-
-	static public function deactivate()
-	{
-		// @codeCoverageIgnoreStart
-		self::flushRules();
-	} // @codeCoverageIgnoreEnd
 
 
 	/**
@@ -477,11 +473,9 @@ abstract class Installer
 	 *
 	 */
 
-	static public function deinstall()
+	public function deinstall()
 	{
-		global $wpdb;
-		$prefix = self::getPrefix();
-
+		$prefix = $this->getPrefix();
 		$tables = array(
 			$prefix."oo_plugin_cache",
 			$prefix."oo_plugin_listviews",
@@ -495,19 +489,10 @@ abstract class Installer
 			$prefix."oo_plugin_sortbyuservalues",
 		);
 
-		foreach ($tables as $table)
-		{
-			$wpdb->query("DROP TABLE IF EXISTS ".esc_sql($table));
+		foreach ($tables as $table)	{
+			$this->_pWPDB->query("DROP TABLE IF EXISTS ".esc_sql($table));
 		}
 
-		delete_option('oo_plugin_db_version');
-		delete_option('onoffice-default-view');
-		delete_option('onoffice-favorization-enableFav');
-		delete_option('onoffice-favorization-favButtonLabelFav');
-		delete_option('onoffice-maps-mapprovider');
-		delete_option('onoffice-settings-apisecret');
-		delete_option('onoffice-settings-apikey');
-
-		self::flushRules();
+		$this->_pWpOption->deleteOption('oo_plugin_db_version');
 	}
 }

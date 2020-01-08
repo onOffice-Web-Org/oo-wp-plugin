@@ -19,47 +19,49 @@
  *
  */
 
-declare (strict_types=1);
+declare(strict_types=1);
 
-namespace onOffice\tests;
+namespace onOffice\tests\Mocks;
 
-use onOffice\WPlugin\Template;
+use onOffice\WPlugin\Installer\DatabaseChangesInterface;
+use wpdb;
 
-
-/**
- *
- */
-
-class TemplateMocker
-	extends Template
+class DatabaseChangesDummy
+	implements DatabaseChangesInterface
 {
-	/** @var string */
-	private $_dir = null;
-
+	private $_dbVersion = 0;
 
 	/**
 	 *
-	 * @param string $templateName
-	 * @param string $dir
-	 *
 	 */
-
-	public function __construct(string $templateName, string $dir = null)
+	public function install()
 	{
-		parent::__construct($templateName);
-
-		$this->_dir = $dir ?? realpath(__DIR__);
 	}
 
+	/**
+	 * @return mixed
+	 */
+	public function getDbVersion()
+	{
+		return $this->_dbVersion;
+	}
 
 	/**
 	 *
-	 * @return string
+	 * Callback for plugin uninstall hook
+	 *
+	 * @global wpdb $wpdb
 	 *
 	 */
-
-	protected function buildFilePath(): string
+	public function deinstall()
 	{
-		return $this->_dir.'/'.$this->getTemplateName();
+	}
+
+	/**
+	 * @param int $dbVersion
+	 */
+	public function setDbVersion(int $dbVersion)
+	{
+		$this->_dbVersion = $dbVersion;
 	}
 }

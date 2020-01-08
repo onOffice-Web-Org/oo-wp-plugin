@@ -32,7 +32,6 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\UnknownFieldException;
@@ -50,6 +49,7 @@ use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_Query;
+use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_rewrite_rule;
 use function add_rewrite_tag;
@@ -57,7 +57,7 @@ use function get_page_uri;
 use function get_post;
 use function shortcode_atts;
 use function wp_get_post_parent_id;
-use const ONOFFICE_DI_CONFIG_PATH;
+
 
 /**
  *
@@ -126,6 +126,10 @@ class ContentFilter
 	public function registerEstateShortCodes($attributesInput)
 	{
 		global $wp_query;
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+
 		$page = 1;
 		if (!empty($wp_query->query_vars['page'])) {
 			$page = $wp_query->query_vars['page'];
@@ -141,7 +145,8 @@ class ContentFilter
 				$pDetailView = $this->getEstateDetailView();
 
 				if ($pDetailView->getName() === $attributes['view']) {
-					$pTemplate = new Template($pDetailView->getTemplate());
+					/* @var $pTemplate Template */
+					$pTemplate = $pContainer->get(Template::class)->withTemplateName($pDetailView->getTemplate());
 					$pEstateDetail = $this->preloadSingleEstate($pDetailView, $attributes['units']);
 					$pTemplate->setEstateList($pEstateDetail);
 					$result = $pTemplate->render();
@@ -152,6 +157,7 @@ class ContentFilter
 				$pListView = $pListViewFactory->getListViewByName($attributes['view']);
 
 				if (is_object($pListView) && $pListView->getName() === $attributes['view']) {
+
 					$pDIContainerBuilder = new ContainerBuilder;
 					$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 					$pContainer = $pDIContainerBuilder->build();
@@ -162,6 +168,7 @@ class ContentFilter
 
 					$this->setAllowedGetParametersEstate($pListView, $pSortListModel);
 					$pTemplate = new Template($pListView->getTemplate());
+
 					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
 					$availableOptionsEstates = $pListView->getAvailableOptions();
 					$pDistinctFieldsChecker = new DistinctFieldsScriptRegistrator

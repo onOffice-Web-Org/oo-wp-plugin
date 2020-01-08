@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018  onOffice GmbH
+ *    Copyright (C) 2019  onOffice Software
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -35,6 +35,6 @@ switch ($pMapProvider->getActiveMapProvider()) {
 		break;
 
 	case MapProvider::OPEN_STREET_MAPS:
-		include 'map-osm.php';
+		include('map-osm.php');
 		break;
 }

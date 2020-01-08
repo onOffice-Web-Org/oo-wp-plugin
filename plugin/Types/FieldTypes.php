@@ -99,7 +99,24 @@ abstract class FieldTypes
 	private static $_multipleSelectTypes = [
 		FieldTypes::FIELD_TYPE_MULTISELECT,
 		FieldTypes::FIELD_TYPE_SINGLESELECT,
+		'displayAll',
+		'displayLive',
+		'limitExceeded',
 	];
+
+
+	/** @var string[] */
+	private static $_regZusatzSearchcritTypes = [
+		'displayAll',
+		'displayLive',
+		'limitExceeded',
+	];
+
+
+	/** @return bool */
+	static public function isRegZusatzSearchcritTypes($type): bool
+		{ return in_array($type, self::$_regZusatzSearchcritTypes); }
+
 
 	/**
 	 *

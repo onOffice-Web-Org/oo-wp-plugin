@@ -73,15 +73,43 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.3.0 =
+
+**Changes**
+
+* Selection of default sort direction in the estate list configuration for the user sorting in the front-end.
+
+**Fixes**
+
+* Fix handling of deactivated fields in back-end list configuration.
+
+= 2.2.2 =
+
+**Fixes**
+
+* Remove contact form from default estate list template.
+* Fix variable name collision in estate detail and map template.
+* Add missing languages to the language mapping.
+
+**Changes**
+
+* The Regional Addition can now be used as both single select or multi select field.
+
+= 2.2.1 =
+
+**Fixes**
+
+* Migration of database changes introduced in version 2.2.0.
+
 = 2.2.0 =
 
-** New **
+**New**
 
 * Option to choose whether the estate list should be pre-sorted or sortable by a condition selected by the user in the front-end.
 
 = 2.1.2 =
 
-** Fixes **
+**Fixes**
 
 * Prevent WordPress from throwing an error in both front-end and back-end if a field has an empty label.
 
@@ -138,6 +166,15 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+= 2.3.0 =
+Adds default sort direction for the user-defined sorting.
+
+= 2.2.2 =
+Various bug fixes.
+
+= 2.2.1 =
+Fixes the migration of the database changes introduced in version 2.2.0.
 
 = 2.2.0 =
 Estate views can be sorted by the user in the front-end.

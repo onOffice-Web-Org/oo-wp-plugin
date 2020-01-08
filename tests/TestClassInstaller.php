@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,124 +19,72 @@
  *
  */
 
-declare (strict_types=1);
-
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Installer;
-use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Installer\Installer;
 use WP_UnitTestCase;
-use function add_filter;
-use function get_option;
-use function remove_filter;
-
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- * @covers onOffice\WPlugin\Installer
- *
- * Please note $wpdb won't create any tables in testing mode
- *
- */
 
 class TestClassInstaller
 	extends WP_UnitTestCase
 {
-	/** amount of tables created */
-	const NUM_NEW_TABLES = 7;
-
-	/** @var string[] */
-	private $_createQueries = [];
-
-	/** @var string[] */
-	private $_dropQueries = [];
-
-
 	/**
-	 *
-	 * @return array
-	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 
-	public function testInstall(): array
+	public function testInstall()
 	{
-		add_filter('query', [$this, 'saveCreateQuery'], 1);
+		global $wp_rewrite;
+		$wp_rewrite->permalink_structure = '%postname%';
+		$wp_rewrite->rewritecode = [];
+		$wp_rewrite->rewritereplace = [];
+		$wp_rewrite->queryreplace = [];
+		$wp_rewrite->extra_rules_top = [];
+		$this->assertArrayNotHasKey('^distinctfields-json/?$', $wp_rewrite->rewrite_rules());
+		$this->assertArrayNotHasKey('^document-pdf/([^\/]+)/([0-9]+)/?$', $wp_rewrite->rewrite_rules());
 		Installer::install();
-		remove_filter('query', [$this, 'saveCreateQuery'], 1);
-
-		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
-
-		$dbversion = get_option('oo_plugin_db_version', null);
-		$this->assertEquals(14, $dbversion);
-		return $this->_createQueries;
+		$this->assertNotEmpty($wp_rewrite->rewritecode);
+		$this->assertNotEmpty($wp_rewrite->rewritereplace);
+		$this->assertNotEmpty($wp_rewrite->queryreplace);
+		$this->assertNotEmpty($wp_rewrite->extra_rules_top);
+		$this->assertNotEmpty($wp_rewrite->rewrite_rules());
+		$this->assertArrayHasKey('^distinctfields-json/?$', $wp_rewrite->rewrite_rules());
+		$this->assertArrayHasKey('^document-pdf/([^\/]+)/([0-9]+)/?$', $wp_rewrite->rewrite_rules());
 	}
 
+	/**
+	 * @depends testInstall
+	 * @preserveGlobalState disabled
+	 */
+	public function testDeactivate()
+	{
+		global $wp_rewrite;
+		$wp_rewrite->permalink_structure = '%postname%';
+		Installer::install();
+
+		// make rewrite rules outdated
+		$wp_rewrite->extra_rules_top = [];
+		$wp_rewrite->extra_rules = [];
+
+		$rewriteRulesBefore = get_option('rewrite_rules');
+
+		// should refresh rewrite rules
+		Installer::deactivate();
+		$rewriteRulesAfter = get_option('rewrite_rules');
+		$this->assertNotSame($rewriteRulesBefore, $rewriteRulesAfter);
+	}
 
 	/**
-	 *
-	 * @depends testInstall
-	 * @param array $createQueries from testInstall test.
-	 *
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
 	 */
-
-	public function testUninstall(array $createQueries)
+	public function testDeinstall()
 	{
-		add_filter('query', [$this, 'saveDropQuery'], 1);
 		Installer::deinstall();
-		remove_filter('query', [$this, 'saveDropQuery'], 1);
-
-		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_dropQueries));
-
-		// assert that as many tables have been removed as have been created
-		$uniqueCreateQueries = array_unique($createQueries);
-		$uniqueDropQueries = array_unique($this->_dropQueries);
-
-		$this->assertEquals(count($uniqueCreateQueries), count($uniqueDropQueries));
-
-		$dbversion = get_option('oo_plugin_db_version', null);
-		$this->assertNull($dbversion);
-
-		$this->assertFalse(get_option('oo_plugin_db_version'));
 		$this->assertFalse(get_option('onoffice-default-view'));
 		$this->assertFalse(get_option('onoffice-favorization-enableFav'));
 		$this->assertFalse(get_option('onoffice-favorization-favButtonLabelFav'));
 		$this->assertFalse(get_option('onoffice-settings-apisecret'));
 		$this->assertFalse(get_option('onoffice-settings-apikey'));
-	}
-
-
-	/**
-	 *
-	 * @param string $query
-	 * @return string
-	 *
-	 */
-
-	public function saveCreateQuery(string $query): string
-	{
-		if (__String::getNew($query)->startsWith('CREATE TABLE')) {
-			$this->_createQueries []= $query;
-		}
-
-		return $query;
-	}
-
-
-	/**
-	 *
-	 * @param string $query
-	 * @return string
-	 *
-	 */
-
-	public function saveDropQuery(string $query): string
-	{
-		if (__String::getNew($query)->startsWith('DROP TABLE')) {
-			$this->_dropQueries []= $query;
-		}
-
-		return $query;
 	}
 }

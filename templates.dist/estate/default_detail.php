@@ -28,14 +28,12 @@ use onOffice\WPlugin\EstateDetail;
  */
 
 /* @var $pEstates EstateDetail */
+$pEstates->resetEstateIterator();
+	while ( $currentEstate = $pEstates->estateIterator() ) :
 require('map/map.php');
 
 ?>
 <h1><?php esc_html_e('Detail View', 'onoffice') ?></h1>
-
-<?php
-	$pEstates->resetEstateIterator();
-	while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 	<?php echo $pEstates->getEstateUnits( ); ?>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
@@ -44,19 +42,15 @@ require('map/map.php');
 	?>
 		<?php echo esc_html($pEstates->getFieldLabel( $field )) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
 
-	<?php endforeach; ?>
+	<?php endforeach;
 
-
-	<?php
 	foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
 		<ul>
 			<b> <?php echo esc_html__('Contact person', 'onoffice').': '.esc_html($contactData['Vorname']); ?> <?php echo esc_html($contactData['Name']); ?></b>
 			<?php // either use the phone number flagged as default (add `default*` to config) ... ?>
-			<!--<li>Telefon: <?php // echo $contactData['defaultphone']; ?></li>-->
-			<!--<li>Telefax: <?php // echo $contactData['defaultfax']; ?></li>-->
-			<!--<li>E-Mail: <?php // echo $contactData['defaultemail']; ?></li>-->
-
-
+			<li>Telefon: <?php echo $contactData['defaultphone']; ?></li>
+			<li>Telefax: <?php echo $contactData['defaultfax']; ?></li>
+			<li>E-Mail: <?php echo $contactData['defaultemail']; ?></li>
 			<?php // ... or the specific one (add `mobile`, `phone`, `email` to config): ?>
 			<?php
 			$mobilePhoneNumbers = $contactData->offsetExists('mobile') ? $contactData->getValueRaw('mobile') : array();
@@ -122,14 +116,5 @@ require('map/map.php');
 			<?php esc_html_e('PDF expose', 'onoffice'); ?>
 		</a>
 	<?php endif; ?>
-	<?php
-		try {
-			$estateId = $pEstates->getCurrentEstateId();
-			$pForm = new \onOffice\WPlugin\Form('contact', \onOffice\WPlugin\Form::TYPE_CONTACT);
-			include( __DIR__ . "/../form/defaultform.php" );
-		} catch (\onOffice\WPlugin\DataFormConfiguration\UnknownFormException $pE) {
-			echo esc_html__('(Form is not available)', 'onoffice');
-		}
-	?>
 	<?php echo $pEstates->getSimilarEstates(); ?>
 <?php endwhile; ?>
