@@ -430,8 +430,6 @@ abstract class AdminPageSettingsBase
 		wp_register_script('oo-sort-by-user-selection',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-sort-by-user-selection.js', ['jquery'], '', true);
 
-		wp_enqueue_script('oo-sort-by-user-selection');
-
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');
 

@@ -34,11 +34,44 @@ class SortListTypes
 	/** */
 	const SORT_ORDER = 'sortorder';
 
+	/** */
+	const SORT_BY_USER_DEFINED_DEFAULT_DELIMITER = '#';
+
 	/**
 	 * @return array
 	 */
 	static public function getSortUrlPrameter(): array
 	{
 		return [self::SORT_BY, self::SORT_ORDER];
+	}
+
+
+	/**
+	 * @return array
+	 */
+	static public function getSortOrder(): array
+	{
+		return [
+			0 => [
+				SortListTypes::SORTORDER_ASC => __('lowest first', 'onoffice'),
+				SortListTypes::SORTORDER_DESC => __('highest first', 'onoffice'),
+			],
+			1 => [
+				SortListTypes::SORTORDER_ASC => __('ascending', 'onoffice'),
+				SortListTypes::SORTORDER_DESC => __('descending', 'onoffice'),
+			],
+		];
+	}
+
+	/**
+	 * @param int $sortByUserDirection
+	 * @param string $sortorder
+	 * @return string
+	 */
+	static public function getSortOrderMapping(int $sortByUserDirection, string $sortorder): string
+	{
+		$mapping = self::getSortOrder();
+
+		return $mapping[$sortByUserDirection][$sortorder];
 	}
 }

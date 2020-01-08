@@ -124,7 +124,11 @@ class TestClassFormModelBuilderDBEstateListSettings
 				'kaufpreis' => 'Kaufpreis',
 				'kaltmiete' => 'Kaltmiete']);
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
-		$pInstance->method('getValue')->willReturn(['kaufpreis']);
+
+		$pInstance->expects($this->exactly(3))
+			->method('getValue')
+			->withConsecutive(['sortByUserDefinedDefault'], ['sortbyuservalues'], ['sortByUserDefinedDirection'])
+			->will($this->onConsecutiveCalls('kaufpreis#ASC', ['kaufpreis'], '1'));
 
 		$pInputModelDB = $pInstance->createInputModelSortByDefault();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);

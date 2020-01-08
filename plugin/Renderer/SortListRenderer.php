@@ -51,26 +51,6 @@ class SortListRenderer
 		return $htmlSortListSelector;
 	}
 
-	/**
-	 * @param int $sortByUserDirection
-	 * @param string $sortorder
-	 * @return string
-	 */
-	private function getSortOrderMapping(int $sortByUserDirection, string $sortorder): string
-	{
-		$mapping = [
-			0 => [
-				SortListTypes::SORTORDER_ASC => __('lowest first', 'onoffice'),
-				SortListTypes::SORTORDER_DESC => __('highest first', 'onoffice'),
-			],
-			1 => [
-				SortListTypes::SORTORDER_ASC => __('ascending', 'onoffice'),
-				SortListTypes::SORTORDER_DESC => __('descending', 'onoffice'),
-			],
-		];
-
-		return $mapping[$sortByUserDirection][$sortorder];
-	}
 
 	/**
 	 * @param SortListDataModel $pSortListModel
@@ -79,7 +59,7 @@ class SortListRenderer
 	 */
 	private function estimateDirectionLabelBySortorder(SortListDataModel $pSortListModel, string $sortorder): string
 	{
-		$sortorderDirectionLabel = $this->getSortOrderMapping($pSortListModel->getSortbyUserDirection(), $sortorder);
+		$sortorderDirectionLabel = SortListTypes::getSortOrderMapping($pSortListModel->getSortbyUserDirection(), $sortorder);
 		return esc_html($sortorderDirectionLabel);
 	}
 
