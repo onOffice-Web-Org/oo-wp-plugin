@@ -98,7 +98,7 @@ class ContentFilterShortCodeAddress
 		$pAddressListView = $this->_pEnvironment->getDataListFactory()->getListViewByName($addressListName);
 		$pAddressList = $this->_pEnvironment->createAddressList()->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
-		$this->estimateAllowedGetParameters($pAddressListView->getFilterableFields());
+		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
 		$pTemplate = $this->_pEnvironment->getTemplate()->withTemplateName($templateName);
 		$pTemplate->setAddressList($pAddressList);
@@ -109,7 +109,7 @@ class ContentFilterShortCodeAddress
 	/**
 	 * @param array $filterableFields
 	 */
-	private function estimateAllowedGetParameters(array $filterableFields)
+	private function populateWpLinkPagesArgs(array $filterableFields)
 	{
 		$pModel = $this->_pSearchParametersModelBuilder->build(
 			$filterableFields, onOfficeSDK::MODULE_ADDRESS, $this->_pBuilderShort);

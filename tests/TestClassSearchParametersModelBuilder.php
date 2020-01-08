@@ -129,6 +129,9 @@ class TestClassSearchParametersModelBuilder
 		$this->assertEquals(['Ort' => 'Aachen'], $pModel->getParameters());
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder::build
+	 */
 	public function testBuildEstateNumField()
 	{
 		$_GET = [
