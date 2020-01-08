@@ -24,10 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use Generator;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesForm;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -298,6 +295,9 @@ abstract class AdminPageFormSettingsBase
 		$pFieldsCollectionBuilder->addFieldsAddressEstate($pFieldsCollection);
 		$pFieldsCollectionBuilder->addFieldsSearchCriteria($pFieldsCollection);
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
+			if (!in_array($pField->getModule(), [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_SEARCHCRITERIA], true)) {
+				continue;
+			}
 			$result[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
 			if ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$result[$pField->getModule()][$pField->getName()]['permittedvalues'] = [

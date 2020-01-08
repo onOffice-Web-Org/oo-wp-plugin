@@ -67,6 +67,10 @@ class TestClassForm
 				$pFieldMultiSelect = new Field('testFieldMultiSelect', 'testModule');
 				$pFieldMultiSelect->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 				$pFieldsCollection->addField($pFieldMultiSelect);
+				$pFieldRange = new Field('testRange', 'testModule');
+				$pFieldRange->setIsRangeField(true);
+				$pFieldRange->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldsCollection->addField($pFieldRange);
 				return $pFieldsCollectionBuilder;
 			}));
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilder);
@@ -98,7 +102,7 @@ class TestClassForm
 		$this->_pContainer->set(DefaultValueModelToOutputConverter::class, $pDefaultValueModelToOutputConverter);
 
 		$pDefaultValueModelToOutputConverter->expects($this->atLeastOnce())->method('getConvertedField')
-			->will($this->onConsecutiveCalls(['testValue'], ['testMulti1', 'testMulti2']));
+			->will($this->onConsecutiveCalls(['testValue'], ['testMulti1', 'testMulti2'], [['min' => 13.1, 'max' => 14.]]));
 
 		$this->_pSubject = new Form('testForm1', Form::TYPE_INTEREST, $this->_pContainer);
 	}
@@ -111,5 +115,7 @@ class TestClassForm
 		$this->assertEquals('testValue', $this->_pSubject->getFieldValue('testFieldText'));
 		$this->assertEquals(['testMulti1', 'testMulti2'],
 			$this->_pSubject->getFieldValue('testFieldMultiSelect', true));
+		$this->assertEquals(['min' => 13.1, 'max' => 14.],
+			$this->_pSubject->getFieldValue('testRange', true));
 	}
 }

@@ -500,7 +500,11 @@ class Form
 		foreach ($this->_pFieldsCollection->getAllFields() as $pField) {
 			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
 			$values[$pField->getName()] = $value[0] ?? '';
-			if ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
+
+			if ($pField->getIsRangeField()) {
+				$values[$pField->getName().'__von'] = $value['min'] ?? '';
+				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
+			} else if ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
 				$values[$pField->getName()] = $value;
 			} else if ($pField->getType() === FieldTypes::FIELD_TYPE_TEXT ||
 				$pField->getType() === FieldTypes::FIELD_TYPE_VARCHAR) {
