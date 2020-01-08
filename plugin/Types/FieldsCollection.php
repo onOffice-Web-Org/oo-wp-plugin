@@ -70,7 +70,7 @@ class FieldsCollection implements FieldModuleCollection
 
 	/**
 	 *
-	 * @return array
+	 * @return Field[]
 	 *
 	 */
 

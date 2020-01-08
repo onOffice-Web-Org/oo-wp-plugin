@@ -28,11 +28,9 @@ use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfiguration;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
-use onOffice\WPlugin\Field\SearchcriteriaFields;
 use function sanitize_email;
 use function sanitize_text_field;
 
