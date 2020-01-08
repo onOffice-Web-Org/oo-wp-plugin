@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
@@ -166,6 +167,45 @@ class TestClassFieldsCollection
 		$pCollection = $this->createPrefilledFieldsCollection();
 		// Exception expected, because Marilyn is in testModuleB
 		$pCollection->removeFieldByModuleAndName('testModuleA', 'Marilyn');
+	}
+
+	/**
+	 *
+	 */
+
+	public function testGetAllFieldsKeyedUnsafe()
+	{
+		$pCollection = $this->createPrefilledFieldsCollection();
+		$result = $pCollection->getAllFieldsKeyedUnsafe();
+		$this->assertEquals([
+			'Michael' => new Field('Michael', 'testModuleA'),
+			'Elton' => new Field('Elton', 'testModuleA'),
+			'Marilyn' => new Field('Marilyn', 'testModuleB'),
+		], $result);
+	}
+
+	/**
+	 *
+	 * @throws UnknownFieldException
+	 *
+	 */
+
+	public function testGetFieldByKeyUnsafeSuccess()
+	{
+		$pCollection = $this->createPrefilledFieldsCollection();
+		$pResult = $pCollection->getFieldByKeyUnsafe('Elton');
+		$this->assertEquals($pResult, new Field('Elton', 'testModuleA'));
+	}
+
+	/**
+	 * @throws UnknownFieldException
+	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
+	 */
+
+	public function testGetFieldByKeyUnsafeFailure()
+	{
+		$pCollection = $this->createPrefilledFieldsCollection();
+		$pCollection->getFieldByKeyUnsafe('Steve');
 	}
 
 

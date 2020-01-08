@@ -50,17 +50,17 @@ abstract class FormModelBuilder
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
-
 	/**
-	 *
+	 * @param string $pageSlug
+	 * @return FormModel
 	 */
 
 	abstract public function generate(string $pageSlug): FormModel;
 
-
 	/**
 	 *
 	 * @param string $key
+	 * @param mixed $default
 	 * @return mixed
 	 *
 	 */

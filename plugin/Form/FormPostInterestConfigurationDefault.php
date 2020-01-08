@@ -35,13 +35,13 @@ class FormPostInterestConfigurationDefault
 	implements FormPostInterestConfiguration
 {
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var FormAddressCreator */
-	private $_pFormAddressCreator = null;
+	private $_pFormAddressCreator;
 
 	/** @var SearchcriteriaFields */
-	private $_pSearchcriteriaFields = null;
+	private $_pSearchcriteriaFields;
 
 
 	/**

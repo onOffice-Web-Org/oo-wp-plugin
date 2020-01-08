@@ -24,6 +24,8 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\Collection;
 
 use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
@@ -38,7 +40,7 @@ use function __;
 class FieldsCollectionBuilderShort
 {
 	/** @var Container */
-	private $_pContainer = null;
+	private $_pContainer;
 
 
 	/**
@@ -52,12 +54,12 @@ class FieldsCollectionBuilderShort
 		$this->_pContainer = $pContainer;
 	}
 
-
 	/**
 	 *
 	 * @param FieldsCollection $pFieldsCollection
 	 * @return $this
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function addFieldsAddressEstate(FieldsCollection $pFieldsCollection): self
@@ -69,12 +71,12 @@ class FieldsCollectionBuilderShort
 		return $this;
 	}
 
-
 	/**
 	 *
 	 * @param FieldsCollection $pFieldsCollection
 	 * @return $this
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function addFieldsSearchCriteria(FieldsCollection $pFieldsCollection): self
@@ -85,12 +87,12 @@ class FieldsCollectionBuilderShort
 		return $this;
 	}
 
-
 	/**
 	 *
 	 * @param FieldsCollection $pFieldsCollection
 	 * @return $this
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function addFieldsFormBackend(FieldsCollection $pFieldsCollection): self
@@ -105,12 +107,12 @@ class FieldsCollectionBuilderShort
 		return $this;
 	}
 
-
 	/**
 	 *
 	 * @param FieldsCollection $pFieldsCollection
 	 * @return $this
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function addFieldsFormFrontend(FieldsCollection $pFieldsCollection): self
@@ -124,12 +126,12 @@ class FieldsCollectionBuilderShort
 		return $this;
 	}
 
-
 	/**
 	 *
 	 * @param FieldCategoryToFieldConverter $pConverter
 	 * @return FieldsCollection
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	private function buildSearchcriteriaFieldsCollectionByFieldLoader(FieldCategoryToFieldConverter $pConverter): FieldsCollection
@@ -139,12 +141,12 @@ class FieldsCollectionBuilderShort
 			->buildFieldsCollection($pFieldLoader);
 	}
 
-
 	/**
 	 *
 	 * @param FieldsCollection $pFieldsCollection
 	 * @return $this
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function addFieldsSearchCriteriaSpecificBackend(FieldsCollection $pFieldsCollection): self

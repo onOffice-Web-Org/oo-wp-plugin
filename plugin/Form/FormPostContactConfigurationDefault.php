@@ -26,9 +26,6 @@ use onOffice\WPlugin\WP\WPQueryWrapper;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 class FormPostContactConfigurationDefault
@@ -45,6 +42,10 @@ class FormPostContactConfigurationDefault
 
 
 	/**
+	 *
+	 * @param SDKWrapper $pSDKWrapper
+	 * @param WPQueryWrapper $pWPQueryWrapper
+	 * @param FormAddressCreator $pFormAddressCreator
 	 *
 	 */
 
