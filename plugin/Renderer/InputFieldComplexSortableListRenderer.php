@@ -24,7 +24,6 @@ namespace onOffice\WPlugin\Renderer;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
-use function __;
 use function esc_html;
 
 /**
@@ -75,7 +74,7 @@ class InputFieldComplexSortableListRenderer
 
 				if (in_array($key, $deactivatedFields)) {
 					$deactivatedStyle = ' style="color:red;" ';
-					$deactivatedInTheSoftware = ' ('.__('Disabled in onOffice', 'onoffice').')';
+					$deactivatedInTheSoftware = ' ('.esc_html__('Disabled in onOffice', 'onoffice').')';
 				}
 			}
 
@@ -118,9 +117,4 @@ class InputFieldComplexSortableListRenderer
 			}
 		}
 	}
-
-
-	/** @return array */
-	public function getInactiveFilds()
-		{ return $this->_inactiveFields; }
 }

@@ -95,18 +95,6 @@ abstract class InputFieldRenderer
 
 	/**
 	 *
-	 * @param array $attributes
-	 *
-	 */
-
-	public function setAdditionalAttributes(array $attributes)
-	{
-		$this->_additionalAttributes = $attributes;
-	}
-
-
-	/**
-	 *
 	 * @return string
 	 *
 	 */

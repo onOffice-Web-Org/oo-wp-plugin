@@ -67,7 +67,6 @@ class FormModelBuilderDBForm
 	/**
 	 * @param Container $pContainer
 	 */
-
 	public function __construct(Container $pContainer)
 	{
 		$pConfigForm = new InputModelDBFactoryConfigForm();
@@ -77,14 +76,12 @@ class FormModelBuilderDBForm
 	}
 
 	/**
-	 *
 	 * @param string $module
 	 * @param string $htmlType
 	 * @return InputModelDB
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-
 	public function createSortableFieldList($module, $htmlType)
 	{
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
@@ -130,12 +127,10 @@ class FormModelBuilderDBForm
 	}
 
 	/**
-	 *
 	 * @return FieldsCollection
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-
 	private function getFieldsCollection(): FieldsCollection
 	{
 		$pContainerBuilder = new ContainerBuilder;
@@ -152,16 +147,12 @@ class FormModelBuilderDBForm
 		return $pFieldsCollection;
 	}
 
-
 	/**
-	 *
 	 * @param string $category
 	 * @param array $fieldNames
 	 * @param string $categoryLabel
 	 * @return InputModelDB
-	 *
 	 */
-
 	public function createInputModelFieldsConfigByCategory($category, $fieldNames, $categoryLabel)
 	{
 		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
@@ -177,16 +168,12 @@ class FormModelBuilderDBForm
 		return $pInputModelFieldsConfig;
 	}
 
-
 	/**
-	 *
 	 * @param string $pageSlug
 	 * @param int $formId
 	 * @return FormModel
 	 * @throws Exception
-	 *
 	 */
-
 	public function generate(string $pageSlug, $formId = null): FormModel
 	{
 		if ($this->_formType === null) {
@@ -220,13 +207,9 @@ class FormModelBuilderDBForm
 		return $pFormModel;
 	}
 
-
 	/**
-	 *
 	 * @return InputModelDB
-	 *
 	 */
-
 	public function createInputModelName()
 	{
 		$labelName = __('Form Name', 'onoffice');
@@ -240,13 +223,9 @@ class FormModelBuilderDBForm
 		return $pInputModelName;
 	}
 
-
 	/**
-	 *
 	 * @return InputModelLabel
-	 *
 	 */
-
 	public function createInputModelFormType()
 	{
 		$formType = $this->getFormType();
@@ -259,13 +238,9 @@ class FormModelBuilderDBForm
 		return $pInputModeLabel;
 	}
 
-
 	/**
-	 *
 	 * @return InputModelLabel
-	 *
 	 */
-
 	public function createInputModelEmbedCode()
 	{
 		$pConfig = new InputModelDBFactoryConfigForm();
@@ -282,13 +257,9 @@ class FormModelBuilderDBForm
 		return $pInputModeLabel;
 	}
 
-
 	/**
-	 *
 	 * @return InputModelDB
-	 *
 	 */
-
 	public function createInputModelRecipient()
 	{
 		$labelRecipient = __('Recipient\'s E-Mail Address', 'onoffice');
@@ -304,12 +275,9 @@ class FormModelBuilderDBForm
 	}
 
 	/**
-	 *
 	 * @return InputModelDB
-	 *
 	 * @throws Exception
 	 */
-
 	public function createInputModelCaptchaRequired(): InputModelDB
 	{
 		$addition = '';
@@ -329,13 +297,9 @@ class FormModelBuilderDBForm
 		return $pInputModelFormRequiresCaptcha;
 	}
 
-
 	/**
-	 *
 	 * @return InputModelDB
-	 *
 	 */
-
 	public function createInputModelResultLimit()
 	{
 		$labelResultLimit = __('Result Limit', 'onoffice');
@@ -349,13 +313,9 @@ class FormModelBuilderDBForm
 		return $pInputModelFormLimitResult;
 	}
 
-
 	/**
-	 *
 	 * @return InputModelDB
-	 *
 	 */
-
 	public function getInputModelIsRequired()
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
@@ -370,13 +330,9 @@ class FormModelBuilderDBForm
 		return $pInputModel;
 	}
 
-
 	/**
-	 *
 	 * @return InputModelDB
-	 *
 	 */
-
 	public function getInputModelIsAvailableOptions()
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
@@ -392,13 +348,11 @@ class FormModelBuilderDBForm
 	}
 
 	/**
-	 *
 	 * @param FieldsCollection $pFieldsCollection
 	 * @return InputModelDB
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-
 	private function getInputModelDefaultValue(FieldsCollection $pFieldsCollection): InputModelDB
 	{
 		$pInputModelBuilder = $this->_pContainer->get(InputModelBuilderDefaultValue::class);
@@ -407,11 +361,8 @@ class FormModelBuilderDBForm
 
 
 	/**
-	 *
 	 * @return InputModelDB
-	 *
 	 */
-
 	public function getInputModelDefaultValueLanguageSwitch(): InputModelDB
 	{
 		$pInputModel = new InputModelDB('defaultvalue_newlang', __('Add language', 'onoffice'));
@@ -423,11 +374,10 @@ class FormModelBuilderDBForm
 		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
 		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
 			$isTextType = in_array($type, [FieldTypes::FIELD_TYPE_TEXT, FieldTypes::FIELD_TYPE_VARCHAR], true);
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+			$pInputModel->setLabel('');
 
-			if (!$isTextType) {
-				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
-				$pInputModel->setLabel('');
-			} else {
+			if ($isTextType) {
 				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 				$pInputModel->setLabel(__('Add language', 'onoffice'));
 			}
@@ -436,17 +386,13 @@ class FormModelBuilderDBForm
 		return $pInputModel;
 	}
 
-
 	/**
-	 *
 	 * @param string $label
 	 * @param string $type
 	 * @param bool $checked
 	 * @return InputModelDB
 	 * @throws Exception
-	 *
 	 */
-
 	private function generateGenericCheckbox(string $label, string $type, bool $checked):
 		InputModelDB
 	{
@@ -461,14 +407,10 @@ class FormModelBuilderDBForm
 		return $pInputModel;
 	}
 
-
 	/**
-	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key Name of input
-	 *
 	 */
-
 	public function callbackValueInputModelIsRequired(InputModelBase $pInputModel, $key)
 	{
 		$fieldsRequired = $this->getValue('fieldsRequired');
@@ -477,14 +419,10 @@ class FormModelBuilderDBForm
 		$pInputModel->setValuesAvailable($key);
 	}
 
-
 	/**
-	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key Name of input
-	 *
 	 */
-
 	public function callbackValueInputModelIsAvailableOptions(InputModelBase $pInputModel, string $key)
 	{
 		$fieldsAvOpt = $this->getValue('fieldsAvailableOptions');
@@ -493,13 +431,9 @@ class FormModelBuilderDBForm
 		$pInputModel->setValuesAvailable($key);
 	}
 
-
 	/**
-	 *
 	 * @return InputModelDB
-	 *
 	 */
-
 	public function getInputModelModule()
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
@@ -516,13 +450,11 @@ class FormModelBuilderDBForm
 	}
 
 	/**
-	 *
 	 * @param InputModelBase $pInputModel
 	 * @param string $key
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-
 	private function callbackValueInputModelModule(InputModelBase $pInputModel, string $key)
 	{
 		$module = '';
@@ -538,7 +470,6 @@ class FormModelBuilderDBForm
 		$pInputModel->setLabel($label);
 		$pInputModel->setValue($module);
 	}
-
 
 	/** @return string */
 	public function getFormType()
