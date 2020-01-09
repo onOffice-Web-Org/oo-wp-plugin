@@ -179,7 +179,7 @@ onOffice.default_values_input_converter = function () {
             return;
         }
         var fieldName = mainElement.textContent;
-        if (onOffice.default_values_inputs_converted.indexOf(fieldName) !== -1) {
+        if (onOffice.default_values_inputs_converted.indexOf(fieldName) !== -1 || fieldName === 'dummy_key') {
             return;
         }
         onOffice.default_values_inputs_converted.push(fieldName);
@@ -214,7 +214,7 @@ document.addEventListener("addFieldItem", function(e) {
     p.classList.add(['wp-clearfix']);
     var fieldDefinition = getFieldDefinition(fieldName);
 
-    if (fieldDefinition.type === 'varchar' || fieldDefinition.type === 'text') {
+    if (['varchar', 'text'].indexOf(fieldDefinition.type) >= 0) {
         var select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;
         select.name = 'language-language';
@@ -239,7 +239,7 @@ document.addEventListener("addFieldItem", function(e) {
         label.textContent = 'Add language';
         p.appendChild(label);
         p.appendChild(select);
-    } else if (fieldDefinition.type === 'singleselect') {
+    } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 0) {
         var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value]');
         var select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;

@@ -81,7 +81,7 @@ class InputModelRenderer
 				$pInputField->render();
 				echo '</p>';
 			} else {
-				echo $pInputField->render();
+				$pInputField->render();
 			}
 		}
 	}
@@ -145,9 +145,9 @@ class InputModelRenderer
 
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST:
 				$pContent = new InputFieldComplexSortableDetailListContentDefault();
-				$pContent->setExtraInputModels($pInputModel->getReferencedInputModels());
 				$pInstance = new InputFieldComplexSortableDetailListRenderer($elementName,
 					[$pInputModel->getValue()]);
+				$pInstance->setExtraInputModels($pInputModel->getReferencedInputModels());
 				$pInstance->setContentRenderer($pContent);
 				$pInstance->setAllFields($pInputModel->getValuesAvailable());
 				break;
