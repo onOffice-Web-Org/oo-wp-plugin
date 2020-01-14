@@ -263,6 +263,7 @@ abstract class AdminPageFormSettingsBase
 			self::FIELD_MODULE => __('Module: %s', 'onoffice'),
 			self::FIELD_MULTISELECT_EDIT_VALUES => __('Edit Values', 'onoffice'),
 			self::DEFAULT_VALUES => $this->readDefaultValues(),
+			'label_choose_language' => __('Choose Language', 'onoffice'),
 			'fieldList' => $this->getFieldList(),
 			'installed_wp_languages' => $this->getInstalledLanguages(),
 			'language_native' => $pLanguage->getLocale(),

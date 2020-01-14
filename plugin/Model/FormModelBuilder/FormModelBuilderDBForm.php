@@ -370,7 +370,8 @@ class FormModelBuilderDBForm
 		$pInputModel->setField('language');
 
 		$pLanguageReader = new InstalledLanguageReader;
-		$languages = ['' => ''] + $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
+		$languages = ['' => __('Choose Language', 'onoffice')]
+			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
 		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
 		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
 			$isTextType = in_array($type, [FieldTypes::FIELD_TYPE_TEXT, FieldTypes::FIELD_TYPE_VARCHAR], true);

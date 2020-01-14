@@ -220,7 +220,7 @@ document.addEventListener("addFieldItem", function(e) {
         select.name = 'language-language';
         select.className = 'onoffice-input';
 
-        select.options.add(new Option('', ''));
+        select.options.add(new Option(onOffice_loc_settings.label_choose_language, ''));
         var keys = Object.keys(onOffice_loc_settings.installed_wp_languages);
         keys.forEach(function (k) {
             var v = onOffice_loc_settings.installed_wp_languages[k];
