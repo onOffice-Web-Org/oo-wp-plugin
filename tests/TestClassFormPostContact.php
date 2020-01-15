@@ -83,9 +83,6 @@ class TestClassFormPostContact
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$pCompoundFields = new CompoundFieldsFilter();
-		$pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setConstructorArgs([new Container()])
-				->getMock();
 
 		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
@@ -174,7 +171,7 @@ class TestClassFormPostContact
 		$pSearchciteriaFields = $pContainer->get(SearchcriteriaFields::class);
 
 		$this->_pFormPostConfiguration->setCompoundFields($pCompoundFields);
-		$this->_pFormPostConfiguration->setFieldsCollectionBuilderShort($pBuilderShort);
+		$this->_pFormPostConfiguration->setFieldsCollectionBuilderShort($this->_pFieldsCollectionBuilderShort);
 
 		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest
 			($this->_pSDKWrapperMocker, $pWPQueryWrapper, $pFormAddressCreator);

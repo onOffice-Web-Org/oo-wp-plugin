@@ -122,10 +122,6 @@ class TestClassFormPostApplicantSearch
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
-		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setConstructorArgs([new Container()])
-				->getMock();
-
 		$pCompoundFields = new CompoundFieldsFilter();
 
 		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pLogger);
@@ -138,7 +134,7 @@ class TestClassFormPostApplicantSearch
 		];
 
 		$this->_pFormPostConfigurationTest->setCompoundFields($pCompoundFields);
-		$this->_pFormPostConfigurationTest->setFieldsCollectionBuilderShort($pFieldsCollectionBuilderShort);
+		$this->_pFormPostConfigurationTest->setFieldsCollectionBuilderShort($this->_pFieldsCollectionBuilderShort);
 
 		$this->setupDataFormConfiguration();
 
