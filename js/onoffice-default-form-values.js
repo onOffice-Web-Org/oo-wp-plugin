@@ -12,8 +12,10 @@ onOffice.default_values_input_converter = function () {
     // plaintext
     document.querySelectorAll('select[name=language-language].onoffice-input').forEach(function (element) {
         element.backupLanguageSelection = {};
-        var mainInput = element.parentElement.parentElement.querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value].onoffice-input');
-        var fieldname = element.parentElement.parentElement.parentElement.querySelector('span.menu-item-settings-name').textContent;
+        var mainInput = element.parentElement.parentElement
+            .querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value].onoffice-input');
+        var fieldname = element.parentElement.parentElement.parentElement
+            .querySelector('span.menu-item-settings-name').textContent;
         if (onOffice.default_values_inputs_converted.indexOf(fieldname) !== -1) {
             return;
         }
@@ -54,7 +56,8 @@ onOffice.default_values_input_converter = function () {
                 var deleteButton = generateDeleteButton(event.srcElement, value);
                 var paragraph = generateParagraph(label, clone, deleteButton);
 
-                element.backupLanguageSelection[event.srcElement.selectedOptions[0].value] = event.srcElement.selectedOptions[0];
+                element.backupLanguageSelection[event.srcElement.selectedOptions[0].value] =
+                    event.srcElement.selectedOptions[0];
                 event.srcElement.options[event.srcElement.selectedIndex] = null;
 
                 mainInput.parentNode.parentNode.insertBefore(paragraph, event.srcElement.parentNode);
@@ -110,7 +113,8 @@ onOffice.default_values_input_converter = function () {
     });
 
     // single-select, multi-select, boolean
-    document.querySelectorAll('select[name^=oopluginfieldconfigformdefaultsvalues-value]').forEach(function (mainInput) {
+    document.querySelectorAll('select[name^=oopluginfieldconfigformdefaultsvalues-value]')
+        .forEach(function (mainInput) {
         var mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
         if (mainElement === null) {
             return;
@@ -194,7 +198,15 @@ onOffice.default_values_input_converter = function () {
 
         mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + '][min]';
         var mainInputClone = mainInput.cloneNode(true);
+        mainInputClone.id = 'input_js_' + onOffice.js_field_count;
+        onOffice.js_field_count += 1;
+        var labelFrom = mainInput.parentElement.querySelector('label[for='+mainInput.id+']')
+        var labelUpTo = labelFrom.cloneNode(true);
+        labelUpTo.htmlFor = mainInputClone.id;
+        labelFrom.textContent = onOffice_loc_settings.label_default_value_from;
+        labelUpTo.textContent = onOffice_loc_settings.label_default_value_up_to;
         mainInputClone.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + '][max]';
+        mainInput.parentElement.appendChild(labelUpTo);
         mainInput.parentElement.appendChild(mainInputClone);
         var predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
             !Array.isArray(predefinedValues[fieldName]);

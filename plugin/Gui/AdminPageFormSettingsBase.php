@@ -267,6 +267,8 @@ abstract class AdminPageFormSettingsBase
 			'label_choose_language' => __('Choose Language', 'onoffice'),
 			/* translators: %s is the name of a language */
 			'label_default_value' => __('Default Value: %s', 'onoffice'),
+			'label_default_value_from' => __('Default Value From:', 'onoffice'),
+			'label_default_value_up_to' => __('Default Value Up To:', 'onoffice'),
 			'fieldList' => $this->getFieldList(),
 			'installed_wp_languages' => $this->getInstalledLanguages(),
 			'language_native' => $pLanguage->getLocale(),
