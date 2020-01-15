@@ -76,7 +76,7 @@ onOffice.default_values_input_converter = function () {
             label.classList = ['howto'];
             label.htmlFor = clone.id;
             label.style.minWidth = 'min-content';
-            label.textContent = labelText;
+            label.textContent = onOffice_loc_settings.label_default_value.replace('%s', labelText);
             return label;
         }
 
@@ -236,7 +236,7 @@ document.addEventListener("addFieldItem", function(e) {
         var label = document.createElement('label');
         label.htmlFor = select.id;
         label.className = 'howto';
-        label.textContent = 'Add language';
+        label.textContent = onOffice_loc_settings.label_add_language;
         p.appendChild(label);
         p.appendChild(select);
     } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 0) {
