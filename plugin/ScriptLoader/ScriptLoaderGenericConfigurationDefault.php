@@ -55,10 +55,16 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'onoffice-sort-list-selector', plugins_url('/js/onoffice-sort-list-selector.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
+			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/js/onoffice_defaultview.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true),
 
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
+			new IncludeFileModel($style, 'slick', plugins_url('/css/slick.css', $pluginPath)),
+			new IncludeFileModel($style, 'slick-theme', plugins_url('/css/slick-theme.css', $pluginPath)),
+			new IncludeFileModel($style, 'onoffice_defaultview', plugins_url('/css/onoffice_defaultview.css', $pluginPath)),
 		];
 
 		if (Favorites::isFavorizationEnabled()) {
