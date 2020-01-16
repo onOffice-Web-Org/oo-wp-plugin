@@ -97,6 +97,7 @@ class DefaultValueRowSaver
 			case FieldTypes::FIELD_TYPE_INTEGER:
 			case FieldTypes::FIELD_TYPE_FLOAT:
 			case FieldTypes::FIELD_TYPE_SINGLESELECT:
+			case 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal':
 				$this->saveGeneric($formId, $pField, $values);
 				break;
 			case FieldTypes::FIELD_TYPE_MULTISELECT:

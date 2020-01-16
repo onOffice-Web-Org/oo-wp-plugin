@@ -190,7 +190,12 @@ onOffice.default_values_input_converter = function () {
         var fieldDefinition = getFieldDefinition(fieldName);
 
         if (!fieldDefinition.rangefield &&
-            ['integer', 'float', 'date'].indexOf(fieldDefinition.type) >= 0) {
+            [
+                'integer', 'float', 'date',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
+            ].indexOf(fieldDefinition.type) >= 0) {
             mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
             mainInput.value = predefinedValues[fieldName][0] || '';
             return;
@@ -226,7 +231,8 @@ document.addEventListener("addFieldItem", function(e) {
     p.classList.add(['wp-clearfix']);
     var fieldDefinition = getFieldDefinition(fieldName);
 
-    if (['varchar', 'text'].indexOf(fieldDefinition.type) >= 0) {
+    if (['varchar', 'text',
+        'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar'].indexOf(fieldDefinition.type) >= 0) {
         var select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;
         select.name = 'language-language';

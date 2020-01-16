@@ -23,8 +23,6 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field\Collection;
 
-use DI\DependencyException;
-use DI\NotFoundException;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Types\FieldsCollection;
 
@@ -33,48 +31,19 @@ use onOffice\WPlugin\Types\FieldsCollection;
  */
 class FieldsCollectionBuilderFromNamesForm
 {
-	/** @var FieldsCollectionBuilderShort */
-	private $_pFieldsCollectionBuilderShort;
-
-	/**
-	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilder
-	 */
-	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilder)
-	{
-		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilder;
-	}
-
 	/**
 	 * @param array $fieldList
+	 * @param FieldsCollection $pBase
 	 * @return FieldsCollection
-	 * @throws DependencyException
-	 * @throws NotFoundException
 	 * @throws UnknownFieldException
 	 */
-	public function buildFieldsCollection(array $fieldList): FieldsCollection
+	public function buildFieldsCollectionFromBaseCollection(array $fieldList, FieldsCollection $pBase): FieldsCollection
 	{
 		$pFieldsCollectionTarget = new FieldsCollection;
-		$pFieldsCollectionSource = $this->buildFieldsCollectionAllFields();
-
 		foreach ($fieldList as $field) {
-			$this->copyField($pFieldsCollectionSource, $field, $pFieldsCollectionTarget);
+			$this->copyField($pBase, $field, $pFieldsCollectionTarget);
 		}
 		return $pFieldsCollectionTarget;
-	}
-
-	/**
-	 * @return FieldsCollection
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	private function buildFieldsCollectionAllFields(): FieldsCollection
-	{
-		$pFieldsCollectionAll = new FieldsCollection;
-		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollectionAll);
-		$this->_pFieldsCollectionBuilderShort->addFieldsFormBackend($pFieldsCollectionAll);
-		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($pFieldsCollectionAll);
-		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteriaSpecificBackend($pFieldsCollectionAll);
-		return $pFieldsCollectionAll;
 	}
 
 	/**

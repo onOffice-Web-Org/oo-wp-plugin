@@ -34,6 +34,7 @@ use onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueRowSaver;
 use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
@@ -295,15 +296,7 @@ abstract class AdminPageFormSettingsBase
 	private function getFieldList(): array
 	{
 		$result = [];
-		$pFieldsCollection = new FieldsCollection;
-		/** @var FieldsCollectionBuilderShort $pFieldsCollectionBuilder */
-		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderShort::class);
-		$pFieldsCollectionBuilder->addFieldsAddressEstate($pFieldsCollection);
-		$pFieldsCollectionBuilder->addFieldsSearchCriteria($pFieldsCollection);
-		foreach ($pFieldsCollection->getAllFields() as $pField) {
-			if (!in_array($pField->getModule(), [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_SEARCHCRITERIA], true)) {
-				continue;
-			}
+		foreach ($this->buildFieldsCollectionForCurrentForm()->getAllFields() as $pField) {
 			$result[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
 			if ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$result[$pField->getModule()][$pField->getName()]['permittedvalues'] = [
@@ -326,7 +319,7 @@ abstract class AdminPageFormSettingsBase
 		/** @var DefaultValueModelToOutputConverter $pDefaultValueConverter */
 		$pDefaultValueConverter = $this->getContainer()->get(DefaultValueModelToOutputConverter::class);
 
-		foreach ($this->readFields()->getAllFields() as $pField) {
+		foreach ($this->buildFieldsCollectionForCurrentForm()->getAllFields() as $pField) {
 			$result[$pField->getName()] = $pDefaultValueConverter->getConvertedField
 				((int)$this->getListViewId(), $pField);
 		}
@@ -393,24 +386,10 @@ abstract class AdminPageFormSettingsBase
 	protected function generateAccordionBoxes()
 	{
 		$this->cleanPreviousBoxes();
-		$pDefaultFieldsCollection = $this->readFields();
-		$modules = [];
-
-		if ($this->_showEstateFields) {
-			$modules []= onOfficeSDK::MODULE_ESTATE;
-		}
-
-		if ($this->_showAddressFields) {
-			$modules []= onOfficeSDK::MODULE_ADDRESS;
-		}
-
-		if ($this->_showSearchCriteriaFields) {
-			$modules []= onOfficeSDK::MODULE_SEARCHCRITERIA;
-		}
-
+		$pDefaultFieldsCollection = $this->buildFieldsCollectionForCurrentForm();
 		$pFieldsCollectionConverter = new FieldsCollectionToContentFieldLabelArrayConverter();
 
-		foreach ($modules as $module) {
+		foreach ($this->getCurrentFormModules() as $module) {
 			$fieldNames = $pFieldsCollectionConverter->convert($pDefaultFieldsCollection, $module);
 
 			foreach (array_keys($fieldNames) as $category) {
@@ -429,19 +408,33 @@ abstract class AdminPageFormSettingsBase
 	 * @throws NotFoundException
 	 */
 
-	private function readFields(): FieldsCollection
+	private function buildFieldsCollectionForCurrentForm(): FieldsCollection
 	{
 		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pDefaultFieldsCollection = new FieldsCollection();
+		$modules = $this->getCurrentFormModules();
 
-		if ($this->_showEstateFields || $this->_showAddressFields) {
+		if (in_array(onOfficeSDK::MODULE_ADDRESS, $modules) ||
+			in_array(onOfficeSDK::MODULE_ESTATE, $modules)) {
 			$pFieldsCollectionBuilder->addFieldsAddressEstate($pDefaultFieldsCollection);
 		}
 
-		if ($this->_showSearchCriteriaFields) {
+		if (in_array(onOfficeSDK::MODULE_SEARCHCRITERIA, $modules)) {
 			$pFieldsCollectionBuilder
 				->addFieldsSearchCriteria($pDefaultFieldsCollection)
 				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection);
+		}
+
+		$formModules = $this->getCurrentFormModules();
+		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
+			if (!in_array($pField->getModule(), $formModules, true)) {
+				continue;
+			}
+
+			if ($this->getType() === Form::TYPE_APPLICANT_SEARCH) {
+				// no range fields for applicant search forms
+				$pField->setIsRangeField(false);
+			}
 		}
 
 		return $pDefaultFieldsCollection;
@@ -465,21 +458,11 @@ abstract class AdminPageFormSettingsBase
 
 	protected function addFieldConfigurationForMainModules(FormModelBuilder $pFormModelBuilder)
 	{
-		$pFieldsCollection = $this->readFields();
+		$pFieldsCollection = $this->buildFieldsCollectionForCurrentForm();
 
-		if ($this->_showEstateFields) {
+		foreach ($this->getCurrentFormModules() as $module) {
 			$this->addFieldConfigurationByModule
-				($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
-		}
-
-		if ($this->_showAddressFields) {
-			$this->addFieldConfigurationByModule
-				($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
-		}
-
-		if ($this->_showSearchCriteriaFields) {
-			$this->addFieldConfigurationByModule
-				($pFormModelBuilder, $pFieldsCollection, onOfficeSDK::MODULE_SEARCHCRITERIA);
+				($pFormModelBuilder, $pFieldsCollection, $module);
 		}
 	}
 
@@ -514,10 +497,12 @@ abstract class AdminPageFormSettingsBase
 	{
 		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] ?? [];
 		$fieldNamesSelected = array_column($fields, 'fieldname');
+		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentForm();
 
 		/** @var FieldsCollectionBuilderFromNamesForm $pFieldsCollectionBuilder */
 		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesForm::class);
-		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollection($fieldNamesSelected);
+		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollectionFromBaseCollection
+			($fieldNamesSelected, $pFieldsCollectionBase);
 
 		/** @var DefaultValueDelete $pDefaultValueDelete */
 		$pDefaultValueDelete = $this->getContainer()->get(DefaultValueDelete::class);
@@ -544,6 +529,27 @@ abstract class AdminPageFormSettingsBase
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getCurrentFormModules(): array
+	{
+		$modules = [];
+		if ($this->_showEstateFields) {
+			$modules[] = onOfficeSDK::MODULE_ESTATE;
+		}
+
+		if ($this->_showAddressFields) {
+			$modules[] = onOfficeSDK::MODULE_ADDRESS;
+		}
+
+		if ($this->_showSearchCriteriaFields) {
+			$modules[] = onOfficeSDK::MODULE_SEARCHCRITERIA;
+		}
+
+		return $modules;
 	}
 
 	/** @return string */

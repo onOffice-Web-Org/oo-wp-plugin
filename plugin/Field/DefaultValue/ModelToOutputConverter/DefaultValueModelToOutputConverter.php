@@ -80,6 +80,7 @@ class DefaultValueModelToOutputConverter
 			case FieldTypes::FIELD_TYPE_FLOAT:
 			case FieldTypes::FIELD_TYPE_INTEGER:
 			case FieldTypes::FIELD_TYPE_SINGLESELECT:
+			case 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal':
 				return $this->convertGeneric($formId, $pField);
 			case FieldTypes::FIELD_TYPE_MULTISELECT:
 				return $this->convertMultiSelect($formId, $pField);

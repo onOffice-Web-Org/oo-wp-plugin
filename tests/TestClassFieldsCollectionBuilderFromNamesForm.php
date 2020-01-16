@@ -23,15 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\DependencyException;
-use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesForm;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class TestClassFieldsCollectionBuilderFromNamesForm
 	extends \WP_UnitTestCase
@@ -44,29 +39,28 @@ class TestClassFieldsCollectionBuilderFromNamesForm
 	 */
 	public function prepare()
 	{
-		$pFieldsCollectionBuilderShort = $this->buildFieldsCollectionBuilderShortMock();
-		$this->_pSubject = new FieldsCollectionBuilderFromNamesForm($pFieldsCollectionBuilderShort);
+		$this->_pSubject = new FieldsCollectionBuilderFromNamesForm();
 	}
 
 	/**
 	 *
 	 */
-	public function testBuildFieldsCollection()
+	public function testBuildFieldsCollectionFromBaseCollection()
 	{
-		$pNewFieldsCollection = $this->_pSubject->buildFieldsCollection(['testAddress', 'testEstate']);
+		$pBaseFieldsCollection = $this->buildExampleFieldsCollection();
+		$pNewFieldsCollection = $this->_pSubject->buildFieldsCollectionFromBaseCollection
+			(['testAddress', 'testEstate'], $pBaseFieldsCollection);
 		$pExpectedFieldsCollection = $this->buildExpectedFieldsCollection();
 		$this->assertEquals($pExpectedFieldsCollection, $pNewFieldsCollection);
 	}
 
 	/**
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws UnknownFieldException
 	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
 	 */
 	public function testBuildFieldsCollectionUnknownField()
 	{
-		$this->_pSubject->buildFieldsCollection(['testUnknown']);
+		$pBaseFieldsCollection = $this->buildExampleFieldsCollection();
+		$this->_pSubject->buildFieldsCollectionFromBaseCollection(['testUnknown'], $pBaseFieldsCollection);
 	}
 
 	/**
@@ -82,33 +76,15 @@ class TestClassFieldsCollectionBuilderFromNamesForm
 	}
 
 	/**
-	 * @return MockObject
+	 * @return FieldsCollection
 	 */
-	private function buildFieldsCollectionBuilderShortMock(): MockObject
+	private function buildExampleFieldsCollection(): FieldsCollection
 	{
-		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods([
-				'addFieldsAddressEstate',
-				'addFieldsFormBackend',
-				'addFieldsSearchCriteria',
-				'addFieldsSearchCriteriaSpecificBackend'
-			])->disableOriginalConstructor()
-			->getMock();
-		$pFieldsCollectionBuilderShort->expects($this->once())
-			->method('addFieldsAddressEstate')->willReturnCallback(
-				function(FieldsCollection $pFieldsCollectionInner) use ($pFieldsCollectionBuilderShort) {
-					$fieldsAddressEstate = $this->buildExampleFields();
-					$pFieldsCollectionInner->addField($fieldsAddressEstate[0]);
-					$pFieldsCollectionInner->addField($fieldsAddressEstate[1]);
-					return $pFieldsCollectionBuilderShort;
-				});
-		$pFieldsCollectionBuilderShort->expects($this->once())
-			->method('addFieldsFormBackend')->willReturnSelf();
-		$pFieldsCollectionBuilderShort->expects($this->once())
-			->method('addFieldsSearchCriteria')->willReturnSelf();
-		$pFieldsCollectionBuilderShort->expects($this->once())
-			->method('addFieldsSearchCriteriaSpecificBackend')->willReturnSelf();
-		return $pFieldsCollectionBuilderShort;
+		$pFieldsCollectionInner = new FieldsCollection;
+		$fieldsAddressEstate = $this->buildExampleFields();
+		$pFieldsCollectionInner->addField($fieldsAddressEstate[0]);
+		$pFieldsCollectionInner->addField($fieldsAddressEstate[1]);
+		return $pFieldsCollectionInner;
 	}
 
 	/**
