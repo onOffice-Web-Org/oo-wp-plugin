@@ -28,6 +28,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesForm;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueDelete;
 use onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException;
@@ -46,6 +47,7 @@ use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\ModuleTranslation;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
@@ -406,6 +408,7 @@ abstract class AdminPageFormSettingsBase
 	 * @return FieldsCollection
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
 
 	private function buildFieldsCollectionForCurrentForm(): FieldsCollection
@@ -425,19 +428,16 @@ abstract class AdminPageFormSettingsBase
 				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection);
 		}
 
-		$formModules = $this->getCurrentFormModules();
 		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
-			if (!in_array($pField->getModule(), $formModules, true)) {
-				continue;
-			}
-
-			if ($this->getType() === Form::TYPE_APPLICANT_SEARCH) {
-				// no range fields for applicant search forms
-				$pField->setIsRangeField(false);
+			if (!in_array($pField->getModule(), $modules, true)) {
+				$pDefaultFieldsCollection->removeFieldByModuleAndName
+					($pField->getModule(), $pField->getName());
 			}
 		}
 
-		return $pDefaultFieldsCollection;
+		/** @var FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm */
+		$pFieldsCollectionConfiguratorForm = $this->getContainer()->get(FieldsCollectionConfiguratorForm::class);
+		return $pFieldsCollectionConfiguratorForm->buildForFormType($pDefaultFieldsCollection, $this->getType());
 	}
 
 	/**
@@ -454,6 +454,7 @@ abstract class AdminPageFormSettingsBase
 	 * @param FormModelBuilder $pFormModelBuilder
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
 
 	protected function addFieldConfigurationForMainModules(FormModelBuilder $pFormModelBuilder)

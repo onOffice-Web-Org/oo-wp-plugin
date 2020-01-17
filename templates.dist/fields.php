@@ -120,8 +120,7 @@ if (!function_exists('renderFormField')) {
 			$typeCurrentInput = onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER;
 		}
 
-		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput &&
-			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land', 'vermarktungsart'))) {
+		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput && !$isRangeValue) {
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';

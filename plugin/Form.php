@@ -33,6 +33,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
 use onOffice\WPlugin\Record\RecordManagerFactory;
@@ -95,12 +96,13 @@ class Form
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice'));
 		$this->setGenericSetting('formId', 'onoffice-form');
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
-		$this->_pFieldsCollection = new FieldsCollection();
+		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
-			->addFieldsAddressEstate($this->_pFieldsCollection)
-			->addFieldsSearchCriteria($this->_pFieldsCollection)
-			->addFieldsFormFrontend($this->_pFieldsCollection);
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsSearchCriteria($pFieldsCollection)
+			->addFieldsFormFrontend($pFieldsCollection);
+		$this->_pFieldsCollection = $this->buildFieldsCollectionForForm($pFieldsCollection, $type);
 
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
@@ -124,6 +126,20 @@ class Form
 			$this->_pFormData->setValues
 				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
 		}
+	}
+
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $type
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function buildFieldsCollectionForForm(FieldsCollection $pFieldsCollection, string $type): FieldsCollection
+	{
+		/** @var FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm */
+		$pFieldsCollectionConfiguratorForm = $this->_pContainer->get(FieldsCollectionConfiguratorForm::class);
+		return $pFieldsCollectionConfiguratorForm->buildForFormType($pFieldsCollection, $type);
 	}
 
 	/**
@@ -504,9 +520,9 @@ class Form
 			if ($pField->getIsRangeField()) {
 				$values[$pField->getName().'__von'] = $value['min'] ?? '';
 				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
-			} else if ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
+			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
 				$values[$pField->getName()] = $value;
-			} else if ($pField->getType() === FieldTypes::FIELD_TYPE_TEXT ||
+			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_TEXT ||
 				$pField->getType() === FieldTypes::FIELD_TYPE_VARCHAR) {
 				$values[$pField->getName()] = ($value['native'] ?? '') ?: (array_shift($value) ?? '');
 			}
