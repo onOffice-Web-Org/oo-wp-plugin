@@ -41,11 +41,8 @@ class TestClassInputModelBuilderDefaultValue
 	private $_pSubject = null;
 
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$pInputModelDBFactoryConfigForm = new InputModelDBFactoryConfigForm;
@@ -59,7 +56,6 @@ class TestClassInputModelBuilderDefaultValue
 	 * @param array $permittedValues
 	 * @param array $presetValues
 	 */
-
 	public function testCallbackValueInputModelDefaultValue(
 		InputModelDB $pExpectedInputModel,
 		string $fieldType,
@@ -76,11 +72,8 @@ class TestClassInputModelBuilderDefaultValue
 	}
 
 	/**
-	 *
 	 * @return Generator
-	 *
 	 */
-
 	public function dataProviderCallbackValueInputModelDefaultValue(): Generator
 	{
 		$pInputModelBase = new InputModelDB('testInput', 'testLabel');
@@ -102,12 +95,10 @@ class TestClassInputModelBuilderDefaultValue
 		];
 	}
 
-
 	/**
-	 *
+	 * @return Closure
 	 */
-
-	public function testCreateInputModelDefaultValue()
+	public function testCreateInputModelDefaultValue(): Closure
 	{
 		$pFieldsCollection = $this->createFieldsCollection();
 		$presetValues = [];
@@ -116,15 +107,27 @@ class TestClassInputModelBuilderDefaultValue
 		$this->assertSame(InputModelBase::HTML_TYPE_TEXT, $pResult->getHtmlType());
 		$this->assertTrue($pResult->getIsMulti());
 		$this->assertInstanceOf(Closure::class, $pResult->getValueCallback());
+		return $pResult->getValueCallback();
 	}
 
+	/**
+	 * @depends testCreateInputModelDefaultValue
+	 * @param Closure $pClosure
+	 */
+	public function testValueCallback(Closure $pClosure)
+	{
+		$pInputModel = new InputModelDB('test', 'testLabel');
+		$pClosure($pInputModel, 'testFieldString');
+		$this->assertEquals(InputModelBase::HTML_TYPE_TEXT, $pInputModel->getHtmlType());
+		$pClosure($pInputModel, 'testFieldSingleSelect');
+		$this->assertEquals(InputModelBase::HTML_TYPE_SELECT, $pInputModel->getHtmlType());
+		$pClosure($pInputModel, 'dummy_key');
+		$this->assertEquals(InputModelBase::HTML_TYPE_TEXT, $pInputModel->getHtmlType());
+	}
 
 	/**
-	 *
 	 * @return FieldsCollection
-	 *
 	 */
-
 	private function createFieldsCollection(): FieldsCollection
 	{
 		$pFieldsCollection = new FieldsCollection;

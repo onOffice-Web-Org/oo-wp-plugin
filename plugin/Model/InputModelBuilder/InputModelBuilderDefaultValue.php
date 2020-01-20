@@ -76,6 +76,7 @@ class InputModelBuilderDefaultValue
 	public function createInputModelDefaultValue(FieldsCollection $pFieldsCollection,
 		array $presetValuesDefaultValue): InputModelDB
 	{
+		$pFieldsCollectionClone = $this->cloneFieldsCollectionWithDummyField($pFieldsCollection);
 		$pInputModelFactory = new InputModelDBFactory($this->_pInputModelDBFactoryConfigForm);
 		$label = __('Default Value', 'onoffice');
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_VALUE;
@@ -84,15 +85,27 @@ class InputModelBuilderDefaultValue
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);
 		$pInputModel->setValueCallback(function(InputModelBase $pInputModel, string $key) use
-			($presetValuesDefaultValue, $pFieldsCollection) {
+			($presetValuesDefaultValue, $pFieldsCollectionClone) {
 				try {
-					$pField = $pFieldsCollection->getFieldByKeyUnsafe($key);
+					$pField = $pFieldsCollectionClone->getFieldByKeyUnsafe($key);
 					$this->callbackValueInputModelDefaultValue($pInputModel, $pField, $presetValuesDefaultValue);
 				} catch (UnknownFieldException $pE) {}
 			});
 		return $pInputModel;
 	}
 
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return FieldsCollection
+	 */
+	private function cloneFieldsCollectionWithDummyField(FieldsCollection $pFieldsCollection): FieldsCollection
+	{
+		$pFieldsCollectionClone = clone $pFieldsCollection; // shallow copy
+		$pDummyField = new Field('dummy_key', 'dummy_module');
+		$pDummyField->setType(FieldTypes::FIELD_TYPE_INTEGER);
+		$pFieldsCollectionClone->addField($pDummyField);
+		return $pFieldsCollectionClone;
+	}
 
 	/**
 	 *
