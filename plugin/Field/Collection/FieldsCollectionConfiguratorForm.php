@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Field\Collection;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 
@@ -67,6 +68,23 @@ class FieldsCollectionConfiguratorForm
 
 	/**
 	 * @param FieldsCollection $pFieldsCollection
+	 * @return FieldsCollection
+	 */
+	public function configureForOwnerForm(FieldsCollection $pFieldsCollection): FieldsCollection
+	{
+		$fieldsFiltered = array_filter($pFieldsCollection->getAllFields(), function(Field $pField) {
+			return in_array($pField->getModule(), [onOfficeSDK::MODULE_ESTATE, onOfficeSDK::MODULE_ADDRESS]);
+		});
+
+		$pFieldsCollectionNew = new FieldsCollection;
+		foreach ($fieldsFiltered as $pField) {
+			$pFieldsCollectionNew->addField(clone $pField);
+		}
+		return $pFieldsCollectionNew;
+	}
+
+	/**
+	 * @param FieldsCollection $pFieldsCollection
 	 * @param string $formType
 	 * @return FieldsCollection
 	 */
@@ -76,6 +94,8 @@ class FieldsCollectionConfiguratorForm
 			return $this->configureForApplicantSearchForm($pFieldsCollection);
 		} elseif ($formType === Form::TYPE_INTEREST) {
 			return $this->configureForInterestForm($pFieldsCollection);
+		} elseif ($formType === Form::TYPE_OWNER) {
+			return $this->configureForOwnerForm($pFieldsCollection);
 		}
 		return $pFieldsCollection;
 	}

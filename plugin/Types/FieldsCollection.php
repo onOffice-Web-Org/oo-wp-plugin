@@ -187,6 +187,7 @@ class FieldsCollection implements FieldModuleCollection
 		}
 
 		unset($this->_fieldsByModule[$module][$name]);
+		$this->_fieldsByModule = array_filter($this->_fieldsByModule);
 		$index = array_search($pField, $this->_fields, true);
 
 		unset($this->_fields[$index]);

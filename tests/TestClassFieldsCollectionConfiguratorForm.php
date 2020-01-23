@@ -61,6 +61,7 @@ class TestClassFieldsCollectionConfiguratorForm
 		$pFieldsCollection = $this->buildFieldsCollectionSelect();
 		$pSubject = new FieldsCollectionConfiguratorForm;
 		$pFieldsCollectionNew = $pSubject->configureForInterestForm($pFieldsCollection);
+		$this->assertCount(2, $pFieldsCollectionNew->getAllFields());
 		foreach ($pFieldsCollectionNew->getAllFields() as $pField) {
 			$pFieldOriginal = $pFieldsCollection->getFieldByModuleAndName
 				($pField->getModule(), $pField->getName());
@@ -71,6 +72,21 @@ class TestClassFieldsCollectionConfiguratorForm
 					($pField->getName() !== 'vermarktungsart' && $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT);
 			}));
 		}
+	}
+
+	/**
+	 * @throws UnknownFieldException
+	 */
+	public function testConfigureForOwnerForm()
+	{
+		$pFieldsCollection = $this->buildFieldsCollectionDifferentModules();
+		$pSubject = new FieldsCollectionConfiguratorForm;
+		$pFieldsCollectionNew = $pSubject->configureForOwnerForm($pFieldsCollection);
+		$this->assertCount(2, $pFieldsCollectionNew->getAllFields());
+		$this->assertNotSame($pFieldsCollectionNew, $pFieldsCollection);
+		$pFieldsCollection->removeFieldByModuleAndName
+			(onOfficeSDK::MODULE_SEARCHCRITERIA, 'testModuleSearchCriteria');
+		$this->assertEquals($pFieldsCollection, $pFieldsCollectionNew);
 	}
 
 	/**
@@ -92,6 +108,8 @@ class TestClassFieldsCollectionConfiguratorForm
 		$pCollectionInterest = $pSubject->buildForFormType($pFieldsCollection, Form::TYPE_INTEREST);
 		$this->assertEquals(FieldTypes::FIELD_TYPE_MULTISELECT,
 			$pCollectionInterest->getFieldByKeyUnsafe('b')->getType());
+		$pCollectionOwner = $pSubject->buildForFormType($pFieldsCollection, Form::TYPE_OWNER);
+		$this->assertEmpty($pCollectionOwner->getAllFields());
 	}
 
 	/**
@@ -123,6 +141,21 @@ class TestClassFieldsCollectionConfiguratorForm
 		$pField4->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldsCollection->addField($pField3);
 		$pFieldsCollection->addField($pField4);
+		return $pFieldsCollection;
+	}
+
+	/**
+	 * @return FieldsCollection
+	 */
+	private function buildFieldsCollectionDifferentModules(): FieldsCollection
+	{
+		$pFieldsCollection = new FieldsCollection;
+		$pField1 = new Field('testModuleAddress', onOfficeSDK::MODULE_ADDRESS);
+		$pField2 = new Field('testModuleEstate', onOfficeSDK::MODULE_ESTATE);
+		$pField3 = new Field('testModuleSearchCriteria', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pFieldsCollection->addField($pField1);
+		$pFieldsCollection->addField($pField2);
+		$pFieldsCollection->addField($pField3);
 		return $pFieldsCollection;
 	}
 }
