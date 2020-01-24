@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\Record\RecordManager;
 use function __;
 
@@ -80,7 +82,8 @@ class AdminPageFormSettingsInterestOwner
 	/**
 	 *
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function getEnqueueData(): array

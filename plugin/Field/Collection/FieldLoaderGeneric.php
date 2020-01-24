@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\Field\Collection;
 use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
 
@@ -37,27 +38,20 @@ class FieldLoaderGeneric
 	implements FieldLoader
 {
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
+	private $_pSDKWrapper;
 
 	/**
-	 *
 	 * @param SDKWrapper $pSDKWrapper
-	 *
 	 */
-
 	public function __construct(SDKWrapper $pSDKWrapper)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 	}
 
-
 	/**
-	 *
 	 * @return Generator
-	 *
+	 * @throws APIEmptyResultException
 	 */
-
 	public function load(): Generator
 	{
 		$result = $this->sendRequest();
@@ -77,13 +71,10 @@ class FieldLoaderGeneric
 		}
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
+	 * @throws APIEmptyResultException
 	 */
-
 	private function sendRequest(): array
 	{
 		$parametersGetFieldList = [

@@ -59,11 +59,11 @@ class FieldLoaderSearchCriteria
 		$this->_pCategoryConverter = $pFieldCategoryConverter;
 	}
 
-
 	/**
 	 *
 	 * @return Generator
 	 *
+	 * @throws \onOffice\WPlugin\API\APIEmptyResultException
 	 */
 
 	public function load(): Generator

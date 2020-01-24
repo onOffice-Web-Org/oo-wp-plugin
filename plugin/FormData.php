@@ -29,6 +29,8 @@
 namespace onOffice\WPlugin;
 
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
@@ -60,9 +62,6 @@ class FormData
 	private $_formtype = null;
 
 	/** @var array */
-	private $_configFields = [];
-
-	/** @var array */
 	private $_responseFieldsValues = [];
 
 	/** @var DataFormConfiguration */
@@ -80,7 +79,6 @@ class FormData
 	{
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 		$this->_formNo = $formNo;
-		$this->_configFields = $this->_pDataFormConfiguration->getInputs();
 	}
 
 
@@ -105,16 +103,14 @@ class FormData
 		return $missing;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getAddressData(): array
 	{
-		$inputs = $this->_configFields;
+		$inputs = $this->_pDataFormConfiguration->getInputs();
 		$addressData = [];
 		$pContainerBuilder = new ContainerBuilder();
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -132,16 +128,15 @@ class FormData
 		return $addressData;
 	}
 
-
 	/**
 	 *
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getSearchcriteriaData(): array
 	{
-		$inputs = $this->_configFields;
+		$inputs = $this->_pDataFormConfiguration->getInputs();
 		$searchcriteriaData = [];
 
 		$pContainerBuilder = new ContainerBuilder();

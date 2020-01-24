@@ -25,14 +25,10 @@ namespace onOffice\WPlugin\Form;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\InputVariableReader;
-use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\SDKWrapper;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -99,18 +95,6 @@ class FormPostOwnerConfigurationTest
 	public function getSDKWrapper(): SDKWrapper
 	{
 		return $this->_pSDKWrapper;
-	}
-
-
-	/**
-	 *
-	 * @return InputVariableReaderConfigTest
-	 *
-	 */
-
-	public function getEstateListInputVariableReaderConfigTest(): InputVariableReaderConfigTest
-	{
-		return $this->_pInputVariableReaderConfigTest;
 	}
 
 
