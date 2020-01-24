@@ -83,19 +83,24 @@ abstract class FormPost
 	/** @var CompoundFieldsFilter */
 	private $_pCompoundFields = null;
 
+	/** @var FieldsCollectionConfiguratorForm */
+	private $_pFieldsCollectionConfiguratorForm;
 
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
-	 *
+	 * @param FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration,
-		SearchcriteriaFields $pSearchcriteriaFields)
+	public function __construct(
+		FormPostConfiguration $pFormPostConfiguration,
+		SearchcriteriaFields $pSearchcriteriaFields,
+		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm)
 	{
 		$this->_pFormPostConfiguration = $pFormPostConfiguration;
 		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
+		$this->_pFieldsCollectionConfiguratorForm = $pFieldsCollectionConfiguratorForm;
 	}
 
 	/**
@@ -175,12 +180,8 @@ abstract class FormPost
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormFrontend($pFieldsCollection);
 
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-		/** @var FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm */
-		$pFieldsCollectionConfiguratorForm = $pContainer->get(FieldsCollectionConfiguratorForm::class);
-		$this->_pFieldsCollection = $pFieldsCollectionConfiguratorForm->buildForFormType($pFieldsCollection, $pFormConfig->getFormType());
+		$this->_pFieldsCollection = $this->_pFieldsCollectionConfiguratorForm
+			->buildForFormType($pFieldsCollection, $pFormConfig->getFormType());
 		$this->_pCompoundFields = $this->_pFormPostConfiguration->getCompoundFields();
 		$requiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getRequiredFields());
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());

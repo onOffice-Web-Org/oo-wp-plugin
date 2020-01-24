@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -41,6 +42,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use WP_UnitTestCase;
+use function DI\autowire;
 use function json_decode;
 
 /**
@@ -53,9 +55,6 @@ use function json_decode;
 class TestClassFormPostInterest
 	extends WP_UnitTestCase
 {
-	/** @var FormPostConfigurationTest */
-	private $_pFormPostConfiguration = null;
-
 	/** @var FormPostInterest */
 	private $_pFormPostInterest = null;
 
@@ -65,6 +64,9 @@ class TestClassFormPostInterest
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort = null;
 
+	/** @var Container */
+	private $_pContainer = null;
+
 	/**
 	 *
 	 * @before
@@ -73,12 +75,15 @@ class TestClassFormPostInterest
 
 	public function prepare()
 	{
-		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
-		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+
 		$fieldsResponse = file_get_contents
 			(__DIR__.'/resources/ApiResponseGetFields.json');
 		$responseArrayFields = json_decode($fieldsResponse, true);
+		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'fields', '', [
 			'labels' => true,
@@ -88,10 +93,8 @@ class TestClassFormPostInterest
 					'modules' => ['address', 'estate'],
 			], null, $responseArrayFields);
 
-		$pContainer = new Container;
-		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
-		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
-			new FieldsCollectionBuilderShort($pContainer));
+		$this->_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$this->_pContainer->set(Logger::class, $this->getMockBuilder(Logger::class)->getMock());
 
 		$pSearchcriteriaFields = $this->getMockBuilder(SearchcriteriaFields::class)
 			->setMethods(['getFormFieldsWithRangeFields'])
@@ -159,14 +162,10 @@ class TestClassFormPostInterest
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
-		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
-		$this->_pFormPostConfiguration->setCompoundFields(new CompoundFieldsFilter());
-		$this->_pFormPostConfiguration->setFieldsCollectionBuilderShort($this->_pFieldsCollectionBuilderShort);
-		$this->_pFormPostInterestConfiguration = new FormPostInterestConfigurationTest
-			($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields);
-
-		$this->_pFormPostInterest = new FormPostInterest($this->_pFormPostConfiguration,
-			$this->_pFormPostInterestConfiguration, $pSearchcriteriaFields);
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+		$this->_pContainer->set(Form\FormPostConfiguration::class, autowire(FormPostConfigurationTest::class));
+		$this->_pContainer->set(Form\FormPostInterestConfiguration::class, autowire(FormPostInterestConfigurationTest::class));
+		$this->_pFormPostInterest = $this->_pContainer->get(FormPostInterest::class);
 	}
 
 
@@ -224,7 +223,7 @@ class TestClassFormPostInterest
 			[true, true, false],
 		];
 
-		$this->_pFormPostConfiguration->getLogger()
+		$this->_pContainer->get(Logger::class)
 			->expects($this->exactly(count($unsuccessfulCombinations)))->method('logError');
 
 		foreach ($unsuccessfulCombinations as $values) {

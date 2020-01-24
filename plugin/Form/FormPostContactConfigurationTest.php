@@ -31,20 +31,17 @@ use onOffice\WPlugin\WP\WPQueryWrapper;
 class FormPostContactConfigurationTest
 	implements FormPostContactConfiguration
 {
-	/** @var string */
-	private $_referrer = '';
-
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var bool */
 	private $_newsletterAccepted = false;
 
 	/** @var WPQueryWrapper */
-	private $_pWPQueryWrapper = null;
+	private $_pWPQueryWrapper;
 
 	/** @var FormAddressCreator */
-	private $_pFormAddressCreator = null;
+	private $_pFormAddressCreator;
 
 
 	/**
@@ -74,7 +71,7 @@ class FormPostContactConfigurationTest
 
 	public function getReferrer(): string
 	{
-		return $this->_referrer;
+		return '/test/page';
 	}
 
 
@@ -87,18 +84,6 @@ class FormPostContactConfigurationTest
 	public function getSDKWrapper(): SDKWrapper
 	{
 		return $this->_pSDKWrapper;
-	}
-
-
-	/**
-	 *
-	 * @param string $referrer
-	 *
-	 */
-
-	public function setReferrer(string $referrer)
-	{
-		$this->_referrer = $referrer;
 	}
 
 

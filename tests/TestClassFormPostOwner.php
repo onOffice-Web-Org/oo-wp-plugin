@@ -25,7 +25,11 @@ namespace onOffice\tests;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\InputVariableReaderConfig;
+use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
@@ -44,6 +48,7 @@ use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
+use function DI\autowire;
 use function json_decode;
 
 
@@ -60,11 +65,11 @@ class TestClassFormPostOwner
 	/** @var SDKWrapperMocker */
 	private $_pSDKWrapperMocker = null;
 
-	/** @var FormPostConfigurationTest */
-	private $_pFormPostConfiguration = null;
-
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort = null;
+
+	/** @var Container */
+	private $_pContainer = null;
 
 	/**
 	 *
@@ -151,36 +156,32 @@ class TestClassFormPostOwner
 
 		$pContainerBuilder = new ContainerBuilder();
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
-		$pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
-		$pSearchcriteriaFields = $pContainer->get(SearchcriteriaFields::class);
-		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
-			$this->_pFieldsCollectionBuilderShort);
-		$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationTest
-			($this->_pSDKWrapperMocker, $pFormAddressCreator);
-		$pFormPostOwnerConfiguration->setReferrer('/test/page/1');
-		$this->configureEstateListInputVariableReaderConfig($pFormPostOwnerConfiguration);
-		$this->_pFormPostConfiguration = $this->createNewFormPostConfigurationTest();
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+		$this->_pContainer->set(Logger::class, $this->getMockBuilder(Logger::class)->getMock());
+		$this->_pContainer->set(FormPostOwnerConfiguration::class, autowire(FormPostOwnerConfigurationTest::class));
+		$this->_pContainer->set(InputVariableReaderConfig::class, autowire(InputVariableReaderConfigTest::class));
+		$this->_pContainer->set(Form\FormPostConfiguration::class, autowire(FormPostConfigurationTest::class));
 
-		$this->_pFormPostOwner = new FormPostOwner($this->_pFormPostConfiguration,
-			$pFormPostOwnerConfiguration, $pSearchcriteriaFields);
+		$this->configureEstateListInputVariableReaderConfig();
+
+		$this->_pFormPostOwner = $this->_pContainer->get(FormPostOwner::class);
 	}
-
 
 	/**
 	 *
-	 * @param FormPostOwnerConfiguration $pFormPostOwnerConfiguration
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
-	private function configureEstateListInputVariableReaderConfig
-		(FormPostOwnerConfiguration $pFormPostOwnerConfiguration)
+	private function configureEstateListInputVariableReaderConfig()
 	{
 		$moduleEstate = onOfficeSDK::MODULE_ESTATE;
 
+		/** @var InputVariableReaderConfigTest $pEstateListInputVariableReaderConfig */
 		$pEstateListInputVariableReaderConfig =
-			$pFormPostOwnerConfiguration->getEstateListInputVariableReaderConfigTest();
+			$this->_pContainer->get(InputVariableReaderConfigTest::class);
 		$pEstateListInputVariableReaderConfig->setValue('objektart', 'haus');
 		$pEstateListInputVariableReaderConfig->setValue('objekttyp', 'stadthaus');
 		$pEstateListInputVariableReaderConfig->setValue('energieausweistyp', 'Bedarfsausweis');
@@ -196,26 +197,6 @@ class TestClassFormPostOwner
 			('wohnflaeche', $moduleEstate, FieldTypes::FIELD_TYPE_INTEGER);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kabel_sat_tv', $moduleEstate, FieldTypes::FIELD_TYPE_BOOLEAN);
-	}
-
-
-	/**
-	 *
-	 * @return FormPostConfigurationTest
-	 *
-	 */
-
-	private function createNewFormPostConfigurationTest(): FormPostConfigurationTest
-	{
-		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
-
-		$pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
-		$pCompoundFields = new CompoundFieldsFilter();
-
-		$pFormPostConfiguration->setCompoundFields($pCompoundFields);
-		$pFormPostConfiguration->setFieldsCollectionBuilderShort($this->_pFieldsCollectionBuilderShort);
-
-		return $pFormPostConfiguration;
 	}
 
 
@@ -301,7 +282,7 @@ class TestClassFormPostOwner
 
 		$this->prepareMockerForAddressCreationNoSuccess();
 		$this->prepareMockerForEstateCreationSuccess();
-		$this->_pFormPostConfiguration->getLogger()->expects($this->once())->method('logError');
+		$this->_pContainer->get(Logger::class)->expects($this->once())->method('logError');
 
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 		$this->_pFormPostOwner->initialCheck($pDataFormConfiguration, 3);

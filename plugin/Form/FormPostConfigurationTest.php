@@ -39,28 +39,33 @@ class FormPostConfigurationTest
 	private $_postvarCaptchaToken = '';
 
 	/** @var Logger */
-	private $_pLogger = null;
+	private $_pLogger;
 
 	/** @var WPOptionWrapperTest */
-	private $_pWPOptionsWrapper = null;
+	private $_pWPOptionsWrapper;
 
 	/** @var FieldsCollectionBuilderShort */
-	private $_pFieldsCollectionBuilderShort = null;
+	private $_pFieldsCollectionBuilderShort;
 
 	/** @var CompoundFieldsFilter */
-	private $_pCompoundFields = null;
-
+	private $_pCompoundFields;
 
 	/**
 	 *
 	 * @param Logger $pLogger
-	 *
+	 * @param CompoundFieldsFilter $pCompoundFields
+	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 */
 
-	public function __construct(Logger $pLogger)
+	public function __construct(
+		Logger $pLogger,
+		CompoundFieldsFilter $pCompoundFields,
+		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort)
 	{
 		$this->_pWPOptionsWrapper = new WPOptionWrapperTest;
 		$this->_pLogger = $pLogger;
+		$this->_pCompoundFields = $pCompoundFields;
+		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
 
@@ -133,29 +138,5 @@ class FormPostConfigurationTest
 	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
 	{
 		return $this->_pFieldsCollectionBuilderShort;
-	}
-
-
-	/**
-	 *
-	 * @param CompoundFieldsFilter $pCompoundFields
-	 *
-	 */
-
-	public function setCompoundFields(CompoundFieldsFilter $pCompoundFields)
-	{
-		$this->_pCompoundFields = $pCompoundFields;
-	}
-
-
-	/**
-	 *
-	 * @param FieldsCollectionBuilderShort $pBuilder
-	 *
-	 */
-
-	public function setFieldsCollectionBuilderShort(FieldsCollectionBuilderShort $pBuilder)
-	{
-		$this->_pFieldsCollectionBuilderShort = $pBuilder;
 	}
 }

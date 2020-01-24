@@ -21,6 +21,8 @@
 namespace onOffice\WPlugin;
 
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
@@ -35,27 +37,28 @@ use const ONOFFICE_DI_CONFIG_PATH;
 class FormPostHandler
 {
 	/** @var array */
-	static private $_formPostClassesByType = [
+	const TYPE_MAPPING = [
 		Form::TYPE_CONTACT => FormPostContact::class,
 		Form::TYPE_OWNER => FormPostOwner::class,
 		Form::TYPE_INTEREST => FormPostInterest::class,
 		Form::TYPE_APPLICANT_SEARCH => FormPostApplicantSearch::class,
 	];
 
-
 	/** @var array */
 	static private $_instances = [];
 
-
 	/**
 	 *
+	 * @param string $type
 	 * @return FormPost
-	 *
+	 * @throws UnknownFormException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	static public function getInstance(string $type)
 	{
-		if (!isset(self::$_formPostClassesByType[$type])) {
+		if (!isset(self::TYPE_MAPPING[$type])) {
 			throw new UnknownFormException($type);
 		}
 
@@ -63,7 +66,7 @@ class FormPostHandler
 			$pDIBuilder = new ContainerBuilder();
 			$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 			$pDI = $pDIBuilder->build();
-			self::$_instances[$type] = $pDI->make(self::$_formPostClassesByType[$type]);
+			self::$_instances[$type] = $pDI->make(self::TYPE_MAPPING[$type]);
 		}
 
 		return self::$_instances[$type];
@@ -82,9 +85,7 @@ class FormPostHandler
 		if ($formName !== null && $formNo !== null) {
 			$pDataFormConfigFactory = new DataFormConfigurationFactory();
 			$pFormConfig = $pDataFormConfigFactory->loadByFormName($formName);
-			$formType = $pFormConfig->getFormType();
-
-			$pFormPostInstance = self::getInstance($formType);
+			$pFormPostInstance = self::getInstance($pFormConfig->getFormType());
 			$pFormPostInstance->initialCheck($pFormConfig, $formNo);
 		}
 	}

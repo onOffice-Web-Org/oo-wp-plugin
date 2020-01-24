@@ -27,10 +27,7 @@ use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\CompoundFieldsFilter;
-use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form;
-use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\Form\FormPostContactConfigurationTest;
 use onOffice\WPlugin\FormPost;
@@ -42,6 +39,7 @@ use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
+use function DI\autowire;
 use function json_decode;
 
 /**
@@ -57,17 +55,14 @@ class TestClassFormPostContact
 	/** @var FormPostContact */
 	private $_pFormPostContact = null;
 
-	/** @var FormPostConfigurationTest */
-	private $_pFormPostConfiguration = null;
-
-	/** @var FormPostContactConfigurationTest */
-	private $_pFormPostContactConfiguration = null;
-
 	/** @var SDKWrapperMocker */
 	private $_pSDKWrapperMocker = null;
 
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort = null;
+
+	/** @var Container */
+	private $_pContainer = null;
 
 	/**
 	 *
@@ -79,20 +74,21 @@ class TestClassFormPostContact
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
-
-		$pCompoundFields = new CompoundFieldsFilter();
-		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
-		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
-			->getMock();
-		$pContainer = new Container;
-		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
-		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
-			new FieldsCollectionBuilderShort($pContainer));
-
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
+
+		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
+			->getMock();
+		$this->_pContainer = new Container;
+		$this->_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$this->_pContainer->set(Form\FormPostConfiguration::class, autowire(FormPostConfigurationTest::class));
+		$this->_pContainer->set(Form\FormPostContactConfiguration::class, autowire(FormPostContactConfigurationTest::class));
+		$this->_pContainer->set(WPQueryWrapper::class, $pWPQueryWrapper);
+		$this->_pContainer->set(Logger::class, $pLogger);
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+
 
 		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
 			->with($this->anything())
@@ -165,16 +161,7 @@ class TestClassFormPostContact
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
-		$pSearchciteriaFields = $pContainer->get(SearchcriteriaFields::class);
-
-		$this->_pFormPostConfiguration->setCompoundFields($pCompoundFields);
-		$this->_pFormPostConfiguration->setFieldsCollectionBuilderShort($this->_pFieldsCollectionBuilderShort);
-
-		$this->_pFormPostContactConfiguration = new FormPostContactConfigurationTest
-			($this->_pSDKWrapperMocker, $pWPQueryWrapper, $pFormAddressCreator);
-		$this->_pFormPostContactConfiguration->setReferrer('/test/page');
-		$this->_pFormPostContact = new FormPostContact($this->_pFormPostConfiguration,
-			$this->_pFormPostContactConfiguration, $pSearchciteriaFields);
+		$this->_pFormPostContact = $this->_pContainer->get(FormPostContact::class);
 
 		$this->configureSDKWrapperForContactAddress();
 		$this->configureSDKWrapperForCreateAddress();
@@ -365,7 +352,7 @@ class TestClassFormPostContact
 	{
 		$_POST = $this->getPostVariables();
 
-		$this->_pFormPostContactConfiguration->setNewsletterAccepted(true);
+		$this->_pContainer->get(Form\FormPostContactConfiguration::class)->setNewsletterAccepted(true);
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
