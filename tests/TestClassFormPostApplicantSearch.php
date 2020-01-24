@@ -25,9 +25,9 @@ namespace onOffice\tests;
 
 use DI\Container;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
@@ -37,7 +37,6 @@ use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -122,10 +121,6 @@ class TestClassFormPostApplicantSearch
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
-		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setConstructorArgs([new Container()])
-				->getMock();
-
 		$pCompoundFields = new CompoundFieldsFilter();
 
 		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pLogger);
@@ -138,7 +133,7 @@ class TestClassFormPostApplicantSearch
 		];
 
 		$this->_pFormPostConfigurationTest->setCompoundFields($pCompoundFields);
-		$this->_pFormPostConfigurationTest->setFieldsCollectionBuilderShort($pFieldsCollectionBuilderShort);
+		$this->_pFormPostConfigurationTest->setFieldsCollectionBuilderShort($this->_pFieldsCollectionBuilderShort);
 
 		$this->setupDataFormConfiguration();
 
@@ -149,7 +144,7 @@ class TestClassFormPostApplicantSearch
 		$pSearchcriteriaFields->method('getFormFields')->with($this->anything())->will($this->returnArgument(0));
 
 		$this->_pFormPostApplicantSearch = new FormPostApplicantSearch($this->_pFormPostConfigurationTest,
-			$pSDKWrapperMocker, $pSearchcriteriaFields, $this->_pFieldsCollectionBuilderShort);
+			$pSDKWrapperMocker, $pSearchcriteriaFields);
 	}
 
 

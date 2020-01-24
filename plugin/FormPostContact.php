@@ -21,18 +21,16 @@
 
 namespace onOffice\WPlugin;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
 use function sanitize_text_field;
-
 
 /**
  *
@@ -53,26 +51,26 @@ class FormPostContact
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostContactConfiguration $pFormPostContactConfiguration
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 *
 	 */
 
 	public function __construct(FormPostConfiguration $pFormPostConfiguration,
 		FormPostContactConfiguration $pFormPostContactConfiguration,
-		FieldsCollectionBuilderShort $pBuilderShort,
 		SearchcriteriaFields $pSearchcriteriaFields)
 	{
 		$this->_pFormPostContactConfiguration = $pFormPostContactConfiguration;
 
-		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
+		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields);
 	}
-
 
 	/**
 	 *
 	 * @param FormData $pFormData
-	 *
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws Field\UnknownFieldException
+	 * @throws NotFoundException
 	 */
 
 	protected function analyseFormContentByPrefix(FormData $pFormData)
@@ -101,12 +99,12 @@ class FormPostContact
 		return ['Id' => onOfficeSDK::MODULE_ESTATE] + parent::getAllowedPostVars($pFormConfig);
 	}
 
-
 	/**
 	 *
 	 * @param FormData $pFormData
 	 * @return void
-	 *
+	 * @throws ApiClientException
+	 * @throws Field\UnknownFieldException
 	 */
 
 	private function createAddress(FormData $pFormData)
@@ -133,14 +131,14 @@ class FormPostContact
 		}
 	}
 
-
 	/**
 	 *
 	 * @param FormData $pFormData
 	 * @param string $recipient
 	 * @param string $subject
 	 * @throws ApiClientException
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	private function sendContactRequest(FormData $pFormData, string $recipient = '', $subject = null)

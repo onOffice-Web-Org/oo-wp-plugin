@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
@@ -28,10 +30,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\Utility\__String;
-
 
 /**
  *
@@ -60,27 +59,25 @@ class FormPostApplicantSearch
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 *
 	 */
 
 	public function __construct(
 		FormPostConfiguration $pFormPostConfiguration,
 		SDKWrapper $pSDKWrapper,
-		SearchcriteriaFields $pSearchcriteriaFields,
-		FieldsCollectionBuilderShort $pBuilderShort)
+		SearchcriteriaFields $pSearchcriteriaFields)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
 
-		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
+		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields);
 	}
-
 
 	/**
 	 *
 	 * @param FormData $pFormData
 	 *
+	 * @throws API\APIEmptyResultException
 	 */
 
 	protected function analyseFormContentByPrefix(FormData $pFormData)
@@ -97,12 +94,12 @@ class FormPostApplicantSearch
 		$pFormData->setResponseFieldsValues($applicants);
 	}
 
-
 	/**
 	 *
 	 * @param DataFormConfiguration $pFormConfig
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
@@ -111,13 +108,13 @@ class FormPostApplicantSearch
 		return $this->_pSearchcriteriaFields->getFormFields($formFields);
 	}
 
-
 	/**
 	 *
 	 * @param FormData $pFormData
 	 * @param int $limitResults
 	 * @return array
 	 *
+	 * @throws API\APIEmptyResultException
 	 */
 
 	private function getApplicants(FormData $pFormData, int $limitResults): array
@@ -188,12 +185,12 @@ class FormPostApplicantSearch
 		return $searchParameters;
 	}
 
-
 	/**
 	 *
 	 * @param array $applicants
 	 * @return array
 	 *
+	 * @throws API\APIEmptyResultException
 	 */
 
 	private function setKdNr(array $applicants): array

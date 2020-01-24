@@ -68,8 +68,8 @@ class TestClassFieldsCollectionConfiguratorForm
 			$this->assertNotSame($pFieldOriginal, $pField);
 			$this->assertThat($pField, $this->callback(function(Field $pField) {
 				return
-					($pField->getName() === 'vermarktungsart' && $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT) ||
-					($pField->getName() !== 'vermarktungsart' && $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT);
+					($pField->getName() === 'objekttyp' && $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) ||
+					($pField->getName() !== 'objekttyp' && $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT);
 			}));
 		}
 	}
@@ -98,7 +98,7 @@ class TestClassFieldsCollectionConfiguratorForm
 		$pFieldsCollection = new FieldsCollection;
 		$pFieldRange = new Field('a', 'a');
 		$pFieldRange->setIsRangeField(true);
-		$pFieldSingleSelect = new Field('b', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pFieldSingleSelect = new Field('objekttyp', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pFieldSingleSelect->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldsCollection->addField($pFieldRange);
 		$pFieldsCollection->addField($pFieldSingleSelect);
@@ -107,7 +107,7 @@ class TestClassFieldsCollectionConfiguratorForm
 			->getFieldByKeyUnsafe('a')->getIsRangeField());
 		$pCollectionInterest = $pSubject->buildForFormType($pFieldsCollection, Form::TYPE_INTEREST);
 		$this->assertEquals(FieldTypes::FIELD_TYPE_MULTISELECT,
-			$pCollectionInterest->getFieldByKeyUnsafe('b')->getType());
+			$pCollectionInterest->getFieldByKeyUnsafe('objekttyp')->getType());
 		$pCollectionOwner = $pSubject->buildForFormType($pFieldsCollection, Form::TYPE_OWNER);
 		$this->assertEmpty($pCollectionOwner->getAllFields());
 	}
@@ -137,7 +137,7 @@ class TestClassFieldsCollectionConfiguratorForm
 		$pFieldsCollection = new FieldsCollection;
 		$pField3 = new Field('testFieldSingleselect', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pField3->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$pField4 = new Field('vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pField4 = new Field('objekttyp', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pField4->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldsCollection->addField($pField3);
 		$pFieldsCollection->addField($pField4);

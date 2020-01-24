@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
@@ -74,7 +75,6 @@ class TestClassFormPostOwner
 	public function prepare()
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
-		$this->_pFormPostConfiguration = $this->createNewFormPostConfigurationTest();
 		$this->prepareSDKWrapperForFieldsAddressEstate();
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
@@ -149,18 +149,22 @@ class TestClassFormPostOwner
 			return $this->_pFieldsCollectionBuilderShort;
 		}));
 
-		$pContainer = new Container;
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
 		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
 		$pSearchcriteriaFields = $pContainer->get(SearchcriteriaFields::class);
 		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
-			new FieldsCollectionBuilderShort($pContainer));
+			$this->_pFieldsCollectionBuilderShort);
 		$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationTest
 			($this->_pSDKWrapperMocker, $pFormAddressCreator);
 		$pFormPostOwnerConfiguration->setReferrer('/test/page/1');
 		$this->configureEstateListInputVariableReaderConfig($pFormPostOwnerConfiguration);
+		$this->_pFormPostConfiguration = $this->createNewFormPostConfigurationTest();
 
 		$this->_pFormPostOwner = new FormPostOwner($this->_pFormPostConfiguration,
-			$pFormPostOwnerConfiguration, $this->_pFieldsCollectionBuilderShort, $pSearchcriteriaFields);
+			$pFormPostOwnerConfiguration, $pSearchcriteriaFields);
 	}
 
 
@@ -206,14 +210,10 @@ class TestClassFormPostOwner
 		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
-		$pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setConstructorArgs([new Container()])
-				->getMock();
-
 		$pCompoundFields = new CompoundFieldsFilter();
 
 		$pFormPostConfiguration->setCompoundFields($pCompoundFields);
-		$pFormPostConfiguration->setFieldsCollectionBuilderShort($pBuilderShort);
+		$pFormPostConfiguration->setFieldsCollectionBuilderShort($this->_pFieldsCollectionBuilderShort);
 
 		return $pFormPostConfiguration;
 	}

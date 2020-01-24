@@ -57,7 +57,7 @@ class FieldsCollectionConfiguratorForm
 			$pFieldClone = clone $pField;
 			if ($pFieldClone->getModule() === onOfficeSDK::MODULE_SEARCHCRITERIA &&
 				$pFieldClone->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT &&
-				!in_array($pField->getName(), ['objektart', 'range_land', 'vermarktungsart']))
+				in_array($pField->getName(), ['objekttyp']))
 			{
 				$pFieldClone->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 			}
@@ -73,7 +73,8 @@ class FieldsCollectionConfiguratorForm
 	public function configureForOwnerForm(FieldsCollection $pFieldsCollection): FieldsCollection
 	{
 		$fieldsFiltered = array_filter($pFieldsCollection->getAllFields(), function(Field $pField) {
-			return in_array($pField->getModule(), [onOfficeSDK::MODULE_ESTATE, onOfficeSDK::MODULE_ADDRESS]);
+			// field 'message' doesn't belong to any module
+			return in_array($pField->getModule(), [onOfficeSDK::MODULE_ESTATE, onOfficeSDK::MODULE_ADDRESS, '']);
 		});
 
 		$pFieldsCollectionNew = new FieldsCollection;

@@ -90,6 +90,7 @@ abstract class FieldTypes
 		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal',
 		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float',
 		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:int',
 		FieldTypes::FIELD_TYPE_FLOAT,
 		FieldTypes::FIELD_TYPE_INTEGER,
 	];

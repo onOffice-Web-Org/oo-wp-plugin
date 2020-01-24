@@ -50,9 +50,9 @@ class FormPostOwnerConfigurationTest
 	/** @var FormAddressCreator */
 	private $_pFormAddressCreator = null;
 
-
 	/**
-	 *
+	 * @param SDKWrapper $pSDKWrapper
+	 * @param FormAddressCreator $pFormAddressCreator
 	 */
 
 	public function __construct(SDKWrapper $pSDKWrapper, FormAddressCreator $pFormAddressCreator)
