@@ -428,6 +428,8 @@ abstract class AdminPageFormSettingsBase
 				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection);
 		}
 
+		$pFieldsCollectionBuilder->addFieldsFormBackend($pDefaultFieldsCollection);
+
 		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
 			if (!in_array($pField->getModule(), $modules, true)) {
 				$pDefaultFieldsCollection->removeFieldByModuleAndName
@@ -537,7 +539,8 @@ abstract class AdminPageFormSettingsBase
 	 */
 	public function getCurrentFormModules(): array
 	{
-		$modules = [];
+		// empty module name for `message` field
+		$modules = [''];
 		if ($this->_showEstateFields) {
 			$modules[] = onOfficeSDK::MODULE_ESTATE;
 		}
