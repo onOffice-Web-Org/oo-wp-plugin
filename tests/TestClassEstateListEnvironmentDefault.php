@@ -23,11 +23,13 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\EstateFiles;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
@@ -123,9 +125,14 @@ class TestClassEstateListEnvironmentDefault
 
 	public function testDefaultFilterBuilder()
 	{
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->getMock();
+
 		$this->_pSubject->setDefaultFilterBuilder
-			(new DefaultFilterBuilderListView(new DataListView(1, 'test')));
+			(new DefaultFilterBuilderListView(new DataListView(1, 'test'), $pFieldsCollectionBuilderShort));
 		$this->assertInstanceOf
+
 			(DefaultFilterBuilderListView::class, $this->_pSubject->getDefaultFilterBuilder());
 	}
 

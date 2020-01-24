@@ -32,8 +32,8 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
@@ -161,14 +161,15 @@ class ContentFilter
 					$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 					$pContainer = $pDIContainerBuilder->build();
 					$pSortListBuilder = $pContainer->get(SortListBuilder::class);
+					$pFieldsCollectionBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
 					$pSortListModel = $pSortListBuilder->build($pListView);
 					$pListView->setSortby($pSortListModel->getSelectedSortby());
 					$pListView->setSortorder($pSortListModel->getSelectedSortorder());
 
-					$this->setAllowedGetParametersEstate($pListView, $pSortListModel);
+					$this->setAllowedGetParametersEstate($pListView, $pSortListModel, $pFieldsCollectionBuilderShort);
 					$pTemplate = new Template($pListView->getTemplate());
 
-					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView);
+					$pListViewFilterBuilder = new DefaultFilterBuilderListView($pListView, $pFieldsCollectionBuilderShort);
 					$availableOptionsEstates = $pListView->getAvailableOptions();
 					$pDistinctFieldsChecker = new DistinctFieldsScriptRegistrator
 						(new WPScriptStyleDefault);
@@ -199,28 +200,30 @@ class ContentFilter
 	/**
 	 * @param DataListView $pDataView
 	 * @param SortListDataModel $pSortListDataModel
+	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
+	 * @throws UnknownFieldException
 	 */
-	private function setAllowedGetParametersEstate(DataListView $pDataView, SortListDataModel $pSortListDataModel)
+	private function setAllowedGetParametersEstate(DataListView $pDataView, SortListDataModel $pSortListDataModel,
+		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort)
 	{
 		$pRequestVariableSanitizer = new RequestVariablesSanitizer();
+		$pFieldsCollection = new FieldsCollection();
 
-		$pFieldNames = new Fieldnames
-			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection()));
-		$pFieldNames->loadLanguage();
+		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+
 		$pModel = new SearchParametersModel();
 		$filterableFieldsView = $pDataView->getFilterableFields();
 		$filterableFields = $this->setAllowedGetParametersEstateGeo($filterableFieldsView);
 
 		foreach ($filterableFields as $filterableField) {
-			try {
-				$fieldInfo = $pFieldNames->getFieldInformation
-					($filterableField, onOfficeSDK::MODULE_ESTATE);
-			} catch (UnknownFieldException $pException) {
-				$this->$this->_pLogger->logError($pException);
+
+			if (!$pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $filterableField)) {
 				continue;
 			}
 
-			if (FieldTypes::isMultipleSelectType($fieldInfo['type'])) {
+			$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, $filterableField);
+
+			if (FieldTypes::isMultipleSelectType($pField->getType())) {
 				$pModel->setParameterArray
 					($filterableField, $pRequestVariableSanitizer->getFilteredGet($filterableField, FILTER_DEFAULT, FILTER_FORCE_ARRAY));
 			}
@@ -229,7 +232,7 @@ class ContentFilter
 					($filterableField, $pRequestVariableSanitizer->getFilteredGet($filterableField));
 			}
 
-			$type = $fieldInfo['type'];
+			$type = $pField->getType();
 
 			if (FieldTypes::isNumericType($type) ||
 				FieldTypes::isDateOrDateTime($type)) {

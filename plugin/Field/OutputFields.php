@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandlerBase;
 use onOffice\WPlugin\Controller\InputVariableReader;
-use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\GeoPosition;
-use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Types\FieldsCollection;
 
 /**
@@ -93,6 +92,7 @@ class OutputFields
 		}
 
 		$allFields = array_merge($fieldsArray, array_keys($geoFields));
+		$allFields = $this->filterActiveFields($allFields, $pFieldsCollection);
 
 		$valuesDefault = array_map(function($field) use ($geoFields) {
 			return $this->_pInputVariableReader->getFieldValueFormatted($field) ?? $geoFields[$field] ?? null;
@@ -106,6 +106,21 @@ class OutputFields
 		return $result;
 	}
 
+	/**
+	 * @param $allFields
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return array
+	 */
+	private function filterActiveFields($allFields, FieldsCollection $pFieldsCollection): array
+	{
+		$activeFields = [];
+		foreach ($allFields as $field){
+			if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)) {
+				$activeFields []= $field;
+			}
+		}
+		return $activeFields;
+	}
 
 	/** @return DataViewFilterableFields */
 	public function getDataView(): DataViewFilterableFields

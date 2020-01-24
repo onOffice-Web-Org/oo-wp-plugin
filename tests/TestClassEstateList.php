@@ -695,7 +695,10 @@ class TestClassEstateList
 		$this->_pEnvironment = $this->getMockBuilder(EstateListEnvironment::class)->getMock();
 		$this->_pEnvironment->method('getSDKWrapper')->willReturn($this->_pSDKWrapperMocker);
 		$pDataListView = $this->getDataView();
-		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView);
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->getMock();
+		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
 		$this->_pEstateList = new EstateList($pDataListView, $this->_pEnvironment);
 
