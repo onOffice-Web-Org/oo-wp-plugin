@@ -28,7 +28,11 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Region\Region;
+use onOffice\WPlugin\Region\RegionController;
+use onOffice\WPlugin\Region\RegionFilter;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
@@ -40,12 +44,25 @@ class FieldLoaderGeneric
 	/** @var SDKWrapper */
 	private $_pSDKWrapper;
 
+	/** @var RegionController */
+	private $_pRegionController;
+
+	/** @var RegionFilter */
+	private $_pRegionFilter;
+
 	/**
 	 * @param SDKWrapper $pSDKWrapper
+	 * @param RegionController $pRegionController
+	 * @param RegionFilter $pRegionFilter
 	 */
-	public function __construct(SDKWrapper $pSDKWrapper)
+	public function __construct(
+		SDKWrapper $pSDKWrapper,
+		RegionController $pRegionController,
+		RegionFilter $pRegionFilter)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->_pRegionController = $pRegionController;
+		$this->_pRegionFilter = $pRegionFilter;
 	}
 
 	/**
@@ -65,6 +82,15 @@ class FieldLoaderGeneric
 			}
 
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
+				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz') {
+					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
+					$this->_pRegionController->fetchRegions();
+					$regions = $this->_pRegionController->getRegions();
+					$fieldProperties['permittedvalues'] = $this->_pRegionFilter
+						->buildRegions($regions);
+					$fieldProperties['labelOnlyValues'] = $this->_pRegionFilter
+						->collectLabelOnlyValues($regions);
+				}
 				$fieldProperties['module'] = $module;
 				yield $fieldName => $fieldProperties;
 			}

@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\Field\Collection;
 use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
 
@@ -38,10 +39,10 @@ class FieldLoaderSearchCriteria
 	implements FieldLoader
 {
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var FieldCategoryToFieldConverter */
-	private $_pCategoryConverter = null;
+	private $_pCategoryConverter;
 
 
 	/**
@@ -60,10 +61,8 @@ class FieldLoaderSearchCriteria
 	}
 
 	/**
-	 *
 	 * @return Generator
-	 *
-	 * @throws \onOffice\WPlugin\API\APIEmptyResultException
+	 * @throws APIEmptyResultException
 	 */
 
 	public function load(): Generator

@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use Exception;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -40,11 +41,9 @@ use function register_setting;
 class InputModelRenderer
 {
 	/**
-	 *
 	 * @param FormModel $pFormModel
-	 *
+	 * @throws Exception
 	 */
-
 	public function buildForm(FormModel $pFormModel)
 	{
 		add_settings_section($pFormModel->getGroupSlug(), $pFormModel->getLabel(),
@@ -57,14 +56,11 @@ class InputModelRenderer
 		}
 	}
 
-
 	/**
-	 *
 	 * @param FormModel $pFormModel
 	 * @return void
-	 *
+	 * @throws Exception
 	 */
-
 	public function buildForAjax(FormModel $pFormModel)
 	{
 		if ($pFormModel->getIsInvisibleForm()) {
@@ -108,13 +104,12 @@ class InputModelRenderer
 		}
 	}
 
-
 	/**
 	 *
 	 * @param InputModelBase $pInputModel
 	 * @param FormModel $pFormModel
 	 * @return InputFieldLabelRenderer
-	 *
+	 * @throws Exception
 	 */
 
 	private function createInputField(InputModelBase $pInputModel, FormModel $pFormModel)
@@ -129,6 +124,7 @@ class InputModelRenderer
 				$pInstance = new InputFieldSelectRenderer($elementName,
 					$pInputModel->getValuesAvailable());
 				$pInstance->setSelectedValue($pInputModel->getValue());
+				$pInstance->setLabelOnlyValues($pInputModel->getLabelOnlyValues());
 				break;
 
 			case InputModelOption::HTML_TYPE_CHECKBOX:

@@ -51,6 +51,7 @@ class TestClassField
 		$this->assertEquals('', $pField->getLabel());
 		$this->assertEquals(0, $pField->getLength());
 		$this->assertEmpty($pField->getPermittedvalues());
+		$this->assertEmpty($pField->getLabelOnlyValues());
 		$this->assertEquals(FieldTypes::FIELD_TYPE_VARCHAR, $pField->getType());
 		$this->assertFalse($pField->getIsRangeField());
 		$this->assertEmpty($pField->getRangeFieldTranslations());
@@ -70,6 +71,7 @@ class TestClassField
 		$this->assertEquals('A test', $pField->getLabel());
 		$this->assertEquals(13, $pField->getLength());
 		$this->assertEquals(['test', 'asdf', 13, 37], $pField->getPermittedvalues());
+		$this->assertEquals(['asdf'], $pField->getLabelOnlyValues());
 		$this->assertEquals(FieldTypes::FIELD_TYPE_DATE, $pField->getType());
 		$this->assertTrue($pField->getIsRangeField());
 		$this->assertSame([
@@ -99,6 +101,7 @@ class TestClassField
 			'default' => 'asd',
 			'length' => 13,
 			'permittedvalues' => ['test', 'asdf', 13, 37],
+			'labelOnlyValues' => ['asdf'],
 			'content' => 'asdf',
 			'rangefield' => true,
 			'additionalTranslations' => [
@@ -127,6 +130,7 @@ class TestClassField
 			'default' => 'asd',
 			'length' => 13,
 			'permittedvalues' => ['test', 'asdf', 13, 37],
+			'labelOnlyValues' => ['asdf'],
 			'content' => 'asdf',
 			'rangefield' => true,
 			'additionalTranslations' => [
@@ -154,6 +158,7 @@ class TestClassField
 			'default' => 'asd',
 			'length' => 13,
 			'permittedvalues' => ['test', 'asdf', 13, 37],
+			'labelOnlyValues' => ['test'],
 			'content' => 'asdf',
 			'rangefield' => true,
 			'additionalTranslations' => [
@@ -186,6 +191,7 @@ class TestClassField
 			'testField123__von' => 'testField123 from',
 			'testField123__bis' => 'testField123 up to',
 		]);
+		$pField->setLabelOnlyValues(['asdf']);
 		$pField->setCompoundFields([
 			'Anrede-Titel' => ['Anrede', 'Titel'],
 		]);

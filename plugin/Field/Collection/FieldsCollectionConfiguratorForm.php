@@ -57,7 +57,7 @@ class FieldsCollectionConfiguratorForm
 			$pFieldClone = clone $pField;
 			if ($pFieldClone->getModule() === onOfficeSDK::MODULE_SEARCHCRITERIA &&
 				$pFieldClone->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT &&
-				in_array($pField->getName(), ['objekttyp']))
+				in_array($pField->getName(), ['objekttyp', 'regionaler_zusatz']))
 			{
 				$pFieldClone->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 			}

@@ -23,7 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\Field\Collection\FieldRowConverterSearchCriteria;
+use onOffice\WPlugin\Region\RegionController;
 use WP_UnitTestCase;
 
 
@@ -74,19 +78,26 @@ class TestClassFieldRowConverterSearchCriteria
 		],
 	];
 
-
 	/**
 	 *
 	 * @dataProvider rowProvider
 	 *
 	 * @param array $input
 	 * @param array $expected
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function testConvertRow(array $input, array $expected)
 	{
-		$pFieldRowConverterSearchCriteria = new FieldRowConverterSearchCriteria();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pRegionController = $this->getMockBuilder(RegionController::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$pContainer->set(RegionController::class, $pRegionController);
+		$pFieldRowConverterSearchCriteria = $pContainer->get(FieldRowConverterSearchCriteria::class);
 		$result = $pFieldRowConverterSearchCriteria->convertRow($input);
 		$this->assertEquals($expected, $result);
 	}

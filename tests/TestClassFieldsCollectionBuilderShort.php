@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use DI\Container;
+use DI\ContainerBuilder;
 use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo;
@@ -31,6 +32,7 @@ use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
 use onOffice\WPlugin\Field\Collection\FieldLoaderSearchCriteria;
 use onOffice\WPlugin\Field\Collection\FieldRowConverterSearchCriteria;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
@@ -93,9 +95,11 @@ class TestClassFieldsCollectionBuilderShort
 
 	public function prepare()
 	{
-		$pContainer = new Container();
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
 		$pFieldLoaderGeneric = $this->getMockBuilder(FieldLoaderGeneric::class)
-			->setConstructorArgs([new SDKWrapperMocker()])
+			->disableOriginalConstructor()
 			->setMethods(['load'])
 			->getMock();
 		$pFieldLoaderGeneric->method('load')->will($this->returnCallback(function(): Generator {
@@ -103,10 +107,7 @@ class TestClassFieldsCollectionBuilderShort
 		}));
 
 		$pFieldLoaderSearchCriteria = $this->getMockBuilder(FieldLoaderSearchCriteria::class)
-			->setConstructorArgs([
-					new SDKWrapper(),
-					new FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo(new FieldRowConverterSearchCriteria()),
-				])
+			->disableOriginalConstructor()
 			->setMethods(['load'])
 			->getMock();
 		$pFieldLoaderSearchCriteria->method('load')->will($this->returnCallback(function(): Generator {
@@ -119,11 +120,15 @@ class TestClassFieldsCollectionBuilderShort
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetSearchcriteriaFieldsENG.json'), true);
 		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '',
 			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);
+		$pRegionController = $this->getMockBuilder(RegionController::class)
+			->disableOriginalConstructor()
+			->getMock();
 
 		$pContainer->set(SDKWrapper::class, $pSDKWrapper);
+		$pContainer->set(RegionController::class, $pRegionController);
 		$pContainer->set(FieldLoaderGeneric::class, $pFieldLoaderGeneric);
 		$pContainer->set(FieldLoaderSearchCriteria::class, $pFieldLoaderSearchCriteria);
-		$this->_pSubject = new FieldsCollectionBuilderShort($pContainer);
+		$this->_pSubject = $pContainer->get(FieldsCollectionBuilderShort::class);
 	}
 
 

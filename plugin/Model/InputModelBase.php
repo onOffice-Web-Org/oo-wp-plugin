@@ -99,6 +99,9 @@ abstract class InputModelBase
 	/** @var string */
 	private $_oOModule = '';
 
+	/** @var array */
+	private $_labelOnlyValues = [];
+
 	/**
 	 *
 	 * @return string
@@ -210,4 +213,12 @@ abstract class InputModelBase
 	/** @return string */
 	public function getOoModule(): string
 		{ return $this->_oOModule; }
+
+	/** @return array */
+	public function getLabelOnlyValues(): array
+		{ return $this->_labelOnlyValues; }
+
+	/** @param array $labelOnlyValues */
+	public function setLabelOnlyValues(array $labelOnlyValues)
+		{ $this->_labelOnlyValues = $labelOnlyValues; }
 }

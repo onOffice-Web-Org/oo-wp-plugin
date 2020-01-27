@@ -125,5 +125,6 @@ class InputModelBuilderDefaultValue
 		$pInputModel->setValuesAvailable(['' => ''] + $pField->getPermittedvalues());
 		$type = self::FIELD_TYPE_TO_HTML_TYPE_MAPPING[$pField->getType()] ?? InputModelOption::HTML_TYPE_TEXT;
 		$pInputModel->setHtmlType($type);
+		$pInputModel->setLabelOnlyValues($pField->getLabelOnlyValues());
 	}
 }

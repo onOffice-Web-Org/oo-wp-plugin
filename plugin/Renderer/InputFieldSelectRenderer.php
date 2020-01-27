@@ -37,6 +37,9 @@ class InputFieldSelectRenderer
 	/** @var array */
 	private $_selectedValue = [];
 
+	/** @var array  */
+	private $_labelOnlyValues = [];
+
 	/**
 	 *
 	 * @param string $name
@@ -63,11 +66,15 @@ class InputFieldSelectRenderer
 
 		foreach ($this->getValue() as $key => $label)
 		{
-			echo '<option value="'.esc_html($key).'" '
-				.($key == $this->_selectedValue ? ' selected="selected" ' : null)
-				.' >'
-				.esc_html($label)
-				.'</option>';
+			if (in_array($key, $this->_labelOnlyValues)) {
+				echo '<optgroup label="'.esc_html($label).'" '
+					.($key == $this->_selectedValue ? ' selected="selected" ' : null).'></optgroup>';
+			} else {
+				echo '<option value="'.esc_html($key).'" '
+					.($key == $this->_selectedValue ? ' selected="selected" ' : null).'>'
+					.esc_html($label)
+					.'</option>';
+			}
 		}
 
 		echo '</select>';
@@ -87,4 +94,13 @@ class InputFieldSelectRenderer
 	/** @return string */
 	public function getSelectedValue()
 		{ return $this->_selectedValue; }
+
+
+	/**
+	 * @param array $labelOnlyValues
+	 */
+	public function setLabelOnlyValues(array $labelOnlyValues)
+	{
+		$this->_labelOnlyValues = $labelOnlyValues;
+	}
 }
