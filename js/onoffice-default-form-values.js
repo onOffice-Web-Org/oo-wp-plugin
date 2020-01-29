@@ -270,9 +270,15 @@ document.addEventListener("addFieldItem", function(e) {
         var keys = Object.keys(fieldDefinition.permittedvalues);
         keys.forEach(function (k) {
             var v = fieldDefinition.permittedvalues[k];
-            select.options.add(new Option(v, k));
-            if (k === fieldDefinition.selectedvalue) {
-                select.selectedIndex = select.options.length - 1;
+            if (fieldDefinition.labelOnlyValues.indexOf(k) !== -1) {
+                var group = document.createElement('optgroup');
+                group.label = v;
+                select.options.add(group);
+            } else {
+                select.options.add(new Option(v, k));
+                if (k === fieldDefinition.selectedvalue) {
+                    select.selectedIndex = select.options.length - 1;
+                }
             }
         });
 
