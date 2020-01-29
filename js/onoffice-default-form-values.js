@@ -193,6 +193,7 @@ onOffice.default_values_input_converter = function () {
             [
                 'integer', 'float', 'date',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float',
+                'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:int',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
             ].indexOf(fieldDefinition.type) >= 0) {
@@ -232,7 +233,8 @@ document.addEventListener("addFieldItem", function(e) {
     var fieldDefinition = getFieldDefinition(fieldName);
 
     if (['varchar', 'text',
-        'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar'].indexOf(fieldDefinition.type) >= 0) {
+        'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar',
+        'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:Text'].indexOf(fieldDefinition.type) >= 0) {
         var select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;
         select.name = 'language-language';

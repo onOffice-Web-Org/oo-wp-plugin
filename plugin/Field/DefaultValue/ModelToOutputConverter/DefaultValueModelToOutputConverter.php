@@ -59,36 +59,31 @@ class DefaultValueModelToOutputConverter
 
 
 	/**
-	 *
 	 * @param int $formId
 	 * @param Field $pField
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 *
 	 */
-
 	public function getConvertedField(int $formId, Field $pField): array
 	{
+		$isSingleValue = FieldTypes::isDateOrDateTime($pField->getType()) ||
+			FieldTypes::isNumericType($pField->getType()) ||
+			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT;
+		$isMultiSelect = $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
+		$isBoolean = $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
+		$isStringType = FieldTypes::isStringType($pField->getType());
+
 		if ($pField->getIsRangeField()) {
 			return $this->convertNumericRange($formId, $pField);
-		}
-
-		switch ($pField->getType()) {
-			case FieldTypes::FIELD_TYPE_DATETIME:
-			case FieldTypes::FIELD_TYPE_DATE:
-			case FieldTypes::FIELD_TYPE_FLOAT:
-			case FieldTypes::FIELD_TYPE_INTEGER:
-			case FieldTypes::FIELD_TYPE_SINGLESELECT:
-			case 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal':
-				return $this->convertGeneric($formId, $pField);
-			case FieldTypes::FIELD_TYPE_MULTISELECT:
-				return $this->convertMultiSelect($formId, $pField);
-			case FieldTypes::FIELD_TYPE_BOOLEAN:
-				return $this->convertBoolean($formId, $pField);
-			case FieldTypes::FIELD_TYPE_TEXT:
-			case FieldTypes::FIELD_TYPE_VARCHAR:
-				return $this->convertText($formId, $pField);
+		} elseif ($isSingleValue) {
+			return $this->convertGeneric($formId, $pField);
+		} elseif ($isMultiSelect) {
+			return $this->convertMultiSelect($formId, $pField);
+		} elseif ($isBoolean) {
+			return $this->convertBoolean($formId, $pField);
+		} elseif ($isStringType) {
+			return $this->convertText($formId, $pField);
 		}
 		return [];
 	}

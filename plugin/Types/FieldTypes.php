@@ -25,11 +25,7 @@ namespace onOffice\WPlugin\Types;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
- *
  */
-
 abstract class FieldTypes
 {
 	/** */
@@ -62,14 +58,21 @@ abstract class FieldTypes
 	/** */
 	const FIELD_TYPE_DATETIME = 'datetime';
 
+	/** @var array */
+	const TYPES_STRING = [
+		self::FIELD_TYPE_TEXT,
+		self::FIELD_TYPE_VARCHAR,
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar',
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:Text',
+	];
 
 	/** @var array */
-	private static $_inputVarSanitizers = [
+	const INPUT_VAR_SANITIZERS = [
 		self::FIELD_TYPE_MULTISELECT => FILTER_SANITIZE_STRING,
 		self::FIELD_TYPE_SINGLESELECT => FILTER_SANITIZE_STRING,
 		self::FIELD_TYPE_TEXT => FILTER_SANITIZE_STRING,
 		self::FIELD_TYPE_INTEGER => FILTER_VALIDATE_INT,
-		self::FIELD_TYPE_VARCHAR =>FILTER_SANITIZE_STRING,
+		self::FIELD_TYPE_VARCHAR => FILTER_SANITIZE_STRING,
 		self::FIELD_TYPE_FLOAT => FILTER_SANITIZE_STRING, // locale-specific processing needed
 		self::FIELD_TYPE_BOOLEAN => FILTER_SANITIZE_STRING, // needs difference between null and false
 		self::FIELD_TYPE_DATE => FILTER_SANITIZE_STRING,
@@ -77,16 +80,18 @@ abstract class FieldTypes
 		self::FIELD_TYPE_DATETIME => FILTER_SANITIZE_STRING,
 	];
 
-
 	/** @var array */
-	private static $_numericTypes = [
+	const TYPES_NUMERIC = [
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal',
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float',
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
+		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:int',
 		self::FIELD_TYPE_INTEGER,
 		self::FIELD_TYPE_FLOAT,
 	];
 
-
 	/** @var string[] */
-	private static $_rangeTypes = [
+	const TYPES_RANGE = [
 		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal',
 		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float',
 		'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
@@ -95,9 +100,8 @@ abstract class FieldTypes
 		FieldTypes::FIELD_TYPE_INTEGER,
 	];
 
-
 	/** @var string[] */
-	private static $_multipleSelectTypes = [
+	const TYPES_MULTI_SELECT = [
 		FieldTypes::FIELD_TYPE_MULTISELECT,
 		FieldTypes::FIELD_TYPE_SINGLESELECT,
 		'displayAll',
@@ -105,80 +109,72 @@ abstract class FieldTypes
 		'limitExceeded',
 	];
 
-
 	/** @var string[] */
-	private static $_regZusatzSearchcritTypes = [
+	const TYPES_REG_ADDITION_SEARCHCRITERIA = [
 		'displayAll',
 		'displayLive',
 		'limitExceeded',
 	];
 
-
-	/** @return bool */
-	static public function isRegZusatzSearchcritTypes($type): bool
-		{ return in_array($type, self::$_regZusatzSearchcritTypes); }
-
+	/**
+	 * @param string $type
+	 * @return bool
+	 */
+	static public function isRegZusatzSearchcritTypes(string $type): bool
+	{
+		return in_array($type, self::TYPES_REG_ADDITION_SEARCHCRITERIA);
+	}
 
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	static public function getInputVarSanitizers(): array
 	{
-		return self::$_inputVarSanitizers;
+		return self::INPUT_VAR_SANITIZERS;
 	}
 
-
 	/**
-	 *
 	 * @param string $type
 	 * @return bool
-	 *
 	 */
-
 	static public function isNumericType(string $type): bool
 	{
-		return in_array($type, self::$_numericTypes, true);
+		return in_array($type, self::TYPES_NUMERIC, true);
 	}
 
-
 	/**
-	 *
 	 * @param string $type
 	 * @return bool
-	 *
 	 */
-
 	static public function isDateOrDateTime(string $type): bool
 	{
 		return $type === self::FIELD_TYPE_DATE || $type === self::FIELD_TYPE_DATETIME;
 	}
 
-
 	/**
-	 *
 	 * @param string $type
 	 * @return bool
-	 *
 	 */
-
 	static public function isRangeType(string $type): bool
 	{
-		return in_array($type, self::$_rangeTypes);
+		return in_array($type, self::TYPES_RANGE);
 	}
 
-
 	/**
-	 *
 	 * @param string $type
 	 * @return bool
-	 *
 	 */
-
 	static public function isMultipleSelectType(string $type): bool
 	{
-		return in_array($type, self::$_multipleSelectTypes);
+		return in_array($type, self::TYPES_MULTI_SELECT);
+	}
+
+	/**
+	 * @param string $type
+	 * @return bool
+	 */
+	static public function isStringType(string $type): bool
+	{
+		return in_array($type, self::TYPES_STRING);
 	}
 }

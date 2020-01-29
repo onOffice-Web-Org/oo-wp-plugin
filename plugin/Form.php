@@ -522,8 +522,7 @@ class Form
 				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
 			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
 				$values[$pField->getName()] = $value;
-			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_TEXT ||
-				$pField->getType() === FieldTypes::FIELD_TYPE_VARCHAR) {
+			} elseif (FieldTypes::isStringType($pField->getType())) {
 				$values[$pField->getName()] = ($value['native'] ?? '') ?: (array_shift($value) ?? '');
 			}
 		}

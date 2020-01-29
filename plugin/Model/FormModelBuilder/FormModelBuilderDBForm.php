@@ -374,12 +374,10 @@ class FormModelBuilderDBForm
 			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
 		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
 		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
-			$isTextType = in_array($type, [FieldTypes::FIELD_TYPE_TEXT, FieldTypes::FIELD_TYPE_VARCHAR,
-				'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar'], true);
 			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
 			$pInputModel->setLabel('');
 
-			if ($isTextType) {
+			if (FieldTypes::isStringType($type ?? '')) {
 				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 				$pInputModel->setLabel(__('Add language', 'onoffice'));
 			}

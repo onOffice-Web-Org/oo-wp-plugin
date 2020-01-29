@@ -86,30 +86,23 @@ class DefaultValueRowSaver
 	 */
 	private function saveForFoundType(int $formId, Field $pField, $values)
 	{
+		$isSingleValue = FieldTypes::isDateOrDateTime($pField->getType()) ||
+			FieldTypes::isNumericType($pField->getType()) ||
+			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT;
+		$isMultiSelect = $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
+		$isBoolean = $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
+		$isStringType = FieldTypes::isStringType($pField->getType());
+
 		if ($pField->getIsRangeField()) {
 			$this->saveNumericRange($formId, $pField, $values);
-			return;
-		}
-
-		switch ($pField->getType()) {
-			case FieldTypes::FIELD_TYPE_DATE:
-			case FieldTypes::FIELD_TYPE_DATETIME:
-			case FieldTypes::FIELD_TYPE_INTEGER:
-			case FieldTypes::FIELD_TYPE_FLOAT:
-			case FieldTypes::FIELD_TYPE_SINGLESELECT:
-			case 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal':
-				$this->saveGeneric($formId, $pField, $values);
-				break;
-			case FieldTypes::FIELD_TYPE_MULTISELECT:
-				$this->saveMultiSelect($formId, $pField, $values);
-				break;
-			case FieldTypes::FIELD_TYPE_BOOLEAN:
-				$this->saveBool($formId, $pField, $values);
-				break;
-			case FieldTypes::FIELD_TYPE_TEXT:
-			case FieldTypes::FIELD_TYPE_VARCHAR:
-				$this->saveText($formId, $pField, $values);
-				break;
+		} elseif ($isSingleValue) {
+			$this->saveGeneric($formId, $pField, $values);
+		} elseif ($isMultiSelect) {
+			$this->saveMultiSelect($formId, $pField, $values);
+		} elseif ($isBoolean) {
+			$this->saveBool($formId, $pField, $values);
+		} elseif ($isStringType) {
+			$this->saveText($formId, $pField, $values);
 		}
 	}
 
