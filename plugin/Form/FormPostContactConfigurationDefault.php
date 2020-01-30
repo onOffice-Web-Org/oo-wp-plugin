@@ -82,16 +82,12 @@ class FormPostContactConfigurationDefault
 		return filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '';
 	}
 
-
 	/**
-	 *
 	 * @return bool
-	 *
 	 */
-
 	public function getNewsletterAccepted(): bool
 	{
-		return filter_input(INPUT_POST, 'newsletter', FILTER_VALIDATE_BOOLEAN) ?? false;
+		return filter_var($_POST['newsletter'] ?? null, FILTER_SANITIZE_STRING) === 'y';
 	}
 
 

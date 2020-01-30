@@ -79,17 +79,23 @@ class TestClassFormPostContactConfigurationDefault
 	/**
 	 *
 	 */
-
-	public function testGetNewsletterAccepted()
+	public function testGetNewsletterAcceptedFalse()
 	{
 		$this->assertFalse($this->_pSubject->getNewsletterAccepted());
 	}
 
+	/**
+	 *
+	 */
+	public function testGetNewsletterAcceptedTrue()
+	{
+		$_POST['newsletter'] = 'y';
+		$this->assertTrue($this->_pSubject->getNewsletterAccepted());
+	}
 
 	/**
 	 *
 	 */
-
 	public function testGetWPQueryWrapper()
 	{
 		$this->assertInstanceOf(WPQueryWrapper::class, $this->_pSubject->getWPQueryWrapper());
