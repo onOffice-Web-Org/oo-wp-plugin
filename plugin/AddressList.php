@@ -310,7 +310,7 @@ class AddressList
 		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$fieldsValues = $pFilterableFields->getVisibleFilterableFields($pFieldsCollection);
+		$fieldsValues = $pFilterableFields->getVisibleFilterableFields($pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $this->_pEnvironment

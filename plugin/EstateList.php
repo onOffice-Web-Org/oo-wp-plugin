@@ -705,7 +705,7 @@ class EstateList
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$fieldsValues = $this->_pEnvironment
 			->getOutputFields($this->_pDataView)
-			->getVisibleFilterableFields($pFieldsCollection);
+			->getVisibleFilterableFields($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $this->_pEnvironment

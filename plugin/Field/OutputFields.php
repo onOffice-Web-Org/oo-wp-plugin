@@ -70,14 +70,13 @@ class OutputFields
 		$this->_pCompoundFieldsFilter = $pCompoundFieldsFilter;
 	}
 
-
 	/**
-	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $module
 	 * @return string[] An array of visible fields
-	 *
 	 */
 
-	public function getVisibleFilterableFields(FieldsCollection $pFieldsCollection): array
+	public function getVisibleFilterableFields(FieldsCollection $pFieldsCollection, string $module): array
 	{
 		$filterable = $this->_pDataView->getFilterableFields();
 		$hidden = $this->_pDataView->getHiddenFields();
@@ -92,7 +91,7 @@ class OutputFields
 		}
 
 		$allFields = array_merge($fieldsArray, array_keys($geoFields));
-		$allFields = $this->filterActiveFields($allFields, $pFieldsCollection);
+		$allFields = $this->filterActiveFields($allFields, $pFieldsCollection, $module);
 
 		$valuesDefault = array_map(function($field) use ($geoFields) {
 			return $this->_pInputVariableReader->getFieldValueFormatted($field) ?? $geoFields[$field] ?? null;
@@ -109,13 +108,14 @@ class OutputFields
 	/**
 	 * @param $allFields
 	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $module
 	 * @return array
 	 */
-	private function filterActiveFields($allFields, FieldsCollection $pFieldsCollection): array
+	private function filterActiveFields($allFields, FieldsCollection $pFieldsCollection, string $module): array
 	{
 		$activeFields = [];
 		foreach ($allFields as $field){
-			if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)) {
+			if ($pFieldsCollection->containsFieldByModule($module, $field)) {
 				$activeFields []= $field;
 			}
 		}

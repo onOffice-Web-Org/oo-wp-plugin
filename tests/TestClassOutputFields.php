@@ -182,6 +182,6 @@ class TestClassOutputFields
 				$pGeoPosition,
 				$pCompoundFieldsMocker,
 				$this->_pInputVariableReader);
-		$this->assertEquals($expectation, $pOutputFields->getVisibleFilterableFields($pFieldsCollection));
+		$this->assertEquals($expectation, $pOutputFields->getVisibleFilterableFields($pFieldsCollection, 'estate'));
 	}
 }
