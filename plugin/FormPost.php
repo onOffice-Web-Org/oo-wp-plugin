@@ -204,7 +204,15 @@ abstract class FormPost
 	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
 	{
 		$inputs = $pFormConfig->getInputs();
-		return $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $inputs);
+		$fields = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $inputs);
+		$activeFields = [];
+
+		foreach ($fields as $name => $module) {
+			if ($this->_pFieldsCollection->containsFieldByModule($module, $name)) {
+				$activeFields[$name] = $module;
+			}
+		}
+		return $activeFields;
 	}
 
 

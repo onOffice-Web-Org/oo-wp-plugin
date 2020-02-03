@@ -74,7 +74,6 @@ class TestClassFormPostOwner
 	public function prepare()
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
-		$this->_pFormPostConfiguration = $this->createNewFormPostConfigurationTest();
 		$this->prepareSDKWrapperForFieldsAddressEstate();
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
@@ -149,11 +148,17 @@ class TestClassFormPostOwner
 			return $this->_pFieldsCollectionBuilderShort;
 		}));
 
+		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
+		$pCompoundFields = new CompoundFieldsFilter();
+		$this->_pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
+		$this->_pFormPostConfiguration->setCompoundFields($pCompoundFields);
+		$this->_pFormPostConfiguration->setFieldsCollectionBuilderShort($this->_pFieldsCollectionBuilderShort);
+
 		$pContainer = new Container;
 		$pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
 		$pSearchcriteriaFields = $pContainer->get(SearchcriteriaFields::class);
 		$pFormAddressCreator = new FormAddressCreator($this->_pSDKWrapperMocker,
-			new FieldsCollectionBuilderShort($pContainer));
+			$this->_pFieldsCollectionBuilderShort);
 		$pFormPostOwnerConfiguration = new FormPostOwnerConfigurationTest
 			($this->_pSDKWrapperMocker, $pFormAddressCreator);
 		$pFormPostOwnerConfiguration->setReferrer('/test/page/1');
@@ -192,30 +197,6 @@ class TestClassFormPostOwner
 			('wohnflaeche', $moduleEstate, FieldTypes::FIELD_TYPE_INTEGER);
 		$pEstateListInputVariableReaderConfig->setFieldTypeByModule
 			('kabel_sat_tv', $moduleEstate, FieldTypes::FIELD_TYPE_BOOLEAN);
-	}
-
-
-	/**
-	 *
-	 * @return FormPostConfigurationTest
-	 *
-	 */
-
-	private function createNewFormPostConfigurationTest(): FormPostConfigurationTest
-	{
-		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
-
-		$pFormPostConfiguration = new FormPostConfigurationTest($pLogger);
-		$pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setConstructorArgs([new Container()])
-				->getMock();
-
-		$pCompoundFields = new CompoundFieldsFilter();
-
-		$pFormPostConfiguration->setCompoundFields($pCompoundFields);
-		$pFormPostConfiguration->setFieldsCollectionBuilderShort($pBuilderShort);
-
-		return $pFormPostConfiguration;
 	}
 
 

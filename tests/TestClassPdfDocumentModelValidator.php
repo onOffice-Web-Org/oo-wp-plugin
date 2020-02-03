@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -30,9 +31,14 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
 use onOffice\WPlugin\PDF\PdfDocumentModelValidator;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
 
@@ -75,8 +81,16 @@ class TestClassPdfDocumentModelValidator
 		$this->_pDataListviewFactory = $this->getMockBuilder(DataListViewFactory::class)
 			->getMock();
 
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$pDefaultFilterbuilderFactory = $this->getMockBuilder(DefaultFilterBuilderFactory::class)
+			->setConstructorArgs([$pFieldsCollectionBuilderShort])
+			->getMock();
+
 		$this->_pSubject = new PdfDocumentModelValidator
-			($this->_pAPIClientAction, $pDataDetailViewHandler, $this->_pDataListviewFactory);
+			($this->_pAPIClientAction, $pDataDetailViewHandler, $this->_pDataListviewFactory, $pDefaultFilterbuilderFactory);
 	}
 
 
@@ -135,10 +149,6 @@ class TestClassPdfDocumentModelValidator
 			'estatelanguage' => 'ENG',
 			'formatoutput' => 0,
 			'filter' => [
-				'veroeffentlichen' => [[
-					'op' => '=',
-					'val' => '1',
-				]],
 				'Id' => [[
 					'op' => '=',
 					'val' => '13',

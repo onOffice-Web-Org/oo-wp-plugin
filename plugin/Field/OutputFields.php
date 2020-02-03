@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandlerBase;
 use onOffice\WPlugin\Controller\InputVariableReader;
-use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\GeoPosition;
-use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Types\FieldsCollection;
 
 /**
@@ -71,14 +70,13 @@ class OutputFields
 		$this->_pCompoundFieldsFilter = $pCompoundFieldsFilter;
 	}
 
-
 	/**
-	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $module
 	 * @return string[] An array of visible fields
-	 *
 	 */
 
-	public function getVisibleFilterableFields(FieldsCollection $pFieldsCollection): array
+	public function getVisibleFilterableFields(FieldsCollection $pFieldsCollection, string $module): array
 	{
 		$filterable = $this->_pDataView->getFilterableFields();
 		$hidden = $this->_pDataView->getHiddenFields();
@@ -93,6 +91,7 @@ class OutputFields
 		}
 
 		$allFields = array_merge($fieldsArray, array_keys($geoFields));
+		$allFields = $this->filterActiveFields($allFields, $pFieldsCollection, $module);
 
 		$valuesDefault = array_map(function($field) use ($geoFields) {
 			return $this->_pInputVariableReader->getFieldValueFormatted($field) ?? $geoFields[$field] ?? null;
@@ -106,6 +105,22 @@ class OutputFields
 		return $result;
 	}
 
+	/**
+	 * @param $allFields
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $module
+	 * @return array
+	 */
+	private function filterActiveFields($allFields, FieldsCollection $pFieldsCollection, string $module): array
+	{
+		$activeFields = [];
+		foreach ($allFields as $field){
+			if ($pFieldsCollection->containsFieldByModule($module, $field)) {
+				$activeFields []= $field;
+			}
+		}
+		return $activeFields;
+	}
 
 	/** @return DataViewFilterableFields */
 	public function getDataView(): DataViewFilterableFields

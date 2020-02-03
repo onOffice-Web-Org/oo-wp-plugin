@@ -23,15 +23,19 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\tests\WP_UnitTest_Localized;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewEnvironment;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\Region\RegionController;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 
 /**
@@ -118,7 +122,10 @@ class TestClassDefaultFilterBuilderListView
 	public function testDefaultFilter()
 	{
 		$pDataListView = new DataListView(1, 'test');
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->getMock();
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -141,7 +148,10 @@ class TestClassDefaultFilterBuilderListView
 	{
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_REFERENCE);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->getMock();
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -171,7 +181,10 @@ class TestClassDefaultFilterBuilderListView
 	{
 		$pDataListView = new DataListView(1, 'test');
 		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_FAVORITES);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->getMock();
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -204,7 +217,10 @@ class TestClassDefaultFilterBuilderListView
 		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('regionaler_zusatz', onOfficeSDK::MODULE_ESTATE, FieldTypes::FIELD_TYPE_MULTISELECT);
 		$this->_pInputVariableReaderConfig->setValue('regionaler_zusatz', 'OstfriesischeInseln');
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->getMock();
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -250,14 +266,34 @@ class TestClassDefaultFilterBuilderListView
 		// geoPosition should get removed
 		$pDataListView->setFilterableFields(['testtext', 'othertest', 'geoPosition']);
 
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->setMethods(['addFieldsAddressEstate'])
+			->getMock();
 		$module = onOfficeSDK::MODULE_ESTATE;
+
+		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection) use ($pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort {
+
+				$pField1 = new Field('testtext', onOfficeSDK::MODULE_ESTATE);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				$pField2 = new Field('othertest', onOfficeSDK::MODULE_ESTATE);
+				$pField2->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pFieldsCollection->addField($pField2);
+
+				return $pFieldsCollectionBuilderShort;
+			}));
+
 		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('testtext', $module, FieldTypes::FIELD_TYPE_MULTISELECT);
 		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('othertest', $module, FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$this->_pInputVariableReaderConfig->setValueArray('testtext', ['asd' , 'hello']);
 		$this->_pInputVariableReaderConfig->setValueArray('othertest', ['bonjour' , 'salve']);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [
@@ -307,7 +343,11 @@ class TestClassDefaultFilterBuilderListView
 			('number_float', $module, FieldTypes::FIELD_TYPE_FLOAT);
 		$this->_pInputVariableReaderConfig->setFieldTypeByModule
 			('bool', $module, FieldTypes::FIELD_TYPE_BOOLEAN);
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $this->_pEnvironment);
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort, $this->_pEnvironment);
 
 		$expected = [
 			'veroeffentlichen' => [

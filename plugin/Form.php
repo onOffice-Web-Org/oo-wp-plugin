@@ -153,8 +153,29 @@ class Form
 		$inputs = $this->getDataFormConfiguration()->getInputs();
 		$inputsSplitCompound = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $inputs);
 		$inputsAll = array_merge($inputsSplitCompound, $this->getFormSpecificFields());
+		$inputsAll = $this->filterActiveInputFields($inputsAll);
 
 		return $inputsAll;
+	}
+
+
+	/**
+	 * @param $inputs
+	 * @return array
+	 *
+	 */
+
+	private function filterActiveInputFields($inputs): array
+	{
+		$activeInputs = [];
+
+		foreach ($inputs as $name => $module) {
+			if ($this->_pFieldsCollection->containsFieldByModule($module, $name)) {
+				$activeInputs[$name] = $module;
+			}
+		}
+
+		return $activeInputs;
 	}
 
 
