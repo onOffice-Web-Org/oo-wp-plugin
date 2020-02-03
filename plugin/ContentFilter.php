@@ -48,6 +48,7 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use WP_Query;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
