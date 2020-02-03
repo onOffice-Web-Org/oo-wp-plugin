@@ -73,6 +73,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.3.1 =
+
+**Fixes**
+
+* Fix handling of deactivated fields in back-end estate list configuration.
+* Fix handling of search parameters of address list pagination.
+
 = 2.3.0 =
 
 **Changes**
@@ -166,6 +173,9 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+== 2.3.1 ==
+Fix handling of address list pagination and deactivated fields in estate list.
 
 = 2.3.0 =
 Adds default sort direction for the user-defined sorting.
