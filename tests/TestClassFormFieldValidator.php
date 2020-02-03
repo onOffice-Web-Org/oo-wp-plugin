@@ -27,6 +27,7 @@ use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\Field;
@@ -43,6 +44,7 @@ use WP_UnitTestCase;
 class TestClassFormFieldValidator
 	extends WP_UnitTestCase
 {
+	/** @var FormFieldValidator */
 	private $_pInstance = null;
 
 	/** FieldCollectionBuilderShort */
@@ -117,10 +119,8 @@ class TestClassFormFieldValidator
 
 			$pSeachrcriteriaFields = new SearchcriteriaFields($this->_pFieldsCollectionBuilderShort);
 
-			$this->_pInstance = new FormFieldValidator($this->_pFieldsCollectionBuilderShort, new RequestVariablesSanitizer, $pSeachrcriteriaFields);
+			$this->_pInstance = new FormFieldValidator(new RequestVariablesSanitizer, $pSeachrcriteriaFields);
 	}
-
-
 
 	/**
 	 *
@@ -129,6 +129,7 @@ class TestClassFormFieldValidator
 	 * @covers onOffice\WPlugin\Form\FormFieldValidator::getValueFromRequest
 	 * @covers onOffice\WPlugin\Form\FormFieldValidator::isMultipleSingleSelectAllowed
 	 *
+	 * @throws UnknownFieldException
 	 */
 
 	public function testGetValidatedValues()
@@ -162,6 +163,45 @@ class TestClassFormFieldValidator
 			'regionaler_zusatz' => ['regZusatz1', 'regZusatz2'],
 		];
 
-		$this->assertEquals($expectedData, $this->_pInstance->getValidatedValues($data));
+		$pFieldsCollection = $this->buildFieldsCollection();
+		$this->assertEquals($expectedData, $this->_pInstance->getValidatedValues($data, $pFieldsCollection));
+	}
+
+	/**
+	 * @return FieldsCollection
+	 */
+	private function buildFieldsCollection(): FieldsCollection
+	{
+		$pFieldsCollection = new FieldsCollection;
+		$pFieldVorname = new Field('Vorname', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldVorname->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+		$pFieldsCollection->addField($pFieldVorname);
+
+		$pFieldAnzZimmer = new Field('anzahl_zimmer', onOfficeSDK::MODULE_ESTATE);
+		$pFieldAnzZimmer->setType(FieldTypes::FIELD_TYPE_INTEGER);
+		$pFieldsCollection->addField($pFieldAnzZimmer);
+
+		$pFieldWohnfl = new Field('wohnflaeche', onOfficeSDK::MODULE_ESTATE);
+		$pFieldWohnfl->setType(FieldTypes::FIELD_TYPE_FLOAT);
+		$pFieldsCollection->addField($pFieldWohnfl);
+
+		$pFieldBad = new Field('bad', onOfficeSDK::MODULE_ESTATE);
+		$pFieldBad->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+		$pFieldBad->setPermittedvalues(['wanne' => 'Wanne', 'fenster' => 'Fenster', 'bidet' => 'Bidet']);
+		$pFieldsCollection->addField($pFieldBad);
+
+		$pFieldAnzBadezi = new Field('anzahl_badezimmer', onOfficeSDK::MODULE_ESTATE);
+		$pFieldAnzBadezi->setType(FieldTypes::FIELD_TYPE_FLOAT);
+		$pFieldsCollection->addField($pFieldAnzBadezi);
+
+		$pField1 = new Field('objekttyp', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pField1->setPermittedvalues(['reihenendhaus' => 'Reihenendhaus', 'stadthaus' => 'Stadthaus']);
+		$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+		$pFieldsCollection->addField($pField1);
+
+		$pFieldRegZusatz = new Field('regionaler_zusatz', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pFieldRegZusatz->setType('displayAll');
+		$pFieldsCollection->addField($pFieldRegZusatz);
+		return $pFieldsCollection;
 	}
 }

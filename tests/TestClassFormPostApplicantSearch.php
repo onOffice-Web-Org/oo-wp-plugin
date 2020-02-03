@@ -24,21 +24,23 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form;
+use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostApplicantSearch;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use WP_UnitTestCase;
+use function DI\autowire;
 use function json_decode;
 
 /**
@@ -51,9 +53,6 @@ use function json_decode;
 class TestClassFormPostApplicantSearch
 	extends WP_UnitTestCase
 {
-	/** @var FormPostConfigurationTest */
-	private $_pFormPostConfigurationTest = null;
-
 	/** @var FormPostApplicantSearch */
 	private $_pFormPostApplicantSearch = null;
 
@@ -71,8 +70,6 @@ class TestClassFormPostApplicantSearch
 
 	public function prepare()
 	{
-		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
-
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria', 'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
@@ -122,9 +119,6 @@ class TestClassFormPostApplicantSearch
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
-		$pCompoundFields = new CompoundFieldsFilter();
-
-		$this->_pFormPostConfigurationTest = new FormPostConfigurationTest($pLogger);
 		$pSDKWrapperMocker = $this->setupSDKWrapperMocker();
 		$_POST = [
 			'objektart' => 'haus',
@@ -132,9 +126,6 @@ class TestClassFormPostApplicantSearch
 			'kaufpreis' => '200000',
 			'wohnflaeche' => '800',
 		];
-
-		$this->_pFormPostConfigurationTest->setCompoundFields($pCompoundFields);
-		$this->_pFormPostConfigurationTest->setFieldsCollectionBuilderShort($this->_pFieldsCollectionBuilderShort);
 
 		$this->setupDataFormConfiguration();
 
@@ -144,8 +135,16 @@ class TestClassFormPostApplicantSearch
 			->getMock();
 		$pSearchcriteriaFields->method('getFormFields')->with($this->anything())->will($this->returnArgument(0));
 
-		$this->_pFormPostApplicantSearch = new FormPostApplicantSearch($this->_pFormPostConfigurationTest,
-			$pSDKWrapperMocker, $pSearchcriteriaFields, $this->_pFieldsCollectionBuilderShort);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pContainer->set(FormPostConfiguration::class, autowire(FormPostConfigurationTest::class));
+		$pContainer->set(SDKWrapper::class, $pSDKWrapperMocker);
+		$pContainer->set(SearchcriteriaFields::class, $pSearchcriteriaFields);
+		$pContainer->set(Logger::class, $this->getMockBuilder(Logger::class)->getMock());
+		$pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+
+		$this->_pFormPostApplicantSearch = $pContainer->get(FormPostApplicantSearch::class);
 	}
 
 

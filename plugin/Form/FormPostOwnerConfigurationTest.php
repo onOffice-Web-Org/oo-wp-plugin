@@ -30,34 +30,32 @@ use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
 class FormPostOwnerConfigurationTest
 	implements FormPostOwnerConfiguration
 {
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
-	/** @var string */
-	private $_referrer = '';
+	private $_pSDKWrapper;
 
 	/** @var InputVariableReaderConfigTest */
-	private $_pInputVariableReaderConfigTest = null;
+	private $_pInputVariableReaderConfigTest;
 
 	/** @var FormAddressCreator */
-	private $_pFormAddressCreator = null;
-
+	private $_pFormAddressCreator;
 
 	/**
-	 *
+	 * @param SDKWrapper $pSDKWrapper
+	 * @param FormAddressCreator $pFormAddressCreator
+	 * @param InputVariableReaderConfigTest $pInputVariableReaderConfigTest
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper, FormAddressCreator $pFormAddressCreator)
+	public function __construct(
+		SDKWrapper $pSDKWrapper,
+		FormAddressCreator $pFormAddressCreator,
+		InputVariableReaderConfigTest $pInputVariableReaderConfigTest)
 	{
-		$this->_pInputVariableReaderConfigTest = new InputVariableReaderConfigTest();
+		$this->_pInputVariableReaderConfigTest = $pInputVariableReaderConfigTest;
 		$this->_pFormAddressCreator = $pFormAddressCreator;
 		$this->_pSDKWrapper = $pSDKWrapper;
 	}
@@ -84,7 +82,7 @@ class FormPostOwnerConfigurationTest
 
 	public function getReferrer(): string
 	{
-		return $this->_referrer;
+		return '/test/page/1';
 	}
 
 
@@ -97,30 +95,6 @@ class FormPostOwnerConfigurationTest
 	public function getSDKWrapper(): SDKWrapper
 	{
 		return $this->_pSDKWrapper;
-	}
-
-
-	/**
-	 *
-	 * @param string $referrer
-	 *
-	 */
-
-	public function setReferrer(string $referrer)
-	{
-		$this->_referrer = $referrer;
-	}
-
-
-	/**
-	 *
-	 * @return InputVariableReaderConfigTest
-	 *
-	 */
-
-	public function getEstateListInputVariableReaderConfigTest(): InputVariableReaderConfigTest
-	{
-		return $this->_pInputVariableReaderConfigTest;
 	}
 
 

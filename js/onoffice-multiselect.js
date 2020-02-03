@@ -2,10 +2,11 @@ var onOffice = onOffice || {};
 (function() {
 	var checkboxCounter = checkboxCounter || 0;
 
-	function multiselect(element, options, preselected) {
+	function multiselect(element, options, preselected, settings = {}) {
 		this._element = typeof(element) === 'string' ? document.getElementById(element) : element;
 		this._options = options || {};
 		this._name = this._element.getAttribute('data-name');
+		this._settings = settings;
 		this._load(preselected);
 	};
 
@@ -22,10 +23,12 @@ var onOffice = onOffice || {};
 			checkboxCounter++;
 			var value = this._options[key];
 			var checked = preselected.indexOf(key) >= 0 ? ' checked' : '';
+            var nameSuffix = (this._settings.name_is_array || false) ? '[]' : '';
+            var className = this._settings.cb_class || '';
 
 			output += '<label for=cb' + checkboxCounter + '>' +
-				'<input type="checkbox" name=' + this._name + '[] value="' + key + '" ' +
-				checked + ' id=cb' + checkboxCounter + '>' + value + '</label>';
+				'<input type="checkbox" name=' + this._name + nameSuffix + ' value="' + key + '" ' +
+				checked + ' id="cb' + checkboxCounter + '" class="' + className + '">' + value + '</label>';
 		}
 
 		divPopup.innerHTML = output;

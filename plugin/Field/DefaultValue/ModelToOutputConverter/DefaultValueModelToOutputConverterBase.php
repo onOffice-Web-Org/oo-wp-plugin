@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,30 +19,14 @@
  *
  */
 
-namespace onOffice\WPlugin\Gui;
+declare (strict_types=1);
 
-use onOffice\WPlugin\Model\InputModelBase;
-
+namespace onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter;
 
 /**
  *
  */
 
-class AdminPageFormSettingsFree
-	extends AdminPageFormSettingsBase
+interface DefaultValueModelToOutputConverterBase
 {
-	/**
-	 *
-	 */
-
-	protected function buildForms()
-	{
-		parent::buildForms();
-		$pFormModelBuilder = $this->getFormModelBuilder();
-
-		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
-
-		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
-			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
-	}
 }

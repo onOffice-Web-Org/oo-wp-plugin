@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -41,17 +43,12 @@ class SearchcriteriaFields
 	/** */
 	const RANGE_UPTO = '__bis';
 
-
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilder = null;
 
-
 	/**
-	 *
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilder
-	 *
 	 */
-
 	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilder)
 	{
 		$this->_pFieldsCollectionBuilder = $pFieldsCollectionBuilder;
@@ -59,14 +56,12 @@ class SearchcriteriaFields
 
 
 	/**
-	 *
 	 * SearchCriteria fields have the suffixes `__von` and `__bis`
 	 *
 	 * @param string $input
 	 * @return string
 	 *
 	 */
-
 	public function getFieldNameOfInput($input): string
 	{
 		$inputConfigName = $input;
@@ -80,28 +75,24 @@ class SearchcriteriaFields
 		return $inputConfigName;
 	}
 
-
 	/**
-	 *
 	 * @param array $inputFormFields
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getFormFields(array $inputFormFields): array
 	{
 		$pFieldsCollection = $this->loadSearchCriteriaFields();
 		return $this->generateFieldModuleArray($pFieldsCollection, $inputFormFields);
 	}
 
-
 	/**
-	 *
 	 * @param array $inputFormFields
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getFormFieldsWithRangeFields(array $inputFormFields): array
 	{
 		$pFieldsCollection = $this->loadSearchCriteriaFields();
@@ -119,13 +110,11 @@ class SearchcriteriaFields
 		return $newFormFields;
 	}
 
-
 	/**
-	 *
 	 * @return FieldsCollection
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	private function loadSearchCriteriaFields(): FieldsCollection
 	{
 		$pFieldsCollection = new FieldsCollection();
@@ -133,14 +122,11 @@ class SearchcriteriaFields
 		return $pFieldsCollection;
 	}
 
-
 	/**
-	 *
 	 * @param FieldsCollection $pFieldsCollection
+	 * @param array $inputFormFields
 	 * @return array
-	 *
 	 */
-
 	private function generateFieldModuleArray(
 		FieldsCollection $pFieldsCollection,
 		array $inputFormFields): array

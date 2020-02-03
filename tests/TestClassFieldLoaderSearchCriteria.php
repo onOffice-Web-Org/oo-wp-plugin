@@ -23,11 +23,16 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\Collection\FieldCategoryToFieldConverter;
 use onOffice\WPlugin\Field\Collection\FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo;
 use onOffice\WPlugin\Field\Collection\FieldLoaderSearchCriteria;
 use onOffice\WPlugin\Field\Collection\FieldRowConverterSearchCriteria;
+use onOffice\WPlugin\Region\RegionController;
+use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
+use function DI\autowire;
 use function json_decode;
 
 
@@ -57,9 +62,17 @@ class TestClassFieldLoaderSearchCriteria
 		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'searchCriteriaFields', '',
 			$searchCriteriaFieldsParameters, null, $responseGetSearchcriteriaFields);
 
-		$pFieldRowConverter = new FieldRowConverterSearchCriteria();
-		$pFieldCategoryConverter = new FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo($pFieldRowConverter);
-		$this->_pFieldLoaderSearchCriteria = new FieldLoaderSearchCriteria($pSDKWrapper, $pFieldCategoryConverter);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+
+		$pRegionController = $this->getMockBuilder(RegionController::class)
+			->disableOriginalConstructor()->getMock();
+		$pContainer->set(SDKWrapper::class, $pSDKWrapper);
+		$pContainer->set(RegionController::class, $pRegionController);
+		$pContainer->set(FieldCategoryToFieldConverter::class,
+			autowire(FieldCategoryToFieldConverterSearchCriteriaBackendNoGeo::class));
+		$this->_pFieldLoaderSearchCriteria = $pContainer->get(FieldLoaderSearchCriteria::class);
 	}
 
 

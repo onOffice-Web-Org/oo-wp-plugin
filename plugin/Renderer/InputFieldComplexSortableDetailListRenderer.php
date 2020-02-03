@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -43,8 +45,11 @@ class InputFieldComplexSortableDetailListRenderer
 	/** @var array */
 	private $_allFields = [];
 
-	/** @var InputFieldComplexSortableDetailListContentBase */
+	/** @var InputFieldComplexSortableDetailListContentDefault */
 	private $_pContentRenderer = null;
+
+	/** @var array */
+	private $_extraInputModels = [];
 
 
 	/**
@@ -73,7 +78,7 @@ class InputFieldComplexSortableDetailListRenderer
 
 		$fields = [];
 		$values = $this->getValue();
-		$allFields = $values[0];
+		$allFields = $values[0] ?? [];
 
 		foreach ($allFields as $value) {
 			$fields[$value] = $this->_allFields[$value] ?? [];
@@ -83,15 +88,16 @@ class InputFieldComplexSortableDetailListRenderer
 			$label = $properties['label'] ?? null;
 			$category = $properties['content'] ?? null;
 			$type = $properties['type'] ?? null;
-			$this->generateSelectableElement($key, $label, $category, $i, $type);
+			$this->generateSelectableElement($key, $label, $category, $i, $type,
+				false, $this->_extraInputModels);
 			$i++;
 		}
 
 		// create hidden element for cloning
-		echo $this->generateSelectableElement('dummy_key', 'dummy_label', 'dummy_category', $i, FieldTypes::FIELD_TYPE_MULTISELECT, true);
+		$this->generateSelectableElement('dummy_key', 'dummy_label',
+			'dummy_category', $i, null, true, $this->_extraInputModels);
 		echo '</ul>';
 	}
-
 
 	/**
 	 *
@@ -101,10 +107,13 @@ class InputFieldComplexSortableDetailListRenderer
 	 * @param int $iteration
 	 * @param string $type
 	 * @param bool $isDummy for javascript-side copying
-	 *
+	 * @param array $extraInputModels
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
-	private function generateSelectableElement($key, $label, $category, $iteration, $type, $isDummy = false)
+	private function generateSelectableElement($key, $label, $category,
+		$iteration, $type, $isDummy = false, array $extraInputModels = [])
 	{
 		$inactiveFields = $this->_inactiveFields;
 
@@ -139,7 +148,7 @@ class InputFieldComplexSortableDetailListRenderer
 			.'<div class="menu-item-settings submitbox" style="display:none;">';
 
 			if ($this->_pContentRenderer !== null) {
-				$this->_pContentRenderer->render($key, $isDummy, $type);
+				$this->_pContentRenderer->render($key, $isDummy, $type, $extraInputModels);
 			}
 
 		echo '</div>';
@@ -165,11 +174,13 @@ class InputFieldComplexSortableDetailListRenderer
 	public function setAllFields(array $allFields)
 		{ $this->_allFields = $allFields; }
 
-	/** @return InputFieldComplexSortableDetailListContentBase */
-	public function getContentRenderer()
-		{ return $this->_pContentRenderer; }
-
-	/** @param InputFieldComplexSortableDetailListContentBase $pContentRenderer */
-	public function setContentRenderer(InputFieldComplexSortableDetailListContentBase $pContentRenderer)
+	/** @param InputFieldComplexSortableDetailListContentDefault $pContentRenderer */
+	public function setContentRenderer(InputFieldComplexSortableDetailListContentDefault $pContentRenderer)
 		{ $this->_pContentRenderer = $pContentRenderer; }
+
+	/**
+	 * @param array $extraInputModels
+	 */
+	public function setExtraInputModels(array $extraInputModels)
+		{ $this->_extraInputModels = $extraInputModels; }
 }

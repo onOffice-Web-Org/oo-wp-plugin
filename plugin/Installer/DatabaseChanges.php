@@ -32,7 +32,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 15;
+	const MAX_VERSION = 16;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -132,6 +132,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 15;
 		}
 
+		if ($dbversion == 15) {
+			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
+			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
+			$dbversion = 16;
+		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
@@ -423,6 +428,43 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigDefaults(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig_form_defaults";
+		$sql = "CREATE TABLE $tableName (
+			`defaults_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`defaults_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigDefaultsValues(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig_form_defaults_values";
+		$sql = "CREATE TABLE $tableName (
+			`defaults_values_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`defaults_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			PRIMARY KEY (`defaults_values_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
 
 	/**
 	 *
@@ -487,6 +529,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_listviews_address",
 			$prefix."oo_plugin_address_fieldconfig",
 			$prefix."oo_plugin_sortbyuservalues",
+			$prefix."oo_plugin_fieldconfig_form_defaults",
+			$prefix."oo_plugin_fieldconfig_form_defaults_values",
 		);
 
 		foreach ($tables as $table)	{

@@ -64,6 +64,9 @@ class Field
 	/** @var array */
 	private $_compoundFields = [];
 
+	/** @var array */
+	private $_labelOnlyValues = [];
+
 
 	/**
 	 *
@@ -320,6 +323,22 @@ class Field
 		return $this->_compoundFields;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getLabelOnlyValues(): array
+	{
+		return $this->_labelOnlyValues;
+	}
+
+	/**
+	 * @param array $labelOnlyValues
+	 */
+	public function setLabelOnlyValues(array $labelOnlyValues)
+	{
+		$this->_labelOnlyValues = $labelOnlyValues;
+	}
+
 
 	/**
 	 *
@@ -340,6 +359,7 @@ class Field
 			'rangefield' => $this->_isRangeField,
 			'additionalTranslations' => $this->_rangeFieldTranslations,
 			'compoundFields' => $this->_compoundFields,
+			'labelOnlyValues' => $this->_labelOnlyValues,
 		];
 	}
 
@@ -364,6 +384,7 @@ class Field
 		$pField->setIsRangeField((bool)($row['rangefield'] ?? false));
 		$pField->setRangeFieldTranslations($row['additionalTranslations'] ?? []);
 		$pField->setCompoundFields($row['compoundFields'] ?? []);
+		$pField->setLabelOnlyValues($row['labelOnlyValues'] ?? []);
 		return $pField;
 	}
 }

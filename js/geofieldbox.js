@@ -27,7 +27,11 @@ onOffice.geoSettingsBox.getGeoFieldBox = function() {
 
 (function() {
     if (document.querySelector("#menu-item-geoPosition") === null) {
-        onOffice.geoSettingsBox.getGeoFieldBox().hidden = true;
+        var geoFieldBox = onOffice.geoSettingsBox.getGeoFieldBox();
+
+        if (geoFieldBox) {
+            geoFieldBox.hidden = true;
+        }
     }
 
 	var geosettingsUiHide = new onOffice.geoSettingsBox();

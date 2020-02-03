@@ -41,6 +41,7 @@ use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
+use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
@@ -66,6 +67,8 @@ return [
 	APIClientActionGeneric::class => autowire()
 		->constructorParameter('actionId', '')
 		->constructorParameter('resourceType', ''),
+	RegionController::class => autowire()
+		->constructorParameter('init', false),
 	ContentFilterShortCodeAddressEnvironment::class => autowire(ContentFilterShortCodeAddressEnvironmentDefault::class),
 	FormPostConfiguration::class => autowire(FormPostConfigurationDefault::class),
 	FormPostOwnerConfiguration::class => autowire(FormPostOwnerConfigurationDefault::class),
@@ -76,7 +79,7 @@ return [
 	ScriptLoaderBuilderConfig::class => autowire(ScriptLoaderBuilderConfigDefault::class),
 	ScriptLoaderGenericConfiguration::class => autowire(ScriptLoaderGenericConfigurationDefault::class),
 	Filesystem::class => autowire(FilesystemDirect::class),
-	wpdb::class => function() {
+	wpdb::class => static function() {
 		global $wpdb;
 		return $wpdb;
 	},

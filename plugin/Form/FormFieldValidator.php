@@ -25,14 +25,12 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Form;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
-
-
 
 /**
  *
@@ -40,9 +38,6 @@ use onOffice\WPlugin\Types\FieldTypes;
 
 class FormFieldValidator
 {
-	/** @var FieldsCollectionBuilderShort */
-	private $_pFieldsCollectionBuilderShort;
-
 	/** @var RequestVariablesSanitizer */
 	private $_pRequestSanitizer;
 
@@ -57,35 +52,28 @@ class FormFieldValidator
 
 	/**
 	 *
-	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 * @param RequestVariablesSanitizer $pRequestSanitizer
+	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 *
 	 */
 
-	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
+	public function __construct(
 			RequestVariablesSanitizer $pRequestSanitizer,
 			SearchcriteriaFields $pSearchcriteriaFields)
 	{
-		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 		$this->_pRequestSanitizer = $pRequestSanitizer;
 		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
 	}
 
-
 	/**
-	 *
 	 * @param array $formFields
+	 * @param FieldsCollection $pFieldsCollection
 	 * @return array
 	 *
+	 * @throws UnknownFieldException
 	 */
-
-	public function getValidatedValues(array $formFields): array
+	public function getValidatedValues(array $formFields, FieldsCollection $pFieldsCollection): array
 	{
-		$pFieldsCollection = new FieldsCollection();
-		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($pFieldsCollection);
-		$this->_pFieldsCollectionBuilderShort->addFieldsFormFrontend($pFieldsCollection);
-
 		$sanitizedData = [];
 
 		foreach ($formFields as $fieldName => $module) {
@@ -165,6 +153,7 @@ class FormFieldValidator
 	 *
 	 * @param string $dataType
 	 * @param string $fieldName
+	 * @param string $module
 	 * @return mixed
 	 *
 	 */
@@ -185,8 +174,7 @@ class FormFieldValidator
 		if ($dataType == FieldTypes::FIELD_TYPE_MULTISELECT ||
 			$this->isMultipleSingleSelectAllowed($fieldName, $module)){
 			$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_DEFAULT, FILTER_FORCE_ARRAY);
-		}
-		else {
+		} else {
 			$returnValue = $this->_pRequestSanitizer->getFilteredPost($fieldName, $filter);
 		}
 

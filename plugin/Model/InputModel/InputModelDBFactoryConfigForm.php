@@ -72,6 +72,9 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_NEWSLETTER = 'newsletter';
 
 	/** */
+	const INPUT_FORM_DEFAULT_VALUE = 'defaultValue';
+
+	/** */
 	const INPUT_FORM_ESTATE_CONTEXT_AS_HEADING = 'show_estate_context';
 
 
@@ -141,6 +144,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_AVAILABLE_OPTIONS => [
 			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
 			self::KEY_FIELD => 'availableOptions',
+		],
+		self::INPUT_FORM_DEFAULT_VALUE => [
+			self::KEY_TABLE => 'oo_plugin_fieldconfig_form_defaults_values',
+			self::KEY_FIELD => 'value',
 		],
 	];
 

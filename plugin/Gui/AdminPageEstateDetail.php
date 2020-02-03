@@ -64,9 +64,6 @@ use function wp_verify_nonce;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
 class AdminPageEstateDetail
@@ -113,11 +110,10 @@ class AdminPageEstateDetail
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
 
+		/* @var $pRenderer InputModelRenderer */
+		$pRenderer = $this->getContainer()->get(InputModelRenderer::class);
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
-		$pRendererSortablefields = new InputModelRenderer($pFormViewSortableFields);
-
 		$pFormViewSortablecontactFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_DATA_FIELDS);
-		$pRendererSortableContactFields = new InputModelRenderer($pFormViewSortablecontactFields);
 
 		wp_nonce_field( $this->getPageSlug() );
 
@@ -162,7 +158,7 @@ class AdminPageEstateDetail
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
-		$pRendererSortableContactFields->buildForAjax();
+		$pRenderer->buildForAjax($pFormViewSortablecontactFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
 
@@ -177,7 +173,7 @@ class AdminPageEstateDetail
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
 		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
-		$pRendererSortablefields->buildForAjax();
+		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
 		echo '</div>';
@@ -444,7 +440,7 @@ class AdminPageEstateDetail
 	 *
 	 */
 
-	public function getEnqueueData()
+	public function getEnqueueData(): array
 	{
 		return array(
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The detail view has been saved.', 'onoffice'),

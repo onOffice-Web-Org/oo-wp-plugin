@@ -27,16 +27,16 @@
 
 namespace onOffice\WPlugin;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\Types\FieldTypes;
 
 /**
@@ -52,31 +52,30 @@ class FormPostOwner
 	/** @var FormPostOwnerConfiguration */
 	private $_pFormPostOwnerConfiguration = null;
 
-
 	/**
-	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostOwnerConfiguration $pFormPostOwnerConfiguration
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
-	 *
+	 * @param FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm
 	 */
-
-	public function __construct(FormPostConfiguration $pFormPostConfiguration,
+	public function __construct(
+		FormPostConfiguration $pFormPostConfiguration,
 		FormPostOwnerConfiguration $pFormPostOwnerConfiguration,
-		FieldsCollectionBuilderShort $pBuilderShort,
-		SearchcriteriaFields $pSearchcriteriaFields)
+		SearchcriteriaFields $pSearchcriteriaFields,
+		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm)
 	{
 		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
-
-		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
+		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
 	}
-
 
 	/**
 	 *
 	 * @param FormData $pFormData
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws Field\UnknownFieldException
+	 * @throws NotFoundException
 	 */
 
 	protected function analyseFormContentByPrefix(FormData $pFormData)
@@ -99,11 +98,11 @@ class FormPostOwner
 		}
 	}
 
-
 	/**
 	 *
 	 * @return int
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws ApiClientException
 	 */
 
 	private function createEstate(): int
@@ -190,26 +189,26 @@ class FormPostOwner
 		}
 	}
 
-
 	/**
 	 *
 	 * @param string $recipient
 	 * @param int $estateId
 	 * @param string $subject
+	 * @throws API\APIEmptyResultException
 	 * @throws ApiClientException
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	private function sendContactRequest(string $recipient, int $estateId, $subject = null)
 	{
 		$addressData = $this->_pFormData->getAddressData();
 		$values = $this->_pFormData->getValues();
-		$message = $values['message'] ?? null;
 
 		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
-			'message' => $message,
+			'message' => $values['message'] ?? null,
 			'subject' => $subject,
 			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
 			'formtype' => $this->_pFormData->getFormtype(),

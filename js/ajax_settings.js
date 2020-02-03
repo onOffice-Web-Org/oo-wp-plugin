@@ -63,27 +63,88 @@ onOffice.ajaxSaver = function(outerDiv) {
 		this._outerDiv.find('.onoffice-input:not([data-onoffice-ignore=true])').each(function(i, elem) {
 			var inputNameFull = $(elem).attr('name');
 			var inputName = inputNameFull;
+			if (inputName === "dummy_key") {
+			    return;
+            }
 			var elementValue = proto._getValueOfElement(elem);
 
 			if (elementValue === null) {
 				return;
 			}
 
-			var inputContainsArray = inputNameFull.match(/\[\]$/);
+            var inputContainsArray = /\[\]$/.test(inputNameFull);
+            var inputContainsObject = /\[[^\]]+\]/.test(inputNameFull);
 
-			if (inputContainsArray) { // array
-				inputName = inputNameFull.replace(/\[\]$/, '');
-				if (values[inputName] === undefined) {
-					values[inputName] = [];
-				}
-				values[inputName].push(elementValue);
-			} else {
-				values[inputName] = elementValue;
-			}
-		});
+            if (inputContainsArray) {
+                inputName = inputNameFull.match(/(.+)\[\]/)[1];
+                var previousEntry = proto._getValueOfNestedObjectByKeys(inputNameFull, values) || [];
+
+                if (Array.isArray(previousEntry)) {
+                    previousEntry.push(elementValue);
+                } else {
+                    // get highest numeric key
+                    var highestKey = Object.keys(previousEntry).reduce(function(a, b) {
+                        return parseInt(a,10) > parseInt(b,10) ? a : b
+                    });
+
+                    if (isNaN(highestKey)) {
+                        highestKey = -1;
+                    }
+
+                    previousEntry[highestKey+1] = elementValue;
+                }
+
+                elementValue = previousEntry;
+            }
+
+            if (inputContainsObject) {
+                var nestedParameters = proto._getNestedParameterNamesOfString(inputNameFull);
+                var recentObject = values;
+
+                nestedParameters.forEach(function(parameter, i) {
+                    if (i !== (nestedParameters.length - 1)) {
+                        recentObject[parameter] = recentObject[parameter] || {};
+                        recentObject = recentObject[parameter];
+                    } else {
+                        recentObject[parameter] = elementValue;
+                    }
+                });
+            } else {
+                values[inputName] = elementValue;
+            }
+        });
 
 		return values;
 	};
+
+	this._getNestedParameterNamesOfString = function(string) {
+        var inputNameArray = string.match(/([^\[]+)/)[0];
+
+        var nestedParameterNameMatch = string.match(/\[(.+)\]/);
+        var result = [inputNameArray];
+
+        if (nestedParameterNameMatch && nestedParameterNameMatch[1]) {
+            var nestedParameterName = nestedParameterNameMatch[1];
+            result = result.concat(nestedParameterName.split('][').filter(function(value) {
+                return value !== "";
+            }));
+        }
+        return result;
+    };
+
+	this._getValueOfNestedObjectByKeys = function(nestedName, object) {
+        var nestedParameters = this._getNestedParameterNamesOfString(nestedName);
+        var recentObject = object;
+        nestedParameters.forEach(function(parameter, i) {
+            if (i !== (nestedParameters.length - 1)) {
+                recentObject[parameter] = recentObject[parameter] || {};
+                recentObject = recentObject[parameter];
+            } else {
+                recentObject = recentObject[parameter] || [];
+            }
+        });
+        return recentObject;
+    };
 
 	this._getValueOfElement = function(element) {
 		var value = null;

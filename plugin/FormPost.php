@@ -21,16 +21,18 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
-use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\Types\FieldsCollection;
 
 /**
@@ -69,9 +71,6 @@ abstract class FormPost
 	/** @var FormPostConfiguration */
 	private $_pFormPostConfiguration = null;
 
-	/** @var FieldsCollectionBuilderShort */
-	private $_pBuilderShort = null;
-
 	/** @var int */
 	private $_absolutCountResults = 0;
 
@@ -84,31 +83,34 @@ abstract class FormPost
 	/** @var CompoundFieldsFilter */
 	private $_pCompoundFields = null;
 
+	/** @var FieldsCollectionConfiguratorForm */
+	private $_pFieldsCollectionConfiguratorForm;
 
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
-	 *
+	 * @param FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration,
-			FieldsCollectionBuilderShort $pBuilderShort,
-			SearchcriteriaFields $pSearchcriteriaFields)
+	public function __construct(
+		FormPostConfiguration $pFormPostConfiguration,
+		SearchcriteriaFields $pSearchcriteriaFields,
+		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm)
 	{
 		$this->_pFormPostConfiguration = $pFormPostConfiguration;
-		$this->_pBuilderShort = $pBuilderShort;
 		$this->_pSearchcriteriaFields = $pSearchcriteriaFields;
+		$this->_pFieldsCollectionConfiguratorForm = $pFieldsCollectionConfiguratorForm;
 	}
-
 
 	/**
 	 *
 	 * @param DataFormConfiguration $pConfig
 	 * @param int $formNo
 	 * @return void
-	 *
+	 * @throws DependencyException
+	 * @throws Field\UnknownFieldException
+	 * @throws NotFoundException
 	 */
 
 	public function initialCheck(DataFormConfiguration $pConfig, int $formNo)
@@ -157,34 +159,36 @@ abstract class FormPost
 		}
 	}
 
-
 	/**
 	 *
 	 * @param DataFormConfiguration $pFormConfig
 	 * @param int $formNo
 	 * @return FormData
-	 *
+	 * @throws Field\UnknownFieldException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	private function buildFormData(DataFormConfiguration $pFormConfig, $formNo): FormData
 	{
-		$pFormFieldValidator = new FormFieldValidator($this->_pBuilderShort,
-				new RequestVariablesSanitizer, $this->_pSearchcriteriaFields);
+		$pFormFieldValidator = new FormFieldValidator(new RequestVariablesSanitizer, $this->_pSearchcriteriaFields);
 
-		$this->_pFieldsCollection = new FieldsCollection();
+		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pFormPostConfiguration->getFieldsCollectionBuilderShort();
 		$pFieldBuilderShort
-			->addFieldsAddressEstate($this->_pFieldsCollection)
-			->addFieldsSearchCriteria($this->_pFieldsCollection)
-			->addFieldsFormFrontend($this->_pFieldsCollection);
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsSearchCriteria($pFieldsCollection)
+			->addFieldsFormFrontend($pFieldsCollection);
 
+		$this->_pFieldsCollection = $this->_pFieldsCollectionConfiguratorForm
+			->buildForFormType($pFieldsCollection, $pFormConfig->getFormType());
 		$this->_pCompoundFields = $this->_pFormPostConfiguration->getCompoundFields();
 		$requiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getRequiredFields());
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());
 		$pFormConfig->setInputs($inputs);
 
 		$formFields = $this->getAllowedPostVars($pFormConfig);
-		$formData = $pFormFieldValidator->getValidatedValues($formFields);
+		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
 		$pFormData = new FormData($pFormConfig, $formNo);
 		$pFormData->setRequiredFields($requiredFields);
 		$pFormData->setFormtype($pFormConfig->getFormType());
