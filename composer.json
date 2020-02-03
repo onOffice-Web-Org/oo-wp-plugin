@@ -28,6 +28,12 @@
 		"phpstan/phpstan": ">=0.9",
 		"php-coveralls/php-coveralls": "^2.1"
 	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/onOfficeGmbH/sdk"
+		}
+	],
 	"autoload": {
 		 "psr-4": {
 			"onOffice\\SDK\\": "SDK/SDK/",
