@@ -40,7 +40,6 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
-use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -49,7 +48,6 @@ use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_Query;
-use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_rewrite_rule;
 use function add_rewrite_tag;
@@ -57,7 +55,7 @@ use function get_page_uri;
 use function get_post;
 use function shortcode_atts;
 use function wp_get_post_parent_id;
-
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *

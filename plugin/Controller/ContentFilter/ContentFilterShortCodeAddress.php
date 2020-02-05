@@ -23,9 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
 use onOffice\WPlugin\Template;
@@ -43,36 +45,25 @@ class ContentFilterShortCodeAddress
 	/** @var ContentFilterShortCodeAddressEnvironment */
 	private $_pEnvironment = null;
 
-	/** @var FieldsCollectionBuilderShort */
-	private $_pBuilderShort;
-
 	/** @var SearchParametersModelBuilder */
 	private $_pSearchParametersModelBuilder;
 
 	/**
-	 *
 	 * @param ContentFilterShortCodeAddressEnvironment $pEnvironment
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchParametersModelBuilder $pSearchParametersModelBuilder
 	 */
-
-	public function __construct(ContentFilterShortCodeAddressEnvironment $pEnvironment,
-		FieldsCollectionBuilderShort $pBuilderShort,
-		SearchParametersModelBuilder $pSearchParametersModelBuilder )
+	public function __construct(
+		ContentFilterShortCodeAddressEnvironment $pEnvironment,
+		SearchParametersModelBuilder $pSearchParametersModelBuilder)
 	{
 		$this->_pEnvironment = $pEnvironment;
-		$this->_pBuilderShort = $pBuilderShort;
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 	}
 
-
 	/**
-	 *
 	 * @param array $attributesInput
 	 * @return string
-	 *
 	 */
-
 	public function replaceShortCodes(array $attributesInput): string
 	{
 		$attributes = shortcode_atts([
@@ -91,6 +82,9 @@ class ContentFilterShortCodeAddress
 	/**
 	 * @param string $addressListName
 	 * @return Template
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownViewException
 	 */
 	private function createTemplate(string $addressListName): Template
 	{
@@ -108,11 +102,13 @@ class ContentFilterShortCodeAddress
 
 	/**
 	 * @param array $filterableFields
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	private function populateWpLinkPagesArgs(array $filterableFields)
 	{
-		$pModel = $this->_pSearchParametersModelBuilder->build(
-			$filterableFields, onOfficeSDK::MODULE_ADDRESS, $this->_pBuilderShort);
+		$pModel = $this->_pSearchParametersModelBuilder->build
+			($filterableFields, onOfficeSDK::MODULE_ADDRESS);
 
 		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pModel): string {
 			$pSearchParameters = new SearchParameters();
@@ -121,13 +117,9 @@ class ContentFilterShortCodeAddress
 		add_filter('wp_link_pages_args', [$pModel, 'populateDefaultLinkParams']);
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
 	public function getTag(): string
 	{
 		return 'oo_address';
