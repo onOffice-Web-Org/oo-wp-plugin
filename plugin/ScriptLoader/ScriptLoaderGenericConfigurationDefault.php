@@ -52,10 +52,13 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'onoffice-leadform', plugins_url('/js/onoffice-leadform.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-sort-list-selector', plugins_url('/js/onoffice-sort-list-selector.js', $pluginPath)))
+			(new IncludeFileModel($script, 'slick', plugins_url('/js/slick.js', $pluginPath)))
+			->setDependencies(['jquery'])
+			->setLoadInFooter(true),
+			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/js/onoffice_defaultview.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/js/onoffice_defaultview.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-sort-list-selector', plugins_url('/js/onoffice-sort-list-selector.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
 

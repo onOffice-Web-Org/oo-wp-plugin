@@ -22,7 +22,6 @@
 					</div>
 					<div class="oo-listinfotable">
 						<?php foreach ( $currentEstate as $field => $value ) {
-							var_dump($value);
 							if ( is_numeric( $value ) && 0 == $value ) {
 								continue;
 							}
