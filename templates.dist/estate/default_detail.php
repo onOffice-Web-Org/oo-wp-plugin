@@ -35,7 +35,7 @@ use onOffice\WPlugin\EstateDetail;
 			<div class="oo-detailsgallery" id="oo-galleryslide">
 				<?php $estatePictures = $pEstates->getEstatePictures();
 				foreach ( $estatePictures as $id ) { ?>
-				<div class="oo-detailspicture" style="background-image: url('<?php echo $pEstates->getEstatePictureUrl( $id ); ?>');"></div>
+				<div class="oo-detailspicture" style="background-image: url('<?php echo esc_url($pEstates->getEstatePictureUrl( $id )); ?>');"></div>
 				<?php } ?>
 			</div>
 			<div class="oo-detailstable">	
@@ -102,15 +102,7 @@ use onOffice\WPlugin\EstateDetail;
 				<?php endforeach; ?>
 			</div>
 			<div class="oo-detailsform">
-				<?php
-					try {
-						$estateId = $pEstates->getCurrentEstateId();
-						$pForm = new \onOffice\WPlugin\Form('contact', \onOffice\WPlugin\Form::TYPE_CONTACT);
-						include( __DIR__ . "/../form/defaultform.php" );
-					} catch (\onOffice\WPlugin\DataFormConfiguration\UnknownFormException $pE) {
-						echo esc_html__('(Form is not available)', 'onoffice');
-					}
-				?>
+				<!-- put your form here -->
 			</div>
 			<div class="oo-detailsexpose">
 				<?php if ($pEstates->getDocument() != ''): ?>

@@ -53,7 +53,7 @@ require 'SearchForm.php';
 				$estatePictures = $pEstates->getEstatePictures();
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstates->getEstatePictureValues( $id );
-					echo '<a href="'.$pEstates->getEstateLink().'" style="background-image: url('.$pEstates->getEstatePictureUrl( $id ).');" class="oo-listimage">';
+					echo '<a href="'.$pEstates->getEstateLink().'" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
 					}
