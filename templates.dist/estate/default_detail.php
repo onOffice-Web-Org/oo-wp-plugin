@@ -23,6 +23,9 @@ use onOffice\WPlugin\EstateDetail;
  *  Default template
  *
  */
+
+$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
+
 ?>
 <div class="oo-detailview">
 	<?php
@@ -43,7 +46,7 @@ use onOffice\WPlugin\EstateDetail;
 					if ( is_numeric( $value ) && 0 == $value ) {
 						continue;
 					}
-					if ( $field === "objekttitel" || $field === "objektbeschreibung" || $field === "lage" || $field === "ausstatt_beschr" || $field === "sonstige_angaben" ) {
+					if ( in_array($field, $dontEcho) ) {
 						continue;
 					}
 					if ( $value == "" ) {

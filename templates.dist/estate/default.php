@@ -26,6 +26,9 @@ use onOffice\WPlugin\Favorites;
 // display search form
 require 'SearchForm.php';
 /* @var $pEstates onOffice\WPlugin\EstateList */
+
+$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
+
 ?>
 <div class="oo-estate-map">
 	<?php // require('map/map.php'); ?>
@@ -68,7 +71,7 @@ require 'SearchForm.php';
 							if ( is_numeric( $value ) && 0 == $value ) {
 								continue;
 							}
-							if ( $field === "objekttitel" || $field === "objektbeschreibung" || $field === "lage" || $field === "ausstatt_beschr" || $field === "sonstige_angaben" ) {
+							if ( in_array($field, $dontEcho) ) {
 								continue;
 							}
 							if ( $value == "" ) {
