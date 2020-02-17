@@ -44,19 +44,20 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 </div>
 <div class="oo-listframe">
 	<?php
-	$pEstates->resetEstateIterator();
-	while ( $currentEstate = $pEstates->estateIterator() ) :
+	$pEstatesClone = clone $pEstates;
+	$pEstatesClone->resetEstateIterator();
+	while ( $currentEstate = $pEstatesClone->estateIterator() ) :
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
 		unset($currentEstate['vermarktungsstatus']);
-		$estateId = $pEstates->getCurrentEstateId();
+		$estateId = $pEstatesClone->getCurrentEstateId();
 	?>
 		<div class="oo-listobject">
 			<div class="oo-listobjectwrap">
 				<?php
-				$estatePictures = $pEstates->getEstatePictures();
+				$estatePictures = $pEstatesClone->getEstatePictures();
 				foreach ( $estatePictures as $id ) {
-					$pictureValues = $pEstates->getEstatePictureValues( $id );
-					echo '<a href="'.$pEstates->getEstateLink().'" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
+					echo '<a href="'.$pEstatesClone->getEstateLink().'" style="background-image: url('.esc_url($pEstatesClone->getEstatePictureUrl( $id )).');" class="oo-listimage">';
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
 					}
@@ -77,11 +78,11 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 							if ( $value == "" ) {
 								continue;
 							}
-							echo '<div class="oo-listtd">'.esc_html($pEstates->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 						} ?>
 					</div>
 					<div class="oo-detailslink">
-						<a href="<?php echo $pEstates->getEstateLink(); ?>">
+						<a href="<?php echo $pEstatesClone->getEstateLink(); ?>">
 							<?php esc_html_e('Show Details', 'onoffice'); ?>
 						</a>
 					</div>
@@ -89,7 +90,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			</div>
 		</div>
 		<?php if (Favorites::isFavorizationEnabled()): ?>
-			<button data-onoffice-estateid="<?php echo $pEstates->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
+			<button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
 				<?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
 			</button>
 		<?php endif ?>

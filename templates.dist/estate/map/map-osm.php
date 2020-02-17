@@ -29,10 +29,11 @@ use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /* @var $pEstates EstateList */
-$pEstates->resetEstateIterator();
+$pEstatesClone = clone $pEstates;
+$pEstatesClone->resetEstateIterator();
 $estateData = [];
 
-while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
+while ($currentEstate = $pEstatesClone->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
 	$virtualAddressSet = (bool)$currentEstate['virtualAddress'];
 	$position = [
 		'lat' => (float) $currentEstate['breitengrad'],
