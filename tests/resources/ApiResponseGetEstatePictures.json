@@ -1,0 +1,66 @@
+{
+    "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+    "resourceid": "",
+    "resourcetype": "estatepictures",
+    "cacheable": true,
+    "identifier": "",
+    "data": {
+      "meta": {
+        "cntabsolute": 1
+      },
+      "records": [
+        {
+          "id": 2,
+          "type": "files",
+          "elements": [
+            {
+              "estateid": "15",
+              "type": "Titelbild",
+              "url": "https://test.url/image/2.jpg",
+              "title": "Awesome image",
+              "text": "An image for test",
+              "originalname": "Download (1).jpg",
+              "modified": 1581580240,
+              "estateMainId": "15"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "type": "files",
+          "elements": [
+            {
+              "estateid": "15",
+              "type": "Foto",
+              "url": "https://test.url/image/3.png",
+              "title": "Another awesome image",
+              "text": "Another image for test",
+              "originalname": "Download (1).jpg",
+              "modified": 1581580240,
+              "estateMainId": "15"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "type": "files",
+          "elements": [
+            {
+              "estateid": "15",
+              "type": "Foto_gross",
+              "url": "https://test.url/image/4.png",
+              "title": "Another awesome image",
+              "text": "Another image for test",
+              "originalname": "Download (1).jpg",
+              "modified": 1581580240,
+              "estateMainId": "15"
+            }
+          ]
+        }
+      ]
+    },
+    "status": {
+      "errorcode": 0,
+      "message": "OK"
+    }
+}

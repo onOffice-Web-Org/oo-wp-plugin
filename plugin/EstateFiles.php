@@ -30,9 +30,11 @@ namespace onOffice\WPlugin;
 
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\Utility\__String;
+use function esc_url;
 
 /**
  *
@@ -43,60 +45,39 @@ class EstateFiles
 	/** @var array */
 	private $_estateFiles = array();
 
-	/** @var int */
-	private $_handleEstatePictures = null;
-
 	/** @var array */
 	private $_pictureCategories = array();
 
-
 	/**
+	 * EstateFiles constructor.
 	 *
 	 * @param string[] $pictureCategories
-	 *
+	 * @param array $estateIds
+	 * @param SDKWrapper $pSDKWrapper
+	 * @throws API\APIEmptyResultException
+	 * @throws HttpFetchNoResultException
 	 */
 
-	public function __construct(array $pictureCategories)
+	public function __construct(array $pictureCategories, array $estateIds, SDKWrapper $pSDKWrapper)
 	{
 		$this->_pictureCategories = $pictureCategories;
 
 		if (count($pictureCategories) > 0) {
-			add_action('oo_beforeEstateRelations', array($this, 'registerRequest'), 10, 2);
-			add_action('oo_afterEstateRelations', array($this, 'parseRequest'), 10, 1);
-		}
-	}
-
-
-	/**
-	 *
-	 * @param SDKWrapper $pSDKWrapper
-	 * @param array $estateIds
-	 *
-	 */
-
-	public function registerRequest(SDKWrapper $pSDKWrapper, array $estateIds)
-	{
-		$this->_handleEstatePictures = $pSDKWrapper->addRequest(
-			onOfficeSDK::ACTION_ID_GET, 'estatepictures', array(
+			$pAPIClientAction = new APIClientActionGeneric(
+				$pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'estatepictures');
+			$pAPIClientAction->setParameters([
 				'estateids' => array_values($estateIds),
 				'categories' => $this->_pictureCategories,
 				'language' => Language::getDefault(),
-			)
-		);
-	}
+			]);
 
+			$pAPIClientAction->addRequestToQueue()->sendRequests();
 
-	/**
-	 *
-	 * @param SDKWrapper $pSDKWrapper
-	 *
-	 */
-
-	public function parseRequest(SDKWrapper $pSDKWrapper)
-	{
-		$responseArrayEstatePictures = $pSDKWrapper->getRequestResponse
-			($this->_handleEstatePictures);
-		$this->collectEstateFiles($responseArrayEstatePictures);
+			if (!$pAPIClientAction->getResultStatus()) {
+				throw new HttpFetchNoResultException();
+			}
+			$this->collectEstateFiles($pAPIClientAction->getResultRecords());
+		}
 	}
 
 
@@ -109,13 +90,7 @@ class EstateFiles
 
 	private function collectEstateFiles($responseArrayEstatePictures)
 	{
-		if (!isset( $responseArrayEstatePictures['data']['records'])) {
-			throw new HttpFetchNoResultException();
-		}
-
-		$records = $responseArrayEstatePictures['data']['records'];
-
-		foreach ($records as $fileEntry) {
+		foreach ($responseArrayEstatePictures as $fileEntry) {
 			$fileId = $fileEntry['id'];
 			foreach ($fileEntry['elements'] as $properties) {
 				$estateId = $properties['estateid'];
