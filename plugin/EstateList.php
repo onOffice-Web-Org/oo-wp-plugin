@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin;
 
 use DI\ContainerBuilder;
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\EstateListBase;
@@ -75,9 +76,6 @@ class EstateList
 
 	/** @var int */
 	private $_numEstatePages = null;
-
-	/** @var int */
-	private $_handleEstateContactPerson = null;
 
 	/** @var DataView */
 	private $_pDataView = null;
@@ -177,20 +175,12 @@ class EstateList
 
 		$fileCategories = $this->getPreloadEstateFileCategories();
 
-		$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles($fileCategories);
 		$estateIds = $this->getEstateIdToForeignMapping($this->_records);
 
-		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
-
 		if ($estateIds !== []) {
-			add_action('oo_beforeEstateRelations', [$this, 'registerContactPersonCall'], 10, 2);
-			add_action('oo_afterEstateRelations', [$this, 'extractEstateContactPerson'], 10, 2);
+			$this->getEstateContactPerson($estateIds);
 
-			do_action('oo_beforeEstateRelations', $pSDKWrapper, $estateIds);
-
-			$pSDKWrapper->sendRequests();
-
-			do_action('oo_afterEstateRelations', $pSDKWrapper, $estateIds);
+			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles($fileCategories, $estateIds);
 		}
 
 		if ($pDataListView->getRandom()) {
@@ -228,38 +218,29 @@ class EstateList
 
 
 	/**
-	 *
-	 * @param SDKWrapper $pSDKWrapper
 	 * @param array $estateIds
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws HttpFetchNoResultException
 	 */
-
-	public function registerContactPersonCall(SDKWrapper $pSDKWrapper, array $estateIds)
+	private function getEstateContactPerson(array $estateIds)
 	{
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+
 		$parameters = [
 			'parentids' => array_keys($estateIds),
 			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
 		];
+		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAPIClientAction->setParameters($parameters);
 
-		$this->_handleEstateContactPerson = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', $parameters);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		if (!$pAPIClientAction->getResultStatus()) {
+			throw new HttpFetchNoResultException();
+		}
+
+		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
 	}
-
-
-	/**
-	 *
-	 * @param SDKWrapper $pSDKWrapper
-	 * @param array $estateIds
-	 *
-	 */
-
-	public function extractEstateContactPerson(SDKWrapper $pSDKWrapper, array $estateIds)
-	{
-		$responseArrayContactPerson = $pSDKWrapper->getRequestResponse
-			($this->_handleEstateContactPerson);
-		$this->collectEstateContactPerson($responseArrayContactPerson, $estateIds);
-	}
-
 
 	/**
 	 *
@@ -370,7 +351,7 @@ class EstateList
 
 	private function collectEstateContactPerson($responseArrayContacts, array $estateIds)
 	{
-		$records = $responseArrayContacts['data']['records'][0]['elements'] ?? [];
+		$records = $responseArrayContacts[0]['elements'] ?? [];
 		$allAddressIds = [];
 
 		foreach ($records as $estateId => $adressIds) {

@@ -121,17 +121,15 @@ class EstateListEnvironmentDefault
 		return $this->_pAddressList;
 	}
 
-
 	/**
-	 *
 	 * @param array $fileTypes
+	 * @param array $estateIds
 	 * @return EstateFiles
-	 *
 	 */
 
-	public function getEstateFiles(array $fileTypes): EstateFiles
+	public function getEstateFiles(array $fileTypes, array $estateIds): EstateFiles
 	{
-		return new EstateFiles($fileTypes);
+		return new EstateFiles($fileTypes, $estateIds, $this->_pSDKWrapper);
 	}
 
 
