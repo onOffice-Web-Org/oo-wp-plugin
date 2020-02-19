@@ -95,8 +95,7 @@ class Fieldnames
 		$pApiClientActionFields = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
 		$pApiClientActionFields->setParameters($parametersGetFieldList);
-		$pApiClientActionFields->addRequestToQueue();
-		$pSDKWrapper->sendRequests();
+		$pApiClientActionFields->addRequestToQueue()->sendRequests();
 
 		$this->createFieldList($pApiClientActionFields);
 		$this->setPermittedValuesForEstateSearchFields();

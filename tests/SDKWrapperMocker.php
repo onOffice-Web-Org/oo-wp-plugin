@@ -62,21 +62,6 @@ class SDKWrapperMocker
 	 *
 	 * @param string $actionId
 	 * @param string $resourceType
-	 * @param array $parameters
-	 * @return int
-	 *
-	 */
-
-	public function addRequest(string $actionId, string $resourceType, array $parameters = [])
-	{
-		return $this->addFullRequest($actionId, $resourceType, '', $parameters);
-	}
-
-
-	/**
-	 *
-	 * @param string $actionId
-	 * @param string $resourceType
 	 * @param string $resourceId
 	 * @param array $parameters
 	 * @param string $identifier
@@ -232,7 +217,7 @@ class SDKWrapperMocker
 	 *
 	 */
 
-	public function getRequestResponse(int $handle): array
+	private function getRequestResponse(int $handle): array
 	{
 		$response = null;
 
