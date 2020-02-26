@@ -42,6 +42,9 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		?>
 	</p>
 </div>
+<div class="oo-estate-sort">
+	<?php echo '<div class="col-lg-12">'.$generateSortDropDown().'</div>'; ?>
+</div>
 <div class="oo-listframe">
 	<?php
 	$pEstatesClone = clone $pEstates;

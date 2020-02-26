@@ -64,6 +64,12 @@
 	z-index: 888;
 }
 
+/* estate sort */
+
+.oo-estate-sort {
+	padding: 15px;
+}
+
 /* listframe */
 
 .oo-listheadline {

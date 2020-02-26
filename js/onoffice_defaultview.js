@@ -1,14 +1,14 @@
 // noconflict mode
-var oo = jQuery.noConflict();
+// var oo = jQuery.noConflict();
 
-oo(document).ready(function() {
+$(document).ready(function() {
 
-	oo('#oo-galleryslide').slick({
+	$('#oo-galleryslide').slick({
 		infinite: true,
 		slidesToShow: 1
 	});
 
-	oo('#oo-similarframe').slick({
+	$('#oo-similarframe').slick({
 		infinite: true,
 		arrows: false,
 		dots: true,
