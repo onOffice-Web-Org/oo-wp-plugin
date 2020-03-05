@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,67 +19,34 @@
  *
  */
 
-namespace onOffice\WPlugin\Form;
+declare (strict_types=1);
 
-use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\WP\WPQueryWrapper;
-use onOffice\WPlugin\WP\WPWrapper;
+namespace onOffice\WPlugin\WP;
 
-/**
- *
- */
+use WP;
 
-interface FormPostContactConfiguration
+class WPWrapper
 {
 	/**
 	 *
-	 * @return SDKWrapper
+	 * @global \WP $wp
+	 * @return WP
 	 *
 	 */
 
-	public function getSDKWrapper(): SDKWrapper;
+	public function getWP(): WP
+	{
+		global $wp;
+		return $wp;
+	}
 
 
 	/**
-	 *
-	 * @return string
-	 *
+	 * @return string|null
 	 */
 
-	public function getReferrer(): string;
-
-
-	/**
-	 *
-	 * @return bool
-	 *
-	 */
-
-	public function getNewsletterAccepted(): bool;
-
-
-	/**
-	 *
-	 * @return WPQueryWrapper
-	 *
-	 */
-
-	public function getWPQueryWrapper(): WPQueryWrapper;
-
-
-	/**
-	 *
-	 * @return FormAddressCreator
-	 *
-	 */
-
-	public function getFormAddressCreator(): FormAddressCreator;
-
-
-	/**
-	 * @return WPWrapper
-	 *
-	 */
-
-	public function getWPWrapper(): WPWrapper;
+	public function getRequest()
+	{
+		return $this->getWP()->request;
+	}
 }

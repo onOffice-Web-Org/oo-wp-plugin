@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\WP\WPWrapper;
 
 /**
  *
@@ -40,23 +41,29 @@ class FormPostContactConfigurationDefault
 	/** @var FormAddressCreator */
 	private $_pFormAddressCreator = null;
 
+	/** @var WPWrapper */
+	private $_pWPWrapper;
+
 
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param WPQueryWrapper $pWPQueryWrapper
 	 * @param FormAddressCreator $pFormAddressCreator
+	 * @param WPWrapper $pWPWrapper
 	 *
 	 */
 
 	public function __construct(
 		SDKWrapper $pSDKWrapper,
 		WPQueryWrapper $pWPQueryWrapper,
-		FormAddressCreator $pFormAddressCreator)
+		FormAddressCreator $pFormAddressCreator,
+		WPWrapper $pWPWrapper)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 		$this->_pFormAddressCreator = $pFormAddressCreator;
+		$this->_pWPWrapper = $pWPWrapper;
 	}
 
 
@@ -113,5 +120,14 @@ class FormPostContactConfigurationDefault
 	public function getFormAddressCreator(): FormAddressCreator
 	{
 		return $this->_pFormAddressCreator;
+	}
+
+
+	/**
+	 * @return WPWrapper
+	 */
+	public function getWPWrapper(): WPWrapper
+	{
+		return $this->_pWPWrapper;
 	}
 }

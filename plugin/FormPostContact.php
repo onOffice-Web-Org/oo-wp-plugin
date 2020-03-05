@@ -32,6 +32,7 @@ use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
 use function sanitize_text_field;
+use function home_url;
 
 /**
  *
@@ -147,6 +148,7 @@ class FormPostContact
 	{
 		$values = $pFormData->getValues();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
+		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
 		$requestParams = [
 			'addressdata' => $pFormData->getAddressData(),
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
@@ -154,6 +156,8 @@ class FormPostContact
 			'subject' => sanitize_text_field($subject),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
+			'estatedata' => ["ort", "plz", "land"],
+			'estateurl' => home_url($pWPWrapper->getRequest()),
 		];
 
 		if ($recipient !== '') {

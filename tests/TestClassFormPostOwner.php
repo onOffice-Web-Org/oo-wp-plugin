@@ -563,6 +563,7 @@ class TestClassFormPostOwner
 			'subject' => null,
 			'referrer' => '/test/page/1',
 			'formtype' => 'owner',
+			'estatedata' => ['objektart','objekttyp','energieausweistyp','wohnflaeche','kabel_sat_tv'],
 			'recipient' => 'test@my-onoffice.com'
 		];
 

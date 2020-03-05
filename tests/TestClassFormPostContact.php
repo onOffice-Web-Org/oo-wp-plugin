@@ -38,6 +38,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\WP\WPWrapper;
 use WP_UnitTestCase;
 use function DI\autowire;
 use function json_decode;
@@ -191,6 +192,8 @@ class TestClassFormPostContact
 			'subject' => '¡A new Contact!',
 			'referrer' => '/test/page',
 			'formtype' => 'contact',
+			'estatedata' => ["ort", "plz", "land"],
+			'estateurl' => 'http://example.org',
 			'recipient' => 'test@my-onoffice.com',
 		];
 
