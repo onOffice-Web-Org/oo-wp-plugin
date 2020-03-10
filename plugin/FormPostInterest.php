@@ -119,6 +119,13 @@ class FormPostInterest
 	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
 	{
 		$addressData = $pFormData->getAddressData();
+		$filledAddressData = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
+			->getAddressDataForEmail($pFormData);
+
+		$filledSearchcriteriaData = $this->_pFormPostInterestConfiguration
+			->getSearchcriteriaFields()
+			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData());
+
 		$name = $addressData['Name'] ?? null;
 		$firstName = $addressData['Vorname'] ?? null;
 		$mailInteressent = $addressData['Email'] ?? null;
@@ -127,6 +134,10 @@ class FormPostInterest
 				.'ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite '
 				.'eingetragen. Die Adresse ('.sanitize_text_field($firstName).' '.sanitize_text_field($name).') wurde bereits in Ihrem System '
 				.'eingetragen.'."\n\n"
+				."Kontaktdaten des Interessenten:"."\n"
+				.$this->createStringFromInputData($filledAddressData)."\n\n"
+				."Suchkriterien des Interessenten:"."\n"
+				.$this->createStringFromInputData($filledSearchcriteriaData)."\n\n"
 				.'Herzliche Grüße'."\n"
 				.'Ihr onOffice Team';
 
@@ -149,6 +160,21 @@ class FormPostInterest
 		if (!$pApiClientAction->getResultStatus()) {
 			throw new ApiClientException($pApiClientAction);
 		}
+	}
+
+	/**
+	 * @param array $inputData
+	 * @return string
+	 */
+	private function createStringFromInputData(array $inputData): string
+	{
+		$data = [];
+
+		foreach ($inputData as $key => $value) {
+			$data []= $key.': '.$value;
+		}
+
+		return implode("\n", $data);
 	}
 
 	/**

@@ -45,6 +45,9 @@ class FormAddressCreator
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort;
 
+	/** @var array */
+	private $_adressDataWithLabels = [];
+
 
 	/**
 	 *
@@ -125,6 +128,47 @@ class FormAddressCreator
 			}
 		}
 
+		return $addressData;
+	}
+
+	/**
+	 * @param FormData $pFormData
+	 * @return array
+	 * @throws UnknownFieldException
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function getAddressDataForEmail(FormData $pFormData): array
+	{
+		$addressData = [];
+		$addressFields = $pFormData->getAddressData();
+
+		$pFieldsCollection = new FieldsCollection();
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+
+		foreach ($addressFields as $inputName => $value) {
+			$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ADDRESS, $inputName);
+
+			switch ($pField->getType()) {
+				case FieldTypes::FIELD_TYPE_SINGLESELECT:
+					$addressData[$pField->getLabel()] = array_key_exists($value, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$value] : $value;
+					break;
+				case FieldTypes::FIELD_TYPE_MULTISELECT:
+					if (!is_array($value)) {
+						$addressData[$pField->getLabel()] = array_key($value, $pField->getPermittedvalues()) ?? $value;
+					} else {
+						$tmpMsValues = [];
+						foreach ($value as $val) {
+							$tmpMsValues []= array_key($val, $pField->getPermittedvalues()) ?? $val;
+						}
+						$addressData[$pField->getLabel()] = implode(', ', $tmpMsValues);
+					}
+					break;
+				default:
+					$addressData[$pField->getLabel()] = $value;
+					break;
+			}
+		}
 		return $addressData;
 	}
 }
