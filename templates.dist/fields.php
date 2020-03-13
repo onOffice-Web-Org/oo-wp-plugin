@@ -139,7 +139,14 @@ if (!function_exists('renderFormField')) {
 		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
 			$isRangeValue)) {
-			$output .= '<div data-name="'.esc_attr($fieldName).'" class="multiselect" data-values="'
+
+			$postfix = '';
+
+			if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput) {
+				$postfix = '[]';
+			}
+
+			$output .= '<div data-name="'.esc_attr($fieldName).$postfix.'" class="multiselect" data-values="'
 				.esc_attr(json_encode($permittedValues)).'" data-selected="'
 				.esc_attr(json_encode($selectedValue)).'">
 				<input type="button" class="onoffice-multiselect-edit" value="'
