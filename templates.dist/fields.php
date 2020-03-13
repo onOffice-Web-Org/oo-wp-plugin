@@ -195,8 +195,8 @@ if (!function_exists('renderRegionalAddition')) {
 		$pRegionController = new RegionController();
 		$regions = $pRegionController->getRegions();
 		ob_start();
+		echo '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 		foreach ($regions as $pRegion) {
-			echo '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 			/* @var $pRegion Region */
 			printRegion( $pRegion, $selectedValue ?? [] );
 		}
