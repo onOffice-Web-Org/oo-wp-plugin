@@ -156,7 +156,7 @@ class FormPostContact
 			'subject' => sanitize_text_field($subject),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
-			'estatedata' => ["ort", "plz", "land"],
+			'estatedata' => ["objekttitel", "ort", "plz", "land"],
 			'estateurl' => home_url($pWPWrapper->getRequest()),
 		];
 

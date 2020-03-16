@@ -192,7 +192,7 @@ class TestClassFormPostContact
 			'subject' => '¡A new Contact!',
 			'referrer' => '/test/page',
 			'formtype' => 'contact',
-			'estatedata' => ["ort", "plz", "land"],
+			'estatedata' => ["objekttitel", "ort", "plz", "land"],
 			'estateurl' => 'http://example.org',
 			'recipient' => 'test@my-onoffice.com',
 		];
