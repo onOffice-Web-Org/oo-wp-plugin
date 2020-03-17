@@ -58,7 +58,7 @@ class EstateFiles
 	 * @throws HttpFetchNoResultException
 	 */
 
-	public function __construct(array $pictureCategories, array $estateIds, SDKWrapper $pSDKWrapper)
+	public function getAllFiles(array $pictureCategories, array $estateIds, SDKWrapper $pSDKWrapper)
 	{
 		$this->_pictureCategories = $pictureCategories;
 

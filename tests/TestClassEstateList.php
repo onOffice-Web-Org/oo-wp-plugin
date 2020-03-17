@@ -253,7 +253,8 @@ class TestClassEstateList
 
 	public function testGetEstatePictures()
 	{
-		$pEstatePicturesMock = new EstateFiles($this->getDataView()->getPictureTypes(), [15], $this->_pSDKWrapperMocker);
+		$pEstatePicturesMock = new EstateFiles;
+		$pEstatePicturesMock->getAllFiles($this->getDataView()->getPictureTypes(), [15], $this->_pSDKWrapperMocker);
 		$this->_pEnvironment->method('getEstateFiles')->with($this->getDataView()->getPictureTypes())->will($this->returnValue($pEstatePicturesMock));
 
 		$this->_pEstateList->loadEstates();
@@ -270,7 +271,8 @@ class TestClassEstateList
 
 	public function testGetEstatePictureUrl()
 {
-	$pEstatePicturesMock = new EstateFiles($this->getDataView()->getPictureTypes(), [15], $this->_pSDKWrapperMocker);
+	$pEstatePicturesMock = new EstateFiles;
+	$pEstatePicturesMock->getAllFiles($this->getDataView()->getPictureTypes(), [15], $this->_pSDKWrapperMocker);
 	$this->_pEnvironment->method('getEstateFiles')
 		->with($this->getDataView()
 			->getPictureTypes())
@@ -333,7 +335,8 @@ class TestClassEstateList
 
 	private function doTestGetEstatePictureMethodGeneric(string $methodName, array $expectedResults)
 	{
-		$pEstateFiles = new EstateFiles($this->getDataView()->getPictureTypes(), [15], $this->_pSDKWrapperMocker);
+		$pEstateFiles = new EstateFiles;
+		$pEstateFiles->getAllFiles($this->getDataView()->getPictureTypes(), [15], $this->_pSDKWrapperMocker);
 
 		$this->_pEnvironment->method('getEstateFiles')
 			->with($this->getDataView()

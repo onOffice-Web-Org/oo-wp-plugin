@@ -129,7 +129,9 @@ class EstateListEnvironmentDefault
 
 	public function getEstateFiles(array $fileTypes, array $estateIds): EstateFiles
 	{
-		return new EstateFiles($fileTypes, $estateIds, $this->_pSDKWrapper);
+		$pEstateFiles = new EstateFiles;
+		$pEstateFiles->getAllFiles($fileTypes, $estateIds, $this->_pSDKWrapper);
+		return $pEstateFiles;
 	}
 
 

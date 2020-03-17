@@ -79,15 +79,16 @@ class TestClassEstateFiles
 			'language' => 'ENG'
 		], null, $responseGetEstatePictures);
 
-		$this->_pInstance = new EstateFiles(self::CATEGORIES, [15], $pSDKWrapperMocker);
+		$this->_pInstance = new EstateFiles;
+		$this->_pInstance->getAllFiles(self::CATEGORIES, [15], $pSDKWrapperMocker);
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\EstateFiles::__construct
+	 * @covers \onOffice\WPlugin\EstateFiles::getAllFiles
 	 * @covers \onOffice\WPlugin\EstateFiles::collectEstateFiles
 	 * @covers \onOffice\WPlugin\EstateFiles::correctUrl
 	 */
-	public function testInstance()
+	public function testgetAllFiles()
 	{
 		$this->assertInstanceOf(EstateFiles::class, $this->_pInstance);
 	}
