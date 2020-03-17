@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016-2019 onOffice GmbH
+ *    Copyright (C) 2016-2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -47,7 +47,6 @@ use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_Query;
 use function __;
 use function add_rewrite_rule;
-use function add_rewrite_tag;
 use function get_page_uri;
 use function get_post;
 use function shortcode_atts;
@@ -66,35 +65,19 @@ class ContentFilter
 	/** @var ScriptLoaderMap */
 	private $_pScriptLoaderMap = null;
 
-
 	/**
-	 *
 	 * @param Logger $pLogger
 	 * @param ScriptLoaderMap $pScriptLoaderMap
-	 *
 	 */
-
 	public function __construct(Logger $pLogger, ScriptLoaderMap $pScriptLoaderMap)
 	{
 		$this->_pLogger = $pLogger;
 		$this->_pScriptLoaderMap = $pScriptLoaderMap;
 	}
 
-
 	/**
 	 *
 	 */
-
-	public function addCustomRewriteTags() {
-		add_rewrite_tag('%estate_id%', '([^&]+)');
-		add_rewrite_tag('%view%', '([^&]+)');
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function addCustomRewriteRules() {
 		$pDetailView = $this->getEstateDetailView();
 		$detailPageId = $pDetailView->getPageId();
@@ -111,13 +94,10 @@ class ContentFilter
 	}
 
 	/**
-	 *
 	 * @param array $attributesInput
 	 * @return string
-	 *
 	 * @throws Exception
 	 */
-
 	public function registerEstateShortCodes($attributesInput)
 	{
 		global $wp_query;
@@ -256,14 +236,10 @@ class ContentFilter
 		add_filter('wp_link_pages_args', [$pModel, 'populateDefaultLinkParams']);
 	}
 
-
 	/**
-	 *
 	 * @param array $filterableFields
 	 * @return array
-	 *
 	 */
-
 	private function setAllowedGetParametersEstateGeo(array $filterableFields): array
 	{
 		$positionGeoPos = array_search(GeoPosition::FIELD_GEO_POSITION, $filterableFields, true);
@@ -279,14 +255,10 @@ class ContentFilter
 		return $filterableFields;
 	}
 
-
 	/**
-	 *
 	 * @param int $page
 	 * @return string
-	 *
 	 */
-
 	private function rebuildSlugTaxonomy($page)
 	{
 		$pPost = get_post($page);
@@ -305,16 +277,12 @@ class ContentFilter
 		return $listpermalink;
 	}
 
-
 	/**
-	 *
 	 * @global WP_Query $wp_query
 	 * @param DataDetailView $pDetailView
 	 * @param string $unitsView
 	 * @return EstateDetail
-	 *
 	 */
-
 	private function preloadSingleEstate(DataDetailView $pDetailView, $unitsView)
 	{
 		global $wp_query;
@@ -333,11 +301,8 @@ class ContentFilter
 	}
 
 	/**
-	 *
 	 * @return DataDetailView
-	 *
 	 */
-
 	private function getEstateDetailView(): DataDetailView
 	{
 		$pDataDetailViewHandler = new DataDetailViewHandler();

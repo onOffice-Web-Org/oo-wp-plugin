@@ -45,6 +45,7 @@ use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
+use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
@@ -69,12 +70,12 @@ $pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
 
 add_action('plugins_loaded', function() use ($pDI) {
-	/** @var DatabaseChanges $pDbChanges */
-	$pDbChanges = $pDI->get(DatabaseChangesInterface::class);
-	$pDbChanges->install();
+	$pDI->get(DatabaseChangesInterface::class)->install();
 });
 
-add_action('init', [$pContentFilter, 'addCustomRewriteTags']);
+add_action('init', function() use ($pDI) {
+	$pDI->get(RewriteRuleBuilder::class)->addCustomRewriteTags();
+});
 add_action('init', [$pContentFilter, 'addCustomRewriteRules']);
 
 // This hook [wp] is one effective place to perform any high-level filtering or validation,
