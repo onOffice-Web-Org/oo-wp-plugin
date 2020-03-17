@@ -24,7 +24,6 @@ namespace onOffice\WPlugin;
 use DI\ContainerBuilder;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Controller\EstateTitleBuilder;
 use onOffice\WPlugin\Controller\SortList\SortListBuilder;
 use onOffice\WPlugin\Controller\SortList\SortListDataModel;
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
@@ -43,9 +42,7 @@ use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\WP\WPQueryWrapper;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_Query;
 use function __;
@@ -113,12 +110,12 @@ class ContentFilter
 		add_rewrite_rule('^document-pdf/([^\/]+)/([0-9]+)/?$', 'index.php?document_pdf=1&view=$matches[1]&estate_id=$matches[2]', 'top');
 	}
 
-
 	/**
 	 *
 	 * @param array $attributesInput
 	 * @return string
 	 *
+	 * @throws Exception
 	 */
 
 	public function registerEstateShortCodes($attributesInput)
@@ -201,6 +198,8 @@ class ContentFilter
 	 * @param SortListDataModel $pSortListDataModel
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 * @throws UnknownFieldException
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
 	 */
 	private function setAllowedGetParametersEstate(DataListView $pDataView, SortListDataModel $pSortListDataModel,
 		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort)
@@ -332,42 +331,6 @@ class ContentFilter
 
 		return $pEstateDetailList;
 	}
-
-
-	/**
-	 *
-	 * @param array $title see Wordpress internal function wp_get_document_title()
-	 * @return string
-	 *
-	 */
-
-	public function setTitle(array $title)
-	{
-		$estateId = (int)(new WPQueryWrapper())->getWPQuery()->get('estate_id', 0);
-		if ($estateId === 0) {
-			return $title;
-		}
-
-		$newTitleValue = '';
-		$pEstateTitleBuilder = new EstateTitleBuilder();
-		$titleFull = $pEstateTitleBuilder->buildTitle($estateId, '%1$s');
-		$titleLength = __String::getNew($titleFull)->length();
-
-		if ($titleLength > 0 && $titleLength < 70) {
-			$newTitleValue = $titleFull;
-		} else {
-			/* translators: %2$s is the kind of estate, %3$s the markting type,
-							%4$s the city, %5$s is the estate number.
-							Example: House (Sale) in Aachen - JJ12345 */
-			$format = __('%2$s (%3$s) in %4$s - %5$s', 'onoffice');
-			$newTitleValue = $pEstateTitleBuilder->buildTitle($estateId, $format);
-		}
-
-		$title['title'] = $newTitleValue;
-
-		return $title;
-	}
-
 
 	/**
 	 *

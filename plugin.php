@@ -44,11 +44,12 @@ use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
+use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
-use onOffice\WPlugin\Installer\Installer;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
+use onOffice\WPlugin\Installer\Installer;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
 use onOffice\WPlugin\PDF\PdfDocumentModelValidationException;
 use onOffice\WPlugin\PDF\PdfDownload;
@@ -110,7 +111,9 @@ add_shortcode('oo_estate', [$pContentFilter, 'registerEstateShortCodes']);
 
 $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 
-add_filter('document_title_parts', [$pContentFilter, 'setTitle'], 10, 2);
+add_filter('document_title_parts', function($title) use ($pDI) {
+	return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+}, 10, 2);
 
 register_activation_hook(__FILE__, [Installer::class, 'install']);
 register_deactivation_hook(__FILE__, [Installer::class, 'deactivate']);
