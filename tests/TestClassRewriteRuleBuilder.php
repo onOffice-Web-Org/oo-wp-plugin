@@ -102,14 +102,11 @@ class TestClassRewriteRuleBuilder
 			->will($this->returnValue($pDataDetailView));
 
 		$pWPPageWrapper = $this->getMockBuilder(WPPageWrapper::class)
-			->setMethods(['getPageUriByPageId', 'getPageLinkById'])
+			->setMethods(['getPageUriByPageId'])
 			->getMock();
 		$pWPPageWrapper->method('getPageUriByPageId')
 			->with(13)
 			->will($this->returnValue('test_parent/test-post'));
-		$pWPPageWrapper->method('getPageLinkById')
-			->with(13)
-			->will($this->returnValue('http://test.local/test_parent/test-post'));
 
 		$this->_pContainer->set(DataDetailViewHandler::class, $pDataDetailViewHandler);
 		$this->_pContainer->set(WPPageWrapper::class, $pWPPageWrapper);
@@ -117,7 +114,7 @@ class TestClassRewriteRuleBuilder
 		$pSubject = $this->_pContainer->get(RewriteRuleBuilder::class);
 		$pSubject->addDynamicRewriteRules();
 		$this->assertSame([
-			'^(http\://test\.local/test_parent/test\-post)/([0-9]+)/?$' =>
+			'^(test_parent/test\-post)/([0-9]+)/?$' =>
 				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&estate_id=$matches[2]'
 		], $wp_rewrite->extra_rules_top);
 	}

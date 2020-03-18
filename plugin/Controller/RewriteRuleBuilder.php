@@ -64,8 +64,7 @@ class RewriteRuleBuilder
 		$detailPageId = $this->_pDataDetailViewHandler->getDetailView()->getPageId();
 		if ($detailPageId !== 0) {
 			$pagename = $this->_pWPPageWrapper->getPageUriByPageId($detailPageId);
-			$pageUrl = $this->_pWPPageWrapper->getPageLinkById($detailPageId);
-			add_rewrite_rule('^('.preg_quote($pageUrl).')/([0-9]+)/?$',
+			add_rewrite_rule('^('.preg_quote($pagename).')/([0-9]+)/?$',
 				'index.php?pagename='.urlencode($pagename).'&view=$matches[1]&estate_id=$matches[2]','top');
 		}
 	}
