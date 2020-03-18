@@ -48,10 +48,10 @@ class Installer
 		// If you are modifying this, please also make sure to edit the test
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 		$pContainer = self::buildDI();
-		$pContentFilter = $pContainer->get(ContentFilter::class);
 		$pRewriteRuleBuilder = $pContainer->get(RewriteRuleBuilder::class);
 		$pRewriteRuleBuilder->addCustomRewriteTags();
-		$pContentFilter->addCustomRewriteRules();
+		$pRewriteRuleBuilder->addStaticRewriteRules();
+		$pRewriteRuleBuilder->addDynamicRewriteRules();
 		self::flushRules();
 	}
 

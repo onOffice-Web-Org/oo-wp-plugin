@@ -39,18 +39,13 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
-use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_Query;
 use function __;
-use function add_rewrite_rule;
-use function get_page_uri;
-use function get_post;
 use function shortcode_atts;
-use function wp_get_post_parent_id;
 use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
@@ -62,35 +57,12 @@ class ContentFilter
 	/** @var Logger */
 	private $_pLogger = null;
 
-	/** @var ScriptLoaderMap */
-	private $_pScriptLoaderMap = null;
-
 	/**
 	 * @param Logger $pLogger
-	 * @param ScriptLoaderMap $pScriptLoaderMap
 	 */
-	public function __construct(Logger $pLogger, ScriptLoaderMap $pScriptLoaderMap)
+	public function __construct(Logger $pLogger)
 	{
 		$this->_pLogger = $pLogger;
-		$this->_pScriptLoaderMap = $pScriptLoaderMap;
-	}
-
-	/**
-	 *
-	 */
-	public function addCustomRewriteRules() {
-		$pDetailView = $this->getEstateDetailView();
-		$detailPageId = $pDetailView->getPageId();
-
-		if ($detailPageId != null) {
-			$pagename = get_page_uri($detailPageId);
-			$pageUrl = $this->rebuildSlugTaxonomy($detailPageId);
-			add_rewrite_rule('^('.preg_quote($pageUrl).')/([0-9]+)/?$',
-				'index.php?pagename='.urlencode($pagename).'&view=$matches[1]&estate_id=$matches[2]','top');
-		}
-
-		add_rewrite_rule('^distinctfields-json/?$', 'index.php?distinctfields_json=1', 'top');
-		add_rewrite_rule('^document-pdf/([^\/]+)/([0-9]+)/?$', 'index.php?document_pdf=1&view=$matches[1]&estate_id=$matches[2]', 'top');
 	}
 
 	/**
@@ -253,28 +225,6 @@ class ContentFilter
 			unset($filterableFields[$positionGeoPos]);
 		}
 		return $filterableFields;
-	}
-
-	/**
-	 * @param int $page
-	 * @return string
-	 */
-	private function rebuildSlugTaxonomy($page)
-	{
-		$pPost = get_post($page);
-
-		if ($pPost === null) {
-			return;
-		}
-
-		$listpermalink = $pPost->post_name;
-		$parent = wp_get_post_parent_id($page);
-
-		if ($parent) {
-			$listpermalink = $this->rebuildSlugTaxonomy($parent).'/'.$listpermalink;
-		}
-
-		return $listpermalink;
 	}
 
 	/**

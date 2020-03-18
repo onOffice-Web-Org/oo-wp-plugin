@@ -74,9 +74,11 @@ add_action('plugins_loaded', function() use ($pDI) {
 });
 
 add_action('init', function() use ($pDI) {
-	$pDI->get(RewriteRuleBuilder::class)->addCustomRewriteTags();
+	$pRewriteRuleBuilder = $pDI->get(RewriteRuleBuilder::class);
+	$pRewriteRuleBuilder->addCustomRewriteTags();
+	$pRewriteRuleBuilder->addStaticRewriteRules();
+	$pRewriteRuleBuilder->addDynamicRewriteRules();
 });
-add_action('init', [$pContentFilter, 'addCustomRewriteRules']);
 
 // This hook [wp] is one effective place to perform any high-level filtering or validation,
 // following queries, but before WordPress does any routing, processing, or handling.
