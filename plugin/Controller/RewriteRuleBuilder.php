@@ -23,11 +23,50 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\WP\WPPageWrapper;
+
 class RewriteRuleBuilder
 {
+	/** @var DataDetailViewHandler */
+	private $_pDataDetailViewHandler;
+
+	/** @var WPPageWrapper */
+	private $_pWPPageWrapper;
+
+	/**
+	 * @param DataDetailViewHandler $pDataDetailViewHandler
+	 * @param WPPageWrapper $pWPPageWrapper
+	 */
+	public function __construct(
+		DataDetailViewHandler $pDataDetailViewHandler,
+		WPPageWrapper $pWPPageWrapper)
+	{
+		$this->_pDataDetailViewHandler = $pDataDetailViewHandler;
+		$this->_pWPPageWrapper = $pWPPageWrapper;
+	}
+
 	public function addCustomRewriteTags()
 	{
 		add_rewrite_tag('%estate_id%', '([^&]+)');
 		add_rewrite_tag('%view%', '([^&]+)');
+	}
+
+	public function addStaticRewriteRules()
+	{
+		add_rewrite_rule('^distinctfields-json/?$', 'index.php?distinctfields_json=1', 'top');
+		add_rewrite_rule('^document-pdf/([^\/]+)/([0-9]+)/?$',
+			'index.php?document_pdf=1&view=$matches[1]&estate_id=$matches[2]', 'top');
+	}
+
+	public function addDynamicRewriteRules()
+	{
+		$detailPageId = $this->_pDataDetailViewHandler->getDetailView()->getPageId();
+		if ($detailPageId !== 0) {
+			$pagename = $this->_pWPPageWrapper->getPageUriByPageId($detailPageId);
+			$pageUrl = $this->_pWPPageWrapper->getPageLinkById($detailPageId);
+			add_rewrite_rule('^('.preg_quote($pageUrl).')/([0-9]+)/?$',
+				'index.php?pagename='.urlencode($pagename).'&view=$matches[1]&estate_id=$matches[2]','top');
+		}
 	}
 }
