@@ -166,4 +166,10 @@ class TestClassContentFilterShortCodeEstateDetail
 		$expectedFile = __DIR__.'/resources/templates/TestClassContentFilterShortCodeEstateDetail_expected.txt';
 		$this->assertStringEqualsFile($expectedFile, $pSubject->render(['units' => 'test_units']));
 	}
+
+	public function testGetViewName()
+	{
+		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
+		$this->assertSame('detail', $pSubject->getViewName());
+	}
 }

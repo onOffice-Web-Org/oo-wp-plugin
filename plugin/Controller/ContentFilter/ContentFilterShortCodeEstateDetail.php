@@ -76,4 +76,12 @@ class ContentFilterShortCodeEstateDetail
 		$result = $pTemplate->render();
 		return $result;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getViewName(): string
+	{
+		return $this->_pDataDetailViewHandler->getDetailView()->getName();
+	}
 }
