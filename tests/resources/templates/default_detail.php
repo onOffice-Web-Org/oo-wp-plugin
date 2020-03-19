@@ -29,37 +29,37 @@ use onOffice\WPlugin\EstateDetail;
 (function(EstateDetail $pEstates) {
 	$pEstates->resetEstateIterator();
 	$currentEstate = $pEstates->estateIterator();
-    echo $pEstates->getEstateUnits();
-    foreach ($currentEstate as $field => $value) {
-        if (is_numeric($value) && 0 == $value) {
-            continue;
-        }
-        echo esc_html($pEstates->getFieldLabel($field)) . ': '
-            . (is_array($value) ? implode(', ', $value) : $value) . "\n";
-    };
+	echo $pEstates->getEstateUnits();
+	foreach ($currentEstate as $field => $value) {
+		if (is_numeric($value) && 0 == $value) {
+			continue;
+		}
+		echo esc_html($pEstates->getFieldLabel($field)) . ': '
+			. (is_array($value) ? implode(', ', $value) : $value) . "\n";
+	};
 
-    foreach ($pEstates->getEstateContacts() as $contactData) {
-        echo '* ' . esc_html__('Contact person', 'onoffice') . ': '
-            . esc_html($contactData['Vorname'] . ' ' . $contactData['Name']) . "\n";
-    }
+	foreach ($pEstates->getEstateContacts() as $contactData) {
+		echo '* ' . esc_html__('Contact person', 'onoffice') . ': '
+			. esc_html($contactData['Vorname'] . ' ' . $contactData['Name']) . "\n";
+	}
 
-    foreach ($pEstates->getEstateMovieLinks() as $movieLink) {
-        echo '<a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '">'
-            . esc_html($movieLink['title']) . '</a>' . "\n";
-    }
+	foreach ($pEstates->getEstateMovieLinks() as $movieLink) {
+		echo '<a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '">'
+			. esc_html($movieLink['title']) . '</a>' . "\n";
+	}
 
-    foreach ($pEstates->getMovieEmbedPlayers(['width' => 500]) as $movieInfos) {
-        echo esc_html($movieInfos['title']) . $movieInfos['player'];
-    }
+	foreach ($pEstates->getMovieEmbedPlayers(['width' => 500]) as $movieInfos) {
+		echo esc_html($movieInfos['title']) . $movieInfos['player'];
+	}
 
-    foreach ($pEstates->getEstatePictures() as $id) {
-        echo $pEstates->getEstatePictureTitle($id) . ': '
-            . $pEstates->getEstatePictureUrl($id, ['width' => 300, 'height' => 400]) . "\n";
-    }
+	foreach ($pEstates->getEstatePictures() as $id) {
+		echo $pEstates->getEstatePictureTitle($id) . ': '
+			. $pEstates->getEstatePictureUrl($id, ['width' => 300, 'height' => 400]) . "\n";
+	}
 
-    if ($pEstates->getDocument() != '') {
-        echo esc_html_e('Documents', 'onoffice') . "\n"
-            . $pEstates->getDocument() . "\n";
-    }
-    echo $pEstates->getSimilarEstates();
+	if ($pEstates->getDocument() != '') {
+		echo esc_html_e('Documents', 'onoffice') . "\n"
+			. $pEstates->getDocument() . "\n";
+	}
+	echo $pEstates->getSimilarEstates();
 })($pEstates);
