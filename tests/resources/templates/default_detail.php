@@ -25,44 +25,41 @@ namespace onOffice\tests\resources\templates;
 
 use onOffice\WPlugin\EstateDetail;
 
-$pClosure = function(EstateDetail $pEstates): \Generator {
+/* @var $pEstates EstateDetail */
+(function(EstateDetail $pEstates) {
 	$pEstates->resetEstateIterator();
 	$currentEstate = $pEstates->estateIterator();
-    yield $pEstates->getEstateUnits();
+    echo $pEstates->getEstateUnits();
     foreach ($currentEstate as $field => $value) {
         if (is_numeric($value) && 0 == $value) {
             continue;
         }
-        yield esc_html($pEstates->getFieldLabel($field)) . ': '
+        echo esc_html($pEstates->getFieldLabel($field)) . ': '
             . (is_array($value) ? implode(', ', $value) : $value) . "\n";
     };
 
     foreach ($pEstates->getEstateContacts() as $contactData) {
-        yield '* ' . esc_html__('Contact person', 'onoffice') . ': '
+        echo '* ' . esc_html__('Contact person', 'onoffice') . ': '
             . esc_html($contactData['Vorname'] . ' ' . $contactData['Name']) . "\n";
     }
 
     foreach ($pEstates->getEstateMovieLinks() as $movieLink) {
-        yield '<a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '">'
+        echo '<a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '">'
             . esc_html($movieLink['title']) . '</a>' . "\n";
     }
 
     foreach ($pEstates->getMovieEmbedPlayers(['width' => 500]) as $movieInfos) {
-        yield esc_html($movieInfos['title']) . $movieInfos['player'];
+        echo esc_html($movieInfos['title']) . $movieInfos['player'];
     }
 
     foreach ($pEstates->getEstatePictures() as $id) {
-        yield $pEstates->getEstatePictureTitle($id) . ': '
+        echo $pEstates->getEstatePictureTitle($id) . ': '
             . $pEstates->getEstatePictureUrl($id, ['width' => 300, 'height' => 400]) . "\n";
     }
 
     if ($pEstates->getDocument() != '') {
-        yield esc_html_e('Documents', 'onoffice') . "\n"
+        echo esc_html_e('Documents', 'onoffice') . "\n"
             . $pEstates->getDocument() . "\n";
     }
-    yield $pEstates->getSimilarEstates();
-};
-
-/* @var $pEstates EstateDetail */
-echo implode('', iterator_to_array($pClosure($pEstates)));
-unset($pClosure);
+    echo $pEstates->getSimilarEstates();
+})($pEstates);
