@@ -32,7 +32,7 @@ use onOffice\WPlugin\Controller\SortList\SortListDataModel;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
-use onOffice\WPlugin\Factory\EstateDetailFactory;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
@@ -61,7 +61,7 @@ class ContentFilterShortCodeEstateList
 	/** @var DefaultFilterBuilderFactory */
 	private $_pDefaultFilterBuilderFactory;
 
-	/** @var EstateDetailFactory */
+	/** @var EstateListFactory */
 	private $_pEstateDetailFactory;
 
 	/** @var Template */
@@ -77,7 +77,7 @@ class ContentFilterShortCodeEstateList
 	 * @param SearchParametersModelBuilderEstate $pSearchParametersModelBuilderEstate
 	 * @param DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator
 	 * @param DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory
-	 * @param EstateDetailFactory $pEstateDetailFactory
+	 * @param EstateListFactory $pEstateDetailFactory
 	 * @param Template $pTemplate
 	 * @param SearchParameters $pSearchParameters
 	 */
@@ -88,7 +88,7 @@ class ContentFilterShortCodeEstateList
 		SearchParametersModelBuilderEstate $pSearchParametersModelBuilderEstate,
 		DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator,
 		DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory,
-		EstateDetailFactory $pEstateDetailFactory,
+		EstateListFactory $pEstateDetailFactory,
 		Template $pTemplate,
 		SearchParameters $pSearchParameters)
 	{

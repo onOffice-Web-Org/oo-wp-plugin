@@ -29,7 +29,7 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\EstateList;
-use onOffice\WPlugin\Factory\EstateDetailFactory;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use WP_UnitTestCase;
 
@@ -38,7 +38,7 @@ use WP_UnitTestCase;
  *
  */
 
-class TestClassEstateDetailFactory
+class TestClassEstateListFactory
 	extends WP_UnitTestCase
 {
 	/** @var Container */
@@ -63,7 +63,7 @@ class TestClassEstateDetailFactory
 			->will($this->returnValue($pDataDetailView));
 
 		$this->_pContainer->set(DataDetailViewHandler::class, $pDataDetailViewHandler);
-		$pSubject = $this->_pContainer->get(EstateDetailFactory::class);
+		$pSubject = $this->_pContainer->get(EstateListFactory::class);
 
 		$pDataDetail = $pSubject->createEstateDetail(3);
 		$this->assertEquals(3, $pDataDetail->getEstateId());
@@ -81,7 +81,7 @@ class TestClassEstateDetailFactory
 
 	public function testCreateEstateList()
 	{
-		$pSubject = $this->_pContainer->get(EstateDetailFactory::class);
+		$pSubject = $this->_pContainer->get(EstateListFactory::class);
 		$pDataListView = new DataListView(123, 'testEstateListView');
 		$pResult = $pSubject->createEstateList($pDataListView);
 		$this->assertInstanceOf(EstateList::class, $pResult);

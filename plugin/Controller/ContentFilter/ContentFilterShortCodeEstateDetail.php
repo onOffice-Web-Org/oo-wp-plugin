@@ -24,7 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
-use onOffice\WPlugin\Factory\EstateDetailFactory;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
@@ -36,7 +36,7 @@ class ContentFilterShortCodeEstateDetail
 	/** @var Template */
 	private $_pTemplate;
 
-	/** @var EstateDetailFactory */
+	/** @var EstateListFactory */
 	private $_pEstateDetailFactory;
 
 	/** @var WPQueryWrapper */
@@ -45,13 +45,13 @@ class ContentFilterShortCodeEstateDetail
 	/**
 	 * @param DataDetailViewHandler $pDataDetailViewHandler
 	 * @param Template $pTemplate
-	 * @param EstateDetailFactory $pEstateDetailFactory
+	 * @param EstateListFactory $pEstateDetailFactory
 	 * @param WPQueryWrapper $pWPQueryWrapper
 	 */
 	public function __construct(
 		DataDetailViewHandler $pDataDetailViewHandler,
 		Template $pTemplate,
-		EstateDetailFactory $pEstateDetailFactory,
+		EstateListFactory $pEstateDetailFactory,
 		WPQueryWrapper $pWPQueryWrapper)
 	{
 		$this->_pTemplate = $pTemplate;

@@ -34,7 +34,7 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
  *
  */
 
-class EstateDetailFactory
+class EstateListFactory
 {
 	/** @var DataDetailViewHandler */
 	private $_pDataDetailViewHandler;

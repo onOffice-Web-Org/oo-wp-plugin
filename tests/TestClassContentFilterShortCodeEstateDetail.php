@@ -30,7 +30,7 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateDetail
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\EstateDetail;
-use onOffice\WPlugin\Factory\EstateDetailFactory;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
@@ -150,7 +150,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		$pWPQueryWrapper->expects($this->once())
 			->method('getWPQuery')
 			->will($this->returnValue($pWPQuery));
-		$pEstateDetailFactory = $this->getMockBuilder(EstateDetailFactory::class)
+		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$pEstateDetailFactory->expects($this->once())
@@ -161,7 +161,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		$this->_pContainer->set(DataDetailView::class, $pDataDetailView);
 		$this->_pContainer->set(WPQueryWrapper::class, $pWPQueryWrapper);
 		$this->_pContainer->set(DataDetailViewHandler::class, $pDataDetailViewHandler);
-		$this->_pContainer->set(EstateDetailFactory::class, $pEstateDetailFactory);
+		$this->_pContainer->set(EstateListFactory::class, $pEstateDetailFactory);
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
 		$expectedFile = __DIR__.'/resources/templates/TestClassContentFilterShortCodeEstateDetail_expected.txt';
 		$this->assertStringEqualsFile($expectedFile, $pSubject->render(['units' => 'test_units']));

@@ -31,7 +31,7 @@ use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\EstateList;
-use onOffice\WPlugin\Factory\EstateDetailFactory;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Template;
 
@@ -63,7 +63,7 @@ class TestClassContentFilterShortCodeEstateList
 			->setMethods(['addFieldsAddressEstate'])
 			->getMock();
 
-		$pEstateDetailFactory = $this->getMockBuilder(EstateDetailFactory::class)
+		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
 			->disableOriginalConstructor()
 			->setMethods(['createEstateList'])
 			->getMock();
@@ -74,7 +74,7 @@ class TestClassContentFilterShortCodeEstateList
 
 		$this->_pContainer->set(DataListViewFactory::class, $pDataListViewFactory);
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
-		$this->_pContainer->set(EstateDetailFactory::class, $pEstateDetailFactory);
+		$this->_pContainer->set(EstateListFactory::class, $pEstateDetailFactory);
 		$this->_pContainer->set(Template::class, $pTemplate);
 	}
 
