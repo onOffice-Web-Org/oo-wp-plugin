@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin\Controller;
 
-use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use WP_Post;

@@ -76,6 +76,6 @@ class TestClassContentFilterShortCodeBuilder
 
 	public function testGetClasses()
 	{
-		$this->assertCount(4, $this->_pSubject->getClasses());
+		$this->assertCount(5, $this->_pSubject->getClasses());
 	}
 }

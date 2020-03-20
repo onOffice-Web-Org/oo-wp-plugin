@@ -23,19 +23,38 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
+use DI\DependencyException;
+use DI\NotFoundException;
+use Exception;
+use onOffice\WPlugin\DataView\UnknownViewException;
+use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Utility\Logger;
+
 class ContentFilterShortCodeEstate
 	implements ContentFilterShortCode
 {
 	/** @var ContentFilterShortCodeEstateDetail */
 	private $_pContentFilterShortCodeEstateDetail;
 
+	/** @var ContentFilterShortCodeEstateList */
+	private $_pContentFilterShortCodeEstateList;
+
+	/** @var Logger */
+	private $_pLogger;
+
 	/**
 	 * @param ContentFilterShortCodeEstateDetail $pContentFilterShortCodeEstateDetail
+	 * @param ContentFilterShortCodeEstateList $pContentFilterShortCodeEstateList
+	 * @param Logger $pLogger
 	 */
 	public function __construct(
-		ContentFilterShortCodeEstateDetail $pContentFilterShortCodeEstateDetail)
+		ContentFilterShortCodeEstateDetail $pContentFilterShortCodeEstateDetail,
+		ContentFilterShortCodeEstateList $pContentFilterShortCodeEstateList,
+		Logger $pLogger)
 	{
 		$this->_pContentFilterShortCodeEstateDetail = $pContentFilterShortCodeEstateDetail;
+		$this->_pContentFilterShortCodeEstateList = $pContentFilterShortCodeEstateList;
+		$this->_pLogger = $pLogger;
 	}
 
 	/**
@@ -44,11 +63,31 @@ class ContentFilterShortCodeEstate
 	 */
 	public function replaceShortCodes(array $attributesInput): string
 	{
-		$view = $attributesInput['view'] ?? '';
-		if ($view === $this->_pContentFilterShortCodeEstateDetail->getViewName()) {
-			return $this->_pContentFilterShortCodeEstateDetail->render($attributesInput);
+		try {
+			return $this->buildReplacementString($attributesInput);
+		} catch (Exception $pException) {
+			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
-		return '';
+	}
+
+	/**
+	 * @param array $attributesInput
+	 * @return string
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 * @throws UnknownViewException
+	 */
+	private function buildReplacementString(array $attributesInput): string
+	{
+		$attributes = shortcode_atts([
+			'view' => null,
+			'units' => null,
+		], $attributesInput);
+		if ($attributes['view'] === $this->_pContentFilterShortCodeEstateDetail->getViewName()) {
+			return $this->_pContentFilterShortCodeEstateDetail->render($attributes);
+		}
+		return $this->_pContentFilterShortCodeEstateList->render($attributes);
 	}
 
 	/**

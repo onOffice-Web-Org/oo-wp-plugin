@@ -40,7 +40,6 @@ define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Cache\CacheHandler;
-use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
@@ -64,7 +63,6 @@ $pDIBuilder = new ContainerBuilder();
 $pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 $pDI = $pDIBuilder->build();
 
-$pContentFilter = $pDI->get(ContentFilter::class);
 $pAdminViewController = new AdminViewController();
 $pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
 $pDI->get(ScriptLoaderRegistrator::class)->generate();
@@ -109,8 +107,6 @@ add_action('plugins_loaded', function() {
 
 // "Settings" link in plugins list
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewController, 'pluginSettingsLink']);
-
-add_shortcode('oo_estate', [$pContentFilter, 'registerEstateShortCodes']);
 
 $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 

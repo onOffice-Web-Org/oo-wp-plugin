@@ -25,7 +25,6 @@ namespace onOffice\WPlugin\Installer;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use WP_Rewrite;
 use function delete_option;

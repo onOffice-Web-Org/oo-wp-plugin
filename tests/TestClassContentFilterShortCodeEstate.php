@@ -27,6 +27,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstate;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateDetail;
+use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateList;
 
 class TestClassContentFilterShortCodeEstate
 	extends \WP_UnitTestCase
@@ -48,8 +49,14 @@ class TestClassContentFilterShortCodeEstate
 				->getMock();
 		$pContentFilterShortCodeEstateDetail
 			->method('getViewName')->will($this->returnValue('default_view'));
+		$pContentFilterShortCodeEstateList = $this->getMockBuilder
+			(ContentFilterShortCodeEstateList::class)
+				->disableOriginalConstructor()
+				->getMock();
 		$this->_pContainer->set(ContentFilterShortCodeEstateDetail::class,
 			$pContentFilterShortCodeEstateDetail);
+		$this->_pContainer->set(ContentFilterShortCodeEstateList::class,
+			$pContentFilterShortCodeEstateList);
 	}
 
 	public function testGetTag()
@@ -64,15 +71,20 @@ class TestClassContentFilterShortCodeEstate
 			'view' => 'default_view',
 			'units' => 'test_units',
 		];
-		$pContentFilterDetail = $this->_pContainer->get
-			(ContentFilterShortCodeEstateDetail::class);
+		$pContentFilterDetail = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
 		$pContentFilterDetail->expects($this->once())
 			->method('render')
 			->with($input)
 			->will($this->returnValue('rendered detail'));
 
+		$pContentFilterList = $this->_pContainer->get(ContentFilterShortCodeEstateList::class);
+		$pContentFilterList->expects($this->once())
+			->method('render')
+			->with(['view' => 'other', 'units' => null])
+			->will($this->returnValue('rendered list'));
+
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstate::class);
 		$this->assertSame('rendered detail', $pSubject->replaceShortCodes($input));
-		$this->assertSame('', $pSubject->replaceShortCodes(['view' => 'other']));
+		$this->assertSame('rendered list', $pSubject->replaceShortCodes(['view' => 'other']));
 	}
 }
