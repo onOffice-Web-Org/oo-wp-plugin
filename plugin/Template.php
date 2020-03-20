@@ -23,6 +23,8 @@ namespace onOffice\WPlugin;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Template\TemplateCallbackBuilder;
 use const WP_PLUGIN_DIR;
@@ -66,11 +68,11 @@ class Template
 		$this->_templateName = $templateName;
 	}
 
-
 	/**
 	 *
 	 * @return string
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function render(): string
@@ -107,6 +109,8 @@ class Template
 	 * @param string $templatePath
 	 * @param Container $pContainer
 	 * @return string
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	private static function getIncludeContents(array $templateData, $templatePath, Container $pContainer)
