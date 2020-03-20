@@ -32,6 +32,8 @@ use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\InputVariableReader;
+use onOffice\WPlugin\Controller\InputVariableReaderParser;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
@@ -122,15 +124,17 @@ class FormData
 		$pContainer = $pContainerBuilder->build();
 		$pSearchcriteriaFields = $pContainer->get(SearchcriteriaFields::class);
 
+		$pInputVariableReaderAddress = new InputVariableReaderParser();
+
 		foreach ($this->_values as $input => $value) {
 			$inputConfigName = $pSearchcriteriaFields->getFieldNameOfInput($input);
 			$inputModule = $inputs[$inputConfigName] ?? null;
 
 			if (onOfficeSDK::MODULE_ADDRESS === $inputModule) {
 				$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ADDRESS, $input);
-				if ($pField->getType() == FieldTypes::FIELD_TYPE_BOOLEAN &&
-					$value == 'y') {
-					$value = 1;
+
+				if ($pField->getType() == FieldTypes::FIELD_TYPE_BOOLEAN) {
+					$value = $pInputVariableReaderAddress->parseBool($value);
 				}
 				$addressData[$input] = $value;
 			}
