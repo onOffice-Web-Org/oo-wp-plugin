@@ -25,8 +25,6 @@ namespace onOffice;
 
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientActionGetPdf;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
 use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\Filesystem\Filesystem;
@@ -69,7 +67,6 @@ return [
 		->constructorParameter('resourceType', ''),
 	RegionController::class => autowire()
 		->constructorParameter('init', false),
-	ContentFilterShortCodeAddressEnvironment::class => autowire(ContentFilterShortCodeAddressEnvironmentDefault::class),
 	FormPostConfiguration::class => autowire(FormPostConfigurationDefault::class),
 	FormPostOwnerConfiguration::class => autowire(FormPostOwnerConfigurationDefault::class),
 	FormPostContactConfiguration::class => autowire(FormPostContactConfigurationDefault::class),
