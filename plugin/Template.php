@@ -98,7 +98,7 @@ class Template
 
 	/** @return string */
 	protected function getTemplateName(): string
-	{ return $this->_templateName; }
+		{ return $this->_templateName; }
 
 	/**
 	 *
@@ -112,7 +112,6 @@ class Template
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-
 	private static function getIncludeContents(array $templateData, $templatePath, Container $pContainer)
 	{
 		// vars which might be used in template
@@ -131,13 +130,9 @@ class Template
 		return ob_get_clean();
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
 	protected function buildFilePath(): string
 	{
 		return WP_PLUGIN_DIR.'/'.$this->_templateName;
@@ -145,12 +140,9 @@ class Template
 
 
 	/**
-	 *
 	 * @param string $templateName
 	 * @return self
-	 *
 	 */
-
 	public function withTemplateName(string $templateName): self
 	{
 		$pNewTemplate = clone $this;
@@ -175,19 +167,19 @@ class Template
 	 */
 	public function withAddressList(AddressList $pAddressList): self
 	{
-		$pThisCloned = clone $this;
-		$pThisCloned->_pAddressList = $pAddressList;
-		return $pThisCloned;
+		$pClonedThis = clone $this;
+		$pClonedThis->_pAddressList = $pAddressList;
+		return $pClonedThis;
 	}
 
 	/**
 	 * @param EstateListBase $pEstateList
 	 * @return $this
 	 */
-	public function setEstateList(EstateListBase $pEstateList): self
+	public function withEstateList(EstateListBase $pEstateList): self
 	{
-		$this->_pEstateList = $pEstateList;
-		return $this;
+		$pClonedThis = clone $this;
+		$pClonedThis->_pEstateList = $pEstateList;
+		return $pClonedThis;
 	}
-
 }

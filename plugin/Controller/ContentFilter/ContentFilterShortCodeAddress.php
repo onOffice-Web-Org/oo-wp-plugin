@@ -94,10 +94,9 @@ class ContentFilterShortCodeAddress
 		$pAddressList->loadAddresses($page);
 		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
-		$pTemplate = $this->_pEnvironment->getTemplate()->withTemplateName($templateName);
-		$pTemplate->withAddressList($pAddressList);
-
-		return $pTemplate;
+		return $this->_pEnvironment->getTemplate()
+			->withTemplateName($templateName)
+			->withAddressList($pAddressList);
 	}
 
 	/**

@@ -124,7 +124,8 @@ class TestClassContentFilterShortCodeAddress
 		$pTemplateMock->method('render')->will($this->returnValue('I am the returned text.'));
 
 		$pTemplateMock->expects($this->once())->method('withAddressList')
-			->with($this->anything());
+			->with($this->anything())
+			->will($this->returnSelf());
 		$pTemplateMock->expects($this->once())->method('withTemplateName')->with('adressList-01')
 			->will($this->returnSelf());
 
@@ -142,6 +143,9 @@ class TestClassContentFilterShortCodeAddress
 	public function testReplaceShortCodesException()
 	{
 		$pTemplateMock = $this->_pEnvironment->getTemplate();
+		$pTemplateMock->expects($this->once())
+			->method('withAddressList')
+			->will($this->returnSelf());
 		$pException = new Exception(__CLASS__);
 		$pTemplateMock->expects($this->once())->method('render')->will($this->throwException($pException));
 		$pLogger = $this->_pEnvironment->getLogger();

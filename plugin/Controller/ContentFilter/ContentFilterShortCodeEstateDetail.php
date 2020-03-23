@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Template;
@@ -63,6 +65,8 @@ class ContentFilterShortCodeEstateDetail
 	/**
 	 * @param array $attributes
 	 * @return string
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	public function render(array $attributes): string
 	{
@@ -72,9 +76,9 @@ class ContentFilterShortCodeEstateDetail
 		$pEstateDetailList = $this->_pEstateDetailFactory->createEstateDetail($estateId);
 		$pEstateDetailList->setUnitsViewName($attributes['units'] ?? null);
 		$pEstateDetailList->loadSingleEstate($estateId);
-		$pTemplate->setEstateList($pEstateDetailList);
-		$result = $pTemplate->render();
-		return $result;
+		return $pTemplate
+			->withEstateList($pEstateDetailList)
+			->render();
 	}
 
 	/**

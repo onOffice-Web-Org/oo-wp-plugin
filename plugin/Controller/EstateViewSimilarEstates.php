@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use Generator;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
@@ -115,12 +117,12 @@ class EstateViewSimilarEstates
 		}
 	}
 
-
 	/**
 	 *
 	 * @param int $mainEstateId
 	 * @return string
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function generateHtmlOutput(int $mainEstateId): string
@@ -132,11 +134,10 @@ class EstateViewSimilarEstates
 		}
 
 		$pEstateList = $this->_estateListsByMainId[$mainEstateId];
-		$pTemplate = $this->_pEnvironment->getTemplate($templateName);
-		$pTemplate->setEstateList($pEstateList);
-		$htmlOutput = $pTemplate->render();
-
-		return $htmlOutput;
+		return $this->_pEnvironment
+			->getTemplate($templateName)
+			->withEstateList($pEstateList)
+			->render();
 	}
 
 

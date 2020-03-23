@@ -135,10 +135,10 @@ class ContentFilterShortCodeEstateList
 			$pEstateList->setUnitsViewName($attributes['units']);
 			$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 
-			$pTemplate = $this->_pTemplate->withTemplateName($pListViewWithSortParams->getTemplate());
-			$pTemplate->setEstateList($pEstateList);
 			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery()->get('page', 1));
-
+			$pTemplate = $this->_pTemplate
+				->withTemplateName($pListViewWithSortParams->getTemplate())
+				->withEstateList($pEstateList);
 			$result = $pTemplate->render();
 		}
 		return $result;
