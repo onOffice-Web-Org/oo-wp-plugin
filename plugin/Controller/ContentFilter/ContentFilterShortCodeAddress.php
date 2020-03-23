@@ -72,20 +72,22 @@ class ContentFilterShortCodeAddress
 	 * @param Container $pContainer
 	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchParametersModelBuilder $pSearchParametersModelBuilder
+	 * @param AddressList $pAddressList
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
 	 */
 	public function __construct(
 		Container $pContainer,
 		FieldsCollectionBuilderShort $pBuilderShort,
-		SearchParametersModelBuilder $pSearchParametersModelBuilder )
+		SearchParametersModelBuilder $pSearchParametersModelBuilder,
+		AddressList $pAddressList)
 	{
 		$this->_pBuilderShort = $pBuilderShort;
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 
 		$this->_pLogger = $pContainer->get(Logger::class);
 		$this->_pDataListFactory = $pContainer->get(DataListViewFactoryAddress::class);
-		$this->_pAddressList = $pContainer->get(AddressList::class);
+		$this->_pAddressList = $pAddressList;
 		$this->_pTemplate = $pContainer->get(Template::class);
 		$this->_pWPQueryWrapper = $pContainer-> get(WPQueryWrapper::class);
 	}
