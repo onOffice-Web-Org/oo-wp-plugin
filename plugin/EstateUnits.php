@@ -133,7 +133,8 @@ class EstateUnits
 		$pEstateList->loadEstates();
 
 		$templateName = $pDataView->getTemplate();
-		return $this->_pEstateUnitsConfiguration->getTemplate($templateName)
+		return $this->_pEstateUnitsConfiguration->getTemplate()
+			->withTemplateName($templateName)
 			->withEstateList($pEstateList)
 			->render();
 	}

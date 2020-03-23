@@ -70,7 +70,7 @@ class TestClassContentFilterShortCodeEstateList
 		$pEstateList = $this->generateEstateList($pDataListView);
 		$pEstateDetailFactory->method('createEstateList')->will($this->returnValue($pEstateList));
 
-		$pTemplate = new TemplateMocker('', __DIR__.'/resources/templates');
+		$pTemplate = new TemplateMocker(__DIR__.'/resources/templates');
 
 		$this->_pContainer->set(DataListViewFactory::class, $pDataListViewFactory);
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);

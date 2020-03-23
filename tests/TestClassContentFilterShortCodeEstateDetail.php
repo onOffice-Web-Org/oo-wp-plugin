@@ -129,7 +129,7 @@ class TestClassContentFilterShortCodeEstateDetail
 
 	public function testRender()
 	{
-		$pTemplateMocker = new TemplateMocker('');
+		$pTemplateMocker = new TemplateMocker();
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 			->setMethods(['getDetailView'])
 			->getMock();

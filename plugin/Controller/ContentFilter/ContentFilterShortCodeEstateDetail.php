@@ -73,7 +73,7 @@ class ContentFilterShortCodeEstateDetail
 		$pDetailView = $this->_pDataDetailViewHandler->getDetailView();
 		$pTemplate = $this->_pTemplate->withTemplateName($pDetailView->getTemplate());
 		$estateId = $this->_pWPQueryWrapper->getWPQuery()->query_vars['estate_id'] ?? 0;
-		$pEstateDetailList = $this->_pEstateDetailFactory->createEstateDetail($estateId);
+		$pEstateDetailList = $this->_pEstateDetailFactory->createEstateDetail((int)$estateId);
 		$pEstateDetailList->setUnitsViewName($attributes['units'] ?? null);
 		$pEstateDetailList->loadSingleEstate($estateId);
 		return $pTemplate

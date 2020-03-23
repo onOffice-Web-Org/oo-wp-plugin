@@ -69,7 +69,6 @@ class TestClassContentFilterShortCodeAddress
 
 		$pTemplateMock = $this->getMockBuilder(Template::class)
 			->setMethods(['render', 'withAddressList', 'withTemplateName'])
-			->setConstructorArgs(['adressList-01'])
 			->getMock();
 		$pTemplateMock->method('withTemplateName')->will($this->returnSelf()); // should be a clone!
 		$pLogger = $this->getMockBuilder(Logger::class)

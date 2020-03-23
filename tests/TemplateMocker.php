@@ -34,30 +34,19 @@ class TemplateMocker
 	extends Template
 {
 	/** @var string */
-	private $_dir = null;
-
+	private $_dir;
 
 	/**
-	 *
-	 * @param string $templateName
 	 * @param string $dir
-	 *
 	 */
-
-	public function __construct(string $templateName, string $dir = null)
+	public function __construct(string $dir = null)
 	{
-		parent::__construct($templateName);
-
 		$this->_dir = $dir ?? realpath(__DIR__);
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
 	protected function buildFilePath(): string
 	{
 		return $this->_dir.'/'.$this->getTemplateName();

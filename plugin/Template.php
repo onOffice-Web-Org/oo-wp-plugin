@@ -44,37 +44,23 @@ class Template
 	/** */
 	const KEY_ADDRESSLIST = 'addresslist';
 
-	/** @var EstateListBase */
+	/** @var string */
+	private $_templateName = '';
+
+	/** @var EstateListBase|null */
 	private $_pEstateList = null;
 
-	/** @var string */
-	private $_templateName = null;
-
-	/** @var Form */
+	/** @var Form|null */
 	private $_pForm = null;
 
-	/** @var AddressList */
+	/** @var AddressList|null */
 	private $_pAddressList = null;
 
-
 	/**
-	 *
-	 * @param string $templateName
-	 *
-	 */
-
-	public function __construct(string $templateName)
-	{
-		$this->_templateName = $templateName;
-	}
-
-	/**
-	 *
 	 * @return string
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-
 	public function render(): string
 	{
 		$templateData = [

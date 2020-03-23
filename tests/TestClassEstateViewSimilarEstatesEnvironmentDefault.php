@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use Closure;
+use Exception;
 use onOffice\tests\EstateListMocker;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateViewSimilarEstatesEnvironmentDefault;
@@ -44,7 +45,6 @@ class TestClassEstateViewSimilarEstatesEnvironmentDefault
 	/**
 	 *
 	 */
-
 	public function testGetEstateList()
 	{
 		$pEstateViewSimilarEstatesEnvironmentDefault = $this->getNewInstance();
@@ -53,34 +53,25 @@ class TestClassEstateViewSimilarEstatesEnvironmentDefault
 		$this->assertFalse($pEstateList->getFormatOutput());
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function testGetTemplate()
 	{
 		$pInstance = $this->getNewInstance();
-		$templatePath = '/test/of/template.php';
-		$pTemplate = $pInstance->getTemplate($templatePath);
+		$pTemplate = $pInstance->getTemplate();
 		$this->assertInstanceOf(Template::class, $pTemplate);
-		$pClosure = function() { return $this->_templateName; };
-		$newTemplate = Closure::bind($pClosure, $pTemplate, Template::class)();
-		$this->assertEquals($templatePath, $newTemplate);
 	}
 
-
 	/**
-	 *
 	 * @return EstateViewSimilarEstatesEnvironmentDefault
-	 *
+	 * @throws Exception
 	 */
-
 	private function getNewInstance(): EstateViewSimilarEstatesEnvironmentDefault
 	{
 		$pDataView = new DataViewSimilarEstates();
-		$pEstatelist = new EstateListMocker($pDataView);
-		$this->assertTrue($pEstatelist->getFormatOutput());
-		return new EstateViewSimilarEstatesEnvironmentDefault($pDataView, $pEstatelist);
+		$pEstateList = new EstateListMocker($pDataView);
+		$this->assertTrue($pEstateList->getFormatOutput());
+		return new EstateViewSimilarEstatesEnvironmentDefault($pDataView, $pEstateList);
 	}
 }

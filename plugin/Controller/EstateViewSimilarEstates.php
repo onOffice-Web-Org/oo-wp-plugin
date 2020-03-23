@@ -135,7 +135,8 @@ class EstateViewSimilarEstates
 
 		$pEstateList = $this->_estateListsByMainId[$mainEstateId];
 		return $this->_pEnvironment
-			->getTemplate($templateName)
+			->getTemplate()
+			->withTemplateName($templateName)
 			->withEstateList($pEstateList)
 			->render();
 	}

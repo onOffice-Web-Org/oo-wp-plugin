@@ -70,7 +70,6 @@ class TestClassContentFilterShortCodeForm
 	public function prepare()
 	{
 		$this->_pTemplate = $this->getMockBuilder(Template::class)
-			->setConstructorArgs([''])
 			->setMethods(['render', 'getImpressum'])
 			->getMock();
 		$this->_pTemplate->method('render')->will($this->returnValue('testResult'));

@@ -50,12 +50,8 @@ interface EstateViewSimilarEstatesEnvironment
 
 	public function getEstateList(): EstateListBase;
 
-
 	/**
-	 *
-	 * @param string $templateName
-	 *
+	 * @return Template
 	 */
-
-	public function getTemplate(string $templateName): Template;
+	public function getTemplate(): Template;
 }
