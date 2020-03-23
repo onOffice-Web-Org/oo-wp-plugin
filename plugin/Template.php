@@ -158,20 +158,16 @@ class Template
 		return $pNewTemplate;
 	}
 
-
 	/**
-	 *
 	 * @param Form $pForm
 	 * @return $this
-	 *
 	 */
-
-	public function setForm(Form $pForm): self
+	public function withForm(Form $pForm): self
 	{
-		$this->_pForm = $pForm;
-		return $this;
+		$pClonedThis = clone $this;
+		$pClonedThis->_pForm = $pForm;
+		return $pClonedThis;
 	}
-
 
 	/**
 	 * @param AddressList $pAddressList
