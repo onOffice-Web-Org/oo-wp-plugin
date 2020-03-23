@@ -73,6 +73,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+== 2.4.2 ==
+
+**Fixes**
+
+* Fix rendering of regional addition in forms.
+* Fix of multiselect fields with  multiple values in forms.
+* Fix handling of boolean values after form submits.
+
 == 2.4.1 ==
 
 **Fixes**
