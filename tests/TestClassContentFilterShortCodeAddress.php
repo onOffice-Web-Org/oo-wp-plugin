@@ -68,7 +68,7 @@ class TestClassContentFilterShortCodeAddress
 			->getMock();
 
 		$pTemplateMock = $this->getMockBuilder(Template::class)
-			->setMethods(['render', 'setAddressList', 'withTemplateName'])
+			->setMethods(['render', 'withAddressList', 'withTemplateName'])
 			->setConstructorArgs(['adressList-01'])
 			->getMock();
 		$pTemplateMock->method('withTemplateName')->will($this->returnSelf()); // should be a clone!
@@ -123,7 +123,7 @@ class TestClassContentFilterShortCodeAddress
 		$pTemplateMock = $this->_pEnvironment->getTemplate();
 		$pTemplateMock->method('render')->will($this->returnValue('I am the returned text.'));
 
-		$pTemplateMock->expects($this->once())->method('setAddressList')
+		$pTemplateMock->expects($this->once())->method('withAddressList')
 			->with($this->anything());
 		$pTemplateMock->expects($this->once())->method('withTemplateName')->with('adressList-01')
 			->will($this->returnSelf());

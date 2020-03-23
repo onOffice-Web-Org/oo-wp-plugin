@@ -174,26 +174,20 @@ class Template
 
 
 	/**
-	 *
 	 * @param AddressList $pAddressList
 	 * @return $this
-	 *
 	 */
-
-	public function setAddressList(AddressList $pAddressList): self
+	public function withAddressList(AddressList $pAddressList): self
 	{
-		$this->_pAddressList = $pAddressList;
-		return $this;
+		$pThisCloned = clone $this;
+		$pThisCloned->_pAddressList = $pAddressList;
+		return $pThisCloned;
 	}
 
-
 	/**
-	 *
-	 * @param EstateList $pEstateList
+	 * @param EstateListBase $pEstateList
 	 * @return $this
-	 *
 	 */
-
 	public function setEstateList(EstateListBase $pEstateList): self
 	{
 		$this->_pEstateList = $pEstateList;
