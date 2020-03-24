@@ -118,13 +118,15 @@ class FormPostInterest
 
 	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
 	{
-		$addressData = $pFormData->getAddressData();
 		$filledAddressData = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
 			->getAddressDataForEmail($pFormData);
 
 		$filledSearchcriteriaData = $this->_pFormPostInterestConfiguration
 			->getSearchcriteriaFields()
 			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData());
+
+
+		$addressData = $pFormData->getAddressData($this->getFieldsCollection());
 
 		$name = $addressData['Name'] ?? null;
 		$firstName = $addressData['Vorname'] ?? null;

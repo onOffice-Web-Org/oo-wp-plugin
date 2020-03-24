@@ -185,7 +185,7 @@ class TestClassFormPostContact
 				'Plz' => '52068',
 				'Ort' => 'Aachen',
 				'Telefon1' => '0815/2345677',
-				'AGB_akzeptiert' => '1',
+				'AGB_akzeptiert' => true,
 			],
 			'estateid' => 1337,
 			'message' => null,
@@ -240,7 +240,7 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
-			'AGB_akzeptiert' => '1',
+			'AGB_akzeptiert' => true,
 			'checkDuplicate' => true,
 		];
 
@@ -266,7 +266,7 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
-			'AGB_akzeptiert' => '1',
+			'AGB_akzeptiert' => true,
 			'checkDuplicate' => false,
 		];
 
@@ -439,7 +439,7 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'Telefon1' => '0815/2345677',
-			'AGB_akzeptiert' => '1',
+			'AGB_akzeptiert' => 'y',
 			'Id' => '1337',
 			'Anrede' => '',
 		];

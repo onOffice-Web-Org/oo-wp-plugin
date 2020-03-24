@@ -150,7 +150,7 @@ class FormPostContact
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
 		$requestParams = [
-			'addressdata' => $pFormData->getAddressData(),
+			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $values['message'] ?? null,
 			'subject' => sanitize_text_field($subject),

@@ -205,7 +205,7 @@ class FormPostOwner
 
 	private function sendContactRequest(string $recipient, int $estateId, array $estateValues, $subject=null)
 	{
-		$addressData = $this->_pFormData->getAddressData();
+		$addressData = $this->_pFormData->getAddressData($this->getFieldsCollection());
 		$values = $this->_pFormData->getValues();
 		$estateData = array_keys($estateValues);
 
