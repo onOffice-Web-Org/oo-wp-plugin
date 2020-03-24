@@ -27,6 +27,9 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
 
 /**
@@ -60,6 +63,7 @@ class TestClassFormData
 		'testInput8__bis' => 55,
 		'testInput9' => 'wood',
 		'regionaler_zusatz' => 'AachenStadt',
+		'testBoolInput' => 'y'
 	];
 
 
@@ -87,6 +91,7 @@ class TestClassFormData
 			'testInput8' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'testInput9' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'regionaler_zusatz' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'testBoolInput' => onOfficeSDK::MODULE_ADDRESS,
 		]);
 
 		$pDataFormConfiguration->setRequiredFields([
@@ -173,7 +178,37 @@ class TestClassFormData
 
 	public function testGetAddressData()
 	{
-		$addressData = $this->_pFormData->getAddressData();
+		$pFieldTelefon1 = new Field('Telefon1', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldTelefon1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldEmail = new Field('Email', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldEmail->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldTelefax1 = new Field('Telefax1', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldTelefax1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldTestInput1 = new Field('testInput1', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldTestInput1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+
+		$pFieldTestInput3Von = new Field('testInput3__von', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldTestInput3Von->setType(FieldTypes::FIELD_TYPE_INTEGER);
+
+		$pFieldTestInput3Bis = new Field('testInput3__bis', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldTestInput3Bis->setType(FieldTypes::FIELD_TYPE_INTEGER);
+
+		$pFieldTestBool = new Field('testBoolInput', onOfficeSDK::MODULE_ADDRESS);
+		$pFieldTestBool->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+
+		$pFieldsCollection = new FieldsCollection;
+		$pFieldsCollection->addField($pFieldTelefon1);
+		$pFieldsCollection->addField($pFieldEmail);
+		$pFieldsCollection->addField($pFieldTelefax1);
+		$pFieldsCollection->addField($pFieldTestInput1);
+		$pFieldsCollection->addField($pFieldTestInput3Von);
+		$pFieldsCollection->addField($pFieldTestInput3Bis);
+		$pFieldsCollection->addField($pFieldTestBool);
+
+		$addressData = $this->_pFormData->getAddressData($pFieldsCollection);
 		$expectation = [
 			'testInput1' => 'Test',
 			'testInput3__von' => 3.1415,
@@ -181,6 +216,7 @@ class TestClassFormData
 			'Telefon1' => '0815 8374374',
 			'Email' => 'test-wp@my-onoffice.com',
 			'Telefax1' => '0815 83748937',
+			'testBoolInput' => 1
 		];
 
 		$this->assertEquals($expectation, $addressData);
