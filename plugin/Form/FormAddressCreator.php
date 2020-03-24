@@ -140,11 +140,10 @@ class FormAddressCreator
 	 */
 	public function getAddressDataForEmail(FormData $pFormData): array
 	{
-		$addressData = [];
-		$addressFields = $pFormData->getAddressData();
-
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$addressData = [];
+		$addressFields = $pFormData->getAddressData($pFieldsCollection);
 
 		foreach ($addressFields as $inputName => $value) {
 			$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ADDRESS, $inputName);
