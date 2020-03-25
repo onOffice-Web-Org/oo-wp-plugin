@@ -2,7 +2,7 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 7.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -72,6 +72,14 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+== 2.4.2 ==
+
+**Fixes**
+
+* Fix rendering of regional addition in forms.
+* Fix of multiselect fields with  multiple values in forms.
+* Fix handling of boolean values after form submits.
 
 == 2.4.1 ==
 

@@ -139,7 +139,14 @@ if (!function_exists('renderFormField')) {
 		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
 			$isRangeValue)) {
-			$output .= '<div data-name="'.esc_attr($fieldName).'" class="multiselect" data-values="'
+
+			$postfix = '';
+
+			if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput) {
+				$postfix = '[]';
+			}
+
+			$output .= '<div data-name="'.esc_attr($fieldName).$postfix.'" class="multiselect" data-values="'
 				.esc_attr(json_encode($permittedValues)).'" data-selected="'
 				.esc_attr(json_encode($selectedValue)).'">
 				<input type="button" class="onoffice-multiselect-edit" value="'
@@ -188,8 +195,8 @@ if (!function_exists('renderRegionalAddition')) {
 		$pRegionController = new RegionController();
 		$regions = $pRegionController->getRegions();
 		ob_start();
+		echo '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 		foreach ($regions as $pRegion) {
-			echo '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 			/* @var $pRegion Region */
 			printRegion( $pRegion, $selectedValue ?? [] );
 		}
