@@ -203,4 +203,12 @@ class TestClassEstateListEnvironmentDefault
 	{
 		$this->_pSubject = new EstateListEnvironmentDefault();
 	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Controller\EstateListEnvironmentDefault::getFieldsCollectionBuilderShort
+	 */
+	public function testGetFieldsCollectionBuilderShort()
+	{
+		$this->assertInstanceOf(FieldsCollectionBuilderShort::class, $this->_pSubject->getFieldsCollectionBuilderShort());
+	}
 }
