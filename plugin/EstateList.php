@@ -180,7 +180,8 @@ class EstateList
 		if ($estateIds !== []) {
 			$this->getEstateContactPerson($estateIds);
 
-			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles($fileCategories, $estateIds);
+			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
+			$this->_pEstateFiles->getAllFiles($fileCategories, $estateIds, $this->_pEnvironment->getSDKWrapper());
 		}
 
 		if ($pDataListView->getRandom()) {

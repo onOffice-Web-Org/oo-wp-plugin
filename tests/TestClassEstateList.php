@@ -254,8 +254,8 @@ class TestClassEstateList
 	public function testGetEstatePictures()
 	{
 		$pEstatePicturesMock = new EstateFiles;
-		$pEstatePicturesMock->getAllFiles($this->getDataView()->getPictureTypes(), [15], $this->_pSDKWrapperMocker);
-		$this->_pEnvironment->method('getEstateFiles')->with($this->getDataView()->getPictureTypes())->will($this->returnValue($pEstatePicturesMock));
+		$this->_pEnvironment->method('getEstateFiles')
+			->will($this->returnValue($pEstatePicturesMock));
 
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
@@ -272,10 +272,7 @@ class TestClassEstateList
 	public function testGetEstatePictureUrl()
 {
 	$pEstatePicturesMock = new EstateFiles;
-	$pEstatePicturesMock->getAllFiles($this->getDataView()->getPictureTypes(), [15], $this->_pSDKWrapperMocker);
 	$this->_pEnvironment->method('getEstateFiles')
-		->with($this->getDataView()
-			->getPictureTypes())
 		->willReturn($pEstatePicturesMock);
 
 	$this->_pEstateList->loadEstates();
@@ -336,11 +333,8 @@ class TestClassEstateList
 	private function doTestGetEstatePictureMethodGeneric(string $methodName, array $expectedResults)
 	{
 		$pEstateFiles = new EstateFiles;
-		$pEstateFiles->getAllFiles($this->getDataView()->getPictureTypes(), [15], $this->_pSDKWrapperMocker);
 
 		$this->_pEnvironment->method('getEstateFiles')
-			->with($this->getDataView()
-			->getPictureTypes())
 			->willReturn($pEstateFiles);
 
 		$this->_pEstateList->loadEstates();
@@ -665,12 +659,14 @@ class TestClassEstateList
 				'parentids' => [15, 1051, 1082, 1193, 1071],
 				'relationtype' => 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:contactPerson'
 			], null, $responseGetIdsFromRelation);
+
 		$this->_pSDKWrapperMocker->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_GET, 'estatepictures', '', [
-				'estateids' => [15],
-				'categories' => ['Titelbild', "Foto"],
-				'language' => 'ENG'
-			], null, $responseGetEstatePictures);
+		(onOfficeSDK::ACTION_ID_GET, 'estatepictures', '', [
+			'estateids' => [15,1051,1082,1193,5448],
+			'categories' => ['Titelbild', "Foto"],
+			'language' => 'ENG'
+		], null, $responseGetEstatePictures);
+
 
 		$this->_pEnvironment = $this->getMockBuilder(EstateListEnvironment::class)->getMock();
 		$this->_pEnvironment->method('getSDKWrapper')->willReturn($this->_pSDKWrapperMocker);

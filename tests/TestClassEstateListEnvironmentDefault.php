@@ -70,7 +70,7 @@ class TestClassEstateListEnvironmentDefault
 
 	public function testGetEstateFiles()
 	{
-		$this->assertInstanceOf(EstateFiles::class, $this->_pSubject->getEstateFiles([], []));
+		$this->assertInstanceOf(EstateFiles::class, $this->_pSubject->getEstateFiles());
 	}
 
 
