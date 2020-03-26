@@ -28,6 +28,7 @@ use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
+use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
@@ -69,6 +70,11 @@ class TestClassContentFilterShortCodeAddress
 
 	/** @var WPQueryWrapper */
 	private $_pWPQueryWrapperMock;
+
+	/**
+	 * @var AddressListFactory
+	 */
+	private $_pAddressListFactory;
 
 	/**
 	 *
@@ -152,6 +158,13 @@ class TestClassContentFilterShortCodeAddress
 
 		$pSearchParametersModel = new SearchParametersModel();
 		$this->_pSearchParametersModelBuilder->method('build')->with($this->anything())->willReturn($pSearchParametersModel);
+
+		$this->_pAddressListFactory = $this->getMockBuilder(AddressListFactory::class)
+			->setMethods(['create'])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$this->_pAddressListFactory->method('create')->willReturn($this->getMockBuilder(AddressList::class)->getMock());
 	}
 
 
@@ -184,7 +197,7 @@ class TestClassContentFilterShortCodeAddress
 
 		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress(
 			$pContainer, $this->_pBuilderShort, $this->_pSearchParametersModelBuilder,
-			$this->getMockBuilder(AddressList::class)->getMock());
+			$this->_pAddressListFactory);
 		$result = $pConfigFilterShortCodeAddress->replaceShortCodes(['view' => 'adressList-01']);
 		$this->assertEquals('I am the returned text.', $result);
 	}
@@ -219,7 +232,7 @@ class TestClassContentFilterShortCodeAddress
 
 		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress(
 			$pContainer, $this->_pBuilderShort, $this->_pSearchParametersModelBuilder,
-			$this->getMockBuilder(AddressList::class)->getMock());
+			$this->_pAddressListFactory);
 		$result = $pConfigFilterShortCodeAddress->replaceShortCodes(['view' => 'testException']);
 		$this->assertEquals('Exception caught', $result);
 	}
@@ -233,7 +246,7 @@ class TestClassContentFilterShortCodeAddress
 	{
 		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress(
 			$this->_pContainer, $this->_pBuilderShort, $this->_pSearchParametersModelBuilder,
-			$this->getMockBuilder(AddressList::class)->getMock());
+			$this->_pAddressListFactory);
 		$this->assertEquals('oo_address', $pConfigFilterShortCodeAddress->getTag());
 	}
 }

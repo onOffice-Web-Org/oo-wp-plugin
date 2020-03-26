@@ -28,6 +28,7 @@ use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
@@ -80,14 +81,14 @@ class ContentFilterShortCodeAddress
 		Container $pContainer,
 		FieldsCollectionBuilderShort $pBuilderShort,
 		SearchParametersModelBuilder $pSearchParametersModelBuilder,
-		AddressList $pAddressList)
+		AddressListFactory $pAddressListFactory)
 	{
 		$this->_pBuilderShort = $pBuilderShort;
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 
 		$this->_pLogger = $pContainer->get(Logger::class);
 		$this->_pDataListFactory = $pContainer->get(DataListViewFactoryAddress::class);
-		$this->_pAddressList = $pAddressList;
+		$this->_pAddressList = $pAddressListFactory->create();
 		$this->_pTemplate = $pContainer->get(Template::class);
 		$this->_pWPQueryWrapper = $pContainer-> get(WPQueryWrapper::class);
 	}

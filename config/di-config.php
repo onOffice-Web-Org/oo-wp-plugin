@@ -25,6 +25,8 @@ namespace onOffice;
 
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientActionGetPdf;
+use onOffice\WPlugin\Controller\AddressListEnvironment;
+use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\Filesystem\Filesystem;
@@ -84,4 +86,5 @@ return [
 	WPScreenWrapper::class => autowire(WPScreenWrapperDefault::class),
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
+	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
 ];
