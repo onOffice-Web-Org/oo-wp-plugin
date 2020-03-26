@@ -95,11 +95,10 @@ class InputModelBuilderGeoRange
 			new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
 	}
 
-
 	/**
 	 *
+	 * @param ViewProperty $pView
 	 * @return Generator
-	 *
 	 */
 
 	public function build(ViewProperty $pView): Generator
