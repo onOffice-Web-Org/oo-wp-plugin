@@ -199,6 +199,15 @@ abstract class FormPost
 
 
 	/**
+	 * @return FieldsCollection
+	 */
+	protected function getFieldsCollection(): FieldsCollection
+	{
+		return $this->_pFieldsCollection;
+	}
+
+
+	/**
 	 *
 	 * @param DataFormConfiguration $pFormConfig
 	 * @return string[]

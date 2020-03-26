@@ -118,7 +118,7 @@ class FormPostInterest
 
 	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
 	{
-		$addressData = $pFormData->getAddressData();
+		$addressData = $pFormData->getAddressData($this->getFieldsCollection());
 		$name = $addressData['Name'] ?? null;
 		$firstName = $addressData['Vorname'] ?? null;
 		$mailInteressent = $addressData['Email'] ?? null;
