@@ -253,18 +253,12 @@ class TestClassEstateList
 
 	public function testGetEstatePictures()
 	{
-		$pEstatePicturesMock = $this->getMockBuilder(EstateFiles::class)
-			->setMethods(['registerRequest', 'parseRequest', 'getEstatePictures'])
-			->setConstructorArgs([$this->getDataView()->getPictureTypes()])
-			->getMock();
-		$pEstatePicturesMock->method('getEstatePictures')->with(15)->willReturn($this->_estatePicturesByEstateId[15]);
-		$this->_pEnvironment->method('getEstateFiles')->with($this->getDataView()->getPictureTypes())->will($this->returnValue($pEstatePicturesMock));
+		$pEstatePicturesMock = new EstateFiles;
+		$this->_pEnvironment->method('getEstateFiles')
+			->will($this->returnValue($pEstatePicturesMock));
 
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
-		$pEstateFilesResult = Closure::bind(function() { return $this->_pEstateFiles; }, $this->_pEstateList, EstateList::class)();
-
-		$this->assertEquals($pEstatePicturesMock, $pEstateFilesResult);
 
 		$this->assertEqualSets([2, 3, 4], $this->_pEstateList->getEstatePictures());
 		$this->assertEquals([2], $this->_pEstateList->getEstatePictures(['Titelbild']));
@@ -276,33 +270,18 @@ class TestClassEstateList
 	 */
 
 	public function testGetEstatePictureUrl()
-	{
-		$pEstatePicturesMock = $this->getMockBuilder(EstateFiles::class)
-			->setMethods(['registerRequest', 'parseRequest', 'getEstatePictures', 'getEstateFileUrl'])
-			->setConstructorArgs([$this->getDataView()->getPictureTypes()])
-			->getMock();
-		$pEstatePicturesMock
-			->expects($this->at(2))
-			->method('getEstateFileUrl')
-			->with(2, 15, null)
-			->willReturn($this->_estatePicturesByEstateId[15][2]['url']);
-		$pEstatePicturesMock
-			->expects($this->at(3))
-			->method('getEstateFileUrl')
-			->with(3, 15, ['width' => 200, 'height' => 300])
-			->willReturn($this->_estatePicturesByEstateId[15][3]['url'].'@200x300');
-		$this->_pEnvironment->method('getEstateFiles')
-			->with($this->getDataView()
-			->getPictureTypes())
-			->willReturn($pEstatePicturesMock);
+{
+	$pEstatePicturesMock = new EstateFiles;
+	$this->_pEnvironment->method('getEstateFiles')
+		->willReturn($pEstatePicturesMock);
 
-		$this->_pEstateList->loadEstates();
-		$this->_pEstateList->estateIterator();
-		$this->assertEquals($this->_estatePicturesByEstateId[15][2]['url'],
-			$this->_pEstateList->getEstatePictureUrl(2));
-		$this->assertEquals($this->_estatePicturesByEstateId[15][3]['url'].'@200x300',
-			$this->_pEstateList->getEstatePictureUrl(3, ['width' => 200, 'height' => 300]));
-	}
+	$this->_pEstateList->loadEstates();
+	$this->_pEstateList->estateIterator();
+	$this->assertEquals($this->_estatePicturesByEstateId[15][2]['url'],
+		$this->_pEstateList->getEstatePictureUrl(2));
+	$this->assertEquals($this->_estatePicturesByEstateId[15][3]['url'].'@200x300',
+		$this->_pEstateList->getEstatePictureUrl(3, ['width' => 200, 'height' => 300]));
+}
 
 
 	/**
@@ -353,24 +332,10 @@ class TestClassEstateList
 
 	private function doTestGetEstatePictureMethodGeneric(string $methodName, array $expectedResults)
 	{
-		$pEstatePicturesMock = $this->getMockBuilder(EstateFiles::class)
-			->setMethods(['registerRequest', 'parseRequest', 'getEstatePictures', $methodName])
-			->setConstructorArgs([$this->getDataView()->getPictureTypes()])
-			->getMock();
-		$pEstatePicturesMock
-			->expects($this->at(2))
-			->method($methodName)
-			->with(2, 15)
-			->willReturn($expectedResults[0]);
-		$pEstatePicturesMock
-			->expects($this->at(3))
-			->method($methodName)
-			->with(3, 15)
-			->willReturn($expectedResults[1]);
+		$pEstateFiles = new EstateFiles;
+
 		$this->_pEnvironment->method('getEstateFiles')
-			->with($this->getDataView()
-			->getPictureTypes())
-			->willReturn($pEstatePicturesMock);
+			->willReturn($pEstateFiles);
 
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
@@ -682,6 +647,8 @@ class TestClassEstateList
 		$parametersReadEstateRaw = $dataReadEstateRaw['parameters'];
 		$responseGetIdsFromRelation = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsFromRelation.json'), true);
+		$responseGetEstatePictures = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatePictures.json'), true);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
@@ -692,6 +659,15 @@ class TestClassEstateList
 				'parentids' => [15, 1051, 1082, 1193, 1071],
 				'relationtype' => 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:contactPerson'
 			], null, $responseGetIdsFromRelation);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_GET, 'estatepictures', '', [
+			'estateids' => [15,1051,1082,1193,5448],
+			'categories' => ['Titelbild', "Foto"],
+			'language' => 'ENG'
+		], null, $responseGetEstatePictures);
+
+
 		$this->_pEnvironment = $this->getMockBuilder(EstateListEnvironment::class)->getMock();
 		$this->_pEnvironment->method('getSDKWrapper')->willReturn($this->_pSDKWrapperMocker);
 		$pDataListView = $this->getDataView();
