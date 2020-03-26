@@ -31,8 +31,6 @@ class AddressListFactory
 	private $_pEnvironment;
 
 	/**
-	 * AddressListFactory constructor.
-	 *
 	 * @param AddressListEnvironment $pEnvironment
 	 */
 	public function __construct(AddressListEnvironment $pEnvironment)

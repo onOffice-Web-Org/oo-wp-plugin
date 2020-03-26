@@ -39,8 +39,6 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use function add_action;
-use function do_action;
 use function esc_url;
 use function get_page_link;
 use function home_url;
@@ -145,6 +143,7 @@ class EstateList
 	 * @param DataView $pDataListView
 	 * @throws API\APIEmptyResultException
 	 * @throws UnknownViewException
+	 * @throws HttpFetchNoResultException
 	 */
 	public function loadEstates(int $currentPage = 1, DataView $pDataListView = null)
 	{

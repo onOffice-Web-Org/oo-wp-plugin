@@ -27,7 +27,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Factory\AddressListFactory;
@@ -62,8 +61,8 @@ class ContentFilterShortCodeAddress
 	/** @var WPQueryWrapper */
 	private $_pWPQueryWrapper;
 
-	/** @var mixed|AddressList */
-	private $_pAddressList;
+	/** @var AddressListFactory */
+	private $_pAddressListFactory;
 
 	/**
 	 * ContentFilterShortCodeAddress constructor.
@@ -87,7 +86,7 @@ class ContentFilterShortCodeAddress
 
 		$this->_pLogger = $pLogger;
 		$this->_pDataListFactory = $pDataListFactory;
-		$this->_pAddressList = $pAddressListFactory->create();
+		$this->_pAddressListFactory = $pAddressListFactory;
 		$this->_pTemplate = $pTemplate;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 	}
@@ -122,7 +121,7 @@ class ContentFilterShortCodeAddress
 	{
 		$page = $this->_pWPQueryWrapper->getWPQuery()->get('page', 1);
 		$pAddressListView = $this->_pDataListFactory->getListViewByName($addressListName);
-		$pAddressList = $this->_pAddressList->withDataListViewAddress($pAddressListView);
+		$pAddressList = $this->_pAddressListFactory->create()->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
 		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
