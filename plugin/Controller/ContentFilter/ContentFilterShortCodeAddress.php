@@ -70,27 +70,31 @@ class ContentFilterShortCodeAddress
 	/**
 	 * ContentFilterShortCodeAddress constructor.
 	 *
-	 * @param Container $pContainer
 	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchParametersModelBuilder $pSearchParametersModelBuilder
-	 * @param AddressList $pAddressList
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @param AddressListFactory $pAddressListFactory
+	 * @param Logger $pLogger
+	 * @param DataListViewFactoryAddress $pDataListFactory
+	 * @param Template $pTemplate
+	 * @param WPQueryWrapper $pWPQueryWrapper
 	 */
 	public function __construct(
-		Container $pContainer,
 		FieldsCollectionBuilderShort $pBuilderShort,
 		SearchParametersModelBuilder $pSearchParametersModelBuilder,
-		AddressListFactory $pAddressListFactory)
+		AddressListFactory $pAddressListFactory,
+		Logger $pLogger,
+		DataListViewFactoryAddress $pDataListFactory,
+		Template $pTemplate,
+		WPQueryWrapper $pWPQueryWrapper)
 	{
 		$this->_pBuilderShort = $pBuilderShort;
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 
-		$this->_pLogger = $pContainer->get(Logger::class);
-		$this->_pDataListFactory = $pContainer->get(DataListViewFactoryAddress::class);
+		$this->_pLogger = $pLogger;
+		$this->_pDataListFactory = $pDataListFactory;
 		$this->_pAddressList = $pAddressListFactory->create();
-		$this->_pTemplate = $pContainer->get(Template::class);
-		$this->_pWPQueryWrapper = $pContainer-> get(WPQueryWrapper::class);
+		$this->_pTemplate = $pTemplate;
+		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 	}
 
 
