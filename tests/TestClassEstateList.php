@@ -44,8 +44,10 @@ use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\EstateStatusLabel;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\FieldTypes;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -545,40 +547,64 @@ class TestClassEstateList
 			->setMethods(['getVisibleFilterableFields'])
 			->disableOriginalConstructor()
 			->getMock();
-		$pMockOutputFields->method('getVisibleFilterableFields')->willReturn(['objektart' => 'haus', 'objekttyp' => 'reihenhaus']);
+		$pMockOutputFields->expects($this->once())
+			->method('getVisibleFilterableFields')
+			->willReturn(['objektart' => 'haus', 'objekttyp' => 'reihenhaus']);
 		$this->_pEnvironment->method('getOutputFields')->willReturn($pMockOutputFields);
 
-		$valueMap = [
-			['objektart', 'estate', ['name' => 'objektart', 'type' => 'singleselect']],
-			['objekttyp', 'estate', ['name' => 'objekttyp', 'type' => 'singleselect']],
-		];
-
 		$pFieldsCollection = new FieldsCollection();
-		$pMockFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setMethods(['getFieldInformation'])
-			->setConstructorArgs([$pFieldsCollection])
-			->getMock();
-		$pMockFieldnames->method('getFieldInformation')->will($this->returnValueMap($valueMap));
-		$this->_pEnvironment->method('getFieldnames')->willReturn($pMockFieldnames);
+		$pFieldObjektArt = new Field('objektart', 'estate');
+		$pFieldObjektArt->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+		$pFieldObjektTyp = new Field('objekttyp', 'estate');
+		$pFieldObjektTyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+		$pFieldsCollection->addField($pFieldObjektArt);
+		$pFieldsCollection->addField($pFieldObjektTyp);
 
 		$expectation = [
 			'objektart' => [
 				'name' => 'objektart',
 				'type' => 'singleselect',
 				'value' => 'haus',
+				'label' => '',
+				'default' => null,
+				'length' => null,
+				'permittedvalues' => [],
+				'content' => '',
+				'module' => 'estate',
+				'rangefield' => false,
+				'additionalTranslations' => [],
+				'compoundFields' => [],
+				'labelOnlyValues' => [],
 			],
 			'objekttyp' => [
 				'name' => 'objekttyp',
 				'type' => 'singleselect',
 				'value' => 'reihenhaus',
+				'label' => '',
+				'default' => null,
+				'length' => null,
+				'permittedvalues' => [],
+				'content' => '',
+				'module' => 'estate',
+				'rangefield' => false,
+				'additionalTranslations' => [],
+				'compoundFields' => [],
+				'labelOnlyValues' => [],
 			],
 		];
 
-		$pBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setConstructorArgs([new Container()])
+		$pFieldsCollectionBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->disableOriginalConstructor()
 				->getMock();
+		$pFieldsCollectionBuilderMock->method('addFieldsAddressEstate')
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollectionOut)
+				use ($pFieldsCollection, $pFieldsCollectionBuilderMock): FieldsCollectionBuilderShort {
+					$pFieldsCollectionOut->merge($pFieldsCollection);
+					return $pFieldsCollectionBuilderMock;
+				}));
 
-		$this->_pEnvironment->method('getFieldsCollectionBuilderShort')->willReturn($pBuilderMock);
+		$this->_pEnvironment
+			->method('getFieldsCollectionBuilderShort')->willReturn($pFieldsCollectionBuilderMock);
 
 		$this->assertEquals($expectation, $this->_pEstateList->getVisibleFilterableFields());
 	}
