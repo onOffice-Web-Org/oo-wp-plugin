@@ -27,10 +27,15 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\AddressList;
+use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
 use onOffice\WPlugin\DataView\UnknownViewException;
+use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
 use onOffice\WPlugin\Template;
+use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use function shortcode_atts;
 
 /**
@@ -42,22 +47,49 @@ use function shortcode_atts;
 class ContentFilterShortCodeAddress
 	implements ContentFilterShortCode
 {
-	/** @var ContentFilterShortCodeAddressEnvironment */
-	private $_pEnvironment = null;
-
 	/** @var SearchParametersModelBuilder */
 	private $_pSearchParametersModelBuilder;
 
+	/** @var Logger */
+	private $_pLogger;
+
+	/** @var DataListViewFactoryAddress */
+	private $_pDataListFactory;
+
+	/** @var Template */
+	private $_pTemplate;
+
+	/** @var WPQueryWrapper */
+	private $_pWPQueryWrapper;
+
+	/** @var mixed|AddressList */
+	private $_pAddressList;
+
 	/**
-	 * @param ContentFilterShortCodeAddressEnvironment $pEnvironment
+	 * ContentFilterShortCodeAddress constructor.
+	 *
 	 * @param SearchParametersModelBuilder $pSearchParametersModelBuilder
+	 * @param AddressListFactory $pAddressListFactory
+	 * @param Logger $pLogger
+	 * @param DataListViewFactoryAddress $pDataListFactory
+	 * @param Template $pTemplate
+	 * @param WPQueryWrapper $pWPQueryWrapper
 	 */
 	public function __construct(
-		ContentFilterShortCodeAddressEnvironment $pEnvironment,
-		SearchParametersModelBuilder $pSearchParametersModelBuilder)
+		SearchParametersModelBuilder $pSearchParametersModelBuilder,
+		AddressListFactory $pAddressListFactory,
+		Logger $pLogger,
+		DataListViewFactoryAddress $pDataListFactory,
+		Template $pTemplate,
+		WPQueryWrapper $pWPQueryWrapper)
 	{
-		$this->_pEnvironment = $pEnvironment;
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
+
+		$this->_pLogger = $pLogger;
+		$this->_pDataListFactory = $pDataListFactory;
+		$this->_pAddressList = $pAddressListFactory->create();
+		$this->_pTemplate = $pTemplate;
+		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 	}
 
 	/**
@@ -75,7 +107,7 @@ class ContentFilterShortCodeAddress
 			$pTemplate = $this->createTemplate($addressListName);
 			return $pTemplate->render();
 		} catch (Exception $pException) {
-			return $this->_pEnvironment->getLogger()->logErrorAndDisplayMessage($pException);
+			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
 	}
 
@@ -88,13 +120,13 @@ class ContentFilterShortCodeAddress
 	 */
 	private function createTemplate(string $addressListName): Template
 	{
-		$page = $this->_pEnvironment->getWPQueryWrapper()->getWPQuery()->get('page', 1);
-		$pAddressListView = $this->_pEnvironment->getDataListFactory()->getListViewByName($addressListName);
-		$pAddressList = $this->_pEnvironment->createAddressList()->withDataListViewAddress($pAddressListView);
+		$page = $this->_pWPQueryWrapper->getWPQuery()->get('page', 1);
+		$pAddressListView = $this->_pDataListFactory->getListViewByName($addressListName);
+		$pAddressList = $this->_pAddressList->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
 		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
-		return $this->_pEnvironment->getTemplate()
+		return $this->_pTemplate
 			->withTemplateName($templateName)
 			->withAddressList($pAddressList);
 	}

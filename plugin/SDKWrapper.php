@@ -103,24 +103,6 @@ class SDKWrapper
 
 	/**
 	 *
-	 * @deprecated since 2018
-	 * Use APIClientActionGeneric instead!
-	 *
-	 * @param string $actionId
-	 * @param string $resourceType
-	 * @param array $parameters
-	 * @return int handle
-	 *
-	 */
-
-	public function addRequest(string $actionId, string $resourceType, array $parameters = [])
-	{
-		return $this->_pSDK->callGeneric( $actionId, $resourceType, $parameters );
-	}
-
-
-	/**
-	 *
 	 * @param APIClientActionGeneric $pApiAction
 	 * @return int
 	 *
@@ -163,21 +145,6 @@ class SDKWrapper
 		}
 
 		$this->_callbacksAfterSend = [];
-	}
-
-
-	/**
-	 *
-	 * @deprecated since 2018
-	 * @param int $handle
-	 * @return array
-	 *
-	 */
-
-	public function getRequestResponse(int $handle): array
-	{
-		$response = $this->_pSDK->getResponseArray($handle);
-		return $response ?? [];
 	}
 
 

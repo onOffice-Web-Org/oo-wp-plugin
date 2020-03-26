@@ -79,15 +79,11 @@ interface EstateListEnvironment
 
 	public function getGeoSearchBuilder(): GeoSearchBuilder;
 
-
 	/**
-	 *
-	 * @param array $fileTypes
 	 * @return EstateFiles
-	 *
 	 */
 
-	public function getEstateFiles(array $fileTypes): EstateFiles;
+	public function getEstateFiles(): EstateFiles;
 
 
 	/**

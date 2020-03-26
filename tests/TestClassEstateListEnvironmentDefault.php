@@ -70,7 +70,7 @@ class TestClassEstateListEnvironmentDefault
 
 	public function testGetEstateFiles()
 	{
-		$this->assertInstanceOf(EstateFiles::class, $this->_pSubject->getEstateFiles([]));
+		$this->assertInstanceOf(EstateFiles::class, $this->_pSubject->getEstateFiles());
 	}
 
 
@@ -202,5 +202,13 @@ class TestClassEstateListEnvironmentDefault
 	public function generate()
 	{
 		$this->_pSubject = new EstateListEnvironmentDefault();
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Controller\EstateListEnvironmentDefault::getFieldsCollectionBuilderShort
+	 */
+	public function testGetFieldsCollectionBuilderShort()
+	{
+		$this->assertInstanceOf(FieldsCollectionBuilderShort::class, $this->_pSubject->getFieldsCollectionBuilderShort());
 	}
 }
