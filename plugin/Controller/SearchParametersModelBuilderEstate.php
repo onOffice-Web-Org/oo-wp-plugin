@@ -71,7 +71,6 @@ class SearchParametersModelBuilderEstate
 		SortListDataModel $pSortListDataModel): SearchParametersModel
 	{
 		$pFieldsCollection = new FieldsCollection();
-//		$pFieldsCollection->merge(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection()));
 		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 
 		$pModel = new SearchParametersModel();
