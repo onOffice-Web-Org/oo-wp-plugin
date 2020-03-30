@@ -30,9 +30,15 @@ require 'SearchForm.php';
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
 
 ?>
-<div class="oo-estate-map">
-	<?php // require('map/map.php'); ?>
-</div>
+
+<?php
+	/**
+	* If you want to add a map with markers for the estates you can implement it like this: 
+	* <div class="oo-estate-map">
+	* 	<?php require('map/map.php'); ?>
+	* </div>
+	*/
+?>
 <div class="oo-listheadline">
 	<h1><?php esc_html_e('Overview of Estates', 'onoffice'); ?></h1>
 	<p>
@@ -60,7 +66,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				$estatePictures = $pEstatesClone->getEstatePictures();
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
-					echo '<a href="'.$pEstatesClone->getEstateLink().'" style="background-image: url('.esc_url($pEstatesClone->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+					echo '<a href="'.esc_url($pEstatesClone->getEstateLink()).'" style="background-image: url('.esc_url($pEstatesClone->getEstatePictureUrl( $id )).');" class="oo-listimage">';
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
 					}
@@ -85,7 +91,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						} ?>
 					</div>
 					<div class="oo-detailslink">
-						<a href="<?php echo $pEstatesClone->getEstateLink(); ?>">
+						<a href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
 							<?php esc_html_e('Show Details', 'onoffice'); ?>
 						</a>
 					</div>
