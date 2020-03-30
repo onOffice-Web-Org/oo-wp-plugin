@@ -28,10 +28,13 @@
 
 namespace onOffice\WPlugin;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandlerEmpty;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -79,14 +82,13 @@ class AddressList
 		$this->_pDataViewAddress = new DataListViewAddress(0, 'default');
 	}
 
-
 	/**
-	 *
 	 * @param array $addressIds
 	 * @param array $fields
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function loadAdressesById(array $addressIds, array $fields)
 	{
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
@@ -106,17 +108,16 @@ class AddressList
 		$this->_pDataViewAddress->setFields($fields);
 	}
 
-
 	/**
-	 *
-	 * @global int $numpages
-	 * @global bool $multipage
+	 * @param int $inputPage
+	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 * @global int $page
 	 * @global bool $more
-	 * @param int $inputPage
-	 *
+	 * @global int $numpages
+	 * @global bool $multipage
 	 */
-
 	public function loadAddresses(int $inputPage = 1)
 	{
 		global $numpages, $multipage, $page, $more;
@@ -145,13 +146,9 @@ class AddressList
 		$page = $newPage;
 	}
 
-
 	/**
-	 *
 	 * @return ViewFieldModifierHandler
-	 *
 	 */
-
 	private function generateRecordModifier(): ViewFieldModifierHandler
 	{
 		$fields = $this->_pDataViewAddress->getFields();
@@ -168,13 +165,9 @@ class AddressList
 		return $pAddressFieldModifierHandler;
 	}
 
-
 	/**
-	 *
 	 * @param array $records
-	 *
 	 */
-
 	private function fillAddressesById(array $records)
 	{
 		foreach ($records as $address) {
@@ -186,14 +179,10 @@ class AddressList
 		}
 	}
 
-
 	/**
-	 *
 	 * @param array $elements
 	 * @return array
-	 *
 	 */
-
 	private function collectAdditionalContactData(array $elements): array
 	{
 		$additionalContactData = [];
@@ -212,27 +201,19 @@ class AddressList
 		return $additionalContactData;
 	}
 
-
 	/**
-	 *
 	 * @param int $id
 	 * @return array
-	 *
 	 */
-
 	public function getAddressById($id): array
 	{
 		return $this->_adressesById[$id] ?? [];
 	}
 
-
 	/**
-	 *
 	 * @param bool $raw
 	 * @return array
-	 *
 	 */
-
 	public function getRows(bool $raw = false): array
 	{
 		$pAddressFieldModifier = $this->generateRecordModifier();
@@ -242,37 +223,24 @@ class AddressList
 		}, $this->_adressesById);
 	}
 
-
 	/**
-	 *
 	 * @param bool $raw
 	 * @param array $row
 	 * @return ArrayContainerEscape
-	 *
 	 */
-
 	private function getArrayContainerByRow(bool $raw, array $row): ArrayContainer
 	{
-		$pArrayContainer = null;
-
 		if ($raw) {
-			$pArrayContainer = new ArrayContainer($row);
-		} else {
-			$pArrayContainer = new ArrayContainerEscape($row);
+			return new ArrayContainer($row);
 		}
-
-		return $pArrayContainer;
+		return new ArrayContainerEscape($row);
 	}
 
-
 	/**
-	 *
 	 * @param string $field
 	 * @param bool $raw
 	 * @return string
-	 *
 	 */
-
 	public function getFieldLabel($field, bool $raw = false): string
 	{
 		$label = $this->_pEnvironment->getFieldnames()
@@ -286,7 +254,6 @@ class AddressList
 	 * @return string
 	 * @throws Field\UnknownFieldException
 	 */
-
 	public function getFieldType($field): string
 	{
 		$fieldInformation = $this->_pEnvironment
@@ -295,40 +262,35 @@ class AddressList
 		return $fieldInformation['type'];
 	}
 
-
 	/**
-	 *
 	 * @return string[] An array of visible fields
-	 *
+	 * @throws Field\UnknownFieldException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getVisibleFilterableFields(): array
 	{
-		$pDataListView = $this->_pDataViewAddress;
-		$pFilterableFields = $this->_pEnvironment->getOutputFields($pDataListView);
+		$pFilterableFields = $this->_pEnvironment->getOutputFields();
 		/** @var FieldsCollectionBuilderShort $pBuilderShort */
 		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollection = new FieldsCollection();
 		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$fieldsValues = $pFilterableFields->getVisibleFilterableFields($pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
+		$fieldsValues = $pFilterableFields->getVisibleFilterableFields
+			($this->_pDataViewAddress, $pFieldsCollection, new GeoPositionFieldHandlerEmpty);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
-			$result[$field] = $this->_pEnvironment
-				->getFieldnames()
-				->getFieldInformation($field, onOfficeSDK::MODULE_ADDRESS);
+			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
+				->getAsRow();
+			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
 		}
 		return $result;
 	}
 
-
 	/**
-	 *
 	 * @param DataListViewAddress $pDataListViewAddress
 	 * @return AddressList
-	 *
 	 */
-
 	public function withDataListViewAddress(DataListViewAddress $pDataListViewAddress): AddressList
 	{
 		$pAddressList = clone $this;

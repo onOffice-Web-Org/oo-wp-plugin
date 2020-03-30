@@ -39,15 +39,12 @@ class DataDetailViewHandler
 	const DEFAULT_VIEW_OPTION_KEY = 'onoffice-default-view';
 
 	/** @var WPOptionWrapperBase */
-	private $_pWPOptionWrapper = null;
+	private $_pWPOptionWrapper;
 
 
 	/**
-	 *
 	 * @param WPOptionWrapperBase $pWPOptionWrapper
-	 *
 	 */
-
 	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
 	{
 		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();

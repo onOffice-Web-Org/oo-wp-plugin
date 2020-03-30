@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\Controller\ContentFilter;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\SearchParametersModelBuilderEstate;
 use onOffice\WPlugin\Controller\SortList\SortListBuilder;
 use onOffice\WPlugin\Controller\SortList\SortListDataModel;
@@ -110,6 +111,7 @@ class ContentFilterShortCodeEstateList
 	 * @throws NotFoundException
 	 * @throws UnknownFieldException
 	 * @throws UnknownViewException
+	 * @throws APIEmptyResultException
 	 */
 	public function render(array $attributes): string
 	{

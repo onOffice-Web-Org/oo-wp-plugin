@@ -23,16 +23,16 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
-use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\AddressViewFieldModifierTypes;
@@ -54,106 +54,74 @@ class AddressListEnvironmentDefault
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
-	/** @var CompoundFieldsFilter */
-	private $_pDataListViewAddressToAPIParameters = null;
-
-	/** @var FieldsCollectionBuilderShort */
-	private $_pFieldsBuilderShort = null;
-
+	/** @var Container */
+	private $_pContainer;
 
 	/**
 	 *
 	 */
-
 	public function __construct()
 	{
 		$pFieldCollection = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
-		$this->_pFieldnames = new Fieldnames($pFieldCollection);
-		$this->_pSDKWrapper = new SDKWrapper();
+		$this->_pFieldnames = new Fieldnames($pFieldCollection); // not injectable!
 
 		$pContainerBuilder = new ContainerBuilder();
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-		$this->_pDataListViewAddressToAPIParameters = $pContainer->get(DataListViewAddressToAPIParameters::class);
-		$this->_pFieldsBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$this->_pContainer = $pContainerBuilder->build();
 	}
 
-
 	/**
-	 *
-	 * @param FilterBuilderInputVariables $pFilterBuilder
 	 * @return DataListViewAddressToAPIParameters
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getDataListViewAddressToAPIParameters(): DataListViewAddressToAPIParameters
 	{
-		return $this->_pDataListViewAddressToAPIParameters;
+		return $this->_pContainer->get(DataListViewAddressToAPIParameters::class);;
 	}
 
-
 	/**
-	 *
 	 * @return Fieldnames
-	 *
 	 */
-
 	public function getFieldnames(): Fieldnames
 	{
 		return $this->_pFieldnames;
 	}
 
-
 	/**
-	 *
 	 * @return FieldsCollectionBuilderShort
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
 	{
-		return $this->_pFieldsBuilderShort;
+		return $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 	}
 
-
 	/**
-	 *
-	 * @param DataListViewAddress $pListView
 	 * @return OutputFields
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	public function getOutputFields(DataListViewAddress $pListView): OutputFields
+	public function getOutputFields(): OutputFields
 	{
-		return new OutputFields(
-				$pListView,
-				new GeoPositionFieldHandlerEmpty(),
-				new CompoundFieldsFilter());
+		return $this->_pContainer->get(OutputFields::class);
 	}
 
-
 	/**
-	 *
 	 * @return SDKWrapper
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getSDKWrapper(): SDKWrapper
 	{
-		return $this->_pSDKWrapper;
+		return $this->_pContainer->get(SDKWrapper::class);
 	}
 
-
 	/**
-	 *
 	 * @param array $fields
 	 * @return ViewFieldModifierHandler
-	 *
 	 */
-
 	public function getViewFieldModifierHandler(array $fields): ViewFieldModifierHandler
 	{
 		return new ViewFieldModifierHandler($fields, onOfficeSDK::MODULE_ADDRESS,

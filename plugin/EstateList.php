@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
@@ -29,11 +30,15 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPLugin\DataView\UnknownViewException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
+use onOffice\WPlugin\Field\OutputFields;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -95,10 +100,15 @@ class EstateList
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	public function __construct(DataView $pDataView, EstateListEnvironment $pEnvironment = null)
 	{
-		$this->_pEnvironment = $pEnvironment ?? new EstateListEnvironmentDefault();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$this->_pEnvironment = $pEnvironment ?? new EstateListEnvironmentDefault($pContainer);
 		$this->_pDataView = $pDataView;
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$this->_pApiClientAction = new APIClientActionGeneric
@@ -142,6 +152,8 @@ class EstateList
 	 * @param int $currentPage
 	 * @param DataView $pDataListView
 	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 * @throws UnknownViewException
 	 * @throws HttpFetchNoResultException
 	 */
@@ -404,10 +416,13 @@ class EstateList
 
 	/**
 	 * @return string
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	public function getEstateLink(): string
 	{
-		$pageId = $this->_pEnvironment->getDataDetailView()->getPageId();
+		$pageId = $this->_pEnvironment->getDataDetailViewHandler()
+			->getDetailView()->getPageId();
 		$fullLink = '#';
 
 		if ($pageId !== 0) {
@@ -546,6 +561,7 @@ class EstateList
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 * @throws HttpFetchNoResultException
+	 * @throws UnknownViewException
 	 */
 	public function getEstateUnits()
 	{
@@ -581,21 +597,24 @@ class EstateList
 
 	/**
 	 * @return string[] An array of visible fields
-	 * @throws Field\UnknownFieldException
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
 	public function getVisibleFilterableFields(): array
 	{
+		$pContainer = $this->_pEnvironment->getContainer();
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$pFieldsCollection->merge
 			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection));
-
-		$fieldsValues = $this->_pEnvironment
-			->getOutputFields($this->_pDataView)
-			->getVisibleFilterableFields($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
+		$pFieldsCollectionFieldDuplicatorForGeoEstate =
+			$pContainer->get(FieldsCollectionFieldDuplicatorForGeoEstate::class);
+		$pFieldsCollectionFieldDuplicatorForGeoEstate->duplicateFields($pFieldsCollection);
+		$fieldsValues = $pContainer->get(OutputFields::class)
+			->getVisibleFilterableFields($this->_pDataView,
+				$pFieldsCollection, new GeoPositionFieldHandler);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
@@ -639,7 +658,10 @@ class EstateList
 	public function getDataView(): DataView
 		{ return $this->_pDataView; }
 
-	/** @return DefaultFilterBuilder */
+	/**
+	 * @return DefaultFilterBuilder
+	 * @throws UnknownViewException
+	 */
 	public function getDefaultFilterBuilder(): DefaultFilterBuilder
 		{ return $this->_pEnvironment->getDefaultFilterBuilder(); }
 

@@ -21,17 +21,18 @@
 
 namespace onOffice\WPlugin\Controller;
 
-use DI\ContainerBuilder;
+use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
-use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
-use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\EstateUnits;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
@@ -42,16 +43,10 @@ use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\Field\CompoundFieldsFilter;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
- *
  */
-
 class EstateListEnvironmentDefault
 	implements EstateListEnvironment
 {
@@ -70,43 +65,30 @@ class EstateListEnvironmentDefault
 	/** @var EstateStatusLabel */
 	private $_pEstateStatusLabel = null;
 
-	/** @var FieldsCollectionBuilderShort */
-	private $_pBuilderShort = null;
-
-	/** @var CompoundFieldsFilter */
-	private $_pCompoundFieldsFilter = null;
-
+	/** @var Container */
+	private $_pContainer;
 
 	/**
-	 *
+	 * @param Container $pContainer
 	 */
-
-	public function __construct()
+	public function __construct(Container $pContainer)
 	{
 		$this->_pSDKWrapper = new SDKWrapper();
 		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection());
 		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 		$this->_pAddressList = new AddressList();
 		$this->_pEstateStatusLabel = new EstateStatusLabel();
-
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-
-		$this->_pCompoundFieldsFilter = $pContainer->get(CompoundFieldsFilter::class);
-		$this->_pBuilderShort = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$this->_pContainer = $pContainer;
 	}
 
-
 	/**
-	 *
 	 * @return FieldsCollectionBuilderShort
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
 	{
-		return $this->_pBuilderShort;
+		return $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 	}
 
 
@@ -154,16 +136,14 @@ class EstateListEnvironmentDefault
 		return new GeoSearchBuilderEmpty();
 	}
 
-
 	/**
-	 *
 	 * @return SDKWrapper
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getSDKWrapper(): SDKWrapper
 	{
-		return $this->_pSDKWrapper;
+		return $this->_pContainer->get(SDKWrapper::class);
 	}
 
 
@@ -194,25 +174,22 @@ class EstateListEnvironmentDefault
 		$this->_pDefaultFilterBuilder = $pDefaultFilterBuilder;
 	}
 
-
 	/**
-	 *
-	 * @return DataDetailView
-	 *
+	 * @return DataDetailViewHandler
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	public function getDataDetailView(): DataDetailView
+	public function getDataDetailViewHandler(): DataDetailViewHandler
 	{
-		$pDataDetailViewHandler = new DataDetailViewHandler();
-		return $pDataDetailViewHandler->getDetailView();
+		return $this->_pContainer->get(DataDetailViewHandler::class);
 	}
-
 
 	/**
 	 *
 	 * @param string $name
 	 * @return EstateUnits
 	 *
+	 * @throws UnknownViewException
 	 */
 
 	public function getEstateUnitsByName(string $name): EstateUnits
@@ -228,18 +205,14 @@ class EstateListEnvironmentDefault
 		// @codeCoverageIgnoreEnd
 	}
 
-
 	/**
-	 *
-	 * @param DataViewFilterableFields $pDataView
 	 * @return OutputFields
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	public function getOutputFields(DataViewFilterableFields $pDataView): OutputFields
+	public function getOutputFields(): OutputFields
 	{
-		$pGeoPositionFieldHandler = new GeoPositionFieldHandler();
-		return new OutputFields($pDataView, $pGeoPositionFieldHandler, $this->_pCompoundFieldsFilter);
+		return $this->_pContainer->get(OutputFields::class);
 	}
 
 
@@ -278,5 +251,13 @@ class EstateListEnvironmentDefault
 	public function getEstateStatusLabel(): EstateStatusLabel
 	{
 		return $this->_pEstateStatusLabel;
+	}
+
+	/**
+	 * @return Container
+	 */
+	public function getContainer(): Container
+	{
+		return $this->_pContainer;
 	}
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandlerBase;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
@@ -33,100 +32,56 @@ use onOffice\WPlugin\Types\FieldsCollection;
 /**
  *
  */
-
 class OutputFields
 {
-	/** @var DataViewFilterableFields */
-	private $_pDataView = null;
-
-	/** @var InputVariableReader */
-	private $_pInputVariableReader = null;
-
-	/** @var GeoPositionFieldHandlerBase */
-	private $_pGeoPositionFieldHandler = null;
-
 	/** @var CompoundFieldsFilter */
-	private $_pCompoundFieldsFilter = null;
+	private $_pCompoundFieldsFilter;
 
 	/**
-	 *
-	 * @param DataViewFilterableFields $pDataListView
-	 * @param GeoPositionFieldHandlerBase $pGeoPositionFieldHandler
 	 * @param CompoundFieldsFilter $pCompoundFieldsFilter
-	 * @param InputVariableReader $pInputVariableReader
-	 * 
 	 */
-
 	public function __construct(
-		DataViewFilterableFields $pDataListView,
-		GeoPositionFieldHandlerBase $pGeoPositionFieldHandler,
-		CompoundFieldsFilter $pCompoundFieldsFilter,
-		InputVariableReader $pInputVariableReader = null)
+		CompoundFieldsFilter $pCompoundFieldsFilter)
 	{
-		$this->_pDataView = $pDataListView;
-		$this->_pInputVariableReader = $pInputVariableReader ??
-			new InputVariableReader($pDataListView->getModule());
-		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler;
 		$this->_pCompoundFieldsFilter = $pCompoundFieldsFilter;
 	}
 
 	/**
+	 * @param DataViewFilterableFields $pDataView
 	 * @param FieldsCollection $pFieldsCollection
-	 * @param string $module
+	 * @param GeoPositionFieldHandlerBase $pGeoPositionFieldHandler
+	 * @param InputVariableReader|null $pInputVariableReader
 	 * @return string[] An array of visible fields
 	 */
-
-	public function getVisibleFilterableFields(FieldsCollection $pFieldsCollection, string $module): array
+	public function getVisibleFilterableFields(
+		DataViewFilterableFields $pDataView,
+		FieldsCollection $pFieldsCollection,
+		GeoPositionFieldHandlerBase $pGeoPositionFieldHandler,
+		InputVariableReader $pInputVariableReader = null): array
 	{
-		$filterable = $this->_pDataView->getFilterableFields();
-		$hidden = $this->_pDataView->getHiddenFields();
+		$filterable = $pDataView->getFilterableFields();
+		$hidden = $pDataView->getHiddenFields();
+		$pInputVariableReader = $pInputVariableReader ?? new InputVariableReader($pDataView->getModule());
 
 		$fieldsArray = array_diff($filterable, $hidden);
 		$posGeo = array_search(GeoPosition::FIELD_GEO_POSITION, $fieldsArray);
 		$geoFields = [];
 		if ($posGeo !== false) {
 			unset($fieldsArray[$posGeo]);
-			$this->_pGeoPositionFieldHandler->readValues($this->_pDataView);
-			$geoFields = $this->_pGeoPositionFieldHandler->getActiveFieldsWithValue();
+			$pGeoPositionFieldHandler->readValues($pDataView);
+			$geoFields = $pGeoPositionFieldHandler->getActiveFieldsWithValue();
 		}
 
 		$allFields = array_merge($fieldsArray, array_keys($geoFields));
-		$allFields = $this->filterActiveFields($allFields, $pFieldsCollection, $module);
-
-		$valuesDefault = array_map(function($field) use ($geoFields) {
-			return $this->_pInputVariableReader->getFieldValueFormatted($field) ?? $geoFields[$field] ?? null;
+		$valuesDefault = array_map(function($field) use ($geoFields, $pInputVariableReader) {
+			return $pInputVariableReader->getFieldValueFormatted($field) ?? $geoFields[$field] ?? null;
 		}, $allFields);
 
 		$resultDefault = array_combine($allFields, $valuesDefault);
 
-		$result = $this->_pCompoundFieldsFilter->mergeListFilterableFields(
-				$pFieldsCollection, $resultDefault);
+		$result = $this->_pCompoundFieldsFilter->mergeListFilterableFields
+			($pFieldsCollection, $resultDefault);
 
 		return $result;
 	}
-
-	/**
-	 * @param $allFields
-	 * @param FieldsCollection $pFieldsCollection
-	 * @param string $module
-	 * @return array
-	 */
-	private function filterActiveFields($allFields, FieldsCollection $pFieldsCollection, string $module): array
-	{
-		$activeFields = [];
-		foreach ($allFields as $field){
-			if ($pFieldsCollection->containsFieldByModule($module, $field)) {
-				$activeFields []= $field;
-			}
-		}
-		return $activeFields;
-	}
-
-	/** @return DataViewFilterableFields */
-	public function getDataView(): DataViewFilterableFields
-		{ return $this->_pDataView; }
-
-	/** @return InputVariableReader */
-	public function getInputVariableReader(): InputVariableReader
-		{ return $this->_pInputVariableReader; }
 }

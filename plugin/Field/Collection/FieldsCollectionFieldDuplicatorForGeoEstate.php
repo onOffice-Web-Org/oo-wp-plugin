@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -21,30 +21,26 @@
 
 declare (strict_types=1);
 
-namespace onOffice\WPlugin\Controller;
+namespace onOffice\WPlugin\Field\Collection;
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- */
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
 
-interface GeoPositionFieldHandlerBase
+class FieldsCollectionFieldDuplicatorForGeoEstate
 {
 	/**
-	 * @return array
+	 * @param FieldsCollection $pFieldsCollection
 	 */
-	public function getActiveFields(): array;
-
-
-	/**
-	 * @return array
-	 */
-	public function getActiveFieldsWithValue(): array;
-
-	/**
-	 * @param ViewProperty $pViewProperty
-	 */
-	public function readValues(ViewProperty $pViewProperty);
+	public function duplicateFields(FieldsCollection $pFieldsCollection)
+	{
+		try {
+			$pFieldLand = $pFieldsCollection->getFieldByModuleAndName
+				(onOfficeSDK::MODULE_ESTATE, 'land');
+			$row = $pFieldLand->getAsRow();
+			$pFieldCountry = Field::createByRow('country', $row);
+			$pFieldsCollection->addField($pFieldCountry);
+		} catch (UnknownFieldException $e) {}
+	}
 }

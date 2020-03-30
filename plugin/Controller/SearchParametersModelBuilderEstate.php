@@ -30,6 +30,7 @@ use onOffice\WPlugin\Controller\SortList\SortListDataModel;
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use onOffice\WPlugin\GeoPosition;
@@ -70,6 +71,7 @@ class SearchParametersModelBuilderEstate
 		SortListDataModel $pSortListDataModel): SearchParametersModel
 	{
 		$pFieldsCollection = new FieldsCollection();
+//		$pFieldsCollection->merge(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection()));
 		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 
 		$pModel = new SearchParametersModel();
