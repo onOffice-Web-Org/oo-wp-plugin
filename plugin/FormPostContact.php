@@ -45,6 +45,9 @@ use function home_url;
 class FormPostContact
 	extends FormPost
 {
+	/**	 */
+	const PORTALFILTER_IDENTIFIER = '[onOffice-WP]';
+
 	/** @var FormPostContactConfiguration */
 	private $_pFormPostContactConfiguration = null;
 
@@ -153,7 +156,7 @@ class FormPostContact
 			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $values['message'] ?? null,
-			'subject' => sanitize_text_field($subject),
+			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
 			'estatedata' => ["objekttitel", "ort", "plz", "land"],

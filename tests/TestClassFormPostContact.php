@@ -189,7 +189,7 @@ class TestClassFormPostContact
 			],
 			'estateid' => 1337,
 			'message' => null,
-			'subject' => '¡A new Contact!',
+			'subject' => '¡A new Contact!'.' '.FormPostContact::PORTALFILTER_IDENTIFIER,
 			'referrer' => '/test/page',
 			'formtype' => 'contact',
 			'estatedata' => ["objekttitel", "ort", "plz", "land"],
