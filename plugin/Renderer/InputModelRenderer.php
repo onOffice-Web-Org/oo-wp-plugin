@@ -226,14 +226,10 @@ class InputModelRenderer
 		return $pInstance;
 	}
 
-
 	/**
-	 *
-	 * @param InputModel $pInputModel
+	 * @param InputModelBase $pInputModel
 	 * @return string New name of HTML element, with brackets if multi == true
-	 *
 	 */
-
 	private function getHtmlElementName(InputModelBase $pInputModel): string
 	{
 		$name = $pInputModel->getIdentifier();

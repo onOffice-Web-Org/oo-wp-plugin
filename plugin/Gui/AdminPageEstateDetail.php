@@ -21,13 +21,18 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
-use onOffice\WPlugin\Field\FieldModuleCollection;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
+use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
@@ -37,7 +42,6 @@ use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
-use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_action;
 use function add_screen_option;
@@ -61,6 +65,7 @@ use function wp_enqueue_script;
 use function wp_nonce_field;
 use function wp_register_script;
 use function wp_verify_nonce;
+use const ONOFFICE_PLUGIN_DIR;
 
 /**
  *
@@ -76,9 +81,6 @@ class AdminPageEstateDetail
 	const VIEW_SAVE_FAIL_MESSAGE = 'view_save_fail_message';
 
 	/** */
-	const FORM_VIEW_RECORDS_FILTER = 'viewrecordsfilter';
-
-	/** */
 	const FORM_VIEW_LAYOUT_DESIGN = 'viewlayoutdesign';
 
 	/** */
@@ -89,9 +91,6 @@ class AdminPageEstateDetail
 
 	/** */
 	const FORM_VIEW_SIMILAR_ESTATES = 'viewsimilarestates';
-
-	/** */
-	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
 
 	/** */
 	const FORM_VIEW_CONTACT_DATA_FIELDS = 'viewcontactdatafields';
@@ -109,6 +108,8 @@ class AdminPageEstateDetail
 		$pDataView = $pDataDetailViewHandler->getDetailView();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
+
+		$pFieldsCollection = $this->readAllFields();
 
 		/* @var $pRenderer InputModelRenderer */
 		$pRenderer = $this->getContainer()->get(InputModelRenderer::class);
@@ -150,7 +151,7 @@ class AdminPageEstateDetail
 		echo '<div class="clear"></div>';
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		echo '<div style="float:left;">';
-		$this->generateAccordionBoxesContactPerson();
+		$this->generateAccordionBoxesContactPerson($pFieldsCollection);
 		echo '</div>';
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'contactperson', null);
@@ -165,7 +166,7 @@ class AdminPageEstateDetail
 		echo '<div class="clear"></div>';
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		echo '<div style="float:left;">';
-		$this->generateAccordionBoxes();
+		$this->generateAccordionBoxes($pFieldsCollection);
 		echo '</div>';
 		echo '<div id="listSettings" style="float:left;" class="postbox">';
 		do_accordion_sections(get_current_screen()->id, 'advanced', null);
@@ -227,33 +228,33 @@ class AdminPageEstateDetail
 	}
 
 	/**
-	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	protected function generateAccordionBoxes()
+	protected function generateAccordionBoxes(FieldsCollection $pFieldsCollection)
 	{
-		$fieldNames = array_keys($this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE));
+		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
+		$fieldsEstate = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
 
-		foreach ($fieldNames as $category)
-		{
-			$pFormFieldsConfig = $this->getFormModelByGroupSlug($category);
+		foreach (array_keys($fieldsEstate) as $category) {
+			$pFormFieldsConfig = $this->getFormModelByGroupSlug(onOfficeSDK::MODULE_ESTATE.$category);
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'advanced');
 		}
 	}
 
-
 	/**
-	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	protected function generateAccordionBoxesContactPerson()
+	protected function generateAccordionBoxesContactPerson(FieldsCollection $pFieldsCollection)
 	{
-		$fieldNamesContactData = array_keys($this->readFieldnamesByContent
-			(onOfficeSDK::MODULE_ADDRESS, $this->getAddressFieldsConfiguration()));
+		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
+		$fieldNamesContactData = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
 
-		foreach ($fieldNamesContactData as $content)
-		{
-			$pFormFieldsConfig = $this->getFormModelByGroupSlug($content);
+		foreach (array_keys($fieldNamesContactData) as $category) {
+			$pFormFieldsConfig = $this->getFormModelByGroupSlug(onOfficeSDK::MODULE_ADDRESS.$category);
 			$this->createMetaBoxByForm($pFormFieldsConfig, 'contactperson');
 		}
 	}
@@ -261,7 +262,6 @@ class AdminPageEstateDetail
 	/**
 	 *
 	 */
-
 	protected function buildForms()
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
@@ -317,38 +317,36 @@ class AdminPageEstateDetail
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesTemplate);
 		$this->addFormModel($pFormModelSimilarEstates);
 
-		$pFieldsConfiguration = new FieldModuleCollectionDecoratorInternalAnnotations
-			(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection()));
-
-		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, $pFieldsConfiguration);
+		$pFieldsCollection = $this->readAllFields();
+		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
+		$fieldsEstate = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
+		$fieldsAddress = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
-			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldNames);
-
-		$fieldNamesContactPerson =  $this->readFieldnamesByContent
-			(onOfficeSDK::MODULE_ADDRESS, $this->getAddressFieldsConfiguration());
+			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldsEstate);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS,
-			self::FORM_VIEW_CONTACT_DATA_FIELDS, $pFormModelBuilder, $fieldNamesContactPerson);
+			self::FORM_VIEW_CONTACT_DATA_FIELDS, $pFormModelBuilder, $fieldsAddress);
 	}
 
-
 	/**
-	 *
-	 * @return FieldModuleCollection
-	 *
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	private function getAddressFieldsConfiguration(): FieldModuleCollection
+	private function readAllFields(): FieldsCollection
 	{
-		return new FieldModuleCollectionDecoratorInternalAnnotations
-			(new FieldModuleCollectionDecoratorGeoPositionBackend
-				(new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection())));
+		$pFieldsCollection = new FieldsCollection;
+		$pFieldsCollection->merge
+			(new FieldModuleCollectionDecoratorInternalAnnotations
+				(new FieldModuleCollectionDecoratorGeoPositionBackend
+					(new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection()))));
+		$this->getContainer()->get(FieldsCollectionBuilderShort::class)
+			->addFieldsAddressEstate($pFieldsCollection);
+		return $pFieldsCollection;
 	}
-
 
 	/**
 	 *
 	 */
-
 	public function ajax_action()
 	{
 		$this->buildForms();
@@ -377,16 +375,15 @@ class AdminPageEstateDetail
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$valuesPrefixless = $pInputModelDBAdapterArray->generateValuesArray();
 		$pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($valuesPrefixless);
-		$result = true;
+		$pResultObject = new stdClass();
 
 		try {
 			$pDataDetailViewHandler->saveDetailView($pDataDetailView);
+			$pResultObject->result = true;
 		} catch (Exception $pEx) {
-			$result = false;
+			$pResultObject->result = false;
 		}
 
-		$pResultObject = new stdClass();
-		$pResultObject->result = $result;
 		$pResultObject->record_id = null;
 		$pResultObject->messageKey = $pResultObject->result ?
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE :
@@ -397,11 +394,9 @@ class AdminPageEstateDetail
 		wp_die();
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function doExtraEnqueues()
 	{
 		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/admin.js',
@@ -411,35 +406,25 @@ class AdminPageEstateDetail
 		wp_enqueue_script('postbox');
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function handleAdminNotices()
 	{
 		add_action('admin_notices', array($this, 'addAdminNoticeWrapper'));
 	}
 
-
 	/**
-	 *
 	 * rest will be added via js
-	 *
 	 */
-
 	public function addAdminNoticeWrapper()
 	{
 		echo '<div id="onoffice-notice-wrapper"></div>';
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	public function getEnqueueData(): array
 	{
 		return array(
@@ -451,53 +436,40 @@ class AdminPageEstateDetail
 	}
 
 	/**
-	 *
 	 * @param string $module
+	 * @param $groupSlug
 	 * @param FormModelBuilderEstateDetailSettings $pFormModelBuilder
 	 * @param array $fieldNames
-	 *
+	 * @throws UnknownModuleException
+	 * @throws ExceptionInputModelMissingField
 	 */
-
-	protected function addFieldsConfiguration($module, $groupSlug, FormModelBuilderEstateDetailSettings $pFormModelBuilder,
-		array $fieldNames, $htmlType = InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST)
+	private function addFieldsConfiguration($module, $groupSlug, FormModelBuilderEstateDetailSettings $pFormModelBuilder,
+		array $fieldNames)
 	{
-		foreach ($fieldNames as $category => $fields)
-		{
+		foreach ($fieldNames as $category => $fields) {
 			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
-				($category, $fields, $category);
+				($module.$category, $fields, $category);
 			$pInputModelFieldsConfig->setSpecialDivId(self::getSpecialDivId($module));
 			$pFormModelFieldsConfig = new FormModel();
 			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
-			$pFormModelFieldsConfig->setGroupSlug($category);
+			$pFormModelFieldsConfig->setGroupSlug($module.$category);
 			$pFormModelFieldsConfig->setLabel($category);
 			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
 			$this->addFormModel($pFormModelFieldsConfig);
 		}
 
-		$label = null;
-
-		if ($module == onOfficeSDK::MODULE_ESTATE)
-		{
-			$label = 'Fields Configuration Estate';
-		}
-		elseif ($module == onOfficeSDK::MODULE_ADDRESS)
-		{
-			$label = 'Fields Configuration Contact Person';
-		}
-
-		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module, $htmlType);
+		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module,
+			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
 		$pFormModelSortableFields = new FormModel();
 		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
 		$pFormModelSortableFields->setGroupSlug($groupSlug);
-		$pFormModelSortableFields->setLabel(__($label, 'onoffice'));
 		$pFormModelSortableFields->addInputModel($pInputModelSortableFields);
 		$this->addFormModel($pFormModelSortableFields);
 
 		$pFormHidden = new FormModel();
 		$pFormHidden->setIsInvisibleForm(true);
 
-		foreach ($pInputModelSortableFields->getReferencedInputModels() as $pReference)
-		{
+		foreach ($pInputModelSortableFields->getReferencedInputModels() as $pReference) {
 			$pFormHidden->addInputModel($pReference);
 		}
 
@@ -506,12 +478,9 @@ class AdminPageEstateDetail
 
 
 	/**
-	 *
 	 * @param string $module
 	 * @return string
-	 *
 	 */
-
 	private static function getSpecialDivId($module)
 	{
 		return 'actionFor'.$module;

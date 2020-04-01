@@ -30,6 +30,7 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
@@ -219,11 +220,13 @@ class FormModelBuilderEstateDetailSettings
 		return $pInputModelFieldsConfig;
 	}
 
-
 	/**
 	 *
-	 * @return InputModelDB
-	 *
+	 * @param $module
+	 * @param $htmlType
+	 * @return InputModelOption
+	 * @throws UnknownModuleException
+	 * @throws ExceptionInputModelMissingField
 	 */
 
 	public function createSortableFieldList($module, $htmlType)
@@ -249,39 +252,14 @@ class FormModelBuilderEstateDetailSettings
 		return $pInputModelFieldsConfig;
 	}
 
-
 	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelAddressFieldsConfig()
-	{
-		$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create(
-			InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
-
-		$fieldNames = $this->readFieldnames(onOfficeSDK::MODULE_ADDRESS);
-		$pInputModelFieldsConfig->setHtmlType(InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST);
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
-		$fields = $this->_pDataDetailView->getAddressFields();
-		$pInputModelFieldsConfig->setValue($fields);
-
-		return $pInputModelFieldsConfig;
-	}
-
-
-	/**
-	 *
 	 * @param string $field
-	 * @return InputModelDB
-	 *
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
 	 */
-
 	public function createInputModelTemplate(string $field = InputModelOptionFactoryDetailView::INPUT_TEMPLATE)
 	{
 		$labelTemplate = __('Template', 'onoffice');
-
 		$pInputModelTemplate = $this->_pInputModelDetailViewFactory->create($field, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
