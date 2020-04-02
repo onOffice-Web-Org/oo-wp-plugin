@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+== 2.5.1 ==
+
+**Fixes**
+
+* fix issues with geo fields on estate list
+
 == 2.5.0 ==
 
 **Changes**
@@ -199,6 +205,9 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+== 2.5.1 ==
+Fix issue with geo fields
 
 == 2.4.1 ==
 Fix for newsletter checkbox (only for applicant form).
