@@ -26,6 +26,8 @@ namespace onOffice\WPlugin\Controller\ContentFilter;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use onOffice\SDK\Exception\HttpFetchNoResultException;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Utility\Logger;
@@ -77,6 +79,8 @@ class ContentFilterShortCodeEstate
 	 * @throws NotFoundException
 	 * @throws UnknownFieldException
 	 * @throws UnknownViewException
+	 * @throws HttpFetchNoResultException
+	 * @throws APIEmptyResultException
 	 */
 	private function buildReplacementString(array $attributesInput): string
 	{

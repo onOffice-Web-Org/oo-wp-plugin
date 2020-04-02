@@ -27,11 +27,7 @@ use onOffice\WPlugin\SDKWrapper;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
-
 class APIClientActionGeneric
 {
 	/** @var SDKWrapper */
@@ -60,13 +56,10 @@ class APIClientActionGeneric
 
 
 	/**
-	 *
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param string $actionId
 	 * @param string $resourceType
-	 *
 	 */
-
 	public function __construct(SDKWrapper $pSDKWrapper, string $actionId, string $resourceType)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
@@ -75,61 +68,43 @@ class APIClientActionGeneric
 		$this->setResultCallback([$this, 'onAfterExecution']);
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function __clone()
 	{
 		$this->setResultCallback([$this, 'onAfterExecution']);
 	}
 
-
 	/**
-	 *
 	 * @return ApiClientException
-	 *
 	 */
-
 	private function generateException(): ApiClientException
 	{
 		$pExceptionFactory = new APIClientExceptionFactory();
 		return $pExceptionFactory->createExceptionByAPIClientAction($this);
 	}
 
-
 	/**
-	 *
 	 * @return $this
-	 *
 	 */
-
 	public function addRequestToQueue(): APIClientActionGeneric
 	{
 		$this->_requestHandle = $this->_pSDKWrapper->addRequestByApiAction($this);
 		return $this;
 	}
 
-
 	/**
-	 *
 	 * call addRequestToQueue() first
-	 *
 	 */
-
 	public function sendRequests()
 	{
 		$this->_pSDKWrapper->sendRequests();
 	}
 
-
 	/**
-	 *
 	 * @return bool
-	 *
 	 */
-
 	public function getResultStatus(): bool
 	{
 		$resultApi = $this->getResult();
@@ -138,27 +113,19 @@ class APIClientActionGeneric
 		return $result;
 	}
 
-
 	/**
-	 *
 	 * @return int
-	 *
 	 */
-
 	public function getErrorCode(): int
 	{
 		$resultApi = $this->getResult();
 		return $resultApi['status']['errorcode'] ?? 500;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 * @throws APIEmptyResultException
-	 *
+	 * @throws ApiClientException
 	 */
-
 	public function getResultRecords(): array
 	{
 		if ($this->getResultStatus()) {
@@ -169,14 +136,10 @@ class APIClientActionGeneric
 		throw $this->generateException();
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 * @throws APIEmptyResultException
-	 *
+	 * @throws ApiClientException
 	 */
-
 	public function getResultMeta(): array
 	{
 		if ($this->getResultStatus()) {
@@ -187,27 +150,19 @@ class APIClientActionGeneric
 		throw $this->generateException();
 	}
 
-
 	/**
-	 *
 	 * @param array $result
-	 *
 	 */
-
 	public function onAfterExecution(array $result)
 	{
 		$this->setResult($result);
 	}
 
-
 	/**
-	 *
 	 * @param string $actionId
 	 * @param string $resourceType
 	 * @return self
-	 *
 	 */
-
 	public function withActionIdAndResourceType(string $actionId, string $resourceType): self
 	{
 		$pAPIClientAction = clone $this;
@@ -215,7 +170,6 @@ class APIClientActionGeneric
 		$pAPIClientAction->setResourceType($resourceType);
 		return $pAPIClientAction;
 	}
-
 
 	/** @return string */
 	public function getActionId(): string

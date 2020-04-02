@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\SearchParametersModelBuilderEstate;
@@ -112,6 +113,7 @@ class ContentFilterShortCodeEstateList
 	 * @throws UnknownFieldException
 	 * @throws UnknownViewException
 	 * @throws APIEmptyResultException
+	 * @throws HttpFetchNoResultException
 	 */
 	public function render(array $attributes): string
 	{
@@ -137,7 +139,7 @@ class ContentFilterShortCodeEstateList
 			$pEstateList->setUnitsViewName($attributes['units']);
 			$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 
-			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery()->get('page', 1));
+			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery()->get('page', 1) ?: 1);
 			$pTemplate = $this->_pTemplate
 				->withTemplateName($pListViewWithSortParams->getTemplate())
 				->withEstateList($pEstateList);

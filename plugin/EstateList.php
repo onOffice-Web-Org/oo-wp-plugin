@@ -209,11 +209,11 @@ class EstateList
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 	}
 
-
 	/**
 	 * @param array $estateIds
 	 * @throws API\APIEmptyResultException
-	 * @throws HttpFetchNoResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	private function getEstateContactPerson(array $estateIds)
 	{
@@ -223,15 +223,10 @@ class EstateList
 			'parentids' => array_keys($estateIds),
 			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
 		];
-		$pAPIClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
 		$pAPIClientAction->setParameters($parameters);
-
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
-
-		if (!$pAPIClientAction->getResultStatus()) {
-			throw new HttpFetchNoResultException();
-		}
-
 		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
 	}
 
@@ -328,16 +323,19 @@ class EstateList
 	/**
 	 * @param array $responseArrayContacts
 	 * @param array $estateIds
+	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	private function collectEstateContactPerson($responseArrayContacts, array $estateIds)
 	{
 		$records = $responseArrayContacts[0]['elements'] ?? [];
 		$allAddressIds = [];
 
-		foreach ($records as $estateId => $adressIds) {
+		foreach ($records as $estateId => $addressIds) {
 			$subjectEstateId = $estateIds[$estateId];
-			$this->_estateContacts[$subjectEstateId] = $adressIds;
-			$allAddressIds = array_unique(array_merge($allAddressIds, $adressIds));
+			$this->_estateContacts[$subjectEstateId] = $addressIds;
+			$allAddressIds = array_unique(array_merge($allAddressIds, $addressIds));
 		}
 
 		$fields = $this->_pDataView->getAddressFields();
