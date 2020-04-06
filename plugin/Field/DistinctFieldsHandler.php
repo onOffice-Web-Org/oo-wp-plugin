@@ -128,14 +128,11 @@ class DistinctFieldsHandler
 		$values = [];
 
 		foreach ($pModel->getDistinctFields() as $field) {
-			if ($pFieldsCollection->containsFieldByModule($pModel->getModule(), $field))
-			{
-				$pField = $pFieldsCollection->getFieldByModuleAndName($pModel->getModule(), $field);
-				$pApiClientAction = $apiClientActions[$field];
-				$records = $pApiClientAction->getResultRecords();
-				$field = $this->editMultiselectableField($pField);
-				$values[$field] = $records[0]['elements'];
-			}
+			$pField = $pFieldsCollection->getFieldByModuleAndName($pModel->getModule(), $field);
+			$pApiClientAction = $apiClientActions[$field];
+			$records = $pApiClientAction->getResultRecords();
+			$field = $this->editMultiselectableField($pField);
+			$values[$field] = $records[0]['elements'];
 		}
 
 		return $values;
@@ -177,7 +174,7 @@ class DistinctFieldsHandler
 
 	private function buildParameters(string $field, DistinctFieldsHandlerModel $pModel): array
 	{
-		$filter = $this->_pDistinctFieldsFilter->filter($field, $pModel->getInputValues(), $pModel->getModule());
+		$filter = $this->_pDistinctFieldsFilter->filter($field, $pModel->getInputValues(), $pModel->getModule(), $pModel->getDistinctFields());
 		$requestParams = [
 			'language' => Language::getDefault(),
 			'module' => $pModel->getModule(),

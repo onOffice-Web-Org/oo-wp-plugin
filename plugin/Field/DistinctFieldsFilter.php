@@ -90,16 +90,18 @@ class DistinctFieldsFilter
 		return $field === $distinctField;
 	}
 
-
 	/**
-	 *
 	 * @param string $distinctField
 	 * @param array $inputValues
 	 * @param string $module
-	 *
+	 * @param array $possibleDistinctFields
+	 * @return array
+	 * @throws UnknownFieldException
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
 	 */
 
-	public function filter(string $distinctField, array $inputValues, string $module): array
+	public function filter(string $distinctField, array $inputValues, string $module, array $possibleDistinctFields): array
 	{
 		$filter = [];
 		$pFieldsCollection = new FieldsCollection();
@@ -110,7 +112,8 @@ class DistinctFieldsFilter
 		foreach ($inputValues as $key => $value) {
 			if (in_array($key, self::NOT_ALLOWED_KEYS) ||
 				in_array($value, self::NOT_ALLOWED_VALUES) ||
-				$this->isDistinctField($key, $distinctField)) {
+				$this->isDistinctField($key, $distinctField) ||
+				!in_array($key, $possibleDistinctFields)) {
 				continue;
 			}
 
@@ -124,10 +127,6 @@ class DistinctFieldsFilter
 				$field = $pString->replace('__bis', '');
 				$filter[$field] = [$this->filterForEstateBis($filter, $key, $value)];
 			} else {
-				if (!$pFieldsCollection->containsFieldByModule($module, $key))
-				{
-					continue;
-				}
 				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $key);
 				$field = $key;
 

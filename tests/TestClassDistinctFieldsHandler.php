@@ -162,7 +162,7 @@ class TestClassDistinctFieldsHandler
 	{
 		$_POST = [
 			'field' => 'objektart[]',
-			'inputValues' => '{\\"\\":\\"OK\\",\\"nutzungsart[]\\":[\\"wohnen\\"],\\"objektart[]\\":[\\"haus\\"],\\"radius\\":\\"0\\",\\"oo_formid\\":\\"contactform\\",\\"oo_formno\\":\\"10\\",\\"Id\\":\\"2370\\"}',
+			'inputValues' => '{\\"\\":\\"OK\\",\\"nutzungsart\\":[\\"wohnen\\"],\\"objektart\\":[\\"haus\\"],\\"radius\\":\\"0\\",\\"oo_formid\\":\\"contactform\\",\\"oo_formno\\":\\"10\\",\\"Id\\":\\"2370\\"}',
 			'module' => 'estate',
 			'distinctValues' => ['nutzungsart','objektart'],
 		];
