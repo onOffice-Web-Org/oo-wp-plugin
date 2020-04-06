@@ -28,22 +28,21 @@
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
+/* @var $pEstates EstateList */
 $pEstatesClone = clone $pEstates;
-
-/* @var $pEstatesClone EstateList */
 $pEstatesClone->resetEstateIterator();
 $estateData = array();
 
-while ( $currentEstateMap = $pEstatesClone->estateIterator( EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP ) ) {
-	$virtualAddressSet = (bool)$currentEstateMap['virtualAddress'];
+while ( $currentEstateMap  = $pEstatesClone->estateIterator( EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP ) ) {
+	$virtualAddressSet = (bool)$currentEstateMap ['virtualAddress'];
 	$position = array(
-		'lat' => (float) $currentEstateMap['breitengrad'],
-		'lng' => (float) $currentEstateMap['laengengrad'],
+		'lat' => (float) $currentEstateMap ['breitengrad'],
+		'lng' => (float) $currentEstateMap ['laengengrad'],
 	);
-	$title = $currentEstateMap['objekttitel'];
+	$title = $currentEstateMap ['objekttitel'];
 	$visible = ! $virtualAddressSet;
 
-	if ( 0 == $position['lng'] || 0 == $position['lat'] || ! $currentEstateMap['showGoogleMap'] ) {
+	if ( 0 == $position['lng'] || 0 == $position['lat'] || ! $currentEstateMap ['showGoogleMap'] ) {
 		continue;
 	}
 
@@ -53,8 +52,6 @@ while ( $currentEstateMap = $pEstatesClone->estateIterator( EstateViewFieldModif
 		'visible' => $visible,
 	);
 }
-unset($currentEstateMap);
-unset($pEstatesClone);
 ?>
 
 <script type="text/javascript">
@@ -101,4 +98,4 @@ unset($pEstatesClone);
 
 </script>
 
-<div id="gmap" style="width: 600px; height: 400px;"></div>
+<div id="gmap" style="width: 100%; height: 100%;"></div>

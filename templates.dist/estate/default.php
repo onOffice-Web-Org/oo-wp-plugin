@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  *    Copyright (C) 2016  onOffice Software AG
@@ -18,25 +17,95 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 /**
  *
  *  Default template
  *
  */
-
 use onOffice\WPlugin\Favorites;
-
-echo '<div>'.$generateSortDropDown().'</div>';
-
 // display search form
 require 'SearchForm.php';
-
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
-require('map/map.php');
+$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
 
-if (Favorites::isFavorizationEnabled()): ?>
+?>
+
+<?php
+	/**
+	* If you want to add a map with markers for the estates you can implement it like this: 
+	* <div class="oo-estate-map">
+	* 	<?php require('map/map.php'); ?>
+	* </div>
+	*/
+?>
+<div class="oo-listheadline">
+	<h1><?php esc_html_e('Overview of Estates', 'onoffice'); ?></h1>
+	<p>
+		
+		<?php /* translators: %d will be replaced with a number. */
+		echo sprintf(esc_html_x('Found %d estates over all.', 'template', 'onoffice'), $pEstates->getEstateOverallCount());
+		?>
+	</p>
+</div>
+<div class="oo-estate-sort">
+	<?php echo '<div class="col-lg-12">'.$generateSortDropDown().'</div>'; ?>
+</div>
+<div class="oo-listframe">
+	<?php
+	$pEstatesClone = clone $pEstates;
+	$pEstatesClone->resetEstateIterator();
+	while ( $currentEstate = $pEstatesClone->estateIterator() ) :
+		$marketingStatus = $currentEstate['vermarktungsstatus'];
+		unset($currentEstate['vermarktungsstatus']);
+		$estateId = $pEstatesClone->getCurrentEstateId();
+	?>
+		<div class="oo-listobject">
+			<div class="oo-listobjectwrap">
+				<?php
+				$estatePictures = $pEstatesClone->getEstatePictures();
+				foreach ( $estatePictures as $id ) {
+					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
+					echo '<a href="'.esc_url($pEstatesClone->getEstateLink()).'" style="background-image: url('.esc_url($pEstatesClone->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
+						echo '<span>'.esc_html($marketingStatus).'</span>';
+					}
+					echo '</a>';
+				} ?>
+				<div class="oo-listinfo">
+					<div class="oo-listtitle">
+						<?php echo $currentEstate["objekttitel"]; ?>
+					</div>
+					<div class="oo-listinfotable">
+						<?php foreach ( $currentEstate as $field => $value ) {
+							if ( is_numeric( $value ) && 0 == $value ) {
+								continue;
+							}
+							if ( in_array($field, $dontEcho) ) {
+								continue;
+							}
+							if ( $value == "" ) {
+								continue;
+							}
+							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+						} ?>
+					</div>
+					<div class="oo-detailslink">
+						<a href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
+							<?php esc_html_e('Show Details', 'onoffice'); ?>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php if (Favorites::isFavorizationEnabled()): ?>
+			<button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
+				<?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
+			</button>
+		<?php endif ?>
+	<?php endwhile; ?>
+</div>
+<?php if (Favorites::isFavorizationEnabled()) { ?>
 <script>
 	$(document).ready(function() {
 		onofficeFavorites = new onOffice.favorites(<?php echo json_encode(Favorites::COOKIE_NAME); ?>);
@@ -59,72 +128,4 @@ if (Favorites::isFavorizationEnabled()): ?>
 		$('button.onoffice.favorize').each(onOffice.addFavoriteButtonLabel);
 	});
 </script>
-<?php endif ?>
-<h1><?php esc_html_e('Overview of Estates', 'onoffice'); ?></h1>
-
-<p><?php
-/* translators: %d will be replaced with a number. */
-echo sprintf(esc_html_x('Found %d estates over all.', 'template', 'onoffice'), $pEstates->getEstateOverallCount());
-?></p>
-
-<?php
-$pEstates->resetEstateIterator();
-while ( $currentEstate = $pEstates->estateIterator() ) :
-	$marketingStatus = $currentEstate['vermarktungsstatus'];
-	unset($currentEstate['vermarktungsstatus']);
-	$estateId = $pEstates->getCurrentEstateId();
-?>
-
-<p>
-	<a href="<?php echo $pEstates->getEstateLink(); ?>"><?php esc_html_e('Show Details', 'onoffice'); ?></a><br>
-	<?php foreach ( $currentEstate as $field => $value ) :
-		if ( is_numeric( $value ) && 0 == $value ) {
-			continue;
-		}
-	?>
-
-		<?php echo esc_html($pEstates->getFieldLabel( $field )) .': '.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)); ?><br>
-
-	<?php endforeach; ?>
-
-	<p><b><?php esc_html_e('Contact form: ', 'onoffice'); ?></b>
-		<?php
-			try {
-				$pForm = new \onOffice\WPlugin\Form('Contactform', \onOffice\WPlugin\Form::TYPE_CONTACT);
-				include( __DIR__ . "/../form/defaultform.php" );
-			} catch (\onOffice\WPlugin\DataFormConfiguration\UnknownFormException $pE) {
-				echo esc_html__('(Form is not available)', 'onoffice');
-			}
-		?>
-	</p>
-
-
-	<?php
-	$estatePictures = $pEstates->getEstatePictures();
-	foreach ( $estatePictures as $id ) :
-		$pictureValues = $pEstates->getEstatePictureValues( $id );
-		echo '<a href="'.esc_url($pictureValues['url']).'" class="estate-status">';
-
-		if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
-			echo '<span>'.esc_html($marketingStatus).'</span>';
-		}
-		echo '<img src="'.esc_url($pEstates->getEstatePictureUrl( $id, array('width' => 400, 'height' => 300) )).'">';
-		echo '</a>';
-	?>
-		<?php echo esc_html( $pictureValues['text'] ); ?>
-	<?php endforeach; ?>
-
-	<?php echo $pEstates->getEstateUnits( ); ?>
-	<?php if ($pEstates->getDocument() !== ''): ?>
-		<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
-		<a href="<?php echo $pEstates->getDocument(); ?>">
-			<?php esc_html_e('PDF expose', 'onoffice'); ?>
-		</a>
-	<?php endif; ?>
-
-	<?php if (Favorites::isFavorizationEnabled()): ?>
-		<button data-onoffice-estateid="<?php echo $pEstates->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
-			<?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
-		</button>
-	<?php endif ?>
-<?php endwhile; ?>
+<?php } ?>

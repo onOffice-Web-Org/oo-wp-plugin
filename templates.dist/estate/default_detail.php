@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  *    Copyright (C) 2016  onOffice Software AG
@@ -18,103 +17,111 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 use onOffice\WPlugin\EstateDetail;
-
 /**
  *
  *  Default template
  *
  */
 
-/* @var $pEstates EstateDetail */
-$pEstates->resetEstateIterator();
-	while ( $currentEstate = $pEstates->estateIterator() ) :
-require('map/map.php');
+$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
 
 ?>
-<h1><?php esc_html_e('Detail View', 'onoffice') ?></h1>
-	<?php echo $pEstates->getEstateUnits( ); ?>
-	<?php foreach ( $currentEstate as $field => $value ) :
-		if ( is_numeric( $value ) && 0 == $value ) {
-			continue;
-		}
-	?>
-		<?php echo esc_html($pEstates->getFieldLabel( $field )) .': '.(is_array($value) ? implode(', ', $value) : $value); ?><br>
-
-	<?php endforeach;
-
-	foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
-		<ul>
-			<b> <?php echo esc_html__('Contact person', 'onoffice').': '.esc_html($contactData['Vorname']); ?> <?php echo esc_html($contactData['Name']); ?></b>
-			<?php // either use the phone number flagged as default (add `default*` to config) ... ?>
-			<li>Telefon: <?php echo $contactData['defaultphone']; ?></li>
-			<li>Telefax: <?php echo $contactData['defaultfax']; ?></li>
-			<li>E-Mail: <?php echo $contactData['defaultemail']; ?></li>
-			<?php // ... or the specific one (add `mobile`, `phone`, `email` to config): ?>
-			<?php
-			$mobilePhoneNumbers = $contactData->offsetExists('mobile') ? $contactData->getValueRaw('mobile') : array();
-			if (count($mobilePhoneNumbers) > 0) :
-			?>
-				<li>
-					<?php esc_html_e('Phone (mobile): ', 'onoffice'); ?>
-					<?php echo esc_html(array_shift($mobilePhoneNumbers)); ?>
-				</li>
-			<?php endif; ?>
-			<?php
-			$businessPhoneNumbers = $contactData->offsetExists('phonebusiness') ?
-				$contactData->getValueRaw('phonebusiness') : array();
-			if (count($businessPhoneNumbers) > 0) :
-			?>
-				<li>
-					<?php esc_html_e('Phone (business): ', 'onoffice'); ?>
-					<?php echo esc_html(array_shift($businessPhoneNumbers)); ?>
-				</li>
-			<?php endif; ?>
-
-			<?php
-			echo 'Bild: ', $contactData->getValueRaw('imageUrl'), '<br>';
-			$businessEmailAddresses = $contactData->offsetExists('emailbusiness') ?
-				$contactData->getValueRaw('emailbusiness') : array();
-			if (count($businessEmailAddresses) > 0) :
-			?>
-				<li>
-					<?php esc_html_e('E-Mail (business): ', 'onoffice'); ?>
-					<?php echo esc_html(array_shift($businessEmailAddresses)); ?>
-				</li>
-			<?php endif; ?>
-		</ul>
-
-	<?php endforeach; ?>
-
+<div class="oo-detailview">
 	<?php
-
-	$estateMovieLinks = $pEstates->getEstateMovieLinks();
-	foreach ($estateMovieLinks as $movieLink) {
-		echo '<a href="'.esc_attr($movieLink['url']).'" title="'.esc_attr($movieLink['title']).'">'
-			.esc_html($movieLink['title']).'</a><br>';
-	}
-
-	$movieOptions = array('width' => 500); // optional
-
-	foreach ($pEstates->getMovieEmbedPlayers($movieOptions) as $movieInfos) {
-		echo '<h3>'.esc_html($movieInfos['title']).'</h3>';
-		echo $movieInfos['player'];
-	}
-
-	$estatePictures = $pEstates->getEstatePictures();
-	foreach ( $estatePictures as $id ) : ?>
-	<a href="<?php echo $pEstates->getEstatePictureUrl( $id ); ?>">
-		<img src="<?php echo esc_url($pEstates->getEstatePictureUrl( $id, array('width' => 300, 'height' => 400) )); ?>">
-		<?php echo $pEstates->getEstatePictureTitle($id).'<br>'; ?>
-	</a>
-	<?php endforeach; ?>
-
-	<?php if ($pEstates->getDocument() != ''): ?>
-		<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
-		<a href="<?php echo $pEstates->getDocument(); ?>">
-			<?php esc_html_e('PDF expose', 'onoffice'); ?>
-		</a>
-	<?php endif; ?>
-	<?php echo $pEstates->getSimilarEstates(); ?>
-<?php endwhile; ?>
+	$pEstates->resetEstateIterator();
+	while ( $currentEstate = $pEstates->estateIterator() ) { ?>
+		<div class="oo-detailsheadline">
+			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
+		</div>
+		<div class="oo-details-main">
+			<div class="oo-detailsgallery" id="oo-galleryslide">
+				<?php $estatePictures = $pEstates->getEstatePictures();
+				foreach ( $estatePictures as $id ) { ?>
+				<div class="oo-detailspicture" style="background-image: url('<?php echo esc_url($pEstates->getEstatePictureUrl( $id )); ?>');"></div>
+				<?php } ?>
+			</div>
+			<div class="oo-detailstable">	
+				<?php foreach ( $currentEstate as $field => $value ) {
+					if ( is_numeric( $value ) && 0 == $value ) {
+						continue;
+					}
+					if ( in_array($field, $dontEcho) ) {
+						continue;
+					}
+					if ( $value == "" ) {
+						continue;
+					}
+					echo '<div class="oo-detailslisttd">'.esc_html($pEstates->getFieldLabel( $field )) .'</div><div class="oo-detailslisttd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+				} ?>
+			</div>
+			<?php if ( $currentEstate["objektbeschreibung"] !== "" ) { ?>
+				<div class="oo-detailsfreetext">	
+					<h2><?php esc_html_e('Description', 'onoffice') ?></h2>
+					<?php echo $currentEstate["objektbeschreibung"]; ?>
+				</div>
+			<?php } ?>
+			<?php if ( $currentEstate["lage"] !== "" ) { ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php esc_html_e('Location', 'onoffice') ?></h2>
+					<?php echo $currentEstate["lage"]; ?>
+				</div>
+			<?php } ?>
+			<?php
+				/**
+				* If you want to add a map to show the location of the property you can implement it like this: 
+				* <div class="oo-detailsmap">
+				* 	<?php require('map/map.php'); ?>
+				* </div>
+				*/
+			?>
+			<?php if ( $currentEstate["ausstatt_beschr"] !== "" ) { ?>
+				<div class="oo-detailsfreetext">	
+					<h2><?php esc_html_e('Equipment', 'onoffice') ?></h2>
+					<?php echo $currentEstate["ausstatt_beschr"]; ?>
+				</div>
+			<?php } ?>
+			<?php if ( $currentEstate["sonstige_angaben"] !== "" ) { ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php esc_html_e('Other Information', 'onoffice') ?></h2>
+					<?php echo $currentEstate["sonstige_angaben"]; ?>
+				</div>
+			<?php } ?>
+			<div class="oo-units">
+				<?php echo $pEstates->getEstateUnits( ); ?>
+			</div>
+		</div>
+		<div class="oo-details-sidebar">
+			<div class="oo-asp">
+				<h2><?php echo esc_html__('Contact person', 'onoffice'); ?></h2>
+				<?php
+				foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
+					<div class="oo-aspname">
+						<strong><?php echo $contactData['Anrede'].'&nbsp;'.$contactData['Vorname'].'&nbsp;'.$contactData['Name']; ?></strong>
+					</div>
+					<div class="oo-asplocation">
+						<span><?php echo $contactData['Strasse']; ?></span>
+						<span><?php echo $contactData['Plz'].'&nbsp;'.$contactData['Ort']; ?></span>
+					</div>
+					<div class="oo-aspcontact">
+						<span><?php echo $contactData['Telefon1']; ?></span>					
+					</div>
+				<?php endforeach; ?>
+			</div>
+			<div class="oo-detailsform">
+				<!-- put your form here -->
+			</div>
+			<div class="oo-detailsexpose">
+				<?php if ($pEstates->getDocument() != ''): ?>
+					<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
+					<a href="<?php echo $pEstates->getDocument(); ?>">
+						<?php esc_html_e('PDF expose', 'onoffice'); ?>
+					</a>
+				<?php endif; ?>
+			</div>
+		</div>
+		<div class="oo-similar">
+			<?php echo $pEstates->getSimilarEstates(); ?>
+		</div>
+	<?php } ?>
+</div>
