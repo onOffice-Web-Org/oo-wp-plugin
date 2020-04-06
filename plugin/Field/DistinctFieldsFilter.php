@@ -124,6 +124,10 @@ class DistinctFieldsFilter
 				$field = $pString->replace('__bis', '');
 				$filter[$field] = [$this->filterForEstateBis($filter, $key, $value)];
 			} else {
+				if (!$pFieldsCollection->containsFieldByModule($module, $key))
+				{
+					continue;
+				}
 				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $key);
 				$field = $key;
 

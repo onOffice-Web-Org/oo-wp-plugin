@@ -128,11 +128,14 @@ class DistinctFieldsHandler
 		$values = [];
 
 		foreach ($pModel->getDistinctFields() as $field) {
-			$pField = $pFieldsCollection->getFieldByModuleAndName($pModel->getModule(), $field);
-			$pApiClientAction = $apiClientActions[$field];
-			$records = $pApiClientAction->getResultRecords();
-			$field = $this->editMultiselectableField($pField);
-			$values[$field] = $records[0]['elements'];
+			if ($pFieldsCollection->containsFieldByModule($pModel->getModule(), $field))
+			{
+				$pField = $pFieldsCollection->getFieldByModuleAndName($pModel->getModule(), $field);
+				$pApiClientAction = $apiClientActions[$field];
+				$records = $pApiClientAction->getResultRecords();
+				$field = $this->editMultiselectableField($pField);
+				$values[$field] = $records[0]['elements'];
+			}
 		}
 
 		return $values;

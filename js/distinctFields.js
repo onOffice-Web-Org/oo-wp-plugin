@@ -106,8 +106,7 @@ jQuery(function() {
 						index in multiselectSelectedValues) {
 					var cleanName = index.replace("[]", "");
 					var element = $("[data-name=" + cleanName + "]");
-
-					renderMultiselectable(element, values, multiselectSelectedValues[index]);
+					renderMultiselectable(element, values, multiselectSelectedValues[cleanName]);
 				} else if (index.indexOf("[]") === -1) {
 					renderNonMultiselectable(index, values);
 				}
