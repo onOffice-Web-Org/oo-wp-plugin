@@ -29,31 +29,30 @@ use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /* @var $pEstates EstateList */
-$pEstatesClone = clone $pEstates;
-$pEstatesClone->resetEstateIterator();
-$estateData = [];
+$estateData = (function(EstateList $pEstatesClone): array {
+	$pEstatesClone->resetEstateIterator();
+	$estateData = [];
 
-while ($currentEstateMap  = $pEstatesClone->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
-	$virtualAddressSet = (bool)$currentEstateMap ['virtualAddress'];
-	$position = [
-		'lat' => (float) $currentEstateMap ['breitengrad'],
-		'lng' => (float) $currentEstateMap ['laengengrad'],
-	];
-	$title = $currentEstateMap ['objekttitel'];
-	$visible = !$virtualAddressSet;
+	while ($currentEstateMap = $pEstatesClone->estateIterator
+		(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
+		$virtualAddressSet = (bool)$currentEstateMap['virtualAddress'];
+		$position = [
+			'lat' => (float)$currentEstateMap['breitengrad'],
+			'lng' => (float)$currentEstateMap['laengengrad'],
+		];
+		$title = $currentEstateMap['objekttitel'];
+		$visible = !$virtualAddressSet;
 
-	if (.0 === $position['lng'] || .0 === $position['lat'] || !$currentEstateMap ['showGoogleMap']) {
-		continue;
+		if (.0 !== $position['lng'] && .0 !== $position['lat'] && $currentEstateMap['showGoogleMap']) {
+			$estateData[] = [
+				'latlng' => $position,
+				'options' => ['title' => $title],
+				'visible' => $visible,
+			];
+		}
 	}
-
-	$estateData []= [
-		'latlng' => $position,
-		'options' => [
-			'title' => $title,
-		],
-		'visible' => $visible,
-	];
-}
+	return $estateData;
+})(clone $pEstates);
 ?>
 
 <div id="map" style="width: 100%; height: 100%;"></div>
@@ -83,3 +82,4 @@ while ($currentEstateMap  = $pEstatesClone->estateIterator(EstateViewFieldModifi
 	map.fitBounds(group.getBounds());
 })();
 </script>
+<?php unset($estateData); ?>

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- *    Copyright (C) 2016  onOffice Software AG
+ *    Copyright (C) 2020  onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 use onOffice\WPlugin\EstateDetail;
+
 /**
  *
  *  Default template
@@ -25,7 +27,7 @@ use onOffice\WPlugin\EstateDetail;
  */
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
-
+/** @var EstateDetail $pEstates */
 ?>
 <div class="oo-detailview">
 	<?php
@@ -36,13 +38,17 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		</div>
 		<div class="oo-details-main">
 			<div class="oo-detailsgallery" id="oo-galleryslide">
-				<?php $estatePictures = $pEstates->getEstatePictures();
-				foreach ( $estatePictures as $id ) { ?>
-				<div class="oo-detailspicture" style="background-image: url('<?php echo esc_url($pEstates->getEstatePictureUrl( $id )); ?>');"></div>
-				<?php } ?>
+				<?php
+				$estatePictures = $pEstates->getEstatePictures();
+				foreach ( $estatePictures as $id ) {
+					printf('<div class="oo-detailspicture" style="background-image: url(\'%s\');"></div>'."\n",
+						esc_url($pEstates->getEstatePictureUrl($id)));
+				}
+			?>
 			</div>
-			<div class="oo-detailstable">	
-				<?php foreach ( $currentEstate as $field => $value ) {
+			<div class="oo-detailstable">
+				<?php
+				foreach ( $currentEstate as $field => $value ) {
 					if ( is_numeric( $value ) && 0 == $value ) {
 						continue;
 					}
@@ -52,21 +58,27 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					if ( $value == "" ) {
 						continue;
 					}
-					echo '<div class="oo-detailslisttd">'.esc_html($pEstates->getFieldLabel( $field )) .'</div><div class="oo-detailslisttd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+					echo '<div class="oo-detailslisttd">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'."\n"
+						.'<div class="oo-detailslisttd">'
+							.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
+							.'</div>'."\n";
 				} ?>
 			</div>
+
 			<?php if ( $currentEstate["objektbeschreibung"] !== "" ) { ?>
-				<div class="oo-detailsfreetext">	
-					<h2><?php esc_html_e('Description', 'onoffice') ?></h2>
-					<?php echo $currentEstate["objektbeschreibung"]; ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php esc_html_e('Description', 'onoffice'); ?></h2>
+					<?php echo $currentEstate["objektbeschreibung"]."\n"; ?>
 				</div>
 			<?php } ?>
+
 			<?php if ( $currentEstate["lage"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Location', 'onoffice') ?></h2>
-					<?php echo $currentEstate["lage"]; ?>
+					<h2><?php esc_html_e('Location', 'onoffice'); ?></h2>
+					<?php echo $currentEstate["lage"]."\n"; ?>
 				</div>
 			<?php } ?>
+
 			<?php
 				/**
 				* If you want to add a map to show the location of the property you can implement it like this: 
@@ -75,18 +87,21 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				* </div>
 				*/
 			?>
+
 			<?php if ( $currentEstate["ausstatt_beschr"] !== "" ) { ?>
-				<div class="oo-detailsfreetext">	
-					<h2><?php esc_html_e('Equipment', 'onoffice') ?></h2>
-					<?php echo $currentEstate["ausstatt_beschr"]; ?>
+				<div class="oo-detailsfreetext">
+					<h2><?php esc_html_e('Equipment', 'onoffice'); ?></h2>
+					<?php echo $currentEstate["ausstatt_beschr"]."\n"; ?>
 				</div>
 			<?php } ?>
+
 			<?php if ( $currentEstate["sonstige_angaben"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Other Information', 'onoffice') ?></h2>
-					<?php echo $currentEstate["sonstige_angaben"]; ?>
+					<h2><?php esc_html_e('Other Information', 'onoffice'); ?></h2>
+					<?php echo $currentEstate["sonstige_angaben"]."\n"; ?>
 				</div>
 			<?php } ?>
+
 			<div class="oo-units">
 				<?php echo $pEstates->getEstateUnits( ); ?>
 			</div>
@@ -104,12 +119,9 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						<span><?php echo $contactData['Plz'].'&nbsp;'.$contactData['Ort']; ?></span>
 					</div>
 					<div class="oo-aspcontact">
-						<span><?php echo $contactData['Telefon1']; ?></span>					
+						<span><?php echo $contactData['Telefon1']; ?></span>
 					</div>
 				<?php endforeach; ?>
-			</div>
-			<div class="oo-detailsform">
-				<!-- put your form here -->
 			</div>
 			<div class="oo-detailsexpose">
 				<?php if ($pEstates->getDocument() != ''): ?>
@@ -124,4 +136,5 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php echo $pEstates->getSimilarEstates(); ?>
 		</div>
 	<?php } ?>
+
 </div>

@@ -44,13 +44,16 @@ class TestClassScriptLoaderGenericConfigurationDefault
 
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$config = $pScriptLoaderGenericConfigurationDefault->getScriptLoaderGenericConfiguration();
-		$this->assertCount(7, $config);
+		$this->assertCount(12, $config);
 		/* @var $pFileModel IncludeFileModel */
 		foreach ($config as $pFileModel) {
 			$this->assertInstanceOf(IncludeFileModel::class, $pFileModel);
 			$this->assertThat($pFileModel->getFilePath(), $this->logicalOr
 				($this->stringStartsWith('https://'),
 					$this->stringStartsWith('http://example.org/wp-content/plugins/')));
+			$this->assertThat($pFileModel->getFilePath(), $this->logicalOr
+				($this->stringEndsWith('.js'),
+					$this->stringEndsWith('.css')));
 			$this->assertNotEmpty($pFileModel->getIdentifier());
 			$this->assertNotEmpty($pFileModel->getType());
 		}

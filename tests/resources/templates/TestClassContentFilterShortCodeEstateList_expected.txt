@@ -11,4 +11,4 @@ label-kaufpreis: 80.000,00 €
 label-objektbeschreibung: große Freifläche
 label-lage: Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.
 label-ausstatt_beschr: teilweise mit einer alten Mauer aus Findlingen umgeben
-label-sonstige_angaben: Vereinbaren sie noch heute einen Besichtigungstermin
+label-sonstige_angaben: Vereinbaren Sie noch heute einen Besichtigungstermin

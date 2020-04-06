@@ -19,6 +19,7 @@
  *
  */
 
+use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\Types\MapProvider;
 
 /**
@@ -26,15 +27,15 @@ use onOffice\WPlugin\Types\MapProvider;
  *  Map template
  *
  */
+/** @var EstateList $pEstates */
+(function (MapProvider $pMapProvider, EstateList $pEstates) {
+	switch ($pMapProvider->getActiveMapProvider()) {
+		case MapProvider::GOOGLE_MAPS:
+			include 'map-google.php';
+			break;
 
-$pMapProvider = new MapProvider();
-
-switch ($pMapProvider->getActiveMapProvider()) {
-	case MapProvider::GOOGLE_MAPS:
-		include 'map-google.php';
-		break;
-
-	case MapProvider::OPEN_STREET_MAPS:
-		include('map-osm.php');
-		break;
-}
+		case MapProvider::OPEN_STREET_MAPS:
+			include 'map-osm.php';
+			break;
+	}
+})(new MapProvider(), $pEstates);

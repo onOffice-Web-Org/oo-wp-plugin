@@ -29,35 +29,36 @@ use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /* @var $pEstates EstateList */
-$pEstatesClone = clone $pEstates;
-$pEstatesClone->resetEstateIterator();
-$estateData = array();
+$estateData = (function (EstateList $pEstatesClone): array {
+	$pEstatesClone->resetEstateIterator();
+	$estateData = [];
 
-while ( $currentEstateMap  = $pEstatesClone->estateIterator( EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP ) ) {
-	$virtualAddressSet = (bool)$currentEstateMap ['virtualAddress'];
-	$position = array(
-		'lat' => (float) $currentEstateMap ['breitengrad'],
-		'lng' => (float) $currentEstateMap ['laengengrad'],
-	);
-	$title = $currentEstateMap ['objekttitel'];
-	$visible = ! $virtualAddressSet;
+	while ($currentEstateMap = $pEstatesClone->estateIterator
+        (EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
+		$virtualAddressSet = (bool)$currentEstateMap['virtualAddress'];
+		$position = [
+			'lat' => (float)$currentEstateMap['breitengrad'],
+			'lng' => (float)$currentEstateMap['laengengrad'],
+		];
+		$title = $currentEstateMap ['objekttitel'];
+		$visible = !$virtualAddressSet;
 
-	if ( 0 == $position['lng'] || 0 == $position['lat'] || ! $currentEstateMap ['showGoogleMap'] ) {
-		continue;
+		if (.0 !== $position['lng'] && .0 !== $position['lat'] && $currentEstateMap['showGoogleMap']) {
+            $estateData[] = [
+                'position' => $position,
+                'title' => $title,
+                'visible' => $visible,
+            ];
+		}
 	}
-
-	$estateData []= array(
-		'position' => $position,
-		'title' => $title,
-		'visible' => $visible,
-	);
-}
+	return $estateData;
+})(clone $pEstates);
 ?>
 
 <script type="text/javascript">
 (function() {
 	var gmapInit = function() {
-		var estates = <?php echo json_encode($estateData, JSON_PRETTY_PRINT);?>;
+		var estates = <?php echo json_encode($estateData, JSON_PRETTY_PRINT); ?>;
 		var settings = {
 			zoom: null
 		};
@@ -94,8 +95,9 @@ while ( $currentEstateMap  = $pEstatesClone->estateIterator( EstateViewFieldModi
 
 	google.maps.event.addDomListener(window, "load", gmapInit);
 })();
-
-
 </script>
 
+<?php
+unset($estateData);
+?>
 <div id="gmap" style="width: 100%; height: 100%;"></div>
