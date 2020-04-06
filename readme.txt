@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+== 2.5.2 ==
+
+**Fixes**
+
+* Fix detail view configuration of fields, if field category name exists in both address and estate module
+
 == 2.5.1 ==
 
 **Fixes**
@@ -205,6 +211,10 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+== 2.5.2 ==
+
+Fix errors in estate detail view configuration.
 
 == 2.5.1 ==
 Fix issue with geo fields
