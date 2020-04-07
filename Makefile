@@ -15,15 +15,15 @@ copy-files-release:
 change-title: copy-files-release
 	sed -i -r "s/(Plugin Name: .+) \(dev\)$$/\1/" $(PREFIX)/onoffice/plugin.php
 
-add-version: change-title
+add-version: copy-files-release
 	sed -i -r "s/Version:\ [^$$]+/Version:\ $(patsubst v%,%,$(OO_PLUGIN_VERSION))/" $(PREFIX)/onoffice/plugin.php
 
-composer-install-nodev: add-version
+composer-install-nodev:
 	cd $(PREFIX)/onoffice; composer install --no-dev -a
 	
-release: composer-install-nodev
+release: copy-files-release change-title add-version composer-install-nodev
 
-zip: release
+test-zip: copy-files-release add-version composer-install-nodev
 	cd $(PREFIX); zip -r onoffice.zip onoffice/
 
 clean-zip:
