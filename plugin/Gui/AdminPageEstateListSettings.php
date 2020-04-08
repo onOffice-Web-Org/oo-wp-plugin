@@ -151,7 +151,8 @@ class AdminPageEstateListSettings
 			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
 
-		$pInputModelGeoLabel = new InputModelLabel(null, __('At least the following fields must be active: country, radius and city or postcode.', 'onoffice'));
+		$geoNotice = __('At least the following fields must be active: country, radius and city or postcode.', 'onoffice');
+		$pInputModelGeoLabel = new InputModelLabel(null, $geoNotice);
 		$pInputModelGeoLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_ITALIC);
 		$pFormModelGeoFields->addInputModel($pInputModelGeoLabel);
 
