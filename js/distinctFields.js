@@ -8,6 +8,7 @@ jQuery(function() {
 
 	function renderMultiselectable(element, values, preselected) {
 		element.children().remove();
+		
 		element.append("<input type='button' class='onoffice-multiselect-edit' value='"
 			+ onoffice_distinctFields.editValuesLabel + "'>");
 
@@ -104,9 +105,8 @@ jQuery(function() {
 
 				if (!$.isEmptyObject(multiselectSelectedValues) &&
 						index in multiselectSelectedValues) {
-					var cleanName = index.replace("[]", "");
-					var element = $("[data-name=" + cleanName + "]");
-					renderMultiselectable(element, values, multiselectSelectedValues[cleanName]);
+					var element = $('[data-name="' + index + '"]');
+					renderMultiselectable(element, values, multiselectSelectedValues[cleanName+"[]"]);
 				} else if (index.indexOf("[]") === -1) {
 					renderNonMultiselectable(index, values);
 				}

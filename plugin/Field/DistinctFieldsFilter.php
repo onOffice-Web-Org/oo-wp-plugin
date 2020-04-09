@@ -110,15 +110,15 @@ class DistinctFieldsFilter
 		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($pFieldsCollection);
 
 		foreach ($inputValues as $key => $value) {
+			$pString = __String::getNew($key);
+			$key = $pString->replace('[]', '');
+
 			if (in_array($key, self::NOT_ALLOWED_KEYS) ||
 				in_array($value, self::NOT_ALLOWED_VALUES) ||
 				$this->isDistinctField($key, $distinctField) ||
 				!in_array($key, $possibleDistinctFields)) {
 				continue;
 			}
-
-			$pString = __String::getNew($key);
-			$key = $pString->replace('[]', '');
 
 			if ($pString->endsWith('__von') && $module == onOfficeSDK::MODULE_ESTATE){
 				$field = $pString->replace('__von', '');
