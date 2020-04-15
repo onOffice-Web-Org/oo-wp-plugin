@@ -183,12 +183,13 @@ class AdminPageEstateDetail
 		do_settings_sections($this->getPageSlug());
 		submit_button(null, 'primary', 'send_ajax');
 
-		echo '<script>onOffice.ajaxSaver = new onOffice.ajaxSaver("onoffice-ajax");';
-		echo 'onOffice.ajaxSaver.register();';
-		echo '$(document).ready(function(){'
-			.'postboxes.add_postbox_toggles(pagenow);'
-			.'});';
-		echo '</script>';
+		echo '<script>'
+			.'jQuery(document).ready(function(){'
+				.'onOffice.ajaxSaver = new onOffice.ajaxSaver("onoffice-ajax");'
+				.'onOffice.ajaxSaver.register();'
+				.'postboxes.add_postbox_toggles(pagenow);'
+			.'});'
+		.'</script>';
 	}
 
 

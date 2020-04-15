@@ -234,15 +234,15 @@ class AdminViewController
 
 		$pAdminView = $this->_ajaxHooks[$hook];
 		$ajaxDataAdminPage = $pAdminView->getEnqueueData();
-		$ajaxDataGeneral = array(
-				'ajax_url' => admin_url('admin-ajax.php'),
-				'action' => $hook,
-				'nonce' => wp_create_nonce($hook),
-			);
+		$ajaxDataGeneral = [
+			'ajax_url' => admin_url('admin-ajax.php'),
+			'action' => $hook,
+			'nonce' => wp_create_nonce($hook),
+		];
 
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
 		wp_enqueue_script('onoffice-ajax-settings',
-			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery']);
+			plugins_url('/js/ajax_settings.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'oo-sort-by-user-selection']);
 		wp_enqueue_script('onoffice-geofieldbox',
 			plugins_url('/js/geofieldbox.js', ONOFFICE_PLUGIN_DIR.'/index.php'), [], null, true);
 
