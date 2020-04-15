@@ -31,6 +31,7 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
+use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -149,6 +150,11 @@ class AdminPageEstateListSettings
 		foreach ($pInputModelBuilderGeoRange->build($pListView) as $pInputModel) {
 			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
+
+		$geoNotice = __('At least the following fields must be active: country, radius and city or postcode.', 'onoffice');
+		$pInputModelGeoLabel = new InputModelLabel(null, $geoNotice);
+		$pInputModelGeoLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_ITALIC);
+		$pFormModelGeoFields->addInputModel($pInputModelGeoLabel);
 
 		$this->addFormModel($pFormModelGeoFields);
 
