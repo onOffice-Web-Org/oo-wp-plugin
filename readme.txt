@@ -73,6 +73,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.5.3 =
+
+**Fixes**
+
+* Notice in the geo fields administration.
+* jQuery internal reorganization.
+
 = 2.5.2 =
 
 **Fixes**
@@ -211,6 +218,9 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+= 2.5.3 =
+jQuery internal reorganization, notice in the geo fields administration.
 
 = 2.5.2 =
 Fix errors in estate detail view configuration.
