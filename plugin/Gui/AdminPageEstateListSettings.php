@@ -254,9 +254,5 @@ class AdminPageEstateListSettings
 	{
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
-
-		$translations = SortListTypes::getSortOrder();
-		wp_localize_script('oo-sort-by-user-selection', 'onoffice_mapping_translations', $translations);
-		wp_enqueue_script('oo-sort-by-user-selection');
 	}
 }
