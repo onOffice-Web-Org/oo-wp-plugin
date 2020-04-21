@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use Exception;
 use onOffice\WPlugin\Controller\AdminViewController;
 use WP_Screen;
 use WP_UnitTestCase;
@@ -42,11 +43,8 @@ class TestClassAdminViewController
 	extends WP_UnitTestCase
 {
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$pWPScreen = WP_Screen::get('admin_page_onoffice');
@@ -54,47 +52,35 @@ class TestClassAdminViewController
 		set_current_screen($pWPScreen);
 	}
 
-
 	/**
-	 *
 	 * @return AdminViewController
-	 *
 	 */
-
 	public function testOnInit(): AdminViewController
 	{
-
 		$this->assertTrue(is_admin());
 		$pAdminViewController = new AdminViewController();
 		$this->assertNull($pAdminViewController->onInit());
 		return $pAdminViewController;
 	}
 
-
 	/**
-	 *
 	 * @depends testOnInit
-	 *
+	 * @param AdminViewController $pAdminViewController
 	 */
-
 	public function testEnqueueAjax(AdminViewController $pAdminViewController)
 	{
 		wp_scripts()->registered = [];
 		$pAdminViewController->enqueue_ajax('admin_page_onoffice-editlistviewaddress');
 		$pAdminViewController->enqueue_ajax('admin_page_onoffice-editlistview');
 		$pAdminViewController->enqueue_ajax('admin_page_onoffice-editunitlist');
-		$this->assertCount(2, wp_scripts()->registered);
+		$this->assertCount(3, wp_scripts()->registered);
 	}
 
-
 	/**
-	 *
 	 * @depends testOnInit
 	 * @global array $wp_actions
 	 * @param AdminViewController $pAdminViewController
-	 *
 	 */
-
 	public function testRegisterMenu(AdminViewController $pAdminViewController)
 	{
 		global $wp_filter;
@@ -103,15 +89,12 @@ class TestClassAdminViewController
 		$this->assertCount(5, $wp_filter);
 	}
 
-
 	/**
-	 *
 	 * @depends testOnInit
-	 * @global array $wp_filter
 	 * @param AdminViewController $pAdminViewController
-	 *
+	 * @throws Exception
+	 * @global array $wp_filter
 	 */
-
 	public function testAddAjaxHooks(AdminViewController $pAdminViewController)
 	{
 		global $wp_filter;
@@ -120,14 +103,10 @@ class TestClassAdminViewController
 		$this->assertCount(4, $wp_filter);
 	}
 
-
 	/**
-	 *
 	 * @depends testOnInit
 	 * @param AdminViewController $pAdminViewController
-	 *
 	 */
-
 	public function testPluginSettingsLink(AdminViewController $pAdminViewController)
 	{
 		$links = ['<a href="https://example.org/test">test</a>'];
