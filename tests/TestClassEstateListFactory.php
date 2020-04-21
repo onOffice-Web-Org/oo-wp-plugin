@@ -23,9 +23,13 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
-use onOffice\WPlugin\Factory\EstateDetailFactory;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\EstateList;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 use WP_UnitTestCase;
 
@@ -34,37 +38,34 @@ use WP_UnitTestCase;
  *
  */
 
-class TestClassEstateDetailFactory
+class TestClassEstateListFactory
 	extends WP_UnitTestCase
 {
-	/** @var EstateDetailFactory */
-	private $_pSubject = null;
-
+	/** @var Container */
+	private $_pContainer;
 
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+	}
+
+	public function testCreateEstateDetail()
 	{
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
 			->getMock();
 		$pDataDetailView = new DataDetailView();
 		$pDataDetailViewHandler->expects($this->once())->method('getDetailView')
 			->will($this->returnValue($pDataDetailView));
-		$this->_pSubject = new EstateDetailFactory($pDataDetailViewHandler);
-	}
 
+		$this->_pContainer->set(DataDetailViewHandler::class, $pDataDetailViewHandler);
+		$pSubject = $this->_pContainer->get(EstateListFactory::class);
 
-	/**
-	 *
-	 */
-
-	public function testCreateEstateDetail()
-	{
-		$pDataDetail = $this->_pSubject->createEstateDetail(3);
+		$pDataDetail = $pSubject->createEstateDetail(3);
 		$this->assertEquals(3, $pDataDetail->getEstateId());
 		$this->assertInstanceOf(DefaultFilterBuilderDetailView::class, $pDataDetail->getDefaultFilterBuilder());
 		$this->assertInstanceOf(DataDetailView::class, $pDataDetail->getDataView());
@@ -76,5 +77,14 @@ class TestClassEstateDetailFactory
 				['op' => '=', 'val' => 3],
 			],
 		], $pDataDetail->getDefaultFilterBuilder()->buildFilter());
+	}
+
+	public function testCreateEstateList()
+	{
+		$pSubject = $this->_pContainer->get(EstateListFactory::class);
+		$pDataListView = new DataListView(123, 'testEstateListView');
+		$pResult = $pSubject->createEstateList($pDataListView);
+		$this->assertInstanceOf(EstateList::class, $pResult);
+		$this->assertSame($pDataListView, $pResult->getDataView());
 	}
 }

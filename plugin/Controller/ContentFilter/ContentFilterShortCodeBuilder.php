@@ -24,6 +24,8 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Generator;
 
 /**
@@ -33,10 +35,11 @@ use Generator;
 class ContentFilterShortCodeBuilder
 {
 	/** @var Container */
-	private $_pContainer = null;
+	private $_pContainer;
 
 	/** @var array */
 	private $_classes = [
+		ContentFilterShortCodeEstate::class,
 		ContentFilterShortCodeAddress::class,
 		ContentFilterShortCodeForm::class,
 		ContentFilterShortCodeImprint::class,
@@ -55,11 +58,11 @@ class ContentFilterShortCodeBuilder
 		$this->_pContainer = $pContainer;
 	}
 
-
 	/**
 	 *
 	 * @return Generator
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	public function buildAllContentFilterShortCodes(): Generator

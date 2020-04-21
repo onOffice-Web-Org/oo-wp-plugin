@@ -34,11 +34,9 @@ use onOffice\WPlugin\Types\FieldsCollection;
 class CompoundFieldsFilter
 {
 	/**
-	 *
+	 * @param FieldsCollection $pFieldsCollection
 	 * @return array
-	 *
 	 */
-
 	public function buildCompoundFields(FieldsCollection $pFieldsCollection): array
 	{
 		$fields = $pFieldsCollection->getAllFields();
@@ -53,15 +51,11 @@ class CompoundFieldsFilter
 		return $result;
 	}
 
-
 	/**
-	 *
 	 * @param FieldsCollection $pFieldsCollection
 	 * @param array $fields
 	 * @return array
-	 *
 	 */
-
 	public function mergeFields(FieldsCollection $pFieldsCollection, array $fields): array
 	{
 		$compoundFields = $this->buildCompoundFields($pFieldsCollection);
@@ -78,15 +72,11 @@ class CompoundFieldsFilter
 		return $result;
 	}
 
-
 	/**
-	 *
 	 * @param FieldsCollection $pFieldsCollection
 	 * @param array $fields
 	 * @return array
-	 *
 	 */
-
 	public function mergeAssocFields(FieldsCollection $pFieldsCollection, array $fields): array
 	{
 		$compoundFields = $this->buildCompoundFields($pFieldsCollection);
@@ -103,16 +93,12 @@ class CompoundFieldsFilter
 		return $result;
 	}
 
-
 	/**
-	 *
 	 * @param array $result
 	 * @param array $compoundFields
 	 * @param string $module
 	 * @return array
-	 *
 	 */
-
 	private function createNew(array $result, array $compoundFields, string $module): array
 	{
 		foreach ($compoundFields as $name) {
@@ -121,16 +107,11 @@ class CompoundFieldsFilter
 		return $result;
 	}
 
-
-
 	/**
-	 *
 	 * @param FieldsCollection $pFieldsCollection
 	 * @param array $fields
 	 * @return array
-	 *
 	 */
-
 	public function mergeListFilterableFields(FieldsCollection $pFieldsCollection, array $fields): array
 	{
 		$compoundFields = $this->buildCompoundFields($pFieldsCollection);
@@ -145,7 +126,6 @@ class CompoundFieldsFilter
 				$result[$fieldname] = $value;
 			}
 		}
-
 		return $result;
 	}
 }

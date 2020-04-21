@@ -23,16 +23,21 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Filter\SearchParameters;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
-use onOffice\WPlugin\Field\UnknownFieldException;
-use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Logger;
 
+/**
+ *
+ */
 class SearchParametersModelBuilder
 {
 	/** @var CompoundFieldsFilter */
@@ -44,34 +49,43 @@ class SearchParametersModelBuilder
 	/** @var Logger */
 	private $_pLogger;
 
+	/** @var FieldsCollectionBuilderShort */
+	private $_pFieldsCollectionBuilderShort;
+
 	/**
 	 * SearchParametersModelBuilder constructor.
 	 *
 	 * @param CompoundFieldsFilter $pCompoundFieldsFilter
 	 * @param RequestVariablesSanitizer $pRequestVariablesSanitizer
 	 * @param Logger $pLogger
+	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 */
-	public function __construct(CompoundFieldsFilter $pCompoundFieldsFilter, RequestVariablesSanitizer $pRequestVariablesSanitizer, Logger $pLogger)
+	public function __construct(
+		CompoundFieldsFilter $pCompoundFieldsFilter,
+		RequestVariablesSanitizer $pRequestVariablesSanitizer,
+		Logger $pLogger,
+		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort)
 	{
 		$this->_pCompoundFieldsFilter = $pCompoundFieldsFilter;
 		$this->_pRequestVariablesSanitizer = $pRequestVariablesSanitizer;
 		$this->_pLogger = $pLogger;
+		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
 	/**
 	 * @param array $filterableFields
 	 * @param string $module
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @return SearchParametersModel
-	 * @throws UnknownFieldException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-	public function build(array $filterableFields, string $module, FieldsCollectionBuilderShort $pBuilderShort): SearchParametersModel
+	public function build(array $filterableFields, string $module): SearchParametersModel
 	{
 		$pModel = new SearchParametersModel();
 		$pFieldsCollection = new FieldsCollection();
 
-		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$pBuilderShort->addFieldsSearchCriteria($pFieldsCollection);
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($pFieldsCollection);
 
 		$pGeoFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
 		$pFieldsCollection->merge($pGeoFieldsCollection);

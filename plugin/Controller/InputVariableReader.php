@@ -40,13 +40,10 @@ class InputVariableReader
 	/** @var string */
 	private $_module = null;
 
-
 	/**
-	 *
+	 * @param string $module
 	 * @param InputVariableReaderConfig $pConfig
-	 *
 	 */
-
 	public function __construct(string $module, InputVariableReaderConfig $pConfig = null)
 	{
 		$this->_module = $module;

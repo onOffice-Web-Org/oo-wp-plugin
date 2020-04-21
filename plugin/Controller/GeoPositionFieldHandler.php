@@ -49,13 +49,9 @@ class GeoPositionFieldHandler
 	/** @var array */
 	private $_records = [];
 
-
 	/**
-	 *
 	 * @param RecordManagerFactory $pRecordManagerFactory
-	 *
 	 */
-
 	public function __construct(
 		RecordManagerFactory $pRecordManagerFactory = null)
 	{

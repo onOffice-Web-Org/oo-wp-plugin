@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -25,20 +25,12 @@ namespace onOffice\WPlugin\Installer;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use onOffice\WPlugin\ContentFilter;
-use onOffice\WPlugin\ScriptLoader\ScriptLoaderMap;
-use onOffice\WPlugin\ScriptLoader\ScriptLoaderMapFactory;
-use onOffice\WPlugin\Types\MapProvider;
-use onOffice\WPlugin\Utility\Logger;
+use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use WP_Rewrite;
-use wpdb;
 use function delete_option;
 use const ABSPATH;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
  *
  * Creates tables and sets options
  * Also removes them
@@ -48,41 +40,32 @@ use const ABSPATH;
 class Installer
 {
 	/**
-	 *
 	 * Callback for plugin activation hook
-	 *
 	 */
-
 	static public function install()
 	{
 		// If you are modifying this, please also make sure to edit the test
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-		$pContentFilter = new ContentFilter(new Logger(), new ScriptLoaderMap
-		(new MapProvider(), new ScriptLoaderMapFactory(new Container)));
-		$pContentFilter->addCustomRewriteTags();
-		$pContentFilter->addCustomRewriteRules();
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		$pContainer = self::buildDI();
+		$pRewriteRuleBuilder = $pContainer->get(RewriteRuleBuilder::class);
+		$pRewriteRuleBuilder->addCustomRewriteTags();
+		$pRewriteRuleBuilder->addStaticRewriteRules();
+		$pRewriteRuleBuilder->addDynamicRewriteRules();
 		self::flushRules();
 	}
 
-
 	/**
-	 *
 	 * @global WP_Rewrite $wp_rewrite
-	 *
 	 */
-
 	static private function flushRules()
 	{
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules(false);
 	}
 
-
 	/**
 	 *
 	 */
-
 	static public function deactivate()
 	{
 		self::flushRules();

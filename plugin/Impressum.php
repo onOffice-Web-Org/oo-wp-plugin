@@ -32,100 +32,21 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 
 class Impressum
 {
-	/** */
-	const KEY_TITLE = 'title';
-
-	/** */
-	const KEY_FIRSTNAME = 'firstname';
-
-	/** */
-	const KEY_LASTNAME = 'lastname';
-
-	/** */
-	const KEY_FIRMA = 'firma';
-
-	/** */
-	const KEY_POSTCODE = 'postcode';
-
-	/** */
-	const KEY_CITY = 'city';
-
-	/** */
-	const KEY_STREET = 'street';
-
-	/** */
-	const KEY_HOUSENUMBER = 'housenumber';
-
-	/** */
-	const KEY_STATE = 'state';
-
-	/** */
-	const KEY_COUNTRY = 'country';
-
-	/** */
-	const KEY_PHONE = 'phone';
-
-	/** */
-	const KEY_MOBIL = 'mobil';
-
-	/** */
-	const KEY_FAX = 'fax';
-
-	/** */
-	const KEY_EMAIL = 'email';
-
-	/** */
-	const KEY_HOMEPAGE = 'homepage';
-
-	/** */
-	const KEY_VERTRETUNGSBERECHTIGTER = 'vertretungsberechtigter';
-
-	/** */
-	const KEY_BERUFSAUFSICHTSBEHOERDE = 'berufsaufsichtsbehoerde';
-
-	/** */
-	const KEY_HANDELSREGISTER = 'handelsregister';
-
-	/** */
-	const KEY_HANDELSREGISTERNUMMER = 'handelsregisterNr';
-
-	/** */
-	const KEY_UST_ID = 'ustId';
-
-	/** */
-	const KEY_BANK = 'bank';
-
-	/** */
-	const KEY_IBAN = 'iban';
-
-	/** */
-	const KEY_BIC = 'bic';
-
-	/** */
-	const KEY_CHAMBER = 'chamber';
-
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
+	private $_pSDKWrapper;
 
 	/**
-	 *
 	 * @param SDKWrapper $pSDKWrapper
-	 *
 	 */
-
 	public function __construct(SDKWrapper $pSDKWrapper)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
+	 * @throws API\APIEmptyResultException
 	 */
-
 	public function load(): array
 	{
 		$pApiClientAction = new APIClientActionGeneric

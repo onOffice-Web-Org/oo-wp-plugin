@@ -84,7 +84,6 @@ class EstateFiles
 	/**
 	 *
 	 * @param array $responseArrayEstatePictures
-	 * @throws HttpFetchNoResultException
 	 *
 	 */
 

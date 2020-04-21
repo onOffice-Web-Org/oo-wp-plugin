@@ -21,7 +21,11 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
+use Exception;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\Template;
@@ -39,18 +43,16 @@ class EstateViewSimilarEstatesEnvironmentDefault
 	implements EstateViewSimilarEstatesEnvironment
 {
 	/** @var EstateList */
-	private $_pEstateList = null;
+	private $_pEstateList;
 
 	/** @var Container */
-	private $_pContainer = null;
+	private $_pContainer;
 
 	/**
-	 *
 	 * @param DataView $pDataView
 	 * @param EstateListBase $pEstateList
-	 *
+	 * @throws Exception
 	 */
-
 	public function __construct(DataView $pDataView, EstateListBase $pEstateList = null)
 	{
 		$this->_pEstateList = $pEstateList ?? new EstateList($pDataView);
@@ -60,28 +62,21 @@ class EstateViewSimilarEstatesEnvironmentDefault
 		$this->_pContainer = $pDIContainerBuilder->build();
 	}
 
-
 	/**
-	 *
 	 * @return EstateListBase
-	 *
 	 */
-
 	public function getEstateList(): EstateListBase
 	{
 		return $this->_pEstateList;
 	}
 
-
 	/**
-	 *
-	 * @param string $templateName
 	 * @return Template
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	public function getTemplate(string $templateName): Template
+	public function getTemplate(): Template
 	{
-		return $this->_pContainer->get(Template::class)->withTemplateName($templateName);
+		return $this->_pContainer->get(Template::class);
 	}
 }

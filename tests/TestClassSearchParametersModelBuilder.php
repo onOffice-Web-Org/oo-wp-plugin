@@ -24,12 +24,11 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
-use onOffice\WPlugin\RequestVariablesSanitizer;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -39,26 +38,18 @@ use WP_UnitTestCase;
 class TestClassSearchParametersModelBuilder
 	extends WP_UnitTestCase
 {
-	/** @var Logger */
-	private $_pLogger;
-
-	/** @var CompoundFieldsFilter */
-	private $_pCompoundFields;
-
-	/** @var RequestVariablesSanitizer */
-	private $_pRequestVariablesSanitizer;
-
 	/** @var FieldsCollectionBuilderShort */
 	private $_pBuilderShort;
+
+	/** @var SearchParametersModelBuilder */
+	private $_pInstance = null;
 
 	/**
 	 * @before
 	 */
 	public function prepare()
 	{
-		$this->_pLogger = $this->getMockBuilder(Logger::class)->getMock();
-		$this->_pRequestVariablesSanitizer = new RequestVariablesSanitizer();
-		$this->_pCompoundFields = new CompoundFieldsFilter;
+		$pLogger = $this->getMockBuilder(Logger::class)->getMock();
 
 		$this->_pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
@@ -92,6 +83,13 @@ class TestClassSearchParametersModelBuilder
 				$pFieldsCollection->addField($pFieldKaufpreis);
 				return $this->_pBuilderShort;
 			}));
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pContainer->set(Logger::class, $pLogger);
+		$pContainer->set(FieldsCollectionBuilderShort::class, $this->_pBuilderShort);
+		$this->_pInstance = $pContainer->get(SearchParametersModelBuilder::class);
 	}
 
 	/**
@@ -105,8 +103,7 @@ class TestClassSearchParametersModelBuilder
 			'Ort' => 'Aachen',
 		];
 
-		$pInstance = new SearchParametersModelBuilder($this->_pCompoundFields, $this->_pRequestVariablesSanitizer, $this->_pLogger);
-		$pModel = $pInstance->build(['Anrede', 'Titel', 'Ort'], onOfficeSDK::MODULE_ADDRESS, $this->_pBuilderShort);
+		$pModel = $this->_pInstance->build(['Anrede', 'Titel', 'Ort'], onOfficeSDK::MODULE_ADDRESS);
 		$this->assertInstanceOf(SearchParametersModel::class, $pModel);
 		$this->assertEquals(['Anrede' => ['Herr', 'Frau', 'Firma'], 'Ort'=>'Aachen'], $pModel->getParameters());
 
@@ -124,8 +121,7 @@ class TestClassSearchParametersModelBuilder
 			'Ort' => 'Aachen'
 		];
 
-		$pInstance = new SearchParametersModelBuilder($this->_pCompoundFields, $this->_pRequestVariablesSanitizer, $this->_pLogger);
-		$pModel = $pInstance->build(['asd', 'Ort'], onOfficeSDK::MODULE_ADDRESS, $this->_pBuilderShort);
+		$pModel = $this->_pInstance->build(['asd', 'Ort'], onOfficeSDK::MODULE_ADDRESS);
 		$this->assertEquals(['Ort' => 'Aachen'], $pModel->getParameters());
 	}
 
@@ -139,8 +135,7 @@ class TestClassSearchParametersModelBuilder
 			'kaufpreis__bis'=> '20000',
 		];
 
-		$pInstance = new SearchParametersModelBuilder($this->_pCompoundFields, $this->_pRequestVariablesSanitizer, $this->_pLogger);
-		$pModel = $pInstance->build(['asd', 'Ort', 'kaufpreis'], onOfficeSDK::MODULE_ESTATE, $this->_pBuilderShort);
+		$pModel = $this->_pInstance->build(['asd', 'Ort', 'kaufpreis'], onOfficeSDK::MODULE_ESTATE);
 		$this->assertEquals(['kaufpreis__von', 'kaufpreis__bis', 'kaufpreis'], $pModel->getAllowedGetParameters());
 		$this->assertEquals(['kaufpreis__von'=> '10000','kaufpreis__bis'=> '20000',], $pModel->getParameters());
 	}

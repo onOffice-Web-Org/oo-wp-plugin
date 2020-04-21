@@ -24,7 +24,9 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Factory;
 
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\EstateDetail;
+use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
 
 
@@ -32,7 +34,7 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
  *
  */
 
-class EstateDetailFactory
+class EstateListFactory
 {
 	/** @var DataDetailViewHandler */
 	private $_pDataDetailViewHandler;
@@ -68,5 +70,14 @@ class EstateDetailFactory
 		$pEstateDetail->setDefaultFilterBuilder($pDefaultFilterBuilder);
 		$pEstateDetail->setEstateId($estateId);
 		return $pEstateDetail;
+	}
+
+	/**
+	 * @param DataListView $pDataListView
+	 * @return EstateList
+	 */
+	public function createEstateList(DataListView $pDataListView): EstateList
+	{
+		return new EstateList($pDataListView);
 	}
 }

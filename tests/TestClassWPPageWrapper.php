@@ -28,7 +28,8 @@ use WP_UnitTestCase;
 
 
 /**
- *
+ * @preserveGlobalState disabled
+ * @runTestsInSeparateProcesses
  */
 
 class TestClassWPPageWrapper
@@ -41,13 +42,17 @@ class TestClassWPPageWrapper
 	private $_postId = 0;
 
 	/** @var array */
-	private $_postData = [
+	const POST_DATA = [
+		'post_parent' => 0,
 		'post_title' => 'onOffice Test Post',
 		'post_content' => 'Hello. This is a test.',
 		'post_status' => 'published',
 		'post_date' => '2019-05-09 13:37:37',
 		'post_type' => 'page',
 	];
+
+	/** @var int */
+	private $_ancestorId = 0;
 
 
 	/**
@@ -61,7 +66,17 @@ class TestClassWPPageWrapper
 		$this->_pSubject = new WPPageWrapper();
 		// set this even though the permalink for pages always is %postname%
 		$this->set_permalink_structure('/%year%/%monthnum%/%day%/%postname%/');
-		$this->_postId = wp_insert_post($this->_postData);
+		$this->_ancestorId = wp_insert_post([
+			'post_name' => 'test_parent_post',
+			'post_title' => 'My Test Post',
+			'post_type' => 'page',
+			'post_status' => 'published',
+			'post_date' => '2016-05-01 13:37:37',
+		]);
+
+		$postData = self::POST_DATA;
+		$postData['post_parent'] = $this->_ancestorId;
+		$this->_postId = wp_insert_post($postData);
 		$this->assertInternalType('integer', $this->_postId);
 		$this->assertGreaterThan(0, $this->_postId);
 	}
@@ -73,7 +88,9 @@ class TestClassWPPageWrapper
 
 	public function testGetPageByPath()
 	{
-		$this->assertEquals($this->_postId, $this->_pSubject->getPageByPath('onoffice-test-post')->ID);
+		$this->assertEquals($this->_ancestorId, $this->_pSubject->getPageByPath('test_parent_post')->ID);
+		$this->assertEquals($this->_postId, $this->_pSubject->getPageByPath
+			('test_parent_post/onoffice-test-post')->ID);
 	}
 
 
@@ -88,15 +105,31 @@ class TestClassWPPageWrapper
 		$this->_pSubject->getPageByPath('unknown-page');
 	}
 
-
-	/**
-	 *
-	 */
-
 	public function testGetPageLinkByPost()
 	{
-		$pPost = get_post($this->_postId);
-		$expectedLink = 'http://example.org/onoffice-test-post';
-		$this->assertStringStartsWith($expectedLink, $this->_pSubject->getPageLinkByPost($pPost));
+		$expectedLinkChild = 'http://example.org/test_parent_post/onoffice-test-post/';
+		$this->assertSame($expectedLinkChild,
+			$this->_pSubject->getPageLinkByPost(get_post($this->_postId)));
+		$expectedLinkParent = 'http://example.org/test_parent_post/';
+		$this->assertSame($expectedLinkParent,
+			$this->_pSubject->getPageLinkByPost(get_post($this->_ancestorId)));
+	}
+
+	public function testGetPageLinkById()
+	{
+		$expectedLinkChild = 'http://example.org/test_parent_post/onoffice-test-post/';
+		$this->assertSame($expectedLinkChild, $this->_pSubject->getPageLinkById($this->_postId));
+		$expectedLinkParent = 'http://example.org/test_parent_post/';
+		$this->assertSame($expectedLinkParent,
+			$this->_pSubject->getPageLinkById($this->_ancestorId));
+	}
+
+	public function testGetPageUriByPageId()
+	{
+		$expectedLinkChild = 'test_parent_post/onoffice-test-post';
+		$this->assertSame($expectedLinkChild, $this->_pSubject->getPageUriByPageId($this->_postId));
+		$expectedLinkParent = 'test_parent_post';
+		$this->assertSame($expectedLinkParent,
+			$this->_pSubject->getPageUriByPageId($this->_ancestorId));
 	}
 }

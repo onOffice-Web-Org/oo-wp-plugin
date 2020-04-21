@@ -76,7 +76,6 @@ class EstateTitleBuilder
 		$this->_pEstateDetail = $pEstateDetail;
 	}
 
-
 	/**
 	 *
 	 * @param int $estateId
@@ -89,6 +88,7 @@ class EstateTitleBuilder
 	 * %4$s: 'ort',
 	 * %5$s: 'objektnr_extern',
 	 *
+	 * @return string
 	 */
 
 	public function buildTitle(int $estateId, string $format): string
@@ -100,7 +100,7 @@ class EstateTitleBuilder
 		$pEstateFieldModifier = $this->_pViewFieldModifierFactory->create($modifier);
 		$fieldsForTitle = $pEstateFieldModifier->getVisibleFields();
 
-		if ($pEstateIterator) {
+		if ($pEstateIterator !== false) {
 			$fetchedValues = array_map([$pEstateIterator, 'getValueRaw'], $fieldsForTitle);
 			$values = array_combine($fieldsForTitle, $fetchedValues);
 			$this->_pEstateDetail->resetEstateIterator();

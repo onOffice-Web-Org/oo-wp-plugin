@@ -62,10 +62,7 @@ interface EstateUnitsConfigurationBase
 
 
 	/**
-	 *
 	 * @return Template
-	 *
 	 */
-
-	public function getTemplate(string $templateName): Template;
+	public function getTemplate(): Template;
 }

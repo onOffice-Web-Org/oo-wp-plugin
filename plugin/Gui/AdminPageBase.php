@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Exception;
 use onOffice\WPlugin\Model\FormModel;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function esc_html__;
@@ -43,11 +44,9 @@ abstract class AdminPageBase
 	private $_pContainer;
 
 	/**
-	 *
 	 * @param string $pageSlug
-	 *
+	 * @throws Exception
 	 */
-
 	public function __construct($pageSlug)
 	{
 		$this->_pageSlug = $pageSlug;

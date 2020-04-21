@@ -42,12 +42,11 @@ interface FieldModuleCollection
 
 	public function getAllFields(): array;
 
-
 	/**
 	 *
 	 * @param string $module
 	 * @param string $name
-	 *
+	 * @return bool
 	 */
 
 	public function containsFieldByModule(string $module, string $name): bool;

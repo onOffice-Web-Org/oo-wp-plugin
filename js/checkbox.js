@@ -65,6 +65,7 @@ onOffice.checkboxAdmin = function() {
 };
 
 onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
+    var $ = jQuery;
 	var instance = this;
 	var toggleChild = function(receivers, mainElement) {
 		for (var i in receivers) {
@@ -116,7 +117,7 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 	}
 };
 
-$(document).ready(function() {
+jQuery(document).ready(function() {
 	var cbAdmin = new onOffice.checkboxAdmin();
 	cbAdmin.changeCbStatus(this);
 });

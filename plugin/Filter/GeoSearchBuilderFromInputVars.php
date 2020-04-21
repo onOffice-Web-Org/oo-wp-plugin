@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\Filter;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\ViewProperty;
@@ -54,13 +55,11 @@ class GeoSearchBuilderFromInputVars
 	/** @var ViewProperty */
 	private $_pView = null;
 
-
 	/**
-	 *
 	 * @param InputVariableReader $pEstateListInputVariableReader
-	 *
+	 * @param GeoPositionFieldHandler|null $pGeoPositionFieldHandler
+	 * @param APIClientActionGeneric|null $pAPIClientActionGeneric
 	 */
-
 	public function __construct(
 		InputVariableReader $pEstateListInputVariableReader = null,
 		GeoPositionFieldHandler $pGeoPositionFieldHandler = null,
@@ -74,14 +73,11 @@ class GeoSearchBuilderFromInputVars
 			(new SDKWrapper(), '', '');
 	}
 
-
 	/**
-	 *
 	 * @param array $inputs
 	 * @return array
-	 *
+	 * @throws APIEmptyResultException
 	 */
-
 	private function createGeoRangeSearchParameterRequest(array $inputs): array
 	{
 		$radius = $inputs[GeoPosition::ESTATE_LIST_SEARCH_RADIUS] ??
@@ -100,14 +96,10 @@ class GeoSearchBuilderFromInputVars
 		return $inputs;
 	}
 
-
 	/**
-	 *
 	 * @return array
 	 * @throws Exception
-	 *
 	 */
-
 	public function buildParameters(): array
 	{
 		if ($this->_pView === null) {
@@ -121,13 +113,9 @@ class GeoSearchBuilderFromInputVars
 		return $requestGeoSearchParameters;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	private function getGeoSearchValues(): array
 	{
 		$inputValues = $this->_pGeoPositionFieldHandler->getActiveFieldsWithValue();
@@ -138,13 +126,10 @@ class GeoSearchBuilderFromInputVars
 		return $inputValues;
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
+	 * @throws APIEmptyResultException
 	 */
-
 	private function readDefaultCountryValue(): string
 	{
 		$pApiClientAction = $this->_pAPIClientActionGeneric->withActionIdAndResourceType
@@ -156,7 +141,6 @@ class GeoSearchBuilderFromInputVars
 		$pApiClientAction->addRequestToQueue()->sendRequests();
 		return $pApiClientAction->getResultRecords()[0]['elements']['country'];
 	}
-
 
 	/** @param ViewProperty $pViewProperty */
 	public function setViewProperty(ViewProperty $pViewProperty)

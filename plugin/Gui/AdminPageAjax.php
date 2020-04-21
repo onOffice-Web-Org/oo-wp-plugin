@@ -82,15 +82,10 @@ abstract class AdminPageAjax
 		}
 	}
 
-
 	/**
-	 *
 	 * @param FormModel $pFormModel
 	 * @param string $position
-	 * @param InputModelRenderer $pInputModelRenderer
-	 *
 	 */
-
 	protected function createMetaBoxByForm(FormModel $pFormModel, string $position = 'left')
 	{
 		$screenId = get_current_screen()->id;

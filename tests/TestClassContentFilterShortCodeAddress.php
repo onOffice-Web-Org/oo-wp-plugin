@@ -28,18 +28,14 @@ use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddress;
-use onOffice\WPlugin\Factory\AddressListFactory;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\Factory\AddressListFactory;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
+use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use onOffice\WPlugin\WP\WPQueryWrapper;
-use onOffice\WPlugin\Types\Field;
-use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
-use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
 use WP_Query;
 use WP_UnitTestCase;
 
@@ -52,47 +48,24 @@ use WP_UnitTestCase;
 class TestClassContentFilterShortCodeAddress
 	extends WP_UnitTestCase
 {
-
 	/** @var Container */
 	private $_pContainer;
 
-	/** @var FieldsCollectionBuilderShort */
-	private $_pBuilderShort;
-
-	/** @var SearchParametersModelBuilder */
-	private $_pSearchParametersModelBuilder;
-
-	/** @var Logger */
-	private $_pLogger;
-
-	/** @var DataListViewFactoryAddress */
-	private $_pMockDataListViewFactoryAddress;
-
-	/** @var WPQueryWrapper */
-	private $_pWPQueryWrapperMock;
-
-	/** @var Template */
-	private $_pTemplateMock;
-
 	/**
-	 * @var AddressListFactory
-	 */
-	private $_pAddressListFactory;
-
-	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
-		$this->_pTemplateMock = $this->getMockBuilder(Template::class)
-			->setMethods(['render', 'setAddressList', 'withTemplateName'])
-			->setConstructorArgs(['adressList-01'])
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+
+		$pTemplateMock = $this->getMockBuilder(Template::class)
+			->setMethods(['render', 'withAddressList', 'withTemplateName'])
 			->getMock();
-		$this->_pTemplateMock ->method('withTemplateName')->will($this->returnSelf()); // should be a clone!
-		$this->_pLogger = $this->getMockBuilder(Logger::class)
+		$pTemplateMock->method('withTemplateName')->will($this->returnSelf()); // should be a clone!
+
+		$pLogger = $this->getMockBuilder(Logger::class)
 			->setMethods(['logErrorAndDisplayMessage'])
 			->getMock();
 
@@ -100,65 +73,43 @@ class TestClassContentFilterShortCodeAddress
 		$pDataListViewAddress->setTemplate('adressList-01');
 		$pDataListViewAddress->setFilterableFields(['Ort']);
 
-		$this->_pMockDataListViewFactoryAddress = $this->getMockBuilder(DataListViewFactoryAddress::class)
+		$pMockDataListViewFactoryAddress = $this->getMockBuilder(DataListViewFactoryAddress::class)
 			->setMethods(['getListViewByName'])
 			->disableOriginalConstructor()
 			->getMock();
-		$this->_pMockDataListViewFactoryAddress->method('getListViewByName')->will
+		$pMockDataListViewFactoryAddress->method('getListViewByName')->will
 			($this->returnValue($pDataListViewAddress));
 
-
-		$this->_pWPQueryWrapperMock = $this->getMockBuilder(WPQueryWrapper::class)
+		$pWPQueryWrapperMock = $this->getMockBuilder(WPQueryWrapper::class)
 				->getMock();
 		$pWPQueryMock = $this->getMockBuilder(WP_Query::class)->getMock();
 		$pWPQueryMock->method('get')
 			->with('page', 1)->will($this->returnValue(2));
-		$this->_pWPQueryWrapperMock->method('getWPQuery')->will($this->returnValue($pWPQueryMock));
+		$pWPQueryWrapperMock->method('getWPQuery')->will($this->returnValue($pWPQueryMock));
 
-		$this->_pBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate'])
-			->setConstructorArgs([new Container])
-			->getMock();
-
-		$this->_pBuilderShort->method('addFieldsAddressEstate')
-			->with($this->anything())
-			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
-				$pFieldAnrede = new Field('Anrede', onOfficeSDK::MODULE_ADDRESS);
-				$pFieldAnrede->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pFieldsCollection->addField($pFieldAnrede);
-
-				$pFieldTitle = new Field('Titel', onOfficeSDK::MODULE_ADDRESS);
-				$pFieldTitle->setType(FieldTypes::FIELD_TYPE_VARCHAR);
-				$pFieldsCollection->addField($pFieldTitle);
-
-				$pFieldOrt = new Field('Ort', onOfficeSDK::MODULE_ADDRESS);
-				$pFieldOrt->setType(FieldTypes::FIELD_TYPE_VARCHAR);
-				$pFieldsCollection->addField($pFieldOrt);
-
-				$pFieldNutzungsart = new Field('nutzungsart', onOfficeSDK::MODULE_ESTATE);
-				$pFieldNutzungsart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pFieldsCollection->addField($pFieldNutzungsart);
-
-				$pFieldOrtEstate = new Field('ort', onOfficeSDK::MODULE_ESTATE);
-				$pFieldOrtEstate->setType(FieldTypes::FIELD_TYPE_VARCHAR);
-				$pFieldsCollection->addField($pFieldOrtEstate);
-				return $this->_pBuilderShort;
-			}));
-
-		$this->_pSearchParametersModelBuilder = $this->getMockBuilder(SearchParametersModelBuilder::class)
+		$pSearchParametersModelBuilder = $this->getMockBuilder(SearchParametersModelBuilder::class)
 			->setMethods(['build'])
 			->disableOriginalConstructor()
 			->getMock();
 
 		$pSearchParametersModel = new SearchParametersModel();
-		$this->_pSearchParametersModelBuilder->method('build')->with($this->anything())->willReturn($pSearchParametersModel);
+		$pSearchParametersModelBuilder->method('build')->with($this->anything())->willReturn($pSearchParametersModel);
 
-		$this->_pAddressListFactory = $this->getMockBuilder(AddressListFactory::class)
+		$pAddressListFactory = $this->getMockBuilder(AddressListFactory::class)
 			->setMethods(['create'])
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->_pAddressListFactory->method('create')->willReturn($this->getMockBuilder(AddressList::class)->getMock());
+		$pAddressListFactory->method('create')
+			->willReturn($this->getMockBuilder(AddressList::class)
+			->getMock());
+		$this->_pContainer->set(Template::class, $pTemplateMock);
+		$this->_pContainer->set(Logger::class, $pLogger);
+		$this->_pContainer->set(DataListViewFactoryAddress::class, $pMockDataListViewFactoryAddress);
+		$this->_pContainer->set(WPQueryWrapper::class, $pWPQueryWrapperMock);
+		$this->_pContainer->set(SearchParametersModelBuilder::class, $pSearchParametersModelBuilder);
+		$this->_pContainer->set(AddressListFactory::class, $pAddressListFactory);
+
 	}
 
 
@@ -168,27 +119,17 @@ class TestClassContentFilterShortCodeAddress
 
 	public function testReplaceShortCodes()
 	{
-		$pTemplateMock = $this->getMockBuilder(Template::class)
-			->setMethods(['render', 'setAddressList', 'withTemplateName'])
-			->setConstructorArgs(['adressList-01'])
-			->getMock();
+		$pTemplateMock = $this->_pContainer->get(Template::class);
 		$pTemplateMock->method('withTemplateName')->will($this->returnSelf()); // should be a clone!
 		$pTemplateMock->method('render')->will($this->returnValue('I am the returned text.'));
 
-		$pTemplateMock->expects($this->once())->method('setAddressList')
-			->with($this->anything());
+		$pTemplateMock->expects($this->once())->method('withAddressList')
+			->with($this->anything())
+			->will($this->returnSelf());
 		$pTemplateMock->expects($this->once())->method('withTemplateName')->with('adressList-01')
 			->will($this->returnSelf());
 
-		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress(
-			$this->_pBuilderShort,
-			$this->_pSearchParametersModelBuilder,
-			$this->_pAddressListFactory,
-			$this->_pLogger,
-			$this->_pMockDataListViewFactoryAddress,
-			$pTemplateMock,
-			$this->_pWPQueryWrapperMock
-		);
+		$pConfigFilterShortCodeAddress = $this->_pContainer->get(ContentFilterShortCodeAddress::class);
 		$result = $pConfigFilterShortCodeAddress->replaceShortCodes(['view' => 'adressList-01']);
 		$this->assertEquals('I am the returned text.', $result);
 	}
@@ -200,28 +141,17 @@ class TestClassContentFilterShortCodeAddress
 
 	public function testReplaceShortCodesException()
 	{
-		$pTemplateMock = $this->getMockBuilder(Template::class)
-			->setMethods(['render', 'setAddressList', 'withTemplateName'])
-			->setConstructorArgs(['adressList-01'])
-			->getMock();
-		$pTemplateMock->method('withTemplateName')->will($this->returnSelf());
+		$pTemplateMock = $this->_pContainer->get(Template::class);
+		$pTemplateMock->expects($this->once())
+			->method('withAddressList')
+			->will($this->returnSelf());
 		$pException = new Exception(__CLASS__);
 		$pTemplateMock->expects($this->once())->method('render')->will($this->throwException($pException));
-		$pLogger = $this->getMockBuilder(Logger::class)
-			->setMethods(['logErrorAndDisplayMessage'])
-			->getMock();
-		$pLogger->expects($this->once())->method('logErrorAndDisplayMessage')
+		$this->_pContainer->get(Logger::class)
+			->expects($this->once())->method('logErrorAndDisplayMessage')
 			->with($pException)->will($this->returnValue('Exception caught'));
 
-		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress(
-			$this->_pBuilderShort,
-			$this->_pSearchParametersModelBuilder,
-			$this->_pAddressListFactory,
-			$pLogger,
-			$this->_pMockDataListViewFactoryAddress,
-			$pTemplateMock,
-			$this->_pWPQueryWrapperMock
-		);
+		$pConfigFilterShortCodeAddress = $this->_pContainer->get(ContentFilterShortCodeAddress::class);
 		$result = $pConfigFilterShortCodeAddress->replaceShortCodes(['view' => 'testException']);
 		$this->assertEquals('Exception caught', $result);
 	}
@@ -233,15 +163,7 @@ class TestClassContentFilterShortCodeAddress
 
 	public function testGetTag()
 	{
-		$pConfigFilterShortCodeAddress = new ContentFilterShortCodeAddress(
-			$this->_pBuilderShort,
-			$this->_pSearchParametersModelBuilder,
-			$this->_pAddressListFactory,
-			$this->_pLogger,
-			$this->_pMockDataListViewFactoryAddress,
-			$this->_pTemplateMock,
-			$this->_pWPQueryWrapperMock
-		);
+		$pConfigFilterShortCodeAddress = $this->_pContainer->get(ContentFilterShortCodeAddress::class);
 		$this->assertEquals('oo_address', $pConfigFilterShortCodeAddress->getTag());
 	}
 }

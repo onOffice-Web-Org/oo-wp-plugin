@@ -68,14 +68,12 @@ class EstateStatusLabel
 		$this->_pFieldnamesInactive = $pFieldnamesInactive ?? new Fieldnames(new FieldsCollection(), true);
 	}
 
-
 	/**
 	 *
 	 * @param array $estateValues
 	 * @return string
-	 *
+	 * @throws UnknownFieldException
 	 */
-
 	public function getLabel(array $estateValues): string
 	{
 		$this->_estateValues = $estateValues;
@@ -89,14 +87,12 @@ class EstateStatusLabel
 		return '';
 	}
 
-
 	/**
 	 *
 	 * @param string $key
 	 * @return string
-	 *
+	 * @throws UnknownFieldException
 	 */
-
 	private function processRecord(string $key): string
 	{
 		$this->_pFieldnamesActive->loadLanguage();
@@ -114,14 +110,11 @@ class EstateStatusLabel
 		return $label;
 	}
 
-
 	/**
-	 *
 	 * @param string $key
 	 * @return string
-	 *
+	 * @throws UnknownFieldException
 	 */
-
 	private function getFieldLabel(string $key): string
 	{
 		$this->_pFieldnamesActive->loadLanguage();

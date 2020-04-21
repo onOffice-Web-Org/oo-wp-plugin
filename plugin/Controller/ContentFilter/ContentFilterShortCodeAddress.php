@@ -23,13 +23,13 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
-use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Factory\AddressListFactory;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParameters;
 use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModelBuilder;
 use onOffice\WPlugin\Template;
@@ -46,9 +46,6 @@ use function shortcode_atts;
 class ContentFilterShortCodeAddress
 	implements ContentFilterShortCode
 {
-	/** @var FieldsCollectionBuilderShort */
-	private $_pBuilderShort;
-
 	/** @var SearchParametersModelBuilder */
 	private $_pSearchParametersModelBuilder;
 
@@ -64,13 +61,12 @@ class ContentFilterShortCodeAddress
 	/** @var WPQueryWrapper */
 	private $_pWPQueryWrapper;
 
-	/** @var mixed|AddressList */
-	private $_pAddressList;
+	/** @var AddressListFactory */
+	private $_pAddressListFactory;
 
 	/**
 	 * ContentFilterShortCodeAddress constructor.
 	 *
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchParametersModelBuilder $pSearchParametersModelBuilder
 	 * @param AddressListFactory $pAddressListFactory
 	 * @param Logger $pLogger
@@ -79,7 +75,6 @@ class ContentFilterShortCodeAddress
 	 * @param WPQueryWrapper $pWPQueryWrapper
 	 */
 	public function __construct(
-		FieldsCollectionBuilderShort $pBuilderShort,
 		SearchParametersModelBuilder $pSearchParametersModelBuilder,
 		AddressListFactory $pAddressListFactory,
 		Logger $pLogger,
@@ -87,24 +82,19 @@ class ContentFilterShortCodeAddress
 		Template $pTemplate,
 		WPQueryWrapper $pWPQueryWrapper)
 	{
-		$this->_pBuilderShort = $pBuilderShort;
 		$this->_pSearchParametersModelBuilder = $pSearchParametersModelBuilder;
 
 		$this->_pLogger = $pLogger;
 		$this->_pDataListFactory = $pDataListFactory;
-		$this->_pAddressList = $pAddressListFactory->create();
+		$this->_pAddressListFactory = $pAddressListFactory;
 		$this->_pTemplate = $pTemplate;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 	}
 
-
 	/**
-	 *
 	 * @param array $attributesInput
 	 * @return string
-	 *
 	 */
-
 	public function replaceShortCodes(array $attributesInput): string
 	{
 		$attributes = shortcode_atts([
@@ -123,29 +113,32 @@ class ContentFilterShortCodeAddress
 	/**
 	 * @param string $addressListName
 	 * @return Template
-	 * @throws \onOffice\WPlugin\DataView\UnknownViewException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownViewException
 	 */
 	private function createTemplate(string $addressListName): Template
 	{
 		$page = $this->_pWPQueryWrapper->getWPQuery()->get('page', 1);
 		$pAddressListView = $this->_pDataListFactory->getListViewByName($addressListName);
-		$pAddressList = $this->_pAddressList->withDataListViewAddress($pAddressListView);
+		$pAddressList = $this->_pAddressListFactory->create()->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);
 		$this->populateWpLinkPagesArgs($pAddressListView->getFilterableFields());
 		$templateName = $pAddressListView->getTemplate(); // name
-		$pTemplate = $this->_pTemplate->withTemplateName($templateName);
-		$pTemplate->setAddressList($pAddressList);
-
-		return $pTemplate;
+		return $this->_pTemplate
+			->withTemplateName($templateName)
+			->withAddressList($pAddressList);
 	}
 
 	/**
 	 * @param array $filterableFields
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	private function populateWpLinkPagesArgs(array $filterableFields)
 	{
-		$pModel = $this->_pSearchParametersModelBuilder->build(
-			$filterableFields, onOfficeSDK::MODULE_ADDRESS, $this->_pBuilderShort);
+		$pModel = $this->_pSearchParametersModelBuilder->build
+			($filterableFields, onOfficeSDK::MODULE_ADDRESS);
 
 		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pModel): string {
 			$pSearchParameters = new SearchParameters();
@@ -154,13 +147,9 @@ class ContentFilterShortCodeAddress
 		add_filter('wp_link_pages_args', [$pModel, 'populateDefaultLinkParams']);
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
 	public function getTag(): string
 	{
 		return 'oo_address';

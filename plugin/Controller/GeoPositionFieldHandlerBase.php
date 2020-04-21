@@ -33,27 +33,18 @@ namespace onOffice\WPlugin\Controller;
 interface GeoPositionFieldHandlerBase
 {
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	public function getActiveFields(): array;
 
 
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	public function getActiveFieldsWithValue(): array;
 
-
 	/**
-	 *
+	 * @param ViewProperty $pViewProperty
 	 */
-
 	public function readValues(ViewProperty $pViewProperty);
-
 }

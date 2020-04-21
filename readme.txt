@@ -73,13 +73,32 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-== 2.5.0 ==
+= 2.5.3 =
+
+**Fixes**
+
+* Notice in the geo fields administration.
+* jQuery internal reorganization.
+
+= 2.5.2 =
+
+**Fixes**
+
+* Fix detail view configuration of fields, if field category name exists in both address and estate module
+
+= 2.5.1 =
+
+**Fixes**
+
+* fix issues with geo fields on estate list
+
+= 2.5.0 =
 
 **Changes**
 
 * internal reorganization
 
-== 2.4.2 ==
+= 2.4.2 =
 
 **Fixes**
 
@@ -87,7 +106,7 @@ Start editing inside the `onoffice-personalized` folder.
 * Fix of multiselect fields with  multiple values in forms.
 * Fix handling of boolean values after form submits.
 
-== 2.4.1 ==
+= 2.4.1 =
 
 **Fixes**
 
@@ -200,13 +219,22 @@ Stable version of the plugin, including a backend GUI
 
 == Upgrade Notice ==
 
-== 2.4.1 ==
+= 2.5.3 =
+jQuery internal reorganization, notice in the geo fields administration.
+
+= 2.5.2 =
+Fix errors in estate detail view configuration.
+
+= 2.5.1 =
+Fix issue with geo fields
+
+= 2.4.1 =
 Fix for newsletter checkbox (only for applicant form).
 
-== 2.4.0 ==
+= 2.4.0 =
 Ability to set preset values per input in forms.
 
-== 2.3.1 ==
+= 2.3.1 =
 Fix handling of address list pagination and deactivated fields in estate list.
 
 = 2.3.0 =

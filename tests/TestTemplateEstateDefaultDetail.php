@@ -118,15 +118,13 @@ class TestTemplateEstateDefaultDetail
 
 
 	/**
-	 *
 	 * @covers \onOffice\WPlugin\Template::render
-	 *
 	 */
-
 	public function testRender()
 	{
-		$pTemplate = new TemplateMocker('templates.dist/estate/default_detail.php', getcwd());
-		$pTemplate->setEstateList($this->_pEstate);
+		$pTemplate = (new TemplateMocker(getcwd()))
+			->withTemplateName('templates.dist/estate/default_detail.php')
+			->withEstateList($this->_pEstate);
 		$output = $pTemplate->render();
 		$expected = file_get_contents(__DIR__.'/resources/templates/output_default_detail.html');
 

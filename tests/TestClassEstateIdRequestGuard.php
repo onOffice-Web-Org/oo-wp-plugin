@@ -27,7 +27,7 @@ use Generator;
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\EstateDetail;
-use onOffice\WPlugin\Factory\EstateDetailFactory;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use WP_UnitTestCase;
 
@@ -50,7 +50,7 @@ class TestClassEstateIdRequestGuard
 
 	public function testIsValid(int $estateId, $iterator, bool $result)
 	{
-		$pEstateDetailFactory = $this->getMockBuilder(EstateDetailFactory::class)
+		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
 			->disableOriginalConstructor()
 			->getMock();
 		$pEstateDetail = $this->getMockBuilder(EstateDetail::class)

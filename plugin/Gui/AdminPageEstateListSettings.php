@@ -31,6 +31,7 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
+use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -150,6 +151,11 @@ class AdminPageEstateListSettings
 			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
 
+		$geoNotice = __('At least the following fields must be active: country, radius and city or postcode.', 'onoffice');
+		$pInputModelGeoLabel = new InputModelLabel(null, $geoNotice);
+		$pInputModelGeoLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_ITALIC);
+		$pFormModelGeoFields->addInputModel($pInputModelGeoLabel);
+
 		$this->addFormModel($pFormModelGeoFields);
 
 		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection());
@@ -256,7 +262,6 @@ class AdminPageEstateListSettings
 		wp_enqueue_script('oo-checkbox-js');
 
 		$translations = SortListTypes::getSortOrder();
-
 		wp_localize_script('oo-sort-by-user-selection', 'onoffice_mapping_translations', $translations);
 		wp_enqueue_script('oo-sort-by-user-selection');
 	}

@@ -1,0 +1,16 @@
+label-objekttitel: flach begrüntes Grundstück
+label-objektart: Grundstück
+label-objekttyp: Wohnen
+label-vermarktungsart: Kauf
+label-plz: 52078
+label-ort: Aachen
+label-objektnr_extern: AP001
+label-grundstuecksflaeche: ca. 5.400 m²
+label-kaufpreis: 80.000,00 €
+label-objektbeschreibung: große Freifläche
+label-lage: Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.
+label-ausstatt_beschr: teilweise mit einer alten Mauer aus Findlingen umgeben
+label-sonstige_angaben: Vereinbaren sie noch heute einen Besichttgungstermin
+* Contact person: Ana Petrova
+<a href="https://asd.de" title="test movie">test movie</a>
+Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg

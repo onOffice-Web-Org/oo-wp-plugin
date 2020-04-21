@@ -59,8 +59,6 @@ use wpdb;
 use function DI\autowire;
 
 return [
-	Template::class => autowire()
-		->constructorParameter('templateName', ''),
 	ApiClientActionGetPdf::class => autowire()
 		->constructorParameter('actionId', '')
 		->constructorParameter('resourceType', ''),

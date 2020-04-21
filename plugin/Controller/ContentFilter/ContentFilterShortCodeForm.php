@@ -110,7 +110,7 @@ class ContentFilterShortCodeForm
 			$template = $pFormConfig->getTemplate();
 			$pTemplate = $this->_pTemplate->withTemplateName($template);
 			$pForm = $this->_pFormBuilder->build($formName, $pFormConfig->getFormType());
-			return $pTemplate->setForm($pForm)->render();
+			return $pTemplate->withForm($pForm)->render();
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
