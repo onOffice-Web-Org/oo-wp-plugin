@@ -70,7 +70,7 @@ class DistinctFieldsScriptRegistrator
 		}
 
 		$this->_pScriptStyle->registerScript('onoffice-distinctValues',
-			plugins_url('/js/distinctFields.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery']);
+			plugins_url('/js/distinctFields.js', ONOFFICE_PLUGIN_DIR.'/index.php'), ['jquery', 'onoffice-multiselect']);
 		$this->_pScriptStyle->enqueueScript('onoffice-distinctValues');
 		$this->_pScriptStyle->localizeScript('onoffice-distinctValues', 'onoffice_distinctFields', [
 			'base_path' => get_site_url(null, '/distinctfields-json'),
