@@ -73,6 +73,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.5.4 =
+
+**Changes**
+
+* jQuery internal reorganization.
+* More data in the emails by form submit.
+
 = 2.5.3 =
 
 **Fixes**
@@ -218,6 +225,9 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+= 2.5.4 =
+More data in the emails by form submit, jQuery internal reorganization.
 
 = 2.5.3 =
 jQuery internal reorganization, notice in the geo fields administration.
