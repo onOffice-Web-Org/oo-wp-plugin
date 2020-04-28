@@ -53,6 +53,7 @@ use onOffice\WPlugin\Installer\Installer;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
 use onOffice\WPlugin\PDF\PdfDocumentModelValidationException;
 use onOffice\WPlugin\PDF\PdfDownload;
+use onOffice\WPlugin\PDF\PdfDownloadException;
 use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\Utility\__String;
@@ -148,15 +149,15 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			$pPdfDocumentModel = new PdfDocumentModel($pWP->query_vars['estate_id'] ?? 0, $pWP->query_vars['view'] ?? '');
 			/* @var $pPdfDownload PdfDownload */
 			$pPdfDownload = $pDI->get(PdfDownload::class);
-			$pDocumentResponse = $pPdfDownload->download($pPdfDocumentModel);
-			header('Content-Type: '.$pDocumentResponse->getMimetype());
-			header('Content-Disposition: attachment; filename="document_'.$pPdfDocumentModel->getEstateId().'.pdf"');
-			echo $pDocumentResponse->getBinary();
+			$pPdfDownload->download($pPdfDocumentModel);
 		} catch (PdfDocumentModelValidationException $pEx) {
 			$pWP->handle_404();
 			include(get_query_template('404'));
-			die();
+		} catch (PdfDownloadException $pEx) {
+			$pWP->handle_404();
+			include(get_query_template('404'));
 		}
+		die();
 	}
 });
 

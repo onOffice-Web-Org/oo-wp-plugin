@@ -24,53 +24,55 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\PDF;
 
+use Iterator;
+
 /**
  *
  */
-
 class PdfDocumentResult
 {
 	/** @var string */
-	private $_mimetype;
+	private $_contentType;
 
-	/** @var string */
-	private $_binary;
+	/** @var int */
+	private $_contentLength;
 
+	/** @var Iterator */
+	private $_pIterator;
 
 	/**
-	 *
-	 * @param string $mime
-	 * @param string $binary
-	 *
+	 * @param string $contentType
+	 * @param int $contentLength
+	 * @param Iterator $pIterator
 	 */
-
-	public function __construct(string $mime, string $binary)
+	public function __construct(string $contentType, int $contentLength, Iterator $pIterator)
 	{
-		$this->_mimetype = $mime;
-		$this->_binary = $binary;
+		$this->_contentType = $contentType;
+		$this->_contentLength = $contentLength;
+		$this->_pIterator = $pIterator;
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
-	public function getMimetype(): string
+	public function getContentType(): string
 	{
-		return $this->_mimetype;
+		return $this->_contentType;
 	}
 
+	/**
+	 * @return int
+	 */
+	public function getContentLength(): int
+	{
+		return $this->_contentLength;
+	}
 
 	/**
-	 *
-	 * @return string
-	 *
+	 * @return Iterator
 	 */
-
-	public function getBinary(): string
+	public function getIterator(): Iterator
 	{
-		return $this->_binary;
+		return $this->_pIterator;
 	}
 }

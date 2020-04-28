@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,6 @@ namespace onOffice\tests;
 use onOffice\WPlugin\PDF\PdfDocumentResult;
 use WP_UnitTestCase;
 
-
 /**
  *
  */
@@ -34,14 +33,15 @@ use WP_UnitTestCase;
 class TestClassPdfDocumentResult
 	extends WP_UnitTestCase
 {
-	/**
-	 *
-	 */
-
 	public function testConstruct()
 	{
-		$pPdfDocumentResult = new PdfDocumentResult('text/plain', "Hello World\0\nabc");
-		$this->assertEquals('text/plain', $pPdfDocumentResult->getMimetype());
-		$this->assertEquals("Hello World\0\nabc", $pPdfDocumentResult->getBinary());
+		$content = ['chunk1', "chunk\0\n", 'chunk3'];
+		$length = strlen(implode('', $content));
+		$pIterator = new \ArrayIterator($content);
+		$pPdfDocumentResult = new PdfDocumentResult('text/plain', $length, $pIterator);
+		$this->assertEquals('text/plain', $pPdfDocumentResult->getContentType());
+		$this->assertEquals($length, $pPdfDocumentResult->getContentLength());
+		$this->assertInstanceOf(\Iterator::class, $pPdfDocumentResult->getIterator());
+		$this->assertEquals($content, iterator_to_array($pPdfDocumentResult->getIterator()));
 	}
 }

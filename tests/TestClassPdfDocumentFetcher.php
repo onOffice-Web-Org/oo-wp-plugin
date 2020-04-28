@@ -23,7 +23,9 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\API\ApiClientActionGetPdf;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\PDF\PdfDownloadException;
+use Symfony\Component\Process\Process;
 use onOffice\WPlugin\PDF\PdfDocumentFetcher;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
 use onOffice\WPlugin\PDF\PdfDocumentResult;
@@ -37,47 +39,69 @@ use WP_UnitTestCase;
 class TestClassPdfDocumentFetcher
 	extends WP_UnitTestCase
 {
-	/** @var PdfDocumentFetcher */
-	private $_pPdfDocumentFetcher = null;
+	/** @var Process */
+	private static $_pProcess;
 
-
-	/**
-	 *
-	 * @before
-	 *
-	 */
-
-	public function prepare()
+	static public function setUpBeforeClass()
 	{
-		$pApiClientActionGetPdf = $this->getMockBuilder(ApiClientActionGetPdf::class)
-			->setConstructorArgs([new SDKWrapper(), '', ''])
-			->setMethods(['getMimeTypeResult', 'sendRequests', 'getResultRecords'])
-			->getMock();
-		$pApiClientActionGetPdf
-			->expects($this->once())
-			->method('getMimeTypeResult')
-			->will($this->returnValue('application/pdf'));
-		$pApiClientActionGetPdf
-			->expects($this->once())
-			->method('getResultRecords')
-			->will($this->returnValue([
-				0 => "\0\0\0\0\xab\0xac12345",
-			]));
-		$this->_pPdfDocumentFetcher = new PdfDocumentFetcher($pApiClientActionGetPdf);
+		parent::setUpBeforeClass();
+		$command = ['php', '-S', 'localhost:8008', '-t', './resources/HTTP/'];
+		self::$_pProcess = new Process($command, __DIR__);
+		self::$_pProcess->start();
 	}
 
+	/**
+	 * @param string $returnUrl
+	 * @return APIClientActionGeneric
+	 */
+	public function getApiClientAction(string $returnUrl): APIClientActionGeneric
+	{
+		$pApiClientAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->setConstructorArgs([new SDKWrapper(), '', ''])
+			->setMethods(['sendRequests', 'getResultRecords'])
+			->getMock();
+
+		$pApiClientAction->expects($this->once())->method('sendRequests');
+		$pApiClientAction
+			->expects($this->once())
+			->method('getResultRecords')
+			->will($this->returnValue([0 => [
+				'elements' => [
+					0 => $returnUrl,
+			]]]));
+		return $pApiClientAction;
+	}
 
 	/**
 	 *
 	 */
-
 	public function testFetch()
 	{
-		$pPdfDocumentModel = new PdfDocumentModel(13, 'defaultexpose', 'testConfig');
+		$pApiClientAction = $this->getApiClientAction('http://localhost:8008/test.txt');
+		$PdfDocumentFetcher = new PdfDocumentFetcher($pApiClientAction);
+		$pPdfDocumentModel = new PdfDocumentModel(13, 'defaultexpose');
 		$pPdfDocumentModel->setLanguage('ESP');
-		$pResponse = $this->_pPdfDocumentFetcher->fetch($pPdfDocumentModel);
+		$pResponse = $PdfDocumentFetcher->fetch($pPdfDocumentModel);
 		$this->assertInstanceOf(PdfDocumentResult::class, $pResponse);
-		$this->assertEquals('application/pdf', $pResponse->getMimetype());
-		$this->assertEquals("\0\0\0\0\xab\0xac12345", $pResponse->getBinary());
+		$this->assertSame(12, $pResponse->getContentLength());
+		$this->assertSame('text/plain; charset=UTF-8', $pResponse->getContentType());
+		$this->assertInstanceOf(\Iterator::class, $pResponse->getIterator());
+		$this->assertSame(['Hello World!'], iterator_to_array($pResponse->getIterator()));
+	}
+
+	public function testFetchUnSuccessful()
+	{
+		$pApiClientAction = $this->getApiClientAction('http://localhost:8008/does/not/exist.txt');
+		$PdfDocumentFetcher = new PdfDocumentFetcher($pApiClientAction);
+		$pPdfDocumentModel = new PdfDocumentModel(13, 'defaultexpose');
+		$pPdfDocumentModel->setLanguage('ESP');
+		$this->expectException(PdfDownloadException::class);
+		$PdfDocumentFetcher->fetch($pPdfDocumentModel);
+	}
+
+	public static function tearDownAfterClass()
+	{
+		parent::tearDownAfterClass();
+		self::$_pProcess->stop();
 	}
 }

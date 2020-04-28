@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\PDF;
 
+use onOffice\WPlugin\API\ApiClientException;
+
 /**
  *
  */
@@ -35,14 +37,10 @@ class PdfDownload
 	/** @var PdfDocumentModelValidator */
 	private $_pPdfDocumentModelValidator;
 
-
 	/**
-	 *
 	 * @param PdfDocumentFetcher $pPdfDocumentFetcher
 	 * @param PdfDocumentModelValidator $pPdfDocumentModelValidator
-	 *
 	 */
-
 	public function __construct(
 		PdfDocumentFetcher $pPdfDocumentFetcher,
 		PdfDocumentModelValidator $pPdfDocumentModelValidator)
@@ -51,18 +49,22 @@ class PdfDownload
 		$this->_pPdfDocumentModelValidator = $pPdfDocumentModelValidator;
 	}
 
-
 	/**
-	 *
 	 * @param PdfDocumentModel $pModel
-	 * @return PdfDocumentResult
 	 * @throws PdfDocumentModelValidationException
-	 *
+	 * @throws PdfDownloadException
+	 * @throws ApiClientException
 	 */
-
-	public function download(PdfDocumentModel $pModel): PdfDocumentResult
+	public function download(PdfDocumentModel $pModel)
 	{
 		$pModelValidated = $this->_pPdfDocumentModelValidator->validate($pModel);
-		return $this->_pPdfDocumentFetcher->fetch($pModelValidated);
+		$pDocumentResponse =  $this->_pPdfDocumentFetcher->fetch($pModelValidated);
+		header('Content-Type: '.$pDocumentResponse->getContentType());
+		header('Content-Length: '.$pDocumentResponse->getContentLength());
+		header('Content-Disposition: attachment; filename="document_'.$pModel->getEstateId().'.pdf"');
+
+		foreach ($pDocumentResponse->getIterator() as $chunk) {
+			echo $chunk;
+		}
 	}
 }
