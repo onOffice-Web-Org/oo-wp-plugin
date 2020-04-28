@@ -48,6 +48,7 @@ class TestClassPdfDocumentFetcher
 		$command = ['php', '-S', 'localhost:8008', '-t', './resources/HTTP/'];
 		self::$_pProcess = new Process($command, __DIR__);
 		self::$_pProcess->start();
+		sleep(10);
 	}
 
 	/**
