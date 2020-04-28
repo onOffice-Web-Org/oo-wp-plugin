@@ -24,7 +24,6 @@ declare (strict_types=1);
 namespace onOffice;
 
 use onOffice\WPlugin\API\APIClientActionGeneric;
-use onOffice\WPlugin\API\ApiClientActionGetPdf;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Controller\InputVariableReaderConfig;
@@ -46,7 +45,6 @@ use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
-use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPNonceWrapper;
 use onOffice\WPlugin\WP\WPNonceWrapperDefault;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -59,9 +57,6 @@ use wpdb;
 use function DI\autowire;
 
 return [
-	ApiClientActionGetPdf::class => autowire()
-		->constructorParameter('actionId', '')
-		->constructorParameter('resourceType', ''),
 	APIClientActionGeneric::class => autowire()
 		->constructorParameter('actionId', '')
 		->constructorParameter('resourceType', ''),
