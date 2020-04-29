@@ -18,6 +18,7 @@
 	},
 	"require": {
 		"php": ">=7.0.0",
-		"php-di/php-di": "^6.0"
-	}
+		"php-di/php-di": "^6.0",
+		"ext-curl": "*"
+    }
 }

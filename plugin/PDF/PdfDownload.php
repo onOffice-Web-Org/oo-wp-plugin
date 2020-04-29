@@ -58,13 +58,7 @@ class PdfDownload
 	public function download(PdfDocumentModel $pModel)
 	{
 		$pModelValidated = $this->_pPdfDocumentModelValidator->validate($pModel);
-		$pDocumentResponse =  $this->_pPdfDocumentFetcher->fetch($pModelValidated);
-		header('Content-Type: '.$pDocumentResponse->getContentType());
-		header('Content-Length: '.$pDocumentResponse->getContentLength());
-		header('Content-Disposition: attachment; filename="document_'.$pModel->getEstateId().'.pdf"');
-
-		foreach ($pDocumentResponse->getIterator() as $chunk) {
-			echo $chunk;
-		}
+		$url = $this->_pPdfDocumentFetcher->fetchUrl($pModelValidated);
+		$this->_pPdfDocumentFetcher->proxyResult($pModelValidated, $url);
 	}
 }

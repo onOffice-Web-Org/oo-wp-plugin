@@ -23,11 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\PDF;
 
-use AppendIterator;
-use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -35,6 +34,9 @@ use onOffice\WPlugin\API\ApiClientException;
 
 class PdfDocumentFetcher
 {
+	/** @var array */
+	const WHITELIST_HEADERS = ['content-length', 'content-type'];
+
 	/** @var APIClientActionGeneric */
 	private $_pApiClientAction;
 
@@ -47,58 +49,66 @@ class PdfDocumentFetcher
 	}
 
 	/**
+	 * HTTP tunnel meant to transport big files with low RAM usage
 	 * @param PdfDocumentModel $pModel
-	 * @return PdfDocumentResult
+	 * @param string $url
 	 * @throws PdfDownloadException
+	 */
+	public function proxyResult(PdfDocumentModel $pModel, string $url)
+	{
+		header('Content-Disposition: attachment; filename="document_'.$pModel->getEstateId().'.pdf"');
+		$curl = curl_init($url);
+		$pCallbackHeader = function($ch, $data): int {
+			return $this->setHeaders($data);
+		};
+
+		$writeCallback = function($ch, $data): int {
+			echo $data;
+			return strlen($data);
+		};
+
+		curl_setopt_array($curl, [
+			CURLOPT_FAILONERROR => true,
+			CURLOPT_WRITEFUNCTION => $writeCallback,
+			CURLOPT_HEADERFUNCTION => $pCallbackHeader,
+			CURLOPT_BUFFERSIZE => 1024 ** 2,
+		]);
+
+		if (!curl_exec($curl) || curl_getinfo($curl, CURLINFO_HTTP_CODE) !== 200) {
+			curl_close($curl);
+			throw new PdfDownloadException;
+		}
+		curl_close($curl);
+	}
+
+	/**
+	 * @param string $inputString
+	 * @return int
+	 */
+	private function setHeaders(string $inputString): int
+	{
+		foreach (self::WHITELIST_HEADERS as $header) {
+			if (__String::getNew(strtolower($inputString))->startsWith($header . ':') &&
+				substr_count($inputString, ':') === 1) {
+				header($inputString);
+			}
+		}
+		return strlen($inputString);
+	}
+
+	/**
+	 * @param PdfDocumentModel $pModel
+	 * @return string
 	 * @throws ApiClientException
 	 */
-	public function fetch(PdfDocumentModel $pModel): PdfDocumentResult
+	public function fetchUrl(PdfDocumentModel $pModel): string
 	{
 		$pApiClientAction = $this->_pApiClientAction
 			->withActionIdAndResourceType(onOfficeSDK::ACTION_ID_GET, 'pdf');
 		$parameters = $this->getParameters($pModel);
 		$pApiClientAction->setParameters($parameters);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
-
-		$url = $pApiClientAction->getResultRecords()[0]['elements'][0] ?? '';
-		return $this->generateResult($url);
-	}
-
-	/**
-	 * @param string $url
-	 * @return PdfDocumentResult length of the document
-	 * @throws PdfDownloadException
-	 */
-	private function generateResult(string $url) : PdfDocumentResult
-	{
-		$pResult = new AppendIterator;
-		$curl = curl_init($url);
-		$pCallback = function ($ch, $data) use ($pResult) {
-			$pResult->append($this->makeGenerator($data));
-			return strlen($data); //return the exact length
-		};
-		curl_setopt_array($curl, [
-			CURLOPT_WRITEFUNCTION => $pCallback,
-			CURLOPT_BUFFERSIZE => 1024,
-		]);
-
-		if (!curl_exec($curl) || curl_getinfo($curl, CURLINFO_HTTP_CODE) !== 200) {
-			throw new PdfDownloadException;
-		}
-
-		// heads up! returns float!
-		$length = (int)curl_getinfo($curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-		$mimeType = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
-		return new PdfDocumentResult($mimeType, $length, $pResult);
-	}
-
-	/**
-	 * @param string $data
-	 * @return Generator
-	 */
-	private function makeGenerator(string $data): Generator
-	{
-		yield $data;
+		return $pApiClientAction->getResultRecords()[0]['elements'][0] ?? '';
 	}
 
 	/**

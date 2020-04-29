@@ -28,7 +28,6 @@ use onOffice\WPlugin\PDF\PdfDocumentFetcher;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
 use onOffice\WPlugin\PDF\PdfDocumentModelValidationException;
 use onOffice\WPlugin\PDF\PdfDocumentModelValidator;
-use onOffice\WPlugin\PDF\PdfDocumentResult;
 use onOffice\WPlugin\PDF\PdfDownload;
 use onOffice\WPlugin\PDF\PdfDownloadException;
 use WP_UnitTestCase;
@@ -72,19 +71,23 @@ class TestClassPdfDownload
 	 */
 	public function testDownload()
 	{
-		$content = ["\0\0\xab", "\xbc\x32"];
-		$pIterator = new \ArrayIterator($content);
-		$length = strlen(implode('', $content));
-		$pResponse = new PdfDocumentResult('application/pdf', $length, $pIterator);
+		$url = uniqid();
+		$pPdfDocumentModel = new PdfDocumentModel(12, 'testview');
+
+		$this->_pPdfDocumentModelValidator
+			->expects($this->once())
+			->method('validate')
+			->will($this->returnValue($pPdfDocumentModel));
 		$this->_pPdfDocumentFetcher
-			->expects($this->once())->method('fetch')->will($this->returnValue($pResponse));
-		$pModel = new PdfDocumentModel(13, 'testView');
-		ob_start();
-		$this->_pPdfDownload->download($pModel);
-		$result = ob_get_clean();
-		$this->assertSame("\0\0\xab\xbc\x32", $result);
-		$this->assertContains('Content-Type: application/pdf', xdebug_get_headers());
-		$this->assertContains('Content-Length: '.$length, xdebug_get_headers());
-		$this->assertContains('Content-Disposition: attachment; filename="document_13.pdf"', xdebug_get_headers());
+			->expects($this->once())
+			->method('fetchUrl')
+			->with($pPdfDocumentModel)
+			->will($this->returnValue($url));
+		$this->_pPdfDocumentFetcher
+			->expects($this->once())
+			->method('proxyResult')
+			->with($pPdfDocumentModel, $url);
+		$pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator);
+		$pSubject->download($pPdfDocumentModel);
 	}
 }
