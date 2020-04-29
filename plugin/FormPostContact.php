@@ -31,6 +31,8 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldTypes;
 use function sanitize_text_field;
 use function home_url;
 
@@ -103,6 +105,19 @@ class FormPostContact
 	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
 	{
 		return ['Id' => onOfficeSDK::MODULE_ESTATE] + parent::getAllowedPostVars($pFormConfig);
+	}
+
+
+	/**
+	 * @return array
+	 */
+
+	protected function expandFieldsCollection()
+	{
+		$pField = new Field('Id', onOfficeSDK::MODULE_ESTATE);
+		$pField->setType(FieldTypes::FIELD_TYPE_INTEGER);
+
+		return [$pField];
 	}
 
 	/**
