@@ -343,11 +343,17 @@ msgstr ""
 "Die Detailansicht wird gerade nicht verwendet. Fügen Sie diesen Code auf "
 "einer Seite ein, um die Detailansicht dort zu sehen:"
 
-#: plugin/Gui/AdminPageEstateDetail.php:161
-#: plugin/Gui/AdminPageEstateDetail.php:176
 #: plugin/Gui/AdminPageSettingsBase.php:177
 msgid "Fields"
 msgstr "Felder"
+
+#: plugin/Gui/AdminPageEstateDetail.php:161
+msgid "Contact person fields"
+msgstr "Felder Ansprechpartner"
+
+#: plugin/Gui/AdminPageEstateDetail.php:176
+msgid "Real estate data fields"
+msgstr "Felder Immobiliendaten"
 
 #: plugin/Gui/AdminPageEstateDetail.php:293
 msgid "Additional Media"

@@ -321,10 +321,16 @@ msgstr ""
 msgid "Detail view is not in use yet. Insert this code on a page to get the detail view there:"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:161
-#: plugin/Gui/AdminPageEstateDetail.php:176
 #: plugin/Gui/AdminPageSettingsBase.php:177
 msgid "Fields"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:161
+msgid "Contact person fields"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateDetail.php:176
+msgid "Real estate data fields"
 msgstr ""
 
 #: plugin/Gui/AdminPageEstateDetail.php:293

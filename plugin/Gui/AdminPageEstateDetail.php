@@ -158,7 +158,7 @@ class AdminPageEstateDetail
 		echo '</div>';
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ADDRESS)).'">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Contact person fields', 'onoffice').'</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortablecontactFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -173,7 +173,7 @@ class AdminPageEstateDetail
 		echo '</div>';
 		echo '<div class="fieldsSortable postbox" id="'
 			.esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real estate data fields', 'onoffice').'</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';

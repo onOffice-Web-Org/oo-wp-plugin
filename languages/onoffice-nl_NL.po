@@ -235,9 +235,17 @@ msgstr "Pagina bewerken"
 msgid "Detail view is not in use yet. Insert this code on a page to get the detail view there:"
 msgstr "Detailweergave is nog niet in gebruik. Voeg deze code in op een pagina om daar de detailweergave te krijgen:"
 
-#: plugin/Gui/AdminPageEstateDetail.php:163 plugin/Gui/AdminPageEstateDetail.php:178 plugin/Gui/AdminPageSettingsBase.php:181
+#: plugin/Gui/AdminPageSettingsBase.php:181
 msgid "Fields"
-msgstr "Velden"
+msgstr "Velden contactpersoon"
+
+#: plugin/Gui/AdminPageEstateDetail.php:161
+msgid "Contact person fields"
+msgstr "Felder Ansprechpartner"
+
+#: plugin/Gui/AdminPageEstateDetail.php:176
+msgid "Real estate data fields"
+msgstr "Vastgoedgegevensvelden"
 
 #: plugin/Gui/AdminPageEstateDetail.php:296
 msgid "Additional Media"

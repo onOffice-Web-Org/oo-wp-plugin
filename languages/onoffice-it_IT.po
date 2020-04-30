@@ -234,9 +234,17 @@ msgstr "Modifica pagina"
 msgid "Detail view is not in use yet. Insert this code on a page to get the detail view there:"
 msgstr "La vista dettagliata non è ancora in uso. Inserisci questo codice su una pagina per ottenere la vista di dettaglio:"
 
-#: plugin/Gui/AdminPageEstateDetail.php:163 plugin/Gui/AdminPageEstateDetail.php:178 plugin/Gui/AdminPageSettingsBase.php:181
+#: plugin/Gui/AdminPageSettingsBase.php:181
 msgid "Fields"
 msgstr "I campi"
+
+#: plugin/Gui/AdminPageEstateDetail.php:161
+msgid "Contact person fields"
+msgstr "Campi della persona di contatto"
+
+#: plugin/Gui/AdminPageEstateDetail.php:176
+msgid "Real estate data fields"
+msgstr "Campi dati immobiliari"
 
 #: plugin/Gui/AdminPageEstateDetail.php:296
 msgid "Additional Media"
