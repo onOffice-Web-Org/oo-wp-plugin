@@ -27,11 +27,11 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\FormData;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
-
 
 /**
  *
@@ -40,10 +40,13 @@ use onOffice\WPlugin\Types\FieldTypes;
 class FormAddressCreator
 {
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var FieldsCollectionBuilderShort */
-	private $_pFieldsCollectionBuilderShort = null;
+	private $_pFieldsCollectionBuilderShort;
+
+	/** @var array */
+	private $_adressDataWithLabels = [];
 
 
 	/**
@@ -62,13 +65,13 @@ class FormAddressCreator
 	}
 
 
-
 	/**
 	 *
 	 * @param FormData $pFormData
 	 * @param bool $mergeExisting
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
+	 * @throws UnknownFieldException
 	 *
 	 */
 
@@ -98,6 +101,8 @@ class FormAddressCreator
 	 * @param FormData $pFormData
 	 * @return array
 	 *
+	 * @throws UnknownFieldException
+	 *
 	 */
 
 	private function getAddressDataForApiCall(FormData $pFormData): array
@@ -109,9 +114,9 @@ class FormAddressCreator
 		];
 
 		$addressData = [];
-		$addressFields = $pFormData->getAddressData();
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$addressFields = $pFormData->getAddressData($pFieldsCollection);
 
 		foreach ($addressFields as $inputName => $value) {
 			$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ADDRESS, $inputName);
@@ -123,6 +128,46 @@ class FormAddressCreator
 			}
 		}
 
+		return $addressData;
+	}
+
+	/**
+	 * @param FormData $pFormData
+	 * @return array
+	 * @throws UnknownFieldException
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function getAddressDataForEmail(FormData $pFormData): array
+	{
+		$pFieldsCollection = new FieldsCollection();
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$addressData = [];
+		$addressFields = $pFormData->getAddressData($pFieldsCollection);
+
+		foreach ($addressFields as $inputName => $value) {
+			$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ADDRESS, $inputName);
+
+			switch ($pField->getType()) {
+				case FieldTypes::FIELD_TYPE_SINGLESELECT:
+					$addressData[$pField->getLabel()] = array_key_exists($value, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$value] : $value;
+					break;
+				case FieldTypes::FIELD_TYPE_MULTISELECT:
+					if (!is_array($value)) {
+						$addressData[$pField->getLabel()] = array_key($value, $pField->getPermittedvalues()) ?? $value;
+					} else {
+						$tmpMsValues = [];
+						foreach ($value as $val) {
+							$tmpMsValues []= array_key($val, $pField->getPermittedvalues()) ?? $val;
+						}
+						$addressData[$pField->getLabel()] = implode(', ', $tmpMsValues);
+					}
+					break;
+				default:
+					$addressData[$pField->getLabel()] = $value;
+					break;
+			}
+		}
 		return $addressData;
 	}
 }

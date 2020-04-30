@@ -31,16 +31,16 @@ namespace onOffice\WPlugin\Renderer;
 abstract class InputFieldRenderer
 {
 	/** @var string */
-	private $_type = null;
+	private $_type;
 
 	/** @var string */
-	private $_name = null;
+	private $_name;
 
 	/** @var mixed */
 	private $_value = null;
 
 	/** @var array  */
-	private $_additionalAttributes = array();
+	private $_additionalAttributes = [];
 
 	/** @var int */
 	private static $_guiId = 0;
@@ -95,26 +95,15 @@ abstract class InputFieldRenderer
 
 	/**
 	 *
-	 * @param array $attributes
+	 * @return string
 	 *
 	 */
 
-	public function setAdditionalAttributes(array $attributes)
-	{
-		$this->_additionalAttributes = $attributes;
-	}
-
-
-	/**
-	 *
-	 * @return int
-	 *
-	 */
-
-	public function getGuiId()
+	public function getGuiId(): string
 	{
 		return $this->_type.'_'.self::$_guiId;
 	}
+
 
 	/**
 	 *
@@ -122,15 +111,11 @@ abstract class InputFieldRenderer
 	 *
 	 */
 
-	protected function renderAdditionalAttributes()
+	protected function renderAdditionalAttributes(): string
 	{
-		$outputValues = array();
-
-		if (count($this->_additionalAttributes) > 0) {
-			foreach ($this->_additionalAttributes as $name => $value) {
-				$outputValues []= esc_html($name).'="'.esc_html($value).'"';
-			}
-		}
+		$outputValues = array_map(function(string $name, string $value): string {
+			return esc_html($name).'="'.esc_html($value).'"';
+		}, array_keys($this->_additionalAttributes), $this->_additionalAttributes);
 
 		return implode(' ', $outputValues);
 	}
@@ -152,7 +137,6 @@ abstract class InputFieldRenderer
 	public function getName()
 		{ return $this->_name; }
 
-
 	/** @return mixed */
 	public function getValue()
 		{ return $this->_value; }
@@ -161,11 +145,9 @@ abstract class InputFieldRenderer
 	public function setValue($value)
 		{ $this->_value = $value; }
 
-
 	/** @return string */
 	public function getType()
 		{ return $this->_type;}
-
 
 	/** @param string $module */
 	public function setOoModule(string $module)

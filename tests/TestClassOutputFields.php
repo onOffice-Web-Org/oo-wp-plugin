@@ -21,6 +21,8 @@
 
 namespace onOffice\tests;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\InputVariableReader;
@@ -53,15 +55,15 @@ class TestClassOutputFields
 	/** @var InputVariableReader */
 	private $_pInputVariableReader = null;
 
+	/** @var Container */
+	private $_pContainer;
+
 
 	/**
-	 *
+	 * @before
 	 */
-
-	public function setUp()
+	public function prepare()
 	{
-		parent::setUp();
-
 		$this->_pDataListView = new DataListViewAddress(1, 'test');
 		$this->_pDataListView->setFields(['testField1', 'testField2', 'testField3', 'geoPosition']);
 		$this->_pDataListView->setFilterableFields(['testField1', 'testField2', 'geoPosition']);
@@ -84,15 +86,15 @@ class TestClassOutputFields
 			('radius', $module, FieldTypes::FIELD_TYPE_FLOAT);
 		$this->_pInputVariableReader = new InputVariableReader($module, $pInputVariableReaderConfig);
 		$this->setValues($pInputVariableReaderConfig);
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
 	}
 
-
 	/**
-	 *
 	 * @param InputVariableReaderConfigTest $pInputVariableReaderConfig
-	 *
 	 */
-
 	private function setValues(InputVariableReaderConfigTest $pInputVariableReaderConfig)
 	{
 		$pInputVariableReaderConfig->setValue('testField1', '2');
@@ -102,41 +104,9 @@ class TestClassOutputFields
 		$pInputVariableReaderConfig->setValue('street', 'Charlottenburger Allee');
 	}
 
-
 	/**
-	 *
-	 * @covers onOffice\WPlugin\Field\OutputFields::__construct
-	 * @covers onOffice\WPlugin\Field\OutputFields::getDataView
-	 * @covers onOffice\WPlugin\Field\OutputFields::getInputVariableReader
-	 *
+	 * @covers \onOffice\WPlugin\Field\OutputFields::getVisibleFilterableFields
 	 */
-
-	public function testConstruct()
-	{
-		$pGeoPosition = $this->getMockBuilder(GeoPositionFieldHandler::class)
-			->disableOriginalConstructor()
-			->getMock();
-
-		$pCompoundFields = new CompoundFieldsFilter();
-
-		$pOutputFields = new OutputFields(
-				$this->_pDataListView,
-				$pGeoPosition,
-				$pCompoundFields,
-				$this->_pInputVariableReader);
-
-		$this->assertEquals($this->_pDataListView, $pOutputFields->getDataView());
-		$this->assertEquals($this->_pInputVariableReader, $pOutputFields->getInputVariableReader());
-
-	}
-
-
-	/**
-	 *
-	 * @covers onOffice\WPlugin\Field\OutputFields::getVisibleFilterableFields
-	 *
-	 */
-
 	public function testGetVisibleFilterableFields()
 	{
 		$expectation = [
@@ -171,17 +141,14 @@ class TestClassOutputFields
 		$pCompoundFieldsMocker = $this->getMockBuilder(CompoundFieldsFilter::class)
 				->setMethods(['mergeListFilterableFields'])
 				->getMock();
-
 		$pCompoundFieldsMocker->method('mergeListFilterableFields')->will($this->returnValue(
 				$expectation));
 
-		$pFieldsCollection =  $this->getMockBuilder(FieldsCollection::class)->getMock();
+		$this->_pContainer->set(CompoundFieldsFilter::class, $pCompoundFieldsMocker);
 
-		$pOutputFields = new OutputFields(
-				$this->_pDataListView,
-				$pGeoPosition,
-				$pCompoundFieldsMocker,
-				$this->_pInputVariableReader);
-		$this->assertEquals($expectation, $pOutputFields->getVisibleFilterableFields($pFieldsCollection));
+		$pFieldsCollection = new FieldsCollection;
+		$pOutputFields = $this->_pContainer->get(OutputFields::class);
+		$this->assertEquals($expectation, $pOutputFields->getVisibleFilterableFields
+			($this->_pDataListView, $pFieldsCollection, $pGeoPosition, $this->_pInputVariableReader));
 	}
 }

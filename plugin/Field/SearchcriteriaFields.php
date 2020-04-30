@@ -23,8 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
@@ -41,17 +44,12 @@ class SearchcriteriaFields
 	/** */
 	const RANGE_UPTO = '__bis';
 
-
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilder = null;
 
-
 	/**
-	 *
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilder
-	 *
 	 */
-
 	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilder)
 	{
 		$this->_pFieldsCollectionBuilder = $pFieldsCollectionBuilder;
@@ -59,14 +57,12 @@ class SearchcriteriaFields
 
 
 	/**
-	 *
 	 * SearchCriteria fields have the suffixes `__von` and `__bis`
 	 *
 	 * @param string $input
 	 * @return string
 	 *
 	 */
-
 	public function getFieldNameOfInput($input): string
 	{
 		$inputConfigName = $input;
@@ -80,28 +76,71 @@ class SearchcriteriaFields
 		return $inputConfigName;
 	}
 
-
 	/**
-	 *
 	 * @param array $inputFormFields
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getFormFields(array $inputFormFields): array
 	{
 		$pFieldsCollection = $this->loadSearchCriteriaFields();
 		return $this->generateFieldModuleArray($pFieldsCollection, $inputFormFields);
 	}
 
-
 	/**
-	 *
 	 * @param array $inputFormFields
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
+	public function getFieldLabelsOfInputs(array $inputFormFields): array
+	{
+		$pFieldsCollection = new FieldsCollection();
+		$this->_pFieldsCollectionBuilder
+			->addFieldsSearchCriteria($pFieldsCollection)
+			->addFieldsAddressEstate($pFieldsCollection);
 
+		$output = [];
+
+		foreach ($inputFormFields as $name => $value) {
+			$aliasedFieldName = $this->getFieldNameOfInput($name);
+			$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, $aliasedFieldName);
+
+			if (FieldTypes::isRangeType($pField->getType()))
+			{
+				if (stristr($name, self::RANGE_FROM)) {
+					$output[$pField->getLabel().' (min)'] = $value;
+				} elseif (stristr($name, self::RANGE_UPTO)) {
+					$output[$pField->getLabel().' (max)'] = $value;
+				} else {
+					$output[$pField->getLabel()] = $value;
+				}
+			} else if (FieldTypes::isMultipleSelectType($pField->getType())) {
+				if (is_array($value)) {
+					$tmpOutput = [];
+					foreach ($value as $val) {
+						$tmpOutput []= (array_key_exists($val, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$val] : $val);
+					}
+					$output[$pField->getLabel()] = implode(', ', $tmpOutput);
+				}
+				else {
+					$output[$pField->getLabel()] = (array_key_exists($value, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$value] : $value);
+				}
+			} else {
+				$output[$pField->getLabel()] = $value;
+			}
+		}
+		return $output;
+	}
+
+
+	/**
+	 * @param array $inputFormFields
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
 	public function getFormFieldsWithRangeFields(array $inputFormFields): array
 	{
 		$pFieldsCollection = $this->loadSearchCriteriaFields();
@@ -119,13 +158,11 @@ class SearchcriteriaFields
 		return $newFormFields;
 	}
 
-
 	/**
-	 *
 	 * @return FieldsCollection
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	private function loadSearchCriteriaFields(): FieldsCollection
 	{
 		$pFieldsCollection = new FieldsCollection();
@@ -133,14 +170,11 @@ class SearchcriteriaFields
 		return $pFieldsCollection;
 	}
 
-
 	/**
-	 *
 	 * @param FieldsCollection $pFieldsCollection
+	 * @param array $inputFormFields
 	 * @return array
-	 *
 	 */
-
 	private function generateFieldModuleArray(
 		FieldsCollection $pFieldsCollection,
 		array $inputFormFields): array

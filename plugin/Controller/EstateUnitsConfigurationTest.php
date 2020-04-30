@@ -44,51 +44,36 @@ class EstateUnitsConfigurationTest
 	/** @var EstateListMocker */
 	private $_pEstateListMocker = null;
 
-
 	/**
-	 *
+	 * @param DataView $pDataView
 	 */
-
 	public function __construct(DataView $pDataView)
 	{
 		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 		$this->_pEstateListMocker = new EstateListMocker($pDataView);
 	}
 
-
 	/**
-	 *
 	 * @return EstateListMocker
-	 *
 	 */
-
 	public function getEstateList(): EstateListBase
 	{
 		return $this->_pEstateListMocker;
 	}
 
-
 	/**
-	 *
 	 * @return SDKWrapperMocker
-	 *
 	 */
-
 	public function getSDKWrapper(): SDKWrapper
 	{
 		return $this->_pSDKWrapperMocker;
 	}
 
-
 	/**
-	 *
-	 * @param string $templateName
 	 * @return Template
-	 *
 	 */
-
-	public function getTemplate(string $templateName): Template
+	public function getTemplate(): Template
 	{
-		return new TemplateMocker($templateName);
+		return new TemplateMocker();
 	}
 }

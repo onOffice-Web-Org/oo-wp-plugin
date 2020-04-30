@@ -21,51 +21,61 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\Model\FormModel;
-use onOffice\WPlugin\Renderer\InputFieldComplexSortableDetailListContentBase;
 use onOffice\WPlugin\Types\FieldTypes;
+use function __;
+use function esc_html;
+use function esc_html__;
+use const ONOFFICE_DI_CONFIG_PATH;
 
 /**
  *
  */
 
 class InputFieldComplexSortableDetailListContentDefault
-	extends InputFieldComplexSortableDetailListContentBase
 {
 	/**
-	 *
 	 * @param string $key
-	 * @param bool $dummy
-	 *
+	 * @param bool $isDummy
+	 * @param string $type
+	 * @param array $extraInputModels
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
-	public function render($key, $dummy, $type = null)
+	public function render(string $key, bool $isDummy,
+		string $type = null, array $extraInputModels = [])
 	{
 		$pFormModel = new FormModel();
 
-		foreach ($this->getExtraInputModels() as $pInputModel) {
-
+		foreach ($extraInputModels as $pInputModel) {
 			if (!in_array($type, [FieldTypes::FIELD_TYPE_MULTISELECT, FieldTypes::FIELD_TYPE_SINGLESELECT]) &&
-					$pInputModel->getField() == 'availableOptions')
+				$pInputModel->getField() == 'availableOptions')
 			{
 				continue;
 			}
-
-			$pInputModel->setIgnore($dummy);
+			$pInputModel->setIgnore($isDummy);
 			$callbackValue = $pInputModel->getValueCallback();
 
 			if ($callbackValue !== null) {
-				call_user_func($callbackValue, $pInputModel, $key);
+				call_user_func($callbackValue, $pInputModel, $key, $type);
 			}
 
 			$pFormModel->addInputModel($pInputModel);
 		}
 
-		$pInputModelRenderer = new InputModelRenderer($pFormModel);
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		/* @var $pInputModelRenderer InputModelRenderer */
+		$pInputModelRenderer = $pContainer->get(InputModelRenderer::class);
 		echo '<p class="wp-clearfix"><label class="howto">'.esc_html__('Key of Field:', 'onoffice')
 				.'&nbsp;</label><span class="menu-item-settings-name">'.esc_html($key).'</span></p>';
 
-		$pInputModelRenderer->buildForAjax();
+		$pInputModelRenderer->buildForAjax($pFormModel);
 
 		echo '<a class="item-delete-link submitdelete">'.__('Delete', 'onoffice').'</a>';
 	}

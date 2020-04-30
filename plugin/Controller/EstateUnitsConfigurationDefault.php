@@ -22,6 +22,8 @@
 namespace onOffice\WPlugin\Controller;
 
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\SDKWrapper;
@@ -81,16 +83,15 @@ class EstateUnitsConfigurationDefault
 		return $this->_pContainer->get(SDKWrapper::class);
 	}
 
-
 	/**
 	 *
-	 * @param string $templateName
 	 * @return Template
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
-	public function getTemplate(string $templateName): Template
+	public function getTemplate(): Template
 	{
-		return $this->_pContainer->get(Template::class)->withTemplateName($templateName);
+		return $this->_pContainer->get(Template::class);
 	}
 }

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,30 +19,34 @@
  *
  */
 
-namespace onOffice\WPlugin\Gui;
+declare (strict_types=1);
 
-use onOffice\WPlugin\Model\InputModelBase;
+namespace onOffice\WPlugin\WP;
 
+use WP;
 
-/**
- *
- */
-
-class AdminPageFormSettingsFree
-	extends AdminPageFormSettingsBase
+class WPWrapper
 {
 	/**
 	 *
+	 * @global \WP $wp
+	 * @return WP
+	 *
 	 */
 
-	protected function buildForms()
+	public function getWP(): WP
 	{
-		parent::buildForms();
-		$pFormModelBuilder = $this->getFormModelBuilder();
+		global $wp;
+		return $wp;
+	}
 
-		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
 
-		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
-			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+	/**
+	 * @return string|null
+	 */
+
+	public function getRequest()
+	{
+		return $this->getWP()->request;
 	}
 }

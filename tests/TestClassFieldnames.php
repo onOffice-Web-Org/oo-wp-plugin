@@ -286,6 +286,7 @@ class TestClassFieldnames
 			'module' => 'estate',
 			'rangefield' => false,
 			'additionalTranslations' => [],
+			'labelOnlyValues' => [],
 			'compoundFields' => [],
 		];
 		$actualResult = $pFieldNames->getFieldInformation('country', onOfficeSDK::MODULE_ESTATE);

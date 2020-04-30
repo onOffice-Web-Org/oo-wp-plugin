@@ -36,6 +36,7 @@ use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
@@ -144,11 +145,23 @@ class TestClassAddressList
 		$pMockConfig->method('getFieldnames')->will($this->returnValue($pMockFieldnames));
 		$pMockConfig->method('getOutputFields')->will($this->returnValue($pMockOutputFields));
 
-		$pBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+		$pFieldsCollectionBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 				->setConstructorArgs([new Container()])
 				->getMock();
 
-		$pMockConfig->method('getFieldsCollectionBuilderShort')->willReturn($pBuilderMock);
+		$pFieldsCollectionNewFields = new FieldsCollection;
+		$pFieldsCollectionNewFields->addField(new Field('KdNr', onOfficeSDK::MODULE_ADDRESS));
+		$pFieldsCollectionNewFields->addField(new Field('Vorname', onOfficeSDK::MODULE_ADDRESS));
+		$pFieldsCollectionNewFields->addField(new Field('Name', onOfficeSDK::MODULE_ADDRESS));
+
+		$pFieldsCollectionBuilderMock->method('addFieldsAddressEstate')
+			->will($this->returnCallback(function(FieldsCollection $pCollection)
+			use ($pFieldsCollectionBuilderMock, $pFieldsCollectionNewFields): FieldsCollectionBuilderShort {
+				$pCollection->merge($pFieldsCollectionNewFields);
+				return $pFieldsCollectionBuilderMock;
+			}));
+
+		$pMockConfig->method('getFieldsCollectionBuilderShort')->willReturn($pFieldsCollectionBuilderMock);
 
 		$this->_pAddressList = new AddressList($pMockConfig);
 	}
@@ -263,15 +276,48 @@ class TestClassAddressList
 			'KdNr' => [
 				'type' => 'varchar',
 				'value' => 4,
+				'label' => '',
+				'default' => null,
+				'length' => null,
+				'permittedvalues' => Array (),
+				'content' => '',
+				'module' => 'address',
+				'rangefield' => false,
+				'additionalTranslations' => Array (),
+				'compoundFields' => Array (),
+				'labelOnlyValues' => Array (),
+				'name' => 'KdNr',
 			],
 			'Vorname' => [
-				'type' => 'text',
+				'type' => 'varchar',
 				'value' => null,
+				'label' => '',
+				'default' => null,
+				'length' => null,
+				'permittedvalues' => Array (),
+				'content' => '',
+				'module' => 'address',
+				'rangefield' => false,
+				'additionalTranslations' => Array (),
+				'compoundFields' => Array (),
+				'labelOnlyValues' => Array (),
+				'name' => 'Vorname',
 			],
 			'Name' => [
-				'type' =>  'text',
+				'type' => 'varchar',
 				'value' => 'Stefansson',
-			],
+				'label' => '',
+				'default' => null,
+				'length' => null,
+				'permittedvalues' => Array (),
+				'content' => '',
+				'module' => 'address',
+				'rangefield' => false,
+				'additionalTranslations' => Array (),
+				'compoundFields' => Array (),
+				'labelOnlyValues' => Array (),
+				'name' => 'Name',
+			]
 		];
 
 		$this->assertEquals($expectedResult, $this->_pAddressList->getVisibleFilterableFields());

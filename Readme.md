@@ -20,7 +20,7 @@ git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git
 PREFIX=/tmp make release
 ```
 
-This will generate the directory /tmp/onoffice with the plugin data. If you need a zip file, execute `make zip`.
+This will generate the directory /tmp/onoffice with the plugin data. If you need a zip file for testing, execute `make test-zip`.
 
 ## Getting Started
 

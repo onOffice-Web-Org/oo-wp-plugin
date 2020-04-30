@@ -22,7 +22,12 @@
 
 namespace onOffice\WPlugin\Filter\SearchParameters;
 
-use onOffice\WPlugin\Filter\SearchParameters\SearchParametersModel;
+use DI\DependencyException;
+use DI\NotFoundException;
+use onOffice\WPlugin\Controller\SearchParametersModelBuilderEstate;
+use onOffice\WPlugin\Controller\SortList\SortListDataModel;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use function add_query_arg;
 use function esc_url;
 use function get_permalink;
@@ -37,21 +42,18 @@ use function user_trailingslashit;
 
 class SearchParameters
 {
-
 	/**
-	 *
 	 * Generates a pagelink for pagination with given parameters as GET Request
 	 *
 	 * partly taken from wp_link_pages() and _wp_link_page()
 	 *
-	 * @global int $page
-	 * @global bool $more
 	 * @param string $link
 	 * @param int $i
+	 * @param SearchParametersModel $pModel
 	 * @return string
-	 *
+	 * @global int $page
+	 * @global bool $more
 	 */
-
 	public function linkPagesLink(string $link, int $i, SearchParametersModel $pModel): string
 	{
 		global $page, $more;
@@ -75,17 +77,13 @@ class SearchParameters
 		return $output;
 	}
 
-
 	/**
-	 *
 	 * @param int $i
 	 * @param int $page
 	 * @param array $linkparams
 	 * @param  SearchParametersModel $pModel
 	 * @return string
-	 *
 	 */
-
 	private function getLinkSnippetForPage(int $i, int $page, array $linkparams, SearchParametersModel $pModel): string
 	{
 		$key = $i < $page ? 'previouspagelink' : 'nextpagelink';
@@ -95,18 +93,25 @@ class SearchParameters
 			.$linkparams['link_after'].'</a>';
 	}
 
-
 	/**
-	 *
 	 * @param int $i
 	 * @param array $parameters
 	 * @return string
-	 *
 	 */
-
 	private function geturl($i, array $parameters): string
 	{
 		$url = trailingslashit(get_permalink()).user_trailingslashit($i, 'single_paged');
 		return add_query_arg($parameters, $url);
+	}
+
+	/**
+	 * @param SearchParametersModel $pSearchParametersModel
+	 */
+	public function registerNewPageLinkArgs(SearchParametersModel $pSearchParametersModel)
+	{
+		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pSearchParametersModel): string {
+			return $this->linkPagesLink($link, $i, $pSearchParametersModel);
+		}, 10, 2);
+		add_filter('wp_link_pages_args', [$pSearchParametersModel, 'populateDefaultLinkParams']);
 	}
 }

@@ -25,8 +25,8 @@ namespace onOffice;
 
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientActionGetPdf;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironment;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeAddressEnvironmentDefault;
+use onOffice\WPlugin\Controller\AddressListEnvironment;
+use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Controller\InputVariableReaderConfig;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldnames;
 use onOffice\WPlugin\Filesystem\Filesystem;
@@ -41,6 +41,7 @@ use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfigurationDefault;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
+use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
@@ -58,15 +59,14 @@ use wpdb;
 use function DI\autowire;
 
 return [
-	Template::class => autowire()
-		->constructorParameter('templateName', ''),
 	ApiClientActionGetPdf::class => autowire()
 		->constructorParameter('actionId', '')
 		->constructorParameter('resourceType', ''),
 	APIClientActionGeneric::class => autowire()
 		->constructorParameter('actionId', '')
 		->constructorParameter('resourceType', ''),
-	ContentFilterShortCodeAddressEnvironment::class => autowire(ContentFilterShortCodeAddressEnvironmentDefault::class),
+	RegionController::class => autowire()
+		->constructorParameter('init', false),
 	FormPostConfiguration::class => autowire(FormPostConfigurationDefault::class),
 	FormPostOwnerConfiguration::class => autowire(FormPostOwnerConfigurationDefault::class),
 	FormPostContactConfiguration::class => autowire(FormPostContactConfigurationDefault::class),
@@ -76,7 +76,7 @@ return [
 	ScriptLoaderBuilderConfig::class => autowire(ScriptLoaderBuilderConfigDefault::class),
 	ScriptLoaderGenericConfiguration::class => autowire(ScriptLoaderGenericConfigurationDefault::class),
 	Filesystem::class => autowire(FilesystemDirect::class),
-	wpdb::class => function() {
+	wpdb::class => static function() {
 		global $wpdb;
 		return $wpdb;
 	},
@@ -84,4 +84,5 @@ return [
 	WPScreenWrapper::class => autowire(WPScreenWrapperDefault::class),
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
+	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
 ];

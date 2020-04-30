@@ -24,6 +24,10 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\Collection;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Region\Region;
+use onOffice\WPlugin\Region\RegionController;
+use onOffice\WPlugin\Region\RegionFilter;
+use onOffice\WPlugin\Types\FieldTypes;
 use function __;
 
 /**
@@ -32,6 +36,21 @@ use function __;
 
 class FieldRowConverterSearchCriteria
 {
+	/** @var RegionController */
+	private $_pRegionController;
+
+	/** @var RegionFilter */
+	private $_pRegionFilter;
+
+	/**
+	 * @param RegionController $pRegionController
+	 */
+	public function __construct(RegionController $pRegionController, RegionFilter $pRegionFilter)
+	{
+		$this->_pRegionController = $pRegionController;
+		$this->_pRegionFilter = $pRegionFilter;
+	}
+
 	/**
 	 *
 	 * @param array $input
@@ -48,6 +67,14 @@ class FieldRowConverterSearchCriteria
 		$input['module'] = onOfficeSDK::MODULE_SEARCHCRITERIA;
 		$input['content'] = __('Search Criteria', 'onoffice');
 		$input['permittedvalues'] = $input['values'] ?? [];
+
+		if (($input['type'] ?? '') === 'displayLive') {
+			$input['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
+			$this->_pRegionController->fetchRegions();
+			$regions = $this->_pRegionController->getRegions();
+			$input['permittedvalues'] = $this->_pRegionFilter->buildRegions($regions);
+			$input['labelOnlyValues'] = $this->_pRegionFilter->collectLabelOnlyValues($regions);
+		}
 		unset($input['values']);
 		$input['rangefield'] = (bool)($input['rangefield'] ?? false);
 		return $input;

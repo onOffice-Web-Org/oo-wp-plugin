@@ -38,7 +38,7 @@ require('map/map.php');
 
 if (Favorites::isFavorizationEnabled()): ?>
 <script>
-	$(document).ready(function() {
+	jQuery(document).ready(function($) {
 		onofficeFavorites = new onOffice.favorites(<?php echo json_encode(Favorites::COOKIE_NAME); ?>);
 		onOffice.addFavoriteButtonLabel = function(i, element) {
 			var estateId = $(element).attr('data-onoffice-estateid');

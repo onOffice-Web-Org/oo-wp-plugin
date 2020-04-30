@@ -29,9 +29,16 @@
 namespace onOffice\WPlugin;
 
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Controller\InputVariableReader;
+use onOffice\WPlugin\Controller\InputVariableReaderParser;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use const ONOFFICE_DI_CONFIG_PATH;
 
 
@@ -60,9 +67,6 @@ class FormData
 	private $_formtype = null;
 
 	/** @var array */
-	private $_configFields = [];
-
-	/** @var array */
 	private $_responseFieldsValues = [];
 
 	/** @var DataFormConfiguration */
@@ -80,7 +84,6 @@ class FormData
 	{
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
 		$this->_formNo = $formNo;
-		$this->_configFields = $this->_pDataFormConfiguration->getInputs();
 	}
 
 
@@ -105,43 +108,49 @@ class FormData
 		return $missing;
 	}
 
-
 	/**
-	 *
+	 * @param FieldsCollection $pFieldsCollection
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws Field\UnknownFieldException
+	 * @throws NotFoundException
 	 */
-
-	public function getAddressData(): array
+	public function getAddressData(FieldsCollection $pFieldsCollection): array
 	{
-		$inputs = $this->_configFields;
+		$inputs = $this->_pDataFormConfiguration->getInputs();
 		$addressData = [];
 		$pContainerBuilder = new ContainerBuilder();
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
 		$pSearchcriteriaFields = $pContainer->get(SearchcriteriaFields::class);
 
+		$pInputVariableReaderAddress = new InputVariableReaderParser();
+
 		foreach ($this->_values as $input => $value) {
 			$inputConfigName = $pSearchcriteriaFields->getFieldNameOfInput($input);
 			$inputModule = $inputs[$inputConfigName] ?? null;
 
 			if (onOfficeSDK::MODULE_ADDRESS === $inputModule) {
+				$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ADDRESS, $input);
+
+				if ($pField->getType() == FieldTypes::FIELD_TYPE_BOOLEAN) {
+					$value = $pInputVariableReaderAddress->parseBool($value);
+				}
 				$addressData[$input] = $value;
 			}
 		}
 		return $addressData;
 	}
 
-
 	/**
 	 *
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getSearchcriteriaData(): array
 	{
-		$inputs = $this->_configFields;
+		$inputs = $this->_pDataFormConfiguration->getInputs();
 		$searchcriteriaData = [];
 
 		$pContainerBuilder = new ContainerBuilder();

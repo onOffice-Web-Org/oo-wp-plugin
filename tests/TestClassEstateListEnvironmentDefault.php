@@ -23,11 +23,14 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
-use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\EstateFiles;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
@@ -48,6 +51,9 @@ use WP_UnitTestCase;
 class TestClassEstateListEnvironmentDefault
 	extends WP_UnitTestCase
 {
+	/** @var Container */
+	private $_pContainer;
+
 	/** @var EstateListEnvironmentDefault */
 	private $_pSubject = null;
 
@@ -68,7 +74,7 @@ class TestClassEstateListEnvironmentDefault
 
 	public function testGetEstateFiles()
 	{
-		$this->assertInstanceOf(EstateFiles::class, $this->_pSubject->getEstateFiles([]));
+		$this->assertInstanceOf(EstateFiles::class, $this->_pSubject->getEstateFiles());
 	}
 
 
@@ -123,9 +129,14 @@ class TestClassEstateListEnvironmentDefault
 
 	public function testDefaultFilterBuilder()
 	{
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([new Container])
+			->getMock();
+
 		$this->_pSubject->setDefaultFilterBuilder
-			(new DefaultFilterBuilderListView(new DataListView(1, 'test')));
+			(new DefaultFilterBuilderListView(new DataListView(1, 'test'), $pFieldsCollectionBuilderShort));
 		$this->assertInstanceOf
+
 			(DefaultFilterBuilderListView::class, $this->_pSubject->getDefaultFilterBuilder());
 	}
 
@@ -136,7 +147,7 @@ class TestClassEstateListEnvironmentDefault
 
 	public function testGetDataDetailView()
 	{
-		$this->assertInstanceOf(DataDetailView::class, $this->_pSubject->getDataDetailView());
+		$this->assertInstanceOf(DataDetailViewHandler::class, $this->_pSubject->getDataDetailViewHandler());
 	}
 
 
@@ -194,6 +205,17 @@ class TestClassEstateListEnvironmentDefault
 
 	public function generate()
 	{
-		$this->_pSubject = new EstateListEnvironmentDefault();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pSubject = $this->_pContainer->get(EstateListEnvironmentDefault::class);
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Controller\EstateListEnvironmentDefault::getFieldsCollectionBuilderShort
+	 */
+	public function testGetFieldsCollectionBuilderShort()
+	{
+		$this->assertInstanceOf(FieldsCollectionBuilderShort::class, $this->_pSubject->getFieldsCollectionBuilderShort());
 	}
 }

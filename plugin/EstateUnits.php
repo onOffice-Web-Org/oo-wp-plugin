@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
@@ -44,14 +46,10 @@ class EstateUnits
 	/** @var EstateUnitsConfigurationBase */
 	private $_pEstateUnitsConfiguration = null;
 
-
 	/**
-	 *
 	 * @param DataListView $pDataListView
 	 * @param EstateUnitsConfigurationBase $pEstateUnitsConfiguration
-	 *
 	 */
-
 	public function __construct(DataListView $pDataListView,
 		EstateUnitsConfigurationBase $pEstateUnitsConfiguration = null)
 	{
@@ -60,14 +58,11 @@ class EstateUnits
 		assert($pDataListView === $this->_pEstateUnitsConfiguration->getEstateList()->getDataView());
 	}
 
-
 	/**
-	 *
 	 * @param EstateListBase $pEstateList
 	 * @throws HttpFetchNoResultException
-	 *
+	 * @throws API\APIEmptyResultException
 	 */
-
 	public function loadByMainEstates(EstateListBase $pEstateList)
 	{
 		$pSDKWrapper = $this->_pEstateUnitsConfiguration->getSDKWrapper();
@@ -86,13 +81,9 @@ class EstateUnits
 		$this->evaluateEstateUnits($pAPIClientAction->getResultRecords());
 	}
 
-
 	/**
-	 *
 	 * @param array $records
-	 *
 	 */
-
 	private function evaluateEstateUnits(array $records)
 	{
 		foreach ($records as $properties) {
@@ -100,41 +91,31 @@ class EstateUnits
 		}
 	}
 
-
 	/**
-	 *
 	 * @param int $estateId
 	 * @return int[]
-	 *
 	 */
-
 	public function getSubEstateIds(int $estateId): array
 	{
 		return $this->_estateUnits[$estateId] ?? [];
 	}
 
-
 	/**
-	 *
 	 * @param int $estateId
 	 * @return int
-	 *
 	 */
-
 	public function getSubEstateCount(int $estateId): int
 	{
 		$units = $this->getSubEstateIds($estateId);
 		return count($units);
 	}
 
-
 	/**
-	 *
 	 * @param int $mainEstateId
 	 * @return string
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function generateHtmlOutput(int $mainEstateId): string
 	{
 		$units = $this->getSubEstateIds($mainEstateId);
@@ -152,10 +133,9 @@ class EstateUnits
 		$pEstateList->loadEstates();
 
 		$templateName = $pDataView->getTemplate();
-		$pTemplate = $this->_pEstateUnitsConfiguration->getTemplate($templateName);
-		$pTemplate->setEstateList($pEstateList);
-		$htmlOutput = $pTemplate->render();
-
-		return $htmlOutput;
+		return $this->_pEstateUnitsConfiguration->getTemplate()
+			->withTemplateName($templateName)
+			->withEstateList($pEstateList)
+			->render();
 	}
 }

@@ -27,17 +27,18 @@
 
 namespace onOffice\WPlugin;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationOwner;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -52,31 +53,30 @@ class FormPostOwner
 	/** @var FormPostOwnerConfiguration */
 	private $_pFormPostOwnerConfiguration = null;
 
-
 	/**
-	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostOwnerConfiguration $pFormPostOwnerConfiguration
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
-	 *
+	 * @param FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm
 	 */
-
-	public function __construct(FormPostConfiguration $pFormPostConfiguration,
+	public function __construct(
+		FormPostConfiguration $pFormPostConfiguration,
 		FormPostOwnerConfiguration $pFormPostOwnerConfiguration,
-		FieldsCollectionBuilderShort $pBuilderShort,
-		SearchcriteriaFields $pSearchcriteriaFields)
+		SearchcriteriaFields $pSearchcriteriaFields,
+		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm)
 	{
 		$this->_pFormPostOwnerConfiguration = $pFormPostOwnerConfiguration;
-
-		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
+		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
 	}
-
 
 	/**
 	 *
 	 * @param FormData $pFormData
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws Field\UnknownFieldException
+	 * @throws NotFoundException
 	 */
 
 	protected function analyseFormContentByPrefix(FormData $pFormData)
@@ -91,25 +91,26 @@ class FormPostOwner
 
 		$addressId = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
 			->createOrCompleteAddress($pFormData, $checkduplicate);
-		$estateId = $this->createEstate();
+		$estateData = $this->getEstateData();
+		$estateId = $this->createEstate($estateData);
 		$this->createOwnerRelation($estateId, $addressId);
 
 		if (null != $recipient) {
-			$this->sendContactRequest($recipient, $estateId, $subject);
+			$this->sendContactRequest($recipient, $estateId, $estateData, $subject);
 		}
 	}
 
-
 	/**
 	 *
+	 * @param array $estateData
 	 * @return int
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws ApiClientException
 	 */
 
-	private function createEstate(): int
+	private function createEstate(array $estateData): int
 	{
-		$estateValues = $this->getEstateData();
-		$requestParams = ['data' => $estateValues];
+		$requestParams = ['data' => $estateData];
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 
 		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE,
@@ -190,30 +191,36 @@ class FormPostOwner
 		}
 	}
 
-
 	/**
 	 *
 	 * @param string $recipient
 	 * @param int $estateId
+	 * @param array $estateValues
 	 * @param string $subject
+	 * @throws API\APIEmptyResultException
 	 * @throws ApiClientException
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
-	private function sendContactRequest(string $recipient, int $estateId, $subject = null)
+	private function sendContactRequest(string $recipient, int $estateId, array $estateValues, $subject=null)
 	{
-		$addressData = $this->_pFormData->getAddressData();
+		$addressData = $this->_pFormData->getAddressData($this->getFieldsCollection());
 		$values = $this->_pFormData->getValues();
-		$message = $values['message'] ?? null;
+		$estateData = array_keys($estateValues);
 
 		$requestParams = [
 			'addressdata' => $addressData,
 			'estateid' => $estateId,
-			'message' => $message,
+			'message' => $values['message'] ?? null,
 			'subject' => $subject,
 			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
 			'formtype' => $this->_pFormData->getFormtype(),
 		];
+
+		if ($estateData != []) {
+			$requestParams['estatedata'] = $estateData;
+		}
 
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;

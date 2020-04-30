@@ -23,31 +23,29 @@ namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\WP\WPWrapper;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
 class FormPostContactConfigurationTest
 	implements FormPostContactConfiguration
 {
-	/** @var string */
-	private $_referrer = '';
-
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var bool */
 	private $_newsletterAccepted = false;
 
 	/** @var WPQueryWrapper */
-	private $_pWPQueryWrapper = null;
+	private $_pWPQueryWrapper;
 
 	/** @var FormAddressCreator */
-	private $_pFormAddressCreator = null;
+	private $_pFormAddressCreator;
+
+	/** @var WPWrapper */
+	private $_pWPWrapper;
 
 
 	/**
@@ -55,17 +53,20 @@ class FormPostContactConfigurationTest
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param WPQueryWrapper $pWPQueryWrapper
 	 * @param FormAddressCreator $pFormAddressCreator
+	 * @param WPWrapper $pWPWrapper
 	 *
 	 */
 
 	public function __construct(
 		SDKWrapper $pSDKWrapper,
 		WPQueryWrapper $pWPQueryWrapper,
-		FormAddressCreator $pFormAddressCreator)
+		FormAddressCreator $pFormAddressCreator,
+		WPWrapper $pWPWrapper)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 		$this->_pFormAddressCreator = $pFormAddressCreator;
+		$this->_pWPWrapper = $pWPWrapper;
 	}
 
 
@@ -77,7 +78,7 @@ class FormPostContactConfigurationTest
 
 	public function getReferrer(): string
 	{
-		return $this->_referrer;
+		return '/test/page';
 	}
 
 
@@ -90,18 +91,6 @@ class FormPostContactConfigurationTest
 	public function getSDKWrapper(): SDKWrapper
 	{
 		return $this->_pSDKWrapper;
-	}
-
-
-	/**
-	 *
-	 * @param string $referrer
-	 *
-	 */
-
-	public function setReferrer(string $referrer)
-	{
-		$this->_referrer = $referrer;
 	}
 
 
@@ -150,5 +139,15 @@ class FormPostContactConfigurationTest
 	public function getFormAddressCreator(): FormAddressCreator
 	{
 		return $this->_pFormAddressCreator;
+	}
+
+
+	/**
+	 * @return WPWrapper
+	 */
+
+	public function getWPWrapper(): WPWrapper
+	{
+		return $this->_pWPWrapper;
 	}
 }

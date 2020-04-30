@@ -24,6 +24,8 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Record;
 
 use wpdb;
+use function esc_sql;
+
 
 /**
  *
@@ -58,10 +60,24 @@ class RecordManagerDeleteForm
 	public function deleteByIds(array $ids)
 	{
 		$prefix = $this->_pWPDB->prefix;
+		$pWpdb = $this->_pWPDB;
 
 		foreach ($ids as $id) {
-			$this->_pWPDB->delete($prefix.'oo_plugin_forms', ['form_id' => $id]);
-			$this->_pWPDB->delete($prefix.'oo_plugin_form_fieldconfig', ['form_id' => $id]);
+			$pWpdb->delete($prefix.'oo_plugin_forms', ['form_id' => $id]);
+			$pWpdb->delete($prefix.'oo_plugin_form_fieldconfig', ['form_id' => $id]);
+			$defaultIds = $pWpdb->get_col(
+				"SELECT defaults_id "
+				."FROM {$prefix}oo_plugin_fieldconfig_form_defaults "
+				."WHERE form_id = '".esc_sql($id)."'");
+
+			if ($defaultIds !== []) {
+				$stringPlaceholders = array_fill(0, count($defaultIds), '%d');
+				$placeHolders = implode(', ', $stringPlaceholders);
+				$pWpdb->query($pWpdb->prepare("DELETE FROM {$prefix}oo_plugin_fieldconfig_form_defaults_values "
+					."WHERE defaults_id IN ($placeHolders)", $defaultIds));
+			}
+
+			$pWpdb->delete($prefix.'oo_plugin_fieldconfig_form_defaults', ['form_id' => $id]);
 		}
 	}
 }

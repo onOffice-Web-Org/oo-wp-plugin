@@ -120,8 +120,7 @@ if (!function_exists('renderFormField')) {
 			$typeCurrentInput = onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER;
 		}
 
-		if ((\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput &&
-			!$isRangeValue) || in_array($fieldName, array('objektart', 'range_land', 'vermarktungsart'))) {
+		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput && !$isRangeValue) {
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
@@ -140,7 +139,14 @@ if (!function_exists('renderFormField')) {
 		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
 			$isRangeValue)) {
-			$output .= '<div data-name="'.esc_attr($fieldName).'" class="multiselect" data-values="'
+
+			$postfix = '';
+
+			if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput) {
+				$postfix = '[]';
+			}
+
+			$output .= '<div data-name="'.esc_attr($fieldName).$postfix.'" class="multiselect" data-values="'
 				.esc_attr(json_encode($permittedValues)).'" data-selected="'
 				.esc_attr(json_encode($selectedValue)).'">
 				<input type="button" class="onoffice-multiselect-edit" value="'
@@ -189,8 +195,8 @@ if (!function_exists('renderRegionalAddition')) {
 		$pRegionController = new RegionController();
 		$regions = $pRegionController->getRegions();
 		ob_start();
+		echo '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 		foreach ($regions as $pRegion) {
-			echo '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 			/* @var $pRegion Region */
 			printRegion( $pRegion, $selectedValue ?? [] );
 		}

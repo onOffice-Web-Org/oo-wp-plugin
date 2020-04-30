@@ -90,7 +90,7 @@ abstract class InputModelBase
 	/** @var array For referenced input models only */
 	private $_valueCallback = null;
 
-	/** @var InputModelBase */
+	/** @var InputModelBase[] */
 	private $_referencedInputModels = array();
 
 	/** @var string */
@@ -98,6 +98,9 @@ abstract class InputModelBase
 
 	/** @var string */
 	private $_oOModule = '';
+
+	/** @var array */
+	private $_labelOnlyValues = [];
 
 	/**
 	 *
@@ -180,11 +183,11 @@ abstract class InputModelBase
 		{ return $this->_id; }
 
 	/** @return array */
-	public function getValueCallback()
+	public function getValueCallback(): callable
 		{ return $this->_valueCallback; }
 
-	/** @param array|string $valueCallback */
-	public function setValueCallback($valueCallback)
+	/** @param callable $valueCallback */
+	public function setValueCallback(callable $valueCallback)
 		{ $this->_valueCallback = $valueCallback; }
 
 	/** @param InputModelBase $pReferencedInputModel */
@@ -210,4 +213,12 @@ abstract class InputModelBase
 	/** @return string */
 	public function getOoModule(): string
 		{ return $this->_oOModule; }
+
+	/** @return array */
+	public function getLabelOnlyValues(): array
+		{ return $this->_labelOnlyValues; }
+
+	/** @param array $labelOnlyValues */
+	public function setLabelOnlyValues(array $labelOnlyValues)
+		{ $this->_labelOnlyValues = $labelOnlyValues; }
 }

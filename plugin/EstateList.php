@@ -22,25 +22,28 @@
 namespace onOffice\WPlugin;
 
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
+use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
+use onOffice\WPLugin\DataView\UnknownViewException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
+use onOffice\WPlugin\Field\OutputFields;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
-use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Controller\SortList\SortListBuilder;
-use onOffice\WPlugin\Controller\SortList\SortListDataModel;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use function add_action;
-use function do_action;
 use function esc_url;
 use function get_page_link;
 use function home_url;
@@ -76,9 +79,6 @@ class EstateList
 	/** @var int */
 	private $_numEstatePages = null;
 
-	/** @var int */
-	private $_handleEstateContactPerson = null;
-
 	/** @var DataView */
 	private $_pDataView = null;
 
@@ -97,17 +97,18 @@ class EstateList
 	/** @var GeoSearchBuilder */
 	private $_pGeoSearchBuilder = null;
 
-
 	/**
-	 *
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function __construct(DataView $pDataView, EstateListEnvironment $pEnvironment = null)
 	{
-		$this->_pEnvironment = $pEnvironment ?? new EstateListEnvironmentDefault();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$this->_pEnvironment = $pEnvironment ?? new EstateListEnvironmentDefault($pContainer);
 		$this->_pDataView = $pDataView;
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$this->_pApiClientAction = new APIClientActionGeneric
@@ -115,13 +116,10 @@ class EstateList
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 	}
 
-
 	/**
-	 *
 	 * @return int
-	 *
+	 * @throws API\APIEmptyResultException
 	 */
-
 	protected function getNumEstatePages()
 	{
 		$recordNumOverAll = $this->getEstateOverallCount();
@@ -135,36 +133,30 @@ class EstateList
 
 
 	/**
-	 *
 	 * @return int
-	 *
 	 */
-
 	protected function getRecordsPerPage()
 	{
 		return $this->_pDataView->getRecordsPerPage();
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	protected function getPreloadEstateFileCategories()
 	{
 		return $this->_pDataView->getPictureTypes();
 	}
 
-
 	/**
-	 *
 	 * @param int $currentPage
 	 * @param DataView $pDataListView
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownViewException
+	 * @throws HttpFetchNoResultException
 	 */
-
 	public function loadEstates(int $currentPage = 1, DataView $pDataListView = null)
 	{
 		if ($pDataListView === null)
@@ -177,20 +169,13 @@ class EstateList
 
 		$fileCategories = $this->getPreloadEstateFileCategories();
 
-		$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles($fileCategories);
 		$estateIds = $this->getEstateIdToForeignMapping($this->_records);
 
-		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
-
 		if ($estateIds !== []) {
-			add_action('oo_beforeEstateRelations', [$this, 'registerContactPersonCall'], 10, 2);
-			add_action('oo_afterEstateRelations', [$this, 'extractEstateContactPerson'], 10, 2);
+			$this->getEstateContactPerson($estateIds);
 
-			do_action('oo_beforeEstateRelations', $pSDKWrapper, $estateIds);
-
-			$pSDKWrapper->sendRequests();
-
-			do_action('oo_afterEstateRelations', $pSDKWrapper, $estateIds);
+			$this->_pEstateFiles = $this->_pEnvironment->getEstateFiles();
+			$this->_pEstateFiles->getAllFiles($fileCategories, $estateIds, $this->_pEnvironment->getSDKWrapper());
 		}
 
 		if ($pDataListView->getRandom()) {
@@ -201,13 +186,11 @@ class EstateList
 		$this->resetEstateIterator();
 	}
 
-
 	/**
-	 *
 	 * @param int $currentPage
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws UnknownViewException
 	 */
-
 	private function loadRecords(int $currentPage)
 	{
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
@@ -226,48 +209,33 @@ class EstateList
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 	}
 
-
 	/**
-	 *
-	 * @param SDKWrapper $pSDKWrapper
 	 * @param array $estateIds
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	public function registerContactPersonCall(SDKWrapper $pSDKWrapper, array $estateIds)
+	private function getEstateContactPerson(array $estateIds)
 	{
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+
 		$parameters = [
 			'parentids' => array_keys($estateIds),
 			'relationtype' => onOfficeSDK::RELATION_TYPE_CONTACT_BROKER,
 		];
-
-		$this->_handleEstateContactPerson = $pSDKWrapper->addRequest
-			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', $parameters);
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAPIClientAction->setParameters($parameters);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+		$this->collectEstateContactPerson($pAPIClientAction->getResultRecords(), $estateIds);
 	}
 
-
 	/**
-	 *
-	 * @param SDKWrapper $pSDKWrapper
-	 * @param array $estateIds
-	 *
-	 */
-
-	public function extractEstateContactPerson(SDKWrapper $pSDKWrapper, array $estateIds)
-	{
-		$responseArrayContactPerson = $pSDKWrapper->getRequestResponse
-			($this->_handleEstateContactPerson);
-		$this->collectEstateContactPerson($responseArrayContactPerson, $estateIds);
-	}
-
-
-	/**
-	 *
 	 * @param int $currentPage
+	 * @param bool $formatOutput
 	 * @return array
-	 *
+	 * @throws UnknownViewException
 	 */
-
 	private function getEstateParameters(int $currentPage, bool $formatOutput)
 	{
 		$language = Language::getDefault();
@@ -302,13 +270,9 @@ class EstateList
 		return $requestParams;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	protected function addExtraParams(): array
 	{
 		$pListView = $this->_pDataView;
@@ -339,14 +303,10 @@ class EstateList
 		return $requestParams;
 	}
 
-
 	/**
-	 *
 	 * @param array $estateResponseArray
 	 * @return array Mapping: mainEstateId => multiLangId
-	 *
 	 */
-
 	private function getEstateIdToForeignMapping($estateResponseArray)
 	{
 		$estateIds = [];
@@ -360,23 +320,22 @@ class EstateList
 		return $estateIds;
 	}
 
-
 	/**
-	 *
 	 * @param array $responseArrayContacts
 	 * @param array $estateIds
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	private function collectEstateContactPerson($responseArrayContacts, array $estateIds)
 	{
-		$records = $responseArrayContacts['data']['records'][0]['elements'] ?? [];
+		$records = $responseArrayContacts[0]['elements'] ?? [];
 		$allAddressIds = [];
 
-		foreach ($records as $estateId => $adressIds) {
+		foreach ($records as $estateId => $addressIds) {
 			$subjectEstateId = $estateIds[$estateId];
-			$this->_estateContacts[$subjectEstateId] = $adressIds;
-			$allAddressIds = array_unique(array_merge($allAddressIds, $adressIds));
+			$this->_estateContacts[$subjectEstateId] = $addressIds;
+			$allAddressIds = array_unique(array_merge($allAddressIds, $addressIds));
 		}
 
 		$fields = $this->_pDataView->getAddressFields();
@@ -386,14 +345,11 @@ class EstateList
 		}
 	}
 
-
 	/**
-	 *
 	 * @param string $modifier
 	 * @return ArrayContainerEscape
-	 *
+	 * @throws \Exception
 	 */
-
 	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
 		global $numpages, $multipage, $page, $more;
@@ -435,25 +391,19 @@ class EstateList
 		return $pArrayContainer;
 	}
 
-
 	/**
-	 *
 	 * @return int
-	 *
+	 * @throws API\APIEmptyResultException
 	 */
-
 	public function getEstateOverallCount()
 	{
 		return $this->_pApiClientAction->getResultMeta()['cntabsolute'];
 	}
 
-
 	/**
-	 *
+	 * @param string $field
 	 * @return string
-	 *
 	 */
-
 	public function getFieldLabel($field): string
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
@@ -462,16 +412,15 @@ class EstateList
 		return $fieldNewName;
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function getEstateLink(): string
 	{
-		$pageId = $this->_pEnvironment->getDataDetailView()->getPageId();
+		$pageId = $this->_pEnvironment->getDataDetailViewHandler()
+			->getDetailView()->getPageId();
 		$fullLink = '#';
 
 		if ($pageId !== 0) {
@@ -482,14 +431,10 @@ class EstateList
 		return $fullLink;
 	}
 
-
 	/**
-	 *
 	 * @param array $types
 	 * @return array
-	 *
 	 */
-
 	public function	getEstatePictures(array $types = null)
 	{
 		$estateId = $this->_currentEstate['id'];
@@ -506,110 +451,78 @@ class EstateList
 		return $estateFiles;
 	}
 
-
 	/**
-	 *
 	 * Not supported in list view
 	 * @return array Returns an array if Movie Links are active and displayed as Link
-	 *
 	 */
-
 	public function getEstateMovieLinks(): array
 	{
 		return [];
 	}
 
-
 	/**
-	 *
 	 * Not supported in list view
 	 * @param array $options
 	 * @return array
-	 *
 	 */
-
 	public function getMovieEmbedPlayers(array $options = []): array
 	{
 		return [];
 	}
 
-
 	/**
-	 *
 	 * @param int $imageId
 	 * @param array $options
 	 * @return string
-	 *
 	 */
-
 	public function getEstatePictureUrl($imageId, array $options = null)
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstateFileUrl($imageId, $currentEstate, $options);
 	}
 
-
 	/**
-	 *
 	 * @param int $imageId
 	 * @return string
-	 *
 	 */
-
 	public function getEstatePictureTitle($imageId)
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstatePictureTitle($imageId, $currentEstate);
 	}
 
-
 	/**
-	 *
 	 * @param int $imageId
 	 * @return string
-	 *
 	 */
-
 	public function getEstatePictureText($imageId)
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstatePictureText($imageId, $currentEstate);
 	}
 
-
 	/**
-	 *
 	 * @param int $imageId
 	 * @return array
-	 *
 	 */
-
 	public function getEstatePictureValues($imageId)
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstatePictureValues($imageId, $currentEstate);
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	public function getEstateContactIds(): array
 	{
 		$recordId = $this->_currentEstate['id'];
 		return $this->_estateContacts[$recordId] ?? [];
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	public function getEstateContacts()
 	{
 		$addressIds = $this->getEstateContactIds();
@@ -624,37 +537,30 @@ class EstateList
 		return $result;
 	}
 
-
 	/**
-	 *
 	 * @return int
-	 *
 	 */
-
 	public function getCurrentEstateId(): int
 	{
 		return $this->_currentEstate['id'];
 	}
 
-
 	/**
-	 *
 	 * @return int
-	 *
 	 */
-
 	public function getCurrentMultiLangEstateMainId()
 	{
 		return $this->_currentEstate['mainId'];
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws HttpFetchNoResultException
+	 * @throws UnknownViewException
 	 */
-
 	public function getEstateUnits()
 	{
 		$estateId = $this->getCurrentMultiLangEstateMainId();
@@ -673,13 +579,9 @@ class EstateList
 		return $htmlOutput;
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
 	public function getDocument()
 	{
 		$document = '';
@@ -691,66 +593,60 @@ class EstateList
 		return $document;
 	}
 
-
 	/**
-	 *
 	 * @return string[] An array of visible fields
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
-
 	public function getVisibleFilterableFields(): array
 	{
+		$pContainer = $this->_pEnvironment->getContainer();
 		$pFieldsCollection = new FieldsCollection();
-		$pBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
-		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$fieldsValues = $this->_pEnvironment
-			->getOutputFields($this->_pDataView)
-			->getVisibleFilterableFields($pFieldsCollection);
+		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
+		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$pFieldsCollection->merge
+			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection));
+		$pFieldsCollectionFieldDuplicatorForGeoEstate =
+			$pContainer->get(FieldsCollectionFieldDuplicatorForGeoEstate::class);
+		$pFieldsCollectionFieldDuplicatorForGeoEstate->duplicateFields($pFieldsCollection);
+		$fieldsValues = $pContainer->get(OutputFields::class)
+			->getVisibleFilterableFields($this->_pDataView,
+				$pFieldsCollection, new GeoPositionFieldHandler);
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
-			$result[$field] = $this->_pEnvironment
-				->getFieldnames()
-				->getFieldInformation($field, onOfficeSDK::MODULE_ESTATE);
+			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
+				->getAsRow();
+			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
 		}
 		return $result;
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function resetEstateIterator()
 	{
 		reset($this->_records);
 	}
 
-
 	/**
-	 *
 	 * @return bool
-	 *
 	 */
-
 	public function getShowEstateMarketingStatus(): bool
 	{
 		return $this->_pDataView instanceof DataListView &&
 			$this->_pDataView->getShowStatus();
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	public function getEstateIds(): array
 	{
 		return array_column($this->_records, 'id');
 	}
-
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()
@@ -760,7 +656,10 @@ class EstateList
 	public function getDataView(): DataView
 		{ return $this->_pDataView; }
 
-	/** @return DefaultFilterBuilder */
+	/**
+	 * @return DefaultFilterBuilder
+	 * @throws UnknownViewException
+	 */
 	public function getDefaultFilterBuilder(): DefaultFilterBuilder
 		{ return $this->_pEnvironment->getDefaultFilterBuilder(); }
 

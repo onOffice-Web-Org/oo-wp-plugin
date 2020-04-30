@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +18,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 namespace onOffice\WPlugin\Renderer;
 
 use onOffice\WPlugin\Utility\HtmlIdGenerator;
@@ -32,12 +33,12 @@ use onOffice\WPlugin\Utility\HtmlIdGenerator;
 class InputFieldCheckboxButtonRenderer
 	extends InputFieldCheckboxRenderer
 {
-
 	/** @var string */
 	private $_id = null;
 
 	/** @var string */
 	private $_label = null;
+
 
 	/**
 	 *

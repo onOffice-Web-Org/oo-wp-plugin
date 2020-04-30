@@ -1,4 +1,4 @@
-$(document).ready(function() {
+jQuery(document).ready(function($) {
     $('#onofficeSortListSelector').change(function() {
 
         var selectedvalue = $(this).val();

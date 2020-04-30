@@ -21,65 +21,41 @@
 
 declare (strict_types=1);
 
-namespace onOffice\WPlugin\Controller\ContentFilter;
+namespace onOffice\tests;
 
-use onOffice\WPlugin\AddressList;
-use onOffice\WPlugin\DataView\DataListViewFactoryAddress;
-use onOffice\WPlugin\Template;
-use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
+use onOffice\WPlugin\Types\Field;
+use WP_UnitTestCase;
 
 
 /**
  *
- * interface for ContentFilterShortCodeAddressEnvironment
- *
  */
 
-interface ContentFilterShortCodeAddressEnvironment
+class TestClassDefaultValueModelMultiselect
+	extends WP_UnitTestCase
 {
-
 	/**
-	 *
-	 * @return AddressList
 	 *
 	 */
 
-	public function createAddressList(): AddressList;
-
-
-	/**
-	 *
-	 * @return DataListViewFactoryAddress
-	 *
-	 */
-
-	public function getDataListFactory(): DataListViewFactoryAddress;
+	public function testConstruct()
+	{
+		$pDefaultValueModelMultiselect = new DefaultValueModelMultiselect
+			(14, new Field('testfieldA', 'testModuleA'));
+		$this->assertEmpty($pDefaultValueModelMultiselect->getValues());
+	}
 
 
 	/**
 	 *
-	 * @return Template
-	 *
 	 */
 
-	public function getTemplate(): Template;
-
-
-	/**
-	 *
-	 * @return Logger
-	 *
-	 */
-
-	public function getLogger(): Logger;
-
-
-	/**
-	 *
-	 * @return WPQueryWrapper
-	 *
-	 */
-
-	public function getWPQueryWrapper(): WPQueryWrapper;
+	public function testSetValues()
+	{
+		$pDefaultValueModelMultiselect = new DefaultValueModelMultiselect
+			(14, new Field('testfieldA', 'testModuleA'));
+		$pDefaultValueModelMultiselect->setValues(['123', 'abc']);
+		$this->assertSame(['123', 'abc'], $pDefaultValueModelMultiselect->getValues());
+	}
 }

@@ -24,9 +24,12 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\Filter;
 
 use Exception;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\Types\FieldsCollection;
 
 /**
  *
@@ -44,6 +47,9 @@ class DefaultFilterBuilderListView
 	/** @var DefaultFilterBuilderListViewEnvironment */
 	private $_pEnvironment = null;
 
+	/** @var FieldsCollectionBuilderShort  */
+	private $_pFieldsCollectionBuilderShort;
+
 	/** @var array */
 	private $_defaultFilter = [
 		'veroeffentlichen' => [
@@ -51,21 +57,23 @@ class DefaultFilterBuilderListView
 		],
 	];
 
-
 	/**
+	 * DefaultFilterBuilderListView constructor.
 	 *
 	 * @param DataListView $pDataListView
-	 * @param DefaultFilterBuilderListViewEnvironment $pEnvironment
-	 * @throws Exception
+	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
+	 * @param DefaultFilterBuilderListViewEnvironment|null $pEnvironment
 	 *
 	 */
 
 	public function __construct(
 		DataListView $pDataListView,
+		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
 		DefaultFilterBuilderListViewEnvironment $pEnvironment = null)
 	{
 		$this->_pDataListView = $pDataListView;
 		$this->_pEnvironment = $pEnvironment ?? new DefaultFilterBuilderListViewEnvironmentDefault();
+		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
 
@@ -85,6 +93,7 @@ class DefaultFilterBuilderListView
 			unset($filterableFields[$position]);
 		}
 
+		$filterableFields = $this->filterActiveFilterableFields($filterableFields);
 		$fieldFilter = $this->_pEnvironment->getFilterBuilderInputVariables()->getPostFieldsFilter($filterableFields);
 		$filter = array_merge($this->_defaultFilter, $fieldFilter);
 
@@ -102,6 +111,26 @@ class DefaultFilterBuilderListView
 		return $filterWithRegion;
 	}
 
+	/**
+	 * @param array $filterableFields
+	 * @return array
+	 */
+	private function filterActiveFilterableFields(array $filterableFields): array
+	{
+		$pFieldsCollection = new FieldsCollection;
+
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+
+		$activeFilterableFields = [];
+
+		foreach ($filterableFields as $field) {
+			if ($pFieldsCollection->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $field)) {
+				$activeFilterableFields []= $field;
+			}
+		}
+
+		return $activeFilterableFields;
+	}
 
 	/**
 	 *

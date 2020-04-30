@@ -165,34 +165,4 @@ class TestClassSDKWrapper
 		]], $pAPIClientActionGeneric->getResultRecords());
 		return $pSDKWrapper;
 	}
-
-
-	/**
-	 *
-	 * @depends testSendRequests
-	 * @param SDKWrapper $pSDKWrapper
-	 * Remove after refactoring
-	 *
-	 */
-
-	public function testGetRequestResponse(SDKWrapper $pSDKWrapper)
-	{
-		$this->assertEquals(json_decode($this->_expectedResult, true), $pSDKWrapper->getRequestResponse(2));
-	}
-
-
-	/**
-	 *
-	 * Remove after refactoring
-	 *
-	 */
-
-	public function testAddRequest()
-	{
-		$this->_pMockSDK->expects($this->once())
-			->method('callGeneric')
-			->with('TestAction', 'TestResource', ['TestParam' => 1])
-			->will($this->returnValue(4));
-		$this->assertEquals(4, $this->_pSDKWrapper->addRequest('TestAction', 'TestResource', ['TestParam' => 1]));
-	}
 }

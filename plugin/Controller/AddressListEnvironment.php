@@ -45,57 +45,33 @@ use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 interface AddressListEnvironment
 {
 	/**
-	 *
 	 * @return SDKWrapper
-	 *
 	 */
-
 	public function getSDKWrapper(): SDKWrapper;
 
-
 	/**
-	 *
 	 * @return Fieldnames
-	 *
 	 */
-
 	public function getFieldnames(): Fieldnames;
 
-
 	/**
-	 *
 	 * @return OutputFields
-	 *
 	 */
-
-	public function getOutputFields(DataListViewAddress $pListView): OutputFields;
-
+	public function getOutputFields(): OutputFields;
 
 	/**
-	 *
-	 * @param FilterBuilderInputVariables $pFilterBuilder
-	 *
+	 * @return DataListViewAddressToAPIParameters
 	 */
-
 	public function getDataListViewAddressToAPIParameters(): DataListViewAddressToAPIParameters;
 
-
 	/**
-	 *
 	 * @param array $fields
 	 * @return ViewFieldModifierHandler
-	 *
 	 */
-
 	public function getViewFieldModifierHandler(array $fields): ViewFieldModifierHandler;
 
-
-
 	/**
-	 *
 	 * @return FieldsCollectionBuilderShort
-	 *
 	 */
-
 	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort;
 }

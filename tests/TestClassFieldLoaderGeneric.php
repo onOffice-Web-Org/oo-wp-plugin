@@ -23,8 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
+use onOffice\WPlugin\Region\RegionController;
+use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -60,7 +63,16 @@ class TestClassFieldLoaderGeneric
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetFields.json'), true);
 		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
 			$fieldParameters, null, $responseGetFields);
-		$this->_pFieldLoader = new FieldLoaderGeneric($pSDKWrapper);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pRegionController = $this->getMockBuilder(RegionController::class)
+			->disableOriginalConstructor()
+			->getMock();
+
+		$pContainer->set(RegionController::class, $pRegionController);
+		$pContainer->set(SDKWrapper::class, $pSDKWrapper);
+		$this->_pFieldLoader = $pContainer->get(FieldLoaderGeneric::class);
 	}
 
 

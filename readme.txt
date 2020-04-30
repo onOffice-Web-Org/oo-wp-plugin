@@ -2,7 +2,7 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 7.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -72,6 +72,65 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.5.4 =
+
+**Changes**
+
+* jQuery internal reorganization.
+* More data in the emails by form submit.
+
+= 2.5.3 =
+
+**Fixes**
+
+* Notice in the geo fields administration.
+* jQuery internal reorganization.
+
+= 2.5.2 =
+
+**Fixes**
+
+* Fix detail view configuration of fields, if field category name exists in both address and estate module
+
+= 2.5.1 =
+
+**Fixes**
+
+* fix issues with geo fields on estate list
+
+= 2.5.0 =
+
+**Changes**
+
+* internal reorganization
+
+= 2.4.2 =
+
+**Fixes**
+
+* Fix rendering of regional addition in forms.
+* Fix of multiselect fields with  multiple values in forms.
+* Fix handling of boolean values after form submits.
+
+= 2.4.1 =
+
+**Fixes**
+
+* Fix for newsletter checkbox (only for applicant form).
+
+= 2.4.0 =
+
+**New**
+
+* Ability to set preset values per input in forms.
+
+= 2.3.1 =
+
+**Fixes**
+
+* Fix handling of deactivated fields in back-end estate list configuration.
+* Fix handling of search parameters of address list pagination.
 
 = 2.3.0 =
 
@@ -166,6 +225,27 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+= 2.5.4 =
+More data in the emails by form submit, jQuery internal reorganization.
+
+= 2.5.3 =
+jQuery internal reorganization, notice in the geo fields administration.
+
+= 2.5.2 =
+Fix errors in estate detail view configuration.
+
+= 2.5.1 =
+Fix issue with geo fields
+
+= 2.4.1 =
+Fix for newsletter checkbox (only for applicant form).
+
+= 2.4.0 =
+Ability to set preset values per input in forms.
+
+= 2.3.1 =
+Fix handling of address list pagination and deactivated fields in estate list.
 
 = 2.3.0 =
 Adds default sort direction for the user-defined sorting.

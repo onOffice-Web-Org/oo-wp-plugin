@@ -54,11 +54,9 @@ class GeoPositionFieldHandlerEmpty
 		return [];
 	}
 
-
 	/**
-	 *
+	 * @param ViewProperty $pViewProperty
 	 */
-
 	public function readValues(ViewProperty $pViewProperty)
 		{}
 }

@@ -61,4 +61,14 @@ class WPPageWrapper
 	{
 		return get_permalink($pPost);
 	}
+
+	public function getPageLinkById(int $pageId): string
+	{
+		return get_permalink($pageId);
+	}
+
+	public function getPageUriByPageId(int $pageId): string
+	{
+		return get_page_uri($pageId) ?: '';
+	}
 }

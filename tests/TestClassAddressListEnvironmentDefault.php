@@ -19,11 +19,14 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace onOffice\tests;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\API\DataViewToAPI\DataListViewAddressToAPIParameters;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
-use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
@@ -42,95 +45,75 @@ class TestClassAddressListEnvironmentDefault
 	extends WP_UnitTestCase
 {
 	/** @var AddressListEnvironmentDefault */
-	private $_pEnvironment = null;
-
-	/** @var DataListViewAddress */
-	private $_pListView = null;
-
+	private $_pEnvironment;
 
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$this->_pEnvironment = new AddressListEnvironmentDefault();
-		$this->_pListView = new DataListViewAddress(3, 'testList');
-		$this->_pListView->setFields([
-			'imageUrl',
-			'testField1',
-		]);
 	}
 
-
 	/**
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function testGetDataListViewAddressToAPIParameters()
 	{
 		$pDataListViewAddressToAPIParameters = $this->_pEnvironment
-			->getDataListViewAddressToAPIParameters($this->_pListView);
+			->getDataListViewAddressToAPIParameters();
 		$this->assertInstanceOf(DataListViewAddressToAPIParameters::class,
 			$pDataListViewAddressToAPIParameters);
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function testGetFieldnames()
 	{
 		$pFieldnames = $this->_pEnvironment->getFieldnames();
 		$this->assertInstanceOf(Fieldnames::class, $pFieldnames);
 	}
 
-
 	/**
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function testGetOutputFields()
 	{
-		$pOutputFields = $this->_pEnvironment->getOutputFields($this->_pListView);
+		$pOutputFields = $this->_pEnvironment->getOutputFields();
 		$this->assertInstanceOf(OutputFields::class, $pOutputFields);
 	}
 
-
 	/**
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function testGetSDKWrapper()
 	{
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
 		$this->assertInstanceOf(SDKWrapper::class, $pSDKWrapper);
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function testGetViewFieldModifierHandler()
 	{
-		$pViewFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
-			($this->_pListView->getFields());
+		$pViewFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler([
+			'imageUrl',
+			'testField1',
+		]);
 		$this->assertInstanceOf(ViewFieldModifierHandler::class, $pViewFieldModifierHandler);
 	}
 
-
 	/**
-	 *
-	 * @covers onOffice\WPlugin\Controller\AddressListEnvironmentDefault::getFieldsCollectionBuilderShort
-	 *
+	 * @covers \onOffice\WPlugin\Controller\AddressListEnvironmentDefault::getFieldsCollectionBuilderShort
 	 */
-
 	public function testGetFieldsCollectionBuilderShort()
 	{
-		$this->assertInstanceOf(FieldsCollectionBuilderShort::class, $this->_pEnvironment->getFieldsCollectionBuilderShort());
+		$this->assertInstanceOf(FieldsCollectionBuilderShort::class,
+			$this->_pEnvironment->getFieldsCollectionBuilderShort());
 	}
 }

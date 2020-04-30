@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\__String;
 use ReflectionClass;
 use WP_UnitTestCase;
 
@@ -45,11 +46,13 @@ class TestClassFieldTypes
 	{
 		$pReflection = new ReflectionClass(FieldTypes::class);
 		$constants = $pReflection->getConstants();
+		$fieldTypeConstants = array_filter($constants, function(string $key): bool {
+			return __String::getNew($key)->startsWith('FIELD_TYPE_');
+		}, ARRAY_FILTER_USE_KEY);
 
 		$sanitizers = FieldTypes::getInputVarSanitizers();
-
-		$this->assertCount(count($constants), $sanitizers);
-		$this->assertEqualSets($constants, array_keys($sanitizers));
+		$this->assertCount(count($fieldTypeConstants), $sanitizers);
+		$this->assertEqualSets($fieldTypeConstants, array_keys($sanitizers));
 	}
 
 
@@ -61,6 +64,10 @@ class TestClassFieldTypes
 	{
 		$this->assertTrue(FieldTypes::isNumericType(FieldTypes::FIELD_TYPE_FLOAT));
 		$this->assertTrue(FieldTypes::isNumericType(FieldTypes::FIELD_TYPE_INTEGER));
+		$this->assertTrue(FieldTypes::isNumericType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'));
+		$this->assertTrue(FieldTypes::isNumericType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float'));
+		$this->assertTrue(FieldTypes::isNumericType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer'));
+		$this->assertTrue(FieldTypes::isNumericType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:int'));
 		$this->assertFalse(FieldTypes::isNumericType(FieldTypes::FIELD_TYPE_BLOB));
 	}
 
@@ -86,6 +93,7 @@ class TestClassFieldTypes
 		$this->assertTrue(FieldTypes::isRangeType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'));
 		$this->assertTrue(FieldTypes::isRangeType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float'));
 		$this->assertTrue(FieldTypes::isRangeType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer'));
+		$this->assertTrue(FieldTypes::isRangeType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:int'));
 		$this->assertTrue(FieldTypes::isRangeType(FieldTypes::FIELD_TYPE_FLOAT));
 		$this->assertTrue(FieldTypes::isRangeType(FieldTypes::FIELD_TYPE_INTEGER));
 		$this->assertFalse(FieldTypes::isRangeType(FieldTypes::FIELD_TYPE_MULTISELECT));
@@ -114,5 +122,19 @@ class TestClassFieldTypes
 		$this->assertTrue(FieldTypes::isRegZusatzSearchcritTypes('displayAll'));
 		$this->assertTrue(FieldTypes::isRegZusatzSearchcritTypes('displayLive'));
 		$this->assertTrue(FieldTypes::isRegZusatzSearchcritTypes('limitExceeded'));
+		$this->assertFalse(FieldTypes::isRegZusatzSearchcritTypes(FieldTypes::FIELD_TYPE_SINGLESELECT));
+		$this->assertFalse(FieldTypes::isRegZusatzSearchcritTypes(FieldTypes::FIELD_TYPE_MULTISELECT));
+	}
+
+	/**
+	 *
+	 */
+	public function testIsStringType()
+	{
+		$this->assertTrue(FieldTypes::isStringType(FieldTypes::FIELD_TYPE_TEXT));
+		$this->assertTrue(FieldTypes::isStringType(FieldTypes::FIELD_TYPE_VARCHAR));
+		$this->assertTrue(FieldTypes::isStringType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar'));
+		$this->assertTrue(FieldTypes::isStringType('urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:Text'));
+		$this->assertFalse(FieldTypes::isStringType(FieldTypes::FIELD_TYPE_SINGLESELECT));
 	}
 }

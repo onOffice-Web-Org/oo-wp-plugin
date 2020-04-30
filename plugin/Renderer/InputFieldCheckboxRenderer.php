@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Renderer;
 
 use DI\ContainerBuilder;
+use Exception;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\UnknownFieldException;
@@ -41,9 +42,6 @@ class InputFieldCheckboxRenderer
 	/** @var array */
 	private $_checkedValues = [];
 
-	/** @var FieldsCollection */
-	private $_pFieldsCollection;
-
 	/**
 	 *
 	 * @param string $name
@@ -54,68 +52,70 @@ class InputFieldCheckboxRenderer
 	public function __construct($name, $value)
 	{
 		parent::__construct('checkbox', $name, $value);
-		$this->_pFieldsCollection = new FieldsCollection();
 	}
-
 
 	/**
 	 *
 	 * @param string $key
+	 * @param FieldsCollection $pFieldsCollection
 	 * @return bool
-	 *
 	 */
 
-	private function isMultipleSelect(string $key): bool
+	private function isMultipleSelect(string $key, FieldsCollection $pFieldsCollection): bool
 	{
 		$module = $this->getOoModule();
 
 		try {
-			$type = $this->_pFieldsCollection->getFieldByModuleAndName($module, $key)->getType();
+			$type = $pFieldsCollection->getFieldByModuleAndName($module, $key)->getType();
 			return FieldTypes::isMultipleSelectType($type);
 		} catch (UnknownFieldException $pEx) {
 			return false;
 		}
 	}
 
-
 	/**
 	 *
+	 * @return FieldsCollection
+	 *
+	 * @throws Exception
 	 */
 
-	private function buildFieldsCollection()
+	private function buildFieldsCollection(): FieldsCollection
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pDIContainerBuilder->build();
+		$pFieldsCollection = new FieldsCollection();
 
 		/** @var FieldsCollectionBuilderShort $pFieldsCollectionBuilder */
 		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
 		try {
 			$pFieldsCollectionBuilder
-				->addFieldsAddressEstate($this->_pFieldsCollection)
-				->addFieldsSearchCriteria($this->_pFieldsCollection);
+				->addFieldsAddressEstate($pFieldsCollection)
+				->addFieldsSearchCriteria($pFieldsCollection);
 		} catch (APIClientCredentialsException $pEx) {}
+		return $pFieldsCollection;
 	}
-
 
 	/**
 	 *
+	 * @throws Exception
 	 */
 
 	public function render()
 	{
-		$this->buildFieldsCollection();
+		$pFieldsCollection = $this->buildFieldsCollection();
 
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
-				$onofficeMultipleSelect = $this->isMultipleSelect($key) ? '1' : '0';
+				$onofficeMultipleSelect = $this->isMultipleSelect($key, $pFieldsCollection) ? '1' : '0';
 
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 					.'" value="'.esc_html($key).'"'
-					.(in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
+					.(is_array($this->_checkedValues) && in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
-					.' onoffice-multipleSelectType = "'.$onofficeMultipleSelect.'"'
+					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
 					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
 			}

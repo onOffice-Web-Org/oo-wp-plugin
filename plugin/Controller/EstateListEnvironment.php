@@ -21,157 +21,94 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\Container;
 use onOffice\WPlugin\AddressList;
-use onOffice\WPlugin\DataView\DataDetailView;
-use onOffice\WPlugin\DataView\DataViewFilterableFields;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\EstateUnits;
-use onOffice\WPlugin\Field\OutputFields;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
- *
  */
-
 interface EstateListEnvironment
 {
 	/**
-	 *
 	 * @return SDKWrapper
-	 *
 	 */
-
 	public function getSDKWrapper(): SDKWrapper;
 
-
 	/**
-	 *
 	 * @return Fieldnames preconfigured with FieldModuleCollectionDecoratorGeoPosition
-	 *
 	 */
-
 	public function getFieldnames(): Fieldnames;
 
-
 	/**
-	 *
 	 * @return AddressList
-	 *
 	 */
-
 	public function getAddressList(): AddressList;
 
-
 	/**
-	 *
 	 * @return GeoSearchBuilder
-	 *
 	 */
-
 	public function getGeoSearchBuilder(): GeoSearchBuilder;
 
-
 	/**
-	 *
-	 * @param array $fileTypes
 	 * @return EstateFiles
-	 *
 	 */
-
-	public function getEstateFiles(array $fileTypes): EstateFiles;
-
+	public function getEstateFiles(): EstateFiles;
 
 	/**
-	 *
 	 * @return DefaultFilterBuilder
-	 *
 	 */
-
 	public function getDefaultFilterBuilder(): DefaultFilterBuilder;
 
-
 	/**
-	 *
 	 * @param DefaultFilterBuilder $pDefaultFilterBuilder
-	 *
 	 */
-
 	public function setDefaultFilterBuilder(DefaultFilterBuilder $pDefaultFilterBuilder);
 
-
 	/**
-	 *
-	 * @return DataDetailView
-	 *
+	 * @return DataDetailViewHandler
 	 */
-
-	public function getDataDetailView(): DataDetailView;
-
+	public function getDataDetailViewHandler(): DataDetailViewHandler;
 
 	/**
-	 *
 	 * @param string $name
 	 * @return EstateUnits
-	 *
 	 */
-
 	public function getEstateUnitsByName(string $name): EstateUnits;
 
-
 	/**
-	 *
-	 * @param DataViewFilterableFields $pDataView
-	 * @return OutputFields
-	 *
-	 */
-
-	public function getOutputFields(DataViewFilterableFields $pDataView): OutputFields;
-
-
-	/**
-	 *
 	 * @param array $values
-	 *
 	 */
-
 	public function shuffle(array &$values);
 
-
 	/**
-	 *
 	 * @param array $fieldList
 	 * @param string $modifier
 	 * @return ViewFieldModifierHandler
-	 *
 	 */
-
 	public function getViewFieldModifierHandler(array $fieldList, string $modifier): ViewFieldModifierHandler;
 
-
 	/**
-	 *
 	 * @return EstateStatusLabel
-	 *
 	 */
-
 	public function getEstateStatusLabel(): EstateStatusLabel;
 
-
+	/**
+	 * @return FieldsCollectionBuilderShort
+	 */
+	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort;
 
 	/**
-	 *
-	 * @return FieldsCollectionBuilderShort
-	 *
+	 * @return Container
 	 */
-
-	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort;
+	public function getContainer(): Container;
 }

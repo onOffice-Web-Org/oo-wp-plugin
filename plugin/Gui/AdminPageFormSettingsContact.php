@@ -211,21 +211,9 @@ class AdminPageFormSettingsContact
 		}
 	}
 
-	/** @return bool */
-	public function getShowMessageInput(): bool
-		{ return $this->_showMessageInput; }
-
 	/** @param bool $showMessageInput */
 	public function setShowMessageInput(bool $showMessageInput)
 		{ $this->_showMessageInput = $showMessageInput; }
-
-	/** @return bool */
-	public function getShowCreateAddress(): bool
-		{ return $this->_showCreateAddress; }
-
-	/** @return bool */
-	public function getShowCheckDuplicates(): bool
-		{ return $this->_showCheckDuplicates; }
 
 	/** @param bool $showCreateAddress */
 	public function setShowCreateAddress(bool $showCreateAddress)
@@ -235,25 +223,13 @@ class AdminPageFormSettingsContact
 	public function setShowCheckDuplicates(bool $showCheckDuplicates)
 		{ $this->_showCheckDuplicates = $showCheckDuplicates; }
 
-	/** @return bool */
-	public function getShowNewsletterCheckbox(): bool
-		{ return $this->_showNewsletterCheckbox; }
-
 	/** @param bool $showNewsletterCheckbox */
 	public function setShowNewsletterCheckbox(bool $showNewsletterCheckbox)
 		{ $this->_showNewsletterCheckbox = $showNewsletterCheckbox; }
 
-	/** @return bool */
-	public function getShowGeoPositionSettings(): bool
-		{ return $this->_showGeoPositionSettings; }
-
 	/** @param bool $showGeoPositionSettings */
 	public function setShowGeoPositionSettings(bool $showGeoPositionSettings)
 		{ $this->_showGeoPositionSettings = $showGeoPositionSettings; }
-
-	/** @return bool */
-	public function getShowEstateContextCheckbox(): bool
-		{ return $this->_showEstateContextCheckbox; }
 
 	/** @param bool $showEstateContextCheckbox */
 	public function setShowEstateContextCheckbox(bool $showEstateContextCheckbox)

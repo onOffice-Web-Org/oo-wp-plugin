@@ -23,19 +23,23 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
 use Closure;
+use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\AddressList;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPLugin\DataView\UnknownViewException;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\EstateUnits;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
@@ -43,9 +47,11 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderPresetEstateIds;
 use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
 use onOffice\WPlugin\GeoPosition;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\EstateStatusLabel;
+use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\FieldTypes;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -62,6 +68,9 @@ class TestClassEstateList
 {
 	/** @var EstateList */
 	private $_pEstateList = null;
+
+	/** @var Container */
+	private $_pContainer;
 
 	/** @var EstateListEnvironment */
 	private $_pEnvironment = null;
@@ -208,7 +217,11 @@ class TestClassEstateList
 		$this->_pEstateList->estateIterator(); // jump to the first estate
 		$pDataDetailView = new DataDetailView();
 		$pDataDetailView->setPageId(0);
-		$this->_pEnvironment->method('getDataDetailView')->will($this->returnValue($pDataDetailView));
+		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
+			->setMethods(['getDetailView'])
+			->getMock();
+		$pDataDetailViewHandler->method('getDetailView')->will($this->returnValue($pDataDetailView));
+		$this->_pContainer->set(DataDetailViewHandler::class, $pDataDetailViewHandler);
 		$this->assertEquals('#', $this->_pEstateList->getEstateLink());
 
 		$wp_rewrite = new WP_Rewrite();
@@ -253,18 +266,12 @@ class TestClassEstateList
 
 	public function testGetEstatePictures()
 	{
-		$pEstatePicturesMock = $this->getMockBuilder(EstateFiles::class)
-			->setMethods(['registerRequest', 'parseRequest', 'getEstatePictures'])
-			->setConstructorArgs([$this->getDataView()->getPictureTypes()])
-			->getMock();
-		$pEstatePicturesMock->method('getEstatePictures')->with(15)->willReturn($this->_estatePicturesByEstateId[15]);
-		$this->_pEnvironment->method('getEstateFiles')->with($this->getDataView()->getPictureTypes())->will($this->returnValue($pEstatePicturesMock));
+		$pEstatePicturesMock = new EstateFiles;
+		$this->_pEnvironment->method('getEstateFiles')
+			->will($this->returnValue($pEstatePicturesMock));
 
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
-		$pEstateFilesResult = Closure::bind(function() { return $this->_pEstateFiles; }, $this->_pEstateList, EstateList::class)();
-
-		$this->assertEquals($pEstatePicturesMock, $pEstateFilesResult);
 
 		$this->assertEqualSets([2, 3, 4], $this->_pEstateList->getEstatePictures());
 		$this->assertEquals([2], $this->_pEstateList->getEstatePictures(['Titelbild']));
@@ -276,33 +283,18 @@ class TestClassEstateList
 	 */
 
 	public function testGetEstatePictureUrl()
-	{
-		$pEstatePicturesMock = $this->getMockBuilder(EstateFiles::class)
-			->setMethods(['registerRequest', 'parseRequest', 'getEstatePictures', 'getEstateFileUrl'])
-			->setConstructorArgs([$this->getDataView()->getPictureTypes()])
-			->getMock();
-		$pEstatePicturesMock
-			->expects($this->at(2))
-			->method('getEstateFileUrl')
-			->with(2, 15, null)
-			->willReturn($this->_estatePicturesByEstateId[15][2]['url']);
-		$pEstatePicturesMock
-			->expects($this->at(3))
-			->method('getEstateFileUrl')
-			->with(3, 15, ['width' => 200, 'height' => 300])
-			->willReturn($this->_estatePicturesByEstateId[15][3]['url'].'@200x300');
-		$this->_pEnvironment->method('getEstateFiles')
-			->with($this->getDataView()
-			->getPictureTypes())
-			->willReturn($pEstatePicturesMock);
+{
+	$pEstatePicturesMock = new EstateFiles;
+	$this->_pEnvironment->method('getEstateFiles')
+		->willReturn($pEstatePicturesMock);
 
-		$this->_pEstateList->loadEstates();
-		$this->_pEstateList->estateIterator();
-		$this->assertEquals($this->_estatePicturesByEstateId[15][2]['url'],
-			$this->_pEstateList->getEstatePictureUrl(2));
-		$this->assertEquals($this->_estatePicturesByEstateId[15][3]['url'].'@200x300',
-			$this->_pEstateList->getEstatePictureUrl(3, ['width' => 200, 'height' => 300]));
-	}
+	$this->_pEstateList->loadEstates();
+	$this->_pEstateList->estateIterator();
+	$this->assertEquals($this->_estatePicturesByEstateId[15][2]['url'],
+		$this->_pEstateList->getEstatePictureUrl(2));
+	$this->assertEquals($this->_estatePicturesByEstateId[15][3]['url'].'@200x300',
+		$this->_pEstateList->getEstatePictureUrl(3, ['width' => 200, 'height' => 300]));
+}
 
 
 	/**
@@ -346,31 +338,18 @@ class TestClassEstateList
 		$this->doTestGetEstatePictureMethodGeneric('getEstatePictureValues', $expectation);
 	}
 
-
 	/**
-	 *
+	 * @param string $methodName
+	 * @param array $expectedResults
+	 * @throws UnknownViewException
+	 * @throws APIEmptyResultException
 	 */
-
 	private function doTestGetEstatePictureMethodGeneric(string $methodName, array $expectedResults)
 	{
-		$pEstatePicturesMock = $this->getMockBuilder(EstateFiles::class)
-			->setMethods(['registerRequest', 'parseRequest', 'getEstatePictures', $methodName])
-			->setConstructorArgs([$this->getDataView()->getPictureTypes()])
-			->getMock();
-		$pEstatePicturesMock
-			->expects($this->at(2))
-			->method($methodName)
-			->with(2, 15)
-			->willReturn($expectedResults[0]);
-		$pEstatePicturesMock
-			->expects($this->at(3))
-			->method($methodName)
-			->with(3, 15)
-			->willReturn($expectedResults[1]);
+		$pEstateFiles = new EstateFiles;
+
 		$this->_pEnvironment->method('getEstateFiles')
-			->with($this->getDataView()
-			->getPictureTypes())
-			->willReturn($pEstatePicturesMock);
+			->willReturn($pEstateFiles);
 
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
@@ -545,41 +524,63 @@ class TestClassEstateList
 			->setMethods(['getVisibleFilterableFields'])
 			->disableOriginalConstructor()
 			->getMock();
-		$pMockOutputFields->method('getVisibleFilterableFields')->willReturn(['objektart' => 'haus', 'objekttyp' => 'reihenhaus']);
-		$this->_pEnvironment->method('getOutputFields')->willReturn($pMockOutputFields);
-
-		$valueMap = [
-			['objektart', 'estate', ['name' => 'objektart', 'type' => 'singleselect']],
-			['objekttyp', 'estate', ['name' => 'objekttyp', 'type' => 'singleselect']],
-		];
+		$pMockOutputFields->expects($this->once())
+			->method('getVisibleFilterableFields')
+			->willReturn(['objektart' => 'haus', 'objekttyp' => 'reihenhaus']);
+		$this->_pContainer->set(OutputFields::class, $pMockOutputFields);
 
 		$pFieldsCollection = new FieldsCollection();
-		$pMockFieldnames = $this->getMockBuilder(Fieldnames::class)
-			->setMethods(['getFieldInformation'])
-			->setConstructorArgs([$pFieldsCollection])
-			->getMock();
-		$pMockFieldnames->method('getFieldInformation')->will($this->returnValueMap($valueMap));
-		$this->_pEnvironment->method('getFieldnames')->willReturn($pMockFieldnames);
+		$pFieldObjektArt = new Field('objektart', 'estate');
+		$pFieldObjektArt->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+		$pFieldObjektTyp = new Field('objekttyp', 'estate');
+		$pFieldObjektTyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+		$pFieldsCollection->addField($pFieldObjektArt);
+		$pFieldsCollection->addField($pFieldObjektTyp);
 
 		$expectation = [
 			'objektart' => [
 				'name' => 'objektart',
 				'type' => 'singleselect',
 				'value' => 'haus',
+				'label' => '',
+				'default' => null,
+				'length' => null,
+				'permittedvalues' => [],
+				'content' => '',
+				'module' => 'estate',
+				'rangefield' => false,
+				'additionalTranslations' => [],
+				'compoundFields' => [],
+				'labelOnlyValues' => [],
 			],
 			'objekttyp' => [
 				'name' => 'objekttyp',
 				'type' => 'singleselect',
 				'value' => 'reihenhaus',
+				'label' => '',
+				'default' => null,
+				'length' => null,
+				'permittedvalues' => [],
+				'content' => '',
+				'module' => 'estate',
+				'rangefield' => false,
+				'additionalTranslations' => [],
+				'compoundFields' => [],
+				'labelOnlyValues' => [],
 			],
 		];
 
-		$pBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-				->setConstructorArgs([new Container()])
+		$pFieldsCollectionBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->disableOriginalConstructor()
 				->getMock();
+		$pFieldsCollectionBuilderMock->method('addFieldsAddressEstate')
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollectionOut)
+				use ($pFieldsCollection, $pFieldsCollectionBuilderMock): FieldsCollectionBuilderShort {
+					$pFieldsCollectionOut->merge($pFieldsCollection);
+					return $pFieldsCollectionBuilderMock;
+				}));
 
-		$this->_pEnvironment->method('getFieldsCollectionBuilderShort')->willReturn($pBuilderMock);
-
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderMock);
 		$this->assertEquals($expectation, $this->_pEstateList->getVisibleFilterableFields());
 	}
 
@@ -682,6 +683,8 @@ class TestClassEstateList
 		$parametersReadEstateRaw = $dataReadEstateRaw['parameters'];
 		$responseGetIdsFromRelation = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsFromRelation.json'), true);
+		$responseGetEstatePictures = json_decode
+			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatePictures.json'), true);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
@@ -692,10 +695,36 @@ class TestClassEstateList
 				'parentids' => [15, 1051, 1082, 1193, 1071],
 				'relationtype' => 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:contactPerson'
 			], null, $responseGetIdsFromRelation);
-		$this->_pEnvironment = $this->getMockBuilder(EstateListEnvironment::class)->getMock();
-		$this->_pEnvironment->method('getSDKWrapper')->willReturn($this->_pSDKWrapperMocker);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_GET, 'estatepictures', '', [
+			'estateids' => [15,1051,1082,1193,5448],
+			'categories' => ['Titelbild', "Foto"],
+			'language' => 'ENG'
+		], null, $responseGetEstatePictures);
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$this->_pEnvironment = $this->getMockBuilder(EstateListEnvironmentDefault::class)
+			->setConstructorArgs([$this->_pContainer])
+			->setMethods([
+				'getDefaultFilterBuilder',
+				'getGeoSearchBuilder',
+				'getEstateStatusLabel',
+				'setDefaultFilterBuilder',
+				'getEstateFiles',
+				'getFieldnames',
+				'getAddressList',
+				'getEstateUnitsByName',
+			])
+			->getMock();
 		$pDataListView = $this->getDataView();
-		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView);
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setConstructorArgs([$this->_pContainer])
+			->getMock();
+		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
 		$this->_pEstateList = new EstateList($pDataListView, $this->_pEnvironment);
 

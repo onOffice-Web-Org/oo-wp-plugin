@@ -23,6 +23,8 @@ namespace onOffice\WPlugin;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Template\TemplateCallbackBuilder;
 use const WP_PLUGIN_DIR;
@@ -42,37 +44,23 @@ class Template
 	/** */
 	const KEY_ADDRESSLIST = 'addresslist';
 
-	/** @var EstateListBase */
+	/** @var string */
+	private $_templateName = '';
+
+	/** @var EstateListBase|null */
 	private $_pEstateList = null;
 
-	/** @var string */
-	private $_templateName = null;
-
-	/** @var Form */
+	/** @var Form|null */
 	private $_pForm = null;
 
-	/** @var AddressList */
+	/** @var AddressList|null */
 	private $_pAddressList = null;
 
-
 	/**
-	 *
-	 * @param string $templateName
-	 *
-	 */
-
-	public function __construct(string $templateName)
-	{
-		$this->_templateName = $templateName;
-	}
-
-
-	/**
-	 *
 	 * @return string
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function render(): string
 	{
 		$templateData = [
@@ -96,7 +84,7 @@ class Template
 
 	/** @return string */
 	protected function getTemplateName(): string
-	{ return $this->_templateName; }
+		{ return $this->_templateName; }
 
 	/**
 	 *
@@ -107,8 +95,9 @@ class Template
 	 * @param string $templatePath
 	 * @param Container $pContainer
 	 * @return string
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	private static function getIncludeContents(array $templateData, $templatePath, Container $pContainer)
 	{
 		// vars which might be used in template
@@ -127,13 +116,9 @@ class Template
 		return ob_get_clean();
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
 	protected function buildFilePath(): string
 	{
 		return WP_PLUGIN_DIR.'/'.$this->_templateName;
@@ -141,12 +126,9 @@ class Template
 
 
 	/**
-	 *
 	 * @param string $templateName
 	 * @return self
-	 *
 	 */
-
 	public function withTemplateName(string $templateName): self
 	{
 		$pNewTemplate = clone $this;
@@ -154,46 +136,36 @@ class Template
 		return $pNewTemplate;
 	}
 
-
 	/**
-	 *
 	 * @param Form $pForm
 	 * @return $this
-	 *
 	 */
-
-	public function setForm(Form $pForm): self
+	public function withForm(Form $pForm): self
 	{
-		$this->_pForm = $pForm;
-		return $this;
+		$pClonedThis = clone $this;
+		$pClonedThis->_pForm = $pForm;
+		return $pClonedThis;
 	}
 
-
 	/**
-	 *
 	 * @param AddressList $pAddressList
 	 * @return $this
-	 *
 	 */
-
-	public function setAddressList(AddressList $pAddressList): self
+	public function withAddressList(AddressList $pAddressList): self
 	{
-		$this->_pAddressList = $pAddressList;
-		return $this;
+		$pClonedThis = clone $this;
+		$pClonedThis->_pAddressList = $pAddressList;
+		return $pClonedThis;
 	}
-
 
 	/**
-	 *
-	 * @param EstateList $pEstateList
+	 * @param EstateListBase $pEstateList
 	 * @return $this
-	 *
 	 */
-
-	public function setEstateList(EstateListBase $pEstateList): self
+	public function withEstateList(EstateListBase $pEstateList): self
 	{
-		$this->_pEstateList = $pEstateList;
-		return $this;
+		$pClonedThis = clone $this;
+		$pClonedThis->_pEstateList = $pEstateList;
+		return $pClonedThis;
 	}
-
 }

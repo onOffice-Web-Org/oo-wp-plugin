@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
-use onOffice\WPlugin\Factory\EstateDetailFactory;
+use onOffice\WPlugin\Factory\EstateListFactory;
 
 /**
  *
@@ -33,17 +33,17 @@ use onOffice\WPlugin\Factory\EstateDetailFactory;
 
 class EstateIdRequestGuard
 {
-	/** @var EstateDetailFactory */
+	/** @var EstateListFactory */
 	private $_pEstateDetailFactory;
 
 
 	/**
 	 *
-	 * @param EstateDetailFactory $pEstateDetailFactory
+	 * @param EstateListFactory $pEstateDetailFactory
 	 *
 	 */
 
-	public function __construct(EstateDetailFactory $pEstateDetailFactory)
+	public function __construct(EstateListFactory $pEstateDetailFactory)
 	{
 		$this->_pEstateDetailFactory = $pEstateDetailFactory;
 	}

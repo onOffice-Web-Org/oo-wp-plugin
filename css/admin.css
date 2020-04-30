@@ -37,6 +37,7 @@ body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
 
 #onoffice-ajax #poststuff .metabox-holder.columns-2 #postbox-container-2 {
     width: 49%;
+	max-width: 500px;
 }
 
 #onoffice-ajax #poststuff #post-body-content {
@@ -46,6 +47,11 @@ body.sticky-menu #onoffice-ajax #post-body.columns-2 #postbox-container-1 {
 
 #onoffice-ajax #poststuff #post-body.columns-2 #side-sortables {
     width: 100%;
+}
+
+#poststuff #post-body.columns-2 {
+    margin-right: 0;
+	max-width: 1000px;
 }
 
 #onoffice-ajax #listSettings {
@@ -63,16 +69,27 @@ body #onoffice-ajax span.viewusage .italic {
 	font-style: italic;
 }
 
-.fieldsSortable{
+.fieldsSortable {
 	float: right;
 	min-height: 320px;
-	width: 49%;
+	max-width: 480px;
 	background: #fff;
+	width: 50%;
 }
 
-#sortableFieldsList .menu-item-bar{
+#sortableFieldsList .menu-item-bar {
 	display: block;
 	padding-left: 5px;
+}
+
+#sortableFieldsList .menu-item-bar > .menu-item-handle {
+	max-width: 435px;
+	width: 100%;
+}
+
+#sortableFieldsList .menu-item-settings {
+	max-width: 455px;
+	width: 100%;
 }
 
 #sortableFieldsList .menu-item-settings .submitdelete {
@@ -81,7 +98,7 @@ body #onoffice-ajax span.viewusage .italic {
 	width: 98%;
 }
 
-#listSettings .accordion-section-title:hover{
+#listSettings .accordion-section-title:hover {
 	cursor: inherit;
 }
 
@@ -89,6 +106,7 @@ body #onoffice-ajax span.viewusage .italic {
 	display: block;
 	position: relative;
 	margin-left: 5px;
+	background: #fff;
 	clear: both;
 }
 
@@ -157,6 +175,23 @@ div.fieldsSortable #sortableFieldsList div.menu-item-settings p input {
 	float: right;
 }
 
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:before {
+	vertical-align: middle;
+}
+
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang {
+	color: #737373;
+}
+
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:before:hover {
+	color: #ce8483;
+}
+
+div.fieldsSortable #sortableFieldsList div.menu-item-settings p span.deleteButtonLang:hover {
+	cursor: pointer;
+	color: #d43f3a;
+}
+
 div.fieldsSortable #sortableFieldsList div.menu-item-settings p label {
 	float: left;
 }
@@ -198,4 +233,20 @@ body.toplevel_page_onoffice img.logo {
 
 body.toplevel_page_onoffice .card h3 {
 	font-size: 1.15em;
+}
+
+.menu-item-settings div.multiselect > div.onoffice-multiselect-popup > label {
+    display: block;
+    min-height: 16pt;
+    width: 300px;
+}
+
+div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect {
+    width:  100%;
+    margin-top: 10pt;
+}
+
+div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.onoffice-multiselect-edit {
+    position: relative;
+    float: right;
 }

@@ -37,39 +37,29 @@ class EstateViewSimilarEstatesEnvironmentTest
 	implements EstateViewSimilarEstatesEnvironment
 {
 	/** @var EstateListMocker */
-	private $_pEstateListMocker = null;
-
+	private $_pEstateListMocker;
 
 	/**
-	 *
+	 * @param DataView $pDataView
 	 */
-
 	public function __construct(DataView $pDataView)
 	{
 		$this->_pEstateListMocker = new EstateListMocker($pDataView);
 	}
 
-
 	/**
-	 *
 	 * @return EstateListMocker
-	 *
 	 */
-
 	public function getEstateList(): EstateListBase
 	{
 		return $this->_pEstateListMocker;
 	}
 
-
 	/**
-	 *
-	 * @param string $templateName
-	 *
+	 * @return Template
 	 */
-
-	public function getTemplate(string $templateName): Template
+	public function getTemplate(): Template
 	{
-		return new TemplateMocker($templateName);
+		return new TemplateMocker();
 	}
 }

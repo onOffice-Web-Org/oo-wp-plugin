@@ -22,17 +22,17 @@
 
 namespace onOffice\WPlugin;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
+use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostInterestConfiguration;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
-use onOffice\WPlugin\Field\SearchcriteriaFields;
 use function sanitize_email;
 use function sanitize_text_field;
 
@@ -48,32 +48,31 @@ class FormPostInterest
 	/** @var FormPostInterestConfiguration */
 	private $_pFormPostInterestConfiguration = null;
 
-
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostInterestConfiguration $pFormPostInterestConfiguration
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
-	 *
+	 * @param FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration,
+	public function __construct(
+		FormPostConfiguration $pFormPostConfiguration,
 		FormPostInterestConfiguration $pFormPostInterestConfiguration,
-		FieldsCollectionBuilderShort $pBuilderShort,
-		SearchcriteriaFields $pSearchcriteriaFields)
+		SearchcriteriaFields $pSearchcriteriaFields,
+		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm)
 	{
-		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
+		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
 		$this->_pFormPostInterestConfiguration = $pFormPostInterestConfiguration;
 	}
 
-
 	/**
-	 *
 	 * @param FormData $pFormData
-	 *
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws Field\UnknownFieldException
+	 * @throws NotFoundException
 	 */
-
 	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
 		/* @var $pFormConfiguration DataFormConfigurationInterest */
@@ -91,21 +90,21 @@ class FormPostInterest
 		}
 	}
 
-
 	/**
 	 *
 	 * @param DataFormConfiguration $pFormConfig
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
 	{
 		$formFields = parent::getAllowedPostVars($pFormConfig);
-		return $this->_pFormPostInterestConfiguration->getSearchcriteriaFields()
+		$postvars = $this->_pFormPostInterestConfiguration->getSearchcriteriaFields()
 			->getFormFieldsWithRangeFields($formFields);
+		return $postvars;
 	}
-
 
 	/**
 	 *
@@ -113,12 +112,22 @@ class FormPostInterest
 	 * @param string $recipient
 	 * @param string $subject
 	 * @throws ApiClientException
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
 	{
-		$addressData = $pFormData->getAddressData();
+		$filledAddressData = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
+			->getAddressDataForEmail($pFormData);
+
+		$filledSearchcriteriaData = $this->_pFormPostInterestConfiguration
+			->getSearchcriteriaFields()
+			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData());
+
+
+		$addressData = $pFormData->getAddressData($this->getFieldsCollection());
+
 		$name = $addressData['Name'] ?? null;
 		$firstName = $addressData['Vorname'] ?? null;
 		$mailInteressent = $addressData['Email'] ?? null;
@@ -127,6 +136,10 @@ class FormPostInterest
 				.'ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite '
 				.'eingetragen. Die Adresse ('.sanitize_text_field($firstName).' '.sanitize_text_field($name).') wurde bereits in Ihrem System '
 				.'eingetragen.'."\n\n"
+				."Kontaktdaten des Interessenten:"."\n"
+				.$this->createStringFromInputData($filledAddressData)."\n\n"
+				."Suchkriterien des Interessenten:"."\n"
+				.$this->createStringFromInputData($filledSearchcriteriaData)."\n\n"
 				.'Herzliche Grüße'."\n"
 				.'Ihr onOffice Team';
 
@@ -151,14 +164,28 @@ class FormPostInterest
 		}
 	}
 
+	/**
+	 * @param array $inputData
+	 * @return string
+	 */
+	private function createStringFromInputData(array $inputData): string
+	{
+		$data = [];
+
+		foreach ($inputData as $key => $value) {
+			$data []= $key.': '.$value;
+		}
+
+		return implode("\n", $data);
+	}
 
 	/**
-	 *
 	 * @param FormData $pFormData
 	 * @param int $addressId
-	 *
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	private function createSearchcriteria(FormData $pFormData, int $addressId)
 	{
 		$requestParams = [

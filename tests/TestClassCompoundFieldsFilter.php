@@ -33,8 +33,6 @@ use WP_UnitTestCase;
  *
  * Test of class CompoundFieldsFilter
  *
- * @author ana
- *
  */
 
 class TestClassCompoundFieldsFilter

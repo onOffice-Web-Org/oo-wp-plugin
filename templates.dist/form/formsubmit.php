@@ -20,7 +20,7 @@
  */
 
 $key = get_option('onoffice-settings-captcha-sitekey', '');
-
+/** @var \onOffice\WPlugin\Form $pForm */
 if ($pForm->needsReCaptcha() && $key !== '') {
 	$formId = $pForm->getGenericSetting('formId');
 ?>

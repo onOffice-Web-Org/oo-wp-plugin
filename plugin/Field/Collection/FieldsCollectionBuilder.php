@@ -34,11 +34,9 @@ use onOffice\WPlugin\Types\FieldsCollection;
 class FieldsCollectionBuilder
 {
 	/**
-	 *
+	 * @param FieldLoader $pFieldLoader
 	 * @return FieldsCollection
-	 *
 	 */
-
 	public function buildFieldsCollection(FieldLoader $pFieldLoader): FieldsCollection
 	{
 		$pFieldsCollection = new FieldsCollection();

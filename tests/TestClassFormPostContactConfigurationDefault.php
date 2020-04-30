@@ -29,6 +29,7 @@ use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\Form\FormPostContactConfigurationDefault;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\WP\WPWrapper;
 use WP_UnitTestCase;
 
 /**
@@ -52,7 +53,7 @@ class TestClassFormPostContactConfigurationDefault
 	{
 		$this->_pSubject = new FormPostContactConfigurationDefault
 			(new SDKWrapper, new WPQueryWrapper(), new FormAddressCreator(new SDKWrapper,
-				new FieldsCollectionBuilderShort(new Container)));
+				new FieldsCollectionBuilderShort(new Container)), new WPWrapper());
 	}
 
 
@@ -79,17 +80,23 @@ class TestClassFormPostContactConfigurationDefault
 	/**
 	 *
 	 */
-
-	public function testGetNewsletterAccepted()
+	public function testGetNewsletterAcceptedFalse()
 	{
 		$this->assertFalse($this->_pSubject->getNewsletterAccepted());
 	}
 
+	/**
+	 *
+	 */
+	public function testGetNewsletterAcceptedTrue()
+	{
+		$_POST['newsletter'] = 'y';
+		$this->assertTrue($this->_pSubject->getNewsletterAccepted());
+	}
 
 	/**
 	 *
 	 */
-
 	public function testGetWPQueryWrapper()
 	{
 		$this->assertInstanceOf(WPQueryWrapper::class, $this->_pSubject->getWPQueryWrapper());
@@ -103,5 +110,16 @@ class TestClassFormPostContactConfigurationDefault
 	public function testGetFormAddressCreator()
 	{
 		$this->assertInstanceOf(FormAddressCreator::class, $this->_pSubject->getFormAddressCreator());
+	}
+
+
+	/**
+	 * @covers \onOffice\WPlugin\Form\FormPostContactConfigurationDefault::getWPWrapper
+	 *
+	 */
+
+	public function testGetWPWrapper()
+	{
+		return $this->assertInstanceOf(WPWrapper::class, $this->_pSubject->getWPWrapper());
 	}
 }

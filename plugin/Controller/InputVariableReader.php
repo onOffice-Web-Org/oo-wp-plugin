@@ -21,12 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
-use DateTime;
-use DateTimeZone;
-use Exception;
-use onOffice\WPlugin\Gui\DateTimeFormatter;
 use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\Utility\__String;
 use WP_Locale;
 use function number_format_i18n;
 
@@ -45,13 +40,10 @@ class InputVariableReader
 	/** @var string */
 	private $_module = null;
 
-
 	/**
-	 *
+	 * @param string $module
 	 * @param InputVariableReaderConfig $pConfig
-	 *
 	 */
-
 	public function __construct(string $module, InputVariableReaderConfig $pConfig = null)
 	{
 		$this->_module = $module;
@@ -114,23 +106,9 @@ class InputVariableReader
 
 	private function formatValue($value, string $type)
 	{
-		if (is_float($value)) {
-			return number_format_i18n($value, 2);
-		} elseif (is_array($value)) {
-			$value = array_map(function($val) use ($type) {
-				return $this->formatValue($val, $type);
-			}, $value);
-		} elseif (FieldTypes::isDateOrDateTime($type) && $value != '') {
-			$format = DateTimeFormatter::SHORT|DateTimeFormatter::ADD_DATE;
-			if ($type === FieldTypes::FIELD_TYPE_DATETIME) {
-				$format |= DateTimeFormatter::ADD_TIME;
-			}
+		$pFormatter = new InputVariableReaderFormatter;
 
-			$pDate = new DateTime($value.' Europe/Berlin');
-			$pDateTimeFormatter = new DateTimeFormatter();
-			$value = $pDateTimeFormatter->formatByTimestamp($format, $pDate->getTimestamp());
-		}
-		return $value;
+		return $pFormatter->formatValue($value, $type);
 	}
 
 
@@ -151,7 +129,8 @@ class InputVariableReader
 		// https://github.com/php/php-src/blob/c03ee1923057b62666a6a4144a9b2920e38b8765/ext/filter/filter.c#L744-L753
 
 		$value = $this->getValue($fullInputName, $sanitizer);
-		return $this->parseValue($value, $type);
+		$pParser = new InputVariableReaderParser($this->_pConfig->getTimezoneString());
+		return $pParser->parseValue($value, $type);
 	}
 
 
@@ -174,109 +153,6 @@ class InputVariableReader
 		}
 
 		return $value;
-	}
-
-
-	/**
-	 *
-	 * @param mixed $value
-	 * @param string $type
-	 * @return string
-	 *
-	 */
-
-	private function parseValue($value, $type)
-	{
-		if (is_array($value)) {
-			return array_map(function($val) use ($type) {
-				return $this->parseValue($val, $type);
-			}, $value);
-		} elseif ($value === null) {
-			return null;
-		}
-
-		switch ($type) {
-			case FieldTypes::FIELD_TYPE_FLOAT:
-				$value = $this->parseFloat($value);
-				break;
-
-			case FieldTypes::FIELD_TYPE_BOOLEAN:
-				$value = $this->parseBool($value);
-				break;
-
-			case FieldTypes::FIELD_TYPE_DATE:
-			case FieldTypes::FIELD_TYPE_DATETIME:
-				$value = $this->parseDate($value);
-				break;
-		}
-
-		return $value;
-	}
-
-
-	/**
-	 *
-	 * @global WP_Locale $wp_locale
-	 * @param string $floatString
-	 * @return float
-	 *
-	 */
-
-	private function parseFloat(string $floatString)
-	{
-		if (__String::getNew($floatString)->isEmpty()) {
-			return null;
-		}
-
-		global $wp_locale;
-		$stringThousand = __String::getNew($floatString)->replace
-			($wp_locale->number_format['thousands_sep'], '');
-		$stringDec = __String::getNew($stringThousand)->replace
-			($wp_locale->number_format['decimal_point'], '.');
-
-		return floatval($stringDec);
-	}
-
-
-	/**
-	 *
-	 * @param string $boolString
-	 * @return bool
-	 *
-	 */
-
-	private function parseBool(string $boolString)
-	{
-		if (__String::getNew($boolString)->isEmpty() || $boolString === 'u') {
-			return null;
-		}
-
-		return $boolString === 'y';
-	}
-
-
-	/**
-	 *
-	 * @param string $dateString
-	 * @return int
-	 *
-	 */
-
-	private function parseDate(string $dateString)
-	{
-		if (__String::getNew($dateString)->isEmpty()) {
-			return null;
-		}
-
-		$pTimezoneBerlin = new DateTimeZone('Europe/Berlin');
-
-		try {
-			$pDateTime = new DateTime($dateString.' '.$this->_pConfig->getTimezoneString());
-			$pDateTime->setTimezone($pTimezoneBerlin);
-			return $pDateTime->format('Y-m-d H:i:s');
-		} catch (Exception $pE) {
-			return null;
-		}
 	}
 
 

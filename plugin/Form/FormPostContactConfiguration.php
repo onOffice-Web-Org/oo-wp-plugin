@@ -23,11 +23,9 @@ namespace onOffice\WPlugin\Form;
 
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use onOffice\WPlugin\WP\WPWrapper;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 
@@ -76,4 +74,12 @@ interface FormPostContactConfiguration
 	 */
 
 	public function getFormAddressCreator(): FormAddressCreator;
+
+
+	/**
+	 * @return WPWrapper
+	 *
+	 */
+
+	public function getWPWrapper(): WPWrapper;
 }

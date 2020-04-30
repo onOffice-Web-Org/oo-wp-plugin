@@ -23,8 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\ContainerBuilder;
+use Exception;
 use onOffice\WPlugin\Field\Collection\FieldCategoryToFieldConverterSearchCriteriaGeoBackend;
-use onOffice\WPlugin\Field\Collection\FieldRowConverterSearchCriteria;
+use onOffice\WPlugin\Region\RegionController;
 use WP_UnitTestCase;
 
 /**
@@ -61,17 +63,22 @@ class TestClassFieldCategoryToFieldConverterSearchCriteriaGeoBackend
 		],
 	];
 
-
 	/**
-	 *
 	 * @before
-	 *
+	 * @throws Exception
 	 */
 
 	public function prepare()
 	{
-		$pFieldRowConverter = new FieldRowConverterSearchCriteria();
-		$this->_pSubject = new FieldCategoryToFieldConverterSearchCriteriaGeoBackend($pFieldRowConverter);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pRegionController = $this->getMockBuilder(RegionController::class)
+			->disableOriginalConstructor()
+			->getMock();
+
+		$pContainer->set(RegionController::class, $pRegionController);
+		$this->_pSubject = $pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoBackend::class);
 	}
 
 

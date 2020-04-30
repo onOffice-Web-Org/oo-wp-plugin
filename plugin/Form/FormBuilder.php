@@ -23,6 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Form;
 
+use DI\Container;
+use DI\DependencyException;
+use DI\NotFoundException;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
 
 /**
@@ -31,17 +35,28 @@ use onOffice\WPlugin\Form;
 
 class FormBuilder
 {
+	/** @var Container */
+	private $_pContainer;
+
 	/**
-	 *
+	 * @param Container $pContainer
+	 */
+	public function __construct(Container $pContainer)
+	{
+		$this->_pContainer = $pContainer;
+	}
+
+	/**
 	 * @param string $formName
 	 * @param string $type
 	 * @return Form
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFormException
 	 */
-
 	public function build(string $formName, string $type): Form
 	{
 		// @codeCoverageIgnoreStart
-		return new Form($formName, $type);
+		return new Form($formName, $type, $this->_pContainer);
 	} // @codeCoverageIgnoreEnd
 }

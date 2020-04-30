@@ -54,7 +54,7 @@ class TestClassContentFilterShortCodeForm
 	/** @var DataFormConfigurationFactory */
 	private $_pDataFormConfigurationFactory = null;
 
-	/** @var DistinctFieldsChecker */
+	/** @var DistinctFieldsScriptRegistrator */
 	private $_pDistinctFieldsScriptLoader = null;
 
 	/** @var Form\FormBuilder */
@@ -70,7 +70,6 @@ class TestClassContentFilterShortCodeForm
 	public function prepare()
 	{
 		$this->_pTemplate = $this->getMockBuilder(Template::class)
-			->setConstructorArgs([''])
 			->setMethods(['render', 'getImpressum'])
 			->getMock();
 		$this->_pTemplate->method('render')->will($this->returnValue('testResult'));
@@ -83,6 +82,7 @@ class TestClassContentFilterShortCodeForm
 			->setConstructorArgs([new WPScriptStyleDefault()])
 			->getMock();
 		$this->_pFormBuilder = $this->getMockBuilder(Form\FormBuilder::class)
+			->disableOriginalConstructor()
 			->getMock();
 		$this->_pContentFilterShortCodeForm = new ContentFilterShortCodeForm
 			($this->_pTemplate, $this->_pDataFormConfigurationFactory, $this->_pLogger,

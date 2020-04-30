@@ -29,7 +29,7 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
-use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 
 /**
  *
@@ -49,23 +49,29 @@ class PdfDocumentModelValidator
 	/** @var DataListViewFactory */
 	private $_pDataListViewFactory;
 
+	/**
+	 * @var DefaultFilterBuilderFactory
+	 */
+	private $_pDefaultFilterBuilderFactory;
 
 	/**
 	 *
 	 * @param APIClientActionGeneric $pAPIClientActionGeneric
 	 * @param DataDetailViewHandler $pDataDetailViewHandler
 	 * @param DataListViewFactory $pDataListViewFactory
-	 *
+	 * @param DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory
 	 */
 
 	public function __construct(
 		APIClientActionGeneric $pAPIClientActionGeneric,
 		DataDetailViewHandler $pDataDetailViewHandler,
-		DataListViewFactory $pDataListViewFactory)
+		DataListViewFactory $pDataListViewFactory,
+		DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory)
 	{
 		$this->_pAPIClientActionGeneric = $pAPIClientActionGeneric;
 		$this->_pDataDetailViewHandler = $pDataDetailViewHandler;
 		$this->_pDataListViewFactory = $pDataListViewFactory;
+		$this->_pDefaultFilterBuilderFactory = $pDefaultFilterBuilderFactory;
 	}
 
 
@@ -127,7 +133,7 @@ class PdfDocumentModelValidator
 			 /* @var $pView \onOffice\WPlugin\DataView\DataListView */
 			$pView = $this->_pDataListViewFactory->getListViewByName($pModel->getViewName());
 			$pModel->setTemplate($pView->getExpose());
-			$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pView);
+			$pDefaultFilterBuilder = $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pView);
 			$filter = $pDefaultFilterBuilder->buildFilter();
 			$filter['Id'][] = ['op' => '=', 'val' => $pModel->getEstateId()];
 			$parametersGetEstate['filterid'] = $pView->getFilterId();

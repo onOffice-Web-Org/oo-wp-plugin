@@ -21,18 +21,18 @@
 
 namespace onOffice\WPlugin;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
-use onOffice\WPlugin\FormData;
-use onOffice\WPlugin\FormPost;
 use function sanitize_text_field;
-
+use function home_url;
 
 /**
  *
@@ -45,34 +45,38 @@ use function sanitize_text_field;
 class FormPostContact
 	extends FormPost
 {
+	/**	 */
+	const PORTALFILTER_IDENTIFIER = '[onOffice-WP]';
+
 	/** @var FormPostContactConfiguration */
 	private $_pFormPostContactConfiguration = null;
-
 
 	/**
 	 *
 	 * @param FormPostConfiguration $pFormPostConfiguration
 	 * @param FormPostContactConfiguration $pFormPostContactConfiguration
-	 * @param FieldsCollectionBuilderShort $pBuilderShort
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
-	 *
+	 * @param FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm
 	 */
 
-	public function __construct(FormPostConfiguration $pFormPostConfiguration,
+	public function __construct(
+		FormPostConfiguration $pFormPostConfiguration,
 		FormPostContactConfiguration $pFormPostContactConfiguration,
-		FieldsCollectionBuilderShort $pBuilderShort,
-		SearchcriteriaFields $pSearchcriteriaFields)
+		SearchcriteriaFields $pSearchcriteriaFields,
+		FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm)
 	{
 		$this->_pFormPostContactConfiguration = $pFormPostContactConfiguration;
 
-		parent::__construct($pFormPostConfiguration, $pBuilderShort, $pSearchcriteriaFields);
+		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
 	}
-
 
 	/**
 	 *
 	 * @param FormData $pFormData
-	 *
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws Field\UnknownFieldException
+	 * @throws NotFoundException
 	 */
 
 	protected function analyseFormContentByPrefix(FormData $pFormData)
@@ -101,12 +105,12 @@ class FormPostContact
 		return ['Id' => onOfficeSDK::MODULE_ESTATE] + parent::getAllowedPostVars($pFormConfig);
 	}
 
-
 	/**
 	 *
 	 * @param FormData $pFormData
 	 * @return void
-	 *
+	 * @throws ApiClientException
+	 * @throws Field\UnknownFieldException
 	 */
 
 	private function createAddress(FormData $pFormData)
@@ -133,27 +137,30 @@ class FormPostContact
 		}
 	}
 
-
 	/**
 	 *
 	 * @param FormData $pFormData
 	 * @param string $recipient
 	 * @param string $subject
 	 * @throws ApiClientException
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 
 	private function sendContactRequest(FormData $pFormData, string $recipient = '', $subject = null)
 	{
 		$values = $pFormData->getValues();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
+		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
 		$requestParams = [
-			'addressdata' => $pFormData->getAddressData(),
+			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $values['message'] ?? null,
-			'subject' => sanitize_text_field($subject),
+			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
+			'estatedata' => ["objekttitel", "ort", "plz", "land"],
+			'estateurl' => home_url($pWPWrapper->getRequest()),
 		];
 
 		if ($recipient !== '') {

@@ -38,9 +38,6 @@ use function wp_die;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
  */
 
 abstract class AdminPageAjax
@@ -85,28 +82,22 @@ abstract class AdminPageAjax
 		}
 	}
 
-
 	/**
-	 *
 	 * @param FormModel $pFormModel
 	 * @param string $position
-	 * @param InputModelRenderer $pInputModelRenderer
-	 *
 	 */
-
-	protected function createMetaBoxByForm(FormModel $pFormModel,
-		$position = 'left', InputModelRenderer $pInputModelRenderer = null)
+	protected function createMetaBoxByForm(FormModel $pFormModel, string $position = 'left')
 	{
 		$screenId = get_current_screen()->id;
 		$formId = $pFormModel->getGroupSlug();
 		$formIdHtmlFriendly = HtmlIdGenerator::generateByString($formId);
 		$formLabel = $pFormModel->getLabel();
 
-		if ($pInputModelRenderer === null) {
-			$pInputModelRenderer = new InputModelRenderer($pFormModel);
-		}
-
-		$callback =  array($pInputModelRenderer, 'buildForAjax');
+		$callback = function() use ($pFormModel) {
+			/* @var $pInputModelRenderer InputModelRenderer */
+			$pInputModelRenderer = $this->getContainer()->get(InputModelRenderer::class);
+			$pInputModelRenderer->buildForAjax($pFormModel);
+		};
 		add_meta_box($formIdHtmlFriendly, $formLabel, $callback, $screenId, $position, 'default');
 	}
 
@@ -124,7 +115,7 @@ abstract class AdminPageAjax
 	 *
 	 */
 
-	public function getEnqueueData()
+	public function getEnqueueData(): array
 	{
 		return [];
 	}

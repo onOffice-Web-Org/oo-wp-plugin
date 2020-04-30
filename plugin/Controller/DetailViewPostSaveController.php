@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin\Controller;
 
-use onOffice\WPlugin\ContentFilter;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use WP_Post;
@@ -35,19 +34,19 @@ use WP_Post;
 
 class DetailViewPostSaveController
 {
-	/** @var ContentFilter */
-	private $_pContentFilter = null;
+	/** @var RewriteRuleBuilder */
+	private $_pRewriteRuleBuilder;
 
 
 	/**
 	 *
-	 * @param ContentFilter $pContentFilter
+	 * @param RewriteRuleBuilder $pRewriteRuleBuilder
 	 *
 	 */
 
-	public function __construct(ContentFilter $pContentFilter)
+	public function __construct(RewriteRuleBuilder $pRewriteRuleBuilder)
 	{
-		$this->_pContentFilter = $pContentFilter;
+		$this->_pRewriteRuleBuilder = $pRewriteRuleBuilder;
 	}
 
 
@@ -76,19 +75,19 @@ class DetailViewPostSaveController
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
 			if ($viewContained) {
-				$pDetailView->setPageId($postId);
+				$pDetailView->setPageId((int)$postId);
 				$pDataDetailViewHandler->saveDetailView($pDetailView);
-				$this->_pContentFilter->addCustomRewriteRules();
+				$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
 				flush_rewrite_rules();
 
-			} elseif ($pDetailView->getPageId() != null) {
+			} elseif ($pDetailView->getPageId() !== 0) {
 				$postRevisions = wp_get_post_revisions($postId);
 				$detailInPreviousRev = array_key_exists($pDetailView->getPageId(), $postRevisions);
 
 				if ($detailInPreviousRev || $pDetailView->getPageId() === $postId) {
-					$pDetailView->setPageId(null);
+					$pDetailView->setPageId(0);
 					$pDataDetailViewHandler->saveDetailView($pDetailView);
-					$this->_pContentFilter->addCustomRewriteRules();
+					$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
 					flush_rewrite_rules();
 				}
 			}
