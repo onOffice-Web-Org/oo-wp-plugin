@@ -30,13 +30,6 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigGeoFields;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use function esc_sql;
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- */
-
 class GeoPositionFieldHandler
 	implements GeoPositionFieldHandlerBase
 {
@@ -169,5 +162,5 @@ class GeoPositionFieldHandler
 
 	/**  @return int */
 	public function getRadiusValue(): int
-		{ return intval($this->_records['radius'] ?? 0); }
+		{ return intval($this->_records['radius'] ?? 10); }
 }

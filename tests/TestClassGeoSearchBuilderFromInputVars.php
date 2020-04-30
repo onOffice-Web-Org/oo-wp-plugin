@@ -56,13 +56,9 @@ class TestClassGeoSearchBuilderFromInputVars
 	/** @var GeoPositionFieldHandler */
 	private $_pGeoPositionFieldHandler = null;
 
-
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$this->_pVariableReaderConfig = new InputVariableReaderConfigTest();
@@ -77,7 +73,7 @@ class TestClassGeoSearchBuilderFromInputVars
 		$pDataView = new DataListView(13, 'test');
 
 		$this->_pGeoPositionFieldHandler = $this->getMockBuilder(GeoPositionFieldHandler::class)
-			->setMethods(['readValues', 'getActiveFields', 'getActiveFieldsWithValue'])
+			->setMethods(['readValues', 'getActiveFields', 'getActiveFieldsWithValue', 'getRadiusValue'])
 			->getMock();
 
 		$this->_pAPIClientActionMock = $this->getMockBuilder(APIClientActionGeneric::class)
@@ -89,11 +85,6 @@ class TestClassGeoSearchBuilderFromInputVars
 			($pEstateListVariableReader, $this->_pGeoPositionFieldHandler, $this->_pAPIClientActionMock);
 		$this->_pGeoSearchBuilderFromInputVars->setViewProperty($pDataView);
 	}
-
-
-	/**
-	 *
-	 */
 
 	public function testBuildParameters()
 	{
@@ -113,11 +104,6 @@ class TestClassGeoSearchBuilderFromInputVars
 		$this->assertEqualSets($expectedParameters, $parameters);
 	}
 
-
-	/**
-	 *
-	 */
-
 	public function testBuildParametersIncomplete()
 	{
 		$this->setActiveFields();
@@ -128,16 +114,10 @@ class TestClassGeoSearchBuilderFromInputVars
 		$this->assertEquals([], $parameters);
 	}
 
-
-	/**
-	 *
-	 */
-
 	public function testMissingRadiusParameter()
 	{
 		$this->setActiveFields();
 		$this->_pVariableReaderConfig->setValue('street', 'Teststr');
-		$this->_pVariableReaderConfig->setValue('radius', 10);
 		$this->_pVariableReaderConfig->setValue('zip', '52072');
 		$parameters = $this->_pGeoSearchBuilderFromInputVars->buildParameters();
 
@@ -145,14 +125,39 @@ class TestClassGeoSearchBuilderFromInputVars
 			'country' => 'DEU',
 			'zip' => '52072',
 			'street' => 'Teststr',
-			'radius' => 10,
+			'radius' => 20,
 		], $parameters);
 	}
 
+	public function testEmptyRadiusParameterUsingDefaultRadius()
+	{
+		$this->setActiveFields();
+		$this->_pVariableReaderConfig->setValue('zip', '52070');
+		$this->_pVariableReaderConfig->setValue('radius', '');
+		$parameters = $this->_pGeoSearchBuilderFromInputVars->buildParameters();
 
-	/**
-	 *
-	 */
+		$this->assertEquals([
+			'country' => 'DEU',
+			'zip' => '52070',
+			'radius' => 20,
+			'street' => null,
+		], $parameters);
+	}
+
+	public function testEmptyRadiusParameterUsingFallbackRadius()
+	{
+		$this->setActiveFields(['radius']);
+		$this->_pVariableReaderConfig->setValue('zip', '52070');
+		$this->_pVariableReaderConfig->setValue('radius', '');
+		$parameters = $this->_pGeoSearchBuilderFromInputVars->buildParameters();
+
+		$this->assertEquals([
+			'country' => 'DEU',
+			'zip' => '52070',
+			'radius' => 10,
+			'street' => null,
+		], $parameters);
+	}
 
 	public function testMissingCountryParameter()
 	{
@@ -179,27 +184,19 @@ class TestClassGeoSearchBuilderFromInputVars
 		], $parameters);
 	}
 
-
 	/**
-	 *
 	 * @expectedException Exception
 	 * @expectedExceptionMessage pView cannot be null
-	 *
 	 */
-
 	public function testNoView()
 	{
 		$pGeoSearchBuilderFromInputVars = new GeoSearchBuilderFromInputVars();
 		$pGeoSearchBuilderFromInputVars->buildParameters();
 	}
 
-
 	/**
-	 *
 	 * @param array $blacklist
-	 *
 	 */
-
 	private function setActiveFields(array $blacklist = [])
 	{
 		$activeFieldsDefault = [
@@ -221,6 +218,8 @@ class TestClassGeoSearchBuilderFromInputVars
 
 		$this->_pGeoPositionFieldHandler->method('getActiveFields')
 			->will($this->returnValue($activeFields));
+		$this->_pGeoPositionFieldHandler->method('getRadiusValue')
+			->will($this->returnValue($activeFieldsWithValues['radius'] ?? 10));
 		$this->_pGeoPositionFieldHandler->method('getActiveFieldsWithValue')
 			->will($this->returnValue($activeFieldsWithValues));
 	}

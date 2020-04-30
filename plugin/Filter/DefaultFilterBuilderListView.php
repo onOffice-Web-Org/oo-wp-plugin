@@ -23,20 +23,14 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Filter;
 
-use Exception;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\FieldsCollection;
-
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
- *
- */
 
 class DefaultFilterBuilderListView
 	implements DefaultFilterBuilder
@@ -58,14 +52,10 @@ class DefaultFilterBuilderListView
 	];
 
 	/**
-	 * DefaultFilterBuilderListView constructor.
-	 *
 	 * @param DataListView $pDataListView
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 * @param DefaultFilterBuilderListViewEnvironment|null $pEnvironment
-	 *
 	 */
-
 	public function __construct(
 		DataListView $pDataListView,
 		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
@@ -76,13 +66,11 @@ class DefaultFilterBuilderListView
 		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function buildFilter(): array
 	{
 		$filterableFields = $this->_pDataListView->getFilterableFields();
@@ -114,13 +102,13 @@ class DefaultFilterBuilderListView
 	/**
 	 * @param array $filterableFields
 	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	private function filterActiveFilterableFields(array $filterableFields): array
 	{
 		$pFieldsCollection = new FieldsCollection;
-
 		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-
 		$activeFilterableFields = [];
 
 		foreach ($filterableFields as $field) {
@@ -133,12 +121,9 @@ class DefaultFilterBuilderListView
 	}
 
 	/**
-	 *
 	 * @param array $baseFilter
 	 * @return array
-	 *
 	 */
-
 	private function addSubRegionFilter(array $baseFilter): array
 	{
 		if (in_array('regionaler_zusatz', $this->_pDataListView->getFilterableFields(), true)) {
@@ -162,13 +147,9 @@ class DefaultFilterBuilderListView
 		return $baseFilter;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	private function getFavoritesFilter(): array
 	{
 		$ids = Favorites::getAllFavorizedIds();
@@ -181,13 +162,9 @@ class DefaultFilterBuilderListView
 		return $filter;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	private function getReferenceViewFilter(): array
 	{
 		$filter = $this->_defaultFilter;
