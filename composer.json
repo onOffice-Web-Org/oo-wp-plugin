@@ -1,39 +1,9 @@
 {
-	"name": "onofficegmbh/oo-wp-plugin",
-	"type": "wordpress-plugin",
-	"license": "GNU AGPLv3 and GNU GPLv3",
-	"description": "onOffice plugin for WordPress",
-	"homepage": "https://github.com/onOfficeGmbH/oo-wp-plugin",
-	"authors": [
-		{
-			"name": "Jakob Jungmann",
-			"email": "j.jungman@onoffice.com",
-			"homepage": "https://github.com/jayay"
-		},
-		{
-			"name": "Ana Ivanova",
-			"email": "a.ivanova@onoffice.com",
-			"homepage": "https://github.com/anaivanova"
-		}
-	],
-	"keywords": [
-		"wordpress",
-		"onoffice"
-	],
-	"support": {
-		"issues": "https://github.com/onOfficeGmbH/oo-wp-plugin/issues"
-	},
 	"require-dev": {
 		"phpunit/phpunit": "6 - 7",
 		"phpstan/phpstan": ">=0.9",
 		"php-coveralls/php-coveralls": "^2.1"
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/onOfficeGmbH/sdk"
-		}
-	],
 	"autoload": {
 		 "psr-4": {
 			"onOffice\\SDK\\": "SDK/SDK/",
@@ -47,7 +17,6 @@
 	},
 	"require": {
 		"php": ">=7.0.0",
-		"php-di/php-di": "^6.0",
-		"composer/installers": "~1.0"
+		"php-di/php-di": "^6.0"
 	}
 }
