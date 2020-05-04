@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.5.5 =
+
+**Fixes**
+
+* Fix submit contact form with deactivated estate id field in onOffice enteprise.
+
 = 2.5.4 =
 
 **Changes**
@@ -225,6 +231,9 @@ Stable version of the plugin, including a backend GUI
 * Show information or expose PDFs about sub-estates of a property complex.
 
 == Upgrade Notice ==
+
+= 2.5.5 =
+Fix submit contact form with deactivated estate id field in onOffice enteprise.
 
 = 2.5.4 =
 More data in the emails by form submit, jQuery internal reorganization.
