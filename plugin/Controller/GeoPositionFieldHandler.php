@@ -51,13 +51,9 @@ class GeoPositionFieldHandler
 		$this->_pRecordManagerFactory = $pRecordManagerFactory ?? new RecordManagerFactory();
 	}
 
-
 	/**
-	 *
 	 * @param ViewProperty $pViewProperty
-	 *
 	 */
-
 	public function readValues(ViewProperty $pViewProperty)
 	{
 		$pInputModelFactory = new InputModelDBFactoryConfigGeoFields($pViewProperty->getModule());
@@ -82,13 +78,9 @@ class GeoPositionFieldHandler
 		$this->_records = (array)($pRecordManager->getRecords()[0] ?? $this->getDefaultConfiguration());
 	}
 
-
 	/**
-	 *
 	 * @return array The active fields in correct order
-	 *
 	 */
-
 	public function getActiveFields(): array
 	{
 		$activeFields = array_filter($this->_records, function($value): bool {
@@ -101,13 +93,9 @@ class GeoPositionFieldHandler
 		return $activeGeoFields;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	public function getActiveFieldsWithValue(): array
 	{
 		$values = [];
@@ -120,14 +108,10 @@ class GeoPositionFieldHandler
 		return $values;
 	}
 
-
 	/**
-	 *
 	 * @return array
 	 * @throws LogicException
-	 *
 	 */
-
 	public function getGeoFieldsOrdered(): array
 	{
 		$geoFieldsString = $this->_records['geo_order'] ?? '';
@@ -142,13 +126,9 @@ class GeoPositionFieldHandler
 		return $geoFieldsArray;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	private function getDefaultConfiguration(): array
 	{
 		$defaultActive = [
@@ -159,8 +139,7 @@ class GeoPositionFieldHandler
 		return array_combine($intersection, array_fill(0, count($intersection), '1'));
 	}
 
-
 	/**  @return int */
 	public function getRadiusValue(): int
-		{ return intval($this->_records['radius'] ?? 10); }
+		{ return intval($this->_records['radius'] ?? 0) ?: 10; }
 }
