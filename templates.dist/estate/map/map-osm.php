@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019  onOffice Software
+ *    Copyright (C) 2018  onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -28,38 +28,34 @@
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
-$pEstatesClone = clone $pEstates;
+/* @var $pEstates EstateList */
+$estateData = (function(EstateList $pEstatesClone): array {
+	$pEstatesClone->resetEstateIterator();
+	$estateData = [];
 
-		/* @var $pEstatesClone EstateList */
-$pEstatesClone->resetEstateIterator();
-$estateData = [];
+	while ($currentEstateMap = $pEstatesClone->estateIterator
+		(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
+		$virtualAddressSet = (bool)$currentEstateMap['virtualAddress'];
+		$position = [
+			'lat' => (float)$currentEstateMap['breitengrad'],
+			'lng' => (float)$currentEstateMap['laengengrad'],
+		];
+		$title = $currentEstateMap['objekttitel'];
+		$visible = !$virtualAddressSet;
 
-while ($currentEstateMap = $pEstatesClone->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP)) {
-	$virtualAddressSet = (bool)$currentEstateMap['virtualAddress'];
-$position = [
-		'lat' => (float) $currentEstateMap['breitengrad'],
-		'lng' => (float) $currentEstateMap['laengengrad'],
-];
-	$title = $currentEstateMap['objekttitel'];
-$visible = !$virtualAddressSet;
-
-	if (.0 === $position['lng'] || .0 === $position['lat'] || !$currentEstateMap['showGoogleMap']) {
-		continue;
+		if (.0 !== $position['lng'] && .0 !== $position['lat'] && $currentEstateMap['showGoogleMap']) {
+			$estateData[] = [
+				'latlng' => $position,
+				'options' => ['title' => $title],
+				'visible' => $visible,
+			];
+		}
 	}
-
-	$estateData []= [
-	'latlng' => $position,
-	'options' => [
-		'title' => $title,
-		],
-		'visible' => $visible,
-	];
-}
-unset($currentEstateMap);
-unset($pEstatesClone);
+	return $estateData;
+})(clone $pEstates);
 ?>
 
-<div id="map" style="width: 600px; height: 400px;"></div>
+<div id="map" style="width: 100%; height: 100%;"></div>
 
 <script>
 (function() {
@@ -86,3 +82,4 @@ unset($pEstatesClone);
 	map.fitBounds(group.getBounds());
 })();
 </script>
+<?php unset($estateData); ?>

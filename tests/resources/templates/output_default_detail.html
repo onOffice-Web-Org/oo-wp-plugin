@@ -1,69 +1,75 @@
+<div class="oo-detailview">
+			<div class="oo-detailsheadline">
+			<h1>flach begrüntes Grundstück</h1>
+		</div>
+		<div class="oo-details-main">
+			<div class="oo-detailsgallery" id="oo-galleryslide">
+				<div class="oo-detailspicture" style="background-image: url('https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg');"></div>
+			</div>
+			<div class="oo-detailstable">
+				<div class="oo-detailslisttd">label-objektart</div>
+<div class="oo-detailslisttd">Grundstück</div>
+<div class="oo-detailslisttd">label-objekttyp</div>
+<div class="oo-detailslisttd">Wohnen</div>
+<div class="oo-detailslisttd">label-vermarktungsart</div>
+<div class="oo-detailslisttd">Kauf</div>
+<div class="oo-detailslisttd">label-plz</div>
+<div class="oo-detailslisttd">52078</div>
+<div class="oo-detailslisttd">label-ort</div>
+<div class="oo-detailslisttd">Aachen</div>
+<div class="oo-detailslisttd">label-objektnr_extern</div>
+<div class="oo-detailslisttd">AP001</div>
+<div class="oo-detailslisttd">label-grundstuecksflaeche</div>
+<div class="oo-detailslisttd">ca. 5.400 m²</div>
+<div class="oo-detailslisttd">label-kaufpreis</div>
+<div class="oo-detailslisttd">80.000,00 €</div>
+			</div>
 
-<div id="map" style="width: 600px; height: 400px;"></div>
-
-<script>
-(function() {
-	var estateMarkers = [];
-	var map = L.map('map', {
-		center: [50.8, 10.0],
-		zoom: 5
-	});
-	L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
-
-	var group = new L.featureGroup();
-
-	for (i in estateMarkers) {
-		var estate = estateMarkers[i];
-		var marker = L.marker(estate.latlng, estate.options);
-		marker.bindPopup(estate.options.title);
-		group.addLayer(marker);
-		if (estate.visible) {
-			marker.addTo(map);
-		}
-		// only extend map boundaries by new coordinates, if not visible
-	}
-
-	map.fitBounds(group.getBounds());
-})();
-</script>
-<h1>Detail View</h1>
-				label-objekttitel: flach begrüntes Grundstück<br>
-
-			label-objektart: Grundstück<br>
-
-			label-objekttyp: Wohnen<br>
-
-			label-vermarktungsart: Kauf<br>
-
-			label-plz: 52078<br>
-
-			label-ort: Aachen<br>
-
-			label-objektnr_extern: AP001<br>
-
-			label-grundstuecksflaeche: ca. 5.400 m²<br>
-
-			label-kaufpreis: 80.000,00 €<br>
-
-			label-objektbeschreibung: große Freifläche<br>
-
-			label-lage: Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.<br>
-
-			label-ausstatt_beschr: teilweise mit einer alten Mauer aus Findlingen umgeben<br>
-
-			label-sonstige_angaben: Vereinbaren sie noch heute einen Besichttgungstermin<br>
-
-			<ul>
-			<b> Contact person: Ana Petrova Ivanova</b>
-						<li>Telefon: </li>
-			<li>Telefax: </li>
-			<li>E-Mail: </li>
-									
-			Bild: <br>		</ul>
-
+							<div class="oo-detailsfreetext">
+					<h2>Description</h2>
+					große Freifläche
+				</div>
+			
+							<div class="oo-detailsfreetext">
+					<h2>Location</h2>
+					Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.
+				</div>
+			
+			
+							<div class="oo-detailsfreetext">
+					<h2>Equipment</h2>
+					teilweise mit einer alten Mauer aus Findlingen umgeben
+				</div>
+			
+							<div class="oo-detailsfreetext">
+					<h2>Other Information</h2>
+					Vereinbaren sie noch heute einen Besichtigungstermin
+				</div>
+			
+			<div class="oo-units">
+				Estate Units here			</div>
+		</div>
+		<div class="oo-details-sidebar">
+			<div class="oo-asp">
+				<h2>Contact person</h2>
+									<div class="oo-aspname">
+						<strong>&nbsp;Peter&nbsp;Parker</strong>
+					</div>
+					<div class="oo-asplocation">
+						<span></span>
+						<span>&nbsp;</span>
+					</div>
+					<div class="oo-aspcontact">
+						<span></span>
+					</div>
+							</div>
+			<div class="oo-detailsexpose">
+									<h2>Documents</h2>
+					<a href="Document here">
+						PDF expose					</a>
+							</div>
+		</div>
+		<div class="oo-similar">
+			Similar Estates here		</div>
 	
-	<a href="https://asd.de" title="test movie">test movie</a><br>	<a href="https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg">
-		<img src="https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg">
-		Fotolia_3286409_Subscription_XL<br>	</a>
-	
-		
+</div>

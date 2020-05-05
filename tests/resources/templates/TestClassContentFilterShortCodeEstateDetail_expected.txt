@@ -10,7 +10,35 @@ label-kaufpreis: 80.000,00 €
 label-objektbeschreibung: große Freifläche
 label-lage: Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.
 label-ausstatt_beschr: teilweise mit einer alten Mauer aus Findlingen umgeben
-label-sonstige_angaben: Vereinbaren sie noch heute einen Besichttgungstermin
-* Contact person: Ana Petrova
+label-sonstige_angaben: Vereinbaren Sie noch heute einen Besichtigungstermin
+* Contact person: Peter Parker
 <a href="https://asd.de" title="test movie">test movie</a>
 Fotolia_3286409_Subscription_XL: https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg
+
+<div id="map" style="width: 100%; height: 100%;"></div>
+
+<script>
+(function() {
+	var estateMarkers = [{"latlng":{"lat":48.8582345,"lng":2.2944223},"options":{"title":""},"visible":true}];
+	var map = L.map('map', {
+		center: [50.8, 10.0],
+		zoom: 5
+	});
+	L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
+
+	var group = new L.featureGroup();
+
+	for (i in estateMarkers) {
+		var estate = estateMarkers[i];
+		var marker = L.marker(estate.latlng, estate.options);
+		marker.bindPopup(estate.options.title);
+		group.addLayer(marker);
+		if (estate.visible) {
+			marker.addTo(map);
+		}
+		// only extend map boundaries by new coordinates, if not visible
+	}
+
+	map.fitBounds(group.getBounds());
+})();
+</script>
