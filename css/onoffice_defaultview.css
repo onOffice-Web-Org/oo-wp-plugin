@@ -1,5 +1,4 @@
 /* estate search */
-
 .oo-searchform {
 	margin: 0 0 25px 0;
 }
@@ -52,12 +51,19 @@
 }
 
 /* estate map */
-
 .oo-estate-map {
 	padding: 0 15px;
 	width: 100%;
 	height: 300px;
-	display: none;
+}
+
+.oo-detailsmap {
+    position: relative;
+    height: auto;
+}
+
+.oo-detailsmap #map {
+    height: 300px !important;
 }
 
 .oo-estate-map #map .leaflet-top, .oo-estate-map #map .leaflet-bottom {
@@ -65,13 +71,11 @@
 }
 
 /* estate sort */
-
 .oo-estate-sort {
 	padding: 15px;
 }
 
 /* listframe */
-
 .oo-listheadline {
 	padding: 10px 15px;
 }
@@ -82,15 +86,10 @@
 }
 
 /* listobject */
-
 .oo-listobject {
 	width: 33.33%;
 	padding: 0 15px;
 	margin: 0 0 50px 0;
-}
-
-.onoffice.favorize {
-	display: none;
 }
 
 .oo-listobjectwrap {
@@ -154,7 +153,6 @@
 }
 
 /* details */
-
 .oo-detailsheadline {
 	padding: 10px 15px;
 }
@@ -207,7 +205,7 @@
 	font-weight: 700;
 }
 
-.oo-detailsfreetext {
+.oo-detailsfreetext, .oo-detailsmap {
 	padding-bottom: 15px;
 	padding-top: 15px;
 	border-bottom: 2px solid #efefef;
@@ -246,9 +244,7 @@
 }
 
 /* responsive */
-
 @media only screen and (max-width: 991px) {
-
 	.oo-listobject, .oo-searchformfield {
 		width: 50%;
 	}
@@ -260,13 +256,10 @@
 	.oo-details-sidebar {
 		width: 50%;
 	}
-
 }
 
 @media only screen and (max-width: 575px) {
-
 	.oo-listobject, .oo-searchformfield, .oo-details-sidebar {
 		width: 100%;
 	}
-	
 }

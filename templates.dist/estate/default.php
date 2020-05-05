@@ -31,14 +31,9 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 ?>
 
-<?php
-	/**
-	* If you want to add a map with markers for the estates you can implement it like this: 
-	* <div class="oo-estate-map">
-	* 	<?php require('map/map.php'); ?>
-	* </div>
-	*/
-?>
+<div class="oo-estate-map">
+    <?php require('map/map.php'); ?>
+</div>
 <div class="oo-listheadline">
 	<h1><?php esc_html_e('Overview of Estates', 'onoffice'); ?></h1>
 	<p>
@@ -94,15 +89,15 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						<a href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
 							<?php esc_html_e('Show Details', 'onoffice'); ?>
 						</a>
+                        <?php if (Favorites::isFavorizationEnabled()): ?>
+                            <button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
+                                <?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
+                            </button>
+                        <?php endif ?>
 					</div>
 				</div>
 			</div>
 		</div>
-		<?php if (Favorites::isFavorizationEnabled()): ?>
-			<button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
-				<?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
-			</button>
-		<?php endif ?>
 	<?php endwhile; ?>
 </div>
 <?php if (Favorites::isFavorizationEnabled()) { ?>

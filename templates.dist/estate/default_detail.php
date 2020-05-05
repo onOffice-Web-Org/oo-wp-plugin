@@ -79,14 +79,16 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				</div>
 			<?php } ?>
 
-			<?php
-				/**
-				* If you want to add a map to show the location of the property you can implement it like this: 
-				* <div class="oo-detailsmap">
-				* 	<?php require('map/map.php'); ?>
-				* </div>
-				*/
-			?>
+            <?php
+            ob_start();
+            require('map/map.php');
+            $mapContent = ob_get_clean();
+            if ($mapContent != '') { ?>
+            <div class="oo-detailsmap">
+                <h2><?php esc_html_e('Map', 'onoffice'); ?></h2>
+                <?php echo $mapContent; ?>
+            </div>
+            <?php } ?>
 
 			<?php if ( $currentEstate["ausstatt_beschr"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">

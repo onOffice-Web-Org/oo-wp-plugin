@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018  onOffice GmbH
+ *    Copyright (C) 2018-2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -20,16 +20,13 @@
  */
 
 /**
- *
  *  Map template for OSM
- *
  */
-
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /* @var $pEstates EstateList */
-$estateData = (function(EstateList $pEstatesClone): array {
+return (function(EstateList $pEstatesClone) {
 	$pEstatesClone->resetEstateIterator();
 	$estateData = [];
 
@@ -51,35 +48,37 @@ $estateData = (function(EstateList $pEstatesClone): array {
 			];
 		}
 	}
-	return $estateData;
-})(clone $pEstates);
-?>
 
-<div id="map" style="width: 100%; height: 100%;"></div>
-
-<script>
-(function() {
-	var estateMarkers = <?php echo json_encode($estateData); ?>;
-	var map = L.map('map', {
-		center: [50.8, 10.0],
-		zoom: 5
-	});
-	L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
-
-	var group = new L.featureGroup();
-
-	for (i in estateMarkers) {
-		var estate = estateMarkers[i];
-		var marker = L.marker(estate.latlng, estate.options);
-		marker.bindPopup(estate.options.title);
-		group.addLayer(marker);
-		if (estate.visible) {
-			marker.addTo(map);
-		}
-		// only extend map boundaries by new coordinates, if not visible
+	if ($estateData === []) {
+		return;
 	}
+    ?>
 
-	map.fitBounds(group.getBounds());
-})();
-</script>
-<?php unset($estateData); ?>
+    <div id="map" style="width: 100%; height: 100%;"></div>
+
+    <script>
+    (function() {
+        var estateMarkers = <?php echo json_encode($estateData); ?>;
+        var map = L.map('map', {
+            center: [50.8, 10.0],
+            zoom: 5
+        });
+        L.tileLayer('https://tiles.onoffice.de/tiles/{z}/{x}/{y}.png').addTo(map);
+
+        var group = new L.featureGroup();
+
+        for (i in estateMarkers) {
+            var estate = estateMarkers[i];
+            var marker = L.marker(estate.latlng, estate.options);
+            marker.bindPopup(estate.options.title);
+            group.addLayer(marker);
+            if (estate.visible) {
+                marker.addTo(map);
+            }
+        }
+        map.fitBounds(group.getBounds());
+    })();
+    </script>
+
+    <?php
+});

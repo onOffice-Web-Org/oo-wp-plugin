@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018  onOffice GmbH
+ *    Copyright (C) 2018-2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -20,16 +20,13 @@
  */
 
 /**
- *
  *  Map template for Google Maps
- *
  */
-
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /* @var $pEstates EstateList */
-$estateData = (function (EstateList $pEstatesClone): array {
+return (function (EstateList $pEstatesClone) {
 	$pEstatesClone->resetEstateIterator();
 	$estateData = [];
 
@@ -51,53 +48,51 @@ $estateData = (function (EstateList $pEstatesClone): array {
             ];
 		}
 	}
-	return $estateData;
-})(clone $pEstates);
-?>
 
-<script type="text/javascript">
-(function() {
-	var gmapInit = function() {
-		var estates = <?php echo json_encode($estateData, JSON_PRETTY_PRINT); ?>;
-		var settings = {
-			zoom: null
-		};
+	if ($estateData === []) {
+	    return;
+    }
+    ?>
 
-		var mapElement = document.getElementById('gmap');
-		var map = new google.maps.Map(mapElement, settings.mapConfig);
-		var bounds = new google.maps.LatLngBounds();
+    <script type="text/javascript">
+    (function() {
+        var gmapInit = function() {
+            var estates = <?php echo json_encode($estateData, JSON_PRETTY_PRINT); ?>;
+            var settings = {zoom: null};
 
-		map.fitBounds(bounds);
-		map.addListener("bounds_changed", function() {
-			if (settings.zoom !== null) {
-				map.setZoom(settings.zoom);
-			}
-		});
+            var mapElement = document.getElementById('gmap');
+            var map = new google.maps.Map(mapElement, settings.mapConfig);
+            var bounds = new google.maps.LatLngBounds();
 
-		for (var i in estates) {
-			var estateConfig = estates[i];
-			var latLng = new google.maps.LatLng(estateConfig.position.lat, estateConfig.position.lng);
-			bounds.extend(latLng);
+            map.fitBounds(bounds);
+            map.addListener("bounds_changed", function() {
+                if (settings.zoom !== null) {
+                    map.setZoom(settings.zoom);
+                }
+            });
 
-			if (!estateConfig.visible) {
-				// no marker but extended map bounds
-				continue;
-			}
+            for (var i in estates) {
+                var estateConfig = estates[i];
+                var latLng = new google.maps.LatLng(estateConfig.position.lat, estateConfig.position.lng);
+                bounds.extend(latLng);
 
-			new google.maps.Marker({
-				position: latLng,
-				icon: null,
-				map: map,
-				title: estateConfig.title
-			});
-		}
-	};
+                if (estateConfig.visible) {
+                    // no marker but extended map bounds
+                    new google.maps.Marker({
+                        position: latLng,
+                        icon: null,
+                        map: map,
+                        title: estateConfig.title
+                    });
+                }
+            }
+        };
 
-	google.maps.event.addDomListener(window, "load", gmapInit);
-})();
-</script>
+        google.maps.event.addDomListener(window, "load", gmapInit);
+    })();
+    </script>
 
-<?php
-unset($estateData);
-?>
-<div id="gmap" style="width: 100%; height: 100%;"></div>
+    <div id="gmap" style="width: 100%; height: 100%;"></div>
+
+    <?php
+});
