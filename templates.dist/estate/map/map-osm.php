@@ -51,11 +51,8 @@ return (function(EstateList $pEstatesClone) {
 
 	if ($estateData === []) {
 		return;
-	}
-    ?>
-
+	} ?>
     <div id="map" style="width: 100%; height: 100%;"></div>
-
     <script>
     (function() {
         var estateMarkers = <?php echo json_encode($estateData); ?>;
@@ -79,6 +76,5 @@ return (function(EstateList $pEstatesClone) {
         map.fitBounds(group.getBounds());
     })();
     </script>
-
-    <?php
+<?php
 });

@@ -27,23 +27,15 @@ use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\EstateDetail;
 use WP_UnitTestCase;
 
-/**
- *
- */
-
 class TestTemplateEstateDefaultDetail
 	extends WP_UnitTestCase
 {
 	/** @var EstateDetail */
 	private $_pEstate = null;
 
-
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$this->_pEstate = $this->getMockBuilder(EstateDetail::class)
@@ -117,7 +109,6 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
 	}
-
 
 	/**
 	 * @covers \onOffice\WPlugin\Template::render

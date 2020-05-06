@@ -51,9 +51,7 @@ return (function (EstateList $pEstatesClone) {
 
 	if ($estateData === []) {
 	    return;
-    }
-    ?>
-
+    } ?>
     <script type="text/javascript">
     (function() {
         var gmapInit = function() {
@@ -91,8 +89,6 @@ return (function (EstateList $pEstatesClone) {
         google.maps.event.addDomListener(window, "load", gmapInit);
     })();
     </script>
-
     <div id="gmap" style="width: 100%; height: 100%;"></div>
-
-    <?php
+<?php
 });

@@ -77,9 +77,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					<h2><?php esc_html_e('Location', 'onoffice'); ?></h2>
 					<?php echo $currentEstate["lage"]."\n"; ?>
 				</div>
-			<?php } ?>
+			<?php }
 
-            <?php
             ob_start();
             require('map/map.php');
             $mapContent = ob_get_clean();
