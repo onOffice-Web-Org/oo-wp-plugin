@@ -24,38 +24,23 @@ namespace onOffice\WPlugin\ViewFieldModifier;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Utility\__String;
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- */
-
 abstract class EstateViewFieldModifierTypeEstateGeoBase
 	implements ViewFieldModifierTypeBase
 {
 	/** @var array */
 	private $_viewFields = [];
 
-
 	/**
-	 *
 	 * @param array $viewFields
-	 *
 	 */
-
 	public function __construct(array $viewFields)
 	{
 		$this->_viewFields = $viewFields;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	public function getAPIFields(): array
 	{
 		$geoSpecific = [
@@ -74,63 +59,38 @@ abstract class EstateViewFieldModifierTypeEstateGeoBase
 		return array_unique($this->editViewFieldsForApiGeoPosition($apiFields));
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
 	 */
-
 	public function getVisibleFields(): array
 	{
 		return $this->editViewFieldsForApiGeoPosition($this->_viewFields);
 	}
 
-
 	/**
-	 *
 	 * @param array $record
 	 * @return array
-	 *
 	 */
-
 	public function reduceRecord(array $record): array
 	{
 		if (1 == $record['virtualAddress']) {
-			if (isset($record['strasse'])) {
-				$record['strasse'] = $record['virtualStreet'];
-			}
-
-			if (isset($record['hausnummer'])) {
-				$record['hausnummer'] = $record['virtualHouseNumber'];
-			}
-
-			if (isset($record['laengengrad'])) {
-				$record['laengengrad'] = $record['virtualLongitude'];
-			}
-
-			if (isset($record['breitengrad'])) {
-				$record['breitengrad'] = $record['virtualLatitude'];
-			}
+			$record['strasse'] = $record['virtualStreet'] ?? '';
+			$record['hausnummer'] = $record['virtualHouseNumber'] ?? '';
+			$record['laengengrad'] = $record['virtualLongitude'] ?? .0;
+			$record['breitengrad'] = $record['virtualLatitude'] ?? .0;
 		} elseif (0 == $record['objektadresse_freigeben'] ||
 			__String::getNew($record['strasse'] ?? '')->isEmpty()) {
 			$record['laengengrad'] = 0;
 			$record['breitengrad'] = 0;
 			unset($record['strasse']);
 		}
-
 		return $record;
 	}
 
-
-
 	/**
-	 *
 	 * @param array $viewFields
 	 * @return array
-	 *
 	 */
-
 	protected function editViewFieldsForApiGeoPosition(array $viewFields): array
 	{
 		$pos = array_search(GeoPosition::FIELD_GEO_POSITION, $viewFields);
