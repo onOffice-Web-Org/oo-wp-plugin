@@ -61,7 +61,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				$estatePictures = $pEstatesClone->getEstatePictures();
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
-					echo '<a href="'.esc_url($pEstatesClone->getEstateLink()).'" style="background-image: url('.esc_url($pEstatesClone->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+					echo '<a href="'.esc_url($pEstatesClone->getEstateLink()).'" style="background-image: url('.esc_url($pEstatesClone->getEstatePictureUrl($id, ['height' => 350])).');" class="oo-listimage estate-status">';
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
 					}
