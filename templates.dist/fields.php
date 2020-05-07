@@ -8,7 +8,7 @@ if ( ! function_exists( 'printRegion') ) {
 	function printRegion( onOffice\WPlugin\Region\Region $pRegion, $selected = array(), $level = 0 ) {
 		$prefix = str_repeat( '-', $level );
 		$selectStr = (in_array($pRegion->getId(), $selected) ? ' selected' : '');
-		echo '<option value="'.esc_html( $pRegion->getId() ).'"'.$selectStr.'>'
+		echo '<option value="'.esc_html( $pRegion->getId() ).'" '.$selectStr.'>'
 			.$prefix.' '.esc_html( $pRegion->getName() ).'</option>';
 		foreach ( $pRegion->getChildren() as $pRegionChild ) {
 			printRegion($pRegionChild, $selected, $level + 1);
@@ -120,7 +120,7 @@ if (!function_exists('renderFormField')) {
 			$typeCurrentInput = onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER;
 		}
 
-		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput && !$isRangeValue) {
+		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
 			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
@@ -135,7 +135,7 @@ if (!function_exists('renderFormField')) {
 			}
 			$output .= '</select>';
 		} elseif ($fieldName === 'regionaler_zusatz') {
-			$output .= renderRegionalAddition($fieldName, [$selectedValue], false, $fieldLabel);
+			$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel);
 		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
 			$isRangeValue)) {
@@ -177,8 +177,6 @@ if (!function_exists('renderFormField')) {
 			} else {
 				$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($fieldName).'" '.$value.'>';
 			}
-
-
 		}
 		return $output;
 	}
