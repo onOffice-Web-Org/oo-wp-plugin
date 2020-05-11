@@ -208,7 +208,7 @@ class APIClientActionGeneric
 		{ $this->_result = $result; }
 
 	/** @return array */
-	protected function getResult(): array
+	public function getResult(): array
 		{ return $this->_result; }
 
 	/** @return callable */
