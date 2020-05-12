@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  *    Copyright (C) 2018  onOffice Software AG
@@ -18,30 +17,26 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'fields.php';
-
 $visible = $pEstates->getVisibleFilterableFields();
-
 if (count($visible) === 0) {
 	return;
 }
-
 ?>
-
-<form method="get">
-
-<?php
-
-foreach ($visible as $inputName => $properties) :
-	echo '<p>';
-	echo esc_html($properties['label']).': ';
-	echo '<br>';
-	renderFieldEstateSearch($inputName, $properties);
-	echo '</p>';
-endforeach;
-?>
-
-	<input type="submit" value="<?php echo esc_attr__('Send', 'onoffice'); ?>">
-</form>
-<br>
+<div class="oo-searchform">
+	<form method="get">
+		<div class="oo-searchformfieldwrap">
+			<?php
+			foreach ($visible as $inputName => $properties) :
+				echo '<div class="oo-searchformfield">';
+				echo '<label>'.esc_html($properties['label']).':</label>';
+				renderFieldEstateSearch($inputName, $properties);
+				echo '</div>';
+			endforeach;
+			?>		
+			<div class="oo-searchformfield">
+				<input type="submit" value="<?php echo esc_attr__('Search', 'onoffice'); ?>">
+			</div>
+		</div>
+	</form>
+</div>
