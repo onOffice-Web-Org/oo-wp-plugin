@@ -135,6 +135,10 @@ if (!function_exists('renderFormField')) {
 			}
 			$output .= '</select>';
 		} elseif ($fieldName === 'regionaler_zusatz') {
+			if (!is_array($selectedValue))
+			{
+				$selectedValue = [];
+			}
 			$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel);
 		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
