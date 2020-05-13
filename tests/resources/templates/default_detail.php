@@ -63,3 +63,5 @@ use onOffice\WPlugin\EstateDetail;
 	}
 	echo $pEstates->getSimilarEstates();
 })($pEstates);
+
+include ONOFFICE_PLUGIN_DIR . '/templates.dist/estate/map/map.php';

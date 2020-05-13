@@ -120,7 +120,7 @@ class TestClassContentFilterShortCodeEstateList
 			'objektbeschreibung' => 'große Freifläche',
 			'lage' => 'Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.',
 			'ausstatt_beschr' => 'teilweise mit einer alten Mauer aus Findlingen umgeben',
-			'sonstige_angaben' => 'Vereinbaren sie noch heute einen Besichtigungstermin'
+			'sonstige_angaben' => 'Vereinbaren Sie noch heute einen Besichtigungstermin'
 		];
 
 		$pArrayContainerEstateDetail = new ArrayContainerEscape($estateData);
