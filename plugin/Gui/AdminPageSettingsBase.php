@@ -342,6 +342,19 @@ abstract class AdminPageSettingsBase
 
 	protected function prepareValues(stdClass $pValues) {}
 
+	/**
+	 *  following characters are compatible across all platforms:
+	 * Upper-case and lower-case letters: A-Z a-z (+ Umlaut)
+	 * Digits: 0-9
+	 * Underscore: _
+	 * @param string $name
+	 * @return string
+	 */
+	protected function sanitizeShortcodeName(string $name): string
+	{
+		return preg_replace('/[^a-zA-Z0-9äÄöÖüÜß.,_ ]/', '', $name);
+	}
+
 
 	/**
 	 *
