@@ -206,6 +206,11 @@ class AdminPageAddressListSettings
 		$type = RecordManagerFactory::TYPE_ADDRESS;
 		$result = false;
 
+		if (array_key_exists('name', $row[RecordManager::TABLENAME_LIST_VIEW_ADDRESS])) {
+			$row[RecordManager::TABLENAME_LIST_VIEW_ADDRESS]['name'] = $this->sanitizeShortcodeName(
+				$row[RecordManager::TABLENAME_LIST_VIEW_ADDRESS]['name']);
+		}
+
 		if ($recordId != null) {
 			$action = RecordManagerFactory::ACTION_UPDATE;
 			/* @var $pRecordManagerUpdate RecordManagerUpdateListViewAddress */

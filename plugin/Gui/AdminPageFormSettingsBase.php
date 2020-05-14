@@ -184,6 +184,11 @@ abstract class AdminPageFormSettingsBase
 		$result = false;
 		$type = RecordManagerFactory::TYPE_FORM;
 
+		if (array_key_exists('name', $row[RecordManager::TABLENAME_FORMS])) {
+			$row[RecordManager::TABLENAME_FORMS]['name'] = $this->sanitizeShortcodeName(
+				$row[RecordManager::TABLENAME_FORMS]['name']);
+		}
+
 		if ($recordId != 0) {
 			$action = RecordManagerFactory::ACTION_UPDATE;
 			// update by row
