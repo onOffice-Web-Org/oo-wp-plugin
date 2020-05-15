@@ -455,6 +455,10 @@ abstract class AdminPageSettingsBase
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/init.js', ['chosen-jquery', 'chosen-prism'], '', true);
 
 		wp_enqueue_script('chosen-init');
+
+		wp_register_script('oo-sanitize-shortcode-name',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/onoffice-sanitize-shortcode-name.js',
+			['jquery'], '', true);
 	}
 
 

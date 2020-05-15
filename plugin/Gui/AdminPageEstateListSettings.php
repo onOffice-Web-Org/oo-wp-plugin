@@ -35,10 +35,12 @@ use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Record\RecordManager;
 use stdClass;
 use function __;
 use function add_screen_option;
 use function wp_enqueue_script;
+use function wp_localize_script;
 
 /**
  *
@@ -260,5 +262,7 @@ class AdminPageEstateListSettings
 	{
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
+		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);
+		wp_enqueue_script('oo-sanitize-shortcode-name');
 	}
 }

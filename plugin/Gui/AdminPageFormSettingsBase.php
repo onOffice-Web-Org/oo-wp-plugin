@@ -535,6 +535,9 @@ abstract class AdminPageFormSettingsBase
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
+
+		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginforms-name']);
+		wp_enqueue_script('oo-sanitize-shortcode-name');
 	}
 
 	/**
