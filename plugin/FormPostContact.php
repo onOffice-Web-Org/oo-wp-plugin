@@ -31,7 +31,10 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostContactConfiguration;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldTypes;
 use function sanitize_text_field;
+use function home_url;
 
 /**
  *
@@ -44,6 +47,9 @@ use function sanitize_text_field;
 class FormPostContact
 	extends FormPost
 {
+	/**	 */
+	const PORTALFILTER_IDENTIFIER = '[onOffice-WP]';
+
 	/** @var FormPostContactConfiguration */
 	private $_pFormPostContactConfiguration = null;
 
@@ -101,6 +107,19 @@ class FormPostContact
 		return ['Id' => onOfficeSDK::MODULE_ESTATE] + parent::getAllowedPostVars($pFormConfig);
 	}
 
+
+	/**
+	 * @return array
+	 */
+
+	protected function expandFieldsCollection()
+	{
+		$pField = new Field('Id', onOfficeSDK::MODULE_ESTATE);
+		$pField->setType(FieldTypes::FIELD_TYPE_INTEGER);
+
+		return [$pField];
+	}
+
 	/**
 	 *
 	 * @param FormData $pFormData
@@ -147,13 +166,16 @@ class FormPostContact
 	{
 		$values = $pFormData->getValues();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
+		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
 		$requestParams = [
 			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $values['message'] ?? null,
-			'subject' => sanitize_text_field($subject),
+			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
 			'formtype' => $pFormData->getFormtype(),
+			'estatedata' => ["objekttitel", "ort", "plz", "land"],
+			'estateurl' => home_url($pWPWrapper->getRequest()),
 		];
 
 		if ($recipient !== '') {

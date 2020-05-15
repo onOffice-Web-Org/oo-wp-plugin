@@ -90,13 +90,21 @@ class TestClassContentFilterShortCodeEstateDetail
 			'objektbeschreibung' => 'große Freifläche',
 			'lage' => 'Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.',
 			'ausstatt_beschr' => 'teilweise mit einer alten Mauer aus Findlingen umgeben',
-			'sonstige_angaben' => 'Vereinbaren sie noch heute einen Besichttgungstermin'
+			'sonstige_angaben' => 'Vereinbaren Sie noch heute einen Besichtigungstermin'
 		];
 
 		$pArrayContainerEstateDetail = new ArrayContainerEscape($estateData);
 
+		$pArrayContainerEstateMap = new ArrayContainerEscape([
+			'breitengrad' => '48.8582345',
+			'laengengrad' => '2.2944223',
+			'showGoogleMap' => '1',
+			'virtualAddress' => '0',
+		]);
+
 		$this->_pEstate->setEstateId(13);
-		$this->_pEstate->method('estateIterator')->will($this->onConsecutiveCalls($pArrayContainerEstateDetail, false));
+		$this->_pEstate->method('estateIterator')
+			->will($this->onConsecutiveCalls($pArrayContainerEstateDetail, $pArrayContainerEstateMap, false));
 
 		$this->_pEstate->method('getFieldLabel')->with($this->anything())
 			->will($this->returnCallback(function(string $field): string {
@@ -104,8 +112,9 @@ class TestClassContentFilterShortCodeEstateDetail
 			}));
 
 		$contactData = [
-			'Name' => 'Petrova',
-			'Vorname' => 'Ana'];
+			'Name' => 'Parker',
+			'Vorname' => 'Peter',
+		];
 		$pArrayContainerContact = new ArrayContainerEscape($contactData);
 		$this->_pEstate->method('getEstateContacts')->willReturn([$pArrayContainerContact]);
 
@@ -118,9 +127,11 @@ class TestClassContentFilterShortCodeEstateDetail
 
 		$this->_pEstate->method('getMovieEmbedPlayers')->willReturn([]);
 		$this->_pEstate->method('getEstatePictures')->willReturn([362]);
-		$this->_pEstate->method('getEstatePictureUrl')->with(362)->willReturn(
-			'https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg');
-		$this->_pEstate->method('getEstatePictureTitle')->with(362)->willReturn('Fotolia_3286409_Subscription_XL');
+		$this->_pEstate->method('getEstatePictureUrl')
+			->with(362)->willReturn('https://image.onoffice.de/smart25/Objekte/index.php?'
+				.'kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg');
+		$this->_pEstate->method('getEstatePictureTitle')
+			->with(362)->willReturn('Fotolia_3286409_Subscription_XL');
 
 		$this->_pEstate->method('getDocument')->willReturn('');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);

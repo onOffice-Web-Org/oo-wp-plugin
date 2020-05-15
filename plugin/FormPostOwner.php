@@ -38,6 +38,7 @@ use onOffice\WPlugin\Field\SearchcriteriaFields;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Form\FormPostOwnerConfiguration;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -90,25 +91,26 @@ class FormPostOwner
 
 		$addressId = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
 			->createOrCompleteAddress($pFormData, $checkduplicate);
-		$estateId = $this->createEstate();
+		$estateData = $this->getEstateData();
+		$estateId = $this->createEstate($estateData);
 		$this->createOwnerRelation($estateId, $addressId);
 
 		if (null != $recipient) {
-			$this->sendContactRequest($recipient, $estateId, $subject);
+			$this->sendContactRequest($recipient, $estateId, $estateData, $subject);
 		}
 	}
 
 	/**
 	 *
+	 * @param array $estateData
 	 * @return int
 	 * @throws API\APIEmptyResultException
 	 * @throws ApiClientException
 	 */
 
-	private function createEstate(): int
+	private function createEstate(array $estateData): int
 	{
-		$estateValues = $this->getEstateData();
-		$requestParams = ['data' => $estateValues];
+		$requestParams = ['data' => $estateData];
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
 
 		$pApiClientAction = new APIClientActionGeneric($pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE,
@@ -193,6 +195,7 @@ class FormPostOwner
 	 *
 	 * @param string $recipient
 	 * @param int $estateId
+	 * @param array $estateValues
 	 * @param string $subject
 	 * @throws API\APIEmptyResultException
 	 * @throws ApiClientException
@@ -200,10 +203,11 @@ class FormPostOwner
 	 * @throws NotFoundException
 	 */
 
-	private function sendContactRequest(string $recipient, int $estateId, $subject = null)
+	private function sendContactRequest(string $recipient, int $estateId, array $estateValues, $subject=null)
 	{
 		$addressData = $this->_pFormData->getAddressData($this->getFieldsCollection());
 		$values = $this->_pFormData->getValues();
+		$estateData = array_keys($estateValues);
 
 		$requestParams = [
 			'addressdata' => $addressData,
@@ -213,6 +217,10 @@ class FormPostOwner
 			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
 			'formtype' => $this->_pFormData->getFormtype(),
 		];
+
+		if ($estateData != []) {
+			$requestParams['estatedata'] = $estateData;
+		}
 
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;

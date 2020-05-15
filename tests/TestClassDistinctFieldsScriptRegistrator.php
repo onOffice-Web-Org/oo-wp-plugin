@@ -59,7 +59,7 @@ class TestClassDistinctFieldsScriptRegistrator
 		$this->assertEquals([
 			'onoffice-distinctValues' => [
 				'src' => 'http://example.org/wp-content/plugins'.getcwd().'/js/distinctFields.js',
-				'deps' => ['jquery'],
+				'deps' => ['jquery', 'onoffice-multiselect'],
 				'ver' => false,
 				'inFooter' => false,
 			],

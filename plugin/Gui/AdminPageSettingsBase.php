@@ -183,12 +183,13 @@ abstract class AdminPageSettingsBase
 		do_settings_sections( $this->getPageSlug() );
 		submit_button(null, 'primary', 'send_ajax');
 
-		echo '<script>onOffice.ajaxSaver = new onOffice.ajaxSaver("onoffice-ajax");';
-		echo 'onOffice.ajaxSaver.register();';
-		echo '$(document).ready(function(){'
-			.'postboxes.add_postbox_toggles(pagenow);'
-			.'});';
-		echo '</script>';
+		echo '<script>'
+			.'jQuery(document).ready(function(){'
+				.'onOffice.ajaxSaver = new onOffice.ajaxSaver("onoffice-ajax");'
+				.'onOffice.ajaxSaver.register();'
+				.'postboxes.add_postbox_toggles(pagenow);'
+			.'});'
+		.'</script>';
 	}
 
 
@@ -428,9 +429,6 @@ abstract class AdminPageSettingsBase
 		wp_register_script('onoffice-default-form-values-js',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-default-form-values.js', ['onoffice-multiselect'], '', true);
 
-		wp_register_script('oo-sort-by-user-selection',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-sort-by-user-selection.js', ['jquery'], '', true);
-
 		wp_enqueue_script('postbox');
 		wp_enqueue_script('admin-js');
 
@@ -438,13 +436,11 @@ abstract class AdminPageSettingsBase
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/chosen.jquery.js', ['jquery'], '', true);
 
 		wp_register_script('chosen-prism',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/prism.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/prism.js', ['chosen-jquery'], '', true);
 
 		wp_register_script('chosen-init',
-			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/init.js', ['jquery'], '', true);
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/init.js', ['chosen-jquery', 'chosen-prism'], '', true);
 
-		wp_enqueue_script('chosen-jquery');
-		wp_enqueue_script('chosen-prism');
 		wp_enqueue_script('chosen-init');
 	}
 

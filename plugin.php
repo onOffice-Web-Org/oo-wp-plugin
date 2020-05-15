@@ -20,7 +20,7 @@
  */
 
 /*
-Plugin Name: onOffice for WP-Websites
+Plugin Name: onOffice for WP-Websites (dev)
 Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/

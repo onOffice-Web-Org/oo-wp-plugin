@@ -138,15 +138,36 @@ class TestClassFormPostInterest
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
 				$pFieldVorname = new Field('Vorname', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldVorname->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldVorname->setLabel('Vorname');
 				$pFieldsCollection->addField($pFieldVorname);
 
 				$pFieldName = new Field('Name', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldName->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldName->setLabel('Name');
 				$pFieldsCollection->addField($pFieldName);
 
 				$pFieldEmail = new Field('Email', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldEmail->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldEmail->setLabel('E-Mail');
 				$pFieldsCollection->addField($pFieldEmail);
+
+				$pField3 = new Field('objekttyp', onOfficeSDK::MODULE_ESTATE);
+				$pField3->setPermittedvalues(['reihenendhaus' => 'Reihenendhaus', 'reihenhaus' => 'Reihenhaus']);
+				$pField3->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+				$pField3->setLabel('Objekttyp');
+				$pFieldsCollection->addField($pField3);
+
+				$pField1 = new Field('vermarktungsart', onOfficeSDK::MODULE_ESTATE);
+				$pField1->setPermittedvalues(['kauf' => 'Kauf', 'miete' => 'Miete']);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pField1->setLabel('Vermarktungsart');
+				$pFieldsCollection->addField($pField1);
+
+				$pField2 = new Field('kaufpreis', onOfficeSDK::MODULE_ESTATE);
+				$pField2->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pField2->setLabel('Kaufpreis');
+				$pFieldsCollection->addField($pField2);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -160,9 +181,13 @@ class TestClassFormPostInterest
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
+			$pFormAddressCreator = new Form\FormAddressCreator($this->_pSDKWrapperMocker, $this->_pFieldsCollectionBuilderShort);
+			$pSearchcriteriaFields = new SearchcriteriaFields($this->_pFieldsCollectionBuilderShort);
+			$pFormPostInterestConfiguration = new FormPostInterestConfigurationTest($this->_pSDKWrapperMocker, $pFormAddressCreator, $pSearchcriteriaFields);
+
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
 		$this->_pContainer->set(Form\FormPostConfiguration::class, autowire(FormPostConfigurationTest::class));
-		$this->_pContainer->set(Form\FormPostInterestConfiguration::class, autowire(FormPostInterestConfigurationTest::class));
+		$this->_pContainer->set(Form\FormPostInterestConfiguration::class, $pFormPostInterestConfiguration);
 		$this->_pFormPostInterest = $this->_pContainer->get(FormPostInterest::class);
 	}
 
@@ -393,6 +418,14 @@ class TestClassFormPostInterest
 				.'ein neuer Interessent hat sich über das Kontaktformular auf Ihrer Webseite '
 				.'eingetragen. Die Adresse (John Doe) wurde bereits in Ihrem System eingetragen.'
 				."\n\n"
+				."Kontaktdaten des Interessenten:"."\n"
+				."Vorname: John"."\n"
+				."Name: Doe"."\n"
+				."E-Mail: john@doemail.com"."\n\n"
+				."Suchkriterien des Interessenten:"."\n"
+				."Vermarktungsart: Kauf"."\n"
+				."Kaufpreis (min): 200000"."\n"
+				."Kaufpreis (max): 800000"."\n\n"
 				.'Herzliche Grüße'."\n"
 				.'Ihr onOffice Team',
 			'subject' => 'Interest',
