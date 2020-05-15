@@ -23,6 +23,8 @@ namespace onOffice\tests;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\InputVariableReader;
@@ -55,6 +57,9 @@ class TestClassOutputFields
 	/** @var InputVariableReader */
 	private $_pInputVariableReader = null;
 
+	/** @var InputVariableReaderConfigTest */
+	private $_pInputVariableReaderConfigTest;
+
 	/** @var Container */
 	private $_pContainer;
 
@@ -69,39 +74,28 @@ class TestClassOutputFields
 		$this->_pDataListView->setFilterableFields(['testField1', 'testField2', 'geoPosition']);
 		$this->_pDataListView->setHiddenFields(['testField2']);
 
-		$module = onOfficeSDK::MODULE_ADDRESS;
+		$module = onOfficeSDK::MODULE_ESTATE;
 
-		$pInputVariableReaderConfig = new InputVariableReaderConfigTest();
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfigTest = new InputVariableReaderConfigTest();
+		$this->_pInputVariableReaderConfigTest->setFieldTypeByModule
 			('testField1', $module, FieldTypes::FIELD_TYPE_INTEGER);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfigTest->setFieldTypeByModule
 			('testField3', $module, FieldTypes::FIELD_TYPE_VARCHAR);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfigTest->setFieldTypeByModule
 			('country', $module, FieldTypes::FIELD_TYPE_VARCHAR);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfigTest->setFieldTypeByModule
 			('zip', $module, FieldTypes::FIELD_TYPE_VARCHAR);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfigTest->setFieldTypeByModule
+			('city', $module, FieldTypes::FIELD_TYPE_VARCHAR);
+		$this->_pInputVariableReaderConfigTest->setFieldTypeByModule
 			('street', $module, FieldTypes::FIELD_TYPE_TEXT);
-		$pInputVariableReaderConfig->setFieldTypeByModule
+		$this->_pInputVariableReaderConfigTest->setFieldTypeByModule
 			('radius', $module, FieldTypes::FIELD_TYPE_FLOAT);
-		$this->_pInputVariableReader = new InputVariableReader($module, $pInputVariableReaderConfig);
-		$this->setValues($pInputVariableReaderConfig);
+		$this->_pInputVariableReader = new InputVariableReader($module, $this->_pInputVariableReaderConfigTest);
 
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
-	}
-
-	/**
-	 * @param InputVariableReaderConfigTest $pInputVariableReaderConfig
-	 */
-	private function setValues(InputVariableReaderConfigTest $pInputVariableReaderConfig)
-	{
-		$pInputVariableReaderConfig->setValue('testField1', '2');
-		$pInputVariableReaderConfig->setValue('testField3', 'test value');
-		$pInputVariableReaderConfig->setValue('country', 'DEU');
-		$pInputVariableReaderConfig->setValue('zip', '52068');
-		$pInputVariableReaderConfig->setValue('street', 'Charlottenburger Allee');
 	}
 
 	/**
@@ -117,6 +111,49 @@ class TestClassOutputFields
 			'radius' => null,
 		];
 
+		$this->_pInputVariableReaderConfigTest->setValue('testField1', '2');
+		$this->_pInputVariableReaderConfigTest->setValue('testField3', 'test value');
+		$this->_pInputVariableReaderConfigTest->setValue('country', 'DEU');
+		$this->_pInputVariableReaderConfigTest->setValue('zip', '52068');
+		$this->_pInputVariableReaderConfigTest->setValue('street', 'Charlottenburger Allee');
+
+		$activeGeoFields = [
+			'country_active' => 'country',
+			'zip_active' => 'zip',
+			'radius_active' => 'radius',
+			'street_active' => 'street',
+		];
+
+		$this->performTest($activeGeoFields, $expectation);
+	}
+
+	public function testGetVisibleFilterableFieldsWithEmptyGeo()
+	{
+		$expectation = ['testField1' => 2];
+		$this->_pInputVariableReaderConfigTest->setValue('testField1', '2');
+		$this->_pInputVariableReaderConfigTest->setValue('testField3', 'test value');
+		$this->_pInputVariableReaderConfigTest->setValue('country', '');
+		$this->_pInputVariableReaderConfigTest->setValue('zip', '');
+		$this->_pInputVariableReaderConfigTest->setValue('street', '');
+
+		$activeGeoFields = [
+			'country_active' => 'country',
+			'zip_active' => 'zip',
+			'city_active' => 'city',
+			'radius_active' => 'radius',
+		];
+
+		$this->performTest($activeGeoFields, $expectation);
+	}
+
+	/**
+	 * @param array $activeGeoFields
+	 * @param array $expectation
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function performTest(array $activeGeoFields, array $expectation)
+	{
 		$pMockRecordManager = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
 			->disableOriginalConstructor()
 			->getMock();
@@ -128,21 +165,16 @@ class TestClassOutputFields
 			->will($this->returnValue($pMockRecordManager));
 
 		$pGeoPosition = $this->getMockBuilder(GeoPositionFieldHandler::class)
-				->setMethods(['getActiveFields'])
-				->setConstructorArgs([$pMockRecordManagerFactory])
-				->getMock();
-		$pGeoPosition->method('getActiveFields')->will($this->returnValue([
-			'country_active' => 'country',
-			'zip_active' => 'zip',
-			'radius_active' => 'radius',
-			'street_active' => 'street',
-		]));
+			->setMethods(['getActiveFields'])
+			->setConstructorArgs([$pMockRecordManagerFactory])
+			->getMock();
+		$pGeoPosition->method('getActiveFields')->will($this->returnValue($activeGeoFields));
 
 		$pCompoundFieldsMocker = $this->getMockBuilder(CompoundFieldsFilter::class)
-				->setMethods(['mergeListFilterableFields'])
-				->getMock();
+			->setMethods(['mergeListFilterableFields'])
+			->getMock();
 		$pCompoundFieldsMocker->method('mergeListFilterableFields')->will($this->returnValue(
-				$expectation));
+			$expectation));
 
 		$this->_pContainer->set(CompoundFieldsFilter::class, $pCompoundFieldsMocker);
 

@@ -76,6 +76,7 @@ class GeoPositionFieldHandler
 		$pRecordManager->addWhere($where);
 
 		$this->_records = (array)($pRecordManager->getRecords()[0] ?? $this->getDefaultConfiguration());
+		$this->_records['radius'] = intval($this->_records['radius'] ?? 0) ?: 10;
 	}
 
 	/**
@@ -141,5 +142,5 @@ class GeoPositionFieldHandler
 
 	/**  @return int */
 	public function getRadiusValue(): int
-		{ return intval($this->_records['radius'] ?? 0) ?: 10; }
+		{ return $this->_records['radius']; }
 }

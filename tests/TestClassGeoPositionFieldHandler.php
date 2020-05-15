@@ -91,7 +91,7 @@ class TestClassGeoPositionFieldHandler
 			'country' => null,
 			'zip' => null,
 			'street' => null,
-			'radius' => null,
+			'radius' => 10,
 			'city' => null,
 		], $pGeoPositionFieldHandler->getActiveFieldsWithValue());
 
