@@ -21,6 +21,7 @@
 
 namespace onOffice\tests;
 
+use LogicException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataView\DataListView;
@@ -30,14 +31,9 @@ use onOffice\WPlugin\Record\RecordManagerRead;
 use stdClass;
 use WP_UnitTestCase;
 
-
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
- *
  */
-
 class TestClassGeoPositionFieldHandler
 	extends WP_UnitTestCase
 {
@@ -47,13 +43,9 @@ class TestClassGeoPositionFieldHandler
 	/** @var RecordManagerFactory */
 	private $_pRecordManagerFactory = null;
 
-
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$pInputModelDBFactoryConfigGeoFields = new InputModelDBFactoryConfigGeoFields(onOfficeSDK::MODULE_ESTATE);
@@ -70,11 +62,6 @@ class TestClassGeoPositionFieldHandler
 			->will($this->returnValue($this->getRecordManagerMock()));
 	}
 
-
-	/**
-	 *
-	 */
-
 	public function testGetActiveFieldsRespectingOrder()
 	{
 		$this->_record[0]->geo_order = 'street,country,radius,zip,city';
@@ -88,13 +75,9 @@ class TestClassGeoPositionFieldHandler
 		$this->assertEquals(['street', 'country', 'radius', 'zip', 'city'], array_values($activeFields));
 	}
 
-
 	/**
-	 *
 	 * @return GeoPositionFieldHandler
-	 *
 	 */
-
 	public function testGetActiveFieldsWithValue(): GeoPositionFieldHandler
 	{
 		$this->_record[0]->geo_order = 'street,country,radius,zip,city';
@@ -108,17 +91,12 @@ class TestClassGeoPositionFieldHandler
 			'country' => null,
 			'zip' => null,
 			'street' => null,
-			'radius' => null,
+			'radius' => 10,
 			'city' => null,
 		], $pGeoPositionFieldHandler->getActiveFieldsWithValue());
 
 		return $pGeoPositionFieldHandler;
 	}
-
-
-	/**
-	 *
-	 */
 
 	public function testGetRadiusValue()
 	{
@@ -129,10 +107,14 @@ class TestClassGeoPositionFieldHandler
 		$this->assertEquals(15, $pGeoPositionFieldHandler->getRadiusValue());
 	}
 
-
-	/**
-	 *
-	 */
+	public function testGetRadiusValueIfNoneGivenInBackend()
+	{
+		$this->_record[0]->radius = 0;
+		$pView = new DataListView(3, 'test');
+		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
+		$pGeoPositionFieldHandler->readValues($pView);
+		$this->assertEquals(10, $pGeoPositionFieldHandler->getRadiusValue());
+	}
 
 	public function testGetGeoFieldsOrdered()
 	{
@@ -146,11 +128,6 @@ class TestClassGeoPositionFieldHandler
 			$pGeoPositionFieldHandler->getGeoFieldsOrdered());
 	}
 
-
-	/**
-	 *
-	 */
-
 	public function testGetGeoFieldsOrderedEmptyOrder()
 	{
 		// extra case
@@ -161,13 +138,6 @@ class TestClassGeoPositionFieldHandler
 		$this->assertEquals([], $pGeoPositionFieldHandler->getGeoFieldsOrdered());
 	}
 
-
-	/**
-	 *
-	 * @expectedException \LogicException
-	 *
-	 */
-
 	public function testGetGeoFieldsLogicException()
 	{
 		// radius missing
@@ -176,17 +146,14 @@ class TestClassGeoPositionFieldHandler
 		$pView = new DataListView(3, 'test');
 		$pGeoPositionFieldHandler = new GeoPositionFieldHandler($this->_pRecordManagerFactory);
 		$pGeoPositionFieldHandler->readValues($pView);
-
+		$this->expectException(LogicException::class);
 		$pGeoPositionFieldHandler->getGeoFieldsOrdered();
 	}
 
-
 	/**
-	 *
 	 * @depends testGetActiveFieldsWithValue
-	 *
+	 * @param GeoPositionFieldHandler $pGeoPositionFieldHandler
 	 */
-
 	public function testDefaultValues(GeoPositionFieldHandler $pGeoPositionFieldHandler)
 	{
 		$pView = new DataListView(0, 'test');
@@ -199,11 +166,8 @@ class TestClassGeoPositionFieldHandler
 
 
 	/**
-	 *
 	 * @return RecordManagerRead
-	 *
 	 */
-
 	private function getRecordManagerMock(): RecordManagerRead
 	{
 		$pRecordManager = $this->getMockBuilder(RecordManagerRead::class)
