@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.6.1 =
+
+**Changes**
+
+* Representation of the search criterie fields in forms compatible with onOffice enterprise.
+
 = 2.6.0 =
 
 **New**
@@ -94,6 +100,9 @@ Start editing inside the `onoffice-personalized` folder.
 More information can be found in our [changelog](changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.6.1 =
+Representation of the search criterie fields in forms compatible with onOffice enterprise.
 
 = 2.6.0 =
 New estate templates and dependencies updated.
