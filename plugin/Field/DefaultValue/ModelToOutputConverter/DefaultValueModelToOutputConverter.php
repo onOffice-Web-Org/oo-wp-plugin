@@ -73,6 +73,7 @@ class DefaultValueModelToOutputConverter
 		$isMultiSelect = $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
 		$isBoolean = $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
 		$isStringType = FieldTypes::isStringType($pField->getType());
+		$isRegZusatz = FieldTypes::isRegZusatzSearchcritTypes($pField->getType());
 
 		if ($pField->getIsRangeField()) {
 			return $this->convertNumericRange($formId, $pField);
@@ -84,6 +85,9 @@ class DefaultValueModelToOutputConverter
 			return $this->convertBoolean($formId, $pField);
 		} elseif ($isStringType) {
 			return $this->convertText($formId, $pField);
+		} elseif ($isRegZusatz) {
+			$pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+			return $this->convertMultiSelect($formId, $pField);
 		}
 		return [];
 	}

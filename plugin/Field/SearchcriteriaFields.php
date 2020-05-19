@@ -28,6 +28,7 @@ use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
+use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
@@ -101,11 +102,20 @@ class SearchcriteriaFields
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsAddressEstate($pFieldsCollection);
 
+		$pGeoFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
+		$pFieldsCollection->merge($pGeoFieldsCollection);
+
 		$output = [];
+		$pGeoPosition = new GeoPosition;
+		$geoRangeFields = array_flip($pGeoPosition->getSearchCriteriaFields());
 
 		foreach ($inputFormFields as $name => $value) {
 			$aliasedFieldName = $this->getFieldNameOfInput($name);
-			$pField = $pFieldsCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, $aliasedFieldName);
+			if (in_array($name, $pGeoPosition->getSearchCriteriaFields())) {
+				$aliasedFieldName = $geoRangeFields[$name];
+			}
+			$module = onOfficeSDK::MODULE_ESTATE;
+			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $aliasedFieldName);
 
 			if (FieldTypes::isRangeType($pField->getType()))
 			{

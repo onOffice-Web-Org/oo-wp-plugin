@@ -43,6 +43,7 @@ class TestClassFieldRowConverterSearchCriteria
 		'basic values' => [
 			[
 				'name' => 'testField',
+				'type' => 'multiselect',
 			],
 			[
 				'label' => 'testField',
@@ -51,6 +52,7 @@ class TestClassFieldRowConverterSearchCriteria
 				'content' => 'Search Criteria',
 				'permittedvalues' => [],
 				'rangefield' => false,
+				'type' => 'multiselect',
 			],
 		],
 		'variable values' => [
@@ -58,6 +60,7 @@ class TestClassFieldRowConverterSearchCriteria
 				'name' => 'testField1',
 				'values' => ['abc', 'def'],
 				'rangefield' => true,
+				'type' => 'multiselect',
 				'additionalTranslations' => [
 					'testField1__von' => 'testField1 von',
 					'testField1__bis' => 'testField1 bis',
@@ -69,6 +72,7 @@ class TestClassFieldRowConverterSearchCriteria
 				'module' => 'searchcriteria',
 				'content' => 'Search Criteria',
 				'permittedvalues' => ['abc', 'def'],
+				'type' => 'multiselect',
 				'rangefield' => true,
 				'additionalTranslations' => [
 					'testField1__von' => 'testField1 von',

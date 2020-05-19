@@ -1171,3 +1171,18 @@ msgstr "Formular öffnen"
 
 #~ msgid "Activate"
 #~ msgstr "Aktivieren"
+
+#~ msgid "Description"
+#~ msgstr "Beschreibung"
+
+#~ msgid "Location"
+#~ msgstr "Lage"
+
+#~ msgid "Equipment"
+#~ msgstr "Ausstattung"
+
+#~ msgid "Other Information"
+#~ msgstr "Weitere Informationen"
+
+#~ msgid "Map"
+#~ msgstr "Karte"
