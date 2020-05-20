@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\PDF;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
@@ -55,13 +56,11 @@ class PdfDocumentModelValidator
 	private $_pDefaultFilterBuilderFactory;
 
 	/**
-	 *
 	 * @param APIClientActionGeneric $pAPIClientActionGeneric
 	 * @param DataDetailViewHandler $pDataDetailViewHandler
 	 * @param DataListViewFactory $pDataListViewFactory
 	 * @param DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory
 	 */
-
 	public function __construct(
 		APIClientActionGeneric $pAPIClientActionGeneric,
 		DataDetailViewHandler $pDataDetailViewHandler,
@@ -74,15 +73,12 @@ class PdfDocumentModelValidator
 		$this->_pDefaultFilterBuilderFactory = $pDefaultFilterBuilderFactory;
 	}
 
-
 	/**
-	 *
 	 * @param PdfDocumentModel $pModel
 	 * @return PdfDocumentModel
 	 * @throws PdfDocumentModelValidationException
-	 *
+	 * @throws ApiClientException
 	 */
-
 	public function validate(PdfDocumentModel $pModel): PdfDocumentModel
 	{
 		$pModelClone = clone $pModel;
@@ -105,14 +101,11 @@ class PdfDocumentModelValidator
 		return $pModelClone;
 	}
 
-
 	/**
-	 *
 	 * @param PdfDocumentModel $pModel
 	 * @return array
-	 *
+	 * @throws UnknownViewException
 	 */
-
 	private function buildParameters(PdfDocumentModel $pModel): array
 	{
 		$parametersGetEstate = [
