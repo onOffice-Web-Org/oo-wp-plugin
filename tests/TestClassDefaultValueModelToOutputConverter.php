@@ -201,6 +201,23 @@ class TestClassDefaultValueModelToOutputConverter extends WP_UnitTestCase
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
+	public function testGetConvertedFieldForRegZusatz()
+	{
+		$this->_pField->setType('displayAll');
+		$pMultiSelectFieldModel = new DefaultValueModelMultiselect(13, $this->_pField);
+		$pMultiSelectFieldModel->setValues(['Aachen', 'Würselen', 'Herzogenrath']);
+
+		$pDefaultValueReader = $this->_pContainer->get(DefaultValueRead::class);
+		$pDefaultValueReader->expects($this->once())
+			->method('readDefaultValuesMultiSelect')->will($this->returnValue($pMultiSelectFieldModel));
+		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
+		$this->assertEquals(['Aachen', 'Würselen', 'Herzogenrath'], $result);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
 	public function testGetConvertedFieldForNonEmptySingleSelectField()
 	{
 		$this->_pField->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);

@@ -72,9 +72,13 @@ abstract class AdminPageEstateListSettingsBase
 
 		if ($row[RecordManager::TABLENAME_LIST_VIEW]['name'] === $pDummyDetailView->getName()) {
 			// false / null
-			$pResultObject->result = false;
-			$pResultObject->record_id = null;
+			$pResult->result = false;
+			$pResult->record_id = null;
 			return;
+		}
+		else{
+			$row[RecordManager::TABLENAME_LIST_VIEW]['name'] =
+				$this->sanitizeShortcodeName($row[RecordManager::TABLENAME_LIST_VIEW]['name']);
 		}
 
 		if ($recordId != null) {
