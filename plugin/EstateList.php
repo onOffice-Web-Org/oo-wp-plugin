@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2016 onOffice Software AG
+ *    Copyright (C) 2016-2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -47,13 +47,6 @@ use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use function esc_url;
 use function get_page_link;
 use function home_url;
-
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2015, onOffice(R) Software AG
- *
- */
 
 class EstateList
 	implements EstateListBase
@@ -118,7 +111,7 @@ class EstateList
 
 	/**
 	 * @return int
-	 * @throws API\APIEmptyResultException
+	 * @throws API\ApiClientException
 	 */
 	protected function getNumEstatePages()
 	{
@@ -156,6 +149,7 @@ class EstateList
 	 * @throws NotFoundException
 	 * @throws UnknownViewException
 	 * @throws HttpFetchNoResultException
+	 * @throws API\ApiClientException
 	 */
 	public function loadEstates(int $currentPage = 1, DataView $pDataListView = null)
 	{
@@ -188,8 +182,8 @@ class EstateList
 
 	/**
 	 * @param int $currentPage
-	 * @throws API\APIEmptyResultException
 	 * @throws UnknownViewException
+	 * @throws API\ApiClientException
 	 */
 	private function loadRecords(int $currentPage)
 	{
@@ -214,6 +208,7 @@ class EstateList
 	 * @throws API\APIEmptyResultException
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws API\ApiClientException
 	 */
 	private function getEstateContactPerson(array $estateIds)
 	{
@@ -393,7 +388,7 @@ class EstateList
 
 	/**
 	 * @return int
-	 * @throws API\APIEmptyResultException
+	 * @throws API\ApiClientException
 	 */
 	public function getEstateOverallCount()
 	{
