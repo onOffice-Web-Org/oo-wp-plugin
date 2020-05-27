@@ -73,6 +73,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.6.3 =
+
+** Fixes **
+
+* Fix of the default-settings for the radius value in the geo-range-search.
+* Link to the documentation in English.
+
 = 2.6.2 =
 
 ** Changes **
