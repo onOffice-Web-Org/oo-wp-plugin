@@ -23,11 +23,13 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\PDF\PdfDocumentFetcher;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
+use onOffice\WPlugin\PDF\PdfDocumentModelValidationException;
 use onOffice\WPlugin\PDF\PdfDocumentModelValidator;
-use onOffice\WPlugin\PDF\PdfDocumentResult;
 use onOffice\WPlugin\PDF\PdfDownload;
+use onOffice\WPlugin\PDF\PdfDownloadException;
 use WP_UnitTestCase;
 
 /**
@@ -46,13 +48,9 @@ class TestClassPdfDownload
 	/** @var PdfDownload */
 	private $_pPdfDownload = null;
 
-
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$this->_pPdfDocumentFetcher = $this->getMockBuilder(PdfDocumentFetcher::class)
@@ -64,17 +62,32 @@ class TestClassPdfDownload
 		$this->_pPdfDownload = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator);
 	}
 
-
 	/**
-	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 * @throws ApiClientException
+	 * @throws PdfDocumentModelValidationException
+	 * @throws PdfDownloadException
 	 */
-
 	public function testDownload()
 	{
-		$pResponse = new PdfDocumentResult('application/pdf', "\0\0\xab");
+		$url = uniqid();
+		$pPdfDocumentModel = new PdfDocumentModel(12, 'testview');
+
+		$this->_pPdfDocumentModelValidator
+			->expects($this->once())
+			->method('validate')
+			->will($this->returnValue($pPdfDocumentModel));
 		$this->_pPdfDocumentFetcher
-			->expects($this->once())->method('fetch')->will($this->returnValue($pResponse));
-		$pModel = new PdfDocumentModel(13, 'testTemplate', 'testView');
-		$this->assertSame($pResponse, $this->_pPdfDownload->download($pModel));
+			->expects($this->once())
+			->method('fetchUrl')
+			->with($pPdfDocumentModel)
+			->will($this->returnValue($url));
+		$this->_pPdfDocumentFetcher
+			->expects($this->once())
+			->method('proxyResult')
+			->with($pPdfDocumentModel, $url);
+		$pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator);
+		$pSubject->download($pPdfDocumentModel);
 	}
 }

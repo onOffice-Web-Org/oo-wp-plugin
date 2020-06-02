@@ -21,27 +21,8 @@
 
 declare (strict_types=1);
 
-namespace onOffice\tests;
+namespace onOffice\WPlugin\PDF;
 
-use onOffice\WPlugin\PDF\PdfDocumentResult;
-use WP_UnitTestCase;
-
-
-/**
- *
- */
-
-class TestClassPdfDocumentResult
-	extends WP_UnitTestCase
-{
-	/**
-	 *
-	 */
-
-	public function testConstruct()
-	{
-		$pPdfDocumentResult = new PdfDocumentResult('text/plain', "Hello World\0\nabc");
-		$this->assertEquals('text/plain', $pPdfDocumentResult->getMimetype());
-		$this->assertEquals("Hello World\0\nabc", $pPdfDocumentResult->getBinary());
-	}
-}
+class PdfDownloadException
+	extends \Exception
+{}

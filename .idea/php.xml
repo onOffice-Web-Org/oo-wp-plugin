@@ -67,6 +67,7 @@
       <path value="$PROJECT_DIR$/vendor/jeremeamia/superclosure" />
       <path value="$PROJECT_DIR$/vendor/phpspec/prophecy" />
       <path value="$PROJECT_DIR$/../wordpress-trunk/src" />
+      <path value="$PROJECT_DIR$/vendor/symfony/process" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7" />
