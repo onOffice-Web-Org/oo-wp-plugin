@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.0 =
+
+** New **
+
+* A new and faster pdf download.
+
 = 2.6.3 =
 
 ** Fixes **
