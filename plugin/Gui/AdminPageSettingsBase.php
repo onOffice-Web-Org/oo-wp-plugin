@@ -352,7 +352,7 @@ abstract class AdminPageSettingsBase
 	 */
 	protected function sanitizeShortcodeName(string $name): string
 	{
-		return preg_replace('/[^a-zA-Z0-9äÄöÖüÜß_ ]/', '', $name);
+		return preg_replace('/[^a-zA-Z0-9äÄöÖüÜß:_ \-]/', '', $name);
 	}
 
 
