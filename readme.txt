@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.1 =
+
+** Fixes **
+
+* Fix of distinct fields.
+
 = 2.7.0 =
 
 ** New **
@@ -109,16 +115,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 * output of errorCode in api-call exceptions
 
-= 2.5.5 =
-
-**Fixes**
-
-* Fix submission of contact form with deactivated estate id field in onOffice enterprise.
-
-
 More information can be found in our [changelog](changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.7.0 =
+A new and faster pdf download.
 
 = 2.6.2 =
 Removal of illegal characters in shortcode names on saving.
