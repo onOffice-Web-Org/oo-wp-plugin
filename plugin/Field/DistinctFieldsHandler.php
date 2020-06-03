@@ -174,7 +174,7 @@ class DistinctFieldsHandler
 
 	private function buildParameters(string $field, DistinctFieldsHandlerModel $pModel): array
 	{
-		$filter = $this->_pDistinctFieldsFilter->filter($field, $pModel->getInputValues(), $pModel->getModule());
+		$filter = $this->_pDistinctFieldsFilter->filter($field, $pModel->getInputValues(), $pModel->getModule(), $pModel->getDistinctFields());
 		$requestParams = [
 			'language' => Language::getDefault(),
 			'module' => $pModel->getModule(),

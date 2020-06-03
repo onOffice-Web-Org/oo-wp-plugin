@@ -70,7 +70,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$inputName !== 'regionaler_zusatz' &&
 			$inputName != 'country') {
 				$permittedValues = $properties['permittedvalues'];
-				echo '<div data-name="'.esc_html($inputName).'" class="multiselect" data-values="'
+				echo '<div data-name="'.esc_html($inputName).'[]" class="multiselect" data-values="'
 					.esc_html(json_encode($permittedValues)).'" data-selected="'
 					.esc_html(json_encode($selectedValue)).'">
 				<input type="button" class="onoffice-multiselect-edit" value="'

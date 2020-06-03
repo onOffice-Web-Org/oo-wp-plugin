@@ -114,7 +114,7 @@ class TestClassDistinctFieldsFilter
 	{
 		$inputValues = [
 			'' => 'Send',
-			'objektart[]' => ['haus'],
+			'objektart' => ['haus'],
 			'wohnflaeche__von' => '100',
 			'wohnflaeche__bis' => '300',
 			'kaufpreis__bis' => '300000',
@@ -130,7 +130,7 @@ class TestClassDistinctFieldsFilter
 		];
 
 		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
-		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues, 'estate'));
+		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues, 'estate', ['objekttyp', 'objektart','wohnflaeche__von', 'wohnflaeche__bis','kaufpreis__von', 'kaufpreis__bis','ort']));
 	}
 
 
@@ -159,7 +159,7 @@ class TestClassDistinctFieldsFilter
 			'objekttyp' => '',
 			'vermarktungsart' => '',
 			'wohnflaeche' => '100',
-			'boden[]' => ['marmor'],
+			'boden' => ['marmor'],
 			'range_land' => '',
 			'range_plz' => '',
 			'range_strasse' => '',
@@ -167,7 +167,7 @@ class TestClassDistinctFieldsFilter
 		];
 
 		$pInstance = new DistinctFieldsFilter($this->_pFieldsCollectionBuilderShort);
-		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues, 'searchcriteria'));
+		$this->assertEquals($expectedResult, $pInstance->filter('objekttyp', $inputValues, 'searchcriteria', ['objektart', 'boden', 'wohnflaeche']));
 	}
 
 
