@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.2 =
+
+** Changes **
+
+* more legal characters for list and form names (shortcode names).
+
 = 2.7.1 =
 
 ** Fixes **
@@ -118,6 +124,12 @@ Start editing inside the `onoffice-personalized` folder.
 More information can be found in our [changelog](changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.7.2 =
+More legal characters for list and form names.
+
+= 2.7.1 =
+Fix of distinct fields.
 
 = 2.7.0 =
 A new and faster pdf download.
