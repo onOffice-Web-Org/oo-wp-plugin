@@ -56,7 +56,10 @@ class PdfDocumentFetcher
 	 */
 	public function proxyResult(PdfDocumentModel $pModel, string $url)
 	{
-		header('Content-Disposition: attachment; filename="document_'.$pModel->getEstateId().'.pdf"');
+		$filename = sprintf('%s_%s.pdf',
+			str_replace('urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:', '', $pModel->getTemplate()),
+			$pModel->getEstateIdExternal());
+		header('Content-Disposition: attachment; filename="'.$filename.'"');
 		$curl = curl_init($url);
 		$pCallbackHeader = function($ch, $data): int {
 			return $this->setHeaders($data);

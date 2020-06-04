@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\PDF;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\API\ApiClientException;
 
 /**
@@ -51,9 +53,11 @@ class PdfDownload
 
 	/**
 	 * @param PdfDocumentModel $pModel
+	 * @throws ApiClientException
 	 * @throws PdfDocumentModelValidationException
 	 * @throws PdfDownloadException
-	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	public function download(PdfDocumentModel $pModel)
 	{

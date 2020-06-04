@@ -67,10 +67,10 @@ class TestClassPdfDocumentFetcher
 		$this->_pAPIClientAction->method('sendRequests');
 		$this->_pAPIClientAction
 			->method('getResultRecords')
-			->will($this->returnValue([0 => [
+			->willReturn([0 => [
 				'elements' => [
 					0 => 'http://localhost:8008/test.txt',
-			]]]));
+				]]]);
 	}
 
 	/**
@@ -95,12 +95,14 @@ class TestClassPdfDocumentFetcher
 		$pPdfDocumentFetcher = new PdfDocumentFetcher($this->_pAPIClientAction);
 		$pPdfDocumentModel = new PdfDocumentModel(13, 'defaultexpose');
 		$pPdfDocumentModel->setLanguage('ESP');
+		$pPdfDocumentModel->setEstateIdExternal('EXT1337');
+		$pPdfDocumentModel->setTemplate('urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:alaska');
 
 		$this->expectOutputString('Hello World!');
 		$pPdfDocumentFetcher->proxyResult($pPdfDocumentModel, 'http://localhost:8008/test.txt');
 		$this->assertContains('Content-Type: text/plain; charset=UTF-8', xdebug_get_headers());
 		$this->assertContains('Content-Length: 12', xdebug_get_headers());
-		$this->assertContains('Content-Disposition: attachment; filename="document_13.pdf"', xdebug_get_headers());
+		$this->assertContains('Content-Disposition: attachment; filename="alaska_EXT1337.pdf"', xdebug_get_headers());
 	}
 
 	/**
