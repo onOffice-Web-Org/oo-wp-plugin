@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.3 =
+
+** Changes **
+
+* New pdf filename.
+
 = 2.7.2 =
 
 ** Changes **
@@ -91,39 +97,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 * A new and faster pdf download.
 
-= 2.6.3 =
-
-** Fixes **
-
-* Fix of the default-settings for the radius value in the geo-range-search.
-* Link to the documentation in English.
-
-= 2.6.2 =
-
-** Changes **
-
-* Removal of illegal characters in shortcode names on saving.
-
-= 2.6.1 =
-
-**Changes**
-
-* Representation of the search criterie fields in forms compatible with onOffice enterprise.
-
-= 2.6.0 =
-
-**New**
-
-* New estate templates
-* Update php-di and php-coveralls
-
-**Changes**
-
-* output of errorCode in api-call exceptions
 
 More information can be found in our [changelog](changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.7.3 =
+New pdf filename.
 
 = 2.7.2 =
 More legal characters for list and form names.
