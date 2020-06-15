@@ -27,6 +27,10 @@ _shared_job: &shared_job
 
 jobs:
   include:
+    - stage: "Smoke Test"
+      php: "7.2"
+      before_script: composer install
+      script: vendor/bin/phpcs -p . --standard=PHPCompatibility --parallel=3 --runtime-set testVersion 7.0 --ignore="vendor/*,*.js,*.min.css"
     - stage: "Unit Test"
       php: "7.0"
       env:
@@ -62,7 +66,7 @@ jobs:
         - vendor/bin/phpunit --coverage-clover build/logs/clover.xml
       after_success:
         - travis_retry php vendor/bin/php-coveralls
-    - stage: "Deploy to WP SVN"
+    - stage: "Deployment to WP SVN (tag only)"
       php: "7.0"
       env:
           - WP_VERSION=latest
