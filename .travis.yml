@@ -30,7 +30,7 @@ jobs:
     - stage: "Smoke Test"
       php: "7.2"
       before_script: composer install
-      script: vendor/bin/phpcs -p . --standard=PHPCompatibility --parallel=3 --runtime-set testVersion 7.0 --ignore="vendor/*,*.js,*.min.css"
+      script: vendor/bin/phpcs -p . --standard=PHPCompatibility --runtime-set testVersion 7.0 --ignore="vendor,*.js,*.min.css"
     - stage: "Unit Test"
       php: "7.0"
       env:
