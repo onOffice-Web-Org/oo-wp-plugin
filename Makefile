@@ -20,10 +20,14 @@ add-version: copy-files-release
 
 composer-install-nodev:
 	cd $(PREFIX)/onoffice; composer install --no-dev -a
-	
-release: copy-files-release change-title add-version composer-install-nodev
 
-test-zip: copy-files-release add-version composer-install-nodev
+pot:
+	vendor/bin/wp i18n make-pot . languages/onoffice.pot
+	sed -i -r "s/onOffice for WP-Websites \(dev\)/onOffice for WP-Websites/" languages/onoffice.pot
+	
+release: pot copy-files-release change-title add-version composer-install-nodev
+
+test-zip: pot copy-files-release add-version composer-install-nodev
 	cd $(PREFIX); zip -r onoffice.zip onoffice/
 
 clean-zip:
