@@ -66,7 +66,11 @@ jobs:
       php: "7.0"
       env:
           - WP_VERSION=latest
-      before_script: composer install
+      script: skip
+      before_deploy:
+        - export PATH="$HOME/.composer/vendor/bin:$PATH"
+        - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+        - composer install
       deploy:
         script: sh bin/commit-svn $TRAVIS_TAG --stable > /dev/null
         provider: script
