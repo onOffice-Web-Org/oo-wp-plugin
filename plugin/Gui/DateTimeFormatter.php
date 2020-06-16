@@ -60,13 +60,13 @@ class DateTimeFormatter
 		self::SHORT|self::ADD_TIME => 'g:i:s a',
 	];
 
-
 	/**
 	 *
 	 * @param int $format bitmask
 	 * @param int $timestamp GMT
 	 * @return string
 	 *
+	 * @throws Exception
 	 */
 
 	public function formatByTimestamp(int $format, int $timestamp): string
