@@ -59,7 +59,7 @@ class TestClassGeoPositionFieldHandler
 			->getMock();
 		$this->_pRecordManagerFactory->method('create')
 			->with(onOfficeSDK::MODULE_ESTATE, RecordManagerFactory::ACTION_READ, $this->anything())
-			->will($this->returnValue($this->getRecordManagerMock()));
+			->willReturn($this->getRecordManagerMock());
 	}
 
 	public function testGetActiveFieldsRespectingOrder()
@@ -173,8 +173,8 @@ class TestClassGeoPositionFieldHandler
 		$pRecordManager = $this->getMockBuilder(RecordManagerRead::class)
 			->setMethods(['getMainTable', 'getIdColumnMain', 'getRecords', 'getRowByName', 'addWhere'])
 			->getMock();
-		$pRecordManager->method('getMainTable')->will($this->returnValue('oo_plugin_listviews'));
-		$pRecordManager->method('getIdColumnMain')->will($this->returnValue('listview_id'));
+		$pRecordManager->method('getMainTable')->willReturn('oo_plugin_listviews');
+		$pRecordManager->method('getIdColumnMain')->willReturn('listview_id');
 		$pRecordManager->method('getRecords')->will($this->onConsecutiveCalls($this->_record, []));
 
 		return $pRecordManager;

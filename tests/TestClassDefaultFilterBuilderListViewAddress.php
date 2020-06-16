@@ -29,14 +29,8 @@ use onOffice\WPlugin\Filter\DefaultFilterBuilderListViewAddress;
 use onOffice\WPlugin\Filter\FilterBuilderInputVariables;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
+use PHPUnit\Framework\MockObject\MockObject;
 use WP_UnitTestCase;
-
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
- *
- */
 
 class TestClassDefaultFilterBuilderListViewAddress
 	extends WP_UnitTestCase
@@ -91,13 +85,19 @@ class TestClassDefaultFilterBuilderListViewAddress
 	/** @var FilterBuilderInputVariables */
 	private $_pFilterBuilderInputVariables = null;
 
+	/**
+	 * @var MockObject
+	 */
+	private $_pFieldsCollectionBuilderShort;
 
 	/**
-	 *
-	 * @before
-	 *
+	 * @var MockObject
 	 */
+	private $_pCompoundFields;
 
+	/**
+	 * @before
+	 */
 	public function prepare()
 	{
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
@@ -116,26 +116,6 @@ class TestClassDefaultFilterBuilderListViewAddress
 
 	/**
 	 *
-	 */
-
-	public function testConstruct()
-	{
-		$pDataListView = new DataListViewAddress(1, 'test');
-
-		$pInstance = new DefaultFilterBuilderListViewAddress(
-				$pDataListView,
-				$this->_pFieldsCollectionBuilderShort,
-				$this->_pCompoundFields);
-
-		$pClosureFilterBuilder = Closure::bind(function() {
-			return $this->_pFilterBuilderInputVars;
-		}, $pInstance, DefaultFilterBuilderListViewAddress::class);
-		$this->assertInstanceOf(FilterBuilderInputVariables::class, $pClosureFilterBuilder());
-	}
-
-
-	/**
-	 *
 	 * @expectedException \Exception
 	 * @expectedExceptionMessage Module must be address
 	 *
@@ -144,7 +124,7 @@ class TestClassDefaultFilterBuilderListViewAddress
 	public function testWrongModule()
 	{
 		$pDataListView = new DataListViewAddress(1, 'test');
-		$this->_pFilterBuilderInputVariables->method('getModule')->will($this->returnValue(onOfficeSDK::MODULE_ESTATE));
+		$this->_pFilterBuilderInputVariables->method('getModule')->willReturn(onOfficeSDK::MODULE_ESTATE);
 		new DefaultFilterBuilderListViewAddress(
 				$pDataListView,
 				$this->_pFieldsCollectionBuilderShort,
@@ -160,7 +140,7 @@ class TestClassDefaultFilterBuilderListViewAddress
 	public function testBuildFilter()
 	{
 		$pDataListView = new DataListViewAddress(1, 'test');
-		$this->_pFilterBuilderInputVariables->method('getModule')->will($this->returnValue(onOfficeSDK::MODULE_ADDRESS));
+		$this->_pFilterBuilderInputVariables->method('getModule')->willReturn(onOfficeSDK::MODULE_ADDRESS);
 		$pInstance = new DefaultFilterBuilderListViewAddress
 			($pDataListView,
 				$this->_pFieldsCollectionBuilderShort,
@@ -169,7 +149,7 @@ class TestClassDefaultFilterBuilderListViewAddress
 
 		$this->_pFilterBuilderInputVariables
 			->method('getPostFieldsFilter')
-			->will($this->returnValue(self::POST_FIELDS_FITLER));
+			->willReturn(self::POST_FIELDS_FITLER);
 
 		$this->assertEquals(self::EXPECTED_RESULT, $pInstance->buildFilter());
 	}
