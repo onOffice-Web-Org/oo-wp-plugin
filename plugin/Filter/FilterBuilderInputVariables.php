@@ -47,14 +47,11 @@ class FilterBuilderInputVariables
 	/** @var bool */
 	private $_fuzzySearch = false;
 
-
 	/**
-	 *
 	 * @param string $module
+	 * @param bool $fuzzySearch
 	 * @param InputVariableReaderConfig $pInputVariableReaderConf
-	 *
 	 */
-
 	public function __construct(
 		string $module,
 		bool $fuzzySearch = false,

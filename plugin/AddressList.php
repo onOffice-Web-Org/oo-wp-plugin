@@ -85,9 +85,9 @@ class AddressList
 	/**
 	 * @param array $addressIds
 	 * @param array $fields
-	 * @throws API\APIEmptyResultException
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws API\ApiClientException
 	 */
 	public function loadAdressesById(array $addressIds, array $fields)
 	{
@@ -110,9 +110,9 @@ class AddressList
 
 	/**
 	 * @param int $inputPage
-	 * @throws API\APIEmptyResultException
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws API\ApiClientException
 	 * @global int $page
 	 * @global bool $more
 	 * @global int $numpages
@@ -250,7 +250,7 @@ class AddressList
 	}
 
 	/**
-	 * @param $field
+	 * @param string $field
 	 * @return string
 	 * @throws Field\UnknownFieldException
 	 */
