@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationInterest;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form\FormAddressCreator;
 use onOffice\WPlugin\FormData;
@@ -78,14 +79,17 @@ class TestClassFormAddressCreator
 			->with($this->anything())
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
 				$pField1 = new Field('testaddressfield1varchar', onOfficeSDK::MODULE_ADDRESS);
+				$pField1->setLabel('Test Address Field1 Varchar');
 				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($pField1);
 
 				$pField2 = new Field('testaddressfield1multiselect', onOfficeSDK::MODULE_ADDRESS);
+				$pField2->setLabel('Test Address Field1 Multiselect');
 				$pField2->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
-				$pField2->setPermittedvalues(['hut', 'tut']);
+				$pField2->setPermittedvalues(['hut' => 'HUT', 'tut' => 'TUT']);
 				$pFieldsCollection->addField($pField2);
 				$pFieldsCollection->addField(new Field('testestatefield1multiselect', onOfficeSDK::MODULE_ESTATE));
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 	}
@@ -114,6 +118,35 @@ class TestClassFormAddressCreator
 		$this->configureSDKWrapperMockerForAddressCreation(0);
 		$pFormData = $this->createFormData();
 		$this->_pSubject->createOrCompleteAddress($pFormData);
+	}
+
+
+	public function testGetAddressDataForEmail()
+	{
+//		$pDataformConfiguration = new DataFormConfigurationInterest();
+//		$pDataformConfiguration->setInputs(['testaddressfield1varchar' => 'address', 'testaddressfield1multiselect' => 'address']);
+
+		$pFormData = $this->getMockBuilder(FormData::class)
+			->setMethods(['getAddressData'])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$pFieldsCollection = new FieldsCollection();
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+
+		$pFormData->method('getAddressData')
+			->with($pFieldsCollection)
+			->willReturn([
+			'testaddressfield1varchar' => 'asd',
+			'testaddressfield1multiselect' => ['hut', 'tut']
+		]);
+
+		$expectedValues = [
+			'Test Address Field1 Varchar' => 'asd',
+			'Test Address Field1 Multiselect' => 'HUT, TUT'
+		];
+
+		$this->assertEquals($expectedValues, $this->_pSubject->getAddressDataForEmail($pFormData));
 	}
 
 
