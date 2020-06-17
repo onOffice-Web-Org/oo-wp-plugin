@@ -73,6 +73,10 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.4 =
+
+* Minor fixes
+
 = 2.7.3 =
 
 ** Changes **
@@ -101,6 +105,9 @@ Start editing inside the `onoffice-personalized` folder.
 More information can be found in our [changelog](changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.7.4 =
+Minor fixes.
 
 = 2.7.3 =
 New pdf filename.
