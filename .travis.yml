@@ -29,8 +29,15 @@ jobs:
   include:
     - stage: "Smoke Test"
       php: "7.2"
-      before_script: composer install
-      script: vendor/bin/phpcs -p . --standard=PHPCompatibility --runtime-set testVersion 7.0 --ignore="vendor,*.js,*.min.css"
+      env:
+        - WP_VERSION=latest
+      before_script:
+        - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+        - composer install
+        - composer update phpstan/phpstan --ignore-platform-reqs
+      script:
+        - vendor/bin/phpcs -p . --standard=PHPCompatibility --runtime-set testVersion 7.0 --ignore="vendor,*.js,*.min.css"
+        - vendor/bin/phpstan analyse . -c phpstan.neon
     - stage: "Unit Test"
       php: "7.0"
       env:
