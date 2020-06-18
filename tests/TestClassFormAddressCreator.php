@@ -120,12 +120,16 @@ class TestClassFormAddressCreator
 		$this->_pSubject->createOrCompleteAddress($pFormData);
 	}
 
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 * @throws \onOffice\WPlugin\Field\UnknownFieldException
+	 * @covers \onOffice\WPlugin\Form\FormAddressCreator::getAddressDataForEmail
+	 *
+	 */
 
 	public function testGetAddressDataForEmail()
 	{
-//		$pDataformConfiguration = new DataFormConfigurationInterest();
-//		$pDataformConfiguration->setInputs(['testaddressfield1varchar' => 'address', 'testaddressfield1multiselect' => 'address']);
-
 		$pFormData = $this->getMockBuilder(FormData::class)
 			->setMethods(['getAddressData'])
 			->disableOriginalConstructor()
