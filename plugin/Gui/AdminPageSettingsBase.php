@@ -352,13 +352,13 @@ abstract class AdminPageSettingsBase
 	 */
 	protected function sanitizeShortcodeName(string $name): string
 	{
-		return preg_replace('/[^a-zA-Z0-9äÄöÖüÜß:_ \-]/', '', $name);
+		return preg_replace('/[^a-zA-Z0-9äÄöÖüÜß:_ \-]/u', '', $name);
 	}
 
 
 	/**
 	 *
-	 * @param string $module
+	 * @param string|null $module
 	 * @param FormModelBuilder $pFormModelBuilder
 	 * @param array $fieldNames
 	 * @param bool $addModule

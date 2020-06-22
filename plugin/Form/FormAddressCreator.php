@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Form;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
@@ -36,7 +38,6 @@ use onOffice\WPlugin\Types\FieldTypes;
 /**
  *
  */
-
 class FormAddressCreator
 {
 	/** @var SDKWrapper */
@@ -45,17 +46,10 @@ class FormAddressCreator
 	/** @var FieldsCollectionBuilderShort */
 	private $_pFieldsCollectionBuilderShort;
 
-	/** @var array */
-	private $_adressDataWithLabels = [];
-
-
 	/**
-	 *
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
-	 *
 	 */
-
 	public function __construct(
 		SDKWrapper $pSDKWrapper,
 		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort)
@@ -64,17 +58,15 @@ class FormAddressCreator
 		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
-
 	/**
-	 *
 	 * @param FormData $pFormData
 	 * @param bool $mergeExisting
 	 * @return int the new (or updated) address ID
 	 * @throws ApiClientException
 	 * @throws UnknownFieldException
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function createOrCompleteAddress(
 		FormData $pFormData, bool $mergeExisting = false): int
 	{
@@ -91,20 +83,17 @@ class FormAddressCreator
 		if ($addressId > 0) {
 			return $addressId;
 		}
-
 		throw new ApiClientException($pApiClientAction);
 	}
 
-
 	/**
-	 *
 	 * @param FormData $pFormData
 	 * @return array
 	 *
 	 * @throws UnknownFieldException
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	private function getAddressDataForApiCall(FormData $pFormData): array
 	{
 		$fieldNameAliases = [
@@ -135,8 +124,8 @@ class FormAddressCreator
 	 * @param FormData $pFormData
 	 * @return array
 	 * @throws UnknownFieldException
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	public function getAddressDataForEmail(FormData $pFormData): array
 	{

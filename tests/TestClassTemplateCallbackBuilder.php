@@ -33,9 +33,6 @@ use WP_UnitTestCase;
 class TestClassTemplateCallbackBuilder
 	extends WP_UnitTestCase
 {
-	/**
-	 * @covers onOffice\WPlugin\Template\TemplateCallbackBuilder::buildCallbackListSortDropDown
-	 */
 	public function testBuildCallbackListSortDropDown()
 	{
 		$pListView = new DataListView(1, 'asd');
@@ -49,7 +46,7 @@ class TestClassTemplateCallbackBuilder
 		$pInstance = new TemplateCallbackBuilder(new Container());
 		$this->assertInstanceOf(TemplateCallbackBuilder::class, $pInstance);
 
-		$pEstateList = $this->getMockbuilder(EstateList::class)
+		$pEstateList = $this->getMockBuilder(EstateList::class)
 			->setMethods(['getDataView'])
 			->disableOriginalConstructor()
 			->getMock();

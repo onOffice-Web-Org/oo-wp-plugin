@@ -123,32 +123,23 @@ class DBCache
 		return $record;
 	}
 
-
 	/**
 	 *
 	 * @param array $parameters
 	 * @param string $value
-	 *
+	 * @return bool
 	 */
-
 	public function write( array $parameters, $value )
 	{
 		$parametersHashed = $this->getParametersHashed( $parameters );
 		$parametersSerialized = $this->getParametersSerialized( $parameters );
 
-		$this->_pWpdb->replace(
-			"{$this->_pWpdb->prefix}oo_plugin_cache",
-			array(
+		return $this->_pWpdb->replace(
+			"{$this->_pWpdb->prefix}oo_plugin_cache", [
 				'cache_parameters' => $parametersSerialized,
 				'cache_parameters_hashed' => $parametersHashed,
 				'cache_response' => $value,
-			),
-			array(
-				'%s',
-				'%s',
-				'%s',
-			)
-		);
+			], ['%s', '%s', '%s']) > 0;
 	}
 
 

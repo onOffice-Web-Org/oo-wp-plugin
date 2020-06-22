@@ -34,7 +34,7 @@ use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
-use onOffice\WPLugin\DataView\UnknownViewException;
+use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
@@ -205,7 +205,6 @@ class EstateList
 
 	/**
 	 * @param array $estateIds
-	 * @throws API\APIEmptyResultException
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 * @throws API\ApiClientException
@@ -318,9 +317,9 @@ class EstateList
 	/**
 	 * @param array $responseArrayContacts
 	 * @param array $estateIds
-	 * @throws API\APIEmptyResultException
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws API\ApiClientException
 	 */
 	private function collectEstateContactPerson($responseArrayContacts, array $estateIds)
 	{

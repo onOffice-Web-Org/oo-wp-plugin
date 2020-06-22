@@ -42,13 +42,9 @@ class TestClassFormPostContactConfigurationDefault
 	/** @var FormPostContactConfigurationDefault */
 	private $_pSubject = null;
 
-
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$this->_pSubject = new FormPostContactConfigurationDefault
@@ -56,70 +52,42 @@ class TestClassFormPostContactConfigurationDefault
 				new FieldsCollectionBuilderShort(new Container)), new WPWrapper());
 	}
 
-
-	/**
-	 *
-	 */
-
 	public function testGetSDKWrapper()
 	{
 		$this->assertInstanceOf(SDKWrapper::class, $this->_pSubject->getSDKWrapper());
 	}
-
-
-	/**
-	 *
-	 */
 
 	public function testGetReferrer()
 	{
 		$this->assertEquals('', $this->_pSubject->getReferrer());
 	}
 
-
-	/**
-	 *
-	 */
 	public function testGetNewsletterAcceptedFalse()
 	{
 		$this->assertFalse($this->_pSubject->getNewsletterAccepted());
 	}
 
-	/**
-	 *
-	 */
 	public function testGetNewsletterAcceptedTrue()
 	{
 		$_POST['newsletter'] = 'y';
 		$this->assertTrue($this->_pSubject->getNewsletterAccepted());
 	}
 
-	/**
-	 *
-	 */
 	public function testGetWPQueryWrapper()
 	{
 		$this->assertInstanceOf(WPQueryWrapper::class, $this->_pSubject->getWPQueryWrapper());
 	}
-
-
-	/**
-	 *
-	 */
 
 	public function testGetFormAddressCreator()
 	{
 		$this->assertInstanceOf(FormAddressCreator::class, $this->_pSubject->getFormAddressCreator());
 	}
 
-
 	/**
 	 * @covers \onOffice\WPlugin\Form\FormPostContactConfigurationDefault::getWPWrapper
-	 *
 	 */
-
 	public function testGetWPWrapper()
 	{
-		return $this->assertInstanceOf(WPWrapper::class, $this->_pSubject->getWPWrapper());
+		$this->assertInstanceOf(WPWrapper::class, $this->_pSubject->getWPWrapper());
 	}
 }

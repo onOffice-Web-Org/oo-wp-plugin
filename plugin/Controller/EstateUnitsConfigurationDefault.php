@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
