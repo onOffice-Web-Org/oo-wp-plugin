@@ -35,6 +35,7 @@ jobs:
         - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
         - composer install
         - composer update phpstan/phpstan --ignore-platform-reqs
+        - vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility
       script:
         - vendor/bin/phpcs -p . --standard=PHPCompatibility --runtime-set testVersion 7.0 --ignore="vendor,*.js,*.min.css"
         - vendor/bin/phpstan analyse . -c phpstan.neon
