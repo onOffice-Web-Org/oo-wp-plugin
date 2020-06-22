@@ -143,11 +143,11 @@ class FormAddressCreator
 					break;
 				case FieldTypes::FIELD_TYPE_MULTISELECT:
 					if (!is_array($value)) {
-						$addressData[$pField->getLabel()] = array_keys($value, $pField->getPermittedvalues()) ?? $value;
+						$addressData[$pField->getLabel()] = array_keys($pField->getPermittedvalues(), $value)[0] ?? $value;
 					} else {
 						$tmpMsValues = [];
 						foreach ($value as $val) {
-							$tmpMsValues []= array_keys($val, $pField->getPermittedvalues()) ?? $val;
+							$tmpMsValues []= array_keys(array_flip($pField->getPermittedvalues()), $val)[0] ?? $val;
 						}
 						$addressData[$pField->getLabel()] = implode(', ', $tmpMsValues);
 					}
