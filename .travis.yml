@@ -86,6 +86,6 @@ jobs:
       deploy:
         script: sh bin/commit-svn $TRAVIS_TAG --stable > /dev/null
         provider: script
-        cleanup: false
+        skip_cleanup: true
         on:
           tags: true
