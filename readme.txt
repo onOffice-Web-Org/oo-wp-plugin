@@ -73,6 +73,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.5 =
+
+** Changes **
+
+* Fix translations for image-type label in back-end.
+* Fix sending multiple address form values for a multi select field in emails.
+
 = 2.7.4 =
 
 * Minor fixes
@@ -105,6 +112,9 @@ Start editing inside the `onoffice-personalized` folder.
 More information can be found in our [changelog](changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.7.5 =
+Fix translations for image-type label in back-end and fix sending multiple address form values for a multi select field in emails.
 
 = 2.7.4 =
 Minor fixes.
