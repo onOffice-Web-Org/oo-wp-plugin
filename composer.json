@@ -9,7 +9,8 @@
 		"phpstan/phpstan": "*",
 		"php-coveralls/php-coveralls": "^2.2",
 		"symfony/process": "^3.4",
-        "phpcompatibility/php-compatibility": "*"
+        "phpcompatibility/php-compatibility": "*",
+		"wp-cli/i18n-command": "*"
 	},
     "prefer-stable" : true,
 	"autoload": {
