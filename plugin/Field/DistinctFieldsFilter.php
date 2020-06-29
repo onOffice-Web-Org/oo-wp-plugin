@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\Field;
@@ -30,43 +32,26 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 
-/**
- *
- */
-
 class DistinctFieldsFilter
 {
-	/** */
 	const NOT_ALLOWED_KEYS = ['s', '', 'oo_formid', 'oo_formno', 'Id'];
-
-	/** */
 	const NOT_ALLOWED_VALUES = [''];
 
-
 	/** @var FieldsCollectionBuilderShort */
-	private $_pFieldsCollectionBuilderShort = null;
-
-
+	private $_pFieldsCollectionBuilderShort;
 
 	/**
-	 *
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
-	 *
 	 */
-
 	public function __construct(FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort)
 	{
 		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
 	}
 
-
 	/**
-	 *
 	 * @param Field $pField
 	 * @return bool
-	 *
 	 */
-
 	private function isMultiselectableType(Field $pField): bool
 	{
 		return $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT ||
@@ -74,19 +59,14 @@ class DistinctFieldsFilter
 			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT);
 	}
 
-
 	/**
-	 *
 	 * @param string $key
 	 * @param string $distinctField
-	 * @return boolean
-	 *
+	 * @return bool
 	 */
-
-	public function isDistinctField(string $key, string $distinctField)
+	public function isDistinctField(string $key, string $distinctField): bool
 	{
 		$field = str_replace(['[]','__von', '__bis'], '', $key);
-
 		return $field === $distinctField;
 	}
 
@@ -97,10 +77,9 @@ class DistinctFieldsFilter
 	 * @param array $possibleDistinctFields
 	 * @return array
 	 * @throws UnknownFieldException
-	 * @throws \DI\DependencyException
-	 * @throws \DI\NotFoundException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function filter(string $distinctField, array $inputValues, string $module, array $possibleDistinctFields): array
 	{
 		$filter = [];
@@ -114,23 +93,23 @@ class DistinctFieldsFilter
 			$key = $pString->replace('[]', '');
 
 			if (in_array($key, self::NOT_ALLOWED_KEYS) ||
-				in_array($value, self::NOT_ALLOWED_VALUES) ||
+				in_array($value, self::NOT_ALLOWED_VALUES, true) ||
 				$this->isDistinctField($key, $distinctField) ||
-				!in_array($key, $possibleDistinctFields)) {
+				!in_array($key, $possibleDistinctFields, true)) {
 				continue;
 			}
 
-			if ($pString->endsWith('__von') && $module == onOfficeSDK::MODULE_ESTATE){
+			if ($pString->endsWith('__von') && $module === onOfficeSDK::MODULE_ESTATE){
 				$field = $pString->replace('__von', '');
 				$filter[$field] = [$this->filterForEstateVon($filter, $key, $value)];
-			} elseif ($pString->endsWith('__bis') && $module == onOfficeSDK::MODULE_ESTATE){
+			} elseif ($pString->endsWith('__bis') && $module === onOfficeSDK::MODULE_ESTATE){
 				$field = $pString->replace('__bis', '');
 				$filter[$field] = [$this->filterForEstateBis($filter, $key, $value)];
 			} else {
 				$pField = $pFieldsCollection->getFieldByModuleAndName($module, $key);
 				$field = $key;
 
-				if ($module == onOfficeSDK::MODULE_SEARCHCRITERIA &&
+				if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
 						FieldTypes::isRangeType($pField->getType())) {
 					if (!isset($filter[$field.'__von'])) {
 						$filter[$field.'__von'] = [['op' => '<=', 'val' => $value]];
@@ -144,43 +123,29 @@ class DistinctFieldsFilter
 				}
 			}
 		}
-
 		return $filter;
 	}
 
-
 	/**
-	 *
 	 * @param Field $pField
 	 * @param mixed $value
 	 * @return array
-	 *
 	 */
-
-	private function createDefaultFilter(Field $pField, $value)
+	private function createDefaultFilter(Field $pField, $value): array
 	{
-		$filter = [];
-
-		if ($this->isMultiselectableType($pField) || is_array($value)) {
-			$filter = ['op' => 'in', 'val' => $value];
-		} else {
-			$filter = ['op' => '=', 'val'=> $value];
+		if (is_array($value) || $this->isMultiselectableType($pField)) {
+			return ['op' => 'in', 'val' => $value];
 		}
-
-		return $filter;
+		return ['op' => '=', 'val'=> $value];
 	}
 
-
 	/**
-	 *
 	 * @param array $filter
 	 * @param string $field
 	 * @param mixed $value
 	 * @return array
-	 *
 	 */
-
-	private function filterForEstateVon(array $filter, string $field, $value)
+	private function filterForEstateVon(array $filter, string $field, $value): array
 	{
 		$operator = '>=';
 		$field = __String::getNew($field)->replace('__von', '');
@@ -191,21 +156,16 @@ class DistinctFieldsFilter
 			$value2 = $filter[$field][0]['val'];
 			$value = [$value1, $value2];
 		}
-
 		return ['op' => $operator, 'val' => $value];
 	}
 
-
 	/**
-	 *
 	 * @param array $filter
 	 * @param string $field
 	 * @param mixed $value
 	 * @return array
-	 *
 	 */
-
-	private function filterForEstateBis(array $filter, string $field, $value)
+	private function filterForEstateBis(array $filter, string $field, $value): array
 	{
 		$operator = '<=';
 		$field = __String::getNew($field)->replace('__bis', '');
@@ -216,7 +176,6 @@ class DistinctFieldsFilter
 			$value2 = $value;
 			$value = [$value1, $value2];
 		}
-
 		return ['op' => $operator, 'val' => $value];
 	}
 }

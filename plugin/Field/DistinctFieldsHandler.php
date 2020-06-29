@@ -23,59 +23,41 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\DistinctFieldsFilter;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 
-
-/**
- *
- *
- */
-
 class DistinctFieldsHandler
 {
-	/** */
-	const PARAMETER_FIELD = 'field';
-
-	/** */
 	const PARAMETER_INPUT_VALUES = 'inputValues';
-
-	/** */
 	const PARAMETER_DISTINCT_VALUES = 'distinctValues';
-
-	/** */
 	const PARAMETER_MODULE = 'module';
 
-
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var FieldsCollectionBuilderShort */
-	private $_pFieldsCollectionBuilderShort = null;
+	private $_pFieldsCollectionBuilderShort;
 
 	/** @var DistinctFieldsHandlerModelBuilder */
-	private $_pDistinctFieldsHandlerModelBuilder = null;
+	private $_pDistinctFieldsHandlerModelBuilder;
 
 	/** @var DistinctFieldsFilter */
-	private $_pDistinctFieldsFilter = null;
-
+	private $_pDistinctFieldsFilter;
 
 	/**
-	 *
 	 * @param DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
 	 * @param DistinctFieldsFilter $pDistinctFieldsFilter
-	 *
 	 */
-
 	public function __construct(
 		DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder,
 		SDKWrapper $pSDKWrapper,
@@ -88,35 +70,28 @@ class DistinctFieldsHandler
 		$this->_pDistinctFieldsFilter = $pDistinctFieldsFilter;
 	}
 
-
 	/**
-	 *
-	 * @param string $field
 	 * @param Field $pField
 	 * @return string
-	 *
 	 */
-
-	private function editMultiselectableField(Field $pField)
+	private function editMultiselectableField(Field $pField): string
 	{
 		$fieldType = $pField->getType();
 		$field = $pField->getName();
 
-		if ($pField->getModule() == onOfficeSDK::MODULE_ESTATE &&
+		if ($pField->getModule() === onOfficeSDK::MODULE_ESTATE &&
 			FieldTypes::isMultipleSelectType($fieldType)) {
 			$field .= '[]';
 		}
-
 		return $field;
 	}
 
-
 	/**
-	 *
 	 * @return array
-	 *
+	 * @throws UnknownFieldException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	public function check(): array
 	{
 		$pFieldsCollection = new FieldsCollection();
@@ -134,22 +109,19 @@ class DistinctFieldsHandler
 			$field = $this->editMultiselectableField($pField);
 			$values[$field] = $records[0]['elements'];
 		}
-
 		return $values;
 	}
 
-
 	/**
-	 *
 	 * @param DistinctFieldsHandlerModel $pModel
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
-
 	private function retrieveValues(DistinctFieldsHandlerModel $pModel): array
 	{
 		$apiClientActions = [];
-
 		foreach ($pModel->getDistinctFields() as $field) {
 			$requestParams = $this->buildParameters($field, $pModel);
 			$pApiClientAction = new APIClientActionGeneric
@@ -163,15 +135,14 @@ class DistinctFieldsHandler
 		return $apiClientActions;
 	}
 
-
 	/**
-	 *
 	 * @param string $field
 	 * @param DistinctFieldsHandlerModel $pModel
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
-
 	private function buildParameters(string $field, DistinctFieldsHandlerModel $pModel): array
 	{
 		$filter = $this->_pDistinctFieldsFilter->filter($field, $pModel->getInputValues(), $pModel->getModule(), $pModel->getDistinctFields());
@@ -185,7 +156,6 @@ class DistinctFieldsHandler
 		if ($pModel->getGeoPositionFields() !== []) {
 			$requestParams['georangesearch'] = $pModel->getGeoPositionFields();
 		}
-
 		return $requestParams;
 	}
 }
