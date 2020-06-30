@@ -27,111 +27,80 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Language;
-use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\FieldTypes;
 
 class DistinctFieldsHandler
 {
-	const PARAMETER_INPUT_VALUES = 'inputValues';
-	const PARAMETER_DISTINCT_VALUES = 'distinctValues';
-	const PARAMETER_MODULE = 'module';
-
-	/** @var SDKWrapper */
-	private $_pSDKWrapper;
-
-	/** @var FieldsCollectionBuilderShort */
-	private $_pFieldsCollectionBuilderShort;
+	/** @var APIClientActionGeneric */
+	private $_pApiClientAction;
 
 	/** @var DistinctFieldsHandlerModelBuilder */
 	private $_pDistinctFieldsHandlerModelBuilder;
 
-	/** @var DistinctFieldsFilter */
-	private $_pDistinctFieldsFilter;
-
 	/**
+	 * @param APIClientActionGeneric $pApiClientAction
 	 * @param DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder
-	 * @param SDKWrapper $pSDKWrapper
-	 * @param FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort
-	 * @param DistinctFieldsFilter $pDistinctFieldsFilter
 	 */
 	public function __construct(
-		DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder,
-		SDKWrapper $pSDKWrapper,
-		FieldsCollectionBuilderShort $pFieldsCollectionBuilderShort,
-		DistinctFieldsFilter $pDistinctFieldsFilter)
+		APIClientActionGeneric $pApiClientAction,
+		DistinctFieldsHandlerModelBuilder $pDistinctFieldsHandlerModelBuilder)
 	{
-		$this->_pSDKWrapper = $pSDKWrapper;
-		$this->_pFieldsCollectionBuilderShort = $pFieldsCollectionBuilderShort;
+		$this->_pApiClientAction = $pApiClientAction;
 		$this->_pDistinctFieldsHandlerModelBuilder = $pDistinctFieldsHandlerModelBuilder;
-		$this->_pDistinctFieldsFilter = $pDistinctFieldsFilter;
 	}
 
 	/**
-	 * @param Field $pField
-	 * @return string
-	 */
-	private function editMultiselectableField(Field $pField): string
-	{
-		$fieldType = $pField->getType();
-		$field = $pField->getName();
-
-		if ($pField->getModule() === onOfficeSDK::MODULE_ESTATE &&
-			FieldTypes::isMultipleSelectType($fieldType)) {
-			$field .= '[]';
-		}
-		return $field;
-	}
-
-	/**
-	 * @return array
+	 * @param DistinctFieldsHandlerModel $pModel
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return FieldsCollection
 	 * @throws UnknownFieldException
-	 * @throws DependencyException
-	 * @throws NotFoundException
 	 */
-	public function check(): array
+	private function fetchValuesAndModifyFieldsCollection(DistinctFieldsHandlerModel $pModel, FieldsCollection $pFieldsCollection): FieldsCollection
 	{
-		$pFieldsCollection = new FieldsCollection();
-		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
-		$this->_pFieldsCollectionBuilderShort->addFieldsSearchCriteria($pFieldsCollection);
-
-		$pModel = $this->_pDistinctFieldsHandlerModelBuilder->buildDataModel();
 		$apiClientActions = $this->retrieveValues($pModel);
-		$values = [];
-
+		$pFieldsCollectionCloned = clone $pFieldsCollection;
 		foreach ($pModel->getDistinctFields() as $field) {
-			$pField = $pFieldsCollection->getFieldByModuleAndName($pModel->getModule(), $field);
+			$pField = $pFieldsCollectionCloned->getFieldByModuleAndName($pModel->getModule(), $field);
 			$pApiClientAction = $apiClientActions[$field];
 			$records = $pApiClientAction->getResultRecords();
-			$field = $this->editMultiselectableField($pField);
-			$values[$field] = $records[0]['elements'];
+			$pField->setPermittedvalues($records[0]['elements']);
 		}
-		return $values;
+		return $pFieldsCollectionCloned;
+	}
+
+	/**
+	 * @param DataListView $pListView
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return FieldsCollection
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 * @throws DependencyException
+	 */
+	public function modifyFieldsCollectionForEstate(
+		DataListView $pListView, FieldsCollection $pFieldsCollection): FieldsCollection
+	{
+		$pModel = $this->_pDistinctFieldsHandlerModelBuilder->buildDataModelForEstate($pListView);
+		return $this->fetchValuesAndModifyFieldsCollection($pModel, $pFieldsCollection);
 	}
 
 	/**
 	 * @param DistinctFieldsHandlerModel $pModel
 	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws UnknownFieldException
 	 */
 	private function retrieveValues(DistinctFieldsHandlerModel $pModel): array
 	{
 		$apiClientActions = [];
 		foreach ($pModel->getDistinctFields() as $field) {
 			$requestParams = $this->buildParameters($field, $pModel);
-			$pApiClientAction = new APIClientActionGeneric
-				($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'distinctValues');
+			$pApiClientAction = $this->_pApiClientAction->withActionIdAndResourceType
+				(onOfficeSDK::ACTION_ID_GET, 'distinctValues');
 			$pApiClientAction->setParameters($requestParams);
 			$apiClientActions[$field] = $pApiClientAction;
 			$pApiClientAction->addRequestToQueue();
 		}
-
-		$this->_pSDKWrapper->sendRequests();
+		$this->_pApiClientAction->sendRequests();
 		return $apiClientActions;
 	}
 
@@ -139,23 +108,15 @@ class DistinctFieldsHandler
 	 * @param string $field
 	 * @param DistinctFieldsHandlerModel $pModel
 	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 * @throws UnknownFieldException
 	 */
 	private function buildParameters(string $field, DistinctFieldsHandlerModel $pModel): array
 	{
-		$filter = $this->_pDistinctFieldsFilter->filter($field, $pModel->getInputValues(), $pModel->getModule(), $pModel->getDistinctFields());
-		$requestParams = [
+		return [
 			'language' => Language::getDefault(),
 			'module' => $pModel->getModule(),
 			'field' => $field,
-			'filter' => $filter,
+			'filter' => $pModel->getFilterExpression(),
+			'filterid' => $pModel->getFilterId(),
 		];
-
-		if ($pModel->getGeoPositionFields() !== []) {
-			$requestParams['georangesearch'] = $pModel->getGeoPositionFields();
-		}
-		return $requestParams;
 	}
 }

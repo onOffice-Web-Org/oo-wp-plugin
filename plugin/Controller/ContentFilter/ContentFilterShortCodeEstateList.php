@@ -26,7 +26,7 @@ namespace onOffice\WPlugin\Controller\ContentFilter;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
-use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\SearchParametersModelBuilderEstate;
 use onOffice\WPlugin\Controller\SortList\SortListBuilder;
@@ -114,6 +114,7 @@ class ContentFilterShortCodeEstateList
 	 * @throws UnknownViewException
 	 * @throws APIEmptyResultException
 	 * @throws HttpFetchNoResultException
+	 * @throws ApiClientException
 	 */
 	public function render(array $attributes): string
 	{
@@ -127,9 +128,6 @@ class ContentFilterShortCodeEstateList
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel);
 			$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory
 				->buildDefaultListViewFilter($pListViewWithSortParams);
-			$availableOptionsEstates = $pListViewWithSortParams->getAvailableOptions();
-			$this->_pDistinctFieldsScriptRegistrator->registerScripts
-				(onOfficeSDK::MODULE_ESTATE, $availableOptionsEstates);
 
 			$pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
 			$pGeoSearchBuilder->setViewProperty($pListViewWithSortParams);

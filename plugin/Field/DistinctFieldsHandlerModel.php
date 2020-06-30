@@ -41,6 +41,12 @@ class DistinctFieldsHandlerModel
 	/** @var array */
 	private $_geoPositionFields = [];
 
+	/** @var array */
+	private $_filterExpression = [];
+
+	/** @var int */
+	private $_filterId = 0;
+
 
 	/**
 	 *
@@ -120,4 +126,35 @@ class DistinctFieldsHandlerModel
 	public function getGeoPositionFields(): array
 		{ return $this->_geoPositionFields; }
 
+	/**
+	 * @return array
+	 */
+	public function getFilterExpression(): array
+	{
+		return $this->_filterExpression;
+	}
+
+	/**
+	 * @param array $filterExpression
+	 */
+	public function setFilterExpression(array $filterExpression)
+	{
+		$this->_filterExpression = $filterExpression;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getFilterId(): int
+	{
+		return $this->_filterId;
+	}
+
+	/**
+	 * @param int $filterId
+	 */
+	public function setFilterId(int $filterId)
+	{
+		$this->_filterId = $filterId;
+	}
 }

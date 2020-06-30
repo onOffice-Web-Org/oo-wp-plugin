@@ -45,7 +45,6 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
-use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
@@ -135,12 +134,6 @@ add_filter('query_vars', function(array $query_vars): array {
     $query_vars []= 'distinctfields_json';
     $query_vars []= 'document_pdf';
     return $query_vars;
-});
-
-add_action('parse_request', function(WP $pWP) use ($pDI) {
-    if (isset($pWP->query_vars['distinctfields_json'])) {
-		wp_send_json($pDI->get(DistinctFieldsHandler::class)->check());
-    }
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {

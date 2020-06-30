@@ -36,6 +36,9 @@ use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
+use onOffice\WPlugin\Field\DistinctFieldsHandler;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerModel;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
@@ -604,6 +607,10 @@ class EstateList
 		$pFieldsCollectionFieldDuplicatorForGeoEstate =
 			$pContainer->get(FieldsCollectionFieldDuplicatorForGeoEstate::class);
 		$pFieldsCollectionFieldDuplicatorForGeoEstate->duplicateFields($pFieldsCollection);
+		/** @var DistinctFieldsHandler $pDistinctFieldsHandler */
+		$pDistinctFieldsHandler = $pContainer->get(DistinctFieldsHandler::class);
+		$pFieldsCollection = $pDistinctFieldsHandler->modifyFieldsCollectionForEstate($this->_pDataView, $pFieldsCollection);
+
 		$fieldsValues = $pContainer->get(OutputFields::class)
 			->getVisibleFilterableFields($this->_pDataView,
 				$pFieldsCollection, new GeoPositionFieldHandler);
