@@ -27,6 +27,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -82,6 +83,20 @@ class DistinctFieldsHandler
 		DataListView $pListView, FieldsCollection $pFieldsCollection): FieldsCollection
 	{
 		$pModel = $this->_pDistinctFieldsHandlerModelBuilder->buildDataModelForEstate($pListView);
+		return $this->fetchValuesAndModifyFieldsCollection($pModel, $pFieldsCollection);
+	}
+
+	/**
+	 * @param DataFormConfigurationApplicantSearch $pDataFormConfiguration
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return FieldsCollection
+	 * @throws UnknownFieldException
+	 */
+	public function modifyFieldsCollectionForSearchCriteria(
+		DataFormConfigurationApplicantSearch $pDataFormConfiguration,
+		FieldsCollection $pFieldsCollection): FieldsCollection
+	{
+		$pModel = $this->_pDistinctFieldsHandlerModelBuilder->buildDataModelForSearchCriteria($pDataFormConfiguration);
 		return $this->fetchValuesAndModifyFieldsCollection($pModel, $pFieldsCollection);
 	}
 

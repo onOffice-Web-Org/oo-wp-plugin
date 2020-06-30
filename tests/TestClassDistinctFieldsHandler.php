@@ -28,6 +28,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
@@ -51,30 +52,41 @@ class TestClassDistinctFieldsHandler
 	 * @param DataListView $pListView
 	 * @return DistinctFieldsHandler
 	 */
-	public function buildSubject(DataListView $pListView): DistinctFieldsHandler
+	public function buildSubjectEstate(DataListView $pListView): DistinctFieldsHandler
 	{
 		$pDefaultFilterBuilder = $this->getMockBuilder(DefaultFilterBuilderListView::class)
-			->setConstructorArgs([$pListView, $this->buildFieldsCollectionBuilderShort()])
+			->setConstructorArgs([$pListView, $this->buildFieldsCollectionBuilderShort(onOfficeSDK::MODULE_ESTATE)])
 			->getMock();
 		$pDefaultFilterBuilder->expects($this->atLeastOnce())->method('buildFilter')
 			->willReturn([
 				'veroeffentlichen' => [['op' => '=', 'val' => '1']],
 			]);
 		$pDefaultFilterBuilderFactory = $this->getMockBuilder(DefaultFilterBuilderFactory::class)
-			->setConstructorArgs([$this->buildFieldsCollectionBuilderShort()])
+			->setConstructorArgs([$this->buildFieldsCollectionBuilderShort(onOfficeSDK::MODULE_ESTATE)])
 			->getMock();
 		$pDefaultFilterBuilderFactory->expects($this->atLeastOnce())->method('buildDefaultListViewFilter')
 			->willReturn($pDefaultFilterBuilder);
 		$pModelBuilder = new DistinctFieldsHandlerModelBuilder($pDefaultFilterBuilderFactory);
 
-		$pApiClientAction = new APIClientActionGeneric($this->buildSDKWrapper(), '', '');
+		$pApiClientAction = new APIClientActionGeneric($this->buildSDKWrapper('estate'), '', '');
+		return new DistinctFieldsHandler($pApiClientAction, $pModelBuilder);
+	}
+
+	public function buildSubjectSearchCriteria(): DistinctFieldsHandler
+	{
+		$pDefaultFilterBuilderFactory = $this->getMockBuilder(DefaultFilterBuilderFactory::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$pModelBuilder = new DistinctFieldsHandlerModelBuilder($pDefaultFilterBuilderFactory);
+
+		$pApiClientAction = new APIClientActionGeneric($this->buildSDKWrapper('searchcriteria'), '', '');
 		return new DistinctFieldsHandler($pApiClientAction, $pModelBuilder);
 	}
 
 	/**
 	 * @return FieldsCollectionBuilderShort
 	 */
-	private function buildFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
+	private function buildFieldsCollectionBuilderShort(string $module): FieldsCollectionBuilderShort
 	{
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
@@ -83,8 +95,8 @@ class TestClassDistinctFieldsHandler
 
 		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
 			->with($this->anything())
-			->willReturnCallback(function (FieldsCollection $pFieldsCollection)
-			use ($pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+			->willReturnCallback(static function(FieldsCollection $pFieldsCollection)
+				use ($pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
 			{
 				$pFieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
 				$pFieldObjektart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
@@ -117,29 +129,31 @@ class TestClassDistinctFieldsHandler
 	}
 
 	/**
+	 * @param string $module
 	 * @return FieldsCollection
 	 */
-	private function buildFieldsCollection(): FieldsCollection
+	private function buildFieldsCollection(string $module): FieldsCollection
 	{
 		$pFieldsCollection = new FieldsCollection;
-		$pFieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+		$pFieldObjektart = new Field('objektart', $module);
 		$pFieldObjektart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 		$pFieldsCollection->addField($pFieldObjektart);
 
-		$pFieldObjekttyp = new Field('objekttyp', onOfficeSDK::MODULE_ESTATE);
+		$pFieldObjekttyp = new Field('objekttyp', $module);
 		$pFieldObjekttyp->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 		$pFieldsCollection->addField($pFieldObjekttyp);
 
-		$pFieldNutzungsart = new Field('nutzungsart', onOfficeSDK::MODULE_ESTATE);
+		$pFieldNutzungsart = new Field('nutzungsart', $module);
 		$pFieldNutzungsart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 		$pFieldsCollection->addField($pFieldNutzungsart);
 		return $pFieldsCollection;
 	}
 
 	/**
+	 * @param string $module
 	 * @return FieldsCollection
 	 */
-	private function buildFieldsCollectionReference(): FieldsCollection
+	private function buildFieldsCollectionReferenceEstate(): FieldsCollection
 	{
 		$pFieldsCollection = new FieldsCollection;
 		$pFieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
@@ -174,31 +188,84 @@ class TestClassDistinctFieldsHandler
 		return $pFieldsCollection;
 	}
 
+	private function buildFieldsCollectionReferenceSearchCriteria(): FieldsCollection
+	{
+		$pFieldsCollection = new FieldsCollection;
+		$pFieldObjektart = new Field('objektart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pFieldObjektart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+		$pFieldObjektart->setPermittedvalues([
+			'wohnung' => 'Apartments',
+			'haus' => 'House',
+			'zimmer' => 'Rooms',
+		]);
+		$pFieldsCollection->addField($pFieldObjektart);
+
+		$pFieldObjekttyp = new Field('objekttyp', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pFieldObjekttyp->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+		$pFieldObjekttyp->setPermittedvalues([
+			'landhaus' => 'Cottage',
+			'reiheneck' => 'Corner townhouse',
+			'reihenend' => 'End townhouse',
+			'souterrain' => 'Basement',
+			'einfamilienhaus' => 'Single family house',
+			'villa' => 'Villa',
+			'schloss' => 'Castle',
+			'hochparterre' => 'Mezzanine floor',
+			'mehrfamilienhaus' => 'Apartment building',
+			'ferienhaus' => 'Holiday home',
+			'chalet' => 'Chalet',
+			'bungalow' => 'Bungalow',
+			'bauernhaus' => 'Farmhouse',
+			'zweifamilienhaus' => 'Two-family-house',
+			'wohn_und_geschaeftshaus' => 'Business premises with living accomodation',
+			'praxisflaeche' => 'Facility space',
+		]);
+		$pFieldsCollection->addField($pFieldObjekttyp);
+
+		$pFieldNutzungsart = new Field('nutzungsart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pFieldNutzungsart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+		$pFieldNutzungsart->setPermittedvalues(['wohnen' => 'Residential']);
+		$pFieldsCollection->addField($pFieldNutzungsart);
+		return $pFieldsCollection;
+	}
+
 	/**
+	 * @param string $module
 	 * @return SDKWrapperMocker
 	 */
-	private function buildSDKWrapper(): SDKWrapperMocker
+	private function buildSDKWrapper(string $module): SDKWrapperMocker
 	{
-		$pSDKWrapperMocker = new SDKWrapperMocker();
-
-		$parametersEstatesObjektart = [
+		$parameters = [
 			'language' => 'ENG',
-			'module' => 'estate',
-			'field' => 'objektart',
-			'filter' => [
-				'veroeffentlichen' => [['op' => '=','val' => '1']],
-			],
-			'filterid' => 1337,
+			'module' => $module,
+			'field' => 'X',
+			'filter' => [],
+			'filterid' => 0,
 		];
+
+		if ($module === 'estate') {
+			$parameters['filter'] = [
+				'veroeffentlichen' => [['op' => '=','val' => '1']],
+			];
+			$parameters['filterid'] = 1337;
+		}
 
 		$fields = [
-			'objektart' => 'ApiResponseDistinctFieldsHandlerEstateObjektart.json',
-			'objekttyp' => 'ApiResponseDistinctFieldsHandlerEstateObjekttyp.json',
-			'nutzungsart' => 'ApiResponseDistinctFieldsHandlerEstateNutzungsart.json',
+			'estate' => [
+				'objektart' => 'ApiResponseDistinctFieldsHandlerEstateObjektart.json',
+				'objekttyp' => 'ApiResponseDistinctFieldsHandlerEstateObjekttyp.json',
+				'nutzungsart' => 'ApiResponseDistinctFieldsHandlerEstateNutzungsart.json',
+			],
+			'searchcriteria' => [
+				'objektart' => 'ApiResponseDistinctFieldsHandlerSearchCriteriaObjektart.json',
+				'objekttyp' => 'ApiResponseDistinctFieldsHandlerSearchCriteriaObjekttyp.json',
+				'nutzungsart' => 'ApiResponseDistinctFieldsHandlerSearchCriteriaNutzungsart.json',
+			],
 		];
+		$pSDKWrapperMocker = new SDKWrapperMocker();
 
-		foreach ($fields as $field => $apiResponseFile) {
-			$parametersEstatesThisField = $parametersEstatesObjektart;
+		foreach ($fields[$module] as $field => $apiResponseFile) {
+			$parametersEstatesThisField = $parameters;
 			$parametersEstatesThisField['field'] = $field;
 			$responseEstatesOThisField = file_get_contents
 				(__DIR__.'/resources/Field/'.$apiResponseFile);
@@ -220,10 +287,24 @@ class TestClassDistinctFieldsHandler
 		$pDataListView->setFilterableFields(['objektart', 'objekttyp', 'nutzungsart']);
 		$pDataListView->setAvailableOptions(['objektart', 'objekttyp', 'nutzungsart']);
 		$pDataListView->setFilterId(1337);
-		$pFieldsCollection = $this->buildFieldsCollection();
-		$pSubject = $this->buildSubject($pDataListView);
+		$pFieldsCollection = $this->buildFieldsCollection(onOfficeSDK::MODULE_ESTATE);
+		$pSubject = $this->buildSubjectEstate($pDataListView);
 		$pNewFieldsCollection = $pSubject->modifyFieldsCollectionForEstate($pDataListView, $pFieldsCollection);
-		$pFieldsCollectionReference = $this->buildFieldsCollectionReference();
+		$pFieldsCollectionReference = $this->buildFieldsCollectionReferenceEstate();
+		$this->assertEquals($pFieldsCollectionReference, $pNewFieldsCollection);
+	}
+
+	/**
+	 * @throws UnknownFieldException
+	 */
+	public function testModifyFieldsCollectionForSearchCriteria()
+	{
+		$pDataFormConfiguration = new DataFormConfigurationApplicantSearch();
+		$pDataFormConfiguration->setAvailableOptionsFields(['objektart', 'objekttyp', 'nutzungsart']);
+		$pFieldsCollection = $this->buildFieldsCollection(onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pSubject = $this->buildSubjectSearchCriteria();
+		$pNewFieldsCollection = $pSubject->modifyFieldsCollectionForSearchCriteria($pDataFormConfiguration, $pFieldsCollection);
+		$pFieldsCollectionReference = $this->buildFieldsCollectionReferenceSearchCriteria();
 		$this->assertEquals($pFieldsCollectionReference, $pNewFieldsCollection);
 	}
 }
