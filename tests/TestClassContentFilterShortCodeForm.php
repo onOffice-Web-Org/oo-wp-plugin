@@ -24,15 +24,12 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use Exception;
-use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeForm;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
-use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use WP_UnitTestCase;
 
 /**

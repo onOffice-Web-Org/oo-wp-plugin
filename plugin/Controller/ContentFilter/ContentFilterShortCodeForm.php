@@ -24,12 +24,8 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use Exception;
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
-use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormBuilder;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;

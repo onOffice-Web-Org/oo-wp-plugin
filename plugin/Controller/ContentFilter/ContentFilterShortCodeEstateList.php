@@ -35,7 +35,6 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Factory\EstateListFactory;
-use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
