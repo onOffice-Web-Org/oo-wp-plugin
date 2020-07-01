@@ -61,7 +61,9 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/js/onoffice_defaultview.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-
+			(new IncludeFileModel($script, 'onoffice-estatetype', plugins_url('/js/onoffice-estatetype.js', $pluginPath)))
+				->setDependencies(['onoffice-multiselect'])
+				->setLoadInFooter(true),
 
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),

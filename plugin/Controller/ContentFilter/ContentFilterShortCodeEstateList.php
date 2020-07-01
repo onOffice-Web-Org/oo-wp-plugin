@@ -57,9 +57,6 @@ class ContentFilterShortCodeEstateList
 	/** @var SearchParametersModelBuilderEstate */
 	private $_pSearchParametersModelBuilderEstate;
 
-	/** @var DistinctFieldsScriptRegistrator */
-	private $_pDistinctFieldsScriptRegistrator;
-
 	/** @var DefaultFilterBuilderFactory */
 	private $_pDefaultFilterBuilderFactory;
 
@@ -77,7 +74,6 @@ class ContentFilterShortCodeEstateList
 	 * @param WPQueryWrapper $pWPQueryWrapper
 	 * @param SortListBuilder $pSortListBuilder
 	 * @param SearchParametersModelBuilderEstate $pSearchParametersModelBuilderEstate
-	 * @param DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator
 	 * @param DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory
 	 * @param EstateListFactory $pEstateDetailFactory
 	 * @param Template $pTemplate
@@ -88,7 +84,6 @@ class ContentFilterShortCodeEstateList
 		WPQueryWrapper $pWPQueryWrapper,
 		SortListBuilder $pSortListBuilder,
 		SearchParametersModelBuilderEstate $pSearchParametersModelBuilderEstate,
-		DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator,
 		DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory,
 		EstateListFactory $pEstateDetailFactory,
 		Template $pTemplate,
@@ -98,7 +93,6 @@ class ContentFilterShortCodeEstateList
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 		$this->_pSortListBuilder = $pSortListBuilder;
 		$this->_pSearchParametersModelBuilderEstate = $pSearchParametersModelBuilderEstate;
-		$this->_pDistinctFieldsScriptRegistrator = $pDistinctFieldsScriptRegistrator;
 		$this->_pDefaultFilterBuilderFactory = $pDefaultFilterBuilderFactory;
 		$this->_pEstateDetailFactory = $pEstateDetailFactory;
 		$this->_pTemplate = $pTemplate;

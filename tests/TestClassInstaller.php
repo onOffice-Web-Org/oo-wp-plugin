@@ -40,7 +40,7 @@ class TestClassInstaller
 		$wp_rewrite->rewritereplace = [];
 		$wp_rewrite->queryreplace = [];
 		$wp_rewrite->extra_rules_top = [];
-		$this->assertArrayNotHasKey('^distinctfields-json/?$', $wp_rewrite->rewrite_rules());
+		$this->assertArrayNotHasKey('^onoffice-estate-types.json$', $wp_rewrite->rewrite_rules());
 		$this->assertArrayNotHasKey('^document-pdf/([^\/]+)/([0-9]+)/?$', $wp_rewrite->rewrite_rules());
 		Installer::install();
 		$this->assertNotEmpty($wp_rewrite->rewritecode);
@@ -48,7 +48,7 @@ class TestClassInstaller
 		$this->assertNotEmpty($wp_rewrite->queryreplace);
 		$this->assertNotEmpty($wp_rewrite->extra_rules_top);
 		$this->assertNotEmpty($wp_rewrite->rewrite_rules());
-		$this->assertArrayHasKey('^distinctfields-json/?$', $wp_rewrite->rewrite_rules());
+		$this->assertArrayHasKey('^onoffice-estate-types.json$', $wp_rewrite->rewrite_rules());
 		$this->assertArrayHasKey('^document-pdf/([^\/]+)/([0-9]+)/?$', $wp_rewrite->rewrite_rules());
 	}
 

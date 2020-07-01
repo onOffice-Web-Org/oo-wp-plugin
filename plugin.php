@@ -45,6 +45,7 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
+use onOffice\WPlugin\Field\EstateKindTypeReader;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
@@ -131,7 +132,7 @@ add_action('pre_update_option', function($value, $option) use ($pDI) {
 }, 10, 2);
 
 add_filter('query_vars', function(array $query_vars): array {
-    $query_vars []= 'distinctfields_json';
+    $query_vars []= 'onoffice_estate_type_json';
     $query_vars []= 'document_pdf';
     return $query_vars;
 });
@@ -166,6 +167,12 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			include(get_query_template('404'));
 			die();
 		}
+	}
+});
+
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+	if (isset($pWP->query_vars['onoffice_estate_type_json'])) {
+		wp_send_json($pDI->get(EstateKindTypeReader::class)->read());
 	}
 });
 
