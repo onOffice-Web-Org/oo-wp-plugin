@@ -22,11 +22,11 @@
 
     const create_preview_text = amount => {
         if (amount === 0) {
-            return 'Keine Ergebnisse';
+            return onoffice_form_preview_strings.amount_none;
         } else if (amount === 1) {
-            return 'Ein Ergebnis anzeigen';
+            return onoffice_form_preview_strings.amount_one;
         }
-        return '%s Ergebnisse anzeigen'.replace('%s', amount);
+        return onoffice_form_preview_strings.amount_other.replace('%s', amount);
     }
 
     const create_preview = (formElement, identifier, amount) => {
