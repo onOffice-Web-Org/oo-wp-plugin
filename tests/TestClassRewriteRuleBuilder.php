@@ -76,6 +76,7 @@ class TestClassRewriteRuleBuilder
 		$pSubject->addStaticRewriteRules();
 		$this->assertSame([
 			'^onoffice-estate-types.json$' => 'index.php?onoffice_estate_type_json=1',
+			'^onoffice-estate-preview/?$' => 'index.php?onoffice_estate_preview=1',
 			'^document-pdf/([^\/]+)/([0-9]+)/?$' =>
 				'index.php?document_pdf=1&view=$matches[1]&estate_id=$matches[2]',
 		], $wp_rewrite->extra_rules_top);

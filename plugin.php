@@ -47,6 +47,7 @@ use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\Field\EstateKindTypeReader;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
+use onOffice\WPlugin\Form\Preview\FormPreviewEstate;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
 use onOffice\WPlugin\Installer\Installer;
@@ -133,7 +134,9 @@ add_action('pre_update_option', function($value, $option) use ($pDI) {
 
 add_filter('query_vars', function(array $query_vars): array {
     $query_vars []= 'onoffice_estate_type_json';
+    $query_vars []= 'onoffice_estate_preview';
     $query_vars []= 'document_pdf';
+    $query_vars []= 'preview_name';
     return $query_vars;
 });
 
@@ -173,6 +176,12 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 add_action('parse_request', function(WP $pWP) use ($pDI) {
 	if (isset($pWP->query_vars['onoffice_estate_type_json'])) {
 		wp_send_json($pDI->get(EstateKindTypeReader::class)->read());
+	}
+});
+
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+	if (isset($pWP->query_vars['onoffice_estate_preview'], $pWP->query_vars['preview_name'])) {
+		wp_send_json($pDI->get(FormPreviewEstate::class)->preview((string)$pWP->query_vars['preview_name']));
 	}
 });
 

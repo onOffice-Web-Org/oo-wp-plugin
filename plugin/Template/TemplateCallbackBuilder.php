@@ -24,6 +24,7 @@ use Closure;
 use DI\Container;
 use onOffice\WPlugin\Controller\SortList\SortListDropDownGenerator;
 use onOffice\WPlugin\EstateList;
+use onOffice\WPlugin\Form;
 
 class TemplateCallbackBuilder
 {
@@ -44,14 +45,35 @@ class TemplateCallbackBuilder
 	 */
 	public function buildCallbackListSortDropDown($pEstateList): Closure
 	{
-		return function() use ($pEstateList): string {
-			$result = '';
+		$pContainer = $this->_pContainer;
+		return static function() use ($pEstateList, $pContainer): string {
 			if ($pEstateList !== null) {
-				/** @var $pEstateList EstateList */
-				$result = $this->_pContainer->get(SortListDropDownGenerator::class)
+				return $pContainer->get(SortListDropDownGenerator::class)
 					->generate($pEstateList->getDataView()->getName());
 			}
-			return $result;
+			return '';
+		};
+	}
+
+	/**
+	 * @param EstateList|null $pEstateList
+	 * @return Closure
+	 */
+	public function buildCallbackEstateListName($pEstateList): Closure
+	{
+		return static function() use ($pEstateList): string {
+			return ($pEstateList !== null) ? $pEstateList->getDataView()->getName() : '';
+		};
+	}
+
+	/**
+	 * @param Form|null $pForm
+	 * @return Closure
+	 */
+	public function buildCallbackFormId($pForm): Closure
+	{
+		return static function() use ($pForm): string {
+			return ($pForm !== null) ? (string)$pForm->getFormId() : '';
 		};
 	}
 }
