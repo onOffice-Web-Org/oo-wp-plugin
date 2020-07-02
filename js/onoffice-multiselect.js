@@ -92,9 +92,9 @@ var onOffice = onOffice || {};
         button.onclick = function() {
             parent.hide();
             const event = new CustomEvent('onoffice-multiselect-change', { detail: {
-                    name: parent._name,
-                    selection: parent._getSelection()
-                }});
+                name: parent._name,
+                selection: parent._getSelection()
+            }});
             parent._element.dispatchEvent(event);
         };
 

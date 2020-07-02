@@ -1,4 +1,4 @@
-(function() {
+(() => {
     let forms = document.querySelectorAll('form');
     const fetch_possible_types = () => {
         let request = new XMLHttpRequest();
@@ -19,7 +19,7 @@
 
     const controlMultiSelectEstateKindType = (elementKind, elementType) => {
         elementType.allOptions =  elementType.onoffice_multiselect._options;
-        elementKind.addEventListener('onoffice-multiselect-change', function (e) {
+        const multiSelectChangeFn = (e) => {
             if (e.detail.name === 'objektart[]') {
                 const selection = e.detail.selection;
                 let newTypes = {};
@@ -33,8 +33,16 @@
                     }
                 }
                 elementType.onoffice_multiselect.reloadWithOptions(newTypes);
+                elementType.onoffice_multiselect.refreshlabel();
+                elementType.dispatchEvent(new Event('onoffice-multiselect-modified'));
             }
-        }, false);
+        }
+        elementKind.addEventListener('onoffice-multiselect-change', multiSelectChangeFn, false);
+        const e = new CustomEvent('ready',  { detail: {
+            name: 'objektart[]',
+            selection: elementKind.onoffice_multiselect._getSelection()
+        }});
+        multiSelectChangeFn(e);
     }
 
     const controlSingleSelectEstateKindType = (elementKind, elementType) => {
@@ -68,8 +76,8 @@
     }
 
     forms.forEach(function (element) {
-        let elementMultiType = element.querySelector('div[data-name^=objekttyp]');
-        let elementMultiKind = element.querySelector('div[data-name^=objektart]');
+        let elementMultiType = element.querySelector('div[data-name^=objekttyp].multiselect');
+        let elementMultiKind = element.querySelector('div[data-name^=objektart].multiselect');
         let elementSingleType = element.querySelector('select[name=objekttyp]');
         let elementSingleKind = element.querySelector('select[name=objektart]');
         if (elementMultiType && elementMultiKind) {

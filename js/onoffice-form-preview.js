@@ -16,7 +16,8 @@
             body: formData,
             signal: signal
         }).then(response => response.json())
-        .then(result => create_preview(element, viewName, result));
+        .then(result => create_preview(element, viewName, result))
+        .catch(err => err);
     }
 
     const create_preview_text = amount => {
@@ -37,7 +38,14 @@
     estateForms.forEach(element => {
         const name = element.getAttribute('data-view-name');
         for (let formControl of element.elements) {
-           formControl.addEventListener('blur', () => estate_refresh_preview(element, name));
+            formControl.addEventListener('change', () => estate_refresh_preview(element, name));
+        }
+        for (let multiSelect of element.querySelectorAll('div.multiselect')) {
+            multiSelect.addEventListener('onoffice-multiselect-modified', (e) => {
+                for (let formControlMS of e.target.getElementsByTagName("*")) {
+                    formControlMS.addEventListener('change', () => estate_refresh_preview(element, name));
+                }
+            });
         }
     });
 })();
