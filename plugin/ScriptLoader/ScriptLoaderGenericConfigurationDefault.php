@@ -85,6 +85,8 @@ class ScriptLoaderGenericConfigurationDefault
 			'amount_one' => __('Show exact match', 'onoffice'),
 			/* translators: %s is the amount of results */
 			'amount_other' => __('Show %s matches', 'onoffice'),
+			'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
+			'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
 		]);
 
 		return $values;

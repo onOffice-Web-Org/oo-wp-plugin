@@ -139,6 +139,7 @@ add_filter('query_vars', function(array $query_vars): array {
     $query_vars []= 'onoffice_estate_preview';
     $query_vars []= 'document_pdf';
     $query_vars []= 'preview_name';
+    $query_vars []= 'nonce';
     return $query_vars;
 });
 
@@ -182,14 +183,16 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
-	if (isset($pWP->query_vars['onoffice_estate_preview'], $pWP->query_vars['preview_name'])) {
+	if (isset($pWP->query_vars['onoffice_estate_preview'], $pWP->query_vars['preview_name']) &&
+		wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-estate-preview') === 1) {
 		wp_send_json($pDI->get(FormPreviewEstate::class)
 			->preview((string)$pWP->query_vars['preview_name']));
 	}
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
-	if (isset($pWP->query_vars['onoffice_applicant_search_preview'], $pWP->query_vars['preview_name'])) {
+	if (isset($pWP->query_vars['onoffice_applicant_search_preview'], $pWP->query_vars['preview_name']) &&
+		wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-applicant-search-preview') === 1) {
 		wp_send_json($pDI->get(FormPreviewApplicantSearch::class)
 			->preview((string)$pWP->query_vars['preview_name']));
 	}

@@ -2,6 +2,7 @@
     const estate_refresh_preview = (element, name) => {
         let formData = new FormData(element);
         formData.append('preview_name', name);
+        formData.append('nonce', onoffice_form_preview_strings.nonce_estate);
         const config = {
             url: '/onoffice-estate-preview/',
             formData
@@ -12,6 +13,7 @@
     const form_refresh_preview = (element, name) => {
         let formData = new FormData(element);
         formData.append('preview_name', name);
+        formData.append('nonce', onoffice_form_preview_strings.nonce_applicant_search);
         const config = {
             url: '/onoffice-applicant-search-preview/',
             formData
