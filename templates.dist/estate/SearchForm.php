@@ -24,7 +24,7 @@ if (count($visible) === 0) {
 }
 ?>
 <div class="oo-searchform">
-	<form method="get" data-view-name="<?php esc_attr_e($getListName()); ?>">
+	<form method="get" data-estate-search-name="<?php esc_attr_e($getListName()); ?>">
 		<div class="oo-searchformfieldwrap">
 			<?php
 			foreach ($visible as $inputName => $properties) :

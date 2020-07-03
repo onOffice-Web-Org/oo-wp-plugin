@@ -2,7 +2,7 @@
     let forms = document.querySelectorAll('form');
     const fetch_possible_types = () => {
         let request = new XMLHttpRequest();
-        request.open('GET', '/onoffice-estate-types.json', false);  // `false` makes the request synchronous
+        request.open('GET', '/onoffice-estate-types.json', false);
         request.send(null);
         if (request.status === 200) {
             return JSON.parse(request.responseText);
@@ -52,7 +52,7 @@
             elementType.allOptions = newTypes;
         }
         elementType.allOptions = elementType.allOptions || elementType.options;
-        elementKind.addEventListener('change', function (e) {
+        const singleSelectChangeFn = () => {
             const selection = elementKind.selectedOptions[0].value;
             let newTypes = {};
             // clone
@@ -72,7 +72,9 @@
                 elementType.add(value);
             }
             elementType.options.selectedIndex = 0;
-        }, false);
+        }
+        elementKind.addEventListener('change', singleSelectChangeFn, false);
+        singleSelectChangeFn(new Event('ready'));
     }
 
     forms.forEach(function (element) {

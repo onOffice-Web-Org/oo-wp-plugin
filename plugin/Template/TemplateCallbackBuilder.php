@@ -65,15 +65,4 @@ class TemplateCallbackBuilder
 			return ($pEstateList !== null) ? $pEstateList->getDataView()->getName() : '';
 		};
 	}
-
-	/**
-	 * @param Form|null $pForm
-	 * @return Closure
-	 */
-	public function buildCallbackFormId($pForm): Closure
-	{
-		return static function() use ($pForm): string {
-			return ($pForm !== null) ? (string)$pForm->getFormId() : '';
-		};
-	}
 }

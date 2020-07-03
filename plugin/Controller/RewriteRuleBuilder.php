@@ -56,6 +56,7 @@ class RewriteRuleBuilder
 	{
 		add_rewrite_rule('^onoffice-estate-types.json$', 'index.php?onoffice_estate_type_json=1', 'top');
 		add_rewrite_rule('^onoffice-estate-preview/?$', 'index.php?onoffice_estate_preview=1', 'top');
+		add_rewrite_rule('^onoffice-applicant-search-preview/?$', 'index.php?onoffice_applicant_search_preview=1', 'top');
 		add_rewrite_rule('^document-pdf/([^\/]+)/([0-9]+)/?$',
 			'index.php?document_pdf=1&view=$matches[1]&estate_id=$matches[2]', 'top');
 	}

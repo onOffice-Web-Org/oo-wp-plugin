@@ -49,10 +49,10 @@ class FormPostApplicantSearch
 	const LIMIT_RESULTS = 100;
 
 	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
+	private $_pSDKWrapper;
 
 	/** @var SearchcriteriaFields */
-	private $_pSearchcriteriaFields = null;
+	private $_pSearchcriteriaFields;
 
 	/**
 	 * @param FormPostConfiguration $pFormPostConfiguration
@@ -60,7 +60,6 @@ class FormPostApplicantSearch
 	 * @param SearchcriteriaFields $pSearchcriteriaFields
 	 * @param FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm
 	 */
-
 	public function __construct(
 		FormPostConfiguration $pFormPostConfiguration,
 		SDKWrapper $pSDKWrapper,
@@ -74,12 +73,9 @@ class FormPostApplicantSearch
 	}
 
 	/**
-	 *
 	 * @param FormData $pFormData
-	 *
-	 * @throws API\APIEmptyResultException
+	 * @throws API\ApiClientException
 	 */
-
 	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
 		/* @var $pFormConfig DataFormConfigurationApplicantSearch */
@@ -95,13 +91,11 @@ class FormPostApplicantSearch
 	}
 
 	/**
-	 *
 	 * @param DataFormConfiguration $pFormConfig
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-
 	protected function getAllowedPostVars(DataFormConfiguration $pFormConfig): array
 	{
 		$formFields = parent::getAllowedPostVars($pFormConfig);
@@ -109,14 +103,11 @@ class FormPostApplicantSearch
 	}
 
 	/**
-	 *
 	 * @param FormData $pFormData
 	 * @param int $limitResults
 	 * @return array
-	 *
-	 * @throws API\APIEmptyResultException
+	 * @throws API\ApiClientException
 	 */
-
 	private function getApplicants(FormData $pFormData, int $limitResults): array
 	{
 		$requestParams = [
@@ -152,15 +143,11 @@ class FormPostApplicantSearch
 		return $this->setKdNr($foundApplicants);
 	}
 
-
 	/**
-	 *
 	 * @param array $record
 	 * @param array $viewFields
 	 * @return array
-	 *
 	 */
-
 	private function collectSearchParametersForRecord(array $record, array $viewFields): array
 	{
 		$elements = $record['elements'];
@@ -186,13 +173,10 @@ class FormPostApplicantSearch
 	}
 
 	/**
-	 *
 	 * @param array $applicants
 	 * @return array
-	 *
-	 * @throws API\APIEmptyResultException
+	 * @throws API\ApiClientException
 	 */
-
 	private function setKdNr(array $applicants): array
 	{
 		$adressIds = array_keys($applicants);
@@ -215,28 +199,20 @@ class FormPostApplicantSearch
 		return $results;
 	}
 
-
 	/**
-	 *
 	 * @param string $rangeField
 	 * @return bool
-	 *
 	 */
-
 	private function isSearchcriteriaRangeField(string $rangeField): bool
 	{
 		$pString = __String::getNew($rangeField);
 		return $pString->endsWith('__von') || $pString->endsWith('__bis');
 	}
 
-
 	/**
-	 *
 	 * @param string $rangeField
 	 * @return string
-	 *
 	 */
-
 	private function getOriginalFieldNameByRangeField(string $rangeField): string
 	{
 		if (!$this->isSearchcriteriaRangeField($rangeField)) {

@@ -81,8 +81,8 @@ class ScriptLoaderGenericConfigurationDefault
 		}
 
 		wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
-			'amount_none' => __('0 matches. Please use other parameters.', 'onoffice'),
-			'amount_one' => __('Show match', 'onoffice'),
+			'amount_none' => __('0 matches. Try different values.', 'onoffice'),
+			'amount_one' => __('Show exact match', 'onoffice'),
 			/* translators: %s is the amount of results */
 			'amount_other' => __('Show %s matches', 'onoffice'),
 		]);

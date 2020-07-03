@@ -304,7 +304,7 @@ class EstateList
 	 * @param array $estateResponseArray
 	 * @return array Mapping: mainEstateId => multiLangId
 	 */
-	private function getEstateIdToForeignMapping($estateResponseArray)
+	private function getEstateIdToForeignMapping($estateResponseArray): array
 	{
 		$estateIds = [];
 
