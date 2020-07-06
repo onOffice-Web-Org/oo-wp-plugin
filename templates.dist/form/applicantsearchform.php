@@ -58,7 +58,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
-	if ($input == 'Umkreis') {
+	if ($input === 'Umkreis') {
 		echo '<br>'
 			.'<fieldset>'
 			.'<legend>'.esc_html__('search within distance of:', 'onoffice').'</legend>';
@@ -86,10 +86,16 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 		echo '</fieldset>';
 		continue;
-	} elseif ($input === 'regionaler_zusatz') {
+	}
+
+	if ($input === 'regionaler_zusatz') {
 		echo '<select size="1" name="'.esc_html($input).'">';
 		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
-		$regions = $pRegionController->getRegions();
+		if ($permittedValues === null) {
+			$regions = $pRegionController->getRegions();
+		} else {
+		    $regions = $pRegionController->getParentRegionsByChildRegionKeys(array_keys($permittedValues));
+        }
 		$selectedValue = $pForm->getFieldValue( $input, true );
 		foreach ($regions as $pRegion) {
 			/* @var $pRegion Region */

@@ -189,15 +189,19 @@ class RegionController
 		foreach ($newPermitted as $pRegion) {
 			do {
 				$regionChildren = $pRegion->getChildren();
-				$pRegion->setChildren(array_filter($regionChildren, static function(Region $pChild) use ($newPermitted) {
+				$regionChildren = array_filter($regionChildren, static function(Region $pChild) use ($newPermitted) {
 					return isset($newPermitted[$pChild->getId()]);
-				}));
+				});
+				$pRegion->setChildren($regionChildren);
 			} while ($pRegion = $pRegion->getParent());
 		}
 
 		// leave only root elements
 		$newPermitted = array_filter($newPermitted, static function($pEntry) {
 			return $pEntry->getParent() === null;
+		});
+		usort($newPermitted, function (Region $pA, Region $pB) {
+			return strnatcasecmp($pA->getName(), $pB->getName());
 		});
 		return $newPermitted;
 	}
