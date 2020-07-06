@@ -51,6 +51,7 @@ class TestClassRegion
 		$this->assertEquals('', $pRegion->getName());
 		$this->assertEquals([], $pRegion->getPostalCodes());
 		$this->assertEquals('', $pRegion->getState());
+		$this->assertNull($pRegion->getParent());
 	}
 
 
@@ -78,5 +79,8 @@ class TestClassRegion
 		], $pRegion->getPostalCodes());
 		$pRegion->setState('Département de Paris');
 		$this->assertEquals('Département de Paris', $pRegion->getState());
+		$pParent = new Region('test', 'DEU');
+		$pRegion->setParent($pParent);
+		$this->assertSame($pParent, $pRegion->getParent());
 	}
 }
