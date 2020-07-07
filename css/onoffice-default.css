@@ -26,3 +26,7 @@ a.estate-status > span {
     white-space: nowrap;
     padding: 7px 25px 7px 25px;
 }
+
+input[type=submit].match {
+    background-color: #559955;
+}

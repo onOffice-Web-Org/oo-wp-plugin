@@ -1,4 +1,4 @@
-(function (){
+(() => {
     const estate_refresh_preview = (element, name) => {
         let formData = new FormData(element);
         formData.append('preview_name', name);
@@ -51,10 +51,13 @@
         const preview_text = create_preview_text(amount);
         let submitElement = formElement.querySelector('input[type=submit]');
         submitElement.value = preview_text;
+        submitElement.classList.remove('match');
+        if (amount > 0) {
+            submitElement.classList.add('match');
+        }
     }
 
-    let estateForms = document.querySelectorAll('form[data-estate-search-name]');
-    estateForms.forEach(element => {
+    document.querySelectorAll('form[data-estate-search-name]').forEach(element => {
         const name = element.getAttribute('data-estate-search-name');
         for (let formControl of element.elements) {
             formControl.addEventListener('change', () => estate_refresh_preview(element, name));
@@ -69,8 +72,7 @@
         }
     });
 
-    let applicantSearchForms = document.querySelectorAll('form[data-applicant-form-id]');
-    applicantSearchForms.forEach(element => {
+    document.querySelectorAll('form[data-applicant-form-id]').forEach(element => {
         const id = element.getAttribute('data-applicant-form-id');
         for (let formControl of element.elements) {
             formControl.addEventListener('change', () => form_refresh_preview(element, id));
