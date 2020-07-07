@@ -30,3 +30,10 @@ a.estate-status > span {
 input[type=submit].match {
     background-color: #559955;
 }
+
+div.multiselect[data-values="[]"] > input[type=button],
+div.multiselect[data-values="{}"] > input[type=button],
+div.multiselect[data-values=""] > input[type=button]{
+    pointer-events: none;
+    opacity: 0.7;
+}

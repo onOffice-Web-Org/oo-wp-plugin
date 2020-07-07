@@ -32,8 +32,11 @@
                         delete newTypes[k];
                     }
                 }
-                elementType.onoffice_multiselect.reloadWithOptions(newTypes);
+                const oldSelection = elementType.onoffice_multiselect._getSelection();
+                const newSelection = allowedTypes.filter(value => oldSelection.includes(value))
+                elementType.onoffice_multiselect.reloadWithOptions(newTypes, newSelection);
                 elementType.onoffice_multiselect.refreshlabel();
+                elementType.setAttribute('data-values', JSON.stringify(newTypes));
                 elementType.dispatchEvent(new Event('onoffice-multiselect-modified'));
             }
         }

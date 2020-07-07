@@ -65,6 +65,7 @@
 
         for (let multiSelect of element.querySelectorAll('div.multiselect')) {
             multiSelect.addEventListener('onoffice-multiselect-modified', (e) => {
+                estate_refresh_preview(element, name);
                 for (let formControlMS of e.target.getElementsByTagName("*")) {
                     formControlMS.addEventListener('change', () => estate_refresh_preview(element, name));
                 }
