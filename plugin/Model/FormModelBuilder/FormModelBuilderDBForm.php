@@ -337,7 +337,7 @@ class FormModelBuilderDBForm
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Available Options', 'onoffice');
+		$label = __('Reduce values according to selected filter', 'onoffice');
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_AVAILABLE_OPTIONS;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
