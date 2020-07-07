@@ -36,6 +36,7 @@ if (count($visible) === 0) {
 			?>		
 			<div class="oo-searchformfield">
 				<input type="submit" value="<?php echo esc_attr__('Search', 'onoffice'); ?>">
+				<svg viewBox="0 0 30 30" id="spinner"></svg>
 			</div>
 		</div>
 	</form>

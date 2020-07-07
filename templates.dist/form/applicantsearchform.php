@@ -94,8 +94,8 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ($permittedValues === null) {
 			$regions = $pRegionController->getRegions();
 		} else {
-		    $regions = $pRegionController->getParentRegionsByChildRegionKeys(array_keys($permittedValues));
-        }
+			$regions = $pRegionController->getParentRegionsByChildRegionKeys(array_keys($permittedValues));
+		}
 		$selectedValue = $pForm->getFieldValue( $input, true );
 		foreach ($regions as $pRegion) {
 			/* @var $pRegion Region */
@@ -111,6 +111,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 $pForm->setGenericSetting('submitButtonLabel', esc_html__('Search for Prospective Buyers', 'onoffice'));
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+echo '<svg viewBox="0 0 30 30" id="spinner"></svg>';
 
 echo '<br>';
 
