@@ -30,13 +30,6 @@ use onOffice\WPlugin\Types\MovieLinkTypes;
 use TypeError;
 use WP_UnitTestCase;
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- */
-
 class TestClassDataDetailView
 	extends WP_UnitTestCase
 {
@@ -63,7 +56,6 @@ class TestClassDataDetailView
 		'sonstige_angaben',
 	];
 
-
 	/** */
 	const DEFAULT_FIELDS_ADDRESS = [
 		'Anrede',
@@ -77,53 +69,9 @@ class TestClassDataDetailView
 		'mobile',
 	];
 
-
 	/**
 	 *
 	 */
-
-	public function test__construct()
-	{
-		$pDataDetailView = new DataDetailView();
-		$this->assertInstanceOf(DataViewSimilarEstates::class,
-			$pDataDetailView->getDataViewSimilarEstates());
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function test__wakeup()
-	{
-		$pInstance = new DataDetailView();
-
-		// old versions didn't have $_pDataViewSimilarEstates, but it must always be set
-		$pClosure = function() {
-			$this->_pDataViewSimilarEstates = null;
-		};
-
-		Closure::bind($pClosure, $pInstance, DataDetailView::class)();
-
-		try {
-			$pInstance->getDataViewSimilarEstates();
-			$this->assertFalse(true);
-		} catch (TypeError $pError) {
-			$this->assertEquals('Return value of '
-				.DataDetailView::class.'::getDataViewSimilarEstates() must be an instance of '
-				.DataViewSimilarEstates::class.', null returned', $pError->getMessage());
-		}
-
-		$string = serialize($pInstance);
-		$pNewInstance = unserialize($string);
-		$this->assertInstanceOf(DataViewSimilarEstates::class, $pNewInstance->getDataViewSimilarEstates());
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testDefaultValues()
 	{
 		$pDataDetailView = new DataDetailView();
@@ -138,11 +86,9 @@ class TestClassDataDetailView
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function testGetterSetter()
 	{
 		$pDataDetailView = new DataDetailView();
@@ -165,11 +111,9 @@ class TestClassDataDetailView
 		$this->assertEquals('/test/template1.test', $pDataDetailView->getTemplate());
 	}
 
-
 	/**
 	 *
 	 */
-
 	public function testEnableSimilarEstates()
 	{
 		$pDataDetailView = new DataDetailView();
@@ -179,12 +123,9 @@ class TestClassDataDetailView
 		$this->assertTrue($pDataDetailView->getDataDetailViewActive());
 	}
 
-
-
 	/**
 	 *
 	 */
-
 	public function testRandom()
 	{
 		$pDataDetailView = new DataDetailView();

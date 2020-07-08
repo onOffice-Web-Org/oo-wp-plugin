@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -23,9 +23,13 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\PDF;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderDetailView;
@@ -49,19 +53,15 @@ class PdfDocumentModelValidator
 	/** @var DataListViewFactory */
 	private $_pDataListViewFactory;
 
-	/**
-	 * @var DefaultFilterBuilderFactory
-	 */
+	/** @var DefaultFilterBuilderFactory */
 	private $_pDefaultFilterBuilderFactory;
 
 	/**
-	 *
 	 * @param APIClientActionGeneric $pAPIClientActionGeneric
 	 * @param DataDetailViewHandler $pDataDetailViewHandler
 	 * @param DataListViewFactory $pDataListViewFactory
 	 * @param DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory
 	 */
-
 	public function __construct(
 		APIClientActionGeneric $pAPIClientActionGeneric,
 		DataDetailViewHandler $pDataDetailViewHandler,
@@ -74,15 +74,14 @@ class PdfDocumentModelValidator
 		$this->_pDefaultFilterBuilderFactory = $pDefaultFilterBuilderFactory;
 	}
 
-
 	/**
-	 *
 	 * @param PdfDocumentModel $pModel
 	 * @return PdfDocumentModel
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 * @throws PdfDocumentModelValidationException
-	 *
 	 */
-
 	public function validate(PdfDocumentModel $pModel): PdfDocumentModel
 	{
 		$pModelClone = clone $pModel;
@@ -102,21 +101,22 @@ class PdfDocumentModelValidator
 			count($pApiClientAction->getResultRecords()) !== 1) {
 			throw new PdfDocumentModelValidationException();
 		}
+		$pModelClone->setEstateIdExternal
+			($pApiClientAction->getResultRecords()[0]['elements']['objektnr_extern']);
 		return $pModelClone;
 	}
 
-
 	/**
-	 *
 	 * @param PdfDocumentModel $pModel
 	 * @return array
-	 *
+	 * @throws UnknownViewException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
 	private function buildParameters(PdfDocumentModel $pModel): array
 	{
 		$parametersGetEstate = [
-			'data' => ['Id'],
+			'data' => ['Id', 'objektnr_extern'],
 			'estatelanguage' => $pModel->getLanguage(),
 			'formatoutput' => 0,
 		];
@@ -130,7 +130,7 @@ class PdfDocumentModelValidator
 			$pDefaultFilterBuilder->setEstateId($pModel->getEstateId());
 			$filter = $pDefaultFilterBuilder->buildFilter();
 		} else {
-			 /* @var $pView \onOffice\WPlugin\DataView\DataListView */
+			 /* @var $pView DataListView */
 			$pView = $this->_pDataListViewFactory->getListViewByName($pModel->getViewName());
 			$pModel->setTemplate($pView->getExpose());
 			$pDefaultFilterBuilder = $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pView);

@@ -23,26 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use Nette\Utils\DateTime;
-use onOffice\tests\WP_UnitTest_Localized;
 use onOffice\WPlugin\Gui\DateTimeFormatter;
-
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- */
 
 class TestClassDateTimeFormatter
 	extends WP_UnitTest_Localized
 {
-	/**
-	 *
-	 * Todo: When translation is ready, translate date/time formattings and test them here
-	 *
-	 */
-
 	public function testShortDate()
 	{
 		$this->switchLocale('en_US');
@@ -53,11 +38,6 @@ class TestClassDateTimeFormatter
 		$result = $pDateTimeFormatter->formatByTimestamp($format, $timestamp);
 		$this->assertEquals('2018/06/21', $result);
 	}
-
-
-	/**
-	 *
-	 */
 
 	public function testShortTime()
 	{
@@ -70,11 +50,6 @@ class TestClassDateTimeFormatter
 		$this->assertEquals('2:25:37 pm', $result);
 	}
 
-
-	/**
-	 *
-	 */
-
 	public function testShortDateTime()
 	{
 		$this->switchLocale('en_US');
@@ -86,15 +61,10 @@ class TestClassDateTimeFormatter
 		$this->assertEquals('2018/06/21 2:25:37 pm', $result);
 	}
 
-
 	/**
-	 *
 	 * Change this, when implementing long date
-	 *
 	 * @expectedException \Exception
-	 *
 	 */
-
 	public function testException()
 	{
 		$timestamp = $this->getTimestamp();
@@ -104,16 +74,13 @@ class TestClassDateTimeFormatter
 		$pDateTimeFormatter->formatByTimestamp($format, $timestamp);
 	}
 
-
 	/**
-	 *
 	 * @return int
-	 *
+	 * @throws \Exception
 	 */
-
 	private function getTimestamp(): int
 	{
-		$pDateTime = new DateTime('2018-06-21 14:25:37');
+		$pDateTime = new \DateTime('2018-06-21 14:25:37');
 		return $pDateTime->getTimestamp();
 	}
 }

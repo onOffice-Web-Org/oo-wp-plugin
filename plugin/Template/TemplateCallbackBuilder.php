@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Template;
 use Closure;
 use DI\Container;
 use onOffice\WPlugin\Controller\SortList\SortListDropDownGenerator;
+use onOffice\WPlugin\EstateList;
 
 class TemplateCallbackBuilder
 {

@@ -103,9 +103,9 @@ class TestClassPdfDocumentModelValidator
 		$this->_pAPIClientAction->expects($this->once())->method('withActionIdAndResourceType')
 			->with(onOfficeSDK::ACTION_ID_READ, 'estate')
 			->will($this->returnSelf());
-		$this->_pAPIClientAction->expects($this->once())->method('getResultStatus')->will($this->returnValue(true));
+		$this->_pAPIClientAction->expects($this->once())->method('getResultStatus')->willReturn(true);
 		$this->_pAPIClientAction->expects($this->once())->method('setParameters')->with([
-			'data' => ['Id'],
+			'data' => ['Id', 'objektnr_extern'],
 			'estatelanguage' => 'ENG',
 			'formatoutput' => 0,
 			'filter' => [
@@ -119,11 +119,12 @@ class TestClassPdfDocumentModelValidator
 				]],
 			],
 		]);
-		$this->_pAPIClientAction->expects($this->once())->method('getResultRecords')->will($this->returnValue([
+		$this->_pAPIClientAction->expects($this->atLeastOnce())->method('getResultRecords')->willReturn([
 			0 => [
 				'Id' => '13',
+				'elements' => ['objektnr_extern' => 'EXT1337'],
 			],
-		]));
+		]);
 		$pPdfDocumentModel = new PdfDocumentModel(13, 'detail');
 		$pResult = $this->_pSubject->validate($pPdfDocumentModel);
 		$this->assertInstanceOf(PdfDocumentModel::class, $pResult);
@@ -143,9 +144,9 @@ class TestClassPdfDocumentModelValidator
 		$this->_pAPIClientAction->expects($this->once())->method('withActionIdAndResourceType')
 			->with(onOfficeSDK::ACTION_ID_READ, 'estate')
 			->will($this->returnSelf());
-		$this->_pAPIClientAction->expects($this->once())->method('getResultStatus')->will($this->returnValue(true));
+		$this->_pAPIClientAction->expects($this->once())->method('getResultStatus')->willReturn(true);
 		$this->_pAPIClientAction->expects($this->once())->method('setParameters')->with([
-			'data' => ['Id'],
+			'data' => ['Id', 'objektnr_extern'],
 			'estatelanguage' => 'ENG',
 			'formatoutput' => 0,
 			'filter' => [
@@ -156,17 +157,18 @@ class TestClassPdfDocumentModelValidator
 			],
 			'filterid' => 11,
 		]);
-		$this->_pAPIClientAction->expects($this->once())->method('getResultRecords')->will($this->returnValue([
+		$this->_pAPIClientAction->expects($this->atLeastOnce())->method('getResultRecords')->willReturn([
 			0 => [
 				'Id' => '13',
+				'elements' => ['objektnr_extern' => 'EXT1337'],
 			],
-		]));
+		]);
 
 		$pDataListview = new DataListView(13, 'list');
 		$pDataListview->setFilterId(11);
 		$pDataListview->setExpose('testexpose');
 		$this->_pDataListviewFactory->expects($this->once())->method('getListViewByName')->with('list')
-			->will($this->returnValue($pDataListview));
+			->willReturn($pDataListview);
 		$pPdfDocumentModel = new PdfDocumentModel(13, 'list');
 		$pResult = $this->_pSubject->validate($pPdfDocumentModel);
 		$this->assertInstanceOf(PdfDocumentModel::class, $pResult);
@@ -203,7 +205,7 @@ class TestClassPdfDocumentModelValidator
 	{
 		$pDataListview = new DataListView(13, 'list');
 		$this->_pDataListviewFactory->expects($this->once())->method('getListViewByName')->with('list')
-			->will($this->returnValue($pDataListview));
+			->willReturn($pDataListview);
 		$pPdfDocumentModel = new PdfDocumentModel(13, 'list');
 		$this->_pSubject->validate($pPdfDocumentModel);
 	}

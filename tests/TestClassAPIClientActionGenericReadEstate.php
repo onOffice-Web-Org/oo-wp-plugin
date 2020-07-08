@@ -60,7 +60,7 @@ class TestClassAPIClientActionGenericReadEstate
 	 *
 	 */
 
-	private function sendRequest(array $apiResult)
+	private function sendRequest(array $apiResult): APIClientActionGeneric
 	{
 		$pSDKMocker = new SDKWrapperMocker();
 		$pApiCall = new APIClientActionGeneric($pSDKMocker, onOfficeSDK::ACTION_ID_READ, 'estate');

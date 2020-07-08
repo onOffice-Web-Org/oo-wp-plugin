@@ -184,6 +184,11 @@ abstract class AdminPageFormSettingsBase
 		$result = false;
 		$type = RecordManagerFactory::TYPE_FORM;
 
+		if (array_key_exists('name', $row[RecordManager::TABLENAME_FORMS])) {
+			$row[RecordManager::TABLENAME_FORMS]['name'] = $this->sanitizeShortcodeName(
+				$row[RecordManager::TABLENAME_FORMS]['name']);
+		}
+
 		if ($recordId != 0) {
 			$action = RecordManagerFactory::ACTION_UPDATE;
 			// update by row
@@ -530,6 +535,9 @@ abstract class AdminPageFormSettingsBase
 		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
 		wp_enqueue_script('onoffice-multiselect');
 		wp_enqueue_style('onoffice-multiselect');
+
+		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginforms-name']);
+		wp_enqueue_script('oo-sanitize-shortcode-name');
 	}
 
 	/**

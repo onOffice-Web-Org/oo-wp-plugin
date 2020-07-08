@@ -68,7 +68,7 @@ class FieldRowConverterSearchCriteria
 		$input['content'] = __('Search Criteria', 'onoffice');
 		$input['permittedvalues'] = $input['values'] ?? [];
 
-		if (($input['type'] ?? '') === 'displayLive') {
+		if (FieldTypes::isRegZusatzSearchcritTypes($input['type'])) {
 			$input['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 			$this->_pRegionController->fetchRegions();
 			$regions = $this->_pRegionController->getRegions();

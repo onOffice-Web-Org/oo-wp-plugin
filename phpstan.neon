@@ -1,25 +1,24 @@
 parameters:
-	level: 2
-	paths:
-		- plugin
-		- tests
-	excludes_analyse:
-		- SDK
-		- '/tmp/wordpress/'
-		- 'tests/bootstrap.php'
-		- 'tests/resources/'
-	autoload_files:
-		- 'tests/bootstrap.php'
-		- '/tmp/wordpress/wp-admin/includes/upgrade.php'
-	ignoreErrors:
-		-
-			message: '#[a-zA-Z0-9\\_]+::__construct\(\) does not call parent constructor from [a-zA-Z0-9\\_]+#'
-			path: '%currentWorkingDirectory%/tests/*Mocker.php'
-		-
-			message: '#Call to an undefined method [a-zA-Z0-9\\_]+::expects\(\)#'
-			path: '%currentWorkingDirectory%/tests/*.php'
-		-
-			message: '#Call to an undefined method [a-zA-Z0-9\\_]+::method\(\)#'
-			path: '%currentWorkingDirectory%/tests/*.php'
-includes:
-	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    level: 1
+    paths:
+        - config
+        - plugin
+        - tests
+    excludes_analyse:
+        - SDK
+        - '/tmp/wordpress/'
+        - 'tests/bootstrap.php'
+        - 'tests/resources/'
+        - 'vendor/'
+        - 'templates.dist/'
+    bootstrapFiles:
+        - 'tests/bootstrap.php'
+        - '/tmp/wordpress/wp-admin/includes/upgrade.php'
+        - '/tmp/wordpress/wp-admin/includes/translation-install.php'
+    scanFiles:
+        - plugin.php
+        - 'templates.dist/fields.php'
+    ignoreErrors:
+        -
+            message: '#Call to an undefined method\sonOffice\\WPlugin\\Model\\FormModelBuilder\\FormModelBuilder::getInputModelDBFactory\(\).#'
+            path: 'plugin/Model/FormModelBuilder/FormModelBuilder.php'

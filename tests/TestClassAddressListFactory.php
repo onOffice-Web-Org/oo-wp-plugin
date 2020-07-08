@@ -24,10 +24,11 @@ namespace onOffice\tests;
 
 use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
-use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
+use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Factory\AddressListFactory;
 
 class TestClassAddressListFactory
+	extends \WP_UnitTestCase
 {
 	/**
 	 * @var AddressListFactory

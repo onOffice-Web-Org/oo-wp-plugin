@@ -69,7 +69,8 @@ class ApiClientException
 		];
 
 		$message = json_encode($messageFormat, JSON_PRETTY_PRINT);
-		return $message."\n\n".parent::__toString();
+		$errorCode = "errorCode: ".json_encode($pApiClientAction->getErrorCode(), JSON_PRETTY_PRINT);
+		return $message."\n\n".$errorCode."\n\n".parent::__toString();
 	}
 
 

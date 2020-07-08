@@ -24,8 +24,9 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\PDF;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\ApiClientActionGetPdf;
-
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -33,56 +34,97 @@ use onOffice\WPlugin\API\ApiClientActionGetPdf;
 
 class PdfDocumentFetcher
 {
-	/** @var ApiClientActionGetPdf */
-	private $_pApiClientActionGetPdf = null;
+	/** @var array */
+	const WHITELIST_HEADERS = ['content-length', 'content-type'];
 
+	/** @var APIClientActionGeneric */
+	private $_pApiClientAction;
 
 	/**
-	 *
-	 * @param ApiClientActionGetPdf $pApiClientActionGetPdf
-	 *
+	 * @param APIClientActionGeneric $pApiClientAction
 	 */
-
-	public function __construct(ApiClientActionGetPdf $pApiClientActionGetPdf)
+	public function __construct(APIClientActionGeneric $pApiClientAction)
 	{
-		$this->_pApiClientActionGetPdf = $pApiClientActionGetPdf;
+		$this->_pApiClientAction = $pApiClientAction;
 	}
 
+	/**
+	 * HTTP tunnel meant to transport big files with low RAM usage
+	 * @param PdfDocumentModel $pModel
+	 * @param string $url
+	 * @throws PdfDownloadException
+	 */
+	public function proxyResult(PdfDocumentModel $pModel, string $url)
+	{
+		$filename = sprintf('%s_%s.pdf',
+			str_replace('urn:onoffice-de-ns:smart:2.5:pdf:expose:lang:', '', $pModel->getTemplate()),
+			$pModel->getEstateIdExternal());
+		header('Content-Disposition: attachment; filename="'.$filename.'"');
+		$curl = curl_init($url);
+		$pCallbackHeader = function($ch, $data): int {
+			return $this->setHeaders($data);
+		};
+
+		$writeCallback = function($ch, $data): int {
+			echo $data;
+			return strlen($data);
+		};
+
+		curl_setopt_array($curl, [
+			CURLOPT_FAILONERROR => true,
+			CURLOPT_WRITEFUNCTION => $writeCallback,
+			CURLOPT_HEADERFUNCTION => $pCallbackHeader,
+			CURLOPT_BUFFERSIZE => 1024 ** 2,
+		]);
+
+		if (!curl_exec($curl) || curl_getinfo($curl, CURLINFO_HTTP_CODE) !== 200) {
+			curl_close($curl);
+			throw new PdfDownloadException;
+		}
+		curl_close($curl);
+	}
 
 	/**
-	 *
-	 * @param PdfDocumentModel $pModel
-	 * @return PdfDocumentResult
-	 *
+	 * @param string $inputString
+	 * @return int
 	 */
-
-	public function fetch(PdfDocumentModel $pModel): PdfDocumentResult
+	private function setHeaders(string $inputString): int
 	{
-		$pApiClientAction = $this->_pApiClientActionGetPdf
+		foreach (self::WHITELIST_HEADERS as $header) {
+			if (__String::getNew(strtolower($inputString))->startsWith($header . ':') &&
+				substr_count($inputString, ':') === 1) {
+				header($inputString);
+			}
+		}
+		return strlen($inputString);
+	}
+
+	/**
+	 * @param PdfDocumentModel $pModel
+	 * @return string
+	 * @throws ApiClientException
+	 */
+	public function fetchUrl(PdfDocumentModel $pModel): string
+	{
+		$pApiClientAction = $this->_pApiClientAction
 			->withActionIdAndResourceType(onOfficeSDK::ACTION_ID_GET, 'pdf');
 		$parameters = $this->getParameters($pModel);
 		$pApiClientAction->setParameters($parameters);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
-		$pPdfDocumentResult = new PdfDocumentResult
-			($pApiClientAction->getMimeTypeResult(), $pApiClientAction->getResultRecords()[0]);
-		return $pPdfDocumentResult;
+		return $pApiClientAction->getResultRecords()[0]['elements'][0] ?? '';
 	}
 
-
 	/**
-	 *
 	 * @param PdfDocumentModel $pModel
 	 * @return array
-	 *
 	 */
-
 	private function getParameters(PdfDocumentModel $pModel): array
 	{
 		return [
 			'estateid' => $pModel->getEstateId(),
 			'language' => $pModel->getLanguage(),
 			'template' => $pModel->getTemplate(),
-			'gzcompress' => true,
+			'asurl' => true,
 		];
 	}
 }

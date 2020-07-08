@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,68 +19,52 @@
  *
  */
 
-
 declare (strict_types=1);
 
 namespace onOffice\WPlugin\Types;
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
- *
- */
-
 class ImageTypes
 {
-
-	/** */
 	const TITLE = 'Titelbild';
-
-	/** */
 	const PHOTO = 'Foto';
-
-	/** */
 	const PHOTO_BIG = 'Foto_gross';
-
-	/** */
 	const GROUNDPLAN = 'Grundriss';
-
-	/** */
 	const PANORAMA = 'Panorama';
-
-	/** */
 	const LOCATION_MAP = 'Lageplan';
-
-	/** */
 	const ENERGY_PASS_RANGE = 'Epass_Skala';
 
-	/** @var array */
-	static private $_imageTypes = array
-		(
-			self::TITLE => 'Cover Photo',
-			self::PHOTO => 'Photo',
-			self::PHOTO_BIG => 'Photo (big)',
-			self::PANORAMA => 'Panorama',
-			self::GROUNDPLAN => 'Ground Plan',
-			self::LOCATION_MAP => 'Location Map',
-			self::ENERGY_PASS_RANGE => 'Energy-Pass Range',
-		);
-
+	const IMAGE_TYPES = [
+		self::TITLE,
+		self::PHOTO,
+		self::PHOTO_BIG,
+		self::PANORAMA,
+		self::GROUNDPLAN,
+		self::LOCATION_MAP,
+		self::ENERGY_PASS_RANGE,
+	];
 
 	/**
-	 *
 	 * @param string $type
 	 * @return bool
-	 *
 	 */
-
-	static public function isImageType(string $type): bool
+	public static function isImageType(string $type): bool
 	{
-		return isset(self::$_imageTypes[$type]);
+		return in_array($type, self::IMAGE_TYPES, true);
 	}
 
-	/** @return array */
-	static public function getAllImageTypes(): array
-		{ return self::$_imageTypes; }
+	/**
+	 * @return array
+	 */
+	public static function getAllImageTypesTranslated(): array
+	{
+		return [
+			self::TITLE => __('Cover Photo', 'onoffice'),
+			self::PHOTO => __('Photo', 'onoffice'),
+			self::PHOTO_BIG => __('Photo (big)', 'onoffice'),
+			self::PANORAMA => __('Panorama', 'onoffice'),
+			self::GROUNDPLAN => __('Ground Plan', 'onoffice'),
+			self::LOCATION_MAP => __('Location Map', 'onoffice'),
+			self::ENERGY_PASS_RANGE => __('Energy-Pass Range', 'onoffice'),
+		];
+	}
 }

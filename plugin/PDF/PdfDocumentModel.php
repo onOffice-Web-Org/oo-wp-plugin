@@ -42,6 +42,9 @@ class PdfDocumentModel
 	private $_template = '';
 
 	/** @var string */
+	private $_estateIdExternal = '';
+
+	/** @var string */
 	private $_viewName;
 
 
@@ -130,5 +133,21 @@ class PdfDocumentModel
 	public function setTemplate(string $template)
 	{
 		$this->_template = $template;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getEstateIdExternal(): string
+	{
+		return $this->_estateIdExternal;
+	}
+
+	/**
+	 * @param string $estateIdExternal
+	 */
+	public function setEstateIdExternal(string $estateIdExternal)
+	{
+		$this->_estateIdExternal = $estateIdExternal;
 	}
 }
