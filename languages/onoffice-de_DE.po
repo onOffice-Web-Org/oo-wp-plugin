@@ -348,11 +348,11 @@ msgid "Fields"
 msgstr "Felder"
 
 #: plugin/Gui/AdminPageEstateDetail.php:161
-msgid "Contact person fields"
-msgstr "Felder Ansprechpartner"
+msgid "Contact Person Fields"
+msgstr "Ansprechpartner-Felder"
 
 #: plugin/Gui/AdminPageEstateDetail.php:176
-msgid "Real estate data fields"
+msgid "Real Estate Fields"
 msgstr "Felder Immobiliendaten"
 
 #: plugin/Gui/AdminPageEstateDetail.php:293

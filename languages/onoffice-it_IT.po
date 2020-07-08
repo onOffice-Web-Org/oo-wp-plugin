@@ -239,11 +239,11 @@ msgid "Fields"
 msgstr "I campi"
 
 #: plugin/Gui/AdminPageEstateDetail.php:161
-msgid "Contact person fields"
+msgid "Contact Person Fields"
 msgstr "Campi della persona di contatto"
 
 #: plugin/Gui/AdminPageEstateDetail.php:176
-msgid "Real estate data fields"
+msgid "Real Estate Fields"
 msgstr "Campi dati immobiliari"
 
 #: plugin/Gui/AdminPageEstateDetail.php:296
