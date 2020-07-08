@@ -40,7 +40,7 @@ class __String
 	 *
 	 */
 
-	public function __construct(string $string)
+	final public function __construct(string $string)
 	{
 		$this->_string = $string;
 	}
@@ -48,7 +48,7 @@ class __String
 
 	/**
 	 *
-	 * @param string $string
+	 * @param string|null $string
 	 * @return static
 	 *
 	 */

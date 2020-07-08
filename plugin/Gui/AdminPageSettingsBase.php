@@ -342,10 +342,23 @@ abstract class AdminPageSettingsBase
 
 	protected function prepareValues(stdClass $pValues) {}
 
+	/**
+	 *  following characters are compatible across all platforms:
+	 * Upper-case and lower-case letters: A-Z a-z (+ Umlaut)
+	 * Digits: 0-9
+	 * Underscore: _
+	 * @param string $name
+	 * @return string
+	 */
+	protected function sanitizeShortcodeName(string $name): string
+	{
+		return preg_replace('/[^a-zA-Z0-9äÄöÖüÜß:_ \-]/u', '', $name);
+	}
+
 
 	/**
 	 *
-	 * @param string $module
+	 * @param string|null $module
 	 * @param FormModelBuilder $pFormModelBuilder
 	 * @param array $fieldNames
 	 * @param bool $addModule
@@ -442,6 +455,10 @@ abstract class AdminPageSettingsBase
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'third_party/chosen/docsupport/init.js', ['chosen-jquery', 'chosen-prism'], '', true);
 
 		wp_enqueue_script('chosen-init');
+
+		wp_register_script('oo-sanitize-shortcode-name',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/onoffice-sanitize-shortcode-name.js',
+			['jquery'], '', true);
 	}
 
 

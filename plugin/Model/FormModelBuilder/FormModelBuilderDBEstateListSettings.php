@@ -351,7 +351,7 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelPictureTypes()
 	{
-		$allPictureTypes = ImageTypes::getAllImageTypes();
+		$allPictureTypes = ImageTypes::getAllImageTypesTranslated();
 
 		$pInputModelPictureTypes = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_PICTURE_TYPE, null, true);

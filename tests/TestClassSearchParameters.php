@@ -38,7 +38,7 @@ class TestClassSearchParameters
 	extends WP_UnitTestCase
 {
 
-	/** @var SearchParamsModel */
+	/** @var SearchParametersModel */
 	private $_pModel = null;
 
 

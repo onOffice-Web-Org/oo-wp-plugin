@@ -847,3 +847,23 @@ msgstr "Volgende"
 #: templates.dist/form/ownerleadgeneratorform.php:132
 msgid "Open the Form"
 msgstr "Open het formulier"
+
+#: templates.dist/estate/default_detail.php
+msgid "Description"
+msgstr "Omschrijving"
+
+#: templates.dist/estate/default_detail.php
+msgid "Location"
+msgstr "Plaats"
+
+#: templates.dist/estate/default_detail.php
+msgid "Equipment"
+msgstr "Inrichting"
+
+#: templates.dist/estate/default_detail.php
+msgid "Other Information"
+msgstr "Extra informatie"
+
+#: templates.dist/estate/default_detail.php
+msgid "Map"
+msgstr "Kaart"

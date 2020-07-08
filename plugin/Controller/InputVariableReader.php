@@ -80,11 +80,11 @@ class InputVariableReader
 		return $fieldValue;
 	}
 
-
 	/**
 	 *
 	 * @param string $fieldInput
 	 *
+	 * @return array|string
 	 */
 
 	public function getFieldValueFormatted(string $fieldInput)

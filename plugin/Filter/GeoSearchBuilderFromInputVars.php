@@ -26,19 +26,13 @@ namespace onOffice\WPlugin\Filter;
 use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\ViewProperty;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\SDKWrapper;
-
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- */
 
 class GeoSearchBuilderFromInputVars
 	implements GeoSearchBuilder
@@ -65,7 +59,6 @@ class GeoSearchBuilderFromInputVars
 		GeoPositionFieldHandler $pGeoPositionFieldHandler = null,
 		APIClientActionGeneric $pAPIClientActionGeneric = null)
 	{
-		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler;
 		$this->_pEstateListInputVariableReader = $pEstateListInputVariableReader ??
 			new InputVariableReader(onOfficeSDK::MODULE_ESTATE);
 		$this->_pGeoPositionFieldHandler = $pGeoPositionFieldHandler ?? new GeoPositionFieldHandler();
@@ -76,13 +69,13 @@ class GeoSearchBuilderFromInputVars
 	/**
 	 * @param array $inputs
 	 * @return array
-	 * @throws APIEmptyResultException
+	 * @throws ApiClientException
 	 */
 	private function createGeoRangeSearchParameterRequest(array $inputs): array
 	{
-		$radius = $inputs[GeoPosition::ESTATE_LIST_SEARCH_RADIUS] ??
-			$this->_pGeoPositionFieldHandler->getRadiusValue();
-		$inputs[GeoPosition::ESTATE_LIST_SEARCH_RADIUS] = $radius;
+		if (empty($inputs[GeoPosition::ESTATE_LIST_SEARCH_RADIUS] ?? false)) {
+			$inputs[GeoPosition::ESTATE_LIST_SEARCH_RADIUS] = $this->_pGeoPositionFieldHandler->getRadiusValue();
+		}
 		$country = $inputs[GeoPosition::ESTATE_LIST_SEARCH_COUNTRY] ??
 			$this->readDefaultCountryValue();
 		$inputs[GeoPosition::ESTATE_LIST_SEARCH_COUNTRY] = $country;
@@ -128,7 +121,7 @@ class GeoSearchBuilderFromInputVars
 
 	/**
 	 * @return string
-	 * @throws APIEmptyResultException
+	 * @throws ApiClientException
 	 */
 	private function readDefaultCountryValue(): string
 	{

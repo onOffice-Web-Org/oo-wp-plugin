@@ -136,6 +136,37 @@ abstract class FormPost
 		}
 	}
 
+	/**
+	 * @return array
+	 */
+	protected function expandFieldsCollection()
+	{
+		return [];
+	}
+
+	/**
+	 * @param DataFormConfiguration $pFormConfig
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	protected function setFieldsCollection(DataFormConfiguration $pFormConfig)
+	{
+		$pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pFormPostConfiguration->getFieldsCollectionBuilderShort();
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsSearchCriteria($pFieldsCollection)
+			->addFieldsFormFrontend($pFieldsCollection);
+
+		$this->_pFieldsCollection = $this->_pFieldsCollectionConfiguratorForm
+			->buildForFormType($pFieldsCollection, $pFormConfig->getFormType());
+
+		foreach ($this->expandFieldsCollection() as $pField) {
+			if (!$this->_pFieldsCollection->containsFieldByModule($pField->getModule(), $pField->getName())) {
+				$this->_pFieldsCollection->addField($pField);
+			}
+		}
+	}
 
 	/**
 	 *
@@ -173,15 +204,7 @@ abstract class FormPost
 	{
 		$pFormFieldValidator = new FormFieldValidator(new RequestVariablesSanitizer, $this->_pSearchcriteriaFields);
 
-		$pFieldsCollection = new FieldsCollection();
-		$pFieldBuilderShort = $this->_pFormPostConfiguration->getFieldsCollectionBuilderShort();
-		$pFieldBuilderShort
-			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsSearchCriteria($pFieldsCollection)
-			->addFieldsFormFrontend($pFieldsCollection);
-
-		$this->_pFieldsCollection = $this->_pFieldsCollectionConfiguratorForm
-			->buildForFormType($pFieldsCollection, $pFormConfig->getFormType());
+		$this->setFieldsCollection($pFormConfig);
 		$this->_pCompoundFields = $this->_pFormPostConfiguration->getCompoundFields();
 		$requiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getRequiredFields());
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());

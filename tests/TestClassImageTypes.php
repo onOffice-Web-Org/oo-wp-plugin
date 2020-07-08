@@ -55,10 +55,11 @@ class TestClassImageTypes
 	 *
 	 */
 
-	public function testGetAllImageTypes()
+	public function testGetAllImageTypesTranslated()
 	{
 		$pReflection = new ReflectionClass(ImageTypes::class);
-		$constants = $pReflection->getConstants();
-		$this->assertEqualSets($constants, array_keys(ImageTypes::getAllImageTypes()));
+		$nameConstants = $pReflection->getConstants();
+		unset($nameConstants['IMAGE_TYPES']);
+		$this->assertEqualSets($nameConstants, array_keys(ImageTypes::getAllImageTypesTranslated()));
 	}
 }

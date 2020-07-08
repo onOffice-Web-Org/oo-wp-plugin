@@ -23,6 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\PDF;
 
+use DI\DependencyException;
+use DI\NotFoundException;
+use onOffice\WPlugin\API\ApiClientException;
+
 /**
  *
  */
@@ -35,14 +39,10 @@ class PdfDownload
 	/** @var PdfDocumentModelValidator */
 	private $_pPdfDocumentModelValidator;
 
-
 	/**
-	 *
 	 * @param PdfDocumentFetcher $pPdfDocumentFetcher
 	 * @param PdfDocumentModelValidator $pPdfDocumentModelValidator
-	 *
 	 */
-
 	public function __construct(
 		PdfDocumentFetcher $pPdfDocumentFetcher,
 		PdfDocumentModelValidator $pPdfDocumentModelValidator)
@@ -51,18 +51,18 @@ class PdfDownload
 		$this->_pPdfDocumentModelValidator = $pPdfDocumentModelValidator;
 	}
 
-
 	/**
-	 *
 	 * @param PdfDocumentModel $pModel
-	 * @return PdfDocumentResult
+	 * @throws ApiClientException
 	 * @throws PdfDocumentModelValidationException
-	 *
+	 * @throws PdfDownloadException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	public function download(PdfDocumentModel $pModel): PdfDocumentResult
+	public function download(PdfDocumentModel $pModel)
 	{
 		$pModelValidated = $this->_pPdfDocumentModelValidator->validate($pModel);
-		return $this->_pPdfDocumentFetcher->fetch($pModelValidated);
+		$url = $this->_pPdfDocumentFetcher->fetchUrl($pModelValidated);
+		$this->_pPdfDocumentFetcher->proxyResult($pModelValidated, $url);
 	}
 }

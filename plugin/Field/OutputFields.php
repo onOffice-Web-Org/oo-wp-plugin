@@ -25,9 +25,11 @@ namespace onOffice\WPlugin\Field;
 
 use onOffice\WPlugin\Controller\GeoPositionFieldHandlerBase;
 use onOffice\WPlugin\Controller\InputVariableReader;
+use onOffice\WPlugin\Controller\InputVariableReaderConfigFieldsCollection;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\GeoPosition;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 
 /**
  *
@@ -74,10 +76,17 @@ class OutputFields
 
 		$allFields = array_merge($fieldsArray, array_keys($geoFields));
 		$valuesDefault = array_map(function($field) use ($geoFields, $pInputVariableReader) {
-			return $pInputVariableReader->getFieldValueFormatted($field) ?? $geoFields[$field] ?? null;
+			return $pInputVariableReader->getFieldValueFormatted($field) ?: $geoFields[$field] ?? null;
 		}, $allFields);
 
 		$resultDefault = array_combine($allFields, $valuesDefault);
+
+		if ($posGeo !== false &&
+			empty($resultDefault[GeoPosition::ESTATE_LIST_SEARCH_CITY]) &&
+			empty($resultDefault[GeoPosition::ESTATE_LIST_SEARCH_ZIP])) {
+			$emptyGeo = array_combine(array_keys($geoFields), array_fill(0, count($geoFields), null));
+			$resultDefault = array_merge($resultDefault, $emptyGeo);
+		}
 
 		$result = $this->_pCompoundFieldsFilter->mergeListFilterableFields
 			($pFieldsCollection, $resultDefault);

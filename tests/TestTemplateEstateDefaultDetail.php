@@ -27,44 +27,37 @@ use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\EstateDetail;
 use WP_UnitTestCase;
 
-/**
- *
- */
-
 class TestTemplateEstateDefaultDetail
 	extends WP_UnitTestCase
 {
 	/** @var EstateDetail */
 	private $_pEstate = null;
 
-
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
 		$this->_pEstate = $this->getMockBuilder(EstateDetail::class)
-				->setMethods(['getEstateUnits',
-							'estateIterator',
-							'getFieldLabel',
-							'getEstateContacts',
-							'getMovieEmbedPlayers',
-							'getEstatePictures',
-							'setEstateId',
-							'getEstateMovieLinks',
-							'getEstatePictureUrl',
-							'getEstatePictureTitle',
-							'getDocument',
-							'getCurrentEstateId',
-							'getSimilarEstates',
-						])
-				->disableOriginalConstructor()
-				->getMock();
+			->setMethods([
+				'getEstateUnits',
+				'estateIterator',
+				'getFieldLabel',
+				'getEstateContacts',
+				'getMovieEmbedPlayers',
+				'getEstatePictures',
+				'setEstateId',
+				'getEstateMovieLinks',
+				'getEstatePictureUrl',
+				'getEstatePictureTitle',
+				'getDocument',
+				'getCurrentEstateId',
+				'getSimilarEstates',
+			])
+			->disableOriginalConstructor()
+			->getMock();
 
-		$this->_pEstate->method('getEstateUnits')->willReturn('');
+		$this->_pEstate->method('getEstateUnits')->willReturn('Estate Units here');
 
 		$estateData = [
 			'objekttitel' => 'flach begrüntes Grundstück',
@@ -79,22 +72,23 @@ class TestTemplateEstateDefaultDetail
 			'objektbeschreibung' => 'große Freifläche',
 			'lage' => 'Das Grundstück liegt am Waldrand und ist über einen geteerten Feldweg erreichbar.',
 			'ausstatt_beschr' => 'teilweise mit einer alten Mauer aus Findlingen umgeben',
-			'sonstige_angaben' => 'Vereinbaren sie noch heute einen Besichttgungstermin'
+			'sonstige_angaben' => 'Vereinbaren sie noch heute einen Besichtigungstermin',
 		];
 
 		$pArrayContainerEstateDetail = new ArrayContainerEscape($estateData);
 
 		$this->_pEstate->setEstateId(52);
-		$this->_pEstate->method('estateIterator')->will($this->onConsecutiveCalls($pArrayContainerEstateDetail, false));
-
+		$this->_pEstate->method('estateIterator')
+			->will($this->onConsecutiveCalls($pArrayContainerEstateDetail, false));
 		$this->_pEstate->method('getFieldLabel')->with($this->anything())
 			->will($this->returnCallback(function(string $field): string {
 				return 'label-'.$field;
 			}));
 
 		$contactData = [
-			'Name' => 'Petrova Ivanova',
-			'Vorname' => 'Ana'];
+			'Name' => 'Parker',
+			'Vorname' => 'Peter',
+		];
 		$pArrayContainerContact = new ArrayContainerEscape($contactData);
 		$this->_pEstate->method('getEstateContacts')->willReturn([$pArrayContainerContact]);
 
@@ -104,18 +98,17 @@ class TestTemplateEstateDefaultDetail
 		];
 
 		$this->_pEstate->method('getEstateMovieLinks')->willReturn([$movielLink]);
-
 		$this->_pEstate->method('getMovieEmbedPlayers')->willReturn([]);
 		$this->_pEstate->method('getEstatePictures')->willReturn([362]);
-		$this->_pEstate->method('getEstatePictureUrl')->with(362)->willReturn(
-				'https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&#038;datensatz=52&#038;filename=Titelbild_362.jpg');
-		$this->_pEstate->method('getEstatePictureTitle')->with(362)->willReturn('Fotolia_3286409_Subscription_XL');
-
-		$this->_pEstate->method('getDocument')->willReturn('');
+		$this->_pEstate->method('getEstatePictureUrl')->with(362)
+			->willReturn('https://image.onoffice.de/smart25/Objekte/index.php?kunde=Ivanova&'
+			.'#038;datensatz=52&#038;filename=Titelbild_362.jpg');
+		$this->_pEstate->method('getEstatePictureTitle')->with(362)
+			->willReturn('Fotolia_3286409_Subscription_XL');
+		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
-		$this->_pEstate->method('getSimilarEstates')->willReturn('');
+		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
 	}
-
 
 	/**
 	 * @covers \onOffice\WPlugin\Template::render
@@ -126,8 +119,7 @@ class TestTemplateEstateDefaultDetail
 			->withTemplateName('templates.dist/estate/default_detail.php')
 			->withEstateList($this->_pEstate);
 		$output = $pTemplate->render();
-		$expected = file_get_contents(__DIR__.'/resources/templates/output_default_detail.html');
-
-		$this->assertEquals($expected, $output);
+		$this->assertStringEqualsFile
+			(__DIR__.'/resources/templates/output_default_detail.html', $output);
 	}
 }

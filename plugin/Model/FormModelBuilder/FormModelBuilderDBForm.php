@@ -76,7 +76,7 @@ class FormModelBuilderDBForm
 	}
 
 	/**
-	 * @param string $module
+	 * @param string|array $module
 	 * @param string $htmlType
 	 * @return InputModelDB
 	 * @throws DependencyException

@@ -107,15 +107,14 @@ class FormPostInterest
 	}
 
 	/**
-	 *
 	 * @param FormData $pFormData
 	 * @param string $recipient
 	 * @param string $subject
 	 * @throws ApiClientException
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws Field\UnknownFieldException
 	 */
-
 	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
 	{
 		$filledAddressData = $this->_pFormPostInterestConfiguration->getFormAddressCreator()

@@ -38,7 +38,7 @@ use WP_UnitTestCase;
 class TestClassSortListDropDownGenerator
 	extends WP_UnitTestCase
 {
-	/** @var DataListviewFactory */
+	/** @var DataListViewFactory */
 	private $_pDataListViewFactory;
 
 	/** @var SortListBuilder */
@@ -47,7 +47,7 @@ class TestClassSortListDropDownGenerator
 	/** @var SortListRenderer */
 	private $_pSortListRenderer;
 
-	/** @var DataListview */
+	/** @var DataListView */
 	private $_pListView;
 
 	/** @var FieldsCollectionBuilderShort */
@@ -84,7 +84,7 @@ class TestClassSortListDropDownGenerator
 
 		$this->_pBuilder->method('addFieldsAddressEstate')
 			->with($this->anything())
-			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
+			->willReturnCallback(function (FieldsCollection $pFieldsCollection): FieldsCollectionBuilderShort {
 				$pKaltmiete = new Field('kaltmiete', onOfficeSDK::MODULE_ESTATE);
 				$pKaltmiete->setLabel('Kaltmiete');
 				$pFieldsCollection->addField($pKaltmiete);
@@ -94,7 +94,7 @@ class TestClassSortListDropDownGenerator
 				$pFieldsCollection->addField($pKaufpreis);
 
 				return $this->_pBuilder;
-			}));
+			});
 
 		$this->_pSortListBuilder = new SortListBuilder($this->_pBuilder);
 	}
