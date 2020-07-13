@@ -73,9 +73,15 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.6 =
+
+**Fixes**
+
+* Fix adding fields in the configuration of the real estate detail view.
+
 = 2.7.5 =
 
-** Changes **
+**Changes**
 
 * Fix translations for image-type label in back-end.
 * Fix sending multiple address form values for a multi select field in emails.
@@ -92,19 +98,19 @@ Start editing inside the `onoffice-personalized` folder.
 
 = 2.7.2 =
 
-** Changes **
+**Changes**
 
 * more legal characters for list and form names (shortcode names).
 
 = 2.7.1 =
 
-** Fixes **
+**Fixes**
 
 * Fix of distinct fields.
 
 = 2.7.0 =
 
-** New **
+**New**
 
 * A new and faster pdf download.
 
@@ -112,6 +118,9 @@ Start editing inside the `onoffice-personalized` folder.
 More information can be found in our [changelog](changelog.txt).
 
 == Upgrade Notice ==
+
+= 2.7.6 =
+Fix adding fields in the configuration of the real estate detail view.
 
 = 2.7.5 =
 Fix translations for image-type label in back-end and fix sending multiple address form values for a multi select field in emails.
