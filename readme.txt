@@ -73,6 +73,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.7 =
+
+**New**
+
+* Fix option to reduce possible field values according to selected filter
+* UI changes to automatically select estate type according to kind
+* preview of how many results will be found
+
 = 2.7.6 =
 
 **Fixes**

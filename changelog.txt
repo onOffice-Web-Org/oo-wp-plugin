@@ -1,5 +1,54 @@
 == Changelog ==
 
+= 2.7.7 =
+
+**New**
+
+* Fix option to reduce possible field values according to selected filter
+* UI changes to automatically select estate type according to kind
+* preview of how many results will be found
+
+= 2.7.6 =
+
+**Fixes**
+
+* Fix adding fields in the configuration of the real estate detail view.
+
+= 2.7.5 =
+
+**Changes**
+
+* Fix translations for image-type label in back-end.
+* Fix sending multiple address form values for a multi select field in emails.
+
+= 2.7.4 =
+
+* Minor fixes
+
+= 2.7.3 =
+
+** Changes **
+
+* New pdf filename.
+
+= 2.7.2 =
+
+**Changes**
+
+* more legal characters for list and form names (shortcode names).
+
+= 2.7.1 =
+
+**Fixes**
+
+* Fix of distinct fields.
+
+= 2.7.0 =
+
+**New**
+
+* A new and faster pdf download
+
 = 2.6.3 =
 
 ** Fixes **
@@ -9,7 +58,7 @@
 
 = 2.6.2 =
 
-** Changes **
+**Changes**
 
 * Removal of illegal characters in shortcode names on saving.
 
