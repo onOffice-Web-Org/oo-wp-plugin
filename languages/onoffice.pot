@@ -1,5 +1,5 @@
 # Copyright (C) 2020 onOffice GmbH
-# This file is distributed under the same license as the onOffice for WP-Websites plugin.
+# This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-06-15T10:26:17+02:00\n"
+"POT-Creation-Date: 2020-07-07T15:31:29+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.2.0\n"
+"X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: onoffice\n"
 
 #. Plugin Name of the plugin
@@ -123,26 +123,16 @@ msgstr ""
 msgid "Form Specific Fields"
 msgstr ""
 
-#: plugin/Field/DistinctFieldsScriptRegistrator.php:79
-msgid "Not specified"
-msgstr ""
-
-#: plugin/Field/DistinctFieldsScriptRegistrator.php:80
-#: templates.dist/fields.php:77
-#: templates.dist/fields.php:157
-msgid "Edit values"
-msgstr ""
-
 #: plugin/Field/FieldModuleCollectionDecoratorGeoPositionBackend.php:70
 msgid "Geo Range Search"
 msgstr ""
 
-#: plugin/Form.php:96
+#: plugin/Form.php:98
 msgid "Submit"
 msgstr ""
 
 #. translators: %1$s is the estate title, %5$s is the estate ID
-#: plugin/Form.php:580
+#: plugin/Form.php:571
 msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
 msgstr ""
 
@@ -619,7 +609,7 @@ msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:181
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
-msgid "Available Options"
+msgid "Reduce values according to selected filter"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:314
@@ -845,6 +835,19 @@ msgstr ""
 msgid "(Remains unchanged)"
 msgstr ""
 
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:84
+msgid "0 matches"
+msgstr ""
+
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:85
+msgid "Show exact match"
+msgstr ""
+
+#. translators: %s is the amount of results
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:87
+msgid "Show %s matches"
+msgstr ""
+
 #: plugin/Translation/FormTranslation.php:55
 msgctxt "forms"
 msgid "All"
@@ -954,32 +957,32 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: templates.dist/estate/default.php:38
+#: templates.dist/estate/default.php:36
 msgid "Overview of Estates"
 msgstr ""
 
 #. translators: %d will be replaced with a number.
-#: templates.dist/estate/default.php:42
+#: templates.dist/estate/default.php:40
 msgctxt "template"
 msgid "Found %d estates over all."
 msgstr ""
 
-#: templates.dist/estate/default.php:90
+#: templates.dist/estate/default.php:88
 #: templates.dist/estate/similar_estates.php:43
 msgid "Show Details"
 msgstr ""
 
-#: templates.dist/estate/default.php:95
+#: templates.dist/estate/default.php:93
 #: templates.dist/estate/default_detail.php:131
 msgid "PDF expose"
 msgstr ""
 
-#: templates.dist/estate/default.php:101
-#: templates.dist/estate/default.php:117
+#: templates.dist/estate/default.php:99
+#: templates.dist/estate/default.php:115
 msgid "Add to "
 msgstr ""
 
-#: templates.dist/estate/default.php:123
+#: templates.dist/estate/default.php:121
 msgid "Remove from "
 msgstr ""
 
@@ -1045,6 +1048,11 @@ msgstr ""
 msgid "Choose country"
 msgstr ""
 
+#: templates.dist/fields.php:77
+#: templates.dist/fields.php:157
+msgid "Edit values"
+msgstr ""
+
 #: templates.dist/fields.php:91
 msgid "From: "
 msgstr ""
@@ -1055,7 +1063,7 @@ msgstr ""
 
 #. translators: %s will be replaced with the translated field name.
 #: templates.dist/fields.php:126
-#: templates.dist/fields.php:200
+#: templates.dist/fields.php:205
 msgid "Choose %s"
 msgstr ""
 
@@ -1091,19 +1099,19 @@ msgstr ""
 msgid "search within distance of:"
 msgstr ""
 
-#: templates.dist/form/applicantsearchform.php:106
+#: templates.dist/form/applicantsearchform.php:112
 msgid "Search for Prospective Buyers"
 msgstr ""
 
 #. translators: %s will be replaced with a number.
-#: templates.dist/form/applicantsearchform.php:119
+#: templates.dist/form/applicantsearchform.php:126
 msgid "%s Prospective Buyer"
 msgid_plural "%s Prospective Buyers"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s will be replaced with a customer reference number.
-#: templates.dist/form/applicantsearchform.php:127
+#: templates.dist/form/applicantsearchform.php:134
 msgid "Customer ref. number %s"
 msgstr ""
 

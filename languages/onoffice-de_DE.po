@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2020-06-15T10:26:17+02:00\n"
-"PO-Revision-Date: 2020-06-15 11:03+0200\n"
+"POT-Creation-Date: 2020-07-07T15:08:51+02:00\n"
+"PO-Revision-Date: 2020-07-07 15:11+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -132,25 +132,16 @@ msgstr "Suchkriterium"
 msgid "Form Specific Fields"
 msgstr "Formspezifische Felder"
 
-#: plugin/Field/DistinctFieldsScriptRegistrator.php:79
-msgid "Not specified"
-msgstr "Keine Angaben"
-
-#: plugin/Field/DistinctFieldsScriptRegistrator.php:80
-#: templates.dist/fields.php:77 templates.dist/fields.php:157
-msgid "Edit values"
-msgstr "Werte bearbeiten"
-
 #: plugin/Field/FieldModuleCollectionDecoratorGeoPositionBackend.php:70
 msgid "Geo Range Search"
 msgstr "Umkreissuche"
 
-#: plugin/Form.php:96
+#: plugin/Form.php:98
 msgid "Submit"
 msgstr "Absenden"
 
 #. translators: %1$s is the estate title, %5$s is the estate ID
-#: plugin/Form.php:580
+#: plugin/Form.php:571
 msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
 msgstr "Ihre Anfrage zu der Immobilie „%1$s“ (%5$s)"
 
@@ -651,9 +642,8 @@ msgid "Hidden"
 msgstr "Unsichtbar"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:181
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
-msgid "Available Options"
-msgstr "Abhängigkeiten auflösen"
+msgid "Reduce values according to selected filter"
+msgstr "Werte durch gewählten Filter reduzieren"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:314
 msgid "Show Estate Status"
@@ -745,6 +735,10 @@ msgstr "Maximale Ergebnisanzahl"
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:323
 msgid "Required"
 msgstr "Pflichtangabe"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
+msgid "Available Options"
+msgstr "Abhängigkeiten auflösen"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:368
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:382
@@ -878,6 +872,19 @@ msgstr "Bearbeiten"
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:84
+msgid "0 matches"
+msgstr "0 Treffer"
+
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:85
+msgid "Show exact match"
+msgstr "Einen Treffer anzeigen"
+
+#. translators: %s is the amount of results
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:87
+msgid "Show %s matches"
+msgstr "%s Treffer anzeigen"
+
 #: plugin/Translation/FormTranslation.php:55
 msgctxt "forms"
 msgid "All"
@@ -987,31 +994,31 @@ msgstr "Foto:"
 msgid "Send"
 msgstr "Absenden"
 
-#: templates.dist/estate/default.php:38
+#: templates.dist/estate/default.php:36
 msgid "Overview of Estates"
 msgstr "Immobilienübersicht"
 
 #. translators: %d will be replaced with a number.
-#: templates.dist/estate/default.php:42
+#: templates.dist/estate/default.php:40
 msgctxt "template"
 msgid "Found %d estates over all."
 msgstr "Insgesamt %d Immobilien gefunden."
 
-#: templates.dist/estate/default.php:90
+#: templates.dist/estate/default.php:88
 #: templates.dist/estate/similar_estates.php:43
 msgid "Show Details"
 msgstr "Details anzeigen"
 
-#: templates.dist/estate/default.php:95
+#: templates.dist/estate/default.php:93
 #: templates.dist/estate/default_detail.php:131
 msgid "PDF expose"
 msgstr "PDF-Exposé"
 
-#: templates.dist/estate/default.php:101 templates.dist/estate/default.php:117
+#: templates.dist/estate/default.php:99 templates.dist/estate/default.php:115
 msgid "Add to "
 msgstr "Hinzufügen zu "
 
-#: templates.dist/estate/default.php:123
+#: templates.dist/estate/default.php:121
 msgid "Remove from "
 msgstr "Löschen von "
 
@@ -1077,6 +1084,10 @@ msgstr "Weitere ähnliche Immobilien"
 msgid "Choose country"
 msgstr "Land auswählen"
 
+#: templates.dist/fields.php:77 templates.dist/fields.php:157
+msgid "Edit values"
+msgstr "Werte bearbeiten"
+
 #: templates.dist/fields.php:91
 msgid "From: "
 msgstr "Von: "
@@ -1086,7 +1097,7 @@ msgid "Up to: "
 msgstr "Bis: "
 
 #. translators: %s will be replaced with the translated field name.
-#: templates.dist/fields.php:126 templates.dist/fields.php:200
+#: templates.dist/fields.php:126 templates.dist/fields.php:205
 msgid "Choose %s"
 msgstr "%s auswählen"
 
@@ -1120,19 +1131,19 @@ msgstr "Bitte ausfüllen!"
 msgid "search within distance of:"
 msgstr "Suche innerhalb ein Radius von:"
 
-#: templates.dist/form/applicantsearchform.php:106
+#: templates.dist/form/applicantsearchform.php:112
 msgid "Search for Prospective Buyers"
 msgstr "Suche nach potenziellen Käufern"
 
 #. translators: %s will be replaced with a number.
-#: templates.dist/form/applicantsearchform.php:119
+#: templates.dist/form/applicantsearchform.php:126
 msgid "%s Prospective Buyer"
 msgid_plural "%s Prospective Buyers"
 msgstr[0] "%s potenzieller Käufer"
 msgstr[1] "%s potenzielle Käufer"
 
 #. translators: %s will be replaced with a customer reference number.
-#: templates.dist/form/applicantsearchform.php:127
+#: templates.dist/form/applicantsearchform.php:134
 msgid "Customer ref. number %s"
 msgstr "Kundennummer %s"
 
@@ -1183,6 +1194,9 @@ msgstr "Weiter"
 #: templates.dist/form/ownerleadgeneratorform.php:133
 msgid "Open the Form"
 msgstr "Formular öffnen"
+
+#~ msgid "Not specified"
+#~ msgstr "Keine Angaben"
 
 #~ msgid "Contact form: "
 #~ msgstr "Kontaktformular: "

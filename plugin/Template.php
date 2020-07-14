@@ -25,6 +25,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Exception;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Template\TemplateCallbackBuilder;
 use const WP_PLUGIN_DIR;
@@ -60,6 +61,7 @@ class Template
 	 * @return string
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function render(): string
 	{
@@ -98,7 +100,7 @@ class Template
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	private static function getIncludeContents(array $templateData, $templatePath, Container $pContainer)
+	private static function getIncludeContents(array $templateData, $templatePath, Container $pContainer): string
 	{
 		// vars which might be used in template
 		$pEstates = $templateData[self::KEY_ESTATELIST];
@@ -107,9 +109,8 @@ class Template
 		/** @var TemplateCallbackBuilder $pTemplateCallback */
 		$pTemplateCallback = $pContainer->get(TemplateCallbackBuilder::class);
 		$generateSortDropDown = $pTemplateCallback->buildCallbackListSortDropDown($pEstates);
-		unset($templateData);
-		unset($pTemplateCallback);
-		unset($pContainer);
+		$getListName = $pTemplateCallback->buildCallbackEstateListName($pEstates);
+		unset($templateData, $pTemplateCallback, $pContainer);
 
 		ob_start();
 		include $templatePath;

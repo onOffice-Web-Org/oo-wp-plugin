@@ -1,6 +1,7 @@
 var onOffice = onOffice || {};
 
 onOffice.checkboxAdmin = function() {
+	this._isInitialRun = true;
 	this._configuration = {
 		// view: address list
 		"input[name^=oopluginaddressfieldconfig-filterable]": [
@@ -30,7 +31,8 @@ onOffice.checkboxAdmin = function() {
 			},
 			{
 				element: "input[name^=oopluginfieldconfig-availableOptions]",
-				invert: false
+				invert: false,
+				checkOnActive: true
 			}
 		],
 
@@ -65,9 +67,9 @@ onOffice.checkboxAdmin = function() {
 };
 
 onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
-    var $ = jQuery;
+	var $ = jQuery;
 	var instance = this;
-	var toggleChild = function(receivers, mainElement) {
+	var toggleChild = function(receivers, mainElement, fromOnChange) {
 		for (var i in receivers) {
 			var receiver = receivers[i];
 			var receiverElement = mainElement.parent().parent().find(receiver.element);
@@ -76,6 +78,7 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 				var isChosen = receiverElement[0].classList.contains("chosen-select");
 				if (mainElement.attr('checked')) {
 					if (!invert) {
+						receiverElement[0].checked = receiverElement[0].checked || (receiver.checkOnActive && (instance._isInitialRun||fromOnChange));
 						receiverElement.removeAttr('disabled');
 					} else {
 						receiverElement.attr('disabled', 'disabled');
@@ -97,6 +100,7 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 				}
 			}
 		}
+		instance._isInitialRun = false;
 	};
 
 	for (var sender in this._configuration) {
@@ -109,10 +113,12 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 			var mainElement = $(mainElements[i]);
 			var receivers = instance._configuration[sender];
 			var callback = function() {
-				toggleChild(receivers, mainElement);
+				toggleChild(receivers, mainElement, true);
 			};
 
-			mainElement.ready(callback).change(callback);
+			mainElement.ready(function() {
+				toggleChild(receivers, mainElement, false);
+			}).change(callback);
 		});
 	}
 };

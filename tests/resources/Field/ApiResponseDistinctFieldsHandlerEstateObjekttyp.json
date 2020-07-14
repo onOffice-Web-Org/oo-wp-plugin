@@ -1,0 +1,33 @@
+{
+  "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+  "resourceid": "",
+  "resourcetype": "distinctValues",
+  "cacheable": true,
+  "identifier": "",
+  "data": {
+    "meta": {
+      "cntabsolute": null
+    },
+    "records": [
+      {
+        "id": 0,
+        "type": "",
+        "elements": {
+          "doppelhaushaelfte": "Semi-detached house",
+          "hochparterre": "Mezzanine floor",
+          "penthouse": "Penthouse",
+          "souterrain": "Basement",
+          "einfamilienhaus": "Single family house",
+          "etage": "Apartment",
+          "bungalow": "Bungalow",
+          "reihenhaus": "Terraced house",
+          "villa": "Villa"
+        }
+      }
+    ]
+  },
+  "status": {
+    "errorcode": 0,
+    "message": "OK"
+  }
+}

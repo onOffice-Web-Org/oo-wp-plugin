@@ -29,6 +29,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
@@ -36,6 +37,8 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
+use onOffice\WPlugin\Field\DistinctFieldsHandler;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -82,15 +85,14 @@ class Form
 	private $_pContainer;
 
 	/**
-	 *
 	 * @param string $formName
 	 * @param string $type
 	 * @param Container|null $pContainer Manual instance creation possible
-	 * @throws UnknownFormException
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 * @throws UnknownFormException
 	 */
-
 	public function __construct(string $formName, string $type, Container $pContainer = null)
 	{
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice'));
@@ -102,19 +104,19 @@ class Form
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsFormFrontend($pFieldsCollection);
-		$this->_pFieldsCollection = $this->buildFieldsCollectionForForm($pFieldsCollection, $type);
 
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();
 		$this->_formNo = $pFormPost->getFormNo();
 
+		$pFormConfigFactory = $this->_pContainer->get(DataFormConfigurationFactory::class);
+		$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
+		$this->_pFieldsCollection = $this->buildFieldsCollectionForForm($pFieldsCollection, $type, $pFormConfig);
 		try {
 			$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
 			$this->setCountAbsoluteResults($pFormPost->getAbsolutCountResults());
 		} catch (UnknownFormException $pE) {
 			// no form sent
-			$pFormConfigFactory = $this->_pContainer->get(DataFormConfigurationFactory::class);
-			$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
 			$pRecordManagerFactory = $this->_pContainer->get(RecordManagerFactory::class);
 			$pGeoPositionDefaults = new GeoPositionFieldHandler($pRecordManagerFactory);
 			$pGeoPositionDefaults->readValues($pFormConfig);
@@ -131,14 +133,26 @@ class Form
 	/**
 	 * @param FieldsCollection $pFieldsCollection
 	 * @param string $type
+	 * @param DataFormConfiguration $pConfiguration
 	 * @return FieldsCollection
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
-	private function buildFieldsCollectionForForm(FieldsCollection $pFieldsCollection, string $type): FieldsCollection
+	private function buildFieldsCollectionForForm(
+		FieldsCollection $pFieldsCollection,
+		string $type,
+		DataFormConfiguration $pConfiguration): FieldsCollection
 	{
 		/** @var FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm */
 		$pFieldsCollectionConfiguratorForm = $this->_pContainer->get(FieldsCollectionConfiguratorForm::class);
+
+		if ($pConfiguration instanceof DataFormConfigurationApplicantSearch) {
+			/** @var DistinctFieldsHandler $pDistinctFieldsHandler */
+			$pDistinctFieldsHandler = $this->_pContainer->get(DistinctFieldsHandler::class);
+			return $pDistinctFieldsHandler->modifyFieldsCollectionForSearchCriteria
+				($pConfiguration, $pFieldsCollection);
+		}
 		return $pFieldsCollectionConfiguratorForm->buildForFormType($pFieldsCollection, $type);
 	}
 
@@ -163,10 +177,7 @@ class Form
 
 	private function getModuleOfField(string $field)
 	{
-		$inputs = $this->getInputFields();
-		$module = $inputs[$field] ?? null;
-
-		return $module;
+		return $this->getInputFields()[$field] ?? null;
 	}
 
 	/**
@@ -245,9 +256,7 @@ class Form
 		$requiredFields = $this->getDataFormConfiguration()->getRequiredFields();
 		$requiredFieldsSplitCompound = $pCompoundFieldsFilter->mergeFields
 			($this->_pFieldsCollection, $requiredFields);
-		$requiredFieldsWithGeo = $this->executeGeoPositionFix($requiredFieldsSplitCompound);
-
-		return $requiredFieldsWithGeo;
+		return $this->executeGeoPositionFix($requiredFieldsSplitCompound);
 	}
 
 
@@ -286,21 +295,17 @@ class Form
 		$pGeoPosition->readValues($this->getDataFormConfiguration());
 
 		if (in_array($field, $pGeoPosition->getActiveFields()) &&
-			in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields)) {
+			in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields, true)) {
 			return true;
 		}
 
-		return in_array($field, $requiredFields);
+		return in_array($field, $requiredFields, true);
 	}
 
-
 	/**
-	 *
 	 * @return DataFormConfiguration
-	 *
 	 */
-
-	private function getDataFormConfiguration()
+	private function getDataFormConfiguration(): DataFormConfiguration
 	{
 		return $this->_pFormData->getDataFormConfiguration();
 	}
@@ -379,7 +384,6 @@ class Form
 		$allFields = $this->_pFieldsCollection->getAllFields();
 		$rangeInfos = [];
 
-		/* @var $pField Field */
 		foreach ($allFields as $pField) {
 			if ($pField->getModule() === onOfficeSDK::MODULE_SEARCHCRITERIA &&
 				$pField->getIsRangeField()) {
@@ -435,37 +439,24 @@ class Form
 		return $returnValues;
 	}
 
-
 	/**
-	 *
 	 * @param string $field
 	 * @param bool $raw
-	 *
 	 * @return array
-	 *
+	 * @throws DependencyException
+	 * @throws UnknownFieldException
+	 * @throws NotFoundException
 	 */
-
 	public function getPermittedValues($field, $raw = false): array
 	{
 		$module = $this->getModuleOfField($field);
-		$fieldType = $this->getFieldType($field);
-		$isMultiselectOrSingleselect = in_array($fieldType, [
-			FieldTypes::FIELD_TYPE_MULTISELECT,
-			FieldTypes::FIELD_TYPE_SINGLESELECT,
-		], true);
+		$result = $this->_pFieldsCollection
+			->getFieldByModuleAndName($module, $field)
+			->getPermittedvalues();
 
-		$result = [];
-
-		if ($isMultiselectOrSingleselect) {
-			$result = $this->_pFieldsCollection
-				->getFieldByModuleAndName($module, $field)
-				->getPermittedvalues();
-
-			if (!$raw) {
-				$result = $this->escapePermittedValues($result);
-			}
+		if (!$raw) {
+			$result = $this->escapePermittedValues($result);
 		}
-
 		return $result;
 	}
 
@@ -517,9 +508,9 @@ class Form
 
 		if ($raw) {
 			return $fieldValue;
-		} else {
-			return esc_html($fieldValue);
 		}
+
+		return esc_html($fieldValue);
 	}
 
 	/**

@@ -20,9 +20,50 @@ a.estate-status > span {
     font-size: 15px;
     font-weight: 600;
     text-transform: uppercase;
-    box-shadow: 0px 1px 20px -2px #000000;
+    box-shadow: 0 1px 20px -2px #000000;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     padding: 7px 25px 7px 25px;
+}
+
+input[type=submit].match {
+    background-color: #559955;
+}
+
+div.multiselect[data-values="[]"] > input[type=button],
+div.multiselect[data-values="{}"] > input[type=button],
+div.multiselect[data-values=""] > input[type=button]{
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    } to {
+        transform: rotate(360deg);
+    }
+}
+
+form[data-estate-search-name] #spinner {
+    visibility: hidden;
+    display: inline;
+    width: 40px;
+    top: -50px;
+    left: 10px;
+    position: relative;
+}
+
+form[data-estate-search-name] #spinner.thinking,
+form[data-applicant-form-id] #spinner.thinking{
+    animation: rotating 2s linear infinite;
+    visibility: visible;
+}
+
+form[data-applicant-form-id] #spinner {
+    visibility: hidden;
+    display: inline;
+    width: 40px;
+    vertical-align: middle;
 }

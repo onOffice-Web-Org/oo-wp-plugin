@@ -22,7 +22,7 @@ $pathComponents = [ONOFFICE_PLUGIN_DIR, 'templates.dist', 'fields.php'];
 require(implode(DIRECTORY_SEPARATOR, $pathComponents));
 
 ?>
-<form method="post" id="onoffice-form">
+<form method="post" id="onoffice-form" data-applicant-form-id="<?php echo esc_attr($pForm->getFormId()); ?>">
 
 	<input type="hidden" name="oo_formid" value="<?php echo $pForm->getFormId(); ?>">
 	<input type="hidden" name="oo_formno" value="<?php echo $pForm->getFormNo(); ?>">
@@ -58,7 +58,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
-	if ($input == 'Umkreis') {
+	if ($input === 'Umkreis') {
 		echo '<br>'
 			.'<fieldset>'
 			.'<legend>'.esc_html__('search within distance of:', 'onoffice').'</legend>';
@@ -86,10 +86,16 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 		echo '</fieldset>';
 		continue;
-	} elseif ($input === 'regionaler_zusatz') {
+	}
+
+	if ($input === 'regionaler_zusatz') {
 		echo '<select size="1" name="'.esc_html($input).'">';
 		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
-		$regions = $pRegionController->getRegions();
+		if ($permittedValues === null) {
+			$regions = $pRegionController->getRegions();
+		} else {
+			$regions = $pRegionController->getParentRegionsByChildRegionKeys(array_keys($permittedValues));
+		}
 		$selectedValue = $pForm->getFieldValue( $input, true );
 		foreach ($regions as $pRegion) {
 			/* @var $pRegion Region */
@@ -105,6 +111,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 
 $pForm->setGenericSetting('submitButtonLabel', esc_html__('Search for Prospective Buyers', 'onoffice'));
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+echo '<svg viewBox="0 0 30 30" id="spinner"></svg>';
 
 echo '<br>';
 

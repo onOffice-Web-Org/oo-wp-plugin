@@ -23,132 +23,122 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModel;
+use DI\Container;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
-use onOffice\WPlugin\RequestVariablesSanitizer;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderListView;
+use onOffice\WPlugin\FormData;
+use onOffice\WPlugin\FormPost;
+use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use WP_UnitTestCase;
-
-
-/**
- *
- */
 
 class TestClassDistinctFieldsHandlerModelBuilder
 	extends WP_UnitTestCase
 {
-	/** @var DistinctFieldsHandlerModelBuilder */
-	private $_pInstance = null;
-
-
 	/**
-	 *
-	 * @before
-	 *
+	 * @param DataListView $pListView
+	 * @return DistinctFieldsHandlerModelBuilder
 	 */
-
-	public function prepare()
+	public function buildSubject(DataListView $pListView): DistinctFieldsHandlerModelBuilder
 	{
-		$this->_pInstance = new DistinctFieldsHandlerModelBuilder(new RequestVariablesSanitizer());
+		$pDefaultFilterBuilder = $this->getMockBuilder(DefaultFilterBuilderListView::class)
+			->setConstructorArgs([$pListView, $this->buildFieldsCollectionBuilderShort()])
+			->getMock();
+		$pDefaultFilterBuilder->method('buildFilter')
+			->willReturn([
+				'veroeffentlichen' => [['op' => '=', 'val' => '1']],
+			]);
+		$pDefaultFilterBuilderFactory = $this->getMockBuilder(DefaultFilterBuilderFactory::class)
+			->setConstructorArgs([$this->buildFieldsCollectionBuilderShort()])
+			->getMock();
+		$pDefaultFilterBuilderFactory->method('buildDefaultListViewFilter')
+			->willReturn($pDefaultFilterBuilder);
+		return new DistinctFieldsHandlerModelBuilder($pDefaultFilterBuilderFactory);
 	}
 
-
 	/**
-	 *
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::__construct
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildDataModel
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildInputValuesForModule
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getDistinctValues
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getInputValues
-	 *
+	 * @return FieldsCollectionBuilderShort
 	 */
+	private function buildFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
+	{
+		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria'])
+			->setConstructorArgs([new Container])
+			->getMock();
+
+		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->with($this->anything())
+			->willReturnCallback(function (FieldsCollection $pFieldsCollection)
+			use ($pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+			{
+				$pFieldObjektart = new Field('objektart', onOfficeSDK::MODULE_ESTATE);
+				$pFieldObjektart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldObjektart);
+
+				$pFieldObjekttyp = new Field('objekttyp', onOfficeSDK::MODULE_ESTATE);
+				$pFieldObjekttyp->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldObjekttyp);
+
+				$pFieldNutzungsart = new Field('nutzungsart', onOfficeSDK::MODULE_ESTATE);
+				$pFieldNutzungsart->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pFieldNutzungsart);
+
+				return $pFieldsCollectionBuilderShort;
+			});
+
+		$pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
+			->with($this->anything())
+			->willReturnCallback(function (FieldsCollection $pFieldsCollection)
+			use ($pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+			{
+				$pField1 = new Field('objektart', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
+				$pFieldsCollection->addField($pField1);
+
+				return $pFieldsCollectionBuilderShort;
+			});
+
+		return $pFieldsCollectionBuilderShort;
+	}
 
 	public function testForEstate()
 	{
-		$inputValues = [
-			'' => 'OK',
-			'nutzungsart[]' => ['wohnen'],
-			'oo_formid' => 'contactform',
-			'oo_formno' => '10',
-			'Id' => '2370'
-		];
+		$pDatalistView = new DataListView(123, 'testList');
+		$pDatalistView->setAvailableOptions(['nutzungsart', 'objektart']);
+		$pDatalistView->setFilterId(12);
 
-		$_POST = [
-			'field' => 'nutzungsart[]',
-			'inputValues' => '{\\"\\":\\"OK\\",\\"nutzungsart[]\\":[\\"wohnen\\"],'
-				.'\\"radius\\":\\"0\\",\\"oo_formid\\":\\"contactform\\",\\"oo_formno\\":\\"10\\",'
-				.'\\"Id\\":\\"2370\\"}',
-			'module' => 'estate',
-			'distinctValues' => ['nutzungsart', 'objektart'],
-		];
+		$pSubject = $this->buildSubject($pDatalistView);
+		$pResultModel = $pSubject->buildDataModelForEstate($pDatalistView);
 
-		$pResultModel = $this->_pInstance->buildDataModel();
-
-		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $pResultModel);
 		$this->assertEquals('estate', $pResultModel->getModule());
 		$this->assertEquals(['nutzungsart', 'objektart'], $pResultModel->getDistinctFields());
-		$this->assertEquals(['radius' => '0'], $pResultModel->getGeoPositionFields());
-		$this->assertEquals($inputValues, $pResultModel->getInputValues());
-	}
-
-
-	/**
-	 *
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::__construct
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildDataModel
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildInputValuesForModule
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getDistinctValues
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::getInputValues
-	 *
-	 */
-
-	public function testForEstateWithEmptyPost()
-	{
-		$_POST = [];
-
-		$pResultModel = $this->_pInstance->buildDataModel();
-
-		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $pResultModel);
-		$this->assertEmpty($pResultModel->getModule());
-		$this->assertEmpty($pResultModel->getDistinctFields());
 		$this->assertEmpty($pResultModel->getInputValues());
-		$this->assertEmpty($pResultModel->getGeoPositionFields());
+		$this->assertEquals([
+			'veroeffentlichen' => [['op' => '=', 'val' => '1']],
+		], $pResultModel->getFilterExpression());
+		$this->assertEquals(12, $pResultModel->getFilterId());
 	}
-
-
-	/**
-	 *
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildDataModel
-	 * @covers onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder::buildInputValuesForModule
-	 *
-	 */
 
 	public function testForSearchcriteria()
 	{
-		$_POST = [
-			'field' => 'objektart',
-			'inputValues' => '{\\"oo_formid\\":\\"applsearchform\\",\\"oo_formno\\":\\"1\\",'
-				.'\\"wohnflaeche\\":\\"\\",\\"anzahl_zimmer\\":\\"\\",\\"objektart\\":\\"haus\\",'
-				.'\\"objekttyp\\":\\"\\",\\"kaltmiete\\":\\"\\",\\"range_plz\\":\\"52068\\"}',
-			'module' => 'searchcriteria',
-			'distinctValues' =>	['objektart', 'objekttyp'],
-		];
+		$pDataFormConfiguration = new DataFormConfigurationApplicantSearch;
+		$pDataFormConfiguration->setAvailableOptionsFields(['objektart', 'objekttyp']);
+		$pDataFormConfiguration->setFormName('applsearchform');
+		$pDataFormConfiguration->setId(1);
 
-		$inputValues = [
-			'oo_formid' => 'applsearchform',
-			'oo_formno' => '1',
-			'wohnflaeche' => '',
-			'anzahl_zimmer' => '',
-			'objektart' => 'haus',
-			'objekttyp' => '',
-			'kaltmiete' => '',
-		];
+		$pSubject = $this->buildSubject(new DataListView(123, 'abcdummy'));
+		$pResultModel = $pSubject->buildDataModelForSearchCriteria($pDataFormConfiguration);
 
-		$pResultModel = $this->_pInstance->buildDataModel();
-
-		$this->assertInstanceOf(DistinctFieldsHandlerModel::class, $pResultModel);
 		$this->assertEquals('searchcriteria', $pResultModel->getModule());
 		$this->assertEquals(['objektart', 'objekttyp'], $pResultModel->getDistinctFields());
-		$this->assertEquals($inputValues, $pResultModel->getInputValues());
-		$this->assertEquals(['zip' => '52068'], $pResultModel->getGeoPositionFields());
+		$this->assertEmpty($pResultModel->getInputValues());
+		$this->assertEmpty($pResultModel->getFilterExpression());
+		$this->assertEquals(0, $pResultModel->getFilterId());
 	}
 }

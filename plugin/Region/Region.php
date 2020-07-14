@@ -56,6 +56,8 @@ class Region
 	/** @var Region[] */
 	private $_children = [];
 
+	/** @var null|Region */
+	private $_pParent = null;
 
 	/**
 	 *
@@ -237,4 +239,21 @@ class Region
 	{
 		$this->_children = $children;
 	}
+
+	/**
+	 * @return Region|null
+	 */
+	public function getParent()
+	{
+		return $this->_pParent;
+	}
+
+	/**
+	 * @param Region|null $pParent
+	 */
+	public function setParent(Region $pParent)
+	{
+		$this->_pParent = $pParent;
+	}
+
 }

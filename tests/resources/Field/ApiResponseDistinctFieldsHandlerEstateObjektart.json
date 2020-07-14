@@ -1,0 +1,28 @@
+{
+  "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+  "resourceid": "",
+  "resourcetype": "distinctValues",
+  "cacheable": true,
+  "identifier": "",
+  "data": {
+    "meta": {
+      "cntabsolute": null
+    },
+    "records": [
+      {
+        "id": 0,
+        "type": "",
+        "elements": {
+          "haus": "House",
+          "wohnung": "Apartments",
+          "buero_praxen": "Offices",
+          "zimmer": "Rooms"
+        }
+      }
+    ]
+  },
+  "status": {
+    "errorcode": 0,
+    "message": "OK"
+  }
+}

@@ -31,6 +31,7 @@ namespace onOffice\WPlugin\Region;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\SDKWrapper;
 
@@ -45,7 +46,6 @@ class RegionController
 
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
-
 
 	/**
 	 *
@@ -63,54 +63,65 @@ class RegionController
 		}
 	}
 
-
 	/**
-	 *
+	 * @throws ApiClientException
 	 */
-
 	public function fetchRegions()
 	{
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'regions');
 		$pApiClientAction->setParameters(['language' => Language::getDefault()]);
 		$pApiClientAction->addRequestToQueue()->sendRequests();
-		$this->_regions = $this->createRegionObjects($pApiClientAction->getResultRecords());
+		$this->_regions = $this->createRegionObjectsRegionOne($pApiClientAction->getResultRecords());
 	}
 
-
 	/**
-	 *
 	 * @param array $regionList
-	 * @param bool $level1
+	 * @param Region|null $pParent
 	 * @return Region[]
-	 *
 	 */
-
-	private function createRegionObjects(array $regionList, bool $level1 = true): array
+	private function createRegionObjects(array $regionList, Region $pParent): array
 	{
 		$regions = [];
 		foreach ($regionList as $regionProperties) {
-			$elements = $regionProperties;
-			if ($level1) {
-				$elements = $regionProperties['elements'];
-			}
-
-			$pRegion = new Region($elements['id'], Language::getDefault());
-			$pRegion->setName($elements['name'] ?? '');
-			$pRegion->setDescription($elements['description'] ?? '');
-			$pRegion->setPostalCodes($elements['postalcodes'] ?? []);
-			$pRegion->setState($elements['state'] ?? '');
-			$pRegion->setCountry($elements['country'] ?? '');
-
-			$children = $this->createRegionObjects($elements['children'], false);
-			$pRegion->setChildren($children);
-
+			$pRegion = $this->buildBaseRegionElement($regionProperties);
+			$pRegion->setChildren($this->createRegionObjects($regionProperties['children'], $pRegion));
+			$pRegion->setParent($pParent);
 			$regions []= $pRegion;
 		}
-
 		return $regions;
 	}
 
+	/**
+	 * @param array $regionList
+	 * @return array
+	 */
+	private function createRegionObjectsRegionOne(array $regionList): array
+	{
+		$regions = [];
+		foreach ($regionList as $regionProperties) {
+			$pRegion = $this->buildBaseRegionElement($regionProperties['elements']);
+			$children = $this->createRegionObjects($regionProperties['elements']['children'], $pRegion);
+			$pRegion->setChildren($children);
+			$regions []= $pRegion;
+		}
+		return $regions;
+	}
+
+	/**
+	 * @param array $elements
+	 * @return Region
+	 */
+	private function buildBaseRegionElement(array $elements): Region
+	{
+		$pRegion = new Region($elements['id'], Language::getDefault());
+		$pRegion->setName($elements['name'] ?? '');
+		$pRegion->setDescription($elements['description'] ?? '');
+		$pRegion->setPostalCodes($elements['postalcodes'] ?? []);
+		$pRegion->setState($elements['state'] ?? '');
+		$pRegion->setCountry($elements['country'] ?? '');
+		return $pRegion;
+	}
 
 	/**
 	 *
@@ -156,6 +167,44 @@ class RegionController
 		return null;
 	}
 
+	/**
+	 * @param array $childRegions
+	 * @return array
+	 * @throws ApiClientException
+	 */
+	public function getParentRegionsByChildRegionKeys(array $childRegions): array
+	{
+		$newPermitted = [];
+		$this->fetchRegions();
+		// collect allowed (parent) regions
+		foreach ($childRegions as $permittedRegion) {
+			$pRegionPermitted = $this->getRegionByKey($permittedRegion);
+			while ($pRegionPermitted !== null) {
+				$newPermitted[$pRegionPermitted->getId()] = $pRegionPermitted;
+				$pRegionPermitted = $pRegionPermitted->getParent();
+			}
+		}
+
+		// cleanup child regions
+		foreach ($newPermitted as $pRegion) {
+			do {
+				$regionChildren = $pRegion->getChildren();
+				$regionChildren = array_filter($regionChildren, static function(Region $pChild) use ($newPermitted) {
+					return isset($newPermitted[$pChild->getId()]);
+				});
+				$pRegion->setChildren($regionChildren);
+			} while ($pRegion = $pRegion->getParent());
+		}
+
+		// leave only root elements
+		$newPermitted = array_filter($newPermitted, static function($pEntry) {
+			return $pEntry->getParent() === null;
+		});
+		usort($newPermitted, function (Region $pA, Region $pB) {
+			return strnatcasecmp($pA->getName(), $pB->getName());
+		});
+		return $newPermitted;
+	}
 
 	/**
 	 *
