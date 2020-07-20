@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2020-07-07T15:08:51+02:00\n"
-"PO-Revision-Date: 2020-07-07 15:11+0200\n"
+"POT-Creation-Date: 2020-07-20T16:29:57+02:00\n"
+"PO-Revision-Date: 2020-07-20 16:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -334,10 +334,12 @@ msgstr ""
 "einer Seite ein, um die Detailansicht dort zu sehen:"
 
 #: plugin/Gui/AdminPageEstateDetail.php:161
+msgid "Contact Person Fields"
+msgstr "Ansprechpartnerdaten"
+
 #: plugin/Gui/AdminPageEstateDetail.php:176
-#: plugin/Gui/AdminPageSettingsBase.php:177
-msgid "Fields"
-msgstr "Felder"
+msgid "Real Estate Fields"
+msgstr "Immobiliendaten"
 
 #: plugin/Gui/AdminPageEstateDetail.php:294
 msgid "Additional Media"
@@ -505,6 +507,10 @@ msgstr "Google Maps"
 msgid "Maps"
 msgstr "Karten"
 
+#: plugin/Gui/AdminPageSettingsBase.php:177
+msgid "Fields"
+msgstr "Felder"
+
 #: plugin/Gui/AdminPageSettingsBase.php:405
 msgid "Fields Configuration"
 msgstr "Feldeinstellungen"
@@ -642,6 +648,7 @@ msgid "Hidden"
 msgstr "Unsichtbar"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:181
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
 msgid "Reduce values according to selected filter"
 msgstr "Werte durch gewählten Filter reduzieren"
 
@@ -735,10 +742,6 @@ msgstr "Maximale Ergebnisanzahl"
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:323
 msgid "Required"
 msgstr "Pflichtangabe"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
-msgid "Available Options"
-msgstr "Abhängigkeiten auflösen"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:368
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:382
@@ -994,31 +997,26 @@ msgstr "Foto:"
 msgid "Send"
 msgstr "Absenden"
 
-#: templates.dist/estate/default.php:36
+#: templates.dist/estate/default.php:38
 msgid "Overview of Estates"
 msgstr "Immobilienübersicht"
 
 #. translators: %d will be replaced with a number.
-#: templates.dist/estate/default.php:40
+#: templates.dist/estate/default.php:42
 msgctxt "template"
 msgid "Found %d estates over all."
 msgstr "Insgesamt %d Immobilien gefunden."
 
-#: templates.dist/estate/default.php:88
+#: templates.dist/estate/default.php:90
 #: templates.dist/estate/similar_estates.php:43
 msgid "Show Details"
 msgstr "Details anzeigen"
 
-#: templates.dist/estate/default.php:93
-#: templates.dist/estate/default_detail.php:131
-msgid "PDF expose"
-msgstr "PDF-Exposé"
-
-#: templates.dist/estate/default.php:99 templates.dist/estate/default.php:115
+#: templates.dist/estate/default.php:94 templates.dist/estate/default.php:110
 msgid "Add to "
 msgstr "Hinzufügen zu "
 
-#: templates.dist/estate/default.php:121
+#: templates.dist/estate/default.php:116
 msgid "Remove from "
 msgstr "Löschen von "
 
@@ -1051,6 +1049,10 @@ msgstr "Ansprechpartner"
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Dokumente"
+
+#: templates.dist/estate/default_detail.php:131
+msgid "PDF expose"
+msgstr "PDF-Exposé"
 
 #: templates.dist/estate/default_units.php:29
 msgid "Entities"
@@ -1195,6 +1197,9 @@ msgstr "Weiter"
 msgid "Open the Form"
 msgstr "Formular öffnen"
 
+#~ msgid "Available Options"
+#~ msgstr "Abhängigkeiten auflösen"
+
 #~ msgid "Not specified"
 #~ msgstr "Keine Angaben"
 
@@ -1215,9 +1220,6 @@ msgstr "Formular öffnen"
 
 #~ msgid "Estates view not found."
 #~ msgstr "Immobilienansicht nicht gefunden."
-
-#~ msgid "Contact person: "
-#~ msgstr "Ansprechpartner: "
 
 #~ msgid "Mobile Phone: "
 #~ msgstr "Mobilnummer: "
