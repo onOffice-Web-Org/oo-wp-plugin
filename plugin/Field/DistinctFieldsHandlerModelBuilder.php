@@ -23,123 +23,58 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Field\DistinctFieldsHandler;
-use onOffice\WPlugin\GeoPosition;
-use onOffice\WPlugin\RequestVariablesSanitizer;
-use onOffice\WPlugin\WP\WPScriptStyleBase;
-use function json_decode;
-
-/**
- *
- */
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationApplicantSearch;
+use onOffice\WPlugin\DataView\DataListView;
+use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 
 class DistinctFieldsHandlerModelBuilder
 {
-	/** @var RequestVariablesSanitizer */
-	private $_pRequestVariables = null;
-
+	/** @var DefaultFilterBuilderFactory */
+	private $_pDefaultFilterBuilderFactory;
 
 	/**
-	 *
-	 * @param RequestVariablesSanitizer $pRequestVariables
-	 * @param WPScriptStyleBase $pScriptStyle
-	 *
+	 * @param DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory
 	 */
-
 	public function __construct(
-		RequestVariablesSanitizer $pRequestVariables)
+		DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory)
 	{
-		$this->_pRequestVariables = $pRequestVariables;
+		$this->_pDefaultFilterBuilderFactory = $pDefaultFilterBuilderFactory;
 	}
 
-
 	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function getDistinctValues(): array
-	{
-		$values = $this->_pRequestVariables->getFilteredPost
-			(DistinctFieldsHandler::PARAMETER_DISTINCT_VALUES,
-				FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
-		if ($values === false) {
-			$values = [];
-		}
-		return $values;
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function getInputValues(): array
-	{
-		return json_decode($this->_pRequestVariables->getFilteredPost
-			(DistinctFieldsHandler::PARAMETER_INPUT_VALUES), true) ?? [];
-	}
-
-
-	/**
-	 *
+	 * @param DataListView $pListView
 	 * @return DistinctFieldsHandlerModel
-	 *
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
-
-	public function buildDataModel(): DistinctFieldsHandlerModel
+	public function buildDataModelForEstate(DataListView $pListView): DistinctFieldsHandlerModel
 	{
-		$module = $this->_pRequestVariables->getFilteredPost(DistinctFieldsHandler::PARAMETER_MODULE) ?? '';
-		$inputValuesRaw = $this->getInputValues();
-
-		$allInputValues = $this->buildInputValuesForModule($module, $inputValuesRaw);
-		$inputValues = $allInputValues['inputValues'];
-		$geoValues = $allInputValues['geoValues'];
-
+		$pListViewNoFilterableFields = clone $pListView;
+		$pListViewNoFilterableFields->setFilterableFields([]);
+		$pDefaultFilterBuilder = $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListViewNoFilterableFields);
 		$pDataModel = new DistinctFieldsHandlerModel();
-		$pDataModel->setModule($module);
-		$pDataModel->setDistinctFields($this->getDistinctValues());
-		$pDataModel->setInputValues($inputValues);
-		$pDataModel->setGeoPositionFields($geoValues);
-
+		$pDataModel->setModule(onOfficeSDK::MODULE_ESTATE);
+		$pDataModel->setDistinctFields($pListView->getAvailableOptions());
+		$pDataModel->setFilterExpression($pDefaultFilterBuilder->buildFilter());
+		$pDataModel->setFilterId($pListView->getFilterId());
 		return $pDataModel;
 	}
 
-
 	/**
-	 *
-	 * @param string $module
-	 * @param array $inputValues
-	 * @return array
-	 *
+	 * @param DataFormConfigurationApplicantSearch $pDataFormConfiguration
+	 * @return DistinctFieldsHandlerModel
 	 */
-
-	private function buildInputValuesForModule(string $module, array $inputValues): array
+	public function buildDataModelForSearchCriteria(
+		DataFormConfigurationApplicantSearch $pDataFormConfiguration): DistinctFieldsHandlerModel
 	{
-		$pGeoPosition = new GeoPosition();
-		$geoRangeValues = [];
+		$formFields = $pDataFormConfiguration->getAvailableOptionsFields();
+		$pDataModel = new DistinctFieldsHandlerModel();
+		$pDataModel->setModule(onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pDataModel->setDistinctFields($formFields);
 
-		if ($module === onOfficeSDK::MODULE_ESTATE) {
-			foreach ($inputValues as $key => $values) {
-				if (in_array($key, $pGeoPosition->getEstateSearchFields())) {
-					$geoRangeValues[$key] = $values;
-					unset($inputValues[$key]);
-				}
-			}
-		} elseif ($module == onOfficeSDK::MODULE_SEARCHCRITERIA) {
-			$mapping = array_flip($pGeoPosition->getSearchCriteriaFields());
-			foreach ($inputValues as $key => $values) {
-				if (isset($mapping[$key])) {
-					$geoRangeValues[$mapping[$key]] = $values;
-					unset($inputValues[$key]);
-				}
-			}
-		}
-
-		return ['inputValues' => $inputValues, 'geoValues' => $geoRangeValues];
+		return $pDataModel;
 	}
 }

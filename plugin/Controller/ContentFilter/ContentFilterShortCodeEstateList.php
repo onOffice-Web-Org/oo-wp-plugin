@@ -26,7 +26,7 @@ namespace onOffice\WPlugin\Controller\ContentFilter;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
-use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\SearchParametersModelBuilderEstate;
 use onOffice\WPlugin\Controller\SortList\SortListBuilder;
@@ -35,7 +35,6 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Factory\EstateListFactory;
-use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
 use onOffice\WPlugin\Filter\GeoSearchBuilderFromInputVars;
@@ -57,9 +56,6 @@ class ContentFilterShortCodeEstateList
 	/** @var SearchParametersModelBuilderEstate */
 	private $_pSearchParametersModelBuilderEstate;
 
-	/** @var DistinctFieldsScriptRegistrator */
-	private $_pDistinctFieldsScriptRegistrator;
-
 	/** @var DefaultFilterBuilderFactory */
 	private $_pDefaultFilterBuilderFactory;
 
@@ -77,7 +73,6 @@ class ContentFilterShortCodeEstateList
 	 * @param WPQueryWrapper $pWPQueryWrapper
 	 * @param SortListBuilder $pSortListBuilder
 	 * @param SearchParametersModelBuilderEstate $pSearchParametersModelBuilderEstate
-	 * @param DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator
 	 * @param DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory
 	 * @param EstateListFactory $pEstateDetailFactory
 	 * @param Template $pTemplate
@@ -88,7 +83,6 @@ class ContentFilterShortCodeEstateList
 		WPQueryWrapper $pWPQueryWrapper,
 		SortListBuilder $pSortListBuilder,
 		SearchParametersModelBuilderEstate $pSearchParametersModelBuilderEstate,
-		DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator,
 		DefaultFilterBuilderFactory $pDefaultFilterBuilderFactory,
 		EstateListFactory $pEstateDetailFactory,
 		Template $pTemplate,
@@ -98,7 +92,6 @@ class ContentFilterShortCodeEstateList
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 		$this->_pSortListBuilder = $pSortListBuilder;
 		$this->_pSearchParametersModelBuilderEstate = $pSearchParametersModelBuilderEstate;
-		$this->_pDistinctFieldsScriptRegistrator = $pDistinctFieldsScriptRegistrator;
 		$this->_pDefaultFilterBuilderFactory = $pDefaultFilterBuilderFactory;
 		$this->_pEstateDetailFactory = $pEstateDetailFactory;
 		$this->_pTemplate = $pTemplate;
@@ -114,6 +107,7 @@ class ContentFilterShortCodeEstateList
 	 * @throws UnknownViewException
 	 * @throws APIEmptyResultException
 	 * @throws HttpFetchNoResultException
+	 * @throws ApiClientException
 	 */
 	public function render(array $attributes): string
 	{
@@ -127,9 +121,6 @@ class ContentFilterShortCodeEstateList
 			$this->registerNewPageLinkArgs($pListViewWithSortParams, $pSortListModel);
 			$pListViewFilterBuilder = $this->_pDefaultFilterBuilderFactory
 				->buildDefaultListViewFilter($pListViewWithSortParams);
-			$availableOptionsEstates = $pListViewWithSortParams->getAvailableOptions();
-			$this->_pDistinctFieldsScriptRegistrator->registerScripts
-				(onOfficeSDK::MODULE_ESTATE, $availableOptionsEstates);
 
 			$pGeoSearchBuilder = new GeoSearchBuilderFromInputVars();
 			$pGeoSearchBuilder->setViewProperty($pListViewWithSortParams);

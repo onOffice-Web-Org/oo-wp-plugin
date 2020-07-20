@@ -61,7 +61,11 @@ class ScriptLoaderGenericConfigurationDefault
 			(new IncludeFileModel($script, 'onoffice_defaultview', plugins_url('/js/onoffice_defaultview.js', $pluginPath)))
 				->setDependencies(['jquery'])
 				->setLoadInFooter(true),
-
+			(new IncludeFileModel($script, 'onoffice-estatetype', plugins_url('/js/onoffice-estatetype.js', $pluginPath)))
+				->setDependencies(['onoffice-multiselect'])
+				->setLoadInFooter(true),
+			(new IncludeFileModel($script, 'onoffice-form-preview', plugins_url('/js/onoffice-form-preview.js', $pluginPath)))
+				->setLoadInFooter(true),
 
 			new IncludeFileModel($style, 'onoffice-default', plugins_url('/css/onoffice-default.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath)),
@@ -75,6 +79,15 @@ class ScriptLoaderGenericConfigurationDefault
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath)))
 				->setDependencies(['jquery']);
 		}
+
+		wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
+			'amount_none' => __('0 matches', 'onoffice'),
+			'amount_one' => __('Show exact match', 'onoffice'),
+			/* translators: %s is the amount of results */
+			'amount_other' => __('Show %s matches', 'onoffice'),
+			'nonce_estate' => wp_create_nonce('onoffice-estate-preview'),
+			'nonce_applicant_search' => wp_create_nonce('onoffice-applicant-search-preview'),
+		]);
 
 		return $values;
 	}

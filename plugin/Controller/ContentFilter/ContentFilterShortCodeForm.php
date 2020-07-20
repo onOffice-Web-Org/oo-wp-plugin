@@ -24,105 +24,71 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use Exception;
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCode;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
-use onOffice\WPlugin\Field\DistinctFieldsScriptRegistrator;
-use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormBuilder;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\Utility\Logger;
 use function shortcode_atts;
 
-/**
- *
- */
-
 class ContentFilterShortCodeForm
 	implements ContentFilterShortCode
 {
 	/** @var Logger */
-	private $_pLogger = null;
+	private $_pLogger;
 
 	/** @var DataFormConfigurationFactory */
-	private $_pDataFormConfigurationFactory = null;
+	private $_pDataFormConfigurationFactory;
 
 	/** @var Template */
-	private $_pTemplate = null;
-
-	/** @var DistinctFieldsScriptRegistrator */
-	private $_pDistinctFieldsScriptRegistrator = null;
+	private $_pTemplate;
 
 	/** @var FormBuilder */
-	private $_pFormBuilder = null;
-
+	private $_pFormBuilder;
 
 	/**
-	 *
 	 * @param Template $pTemplate
 	 * @param DataFormConfigurationFactory $pDataFormConfigurationFactory
 	 * @param Logger $pLogger
-	 * @param DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator
 	 * @param FormBuilder $pFormBuilder
-	 *
 	 */
-
 	public function __construct(
 		Template $pTemplate,
 		DataFormConfigurationFactory $pDataFormConfigurationFactory,
 		Logger $pLogger,
-		DistinctFieldsScriptRegistrator $pDistinctFieldsScriptRegistrator,
 		FormBuilder $pFormBuilder)
 	{
 		$this->_pTemplate = $pTemplate;
 		$this->_pLogger = $pLogger;
 		$this->_pDataFormConfigurationFactory = $pDataFormConfigurationFactory;
-		$this->_pDistinctFieldsScriptRegistrator = $pDistinctFieldsScriptRegistrator;
 		$this->_pFormBuilder = $pFormBuilder;
 	}
 
-
 	/**
-	 *
 	 * @param array $attributesInput
 	 * @return string
-	 *
 	 */
-
 	public function replaceShortCodes(array $attributesInput): string
 	{
 		$attributes = shortcode_atts([
 			'form' => '',
 		], $attributesInput);
 
-		$formName = $attributes['form'];
-
 		try {
-			$pFormConfig = $this->_pDataFormConfigurationFactory->loadByFormName($formName);
-
-			if ($pFormConfig->getFormType() == Form::TYPE_APPLICANT_SEARCH) {
-				$this->_pDistinctFieldsScriptRegistrator->registerScripts
-					(onOfficeSDK::MODULE_SEARCHCRITERIA, $pFormConfig->getAvailableOptionsFields());
-			}
-
+			$pFormConfig = $this->_pDataFormConfigurationFactory->loadByFormName($attributes['form']);
 			/* @var $pFormConfig DataFormConfiguration */
 			$template = $pFormConfig->getTemplate();
 			$pTemplate = $this->_pTemplate->withTemplateName($template);
-			$pForm = $this->_pFormBuilder->build($formName, $pFormConfig->getFormType());
+			$pForm = $this->_pFormBuilder->build($attributes['form'], $pFormConfig->getFormType());
 			return $pTemplate->withForm($pForm)->render();
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
 	}
 
-
 	/**
-	 *
 	 * @return string
-	 *
 	 */
-
 	public function getTag(): string
 	{
 		return 'oo_form';

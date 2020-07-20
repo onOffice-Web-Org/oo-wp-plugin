@@ -63,18 +63,36 @@ jQuery(document).ready(function($){
 				optionsAvailable = $(this).attr('onoffice-multipleSelectType') === '1';
 			}
 
-			if ($('#sortableFieldsList').find('#menu-item-' + valElName).length === 0) {
+			var attachField = false;
+
+			if ($(".attachSortableFieldsList").length == 1) {
+				if ($('#sortableFieldsList').find('#menu-item-' + valElName).length === 0) {
+					attachField = true;
+				}
+			}
+			else {
+				//this case is for estate detail view
+				var detailViewDivId='actionForestate';
+				if (categoryShort.startsWith('address')) {
+					detailViewDivId = 'actionForaddress';
+				}
+				if ($('#'+detailViewDivId).find('#sortableFieldsList').find('#menu-item-' + valElName).length === 0) {
+					attachField = true;
+				}
+			}
+
+			if (attachField) {
 				var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable);
-                var event = new CustomEvent('addFieldItem', {
-                    detail: {
-                        fieldname: valElName,
-                        fieldlabel: valElLabel,
-                        category,
-                        module,
-                        item: clonedItem
-                    }
-                });
-                document.dispatchEvent(event);
+				var event = new CustomEvent('addFieldItem', {
+					detail: {
+						fieldname: valElName,
+						fieldlabel: valElLabel,
+						category,
+						module,
+						item: clonedItem
+					}
+				});
+				document.dispatchEvent(event);
 			}
 		});
 

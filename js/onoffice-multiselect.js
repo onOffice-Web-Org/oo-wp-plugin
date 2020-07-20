@@ -12,39 +12,11 @@ var onOffice = onOffice || {};
 
 
 	multiselect.prototype._load = function(preselected) {
-		var divPopup = document.createElement('div');
-		divPopup.hidden = true;
-		divPopup.className = 'onoffice-multiselect-popup';
-
-		var output = '';
-		preselected = preselected || [];
-
-		for (var key in this._options) {
-			checkboxCounter++;
-			var value = this._options[key];
-			var checked = preselected.indexOf(key) >= 0 ? ' checked' : '';
-            var nameSuffix = (this._settings.name_is_array || false) ? '[]' : '';
-            var className = this._settings.cb_class || '';
-
-			output += '<label for=cb' + checkboxCounter + '>' +
-				'<input type="checkbox" name=' + this._name + nameSuffix + ' value="' + key + '" ' +
-				checked + ' id="cb' + checkboxCounter + '" class="' + className + '">' + value + '</label>';
-		}
-
-		divPopup.innerHTML = output;
-		var parent = this;
-
-		var button = document.createElement('input');
-		button.type = 'button';
-		button.value = 'OK';
-		button.onclick = function() {
-			parent.hide();
-		};
-
-		divPopup.appendChild(button);
-
-		this._element.appendChild(divPopup);
-
+        var divPopup = document.createElement('div');
+        divPopup.hidden = true;
+        divPopup.className = 'onoffice-multiselect-popup';
+        this._element.appendChild(divPopup);
+		this.reloadWithOptions(this._options, preselected);
 		this._displaySpan = document.createElement('span');
 		this._element.appendChild(this._displaySpan);
 		this.refreshlabel();
@@ -92,6 +64,42 @@ var onOffice = onOffice || {};
 		this._displaySpan.textContent = ' ' + labels.join(', ');
 		this.showLabel();
 	};
+
+    multiselect.prototype.reloadWithOptions = function(options, preselected) {
+        this._options = options;
+        var parent = this;
+        var output = '';
+        preselected = preselected || [];
+
+        for (var key in this._options) {
+            checkboxCounter++;
+            var value = this._options[key];
+            var checked = preselected.indexOf(key) >= 0 ? ' checked' : '';
+            var nameSuffix = (this._settings.name_is_array || false) ? '[]' : '';
+            var className = this._settings.cb_class || '';
+
+            output += '<label for=cb' + checkboxCounter + '>' +
+                '<input type="checkbox" name=' + this._name + nameSuffix + ' value="' + key + '" ' +
+                checked + ' id="cb' + checkboxCounter + '" class="' + className + '">' + value + '</label>';
+        }
+
+        var divPopup = this._element.querySelector('div.onoffice-multiselect-popup');
+        divPopup.innerHTML = output;
+
+        var button = document.createElement('input');
+        button.type = 'button';
+        button.value = 'OK';
+        button.onclick = function() {
+            parent.hide();
+            const event = new CustomEvent('onoffice-multiselect-change', { detail: {
+                name: parent._name,
+                selection: parent._getSelection()
+            }});
+            parent._element.dispatchEvent(event);
+        };
+
+        divPopup.appendChild(button);
+    };
 
 
 	multiselect.prototype.hideLabel = function() {
@@ -150,6 +158,7 @@ var onOffice = onOffice || {};
 				instance.show();
 			};
 		})(instance);
+		element.onoffice_multiselect = instance;
 	}
 })();
 

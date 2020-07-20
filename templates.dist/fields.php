@@ -7,7 +7,7 @@ use onOffice\WPlugin\Types\FieldTypes;
 if ( ! function_exists( 'printRegion') ) {
 	function printRegion( onOffice\WPlugin\Region\Region $pRegion, $selected = array(), $level = 0 ) {
 		$prefix = str_repeat( '-', $level );
-		$selectStr = (in_array($pRegion->getId(), $selected) ? ' selected' : '');
+		$selectStr = (in_array($pRegion->getId(), $selected, false) ? ' selected' : '');
 		echo '<option value="'.esc_html( $pRegion->getId() ).'" '.$selectStr.'>'
 			.$prefix.' '.esc_html( $pRegion->getName() ).'</option>';
 		foreach ( $pRegion->getChildren() as $pRegionChild ) {
@@ -78,7 +78,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 			</div>
 			';
 		} elseif ( $inputName === 'regionaler_zusatz' ) {
-			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label']);
+			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], $properties['permittedvalues'] ?? null);
 		}
 		elseif ( $inputName === 'country' )	{
 			echo '<select size="1" name="'.esc_attr($inputName).'">';
@@ -139,7 +139,7 @@ if (!function_exists('renderFormField')) {
 			{
 				$selectedValue = [];
 			}
-			$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel);
+			$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel, $permittedValues ?? null);
 		} elseif (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
 			$isRangeValue)) {
@@ -188,14 +188,19 @@ if (!function_exists('renderFormField')) {
 
 
 if (!function_exists('renderRegionalAddition')) {
-	function renderRegionalAddition(string $inputName, array $selectedValue, bool $multiple, string $fieldLabel): string
+	function renderRegionalAddition(string $inputName, array $selectedValue, bool $multiple, string $fieldLabel, array $permittedValues = null): string
 	{
 		$output = '';
 		$name = esc_attr($inputName).($multiple ? '[]' : '');
 		$multipleAttr = $multiple ? 'multiple size="5"' : 'size="1"';
 		$output .= '<select name="'.$name.'" '.$multipleAttr.'>';
 		$pRegionController = new RegionController();
-		$regions = $pRegionController->getRegions();
+
+		if ($permittedValues !== null) {
+			$regions = $pRegionController->getParentRegionsByChildRegionKeys(array_keys($permittedValues));
+		} else {
+			$regions = $pRegionController->getRegions();
+		}
 		ob_start();
 		echo '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 		foreach ($regions as $pRegion) {

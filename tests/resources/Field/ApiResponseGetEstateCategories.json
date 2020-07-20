@@ -1,0 +1,612 @@
+{
+  "actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:get",
+  "resourceid": "",
+  "resourcetype": "estateCategories",
+  "cacheable": true,
+  "identifier": "",
+  "data": {
+    "meta": {
+      "cntabsolute": null
+    },
+    "records": [
+      {
+        "id": "objektart",
+        "type": "",
+        "elements": [
+          {
+            "id": "zimmer",
+            "name": "Zimmer"
+          },
+          {
+            "id": "haus",
+            "name": "Haus"
+          },
+          {
+            "id": "wohnung",
+            "name": "Wohnung"
+          },
+          {
+            "id": "grundstueck",
+            "name": "Grundst\u00fcck"
+          },
+          {
+            "id": "buero_praxen",
+            "name": "B\u00fcro\/Praxen"
+          },
+          {
+            "id": "einzelhandel",
+            "name": "Laden\/Einzelhandel"
+          },
+          {
+            "id": "gastgewerbe",
+            "name": "Gastgewerbe"
+          },
+          {
+            "id": "hallen_lager_prod",
+            "name": "Hallen\/Lager\/Produktion"
+          },
+          {
+            "id": "land_und_forstwirtschaft",
+            "name": "Land\/Forstwirtschaft"
+          },
+          {
+            "id": "freizeitimmbilien_gewerblich",
+            "name": "Freizeitimmobilie (gewerblich)"
+          },
+          {
+            "id": "sonstige",
+            "name": "Sonstige"
+          }
+        ]
+      },
+      {
+        "id": "objekttyp",
+        "type": "",
+        "elements": {
+          "zimmer": [
+            {
+              "id": "zimmer",
+              "name": "Zimmer"
+            }
+          ],
+          "haus": [
+            {
+              "id": "bungalow",
+              "name": "Bungalow"
+            },
+            {
+              "id": "reihenhaus",
+              "name": "Reihenhaus"
+            },
+            {
+              "id": "reihenend",
+              "name": "Reihenend"
+            },
+            {
+              "id": "reihenmittel",
+              "name": "Reihenmittel"
+            },
+            {
+              "id": "reiheneck",
+              "name": "Reiheneck"
+            },
+            {
+              "id": "doppelhaushaelfte",
+              "name": "Doppelhaush\u00e4lfte"
+            },
+            {
+              "id": "einfamilienhaus",
+              "name": "Einfamilienhaus"
+            },
+            {
+              "id": "stadthaus",
+              "name": "Stadthaus"
+            },
+            {
+              "id": "villa",
+              "name": "Villa"
+            },
+            {
+              "id": "resthof",
+              "name": "Resthof"
+            },
+            {
+              "id": "bauernhaus",
+              "name": "Bauernhaus"
+            },
+            {
+              "id": "landhaus",
+              "name": "Landhaus"
+            },
+            {
+              "id": "schloss",
+              "name": "Schloss"
+            },
+            {
+              "id": "zweifamilienhaus",
+              "name": "Zweifamilienhaus"
+            },
+            {
+              "id": "mehrfamilienhaus",
+              "name": "Mehrfamilienhaus"
+            },
+            {
+              "id": "ferienhaus",
+              "name": "Ferienhaus"
+            },
+            {
+              "id": "berghuette",
+              "name": "Bergh\u00fctte"
+            },
+            {
+              "id": "chalet",
+              "name": "Chalet"
+            },
+            {
+              "id": "strandhaus",
+              "name": "Strandhaus"
+            },
+            {
+              "id": "wohn_und_geschaeftshaus",
+              "name": "Wohn- und Gesch\u00e4ftshaus"
+            },
+            {
+              "id": "geschaeftshaus",
+              "name": "Gesch\u00e4ftshaus"
+            },
+            {
+              "id": "wohnanlage",
+              "name": "Wohnanlage"
+            }
+          ],
+          "wohnung": [
+            {
+              "id": "rohdachboden",
+              "name": "Rohdachboden"
+            },
+            {
+              "id": "hochparterre",
+              "name": "Hochparterre"
+            },
+            {
+              "id": "dachgeschoss",
+              "name": "Dachgeschoss"
+            },
+            {
+              "id": "maisonette",
+              "name": "Maisonette"
+            },
+            {
+              "id": "loft-studio-atelier",
+              "name": "Loft\/Studio\/Atelier"
+            },
+            {
+              "id": "penthouse",
+              "name": "Penthouse"
+            },
+            {
+              "id": "terrassen",
+              "name": "Terrasse"
+            },
+            {
+              "id": "etage",
+              "name": "Etagenwohnung"
+            },
+            {
+              "id": "erdgeschoss",
+              "name": "Erdgeschoss"
+            },
+            {
+              "id": "souterrain",
+              "name": "Souterrain"
+            }
+          ],
+          "grundstueck": [
+            {
+              "id": "seeliegenschaft",
+              "name": "Seeliegenschaft"
+            },
+            {
+              "id": "gewerbepark",
+              "name": "Gewerbepark"
+            },
+            {
+              "id": "wohnen",
+              "name": "Wohnen"
+            },
+            {
+              "id": "gewerbe",
+              "name": "Gewerbe"
+            },
+            {
+              "id": "industrie",
+              "name": "Industrie"
+            },
+            {
+              "id": "land_forstwirtschaft",
+              "name": "Land\/Forstwirtschaft"
+            },
+            {
+              "id": "freizeit",
+              "name": "Freizeit"
+            },
+            {
+              "id": "gemischt",
+              "name": "Gemischt"
+            },
+            {
+              "id": "sondernutzung",
+              "name": "Sondernutzung"
+            }
+          ],
+          "buero_praxen": [
+            {
+              "id": "praxisflaeche",
+              "name": "Praxisfl\u00e4che"
+            },
+            {
+              "id": "buerozentrum",
+              "name": "B\u00fcrozentrum"
+            },
+            {
+              "id": "loft",
+              "name": "Loft"
+            },
+            {
+              "id": "atelier",
+              "name": "Atelier"
+            },
+            {
+              "id": "bueroetage",
+              "name": "B\u00fcroetage"
+            },
+            {
+              "id": "buero_und_lager",
+              "name": "B\u00fcro und Lagergeb\u00e4ude"
+            },
+            {
+              "id": "praxisetage",
+              "name": "Praxisetage"
+            },
+            {
+              "id": "praxishaus",
+              "name": "Praxishaus"
+            },
+            {
+              "id": "gewerbezentrum",
+              "name": "Gewerbezentrum"
+            },
+            {
+              "id": "bueroflaeche",
+              "name": "B\u00fcrofl\u00e4che"
+            },
+            {
+              "id": "buerohaus",
+              "name": "B\u00fcrohaus"
+            },
+            {
+              "id": "praxis",
+              "name": "Praxis"
+            },
+            {
+              "id": "ausstellungsflaeche",
+              "name": "Ausstellungsfl\u00e4che"
+            }
+          ],
+          "einzelhandel": [
+            {
+              "id": "ausstellungsflaeche",
+              "name": "Ausstellungsfl\u00e4che"
+            },
+            {
+              "id": "factory_outlet",
+              "name": "Factory Outlet"
+            },
+            {
+              "id": "kaufhaus",
+              "name": "Kaufhaus"
+            },
+            {
+              "id": "kiosk",
+              "name": "Kiosk"
+            },
+            {
+              "id": "sb_markt",
+              "name": "SB-Markt"
+            },
+            {
+              "id": "verkaufssflaeche",
+              "name": "Verkaufsfl\u00e4che"
+            },
+            {
+              "id": "verkaufshalle",
+              "name": "Verkaufshalle"
+            },
+            {
+              "id": "ladenlokal",
+              "name": "Ladenlokal"
+            },
+            {
+              "id": "einzelhandelsladen",
+              "name": "Einzelhandelsladen"
+            },
+            {
+              "id": "verbrauchermarkt",
+              "name": "Verbrauchermarkt"
+            },
+            {
+              "id": "einkaufszentrum",
+              "name": "Einkaufszentrum"
+            },
+            {
+              "id": "sonstige",
+              "name": "Sonstige"
+            }
+          ],
+          "gastgewerbe": [
+            {
+              "id": "einraumlokal",
+              "name": "Einraumlokal"
+            },
+            {
+              "id": "raucherlokal",
+              "name": "Raucherlokal"
+            },
+            {
+              "id": "barbetrieb",
+              "name": "Barbetrieb"
+            },
+            {
+              "id": "cafe",
+              "name": "Caf\u00e9"
+            },
+            {
+              "id": "diskothek",
+              "name": "Diskothek"
+            },
+            {
+              "id": "gaestehaus",
+              "name": "G\u00e4stehaus"
+            },
+            {
+              "id": "gaststaette",
+              "name": "Gastst\u00e4tte"
+            },
+            {
+              "id": "hotelanwesen",
+              "name": "Hotelanwesen"
+            },
+            {
+              "id": "hotel_garni",
+              "name": "Hotel Garni"
+            },
+            {
+              "id": "restaurant",
+              "name": "Restaurant"
+            },
+            {
+              "id": "gastronomie",
+              "name": "Gastronomie"
+            },
+            {
+              "id": "gastronomie_und_wohnung",
+              "name": "Gastronomie und Wohnen"
+            },
+            {
+              "id": "pensionen",
+              "name": "Pension"
+            },
+            {
+              "id": "hotels",
+              "name": "Hotels"
+            },
+            {
+              "id": "weitere_beherbergungsbetriebe",
+              "name": "Weitere Beherbergungsbetriebe"
+            }
+          ],
+          "hallen_lager_prod": [
+            {
+              "id": "ausstellungsflaeche",
+              "name": "Ausstellungsfl\u00e4che"
+            },
+            {
+              "id": "industriehalle",
+              "name": "Industriehalle"
+            },
+            {
+              "id": "industriehalle_und_freiflaeche",
+              "name": "Industriehalle und Freifl\u00e4che"
+            },
+            {
+              "id": "kuehlhaus",
+              "name": "K\u00fchlhaus"
+            },
+            {
+              "id": "kuehlregallager",
+              "name": "K\u00fchlregallager"
+            },
+            {
+              "id": "lager_mit_freiflaeche",
+              "name": "Lager mit Freifl\u00e4che"
+            },
+            {
+              "id": "lagerflaeche",
+              "name": "Lagerfl\u00e4che"
+            },
+            {
+              "id": "lagerhalle",
+              "name": "Lagerhalle"
+            },
+            {
+              "id": "speditionslager",
+              "name": "Speditionslager"
+            },
+            {
+              "id": "halle",
+              "name": "Halle"
+            },
+            {
+              "id": "lager",
+              "name": "Lager"
+            },
+            {
+              "id": "produktion",
+              "name": "Produktion"
+            },
+            {
+              "id": "werkstatt",
+              "name": "Werkstatt"
+            },
+            {
+              "id": "hochregallager",
+              "name": "Hochregallager"
+            },
+            {
+              "id": "service",
+              "name": "Service"
+            },
+            {
+              "id": "freiflaechen",
+              "name": "Freifl\u00e4chen"
+            },
+            {
+              "id": "industrie",
+              "name": "Industrie"
+            }
+          ],
+          "land_und_forstwirtschaft": [
+            {
+              "id": "jagdrevier",
+              "name": "Jagdrevier"
+            },
+            {
+              "id": "anwesen",
+              "name": "Anwesen"
+            },
+            {
+              "id": "landwirtschaftliche_betriebe",
+              "name": "Landwirtschaftliche Betriebe"
+            },
+            {
+              "id": "bauernhof",
+              "name": "Bauernhof"
+            },
+            {
+              "id": "aussiedlerhof",
+              "name": "Aussiedlerhof"
+            },
+            {
+              "id": "viehwirtschaft",
+              "name": "Viehwirtschaft"
+            },
+            {
+              "id": "jagd_und_forstwirtschaft",
+              "name": "Jagd und Forstwirtschaft"
+            },
+            {
+              "id": "teich_und_fischwirtschaft",
+              "name": "Teich und Fischwirtschaft"
+            },
+            {
+              "id": "scheunen",
+              "name": "Scheunen"
+            },
+            {
+              "id": "reiterhoefe",
+              "name": "Reiterh\u00f6fe"
+            },
+            {
+              "id": "sonstige_landwirtschaftsimmobilien",
+              "name": "Sonstige Landwirtschaftliche Immobilien"
+            }
+          ],
+          "freizeitimmbilien_gewerblich": [
+            {
+              "id": "freizeitanlage",
+              "name": "Freizeitanlage"
+            },
+            {
+              "id": "sportanlage",
+              "name": "Sportanlage"
+            },
+            {
+              "id": "vergnuegungsparks_und_center",
+              "name": "Vergn\u00fcgungsparks und Center"
+            }
+          ],
+          "sonstige": [
+            {
+              "id": "parkhaus",
+              "name": "Parkhaus"
+            },
+            {
+              "id": "tankstelle",
+              "name": "Tankstelle"
+            },
+            {
+              "id": "sonstige",
+              "name": "Sonstige"
+            },
+            {
+              "id": "gewerbeeinheit",
+              "name": "Gewerbeeinheit"
+            },
+            {
+              "id": "gewerbeanwesen",
+              "name": "Gewerbeanwesen"
+            }
+          ]
+        }
+      },
+      {
+        "id": "nutzungsart",
+        "type": "",
+        "elements": [
+          {
+            "id": "wohnen",
+            "name": "Wohnen"
+          },
+          {
+            "id": "gewerbe",
+            "name": "Gewerbe"
+          },
+          {
+            "id": "anlage",
+            "name": "Anlage"
+          },
+          {
+            "id": "waz",
+            "name": "WAZ (Wohnen auf Zeit)"
+          }
+        ]
+      },
+      {
+        "id": "vermarktungsart",
+        "type": "",
+        "elements": [
+          {
+            "id": "kauf",
+            "name": "Kauf"
+          },
+          {
+            "id": "miete",
+            "name": "Miete"
+          },
+          {
+            "id": "pacht",
+            "name": "Pacht"
+          },
+          {
+            "id": "erbpacht",
+            "name": "Erbpacht"
+          }
+        ]
+      }
+    ]
+  },
+  "status": {
+    "errorcode": 0,
+    "message": "OK"
+  }
+}

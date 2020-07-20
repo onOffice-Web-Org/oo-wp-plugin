@@ -138,30 +138,23 @@ class DataFormConfigurationFactory
 		return $pConfig;
 	}
 
-
 	/**
-	 *
 	 * @param string $name
 	 * @return DataFormConfiguration\DataFormConfiguration
-	 *
+	 * @throws UnknownFormException
 	 */
-
 	public function loadByFormName(string $name)
 	{
 		$rowMain = $this->_pRecordManagerRead->getRowByName($name);
 		$this->_type = $rowMain['form_type'];
-		$pConfig = $this->createByRow($rowMain);
-		return $pConfig;
+		return $this->createByRow($rowMain);
 	}
 
-
 	/**
-	 *
 	 * @param array $row
 	 * @return DataFormConfiguration\DataFormConfiguration
-	 *
+	 * @throws UnknownFormException
 	 */
-
 	private function createByRow(array $row)
 	{
 		$pConfig = $this->createEmpty(false);

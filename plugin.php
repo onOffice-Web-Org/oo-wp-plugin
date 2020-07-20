@@ -45,8 +45,10 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
-use onOffice\WPlugin\Field\DistinctFieldsHandler;
+use onOffice\WPlugin\Field\EstateKindTypeReader;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
+use onOffice\WPlugin\Form\Preview\FormPreviewApplicantSearch;
+use onOffice\WPlugin\Form\Preview\FormPreviewEstate;
 use onOffice\WPlugin\FormPostHandler;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
 use onOffice\WPlugin\Installer\Installer;
@@ -132,15 +134,13 @@ add_action('pre_update_option', function($value, $option) use ($pDI) {
 }, 10, 2);
 
 add_filter('query_vars', function(array $query_vars): array {
-    $query_vars []= 'distinctfields_json';
+    $query_vars []= 'onoffice_estate_type_json';
+    $query_vars []= 'onoffice_applicant_search_preview';
+    $query_vars []= 'onoffice_estate_preview';
     $query_vars []= 'document_pdf';
+    $query_vars []= 'preview_name';
+    $query_vars []= 'nonce';
     return $query_vars;
-});
-
-add_action('parse_request', function(WP $pWP) use ($pDI) {
-    if (isset($pWP->query_vars['distinctfields_json'])) {
-		wp_send_json($pDI->get(DistinctFieldsHandler::class)->check());
-    }
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
@@ -173,6 +173,28 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			include(get_query_template('404'));
 			die();
 		}
+	}
+});
+
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+	if (isset($pWP->query_vars['onoffice_estate_type_json'])) {
+		wp_send_json($pDI->get(EstateKindTypeReader::class)->read());
+	}
+});
+
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+	if (isset($pWP->query_vars['onoffice_estate_preview'], $pWP->query_vars['preview_name']) &&
+		wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-estate-preview') === 1) {
+		wp_send_json($pDI->get(FormPreviewEstate::class)
+			->preview((string)$pWP->query_vars['preview_name']));
+	}
+});
+
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+	if (isset($pWP->query_vars['onoffice_applicant_search_preview'], $pWP->query_vars['preview_name']) &&
+		wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-applicant-search-preview') === 1) {
+		wp_send_json($pDI->get(FormPreviewApplicantSearch::class)
+			->preview((string)$pWP->query_vars['preview_name']));
 	}
 });
 

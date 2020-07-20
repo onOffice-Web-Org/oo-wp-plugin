@@ -72,7 +72,7 @@ class InputFieldComplexSortableDetailListRenderer
 	public function render()
 	{
 		$this->readInactiveFields();
-		echo '<ul class="filter-fields-list" id="sortableFieldsList">';
+		echo '<ul class="filter-fields-list attachSortableFieldsList" id="sortableFieldsList">';
 
 		$i = 1;
 

@@ -24,19 +24,10 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
-use onOffice\tests\SDKWrapperMocker;
 use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
-use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
 use function json_decode;
-
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2019, onOffice(R) GmbH
- *
- */
 
 class TestClassRegionController
 	extends WP_UnitTestCase
@@ -44,37 +35,21 @@ class TestClassRegionController
 	/** @var RegionController */
 	private $_pRegionController = null;
 
-
-	/**
-	 *
-	 */
-
 	public function testConstruct()
 	{
 		$pRegionController = new RegionController(false);
 		$this->assertEquals([], $pRegionController->getRegions());
-		$this->assertInstanceOf(SDKWrapper::class, $pRegionController->getSDKWrapper());
 	}
-
-
-	/**
-	 *
-	 */
 
 	public function testGetRegions()
 	{
 		$result = $this->_pRegionController->getRegions();
-		$this->assertEquals(33, count($result));
+		$this->assertCount(33, $result);
 
 		foreach ($result as $pRegion) {
 			$this->assertInstanceOf(Region::class, $pRegion);
 		}
 	}
-
-
-	/**
-	 *
-	 */
 
 	public function testGetRegionByKey()
 	{
@@ -88,11 +63,6 @@ class TestClassRegionController
 		$this->assertEquals(['26524'], $pRegion->getPostalCodes());
 		$this->assertEquals('ENG', $pRegion->getLanguage());
 	}
-
-
-	/**
-	 *
-	 */
 
 	public function testGetSubRegionsByParentRegion()
 	{
@@ -113,13 +83,35 @@ class TestClassRegionController
 		$this->assertEquals([], $this->_pRegionController->getSubRegionsByParentRegion('Unknown'));
 	}
 
+	public function testGetParentRegionsByChildRegionKeys()
+	{
+		$resultObject = $this->_pRegionController->getParentRegionsByChildRegionKeys
+			(['openGeoDb_Region_111297', 'openGeoDb_Region_15773']);
+		$resultArray = [];
+		foreach ($resultObject as $pResultObject) {
+			$resultArray[$pResultObject->getId()] = $pResultObject->getName();
+			foreach ($pResultObject->getChildren() as $pResultChild2) {
+				$resultArray[$pResultObject->getId().'/'.$pResultChild2->getId()] = $pResultChild2->getName();
+				foreach ($pResultChild2->getChildren() as $pResultChild3) {
+					$resultArray[$pResultObject->getId()
+						.'/'.$pResultChild2->getId().'/'.$pResultChild3->getId()] = $pResultChild3->getName();
+				}
+			}
+		}
+
+		$expectedResult = [
+			'openGeoDb_Region_382' => 'Aurich (Kreis)',
+			'openGeoDb_Region_382/openGeoDb_Region_14400' => 'Berumbur (Gemeinde)',
+			'openGeoDb_Region_382/openGeoDb_Region_14400/openGeoDb_Region_111297' => 'Kleinheide',
+			'openGeoDb_Region_382/openGeoDb_Region_15772' => 'Dornum, Ostfriesland (Gemeinde)',
+			'openGeoDb_Region_382/openGeoDb_Region_15772/openGeoDb_Region_15773' => 'Dornumersiel',
+		];
+		$this->assertSame($expectedResult, $resultArray);
+	}
 
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepareTest()
 	{
 		$pSDKWrapper = new SDKWrapperMocker();
