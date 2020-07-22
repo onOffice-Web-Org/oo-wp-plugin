@@ -73,6 +73,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.8 =
+
+**Changes**
+
+* Different titles for address fields in real-estate detail view in backend.
+* Made language files complete.
+
 = 2.7.7 =
 
 **New**
