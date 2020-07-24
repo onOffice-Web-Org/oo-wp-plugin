@@ -99,6 +99,14 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			</div>
 		</div>
 	<?php endwhile; ?>
+	<div class="oo-pagination">
+		<?php wp_link_pages(
+			array(
+				'link_before'      => '<span>',
+				'link_after'       => '</span>',
+			)
+		); ?>
+	</div>
 </div>
 <?php if (Favorites::isFavorizationEnabled()) { ?>
 <script>
