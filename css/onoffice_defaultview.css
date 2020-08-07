@@ -258,6 +258,12 @@
 	}
 }
 
+@media only screen and (max-width: 700px) {
+	.oo-detailslisttd {
+		width: 50%;
+	}
+}
+
 @media only screen and (max-width: 575px) {
 	.oo-listobject, .oo-searchformfield, .oo-details-sidebar {
 		width: 100%;
