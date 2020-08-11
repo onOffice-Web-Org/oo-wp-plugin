@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.9 =
+
+**Fixes**
+
+* Bugfix in detailview for mobile devices.
+
 = 2.7.8 =
 
 **Changes**
