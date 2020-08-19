@@ -27,6 +27,7 @@ use DI\NotFoundException;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
@@ -93,6 +94,9 @@ class EstateList
 	/** @var GeoSearchBuilder */
 	private $_pGeoSearchBuilder = null;
 
+	/** @var EstateDetailUrl */
+	private $_pLanguageSwitcher;
+
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -110,6 +114,7 @@ class EstateList
 		$this->_pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
+		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
 	}
 
 	/**
@@ -422,7 +427,8 @@ class EstateList
 
 		if ($pageId !== 0) {
 			$estate = $this->_currentEstate['mainId'];
-			$fullLink = get_page_link($pageId).$estate;
+			$url = get_page_link($pageId);
+			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate);
 		}
 
 		return $fullLink;

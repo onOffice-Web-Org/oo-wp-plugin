@@ -25,13 +25,13 @@ namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
-class EstateDetailWpmlLs
+class EstateDetailUrl
 {
 	/** @var WPQueryWrapper */
 	private $_pWPQueryWrapper;
 
 	/**
-	 * EstateDetailWpmlLs constructor.
+	 * EstateDetailUrl constructor.
 	 *
 	 * @param WPQueryWrapper $pWPQueryWrapper
 	 */
@@ -45,13 +45,29 @@ class EstateDetailWpmlLs
 	 * @param string $url
 	 * @return string
 	 */
-	public function addIdToLsUrl(string $url): string
+	public function addEstateIdToLanguageSwitcher(string $url): string
 	{
 		$estateId = (int)$this->_pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
+		return $this->createEstateDetailLink($url, $estateId);
+	}
+
+
+	/**
+	 * @param string $url
+	 * @param int $estateId
+	 * @return string
+	 */
+	public function createEstateDetailLink(string $url, int $estateId): string
+	{
 		$urlLsSwitcher = $url;
 
 		if ($estateId !== 0){
-			$urlLsSwitcher .= $estateId;
+			$getParameters = parse_url($url, PHP_URL_QUERY);
+			if ($getParameters != null && strpos($getParameters, 'lang=') !== false) {
+				$urlLsSwitcher = str_replace('?', $estateId.'?', $url);
+			} else {
+				$urlLsSwitcher .= $estateId;
+			}
 		}
 		return $urlLsSwitcher;
 	}

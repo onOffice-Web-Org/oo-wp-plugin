@@ -26,11 +26,11 @@ namespace onOffice\tests;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use onOffice\WPlugin\Controller\EstateDetailWpmlLs;
+use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use WP_UnitTestCase;
 
-class TestClassEstateDetailWpmlLs
+class TestClassEstateDetailUrl
 	extends WP_UnitTestCase
 {
 
@@ -55,18 +55,35 @@ class TestClassEstateDetailWpmlLs
 		$this->_pContainer->set(WPQueryWrapper::class, $pWPQueryWrapper);
 	}
 
-
-	public function testAddIdToLsUrl()
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testAddEstateIdToLanguageSwitcherFolderConfig()
 	{
 		$estateId = 123;
 		$this->_pContainer->get(WPQueryWrapper::class)->getWPQuery()
 			->method('get')
 			->will($this->returnValue($estateId));
 
-		$pInstance = $this->_pContainer->get(EstateDetailWpmlLs::class);
+		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
 		$url = 'https://www.onoffice.de/';
 		$expectedUrl = $url.$estateId;
 
-		$this->assertEquals($expectedUrl, $pInstance->addIdToLsUrl($url));
+		$this->assertEquals($expectedUrl, $pInstance->addEstateIdToLanguageSwitcher($url));
+	}
+
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testCreateEstateDetailLink()
+	{
+		$estateId = 123;
+		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
+		$url = 'https://www.onoffice.de/detail/?lang=en';
+		$expectedUrl = 'https://www.onoffice.de/detail/123?lang=en';
+
+		$this->assertEquals($expectedUrl, $pInstance->createEstateDetailLink($url, $estateId));
 	}
 }
