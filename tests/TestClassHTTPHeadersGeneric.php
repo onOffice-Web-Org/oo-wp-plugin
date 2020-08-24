@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Utility\HTTPHeadersGeneric;

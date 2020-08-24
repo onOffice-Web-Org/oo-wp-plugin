@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace onOffice\WPlugin\Cache;
 
 use DateInterval;
