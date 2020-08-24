@@ -33,8 +33,8 @@ class TestClassHTTPHeadersGeneric extends \WP_UnitTestCase
 	{
 		$pInstance = new HTTPHeadersGeneric;
 		$this->assertSame('', $pInstance->getRequestHeaderValue('Accept-Encoding'));
-		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,br,winrar';
+		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,br,winrar,\"something\"';
 		$acceptEncoding = $pInstance->getRequestHeaderValue('Accept-Encoding');
-		$this->assertEquals('gzip,deflate,br,winrar', $acceptEncoding);
+		$this->assertEquals('gzip,deflate,br,winrar,"something"', $acceptEncoding);
 	}
 }
