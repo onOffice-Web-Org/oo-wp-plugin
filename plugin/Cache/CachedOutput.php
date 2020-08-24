@@ -30,7 +30,7 @@ class CachedOutput
 
 	/**
 	 * @param string $content
-	 * @param string $intervalSpecLifetime
+	 * @param int $intervalSpecLifetime
 	 * @return void
 	 * @throws Exception
 	 */
@@ -46,9 +46,7 @@ class CachedOutput
 		$this->_pHTTPHeaders->addHeader('Cache-Control: max-age='.$intervalSpecLifetime);
 		$this->_pHTTPHeaders->addHeader('ETag: '.$eTag);
 		$this->_pHTTPHeaders->addHeader('Expires: '.$pDateTime->format(DateTimeInterface::RFC7231));
-		$requestHeaders = $this->_pHTTPHeaders->getRequestHeaders();
-		$ifNoneMatchHeader = array_change_key_case($requestHeaders, CASE_LOWER)['if-none-match'] ?? '';
-		if ($eTag === $ifNoneMatchHeader) {
+		if ($eTag === $this->_pHTTPHeaders->getRequestHeaderValue('If-None-Match')) {
 			$this->_pHTTPHeaders->setHttpResponseCode(304);
 			return;
 		}

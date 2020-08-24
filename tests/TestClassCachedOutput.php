@@ -42,8 +42,8 @@ class TestClassCachedOutput
 		$pMockHeaders = $this->getMockBuilder(HTTPHeaders::class)
 			->getMock();
 		$pMockHeaders->expects($this->once())
-			->method('getRequestHeaders')
-			->willReturn(['If-None-Match' => '"f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="']);
+			->method('getRequestHeaderValue')->with('If-None-Match')
+			->willReturn('"f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="');
 		$pMockHeaders->expects($this->once())
 			->method('setHttpResponseCode')->with(304);
 		$pMockHeaders->expects($this->exactly(5))

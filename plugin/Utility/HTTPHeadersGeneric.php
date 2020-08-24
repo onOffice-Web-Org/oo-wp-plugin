@@ -30,6 +30,17 @@ class HTTPHeadersGeneric
 	}
 
 	/**
+	 * @param string $headerName
+	 * @return string
+	 */
+	public function getRequestHeaderValue(string $headerName): string
+	{
+		$key = 'HTTP_'.strtoupper(str_replace('-', '_', $headerName));
+		// stripslashes()? See https://developer.wordpress.org/reference/functions/stripslashes_deep/#more-information
+		return stripslashes($_SERVER[$key] ?? '');
+	}
+
+	/**
 	 * @param int $responseCode
 	 * @codeCoverageIgnore
 	 */

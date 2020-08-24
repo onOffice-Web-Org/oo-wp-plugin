@@ -17,6 +17,12 @@ interface HTTPHeaders
 	public function getRequestHeaders(): array;
 
 	/**
+	 * @param string $headerName
+	 * @return string
+	 */
+	public function getRequestHeaderValue(string $headerName): string;
+
+	/**
 	 * @param int $responseCode
 	 * @return mixed
 	 */

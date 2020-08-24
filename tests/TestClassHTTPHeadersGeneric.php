@@ -28,4 +28,13 @@ class TestClassHTTPHeadersGeneric extends \WP_UnitTestCase
 		$pInstance->addHeader('Content-Type: text/html', true, 404);
 		$this->assertEquals(['Content-type: text/html;charset=UTF-8'], xdebug_get_headers());
 	}
+
+	public function testGetRequestHeaderValue()
+	{
+		$pInstance = new HTTPHeadersGeneric;
+		$this->assertSame('', $pInstance->getRequestHeaderValue('Accept-Encoding'));
+		$_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,br,winrar';
+		$acceptEncoding = $pInstance->getRequestHeaderValue('Accept-Encoding');
+		$this->assertEquals('gzip,deflate,br,winrar', $acceptEncoding);
+	}
 }
