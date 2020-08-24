@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\Cache;
 
 use DateInterval;
+use DateTime;
 use DateTimeImmutable;
-use DateTimeInterface;
 use Exception;
 use onOffice\WPlugin\Utility\HTTPHeaders;
 use RuntimeException;
@@ -21,6 +21,7 @@ class CachedOutput
 
 	/**
 	 * @param DateTimeImmutable $pDateTime
+	 * @param HTTPHeaders $pHTTPHeaders
 	 */
 	public function __construct(DateTimeImmutable $pDateTime, HTTPHeaders $pHTTPHeaders)
 	{
@@ -45,7 +46,7 @@ class CachedOutput
 		$this->_pHTTPHeaders->addHeader('Cache-Control: must-revalidate');
 		$this->_pHTTPHeaders->addHeader('Cache-Control: max-age='.$intervalSpecLifetime);
 		$this->_pHTTPHeaders->addHeader('ETag: '.$eTag);
-		$this->_pHTTPHeaders->addHeader('Expires: '.$pDateTime->format(DateTimeInterface::RFC7231));
+		$this->_pHTTPHeaders->addHeader('Expires: '.$pDateTime->format(DateTime::RFC7231));
 		if ($eTag === $this->_pHTTPHeaders->getRequestHeaderValue('If-None-Match')) {
 			$this->_pHTTPHeaders->setHttpResponseCode(304);
 			return;
