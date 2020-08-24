@@ -12,11 +12,6 @@ interface HTTPHeaders
 	public function headersSent(): bool;
 
 	/**
-	 * @return array
-	 */
-	public function getRequestHeaders(): array;
-
-	/**
 	 * @param string $headerName
 	 * @return string
 	 */
@@ -24,9 +19,13 @@ interface HTTPHeaders
 
 	/**
 	 * @param int $responseCode
-	 * @return mixed
 	 */
 	public function setHttpResponseCode(int $responseCode);
 
+	/**
+	 * @param string $header
+	 * @param bool $replace
+	 * @param int|null $responseCode
+	 */
 	public function addHeader(string $header, bool $replace = true, int $responseCode = null);
 }

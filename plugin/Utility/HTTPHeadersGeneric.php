@@ -17,19 +17,6 @@ class HTTPHeadersGeneric
 	}
 
 	/**
-	 * Will silently return an empty array if apache module was not loaded
-	 * @codeCoverageIgnore
-	 * @return array
-	 */
-	public function getRequestHeaders(): array
-	{
-		if (extension_loaded('apache')) {
-			return apache_request_headers() ?: [];
-		}
-		return [];
-	}
-
-	/**
 	 * @param string $headerName
 	 * @return string
 	 */
