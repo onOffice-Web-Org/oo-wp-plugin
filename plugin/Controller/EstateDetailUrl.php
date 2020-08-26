@@ -23,34 +23,9 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
-use onOffice\WPlugin\WP\WPQueryWrapper;
 
 class EstateDetailUrl
 {
-	/** @var WPQueryWrapper */
-	private $_pWPQueryWrapper;
-
-	/**
-	 * EstateDetailUrl constructor.
-	 *
-	 * @param WPQueryWrapper $pWPQueryWrapper
-	 */
-	public function __construct(WPQueryWrapper $pWPQueryWrapper)
-	{
-		$this->_pWPQueryWrapper = $pWPQueryWrapper;
-	}
-
-
-	/**
-	 * @param string $url
-	 * @return string
-	 */
-	public function addEstateIdToLanguageSwitcher(string $url): string
-	{
-		$estateId = (int)$this->_pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
-		return $this->createEstateDetailLink($url, $estateId);
-	}
-
 
 	/**
 	 * @param string $url
@@ -62,8 +37,14 @@ class EstateDetailUrl
 		$urlLsSwitcher = $url;
 
 		if ($estateId !== 0){
-			$getParameters = parse_url($url, PHP_URL_QUERY);
-			if ($getParameters != null && strpos($getParameters, 'lang=') !== false) {
+			$arguments = parse_url($url, PHP_URL_QUERY);
+			$getParameters = [];
+
+			if ($arguments != null) {
+				parse_str($arguments, $getParameters);
+			}
+
+			if (array_key_exists('lang', $getParameters) && $getParameters['lang'] != null) {
 				$urlLsSwitcher = str_replace('?', $estateId.'?', $url);
 			} else {
 				$urlLsSwitcher .= $estateId;
