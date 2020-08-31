@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e94de1ec4591b79682890cc6d4199ae7",
+    "content-hash": "046ef3c08b87b45f5c5a0bff31a1a8ab",
     "packages": [
         {
             "name": "jeremeamia/superclosure",
@@ -2365,6 +2365,7 @@
             "keywords": [
                 "tokenizer"
             ],
+            "abandoned": true,
             "time": "2017-11-27T05:48:46+00:00"
         },
         {
@@ -3972,7 +3973,7 @@
         },
         {
             "name": "symfony/process",
-            "version": "v3.4.43",
+            "version": "v3.4.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -4484,7 +4485,9 @@
         "php": ">=7.0.0",
         "ext-curl": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {
+        "ext-xdebug": "*"
+    },
     "platform-overrides": {
         "php": "7.0.33"
     },
