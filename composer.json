@@ -10,8 +10,9 @@
 		"php-coveralls/php-coveralls": "^2.2",
 		"symfony/process": "^3.4",
         "phpcompatibility/php-compatibility": "*",
-		"wp-cli/i18n-command": "*"
-	},
+		"wp-cli/i18n-command": "*",
+        "ext-xdebug": "*"
+    },
     "prefer-stable" : true,
 	"autoload": {
 		 "psr-4": {
@@ -27,7 +28,6 @@
 	"require": {
 		"php": ">=7.0.0",
 		"php-di/php-di": "^6.0",
-
 		"ext-curl": "*"
     }
 }
