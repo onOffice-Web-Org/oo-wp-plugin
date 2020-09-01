@@ -117,7 +117,9 @@ class TestClassRewriteRuleBuilder
 		$pSubject->addDynamicRewriteRules();
 		$this->assertSame([
 			'^(test_parent/test\-post)/([0-9]+)/?$' =>
-				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&estate_id=$matches[2]'
+				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&estate_id=$matches[2]',
+			'^(test_parent/test\-post)/page/([0-9]+)/?$' =>
+				'index.php?pagename=test_parent%2Ftest-post&view=$matches[1]&paged=$matches[2]'
 		], $wp_rewrite->extra_rules_top);
 	}
 }

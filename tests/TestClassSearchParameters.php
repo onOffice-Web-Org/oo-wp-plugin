@@ -81,7 +81,7 @@ class TestClassSearchParameters
 
 		$pInstance = new SearchParameters();
 		$this->_pModel->populateDefaultLinkParams($params);
-		$this->assertEquals('<a href="/1?ort=Aachen">1</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
+		$this->assertEquals('<a href="/page/1?ort=Aachen">1</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
 
 		global $more;
 		$more = true;
@@ -104,6 +104,6 @@ class TestClassSearchParameters
 
 		$pInstance = new SearchParameters();
 		$this->_pModel->populateDefaultLinkParams($params);
-		$this->assertEquals('<a href="/1?ort=Aachen">Nächste Seite</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
+		$this->assertEquals('<a href="/page/1?ort=Aachen">Nächste Seite</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
 	}
 }

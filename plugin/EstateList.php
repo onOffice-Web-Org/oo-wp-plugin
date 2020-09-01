@@ -47,6 +47,7 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
 use function home_url;
@@ -349,13 +350,13 @@ class EstateList
 	 */
 	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
-		global $numpages, $multipage, $page, $more;
+		global $numpages, $multipage, $more, $paged;
 
 		if (null !== $this->_numEstatePages &&
 			!$this->_pDataView->getRandom()) {
 			$multipage = true;
 
-			$page = $this->_currentEstatePage;
+			$paged = $this->_currentEstatePage;
 			$more = true;
 			$numpages = $this->_numEstatePages;
 		}

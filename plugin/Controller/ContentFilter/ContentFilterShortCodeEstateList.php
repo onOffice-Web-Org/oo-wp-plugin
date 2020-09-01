@@ -130,7 +130,7 @@ class ContentFilterShortCodeEstateList
 			$pEstateList->setUnitsViewName($attributes['units']);
 			$pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 
-			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery()->get('page', 1) ?: 1);
+			$pEstateList->loadEstates($this->_pWPQueryWrapper->getWPQuery()->get('paged', 1) ?: 1);
 			$pTemplate = $this->_pTemplate
 				->withTemplateName($pListViewWithSortParams->getTemplate())
 				->withEstateList($pEstateList);

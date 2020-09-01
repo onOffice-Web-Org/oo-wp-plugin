@@ -84,7 +84,7 @@ class TestClassContentFilterShortCodeAddress
 				->getMock();
 		$pWPQueryMock = $this->getMockBuilder(WP_Query::class)->getMock();
 		$pWPQueryMock->method('get')
-			->with('page', 1)->will($this->returnValue(2));
+			->with('paged', 1)->will($this->returnValue(2));
 		$pWPQueryWrapperMock->method('getWPQuery')->will($this->returnValue($pWPQueryMock));
 
 		$pSearchParametersModelBuilder = $this->getMockBuilder(SearchParametersModelBuilder::class)

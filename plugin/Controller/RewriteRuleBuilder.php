@@ -68,6 +68,8 @@ class RewriteRuleBuilder
 			$pagename = $this->_pWPPageWrapper->getPageUriByPageId($detailPageId);
 			add_rewrite_rule('^('.preg_quote($pagename).')/([0-9]+)/?$',
 				'index.php?pagename='.urlencode($pagename).'&view=$matches[1]&estate_id=$matches[2]','top');
+			add_rewrite_rule('^('.preg_quote($pagename).')/page/([0-9]+)/?$',
+				'index.php?pagename='.urlencode($pagename).'&view=$matches[1]&paged=$matches[2]','top');
 		}
 	}
 }

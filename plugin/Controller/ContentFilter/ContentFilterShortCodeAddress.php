@@ -119,7 +119,7 @@ class ContentFilterShortCodeAddress
 	 */
 	private function createTemplate(string $addressListName): Template
 	{
-		$page = $this->_pWPQueryWrapper->getWPQuery()->get('page', 1);
+		$page = $this->_pWPQueryWrapper->getWPQuery()->get('paged', 1);
 		$pAddressListView = $this->_pDataListFactory->getListViewByName($addressListName);
 		$pAddressList = $this->_pAddressListFactory->create()->withDataListViewAddress($pAddressListView);
 		$pAddressList->loadAddresses($page);

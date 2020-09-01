@@ -56,7 +56,7 @@ class SearchParameters
 	 */
 	public function linkPagesLink(string $link, int $i, SearchParametersModel $pModel): string
 	{
-		global $page, $more;
+		global $paged, $more;
 
 		$linkparams = $pModel->getDefaultLinkParams();
 		$output = '';
@@ -64,14 +64,14 @@ class SearchParameters
 		if ('number' == $linkparams['next_or_number']) {
 			$link = $linkparams['link_before'].str_replace('%', $i, $linkparams['pagelink'])
 				.$linkparams['link_after'];
-			if ($i != $page || ! $more && 1 == $page) {
+			if ($i != $paged || ! $more && 1 == $paged) {
 				$url = $this->geturl( $i, $pModel->getParameters() );
 				$output .= '<a href="'.esc_url($url).'">'.$link.'</a>';
 			} else {
 				$output .= $link;
 			}
 		} elseif ($more) {
-			$output .= $this->getLinkSnippetForPage($i, $page, $linkparams, $pModel);
+			$output .= $this->getLinkSnippetForPage($i, $paged, $linkparams, $pModel);
 		}
 
 		return $output;
@@ -100,7 +100,7 @@ class SearchParameters
 	 */
 	private function geturl($i, array $parameters): string
 	{
-		$url = trailingslashit(get_permalink()).user_trailingslashit($i, 'single_paged');
+		$url = trailingslashit(get_permalink()).user_trailingslashit('page/'.$i, 'single_paged');
 		return add_query_arg($parameters, $url);
 	}
 
