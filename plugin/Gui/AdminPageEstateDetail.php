@@ -187,7 +187,6 @@ class AdminPageEstateDetail
 			.'jQuery(document).ready(function(){'
 				.'onOffice.ajaxSaver = new onOffice.ajaxSaver("onoffice-ajax");'
 				.'onOffice.ajaxSaver.register();'
-				.'postboxes.add_postbox_toggles(pagenow);'
 			.'});'
 		.'</script>';
 	}

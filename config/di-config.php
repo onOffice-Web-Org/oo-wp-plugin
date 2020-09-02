@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice;
 
+use DateTimeImmutable;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
@@ -45,6 +46,8 @@ use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfig;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderBuilderConfigDefault;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
+use onOffice\WPlugin\Utility\HTTPHeaders;
+use onOffice\WPlugin\Utility\HTTPHeadersGeneric;
 use onOffice\WPlugin\WP\WPNonceWrapper;
 use onOffice\WPlugin\WP\WPNonceWrapperDefault;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -80,4 +83,8 @@ return [
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
 	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
+	DateTimeImmutable::class => autowire()
+		->constructorParameter('time', 'now')
+		->constructorParameter('timezone', null),
+	HTTPHeaders::class => autowire(HTTPHeadersGeneric::class),
 ];

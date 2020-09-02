@@ -73,6 +73,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.10 =
+
+**Fixes**
+
+* Fix accordion boxes in the settings when using WP 5.5.
+* Fix jQuery compability problem with picture checkbox in the estate list settings when using WP 5.5.
+* Optimize estate types to be cached for faster page loading time.
+
 = 2.7.9 =
 
 **Fixes**
