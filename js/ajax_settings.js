@@ -147,20 +147,16 @@ onOffice.ajaxSaver = function(outerDiv) {
     };
 
 	this._getValueOfElement = function(element) {
-		var value = null;
-		switch ($(element).attr('type')) {
+        let value = null;
+        switch (element.type) {
 			case 'radio':
-				if ($(element).attr('selected')) {
-					value = $(element).val();
-				}
-				break;
 			case 'checkbox':
-				if ($(element).attr('checked')) {
-					value = $(element).val();
+				if (element.checked) {
+					value = element.value;
 				}
 				break;
 			default:
-				value = $(element).val();
+				value = element.value;
 		}
 		return value;
 	};

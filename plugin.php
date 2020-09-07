@@ -39,6 +39,7 @@ require 'vendor/autoload.php';
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
 use DI\ContainerBuilder;
+use onOffice\WPlugin\Cache\CachedOutput;
 use onOffice\WPlugin\Cache\CacheHandler;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
@@ -184,9 +185,14 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 	}
 });
 
-add_action('parse_request', function(WP $pWP) use ($pDI) {
+add_action('parse_request', static function(WP $pWP) use ($pDI) {
 	if (isset($pWP->query_vars['onoffice_estate_type_json'])) {
-		wp_send_json($pDI->get(EstateKindTypeReader::class)->read());
+		$content = wp_json_encode($pDI->get(EstateKindTypeReader::class)->read());
+		/** @var CachedOutput $pCachedOutput */
+		$pCachedOutput = $pDI->get(CachedOutput::class);
+		header('Content-Type: application/json; charset='.get_option('blog_charset'));
+		$pCachedOutput->outputCached($content, 60 * 60 * 24 * 2);
+		exit;
 	}
 });
 
