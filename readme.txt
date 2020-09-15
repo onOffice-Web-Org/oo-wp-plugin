@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.12 =
+
+**Fixes**
+
+* Fix pagination problem when using WP 5.5
+
 = 2.7.11 =
 
 **Fixes**
