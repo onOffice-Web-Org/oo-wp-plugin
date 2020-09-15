@@ -59,7 +59,9 @@ use onOffice\WPlugin\PDF\PdfDownload;
 use onOffice\WPlugin\PDF\PdfDownloadException;
 use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
+use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
 
@@ -116,6 +118,12 @@ $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 
 add_filter('document_title_parts', function($title) use ($pDI) {
 	return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+}, 10, 2);
+
+add_filter('wpml_ls_language_url', function($url) use ($pDI){
+	$pWPQueryWrapper = $pDI->get(WPQueryWrapper::class);
+	$estateId = (int) $pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
+	return $pDI->get(EstateDetailUrl::class)->createEstateDetailLink($url, $estateId);
 }, 10, 2);
 
 register_activation_hook(__FILE__, [Installer::class, 'install']);

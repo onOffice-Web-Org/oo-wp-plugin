@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.11 =
+
+**Fixes**
+
+* Fix WPML-Language selector in the real-estate-detail view.
+
 = 2.7.10 =
 
 **Fixes**
