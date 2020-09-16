@@ -45,7 +45,8 @@ class FieldsCollectionToContentFieldLabelArrayConverter
 		$categories = [];
 
 		foreach ($pFieldsCollection->getFieldsByModule($module) as $key => $pField) {
-			$content = $pField->getCategory();
+			$content = $pField->getCategory() ?: __('(unnamed category)', 'onoffice');
+
 			$categories []= $content;
 			$result[$content][$key] = $pField->getLabel();
 		}
