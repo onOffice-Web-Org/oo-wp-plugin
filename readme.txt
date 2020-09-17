@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.13 =
+
+**Fixes**
+
+* Fix of missing contact photo in the detail estate view setting.
+
 = 2.7.12 =
 
 **Fixes**
