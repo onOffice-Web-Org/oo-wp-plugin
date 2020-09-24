@@ -90,7 +90,6 @@ onOffice.ajaxSaver = function(outerDiv) {
                     if (isNaN(highestKey)) {
                         highestKey = -1;
                     }
-
                     previousEntry[highestKey+1] = elementValue;
                 }
 
@@ -153,6 +152,14 @@ onOffice.ajaxSaver = function(outerDiv) {
 			case 'checkbox':
 				if (element.checked) {
 					value = element.value;
+				}
+				break;
+			case 'select-multiple':
+				value = Array();
+				for (var i = 0; i < element.options.length; i++) {
+					if (element.options[i].selected ==true){
+						value.push(element.options[i].value);
+					}
 				}
 				break;
 			default:

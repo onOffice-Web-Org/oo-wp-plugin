@@ -13,7 +13,7 @@ jQuery(document).ready(function($) {
             'oopluginlistviews-sortorder'
         ];
 
-        if ($("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").attr('checked') == 'checked') {
+        if ($("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").prop('checked') == true) {
             sortbynames.forEach(function(item){
                 $("#viewrecordsfilter").find("[name="+item+"]").parent().show();
             });
@@ -33,7 +33,7 @@ jQuery(document).ready(function($) {
     };
 
     onOffice.generateSortByUserDefinedDefault = function() {
-        if ($("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").attr('checked') == 'checked') {
+        if ($("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").prop('checked') == true) {
 
             var oldSelected;
             var selectedDirection;
