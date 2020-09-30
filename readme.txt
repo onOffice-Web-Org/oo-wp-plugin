@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.14 =
+
+**Fixes**
+
+* Fix of user defined sort in the real-estates list configuration
+
 = 2.7.13 =
 
 **Fixes**
