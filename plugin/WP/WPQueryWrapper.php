@@ -41,7 +41,7 @@ class WPQueryWrapper
 	public function getWPQuery(): WP_Query
 	{
 		global $wp_query, $paged;
-		$wpquery = $wp_query;
+		$wpquery = clone $wp_query;
 
 		if (get_query_var( 'paged' )) {
 			$paged = get_query_var('paged');
