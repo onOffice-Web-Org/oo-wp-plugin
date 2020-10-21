@@ -44,8 +44,6 @@ class TestClassWPQueryWrapper
 	public function testGetWPQuery()
 	{
 		$pWPQueryWrapper = new WPQueryWrapper();
-		global $wp_query;
 		$this->assertInstanceOf(WP_Query::class, $pWPQueryWrapper->getWPQuery());
-		$this->assertSame($wp_query, $pWPQueryWrapper->getWPQuery());
 	}
 }
