@@ -37,13 +37,34 @@ class TestClassWPQueryWrapper
 {
 	/**
 	 *
-	 * @global WP_Query $wp_query
-	 *
 	 */
-
 	public function testGetWPQuery()
 	{
 		$pWPQueryWrapper = new WPQueryWrapper();
 		$this->assertInstanceOf(WP_Query::class, $pWPQueryWrapper->getWPQuery());
+	}
+
+	/**
+	 *
+	 */
+	public function testGetWpQueryOnlyWithPage()
+	{
+		global $wp_query;
+		$wp_query = new WP_Query(['page' => 2]);
+		$pWPQueryWrapper = new WPQueryWrapper();
+		$this->assertEquals(2, $pWPQueryWrapper->getWPQuery()->get('paged'));
+		wp_reset_query();
+	}
+
+	/**
+	 *
+	 */
+	public function testGetWpQueryWithPagedAndPage()
+	{
+		global $wp_query;
+		$wp_query = new WP_Query(['page' => 2, 'paged'=> 3]);
+		$pWPQueryWrapper = new WPQueryWrapper();
+		$this->assertEquals(3, $pWPQueryWrapper->getWPQuery()->get('paged'));
+		wp_reset_query();
 	}
 }
