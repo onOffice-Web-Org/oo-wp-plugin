@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.15 =
+
+ **Fixes**
+ 
+ * Fix of pagination in static pages
+
 = 2.7.14 =
 
 **Fixes**
