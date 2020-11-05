@@ -24,8 +24,14 @@ composer-install-nodev:
 pot:
 	vendor/bin/wp i18n make-pot . languages/onoffice.pot --skip-js
 	sed -i -r "s/onOffice for WP-Websites \(dev\)/onOffice for WP-Websites/" languages/onoffice.pot
+
+concat-css:
+	@cat `ls -I ./third_party/slick/*\.css`  ./css/*\.css > ./css/build/oo-wp-plugin.css
+
+mkdirs:
+	@mkdir ./css/build/
 	
-release: pot copy-files-release change-title add-version composer-install-nodev
+release: pot copy-files-release change-title add-version composer-install-nodev mkdirs concat-css
 
 test-zip: pot copy-files-release add-version composer-install-nodev
 	cd $(PREFIX); zip -r onoffice.zip onoffice/
