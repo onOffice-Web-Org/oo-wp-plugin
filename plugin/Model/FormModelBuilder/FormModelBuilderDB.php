@@ -80,7 +80,7 @@ abstract class FormModelBuilderDB
 
 	public function createInputModelName()
 	{
-		$labelName = __('View Name', 'onoffice');
+		$labelName = __('View Name', 'onoffice-for-wp-websites');
 
 		$pInputModelName = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_LISTNAME, null);
@@ -101,7 +101,7 @@ abstract class FormModelBuilderDB
 
 	public function createInputModelSortBy($module)
 	{
-		$labelSortBy = __('Sort by', 'onoffice');
+		$labelSortBy = __('Sort by', 'onoffice-for-wp-websites');
 
 		$pInputModelSortBy = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_SORTBY, $labelSortBy);
@@ -149,7 +149,7 @@ abstract class FormModelBuilderDB
 
 	public function createInputModelRecordsPerPage()
 	{
-		$labelRecordsPerPage = __('Records per Page', 'onoffice');
+		$labelRecordsPerPage = __('Records per Page', 'onoffice-for-wp-websites');
 		$pInputModelRecordsPerPage = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_RECORDS_PER_PAGE, $labelRecordsPerPage);
 		$pInputModelRecordsPerPage->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
@@ -167,13 +167,13 @@ abstract class FormModelBuilderDB
 
 	public function createInputModelSortOrder()
 	{
-		$labelSortOrder = __('Sort order', 'onoffice');
+		$labelSortOrder = __('Sort order', 'onoffice-for-wp-websites');
 		$pInputModelSortOrder = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_SORTORDER, $labelSortOrder);
 		$pInputModelSortOrder->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelSortOrder->setValuesAvailable(array(
-			'ASC' => __('Ascending', 'onoffice'),
-			'DESC' => __('Descending', 'onoffice'),
+			'ASC' => __('Ascending', 'onoffice-for-wp-websites'),
+			'DESC' => __('Descending', 'onoffice-for-wp-websites'),
 		));
 		$pInputModelSortOrder->setValue($this->getValue($pInputModelSortOrder->getField()));
 
@@ -190,7 +190,7 @@ abstract class FormModelBuilderDB
 
 	public function createInputModelTemplate($path)
 	{
-		$labelTemplate = __('Template', 'onoffice');
+		$labelTemplate = __('Template', 'onoffice-for-wp-websites');
 		$selectedTemplate = $this->getValue('template');
 
 		$pInputModelTemplate = $this->getInputModelDBFactory()->create

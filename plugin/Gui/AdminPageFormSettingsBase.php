@@ -109,7 +109,7 @@ abstract class AdminPageFormSettingsBase
 
 	public function __construct($pageSlug)
 	{
-		$this->setPageTitle(__('Edit Form', 'onoffice'));
+		$this->setPageTitle(__('Edit Form', 'onoffice-for-wp-websites'));
 		parent::__construct($pageSlug);
 	}
 
@@ -256,9 +256,9 @@ abstract class AdminPageFormSettingsBase
 		$pLanguage = $this->getContainer()->get(Language::class);
 		return [
 			self::GET_PARAM_TYPE => $this->getType(),
-			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was saved.', 'onoffice'),
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Form was saved.', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the form. Please make '
-				.'sure the name of the form is unique.', 'onoffice'),
+				.'sure the name of the form is unique.', 'onoffice-for-wp-websites'),
 			self::ENQUEUE_DATA_MERGE => [
 				AdminPageSettingsBase::POST_RECORD_ID,
 				self::GET_PARAM_TYPE,
@@ -266,15 +266,15 @@ abstract class AdminPageFormSettingsBase
 			AdminPageSettingsBase::POST_RECORD_ID => (int)$this->getListViewId(),
 			self::MODULE_LABELS => ModuleTranslation::getAllLabelsSingular(),
 			/* translators: %s is a translated module name */
-			self::FIELD_MODULE => __('Module: %s', 'onoffice'),
-			self::FIELD_MULTISELECT_EDIT_VALUES => __('Edit Values', 'onoffice'),
+			self::FIELD_MODULE => __('Module: %s', 'onoffice-for-wp-websites'),
+			self::FIELD_MULTISELECT_EDIT_VALUES => __('Edit Values', 'onoffice-for-wp-websites'),
 			self::DEFAULT_VALUES => $this->readDefaultValues(),
-			'label_add_language' => __('Add Language', 'onoffice'),
-			'label_choose_language' => __('Choose Language', 'onoffice'),
+			'label_add_language' => __('Add Language', 'onoffice-for-wp-websites'),
+			'label_choose_language' => __('Choose Language', 'onoffice-for-wp-websites'),
 			/* translators: %s is the name of a language */
-			'label_default_value' => __('Default Value: %s', 'onoffice'),
-			'label_default_value_from' => __('Default Value From:', 'onoffice'),
-			'label_default_value_up_to' => __('Default Value Up To:', 'onoffice'),
+			'label_default_value' => __('Default Value: %s', 'onoffice-for-wp-websites'),
+			'label_default_value_from' => __('Default Value From:', 'onoffice-for-wp-websites'),
+			'label_default_value_up_to' => __('Default Value Up To:', 'onoffice-for-wp-websites'),
 			'fieldList' => $this->getFieldList(),
 			'installed_wp_languages' => $this->getInstalledLanguages(),
 			'language_native' => $pLanguage->getLocale(),
@@ -305,8 +305,8 @@ abstract class AdminPageFormSettingsBase
 			$result[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
 			if ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$result[$pField->getModule()][$pField->getName()]['permittedvalues'] = [
-					'0' => __('No', 'onoffice'),
-					'1' => __('Yes', 'onoffice'),
+					'0' => __('No', 'onoffice-for-wp-websites'),
+					'1' => __('Yes', 'onoffice-for-wp-websites'),
 				];
 			}
 		}
@@ -350,7 +350,7 @@ abstract class AdminPageFormSettingsBase
 		$pFormModelName = new FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
 		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
-		$pFormModelName->setLabel(__('choose name', 'onoffice'));
+		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 
 		$pInputModelType = $this->_pFormModelBuilder->createInputModelFormType();
@@ -367,7 +367,7 @@ abstract class AdminPageFormSettingsBase
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
+		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$this->addFormModel($pFormModelLayoutDesign);
 	}

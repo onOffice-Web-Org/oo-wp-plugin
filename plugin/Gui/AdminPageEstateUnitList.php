@@ -63,19 +63,19 @@ class AdminPageEstateUnitList
 
 	public function generatePageMainTitle($subTitle)
 	{
-		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
+		echo '<h1 class="wp-heading-inline">'.esc_html__('onoffice-for-wp-websites', 'onoffice-for-wp-websites');
 
 		if ($subTitle != '')
 		{
-			echo ' › '.esc_html__($subTitle, 'onoffice');
+			echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
 		}
 
-		echo ' › '.esc_html__('Units Lists', 'onoffice');
+		echo ' › '.esc_html__('Units Lists', 'onoffice-for-wp-websites');
 
 		$new_link = admin_url('admin.php?page=onoffice-editunitlist');
 
 		echo '</h1>';
-		echo '<a href="'.$new_link.'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
+		echo '<a href="'.$new_link.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 

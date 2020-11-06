@@ -100,8 +100,8 @@ class AddressListTable
 	{
 		return [
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of View', 'onoffice'),
-			'shortcode' => __('Shortcode', 'onoffice'),
+			'name' => __('Name of View', 'onoffice-for-wp-websites'),
+			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		];
 	}
 
@@ -143,8 +143,8 @@ class AddressListTable
 	{
 		$columns = [
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of View', 'onoffice'),
-			'shortcode' => __('Shortcode', 'onoffice'),
+			'name' => __('Name of View', 'onoffice-for-wp-websites'),
+			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		];
 
 		$hidden = ['ID'];
@@ -182,7 +182,7 @@ class AddressListTable
 			."' onclick=\"if ( confirm( '"
 			.esc_js(sprintf(
 			/* translators: %s is the name of the list view. */
-			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice'), $pItem->name))
+			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice-for-wp-websites'), $pItem->name))
 			."' ) ) { return true; }return false;\">".__('Delete')."</a>";
 		return $this->row_actions( $actions );
 	}

@@ -63,8 +63,8 @@ class AdminPageModules
 	private function addFormModelFavorites(string $pageSlug)
 	{
 		$groupSlugFavs = 'onoffice-favorization';
-		$enableFavLabel = __('Enable Watchlist', 'onoffice');
-		$favButtonLabel = __('Expression used', 'onoffice');
+		$enableFavLabel = __('Enable Watchlist', 'onoffice-for-wp-websites');
+		$favButtonLabel = __('Expression used', 'onoffice-for-wp-websites');
 		$pInputModelEnableFav = new InputModelOption($groupSlugFavs, 'enableFav',
 			$enableFavLabel, InputModelOption::SETTING_TYPE_BOOLEAN);
 		$pInputModelEnableFav->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
@@ -75,8 +75,8 @@ class AdminPageModules
 		$pInputModelFavButtonLabel->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
 		$pInputModelFavButtonLabel->setValue(get_option($pInputModelFavButtonLabel->getIdentifier()));
 		$pInputModelFavButtonLabel->setValuesAvailable([
-			Favorites::KEY_SETTING_MEMORIZE => __('Watchlist', 'onoffice'),
-			Favorites::KEY_SETTING_FAVORIZE => __('Favorise', 'onoffice'),
+			Favorites::KEY_SETTING_MEMORIZE => __('Watchlist', 'onoffice-for-wp-websites'),
+			Favorites::KEY_SETTING_FAVORIZE => __('Favorise', 'onoffice-for-wp-websites'),
 		]);
 
 		$pFormModel = new FormModel();
@@ -84,7 +84,7 @@ class AdminPageModules
 		$pFormModel->addInputModel($pInputModelFavButtonLabel);
 		$pFormModel->setGroupSlug($groupSlugFavs);
 		$pFormModel->setPageSlug($pageSlug);
-		$pFormModel->setLabel(__('Watchlist', 'onoffice'));
+		$pFormModel->setLabel(__('Watchlist', 'onoffice-for-wp-websites'));
 
 		$this->addFormModel($pFormModel);
 	}
@@ -99,22 +99,22 @@ class AdminPageModules
 	private function addFormModelMapProvider(string $pageSlug)
 	{
 		$groupSlugMaps = 'onoffice-maps';
-		$mapProviderLabel = __('Map Provider', 'onoffice');
+		$mapProviderLabel = __('Map Provider', 'onoffice-for-wp-websites');
 		$pInputModelMapProvider = new InputModelOption($groupSlugMaps, 'mapprovider',
 			$mapProviderLabel, InputModelOption::SETTING_TYPE_NUMBER);
 		$pInputModelMapProvider->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
 		$selectedValue = get_option($pInputModelMapProvider->getIdentifier(), MapProvider::PROVIDER_DEFAULT);
 		$pInputModelMapProvider->setValue($selectedValue);
 		$pInputModelMapProvider->setValuesAvailable([
-			MapProvider::OPEN_STREET_MAPS => __('OpenStreetMap', 'onoffice'),
-			MapProvider::GOOGLE_MAPS => __('Google Maps', 'onoffice'),
+			MapProvider::OPEN_STREET_MAPS => __('OpenStreetMap', 'onoffice-for-wp-websites'),
+			MapProvider::GOOGLE_MAPS => __('Google Maps', 'onoffice-for-wp-websites'),
 		]);
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelMapProvider);
 		$pFormModel->setGroupSlug($groupSlugMaps);
 		$pFormModel->setPageSlug($pageSlug);
-		$pFormModel->setLabel(__('Maps', 'onoffice'));
+		$pFormModel->setLabel(__('Maps', 'onoffice-for-wp-websites'));
 
 		$this->addFormModel($pFormModel);
 	}

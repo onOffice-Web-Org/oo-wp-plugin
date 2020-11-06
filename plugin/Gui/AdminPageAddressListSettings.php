@@ -60,7 +60,7 @@ class AdminPageAddressListSettings
 	public function __construct($pageSlug)
 	{
 		parent::__construct($pageSlug);
-		$this->setPageTitle(__('Edit Address List', 'onoffice'));
+		$this->setPageTitle(__('Edit Address List', 'onoffice-for-wp-websites'));
 	}
 
 
@@ -97,7 +97,7 @@ class AdminPageAddressListSettings
 		$pFormModelName = new FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
 		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
-		$pFormModelName->setLabel(__('choose name', 'onoffice'));
+		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
 	}
@@ -113,7 +113,7 @@ class AdminPageAddressListSettings
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
+		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$this->addFormModel($pFormModelLayoutDesign);
 	}
@@ -133,7 +133,7 @@ class AdminPageAddressListSettings
 		$pFormModelFilterRecords = new FormModel();
 		$pFormModelFilterRecords->setPageSlug($this->getPageSlug());
 		$pFormModelFilterRecords->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
-		$pFormModelFilterRecords->setLabel(__('Filter & Records', 'onoffice'));
+		$pFormModelFilterRecords->setLabel(__('Filter & Records', 'onoffice-for-wp-websites'));
 		$pFormModelFilterRecords->addInputModel($pInputModelFilter);
 		$pFormModelFilterRecords->addInputModel($pInputModelRecordCount);
 		$pFormModelFilterRecords->addInputModel($pInputModelSortBy);
@@ -152,7 +152,7 @@ class AdminPageAddressListSettings
 		$pFormModelPictureTypes = new FormModel();
 		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
 		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
-		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice'));
+		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
 	}
@@ -303,8 +303,8 @@ class AdminPageAddressListSettings
 	public function getEnqueueData(): array
 	{
 		return array(
-			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The address list was saved.', 'onoffice'),
-			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the list. Please make sure the name of the list is unique.', 'onoffice'),
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The address list was saved.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the list. Please make sure the name of the list is unique.', 'onoffice-for-wp-websites'),
 			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 		);

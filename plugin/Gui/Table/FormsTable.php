@@ -121,9 +121,9 @@ class FormsTable
 	{
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of Form', 'onoffice'),
-			'form_type' => __('Type of Form', 'onoffice'),
-			'shortcode' => __('Shortcode', 'onoffice'),
+			'name' => __('Name of Form', 'onoffice-for-wp-websites'),
+			'form_type' => __('Type of Form', 'onoffice-for-wp-websites'),
+			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		);
 
 		$hidden = array('ID', 'filterId');
@@ -146,9 +146,9 @@ class FormsTable
 	{
 		return array(
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of Form', 'onoffice'),
-			'form_type' => __('Type of Form', 'onoffice'),
-			'shortcode' => __('Shortcode', 'onoffice'),
+			'name' => __('Name of Form', 'onoffice-for-wp-websites'),
+			'form_type' => __('Type of Form', 'onoffice-for-wp-websites'),
+			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		);
 	}
 
@@ -258,7 +258,7 @@ class FormsTable
 			."' onclick=\"if ( confirm( '"
 			.esc_js(sprintf(
 			/* translators: %s is the name of the form. */
-			__("You are about to delete the form '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice'), $pItem->name))
+			__("You are about to delete the form '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice-for-wp-websites'), $pItem->name))
 			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
 		return $this->row_actions( $actions );
 	}

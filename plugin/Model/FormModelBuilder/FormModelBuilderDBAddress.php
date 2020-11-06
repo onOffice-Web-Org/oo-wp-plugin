@@ -91,7 +91,7 @@ class FormModelBuilderDBAddress
 		}
 
 		$pFormModel = new FormModel();
-		$pFormModel->setLabel(__('List View', 'onoffice'));
+		$pFormModel->setLabel(__('List View', 'onoffice-for-wp-websites'));
 		$pFormModel->setGroupSlug('onoffice-listview-address-settings-main');
 		$pFormModel->setPageSlug($pageSlug);
 
@@ -122,7 +122,7 @@ class FormModelBuilderDBAddress
 
 	public function createInputModelFilter()
 	{
-		$labelFiltername = __('Filter', 'onoffice');
+		$labelFiltername = __('Filter', 'onoffice-for-wp-websites');
 		$pInputModelFiltername = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_FILTERID, $labelFiltername);
 		$pInputModelFiltername->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
@@ -145,7 +145,7 @@ class FormModelBuilderDBAddress
 
 	public function createInputModelPictureTypes()
 	{
-		$labelPhoto = __('Passport Photo', 'onoffice');
+		$labelPhoto = __('Passport Photo', 'onoffice-for-wp-websites');
 		$pInputModelPictureTypes = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_PICTURE_TYPE, $labelPhoto);
 		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
@@ -187,7 +187,7 @@ class FormModelBuilderDBAddress
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigAddress();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Filterable', 'onoffice');
+		$label = __('Filterable', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -208,7 +208,7 @@ class FormModelBuilderDBAddress
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigAddress();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Hidden', 'onoffice');
+		$label = __('Hidden', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);

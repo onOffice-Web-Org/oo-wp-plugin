@@ -58,13 +58,13 @@ class ImageTypes
 	public static function getAllImageTypesTranslated(): array
 	{
 		return [
-			self::TITLE => __('Cover Photo', 'onoffice'),
-			self::PHOTO => __('Photo', 'onoffice'),
-			self::PHOTO_BIG => __('Photo (big)', 'onoffice'),
-			self::PANORAMA => __('Panorama', 'onoffice'),
-			self::GROUNDPLAN => __('Ground Plan', 'onoffice'),
-			self::LOCATION_MAP => __('Location Map', 'onoffice'),
-			self::ENERGY_PASS_RANGE => __('Energy-Pass Range', 'onoffice'),
+			self::TITLE => __('Cover Photo', 'onoffice-for-wp-websites'),
+			self::PHOTO => __('Photo', 'onoffice-for-wp-websites'),
+			self::PHOTO_BIG => __('Photo (big)', 'onoffice-for-wp-websites'),
+			self::PANORAMA => __('Panorama', 'onoffice-for-wp-websites'),
+			self::GROUNDPLAN => __('Ground Plan', 'onoffice-for-wp-websites'),
+			self::LOCATION_MAP => __('Location Map', 'onoffice-for-wp-websites'),
+			self::ENERGY_PASS_RANGE => __('Energy-Pass Range', 'onoffice-for-wp-websites'),
 		];
 	}
 }

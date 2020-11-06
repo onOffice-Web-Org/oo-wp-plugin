@@ -63,7 +63,7 @@ class FieldModuleCollectionDecoratorInternalAnnotations
 		$pField = parent::getFieldByModuleAndName($module, $name);
 		$newLabel = $this->_fieldAnnotations[$module][$name] ?? null;
 		if ($newLabel !== null) {
-			$pField->setLabel(__($newLabel, 'onoffice'));
+			$pField->setLabel(__($newLabel, 'onoffice-for-wp-websites'));
 		}
 		return $pField;
 	}
@@ -85,7 +85,7 @@ class FieldModuleCollectionDecoratorInternalAnnotations
 			$label = $this->_fieldAnnotations[$module][$name] ?? null;
 
 			if ($label !== null) {
-				$pField->setLabel(__($label, 'onoffice'));
+				$pField->setLabel(__($label, 'onoffice-for-wp-websites'));
 			}
 		}
 

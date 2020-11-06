@@ -49,7 +49,7 @@ class AdminPageEstateUnitSettings
 	public function __construct($pageSlug)
 	{
 		parent::__construct($pageSlug);
-		$this->setPageTitle(__('Edit Units View', 'onoffice'));
+		$this->setPageTitle(__('Edit Units View', 'onoffice-for-wp-websites'));
 	}
 
 
@@ -68,7 +68,7 @@ class AdminPageEstateUnitSettings
 		$pFormModelName = new Model\FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
 		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
-		$pFormModelName->setLabel(__('choose name', 'onoffice'));
+		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
 
@@ -77,7 +77,7 @@ class AdminPageEstateUnitSettings
 		$pFormModelRecords = new Model\FormModel();
 		$pFormModelRecords->setPageSlug($this->getPageSlug());
 		$pFormModelRecords->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
-		$pFormModelRecords->setLabel(__('Records', 'onoffice'));
+		$pFormModelRecords->setLabel(__('Records', 'onoffice-for-wp-websites'));
 		$pFormModelRecords->addInputModel($pInputModelRecords);
 		$pFormModelRecords->addInputModel($pInputModelRandomOrder);
 		$this->addFormModel($pFormModelRecords);
@@ -86,7 +86,7 @@ class AdminPageEstateUnitSettings
 		$pFormModelLayoutDesign = new Model\FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
+		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$this->addFormModel($pFormModelLayoutDesign);
 
@@ -94,7 +94,7 @@ class AdminPageEstateUnitSettings
 		$pFormModelPictureTypes = new Model\FormModel();
 		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
 		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
-		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice'));
+		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
 
@@ -102,7 +102,7 @@ class AdminPageEstateUnitSettings
 		$pFormModelDocumentTypes = new Model\FormModel();
 		$pFormModelDocumentTypes->setPageSlug($this->getPageSlug());
 		$pFormModelDocumentTypes->setGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
-		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice'));
+		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice-for-wp-websites'));
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
 
