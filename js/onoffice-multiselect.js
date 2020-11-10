@@ -78,9 +78,13 @@ var onOffice = onOffice || {};
             var nameSuffix = (this._settings.name_is_array || false) ? '[]' : '';
             var className = this._settings.cb_class || '';
 
-            output += '<label for=cb' + checkboxCounter + '>' +
-                '<input type="checkbox" name=' + this._name + nameSuffix + ' value="' + key + '" ' +
-                checked + ' id="cb' + checkboxCounter + '" class="' + className + '">' + value + '</label>';
+			output += '<div class="oo-control"><input class="oo-control__input" type="checkbox" name=' + this._name + nameSuffix + ' value="' + key + '" ' +
+			checked + ' id="cb' + checkboxCounter + '" class="' + className + '"><label class="oo-control__label" for=cb' + checkboxCounter + '>' + value + '</label></div>';
+
+
+           // output += '<div class="oo-control"><label class="oo-control__label" for=cb' + checkboxCounter + '>' +
+             //   '<input class="oo-control__input" type="checkbox" name=' + this._name + nameSuffix + ' value="' + key + '" ' +
+              //  checked + ' id="cb' + checkboxCounter + '" class="' + className + '">' + value + '</label></div>';
         }
 
         var divPopup = this._element.querySelector('div.onoffice-multiselect-popup');

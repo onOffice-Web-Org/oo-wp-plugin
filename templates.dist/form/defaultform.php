@@ -60,8 +60,18 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
-		echo $pForm->getFieldLabel($input).$addition.': ';
-		echo renderFormField($input, $pForm).'<br>';
+		$typeCurrentInput = $pForm->getFieldType($input);
+
+		if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+			echo "<div class='oo-control'>";
+			echo renderFormField($input, $pForm);
+			echo "<label class='oo-control__label' for=".$input.">". $pForm->getFieldLabel($input).$addition."</label>";
+			echo "</div>";
+		}
+		else {
+			echo "<label for=".$input.">". $pForm->getFieldLabel($input).$addition.": </label>";
+			echo renderFormField($input, $pForm);
+		}
 	}
 
 	if (array_key_exists('message', $pForm->getInputFields())):
@@ -70,15 +80,13 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 ?>
 
 		<?php
+		echo "<label for='message'>";
 		esc_html_e('Message', 'onoffice');
-		echo $additionMessage; ?>:<br>
+		echo $additionMessage; ?>:</label>
 		<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
 
 <?php
 	endif;
-
-	echo '<br>';
-
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>

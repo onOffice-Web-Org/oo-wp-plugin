@@ -43,8 +43,18 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
-		$line = $pForm->getFieldLabel($input).$addition.': ';
-		$line .= renderFormField($input, $pForm);
+		$typeCurrentInput = $pForm->getFieldType($input);
+
+		if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+			$line = "<div class='oo-control'>";
+			$line .= renderFormField($input, $pForm);
+			$line .= "<label class='oo-control__label' for=".$input.">". $pForm->getFieldLabel($input).$addition."</label>";
+			$line .= "</div>";
+		}
+		else {
+			$line = "<label for=". $pForm->getFieldLabel( $input ).">". $pForm->getFieldLabel( $input ).$addition.':</label>';
+			$line .= renderFormField($input, $pForm);
+		}
 
 		if ( $pForm->isMissingField( $input ) ) {
 			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice').'</span>';
@@ -67,17 +77,18 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
 		$addressValues []= $messageInput;
 	}
-
+	echo '<div class="oo-formfieldwrap">';
 	echo '<h2>'.esc_html__('Your contact details', 'onoffice').'</h2>'
 		.'<p>';
-	echo implode('<br>', $addressValues);
-	echo '</p>
+	echo implode('', $addressValues);
+	echo '</p></div><div class="oo-formfieldwrap">
 		<h2>'.esc_html__('Information about your property', 'onoffice').'</h2>
 		<p>';
-	echo implode('<br>', $estateValues);
-	echo '</p>';
-
+	echo implode('', $estateValues);
+	echo '</p></div>';
+	echo '<div class="oo-formfieldwrap">';
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+	echo '</div>';
 }
 ?>
 

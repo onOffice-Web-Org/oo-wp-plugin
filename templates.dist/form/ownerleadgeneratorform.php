@@ -52,7 +52,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 		$isRequired = $pForm->isRequiredField($input);
 		$addition = $isRequired ? '*' : '';
-		$line = $pForm->getFieldLabel($input).$addition.': ';
+		$line = '<lable for="'.$pForm->getFieldLabel($input).'">'.$pForm->getFieldLabel($input).$addition.': </label>';
 		$line .= renderFormField($input, $pForm);
 
 		if ($table == 'address') {
@@ -76,7 +76,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 
 <div id="onoffice-lead" style="display:none;">
 	<p>
-		<form name="leadgenerator" action="" method="post" id="leadgeneratorform">
+		<form name="leadgenerator" action="" method="post" id="onoffice-form">
 			<input type="hidden" name="oo_formid" value="<?php echo esc_attr($pForm->getFormId()); ?>">
 			<input type="hidden" name="oo_formno" value="<?php echo esc_attr($pForm->getFormNo()); ?>">
 			<div id="leadform">

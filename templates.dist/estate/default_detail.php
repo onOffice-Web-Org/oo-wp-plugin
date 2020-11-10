@@ -132,6 +132,25 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					</a>
 				<?php endif; ?>
 			</div>
+
+			<?php $estateMovieLinks = $pEstates->getEstateMovieLinks();
+			foreach ($estateMovieLinks as $movieLink) {
+				echo '<div class="oo-video"><a href="'.esc_attr($movieLink['url']).'" title="'.esc_attr($movieLink['title']).'">'
+					.esc_html($movieLink['title']).'</a></div>';
+			}
+
+			$movieOptions = array('width' => 500); // optional
+
+			foreach ($pEstates->getMovieEmbedPlayers($movieOptions) as $movieInfos) {
+				echo '<div class="oo-video"><h3>'.esc_html($movieInfos['title']).'</h3>';
+				echo $movieInfos['player'];
+				echo '</div>';
+			} ?>
+
+
+
+
+
 		</div>
 		<div class="oo-similar">
 			<?php echo $pEstates->getSimilarEstates(); ?>

@@ -54,11 +54,11 @@ if (!function_exists('renderFieldEstateSearch')) {
 		}
 
 		if ( $properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN ) {
-			echo '<br>';
 			echo '<fieldset>
 		<input type="radio" id="'.esc_attr($inputName).'_u" name="'.esc_attr($inputName).'" value="u"
 			'.($selectedValue === null ? ' checked' : '').'>
 		<label for="'.esc_attr($inputName).'_u">'.esc_html__('Not Specified', 'onoffice').'</label>
+
 		<input type="radio" id="'.esc_attr($inputName).'_y" name="'.esc_attr($inputName).'" value="y"
 			'.($selectedValue === true  ? 'checked' : '').'>
 		<label for="'.esc_attr($inputName).'_y">'.esc_html__('Yes', 'onoffice').'</label>
@@ -88,17 +88,15 @@ if (!function_exists('renderFieldEstateSearch')) {
 		elseif ( FieldTypes::isNumericType( $properties['type'] ) ||
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']) {
-				esc_html_e('From: ', 'onoffice');
 				echo '<input name="'.esc_attr($inputName).'__von" '.$inputType;
-				echo 'value="'.esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '').'"><br>';
-				esc_html_e('Up to: ', 'onoffice');
+				echo 'value="'.esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '').'"  placeholder="'.esc_html__('From: ', 'onoffice').'">';
 				echo '<input name="'.esc_attr($inputName).'__bis" '.$inputType;
-				echo 'value="'.esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '').'"><br>';
+				echo 'value="'.esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '').'"  placeholder="'.esc_html__('Up to: ', 'onoffice').'">';
 			} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="'.esc_attr($properties['length']).'"' : '';
 			echo '<input name="'.esc_attr($inputName).'" '.$inputType;
-			echo 'value="'.esc_attr($selectedValue).'"'.$lengthAttr.'><br>';
+			echo 'value="'.esc_attr($selectedValue).'"'.$lengthAttr.' placeholder="'.$properties['label'].'">';
 		}
 	}
 }
@@ -110,6 +108,7 @@ if (!function_exists('renderFormField')) {
 		$typeCurrentInput = $pForm->getFieldType($fieldName);
 		$isRequired = $pForm->isRequiredField($fieldName);
 		$requiredAttribute = $isRequired ? 'required ' : '';
+		$requiredPlaceholder = $isRequired ? '*' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
@@ -161,6 +160,7 @@ if (!function_exists('renderFormField')) {
 
 			if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$inputType = 'type="checkbox" ';
+				$inputTypeClass= 'class="oo-control__input"';
 				$value = 'value="y" '.($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float') {
@@ -176,10 +176,12 @@ if (!function_exists('renderFormField')) {
 				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
 					$value = 'value="'.esc_attr($pForm->getFieldValue($key, true)).'"';
 					$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($key).'" '
-						.$value.' placeholder="'.esc_attr($rangeDescription).'">';
+						.$value.' placeholder="'.esc_attr($rangeDescription).$requiredPlaceholder.'" class="'.esc_attr($fieldLabel).'">';
 				}
 			} else {
-				$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($fieldName).'" '.$value.'>';
+				
+				$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($fieldName).'" '.$value.'  placeholder="'.esc_attr($fieldLabel).$requiredPlaceholder.'" '.$inputTypeClass.'>';
+			
 			}
 		}
 		return $output;

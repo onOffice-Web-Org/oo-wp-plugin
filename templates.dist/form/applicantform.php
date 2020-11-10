@@ -43,8 +43,18 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
-	$line = $pForm->getFieldLabel( $input ).$addition.': ';
-	$line .= renderFormField($input, $pForm);
+	$typeCurrentInput = $pForm->getFieldType($input);
+
+		if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+			$line = "<div class='oo-control'>";
+			$line .= renderFormField($input, $pForm);
+			$line .= "<label class='oo-control__label' for=".$input.">". $pForm->getFieldLabel($input).$addition."</label>";
+			$line .= "</div>";
+		}
+		else {
+			$line = "<label for=". $pForm->getFieldLabel( $input ).">". $pForm->getFieldLabel( $input ).$addition.':</label>';
+			$line .= renderFormField($input, $pForm);
+		}
 
 	if ( $pForm->isMissingField( $input ) ) {
 		$line .= '<span>'.esc_html__('Please fill in', 'onoffice').'</span>';
@@ -62,23 +72,23 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 ?>
-	<p>
-	<h1>Ihre Kontaktdaten</h1>
-		<div>
-			<?php echo implode('<br>', $addressValues); ?>
-		</div>
-	</p>
-	<p>
-	<h1>Ihre Suchkriterien</h1>
-		<div>
-			<?php echo implode('<br>', $searchcriteriaValues) ?>
-		</div>
-	</p>
+<div class="oo-formfieldwrap">
+<h1>Ihre Kontaktdaten</h1>
 	<div>
-		<?php
-			include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
-		 ?>
+		<?php echo implode('', $addressValues); ?>
 	</div>
+</div>
+<div class="oo-formfieldwrap">
+	<h1>Ihre Suchkriterien</h1>
+	<div>
+		<?php echo implode('', $searchcriteriaValues) ?>
+	</div>
+</div>
+<div class="oo-formfieldwrap">
+	<?php
+		include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
+	?>
+</div>
 <?php
 }
 ?>

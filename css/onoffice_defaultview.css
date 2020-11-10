@@ -11,19 +11,14 @@
 
 .oo-searchformfield {
 	padding: 0 15px;
-	margin-bottom: 15px;
 	width: 33.33%;
 }
 
 .oo-searchformfield label {
-	display: block;
-	margin: 0;
-	padding: 0;
-}
+	display: block;margin-bottom: .3rem;font-size: .85rem;}
 
 .oo-searchformfield input, .oo-searchformfield button, .oo-searchformfield .multiselect {
 	width: 100%;
-	margin: 0 !important;
 }
 
 .oo-searchformfield input[type="checkbox"] {
@@ -45,9 +40,11 @@
 	z-index: 999;
 	background-color: #ffffff;
 }
-
-.oo-searchformfield br {
-	display: none;
+label.oo-control__label {
+    display: flex;
+    align-items: center;
+    position: relative;
+    color: #000;
 }
 
 /* estate map */
@@ -127,16 +124,18 @@
 .oo-listinfotable {
 	padding: 10px 0;
 	font-size: 15px;
+	min-height: 300px;
 }
 
 .oo-listtd {
 	display: inline-block;
 	width: 50%;
 	border-bottom: 1px solid #efefef;
-	padding: 2.5px 0;
+	overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.oo-detailslink a {
+.oo-detailslink a, .favorize {
 	display: block;
 	text-align: center;
 	color: #ffffff !important;
@@ -146,12 +145,16 @@
 	text-decoration: none;
 }
 
-.oo-detailslink a:hover {
+.oo-detailslink a:hover, .favorize:hover {
 	opacity: 0.8;
 	color: #ffffff !important;
 	text-decoration: none !important;
 }
 
+.favorize {
+	border: 1px solid #839fce;
+	cursor: pointer;
+}
 /* details */
 .oo-detailsheadline {
 	padding: 10px 15px;

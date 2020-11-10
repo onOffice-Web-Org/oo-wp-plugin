@@ -54,17 +54,16 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
 	$inputAddition = $isRequired ? ' required' : '';
-	echo esc_html($pForm->getFieldLabel( $input )).$addition.': <br>';
+	echo '<label for="'.$input.'">'.esc_html($pForm->getFieldLabel( $input )).$addition.': </label>';
 
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
 	if ($input === 'Umkreis') {
-		echo '<br>'
-			.'<fieldset>'
+		echo '<fieldset>'
 			.'<legend>'.esc_html__('search within distance of:', 'onoffice').'</legend>';
 
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
-			echo esc_html($values['label']).':<br>';
+			echo esc_html($values['label']).':';
 
 			if (in_array($values['type'], $selectTypes)) {
 				$permittedValues = $values['permittedvalues'];
@@ -77,10 +76,10 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 						.esc_html($countryName).'</option>';
 				}
 
-				echo '</select><br>';
+				echo '</select>';
 			} else {
 				echo '<input type="text" name="'.esc_html($key).'" value="'
-					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'> <br>';
+					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'>';
 			}
 		}
 
@@ -101,19 +100,16 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 			/* @var $pRegion Region */
 			printRegion( $pRegion, [$selectedValue] );
 		}
-		echo '</select><br>';
+		echo '</select>';
 	} else {
 		echo renderFormField($input, $pForm, false);
 	}
 
-	echo '<br>';
 }
 
 $pForm->setGenericSetting('submitButtonLabel', esc_html__('Search for Prospective Buyers', 'onoffice'));
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 echo '<svg viewBox="0 0 30 30" id="spinner"></svg>';
-
-echo '<br>';
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$applicants = $pForm->getResponseFieldsValues();
@@ -121,18 +117,30 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$umkreisFields = $pForm->getUmkreisFields();
 	$countResults = $pForm->getCountAbsolutResults();
 
-	echo '<p>';
-	echo '<br><span>'.esc_html(
+	echo '<div class="oo-form-result-wrapper">';
+	echo '<h2>'.esc_html(
 			sprintf(_n(
 				/* translators: %s will be replaced with a number. */
 				'%s Prospective Buyer', '%s Prospective Buyers', $countResults, 'onoffice'),
-					number_format_i18n($countResults))).'</span><br>';
+					number_format_i18n($countResults))).'</h2>';
+			
+					if($countResults > 0) {
+						echo '<div>';
 
+						
+					}
+					
+				
+
+			
 	foreach ($applicants as $address => $searchdata) {
-		echo '<br>';
+
 		/* translators: %s will be replaced with a customer reference number. */
-		echo '<span>'.esc_html(sprintf(__('Customer ref. number %s', 'onoffice'), $address)).'</span>';
-		echo '<br>';
+		
+		echo '<div class="oo-applicant">';
+		echo '<div class="oo-customer">'.esc_html(sprintf(__('Customer ref. number %s', 'onoffice'), $address)).'<div> </div></div>';
+		
+	
 		$umkreis = array();
 
 		foreach ($searchdata as $name => $value) {
@@ -141,13 +149,17 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 				if (is_array($value)) {
 					if ($value[0] > 0) {
-						echo $realName.' min. '.$value[0].'<br>';
+						
+						//postTitle($realName);
+						echo '<div class="oo-single_info"><div class="value">'.esc_html('ab', 'onoffice').' ';
+						echo $value[0]. '</div><div class="name"><small>'.$realName.'</small></div></div>';
 					}
 
 					if ($value[1] > 0) {
-						echo $realName.' max. '.$value[1];
+					echo '<div class="oo-single_info"><div class="value">'.esc_html('bis', 'onoffice').' ';
+					echo $value[0]. '</div><div class="name"><small>'.$realName.'</small></div></div>';
+
 					}
-					echo '<br>';
 					continue;
 				}
 			} elseif (in_array($name, array_keys($umkreisFields))) {
@@ -186,14 +198,20 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 				}
 			}
 
-			echo '<span>'.esc_html($realName).': '.(is_array($value) ? implode(', ', $value) : $value).'</span><br>';
+		
+			echo '<div class="oo-single_info"><div class="value">'.(is_array($value) ? implode(', ', $value) : $value). '</div><div><small>'.esc_html($realName).'</small></div></div>';
 		}
 
 		if (count($umkreis) > 0) {
-			echo '<span><i>'.implode(' ', array_values($umkreis)).'</i></span><br>';
+			echo '<span><i>'.implode(' ', array_values($umkreis)).'</i></span>';
 		}
+		echo '</div>';
 	}
-	echo '</p>';
+	if($countResults > 0) {
+		echo '</div>';
+		
+	}
+	echo '</div>';
 }
 
 ?>
