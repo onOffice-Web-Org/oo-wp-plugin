@@ -23,8 +23,8 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
-use onOffice\WPlugin\DataView\DataDetailView;
-use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\DataView\DataSimilarView;
+use onOffice\WPlugin\DataView\DataSimilarViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
@@ -33,7 +33,7 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
-use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
+use onOffice\WPlugin\Model\InputModel\InputModelOptionFactorySimilarView;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
@@ -51,11 +51,11 @@ use function __;
  *
  */
 
-class FormModelBuilderEstateDetailSettings
+class FormModelBuilderSimilarEstateSettings
 	extends FormModelBuilder
 {
-	/** @var InputModelOptionFactoryDetailView */
-	private $_pInputModelDetailViewFactory = null;
+	/** @var InputModelOptionFactorySimilarView */
+	private $_pInputModelSimilarViewFactory = null;
 
 	/** @var DataSimilarView */
 	private $_pDataSimilarView = null;
@@ -84,9 +84,9 @@ class FormModelBuilderEstateDetailSettings
 
 	public function generate(string $pageSlug): FormModel
 	{
-		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView($pageSlug);
-		$pDataDetailViewHandler = new DataDetailViewHandler();
-		$this->_pDataSimilarView = $pDataDetailViewHandler->getDetailView();
+		$this->_pInputModelSimilarViewFactory = new InputModelOptionFactorySimilarView($pageSlug);
+		$pDataSimilarViewHandler = new DataSimilarViewHandler();
+		$this->_pDataSimilarView = $pDataSimilarViewHandler->getDetailView();
 
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Detail View', 'onoffice'));
@@ -106,11 +106,11 @@ class FormModelBuilderEstateDetailSettings
 	public function getCheckboxEnableSimilarEstates()
 	{
 		$labelExpose = __('Show Similar Estates', 'onoffice');
-		$pInputModelActivate = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_ENABLE_SIMILAR_ESTATES, $labelExpose);
+		$pInputModelActivate = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_ENABLE_SIMILAR_ESTATES, $labelExpose);
 		$pInputModelActivate->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelActivate->setValuesAvailable(1);
-		$pInputModelActivate->setValue($this->_pDataSimilarView->getDataDetailViewActive());
+		$pInputModelActivate->setValue($this->_pDataSimilarView->getDataSimilarViewActive());
 
 		return $pInputModelActivate;
 	}
@@ -126,8 +126,8 @@ class FormModelBuilderEstateDetailSettings
 	{
 		$allPictureTypes = ImageTypes::getAllImageTypesTranslated();
 
-		$pInputModelPictureTypes = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_PICTURE_TYPE, null, true);
+		$pInputModelPictureTypes = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_PICTURE_TYPE, null, true);
 		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
 		$pictureTypes = $this->_pDataSimilarView->getPictureTypes();
@@ -153,8 +153,8 @@ class FormModelBuilderEstateDetailSettings
 	{
 		$labelExpose = __('PDF-Expose', 'onoffice');
 
-		$pInputModelExpose = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_EXPOSE, $labelExpose);
+		$pInputModelExpose = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_EXPOSE, $labelExpose);
 		$pInputModelExpose->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$exposes = array('' => '') + $this->readExposes();
 		$pInputModelExpose->setValuesAvailable($exposes);
@@ -174,8 +174,8 @@ class FormModelBuilderEstateDetailSettings
 	{
 		$labelMovieLinks = __('Movie Links', 'onoffice');
 
-		$pInputModelMedia = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_MOVIE_LINKS, $labelMovieLinks);
+		$pInputModelMedia = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_MOVIE_LINKS, $labelMovieLinks);
 		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$options = array(
 			MovieLinkTypes::MOVIE_LINKS_NONE => __('Disabled', 'onoffice'),
@@ -234,12 +234,12 @@ class FormModelBuilderEstateDetailSettings
 		$fields = [];
 
 		if ($module == onOfficeSDK::MODULE_ESTATE) {
-			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
-				(InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
+			$pInputModelFieldsConfig = $this->_pInputModelSimilarViewFactory->create
+				(InputModelOptionFactorySimilarView::INPUT_FIELD_CONFIG, null, true);
 			$fields = $this->_pDataSimilarView->getFields();
 		} elseif ($module == onOfficeSDK::MODULE_ADDRESS) {
-			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
-				(InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
+			$pInputModelFieldsConfig = $this->_pInputModelSimilarViewFactory->create
+				(InputModelOptionFactorySimilarView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
 			$fields = $this->_pDataSimilarView->getAddressFields();
 		} else {
 			throw new UnknownModuleException();
@@ -257,10 +257,10 @@ class FormModelBuilderEstateDetailSettings
 	 * @return InputModelOption
 	 * @throws ExceptionInputModelMissingField
 	 */
-	public function createInputModelTemplate(string $field = InputModelOptionFactoryDetailView::INPUT_TEMPLATE)
+	public function createInputModelTemplate(string $field = InputModelOptionFactorySimilarView::INPUT_TEMPLATE)
 	{
 		$labelTemplate = __('Template', 'onoffice');
-		$pInputModelTemplate = $this->_pInputModelDetailViewFactory->create($field, $labelTemplate);
+		$pInputModelTemplate = $this->_pInputModelSimilarViewFactory->create($field, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
 		$pInputModelTemplate->setValue($this->getTemplateValueByField($field));
@@ -279,9 +279,9 @@ class FormModelBuilderEstateDetailSettings
 	private function getTemplateValueByField(string $field): string
 	{
 		switch ($field) {
-			case InputModelOptionFactoryDetailView::INPUT_TEMPLATE:
+			case InputModelOptionFactorySimilarView::INPUT_TEMPLATE:
 				return $this->_pDataSimilarView->getTemplate();
-			case InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE:
+			case InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE:
 				return $this->_pDataSimilarView->getDataViewSimilarEstates()->getTemplate();
 			default:
 				return '';
@@ -301,8 +301,8 @@ class FormModelBuilderEstateDetailSettings
 
 		$labelSameKind = __('Same Kind of Estate', 'onoffice');
 
-		$pInputModelSimilarEstateKind = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND, $labelSameKind);
+		$pInputModelSimilarEstateKind = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND, $labelSameKind);
 		$pInputModelSimilarEstateKind->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 
 		$pInputModelSimilarEstateKind->setValuesAvailable(1);
@@ -324,8 +324,8 @@ class FormModelBuilderEstateDetailSettings
 
 		$labelSameMarketingMethod = __('Same Marketing Method', 'onoffice');
 
-		$pInputModelSameMarketingMethod = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_SAME_MARKETING_METHOD, $labelSameMarketingMethod);
+		$pInputModelSameMarketingMethod = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SAME_MARKETING_METHOD, $labelSameMarketingMethod);
 		$pInputModelSameMarketingMethod->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 
 		$pInputModelSameMarketingMethod->setValuesAvailable(1);
@@ -347,8 +347,8 @@ class FormModelBuilderEstateDetailSettings
 
 		$labelSamePostalCode = __('Same Postal Code', 'onoffice');
 
-		$pInputModelSamePostalCode = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE, $labelSamePostalCode);
+		$pInputModelSamePostalCode = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE, $labelSamePostalCode);
 		$pInputModelSamePostalCode->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 
 		$pInputModelSamePostalCode->setValuesAvailable(1);
@@ -370,8 +370,8 @@ class FormModelBuilderEstateDetailSettings
 
 		$labelRadius = __('Radius', 'onoffice');
 
-		$pInputModelRadius = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_RADIUS, $labelRadius);
+		$pInputModelRadius = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_RADIUS, $labelRadius);
 		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 
 		$pInputModelRadius->setValuesAvailable(1);
@@ -393,8 +393,8 @@ class FormModelBuilderEstateDetailSettings
 
 		$labelAmount = __('Amount of Estates', 'onoffice');
 
-		$pInputModelAmount = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT, $labelAmount);
+		$pInputModelAmount = $this->_pInputModelSimilarViewFactory->create
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT, $labelAmount);
 		$pInputModelAmount->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 
 		$pInputModelAmount->setValuesAvailable(1);
