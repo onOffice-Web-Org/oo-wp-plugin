@@ -24,6 +24,7 @@ namespace onOffice\WPlugin;
 use Exception;
 use onOffice\WPlugin\Controller\EstateViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataSimilarViewHandler;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use WP_Embed;
 
@@ -148,14 +149,22 @@ class EstateDetail
 
 	public function getSimilarEstates(): string
 	{
-		/* @var $pDataView DataDetailView */
-		$pDataView = $this->getDataView();
+//		/* @var $pDataView DataDetailView */
+//		$pDataView = $this->getDataView();
+//
+//		if (!$pDataView->getDataDetailViewActive()) {
+//			return '';
+//		}
 
-		if (!$pDataView->getDataDetailViewActive()) {
+        // Call to DataSimilarView
+        $pDataSimilarView = new DataSimilarViewHandler();
+        $pDataSimilarSettings = $pDataSimilarView->getDetailView();
+
+        if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
 			return '';
 		}
+		$pDataViewSimilarEstates = $pDataSimilarSettings->getDataViewSimilarEstates();
 
-		$pDataViewSimilarEstates = $pDataView->getDataViewSimilarEstates();
 		$pSimilarEstates = new EstateViewSimilarEstates($pDataViewSimilarEstates);
 		$pCopyThis = clone $this;
 		$pCopyThis->setFormatOutput(false);

@@ -199,11 +199,11 @@ class DataSimilarView
 		{ $this->_pDataViewSimilarEstates = $pDataViewSimilarEstates; }
 
 	/** @return bool */
-	public function getdataSimilarViewActive(): bool
+	public function getDataSimilarViewActive(): bool
 		{ return $this->_dataSimilarViewActive; }
 
 	/** @param bool $dataSimilarViewActive */
-	public function setdataSimilarViewActive(bool $dataSimilarViewActive)
+	public function setDataSimilarViewActive(bool $dataSimilarViewActive)
 		{ $this->_dataSimilarViewActive = $dataSimilarViewActive; }
 
 	/** @return bool */
