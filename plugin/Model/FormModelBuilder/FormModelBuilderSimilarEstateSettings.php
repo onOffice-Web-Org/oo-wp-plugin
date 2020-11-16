@@ -24,7 +24,7 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
 use onOffice\WPlugin\DataView\DataSimilarView;
-use onOffice\WPlugin\DataView\DataSimilarViewHandler;
+use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
@@ -85,8 +85,8 @@ class FormModelBuilderSimilarEstateSettings
 	public function generate(string $pageSlug): FormModel
 	{
 		$this->_pInputModelSimilarViewFactory = new InputModelOptionFactorySimilarView($pageSlug);
-		$pDataSimilarViewHandler = new DataSimilarViewHandler();
-		$this->_pDataSimilarView = $pDataSimilarViewHandler->getDetailView();
+		$pDataSimilarEstatesSettingsHandler= new DataSimilarEstatesSettingsHandler();
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->getDataSimilarEstatesSettings();
 
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Detail View', 'onoffice'));

@@ -52,7 +52,7 @@ use const ONOFFICE_PLUGIN_DIR;
  *
  */
 
-class AdminPageSimilarEstate
+class AdminPageSimilarEstates
 	extends AdminPageAjax
 {
 	/** */
@@ -66,8 +66,8 @@ class AdminPageSimilarEstate
 
 	public function renderContent()
 	{
-		$pDataSimilarViewHandler = new DataSimilarEstatesSettingsHandler();
-		$pDataSimilarView = $pDataSimilarViewHandler->getDetailView();
+		$pDataSimilarSettingsHandler = new DataSimilarEstatesSettingsHandler();
+		$pDataSimilarView = $pDataSimilarSettingsHandler->getDataSimilarEstatesSettings();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
 
@@ -192,13 +192,13 @@ class AdminPageSimilarEstate
 			}
 		}
 
-		$pDataSimilarViewHandler = new DataSimilarEstatesSettingsHandler();
+		$pDataSimilarSettingsHandler = new DataSimilarEstatesSettingsHandler();
 		$valuesPrefixless = $pInputModelDBAdapterArray->generateValuesArray();
-		$pDataSimilarView = $pDataSimilarViewHandler->createDetailViewByValues($valuesPrefixless);
+		$pDataSimilarView = $pDataSimilarSettingsHandler->createDataSimilarEstatesSettingsByValues($valuesPrefixless);
 		$pResultObject = new stdClass();
 
 		try {
-			$pDataSimilarViewHandler->saveDetailView($pDataSimilarView);
+			$pDataSimilarSettingsHandler->saveDataSimilarEstatesSettings($pDataSimilarView);
 			$pResultObject->result = true;
 		} catch (Exception $pEx) {
 			$pResultObject->result = false;
@@ -250,7 +250,7 @@ class AdminPageSimilarEstate
 		return array(
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Similar Estate has been saved.', 'onoffice'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the Similar Estate.', 'onoffice'),
-			AdminPageEstate::PARAM_TAB => AdminPageEstate::PAGE_SIMILAR_ESTATE,
+			AdminPageEstate::PARAM_TAB => AdminPageEstate::PAGE_SIMILAR_ESTATES,
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
 		);
 	}

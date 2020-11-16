@@ -33,10 +33,10 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
  *
  */
 
-class DataSimilarViewHandler
+class DataSimilarEstatesSettingsHandler
 {
 	/** */
-	const DEFAULT_VIEW_OPTION_KEY = 'onoffice-similar-estate-view';
+	const DEFAULT_VIEW_OPTION_KEY = 'onoffice-similar-estates-settings-view';
 
 	/** @var WPOptionWrapperBase */
 	private $_pWPOptionWrapper;
@@ -57,7 +57,7 @@ class DataSimilarViewHandler
 	 *
 	 */
 
-	public function getDetailView(): DataSimilarView
+	public function getDataSimilarEstatesSettings(): DataSimilarView
 	{
 		$optionKey = self::DEFAULT_VIEW_OPTION_KEY;
 		$pAlternate = new DataSimilarView();
@@ -78,7 +78,7 @@ class DataSimilarViewHandler
 	 *
 	 */
 
-	public function saveDetailView(DataSimilarView $pDataSimilarView)
+	public function saveDataSimilarEstatesSettings(DataSimilarView $pDataSimilarView)
 	{
 		$pWpOptionsWrapper = $this->_pWPOptionWrapper;
 		$viewOptionKey = self::DEFAULT_VIEW_OPTION_KEY;
@@ -98,9 +98,9 @@ class DataSimilarViewHandler
 	 *
 	 */
 
-	public function createDetailViewByValues(array $row): DataSimilarView
+	public function createDataSimilarEstatesSettingsByValues(array $row): DataSimilarView
 	{
-		$pDataSimilarView = $this->getDetailView();
+		$pDataSimilarView = $this->getDataSimilarEstatesSettings();
 		$pDataSimilarView->setTemplate($row['template'] ?? '');
 		$pDataSimilarView->setFields($row[DataSimilarView::FIELDS] ?? []);
 		$pDataSimilarView->setPictureTypes($row[DataSimilarView::PICTURES] ?? []);
@@ -111,7 +111,7 @@ class DataSimilarViewHandler
 			($row[DataSimilarView::ENABLE_SIMILAR_ESTATES] ?? false);
 
 		$pDataViewSimilar = $pDataSimilarView->getDataViewSimilarEstates();
-		$this->configureDataViewSimilarEstates($pDataViewSimilar, $row);
+		$this->configureDataSimilarEstatesSettings($pDataViewSimilar, $row);
 
 		return $pDataSimilarView;
 	}
@@ -124,7 +124,7 @@ class DataSimilarViewHandler
 	 *
 	 */
 
-	private function configureDataViewSimilarEstates(DataViewSimilarEstates $pDataViewSimilar,
+	private function configureDataSimilarEstatesSettings(DataViewSimilarEstates $pDataViewSimilar,
 		array $row)
 	{
 		$pDataViewSimilar->setSameEstateKind
