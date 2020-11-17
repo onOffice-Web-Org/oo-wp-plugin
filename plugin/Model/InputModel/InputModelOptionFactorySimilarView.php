@@ -52,6 +52,9 @@ class InputModelOptionFactorySimilarView
 	/** */
 	const INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE = DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE;
 
+    /** */
+    const INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_ARCHIVED = DataViewSimilarEstates::FIELD_DONT_SHOW_ARCHIVED;
+
 	/** */
 	const INPUT_FIELD_SIMILAR_ESTATES_RADIUS = DataViewSimilarEstates::FIELD_RADIUS;
 
@@ -79,6 +82,9 @@ class InputModelOptionFactorySimilarView
 		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
+        self::INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_ARCHIVED => [
+            self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
+        ],
 		self::INPUT_FIELD_SIMILAR_ESTATES_RADIUS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
 		],

@@ -118,79 +118,6 @@ class FormModelBuilderSimilarEstateSettings
 
 	/**
 	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelPictureTypes()
-	{
-		$allPictureTypes = ImageTypes::getAllImageTypesTranslated();
-
-		$pInputModelPictureTypes = $this->_pInputModelSimilarViewFactory->create
-			(InputModelOptionFactorySimilarView::INPUT_PICTURE_TYPE, null, true);
-		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
-		$pictureTypes = $this->_pDataSimilarView->getPictureTypes();
-
-		if (null == $pictureTypes)
-		{
-			$pictureTypes = array();
-		}
-
-		$pInputModelPictureTypes->setValue($pictureTypes);
-
-		return $pInputModelPictureTypes;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelExpose()
-	{
-		$labelExpose = __('PDF-Expose', 'onoffice');
-
-		$pInputModelExpose = $this->_pInputModelSimilarViewFactory->create
-			(InputModelOptionFactorySimilarView::INPUT_EXPOSE, $labelExpose);
-		$pInputModelExpose->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-		$exposes = array('' => '') + $this->readExposes();
-		$pInputModelExpose->setValuesAvailable($exposes);
-		$pInputModelExpose->setValue($this->_pDataSimilarView->getExpose());
-
-		return $pInputModelExpose;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelMovieLinks()
-	{
-		$labelMovieLinks = __('Movie Links', 'onoffice');
-
-		$pInputModelMedia = $this->_pInputModelSimilarViewFactory->create
-			(InputModelOptionFactorySimilarView::INPUT_MOVIE_LINKS, $labelMovieLinks);
-		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-		$options = array(
-			MovieLinkTypes::MOVIE_LINKS_NONE => __('Disabled', 'onoffice'),
-			MovieLinkTypes::MOVIE_LINKS_LINK => __('Link', 'onoffice'),
-			MovieLinkTypes::MOVIE_LINKS_PLAYER => __('Player', 'onoffice'),
-		);
-		$pInputModelMedia->setValuesAvailable($options);
-		$pInputModelMedia->setValue($this->_pDataSimilarView->getMovieLinks());
-
-		return $pInputModelMedia;
-	}
-
-
-	/**
-	 *
 	 * @param string $category
 	 * @param array $fieldNames
 	 * @param string $categoryLabel
@@ -333,6 +260,28 @@ class FormModelBuilderSimilarEstateSettings
 
 		return $pInputModelSameMarketingMethod;
 	}
+
+    /**
+     *
+     * @return InputModelDB
+     *
+     */
+
+    public function createInputModelDontShowArchived()
+    {
+        $pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
+
+        $labelDontShowArchived= __('Don&#8217;t show archived estates', 'onoffice');
+
+        $pInputModelDontShowArchived = $this->_pInputModelSimilarViewFactory->create
+        (InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_ARCHIVED, $labelDontShowArchived);
+        $pInputModelDontShowArchived->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+
+        $pInputModelDontShowArchived->setValuesAvailable(1);
+        $pInputModelDontShowArchived->setValue($pDataViewSimilarEstates->getDontShowArchived());
+
+        return $pInputModelDontShowArchived;
+    }
 
 
 	/**

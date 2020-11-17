@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\DataView;
 
-use onOffice\WPlugin\Types\MovieLinkTypes;
-
 /**
  *
  * @url http://www.onoffice.de

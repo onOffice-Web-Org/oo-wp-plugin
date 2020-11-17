@@ -39,6 +39,9 @@ class DataViewSimilarEstates
 	/** */
 	const FIELD_SAME_MARKETING_METHOD = 'same_maketing_method';
 
+    /** */
+    const FIELD_DONT_SHOW_ARCHIVED = 'dont_show_archived';
+
 	/** */
 	const FIELD_SAME_POSTAL_CODE = 'same_postal_code';
 
@@ -60,6 +63,9 @@ class DataViewSimilarEstates
 
 	/** @var bool */
 	private $_samePostalCode = false;
+
+    /** @var bool */
+    private $_dontShowArchived = false;
 
 	/** @var int */
 	private $_radius = 10;
@@ -83,6 +89,10 @@ class DataViewSimilarEstates
 	public function setSamePostalCode(bool $samePostalCode)
 		{ $this->_samePostalCode = $samePostalCode; }
 
+    /** @param bool $dontShowArchived */
+    public function setDontShowArchived (bool $dontShowArchived)
+    { $this->_dontShowArchived = $dontShowArchived; }
+
 	/** @param int $radius */
 	public function setRadius(int $radius)
 		{ $this->_radius = $radius; }
@@ -99,9 +109,17 @@ class DataViewSimilarEstates
 	public function getSameMarketingMethod(): bool
 		{ return $this->_sameMarketingMethod; }
 
+    /** @return bool */
+    public function get(): bool
+    { return $this->_sameMarketingMethod; }
+
 	/** @return bool */
 	public function getSamePostalCode(): bool
 		{ return $this->_samePostalCode; }
+
+    /** @return bool */
+    public function getDontShowArchived(): bool
+    { return $this->_dontShowArchived; }
 
 	/** @return int */
 	public function getRadius(): int

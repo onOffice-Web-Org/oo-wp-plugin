@@ -163,6 +163,7 @@ class EstateDetail
 			return '';
 		}
 		$pDataViewSimilarEstates = $pDataSimilarSettings->getDataViewSimilarEstates();
+        var_dump($pDataViewSimilarEstates);
 
 		$pSimilarEstates = new EstateViewSimilarEstates($pDataViewSimilarEstates);
 		$pCopyThis = clone $this;
