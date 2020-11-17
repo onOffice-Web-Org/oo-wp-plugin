@@ -35,23 +35,10 @@ use onOffice\WPlugin\Model\InputModelOption;
 
 class InputModelOptionFactorySimilarView
 {
-	/** */
-	const INPUT_PICTURE_TYPE = DataSimilarView::PICTURES;
+
 
 	/** */
 	const INPUT_TEMPLATE = 'template';
-
-	/** */
-	const INPUT_EXPOSE = 'expose';
-
-	/** */
-	const INPUT_MOVIE_LINKS = 'movielinks';
-
-	/** */
-	const INPUT_FIELD_CONFIG = DataSimilarView::FIELDS;
-
-	/** */
-	const INPUT_FIELD_CONTACTDATA_ONLY = DataSimilarView::ADDRESSFIELDS;
 
 	/** */
 	const INPUT_FIELD_ENABLE_SIMILAR_ESTATES = DataSimilarView::ENABLE_SIMILAR_ESTATES;
@@ -83,24 +70,6 @@ class InputModelOptionFactorySimilarView
 
 	/** @var array */
 	private $_inputConfig = [
-		self::INPUT_EXPOSE => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_TEMPLATE => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_PICTURE_TYPE => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_FIELD_CONFIG => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_FIELD_CONTACTDATA_ONLY => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_MOVIE_LINKS => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
 		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],

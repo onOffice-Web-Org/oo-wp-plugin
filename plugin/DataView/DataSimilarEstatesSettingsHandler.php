@@ -101,12 +101,6 @@ class DataSimilarEstatesSettingsHandler
 	public function createDataSimilarEstatesSettingsByValues(array $row): DataSimilarView
 	{
 		$pDataSimilarView = $this->getDataSimilarEstatesSettings();
-		$pDataSimilarView->setTemplate($row['template'] ?? '');
-		$pDataSimilarView->setFields($row[DataSimilarView::FIELDS] ?? []);
-		$pDataSimilarView->setPictureTypes($row[DataSimilarView::PICTURES] ?? []);
-		$pDataSimilarView->setExpose($row['expose'] ?? '');
-		$pDataSimilarView->setAddressFields($row[DataSimilarView::ADDRESSFIELDS] ?? []);
-		$pDataSimilarView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
 		$pDataSimilarView->setDataSimilarViewActive
 			($row[DataSimilarView::ENABLE_SIMILAR_ESTATES] ?? false);
 

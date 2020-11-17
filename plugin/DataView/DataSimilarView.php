@@ -35,71 +35,12 @@ use onOffice\WPlugin\Types\MovieLinkTypes;
  */
 
 class DataSimilarView
-	implements DataView
 {
-	/** */
-	const PICTURES = 'pictures';
-
-	/** */
-	const FIELDS = 'fields';
-
-	/** */
-	const ADDRESSFIELDS = 'addressfields';
-
 	/** */
 	const ENABLE_SIMILAR_ESTATES = 'enablesimilarestates';
 
-
-	/** @var string[] */
-	private $_fields = [
-		'objekttitel',
-		'objektart',
-		'objekttyp',
-		'vermarktungsart',
-		'plz',
-		'ort',
-		'bundesland',
-		'objektnr_extern',
-		'wohnflaeche',
-		'grundstuecksflaeche',
-		'nutzflaeche',
-		'anzahl_zimmer',
-		'anzahl_badezimmer',
-		'kaufpreis',
-		'kaltmiete',
-		'objektbeschreibung',
-		'lage',
-		'ausstatt_beschr',
-		'sonstige_angaben',
-	];
-
-	/** @var string[] */
-	private $_addressFields = [
-		'Anrede',
-		'Vorname',
-		'Name',
-		'Zusatz1',
-		'Strasse',
-		'Plz',
-		'Ort',
-		'Telefon1',
-		'mobile',
-	];
-
-	/** @var string[] */
-	private $_pictureTypes = [];
-
-	/** @var string */
-	private $_template = '';
-
-	/** @var string */
-	private $_expose = '';
-
 	/** @var int */
 	private $_pageId = 0;
-
-	/** @var int */
-	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
 	/** @var bool */
 	private $_dataSimilarViewActive = false;
@@ -130,65 +71,13 @@ class DataSimilarView
 	}
 
 
-	/** @return array */
-	public function getFields(): array
-		{ return $this->_fields; }
-
-	/** @return array */
-	public function getPictureTypes(): array
-		{ return $this->_pictureTypes; }
-
-	/** @return string */
-	public function getTemplate(): string
-		{ return $this->_template; }
-
-	/** @return string */
-	public function getExpose(): string
-		{ return $this->_expose; }
-
-	/** @return string */
-	public function getName(): string
-		{ return 'detail'; }
-
-	/** @return string[] */
-	public function getAddressFields(): array
-		{ return $this->_addressFields; }
-
 	/** @return int */
 	public function getPageId(): int
 		{ return $this->_pageId; }
 
-	/** @param array $fields */
-	public function setFields(array $fields)
-		{ $this->_fields = $fields; }
-
-	/** @param array $pictureTypes */
-	public function setPictureTypes(array $pictureTypes)
-		{ $this->_pictureTypes = $pictureTypes; }
-
-	/** @param string $template */
-	public function setTemplate(string $template)
-		{ $this->_template = $template; }
-
-	/** @param string $expose */
-	public function setExpose(string $expose)
-		{ $this->_expose = $expose; }
-
 	/** @param int $pageId */
 	public function setPageId(int $pageId)
 		{ $this->_pageId = $pageId; }
-
-	/** @var string[] $addressFields */
-	public function setAddressFields(array $addressFields)
-		{ $this->_addressFields = $addressFields; }
-
-	/** @return int */
-	public function getMovieLinks(): int
-		{ return $this->_movieLinks; }
-
-	/** @param int $movieLinks */
-	public function setMovieLinks(int $movieLinks)
-		{ $this->_movieLinks = $movieLinks; }
 
 	/** @return DataViewSimilarEstates */
 	public function getDataViewSimilarEstates(): DataViewSimilarEstates

@@ -159,7 +159,6 @@ class EstateDetail
         // Call to DataSimilarEstatesSettings
         $pDataSimilarEstatesSettings = new DataSimilarEstatesSettingsHandler();
         $pDataSimilarSettings = $pDataSimilarEstatesSettings->getDataSimilarEstatesSettings();
-
         if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
 			return '';
 		}
