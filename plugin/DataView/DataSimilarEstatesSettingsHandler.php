@@ -129,6 +129,8 @@ class DataSimilarEstatesSettingsHandler
 			($row[DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE] ?? false);
         $pDataViewSimilar->setDontShowArchived
             ($row[DataViewSimilarEstates::FIELD_DONT_SHOW_ARCHIVED] ?? false);
+        $pDataViewSimilar->setDontShowReference
+        ($row[DataViewSimilarEstates::FIELD_DONT_SHOW_REFERENCE] ?? false);
 		$pDataViewSimilar->setRadius
 			($row[DataViewSimilarEstates::FIELD_RADIUS] ?? $pDataViewSimilar->getRadius());
 		$pDataViewSimilar->setRecordsPerPage

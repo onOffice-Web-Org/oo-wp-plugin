@@ -70,6 +70,7 @@ class DefaultFilterBuilderSimilarEstates
 		$pDataListView = $pFilterConfiguration->getDataViewSimilarEstates();
 		$postalCode = $pFilterConfiguration->getPostalCode();
         $showArchived = $pFilterConfiguration->getShowArchived();
+        $showReference = $pFilterConfiguration->getShowReference();
 
 		if ($pDataListView->getSameEstateKind()) {
 			$filter['objektart'] []= ['op' => '=', 'val' => $pFilterConfiguration->getEstateKind()];
@@ -85,6 +86,10 @@ class DefaultFilterBuilderSimilarEstates
 
         if ($pDataListView->getDontShowArchived() && $showArchived !== 'status2obj_archiviert') {
             $filter['status2'] []= ['op' => '!=', 'val' => ['status2obj_archiviert'] ];
+        }
+
+        if ($pDataListView->getDontShowReference() && $showReference !== '1') {
+            $filter['referenz'] []= ['op' => '!=', 'val' => '1' ];
         }
 
 		if ($this->_excludeIds !== []) {

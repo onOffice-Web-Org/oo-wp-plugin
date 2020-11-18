@@ -283,6 +283,28 @@ class FormModelBuilderSimilarEstateSettings
         return $pInputModelDontShowArchived;
     }
 
+    /**
+     *
+     * @return InputModelDB
+     *
+     */
+
+    public function createInputModelDontShowReference()
+    {
+        $pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
+
+        $labelDontShowReference= __('Don&#8217;t show reference estates', 'onoffice');
+
+        $pInputModelDontShowReference = $this->_pInputModelSimilarViewFactory->create
+        (InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_REFERENCE, $labelDontShowReference);
+        $pInputModelDontShowReference->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+
+        $pInputModelDontShowReference->setValuesAvailable(1);
+        $pInputModelDontShowReference->setValue($pDataViewSimilarEstates->getDontShowReference());
+
+        return $pInputModelDontShowReference;
+    }
+
 
 	/**
 	 *

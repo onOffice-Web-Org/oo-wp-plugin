@@ -36,7 +36,6 @@ use onOffice\WPlugin\Model\InputModelOption;
 class InputModelOptionFactorySimilarView
 {
 
-
 	/** */
 	const INPUT_TEMPLATE = 'template';
 
@@ -54,6 +53,9 @@ class InputModelOptionFactorySimilarView
 
     /** */
     const INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_ARCHIVED = DataViewSimilarEstates::FIELD_DONT_SHOW_ARCHIVED;
+
+    /** */
+    const INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_REFERENCE = DataViewSimilarEstates::FIELD_DONT_SHOW_REFERENCE;
 
 	/** */
 	const INPUT_FIELD_SIMILAR_ESTATES_RADIUS = DataViewSimilarEstates::FIELD_RADIUS;
@@ -83,6 +85,9 @@ class InputModelOptionFactorySimilarView
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
         self::INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_ARCHIVED => [
+            self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
+        ],
+        self::INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_REFERENCE => [
             self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
         ],
 		self::INPUT_FIELD_SIMILAR_ESTATES_RADIUS => [
