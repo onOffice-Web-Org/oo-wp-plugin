@@ -142,7 +142,7 @@ class DataViewSimilarEstates
 	{
 		return [
 			'Id', 'objekttitel', 'objektnr_extern', 'regionaler_zusatz', 'kaufpreis', 'wohnflaeche',
-			'anzahl_zimmer', 'kaltmiete', 'ort', 'plz', 'grundstuecksflaeche', 'nutzflaeche'
+			'anzahl_zimmer', 'kaltmiete', 'ort', 'plz','status2', 'grundstuecksflaeche', 'nutzflaeche'
 		];
 	}
 

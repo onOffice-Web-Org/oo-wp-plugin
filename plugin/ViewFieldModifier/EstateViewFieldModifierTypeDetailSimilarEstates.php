@@ -36,6 +36,7 @@ class EstateViewFieldModifierTypeDetailSimilarEstates
 		'laengengrad',
 		'breitengrad',
 		'plz',
+        'status2',
 		'vermarktungsart',
 		'objektart',
 		'strasse',

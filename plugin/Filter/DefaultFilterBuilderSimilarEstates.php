@@ -69,6 +69,7 @@ class DefaultFilterBuilderSimilarEstates
 		$pFilterConfiguration = $this->_pFilterConfigurationSimilarEstates;
 		$pDataListView = $pFilterConfiguration->getDataViewSimilarEstates();
 		$postalCode = $pFilterConfiguration->getPostalCode();
+        $showArchived = $pFilterConfiguration->getShowArchived();
 
 		if ($pDataListView->getSameEstateKind()) {
 			$filter['objektart'] []= ['op' => '=', 'val' => $pFilterConfiguration->getEstateKind()];
@@ -82,10 +83,13 @@ class DefaultFilterBuilderSimilarEstates
 			$filter['plz'] []= ['op' => '=', 'val' => $pFilterConfiguration->getPostalCode()];
 		}
 
+        if ($pDataListView->getDontShowArchived() && $showArchived !== 'status2obj_archiviert') {
+            $filter['status2'] []= ['op' => '!=', 'val' => ['status2obj_archiviert'] ];
+        }
+
 		if ($this->_excludeIds !== []) {
 			$filter['Id'] []= ['op' => 'not in', 'val' => $this->_excludeIds];
 		}
-
 		return $filter;
 	}
 

@@ -41,6 +41,9 @@ class FilterConfigurationSimilarEstates
 	/** @var string */
 	private $_postalCode = '';
 
+    /** @var string */
+    private $_showArchived = '';
+
 	/** @var GeoCoordinates */
 	private $_pGeoCoordinates = null;
 
@@ -95,6 +98,17 @@ class FilterConfigurationSimilarEstates
 	{
 		return $this->_postalCode;
 	}
+
+    /**
+     *
+     * @return string
+     *
+     */
+
+    public function getShowArchived(): string
+    {
+        return $this->_showArchived;
+    }
 
 
 	/**
@@ -263,6 +277,17 @@ class FilterConfigurationSimilarEstates
 	{
 		$this->_postalCode = $postalCode;
 	}
+
+    /**
+     *
+     * @param string $showArchived
+     *
+     */
+
+    public function setShowArchive(string $showArchived)
+    {
+        $this->_showArchived= $showArchived;
+    }
 
 
 	/**

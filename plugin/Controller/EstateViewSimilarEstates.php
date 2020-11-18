@@ -45,6 +45,7 @@ class EstateViewSimilarEstates
 	/** @var FilterConfigurationSimilarEstates */
 	private $_pFilterConfiguration = null;
 
+
 	/** @var EstateViewSimilarEstatesEnvironment */
 	private $_pEnvironment = null;
 
@@ -96,6 +97,7 @@ class EstateViewSimilarEstates
 			$this->_pFilterConfiguration->setStreet($pValuesCurrentEstate->getValueRaw('strasse') ?? '');
 			$this->_pFilterConfiguration->setCountry($pValuesCurrentEstate->getValueRaw('land') ?? '');
 			$this->_pFilterConfiguration->setPostalCode($pValuesCurrentEstate->getValueRaw('plz') ?? '');
+            $this->_pFilterConfiguration->setShowArchive($pValuesCurrentEstate->getValueRaw('status2') ?? '');
 			$longitude = $pValuesCurrentEstate->getValueRaw('laengengrad');
 			$latitude = $pValuesCurrentEstate->getValueRaw('breitengrad');
 			$estateId = $pEstateList->getCurrentEstateId();
