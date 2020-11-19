@@ -38,8 +38,6 @@ use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\ImageTypes;
-use onOffice\WPlugin\Types\MovieLinkTypes;
 use function __;
 
 /**
@@ -164,10 +162,7 @@ class FormModelBuilderSimilarEstateSettings
 			$pInputModelFieldsConfig = $this->_pInputModelSimilarViewFactory->create
 				(InputModelOptionFactorySimilarView::INPUT_FIELD_CONFIG, null, true);
 			$fields = $this->_pDataSimilarView->getFields();
-		} elseif ($module == onOfficeSDK::MODULE_ADDRESS) {
-			$pInputModelFieldsConfig = $this->_pInputModelSimilarViewFactory->create
-				(InputModelOptionFactorySimilarView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
-			$fields = $this->_pDataSimilarView->getAddressFields();
+
 		} else {
 			throw new UnknownModuleException();
 		}
@@ -206,8 +201,6 @@ class FormModelBuilderSimilarEstateSettings
 	private function getTemplateValueByField(string $field): string
 	{
 		switch ($field) {
-			case InputModelOptionFactorySimilarView::INPUT_TEMPLATE:
-				return $this->_pDataSimilarView->getTemplate();
 			case InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE:
 				return $this->_pDataSimilarView->getDataViewSimilarEstates()->getTemplate();
 			default:

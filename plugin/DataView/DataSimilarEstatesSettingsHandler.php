@@ -101,6 +101,7 @@ class DataSimilarEstatesSettingsHandler
 	public function createDataSimilarEstatesSettingsByValues(array $row): DataSimilarView
 	{
 		$pDataSimilarView = $this->getDataSimilarEstatesSettings();
+        $pDataSimilarView->setFields($row[DataDetailView::FIELDS] ?? []);
 		$pDataSimilarView->setDataSimilarViewActive
 			($row[DataSimilarView::ENABLE_SIMILAR_ESTATES] ?? false);
 
@@ -121,6 +122,8 @@ class DataSimilarEstatesSettingsHandler
 	private function configureDataSimilarEstatesSettings(DataViewSimilarEstates $pDataViewSimilar,
 		array $row)
 	{
+        $pDataViewSimilar->setFields
+            ($row[DataViewSimilarEstates::FIELDS] ?? false);
 		$pDataViewSimilar->setSameEstateKind
 			($row[DataViewSimilarEstates::FIELD_SAME_KIND] ?? false);
 		$pDataViewSimilar->setSameMarketingMethod

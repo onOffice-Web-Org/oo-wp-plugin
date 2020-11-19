@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Model\InputModel;
 
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
@@ -38,6 +39,9 @@ class InputModelOptionFactorySimilarView
 
 	/** */
 	const INPUT_TEMPLATE = 'template';
+
+    /** */
+    const INPUT_FIELD_CONFIG = DataSimilarView::FIELDS;
 
 	/** */
 	const INPUT_FIELD_ENABLE_SIMILAR_ESTATES = DataSimilarView::ENABLE_SIMILAR_ESTATES;
@@ -75,6 +79,9 @@ class InputModelOptionFactorySimilarView
 
 	/** @var array */
 	private $_inputConfig = [
+        self::INPUT_FIELD_CONFIG => [
+            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+        ],
 		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],

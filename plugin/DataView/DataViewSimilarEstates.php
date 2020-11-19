@@ -33,6 +33,26 @@ use onOffice\WPlugin\Types\ImageTypes;
 class DataViewSimilarEstates
 	implements DataView
 {
+    /** */
+    const FIELDS = 'fields';
+
+    /** @var string[] */
+    private $_fields = [
+        'Id',
+        'objekttitel',
+        'objektnr_extern',
+        'regionaler_zusatz',
+        'kaufpreis',
+        'wohnflaeche',
+        'anzahl_zimmer',
+        'kaltmiete',
+        'ort',
+        'plz',
+        'status2',
+        'grundstuecksflaeche',
+        'nutzflaeche'
+    ];
+
 	/** */
 	const FIELD_SAME_KIND = 'same_kind';
 
@@ -153,12 +173,11 @@ class DataViewSimilarEstates
 
 	/** @return array */
 	public function getFields(): array
-	{
-		return [
-			'Id', 'objekttitel', 'objektnr_extern', 'regionaler_zusatz', 'kaufpreis', 'wohnflaeche',
-			'anzahl_zimmer', 'kaltmiete', 'ort', 'plz','status2', 'grundstuecksflaeche', 'nutzflaeche'
-		];
-	}
+	{ return $this->_fields;}
+
+    /** @param array $fields */
+    public function setFields(array $fields)
+    { $this->_fields = $fields; }
 
 	/** @return string */
 	public function getName(): string

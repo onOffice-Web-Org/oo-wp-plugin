@@ -34,8 +34,28 @@ namespace onOffice\WPlugin\DataView;
 
 class DataSimilarView
 {
+    /** */
+    const FIELDS = 'fields';
+
 	/** */
 	const ENABLE_SIMILAR_ESTATES = 'enablesimilarestates';
+
+    /** @var string[] */
+    private $_fields = [
+        'Id',
+        'objekttitel',
+        'objektnr_extern',
+        'regionaler_zusatz',
+        'kaufpreis',
+        'wohnflaeche',
+        'anzahl_zimmer',
+        'kaltmiete',
+        'ort',
+        'plz',
+        'status2',
+        'grundstuecksflaeche',
+        'nutzflaeche'
+    ];
 
 	/** @var int */
 	private $_pageId = 0;
@@ -76,6 +96,14 @@ class DataSimilarView
 	/** @param int $pageId */
 	public function setPageId(int $pageId)
 		{ $this->_pageId = $pageId; }
+
+    /** @return array */
+    public function getFields(): array
+    { return $this->_fields; }
+
+    /** @param array $fields */
+    public function setFields(array $fields)
+    { $this->_fields = $fields; }
 
 	/** @return DataViewSimilarEstates */
 	public function getDataViewSimilarEstates(): DataViewSimilarEstates
