@@ -149,14 +149,6 @@ class EstateDetail
 
 	public function getSimilarEstates(): string
 	{
-//		/* @var $pDataView DataDetailView */
-//		$pDataView = $this->getDataView();
-//
-//		if (!$pDataView->getDataDetailViewActive()) {
-//			return '';
-//		}
-
-        // Call to DataSimilarEstatesSettings
         $pDataSimilarEstatesSettings = new DataSimilarEstatesSettingsHandler();
         $pDataSimilarSettings = $pDataSimilarEstatesSettings->getDataSimilarEstatesSettings();
         if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
