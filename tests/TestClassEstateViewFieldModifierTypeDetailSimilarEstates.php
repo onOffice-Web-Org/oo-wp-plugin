@@ -56,6 +56,8 @@ class TestClassEstateViewFieldModifierTypeDetailSimilarEstates
 		'laengengrad',
 		'breitengrad',
 		'plz',
+        'referenz',
+        'status2',
 		'vermarktungsart',
 		'objektart',
 		'strasse',

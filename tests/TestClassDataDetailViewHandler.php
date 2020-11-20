@@ -54,13 +54,7 @@ class TestClassDataDetailViewHandler
 		],
 		'expose' => 'testexposetype',
 		'addressfields' => ['Vorname', 'Name'],
-		'movielinks' => MovieLinkTypes::MOVIE_LINKS_PLAYER,
-		'similar_estates_template' => '/test/similar/template.php',
-		'same_kind' => true,
-		'same_maketing_method' => true,
-		'radius' => 35,
-		'amount' => 13,
-		'enablesimilarestates' => true,
+		'movielinks' => MovieLinkTypes::MOVIE_LINKS_PLAYER
 	];
 
 
