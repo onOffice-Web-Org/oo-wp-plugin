@@ -56,6 +56,8 @@ class TestClassFilterConfigurationSimilarEstates
 		$this->_pDataViewSimilarEstates->setSameEstateKind(true);
 		$this->_pDataViewSimilarEstates->setSameMarketingMethod(true);
 		$this->_pDataViewSimilarEstates->setSamePostalCode(true);
+        $this->_pDataViewSimilarEstates->setDontShowArchived(true);
+        $this->_pDataViewSimilarEstates->setDontShowReference(true);
 	}
 
 
@@ -76,6 +78,8 @@ class TestClassFilterConfigurationSimilarEstates
 		$pFilterConfigurationSimilarEstates->setStreet('Riverfront Pkwy');
 		$pFilterConfigurationSimilarEstates->setCity('Chattanooga');
 		$pFilterConfigurationSimilarEstates->setMarketingMethod('miete');
+        $pFilterConfigurationSimilarEstates->setShowArchive('status2obj_aktiv');
+        $pFilterConfigurationSimilarEstates->setShowReference('1');
 
 		$this->assertEquals(13, $pFilterConfigurationSimilarEstates->getAmount());
 		$this->assertEquals(80, $pFilterConfigurationSimilarEstates->getRadius());
@@ -89,5 +93,7 @@ class TestClassFilterConfigurationSimilarEstates
 		$this->assertEquals('Riverfront Pkwy', $pFilterConfigurationSimilarEstates->getStreet());
 		$this->assertEquals('Chattanooga', $pFilterConfigurationSimilarEstates->getCity());
 		$this->assertEquals('miete', $pFilterConfigurationSimilarEstates->getMarketingMethod());
+        $this->assertEquals('status2obj_aktiv', $pFilterConfigurationSimilarEstates->getShowArchived());
+        $this->assertEquals('1', $pFilterConfigurationSimilarEstates->getShowReference());
 	}
 }
