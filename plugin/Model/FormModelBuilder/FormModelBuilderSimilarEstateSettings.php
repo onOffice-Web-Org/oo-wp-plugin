@@ -92,8 +92,8 @@ class FormModelBuilderSimilarEstateSettings
         $this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->getDataSimilarEstatesSettings();
 
 		$pFormModel = new FormModel();
-		$pFormModel->setLabel(__('Detail View', 'onoffice'));
-		$pFormModel->setGroupSlug('onoffice-detailview-settings-main');
+		$pFormModel->setLabel(__('Similar Estates View', 'onoffice'));
+		$pFormModel->setGroupSlug('onoffice-similar-view-settings-main');
 		$pFormModel->setPageSlug($pageSlug);
 
 		return $pFormModel;
