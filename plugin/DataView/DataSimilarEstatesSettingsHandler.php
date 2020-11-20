@@ -45,9 +45,9 @@ class DataSimilarEstatesSettingsHandler
 	/**
 	 * @param WPOptionWrapperBase $pWPOptionWrapper
 	 */
-	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
+	public function __construct(WPOptionWrapperBase $pWPOptionWrapper)
 	{
-		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
+		$this->_pWPOptionWrapper = $pWPOptionWrapper;
 	}
 
 

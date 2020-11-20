@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Controller\EstateViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -149,7 +150,10 @@ class EstateDetail
 
 	public function getSimilarEstates(): string
 	{
-        $pDataSimilarEstatesSettings = new DataSimilarEstatesSettingsHandler();
+        $pContainerBuilder = new ContainerBuilder;
+        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+        $pContainer = $pContainerBuilder->build();
+        $pDataSimilarEstatesSettings = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
         $pDataSimilarSettings = $pDataSimilarEstatesSettings->getDataSimilarEstatesSettings();
         if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
 			return '';

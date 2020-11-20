@@ -46,10 +46,6 @@ class DataDetailView
 	/** */
 	const ADDRESSFIELDS = 'addressfields';
 
-	/** */
-	const ENABLE_SIMILAR_ESTATES = 'enablesimilarestates';
-
-
 	/** @var string[] */
 	private $_fields = [
 		'objekttitel',
@@ -101,34 +97,22 @@ class DataDetailView
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
-	/** @var bool */
-	private $_dataDetailViewActive = false;
-
-	/** @var DataViewSimilarEstates */
-	private $_pDataViewSimilarEstates = null;
-
 
 	/**
 	 *
 	 */
 
-	public function __construct()
-	{
-		$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
-	}
+	public function __construct(){
 
+    }
 
 	/**
 	 *
 	 */
 
-	public function __wakeup()
-	{
-		if ($this->_pDataViewSimilarEstates === null) {
-			$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
-		}
-	}
+	public function __wakeup(){
 
+    }
 
 	/** @return array */
 	public function getFields(): array
@@ -189,22 +173,6 @@ class DataDetailView
 	/** @param int $movieLinks */
 	public function setMovieLinks(int $movieLinks)
 		{ $this->_movieLinks = $movieLinks; }
-
-	/** @return DataViewSimilarEstates */
-	public function getDataViewSimilarEstates(): DataViewSimilarEstates
-		{ return $this->_pDataViewSimilarEstates; }
-
-	/** @param DataViewSimilarEstates $pDataViewSimilarEstates */
-	public function setDataViewSimilarEstates(DataViewSimilarEstates $pDataViewSimilarEstates)
-		{ $this->_pDataViewSimilarEstates = $pDataViewSimilarEstates; }
-
-	/** @return bool */
-	public function getDataDetailViewActive(): bool
-		{ return $this->_dataDetailViewActive; }
-
-	/** @param bool $dataDetailViewActive */
-	public function setDataDetailViewActive(bool $dataDetailViewActive)
-		{ $this->_dataDetailViewActive = $dataDetailViewActive; }
 
 	/** @return bool */
 	public function getRandom(): bool

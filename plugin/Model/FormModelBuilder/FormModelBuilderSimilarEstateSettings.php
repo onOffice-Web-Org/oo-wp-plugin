@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
 use onOffice\WPlugin\DataView\DataSimilarView;
@@ -83,8 +84,12 @@ class FormModelBuilderSimilarEstateSettings
 	public function generate(string $pageSlug): FormModel
 	{
 		$this->_pInputModelSimilarViewFactory = new InputModelOptionFactorySimilarView($pageSlug);
-		$pDataSimilarEstatesSettingsHandler= new DataSimilarEstatesSettingsHandler();
-		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->getDataSimilarEstatesSettings();
+
+        $pContainerBuilder = new ContainerBuilder;
+        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+        $pContainer = $pContainerBuilder->build();
+        $pDataSimilarEstatesSettingsHandler = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
+        $this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->getDataSimilarEstatesSettings();
 
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Detail View', 'onoffice'));

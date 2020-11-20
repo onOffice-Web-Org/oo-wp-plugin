@@ -82,7 +82,7 @@ class AdminPageSimilarEstates
 
 	public function renderContent()
 	{
-		$pDataSimilarSettingsHandler = new DataSimilarEstatesSettingsHandler();
+		$pDataSimilarSettingsHandler = $this->getContainer()->get(DataSimilarEstatesSettingsHandler::class);
 		$pDataSimilarView = $pDataSimilarSettingsHandler->getDataSimilarEstatesSettings();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
@@ -268,7 +268,7 @@ class AdminPageSimilarEstates
 			}
 		}
 
-		$pDataSimilarSettingsHandler = new DataSimilarEstatesSettingsHandler();
+        $pDataSimilarSettingsHandler = $this->getContainer()->get(DataSimilarEstatesSettingsHandler::class);
 		$valuesPrefixless = $pInputModelDBAdapterArray->generateValuesArray();
 		$pDataSimilarView = $pDataSimilarSettingsHandler->createDataSimilarEstatesSettingsByValues($valuesPrefixless);
 		$pResultObject = new stdClass();
