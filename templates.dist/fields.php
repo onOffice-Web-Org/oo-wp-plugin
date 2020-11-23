@@ -54,18 +54,23 @@ if (!function_exists('renderFieldEstateSearch')) {
 		}
 
 		if ( $properties['type'] === FieldTypes::FIELD_TYPE_BOOLEAN ) {
-			echo '<br>';
 			echo '<fieldset>
-		<input type="radio" id="'.esc_attr($inputName).'_u" name="'.esc_attr($inputName).'" value="u"
-			'.($selectedValue === null ? ' checked' : '').'>
-		<label for="'.esc_attr($inputName).'_u">'.esc_html__('Not Specified', 'onoffice').'</label>
-		<input type="radio" id="'.esc_attr($inputName).'_y" name="'.esc_attr($inputName).'" value="y"
-			'.($selectedValue === true  ? 'checked' : '').'>
-		<label for="'.esc_attr($inputName).'_y">'.esc_html__('Yes', 'onoffice').'</label>
-		<input type="radio" id="'.esc_attr($inputName).'_n" name="'.esc_attr($inputName).'" value="n"
-			'.($selectedValue === false ? 'checked' : '').'>
-		<label for="'.esc_attr($inputName).'_n">'.esc_html__('No', 'onoffice').'</label>
-	  </fieldset>';
+			<div class="oo-control">
+				<label for="'.esc_attr($inputName).'_u">
+				<input type="radio" id="'.esc_attr($inputName).'_u" name="'.esc_attr($inputName).'" value="u"
+				'.($selectedValue === null ? ' checked' : '').'>'.esc_html__('Not Specified', 'onoffice').'</label>
+			</div>
+			<div class="oo-control">
+				<label for="'.esc_attr($inputName).'_y">
+				<input type="radio" id="'.esc_attr($inputName).'_y" name="'.esc_attr($inputName).'" value="y"
+				'.($selectedValue === true  ? 'checked' : '').'>'.esc_html__('Yes', 'onoffice').'</label>
+			</div>	
+			<div class="oo-control">
+				<label for="'.esc_attr($inputName).'_n">
+				<input type="radio" id="'.esc_attr($inputName).'_n" name="'.esc_attr($inputName).'" value="n"
+				'.($selectedValue === false ? 'checked' : '').'>'.esc_html__('No', 'onoffice').'</label>
+			</div>
+	  		</fieldset>';
 		} elseif ( in_array($properties['type'], $multiSelectableTypes) &&
 			$inputName !== 'regionaler_zusatz' &&
 			$inputName != 'country') {
@@ -88,17 +93,17 @@ if (!function_exists('renderFieldEstateSearch')) {
 		elseif ( FieldTypes::isNumericType( $properties['type'] ) ||
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']) {
-				esc_html_e('From: ', 'onoffice');
+				//esc_html_e('From: ', 'onoffice');
 				echo '<input name="'.esc_attr($inputName).'__von" '.$inputType;
-				echo 'value="'.esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '').'"><br>';
-				esc_html_e('Up to: ', 'onoffice');
+				echo 'value="'.esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '').'" placeholder="'.esc_html__('From: ', 'onoffice').'">';
+				//esc_html_e('Up to: ', 'onoffice');
 				echo '<input name="'.esc_attr($inputName).'__bis" '.$inputType;
-				echo 'value="'.esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '').'"><br>';
+				echo 'value="'.esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '').'" placeholder="'.esc_html__('Up to: ', 'onoffice').'">';
 			} else {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="'.esc_attr($properties['length']).'"' : '';
 			echo '<input name="'.esc_attr($inputName).'" '.$inputType;
-			echo 'value="'.esc_attr($selectedValue).'"'.$lengthAttr.'><br>';
+			echo 'value="'.esc_attr($selectedValue).'"'.$lengthAttr.' placeholder="'.$properties['label'].'">';
 		}
 	}
 }
@@ -110,6 +115,7 @@ if (!function_exists('renderFormField')) {
 		$typeCurrentInput = $pForm->getFieldType($fieldName);
 		$isRequired = $pForm->isRequiredField($fieldName);
 		$requiredAttribute = $isRequired ? 'required ' : '';
+		$requiredPlaceholder = $isRequired ? '*' : '';
 		$permittedValues = $pForm->getPermittedValues($fieldName, true);
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
@@ -176,10 +182,10 @@ if (!function_exists('renderFormField')) {
 				foreach ($pForm->getSearchcriteriaRangeInfosForField($fieldName) as $key => $rangeDescription) {
 					$value = 'value="'.esc_attr($pForm->getFieldValue($key, true)).'"';
 					$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($key).'" '
-						.$value.' placeholder="'.esc_attr($rangeDescription).'">';
+					.$value.' placeholder="'.esc_attr($rangeDescription).$requiredPlaceholder.'" class="'.esc_attr($fieldLabel).'">';
 				}
 			} else {
-				$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($fieldName).'" '.$value.'>';
+				$output .= '<input '.$inputType.$requiredAttribute.' name="'.esc_attr($fieldName).'" '.$value. ' placeholder="'.esc_attr($fieldLabel).$requiredPlaceholder.'" >';
 			}
 		}
 		return $output;

@@ -38,7 +38,7 @@ $selectTypes = array(
 	);
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo esc_html__('ERROR!', 'onoffice');
+	echo esc_html__('There was an error sending the form.', 'onoffice');
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
@@ -54,17 +54,16 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
 	$inputAddition = $isRequired ? ' required' : '';
-	echo esc_html($pForm->getFieldLabel( $input )).$addition.': <br>';
+	echo '<label for="'.$input.'">'.esc_html($pForm->getFieldLabel( $input )).$addition.': </label>';
 
 	$permittedValues = $pForm->getPermittedValues( $input, true );
 
 	if ($input === 'Umkreis') {
-		echo '<br>'
-			.'<fieldset>'
+		echo '<fieldset>'
 			.'<legend>'.esc_html__('search within distance of:', 'onoffice').'</legend>';
 
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
-			echo esc_html($values['label']).':<br>';
+			echo esc_html($values['label']).':';
 
 			if (in_array($values['type'], $selectTypes)) {
 				$permittedValues = $values['permittedvalues'];
@@ -77,7 +76,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 						.esc_html($countryName).'</option>';
 				}
 
-				echo '</select><br>';
+				echo '</select>';
 			} else {
 				echo '<input type="text" name="'.esc_html($key).'" value="'
 					.esc_attr($pForm->getFieldValue( $key )).'"'.$inputAddition.'> <br>';
@@ -105,8 +104,6 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	} else {
 		echo renderFormField($input, $pForm, false);
 	}
-
-	echo '<br>';
 }
 
 $pForm->setGenericSetting('submitButtonLabel', esc_html__('Search for Prospective Buyers', 'onoffice'));
@@ -121,7 +118,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	$umkreisFields = $pForm->getUmkreisFields();
 	$countResults = $pForm->getCountAbsolutResults();
 
-	echo '<p>';
+	echo '<div class="oo-applicantsresults">';
 	echo '<br><span>'.esc_html(
 			sprintf(_n(
 				/* translators: %s will be replaced with a number. */
@@ -193,7 +190,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			echo '<span><i>'.implode(' ', array_values($umkreis)).'</i></span><br>';
 		}
 	}
-	echo '</p>';
+	echo '</div>';
 }
 
 ?>

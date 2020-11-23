@@ -40,10 +40,10 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 <?php
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo esc_html__('SUCCESS!', 'onoffice');
+	echo esc_html__('The form was sent successfully.', 'onoffice');
 } else {
 	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo esc_html__('ERROR!', 'onoffice');
+		echo esc_html__('There was an error sending the form.', 'onoffice');
 	} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
 		echo esc_html__('Spam detected!', 'onoffice');
 	}
@@ -60,8 +60,19 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 		$isRequired = $pForm->isRequiredField( $input );
 		$addition = $isRequired ? '*' : '';
-		echo $pForm->getFieldLabel($input).$addition.': ';
-		echo renderFormField($input, $pForm).'<br>';
+		$typeCurrentInput = $pForm->getFieldType($input);
+
+		if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+			echo "<div class='oo-control'>";
+			echo "<label class='oo-control__label' for=".$input.">";
+			echo renderFormField($input, $pForm);
+			echo $pForm->getFieldLabel($input).$addition."</label>";
+			echo "</div>";
+		}
+		else {
+			echo "<label for=".$input.">". $pForm->getFieldLabel($input).$addition.": </label>";
+			echo renderFormField($input, $pForm);
+		}
 	}
 
 	if (array_key_exists('message', $pForm->getInputFields())):
@@ -70,9 +81,10 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 ?>
 
 		<?php
+		echo "<label for='message'>";
 		esc_html_e('Message', 'onoffice');
-		echo $additionMessage; ?>:<br>
-		<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
+		echo $additionMessage; ?>:</label>
+		<textarea name="message" placeholder="<?php esc_html_e('Message', 'onoffice'); ?>"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
 
 <?php
 	endif;

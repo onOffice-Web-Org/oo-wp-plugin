@@ -1,4 +1,53 @@
+
 span.onoffice-pleasefill {
 	color: #dd1111;
-	margin-right: 5pt;
+	margin-right: 5px;
+}
+#onoffice-form {
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.oo-formfieldwrap {
+    padding: 0 15px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+#onoffice-form select, .oo-searchformfieldwrap select, .oo-applicantsresults {
+	width: 100%;
+}
+
+#onoffice-form .oo-formfieldwrap input[name*="_von"], #onoffice-form .oo-formfieldwrap input[name*="_bis"], .oo-searchformfieldwrap input[name*="_von"][type="text"], .oo-searchformfieldwrap input[name*="_bis"][type="text"] {
+	width: 49%;
+	display: inline-block;
+}
+
+#onoffice-form .oo-formfieldwrap input[name*="_bis"], .oo-searchformfieldwrap input[name*="_bis"][type="text"] {
+    margin-left: 2%;
+}
+
+#onoffice-form input[type="submit"] {
+	margin-top: 10px;
+    margin-bottom: 10px;
+}
+#onoffice-form input[type="checkbox"], #onoffice-form input[type="radio"] {
+    width: auto;
+    margin-right: 5px;
+}
+.oo-control {
+    width: 100%;
+}
+@media only screen and (min-width: 576px) {
+    .oo-formfieldwrap:nth-child(2n+1) {
+        padding-left: 0;
+    }
+    
+    .oo-formfieldwrap:nth-child(2n) {
+		padding-right: 0;
+		padding-left: 10px;
+	}
+	.oo-formfieldwrap {
+		width: 49%;
+	}
 }

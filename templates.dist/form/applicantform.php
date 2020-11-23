@@ -32,9 +32,9 @@ $addressValues = array();
 $searchcriteriaValues = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo '<p>'.esc_html__('SUCCESS!', 'onoffice').'</p>';
+	echo '<p>'.esc_html__('The form was sent successfully.', 'onoffice').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo '<p>'.esc_html__('ERROR!', 'onoffice').'</p>';
+	echo '<p>'.esc_html__('There was an error sending the form.', 'onoffice').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 	echo '<p>'.esc_html__('Missing Fields!', 'onoffice').'</p>';
 }
@@ -43,8 +43,19 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 foreach ( $pForm->getInputFields() as $input => $table ) {
 	$isRequired = $pForm->isRequiredField( $input );
 	$addition = $isRequired ? '*' : '';
-	$line = $pForm->getFieldLabel( $input ).$addition.': ';
-	$line .= renderFormField($input, $pForm);
+	$typeCurrentInput = $pForm->getFieldType($input);
+
+	if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
+		$line = "<div class='oo-control'>";
+		$line .= "<label class='oo-control__label' for=".$input.">";
+		$line .= renderFormField($input, $pForm);
+		$line .= $pForm->getFieldLabel($input).$addition."</label>";
+		$line .= "</div>";
+	}
+	else {
+		$line = "<label for=".$input.">". $pForm->getFieldLabel( $input ).$addition.':</label>';
+		$line .= renderFormField($input, $pForm);
+	}
 
 	if ( $pForm->isMissingField( $input ) ) {
 		$line .= '<span>'.esc_html__('Please fill in', 'onoffice').'</span>';
@@ -62,19 +73,21 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 ?>
-	<p>
-	<h1>Ihre Kontaktdaten</h1>
+<div class="oo-formfieldwrap">
+
+	<h2>Ihre Kontaktdaten</h2>
 		<div>
-			<?php echo implode('<br>', $addressValues); ?>
+			<?php echo implode($addressValues); ?>
 		</div>
-	</p>
-	<p>
-	<h1>Ihre Suchkriterien</h1>
+</div>
+	<div class="oo-formfieldwrap">
+
+	<h2>Ihre Suchkriterien</h2>
 		<div>
-			<?php echo implode('<br>', $searchcriteriaValues) ?>
+			<?php echo implode($searchcriteriaValues) ?>
 		</div>
-	</p>
-	<div>
+</div>
+	<div class="oo-formfieldwrap">
 		<?php
 			include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 		 ?>

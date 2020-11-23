@@ -21,14 +21,22 @@
 	padding: 0;
 }
 
-.oo-searchformfield input, .oo-searchformfield button, .oo-searchformfield .multiselect {
+.oo-searchformfield input:not([type='checkbox']):not([type='radio']), .oo-searchformfield button, .oo-searchformfield .multiselect {
 	width: 100%;
-	margin: 0 !important;
 }
 
-.oo-searchformfield input[type="checkbox"] {
+.oo-searchformfield input[type="checkbox"], .oo-searchformfield input[type="radio"] {
 	width: auto;
 	margin-right: 5px;
+}
+
+.oo-searchformfieldwrap .oo-searchformfield input[name*="_von"], .oo-searchformfieldwrap .oo-searchformfield input[name*="_bis"], .oo-searchformfieldwrap .oo-searchformfield input[name*="_von"][type="text"], .oo-searchformfieldwrap .oo-searchformfield input[name*="_bis"][type="text"] {
+    width: 49%;
+    display: inline-block;
+}
+
+.oo-searchformfieldwrap .oo-searchformfield input[name*="_bis"], .oo-searchformfieldwrap .oo-searchformfield input[name*="_bis"][type="text"] {
+    margin-left: 2%;
 }
 
 .oo-searchformfield .multiselect {
@@ -44,6 +52,9 @@
 	overflow-y: scroll;
 	z-index: 999;
 	background-color: #ffffff;
+}
+.onoffice-multiselect-popup label {
+    padding-left: 5px;
 }
 
 .oo-searchformfield br {
@@ -275,4 +286,10 @@
 	.oo-listobject, .oo-searchformfield, .oo-details-sidebar {
 		width: 100%;
 	}
+	.oo-searchformfieldwrap .oo-searchformfield input[name*="_von"], .oo-searchformfieldwrap .oo-searchformfield input[name*="_bis"], .oo-searchformfieldwrap .oo-searchformfield input[name*="_von"][type="text"], .oo-searchformfieldwrap .oo-searchformfield input[name*="_bis"][type="text"] {
+		width: 100%;
+		margin-left: 0;
+		
+	}
+	
 }
