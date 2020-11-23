@@ -22,6 +22,8 @@
 			"ort",
 			"objektnr_extern",
 			"plz",
+			"status2",
+			"referenz",
 			"land"
 		],
 		"filter": {
