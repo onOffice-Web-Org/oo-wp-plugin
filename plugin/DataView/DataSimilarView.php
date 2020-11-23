@@ -120,9 +120,4 @@ class DataSimilarView
 	/** @param bool $dataSimilarViewActive */
 	public function setDataSimilarViewActive(bool $dataSimilarViewActive)
 		{ $this->_dataSimilarViewActive = $dataSimilarViewActive; }
-
-	/** @return bool */
-	public function getRandom(): bool
-		{  return false; }
-
 }
