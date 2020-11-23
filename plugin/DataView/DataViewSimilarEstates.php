@@ -139,10 +139,6 @@ class DataViewSimilarEstates
 	public function getSameMarketingMethod(): bool
 		{ return $this->_sameMarketingMethod; }
 
-    /** @return bool */
-    public function get(): bool
-    { return $this->_sameMarketingMethod; }
-
 	/** @return bool */
 	public function getSamePostalCode(): bool
 		{ return $this->_samePostalCode; }
