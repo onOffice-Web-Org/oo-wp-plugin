@@ -97,23 +97,6 @@ class DataDetailView
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
-
-	/**
-	 *
-	 */
-
-	public function __construct(){
-
-    }
-
-	/**
-	 *
-	 */
-
-	public function __wakeup(){
-
-    }
-
 	/** @return array */
 	public function getFields(): array
 		{ return $this->_fields; }
