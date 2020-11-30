@@ -96,10 +96,6 @@ class DataSimilarView
 	public function getDataViewSimilarEstates(): DataViewSimilarEstates
 		{ return $this->_pDataViewSimilarEstates; }
 
-	/** @param DataViewSimilarEstates $pDataViewSimilarEstates */
-	public function setDataViewSimilarEstates(DataViewSimilarEstates $pDataViewSimilarEstates)
-		{ $this->_pDataViewSimilarEstates = $pDataViewSimilarEstates; }
-
 	/** @return bool */
 	public function getDataSimilarViewActive(): bool
 		{ return $this->_dataSimilarViewActive; }
