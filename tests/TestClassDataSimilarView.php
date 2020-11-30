@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use Closure;
 use onOffice\WPlugin\DataView\DataSimilarView;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use WP_UnitTestCase;
 
 class TestClassDataSimilarView
@@ -46,6 +47,17 @@ class TestClassDataSimilarView
         'grundstuecksflaeche',
         'nutzflaeche'
 	];
+
+    /**
+     *
+     */
+
+    public function test__construct()
+    {
+        $pDataSimilarView = new DataSimilarView();
+        $this->assertInstanceOf(DataViewSimilarEstates::class,
+            $pDataSimilarView->getDataViewSimilarEstates());
+    }
 
 	/**
 	 *

@@ -76,19 +76,6 @@ class DataSimilarView
 		$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
 	}
 
-
-	/**
-	 *
-	 */
-
-	public function __wakeup()
-	{
-		if ($this->_pDataViewSimilarEstates === null) {
-			$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
-		}
-	}
-
-
 	/** @return int */
 	public function getPageId(): int
 		{ return $this->_pageId; }
