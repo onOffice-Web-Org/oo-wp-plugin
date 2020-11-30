@@ -83,6 +83,9 @@ class AdminPageEstateDetail
 	/** */
 	const FORM_VIEW_LAYOUT_DESIGN = 'viewlayoutdesign';
 
+    /** */
+    const FORM_VIEW_CONTACT_FORM = 'viewcontactform';
+
 	/** */
 	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
 
@@ -220,6 +223,9 @@ class AdminPageEstateDetail
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
 
+        $pFormContactForm = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_FORM);
+        $this->createMetaBoxByForm($pFormContactForm, 'normal');
+
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'side');
 
@@ -276,6 +282,14 @@ class AdminPageEstateDetail
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$this->addFormModel($pFormModelLayoutDesign);
+
+        $pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
+        $pFormModelShortCodeForm = new FormModel();
+        $pFormModelShortCodeForm->setPageSlug($this->getPageSlug());
+        $pFormModelShortCodeForm->setGroupSlug(self::FORM_VIEW_CONTACT_FORM);
+        $pFormModelShortCodeForm->setLabel(__('Contact Form', 'onoffice'));
+        $pFormModelShortCodeForm->addInputModel($pInputModelShortCodeForm);
+        $this->addFormModel($pFormModelShortCodeForm);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
 		$pFormModelPictureTypes = new FormModel();

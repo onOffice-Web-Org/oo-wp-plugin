@@ -22,11 +22,13 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
@@ -129,6 +131,28 @@ abstract class FormModelBuilder
 
 		return $templates;
 	}
+
+    /**
+     *
+     * @return array
+     *
+     * @throws UnknownFormException
+     */
+
+    protected function readNameShortCodeForm()
+    {
+        $recordManagerReadForm = new RecordManagerReadForm();
+        $allRecordsForm = $recordManagerReadForm->getAllRecords();
+        $shortCodeForm = array();
+
+        foreach ($allRecordsForm as $value) {
+            $form_id = $value->form_id;
+            $form_name = __String::getNew($value->name);
+            $shortCodeForm[$form_id] = '[oo_form form=&quot;'
+                . esc_html($form_name) . '&quot;]';
+        }
+        return $shortCodeForm;
+    }
 
 
 	/**
