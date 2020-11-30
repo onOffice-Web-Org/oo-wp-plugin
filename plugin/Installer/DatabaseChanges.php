@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
 use function dbDelta;
@@ -137,6 +138,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
 			$dbversion = 16;
 		}
+
+        if ($dbversion == 16) {
+            dbDelta( $this->InstallDataQueryForms() );
+            dbDelta( $this->InstallDataQueryFormFieldConfig() );
+            $dbversion = 17;
+        }
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
@@ -255,6 +262,37 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+    /**
+     *
+     */
+
+    private function InstallDataQueryForms()
+    {
+        $prefix = $this->getPrefix();
+        $tableName = $prefix . "oo_plugin_forms";
+        $allTemplatePathsForm = $this->readTemplatePaths('form');
+        $template = '';
+        foreach ($allTemplatePathsForm as $TemplatePathsForm) {
+            if (basename($TemplatePathsForm) === 'defaultform.php') {
+                $template = $TemplatePathsForm;
+            }
+        }
+        $this->_pWPDB->insert(
+            $tableName,
+            array(
+                'form_id' => '1',
+                'name' => 'Default Form',
+                'form_type' => 'contact',
+                'template' => $template,
+                'country_active' => 1,
+                'zip_active' => 1,
+                'street_active' => 1,
+                'radius_active' => 1,
+                'geo_order' => 'street,zip,city,country,radius'
+            )
+        );
+    }
+
 
 	/**
 	 *
@@ -309,6 +347,76 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+    /**
+     *
+     */
+
+    private function InstallDataQueryFormFieldConfig()
+    {
+        $prefix = $this->getPrefix();
+        $tableName = $prefix . "oo_plugin_form_fieldconfig";
+
+        $rows = array(
+            array(
+                'form_fieldconfig_id' => 1,
+                'form_id' => 1,
+                'order' => 1,
+                'fieldname' => 'Vorname',
+                'module' => 'address'
+            ),
+            array(
+                'form_fieldconfig_id' => 2,
+                'form_id' => 1,
+                'order' => 2,
+                'fieldname' => 'Name',
+                'module' => 'address'
+            ),
+            array(
+                'form_fieldconfig_id' => 3,
+                'form_id' => 1,
+                'order' => 3,
+                'fieldname' => 'Strasse',
+                'module' => 'address'
+            ),
+            array(
+                'form_fieldconfig_id' => 4,
+                'form_id' => 1,
+                'order' => 4,
+                'fieldname' => 'Plz',
+                'module' => 'address'
+            ),
+            array(
+                'form_fieldconfig_id' => 5,
+                'form_id' => 1,
+                'order' => 5,
+                'fieldname' => 'Ort',
+                'module' => 'address'
+            ),
+            array(
+                'form_fieldconfig_id' => 6,
+                'form_id' => 1,
+                'order' => 6,
+                'fieldname' => 'Telefon1',
+                'module' => 'address'
+            ),
+            array(
+                'form_fieldconfig_id' => 7,
+                'form_id' => 1,
+                'order' => 7,
+                'fieldname' => 'Email',
+                'module' => 'address'
+            ),
+            array(
+                'form_fieldconfig_id' => 8,
+                'form_id' => 1,
+                'order' => 8,
+                'fieldname' => 'message'
+            )
+        );
+        foreach ($rows as $row) {
+            $this->_pWPDB->insert($tableName, $row);
+        }
+    }
 
 	/**
 	 *
@@ -539,4 +647,29 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		$this->_pWpOption->deleteOption('oo_plugin_db_version');
 	}
+
+    /**
+     *
+     * @param string $directory
+     * @param string $pattern
+     * @return array
+     *
+     */
+
+    protected function readTemplatePaths($directory, $pattern = '*')
+    {
+        $templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php')
+            . 'templates.dist/' . $directory . '/' . $pattern . '.php');
+        $templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR)
+            . 'onoffice-personalized/templates/' . $directory . '/' . $pattern . '.php');
+        $templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
+        $templates = array();
+
+        foreach ($templatesAll as $value) {
+            $value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
+            $templates[$value] = $value;
+        }
+
+        return $templates;
+    }
 }
