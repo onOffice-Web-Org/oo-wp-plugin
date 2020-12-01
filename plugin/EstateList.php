@@ -372,14 +372,14 @@ class EstateList
 		$currentRecord = current($this->_records);
 		next($this->_records);
 
+		if (false === $currentRecord) {
+			return false;
+		}
+
 		$this->_currentEstate['id'] = $currentRecord['id'];
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
-
-		if (false === $currentRecord) {
-			return false;
-		}
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
