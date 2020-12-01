@@ -302,7 +302,7 @@ class FormModelBuilderEstateDetailSettings
         $pInputModelShortCodeForm = $this->_pInputModelDetailViewFactory->create
         (InputModelOptionFactoryDetailView::INPUT_SHORT_CODE_FORM, $labelShortCodeForm);
         $pInputModelShortCodeForm->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-        $nameShortCodeForms = array('no-contact-form' => 'No Contact Form') + $this->readNameShortCodeForm();
+        $nameShortCodeForms = array('' => 'No Contact Form') + $this->readNameShortCodeForm();
         $pInputModelShortCodeForm->setValuesAvailable($nameShortCodeForms);
 
         $pInputModelShortCodeForm->setValue($this->_pDataDetailView->getShortCodeForm());
