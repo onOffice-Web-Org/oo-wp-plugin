@@ -28,7 +28,7 @@ Description: Your connection to onOffice: This plugin enables you to have quick 
 Version: 2.0
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
-Text Domain: onoffice
+Text Domain: onoffice-for-wp-websites
 Domain Path: /languages
 */
 
@@ -114,7 +114,7 @@ add_action('plugins_loaded', function() {
 
 // Check 'onoffice-personalized' Folder exists
 $onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
-if (file_exists($onofficePersonalizedFolder)) {
+if (is_dir($onofficePersonalizedFolder)) {
     load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
 }
 
