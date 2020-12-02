@@ -109,13 +109,13 @@ add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 
 add_action('plugins_loaded', function() {
 	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR).'/languages');
-    load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
+	load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
 });
 
 // Check 'onoffice-personalized' Folder exists
 $onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
 if (is_dir($onofficePersonalizedFolder)) {
-    load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
+	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
 }
 
 // "Settings" link in plugins list
