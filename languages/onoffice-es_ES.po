@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice direct 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2020-07-20T16:29:57+02:00\n"
-"PO-Revision-Date: 2020-07-20 16:48+0200\n"
+"POT-Creation-Date: 2020-12-02T16:12:57+01:00\n"
+"PO-Revision-Date: 2020-12-02 18:07+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -45,850 +45,6 @@ msgstr "onOffice GmbH"
 #. Author URI of the plugin
 msgid "https://en.onoffice.com/"
 msgstr "https://es.onoffice.com/"
-
-#: plugin/API/APIClientCredentialsException.php:48
-msgid "Please configure your onOffice API credentials first!"
-msgstr "Por favor, configure primero sus credenciales de la API de onOffice!"
-
-#: plugin/Controller/AdminViewController.php:148
-#: plugin/Gui/AdminPageAddressList.php:78 plugin/Gui/AdminPageBase.php:88
-#: plugin/Gui/AdminPageEstateDetail.php:204
-#: plugin/Gui/AdminPageEstateList.php:71
-#: plugin/Gui/AdminPageEstateUnitList.php:66
-#: plugin/Gui/AdminPageFormList.php:177
-msgid "onOffice"
-msgstr "onOffice"
-
-#: plugin/Controller/AdminViewController.php:154
-#: plugin/Gui/AdminPageAddressList.php:59
-msgid "Addresses"
-msgstr "Direcciones"
-
-#: plugin/Controller/AdminViewController.php:160
-#: plugin/Controller/AdminViewController.php:161
-msgid "Estates"
-msgstr "Propiedades"
-
-#: plugin/Controller/AdminViewController.php:172
-#: plugin/Gui/AdminPageFormList.php:93
-msgid "Forms"
-msgstr "Formularios"
-
-#: plugin/Controller/AdminViewController.php:186
-msgid "Modules"
-msgstr "Módulos"
-
-#: plugin/Controller/AdminViewController.php:210
-#: plugin/Controller/AdminViewController.php:211
-#: plugin/Controller/AdminViewController.php:373
-msgid "Settings"
-msgstr "Ajustes"
-
-#: plugin/Controller/AdminViewController.php:391
-msgid "API token and secret"
-msgstr "Token de la API y secreto"
-
-#. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:394
-msgid ""
-"It looks like you did not enter any valid API credentials. Please consider "
-"reviewing your %s."
-msgstr ""
-"Parece que no ha introducido ninguna credencial de API válida. Por favor, "
-"considere la posibilidad de revisar su %s..."
-
-#. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
-#: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
-msgid "%2$s (%3$s) in %4$s - %5$s"
-msgstr "%1$s (%2$s) en %3$s - %4$s"
-
-#: plugin/Controller/SortList/SortListTypes.php:56
-#: tests/TestClassSortListTypes.php:60
-msgid "lowest first"
-msgstr "primero el más bajo"
-
-#: plugin/Controller/SortList/SortListTypes.php:57
-#: tests/TestClassSortListTypes.php:50 tests/TestClassSortListTypes.php:61
-msgid "highest first"
-msgstr "primero el más alto"
-
-#: plugin/Controller/SortList/SortListTypes.php:60
-#: tests/TestClassSortListTypes.php:49 tests/TestClassSortListTypes.php:64
-msgid "ascending"
-msgstr "Ascendente"
-
-#: plugin/Controller/SortList/SortListTypes.php:61
-#: tests/TestClassSortListTypes.php:65
-msgid "descending"
-msgstr "Descendente"
-
-#: plugin/Field/Collection/FieldCategoryToFieldConverterSearchCriteriaGeoBackend.php:81
-msgid "Geo Position"
-msgstr "Posición geográfica"
-
-#: plugin/Field/Collection/FieldRowConverterSearchCriteria.php:68
-msgid "Search Criteria"
-msgstr "Criterios de búsqueda"
-
-#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:156
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:142
-msgid "Form Specific Fields"
-msgstr "Campos específicos de formulario"
-
-#: plugin/Field/FieldModuleCollectionDecoratorGeoPositionBackend.php:70
-msgid "Geo Range Search"
-msgstr "Búsqueda por rango geográfico"
-
-#: plugin/Form.php:98
-msgid "Submit"
-msgstr "Enviar"
-
-#. translators: %1$s is the estate title, %5$s is the estate ID
-#: plugin/Form.php:571
-msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
-msgstr ""
-
-#. translators: %s will be replaced with a number.
-#: plugin/Gui/AdminNoticeHandlerListViewDeletion.php:43
-msgid "%s list view has been deleted."
-msgid_plural "%s list views have been deleted."
-msgstr[0] "%s se ha eliminado la vista de lista."
-msgstr[1] "%s se han eliminado las vistas de lista."
-
-#: plugin/Gui/AdminNoticeHandlerListViewDeletion.php:47
-msgid "No list view was deleted."
-msgstr "No se ha eliminado ninguna vista de lista."
-
-#. translators: %s will be replaced with a number.
-#: plugin/Gui/AdminNoticeHandlerListViewDeletion.php:63
-msgid "%s form has been deleted."
-msgid_plural "%s forms have been deleted."
-msgstr[0] "%s ha sido borrado."
-msgstr[1] "%s se han borrado los formularios."
-
-#: plugin/Gui/AdminNoticeHandlerListViewDeletion.php:67
-msgid "No form was deleted."
-msgstr "No se ha borrado ningún formulario."
-
-#: plugin/Gui/AdminPageAddressList.php:87 plugin/Gui/AdminPageEstateList.php:83
-#: plugin/Gui/AdminPageEstateUnitList.php:78
-#: plugin/Gui/AdminPageFormList.php:195
-msgid "Add New"
-msgstr "Añadir nuevo"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:63
-msgid "Edit Address List"
-msgstr "Editar lista de direcciones"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:100
-#: plugin/Gui/AdminPageEstateListSettings.php:86
-#: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:353
-msgid "choose name"
-msgstr "escoja un nombre"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:116
-#: plugin/Gui/AdminPageEstateDetail.php:277
-#: plugin/Gui/AdminPageEstateListSettings.php:125
-#: plugin/Gui/AdminPageEstateUnitSettings.php:89
-#: plugin/Gui/AdminPageFormSettingsBase.php:370
-msgid "Layout & Design"
-msgstr "Diseño y diagramación"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:136
-msgid "Filter & Records"
-msgstr "Filtro y registros"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:155
-#: plugin/Gui/AdminPageEstateDetail.php:285
-#: plugin/Gui/AdminPageEstateListSettings.php:133
-#: plugin/Gui/AdminPageEstateUnitSettings.php:97
-msgid "Photo Types"
-msgstr "Tipos de fotos"
-
-#: plugin/Gui/AdminPageAddressListSettings.php:306
-msgid "The address list was saved."
-msgstr "Se ha grabado la lista de direcciones."
-
-#: plugin/Gui/AdminPageAddressListSettings.php:307
-msgid ""
-"There was a problem saving the list. Please make sure the name of the list "
-"is unique."
-msgstr ""
-"Hubo un problema para guardar la lista. Por favor, asegúrese de que el "
-"nombre de la lista sea único."
-
-#: plugin/Gui/AdminPageAjax.php:76
-msgid "login credentials"
-msgstr "credenciales de ingreso"
-
-#. translators: %s will be replaced with the link to the login credentials page.
-#: plugin/Gui/AdminPageAjax.php:79
-msgid ""
-"It looks like you did not enter any valid API credentials. Please go back "
-"and review your %s."
-msgstr ""
-"Parece que no ha introducido ninguna credencial de API válida. Por favor, "
-"regrese y revise su %s..."
-
-#: plugin/Gui/AdminPageApiSettings.php:65
-msgid "API token"
-msgstr "Token de la API"
-
-#: plugin/Gui/AdminPageApiSettings.php:66
-msgid "API secret"
-msgstr "Secreto de la API"
-
-#: plugin/Gui/AdminPageApiSettings.php:83
-msgid "API settings"
-msgstr "Configuración de la API"
-
-#: plugin/Gui/AdminPageApiSettings.php:95
-msgid "Site Key"
-msgstr "Clave de centro"
-
-#: plugin/Gui/AdminPageApiSettings.php:96
-msgid "Secret Key"
-msgstr "Clave Secreta"
-
-#: plugin/Gui/AdminPageApiSettings.php:117
-msgid "Google reCAPTCHA"
-msgstr "Google reCAPTCHA"
-
-#: plugin/Gui/AdminPageApiSettings.php:132
-#: plugin/Gui/AdminPageApiSettings.php:142
-#, fuzzy
-#| msgid "Google Maps"
-msgid "Google Maps Key"
-msgstr "Google Maps"
-
-#: plugin/Gui/AdminPageApiSettings.php:169
-msgid "The keys are OK."
-msgstr "Las llaves están bien."
-
-#: plugin/Gui/AdminPageApiSettings.php:170
-msgid "There was an error:"
-msgstr "Hubo un error:"
-
-#: plugin/Gui/AdminPageApiSettings.php:171
-msgid "The secret parameter is missing."
-msgstr "Falta el parámetro secreto."
-
-#: plugin/Gui/AdminPageApiSettings.php:172
-msgid "The secret parameter is invalid or malformed."
-msgstr "El parámetro secreto es inválido o malformado."
-
-#: plugin/Gui/AdminPageApiSettings.php:173
-msgid "The response parameter is missing."
-msgstr "Falta el parámetro de respuesta."
-
-#: plugin/Gui/AdminPageApiSettings.php:174
-msgid "The response parameter is invalid or malformed."
-msgstr "El parámetro de respuesta es inválido o malformado."
-
-#: plugin/Gui/AdminPageApiSettings.php:175
-msgid "The request is invalid or malformed."
-msgstr "La solicitud es inválida o malformada."
-
-#: plugin/Gui/AdminPageApiSettings.php:186
-msgid ""
-"In order to use Google reCAPTCHA, you need to provide your keys. You're free "
-"to enable it in the form settings for later use."
-msgstr ""
-"Para poder utilizar Google reCAPTCHA, necesita proporcionar sus claves. "
-"Puede habilitarlo en la configuración del formulario para su uso posterior."
-
-#: plugin/Gui/AdminPageApiSettings.php:224
-msgid "The cache was cleaned."
-msgstr "Se ha limpiado la caché."
-
-#: plugin/Gui/AdminPageEstate.php:82 plugin/Gui/AdminPageEstateList.php:78
-msgid "List Views"
-msgstr "Vistas de lista"
-
-#: plugin/Gui/AdminPageEstate.php:83 plugin/Gui/AdminPageEstateDetail.php:206
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:92
-msgid "Detail View"
-msgstr "Vista detallada"
-
-#: plugin/Gui/AdminPageEstate.php:84
-msgid "Unit Lists"
-msgstr "Listas de unidades"
-
-#: plugin/Gui/AdminPageEstateDetail.php:121
-#: plugin/Gui/AdminPageEstateListSettings.php:67
-msgid "Edit List View"
-msgstr "Editar vista de lista"
-
-#. translators: %s will be replaced with a link to the appropriate page.
-#: plugin/Gui/AdminPageEstateDetail.php:131
-msgid "Detail view in use on page %s"
-msgstr "Vista detallada en uso en la página %s"
-
-#: plugin/Gui/AdminPageEstateDetail.php:133
-msgid "Edit Page"
-msgstr "Editar página"
-
-#: plugin/Gui/AdminPageEstateDetail.php:135
-msgid ""
-"Detail view is not in use yet. Insert this code on a page to get the detail "
-"view there:"
-msgstr ""
-"La vista detallada todavía no está en uso. Inserte este código en una página "
-"para obtener la vista detallada:"
-
-#: plugin/Gui/AdminPageEstateDetail.php:161
-msgid "Contact Person Fields"
-msgstr "Campos de la persona de contacto"
-
-#: plugin/Gui/AdminPageEstateDetail.php:176
-msgid "Real Estate Fields"
-msgstr "Campos de datos de bienes raíces"
-
-#: plugin/Gui/AdminPageEstateDetail.php:294
-msgid "Additional Media"
-msgstr "Medios adicionales"
-
-#: plugin/Gui/AdminPageEstateDetail.php:311
-msgid "Similar Estates"
-msgstr "Sucesiones similares"
-
-#: plugin/Gui/AdminPageEstateDetail.php:432
-msgid "The detail view has been saved."
-msgstr "Se ha grabado la vista detallada."
-
-#: plugin/Gui/AdminPageEstateDetail.php:433
-msgid "There was a problem saving the detail view."
-msgstr "Ha habido un problema para guardar la vista detallada."
-
-#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:141
-msgid "Are you sure you want to delete the selected items?"
-msgstr "¿Está seguro de que desea borrar las posiciones seleccionadas?"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:106
-msgid "Filters & Records"
-msgstr "Filtros y registros"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:141
-#: plugin/Gui/AdminPageEstateUnitSettings.php:105
-msgid "Downloadable Documents"
-msgstr "Documentos descargables"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:150
-#: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:170
-msgid "Geo Fields"
-msgstr "Campos geográficos"
-
-#: plugin/Gui/AdminPageEstateListSettings.php:156
-msgid ""
-"At least the following fields must be active: country, radius and city or "
-"postcode."
-msgstr ""
-
-#: plugin/Gui/AdminPageEstateListSettingsBase.php:159
-msgid "The view has been saved."
-msgstr "La vista se ha guardado."
-
-#: plugin/Gui/AdminPageEstateListSettingsBase.php:160
-msgid ""
-"There was a problem saving the view. Please make sure the name of the view "
-"is unique, even across all estate list types."
-msgstr ""
-"Hubo un problema para salvar la vista. Por favor, asegúrese de que el nombre "
-"de la vista es único, incluso en todos los tipos de listas de propiedades."
-
-#: plugin/Gui/AdminPageEstateUnitList.php:73
-msgid "Units Lists"
-msgstr "Listas de Unidades"
-
-#: plugin/Gui/AdminPageEstateUnitSettings.php:52
-msgid "Edit Units View"
-msgstr "Vista Editar unidades"
-
-#: plugin/Gui/AdminPageEstateUnitSettings.php:80
-msgid "Records"
-msgstr "Registros"
-
-#: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
-#: plugin/Gui/AdminPageFormSettingsContact.php:96
-msgid "Form Specific Options"
-msgstr "Opciones específicas del formulario"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:112
-msgid "Edit Form"
-msgstr "Editar formulario"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:259
-msgid "The Form was saved."
-msgstr "El formulario fue guardado."
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:260
-msgid ""
-"There was a problem saving the form. Please make sure the name of the form "
-"is unique."
-msgstr ""
-"Hubo un problema al guardar el formulario. Por favor, asegúrese de que el "
-"nombre del formulario sea único."
-
-#. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:269
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:469
-msgid "Module: %s"
-msgstr "Módulo %s"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:270
-msgid "Edit Values"
-msgstr "Editar valores"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:272
-msgid "Add Language"
-msgstr "Añade el idioma"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:273
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:373
-#, fuzzy
-#| msgid "choose name"
-msgid "Choose Language"
-msgstr "escoja un nombre"
-
-#. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:275
-msgid "Default Value: %s"
-msgstr "Valor por defecto: %s"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:276
-#, fuzzy
-#| msgid "Default Value for Radius"
-msgid "Default Value From:"
-msgstr "Valor de propuesta para el radio"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:277
-#, fuzzy
-#| msgid "Default Value for Radius"
-msgid "Default Value Up To:"
-msgstr "Valor de propuesta para el radio"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:308
-#: plugin/Gui/Table/EstateListTable.php:172 templates.dist/fields.php:67
-msgid "No"
-msgstr "No"
-
-#: plugin/Gui/AdminPageFormSettingsBase.php:309
-#: plugin/Gui/Table/EstateListTable.php:172 templates.dist/fields.php:64
-msgid "Yes"
-msgstr "Sí"
-
-#: plugin/Gui/AdminPageFormSettingsInterestOwner.php:92
-msgid "Please provide an Email address!"
-msgstr "Por favor proporcione una dirección de correo electrónico!"
-
-#: plugin/Gui/AdminPageModules.php:66
-msgid "Enable Watchlist"
-msgstr "Activar Watchlist"
-
-#: plugin/Gui/AdminPageModules.php:67
-msgid "Expression used"
-msgstr "Expresión utilizada"
-
-#: plugin/Gui/AdminPageModules.php:78 plugin/Gui/AdminPageModules.php:87
-msgid "Watchlist"
-msgstr "Lista de observación"
-
-#: plugin/Gui/AdminPageModules.php:79
-msgid "Favorise"
-msgstr "Favorecer"
-
-#: plugin/Gui/AdminPageModules.php:102
-msgid "Map Provider"
-msgstr "Proveedor de mapas"
-
-#: plugin/Gui/AdminPageModules.php:109
-msgid "OpenStreetMap"
-msgstr "Mapa de OpenStreet"
-
-#: plugin/Gui/AdminPageModules.php:110
-msgid "Google Maps"
-msgstr "Google Maps"
-
-#: plugin/Gui/AdminPageModules.php:117
-msgid "Maps"
-msgstr "Mapas"
-
-#: plugin/Gui/AdminPageSettingsBase.php:177
-msgid "Fields"
-msgstr "Campos"
-
-#: plugin/Gui/AdminPageSettingsBase.php:405
-msgid "Fields Configuration"
-msgstr "Configuración de campos"
-
-#: plugin/Gui/Table/AddressListTable.php:103
-#: plugin/Gui/Table/AddressListTable.php:146
-#: plugin/Gui/Table/EstateListTable.php:131
-#: plugin/Gui/Table/EstateListTable.php:211
-#: plugin/Gui/Table/EstateUnitsTable.php:62
-#: plugin/Gui/Table/EstateUnitsTable.php:114
-msgid "Name of View"
-msgstr "Nombre de la vista"
-
-#: plugin/Gui/Table/AddressListTable.php:104
-#: plugin/Gui/Table/AddressListTable.php:147
-#: plugin/Gui/Table/EstateListTable.php:135
-#: plugin/Gui/Table/EstateListTable.php:215
-#: plugin/Gui/Table/EstateUnitsTable.php:63
-#: plugin/Gui/Table/EstateUnitsTable.php:116
-#: plugin/Gui/Table/FormsTable.php:126 plugin/Gui/Table/FormsTable.php:151
-msgid "Shortcode"
-msgstr "Código abreviado"
-
-#. translators: %s is the name of the list view.
-#: plugin/Gui/Table/AddressListTable.php:185
-#: plugin/Gui/Table/EstateListTable.php:273
-msgid ""
-"You are about to delete the listview '%s'\n"
-"  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-
-#: plugin/Gui/Table/EstateListTable.php:132
-#: plugin/Gui/Table/EstateListTable.php:212
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:125
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:135
-msgid "Filter"
-msgstr "Filtro"
-
-#: plugin/Gui/Table/EstateListTable.php:133
-#: plugin/Gui/Table/EstateListTable.php:213
-msgid "Show Status"
-msgstr "Mostrar Estado"
-
-#: plugin/Gui/Table/EstateListTable.php:134
-#: plugin/Gui/Table/EstateListTable.php:214
-#: plugin/Gui/Table/EstateUnitsTable.php:115
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:295
-msgid "Type of List"
-msgstr "Tipo de lista"
-
-#: plugin/Gui/Table/EstateListTable.php:191
-msgid "(Needs valid API credentials)"
-msgstr "(Necesita credenciales de API válidas)"
-
-#. translators: %s will be replaced with a number.
-#: plugin/Gui/Table/EstateListTable.php:194
-msgid "(Unknown Filter (ID: %s))"
-msgstr "(Filtro desconocido (ID: %s))"
-
-#. translators: %s is the name of the unit view.
-#: plugin/Gui/Table/EstateUnitsTable.php:165
-msgid ""
-"You are about to delete the unit view '%s'\n"
-"  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-
-#: plugin/Gui/Table/FormsTable.php:124 plugin/Gui/Table/FormsTable.php:149
-msgid "Name of Form"
-msgstr "Nombre del formulario"
-
-#: plugin/Gui/Table/FormsTable.php:125 plugin/Gui/Table/FormsTable.php:150
-msgid "Type of Form"
-msgstr "Tipo de formulario"
-
-#. translators: %s is the name of the form.
-#: plugin/Gui/Table/FormsTable.php:261
-msgid ""
-"You are about to delete the form '%s'\n"
-"  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:83
-msgid "View Name"
-msgstr "Nombre de la vista"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:104
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:437
-msgid "Sort by"
-msgstr "Ordenar por"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:152
-msgid "Records per Page"
-msgstr "Registros por página"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:170
-msgid "Sort order"
-msgstr "Orden de clasificación"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:175
-msgid "Ascending"
-msgstr "Ascendente"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:176
-msgid "Descending"
-msgstr "Descendente"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:262
-msgid "Template"
-msgstr "Plantilla"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119
-msgid "List View"
-msgstr "Vista de lista"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:148
-msgid "Passport Photo"
-msgstr "Foto de Pasaporte"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:190
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:160
-msgid "Filterable"
-msgstr "Filtrable"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:211
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:202
-msgid "Hidden"
-msgstr "Oculto"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:181
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
-msgid "Reduce values according to selected filter"
-msgstr "Reducir los valores según el filtro seleccionado"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:314
-msgid "Show Estate Status"
-msgstr "Mostrar el estado del patrimonio"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:334
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:108
-msgid "Random Order"
-msgstr "Orden aleatorio"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:381
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:154
-msgid "PDF-Expose"
-msgstr "PDF-Expose"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:403
-msgid "Default"
-msgstr "Predeterminado"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:404
-msgid "Reference Estates"
-msgstr "Fincas de referencia"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:405
-msgid "Favorites List"
-msgstr "Lista de favoritos"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:418
-msgid "Sort by User Selection"
-msgstr "Ordenar por selección de usuario"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:461
-msgid "Standard Sort"
-msgstr "Ordenar por defecto"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:503
-msgid "lowest First / highest First"
-msgstr "Primero más bajo / primero más alto"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:504
-msgid "ascending / descending"
-msgstr "ascendente / descendente"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:507
-msgid "Formulation of sorting directions"
-msgstr "Formulación de direcciones de clasificación"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:92
-msgid "Unit List"
-msgstr "Lista de unidades"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:203
-msgid "Form"
-msgstr "Formulario"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:215
-msgid "Form Name"
-msgstr "Nombre del formulario"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:234
-msgid "Type of Form: "
-msgstr "Tipo de formulario: "
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:253
-msgid ", Embed Code: "
-msgstr "Código de incrustación: "
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:265
-msgid "Recipient's E-Mail Address"
-msgstr "Dirección de correo electrónico del destinatario"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:272
-msgid "john.doe@example.com"
-msgstr "john.doe@example.com"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:286
-msgid "(won't work until set up globally)"
-msgstr "(no funcionará hasta que se establezca globalmente)"
-
-#. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:292
-msgid "Requires Captcha %s"
-msgstr "Requiere Captcha %s"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:305
-msgid "Result Limit"
-msgstr "Resultado Límite"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:323
-msgid "Required"
-msgstr "Requerido"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:368
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:382
-msgid "Add language"
-msgstr ""
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:441
-msgid "Module"
-msgstr "Módulo"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:108
-msgid "Show Similar Estates"
-msgstr "Mostrar Sucesiones Similares"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:175
-msgid "Movie Links"
-msgstr "Enlaces de películas"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:181
-msgid "Disabled"
-msgstr "Discapacitado"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
-msgid "Link"
-msgstr "Enlace"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:183
-msgid "Player"
-msgstr "Jugador"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:302
-msgid "Same Kind of Estate"
-msgstr "El mismo tipo de patrimonio"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:325
-msgid "Same Marketing Method"
-msgstr "El mismo método de comercialización"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:348
-msgid "Same Postal Code"
-msgstr "Mismo Código Postal"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:371
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
-msgid "Radius"
-msgstr "Radio"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:394
-msgid "Amount of Estates"
-msgstr "Cantidad de Sucesiones"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:63
-msgid "Set Estate Context as Heading"
-msgstr ""
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:65
-msgid "Newsletter"
-msgstr "Boletín de noticias"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:67
-msgid "Check for Duplicates"
-msgstr "Comprobar si hay duplicados"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:69
-msgid "Create Address"
-msgstr "Crear dirección"
-
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:71
-msgid "Subject (optional)"
-msgstr "Tema (opcional)"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderDefaultValue.php:81
-msgid "Default Value"
-msgstr "Valor por defecto"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:135
-msgid "Default Value for Radius"
-msgstr "Valor de propuesta para el radio"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:139
-#: templates.dist/fields.php:61
-msgid "Not Specified"
-msgstr "No especificado"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:182
-msgid "Order"
-msgstr ""
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:241
-msgid "Country"
-msgstr "País"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:242
-msgid "Postal Code"
-msgstr "Postal code"
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:243
-msgid "City"
-msgstr ""
-
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:244
-msgid "Street"
-msgstr "Calle"
-
-#: plugin/Record/RecordManagerReadListViewAddress.php:93
-msgid "unknown address list name"
-msgstr "nombre desconocido de la lista de direcciones"
-
-#: plugin/Renderer/InputFieldCheckboxButtonRenderer.php:67
-msgid "Add to List >>"
-msgstr "Agregar a la lista >&gt"
-
-#: plugin/Renderer/InputFieldComplexSortableDetailListContentDefault.php:75
-msgid "Key of Field:"
-msgstr "Clave de Campo:"
-
-#: plugin/Renderer/InputFieldComplexSortableDetailListContentDefault.php:80
-msgid "Delete"
-msgstr "Borrar"
-
-#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:127
-#: plugin/Renderer/InputFieldComplexSortableListRenderer.php:77
-msgid "Disabled in onOffice"
-msgstr "Desactivado en onOffice"
-
-#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:139
-msgid "Edit"
-msgstr "Tratar"
-
-#: plugin/Renderer/InputModelRenderer.php:176
-msgid "(Remains unchanged)"
-msgstr "(Permanece sin cambios)"
-
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:84
-msgid "0 matches"
-msgstr "0 coincidencias"
-
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:85
-msgid "Show exact match"
-msgstr "Mostrar coincidencia exacta"
-
-#. translators: %s is the amount of results
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:87
-msgid "Show %s matches"
-msgstr "Muestran %s coincidencias"
 
 #: plugin/Translation/FormTranslation.php:55
 msgctxt "forms"
@@ -946,51 +102,6 @@ msgid_plural "Search Criteria"
 msgstr[0] "Criterio de búsqueda"
 msgstr[1] "Criterios de búsqueda"
 
-#: plugin/Types/EstateStatusLabel.php:104
-msgid "rented"
-msgstr "alquila"
-
-#: plugin/Types/EstateStatusLabel.php:106
-msgid "sold"
-msgstr "vendido"
-
-#: plugin/Types/ImageTypes.php:61
-msgid "Cover Photo"
-msgstr "Foto de la cubierta"
-
-#: plugin/Types/ImageTypes.php:62
-msgid "Photo"
-msgstr "Foto"
-
-#: plugin/Types/ImageTypes.php:63
-msgid "Photo (big)"
-msgstr ""
-
-#: plugin/Types/ImageTypes.php:64
-msgid "Panorama"
-msgstr ""
-
-#: plugin/Types/ImageTypes.php:65
-msgid "Ground Plan"
-msgstr ""
-
-#: plugin/Types/ImageTypes.php:66
-msgid "Location Map"
-msgstr "Mapa de ubicación"
-
-#: plugin/Types/ImageTypes.php:67
-msgid "Energy-Pass Range"
-msgstr ""
-
-#: plugin/Utility/Logger.php:77
-msgid "An error occured:"
-msgstr "Se ha producido un error:"
-
-#. translators: %s is the path of a page.
-#: plugin/WP/UnknownPageException.php:45
-msgid "Bad path \"%s\". The Page was not found."
-msgstr ""
-
 #: templates.dist/address/default.php:39
 msgid "Picture: "
 msgstr ""
@@ -1043,14 +154,12 @@ msgid "Other Information"
 msgstr "Mas informacíones"
 
 #: templates.dist/estate/default_detail.php:112
-#: tests/resources/templates/default_detail.php:42
 #, fuzzy
 #| msgid "Contact person: "
 msgid "Contact person"
 msgstr "Persona de contacto: "
 
 #: templates.dist/estate/default_detail.php:129
-#: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documentos"
 
@@ -1074,7 +183,7 @@ msgstr "Teléfono:"
 msgid "Fax:"
 msgstr "Fax:"
 
-#: templates.dist/estate/default_units.php:45
+#: templates.dist/estate/default_units.php:46
 msgid "E-Mail:"
 msgstr "E-Mail:"
 
@@ -1089,6 +198,18 @@ msgstr "Más propiedades como esta"
 #: templates.dist/fields.php:21
 msgid "Choose country"
 msgstr "Elija un país"
+
+#: templates.dist/fields.php:61
+msgid "Not Specified"
+msgstr "No especificado"
+
+#: templates.dist/fields.php:64
+msgid "Yes"
+msgstr "Sí"
+
+#: templates.dist/fields.php:67
+msgid "No"
+msgstr "No"
 
 #: templates.dist/fields.php:77 templates.dist/fields.php:157
 msgid "Edit values"
@@ -1199,6 +320,565 @@ msgstr "Siguiente"
 #: templates.dist/form/ownerleadgeneratorform.php:133
 msgid "Open the Form"
 msgstr "Abrir el formulario"
+
+#~ msgid "Please configure your onOffice API credentials first!"
+#~ msgstr ""
+#~ "Por favor, configure primero sus credenciales de la API de onOffice!"
+
+#~ msgid "onOffice"
+#~ msgstr "onOffice"
+
+#~ msgid "Addresses"
+#~ msgstr "Direcciones"
+
+#~ msgid "Estates"
+#~ msgstr "Propiedades"
+
+#~ msgid "Forms"
+#~ msgstr "Formularios"
+
+#~ msgid "Modules"
+#~ msgstr "Módulos"
+
+#~ msgid "Settings"
+#~ msgstr "Ajustes"
+
+#~ msgid "API token and secret"
+#~ msgstr "Token de la API y secreto"
+
+#~ msgid ""
+#~ "It looks like you did not enter any valid API credentials. Please "
+#~ "consider reviewing your %s."
+#~ msgstr ""
+#~ "Parece que no ha introducido ninguna credencial de API válida. Por favor, "
+#~ "considere la posibilidad de revisar su %s..."
+
+#~ msgid "%2$s (%3$s) in %4$s - %5$s"
+#~ msgstr "%1$s (%2$s) en %3$s - %4$s"
+
+#~ msgid "lowest first"
+#~ msgstr "primero el más bajo"
+
+#~ msgid "highest first"
+#~ msgstr "primero el más alto"
+
+#~ msgid "ascending"
+#~ msgstr "Ascendente"
+
+#~ msgid "descending"
+#~ msgstr "Descendente"
+
+#~ msgid "Geo Position"
+#~ msgstr "Posición geográfica"
+
+#~ msgid "Search Criteria"
+#~ msgstr "Criterios de búsqueda"
+
+#~ msgid "Form Specific Fields"
+#~ msgstr "Campos específicos de formulario"
+
+#~ msgid "Geo Range Search"
+#~ msgstr "Búsqueda por rango geográfico"
+
+#~ msgid "Submit"
+#~ msgstr "Enviar"
+
+#~ msgid "%s list view has been deleted."
+#~ msgid_plural "%s list views have been deleted."
+#~ msgstr[0] "%s se ha eliminado la vista de lista."
+#~ msgstr[1] "%s se han eliminado las vistas de lista."
+
+#~ msgid "No list view was deleted."
+#~ msgstr "No se ha eliminado ninguna vista de lista."
+
+#~ msgid "%s form has been deleted."
+#~ msgid_plural "%s forms have been deleted."
+#~ msgstr[0] "%s ha sido borrado."
+#~ msgstr[1] "%s se han borrado los formularios."
+
+#~ msgid "No form was deleted."
+#~ msgstr "No se ha borrado ningún formulario."
+
+#~ msgid "Add New"
+#~ msgstr "Añadir nuevo"
+
+#~ msgid "Edit Address List"
+#~ msgstr "Editar lista de direcciones"
+
+#~ msgid "choose name"
+#~ msgstr "escoja un nombre"
+
+#~ msgid "Layout & Design"
+#~ msgstr "Diseño y diagramación"
+
+#~ msgid "Filter & Records"
+#~ msgstr "Filtro y registros"
+
+#~ msgid "Photo Types"
+#~ msgstr "Tipos de fotos"
+
+#~ msgid "The address list was saved."
+#~ msgstr "Se ha grabado la lista de direcciones."
+
+#~ msgid ""
+#~ "There was a problem saving the list. Please make sure the name of the "
+#~ "list is unique."
+#~ msgstr ""
+#~ "Hubo un problema para guardar la lista. Por favor, asegúrese de que el "
+#~ "nombre de la lista sea único."
+
+#~ msgid "login credentials"
+#~ msgstr "credenciales de ingreso"
+
+#~ msgid ""
+#~ "It looks like you did not enter any valid API credentials. Please go back "
+#~ "and review your %s."
+#~ msgstr ""
+#~ "Parece que no ha introducido ninguna credencial de API válida. Por favor, "
+#~ "regrese y revise su %s..."
+
+#~ msgid "API token"
+#~ msgstr "Token de la API"
+
+#~ msgid "API secret"
+#~ msgstr "Secreto de la API"
+
+#~ msgid "API settings"
+#~ msgstr "Configuración de la API"
+
+#~ msgid "Site Key"
+#~ msgstr "Clave de centro"
+
+#~ msgid "Secret Key"
+#~ msgstr "Clave Secreta"
+
+#~ msgid "Google reCAPTCHA"
+#~ msgstr "Google reCAPTCHA"
+
+#, fuzzy
+#~| msgid "Google Maps"
+#~ msgid "Google Maps Key"
+#~ msgstr "Google Maps"
+
+#~ msgid "The keys are OK."
+#~ msgstr "Las llaves están bien."
+
+#~ msgid "There was an error:"
+#~ msgstr "Hubo un error:"
+
+#~ msgid "The secret parameter is missing."
+#~ msgstr "Falta el parámetro secreto."
+
+#~ msgid "The secret parameter is invalid or malformed."
+#~ msgstr "El parámetro secreto es inválido o malformado."
+
+#~ msgid "The response parameter is missing."
+#~ msgstr "Falta el parámetro de respuesta."
+
+#~ msgid "The response parameter is invalid or malformed."
+#~ msgstr "El parámetro de respuesta es inválido o malformado."
+
+#~ msgid "The request is invalid or malformed."
+#~ msgstr "La solicitud es inválida o malformada."
+
+#~ msgid ""
+#~ "In order to use Google reCAPTCHA, you need to provide your keys. You're "
+#~ "free to enable it in the form settings for later use."
+#~ msgstr ""
+#~ "Para poder utilizar Google reCAPTCHA, necesita proporcionar sus claves. "
+#~ "Puede habilitarlo en la configuración del formulario para su uso "
+#~ "posterior."
+
+#~ msgid "The cache was cleaned."
+#~ msgstr "Se ha limpiado la caché."
+
+#~ msgid "List Views"
+#~ msgstr "Vistas de lista"
+
+#~ msgid "Detail View"
+#~ msgstr "Vista detallada"
+
+#~ msgid "Unit Lists"
+#~ msgstr "Listas de unidades"
+
+#~ msgid "Edit List View"
+#~ msgstr "Editar vista de lista"
+
+#~ msgid "Detail view in use on page %s"
+#~ msgstr "Vista detallada en uso en la página %s"
+
+#~ msgid "Edit Page"
+#~ msgstr "Editar página"
+
+#~ msgid ""
+#~ "Detail view is not in use yet. Insert this code on a page to get the "
+#~ "detail view there:"
+#~ msgstr ""
+#~ "La vista detallada todavía no está en uso. Inserte este código en una "
+#~ "página para obtener la vista detallada:"
+
+#~ msgid "Contact Person Fields"
+#~ msgstr "Campos de la persona de contacto"
+
+#~ msgid "Real Estate Fields"
+#~ msgstr "Campos de datos de bienes raíces"
+
+#~ msgid "Additional Media"
+#~ msgstr "Medios adicionales"
+
+#~ msgid "Similar Estates"
+#~ msgstr "Sucesiones similares"
+
+#~ msgid "The detail view has been saved."
+#~ msgstr "Se ha grabado la vista detallada."
+
+#~ msgid "There was a problem saving the detail view."
+#~ msgstr "Ha habido un problema para guardar la vista detallada."
+
+#~ msgid "Are you sure you want to delete the selected items?"
+#~ msgstr "¿Está seguro de que desea borrar las posiciones seleccionadas?"
+
+#~ msgid "Filters & Records"
+#~ msgstr "Filtros y registros"
+
+#~ msgid "Downloadable Documents"
+#~ msgstr "Documentos descargables"
+
+#~ msgid "Geo Fields"
+#~ msgstr "Campos geográficos"
+
+#~ msgid "The view has been saved."
+#~ msgstr "La vista se ha guardado."
+
+#~ msgid ""
+#~ "There was a problem saving the view. Please make sure the name of the "
+#~ "view is unique, even across all estate list types."
+#~ msgstr ""
+#~ "Hubo un problema para salvar la vista. Por favor, asegúrese de que el "
+#~ "nombre de la vista es único, incluso en todos los tipos de listas de "
+#~ "propiedades."
+
+#~ msgid "Units Lists"
+#~ msgstr "Listas de Unidades"
+
+#~ msgid "Edit Units View"
+#~ msgstr "Vista Editar unidades"
+
+#~ msgid "Records"
+#~ msgstr "Registros"
+
+#~ msgid "Form Specific Options"
+#~ msgstr "Opciones específicas del formulario"
+
+#~ msgid "Edit Form"
+#~ msgstr "Editar formulario"
+
+#~ msgid "The Form was saved."
+#~ msgstr "El formulario fue guardado."
+
+#~ msgid ""
+#~ "There was a problem saving the form. Please make sure the name of the "
+#~ "form is unique."
+#~ msgstr ""
+#~ "Hubo un problema al guardar el formulario. Por favor, asegúrese de que el "
+#~ "nombre del formulario sea único."
+
+#~ msgid "Module: %s"
+#~ msgstr "Módulo %s"
+
+#~ msgid "Edit Values"
+#~ msgstr "Editar valores"
+
+#~ msgid "Add Language"
+#~ msgstr "Añade el idioma"
+
+#, fuzzy
+#~| msgid "choose name"
+#~ msgid "Choose Language"
+#~ msgstr "escoja un nombre"
+
+#~ msgid "Default Value: %s"
+#~ msgstr "Valor por defecto: %s"
+
+#, fuzzy
+#~| msgid "Default Value for Radius"
+#~ msgid "Default Value From:"
+#~ msgstr "Valor de propuesta para el radio"
+
+#, fuzzy
+#~| msgid "Default Value for Radius"
+#~ msgid "Default Value Up To:"
+#~ msgstr "Valor de propuesta para el radio"
+
+#~ msgid "Please provide an Email address!"
+#~ msgstr "Por favor proporcione una dirección de correo electrónico!"
+
+#~ msgid "Enable Watchlist"
+#~ msgstr "Activar Watchlist"
+
+#~ msgid "Expression used"
+#~ msgstr "Expresión utilizada"
+
+#~ msgid "Watchlist"
+#~ msgstr "Lista de observación"
+
+#~ msgid "Favorise"
+#~ msgstr "Favorecer"
+
+#~ msgid "Map Provider"
+#~ msgstr "Proveedor de mapas"
+
+#~ msgid "OpenStreetMap"
+#~ msgstr "Mapa de OpenStreet"
+
+#~ msgid "Google Maps"
+#~ msgstr "Google Maps"
+
+#~ msgid "Maps"
+#~ msgstr "Mapas"
+
+#~ msgid "Fields"
+#~ msgstr "Campos"
+
+#~ msgid "Fields Configuration"
+#~ msgstr "Configuración de campos"
+
+#~ msgid "Name of View"
+#~ msgstr "Nombre de la vista"
+
+#~ msgid "Shortcode"
+#~ msgstr "Código abreviado"
+
+#~ msgid "Filter"
+#~ msgstr "Filtro"
+
+#~ msgid "Show Status"
+#~ msgstr "Mostrar Estado"
+
+#~ msgid "Type of List"
+#~ msgstr "Tipo de lista"
+
+#~ msgid "(Needs valid API credentials)"
+#~ msgstr "(Necesita credenciales de API válidas)"
+
+#~ msgid "(Unknown Filter (ID: %s))"
+#~ msgstr "(Filtro desconocido (ID: %s))"
+
+#~ msgid "Name of Form"
+#~ msgstr "Nombre del formulario"
+
+#~ msgid "Type of Form"
+#~ msgstr "Tipo de formulario"
+
+#~ msgid "View Name"
+#~ msgstr "Nombre de la vista"
+
+#~ msgid "Sort by"
+#~ msgstr "Ordenar por"
+
+#~ msgid "Records per Page"
+#~ msgstr "Registros por página"
+
+#~ msgid "Sort order"
+#~ msgstr "Orden de clasificación"
+
+#~ msgid "Ascending"
+#~ msgstr "Ascendente"
+
+#~ msgid "Descending"
+#~ msgstr "Descendente"
+
+#~ msgid "Template"
+#~ msgstr "Plantilla"
+
+#~ msgid "List View"
+#~ msgstr "Vista de lista"
+
+#~ msgid "Passport Photo"
+#~ msgstr "Foto de Pasaporte"
+
+#~ msgid "Filterable"
+#~ msgstr "Filtrable"
+
+#~ msgid "Hidden"
+#~ msgstr "Oculto"
+
+#~ msgid "Reduce values according to selected filter"
+#~ msgstr "Reducir los valores según el filtro seleccionado"
+
+#~ msgid "Show Estate Status"
+#~ msgstr "Mostrar el estado del patrimonio"
+
+#~ msgid "Random Order"
+#~ msgstr "Orden aleatorio"
+
+#~ msgid "PDF-Expose"
+#~ msgstr "PDF-Expose"
+
+#~ msgid "Default"
+#~ msgstr "Predeterminado"
+
+#~ msgid "Reference Estates"
+#~ msgstr "Fincas de referencia"
+
+#~ msgid "Favorites List"
+#~ msgstr "Lista de favoritos"
+
+#~ msgid "Sort by User Selection"
+#~ msgstr "Ordenar por selección de usuario"
+
+#~ msgid "Standard Sort"
+#~ msgstr "Ordenar por defecto"
+
+#~ msgid "lowest First / highest First"
+#~ msgstr "Primero más bajo / primero más alto"
+
+#~ msgid "ascending / descending"
+#~ msgstr "ascendente / descendente"
+
+#~ msgid "Formulation of sorting directions"
+#~ msgstr "Formulación de direcciones de clasificación"
+
+#~ msgid "Unit List"
+#~ msgstr "Lista de unidades"
+
+#~ msgid "Form"
+#~ msgstr "Formulario"
+
+#~ msgid "Form Name"
+#~ msgstr "Nombre del formulario"
+
+#~ msgid "Type of Form: "
+#~ msgstr "Tipo de formulario: "
+
+#~ msgid ", Embed Code: "
+#~ msgstr "Código de incrustación: "
+
+#~ msgid "Recipient's E-Mail Address"
+#~ msgstr "Dirección de correo electrónico del destinatario"
+
+#~ msgid "john.doe@example.com"
+#~ msgstr "john.doe@example.com"
+
+#~ msgid "(won't work until set up globally)"
+#~ msgstr "(no funcionará hasta que se establezca globalmente)"
+
+#~ msgid "Requires Captcha %s"
+#~ msgstr "Requiere Captcha %s"
+
+#~ msgid "Result Limit"
+#~ msgstr "Resultado Límite"
+
+#~ msgid "Required"
+#~ msgstr "Requerido"
+
+#~ msgid "Module"
+#~ msgstr "Módulo"
+
+#~ msgid "Show Similar Estates"
+#~ msgstr "Mostrar Sucesiones Similares"
+
+#~ msgid "Movie Links"
+#~ msgstr "Enlaces de películas"
+
+#~ msgid "Disabled"
+#~ msgstr "Discapacitado"
+
+#~ msgid "Link"
+#~ msgstr "Enlace"
+
+#~ msgid "Player"
+#~ msgstr "Jugador"
+
+#~ msgid "Same Kind of Estate"
+#~ msgstr "El mismo tipo de patrimonio"
+
+#~ msgid "Same Marketing Method"
+#~ msgstr "El mismo método de comercialización"
+
+#~ msgid "Same Postal Code"
+#~ msgstr "Mismo Código Postal"
+
+#~ msgid "Radius"
+#~ msgstr "Radio"
+
+#~ msgid "Amount of Estates"
+#~ msgstr "Cantidad de Sucesiones"
+
+#~ msgid "Newsletter"
+#~ msgstr "Boletín de noticias"
+
+#~ msgid "Check for Duplicates"
+#~ msgstr "Comprobar si hay duplicados"
+
+#~ msgid "Create Address"
+#~ msgstr "Crear dirección"
+
+#~ msgid "Subject (optional)"
+#~ msgstr "Tema (opcional)"
+
+#~ msgid "Default Value"
+#~ msgstr "Valor por defecto"
+
+#~ msgid "Default Value for Radius"
+#~ msgstr "Valor de propuesta para el radio"
+
+#~ msgid "Country"
+#~ msgstr "País"
+
+#~ msgid "Postal Code"
+#~ msgstr "Postal code"
+
+#~ msgid "Street"
+#~ msgstr "Calle"
+
+#~ msgid "unknown address list name"
+#~ msgstr "nombre desconocido de la lista de direcciones"
+
+#~ msgid "Add to List >>"
+#~ msgstr "Agregar a la lista >&gt"
+
+#~ msgid "Key of Field:"
+#~ msgstr "Clave de Campo:"
+
+#~ msgid "Delete"
+#~ msgstr "Borrar"
+
+#~ msgid "Disabled in onOffice"
+#~ msgstr "Desactivado en onOffice"
+
+#~ msgid "Edit"
+#~ msgstr "Tratar"
+
+#~ msgid "(Remains unchanged)"
+#~ msgstr "(Permanece sin cambios)"
+
+#~ msgid "0 matches"
+#~ msgstr "0 coincidencias"
+
+#~ msgid "Show exact match"
+#~ msgstr "Mostrar coincidencia exacta"
+
+#~ msgid "Show %s matches"
+#~ msgstr "Muestran %s coincidencias"
+
+#~ msgid "rented"
+#~ msgstr "alquila"
+
+#~ msgid "sold"
+#~ msgstr "vendido"
+
+#~ msgid "Cover Photo"
+#~ msgstr "Foto de la cubierta"
+
+#~ msgid "Photo"
+#~ msgstr "Foto"
+
+#~ msgid "Location Map"
+#~ msgstr "Mapa de ubicación"
+
+#~ msgid "An error occured:"
+#~ msgstr "Se ha producido un error:"
 
 #~ msgid "Estates view not found."
 #~ msgstr "No se ha encontrado la vista de la finca."
