@@ -1,19 +1,20 @@
-# Copyright (C) 2019 onOffice GmbH
-# This file is distributed under the same license as the onOffice direct plugin.
+# Copyright (C) 2020 onOffice GmbH
+# This file is distributed under the same license as the onOffice for WP-Websites plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice direct 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2020-07-20T16:29:57+02:00\n"
-"PO-Revision-Date: 2020-07-20 17:27+0200\n"
+"Project-Id-Version: onOffice for WP-Websites 2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
+"websites\n"
+"POT-Creation-Date: 2020-12-02T06:17:40+03:00\n"
+"PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
-"X-Domain: onoffice\n"
+"X-Generator: Poedit 2.4.1\n"
+"X-Domain: onoffice-for-wp-websites\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
@@ -24,7 +25,6 @@ msgstr "onOffice direct"
 
 #. Plugin URI of the plugin
 #, fuzzy
-#| msgid "https://en.onoffice.com/"
 msgid "https://wpplugindoc.onoffice.de"
 msgstr "https://en.onoffice.com/"
 
@@ -52,7 +52,7 @@ msgstr "Gelieve eerst uw onOffice API-gegevens te configureren!"
 
 #: plugin/Controller/AdminViewController.php:148
 #: plugin/Gui/AdminPageAddressList.php:78 plugin/Gui/AdminPageBase.php:88
-#: plugin/Gui/AdminPageEstateDetail.php:204
+#: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
 #: plugin/Gui/AdminPageEstateUnitList.php:66
 #: plugin/Gui/AdminPageFormList.php:177
@@ -135,6 +135,10 @@ msgstr "Zoekcriteria"
 msgid "Form Specific Fields"
 msgstr "Vorm-specifieke velden"
 
+#: plugin/Field/Collection/FieldsCollectionToContentFieldLabelArrayConverter.php:48
+msgid "(unnamed category)"
+msgstr ""
+
 #: plugin/Field/FieldModuleCollectionDecoratorGeoPositionBackend.php:70
 msgid "Geo Range Search"
 msgstr "Geo bereik zoeken"
@@ -188,7 +192,7 @@ msgid "choose name"
 msgstr "naam kiezen"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:116
-#: plugin/Gui/AdminPageEstateDetail.php:277
+#: plugin/Gui/AdminPageEstateDetail.php:276
 #: plugin/Gui/AdminPageEstateListSettings.php:125
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
 #: plugin/Gui/AdminPageFormSettingsBase.php:370
@@ -200,7 +204,7 @@ msgid "Filter & Records"
 msgstr "Filter & dossiers"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:155
-#: plugin/Gui/AdminPageEstateDetail.php:285
+#: plugin/Gui/AdminPageEstateDetail.php:284
 #: plugin/Gui/AdminPageEstateListSettings.php:133
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
@@ -305,7 +309,7 @@ msgstr "De cache is schoongemaakt."
 msgid "List Views"
 msgstr "Lijst met meningen"
 
-#: plugin/Gui/AdminPageEstate.php:83 plugin/Gui/AdminPageEstateDetail.php:206
+#: plugin/Gui/AdminPageEstate.php:83 plugin/Gui/AdminPageEstateDetail.php:205
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:92
 msgid "Detail View"
 msgstr "Detailweergave"
@@ -344,19 +348,19 @@ msgstr "Ansprechpartner-Felder"
 msgid "Real Estate Fields"
 msgstr "Vastgoedgegevensvelden"
 
-#: plugin/Gui/AdminPageEstateDetail.php:294
+#: plugin/Gui/AdminPageEstateDetail.php:293
 msgid "Additional Media"
 msgstr "Extra media"
 
-#: plugin/Gui/AdminPageEstateDetail.php:311
+#: plugin/Gui/AdminPageEstateDetail.php:310
 msgid "Similar Estates"
 msgstr "Vergelijkbare Landgoederen"
 
-#: plugin/Gui/AdminPageEstateDetail.php:432
+#: plugin/Gui/AdminPageEstateDetail.php:431
 msgid "The detail view has been saved."
 msgstr "Het detailaanzicht is opgeslagen."
 
-#: plugin/Gui/AdminPageEstateDetail.php:433
+#: plugin/Gui/AdminPageEstateDetail.php:432
 msgid "There was a problem saving the detail view."
 msgstr "Er was een probleem met het bewaren van het detailaanzicht."
 
@@ -384,6 +388,7 @@ msgid ""
 "At least the following fields must be active: country, radius and city or "
 "postcode."
 msgstr ""
+"Mindestens folgende Felder müssen aktiv sein: Land, Radius und Ort  oder PLZ."
 
 #: plugin/Gui/AdminPageEstateListSettingsBase.php:159
 msgid "The view has been saved."
@@ -463,12 +468,12 @@ msgid "Default Value Up To:"
 msgstr "Standaardwaarde tot:"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:308
-#: plugin/Gui/Table/EstateListTable.php:172 templates.dist/fields.php:67
+#: plugin/Gui/Table/EstateListTable.php:172
 msgid "No"
 msgstr "Nee"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:309
-#: plugin/Gui/Table/EstateListTable.php:172 templates.dist/fields.php:64
+#: plugin/Gui/Table/EstateListTable.php:172
 msgid "Yes"
 msgstr "Ja"
 
@@ -512,7 +517,7 @@ msgstr "Kaarten"
 msgid "Fields"
 msgstr "Velden contactpersoon"
 
-#: plugin/Gui/AdminPageSettingsBase.php:405
+#: plugin/Gui/AdminPageSettingsBase.php:404
 msgid "Fields Configuration"
 msgstr "Velden Configuratie"
 
@@ -542,6 +547,8 @@ msgid ""
 "You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
+"Sie sind dabei, die Listenansicht '%s' zu löschen.\n"
+"Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
 #: plugin/Gui/Table/EstateListTable.php:132
 #: plugin/Gui/Table/EstateListTable.php:212
@@ -577,6 +584,8 @@ msgid ""
 "You are about to delete the unit view '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
+"Sie sind dabei, die Einheitenliste '%s' zu löschen.\n"
+"Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
 #: plugin/Gui/Table/FormsTable.php:124 plugin/Gui/Table/FormsTable.php:149
 msgid "Name of Form"
@@ -592,6 +601,8 @@ msgid ""
 "You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
+"Sie sind dabei, das Formular '%s' zu löschen.\n"
+"Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:83
 msgid "View Name"
@@ -675,11 +686,11 @@ msgstr "Favorieten Lijst"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:418
 msgid "Sort by User Selection"
-msgstr ""
+msgstr "Ordenar por selección de usuario"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:461
 msgid "Standard Sort"
-msgstr ""
+msgstr "Ordenar por defecto"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:503
 msgid "lowest First / highest First"
@@ -817,13 +828,12 @@ msgid "Default Value for Radius"
 msgstr "Standaardwaarde voor Radius"
 
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:139
-#: templates.dist/fields.php:61
 msgid "Not Specified"
 msgstr "Niet gespecificeerd"
 
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:182
 msgid "Order"
-msgstr ""
+msgstr "Reihenfolge"
 
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:241
 msgid "Country"
@@ -883,68 +893,6 @@ msgstr "Toon exact resultaat"
 msgid "Show %s matches"
 msgstr "Toon %s resultaten"
 
-#: plugin/Translation/FormTranslation.php:55
-msgctxt "forms"
-msgid "All"
-msgid_plural "All"
-msgstr[0] "Alle"
-msgstr[1] "Alle"
-
-#: plugin/Translation/FormTranslation.php:59
-msgctxt "forms"
-msgid "Contact Form"
-msgid_plural "Contact Forms"
-msgstr[0] "Contactformulier"
-msgstr[1] "Contact Formulieren"
-
-#: plugin/Translation/FormTranslation.php:63
-msgctxt "forms"
-msgid "Interest Form"
-msgid_plural "Interest Forms"
-msgstr[0] "Rente vorm"
-msgstr[1] "Renteformulieren"
-
-#: plugin/Translation/FormTranslation.php:67
-msgctxt "forms"
-msgid "Owner Form"
-msgid_plural "Owner Forms"
-msgstr[0] "Eigenaarsformulier"
-msgstr[1] "Eigenaarsformulieren"
-
-#: plugin/Translation/FormTranslation.php:71
-msgctxt "forms"
-msgid "Applicant Search Form"
-msgid_plural "Applicant Search Forms"
-msgstr[0] "Zoekformulier voor aanvragers"
-msgstr[1] "Formulieren voor het zoeken naar aanvragers"
-
-#: plugin/Translation/ModuleTranslation.php:79
-#, fuzzy
-#| msgid "Addresses"
-msgctxt "modules"
-msgid "Address"
-msgid_plural "Addresses"
-msgstr[0] "Adressen"
-msgstr[1] "Adressen"
-
-#: plugin/Translation/ModuleTranslation.php:80
-#, fuzzy
-#| msgid "Estates"
-msgctxt "modules"
-msgid "Estate"
-msgid_plural "Estates"
-msgstr[0] "Landgoederen"
-msgstr[1] "Landgoederen"
-
-#: plugin/Translation/ModuleTranslation.php:81
-#, fuzzy
-#| msgid "Search Criteria"
-msgctxt "modules"
-msgid "Search Criteria"
-msgid_plural "Search Criteria"
-msgstr[0] "Zoekcriteria"
-msgstr[1] "Zoekcriteria"
-
 #: plugin/Types/EstateStatusLabel.php:104
 msgid "rented"
 msgstr "gehuurd"
@@ -963,15 +911,15 @@ msgstr "Foto"
 
 #: plugin/Types/ImageTypes.php:63
 msgid "Photo (big)"
-msgstr ""
+msgstr "Foto (groß)"
 
 #: plugin/Types/ImageTypes.php:64
 msgid "Panorama"
-msgstr ""
+msgstr "Panorama"
 
 #: plugin/Types/ImageTypes.php:65
 msgid "Ground Plan"
-msgstr ""
+msgstr "Grundriss"
 
 #: plugin/Types/ImageTypes.php:66
 msgid "Location Map"
@@ -979,7 +927,7 @@ msgstr "Locatie kaart"
 
 #: plugin/Types/ImageTypes.php:67
 msgid "Energy-Pass Range"
-msgstr ""
+msgstr "Energiepass-Skala"
 
 #: plugin/Utility/Logger.php:77
 msgid "An error occured:"
@@ -988,244 +936,12 @@ msgstr "Er is een fout opgetreden:"
 #. translators: %s is the path of a page.
 #: plugin/WP/UnknownPageException.php:45
 msgid "Bad path \"%s\". The Page was not found."
-msgstr ""
+msgstr "Der Pfad „%s“ ist ungültig. Die Seite wurde nicht gefunden."
 
-#: templates.dist/address/default.php:39
-msgid "Picture: "
-msgstr ""
-
-#: templates.dist/address/SearchFormAddress.php:45
-msgid "Send"
-msgstr "Verzenden"
-
-#: templates.dist/estate/default.php:38
-msgid "Overview of Estates"
-msgstr "Overzicht van Landgoederen"
-
-#. translators: %d will be replaced with a number.
-#: templates.dist/estate/default.php:42
-msgctxt "template"
-msgid "Found %d estates over all."
-msgstr "Ik heb overal %d landgoederen gevonden."
-
-#: templates.dist/estate/default.php:90
-#: templates.dist/estate/similar_estates.php:43
-msgid "Show Details"
-msgstr "Details tonen"
-
-#: templates.dist/estate/default.php:94 templates.dist/estate/default.php:110
-msgid "Add to "
-msgstr "Toevoegen aan "
-
-#: templates.dist/estate/default.php:116
-msgid "Remove from "
-msgstr "Verwijderen van "
-
-#: templates.dist/estate/default_detail.php:70
-msgid "Description"
-msgstr "Omschrijving"
-
-#: templates.dist/estate/default_detail.php:77
-msgid "Location"
-msgstr "Plaats"
-
-#: templates.dist/estate/default_detail.php:87
-msgid "Map"
-msgstr "Kaart"
-
-#: templates.dist/estate/default_detail.php:94
-msgid "Equipment"
-msgstr "Inrichting"
-
-#: templates.dist/estate/default_detail.php:101
-msgid "Other Information"
-msgstr "Extra informatie"
-
-#: templates.dist/estate/default_detail.php:112
 #: tests/resources/templates/default_detail.php:42
 msgid "Contact person"
 msgstr "Contactpersoon"
 
-#: templates.dist/estate/default_detail.php:129
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documenten"
-
-#: templates.dist/estate/default_detail.php:131
-msgid "PDF expose"
-msgstr "PDF-blootstelling"
-
-#: templates.dist/estate/default_units.php:29
-msgid "Entities"
-msgstr "Entiteiten"
-
-#: templates.dist/estate/default_units.php:39
-msgid "Contact person of entity:"
-msgstr "Contactpersoon van de entiteit:"
-
-#: templates.dist/estate/default_units.php:43
-msgid "Phone:"
-msgstr "Telefoon:"
-
-#: templates.dist/estate/default_units.php:44
-msgid "Fax:"
-msgstr "Fax:"
-
-#: templates.dist/estate/default_units.php:45
-msgid "E-Mail:"
-msgstr "E-Mail:"
-
-#: templates.dist/estate/SearchForm.php:38
-msgid "Search"
-msgstr ""
-
-#: templates.dist/estate/similar_estates.php:4
-msgid "More Estates like this"
-msgstr "Meer Landgoederen zoals deze"
-
-#: templates.dist/fields.php:21
-msgid "Choose country"
-msgstr "Kies een land"
-
-#: templates.dist/fields.php:77 templates.dist/fields.php:157
-msgid "Edit values"
-msgstr "Waarden bewerken"
-
-#: templates.dist/fields.php:91
-msgid "From: "
-msgstr "Van: "
-
-#: templates.dist/fields.php:94
-msgid "Up to: "
-msgstr "Tot aan: "
-
-#. translators: %s will be replaced with the translated field name.
-#: templates.dist/fields.php:126 templates.dist/fields.php:205
-msgid "Choose %s"
-msgstr "Kies %s"
-
-#: templates.dist/form/applicantform.php:35
-#: templates.dist/form/defaultform.php:43 templates.dist/form/ownerform.php:36
-msgid "SUCCESS!"
-msgstr ""
-
-#: templates.dist/form/applicantform.php:37
-#: templates.dist/form/applicantsearchform.php:41
-#: templates.dist/form/defaultform.php:46 templates.dist/form/ownerform.php:39
-#: templates.dist/form/ownerleadgeneratorform.php:85
-msgid "ERROR!"
-msgstr ""
-
-#: templates.dist/form/applicantform.php:39
-msgid "Missing Fields!"
-msgstr ""
-
-#: templates.dist/form/applicantform.php:50
-#: templates.dist/form/ownerform.php:50
-msgid "Please fill in"
-msgstr ""
-
-#: templates.dist/form/applicantsearchform.php:51
-#: templates.dist/form/defaultform.php:54
-msgid "Please fill in!"
-msgstr ""
-
-#: templates.dist/form/applicantsearchform.php:64
-msgid "search within distance of:"
-msgstr ""
-
-#: templates.dist/form/applicantsearchform.php:112
-msgid "Search for Prospective Buyers"
-msgstr "Zoeken naar potentiële kopers"
-
-#. translators: %s will be replaced with a number.
-#: templates.dist/form/applicantsearchform.php:126
-msgid "%s Prospective Buyer"
-msgid_plural "%s Prospective Buyers"
-msgstr[0] "%s Potentiële Koper"
-msgstr[1] "%s Potentiële kopers"
-
-#. translators: %s will be replaced with a customer reference number.
-#: templates.dist/form/applicantsearchform.php:134
-msgid "Customer ref. number %s"
-msgstr "Ref. nummer van de klant %s"
-
-#: templates.dist/form/defaultform.php:48
-msgid "Spam detected!"
-msgstr ""
-
-#: templates.dist/form/defaultform.php:73 templates.dist/form/ownerform.php:66
-msgid "Message"
-msgstr "Bericht"
-
-#: templates.dist/form/ownerform.php:71
-#: templates.dist/form/ownerleadgeneratorform.php:90
-msgid "Your contact details"
-msgstr "Uw contactgegevens"
-
-#: templates.dist/form/ownerform.php:75
-#: templates.dist/form/ownerleadgeneratorform.php:97
-msgid "Information about your property"
-msgstr "Informatie over uw woning"
-
-#: templates.dist/form/ownerleadgeneratorform.php:34
-msgid "The form was sent successfully."
-msgstr "Het formulier is succesvol verzonden."
-
-#: templates.dist/form/ownerleadgeneratorform.php:38
-msgid "There was an error sending the form."
-msgstr "Er is een fout gemaakt bij het verzenden van het formulier."
-
-#: templates.dist/form/ownerleadgeneratorform.php:41
-msgid "The form wasn't sent because spam was detected."
-msgstr "Het formulier werd niet verzonden omdat er spam werd gedetecteerd."
-
-#. translators: %s will be replaced with a translated field name.
-#: templates.dist/form/ownerleadgeneratorform.php:50
-msgid "Please enter a value for %s."
-msgstr "Gelieve een waarde in te voeren voor %s."
-
-#: templates.dist/form/ownerleadgeneratorform.php:115
-msgid "Back"
-msgstr "Terug"
-
-#: templates.dist/form/ownerleadgeneratorform.php:118
-msgid "Next"
-msgstr "Volgende"
-
-#: templates.dist/form/ownerleadgeneratorform.php:133
-msgid "Open the Form"
-msgstr "Open het formulier"
-
-#~ msgid "Estates view not found."
-#~ msgstr "Landgoederen bekijken niet gevonden."
-
-#~ msgid "Not specified"
-#~ msgstr "Niet gespecificeerd"
-
-#~ msgid "Available Options"
-#~ msgstr "Beschikbare opties"
-
-#~ msgid "Pages"
-#~ msgstr "Pagina's"
-
-#~ msgid "Activate"
-#~ msgstr "Activeren"
-
-#~ msgid "Mobile Phone: "
-#~ msgstr "Mobiele telefoon: "
-
-#~ msgid "Phone (business): "
-#~ msgstr "Telefoon (zakelijk): "
-
-#~ msgid "E-Mail (business): "
-#~ msgstr "E-mail (zakelijk): "
-
-#~ msgid "Contact form: "
-#~ msgstr "Contactformulier: "
-
-#~ msgid "(Form is not available)"
-#~ msgstr "(Formulier is niet beschikbaar)"
-
-#~ msgid "Phone (mobile): "
-#~ msgstr "Telefoon (mobiel): "

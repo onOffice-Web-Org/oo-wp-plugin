@@ -119,6 +119,7 @@ abstract class WP_UnitTest_Localized
 
 	public static function tearDownAfterClass()
 	{
+		unload_textdomain('onoffice-for-wp-websites');
 		unload_textdomain('onoffice');
 		parent::tearDownAfterClass();
 	}
