@@ -75,7 +75,7 @@ class AdminPageAddressList
 
 	public function generatePageMainTitle($subTitle)
 	{
-		echo '<h1 class="wp-heading-inline">'.esc_html__('onoffice-for-wp-websites', 'onoffice-for-wp-websites');
+		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
 
 		if ($subTitle != '') {
 			echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
