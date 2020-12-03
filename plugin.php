@@ -108,15 +108,16 @@ add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 
 add_action('plugins_loaded', function() {
-	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR).'/languages');
 	load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
+	// Check 'onoffice-personalized' Folder exists
+	$onofficePersonalizedFolderLanguages = plugin_dir_path(__DIR__) . 'onoffice-personalized/languages';
+	$onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
+	if (is_dir($onofficePersonalizedFolderLanguages)) {
+		load_plugin_textdomain('onoffice', false, basename($onofficePersonalizedFolder) . '/languages');
+	} else {
+		load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
+	}
 });
-
-// Check 'onoffice-personalized' Folder exists
-$onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
-if (is_dir($onofficePersonalizedFolder)) {
-	load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
-}
 
 // "Settings" link in plugins list
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewController, 'pluginSettingsLink']);
