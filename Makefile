@@ -23,8 +23,10 @@ composer-install-nodev:
 
 pot:
 	vendor/bin/wp i18n make-pot . languages/onoffice-for-wp-websites.pot --skip-js
+	vendor/bin/wp i18n make-pot . languages/onoffice.pot --domain=onoffice --skip-js
 	sed -i -r "s/onOffice for WP-Websites \(dev\)/onOffice for WP-Websites/" languages/onoffice-for-wp-websites.pot
-	
+	sed -i -r "s/onOffice for WP-Websites \(dev\)/onOffice for WP-Websites/" languages/onoffice.pot
+
 release: pot copy-files-release change-title add-version composer-install-nodev
 
 test-zip: pot copy-files-release add-version composer-install-nodev
