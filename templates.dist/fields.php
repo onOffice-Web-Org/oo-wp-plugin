@@ -103,7 +103,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$lengthAttr = !is_null($properties['length']) ?
 				' maxlength="'.esc_attr($properties['length']).'"' : '';
 			echo '<input name="'.esc_attr($inputName).'" '.$inputType;
-			echo 'value="'.esc_attr($selectedValue).'"'.$lengthAttr.' placeholder="'.$properties['label'].'">';
+			echo 'value="'.esc_attr($selectedValue).'"'.$lengthAttr.' placeholder="'.esc_attr($properties['label']).'">';
 		}
 	}
 }

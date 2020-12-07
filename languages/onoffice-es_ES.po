@@ -1123,6 +1123,10 @@ msgstr ""
 msgid "Missing Fields!"
 msgstr ""
 
+#: templates.dist/form/applicantform.php:85
+msgid "Your search criteria"
+msgstr ""
+
 #: templates.dist/form/applicantform.php:50
 #: templates.dist/form/ownerform.php:50
 msgid "Please fill in"

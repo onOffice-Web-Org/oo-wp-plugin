@@ -47,13 +47,13 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 		if ($typeCurrentInput == onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_BOOLEAN) {
 			$line = "<div class='oo-control'>";
-			$line .= "<label class='oo-control__label' for=".$input.">";
+			$line .= "<label class='oo-control__label' for=".esc_attr($input).">";
 			$line .= renderFormField($input, $pForm);
 			$line .= $pForm->getFieldLabel($input).$addition."</label>";
 			$line .= "</div>";
 		}
 		else {
-			$line = "<label for=".$input.">". $pForm->getFieldLabel( $input ).$addition.':</label>';
+			$line = "<label for=".esc_attr($input).">". $pForm->getFieldLabel( $input ).$addition.':</label>';
 			$line .= renderFormField($input, $pForm);
 		}
 

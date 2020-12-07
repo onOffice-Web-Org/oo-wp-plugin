@@ -53,7 +53,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		$line .= "</div>";
 	}
 	else {
-		$line = "<label for=".$input.">". $pForm->getFieldLabel( $input ).$addition.':</label>';
+		$line = "<label for=".esc_attr($input).">". $pForm->getFieldLabel( $input ).$addition.':</label>';
 		$line .= renderFormField($input, $pForm);
 	}
 
@@ -75,14 +75,14 @@ if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 ?>
 <div class="oo-formfieldwrap">
 
-	<h2>Ihre Kontaktdaten</h2>
+	<h2><?php esc_html_e('Your contact details', 'onoffice'); ?> </h2>
 		<div>
 			<?php echo implode($addressValues); ?>
 		</div>
 </div>
 	<div class="oo-formfieldwrap">
 
-	<h2>Ihre Suchkriterien</h2>
+	<h2><?php esc_html_e('Your search criteria', 'onoffice'); ?></h2>
 		<div>
 			<?php echo implode($searchcriteriaValues) ?>
 		</div>

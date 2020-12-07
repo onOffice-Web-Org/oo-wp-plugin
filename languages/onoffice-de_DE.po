@@ -1124,6 +1124,10 @@ msgstr "Fehlende Felder!"
 msgid "Please fill in"
 msgstr "Bitte ausfüllen"
 
+#: templates.dist/form/applicantform.php:85
+msgid "Your search criteria"
+msgstr "Ihre Suchkriterien"
+
 #: templates.dist/form/applicantsearchform.php:51
 #: templates.dist/form/defaultform.php:54
 msgid "Please fill in!"

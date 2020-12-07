@@ -1128,6 +1128,10 @@ msgstr ""
 msgid "Please fill in"
 msgstr ""
 
+#: templates.dist/form/applicantform.php:85
+msgid "Your search criteria"
+msgstr ""
+
 #: templates.dist/form/applicantsearchform.php:51
 #: templates.dist/form/defaultform.php:54
 msgid "Please fill in!"
