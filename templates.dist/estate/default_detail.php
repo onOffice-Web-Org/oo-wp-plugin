@@ -158,8 +158,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <?php
 $shortCodeForm = $pEstates->getShortCodeForm();
 if (!empty($shortCodeForm)) {
-    ?>
-    <div class="detail-contact-form">
-        <?php echo do_shortcode($shortCodeForm); ?>
-    </div>
+	?>
+	<div class="detail-contact-form">
+		<?php echo do_shortcode($shortCodeForm); ?>
+	</div>
 <?php } ?>

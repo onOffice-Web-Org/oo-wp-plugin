@@ -272,9 +272,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$tableName = $prefix . "oo_plugin_forms";
 		$allTemplatePathsForm = $this->readTemplatePaths('form');
 		$template = '';
-		foreach ($allTemplatePathsForm as $TemplatePathsForm) {
-			if (basename($TemplatePathsForm) === 'defaultform.php') {
-				$template = $TemplatePathsForm;
+		foreach ($allTemplatePathsForm as $templatePathsForm) {
+			if (basename($templatePathsForm) === 'defaultform.php') {
+				$template = $templatePathsForm;
 			}
 		}
 		$this->_pWPDB->insert(
