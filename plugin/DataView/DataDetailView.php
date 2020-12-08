@@ -92,8 +92,8 @@ class DataDetailView
 	/** @var string */
 	private $_template = '';
 
-    /** @var string */
-    private $_shortCodeForm = '';
+	/** @var string */
+	private $_shortCodeForm = '';
 
 	/** @var string */
 	private $_expose = '';
@@ -145,9 +145,9 @@ class DataDetailView
 	public function getTemplate(): string
 		{ return $this->_template; }
 
-    /** @return string */
-    public function getShortCodeForm(): string
-        { return $this->_shortCodeForm; }
+	/** @return string */
+	public function getShortCodeForm(): string
+		{ return $this->_shortCodeForm;}
 
 	/** @return string */
 	public function getExpose(): string
@@ -177,9 +177,9 @@ class DataDetailView
 	public function setTemplate(string $template)
 		{ $this->_template = $template; }
 
-    /** @param string $shortCodeForm */
-    public function setShortCodeForm(string $shortCodeForm)
-        { $this->_shortCodeForm = $shortCodeForm; }
+	/** @param string $shortCodeForm */
+	public function setShortCodeForm(string $shortCodeForm)
+	{$this->_shortCodeForm = $shortCodeForm;}
 
 	/** @param string $expose */
 	public function setExpose(string $expose)

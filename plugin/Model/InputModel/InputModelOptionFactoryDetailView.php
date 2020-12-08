@@ -41,8 +41,8 @@ class InputModelOptionFactoryDetailView
 	/** */
 	const INPUT_TEMPLATE = 'template';
 
-    /** */
-    const INPUT_SHORT_CODE_FORM = 'shortcodeform';
+	/** */
+	const INPUT_SHORT_CODE_FORM = 'shortcodeform';
 
 	/** */
 	const INPUT_EXPOSE = 'expose';
@@ -92,9 +92,9 @@ class InputModelOptionFactoryDetailView
 		self::INPUT_TEMPLATE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-        self::INPUT_SHORT_CODE_FORM => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
+		self::INPUT_SHORT_CODE_FORM => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
 		self::INPUT_PICTURE_TYPE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],

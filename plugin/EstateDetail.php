@@ -109,22 +109,22 @@ class EstateDetail
 		return $result;
 	}
 
-    /**
-     *
-     * @return array Returns an string
-     *
-     */
+	/**
+	 *
+	 * @return array Returns an string
+	 *
+	 */
 
-    public function getShortCodeForm(): string
-    {
-        $result = '';
+	public function getShortCodeForm(): string
+	{
+		$result = '';
 
-        if (!empty($this->getDataView()->getShortCodeForm())) {
-            $result = $this->getDataView()->getShortCodeForm();
-        }
+		if (!empty($this->getDataView()->getShortCodeForm())) {
+			$result = $this->getDataView()->getShortCodeForm();
+		}
 
-        return $result;
-    }
+		return $result;
+	}
 
 
 	/**

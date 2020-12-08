@@ -132,27 +132,27 @@ abstract class FormModelBuilder
 		return $templates;
 	}
 
-    /**
-     *
-     * @return array
-     *
-     * @throws UnknownFormException
-     */
+	/**
+	 *
+	 * @return array
+	 *
+	 * @throws UnknownFormException
+	 */
 
-    protected function readNameShortCodeForm()
-    {
-        $recordManagerReadForm = new RecordManagerReadForm();
-        $allRecordsForm = $recordManagerReadForm->getAllRecords();
-        $shortCodeForm = array();
+	protected function readNameShortCodeForm()
+	{
+		$recordManagerReadForm = new RecordManagerReadForm();
+		$allRecordsForm = $recordManagerReadForm->getAllRecords();
+		$shortCodeForm = array();
 
-        foreach ($allRecordsForm as $value) {
-            $form_name = __String::getNew($value->name);
-            $shortCodeForm['[oo_form form=&quot;'
-            . esc_html($form_name) . '&quot;]'] = '[oo_form form=&quot;'
-                . esc_html($form_name) . '&quot;]';
-        }
-        return $shortCodeForm;
-    }
+		foreach ($allRecordsForm as $value) {
+			$form_name = __String::getNew($value->name);
+			$shortCodeForm['[oo_form form=&quot;'
+			. esc_html($form_name) . '&quot;]'] = '[oo_form form=&quot;'
+				. esc_html($form_name) . '&quot;]';
+		}
+		return $shortCodeForm;
+	}
 
 
 	/**

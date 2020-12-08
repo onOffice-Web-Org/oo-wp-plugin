@@ -102,7 +102,7 @@ class DataDetailViewHandler
 	{
 		$pDataDetailView = $this->getDetailView();
 		$pDataDetailView->setTemplate($row['template'] ?? '');
-        $pDataDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
+		$pDataDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
 		$pDataDetailView->setFields($row[DataDetailView::FIELDS] ?? []);
 		$pDataDetailView->setPictureTypes($row[DataDetailView::PICTURES] ?? []);
 		$pDataDetailView->setExpose($row['expose'] ?? '');

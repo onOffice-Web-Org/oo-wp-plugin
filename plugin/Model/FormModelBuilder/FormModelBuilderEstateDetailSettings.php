@@ -287,28 +287,28 @@ class FormModelBuilderEstateDetailSettings
 		}
 	}
 
-    /**
-     *
-     * @return InputModelDB
-     *
-     * @throws UnknownFormException
-     * @throws ExceptionInputModelMissingField
-     */
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 * @throws UnknownFormException
+	 * @throws ExceptionInputModelMissingField
+	 */
 
-    public function createInputModelShortCodeForm()
-    {
+	public function createInputModelShortCodeForm()
+	{
 
-        $labelShortCodeForm = __('Select Contact Form', 'onoffice');
-        $pInputModelShortCodeForm = $this->_pInputModelDetailViewFactory->create
-        (InputModelOptionFactoryDetailView::INPUT_SHORT_CODE_FORM, $labelShortCodeForm);
-        $pInputModelShortCodeForm->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-        $nameShortCodeForms = array('' => 'No Contact Form') + $this->readNameShortCodeForm();
-        $pInputModelShortCodeForm->setValuesAvailable($nameShortCodeForms);
+		$labelShortCodeForm = __('Select Contact Form', 'onoffice');
+		$pInputModelShortCodeForm = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_SHORT_CODE_FORM, $labelShortCodeForm);
+		$pInputModelShortCodeForm->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$nameShortCodeForms = array('' => 'No Contact Form') + $this->readNameShortCodeForm();
+		$pInputModelShortCodeForm->setValuesAvailable($nameShortCodeForms);
 
-        $pInputModelShortCodeForm->setValue($this->_pDataDetailView->getShortCodeForm());
+		$pInputModelShortCodeForm->setValue($this->_pDataDetailView->getShortCodeForm());
 
-        return $pInputModelShortCodeForm;
-    }
+		return $pInputModelShortCodeForm;
+	}
 
 
 	/**
