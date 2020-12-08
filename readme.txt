@@ -73,11 +73,17 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.16 =
+
+**Fixes**
+
+* Fix of incorrect value for empty real estate fields
+
 = 2.7.15 =
 
- **Fixes**
+**Fixes**
  
- * Fix of pagination in static pages
+* Fix of pagination in static pages
 
 = 2.7.14 =
 
