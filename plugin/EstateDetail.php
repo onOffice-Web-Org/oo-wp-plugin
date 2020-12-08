@@ -123,7 +123,7 @@ class EstateDetail
 			$result = $this->getDataView()->getShortCodeForm();
 		}
 
-		return $result;
+		return  '[oo_form form="' . $result . '"]';
 	}
 
 

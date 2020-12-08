@@ -147,8 +147,7 @@ abstract class FormModelBuilder
 
 		foreach ($allRecordsForm as $value) {
 			$form_name = __String::getNew($value->name);
-			$shortCodeForm['[oo_form form=&quot;'
-			. esc_html($form_name) . '&quot;]'] = '[oo_form form=&quot;'
+			$shortCodeForm[$value->name] = '[oo_form form=&quot;'
 				. esc_html($form_name) . '&quot;]';
 		}
 		return $shortCodeForm;
