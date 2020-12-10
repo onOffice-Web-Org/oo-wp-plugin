@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.17 =
+
+**Fixes**
+
+* Fixes for WordPress 5.6
+
 = 2.7.16 =
 
 **Fixes**
