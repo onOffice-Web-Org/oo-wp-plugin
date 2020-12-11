@@ -1,0 +1,56 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ 8540-wordpress-implement-github-actions ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php-versions: ['7.1']
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
+    steps:
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '5.7'
+          mysql database: 'wordpress_test'
+          mysql root password: ${{ secrets.RootPassword }} # Required if "mysql user" is empty, default is empty. The root superuser password
+          mysql user: 'developer' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
+          mysql password: '123456' # Required if "mysql user" exists. The password for the "mysql user"
+
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extension-csv: mbstring, intl #optional, setup extensions
+          ini-values-csv: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
+          coverage: xdebug #optional, setup coverage driver
+          tools: php-cs-fixer, phpunit
+
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Composer install
+        run: |
+          composer install
+          composer update phpstan/phpstan --ignore-platform-reqs
+          vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility
+
+      - name: Install WP Tests
+        run: bash bin/install-wp-tests-github-actions.sh wordpress_test developer '123456' 172.17.0.1 latest
+
+      - name: phpunit tests
+        run: ./vendor/bin/phpunit
