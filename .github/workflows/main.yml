@@ -29,13 +29,13 @@ jobs:
 
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@v1
         with:
           php-version: ${{ matrix.php-versions }}
-          extension-csv: mbstring, intl #optional, setup extensions
+          extension-csv: mysqli, mbstring, intl #optional, setup extensions
           ini-values-csv: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
           coverage: xdebug #optional, setup coverage driver
           tools: php-cs-fixer, phpunit
@@ -50,7 +50,9 @@ jobs:
           vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility
 
       - name: Install WP Tests
-        run: bash bin/install-wp-tests-github-actions.sh wordpress_test developer '123456' 172.17.0.1 latest
+        run: |
+          bash bin/install-wp-tests-github-actions.sh wordpress_test developer '123456' 172.17.0.1 latest
+
 
       - name: phpunit tests
         run: ./vendor/bin/phpunit
