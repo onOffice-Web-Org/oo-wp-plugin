@@ -15,12 +15,13 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php-versions: ['7.0','7.1','7.2','7.3']
+        php-versions: ['7.0']
     name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
     steps:
       - name: Set up MySQL
         uses: mirromutth/mysql-action@v1.1
         with:
+#          mysql version: '5.7'
           mysql database: 'wordpress_test'
           mysql root password: ${{ secrets.RootPassword }} # Required if "mysql user" is empty, default is empty. The root superuser password
           mysql user: 'developer' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
@@ -47,8 +48,6 @@ jobs:
           composer install
           composer update phpstan/phpstan --ignore-platform-reqs
           vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility
-          vendor/bin/phpcs -p . --standard=PHPCompatibility --runtime-set testVersion 7.0 --ignore="vendor,*.js,*.min.css"
-          vendor/bin/phpstan analyse . -c phpstan.neon
 
       - name: Install WP Tests
         run: bash bin/install-wp-tests-github-actions.sh wordpress_test developer '123456' 172.17.0.1 latest
