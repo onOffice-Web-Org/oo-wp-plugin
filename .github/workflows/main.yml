@@ -44,7 +44,7 @@ jobs:
         run: php -v
 
       - name: Check SDK folder
-        run: ls -la /home/runner/work/oo-wp-plugin/oo-wp-plugin/
+        run: ls -la /home/runner/work/oo-wp-plugin/oo-wp-plugin/SDK
 
       - name: Composer install
         run: |
