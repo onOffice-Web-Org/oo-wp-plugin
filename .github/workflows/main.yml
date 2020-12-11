@@ -35,8 +35,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extension-csv: mbstring, mysqli, intl #optional, setup extensions
-          ini-values-csv: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
+          extensions: mbstring, mysqli, intl #optional, setup extensions
+          ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
           coverage: xdebug #optional, setup coverage driver
           tools: php-cs-fixer, phpunit
 
