@@ -219,6 +219,15 @@ class EstateListMocker
 		return $this->_currentEstateId;
 	}
 
+	/**
+	 * @return int
+	 */
+	public function getCurrentMultiLangEstateMainId(): int
+	{
+		$this->registerMethodCall(__METHOD__);
+		return $this->_currentEstateId;
+	}
+
 
 	/**
 	 *
