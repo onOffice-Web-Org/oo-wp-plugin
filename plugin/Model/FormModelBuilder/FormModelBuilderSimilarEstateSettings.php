@@ -371,4 +371,12 @@ class FormModelBuilderSimilarEstateSettings
 
 		return $pInputModelAmount;
 	}
+
+    /**
+     * @param InputModelOptionFactorySimilarView $pInputModelSimilarViewFactory
+     */
+    public function setInputModelSimilarViewFactory(InputModelOptionFactorySimilarView $pInputModelSimilarViewFactory)
+    {
+        $this->_pInputModelSimilarViewFactory = $pInputModelSimilarViewFactory;
+    }
 }
