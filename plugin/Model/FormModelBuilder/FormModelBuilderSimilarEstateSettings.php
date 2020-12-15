@@ -265,20 +265,20 @@ class FormModelBuilderSimilarEstateSettings
      *
      */
 
-    public function createInputModelDontShowArchived()
+    public function createInputModelShowArchived()
     {
         $pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-        $labelDontShowArchived= __('Don&#8217;t show archived estates', 'onoffice');
+        $labelShowArchived= __('Don&#8217;t show archived estates', 'onoffice');
 
-        $pInputModelDontShowArchived = $this->_pInputModelSimilarViewFactory->create
-        (InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_ARCHIVED, $labelDontShowArchived);
-        $pInputModelDontShowArchived->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+        $pInputModelShowArchived = $this->_pInputModelSimilarViewFactory->create
+        (InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_ARCHIVED, $labelShowArchived);
+        $pInputModelShowArchived->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 
-        $pInputModelDontShowArchived->setValuesAvailable(1);
-        $pInputModelDontShowArchived->setValue($pDataViewSimilarEstates->getDontShowArchived());
+        $pInputModelShowArchived->setValuesAvailable(1);
+        $pInputModelShowArchived->setValue($pDataViewSimilarEstates->getShowArchived());
 
-        return $pInputModelDontShowArchived;
+        return $pInputModelShowArchived;
     }
 
     /**
@@ -287,20 +287,20 @@ class FormModelBuilderSimilarEstateSettings
      *
      */
 
-    public function createInputModelDontShowReference()
+    public function createInputModelShowReference()
     {
         $pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-        $labelDontShowReference= __('Don&#8217;t show reference estates', 'onoffice');
+        $labelShowReference= __('Don&#8217;t show reference estates', 'onoffice');
 
-        $pInputModelDontShowReference = $this->_pInputModelSimilarViewFactory->create
-        (InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_DONT_SHOW_REFERENCE, $labelDontShowReference);
-        $pInputModelDontShowReference->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+        $pInputModelShowReference = $this->_pInputModelSimilarViewFactory->create
+        (InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_REFERENCE, $labelShowReference);
+        $pInputModelShowReference->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 
-        $pInputModelDontShowReference->setValuesAvailable(1);
-        $pInputModelDontShowReference->setValue($pDataViewSimilarEstates->getDontShowReference());
+        $pInputModelShowReference->setValuesAvailable(1);
+        $pInputModelShowReference->setValue($pDataViewSimilarEstates->getShowReference());
 
-        return $pInputModelDontShowReference;
+        return $pInputModelShowReference;
     }
 
 

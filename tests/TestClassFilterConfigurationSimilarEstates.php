@@ -56,8 +56,8 @@ class TestClassFilterConfigurationSimilarEstates
 		$this->_pDataViewSimilarEstates->setSameEstateKind(true);
 		$this->_pDataViewSimilarEstates->setSameMarketingMethod(true);
 		$this->_pDataViewSimilarEstates->setSamePostalCode(true);
-        $this->_pDataViewSimilarEstates->setDontShowArchived(true);
-        $this->_pDataViewSimilarEstates->setDontShowReference(true);
+		$this->_pDataViewSimilarEstates->setShowArchived(true);
+		$this->_pDataViewSimilarEstates->setShowReference(true);
 	}
 
 

@@ -33,31 +33,31 @@ class TestClassDataSimilarView
 {
 	/** */
 	const DEFAULT_FIELDS_ESTATE = [
-        'Id',
-        'objekttitel',
-        'objektnr_extern',
-        'regionaler_zusatz',
-        'kaufpreis',
-        'wohnflaeche',
-        'anzahl_zimmer',
-        'kaltmiete',
-        'ort',
-        'plz',
-        'status2',
-        'grundstuecksflaeche',
-        'nutzflaeche'
+		'Id',
+		'objekttitel',
+		'objektnr_extern',
+		'regionaler_zusatz',
+		'kaufpreis',
+		'wohnflaeche',
+		'anzahl_zimmer',
+		'kaltmiete',
+		'ort',
+		'plz',
+		'status2',
+		'grundstuecksflaeche',
+		'nutzflaeche'
 	];
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 
-    public function test__construct()
-    {
-        $pDataSimilarView = new DataSimilarView();
-        $this->assertInstanceOf(DataViewSimilarEstates::class,
-            $pDataSimilarView->getDataViewSimilarEstates());
-    }
+	public function test__construct()
+	{
+		$pDataSimilarView = new DataSimilarView();
+		$this->assertInstanceOf(DataViewSimilarEstates::class,
+			$pDataSimilarView->getDataViewSimilarEstates());
+	}
 
 	/**
 	 *
@@ -70,16 +70,16 @@ class TestClassDataSimilarView
 		$this->assertEquals(0, $pDataSimilarView->getPageId());
 	}
 
-    /**
-     *
-     */
-    public function testEnableSimilarEstates()
-    {
-        $pDataSimilarView = new DataSimilarView();
+	/**
+	 *
+	 */
+	public function testEnableSimilarEstates()
+	{
+		$pDataSimilarView = new DataSimilarView();
 
-        $this->assertFalse($pDataSimilarView->getDataSimilarViewActive());
-        $pDataSimilarView->setDataSimilarViewActive(true);
-        $this->assertTrue($pDataSimilarView->getDataSimilarViewActive());
-    }
+		$this->assertFalse($pDataSimilarView->getDataSimilarViewActive());
+		$pDataSimilarView->setDataSimilarViewActive(true);
+		$this->assertTrue($pDataSimilarView->getDataSimilarViewActive());
+	}
 
 }

@@ -63,8 +63,8 @@ class TestClassDefaultFilterBuilderSimilarEstates
 		$this->_pFilterConfigurationSimilarEstates->setEstateKind('wohnung');
 		$this->_pFilterConfigurationSimilarEstates->setMarketingMethod('kauf');
 		$this->_pFilterConfigurationSimilarEstates->setPostalCode('52070');
-        $this->_pFilterConfigurationSimilarEstates->setShowArchive('status2obj_archiviert');
-        $this->_pFilterConfigurationSimilarEstates->setShowReference('1');
+		$this->_pFilterConfigurationSimilarEstates->setShowArchive('status2obj_archiviert');
+		$this->_pFilterConfigurationSimilarEstates->setShowReference('1');
 	}
 
 
@@ -144,48 +144,47 @@ class TestClassDefaultFilterBuilderSimilarEstates
 	}
 
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 
-    public function testBuildFilterDontShowArchive()
-    {
-        $this->getDataViewSimilarEstates()->setDontShowArchived(true);
-        $result = $this->_pDefaultFilterBuilderSimilarEstates->buildFilter();
-        $expectation = [
-            'veroeffentlichen' => [
-                ['op' => '=', 'val' => 1],
-            ],
-            'status2' => [
-                ['op' => '!=', 'val' => ['status2obj_archiviert']],
-            ],
-        ];
-        $this->assertEquals($expectation, $result);
-    }
-
-
-    /**
-     *
-     */
-
-    public function testBuildFilterDontShowReference()
-    {
-        $this->getDataViewSimilarEstates()->setDontShowReference(true);
-        $result = $this->_pDefaultFilterBuilderSimilarEstates->buildFilter();
-        $expectation = [
-            'veroeffentlichen' => [
-                ['op' => '=', 'val' => 1],
-            ],
-            'referenz' => [
-                ['op' => '!=', 'val' => '1'],
-            ],
-        ];
-        $this->assertEquals($expectation, $result);
-    }
+	public function testBuildFilterShowArchive()
+	{
+		$this->getDataViewSimilarEstates()->setShowArchived(true);
+		$result = $this->_pDefaultFilterBuilderSimilarEstates->buildFilter();
+		$expectation = [
+			'veroeffentlichen' => [
+				['op' => '=', 'val' => 1],
+			],
+			'status2' => [
+				['op' => '!=', 'val' => ['status2obj_archiviert']],
+			],
+		];
+		$this->assertEquals($expectation, $result);
+	}
 
 
+	/**
+	 *
+	 */
 
-    /**
+	public function testBuildFilterShowReference()
+	{
+		$this->getDataViewSimilarEstates()->setShowReference(true);
+		$result = $this->_pDefaultFilterBuilderSimilarEstates->buildFilter();
+		$expectation = [
+			'veroeffentlichen' => [
+				['op' => '=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => '1'],
+			],
+		];
+		$this->assertEquals($expectation, $result);
+	}
+
+
+	/**
 	 *
 	 */
 

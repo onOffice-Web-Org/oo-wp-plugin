@@ -101,7 +101,7 @@ class DataSimilarEstatesSettingsHandler
 	public function createDataSimilarEstatesSettingsByValues(array $row): DataSimilarView
 	{
 		$pDataSimilarView = $this->getDataSimilarEstatesSettings();
-        $pDataSimilarView->setFields($row[DataDetailView::FIELDS] ?? []);
+		$pDataSimilarView->setFields($row[DataDetailView::FIELDS] ?? []);
 		$pDataSimilarView->setDataSimilarViewActive
 			($row[DataSimilarView::ENABLE_SIMILAR_ESTATES] ?? false);
 
@@ -122,18 +122,18 @@ class DataSimilarEstatesSettingsHandler
 	private function configureDataSimilarEstatesSettings(DataViewSimilarEstates $pDataViewSimilar,
 		array $row)
 	{
-        $pDataViewSimilar->setFields
-            ($row[DataViewSimilarEstates::FIELDS] ?? false);
+		$pDataViewSimilar->setFields
+		($row[DataViewSimilarEstates::FIELDS] ?? false);
 		$pDataViewSimilar->setSameEstateKind
 			($row[DataViewSimilarEstates::FIELD_SAME_KIND] ?? false);
 		$pDataViewSimilar->setSameMarketingMethod
 			($row[DataViewSimilarEstates::FIELD_SAME_MARKETING_METHOD] ?? false);
 		$pDataViewSimilar->setSamePostalCode
 			($row[DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE] ?? false);
-        $pDataViewSimilar->setDontShowArchived
-            ($row[DataViewSimilarEstates::FIELD_DONT_SHOW_ARCHIVED] ?? false);
-        $pDataViewSimilar->setDontShowReference
-        ($row[DataViewSimilarEstates::FIELD_DONT_SHOW_REFERENCE] ?? false);
+		$pDataViewSimilar->setShowArchived
+		($row[DataViewSimilarEstates::FIELD_SHOW_ARCHIVED] ?? false);
+		$pDataViewSimilar->setShowReference
+		($row[DataViewSimilarEstates::FIELD_SHOW_REFERENCE] ?? false);
 		$pDataViewSimilar->setRadius
 			($row[DataViewSimilarEstates::FIELD_RADIUS] ?? $pDataViewSimilar->getRadius());
 		$pDataViewSimilar->setRecordsPerPage
