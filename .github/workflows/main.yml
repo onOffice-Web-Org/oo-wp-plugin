@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 # Controls when the action will run. 
@@ -15,17 +13,17 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php-versions: ['7.4']
+        php-versions: ['7.0','7.1','7.2','7.3']
     name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
     steps:
       - name: Set up MySQL
         uses: mirromutth/mysql-action@v1.1
         with:
-#          mysql version: '5.7'
+          mysql version: '5.7'
           mysql database: 'wordpress_test'
-          mysql root password: ${{ secrets.RootPassword }} # Required if "mysql user" is empty, default is empty. The root superuser password
-          mysql user: 'developer' # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
-          mysql password: '123456' # Required if "mysql user" exists. The password for the "mysql user"
+          mysql root password: ${{ secrets.RootPassword }}
+          mysql user: 'developer'
+          mysql password: '123456'
 
 
       - name: Checkout
