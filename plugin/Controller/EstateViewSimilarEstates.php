@@ -98,7 +98,7 @@ class EstateViewSimilarEstates
 			$this->_pFilterConfiguration->setPostalCode($pValuesCurrentEstate->getValueRaw('plz') ?? '');
 			$longitude = $pValuesCurrentEstate->getValueRaw('laengengrad');
 			$latitude = $pValuesCurrentEstate->getValueRaw('breitengrad');
-			$estateId = $pEstateList->getCurrentEstateId();
+			$estateId = $pEstateList->getCurrentMultiLangEstateMainId();
 
 			if ($longitude != .0 && $latitude != .0) {
 				$pGeoCoordinates = new GeoCoordinates($latitude, $longitude);

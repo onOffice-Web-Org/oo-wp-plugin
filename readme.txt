@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.7.18 =
+
+**Fixes**
+
+* Fix for similar estates in foreign language content
+
 = 2.7.17 =
 
 **Fixes**
