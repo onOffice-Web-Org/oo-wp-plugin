@@ -128,8 +128,8 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 		$result = [];
 
 		foreach ($newAddressFields as $fieldName => $data) {
-			$pField = new Field($fieldName, onOfficeSDK::MODULE_ADDRESS, __($data['label'], 'onoffice'));
-			$pField->setCategory(__($data['category'] ?? '', 'onoffice'));
+			$pField = new Field($fieldName, onOfficeSDK::MODULE_ADDRESS, __($data['label'], 'onoffice-for-wp-websites'));
+			$pField->setCategory(__($data['category'] ?? '', 'onoffice-for-wp-websites'));
 			$pField->setDefault($data['default'] ?? null);
 			$pField->setLength($data['length'] ?? 0);
 			$pField->setPermittedvalues($data['permittedvalues'] ?? []);

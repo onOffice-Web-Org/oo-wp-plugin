@@ -132,11 +132,11 @@ class InputModelBuilderGeoRange
 	private function generateInputRadius(): InputModelDB
 	{
 		$pInputModelRadius = $this->_pInputModelFactory->create
-			(InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS, __('Default Value for Radius', 'onoffice'));
+			(InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS, __('Default Value for Radius', 'onoffice-for-wp-websites'));
 		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 
 		$valuesAvailable = [
-			0 => __('Not Specified', 'onoffice'),
+			0 => __('Not Specified', 'onoffice-for-wp-websites'),
 			1 => '1 km',
 			5 => '5 km',
 			10 => '10 km',
@@ -179,7 +179,7 @@ class InputModelBuilderGeoRange
 		}
 
 		$pInputModelRadius = $this->_pInputModelFactory->create
-			(InputModelDBFactoryConfigGeoFields::FIELDNAME_GEO_ORDER, __('Order', 'onoffice'));
+			(InputModelDBFactoryConfigGeoFields::FIELDNAME_GEO_ORDER, __('Order', 'onoffice-for-wp-websites'));
 		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelRadius->setValuesAvailable($options);
 		$geoFieldOrderValue = implode(',', $this->_pGeoPositionFieldHandler->getGeoFieldsOrdered());
@@ -238,14 +238,14 @@ class InputModelBuilderGeoRange
 	private function getFieldnamesActiveCheckbox(ViewProperty $pView): array
 	{
 		$fieldnames = [
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => __('Country', 'onoffice'),
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE => __('Postal Code', 'onoffice'),
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_CITY_ACTIVE => __('City', 'onoffice'),
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => __('Street', 'onoffice'),
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => __('Country', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE => __('Postal Code', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_CITY_ACTIVE => __('City', 'onoffice-for-wp-websites'),
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => __('Street', 'onoffice-for-wp-websites'),
 		];
 
 		if ($pView->getViewType() !== Form::TYPE_APPLICANT_SEARCH) {
-			$fieldnames[InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE] = __('Radius', 'onoffice');
+			$fieldnames[InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE] = __('Radius', 'onoffice-for-wp-websites');
 		}
 
 		return $fieldnames;

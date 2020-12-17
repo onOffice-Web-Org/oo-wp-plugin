@@ -74,7 +74,7 @@ class InputFieldComplexSortableListRenderer
 
 				if (in_array($key, $deactivatedFields)) {
 					$deactivatedStyle = ' style="color:red;" ';
-					$deactivatedInTheSoftware = ' ('.esc_html__('Disabled in onOffice', 'onoffice').')';
+					$deactivatedInTheSoftware = ' ('.esc_html__('Disabled in onOffice', 'onoffice-for-wp-websites').')';
 				}
 			}
 

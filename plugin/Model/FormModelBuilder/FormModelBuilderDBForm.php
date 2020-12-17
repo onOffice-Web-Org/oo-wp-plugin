@@ -200,7 +200,7 @@ class FormModelBuilderDBForm
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
-		$pFormModel->setLabel(__('Form', 'onoffice'));
+		$pFormModel->setLabel(__('Form', 'onoffice-for-wp-websites'));
 		$pFormModel->setGroupSlug('onoffice-form-settings');
 		$pFormModel->setPageSlug($pageSlug);
 
@@ -212,7 +212,7 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelName()
 	{
-		$labelName = __('Form Name', 'onoffice');
+		$labelName = __('Form Name', 'onoffice-for-wp-websites');
 
 		$pInputModelName = $this->getInputModelDBFactory()->create
 			(InputModelDBFactoryConfigForm::INPUT_FORM_NAME, null);
@@ -231,7 +231,7 @@ class FormModelBuilderDBForm
 		$formType = $this->getFormType();
 		$pFormTranslation = new FormTranslation();
 		$translation = $pFormTranslation->getPluralTranslationForForm($formType, 1);
-		$pInputModeLabel = new InputModelLabel(__('Type of Form: ', 'onoffice'), $translation);
+		$pInputModeLabel = new InputModelLabel(__('Type of Form: ', 'onoffice-for-wp-websites'), $translation);
 
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 
@@ -250,7 +250,7 @@ class FormModelBuilderDBForm
 		$formName = $this->getValue($name);
 
 		$code = '[oo_form form="'.$formName.'"]';
-		$pInputModeLabel = new InputModelLabel(__(', Embed Code: ', 'onoffice'), $code);
+		$pInputModeLabel = new InputModelLabel(__(', Embed Code: ', 'onoffice-for-wp-websites'), $code);
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
 
@@ -262,14 +262,14 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelRecipient()
 	{
-		$labelRecipient = __('Recipient\'s E-Mail Address', 'onoffice');
+		$labelRecipient = __('Recipient\'s E-Mail Address', 'onoffice-for-wp-websites');
 		$selectedRecipient = $this->getValue('recipient');
 
 		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create
 			(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
-		$pInputModelFormRecipient->setPlaceholder(__('john.doe@example.com', 'onoffice'));
+		$pInputModelFormRecipient->setPlaceholder(__('john.doe@example.com', 'onoffice-for-wp-websites'));
 
 		return $pInputModelFormRecipient;
 	}
@@ -283,13 +283,13 @@ class FormModelBuilderDBForm
 		$addition = '';
 
 		if (get_option('onoffice-settings-captcha-sitekey', '') === '') {
-			$addition = __('(won\'t work until set up globally)', 'onoffice');
+			$addition = __('(won\'t work until set up globally)', 'onoffice-for-wp-websites');
 		}
 
 		/* translators: %s will be replaced with the translation of
 			'(won't work until set up globally)', if captcha hasn't been set up appropriately yet,
 			or blank otherwise. */
-		$labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice'), $addition);
+		$labelRequiresCaptcha = sprintf(__('Requires Captcha %s', 'onoffice-for-wp-websites'), $addition);
 		$selectedValue = $this->getValue('captcha', false);
 		$pInputModelFormRequiresCaptcha = $this->generateGenericCheckbox($labelRequiresCaptcha,
 			InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRES_CAPTCHA, $selectedValue);
@@ -302,7 +302,7 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelResultLimit()
 	{
-		$labelResultLimit = __('Result Limit', 'onoffice');
+		$labelResultLimit = __('Result Limit', 'onoffice-for-wp-websites');
 		$pInputModelFormLimitResult = $this->getInputModelDBFactory()->create
 			(InputModelDBFactoryConfigForm::INPUT_FORM_LIMIT_RESULTS, $labelResultLimit);
 		$field = $pInputModelFormLimitResult->getField();
@@ -320,7 +320,7 @@ class FormModelBuilderDBForm
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Required', 'onoffice');
+		$label = __('Required', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_REQUIRED;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -337,7 +337,7 @@ class FormModelBuilderDBForm
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Reduce values according to selected filter', 'onoffice');
+		$label = __('Reduce values according to selected filter', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_AVAILABLE_OPTIONS;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -365,12 +365,12 @@ class FormModelBuilderDBForm
 	 */
 	public function getInputModelDefaultValueLanguageSwitch(): InputModelDB
 	{
-		$pInputModel = new InputModelDB('defaultvalue_newlang', __('Add language', 'onoffice'));
+		$pInputModel = new InputModelDB('defaultvalue_newlang', __('Add language', 'onoffice-for-wp-websites'));
 		$pInputModel->setTable('language');
 		$pInputModel->setField('language');
 
 		$pLanguageReader = new InstalledLanguageReader;
-		$languages = ['' => __('Choose Language', 'onoffice')]
+		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
 			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
 		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
 		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
@@ -379,7 +379,7 @@ class FormModelBuilderDBForm
 
 			if (FieldTypes::isStringType($type ?? '')) {
 				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
-				$pInputModel->setLabel(__('Add language', 'onoffice'));
+				$pInputModel->setLabel(__('Add language', 'onoffice-for-wp-websites'));
 			}
 		});
 
@@ -438,7 +438,7 @@ class FormModelBuilderDBForm
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Module', 'onoffice');
+		$label = __('Module', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_MODULE;
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
@@ -465,8 +465,8 @@ class FormModelBuilderDBForm
 				break;
 			}
 		}
-		$moduleTranslated = __(ModuleTranslation::getLabelSingular($module ?? ''), 'onoffice');
-		$label = sprintf(__('Module: %s', 'onoffice'), $moduleTranslated);
+		$moduleTranslated = __(ModuleTranslation::getLabelSingular($module ?? ''), 'onoffice-for-wp-websites');
+		$label = sprintf(__('Module: %s', 'onoffice-for-wp-websites'), $moduleTranslated);
 		$pInputModel->setLabel($label);
 		$pInputModel->setValue($module);
 	}

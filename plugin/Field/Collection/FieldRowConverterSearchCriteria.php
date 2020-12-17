@@ -65,7 +65,7 @@ class FieldRowConverterSearchCriteria
 
 		$input['tablename'] = 'ObjSuchkriterien';
 		$input['module'] = onOfficeSDK::MODULE_SEARCHCRITERIA;
-		$input['content'] = __('Search Criteria', 'onoffice');
+		$input['content'] = __('Search Criteria', 'onoffice-for-wp-websites');
 		$input['permittedvalues'] = $input['values'] ?? [];
 
 		if (FieldTypes::isRegZusatzSearchcritTypes($input['type'])) {

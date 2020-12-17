@@ -62,7 +62,7 @@ class EstateViewDocumentTitleBuilder
 			/* translators: %2$s is the kind of estate, %3$s the markting type,
 							%4$s the city, %5$s is the estate number.
 							Example: House (Sale) in Aachen - JJ12345 */
-			$format = __('%2$s (%3$s) in %4$s - %5$s', 'onoffice');
+			$format = __('%2$s (%3$s) in %4$s - %5$s', 'onoffice-for-wp-websites');
 			$title['title'] = $this->_pEstateTitleBuilder->buildTitle($estateId, $format);
 		}
 

@@ -89,7 +89,7 @@ class FormModelBuilderDBEstateUnitListSettings
 		}
 
 		$pFormModel = new FormModel();
-		$pFormModel->setLabel(__('Unit List', 'onoffice'));
+		$pFormModel->setLabel(__('Unit List', 'onoffice-for-wp-websites'));
 		$pFormModel->setGroupSlug('onoffice-unitlist-settings');
 		$pFormModel->setPageSlug($pageSlug);
 
@@ -105,7 +105,7 @@ class FormModelBuilderDBEstateUnitListSettings
 
 	public function createInputModelRandomOrder()
 	{
-		$labelShowStatus = __('Random Order', 'onoffice');
+		$labelShowStatus = __('Random Order', 'onoffice-for-wp-websites');
 
 		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_RANDOM_ORDER, $labelShowStatus);

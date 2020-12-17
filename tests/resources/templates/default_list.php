@@ -30,7 +30,7 @@ use onOffice\WPlugin\EstateList;
 	$pEstates->resetEstateIterator();
 	while ($currentEstate = $pEstates->estateIterator()) {
 		unset($currentEstate['vermarktungsstatus']);
-		echo $pEstates->getEstateLink() . ': ' . esc_html('Show Details', 'onoffice')."\n";
+		echo $pEstates->getEstateLink() . ': ' . esc_html('Show Details', 'onoffice-for-wp-websites')."\n";
 		foreach ($currentEstate as $field => $value) {
 			echo esc_html($pEstates->getFieldLabel($field)) . ': '
 				. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)) . "\n";

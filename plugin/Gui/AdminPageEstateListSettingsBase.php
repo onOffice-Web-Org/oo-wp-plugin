@@ -156,9 +156,9 @@ abstract class AdminPageEstateListSettingsBase
 	public function getEnqueueData(): array
 	{
 		return array(
-			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice'),
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view. Please make '
-				.'sure the name of the view is unique, even across all estate list types.', 'onoffice'),
+				.'sure the name of the view is unique, even across all estate list types.', 'onoffice-for-wp-websites'),
 			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 		);

@@ -64,7 +64,7 @@ class AdminPageEstateListSettings
 	public function __construct($pageSlug)
 	{
 		parent::__construct($pageSlug);
-		$this->setPageTitle(__('Edit List View', 'onoffice'));
+		$this->setPageTitle(__('Edit List View', 'onoffice-for-wp-websites'));
 	}
 
 
@@ -83,7 +83,7 @@ class AdminPageEstateListSettings
 		$pFormModelName = new FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
 		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
-		$pFormModelName->setLabel(__('choose name', 'onoffice'));
+		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
 
@@ -103,7 +103,7 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter = new FormModel();
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
 		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
-		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice'));
+		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice-for-wp-websites'));
 		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
 		$pFormModelRecordsFilter->addInputModel($pInputModelSortBySetting);
@@ -122,7 +122,7 @@ class AdminPageEstateListSettings
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
-		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice'));
+		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$this->addFormModel($pFormModelLayoutDesign);
 
@@ -130,7 +130,7 @@ class AdminPageEstateListSettings
 		$pFormModelPictureTypes = new FormModel();
 		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
 		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
-		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice'));
+		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
 
@@ -138,7 +138,7 @@ class AdminPageEstateListSettings
 		$pFormModelDocumentTypes = new FormModel();
 		$pFormModelDocumentTypes->setPageSlug($this->getPageSlug());
 		$pFormModelDocumentTypes->setGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
-		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice'));
+		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice-for-wp-websites'));
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$this->addFormModel($pFormModelDocumentTypes);
 
@@ -147,13 +147,13 @@ class AdminPageEstateListSettings
 		$pFormModelGeoFields = new FormModel();
 		$pFormModelGeoFields->setPageSlug($this->getPageSlug());
 			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
-		$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
+		$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice-for-wp-websites'));
 		$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE);
 		foreach ($pInputModelBuilderGeoRange->build($pListView) as $pInputModel) {
 			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
 
-		$geoNotice = __('At least the following fields must be active: country, radius and city or postcode.', 'onoffice');
+		$geoNotice = __('At least the following fields must be active: country, radius and city or postcode.', 'onoffice-for-wp-websites');
 		$pInputModelGeoLabel = new InputModelLabel(null, $geoNotice);
 		$pInputModelGeoLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_ITALIC);
 		$pFormModelGeoFields->addInputModel($pInputModelGeoLabel);

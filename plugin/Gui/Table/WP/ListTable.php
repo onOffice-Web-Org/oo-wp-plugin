@@ -42,8 +42,8 @@ abstract class ListTable extends WP_List_Table
 	/**
 	 *
 	 * $columns = array(
-	 *		'link_name' => __('Link Name', 'onoffice'),
-	 *		'link_category' => __('Link Category', 'onoffice'),
+	 *		'link_name' => __('Link Name', 'onoffice-for-wp-websites'),
+	 *		'link_category' => __('Link Category', 'onoffice-for-wp-websites'),
 	 *		'cb' => '<input type="checkbox" />',
 	 *	);
 	 *
