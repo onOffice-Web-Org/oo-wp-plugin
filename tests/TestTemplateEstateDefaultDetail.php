@@ -52,7 +52,7 @@ class TestTemplateEstateDefaultDetail
 				'getEstatePictureTitle',
 				'getDocument',
 				'getCurrentEstateId',
-                'getSimilarEstates',
+				'getSimilarEstates',
 			])
 			->disableOriginalConstructor()
 			->getMock();
@@ -107,7 +107,7 @@ class TestTemplateEstateDefaultDetail
 			->willReturn('Fotolia_3286409_Subscription_XL');
 		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
-        $this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
+		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
 	}
 
 	/**
