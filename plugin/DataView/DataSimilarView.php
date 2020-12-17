@@ -34,28 +34,28 @@ namespace onOffice\WPlugin\DataView;
 
 class DataSimilarView
 {
-    /** */
-    const FIELDS = 'fields';
+	/** */
+	const FIELDS = 'fields';
 
 	/** */
 	const ENABLE_SIMILAR_ESTATES = 'enablesimilarestates';
 
-    /** @var string[] */
-    private $_fields = [
-        'Id',
-        'objekttitel',
-        'objektnr_extern',
-        'regionaler_zusatz',
-        'kaufpreis',
-        'wohnflaeche',
-        'anzahl_zimmer',
-        'kaltmiete',
-        'ort',
-        'plz',
-        'status2',
-        'grundstuecksflaeche',
-        'nutzflaeche'
-    ];
+	/** @var string[] */
+	private $_fields = [
+		'Id',
+		'objekttitel',
+		'objektnr_extern',
+		'regionaler_zusatz',
+		'kaufpreis',
+		'wohnflaeche',
+		'anzahl_zimmer',
+		'kaltmiete',
+		'ort',
+		'plz',
+		'status2',
+		'grundstuecksflaeche',
+		'nutzflaeche'
+	];
 
 	/** @var int */
 	private $_pageId = 0;
@@ -84,13 +84,13 @@ class DataSimilarView
 	public function setPageId(int $pageId)
 		{ $this->_pageId = $pageId; }
 
-    /** @return array */
-    public function getFields(): array
-    { return $this->_fields; }
+	/** @return array */
+	public function getFields(): array
+		{ return $this->_fields; }
 
-    /** @param array $fields */
-    public function setFields(array $fields)
-    { $this->_fields = $fields; }
+	/** @param array $fields */
+	public function setFields(array $fields)
+		{ $this->_fields = $fields; }
 
 	/** @return DataViewSimilarEstates */
 	public function getDataViewSimilarEstates(): DataViewSimilarEstates
@@ -103,4 +103,12 @@ class DataSimilarView
 	/** @param bool $dataSimilarViewActive */
 	public function setDataSimilarViewActive(bool $dataSimilarViewActive)
 		{ $this->_dataSimilarViewActive = $dataSimilarViewActive; }
+
+	/**
+	 * @param DataViewSimilarEstates $pDataViewSimilarEstates
+	 */
+	public function setDataViewSimilarEstates(DataViewSimilarEstates $pDataViewSimilarEstates)
+	{
+		$this->_pDataViewSimilarEstates = $pDataViewSimilarEstates;
+	}
 }

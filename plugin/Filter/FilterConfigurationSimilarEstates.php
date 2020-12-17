@@ -41,11 +41,11 @@ class FilterConfigurationSimilarEstates
 	/** @var string */
 	private $_postalCode = '';
 
-    /** @var string */
-    private $_showArchived = '';
+	/** @var string */
+	private $_showArchived = '';
 
-    /** @var string */
-    private $_showReference = '';
+	/** @var string */
+	private $_showReference = '';
 
 	/** @var GeoCoordinates */
 	private $_pGeoCoordinates = null;
@@ -102,27 +102,27 @@ class FilterConfigurationSimilarEstates
 		return $this->_postalCode;
 	}
 
-    /**
-     *
-     * @return string
-     *
-     */
+	/**
+	 *
+	 * @return string
+	 *
+	 */
 
-    public function getShowArchived(): string
-    {
-        return $this->_showArchived;
-    }
+	public function getShowArchived(): string
+	{
+		return $this->_showArchived;
+	}
 
-    /**
-     *
-     * @return string
-     *
-     */
+	/**
+	 *
+	 * @return string
+	 *
+	 */
 
-    public function getShowReference(): string
-    {
-        return $this->_showReference;
-    }
+	public function getShowReference(): string
+	{
+		return $this->_showReference;
+	}
 
 
 	/**
@@ -292,27 +292,27 @@ class FilterConfigurationSimilarEstates
 		$this->_postalCode = $postalCode;
 	}
 
-    /**
-     *
-     * @param string $showArchived
-     *
-     */
+	/**
+	 *
+	 * @param string $showArchived
+	 *
+	 */
 
-    public function setShowArchive(string $showArchived)
-    {
-        $this->_showArchived= $showArchived;
-    }
+	public function setShowArchive(string $showArchived)
+	{
+		$this->_showArchived = $showArchived;
+	}
 
-    /**
-     *
-     * @param string $showReference
-     *
-     */
+	/**
+	 *
+	 * @param string $showReference
+	 *
+	 */
 
-    public function setShowReference(string $showReference)
-    {
-        $this->_showArchived= $showReference;
-    }
+	public function setShowReference(string $showReference)
+	{
+		$this->_showReference = $showReference;
+	}
 
 
 	/**

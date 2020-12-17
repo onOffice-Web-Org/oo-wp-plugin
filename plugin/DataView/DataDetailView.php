@@ -38,6 +38,9 @@ class DataDetailView
 	implements DataView
 {
 	/** */
+	const ENABLE_SIMILAR_ESTATES = 'enablesimilarestates';
+
+	/** */
 	const PICTURES = 'pictures';
 
 	/** */
@@ -97,6 +100,34 @@ class DataDetailView
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
+	/** @var bool */
+	private $_dataDetailViewActive = false;
+
+	/** @var DataViewSimilarEstates */
+	private $_pDataViewSimilarEstates = null;
+
+
+	/**
+	 *
+	 */
+
+	public function __construct()
+	{
+		$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function __wakeup()
+	{
+		if ($this->_pDataViewSimilarEstates === null) {
+			$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
+		}
+	}
+
 	/** @return array */
 	public function getFields(): array
 		{ return $this->_fields; }
@@ -152,6 +183,22 @@ class DataDetailView
 	/** @return int */
 	public function getMovieLinks(): int
 		{ return $this->_movieLinks; }
+
+	/** @return DataViewSimilarEstates */
+	public function getDataViewSimilarEstates(): DataViewSimilarEstates
+	{ return $this->_pDataViewSimilarEstates; }
+
+	/** @param DataViewSimilarEstates $pDataViewSimilarEstates */
+	public function setDataViewSimilarEstates(DataViewSimilarEstates $pDataViewSimilarEstates)
+	{ $this->_pDataViewSimilarEstates = $pDataViewSimilarEstates; }
+
+	/** @return bool */
+	public function getDataDetailViewActive(): bool
+	{ return $this->_dataDetailViewActive; }
+
+	/** @param bool $dataDetailViewActive */
+	public function setDataDetailViewActive(bool $dataDetailViewActive)
+	{ $this->_dataDetailViewActive = $dataDetailViewActive; }
 
 	/** @param int $movieLinks */
 	public function setMovieLinks(int $movieLinks)

@@ -50,17 +50,17 @@ class TestClassDataSimilarEstatesSettingsHandler
 		'similar_estates_template' => '/test/similar/template.php',
 		'same_kind' => true,
 		'same_maketing_method' => true,
-        'dont_show_archived' => true,
-        'dont_show_reference' => true,
+		'show_archived' => true,
+		'show_reference' => true,
 		'radius' => 35,
 		'amount' => 13,
 		'enablesimilarestates' => true,
 	];
 
-    /** */
-    const VALUES_EMPTY_BY_ROW = [
-        'fields' => [],
-    ];
+	/** */
+	const VALUES_EMPTY_BY_ROW = [
+		'fields' => [],
+	];
 
 
 	/**
@@ -71,34 +71,34 @@ class TestClassDataSimilarEstatesSettingsHandler
 	{
 		$row = self::VALUES_BY_ROW;
 
-        $pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
 		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
 		$pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
 		$this->assertEquals($row['fields'], $pDataSimilarView->getFields());
-        $this->assertEquals($row['enablesimilarestates'], $pDataSimilarView->getDataSimilarViewActive());
-        $pDataSimilar = $pDataSimilarView->getDataViewSimilarEstates();
+		$this->assertEquals($row['enablesimilarestates'], $pDataSimilarView->getDataSimilarViewActive());
+		$pDataSimilar = $pDataSimilarView->getDataViewSimilarEstates();
 
-        $this->assertEquals($row['same_kind'], $pDataSimilar->getSameEstateKind());
-        $this->assertEquals($row['same_maketing_method'], $pDataSimilar->getSameMarketingMethod());
-        $this->assertFalse($pDataSimilar->getSamePostalCode()); // missing -> bool
-        $this->assertEquals($row['radius'], $pDataSimilar->getRadius());
-        $this->assertEquals($row['amount'], $pDataSimilar->getRecordsPerPage());
+		$this->assertEquals($row['same_kind'], $pDataSimilar->getSameEstateKind());
+		$this->assertEquals($row['same_maketing_method'], $pDataSimilar->getSameMarketingMethod());
+		$this->assertFalse($pDataSimilar->getSamePostalCode()); // missing -> bool
+		$this->assertEquals($row['radius'], $pDataSimilar->getRadius());
+		$this->assertEquals($row['amount'], $pDataSimilar->getRecordsPerPage());
 	}
 
-    /**
-     *
-     */
+	/**
+	 *
+	 */
 
-    public function testCreateEmptyDataSimilarEstatesSettingsByValues()
-    {
-        $row = self::VALUES_EMPTY_BY_ROW;
-        $pWPOptionsWrapper = new WPOptionWrapperTest();
-        $pDataDetailViewHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
-        $pDataSimilarView = $pDataDetailViewHandler->createDataSimilarEstatesSettingsByValues($row);
+	public function testCreateEmptyDataSimilarEstatesSettingsByValues()
+	{
+		$row = self::VALUES_EMPTY_BY_ROW;
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataDetailViewHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
+		$pDataSimilarView = $pDataDetailViewHandler->createDataSimilarEstatesSettingsByValues($row);
 
-        $this->assertEquals($pDataSimilarView->getFields(), []);
-        $this->assertEquals($pDataSimilarView->getPageId(), 0);
-    }
+		$this->assertEquals($pDataSimilarView->getFields(), []);
+		$this->assertEquals($pDataSimilarView->getPageId(), 0);
+	}
 
 	/**
 	 *

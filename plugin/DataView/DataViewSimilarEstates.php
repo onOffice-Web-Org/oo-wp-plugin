@@ -33,25 +33,25 @@ use onOffice\WPlugin\Types\ImageTypes;
 class DataViewSimilarEstates
 	implements DataView
 {
-    /** */
-    const FIELDS = 'fields';
+	/** */
+	const FIELDS = 'fields';
 
-    /** @var string[] */
-    private $_fields = [
-        'Id',
-        'objekttitel',
-        'objektnr_extern',
-        'regionaler_zusatz',
-        'kaufpreis',
-        'wohnflaeche',
-        'anzahl_zimmer',
-        'kaltmiete',
-        'ort',
-        'plz',
-        'status2',
-        'grundstuecksflaeche',
-        'nutzflaeche'
-    ];
+	/** @var string[] */
+	private $_fields = [
+		'Id',
+		'objekttitel',
+		'objektnr_extern',
+		'regionaler_zusatz',
+		'kaufpreis',
+		'wohnflaeche',
+		'anzahl_zimmer',
+		'kaltmiete',
+		'ort',
+		'plz',
+		'status2',
+		'grundstuecksflaeche',
+		'nutzflaeche'
+	];
 
 	/** */
 	const FIELD_SAME_KIND = 'same_kind';
@@ -59,11 +59,11 @@ class DataViewSimilarEstates
 	/** */
 	const FIELD_SAME_MARKETING_METHOD = 'same_maketing_method';
 
-    /** */
-    const FIELD_DONT_SHOW_ARCHIVED = 'dont_show_archived';
+	/** */
+	const FIELD_SHOW_ARCHIVED = 'show_archived';
 
-    /** */
-    const FIELD_DONT_SHOW_REFERENCE = 'dont_show_reference';
+	/** */
+	const FIELD_SHOW_REFERENCE = 'show_reference';
 
 	/** */
 	const FIELD_SAME_POSTAL_CODE = 'same_postal_code';
@@ -87,11 +87,11 @@ class DataViewSimilarEstates
 	/** @var bool */
 	private $_samePostalCode = false;
 
-    /** @var bool */
-    private $_dontShowArchived = false;
+	/** @var bool */
+	private $_showArchived = false;
 
-    /** @var bool */
-    private $_dontShowReference = false;
+	/** @var bool */
+	private $_showReference = false;
 
 	/** @var int */
 	private $_radius = 10;
@@ -115,13 +115,13 @@ class DataViewSimilarEstates
 	public function setSamePostalCode(bool $samePostalCode)
 		{ $this->_samePostalCode = $samePostalCode; }
 
-    /** @param bool $dontShowArchived */
-    public function setDontShowArchived (bool $dontShowArchived)
-    { $this->_dontShowArchived = $dontShowArchived; }
+	/** @param bool $showArchived */
+	public function setShowArchived(bool $showArchived)
+		{ $this->_showArchived = $showArchived; }
 
-    /** @param bool $dontShowArchived */
-    public function setDontShowReference (bool $dontShowReference)
-    { $this->_dontShowReference = $dontShowReference; }
+	/** @param bool $showReference */
+	public function setShowReference(bool $showReference)
+		{ $this->_showReference = $showReference; }
 
 	/** @param int $radius */
 	public function setRadius(int $radius)
@@ -143,13 +143,13 @@ class DataViewSimilarEstates
 	public function getSamePostalCode(): bool
 		{ return $this->_samePostalCode; }
 
-    /** @return bool */
-    public function getDontShowArchived(): bool
-    { return $this->_dontShowArchived; }
+	/** @return bool */
+	public function getShowArchived(): bool
+		{ return $this->_showArchived; }
 
-    /** @return bool */
-    public function getDontShowReference(): bool
-    { return $this->_dontShowReference; }
+	/** @return bool */
+	public function getShowReference(): bool
+		{ return $this->_showReference; }
 
 	/** @return int */
 	public function getRadius(): int
@@ -171,9 +171,9 @@ class DataViewSimilarEstates
 	public function getFields(): array
 	{ return $this->_fields;}
 
-    /** @param array $fields */
-    public function setFields(array $fields)
-    { $this->_fields = $fields; }
+	/** @param array $fields */
+	public function setFields(array $fields)
+		{ $this->_fields = $fields; }
 
 	/** @return string */
 	public function getName(): string

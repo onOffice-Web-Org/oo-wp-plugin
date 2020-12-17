@@ -77,8 +77,8 @@ class AdminPageSimilarEstates
 	/** */
 	const FORM_VIEW_SIMILAR_ESTATES = 'viewsimilarestates';
 
-    /** */
-    const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
+	/** */
+	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
 
 	public function renderContent()
 	{
@@ -87,11 +87,11 @@ class AdminPageSimilarEstates
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
 
-        $pFieldsCollection = $this->readAllFields();
+		$pFieldsCollection = $this->readAllFields();
 
-        /* @var $pRenderer InputModelRenderer */
-        $pRenderer = $this->getContainer()->get(InputModelRenderer::class);
-        $pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
+		/* @var $pRenderer InputModelRenderer */
+		$pRenderer = $this->getContainer()->get(InputModelRenderer::class);
+		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
 
 		wp_nonce_field( $this->getPageSlug() );
 
@@ -107,18 +107,18 @@ class AdminPageSimilarEstates
 		echo '<div class="postbox-container" id="postbox-container-2">';
 		do_meta_boxes(get_current_screen()->id, 'normal', null );
 		echo '</div>';
-        echo '<div class="clear"></div>';
-        echo '<div style="float:left;">';
-        $this->generateAccordionBoxes($pFieldsCollection);
-        echo '</div>';
-        echo '<div id="listSettings" style="float:left;" class="postbox">';
-        do_accordion_sections(get_current_screen()->id, 'advanced', null);
-        echo '</div>';
-        echo '<div class="fieldsSortable postbox" id="'
-            .esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)).'">';
-        echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Real Estate Fields', 'onoffice').'</span></h2>';
-        $pRenderer->buildForAjax($pFormViewSortableFields);
-        echo '</div>';
+		echo '<div class="clear"></div>';
+		echo '<div style="float:left;">';
+		$this->generateAccordionBoxes($pFieldsCollection);
+		echo '</div>';
+		echo '<div id="listSettings" style="float:left;" class="postbox">';
+		do_accordion_sections(get_current_screen()->id, 'advanced', null);
+		echo '</div>';
+		echo '<div class="fieldsSortable postbox" id="'
+			. esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)) . '">';
+		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Real Estate Fields', 'onoffice') . '</span></h2>';
+		$pRenderer->buildForAjax($pFormViewSortableFields);
+		echo '</div>';
 		echo '<div class="clear"></div>';
 		echo '</div>';
 
@@ -163,21 +163,21 @@ class AdminPageSimilarEstates
 		$this->createMetaBoxByForm($pFormSimilarEstates, 'normal');
 	}
 
-    /**
-     * @param FieldsCollection $pFieldsCollection
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    protected function generateAccordionBoxes(FieldsCollection $pFieldsCollection)
-    {
-        $pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
-        $fieldsEstate = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	protected function generateAccordionBoxes(FieldsCollection $pFieldsCollection)
+	{
+		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
+		$fieldsEstate = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
 
-        foreach (array_keys($fieldsEstate) as $category) {
-            $pFormFieldsConfig = $this->getFormModelByGroupSlug(onOfficeSDK::MODULE_ESTATE.$category);
-            $this->createMetaBoxByForm($pFormFieldsConfig, 'advanced');
-        }
-    }
+		foreach (array_keys($fieldsEstate) as $category) {
+			$pFormFieldsConfig = $this->getFormModelByGroupSlug(onOfficeSDK::MODULE_ESTATE . $category);
+			$this->createMetaBoxByForm($pFormFieldsConfig, 'advanced');
+		}
+	}
 
 	/**
 	 *
@@ -192,8 +192,8 @@ class AdminPageSimilarEstates
 		$pInputModelSimilarEstatesEstateKind = $pFormModelBuilder->createInputModelSimilarEstateKind();
 		$pInputModelSimilarEstatesMarketingMethod = $pFormModelBuilder->createInputModelSimilarEstateMarketingMethod();
 		$pInputModelSimilarEstatesSamePostalCode = $pFormModelBuilder->createInputModelSameEstatePostalCode();
-        $pInputModelSimilarEstatesDontShowArchived = $pFormModelBuilder->createInputModelDontShowArchived();
-        $pInputModelSimilarEstatesDontShowReference = $pFormModelBuilder->createInputModelDontShowReference();
+		$pInputModelSimilarEstatesShowArchived = $pFormModelBuilder->createInputModelShowArchived();
+		$pInputModelSimilarEstatesShowReference = $pFormModelBuilder->createInputModelShowReference();
 		$pInputModelSimilarEstatesRadius = $pFormModelBuilder->createInputModelSameEstateRadius();
 		$pInputModelSimilarEstatesAmount = $pFormModelBuilder->createInputModelSameEstateAmount();
 		$pInputModelSimilarEstatesTemplate = $pFormModelBuilder->createInputModelTemplate
@@ -208,37 +208,37 @@ class AdminPageSimilarEstates
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesEstateKind);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesMarketingMethod);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesSamePostalCode);
-        $pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesDontShowArchived);
-        $pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesDontShowReference);
+		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesShowArchived);
+		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesShowReference);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesRadius);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesAmount);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesTemplate);
 		$this->addFormModel($pFormModelSimilarEstates);
 
-        $pFieldsCollection = $this->readAllFields();
-        $pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
-        $fieldsEstate = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
-        $this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
-            self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldsEstate);
+		$pFieldsCollection = $this->readAllFields();
+		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
+		$fieldsEstate = $pFieldsCollectionConverter->convert($pFieldsCollection, onOfficeSDK::MODULE_ESTATE);
+		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE,
+			self::FORM_VIEW_SORTABLE_FIELDS_CONFIG, $pFormModelBuilder, $fieldsEstate);
 
 	}
 
-    /**
-     * @return FieldsCollection
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    private function readAllFields(): FieldsCollection
-    {
-        $pFieldsCollection = new FieldsCollection;
-        $pFieldsCollection->merge
-        (new FieldModuleCollectionDecoratorInternalAnnotations
-        (new FieldModuleCollectionDecoratorGeoPositionBackend
-        (new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection()))));
-        $this->getContainer()->get(FieldsCollectionBuilderShort::class)
-            ->addFieldsAddressEstate($pFieldsCollection);
-        return $pFieldsCollection;
-    }
+	/**
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function readAllFields(): FieldsCollection
+	{
+		$pFieldsCollection = new FieldsCollection;
+		$pFieldsCollection->merge
+		(new FieldModuleCollectionDecoratorInternalAnnotations
+		(new FieldModuleCollectionDecoratorGeoPositionBackend
+		(new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection()))));
+		$this->getContainer()->get(FieldsCollectionBuilderShort::class)
+			->addFieldsAddressEstate($pFieldsCollection);
+		return $pFieldsCollection;
+	}
 
 	/**
 	 *
@@ -331,53 +331,53 @@ class AdminPageSimilarEstates
 		);
 	}
 
-    /**
-     * @param string $module
-     * @param $groupSlug
-     * @param FormModelBuilderSimilarEstateSettings $pFormModelBuilder
-     * @param array $fieldNames
-     * @throws UnknownModuleException
-     * @throws ExceptionInputModelMissingField
-     */
-    private function addFieldsConfiguration($module, $groupSlug, FormModelBuilderSimilarEstateSettings $pFormModelBuilder,
-                                            array $fieldNames)
-    {
-        foreach ($fieldNames as $category => $fields) {
-            $pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
-            ($module.$category, $fields, $category);
-            $pInputModelFieldsConfig->setSpecialDivId(self::getSpecialDivId($module));
-            $pFormModelFieldsConfig = new FormModel();
-            $pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
-            $pFormModelFieldsConfig->setGroupSlug($module.$category);
-            $pFormModelFieldsConfig->setLabel($category);
-            $pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
-            $this->addFormModel($pFormModelFieldsConfig);
-        }
+	/**
+	 * @param string $module
+	 * @param $groupSlug
+	 * @param FormModelBuilderSimilarEstateSettings $pFormModelBuilder
+	 * @param array $fieldNames
+	 * @throws UnknownModuleException
+	 * @throws ExceptionInputModelMissingField
+	 */
+	private function addFieldsConfiguration($module, $groupSlug, FormModelBuilderSimilarEstateSettings $pFormModelBuilder,
+											array $fieldNames)
+	{
+		foreach ($fieldNames as $category => $fields) {
+			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
+			($module . $category, $fields, $category);
+			$pInputModelFieldsConfig->setSpecialDivId(self::getSpecialDivId($module));
+			$pFormModelFieldsConfig = new FormModel();
+			$pFormModelFieldsConfig->setPageSlug($this->getPageSlug());
+			$pFormModelFieldsConfig->setGroupSlug($module . $category);
+			$pFormModelFieldsConfig->setLabel($category);
+			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
+			$this->addFormModel($pFormModelFieldsConfig);
+		}
 
-        $pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module,
-            InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
-        $pFormModelSortableFields = new FormModel();
-        $pFormModelSortableFields->setPageSlug($this->getPageSlug());
-        $pFormModelSortableFields->setGroupSlug($groupSlug);
-        $pFormModelSortableFields->addInputModel($pInputModelSortableFields);
-        $this->addFormModel($pFormModelSortableFields);
+		$pInputModelSortableFields = $pFormModelBuilder->createSortableFieldList($module,
+			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
+		$pFormModelSortableFields = new FormModel();
+		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
+		$pFormModelSortableFields->setGroupSlug($groupSlug);
+		$pFormModelSortableFields->addInputModel($pInputModelSortableFields);
+		$this->addFormModel($pFormModelSortableFields);
 
-        $pFormHidden = new FormModel();
-        $pFormHidden->setIsInvisibleForm(true);
+		$pFormHidden = new FormModel();
+		$pFormHidden->setIsInvisibleForm(true);
 
-        foreach ($pInputModelSortableFields->getReferencedInputModels() as $pReference) {
-            $pFormHidden->addInputModel($pReference);
-        }
+		foreach ($pInputModelSortableFields->getReferencedInputModels() as $pReference) {
+			$pFormHidden->addInputModel($pReference);
+		}
 
-        $this->addFormModel($pFormHidden);
-    }
+		$this->addFormModel($pFormHidden);
+	}
 
-    /**
-     * @param string $module
-     * @return string
-     */
-    private static function getSpecialDivId($module)
-    {
-        return 'actionFor'.$module;
-    }
+	/**
+	 * @param string $module
+	 * @return string
+	 */
+	private static function getSpecialDivId($module)
+	{
+		return 'actionFor' . $module;
+	}
 }
