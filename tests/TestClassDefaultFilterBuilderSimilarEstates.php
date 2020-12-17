@@ -63,8 +63,8 @@ class TestClassDefaultFilterBuilderSimilarEstates
 		$this->_pFilterConfigurationSimilarEstates->setEstateKind('wohnung');
 		$this->_pFilterConfigurationSimilarEstates->setMarketingMethod('kauf');
 		$this->_pFilterConfigurationSimilarEstates->setPostalCode('52070');
-		$this->_pFilterConfigurationSimilarEstates->setShowArchive('status2obj_archiviert');
-		$this->_pFilterConfigurationSimilarEstates->setShowReference('1');
+		$this->_pFilterConfigurationSimilarEstates->setShowArchive('status2obj_aktiv');
+		$this->_pFilterConfigurationSimilarEstates->setShowReference('0');
 	}
 
 

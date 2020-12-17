@@ -37,41 +37,41 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	extends WP_UnitTestCase
 {
 
-    /** */
-    const VALUES_BY_ROW = [
-        'fields' => [
-            'Objektnr_extern',
-            'wohnflaeche',
-            'kaufpreis',
-        ],
-        'similar_estates_template' => '/test/similar/template.php',
-        'same_kind' => true,
-        'same_maketing_method' => true,
-        'show_archived' => true,
-        'show_reference' => true,
-        'radius' => 35,
-        'amount' => 13,
-        'enablesimilarestates' => true,
-    ];
+	/** */
+	const VALUES_BY_ROW = [
+		'fields' => [
+			'Objektnr_extern',
+			'wohnflaeche',
+			'kaufpreis',
+		],
+		'similar_estates_template' => '/test/similar/template.php',
+		'same_kind' => true,
+		'same_maketing_method' => true,
+		'show_archived' => true,
+		'show_reference' => true,
+		'radius' => 35,
+		'amount' => 13,
+		'enablesimilarestates' => true,
+	];
 
 	/** @var bool */
 	private $_dataSimilarViewActive = true;
 
-    /** @var InputModelOptionFactorySimilarView */
-    private $_pInputModelSimilarViewFactory ;
+	/** @var InputModelOptionFactorySimilarView */
+	private $_pInputModelSimilarViewFactory;
 
 	/** @var DataSimilarView */
 	private $_pDataSimilarView = null;
 
-    /**
-     * @before
-     */
-    public function prepare()
-    {
-        $this->_pInputModelSimilarViewFactory  = new InputModelOptionFactorySimilarView('onoffice');
-    }
+	/**
+	 * @before
+	 */
+	public function prepare()
+	{
+		$this->_pInputModelSimilarViewFactory = new InputModelOptionFactorySimilarView('onoffice');
+	}
 
-    /**
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::GetCheckboxEnableSimilarEstates
 	 */
 	public function testGetCheckboxEnableSimilarEstates()
@@ -81,7 +81,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pWPOptionsWrapper = new WPOptionWrapperTest();
 		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
 		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
-		
+
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
 			->disableOriginalConstructor()
@@ -95,9 +95,59 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::GetCheckboxEnableSimilarEstates
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateKind
 	 */
-	public function testCreateInputModelFieldsConfigByCategory()
+	public function testCreateInputModelSimilarEstateKind()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->createInputModelSimilarEstateKind();
+		$this->assertEquals($pInputModelDB->getValue(), '1');
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 */
+	public function testCreateInputModelSimilarEstateMarketingMethod()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->createInputModelSimilarEstateMarketingMethod();
+		$this->assertEquals($pInputModelDB->getValue(), '1');
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 */
+	public function testCreateInputModelShowArchived()
 	{
 		$row = self::VALUES_BY_ROW;
 
@@ -113,8 +163,101 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
 
-		$pInputModelDB = $pInstance->createInputModelFieldsConfigByCategory('test',$row['fields'],'test');
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkboxWithSubmitButton');
+		$pInputModelDB = $pInstance->createInputModelShowArchived();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 */
+	public function testCreateInputModelShowReference()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+
+		$pInputModelDB = $pInstance->createInputModelShowReference();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 */
+	public function testCreateInputModelSameEstatePostalCode()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+
+		$pInputModelDB = $pInstance->createInputModelSameEstatePostalCode();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 */
+	public function testCreateInputModelSameEstateRadius()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+
+		$pInputModelDB = $pInstance->createInputModelSameEstateRadius();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 */
+	public function testCreateInputModelSameEstateAmount()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+
+		$pInputModelDB = $pInstance->createInputModelSameEstateRadius();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
+	}
+
 
 }

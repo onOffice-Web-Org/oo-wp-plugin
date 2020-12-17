@@ -112,19 +112,19 @@ class TestClassDatabaseChanges
 
 		$prefix = $this->_pDbChanges->getPWPDB()->prefix;
 		$similarViewOptions = $this->_pDbChanges->getPWPDB()->get_results("select * from " . $prefix . "options where option_name = 'onoffice-similar-estates-settings-view'");
+		$new_data = [];
 		if(!empty($similarViewOptions)){
-			$new_data = [];
 			foreach ($similarViewOptions as $similarViewOption) {
 				$similarViewOptionValues = maybe_unserialize($similarViewOption->option_value);
 				$new_data['enablesimilarestates'] = $similarViewOptionValues->getDataSimilarViewActive();
 
-				$dataViewSimilarEstates = $similarViewOptionValues->getDataViewSimilarEstates();
-				$new_data['radius'] = $dataViewSimilarEstates->getRadius();
-				$new_data['same_kind'] = $dataViewSimilarEstates->getSameEstateKind();
-				$new_data['same_maketing_method'] = $dataViewSimilarEstates->getSameMarketingMethod();
-				$new_data['same_postal_code'] = $dataViewSimilarEstates->getSamePostalCode();
-				$new_data['amount'] = $dataViewSimilarEstates->getRecordsPerPage();
-				$new_data['similar_estates_template'] = $dataViewSimilarEstates->getTemplate();
+				$newDataViewSimilarEstates = $similarViewOptionValues->getDataViewSimilarEstates();
+				$new_data['radius'] = $newDataViewSimilarEstates->getRadius();
+				$new_data['same_kind'] = $newDataViewSimilarEstates->getSameEstateKind();
+				$new_data['same_maketing_method'] = $newDataViewSimilarEstates->getSameMarketingMethod();
+				$new_data['same_postal_code'] = $newDataViewSimilarEstates->getSamePostalCode();
+				$new_data['amount'] = $newDataViewSimilarEstates->getRecordsPerPage();
+				$new_data['similar_estates_template'] = $newDataViewSimilarEstates->getTemplate();
 			}
 		}
 		$this->assertEquals($new_data['enablesimilarestates'], true);
