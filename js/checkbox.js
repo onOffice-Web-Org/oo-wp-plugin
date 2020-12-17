@@ -1,5 +1,4 @@
 var onOffice = onOffice || {};
-
 onOffice.checkboxAdmin = function() {
 	this._isInitialRun = true;
 	this._configuration = {
@@ -74,15 +73,16 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 			var receiver = receivers[i];
 			var receiverElement = mainElement.parent().parent().find(receiver.element);
 			var invert = receiver.invert;
+
 			if (receiverElement.length) {
 				var isChosen = receiverElement[0].classList.contains("chosen-select");
 				if (mainElement.prop('checked')) {
 					if (!invert) {
 						receiverElement[0].checked = receiverElement[0].checked || (receiver.checkOnActive && (instance._isInitialRun||fromOnChange));
-						receiverElement.removeProp('disabled');
+						receiverElement.removeAttr('disabled');
 					} else {
 						receiverElement.prop('disabled', 'disabled');
-						receiverElement.removeProp('checked');
+						receiverElement.removeAttr('checked');
 						if (isChosen) {
 							receiverElement.trigger("chosen:updated");
 						}
@@ -90,9 +90,9 @@ onOffice.checkboxAdmin.prototype.changeCbStatus = function(topElement) {
 				} else {
 					if (!invert) {
 						receiverElement.prop('disabled', 'disabled');
-						receiverElement.removeProp('checked');
+						receiverElement.removeAttr('checked');
 					} else {
-						receiverElement.removeProp('disabled');
+						receiverElement.removeAttr('disabled');
 						if (isChosen) {
 							receiverElement.trigger("chosen:updated");
 						}
