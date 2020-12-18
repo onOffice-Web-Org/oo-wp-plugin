@@ -68,19 +68,19 @@ class AdminPageEstateList
 
 	public function generatePageMainTitle($subTitle)
 	{
-		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
+		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
 
 		if ($subTitle != '')
 		{
-			echo ' › '.esc_html__($subTitle, 'onoffice');
+			echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
 		}
 
-		echo ' › '.esc_html__('List Views', 'onoffice');
+		echo ' › '.esc_html__('List Views', 'onoffice-for-wp-websites');
 
 		$newLink = admin_url('admin.php?page=onoffice-editlistview');
 
 		echo '</h1>';
-		echo '<a href="'.esc_attr($newLink).'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
+		echo '<a href="'.esc_attr($newLink).'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 
@@ -92,7 +92,7 @@ class AdminPageEstateList
 	public function doExtraEnqueues()
 	{
 		$translation = array(
-			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice'),
+			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice-for-wp-websites'),
 		);
 
 		wp_register_script('onoffice-bulk-actions', plugins_url('/js/onoffice-bulk-actions.js',

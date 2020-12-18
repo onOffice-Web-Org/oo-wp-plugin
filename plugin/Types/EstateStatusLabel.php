@@ -101,9 +101,9 @@ class EstateStatusLabel
 
 		if ($key === 'verkauft') {
 			if ($this->_estateValues['vermarktungsart'] === 'miete') {
-				$label = __('rented', 'onoffice');
+				$label = __('rented', 'onoffice-for-wp-websites');
 			} elseif ($this->_estateValues['vermarktungsart'] === 'kauf') {
-				$label = __('sold', 'onoffice');
+				$label = __('sold', 'onoffice-for-wp-websites');
 			}
 		}
 

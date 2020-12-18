@@ -53,12 +53,12 @@ class SortListTypes
 	{
 		return [
 			0 => [
-				SortListTypes::SORTORDER_ASC => __('lowest first', 'onoffice'),
-				SortListTypes::SORTORDER_DESC => __('highest first', 'onoffice'),
+				SortListTypes::SORTORDER_ASC => __('lowest first', 'onoffice-for-wp-websites'),
+				SortListTypes::SORTORDER_DESC => __('highest first', 'onoffice-for-wp-websites'),
 			],
 			1 => [
-				SortListTypes::SORTORDER_ASC => __('ascending', 'onoffice'),
-				SortListTypes::SORTORDER_DESC => __('descending', 'onoffice'),
+				SortListTypes::SORTORDER_ASC => __('ascending', 'onoffice-for-wp-websites'),
+				SortListTypes::SORTORDER_DESC => __('descending', 'onoffice-for-wp-websites'),
 			],
 		];
 	}

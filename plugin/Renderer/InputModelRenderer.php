@@ -173,7 +173,7 @@ class InputModelRenderer
 				$pInstance->addAdditionalAttribute('size', '50');
 				if ($pInputModel->getIsPassword()) {
 					$pInstance->addAdditionalAttribute('placeholder',
-						__('(Remains unchanged)', 'onoffice'));
+						__('(Remains unchanged)', 'onoffice-for-wp-websites'));
 				} else {
 					$placeholder = $pInputModel->getPlaceholder();
 					if (!__String::getNew($placeholder)->isEmpty()) {

@@ -95,7 +95,7 @@ class Form
 	 */
 	public function __construct(string $formName, string $type, Container $pContainer = null)
 	{
-		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice'));
+		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice-for-wp-websites'));
 		$this->setGenericSetting('formId', 'onoffice-form');
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
 		$pFieldsCollection = new FieldsCollection();
@@ -568,7 +568,7 @@ class Form
 		if ($this->getDataFormConfiguration()->getShowEstateContext() && $estateId !== 0) {
 			$pEstateTitleBuilder = new EstateTitleBuilder();
 			/* translators: %1$s is the estate title, %5$s is the estate ID */
-			$format = __('Your Inquiry about Real Estate “%1$s” (%5$s)', 'onoffice');
+			$format = __('Your Inquiry about Real Estate “%1$s” (%5$s)', 'onoffice-for-wp-websites');
 			$result = $pEstateTitleBuilder->buildTitle($estateId, $format);
 		}
 		return esc_html($result);

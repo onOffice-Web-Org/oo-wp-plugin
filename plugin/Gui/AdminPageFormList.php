@@ -90,7 +90,7 @@ class AdminPageFormList
 
 	public function renderContent()
 	{
-		$this->generatePageMainTitle(__('Forms', 'onoffice'));
+		$this->generatePageMainTitle(__('Forms', 'onoffice-for-wp-websites'));
 
 		$this->_pFormsTable->prepare_items();
 		echo '<p>';
@@ -138,7 +138,7 @@ class AdminPageFormList
 	public function doExtraEnqueues()
 	{
 		$translation = array(
-			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice'),
+			'confirmdialog' => __('Are you sure you want to delete the selected items?', 'onoffice-for-wp-websites'),
 		);
 
 		wp_register_script('onoffice-bulk-actions', plugins_url('/js/onoffice-bulk-actions.js',
@@ -174,7 +174,7 @@ class AdminPageFormList
 
 	public function generatePageMainTitle($subTitle)
 	{
-		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
+		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
 
 		$tab = $this->getTab();
 
@@ -182,7 +182,7 @@ class AdminPageFormList
 		$translation = $pFormTranslation->getPluralTranslationForForm($tab, 1);
 
 		if ($subTitle != '') {
-			echo ' › '.esc_html__($subTitle, 'onoffice'). ' › '.$translation;
+			echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites'). ' › '.$translation;
 		}
 
 		$typeParam = AdminPageFormSettingsMain::GET_PARAM_TYPE;
@@ -192,7 +192,7 @@ class AdminPageFormList
 
 		if ($tab !== 'all') {
 			echo '<a href="'.$newLink.'" class="page-title-action">'
-				.esc_html__('Add New', 'onoffice').'</a>';
+				.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		}
 		echo '<hr class="wp-header-end">';
 	}

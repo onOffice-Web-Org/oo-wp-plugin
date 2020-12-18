@@ -62,8 +62,8 @@ class AdminPageApiSettings
 
 	private function addFormModelAPI()
 	{
-		$labelKey = __('API token', 'onoffice');
-		$labelSecret = __('API secret', 'onoffice');
+		$labelKey = __('API token', 'onoffice-for-wp-websites');
+		$labelSecret = __('API secret', 'onoffice-for-wp-websites');
 		$pInputModelApiKey = new InputModelOption('onoffice-settings', 'apikey', $labelKey, 'string');
 		$optionNameKey = $pInputModelApiKey->getIdentifier();
 		$pInputModelApiKey->setValue(get_option($optionNameKey));
@@ -80,7 +80,7 @@ class AdminPageApiSettings
 		$pFormModel->addInputModel($pInputModelApiKey);
 		$pFormModel->setGroupSlug('onoffice-api');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('API settings', 'onoffice'));
+		$pFormModel->setLabel(__('API settings', 'onoffice-for-wp-websites'));
 
 		$this->addFormModel($pFormModel);
 	}
@@ -92,8 +92,8 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleCaptcha()
 	{
-		$labelSiteKey = __('Site Key', 'onoffice');
-		$labelSecretKey = __('Secret Key', 'onoffice');
+		$labelSiteKey = __('Site Key', 'onoffice-for-wp-websites');
+		$labelSecretKey = __('Secret Key', 'onoffice-for-wp-websites');
 		$pInputModelCaptchaSiteKey = new InputModelOption
 			('onoffice-settings', 'captcha-sitekey', $labelSiteKey, 'string');
 		$optionNameKey = $pInputModelCaptchaSiteKey->getIdentifier();
@@ -114,7 +114,7 @@ class AdminPageApiSettings
 		$pFormModel->addInputModel($pInputModelCaptchaPageSecret);
 		$pFormModel->setGroupSlug('onoffice-google-recaptcha');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('Google reCAPTCHA', 'onoffice'));
+		$pFormModel->setLabel(__('Google reCAPTCHA', 'onoffice-for-wp-websites'));
 		$pFormModel->setTextCallback(function() {
 			$this->renderTestFormReCaptcha();
 		});
@@ -129,7 +129,7 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleMapsKey()
 	{
-		$labelgoogleMapsKey = __('Google Maps Key', 'onoffice');
+		$labelgoogleMapsKey = __('Google Maps Key', 'onoffice-for-wp-websites');
 		$pInputModelGoogleMapsKey = new InputModelOption
 				('onoffice-settings', 'googlemaps-key', $labelgoogleMapsKey, 'string');
 		$optionMapKey = $pInputModelGoogleMapsKey->getIdentifier();
@@ -139,7 +139,7 @@ class AdminPageApiSettings
 		$pFormModel->addInputModel($pInputModelGoogleMapsKey);
 		$pFormModel->setGroupSlug('onoffice-google-maps-key');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('Google Maps Key', 'onoffice'));
+		$pFormModel->setLabel(__('Google Maps Key', 'onoffice-for-wp-websites'));
 
 		$this->addFormModel($pFormModel);
 	}
@@ -166,13 +166,13 @@ class AdminPageApiSettings
 		$tokenOptions = get_option('onoffice-settings-captcha-sitekey', '');
 		$secretOptions = get_option('onoffice-settings-captcha-secretkey', '');
 		$stringTranslations = [
-			'response_ok' => __('The keys are OK.', 'onoffice'),
-			'response_error' => __('There was an error:', 'onoffice'),
-			'missing-input-secret' => __('The secret parameter is missing.', 'onoffice'),
-			'invalid-input-secret' => __('The secret parameter is invalid or malformed.', 'onoffice'),
-			'missing-input-response' => __('The response parameter is missing.', 'onoffice'),
-			'invalid-input-response' => __('The response parameter is invalid or malformed.', 'onoffice'),
-			'bad-request' => __('The request is invalid or malformed.', 'onoffice'),
+			'response_ok' => __('The keys are OK.', 'onoffice-for-wp-websites'),
+			'response_error' => __('There was an error:', 'onoffice-for-wp-websites'),
+			'missing-input-secret' => __('The secret parameter is missing.', 'onoffice-for-wp-websites'),
+			'invalid-input-secret' => __('The secret parameter is invalid or malformed.', 'onoffice-for-wp-websites'),
+			'missing-input-response' => __('The response parameter is missing.', 'onoffice-for-wp-websites'),
+			'invalid-input-response' => __('The response parameter is invalid or malformed.', 'onoffice-for-wp-websites'),
+			'bad-request' => __('The request is invalid or malformed.', 'onoffice-for-wp-websites'),
 		];
 
 		if ($tokenOptions !== '' && $secretOptions !== '') {
@@ -184,7 +184,7 @@ class AdminPageApiSettings
 				esc_html($tokenOptions));
 		} else {
 			echo __('In order to use Google reCAPTCHA, you need to provide your keys. '
-				.'You\'re free to enable it in the form settings for later use.', 'onoffice');
+				.'You\'re free to enable it in the form settings for later use.', 'onoffice-for-wp-websites');
 		}
 	}
 
@@ -221,7 +221,7 @@ class AdminPageApiSettings
 	public function displayCacheClearSuccess()
 	{
 		$class = 'notice notice-success is-dismissible';
-		$message = __('The cache was cleaned.', 'onoffice');
+		$message = __('The cache was cleaned.', 'onoffice-for-wp-websites');
 
 		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
 	}

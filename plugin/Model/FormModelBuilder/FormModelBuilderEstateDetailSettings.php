@@ -90,7 +90,7 @@ class FormModelBuilderEstateDetailSettings
 		$this->_pDataDetailView = $pDataDetailViewHandler->getDetailView();
 
 		$pFormModel = new FormModel();
-		$pFormModel->setLabel(__('Detail View', 'onoffice'));
+		$pFormModel->setLabel(__('Detail View', 'onoffice-for-wp-websites'));
 		$pFormModel->setGroupSlug('onoffice-detailview-settings-main');
 		$pFormModel->setPageSlug($pageSlug);
 
@@ -106,7 +106,7 @@ class FormModelBuilderEstateDetailSettings
 
 	public function getCheckboxEnableSimilarEstates()
 	{
-		$labelExpose = __('Show Similar Estates', 'onoffice');
+		$labelExpose = __('Show Similar Estates', 'onoffice-for-wp-websites');
 		$pInputModelActivate = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_FIELD_ENABLE_SIMILAR_ESTATES, $labelExpose);
 		$pInputModelActivate->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
@@ -152,7 +152,7 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createInputModelExpose()
 	{
-		$labelExpose = __('PDF-Expose', 'onoffice');
+		$labelExpose = __('PDF-Expose', 'onoffice-for-wp-websites');
 
 		$pInputModelExpose = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_EXPOSE, $labelExpose);
@@ -173,15 +173,15 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createInputModelMovieLinks()
 	{
-		$labelMovieLinks = __('Movie Links', 'onoffice');
+		$labelMovieLinks = __('Movie Links', 'onoffice-for-wp-websites');
 
 		$pInputModelMedia = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_MOVIE_LINKS, $labelMovieLinks);
 		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$options = array(
-			MovieLinkTypes::MOVIE_LINKS_NONE => __('Disabled', 'onoffice'),
-			MovieLinkTypes::MOVIE_LINKS_LINK => __('Link', 'onoffice'),
-			MovieLinkTypes::MOVIE_LINKS_PLAYER => __('Player', 'onoffice'),
+			MovieLinkTypes::MOVIE_LINKS_NONE => __('Disabled', 'onoffice-for-wp-websites'),
+			MovieLinkTypes::MOVIE_LINKS_LINK => __('Link', 'onoffice-for-wp-websites'),
+			MovieLinkTypes::MOVIE_LINKS_PLAYER => __('Player', 'onoffice-for-wp-websites'),
 		);
 		$pInputModelMedia->setValuesAvailable($options);
 		$pInputModelMedia->setValue($this->_pDataDetailView->getMovieLinks());
@@ -260,7 +260,7 @@ class FormModelBuilderEstateDetailSettings
 	 */
 	public function createInputModelTemplate(string $field = InputModelOptionFactoryDetailView::INPUT_TEMPLATE)
 	{
-		$labelTemplate = __('Template', 'onoffice');
+		$labelTemplate = __('Template', 'onoffice-for-wp-websites');
 		$pInputModelTemplate = $this->_pInputModelDetailViewFactory->create($field, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
@@ -321,7 +321,7 @@ class FormModelBuilderEstateDetailSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
 
-		$labelSameKind = __('Same Kind of Estate', 'onoffice');
+		$labelSameKind = __('Same Kind of Estate', 'onoffice-for-wp-websites');
 
 		$pInputModelSimilarEstateKind = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND, $labelSameKind);
@@ -344,7 +344,7 @@ class FormModelBuilderEstateDetailSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
 
-		$labelSameMarketingMethod = __('Same Marketing Method', 'onoffice');
+		$labelSameMarketingMethod = __('Same Marketing Method', 'onoffice-for-wp-websites');
 
 		$pInputModelSameMarketingMethod = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_SAME_MARKETING_METHOD, $labelSameMarketingMethod);
@@ -367,7 +367,7 @@ class FormModelBuilderEstateDetailSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
 
-		$labelSamePostalCode = __('Same Postal Code', 'onoffice');
+		$labelSamePostalCode = __('Same Postal Code', 'onoffice-for-wp-websites');
 
 		$pInputModelSamePostalCode = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE, $labelSamePostalCode);
@@ -390,7 +390,7 @@ class FormModelBuilderEstateDetailSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
 
-		$labelRadius = __('Radius', 'onoffice');
+		$labelRadius = __('Radius', 'onoffice-for-wp-websites');
 
 		$pInputModelRadius = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_RADIUS, $labelRadius);
@@ -413,7 +413,7 @@ class FormModelBuilderEstateDetailSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
 
-		$labelAmount = __('Amount of Estates', 'onoffice');
+		$labelAmount = __('Amount of Estates', 'onoffice-for-wp-websites');
 
 		$pInputModelAmount = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT, $labelAmount);

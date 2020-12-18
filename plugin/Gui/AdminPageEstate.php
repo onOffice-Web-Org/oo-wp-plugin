@@ -79,9 +79,9 @@ class AdminPageEstate
 	public function __construct($pageSlug)
 	{
 		$this->_tabs = array(
-			self::PAGE_ESTATE_LIST => __('List Views', 'onoffice'),
-			self::PAGE_ESTATE_DETAIL => __('Detail View', 'onoffice'),
-			self::PAGE_ESTATE_UNITS => __('Unit Lists', 'onoffice'),
+			self::PAGE_ESTATE_LIST => __('List Views', 'onoffice-for-wp-websites'),
+			self::PAGE_ESTATE_DETAIL => __('Detail View', 'onoffice-for-wp-websites'),
+			self::PAGE_ESTATE_UNITS => __('Unit Lists', 'onoffice-for-wp-websites'),
 		);
 
 		parent::__construct($pageSlug);

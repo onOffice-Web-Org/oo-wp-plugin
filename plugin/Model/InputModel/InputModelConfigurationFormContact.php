@@ -60,15 +60,15 @@ class InputModelConfigurationFormContact
 	public function __construct()
 	{
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING]
-			[self::KEY_LABEL] = __('Set Estate Context as Heading', 'onoffice');
+			[self::KEY_LABEL] = __('Set Estate Context as Heading', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER]
-			[self::KEY_LABEL] = __('Newsletter', 'onoffice');
+			[self::KEY_LABEL] = __('Newsletter', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES]
-			[self::KEY_LABEL] = __('Check for Duplicates', 'onoffice');
+			[self::KEY_LABEL] = __('Check for Duplicates', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS]
-			[self::KEY_LABEL] = __('Create Address', 'onoffice');
+			[self::KEY_LABEL] = __('Create Address', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT]
-			[self::KEY_LABEL] = __('Subject (optional)', 'onoffice');
+			[self::KEY_LABEL] = __('Subject (optional)', 'onoffice-for-wp-websites');
 	}
 
 

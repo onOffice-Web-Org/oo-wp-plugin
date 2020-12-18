@@ -67,7 +67,7 @@ class FieldModuleCollectionDecoratorGeoPositionBackend
 	{
 		parent::__construct($pFieldModuleCollection);
 		$this->_geoFields[onOfficeSDK::MODULE_ESTATE][GeoPosition::FIELD_GEO_POSITION]['content'] =
-			__('Geo Range Search', 'onoffice');
+			__('Geo Range Search', 'onoffice-for-wp-websites');
 	}
 
 

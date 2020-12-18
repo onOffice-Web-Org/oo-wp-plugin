@@ -116,7 +116,7 @@ class FormModelBuilderDBEstateListSettings
 		}
 
 		$pFormModel = new FormModel();
-		$pFormModel->setLabel(__('List View', 'onoffice'));
+		$pFormModel->setLabel(__('List View', 'onoffice-for-wp-websites'));
 		$pFormModel->setGroupSlug('onoffice-listview-settings-main');
 		$pFormModel->setPageSlug($pageSlug);
 
@@ -132,7 +132,7 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelFilter()
 	{
-		$labelFiltername = __('Filter', 'onoffice');
+		$labelFiltername = __('Filter', 'onoffice-for-wp-websites');
 		$pInputModelFiltername = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_FILTERID, $labelFiltername);
 		$pInputModelFiltername->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
@@ -157,7 +157,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Filterable', 'onoffice');
+		$label = __('Filterable', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -178,7 +178,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Reduce values according to selected filter', 'onoffice');
+		$label = __('Reduce values according to selected filter', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -199,7 +199,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Hidden', 'onoffice');
+		$label = __('Hidden', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_HIDDEN;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -292,7 +292,7 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelListType()
 	{
-		$labelListType = __('Type of List', 'onoffice');
+		$labelListType = __('Type of List', 'onoffice-for-wp-websites');
 		$pInputModelListType = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_LIST_TYPE, $labelListType);
 		$pInputModelListType->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
@@ -311,7 +311,7 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelShowStatus()
 	{
-		$labelShowStatus = __('Show Estate Status', 'onoffice');
+		$labelShowStatus = __('Show Estate Status', 'onoffice-for-wp-websites');
 
 		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_SHOW_STATUS, $labelShowStatus);
@@ -331,7 +331,7 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelRandomSort()
 	{
-		$labelRandom = __('Random Order', 'onoffice');
+		$labelRandom = __('Random Order', 'onoffice-for-wp-websites');
 
 		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_RANDOM_ORDER, $labelRandom);
@@ -378,7 +378,7 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelExpose()
 	{
-		$labelExpose = __('PDF-Expose', 'onoffice');
+		$labelExpose = __('PDF-Expose', 'onoffice-for-wp-websites');
 
 		$pInputModelExpose = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_EXPOSE, $labelExpose);
@@ -400,9 +400,9 @@ class FormModelBuilderDBEstateListSettings
 	static public function getListViewLabels()
 	{
 		return array(
-			DataListView::LISTVIEW_TYPE_DEFAULT => __('Default', 'onoffice'),
-			DataListView::LISTVIEW_TYPE_REFERENCE => __('Reference Estates', 'onoffice'),
-			DataListView::LISTVIEW_TYPE_FAVORITES => __('Favorites List', 'onoffice'),
+			DataListView::LISTVIEW_TYPE_DEFAULT => __('Default', 'onoffice-for-wp-websites'),
+			DataListView::LISTVIEW_TYPE_REFERENCE => __('Reference Estates', 'onoffice-for-wp-websites'),
+			DataListView::LISTVIEW_TYPE_FAVORITES => __('Favorites List', 'onoffice-for-wp-websites'),
 		);
 	}
 
@@ -415,7 +415,7 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelSortBySetting()
 	{
-		$label = __('Sort by User Selection', 'onoffice');
+		$label = __('Sort by User Selection', 'onoffice-for-wp-websites');
 		$pInputModel = $this->getInputModelDBFactory()->create
 				(InputModelDBFactory::INPUT_SORT_BY_SETTING, $label);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
@@ -434,7 +434,7 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelSortByChosen()
 	{
-		$label = __('Sort by', 'onoffice');
+		$label = __('Sort by', 'onoffice-for-wp-websites');
 		$pInputModel = $this->getInputModelDBFactory()->create
 				(InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
@@ -458,7 +458,7 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelSortByDefault()
 	{
-		$label = __('Standard Sort', 'onoffice');
+		$label = __('Standard Sort', 'onoffice-for-wp-websites');
 		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_DEFAULT, $label);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 
@@ -483,7 +483,7 @@ class FormModelBuilderDBEstateListSettings
 				$defaultValues[$value.'#'.SortListTypes::SORTORDER_DESC] =
 					$fieldnames[$value].' ('.SortListTypes::getSortOrderMapping(
 						$sortBySpec, SortListTypes::SORTORDER_DESC).')';
-			}			
+			}
 		}
 
 		$pInputModel->setValuesAvailable($defaultValues);
@@ -500,11 +500,11 @@ class FormModelBuilderDBEstateListSettings
 	public function createInputModelSortBySpec()
 	{
 		$userDefinedSortDirectionValues = [
-			'0' => __('lowest First / highest First', 'onoffice'),
-			'1' => __('ascending / descending', 'onoffice'),
+			'0' => __('lowest First / highest First', 'onoffice-for-wp-websites'),
+			'1' => __('ascending / descending', 'onoffice-for-wp-websites'),
 		];
 
-		$label = __('Formulation of sorting directions', 'onoffice');
+		$label = __('Formulation of sorting directions', 'onoffice-for-wp-websites');
 		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_USER_DEFINED_DIRECTION, $label);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModel->setValue($this->getValue($pInputModel->getField()));

@@ -41,10 +41,10 @@ class AdminNoticeHandlerListViewDeletion
  		if ($deletedCount > 0) {
 			/* translators: %s will be replaced with a number. */
 			$message = sprintf(_n('%s list view has been deleted.', '%s list views have been deleted.',
-				$deletedCount, 'onoffice'), number_format_i18n($deletedCount));
+				$deletedCount, 'onoffice-for-wp-websites'), number_format_i18n($deletedCount));
 			return $this->displayListViewDeleteSuccess($message);
 		} else {
-			return $this->displayListViewDeleteError(__('No list view was deleted.', 'onoffice'));
+			return $this->displayListViewDeleteError(__('No list view was deleted.', 'onoffice-for-wp-websites'));
 		}
 	}
 
@@ -61,10 +61,10 @@ class AdminNoticeHandlerListViewDeletion
 		if ($deletedCount > 0) {
 			/* translators: %s will be replaced with a number. */
 			$message = sprintf(_n('%s form has been deleted.', '%s forms have been deleted.',
-				$deletedCount, 'onoffice'), number_format_i18n($deletedCount));
+				$deletedCount, 'onoffice-for-wp-websites'), number_format_i18n($deletedCount));
 			return $this->displayListViewDeleteSuccess($message);
 		} else {
-			return $this->displayListViewDeleteError(__('No form was deleted.', 'onoffice'));
+			return $this->displayListViewDeleteError(__('No form was deleted.', 'onoffice-for-wp-websites'));
 		}
 	}
 

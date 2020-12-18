@@ -42,6 +42,6 @@ class UnknownPageException
 	public function printFormatted(): string
 	{
 		/* translators: %s is the path of a page. */
-		return sprintf(__('Bad path "%s". The Page was not found.', 'onoffice'), $this->message);
+		return sprintf(__('Bad path "%s". The Page was not found.', 'onoffice-for-wp-websites'), $this->message);
 	}
 }

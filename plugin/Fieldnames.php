@@ -216,7 +216,7 @@ class Fieldnames
 
 		foreach ($extraFieldsObject as $pField) {
 			$newContent = $pField->getCategory() !== '' ?
-				$pField->getCategory() : __('Form Specific Fields', 'onoffice');
+				$pField->getCategory() : __('Form Specific Fields', 'onoffice-for-wp-websites');
 			$pField->setCategory($newContent);
 			$extraFields[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
 		}

@@ -58,7 +58,7 @@ class AdminPageFormSettingsApplicantSearch
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
-		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice'));
+		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice-for-wp-websites'));
 		$pFormModelFormSpecific->addInputModel($pInputModelResultLimit);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 		$this->addFormModel($pFormModelFormSpecific);
@@ -70,7 +70,7 @@ class AdminPageFormSettingsApplicantSearch
 		$pFormModelGeoFields = new FormModel();
 		$pFormModelGeoFields->setPageSlug($this->getPageSlug());
 		$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
-		$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
+		$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice-for-wp-websites'));
 		$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_SEARCHCRITERIA);
 		foreach ($pInputModelBuilderGeoRange->build($pDataFormConfiguration) as $pInputModel) {
 			$pFormModelGeoFields->addInputModel($pInputModel);

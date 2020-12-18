@@ -59,8 +59,8 @@ class EstateUnitsTable extends ListTable
 	{
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of View', 'onoffice'),
-			'shortcode' => __('Shortcode', 'onoffice'),
+			'name' => __('Name of View', 'onoffice-for-wp-websites'),
+			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		);
 
 		$sortable = array();
@@ -111,9 +111,9 @@ class EstateUnitsTable extends ListTable
 	{
 		return array(
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of View', 'onoffice'),
-			'list_type' => __('Type of List', 'onoffice'),
-			'shortcode' => __('Shortcode', 'onoffice'),
+			'name' => __('Name of View', 'onoffice-for-wp-websites'),
+			'list_type' => __('Type of List', 'onoffice-for-wp-websites'),
+			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		);
 	}
 
@@ -162,7 +162,7 @@ class EstateUnitsTable extends ListTable
 			."' onclick=\"if ( confirm( '"
 			.esc_js(sprintf(
 			/* translators: %s is the name of the unit view. */
-			__("You are about to delete the unit view '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice'), $pItem->name))
+			__("You are about to delete the unit view '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice-for-wp-websites'), $pItem->name))
 			."' ) ) { return true;}return false;\">" . __('Delete') . "</a>";
 		return $this->row_actions( $actions );
 	}

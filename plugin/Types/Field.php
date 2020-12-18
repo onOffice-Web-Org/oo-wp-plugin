@@ -374,7 +374,7 @@ class Field
 
 	public static function createByRow(string $fieldName, array $row): Field
 	{
-		$label = __($row['label'], 'onoffice') ?: sprintf('(%s)', $fieldName);
+		$label = __($row['label'], 'onoffice-for-wp-websites') ?: sprintf('(%s)', $fieldName);
 		$pField = new Field($fieldName, $row['module'] ?? '', $label);
 		$pField->setDefault($row['default'] ?? null);
 		$pField->setLength($row['length'] ?? 0);

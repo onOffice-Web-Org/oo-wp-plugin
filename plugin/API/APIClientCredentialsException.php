@@ -45,6 +45,6 @@ class APIClientCredentialsException
 
 	public function printFormatted(): string
 	{
-		return __('Please configure your onOffice API credentials first!', 'onoffice');
+		return __('Please configure your onOffice API credentials first!', 'onoffice-for-wp-websites');
 	}
 }
