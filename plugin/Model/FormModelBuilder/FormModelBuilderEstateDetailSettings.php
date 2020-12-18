@@ -298,11 +298,11 @@ class FormModelBuilderEstateDetailSettings
 	public function createInputModelShortCodeForm()
 	{
 
-		$labelShortCodeForm = __('Select Contact Form', 'onoffice');
+		$labelShortCodeForm = __('Select Contact Form', 'onoffice-for-wp-websites');
 		$pInputModelShortCodeForm = $this->_pInputModelDetailViewFactory->create
 		(InputModelOptionFactoryDetailView::INPUT_SHORT_CODE_FORM, $labelShortCodeForm);
 		$pInputModelShortCodeForm->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-		$nameShortCodeForms = array('' => 'No Contact Form') + $this->readNameShortCodeForm();
+		$nameShortCodeForms = array('' => __('No Contact Form', 'onoffice-for-wp-websites')) + $this->readNameShortCodeForm();
 		$pInputModelShortCodeForm->setValuesAvailable($nameShortCodeForms);
 
 		$pInputModelShortCodeForm->setValue($this->_pDataDetailView->getShortCodeForm());

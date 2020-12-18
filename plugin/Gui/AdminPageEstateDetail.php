@@ -287,7 +287,7 @@ class AdminPageEstateDetail
 		$pFormModelShortCodeForm = new FormModel();
 		$pFormModelShortCodeForm->setPageSlug($this->getPageSlug());
 		$pFormModelShortCodeForm->setGroupSlug(self::FORM_VIEW_CONTACT_FORM);
-		$pFormModelShortCodeForm->setLabel(__('Contact Form', 'onoffice'));
+		$pFormModelShortCodeForm->setLabel(__('Contact Form', 'onoffice-for-wp-websites'));
 		$pFormModelShortCodeForm->addInputModel($pInputModelShortCodeForm);
 		$this->addFormModel($pFormModelShortCodeForm);
 
