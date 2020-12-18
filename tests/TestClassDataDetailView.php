@@ -69,6 +69,38 @@ class TestClassDataDetailView
 		'mobile',
 	];
 
+	/** @var DataViewSimilarEstates */
+	private $_pDataViewSimilarEstates = null;
+
+	/**
+	 *
+	 */
+
+	public function test__wakeup()
+	{
+		$pInstance = new DataDetailView();
+
+		// old versions didn't have $_pDataViewSimilarEstates, but it must always be set
+		$pClosure = function() {
+			$this->_pDataViewSimilarEstates = null;
+		};
+
+		Closure::bind($pClosure, $pInstance, DataDetailView::class)();
+
+		try {
+			$pInstance->getDataViewSimilarEstates();
+			$this->assertFalse(true);
+		} catch (TypeError $pError) {
+			$this->assertEquals('Return value of '
+				.DataDetailView::class.'::getDataViewSimilarEstates() must be an instance of '
+				.DataViewSimilarEstates::class.', null returned', $pError->getMessage());
+		}
+
+		$string = serialize($pInstance);
+		$pNewInstance = unserialize($string);
+		$this->assertInstanceOf(DataViewSimilarEstates::class, $pNewInstance->getDataViewSimilarEstates());
+	}
+
 	/**
 	 *
 	 */
@@ -109,6 +141,18 @@ class TestClassDataDetailView
 			$pDataDetailView->getPictureTypes());
 		$pDataDetailView->setTemplate('/test/template1.test');
 		$this->assertEquals('/test/template1.test', $pDataDetailView->getTemplate());
+	}
+
+	/**
+	 *
+	 */
+	public function testEnableSimilarEstates()
+	{
+		$pDataDetailView = new DataDetailView();
+
+		$this->assertFalse($pDataDetailView->getDataDetailViewActive());
+		$pDataDetailView->setDataDetailViewActive(true);
+		$this->assertTrue($pDataDetailView->getDataDetailViewActive());
 	}
 
 	/**

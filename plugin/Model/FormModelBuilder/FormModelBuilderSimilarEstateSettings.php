@@ -40,7 +40,6 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use function __;
-use function esc_html__;
 
 /**
  *
@@ -291,7 +290,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-		$labelShowArchived = esc_html__('Don&#8217;t show archived estates', 'onoffice-for-wp-websites');
+		$labelShowArchived = __('Don\'t show archived estates', 'onoffice-for-wp-websites');
 
 		$pInputModelShowArchived = $this->_pInputModelSimilarViewFactory->create
 		(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_ARCHIVED, $labelShowArchived);
@@ -312,7 +311,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-		$labelShowReference = esc_html__('Don&#8217;t show reference estates', 'onoffice-for-wp-websites');
+		$labelShowReference = __('Don\'t show reference estates', 'onoffice-for-wp-websites');
 
 		$pInputModelShowReference = $this->_pInputModelSimilarViewFactory->create
 		(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_REFERENCE, $labelShowReference);

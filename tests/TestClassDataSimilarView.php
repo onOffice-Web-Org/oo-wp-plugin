@@ -82,4 +82,5 @@ class TestClassDataSimilarView
 		$this->assertTrue($pDataSimilarView->getDataSimilarViewActive());
 	}
 
+
 }

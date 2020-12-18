@@ -145,7 +145,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelShowArchived
 	 */
 	public function testCreateInputModelShowArchived()
 	{
@@ -162,13 +162,14 @@ class TestClassFormModelBuilderSimilarEstateSettings
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->method('getValue')->willReturn('1');
 
 		$pInputModelDB = $pInstance->createInputModelShowArchived();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelShowReference
 	 */
 	public function testCreateInputModelShowReference()
 	{
@@ -191,7 +192,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSameEstatePostalCode
 	 */
 	public function testCreateInputModelSameEstatePostalCode()
 	{
@@ -214,7 +215,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSameEstateRadius
 	 */
 	public function testCreateInputModelSameEstateRadius()
 	{
@@ -237,7 +238,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSimilarEstateMarketingMethod
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::CreateInputModelSameEstateAmount
 	 */
 	public function testCreateInputModelSameEstateAmount()
 	{
@@ -255,7 +256,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
 
-		$pInputModelDB = $pInstance->createInputModelSameEstateRadius();
+		$pInputModelDB = $pInstance->createInputModelSameEstateAmount();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
 	}
 
