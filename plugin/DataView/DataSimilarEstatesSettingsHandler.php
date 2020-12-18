@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,17 +19,16 @@
  *
  */
 
+
 namespace onOffice\WPlugin\DataView;
 
-use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
-use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
+ * @copyright 2003-2020, onOffice(R) GmbH
  *
  */
 
@@ -52,9 +51,7 @@ class DataSimilarEstatesSettingsHandler
 
 
 	/**
-	 *
 	 * @return DataSimilarView
-	 *
 	 */
 
 	public function getDataSimilarEstatesSettings(): DataSimilarView
@@ -73,9 +70,7 @@ class DataSimilarEstatesSettingsHandler
 
 
 	/**
-	 *
 	 * @param DataSimilarView $pDataSimilarView
-	 *
 	 */
 
 	public function saveDataSimilarEstatesSettings(DataSimilarView $pDataSimilarView)
@@ -92,10 +87,8 @@ class DataSimilarEstatesSettingsHandler
 
 
 	/**
-	 *
 	 * @param array $row
 	 * @return DataSimilarView
-	 *
 	 */
 
 	public function createDataSimilarEstatesSettingsByValues(array $row): DataSimilarView
@@ -113,10 +106,8 @@ class DataSimilarEstatesSettingsHandler
 
 
 	/**
-	 *
 	 * @param DataViewSimilarEstates $pDataViewSimilar
 	 * @param array $row
-	 *
 	 */
 
 	private function configureDataSimilarEstatesSettings(DataViewSimilarEstates $pDataViewSimilar,

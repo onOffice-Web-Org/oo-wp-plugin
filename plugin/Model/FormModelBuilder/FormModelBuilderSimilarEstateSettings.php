@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2020 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -22,15 +22,14 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
-use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
@@ -39,12 +38,14 @@ use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use function __;
+use function esc_html__;
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2017, onOffice(R) GmbH
+ * @copyright 2003-2020, onOffice(R) GmbH
  *
  * This class must not use InputModelDB!
  *
@@ -59,37 +60,22 @@ class FormModelBuilderSimilarEstateSettings
 	/** @var DataSimilarView */
 	private $_pDataSimilarView = null;
 
-
 	/**
-	 *
-	 */
-
-	public function __construct()
-	{
-		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
-			(new FieldModuleCollectionDecoratorReadAddress
-				(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection())));
-		$pFieldnames = new Fieldnames($pFieldCollection);
-		$pFieldnames->loadLanguage();
-		$this->setFieldnames($pFieldnames);
-	}
-
-
-	/**
-	 *
+	 * @param string $pageSlug
 	 * @return FormModel
-	 *
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
 	 */
 
 	public function generate(string $pageSlug): FormModel
 	{
 		$this->_pInputModelSimilarViewFactory = new InputModelOptionFactorySimilarView($pageSlug);
 
-        $pContainerBuilder = new ContainerBuilder;
-        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-        $pContainer = $pContainerBuilder->build();
-        $pDataSimilarEstatesSettingsHandler = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
-        $this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->getDataSimilarEstatesSettings();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pDataSimilarEstatesSettingsHandler = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->getDataSimilarEstatesSettings();
 
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Similar Estates View', 'onoffice'));
@@ -101,9 +87,8 @@ class FormModelBuilderSimilarEstateSettings
 
 
 	/**
-	 *
 	 * @return InputModelDB
-	 *
+	 * @throws ExceptionInputModelMissingField
 	 */
 
 	public function getCheckboxEnableSimilarEstates()
@@ -120,12 +105,10 @@ class FormModelBuilderSimilarEstateSettings
 
 
 	/**
-	 *
 	 * @param string $category
 	 * @param array $fieldNames
 	 * @param string $categoryLabel
 	 * @return InputModelDB
-	 *
 	 */
 
 	public function createInputModelFieldsConfigByCategory($category, $fieldNames, $categoryLabel)
@@ -151,12 +134,32 @@ class FormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 *
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getFieldsCollection(): FieldsCollection
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+
+		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollection = new FieldsCollection();
+
+		$pFieldsCollectionBuilder
+			->addFieldsAddressEstate($pFieldsCollection);
+		return $pFieldsCollection;
+	}
+
+	/**
 	 * @param $module
 	 * @param $htmlType
 	 * @return InputModelOption
-	 * @throws UnknownModuleException
+	 * @throws DependencyException
 	 * @throws ExceptionInputModelMissingField
+	 * @throws NotFoundException
+	 * @throws UnknownModuleException
 	 */
 
 	public function createSortableFieldList($module, $htmlType)
@@ -165,7 +168,7 @@ class FormModelBuilderSimilarEstateSettings
 
 		if ($module == onOfficeSDK::MODULE_ESTATE) {
 			$pInputModelFieldsConfig = $this->_pInputModelSimilarViewFactory->create
-				(InputModelOptionFactorySimilarView::INPUT_FIELD_CONFIG, null, true);
+			(InputModelOptionFactorySimilarView::INPUT_FIELD_CONFIG, null, true);
 			$fields = $this->_pDataSimilarView->getFields();
 
 		} else {
@@ -173,8 +176,29 @@ class FormModelBuilderSimilarEstateSettings
 		}
 
 		$pInputModelFieldsConfig->setHtmlType($htmlType);
-		$fieldNames = $this->getFieldnames()->getFieldList($module);
-		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = [];
+
+		if (is_array($module)) {
+			$this->_formModules = $module;
+			foreach ($module as $submodule) {
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule ?? '');
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		} else {
+			$this->_formModules = [$module];
+			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+		}
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$pInputModelFieldsConfig->setValue($fields);
 		return $pInputModelFieldsConfig;
 	}
@@ -197,10 +221,8 @@ class FormModelBuilderSimilarEstateSettings
 
 
 	/**
-	 *
 	 * @param string $field
 	 * @return string
-	 *
 	 */
 
 	private function getTemplateValueByField(string $field): string
@@ -215,9 +237,8 @@ class FormModelBuilderSimilarEstateSettings
 
 
 	/**
-	 *
 	 * @return InputModelDB
-	 *
+	 * @throws ExceptionInputModelMissingField
 	 */
 
 	public function createInputModelSimilarEstateKind()
@@ -238,9 +259,8 @@ class FormModelBuilderSimilarEstateSettings
 
 
 	/**
-	 *
-	 * @return InputModelDB
-	 *
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
 	 */
 
 	public function createInputModelSimilarEstateMarketingMethod()
@@ -259,55 +279,52 @@ class FormModelBuilderSimilarEstateSettings
 		return $pInputModelSameMarketingMethod;
 	}
 
-    /**
-     *
-     * @return InputModelDB
-     *
-     */
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
 
-    public function createInputModelShowArchived()
-    {
-        $pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
+	public function createInputModelShowArchived()
+	{
+		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-        $labelShowArchived= __('Don&#8217;t show archived estates', 'onoffice');
+		$labelShowArchived = esc_html__('Don&#8217;t show archived estates', 'onoffice');
 
-        $pInputModelShowArchived = $this->_pInputModelSimilarViewFactory->create
-        (InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_ARCHIVED, $labelShowArchived);
-        $pInputModelShowArchived->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowArchived = $this->_pInputModelSimilarViewFactory->create
+		(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_ARCHIVED, $labelShowArchived);
+		$pInputModelShowArchived->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 
-        $pInputModelShowArchived->setValuesAvailable(1);
-        $pInputModelShowArchived->setValue($pDataViewSimilarEstates->getShowArchived());
+		$pInputModelShowArchived->setValuesAvailable(1);
+		$pInputModelShowArchived->setValue($pDataViewSimilarEstates->getShowArchived());
 
-        return $pInputModelShowArchived;
-    }
+		return $pInputModelShowArchived;
+	}
 
-    /**
-     *
-     * @return InputModelDB
-     *
-     */
+	/**
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 */
 
-    public function createInputModelShowReference()
-    {
-        $pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
+	public function createInputModelShowReference()
+	{
+		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-        $labelShowReference= __('Don&#8217;t show reference estates', 'onoffice');
+		$labelShowReference = esc_html__('Don&#8217;t show reference estates', 'onoffice');
 
-        $pInputModelShowReference = $this->_pInputModelSimilarViewFactory->create
-        (InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_REFERENCE, $labelShowReference);
-        $pInputModelShowReference->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowReference = $this->_pInputModelSimilarViewFactory->create
+		(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_REFERENCE, $labelShowReference);
+		$pInputModelShowReference->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 
-        $pInputModelShowReference->setValuesAvailable(1);
-        $pInputModelShowReference->setValue($pDataViewSimilarEstates->getShowReference());
+		$pInputModelShowReference->setValuesAvailable(1);
+		$pInputModelShowReference->setValue($pDataViewSimilarEstates->getShowReference());
 
-        return $pInputModelShowReference;
-    }
+		return $pInputModelShowReference;
+	}
 
 
 	/**
-	 *
-	 * @return InputModelDB
-	 *
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
 	 */
 
 	public function createInputModelSameEstatePostalCode()
@@ -328,9 +345,8 @@ class FormModelBuilderSimilarEstateSettings
 
 
 	/**
-	 *
-	 * @return InputModelDB
-	 *
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
 	 */
 
 	public function createInputModelSameEstateRadius()
@@ -351,9 +367,8 @@ class FormModelBuilderSimilarEstateSettings
 
 
 	/**
-	 *
-	 * @return InputModelDB
-	 *
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
 	 */
 
 	public function createInputModelSameEstateAmount()
@@ -372,11 +387,11 @@ class FormModelBuilderSimilarEstateSettings
 		return $pInputModelAmount;
 	}
 
-    /**
-     * @param InputModelOptionFactorySimilarView $pInputModelSimilarViewFactory
-     */
-    public function setInputModelSimilarViewFactory(InputModelOptionFactorySimilarView $pInputModelSimilarViewFactory)
-    {
-        $this->_pInputModelSimilarViewFactory = $pInputModelSimilarViewFactory;
-    }
+	/**
+	 * @param InputModelOptionFactorySimilarView $pInputModelSimilarViewFactory
+	 */
+	public function setInputModelSimilarViewFactory(InputModelOptionFactorySimilarView $pInputModelSimilarViewFactory)
+	{
+		$this->_pInputModelSimilarViewFactory = $pInputModelSimilarViewFactory;
+	}
 }

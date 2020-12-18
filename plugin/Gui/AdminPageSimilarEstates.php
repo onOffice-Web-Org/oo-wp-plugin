@@ -153,10 +153,6 @@ class AdminPageSimilarEstates
 	 *
 	 */
 
-		/**
-	 *
-	 */
-
 	private function generateMetaBoxes()
 	{
 		$pFormSimilarEstates = $this->getFormModelByGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
