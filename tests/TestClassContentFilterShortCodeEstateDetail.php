@@ -69,6 +69,7 @@ class TestClassContentFilterShortCodeEstateDetail
 				'getEstatePictureTitle',
 				'getDocument',
 				'getCurrentEstateId',
+				'getSimilarEstates',
 				'loadSingleEstate',
 			])
 			->disableOriginalConstructor()
@@ -134,6 +135,7 @@ class TestClassContentFilterShortCodeEstateDetail
 
 		$this->_pEstate->method('getDocument')->willReturn('');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
+		$this->_pEstate->method('getSimilarEstates')->willReturn('');
 	}
 
 	public function testRender()

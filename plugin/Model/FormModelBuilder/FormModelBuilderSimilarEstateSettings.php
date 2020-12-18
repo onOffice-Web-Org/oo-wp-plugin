@@ -60,6 +60,9 @@ class FormModelBuilderSimilarEstateSettings
 	/** @var DataSimilarView */
 	private $_pDataSimilarView = null;
 
+	/** @var array */
+	private $_formModules = [];
+
 	/**
 	 * @param string $pageSlug
 	 * @return FormModel
