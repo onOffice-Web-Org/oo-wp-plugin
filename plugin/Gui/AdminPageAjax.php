@@ -73,11 +73,11 @@ abstract class AdminPageAjax
 			try {
 				$this->buildForms();
 			} catch (APIClientCredentialsException $pCredentialsException) {
-				$label = __('login credentials', 'onoffice');
+				$label = __('login credentials', 'onoffice-for-wp-websites');
 				$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
 				/* translators: %s will be replaced with the link to the login credentials page. */
 				wp_die(sprintf(__('It looks like you did not enter any valid API credentials. '
-					.'Please go back and review your %s.', 'onoffice'), $loginCredentialsLink), 'onOffice plugin');
+					.'Please go back and review your %s.', 'onoffice-for-wp-websites'), $loginCredentialsLink), 'onOffice plugin');
 			}
 		}
 	}

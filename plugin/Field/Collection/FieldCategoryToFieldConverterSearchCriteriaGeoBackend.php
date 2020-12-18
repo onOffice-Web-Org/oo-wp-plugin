@@ -78,7 +78,7 @@ class FieldCategoryToFieldConverterSearchCriteriaGeoBackend
 	{
 		$field = [
 			'id' => GeoPosition::FIELD_GEO_POSITION,
-			'name' => __('Geo Position', 'onoffice'),
+			'name' => __('Geo Position', 'onoffice-for-wp-websites'),
 			'type' => FieldTypes::FIELD_TYPE_FLOAT,
 		];
 		return $this->_pFieldRowConverter->convertRow($field);

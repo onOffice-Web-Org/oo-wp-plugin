@@ -95,7 +95,7 @@ class AdminPageSimilarEstates
 
 		wp_nonce_field( $this->getPageSlug() );
 
-		$this->generatePageMainTitle(__('Edit List View', 'onoffice'));
+		$this->generatePageMainTitle(__('Edit List View', 'onoffice-for-wp-websites'));
 		echo '<div id="onoffice-ajax">';
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
@@ -116,7 +116,7 @@ class AdminPageSimilarEstates
 		echo '</div>';
 		echo '<div class="fieldsSortable postbox" id="'
 			. esc_attr(self::getSpecialDivId(onOfficeSDK::MODULE_ESTATE)) . '">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Real Estate Fields', 'onoffice') . '</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle"><span>' . __('Real Estate Fields', 'onoffice-for-wp-websites') . '</span></h2>';
 		$pRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -142,9 +142,9 @@ class AdminPageSimilarEstates
 
 	public function generatePageMainTitle($subTitle)
 	{
-		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
-		echo ' › '.esc_html__($subTitle, 'onoffice');
-		echo ' › '.esc_html__('Similar Estates', 'onoffice');
+		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
+		echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
+		echo ' › '.esc_html__('Similar Estates', 'onoffice-for-wp-websites');
 		echo '</h1>';
 		echo '<hr class="wp-header-end">';
 	}
@@ -199,7 +199,7 @@ class AdminPageSimilarEstates
 		$pFormModelSimilarEstates = new FormModel();
 		$pFormModelSimilarEstates->setPageSlug($this->getPageSlug());
 		$pFormModelSimilarEstates->setGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
-		$pFormModelSimilarEstates->setLabel(__('Similar Estates', 'onoffice'));
+		$pFormModelSimilarEstates->setLabel(__('Similar Estates', 'onoffice-for-wp-websites'));
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesActivated);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesEstateKind);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesMarketingMethod);
@@ -320,8 +320,8 @@ class AdminPageSimilarEstates
 	public function getEnqueueData(): array
 	{
 		return array(
-			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Similar Estate has been saved.', 'onoffice'),
-			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the Similar Estate.', 'onoffice'),
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Similar Estate has been saved.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the Similar Estate.', 'onoffice-for-wp-websites'),
 			AdminPageEstate::PARAM_TAB => AdminPageEstate::PAGE_SIMILAR_ESTATES,
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
 		);

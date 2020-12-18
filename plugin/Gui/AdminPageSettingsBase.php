@@ -174,7 +174,7 @@ abstract class AdminPageSettingsBase
 		do_accordion_sections(get_current_screen()->id, 'side', null);
 		echo '</div>';
 		echo '<div class="fieldsSortable postbox">';
-		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice').'</span></h2>';
+		echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice-for-wp-websites').'</span></h2>';
 		$pInputModelRenderer->buildForAjax($pFormViewSortableFields);
 		echo '</div>';
 		echo '<div class="clear"></div>';
@@ -401,7 +401,7 @@ abstract class AdminPageSettingsBase
 		$pFormModelSortableFields->setPageSlug($this->getPageSlug());
 		$pFormModelSortableFields->setGroupSlug
 			(AdminPageEstateListSettings::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
-		$pFormModelSortableFields->setLabel(__('Fields Configuration', 'onoffice'));
+		$pFormModelSortableFields->setLabel(__('Fields Configuration', 'onoffice-for-wp-websites'));
 		$pFormModelSortableFields->addInputModel($pInputModelSortableFields);
 		$this->addFormModel($pFormModelSortableFields);
 

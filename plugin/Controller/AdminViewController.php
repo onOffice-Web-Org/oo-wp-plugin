@@ -145,20 +145,20 @@ class AdminViewController
 		$pDI = $pDIBuilder->build();
 
 		// main page
-		add_menu_page( __('onOffice', 'onoffice'), __('onOffice', 'onoffice'),
+		add_menu_page( __('onOffice', 'onoffice-for-wp-websites'), __('onOffice', 'onoffice-for-wp-websites'),
 			$roleMainPage, $this->_pageSlug, function() use ($pDI) {
 				echo $pDI->get(MainPage::class)->render();
 			}, 'dashicons-admin-home');
 
 		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
-		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice'), __('Addresses', 'onoffice'),
+		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'), __('Addresses', 'onoffice-for-wp-websites'),
 			$roleAddress, $this->_pageSlug.'-addresses', array($pAdminPageAddresses, 'render'));
 		add_action('load-'.$hookAddresses, [$pAdminPageAddresses, 'handleAdminNotices']);
 		add_action('current_screen', [$pAdminPageAddresses, 'preOutput']);
 
 		// Estates
-		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice'),
-			__('Estates', 'onoffice'), $roleEstate,
+		$hookEstates = add_submenu_page( $this->_pageSlug, __('Estates', 'onoffice-for-wp-websites'),
+			__('Estates', 'onoffice-for-wp-websites'), $roleEstate,
 			$this->_pageSlug.'-estates',  array($this->_pAdminPageEstates, 'render'));
 		add_action( 'load-'.$hookEstates, array($this->_pAdminPageEstates, 'handleAdminNotices'));
 		$pSelectedSubPage = $this->_pAdminPageEstates->getSelectedAdminPage();
@@ -169,7 +169,7 @@ class AdminViewController
 
 		// Forms
 		$pAdminPageFormList = new AdminPageFormList($this->_pageSlug);
-		$hookForms = add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice'), __('Forms', 'onoffice'),
+		$hookForms = add_submenu_page( $this->_pageSlug, __('Forms', 'onoffice-for-wp-websites'), __('Forms', 'onoffice-for-wp-websites'),
 			$roleForm, $this->_pageSlug.'-forms', array($pAdminPageFormList, 'render'));
 		add_action( 'load-'.$hookForms, array($pAdminPageFormList, 'handleAdminNotices'));
 		add_action('current_screen', [$pAdminPageFormList, 'preOutput']);
@@ -183,7 +183,7 @@ class AdminViewController
 
 		// Modules
 		$pAdminPageModules = new AdminPageModules($this->_pageSlug);
-		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice'), __('Modules', 'onoffice'),
+		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice-for-wp-websites'), __('Modules', 'onoffice-for-wp-websites'),
 			$roleModules, $this->_pageSlug.'-modules', array($pAdminPageModules, 'render'));
 		add_action( 'admin_init', array($pAdminPageModules, 'registerForms'));
 
@@ -207,8 +207,8 @@ class AdminViewController
 
 		// Settings
 		$pAdminSettingsPage = new AdminPageApiSettings($this->_pageSlug.'-settings');
-		$hookSettings = add_submenu_page( $this->_pageSlug, __('Settings', 'onoffice'),
-			__('Settings', 'onoffice'), $roleSettings, $this->_pageSlug.'-settings',
+		$hookSettings = add_submenu_page( $this->_pageSlug, __('Settings', 'onoffice-for-wp-websites'),
+			__('Settings', 'onoffice-for-wp-websites'), $roleSettings, $this->_pageSlug.'-settings',
 			array($pAdminSettingsPage, 'render'));
 		add_action( 'admin_init', array($pAdminSettingsPage, 'registerForms'));
 		add_action( 'load-'.$hookSettings, array($pAdminSettingsPage, 'handleAdminNotices'));
@@ -370,7 +370,7 @@ class AdminViewController
 	public function pluginSettingsLink($links)
 	{
 		$url = get_admin_url().'admin.php?'.http_build_query(['page' => $this->_pageSlug]);
-		$settings_link = '<a href="'.esc_html($url).'">'.esc_html__('Settings', 'onoffice').'</a>';
+		$settings_link = '<a href="'.esc_html($url).'">'.esc_html__('Settings', 'onoffice-for-wp-websites').'</a>';
 		array_unshift($links, $settings_link);
 		return $links;
 	}
@@ -388,11 +388,11 @@ class AdminViewController
 			$pFieldnames->loadLanguage();
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$class = 'notice notice-error';
-			$label = __('API token and secret', 'onoffice');
+			$label = __('API token and secret', 'onoffice-for-wp-websites');
 			$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
 			/* translators: %s will be replaced with the translation of 'API token and secret'. */
 			$message = sprintf(esc_html(__('It looks like you did not enter any valid API '
-				.'credentials. Please consider reviewing your %s.', 'onoffice')), $loginCredentialsLink);
+				.'credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites')), $loginCredentialsLink);
 
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		}

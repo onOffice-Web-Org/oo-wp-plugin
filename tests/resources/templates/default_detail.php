@@ -39,7 +39,7 @@ use onOffice\WPlugin\EstateDetail;
 	};
 
 	foreach ($pEstates->getEstateContacts() as $contactData) {
-		echo '* ' . esc_html__('Contact person', 'onoffice') . ': '
+		echo '* ' . esc_html__('Contact person', 'onoffice-for-wp-websites') . ': '
 			. esc_html($contactData['Vorname'] . ' ' . $contactData['Name']) . "\n";
 	}
 
@@ -58,7 +58,7 @@ use onOffice\WPlugin\EstateDetail;
 	}
 
 	if ($pEstates->getDocument() != '') {
-		echo esc_html_e('Documents', 'onoffice') . "\n"
+		echo esc_html_e('Documents', 'onoffice-for-wp-websites') . "\n"
 			. $pEstates->getDocument() . "\n";
 	}
 	echo $pEstates->getSimilarEstates();

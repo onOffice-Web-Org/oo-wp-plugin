@@ -93,7 +93,7 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
-		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice'));
+		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice-for-wp-websites'));
 		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
@@ -139,7 +139,7 @@ class AdminPageFormSettingsContact
 	{
 		if ($this->_showMessageInput) {
 			$pFieldCollection = new FieldModuleCollectionDecoratorFormContact(new FieldsCollection());
-			$category = __('Form Specific Fields', 'onoffice');
+			$category = __('Form Specific Fields', 'onoffice-for-wp-websites');
 			$this->_additionalCategories []= $category;
 			$pFieldMessage = $pFieldCollection->getFieldByModuleAndName('', 'message');
 
@@ -167,7 +167,7 @@ class AdminPageFormSettingsContact
 			$pFormModelGeoFields = new FormModel();
 			$pFormModelGeoFields->setPageSlug($this->getPageSlug());
 			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
-			$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice'));
+			$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice-for-wp-websites'));
 			$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_SEARCHCRITERIA);
 			foreach ($pInputModelBuilderGeoRange->build($pDataFormConfiguration) as $pInputModel) {
 				$pFormModelGeoFields->addInputModel($pInputModel);

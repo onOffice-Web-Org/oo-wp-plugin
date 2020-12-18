@@ -89,7 +89,7 @@ class FormModelBuilderEstateDetailSettings
 		$this->_pDataDetailView = $pDataDetailViewHandler->getDetailView();
 
 		$pFormModel = new FormModel();
-		$pFormModel->setLabel(__('Detail View', 'onoffice'));
+		$pFormModel->setLabel(__('Detail View', 'onoffice-for-wp-websites'));
 		$pFormModel->setGroupSlug('onoffice-detailview-settings-main');
 		$pFormModel->setPageSlug($pageSlug);
 
@@ -131,7 +131,7 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createInputModelExpose()
 	{
-		$labelExpose = __('PDF-Expose', 'onoffice');
+		$labelExpose = __('PDF-Expose', 'onoffice-for-wp-websites');
 
 		$pInputModelExpose = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_EXPOSE, $labelExpose);
@@ -152,15 +152,15 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createInputModelMovieLinks()
 	{
-		$labelMovieLinks = __('Movie Links', 'onoffice');
+		$labelMovieLinks = __('Movie Links', 'onoffice-for-wp-websites');
 
 		$pInputModelMedia = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_MOVIE_LINKS, $labelMovieLinks);
 		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$options = array(
-			MovieLinkTypes::MOVIE_LINKS_NONE => __('Disabled', 'onoffice'),
-			MovieLinkTypes::MOVIE_LINKS_LINK => __('Link', 'onoffice'),
-			MovieLinkTypes::MOVIE_LINKS_PLAYER => __('Player', 'onoffice'),
+			MovieLinkTypes::MOVIE_LINKS_NONE => __('Disabled', 'onoffice-for-wp-websites'),
+			MovieLinkTypes::MOVIE_LINKS_LINK => __('Link', 'onoffice-for-wp-websites'),
+			MovieLinkTypes::MOVIE_LINKS_PLAYER => __('Player', 'onoffice-for-wp-websites'),
 		);
 		$pInputModelMedia->setValuesAvailable($options);
 		$pInputModelMedia->setValue($this->_pDataDetailView->getMovieLinks());
@@ -239,7 +239,7 @@ class FormModelBuilderEstateDetailSettings
 	 */
 	public function createInputModelTemplate(string $field = InputModelOptionFactoryDetailView::INPUT_TEMPLATE)
 	{
-		$labelTemplate = __('Template', 'onoffice');
+		$labelTemplate = __('Template', 'onoffice-for-wp-websites');
 		$pInputModelTemplate = $this->_pInputModelDetailViewFactory->create($field, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));

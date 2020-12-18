@@ -78,6 +78,13 @@ abstract class WP_UnitTest_Localized
 	{
 		global $l10n;
 
+		if (!is_textdomain_loaded('onoffice-for-wp-websites') && $newLocale !== 'en_US') {
+			load_textdomain('onoffice-for-wp-websites', ONOFFICE_PLUGIN_DIR . '/languages/onoffice-for-wp-websites-' . $newLocale . '.mo');
+			if (!array_key_exists('onoffice-for-wp-websites', $l10n ?? [])) {
+				throw new Exception('Textdomain not added');
+			}
+		}
+
 		if (!is_textdomain_loaded('onoffice') && $newLocale !== 'en_US') {
 			load_textdomain('onoffice', ONOFFICE_PLUGIN_DIR.'/languages/onoffice-'.$newLocale.'.mo');
 			if (!array_key_exists('onoffice', $l10n ?? [])) {
@@ -112,6 +119,7 @@ abstract class WP_UnitTest_Localized
 
 	public static function tearDownAfterClass()
 	{
+		unload_textdomain('onoffice-for-wp-websites');
 		unload_textdomain('onoffice');
 		parent::tearDownAfterClass();
 	}

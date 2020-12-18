@@ -90,7 +90,7 @@ class RecordManagerReadListViewAddress
 
 		if ($result === null)
 		{
-			throw new \Exception(__('unknown address list name', 'onoffice'));
+			throw new \Exception(__('unknown address list name', 'onoffice-for-wp-websites'));
 		}
 
 		$resultFieldConfig = $this->readFieldconfigByListviewId($result[$this->getIdColumnMain()]);

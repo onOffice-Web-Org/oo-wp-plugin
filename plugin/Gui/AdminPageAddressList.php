@@ -56,7 +56,7 @@ class AdminPageAddressList
 
 	public function renderContent()
 	{
-		$this->generatePageMainTitle(__('Addresses', 'onoffice'));
+		$this->generatePageMainTitle(__('Addresses', 'onoffice-for-wp-websites'));
 		$this->_pAddressListTable->prepare_items();
 		echo '<p>';
 		echo '<form method="post">';
@@ -75,16 +75,16 @@ class AdminPageAddressList
 
 	public function generatePageMainTitle($subTitle)
 	{
-		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice');
+		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
 
 		if ($subTitle != '') {
-			echo ' › '.esc_html__($subTitle, 'onoffice');
+			echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
 		}
 
 		echo '</h1>';
 
 		$newLink = admin_url('admin.php?page=onoffice-editlistviewaddress');
-		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice').'</a>';
+		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
 

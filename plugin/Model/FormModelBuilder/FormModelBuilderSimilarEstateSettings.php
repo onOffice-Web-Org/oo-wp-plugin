@@ -78,7 +78,7 @@ class FormModelBuilderSimilarEstateSettings
 		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->getDataSimilarEstatesSettings();
 
 		$pFormModel = new FormModel();
-		$pFormModel->setLabel(__('Similar Estates View', 'onoffice'));
+		$pFormModel->setLabel(__('Similar Estates View', 'onoffice-for-wp-websites'));
 		$pFormModel->setGroupSlug('onoffice-similar-view-settings-main');
 		$pFormModel->setPageSlug($pageSlug);
 
@@ -93,7 +93,7 @@ class FormModelBuilderSimilarEstateSettings
 
 	public function getCheckboxEnableSimilarEstates()
 	{
-		$labelExpose = __('Show Similar Estates', 'onoffice');
+		$labelExpose = __('Show Similar Estates', 'onoffice-for-wp-websites');
 		$pInputModelActivate = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_ENABLE_SIMILAR_ESTATES, $labelExpose);
 		$pInputModelActivate->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
@@ -210,7 +210,7 @@ class FormModelBuilderSimilarEstateSettings
 	 */
 	public function createInputModelTemplate(string $field = InputModelOptionFactorySimilarView::INPUT_TEMPLATE)
 	{
-		$labelTemplate = __('Template', 'onoffice');
+		$labelTemplate = __('Template', 'onoffice-for-wp-websites');
 		$pInputModelTemplate = $this->_pInputModelSimilarViewFactory->create($field, $labelTemplate);
 		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
@@ -245,7 +245,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-		$labelSameKind = __('Same Kind of Estate', 'onoffice');
+		$labelSameKind = __('Same Kind of Estate', 'onoffice-for-wp-websites');
 
 		$pInputModelSimilarEstateKind = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND, $labelSameKind);
@@ -267,7 +267,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-		$labelSameMarketingMethod = __('Same Marketing Method', 'onoffice');
+		$labelSameMarketingMethod = __('Same Marketing Method', 'onoffice-for-wp-websites');
 
 		$pInputModelSameMarketingMethod = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SAME_MARKETING_METHOD, $labelSameMarketingMethod);
@@ -288,7 +288,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-		$labelShowArchived = esc_html__('Don&#8217;t show archived estates', 'onoffice');
+		$labelShowArchived = esc_html__('Don&#8217;t show archived estates', 'onoffice-for-wp-websites');
 
 		$pInputModelShowArchived = $this->_pInputModelSimilarViewFactory->create
 		(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_ARCHIVED, $labelShowArchived);
@@ -309,7 +309,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-		$labelShowReference = esc_html__('Don&#8217;t show reference estates', 'onoffice');
+		$labelShowReference = esc_html__('Don&#8217;t show reference estates', 'onoffice-for-wp-websites');
 
 		$pInputModelShowReference = $this->_pInputModelSimilarViewFactory->create
 		(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SHOW_REFERENCE, $labelShowReference);
@@ -331,7 +331,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-		$labelSamePostalCode = __('Same Postal Code', 'onoffice');
+		$labelSamePostalCode = __('Same Postal Code', 'onoffice-for-wp-websites');
 
 		$pInputModelSamePostalCode = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE, $labelSamePostalCode);
@@ -353,7 +353,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-		$labelRadius = __('Radius', 'onoffice');
+		$labelRadius = __('Radius', 'onoffice-for-wp-websites');
 
 		$pInputModelRadius = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_RADIUS, $labelRadius);
@@ -375,7 +375,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
 
-		$labelAmount = __('Amount of Estates', 'onoffice');
+		$labelAmount = __('Amount of Estates', 'onoffice-for-wp-websites');
 
 		$pInputModelAmount = $this->_pInputModelSimilarViewFactory->create
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT, $labelAmount);

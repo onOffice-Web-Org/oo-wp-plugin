@@ -78,7 +78,7 @@ class InputModelBuilderDefaultValue
 	{
 		$pFieldsCollectionClone = $this->cloneFieldsCollectionWithDummyField($pFieldsCollection);
 		$pInputModelFactory = new InputModelDBFactory($this->_pInputModelDBFactoryConfigForm);
-		$label = __('Default Value', 'onoffice');
+		$label = __('Default Value', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_VALUE;
 
 		/** @var InputModelDB $pInputModel */

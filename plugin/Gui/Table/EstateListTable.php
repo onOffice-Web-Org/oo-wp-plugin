@@ -128,11 +128,11 @@ class EstateListTable extends ListTable
 	{
 		$columns = [
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of View', 'onoffice'),
-			'filtername' => __('Filter', 'onoffice'),
-			'show_status' => __('Show Status', 'onoffice'),
-			'list_type' => __('Type of List', 'onoffice'),
-			'shortcode' => __('Shortcode', 'onoffice'),
+			'name' => __('Name of View', 'onoffice-for-wp-websites'),
+			'filtername' => __('Filter', 'onoffice-for-wp-websites'),
+			'show_status' => __('Show Status', 'onoffice-for-wp-websites'),
+			'list_type' => __('Type of List', 'onoffice-for-wp-websites'),
+			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		];
 
 		$hidden = ['ID', 'filterId'];
@@ -169,7 +169,7 @@ class EstateListTable extends ListTable
 
 	protected function column_show_status($pItem)
 	{
-		return $pItem->show_status == '1' ? __('Yes', 'onoffice') : __('No', 'onoffice');
+		return $pItem->show_status == '1' ? __('Yes', 'onoffice-for-wp-websites') : __('No', 'onoffice-for-wp-websites');
 	}
 
 
@@ -188,10 +188,10 @@ class EstateListTable extends ListTable
 				$filterName = $this->_pFilterCall->getFilternameById($pItem->filterId);
 			}
 		} catch (APIClientCredentialsException $pCredentialsException) {
-			$filterName = __('(Needs valid API credentials)', 'onoffice');
+			$filterName = __('(Needs valid API credentials)', 'onoffice-for-wp-websites');
 		} catch (UnknownFilterException $pFilterException) {
 			/* translators: %s will be replaced with a number. */
-			$filterName = sprintf(__('(Unknown Filter (ID: %s))', 'onoffice'),
+			$filterName = sprintf(__('(Unknown Filter (ID: %s))', 'onoffice-for-wp-websites'),
 				$pFilterException->getFilterId());
 		}
 		return $filterName;
@@ -208,11 +208,11 @@ class EstateListTable extends ListTable
 	{
 		return [
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of View', 'onoffice'),
-			'filtername' => __('Filter', 'onoffice'),
-			'show_status' => __('Show Status', 'onoffice'),
-			'list_type' => __('Type of List', 'onoffice'),
-			'shortcode' => __('Shortcode', 'onoffice'),
+			'name' => __('Name of View', 'onoffice-for-wp-websites'),
+			'filtername' => __('Filter', 'onoffice-for-wp-websites'),
+			'show_status' => __('Show Status', 'onoffice-for-wp-websites'),
+			'list_type' => __('Type of List', 'onoffice-for-wp-websites'),
+			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		];
 	}
 
@@ -270,7 +270,7 @@ class EstateListTable extends ListTable
 			."' onclick=\"if ( confirm( '"
 			.esc_js(sprintf(
 			/* translators: %s is the name of the list view. */
-			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice'), $pItem->name))
+			__("You are about to delete the listview '%s'\n  'Cancel' to stop, 'OK' to delete.", 'onoffice-for-wp-websites'), $pItem->name))
 			."' ) ) { return true;}return false;\">" . esc_html__('Delete') . "</a>";
 		return $this->row_actions($actions);
 	}

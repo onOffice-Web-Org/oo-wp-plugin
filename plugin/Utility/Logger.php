@@ -74,7 +74,7 @@ class Logger
 			} else {
 				$output = '<pre>'
 					.'<u><strong>[onOffice-Plugin]</strong> '
-					.esc_html__('An error occured:', 'onoffice').'</u><p>'
+					.esc_html__('An error occured:', 'onoffice-for-wp-websites').'</u><p>'
 					.esc_html((string) $pException).'</pre></p>';
 			}
 		}

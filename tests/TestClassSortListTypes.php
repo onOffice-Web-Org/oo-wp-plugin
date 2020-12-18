@@ -46,8 +46,8 @@ class TestClassSortListTypes
 	 */
 	public function testGetSortOrderMapping()
 	{
-		$this->assertEquals( __('ascending', 'onoffice'), SortListTypes::getSortOrderMapping(1, 'ASC'));
-		$this->assertEquals( __('highest first', 'onoffice'), SortListTypes::getSortOrderMapping(0, 'DESC'));
+		$this->assertEquals( __('ascending', 'onoffice-for-wp-websites'), SortListTypes::getSortOrderMapping(1, 'ASC'));
+		$this->assertEquals( __('highest first', 'onoffice-for-wp-websites'), SortListTypes::getSortOrderMapping(0, 'DESC'));
 	}
 
 	/**
@@ -57,12 +57,12 @@ class TestClassSortListTypes
 	{
 		$expectedValue = [
 			0 => [
-				'ASC' => __('lowest first', 'onoffice'),
-				'DESC' => __('highest first', 'onoffice'),
+				'ASC' => __('lowest first', 'onoffice-for-wp-websites'),
+				'DESC' => __('highest first', 'onoffice-for-wp-websites'),
 			],
 			1 => [
-				'ASC' => __('ascending', 'onoffice'),
-				'DESC' => __('descending', 'onoffice'),
+				'ASC' => __('ascending', 'onoffice-for-wp-websites'),
+				'DESC' => __('descending', 'onoffice-for-wp-websites'),
 			],
 		];
 
