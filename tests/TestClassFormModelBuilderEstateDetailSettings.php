@@ -87,4 +87,48 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelPictureTypes
+	 */
+	public function testCreateInputModelPictureTypes()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataDetailViewHandler($pWPOptionsWrapper);
+		$this->_pDataDetailView = $pDataSimilarEstatesSettingsHandler->createDetailViewByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+
+		$pInputModelDB = $pInstance->createInputModelPictureTypes();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelMovieLinks
+	 */
+	public function testCreateInputModelMovieLinks()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataDetailViewHandler($pWPOptionsWrapper);
+		$this->_pDataDetailView = $pDataSimilarEstatesSettingsHandler->createDetailViewByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+
+		$pInputModelDB = $pInstance->createInputModelMovieLinks();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
 }
