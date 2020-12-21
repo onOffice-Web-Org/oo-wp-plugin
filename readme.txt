@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.8.1 =
+
+** Fixes **
+
+* Fix translations for forgotten lazy translated strings 
+
 = 2.8.0 =
 
 **Changes**
