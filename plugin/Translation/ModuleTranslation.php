@@ -60,7 +60,7 @@ class ModuleTranslation
 	public static function getAllLabelsSingular(): array
 	{
 		$result = array_map(function(array $value): string {
-			return translate_nooped_plural($value, 1, 'onoffice');
+			return translate_nooped_plural($value, 1, 'onoffice-for-wp-websites');
 		}, self::getModuleTranslations());
 
 		return $result;
@@ -76,9 +76,9 @@ class ModuleTranslation
 	private static function getModuleTranslations(): array
 	{
 		return [
-			onOfficeSDK::MODULE_ADDRESS => _nx_noop('Address', 'Addresses', 'modules', 'onoffice'),
-			onOfficeSDK::MODULE_ESTATE => _nx_noop('Estate', 'Estates', 'modules', 'onoffice'),
-			onOfficeSDK::MODULE_SEARCHCRITERIA => _nx_noop('Search Criteria', 'Search Criteria', 'modules', 'onoffice'),
+			onOfficeSDK::MODULE_ADDRESS => _nx_noop('Address', 'Addresses', 'modules', 'onoffice-for-wp-websites'),
+			onOfficeSDK::MODULE_ESTATE => _nx_noop('Estate', 'Estates', 'modules', 'onoffice-for-wp-websites'),
+			onOfficeSDK::MODULE_SEARCHCRITERIA => _nx_noop('Search Criteria', 'Search Criteria', 'modules', 'onoffice-for-wp-websites'),
 		];
 	}
 }
