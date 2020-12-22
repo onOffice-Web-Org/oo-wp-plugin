@@ -2,9 +2,12 @@ name: Testing
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
+  # Triggers the workflow on push or by cron schedule
   push:
-    branches: [ 8540-wordpress-implement-github-actions ]
+    branches:
+      -  '*'    # push to any branch
+  schedule:
+    cron: "0 13 * * 1" # Every Monday at 1PM UTC (9AM EST)
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -20,7 +23,7 @@ jobs:
       uses: mirromutth/mysql-action@v1.1
       with:
         mysql version: '5.7'
-        mysql root password: '123456'
+        mysql root password: ${{ secrets.MYSQL_PASSWORD }}
 
     - name: Checkout from GIT
       uses: actions/checkout@v2
@@ -31,7 +34,7 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-        extensions: mbstring, mysqli, intl #optional, setup extensions
+        extensions: mbstring, mysqli, intl, curl #optional, setup extensions
         coverage: xdebug #optional, setup coverage driver
 
     - name: Check PHP Version
@@ -42,7 +45,7 @@ jobs:
         composer install
 
     - name: Install WP Tests
-      run: bash bin/install-wp-tests.sh wordpress_test root '123456' 172.17.0.1 latest
+      run: bash bin/install-wp-tests.sh wordpress_test root '${{ secrets.MYSQL_PASSWORD }}' 172.17.0.1 latest
 
     - name: Run unit tests
       run: |
