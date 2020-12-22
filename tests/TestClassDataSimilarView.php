@@ -43,7 +43,6 @@ class TestClassDataSimilarView
 		'kaltmiete',
 		'ort',
 		'plz',
-		'status2',
 		'grundstuecksflaeche',
 		'nutzflaeche'
 	];

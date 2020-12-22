@@ -52,7 +52,6 @@ class DataSimilarView
 		'kaltmiete',
 		'ort',
 		'plz',
-		'status2',
 		'grundstuecksflaeche',
 		'nutzflaeche'
 	];

@@ -145,9 +145,9 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelShowArchived
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelDoNotShowArchived
 	 */
-	public function testCreateInputModelShowArchived()
+	public function testCreateInputModelDoNotShowArchived()
 	{
 		$row = self::VALUES_BY_ROW;
 
@@ -164,14 +164,14 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
 		$pInstance->method('getValue')->willReturn('1');
 
-		$pInputModelDB = $pInstance->createInputModelShowArchived();
+		$pInputModelDB = $pInstance->createInputModelDoNotShowArchived();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelShowReference
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelDoNotShowReference
 	 */
-	public function testCreateInputModelShowReference()
+	public function testCreateInputModelDoNotShowReference()
 	{
 		$row = self::VALUES_BY_ROW;
 
@@ -187,7 +187,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInstance->generate('test');
 		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
 
-		$pInputModelDB = $pInstance->createInputModelShowReference();
+		$pInputModelDB = $pInstance->createInputModelDoNotShowReference();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
 

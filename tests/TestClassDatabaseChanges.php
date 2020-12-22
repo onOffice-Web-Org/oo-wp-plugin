@@ -110,23 +110,19 @@ class TestClassDatabaseChanges
 		$this->_pDbChanges->install();
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
 
-		$prefix = $this->_pDbChanges->getPWPDB()->prefix;
-		$similarViewOptions = $this->_pDbChanges->getPWPDB()->get_results("select * from " . $prefix . "options where option_name = 'onoffice-similar-estates-settings-view'");
-		$new_data = [];
-		if(!empty($similarViewOptions)){
-			foreach ($similarViewOptions as $similarViewOption) {
-				$similarViewOptionValues = maybe_unserialize($similarViewOption->option_value);
-				$new_data['enablesimilarestates'] = $similarViewOptionValues->getDataSimilarViewActive();
+		$similarViewOptions = get_option('onoffice-similar-estates-settings-view');
 
-				$newDataViewSimilarEstates = $similarViewOptionValues->getDataViewSimilarEstates();
-				$new_data['radius'] = $newDataViewSimilarEstates->getRadius();
-				$new_data['same_kind'] = $newDataViewSimilarEstates->getSameEstateKind();
-				$new_data['same_maketing_method'] = $newDataViewSimilarEstates->getSameMarketingMethod();
-				$new_data['same_postal_code'] = $newDataViewSimilarEstates->getSamePostalCode();
-				$new_data['amount'] = $newDataViewSimilarEstates->getRecordsPerPage();
-				$new_data['similar_estates_template'] = $newDataViewSimilarEstates->getTemplate();
-			}
-		}
+		$new_data = [];
+		$new_data['enablesimilarestates'] = $similarViewOptions->getDataSimilarViewActive();
+
+		$newDataViewSimilarEstates = $similarViewOptions->getDataViewSimilarEstates();
+		$new_data['radius'] = $newDataViewSimilarEstates->getRadius();
+		$new_data['same_kind'] = $newDataViewSimilarEstates->getSameEstateKind();
+		$new_data['same_maketing_method'] = $newDataViewSimilarEstates->getSameMarketingMethod();
+		$new_data['same_postal_code'] = $newDataViewSimilarEstates->getSamePostalCode();
+		$new_data['amount'] = $newDataViewSimilarEstates->getRecordsPerPage();
+		$new_data['similar_estates_template'] = $newDataViewSimilarEstates->getTemplate();
+
 		$this->assertEquals($new_data['enablesimilarestates'], true);
 		$this->assertEquals($new_data['same_kind'], true);
 		$this->assertEquals($new_data['same_postal_code'], true);

@@ -41,12 +41,6 @@ class FilterConfigurationSimilarEstates
 	/** @var string */
 	private $_postalCode = '';
 
-	/** @var string */
-	private $_showArchived = '';
-
-	/** @var string */
-	private $_showReference = '';
-
 	/** @var GeoCoordinates */
 	private $_pGeoCoordinates = null;
 
@@ -100,28 +94,6 @@ class FilterConfigurationSimilarEstates
 	public function getPostalCode(): string
 	{
 		return $this->_postalCode;
-	}
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getShowArchived(): string
-	{
-		return $this->_showArchived;
-	}
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getShowReference(): string
-	{
-		return $this->_showReference;
 	}
 
 
@@ -290,28 +262,6 @@ class FilterConfigurationSimilarEstates
 	public function setPostalCode(string $postalCode)
 	{
 		$this->_postalCode = $postalCode;
-	}
-
-	/**
-	 *
-	 * @param string $showArchived
-	 *
-	 */
-
-	public function setShowArchive(string $showArchived)
-	{
-		$this->_showArchived = $showArchived;
-	}
-
-	/**
-	 *
-	 * @param string $showReference
-	 *
-	 */
-
-	public function setShowReference(string $showReference)
-	{
-		$this->_showReference = $showReference;
 	}
 
 

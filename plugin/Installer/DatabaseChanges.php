@@ -493,24 +493,19 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	public function migrationsDataSimilarEstates()
 	{
-		$prefix = $this->getPrefix();
-		$defaultViewOptions = $this->_pWPDB->get_results("select * from " . $prefix . "options where option_name = 'onoffice-default-view'");
+		$defaultViewOptions = get_option('onoffice-default-view');
 		if(!empty($defaultViewOptions)){
 			add_option('onoffice-similar-estates-settings-view', '');
 			$old_data = [];
+			$old_data['enablesimilarestates'] = $defaultViewOptions->getDataDetailViewActive();
 
-			foreach ($defaultViewOptions as $defaultViewOption) {
-				$defaultViewOptionValues = maybe_unserialize($defaultViewOption->option_value);
-				$old_data['enablesimilarestates'] = $defaultViewOptionValues->getDataDetailViewActive();
-
-				$dataViewSimilarEstates = $defaultViewOptionValues->getDataViewSimilarEstates();
-				$old_data['radius'] = $dataViewSimilarEstates->getRadius();
-				$old_data['same_kind'] = $dataViewSimilarEstates->getSameEstateKind();
-				$old_data['same_maketing_method'] = $dataViewSimilarEstates->getSameMarketingMethod();
-				$old_data['same_postal_code'] = $dataViewSimilarEstates->getSamePostalCode();
-				$old_data['amount'] = $dataViewSimilarEstates->getRecordsPerPage();
-				$old_data['similar_estates_template'] = $dataViewSimilarEstates->getTemplate();
-			}
+			$dataDetailViewSimilarEstates = $defaultViewOptions->getDataViewSimilarEstates();
+			$old_data['radius'] = $dataDetailViewSimilarEstates->getRadius();
+			$old_data['same_kind'] = $dataDetailViewSimilarEstates->getSameEstateKind();
+			$old_data['same_maketing_method'] = $dataDetailViewSimilarEstates->getSameMarketingMethod();
+			$old_data['same_postal_code'] = $dataDetailViewSimilarEstates->getSamePostalCode();
+			$old_data['amount'] = $dataDetailViewSimilarEstates->getRecordsPerPage();
+			$old_data['similar_estates_template'] = $dataDetailViewSimilarEstates->getTemplate();
 
 			$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
 			$dataSimilarViewOptions->name = "onoffice-similar-estates-settings-view";

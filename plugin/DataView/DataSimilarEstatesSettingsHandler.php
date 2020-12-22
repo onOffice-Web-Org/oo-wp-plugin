@@ -121,10 +121,10 @@ class DataSimilarEstatesSettingsHandler
 			($row[DataViewSimilarEstates::FIELD_SAME_MARKETING_METHOD] ?? false);
 		$pDataViewSimilar->setSamePostalCode
 			($row[DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE] ?? false);
-		$pDataViewSimilar->setShowArchived
-			($row[DataViewSimilarEstates::FIELD_SHOW_ARCHIVED] ?? false);
-		$pDataViewSimilar->setShowReference
-			($row[DataViewSimilarEstates::FIELD_SHOW_REFERENCE] ?? false);
+		$pDataViewSimilar->setDoNotShowArchived
+			($row[DataViewSimilarEstates::FIELD_DO_NOT_SHOW_ARCHIVED] ?? false);
+		$pDataViewSimilar->setDoNotShowReference
+			($row[DataViewSimilarEstates::FIELD_DO_NOT_SHOW_REFERENCE] ?? false);
 		$pDataViewSimilar->setRadius
 			($row[DataViewSimilarEstates::FIELD_RADIUS] ?? $pDataViewSimilar->getRadius());
 		$pDataViewSimilar->setRecordsPerPage
