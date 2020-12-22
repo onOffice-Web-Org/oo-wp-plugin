@@ -58,17 +58,18 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	private $_dataSimilarViewActive = true;
 
 	/** @var InputModelOptionFactorySimilarView */
-	private $_pInputModelSimilarViewFactory;
+	private $_pInputModelOptionFactorySimilarViewDBEntry;
 
 	/** @var DataSimilarView */
 	private $_pDataSimilarView = null;
+
 
 	/**
 	 * @before
 	 */
 	public function prepare()
 	{
-		$this->_pInputModelSimilarViewFactory = new InputModelOptionFactorySimilarView('onoffice');
+		$this->_pInputModelOptionFactorySimilarViewDBEntry = new InputModelOptionFactorySimilarView('onoffice');
 	}
 
 	/**
@@ -88,7 +89,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 
 		$pInputModelDB = $pInstance->getCheckboxEnableSimilarEstates();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
@@ -111,7 +112,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 		$pInstance->method('getValue')->willReturn('1');
 
 		$pInputModelDB = $pInstance->createInputModelSimilarEstateKind();
@@ -136,7 +137,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 		$pInstance->method('getValue')->willReturn('1');
 
 		$pInputModelDB = $pInstance->createInputModelSimilarEstateMarketingMethod();
@@ -161,7 +162,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 		$pInstance->method('getValue')->willReturn('1');
 
 		$pInputModelDB = $pInstance->createInputModelDoNotShowArchived();
@@ -185,7 +186,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 
 		$pInputModelDB = $pInstance->createInputModelDoNotShowReference();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
@@ -208,7 +209,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 
 		$pInputModelDB = $pInstance->createInputModelSameEstatePostalCode();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
@@ -231,7 +232,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 
 		$pInputModelDB = $pInstance->createInputModelSameEstateRadius();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
@@ -254,7 +255,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelSimilarViewFactory);
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
 
 		$pInputModelDB = $pInstance->createInputModelSameEstateAmount();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
