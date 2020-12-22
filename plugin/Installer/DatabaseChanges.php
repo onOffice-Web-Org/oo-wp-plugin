@@ -139,7 +139,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 16) {
-			dbDelta( $this->migrationsDataSimilarEstates() );
+			$this->migrationsDataSimilarEstates();
 			$dbversion = 17;
 		}
 
