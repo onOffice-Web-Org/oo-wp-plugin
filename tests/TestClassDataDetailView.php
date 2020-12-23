@@ -68,39 +68,6 @@ class TestClassDataDetailView
 		'Telefon1',
 		'mobile',
 	];
-
-	/** @var DataViewSimilarEstates */
-	private $_pDataViewSimilarEstates = null;
-
-	/**
-	 *
-	 */
-
-	public function test__wakeup()
-	{
-		$pInstance = new DataDetailView();
-
-		// old versions didn't have $_pDataViewSimilarEstates, but it must always be set
-		$pClosure = function() {
-			$this->_pDataViewSimilarEstates = null;
-		};
-
-		Closure::bind($pClosure, $pInstance, DataDetailView::class)();
-
-		try {
-			$pInstance->getDataViewSimilarEstates();
-			$this->assertFalse(true);
-		} catch (TypeError $pError) {
-			$this->assertEquals('Return value of '
-				.DataDetailView::class.'::getDataViewSimilarEstates() must be an instance of '
-				.DataViewSimilarEstates::class.', null returned', $pError->getMessage());
-		}
-
-		$string = serialize($pInstance);
-		$pNewInstance = unserialize($string);
-		$this->assertInstanceOf(DataViewSimilarEstates::class, $pNewInstance->getDataViewSimilarEstates());
-	}
-
 	/**
 	 *
 	 */
