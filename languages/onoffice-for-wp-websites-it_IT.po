@@ -3,9 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
-"websites\n"
-"POT-Creation-Date: 2020-12-18T11:16:14+03:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
+"POT-Creation-Date: 2020-12-21T14:37:43+01:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -911,6 +910,72 @@ msgstr "Mostra la corrispondenza esatta"
 #: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:87
 msgid "Show %s matches"
 msgstr "Mostra %s partite"
+
+#: plugin/Translation/FormTranslation.php:55
+msgctxt "forms"
+msgid "All"
+msgid_plural "All"
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugin/Translation/FormTranslation.php:59
+#, fuzzy
+#| msgid "Contact person"
+msgctxt "forms"
+msgid "Contact Form"
+msgid_plural "Contact Forms"
+msgstr[0] "Persona di contatto"
+msgstr[1] "Persona di contatto"
+
+#: plugin/Translation/FormTranslation.php:63
+#, fuzzy
+#| msgid "Contact person"
+msgctxt "forms"
+msgid "Interest Form"
+msgid_plural "Interest Forms"
+msgstr[0] "Persona di contatto"
+msgstr[1] "Persona di contatto"
+
+#: plugin/Translation/FormTranslation.php:67
+msgctxt "forms"
+msgid "Owner Form"
+msgid_plural "Owner Forms"
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugin/Translation/FormTranslation.php:71
+msgctxt "forms"
+msgid "Applicant Search Form"
+msgid_plural "Applicant Search Forms"
+msgstr[0] ""
+msgstr[1] ""
+
+#: plugin/Translation/ModuleTranslation.php:79
+#, fuzzy
+#| msgid "Addresses"
+msgctxt "modules"
+msgid "Address"
+msgid_plural "Addresses"
+msgstr[0] "Indirizzi"
+msgstr[1] "Indirizzi"
+
+#: plugin/Translation/ModuleTranslation.php:80
+#, fuzzy
+#| msgid "Estates"
+msgctxt "modules"
+msgid "Estate"
+msgid_plural "Estates"
+msgstr[0] "Tenute"
+msgstr[1] "Tenute"
+
+#: plugin/Translation/ModuleTranslation.php:81
+#, fuzzy
+#| msgid "Search Criteria"
+msgctxt "modules"
+msgid "Search Criteria"
+msgid_plural "Search Criteria"
+msgstr[0] "Criteri di ricerca"
+msgstr[1] "Criteri di ricerca"
 
 #: plugin/Types/EstateStatusLabel.php:104
 msgid "rented"

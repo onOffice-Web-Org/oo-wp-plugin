@@ -52,23 +52,23 @@ class FormTranslation
 	{
 		$this->_formConfig = [
 			'all' => [
-				self::SUB_LABEL => _nx_noop('All', 'All', 'forms', 'onoffice'),
+				self::SUB_LABEL => _nx_noop('All', 'All', 'forms', 'onoffice-for-wp-websites'),
 				self::SUB_DB_VALUE => null,
 			],
 			Form::TYPE_CONTACT => [
-				self::SUB_LABEL => _nx_noop('Contact Form', 'Contact Forms', 'forms', 'onoffice'),
+				self::SUB_LABEL => _nx_noop('Contact Form', 'Contact Forms', 'forms', 'onoffice-for-wp-websites'),
 				self::SUB_DB_VALUE => Form::TYPE_CONTACT,
 			],
 			Form::TYPE_INTEREST => [
-				self::SUB_LABEL => _nx_noop('Interest Form', 'Interest Forms', 'forms', 'onoffice'),
+				self::SUB_LABEL => _nx_noop('Interest Form', 'Interest Forms', 'forms', 'onoffice-for-wp-websites'),
 				self::SUB_DB_VALUE => Form::TYPE_INTEREST,
 			],
 			Form::TYPE_OWNER => [
-				self::SUB_LABEL => _nx_noop('Owner Form', 'Owner Forms', 'forms', 'onoffice'),
+				self::SUB_LABEL => _nx_noop('Owner Form', 'Owner Forms', 'forms', 'onoffice-for-wp-websites'),
 				self::SUB_DB_VALUE => Form::TYPE_OWNER,
 			],
 			Form::TYPE_APPLICANT_SEARCH => [
-				self::SUB_LABEL => _nx_noop('Applicant Search Form', 'Applicant Search Forms', 'forms', 'onoffice'),
+				self::SUB_LABEL => _nx_noop('Applicant Search Form', 'Applicant Search Forms', 'forms', 'onoffice-for-wp-websites'),
 				self::SUB_DB_VALUE => Form::TYPE_APPLICANT_SEARCH,
 			],
 		];
@@ -88,7 +88,7 @@ class FormTranslation
 		$formConfig = $this->getFormConfig();
 		$label = $formConfig[$formType] ?? null;
 
-		return translate_nooped_plural($label[self::SUB_LABEL], $count, 'onoffice') ?? '';
+		return translate_nooped_plural($label[self::SUB_LABEL], $count, 'onoffice-for-wp-websites') ?? '';
 	}
 
 	/** @return array */

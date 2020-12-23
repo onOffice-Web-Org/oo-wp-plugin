@@ -73,6 +73,18 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.8.1 =
+
+** Fixes **
+
+* Fix translations for forgotten lazy translated strings 
+
+= 2.8.0 =
+
+**Changes**
+
+* Changes of the text domain
+
 = 2.7.18 =
 
 **Fixes**
@@ -120,123 +132,6 @@ Start editing inside the `onoffice-personalized` folder.
 **Fixes**
 
 * Fix WPML-Language selector in the real-estate-detail view.
-
-= 2.7.10 =
-
-**Fixes**
-
-* Fix accordion boxes in the settings when using WP 5.5.
-* Fix jQuery compability problem with picture checkbox in the estate list settings when using WP 5.5.
-* Optimize estate types to be cached for faster page loading time.
-
-= 2.7.9 =
-
-**Fixes**
-
-* Bugfix in detailview for mobile devices.
-
-= 2.7.8 =
-
-**Changes**
-
-* Different titles for address fields in real-estate detail view in backend.
-* Made language files complete.
-
-= 2.7.7 =
-
-**New**
-
-* Fix option to reduce possible field values according to selected filter
-* UI changes to automatically select estate type according to kind
-* preview of how many results will be found
-
-= 2.7.6 =
-
-**Fixes**
-
-* Fix adding fields in the configuration of the real estate detail view.
-
-= 2.7.5 =
-
-**Changes**
-
-* Fix translations for image-type label in back-end.
-* Fix sending multiple address form values for a multi select field in emails.
-
-= 2.7.4 =
-
-* Minor fixes
-
-= 2.7.3 =
-
-** Changes **
-
-* New pdf filename.
-
-= 2.7.2 =
-
-**Changes**
-
-* more legal characters for list and form names (shortcode names).
-
-= 2.7.1 =
-
-**Fixes**
-
-* Fix of distinct fields.
-
-= 2.7.0 =
-
-**New**
-
-* A new and faster pdf download.
-
-
-More information can be found in our [changelog](changelog.txt).
-
-== Upgrade Notice ==
-
-= 2.7.6 =
-Fix adding fields in the configuration of the real estate detail view.
-
-= 2.7.5 =
-Fix translations for image-type label in back-end and fix sending multiple address form values for a multi select field in emails.
-
-= 2.7.4 =
-Minor fixes.
-
-= 2.7.3 =
-New pdf filename.
-
-= 2.7.2 =
-More legal characters for list and form names.
-
-= 2.7.1 =
-Fix of distinct fields.
-
-= 2.7.0 =
-A new and faster pdf download.
-
-= 2.6.2 =
-Removal of illegal characters in shortcode names on saving.
-
-= 2.6.1 =
-Representation of the search criterie fields in forms compatible with onOffice enterprise.
-
-= 2.6.0 =
-New estate templates and dependencies updated.
-
-= 2.5.5 =
-Fix submission of contact form with deactivated estate id field in onOffice enterprise.
-
-= 2.5.4 =
-More data in the emails by form submit, jQuery internal reorganization.
-
-= 2.5.3 =
-jQuery internal reorganization, notice in the geo fields administration.
-
-= 2.5.2 =
-Fix errors in estate detail view configuration.
 
 
 == Arbitrary section ==
