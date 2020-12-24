@@ -140,8 +140,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 16) {
-			dbDelta($this->InstallDataQueryForms());
-			dbDelta($this->InstallDataQueryFormFieldConfig());
+			$this->installDataQueryForms();
 			$dbversion = 17;
 		}
 
@@ -266,7 +265,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 *
 	 */
 
-	private function InstallDataQueryForms()
+	private function installDataQueryForms()
 	{
 		$prefix = $this->getPrefix();
 		$tableName = $prefix . "oo_plugin_forms";
@@ -280,7 +279,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$this->_pWPDB->insert(
 			$tableName,
 			array(
-				'form_id' => '1',
 				'name' => 'Default Form',
 				'form_type' => 'contact',
 				'template' => $template,
@@ -291,6 +289,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 				'geo_order' => 'street,zip,city,country,radius'
 			)
 		);
+		$defaultFormId = $this->_pWPDB->insert_id;
+		$this->installDataQueryFormFieldConfig($defaultFormId);
 	}
 
 
@@ -351,64 +351,56 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 *
 	 */
 
-	private function InstallDataQueryFormFieldConfig()
+	private function installDataQueryFormFieldConfig($defaultFormId)
 	{
 		$prefix = $this->getPrefix();
 		$tableName = $prefix . "oo_plugin_form_fieldconfig";
 
 		$rows = array(
 			array(
-				'form_fieldconfig_id' => 1,
-				'form_id' => 1,
+				'form_id' => $defaultFormId,
 				'order' => 1,
 				'fieldname' => 'Vorname',
 				'module' => 'address'
 			),
 			array(
-				'form_fieldconfig_id' => 2,
-				'form_id' => 1,
+				'form_id' => $defaultFormId,
 				'order' => 2,
 				'fieldname' => 'Name',
 				'module' => 'address'
 			),
 			array(
-				'form_fieldconfig_id' => 3,
-				'form_id' => 1,
+				'form_id' => $defaultFormId,
 				'order' => 3,
 				'fieldname' => 'Strasse',
 				'module' => 'address'
 			),
 			array(
-				'form_fieldconfig_id' => 4,
-				'form_id' => 1,
+				'form_id' => $defaultFormId,
 				'order' => 4,
 				'fieldname' => 'Plz',
 				'module' => 'address'
 			),
 			array(
-				'form_fieldconfig_id' => 5,
-				'form_id' => 1,
+				'form_id' => $defaultFormId,
 				'order' => 5,
 				'fieldname' => 'Ort',
 				'module' => 'address'
 			),
 			array(
-				'form_fieldconfig_id' => 6,
-				'form_id' => 1,
+				'form_id' => $defaultFormId,
 				'order' => 6,
 				'fieldname' => 'Telefon1',
 				'module' => 'address'
 			),
 			array(
-				'form_fieldconfig_id' => 7,
-				'form_id' => 1,
+				'form_id' => $defaultFormId,
 				'order' => 7,
 				'fieldname' => 'Email',
 				'module' => 'address'
 			),
 			array(
-				'form_fieldconfig_id' => 8,
-				'form_id' => 1,
+				'form_id' => $defaultFormId,
 				'order' => 8,
 				'fieldname' => 'message'
 			)

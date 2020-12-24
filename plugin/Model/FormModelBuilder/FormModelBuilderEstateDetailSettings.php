@@ -38,9 +38,11 @@ use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use onOffice\WPlugin\Utility\__String;
 use function __;
 
 /**
@@ -423,5 +425,26 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelAmount->setValue($pDataViewSimilarEstates->getRecordsPerPage());
 
 		return $pInputModelAmount;
+	}
+
+	/**
+	 *
+	 * @return array
+	 *
+	 * @throws UnknownFormException
+	 */
+
+	protected function readNameShortCodeForm()
+	{
+		$recordManagerReadForm = new RecordManagerReadForm();
+		$allRecordsForm = $recordManagerReadForm->getAllRecords();
+		$shortCodeForm = array();
+
+		foreach ($allRecordsForm as $value) {
+			$form_name = __String::getNew($value->name);
+			$shortCodeForm[$value->name] = '[oo_form form=&quot;'
+				. esc_html($form_name) . '&quot;]';
+		}
+		return $shortCodeForm;
 	}
 }

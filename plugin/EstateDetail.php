@@ -111,7 +111,7 @@ class EstateDetail
 
 	/**
 	 *
-	 * @return array Returns an string
+	 * @return string
 	 *
 	 */
 
@@ -119,11 +119,14 @@ class EstateDetail
 	{
 		$result = '';
 
-		if (!empty($this->getDataView()->getShortCodeForm())) {
-			$result = $this->getDataView()->getShortCodeForm();
+		if ($this->getDataView()->getShortCodeForm() == '') {
+			return '';
 		}
 
+		$result = $this->getDataView()->getShortCodeForm();
+
 		return  '[oo_form form="' . $result . '"]';
+
 	}
 
 
