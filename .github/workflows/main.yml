@@ -1,4 +1,4 @@
-name: Testing
+name: Unit tests
 
 # Controls when the action will run.
 on:
