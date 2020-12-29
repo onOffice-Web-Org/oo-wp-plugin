@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2020-12-21T14:37:43+01:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
+"websites\n"
+"POT-Creation-Date: 2020-12-29T15:20:28+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -19,7 +20,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #, fuzzy
 #| msgid "onOffice direct"
-msgid "onOffice for WP-Websites (dev)"
+msgid "onOffice for WP-Websites"
 msgstr "onOffice direct"
 
 #. Plugin URI of the plugin
@@ -530,13 +531,13 @@ msgstr "Configurazione dei campi"
 #: plugin/Gui/AdminPageSimilarEstates.php:323
 #, fuzzy
 #| msgid "The view has been saved."
-msgid "The Similar Estate has been saved."
+msgid "The similar estates view has been saved."
 msgstr "La vista è stata salvata."
 
 #: plugin/Gui/AdminPageSimilarEstates.php:324
 #, fuzzy
 #| msgid "There was a problem saving the detail view."
-msgid "There was a problem saving the Similar Estate."
+msgid "There was a problem saving the similar estates view."
 msgstr "C'è stato un problema nel salvare la vista di dettaglio."
 
 #: plugin/Gui/Table/AddressListTable.php:103

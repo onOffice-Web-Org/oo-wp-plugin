@@ -61,6 +61,13 @@ class TestClassDatabaseChanges
 	/** @var DatabaseChanges */
 	private $_pDbChanges;
 
+	/** @var string[] */
+	private $_fields = [
+		'Field 1',
+		'Field 2',
+		'Field 3'
+	];
+
 	/**
 	 * @before
 	 */
@@ -77,6 +84,7 @@ class TestClassDatabaseChanges
 		$dataSimilarViewOptions->setDataDetailViewActive(true);
 
 		$dataViewSimilarEstates = $dataSimilarViewOptions->getDataViewSimilarEstates();
+		$dataViewSimilarEstates->setFields($this->_fields);
 		$dataViewSimilarEstates->setSameEstateKind(true);
 		$dataViewSimilarEstates->setSameMarketingMethod(true);
 		$dataViewSimilarEstates->setSamePostalCode(true);
@@ -112,24 +120,27 @@ class TestClassDatabaseChanges
 
 		$similarViewOptions = get_option('onoffice-similar-estates-settings-view');
 
-		$new_data = [];
-		$new_data['enablesimilarestates'] = $similarViewOptions->getDataSimilarViewActive();
+		$newEnableSimilarEstates = $similarViewOptions->getDataSimilarViewActive();
 
 		$newDataViewSimilarEstates = $similarViewOptions->getDataViewSimilarEstates();
-		$new_data['radius'] = $newDataViewSimilarEstates->getRadius();
-		$new_data['same_kind'] = $newDataViewSimilarEstates->getSameEstateKind();
-		$new_data['same_maketing_method'] = $newDataViewSimilarEstates->getSameMarketingMethod();
-		$new_data['same_postal_code'] = $newDataViewSimilarEstates->getSamePostalCode();
-		$new_data['amount'] = $newDataViewSimilarEstates->getRecordsPerPage();
-		$new_data['similar_estates_template'] = $newDataViewSimilarEstates->getTemplate();
+		$newFields = $newDataViewSimilarEstates->getFields();
+		$newRadius = $newDataViewSimilarEstates->getRadius();
+		$newSameKind = $newDataViewSimilarEstates->getSameEstateKind();
+		$newSameMarketingMethod = $newDataViewSimilarEstates->getSameMarketingMethod();
+		$newSamePostalCode = $newDataViewSimilarEstates->getSamePostalCode();
+		$newAmount = $newDataViewSimilarEstates->getRecordsPerPage();
+		$newSimilarEstatesTemplate = $newDataViewSimilarEstates->getTemplate();
 
-		$this->assertEquals($new_data['enablesimilarestates'], true);
-		$this->assertEquals($new_data['same_kind'], true);
-		$this->assertEquals($new_data['same_postal_code'], true);
-		$this->assertEquals($new_data['same_maketing_method'], true);
-		$this->assertEquals($new_data['radius'], 35);
-		$this->assertEquals($new_data['amount'], 13);
-		$this->assertEquals($new_data['similar_estates_template'], '/test/similar/template.php');
+		$this->assertEquals($newEnableSimilarEstates, true);
+		$this->assertEquals($newFields[0], 'Field 1');
+		$this->assertEquals($newFields[1], 'Field 2');
+		$this->assertEquals($newFields[2], 'Field 3');
+		$this->assertEquals($newRadius, true);
+		$this->assertEquals($newSameKind, true);
+		$this->assertEquals($newSameMarketingMethod, true);
+		$this->assertEquals($newSamePostalCode, 35);
+		$this->assertEquals($newAmount, 13);
+		$this->assertEquals($newSimilarEstatesTemplate, '/test/similar/template.php');
 
 		return $this->_createQueries;
 	}

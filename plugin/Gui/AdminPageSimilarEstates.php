@@ -320,8 +320,8 @@ class AdminPageSimilarEstates
 	public function getEnqueueData(): array
 	{
 		return array(
-			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The Similar Estate has been saved.', 'onoffice-for-wp-websites'),
-			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the Similar Estate.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The similar estates view has been saved.', 'onoffice-for-wp-websites'),
+			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the similar estates view.', 'onoffice-for-wp-websites'),
 			AdminPageEstate::PARAM_TAB => AdminPageEstate::PAGE_SIMILAR_ESTATES,
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
 		);

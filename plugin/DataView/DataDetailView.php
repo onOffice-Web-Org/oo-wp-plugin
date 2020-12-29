@@ -116,6 +116,17 @@ class DataDetailView
 		$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
 	}
 
+	/**
+	 *
+	 */
+
+	public function __wakeup()
+	{
+		if ($this->_pDataViewSimilarEstates === null) {
+			$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
+		}
+	}
+
 	/** @return array */
 	public function getFields(): array
 		{ return $this->_fields; }

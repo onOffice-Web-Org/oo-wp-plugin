@@ -496,28 +496,29 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$defaultViewOptions = get_option('onoffice-default-view');
 		if(!empty($defaultViewOptions)){
 			add_option('onoffice-similar-estates-settings-view', '');
-			$old_data = [];
-			$old_data['enablesimilarestates'] = $defaultViewOptions->getDataDetailViewActive();
+
+			$old_enableSimilarEstates = $defaultViewOptions->getDataDetailViewActive();
 
 			$dataDetailViewSimilarEstates = $defaultViewOptions->getDataViewSimilarEstates();
-			$old_data['radius'] = $dataDetailViewSimilarEstates->getRadius();
-			$old_data['same_kind'] = $dataDetailViewSimilarEstates->getSameEstateKind();
-			$old_data['same_maketing_method'] = $dataDetailViewSimilarEstates->getSameMarketingMethod();
-			$old_data['same_postal_code'] = $dataDetailViewSimilarEstates->getSamePostalCode();
-			$old_data['amount'] = $dataDetailViewSimilarEstates->getRecordsPerPage();
-			$old_data['similar_estates_template'] = $dataDetailViewSimilarEstates->getTemplate();
+			$oldFields = $dataDetailViewSimilarEstates->getFields();
+			$oldRadius = $dataDetailViewSimilarEstates->getRadius();
+			$oldSameKind = $dataDetailViewSimilarEstates->getSameEstateKind();
+			$oldSameMarketingMethod = $dataDetailViewSimilarEstates->getSameMarketingMethod();
+			$oldSamePostalCode= $dataDetailViewSimilarEstates->getSamePostalCode();
+			$oldAmount = $dataDetailViewSimilarEstates->getRecordsPerPage();
+			$oldSimilarEstatesTemplate = $dataDetailViewSimilarEstates->getTemplate();
 
 			$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
-			$dataSimilarViewOptions->name = "onoffice-similar-estates-settings-view";
-			$dataSimilarViewOptions->setDataSimilarViewActive($old_data['enablesimilarestates']);
+			$dataSimilarViewOptions->setDataSimilarViewActive($old_enableSimilarEstates);
 
 			$dataViewSimilarEstates = $dataSimilarViewOptions->getDataViewSimilarEstates();
-			$dataViewSimilarEstates->setSameEstateKind($old_data['same_kind']);
-			$dataViewSimilarEstates->setSameMarketingMethod($old_data['same_maketing_method']);
-			$dataViewSimilarEstates->setSamePostalCode($old_data['same_postal_code']);
-			$dataViewSimilarEstates->setRadius($old_data['radius']);
-			$dataViewSimilarEstates->setRecordsPerPage($old_data['amount']);
-			$dataViewSimilarEstates->setTemplate($old_data['similar_estates_template']);
+			$dataViewSimilarEstates->setFields($oldFields);
+			$dataViewSimilarEstates->setSameEstateKind($oldSameKind);
+			$dataViewSimilarEstates->setSameMarketingMethod($oldSameMarketingMethod);
+			$dataViewSimilarEstates->setSamePostalCode($oldSamePostalCode);
+			$dataViewSimilarEstates->setRadius($oldRadius);
+			$dataViewSimilarEstates->setRecordsPerPage($oldAmount);
+			$dataViewSimilarEstates->setTemplate($oldSimilarEstatesTemplate);
 			$dataSimilarViewOptions->setDataViewSimilarEstates($dataViewSimilarEstates);
 			update_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
 		}
