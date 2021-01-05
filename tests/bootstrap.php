@@ -37,7 +37,7 @@ require $_tests_dir . '/includes/bootstrap.php';
 
 // The only deprecation warnings we need to ignore/handle are in PHP 7.4 so far
 if (PHP_VERSION_ID >= 70400) {
-	function customErrorHandler($errno, $errstr, $errfile, $errline)
+	$customErrorHandler = function($errno, $errstr, $errfile, $errline)
 	{
 		// ignore this warning to let tests pass.
 		if ($errno === E_DEPRECATED) {
@@ -46,12 +46,12 @@ if (PHP_VERSION_ID >= 70400) {
 			}
 		}
 
-		$UtilPrefix = class_exists('PHPUnit_Util_ErrorHandler') ? 'PHPUnit_Util_' : 'PHPUnit\Util\\';
-		$ErrorHandler = $UtilPrefix . 'ErrorHandler';
+		$utilPrefix = class_exists('PHPUnit_Util_ErrorHandler') ? 'PHPUnit_Util_' : 'PHPUnit\Util\\';
+		$errorHandler = $utilPrefix . 'ErrorHandler';
 
 		// Any other error should be left up to PHPUnit to handle
-		return $ErrorHandler::handleError($errno, $errstr, $errfile, $errline);
-	}
+		return $errorHandler::handleError($errno, $errstr, $errfile, $errline);
+	};
 
-	set_error_handler("customErrorHandler");
+	set_error_handler($customErrorHandler);
 }
