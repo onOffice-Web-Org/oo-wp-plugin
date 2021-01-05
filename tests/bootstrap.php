@@ -33,3 +33,25 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
+
+
+// The only deprecation warnings we need to ignore/handle are in PHP 7.4 so far
+if (PHP_VERSION_ID >= 70400) {
+	$customErrorHandler = function($errno, $errstr, $errfile, $errline)
+	{
+		// ignore this warning to let tests pass.
+		if ($errno === E_DEPRECATED) {
+			if ($errstr === "Function ReflectionType::__toString() is deprecated") {
+				return true;
+			}
+		}
+
+		$utilPrefix = class_exists('PHPUnit_Util_ErrorHandler') ? 'PHPUnit_Util_' : 'PHPUnit\Util\\';
+		$errorHandler = $utilPrefix . 'ErrorHandler';
+
+		// Any other error should be left up to PHPUnit to handle
+		return $errorHandler::handleError($errno, $errstr, $errfile, $errline);
+	};
+
+	set_error_handler($customErrorHandler);
+}
