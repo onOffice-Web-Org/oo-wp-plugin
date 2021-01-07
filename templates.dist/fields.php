@@ -70,18 +70,19 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$inputName !== 'regionaler_zusatz' &&
 			$inputName != 'country') {
 				$permittedValues = $properties['permittedvalues'];
-				echo '<div data-name="'.esc_html($inputName).'[]" class="multiselect" data-values="'
-					.esc_html(json_encode($permittedValues)).'" data-selected="'
-					.esc_html(json_encode($selectedValue)).'">
-				<input type="button" class="onoffice-multiselect-edit" value="'
-					.esc_html__('Edit values', 'onoffice').'">
-			</div>
-			';
+				$htmlOptions = '';
+				foreach ($permittedValues as $key => $value) {
+					$htmlOptions .= '<option value="'.$key.'">'.$value.'</option>';
+				}
+				$htmlSelect = '<select class="custom-multiple-select" name="'.esc_html($inputName).'[]" multiple="multiple">';
+				$htmlSelect .= $htmlOptions;
+				$htmlSelect .= '</select>';
+			echo $htmlSelect;
 		} elseif ( $inputName === 'regionaler_zusatz' ) {
 			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], $properties['permittedvalues'] ?? null);
 		}
 		elseif ( $inputName === 'country' )	{
-			echo '<select size="1" name="'.esc_attr($inputName).'">';
+			echo '<select class="custom-single-select" size="1" name="'.esc_attr($inputName).'">';
 			printCountry($properties['permittedvalues'], $selectedValue);
 			echo '</select>';
 		}

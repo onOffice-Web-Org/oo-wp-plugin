@@ -45,8 +45,11 @@ class ScriptLoaderGenericConfigurationDefault
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$script = IncludeFileModel::TYPE_SCRIPT;
 		$style = IncludeFileModel::TYPE_STYLE;
-
 		$values = [
+			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
+				->setLoadInFooter(true),
+			(new IncludeFileModel($script, 'onoffice-select2', plugins_url('/js/onoffice-select2.js', $pluginPath)))
+				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath)))
 				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-leadform', plugins_url('/js/onoffice-leadform.js', $pluginPath)))
@@ -73,6 +76,7 @@ class ScriptLoaderGenericConfigurationDefault
 			new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath)),
 			new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice_defaultview', plugins_url('/css/onoffice_defaultview.css', $pluginPath)),
+			new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath))
 		];
 
 		if (Favorites::isFavorizationEnabled()) {
