@@ -29,6 +29,6 @@
 		"php": ">=7.0.0",
 		"php-di/php-di": "^6.0",
 		"ext-curl": "*",
-        "select2/select2": "^4.0"
-    }
+		"select2/select2": "^4.0"
+	}
 }
