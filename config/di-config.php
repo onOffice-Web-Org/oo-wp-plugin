@@ -59,6 +59,17 @@ use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use wpdb;
 use function DI\autowire;
 
+
+$pDateTimeImmutable = autowire()
+	->constructorParameter('time', 'now');
+
+ if (version_compare(PHP_VERSION, '7.1') >= 0)
+ {
+	 $pDateTimeImmutable = autowire()
+		 ->constructorParameter('time', 'now')
+		 ->constructorParameter('timezone', null);
+ }
+
 return [
 	APIClientActionGeneric::class => autowire()
 		->constructorParameter('actionId', '')
@@ -83,8 +94,6 @@ return [
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
 	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
-	DateTimeImmutable::class => autowire()
-		->constructorParameter('time', 'now')
-		->constructorParameter('timezone', null),
+	DateTimeImmutable::class => $pDateTimeImmutable,
 	HTTPHeaders::class => autowire(HTTPHeadersGeneric::class),
 ];

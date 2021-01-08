@@ -40,7 +40,7 @@ class TestClassDiConfig
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
 
-		foreach ($mapping as $className => $instance)
+		foreach ($mapping as $className => $inst)
 		{
 			$pInstance = $pContainer->get($className);
 			$this->assertInstanceOf($className, $pInstance);
