@@ -17,23 +17,19 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+namespace onOffice\tests;
 
-declare (strict_types=1);
-
-namespace onOffice\WPlugin\Factory;
-
+use onOffice\WPlugin\Factory\DateTimeImmutableFactory;
 use DateTimeImmutable;
-use DateTimeZone;
+use WP_UnitTestCase;
 
-class DateTimeImmutableFactory
+class TestClassDateTimeImmutableFactory
+	extends WP_UnitTestCase
 {
-	/**
-	 * @return DateTimeImmutable
-	 */
-	public function create(): DateTimeImmutable
+	public function testCreate()
 	{
-		return new DateTimeImmutable();
+		$pFactory = new DateTimeImmutableFactory();
+
+		$this->assertInstanceOf(DateTimeImmutable::class, $pFactory->create());
 	}
-
-
 }
