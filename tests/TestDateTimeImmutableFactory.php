@@ -23,7 +23,7 @@ use onOffice\WPlugin\Factory\DateTimeImmutableFactory;
 use DateTimeImmutable;
 use WP_UnitTestCase;
 
-class TestClassDateTimeImmutableFactory
+class TestDateTimeImmutableFactory
 	extends WP_UnitTestCase
 {
 	public function testCreate()

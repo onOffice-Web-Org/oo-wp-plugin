@@ -56,7 +56,6 @@ use onOffice\WPlugin\WP\WPScreenWrapper;
 use onOffice\WPlugin\WP\WPScreenWrapperDefault;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
-use onOffice\WPlugin\Factory\DateTimeImmutableFactory;
 use wpdb;
 use function DI\autowire;
 
@@ -86,6 +85,5 @@ return [
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
 	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
-	DateTimeImmutableFactory::class => autowire(DateTimeImmutableFactory::class),
 	HTTPHeaders::class => autowire(HTTPHeadersGeneric::class),
 ];
