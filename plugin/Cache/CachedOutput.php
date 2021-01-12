@@ -6,26 +6,26 @@ namespace onOffice\WPlugin\Cache;
 
 use DateInterval;
 use DateTime;
-use DateTimeImmutable;
+use onOffice\WPlugin\Factory\DateTimeImmutableFactory;
 use Exception;
 use onOffice\WPlugin\Utility\HTTPHeaders;
 use RuntimeException;
 
 class CachedOutput
 {
-	/** @var DateTimeImmutable */
-	private $_pDateTime;
+	/** @var DateTimeImmutableFactory */
+	private $_pDateTimeFactory;
 
 	/** @var HTTPHeaders */
 	private $_pHTTPHeaders;
 
 	/**
-	 * @param DateTimeImmutable $pDateTime
+	 * @param DateTimeImmutableFactory $pDateTimeFactory
 	 * @param HTTPHeaders $pHTTPHeaders
 	 */
-	public function __construct(DateTimeImmutable $pDateTime, HTTPHeaders $pHTTPHeaders)
+	public function __construct(DateTimeImmutableFactory $pDateTimeFactory, HTTPHeaders $pHTTPHeaders)
 	{
-		$this->_pDateTime = $pDateTime;
+		$this->_pDateTimeFactory = $pDateTimeFactory;
 		$this->_pHTTPHeaders = $pHTTPHeaders;
 	}
 
@@ -40,7 +40,9 @@ class CachedOutput
 		if ($this->_pHTTPHeaders->headersSent()) {
 			throw new RuntimeException('Headers sent');
 		}
-		$pDateTime = $this->_pDateTime->add(new DateInterval('PT'.$intervalSpecLifetime.'S'));
+
+		$pDateTimeImmutable = $this->_pDateTimeFactory->create();
+		$pDateTime = $pDateTimeImmutable->add(new DateInterval('PT'.$intervalSpecLifetime.'S'));
 		$eTag = $this->createETagValueQuoted($content);
 		$this->_pHTTPHeaders->addHeader('Cache-Control: public');
 		$this->_pHTTPHeaders->addHeader('Cache-Control: must-revalidate');

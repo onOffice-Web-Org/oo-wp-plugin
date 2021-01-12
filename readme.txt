@@ -73,9 +73,19 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.8.2 =
+
+**Fixes**
+
+* Fix reflection problem in di and php 7.0
+
+**Changes**
+
+* Update development and deployment tools
+
 = 2.8.1 =
 
-** Fixes **
+**Fixes**
 
 * Fix translations for forgotten lazy translated strings 
 

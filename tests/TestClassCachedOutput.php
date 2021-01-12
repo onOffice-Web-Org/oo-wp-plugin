@@ -6,6 +6,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Cache\CachedOutput;
 use onOffice\WPlugin\Utility\HTTPHeaders;
+use onOffice\WPlugin\Factory\DateTimeImmutableFactory;
 
 class TestClassCachedOutput
 	extends \WP_UnitTestCase
@@ -26,7 +27,14 @@ class TestClassCachedOutput
 				['Cache-Control: max-age=1209600', true, null],
 				['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
 				['Expires: Mon, 07 Sep 2020 02:01:01 GMT', true, null]);
-		$pCachedOutput = new CachedOutput($pDateTimeImmutable, $pMockHeaders);
+
+		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
+			->setMethods(['create'])
+			->getMock();
+
+		$pDateTimeImmutableFactory->method('create')->willReturn($pDateTimeImmutable);
+
+		$pCachedOutput = new CachedOutput($pDateTimeImmutableFactory, $pMockHeaders);
 		$message = 'Hello World!';
 
 		$this->expectOutputString('Hello World!');
@@ -53,7 +61,13 @@ class TestClassCachedOutput
 				['Cache-Control: max-age=1209600', true, null],
 				['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
 				['Expires: Mon, 07 Sep 2020 02:01:01 GMT', true, null]);
-		$pCachedOutput = new CachedOutput($pDateTimeImmutable, $pMockHeaders);
+
+		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
+			->setMethods(['create'])
+			->getMock();
+		$pDateTimeImmutableFactory->method('create')->willReturn($pDateTimeImmutable);
+
+		$pCachedOutput = new CachedOutput($pDateTimeImmutableFactory, $pMockHeaders);
 		$this->expectOutputString('');
 
 		$pCachedOutput->outputCached('Hello World!', 60 * 60 * 24 * 14);
