@@ -70,13 +70,13 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$inputName !== 'regionaler_zusatz' &&
 			$inputName != 'country') {
 				$permittedValues = $properties['permittedvalues'];
-				$htmlOptions = '';
-				foreach ($permittedValues as $key => $value) {
-					$htmlOptions .= '<option value="'.$key.'">'.$value.'</option>';
-				}
-				$htmlSelect = '<select class="custom-multiple-select" name="'.esc_html($inputName).'[]" multiple="multiple">';
-				$htmlSelect .= $htmlOptions;
-				$htmlSelect .= '</select>';
+			$htmlOptions = '';
+			foreach ($permittedValues as $key => $value) {
+				$htmlOptions .= '<option value="' . $key . '">' . $value . '</option>';
+			}
+			$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_html($inputName) . '[]" multiple="multiple">';
+			$htmlSelect .= $htmlOptions;
+			$htmlSelect .= '</select>';
 			echo $htmlSelect;
 		} elseif ( $inputName === 'regionaler_zusatz' ) {
 			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], $properties['permittedvalues'] ?? null);

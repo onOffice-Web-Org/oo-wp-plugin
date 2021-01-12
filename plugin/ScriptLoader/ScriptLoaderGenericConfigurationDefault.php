@@ -48,7 +48,7 @@ class ScriptLoaderGenericConfigurationDefault
 		$values = [
 			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
 				->setLoadInFooter(true),
-			(new IncludeFileModel($script, 'onoffice-select2', plugins_url('/js/onoffice-select2.js', $pluginPath)))
+			(new IncludeFileModel($script, 'onoffice-custom-select', plugins_url('/js/onoffice-custom-select.js', $pluginPath)))
 				->setLoadInFooter(true),
 			(new IncludeFileModel($script, 'onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath)))
 				->setLoadInFooter(true),
