@@ -72,7 +72,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 				$permittedValues = $properties['permittedvalues'];
 			$htmlOptions = '';
 			foreach ($permittedValues as $key => $value) {
-				$htmlOptions .= '<option value="' . $key . '">' . $value . '</option>';
+				$htmlOptions .= '<option value="'.esc_attr($key).'">'.esc_html($value).'</option>';
 			}
 			$htmlSelect = '<select class="custom-multiple-select form-control" name="' . esc_html($inputName) . '[]" multiple="multiple">';
 			$htmlSelect .= $htmlOptions;
@@ -122,7 +122,7 @@ if (!function_exists('renderFormField')) {
 		}
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
-			$output .= '<select size="1" name="'.esc_html($fieldName).'">';
+			$output .= '<select class="custom-single-select" size="1" name="'.esc_html($fieldName).'">';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">'.esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)).'</option>';
 			foreach ($permittedValues as $key => $value) {
@@ -151,11 +151,13 @@ if (!function_exists('renderFormField')) {
 				$postfix = '[]';
 			}
 
-			$output .= '<div data-name="'.esc_attr($fieldName).$postfix.'" class="multiselect" data-values="'
-				.esc_attr(json_encode($permittedValues)).'" data-selected="'
-				.esc_attr(json_encode($selectedValue)).'">
-				<input type="button" class="onoffice-multiselect-edit" value="'
-					.esc_html__('Edit values', 'onoffice').'"></div>';
+			$htmlOptions = '';
+			foreach ($permittedValues as $key => $value) {
+				$htmlOptions .= '<option value="'.esc_attr($key).'">'.esc_html($value).'</option>';
+			}
+			$output = '<select class="custom-multiple-select form-control" name="' . esc_html($fieldName) . '[]" multiple="multiple">';
+			$output .= $htmlOptions;
+			$output .= '</select>';
 		} else {
 			$inputType = 'type="text" ';
 			$value = 'value="'.esc_attr($pForm->getFieldValue($fieldName, true)).'"';
