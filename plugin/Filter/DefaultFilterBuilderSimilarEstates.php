@@ -86,6 +86,9 @@ class DefaultFilterBuilderSimilarEstates
 			$filter['Id'] []= ['op' => 'not in', 'val' => $this->_excludeIds];
 		}
 
+		$filter['verkauft'] []= ['op' => 'not in', 'val' => 1];
+		$filter['reserviert'] []= ['op' => 'not in', 'val' => 1];
+
 		return $filter;
 	}
 
