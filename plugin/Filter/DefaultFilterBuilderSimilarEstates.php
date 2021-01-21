@@ -64,6 +64,15 @@ class DefaultFilterBuilderSimilarEstates
 			'veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
 			],
+			'verkauft' => [
+				['op' => 'not in', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => 'not in', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => 'not in', 'val' => 1],
+			],
 		];
 
 		$pFilterConfiguration = $this->_pFilterConfigurationSimilarEstates;
@@ -85,10 +94,6 @@ class DefaultFilterBuilderSimilarEstates
 		if ($this->_excludeIds !== []) {
 			$filter['Id'] []= ['op' => 'not in', 'val' => $this->_excludeIds];
 		}
-
-		$filter['verkauft'] []= ['op' => 'not in', 'val' => 1];
-		$filter['reserviert'] []= ['op' => 'not in', 'val' => 1];
-		$filter['referenz'] []= ['op' => 'not in', 'val' => 1];
 
 		return $filter;
 	}
