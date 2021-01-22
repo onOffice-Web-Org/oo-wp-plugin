@@ -116,8 +116,10 @@ class InputFieldCheckboxRenderer
 					.(is_array($this->_checkedValues) && in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
 					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
-					.' id="'.esc_html($inputId).'">'
-					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
+					.' id="'.esc_html($inputId).(($key === "multiParkingLot") ? ' input-multiParkingLot' : '').'"'
+					. (($key === "multiParkingLot") ? ' disabled class="input-multiParkingLot"' : '') . '>'
+					.'<label'.(($key === "multiParkingLot") ? ' class="label-multiParkingLot" ' : '').'for="'.esc_html($inputId).'">'.esc_html($label)
+					. (($key === "multiParkingLot") ? '<span class="hint">'.__('(Can not be displayed)', 'onoffice-for-wp-websites').'</span>' : '').'</label><br>';
 			}
 		} else {
 			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
