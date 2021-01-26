@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\API\APIClientCredentialsException;
@@ -39,6 +40,10 @@ use function esc_html;
 class InputFieldCheckboxRenderer
 	extends InputFieldRenderer
 {
+
+	/** @var Container */
+	private $_pContainer;
+
 	/** @var array */
 	private $_checkedValues = [];
 
@@ -48,7 +53,6 @@ class InputFieldCheckboxRenderer
 	 * @param mixed $value
 	 *
 	 */
-
 	public function __construct($name, $value)
 	{
 		parent::__construct('checkbox', $name, $value);
@@ -82,13 +86,16 @@ class InputFieldCheckboxRenderer
 
 	private function buildFieldsCollection(): FieldsCollection
 	{
-		$pDIContainerBuilder = new ContainerBuilder;
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIContainerBuilder->build();
+		if (empty($this->_pContainer)) {
+			$pDIContainerBuilder = new ContainerBuilder;
+			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			$this->_pContainer = $pDIContainerBuilder->build();
+		}
 		$pFieldsCollection = new FieldsCollection();
 
 		/** @var FieldsCollectionBuilderShort $pFieldsCollectionBuilder */
-		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollectionBuilder = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
+
 		try {
 			$pFieldsCollectionBuilder
 				->addFieldsAddressEstate($pFieldsCollection)
@@ -105,7 +112,6 @@ class InputFieldCheckboxRenderer
 	public function render()
 	{
 		$pFieldsCollection = $this->buildFieldsCollection();
-
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
@@ -138,4 +144,12 @@ class InputFieldCheckboxRenderer
 	/** @return array */
 	public function getCheckedValues()
 		{ return $this->_checkedValues; }
+
+	/**
+	 * @param Container $pContainer
+	 */
+	public function setPContainer(Container $pContainer)
+	{
+		$this->_pContainer = $pContainer;
+	}
 }
