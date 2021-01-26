@@ -65,13 +65,13 @@ class DefaultFilterBuilderSimilarEstates
 				['op' => '=', 'val' => 1],
 			],
 			'verkauft' => [
-				['op' => 'not in', 'val' => 1],
+				['op' => '!=', 'val' => 1],
 			],
 			'reserviert' => [
-				['op' => 'not in', 'val' => 1],
+				['op' => '!=', 'val' => 1],
 			],
 			'referenz' => [
-				['op' => 'not in', 'val' => 1],
+				['op' => '!=', 'val' => 1],
 			],
 		];
 
