@@ -98,6 +98,11 @@ class TestClassInputFieldCheckboxRenderer
 				$pFieldMultiParkingLot->setLabel('Parking');
 				$pFieldsCollection->addField($pFieldMultiParkingLot);
 
+				$pFieldTest= new Field('test', onOfficeSDK::MODULE_ESTATE);
+				$pFieldTest->setType(FieldTypes::FIELD_TYPE_INTEGER);
+				$pFieldTest->setLabel('Test');
+				$pFieldsCollection->addField($pFieldTest);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -107,18 +112,18 @@ class TestClassInputFieldCheckboxRenderer
 	/**
 	 *
 	 */
-	public function testRenderMultiParkingLotField()
+	public function testRenderRegularField()
 	{
-		$pSubject = new InputFieldCheckboxRenderer('testRenderer', '');
-		$pSubject->setValue(['multiParkingLot' => 'Parking']);
-		$pSubject->setPContainer($this->_pContainer);
+		$pSubject = new InputFieldCheckboxRenderer('testRenderer', '', $this->_pContainer);
+		$pSubject->setValue(['multiParkingLot' => 'Parking', 'test' => 'Test']);
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
 		$this->assertEquals('<input type="checkbox" name="testRenderer" value="multiParkingLot" onoffice-multipleSelectType="0" '
 			. 'id="labelcheckbox_1bmultiParkingLot input-multiParkingLot" disabled class="input-multiParkingLot">'
-			. '<label class="label-multiParkingLot" for="labelcheckbox_1bmultiParkingLot">Parking<span class="hint">(Can not be displayed)</span></label><br>',
-			$output);
+			. '<label class="label-multiParkingLot" for="labelcheckbox_1bmultiParkingLot">Parking<span class="hint">(Can not be displayed)</span></label><br>'
+			. '<input type="checkbox" name="testRenderer" value="test" onoffice-multipleSelectType="0" id="labelcheckbox_1btest">'
+			. '<labelfor="labelcheckbox_1btest">Test</label><br>', $output);
 	}
 
 }

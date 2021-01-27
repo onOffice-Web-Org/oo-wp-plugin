@@ -42,7 +42,7 @@ class InputFieldCheckboxRenderer
 {
 
 	/** @var Container */
-	private $_pContainer;
+	private $_pContainer = null;
 
 	/** @var array */
 	private $_checkedValues = [];
@@ -51,11 +51,18 @@ class InputFieldCheckboxRenderer
 	 *
 	 * @param string $name
 	 * @param mixed $value
-	 *
+	 * @param null $_pContainer
+	 * @throws Exception
 	 */
-	public function __construct($name, $value)
+	public function __construct($name, $value, $_pContainer = null)
 	{
-		parent::__construct('checkbox', $name, $value);
+		if (empty($_pContainer)) {
+			$pDIContainerBuilder = new ContainerBuilder;
+			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			$_pContainer = $pDIContainerBuilder->build();
+		}
+		$this->_pContainer = $_pContainer;
+		parent::__construct('checkbox', $name, $value, $_pContainer);
 	}
 
 	/**
@@ -86,11 +93,6 @@ class InputFieldCheckboxRenderer
 
 	private function buildFieldsCollection(): FieldsCollection
 	{
-		if (empty($this->_pContainer)) {
-			$pDIContainerBuilder = new ContainerBuilder;
-			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-			$this->_pContainer = $pDIContainerBuilder->build();
-		}
 		$pFieldsCollection = new FieldsCollection();
 
 		/** @var FieldsCollectionBuilderShort $pFieldsCollectionBuilder */
@@ -144,12 +146,4 @@ class InputFieldCheckboxRenderer
 	/** @return array */
 	public function getCheckedValues()
 		{ return $this->_checkedValues; }
-
-	/**
-	 * @param Container $pContainer
-	 */
-	public function setPContainer(Container $pContainer)
-	{
-		$this->_pContainer = $pContainer;
-	}
 }
