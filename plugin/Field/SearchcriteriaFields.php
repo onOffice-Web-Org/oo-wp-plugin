@@ -95,62 +95,6 @@ class SearchcriteriaFields
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function getFieldLabelsOfInputs(array $inputFormFields): array
-	{
-		$pFieldsCollection = new FieldsCollection();
-		$this->_pFieldsCollectionBuilder
-			->addFieldsSearchCriteria($pFieldsCollection)
-			->addFieldsAddressEstate($pFieldsCollection);
-
-		$pGeoFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
-		$pFieldsCollection->merge($pGeoFieldsCollection);
-
-		$output = [];
-		$pGeoPosition = new GeoPosition;
-		$geoRangeFields = array_flip($pGeoPosition->getSearchCriteriaFields());
-
-		foreach ($inputFormFields as $name => $value) {
-			$aliasedFieldName = $this->getFieldNameOfInput($name);
-			if (in_array($name, $pGeoPosition->getSearchCriteriaFields())) {
-				$aliasedFieldName = $geoRangeFields[$name];
-			}
-			$module = onOfficeSDK::MODULE_ESTATE;
-			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $aliasedFieldName);
-
-			if (FieldTypes::isRangeType($pField->getType()))
-			{
-				if (stristr($name, self::RANGE_FROM)) {
-					$output[$pField->getLabel().' (min)'] = $value;
-				} elseif (stristr($name, self::RANGE_UPTO)) {
-					$output[$pField->getLabel().' (max)'] = $value;
-				} else {
-					$output[$pField->getLabel()] = $value;
-				}
-			} else if (FieldTypes::isMultipleSelectType($pField->getType())) {
-				if (is_array($value)) {
-					$tmpOutput = [];
-					foreach ($value as $val) {
-						$tmpOutput []= (array_key_exists($val, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$val] : $val);
-					}
-					$output[$pField->getLabel()] = implode(', ', $tmpOutput);
-				}
-				else {
-					$output[$pField->getLabel()] = (array_key_exists($value, $pField->getPermittedvalues()) ? $pField->getPermittedvalues()[$value] : $value);
-				}
-			} else {
-				$output[$pField->getLabel()] = $value;
-			}
-		}
-		return $output;
-	}
-
-
-	/**
-	 * @param array $inputFormFields
-	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
 	public function getFormFieldsWithRangeFields(array $inputFormFields): array
 	{
 		$pFieldsCollection = $this->loadSearchCriteriaFields();
