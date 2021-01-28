@@ -416,15 +416,11 @@ class TestClassFormPostInterest
             'addressdata' => [
                 'Vorname' => 'John',
                 'Name' => 'Doe',
-                'Email' => 'john.doe@my-onoffice.com',
-                'Plz' => '52068',
-                'Ort' => 'Aachen',
-                'Telefon1' => '0815/2345677',
-                'AGB_akzeptiert' => true,
+                'email' => 'john@doemail.com',
             ],
             'message' => null,
-            'subject' => 'Subject',
-            'formtype' => 'interest',
+            'subject' => 'Interest',
+            'formtype' => Form::TYPE_INTEREST,
             'recipient' => 'test@my-onoffice.com',
         ];
 
