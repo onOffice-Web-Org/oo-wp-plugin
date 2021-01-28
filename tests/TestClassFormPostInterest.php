@@ -428,8 +428,8 @@ class TestClassFormPostInterest
             'recipient' => 'test@my-onoffice.com',
         ];
 
-		$response = $responseJson = file_get_contents(__DIR__.'/resources/ApiResponseDoContactaddress.json');
-
+		$responseJson = file_get_contents(__DIR__.'/resources/ApiResponseDoContactaddress.json');
+        $response = json_decode($responseJson, true);
 		if (!$success) {
 			$response = $this->getUnsuccessfulResponse(onOfficeSDK::ACTION_ID_DO, 'contactaddress');
 		}
