@@ -416,7 +416,7 @@ class TestClassFormPostInterest
             'addressdata' => [
                 'Vorname' => 'John',
                 'Name' => 'Doe',
-                'email' => 'john@doemail.com',
+                'Email' => 'john@doemail.com',
             ],
             'message' => null,
             'subject' => 'Interest',
