@@ -32,9 +32,6 @@ use DI\Container;
 
 abstract class InputFieldRenderer
 {
-	/** @var Container */
-	private $_pContainer = null;
-
 	/** @var string */
 	private $_type;
 
@@ -59,15 +56,13 @@ abstract class InputFieldRenderer
 	 * @param string $type
 	 * @param string $name
 	 * @param mixed $value
-	 * @param null $_pContainer
 	 */
 
-	public function __construct($type, $name, $value = null, $_pContainer = null)
+	public function __construct($type, $name, $value = null)
 	{
 		$this->_type = $type;
 		$this->_name = $name;
 		$this->_value = $value;
-		$this->_pContainer = $_pContainer;
 
 		self::$_guiId++;
 	}

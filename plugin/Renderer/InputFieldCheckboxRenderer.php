@@ -51,18 +51,18 @@ class InputFieldCheckboxRenderer
 	 *
 	 * @param string $name
 	 * @param mixed $value
-	 * @param null $_pContainer
+	 * @param Container $_pContainer
 	 * @throws Exception
 	 */
-	public function __construct($name, $value, $_pContainer = null)
+	public function __construct($name, $value, Container $_pContainer = null)
 	{
-		if (empty($_pContainer)) {
+		if ($_pContainer === null) {
 			$pDIContainerBuilder = new ContainerBuilder;
 			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 			$_pContainer = $pDIContainerBuilder->build();
 		}
 		$this->_pContainer = $_pContainer;
-		parent::__construct('checkbox', $name, $value, $_pContainer);
+		parent::__construct('checkbox', $name, $value);
 	}
 
 	/**
