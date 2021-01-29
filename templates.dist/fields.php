@@ -153,7 +153,12 @@ if (!function_exists('renderFormField')) {
 
 			$htmlOptions = '';
 			foreach ($permittedValues as $key => $value) {
-				$htmlOptions .= '<option value="'.esc_attr($key).'">'.esc_html($value).'</option>';
+				if (is_array($selectedValue)) {
+					$isSelected = in_array($key, $selectedValue, true);
+				} else {
+					$isSelected = $selectedValue == $key;
+				}
+				$htmlOptions .= '<option value="'.esc_attr($key).'".'.($isSelected ? ' selected' : '').'>'.esc_html($value).'</option>';
 			}
 			$output = '<select class="custom-multiple-select form-control" name="' . esc_html($fieldName) . '[]" multiple="multiple">';
 			$output .= $htmlOptions;
