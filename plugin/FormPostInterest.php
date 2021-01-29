@@ -140,21 +140,6 @@ class FormPostInterest
 	}
 
 	/**
-	 * @param array $inputData
-	 * @return string
-	 */
-	private function createStringFromInputData(array $inputData): string
-	{
-		$data = [];
-
-		foreach ($inputData as $key => $value) {
-			$data []= $key.': '.$value;
-		}
-
-		return implode("\n", $data);
-	}
-
-	/**
 	 * @param FormData $pFormData
 	 * @param int $addressId
 	 * @throws ApiClientException
