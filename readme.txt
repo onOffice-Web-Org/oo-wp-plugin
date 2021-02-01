@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.8.3 =
+
+**Changes**
+
+* Reference estates, reserved and sold ones are not being shown in the similar estates view anymore
+
 = 2.8.2 =
 
 **Fixes**
