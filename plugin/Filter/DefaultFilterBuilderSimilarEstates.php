@@ -64,6 +64,15 @@ class DefaultFilterBuilderSimilarEstates
 			'veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
 			],
+			'verkauft' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => 1],
+			],
 		];
 
 		$pFilterConfiguration = $this->_pFilterConfigurationSimilarEstates;
