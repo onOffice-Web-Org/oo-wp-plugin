@@ -117,26 +117,26 @@ class FormPostInterest
 	 */
 	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
 	{
-        $values = $pFormData->getValues();
-        $requestParams = [
-            'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
-            'message' => $values['message'] ?? null,
-            'subject' => sanitize_text_field($subject),
-            'formtype' => $pFormData->getFormtype(),
-            'recipient' => $recipient
-        ];
+		$values = $pFormData->getValues();
+		$requestParams = [
+			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
+			'message' => $values['message'] ?? null,
+			'subject' => sanitize_text_field($subject),
+			'formtype' => $pFormData->getFormtype(),
+			'recipient' => $recipient
+		];
 
-        if ($recipient !== '') {
-            $requestParams['recipient'] = $recipient;
-        }
-        $pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
-        $pAPIClientAction = new APIClientActionGeneric
-        ($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
-        $pAPIClientAction->setParameters($requestParams);
-        $pAPIClientAction->addRequestToQueue()->sendRequests();
-        if (!$pAPIClientAction->getResultStatus()) {
-            throw new ApiClientException($pAPIClientAction);
-        }
+		if ($recipient !== '') {
+			$requestParams['recipient'] = $recipient;
+		}
+		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
+		$pAPIClientAction = new APIClientActionGeneric
+		($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
+		$pAPIClientAction->setParameters($requestParams);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+		if (!$pAPIClientAction->getResultStatus()) {
+			throw new ApiClientException($pAPIClientAction);
+		}
 	}
 
 	/**
