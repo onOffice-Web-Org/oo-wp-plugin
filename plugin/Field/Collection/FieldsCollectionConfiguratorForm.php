@@ -62,10 +62,9 @@ class FieldsCollectionConfiguratorForm
 				$pFieldClone->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 			}
 
-			if (in_array($pFieldClone->getName(), ['krit_bemerkung_oeffentlich']))
-            {
-                continue;
-            }
+			if ( in_array( $pFieldClone->getName(), [ 'krit_bemerkung_oeffentlich' ] ) ) {
+				continue;
+			}
 			
 			$pFieldsCollectionNew->addField($pFieldClone);
 		}
