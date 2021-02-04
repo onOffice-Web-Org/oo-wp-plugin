@@ -53,6 +53,7 @@ class AdminPageApiSettings
 		$this->addFormModelAPI();
 		$this->addFormModelGoogleCaptcha();
 		$this->addFormModelGoogleMapsKey();
+		$this->addFormModelGoogleBotSettings();
 	}
 
 
@@ -140,6 +141,24 @@ class AdminPageApiSettings
 		$pFormModel->setGroupSlug('onoffice-google-maps-key');
 		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('Google Maps Key', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
+	}
+
+	private function addFormModelGoogleBotSettings()
+	{
+		$labelGoogleBotIndexPdfExpose = __('Index Pdf Expose', 'onoffice-for-wp-websites');
+		$pInputModeGoogleBotIndexPdfExpose = new InputModelOption('onoffice-settings', 'google-bot-index-pdf-expose',
+			$labelGoogleBotIndexPdfExpose, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModeGoogleBotIndexPdfExpose->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModeGoogleBotIndexPdfExpose->setValuesAvailable(1);
+		$pInputModeGoogleBotIndexPdfExpose->setValue(get_option($pInputModeGoogleBotIndexPdfExpose->getIdentifier()) == 1);
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModeGoogleBotIndexPdfExpose);
+		$pFormModel->setGroupSlug('onoffice-google-bot');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('Google Bot', 'onoffice-for-wp-websites'));
 
 		$this->addFormModel($pFormModel);
 	}

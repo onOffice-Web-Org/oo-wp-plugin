@@ -1,17 +1,18 @@
-# Copyright (C) 2020 onOffice GmbH
+# Copyright (C) 2021 onOffice GmbH
 # This file is distributed under the AGPL 3+.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-websites\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-12-21T14:37:43+01:00\n"
+"POT-Creation-Date: 2021-02-04 16:35+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.4.0\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Domain: onoffice-for-wp-websites\n"
 
 #. Plugin Name of the plugin
@@ -39,8 +40,7 @@ msgid "Please configure your onOffice API credentials first!"
 msgstr ""
 
 #: plugin/Controller/AdminViewController.php:148
-#: plugin/Gui/AdminPageAddressList.php:78
-#: plugin/Gui/AdminPageBase.php:88
+#: plugin/Gui/AdminPageAddressList.php:78 plugin/Gui/AdminPageBase.php:88
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
 #: plugin/Gui/AdminPageEstateUnitList.php:66
@@ -93,14 +93,12 @@ msgid "lowest first"
 msgstr ""
 
 #: plugin/Controller/SortList/SortListTypes.php:57
-#: tests/TestClassSortListTypes.php:50
-#: tests/TestClassSortListTypes.php:61
+#: tests/TestClassSortListTypes.php:50 tests/TestClassSortListTypes.php:61
 msgid "highest first"
 msgstr ""
 
 #: plugin/Controller/SortList/SortListTypes.php:60
-#: tests/TestClassSortListTypes.php:49
-#: tests/TestClassSortListTypes.php:64
+#: tests/TestClassSortListTypes.php:49 tests/TestClassSortListTypes.php:64
 msgid "ascending"
 msgstr ""
 
@@ -118,8 +116,7 @@ msgid "Search Criteria"
 msgstr ""
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:156
-#: plugin/Fieldnames.php:219
-#: plugin/Gui/AdminPageFormSettingsContact.php:142
+#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:142
 msgid "Form Specific Fields"
 msgstr ""
 
@@ -162,8 +159,7 @@ msgstr[1] ""
 msgid "No form was deleted."
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressList.php:87
-#: plugin/Gui/AdminPageEstateList.php:83
+#: plugin/Gui/AdminPageAddressList.php:87 plugin/Gui/AdminPageEstateList.php:83
 #: plugin/Gui/AdminPageEstateUnitList.php:78
 #: plugin/Gui/AdminPageFormList.php:195
 msgid "Add New"
@@ -216,78 +212,84 @@ msgstr ""
 msgid "It looks like you did not enter any valid API credentials. Please go back and review your %s."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:65
+#: plugin/Gui/AdminPageApiSettings.php:66
 msgid "API token"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:66
+#: plugin/Gui/AdminPageApiSettings.php:67
 msgid "API secret"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:83
+#: plugin/Gui/AdminPageApiSettings.php:84
 msgid "API settings"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:95
+#: plugin/Gui/AdminPageApiSettings.php:96
 msgid "Site Key"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:96
+#: plugin/Gui/AdminPageApiSettings.php:97
 msgid "Secret Key"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:117
+#: plugin/Gui/AdminPageApiSettings.php:118
 msgid "Google reCAPTCHA"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:132
-#: plugin/Gui/AdminPageApiSettings.php:142
+#: plugin/Gui/AdminPageApiSettings.php:133
+#: plugin/Gui/AdminPageApiSettings.php:143
 msgid "Google Maps Key"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:169
+#: plugin/Gui/AdminPageApiSettings.php:150
+msgid "Index Pdf Expose"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:161
+msgid "Google Bot"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:188
 msgid "The keys are OK."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:170
+#: plugin/Gui/AdminPageApiSettings.php:189
 msgid "There was an error:"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:171
+#: plugin/Gui/AdminPageApiSettings.php:190
 msgid "The secret parameter is missing."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:172
+#: plugin/Gui/AdminPageApiSettings.php:191
 msgid "The secret parameter is invalid or malformed."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:173
+#: plugin/Gui/AdminPageApiSettings.php:192
 msgid "The response parameter is missing."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:174
+#: plugin/Gui/AdminPageApiSettings.php:193
 msgid "The response parameter is invalid or malformed."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:175
+#: plugin/Gui/AdminPageApiSettings.php:194
 msgid "The request is invalid or malformed."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:186
+#: plugin/Gui/AdminPageApiSettings.php:205
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:224
+#: plugin/Gui/AdminPageApiSettings.php:243
 msgid "The cache was cleaned."
 msgstr ""
 
-#: plugin/Gui/AdminPageEstate.php:82
-#: plugin/Gui/AdminPageEstateList.php:78
+#: plugin/Gui/AdminPageEstate.php:82 plugin/Gui/AdminPageEstateList.php:78
 msgid "List Views"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstate.php:83
-#: plugin/Gui/AdminPageEstateDetail.php:205
+#: plugin/Gui/AdminPageEstate.php:83 plugin/Gui/AdminPageEstateDetail.php:205
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:92
 msgid "Detail View"
 msgstr ""
@@ -338,8 +340,7 @@ msgstr ""
 msgid "There was a problem saving the detail view."
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateList.php:95
-#: plugin/Gui/AdminPageFormList.php:141
+#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:141
 msgid "Are you sure you want to delete the selected items?"
 msgstr ""
 
@@ -453,8 +454,7 @@ msgstr ""
 msgid "Expression used"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:78
-#: plugin/Gui/AdminPageModules.php:87
+#: plugin/Gui/AdminPageModules.php:78 plugin/Gui/AdminPageModules.php:87
 msgid "Watchlist"
 msgstr ""
 
@@ -501,8 +501,7 @@ msgstr ""
 #: plugin/Gui/Table/EstateListTable.php:215
 #: plugin/Gui/Table/EstateUnitsTable.php:63
 #: plugin/Gui/Table/EstateUnitsTable.php:116
-#: plugin/Gui/Table/FormsTable.php:126
-#: plugin/Gui/Table/FormsTable.php:151
+#: plugin/Gui/Table/FormsTable.php:126 plugin/Gui/Table/FormsTable.php:151
 msgid "Shortcode"
 msgstr ""
 
@@ -549,13 +548,11 @@ msgid ""
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: plugin/Gui/Table/FormsTable.php:124
-#: plugin/Gui/Table/FormsTable.php:149
+#: plugin/Gui/Table/FormsTable.php:124 plugin/Gui/Table/FormsTable.php:149
 msgid "Name of Form"
 msgstr ""
 
-#: plugin/Gui/Table/FormsTable.php:125
-#: plugin/Gui/Table/FormsTable.php:150
+#: plugin/Gui/Table/FormsTable.php:125 plugin/Gui/Table/FormsTable.php:150
 msgid "Type of Form"
 msgstr ""
 
