@@ -48,6 +48,8 @@ class TestClassDataViewSimilarEstates
 		$this->assertEquals(true, $pDataViewSimilarEstates->getSameEstateKind());
 		$this->assertEquals(true, $pDataViewSimilarEstates->getSameMarketingMethod());
 		$this->assertEquals(false, $pDataViewSimilarEstates->getSamePostalCode());
+		$this->assertEquals(false, $pDataViewSimilarEstates->getDoNotShowArchived());
+		$this->assertEquals(false, $pDataViewSimilarEstates->getDoNotShowReference());
 		$this->assertEquals(10, $pDataViewSimilarEstates->getRadius());
 		$this->assertEquals(5, $pDataViewSimilarEstates->getRecordsPerPage());
 	}
@@ -70,6 +72,10 @@ class TestClassDataViewSimilarEstates
 		$this->assertTrue($pDataViewSimilarEstates->getSameMarketingMethod());
 		$pDataViewSimilarEstates->setSamePostalCode(true);
 		$this->assertTrue($pDataViewSimilarEstates->getSamePostalCode());
+		$pDataViewSimilarEstates->setDoNotShowArchived(true);
+		$this->assertTrue($pDataViewSimilarEstates->getDoNotShowArchived());
+		$pDataViewSimilarEstates->setDoNotShowReference(true);
+		$this->assertTrue($pDataViewSimilarEstates->getDoNotShowReference());
 		$this->assertEquals(['Id' => 'ASC'], $pDataViewSimilarEstates->getSortBy());
 		$this->assertNull($pDataViewSimilarEstates->getSortOrder());
 		$this->assertNull($pDataViewSimilarEstates->getFilterId());
