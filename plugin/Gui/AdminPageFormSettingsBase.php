@@ -395,7 +395,7 @@ abstract class AdminPageFormSettingsBase
 		$pFieldsCollectionConverter = new FieldsCollectionToContentFieldLabelArrayConverter();
 
 		foreach ($this->getCurrentFormModules() as $module) {
-			$fieldNames = $pFieldsCollectionConverter->convert($pDefaultFieldsCollection, $module, $this->_type);
+			$fieldNames = $pFieldsCollectionConverter->convert($pDefaultFieldsCollection, $module);
 
 			foreach (array_keys($fieldNames) as $category) {
 				$slug = $this->generateGroupSlugByModuleCategory($module, $category);
@@ -485,7 +485,7 @@ abstract class AdminPageFormSettingsBase
 		FormModelBuilder $pFormModelBuilder, FieldsCollection $pFieldsCollection, string $module)
 	{
 		$pFieldsCollectionConverter = new FieldsCollectionToContentFieldLabelArrayConverter();
-		$fieldNames = $pFieldsCollectionConverter->convert($pFieldsCollection, $module, $this->_type);
+		$fieldNames = $pFieldsCollectionConverter->convert($pFieldsCollection, $module);
 		$this->addFieldsConfiguration($module, $pFormModelBuilder, $fieldNames, true);
 		$this->addSortableFieldModule($module);
 	}

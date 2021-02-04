@@ -36,18 +36,15 @@ class FieldsCollectionToContentFieldLabelArrayConverter
      *
      * @param FieldsCollection $pFieldsCollection
      * @param string $module
-     * @param string|null $type
      * @return array
      */
 
-	public function convert(FieldsCollection $pFieldsCollection, string $module, string $type = null): array
+	public function convert(FieldsCollection $pFieldsCollection, string $module): array
 	{
 		$result = [];
 		$categories = [];
 
 		foreach ($pFieldsCollection->getFieldsByModule($module) as $key => $pField) {
-		    if ($key == 'krit_bemerkung_oeffentlich' && $type == Form::TYPE_INTEREST) continue;
-
 			$content = $pField->getCategory() ?: __('(unnamed category)', 'onoffice-for-wp-websites');
 
 			$categories []= $content;
