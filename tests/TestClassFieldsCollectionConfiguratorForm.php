@@ -77,6 +77,27 @@ class TestClassFieldsCollectionConfiguratorForm
 	/**
 	 * @throws UnknownFieldException
 	 */
+	public function testConfigureForInterestFormWithPassingKritBemerkungOeffentlichField()
+	{
+		$pFieldsCollection = $this->buildFieldsCollectionWithKritBemerkungOeffentlichField();
+		$pSubject = new FieldsCollectionConfiguratorForm;
+		$pFieldsCollectionNew = $pSubject->configureForInterestForm($pFieldsCollection);
+		$this->assertCount(1, $pFieldsCollectionNew->getAllFields());
+		foreach ($pFieldsCollectionNew->getAllFields() as $pField) {
+			$pFieldOriginal = $pFieldsCollection->getFieldByModuleAndName
+			($pField->getModule(), $pField->getName());
+			$this->assertNotSame($pFieldOriginal, $pField);
+			$this->assertThat($pField, $this->callback(function(Field $pField) {
+				return
+					($pField->getName() === 'objekttyp' && $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) ||
+					($pField->getName() !== 'objekttyp' && $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT);
+			}));
+		}
+	}
+
+	/**
+	 * @throws UnknownFieldException
+	 */
 	public function testConfigureForOwnerForm()
 	{
 		$pFieldsCollection = $this->buildFieldsCollectionDifferentModules();
@@ -156,6 +177,21 @@ class TestClassFieldsCollectionConfiguratorForm
 		$pFieldsCollection->addField($pField1);
 		$pFieldsCollection->addField($pField2);
 		$pFieldsCollection->addField($pField3);
+		return $pFieldsCollection;
+	}
+
+	/**
+	 * @return FieldsCollection
+	 */
+	private function buildFieldsCollectionWithKritBemerkungOeffentlichField(): FieldsCollection
+	{
+		$pFieldsCollection = new FieldsCollection;
+		$pField1 = new Field('krit_bemerkung_oeffentlich', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pField1->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+		$pField2 = new Field('objekttyp', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pField2->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+		$pFieldsCollection->addField($pField1);
+		$pFieldsCollection->addField($pField2);
 		return $pFieldsCollection;
 	}
 }
