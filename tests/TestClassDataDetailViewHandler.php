@@ -54,13 +54,7 @@ class TestClassDataDetailViewHandler
 		],
 		'expose' => 'testexposetype',
 		'addressfields' => ['Vorname', 'Name'],
-		'movielinks' => MovieLinkTypes::MOVIE_LINKS_PLAYER,
-		'similar_estates_template' => '/test/similar/template.php',
-		'same_kind' => true,
-		'same_maketing_method' => true,
-		'radius' => 35,
-		'amount' => 13,
-		'enablesimilarestates' => true,
+		'movielinks' => MovieLinkTypes::MOVIE_LINKS_PLAYER
 	];
 
 
@@ -80,14 +74,6 @@ class TestClassDataDetailViewHandler
 		$this->assertEquals($row['expose'], $pDataDetailview->getExpose());
 		$this->assertEquals($row['addressfields'], $pDataDetailview->getAddressFields());
 		$this->assertEquals($row['movielinks'], $pDataDetailview->getMovieLinks());
-		$this->assertEquals($row['enablesimilarestates'], $pDataDetailview->getDataDetailViewActive());
-		$pDataSimilar = $pDataDetailview->getDataViewSimilarEstates();
-
-		$this->assertEquals($row['same_kind'], $pDataSimilar->getSameEstateKind());
-		$this->assertEquals($row['same_maketing_method'], $pDataSimilar->getSameMarketingMethod());
-		$this->assertFalse($pDataSimilar->getSamePostalCode()); // missing -> bool
-		$this->assertEquals($row['radius'], $pDataSimilar->getRadius());
-		$this->assertEquals($row['amount'], $pDataSimilar->getRecordsPerPage());
 	}
 
 
