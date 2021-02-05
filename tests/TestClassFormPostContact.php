@@ -187,7 +187,7 @@ class TestClassFormPostContact
 				'Telefon1' => '0815/2345677',
 				'AGB_akzeptiert' => true,
 			],
-			'estateid' => 1337,
+			'estateId' => 1337,
 			'message' => null,
 			'subject' => '¡A new Contact!'.' '.FormPostContact::PORTALFILTER_IDENTIFIER,
 			'referrer' => '/test/page',

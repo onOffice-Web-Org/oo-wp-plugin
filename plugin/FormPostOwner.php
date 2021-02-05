@@ -211,7 +211,7 @@ class FormPostOwner
 
 		$requestParams = [
 			'addressdata' => $addressData,
-			'estateid' => $estateId,
+			'estateId' => $estateId,
 			'message' => $values['message'] ?? null,
 			'subject' => $subject,
 			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),

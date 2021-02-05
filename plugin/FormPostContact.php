@@ -169,7 +169,7 @@ class FormPostContact
 		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
 		$requestParams = [
 			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
-			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
+			'estateId' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $values['message'] ?? null,
 			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),

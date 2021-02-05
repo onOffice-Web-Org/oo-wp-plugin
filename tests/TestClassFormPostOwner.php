@@ -558,7 +558,7 @@ class TestClassFormPostOwner
 				'ArtDaten' => ['Eigentümer'],
 				'Telefon1' => '0815 234567890',
 			],
-			'estateid' => 5590,
+			'estateId' => 5590,
 			'message' => 'Hello! I am interested in selling my property!',
 			'subject' => null,
 			'referrer' => '/test/page/1',
