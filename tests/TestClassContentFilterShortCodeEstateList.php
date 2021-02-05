@@ -99,7 +99,6 @@ class TestClassContentFilterShortCodeEstateList
 				'getEstatePictureTitle',
 				'getDocument',
 				'getCurrentEstateId',
-				'getSimilarEstates',
 				'loadEstates',
 			])
 			->setConstructorArgs([$pDataListView, $pEstateListEnvironment])
@@ -150,7 +149,6 @@ class TestClassContentFilterShortCodeEstateList
 
 		$pEstate->method('getDocument')->willReturn('');
 		$pEstate->method('getCurrentEstateId')->willReturn(52);
-		$pEstate->method('getSimilarEstates')->willReturn('');
 		return $pEstate;
 	}
 
