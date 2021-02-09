@@ -78,7 +78,6 @@ class TestClassDatabaseChanges
 		$this->_pWpOption = new WPOptionWrapperTest();
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
 
-		add_option('onoffice-default-view', '');
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
 		$dataSimilarViewOptions->name = "onoffice-default-view";
 		$dataSimilarViewOptions->setDataDetailViewActive(true);
@@ -92,7 +91,7 @@ class TestClassDatabaseChanges
 		$dataViewSimilarEstates->setRecordsPerPage(13);
 		$dataViewSimilarEstates->setTemplate('/test/similar/template.php');
 		$dataSimilarViewOptions->setDataViewSimilarEstates($dataViewSimilarEstates);
-		update_option('onoffice-default-view', $dataSimilarViewOptions);
+		add_option('onoffice-default-view', $dataSimilarViewOptions);
 	}
 
 	/**
@@ -103,6 +102,7 @@ class TestClassDatabaseChanges
 	{
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->_pDbChanges->install();
+
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 

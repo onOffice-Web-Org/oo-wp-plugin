@@ -60,7 +60,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		// If you are modifying this, please also make sure to edit the test
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
-
 		if ($dbversion === null) {
 			dbDelta( $this->getCreateQueryCache() );
 
@@ -495,8 +494,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 	{
 		$defaultViewOptions = get_option('onoffice-default-view');
 		if(!empty($defaultViewOptions)){
-			add_option('onoffice-similar-estates-settings-view', '');
-
 			$old_enableSimilarEstates = $defaultViewOptions->getDataDetailViewActive();
 
 			$dataDetailViewSimilarEstates = $defaultViewOptions->getDataViewSimilarEstates();
@@ -520,7 +517,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dataViewSimilarEstates->setRecordsPerPage($oldAmount);
 			$dataViewSimilarEstates->setTemplate($oldSimilarEstatesTemplate);
 			$dataSimilarViewOptions->setDataViewSimilarEstates($dataViewSimilarEstates);
-			update_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
+			add_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
 		}
 	}
 
