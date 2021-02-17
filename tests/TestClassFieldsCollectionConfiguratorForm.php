@@ -89,8 +89,7 @@ class TestClassFieldsCollectionConfiguratorForm
 			$this->assertNotSame($pFieldOriginal, $pField);
 			$this->assertThat($pField, $this->callback(function(Field $pField) {
 				return
-					($pField->getName() === 'objekttyp' && $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) ||
-					($pField->getName() !== 'objekttyp' && $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT);
+					($pField->getName() !== 'krit_bemerkung_oeffentlich' && $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT);
 			}));
 		}
 	}
