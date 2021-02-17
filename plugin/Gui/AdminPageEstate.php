@@ -51,6 +51,9 @@ class AdminPageEstate
 	const PAGE_ESTATE_DETAIL = 'detail';
 
 	/** */
+	const PAGE_SIMILAR_ESTATES = 'similar-estates';
+
+	/** */
 	const PAGE_ESTATE_UNITS = 'units';
 
 	/** */
@@ -63,6 +66,7 @@ class AdminPageEstate
 	private $_subPageClassByTab = array(
 		self::PAGE_ESTATE_LIST => AdminPageEstateList::class,
 		self::PAGE_ESTATE_DETAIL => AdminPageEstateDetail::class,
+		self::PAGE_SIMILAR_ESTATES => AdminPageSimilarEstates::class,
 		self::PAGE_ESTATE_UNITS => AdminPageEstateUnitList::class,
 	);
 
@@ -81,6 +85,7 @@ class AdminPageEstate
 		$this->_tabs = array(
 			self::PAGE_ESTATE_LIST => __('List Views', 'onoffice-for-wp-websites'),
 			self::PAGE_ESTATE_DETAIL => __('Detail View', 'onoffice-for-wp-websites'),
+			self::PAGE_SIMILAR_ESTATES => __('Similar Estates', 'onoffice-for-wp-websites'),
 			self::PAGE_ESTATE_UNITS => __('Unit Lists', 'onoffice-for-wp-websites'),
 		);
 

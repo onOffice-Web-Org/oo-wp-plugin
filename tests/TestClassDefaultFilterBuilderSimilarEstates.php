@@ -177,6 +177,46 @@ class TestClassDefaultFilterBuilderSimilarEstates
 		$this->assertEquals($expectation, $result);
 	}
 
+	public function testBuildFilterDoNotShowArchive()
+	{
+		$this->getDataViewSimilarEstates()->setDoNotShowArchived(true);
+		$result = $this->_pDefaultFilterBuilderSimilarEstates->buildFilter();
+		$expectation = [
+			'veroeffentlichen' => [
+				['op' => '=', 'val' => 1],
+			],
+			'status' => [
+				['op' => '!=', 'val' => 0],
+			],
+		];
+		$this->assertEquals($expectation, $result);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testBuildFilterDoNotShowReference()
+	{
+		$this->getDataViewSimilarEstates()->setDoNotShowReference(true);
+		$result = $this->_pDefaultFilterBuilderSimilarEstates->buildFilter();
+		$expectation = [
+			'veroeffentlichen' => [
+				['op' => '=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => 1],
+			],
+		];
+		$this->assertEquals($expectation, $result);
+	}
+
+
+	/**
+	 *
+	 */
+
 
 	/**
 	 *
