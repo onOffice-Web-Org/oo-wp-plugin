@@ -58,7 +58,7 @@ jobs:
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        vendor/bin/php-coveralls --coverage_clover=build/logs/clover.xml -v --fail-on-warning --fail-on-risky --disallow-test-output
+        vendor/bin/php-coveralls --coverage_clover=build/logs/clover.xml -v
 
     - name: Smoke tests phpstan and PHP-Compability (using phpcs) with PHP ${{ matrix.php-versions }}
       if: matrix.php-versions == '7.2'
