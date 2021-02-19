@@ -38,7 +38,7 @@ abstract class CustomLabelModelBase
 	private $_formId = 0;
 
 	/** @var int */
-	private $_customsId = 0;
+	private $_defaultsId = 0;
 
 
 	/**
@@ -85,20 +85,20 @@ abstract class CustomLabelModelBase
 	 *
 	 */
 
-	public function getCustomsId(): int
+	public function getDefaultsId(): int
 	{
-		return $this->_customsId;
+		return $this->_defaultsId;
 	}
 
 
 	/**
 	 *
-	 * @param int $customsId
+	 * @param int $defaultsId
 	 *
 	 */
 
-	public function setCustomsId(int $customsId)
+	public function setDefaultsId(int $defaultsId)
 	{
-		$this->_customsId = $customsId;
+		$this->_defaultsId = $defaultsId;
 	}
 }

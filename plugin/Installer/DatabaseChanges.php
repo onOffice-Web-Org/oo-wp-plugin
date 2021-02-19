@@ -485,7 +485,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$tableName = $prefix."oo_plugin_fieldconfig_form_customs_labels";
 		$sql = "CREATE TABLE $tableName (
 			`customs_labels_id` bigint(20) NOT NULL AUTO_INCREMENT,
-			`customs_id` bigint(20) NOT NULL,
+			`defaults_id` bigint(20) NOT NULL,
 			`locale` tinytext NULL DEFAULT NULL,
 			`value` text,
 			PRIMARY KEY (`customs_labels_id`)

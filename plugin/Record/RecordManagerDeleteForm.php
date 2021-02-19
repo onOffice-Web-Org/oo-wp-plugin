@@ -75,6 +75,8 @@ class RecordManagerDeleteForm
 				$placeHolders = implode(', ', $stringPlaceholders);
 				$pWpdb->query($pWpdb->prepare("DELETE FROM {$prefix}oo_plugin_fieldconfig_form_defaults_values "
 					."WHERE defaults_id IN ($placeHolders)", $defaultIds));
+				$pWpdb->query($pWpdb->prepare("DELETE FROM {$prefix}oo_plugin_fieldconfig_form_customs_labels "
+					."WHERE defaults_id IN ($placeHolders)", $defaultIds));
 			}
 
 			$pWpdb->delete($prefix.'oo_plugin_fieldconfig_form_defaults', ['form_id' => $id]);

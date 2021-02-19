@@ -11,7 +11,7 @@ onOffice.custom_labels_input_converter = function () {
     var predefinedValues = onOffice_loc_settings.customlabels || {};
 
     // plaintext
-    document.querySelectorAll('select[name=language-language].onoffice-input').forEach(function (element) {
+    document.querySelectorAll('select[name=language-custom-label-language].onoffice-input').forEach(function (element) {
         element.backupLanguageSelection = {};
         var mainInput = element.parentElement.parentElement
             .querySelector('input[name^=oopluginfieldconfigformcustomslabels-value].onoffice-input');
@@ -127,7 +127,7 @@ document.addEventListener("addFieldItem", function(e) {
         'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:Text'].indexOf(fieldDefinition.type) >= 0) {
         var select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;
-        select.name = 'language-language';
+        select.name = 'language-custom-label-language';
         select.className = 'onoffice-input';
 
         select.options.add(new Option(onOffice_loc_settings.label_choose_language, ''));

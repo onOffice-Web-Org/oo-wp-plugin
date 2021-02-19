@@ -66,12 +66,12 @@ class CustomLabelCreate
 
 	public function createForText(CustomlabelModelText $pDataModel): int
 	{
-		$customsId = $this->createBase($pDataModel);
+		$defaultsId = $this->createBase($pDataModel);
 
 		foreach ($pDataModel->getValuesByLocale() as $locale => $value) {
-			$this->writeDatabaseValueSingle($customsId, $value, $locale);
+			$this->writeDatabaseValueSingle($defaultsId, $value, $locale);
 		}
-		return $customsId;
+		return $defaultsId;
 	}
 
 
@@ -87,9 +87,9 @@ class CustomLabelCreate
 	private function createBase(CustomlabelModelBase $pDataModel): int
 	{
 		$field = $pDataModel->getField()->getName();
-		$customsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field);
-		$pDataModel->setCustomsId($customsId);
-		return $customsId;
+		$defaultsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field);
+		$pDataModel->setDefaultsId($defaultsId);
+		return $defaultsId;
 	}
 
 
@@ -119,7 +119,7 @@ class CustomLabelCreate
 	 *
 	 * step two: write to oo_fieldconfig_form_customs_labels
 	 *
-	 * @param int $customsId
+	 * @param int $defaultsId
 	 * @param string $value
 	 * @param string $locale
 	 *
@@ -127,11 +127,11 @@ class CustomLabelCreate
 	 *
 	 */
 
-	private function writeDatabaseValueSingle(int $customsId, string $value, string $locale = '')
+	private function writeDatabaseValueSingle(int $defaultsId, string $value, string $locale = '')
 	{
 		$pRecordManager = $this->createRecordManagerCustomsLabels();
 		$values = [
-			'customs_id' => $customsId,
+			'defaults_id' => $defaultsId,
 			'locale' => $locale,
 			'value' => $value,
 		];

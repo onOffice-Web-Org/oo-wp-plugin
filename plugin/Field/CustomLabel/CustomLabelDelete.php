@@ -106,6 +106,6 @@ class CustomLabelDelete
 		return "DELETE {$prefix}oo_plugin_fieldconfig_form_defaults, {$prefix}oo_plugin_fieldconfig_form_customs_labels "
 			."FROM {$prefix}oo_plugin_fieldconfig_form_defaults "
 			."INNER JOIN {$prefix}oo_plugin_fieldconfig_form_customs_labels "
-			."ON {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id = {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_id";
+			."ON {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id = {$prefix}oo_plugin_fieldconfig_form_customs_labels.defaults_id";
 	}
 }

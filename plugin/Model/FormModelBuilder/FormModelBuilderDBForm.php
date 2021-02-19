@@ -120,8 +120,9 @@ class FormModelBuilderDBForm
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
-		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
+		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
+		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 
@@ -394,6 +395,32 @@ class FormModelBuilderDBForm
 			if (FieldTypes::isStringType($type ?? '')) {
 				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 				$pInputModel->setLabel(__('Add language', 'onoffice-for-wp-websites'));
+			}
+		});
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function getInputModelCustomLabelLanguageSwitch(): InputModelDB
+	{
+		$pInputModel = new InputModelDB('customlabel_newlang', __('Add custom label language', 'onoffice-for-wp-websites'));
+		$pInputModel->setTable('language-custom-label');
+		$pInputModel->setField('language');
+
+		$pLanguageReader = new InstalledLanguageReader;
+		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
+			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
+		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+			$pInputModel->setLabel('');
+
+			if (FieldTypes::isStringType($type ?? '')) {
+				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+				$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
 			}
 		});
 

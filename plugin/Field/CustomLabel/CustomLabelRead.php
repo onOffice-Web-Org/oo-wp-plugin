@@ -81,7 +81,7 @@ class CustomLabelRead
 			."FROM {$prefix}oo_plugin_fieldconfig_form_defaults\n"
 			."INNER JOIN {$prefix}oo_plugin_fieldconfig_form_customs_labels\n"
 			."ON {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id = "
-			." {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_id\n"
+			." {$prefix}oo_plugin_fieldconfig_form_customs_labels.defaults_id\n"
 			."WHERE {$prefix}oo_plugin_fieldconfig_form_defaults.fieldname = '".esc_sql($pField->getName())."' AND\n"
 			." {$prefix}oo_plugin_fieldconfig_form_defaults.form_id = ".esc_sql($formId);
 		return $query;
