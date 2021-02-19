@@ -185,6 +185,15 @@ class TestClassDefaultFilterBuilderSimilarEstates
 			'veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
 			],
+			'verkauft' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => 1],
+			],
 			'status' => [
 				['op' => '!=', 'val' => 0],
 			],
@@ -205,7 +214,14 @@ class TestClassDefaultFilterBuilderSimilarEstates
 			'veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
 			],
+			'verkauft' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => '!=', 'val' => 1],
+			],
 			'referenz' => [
+				['op' => '!=', 'val' => 1],
 				['op' => '!=', 'val' => 1],
 			],
 		];
