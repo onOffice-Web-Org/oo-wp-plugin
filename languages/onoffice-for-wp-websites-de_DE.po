@@ -266,8 +266,8 @@ msgid "Google Maps Key"
 msgstr "Google Maps-Key"
 
 #: plugin/Gui/AdminPageApiSettings.php:150
-msgid "Index Pdf Expose"
-msgstr "Index Pdf Expose"
+msgid "Index PDF brochure"
+msgstr "Index PDF brochure"
 
 #: plugin/Gui/AdminPageApiSettings.php:161
 msgid "Google Bot"

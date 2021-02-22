@@ -247,7 +247,7 @@ msgid "Google Maps Key"
 msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:150
-msgid "Index Pdf Expose"
+msgid "Index PDF brochure"
 msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:161

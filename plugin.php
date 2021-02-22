@@ -169,6 +169,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			$pPdfDocumentModel = new PdfDocumentModel($pWP->query_vars['estate_id'] ?? 0, $pWP->query_vars['view'] ?? '');
 			/* @var $pPdfDownload PdfDownload */
 			$pPdfDownload = $pDI->get(PdfDownload::class);
+            $pPdfDownload->settingGoogleBotAcceptIndex(!empty(get_option('onoffice-settings-google-bot-index-pdf-expose')));
 			$pPdfDownload->download($pPdfDocumentModel);
 		} catch (PdfDocumentModelValidationException $pEx) {
 			$pWP->handle_404();

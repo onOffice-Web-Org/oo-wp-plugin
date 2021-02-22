@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\PDF;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\Utility\HTTPHeaders;
 
 /**
  *
@@ -38,15 +39,22 @@ class PdfDownload
 
 	/** @var PdfDocumentModelValidator */
 	private $_pPdfDocumentModelValidator;
+    /**
+     * @var HTTPHeaders
+     */
+    private $_httpHeadersGeneric;
 
-	/**
-	 * @param PdfDocumentFetcher $pPdfDocumentFetcher
-	 * @param PdfDocumentModelValidator $pPdfDocumentModelValidator
-	 */
+    /**
+     * @param PdfDocumentFetcher $pPdfDocumentFetcher
+     * @param PdfDocumentModelValidator $pPdfDocumentModelValidator
+     * @param HTTPHeaders $httpHeadersGeneric
+     */
 	public function __construct(
 		PdfDocumentFetcher $pPdfDocumentFetcher,
-		PdfDocumentModelValidator $pPdfDocumentModelValidator)
+		PdfDocumentModelValidator $pPdfDocumentModelValidator,
+        HTTPHeaders $httpHeadersGeneric)
 	{
+		$this->_httpHeadersGeneric = $httpHeadersGeneric;
 		$this->_pPdfDocumentFetcher = $pPdfDocumentFetcher;
 		$this->_pPdfDocumentModelValidator = $pPdfDocumentModelValidator;
 	}
@@ -65,4 +73,15 @@ class PdfDownload
 		$url = $this->_pPdfDocumentFetcher->fetchUrl($pModelValidated);
 		$this->_pPdfDocumentFetcher->proxyResult($pModelValidated, $url);
 	}
+
+    /**
+     * @param bool $accept
+     */
+    public function settingGoogleBotAcceptIndex(bool $accept = true)
+    {
+        if ($accept === false)
+        {
+            $this->_httpHeadersGeneric->addHeader('X-Robots-Tag: googlebot: noindex, nofollow');
+        }
+    }
 }
