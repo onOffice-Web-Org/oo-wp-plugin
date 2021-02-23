@@ -27,6 +27,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Utility\HTTPHeaders;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 
 /**
  *
@@ -42,21 +43,28 @@ class PdfDownload
     /**
      * @var HTTPHeaders
      */
-    private $_httpHeadersGeneric;
+    private $_pHttpHeadersGeneric;
+    /**
+     * @var WPOptionWrapperDefault
+     */
+    private $_pWPOptionWrapper;
 
     /**
      * @param PdfDocumentFetcher $pPdfDocumentFetcher
      * @param PdfDocumentModelValidator $pPdfDocumentModelValidator
-     * @param HTTPHeaders $httpHeadersGeneric
+     * @param HTTPHeaders $pHttpHeadersGeneric
+     * @param WPOptionWrapperDefault $pWPOptionWrapper
      */
 	public function __construct(
 		PdfDocumentFetcher $pPdfDocumentFetcher,
 		PdfDocumentModelValidator $pPdfDocumentModelValidator,
-        HTTPHeaders $httpHeadersGeneric)
+        HTTPHeaders $pHttpHeadersGeneric,
+        WPOptionWrapperDefault $pWPOptionWrapper = null)
 	{
-		$this->_httpHeadersGeneric = $httpHeadersGeneric;
-		$this->_pPdfDocumentFetcher = $pPdfDocumentFetcher;
+		$this->_pHttpHeadersGeneric        = $pHttpHeadersGeneric;
+		$this->_pPdfDocumentFetcher        = $pPdfDocumentFetcher;
 		$this->_pPdfDocumentModelValidator = $pPdfDocumentModelValidator;
+        $this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
 	}
 
 	/**
@@ -69,19 +77,11 @@ class PdfDownload
 	 */
 	public function download(PdfDocumentModel $pModel)
 	{
+        if (!$this->_pWPOptionWrapper->getOption('onoffice-settings-google-bot-index-pdf-expose')) {
+            $this->_pHttpHeadersGeneric->addHeader('X-Robots-Tag: googlebot: noindex, nofollow');
+        }
 		$pModelValidated = $this->_pPdfDocumentModelValidator->validate($pModel);
 		$url = $this->_pPdfDocumentFetcher->fetchUrl($pModelValidated);
 		$this->_pPdfDocumentFetcher->proxyResult($pModelValidated, $url);
 	}
-
-    /**
-     * @param bool $accept
-     */
-    public function settingGoogleBotAcceptIndex(bool $accept = true)
-    {
-        if ($accept === false)
-        {
-            $this->_httpHeadersGeneric->addHeader('X-Robots-Tag: googlebot: noindex, nofollow');
-        }
-    }
 }
