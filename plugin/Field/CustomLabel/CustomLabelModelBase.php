@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2021 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -38,7 +38,7 @@ abstract class CustomLabelModelBase
 	private $_formId = 0;
 
 	/** @var int */
-	private $_defaultsId = 0;
+	private $_customsLabelsId = 0;
 
 
 	/**
@@ -81,24 +81,12 @@ abstract class CustomLabelModelBase
 
 	/**
 	 *
-	 * @return int
+	 * @param int $customsLabelsId
 	 *
 	 */
 
-	public function getDefaultsId(): int
+	public function setCustomsLabelsId(int $customsLabelsId)
 	{
-		return $this->_defaultsId;
-	}
-
-
-	/**
-	 *
-	 * @param int $defaultsId
-	 *
-	 */
-
-	public function setDefaultsId(int $defaultsId)
-	{
-		$this->_defaultsId = $defaultsId;
+		$this->_customsLabelsId = $customsLabelsId;
 	}
 }

@@ -144,7 +144,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 17) {
-			dbDelta( $this->getCreateQueryFieldConfigCustomsLabels() );
+			dbDelta($this->getCreateQueryFieldConfigCustomsLabels());
+			dbDelta($this->getCreateQueryFieldConfigTranslatedLabels());
 			$dbversion = 18;
 		}
 
@@ -482,13 +483,31 @@ class DatabaseChanges implements DatabaseChangesInterface
 	{
 		$prefix = $this->getPrefix();
 		$charsetCollate = $this->getCharsetCollate();
-		$tableName = $prefix."oo_plugin_fieldconfig_form_customs_labels";
+		$tableName = $prefix . "oo_plugin_fieldconfig_form_customs_labels";
 		$sql = "CREATE TABLE $tableName (
 			`customs_labels_id` bigint(20) NOT NULL AUTO_INCREMENT,
-			`defaults_id` bigint(20) NOT NULL,
+			`form_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`customs_labels_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigTranslatedLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_form_translated_labels";
+		$sql = "CREATE TABLE $tableName (
+			`translated_label_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`input_id` bigint(20) NOT NULL,
 			`locale` tinytext NULL DEFAULT NULL,
 			`value` text,
-			PRIMARY KEY (`customs_labels_id`)
+			PRIMARY KEY (`translated_label_id`)
 		) $charsetCollate;";
 
 		return $sql;

@@ -153,7 +153,7 @@ class InputModelDBFactoryConfigForm
 			self::KEY_FIELD => 'value',
 		],
 		self::INPUT_FORM_CUSTOM_LABEL => [
-			self::KEY_TABLE => 'oo_plugin_fieldconfig_form_customs_labels',
+			self::KEY_TABLE => 'oo_plugin_fieldconfig_form_translated_labels',
 			self::KEY_FIELD => 'value',
 		],
 	];

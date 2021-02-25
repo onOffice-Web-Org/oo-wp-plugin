@@ -572,7 +572,7 @@ abstract class AdminPageFormSettingsBase
 
 		$pCustomLabelSave = $this->getContainer()->get(CustomLabelRowSaver::class);
 		$pCustomLabelSave->saveCustomLabels($recordId,
-			$row['oo_plugin_fieldconfig_form_customs_labels'] ?? [], $pFieldsCollectionCurrent);
+			$row['oo_plugin_fieldconfig_form_translated_labels'] ?? [], $pFieldsCollectionCurrent);
 	}
 
 

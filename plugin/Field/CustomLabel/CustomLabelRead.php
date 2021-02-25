@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2021 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,6 @@ use function esc_sql;
  * Reads default values as defined in WP, not onOffice enterprise
  *
  */
-
 class CustomLabelRead
 {
 	/** @var wpdb */
@@ -48,6 +47,7 @@ class CustomLabelRead
 	{
 		$this->_pWPDB = $pWPDB;
 	}
+
 	/**
 	 * @param int $formId
 	 * @param Field $pField
@@ -66,6 +66,18 @@ class CustomLabelRead
 		return $pDataModel;
 	}
 
+	/**
+	 * @param int $formId
+	 * @param $field
+	 * @param $current_lang
+	 * @return array
+	 */
+	public function readCustomLabelByFormIdAndFieldName(int $formId, $field, $current_lang): array
+	{
+		$query = $this->createCustomsLabelsByFormIdQuery($formId, $field, $current_lang);
+		return $this->_pWPDB->get_results($query, OBJECT);
+	}
+
 
 	/**
 	 * @param int $formId
@@ -75,16 +87,37 @@ class CustomLabelRead
 	private function createBaseQuery(int $formId, Field $pField): string
 	{
 		$prefix = $this->_pWPDB->prefix;
-		$query = "SELECT {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id,"
-			."{$prefix}oo_plugin_fieldconfig_form_customs_labels.locale,\n"
-			."{$prefix}oo_plugin_fieldconfig_form_customs_labels.value\n"
-			."FROM {$prefix}oo_plugin_fieldconfig_form_defaults\n"
-			."INNER JOIN {$prefix}oo_plugin_fieldconfig_form_customs_labels\n"
-			."ON {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id = "
-			." {$prefix}oo_plugin_fieldconfig_form_customs_labels.defaults_id\n"
-			."WHERE {$prefix}oo_plugin_fieldconfig_form_defaults.fieldname = '".esc_sql($pField->getName())."' AND\n"
-			." {$prefix}oo_plugin_fieldconfig_form_defaults.form_id = ".esc_sql($formId);
+		$query = "SELECT {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id,"
+			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.locale,\n"
+			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.value\n"
+			. "FROM {$prefix}oo_plugin_fieldconfig_form_customs_labels\n"
+			. "INNER JOIN {$prefix}oo_plugin_fieldconfig_form_translated_labels\n"
+			. "ON {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id = "
+			. " {$prefix}oo_plugin_fieldconfig_form_translated_labels.input_id\n"
+			. "WHERE {$prefix}oo_plugin_fieldconfig_form_customs_labels.fieldname = '" . esc_sql($pField->getName()) . "' AND\n"
+			. " {$prefix}oo_plugin_fieldconfig_form_customs_labels.form_id = " . esc_sql($formId);
 		return $query;
 	}
 
+	/**
+	 * @param int $formId
+	 * @param string $field
+	 * @param $current_lang
+	 * @return string
+	 */
+	private function createCustomsLabelsByFormIdQuery(int $formId, string $field, $current_lang): string
+	{
+		$prefix = $this->_pWPDB->prefix;
+		$queryByFormId = "SELECT {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id,"
+			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.locale,\n"
+			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.value\n"
+			. "FROM {$prefix}oo_plugin_fieldconfig_form_customs_labels\n"
+			. "INNER JOIN {$prefix}oo_plugin_fieldconfig_form_translated_labels\n"
+			. "ON {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id = "
+			. " {$prefix}oo_plugin_fieldconfig_form_translated_labels.input_id\n"
+			. "WHERE {$prefix}oo_plugin_fieldconfig_form_customs_labels.fieldname = '" . esc_sql($field) . "' AND\n"
+			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.locale = '" . esc_sql($current_lang) . "' AND\n"
+			. " {$prefix}oo_plugin_fieldconfig_form_customs_labels.form_id = " . esc_sql($formId);
+		return $queryByFormId;
+	}
 }

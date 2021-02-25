@@ -35,7 +35,6 @@ use onOffice\WPlugin\Types\FieldTypes;
 /**
  *
  */
-
 class CustomLabelRowSaver
 {
 	/** @var CustomLabelCreate */
@@ -50,8 +49,8 @@ class CustomLabelRowSaver
 	 */
 	public function __construct(
 		CustomLabelCreate $pCustomLabelCreate,
-		Language $pLanguage)
-	{
+		Language $pLanguage
+	) {
 		$this->_pCustomLabelCreate = $pCustomLabelCreate;
 		$this->_pLanguage = $pLanguage;
 	}
@@ -66,7 +65,7 @@ class CustomLabelRowSaver
 	public function saveCustomLabels(int $formId, array $row, FieldsCollection $pUsedFieldsCollection)
 	{
 		foreach ($row as $field => $values) {
-			$values = is_object($values) ? (array) $values : $values;
+			$values = is_object($values) ? (array)$values : $values;
 			if ($values !== [] && $values !== '') {
 				$pField = $pUsedFieldsCollection->getFieldByKeyUnsafe($field);
 				$this->saveForFoundType($formId, $pField, $values);
@@ -82,63 +81,11 @@ class CustomLabelRowSaver
 	 */
 	private function saveForFoundType(int $formId, Field $pField, $values)
 	{
-		$isSingleValue = FieldTypes::isDateOrDateTime($pField->getType()) ||
-			FieldTypes::isNumericType($pField->getType()) ||
-			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT;
-		$isMultiSelect = $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
-		$isBoolean = $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
 		$isStringType = FieldTypes::isStringType($pField->getType());
 
-		if ($pField->getIsRangeField()) {
-			$this->saveNumericRange($formId, $pField, $values);
-		} elseif ($isSingleValue) {
-			$this->saveGeneric($formId, $pField, $values);
-		} elseif ($isMultiSelect) {
-			$this->saveMultiSelect($formId, $pField, $values);
-		} elseif ($isBoolean) {
-			$this->saveBool($formId, $pField, $values);
-		} elseif ($isStringType) {
+		if ($isStringType) {
 			$this->saveText($formId, $pField, $values);
 		}
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @param string $value
-	 * @throws RecordManagerInsertException
-	 */
-	private function saveGeneric(int $formId, Field $pField, string $value)
-	{
-		$pModel = new CustomLabelModelSingleselect($formId, $pField);
-		$pModel->setValue($value);
-		$this->_pCustomLabelCreate->createForSingleselect($pModel);
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @param string $value
-	 * @throws RecordManagerInsertException
-	 */
-	private function saveBool(int $formId, Field $pField, string $value)
-	{
-		$pModel = new CustomLabelModelBool($formId, $pField);
-		$pModel->setValue((bool)$value);
-		$this->_pCustomLabelCreate->createForBool($pModel);
-	}
-
-	/**
-	 * @param int $formId
-	 * @param Field $pField
-	 * @param array $values
-	 * @throws RecordManagerInsertException
-	 */
-	private function saveMultiSelect(int $formId, Field $pField, array $values)
-	{
-		$pModel = new CustomLabelModelMultiselect($formId, $pField);
-		$pModel->setValues($values);
-		$this->_pCustomLabelCreate->createForMultiselect($pModel);
 	}
 
 	/**

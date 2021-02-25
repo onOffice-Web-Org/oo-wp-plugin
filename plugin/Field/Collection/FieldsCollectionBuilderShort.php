@@ -26,9 +26,15 @@ namespace onOffice\WPlugin\Field\Collection;
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelForm;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
+use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 
@@ -119,6 +125,47 @@ class FieldsCollectionBuilderShort
 	{
 		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorFormContact
 			(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection));
+		$pFieldsCollection->merge($pFieldsCollectionTmp);
+		$pFieldCategoryConverterGeoPos = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoFrontend::class);
+		$pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
+		$pFieldsCollection->merge($pFieldsCollectionGeo);
+		return $this;
+	}
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $formName
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFormException
+	 */
+
+	public function addCustomLabelFieldsFormFrontend(FieldsCollection $pFieldsCollection, $formName): self
+	{
+		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
+		$results = $recordManagerReadForm->getRowByName($formName);
+		$fieldsByFormIds = $recordManagerReadForm->readFieldsByFormId(intval($results['form_id']));
+		$fieldCustomLabels = [];
+		foreach ($fieldsByFormIds as $fieldsByFormId) {
+			$lang = $this->_pContainer->get(Language::class);
+			$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
+			$query = $customLabelRead->readCustomLabelByFormIdAndFieldName(intval($results['form_id']),
+				$fieldsByFormId['fieldname'],
+				$lang->getLocale());
+			if (empty($query[0]->value)) {
+				continue;
+			}
+			if ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ADDRESS) {
+				$fieldCustomLabels[onOfficeSDK::MODULE_ADDRESS][$fieldsByFormId['fieldname']] = $query[0]->value;
+			} else {
+				$fieldCustomLabels[''][$fieldsByFormId['fieldname']] = $query[0]->value;
+			}
+		}
+
+		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorCustomLabelForm($pFieldsCollection);
+		$pFieldsCollectionTmp->setFieldCustomLabel($fieldCustomLabels);
 		$pFieldsCollection->merge($pFieldsCollectionTmp);
 		$pFieldCategoryConverterGeoPos = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoFrontend::class);
 		$pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);

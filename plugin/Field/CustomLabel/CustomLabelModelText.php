@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2021 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -27,7 +27,6 @@ namespace onOffice\WPlugin\Field\CustomLabel;
 /**
  *
  */
-
 class CustomLabelModelText
 	extends CustomLabelModelBase
 {

@@ -104,6 +104,7 @@ class Form
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
+			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName)
 			->addFieldsFormFrontend($pFieldsCollection);
 
 		$pFormPost = FormPostHandler::getInstance($type);
@@ -127,7 +128,7 @@ class Form
 			$this->_pFormData->setFormtype($pFormConfig->getFormType());
 			$this->_pFormData->setFormSent(false);
 			$this->_pFormData->setValues
-				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues() + $this->getCustomLabels());
+				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
 		}
 	}
 
@@ -528,34 +529,6 @@ class Form
 
 		foreach ($this->_pFieldsCollection->getAllFields() as $pField) {
 			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
-			$values[$pField->getName()] = $value[0] ?? '';
-
-			if ($pField->getIsRangeField()) {
-				$values[$pField->getName().'__von'] = $value['min'] ?? '';
-				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
-			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
-				$values[$pField->getName()] = $value;
-			} elseif (FieldTypes::isStringType($pField->getType())) {
-				$values[$pField->getName()] = ($value['native'] ?? '') ?: (array_shift($value) ?? '');
-			}
-		}
-		return array_filter($values);
-	}
-
-	/**
-	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	private function getCustomLabels(): array
-	{
-		/** @var CustomLabelModelToOutputConverter $pCustomLabelRead */
-		$pCustomLabelRead = $this->_pContainer->get(CustomLabelModelToOutputConverter::class);
-		$formId = $this->getDataFormConfiguration()->getId();
-		$values = [];
-
-		foreach ($this->_pFieldsCollection->getAllFields() as $pField) {
-			$value = $pCustomLabelRead->getConvertedField($formId, $pField);
 			$values[$pField->getName()] = $value[0] ?? '';
 
 			if ($pField->getIsRangeField()) {

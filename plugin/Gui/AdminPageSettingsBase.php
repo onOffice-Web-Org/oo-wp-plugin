@@ -235,8 +235,8 @@ abstract class AdminPageSettingsBase
 		$row['oo_plugin_fieldconfig_form_defaults_values'] =
 			(array)($row['oo_plugin_fieldconfig_form_defaults_values']['value'] ?? []) +
 			(array)($values->{'defaultvalue-lang'}) ?? [];
-		$row['oo_plugin_fieldconfig_form_customs_labels'] =
-			(array)($row['oo_plugin_fieldconfig_form_customs_labels']['value'] ?? []) +
+		$row['oo_plugin_fieldconfig_form_translated_labels'] =
+			(array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
 			(array)($values->{'customlabel-lang'}) ?? [];
 
 		if ($checkResult) {

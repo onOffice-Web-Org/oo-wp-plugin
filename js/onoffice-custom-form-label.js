@@ -14,7 +14,7 @@ onOffice.custom_labels_input_converter = function () {
     document.querySelectorAll('select[name=language-custom-label-language].onoffice-input').forEach(function (element) {
         element.backupLanguageSelection = {};
         var mainInput = element.parentElement.parentElement
-            .querySelector('input[name^=oopluginfieldconfigformcustomslabels-value].onoffice-input');
+            .querySelector('input[name^=oopluginfieldconfigformtranslatedlabels-value].onoffice-input');
         var fieldname = element.parentElement.parentElement.parentElement
             .querySelector('span.menu-item-settings-name').textContent;
         if (onOffice.custom_labels_inputs_converted.indexOf(fieldname) !== -1) {

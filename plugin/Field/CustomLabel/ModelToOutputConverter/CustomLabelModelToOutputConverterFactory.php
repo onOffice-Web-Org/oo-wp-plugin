@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2021 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,6 @@ use DI\NotFoundException;
 /**
  *
  */
-
 class CustomLabelModelToOutputConverterFactory
 {
 	/** @var Container */
@@ -60,23 +59,4 @@ class CustomLabelModelToOutputConverterFactory
 		return $this->_pContainer->get(CustomLabelModelToOutputConverterText::class);
 	}
 
-	/**
-	 * @return CustomLabelModelToOutputConverterNumericRange
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	public function createForNumericRange(): CustomLabelModelToOutputConverterNumericRange
-	{
-		return $this->_pContainer->get(CustomLabelModelToOutputConverterNumericRange::class);
-	}
-
-	/**
-	 * @return CustomLabelModelToOutputConverterBool
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	public function createForBool(): CustomLabelModelToOutputConverterBool
-	{
-		return $this->_pContainer->get(CustomLabelModelToOutputConverterBool::class);
-	}
 }

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2021 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -31,14 +31,13 @@ use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 /**
  *
  */
-
 class CustomLabelCreate
 {
 	/** */
-	const TABLE_DEFAULTS = 'oo_plugin_fieldconfig_form_defaults';
+	const TABLE_CUSTOMS_LABELS = 'oo_plugin_fieldconfig_form_customs_labels';
 
 	/** */
-	const TABLE_CUSTOMS_LABELS = 'oo_plugin_fieldconfig_form_customs_labels';
+	const TABLE_TRANSLATED_LABELS = 'oo_plugin_fieldconfig_form_translated_labels';
 
 
 	/** @var RecordManagerFactory */
@@ -59,43 +58,44 @@ class CustomLabelCreate
 
 	/**
 	 *
-	 * @param CustomlabelModelText $pDataModel
+	 * @param CustomLabelModelText $pDataModel
 	 * @return int
 	 * @throws RecordManagerInsertException
 	 */
 
-	public function createForText(CustomlabelModelText $pDataModel): int
+	public function createForText(CustomLabelModelText $pDataModel): int
 	{
-		$defaultsId = $this->createBase($pDataModel);
+		$customsLabelsId = $this->createBase($pDataModel);
 
 		foreach ($pDataModel->getValuesByLocale() as $locale => $value) {
-			$this->writeDatabaseValueSingle($defaultsId, $value, $locale);
+			$this->writeDatabaseValueSingle($customsLabelsId, $value, $locale);
 		}
-		return $defaultsId;
+
+		return $customsLabelsId;
 	}
 
 
 	/**
 	 *
-	 * @param CustomlabelModelBase $pDataModel
+	 * @param CustomLabelModelBase $pDataModel
 	 * @return int
 	 *
 	 * @throws RecordManagerInsertException
 	 *
 	 */
 
-	private function createBase(CustomlabelModelBase $pDataModel): int
+	private function createBase(CustomLabelModelBase $pDataModel): int
 	{
 		$field = $pDataModel->getField()->getName();
-		$defaultsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field);
-		$pDataModel->setDefaultsId($defaultsId);
-		return $defaultsId;
+		$customsLabelsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field);
+		$pDataModel->setCustomsLabelsId($customsLabelsId);
+		return $customsLabelsId;
 	}
 
 
 	/**
 	 *
-	 * Step one: write oo_fieldconfig_form_defaults
+	 * Step one: write oo_fieldconfig_form_customs_labels
 	 *
 	 * @param int $formId
 	 * @param string $field
@@ -111,15 +111,15 @@ class CustomLabelCreate
 			'form_id' => $formId,
 			'fieldname' => $field,
 		];
-		return $pRecordManager->insertByRow([self::TABLE_DEFAULTS => $values]);
+		return $pRecordManager->insertByRow([self::TABLE_CUSTOMS_LABELS => $values]);
 	}
 
 
 	/**
 	 *
-	 * step two: write to oo_fieldconfig_form_customs_labels
+	 * step two: write to oo_fieldconfig_form_translated_labels
 	 *
-	 * @param int $defaultsId
+	 * @param int $customsLabelsId
 	 * @param string $value
 	 * @param string $locale
 	 *
@@ -127,15 +127,15 @@ class CustomLabelCreate
 	 *
 	 */
 
-	private function writeDatabaseValueSingle(int $defaultsId, string $value, string $locale = '')
+	private function writeDatabaseValueSingle(int $customsLabelsId, string $value, string $locale = '')
 	{
 		$pRecordManager = $this->createRecordManagerCustomsLabels();
 		$values = [
-			'defaults_id' => $defaultsId,
+			'input_id' => $customsLabelsId,
 			'locale' => $locale,
 			'value' => $value,
 		];
-		$pRecordManager->insertByRow([self::TABLE_CUSTOMS_LABELS => $values]);
+		$pRecordManager->insertByRow([self::TABLE_TRANSLATED_LABELS => $values]);
 	}
 
 
@@ -147,7 +147,7 @@ class CustomLabelCreate
 
 	private function createRecordManagerDefaults(): RecordManagerInsertGeneric
 	{
-		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_DEFAULTS);
+		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_CUSTOMS_LABELS);
 	}
 
 
@@ -159,6 +159,6 @@ class CustomLabelCreate
 
 	private function createRecordManagerCustomsLabels(): RecordManagerInsertGeneric
 	{
-		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_CUSTOMS_LABELS);
+		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_TRANSLATED_LABELS);
 	}
 }

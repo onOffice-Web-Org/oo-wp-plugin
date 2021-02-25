@@ -193,7 +193,7 @@ class RecordStructure
 				self::EMPTY_VALUE => '',
 			),
 		],
-		'oo_plugin_fieldconfig_form_customs_labels' => [
+		'oo_plugin_fieldconfig_form_translated_labels' => [
 			'value' => array(
 				self::NULL_ALLOWED => false,
 				self::EMPTY_VALUE => '',

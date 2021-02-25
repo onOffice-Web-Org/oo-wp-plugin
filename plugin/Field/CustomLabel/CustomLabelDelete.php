@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2021 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,6 @@ use wpdb;
 /**
  *
  */
-
 class CustomLabelDelete
 {
 	/** @var wpdb */
@@ -55,44 +54,13 @@ class CustomLabelDelete
 			return;
 		}
 
-		$query = $this->getBaseDeleteQuery()." WHERE "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.form_id = '".esc_sql($formId)."' AND "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.fieldname IN('"
-			.implode("', '", esc_sql($fieldNames))
-			."')";
+		$query = $this->getBaseDeleteQuery() . " WHERE "
+			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.form_id = '" . esc_sql($formId) . "' AND "
+			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.fieldname IN('"
+			. implode("', '", esc_sql($fieldNames))
+			. "')";
 
 		if (false === $this->_pWPDB->query($query)) {
-			throw new CustomLabelDeleteException();
-		}
-	}
-
-	/**
-	 * @param int $defaultId
-	 * @throws CustomLabelDeleteException
-	 */
-	public function deleteSingleCustomLabelById(int $defaultId)
-	{
-		$query = $this->getBaseDeleteQuery()." WHERE "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.defaults_id = %d";
-
-		if (!$this->_pWPDB->query($this->_pWPDB->prepare($query, $defaultId))) {
-			throw new CustomLabelDeleteException();
-		}
-	}
-
-	/**
-	 * @param int $formId
-	 * @param string $fieldname
-	 * @throws CustomLabelDeleteException
-	 */
-	public function deleteSingleCustomLabelByFieldname(int $formId, string $fieldname, string $locale = null)
-	{
-		$query = $this->getBaseDeleteQuery()." WHERE "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.form_id = %d AND "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.fieldname = %s AND "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_defaults.locale = %s";
-
-		if (false === $this->_pWPDB->query($this->_pWPDB->prepare($query, $formId, $fieldname, $locale))) {
 			throw new CustomLabelDeleteException();
 		}
 	}
@@ -103,9 +71,9 @@ class CustomLabelDelete
 	private function getBaseDeleteQuery(): string
 	{
 		$prefix = $this->_pWPDB->prefix;
-		return "DELETE {$prefix}oo_plugin_fieldconfig_form_defaults, {$prefix}oo_plugin_fieldconfig_form_customs_labels "
-			."FROM {$prefix}oo_plugin_fieldconfig_form_defaults "
-			."INNER JOIN {$prefix}oo_plugin_fieldconfig_form_customs_labels "
-			."ON {$prefix}oo_plugin_fieldconfig_form_defaults.defaults_id = {$prefix}oo_plugin_fieldconfig_form_customs_labels.defaults_id";
+		return "DELETE {$prefix}oo_plugin_fieldconfig_form_customs_labels, {$prefix}oo_plugin_fieldconfig_form_translated_labels "
+			. "FROM {$prefix}oo_plugin_fieldconfig_form_customs_labels "
+			. "INNER JOIN {$prefix}oo_plugin_fieldconfig_form_translated_labels "
+			. "ON {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id = {$prefix}oo_plugin_fieldconfig_form_translated_labels.input_id";
 	}
 }

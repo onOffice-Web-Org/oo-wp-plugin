@@ -35,20 +35,6 @@ use onOffice\WPlugin\Types\FieldTypes;
 
 class InputModelBuilderCustomLabel
 {
-	/** */
-	const FIELD_TYPE_TO_HTML_TYPE_MAPPING = [
-		FieldTypes::FIELD_TYPE_TEXT => InputModelOption::HTML_TYPE_TEXT,
-		FieldTypes::FIELD_TYPE_VARCHAR => InputModelOption::HTML_TYPE_TEXT,
-		FieldTypes::FIELD_TYPE_DATE => InputModelOption::HTML_TYPE_TEXT,
-		FieldTypes::FIELD_TYPE_DATETIME => InputModelOption::HTML_TYPE_TEXT,
-		FieldTypes::FIELD_TYPE_FLOAT => InputModelOption::HTML_TYPE_TEXT,
-		FieldTypes::FIELD_TYPE_INTEGER => InputModelOption::HTML_TYPE_TEXT,
-		FieldTypes::FIELD_TYPE_MULTISELECT => InputModelOption::HTML_TYPE_SELECT,
-		FieldTypes::FIELD_TYPE_SINGLESELECT => InputModelOption::HTML_TYPE_SELECT,
-		FieldTypes::FIELD_TYPE_BOOLEAN => InputModelOption::HTML_TYPE_SELECT,
-	];
-
-
 	/** @var InputModelDBFactoryConfigForm */
 	private $_pInputModelDBFactoryConfigForm;
 
@@ -123,7 +109,7 @@ class InputModelBuilderCustomLabel
 		$fieldsCustomLabel = $presetValuesCustomLabel[$pField->getName()] ?? '';
 		$pInputModel->setValue($fieldsCustomLabel);
 		$pInputModel->setValuesAvailable(['' => ''] + $pField->getCustomLabel());
-		$type = self::FIELD_TYPE_TO_HTML_TYPE_MAPPING[$pField->getType()] ?? InputModelOption::HTML_TYPE_TEXT;
+		$type = InputModelOption::HTML_TYPE_TEXT;
 		$pInputModel->setHtmlType($type);
 		$pInputModel->setLabelOnlyValues($pField->getLabelOnlyValues());
 	}
