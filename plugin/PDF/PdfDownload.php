@@ -58,13 +58,13 @@ class PdfDownload
 	public function __construct(
 		PdfDocumentFetcher $pPdfDocumentFetcher,
 		PdfDocumentModelValidator $pPdfDocumentModelValidator,
-        HTTPHeaders $pHttpHeadersGeneric,
-        WPOptionWrapperDefault $pWPOptionWrapper = null)
+		HTTPHeaders $pHttpHeadersGeneric,
+		WPOptionWrapperDefault $pWPOptionWrapper = null)
 	{
 		$this->_pHttpHeadersGeneric        = $pHttpHeadersGeneric;
 		$this->_pPdfDocumentFetcher        = $pPdfDocumentFetcher;
 		$this->_pPdfDocumentModelValidator = $pPdfDocumentModelValidator;
-        $this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
+		$this->_pWPOptionWrapper           = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
 	}
 
 	/**
@@ -77,9 +77,9 @@ class PdfDownload
 	 */
 	public function download(PdfDocumentModel $pModel)
 	{
-        if (!$this->_pWPOptionWrapper->getOption('onoffice-settings-google-bot-index-pdf-expose')) {
-            $this->_pHttpHeadersGeneric->addHeader('X-Robots-Tag: googlebot: noindex, nofollow');
-        }
+		if (!$this->_pWPOptionWrapper->getOption('onoffice-settings-google-bot-index-pdf-expose')) {
+			$this->_pHttpHeadersGeneric->addHeader('X-Robots-Tag: googlebot: noindex, nofollow');
+		}
 		$pModelValidated = $this->_pPdfDocumentModelValidator->validate($pModel);
 		$url = $this->_pPdfDocumentFetcher->fetchUrl($pModelValidated);
 		$this->_pPdfDocumentFetcher->proxyResult($pModelValidated, $url);
