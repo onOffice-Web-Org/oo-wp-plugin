@@ -159,6 +159,10 @@ class FieldsCollectionBuilderShort
 			}
 			if ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ADDRESS) {
 				$fieldCustomLabels[onOfficeSDK::MODULE_ADDRESS][$fieldsByFormId['fieldname']] = $query[0]->value;
+			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_SEARCHCRITERIA) {
+				$fieldCustomLabels[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldsByFormId['fieldname']] = $query[0]->value;
+			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ESTATE) {
+				$fieldCustomLabels[onOfficeSDK::MODULE_ESTATE][$fieldsByFormId['fieldname']] = $query[0]->value;
 			} else {
 				$fieldCustomLabels[''][$fieldsByFormId['fieldname']] = $query[0]->value;
 			}

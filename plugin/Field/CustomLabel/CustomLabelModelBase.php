@@ -28,7 +28,6 @@ use onOffice\WPlugin\Types\Field;
 /**
  *
  */
-
 abstract class CustomLabelModelBase
 {
 	/** @var Field */

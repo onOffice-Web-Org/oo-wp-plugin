@@ -27,7 +27,7 @@ namespace onOffice\WPlugin\Field\CustomLabel;
 /**
  *
  */
-class CustomLabelModelText
+class CustomLabelModelField
 	extends CustomLabelModelBase
 {
 	/** @var array */

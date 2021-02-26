@@ -48,15 +48,15 @@ class CustomLabelModelToOutputConverterFactory
 
 	/**
 	 *
-	 * @return CustomLabelModelToOutputConverterText
+	 * @return CustomLabelModelToOutputConverterField
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 *
 	 */
 
-	public function createForText(): CustomLabelModelToOutputConverterText
+	public function createForField(): CustomLabelModelToOutputConverterField
 	{
-		return $this->_pContainer->get(CustomLabelModelToOutputConverterText::class);
+		return $this->_pContainer->get(CustomLabelModelToOutputConverterField::class);
 	}
 
 }

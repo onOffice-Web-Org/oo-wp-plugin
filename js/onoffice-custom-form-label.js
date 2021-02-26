@@ -25,25 +25,21 @@ onOffice.custom_labels_input_converter = function () {
 
         (function () {
             if (predefinedValues[fieldname] !== undefined) {
-                var predefinedValuesIsObject = (typeof predefinedValues[fieldname] === 'object') &&
-                    !Array.isArray(predefinedValues[fieldname]);
-                if (predefinedValuesIsObject) {
-                    for (var lang in predefinedValues[fieldname]) {
-                        var relevantOption = element.querySelector('option[value=' + lang + ']');
-                        if (lang !== 'native') {
-                            var clone = generateClone(mainInput, lang);
-                            var label = generateLabel(relevantOption.text || '', clone);
-                            var deleteButton = generateDeleteButton(element, lang);
-                            var paragraph = generateParagraph(label, clone, deleteButton);
-                            mainInput.parentNode.parentNode.insertBefore(paragraph, element.parentNode);
-                            element.backupLanguageSelection[lang] = relevantOption;
-                            element.options[relevantOption.index] = null;
-                        }
-
-                        var targetInput = element.parentElement.parentElement.querySelector(
-                            'input[name="customlabel-lang[' + fieldname + '][' + lang + ']"]');
-                        targetInput.value = predefinedValues[fieldname][lang];
+                for (var lang in predefinedValues[fieldname]) {
+                    var relevantOption = element.querySelector('option[value=' + lang + ']');
+                    if (lang !== 'native') {
+                        var clone = generateClone(mainInput, lang);
+                        var label = generateLabel(relevantOption.text || '', clone);
+                        var deleteButton = generateDeleteButton(element, lang);
+                        var paragraph = generateParagraph(label, clone, deleteButton);
+                        mainInput.parentNode.parentNode.insertBefore(paragraph, element.parentNode);
+                        element.backupLanguageSelection[lang] = relevantOption;
+                        element.options[relevantOption.index] = null;
                     }
+
+                    var targetInput = element.parentElement.parentElement.querySelector(
+                        'input[name="customlabel-lang[' + fieldname + '][' + lang + ']"]');
+                    targetInput.value = predefinedValues[fieldname][lang];
                 }
             }
         })();
@@ -113,66 +109,6 @@ onOffice.custom_labels_input_converter = function () {
         }
     });
 };
-
-onOffice.js_field_count = onOffice.js_field_count || 0;
-
-document.addEventListener("addFieldItem", function(e) {
-    var fieldName = e.detail.fieldname;
-    var p = document.createElement('p');
-    p.classList.add(['wp-clearfix']);
-    var fieldDefinition = getFieldDefinition(fieldName);
-
-    if (['varchar', 'text',
-        'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar',
-        'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:Text'].indexOf(fieldDefinition.type) >= 0) {
-        var select = document.createElement('select');
-        select.id = 'select_js_' + onOffice.js_field_count;
-        select.name = 'language-custom-label-language';
-        select.className = 'onoffice-input';
-
-        select.options.add(new Option(onOffice_loc_settings.label_choose_language, ''));
-        var keys = Object.keys(onOffice_loc_settings.installed_wp_languages);
-        keys.forEach(function (k) {
-            var v = onOffice_loc_settings.installed_wp_languages[k];
-            if (k === onOffice_loc_settings.language_native) {
-                k = 'native';
-            }
-            select.options.add(new Option(v, k));
-        });
-
-        onOffice.js_field_count += 1;
-        select.options.selectedIndex = 0;
-
-        var label = document.createElement('label');
-        label.htmlFor = select.id;
-        label.className = 'howto';
-        label.textContent = onOffice_loc_settings.label_add_language;
-        p.appendChild(label);
-        p.appendChild(select);
-    } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 0) {
-
-    }
-
-    var paragraph = e.detail.item.querySelectorAll('.menu-item-settings p')[2];
-    paragraph.parentNode.insertBefore(p, paragraph.nextSibling);
-
-    var index = onOffice.custom_labels_inputs_converted.indexOf(fieldName);
-    if (index !== -1) {
-        delete onOffice.custom_labels_inputs_converted[index];
-    }
-
-    onOffice.custom_labels_input_converter();
-});
-
-function getFieldDefinition(fieldName) {
-    var fieldList = onOffice_loc_settings.fieldList || {};
-    for (var module in fieldList) {
-        if (fieldList[module][fieldName] !== undefined) {
-            return fieldList[module][fieldName];
-        }
-    }
-    return {};
-}
 
 onOffice.custom_labels_input_converter();
 

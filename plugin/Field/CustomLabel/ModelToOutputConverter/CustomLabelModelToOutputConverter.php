@@ -66,12 +66,7 @@ class CustomLabelModelToOutputConverter
 	 */
 	public function getConvertedField(int $formId, Field $pField): array
 	{
-		$isStringType = FieldTypes::isStringType($pField->getType());
-
-		if ($isStringType) {
-			return $this->convertText($formId, $pField);
-		}
-		return [];
+		return $this->convertField($formId, $pField);
 	}
 
 	/**
@@ -81,10 +76,10 @@ class CustomLabelModelToOutputConverter
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	private function convertText(int $formId, Field $pField): array
+	private function convertField(int $formId, Field $pField): array
 	{
-		$pModel = $this->_pCustomLabelReader->readCustomLabelsText($formId, $pField);
-		$pConverter = $this->_pOutputConverterFactory->createForText();
+		$pModel = $this->_pCustomLabelReader->readCustomLabelsField($formId, $pField);
+		$pConverter = $this->_pOutputConverterFactory->createForField();
 		return $pConverter->convertToRow($pModel);
 	}
 }

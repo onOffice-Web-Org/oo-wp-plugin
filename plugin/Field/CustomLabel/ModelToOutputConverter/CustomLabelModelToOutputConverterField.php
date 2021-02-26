@@ -23,13 +23,13 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field\CustomLabel\ModelToOutputConverter;
 
-use onOffice\WPlugin\Field\CustomLabel\CustomLabelModelText;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelModelField;
 use onOffice\WPlugin\Language;
 
 /**
  *
  */
-class CustomLabelModelToOutputConverterText
+class CustomLabelModelToOutputConverterField
 	implements CustomLabelModelToOutputConverterBase
 {
 	/** @var Language */
@@ -50,12 +50,12 @@ class CustomLabelModelToOutputConverterText
 
 	/**
 	 *
-	 * @param CustomLabelModelText $pCustomLabelModel
+	 * @param CustomLabelModelField $pCustomLabelModel
 	 * @return array
 	 *
 	 */
 
-	public function convertToRow(CustomLabelModelText $pCustomLabelModel): array
+	public function convertToRow(CustomLabelModelField $pCustomLabelModel): array
 	{
 		$valuesByLocale = $pCustomLabelModel->getValuesByLocale();
 		$currentLocale = $this->_pLanguage->getLocale();

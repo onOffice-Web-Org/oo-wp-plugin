@@ -24,7 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\CustomLabel\ModelToOutputConverter;
 
 use onOffice\WPlugin\Field\CustomLabel\CustomLabelCreate;
-use onOffice\WPlugin\Field\CustomLabel\CustomLabelModelText;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelModelField;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
@@ -81,11 +81,7 @@ class CustomLabelRowSaver
 	 */
 	private function saveForFoundType(int $formId, Field $pField, $values)
 	{
-		$isStringType = FieldTypes::isStringType($pField->getType());
-
-		if ($isStringType) {
-			$this->saveText($formId, $pField, $values);
-		}
+		$this->saveField($formId, $pField, $values);
 	}
 
 	/**
@@ -95,22 +91,22 @@ class CustomLabelRowSaver
 	 * @param array $values
 	 * @throws RecordManagerInsertException
 	 */
-	private function saveText(int $formId, Field $pField, array $values)
+	private function saveField(int $formId, Field $pField, array $values)
 	{
-		$pModel = new CustomLabelModelText($formId, $pField);
+		$pModel = new CustomLabelModelField($formId, $pField);
 
 		foreach ($values as $locale => $value) {
-			$this->addLocaleToModelForText($pModel, $locale, $value);
+			$this->addLocaleToModelForField($pModel, $locale, $value);
 		}
-		$this->_pCustomLabelCreate->createForText($pModel);
+		$this->_pCustomLabelCreate->createForField($pModel);
 	}
 
 	/**
-	 * @param CustomLabelModelText $pModel
+	 * @param CustomLabelModelField $pModel
 	 * @param string $locale
 	 * @param string $value
 	 */
-	private function addLocaleToModelForText(CustomLabelModelText $pModel, string $locale, string $value)
+	private function addLocaleToModelForField(CustomLabelModelField $pModel, string $locale, string $value)
 	{
 		if ($locale === 'native') {
 			$locale = $this->_pLanguage->getLocale();

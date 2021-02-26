@@ -58,12 +58,12 @@ class CustomLabelCreate
 
 	/**
 	 *
-	 * @param CustomLabelModelText $pDataModel
+	 * @param CustomLabelModelField $pDataModel
 	 * @return int
 	 * @throws RecordManagerInsertException
 	 */
 
-	public function createForText(CustomLabelModelText $pDataModel): int
+	public function createForField(CustomLabelModelField $pDataModel): int
 	{
 		$customsLabelsId = $this->createBase($pDataModel);
 

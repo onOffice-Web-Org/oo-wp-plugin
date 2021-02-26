@@ -51,13 +51,13 @@ class CustomLabelRead
 	/**
 	 * @param int $formId
 	 * @param Field $pField
-	 * @return CustomLabelModelText
+	 * @return CustomLabelModelField
 	 */
-	public function readCustomLabelsText(int $formId, Field $pField): CustomLabelModelText
+	public function readCustomLabelsField(int $formId, Field $pField): CustomLabelModelField
 	{
 		$query = $this->createBaseQuery($formId, $pField);
 		$rows = $this->_pWPDB->get_results($query, OBJECT);
-		$pDataModel = new CustomLabelModelText($formId, $pField);
+		$pDataModel = new CustomLabelModelField($formId, $pField);
 
 		foreach ($rows as $pRow) {
 			$pDataModel->addValueByLocale($pRow->locale, $pRow->value);
