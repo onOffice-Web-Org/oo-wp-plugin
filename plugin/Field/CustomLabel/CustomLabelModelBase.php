@@ -77,6 +77,17 @@ abstract class CustomLabelModelBase
 		return $this->_formId;
 	}
 
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	public function getCustomsLabelsId(): int
+	{
+		return $this->_customsLabelsId;
+	}
+
 
 	/**
 	 *

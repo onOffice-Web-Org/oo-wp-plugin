@@ -43,9 +43,6 @@ class Field
 	/** @var array */
 	private $_permittedvalues = [];
 
-	/** @var array */
-	private $_customlabel = [];
-
 	/** @var string */
 	private $_default = null;
 
@@ -124,18 +121,6 @@ class Field
 
 	/**
 	 *
-	 * @return array
-	 *
-	 */
-
-	public function getCustomLabel(): array
-	{
-		return $this->_customlabel;
-	}
-
-
-	/**
-	 *
 	 * @return string
 	 *
 	 */
@@ -192,18 +177,6 @@ class Field
 	{
 		$this->_permittedvalues = $permittedvalues;
 	}
-
-	/**
-	 *
-	 * @param array $customlabel
-	 *
-	 */
-
-	public function setCustomLabel(array $customlabel)
-	{
-		$this->_customlabel = $customlabel;
-	}
-
 
 	/**
 	 *
@@ -379,7 +352,6 @@ class Field
 			'default' => $this->_default,
 			'length' => $this->_length === 0 ? null : $this->_length,
 			'permittedvalues' => $this->_permittedvalues,
-			'customlabel' => $this->_customlabel,
 			'content' => $this->_category,
 			'module' => $this->_module,
 			'rangefield' => $this->_isRangeField,
@@ -405,7 +377,6 @@ class Field
 		$pField->setDefault($row['default'] ?? null);
 		$pField->setLength($row['length'] ?? 0);
 		$pField->setPermittedvalues($row['permittedvalues'] ?? []);
-		$pField->setCustomLabel($row['customlabel'] ?? []);
 		$pField->setCategory($row['content'] ?? '');
 		$pField->setType($row['type']);
 		$pField->setIsRangeField((bool)($row['rangefield'] ?? false));
