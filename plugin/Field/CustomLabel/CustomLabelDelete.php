@@ -66,6 +66,37 @@ class CustomLabelDelete
 	}
 
 	/**
+	 * @param int $defaultId
+	 * @throws CustomLabelDeleteException
+	 */
+	public function deleteSingleCustomLabelById(int $defaultId)
+	{
+		$query = $this->getBaseDeleteQuery() . " WHERE "
+			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id = %d";
+
+		if (!$this->_pWPDB->query($this->_pWPDB->prepare($query, $defaultId))) {
+			throw new CustomLabelDeleteException();
+		}
+	}
+
+	/**
+	 * @param int $formId
+	 * @param string $fieldname
+	 * @throws CustomLabelDeleteException
+	 */
+	public function deleteSingleCustomLabelByFieldname(int $formId, string $fieldname, string $locale = null)
+	{
+		$query = $this->getBaseDeleteQuery() . " WHERE "
+			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.form_id = %d AND "
+			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.fieldname = %s AND "
+			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.locale = %s";
+
+		if (false === $this->_pWPDB->query($this->_pWPDB->prepare($query, $formId, $fieldname, $locale))) {
+			throw new CustomLabelDeleteException();
+		}
+	}
+
+	/**
 	 * @return string
 	 */
 	private function getBaseDeleteQuery(): string
