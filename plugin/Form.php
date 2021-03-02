@@ -104,8 +104,8 @@ class Form
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
-			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName)
-			->addFieldsFormFrontend($pFieldsCollection);
+			->addFieldsFormFrontend($pFieldsCollection)
+			->addCustomLabelFieldsFormFrontend($pFieldsCollection, $formName);
 
 		$pFormPost = FormPostHandler::getInstance($type);
 		FormPost::incrementFormNo();

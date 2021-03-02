@@ -606,6 +606,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_sortbyuservalues",
 			$prefix."oo_plugin_fieldconfig_form_defaults",
 			$prefix."oo_plugin_fieldconfig_form_defaults_values",
+			$prefix."oo_plugin_fieldconfig_form_customs_labels",
+			$prefix."oo_plugin_fieldconfig_form_translated_labels",
 		);
 
 		foreach ($tables as $table)	{

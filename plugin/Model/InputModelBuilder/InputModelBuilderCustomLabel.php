@@ -108,7 +108,6 @@ class InputModelBuilderCustomLabel
 	{
 		$fieldsCustomLabel = $presetValuesCustomLabel[$pField->getName()] ?? '';
 		$pInputModel->setValue($fieldsCustomLabel);
-		$pInputModel->setValuesAvailable(['' => ''] + $pField->getCustomLabel());
 		$type = InputModelOption::HTML_TYPE_TEXT;
 		$pInputModel->setHtmlType($type);
 		$pInputModel->setLabelOnlyValues($pField->getLabelOnlyValues());
