@@ -59,7 +59,7 @@ class PdfDownload
 		PdfDocumentFetcher $pPdfDocumentFetcher,
 		PdfDocumentModelValidator $pPdfDocumentModelValidator,
 		HTTPHeaders $pHttpHeadersGeneric,
-		WPOptionWrapperDefault $pWPOptionWrapper = null)
+		WPOptionWrapperDefault $pWPOptionWrapper)
 	{
 		$this->_pHttpHeadersGeneric        = $pHttpHeadersGeneric;
 		$this->_pPdfDocumentFetcher        = $pPdfDocumentFetcher;
