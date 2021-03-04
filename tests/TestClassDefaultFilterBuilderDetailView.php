@@ -71,6 +71,12 @@ class TestClassDefaultFilterBuilderDetailView
 					'val' => 13,
 				]
 			],
+			'referenz' => [
+				[
+					'op' => '!=',
+					'val' => 1,
+				]
+			],
 		];
 		$this->assertEquals($expectation, $filterResult);
 	}
