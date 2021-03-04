@@ -118,7 +118,7 @@ install_test_suite() {
 		sed $ioption "s/yourpasswordhere/$DB_PASS/" "$WP_TESTS_DIR"/wp-tests-config.php
 		sed $ioption "s|localhost|${DB_HOST}|" "$WP_TESTS_DIR"/wp-tests-config.php
 	fi
-	echo -e "define( 'ONOFFICE_CREDENTIALS_ENC_KEY' , '123456')" >> "$WP_TESTS_DIR"/wp-tests-config.php
+	echo -e "define( 'ONOFFICE_CREDENTIALS_ENC_KEY' , '123456');" >> "$WP_TESTS_DIR"/wp-tests-config.php
 
 }
 
