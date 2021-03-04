@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
 use function dbDelta;
@@ -60,7 +61,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		// If you are modifying this, please also make sure to edit the test
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
-
 		if ($dbversion === null) {
 			dbDelta( $this->getCreateQueryCache() );
 
@@ -493,34 +493,24 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	public function migrationsDataSimilarEstates()
 	{
-		$defaultViewOptions = get_option('onoffice-default-view');
-		if(!empty($defaultViewOptions)){
-			add_option('onoffice-similar-estates-settings-view', '');
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if (!empty($pDataDetailViewOptions)) {
+			$dataDetailViewActive = $pDataDetailViewOptions->getDataDetailViewActive();
 
-			$old_enableSimilarEstates = $defaultViewOptions->getDataDetailViewActive();
+			$dataDetailViewSimilarEstates = $pDataDetailViewOptions->getDataViewSimilarEstates();
+			$pDataSimilarViewOptions = new DataSimilarView();
+			$pDataSimilarViewOptions->setDataSimilarViewActive($dataDetailViewActive);
 
-			$dataDetailViewSimilarEstates = $defaultViewOptions->getDataViewSimilarEstates();
-			$oldFields = $dataDetailViewSimilarEstates->getFields();
-			$oldRadius = $dataDetailViewSimilarEstates->getRadius();
-			$oldSameKind = $dataDetailViewSimilarEstates->getSameEstateKind();
-			$oldSameMarketingMethod = $dataDetailViewSimilarEstates->getSameMarketingMethod();
-			$oldSamePostalCode= $dataDetailViewSimilarEstates->getSamePostalCode();
-			$oldAmount = $dataDetailViewSimilarEstates->getRecordsPerPage();
-			$oldSimilarEstatesTemplate = $dataDetailViewSimilarEstates->getTemplate();
-
-			$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
-			$dataSimilarViewOptions->setDataSimilarViewActive($old_enableSimilarEstates);
-
-			$dataViewSimilarEstates = $dataSimilarViewOptions->getDataViewSimilarEstates();
-			$dataViewSimilarEstates->setFields($oldFields);
-			$dataViewSimilarEstates->setSameEstateKind($oldSameKind);
-			$dataViewSimilarEstates->setSameMarketingMethod($oldSameMarketingMethod);
-			$dataViewSimilarEstates->setSamePostalCode($oldSamePostalCode);
-			$dataViewSimilarEstates->setRadius($oldRadius);
-			$dataViewSimilarEstates->setRecordsPerPage($oldAmount);
-			$dataViewSimilarEstates->setTemplate($oldSimilarEstatesTemplate);
-			$dataSimilarViewOptions->setDataViewSimilarEstates($dataViewSimilarEstates);
-			update_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
+			$pDataViewSimilarEstatesNew = $pDataSimilarViewOptions->getDataViewSimilarEstates();
+			$pDataViewSimilarEstatesNew->setFields($dataDetailViewSimilarEstates->getFields());
+			$pDataViewSimilarEstatesNew->setSameEstateKind($dataDetailViewSimilarEstates->getSameEstateKind());
+			$pDataViewSimilarEstatesNew->setSameMarketingMethod($dataDetailViewSimilarEstates->getSameMarketingMethod());
+			$pDataViewSimilarEstatesNew->setSamePostalCode($dataDetailViewSimilarEstates->getSamePostalCode());
+			$pDataViewSimilarEstatesNew->setRadius($dataDetailViewSimilarEstates->getRadius());
+			$pDataViewSimilarEstatesNew->setRecordsPerPage($dataDetailViewSimilarEstates->getRecordsPerPage());
+			$pDataViewSimilarEstatesNew->setTemplate($dataDetailViewSimilarEstates->getTemplate());
+			$pDataSimilarViewOptions->setDataViewSimilarEstates($pDataViewSimilarEstatesNew);
+			$this->_pWpOption->addOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
 		}
 	}
 
@@ -580,13 +570,5 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		$this->_pWpOption->deleteOption('oo_plugin_db_version');
-	}
-
-	/**
-	 * @return wpdb
-	 */
-	public function getPWPDB(): wpdb
-	{
-		return $this->_pWPDB;
 	}
 }
