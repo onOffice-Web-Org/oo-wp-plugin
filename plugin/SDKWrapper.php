@@ -136,7 +136,7 @@ class SDKWrapper
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
-		$secret = openssl_decrypt($secret, "aes-128-cfb", SECURE_AUTH_KEY);
+		$secret = openssl_decrypt($secret, "aes-128-cfb", ONOFFICE_CREDENTIALS_ENC_KEY);
 		$this->_pSDK->sendRequests($token, $secret);
 		$errors = $this->_pSDK->getErrors();
 

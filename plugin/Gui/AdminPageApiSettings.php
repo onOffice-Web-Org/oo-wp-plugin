@@ -154,7 +154,7 @@ class AdminPageApiSettings
 	public function checkPassword($password, $optionName)
 	{
 		if ($password && $optionName == 'onoffice-settings-apisecret') {
-			$password = openssl_encrypt($password, "aes-128-cfb", SECURE_AUTH_KEY);
+			$password = openssl_encrypt($password, "aes-128-cfb", ONOFFICE_CREDENTIALS_ENC_KEY);
 		}
 		return $password != '' ? $password : get_option($optionName);
 	}
