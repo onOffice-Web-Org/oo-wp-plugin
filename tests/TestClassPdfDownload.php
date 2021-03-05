@@ -116,7 +116,8 @@ class TestClassPdfDownload
     {
         $url = uniqid();
         $pPdfDocumentModel = new PdfDocumentModel(12, 'testview');
-		$this->_httpHeadersGeneric->addOption('onoffice-settings-google-bot-index-pdf-expose', false);
+		$pWPOptionWrapper = new WPOptionWrapperDefault();
+		$pWPOptionWrapper->addOption('onoffice-settings-google-bot-index-pdf-expose', false);
 
         $this->_pPdfDocumentModelValidator
             ->expects($this->once())
