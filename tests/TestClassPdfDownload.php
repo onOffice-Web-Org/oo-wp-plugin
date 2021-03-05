@@ -83,8 +83,6 @@ class TestClassPdfDownload
 	{
 		$url = uniqid();
 		$pPdfDocumentModel = new PdfDocumentModel(12, 'testview');
-		$pWPOptionWrapper = new WPOptionWrapperDefault();
-		$pWPOptionWrapper->addOption('onoffice-settings-google-bot-index-pdf-expose', false);
 
 		$this->_pPdfDocumentModelValidator
 			->expects($this->once())
@@ -132,7 +130,7 @@ class TestClassPdfDownload
             ->expects($this->once())
             ->method('proxyResult')
             ->with($pPdfDocumentModel, $url);
-        $pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_httpHeadersGeneric);
+        $pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_httpHeadersGeneric, $pWPOptionWrapper);
         $this->assertContains('X-Robots-Tag: googlebot: noindex, nofollow', xdebug_get_headers());
         $pSubject->download($pPdfDocumentModel);
     }
