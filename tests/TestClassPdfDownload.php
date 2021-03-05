@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\PDF\PdfDocumentFetcher;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
@@ -74,11 +76,15 @@ class TestClassPdfDownload
 	 * @throws ApiClientException
 	 * @throws PdfDocumentModelValidationException
 	 * @throws PdfDownloadException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	public function testDownload()
 	{
 		$url = uniqid();
 		$pPdfDocumentModel = new PdfDocumentModel(12, 'testview');
+		$pWPOptionWrapper = new WPOptionWrapperDefault();
+		$pWPOptionWrapper->addOption('onoffice-settings-google-bot-index-pdf-expose', false);
 
 		$this->_pPdfDocumentModelValidator
 			->expects($this->once())
@@ -103,8 +109,8 @@ class TestClassPdfDownload
      * @throws ApiClientException
      * @throws PdfDocumentModelValidationException
      * @throws PdfDownloadException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function testDownloadWithNoAcceptGoogleIndex()
     {
