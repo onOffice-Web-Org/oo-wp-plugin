@@ -147,7 +147,7 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
-		$labelGoogleBotIndexPdfExpose = __('Index Pdf Expose', 'onoffice-for-wp-websites');
+		$labelGoogleBotIndexPdfExpose = __('Index PDF Brochure', 'onoffice-for-wp-websites');
 		$pInputModeGoogleBotIndexPdfExpose = new InputModelOption('onoffice-settings', 'google-bot-index-pdf-expose',
 			$labelGoogleBotIndexPdfExpose, InputModelOption::SETTING_TYPE_BOOLEAN);
 		$pInputModeGoogleBotIndexPdfExpose->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
