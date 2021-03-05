@@ -53,9 +53,13 @@ class TestClassPdfDownload
 	private $_pPdfDownload = null;
 
     /** @var HTTPHeadersGeneric */
-    private $_httpHeadersGeneric;
+	private $_pHttpHeadersGeneric;
+	/**
+	 * @var WPOptionWrapperDefault
+	 */
+	private $_pWPOptionWrapper;
 
-    /**
+	/**
 	 * @before
 	 */
 	public function prepare()
@@ -66,8 +70,9 @@ class TestClassPdfDownload
 		$this->_pPdfDocumentModelValidator = $this->getMockBuilder(PdfDocumentModelValidator::class)
 			->disableOriginalConstructor()
 			->getMock();
-        $this->_httpHeadersGeneric = new HTTPHeadersGeneric();
-		$this->_pPdfDownload = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_httpHeadersGeneric);
+        $this->_pHttpHeadersGeneric = new HTTPHeadersGeneric();
+		$this->_pWPOptionWrapper = new WPOptionWrapperDefault();
+		$this->_pPdfDownload = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_pHttpHeadersGeneric, $this->_pWPOptionWrapper);
 	}
 
 	/**
@@ -97,7 +102,7 @@ class TestClassPdfDownload
 			->expects($this->once())
 			->method('proxyResult')
 			->with($pPdfDocumentModel, $url);
-		$pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_httpHeadersGeneric);
+		$pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_pHttpHeadersGeneric, $this->_pWPOptionWrapper);
 		$pSubject->download($pPdfDocumentModel);
 	}
 
@@ -114,8 +119,7 @@ class TestClassPdfDownload
     {
         $url = uniqid();
         $pPdfDocumentModel = new PdfDocumentModel(12, 'testview');
-		$pWPOptionWrapper = new WPOptionWrapperDefault();
-		$pWPOptionWrapper->addOption('onoffice-settings-google-bot-index-pdf-expose', true);
+		$this->_pWPOptionWrapper->addOption('onoffice-settings-google-bot-index-pdf-expose', false);
 
         $this->_pPdfDocumentModelValidator
             ->expects($this->once())
@@ -130,7 +134,7 @@ class TestClassPdfDownload
             ->expects($this->once())
             ->method('proxyResult')
             ->with($pPdfDocumentModel, $url);
-        $pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_httpHeadersGeneric, $pWPOptionWrapper);
+        $pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_pHttpHeadersGeneric, $this->_pWPOptionWrapper);
         $this->assertContains('X-Robots-Tag: googlebot: noindex, nofollow', xdebug_get_headers());
         $pSubject->download($pPdfDocumentModel);
     }
