@@ -124,7 +124,6 @@ class TestClassPdfDownload
             ->method('proxyResult')
             ->with($pPdfDocumentModel, $url);
         $pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_httpHeadersGeneric);
-        $pSubject->settingGoogleBotAcceptIndex(false);
         $this->assertContains('X-Robots-Tag: googlebot: noindex, nofollow', xdebug_get_headers());
         $pSubject->download($pPdfDocumentModel);
     }
