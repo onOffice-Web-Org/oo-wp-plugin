@@ -27,6 +27,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Utility\HTTPHeaders;
+use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 
 /**
@@ -49,17 +50,17 @@ class PdfDownload
      */
     private $_pWPOptionWrapper;
 
-    /**
-     * @param PdfDocumentFetcher $pPdfDocumentFetcher
-     * @param PdfDocumentModelValidator $pPdfDocumentModelValidator
-     * @param HTTPHeaders $pHttpHeadersGeneric
-     * @param WPOptionWrapperDefault $pWPOptionWrapper
-     */
+	/**
+	 * @param PdfDocumentFetcher $pPdfDocumentFetcher
+	 * @param PdfDocumentModelValidator $pPdfDocumentModelValidator
+	 * @param HTTPHeaders $pHttpHeadersGeneric
+	 * @param WPOptionWrapperBase $pWPOptionWrapper
+	 */
 	public function __construct(
 		PdfDocumentFetcher $pPdfDocumentFetcher,
 		PdfDocumentModelValidator $pPdfDocumentModelValidator,
 		HTTPHeaders $pHttpHeadersGeneric,
-		WPOptionWrapperDefault $pWPOptionWrapper = null)
+		WPOptionWrapperBase $pWPOptionWrapper)
 	{
 		$this->_pHttpHeadersGeneric        = $pHttpHeadersGeneric;
 		$this->_pPdfDocumentFetcher        = $pPdfDocumentFetcher;
