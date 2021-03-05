@@ -31,6 +31,7 @@ use onOffice\WPlugin\PDF\PdfDocumentModelValidator;
 use onOffice\WPlugin\PDF\PdfDownload;
 use onOffice\WPlugin\PDF\PdfDownloadException;
 use onOffice\WPlugin\Utility\HTTPHeadersGeneric;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use WP_UnitTestCase;
 
 /**
@@ -109,6 +110,7 @@ class TestClassPdfDownload
     {
         $url = uniqid();
         $pPdfDocumentModel = new PdfDocumentModel(12, 'testview');
+		$this->_httpHeadersGeneric->addOption('onoffice-settings-google-bot-index-pdf-expose', false);
 
         $this->_pPdfDocumentModelValidator
             ->expects($this->once())
