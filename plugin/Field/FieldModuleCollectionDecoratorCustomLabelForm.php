@@ -23,6 +23,12 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use DI\Container;
+use DI\ContainerBuilder;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
+use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\Field;
 
 use function __;
@@ -36,28 +42,44 @@ use function __;
 class FieldModuleCollectionDecoratorCustomLabelForm
 	extends FieldModuleCollectionDecoratorAbstract
 {
+	/** @var Container */
+	private $_pContainer;
+
 	/** @var array */
 	private $_fieldCustomLabels = [];
 
+	/** @var FieldModuleCollection */
+	private $_pFieldModuleCollection = null;
 
-	/**
-	 *
-	 * @param string $module
-	 * @param string $name
-	 * @return Field
-	 *
-	 */
 
-	public function getFieldByModuleAndName(string $module, string $name): Field
+	public function __construct(FieldModuleCollection $pFieldModuleCollection, $formName, Container $pContainer = null)
 	{
-		$pField = parent::getFieldByModuleAndName($module, $name);
-		$newLabel = $this->_fieldCustomLabels[$module][$name] ?? null;
-		if ($newLabel !== null) {
-			$pField->setLabel(__($newLabel, 'onoffice-for-wp-websites'));
+		parent::__construct($pFieldModuleCollection);
+		$this->_pFieldModuleCollection = $pFieldModuleCollection;
+		$this->_pContainer = $pContainer ?? $this->buildContainer();
+		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
+		$results = $recordManagerReadForm->getRowByName($formName);
+		$fieldsByFormIds = $recordManagerReadForm->readFieldsByFormId(intval($results['form_id']));
+		foreach ($fieldsByFormIds as $fieldsByFormId) {
+			$lang = $this->_pContainer->get(Language::class);
+			$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
+			$query = $customLabelRead->readCustomLabelByFormIdAndFieldName(intval($results['form_id']),
+				$fieldsByFormId['fieldname'],
+				$lang->getLocale());
+			if (empty($query[0]->value)) {
+				continue;
+			}
+			if ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ADDRESS) {
+				$this->_fieldCustomLabels[onOfficeSDK::MODULE_ADDRESS][$fieldsByFormId['fieldname']] = $query[0]->value;
+			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_SEARCHCRITERIA) {
+				$this->_fieldCustomLabels[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldsByFormId['fieldname']] = $query[0]->value;
+			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ESTATE) {
+				$this->_fieldCustomLabels[onOfficeSDK::MODULE_ESTATE][$fieldsByFormId['fieldname']] = $query[0]->value;
+			} else {
+				$this->_fieldCustomLabels[''][$fieldsByFormId['fieldname']] = $query[0]->value;
+			}
 		}
-		return $pField;
 	}
-
 
 	/**
 	 *
@@ -68,27 +90,29 @@ class FieldModuleCollectionDecoratorCustomLabelForm
 	public function getAllFields(): array
 	{
 		$fields = parent::getAllFields();
-
-		foreach ($fields as $pField) {
-			$module = $pField->getModule();
-			$name = $pField->getName();
+		$cloneFields = array();
+		foreach ($fields as $key => $field) {
+			$cloneFields[$key] = clone $field;
+			$module = $cloneFields[$key]->getModule();
+			$name = $cloneFields[$key]->getName();
 			$label = $this->_fieldCustomLabels[$module][$name] ?? null;
 
 			if ($label !== null) {
-				$pField->setLabel(__($label, 'onoffice-for-wp-websites'));
+				$cloneFields[$key]->setLabel(__($label, 'onoffice-for-wp-websites'));
 			}
 		}
-		return $fields;
+		return $cloneFields;
 	}
 
 	/**
-	 *
-	 * @param array $fieldCustomLabels
+	 * @return Container
+	 * @throws \Exception
 	 */
-
-	public function setFieldCustomLabel(array $fieldCustomLabels)
+	private function buildContainer(): Container
 	{
-		$this->_fieldCustomLabels = $fieldCustomLabels;
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		return $pContainerBuilder->build();
 	}
 
 }

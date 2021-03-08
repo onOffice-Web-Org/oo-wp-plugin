@@ -23,15 +23,74 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Field\CustomLabel;
 
+use onOffice\WPlugin\Types\Field;
 
 /**
  *
  */
 class CustomLabelModelField
-	extends CustomLabelModelBase
 {
+	/** @var Field */
+	private $_pField = null;
+
+	/** @var int */
+	private $_formId = 0;
+
+	/** @var int */
+	private $_customsLabelsId = 0;
+
 	/** @var array */
 	private $_valuesByLocale = [];
+
+
+	/**
+	 *
+	 * @param int $formId
+	 * @param Field $pField
+	 *
+	 */
+
+	public function __construct(int $formId, Field $pField)
+	{
+		$this->_pField = $pField;
+		$this->_formId = $formId;
+	}
+
+
+	/**
+	 *
+	 * @return Field
+	 *
+	 */
+
+	public function getField(): Field
+	{
+		return $this->_pField;
+	}
+
+
+	/**
+	 *
+	 * @return int
+	 *
+	 */
+
+	public function getFormId(): int
+	{
+		return $this->_formId;
+	}
+
+
+	/**
+	 * @param int $customsLabelsId
+	 * @return CustomLabelModelField
+	 */
+	public function withCustomLabelsId(int $customsLabelsId): self
+	{
+		$pClone = clone $this;
+		$pClone->_customsLabelsId = $customsLabelsId;
+		return $pClone;
+	}
 
 
 	/**

@@ -36,7 +36,6 @@ use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
-use onOffice\WPlugin\Field\CustomLabel\ModelToOutputConverter\CustomLabelModelToOutputConverter;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\Field\UnknownFieldException;

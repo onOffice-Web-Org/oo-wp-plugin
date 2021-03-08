@@ -31,8 +31,8 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionToContentFieldLabelArrayConverter;
 use onOffice\WPlugin\Field\CustomLabel\CustomLabelDelete;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
 use onOffice\WPlugin\Field\CustomLabel\Exception\CustomLabelDeleteException;
-use onOffice\WPlugin\Field\CustomLabel\ModelToOutputConverter\CustomLabelModelToOutputConverter;
 use onOffice\WPlugin\Field\CustomLabel\ModelToOutputConverter\CustomLabelRowSaver;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueDelete;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
@@ -344,17 +344,29 @@ abstract class AdminPageFormSettingsBase
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws UnknownFieldException
 	 */
 	private function readCustomLabels(): array
 	{
 		$result = [];
-		/** @var CustomLabelModelToOutputConverter $pCustomLabelConverter */
-		$pCustomLabelConverter = $this->getContainer()->get(CustomLabelModelToOutputConverter::class);
+		/** @var CustomLabelRead $pCustomLabelRead*/
+		$pCustomLabelRead = $this->getContainer()->get(CustomLabelRead::class);
+		$pLanguage = $this->getContainer()->get(Language::class);
 
 		foreach ($this->buildFieldsCollectionForCurrentForm()->getAllFields() as $pField) {
-			$result[$pField->getName()] = $pCustomLabelConverter->getConvertedField
+			$pCustomLabelModel = $pCustomLabelRead->readCustomLabelsField
 			((int)$this->getListViewId(), $pField);
+
+			$valuesByLocale = $pCustomLabelModel->getValuesByLocale();
+			$currentLocale = $pLanguage->getLocale();
+
+			if (isset($valuesByLocale[$currentLocale])) {
+				$valuesByLocale['native'] = $valuesByLocale[$currentLocale];
+				unset($valuesByLocale[$currentLocale]);
+			}
+			$result[$pField->getName()] = $valuesByLocale;
 		}
+
 		return $result;
 	}
 

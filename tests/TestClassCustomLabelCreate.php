@@ -105,6 +105,5 @@ class TestClassCustomLabelCreate
 		$pCustomLabels->addValueByLocale('fr_BE', 'Custom Label BE');
 		$resultId = $this->_pSubject->createForField($pCustomLabels);
 		$this->assertEquals(121, $resultId);
-		$this->assertEquals(121, $pCustomLabels->getCustomsLabelsId());
 	}
 }

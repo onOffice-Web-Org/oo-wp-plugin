@@ -77,18 +77,18 @@ class CustomLabelCreate
 
 	/**
 	 *
-	 * @param CustomLabelModelBase $pDataModel
+	 * @param CustomLabelModelField $pDataModel
 	 * @return int
 	 *
 	 * @throws RecordManagerInsertException
 	 *
 	 */
 
-	private function createBase(CustomLabelModelBase $pDataModel): int
+	private function createBase(CustomLabelModelField $pDataModel): int
 	{
 		$field = $pDataModel->getField()->getName();
 		$customsLabelsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field);
-		$pDataModel->setCustomsLabelsId($customsLabelsId);
+		$pDataModel->withCustomLabelsId($customsLabelsId);
 		return $customsLabelsId;
 	}
 

@@ -144,32 +144,7 @@ class FieldsCollectionBuilderShort
 
 	public function addCustomLabelFieldsFormFrontend(FieldsCollection $pFieldsCollection, $formName): self
 	{
-		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
-		$results = $recordManagerReadForm->getRowByName($formName);
-		$fieldsByFormIds = $recordManagerReadForm->readFieldsByFormId(intval($results['form_id']));
-		$fieldCustomLabels = [];
-		foreach ($fieldsByFormIds as $fieldsByFormId) {
-			$lang = $this->_pContainer->get(Language::class);
-			$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
-			$query = $customLabelRead->readCustomLabelByFormIdAndFieldName(intval($results['form_id']),
-				$fieldsByFormId['fieldname'],
-				$lang->getLocale());
-			if (empty($query[0]->value)) {
-				continue;
-			}
-			if ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ADDRESS) {
-				$fieldCustomLabels[onOfficeSDK::MODULE_ADDRESS][$fieldsByFormId['fieldname']] = $query[0]->value;
-			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_SEARCHCRITERIA) {
-				$fieldCustomLabels[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldsByFormId['fieldname']] = $query[0]->value;
-			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ESTATE) {
-				$fieldCustomLabels[onOfficeSDK::MODULE_ESTATE][$fieldsByFormId['fieldname']] = $query[0]->value;
-			} else {
-				$fieldCustomLabels[''][$fieldsByFormId['fieldname']] = $query[0]->value;
-			}
-		}
-
-		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorCustomLabelForm($pFieldsCollection);
-		$pFieldsCollectionTmp->setFieldCustomLabel($fieldCustomLabels);
+		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorCustomLabelForm($pFieldsCollection, $formName);
 		$pFieldsCollection->merge($pFieldsCollectionTmp);
 		$pFieldCategoryConverterGeoPos = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoFrontend::class);
 		$pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
