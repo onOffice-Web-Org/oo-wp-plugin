@@ -65,33 +65,13 @@ class CustomLabelCreate
 
 	public function createForField(CustomLabelModelField $pDataModel): int
 	{
-		$customsLabelsId = $this->createBase($pDataModel);
-
+		$field = $pDataModel->getField()->getName();
+		$customsLabelsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field);
 		foreach ($pDataModel->getValuesByLocale() as $locale => $value) {
 			$this->writeDatabaseValueSingle($customsLabelsId, $value, $locale);
 		}
-
 		return $customsLabelsId;
 	}
-
-
-	/**
-	 *
-	 * @param CustomLabelModelField $pDataModel
-	 * @return int
-	 *
-	 * @throws RecordManagerInsertException
-	 *
-	 */
-
-	private function createBase(CustomLabelModelField $pDataModel): int
-	{
-		$field = $pDataModel->getField()->getName();
-		$customsLabelsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field);
-		$pDataModel->withCustomLabelsId($customsLabelsId);
-		return $customsLabelsId;
-	}
-
 
 	/**
 	 *

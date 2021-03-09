@@ -82,18 +82,6 @@ class CustomLabelModelField
 
 
 	/**
-	 * @param int $customsLabelsId
-	 * @return CustomLabelModelField
-	 */
-	public function withCustomLabelsId(int $customsLabelsId): self
-	{
-		$pClone = clone $this;
-		$pClone->_customsLabelsId = $customsLabelsId;
-		return $pClone;
-	}
-
-
-	/**
 	 *
 	 * @param string $locale
 	 * @param string $value

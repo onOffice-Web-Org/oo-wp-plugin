@@ -98,7 +98,7 @@ class FieldModuleCollectionDecoratorCustomLabelForm
 			$label = $this->_fieldCustomLabels[$module][$name] ?? null;
 
 			if ($label !== null) {
-				$cloneFields[$key]->setLabel(__($label, 'onoffice-for-wp-websites'));
+				$cloneFields[$key]->setLabel($label);
 			}
 		}
 		return $cloneFields;
@@ -113,6 +113,17 @@ class FieldModuleCollectionDecoratorCustomLabelForm
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		return $pContainerBuilder->build();
+	}
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getFieldCustomLabels(): array
+	{
+		return $this->_fieldCustomLabels;
 	}
 
 }

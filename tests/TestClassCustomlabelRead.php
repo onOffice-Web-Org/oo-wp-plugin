@@ -100,17 +100,17 @@ class TestClassCustomLabelRead
 
 		$rows = [
 			(object)[
-				'defaults_id' => 1337,
+				'customs_labels_id' => 1337,
 				'locale' => 'de_DE',
 				'value' => 'Deutschland',
 			],
 			(object)[
-				'defaults_id' => 1338,
+				'customs_labels_id' => 1338,
 				'locale' => 'en_US',
 				'value' => 'United States',
 			],
 			(object)[
-				'defaults_id' => 1339,
+				'customs_labels_id' => 1339,
 				'locale' => 'fr_BE',
 				'value' => 'Belgique',
 			],
