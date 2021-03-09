@@ -99,6 +99,12 @@ class TestClassFieldModuleCollectionDecoratorCustomLabel
 		foreach ($pFieldsCollectionByFormIds as $pFieldsCollectionByFormId) {
 			$this->_pFieldModuleCollection->addField(new Field($pFieldsCollectionByFormId['fieldname'],
 				onOfficeSDK::MODULE_ADDRESS));
+			$this->_pFieldModuleCollection->addField(new Field($pFieldsCollectionByFormId['fieldname'],
+				onOfficeSDK::MODULE_SEARCHCRITERIA));
+			$this->_pFieldModuleCollection->addField(new Field($pFieldsCollectionByFormId['fieldname'],
+				onOfficeSDK::MODULE_ESTATE));
+			$this->_pFieldModuleCollection->addField(new Field($pFieldsCollectionByFormId['fieldname'],
+				''));
 			$this->_pWPDBMock->method('get_results')->will($this->returnValue($rows));
 			$this->_pCustomLabelRead = new CustomLabelRead($this->_pWPDBMock);
 			$this->_pCustomLabelRead->readCustomLabelByFormIdAndFieldName(1, $pFieldsCollectionByFormId['fieldname'],
@@ -145,13 +151,46 @@ class TestClassFieldModuleCollectionDecoratorCustomLabel
 				'form_fieldconfig_id' => '1',
 				'form_id' => $formId,
 				'order' => '1',
-				'fieldname' => 'Vorname',
-				'fieldlabel' => 'First Name',
+				'fieldname' => 'Test 1',
+				'fieldlabel' => 'Field label 1',
 				'module' => onOfficeSDK::MODULE_ADDRESS,
 				'individual_fieldname' => '0',
 				'availableOptions' => '0',
 				'required' => '1',
-			]
+			],
+			[
+				'form_fieldconfig_id' => '1',
+				'form_id' => $formId,
+				'order' => '1',
+				'fieldname' => 'Test 3',
+				'fieldlabel' => 'Field label 3',
+				'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+				'individual_fieldname' => '0',
+				'availableOptions' => '0',
+				'required' => '1',
+			],
+			[
+				'form_fieldconfig_id' => '1',
+				'form_id' => $formId,
+				'order' => '1',
+				'fieldname' => 'Test 3',
+				'fieldlabel' => 'Field label 3',
+				'module' => onOfficeSDK::MODULE_ESTATE,
+				'individual_fieldname' => '0',
+				'availableOptions' => '0',
+				'required' => '1',
+			],
+			[
+				'form_fieldconfig_id' => '1',
+				'form_id' => $formId,
+				'order' => '1',
+				'fieldname' => 'Test 4',
+				'fieldlabel' => 'Field label 4',
+				'module' => '',
+				'individual_fieldname' => '0',
+				'availableOptions' => '0',
+				'required' => '1',
+			],
 		];
 
 		return $fields;
