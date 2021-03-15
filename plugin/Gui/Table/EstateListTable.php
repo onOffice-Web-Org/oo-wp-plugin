@@ -144,7 +144,6 @@ class EstateListTable extends ListTable
 		$this->fillData();
 	}
 
-
 	/**
 	 *
 	 * @param object $pItem
@@ -265,6 +264,9 @@ class EstateListTable extends ListTable
 
 		$actions = [];
 		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit').'</a>';
+		$actions['duplicate'] = "<a class='button-duplicate' href='"
+			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-estates&action=bulk_duplicate&listVewId=' . $pItem->ID, 'bulk-estatelists'))
+			. "'>" . esc_html__('Duplicate') . "</a>";
 		$actions['delete'] = "<a class='submitdelete' href='"
 			. esc_attr(wp_nonce_url(admin_url('admin.php').'?page=onoffice-estates&action=bulk_delete&estatelist[]='.$pItem->ID, 'bulk-estatelists'))
 			."' onclick=\"if ( confirm( '"
