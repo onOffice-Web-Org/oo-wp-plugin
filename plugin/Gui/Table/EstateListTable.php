@@ -265,8 +265,14 @@ class EstateListTable extends ListTable
 		$actions = [];
 		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit').'</a>';
 		$actions['duplicate'] = "<a class='button-duplicate' href='"
-			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-estates&action=bulk_duplicate&listVewId=' . $pItem->ID, 'bulk-estatelists'))
-			. "'>" . esc_html__('Duplicate') . "</a>";
+			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-estates&action=bulk_duplicate&listVewId=' . $pItem->ID,
+				'bulk-estatelists'))
+			. "' onclick=\"if ( confirm( '"
+			. esc_js(sprintf(
+			/* translators: %s is the name of the list view. */
+				__("You are about to duplicate the listview '%s'\n  'Cancel' to stop, 'OK' to duplicate.",
+					'onoffice-for-wp-websites'), $pItem->name))
+			. "' ) ) { return true;}return false;\">" . esc_html__('Duplicate','onoffice-for-wp-websites') . "</a>";
 		$actions['delete'] = "<a class='submitdelete' href='"
 			. esc_attr(wp_nonce_url(admin_url('admin.php').'?page=onoffice-estates&action=bulk_delete&estatelist[]='.$pItem->ID, 'bulk-estatelists'))
 			."' onclick=\"if ( confirm( '"
