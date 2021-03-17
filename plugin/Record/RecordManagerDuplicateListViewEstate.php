@@ -23,9 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Nette\DI\Extensions\DIExtension;
 use wpdb;
 
 
@@ -37,16 +39,25 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 	/** @var wpdb */
 	private $_pWPDB;
 
+	/** @var Container */
+	private $_pContainer = null;
 
 	/**
 	 *
 	 * @param wpdb $pWPDB
-	 *
+	 * @param Container $_pContainer
+	 * @throws \Exception
 	 */
 
-	public function __construct(wpdb $pWPDB)
+	public function __construct(wpdb $pWPDB, Container $_pContainer = null)
 	{
 		$this->_pWPDB = $pWPDB;
+		if ($_pContainer === null) {
+			$pDIContainerBuilder = new ContainerBuilder;
+			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			$_pContainer = $pDIContainerBuilder->build();
+		}
+		$this->_pContainer = $_pContainer;
 	}
 
 	/**
@@ -58,13 +69,10 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 
 	public function duplicateByIds(int $id)
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pDI = $pContainerBuilder->build();
 		$prefix = $this->_pWPDB->prefix;
 
 		/* @var $pRecordManagerReadListViewEstate RecordManagerReadListViewEstate */
-		$pRecordManagerReadListViewEstate = $pDI->get(RecordManagerReadListViewEstate::class);
+		$pRecordManagerReadListViewEstate = $this->_pContainer->get(RecordManagerReadListViewEstate::class);
 		$listViewRoot = $pRecordManagerReadListViewEstate->getRowById($id);
 
 		if (isset($listViewRoot) && $listViewRoot != null) {
@@ -96,19 +104,20 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 				$newListView[$key] = $value;
 			}
 			$newListView = array_merge($newNameData, $newListView);
+
 			$this->_pWPDB->insert(
 				$tableListViews,
 				$newListView
 			);
-
 			$duplicateListViewId = $this->_pWPDB->insert_id;
+
 			if ($duplicateListViewId !== 0) {
 				//duplicate data related oo_plugin_fieldconfig table
 				$tableFieldConfig = $prefix . self::TABLENAME_FIELDCONFIG;
 				foreach ($listViewRoot['fields'] as $field) {
 					$selectFieldConfigByIdAndFieldName = "SELECT * FROM {$tableFieldConfig} WHERE listview_id='{$id}' AND fieldname ='{$field}'";
 					$fieldConfigRows = $this->_pWPDB->get_results($selectFieldConfigByIdAndFieldName);
-					if (count($fieldConfigRows) !== 0) {
+					if (!empty($fieldConfigRows) && (count($fieldConfigRows) !== 0)) {
 						foreach ($fieldConfigRows as $fieldConfigRow) {
 							$newFieldConfigRow = [];
 							$newFieldConfigRow['listview_id'] = $duplicateListViewId;
@@ -126,7 +135,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 				$tablePictureTypes = $prefix . self::TABLENAME_PICTURETYPES;
 				$selectPictureTypesById = "SELECT * FROM {$tablePictureTypes} WHERE listview_id='{$id}'";
 				$pictureTypeRows = $this->_pWPDB->get_results($selectPictureTypesById);
-				if (count($pictureTypeRows) !== 0) {
+				if (!empty($pictureTypeRows) && (count($pictureTypeRows) !== 0)) {
 					foreach ($pictureTypeRows as $pictureTypeRow) {
 						$newPictureTypeRow = [];
 						$newPictureTypeRow['listview_id'] = $duplicateListViewId;
@@ -139,7 +148,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 				$tableSortByUserValues = $prefix . self::TABLENAME_SORTBYUSERVALUES;
 				$selectSortByUserValuesById = "SELECT * FROM {$tableSortByUserValues} WHERE listview_id='{$id}'";
 				$sortByUserValuesRows = $this->_pWPDB->get_results($selectSortByUserValuesById);
-				if (count($sortByUserValuesRows) !== 0) {
+				if (!empty($sortByUserValuesRows) && (count($sortByUserValuesRows) !== 0)) {
 					foreach ($sortByUserValuesRows as $sortByUserValuesRow) {
 						$newSortByUserValuesRow = [];
 						$newSortByUserValuesRow['listview_id'] = $duplicateListViewId;
