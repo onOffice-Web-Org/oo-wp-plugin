@@ -146,53 +146,6 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelDoNotShowArchived
-	 */
-	public function testCreateInputModelDoNotShowArchived()
-	{
-		$row = self::VALUES_BY_ROW;
-
-		$pWPOptionsWrapper = new WPOptionWrapperTest();
-		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
-		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
-
-
-		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getValue'])
-			->getMock();
-		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
-		$pInstance->method('getValue')->willReturn('1');
-
-		$pInputModelDB = $pInstance->createInputModelDoNotShowArchived();
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
-	}
-
-	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelDoNotShowReference
-	 */
-	public function testCreateInputModelDoNotShowReference()
-	{
-		$row = self::VALUES_BY_ROW;
-
-		$pWPOptionsWrapper = new WPOptionWrapperTest();
-		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
-		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
-
-
-		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getValue'])
-			->getMock();
-		$pInstance->generate('test');
-		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
-
-		$pInputModelDB = $pInstance->createInputModelDoNotShowReference();
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
-	}
-
-	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelSameEstatePostalCode
 	 */
 	public function testCreateInputModelSameEstatePostalCode()

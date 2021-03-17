@@ -188,8 +188,6 @@ class AdminPageSimilarEstates
 		$pInputModelSimilarEstatesEstateKind = $pFormModelBuilder->createInputModelSimilarEstateKind();
 		$pInputModelSimilarEstatesMarketingMethod = $pFormModelBuilder->createInputModelSimilarEstateMarketingMethod();
 		$pInputModelSimilarEstatesSamePostalCode = $pFormModelBuilder->createInputModelSameEstatePostalCode();
-		$pInputModelSimilarEstatesDoNotShowArchived = $pFormModelBuilder->createInputModelDoNotShowArchived();
-		$pInputModelSimilarEstatesDoNotShowReference = $pFormModelBuilder->createInputModelDoNotShowReference();
 		$pInputModelSimilarEstatesRadius = $pFormModelBuilder->createInputModelSameEstateRadius();
 		$pInputModelSimilarEstatesAmount = $pFormModelBuilder->createInputModelSameEstateAmount();
 		$pInputModelSimilarEstatesTemplate = $pFormModelBuilder->createInputModelTemplate
@@ -204,8 +202,6 @@ class AdminPageSimilarEstates
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesEstateKind);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesMarketingMethod);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesSamePostalCode);
-		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesDoNotShowArchived);
-		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesDoNotShowReference);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesRadius);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesAmount);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesTemplate);
