@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.9.0 =
+
+**New**
+
+* The similar estates view has its own tab in the back-end. The fields to be shown in the similar estates view can be configured and are no longer hard-coded.
+
 = 2.8.3 =
 
 **Changes**

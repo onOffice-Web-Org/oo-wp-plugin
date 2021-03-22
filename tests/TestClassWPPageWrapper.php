@@ -47,7 +47,7 @@ class TestClassWPPageWrapper
 		'post_parent' => 0,
 		'post_title' => 'onOffice Test Post',
 		'post_content' => 'Hello. This is a test.',
-		'post_status' => 'published',
+		'post_status' => 'publish',
 		'post_date' => '2019-05-09 13:37:37',
 		'post_type' => 'page',
 	];
@@ -68,7 +68,7 @@ class TestClassWPPageWrapper
 			'post_name' => 'test_parent_post',
 			'post_title' => 'My Test Post',
 			'post_type' => 'page',
-			'post_status' => 'published',
+			'post_status' => 'publish',
 			'post_date' => '2016-05-01 13:37:37',
 		]);
 
