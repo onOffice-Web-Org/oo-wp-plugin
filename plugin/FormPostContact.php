@@ -50,6 +50,8 @@ class FormPostContact
 	/**	 */
 	const PORTALFILTER_IDENTIFIER = '[onOffice-WP]';
 
+	const FIELD_EMAIL = 'Email';
+
 	/** @var FormPostContactConfiguration */
 	private $_pFormPostContactConfiguration = null;
 
@@ -152,24 +154,26 @@ class FormPostContact
 		}
 	}
 
+
 	/**
-	 *
 	 * @param FormData $pFormData
 	 * @param string $recipient
-	 * @param string $subject
+	 * @param null $subject
 	 * @throws ApiClientException
 	 * @throws DependencyException
+	 * @throws Field\UnknownFieldException
 	 * @throws NotFoundException
 	 */
-
 	private function sendContactRequest(FormData $pFormData, string $recipient = '', $subject = null)
 	{
 		$values = $pFormData->getValues();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
+		$estateId = $values['Id'] ?? $pWPQuery->get('estate_id', null);
+
 		$requestParams = [
 			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
-			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
+			'estateId' => $estateId,
 			'message' => $values['message'] ?? null,
 			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
 			'referrer' => $this->_pFormPostContactConfiguration->getReferrer(),
@@ -178,18 +182,96 @@ class FormPostContact
 			'estateurl' => home_url($pWPWrapper->getRequest()),
 		];
 
-		if ($recipient !== '') {
-			$requestParams['recipient'] = $recipient;
+		$listEmailRecipient = [];
+
+		$estateAddressOwner = $this->getEstateAddressOwner($estateId);
+
+		if (!empty($estateAddressOwner[$estateId])) {
+			foreach ($estateAddressOwner[$estateId] as $addressId) {
+				if (!empty($addressId)) {
+					$addressDetailById = $this->getAddressDetailById($addressId);
+					if (!empty($addressDetailById)) {
+						$emailAddressOwner = $addressDetailById[self::FIELD_EMAIL];
+						$listEmailRecipient[] = $emailAddressOwner;
+					}
+				}
+			}
+		}
+
+		if (empty($listEmailRecipient) && $recipient !== '') {
+			$listEmailRecipient[] = $recipient;
 		}
 
 		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
-		$pAPIClientAction->setParameters($requestParams);
-		$pAPIClientAction->addRequestToQueue()->sendRequests();
+		($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
+		foreach ($listEmailRecipient as $emailRecipient) {
+			$requestParams['recipient'] = $emailRecipient;
+			$pAPIClientAction->setParameters($requestParams);
+			$pAPIClientAction = $pAPIClientAction->addRequestToQueue();
+		}
+		$pAPIClientAction->sendRequests();
+
 
 		if (!$pAPIClientAction->getResultStatus()) {
 			throw new ApiClientException($pAPIClientAction);
 		}
+	}
+
+	/**
+	 * @param int $estateIds
+	 * @return array
+	 * @throws ApiClientException
+	 */
+	public function getEstateAddressOwner(int $estateIds)
+	{
+		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
+
+		$parameters = [
+			'parentids' => [$estateIds],
+			'relationtype' => onOfficeSDK::RELATION_TYPE_ESTATE_ADDRESS_OWNER,
+		];
+		$pAPIClientAction = new APIClientActionGeneric
+		($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'idsfromrelation');
+		$pAPIClientAction->setParameters($parameters);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		$resultRecords = $pAPIClientAction->getResultRecords();
+
+		if (!$pAPIClientAction->getResultStatus()) {
+			throw new ApiClientException($pAPIClientAction);
+		}
+
+		return $resultRecords[0]['elements'];
+	}
+
+	/**
+	 * @param int $addressId
+	 * @return array
+	 * @throws ApiClientException
+	 */
+	public function getAddressDetailById(int $addressId)
+	{
+		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
+
+		$parameters = [
+			'data' => [self::FIELD_EMAIL],
+			'listlimit' => 1,
+			'listoffset' => 0,
+			'formatoutput' => true
+		];
+		$pAPIClientAction = new APIClientActionGeneric
+		($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, onOfficeSDK::MODULE_ADDRESS);
+		$pAPIClientAction->setParameters($parameters);
+		$pAPIClientAction->setResourceId($addressId);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		$resultRecords = $pAPIClientAction->getResultRecords();
+
+		if (!$pAPIClientAction->getResultStatus()) {
+			throw new ApiClientException($pAPIClientAction);
+		}
+
+		return $resultRecords[0]['elements'];
 	}
 }

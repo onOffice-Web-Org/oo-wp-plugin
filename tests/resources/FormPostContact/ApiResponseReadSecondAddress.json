@@ -1,0 +1,26 @@
+{
+	"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:read",
+	"resourceid": "",
+	"resourcetype": "address",
+	"cacheable": true,
+	"identifier": "",
+	"data": {
+		"meta": {
+			"cntabsolute": null
+		},
+		"records": [
+			{
+				"id": 52,
+				"type": "address",
+				"elements": {
+					"id": 52,
+					"Email": "test@my-onoffice.com"
+				}
+			}
+		]
+	},
+	"status": {
+		"errorcode": 0,
+		"message": "OK"
+	}
+}

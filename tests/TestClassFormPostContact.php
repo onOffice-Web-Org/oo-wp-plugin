@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use DI\Container;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form;
@@ -164,10 +165,91 @@ class TestClassFormPostContact
 
 		$this->_pFormPostContact = $this->_pContainer->get(FormPostContact::class);
 
+		$this->configureSDKWrapperForAddressOwner();
 		$this->configureSDKWrapperForContactAddress();
 		$this->configureSDKWrapperForCreateAddress();
 		$this->configureSDKWrapperForCreateAddressWithDuplicateCheck();
 		$this->configureSDKWrapperForFieldsAddressEstate();
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperForAddressOwner()
+	{
+		$parameters = [
+			'parentids' => [1337],
+			'relationtype' => 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:owner'
+		];
+
+		$responseJson = file_get_contents(__DIR__ . '/resources/FormPostContact/ApiResponseGetIdsFromRelation.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', $parameters, null, $response);
+	}
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperForTwoAddressOwner()
+	{
+		$parameters = [
+			'parentids' => [1337],
+			'relationtype' => 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:owner'
+		];
+
+		$responseJson = file_get_contents(__DIR__ . '/resources/FormPostContact/ApiResponseGetIdsFromRelationTwoAddress.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', $parameters, null, $response);
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperForReadAddress()
+	{
+		$parameters = array(
+			'data' => array('Email'),
+			'listlimit' => 1,
+			'listoffset' => 0,
+			'formatoutput' => true
+		);
+
+		$responseJson = file_get_contents
+		(__DIR__ . '/resources/FormPostContact/ApiResponseReadAddress.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'address', '50', $parameters, null, $response);
+	}
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperForReadSecondAddress()
+	{
+		$parameters = array(
+			'data' => array('Email'),
+			'listlimit' => 1,
+			'listoffset' => 0,
+			'formatoutput' => true
+		);
+
+		$responseJson = file_get_contents
+		(__DIR__ . '/resources/FormPostContact/ApiResponseReadSecondAddress.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'address', '52', $parameters, null, $response);
 	}
 
 
@@ -187,7 +269,7 @@ class TestClassFormPostContact
 				'Telefon1' => '0815/2345677',
 				'AGB_akzeptiert' => true,
 			],
-			'estateid' => 1337,
+			'estateId' => 1337,
 			'message' => null,
 			'subject' => '¡A new Contact!'.' '.FormPostContact::PORTALFILTER_IDENTIFIER,
 			'referrer' => '/test/page',
@@ -358,6 +440,25 @@ class TestClassFormPostContact
 		$this->_pContainer->get(Form\FormPostContactConfiguration::class)->setNewsletterAccepted(true);
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testSendTwoAddress()
+	{
+		$this->configureSDKWrapperForReadAddress();
+		$this->configureSDKWrapperForReadSecondAddress();
+		$this->configureSDKWrapperForTwoAddressOwner();
+		$_POST = $this->getPostVariables();
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
