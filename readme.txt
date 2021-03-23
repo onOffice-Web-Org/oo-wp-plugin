@@ -73,6 +73,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.10.0 =
+
+**Changes**
+
+* select2 is being used for select fields in the front-end. A current copy of the shipped fields.php needs to be copied into the templates directory for this change to take effect.
+
+
 = 2.9.0 =
 
 **New**
