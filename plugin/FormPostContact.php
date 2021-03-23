@@ -158,7 +158,7 @@ class FormPostContact
 	/**
 	 * @param FormData $pFormData
 	 * @param string $recipient
-	 * @param null $subject
+	 * @param string $subject
 	 * @throws ApiClientException
 	 * @throws DependencyException
 	 * @throws Field\UnknownFieldException
