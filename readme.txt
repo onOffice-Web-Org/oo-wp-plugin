@@ -73,6 +73,25 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.10.0 =
+
+**Changes**
+
+* select2 is being used for select fields in the front-end. A current copy of the shipped fields.php needs to be copied into the templates directory for this change to take effect.
+
+
+= 2.9.0 =
+
+**New**
+
+* The similar estates view has its own tab in the back-end. The fields to be shown in the similar estates view can be configured and are no longer hard-coded.
+
+= 2.8.3 =
+
+**Changes**
+
+* Reference estates, reserved and sold ones are not being shown in the similar estates view anymore
+
 = 2.8.2 =
 
 **Fixes**

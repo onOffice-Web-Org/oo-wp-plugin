@@ -45,6 +45,7 @@ class EstateViewSimilarEstates
 	/** @var FilterConfigurationSimilarEstates */
 	private $_pFilterConfiguration = null;
 
+
 	/** @var EstateViewSimilarEstatesEnvironment */
 	private $_pEnvironment = null;
 

@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\WPlugin\WP\UnknownPageException;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use WP_UnitTestCase;
 
@@ -46,7 +47,7 @@ class TestClassWPPageWrapper
 		'post_parent' => 0,
 		'post_title' => 'onOffice Test Post',
 		'post_content' => 'Hello. This is a test.',
-		'post_status' => 'published',
+		'post_status' => 'publish',
 		'post_date' => '2019-05-09 13:37:37',
 		'post_type' => 'page',
 	];
@@ -56,21 +57,18 @@ class TestClassWPPageWrapper
 
 
 	/**
-	 *
 	 * @before
-	 *
 	 */
-
 	public function prepare()
 	{
+		$this->set_permalink_structure('/%year%/%monthnum%/%day%/%postname%/');
 		$this->_pSubject = new WPPageWrapper();
 		// set this even though the permalink for pages always is %postname%
-		$this->set_permalink_structure('/%year%/%monthnum%/%day%/%postname%/');
 		$this->_ancestorId = wp_insert_post([
 			'post_name' => 'test_parent_post',
 			'post_title' => 'My Test Post',
 			'post_type' => 'page',
-			'post_status' => 'published',
+			'post_status' => 'publish',
 			'post_date' => '2016-05-01 13:37:37',
 		]);
 
@@ -81,11 +79,6 @@ class TestClassWPPageWrapper
 		$this->assertGreaterThan(0, $this->_postId);
 	}
 
-
-	/**
-	 *
-	 */
-
 	public function testGetPageByPath()
 	{
 		$this->assertEquals($this->_ancestorId, $this->_pSubject->getPageByPath('test_parent_post')->ID);
@@ -93,15 +86,9 @@ class TestClassWPPageWrapper
 			('test_parent_post/onoffice-test-post')->ID);
 	}
 
-
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\WP\UnknownPageException
-	 *
-	 */
-
 	public function testGetPageByPathUnknown()
 	{
+		$this->expectException(UnknownPageException::class);
 		$this->_pSubject->getPageByPath('unknown-page');
 	}
 

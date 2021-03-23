@@ -26,10 +26,15 @@ namespace onOffice\tests;
 use Closure;
 use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\ArrayContainerEscape;
+use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -200,8 +205,8 @@ class TestClassEstateList
 			->getMock();
 		$pFieldnamesMock->method('getFieldLabel')->with(
 				$this->equalTo('testfield'), $this->equalTo(onOfficeSDK::MODULE_ESTATE))
-			->will($this->returnValue('Test Field'));
-		$this->_pEnvironment->method('getFieldnames')->will($this->returnValue($pFieldnamesMock));
+			->willReturn('Test Field');
+		$this->_pEnvironment->method('getFieldnames')->willReturn($pFieldnamesMock);
 		$this->assertEquals('Test Field', $this->_pEstateList->getFieldLabel('testfield'));
 	}
 
@@ -212,31 +217,34 @@ class TestClassEstateList
 
 	public function testGetEstateLink()
 	{
-		global $wp_rewrite;
+		global $wp_filter;
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator(); // jump to the first estate
 		$pDataDetailView = new DataDetailView();
 		$pDataDetailView->setPageId(0);
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
+			->disableOriginalConstructor()
 			->setMethods(['getDetailView'])
 			->getMock();
-		$pDataDetailViewHandler->method('getDetailView')->will($this->returnValue($pDataDetailView));
-		$this->_pContainer->set(DataDetailViewHandler::class, $pDataDetailViewHandler);
+		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
+		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
+
 		$this->assertEquals('#', $this->_pEstateList->getEstateLink());
 
-		$wp_rewrite = new WP_Rewrite();
-		$wp_rewrite->permalink_structure = '/%postname%/';
+		$this->set_permalink_structure('/%postname%/');
+		$savePostBackup = $wp_filter['save_post'];
+		$wp_filter['save_post'] = new \WP_Hook;
 		$pWPPost = self::factory()->post->create_and_get([
 			'post_author' => 1,
 			'post_content' => '[oo_estate view="detail"]',
 			'post_title' => 'Details',
 			'post_type' => 'page',
 		]);
+		$wp_filter['save_post'] = $savePostBackup;
 		$pDataDetailView->setPageId($pWPPost->ID);
 
-
 		// slash missing at the end, which WP inserts in production
-		$this->assertEquals('http://example.org/details15', $this->_pEstateList->getEstateLink());
+		$this->assertEquals('http://example.org/details/15', $this->_pEstateList->getEstateLink());
 	}
 
 
@@ -268,7 +276,7 @@ class TestClassEstateList
 	{
 		$pEstatePicturesMock = new EstateFiles;
 		$this->_pEnvironment->method('getEstateFiles')
-			->will($this->returnValue($pEstatePicturesMock));
+			->willReturn($pEstatePicturesMock);
 
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
@@ -341,8 +349,12 @@ class TestClassEstateList
 	/**
 	 * @param string $methodName
 	 * @param array $expectedResults
-	 * @throws UnknownViewException
 	 * @throws APIEmptyResultException
+	 * @throws UnknownViewException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws HttpFetchNoResultException
+	 * @throws ApiClientException
 	 */
 	private function doTestGetEstatePictureMethodGeneric(string $methodName, array $expectedResults)
 	{
@@ -390,7 +402,7 @@ class TestClassEstateList
 			->setMethods(['__construct', 'getAddressById', 'loadAdressesById'])
 			->getMock();
 		$pAddressDataMock->expects($this->once())->method('loadAdressesById')->with([50, 52], ['Vorname', 'Name']);
-		$pAddressDataMock->method('getAddressById')->will($this->returnValueMap($valueMap));
+		$pAddressDataMock->method('getAddressById')->willReturnMap($valueMap);
 		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
@@ -574,11 +586,12 @@ class TestClassEstateList
 				->disableOriginalConstructor()
 				->getMock();
 		$pFieldsCollectionBuilderMock->method('addFieldsAddressEstate')
-			->will($this->returnCallback(function(FieldsCollection $pFieldsCollectionOut)
-				use ($pFieldsCollection, $pFieldsCollectionBuilderMock): FieldsCollectionBuilderShort {
-					$pFieldsCollectionOut->merge($pFieldsCollection);
-					return $pFieldsCollectionBuilderMock;
-				}));
+			->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
+			use ($pFieldsCollection, $pFieldsCollectionBuilderMock): FieldsCollectionBuilderShort
+			{
+				$pFieldsCollectionOut->merge($pFieldsCollection);
+				return $pFieldsCollectionBuilderMock;
+			});
 
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderMock);
 		$this->assertEquals($expectation, $this->_pEstateList->getVisibleFilterableFields());
@@ -718,6 +731,7 @@ class TestClassEstateList
 				'getFieldnames',
 				'getAddressList',
 				'getEstateUnitsByName',
+				'getDataDetailViewHandler',
 			])
 			->getMock();
 		$pDataListView = $this->getDataView();
