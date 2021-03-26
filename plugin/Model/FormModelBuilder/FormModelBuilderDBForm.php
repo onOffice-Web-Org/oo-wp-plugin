@@ -44,6 +44,7 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use function __;
+use function esc_html__;
 use function get_locale;
 use function get_option;
 use const ONOFFICE_DI_CONFIG_PATH;
@@ -270,6 +271,27 @@ class FormModelBuilderDBForm
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
 		$pInputModelFormRecipient->setPlaceholder(__('john.doe@example.com', 'onoffice-for-wp-websites'));
+
+		return $pInputModelFormRecipient;
+	}
+
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function createInputModelRecipientContactForm()
+	{
+		$labelRecipient = __('Fallback\'s E-Mail Address', 'onoffice-for-wp-websites');
+		$selectedRecipient = $this->getValue('recipient');
+
+		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create
+		(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
+		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelFormRecipient->setValue($selectedRecipient);
+		$pInputModelFormRecipient->setPlaceholder(__('john.doe@example.com', 'onoffice-for-wp-websites'));
+		$pInputModelFormRecipient->setHint(esc_html__('The recipient email address is the email address of the contact person that is stored in onOffice enterprise edition.
+		 	If it is not set, the contact request is sent to the fallback address.',
+			'onoffice-for-wp-websites'));
 
 		return $pInputModelFormRecipient;
 	}
