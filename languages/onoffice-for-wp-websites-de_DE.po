@@ -752,10 +752,8 @@ msgid "john.doe@example.com"
 msgstr "max.mustermann@beispiel.com"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:284
-#, fuzzy
-#| msgid "Recipient's E-Mail Address"
 msgid "Fallback's E-Mail Address"
-msgstr "E-Mail-Adresse des Empfängers"
+msgstr "Fallback-Adresse(optiona)"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:292
 msgid ""
