@@ -48,6 +48,9 @@ class FieldsCollectionToContentFieldLabelArrayConverter
 			$content = $pField->getCategory() ?: __('(unnamed category)', 'onoffice-for-wp-websites');
 
 			$categories []= $content;
+			if ($key === 'addressFakturaSeparator1' || $key === 'addressFakturaSeparator2') {
+				continue;
+			}
 			$result[$content][$key] = $pField->getLabel();
 		}
 
