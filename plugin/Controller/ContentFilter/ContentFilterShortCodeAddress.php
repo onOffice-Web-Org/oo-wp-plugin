@@ -137,6 +137,9 @@ class ContentFilterShortCodeAddress
 	 */
 	private function populateWpLinkPagesArgs(array $filterableFields)
 	{
+		if (!get_option('onoffice-pagination-paginationbyonoffice')) {
+			return;
+		}
 		$pModel = $this->_pSearchParametersModelBuilder->build
 			($filterableFields, onOfficeSDK::MODULE_ADDRESS);
 
