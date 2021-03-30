@@ -177,7 +177,7 @@ abstract class InputModelBase
 	public function setPlaceholder($placeholder)
 		{ $this->_placeholder = $placeholder; }
 
-	/** @return bool */
+	/** @return string */
 	public function getHint()
 	{ return $this->_hint; }
 

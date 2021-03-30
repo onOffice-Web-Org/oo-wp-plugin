@@ -44,7 +44,6 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use function __;
-use function esc_html__;
 use function get_locale;
 use function get_option;
 use const ONOFFICE_DI_CONFIG_PATH;
