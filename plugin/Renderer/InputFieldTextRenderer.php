@@ -66,14 +66,14 @@ class InputFieldTextRenderer
 		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 			.'" value="'.esc_html($this->getValue()).'" id="'.esc_html($this->getGuiId()).'"'
 			.' '.$this->renderAdditionalAttributes()
-			.'>'.$textHtml;
+			.'>'.esc_html($textHtml);
 	}
 
-	/** @return mixed */
+	/** @return string */
 	public function getHint()
 	{ return $this->_hint; }
 
-	/** @param mixed $hint */
-	public function setHint($hint)
+	/** @param string $hint */
+	public function setHint(string $hint)
 	{ $this->_hint = $hint; }
 }
