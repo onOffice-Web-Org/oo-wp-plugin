@@ -61,7 +61,7 @@ class InputFieldTextRenderer
 	{
 		$textHtml = '';
 		if (!empty($this->getHint())) {
-			$textHtml = '<p class="hint-fallback-email">' . $this->getHint() . '</p>';
+			$textHtml = '<p class="hint-fallback-email">' . esc_html($this->getHint()) . '</p>';
 		}
 		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 			.'" value="'.esc_html($this->getValue()).'" id="'.esc_html($this->getGuiId()).'"'
@@ -69,11 +69,11 @@ class InputFieldTextRenderer
 			.'>'.$textHtml;
 	}
 
-	/** @return mixed */
+	/** @return string */
 	public function getHint()
 	{ return $this->_hint; }
 
-	/** @param mixed $hint */
-	public function setHint($hint)
+	/** @param string $hint */
+	public function setHint(string $hint)
 	{ $this->_hint = $hint; }
 }
