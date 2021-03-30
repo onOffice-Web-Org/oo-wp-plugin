@@ -66,7 +66,7 @@ class InputFieldTextRenderer
 		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 			.'" value="'.esc_html($this->getValue()).'" id="'.esc_html($this->getGuiId()).'"'
 			.' '.$this->renderAdditionalAttributes()
-			.'>'.$textHtml;
+			.'>'.esc_html($textHtml);
 	}
 
 	/** @return string */
