@@ -31,6 +31,7 @@ use function esc_attr;
 use function esc_html;
 use function get_option;
 use function json_encode;
+use onOffice\WPlugin\Utility\Encrypter;
 use function settings_fields;
 use function submit_button;
 
@@ -173,7 +174,7 @@ class AdminPageApiSettings
 	public function checkPassword($password, $optionName)
 	{
 		if ($password && $optionName == 'onoffice-settings-apisecret') {
-			$password = openssl_encrypt($password, "aes-128-cfb", ONOFFICE_CREDENTIALS_ENC_KEY);
+			$password = Encrypter::encrypt($password);
 		}
 		return $password != '' ? $password : get_option($optionName);
 	}
