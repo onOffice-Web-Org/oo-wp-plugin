@@ -9,7 +9,7 @@
 namespace onOffice\tests;
 
 
-use onOffice\WPlugin\Utility\Encrypter;
+use onOffice\WPlugin\Utility\SymmetricEncryption;
 use WP_UnitTestCase;
 
 
@@ -22,7 +22,7 @@ class TestClassEncrypter extends WP_UnitTestCase
 	public function testEncrypt()
 	{
 		$plainText = '12345';
-		$cipherText = Encrypter::encrypt($plainText);
-		$this->assertSame($plainText, Encrypter::decrypt($cipherText));
+		$cipherText = SymmetricEncryption::encrypt($plainText);
+		$this->assertSame($plainText, SymmetricEncryption::decrypt($cipherText));
 	}
 }
