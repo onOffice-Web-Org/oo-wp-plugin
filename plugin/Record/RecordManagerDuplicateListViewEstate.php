@@ -81,7 +81,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 			//append count name
 			$originalName = $listViewRoot['name'];
 			$newName = "{$originalName} - Copy";
-			$selectLikeOriginalName = "SELECT `name` FROM {$tableListViews} WHERE name LIKE '{$newName}%' ORDER BY listview_id DESC";
+			$selectLikeOriginalName = "SELECT `name` FROM {$tableListViews} WHERE name LIKE '{$this->_pWPDB->_escape($newName)}%' ORDER BY listview_id DESC";
 			$listViewsRows = $this->_pWPDB->get_row($selectLikeOriginalName);
 
 			if (!empty($listViewsRows->name) && $listViewsRows->name !== $originalName) {
@@ -115,7 +115,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 				//duplicate data related oo_plugin_fieldconfig table
 				$tableFieldConfig = $prefix . self::TABLENAME_FIELDCONFIG;
 				foreach ($listViewRoot['fields'] as $field) {
-					$selectFieldConfigByIdAndFieldName = "SELECT * FROM {$tableFieldConfig} WHERE listview_id='{$id}' AND fieldname ='{$field}'";
+					$selectFieldConfigByIdAndFieldName = "SELECT * FROM {$tableFieldConfig} WHERE listview_id='{$this->_pWPDB->_escape($id)}' AND fieldname ='{$this->_pWPDB->_escape($field)}'";
 					$fieldConfigRows = $this->_pWPDB->get_results($selectFieldConfigByIdAndFieldName);
 					if (!empty($fieldConfigRows) && (count($fieldConfigRows) !== 0)) {
 						foreach ($fieldConfigRows as $fieldConfigRow) {
@@ -133,7 +133,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 
 				//duplicate data related oo_plugin_picturetypes table
 				$tablePictureTypes = $prefix . self::TABLENAME_PICTURETYPES;
-				$selectPictureTypesById = "SELECT * FROM {$tablePictureTypes} WHERE listview_id='{$id}'";
+				$selectPictureTypesById = "SELECT * FROM {$tablePictureTypes} WHERE listview_id='{$this->_pWPDB->_escape($id)}'";
 				$pictureTypeRows = $this->_pWPDB->get_results($selectPictureTypesById);
 				if (!empty($pictureTypeRows) && (count($pictureTypeRows) !== 0)) {
 					foreach ($pictureTypeRows as $pictureTypeRow) {
@@ -146,7 +146,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 
 				//duplicate data related oo_plugin_sortbyuservalues table
 				$tableSortByUserValues = $prefix . self::TABLENAME_SORTBYUSERVALUES;
-				$selectSortByUserValuesById = "SELECT * FROM {$tableSortByUserValues} WHERE listview_id='{$id}'";
+				$selectSortByUserValuesById = "SELECT * FROM {$tableSortByUserValues} WHERE listview_id='{$this->_pWPDB->_escape($id)}'";
 				$sortByUserValuesRows = $this->_pWPDB->get_results($selectSortByUserValuesById);
 				if (!empty($sortByUserValuesRows) && (count($sortByUserValuesRows) !== 0)) {
 					foreach ($sortByUserValuesRows as $sortByUserValuesRow) {
