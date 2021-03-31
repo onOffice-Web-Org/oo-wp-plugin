@@ -69,7 +69,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 			if (in_array($values['type'], $selectTypes)) {
 				$permittedValues = $values['permittedvalues'];
 
-				echo '<select size="1" name="'.$key.'">';
+				echo '<select class="custom-single-select" size="1" name="'.$key.'">';
 				echo '<option value="">'.esc_html('not specified').'</option>';
 
 				foreach ( $permittedValues as $countryCode => $countryName ) {
@@ -89,7 +89,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ($input === 'regionaler_zusatz') {
-		echo '<select size="1" name="'.esc_html($input).'">';
+		echo '<select class="custom-single-select" size="1" name="'.esc_html($input).'">';
 		$pRegionController = new \onOffice\WPlugin\Region\RegionController();
 		if ($permittedValues === null) {
 			$regions = $pRegionController->getRegions();

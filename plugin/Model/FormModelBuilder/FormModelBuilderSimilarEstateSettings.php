@@ -281,48 +281,6 @@ class FormModelBuilderSimilarEstateSettings
 		return $pInputModelSameMarketingMethod;
 	}
 
-	/**
-	 * @return InputModelOption
-	 * @throws ExceptionInputModelMissingField
-	 */
-
-	public function createInputModelDoNotShowArchived()
-	{
-		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
-
-		$labelDoNotShowArchived = __('Don\'t show archived estates', 'onoffice-for-wp-websites');
-
-		$pInputModelDoNotShowArchived = $this->_pInputModelSimilarViewFactory->create
-		(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_DO_NOT_SHOW_ARCHIVED, $labelDoNotShowArchived);
-		$pInputModelDoNotShowArchived->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-
-		$pInputModelDoNotShowArchived->setValuesAvailable(1);
-		$pInputModelDoNotShowArchived->setValue($pDataViewSimilarEstates->getDoNotShowArchived());
-
-		return $pInputModelDoNotShowArchived;
-	}
-
-	/**
-	 * @return InputModelOption
-	 * @throws ExceptionInputModelMissingField
-	 */
-
-	public function createInputModelDoNotShowReference()
-	{
-		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
-
-		$labelDoNotShowReference = __('Don\'t show reference estates', 'onoffice-for-wp-websites');
-
-		$pInputModelDoNotShowReference = $this->_pInputModelSimilarViewFactory->create
-		(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_DO_NOT_SHOW_REFERENCE, $labelDoNotShowReference);
-		$pInputModelDoNotShowReference->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-
-		$pInputModelDoNotShowReference->setValuesAvailable(1);
-		$pInputModelDoNotShowReference->setValue($pDataViewSimilarEstates->getDoNotShowReference());
-
-		return $pInputModelDoNotShowReference;
-	}
-
 
 	/**
 	 * @return InputModelOption
