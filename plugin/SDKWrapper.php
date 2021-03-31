@@ -32,6 +32,7 @@ use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Cache\DBCache;
+use onOffice\WPlugin\Utility\Encrypter;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 
@@ -136,7 +137,7 @@ class SDKWrapper
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
-		$secret = openssl_decrypt($secret, "aes-128-cfb", ONOFFICE_CREDENTIALS_ENC_KEY);
+		$secret = Encrypter::decrypt($secret);
 		$this->_pSDK->sendRequests($token, $secret);
 		$errors = $this->_pSDK->getErrors();
 
