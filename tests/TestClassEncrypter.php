@@ -3,7 +3,7 @@
 namespace onOffice\tests;
 
 
-use onOffice\WPlugin\Utility\SymmetricEncryption;
+use onOffice\WPlugin\Utility\SymmetricEncryptionDefault;
 use WP_UnitTestCase;
 
 
@@ -17,7 +17,7 @@ class TestClassEncrypter extends WP_UnitTestCase
 	{
 		$plainText = '12345';
 		$key = 'test-key';
-		$encrypter = new SymmetricEncryption();
+		$encrypter = new SymmetricEncryptionDefault();
 		$cipherText = $encrypter->encrypt($plainText, $key);
 		$this->assertSame($plainText, $encrypter->decrypt($cipherText, $key));
 	}
