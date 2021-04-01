@@ -39,14 +39,15 @@ class SymmetricEncryption
 	 */
 	public function decrypt(string $cipherText, string $key, string $cipher = 'AES-128-CBC'): string
 	{
+		$hmacSha256Len = 32;
 		if (!extension_loaded('openssl')) {
 			return $cipherText;
 		}
 		$decodeText = base64_decode($cipherText);
 		$ivlen = openssl_cipher_iv_length($cipher);
 		$iv = substr($decodeText, 0, $ivlen);
-		$hmac = substr($decodeText, $ivlen, $sha2len = 32);
-		$cipherTextRaw = substr($decodeText, $ivlen + $sha2len);
+		$hmac = substr($decodeText, $ivlen, $hmacSha256Len);
+		$cipherTextRaw = substr($decodeText, $ivlen + $hmacSha256Len);
 		$plainText = openssl_decrypt($cipherTextRaw, $cipher, $key, OPENSSL_RAW_DATA, $iv);
 		if ($plainText === false)
 		{

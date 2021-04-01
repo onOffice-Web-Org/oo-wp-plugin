@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Admin
- * Date: 3/31/2021
- * Time: 11:10 AM
- */
 
 namespace onOffice\tests;
 
