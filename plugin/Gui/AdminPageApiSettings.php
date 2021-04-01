@@ -43,14 +43,19 @@ class AdminPageApiSettings
 	extends AdminPage
 {
 	/**
+	 * @var SymmetricEncryption
+	 */
+	private $_encrypter;
+
+	/**
 	 *
 	 * @param string $pageSlug
 	 *
 	 */
-
 	public function __construct($pageSlug)
 	{
 		parent::__construct($pageSlug);
+		$this->_encrypter = $this->getContainer()->make(SymmetricEncryption::class);
 		$this->addFormModelAPI();
 		$this->addFormModelGoogleCaptcha();
 		$this->addFormModelGoogleMapsKey();
@@ -173,9 +178,8 @@ class AdminPageApiSettings
 
 	public function checkPassword($password, $optionName)
 	{
-		if ($password && $optionName == 'onoffice-settings-apisecret') {
-			$encrypter = new SymmetricEncryption();
-			$password = $encrypter->encrypt($password, ONOFFICE_CREDENTIALS_ENC_KEY);
+		if ($password && $optionName == 'onoffice-settings-apisecret' && defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+			$password = $this->_encrypter->encrypt($password, ONOFFICE_CREDENTIALS_ENC_KEY);
 		}
 		return $password != '' ? $password : get_option($optionName);
 	}

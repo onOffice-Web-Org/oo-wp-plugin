@@ -48,6 +48,7 @@ use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfiguration;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
 use onOffice\WPlugin\Utility\HTTPHeaders;
 use onOffice\WPlugin\Utility\HTTPHeadersGeneric;
+use onOffice\WPlugin\Utility\SymmetricEncryptionDefault;
 use onOffice\WPlugin\WP\WPNonceWrapper;
 use onOffice\WPlugin\WP\WPNonceWrapperDefault;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -56,6 +57,7 @@ use onOffice\WPlugin\WP\WPScreenWrapper;
 use onOffice\WPlugin\WP\WPScreenWrapperDefault;
 use onOffice\WPlugin\WP\WPScriptStyleBase;
 use onOffice\WPlugin\WP\WPScriptStyleDefault;
+use onOffice\WPlugin\Utility\SymmetricEncryption;
 use wpdb;
 use function DI\autowire;
 
@@ -86,4 +88,5 @@ return [
 	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
 	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
 	HTTPHeaders::class => autowire(HTTPHeadersGeneric::class),
+	SymmetricEncryption::class => autowire(SymmetricEncryptionDefault::class)
 ];
