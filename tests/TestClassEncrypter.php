@@ -22,7 +22,9 @@ class TestClassEncrypter extends WP_UnitTestCase
 	public function testEncrypt()
 	{
 		$plainText = '12345';
-		$cipherText = SymmetricEncryption::encrypt($plainText);
-		$this->assertSame($plainText, SymmetricEncryption::decrypt($cipherText));
+		$key = 'test-key';
+		$encrypter = new SymmetricEncryption();
+		$cipherText = $encrypter->encrypt($plainText, $key);
+		$this->assertSame($plainText, $encrypter->decrypt($cipherText, $key));
 	}
 }
