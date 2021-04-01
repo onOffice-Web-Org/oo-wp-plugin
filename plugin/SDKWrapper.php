@@ -137,7 +137,8 @@ class SDKWrapper
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
-		$secret = SymmetricEncryption::decrypt($secret);
+		$encrypter = new SymmetricEncryption();
+		$secret = $encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
 		$this->_pSDK->sendRequests($token, $secret);
 		$errors = $this->_pSDK->getErrors();
 

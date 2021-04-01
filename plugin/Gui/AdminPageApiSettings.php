@@ -155,7 +155,8 @@ class AdminPageApiSettings
 	public function checkPassword($password, $optionName)
 	{
 		if ($password && $optionName == 'onoffice-settings-apisecret') {
-			$password = SymmetricEncryption::encrypt($password);
+			$encrypter = new SymmetricEncryption();
+			$password = $encrypter->encrypt($password, ONOFFICE_CREDENTIALS_ENC_KEY);
 		}
 		return $password != '' ? $password : get_option($optionName);
 	}
