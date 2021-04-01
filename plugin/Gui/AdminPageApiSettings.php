@@ -159,7 +159,8 @@ class AdminPageApiSettings
 
 	public function checkPassword($password, $optionName)
 	{
-		if ($password && $optionName == 'onoffice-settings-apisecret' && defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+		if ($password && $optionName == 'onoffice-settings-apisecret'
+			&& defined('ONOFFICE_CREDENTIALS_ENC_KEY') && ONOFFICE_CREDENTIALS_ENC_KEY) {
 			$password = $this->_encrypter->encrypt($password, ONOFFICE_CREDENTIALS_ENC_KEY);
 		}
 		return $password != '' ? $password : get_option($optionName);
