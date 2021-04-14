@@ -96,26 +96,6 @@ class FormModelBuilderEstateDetailSettings
 		return $pFormModel;
 	}
 
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function getCheckboxEnableSimilarEstates()
-	{
-		$labelExpose = __('Show Similar Estates', 'onoffice-for-wp-websites');
-		$pInputModelActivate = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_ENABLE_SIMILAR_ESTATES, $labelExpose);
-		$pInputModelActivate->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModelActivate->setValuesAvailable(1);
-		$pInputModelActivate->setValue($this->_pDataDetailView->getDataDetailViewActive());
-
-		return $pInputModelActivate;
-	}
-
-
 	/**
 	 *
 	 * @return InputModelDB
@@ -281,125 +261,8 @@ class FormModelBuilderEstateDetailSettings
 		switch ($field) {
 			case InputModelOptionFactoryDetailView::INPUT_TEMPLATE:
 				return $this->_pDataDetailView->getTemplate();
-			case InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE:
-				return $this->_pDataDetailView->getDataViewSimilarEstates()->getTemplate();
 			default:
 				return '';
 		}
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelSimilarEstateKind()
-	{
-		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
-
-		$labelSameKind = __('Same Kind of Estate', 'onoffice-for-wp-websites');
-
-		$pInputModelSimilarEstateKind = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND, $labelSameKind);
-		$pInputModelSimilarEstateKind->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-
-		$pInputModelSimilarEstateKind->setValuesAvailable(1);
-		$pInputModelSimilarEstateKind->setValue($pDataViewSimilarEstates->getSameEstateKind());
-
-		return $pInputModelSimilarEstateKind;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelSimilarEstateMarketingMethod()
-	{
-		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
-
-		$labelSameMarketingMethod = __('Same Marketing Method', 'onoffice-for-wp-websites');
-
-		$pInputModelSameMarketingMethod = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_SAME_MARKETING_METHOD, $labelSameMarketingMethod);
-		$pInputModelSameMarketingMethod->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-
-		$pInputModelSameMarketingMethod->setValuesAvailable(1);
-		$pInputModelSameMarketingMethod->setValue($pDataViewSimilarEstates->getSameMarketingMethod());
-
-		return $pInputModelSameMarketingMethod;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelSameEstatePostalCode()
-	{
-		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
-
-		$labelSamePostalCode = __('Same Postal Code', 'onoffice-for-wp-websites');
-
-		$pInputModelSamePostalCode = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE, $labelSamePostalCode);
-		$pInputModelSamePostalCode->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-
-		$pInputModelSamePostalCode->setValuesAvailable(1);
-		$pInputModelSamePostalCode->setValue($pDataViewSimilarEstates->getSamePostalCode());
-
-		return $pInputModelSamePostalCode;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelSameEstateRadius()
-	{
-		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
-
-		$labelRadius = __('Radius', 'onoffice-for-wp-websites');
-
-		$pInputModelRadius = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_RADIUS, $labelRadius);
-		$pInputModelRadius->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
-
-		$pInputModelRadius->setValuesAvailable(1);
-		$pInputModelRadius->setValue($pDataViewSimilarEstates->getRadius());
-
-		return $pInputModelRadius;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelSameEstateAmount()
-	{
-		$pDataViewSimilarEstates = $this->_pDataDetailView->getDataViewSimilarEstates();
-
-		$labelAmount = __('Amount of Estates', 'onoffice-for-wp-websites');
-
-		$pInputModelAmount = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT, $labelAmount);
-		$pInputModelAmount->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
-
-		$pInputModelAmount->setValuesAvailable(1);
-		$pInputModelAmount->setValue($pDataViewSimilarEstates->getRecordsPerPage());
-
-		return $pInputModelAmount;
 	}
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
 use function dbDelta;
@@ -32,7 +33,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 16;
+	const MAX_VERSION = 17;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -60,7 +61,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		// If you are modifying this, please also make sure to edit the test
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
-
 		if ($dbversion === null) {
 			dbDelta( $this->getCreateQueryCache() );
 
@@ -136,6 +136,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
 			$dbversion = 16;
+		}
+
+		if ($dbversion == 16) {
+			$this->migrationsDataSimilarEstates();
+			$dbversion = 17;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -480,6 +485,33 @@ class DatabaseChanges implements DatabaseChangesInterface
 				WHERE `sortByUserDefinedDefault` != '' AND
 				`sortByUserDefinedDefault`  NOT LIKE '%#ASC' AND 
 				`sortByUserDefinedDefault` NOT LIKE '%#DESC'");
+	}
+
+	/**
+	 *
+	 */
+
+	public function migrationsDataSimilarEstates()
+	{
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if (!empty($pDataDetailViewOptions)) {
+			$dataDetailViewActive = $pDataDetailViewOptions->getDataDetailViewActive();
+
+			$dataDetailViewSimilarEstates = $pDataDetailViewOptions->getDataViewSimilarEstates();
+			$pDataSimilarViewOptions = new DataSimilarView();
+			$pDataSimilarViewOptions->setDataSimilarViewActive($dataDetailViewActive);
+
+			$pDataViewSimilarEstatesNew = $pDataSimilarViewOptions->getDataViewSimilarEstates();
+			$pDataViewSimilarEstatesNew->setFields($dataDetailViewSimilarEstates->getFields());
+			$pDataViewSimilarEstatesNew->setSameEstateKind($dataDetailViewSimilarEstates->getSameEstateKind());
+			$pDataViewSimilarEstatesNew->setSameMarketingMethod($dataDetailViewSimilarEstates->getSameMarketingMethod());
+			$pDataViewSimilarEstatesNew->setSamePostalCode($dataDetailViewSimilarEstates->getSamePostalCode());
+			$pDataViewSimilarEstatesNew->setRadius($dataDetailViewSimilarEstates->getRadius());
+			$pDataViewSimilarEstatesNew->setRecordsPerPage($dataDetailViewSimilarEstates->getRecordsPerPage());
+			$pDataViewSimilarEstatesNew->setTemplate($dataDetailViewSimilarEstates->getTemplate());
+			$pDataSimilarViewOptions->setDataViewSimilarEstates($pDataViewSimilarEstatesNew);
+			$this->_pWpOption->addOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
+		}
 	}
 
 
