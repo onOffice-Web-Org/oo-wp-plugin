@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 21;
+	const MAX_VERSION = 22;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -162,6 +162,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 20) {
 			$this->updateCreateAddressFieldOfIntersetAndOwnerForm();
 			$dbversion = 21;
+		}
+
+		if ($dbversion == 21) {
+			$this->deleteMessageFieldInterestForm();
+			$dbversion = 22;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -702,6 +707,29 @@ class DatabaseChanges implements DatabaseChangesInterface
 				WHERE `form_type` = 'interest' OR `form_type` = 'owner'";
 
 		$this->_pWPDB->query($sql);
+	}
+
+	/**
+	 *
+	 */
+
+	private function deleteMessageFieldInterestForm()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
+		$tableFieldConfig = $prefix . "oo_plugin_form_fieldconfig";
+
+		$rows = $this->_pWPDB->get_results("SELECT `form_id` FROM {$tableName} WHERE form_type = 'interest'");
+
+		foreach ($rows as $interestFormId) {
+			$allFieldComments = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
+										WHERE `fieldname` = 'message'
+										AND `form_id` = '{$interestFormId->form_id}'");
+			foreach ($allFieldComments as $fieldComment) {
+				$this->_pWPDB->delete($tableFieldConfig,
+					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
+			}
+		}
 	}
 
 
