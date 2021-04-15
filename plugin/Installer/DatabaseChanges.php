@@ -143,6 +143,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 17;
 		}
 
+		if ($dbversion == 17) {
+			$this->deleteCommentFieldInterestForm();
+			$dbversion = 18;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -485,6 +490,29 @@ class DatabaseChanges implements DatabaseChangesInterface
 				WHERE `sortByUserDefinedDefault` != '' AND
 				`sortByUserDefinedDefault`  NOT LIKE '%#ASC' AND 
 				`sortByUserDefinedDefault` NOT LIKE '%#DESC'");
+	}
+
+	/**
+	 *
+	 */
+
+	private function deleteCommentFieldInterestForm()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
+		$tableFieldConfig = $prefix . "oo_plugin_form_fieldconfig";
+
+		$rows = $this->_pWPDB->get_results("SELECT `form_id` FROM {$tableName} WHERE form_type = 'interest'");
+
+		foreach ($rows as $interestFormId) {
+			$allFieldComments = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
+										WHERE `fieldname` = 'krit_bemerkung_oeffentlich'
+										AND `form_id` = '{$interestFormId->form_id}'");
+			foreach ($allFieldComments as $fieldComment) {
+				$this->_pWPDB->delete($tableFieldConfig,
+					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
+			}
+		}
 	}
 
 	/**
