@@ -31,6 +31,7 @@ use function add_filter;
 use function get_option;
 use function update_option;
 use function remove_filter;
+use wpdb;
 
 /**
  *
@@ -57,6 +58,9 @@ class TestClassDatabaseChanges
 
 	/** @var WPOptionWrapperTest */
 	private $_pWpOption;
+
+	/** @var wpdb */
+	private $_pWPDBMock = null;
 
 	/** @var DatabaseChanges */
 	private $_pDbChanges;
@@ -107,8 +111,45 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(17, $dbversion);
+		$this->assertEquals(18, $dbversion);
 		return $this->_createQueries;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::DeleteMessageFieldInterestForm
+	 */
+
+	public function testDeleteMessageFieldInterestForm()
+	{
+		$this->_pWpOption->addOption('oo_plugin_db_version', '17');
+		$formsOutput = [
+			(object)[
+				'form_id' => '2',
+				'name' => 'Interest Form',
+				'form_type' => 'interest',
+			]
+		];
+		$fieldConfigOutput = [
+			(object)[
+				'form_fieldconfig_id' => '1',
+				'form_id' => '2',
+				'fieldname' => 'message'
+			]
+		];
+
+		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
+			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->getMock();
+
+		$this->_pWPDBMock->expects($this->exactly(2))
+			->method('get_results')
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput);
+
+		$this->_pWPDBMock->expects($this->once())->method('delete')
+			->will($this->returnValue(true));
+
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock);
+		$this->_pDbChanges->install();
 	}
 
 	public function testInstallMigrationsDataSimilarEstates(): array
@@ -150,7 +191,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(17, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(18, DatabaseChanges::MAX_VERSION);
 	}
 
 
