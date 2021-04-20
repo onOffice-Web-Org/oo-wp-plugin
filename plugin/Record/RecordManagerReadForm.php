@@ -73,12 +73,8 @@ class RecordManagerReadForm
 	}
 
 	/**
-	 *
-	 * @param string $formName
-	 * @return array
-	 *
+	 * @return object
 	 * @throws UnknownFormException
-	 *
 	 */
 
 	public function getAllRecords()
