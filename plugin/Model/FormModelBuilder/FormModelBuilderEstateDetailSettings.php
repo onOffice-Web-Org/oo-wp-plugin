@@ -99,26 +99,6 @@ class FormModelBuilderEstateDetailSettings
 		return $pFormModel;
 	}
 
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function getCheckboxEnableSimilarEstates()
-	{
-		$labelExpose = __('Show Similar Estates', 'onoffice-for-wp-websites');
-		$pInputModelActivate = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_ENABLE_SIMILAR_ESTATES, $labelExpose);
-		$pInputModelActivate->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModelActivate->setValuesAvailable(1);
-		$pInputModelActivate->setValue($this->_pDataDetailView->getDataDetailViewActive());
-
-		return $pInputModelActivate;
-	}
-
-
 	/**
 	 *
 	 * @return InputModelDB
@@ -282,8 +262,6 @@ class FormModelBuilderEstateDetailSettings
 		switch ($field) {
 			case InputModelOptionFactoryDetailView::INPUT_TEMPLATE:
 				return $this->_pDataDetailView->getTemplate();
-			case InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE:
-				return $this->_pDataDetailView->getDataViewSimilarEstates()->getTemplate();
 			default:
 				return '';
 		}

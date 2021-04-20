@@ -85,11 +85,33 @@
         }
     });
 
+    document.querySelectorAll('form[data-estate-search-name]').forEach(element => {
+        const name = element.getAttribute('data-estate-search-name');
+        estate_refresh_preview(element, name);
+        for (let formControl of element.elements) {
+            let $event = $(".custom-multiple-select");
+            $event.on("change", function (e) {
+                estate_refresh_preview(element, name);
+            });
+        }
+    });
+
     document.querySelectorAll('form[data-applicant-form-id]').forEach(element => {
         const id = element.getAttribute('data-applicant-form-id');
         form_refresh_preview(element, id);
         for (let formControl of element.elements) {
             formControl.addEventListener('change', () => form_refresh_preview(element, id));
+        }
+    });
+
+    document.querySelectorAll('form[data-applicant-form-id]').forEach(element => {
+        const id = element.getAttribute('data-applicant-form-id');
+        form_refresh_preview(element, id);
+        for (let formControl of element.elements) {
+            let $eventSelect = $('.' + formControl.getAttribute("class"));
+            $eventSelect.on("change", function (e) {
+                form_refresh_preview(element, id);
+            });
         }
     });
 

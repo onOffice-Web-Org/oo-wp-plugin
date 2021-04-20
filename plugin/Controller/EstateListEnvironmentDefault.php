@@ -50,20 +50,17 @@ use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 class EstateListEnvironmentDefault
 	implements EstateListEnvironment
 {
-	/** @var SDKWrapper */
-	private $_pSDKWrapper = null;
-
 	/** @var Fieldnames */
-	private $_pFieldnames = null;
+	private $_pFieldnames;
 
 	/** @var AddressList */
-	private $_pAddressList = null;
+	private $_pAddressList;
 
 	/** @var DefaultFilterBuilder */
-	private $_pDefaultFilterBuilder = null;
+	private $_pDefaultFilterBuilder;
 
 	/** @var EstateStatusLabel */
-	private $_pEstateStatusLabel = null;
+	private $_pEstateStatusLabel;
 
 	/** @var Container */
 	private $_pContainer;
@@ -73,7 +70,6 @@ class EstateListEnvironmentDefault
 	 */
 	public function __construct(Container $pContainer)
 	{
-		$this->_pSDKWrapper = new SDKWrapper();
 		$pFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection());
 		$this->_pFieldnames = new Fieldnames($pFieldsCollection);
 		$this->_pAddressList = new AddressList();

@@ -59,6 +59,8 @@ use onOffice\WPlugin\WP\WPScriptStyleDefault;
 use wpdb;
 use function DI\autowire;
 
+
+
 return [
 	APIClientActionGeneric::class => autowire()
 		->constructorParameter('actionId', '')
@@ -83,8 +85,5 @@ return [
 	InputVariableReaderConfig::class => autowire(InputVariableReaderConfigFieldnames::class),
 	DatabaseChangesInterface::class => autowire(DatabaseChanges::class),
 	AddressListEnvironment::class => autowire(AddressListEnvironmentDefault::class),
-	DateTimeImmutable::class => autowire()
-		->constructorParameter('time', 'now')
-		->constructorParameter('timezone', null),
 	HTTPHeaders::class => autowire(HTTPHeadersGeneric::class),
 ];
