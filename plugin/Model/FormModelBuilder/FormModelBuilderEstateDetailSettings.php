@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\Exception\UnknownModuleException;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
@@ -247,8 +248,6 @@ class FormModelBuilderEstateDetailSettings
 
 		return $pInputModelTemplate;
 	}
-
-
 	/**
 	 *
 	 * @param string $field
@@ -264,5 +263,28 @@ class FormModelBuilderEstateDetailSettings
 			default:
 				return '';
 		}
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 * @throws UnknownFormException
+	 * @throws ExceptionInputModelMissingField
+	 */
+
+	public function createInputModelShortCodeForm()
+	{
+
+		$labelShortCodeForm = __('Select Contact Form', 'onoffice-for-wp-websites');
+		$pInputModelShortCodeForm = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_SHORT_CODE_FORM, $labelShortCodeForm);
+		$pInputModelShortCodeForm->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$nameShortCodeForms = array('' => __('No Contact Form', 'onoffice-for-wp-websites')) + $this->readNameShortCodeForm();
+		$pInputModelShortCodeForm->setValuesAvailable($nameShortCodeForms);
+
+		$pInputModelShortCodeForm->setValue($this->_pDataDetailView->getShortCodeForm());
+
+		return $pInputModelShortCodeForm;
 	}
 }

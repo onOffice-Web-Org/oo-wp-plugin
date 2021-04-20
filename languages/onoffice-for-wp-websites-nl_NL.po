@@ -347,24 +347,33 @@ msgstr ""
 "Detailweergave is nog niet in gebruik. Voeg deze code in op een pagina om "
 "daar de detailweergave te krijgen:"
 
-#: plugin/Gui/AdminPageEstateDetail.php:158
+#: plugin/Gui/AdminPageEstateDetail.php:164
 msgid "Contact Person Fields"
 msgstr "Ansprechpartner-Felder"
 
-#: plugin/Gui/AdminPageEstateDetail.php:173
-#: plugin/Gui/AdminPageSimilarEstates.php:119
+#: plugin/Gui/AdminPageEstateDetail.php:179
 msgid "Real Estate Fields"
 msgstr "Vastgoedgegevensvelden"
 
-#: plugin/Gui/AdminPageEstateDetail.php:288
+#: plugin/Gui/AdminPageEstateDetail.php:290
+#, fuzzy
+#| msgid "Contact person"
+msgid "Contact Form"
+msgstr "Contactpersoon"
+
+#: plugin/Gui/AdminPageEstateDetail.php:307
 msgid "Additional Media"
 msgstr "Extra media"
 
-#: plugin/Gui/AdminPageEstateDetail.php:404
+#: plugin/Gui/AdminPageEstateDetail.php:324
+msgid "Similar Estates"
+msgstr "Vergelijkbare Landgoederen"
+
+#: plugin/Gui/AdminPageEstateDetail.php:445
 msgid "The detail view has been saved."
 msgstr "Het detailaanzicht is opgeslagen."
 
-#: plugin/Gui/AdminPageEstateDetail.php:405
+#: plugin/Gui/AdminPageEstateDetail.php:446
 msgid "There was a problem saving the detail view."
 msgstr "Er was een probleem met het bewaren van het detailaanzicht."
 
@@ -775,55 +784,49 @@ msgstr "Taal toevoegen"
 msgid "Module"
 msgstr "Module"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:155
-msgid "Movie Links"
-msgstr "Filmlinks"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
-msgid "Disabled"
-msgstr "Uitgeschakeld"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:162
-msgid "Link"
-msgstr "Link"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:163
-msgid "Player"
-msgstr "Speler"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:83
-#, fuzzy
-#| msgid "Similar Estates"
-msgid "Similar Estates View"
-msgstr "Vergelijkbare Landgoederen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:98
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:109
 msgid "Show Similar Estates"
 msgstr "Toon gelijkaardige landgoederen"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:176
+msgid "Movie Links"
+msgstr "Filmlinks"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:183
+msgid "Link"
+msgstr "Link"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:184
+msgid "Player"
+msgstr "Speler"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:301
+msgid "Select Contact Form"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:305
+#, fuzzy
+#| msgid "Contact person"
+msgid "No Contact Form"
+msgstr "Contactpersoon"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:324
 msgid "Same Kind of Estate"
 msgstr "Zelfde soort landgoed"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:347
 msgid "Same Marketing Method"
 msgstr "Dezelfde marketingmethode"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:293
-msgid "Don't show archived estates"
-msgstr ""
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:314
-#, fuzzy
-#| msgid "Reference Estates"
-msgid "Don't show reference estates"
-msgstr "Referentie Landgoederen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:336
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:370
 msgid "Same Postal Code"
 msgstr "Dezelfde postcode"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:358
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:393
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
 msgid "Radius"
 msgstr "Straal"

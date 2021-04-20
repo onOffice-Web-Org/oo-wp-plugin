@@ -946,11 +946,12 @@ msgstr[0] "Persona de contacto: "
 msgstr[1] "Persona de contacto: "
 
 #: plugin/Translation/FormTranslation.php:63
+#, fuzzy
 msgctxt "forms"
 msgid "Interest Form"
 msgid_plural "Interest Forms"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Persona de contacto: "
+msgstr[1] "Persona de contacto: "
 
 #: plugin/Translation/FormTranslation.php:67
 msgctxt "forms"

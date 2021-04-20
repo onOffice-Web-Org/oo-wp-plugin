@@ -361,11 +361,15 @@ msgstr "Campi dati immobiliari"
 msgid "Additional Media"
 msgstr "Supporti aggiuntivi"
 
-#: plugin/Gui/AdminPageEstateDetail.php:404
+#: plugin/Gui/AdminPageEstateDetail.php:324
+msgid "Similar Estates"
+msgstr "Immobili simili"
+
+#: plugin/Gui/AdminPageEstateDetail.php:445
 msgid "The detail view has been saved."
 msgstr "La vista di dettaglio è stata salvata."
 
-#: plugin/Gui/AdminPageEstateDetail.php:405
+#: plugin/Gui/AdminPageEstateDetail.php:446
 msgid "There was a problem saving the detail view."
 msgstr "C'è stato un problema nel salvare la vista di dettaglio."
 
@@ -893,7 +897,7 @@ msgstr "nome della lista degli indirizzi sconosciuti"
 
 #: plugin/Renderer/InputFieldCheckboxButtonRenderer.php:67
 msgid "Add to List >>"
-msgstr "Aggiungi alla lista >>>&gt"
+msgstr "Aggiungi alla lista >>"
 
 #: plugin/Renderer/InputFieldComplexSortableDetailListContentDefault.php:75
 msgid "Key of Field:"
