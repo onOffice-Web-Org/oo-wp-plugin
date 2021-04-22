@@ -72,6 +72,27 @@ class RecordManagerReadForm
 		return $this->getFoundRows();
 	}
 
+	/**
+	 * @return object
+	 * @throws UnknownFormException
+	 */
+
+	public function getAllRecords()
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT *
+				FROM {$prefix}oo_plugin_forms";
+
+		$result = $pWpDb->get_results($sql, OBJECT);
+
+		if ($result === null) {
+			throw new UnknownFormException();
+		}
+
+		return $result;
+	}
 
 	/**
 	 *

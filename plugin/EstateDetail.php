@@ -111,6 +111,25 @@ class EstateDetail
 		return $result;
 	}
 
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getShortCodeForm(): string
+	{
+		$result = '';
+
+		if ($this->getDataView()->getShortCodeForm() == '') {
+			return '';
+		}
+
+		$result = $this->getDataView()->getShortCodeForm();
+
+		return  '[oo_form form="' . $result . '"]';
+
+	}
 
 	/**
 	 *

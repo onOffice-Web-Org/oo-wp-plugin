@@ -37,9 +37,12 @@ use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use onOffice\WPlugin\Utility\__String;
+
 use function __;
 
 /**
@@ -246,6 +249,50 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelTemplate->setValue($this->getTemplateValueByField($field));
 
 		return $pInputModelTemplate;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 * @throws UnknownFormException
+	 * @throws ExceptionInputModelMissingField
+	 */
+
+	public function createInputModelShortCodeForm()
+	{
+
+		$labelShortCodeForm = __('Select Contact Form', 'onoffice-for-wp-websites');
+		$pInputModelShortCodeForm = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_SHORT_CODE_FORM, $labelShortCodeForm);
+		$pInputModelShortCodeForm->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$nameShortCodeForms = array('' => __('No Contact Form', 'onoffice-for-wp-websites')) + $this->readNameShortCodeForm();
+		$pInputModelShortCodeForm->setValuesAvailable($nameShortCodeForms);
+
+		$pInputModelShortCodeForm->setValue($this->_pDataDetailView->getShortCodeForm());
+
+		return $pInputModelShortCodeForm;
+	}
+
+	/**
+	 *
+	 * @return array
+	 *
+	 * @throws UnknownFormException
+	 */
+
+	protected function readNameShortCodeForm()
+	{
+		$recordManagerReadForm = new RecordManagerReadForm();
+		$allRecordsForm = $recordManagerReadForm->getAllRecords();
+		$shortCodeForm = array();
+
+		foreach ($allRecordsForm as $value) {
+			$form_name = __String::getNew($value->name);
+			$shortCodeForm[$value->name] = '[oo_form form=&quot;'
+				. esc_html($form_name) . '&quot;]';
+		}
+		return $shortCodeForm;
 	}
 
 

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\Installer;
 
 use onOffice\WPlugin\DataView\DataSimilarView;
+use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
 use function dbDelta;
@@ -33,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 17;
+	const MAX_VERSION = 18;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -141,6 +142,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 16) {
 			$this->migrationsDataSimilarEstates();
 			$dbversion = 17;
+		}
+
+		if ($dbversion == 17) {
+			$this->installDataQueryForms();
+			$dbversion = 18;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -514,6 +520,124 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
+	/**
+	 *
+	 */
+
+	private function installDataQueryForms()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
+		$allTemplatePathsForm = $this->readTemplatePaths('form');
+		$template = '';
+		foreach ($allTemplatePathsForm as $templatePathsForm) {
+			if (basename($templatePathsForm) === 'defaultform.php') {
+				$template = $templatePathsForm;
+			}
+		}
+		$this->_pWPDB->insert(
+			$tableName,
+			array(
+				'name' => 'Default Form',
+				'form_type' => 'contact',
+				'template' => $template,
+				'country_active' => 1,
+				'zip_active' => 1,
+				'street_active' => 1,
+				'radius_active' => 1,
+				'geo_order' => 'street,zip,city,country,radius'
+			)
+		);
+		$defaultFormId = $this->_pWPDB->insert_id;
+		$this->installDataQueryFormFieldConfig($defaultFormId);
+	}
+
+	/**
+	 *
+	 */
+
+	private function installDataQueryFormFieldConfig($defaultFormId){
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_form_fieldconfig";
+
+		$rows = array(
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 1,
+				'fieldname' => 'Vorname',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 2,
+				'fieldname' => 'Name',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 3,
+				'fieldname' => 'Strasse',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 4,
+				'fieldname' => 'Plz',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 5,
+				'fieldname' => 'Ort',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 6,
+				'fieldname' => 'Telefon1',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 7,
+				'fieldname' => 'Email',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 8,
+				'fieldname' => 'message'
+			)
+		);
+		foreach ($rows as $row) {
+			$this->_pWPDB->insert($tableName, $row);
+		}
+	}
+
+	/**
+	 *
+	 * @param string $directory
+	 * @param string $pattern
+	 * @return array
+	 *
+	 */
+
+	protected function readTemplatePaths($directory, $pattern = '*')
+	{
+		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php')
+			. 'templates.dist/' . $directory . '/' . $pattern . '.php');
+		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR)
+			. 'onoffice-personalized/templates/' . $directory . '/' . $pattern . '.php');
+		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
+		$templates = array();
+
+		foreach ($templatesAll as $value) {
+			$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
+			$templates[$value] = $value;
+		}
+
+		return $templates;
+	}
 
 	/**
 	 *
