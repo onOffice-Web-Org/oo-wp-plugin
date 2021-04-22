@@ -290,7 +290,6 @@ class FormModelBuilderEstateDetailSettings
 		return $pInputModelShortCodeForm;
 	}
 
-
 	/**
 	 *
 	 * @return array
