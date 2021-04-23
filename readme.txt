@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.10.1 =
+
+**Fixes**
+
+* Adds changes to composer.lock so that the new dependency (select2) is acutally included in the plugin.
+
 = 2.10.0 =
 
 **Changes**
