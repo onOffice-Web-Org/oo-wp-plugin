@@ -412,17 +412,18 @@ class TestClassFormPostInterest
 
 	private function addApiResponseSendMail(bool $success)
 	{
-	    $parameters = [
-	        'addressdata' => [
-	            'Vorname' => 'John',
-	            'Name' => 'Doe',
-	            'Email' => 'john@doemail.com',
-	        ],
-	        'message' => null,
-	        'subject' => 'Interest',
-	        'formtype' => Form::TYPE_INTEREST,
-	        'recipient' => 'test@my-onoffice.com',
-	    ];
+		$parameters = [
+			'addressdata' => [
+				'Vorname' => 'John',
+				'Name' => 'Doe',
+				'Email' => 'john@doemail.com',
+			],
+			'message' => "\nSuchkriterien des Interessen:\nVermarktungsart: Kauf\nKaufpreis (min): 200000\nKaufpreis (max): 800000",
+			'subject' => 'Interest',
+			'formtype' => Form::TYPE_INTEREST,
+			"referrer" => "",
+			'recipient' => 'test@my-onoffice.com',
+		];
 
 	    $responseJson = file_get_contents(__DIR__.'/resources/ApiResponseDoContactaddress.json');
 	    $response = json_decode($responseJson, true);
