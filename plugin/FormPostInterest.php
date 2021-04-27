@@ -118,11 +118,18 @@ class FormPostInterest
 	private function sendEmail(FormData $pFormData, string $recipient, $subject = null)
 	{
 		$values = $pFormData->getValues();
+		$filledSearchCriteriaData = $this->_pFormPostInterestConfiguration->getSearchcriteriaFields()
+			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData());
+		$searchCriterias = $this->createStringFromInputData($filledSearchCriteriaData);
+		$message = $values['message'] ?? '';
+		$message .= "\nSuchkriterien des Interessen:\n".
+					"$searchCriterias";
 		$requestParams = [
 			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
-			'message' => $values['message'] ?? null,
+			'message' => $message,
 			'subject' => sanitize_text_field($subject),
 			'formtype' => $pFormData->getFormtype(),
+			'referrer' => filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '',
 			'recipient' => $recipient
 		];
 
@@ -137,6 +144,21 @@ class FormPostInterest
 		if (!$pAPIClientAction->getResultStatus()) {
 			throw new ApiClientException($pAPIClientAction);
 		}
+	}
+
+	/**
+	 * @param array $inputData
+	 * @return string
+	 */
+	private function createStringFromInputData(array $inputData): string
+	{
+		$data = [];
+
+		foreach ($inputData as $key => $value) {
+			$data []= $key.': '.$value;
+		}
+
+		return implode("\n", $data);
 	}
 
 	/**
