@@ -61,6 +61,13 @@ class TestClassDatabaseChanges
 	/** @var DatabaseChanges */
 	private $_pDbChanges;
 
+	/** @var string[] */
+	private $_fields = [
+		'Field 1',
+		'Field 2',
+		'Field 3'
+	];
+
 	/**
 	 * @before
 	 */
@@ -70,6 +77,21 @@ class TestClassDatabaseChanges
 
 		$this->_pWpOption = new WPOptionWrapperTest();
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
+		$dataSimilarViewOptions->name = "onoffice-default-view";
+		$dataSimilarViewOptions->setDataDetailViewActive(true);
+
+		$dataViewSimilarEstates = $dataSimilarViewOptions->getDataViewSimilarEstates();
+		$dataViewSimilarEstates->setFields($this->_fields);
+		$dataViewSimilarEstates->setSameEstateKind(true);
+		$dataViewSimilarEstates->setSameMarketingMethod(true);
+		$dataViewSimilarEstates->setSamePostalCode(true);
+		$dataViewSimilarEstates->setRadius(35);
+		$dataViewSimilarEstates->setRecordsPerPage(13);
+		$dataViewSimilarEstates->setTemplate('/test/similar/template.php');
+		$dataSimilarViewOptions->setDataViewSimilarEstates($dataViewSimilarEstates);
+		add_option('onoffice-default-view', $dataSimilarViewOptions);
 	}
 
 	/**
@@ -80,11 +102,45 @@ class TestClassDatabaseChanges
 	{
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->_pDbChanges->install();
+
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(16, $dbversion);
+		$this->assertEquals(17, $dbversion);
+		return $this->_createQueries;
+	}
+
+	public function testInstallMigrationsDataSimilarEstates(): array
+	{
+		add_option('oo_plugin_db_version', '16');
+		add_filter('query', [$this, 'saveCreateQuery'], 1);
+		$this->_pDbChanges->install();
+		remove_filter('query', [$this, 'saveCreateQuery'], 1);
+
+		$pSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
+		$newEnableSimilarEstates = $pSimilarViewOptions->getDataSimilarViewActive();
+
+		$pNewDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
+		$newFields = $pNewDataViewSimilarEstates->getFields();
+		$newRadius = $pNewDataViewSimilarEstates->getRadius();
+		$newSameKind = $pNewDataViewSimilarEstates->getSameEstateKind();
+		$newSameMarketingMethod = $pNewDataViewSimilarEstates->getSameMarketingMethod();
+		$newSamePostalCode = $pNewDataViewSimilarEstates->getSamePostalCode();
+		$newAmount = $pNewDataViewSimilarEstates->getRecordsPerPage();
+		$newSimilarEstatesTemplate = $pNewDataViewSimilarEstates->getTemplate();
+
+		$this->assertTrue($newEnableSimilarEstates);
+		$this->assertEquals('Field 1', $newFields[0]);
+		$this->assertEquals('Field 2', $newFields[1]);
+		$this->assertEquals('Field 3', $newFields[2]);
+		$this->assertTrue(true, $newRadius);
+		$this->assertTrue(true, $newSameKind);
+		$this->assertTrue(true, $newSameMarketingMethod);
+		$this->assertEquals(35, $newSamePostalCode);
+		$this->assertEquals(13, $newAmount);
+		$this->assertEquals('/test/similar/template.php', $newSimilarEstatesTemplate);
+
 		return $this->_createQueries;
 	}
 
@@ -94,7 +150,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(16, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(17, DatabaseChanges::MAX_VERSION);
 	}
 
 

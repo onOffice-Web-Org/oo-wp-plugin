@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Model\InputModel;
 
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\InputModelOption;
@@ -33,25 +34,35 @@ use onOffice\WPlugin\Model\InputModelOption;
  *
  */
 
-class InputModelOptionFactoryDetailView
+class InputModelOptionFactorySimilarView
 {
-	/** */
-	const INPUT_PICTURE_TYPE = DataDetailView::PICTURES;
 
 	/** */
 	const INPUT_TEMPLATE = 'template';
 
 	/** */
-	const INPUT_EXPOSE = 'expose';
+	const INPUT_FIELD_CONFIG = DataSimilarView::FIELDS;
 
 	/** */
-	const INPUT_MOVIE_LINKS = 'movielinks';
+	const INPUT_FIELD_ENABLE_SIMILAR_ESTATES = DataSimilarView::ENABLE_SIMILAR_ESTATES;
 
 	/** */
-	const INPUT_FIELD_CONFIG = DataDetailView::FIELDS;
+	const INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND = DataViewSimilarEstates::FIELD_SAME_KIND;
 
 	/** */
-	const INPUT_FIELD_CONTACTDATA_ONLY = DataDetailView::ADDRESSFIELDS;
+	const INPUT_FIELD_SIMILAR_ESTATES_SAME_MARKETING_METHOD = DataViewSimilarEstates::FIELD_SAME_MARKETING_METHOD;
+
+	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE = DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE;
+
+	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_RADIUS = DataViewSimilarEstates::FIELD_RADIUS;
+
+	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_AMOUNT = DataViewSimilarEstates::FIELD_AMOUNT;
+
+	/** */
+	const INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE = DataViewSimilarEstates::FIELD_SIMILAR_ESTATES_TEMPLATE;
 
 	/** */
 	const KEY_TYPE = 'type';
@@ -62,24 +73,30 @@ class InputModelOptionFactoryDetailView
 
 	/** @var array */
 	private $_inputConfig = [
-		self::INPUT_EXPOSE => [
+        self::INPUT_FIELD_CONFIG => [
+            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+        ],
+		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_KIND => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_MARKETING_METHOD => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_SAME_POSTAL_CODE => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_RADIUS => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_AMOUNT => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_INTEGER,
+		],
+		self::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_TEMPLATE => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		self::INPUT_FIELD_ENABLE_SIMILAR_ESTATES => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN,
 		],
-		self::INPUT_PICTURE_TYPE => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_FIELD_CONFIG => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_FIELD_CONTACTDATA_ONLY => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		],
-		self::INPUT_MOVIE_LINKS => [
-			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-		]
 	];
 
 

@@ -177,7 +177,6 @@ class TestClassDefaultFilterBuilderSimilarEstates
 		$this->assertEquals($expectation, $result);
 	}
 
-
 	/**
 	 *
 	 */
