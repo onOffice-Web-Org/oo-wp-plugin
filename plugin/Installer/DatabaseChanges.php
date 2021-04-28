@@ -534,7 +534,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		foreach ($rows as $applicantSearchFormId) {
 			$allFieldComments = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
 										WHERE `fieldname` = 'krit_bemerkung_oeffentlich'
-										AND `form_id` = '{$applicantSearchFormId->form_id}'");
+										AND `form_id` = '{$this->_pWPDB->_escape($applicantSearchFormId->form_id)}'");
 			foreach ($allFieldComments as $fieldComment) {
 				$this->_pWPDB->delete($tableFieldConfig,
 					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
