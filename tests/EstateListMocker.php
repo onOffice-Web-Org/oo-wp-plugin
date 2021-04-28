@@ -27,6 +27,7 @@ use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
+use onOffice\WPlugin\Filter\GeoSearchBuilderSimilarEstates;
 
 /**
  *
@@ -58,6 +59,9 @@ class EstateListMocker
 
 	/** @var GeoSearchBuilder */
 	private $_pGeoSearchBuilder = null;
+
+	/** @var GeoSearchBuilderSimilarEstates */
+	private $_pGeoSearchBuilderSimilarEstates = null;
 
 	/** @var bool */
 	private $_formatOutput = true;
@@ -252,6 +256,31 @@ class EstateListMocker
 	{
 		$this->registerMethodCall(__METHOD__);
 		$this->_pGeoSearchBuilder = $pGeoSearchBuilder;
+	}
+
+	/**
+	 *
+	 * @return GeoSearchBuilderSimilarEstates
+	 *
+	 */
+
+	public function getGeoSearchBuilderSimilarEstates(): GeoSearchBuilderSimilarEstates
+	{
+		$this->registerMethodCall(__METHOD__);
+		return $this->_pGeoSearchBuilderSimilarEstates;
+	}
+
+
+	/**
+	 *
+	 * @param GeoSearchBuilderSimilarEstates $pGeoSearchBuilder
+	 *
+	 */
+
+	public function setGeoSearchBuilderSimilarEstates(GeoSearchBuilderSimilarEstates $pGeoSearchBuilder)
+	{
+		$this->registerMethodCall(__METHOD__);
+		$this->_pGeoSearchBuilderSimilarEstates = $pGeoSearchBuilder;
 	}
 
 

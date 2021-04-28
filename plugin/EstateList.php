@@ -45,6 +45,8 @@ use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
+use onOffice\WPlugin\Filter\GeoSearchBuilderSimilarEstates;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
@@ -95,6 +97,9 @@ class EstateList
 	/** @var GeoSearchBuilder */
 	private $_pGeoSearchBuilder = null;
 
+	/** @var GeoSearchBuilderSimilarEstates */
+	private $_pGeoSearchBuilderSimilarEstates = null;
+
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;
 
@@ -115,6 +120,7 @@ class EstateList
 		$this->_pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
+		$this->_pGeoSearchBuilderSimilarEstates = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
 	}
 
@@ -297,6 +303,15 @@ class EstateList
 		if ($pListView instanceof DataViewFilterableFields &&
 			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true)) {
 			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
+
+			if ($geoRangeSearchParameters !== []) {
+				$requestParams['georangesearch'] = $geoRangeSearchParameters;
+			}
+		}
+
+		// only do georange search if requested in similar estate configuration
+		if ($pListView instanceof DataViewSimilarEstates) {
+			$geoRangeSearchParameters = $this->getGeoSearchBuilderSimilarEstates()->buildParameters();
 
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
@@ -690,6 +705,14 @@ class EstateList
 	/** @param GeoSearchBuilder $pGeoSearchBuilder */
 	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder)
 		{ $this->_pGeoSearchBuilder = $pGeoSearchBuilder; }
+
+	/** @return GeoSearchBuilderSimilarEstates */
+	public function getGeoSearchBuilderSimilarEstates(): GeoSearchBuilderSimilarEstates
+		{ return $this->_pGeoSearchBuilderSimilarEstates; }
+
+	/** @param GeoSearchBuilderSimilarEstates $pGeoSearchBuilder */
+	public function setGeoSearchBuilderSimilarEstates(GeoSearchBuilderSimilarEstates $pGeoSearchBuilder)
+		{ $this->_pGeoSearchBuilderSimilarEstates = $pGeoSearchBuilder; }
 
 	/** @return bool */
 	public function getFormatOutput(): bool

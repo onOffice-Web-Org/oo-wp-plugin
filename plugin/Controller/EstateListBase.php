@@ -25,6 +25,7 @@ use onOffice\WPlugin\ArrayContainer;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
+use onOffice\WPlugin\Filter\GeoSearchBuilderSimilarEstates;
 
 /**
  *
@@ -125,6 +126,23 @@ interface EstateListBase
 	 */
 
 	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder);
+
+	/**
+	 *
+	 * @return GeoSearchBuilderSimilarEstates
+	 *
+	 */
+
+	public function getGeoSearchBuilderSimilarEstates(): GeoSearchBuilderSimilarEstates;
+
+
+	/**
+	 *
+	 * @param GeoSearchBuilderSimilarEstates $pGeoSearchBuilder
+	 *
+	 */
+
+	public function setGeoSearchBuilderSimilarEstates(GeoSearchBuilderSimilarEstates $pGeoSearchBuilder);
 
 
 	/** @return DataView */
