@@ -743,9 +743,8 @@ class TestClassEstateList
 		$parametersByCoordinates = ['radius' => 500, 'latitude' => '50.74370', 'longitude' => '6.17194'];
 		$parametersByAddress = ['radius' => 500, 'country' => 'DEU', 'zip' => '52068'];
 		$pGeoSearchBuilder->expects($this->exactly(2))
-			->method('get_results')
+			->method('buildParameters')
 			->willReturnOnConsecutiveCalls($parametersByAddress, $parametersByCoordinates);
-		$pGeoSearchBuilder->method('buildParameters')->willReturn();
 		$this->_pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 		$this->_pEnvironment->method('getGeoSearchBuilder')->willReturn($pGeoSearchBuilder);
 		$pEstateStatusLabel = $this->getMockBuilder(EstateStatusLabel::class)
