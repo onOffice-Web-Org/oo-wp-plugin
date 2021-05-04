@@ -120,7 +120,6 @@ class EstateList
 		$this->_pApiClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
-		$this->_pGeoSearchBuilderSimilarEstates = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
 	}
 
@@ -311,7 +310,7 @@ class EstateList
 
 		// only do georange search if requested in similar estate configuration
 		if ($pListView instanceof DataViewSimilarEstates) {
-			$geoRangeSearchParameters = $this->getGeoSearchBuilderSimilarEstates()->buildParameters();
+			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
 
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
@@ -705,15 +704,6 @@ class EstateList
 	/** @param GeoSearchBuilder $pGeoSearchBuilder */
 	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder)
 		{ $this->_pGeoSearchBuilder = $pGeoSearchBuilder; }
-
-	/** @return GeoSearchBuilderSimilarEstates */
-	public function getGeoSearchBuilderSimilarEstates(): GeoSearchBuilderSimilarEstates
-		{ return $this->_pGeoSearchBuilderSimilarEstates; }
-
-	/** @param GeoSearchBuilderSimilarEstates $pGeoSearchBuilder */
-	public function setGeoSearchBuilderSimilarEstates(GeoSearchBuilderSimilarEstates $pGeoSearchBuilder)
-		{ $this->_pGeoSearchBuilderSimilarEstates = $pGeoSearchBuilder; }
-
 	/** @return bool */
 	public function getFormatOutput(): bool
 		{ return $this->_formatOutput; }

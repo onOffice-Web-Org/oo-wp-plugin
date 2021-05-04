@@ -82,10 +82,6 @@ class TestClassEstateList
 
 	/** @var EstateListEnvironment */
 	private $_pEnvironment = null;
-
-	/** @var FilterConfigurationSimilarEstates */
-	private $_pFilterConfiguration = null;
-
 	/** @var SDKWrapperMocker */
 	private $_pSDKWrapperMocker = null;
 	/** @var array */
@@ -682,23 +678,6 @@ class TestClassEstateList
 
 	/**
 	 *
-	 */
-
-	public function testGeoSearchBuilderSimilarEstates()
-	{
-		$pDataViewSimilarEstates = new DataViewSimilarEstates();
-		$this->_pFilterConfiguration = new FilterConfigurationSimilarEstates($pDataViewSimilarEstates);
-		$pNewGeoSearchBuilderSimilarEstates = $this->getMockBuilder(GeoSearchBuilderSimilarEstates::class)
-			->setConstructorArgs([$this->_pFilterConfiguration])
-			->setMethods(['buildParameters'])
-			->getMock();
-		$this->_pEstateList->setGeoSearchBuilder($pNewGeoSearchBuilderSimilarEstates);
-		$this->assertInstanceOf(GeoSearchBuilderSimilarEstates::class, $this->_pEstateList->getGeoSearchBuilderSimilarEstates());
-	}
-
-
-	/**
-	 *
 	 * @before
 	 *
 	 */
@@ -746,7 +725,6 @@ class TestClassEstateList
 			->setMethods([
 				'getDefaultFilterBuilder',
 				'getGeoSearchBuilder',
-				'getGeoSearchBuilderSimilarEstates',
 				'getEstateStatusLabel',
 				'setDefaultFilterBuilder',
 				'getEstateFiles',
@@ -768,15 +746,6 @@ class TestClassEstateList
 		$pGeoSearchBuilder->method('buildParameters')->willReturn(['radius' => 500, 'country' => 'DEU', 'zip' => '52068']);
 		$this->_pEstateList->setGeoSearchBuilder($pGeoSearchBuilder);
 		$this->_pEnvironment->method('getGeoSearchBuilder')->willReturn($pGeoSearchBuilder);
-		$pDataViewSimilarEstates = new DataViewSimilarEstates();
-		$this->_pFilterConfiguration = new FilterConfigurationSimilarEstates($pDataViewSimilarEstates);
-		$pGeoSearchBuilderSimilarEstates = $this->getMockBuilder(GeoSearchBuilderSimilarEstates::class)
-			->setConstructorArgs([$this->_pFilterConfiguration])
-			->setMethods(['buildParameters'])
-			->getMock();
-		$pGeoSearchBuilderSimilarEstates->method('buildParameters')->willReturn(['radius' => 500, 'latitude' => '50.74370', 'longitude' => '6.17194']);
-		$this->_pEstateList->setGeoSearchBuilderSimilarEstates($pGeoSearchBuilderSimilarEstates);
-		$this->_pEnvironment->method('getGeoSearchBuilderSimilarEstates')->willReturn($pGeoSearchBuilderSimilarEstates);
 		$pEstateStatusLabel = $this->getMockBuilder(EstateStatusLabel::class)
 			->setMethods(['getFieldsByPrio', 'getLabel'])
 			->getMock();

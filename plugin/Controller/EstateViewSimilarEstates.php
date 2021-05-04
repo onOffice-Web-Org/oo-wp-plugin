@@ -113,7 +113,6 @@ class EstateViewSimilarEstates
 			$pEstateListSub = clone $this->_pEnvironment->getEstateList();
 			$pEstateListSub->setDefaultFilterBuilder($pDefaultFilterBuilder);
 			$pEstateListSub->setGeoSearchBuilder($pGeoRangeSearch);
-			$pEstateListSub->setGeoSearchBuilderSimilarEstates($pGeoRangeSearch);
 
 			yield $estateId => $pEstateListSub;
 		}

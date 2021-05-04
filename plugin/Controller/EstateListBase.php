@@ -127,24 +127,6 @@ interface EstateListBase
 
 	public function setGeoSearchBuilder(GeoSearchBuilder $pGeoSearchBuilder);
 
-	/**
-	 *
-	 * @return GeoSearchBuilderSimilarEstates
-	 *
-	 */
-
-	public function getGeoSearchBuilderSimilarEstates(): GeoSearchBuilderSimilarEstates;
-
-
-	/**
-	 *
-	 * @param GeoSearchBuilderSimilarEstates $pGeoSearchBuilder
-	 *
-	 */
-
-	public function setGeoSearchBuilderSimilarEstates(GeoSearchBuilderSimilarEstates $pGeoSearchBuilder);
-
-
 	/** @return DataView */
 	public function getDataView(): DataView;
 }
