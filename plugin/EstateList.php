@@ -45,7 +45,6 @@ use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
-use onOffice\WPlugin\Filter\GeoSearchBuilderSimilarEstates;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
@@ -96,9 +95,6 @@ class EstateList
 
 	/** @var GeoSearchBuilder */
 	private $_pGeoSearchBuilder = null;
-
-	/** @var GeoSearchBuilderSimilarEstates */
-	private $_pGeoSearchBuilderSimilarEstates = null;
 
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;

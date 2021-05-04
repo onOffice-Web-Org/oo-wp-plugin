@@ -27,7 +27,6 @@ use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilderEmpty;
-use onOffice\WPlugin\Filter\GeoSearchBuilderSimilarEstates;
 
 /**
  *
