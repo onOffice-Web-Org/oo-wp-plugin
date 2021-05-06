@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.10.3 =
+
+**Fixes**
+
+* Reverts the changes from release v2.10.2 due to backwards-compability concerns.
+
 = 2.10.2 =
 
 **Fixes**
