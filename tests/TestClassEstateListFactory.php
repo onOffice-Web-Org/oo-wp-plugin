@@ -76,9 +76,6 @@ class TestClassEstateListFactory
 			'Id' => [
 				['op' => '=', 'val' => 3],
 			],
-			'referenz' => [
-				['op' => '!=', 'val' => 1]
-			],
 		], $pDataDetail->getDefaultFilterBuilder()->buildFilter());
 	}
 

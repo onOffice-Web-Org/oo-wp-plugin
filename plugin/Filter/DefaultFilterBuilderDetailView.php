@@ -58,9 +58,6 @@ class DefaultFilterBuilderDetailView
 			'Id' => [
 				['op' => '=', 'val' => $this->_estateId],
 			],
-			'referenz' => [
-				['op' => '!=', 'val' => 1],
-			],
 		];
 	}
 

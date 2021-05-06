@@ -117,10 +117,6 @@ class TestClassPdfDocumentModelValidator
 					'op' => '=',
 					'val' => '13',
 				]],
-				'referenz' => [[
-					'op' => '!=',
-					'val' => 1,
-				]],
 			],
 		]);
 		$this->_pAPIClientAction->expects($this->atLeastOnce())->method('getResultRecords')->willReturn([

@@ -139,36 +139,6 @@ class TestClassDefaultFilterBuilderListView
 		$this->assertEquals($expected, $pInstance->buildFilter());
 	}
 
-	/**
-	 *
-	 */
-
-	public function testDefaultViewFilter()
-	{
-		$pDataListView = new DataListView(1, 'test');
-		$pDataListView->setListType(DataListView::LISTVIEW_TYPE_DEFAULT);
-		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setConstructorArgs([new Container])
-			->getMock();
-		$pInstance = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort, $this->_pEnvironment);
-
-		$expected = [
-			'veroeffentlichen' => [
-				[
-					'op' => '=',
-					'val' => 1,
-				],
-			],
-			'referenz' => [
-				[
-					'op' => '!=',
-					'val' => 1,
-				],
-			],
-		];
-		$this->assertEquals($expected, $pInstance->buildFilter());
-	}
-
 
 	/**
 	 *
@@ -229,12 +199,6 @@ class TestClassDefaultFilterBuilderListView
 					'val' => [0],
 				],
 			],
-			'referenz' => [
-				[
-					'op' => '!=',
-					'val' => 1,
-				],
-			],
 		];
 		$this->assertEquals($expected, $pInstance->buildFilter());
 	}
@@ -269,12 +233,6 @@ class TestClassDefaultFilterBuilderListView
 				[
 					'op' => 'in',
 					'val' => [0],
-				],
-			],
-			'referenz' => [
-				[
-					'op' => '!=',
-					'val' => 1,
 				],
 			],
 			'regionaler_zusatz' => [

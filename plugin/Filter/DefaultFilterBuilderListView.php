@@ -86,9 +86,6 @@ class DefaultFilterBuilderListView
 		$filter = array_merge($this->_defaultFilter, $fieldFilter);
 
 		switch ($this->_pDataListView->getListType()) {
-			case DataListView::LISTVIEW_TYPE_DEFAULT:
-				$filter = $this->getDefaultViewFilter();
-				break;
 			case DataListView::LISTVIEW_TYPE_FAVORITES:
 				$filter = $this->getFavoritesFilter();
 				break;
@@ -153,27 +150,11 @@ class DefaultFilterBuilderListView
 	/**
 	 * @return array
 	 */
-	private function getDefaultViewFilter(): array
-	{
-		$filter = $this->_defaultFilter;
-		$filter['referenz'] = [
-			['op' => '!=', 'val' => 1],
-		];
-
-		return $filter;
-	}
-
-	/**
-	 * @return array
-	 */
 	private function getFavoritesFilter(): array
 	{
 		$ids = Favorites::getAllFavorizedIds();
 
 		$filter = $this->_defaultFilter;
-		$filter['referenz'] = [
-			['op' => '!=', 'val' => 1],
-		];
 		$filter['Id'] = [
 			['op' => 'in', 'val' => $ids],
 		];
