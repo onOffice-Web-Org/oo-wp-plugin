@@ -182,11 +182,11 @@ msgid "choose name"
 msgstr ""
 
 #: plugin/Gui/AdminPageAddressListSettings.php:116
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #: plugin/Gui/AdminPageEstateDetail.php:282
-=======
+=========
 #: plugin/Gui/AdminPageEstateDetail.php:271
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+>>>>>>>>> Temporary merge branch 2
 #: plugin/Gui/AdminPageEstateListSettings.php:125
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
 #: plugin/Gui/AdminPageFormSettingsBase.php:370
@@ -198,11 +198,11 @@ msgid "Filter & Records"
 msgstr ""
 
 #: plugin/Gui/AdminPageAddressListSettings.php:155
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #: plugin/Gui/AdminPageEstateDetail.php:298
-=======
+=========
 #: plugin/Gui/AdminPageEstateDetail.php:279
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+>>>>>>>>> Temporary merge branch 2
 #: plugin/Gui/AdminPageEstateListSettings.php:133
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
@@ -295,15 +295,15 @@ msgstr ""
 msgid "List Views"
 msgstr ""
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #: plugin/Gui/AdminPageEstate.php:83
 #: plugin/Gui/AdminPageEstateDetail.php:208
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:93
-=======
+=========
 #: plugin/Gui/AdminPageEstate.php:87
 #: plugin/Gui/AdminPageEstateDetail.php:202
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:92
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+>>>>>>>>> Temporary merge branch 2
 msgid "Detail View"
 msgstr ""
 
@@ -317,18 +317,18 @@ msgstr ""
 msgid "Unit Lists"
 msgstr ""
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #: plugin/Gui/AdminPageEstateDetail.php:124
-=======
+=========
 #: plugin/Gui/AdminPageEstateDetail.php:118
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+>>>>>>>>> Temporary merge branch 2
 #: plugin/Gui/AdminPageEstateListSettings.php:67
 #: plugin/Gui/AdminPageSimilarEstates.php:98
 msgid "Edit List View"
 msgstr ""
 
 #. translators: %s will be replaced with a link to the appropriate page.
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #: plugin/Gui/AdminPageEstateDetail.php:134
 msgid "Detail view in use on page %s"
 msgstr ""
@@ -366,7 +366,7 @@ msgid "The detail view has been saved."
 msgstr ""
 
 #: plugin/Gui/AdminPageEstateDetail.php:446
-=======
+=========
 #: plugin/Gui/AdminPageEstateDetail.php:128
 msgid "Detail view in use on page %s"
 msgstr ""
@@ -397,7 +397,7 @@ msgid "The detail view has been saved."
 msgstr ""
 
 #: plugin/Gui/AdminPageEstateDetail.php:405
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+>>>>>>>>> Temporary merge branch 2
 msgid "There was a problem saving the detail view."
 msgstr ""
 
@@ -663,12 +663,12 @@ msgid "Descending"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:263
-=======
+=========
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:242
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+>>>>>>>>> Temporary merge branch 2
 msgid "Template"
 msgstr ""
 
@@ -706,11 +706,11 @@ msgid "Random Order"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:381
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:155
-=======
+=========
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:134
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+>>>>>>>>> Temporary merge branch 2
 msgid "PDF-Expose"
 msgstr ""
 
@@ -800,7 +800,7 @@ msgstr ""
 msgid "Module"
 msgstr ""
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:109
 msgid "Show Similar Estates"
 msgstr ""
@@ -842,7 +842,7 @@ msgid "Same Postal Code"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:393
-=======
+=========
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:155
 msgid "Movie Links"
 msgstr ""
@@ -888,16 +888,16 @@ msgid "Same Postal Code"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:358
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+>>>>>>>>> Temporary merge branch 2
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
 msgid "Radius"
 msgstr ""
 
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:416
-=======
+=========
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:380
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+>>>>>>>>> Temporary merge branch 2
 msgid "Amount of Estates"
 msgstr ""
 

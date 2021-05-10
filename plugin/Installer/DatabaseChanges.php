@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 17;
+	const MAX_VERSION = 18;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -132,7 +132,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateSortByUserDefinedDefault();
 			$dbversion = 15;
 		}
-
+		
 		if ($dbversion == 15) {
 			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
@@ -143,6 +143,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->migrationsDataSimilarEstates();
 			$dbversion = 17;
 		}
+		if ($dbversion == 17) {
+			$this->installDataQueryForms();
+			$dbversion = 18;
+		}
+
 		if ($dbversion == 17) {
 			$this->installDataQueryForms();
 			$dbversion = 18;

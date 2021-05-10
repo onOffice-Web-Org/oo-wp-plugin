@@ -26,8 +26,10 @@ namespace onOffice\tests;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
+use wpdb;
 
 class TestClassFormModelBuilderEstateDetailSettings
 	extends WP_UnitTestCase
@@ -49,7 +51,6 @@ class TestClassFormModelBuilderEstateDetailSettings
 		'amount' => 13,
 		'enablesimilarestates' => true,
 	];
-
 
 	/** @var InputModelOptionFactoryDetailView */
 	private $_pInputModelDetailViewFactory;
@@ -76,11 +77,13 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pDataDetailViewHandler = new DataDetailViewHandler($pWPOptionsWrapper);
 		$this->_pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($row);
 
-
 		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->setMethods(['getValue', 'readNameShortCodeForm'])
 			->getMock();
+		$pInstance->expects($this->exactly(1))
+			->method('readNameShortCodeForm')
+			->willReturnOnConsecutiveCalls(['' => '[oo_form form="Default Form"]'],['' => '[oo_form form="Default Form"]']);
 		$pInstance->generate('test');
 
 		$pInputModelDB = $pInstance->createInputModelShortCodeForm();

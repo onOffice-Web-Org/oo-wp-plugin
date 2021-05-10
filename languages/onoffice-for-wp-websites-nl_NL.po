@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
 "websites\n"
-"POT-Creation-Date: 2020-12-29T15:20:28+07:00\n"
+"POT-Creation-Date: 2021-04-20T15:51:07+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -52,11 +52,7 @@ msgstr "Gelieve eerst uw onOffice API-gegevens te configureren!"
 
 #: plugin/Controller/AdminViewController.php:148
 #: plugin/Gui/AdminPageAddressList.php:78 plugin/Gui/AdminPageBase.php:88
-<<<<<<< HEAD
-#: plugin/Gui/AdminPageEstateDetail.php:206
-=======
-#: plugin/Gui/AdminPageEstateDetail.php:200
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+#: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
 #: plugin/Gui/AdminPageEstateUnitList.php:66
 #: plugin/Gui/AdminPageFormList.php:177
@@ -197,11 +193,7 @@ msgid "choose name"
 msgstr "naam kiezen"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:116
-<<<<<<< HEAD
-#: plugin/Gui/AdminPageEstateDetail.php:282
-=======
-#: plugin/Gui/AdminPageEstateDetail.php:271
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+#: plugin/Gui/AdminPageEstateDetail.php:277
 #: plugin/Gui/AdminPageEstateListSettings.php:125
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
 #: plugin/Gui/AdminPageFormSettingsBase.php:370
@@ -213,11 +205,7 @@ msgid "Filter & Records"
 msgstr "Filter & dossiers"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:155
-<<<<<<< HEAD
-#: plugin/Gui/AdminPageEstateDetail.php:298
-=======
-#: plugin/Gui/AdminPageEstateDetail.php:279
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+#: plugin/Gui/AdminPageEstateDetail.php:293
 #: plugin/Gui/AdminPageEstateListSettings.php:133
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
@@ -322,18 +310,13 @@ msgstr "De cache is schoongemaakt."
 msgid "List Views"
 msgstr "Lijst met meningen"
 
-<<<<<<< HEAD
-#: plugin/Gui/AdminPageEstate.php:83 plugin/Gui/AdminPageEstateDetail.php:208
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:93
-=======
-#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateDetail.php:202
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:92
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateDetail.php:205
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:95
 msgid "Detail View"
 msgstr "Detailweergave"
 
 #: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageSimilarEstates.php:147
-#: plugin/Gui/AdminPageSimilarEstates.php:202
+#: plugin/Gui/AdminPageSimilarEstates.php:200
 msgid "Similar Estates"
 msgstr "Vergelijkbare Landgoederen"
 
@@ -341,38 +324,22 @@ msgstr "Vergelijkbare Landgoederen"
 msgid "Unit Lists"
 msgstr "Eenheid Lijsten"
 
-<<<<<<< HEAD
-#: plugin/Gui/AdminPageEstateDetail.php:124
-=======
-#: plugin/Gui/AdminPageEstateDetail.php:118
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+#: plugin/Gui/AdminPageEstateDetail.php:121
 #: plugin/Gui/AdminPageEstateListSettings.php:67
 #: plugin/Gui/AdminPageSimilarEstates.php:98
 msgid "Edit List View"
 msgstr "Lijstweergave bewerken"
 
 #. translators: %s will be replaced with a link to the appropriate page.
-<<<<<<< HEAD
-#: plugin/Gui/AdminPageEstateDetail.php:134
+#: plugin/Gui/AdminPageEstateDetail.php:131
 msgid "Detail view in use on page %s"
 msgstr "Detailaanzicht in gebruik op pagina %s"
 
-#: plugin/Gui/AdminPageEstateDetail.php:136
+#: plugin/Gui/AdminPageEstateDetail.php:133
 msgid "Edit Page"
 msgstr "Pagina bewerken"
 
-#: plugin/Gui/AdminPageEstateDetail.php:138
-=======
-#: plugin/Gui/AdminPageEstateDetail.php:128
-msgid "Detail view in use on page %s"
-msgstr "Detailaanzicht in gebruik op pagina %s"
-
-#: plugin/Gui/AdminPageEstateDetail.php:130
-msgid "Edit Page"
-msgstr "Pagina bewerken"
-
-#: plugin/Gui/AdminPageEstateDetail.php:132
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+#: plugin/Gui/AdminPageEstateDetail.php:135
 msgid ""
 "Detail view is not in use yet. Insert this code on a page to get the detail "
 "view there:"
@@ -380,54 +347,30 @@ msgstr ""
 "Detailweergave is nog niet in gebruik. Voeg deze code in op een pagina om "
 "daar de detailweergave te krijgen:"
 
-<<<<<<< HEAD
-#: plugin/Gui/AdminPageEstateDetail.php:164
+#: plugin/Gui/AdminPageEstateDetail.php:161
 msgid "Contact Person Fields"
 msgstr "Ansprechpartner-Felder"
 
-#: plugin/Gui/AdminPageEstateDetail.php:179
+#: plugin/Gui/AdminPageEstateDetail.php:176
+#: plugin/Gui/AdminPageSimilarEstates.php:119
 msgid "Real Estate Fields"
 msgstr "Vastgoedgegevensvelden"
 
-#: plugin/Gui/AdminPageEstateDetail.php:290
+#: plugin/Gui/AdminPageEstateDetail.php:285
 #, fuzzy
 #| msgid "Contact person"
 msgid "Contact Form"
 msgstr "Contactpersoon"
 
-#: plugin/Gui/AdminPageEstateDetail.php:307
+#: plugin/Gui/AdminPageEstateDetail.php:302
 msgid "Additional Media"
 msgstr "Extra media"
 
-#: plugin/Gui/AdminPageEstateDetail.php:324
-msgid "Similar Estates"
-msgstr "Vergelijkbare Landgoederen"
-
-#: plugin/Gui/AdminPageEstateDetail.php:445
+#: plugin/Gui/AdminPageEstateDetail.php:418
 msgid "The detail view has been saved."
 msgstr "Het detailaanzicht is opgeslagen."
 
-#: plugin/Gui/AdminPageEstateDetail.php:446
-=======
-#: plugin/Gui/AdminPageEstateDetail.php:158
-msgid "Contact Person Fields"
-msgstr "Ansprechpartner-Felder"
-
-#: plugin/Gui/AdminPageEstateDetail.php:173
-#: plugin/Gui/AdminPageSimilarEstates.php:119
-msgid "Real Estate Fields"
-msgstr "Vastgoedgegevensvelden"
-
-#: plugin/Gui/AdminPageEstateDetail.php:288
-msgid "Additional Media"
-msgstr "Extra media"
-
-#: plugin/Gui/AdminPageEstateDetail.php:404
-msgid "The detail view has been saved."
-msgstr "Het detailaanzicht is opgeslagen."
-
-#: plugin/Gui/AdminPageEstateDetail.php:405
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+#: plugin/Gui/AdminPageEstateDetail.php:419
 msgid "There was a problem saving the detail view."
 msgstr "Er was een probleem met het bewaren van het detailaanzicht."
 
@@ -588,13 +531,13 @@ msgstr "Velden contactpersoon"
 msgid "Fields Configuration"
 msgstr "Velden Configuratie"
 
-#: plugin/Gui/AdminPageSimilarEstates.php:323
+#: plugin/Gui/AdminPageSimilarEstates.php:319
 #, fuzzy
-#| msgid "The view has been saved."
+#| msgid "The detail view has been saved."
 msgid "The similar estates view has been saved."
-msgstr "De weergave is opgeslagen."
+msgstr "Het detailaanzicht is opgeslagen."
 
-#: plugin/Gui/AdminPageSimilarEstates.php:324
+#: plugin/Gui/AdminPageSimilarEstates.php:320
 #, fuzzy
 #| msgid "There was a problem saving the detail view."
 msgid "There was a problem saving the similar estates view."
@@ -709,12 +652,8 @@ msgid "Descending"
 msgstr "Aflopend"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-<<<<<<< HEAD
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:263
-=======
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:242
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:245
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
 msgid "Template"
 msgstr "Sjabloon"
 
@@ -752,11 +691,7 @@ msgid "Random Order"
 msgstr "Willekeurige volgorde"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:381
-<<<<<<< HEAD
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:155
-=======
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:134
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:137
 msgid "PDF-Expose"
 msgstr "PDF-blootstelling"
 
@@ -846,66 +781,57 @@ msgstr "Taal toevoegen"
 msgid "Module"
 msgstr "Module"
 
-<<<<<<< HEAD
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:109
-msgid "Show Similar Estates"
-msgstr "Toon gelijkaardige landgoederen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:176
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:158
 msgid "Movie Links"
 msgstr "Filmlinks"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:164
 msgid "Disabled"
 msgstr "Uitgeschakeld"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:183
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:165
 msgid "Link"
 msgstr "Link"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:184
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:166
 msgid "Player"
 msgstr "Speler"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:301
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:281
 msgid "Select Contact Form"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:305
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:285
 #, fuzzy
 #| msgid "Contact person"
 msgid "No Contact Form"
 msgstr "Contactpersoon"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:324
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:304
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
 msgid "Same Kind of Estate"
 msgstr "Zelfde soort landgoed"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:347
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:327
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
 msgid "Same Marketing Method"
 msgstr "Dezelfde marketingmethode"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:370
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:350
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
 msgid "Same Postal Code"
 msgstr "Dezelfde postcode"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:393
-=======
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:155
-msgid "Movie Links"
-msgstr "Filmlinks"
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:373
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
+msgid "Radius"
+msgstr "Straal"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
-msgid "Disabled"
-msgstr "Uitgeschakeld"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:162
-msgid "Link"
-msgstr "Link"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:163
-msgid "Player"
-msgstr "Speler"
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:396
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
+msgid "Amount of Estates"
+msgstr "Bedrag van de Landgoederen"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:83
 #, fuzzy
@@ -916,42 +842,6 @@ msgstr "Vergelijkbare Landgoederen"
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:98
 msgid "Show Similar Estates"
 msgstr "Toon gelijkaardige landgoederen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
-msgid "Same Kind of Estate"
-msgstr "Zelfde soort landgoed"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
-msgid "Same Marketing Method"
-msgstr "Dezelfde marketingmethode"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:293
-msgid "Don't show archived estates"
-msgstr ""
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:314
-#, fuzzy
-#| msgid "Reference Estates"
-msgid "Don't show reference estates"
-msgstr "Referentie Landgoederen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:336
-msgid "Same Postal Code"
-msgstr "Dezelfde postcode"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:358
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
-msgid "Radius"
-msgstr "Straal"
-
-<<<<<<< HEAD
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:416
-=======
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:380
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
-msgid "Amount of Estates"
-msgstr "Bedrag van de Landgoederen"
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:63
 msgid "Set Estate Context as Heading"
@@ -1034,16 +924,16 @@ msgstr "Bewerken"
 msgid "(Remains unchanged)"
 msgstr "(Blijft ongewijzigd)"
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:84
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:88
 msgid "0 matches"
 msgstr "0 resultaten"
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:85
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:89
 msgid "Show exact match"
 msgstr "Toon exact resultaat"
 
 #. translators: %s is the amount of results
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:87
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:91
 msgid "Show %s matches"
 msgstr "Toon %s resultaten"
 
@@ -1064,7 +954,6 @@ msgstr[0] "Contactpersoon"
 msgstr[1] "Contactpersoon"
 
 #: plugin/Translation/FormTranslation.php:63
-<<<<<<< HEAD
 #, fuzzy
 #| msgid "Contact person"
 msgctxt "forms"
@@ -1072,13 +961,6 @@ msgid "Interest Form"
 msgid_plural "Interest Forms"
 msgstr[0] "Contactpersoon"
 msgstr[1] "Contactpersoon"
-=======
-msgctxt "forms"
-msgid "Interest Form"
-msgid_plural "Interest Forms"
-msgstr[0] ""
-msgstr[1] ""
->>>>>>> f73d417677ffd30c2f56d8f13f591e82676f420c
 
 #: plugin/Translation/FormTranslation.php:67
 msgctxt "forms"
