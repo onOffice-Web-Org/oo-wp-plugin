@@ -28,7 +28,9 @@ use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\Table\FormsTable;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Record\RecordManagerDeleteForm;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -217,6 +219,17 @@ class AdminPageFormList
 				check_admin_referer('bulk-forms');
 				$capability = UserCapabilities::RULE_EDIT_VIEW_FORM;
 				$itemsDeleted = $pBulkDeleteRecord->delete($pRecordManagerDeleteForm, $capability, $formIds);
+				//delete form in select form in detail estate
+				foreach ($formIds as $formId) {
+					/* @var $pRecordManagerReadForm RecordManagerReadForm */
+					$pRecordManagerReadForm = $pDI->get(RecordManagerReadForm::class);
+					$nameFormByFormId = $pRecordManagerReadForm->getNameByFormId($formId);
+					$onofficeDefaultViewOption = get_option('onoffice-default-view');
+					if ($nameFormByFormId[0]->name === $onofficeDefaultViewOption->getShortCodeForm()) {
+						$onofficeDefaultViewOption->setShortCodeForm('');
+					}
+					update_option('onoffice-default-view', $onofficeDefaultViewOption);
+				}
 				$redirectTo = add_query_arg('delete', $itemsDeleted,
 					admin_url('admin.php?page=onoffice-forms'));
 			}

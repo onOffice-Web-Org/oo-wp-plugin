@@ -77,6 +77,15 @@ class TestClassDefaultFilterBuilderSimilarEstates
 			'veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
 			],
+			'verkauft' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => 1],
+			],
 		];
 		$this->assertEquals($expectation, $result);
 	}
@@ -96,6 +105,15 @@ class TestClassDefaultFilterBuilderSimilarEstates
 			],
 			'objektart' => [
 				['op' => '=', 'val' => 'wohnung'],
+			],
+			'verkauft' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => 1],
 			],
 		];
 		$this->assertEquals($expectation, $result);
@@ -117,6 +135,15 @@ class TestClassDefaultFilterBuilderSimilarEstates
 			'vermarktungsart' => [
 				['op' => '=', 'val' => 'kauf'],
 			],
+			'verkauft' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => 1],
+			],
 		];
 		$this->assertEquals($expectation, $result);
 	}
@@ -134,13 +161,21 @@ class TestClassDefaultFilterBuilderSimilarEstates
 			'veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
 			],
+			'verkauft' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => 1],
+			],
 			'plz' => [
 				['op' => '=', 'val' => '52070'],
 			],
 		];
 		$this->assertEquals($expectation, $result);
 	}
-
 
 	/**
 	 *
@@ -156,6 +191,15 @@ class TestClassDefaultFilterBuilderSimilarEstates
 		$expectation = [
 			'veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
+			],
+			'verkauft' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => 1],
 			],
 			'plz' => [
 				['op' => '=', 'val' => '52070'],
@@ -182,6 +226,15 @@ class TestClassDefaultFilterBuilderSimilarEstates
 		$expectation = [
 			'veroeffentlichen' => [
 				['op' => '=', 'val' => 1],
+			],
+			'verkauft' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'reserviert' => [
+				['op' => '!=', 'val' => 1],
+			],
+			'referenz' => [
+				['op' => '!=', 'val' => 1],
 			],
 			'vermarktungsart' => [
 				['op' => '=', 'val' => 'kauf'],

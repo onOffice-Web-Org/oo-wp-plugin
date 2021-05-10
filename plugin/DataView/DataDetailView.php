@@ -38,6 +38,9 @@ class DataDetailView
 	implements DataView
 {
 	/** */
+	const ENABLE_SIMILAR_ESTATES = 'enablesimilarestates';
+
+	/** */
 	const PICTURES = 'pictures';
 
 	/** */
@@ -45,10 +48,6 @@ class DataDetailView
 
 	/** */
 	const ADDRESSFIELDS = 'addressfields';
-
-	/** */
-	const ENABLE_SIMILAR_ESTATES = 'enablesimilarestates';
-
 
 	/** @var string[] */
 	private $_fields = [
@@ -120,7 +119,6 @@ class DataDetailView
 		$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
 	}
 
-
 	/**
 	 *
 	 */
@@ -131,7 +129,6 @@ class DataDetailView
 			$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
 		}
 	}
-
 
 	/** @return array */
 	public function getFields(): array
@@ -197,25 +194,25 @@ class DataDetailView
 	public function getMovieLinks(): int
 		{ return $this->_movieLinks; }
 
-	/** @param int $movieLinks */
-	public function setMovieLinks(int $movieLinks)
-		{ $this->_movieLinks = $movieLinks; }
-
 	/** @return DataViewSimilarEstates */
 	public function getDataViewSimilarEstates(): DataViewSimilarEstates
-		{ return $this->_pDataViewSimilarEstates; }
+	{ return $this->_pDataViewSimilarEstates; }
 
 	/** @param DataViewSimilarEstates $pDataViewSimilarEstates */
 	public function setDataViewSimilarEstates(DataViewSimilarEstates $pDataViewSimilarEstates)
-		{ $this->_pDataViewSimilarEstates = $pDataViewSimilarEstates; }
+	{ $this->_pDataViewSimilarEstates = $pDataViewSimilarEstates; }
 
 	/** @return bool */
 	public function getDataDetailViewActive(): bool
-		{ return $this->_dataDetailViewActive; }
+	{ return $this->_dataDetailViewActive; }
 
 	/** @param bool $dataDetailViewActive */
 	public function setDataDetailViewActive(bool $dataDetailViewActive)
-		{ $this->_dataDetailViewActive = $dataDetailViewActive; }
+	{ $this->_dataDetailViewActive = $dataDetailViewActive; }
+
+	/** @param int $movieLinks */
+	public function setMovieLinks(int $movieLinks)
+		{ $this->_movieLinks = $movieLinks; }
 
 	/** @return bool */
 	public function getRandom(): bool

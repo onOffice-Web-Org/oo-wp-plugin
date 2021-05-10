@@ -68,7 +68,6 @@ class TestClassDataDetailView
 		'Telefon1',
 		'mobile',
 	];
-
 	/**
 	 *
 	 */
