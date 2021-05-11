@@ -141,7 +141,6 @@ class TestClassDatabaseChanges
 		$this->assertEquals(13, $newAmount);
 		$this->assertEquals('/test/similar/template.php', $newSimilarEstatesTemplate);
 
->>>>>>>>> Temporary merge branch 2
 		return $this->_createQueries;
 	}
 

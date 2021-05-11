@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
 "websites\n"
-"POT-Creation-Date: 2021-04-20T15:51:07+07:00\n"
+"POT-Creation-Date: 2021-05-11T11:55:18+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -56,7 +56,7 @@ msgstr "Per favore, configura prima le tue credenziali API onOffice!"
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
 #: plugin/Gui/AdminPageEstateUnitList.php:66
-#: plugin/Gui/AdminPageFormList.php:177
+#: plugin/Gui/AdminPageFormList.php:179
 #: plugin/Gui/AdminPageSimilarEstates.php:145
 msgid "onOffice"
 msgstr "onOffice"
@@ -72,7 +72,7 @@ msgid "Estates"
 msgstr "Tenute"
 
 #: plugin/Controller/AdminViewController.php:172
-#: plugin/Gui/AdminPageFormList.php:93
+#: plugin/Gui/AdminPageFormList.php:95
 msgid "Forms"
 msgstr "Moduli"
 
@@ -178,7 +178,7 @@ msgstr "Nessun modulo è stato cancellato."
 
 #: plugin/Gui/AdminPageAddressList.php:87 plugin/Gui/AdminPageEstateList.php:83
 #: plugin/Gui/AdminPageEstateUnitList.php:78
-#: plugin/Gui/AdminPageFormList.php:195
+#: plugin/Gui/AdminPageFormList.php:197
 msgid "Add New"
 msgstr "Aggiungi nuovo"
 
@@ -375,7 +375,7 @@ msgstr "La vista di dettaglio è stata salvata."
 msgid "There was a problem saving the detail view."
 msgstr "C'è stato un problema nel salvare la vista di dettaglio."
 
-#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:141
+#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:143
 msgid "Are you sure you want to delete the selected items?"
 msgstr "Sei sicuro di voler eliminare gli elementi selezionati?"
 
@@ -810,32 +810,6 @@ msgstr ""
 msgid "No Contact Form"
 msgstr "Persona di contatto"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:304
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
-msgid "Same Kind of Estate"
-msgstr "Stesso tipo di proprietà"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:327
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
-msgid "Same Marketing Method"
-msgstr "Stesso metodo di marketing"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:350
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
-msgid "Same Postal Code"
-msgstr "Stesso codice postale"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:373
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
-msgid "Radius"
-msgstr "Raggio"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:396
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
-msgid "Amount of Estates"
-msgstr "Quantità di immobili"
-
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:83
 #, fuzzy
 #| msgid "Similar Estates"
@@ -845,6 +819,27 @@ msgstr "Immobili simili"
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:98
 msgid "Show Similar Estates"
 msgstr "Mostra proprietà simili"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
+msgid "Same Kind of Estate"
+msgstr "Stesso tipo di proprietà"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
+msgid "Same Marketing Method"
+msgstr "Stesso metodo di marketing"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
+msgid "Same Postal Code"
+msgstr "Stesso codice postale"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
+msgid "Radius"
+msgstr "Raggio"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
+msgid "Amount of Estates"
+msgstr "Quantità di immobili"
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:63
 msgid "Set Estate Context as Heading"

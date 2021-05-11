@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
 "websites\n"
-"POT-Creation-Date: 2021-04-20T15:51:07+07:00\n"
+"POT-Creation-Date: 2021-05-11T11:55:18+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -55,7 +55,7 @@ msgstr "Gelieve eerst uw onOffice API-gegevens te configureren!"
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
 #: plugin/Gui/AdminPageEstateUnitList.php:66
-#: plugin/Gui/AdminPageFormList.php:177
+#: plugin/Gui/AdminPageFormList.php:179
 #: plugin/Gui/AdminPageSimilarEstates.php:145
 msgid "onOffice"
 msgstr "onOffice"
@@ -71,7 +71,7 @@ msgid "Estates"
 msgstr "Landgoederen"
 
 #: plugin/Controller/AdminViewController.php:172
-#: plugin/Gui/AdminPageFormList.php:93
+#: plugin/Gui/AdminPageFormList.php:95
 msgid "Forms"
 msgstr "Vormen"
 
@@ -177,7 +177,7 @@ msgstr "Er is geen formulier verwijderd."
 
 #: plugin/Gui/AdminPageAddressList.php:87 plugin/Gui/AdminPageEstateList.php:83
 #: plugin/Gui/AdminPageEstateUnitList.php:78
-#: plugin/Gui/AdminPageFormList.php:195
+#: plugin/Gui/AdminPageFormList.php:197
 msgid "Add New"
 msgstr "Nieuw toevoegen"
 
@@ -374,7 +374,7 @@ msgstr "Het detailaanzicht is opgeslagen."
 msgid "There was a problem saving the detail view."
 msgstr "Er was een probleem met het bewaren van het detailaanzicht."
 
-#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:141
+#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:143
 msgid "Are you sure you want to delete the selected items?"
 msgstr "Weet u zeker dat u de geselecteerde items wilt verwijderen?"
 
@@ -807,32 +807,6 @@ msgstr ""
 msgid "No Contact Form"
 msgstr "Contactpersoon"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:304
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
-msgid "Same Kind of Estate"
-msgstr "Zelfde soort landgoed"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:327
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
-msgid "Same Marketing Method"
-msgstr "Dezelfde marketingmethode"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:350
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
-msgid "Same Postal Code"
-msgstr "Dezelfde postcode"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:373
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
-msgid "Radius"
-msgstr "Straal"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:396
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
-msgid "Amount of Estates"
-msgstr "Bedrag van de Landgoederen"
-
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:83
 #, fuzzy
 #| msgid "Similar Estates"
@@ -842,6 +816,27 @@ msgstr "Vergelijkbare Landgoederen"
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:98
 msgid "Show Similar Estates"
 msgstr "Toon gelijkaardige landgoederen"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
+msgid "Same Kind of Estate"
+msgstr "Zelfde soort landgoed"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
+msgid "Same Marketing Method"
+msgstr "Dezelfde marketingmethode"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
+msgid "Same Postal Code"
+msgstr "Dezelfde postcode"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
+msgid "Radius"
+msgstr "Straal"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
+msgid "Amount of Estates"
+msgstr "Bedrag van de Landgoederen"
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:63
 msgid "Set Estate Context as Heading"

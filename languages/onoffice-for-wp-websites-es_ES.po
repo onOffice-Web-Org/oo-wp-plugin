@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
 "websites\n"
-"POT-Creation-Date: 2021-04-20T15:51:07+07:00\n"
+"POT-Creation-Date: 2021-05-11T11:55:18+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -56,7 +56,7 @@ msgstr "Por favor, configure primero sus credenciales de la API de onOffice!"
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
 #: plugin/Gui/AdminPageEstateUnitList.php:66
-#: plugin/Gui/AdminPageFormList.php:177
+#: plugin/Gui/AdminPageFormList.php:179
 #: plugin/Gui/AdminPageSimilarEstates.php:145
 msgid "onOffice"
 msgstr "onOffice"
@@ -72,7 +72,7 @@ msgid "Estates"
 msgstr "Propiedades"
 
 #: plugin/Controller/AdminViewController.php:172
-#: plugin/Gui/AdminPageFormList.php:93
+#: plugin/Gui/AdminPageFormList.php:95
 msgid "Forms"
 msgstr "Formularios"
 
@@ -178,7 +178,7 @@ msgstr "No se ha borrado ningún formulario."
 
 #: plugin/Gui/AdminPageAddressList.php:87 plugin/Gui/AdminPageEstateList.php:83
 #: plugin/Gui/AdminPageEstateUnitList.php:78
-#: plugin/Gui/AdminPageFormList.php:195
+#: plugin/Gui/AdminPageFormList.php:197
 msgid "Add New"
 msgstr "Añadir nuevo"
 
@@ -374,7 +374,7 @@ msgstr "Se ha grabado la vista detallada."
 msgid "There was a problem saving the detail view."
 msgstr "Ha habido un problema para guardar la vista detallada."
 
-#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:141
+#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:143
 msgid "Are you sure you want to delete the selected items?"
 msgstr "¿Está seguro de que desea borrar las posiciones seleccionadas?"
 
@@ -809,32 +809,6 @@ msgstr ""
 msgid "No Contact Form"
 msgstr "Persona de contacto: "
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:304
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
-msgid "Same Kind of Estate"
-msgstr "El mismo tipo de patrimonio"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:327
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
-msgid "Same Marketing Method"
-msgstr "El mismo método de comercialización"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:350
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
-msgid "Same Postal Code"
-msgstr "Mismo Código Postal"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:373
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
-#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
-msgid "Radius"
-msgstr "Radio"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:396
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
-msgid "Amount of Estates"
-msgstr "Cantidad de Sucesiones"
-
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:83
 #, fuzzy
 #| msgid "Similar Estates"
@@ -844,6 +818,27 @@ msgstr "Sucesiones similares"
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:98
 msgid "Show Similar Estates"
 msgstr "Mostrar Sucesiones Similares"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:250
+msgid "Same Kind of Estate"
+msgstr "El mismo tipo de patrimonio"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:272
+msgid "Same Marketing Method"
+msgstr "El mismo método de comercialización"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
+msgid "Same Postal Code"
+msgstr "Mismo Código Postal"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
+#: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
+msgid "Radius"
+msgstr "Radio"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
+msgid "Amount of Estates"
+msgstr "Cantidad de Sucesiones"
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:63
 msgid "Set Estate Context as Heading"
