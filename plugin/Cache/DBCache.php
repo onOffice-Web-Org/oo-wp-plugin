@@ -123,6 +123,20 @@ class DBCache
 		return $record;
 	}
 
+    /**
+     * @return mixed
+     */
+    public function getAllCacheParameters()
+	{
+        $record = $this->_pWpdb->get_results($this->_pWpdb->prepare( "
+				SELECT cache_parameters
+				FROM {$this->_pWpdb->prefix}oo_plugin_cache"
+			 )
+		);
+
+        return $record;
+	}
+
 	/**
 	 *
 	 * @param array $parameters

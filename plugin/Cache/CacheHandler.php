@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Cache;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\SDKWrapper;
 
 
@@ -64,13 +65,28 @@ class CacheHandler
 
 	/**
 	 *
+     * @throws \onOffice\WPlugin\API\ApiClientException
 	 */
 
-	public function clean()
-	{
-		foreach ($this->_pSDKWrapper->getCache() as $pCache) {
-			/* @var $pCache onOfficeSDKCache */
-			$pCache->cleanup();
-		}
-	}
+    public function clean()
+    {
+        $this->_pSDKWrapper->setConfigWithTimeOutConnector();
+        foreach ($this->_pSDKWrapper->getCache() as $pCache) {
+            foreach ($pCache->getAllCacheParameters() as $cacheParameters) {
+                $cacheParameter = unserialize($cacheParameters->cache_parameters, ['allowed_classes' => false]);
+                $pApiCall = new APIClientActionGeneric
+                (
+                    $this->_pSDKWrapper, $cacheParameter['actionid'], $cacheParameter['resourcetype']
+                );
+                $parameters = $cacheParameter['parameters'];
+                $pApiCall->setParameters($parameters);
+                $pApiCall->addRequestToQueue()->sendRequests();
+                $record = $pApiCall->getResultRecords();
+                if ($record) {
+                    /* @var $pCache onOfficeSDKCache */
+                    $pCache->cleanup();
+                }
+            }
+        }
+    }
 }

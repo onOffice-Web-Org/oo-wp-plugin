@@ -100,6 +100,23 @@ class SDKWrapper
 		return $localconfig;
 	}
 
+    /**
+     *
+     */
+
+    public function setConfigWithTimeOutConnector()
+    {
+        $localconfig = [
+            'apiversion' => 'latest',
+            'server' => 'https://api.onoffice.de/api/',
+            'curl_options' => [
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+                CURLOPT_CONNECTTIMEOUT => 1,
+            ],
+        ];
+        $this->_pSDK->setApiCurlOptions($localconfig['curl_options']);
+    }
 
 	/**
 	 *
