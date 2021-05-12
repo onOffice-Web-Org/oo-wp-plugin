@@ -73,6 +73,19 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.10.3 =
+
+**Fixes**
+
+* Reverts the changes from release v2.10.2 due to backwards-compability concerns.
+
+= 2.10.2 =
+
+**Fixes**
+
+* The visitor can no longer visit the detail page of a reference estate.
+* The default list views and favorites list views exclude reference estates.
+
 = 2.10.1 =
 
 **Fixes**
