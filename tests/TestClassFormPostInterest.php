@@ -418,7 +418,7 @@ class TestClassFormPostInterest
 				'Name' => 'Doe',
 				'Email' => 'john@doemail.com',
 			],
-			'message' => "\nSuchkriterien des Interessen:\nVermarktungsart: Kauf\nKaufpreis (min): 200000\nKaufpreis (max): 800000",
+			'message' => "\nSuchkriterien des Interessenten:\nVermarktungsart: Kauf\nKaufpreis (min): 200000\nKaufpreis (max): 800000",
 			'subject' => 'Interest',
 			'formtype' => Form::TYPE_INTEREST,
 			"referrer" => "",

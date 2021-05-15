@@ -122,7 +122,7 @@ class FormPostInterest
 			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData());
 		$searchCriterias = $this->createStringFromInputData($filledSearchCriteriaData);
 		$message = $values['message'] ?? '';
-		$message .= "\nSuchkriterien des Interessen:\n".
+		$message .= "\nSuchkriterien des Interessenten:\n".
 					"$searchCriterias";
 		$requestParams = [
 			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
