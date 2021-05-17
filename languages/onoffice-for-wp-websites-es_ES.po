@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
 "websites\n"
-"POT-Creation-Date: 2020-12-29T15:20:28+07:00\n"
+"POT-Creation-Date: 2021-02-04T16:59:18+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Domain: onoffice-for-wp-websites\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -237,65 +237,73 @@ msgstr ""
 "Parece que no ha introducido ninguna credencial de API válida. Por favor, "
 "regrese y revise su %s..."
 
-#: plugin/Gui/AdminPageApiSettings.php:65
+#: plugin/Gui/AdminPageApiSettings.php:66
 msgid "API token"
 msgstr "Token de la API"
 
-#: plugin/Gui/AdminPageApiSettings.php:66
+#: plugin/Gui/AdminPageApiSettings.php:67
 msgid "API secret"
 msgstr "Secreto de la API"
 
-#: plugin/Gui/AdminPageApiSettings.php:83
+#: plugin/Gui/AdminPageApiSettings.php:84
 msgid "API settings"
 msgstr "Configuración de la API"
 
-#: plugin/Gui/AdminPageApiSettings.php:95
+#: plugin/Gui/AdminPageApiSettings.php:96
 msgid "Site Key"
 msgstr "Clave de centro"
 
-#: plugin/Gui/AdminPageApiSettings.php:96
+#: plugin/Gui/AdminPageApiSettings.php:97
 msgid "Secret Key"
 msgstr "Clave Secreta"
 
-#: plugin/Gui/AdminPageApiSettings.php:117
+#: plugin/Gui/AdminPageApiSettings.php:118
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:132
-#: plugin/Gui/AdminPageApiSettings.php:142
+#: plugin/Gui/AdminPageApiSettings.php:133
+#: plugin/Gui/AdminPageApiSettings.php:143
 #, fuzzy
 msgid "Google Maps Key"
 msgstr "Google Maps"
 
-#: plugin/Gui/AdminPageApiSettings.php:169
+#: plugin/Gui/AdminPageApiSettings.php:150
+msgid "Index PDF brochure"
+msgstr "Index PDF brochure"
+
+#: plugin/Gui/AdminPageApiSettings.php:161
+msgid "Google Bot"
+msgstr "Google Bot"
+
+#: plugin/Gui/AdminPageApiSettings.php:188
 msgid "The keys are OK."
 msgstr "Las llaves están bien."
 
-#: plugin/Gui/AdminPageApiSettings.php:170
+#: plugin/Gui/AdminPageApiSettings.php:189
 msgid "There was an error:"
 msgstr "Hubo un error:"
 
-#: plugin/Gui/AdminPageApiSettings.php:171
+#: plugin/Gui/AdminPageApiSettings.php:190
 msgid "The secret parameter is missing."
 msgstr "Falta el parámetro secreto."
 
-#: plugin/Gui/AdminPageApiSettings.php:172
+#: plugin/Gui/AdminPageApiSettings.php:191
 msgid "The secret parameter is invalid or malformed."
 msgstr "El parámetro secreto es inválido o malformado."
 
-#: plugin/Gui/AdminPageApiSettings.php:173
+#: plugin/Gui/AdminPageApiSettings.php:192
 msgid "The response parameter is missing."
 msgstr "Falta el parámetro de respuesta."
 
-#: plugin/Gui/AdminPageApiSettings.php:174
+#: plugin/Gui/AdminPageApiSettings.php:193
 msgid "The response parameter is invalid or malformed."
 msgstr "El parámetro de respuesta es inválido o malformado."
 
-#: plugin/Gui/AdminPageApiSettings.php:175
+#: plugin/Gui/AdminPageApiSettings.php:194
 msgid "The request is invalid or malformed."
 msgstr "La solicitud es inválida o malformada."
 
-#: plugin/Gui/AdminPageApiSettings.php:186
+#: plugin/Gui/AdminPageApiSettings.php:205
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -303,7 +311,7 @@ msgstr ""
 "Para poder utilizar Google reCAPTCHA, necesita proporcionar sus claves. "
 "Puede habilitarlo en la configuración del formulario para su uso posterior."
 
-#: plugin/Gui/AdminPageApiSettings.php:224
+#: plugin/Gui/AdminPageApiSettings.php:243
 msgid "The cache was cleaned."
 msgstr "Se ha limpiado la caché."
 
