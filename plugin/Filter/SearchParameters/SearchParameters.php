@@ -109,9 +109,6 @@ class SearchParameters
 	 */
 	public function registerNewPageLinkArgs(SearchParametersModel $pSearchParametersModel)
 	{
-		if (!get_option('onoffice-pagination-paginationbyonoffice')) {
-			return;
-		}
 		add_filter('wp_link_pages_link', function(string $link, int $i) use ($pSearchParametersModel): string {
 			return $this->linkPagesLink($link, $i, $pSearchParametersModel);
 		}, 10, 2);
