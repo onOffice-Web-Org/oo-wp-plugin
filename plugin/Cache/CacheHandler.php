@@ -27,7 +27,6 @@ use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\SDKWrapper;
-use onOffice\WPlugin\SDKWrapperAddCurlOption;
 
 
 /**
@@ -46,13 +45,11 @@ class CacheHandler
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
-	 * @param SDKWrapperAddCurlOption $pSDKWrapperAddCurlOption
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper, SDKWrapperAddCurlOption $pSDKWrapperAddCurlOption)
+	public function __construct(SDKWrapper $pSDKWrapper)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
-		$this->_pSDKWrapperAddCurlOption = $pSDKWrapperAddCurlOption;
 	}
 
 
@@ -75,8 +72,13 @@ class CacheHandler
 
 	public function clean()
 	{
-		$pApiCall = new APIClientActionGeneric($this->_pSDKWrapperAddCurlOption, onOfficeSDK::ACTION_ID_READ,'estate');
-		$pApiCall->addRequestToQueue()->sendRequests();
+		$options = [
+			CURLOPT_SSL_VERIFYPEER => true,
+			CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+			CURLOPT_CONNECTTIMEOUT => 1,
+		];
+		$pApiCall = new APIClientActionGeneric($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ,'estate');
+		$pApiCall->addRequestToQueue()->sendRequestsWithCustomCurlOption($options);
 		$records = $pApiCall->getResultRecords();
 		if(!empty($records)){
 			foreach ($this->_pSDKWrapperAddCurlOption->getCache() as $pCache) {
