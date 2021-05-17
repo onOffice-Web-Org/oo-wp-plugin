@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.11.0 =
+
+**New**
+
+* PDF brochures can be prevented from being indexed by Google bot. In order to configure this, a new checkbox was added in the settings page. Exclusion is being achieved through the HTTP header "X-Robots-Tag: noindex".
+
 = 2.10.3 =
 
 **Fixes**
