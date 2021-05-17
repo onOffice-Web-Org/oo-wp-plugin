@@ -24,7 +24,10 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Cache;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\SDKWrapperAddCurlOption;
 
 
 /**
@@ -36,16 +39,20 @@ class CacheHandler
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
+	/** @var SDKWrapperAddCurlOption */
+	private $_pSDKWrapperAddCurlOption = null;
+
 
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
-	 *
+	 * @param SDKWrapperAddCurlOption $pSDKWrapperAddCurlOption
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper)
+	public function __construct(SDKWrapper $pSDKWrapper, SDKWrapperAddCurlOption $pSDKWrapperAddCurlOption)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->_pSDKWrapperAddCurlOption = $pSDKWrapperAddCurlOption;
 	}
 
 
@@ -68,9 +75,14 @@ class CacheHandler
 
 	public function clean()
 	{
-		foreach ($this->_pSDKWrapper->getCache() as $pCache) {
-			/* @var $pCache onOfficeSDKCache */
-			$pCache->cleanup();
+		$pApiCall = new APIClientActionGeneric($this->_pSDKWrapperAddCurlOption, onOfficeSDK::ACTION_ID_READ,'estate');
+		$pApiCall->addRequestToQueue()->sendRequests();
+		$records = $pApiCall->getResultRecords();
+		if(!empty($records)){
+			foreach ($this->_pSDKWrapperAddCurlOption->getCache() as $pCache) {
+				/* @var $pCache onOfficeSDKCache */
+				$pCache->cleanup();
+			}
 		}
 	}
 }
