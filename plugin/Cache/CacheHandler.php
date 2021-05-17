@@ -81,7 +81,7 @@ class CacheHandler
 		$pApiCall->addRequestToQueue()->sendRequestsWithCustomCurlOption($options);
 		$records = $pApiCall->getResultRecords();
 		if(!empty($records)){
-			foreach ($this->_pSDKWrapperAddCurlOption->getCache() as $pCache) {
+			foreach ($this->_pSDKWrapper->getCache() as $pCache) {
 				/* @var $pCache onOfficeSDKCache */
 				$pCache->cleanup();
 			}
