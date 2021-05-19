@@ -89,7 +89,7 @@ class TestClassFieldLoaderGeneric
 			$this->assertInternalType('string', $fieldname);
 			$actualModule = $fieldProperties['module'];
 			$this->assertContains($actualModule,
-				[onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE], 'Module: '.$actualModule);
+				[onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE], 'Module: ' . $actualModule);
 			$this->assertArrayHasKey('module', $fieldProperties);
 			$this->assertArrayHasKey('label', $fieldProperties);
 			$this->assertArrayHasKey('type', $fieldProperties);
@@ -97,6 +97,9 @@ class TestClassFieldLoaderGeneric
 			$this->assertArrayHasKey('length', $fieldProperties);
 			$this->assertArrayHasKey('permittedvalues', $fieldProperties);
 			$this->assertArrayHasKey('content', $fieldProperties);
+			if ($actualModule == onOfficeSDK::MODULE_ADDRESS && !empty($fieldProperties['tablename'])) {
+				$this->assertNotEquals($fieldProperties['tablename'], 'AdrZusatz');
+			}
 		}
 	}
 }

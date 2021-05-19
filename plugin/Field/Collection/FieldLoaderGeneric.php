@@ -82,6 +82,9 @@ class FieldLoaderGeneric
 			}
 
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
+				if ($module == onOfficeSDK::MODULE_ADDRESS && $fieldProperties['tablename'] == 'AdrZusatz') {
+					continue;
+				}
 				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz') {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 					$this->_pRegionController->fetchRegions();
