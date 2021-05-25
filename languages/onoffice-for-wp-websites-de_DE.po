@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Domain: onoffice-for-wp-websites\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -234,64 +234,72 @@ msgstr ""
 "Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte gehen Sie zurück "
 "und prüfen Ihr %s."
 
-#: plugin/Gui/AdminPageApiSettings.php:65
+#: plugin/Gui/AdminPageApiSettings.php:66
 msgid "API token"
 msgstr "API-Token"
 
-#: plugin/Gui/AdminPageApiSettings.php:66
+#: plugin/Gui/AdminPageApiSettings.php:67
 msgid "API secret"
 msgstr "API-Secret"
 
-#: plugin/Gui/AdminPageApiSettings.php:83
+#: plugin/Gui/AdminPageApiSettings.php:84
 msgid "API settings"
 msgstr "API Einstellungen"
 
-#: plugin/Gui/AdminPageApiSettings.php:95
+#: plugin/Gui/AdminPageApiSettings.php:96
 msgid "Site Key"
 msgstr "Site Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:96
+#: plugin/Gui/AdminPageApiSettings.php:97
 msgid "Secret Key"
 msgstr "Secret Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:117
+#: plugin/Gui/AdminPageApiSettings.php:118
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:132
-#: plugin/Gui/AdminPageApiSettings.php:142
+#: plugin/Gui/AdminPageApiSettings.php:133
+#: plugin/Gui/AdminPageApiSettings.php:143
 msgid "Google Maps Key"
 msgstr "Google Maps-Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:169
+#: plugin/Gui/AdminPageApiSettings.php:150
+msgid "Index PDF brochure"
+msgstr "Index PDF brochure"
+
+#: plugin/Gui/AdminPageApiSettings.php:161
+msgid "Google Bot"
+msgstr "Google Bot"
+
+#: plugin/Gui/AdminPageApiSettings.php:188
 msgid "The keys are OK."
 msgstr "Die Keys sind OK."
 
-#: plugin/Gui/AdminPageApiSettings.php:170
+#: plugin/Gui/AdminPageApiSettings.php:189
 msgid "There was an error:"
 msgstr "Ein Fehler ist aufgetreten:"
 
-#: plugin/Gui/AdminPageApiSettings.php:171
+#: plugin/Gui/AdminPageApiSettings.php:190
 msgid "The secret parameter is missing."
 msgstr "Der Secret-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:172
+#: plugin/Gui/AdminPageApiSettings.php:191
 msgid "The secret parameter is invalid or malformed."
 msgstr "Der Secret-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:173
+#: plugin/Gui/AdminPageApiSettings.php:192
 msgid "The response parameter is missing."
 msgstr "Der reponse-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:174
+#: plugin/Gui/AdminPageApiSettings.php:193
 msgid "The response parameter is invalid or malformed."
 msgstr "Der response-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:175
+#: plugin/Gui/AdminPageApiSettings.php:194
 msgid "The request is invalid or malformed."
 msgstr "Die Anfrage ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:186
+#: plugin/Gui/AdminPageApiSettings.php:205
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -300,7 +308,7 @@ msgstr ""
 "Sie können reCAPTCHA jedoch schon für die spätere Verwendung in den "
 "Formularen aktivieren."
 
-#: plugin/Gui/AdminPageApiSettings.php:224
+#: plugin/Gui/AdminPageApiSettings.php:243
 msgid "The cache was cleaned."
 msgstr "Der Cache wurde geleert."
 

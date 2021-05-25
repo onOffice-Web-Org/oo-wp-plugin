@@ -217,68 +217,76 @@ msgstr ""
 msgid "It looks like you did not enter any valid API credentials. Please go back and review your %s."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:65
+#: plugin/Gui/AdminPageApiSettings.php:66
 msgid "API token"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:66
+#: plugin/Gui/AdminPageApiSettings.php:67
 msgid "API secret"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:83
+#: plugin/Gui/AdminPageApiSettings.php:84
 msgid "API settings"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:95
+#: plugin/Gui/AdminPageApiSettings.php:96
 msgid "Site Key"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:96
+#: plugin/Gui/AdminPageApiSettings.php:97
 msgid "Secret Key"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:117
+#: plugin/Gui/AdminPageApiSettings.php:118
 msgid "Google reCAPTCHA"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:132
-#: plugin/Gui/AdminPageApiSettings.php:142
+#: plugin/Gui/AdminPageApiSettings.php:133
+#: plugin/Gui/AdminPageApiSettings.php:143
 msgid "Google Maps Key"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:169
+#: plugin/Gui/AdminPageApiSettings.php:150
+msgid "Index PDF brochure"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:161
+msgid "Google Bot"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:188
 msgid "The keys are OK."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:170
+#: plugin/Gui/AdminPageApiSettings.php:189
 msgid "There was an error:"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:171
+#: plugin/Gui/AdminPageApiSettings.php:190
 msgid "The secret parameter is missing."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:172
+#: plugin/Gui/AdminPageApiSettings.php:191
 msgid "The secret parameter is invalid or malformed."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:173
+#: plugin/Gui/AdminPageApiSettings.php:192
 msgid "The response parameter is missing."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:174
+#: plugin/Gui/AdminPageApiSettings.php:193
 msgid "The response parameter is invalid or malformed."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:175
+#: plugin/Gui/AdminPageApiSettings.php:194
 msgid "The request is invalid or malformed."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:186
+#: plugin/Gui/AdminPageApiSettings.php:205
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:224
+#: plugin/Gui/AdminPageApiSettings.php:243
 msgid "The cache was cleaned."
 msgstr ""
 
