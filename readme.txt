@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.12.0 =
+
+**New**
+
+* Automatically creates a default contact form during plugin setup.
+
 = 2.11.0 =
 
 **New**
