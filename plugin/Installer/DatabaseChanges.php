@@ -148,11 +148,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 18;
 		}
 
-		if ($dbversion == 17) {
-			$this->installDataQueryForms();
-			$dbversion = 18;
-		}
-
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
