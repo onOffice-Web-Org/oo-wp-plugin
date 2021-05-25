@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-websites\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -118,7 +118,8 @@ msgstr ""
 msgid "E-Mail:"
 msgstr ""
 
-#: templates.dist/estate/SearchForm.php:38
+#: templates.dist/estate/SearchForm.php:30
+#: templates.dist/estate/SearchForm.php:39
 msgid "Search"
 msgstr ""
 
