@@ -148,6 +148,13 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			} ?>
 
 		</div>
+        <div>
+			<?php
+			if (get_option('onoffice-pagination-paginationbyonoffice')) {
+				wp_link_pages();
+			}
+			?>
+        </div>
 		<div class="oo-similar">
 			<?php echo $pEstates->getSimilarEstates(); ?>
 		</div>
