@@ -87,7 +87,7 @@ class AdminPageApiSettings
 		$pInputModelApiSecret = new InputModelOption('onoffice-settings', 'apisecret', $labelSecret, 'string');
 		$pInputModelApiSecret->setIsPassword(true);
 		$optionNameSecret = $pInputModelApiSecret->getIdentifier();
-		$pInputModelApiKey->setSanitizeCallback(function ($apiKey) use ($optionNameKey) {
+		$pInputModelApiKey->setSanitizeCallback(function ($apiKey) {
 			return $this->encrypteCredentials($apiKey);
 		});
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
