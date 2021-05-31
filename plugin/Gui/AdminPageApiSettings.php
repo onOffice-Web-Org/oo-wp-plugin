@@ -78,7 +78,7 @@ class AdminPageApiSettings
 		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
 			try {
 				$apiKeyDecrypt = $this->_encrypter->decrypt(get_option($optionNameKey), ONOFFICE_CREDENTIALS_ENC_KEY);
-			} catch (RuntimeException $e) {
+			} catch (\RuntimeException $e) {
 				$apiKeyDecrypt = $apiKey;
 			}
 			$apiKey = $apiKeyDecrypt;
