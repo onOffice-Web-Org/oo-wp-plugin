@@ -32,6 +32,7 @@ use function esc_html;
 use function get_option;
 use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
+use PHP_CodeSniffer\Exceptions\RuntimeException;
 use function settings_fields;
 use function submit_button;
 
@@ -72,9 +73,15 @@ class AdminPageApiSettings
 		$labelSecret = __('API secret', 'onoffice-for-wp-websites');
 		$pInputModelApiKey = new InputModelOption('onoffice-settings', 'apikey', $labelKey, 'string');
 		$optionNameKey = $pInputModelApiKey->getIdentifier();
-		$apiKey = defined('ONOFFICE_CREDENTIALS_ENC_KEY')
-			? $this->_encrypter->decrypt(get_option($optionNameKey), ONOFFICE_CREDENTIALS_ENC_KEY)
-			: get_option($optionNameKey);
+		$apiKey = get_option($optionNameKey);
+		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+			try {
+				$apiKeyDecrypt = $this->_encrypter->decrypt(get_option($optionNameKey), ONOFFICE_CREDENTIALS_ENC_KEY);
+			} catch (RuntimeException $e) {
+				$apiKeyDecrypt = $apiKey;
+			}
+			$apiKey = $apiKeyDecrypt;
+		}
 		$pInputModelApiKey->setValue($apiKey);
 		$pInputModelApiSecret = new InputModelOption('onoffice-settings', 'apisecret', $labelSecret, 'string');
 		$pInputModelApiSecret->setIsPassword(true);
