@@ -73,11 +73,18 @@ class AdminPageApiSettings
 		$labelSecret = __('API secret', 'onoffice-for-wp-websites');
 		$pInputModelApiKey = new InputModelOption('onoffice-settings', 'apikey', $labelKey, 'string');
 		$optionNameKey = $pInputModelApiKey->getIdentifier();
-		$pInputModelApiKey->setValue(get_option($optionNameKey));
+		$apiKey = defined('ONOFFICE_CREDENTIALS_ENC_KEY')
+			? $this->_encrypter->decrypt(get_option($optionNameKey), ONOFFICE_CREDENTIALS_ENC_KEY)
+			: get_option($optionNameKey);
+		$pInputModelApiKey->setValue($apiKey);
 		$pInputModelApiSecret = new InputModelOption('onoffice-settings', 'apisecret', $labelSecret, 'string');
 		$pInputModelApiSecret->setIsPassword(true);
 		$optionNameSecret = $pInputModelApiSecret->getIdentifier();
+		$pInputModelApiKey->setSanitizeCallback(function ($apiKey) use ($optionNameKey) {
+			return $this->encrypteCredentials($apiKey);
+		});
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
+			$password = $this->encrypteCredentials($password);
 			return $this->checkPassword($password, $optionNameSecret);
 		});
 		$pInputModelApiSecret->setValue(get_option($optionNameSecret, $pInputModelApiSecret->getDefault()));
@@ -178,11 +185,19 @@ class AdminPageApiSettings
 
 	public function checkPassword($password, $optionName)
 	{
-		if ($password && $optionName == 'onoffice-settings-apisecret'
-			&& defined('ONOFFICE_CREDENTIALS_ENC_KEY') && ONOFFICE_CREDENTIALS_ENC_KEY) {
+		return $password != '' ? $password : get_option($optionName);
+	}
+
+	/**
+	 * @param $password
+	 * @return string
+	 */
+	public function encrypteCredentials(string $password)
+	{
+		if ($password && defined('ONOFFICE_CREDENTIALS_ENC_KEY') && ONOFFICE_CREDENTIALS_ENC_KEY) {
 			$password = $this->_encrypter->encrypt($password, ONOFFICE_CREDENTIALS_ENC_KEY);
 		}
-		return $password != '' ? $password : get_option($optionName);
+		return $password;
 	}
 
 

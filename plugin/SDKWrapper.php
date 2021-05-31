@@ -151,10 +151,13 @@ class SDKWrapper
 		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY') && ONOFFICE_CREDENTIALS_ENC_KEY) {
 			try {
 				$secretDecrypt = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
+				$tokenDecrypt = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
 			}catch (\RuntimeException $exception){
 				$secretDecrypt = $secret;
+				$tokenDecrypt = $token;
 			}
 			$secret = $secretDecrypt;
+			$token = $tokenDecrypt;
 		}
 		$this->_pSDK->sendRequests($token, $secret);
 		$errors = $this->_pSDK->getErrors();

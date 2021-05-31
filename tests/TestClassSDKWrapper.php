@@ -108,8 +108,8 @@ class TestClassSDKWrapper
 			->will($this->returnValue(2));
 		$this->_pMockWPOptions = new WPOptionWrapperTest();
 		$this->_pSDKWrapper = new SDKWrapper($this->_pMockSDK, $this->_pMockWPOptions);
-		$this->_pMockWPOptions->addOption('onoffice-settings-apikey', 'testKey');
 		$encrypter = new SymmetricEncryptionDefault();
+		$this->_pMockWPOptions->addOption('onoffice-settings-apikey', $encrypter->encrypt('test-key', ONOFFICE_CREDENTIALS_ENC_KEY));
 		$this->_pMockWPOptions->addOption('onoffice-settings-apisecret', $encrypter->encrypt('test-secret', ONOFFICE_CREDENTIALS_ENC_KEY));
 	}
 
