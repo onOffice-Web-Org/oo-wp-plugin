@@ -32,7 +32,6 @@ use function esc_html;
 use function get_option;
 use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
-use PHP_CodeSniffer\Exceptions\RuntimeException;
 use function settings_fields;
 use function submit_button;
 
