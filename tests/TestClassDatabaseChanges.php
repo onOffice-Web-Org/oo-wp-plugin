@@ -31,6 +31,7 @@ use function add_filter;
 use function get_option;
 use function update_option;
 use function remove_filter;
+use wpdb;
 
 /**
  *
@@ -57,6 +58,9 @@ class TestClassDatabaseChanges
 
 	/** @var WPOptionWrapperTest */
 	private $_pWpOption;
+
+	/** @var wpdb */
+	private $_pWPDBMock = null;
 
 	/** @var DatabaseChanges */
 	private $_pDbChanges;
@@ -142,6 +146,43 @@ class TestClassDatabaseChanges
 		$this->assertEquals('/test/similar/template.php', $newSimilarEstatesTemplate);
 
 		return $this->_createQueries;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::deleteCommentFieldApplicantSearchForm
+	 */
+
+	public function testDeleteCommentFieldApplicantSearchForm()
+	{
+		$this->_pWpOption->addOption('oo_plugin_db_version', '17');
+		$formsOutput = [
+			(object)[
+				'form_id' => '2',
+				'name' => 'Applicant Search Form',
+				'form_type' => 'applicantsearch',
+			]
+		];
+		$fieldConfigOutput = [
+			(object)[
+				'form_fieldconfig_id' => '1',
+				'form_id' => '2',
+				'fieldname' => 'krit_bemerkung_oeffentlich'
+			]
+		];
+
+		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
+			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->getMock();
+
+		$this->_pWPDBMock->expects($this->exactly(2))
+			->method('get_results')
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput);
+
+		$this->_pWPDBMock->expects($this->once())->method('delete')
+			->will($this->returnValue(true));
+
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock);
+		$this->_pDbChanges->install();
 	}
 
 
