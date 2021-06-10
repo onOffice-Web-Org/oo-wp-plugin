@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 18;
+	const MAX_VERSION = 19;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -148,9 +148,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 18;
 		}
 
-		if ($dbversion == 17) {
+		if ($dbversion == 18) {
 			$this->deleteCommentFieldApplicantSearchForm();
-			$dbversion = 18;
+			$dbversion = 19;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
