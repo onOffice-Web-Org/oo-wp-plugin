@@ -111,7 +111,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(18, $dbversion);
+		$this->assertEquals(19, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -154,7 +154,7 @@ class TestClassDatabaseChanges
 
 	public function testDeleteCommentFieldApplicantSearchForm()
 	{
-		$this->_pWpOption->addOption('oo_plugin_db_version', '17');
+		$this->_pWpOption->addOption('oo_plugin_db_version', '18');
 		$formsOutput = [
 			(object)[
 				'form_id' => '2',
@@ -191,7 +191,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(18, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(19, DatabaseChanges::MAX_VERSION);
 	}
 
 
