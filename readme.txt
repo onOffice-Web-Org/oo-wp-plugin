@@ -2,7 +2,7 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 7.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -72,6 +72,13 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.12.1 =
+
+**Changes**
+
+* Remove field `krit_bemerkung_oeffentlich` from applicant search forms, since it can't be used as intended.
+* Increase "Tested up to" in readme.txt to WP 5.7.
 
 = 2.12.0 =
 

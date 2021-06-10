@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 18;
+	const MAX_VERSION = 19;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -146,6 +146,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 17) {
 			$this->installDataQueryForms();
 			$dbversion = 18;
+		}
+
+		if ($dbversion == 18) {
+			$this->deleteCommentFieldApplicantSearchForm();
+			$dbversion = 19;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -610,6 +615,29 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDataViewSimilarEstatesNew->setTemplate($dataDetailViewSimilarEstates->getTemplate());
 			$pDataSimilarViewOptions->setDataViewSimilarEstates($pDataViewSimilarEstatesNew);
 			$this->_pWpOption->addOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
+		}
+	}
+
+	/**
+	 *
+	 */
+
+	private function deleteCommentFieldApplicantSearchForm()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
+		$tableFieldConfig = $prefix . "oo_plugin_form_fieldconfig";
+
+		$rows = $this->_pWPDB->get_results("SELECT `form_id` FROM {$tableName} WHERE form_type = 'applicantsearch'");
+
+		foreach ($rows as $applicantSearchFormId) {
+			$allFieldComments = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
+										WHERE `fieldname` = 'krit_bemerkung_oeffentlich'
+										AND `form_id` = '{$this->_pWPDB->_escape($applicantSearchFormId->form_id)}'");
+			foreach ($allFieldComments as $fieldComment) {
+				$this->_pWPDB->delete($tableFieldConfig,
+					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
+			}
 		}
 	}
 
