@@ -121,7 +121,7 @@ class TestClassDatabaseChanges
 
 	public function testDeleteMessageFieldInterestForm()
 	{
-		$this->_pWpOption->addOption('oo_plugin_db_version', '17');
+		$this->_pWpOption->addOption('oo_plugin_db_version', '19');
 		$formsOutput = [
 			(object)[
 				'form_id' => '2',
@@ -192,17 +192,17 @@ class TestClassDatabaseChanges
 	public function testDeleteCommentFieldApplicantSearchForm()
 	{
 		$this->_pWpOption->addOption('oo_plugin_db_version', '18');
-		$formsOutput = [
+		$formsOutput1 = [
 			(object)[
-				'form_id' => '2',
+				'form_id' => '4',
 				'name' => 'Applicant Search Form',
 				'form_type' => 'applicantsearch',
 			]
 		];
-		$fieldConfigOutput = [
+		$fieldConfigOutput1 = [
 			(object)[
-				'form_fieldconfig_id' => '1',
-				'form_id' => '2',
+				'form_fieldconfig_id' => '2',
+				'form_id' => '4',
 				'fieldname' => 'krit_bemerkung_oeffentlich'
 			]
 		];
@@ -211,11 +211,11 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(2))
+		$this->_pWPDBMock->expects($this->exactly(4))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput);
+			->willReturnOnConsecutiveCalls($formsOutput1, $fieldConfigOutput1,$formsOutput1, $fieldConfigOutput1);
 
-		$this->_pWPDBMock->expects($this->once())->method('delete')
+		$this->_pWPDBMock->expects($this->exactly(2))->method('delete')
 			->will($this->returnValue(true));
 
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock);
