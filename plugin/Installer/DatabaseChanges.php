@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
-use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
@@ -132,7 +131,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateSortByUserDefinedDefault();
 			$dbversion = 15;
 		}
-		
+
 		if ($dbversion == 15) {
 			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
@@ -151,6 +150,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 18) {
 			$this->deleteCommentFieldApplicantSearchForm();
 			$dbversion = 19;
+		}
+		if ($dbversion == 17) {
+			$this->deleteMessageFieldInterestForm();
+			$dbversion = 18;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -270,38 +273,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
-	/**
-	 *
-	 */
-
-	private function installDataQueryForms()
-	{
-		$prefix = $this->getPrefix();
-		$tableName = $prefix . "oo_plugin_forms";
-		$allTemplatePathsForm = $this->readTemplatePaths('form');
-		$template = '';
-		foreach ($allTemplatePathsForm as $templatePathsForm) {
-			if (basename($templatePathsForm) === 'defaultform.php') {
-				$template = $templatePathsForm;
-			}
-		}
-		$this->_pWPDB->insert(
-			$tableName,
-			array(
-				'name' => 'Default Form',
-				'form_type' => 'contact',
-				'template' => $template,
-				'country_active' => 1,
-				'zip_active' => 1,
-				'street_active' => 1,
-				'radius_active' => 1,
-				'geo_order' => 'street,zip,city,country,radius'
-			)
-		);
-		$defaultFormId = $this->_pWPDB->insert_id;
-		$this->installDataQueryFormFieldConfig($defaultFormId);
-	}
-
 
 	/**
 	 *
@@ -356,68 +327,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
-	/**
-	 *
-	 */
-
-	private function installDataQueryFormFieldConfig($defaultFormId)
-	{
-		$prefix = $this->getPrefix();
-		$tableName = $prefix . "oo_plugin_form_fieldconfig";
-
-		$rows = array(
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 1,
-				'fieldname' => 'Vorname',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 2,
-				'fieldname' => 'Name',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 3,
-				'fieldname' => 'Strasse',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 4,
-				'fieldname' => 'Plz',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 5,
-				'fieldname' => 'Ort',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 6,
-				'fieldname' => 'Telefon1',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 7,
-				'fieldname' => 'Email',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 8,
-				'fieldname' => 'message'
-			)
-		);
-		foreach ($rows as $row) {
-			$this->_pWPDB->insert($tableName, $row);
-		}
-	}
 
 	/**
 	 *
@@ -634,6 +543,29 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$allFieldComments = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
 										WHERE `fieldname` = 'krit_bemerkung_oeffentlich'
 										AND `form_id` = '{$this->_pWPDB->_escape($applicantSearchFormId->form_id)}'");
+			foreach ($allFieldComments as $fieldComment) {
+				$this->_pWPDB->delete($tableFieldConfig,
+					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
+			}
+		}
+	}
+
+	/**
+	 *
+	 */
+
+	private function deleteMessageFieldInterestForm()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
+		$tableFieldConfig = $prefix . "oo_plugin_form_fieldconfig";
+
+		$rows = $this->_pWPDB->get_results("SELECT `form_id` FROM {$tableName} WHERE form_type = 'interest'");
+
+		foreach ($rows as $interestFormId) {
+			$allFieldComments = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
+										WHERE `fieldname` = 'message'
+										AND `form_id` = '{$interestFormId->form_id}'");
 			foreach ($allFieldComments as $fieldComment) {
 				$this->_pWPDB->delete($tableFieldConfig,
 					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
