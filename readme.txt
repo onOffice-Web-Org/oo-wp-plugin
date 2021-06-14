@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.13.0 =
+
+**New**
+
+* API-credentials can now be stored in an encrypted manner.
+
 = 2.12.1 =
 
 **Changes**
