@@ -62,7 +62,6 @@ class DataDetailViewHandler
 		$optionKey = self::DEFAULT_VIEW_OPTION_KEY;
 		$pAlternate = new DataDetailView();
 		$pResult = $this->_pWPOptionWrapper->getOption($optionKey, $pAlternate);
-
 		if ($pResult == null)
 		{
 			$pResult = $pAlternate;
@@ -82,7 +81,6 @@ class DataDetailViewHandler
 	{
 		$pWpOptionsWrapper = $this->_pWPOptionWrapper;
 		$viewOptionKey = self::DEFAULT_VIEW_OPTION_KEY;
-
 		if ($pWpOptionsWrapper->getOption($viewOptionKey) !== false) {
 			$pWpOptionsWrapper->updateOption($viewOptionKey, $pDataDetailView);
 		} else {
@@ -108,7 +106,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setExpose($row['expose'] ?? '');
 		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
 		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
-
+		$pDataDetailView->setShowStatus($row['show_status'] ?? false);
 		return $pDataDetailView;
 	}
 }
