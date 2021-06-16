@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.13.1 =
+
+**Changes**
+
+* Avoid display of Faktura fields in WP-Plugin *
+
 = 2.13.0 =
 
 **New**
