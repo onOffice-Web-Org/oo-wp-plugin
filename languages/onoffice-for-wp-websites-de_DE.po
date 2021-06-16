@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
 "websites\n"
-"POT-Creation-Date: 2020-12-29T15:20:28+07:00\n"
+"POT-Creation-Date: 2021-05-11T11:55:18+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,13 +13,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Domain: onoffice-for-wp-websites\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
-#, fuzzy
-#| msgid "onOffice for WP-Websites"
 msgid "onOffice for WP-Websites"
 msgstr "onOffice für WP-Websites"
 
@@ -52,10 +50,10 @@ msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
 
 #: plugin/Controller/AdminViewController.php:148
 #: plugin/Gui/AdminPageAddressList.php:78 plugin/Gui/AdminPageBase.php:88
-#: plugin/Gui/AdminPageEstateDetail.php:200
+#: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
 #: plugin/Gui/AdminPageEstateUnitList.php:66
-#: plugin/Gui/AdminPageFormList.php:177
+#: plugin/Gui/AdminPageFormList.php:179
 #: plugin/Gui/AdminPageSimilarEstates.php:145
 msgid "onOffice"
 msgstr "onOffice"
@@ -71,7 +69,7 @@ msgid "Estates"
 msgstr "Immobilien"
 
 #: plugin/Controller/AdminViewController.php:172
-#: plugin/Gui/AdminPageFormList.php:93
+#: plugin/Gui/AdminPageFormList.php:95
 msgid "Forms"
 msgstr "Formulare"
 
@@ -177,7 +175,7 @@ msgstr "Formular wurde nicht gelöscht."
 
 #: plugin/Gui/AdminPageAddressList.php:87 plugin/Gui/AdminPageEstateList.php:83
 #: plugin/Gui/AdminPageEstateUnitList.php:78
-#: plugin/Gui/AdminPageFormList.php:195
+#: plugin/Gui/AdminPageFormList.php:197
 msgid "Add New"
 msgstr "Neu"
 
@@ -193,7 +191,7 @@ msgid "choose name"
 msgstr "Name auswählen"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:116
-#: plugin/Gui/AdminPageEstateDetail.php:271
+#: plugin/Gui/AdminPageEstateDetail.php:277
 #: plugin/Gui/AdminPageEstateListSettings.php:125
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
 #: plugin/Gui/AdminPageFormSettingsBase.php:370
@@ -205,7 +203,7 @@ msgid "Filter & Records"
 msgstr "Filter & Datensätze"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:155
-#: plugin/Gui/AdminPageEstateDetail.php:279
+#: plugin/Gui/AdminPageEstateDetail.php:293
 #: plugin/Gui/AdminPageEstateListSettings.php:133
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
@@ -236,64 +234,72 @@ msgstr ""
 "Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte gehen Sie zurück "
 "und prüfen Ihr %s."
 
-#: plugin/Gui/AdminPageApiSettings.php:65
+#: plugin/Gui/AdminPageApiSettings.php:66
 msgid "API token"
 msgstr "API-Token"
 
-#: plugin/Gui/AdminPageApiSettings.php:66
+#: plugin/Gui/AdminPageApiSettings.php:67
 msgid "API secret"
 msgstr "API-Secret"
 
-#: plugin/Gui/AdminPageApiSettings.php:83
+#: plugin/Gui/AdminPageApiSettings.php:84
 msgid "API settings"
 msgstr "API Einstellungen"
 
-#: plugin/Gui/AdminPageApiSettings.php:95
+#: plugin/Gui/AdminPageApiSettings.php:96
 msgid "Site Key"
 msgstr "Site Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:96
+#: plugin/Gui/AdminPageApiSettings.php:97
 msgid "Secret Key"
 msgstr "Secret Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:117
+#: plugin/Gui/AdminPageApiSettings.php:118
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:132
-#: plugin/Gui/AdminPageApiSettings.php:142
+#: plugin/Gui/AdminPageApiSettings.php:133
+#: plugin/Gui/AdminPageApiSettings.php:143
 msgid "Google Maps Key"
 msgstr "Google Maps-Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:169
+#: plugin/Gui/AdminPageApiSettings.php:150
+msgid "Index PDF brochure"
+msgstr "Index PDF brochure"
+
+#: plugin/Gui/AdminPageApiSettings.php:161
+msgid "Google Bot"
+msgstr "Google Bot"
+
+#: plugin/Gui/AdminPageApiSettings.php:188
 msgid "The keys are OK."
 msgstr "Die Keys sind OK."
 
-#: plugin/Gui/AdminPageApiSettings.php:170
+#: plugin/Gui/AdminPageApiSettings.php:189
 msgid "There was an error:"
 msgstr "Ein Fehler ist aufgetreten:"
 
-#: plugin/Gui/AdminPageApiSettings.php:171
+#: plugin/Gui/AdminPageApiSettings.php:190
 msgid "The secret parameter is missing."
 msgstr "Der Secret-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:172
+#: plugin/Gui/AdminPageApiSettings.php:191
 msgid "The secret parameter is invalid or malformed."
 msgstr "Der Secret-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:173
+#: plugin/Gui/AdminPageApiSettings.php:192
 msgid "The response parameter is missing."
 msgstr "Der reponse-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:174
+#: plugin/Gui/AdminPageApiSettings.php:193
 msgid "The response parameter is invalid or malformed."
 msgstr "Der response-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:175
+#: plugin/Gui/AdminPageApiSettings.php:194
 msgid "The request is invalid or malformed."
 msgstr "Die Anfrage ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:186
+#: plugin/Gui/AdminPageApiSettings.php:205
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -302,7 +308,7 @@ msgstr ""
 "Sie können reCAPTCHA jedoch schon für die spätere Verwendung in den "
 "Formularen aktivieren."
 
-#: plugin/Gui/AdminPageApiSettings.php:224
+#: plugin/Gui/AdminPageApiSettings.php:243
 msgid "The cache was cleaned."
 msgstr "Der Cache wurde geleert."
 
@@ -310,13 +316,13 @@ msgstr "Der Cache wurde geleert."
 msgid "List Views"
 msgstr "Listenansichten"
 
-#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateDetail.php:202
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:92
+#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateDetail.php:205
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:95
 msgid "Detail View"
 msgstr "Detailansicht"
 
 #: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageSimilarEstates.php:147
-#: plugin/Gui/AdminPageSimilarEstates.php:202
+#: plugin/Gui/AdminPageSimilarEstates.php:200
 msgid "Similar Estates"
 msgstr "Ähnliche Immobilien"
 
@@ -324,22 +330,22 @@ msgstr "Ähnliche Immobilien"
 msgid "Unit Lists"
 msgstr "Einheitenlisten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:118
+#: plugin/Gui/AdminPageEstateDetail.php:121
 #: plugin/Gui/AdminPageEstateListSettings.php:67
 #: plugin/Gui/AdminPageSimilarEstates.php:98
 msgid "Edit List View"
 msgstr "Listenansicht bearbeiten"
 
 #. translators: %s will be replaced with a link to the appropriate page.
-#: plugin/Gui/AdminPageEstateDetail.php:128
+#: plugin/Gui/AdminPageEstateDetail.php:131
 msgid "Detail view in use on page %s"
 msgstr "Detailansicht ist auf der Seite %s eingebunden"
 
-#: plugin/Gui/AdminPageEstateDetail.php:130
+#: plugin/Gui/AdminPageEstateDetail.php:133
 msgid "Edit Page"
 msgstr "Seite bearbeiten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:132
+#: plugin/Gui/AdminPageEstateDetail.php:135
 msgid ""
 "Detail view is not in use yet. Insert this code on a page to get the detail "
 "view there:"
@@ -347,28 +353,34 @@ msgstr ""
 "Die Detailansicht wird gerade nicht verwendet. Fügen Sie diesen Code auf "
 "einer Seite ein, um die Detailansicht dort zu sehen:"
 
-#: plugin/Gui/AdminPageEstateDetail.php:158
+#: plugin/Gui/AdminPageEstateDetail.php:161
 msgid "Contact Person Fields"
 msgstr "Ansprechpartnerdaten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:173
+#: plugin/Gui/AdminPageEstateDetail.php:176
 #: plugin/Gui/AdminPageSimilarEstates.php:119
 msgid "Real Estate Fields"
 msgstr "Immobiliendaten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:288
+#: plugin/Gui/AdminPageEstateDetail.php:285
+#, fuzzy
+#| msgid "Contact person"
+msgid "Contact Form"
+msgstr "Ansprechpartner"
+
+#: plugin/Gui/AdminPageEstateDetail.php:302
 msgid "Additional Media"
 msgstr "Zusätzliche Medien"
 
-#: plugin/Gui/AdminPageEstateDetail.php:404
+#: plugin/Gui/AdminPageEstateDetail.php:418
 msgid "The detail view has been saved."
 msgstr "Die Detailansicht wurde gespeichert."
 
-#: plugin/Gui/AdminPageEstateDetail.php:405
+#: plugin/Gui/AdminPageEstateDetail.php:419
 msgid "There was a problem saving the detail view."
 msgstr "Es ist einen Fehler beim Speichern der Detailansicht aufgetreten."
 
-#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:141
+#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:143
 msgid "Are you sure you want to delete the selected items?"
 msgstr "Möchten Sie das ausgewählte Element wirklich löschen?"
 
@@ -526,13 +538,13 @@ msgstr "Felder"
 msgid "Fields Configuration"
 msgstr "Feldeinstellungen"
 
-#: plugin/Gui/AdminPageSimilarEstates.php:323
+#: plugin/Gui/AdminPageSimilarEstates.php:319
 #, fuzzy
-#| msgid "The view has been saved."
+#| msgid "The detail view has been saved."
 msgid "The similar estates view has been saved."
-msgstr "Die Ansicht wurde gespeichert."
+msgstr "Die Detailansicht wurde gespeichert."
 
-#: plugin/Gui/AdminPageSimilarEstates.php:324
+#: plugin/Gui/AdminPageSimilarEstates.php:320
 #, fuzzy
 #| msgid "There was a problem saving the detail view."
 msgid "There was a problem saving the similar estates view."
@@ -647,7 +659,7 @@ msgid "Descending"
 msgstr "Absteigend"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:242
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:245
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr "Template"
@@ -686,7 +698,7 @@ msgid "Random Order"
 msgstr "Zufällige Reihenfolge"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:381
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:134
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:137
 msgid "PDF-Expose"
 msgstr "PDF-Exposé"
 
@@ -776,21 +788,31 @@ msgstr "Sprache hinzufügen"
 msgid "Module"
 msgstr "Modul"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:155
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:158
 msgid "Movie Links"
 msgstr "Film-Links"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:164
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:162
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:165
 msgid "Link"
 msgstr "Link"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:163
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:166
 msgid "Player"
 msgstr "Player"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:281
+msgid "Select Contact Form"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:285
+#, fuzzy
+#| msgid "Contact person"
+msgid "No Contact Form"
+msgstr "Ansprechpartner"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:83
 #, fuzzy
@@ -810,24 +832,16 @@ msgstr "Gleiche Immobilienart"
 msgid "Same Marketing Method"
 msgstr "Gleiche Vermarktungsart"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:293
-msgid "Don't show archived estates"
-msgstr "Archivierte Objekte nicht anzeigen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:314
-msgid "Don't show reference estates"
-msgstr "Referenzobjekte nicht anzeigen"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:336
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
 msgid "Same Postal Code"
 msgstr "Gleiche Postleitzahl"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:358
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
 msgid "Radius"
 msgstr "Umkreis"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:380
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
 msgid "Amount of Estates"
 msgstr "Anzahl Immobilien"
 
@@ -912,16 +926,16 @@ msgstr "Bearbeiten"
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:84
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:88
 msgid "0 matches"
 msgstr "0 Treffer"
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:85
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:89
 msgid "Show exact match"
 msgstr "Einen Treffer anzeigen"
 
 #. translators: %s is the amount of results
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:87
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:91
 msgid "Show %s matches"
 msgstr "%s Treffer anzeigen"
 

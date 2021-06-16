@@ -28,10 +28,12 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use onOffice\SDK\Cache\onOfficeSDKCache;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Cache\DBCache;
+use onOffice\WPlugin\Utility\SymmetricEncryption;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 
@@ -54,6 +56,11 @@ class SDKWrapper
 	/** @var array */
 	private $_caches = [];
 
+	/**
+	 * @var  SymmetricEncryption
+	 */
+	private $_encrypter;
+
 
 	/**
 	 *
@@ -72,7 +79,12 @@ class SDKWrapper
 		$this->_caches = [
 			new DBCache(['ttl' => 3600]),
 		];
+
 		$config = $this->readConfig();
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$this->_encrypter = $pContainer->make(SymmetricEncryption::class);
 		$this->_pSDK->setCaches($this->_caches);
 		$this->_pSDK->setApiServer($config['server']);
 		$this->_pSDK->setApiVersion($config['apiversion']);
@@ -136,6 +148,17 @@ class SDKWrapper
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
+		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY') && ONOFFICE_CREDENTIALS_ENC_KEY) {
+			try {
+				$secretDecrypt = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
+				$tokenDecrypt = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
+			}catch (\RuntimeException $exception){
+				$secretDecrypt = $secret;
+				$tokenDecrypt = $token;
+			}
+			$secret = $secretDecrypt;
+			$token = $tokenDecrypt;
+		}
 		$this->_pSDK->sendRequests($token, $secret);
 		$errors = $this->_pSDK->getErrors();
 
