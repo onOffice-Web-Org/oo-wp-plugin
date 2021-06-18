@@ -267,7 +267,7 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
 			'AGB_akzeptiert' => true,
-			'checkDuplicate' => false,
+			'checkDuplicate' => false
 		];
 
 		$responseJson = file_get_contents
@@ -340,6 +340,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);
 		$pDataFormConfiguration->setCheckDuplicateOnCreateAddress(true);
+		$pDataFormConfiguration->setContactTypeField('Eigentümer');
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
@@ -389,6 +390,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->setFormName('contactForm');
 		$pDataFormConfiguration->setSubject('¡A new Contact!');
 		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'Email']);
+		$pDataFormConfiguration->setContactTypeField('');
 		$this->mockNewsletterCall();
 
 		return $pDataFormConfiguration;

@@ -86,7 +86,6 @@ class FormPostContact
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfig->getRecipient();
 		$subject = $pFormConfig->getSubject();
-
 		if ($pFormConfig->getCreateAddress()) {
 			$this->createAddress($pFormData);
 		}
@@ -132,8 +131,9 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
+		$contactType = $pFormConfig->getContactType();
 		$addressId = $this->_pFormPostContactConfiguration->getFormAddressCreator()
-			->createOrCompleteAddress($pFormData, $checkDuplicate);
+			->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType);
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
 			// No subscription for newsletter, which is ok

@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 19;
+	const MAX_VERSION = 20;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -153,6 +153,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 19;
 		}
 
+        if ($dbversion == 19) {
+            dbDelta( $this->getQueryAddColumnContactTypePluginFormTable() );
+            $dbversion = 20;
+        }
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -259,7 +264,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
 			`city_active` tinyint(1) NOT NULL DEFAULT '0',
 			`street_active` tinyint(1) NOT NULL DEFAULT '1',
-			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
+			`radius_active` tinyint(1) NOT NULL DEFAULT '1',    
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',
@@ -639,6 +644,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
 			}
 		}
+	}
+
+    public function getQueryAddColumnContactTypePluginFormTable(): string
+    {
+        $prefix = $this->getPrefix();
+        $tableName = $prefix."oo_plugin_forms";
+
+        return "ALTER TABLE $tableName 
+				ADD COLUMN `contact_type` varchar(255) NULL DEFAULT NULL 
+				";
 	}
 
 
