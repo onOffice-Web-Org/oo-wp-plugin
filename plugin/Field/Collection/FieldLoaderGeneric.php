@@ -94,6 +94,13 @@ class FieldLoaderGeneric
 					$fieldProperties['labelOnlyValues'] = $this->_pRegionFilter
 						->collectLabelOnlyValues($regions);
 				}
+
+				if ($module === onOfficeSDK::MODULE_ADDRESS && $fieldName == 'ArtDaten') {
+					$permittedValues = $fieldProperties['permittedvalues'];
+					unset($permittedValues['Systembenutzer']);
+					$fieldProperties['permittedvalues'] = $permittedValues;
+				}
+
 				$fieldProperties['module'] = $module;
 				yield $fieldName => $fieldProperties;
 			}
