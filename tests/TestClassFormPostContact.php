@@ -340,7 +340,6 @@ class TestClassFormPostContact
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);
 		$pDataFormConfiguration->setCheckDuplicateOnCreateAddress(true);
-		$pDataFormConfiguration->setContactTypeField('Eigentümer');
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
