@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.13.2 =
+
+**Changes**
+
+* Hide configuration option "Systembenutzer (Adresse ist mit Benutzer verknüpft)" in contact type configuration *
+
 = 2.13.1 =
 
 **Changes**
