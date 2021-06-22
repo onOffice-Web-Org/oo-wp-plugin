@@ -80,7 +80,7 @@ class FormPostInterest
 		$recipient = $pFormConfiguration->getRecipient();
 		$subject = $pFormConfiguration->getSubject();
 		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
-        $contactType = $pFormConfiguration->getContactType();
+		$contactType = $pFormConfiguration->getContactType();
 		$addressId = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
 			->createOrCompleteAddress($pFormData, $checkduplicate, $contactType);
 		$this->createSearchcriteria($pFormData, $addressId);
