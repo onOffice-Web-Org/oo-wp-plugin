@@ -264,7 +264,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`zip_active` tinyint(1) NOT NULL DEFAULT '1',
 			`city_active` tinyint(1) NOT NULL DEFAULT '0',
 			`street_active` tinyint(1) NOT NULL DEFAULT '1',
-			`radius_active` tinyint(1) NOT NULL DEFAULT '1',    
+			`radius_active` tinyint(1) NOT NULL DEFAULT '1',
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',

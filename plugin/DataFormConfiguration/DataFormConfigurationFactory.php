@@ -320,7 +320,7 @@ class DataFormConfigurationFactory
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setPages($row['pages']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
-        $pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? '');
 	}
 
 
@@ -336,7 +336,7 @@ class DataFormConfigurationFactory
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
-        $pConfig->setContactTypeField($row['contact_type'] ?? '');
+		$pConfig->setContactTypeField($row['contact_type'] ?? '');
 	}
 
 

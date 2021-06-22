@@ -267,7 +267,7 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
 			'AGB_akzeptiert' => true,
-			'checkDuplicate' => false
+			'checkDuplicate' => false,
 		];
 
 		$responseJson = file_get_contents
