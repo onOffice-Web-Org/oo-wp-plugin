@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.13.3 =
+
+**Fixes**
+
+* No e-mail when select newsletter-option *
+
 = 2.13.2 =
 
 **Changes**
