@@ -86,6 +86,7 @@ class FormPostContact
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfig->getRecipient();
 		$subject = $pFormConfig->getSubject();
+
 		if ($pFormConfig->getCreateAddress()) {
 			$this->createAddress($pFormData);
 		}

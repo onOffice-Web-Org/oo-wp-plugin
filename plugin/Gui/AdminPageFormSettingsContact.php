@@ -122,9 +122,9 @@ class AdminPageFormSettingsContact
 		}
 
 		if ($this->_showContactTypeSelect) {
-            $pInputModelContactType = $pFormModelBuilder->createInputModelContactType();
-            $pFormModelFormSpecific->addInputModel($pInputModelContactType);
-        }
+			$pInputModelContactType = $pFormModelBuilder->createInputModelContactType();
+			$pFormModelFormSpecific->addInputModel($pInputModelContactType);
+		}
 
 		$this->addFormModel($pFormModelFormSpecific);
 		$this->buildGeoPositionSettings();
@@ -245,5 +245,5 @@ class AdminPageFormSettingsContact
 
     /** @param bool $showContactTypeSelect */
     public function setShowContactTypeSelect(bool $showContactTypeSelect)
-    { $this->_showContactTypeSelect = $showContactTypeSelect; }
+		{ $this->_showContactTypeSelect = $showContactTypeSelect; }
 }

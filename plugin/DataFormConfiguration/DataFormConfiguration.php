@@ -133,7 +133,7 @@ class DataFormConfiguration
 
     /** @param string $contactTypeField */
     public function setContactTypeField(string $contactTypeField)
-    { $this->_contactType = $contactTypeField; }
+		{ $this->_contactType = $contactTypeField; }
 	/**
 	 *
 	 * @param string $input
@@ -190,5 +190,5 @@ class DataFormConfiguration
 
     /** @return string */
     public function getContactType(): string
-    { return $this->_contactType; }
+		{ return $this->_contactType; }
 }

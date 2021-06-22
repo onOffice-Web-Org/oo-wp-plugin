@@ -120,7 +120,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
 				$pAdminPage->setShowGeoPositionSettings(true);
-                $pAdminPage->setShowContactTypeSelect(true);
+				$pAdminPage->setShowContactTypeSelect(true);
 				break;
 			case Form::TYPE_OWNER:
 				/* @var $pAdminPage AdminPageFormSettingsInterestOwner */
@@ -128,7 +128,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
 				$pAdminPage->setShowMessageInput(true);
-                $pAdminPage->setShowContactTypeSelect(true);
+				$pAdminPage->setShowContactTypeSelect(true);
 				break;
 			case Form::TYPE_CONTACT:
 				/* @var $pAdminPage AdminPageFormSettingsContact */
