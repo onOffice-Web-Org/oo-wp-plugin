@@ -63,8 +63,7 @@ class AdminPageModules
     {
         $groupSlugView = 'onoffice-detail-view';
         $showTitleInUrl = __('Show title in URL', 'onoffice-for-wp-websites');
-
-            $pInputModelShowTitleUrl = new InputModelOption($groupSlugView, 'showTitleUrl',
+        $pInputModelShowTitleUrl = new InputModelOption($groupSlugView, 'showTitleUrl',
             $showTitleInUrl, InputModelOption::SETTING_TYPE_BOOLEAN);
         $pInputModelShowTitleUrl->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
         $pInputModelShowTitleUrl->setValuesAvailable(1);
