@@ -55,7 +55,7 @@ class InputFieldCheckboxRenderer
 
 	public function __construct($name, $value, $description = '')
 	{
-	    $this->descriptionText = $description;
+		$this->descriptionText = $description;
 		parent::__construct('checkbox', $name, $value);
 	}
 
@@ -111,6 +111,7 @@ class InputFieldCheckboxRenderer
 	public function render()
 	{
 		$pFieldsCollection = $this->buildFieldsCollection();
+
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
@@ -130,7 +131,7 @@ class InputFieldCheckboxRenderer
 				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
-                .(!empty($this->descriptionText) && is_string($this->descriptionText) ? '<p class="description">'.$this->descriptionText.'</p><br>' : '');
+				.(!empty($this->descriptionText) && is_string($this->descriptionText) ? '<p class="description">'.$this->descriptionText.'</p><br>' : '');
 		}
 	}
 

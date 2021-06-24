@@ -227,10 +227,10 @@ abstract class InputModelBase
 
     /** @return string */
     public function getDescriptionText()
-    { return $this->_descriptionText; }
+    	{ return $this->_descriptionText; }
 
     /** @param string $descriptionText */
     public function setDescriptionText(string $descriptionText)
-    { $this->_descriptionText = $descriptionText; }
+    	{ $this->_descriptionText = $descriptionText; }
 
 }
