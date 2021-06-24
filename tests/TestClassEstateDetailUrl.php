@@ -82,6 +82,7 @@ class TestClassEstateDetailUrl
 	 */
 	public function testUrlWithTitle()
 	{
+		add_option('onoffice-detail-view-showTitleUrl', true);
 		$estateId = 123;
 		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
 		$url = 'https://www.onoffice.de/detail/';
@@ -97,6 +98,7 @@ class TestClassEstateDetailUrl
 	 */
 	public function testUrlWithTitleLimitCharacter()
 	{
+		add_option('onoffice-detail-view-showTitleUrl', true);
 		$estateId = 123;
 		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
 		$url = 'https://www.onoffice.de/detail/';
@@ -129,6 +131,7 @@ class TestClassEstateDetailUrl
 	 */
 	public function testUrlWithTitleAndParameter()
 	{
+		add_option('onoffice-detail-view-showTitleUrl', true);
 		$estateId = 123;
 		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
 		$url = 'https://www.onoffice.de/detail/?lang=en';
