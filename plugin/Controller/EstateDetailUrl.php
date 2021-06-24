@@ -44,16 +44,19 @@ class EstateDetailUrl
 				parse_str($arguments, $getParameters);
 			}
 
-			if (array_key_exists('lang', $getParameters) && $getParameters['lang'] != null) {
-				$urlLsSwitcher = str_replace('?', $estateId.'?', $url);
-			} else {
-				$urlLsSwitcher .= $estateId;
-			}
+			$urlTemp = $estateId;
 
 			if ($this->isOptionShowTitleUrl() && !empty($title)) {
-				$urlLsSwitcher .= '-' . $this->getSanitizeTitle($title);
+				$urlTemp .= $this->getSanitizeTitle($title);
+			}
+
+			if (array_key_exists('lang', $getParameters) && $getParameters['lang'] != null) {
+				$urlLsSwitcher = str_replace('?', $urlTemp.'?', $url);
+			} else {
+				$urlLsSwitcher .= $urlTemp;
 			}
 		}
+
 		return $urlLsSwitcher;
 	}
 
@@ -79,6 +82,6 @@ class EstateDetailUrl
 			$sanitizeTitle = implode('-', array_splice($arrSanitizeTitle, 0, self::MAXIMUM_WORD_TITLE));
 		}
 
-		return $sanitizeTitle;
+		return '-' . $sanitizeTitle;
 	}
 }
