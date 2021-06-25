@@ -69,13 +69,10 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 
 	public function duplicateByIds(int $id)
 	{
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pDI = $pContainerBuilder->build();
 		$prefix = $this->_pWPDB->prefix;
 
 		/* @var $pRecordManagerReadListViewEstate RecordManagerReadListViewEstate */
-		$pRecordManagerReadListViewEstate = $pDI->get(RecordManagerReadListViewEstate::class);
+		$pRecordManagerReadListViewEstate = $this->_pContainer->get(RecordManagerReadListViewEstate::class);
 		$listViewRoot = $pRecordManagerReadListViewEstate->getRowById($id);
 
 		if (isset($listViewRoot) && $listViewRoot != null) {
