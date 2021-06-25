@@ -23,9 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Nette\DI\Extensions\DIExtension;
 use wpdb;
 
 
@@ -37,16 +39,25 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 	/** @var wpdb */
 	private $_pWPDB;
 
+	/** @var Container */
+	private $_pContainer = null;
 
 	/**
 	 *
 	 * @param wpdb $pWPDB
-	 *
+	 * @param Container $_pContainer
+	 * @throws \Exception
 	 */
 
-	public function __construct(wpdb $pWPDB)
+	public function __construct(wpdb $pWPDB, Container $_pContainer = null)
 	{
 		$this->_pWPDB = $pWPDB;
+		if ($_pContainer === null) {
+			$pDIContainerBuilder = new ContainerBuilder;
+			$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+			$_pContainer = $pDIContainerBuilder->build();
+		}
+		$this->_pContainer = $_pContainer;
 	}
 
 	/**
@@ -84,57 +95,68 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 				$newName = "{$newName} $counter";
 			}
 
+			$newNameData = ['name' => $newName];
+
+			//duplicate root data to new list view
+			$newListView = [];
+			foreach ($listViewRoot as $key => $value) {
+				if (is_array($value) || $key === 'listview_id' || $key === 'name') {
+					continue;
+				}
+				$newListView[$key] = $value;
+			}
+			$newListView = array_merge($newNameData, $newListView);
+
 			$this->_pWPDB->insert(
 				$tableListViews,
-				array(
-					'name' => $newName,
-					'filterId' => $listViewRoot['filterId'],
-					'sortby' => $listViewRoot['sortby'],
-					'sortorder' => $listViewRoot['sortorder'],
-					'show_status' => $listViewRoot['show_status'],
-					'list_type' => $listViewRoot['list_type'],
-					'template' => $listViewRoot['template'],
-					'expose' => $listViewRoot['expose'],
-					'recordsPerPage' => $listViewRoot['recordsPerPage'],
-					'random' => $listViewRoot['random'],
-					'country_active' => $listViewRoot['country_active'],
-					'zip_active' => $listViewRoot['zip_active'],
-					'city_active' => $listViewRoot['city_active'],
-					'street_active' => $listViewRoot['zip_active'],
-					'radius_active' => $listViewRoot['radius_active'],
-					'radius' => $listViewRoot['radius'],
-					'geo_order' => $listViewRoot['geo_order'],
-					'sortBySetting' => $listViewRoot['sortBySetting'],
-					'sortByUserDefinedDefault' => $listViewRoot['sortByUserDefinedDefault'],
-					'sortByUserDefinedDirection' => $listViewRoot['sortByUserDefinedDirection'],
-				)
+				$newListView
 			);
-			$cloneListViewId = $this->_pWPDB->insert_id;
-			if ($cloneListViewId !== 0) {
+			$duplicateListViewId = $this->_pWPDB->insert_id;
+
+			if ($duplicateListViewId !== 0) {
+				//duplicate data related oo_plugin_fieldconfig table
 				$tableFieldConfig = $prefix . self::TABLENAME_FIELDCONFIG;
 				foreach ($listViewRoot['fields'] as $field) {
-					$selectFieldConfigByIdAndFieldName = "SELECT * FROM {$tableFieldConfig} WHERE listview_id='{$id}' AND fieldname ='{$field}'";
-					$fieldConfigRows = $this->_pWPDB->get_row($selectFieldConfigByIdAndFieldName);
-					if (!empty($fieldConfigRows) != 0) {
-						$newFieldConfigRows = [];
-						$newFieldConfigRows['listview_id'] = $cloneListViewId;
-						$newFieldConfigRows['order'] = $fieldConfigRows->order;
-						$newFieldConfigRows['fieldname'] = $field;
-						$newFieldConfigRows['filterable'] = $fieldConfigRows->filterable;
-						$newFieldConfigRows['hidden'] = $fieldConfigRows->hidden;
-						$newFieldConfigRows['availableOptions'] = $fieldConfigRows->availableOptions;
-						$this->_pWPDB->insert($tableFieldConfig, $newFieldConfigRows);
+					$selectFieldConfigByIdAndFieldName = "SELECT * FROM {$this->_pWPDB->_escape($tableFieldConfig)} WHERE listview_id='{$this->_pWPDB->_escape($id)}' AND fieldname ='{$this->_pWPDB->_escape($field)}'";
+					$fieldConfigRows = $this->_pWPDB->get_results($selectFieldConfigByIdAndFieldName);
+					if (!empty($fieldConfigRows) && (count($fieldConfigRows) !== 0)) {
+						foreach ($fieldConfigRows as $fieldConfigRow) {
+							$newFieldConfigRow = [];
+							$newFieldConfigRow['listview_id'] = $duplicateListViewId;
+							$newFieldConfigRow['order'] = $fieldConfigRow->order;
+							$newFieldConfigRow['fieldname'] = $field;
+							$newFieldConfigRow['filterable'] = $fieldConfigRow->filterable;
+							$newFieldConfigRow['hidden'] = $fieldConfigRow->hidden;
+							$newFieldConfigRow['availableOptions'] = $fieldConfigRow->availableOptions;
+							$this->_pWPDB->insert($tableFieldConfig, $newFieldConfigRow);
+						}
 					}
 				}
 
+				//duplicate data related oo_plugin_picturetypes table
 				$tablePictureTypes = $prefix . self::TABLENAME_PICTURETYPES;
-				$selectPictureTypesById = "SELECT * FROM {$tablePictureTypes} WHERE listview_id='{$id}'";
-				$pictureTypeRows = $this->_pWPDB->get_row($selectPictureTypesById);
-				if (!empty($pictureTypeRows) != 0) {
-					$newPictureTypeRows = [];
-					$newPictureTypeRows['listview_id'] = $cloneListViewId;
-					$newPictureTypeRows['picturetype'] = $pictureTypeRows->picturetype;
-					$this->_pWPDB->insert($tablePictureTypes, $newPictureTypeRows);
+				$selectPictureTypesById = "SELECT * FROM {$this->_pWPDB->_escape($tablePictureTypes)} WHERE listview_id='{$this->_pWPDB->_escape($id)}'";
+				$pictureTypeRows = $this->_pWPDB->get_results($selectPictureTypesById);
+				if (!empty($pictureTypeRows) && (count($pictureTypeRows) !== 0)) {
+					foreach ($pictureTypeRows as $pictureTypeRow) {
+						$newPictureTypeRow = [];
+						$newPictureTypeRow['listview_id'] = $duplicateListViewId;
+						$newPictureTypeRow['picturetype'] = $pictureTypeRow->picturetype;
+						$this->_pWPDB->insert($tablePictureTypes, $newPictureTypeRow);
+					}
+				}
+
+				//duplicate data related oo_plugin_sortbyuservalues table
+				$tableSortByUserValues = $prefix . self::TABLENAME_SORTBYUSERVALUES;
+				$selectSortByUserValuesById = "SELECT * FROM {$this->_pWPDB->_escape($tableSortByUserValues)} WHERE listview_id='{$this->_pWPDB->_escape($id)}'";
+				$sortByUserValuesRows = $this->_pWPDB->get_results($selectSortByUserValuesById);
+				if (!empty($sortByUserValuesRows) && (count($sortByUserValuesRows) !== 0)) {
+					foreach ($sortByUserValuesRows as $sortByUserValuesRow) {
+						$newSortByUserValuesRow = [];
+						$newSortByUserValuesRow['listview_id'] = $duplicateListViewId;
+						$newSortByUserValuesRow['sortbyuservalue'] = $sortByUserValuesRow->sortbyuservalue;
+						$this->_pWPDB->insert($tableSortByUserValues, $newSortByUserValuesRow);
+					}
 				}
 			}
 		}

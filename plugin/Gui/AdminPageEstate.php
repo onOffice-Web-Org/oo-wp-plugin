@@ -237,6 +237,7 @@ class AdminPageEstate
 		$pClosureDuplicateEstate = function (string $redirectTo, Table\WP\ListTable $pTable)
 		use ($pDI): string {
 			if (in_array($pTable->current_action(), ['duplicate', 'bulk_duplicate'])) {
+				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
 				if (!(isset($_GET['listVewId']))) {
 					wp_die('No List Views for duplicating!');
 				}

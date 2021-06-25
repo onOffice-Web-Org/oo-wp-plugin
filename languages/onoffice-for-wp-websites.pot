@@ -290,24 +290,30 @@ msgstr ""
 msgid "The cache was cleaned."
 msgstr ""
 
-#: plugin/Gui/AdminPageEstate.php:86
+#: plugin/Gui/AdminPageEstate.php:87
 #: plugin/Gui/AdminPageEstateList.php:78
 msgid "List Views"
 msgstr ""
 
+<<<<<<< HEAD
 #: plugin/Gui/AdminPageEstate.php:87
 #: plugin/Gui/AdminPageEstateDetail.php:205
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:95
+=======
+#: plugin/Gui/AdminPageEstate.php:88
+#: plugin/Gui/AdminPageEstateDetail.php:202
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:92
+>>>>>>> 91c75be369cbe199a60d14d09cabfd1a105b47a1
 msgid "Detail View"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstate.php:88
+#: plugin/Gui/AdminPageEstate.php:89
 #: plugin/Gui/AdminPageSimilarEstates.php:147
 #: plugin/Gui/AdminPageSimilarEstates.php:200
 msgid "Similar Estates"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstate.php:89
+#: plugin/Gui/AdminPageEstate.php:90
 msgid "Unit Lists"
 msgstr ""
 
@@ -449,12 +455,12 @@ msgid "Default Value Up To:"
 msgstr ""
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:308
-#: plugin/Gui/Table/EstateListTable.php:172
+#: plugin/Gui/Table/EstateListTable.php:171
 msgid "No"
 msgstr ""
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:309
-#: plugin/Gui/Table/EstateListTable.php:172
+#: plugin/Gui/Table/EstateListTable.php:171
 msgid "Yes"
 msgstr ""
 
@@ -514,7 +520,7 @@ msgstr ""
 #: plugin/Gui/Table/AddressListTable.php:103
 #: plugin/Gui/Table/AddressListTable.php:146
 #: plugin/Gui/Table/EstateListTable.php:131
-#: plugin/Gui/Table/EstateListTable.php:211
+#: plugin/Gui/Table/EstateListTable.php:210
 #: plugin/Gui/Table/EstateUnitsTable.php:62
 #: plugin/Gui/Table/EstateUnitsTable.php:114
 msgid "Name of View"
@@ -523,7 +529,7 @@ msgstr ""
 #: plugin/Gui/Table/AddressListTable.php:104
 #: plugin/Gui/Table/AddressListTable.php:147
 #: plugin/Gui/Table/EstateListTable.php:135
-#: plugin/Gui/Table/EstateListTable.php:215
+#: plugin/Gui/Table/EstateListTable.php:214
 #: plugin/Gui/Table/EstateUnitsTable.php:63
 #: plugin/Gui/Table/EstateUnitsTable.php:116
 #: plugin/Gui/Table/FormsTable.php:126
@@ -533,38 +539,49 @@ msgstr ""
 
 #. translators: %s is the name of the list view.
 #: plugin/Gui/Table/AddressListTable.php:185
-#: plugin/Gui/Table/EstateListTable.php:273
+#: plugin/Gui/Table/EstateListTable.php:281
 msgid ""
 "You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
 #: plugin/Gui/Table/EstateListTable.php:132
-#: plugin/Gui/Table/EstateListTable.php:212
+#: plugin/Gui/Table/EstateListTable.php:211
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:125
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:135
 msgid "Filter"
 msgstr ""
 
 #: plugin/Gui/Table/EstateListTable.php:133
-#: plugin/Gui/Table/EstateListTable.php:213
+#: plugin/Gui/Table/EstateListTable.php:212
 msgid "Show Status"
 msgstr ""
 
 #: plugin/Gui/Table/EstateListTable.php:134
-#: plugin/Gui/Table/EstateListTable.php:214
+#: plugin/Gui/Table/EstateListTable.php:213
 #: plugin/Gui/Table/EstateUnitsTable.php:115
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:295
 msgid "Type of List"
 msgstr ""
 
-#: plugin/Gui/Table/EstateListTable.php:191
+#: plugin/Gui/Table/EstateListTable.php:190
 msgid "(Needs valid API credentials)"
 msgstr ""
 
 #. translators: %s will be replaced with a number.
-#: plugin/Gui/Table/EstateListTable.php:194
+#: plugin/Gui/Table/EstateListTable.php:193
 msgid "(Unknown Filter (ID: %s))"
+msgstr ""
+
+#. translators: %s is the name of the list view.
+#: plugin/Gui/Table/EstateListTable.php:273
+msgid ""
+"You are about to duplicate the listview '%s'\n"
+"  'Cancel' to stop, 'OK' to duplicate."
+msgstr ""
+
+#: plugin/Gui/Table/EstateListTable.php:275
+msgid "Duplicate"
 msgstr ""
 
 #. translators: %s is the name of the unit view.
