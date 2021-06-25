@@ -83,7 +83,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 
 			$originalName = $listViewRoot['name'];
 			$newName = "{$originalName} - Copy";
-			$selectLikeOriginalName = "SELECT `name` FROM {$tableListViews} WHERE name LIKE '{$originalName}%' ORDER BY listview_id DESC";
+			$selectLikeOriginalName = "SELECT `name` FROM {$this->_pWPDB->_escape($tableListViews)} WHERE name LIKE '{$this->_pWPDB->_escape($originalName)}%' ORDER BY listview_id DESC";
 			$listViewsRows = $this->_pWPDB->get_row($selectLikeOriginalName);
 
 			if (!empty($listViewsRows->name) && $listViewsRows->name !== $originalName) {
