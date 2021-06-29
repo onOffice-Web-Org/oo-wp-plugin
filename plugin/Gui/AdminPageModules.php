@@ -47,7 +47,7 @@ class AdminPageModules
 
 	public function __construct($pageSlug)
 	{
-	    $this->addFormModelDetailView($pageSlug);
+		$this->addFormModelDetailView($pageSlug);
 		$this->addFormModelFavorites($pageSlug);
 		$this->addFormModelMapProvider($pageSlug);
 
