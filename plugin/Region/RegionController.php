@@ -100,6 +100,9 @@ class RegionController
 	{
 		$regions = [];
 		foreach ($regionList as $regionProperties) {
+			if (empty($regionProperties['elements']['id'])) {
+				continue;
+			}
 			$pRegion = $this->buildBaseRegionElement($regionProperties['elements']);
 			$children = $this->createRegionObjects($regionProperties['elements']['children'], $pRegion);
 			$pRegion->setChildren($children);
