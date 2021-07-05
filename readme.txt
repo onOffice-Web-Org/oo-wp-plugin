@@ -75,6 +75,8 @@ Start editing inside the `onoffice-personalized` folder.
 
 = 2.14.0
 
+**New**
+
 * Offer option to dublicate listview *
 
 = 2.13.3 =
