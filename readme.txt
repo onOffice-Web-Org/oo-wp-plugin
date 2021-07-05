@@ -73,7 +73,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= 2.14.0
+= 2.14.0 =
 
 **New**
 
