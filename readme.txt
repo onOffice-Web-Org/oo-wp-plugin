@@ -77,7 +77,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **New**
 
-* Offer option to dublicate listview *
+* Add an option to duplicate listViews.
 
 = 2.13.3 =
 
