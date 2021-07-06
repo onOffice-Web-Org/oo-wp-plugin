@@ -38,10 +38,6 @@ class CacheHandler
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
-	/** @var SDKWrapperAddCurlOption */
-	private $_pSDKWrapperAddCurlOption = null;
-
-
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
@@ -72,13 +68,12 @@ class CacheHandler
 
 	public function clean()
 	{
-		$options = [
+		$pApiCall = new APIClientActionGeneric($this->_pSDKWrapper->withCurlOptions([
 			CURLOPT_SSL_VERIFYPEER => true,
 			CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
 			CURLOPT_CONNECTTIMEOUT => 1,
-		];
-		$pApiCall = new APIClientActionGeneric($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_READ,'estate');
-		$pApiCall->addRequestToQueue()->sendRequestsWithCustomCurlOption($options);
+		]), onOfficeSDK::ACTION_ID_READ,'estate');
+		$pApiCall->addRequestToQueue()->sendRequests();
 		$records = $pApiCall->getResultRecords();
 		if(!empty($records)){
 			foreach ($this->_pSDKWrapper->getCache() as $pCache) {

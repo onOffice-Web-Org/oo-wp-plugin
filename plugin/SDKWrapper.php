@@ -72,32 +72,15 @@ class SDKWrapper
 		$this->_caches = [
 			new DBCache(['ttl' => 3600]),
 		];
-		$config = $this->readConfig();
 		$this->_pSDK->setCaches($this->_caches);
-		$this->_pSDK->setApiServer($config['server']);
-		$this->_pSDK->setApiVersion($config['apiversion']);
-		$this->_pSDK->setApiCurlOptions($config['curl_options']);
-	}
-
-
-	/**
-	 *
-	 * @return array
-	 *
-	 */
-
-	private function readConfig(): array
-	{
-		$localconfig = [
-			'apiversion' => 'latest',
-			'server' => 'https://api.onoffice.de/api/',
-			'curl_options' => [
+		$this->_pSDK->setApiServer('https://api.onoffice.de/api/');
+		$this->_pSDK->setApiVersion('latest');
+		$this->_pSDK->setApiCurlOptions(
+			[
 				CURLOPT_SSL_VERIFYPEER => true,
 				CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
-			],
-		];
-
-		return $localconfig;
+			]
+		);
 	}
 
 
@@ -149,31 +132,6 @@ class SDKWrapper
 
 
 	/**
-	 * @param $options
-	 */
-
-	public function sendRequestsWithCustomCurlOption($options)
-	{
-		$cloneOnOfficeSDK = clone $this->_pSDK;
-		$cloneOnOfficeSDK->setApiCurlOptions($options);
-
-		$pOptionsWrapper = $this->_pWPOptionWrapper;
-		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
-		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
-		$cloneOnOfficeSDK->sendRequests($token, $secret);
-		$errors = $cloneOnOfficeSDK->getErrors();
-
-		foreach ($this->_callbacksAfterSend as $handle => $callback) {
-			$response = $cloneOnOfficeSDK->getResponseArray($handle) ?? $errors[$handle] ?? [];
-			call_user_func($callback, $response);
-		}
-
-		$this->_callbacksAfterSend = [];
-	}
-
-
-
-	/**
 	 *
 	 * @return onOfficeSDKCache[]
 	 *
@@ -206,5 +164,29 @@ class SDKWrapper
 	public function getWPOptionWrapper(): WPOptionWrapperBase
 	{
 		return $this->_pWPOptionWrapper;
+	}
+
+
+	/**
+	 * @param array $curlOptions
+	 * @return SDKWrapper
+	 */
+
+	public function withCurlOptions(array $curlOptions): self
+	{
+		$pClone = clone $this;
+		$pClone->_pSDK->setApiCurlOptions($curlOptions);
+		return $pClone;
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function __clone()
+	{
+		$this->_pSDK = clone $this->_pSDK;
+		$this->_callbacksAfterSend = [];
 	}
 }
