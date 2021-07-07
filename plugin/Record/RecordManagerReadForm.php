@@ -72,6 +72,27 @@ class RecordManagerReadForm
 		return $this->getFoundRows();
 	}
 
+	/**
+	 * @return object
+	 * @throws UnknownFormException
+	 */
+
+	public function getAllRecords()
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT *
+				FROM {$prefix}oo_plugin_forms";
+
+		$result = $pWpDb->get_results($sql, OBJECT);
+
+		if ($result === null) {
+			throw new UnknownFormException();
+		}
+
+		return $result;
+	}
 
 	/**
 	 *
@@ -96,6 +117,27 @@ class RecordManagerReadForm
 		if ($result === null) {
 			throw new UnknownFormException($formName);
 		}
+
+		return $result;
+	}
+
+	/**
+	 *
+	 * @param int $formId
+	 * @return object
+	 *
+	 */
+
+	public function getNameByFormId($formId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlNames = "SELECT *
+				FROM {$prefix}oo_plugin_forms
+				WHERE `form_id` = ".esc_sql((int)$formId);
+
+		$result = $pWpDb->get_results($sqlNames, OBJECT);
 
 		return $result;
 	}

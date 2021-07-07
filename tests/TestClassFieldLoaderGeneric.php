@@ -97,6 +97,9 @@ class TestClassFieldLoaderGeneric
 			$this->assertArrayHasKey('length', $fieldProperties);
 			$this->assertArrayHasKey('permittedvalues', $fieldProperties);
 			$this->assertArrayHasKey('content', $fieldProperties);
+			if ($actualModule == onOfficeSDK::MODULE_ADDRESS && !empty($fieldProperties['permittedvalues'])) {
+				$this->assertArrayNotHasKey('Systembenutzer', $fieldProperties['permittedvalues']);
+			}
 			if ($actualModule == onOfficeSDK::MODULE_ADDRESS && !empty($fieldProperties['tablename'])) {
 				$this->assertNotEquals($fieldProperties['tablename'], 'AdrZusatz');
 			}

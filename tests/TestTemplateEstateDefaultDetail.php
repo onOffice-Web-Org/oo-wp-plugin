@@ -48,6 +48,7 @@ class TestTemplateEstateDefaultDetail
 				'getEstatePictures',
 				'setEstateId',
 				'getEstateMovieLinks',
+				'getShortCodeForm',
 				'getEstatePictureUrl',
 				'getEstatePictureTitle',
 				'getDocument',
@@ -98,6 +99,7 @@ class TestTemplateEstateDefaultDetail
 		];
 
 		$this->_pEstate->method('getEstateMovieLinks')->willReturn([$movielLink]);
+		$this->_pEstate->method('getShortCodeForm')->willReturn('Contact Form here');
 		$this->_pEstate->method('getMovieEmbedPlayers')->willReturn([]);
 		$this->_pEstate->method('getEstatePictures')->willReturn([362]);
 		$this->_pEstate->method('getEstatePictureUrl')->with(362)
