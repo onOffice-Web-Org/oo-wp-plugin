@@ -57,6 +57,7 @@ class TestClassFieldLoaderGeneric
 			'showTable' => true,
 			'language' => 'ENG',
 			'modules' => ['address', 'estate'],
+			'realDataTypes' => true
 		];
 		$pSDKWrapper = new SDKWrapperMocker();
 		$responseGetFields = json_decode
@@ -100,8 +101,8 @@ class TestClassFieldLoaderGeneric
 			if ($actualModule == onOfficeSDK::MODULE_ADDRESS && !empty($fieldProperties['permittedvalues'])) {
 				$this->assertArrayNotHasKey('Systembenutzer', $fieldProperties['permittedvalues']);
 			}
-			if ($actualModule == onOfficeSDK::MODULE_ADDRESS && !empty($fieldProperties['tablename'])) {
-				$this->assertNotEquals($fieldProperties['tablename'], 'AdrZusatz');
+			if ($actualModule == onOfficeSDK::MODULE_ADDRESS && !empty($fieldProperties['type'])) {
+				$this->assertFalse(in_array($fieldProperties['type'], ['user', 'datei', 'redhint', 'blackhint', 'dividingline']));
 			}
 		}
 	}
