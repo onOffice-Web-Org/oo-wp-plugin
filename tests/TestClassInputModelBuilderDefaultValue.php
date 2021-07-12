@@ -123,6 +123,8 @@ class TestClassInputModelBuilderDefaultValue
 		$this->assertEquals(InputModelBase::HTML_TYPE_SELECT, $pInputModel->getHtmlType());
 		$pClosure($pInputModel, 'dummy_key');
 		$this->assertEquals(InputModelBase::HTML_TYPE_TEXT, $pInputModel->getHtmlType());
+		$pClosure($pInputModel, 'testFieldInteger');
+		$this->assertEquals(InputModelBase::HTML_TYPE_NUMBER, $pInputModel->getHtmlType());
 	}
 
 	/**
@@ -158,19 +160,6 @@ class TestClassInputModelBuilderDefaultValue
 	}
 
 	/**
-	 * @depends testCreateInputModelDefaultValue
-	 * @param Closure $pClosure
-	 */
-	public function testValueCallbackNumber(Closure $pClosure)
-	{
-		$pInputModel = new InputModelDB('test', 'testLabel');
-		$pClosure($pInputModel, 'testFieldInteger');
-		$this->assertEquals(InputModelBase::HTML_TYPE_NUMBER, $pInputModel->getHtmlType());
-		$pClosure($pInputModel, 'testFieldFloat');
-		$this->assertEquals(InputModelBase::HTML_TYPE_NUMBER, $pInputModel->getHtmlType());
-	}
-
-	/**
 	 * @return FieldsCollection
 	 */
 	private function createFieldsCollectionNumber(): FieldsCollection
@@ -179,10 +168,6 @@ class TestClassInputModelBuilderDefaultValue
 
 		$pFieldString = new Field('testFieldInteger', 'testModule');
 		$pFieldString->setType(FieldTypes::FIELD_TYPE_INTEGER);
-		$pFieldsCollection->addField($pFieldString);
-
-		$pFieldString = new Field('testFieldFloat', 'testModule');
-		$pFieldString->setType(FieldTypes::FIELD_TYPE_FLOAT);
 		$pFieldsCollection->addField($pFieldString);
 
 		return $pFieldsCollection;
