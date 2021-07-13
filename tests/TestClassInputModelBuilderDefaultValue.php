@@ -121,10 +121,10 @@ class TestClassInputModelBuilderDefaultValue
 		$this->assertEquals(InputModelBase::HTML_TYPE_TEXT, $pInputModel->getHtmlType());
 		$pClosure($pInputModel, 'testFieldSingleSelect');
 		$this->assertEquals(InputModelBase::HTML_TYPE_SELECT, $pInputModel->getHtmlType());
-		$pClosure($pInputModel, 'dummy_key');
-		$this->assertEquals(InputModelBase::HTML_TYPE_TEXT, $pInputModel->getHtmlType());
 		$pClosure($pInputModel, 'testFieldInteger');
 		$this->assertEquals(InputModelBase::HTML_TYPE_NUMBER, $pInputModel->getHtmlType());
+		$pClosure($pInputModel, 'dummy_key');
+		$this->assertEquals(InputModelBase::HTML_TYPE_TEXT, $pInputModel->getHtmlType());
 	}
 
 	/**
@@ -141,34 +141,6 @@ class TestClassInputModelBuilderDefaultValue
 		$pFieldSingleSelect = new Field('testFieldSingleSelect', 'testModule');
 		$pFieldSingleSelect->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldsCollection->addField($pFieldSingleSelect);
-
-		return $pFieldsCollection;
-	}
-
-	/**
-	 * @return Closure
-	 */
-	public function testCreateInputModelDefaultValueNumber(): Closure
-	{
-		$pFieldsCollection = $this->createFieldsCollectionNumber();
-		$presetValues = [];
-		$pResult = $this->_pSubject->createInputModelDefaultValue($pFieldsCollection, $presetValues);
-		$this->assertInstanceOf(InputModelDB::class, $pResult);
-		$this->assertSame(InputModelBase::HTML_TYPE_NUMBER, $pResult->getHtmlType());
-		$this->assertInstanceOf(Closure::class, $pResult->getValueCallback());
-		return $pResult->getValueCallback();
-	}
-
-	/**
-	 * @return FieldsCollection
-	 */
-	private function createFieldsCollectionNumber(): FieldsCollection
-	{
-		$pFieldsCollection = new FieldsCollection;
-
-		$pFieldString = new Field('testFieldInteger', 'testModule');
-		$pFieldString->setType(FieldTypes::FIELD_TYPE_INTEGER);
-		$pFieldsCollection->addField($pFieldString);
 
 		return $pFieldsCollection;
 	}
