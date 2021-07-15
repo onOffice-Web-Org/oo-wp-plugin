@@ -77,7 +77,7 @@ class TestClassCacheHandler
 	 *
 	 */
 
-	public function testClean()
+	public function testSetUpApiCallWithCurlOptions()
 	{
 		$sdkWrapperMocker = new SDKWrapperMocker();
 		$_pSDK = new onOfficeSDK();
@@ -122,10 +122,23 @@ class TestClassCacheHandler
 
 		$sdkWrapperMocker->addFullRequest(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null);
 		$pCacheHandler = new CacheHandler($sdkWrapperMocker);
-		$pCacheHandler->clean();
-		$pCaches = $sdkWrapperMocker->getCache();
-		$this->assertNotEmpty($pCaches);
+		$pCacheHandler->setUpApiCallWithCurlOptions();
 		$this->assertNotNull($sdkWrapperMocker->getSDK());
 		$this->assertEmpty($sdkWrapperMocker->getSDK()->getErrors());
+	}
+
+
+	/**
+	 *
+	 * @expectedException \onOffice\WPlugin\API\APIEmptyResultException
+	 */
+
+	public function testCleanWithEmptyData()
+	{
+		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
+		$pCache->expects($this->exactly(0))->method('cleanup');
+		$cacheInstance = [$pCache];
+		$this->_pSDKWrapper->expects($this->exactly(0))->method('getCache')->will($this->returnValue($cacheInstance));
+		$this->_pCacheHandler->clean();
 	}
 }

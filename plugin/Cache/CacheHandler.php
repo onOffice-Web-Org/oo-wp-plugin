@@ -68,18 +68,31 @@ class CacheHandler
 
 	public function clean()
 	{
-		$pApiCall = new APIClientActionGeneric($this->_pSDKWrapper->withCurlOptions([
-			CURLOPT_SSL_VERIFYPEER => true,
-			CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
-			CURLOPT_CONNECTTIMEOUT => 1,
-		]), onOfficeSDK::ACTION_ID_READ,'estate');
-		$pApiCall->addRequestToQueue()->sendRequests();
-		$records = $pApiCall->getResultRecords();
-		if(!empty($records)){
+		if(!empty($this->setUpApiCallWithCurlOptions())){
 			foreach ($this->_pSDKWrapper->getCache() as $pCache) {
 				/* @var $pCache onOfficeSDKCache */
 				$pCache->cleanup();
 			}
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function setUpApiCallWithCurlOptions(): array
+	{
+		$pApiCall = new APIClientActionGeneric(
+			$this->_pSDKWrapper->withCurlOptions(
+				[
+					CURLOPT_SSL_VERIFYPEER => true,
+					CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+					CURLOPT_CONNECTTIMEOUT => 1,
+				]
+			), onOfficeSDK::ACTION_ID_READ, 'estate'
+		);
+		$pApiCall->addRequestToQueue()->sendRequests();
+		return $pApiCall->getResultRecords();
 	}
 }
