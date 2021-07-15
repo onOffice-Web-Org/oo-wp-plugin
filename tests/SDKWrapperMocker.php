@@ -21,6 +21,7 @@
 
 namespace onOffice\tests;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Cache\DBCache;
 use onOffice\WPlugin\SDKWrapper;
@@ -182,6 +183,17 @@ class SDKWrapperMocker
 
 
 	/**
+	 *
+	 * @param onOfficeSDK $officeSDK
+	 */
+
+	public function setSDK(onOfficeSDK $officeSDK)
+	{
+		$this->_pSDK = $officeSDK;
+	}
+
+
+    /**
 	 *
 	 * For Debug purposes only
 	 *

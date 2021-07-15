@@ -43,7 +43,7 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 class SDKWrapper
 {
 	/** @var onOfficeSDK */
-	private $_pSDK = null;
+	protected $_pSDK = null;
 
 	/** @var array */
 	private $_callbacksAfterSend = [];
@@ -186,7 +186,9 @@ class SDKWrapper
 
 	public function __clone()
 	{
-		$this->_pSDK = clone $this->_pSDK;
-		$this->_callbacksAfterSend = [];
+		if (is_object($this->_pSDK)) {
+			$this->_pSDK = clone $this->_pSDK;
+			$this->_callbacksAfterSend = [];
+		}
 	}
 }
