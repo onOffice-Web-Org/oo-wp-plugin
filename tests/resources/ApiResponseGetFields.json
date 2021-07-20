@@ -88,6 +88,24 @@
 						"tablename": "AdrZusatz",
 						"content": "Adtl Address"
 					},
+					"addressFakturaSeparator1": {
+						"type": "text",
+						"length": null,
+						"permittedvalues": null,
+						"default": null,
+						"label": "FakturaDividinglinie1",
+						"tablename": "addressFaktura",
+						"content": null
+					},
+					"addressFakturaSeparator2": {
+						"type": "text",
+						"length": null,
+						"permittedvalues": null,
+						"default": null,
+						"label": "FakturaDividinglinie2",
+						"tablename": "addressFaktura",
+						"content": null
+					},
 					"Anrede-Titel": {
 						"type": "varchar",
 						"length": 80,

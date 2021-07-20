@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
 "websites\n"
-"POT-Creation-Date: 2021-02-04T16:59:18+07:00\n"
+"POT-Creation-Date: 2021-05-11T11:55:18+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -53,10 +53,10 @@ msgstr "Por favor, configure primero sus credenciales de la API de onOffice!"
 
 #: plugin/Controller/AdminViewController.php:148
 #: plugin/Gui/AdminPageAddressList.php:78 plugin/Gui/AdminPageBase.php:88
-#: plugin/Gui/AdminPageEstateDetail.php:200
+#: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
 #: plugin/Gui/AdminPageEstateUnitList.php:66
-#: plugin/Gui/AdminPageFormList.php:177
+#: plugin/Gui/AdminPageFormList.php:179
 #: plugin/Gui/AdminPageSimilarEstates.php:145
 msgid "onOffice"
 msgstr "onOffice"
@@ -72,7 +72,7 @@ msgid "Estates"
 msgstr "Propiedades"
 
 #: plugin/Controller/AdminViewController.php:172
-#: plugin/Gui/AdminPageFormList.php:93
+#: plugin/Gui/AdminPageFormList.php:95
 msgid "Forms"
 msgstr "Formularios"
 
@@ -178,7 +178,7 @@ msgstr "No se ha borrado ningún formulario."
 
 #: plugin/Gui/AdminPageAddressList.php:87 plugin/Gui/AdminPageEstateList.php:83
 #: plugin/Gui/AdminPageEstateUnitList.php:78
-#: plugin/Gui/AdminPageFormList.php:195
+#: plugin/Gui/AdminPageFormList.php:197
 msgid "Add New"
 msgstr "Añadir nuevo"
 
@@ -194,7 +194,7 @@ msgid "choose name"
 msgstr "escoja un nombre"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:116
-#: plugin/Gui/AdminPageEstateDetail.php:271
+#: plugin/Gui/AdminPageEstateDetail.php:277
 #: plugin/Gui/AdminPageEstateListSettings.php:125
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
 #: plugin/Gui/AdminPageFormSettingsBase.php:370
@@ -206,7 +206,7 @@ msgid "Filter & Records"
 msgstr "Filtro y registros"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:155
-#: plugin/Gui/AdminPageEstateDetail.php:279
+#: plugin/Gui/AdminPageEstateDetail.php:293
 #: plugin/Gui/AdminPageEstateListSettings.php:133
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
@@ -319,13 +319,13 @@ msgstr "Se ha limpiado la caché."
 msgid "List Views"
 msgstr "Vistas de lista"
 
-#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateDetail.php:202
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:92
+#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateDetail.php:205
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:95
 msgid "Detail View"
 msgstr "Vista detallada"
 
 #: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageSimilarEstates.php:147
-#: plugin/Gui/AdminPageSimilarEstates.php:202
+#: plugin/Gui/AdminPageSimilarEstates.php:200
 msgid "Similar Estates"
 msgstr "Sucesiones similares"
 
@@ -333,22 +333,22 @@ msgstr "Sucesiones similares"
 msgid "Unit Lists"
 msgstr "Listas de unidades"
 
-#: plugin/Gui/AdminPageEstateDetail.php:118
+#: plugin/Gui/AdminPageEstateDetail.php:121
 #: plugin/Gui/AdminPageEstateListSettings.php:67
 #: plugin/Gui/AdminPageSimilarEstates.php:98
 msgid "Edit List View"
 msgstr "Editar vista de lista"
 
 #. translators: %s will be replaced with a link to the appropriate page.
-#: plugin/Gui/AdminPageEstateDetail.php:128
+#: plugin/Gui/AdminPageEstateDetail.php:131
 msgid "Detail view in use on page %s"
 msgstr "Vista detallada en uso en la página %s"
 
-#: plugin/Gui/AdminPageEstateDetail.php:130
+#: plugin/Gui/AdminPageEstateDetail.php:133
 msgid "Edit Page"
 msgstr "Editar página"
 
-#: plugin/Gui/AdminPageEstateDetail.php:132
+#: plugin/Gui/AdminPageEstateDetail.php:135
 msgid ""
 "Detail view is not in use yet. Insert this code on a page to get the detail "
 "view there:"
@@ -356,28 +356,33 @@ msgstr ""
 "La vista detallada todavía no está en uso. Inserte este código en una página "
 "para obtener la vista detallada:"
 
-#: plugin/Gui/AdminPageEstateDetail.php:158
+#: plugin/Gui/AdminPageEstateDetail.php:161
 msgid "Contact Person Fields"
 msgstr "Campos de la persona de contacto"
 
-#: plugin/Gui/AdminPageEstateDetail.php:173
+#: plugin/Gui/AdminPageEstateDetail.php:176
 #: plugin/Gui/AdminPageSimilarEstates.php:119
 msgid "Real Estate Fields"
 msgstr "Campos de datos de bienes raíces"
 
-#: plugin/Gui/AdminPageEstateDetail.php:288
+#: plugin/Gui/AdminPageEstateDetail.php:285
+#, fuzzy
+msgid "Contact Form"
+msgstr "Persona de contacto: "
+
+#: plugin/Gui/AdminPageEstateDetail.php:302
 msgid "Additional Media"
 msgstr "Medios adicionales"
 
-#: plugin/Gui/AdminPageEstateDetail.php:404
+#: plugin/Gui/AdminPageEstateDetail.php:418
 msgid "The detail view has been saved."
 msgstr "Se ha grabado la vista detallada."
 
-#: plugin/Gui/AdminPageEstateDetail.php:405
+#: plugin/Gui/AdminPageEstateDetail.php:419
 msgid "There was a problem saving the detail view."
 msgstr "Ha habido un problema para guardar la vista detallada."
 
-#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:141
+#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:143
 msgid "Are you sure you want to delete the selected items?"
 msgstr "¿Está seguro de que desea borrar las posiciones seleccionadas?"
 
@@ -537,13 +542,13 @@ msgstr "Campos"
 msgid "Fields Configuration"
 msgstr "Configuración de campos"
 
-#: plugin/Gui/AdminPageSimilarEstates.php:323
+#: plugin/Gui/AdminPageSimilarEstates.php:319
 #, fuzzy
-#| msgid "The view has been saved."
+#| msgid "The detail view has been saved."
 msgid "The similar estates view has been saved."
-msgstr "La vista se ha guardado."
+msgstr "Se ha grabado la vista detallada."
 
-#: plugin/Gui/AdminPageSimilarEstates.php:324
+#: plugin/Gui/AdminPageSimilarEstates.php:320
 #, fuzzy
 #| msgid "There was a problem saving the detail view."
 msgid "There was a problem saving the similar estates view."
@@ -658,7 +663,7 @@ msgid "Descending"
 msgstr "Descendente"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:242
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:245
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr "Plantilla"
@@ -697,7 +702,7 @@ msgid "Random Order"
 msgstr "Orden aleatorio"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:381
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:134
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:137
 msgid "PDF-Expose"
 msgstr "PDF-Expose"
 
@@ -787,21 +792,30 @@ msgstr "Sprache hinzufügen"
 msgid "Module"
 msgstr "Módulo"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:155
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:158
 msgid "Movie Links"
 msgstr "Enlaces de películas"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:164
 msgid "Disabled"
 msgstr "Discapacitado"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:162
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:165
 msgid "Link"
 msgstr "Enlace"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:163
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:166
 msgid "Player"
 msgstr "Jugador"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:281
+msgid "Select Contact Form"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:285
+#, fuzzy
+msgid "No Contact Form"
+msgstr "Persona de contacto: "
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:83
 #, fuzzy
@@ -821,26 +835,16 @@ msgstr "El mismo tipo de patrimonio"
 msgid "Same Marketing Method"
 msgstr "El mismo método de comercialización"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:293
-msgid "Don't show archived estates"
-msgstr ""
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:314
-#, fuzzy
-#| msgid "Reference Estates"
-msgid "Don't show reference estates"
-msgstr "Fincas de referencia"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:336
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:294
 msgid "Same Postal Code"
 msgstr "Mismo Código Postal"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:358
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:316
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:248
 msgid "Radius"
 msgstr "Radio"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:380
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:338
 msgid "Amount of Estates"
 msgstr "Cantidad de Sucesiones"
 
@@ -925,16 +929,16 @@ msgstr "Tratar"
 msgid "(Remains unchanged)"
 msgstr "(Permanece sin cambios)"
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:84
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:88
 msgid "0 matches"
 msgstr "0 coincidencias"
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:85
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:89
 msgid "Show exact match"
 msgstr "Mostrar coincidencia exacta"
 
 #. translators: %s is the amount of results
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:87
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:91
 msgid "Show %s matches"
 msgstr "Muestran %s coincidencias"
 
@@ -954,11 +958,12 @@ msgstr[0] "Persona de contacto: "
 msgstr[1] "Persona de contacto: "
 
 #: plugin/Translation/FormTranslation.php:63
+#, fuzzy
 msgctxt "forms"
 msgid "Interest Form"
 msgid_plural "Interest Forms"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Persona de contacto: "
+msgstr[1] "Persona de contacto: "
 
 #: plugin/Translation/FormTranslation.php:67
 msgctxt "forms"

@@ -2,7 +2,7 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 7.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -72,6 +72,55 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.14.1 =
+
+**Fixes**
+
+* minor fixes
+
+= 2.14.0 =
+
+**New**
+
+* Add an option to duplicate listViews.
+
+= 2.13.3 =
+
+**Fixes**
+
+* No e-mail when select newsletter-option *
+
+= 2.13.2 =
+
+**Changes**
+
+* Hide configuration option "Systembenutzer (Adresse ist mit Benutzer verknüpft)" in contact type configuration *
+
+= 2.13.1 =
+
+**Changes**
+
+* Avoid display of Faktura fields in WP-Plugin *
+
+= 2.13.0 =
+
+**New**
+
+* API-credentials can now be stored in an encrypted manner.
+
+= 2.12.1 =
+
+**Changes**
+
+* Remove field `krit_bemerkung_oeffentlich` from applicant search forms, since it can't be used as intended.
+* Increase "Tested up to" in readme.txt to WP 5.7.
+
+= 2.12.0 =
+
+**New**
+
+* Automatically creates a default contact form during plugin setup.
 
 = 2.11.0 =
 
