@@ -82,9 +82,12 @@ class FieldLoaderGeneric
 			}
 			$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
-				if ($module == onOfficeSDK::MODULE_ADDRESS && in_array($fieldProperties['type'], $listTypeUnSupported)) {
-					continue;
-				}
+                if ($module == onOfficeSDK::MODULE_ADDRESS
+                    && (in_array($fieldProperties['type'], $listTypeUnSupported)
+                        || $fieldProperties['tablename'] === 'addressFaktura')
+                ) {
+                    continue;
+                }
 				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz') {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 					$this->_pRegionController->fetchRegions();
