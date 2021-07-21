@@ -46,9 +46,6 @@ class EstateDetail
 	/** @var int */
 	private $_estateId = null;
 
-	/** @var Container */
-	private $_pContainer;
-
 	/**
 	 *
 	 * @return int
@@ -181,15 +178,12 @@ class EstateDetail
 	 * @throws HttpFetchNoResultException
 	 */
 
-	public function getSimilarEstates($pContainer): string
+	public function getSimilarEstates(): string
 	{
-		if(empty($pContainer)){
-			$pContainerBuilder = new ContainerBuilder;
-			$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-			$this->_pContainer = $pContainerBuilder->build();
-		}
-		$this->_pContainer = $pContainer;
-        $pDataSimilarEstatesSettings = $this->_pContainer->get(DataSimilarEstatesSettingsHandler::class);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+        $pDataSimilarEstatesSettings = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
         $pDataSimilarSettings = $pDataSimilarEstatesSettings->getDataSimilarEstatesSettings();
         if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
 			return '';
