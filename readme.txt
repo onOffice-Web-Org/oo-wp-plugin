@@ -73,6 +73,36 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.14.1 =
+
+**Fixes**
+
+* minor fixes
+
+= 2.14.0 =
+
+**New**
+
+* Add an option to duplicate listViews.
+
+= 2.13.3 =
+
+**Fixes**
+
+* No e-mail when select newsletter-option *
+
+= 2.13.2 =
+
+**Changes**
+
+* Hide configuration option "Systembenutzer (Adresse ist mit Benutzer verknüpft)" in contact type configuration *
+
+= 2.13.1 =
+
+**Changes**
+
+* Avoid display of Faktura fields in WP-Plugin *
+
 = 2.13.0 =
 
 **New**
