@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin;
 
-use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -183,9 +182,9 @@ class EstateDetail
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
-        $pDataSimilarEstatesSettings = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
-        $pDataSimilarSettings = $pDataSimilarEstatesSettings->getDataSimilarEstatesSettings();
-        if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
+		$pDataSimilarEstatesSettings = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
+		$pDataSimilarSettings = $pDataSimilarEstatesSettings->getDataSimilarEstatesSettings();
+		if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
 			return '';
 		}
 		$pDataViewSimilarEstates = $pDataSimilarSettings->getDataViewSimilarEstates();
