@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\PDF\PdfDocumentFetcher;
 use onOffice\WPlugin\PDF\PdfDocumentModel;
@@ -30,6 +32,8 @@ use onOffice\WPlugin\PDF\PdfDocumentModelValidationException;
 use onOffice\WPlugin\PDF\PdfDocumentModelValidator;
 use onOffice\WPlugin\PDF\PdfDownload;
 use onOffice\WPlugin\PDF\PdfDownloadException;
+use onOffice\WPlugin\Utility\HTTPHeadersGeneric;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use WP_UnitTestCase;
 
 /**
@@ -48,6 +52,13 @@ class TestClassPdfDownload
 	/** @var PdfDownload */
 	private $_pPdfDownload = null;
 
+    /** @var HTTPHeadersGeneric */
+	private $_pHttpHeadersGeneric;
+	/**
+	 * @var WPOptionWrapperDefault
+	 */
+	private $_pWPOptionWrapper;
+
 	/**
 	 * @before
 	 */
@@ -59,7 +70,9 @@ class TestClassPdfDownload
 		$this->_pPdfDocumentModelValidator = $this->getMockBuilder(PdfDocumentModelValidator::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$this->_pPdfDownload = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator);
+		$this->_pHttpHeadersGeneric = new HTTPHeadersGeneric();
+		$this->_pWPOptionWrapper = new WPOptionWrapperDefault();
+		$this->_pPdfDownload = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_pHttpHeadersGeneric, $this->_pWPOptionWrapper);
 	}
 
 	/**
@@ -68,6 +81,8 @@ class TestClassPdfDownload
 	 * @throws ApiClientException
 	 * @throws PdfDocumentModelValidationException
 	 * @throws PdfDownloadException
+	 * @throws DependencyException
+	 * @throws NotFoundException
 	 */
 	public function testDownload()
 	{
@@ -87,7 +102,39 @@ class TestClassPdfDownload
 			->expects($this->once())
 			->method('proxyResult')
 			->with($pPdfDocumentModel, $url);
-		$pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator);
+		$pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_pHttpHeadersGeneric, $this->_pWPOptionWrapper);
 		$pSubject->download($pPdfDocumentModel);
 	}
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     * @throws ApiClientException
+     * @throws PdfDocumentModelValidationException
+     * @throws PdfDownloadException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function testDownloadWithNoAcceptGoogleIndex()
+    {
+		$url = uniqid();
+		$pPdfDocumentModel = new PdfDocumentModel(12, 'testview');
+
+		$this->_pPdfDocumentModelValidator
+			->expects($this->once())
+			->method('validate')
+			->will($this->returnValue($pPdfDocumentModel));
+		$this->_pPdfDocumentFetcher
+			->expects($this->once())
+			->method('fetchUrl')
+			->with($pPdfDocumentModel)
+			->will($this->returnValue($url));
+		$this->_pPdfDocumentFetcher
+			->expects($this->once())
+			->method('proxyResult')
+			->with($pPdfDocumentModel, $url);
+		$pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_pHttpHeadersGeneric, $this->_pWPOptionWrapper);
+		$pSubject->download($pPdfDocumentModel);
+		$this->assertEquals(['X-Robots-Tag: googlebot: noindex, nofollow'], xdebug_get_headers());
+    }
 }

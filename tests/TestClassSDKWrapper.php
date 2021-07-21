@@ -28,6 +28,8 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Cache\DBCache;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Utility\SymmetricEncryption;
+use onOffice\WPlugin\Utility\SymmetricEncryptionDefault;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
@@ -106,8 +108,9 @@ class TestClassSDKWrapper
 			->will($this->returnValue(2));
 		$this->_pMockWPOptions = new WPOptionWrapperTest();
 		$this->_pSDKWrapper = new SDKWrapper($this->_pMockSDK, $this->_pMockWPOptions);
-		$this->_pMockWPOptions->addOption('onoffice-settings-apikey', 'testKey');
-		$this->_pMockWPOptions->addOption('onoffice-settings-apisecret', 'testSecret');
+		$encrypter = new SymmetricEncryptionDefault();
+		$this->_pMockWPOptions->addOption('onoffice-settings-apikey', $encrypter->encrypt('test-key', ONOFFICE_CREDENTIALS_ENC_KEY));
+		$this->_pMockWPOptions->addOption('onoffice-settings-apisecret', $encrypter->encrypt('test-secret', ONOFFICE_CREDENTIALS_ENC_KEY));
 	}
 
 

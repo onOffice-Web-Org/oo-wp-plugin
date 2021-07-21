@@ -130,7 +130,6 @@ abstract class FormModelBuilder
 		return $templates;
 	}
 
-
 	/**
 	 *
 	 * @param string $module

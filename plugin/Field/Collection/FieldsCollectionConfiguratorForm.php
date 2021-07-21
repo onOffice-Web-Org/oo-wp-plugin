@@ -40,6 +40,9 @@ class FieldsCollectionConfiguratorForm
 		$pFieldsCollectionNew = new FieldsCollection;
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
 			$pFieldClone = clone $pField;
+			if (in_array( $pFieldClone->getName(), ['krit_bemerkung_oeffentlich'])) {
+				continue;
+			}
 			$pFieldClone->setIsRangeField(false);
 			$pFieldsCollectionNew->addField($pFieldClone);
 		}

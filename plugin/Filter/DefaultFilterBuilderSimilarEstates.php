@@ -91,14 +91,6 @@ class DefaultFilterBuilderSimilarEstates
 			$filter['plz'] []= ['op' => '=', 'val' => $pFilterConfiguration->getPostalCode()];
 		}
 
-		if ($pDataListView->getDoNotShowArchived()) {
-			$filter['status'] [] = ['op' => '!=', 'val' => 0];
-		}
-
-		if ($pDataListView->getDoNotShowReference()) {
-			$filter['referenz'] [] = ['op' => '!=', 'val' => 1];
-		}
-
 		if ($this->_excludeIds !== []) {
 			$filter['Id'] []= ['op' => 'not in', 'val' => $this->_excludeIds];
 		}

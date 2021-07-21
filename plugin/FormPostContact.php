@@ -87,11 +87,13 @@ class FormPostContact
 		$recipient = $pFormConfig->getRecipient();
 		$subject = $pFormConfig->getSubject();
 
-		if ($pFormConfig->getCreateAddress()) {
-			$this->createAddress($pFormData);
+		try {
+			if ($pFormConfig->getCreateAddress()) {
+				$this->createAddress($pFormData);
+			}
+		} finally {
+			$this->sendContactRequest($pFormData, $recipient ?? '', $subject);
 		}
-
-		$this->sendContactRequest($pFormData, $recipient ?? '', $subject);
 	}
 
 

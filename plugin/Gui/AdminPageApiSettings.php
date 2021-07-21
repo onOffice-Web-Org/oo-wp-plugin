@@ -31,6 +31,7 @@ use function esc_attr;
 use function esc_html;
 use function get_option;
 use function json_encode;
+use onOffice\WPlugin\Utility\SymmetricEncryption;
 use function settings_fields;
 use function submit_button;
 
@@ -42,17 +43,23 @@ class AdminPageApiSettings
 	extends AdminPage
 {
 	/**
+	 * @var SymmetricEncryption
+	 */
+	private $_encrypter;
+
+	/**
 	 *
 	 * @param string $pageSlug
 	 *
 	 */
-
 	public function __construct($pageSlug)
 	{
 		parent::__construct($pageSlug);
+		$this->_encrypter = $this->getContainer()->make(SymmetricEncryption::class);
 		$this->addFormModelAPI();
 		$this->addFormModelGoogleCaptcha();
 		$this->addFormModelGoogleMapsKey();
+		$this->addFormModelGoogleBotSettings();
 	}
 
 
@@ -66,11 +73,24 @@ class AdminPageApiSettings
 		$labelSecret = __('API secret', 'onoffice-for-wp-websites');
 		$pInputModelApiKey = new InputModelOption('onoffice-settings', 'apikey', $labelKey, 'string');
 		$optionNameKey = $pInputModelApiKey->getIdentifier();
-		$pInputModelApiKey->setValue(get_option($optionNameKey));
+		$apiKey = get_option($optionNameKey);
+		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+			try {
+				$apiKeyDecrypt = $this->_encrypter->decrypt(get_option($optionNameKey), ONOFFICE_CREDENTIALS_ENC_KEY);
+			} catch (\RuntimeException $e) {
+				$apiKeyDecrypt = $apiKey;
+			}
+			$apiKey = $apiKeyDecrypt;
+		}
+		$pInputModelApiKey->setValue($apiKey);
 		$pInputModelApiSecret = new InputModelOption('onoffice-settings', 'apisecret', $labelSecret, 'string');
 		$pInputModelApiSecret->setIsPassword(true);
 		$optionNameSecret = $pInputModelApiSecret->getIdentifier();
+		$pInputModelApiKey->setSanitizeCallback(function ($apiKey) {
+			return $this->encrypteCredentials($apiKey);
+		});
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
+			$password = $this->encrypteCredentials($password);
 			return $this->checkPassword($password, $optionNameSecret);
 		});
 		$pInputModelApiSecret->setValue(get_option($optionNameSecret, $pInputModelApiSecret->getDefault()));
@@ -144,6 +164,24 @@ class AdminPageApiSettings
 		$this->addFormModel($pFormModel);
 	}
 
+	private function addFormModelGoogleBotSettings()
+	{
+		$labelGoogleBotIndexPdfExpose = __('Index PDF Brochure', 'onoffice-for-wp-websites');
+		$pInputModeGoogleBotIndexPdfExpose = new InputModelOption('onoffice-settings', 'google-bot-index-pdf-expose',
+			$labelGoogleBotIndexPdfExpose, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModeGoogleBotIndexPdfExpose->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModeGoogleBotIndexPdfExpose->setValuesAvailable(1);
+		$pInputModeGoogleBotIndexPdfExpose->setValue(get_option($pInputModeGoogleBotIndexPdfExpose->getIdentifier()) == 1);
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModeGoogleBotIndexPdfExpose);
+		$pFormModel->setGroupSlug('onoffice-google-bot');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('Google Bot', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
+	}
+
 	/**
 	 *
 	 * @param string $password
@@ -154,6 +192,18 @@ class AdminPageApiSettings
 	public function checkPassword($password, $optionName)
 	{
 		return $password != '' ? $password : get_option($optionName);
+	}
+
+	/**
+	 * @param $password
+	 * @return string
+	 */
+	public function encrypteCredentials(string $password)
+	{
+		if ($password && defined('ONOFFICE_CREDENTIALS_ENC_KEY') && ONOFFICE_CREDENTIALS_ENC_KEY) {
+			$password = $this->_encrypter->encrypt($password, ONOFFICE_CREDENTIALS_ENC_KEY);
+		}
+		return $password;
 	}
 
 
