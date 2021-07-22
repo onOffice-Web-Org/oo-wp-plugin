@@ -43,12 +43,9 @@ class InputFieldNumberRenderer
 	 * @throws Exception
 	 */
 
-	public function __construct($type, $name, $value = null)
+	public function __construct($name, $value = null)
 	{
-		if ($type != 'number') {
-			throw new Exception(' wrong type!');
-		}
-		parent::__construct($type, $name, $value);
+		parent::__construct('number', $name, $value);
 	}
 
 

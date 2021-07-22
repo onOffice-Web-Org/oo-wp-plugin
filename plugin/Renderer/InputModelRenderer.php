@@ -206,7 +206,7 @@ class InputModelRenderer
 				break;
 
 			case InputModelOption::HTML_TYPE_NUMBER:
-				$pInstance = new InputFieldNumberRenderer('number', $elementName);
+				$pInstance = new InputFieldNumberRenderer($elementName);
 				$pInstance->setValue($pInputModel->getValue());
 				break;
 		}
