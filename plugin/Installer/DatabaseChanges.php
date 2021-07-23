@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 20;
+	const MAX_VERSION = 21;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
