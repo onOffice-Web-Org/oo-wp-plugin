@@ -182,17 +182,6 @@ class SDKWrapperMocker
 	}
 
 
-	/**
-	 *
-	 * @param onOfficeSDK $officeSDK
-	 */
-
-	public function setSDK(onOfficeSDK $officeSDK)
-	{
-		$this->_pSDK = $officeSDK;
-	}
-
-
     /**
 	 *
 	 * For Debug purposes only

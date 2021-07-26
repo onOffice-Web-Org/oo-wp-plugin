@@ -24,9 +24,8 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
-use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIAvailabilityChecker;
 use onOffice\WPlugin\Cache\CacheHandler;
-use onOffice\WPlugin\Cache\DBCache;
 use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
 
@@ -44,7 +43,8 @@ class TestClassCacheHandler
 	/** @var CacheHandler */
 	private $_pCacheHandler = null;
 
-
+    /** @var APIAvailabilityChecker */
+    private $_pApiChecker = null;
 	/**
 	 *
 	 * @before
@@ -55,7 +55,8 @@ class TestClassCacheHandler
 	{
 		$this->_pSDKWrapper = $this->getMockBuilder(SDKWrapper::class)
 			->getMock();
-		$this->_pCacheHandler = new CacheHandler($this->_pSDKWrapper);
+        $this->_pApiChecker = $this->getMockBuilder(APIAvailabilityChecker::class)->getMock();
+        $this->_pCacheHandler = new CacheHandler($this->_pSDKWrapper, $this->_pApiChecker);
 	}
 
 
@@ -77,68 +78,13 @@ class TestClassCacheHandler
 	 *
 	 */
 
-	public function testSetUpApiCallWithCurlOptions()
+	public function testClean()
 	{
-		$sdkWrapperMocker = new SDKWrapperMocker();
-		$_pSDK = new onOfficeSDK();
-		$_pSDK->setCaches(
-			[
-				new DBCache(['ttl' => 3600]),
-			]
-		);
-		$_pSDK->setApiServer('https://api.onoffice.de/api/');
-		$_pSDK->setApiVersion('latest');
-		$_pSDK->setApiCurlOptions(
-			[
-				CURLOPT_SSL_VERIFYPEER => true,
-				CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
-			]
-		);
-		$sdkWrapperMocker->setSDK($_pSDK);
-
-		$dataReadEstateFormatted = json_decode(
-			file_get_contents(__DIR__ . '/resources/ApiResponseReadEstatesPublishedENG.json'),
-			true
-		);
-		$responseReadEstate = $dataReadEstateFormatted['response'];
-		$parametersReadEstate = $dataReadEstateFormatted['parameters'];
-
-		$sdkWrapperMocker->addResponseByParameters(
-			onOfficeSDK::ACTION_ID_READ,
-			'estate',
-			'',
-			$parametersReadEstate,
-			null,
-			$responseReadEstate
-		);
-		$sdkWrapperMocker->addResponseByParameters(
-			onOfficeSDK::ACTION_ID_READ,
-			'estate',
-			'',
-			[],
-			null,
-			$responseReadEstate
-		);
-
-		$sdkWrapperMocker->addFullRequest(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null);
-		$pCacheHandler = new CacheHandler($sdkWrapperMocker);
-		$pCacheHandler->setUpApiCallWithCurlOptions();
-		$this->assertNotNull($sdkWrapperMocker->getSDK());
-		$this->assertEmpty($sdkWrapperMocker->getSDK()->getErrors());
-	}
-
-
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\API\APIEmptyResultException
-	 */
-
-	public function testCleanWithEmptyData()
-	{
+		$this->_pApiChecker->expects($this->exactly(1))->method('checkAvailability')->will($this->returnValue(['data' => 'data']));
 		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
-		$pCache->expects($this->exactly(0))->method('cleanup');
+		$pCache->expects($this->exactly(1))->method('cleanup');
 		$cacheInstance = [$pCache];
-		$this->_pSDKWrapper->expects($this->exactly(0))->method('getCache')->will($this->returnValue($cacheInstance));
+		$this->_pSDKWrapper->expects($this->exactly(1))->method('getCache')->will($this->returnValue($cacheInstance));
 		$this->_pCacheHandler->clean();
 	}
 }

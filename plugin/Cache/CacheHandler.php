@@ -24,8 +24,8 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Cache;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\APIAvailabilityChecker;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\SDKWrapper;
 
 
@@ -38,14 +38,19 @@ class CacheHandler
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
+	/** @var APIAvailabilityChecker */
+	private $_pApiChecker = null;
+
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
+	 * @param APIAvailabilityChecker $pApiChecker
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper)
+	public function __construct(SDKWrapper $pSDKWrapper, APIAvailabilityChecker $pApiChecker)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->_pApiChecker = $pApiChecker;
 	}
 
 
@@ -64,35 +69,16 @@ class CacheHandler
 
 	/**
 	 *
+	 * @throws ApiClientException
 	 */
 
 	public function clean()
 	{
-		if(!empty($this->setUpApiCallWithCurlOptions())){
+		if(!empty($this->_pApiChecker->checkAvailability($this->_pSDKWrapper))){
 			foreach ($this->_pSDKWrapper->getCache() as $pCache) {
 				/* @var $pCache onOfficeSDKCache */
 				$pCache->cleanup();
 			}
 		}
-	}
-
-
-	/**
-	 *
-	 */
-
-	public function setUpApiCallWithCurlOptions(): array
-	{
-		$pApiCall = new APIClientActionGeneric(
-			$this->_pSDKWrapper->withCurlOptions(
-				[
-					CURLOPT_SSL_VERIFYPEER => true,
-					CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
-					CURLOPT_CONNECTTIMEOUT => 1,
-				]
-			), onOfficeSDK::ACTION_ID_READ, 'estate'
-		);
-		$pApiCall->addRequestToQueue()->sendRequests();
-		return $pApiCall->getResultRecords();
 	}
 }
