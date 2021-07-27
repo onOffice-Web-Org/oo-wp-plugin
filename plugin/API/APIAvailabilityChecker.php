@@ -18,9 +18,9 @@ class APIAvailabilityChecker
 	 * @param SDKWrapper $pSDKWrapper
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper = null)
+	public function __construct(SDKWrapper $pSDKWrapper)
 	{
-		$this->_pSDKWrapper = $pSDKWrapper ?? new SDKWrapper();
+		$this->_pSDKWrapper = $pSDKWrapper;
 	}
 
 
