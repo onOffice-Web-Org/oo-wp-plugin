@@ -48,7 +48,7 @@ class TestClassAPIAvailabilityChecker
 		$_pSDKWrapper->expects($this->once())->method('withCurlOptions')->will($this->returnValue(
 			$this->buildSDKWrapper()
 		));
-		$apiChecker = new APIAvailabilityChecker();
+		$apiChecker = new APIAvailabilityChecker($_pSDKWrapper);
 		$_pAPIClientAction = $this->getMockBuilder(APIClientActionGeneric::class)
 			->setConstructorArgs([$_pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'basicsettings'])
 			->getMock();
@@ -72,7 +72,7 @@ class TestClassAPIAvailabilityChecker
 				]
 			]
 		);
-		$apiChecker->checkAvailability($_pSDKWrapper);
+		$apiChecker->isAvailable();
 	}
 
 

@@ -10,15 +10,29 @@ use onOffice\WPlugin\SDKWrapper;
 
 class APIAvailabilityChecker
 {
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
+
+	/**
+	 *
+	 * @param SDKWrapper $pSDKWrapper
+	 */
+
+	public function __construct(SDKWrapper $pSDKWrapper = null)
+	{
+		$this->_pSDKWrapper = $pSDKWrapper ?? new SDKWrapper();
+	}
+
+
 	/**
 	 *
 	 * @throws ApiClientException
 	 */
 
-	public function checkAvailability(SDKWrapper $pSDKWrapper): array
+	public function isAvailable(): bool
 	{
 		$pApiCall = new APIClientActionGeneric(
-			$pSDKWrapper->withCurlOptions(
+			$this->_pSDKWrapper->withCurlOptions(
 				[
 					CURLOPT_SSL_VERIFYPEER => true,
 					CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
@@ -42,6 +56,6 @@ class APIAvailabilityChecker
 			]
 		);
 		$pApiCall->addRequestToQueue()->sendRequests();
-		return $pApiCall->getResultRecords();
+		return !empty($pApiCall->getResultRecords());
 	}
 }

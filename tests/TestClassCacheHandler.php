@@ -55,7 +55,9 @@ class TestClassCacheHandler
 	{
 		$this->_pSDKWrapper = $this->getMockBuilder(SDKWrapper::class)
 			->getMock();
-        $this->_pApiChecker = $this->getMockBuilder(APIAvailabilityChecker::class)->getMock();
+		$this->_pApiChecker = $this->getMockBuilder(APIAvailabilityChecker::class)
+			->disableOriginalConstructor()
+			->getMock();
         $this->_pCacheHandler = new CacheHandler($this->_pSDKWrapper, $this->_pApiChecker);
 	}
 
@@ -80,7 +82,7 @@ class TestClassCacheHandler
 
 	public function testClean()
 	{
-		$this->_pApiChecker->expects($this->exactly(1))->method('checkAvailability')->will($this->returnValue(['data' => 'data']));
+		$this->_pApiChecker->expects($this->exactly(1))->method('isAvailable')->will($this->returnValue(true));
 		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
 		$pCache->expects($this->exactly(1))->method('cleanup');
 		$cacheInstance = [$pCache];

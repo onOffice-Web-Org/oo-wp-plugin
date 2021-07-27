@@ -74,7 +74,7 @@ class CacheHandler
 
 	public function clean()
 	{
-		if(!empty($this->_pApiChecker->checkAvailability($this->_pSDKWrapper))){
+		if($this->_pApiChecker->isAvailable()){
 			foreach ($this->_pSDKWrapper->getCache() as $pCache) {
 				/* @var $pCache onOfficeSDKCache */
 				$pCache->cleanup();
