@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.15.0 =
+
+**New**
+
+* Form inputs can now have individual captions. Those can be set in the form-settings in the back-end.
+
 = 2.14.1 =
 
 **Fixes**
