@@ -96,7 +96,7 @@ class RegionController
 	 * @param array $regionList
 	 * @return array
 	 */
-	private function createRegionObjectsRegionOne(array $regionList): array
+	public function createRegionObjectsRegionOne(array $regionList): array
 	{
 		$regions = [];
 		foreach ($regionList as $regionProperties) {

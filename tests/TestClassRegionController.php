@@ -124,4 +124,24 @@ class TestClassRegionController
 
 		$this->_pRegionController = new RegionController(true, $pSDKWrapper);
 	}
+
+	public function testCreateRegionObjectsRegionOneIdIsNull()
+	{
+		$fakeData = [
+			[
+				'elements' => [
+					'id' => null,
+					'children' => []
+				],
+			],
+			[
+				'elements' => [
+					'id' => '',
+					'children' => []
+				],
+			]
+		];
+		$resultObject = $this->_pRegionController->createRegionObjectsRegionOne($fakeData);
+		$this->assertSame([], $resultObject);
+	}
 }
