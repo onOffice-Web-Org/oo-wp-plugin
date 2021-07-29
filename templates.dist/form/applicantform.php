@@ -57,6 +57,10 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	if ($table == 'searchcriteria') {
 		$searchcriteriaValues []= $line;
 	}
+
+    if ($table == '') {
+        $messageValues [] = $line;
+    }
 }
 
 if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
@@ -68,6 +72,12 @@ if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			<?php echo implode('<br>', $addressValues); ?>
 		</div>
 	</p>
+    <p>
+    <h1>Messager</h1>
+    <div>
+        <?php echo implode('<br>', $messageValues); ?>
+    </div>
+    </p>
 	<p>
 	<h1>Ihre Suchkriterien</h1>
 		<div>
