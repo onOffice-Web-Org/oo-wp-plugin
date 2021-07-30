@@ -108,8 +108,11 @@ class SearchcriteriaFields
 		$output = [];
 		$pGeoPosition = new GeoPosition;
 		$geoRangeFields = array_flip($pGeoPosition->getSearchCriteriaFields());
-
 		foreach ($inputFormFields as $name => $value) {
+			if (in_array($name, ['message'])) {
+				$output[$name] = $value;
+				continue;
+			}
 			$aliasedFieldName = $this->getFieldNameOfInput($name);
 			if (in_array($name, $pGeoPosition->getSearchCriteriaFields())) {
 				$aliasedFieldName = $geoRangeFields[$name];

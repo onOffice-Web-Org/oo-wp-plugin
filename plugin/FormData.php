@@ -162,7 +162,7 @@ class FormData
 			$inputConfigName = $pSearchcriteriaFields->getFieldNameOfInput($input);
 			$inputModule = $inputs[$inputConfigName] ?? null;
 
-			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputModule) {
+			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputModule || in_array($input, ['message'])) {
 				$searchcriteriaData[$input] = $value;
 			}
 		}
