@@ -45,7 +45,7 @@ class TestClassFormModelBuilderDBForm
 
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilderDBForm::createInputModelContactType
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelContactType
 	 */
 	public function testCreateInputModelContactType()
 	{
