@@ -63,7 +63,8 @@ class TestClassFormData
 		'testInput8__bis' => 55,
 		'testInput9' => 'wood',
 		'regionaler_zusatz' => 'AachenStadt',
-		'testBoolInput' => 'y'
+		'testBoolInput' => 'y',
+		'message' => 'abc'
 	];
 
 
@@ -92,6 +93,7 @@ class TestClassFormData
 			'testInput9' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'regionaler_zusatz' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'testBoolInput' => onOfficeSDK::MODULE_ADDRESS,
+			'message' => ''
 		]);
 
 		$pDataFormConfiguration->setRequiredFields([
@@ -293,4 +295,23 @@ class TestClassFormData
 		$this->_pFormData->setResponseFieldsValues($values);
 		$this->assertEquals($values, $this->_pFormData->getResponseFieldsValues());
 	}
+
+	/**
+	 *
+	 */
+
+	public function testGetSearchCriteriaDataMessageField()
+	{
+		$searchcriteriaData = $this->_pFormData->getSearchcriteriaData(true);
+		$expectation = [
+			'testInput8__von' => 12,
+			'testInput8__bis' => 55,
+			'testInput9' => 'wood',
+			'regionaler_zusatz' => 'AachenStadt',
+			'message' => 'abc'
+		];
+
+		$this->assertEquals($expectation, $searchcriteriaData);
+	}
+
 }

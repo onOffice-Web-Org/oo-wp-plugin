@@ -144,11 +144,12 @@ class FormData
 
 	/**
 	 *
+	 * @param bool $isGetMessageField
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
-	public function getSearchcriteriaData(): array
+	public function getSearchcriteriaData($isGetMessageField = false): array
 	{
 		$inputs = $this->_pDataFormConfiguration->getInputs();
 		$searchcriteriaData = [];
@@ -162,7 +163,7 @@ class FormData
 			$inputConfigName = $pSearchcriteriaFields->getFieldNameOfInput($input);
 			$inputModule = $inputs[$inputConfigName] ?? null;
 
-			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputModule || in_array($input, ['message'])) {
+			if (onOfficeSDK::MODULE_SEARCHCRITERIA === $inputModule || ($isGetMessageField && in_array($input, ['message']))) {
 				$searchcriteriaData[$input] = $value;
 			}
 		}

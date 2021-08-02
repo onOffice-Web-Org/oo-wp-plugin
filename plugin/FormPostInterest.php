@@ -122,7 +122,7 @@ class FormPostInterest
 
 		$filledSearchcriteriaData = $this->_pFormPostInterestConfiguration
 			->getSearchcriteriaFields()
-			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData());
+			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData(true));
 
 
 		$addressData = $pFormData->getAddressData($this->getFieldsCollection());
@@ -199,7 +199,6 @@ class FormPostInterest
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
-
 		if (!$pApiClientAction->getResultStatus()) {
 			throw new ApiClientException($pApiClientAction);
 		}
