@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.16.0 =
+
+**Changes**
+
+* Both contact form as well as interested party form lead to an e-mail with an OpenImmo Feedback XML attachment file.
+
 = 2.15.0 =
 
 **New**
