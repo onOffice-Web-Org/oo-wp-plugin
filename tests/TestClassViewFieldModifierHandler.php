@@ -68,6 +68,9 @@ class TestClassViewFieldModifierHandler
 		'reserviert' => '1',
 		'verkauft' => '1',
 		'vermarktungsart' => 'kauf',
+        'grundstuecksflaeche' => 'ca. 480 m²',
+        'kaufpreis' => '1.300.000,00 €',
+        'lang' => 'VN'
 	];
 
 
