@@ -393,11 +393,11 @@ class EstateList
         if(isset($recordModified['kaufpreis']) && $recordModified['kaufpreis']) {
             $price = explode(' ', $recordModified['kaufpreis']);
             $numberPrice = $price[0];
-            $numberPrice = explode(',',$numberPrice);
-            $decimal = array_pop($numberPrice);
-            if ($decimal == '0') {
-                $numberPrice = array_shift($numberPrice);
+            if (is_float($numberPrice))
+            {
+                $numberPrice = str_replace(",00", "", number_format_i18n($numberPrice));
             }
+            $numberPrice = str_replace(",00", "",$numberPrice);
             $lang = Language::getDefault();
             switch ($lang) {
                 case 'DEU':
