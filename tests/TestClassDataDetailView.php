@@ -68,7 +68,6 @@ class TestClassDataDetailView
 		'Telefon1',
 		'mobile',
 	];
-
 	/**
 	 *
 	 */
@@ -84,6 +83,7 @@ class TestClassDataDetailView
 		$this->assertEquals(0, $pDataDetailView->getPageId());
 		$this->assertEquals([], $pDataDetailView->getPictureTypes());
 		$this->assertEquals('', $pDataDetailView->getTemplate());
+		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
 	}
 
 	/**
@@ -109,6 +109,8 @@ class TestClassDataDetailView
 			$pDataDetailView->getPictureTypes());
 		$pDataDetailView->setTemplate('/test/template1.test');
 		$this->assertEquals('/test/template1.test', $pDataDetailView->getTemplate());
+		$pDataDetailView->setShortCodeForm('[oo_form form="Contact Form"]');
+		$this->assertEquals('[oo_form form="Contact Form"]', $pDataDetailView->getShortCodeForm());
 	}
 
 	/**

@@ -31,6 +31,7 @@ use function add_filter;
 use function get_option;
 use function update_option;
 use function remove_filter;
+use wpdb;
 
 /**
  *
@@ -47,7 +48,7 @@ class TestClassDatabaseChanges
 	extends WP_UnitTestCase
 {
 	/** amount of tables created */
-	const NUM_NEW_TABLES = 7;
+	const NUM_NEW_TABLES = 9;
 
 	/** @var string[] */
 	private $_createQueries = [];
@@ -58,8 +59,18 @@ class TestClassDatabaseChanges
 	/** @var WPOptionWrapperTest */
 	private $_pWpOption;
 
+	/** @var wpdb */
+	private $_pWPDBMock = null;
+
 	/** @var DatabaseChanges */
 	private $_pDbChanges;
+
+	/** @var string[] */
+	private $_fields = [
+		'Field 1',
+		'Field 2',
+		'Field 3'
+	];
 
 	/**
 	 * @before
@@ -70,6 +81,21 @@ class TestClassDatabaseChanges
 
 		$this->_pWpOption = new WPOptionWrapperTest();
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
+		$dataSimilarViewOptions->name = "onoffice-default-view";
+		$dataSimilarViewOptions->setDataDetailViewActive(true);
+
+		$dataViewSimilarEstates = $dataSimilarViewOptions->getDataViewSimilarEstates();
+		$dataViewSimilarEstates->setFields($this->_fields);
+		$dataViewSimilarEstates->setSameEstateKind(true);
+		$dataViewSimilarEstates->setSameMarketingMethod(true);
+		$dataViewSimilarEstates->setSamePostalCode(true);
+		$dataViewSimilarEstates->setRadius(35);
+		$dataViewSimilarEstates->setRecordsPerPage(13);
+		$dataViewSimilarEstates->setTemplate('/test/similar/template.php');
+		$dataSimilarViewOptions->setDataViewSimilarEstates($dataViewSimilarEstates);
+		add_option('onoffice-default-view', $dataSimilarViewOptions);
 	}
 
 	/**
@@ -80,12 +106,83 @@ class TestClassDatabaseChanges
 	{
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->_pDbChanges->install();
+
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(16, $dbversion);
+		$this->assertEquals(20, $dbversion);
 		return $this->_createQueries;
+	}
+
+	public function testInstallMigrationsDataSimilarEstates(): array
+	{
+		add_option('oo_plugin_db_version', '16');
+		add_filter('query', [$this, 'saveCreateQuery'], 1);
+		$this->_pDbChanges->install();
+		remove_filter('query', [$this, 'saveCreateQuery'], 1);
+
+		$pSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
+		$newEnableSimilarEstates = $pSimilarViewOptions->getDataSimilarViewActive();
+
+		$pNewDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
+		$newFields = $pNewDataViewSimilarEstates->getFields();
+		$newRadius = $pNewDataViewSimilarEstates->getRadius();
+		$newSameKind = $pNewDataViewSimilarEstates->getSameEstateKind();
+		$newSameMarketingMethod = $pNewDataViewSimilarEstates->getSameMarketingMethod();
+		$newSamePostalCode = $pNewDataViewSimilarEstates->getSamePostalCode();
+		$newAmount = $pNewDataViewSimilarEstates->getRecordsPerPage();
+		$newSimilarEstatesTemplate = $pNewDataViewSimilarEstates->getTemplate();
+
+		$this->assertTrue($newEnableSimilarEstates);
+		$this->assertEquals('Field 1', $newFields[0]);
+		$this->assertEquals('Field 2', $newFields[1]);
+		$this->assertEquals('Field 3', $newFields[2]);
+		$this->assertTrue(true, $newRadius);
+		$this->assertTrue(true, $newSameKind);
+		$this->assertTrue(true, $newSameMarketingMethod);
+		$this->assertEquals(35, $newSamePostalCode);
+		$this->assertEquals(13, $newAmount);
+		$this->assertEquals('/test/similar/template.php', $newSimilarEstatesTemplate);
+
+		return $this->_createQueries;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::deleteCommentFieldApplicantSearchForm
+	 */
+
+	public function testDeleteCommentFieldApplicantSearchForm()
+	{
+		$this->_pWpOption->addOption('oo_plugin_db_version', '18');
+		$formsOutput = [
+			(object)[
+				'form_id' => '2',
+				'name' => 'Applicant Search Form',
+				'form_type' => 'applicantsearch',
+			]
+		];
+		$fieldConfigOutput = [
+			(object)[
+				'form_fieldconfig_id' => '1',
+				'form_id' => '2',
+				'fieldname' => 'krit_bemerkung_oeffentlich'
+			]
+		];
+
+		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
+			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->getMock();
+
+		$this->_pWPDBMock->expects($this->exactly(2))
+			->method('get_results')
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput);
+
+		$this->_pWPDBMock->expects($this->once())->method('delete')
+			->will($this->returnValue(true));
+
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock);
+		$this->_pDbChanges->install();
 	}
 
 
@@ -94,7 +191,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(16, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(20, DatabaseChanges::MAX_VERSION);
 	}
 
 
@@ -116,9 +213,7 @@ class TestClassDatabaseChanges
 		// assert that as many tables have been removed as have been created
 		$uniqueCreateQueries = array_unique($createQueries);
 		$uniqueDropQueries = array_unique($this->_dropQueries);
-
 		$this->assertEquals(count($uniqueCreateQueries), count($uniqueDropQueries));
-
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
 		$this->assertNull($dbversion);
 		$this->assertNull($this->_pDbChanges->getDbVersion());

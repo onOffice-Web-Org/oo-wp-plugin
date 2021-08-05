@@ -21,9 +21,11 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Controller\EstateViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use WP_Embed;
 
@@ -109,6 +111,26 @@ class EstateDetail
 		return $result;
 	}
 
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function getShortCodeForm(): string
+	{
+		$result = '';
+
+		if ($this->getDataView()->getShortCodeForm() == '') {
+			return '';
+		}
+
+		$result = $this->getDataView()->getShortCodeForm();
+
+		return  '[oo_form form="' . $result . '"]';
+
+	}
+
 
 	/**
 	 *
@@ -148,14 +170,16 @@ class EstateDetail
 
 	public function getSimilarEstates(): string
 	{
-		/* @var $pDataView DataDetailView */
-		$pDataView = $this->getDataView();
-
-		if (!$pDataView->getDataDetailViewActive()) {
+        $pContainerBuilder = new ContainerBuilder;
+        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+        $pContainer = $pContainerBuilder->build();
+        $pDataSimilarEstatesSettings = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
+        $pDataSimilarSettings = $pDataSimilarEstatesSettings->getDataSimilarEstatesSettings();
+        if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
 			return '';
 		}
+		$pDataViewSimilarEstates = $pDataSimilarSettings->getDataViewSimilarEstates();
 
-		$pDataViewSimilarEstates = $pDataView->getDataViewSimilarEstates();
 		$pSimilarEstates = new EstateViewSimilarEstates($pDataViewSimilarEstates);
 		$pCopyThis = clone $this;
 		$pCopyThis->setFormatOutput(false);

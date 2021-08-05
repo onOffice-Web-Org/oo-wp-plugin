@@ -84,13 +84,13 @@ class AdminPageEstateDetail
 	const FORM_VIEW_LAYOUT_DESIGN = 'viewlayoutdesign';
 
 	/** */
+	const FORM_VIEW_CONTACT_FORM = 'viewcontactform';
+
+	/** */
 	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
 
 	/** */
 	const FORM_VIEW_ADDITIONAL_MEDIA = 'viewdocumenttypes';
-
-	/** */
-	const FORM_VIEW_SIMILAR_ESTATES = 'viewsimilarestates';
 
 	/** */
 	const FORM_VIEW_CONTACT_DATA_FIELDS = 'viewcontactdatafields';
@@ -220,11 +220,12 @@ class AdminPageEstateDetail
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
 
+		$pFormContactForm = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_FORM);
+		$this->createMetaBoxByForm($pFormContactForm, 'normal');
+
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'side');
 
-		$pFormSimilarEstates = $this->getFormModelByGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
-		$this->createMetaBoxByForm($pFormSimilarEstates, 'normal');
 	}
 
 	/**
@@ -277,6 +278,14 @@ class AdminPageEstateDetail
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$this->addFormModel($pFormModelLayoutDesign);
 
+		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
+		$pFormModelShortCodeForm = new FormModel();
+		$pFormModelShortCodeForm->setPageSlug($this->getPageSlug());
+		$pFormModelShortCodeForm->setGroupSlug(self::FORM_VIEW_CONTACT_FORM);
+		$pFormModelShortCodeForm->setLabel(__('Contact Form', 'onoffice-for-wp-websites'));
+		$pFormModelShortCodeForm->addInputModel($pInputModelShortCodeForm);
+		$this->addFormModel($pFormModelShortCodeForm);
+
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
 		$pFormModelPictureTypes = new FormModel();
 		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
@@ -294,28 +303,6 @@ class AdminPageEstateDetail
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$pFormModelDocumentTypes->addInputModel($pInputModelMovieLinks);
 		$this->addFormModel($pFormModelDocumentTypes);
-
-		$pInputModelSimilarEstatesEstateKind = $pFormModelBuilder->createInputModelSimilarEstateKind();
-		$pInputModelSimilarEstatesMarketingMethod = $pFormModelBuilder->createInputModelSimilarEstateMarketingMethod();
-		$pInputModelSimilarEstatesSamePostalCode = $pFormModelBuilder->createInputModelSameEstatePostalCode();
-		$pInputModelSimilarEstatesRadius = $pFormModelBuilder->createInputModelSameEstateRadius();
-		$pInputModelSimilarEstatesAmount = $pFormModelBuilder->createInputModelSameEstateAmount();
-		$pInputModelSimilarEstatesTemplate = $pFormModelBuilder->createInputModelTemplate
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE);
-		$pInputModelSimilarEstatesActivated = $pFormModelBuilder->getCheckboxEnableSimilarEstates();
-
-		$pFormModelSimilarEstates = new FormModel();
-		$pFormModelSimilarEstates->setPageSlug($this->getPageSlug());
-		$pFormModelSimilarEstates->setGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
-		$pFormModelSimilarEstates->setLabel(__('Similar Estates', 'onoffice-for-wp-websites'));
-		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesActivated);
-		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesEstateKind);
-		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesMarketingMethod);
-		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesSamePostalCode);
-		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesRadius);
-		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesAmount);
-		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesTemplate);
-		$this->addFormModel($pFormModelSimilarEstates);
 
 		$pFieldsCollection = $this->readAllFields();
 		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);

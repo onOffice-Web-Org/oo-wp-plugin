@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
 use function dbDelta;
@@ -32,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 16;
+	const MAX_VERSION = 20;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -60,7 +62,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		// If you are modifying this, please also make sure to edit the test
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
-
 		if ($dbversion === null) {
 			dbDelta( $this->getCreateQueryCache() );
 
@@ -131,11 +132,31 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateSortByUserDefinedDefault();
 			$dbversion = 15;
 		}
-
+		
 		if ($dbversion == 15) {
 			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
 			$dbversion = 16;
+		}
+
+		if ($dbversion == 16) {
+			$this->migrationsDataSimilarEstates();
+			$dbversion = 17;
+		}
+		if ($dbversion == 17) {
+			$this->installDataQueryForms();
+			$dbversion = 18;
+		}
+
+		if ($dbversion == 18) {
+			$this->deleteCommentFieldApplicantSearchForm();
+			$dbversion = 19;
+		}
+
+		if ($dbversion == 19) {
+			dbDelta($this->getCreateQueryFieldConfigCustomsLabels());
+			dbDelta($this->getCreateQueryFieldConfigTranslatedLabels());
+			$dbversion = 20;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -255,6 +276,38 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+	/**
+	 *
+	 */
+
+	private function installDataQueryForms()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
+		$allTemplatePathsForm = $this->readTemplatePaths('form');
+		$template = '';
+		foreach ($allTemplatePathsForm as $templatePathsForm) {
+			if (basename($templatePathsForm) === 'defaultform.php') {
+				$template = $templatePathsForm;
+			}
+		}
+		$this->_pWPDB->insert(
+			$tableName,
+			array(
+				'name' => 'Default Form',
+				'form_type' => 'contact',
+				'template' => $template,
+				'country_active' => 1,
+				'zip_active' => 1,
+				'street_active' => 1,
+				'radius_active' => 1,
+				'geo_order' => 'street,zip,city,country,radius'
+			)
+		);
+		$defaultFormId = $this->_pWPDB->insert_id;
+		$this->installDataQueryFormFieldConfig($defaultFormId);
+	}
+
 
 	/**
 	 *
@@ -309,6 +362,68 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+	/**
+	 *
+	 */
+
+	private function installDataQueryFormFieldConfig($defaultFormId)
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_form_fieldconfig";
+
+		$rows = array(
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 1,
+				'fieldname' => 'Vorname',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 2,
+				'fieldname' => 'Name',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 3,
+				'fieldname' => 'Strasse',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 4,
+				'fieldname' => 'Plz',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 5,
+				'fieldname' => 'Ort',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 6,
+				'fieldname' => 'Telefon1',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 7,
+				'fieldname' => 'Email',
+				'module' => 'address'
+			),
+			array(
+				'form_id' => $defaultFormId,
+				'order' => 8,
+				'fieldname' => 'message'
+			)
+		);
+		foreach ($rows as $row) {
+			$this->_pWPDB->insert($tableName, $row);
+		}
+	}
 
 	/**
 	 *
@@ -465,6 +580,43 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigCustomsLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_form_customs_labels";
+		$sql = "CREATE TABLE $tableName (
+			`customs_labels_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`customs_labels_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigTranslatedLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_form_translated_labels";
+		$sql = "CREATE TABLE $tableName (
+			`translated_label_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`input_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			PRIMARY KEY (`translated_label_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
 
 	/**
 	 *
@@ -480,6 +632,56 @@ class DatabaseChanges implements DatabaseChangesInterface
 				WHERE `sortByUserDefinedDefault` != '' AND
 				`sortByUserDefinedDefault`  NOT LIKE '%#ASC' AND 
 				`sortByUserDefinedDefault` NOT LIKE '%#DESC'");
+	}
+
+	/**
+	 *
+	 */
+
+	public function migrationsDataSimilarEstates()
+	{
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if (!empty($pDataDetailViewOptions)) {
+			$dataDetailViewActive = $pDataDetailViewOptions->getDataDetailViewActive();
+
+			$dataDetailViewSimilarEstates = $pDataDetailViewOptions->getDataViewSimilarEstates();
+			$pDataSimilarViewOptions = new DataSimilarView();
+			$pDataSimilarViewOptions->setDataSimilarViewActive($dataDetailViewActive);
+
+			$pDataViewSimilarEstatesNew = $pDataSimilarViewOptions->getDataViewSimilarEstates();
+			$pDataViewSimilarEstatesNew->setFields($dataDetailViewSimilarEstates->getFields());
+			$pDataViewSimilarEstatesNew->setSameEstateKind($dataDetailViewSimilarEstates->getSameEstateKind());
+			$pDataViewSimilarEstatesNew->setSameMarketingMethod($dataDetailViewSimilarEstates->getSameMarketingMethod());
+			$pDataViewSimilarEstatesNew->setSamePostalCode($dataDetailViewSimilarEstates->getSamePostalCode());
+			$pDataViewSimilarEstatesNew->setRadius($dataDetailViewSimilarEstates->getRadius());
+			$pDataViewSimilarEstatesNew->setRecordsPerPage($dataDetailViewSimilarEstates->getRecordsPerPage());
+			$pDataViewSimilarEstatesNew->setTemplate($dataDetailViewSimilarEstates->getTemplate());
+			$pDataSimilarViewOptions->setDataViewSimilarEstates($pDataViewSimilarEstatesNew);
+			$this->_pWpOption->addOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
+		}
+	}
+
+	/**
+	 *
+	 */
+
+	private function deleteCommentFieldApplicantSearchForm()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
+		$tableFieldConfig = $prefix . "oo_plugin_form_fieldconfig";
+
+		$rows = $this->_pWPDB->get_results("SELECT `form_id` FROM {$tableName} WHERE form_type = 'applicantsearch'");
+
+		foreach ($rows as $applicantSearchFormId) {
+			$allFieldComments = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
+										WHERE `fieldname` = 'krit_bemerkung_oeffentlich'
+										AND `form_id` = '{$this->_pWPDB->_escape($applicantSearchFormId->form_id)}'");
+			foreach ($allFieldComments as $fieldComment) {
+				$this->_pWPDB->delete($tableFieldConfig,
+					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
+			}
+		}
 	}
 
 
@@ -531,6 +733,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_sortbyuservalues",
 			$prefix."oo_plugin_fieldconfig_form_defaults",
 			$prefix."oo_plugin_fieldconfig_form_defaults_values",
+			$prefix."oo_plugin_fieldconfig_form_customs_labels",
+			$prefix."oo_plugin_fieldconfig_form_translated_labels",
 		);
 
 		foreach ($tables as $table)	{
@@ -538,5 +742,30 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		$this->_pWpOption->deleteOption('oo_plugin_db_version');
+	}
+
+	/**
+	 *
+	 * @param string $directory
+	 * @param string $pattern
+	 * @return array
+	 *
+	 */
+
+	protected function readTemplatePaths($directory, $pattern = '*')
+	{
+		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php')
+			. 'templates.dist/' . $directory . '/' . $pattern . '.php');
+		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR)
+			. 'onoffice-personalized/templates/' . $directory . '/' . $pattern . '.php');
+		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
+		$templates = array();
+
+		foreach ($templatesAll as $value) {
+			$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
+			$templates[$value] = $value;
+		}
+
+		return $templates;
 	}
 }

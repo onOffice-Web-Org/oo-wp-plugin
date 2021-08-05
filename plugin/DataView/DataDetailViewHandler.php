@@ -102,43 +102,13 @@ class DataDetailViewHandler
 	{
 		$pDataDetailView = $this->getDetailView();
 		$pDataDetailView->setTemplate($row['template'] ?? '');
+		$pDataDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
 		$pDataDetailView->setFields($row[DataDetailView::FIELDS] ?? []);
 		$pDataDetailView->setPictureTypes($row[DataDetailView::PICTURES] ?? []);
 		$pDataDetailView->setExpose($row['expose'] ?? '');
 		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
 		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
-		$pDataDetailView->setDataDetailViewActive
-			($row[DataDetailView::ENABLE_SIMILAR_ESTATES] ?? false);
-
-		$pDataViewSimilar = $pDataDetailView->getDataViewSimilarEstates();
-		$this->configureDataViewSimilarEstates($pDataViewSimilar, $row);
 
 		return $pDataDetailView;
-	}
-
-
-	/**
-	 *
-	 * @param DataViewSimilarEstates $pDataViewSimilar
-	 * @param array $row
-	 *
-	 */
-
-	private function configureDataViewSimilarEstates(DataViewSimilarEstates $pDataViewSimilar,
-		array $row)
-	{
-		$pDataViewSimilar->setSameEstateKind
-			($row[DataViewSimilarEstates::FIELD_SAME_KIND] ?? false);
-		$pDataViewSimilar->setSameMarketingMethod
-			($row[DataViewSimilarEstates::FIELD_SAME_MARKETING_METHOD] ?? false);
-		$pDataViewSimilar->setSamePostalCode
-			($row[DataViewSimilarEstates::FIELD_SAME_POSTAL_CODE] ?? false);
-		$pDataViewSimilar->setRadius
-			($row[DataViewSimilarEstates::FIELD_RADIUS] ?? $pDataViewSimilar->getRadius());
-		$pDataViewSimilar->setRecordsPerPage
-			($row[DataViewSimilarEstates::FIELD_AMOUNT] ?? $pDataViewSimilar->getRecordsPerPage());
-		$pDataViewSimilar->setTemplate
-			($row[DataViewSimilarEstates::FIELD_SIMILAR_ESTATES_TEMPLATE] ??
-				$pDataViewSimilar->getTemplate());
 	}
 }

@@ -53,14 +53,16 @@ class TestClassSearchParameters
 		$this->_pModel = new SearchParametersModel();
 		$this->_pModel->setParameters(['ort' => 'Aachen']);
 		$this->_pModel->setAllowedGetParameters(['ort']);
+		$this->set_permalink_structure('/%postname%/');
+		add_option('onoffice-pagination-paginationbyonoffice', 1);
 	}
 
 
 	/**
 	 *
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::linkPagesLink
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::getLinkSnippetForPage
-	 * @covers onOffice\WPlugin\Filter\SearchParameters\SearchParameters::geturl
+	 * @covers \onOffice\WPlugin\Filter\SearchParameters\SearchParameters::linkPagesLink
+	 * @covers \onOffice\WPlugin\Filter\SearchParameters\SearchParameters::getLinkSnippetForPage
+	 * @covers \onOffice\WPlugin\Filter\SearchParameters\SearchParameters::geturl
 	 *
 	 */
 
@@ -81,7 +83,7 @@ class TestClassSearchParameters
 
 		$pInstance = new SearchParameters();
 		$this->_pModel->populateDefaultLinkParams($params);
-		$this->assertEquals('<a href="/page/1?ort=Aachen">1</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
+		$this->assertEquals('<a href="/page/1/?ort=Aachen">1</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
 
 		global $more;
 		$more = true;
@@ -104,6 +106,6 @@ class TestClassSearchParameters
 
 		$pInstance = new SearchParameters();
 		$this->_pModel->populateDefaultLinkParams($params);
-		$this->assertEquals('<a href="/page/1?ort=Aachen">Nächste Seite</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
+		$this->assertEquals('<a href="/page/1/?ort=Aachen">Nächste Seite</a>', $pInstance->linkPagesLink('asd', 1, $this->_pModel));
 	}
 }
