@@ -96,7 +96,7 @@ class ViewFieldModifierHandler
             if (in_array($field, $key)) {
                 $data[$field] = $this->deleteWord($value);
             }
-            if (!is_null($data['kaufpreis'])) {
+            if (array_key_exists('kaufpreis',$data) && !is_null($data['kaufpreis'])) {
                 $price = explode(' ', $data['kaufpreis']);
                 $currencyUnit = array_pop($price);
                 $numberPrice = explode(',', array_shift($price));
