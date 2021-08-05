@@ -382,6 +382,32 @@ class EstateList
 			$this->_currentEstate['id'];
         $currentRecord['elements']['lang'] = Language::getDefault();
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
+        if (isset($recordModified['grundstuecksflaeche'])) {
+            $recordModified['grundstuecksflaeche'] = str_replace("approx.", "", $recordModified['grundstuecksflaeche']);
+            $recordModified['grundstuecksflaeche'] = str_replace("ca.", "", $recordModified['grundstuecksflaeche']);
+        }
+        if (isset($recordModified['wohnflaeche'])) {
+            $recordModified['wohnflaeche'] = str_replace("approx.", "", $recordModified['wohnflaeche']);
+            $recordModified['wohnflaeche'] = str_replace("ca.", "", $recordModified['wohnflaeche']);
+        }
+        if(isset($recordModified['kaufpreis']) && $recordModified['kaufpreis']) {
+            $price = explode(' ', $recordModified['kaufpreis']);
+            $numberPrice = $price[0];
+            $numberPrice = explode(',',$numberPrice);
+            $decimal = array_pop($numberPrice);
+            if ($decimal == '0') {
+                $numberPrice = array_shift($numberPrice);
+            }
+            $lang = Language::getDefault();
+            switch ($lang) {
+                case 'DEU':
+                    $numberPrice = strtr($numberPrice, array('.' => ',', ',' => '.'));;
+                    break;
+                default:
+                    break;
+            }
+            $recordModified['kaufpreis'] = $numberPrice.' '.$price[1];
+        }
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
 
 		if ($this->getShowEstateMarketingStatus()) {
