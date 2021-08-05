@@ -86,9 +86,37 @@ class ViewFieldModifierHandler
 		$intersection = array_intersect_key($newRecord, $visibleFields);
 
 		$fields = array_merge($visibleFields, $intersection);
-
+        $fields = $this->handleData($fields);
 		return $fields;
 	}
+    private function handleData($data)
+    {
+        $key = array("grundstuecksflaeche", "wohnflaeche");
+        foreach ($data as $field => $value) {
+            if (in_array($field, $key)) {
+                $data[$field] = $this->deleteWord($value);
+            }
+            if (!is_null($data['kaufpreis'])) {
+                $price = explode(' ', $data['kaufpreis']);
+                $currencyUnit = array_pop($price);
+                $numberPrice = explode(',', array_shift($price));
+                $decimal = array_pop($numberPrice);
+                if ($decimal == '0') {
+                    $data['kaufpreis'] = array_shift($numberPrice) . ' ' . $currencyUnit;
+                }
+            }
+            if ($field == 'lang' && $value == 'DEU') {
+                strtr($data['kaufpreis'], array('.' => ',', ',' => '.'));
+            }
+        }
+        return $data;
+    }
+    private function deleteWord($element)
+    {
+        $element = str_replace("approx.", "", $element);
+        $element = str_replace("ca.", "", $element);
+        return trim($element);
+    }
 
 
 	/**
