@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.17.0 =
+
+**New**
+
+* Pagination can now be handled by the theme or the plugin. 
+
 = 2.16.0 =
 
 **Changes**
