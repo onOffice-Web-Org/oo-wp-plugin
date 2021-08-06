@@ -367,7 +367,7 @@ class EstateList
 		}
 
 		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
-		($this->_pDataView->getFields(), $modifier);
+			($this->_pDataView->getFields(), $modifier);
 
 		$currentRecord = current($this->_records);
 		next($this->_records);
@@ -380,7 +380,6 @@ class EstateList
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
-
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		if (isset($recordModified['grundstuecksflaeche'])) {
 			$recordModified['grundstuecksflaeche'] = str_replace("approx.", "", $recordModified['grundstuecksflaeche']);
