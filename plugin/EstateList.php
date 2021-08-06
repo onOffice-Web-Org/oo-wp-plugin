@@ -401,7 +401,7 @@ class EstateList
             $lang = Language::getDefault();
             switch ($lang) {
                 case 'DEU':
-                    $numberPrice = strtr($numberPrice, array('.' => ',', ',' => '.'));;
+                    $numberPrice = strtr($numberPrice, array('.' => ',', ',' => '.'));
                     break;
                 default:
                     break;
