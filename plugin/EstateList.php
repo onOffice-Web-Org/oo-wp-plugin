@@ -398,8 +398,8 @@ class EstateList
 			$numberPrice = str_replace(",", ".", $numberPrice);
 			$numberPrice = floatval($numberPrice);
 			$numberPrice = number_format_i18n($numberPrice, 2);
-			$subString = substr($numberPrice, -3);
-			if ($subString == ',00' || $subString == '.00') {
+			$decimalPart = substr($numberPrice, -3);
+			if ($decimalPart == ',00' || $decimalPart == '.00') {
 				$numberPrice = substr($numberPrice, 0, strlen($numberPrice) - 3);
 			}
 
