@@ -380,6 +380,7 @@ class EstateList
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
+
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		if (isset($recordModified['grundstuecksflaeche'])) {
 			$recordModified['grundstuecksflaeche'] = str_replace("approx.", "", $recordModified['grundstuecksflaeche']);
