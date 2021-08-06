@@ -66,7 +66,8 @@ class TestClassViewFieldModifierHandler
 		'ort' => 'Aachen',
 		'objektnr_extern' => 'JJ1337',
 		'reserviert' => '1',
-		'verkauft' => '1'
+		'verkauft' => '1',
+		'vermarktungsart' => 'kauf',
 	];
 
 
