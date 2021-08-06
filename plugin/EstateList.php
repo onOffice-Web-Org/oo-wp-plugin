@@ -367,7 +367,7 @@ class EstateList
 		}
 
 		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
-			($this->_pDataView->getFields(), $modifier);
+		($this->_pDataView->getFields(), $modifier);
 
 		$currentRecord = current($this->_records);
 		next($this->_records);
@@ -380,34 +380,31 @@ class EstateList
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
-        
+
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
-        if (isset($recordModified['grundstuecksflaeche'])) {
-            $recordModified['grundstuecksflaeche'] = str_replace("approx.", "", $recordModified['grundstuecksflaeche']);
-            $recordModified['grundstuecksflaeche'] = str_replace("ca.", "", $recordModified['grundstuecksflaeche']);
-        }
-        if (isset($recordModified['wohnflaeche'])) {
-            $recordModified['wohnflaeche'] = str_replace("approx.", "", $recordModified['wohnflaeche']);
-            $recordModified['wohnflaeche'] = str_replace("ca.", "", $recordModified['wohnflaeche']);
-        }
-        if(isset($recordModified['kaufpreis']) && $recordModified['kaufpreis']) {
-            $price = explode(' ', $recordModified['kaufpreis']);
-            $numberPrice = $price[0];
-            if (is_float($numberPrice))
-            {
-                $numberPrice = str_replace(",00", "", number_format_i18n($numberPrice));
-            }
-            $numberPrice = str_replace(",00", "",$numberPrice);
-            $lang = Language::getDefault();
-            switch ($lang) {
-                case 'DEU':
-                    $numberPrice = strtr($numberPrice, array('.' => ',', ',' => '.'));
-                    break;
-                default:
-                    break;
-            }
-            $recordModified['kaufpreis'] = $numberPrice.' '.$price[1];
-        }
+		if (isset($recordModified['grundstuecksflaeche'])) {
+			$recordModified['grundstuecksflaeche'] = str_replace("approx.", "", $recordModified['grundstuecksflaeche']);
+			$recordModified['grundstuecksflaeche'] = str_replace("ca.", "", $recordModified['grundstuecksflaeche']);
+		}
+		if (isset($recordModified['wohnflaeche'])) {
+			$recordModified['wohnflaeche'] = str_replace("approx.", "", $recordModified['wohnflaeche']);
+			$recordModified['wohnflaeche'] = str_replace("ca.", "", $recordModified['wohnflaeche']);
+		}
+		if (isset($recordModified['kaufpreis']) && $recordModified['kaufpreis']) {
+			$price = explode(' ', $recordModified['kaufpreis']);
+			$numberPrice = $price[0];
+
+			$numberPrice = str_replace(".", "", $numberPrice);
+			$numberPrice = str_replace(",", ".", $numberPrice);
+			$numberPrice = floatval($numberPrice);
+			$numberPrice = number_format_i18n($numberPrice, 2);
+			$subString = substr($numberPrice, -3);
+			if ($subString == ',00' || $subString == '.00') {
+				$numberPrice = substr($numberPrice, 0, strlen($numberPrice) - 3);
+			}
+
+			$recordModified['kaufpreis'] = $numberPrice . ' ' . $price[1];
+		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
 
 		if ($this->getShowEstateMarketingStatus()) {
