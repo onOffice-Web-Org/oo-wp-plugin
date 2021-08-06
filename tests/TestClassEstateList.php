@@ -799,4 +799,33 @@ class TestClassEstateList
 		$pDataView->setRandom(true);
 		return $pDataView;
 	}
+
+	public function testHandleRecordModified()
+	{
+		$recordModified = [
+			'grundstuecksflaeche' => 'approx. 50m2',
+			'wohnflaeche' => 'approx. 40m2',
+			'kaufpreis' => '130.000,00 €'
+		];
+		$result = $this->_pEstateList->handleRecordModified($recordModified);
+		$this->assertEquals('50m2', $result['grundstuecksflaeche']);
+		$this->assertEquals('40m2', $result['wohnflaeche']);
+		$this->assertEquals('130,000 €', $result['kaufpreis']);
+
+		$recordModified = [
+			'grundstuecksflaeche' => 'ca. 50m2',
+			'wohnflaeche' => 'ca. 40m2',
+			'kaufpreis' => '1.300.000,56 €'
+		];
+		$result = $this->_pEstateList->handleRecordModified($recordModified);
+		$this->assertEquals('50m2', $result['grundstuecksflaeche']);
+		$this->assertEquals('40m2', $result['wohnflaeche']);
+		$this->assertEquals('1,300,000.56 €', $result['kaufpreis']);
+
+		$recordModified = [
+			'kaufpreis' => ''
+		];
+		$result = $this->_pEstateList->handleRecordModified($recordModified);
+		$this->assertEquals('', $result['kaufpreis']);
+	}
 }

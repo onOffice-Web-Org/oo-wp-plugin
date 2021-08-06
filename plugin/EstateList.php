@@ -382,13 +382,30 @@ class EstateList
 			$this->_currentEstate['id'];
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
+		$recordModified = $this->handleRecordModified($recordModified);
+		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
+
+		if ($this->getShowEstateMarketingStatus()) {
+			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
+			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
+		}
+
+		$pArrayContainer = new ArrayContainerEscape($recordModified);
+
+		return $pArrayContainer;
+	}
+
+	public function handleRecordModified($recordModified)
+	{
 		if (isset($recordModified['grundstuecksflaeche'])) {
 			$recordModified['grundstuecksflaeche'] = str_replace("approx.", "", $recordModified['grundstuecksflaeche']);
 			$recordModified['grundstuecksflaeche'] = str_replace("ca.", "", $recordModified['grundstuecksflaeche']);
+			$recordModified['grundstuecksflaeche'] = trim($recordModified['grundstuecksflaeche']);
 		}
 		if (isset($recordModified['wohnflaeche'])) {
 			$recordModified['wohnflaeche'] = str_replace("approx.", "", $recordModified['wohnflaeche']);
 			$recordModified['wohnflaeche'] = str_replace("ca.", "", $recordModified['wohnflaeche']);
+			$recordModified['wohnflaeche'] = trim($recordModified['wohnflaeche']);
 		}
 		if (isset($recordModified['kaufpreis']) && $recordModified['kaufpreis']) {
 			$price = explode(' ', $recordModified['kaufpreis']);
@@ -405,16 +422,7 @@ class EstateList
 
 			$recordModified['kaufpreis'] = $numberPrice . ' ' . $price[1];
 		}
-		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
-
-		if ($this->getShowEstateMarketingStatus()) {
-			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
-			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
-		}
-
-		$pArrayContainer = new ArrayContainerEscape($recordModified);
-
-		return $pArrayContainer;
+		return $recordModified;
 	}
 
 	/**
