@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 20;
+	const MAX_VERSION = 21;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -132,7 +132,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateSortByUserDefinedDefault();
 			$dbversion = 15;
 		}
-		
+
 		if ($dbversion == 15) {
 			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
@@ -157,6 +157,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryFieldConfigCustomsLabels());
 			dbDelta($this->getCreateQueryFieldConfigTranslatedLabels());
 			$dbversion = 20;
+		}
+
+		if ($dbversion == 20) {
+			dbDelta($this->getQueryAddColumnShowReferenceEstateTableEstateView());
+			$dbversion = 21;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -682,6 +687,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
 			}
 		}
+	}
+
+	/**
+	 *
+	 */
+	private function getQueryAddColumnShowReferenceEstateTableEstateView()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix."oo_plugin_listviews";
+		return "ALTER TABLE {$tableName} ADD COLUMN `show_reference_estate` tinyint(1) NOT NULL DEFAULT '0'";
 	}
 
 
