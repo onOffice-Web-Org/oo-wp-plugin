@@ -208,6 +208,25 @@ class EstateList
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
 
 		$this->_records = $this->_pApiClientAction->getResultRecords();
+
+		foreach ($this->_records as &$record) {
+			if (isset($record['elements'])) {
+				foreach ($record['elements'] as $fieldElement => &$valueElement) {
+
+					if (strpos($valueElement, 'approx.') !== false) {
+						$record['elements'][$fieldElement] = $this->handleApprox($valueElement);
+					}
+					if (strpos($valueElement, 'ca.') !== false) {
+						$record['elements'][$fieldElement] = $this->handleCa($valueElement);
+					}
+					if ($number = preg_replace('/[^0-9,.]/', '', $valueElement)) {
+						$numberFormat = $this->handleNumber($number);
+						$record['elements'][$fieldElement] = str_replace($number, $numberFormat, $valueElement);
+					}
+				}
+			}
+		}
+
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 	}
@@ -382,7 +401,6 @@ class EstateList
 			$this->_currentEstate['id'];
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
-		$recordModified = $this->handleRecordModified($recordModified);
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
 
 		if ($this->getShowEstateMarketingStatus()) {
@@ -395,34 +413,32 @@ class EstateList
 		return $pArrayContainer;
 	}
 
-	public function handleRecordModified($recordModified)
+	public function handleApprox($record)
 	{
-		if (isset($recordModified['grundstuecksflaeche'])) {
-			$recordModified['grundstuecksflaeche'] = str_replace("approx.", "", $recordModified['grundstuecksflaeche']);
-			$recordModified['grundstuecksflaeche'] = str_replace("ca.", "", $recordModified['grundstuecksflaeche']);
-			$recordModified['grundstuecksflaeche'] = trim($recordModified['grundstuecksflaeche']);
-		}
-		if (isset($recordModified['wohnflaeche'])) {
-			$recordModified['wohnflaeche'] = str_replace("approx.", "", $recordModified['wohnflaeche']);
-			$recordModified['wohnflaeche'] = str_replace("ca.", "", $recordModified['wohnflaeche']);
-			$recordModified['wohnflaeche'] = trim($recordModified['wohnflaeche']);
-		}
-		if (isset($recordModified['kaufpreis']) && $recordModified['kaufpreis']) {
-			$price = explode(' ', $recordModified['kaufpreis']);
-			$numberPrice = $price[0];
+		$record = str_replace("approx.", "", $record);
+		return trim($record);
+	}
 
-			$numberPrice = str_replace(".", "", $numberPrice);
-			$numberPrice = str_replace(",", ".", $numberPrice);
-			$numberPrice = floatval($numberPrice);
-			$numberPrice = number_format_i18n($numberPrice, 2);
-			$decimalPart = substr($numberPrice, -3);
-			if ($decimalPart == ',00' || $decimalPart == '.00') {
-				$numberPrice = substr($numberPrice, 0, strlen($numberPrice) - 3);
-			}
+	public function handleCa($record)
+	{
+		$record = str_replace("ca.", "", $record);
+		return trim($record);
+	}
 
-			$recordModified['kaufpreis'] = $numberPrice . ' ' . $price[1];
+	public function handleNumber($record)
+	{
+		if (!is_float($record)) {
+			$number = str_replace(".", "", $record);
+			$number = str_replace(",", ".", $number);
+			$record = floatval($number);
 		}
-		return $recordModified;
+
+		$record = number_format_i18n($record, 2);
+		$decimalPart = substr($record, -3);
+		if ($decimalPart == ',00' || $decimalPart == '.00') {
+			$record = substr($record, 0, strlen($record) - 3);
+		}
+		return $record;
 	}
 
 	/**
