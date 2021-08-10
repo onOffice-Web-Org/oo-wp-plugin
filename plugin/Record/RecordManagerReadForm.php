@@ -118,8 +118,35 @@ class RecordManagerReadForm
 			throw new UnknownFormException($formName);
 		}
 
+		$resultFieldConfig = $this->readFieldconfigByFormId($result[$this->getIdColumnMain()]);
+		$result['fields'] = array_column($resultFieldConfig, 'fieldname');
+		$result['filterable'] = array_keys(array_filter(array_column($resultFieldConfig, 'filterable', 'fieldname')));
+		$result['hidden'] = array_keys(array_filter(array_column($resultFieldConfig, 'hidden', 'fieldname')));
+
 		return $result;
 	}
+
+
+	/**
+	 *
+	 * @param int $formId
+	 * @return array
+	 *
+	 */
+
+	public function readFieldconfigByFormId($formId)
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sqlFields = "SELECT *
+			FROM {$prefix}oo_plugin_form_fieldconfig
+			WHERE `".esc_sql($this->getIdColumnMain())."` = ".esc_sql($formId)."
+			ORDER BY `order` ASC";
+
+		return $pWpDb->get_results($sqlFields, ARRAY_A);
+	}
+
 
 	/**
 	 *
