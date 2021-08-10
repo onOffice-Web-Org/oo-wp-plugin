@@ -348,7 +348,7 @@ class DataListView
 	/**
 	 * @param bool $showReferenceStatus
 	 */
-	public function setShowReferenceStatus(bool $showReferenceStatus): void
+	public function setShowReferenceStatus(bool $showReferenceStatus)
 	{
 		$this->_showReferenceStatus = $showReferenceStatus;
 	}
