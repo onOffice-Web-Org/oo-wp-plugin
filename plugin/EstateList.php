@@ -209,21 +209,18 @@ class EstateList
 
 		$this->_records = $this->_pApiClientAction->getResultRecords();
 
+		$ignoreFormat = ['Id','mainLangId','breitengrad','laengengrad'];
 		foreach ($this->_records as &$record) {
 			if (isset($record['elements'])) {
 				foreach ($record['elements'] as $fieldElement => &$valueElement) {
-
-					if (strpos($valueElement, 'approx.') !== false) {
-						$record['elements'][$fieldElement] = $this->removePreStringArea('approx.',$valueElement);
+					if (in_array($fieldElement, $ignoreFormat)) {
+						continue;
 					}
-					if (strpos($valueElement, 'ca.') !== false) {
-						$record['elements'][$fieldElement] = $this->removePreStringArea('ca.', $valueElement);
-					}
-					if ($fieldElement != 'breitengrad' && $fieldElement != 'laengengrad' && $fieldElement != 'mainLangId'){
-						if ($number = preg_replace('/[^0-9,.]/', '', $valueElement)) {
-							$numberFormat = $this->handleNumber($number);
-							$record['elements'][$fieldElement] = str_replace($number, $numberFormat, $valueElement);
-						}
+					$record['elements'][$fieldElement] = $this->removePreStringArea('approx.', $valueElement);
+					$record['elements'][$fieldElement] = $this->removePreStringArea('ca.', $valueElement);
+					if ($number = preg_replace('/[^0-9,.]/', '', $valueElement)) {
+						$numberFormat = $this->handleNumber($number);
+						$record['elements'][$fieldElement] = str_replace($number, $numberFormat, $valueElement);
 					}
 				}
 			}

@@ -803,11 +803,11 @@ class TestClassEstateList
 	public function testRemovePreStringArea()
 	{
 		$record = 'approx. 50m2';
-		$result = $this->_pEstateList->handleApprox('approx.',$record);
+		$result = $this->_pEstateList->removePreStringArea('approx.',$record);
 		$this->assertEquals('50m2', $result);
 
 		$record = 'ca. 50m2';
-		$result = $this->_pEstateList->handleApprox('ca.',$record);
+		$result = $this->_pEstateList->removePreStringArea('ca.',$record);
 		$this->assertEquals('50m2', $result);
 	}
 
