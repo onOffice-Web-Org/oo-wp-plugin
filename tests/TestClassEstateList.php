@@ -800,24 +800,21 @@ class TestClassEstateList
 		return $pDataView;
 	}
 
-	public function testHandleApprox()
+	public function testRemovePreStringArea()
 	{
 		$record = 'approx. 50m2';
-		$result = $this->_pEstateList->handleApprox($record);
+		$result = $this->_pEstateList->handleApprox('approx.',$record);
 		$this->assertEquals('50m2', $result);
-	}
 
-	public function testHandleCa()
-	{
-		$record = 'ca. 150m2';
-		$result = $this->_pEstateList->handleCa($record);
-		$this->assertEquals('150m2', $result);
+		$record = 'ca. 50m2';
+		$result = $this->_pEstateList->handleApprox('ca.',$record);
+		$this->assertEquals('50m2', $result);
 	}
 
 	public function testHandleNumber()
 	{
-		$record = '1,300,000.00 VN';
+		$record = '1.300.000,00';
 		$result = $this->_pEstateList->handleNumber($record);
-		$this->assertEquals('1,300,000 vn', $result);
+		$this->assertEquals('1,300,000', $result);
 	}
 }

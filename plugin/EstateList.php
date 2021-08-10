@@ -214,19 +214,20 @@ class EstateList
 				foreach ($record['elements'] as $fieldElement => &$valueElement) {
 
 					if (strpos($valueElement, 'approx.') !== false) {
-						$record['elements'][$fieldElement] = $this->handleApprox($valueElement);
+						$record['elements'][$fieldElement] = $this->removePreStringArea('approx.',$valueElement);
 					}
 					if (strpos($valueElement, 'ca.') !== false) {
-						$record['elements'][$fieldElement] = $this->handleCa($valueElement);
+						$record['elements'][$fieldElement] = $this->removePreStringArea('ca.', $valueElement);
 					}
-					if ($number = preg_replace('/[^0-9,.]/', '', $valueElement)) {
-						$numberFormat = $this->handleNumber($number);
-						$record['elements'][$fieldElement] = str_replace($number, $numberFormat, $valueElement);
+					if ($fieldElement != 'breitengrad' && $fieldElement != 'laengengrad' && $fieldElement != 'mainLangId'){
+						if ($number = preg_replace('/[^0-9,.]/', '', $valueElement)) {
+							$numberFormat = $this->handleNumber($number);
+							$record['elements'][$fieldElement] = str_replace($number, $numberFormat, $valueElement);
+						}
 					}
 				}
 			}
 		}
-
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 	}
@@ -413,16 +414,10 @@ class EstateList
 		return $pArrayContainer;
 	}
 
-	public function handleApprox($record)
+	public function removePreStringArea($preString, $area)
 	{
-		$record = str_replace("approx.", "", $record);
-		return trim($record);
-	}
-
-	public function handleCa($record)
-	{
-		$record = str_replace("ca.", "", $record);
-		return trim($record);
+		$area = str_replace($preString, "", $area);
+		return trim($area);
 	}
 
 	public function handleNumber($record)
