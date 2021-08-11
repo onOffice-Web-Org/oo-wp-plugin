@@ -75,7 +75,7 @@ class DataListViewFactory
 		$pListView->setSortByUserDefinedDefault($row['sortByUserDefinedDefault']);
 		$pListView->setSortByUserDefinedDirection($row['sortByUserDefinedDirection']);
 		$pListView->setSortByUserValues($row[DataListView::SORT_BY_USER_VALUES]);
-
+		$pListView->setRadius($row['radius']);
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
