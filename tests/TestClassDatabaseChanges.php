@@ -138,9 +138,9 @@ class TestClassDatabaseChanges
 		$this->assertEquals('Field 1', $newFields[0]);
 		$this->assertEquals('Field 2', $newFields[1]);
 		$this->assertEquals('Field 3', $newFields[2]);
-		$this->assertTrue(true, $newRadius);
-		$this->assertTrue(true, $newSameKind);
-		$this->assertTrue(true, $newSameMarketingMethod);
+		$this->assertTrue(true, (string)$newRadius);
+		$this->assertTrue(true, (string)$newSameKind);
+		$this->assertTrue(true, (string)$newSameMarketingMethod);
 		$this->assertEquals(35, $newSamePostalCode);
 		$this->assertEquals(13, $newAmount);
 		$this->assertEquals('/test/similar/template.php', $newSimilarEstatesTemplate);
