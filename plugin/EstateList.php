@@ -24,6 +24,7 @@ namespace onOffice\WPlugin;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use NumberFormatter;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
@@ -375,7 +376,6 @@ class EstateList
 		if (false === $currentRecord) {
 			return false;
 		}
-
 		$this->_currentEstate['id'] = $currentRecord['id'];
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
@@ -388,7 +388,12 @@ class EstateList
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
-
+		if (isset($recordModified['multiParkingLot'])) {
+			$language = new Language();
+			$languageDefault = Language::getDefault();
+			$locate = $language->getLocale();
+			$recordModified['multiParkingLot'] = $this->formatParkingLot($recordModified['multiParkingLot'], $languageDefault, $locate);
+		}
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 
 		return $pArrayContainer;
@@ -654,6 +659,93 @@ class EstateList
 	public function getEstateIds(): array
 	{
 		return array_column($this->_records, 'id');
+	}
+
+	/**
+	 * @param array $parkingArray
+	 * @param string $language
+	 * @param string $locate
+	 * @return array
+	 */
+	public function formatParkingLot(array $parkingArray, string $language, string $locate = 'de_DE'): array
+	{
+//		dd($this->formatPrice('1200', 'DEU', 'de'));
+		$messages = [];
+		foreach ($parkingArray as $key => $parking) {
+			if (!$parking['Count']) {
+				continue;
+			}
+			switch ($language) {
+				case 'ENG':
+					$element = "{$parking['Count']} {$this->getParkingName($key, $parking['Count'])} at {$this->formatPrice($parking['Price'], $language, $locate)}";
+					break;
+				default:
+					$element = "{$parking['Count']} {$this->getParkingName($key, $parking['Count'])} à {$this->formatPrice($parking['Price'], $language, $locate)}";
+					break;
+			}
+			if (!empty($parking['MarketingType'])) {
+				$element .= " ({$parking['MarketingType']})";
+			}
+			array_push($messages, $element);
+
+		}
+		return $messages;
+	}
+
+	/**
+	 * @param string $str
+	 * @param string $language
+	 * @param string $locate
+	 * @return string
+	 */
+	public function formatPrice(string $str, string $language, string $locate): string
+	{
+		$digit = intval(substr(strrchr($str, "."), 1));
+		try {
+			$format = new NumberFormatter($locate, NumberFormatter::CURRENCY);
+			if ($digit) {
+				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);
+			} else {
+				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
+			}
+			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str, "EUR"));;
+		} catch (\Exception $exception){
+			switch ($language) {
+				case 'ENG':
+					if ($digit) {
+						$str = floatval($str);
+						$str = number_format($str, 2, '.', ',');
+					} else {
+						$str = number_format(intval($str), 0, '.', ',');
+					}
+					$str = '€' . $str;
+					break;
+				default:
+					if ($digit) {
+						$str = floatval($str);
+						$str = number_format($str, 2, ',', '.');
+					} else {
+						$str = number_format(intval($str), 0, ',', '.');
+					}
+					$str = $str . ' €';
+					break;
+			}
+			return $str;
+		}
+	}
+
+	/**
+	 * @param string $parkingName
+	 * @param int $count
+	 * @return string
+	 */
+	public function getParkingName(string $parkingName, int $count): string
+	{
+		$str = preg_replace('/([a-z])([A-Z])/', "\\1 \\2", $parkingName);
+		if ($count > 1) {
+			$str .= 's';
+		}
+		return strtolower($str);
 	}
 
 	/** @return EstateFiles */
