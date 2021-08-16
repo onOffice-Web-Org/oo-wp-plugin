@@ -740,6 +740,23 @@ class TestClassEstateList
 		$this->assertEquals($arrayDe, $this->_pEstateList->formatParkingLot($fakeData, 'DEU'));
 	}
 
+	public function testParkingLotWithCountIsNull()
+	{
+		$fakeData = [
+			'carport' => [
+				'Count' => '',
+				'Price' => '12000.00',
+				'MarketingType' => 'purchase'
+			],
+			'duplex' => [
+				'Count' => '0',
+				'Price' => '12777.40',
+				'MarketingType' => 'purchase'
+			]
+		];
+		$this->assertEquals([], $this->_pEstateList->formatParkingLot($fakeData, 'ENG', 'en'));
+	}
+
 	/**
 	 *
 	 */
@@ -846,6 +863,10 @@ class TestClassEstateList
 		]);
 		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
 			($pEstateStatusLabel);
+		$pEstateListMock = $this->getMockBuilder(EstateList::class)
+			->setConstructorArgs([$pDataListView, $this->_pEnvironment])
+			->getMock();
+		$pEstateListMock->method('formatParkingLot')->willReturn([]);
 	}
 
 

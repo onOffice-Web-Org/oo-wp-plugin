@@ -669,7 +669,6 @@ class EstateList
 	 */
 	public function formatParkingLot(array $parkingArray, string $language, string $locate = 'de_DE'): array
 	{
-//		dd($this->formatPrice('1200', 'DEU', 'de'));
 		$messages = [];
 		foreach ($parkingArray as $key => $parking) {
 			if (!$parking['Count']) {
@@ -710,23 +709,17 @@ class EstateList
 			}
 			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str, "EUR"));;
 		} catch (\Exception $exception){
+			if ($digit) {
+				$str = floatval($str);
+				$str = number_format_i18n($str, 2);
+			} else {
+				$str = number_format_i18n(intval($str));
+			}
 			switch ($language) {
 				case 'ENG':
-					if ($digit) {
-						$str = floatval($str);
-						$str = number_format($str, 2, '.', ',');
-					} else {
-						$str = number_format(intval($str), 0, '.', ',');
-					}
 					$str = '€' . $str;
 					break;
 				default:
-					if ($digit) {
-						$str = floatval($str);
-						$str = number_format($str, 2, ',', '.');
-					} else {
-						$str = number_format(intval($str), 0, ',', '.');
-					}
 					$str = $str . ' €';
 					break;
 			}
