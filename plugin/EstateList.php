@@ -209,9 +209,7 @@ class EstateList
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
 
 		$this->_records = $this->_pApiClientAction->getResultRecords();
-
 		$ignoreFormat = ['Id','mainLangId','breitengrad','laengengrad'];
-
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 
