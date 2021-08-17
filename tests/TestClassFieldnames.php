@@ -260,9 +260,7 @@ class TestClassFieldnames
 	{
 		$pFieldnames = $this->getNewFieldnames();
 		$pFieldnames->loadLanguage();
-		$unknownType = $pFieldnames->getType('unknown', onOfficeSDK::MODULE_ADDRESS);
-		var_dump($unknownType);
-		$this->assertEquals('unknown', $unknownType);
+		$pFieldnames->getType('Unknown', onOfficeSDK::MODULE_ADDRESS);
 
 	}
 

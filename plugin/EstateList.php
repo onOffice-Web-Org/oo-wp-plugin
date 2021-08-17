@@ -211,24 +211,28 @@ class EstateList
 		$this->_records = $this->_pApiClientAction->getResultRecords();
 
 		$ignoreFormat = ['Id','mainLangId','breitengrad','laengengrad'];
+
+		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
+		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+
 		foreach ($this->_records as $key => $record) {
 			foreach ($record['elements'] ?? [] as $fieldName => $value) {
 				if (in_array($fieldName, $ignoreFormat)) {
 					continue;
 				}
-				if (FieldTypes::isNumericType($this->_pEnvironment->getFieldnames()->getType($fieldName, \onOffice\SDK\onOfficeSDK::MODULE_ESTATE))) {
-					$this->_records[$key]['elements'][$fieldName] = $this->removePreStringArea('approx.', $value);
-					$this->_records[$key]['elements'][$fieldName] = $this->removePreStringArea('ca.', $this->_records[$key]['elements'][$fieldName]);
-					if ($number = preg_replace('/[^0-9,.]/', '', $this->_records[$key]['elements'][$fieldName])) {
-						$numberFormat = $this->handleNumber($number);
-						$this->_records[$key]['elements'][$fieldName] = str_replace($number, $numberFormat, $this->_records[$key]['elements'][$fieldName]);
+				try {
+					if (FieldTypes::isNumericType($this->_pEnvironment->getFieldnames()->getType($fieldName, \onOffice\SDK\onOfficeSDK::MODULE_ESTATE))) {
+						$this->_records[$key]['elements'][$fieldName] = $this->removePreStringArea('approx.', $value);
+						$this->_records[$key]['elements'][$fieldName] = $this->removePreStringArea('ca.', $this->_records[$key]['elements'][$fieldName]);
+						if ($number = preg_replace('/[^0-9,.]/', '', $this->_records[$key]['elements'][$fieldName])) {
+							$numberFormat = $this->handleNumber($number);
+							$this->_records[$key]['elements'][$fieldName] = str_replace($number, $numberFormat, $this->_records[$key]['elements'][$fieldName]);
+						}
 					}
 				}
-
+				catch (UnknownFieldException $pException){}
 			}
 		}
-		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
-		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 
 	}
 

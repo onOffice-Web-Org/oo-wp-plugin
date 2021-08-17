@@ -232,16 +232,8 @@ class Fieldnames
 	 */
 	public function getType(string $fieldName, string $module): string
 	{
-		try {
-			$row = $this->getRow($module, $fieldName);
-			return $row['type'];
-		}
-		catch (UnknownFieldException $exception)
-		{
-			return $fieldName;
-		}
-
-
+		$row = $this->getRow($module, $fieldName);
+		return $row['type'];
 	}
 
 	/**
