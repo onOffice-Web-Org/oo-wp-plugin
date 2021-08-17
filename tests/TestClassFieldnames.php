@@ -29,6 +29,7 @@ use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
@@ -259,7 +260,10 @@ class TestClassFieldnames
 	{
 		$pFieldnames = $this->getNewFieldnames();
 		$pFieldnames->loadLanguage();
-		$pFieldnames->getType('Unknown', onOfficeSDK::MODULE_ADDRESS);
+		$unknownType = $pFieldnames->getType('unknown', onOfficeSDK::MODULE_ADDRESS);
+		var_dump($unknownType);
+		$this->assertEquals('unknown', $unknownType);
+
 	}
 
 

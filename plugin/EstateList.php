@@ -46,6 +46,7 @@ use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -210,23 +211,25 @@ class EstateList
 		$this->_records = $this->_pApiClientAction->getResultRecords();
 
 		$ignoreFormat = ['Id','mainLangId','breitengrad','laengengrad'];
-		foreach ($this->_records as &$record) {
-			if (isset($record['elements'])) {
-				foreach ($record['elements'] as $fieldElement => &$valueElement) {
-					if (in_array($fieldElement, $ignoreFormat)) {
-						continue;
-					}
-					$record['elements'][$fieldElement] = $this->removePreStringArea('approx.', $valueElement);
-					$record['elements'][$fieldElement] = $this->removePreStringArea('ca.', $valueElement);
-					if ($number = preg_replace('/[^0-9,.]/', '', $valueElement)) {
+		foreach ($this->_records as $key => $record) {
+			foreach ($record['elements'] ?? [] as $fieldName => $value) {
+				if (in_array($fieldName, $ignoreFormat)) {
+					continue;
+				}
+				if (FieldTypes::isNumericType($this->_pEnvironment->getFieldnames()->getType($fieldName, \onOffice\SDK\onOfficeSDK::MODULE_ESTATE))) {
+					$this->_records[$key]['elements'][$fieldName] = $this->removePreStringArea('approx.', $value);
+					$this->_records[$key]['elements'][$fieldName] = $this->removePreStringArea('ca.', $this->_records[$key]['elements'][$fieldName]);
+					if ($number = preg_replace('/[^0-9,.]/', '', $this->_records[$key]['elements'][$fieldName])) {
 						$numberFormat = $this->handleNumber($number);
-						$record['elements'][$fieldElement] = str_replace($number, $numberFormat, $valueElement);
+						$this->_records[$key]['elements'][$fieldName] = str_replace($number, $numberFormat, $this->_records[$key]['elements'][$fieldName]);
 					}
 				}
+
 			}
 		}
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+
 	}
 
 	/**
