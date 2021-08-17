@@ -374,6 +374,31 @@ class TestClassEstateList
 	 *
 	 */
 
+	public function testGetAccessControl()
+	{
+		$valueMap = [
+			'accress-control'
+		];
+		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
+		                         ->setMethods(['__construct', 'getAccessControls'])
+		                         ->getMock();
+		$pDataDetailView->expects($this->once())->method('getAccessControls')->willReturn($valueMap);
+
+		$pDataDetailViewHandlerMock = $this->getMockBuilder(DataDetailViewHandler::class)
+		                         ->setMethods(['__construct', 'getDetailView'])
+		                         ->getMock();
+		$pDataDetailViewHandlerMock->expects($this->once())->method('getDetailView')->willReturn($pDataDetailView);
+
+		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandlerMock);
+
+		$this->assertEquals($valueMap, $this->_pEstateList->getAccessControl());
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testGetEstateContactIds()
 	{
 		$this->_pEstateList->loadEstates();

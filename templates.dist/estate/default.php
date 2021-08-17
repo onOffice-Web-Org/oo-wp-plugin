@@ -61,7 +61,11 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				$estatePictures = $pEstatesClone->getEstatePictures();
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
-					echo '<a href="'.esc_url($pEstatesClone->getEstateLink()).'" style="background-image: url('.esc_url($pEstatesClone->getEstatePictureUrl($id, ['height' => 350])).');" class="oo-listimage estate-status">';
+					if ( $pEstatesClone->getAccessControl() ) {
+						echo '<a href="' . esc_url( $pEstatesClone->getEstateLink() ) . '" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
+					} else {
+						echo '<a href="javascript:void(0)" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
+					}
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
 					}
@@ -86,9 +90,11 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						} ?>
 					</div>
 					<div class="oo-detailslink">
-						<a href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
-							<?php esc_html_e('Show Details', 'onoffice'); ?>
-						</a>
+                        <?php if ($pEstatesClone->getAccessControl()) { ?>
+                            <a href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
+                                <?php esc_html_e('Show Details', 'onoffice'); ?>
+                            </a>
+                        <?php } ?>
                         <?php if (Favorites::isFavorizationEnabled()): ?>
                             <button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
                                 <?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>

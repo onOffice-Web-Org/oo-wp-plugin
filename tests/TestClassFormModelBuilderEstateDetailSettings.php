@@ -113,6 +113,28 @@ class TestClassFormModelBuilderEstateDetailSettings
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputAccessControl
+	 */
+	public function testCreateInputAccessControl()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataDetailViewHandler($pWPOptionsWrapper);
+		$this->_pDataDetailView = $pDataSimilarEstatesSettingsHandler->createDetailViewByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getValue'])
+		                  ->getMock();
+		$pInstance->generate('test');
+
+		$pInputModelDB = $pInstance->createInputAccessControl();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelMovieLinks
 	 */
 	public function testCreateInputModelMovieLinks()

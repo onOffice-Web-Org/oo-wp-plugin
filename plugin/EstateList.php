@@ -516,6 +516,17 @@ class EstateList
 	}
 
 	/**
+	 *
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function getAccessControl(): array {
+		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->getAccessControls();
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getEstateContactIds(): array

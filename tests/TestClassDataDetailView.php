@@ -82,6 +82,7 @@ class TestClassDataDetailView
 		$this->assertEquals('detail', $pDataDetailView->getName());
 		$this->assertEquals(0, $pDataDetailView->getPageId());
 		$this->assertEquals([], $pDataDetailView->getPictureTypes());
+		$this->assertEquals(['Access_Control'], $pDataDetailView->getAccessControls());
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
 	}
@@ -107,6 +108,8 @@ class TestClassDataDetailView
 		$pDataDetailView->setPictureTypes(['testpicturetype1', 'testpicturetype2']);
 		$this->assertEquals(['testpicturetype1', 'testpicturetype2'],
 			$pDataDetailView->getPictureTypes());
+		$pDataDetailView->setAccessControls(['access-control']);
+		$this->assertEquals(['access-control'], $pDataDetailView->getAccessControls());
 		$pDataDetailView->setTemplate('/test/template1.test');
 		$this->assertEquals('/test/template1.test', $pDataDetailView->getTemplate());
 		$pDataDetailView->setShortCodeForm('[oo_form form="Contact Form"]');

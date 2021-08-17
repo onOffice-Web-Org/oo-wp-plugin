@@ -27,6 +27,8 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
 class TestClassEstateViewDocumentTitleBuilder
@@ -65,6 +67,32 @@ class TestClassEstateViewDocumentTitleBuilder
 		$input = ['title' => 'test'];
 		$output = $pSubject->buildDocumentTitle($input);
 		$this->assertEquals(['title' => 'test'], $output);
+	}
+
+	public function testBuildDocumentTitleFor404NotFound() {
+		$pWPQuery = $this->getMockBuilder( \WP_Query::class )->disableOriginalConstructor()->getMock();
+		$pWPQuery->method( 'get' )->with( 'estate_id', 0 )->will( $this->returnValue( 11 ) );
+
+		$pWPQueryWrapper = $this->getMockBuilder( WPQueryWrapper::class )
+								->setMethods( [ 'getWPQuery' ] )
+								->getMock();
+		$pWPQueryWrapper->method( 'getWPQuery' )->will( $this->returnValue( $pWPQuery ) );
+
+		$pDataDetailView = $this->getMockBuilder( DataDetailView::class )
+								->setMethods( [ '__construct', 'getAccessControls' ] )
+								->getMock();
+		$pDataDetailView->expects( $this->once() )->method( 'getAccessControls' )->willReturn( [] );
+
+		$pDataDetailViewHandlerMock = $this->getMockBuilder( DataDetailViewHandler::class )
+										   ->setMethods( [ '__construct', 'getDetailView' ] )
+										   ->getMock();
+		$pDataDetailViewHandlerMock->expects( $this->once() )->method( 'getDetailView' )->willReturn( $pDataDetailView );
+
+		$pSubject = new EstateViewDocumentTitleBuilder( new EstateTitleBuilder(), $pWPQueryWrapper,
+			$pDataDetailViewHandlerMock );
+		$input    = [];
+		$output   = $pSubject->buildDocumentTitle( $input );
+		$this->assertEquals( [ 'title' => 'Error 404 (Not Found)' ], $output );
 	}
 
 	public function testBuildDocumentTitleForShortTitle()

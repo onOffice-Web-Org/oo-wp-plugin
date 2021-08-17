@@ -24,6 +24,10 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\ArrayContainerEscape;
+use onOffice\WPlugin\Controller\EstateListEnvironment;
+use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\EstateDetail;
 use WP_UnitTestCase;
 
@@ -32,6 +36,9 @@ class TestTemplateEstateDefaultDetail
 {
 	/** @var EstateDetail */
 	private $_pEstate = null;
+
+	/** @var EstateListEnvironment */
+	private $_pEnvironment = null;
 
 	/**
 	 * @before
@@ -54,6 +61,7 @@ class TestTemplateEstateDefaultDetail
 				'getDocument',
 				'getCurrentEstateId',
 				'getSimilarEstates',
+				'getAccessControl',
 			])
 			->disableOriginalConstructor()
 			->getMock();
@@ -110,6 +118,7 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
+		$this->_pEstate->method('getAccessControl')->willReturn(['Similar Estates here']);
 	}
 
 	/**

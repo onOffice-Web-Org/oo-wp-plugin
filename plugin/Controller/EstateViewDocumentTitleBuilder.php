@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
@@ -34,14 +35,19 @@ class EstateViewDocumentTitleBuilder
 	/** @var WPQueryWrapper */
 	private $_pWPQueryWrapper;
 
+	/** @var DataDetailViewHandler */
+	private $_pDataDetailViewHandler;
+
 	/**
 	 * @param EstateTitleBuilder $pEstateTitleBuilder
 	 * @param WPQueryWrapper $pWPQueryWrapper
+	 * @param DataDetailViewHandler $dataDetailViewHandler
 	 */
-	public function __construct(EstateTitleBuilder $pEstateTitleBuilder, WPQueryWrapper $pWPQueryWrapper)
+	public function __construct(EstateTitleBuilder $pEstateTitleBuilder, WPQueryWrapper $pWPQueryWrapper, DataDetailViewHandler $dataDetailViewHandler = null)
 	{
 		$this->_pEstateTitleBuilder = $pEstateTitleBuilder;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
+		$this->_pDataDetailViewHandler = $dataDetailViewHandler ?? new DataDetailViewHandler();
 	}
 
 	/**
@@ -52,6 +58,11 @@ class EstateViewDocumentTitleBuilder
 	{
 		$estateId = (int)$this->_pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
 		if ($estateId === 0) {
+			return $title;
+		}
+		$accessControl = $this->_pDataDetailViewHandler->getDetailView()->getAccessControls();
+		if (empty($accessControl)) {
+			$title['title'] = 'Error 404 (Not Found)';
 			return $title;
 		}
 
