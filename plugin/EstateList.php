@@ -667,7 +667,7 @@ class EstateList
 	 * @param string $locate
 	 * @return array
 	 */
-	public function formatParkingLot(array $parkingArray, string $language, string $locate = 'de_DE'): array
+	public function formatParkingLot(array $parkingArray, string $language, string $locale = 'de_DE'): array
 	{
 		$messages = [];
 		foreach ($parkingArray as $key => $parking) {
@@ -676,17 +676,16 @@ class EstateList
 			}
 			switch ($language) {
 				case 'ENG':
-					$element = "{$parking['Count']} {$this->getParkingName($key, $parking['Count'])} at {$this->formatPrice($parking['Price'], $language, $locate)}";
+					$element = sprintf("%d %s at %s", number_format_i18n($parking['Count']), $this->getParkingName($key, $parking['Count']), $this->formatPrice($parking['Price'], $language, $locale));
 					break;
 				default:
-					$element = "{$parking['Count']} {$this->getParkingName($key, $parking['Count'])} à {$this->formatPrice($parking['Price'], $language, $locate)}";
+					$element = sprintf("%d %s à %s", number_format_i18n($parking['Count']), $this->getParkingName($key, $parking['Count']), $this->formatPrice($parking['Price'], $language, $locale));
 					break;
 			}
 			if (!empty($parking['MarketingType'])) {
 				$element .= " ({$parking['MarketingType']})";
 			}
 			array_push($messages, $element);
-
 		}
 		return $messages;
 	}
@@ -697,11 +696,11 @@ class EstateList
 	 * @param string $locate
 	 * @return string
 	 */
-	public function formatPrice(string $str, string $language, string $locate): string
+	public function formatPrice(string $str, string $language, string $locale): string
 	{
 		$digit = intval(substr(strrchr($str, "."), 1));
 		try {
-			$format = new NumberFormatter($locate, NumberFormatter::CURRENCY);
+			$format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
 			if ($digit) {
 				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);
 			} else {
@@ -735,8 +734,10 @@ class EstateList
 	public function getParkingName(string $parkingName, int $count): string
 	{
 		$str = preg_replace('/([a-z])([A-Z])/', "\\1 \\2", $parkingName);
-		if ($count > 1) {
-			$str .= 's';
+		if (1 === $count) {
+			$str = esc_html__($str);
+		} else {
+			$str = esc_html(_n("{$str}", "{$str}s", $count));
 		}
 		return strtolower($str);
 	}
