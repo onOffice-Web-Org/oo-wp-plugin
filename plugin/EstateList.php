@@ -625,7 +625,7 @@ class EstateList
 		if (array_key_exists("radius",$fieldsValues))
 		{
 			$geoFields = $this->_pDataView->getGeoFields();
-			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : 0;
+			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {

@@ -127,6 +127,7 @@ class DataListView
 	/** @var bool */
 	private $_adjustableSorting = false;
 
+
 	/**
 	 *
 	 * @param int $id

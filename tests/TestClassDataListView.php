@@ -297,6 +297,4 @@ class TestClassDataListView
 		$this->_pSubject->setAdjustableSorting(true);
 		$this->assertTrue($this->_pSubject->isAdjustableSorting());
 	}
-
-
 }
