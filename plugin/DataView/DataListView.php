@@ -127,9 +127,6 @@ class DataListView
 	/** @var bool */
 	private $_adjustableSorting = false;
 
-	/** @var string */
-	private $_radius = '';
-
 	/**
 	 *
 	 * @param int $id
@@ -334,19 +331,5 @@ class DataListView
 	public function isAdjustableSorting(): bool
 	{
 		return $this->_adjustableSorting;
-	}
-
-	/** @param string $radius */
-	public function setRadius(string $radius)
-	{
-		$this->_radius = $radius;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getRadius(): string
-	{
-		return $this->_radius;
 	}
 }

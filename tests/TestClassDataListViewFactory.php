@@ -104,7 +104,7 @@ class TestClassDataListViewFactory
 		$this->assertEquals($this->_baseRow['sortByUserDefinedDefault'], $pDataListView->getSortByUserDefinedDefault());
 		$this->assertEquals($this->_baseRow['sortByUserDefinedDirection'], $pDataListView->getSortByUserDefinedDirection());
 		$this->assertEquals($this->_baseRow['sortbyuservalues'], $pDataListView->getSortByUserValues());
-		$this->assertEquals($this->_baseRow['radius'], $pDataListView->getRadius());
+
 		$pDataListView->getFilterableFields();
 	}
 }

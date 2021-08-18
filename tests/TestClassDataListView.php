@@ -298,14 +298,5 @@ class TestClassDataListView
 		$this->assertTrue($this->_pSubject->isAdjustableSorting());
 	}
 
-	/**
-	 *
-	 */
 
-	public function testRadius()
-	{
-		$this->assertEquals('', $this->_pSubject->getRadius());
-		$this->_pSubject->setRadius('200');
-		$this->assertEquals('200', $this->_pSubject->getRadius());
-	}
 }
