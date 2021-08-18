@@ -734,10 +734,12 @@ class EstateList
 	public function getParkingName(string $parkingName, int $count): string
 	{
 		$str = preg_replace('/([a-z])([A-Z])/', "\\1 \\2", $parkingName);
-		if (1 === $count) {
-			$str = esc_html__($str);
-		} else {
-			$str = esc_html(_n("{$str}", "{$str}s", $count));
+		switch ($count) {
+			case 1:
+				$str = esc_html__($str);
+				break;
+			default:
+				$str = esc_html(_n("{$str}", "{$str}s", $count));
 		}
 		return strtolower($str);
 	}
