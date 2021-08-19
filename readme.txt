@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.17.1 =
+
+**Fixes**
+
+* The information on whether the newsletter checkbox was checked is now represented in the email.
+
 = 2.17.0 =
 
 **New**
