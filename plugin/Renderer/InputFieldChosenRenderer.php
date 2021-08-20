@@ -70,17 +70,13 @@ class InputFieldChosenRenderer
 	/**
 	 * @return bool
 	 */
-	public function getMultiple(): bool
-	{
-		return $this->_multiple;
-	}
+	public function getMultiple()
+	{ return $this->_multiple; }
 
 	/**
 	 * @param bool $multiple
 	 */
-	public function setMultiple(bool $multiple): void
-	{
-		$this->_multiple = $multiple;
-	}
+	public function setMultiple($multiple)
+	{ $this->_multiple = $multiple; }
 
 }
