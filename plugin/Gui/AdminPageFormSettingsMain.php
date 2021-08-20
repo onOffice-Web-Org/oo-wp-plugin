@@ -118,14 +118,16 @@ class AdminPageFormSettingsMain
 				/* @var $pAdminPage AdminPageFormSettingsInterestOwner */
 				$pAdminPage->setShowSearchCriteriaFields(true);
 				$pAdminPage->setShowAddressFields(true);
-				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
+				$pAdminPage->setShowCreateInterest(true);
+				$pAdminPage->setShowCheckDuplicates(true);
 				$pAdminPage->setShowGeoPositionSettings(true);
 				break;
 			case Form::TYPE_OWNER:
 				/* @var $pAdminPage AdminPageFormSettingsInterestOwner */
 				$pAdminPage->setShowEstateFields(true);
 				$pAdminPage->setShowAddressFields(true);
-				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
+				$pAdminPage->setShowCreateOwner(true);
+				$pAdminPage->setShowCheckDuplicates(true);
 				$pAdminPage->setShowMessageInput(true);
 				break;
 			case Form::TYPE_CONTACT:

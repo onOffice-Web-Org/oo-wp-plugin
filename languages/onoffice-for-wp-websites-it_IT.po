@@ -3,9 +3,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
-"websites\n"
-"POT-Creation-Date: 2021-05-11T11:55:18+07:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
+"POT-Creation-Date: 2021-08-20T11:25:28+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,7 +12,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -132,8 +131,8 @@ msgstr "Posizione geografica"
 msgid "Search Criteria"
 msgstr "Criteri di ricerca"
 
-#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:156
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:142
+#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:182
+#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:159
 msgid "Form Specific Fields"
 msgstr "Campi specifici del modulo"
 
@@ -150,7 +149,7 @@ msgid "Submit"
 msgstr "Invia"
 
 #. translators: %1$s is the estate title, %5$s is the estate ID
-#: plugin/Form.php:571
+#: plugin/Form.php:572
 msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
 msgstr "La vostra richiesta di informazioni sugli immobili “%1$s” (%5$s)"
 
@@ -189,7 +188,7 @@ msgstr "Modifica elenco indirizzi"
 #: plugin/Gui/AdminPageAddressListSettings.php:100
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:353
+#: plugin/Gui/AdminPageFormSettingsBase.php:392
 msgid "choose name"
 msgstr "scegliere il nome"
 
@@ -197,7 +196,7 @@ msgstr "scegliere il nome"
 #: plugin/Gui/AdminPageEstateDetail.php:277
 #: plugin/Gui/AdminPageEstateListSettings.php:125
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
-#: plugin/Gui/AdminPageFormSettingsBase.php:370
+#: plugin/Gui/AdminPageFormSettingsBase.php:409
 msgid "Layout & Design"
 msgstr "Layout & Design"
 
@@ -237,73 +236,75 @@ msgstr ""
 "Sembra che tu non abbia inserito nessuna credenziale API valida. Per favore, "
 "torna indietro e rivedi il tuo %s."
 
-#: plugin/Gui/AdminPageApiSettings.php:66
+#: plugin/Gui/AdminPageApiSettings.php:72
 msgid "API token"
 msgstr "Gettone API"
 
-#: plugin/Gui/AdminPageApiSettings.php:67
+#: plugin/Gui/AdminPageApiSettings.php:73
 msgid "API secret"
 msgstr "Segreto API"
 
-#: plugin/Gui/AdminPageApiSettings.php:84
+#: plugin/Gui/AdminPageApiSettings.php:103
 msgid "API settings"
 msgstr "Impostazioni API"
 
-#: plugin/Gui/AdminPageApiSettings.php:96
+#: plugin/Gui/AdminPageApiSettings.php:115
 msgid "Site Key"
 msgstr "Chiave del sito"
 
-#: plugin/Gui/AdminPageApiSettings.php:97
+#: plugin/Gui/AdminPageApiSettings.php:116
 msgid "Secret Key"
 msgstr "Chiave segreta"
 
-#: plugin/Gui/AdminPageApiSettings.php:118
+#: plugin/Gui/AdminPageApiSettings.php:137
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:133
-#: plugin/Gui/AdminPageApiSettings.php:143
+#: plugin/Gui/AdminPageApiSettings.php:152
+#: plugin/Gui/AdminPageApiSettings.php:162
 #, fuzzy
 msgid "Google Maps Key"
 msgstr "Google Maps"
 
-#: plugin/Gui/AdminPageApiSettings.php:150
-msgid "Index PDF brochure"
+#: plugin/Gui/AdminPageApiSettings.php:169
+#, fuzzy
+#| msgid "Index PDF brochure"
+msgid "Index PDF Brochure"
 msgstr "Index PDF brochure"
 
-#: plugin/Gui/AdminPageApiSettings.php:161
+#: plugin/Gui/AdminPageApiSettings.php:180
 msgid "Google Bot"
 msgstr "Google Bot"
 
-#: plugin/Gui/AdminPageApiSettings.php:188
+#: plugin/Gui/AdminPageApiSettings.php:219
 msgid "The keys are OK."
 msgstr "I tasti sono OK."
 
-#: plugin/Gui/AdminPageApiSettings.php:189
+#: plugin/Gui/AdminPageApiSettings.php:220
 msgid "There was an error:"
 msgstr "C'è stato un errore:"
 
-#: plugin/Gui/AdminPageApiSettings.php:190
+#: plugin/Gui/AdminPageApiSettings.php:221
 msgid "The secret parameter is missing."
 msgstr "Manca il parametro segreto."
 
-#: plugin/Gui/AdminPageApiSettings.php:191
+#: plugin/Gui/AdminPageApiSettings.php:222
 msgid "The secret parameter is invalid or malformed."
 msgstr "Il parametro segreto non è valido o malformato."
 
-#: plugin/Gui/AdminPageApiSettings.php:192
+#: plugin/Gui/AdminPageApiSettings.php:223
 msgid "The response parameter is missing."
 msgstr "Manca il parametro response."
 
-#: plugin/Gui/AdminPageApiSettings.php:193
+#: plugin/Gui/AdminPageApiSettings.php:224
 msgid "The response parameter is invalid or malformed."
 msgstr "Il parametro di risposta non è valido o malformato."
 
-#: plugin/Gui/AdminPageApiSettings.php:194
+#: plugin/Gui/AdminPageApiSettings.php:225
 msgid "The request is invalid or malformed."
 msgstr "La richiesta non è valida o malformata."
 
-#: plugin/Gui/AdminPageApiSettings.php:205
+#: plugin/Gui/AdminPageApiSettings.php:236
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -311,25 +312,25 @@ msgstr ""
 "Per poter utilizzare Google reCAPTCHA, è necessario fornire le chiavi. Sei "
 "libero di abilitarlo nelle impostazioni del modulo per un uso successivo."
 
-#: plugin/Gui/AdminPageApiSettings.php:243
+#: plugin/Gui/AdminPageApiSettings.php:274
 msgid "The cache was cleaned."
 msgstr "La cache è stata pulita."
 
-#: plugin/Gui/AdminPageEstate.php:86 plugin/Gui/AdminPageEstateList.php:78
+#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateList.php:78
 msgid "List Views"
 msgstr "Elenco Viste"
 
-#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateDetail.php:205
+#: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageEstateDetail.php:205
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:95
 msgid "Detail View"
 msgstr "Vista di dettaglio"
 
-#: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageSimilarEstates.php:147
+#: plugin/Gui/AdminPageEstate.php:89 plugin/Gui/AdminPageSimilarEstates.php:147
 #: plugin/Gui/AdminPageSimilarEstates.php:200
 msgid "Similar Estates"
 msgstr "Immobili simili"
 
-#: plugin/Gui/AdminPageEstate.php:89
+#: plugin/Gui/AdminPageEstate.php:90
 msgid "Unit Lists"
 msgstr "Elenchi di unità"
 
@@ -398,7 +399,7 @@ msgstr "Documenti scaricabili"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:150
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:170
+#: plugin/Gui/AdminPageFormSettingsContact.php:187
 msgid "Geo Fields"
 msgstr "Campi geografici"
 
@@ -434,19 +435,19 @@ msgid "Records"
 msgstr "I record"
 
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
-#: plugin/Gui/AdminPageFormSettingsContact.php:96
+#: plugin/Gui/AdminPageFormSettingsContact.php:103
 msgid "Form Specific Options"
 msgstr "Opzioni specifiche del modulo"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:112
+#: plugin/Gui/AdminPageFormSettingsBase.php:118
 msgid "Edit Form"
 msgstr "Modifica modulo"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:259
+#: plugin/Gui/AdminPageFormSettingsBase.php:266
 msgid "The Form was saved."
 msgstr "Il modulo è stato salvato."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:260
+#: plugin/Gui/AdminPageFormSettingsBase.php:267
 msgid ""
 "There was a problem saving the form. Please make sure the name of the form "
 "is unique."
@@ -455,46 +456,51 @@ msgstr ""
 "nome del modulo sia unico."
 
 #. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:269
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:469
+#: plugin/Gui/AdminPageFormSettingsBase.php:276
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:506
 msgid "Module: %s"
 msgstr "Modulo %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:270
+#: plugin/Gui/AdminPageFormSettingsBase.php:277
 msgid "Edit Values"
 msgstr "Modifica i valori"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:272
+#: plugin/Gui/AdminPageFormSettingsBase.php:280
 msgid "Add Language"
 msgstr "Aggiungi lingua"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:273
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:373
+#: plugin/Gui/AdminPageFormSettingsBase.php:281
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:388
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:415
 msgid "Choose Language"
 msgstr "Scegliere la lingua"
 
 #. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:275
+#: plugin/Gui/AdminPageFormSettingsBase.php:283
 msgid "Default Value: %s"
 msgstr "Valore predefinito: %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:276
+#: plugin/Gui/AdminPageFormSettingsBase.php:284
+msgid "Custom Label: %s"
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsBase.php:285
 #, fuzzy
 msgid "Default Value From:"
 msgstr "Valore predefinito per il raggio"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:277
+#: plugin/Gui/AdminPageFormSettingsBase.php:286
 #, fuzzy
 msgid "Default Value Up To:"
 msgstr "Valore predefinito per il raggio"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:308
-#: plugin/Gui/Table/EstateListTable.php:172
+#: plugin/Gui/AdminPageFormSettingsBase.php:317
+#: plugin/Gui/Table/EstateListTable.php:171
 msgid "No"
 msgstr "No"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:309
-#: plugin/Gui/Table/EstateListTable.php:172
+#: plugin/Gui/AdminPageFormSettingsBase.php:318
+#: plugin/Gui/Table/EstateListTable.php:171
 msgid "Yes"
 msgstr "Sì"
 
@@ -502,43 +508,57 @@ msgstr "Sì"
 msgid "Please provide an Email address!"
 msgstr "Si prega di fornire un indirizzo e-mail!"
 
-#: plugin/Gui/AdminPageModules.php:66
+#: plugin/Gui/AdminPageModules.php:67
 msgid "Enable Watchlist"
 msgstr "Abilita Lista di controllo"
 
-#: plugin/Gui/AdminPageModules.php:67
+#: plugin/Gui/AdminPageModules.php:68
 msgid "Expression used"
 msgstr "Espressione utilizzata"
 
-#: plugin/Gui/AdminPageModules.php:78 plugin/Gui/AdminPageModules.php:87
+#: plugin/Gui/AdminPageModules.php:79 plugin/Gui/AdminPageModules.php:88
 msgid "Watchlist"
 msgstr "Lista di controllo"
 
-#: plugin/Gui/AdminPageModules.php:79
+#: plugin/Gui/AdminPageModules.php:80
 msgid "Favorise"
 msgstr "Favorevole"
 
-#: plugin/Gui/AdminPageModules.php:102
+#: plugin/Gui/AdminPageModules.php:103
 msgid "Map Provider"
 msgstr "Fornitore di mappe"
 
-#: plugin/Gui/AdminPageModules.php:109
+#: plugin/Gui/AdminPageModules.php:110
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: plugin/Gui/AdminPageModules.php:110
+#: plugin/Gui/AdminPageModules.php:111
 msgid "Google Maps"
 msgstr "Google Maps"
 
-#: plugin/Gui/AdminPageModules.php:117
+#: plugin/Gui/AdminPageModules.php:118
 msgid "Maps"
 msgstr "Mappe"
+
+#: plugin/Gui/AdminPageModules.php:129
+msgid "Pagination"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:136
+msgid "By WP Theme"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:137
+#, fuzzy
+#| msgid "onOffice"
+msgid "By onOffice-Plugin"
+msgstr "onOffice"
 
 #: plugin/Gui/AdminPageSettingsBase.php:177
 msgid "Fields"
 msgstr "I campi"
 
-#: plugin/Gui/AdminPageSettingsBase.php:404
+#: plugin/Gui/AdminPageSettingsBase.php:407
 msgid "Fields Configuration"
 msgstr "Configurazione dei campi"
 
@@ -557,7 +577,7 @@ msgstr "C'è stato un problema nel salvare la vista di dettaglio."
 #: plugin/Gui/Table/AddressListTable.php:103
 #: plugin/Gui/Table/AddressListTable.php:146
 #: plugin/Gui/Table/EstateListTable.php:131
-#: plugin/Gui/Table/EstateListTable.php:211
+#: plugin/Gui/Table/EstateListTable.php:210
 #: plugin/Gui/Table/EstateUnitsTable.php:62
 #: plugin/Gui/Table/EstateUnitsTable.php:114
 msgid "Name of View"
@@ -566,7 +586,7 @@ msgstr "Nome della vista"
 #: plugin/Gui/Table/AddressListTable.php:104
 #: plugin/Gui/Table/AddressListTable.php:147
 #: plugin/Gui/Table/EstateListTable.php:135
-#: plugin/Gui/Table/EstateListTable.php:215
+#: plugin/Gui/Table/EstateListTable.php:214
 #: plugin/Gui/Table/EstateUnitsTable.php:63
 #: plugin/Gui/Table/EstateUnitsTable.php:116
 #: plugin/Gui/Table/FormsTable.php:126 plugin/Gui/Table/FormsTable.php:151
@@ -574,8 +594,9 @@ msgid "Shortcode"
 msgstr "Codice di scelta rapida"
 
 #. translators: %s is the name of the list view.
+#. translators: %s is the name of the list view.
 #: plugin/Gui/Table/AddressListTable.php:185
-#: plugin/Gui/Table/EstateListTable.php:273
+#: plugin/Gui/Table/EstateListTable.php:281
 msgid ""
 "You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -584,32 +605,51 @@ msgstr ""
 "Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
 #: plugin/Gui/Table/EstateListTable.php:132
-#: plugin/Gui/Table/EstateListTable.php:212
+#: plugin/Gui/Table/EstateListTable.php:211
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:125
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:135
 msgid "Filter"
 msgstr "Filtro"
 
 #: plugin/Gui/Table/EstateListTable.php:133
-#: plugin/Gui/Table/EstateListTable.php:213
+#: plugin/Gui/Table/EstateListTable.php:212
 msgid "Show Status"
 msgstr "Mostra stato"
 
 #: plugin/Gui/Table/EstateListTable.php:134
-#: plugin/Gui/Table/EstateListTable.php:214
+#: plugin/Gui/Table/EstateListTable.php:213
 #: plugin/Gui/Table/EstateUnitsTable.php:115
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:295
 msgid "Type of List"
 msgstr "Tipo di lista"
 
-#: plugin/Gui/Table/EstateListTable.php:191
+#: plugin/Gui/Table/EstateListTable.php:190
 msgid "(Needs valid API credentials)"
 msgstr "(Richiede credenziali API valide)"
 
 #. translators: %s will be replaced with a number.
-#: plugin/Gui/Table/EstateListTable.php:194
+#: plugin/Gui/Table/EstateListTable.php:193
 msgid "(Unknown Filter (ID: %s))"
 msgstr "(Filtro sconosciuto (ID: %s))"
+
+#. translators: %s is the name of the list view.
+#: plugin/Gui/Table/EstateListTable.php:273
+#, fuzzy
+#| msgid ""
+#| "You are about to delete the listview '%s'\n"
+#| "  'Cancel' to stop, 'OK' to delete."
+msgid ""
+"You are about to duplicate the listview '%s'\n"
+"  'Cancel' to stop, 'OK' to duplicate."
+msgstr ""
+"Sie sind dabei, die Listenansicht '%s' zu löschen.\n"
+"Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
+
+#: plugin/Gui/Table/EstateListTable.php:275
+#, fuzzy
+#| msgid "Check for Duplicates"
+msgid "Duplicate"
+msgstr "Verificare la presenza di duplicati"
 
 #. translators: %s is the name of the unit view.
 #: plugin/Gui/Table/EstateUnitsTable.php:165
@@ -688,7 +728,7 @@ msgid "Hidden"
 msgstr "Nascosto"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:181
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:343
 msgid "Reduce values according to selected filter"
 msgstr "Ridurre i valori in base al filtro selezionato"
 
@@ -742,53 +782,60 @@ msgstr "Formulación de direcciones de clasificación"
 msgid "Unit List"
 msgstr "Elenco unità"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:203
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:206
 msgid "Form"
 msgstr "Forma"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:215
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:218
 msgid "Form Name"
 msgstr "Nome del modulo"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:234
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:237
 msgid "Type of Form: "
 msgstr "Tipo di modulo: "
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:253
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:256
 msgid ", Embed Code: "
 msgstr ", Incorporare il codice: "
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:265
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:268
 msgid "Recipient's E-Mail Address"
 msgstr "Indirizzo e-mail del destinatario"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:272
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:275
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:286
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:289
 msgid "(won't work until set up globally)"
 msgstr "(non funzionerà fino a quando non sarà installato a livello globale)"
 
 #. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:292
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:295
 msgid "Requires Captcha %s"
 msgstr "Richiede Captcha %s"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:305
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:308
 msgid "Result Limit"
 msgstr "Risultato Limite di risultato"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:323
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:326
 msgid "Required"
 msgstr "Richiesto"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:368
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:382
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:383
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:397
 msgid "Add language"
 msgstr "Aggiungi lingua"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:441
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:410
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:420
+#, fuzzy
+#| msgid "Add language"
+msgid "Add custom label language"
+msgstr "Aggiungi lingua"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:478
 msgid "Module"
 msgstr "Modulo"
 
@@ -849,25 +896,40 @@ msgstr "Raggio"
 msgid "Amount of Estates"
 msgstr "Quantità di immobili"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:63
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:69
 msgid "Set Estate Context as Heading"
 msgstr "Immobilienkontext als Überschrift („Ihre Anfrage zu …“)"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:65
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:71
 msgid "Newsletter"
 msgstr "Newsletter"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:67
-msgid "Check for Duplicates"
-msgstr "Verificare la presenza di duplicati"
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:73
+msgid ""
+"Check for Duplicates (override existing address if the email is the same)"
+msgstr ""
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:69
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:75
 msgid "Create Address"
 msgstr "Crea indirizzo"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:71
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:77
+msgid "Create Search Profile"
+msgstr ""
+
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:79
+#, fuzzy
+#| msgid "Create Address"
+msgid "Create Address and Property"
+msgstr "Crea indirizzo"
+
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:81
 msgid "Subject (optional)"
 msgstr "Oggetto (facoltativo)"
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderCustomLabel.php:67
+msgid "Custom Label"
+msgstr ""
 
 #: plugin/Model/InputModelBuilder/InputModelBuilderDefaultValue.php:81
 msgid "Default Value"

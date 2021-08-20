@@ -56,6 +56,12 @@ class AdminPageFormSettingsContact
 	private $_showCreateAddress = false;
 
 	/** @var bool */
+	private $_showCreateInterest = false;
+
+	/** @var bool */
+	private $_showCreateOwner = false;
+
+	/** @var bool */
 	private $_showCheckDuplicates = false;
 
 	/** @var bool */
@@ -70,6 +76,7 @@ class AdminPageFormSettingsContact
 
 	/**
 	 *
+	 * @throws \Exception
 	 */
 
 	protected function buildForms()
@@ -100,6 +107,16 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCreateAddress) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS);
+			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
+		if ($this->_showCreateInterest) {
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEINTEREST);
+			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
+		if ($this->_showCreateOwner) {
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEOWNER);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -234,4 +251,18 @@ class AdminPageFormSettingsContact
 	/** @param bool $showEstateContextCheckbox */
 	public function setShowEstateContextCheckbox(bool $showEstateContextCheckbox)
 		{ $this->_showEstateContextCheckbox = $showEstateContextCheckbox; }
+
+	/**
+	 * @param bool $showCreateInterest
+	 */
+	public function setShowCreateInterest( bool $showCreateInterest ) {
+		$this->_showCreateInterest = $showCreateInterest;
+	}
+
+	/**
+	 * @param bool $showCreateOwner
+	 */
+	public function setShowCreateOwner( bool $showCreateOwner ) {
+		$this->_showCreateOwner = $showCreateOwner;
+	}
 }

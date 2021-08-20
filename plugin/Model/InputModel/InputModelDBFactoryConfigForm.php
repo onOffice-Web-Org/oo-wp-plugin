@@ -48,6 +48,12 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_CREATEADDRESS = 'formCreateAddress';
 
 	/** */
+	const INPUT_FORM_CREATEINTEREST = 'formCreateInterest';
+
+	/** */
+	const INPUT_FORM_CREATEOWNER = 'formCreateOwner';
+
+	/** */
 	const INPUT_FORM_CHECKDUPLICATES = 'formCheckDuplicates';
 
 	/** */
@@ -104,6 +110,14 @@ class InputModelDBFactoryConfigForm
 			self::KEY_FIELD => 'subject',
 		],
 		self::INPUT_FORM_CREATEADDRESS => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'createaddress',
+		],
+		self::INPUT_FORM_CREATEINTEREST => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'createaddress',
+		],
+		self::INPUT_FORM_CREATEOWNER => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'createaddress',
 		],

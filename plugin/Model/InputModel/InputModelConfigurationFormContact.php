@@ -47,6 +47,12 @@ class InputModelConfigurationFormContact
 		InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS => [
 			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
 		],
+		InputModelDBFactoryConfigForm::INPUT_FORM_CREATEINTEREST => [
+			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
+		],
+		InputModelDBFactoryConfigForm::INPUT_FORM_CREATEOWNER => [
+			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
+		],
 		InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT => [
 			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_TEXT,
 		],
@@ -64,9 +70,13 @@ class InputModelConfigurationFormContact
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER]
 			[self::KEY_LABEL] = __('Newsletter', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES]
-			[self::KEY_LABEL] = __('Check for Duplicates', 'onoffice-for-wp-websites');
+			[self::KEY_LABEL] = __('Check for Duplicates (override existing address if the email is the same)', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS]
 			[self::KEY_LABEL] = __('Create Address', 'onoffice-for-wp-websites');
+		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEINTEREST]
+			[self::KEY_LABEL] = __('Create Search Profile', 'onoffice-for-wp-websites');
+		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEOWNER]
+			[self::KEY_LABEL] = __('Create Address and Property', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT]
 			[self::KEY_LABEL] = __('Subject (optional)', 'onoffice-for-wp-websites');
 	}
