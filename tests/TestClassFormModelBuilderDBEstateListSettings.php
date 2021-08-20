@@ -109,6 +109,38 @@ class TestClassFormModelBuilderDBEstateListSettings
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
+	 */
+	public function testCreateInputModelSortByChosenGroup()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->getMock();
+
+		$pInstance->method('getOnlyDefaultSortByFields')
+			->with('estate')
+			->willReturn([
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->with('sortbyuservalues')->willReturn(null);
+
+		$pInputModelDB = $pInstance->createInputModelSortByChosen();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$expectValue = [
+			'group' => [
+				'Popular' => [
+					'kaufpreis' => 'Kaufpreis',
+					'kaltmiete' => 'Kaltmiete'
+				]
+			]
+		];
+		$this->assertEquals($expectValue, $pInputModelDB->getValuesAvailable());
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByDefault
 	 */
 	public function testCreateInputModelSortByDefaultWithValue()

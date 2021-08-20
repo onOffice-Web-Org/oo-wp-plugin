@@ -25,24 +25,62 @@ namespace onOffice\WPlugin\Renderer;
 class InputFieldChosenRenderer
 	extends InputFieldSelectRenderer
 {
+	/** @var boolean */
+	private bool $_multiple = true;
+
 	//put your code here
 	public function render()
 	{
 		$output = '<select name="'.esc_html($this->getName()).'"'
 					.$this->renderAdditionalAttributes()
 					.' id="'.esc_html($this->getGuiId()).'"'
-					.' multiple >';
-
-		foreach ($this->getValue() as $key => $label) {
-			$selected = null;
-			if (in_array($key, $this->getSelectedValue())) {
-				$selected = 'selected="selected"';
+					. ($this->getMultiple() ? ' multiple' : '')
+					. '>';
+		$values = $this->getValue();
+		if (array_key_exists('group', $values)) {
+			foreach ($values['group'] as $k => $group) {
+				$output .= '<optgroup label="' . esc_html($k) . '">';
+				foreach ($group as $key => $label) {
+					$selected = null;
+					if (in_array($key, $this->getSelectedValue())) {
+						$selected = 'selected="selected"';
+					}
+					$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
+				}
+				$output .= '</optgroup>';
 			}
-			$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
+		} else {
+			foreach ($values as $key => $label) {
+				$selected = null;
+				if (
+					(is_array($this->getSelectedValue()) && in_array($key, array_keys($this->getSelectedValue()))) ||
+					$this->getSelectedValue() === $key
+				) {
+					$selected = 'selected="selected"';
+				}
+				$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
+			}
 		}
 
 		$output .= '</select>';
 
 		echo $output;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function getMultiple(): bool
+	{
+		return $this->_multiple;
+	}
+
+	/**
+	 * @param bool $multiple
+	 */
+	public function setMultiple(bool $multiple): void
+	{
+		$this->_multiple = $multiple;
+	}
+
 }

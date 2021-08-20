@@ -83,18 +83,22 @@ abstract class FormModelBuilder
 	 *
 	 */
 
-	protected function readFieldnames($module, bool $withInactive = false)
+	protected function readFieldnames($module, bool $withInactive = false, $isCheckType = false)
 	{
 		try {
 			$this->_pFieldnames->loadLanguage();
 			$fieldnames = $this->_pFieldnames->getFieldList($module);
-
+			$typeSupport = ['integer', 'float', 'varchar', 'text', 'date', 'datetime', 'boolean'];
 			if ($withInactive) {
 				$pFieldnamesInactive = new Fieldnames(new FieldsCollection(), true);
 				$pFieldnamesInactive->loadLanguage();
 				$fieldnames += $pFieldnamesInactive->getFieldList($module);
 			}
-
+			foreach ($fieldnames as $key => $field) {
+				if (!in_array($field['type'], $typeSupport)) {
+					unset($fieldnames[$key]);
+				}
+			}
 			$resultLabel = array_column($fieldnames, 'label');
 			$result = array_combine(array_keys($fieldnames), $resultLabel);
 		} catch (APIClientCredentialsException $pCredentialsException) {

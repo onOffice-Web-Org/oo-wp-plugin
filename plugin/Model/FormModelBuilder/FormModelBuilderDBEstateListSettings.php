@@ -438,10 +438,30 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel = $this->getInputModelDBFactory()->create
 				(InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
-		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
-		$pInputModel->setValuesAvailable($fieldnames);
+		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE, true);
+		$arrayGroupPopular = ['erstellt_am', 'letzte_aktion', 'verkauft_am', 'objektnr_extern',
+			'kaufpreis', 'kaltmiete', 'wohnflaeche', 'grundstuecksflaeche', 'gesamtflaeche',
+			'anzahl_zimmer', 'anzahl_badezimmer'];
+		$data = [];
+		if (!empty($fieldnames)) {
+			$valuePopular = [];
+			$valueAll = [];
+			foreach ($fieldnames as $key => $field) {
+				if (in_array($key, $arrayGroupPopular)) {
+					$valuePopular[$key] = $field;
+				} else {
+					$valueAll[$key] = $field;
+				}
+			}
+			if (!empty($valuePopular)) {
+				$data['group']['Popular'] = $valuePopular;
+			}
+			if (!empty($valueAll)) {
+				$data['group']['All'] = $valueAll;
+			}
+		}
+		$pInputModel->setValuesAvailable($data);
 		$value = $this->getValue(DataListView::SORT_BY_USER_VALUES);
-
 		if ($value == null) {
 			$value = [];
 		}
@@ -460,20 +480,18 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$label = __('Standard Sort', 'onoffice-for-wp-websites');
 		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_DEFAULT, $label);
-		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
 
 		$selectedValue = $this->getValue($pInputModel->getField());
 		$pInputModel->setValue($selectedValue);
 		$values = $this->getValue(DataListView::SORT_BY_USER_VALUES);
-
 		$sortBySpec = $this->getValue(InputModelDBFactory::INPUT_SORT_BY_USER_DEFINED_DIRECTION);
 
 		if ($values == null) {
 			$values = [];
 		}
-		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
+		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE, true);
 		$defaultValues = [];
-
 		foreach ($values as $value)	{
 			if (array_key_exists($value, $fieldnames)) {
 				$defaultValues[$value.'#'.SortListTypes::SORTORDER_ASC] =
@@ -485,7 +503,6 @@ class FormModelBuilderDBEstateListSettings
 						$sortBySpec, SortListTypes::SORTORDER_DESC).')';
 			}
 		}
-
 		$pInputModel->setValuesAvailable($defaultValues);
 		return $pInputModel;
 	}

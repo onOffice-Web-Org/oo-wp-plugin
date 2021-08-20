@@ -13,6 +13,10 @@
 	max-width: 230px;
 }
 
+#onoffice-ajax .metabox-holder .postbox-container .postbox .chosen-container .chosen-drop {
+	display: grid;
+}
+
 #onoffice-ajax input[name=oopluginlistviewsaddress-name],
 #onoffice-ajax input[name=oopluginlistviews-name],
 #onoffice-ajax input[name=oopluginforms-name] {
