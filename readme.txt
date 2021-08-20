@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.18.0 =
+
+**New**
+
+* The templates and translations can now be located in a new folder called `onoffice-theme/languages` and `onoffice-theme/templates` inside the WP theme, respectively.
+
 = 2.17.1 =
 
 **Fixes**
