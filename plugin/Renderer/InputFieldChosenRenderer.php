@@ -26,7 +26,7 @@ class InputFieldChosenRenderer
 	extends InputFieldSelectRenderer
 {
 	/** @var boolean */
-	private bool $_multiple = true;
+	private $_multiple = true;
 
 	//put your code here
 	public function render()
