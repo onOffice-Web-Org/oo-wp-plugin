@@ -117,16 +117,12 @@ class RecordManagerDuplicateListViewAddress extends RecordManager
 					$selectFieldConfigByIdAndFieldName = "SELECT * FROM {$this->_pWPDB->_escape($tableFieldConfig)} WHERE listview_address_id='{$this->_pWPDB->_escape($id)}' AND fieldname ='{$this->_pWPDB->_escape($field)}'";
 					$fieldConfigRows = $this->_pWPDB->get_results($selectFieldConfigByIdAndFieldName);
 
-
 					if (!empty($fieldConfigRows) && (count($fieldConfigRows) !== 0)) {
-						foreach ($fieldConfigRows as $fieldConfigRow) {
-							$newFieldConfigRow = [];
-							$newFieldConfigRow['listview_address_id'] = $duplicateListViewId;
-							$newFieldConfigRow['order'] = $fieldConfigRow->order;
-							$newFieldConfigRow['fieldname'] = $field;
-							$newFieldConfigRow['filterable'] = $fieldConfigRow->filterable;
-							$newFieldConfigRow['hidden'] = $fieldConfigRow->hidden;
-							$this->_pWPDB->insert($tableFieldConfig, $newFieldConfigRow);
+						$newFieldConfigRows = $fieldConfigRows;
+						foreach ($newFieldConfigRows as $newFieldConfigRow) {
+							$newFieldConfigRow->listview_address_id = $duplicateListViewId;
+							unset($newFieldConfigRow->address_fieldconfig_id);
+							$this->_pWPDB->insert($tableFieldConfig, (array)$newFieldConfigRow);
 						}
 					}
 				}
