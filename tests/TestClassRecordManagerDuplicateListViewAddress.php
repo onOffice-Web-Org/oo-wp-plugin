@@ -117,7 +117,7 @@ class TestClassRecordManagerDuplicateListViewAddress
 		$listViewsRows =
 			(object)[
 				'listview_address_id' => '22',
-				'name' => 'list view root - Copy',
+				'name' => 'list view root - Copy 1',
 			];
 
 		$this->_pWPDB->expects($this->once())
