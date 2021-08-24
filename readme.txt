@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.18.1 =
+
+**Fixes**
+
+* Fix for the radius search of similar properties
+
 = 2.18.0 =
 
 **New**
