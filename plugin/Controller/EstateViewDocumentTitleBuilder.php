@@ -43,11 +43,11 @@ class EstateViewDocumentTitleBuilder
 	 * @param WPQueryWrapper $pWPQueryWrapper
 	 * @param DataDetailViewHandler $dataDetailViewHandler
 	 */
-	public function __construct(EstateTitleBuilder $pEstateTitleBuilder, WPQueryWrapper $pWPQueryWrapper, DataDetailViewHandler $dataDetailViewHandler = null)
+	public function __construct(EstateTitleBuilder $pEstateTitleBuilder, WPQueryWrapper $pWPQueryWrapper, DataDetailViewHandler $dataDetailViewHandler)
 	{
 		$this->_pEstateTitleBuilder = $pEstateTitleBuilder;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
-		$this->_pDataDetailViewHandler = $dataDetailViewHandler ?? new DataDetailViewHandler();
+		$this->_pDataDetailViewHandler = $dataDetailViewHandler;
 	}
 
 	/**

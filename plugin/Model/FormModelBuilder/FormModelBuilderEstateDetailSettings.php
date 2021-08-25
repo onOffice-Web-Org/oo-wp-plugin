@@ -134,7 +134,7 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createInputAccessControl() {
 		$allAccessControl = [
-			'Access_Control' => __( 'Alow detail view for reference estates',
+			'Access_Control' => __( 'Allow detail view for reference estates',
 									'onoffice-for-wp-websites' ),
 		];
 
