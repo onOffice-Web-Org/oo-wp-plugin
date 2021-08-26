@@ -28,6 +28,7 @@ use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewForm;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use WP_UnitTestCase;
@@ -112,53 +113,78 @@ class TestClassRecordManagerDuplicateForm
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
+	 * @throws UnknownFormException
 	 */
 
 	public function testDuplicateByIds()
 	{
-		$fieldConfigRecordOutput = [
-			(object)[
-				'fieldname' => 'test1',
-				'fieldlabel' => 'test1',
-				'form_id' => 23,
-				'order' => 1,
-				'module' => '0',
+		$fieldConfigRecordOutputObj = [
+			(object) [
+				'fieldname'            => 'test1',
+				'fieldlabel'           => 'test1',
+				'form_id'              => 23,
+				'order'                => 1,
+				'module'               => '0',
 				'individual_fieldname' => 0,
-				'required' => 0,
-				'availableOptions' => 0
+				'required'             => 0,
+				'availableOptions'     => 0
 			]
 		];
 
-		$sampleData = [
-			(object)[
-				'form_id' => 23,
-				'defaults_id' => 23,
+		$fieldConfigRecordOutputArr = [
+			[
+				'fieldname'            => 'test1',
+				'fieldlabel'           => 'test1',
+				'form_id'              => 23,
+				'order'                => 1,
+				'module'               => '0',
+				'individual_fieldname' => 0,
+				'required'             => 0,
+				'availableOptions'     => 0
+			]
+		];
+
+		$sampleDataObj = [
+			(object) [
+				'form_id'           => 23,
+				'defaults_id'       => 23,
 				'customs_labels_id' => 23,
-				'locale' => 1,
-				'value' => 1,
-				'fieldname' => 'test1',
+				'locale'            => 1,
+				'value'             => 1,
+				'fieldname'         => 'test1',
 			]
 		];
 
-		$recordRootCopy = (object)[
-			'form_id' => 22,
-			'name' => 'list view root - Copy 1',
+		$sampleDataArr = [
+			[
+				'form_id'           => 23,
+				'defaults_id'       => 23,
+				'customs_labels_id' => 23,
+				'locale'            => 1,
+				'value'             => 1,
+				'fieldname'         => 'test1',
+			]
 		];
 
-		$this->_pWPDB->expects($this->once())
-			->method('get_row')
-			->willReturnOnConsecutiveCalls($recordRootCopy);
+		$recordRootCopy = (object) [
+			'form_id' => 22,
+			'name'    => 'list view root - Copy 1',
+		];
 
-		$this->_pWPDB->expects($this->exactly(6))
-			->method('get_results')
-			->willReturnOnConsecutiveCalls(
-				$fieldConfigRecordOutput,
-				$fieldConfigRecordOutput,
-				$sampleData,
-				$sampleData,
-				$sampleData,
-				$sampleData
-			);
+		$this->_pWPDB->expects( $this->once() )
+		             ->method( 'get_row' )
+		             ->willReturnOnConsecutiveCalls( $recordRootCopy );
+
+		$this->_pWPDB->expects( $this->exactly( 6 ) )
+		             ->method( 'get_results' )
+		             ->willReturnOnConsecutiveCalls(
+			             $fieldConfigRecordOutputArr,
+			             $fieldConfigRecordOutputArr,
+			             $sampleDataObj,
+			             $sampleDataArr,
+			             $sampleDataObj,
+			             $sampleDataArr
+		             );
 
 		$this->_pWPDB->insert_id = 23;
 		$this->_pSubject->duplicateByName('list view root');

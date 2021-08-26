@@ -119,8 +119,8 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 				$tableFieldConfig = $prefix . self::TABLENAME_FIELDCONFIG_FORMS;
 				foreach ($listViewRoot['fields'] as $field) {
 					$selectFieldConfigByIdAndFieldName = "SELECT * FROM {$this->_pWPDB->_escape($tableFieldConfig)} WHERE form_id='{$this->_pWPDB->_escape($id)}' AND fieldname ='{$this->_pWPDB->_escape($field)}'";
-					$fieldConfigRows = $this->_pWPDB->get_results($selectFieldConfigByIdAndFieldName);
-					$this->duplicateDataRelated( $duplicateListViewId, (array)$fieldConfigRows,
+					$fieldConfigRows = $this->_pWPDB->get_results($selectFieldConfigByIdAndFieldName, 'ARRAY_A');
+					$this->duplicateDataRelated( $duplicateListViewId, $fieldConfigRows,
 						$tableFieldConfig, 'form_id', 'form_fieldconfig_id' );
 				}
 
@@ -138,8 +138,8 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 
 						$newDefaultsId = $this->_pWPDB->insert_id;
 						$selectFormDefaultValueById = "SELECT * FROM {$this->_pWPDB->_escape($formDefaultsFieldConfigValueTable)} WHERE defaults_id ='{$this->_pWPDB->_escape($formDefaultsRow->defaults_id)}'";
-						$formDefaultsValueRows = $this->_pWPDB->get_results($selectFormDefaultValueById);
-						$this->duplicateDataRelated( $newDefaultsId, (array)$formDefaultsValueRows,
+						$formDefaultsValueRows = $this->_pWPDB->get_results($selectFormDefaultValueById, 'ARRAY_A');
+						$this->duplicateDataRelated( $newDefaultsId, $formDefaultsValueRows,
 							$formDefaultsFieldConfigValueTable, 'defaults_id', 'defaults_values_id' );
 					}
 				}
@@ -158,8 +158,8 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 
 						$newCustomLabelId = $this->_pWPDB->insert_id;
 						$selectFormDefaultValueById = "SELECT * FROM {$this->_pWPDB->_escape($tableFieldFormTranslatedLabel)} WHERE input_id ='{$this->_pWPDB->_escape($fieldFormCustomLabelRow->customs_labels_id)}'";
-						$formTranslatedLabelRows = $this->_pWPDB->get_results($selectFormDefaultValueById);
-						$this->duplicateDataRelated( $newCustomLabelId, (array)$formTranslatedLabelRows,
+						$formTranslatedLabelRows = $this->_pWPDB->get_results($selectFormDefaultValueById, 'ARRAY_A');
+						$this->duplicateDataRelated( $newCustomLabelId, $formTranslatedLabelRows,
 							$tableFieldFormTranslatedLabel, 'input_id', 'translated_label_id' );
 					}
 				}
@@ -183,13 +183,10 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 		string $relatedKeyId,
 		string $disAllowKey
 	) {
-		if ( ! empty( $formDataRelatedRows ) && ( count( $formDataRelatedRows ) !== 0 ) ) {
-			$newFormRelatedRows = $formDataRelatedRows;
-			foreach ( $newFormRelatedRows as $newFormRelatedRow ) {
-				$newFormRelatedRow->$relatedKeyId = $newInsertDataId;
-				unset( $newFormRelatedRow->$disAllowKey );
-				$this->_pWPDB->insert( $relatedTableName, (array) $newFormRelatedRow );
-			}
+		foreach ( $formDataRelatedRows as $formDataRelatedRow ) {
+			$formDataRelatedRow[ $relatedKeyId ] = $newInsertDataId;
+			unset( $formDataRelatedRow[ $disAllowKey ] );
+			$this->_pWPDB->insert( $relatedTableName, $formDataRelatedRow );
 		}
 	}
 }
