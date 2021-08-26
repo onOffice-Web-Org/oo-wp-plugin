@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.18.2 =
+
+**Fixes**
+
+* Fix number fields' default values allowing text
+
 = 2.18.1 =
 
 **Fixes**
