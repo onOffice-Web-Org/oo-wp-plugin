@@ -41,7 +41,6 @@ class TestClassInputModelDB
 	{
 		$pInputModelDB = new InputModelDB('testInput', 'testLabel');
 		$this->assertEquals(null, $pInputModelDB->getTable());
-		$this->assertEquals(null, $pInputModelDB->getDescriptionTextHTML());
 		$this->assertEquals(null, $pInputModelDB->getField());
 		$this->assertEquals(0, $pInputModelDB->getMainRecordId());
 		$this->assertEquals('', $pInputModelDB->getModule());
@@ -68,8 +67,6 @@ class TestClassInputModelDB
 		$this->assertEquals('testModule', $pInputModelDB->getModule());
 		$pInputModelDB->setIgnore(true);
 		$this->assertTrue($pInputModelDB->getIgnore());
-		$pInputModelDB->setDescriptionTextHTML("Hello");
-		$this->assertEquals("Hello", $pInputModelDB->getDescriptionTextHTML());
 		return $pInputModelDB;
 	}
 
