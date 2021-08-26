@@ -102,17 +102,14 @@ class SearchcriteriaFields
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsAddressEstate($pFieldsCollection);
 
-		$pGeoFieldsCollection = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
-		$pFieldsCollection->merge($pGeoFieldsCollection);
+		$pFieldsCollection->merge(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection));
+		$pFieldsCollection->merge(new FieldModuleCollectionDecoratorFormContact(new FieldsCollection));
+		$pFieldsCollection->merge(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection));
 
 		$output = [];
 		$pGeoPosition = new GeoPosition;
 		$geoRangeFields = array_flip($pGeoPosition->getSearchCriteriaFields());
 		foreach ($inputFormFields as $name => $value) {
-			if (in_array($name, ['message'])) {
-				$output[$name] = $value;
-				continue;
-			}
 			$aliasedFieldName = $this->getFieldNameOfInput($name);
 			if (in_array($name, $pGeoPosition->getSearchCriteriaFields())) {
 				$aliasedFieldName = $geoRangeFields[$name];
@@ -122,9 +119,9 @@ class SearchcriteriaFields
 
 			if (FieldTypes::isRangeType($pField->getType()))
 			{
-				if (stristr($name, self::RANGE_FROM)) {
+				if (__String::getNew($name)->endsWith(self::RANGE_FROM)) {
 					$output[$pField->getLabel().' (min)'] = $value;
-				} elseif (stristr($name, self::RANGE_UPTO)) {
+				} elseif (__String::getNew($name)->endsWith(self::RANGE_UPTO)) {
 					$output[$pField->getLabel().' (max)'] = $value;
 				} else {
 					$output[$pField->getLabel()] = $value;

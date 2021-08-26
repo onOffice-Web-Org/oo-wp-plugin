@@ -122,7 +122,7 @@ class FormPostInterest
 
 		$filledSearchcriteriaData = $this->_pFormPostInterestConfiguration
 			->getSearchcriteriaFields()
-			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData(true));
+			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData());
 
 
 		$addressData = $pFormData->getAddressData($this->getFieldsCollection());

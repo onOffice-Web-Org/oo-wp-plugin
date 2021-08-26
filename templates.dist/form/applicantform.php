@@ -58,6 +58,10 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		$searchcriteriaValues []= $line;
 	}
 
+	if ($table == '') {
+		$addressValues []= $line;
+	}
+
 }
 
 if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
