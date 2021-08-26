@@ -28,13 +28,6 @@ use onOffice\WPlugin\EstateDetail;
 
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
 /** @var EstateDetail $pEstates */
-if ( empty( $pEstates->getAccessControl() ) ) {
-	global $wp_query;
-	$wp_query->set_404();
-	status_header( 404 );
-	get_template_part( 404 );
-	exit();
-}
 ?>
 <div class="oo-detailview">
 	<?php
