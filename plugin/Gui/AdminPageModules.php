@@ -68,8 +68,8 @@ class AdminPageModules
 		$pInputModelShowTitleUrl->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelShowTitleUrl->setValuesAvailable(1);
 		$pInputModelShowTitleUrl->setValue(get_option($pInputModelShowTitleUrl->getIdentifier()) == 1);
-		$pInputModelShowTitleUrl->setDescriptionTextHTML('When checked, the estate title will be part of the detail view\'s URLs.
-		The title will be after the data record number, eg. <code>/1234-nice-location-with-view</code>. Not more than the first five words of the title will be used.');
+		$pInputModelShowTitleUrl->setDescriptionTextHTML('If this checkbox is selected, the title of the property will be part of the URLs of the detail views.
+		The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used.');
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelShowTitleUrl);
