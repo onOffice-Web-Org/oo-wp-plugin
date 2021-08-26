@@ -32,7 +32,7 @@ use function __;
  *
  */
 
-class AdminPageFormSettingsValidate
+class AdminPageFormSettingsInquiry
 	extends AdminPageFormSettingsContact
 {
 	/** */

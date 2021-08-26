@@ -42,10 +42,10 @@ class AdminPageFormSettingsMain
 
 	/** @var array */
 	private $_mappingTypeClass = [
-		Form::TYPE_CONTACT => AdminPageFormSettingsValidate::class,
+		Form::TYPE_CONTACT => AdminPageFormSettingsInquiry::class,
 		Form::TYPE_APPLICANT_SEARCH => AdminPageFormSettingsApplicantSearch::class,
-		Form::TYPE_INTEREST => AdminPageFormSettingsValidate::class,
-		Form::TYPE_OWNER => AdminPageFormSettingsValidate::class,
+		Form::TYPE_INTEREST => AdminPageFormSettingsInquiry::class,
+		Form::TYPE_OWNER => AdminPageFormSettingsInquiry::class,
 	];
 
 	/** @var AdminPageFormSettingsBase */
@@ -115,14 +115,14 @@ class AdminPageFormSettingsMain
 
 		switch ($type) {
 			case Form::TYPE_INTEREST:
-				/* @var $pAdminPage AdminPageFormSettingsValidate */
+				/* @var $pAdminPage AdminPageFormSettingsInquiry */
 				$pAdminPage->setShowSearchCriteriaFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
 				$pAdminPage->setShowGeoPositionSettings(true);
 				break;
 			case Form::TYPE_OWNER:
-				/* @var $pAdminPage AdminPageFormSettingsValidate */
+				/* @var $pAdminPage AdminPageFormSettingsInquiry */
 				$pAdminPage->setShowEstateFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
