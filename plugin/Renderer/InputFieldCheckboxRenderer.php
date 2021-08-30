@@ -128,7 +128,7 @@ class InputFieldCheckboxRenderer
 				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
-				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '');
+				.($this->_descriptionTextHTML !== '' ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '');
 		}
 	}
 
