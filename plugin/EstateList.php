@@ -209,7 +209,7 @@ class EstateList
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
 
 		$this->_records = $this->_pApiClientAction->getResultRecords();
-		$ignoreFormat = ['Id','mainLangId','breitengrad','laengengrad'];
+		$ignoreFormat = ['Id','mainLangId','breitengrad','laengengrad','plz'];
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 
@@ -219,7 +219,11 @@ class EstateList
 					continue;
 				}
 				try {
-					if (FieldTypes::isNumericType($this->_pEnvironment->getFieldnames()->getType($fieldName, \onOffice\SDK\onOfficeSDK::MODULE_ESTATE))) {
+					$pFieldsCollection = new FieldsCollection();
+					$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
+					$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+					$pField = $pFieldsCollection->getFieldByModuleAndName(\onOffice\SDK\onOfficeSDK::MODULE_ESTATE, $fieldName);
+					if ($pField->getType() == FieldTypes::FIELD_TYPE_FLOAT) {
 						$this->_records[$key]['elements'][$fieldName] = $this->removePreStringArea('approx.', $value);
 						$this->_records[$key]['elements'][$fieldName] = $this->removePreStringArea('ca.', $this->_records[$key]['elements'][$fieldName]);
 						if ($number = preg_replace('/[^0-9,.]/', '', $this->_records[$key]['elements'][$fieldName])) {
