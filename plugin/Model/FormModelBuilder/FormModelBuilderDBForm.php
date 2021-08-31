@@ -272,7 +272,6 @@ class FormModelBuilderDBForm
 			(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
-		$pInputModelFormRecipient->setPlaceholder(__('', 'onoffice-for-wp-websites'));
 
 		return $pInputModelFormRecipient;
 	}
