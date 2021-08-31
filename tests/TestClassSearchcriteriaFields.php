@@ -127,18 +127,4 @@ class TestClassSearchcriteriaFields
 			'testint__bis' => 'searchcriteria',
 		], $result);
 	}
-
-	/**
-	 *
-	 */
-	public function testGetMessageFieldLabelsOfInputs()
-	{
-		$inputFormFields = [
-			'message' => 'abc'
-		];
-		$result = $this->_pSubject->getFieldLabelsOfInputs($inputFormFields);
-		$this->assertEquals([
-			'message' => 'abc',
-		], $result);
-	}
 }
