@@ -24,6 +24,7 @@ namespace onOffice\WPlugin;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use NumberFormatter;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
@@ -384,7 +385,6 @@ class EstateList
 		if (false === $currentRecord) {
 			return false;
 		}
-
 		$this->_currentEstate['id'] = $currentRecord['id'];
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
@@ -397,7 +397,12 @@ class EstateList
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
-
+		if (isset($recordModified['multiParkingLot'])) {
+			$language = new Language();
+			$languageDefault = Language::getDefault();
+			$locate = $language->getLocale();
+			$recordModified['multiParkingLot'] = $this->formatParkingLot($recordModified['multiParkingLot'], $languageDefault, $locate);
+		}
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 
 		return $pArrayContainer;
@@ -663,6 +668,106 @@ class EstateList
 	public function getEstateIds(): array
 	{
 		return array_column($this->_records, 'id');
+	}
+
+	/**
+	 * @param array $parkingArray
+	 * @param string $language
+	 * @param string $locate
+	 * @return array
+	 */
+	public function formatParkingLot(array $parkingArray, string $language, string $locale = 'de_DE'): array
+	{
+		$messages = [];
+		foreach ($parkingArray as $key => $parking) {
+			if (!$parking['Count']) {
+				continue;
+			}
+			$element = sprintf("%s at %s", $this->getParkingName($key, $parking['Count']), $this->formatPrice($parking['Price'], $language, $locale));
+			if (!empty($parking['MarketingType'])) {
+				$element .= " ({$parking['MarketingType']})";
+			}
+			array_push($messages, $element);
+		}
+		return $messages;
+	}
+
+	/**
+	 * @param string $str
+	 * @param string $language
+	 * @param string $locale
+	 * @return string
+	 */
+	public function formatPrice(string $str, string $language, string $locale): string
+	{
+		$digit = intval(substr(strrchr($str, "."), 1));
+		try {
+			$format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+			if ($digit) {
+				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);
+			} else {
+				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
+			}
+			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str, "EUR"));;
+		} catch (\Exception $exception){
+			if ($digit) {
+				$str = floatval($str);
+				$str = number_format_i18n($str, 2);
+			} else {
+				$str = number_format_i18n(intval($str));
+			}
+			switch ($language) {
+				case 'ENG':
+					$str = '€' . $str;
+					break;
+				default:
+					$str = $str . ' €';
+					break;
+			}
+			return $str;
+		}
+	}
+
+	/**
+	 * @param string $parkingName
+	 * @param int $count
+	 * @return string
+	 */
+	public function getParkingName(string $parkingName, int $count): string
+	{
+		switch ($parkingName) {
+			case 'carport':
+				/* translators: %s is the amount of carports */
+				$str = _n('%s carport', '%s carports', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'duplex':
+				/* translators: %s is the amount of duplexes */
+				$str = _n('%s duplex', '%s duplexes', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'parkingSpace':
+				/* translators: %s is the amount of parking spaces */
+				$str = _n('%s parking space', '%s parking spaces', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'garage':
+				/* translators: %s is the amount of garages */
+				$str = _n('%s garage', '%s garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'multiStoryGarage':
+				/* translators: %s is the amount of multi story garages */
+				$str = _n('%s multi story garage', '%s multi story garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'undergroundGarage':
+				/* translators: %s is the amount of underground garages */
+				$str = _n('%s underground garage', '%s underground garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'otherParkingLot':
+				/* translators: %s is the amount of other parking lots */
+				$str = _n('%s other parking lot', '%s other parking lots', $count, 'onoffice-for-wp-websites');
+				break;
+			default:
+				$str = $parkingName;
+		}
+		return esc_html(sprintf($str, $count));
 	}
 
 	/** @return EstateFiles */
