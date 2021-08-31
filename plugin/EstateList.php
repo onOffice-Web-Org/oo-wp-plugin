@@ -517,12 +517,13 @@ class EstateList
 
 	/**
 	 *
-	 * @return array
+	 * @return bool
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
 
-	public function getAccessControl(): array {
+	public function getAccessControl(): bool
+    {
 		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->getAccessControls();
 	}
 

@@ -49,6 +49,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 		'show_reference' => true,
 		'radius' => 35,
 		'amount' => 13,
+		'access-control' => true,
 		'enablesimilarestates' => true,
 	];
 

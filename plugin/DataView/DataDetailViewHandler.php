@@ -106,7 +106,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
 		$pDataDetailView->setFields($row[DataDetailView::FIELDS] ?? []);
 		$pDataDetailView->setPictureTypes($row[DataDetailView::PICTURES] ?? []);
-		$pDataDetailView->setAccessControls($row[ InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL ] ?? [] );
+		$pDataDetailView->setAccessControls((bool)($row[InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL] ?? ''));
 		$pDataDetailView->setExpose($row['expose'] ?? '');
 		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
 		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);

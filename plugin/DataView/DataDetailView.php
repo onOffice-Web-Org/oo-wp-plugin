@@ -88,8 +88,8 @@ class DataDetailView
 	/** @var string[] */
 	private $_pictureTypes = [];
 
-	/** @var string[] */
-	private $_accessControls = ['Access_Control'];
+	/** @var bool */
+	private $_accessControls = true;
 
 	/** @var string */
 	private $_template = '';
@@ -141,8 +141,8 @@ class DataDetailView
 	public function getPictureTypes(): array
 		{ return $this->_pictureTypes; }
 
-	/** @return array */
-	public function getAccessControls(): array
+	/** @return bool */
+	public function getAccessControls(): bool
 		{ return $this->_accessControls; }
 
 	/** @return string */
@@ -177,8 +177,8 @@ class DataDetailView
 	public function setPictureTypes(array $pictureTypes)
 		{ $this->_pictureTypes = $pictureTypes; }
 
-	/** @param array $accessControl */
-	public function setAccessControls(array $accessControl)
+	/** @param bool $accessControl */
+	public function setAccessControls(bool $accessControl)
 		{ $this->_accessControls = $accessControl; }
 
 	/** @param string $template */

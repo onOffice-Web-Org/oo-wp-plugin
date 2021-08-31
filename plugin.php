@@ -188,7 +188,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 
 	if ($estateId !== '') {
 		$accessControl = $pDataDetailViewHandler->getDetailView()->getAccessControls();
-		if ( empty( $accessControl ) ) {
+		if (!$accessControl) {
 			$pWP->handle_404();
 			include( get_query_template( '404' ) );
 			die();

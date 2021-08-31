@@ -376,9 +376,7 @@ class TestClassEstateList
 
 	public function testGetAccessControl()
 	{
-		$valueMap = [
-			'accress-control'
-		];
+		$valueMap = true;
 		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
 		                         ->setMethods(['__construct', 'getAccessControls'])
 		                         ->getMock();
