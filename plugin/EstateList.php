@@ -674,14 +674,7 @@ class EstateList
 			if (!$parking['Count']) {
 				continue;
 			}
-			switch ($language) {
-				case 'ENG':
-					$element = sprintf("%d %s at %s", number_format_i18n($parking['Count']), $this->getParkingName($key, $parking['Count']), $this->formatPrice($parking['Price'], $language, $locale));
-					break;
-				default:
-					$element = sprintf("%d %s à %s", number_format_i18n($parking['Count']), $this->getParkingName($key, $parking['Count']), $this->formatPrice($parking['Price'], $language, $locale));
-					break;
-			}
+			$element = sprintf("%s at %s", $this->getParkingName($key, $parking['Count']), $this->formatPrice($parking['Price'], $language, $locale));
 			if (!empty($parking['MarketingType'])) {
 				$element .= " ({$parking['MarketingType']})";
 			}
@@ -693,7 +686,7 @@ class EstateList
 	/**
 	 * @param string $str
 	 * @param string $language
-	 * @param string $locate
+	 * @param string $locale
 	 * @return string
 	 */
 	public function formatPrice(string $str, string $language, string $locale): string
@@ -733,15 +726,39 @@ class EstateList
 	 */
 	public function getParkingName(string $parkingName, int $count): string
 	{
-		$str = preg_replace('/([a-z])([A-Z])/', "\\1 \\2", $parkingName);
-		switch ($count) {
-			case 1:
-				$str = esc_html__($str);
+		switch ($parkingName) {
+			case 'carport':
+				/* translators: %s is the amount of carports */
+				$str = _n('%s carport', '%s carports', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'duplex':
+				/* translators: %s is the amount of duplexes */
+				$str = _n('%s duplex', '%s duplexes', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'parkingSpace':
+				/* translators: %s is the amount of parking spaces */
+				$str = _n('%s parking space', '%s parking spaces', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'garage':
+				/* translators: %s is the amount of garages */
+				$str = _n('%s garage', '%s garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'multiStoryGarage':
+				/* translators: %s is the amount of multi story garages */
+				$str = _n('%s multi story garage', '%s multi story garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'undergroundGarage':
+				/* translators: %s is the amount of underground garages */
+				$str = _n('%s underground garage', '%s underground garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'otherParkingLot':
+				/* translators: %s is the amount of other parking lots */
+				$str = _n('%s other parking lot', '%s other parking lots', $count, 'onoffice-for-wp-websites');
 				break;
 			default:
-				$str = esc_html(_n("{$str}", "{$str}s", $count));
+				$str = $parkingName;
 		}
-		return strtolower($str);
+		return esc_html(sprintf($str, $count));
 	}
 
 	/** @return EstateFiles */

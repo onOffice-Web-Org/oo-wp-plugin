@@ -727,17 +727,7 @@ class TestClassEstateList
 			'2 other parking lots at €12,000.01 (purchase)',
 		];
 
-		$arrayDe = [
-			'2 carports à 12.000 € (purchase)',
-			'1 duplex à 12.777,40 € (purchase)',
-			'4 parking spaces à 1.344,44 € (purchase)',
-			'2 garages à 1.200 € (purchase)',
-			'2 multi story garages à 10.000 € (purchased)',
-			'2 underground garages à 12.000 € (purchase)',
-			'2 other parking lots à 12.000,01 € (purchase)',
-		];
 		$this->assertEquals($arrayEn, $this->_pEstateList->formatParkingLot($fakeData, 'ENG', 'en'));
-		$this->assertEquals($arrayDe, $this->_pEstateList->formatParkingLot($fakeData, 'DEU'));
 	}
 
 	public function testParkingLotWithCountIsNull()
@@ -762,8 +752,8 @@ class TestClassEstateList
 	 */
 	public function testGetParkingName()
 	{
-		$this->assertEquals('test parking name', $this->_pEstateList->getParkingName('testParkingName', 1));
-		$this->assertEquals('test parking names', $this->_pEstateList->getParkingName('testParkingName', 2));
+		$this->assertEquals('1 carport', $this->_pEstateList->getParkingName('carport', 1));
+		$this->assertEquals('2 carports', $this->_pEstateList->getParkingName('carport', 2));
 	}
 
 	/**
