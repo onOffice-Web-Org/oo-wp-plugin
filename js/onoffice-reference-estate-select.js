@@ -1,15 +1,15 @@
 jQuery(document).ready(function() {
     const valueSelect = 'reference';
-    const mainElement = $("select[name=oopluginlistviews-listtype]");
-    const Element = $("input[name=oopluginlistviews-showreferenceestate]");
-    mainElement.change(function () {
-       let val = $(this).val();
+    const mainElement = document.querySelector('select[name=oopluginlistviews-listtype');
+    const Element = document.querySelector('input[name=oopluginlistviews-showreferenceestate');
+    mainElement.addEventListener('change',function(event){
+       let val = event.target.value;
        if (val === valueSelect) {
-            Element.prop('disabled', 'disabled');
-            Element.prop('checked', true);
+            Element.setAttribute('disabled', 'disabled');
+            Element.checked = true;
        } else {
-            Element.removeAttr('disabled');
-           Element.prop('checked', false);
+            Element.removeAttribute('disabled');
+            Element.checked = false;
        }
     });
 });
