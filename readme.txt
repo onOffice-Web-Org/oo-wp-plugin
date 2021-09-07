@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.0 =
+
+**Changes**
+
+* WP-Plugin - communication with the onOffice API only takes place in the relevant cases
+
 = 2.18.2 =
 
 **Fixes**
