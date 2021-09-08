@@ -25,6 +25,7 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
+use onOffice\WPlugin\Record\RecordManagerDuplicateListViewEstate;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_action;
@@ -231,8 +232,24 @@ class AdminPageEstate
 			}
 			return $redirectTo;
 		};
-
 		add_filter('handle_bulk_actions-onoffice_page_onoffice-estates', $pClosureDeleteEstate, 10, 3);
+
+		$pClosureDuplicateEstate = function (string $redirectTo, Table\WP\ListTable $pTable)
+		use ($pDI): string {
+			if (in_array($pTable->current_action(), ['duplicate', 'bulk_duplicate'])) {
+				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
+				if (!(isset($_GET['listVewId']))) {
+					wp_die('No List Views for duplicating!');
+				}
+
+				/* @var $pRecordManagerDuplicateListViewEstate RecordManagerDuplicateListViewEstate */
+				$pRecordManagerDuplicateListViewEstate = $pDI->get(RecordManagerDuplicateListViewEstate::class);
+				$listViewRootId = $_GET['listVewId'];
+				$pRecordManagerDuplicateListViewEstate->duplicateByIds($listViewRootId);
+			}
+			return $redirectTo;
+		};
+		add_filter('handle_bulk_actions-onoffice_page_onoffice-estates', $pClosureDuplicateEstate, 10, 3);
 
 		parent::preOutput();
 	}

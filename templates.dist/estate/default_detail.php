@@ -148,9 +148,26 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			} ?>
 
 		</div>
+		<?php
+		if (get_option('onoffice-pagination-paginationbyonoffice')){ ?>
+            <div>
+				<?php
+				wp_link_pages();
+				?>
+            </div>
+		<?php }?>
 		<div class="oo-similar">
 			<?php echo $pEstates->getSimilarEstates(); ?>
 		</div>
 	<?php } ?>
 
 </div>
+
+<?php
+$shortCodeForm = $pEstates->getShortCodeForm();
+if (!empty($shortCodeForm)) {
+	?>
+	<div class="detail-contact-form">
+		<?php echo do_shortcode($shortCodeForm); ?>
+	</div>
+<?php } ?>

@@ -87,11 +87,13 @@ class FormPostContact
 		$recipient = $pFormConfig->getRecipient();
 		$subject = $pFormConfig->getSubject();
 
-		if ($pFormConfig->getCreateAddress()) {
-			$this->createAddress($pFormData);
+		try {
+			if ($pFormConfig->getCreateAddress()) {
+				$this->createAddress($pFormData);
+			}
+		} finally {
+			$this->sendContactRequest($pFormData, $recipient ?? '', $subject);
 		}
-
-		$this->sendContactRequest($pFormData, $recipient ?? '', $subject);
 	}
 
 
@@ -177,7 +179,9 @@ class FormPostContact
 			'estatedata' => ["objekttitel", "ort", "plz", "land"],
 			'estateurl' => home_url($pWPWrapper->getRequest()),
 		];
-
+		if ($this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
+			$requestParams['addressdata']['newsletter_aktiv'] = true;
+		}
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
 		}

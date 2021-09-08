@@ -13,14 +13,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
-"X-Domain: onoffice-for-wp-websites\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.1\n"
 
 #. Plugin Name of the plugin
-#, fuzzy
-#| msgid "onOffice for WP-Websites"
 msgid "onOffice for WP-Websites"
 msgstr "onOffice für WP-Websites"
 

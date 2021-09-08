@@ -82,6 +82,9 @@ class FieldLoaderGeneric
 			}
 
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
+				if ($module === onOfficeSDK::MODULE_ADDRESS && $fieldProperties['tablename'] === 'addressFaktura') {
+					continue;
+				}
 				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz') {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 					$this->_pRegionController->fetchRegions();
@@ -91,6 +94,13 @@ class FieldLoaderGeneric
 					$fieldProperties['labelOnlyValues'] = $this->_pRegionFilter
 						->collectLabelOnlyValues($regions);
 				}
+
+				if ($module === onOfficeSDK::MODULE_ADDRESS && $fieldName == 'ArtDaten') {
+					$permittedValues = $fieldProperties['permittedvalues'];
+					unset($permittedValues['Systembenutzer']);
+					$fieldProperties['permittedvalues'] = $permittedValues;
+				}
+
 				$fieldProperties['module'] = $module;
 				yield $fieldName => $fieldProperties;
 			}
