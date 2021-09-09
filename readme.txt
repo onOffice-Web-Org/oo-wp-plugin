@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.1 =
+
+**Changes**
+
+* The estate status is now also displayed in the detail view.
+
 = 2.19.0 =
 
 **Changes**
