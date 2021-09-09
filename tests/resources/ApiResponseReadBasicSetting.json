@@ -1,0 +1,48 @@
+{
+	"parameters": {
+		"data": {
+			"basicData" : {
+				"characteristicsCi": [
+					"logo",
+					"color",
+					"color2",
+					"textcolorMail",
+					"claim"
+					]
+			}
+		}
+	},
+	"response": {
+		"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:read",
+		"resourceid": "",
+		"resourcetype": "basicsettings",
+		"cacheable": true,
+		"identifier": "",
+		"data": {
+			"meta": {
+				"cntabsolute": 1
+			},
+			"records": [
+				{
+					"id": 15,
+					"type": null,
+					"elements": {
+						"basicData" : {
+							"characteristicsCi": {
+								"logo":  "",
+								"color":  "000",
+								"color2":  "fff",
+								"textcolorMail":  "123",
+								"claim":  ""
+							}
+						}
+					}
+				}
+			]
+		},
+		"status": {
+			"errorcode": 0,
+			"message": "OK"
+		}
+	}
+}

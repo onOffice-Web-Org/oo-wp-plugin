@@ -286,6 +286,10 @@ msgstr ""
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
 msgstr ""
 
+#: plugin/Gui/AdminPageApiSettings.php:212
+msgid "Save changes and clear API cache"
+msgstr ""
+
 #: plugin/Gui/AdminPageApiSettings.php:274
 msgid "The cache was cleaned."
 msgstr ""

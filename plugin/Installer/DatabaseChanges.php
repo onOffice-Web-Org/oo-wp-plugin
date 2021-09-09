@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 19;
+	const MAX_VERSION = 20;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -151,6 +151,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 18) {
 			$this->deleteCommentFieldApplicantSearchForm();
 			$dbversion = 19;
+		}
+
+		if ($dbversion == 19) {
+			dbDelta($this->getCreateQueryFieldConfigCustomsLabels());
+			dbDelta($this->getCreateQueryFieldConfigTranslatedLabels());
+			$dbversion = 20;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -574,6 +580,43 @@ class DatabaseChanges implements DatabaseChangesInterface
 		return $sql;
 	}
 
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigCustomsLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_form_customs_labels";
+		$sql = "CREATE TABLE $tableName (
+			`customs_labels_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`customs_labels_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigTranslatedLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_form_translated_labels";
+		$sql = "CREATE TABLE $tableName (
+			`translated_label_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`input_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			PRIMARY KEY (`translated_label_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
 
 	/**
 	 *
@@ -690,6 +733,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_sortbyuservalues",
 			$prefix."oo_plugin_fieldconfig_form_defaults",
 			$prefix."oo_plugin_fieldconfig_form_defaults_values",
+			$prefix."oo_plugin_fieldconfig_form_customs_labels",
+			$prefix."oo_plugin_fieldconfig_form_translated_labels",
 		);
 
 		foreach ($tables as $table)	{

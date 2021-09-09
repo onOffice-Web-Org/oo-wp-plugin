@@ -165,6 +165,7 @@ class TestClassFormPostContact
 		$this->_pFormPostContact = $this->_pContainer->get(FormPostContact::class);
 
 		$this->configureSDKWrapperForContactAddress();
+		$this->configureSDKWrapperForContactAddressWithNewsLetter();
 		$this->configureSDKWrapperForCreateAddress();
 		$this->configureSDKWrapperForCreateAddressWithDuplicateCheck();
 		$this->configureSDKWrapperForFieldsAddressEstate();
@@ -203,6 +204,37 @@ class TestClassFormPostContact
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', '', $parameters, null, $response);
 	}
+
+	private function configureSDKWrapperForContactAddressWithNewsLetter()
+	{
+		$parameters = [
+			'addressdata' => [
+				'Vorname' => 'John',
+				'Name' => 'Doe',
+				'Email' => 'john.doe@my-onoffice.com',
+				'Plz' => '52068',
+				'Ort' => 'Aachen',
+				'Telefon1' => '0815/2345677',
+				'AGB_akzeptiert' => true,
+				'newsletter_aktiv' => true
+			],
+			'estateid' => 1337,
+			'message' => null,
+			'subject' => '¡A new Contact!'.' '.FormPostContact::PORTALFILTER_IDENTIFIER,
+			'referrer' => '/test/page',
+			'formtype' => 'contact',
+			'estatedata' => ["objekttitel", "ort", "plz", "land"],
+			'estateurl' => 'http://example.org',
+			'recipient' => 'test@my-onoffice.com',
+		];
+
+		$responseJson = file_get_contents(__DIR__.'/resources/ApiResponseDoContactaddress.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_DO, 'contactaddress', '', $parameters, null, $response);
+	}
+
 
 
 	/**
