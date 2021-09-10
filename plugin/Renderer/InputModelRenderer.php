@@ -168,6 +168,12 @@ class InputModelRenderer
 				$pInstance->setCheckedValue($pInputModel->getValue());
 				break;
 
+			case InputModelOption::HTML_TYPE_TEMPLATE_LIST:
+				$pInstance = new InputFieldTemplateListRenderer($elementName,
+					$pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValue($pInputModel->getValue());
+				break;
+
 			case InputModelOption::HTML_TYPE_TEXT:
 				$pInstance = new InputFieldTextRenderer('text', $elementName);
 				$pInstance->addAdditionalAttribute('size', '50');

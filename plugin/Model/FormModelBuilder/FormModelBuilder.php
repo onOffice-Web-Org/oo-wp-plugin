@@ -125,16 +125,29 @@ abstract class FormModelBuilder
 		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles, $templateThemeFiles);
 		$templates = array();
 
+		$plugin_name = basename(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php'));
 		foreach ($templatesAll as $value) {
+			$file = substr(strrchr($value, "/"), 1);
 			if(strpos($value, 'themes') !== false) {
 				$value = __String::getNew($value)->replace(get_template_directory().'/', '');
-				$templates[$value] = $value;
+				$templates[1]['path'][$value] = $file;
+				$templates[1]['title'] = 'Personalized (Theme)';
+				$templates[1]['folder'] = '/onoffice-theme/templates/' . $directory . '/';
 			}else{
 				$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
-				$templates[$value] = $value;
+				if (strpos($value, 'onoffice-personalized') !== false) {
+					$templates[2]['path'][$value] = $file;
+					$templates[2]['title'] = 'Personalized (Plugin)';
+					$templates[2]['folder'] = 'onoffice-personalized/templates/' . $directory . '/';
+				} else {
+					$templates[3]['path'][$value] = $file;
+					$templates[3]['title'] = 'Included';
+					$templates[3]['folder'] = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
+				}
 			}
 		}
 
+		ksort($templates);
 		return $templates;
 	}
 
