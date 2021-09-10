@@ -693,31 +693,31 @@ class EstateList
 	public function formatPrice(string $str, string $language, string $locale): string
 	{
 		$digit = intval(substr(strrchr($str, "."), 1));
-		try {
-			$format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-			if ($digit) {
-				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);
-			} else {
-				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
-			}
-			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str, "EUR"));;
-		} catch (\Exception $exception){
-			if ($digit) {
-				$str = floatval($str);
-				$str = number_format_i18n($str, 2);
-			} else {
-				$str = number_format_i18n(intval($str));
-			}
-			switch ($language) {
-				case 'ENG':
-					$str = '€' . $str;
-					break;
-				default:
-					$str = $str . ' €';
-					break;
-			}
-			return $str;
-		}
+        if (class_exists(NumberFormatter::class)) {
+            $format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+            if ($digit) {
+                $format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);
+            } else {
+                $format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
+            }
+            return str_replace("\xc2\xa0", " ", $format->formatCurrency($str, "EUR"));
+        } else {
+            if ($digit) {
+                $str = floatval($str);
+                $str = number_format_i18n($str, 2);
+            } else {
+                $str = number_format_i18n(intval($str));
+            }
+            switch ($language) {
+                case 'ENG':
+                    $str = '€' . $str;
+                    break;
+                default:
+                    $str = $str . ' €';
+                    break;
+            }
+            return $str;
+        }
 	}
 
 	/**

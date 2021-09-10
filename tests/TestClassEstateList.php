@@ -762,8 +762,8 @@ class TestClassEstateList
 	public function testFormatPrice()
 	{
 		$this->assertEquals('€12,000', $this->_pEstateList->formatPrice('12000', 'ENG', 'en'));
-		$this->assertEquals('1.200 €', $this->_pEstateList->formatPrice('1200', 'DEU', 'de'));
-		$this->assertEquals('1.135,11 €', $this->_pEstateList->formatPrice('1135.11', 'DEU','de'));
+		$this->assertEquals('1,200 €', $this->_pEstateList->formatPrice('1200', 'DEU', 'de'));
+		$this->assertEquals('1,135.11 €', $this->_pEstateList->formatPrice('1135.11', 'DEU','de'));
 		$this->assertEquals('€1,135.11', $this->_pEstateList->formatPrice('1135.11', 'ENG', 'en'));
 	}
 
