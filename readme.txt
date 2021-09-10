@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.2 =
+
+**Changes**
+
+* Add missing code from release 2.19.1
+
 = 2.19.1 =
 
 **Changes**
