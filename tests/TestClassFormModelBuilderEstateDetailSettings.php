@@ -51,6 +51,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 		'amount' => 13,
 		'access-control' => true,
 		'enablesimilarestates' => true,
+		'show_status' => true
 	];
 
 	/** @var InputModelOptionFactoryDetailView */
@@ -155,6 +156,27 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 		$pInputModelDB = $pInstance->createInputModelMovieLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelShowStatus
+	 */
+	public function testCreateInputModelShowStatus()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataDetailViewHandler = new DataDetailViewHandler($pWPOptionsWrapper);
+		$this->_pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($row);
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+
+		$pInputModelDB = $pInstance->createInputModelShowStatus();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
 
 }

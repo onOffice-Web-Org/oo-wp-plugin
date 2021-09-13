@@ -272,12 +272,14 @@ class AdminPageEstateDetail
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
 		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
+		$pInputShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$pFormModelLayoutDesign->addInputModel( $pInputModelShortCodeForm );
+		$pFormModelLayoutDesign->addInputModel($pInputShowStatus);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
