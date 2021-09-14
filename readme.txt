@@ -73,6 +73,48 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.2 =
+
+**Changes**
+
+* Add missing code from release 2.19.1
+
+= 2.19.1 =
+
+**Changes**
+
+* The estate status is now also displayed in the detail view.
+
+= 2.19.0 =
+
+**Changes**
+
+* WP-Plugin - communication with the onOffice API only takes place in the relevant cases
+
+= 2.18.2 =
+
+**Fixes**
+
+* Fix number fields' default values allowing text
+
+= 2.18.1 =
+
+**Fixes**
+
+* Fix for the radius search of similar properties
+
+= 2.18.0 =
+
+**New**
+
+* The templates and translations can now be located in a new folder called `onoffice-theme/languages` and `onoffice-theme/templates` inside the WP theme, respectively.
+
+= 2.17.1 =
+
+**Fixes**
+
+* The information on whether the newsletter checkbox was checked is now represented in the email.
+
 = 2.17.0 =
 
 **New**

@@ -22,9 +22,13 @@
 namespace onOffice\WPlugin;
 
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
+use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\WPlugin\Controller\EstateViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use WP_Embed;
@@ -164,18 +168,24 @@ class EstateDetail
 
 	/**
 	 *
+	 * @param $pContainer
 	 * @return string
-	 *
+	 * @throws API\APIEmptyResultException
+	 * @throws API\ApiClientException
+	 * @throws DataView\UnknownViewException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws HttpFetchNoResultException
 	 */
 
 	public function getSimilarEstates(): string
 	{
-        $pContainerBuilder = new ContainerBuilder;
-        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-        $pContainer = $pContainerBuilder->build();
-        $pDataSimilarEstatesSettings = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
-        $pDataSimilarSettings = $pDataSimilarEstatesSettings->getDataSimilarEstatesSettings();
-        if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pDataSimilarEstatesSettings = $pContainer->get(DataSimilarEstatesSettingsHandler::class);
+		$pDataSimilarSettings = $pDataSimilarEstatesSettings->getDataSimilarEstatesSettings();
+		if (!$pDataSimilarSettings->getDataSimilarViewActive()) {
 			return '';
 		}
 		$pDataViewSimilarEstates = $pDataSimilarSettings->getDataViewSimilarEstates();
@@ -234,5 +244,13 @@ class EstateDetail
 	public function setEstateId(int $estateId)
 	{
 		$this->_estateId = $estateId;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getShowEstateMarketingStatus(): bool
+	{
+		return $this->getDataView()->getShowStatus();
 	}
 }
