@@ -75,7 +75,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 = 2.19.3 =
 
-* Removal of conact person's data (Ansprechpartner der Einheit) in unit list.
+* Removal of contact person's data (Ansprechpartner der Einheit) in unit list.
 
 = 2.19.2 =
 
