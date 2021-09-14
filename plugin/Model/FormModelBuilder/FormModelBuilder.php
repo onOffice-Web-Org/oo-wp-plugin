@@ -50,6 +50,13 @@ abstract class FormModelBuilder
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
+	/** @var int[] */
+	private $_orderOfTemplatesFolder = [
+		"theme" => 1,
+		"plugin" => 2,
+		"included" => 3,
+	];
+
 	/**
 	 * @param string $pageSlug
 	 * @return FormModel
@@ -130,19 +137,22 @@ abstract class FormModelBuilder
 			$file = substr(strrchr($value, "/"), 1);
 			if(strpos($value, 'themes') !== false) {
 				$value = __String::getNew($value)->replace(get_template_directory().'/', '');
-				$templates[1]['path'][$value] = $file;
-				$templates[1]['title'] = 'Personalized (Theme)';
-				$templates[1]['folder'] = '/onoffice-theme/templates/' . $directory . '/';
+				$folderOrder = $this->getOrderOfTemplateFolder('theme');
+				$templates[$folderOrder]['path'][$value] = $file;
+				$templates[$folderOrder]['title'] = 'Personalized (Theme)';
+				$templates[$folderOrder]['folder'] = '/onoffice-theme/templates/' . $directory . '/';
 			}else{
 				$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
 				if (strpos($value, 'onoffice-personalized') !== false) {
-					$templates[2]['path'][$value] = $file;
-					$templates[2]['title'] = 'Personalized (Plugin)';
-					$templates[2]['folder'] = 'onoffice-personalized/templates/' . $directory . '/';
+					$folderOrder = $this->getOrderOfTemplateFolder('plugin');
+					$templates[$folderOrder]['path'][$value] = $file;
+					$templates[$folderOrder]['title'] = 'Personalized (Plugin)';
+					$templates[$folderOrder]['folder'] = 'onoffice-personalized/templates/' . $directory . '/';
 				} else {
-					$templates[3]['path'][$value] = $file;
-					$templates[3]['title'] = 'Included';
-					$templates[3]['folder'] = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
+					$folderOrder = $this->getOrderOfTemplateFolder('included');
+					$templates[$folderOrder]['path'][$value] = $file;
+					$templates[$folderOrder]['title'] = 'Included';
+					$templates[$folderOrder]['folder'] = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
 				}
 			}
 		}
@@ -246,4 +256,11 @@ abstract class FormModelBuilder
 	/** @param array $values */
 	public function setValues(array $values)
 		{ $this->_values = $values; }
+
+	/**
+	 * @param $folderName
+	 * @return int
+	 */
+	protected function getOrderOfTemplateFolder($folderName): int
+	{ return $this->_orderOfTemplatesFolder[$folderName]; }
 }

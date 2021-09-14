@@ -82,7 +82,7 @@ class InputFieldTemplateListRenderer
 				} else {
 					echo '<details>';
 				}
-				echo '<summary>' . $templateValue['title'] . '</summary>';
+				echo '<summary>' . esc_html($templateValue['title']) . '</summary>';
 			}
 			foreach ($templateList as $key => $label) {
 				$checked = false;
@@ -98,7 +98,7 @@ class InputFieldTemplateListRenderer
 					. ' id="' . esc_html($inputId) . '">'
 					. '<label for="' . esc_html($inputId) . '">' . esc_html($label) . '</label><br>';
 			}
-			echo "<p>(in the folder " . $templateValue['folder'] . ")</p>";
+			echo "<p>". esc_html("in the folder " . $templateValue['folder']) ."</p>";
 			echo (count($this->getValue()) > 1) ? '</details>' : '';
 		}
 		echo '</div>';
