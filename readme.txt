@@ -73,6 +73,10 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.3 =
+
+* Removal of conact person's data (Ansprechpartner der Einheit) in unit list.
+
 = 2.19.2 =
 
 **Changes**
