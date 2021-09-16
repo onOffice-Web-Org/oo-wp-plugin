@@ -22,16 +22,11 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\DataView\DataListView;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
-use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 
 /**
@@ -114,5 +109,18 @@ class FormModelBuilderDBEstateUnitListSettings
 		$pInputModelShowStatus->setValuesAvailable(1);
 
 		return $pInputModelShowStatus;
+	}
+
+	/**
+	 * In unit list settings, the field options "Filterable", "Hidden"
+	 * and "Reduce values according to selected filter" has been removed.
+	 * @param string $module
+	 * @param string $htmlType
+	 * @param bool $isShow
+	 * @return InputModelDB
+	 */
+	public function createSortableFieldList($module, $htmlType, bool $isShow = true): InputModelDB
+	{
+		return parent::createSortableFieldList($module, $htmlType, false);
 	}
 }
