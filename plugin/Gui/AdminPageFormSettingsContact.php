@@ -98,7 +98,7 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice-for-wp-websites'));
-        $pFormModelFormSpecific->addInputModel($pInputModelRecipient);
+		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 
