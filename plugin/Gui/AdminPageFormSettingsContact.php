@@ -98,6 +98,7 @@ class AdminPageFormSettingsContact
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice-for-wp-websites'));
+        $pFormModelFormSpecific->addInputModel($pInputModelRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
 
@@ -120,8 +121,6 @@ class AdminPageFormSettingsContact
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
-
-		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
 
 		$this->addFormModel($pFormModelFormSpecific);
 		$this->buildGeoPositionSettings();
