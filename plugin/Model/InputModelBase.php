@@ -105,6 +105,9 @@ abstract class InputModelBase
 	/** @var array */
 	private $_labelOnlyValues = [];
 
+	/** @var array */
+	private $_descriptionRadioTextHTML = [];
+
 	/**
 	 *
 	 * @return string
@@ -224,4 +227,12 @@ abstract class InputModelBase
 	/** @param array $labelOnlyValues */
 	public function setLabelOnlyValues(array $labelOnlyValues)
 		{ $this->_labelOnlyValues = $labelOnlyValues; }
+
+	/** @return string */
+	public function getDescriptionRadioTextHTML()
+	{ return $this->_descriptionRadioTextHTML; }
+
+	/** @param string $descriptionTextHTML */
+	public function setDescriptionRadioTextHTML(array $textHTML)
+	{ $this->_descriptionRadioTextHTML = $textHTML; }
 }
