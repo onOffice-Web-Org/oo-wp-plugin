@@ -41,6 +41,7 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\Utility\__String;
 use function __;
@@ -167,6 +168,76 @@ class FormModelBuilderEstateDetailSettings
 		);
 		$pInputModelMedia->setValuesAvailable($options);
 		$pInputModelMedia->setValue($this->_pDataDetailView->getMovieLinks());
+
+		return $pInputModelMedia;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelOguloLinks()
+	{
+		$labelOguloLinks = __('Ogulo-Links', 'onoffice-for-wp-websites');
+
+		$pInputModelMedia = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_OGULO_LINKS, $labelOguloLinks);
+		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$options = array(
+			LinksTypes::LINKS_DEACTIVATED => __('Disabled', 'onoffice-for-wp-websites'),
+			LinksTypes::LINKS_LINK => __('Link', 'onoffice-for-wp-websites'),
+			LinksTypes::LINKS_EMBEDDED => __('Embedded', 'onoffice-for-wp-websites'),
+		);
+		$pInputModelMedia->setValuesAvailable($options);
+		$pInputModelMedia->setValue($this->_pDataDetailView->getOguloLinks());
+
+		return $pInputModelMedia;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+	public function createInputModelObjectLinks()
+	{
+		$labelObjectLinks = __('Object-Links', 'onoffice-for-wp-websites');
+
+		$pInputModelMedia = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_OBJECT_LINKS, $labelObjectLinks);
+		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$options = array(
+			LinksTypes::LINKS_DEACTIVATED => __('Disabled', 'onoffice-for-wp-websites'),
+			LinksTypes::LINKS_LINK => __('Link', 'onoffice-for-wp-websites'),
+			LinksTypes::LINKS_EMBEDDED => __('Embedded', 'onoffice-for-wp-websites'),
+		);
+		$pInputModelMedia->setValuesAvailable($options);
+		$pInputModelMedia->setValue($this->_pDataDetailView->getObjectLinks());
+
+		return $pInputModelMedia;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+	public function createInputModelLinks()
+	{
+		$labelLinks = __('Links', 'onoffice-for-wp-websites');
+
+		$pInputModelMedia = $this->_pInputModelDetailViewFactory->create
+		(InputModelOptionFactoryDetailView::INPUT_LINKS, $labelLinks);
+		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$options = array(
+			LinksTypes::LINKS_DEACTIVATED => __('Disabled', 'onoffice-for-wp-websites'),
+			LinksTypes::LINKS_LINK => __('Link', 'onoffice-for-wp-websites'),
+			LinksTypes::LINKS_EMBEDDED => __('Embedded', 'onoffice-for-wp-websites'),
+		);
+		$pInputModelMedia->setValuesAvailable($options);
+		$pInputModelMedia->setValue($this->_pDataDetailView->getLinks());
 
 		return $pInputModelMedia;
 	}
