@@ -50,8 +50,7 @@ abstract class FormModelBuilder
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
-	/** @var int[] */
-	private $_orderOfTemplatesFolder = [
+    const ORDER_OF_TEMPLATES_FOLDER = [
 		"theme" => 1,
 		"plugin" => 2,
 		"included" => 3,
@@ -137,19 +136,19 @@ abstract class FormModelBuilder
 			$file = substr(strrchr($value, "/"), 1);
 			if(strpos($value, 'themes') !== false) {
 				$value = __String::getNew($value)->replace(get_template_directory().'/', '');
-				$folderOrder = $this->getOrderOfTemplateFolder('theme');
+				$folderOrder = self::ORDER_OF_TEMPLATES_FOLDER['theme'];
 				$templates[$folderOrder]['path'][$value] = $file;
 				$templates[$folderOrder]['title'] = 'Personalized (Theme)';
 				$templates[$folderOrder]['folder'] = '/onoffice-theme/templates/' . $directory . '/';
 			}else{
 				$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
 				if (strpos($value, 'onoffice-personalized') !== false) {
-					$folderOrder = $this->getOrderOfTemplateFolder('plugin');
+					$folderOrder = self::ORDER_OF_TEMPLATES_FOLDER['plugin'];
 					$templates[$folderOrder]['path'][$value] = $file;
 					$templates[$folderOrder]['title'] = 'Personalized (Plugin)';
 					$templates[$folderOrder]['folder'] = 'onoffice-personalized/templates/' . $directory . '/';
 				} else {
-					$folderOrder = $this->getOrderOfTemplateFolder('included');
+					$folderOrder = self::ORDER_OF_TEMPLATES_FOLDER['included'];
 					$templates[$folderOrder]['path'][$value] = $file;
 					$templates[$folderOrder]['title'] = 'Included';
 					$templates[$folderOrder]['folder'] = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
@@ -256,11 +255,4 @@ abstract class FormModelBuilder
 	/** @param array $values */
 	public function setValues(array $values)
 		{ $this->_values = $values; }
-
-	/**
-	 * @param $folderName
-	 * @return int
-	 */
-	protected function getOrderOfTemplateFolder($folderName): int
-	{ return $this->_orderOfTemplatesFolder[$folderName]; }
 }
