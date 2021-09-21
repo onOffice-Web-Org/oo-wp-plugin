@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-06-25T10:44:31+07:00\n"
+"POT-Creation-Date: 2021-09-16T12:00:22+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -118,9 +118,9 @@ msgstr ""
 msgid "Search Criteria"
 msgstr ""
 
-#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:156
+#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:182
 #: plugin/Fieldnames.php:219
-#: plugin/Gui/AdminPageFormSettingsContact.php:147
+#: plugin/Gui/AdminPageFormSettingsContact.php:146
 msgid "Form Specific Fields"
 msgstr ""
 
@@ -137,7 +137,7 @@ msgid "Submit"
 msgstr ""
 
 #. translators: %1$s is the estate title, %5$s is the estate ID
-#: plugin/Form.php:571
+#: plugin/Form.php:572
 msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
 msgstr ""
 
@@ -177,7 +177,7 @@ msgstr ""
 #: plugin/Gui/AdminPageAddressListSettings.php:100
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:353
+#: plugin/Gui/AdminPageFormSettingsBase.php:392
 msgid "choose name"
 msgstr ""
 
@@ -185,7 +185,7 @@ msgstr ""
 #: plugin/Gui/AdminPageEstateDetail.php:277
 #: plugin/Gui/AdminPageEstateListSettings.php:125
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
-#: plugin/Gui/AdminPageFormSettingsBase.php:370
+#: plugin/Gui/AdminPageFormSettingsBase.php:409
 msgid "Layout & Design"
 msgstr ""
 
@@ -286,7 +286,7 @@ msgstr ""
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:212
+#: plugin/Gui/AdminPageApiSettings.php:262
 msgid "Save changes and clear API cache"
 msgstr ""
 
@@ -375,7 +375,7 @@ msgstr ""
 
 #: plugin/Gui/AdminPageEstateListSettings.php:150
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:175
+#: plugin/Gui/AdminPageFormSettingsContact.php:174
 msgid "Geo Fields"
 msgstr ""
 
@@ -408,56 +408,61 @@ msgstr ""
 msgid "Form Specific Options"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:112
+#: plugin/Gui/AdminPageFormSettingsBase.php:118
 msgid "Edit Form"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:259
+#: plugin/Gui/AdminPageFormSettingsBase.php:266
 msgid "The Form was saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:260
+#: plugin/Gui/AdminPageFormSettingsBase.php:267
 msgid "There was a problem saving the form. Please make sure the name of the form is unique."
 msgstr ""
 
 #. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:269
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:491
+#: plugin/Gui/AdminPageFormSettingsBase.php:276
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:525
 msgid "Module: %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:270
+#: plugin/Gui/AdminPageFormSettingsBase.php:277
 msgid "Edit Values"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:272
+#: plugin/Gui/AdminPageFormSettingsBase.php:280
 msgid "Add Language"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:273
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:395
+#: plugin/Gui/AdminPageFormSettingsBase.php:281
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:407
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:434
 msgid "Choose Language"
 msgstr ""
 
 #. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:275
+#: plugin/Gui/AdminPageFormSettingsBase.php:283
 msgid "Default Value: %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:276
+#: plugin/Gui/AdminPageFormSettingsBase.php:284
+msgid "Custom Label: %s"
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsBase.php:285
 msgid "Default Value From:"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:277
+#: plugin/Gui/AdminPageFormSettingsBase.php:286
 msgid "Default Value Up To:"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:308
+#: plugin/Gui/AdminPageFormSettingsBase.php:317
 #: plugin/Gui/Table/EstateListTable.php:171
 msgid "No"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:309
+#: plugin/Gui/AdminPageFormSettingsBase.php:318
 #: plugin/Gui/Table/EstateListTable.php:171
 msgid "Yes"
 msgstr ""
@@ -466,44 +471,56 @@ msgstr ""
 msgid "Please provide an Email address!"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:66
+#: plugin/Gui/AdminPageModules.php:67
 msgid "Enable Watchlist"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:67
+#: plugin/Gui/AdminPageModules.php:68
 msgid "Expression used"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:78
-#: plugin/Gui/AdminPageModules.php:87
+#: plugin/Gui/AdminPageModules.php:79
+#: plugin/Gui/AdminPageModules.php:88
 msgid "Watchlist"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:79
+#: plugin/Gui/AdminPageModules.php:80
 msgid "Favorise"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:102
+#: plugin/Gui/AdminPageModules.php:103
 msgid "Map Provider"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:109
+#: plugin/Gui/AdminPageModules.php:110
 msgid "OpenStreetMap"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:110
+#: plugin/Gui/AdminPageModules.php:111
 msgid "Google Maps"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:117
+#: plugin/Gui/AdminPageModules.php:118
 msgid "Maps"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:129
+msgid "Pagination"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:136
+msgid "By WP Theme"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:137
+msgid "By onOffice-Plugin"
 msgstr ""
 
 #: plugin/Gui/AdminPageSettingsBase.php:177
 msgid "Fields"
 msgstr ""
 
-#: plugin/Gui/AdminPageSettingsBase.php:404
+#: plugin/Gui/AdminPageSettingsBase.php:407
 msgid "Fields Configuration"
 msgstr ""
 
@@ -711,39 +728,37 @@ msgstr ""
 msgid "Unit List"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:204
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:206
 msgid "Form"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:216
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:218
 msgid "Form Name"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:235
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:237
 msgid "Type of Form: "
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:254
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:256
 msgid ", Embed Code: "
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:266
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:268
 msgid "Recipient's E-Mail Address"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:273
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:291
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:275
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:293
 msgid "john.doe@example.com"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:284
-msgid "Fallback E-Mail Address"
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:286
+msgid "Email address"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:292
-msgid ""
-"The recipient email address is the email address of the contact person that is stored in onOffice enterprise edition.\n"
-"\t\t \tIf it is not set, the contact request is sent to the fallback address."
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:294
+msgid "Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email."
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:308
@@ -763,12 +778,17 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:390
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:404
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:402
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:416
 msgid "Add language"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:463
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:429
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:439
+msgid "Add custom label language"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:497
 msgid "Module"
 msgstr ""
 
@@ -843,6 +863,10 @@ msgstr ""
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:71
 msgid "Subject (optional)"
+msgstr ""
+
+#: plugin/Model/InputModelBuilder/InputModelBuilderCustomLabel.php:67
+msgid "Custom Label"
 msgstr ""
 
 #: plugin/Model/InputModelBuilder/InputModelBuilderDefaultValue.php:81
