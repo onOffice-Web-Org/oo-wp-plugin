@@ -50,7 +50,7 @@ abstract class FormModelBuilder
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
-    const ORDER_OF_TEMPLATES_FOLDER = [
+	const ORDER_OF_TEMPLATES_FOLDER = [
 		"theme" => 1,
 		"plugin" => 2,
 		"included" => 3,

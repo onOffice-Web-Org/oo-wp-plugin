@@ -134,4 +134,26 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::CreateInputModelTemplate
+	 */
+	public function testCreateInputModelTemplate()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataDetailViewHandler = new DataDetailViewHandler($pWPOptionsWrapper);
+		$this->_pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($row);
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue', 'readTemplatePaths'])
+			->getMock();
+		$pInstance->expects($this->exactly(1))
+			->method('readTemplatePaths');
+		$pInstance->generate('test');
+
+		$pInputModelDB = $pInstance->createInputModelTemplate();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'templateList');
+	}
 }
