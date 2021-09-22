@@ -51,9 +51,9 @@ abstract class FormModelBuilder
 	private $_pFieldnames = null;
 
 	const ORDER_OF_TEMPLATES_FOLDER = [
-		"theme" => 1,
-		"plugin" => 2,
-		"included" => 3,
+		"Personalized (Theme)" => 1,
+		"Personalized (Plugin)" => 2,
+		"Included" => 3,
 	];
 
 	/**
@@ -129,35 +129,35 @@ abstract class FormModelBuilder
 			.'/onoffice-theme/templates/'.$directory.'/'.$pattern.'.php');
 		
 		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles, $templateThemeFiles);
-		$templates = array();
+		$templateFolderData = array();
 
 		$plugin_name = basename(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php'));
-		foreach ($templatesAll as $value) {
-			$file = substr(strrchr($value, "/"), 1);
-			if(strpos($value, 'themes') !== false) {
-				$value = __String::getNew($value)->replace(get_template_directory().'/', '');
-				$folderOrder = self::ORDER_OF_TEMPLATES_FOLDER['theme'];
-				$templates[$folderOrder]['path'][$value] = $file;
-				$templates[$folderOrder]['title'] = 'Personalized (Theme)';
-				$templates[$folderOrder]['folder'] = '/onoffice-theme/templates/' . $directory . '/';
-			}else{
-				$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
-				if (strpos($value, 'onoffice-personalized') !== false) {
-					$folderOrder = self::ORDER_OF_TEMPLATES_FOLDER['plugin'];
-					$templates[$folderOrder]['path'][$value] = $file;
-					$templates[$folderOrder]['title'] = 'Personalized (Plugin)';
-					$templates[$folderOrder]['folder'] = 'onoffice-personalized/templates/' . $directory . '/';
+		foreach ($templatesAll as $filePath) {
+			$fileName = substr(strrchr($filePath, "/"), 1);
+			if (strpos($filePath, 'themes') !== false) {
+				$filePath = __String::getNew($filePath)->replace(get_template_directory() . '/', '');
+				$templateTitle = 'Personalized (Theme)';
+				$shortPath = '/onoffice-theme/templates/' . $directory . '/';
+			} else {
+				$filePath = __String::getNew($filePath)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
+				if (strpos($filePath, 'onoffice-personalized') !== false) {
+					$templateTitle = 'Personalized (Plugin)';
+					$shortPath = 'onoffice-personalized/templates/' . $directory . '/';
 				} else {
-					$folderOrder = self::ORDER_OF_TEMPLATES_FOLDER['included'];
-					$templates[$folderOrder]['path'][$value] = $file;
-					$templates[$folderOrder]['title'] = 'Included';
-					$templates[$folderOrder]['folder'] = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
+					$templateTitle = 'Included';
+					$shortPath = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
 				}
 			}
+			$folderOrder = self::ORDER_OF_TEMPLATES_FOLDER[$templateTitle];
+			$templatePathGroupByFolder[$templateTitle][$filePath] = $fileName;
+
+			$templateFolderData[$folderOrder]['path'] = $templatePathGroupByFolder[$templateTitle];
+			$templateFolderData[$folderOrder]['title'] = $templateTitle;
+			$templateFolderData[$folderOrder]['folder'] = $shortPath;
 		}
 
-		ksort($templates);
-		return $templates;
+		ksort($templateFolderData);
+		return $templateFolderData;
 	}
 
 	/**
