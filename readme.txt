@@ -73,6 +73,28 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.4 =
+
+**Changes**
+
+* Removal of the field options "Filterable", "Hidden" and "Reduce values accordings to selected filter" in unit list settings.
+
+= 2.19.3 =
+
+* Removal of contact person's data (Ansprechpartner der Einheit) in unit list.
+
+= 2.19.2 =
+
+**Changes**
+
+* Add missing code from release 2.19.1
+
+= 2.19.1 =
+
+**Changes**
+
+* The estate status is now also displayed in the detail view.
+
 = 2.19.0 =
 
 **Changes**
