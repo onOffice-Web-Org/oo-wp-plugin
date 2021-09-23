@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.5 =
+
+**Changes**
+
+* Configuration of fallback email address is now required in the settings for contact forms.
+
 = 2.19.4 =
 
 **Changes**
