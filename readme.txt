@@ -73,9 +73,21 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.5 =
+
+**Changes**
+
+* Configuration of fallback email address is now required in the settings for contact forms.
+
+= 2.19.4 =
+
+**Changes**
+
+* Removal of the field options "Filterable", "Hidden" and "Reduce values accordings to selected filter" in unit list settings.
+
 = 2.19.3 =
 
-* Removal of conact person's data (Ansprechpartner der Einheit) in unit list.
+* Removal of contact person's data (Ansprechpartner der Einheit) in unit list.
 
 = 2.19.2 =
 
