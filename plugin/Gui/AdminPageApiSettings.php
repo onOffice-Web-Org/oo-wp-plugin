@@ -34,7 +34,7 @@ use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
 use function settings_fields;
 use function submit_button;
-
+use onOffice\WPlugin\Controller\AdminViewController;
 /**
  *
  */
@@ -166,6 +166,7 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
+		$pAdminViewController = new AdminViewController();
 		$labelGoogleBotIndexPdfExpose = __('Index PDF Brochure', 'onoffice-for-wp-websites');
 		$pInputModeGoogleBotIndexPdfExpose = new InputModelOption('onoffice-settings', 'google-bot-index-pdf-expose',
 			$labelGoogleBotIndexPdfExpose, InputModelOption::SETTING_TYPE_BOOLEAN);
@@ -183,7 +184,7 @@ class AdminPageApiSettings
 		]);
 		$pInputModeTitleAndDescription->setValue(get_option($pInputModeTitleAndDescription->getIdentifier()));
 		$pInputModeTitleAndDescription->setDescriptionRadioTextHTML([
-			__('This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.', 'onoffice-for-wp-websites'),
+			__(add_action('admin_notices', [$pAdminViewController, 'general_admin_notice_SEO']).'This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.', 'onoffice-for-wp-websites'),
 			__("This plugin will not modify the title and description. This enables other plugins to manage those tags.<details>
   <summary>Available custom fields</summary>
   <p>When this option is active, the plugin makes the following custom 

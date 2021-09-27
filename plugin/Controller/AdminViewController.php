@@ -60,7 +60,7 @@ use function wp_create_nonce;
 use function wp_enqueue_script;
 use function wp_enqueue_style;
 use function wp_localize_script;
-
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 /**
  *
  */
@@ -395,6 +395,21 @@ class AdminViewController
 				.'credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites')), $loginCredentialsLink);
 
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		}
+	}
+
+	public function general_admin_notice_SEO(){
+		$pWPOptionWrapper = new WPOptionWrapperDefault();
+		if ( count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0 && $pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {
+			echo  '<div class="notice notice-warning is-dismissible">
+             <p>The onOffice plugin has detected an active SEO plugin: Yoast SEO. You
+currently have configured the onOffice plugin to fill out the title and
+description of the detail page, which can lead to conflicts with the SEO
+plugin.
+We recommend that you go the the onOffice plugin settings and configure the
+onOffice plugin to not modify the title and description. This allows you to
+manage the title and description with your active SEO plugin.</p>
+         </div>';
 		}
 	}
 }

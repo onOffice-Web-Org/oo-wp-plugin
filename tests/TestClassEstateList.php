@@ -60,7 +60,7 @@ use onOffice\WPlugin\Types\FieldTypes;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
-
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 /**
  *
  * @url http://www.onoffice.de
@@ -120,6 +120,8 @@ class TestClassEstateList
 		$pDataView = new DataListView(1, 'test');
 		$pEstateList = new EstateList($pDataView);
 		$this->assertInstanceOf(EstateListEnvironmentDefault::class, $pEstateList->getEnvironment());
+		$pWPOptionWrapper = new WPOptionWrapperDefault();
+		$this->assertInstanceOf(WPOptionWrapperDefault::class, $pWPOptionWrapper);
 	}
 
 
