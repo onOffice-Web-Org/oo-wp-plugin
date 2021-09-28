@@ -41,7 +41,7 @@ class InputFieldRadioRenderer
 	 *
 	 * @param string $name
 	 * @param string $value
-	 *
+	 * @param array  $descriptions
 	 */
 
 	public function __construct($name, $value,$descriptions = [])
@@ -86,7 +86,6 @@ class InputFieldRadioRenderer
 				.'" value="'.esc_html($this->getValue()).'"'
 				.$this->renderAdditionalAttributes()
 				.'>';
-//				.($this->_descriptionTextHTML !== '' ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '');
 		}
 	}
 }
