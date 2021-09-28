@@ -44,9 +44,9 @@ class InputFieldRadioRenderer
 	 *
 	 */
 
-	public function __construct($name, $value,$description= [])
+	public function __construct($name, $value,$descriptions = [])
 	{
-		$this->_descriptionTextHtmls = $description;
+		$this->_descriptionTextHtmls = $descriptions;
 		parent::__construct('radio', $name, $value);
 	}
 

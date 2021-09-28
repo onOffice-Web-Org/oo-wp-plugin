@@ -187,20 +187,20 @@ class AdminPageApiSettings
 			__(add_action('admin_notices', [$pAdminViewController, 'general_admin_notice_SEO']).'This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.', 'onoffice-for-wp-websites'),
 			__("This plugin will not modify the title and description. This enables other plugins to manage those tags.
 			<details>
-  				<summary>Available custom fields</summary>
-  				<p>When this option is active, the plugin makes the following custom 
-					fields available in the detail view. These custom fields can be used in 
-					SEO plugins to fill out the title and description with the information 
-					of the currently shown estate. For information on how to use custom fields
-					consult you SEO plugin's documentation.<br>
-    				These custom fields are only available in the detail view and on no other page.<br>
-    				- Title (onoffice_title)<br>
-    				- Description (onoffice_description)<br>
-    				- Place (onoffice_place)<br>
-    				- Postal code (onoffice_postal_code)<br>
-    				- Property class (onoffice_property_class)<br>
-    				- Marketing method (onoffice_marketing_method)<br>
-    				- Data Record Ref No. (onoffice_id)</p>
+				<summary>Available custom fields</summary>
+					<p>When this option is active, the plugin makes the following custom 
+						fields available in the detail view. These custom fields can be used in 
+						SEO plugins to fill out the title and description with the information 
+						of the currently shown estate. For information on how to use custom fields
+						consult you SEO plugin's documentation.<br>
+						These custom fields are only available in the detail view and on no other page.<br>
+						- Title (onoffice_title)<br>
+						- Description (onoffice_description)<br>
+						- Place (onoffice_place)<br>
+						- Postal code (onoffice_postal_code)<br>
+						- Property class (onoffice_property_class)<br>
+						- Marketing method (onoffice_marketing_method)<br>
+						- Data Record Ref No. (onoffice_id)</p>
 			</details>", 'onoffice-for-wp-websites'),
 		]);
 
