@@ -37,10 +37,10 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		if($currentEstate["onoffice-settings-title-and-description"])
 		{
 			?>
-            <head>
-                <title><?php echo $currentEstate["objekttitel"]; ?></title>
-                <meta name="description" content="<?php echo $currentEstate["objektbeschreibung"]; ?>">
-            </head>
+			<head>
+				<title><?php echo $currentEstate["objekttitel"]; ?></title>
+				<meta name="description" content="<?php echo $currentEstate["objektbeschreibung"]; ?>">
+			</head>
 			<?php
 		}
 		?>
