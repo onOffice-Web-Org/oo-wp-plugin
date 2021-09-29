@@ -70,6 +70,16 @@ msgstr "Adressen"
 msgid "Estates"
 msgstr "Landgoederen"
 
+#: plugin/Controller/AdminViewController.php:405
+msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
+"You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin."
+"We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description."
+"This allows you to manage the title and description with your active SEO plugin."
+msgstr "De onOffice-plug-in heeft een actieve SEO-plug-in gedetecteerd: Yoast SEO."
+"Jij hebben momenteel de onOffice-plug-in geconfigureerd om de titel in te vullen en beschrijving van de detailpagina, wat kan leiden tot conflicten met de SEO-plug-in."
+"We raden u aan naar de instellingen van de onOffice-plug-in te gaan en de onOffice plug-in om de titel en beschrijving niet te wijzigen."
+"Dit stelt u in staat om beheer de titel en beschrijving met uw actieve SEO-plug-in."
+
 #: plugin/Controller/AdminViewController.php:172
 #: plugin/Gui/AdminPageFormList.php:95
 msgid "Forms"
@@ -269,9 +279,73 @@ msgstr "Google Kaarten"
 msgid "Index PDF brochure"
 msgstr "Index PDF brochure"
 
-#: plugin/Gui/AdminPageApiSettings.php:161
-msgid "Google Bot"
-msgstr "Google Bot"
+#: plugin/Gui/AdminPageApiSettings.php:210
+msgid "SEO"
+msgstr "SEO"
+
+#: plugin/Gui/AdminPageApiSettings.php:187
+msgid "This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin."
+msgstr "Deze plug-in vult de titel en beschrijving in met de informatie van het getoonde landgoed. Deze optie wordt aanbevolen als u geen SEO-plug-in gebruikt."
+
+#: plugin/Gui/AdminPageApiSettings.php:188
+msgid "This plugin will not modify the title and description. This enables other plugins to manage those tags."
+msgstr "Deze plug-in zal de titel en beschrijving niet wijzigen. Hierdoor kunnen andere plug-ins die tags beheren."
+
+#: plugin/Gui/AdminPageApiSettings.php:190
+msgid "Available custom fields"
+msgstr "Beschikbare aangepaste velden"
+
+#: plugin/Gui/AdminPageApiSettings.php:191
+msgid "When this option is active, the plugin makes the following custom fields available in the detail view."
+"These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate."
+"For information on how to use custom fields consult you SEO plugin's documentation."
+msgstr "Wanneer deze optie actief is, maakt de plug-in het volgende aangepast: velden beschikbaar in de detailweergave."
+"Deze aangepaste velden kunnen worden gebruikt in: SEO-plug-ins om de titel en beschrijving met de informatie in te vullen van het momenteel getoonde landgoed."
+"Voor informatie over het gebruik van aangepaste velden raadpleeg de documentatie van uw SEO-plug-in."
+
+#: plugin/Gui/AdminPageApiSettings.php:194
+msgid "These custom fields are only available in the detail view and on no other page."
+msgstr "Deze aangepaste velden zijn alleen beschikbaar in de detailweergave en op geen enkele andere pagina."
+
+#: plugin/Gui/AdminPageApiSettings.php:195
+msgid "Title (onoffice_title)"
+msgstr "Titel (onoffice_title)"
+
+#: plugin/Gui/AdminPageApiSettings.php:196
+msgid "Description (onoffice_description)"
+msgstr "Beschrijving (onoffice_description)"
+
+#: plugin/Gui/AdminPageApiSettings.php:197
+msgid "Place (onoffice_place)"
+msgstr "Luogo  (onoffice_place)"
+
+#: plugin/Gui/AdminPageApiSettings.php:198
+msgid "Postal code (onoffice_postal_code)"
+msgstr "Postcode (onoffice_postal_code)"
+
+#: plugin/Gui/AdminPageApiSettings.php:199
+msgid "Property class (onoffice_property_class)"
+msgstr "Eigenschapsklasse (onoffice_property_class)"
+
+#: plugin/Gui/AdminPageApiSettings.php:200
+msgid "Marketing method (onoffice_marketing_method)"
+msgstr "Marketing methode: (onoffice_marketing_method)"
+
+#: plugin/Gui/AdminPageApiSettings.php:201
+msgid "Data Record Ref No. (onoffice_id)"
+msgstr "Ref.-nr. gegevensrecord (onoffice_id)"
+
+#: plugin/Gui/AdminPageApiSettings.php:177
+msgid "Title and description"
+msgstr "Titel en beschrijving"
+
+#: plugin/Gui/AdminPageApiSettings.php:182
+msgid "Fill out"
+msgstr "Invullen"
+
+#: plugin/Gui/AdminPageApiSettings.php:183
+msgid "Do not modify"
+msgstr "Niet wijzigen"
 
 #: plugin/Gui/AdminPageApiSettings.php:188
 msgid "The keys are OK."

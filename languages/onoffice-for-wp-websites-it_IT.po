@@ -71,6 +71,16 @@ msgstr "Indirizzi"
 msgid "Estates"
 msgstr "Tenute"
 
+#: plugin/Controller/AdminViewController.php:405
+msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
+"You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin."
+"We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description."
+"This allows you to manage the title and description with your active SEO plugin."
+msgstr "Il plugin onOffice ha rilevato un plugin SEO attivo: Yoast SEO."
+"Voi attualmente hanno configurato il plugin onOffice per compilare il titolo e descrizione della pagina di dettaglio, che può portare a conflitti con il plugin SEO."
+"Ti consigliamo di andare alle impostazioni del plugin onOffice e configurare il plugin onOffice per non modificare il titolo e la descrizione."
+"Questo ti permette di gestisci il titolo e la descrizione con il tuo plugin SEO attivo."
+
 #: plugin/Controller/AdminViewController.php:172
 #: plugin/Gui/AdminPageFormList.php:95
 msgid "Forms"
@@ -271,9 +281,73 @@ msgstr "Google Maps"
 msgid "Index PDF brochure"
 msgstr "Index PDF brochure"
 
-#: plugin/Gui/AdminPageApiSettings.php:161
-msgid "Google Bot"
-msgstr "Google Bot"
+#: plugin/Gui/AdminPageApiSettings.php:210
+msgid "SEO"
+msgstr "SEO"
+
+#: plugin/Gui/AdminPageApiSettings.php:187
+msgid "This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin."
+msgstr "Questo plugin compilerà il titolo e la descrizione con le informazioni della proprietà mostrata. Questa opzione è consigliata se non si utilizza un plug-in SEO."
+
+#: plugin/Gui/AdminPageApiSettings.php:188
+msgid "This plugin will not modify the title and description. This enables other plugins to manage those tags."
+msgstr "Questo plugin non modificherà il titolo e la descrizione. Ciò consente ad altri plugin di gestire quei tag."
+
+#: plugin/Gui/AdminPageApiSettings.php:190
+msgid "Available custom fields"
+msgstr "Campi personalizzati disponibili"
+
+#: plugin/Gui/AdminPageApiSettings.php:191
+msgid "When this option is active, the plugin makes the following custom fields available in the detail view."
+"These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate."
+"For information on how to use custom fields consult you SEO plugin's documentation."
+msgstr "Quando questa opzione è attiva, il plugin effettua le seguenti personalizzazioni campi disponibili nella visualizzazione dei dettagli."
+"Questi campi personalizzati possono essere utilizzati in Plugin SEO per compilare il titolo e la descrizione con le informazioni della tenuta attualmente mostrata."
+"Per informazioni su come utilizzare i campi personalizzati consulta la documentazione del tuo plugin SEO."
+
+#: plugin/Gui/AdminPageApiSettings.php:194
+msgid "These custom fields are only available in the detail view and on no other page."
+msgstr "Questi campi personalizzati sono disponibili solo nella visualizzazione dei dettagli e in nessun'altra pagina."
+
+#: plugin/Gui/AdminPageApiSettings.php:195
+msgid "Title (onoffice_title)"
+msgstr "Titolo (onoffice_title)"
+
+#: plugin/Gui/AdminPageApiSettings.php:196
+msgid "Description (onoffice_description)"
+msgstr "Descrizione (onoffice_description)"
+
+#: plugin/Gui/AdminPageApiSettings.php:197
+msgid "Place (onoffice_place)"
+msgstr "Luogo  (onoffice_place)"
+
+#: plugin/Gui/AdminPageApiSettings.php:198
+msgid "Postal code (onoffice_postal_code)"
+msgstr "Codice postale (onoffice_postal_code)"
+
+#: plugin/Gui/AdminPageApiSettings.php:199
+msgid "Property class (onoffice_property_class)"
+msgstr "Classe di proprietà (onoffice_property_class)"
+
+#: plugin/Gui/AdminPageApiSettings.php:200
+msgid "Marketing method (onoffice_marketing_method)"
+msgstr "Metodo di marketing (onoffice_marketing_method)"
+
+#: plugin/Gui/AdminPageApiSettings.php:201
+msgid "Data Record Ref No. (onoffice_id)"
+msgstr "N. rif. record dati  (onoffice_id)"
+
+#: plugin/Gui/AdminPageApiSettings.php:177
+msgid "Title and description"
+msgstr "Titolo e descrizione"
+
+#: plugin/Gui/AdminPageApiSettings.php:182
+msgid "Fill out"
+msgstr "Compila"
+
+#: plugin/Gui/AdminPageApiSettings.php:183
+msgid "Do not modify"
+msgstr "Non modificare"
 
 #: plugin/Gui/AdminPageApiSettings.php:188
 msgid "The keys are OK."

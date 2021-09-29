@@ -71,6 +71,16 @@ msgstr "Direcciones"
 msgid "Estates"
 msgstr "Propiedades"
 
+#: plugin/Controller/AdminViewController.php:405
+msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
+"You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin."
+"We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description."
+"This allows you to manage the title and description with your active SEO plugin."
+msgstr "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
+"You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin."
+"We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description."
+"This allows you to manage the title and description with your active SEO plugin."
+
 #: plugin/Controller/AdminViewController.php:172
 #: plugin/Gui/AdminPageFormList.php:95
 msgid "Forms"
@@ -271,9 +281,73 @@ msgstr "Google Maps"
 msgid "Index PDF brochure"
 msgstr "Index PDF brochure"
 
-#: plugin/Gui/AdminPageApiSettings.php:161
-msgid "Google Bot"
-msgstr "Google Bot"
+#: plugin/Gui/AdminPageApiSettings.php:210
+msgid "SEO"
+msgstr "SEO"
+
+#: plugin/Gui/AdminPageApiSettings.php:187
+msgid "This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin."
+msgstr "This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin."
+
+#: plugin/Gui/AdminPageApiSettings.php:188
+msgid "This plugin will not modify the title and description. This enables other plugins to manage those tags."
+msgstr "This plugin will not modify the title and description. This enables other plugins to manage those tags."
+
+#: plugin/Gui/AdminPageApiSettings.php:190
+msgid "Available custom fields"
+msgstr "Available custom fields"
+
+#: plugin/Gui/AdminPageApiSettings.php:191
+msgid "When this option is active, the plugin makes the following custom fields available in the detail view."
+"These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate."
+"For information on how to use custom fields consult you SEO plugin's documentation."
+msgstr "When this option is active, the plugin makes the following custom fields available in the detail view."
+"These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate."
+"For information on how to use custom fields consult you SEO plugin's documentation."
+
+#: plugin/Gui/AdminPageApiSettings.php:194
+msgid "These custom fields are only available in the detail view and on no other page."
+msgstr "These custom fields are only available in the detail view and on no other page."
+
+#: plugin/Gui/AdminPageApiSettings.php:195
+msgid "Title (onoffice_title)"
+msgstr "Title (onoffice_title)"
+
+#: plugin/Gui/AdminPageApiSettings.php:196
+msgid "Description (onoffice_description)"
+msgstr "Description (onoffice_description)"
+
+#: plugin/Gui/AdminPageApiSettings.php:197
+msgid "Place (onoffice_place)"
+msgstr "Place (onoffice_place)"
+
+#: plugin/Gui/AdminPageApiSettings.php:198
+msgid "Postal code (onoffice_postal_code)"
+msgstr "Postal code (onoffice_postal_code)"
+
+#: plugin/Gui/AdminPageApiSettings.php:199
+msgid "Property class (onoffice_property_class)"
+msgstr "Property class (onoffice_property_class)"
+
+#: plugin/Gui/AdminPageApiSettings.php:200
+msgid "Marketing method (onoffice_marketing_method)"
+msgstr "Marketing method (onoffice_marketing_method)"
+
+#: plugin/Gui/AdminPageApiSettings.php:201
+msgid "Data Record Ref No. (onoffice_id)"
+msgstr "Data Record Ref No. (onoffice_id)"
+
+#: plugin/Gui/AdminPageApiSettings.php:177
+msgid "Title and description"
+msgstr "Title and description"
+
+#: plugin/Gui/AdminPageApiSettings.php:182
+msgid "Fill out"
+msgstr "Fill out"
+
+#: plugin/Gui/AdminPageApiSettings.php:183
+msgid "Do not modify"
+msgstr "Do not modify"
 
 #: plugin/Gui/AdminPageApiSettings.php:188
 msgid "The keys are OK."

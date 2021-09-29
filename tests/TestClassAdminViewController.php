@@ -117,4 +117,17 @@ class TestClassAdminViewController
 		];
 		$this->assertEquals($expectedResult, $result);
 	}
+
+	/**
+	 * @depends testOnInit
+	 * @param AdminViewController $pAdminViewController
+	 */
+	public function testGeneralAdminNoticeSEO(AdminViewController $pAdminViewController)
+	{
+		global $wp_filter;
+		$wp_filter = [];
+		$pAdminViewController->add_ajax_actions();
+		$this->assertCount(4, $wp_filter);
+	}
+
 }
