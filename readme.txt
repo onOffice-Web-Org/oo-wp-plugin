@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.6 =
+
+**Changes**
+
+* Adjusted the hint text, label and position of the email-address field. 
+
 = 2.19.5 =
 
 **Changes**
