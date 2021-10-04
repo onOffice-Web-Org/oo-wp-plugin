@@ -151,6 +151,49 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				echo '</div>';
 			} ?>
 
+			<?php $estateOguloLinks = $pEstates->getEstateLinks('ogulo');
+			foreach ($estateOguloLinks as $oguloLink) {
+				echo '<div class="oo-video"><a href="'.esc_attr($oguloLink['url']).'" title="'.esc_attr($oguloLink['title']).'">'
+					.esc_html($oguloLink['title']).'</a></div>';
+			}
+
+			$oguloOptions = array('width' => 560, 'height' => 315); // optional
+
+			foreach ($pEstates->getLinkEmbedPlayers('ogulo', $oguloOptions) as $linkInfos) {
+				echo '<div class="oo-video"><a href="' . esc_attr($linkInfos['url']) . '"><h2>'.esc_html($linkInfos['title']).'</h2></a>';
+				echo $linkInfos['player'];
+				echo '</div>';
+			} ?>
+
+			<?php $estateObjectLinks = $pEstates->getEstateLinks('object');
+			foreach ($estateObjectLinks as $objectLink) {
+				echo '<div class="oo-video"><a href="' . esc_attr($objectLink['url']) . '" title="' . esc_attr($objectLink['title']) . '">'
+					. esc_html($objectLink['title']) . '</a></div>';
+			}
+
+			$objectOptions = array('width' => 560, 'height' => 315); // optional
+
+            foreach ($pEstates->getLinkEmbedPlayers('object', $objectOptions) as $linkInfos) {
+            echo '<div class="oo-video"><h2>'.esc_html($linkInfos['title']).'</h2>';
+                echo $linkInfos['player'];
+                echo '</div>';
+            } ?>
+
+			<?php $estateLinks = $pEstates->getEstateLinks('link');
+			foreach ($estateLinks as $link) {
+				echo '<div class="oo-video"><a href="' . esc_attr($link['url']) . '" title="' . esc_attr($link['title']) . '">'
+					. esc_html($link['title']) . '</a></div>';
+			}
+
+            $linkOptions = array('width' => 560, 'height' => 315); // optional
+
+            foreach ($pEstates->getLinkEmbedPlayers('link', $linkOptions) as $linkInfos) {
+            echo '<div class="oo-video"><h2>'.esc_html($linkInfos['title']).'</h2>';
+                echo $linkInfos['player'];
+                echo '</div>';
+            } ?>
+
+
 		</div>
 		<?php
 		if (get_option('onoffice-pagination-paginationbyonoffice')){ ?>

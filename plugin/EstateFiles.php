@@ -32,6 +32,7 @@ use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Types\ImageTypes;
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\Utility\__String;
 use function esc_url;
@@ -76,6 +77,7 @@ class EstateFiles
 			if (!$pAPIClientAction->getResultStatus()) {
 				throw new HttpFetchNoResultException();
 			}
+
 			$this->collectEstateFiles($pAPIClientAction->getResultRecords());
 		}
 	}
@@ -151,6 +153,31 @@ class EstateFiles
 	public function getEstateMovieLinks($estateId): array
 	{
 		$callback = MovieLinkTypes::class.'::isMovieLink';
+		return $this->getFilesOfTypeByCallback($estateId, $callback);
+	}
+
+
+	/**
+	 *
+	 * @param int $estateId
+	 * @return array
+	 *
+	 */
+
+	public function getEstateLinks($estateId, $type = ''): array
+	{
+		switch ($type) {
+			case 'ogulo':
+				$callback = LinksTypes::class.'::isOguloLink';
+				break;
+			case 'object':
+				$callback = LinksTypes::class.'::isObjectLink';
+				break;
+			case 'link':
+				$callback = LinksTypes::class.'::isLink';
+				break;
+		}
+
 		return $this->getFilesOfTypeByCallback($estateId, $callback);
 	}
 

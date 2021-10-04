@@ -107,6 +107,7 @@ class EstateList
 	 */
 	public function __construct(DataView $pDataView, EstateListEnvironment $pEnvironment = null)
 	{
+		add_action('admin_notices', [$this, 'displayAPIError']);
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
@@ -117,6 +118,18 @@ class EstateList
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
+	}
+
+	public function displayAPIError()
+	{
+		$class = 'notice notice-error';
+		$label = __('API token and secret', 'onoffice-for-wp-websites');
+		$loginCredentialsLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+		/* translators: %s will be replaced with the translation of 'API token and secret'. */
+		$message = sprintf(esc_html(__('It looks like you did not enter any valid API '
+			.'credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites')), $loginCredentialsLink);
+
+		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 	}
 
 	/**
@@ -206,7 +219,6 @@ class EstateList
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
-
 		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
@@ -269,6 +281,7 @@ class EstateList
 		}
 
 		$requestParams += $this->addExtraParams();
+		unset($requestParams['data'][19]);
 
 		return $requestParams;
 	}
@@ -384,7 +397,6 @@ class EstateList
 		if (false === $currentRecord) {
 			return false;
 		}
-
 		$this->_currentEstate['id'] = $currentRecord['id'];
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
@@ -453,7 +465,6 @@ class EstateList
 		$estateId = $this->_currentEstate['id'];
 		$estateFiles = [];
 		$estateImages = $this->_pEstateFiles->getEstatePictures($estateId);
-
 		foreach ($estateImages as $image) {
 			if (null !== $types && !in_array($image['type'], $types, true)) {
 				continue;

@@ -44,7 +44,7 @@ abstract class LinksTypes
 
 	/** */
 	const FILE_TYPE_OGULO_LINK = 'Ogulo-Link';
-	const FILE_TYPE_OBJECT_LINK = 'Object-Link';
+	const FILE_TYPE_OBJECT_LINK = 'Objekt-Link';
 	const FILE_TYPE_LINK = 'Link';
 
 	/** @var string[] */
@@ -62,8 +62,30 @@ abstract class LinksTypes
 	 *
 	 */
 
+	static public function isOguloLink(string $type): bool
+	{
+		return $type === self::FILE_TYPE_OGULO_LINK;
+	}
+
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
+	static public function isObjectLink(string $type): bool
+	{
+		return $type === self::FILE_TYPE_OBJECT_LINK;
+	}
+
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
 	static public function isLink(string $type): bool
 	{
-		return in_array($type, self::$_linkTypes, true);
+		return $type === self::FILE_TYPE_LINK;
 	}
 }
