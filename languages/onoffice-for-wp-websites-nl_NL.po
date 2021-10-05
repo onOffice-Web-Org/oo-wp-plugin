@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2021-08-20T11:25:28+07:00\n"
+"POT-Creation-Date: 2021-10-05T13:21:12+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -131,7 +131,7 @@ msgid "Search Criteria"
 msgstr "Zoekcriteria"
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:182
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:159
+#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:167
 msgid "Form Specific Fields"
 msgstr "Vorm-specifieke velden"
 
@@ -398,7 +398,7 @@ msgstr "Downloadbare documenten"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:150
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:187
+#: plugin/Gui/AdminPageFormSettingsContact.php:195
 msgid "Geo Fields"
 msgstr "Geo Velden"
 
@@ -434,7 +434,7 @@ msgid "Records"
 msgstr "Verslagen"
 
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
-#: plugin/Gui/AdminPageFormSettingsContact.php:103
+#: plugin/Gui/AdminPageFormSettingsContact.php:106
 msgid "Form Specific Options"
 msgstr "Vorm-specifieke opties"
 
@@ -907,20 +907,26 @@ msgid ""
 msgstr ""
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:75
+#, fuzzy
+#| msgid "Check for Duplicates"
+msgid "Check for Duplicates"
+msgstr "Controleer op duplicaten"
+
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:77
 msgid "Create Address"
 msgstr "Adres aanmaken"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:77
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:79
 msgid "Create Search Profile"
 msgstr ""
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:79
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:81
 #, fuzzy
 #| msgid "Create Address"
 msgid "Create Address and Property"
 msgstr "Adres aanmaken"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:81
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:83
 msgid "Subject (optional)"
 msgstr "Onderwerp (facultatief)"
 

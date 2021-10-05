@@ -65,6 +65,9 @@ class AdminPageFormSettingsContact
 	private $_showCheckDuplicates = false;
 
 	/** @var bool */
+	private $_showCheckDuplicatesInterestOwner = false;
+
+	/** @var bool */
 	private $_showNewsletterCheckbox = false;
 
 	/** @var bool */
@@ -122,6 +125,11 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
+			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
+		if ($this->_showCheckDuplicatesInterestOwner) {
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -239,6 +247,10 @@ class AdminPageFormSettingsContact
 	/** @param bool $showCheckDuplicates */
 	public function setShowCheckDuplicates(bool $showCheckDuplicates)
 		{ $this->_showCheckDuplicates = $showCheckDuplicates; }
+
+	/** @param bool $showCheckDuplicatesInterestOwner */
+	public function setShowCheckDuplicatesInterestOwner(bool $showCheckDuplicatesInterestOwner)
+		{ $this->_showCheckDuplicatesInterestOwner = $showCheckDuplicatesInterestOwner; }
 
 	/** @param bool $showNewsletterCheckbox */
 	public function setShowNewsletterCheckbox(bool $showNewsletterCheckbox)

@@ -44,6 +44,9 @@ class InputModelConfigurationFormContact
 		InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES => [
 			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
 		],
+		InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER => [
+			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
+		],
 		InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS => [
 			self::KEY_HTMLTYPE => InputModelOption::HTML_TYPE_CHECKBOX,
 		],
@@ -71,6 +74,8 @@ class InputModelConfigurationFormContact
 			[self::KEY_LABEL] = __('Newsletter', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES]
 			[self::KEY_LABEL] = __('Check for Duplicates (override existing address if the email is the same)', 'onoffice-for-wp-websites');
+		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER]
+			[self::KEY_LABEL] = __('Check for Duplicates', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS]
 			[self::KEY_LABEL] = __('Create Address', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEINTEREST]

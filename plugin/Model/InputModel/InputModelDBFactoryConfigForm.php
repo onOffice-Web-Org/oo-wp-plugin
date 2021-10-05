@@ -57,6 +57,9 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_CHECKDUPLICATES = 'formCheckDuplicates';
 
 	/** */
+	const INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER = 'formCheckDuplicatesInterestOwner';
+
+	/** */
 	const INPUT_FORM_REQUIRES_CAPTCHA = 'formRequiresCaptcha';
 
 	/** */
@@ -126,6 +129,10 @@ class InputModelDBFactoryConfigForm
 			self::KEY_FIELD => 'limitresults',
 		],
 		self::INPUT_FORM_CHECKDUPLICATES => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'checkduplicates',
+		],
+		self::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'checkduplicates',
 		],

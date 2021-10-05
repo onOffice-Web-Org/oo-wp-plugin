@@ -119,7 +119,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowSearchCriteriaFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCreateInterest(true);
-				$pAdminPage->setShowCheckDuplicates(true);
+				$pAdminPage->setShowCheckDuplicatesInterestOwner(true);
 				$pAdminPage->setShowGeoPositionSettings(true);
 				break;
 			case Form::TYPE_OWNER:
@@ -127,7 +127,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowEstateFields(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowCreateOwner(true);
-				$pAdminPage->setShowCheckDuplicates(true);
+				$pAdminPage->setShowCheckDuplicatesInterestOwner(true);
 				$pAdminPage->setShowMessageInput(true);
 				break;
 			case Form::TYPE_CONTACT:
