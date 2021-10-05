@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\API;
 
+use onOffice\WPlugin\Controller\Exception\ExceptionPrettyPrintable;
+use function __;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -30,28 +33,18 @@ namespace onOffice\WPlugin\API;
  *
  */
 
-class APIClientExceptionFactory
+class APIClientUserRightsException
+	extends ApiClientException
+	implements ExceptionPrettyPrintable
 {
 	/**
 	 *
-	 * @param APIClientActionGeneric $pAPIClientAction
-	 * @return ApiClientException
+	 * @return string
 	 *
 	 */
 
-	public function createExceptionByAPIClientAction(APIClientActionGeneric $pAPIClientAction): ApiClientException
+	public function printFormatted(): string
 	{
-		$pApiError = new APIError();
-		$code = $pAPIClientAction->getErrorCode();
-
-		if ($pApiError->isCredentialError($code)) {
-			return new APIClientCredentialsException($pAPIClientAction);
-		} elseif ($code === APIError::USER_RIGHTS_ERROR) {
-			return new APIClientUserRightsException($pAPIClientAction);
-		} elseif ($code === 500) {
-			return new APIEmptyResultException($pAPIClientAction);
-		}
-
-		return new ApiClientException($pAPIClientAction);
+		return __('The onOffice plugin received an error from onOffice enterprise.', 'onoffice-for-wp-websites');
 	}
 }

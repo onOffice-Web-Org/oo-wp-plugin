@@ -43,6 +43,7 @@ class APIError
 	const OAUTH_RTOKEN_ACCESS_REVOKED = 48;
 	const WRONG_SECRET = 49;
 	const HMAC_INVALID = 137;
+	const USER_RIGHTS_ERROR = 193;
 
 
 	/**

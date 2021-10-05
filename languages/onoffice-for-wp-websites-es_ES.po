@@ -1059,3 +1059,15 @@ msgstr "Persona de contacto: "
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documentos"
+
+#: plugin/Controller/AdminViewController.php:401
+msgid "The onOffice plugin received an error from onOffice enterprise."
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:402
+msgid "Please open onOffice enterprise and go the API user's \"Rights\" settings. Ensure that the option \"Queries only possible in user context / User ID must be passed with each request\" is not activated as it can only be active for onOffice. Marketplace products and not for this plugin."
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:403
+msgid "If deactivating that option does not solve the error, please contact web-support@onoffice.de."
+msgstr ""

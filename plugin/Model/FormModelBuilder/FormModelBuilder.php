@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\API\APIClientUserRightsException;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\FormModel;
@@ -97,7 +98,7 @@ abstract class FormModelBuilder
 
 			$resultLabel = array_column($fieldnames, 'label');
 			$result = array_combine(array_keys($fieldnames), $resultLabel);
-		} catch (APIClientCredentialsException $pCredentialsException) {
+		} catch (APIClientCredentialsException | APIClientUserRightsException $pCredentialsException) {
 			$result = [];
 		}
 
@@ -165,7 +166,7 @@ abstract class FormModelBuilder
 				$fieldNames = $this->_pFieldnames->getFieldList($module);
 			}
 
-		} catch (APIClientCredentialsException $pCredentialsException) {}
+		} catch (APIClientCredentialsException | APIClientUserRightsException $pCredentialsException) {}
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
@@ -186,7 +187,7 @@ abstract class FormModelBuilder
 		try {
 			$pFilterCall = new FilterCall($module);
 			return $pFilterCall->getFilters();
-		} catch (APIClientCredentialsException $pCredentialsException) {
+		} catch (APIClientCredentialsException | APIClientUserRightsException $pCredentialsException) {
 			return [];
 		}
 	}
@@ -204,7 +205,7 @@ abstract class FormModelBuilder
 			$pTemplateCall = new TemplateCall();
 			$pTemplateCall->loadTemplates();
 			return $pTemplateCall->getTemplates();
-		} catch (APIClientCredentialsException $pException) {
+		} catch (APIClientCredentialsException | APIClientUserRightsException $pException) {
 			return [];
 		}
 	}
