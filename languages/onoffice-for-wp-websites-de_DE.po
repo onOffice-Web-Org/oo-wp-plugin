@@ -721,7 +721,7 @@ msgid "Hidden"
 msgstr "Unsichtbar"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:181
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:343
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:362
 msgid "Reduce values according to selected filter"
 msgstr "Werte durch gewählten Filter reduzieren"
 
@@ -775,31 +775,49 @@ msgstr "Formulierung der Sortierrichtungen"
 msgid "Unit List"
 msgstr "Einheitenliste"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:206
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:204
 msgid "Form"
 msgstr "Formular"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:218
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:216
 msgid "Form Name"
 msgstr "Formularname"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:237
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:235
 msgid "Type of Form: "
 msgstr "Formularart: "
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:256
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:254
 msgid ", Embed Code: "
 msgstr ", Embed Code: "
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:268
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:266
 msgid "Recipient's E-Mail Address"
 msgstr "E-Mail-Adresse des Empfängers"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:275
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:273
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:291
 msgid "john.doe@example.com"
 msgstr "max.mustermann@beispiel.com"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:289
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:284
+#, fuzzy
+#| msgid "Fallback's E-Mail Address"
+msgid "Fallback E-Mail Address"
+msgstr "Fallback-Adresse(optiona)"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:292
+msgid ""
+"The recipient email address is the email address of the contact person that "
+"is stored in onOffice enterprise edition.\n"
+"\t\t \tIf it is not set, the contact request is sent to the fallback address."
+msgstr ""
+"Die Anfrage wird per E-Mail an den Ansprechpartner der Immobilie "
+"verschickt.\n"
+"\t\t \tSollte es zu Problemen beim Versand kommen, wird die hier angegebene "
+"Adresse verwendet."
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:308
 msgid "(won't work until set up globally)"
 msgstr "(funktioniert erst nach der Einrichtung)"
 
@@ -1110,3 +1128,9 @@ msgstr "Ansprechpartner"
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Dokumente"
+
+#~ msgid "Don't show archived estates"
+#~ msgstr "Archivierte Objekte nicht anzeigen"
+
+#~ msgid "Don't show reference estates"
+#~ msgstr "Referenzobjekte nicht anzeigen"

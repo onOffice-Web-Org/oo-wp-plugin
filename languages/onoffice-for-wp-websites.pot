@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-10-05T13:21:12+07:00\n"
+"POT-Creation-Date: 2021-09-16T12:00:22+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -286,6 +286,10 @@ msgstr ""
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
 msgstr ""
 
+#: plugin/Gui/AdminPageApiSettings.php:262
+msgid "Save changes and clear API cache"
+msgstr ""
+
 #: plugin/Gui/AdminPageApiSettings.php:274
 msgid "The cache was cleaned."
 msgstr ""
@@ -431,8 +435,8 @@ msgid "Add Language"
 msgstr ""
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:281
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:388
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:415
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:407
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:434
 msgid "Choose Language"
 msgstr ""
 
@@ -746,10 +750,19 @@ msgid "Recipient's E-Mail Address"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:275
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:293
 msgid "john.doe@example.com"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:289
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:286
+msgid "Email address"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:294
+msgid "Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email."
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:308
 msgid "(won't work until set up globally)"
 msgstr ""
 

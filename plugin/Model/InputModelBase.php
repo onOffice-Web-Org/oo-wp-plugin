@@ -60,6 +60,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_CHOSEN = 'chosen';
 
+	/** */
+	const HTML_TYPE_NUMBER = 'number';
+
 	/** @var string */
 	private $_name = null;
 
@@ -83,6 +86,9 @@ abstract class InputModelBase
 
 	/** @var string */
 	private $_placeholder = null;
+
+	/** @var string */
+	private $_hint = null;
 
 	/** @var string */
 	private $_id = null;
@@ -173,6 +179,14 @@ abstract class InputModelBase
 	/** @param string $placeholder */
 	public function setPlaceholder($placeholder)
 		{ $this->_placeholder = $placeholder; }
+
+	/** @return string */
+	public function getHint()
+	{ return $this->_hint; }
+
+	/** @param string $hint */
+	public function setHint($hint)
+	{ $this->_hint = $hint; }
 
 	/** @param string $id */
 	public function setId($id)
