@@ -34,7 +34,7 @@ class DataFormConfigurationInterest
 	extends DataFormConfiguration
 {
 	/** @var bool */
-	private $_createInterest = false;
+	private $_createInterest = true;
 
 
 	/**

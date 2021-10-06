@@ -34,7 +34,7 @@ class DataFormConfigurationOwner
 	extends DataFormConfiguration
 {
 	/** @var bool */
-	private $_createOwner = false;
+	private $_createOwner = true;
 
 
 	/**
