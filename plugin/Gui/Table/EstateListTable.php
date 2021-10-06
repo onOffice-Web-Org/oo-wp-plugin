@@ -109,7 +109,7 @@ class EstateListTable extends ListTable
 		$pRecordRead->addColumn('name', 'shortcode');
 		$pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites')");
 
-		$this->setItems($pRecordRead->getRecords());
+		$this->setItems($pRecordRead->getRecordsSortedAlphabetically());
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args([

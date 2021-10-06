@@ -72,6 +72,33 @@ class RecordManagerReadForm
 		return $this->getFoundRows();
 	}
 
+
+    /**
+     *
+     * @return object[]
+     *
+     */
+
+    public function getRecordsSortedAlphabetically()
+    {
+        $prefix = $this->getTablePrefix();
+        $pWpDb = $this->getWpdb();
+        $columns = implode(', ', $this->getColumns());
+        $join = implode("\n", $this->getJoins());
+        $where = "(".implode(") AND (", $this->getWhere()).")";
+        $sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
+				FROM {$prefix}oo_plugin_forms
+				{$join}
+				WHERE {$where}
+				ORDER BY `name` ASC
+				LIMIT {$this->getOffset()}, {$this->getLimit()}";
+        $this->setFoundRows($pWpDb->get_results($sql, OBJECT));
+        $this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
+
+        return $this->getFoundRows();
+    }
+
+
 	/**
 	 * @return object
 	 * @throws UnknownFormException

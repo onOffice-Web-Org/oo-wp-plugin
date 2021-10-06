@@ -79,7 +79,7 @@ class AddressListTable
 		$pRecordRead->addColumn('name');
 		$pRecordRead->addColumn('name', 'shortcode');
 
-		$this->setItems($pRecordRead->getRecords());
+		$this->setItems($pRecordRead->getRecordsSortedAlphabetically());
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args([
