@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\API\APIClientUserRightsException;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
@@ -81,11 +82,25 @@ abstract class AdminPageAjax
 					.'Please go back and review your %s.', 'onoffice-for-wp-websites'), $loginCredentialsLink), 'onOffice plugin');
 			} catch (APIClientUserRightsException $pUserRightsException) {
 				$class = 'notice notice-error';
-				$message_01 = sprintf(esc_html(__('The onOffice plugin received an error from onOffice enterprise.','onoffice-for-wp-websites')));
-				$message_02 = sprintf(esc_html(__('Please open onOffice enterprise and go the API user\'s "Rights" settings. Ensure that the option "Queries only possible in user context / User ID must be passed with each request" is not activated as it can only be active for onOffice. Marketplace products and not for this plugin.','onoffice-for-wp-websites')));
-				$message_03 = sprintf(esc_html(__('If deactivating that option does not solve the error, please contact web-support@onoffice.de.','onoffice-for-wp-websites')));
+				$message_01 = sprintf(esc_html(__("The onOffice plugin received an error from onOffice enterprise.","onoffice-for-wp-websites")));
+				$message_02 = sprintf(esc_html(__("Please open onOffice enterprise and go the API user's \"Rights\" settings. Ensure that the option \"Queries only possible in user context / User ID must be passed with each request\" is not activated as it can only be active for onOffice. Marketplace products and not for this plugin.","onoffice-for-wp-websites")));
+				$message_03 = sprintf(esc_html(__("If deactivating that option does not solve the error, please contact web-support@onoffice.de.","onoffice-for-wp-websites")));
 
 				printf('<div class="%1$s"><p>%2$s</p><p>%3$s</p><p>%4$s</p></div>', esc_attr($class), esc_html($message_01), esc_html($message_02), esc_html($message_03));
+				wp_die();
+			}
+			catch (ApiClientException $pApiClientException) {
+				$class = 'notice notice-error';
+				$errorCode = $pApiClientException->getApiClientAction()->getErrorCode();
+				$statusMessage = $pApiClientException->getApiClientAction()->getStatusMessage();
+				$message_01 = sprintf(esc_html(__("The onOffice plugin encountered an error. Please help us fix it by contacting web-support@onoffice.de and sending the following information:","onoffice-for-wp-websites")));
+				$message_02 = sprintf(esc_html(__("> Technical information:","onoffice-for-wp-websites")));
+				/* translators: %s will be replaced with error code from API response */
+				$message_03 = sprintf(esc_html(__("Error code: %s","onoffice-for-wp-websites")), $errorCode);
+				/* translators: %s will be replaced with status message from API response */
+				$message_04 = sprintf(esc_html(__("Status message: %s","onoffice-for-wp-websites")), $statusMessage);
+
+				printf('<details class="%1$s"><summary>%2$s</summary><p>%3$s</p><p>%4$s</p><p>%5$s</p></details>', esc_attr($class), esc_html($message_01), esc_html($message_02), esc_html($message_03), esc_html($message_04));
 				wp_die();
 			}
 		}

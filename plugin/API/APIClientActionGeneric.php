@@ -123,6 +123,15 @@ class APIClientActionGeneric
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getStatusMessage(): string
+	{
+		$resultApi = $this->getResult();
+		return $resultApi['status']['message'] ?? "";
+	}
+
+	/**
 	 * @return array
 	 * @throws ApiClientException
 	 */

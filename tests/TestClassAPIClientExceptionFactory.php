@@ -30,6 +30,7 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIClientExceptionFactory;
+use onOffice\WPlugin\API\APIClientUserRightsException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\API\APIError;
 use WP_UnitTestCase;
@@ -72,6 +73,10 @@ class TestClassAPIClientExceptionFactory
 
 		$this->setReturnCode(2);
 		$this->assertInstanceOf(ApiClientException::class,
+			$pFactory->createExceptionByAPIClientAction($this->_pApiClientAction));
+
+		$this->setReturnCode(APIError::USER_RIGHTS_ERROR);
+		$this->assertInstanceOf(APIClientUserRightsException::class,
 			$pFactory->createExceptionByAPIClientAction($this->_pApiClientAction));
 	}
 

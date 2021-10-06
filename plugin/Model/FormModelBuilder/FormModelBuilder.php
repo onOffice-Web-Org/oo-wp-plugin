@@ -98,7 +98,7 @@ abstract class FormModelBuilder
 
 			$resultLabel = array_column($fieldnames, 'label');
 			$result = array_combine(array_keys($fieldnames), $resultLabel);
-		} catch (APIClientCredentialsException | APIClientUserRightsException $pCredentialsException) {
+		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pCredentialsException) {
 			$result = [];
 		}
 
@@ -166,7 +166,7 @@ abstract class FormModelBuilder
 				$fieldNames = $this->_pFieldnames->getFieldList($module);
 			}
 
-		} catch (APIClientCredentialsException | APIClientUserRightsException $pCredentialsException) {}
+		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pCredentialsException) {}
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
@@ -187,7 +187,7 @@ abstract class FormModelBuilder
 		try {
 			$pFilterCall = new FilterCall($module);
 			return $pFilterCall->getFilters();
-		} catch (APIClientCredentialsException | APIClientUserRightsException $pCredentialsException) {
+		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pCredentialsException) {
 			return [];
 		}
 	}
@@ -205,7 +205,7 @@ abstract class FormModelBuilder
 			$pTemplateCall = new TemplateCall();
 			$pTemplateCall->loadTemplates();
 			return $pTemplateCall->getTemplates();
-		} catch (APIClientCredentialsException | APIClientUserRightsException $pException) {
+		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pException) {
 			return [];
 		}
 	}

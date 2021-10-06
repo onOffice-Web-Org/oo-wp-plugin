@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui\Table;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\API\APIClientUserRightsException;
 use onOffice\WPlugin\Controller\Exception\UnknownFilterException;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\FilterCall;
@@ -188,6 +189,8 @@ class EstateListTable extends ListTable
 			}
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$filterName = __('(Needs valid API credentials)', 'onoffice-for-wp-websites');
+		} catch (APIClientUserRightsException $pCredentialsException) {
+			$filterName = __('(The onOffice plugin received an error from onOffice enterprise.)', 'onoffice-for-wp-websites');
 		} catch (UnknownFilterException $pFilterException) {
 			/* translators: %s will be replaced with a number. */
 			$filterName = sprintf(__('(Unknown Filter (ID: %s))', 'onoffice-for-wp-websites'),

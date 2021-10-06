@@ -23,6 +23,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\API\APIClientUserRightsException;
 use onOffice\WPlugin\Controller\Exception\UnknownFilterException;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\DataView\UnknownViewException;
@@ -98,6 +99,23 @@ class TestClassLogger
 			->getMock();
 		$pException = new APIClientCredentialsException($pApiClientAction);
 		$expectation = '<big><strong>Please configure your onOffice API credentials first!</strong></big>';
+
+		$this->assertEquals($expectation, $this->_pLogger->logErrorAndDisplayMessage($pException));
+	}
+
+
+	/**
+	 *
+	 */
+	public function testLogErrorAndDisplayMessageAPIClientUserRightsException()
+	{
+		wp_get_current_user()->add_cap('edit_pages');
+
+		$pApiClientAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$pException = new APIClientUserRightsException($pApiClientAction);
+		$expectation = '<big><strong>The onOffice plugin received an error from onOffice enterprise.</strong></big>';
 
 		$this->assertEquals($expectation, $this->_pLogger->logErrorAndDisplayMessage($pException));
 	}

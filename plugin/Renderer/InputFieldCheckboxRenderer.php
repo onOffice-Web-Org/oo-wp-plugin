@@ -25,6 +25,7 @@ use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\API\APIClientUserRightsException;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -94,7 +95,7 @@ class InputFieldCheckboxRenderer
 			$pFieldsCollectionBuilder
 				->addFieldsAddressEstate($pFieldsCollection)
 				->addFieldsSearchCriteria($pFieldsCollection);
-		} catch (APIClientCredentialsException | APIClientUserRightsException $pEx) {}
+		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pEx) {}
 		return $pFieldsCollection;
 	}
 
