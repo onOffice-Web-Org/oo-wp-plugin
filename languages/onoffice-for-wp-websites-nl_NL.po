@@ -270,8 +270,8 @@ msgid "Index PDF brochure"
 msgstr "Index PDF brochure"
 
 #: plugin/Gui/AdminPageApiSettings.php:161
-msgid "Google Bot"
-msgstr "Google Bot"
+msgid "Search engine"
+msgstr "Search engine"
 
 #: plugin/Gui/AdminPageApiSettings.php:188
 msgid "The keys are OK."
