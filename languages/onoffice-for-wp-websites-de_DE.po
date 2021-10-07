@@ -1092,12 +1092,30 @@ msgstr "Dokumente"
 
 #: plugin/Controller/AdminViewController.php:401
 msgid "The onOffice plugin received an error from onOffice enterprise."
-msgstr ""
+msgstr "Das onOffice-Plugin hat einen Fehler von onOffice enterprise erhalten."
 
 #: plugin/Controller/AdminViewController.php:402
 msgid "Please open onOffice enterprise and go the API user's \"Rights\" settings. Ensure that the option \"Queries only possible in user context / User ID must be passed with each request\" is not activated as it can only be active for onOffice. Marketplace products and not for this plugin."
-msgstr ""
+msgstr "Bitte öffnen Sie onOffice enterprise und gehen Sie zu den \"Rechte\"-Einstellungen des API-Benutzers. Stellen Sie sicher, dass die Option \"Abfragen nur im Benutzerkontext möglich / Benutzer-ID muss bei jeder Anfrage übergeben werden\" nicht aktiviert ist, da sie nur für onOffice aktiv sein kann. Marketplace-Produkte und nicht für dieses Plugin."
 
 #: plugin/Controller/AdminViewController.php:403
 msgid "If deactivating that option does not solve the error, please contact web-support@onoffice.de."
-msgstr ""
+msgstr "Wenn das Deaktivieren dieser Option den Fehler nicht behebt, wenden Sie sich bitte an web-support@onoffice.de."
+
+#: plugin/Controller/AdminViewController.php:411
+msgid "The onOffice plugin encountered an error. Please help us fix it by contacting web-support@onoffice.de and sending the following information:"
+msgstr "Beim onOffice-Plugin ist ein Fehler aufgetreten. Bitte helfen Sie uns, das Problem zu beheben, indem Sie sich an web-support@onoffice.de wenden und die folgenden Informationen senden:"
+
+#: plugin/Controller/AdminViewController.php:412
+msgid "> Technical information:"
+msgstr "> Technische Informationen:"
+
+#. translators: %s will be replaced with error code from API response
+#: plugin/Controller/AdminViewController.php:414
+msgid "Error code: %s"
+msgstr "Fehlercode: %s"
+
+#. translators: %s will be replaced with status message from API response
+#: plugin/Controller/AdminViewController.php:416
+msgid "Status message: %s"
+msgstr "Statusnachricht: %s"

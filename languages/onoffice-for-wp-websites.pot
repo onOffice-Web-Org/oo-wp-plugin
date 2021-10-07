@@ -1063,3 +1063,21 @@ msgstr ""
 #: plugin/Controller/AdminViewController.php:403
 msgid "If deactivating that option does not solve the error, please contact web-support@onoffice.de."
 msgstr ""
+
+#: plugin/Controller/AdminViewController.php:411
+msgid "The onOffice plugin encountered an error. Please help us fix it by contacting web-support@onoffice.de and sending the following information:"
+msgstr ""
+
+#: plugin/Controller/AdminViewController.php:412
+msgid "> Technical information:"
+msgstr ""
+
+#. translators: %s will be replaced with error code from API response
+#: plugin/Controller/AdminViewController.php:414
+msgid "Error code: %s"
+msgstr ""
+
+#. translators: %s will be replaced with status message from API response
+#: plugin/Controller/AdminViewController.php:416
+msgid "Status message: %s"
+msgstr ""

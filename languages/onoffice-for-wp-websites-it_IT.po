@@ -1064,12 +1064,30 @@ msgstr "Documenti"
 
 #: plugin/Controller/AdminViewController.php:401
 msgid "The onOffice plugin received an error from onOffice enterprise."
-msgstr ""
+msgstr "Il plugin onOffice ha ricevuto un errore da onOffice enterprise."
 
 #: plugin/Controller/AdminViewController.php:402
 msgid "Please open onOffice enterprise and go the API user's \"Rights\" settings. Ensure that the option \"Queries only possible in user context / User ID must be passed with each request\" is not activated as it can only be active for onOffice. Marketplace products and not for this plugin."
-msgstr ""
+msgstr "Apri onOffice enterprise e vai alle impostazioni \"Diritti\" dell'utente API. Assicurati che l'opzione \"Le query possibili solo nel contesto utente / ID utente devono essere passati con ogni richiesta\" non sia attivata in quanto può essere attiva solo per onOffice. Prodotti del mercato e non per questo plugin."
 
 #: plugin/Controller/AdminViewController.php:403
 msgid "If deactivating that option does not solve the error, please contact web-support@onoffice.de."
-msgstr ""
+msgstr "Se la disattivazione di tale opzione non risolve l'errore, contattare web-support@onoffice.de."
+
+#: plugin/Controller/AdminViewController.php:411
+msgid "The onOffice plugin encountered an error. Please help us fix it by contacting web-support@onoffice.de and sending the following information:"
+msgstr "Il plugin onOffice ha riscontrato un errore. Aiutaci a risolverlo contattando web-support@onoffice.de e inviando le seguenti informazioni:"
+
+#: plugin/Controller/AdminViewController.php:412
+msgid "> Technical information:"
+msgstr "> Informazioni tecniche:"
+
+#. translators: %s will be replaced with error code from API response
+#: plugin/Controller/AdminViewController.php:414
+msgid "Error code: %s"
+msgstr "Codice di errore: %s"
+
+#. translators: %s will be replaced with status message from API response
+#: plugin/Controller/AdminViewController.php:416
+msgid "Status message: %s"
+msgstr "Messaggio di stato: %s"

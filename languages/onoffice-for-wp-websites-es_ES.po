@@ -1062,12 +1062,30 @@ msgstr "Documentos"
 
 #: plugin/Controller/AdminViewController.php:401
 msgid "The onOffice plugin received an error from onOffice enterprise."
-msgstr ""
+msgstr "El complemento onOffice recibió un error de onOffice Enterprise."
 
 #: plugin/Controller/AdminViewController.php:402
 msgid "Please open onOffice enterprise and go the API user's \"Rights\" settings. Ensure that the option \"Queries only possible in user context / User ID must be passed with each request\" is not activated as it can only be active for onOffice. Marketplace products and not for this plugin."
-msgstr ""
+msgstr "Abra onOffice Enterprise y vaya a la configuración de \"Derechos\" del usuario de la API. Asegúrese de que la opción \"Las consultas solo son posibles en el contexto del usuario / ID de usuario debe pasarse con cada solicitud \" no esté activada, ya que solo puede estar activa para onOffice. Productos de Marketplace y no para este complemento."
 
 #: plugin/Controller/AdminViewController.php:403
 msgid "If deactivating that option does not solve the error, please contact web-support@onoffice.de."
-msgstr ""
+msgstr "Si la desactivación de esa opción no soluciona el error, póngase en contacto con web-support@onoffice.de."
+
+#: plugin/Controller/AdminViewController.php:411
+msgid "The onOffice plugin encountered an error. Please help us fix it by contacting web-support@onoffice.de and sending the following information:"
+msgstr "El complemento onOffice encontró un error. Ayúdenos a solucionarlo poniéndose en contacto con web-support@onoffice.de y enviando la siguiente información:"
+
+#: plugin/Controller/AdminViewController.php:412
+msgid "> Technical information:"
+msgstr "> Información técnica:"
+
+#. translators: %s will be replaced with error code from API response
+#: plugin/Controller/AdminViewController.php:414
+msgid "Error code: %s"
+msgstr "Código de error:% s"
+
+#. translators: %s will be replaced with status message from API response
+#: plugin/Controller/AdminViewController.php:416
+msgid "Status message: %s"
+msgstr "Mensaje de estado:% s"
