@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.19.7 =
+
+**Changes**
+
+* When indexing for a PDF-Exposé is turned of, that's now applied to all search engines.
+
 = 2.19.6 =
 
 **Changes**
