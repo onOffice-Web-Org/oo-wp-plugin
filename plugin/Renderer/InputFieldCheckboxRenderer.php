@@ -95,7 +95,9 @@ class InputFieldCheckboxRenderer
 			$pFieldsCollectionBuilder
 				->addFieldsAddressEstate($pFieldsCollection)
 				->addFieldsSearchCriteria($pFieldsCollection);
-		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pEx) {}
+		} catch (APIClientCredentialsException  $pCredentialsException) {
+		} catch (APIClientUserRightsException $pUserRightsException) {
+		} catch (ApiClientException $pApiClientException) {}
 		return $pFieldsCollection;
 	}
 

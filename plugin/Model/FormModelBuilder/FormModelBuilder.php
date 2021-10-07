@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\API\APIClientUserRightsException;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\FilterCall;
 use onOffice\WPlugin\Model\FormModel;
@@ -98,7 +99,11 @@ abstract class FormModelBuilder
 
 			$resultLabel = array_column($fieldnames, 'label');
 			$result = array_combine(array_keys($fieldnames), $resultLabel);
-		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pCredentialsException) {
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			$result = [];
+		} catch (APIClientUserRightsException $pUserRightsException) {
+			$result = [];
+		} catch (ApiClientException $pApiClientException) {
 			$result = [];
 		}
 
@@ -166,7 +171,9 @@ abstract class FormModelBuilder
 				$fieldNames = $this->_pFieldnames->getFieldList($module);
 			}
 
-		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pCredentialsException) {}
+		} catch (APIClientCredentialsException $pCredentialsException) {
+		} catch (APIClientUserRightsException $pUserRightsException) {
+		} catch (ApiClientException $pApiClientException) {}
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
 
@@ -187,7 +194,11 @@ abstract class FormModelBuilder
 		try {
 			$pFilterCall = new FilterCall($module);
 			return $pFilterCall->getFilters();
-		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pCredentialsException) {
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			return [];
+		} catch (APIClientUserRightsException $pUserRightsException) {
+			return [];
+		} catch (ApiClientException $pApiClientException) {
 			return [];
 		}
 	}
@@ -205,7 +216,11 @@ abstract class FormModelBuilder
 			$pTemplateCall = new TemplateCall();
 			$pTemplateCall->loadTemplates();
 			return $pTemplateCall->getTemplates();
-		} catch (APIClientCredentialsException | APIClientUserRightsException | ApiClientException $pException) {
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			return [];
+		} catch (APIClientUserRightsException $pUserRightsException) {
+			return [];
+		} catch (ApiClientException $pApiClientException) {
 			return [];
 		}
 	}
