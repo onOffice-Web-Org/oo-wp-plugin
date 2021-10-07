@@ -701,7 +701,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 				SET `createaddress` = 1
 				WHERE `form_type` = 'interest' OR `form_type` = 'owner'";
 
-        $this->_pWPDB->query($this->_pWPDB->prepare($sql));
+		$this->_pWPDB->query($sql);
 	}
 
 
