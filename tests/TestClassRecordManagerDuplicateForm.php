@@ -171,20 +171,31 @@ class TestClassRecordManagerDuplicateForm
 			'name'    => 'list view root - Copy 1',
 		];
 
+		$colData = ['col1'. 'cal2'];
+
 		$this->_pWPDB->expects( $this->once() )
-		             ->method( 'get_row' )
-		             ->willReturnOnConsecutiveCalls( $recordRootCopy );
+					 ->method( 'get_row' )
+					 ->willReturnOnConsecutiveCalls( $recordRootCopy );
+
+		$this->_pWPDB->expects($this->exactly(4))
+			->method('get_col')
+			->willReturnOnConsecutiveCalls(
+				$colData,
+				$colData,
+				$colData,
+				$colData
+			);
 
 		$this->_pWPDB->expects( $this->exactly( 6 ) )
-		             ->method( 'get_results' )
-		             ->willReturnOnConsecutiveCalls(
-			             $fieldConfigRecordOutputArr,
-			             $fieldConfigRecordOutputArr,
-			             $sampleDataObj,
-			             $sampleDataArr,
-			             $sampleDataObj,
-			             $sampleDataArr
-		             );
+					 ->method( 'get_results' )
+					 ->willReturnOnConsecutiveCalls(
+						 $fieldConfigRecordOutputArr,
+						 $fieldConfigRecordOutputArr,
+						 $sampleDataObj,
+						 $sampleDataArr,
+						 $sampleDataObj,
+						 $sampleDataArr
+					 );
 
 		$this->_pWPDB->insert_id = 23;
 		$this->_pSubject->duplicateByName('list view root');
