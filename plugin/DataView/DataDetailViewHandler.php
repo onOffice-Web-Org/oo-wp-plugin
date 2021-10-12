@@ -108,7 +108,6 @@ class DataDetailViewHandler
 		$pDataDetailView->setExpose($row['expose'] ?? '');
 		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
 		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
-		$pDataDetailView->setShowStatus($row['show_status'] ?? false);
 		return $pDataDetailView;
 	}
 }

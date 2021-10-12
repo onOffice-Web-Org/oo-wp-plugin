@@ -245,12 +245,4 @@ class EstateDetail
 	{
 		$this->_estateId = $estateId;
 	}
-
-	/**
-	 * @return bool
-	 */
-	public function getShowEstateMarketingStatus(): bool
-	{
-		return $this->getDataView()->getShowStatus();
-	}
 }

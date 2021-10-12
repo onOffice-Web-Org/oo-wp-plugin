@@ -69,8 +69,7 @@ class DataDetailView
 		'objektbeschreibung',
 		'lage',
 		'ausstatt_beschr',
-		'sonstige_angaben',
-		'vermarktungsstatus'
+		'sonstige_angaben'
 	];
 
 	/** @var string[] */
@@ -101,8 +100,7 @@ class DataDetailView
 	/** @var int */
 	private $_pageId = 0;
 
-	/** @var bool */
-	private $_showStatus = 0;
+
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
@@ -220,13 +218,5 @@ class DataDetailView
 	/** @return bool */
 	public function getRandom(): bool
 		{  return false; }
-
-	/** @return bool */
-	public function getShowStatus(): bool
-	{ return (bool) $this->_showStatus; }
-
-	/** @param bool $status */
-	public function setShowStatus(bool $status)
-	{ $this->_showStatus = $status; }
 
 }
