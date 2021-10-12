@@ -260,3 +260,10 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	text-align: left;
 	margin-top: 0;
 }
+#adminmenu .wp-menu-image img {
+	height: 20px !important;
+	text-align: center !important;
+	line-height: 20px !important;
+	display: block;
+	margin: auto;
+}
