@@ -184,9 +184,11 @@ class RecordManagerDuplicateListViewForm extends RecordManager
 		string $disAllowKey
 	) {
 		foreach ( $formDataRelatedRows as $formDataRelatedRow ) {
-			$formDataRelatedRow[ $relatedKeyId ] = $newInsertDataId;
-			unset( $formDataRelatedRow[ $disAllowKey ] );
-			$this->_pWPDB->insert( $relatedTableName, $formDataRelatedRow );
+			$existingColumns = $this->_pWPDB->get_col("DESC {$relatedTableName}", 0);
+			$formFilterDataRelatedRow = array_intersect_key($formDataRelatedRow, array_flip($existingColumns));
+			$formFilterDataRelatedRow[ $relatedKeyId ] = $newInsertDataId;
+			unset( $formFilterDataRelatedRow[ $disAllowKey ] );
+			$this->_pWPDB->insert( $relatedTableName, $formFilterDataRelatedRow );
 		}
 	}
 }
