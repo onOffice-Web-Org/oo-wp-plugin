@@ -34,7 +34,9 @@ use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
 use function settings_fields;
 use function submit_button;
-
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\API\APIClientCredentialsException;
 /**
  *
  */
@@ -100,7 +102,15 @@ class AdminPageApiSettings
 		$pFormModel->addInputModel($pInputModelApiKey);
 		$pFormModel->setGroupSlug('onoffice-api');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('API settings', 'onoffice-for-wp-websites'));
+
+		$pFieldnames = new Fieldnames(new FieldsCollection());
+
+		try {
+			$pFieldnames->loadLanguage();
+			$pFormModel->setLabel(__('API settings', 'onoffice-for-wp-websites'));
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			$pFormModel->setLabel(__('API settings', 'onoffice-for-wp-websites'));
+		}
 
 		$this->addFormModel($pFormModel);
 	}

@@ -31,7 +31,8 @@ use function is_admin;
 use function set_current_screen;
 use function wp_scripts;
 
-
+use onOffice\WPlugin\SDKWrapper;
+use onOffice\SDK\Cache\onOfficeSDKCache;
 /**
  *
  * @runTestsInSeparateProcesses
@@ -50,6 +51,13 @@ class TestClassAdminViewController
 		$pWPScreen = WP_Screen::get('admin_page_onoffice');
 		$pWPScreen->in_admin('site');
 		set_current_screen($pWPScreen);
+
+		$pSDKWrapper = $this->getMockBuilder(SDKWrapper::class)
+			->getMock();
+		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
+		$pCache->expects($this->once())->method('getHttpResponseByParameterArray');
+		$cacheInstance = [$pCache];
+		$pSDKWrapper->expects($this->once())->method('getCache')->will($this->returnValue($cacheInstance));
 	}
 
 	/**
