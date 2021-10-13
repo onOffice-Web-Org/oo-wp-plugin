@@ -118,19 +118,6 @@ class TestClassRecordManagerDuplicateForm
 
 	public function testDuplicateByIds()
 	{
-		$fieldConfigRecordOutputObj = [
-			(object) [
-				'fieldname'            => 'test1',
-				'fieldlabel'           => 'test1',
-				'form_id'              => 23,
-				'order'                => 1,
-				'module'               => '0',
-				'individual_fieldname' => 0,
-				'required'             => 0,
-				'availableOptions'     => 0
-			]
-		];
-
 		$fieldConfigRecordOutputArr = [
 			[
 				'fieldname'            => 'test1',
@@ -171,7 +158,16 @@ class TestClassRecordManagerDuplicateForm
 			'name'    => 'list view root - Copy 1',
 		];
 
-		$colData = ['col1'. 'cal2'];
+		$colData = [
+			'value' . 'locale',
+			'fieldname',
+			'defaults_id',
+			'form_id',
+			'order',
+			'individual_fieldname',
+			'required',
+			'availableOptions'
+		];
 
 		$this->_pWPDB->expects( $this->once() )
 					 ->method( 'get_row' )
@@ -198,6 +194,34 @@ class TestClassRecordManagerDuplicateForm
 					 );
 
 		$this->_pWPDB->insert_id = 23;
+		$this->_pSubject->duplicateByName('list view root');
+	}
+
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFormException
+	 */
+
+	public function testDuplicateByIdsWithoutData()
+	{
+		$recordRootCopy = (object) [
+			'form_id' => 0,
+			'name'    => 'list view root - Copy 1',
+		];
+
+		$this->_pWPDB->expects( $this->once() )
+			->method( 'get_row' )
+			->willReturnOnConsecutiveCalls( $recordRootCopy );
+
+		$this->_pWPDB->expects($this->never())
+			->method('get_col');
+
+		$this->_pWPDB->expects( $this->never() )
+			->method( 'get_results' );
+
+		$this->_pWPDB->insert_id = 0;
 		$this->_pSubject->duplicateByName('list view root');
 	}
 }
