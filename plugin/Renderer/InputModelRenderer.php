@@ -181,6 +181,9 @@ class InputModelRenderer
 					}
 					$pInstance->setValue($pInputModel->getValue());
 				}
+				if ($pInputModel->getHint() != null) {
+					$pInstance->setHint($pInputModel->getHint());
+				}
 
 				break;
 			case InputModelOption::HTML_TYPE_HIDDEN:
@@ -204,6 +207,11 @@ class InputModelRenderer
 				$pInstance->addAdditionalAttribute('class', 'chosen-select');
 				$pInstance->setMultiple($pInputModel->getIsMulti());
 				$pInstance->setSelectedValue($pInputModel->getValue());
+				break;
+
+			case InputModelOption::HTML_TYPE_NUMBER:
+				$pInstance = new InputFieldNumberRenderer($elementName);
+				$pInstance->setValue($pInputModel->getValue());
 				break;
 		}
 
@@ -241,6 +249,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
 			case InputModelOption::HTML_TYPE_TEXT:
 			case InputModelOption::HTML_TYPE_HIDDEN:
+			case InputModelOption::HTML_TYPE_NUMBER:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}

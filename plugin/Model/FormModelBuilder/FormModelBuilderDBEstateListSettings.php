@@ -266,13 +266,17 @@ class FormModelBuilderDBEstateListSettings
 	 *
 	 * @param string $module
 	 * @param string $htmlType
+	 * @param bool $isShow
 	 * @return InputModelDB
 	 *
 	 */
 
-	public function createSortableFieldList($module, $htmlType)
+	public function createSortableFieldList($module, $htmlType, bool $isShow = true): InputModelDB
 	{
 		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
+		if (! $isShow) {
+			return $pSortableFieldsList;
+		}
 		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
 		$pInputModelIsHidden = $this->getInputModelIsHidden();
 		$pInputModelIsAvailableOptions = $this->getInputModelAvailableOptions();

@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use Exception;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -28,13 +30,9 @@ namespace onOffice\WPlugin\Renderer;
  *
  */
 
-class InputFieldTextRenderer
+class InputFieldNumberRenderer
 	extends InputFieldRenderer
 {
-
-	/** @var string */
-	private $_hint = '';
-
 
 	/**
 	 *
@@ -42,14 +40,12 @@ class InputFieldTextRenderer
 	 * @param string $name
 	 * @param string $value
 	 *
+	 * @throws Exception
 	 */
 
-	public function __construct($type, $name, $value = null)
+	public function __construct($name, $value = null)
 	{
-		if (!in_array($type, array('text', 'hidden'))) {
-			throw new \Exception(' wrong type!');
-		}
-		parent::__construct($type, $name, $value);
+		parent::__construct('number', $name, $value);
 	}
 
 
@@ -59,21 +55,9 @@ class InputFieldTextRenderer
 
 	public function render()
 	{
-		$textHtml = '';
-		if (!empty($this->getHint())) {
-			$textHtml = '<p class="hint-fallback-email">' . esc_html($this->getHint()) . '</p>';
-		}
 		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 			.'" value="'.esc_html($this->getValue()).'" id="'.esc_html($this->getGuiId()).'"'
 			.' '.$this->renderAdditionalAttributes()
-			.'>'.$textHtml;
+			.'>';
 	}
-
-	/** @return string */
-	public function getHint()
-	{ return $this->_hint; }
-
-	/** @param string $hint */
-	public function setHint(string $hint)
-	{ $this->_hint = $hint; }
 }
