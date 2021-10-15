@@ -159,7 +159,7 @@ class TestClassRecordManagerDuplicateListViewEstate
 	public function testAppendCountToNameDuplicateByIds()
 	{
 		$recordRootCopy = (object)[
-			'name' => 'list view root - Copy',
+			'name' => 'list view root - Copy 1',
 		];
 		$fieldConfigRecordOutput = [
 			(object)[
