@@ -23,8 +23,12 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use Closure;
 use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
+use Exception;
 use onOffice\WPlugin\Record\RecordManagerDuplicateListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
@@ -190,5 +194,21 @@ class TestClassRecordManagerDuplicateListViewEstate
 		$this->_pSubject->duplicateByIds(22);
 	}
 
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws Exception
+	 */
+
+	public function testConstructWithoutContainer()
+	{
+		$_pSubject = new RecordManagerDuplicateListViewEstate($this->_pWPDB);
+
+		$pClosureReadValues = Closure::bind(function () {
+			return [];
+		}, $_pSubject, RecordManagerDuplicateListViewEstate::class);
+		$this->assertEquals([], $pClosureReadValues());
+	}
 }
 

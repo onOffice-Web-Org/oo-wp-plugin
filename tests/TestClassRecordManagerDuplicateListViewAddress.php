@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use Closure;
 use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
@@ -129,6 +130,22 @@ class TestClassRecordManagerDuplicateListViewAddress
 
 		$this->_pWPDB->insert_id = 22;
 		$this->_pSubject->duplicateByName('list view root');
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws Exception
+	 */
+
+	public function testConstructWithoutContainer()
+	{
+		$_pSubject = new RecordManagerDuplicateListViewAddress($this->_pWPDB);
+
+		$pClosureReadValues = Closure::bind(function () {
+			return [];
+		}, $_pSubject, RecordManagerDuplicateListViewAddress::class);
+		$this->assertEquals([], $pClosureReadValues());
 	}
 }
 

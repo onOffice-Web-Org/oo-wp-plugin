@@ -224,5 +224,22 @@ class TestClassRecordManagerDuplicateForm
 		$this->_pWPDB->insert_id = 0;
 		$this->_pSubject->duplicateByName('list view root');
 	}
+
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws Exception
+	 */
+
+	public function testConstructWithoutContainer()
+	{
+		$_pSubject = new RecordManagerDuplicateListViewForm($this->_pWPDB);
+
+		$pClosureReadValues = \Closure::bind(function () {
+			return [];
+		}, $_pSubject, RecordManagerDuplicateListViewForm::class);
+		$this->assertEquals([], $pClosureReadValues());
+	}
 }
 
