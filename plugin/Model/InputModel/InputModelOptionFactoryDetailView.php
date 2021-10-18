@@ -88,6 +88,9 @@ class InputModelOptionFactoryDetailView
 		],
 		self::INPUT_MOVIE_LINKS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_SHOW_STATUS => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
 		]
 	];
 
