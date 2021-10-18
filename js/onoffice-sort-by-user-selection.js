@@ -13,6 +13,14 @@ jQuery(document).ready(function($) {
             'oopluginlistviews-sortorder'
         ];
 
+        $("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").change(function (){
+            if(!this.checked) {
+                sortbynames.forEach(function(item){
+                    $("#viewrecordsfilter").find("[name="+item+"]").val(null).trigger("chosen:updated");
+                });
+            }
+        });
+
         if ($("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").prop('checked') == true) {
             sortbynames.forEach(function(item){
                 $("#viewrecordsfilter").find("[name="+item+"]").parent().show();

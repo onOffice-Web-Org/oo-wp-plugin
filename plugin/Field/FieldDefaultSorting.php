@@ -55,6 +55,7 @@ class FieldDefaultSorting
 			'verkauft_am',
 			'letzte_aktion',
 			'objektnr_extern',
+			'anzahl_badezimmer'
 		],
 	];
 
