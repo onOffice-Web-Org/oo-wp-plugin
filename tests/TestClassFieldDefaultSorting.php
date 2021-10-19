@@ -77,6 +77,7 @@ class TestClassFieldDefaultSorting
 			'verkauft_am',
 			'letzte_aktion',
 			'objektnr_extern',
+			'anzahl_badezimmer'
 		];
 
 		$this->assertEquals($expectation, $sorting);
