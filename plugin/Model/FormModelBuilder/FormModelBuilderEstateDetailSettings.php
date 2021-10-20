@@ -307,7 +307,6 @@ class FormModelBuilderEstateDetailSettings
 		return $pInputModelShowStatus;
 	}
 
-
 	/**
 	 *
 	 * @return array

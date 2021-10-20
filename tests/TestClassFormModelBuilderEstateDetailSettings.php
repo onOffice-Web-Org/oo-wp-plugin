@@ -134,6 +134,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInputModelDB = $pInstance->createInputModelMovieLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelShowStatus
 	 */
@@ -154,6 +155,5 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInputModelDB = $pInstance->createInputModelShowStatus();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
-
 
 }
