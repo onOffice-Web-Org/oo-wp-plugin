@@ -79,7 +79,7 @@ class PdfDownload
 	public function download(PdfDocumentModel $pModel)
 	{
 		if (!$this->_pWPOptionWrapper->getOption('onoffice-settings-google-bot-index-pdf-expose')) {
-			$this->_pHttpHeadersGeneric->addHeader('X-Robots-Tag: googlebot: noindex, nofollow');
+			$this->_pHttpHeadersGeneric->addHeader('X-Robots-Tag: noindex, nofollow');
 		}
 		$pModelValidated = $this->_pPdfDocumentModelValidator->validate($pModel);
 		$url = $this->_pPdfDocumentFetcher->fetchUrl($pModelValidated);
