@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.0 =
+
+**Changes**
+
+* Allow duplicating of all lists.
+
 = 2.19.7 =
 
 **Changes**
