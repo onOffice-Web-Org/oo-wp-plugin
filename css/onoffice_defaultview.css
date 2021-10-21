@@ -250,6 +250,11 @@
 #oo-similarframe .oo-listobject {
 	width: inherit;
 }
+
+.oo-video .player-title {
+	text-decoration: none;
+	color: #000;
+}
 /* responsive */
 @media only screen and (max-width: 991px) {
 	.oo-listobject, .oo-searchformfield {

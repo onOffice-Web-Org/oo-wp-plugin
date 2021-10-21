@@ -215,11 +215,11 @@ class EstateDetail
 			($type === 'link' && $this->getDataView()->getLinks() === LinksTypes::LINKS_EMBEDDED)
 		) {
 			$links = $this->getEstateFiles()->getEstateLinks($estateId, $type);
-			$pWpEmbed = new WP_Embed();
 			$allowedOptions = array_flip(['width', 'height']);
 			$newOptions = array_intersect_key($options, $allowedOptions);
 			foreach ($links as $linkId => $properties) {
-				$player = $pWpEmbed->shortcode($newOptions, $properties['url']);
+				$player = '<iframe width="' . $newOptions['width'] . '" height="' . $newOptions['height'] . '" src="' . $properties['url'] .'" style="border: none"
+allowfullscreen=""></iframe>';
 				$newProperties = $properties;
 				$newProperties['player'] = $player;
 				$result[$linkId] = $newProperties;
