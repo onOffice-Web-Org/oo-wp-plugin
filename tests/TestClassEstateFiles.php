@@ -110,6 +110,16 @@ class TestClassEstateFiles
 		$this->assertEmpty($this->_pInstance->getEstateMovieLinks(15));
 	}
 
+		/**
+	 * @covers \onOffice\WPlugin\EstateFiles::getEstateLinks
+	 */
+	public function testGetEstateLinks()
+	{
+		$this->assertEmpty($this->_pInstance->getEstateLinks(15, 'ogulo'));
+		$this->assertEmpty($this->_pInstance->getEstateLinks(15, 'object'));
+		$this->assertEmpty($this->_pInstance->getEstateLinks(15, 'link'));
+	}
+
 	/**
 	 * @covers \onOffice\WPlugin\EstateFiles::getEstateFileUrl
 	 */
@@ -119,6 +129,9 @@ class TestClassEstateFiles
 
 		$this->assertEquals(esc_url('https://test.url/image/2.jpg@150x50'),
 			$this->_pInstance->getEstateFileUrl(2, 15, ['width' => 150, 'height' => 50]));
+
+		$this->assertEquals(null,
+			$this->_pInstance->getEstateFileUrl(5, 15));
 	}
 
 	/**

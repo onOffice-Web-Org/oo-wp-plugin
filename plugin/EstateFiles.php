@@ -166,6 +166,8 @@ class EstateFiles
 
 	public function getEstateLinks($estateId, $type = ''): array
 	{
+		$callback = null;
+
 		switch ($type) {
 			case 'ogulo':
 				$callback = LinksTypes::class.'::isOguloLink';
