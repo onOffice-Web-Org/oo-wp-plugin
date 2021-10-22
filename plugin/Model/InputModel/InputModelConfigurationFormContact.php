@@ -79,7 +79,7 @@ class InputModelConfigurationFormContact
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS]
 			[self::KEY_LABEL] = __('Create Address', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEINTEREST]
-			[self::KEY_LABEL] = __('Create Search Profile', 'onoffice-for-wp-websites');
+			[self::KEY_LABEL] = __('Create Address and Search Profile', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_CREATEOWNER]
 			[self::KEY_LABEL] = __('Create Address and Property', 'onoffice-for-wp-websites');
 		$this->_config[InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT]
