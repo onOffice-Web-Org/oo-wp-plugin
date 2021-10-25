@@ -442,7 +442,7 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel = $this->getInputModelDBFactory()->create
 				(InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
-		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE, true);
+		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
 		$arrayGroupPopular = ['erstellt_am', 'letzte_aktion', 'verkauft_am', 'objektnr_extern',
 			'kaufpreis', 'kaltmiete', 'wohnflaeche', 'grundstuecksflaeche', 'gesamtflaeche',
 			'anzahl_zimmer', 'anzahl_badezimmer'];
@@ -494,7 +494,7 @@ class FormModelBuilderDBEstateListSettings
 		if ($values == null) {
 			$values = [];
 		}
-		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE, true);
+		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
 		$defaultValues = [];
 		foreach ($values as $value)	{
 			if (array_key_exists($value, $fieldnames)) {
