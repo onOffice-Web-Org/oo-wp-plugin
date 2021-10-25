@@ -54,6 +54,18 @@ abstract class RecordManager
 	const TABLENAME_FIELDCONFIG_FORMS = 'oo_plugin_form_fieldconfig';
 
 	/** */
+	const TABLENAME_FIELDCONFIG_FORM_DEFAULTS = 'oo_plugin_fieldconfig_form_defaults';
+
+	/** */
+	const TABLENAME_FIELDCONFIG_FORM_DEFAULTS_VALUES = 'oo_plugin_fieldconfig_form_defaults_values';
+
+	/** */
+	const TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS = 'oo_plugin_fieldconfig_form_customs_labels';
+
+	/** */
+	const TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS = 'oo_plugin_fieldconfig_form_translated_labels';
+
+	/** */
 	const TABLENAME_LIST_VIEW_ADDRESS = 'oo_plugin_listviews_address';
 
 	/** */

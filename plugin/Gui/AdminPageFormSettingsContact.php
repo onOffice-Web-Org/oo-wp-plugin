@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Gui;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\InputModel\InputModelConfigurationFormContact;
@@ -86,8 +87,11 @@ class AdminPageFormSettingsContact
 			$values = $pRecordReadManager->getRowById($this->getListViewId());
 			$pInputModelBuilder->setValues($values);
 		}
-
-		$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
+		if ($this->getType() === Form::TYPE_CONTACT) {
+			$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipientContactForm();
+		} else {
+			$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
+		}
 		$pInputModelSubject = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT);
 		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
 		$pFormModelFormSpecific = new FormModel();
