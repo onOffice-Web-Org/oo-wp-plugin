@@ -109,7 +109,7 @@ abstract class InputModelBase
 	private $_labelOnlyValues = [];
 
     /** @var string */
-    private $_descriptionText = [];
+    private $_descriptionTextHTML = [];
 
 	/**
 	 *
@@ -240,11 +240,11 @@ abstract class InputModelBase
 		{ $this->_labelOnlyValues = $labelOnlyValues; }
 
     /** @return string */
-    public function getDescriptionText()
-    	{ return $this->_descriptionText; }
+    public function getDescriptionTextHTML()
+    	{ return $this->_descriptionTextHTML; }
 
-    /** @param string $descriptionText */
-    public function setDescriptionText(string $descriptionText)
-    	{ $this->_descriptionText = $descriptionText; }
+    /** @param string $descriptionTextHTML */
+    public function setDescriptionTextHTML(string $textHTML)
+    	{ $this->_descriptionTextHTML = $textHTML; }
 
 }

@@ -37,11 +37,11 @@ class EstateDetailUrl
 		$urlLsSwitcher = $url;
 
 		if ($estateId !== 0){
-			$arguments = parse_url($url, PHP_URL_QUERY);
+			$urlElements = parse_url($url);
 			$getParameters = [];
 
-			if ($arguments != null) {
-				parse_str($arguments, $getParameters);
+			if (! empty($urlElements['query'])) {
+				parse_str($urlElements['query'], $getParameters);
 			}
 
 			$urlTemp = $estateId;
@@ -50,10 +50,10 @@ class EstateDetailUrl
 				$urlTemp .= $this->getSanitizeTitle($title);
 			}
 
-			if (array_key_exists('lang', $getParameters) && $getParameters['lang'] != null) {
-				$urlLsSwitcher = str_replace('?', $urlTemp.'?', $url);
-			} else {
-				$urlLsSwitcher .= $urlTemp;
+			$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $urlElements['path'] . $urlTemp;
+
+			if (! empty($getParameters)) {
+				$urlLsSwitcher = $urlLsSwitcher . '?' . http_build_query($getParameters);
 			}
 		}
 
