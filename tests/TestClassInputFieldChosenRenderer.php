@@ -84,4 +84,66 @@ class TestClassInputFieldChosenRenderer
 			.'</optgroup>'
 			.'</select>', $output);
 	}
+
+	/**
+	 *
+	 */
+	public function testRenderSelectedValue()
+	{
+		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		$dataValueGroup = [
+			'group' => [
+				'Popular' => [
+					'kaufpreis' => 'Kaufpreis',
+					'kaltmiete' => 'Kaltmiete'
+				]
+			]
+		];
+		$pSubject->setValue($dataValueGroup);
+		$pSubject->setSelectedValue(['kaufpreis']);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer" id="select_1" multiple>'
+			.'<optgroup label="Popular">'
+			.'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
+			.'<option value="kaltmiete" >Kaltmiete</option>'
+			.'</optgroup>'
+			.'</select>', $output);
+	}
+
+	/**
+	 *
+	 */
+	public function testRenderNotGroup()
+	{
+		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		$dataValue = ['kaufpreis' => 'Kaufpreis', 'kaltmiete' => 'Kaltmiete'];
+		$pSubject->setValue($dataValue);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer" id="select_1" multiple>'
+			.'<option value="kaufpreis" >Kaufpreis</option>'
+			.'<option value="kaltmiete" >Kaltmiete</option>'
+			.'</select>', $output);
+	}
+
+	/**
+	 *
+	 */
+	public function testRenderNotGroupSelected()
+	{
+		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		$dataValue = ['kaufpreis' => 'Kaufpreis', 'kaltmiete' => 'Kaltmiete'];
+		$pSubject->setValue($dataValue);
+		$pSubject->setSelectedValue(['kaufpreis']);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer" id="select_1" multiple>'
+			.'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
+			.'<option value="kaltmiete" >Kaltmiete</option>'
+			.'</select>', $output);
+	}
 }

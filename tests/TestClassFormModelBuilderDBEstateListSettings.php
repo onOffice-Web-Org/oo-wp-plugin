@@ -141,6 +141,38 @@ class TestClassFormModelBuilderDBEstateListSettings
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
+	 */
+	public function testCreateInputModelSortByChosenGroupNotPopular()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->getMock();
+
+		$pInstance->method('getOnlyDefaultSortByFields')
+			->with('estate')
+			->willReturn([
+				'data1' => 'Data 1',
+				'data2' => 'Data 2']);
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->with('sortbyuservalues')->willReturn(null);
+
+		$pInputModelDB = $pInstance->createInputModelSortByChosen();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$expectValue = [
+			'group' => [
+				'All' => [
+					'data1' => 'Data 1',
+					'data2' => 'Data 2'
+				]
+			]
+		];
+		$this->assertEquals($expectValue, $pInputModelDB->getValuesAvailable());
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByDefault
 	 */
 	public function testCreateInputModelSortByDefaultWithValue()

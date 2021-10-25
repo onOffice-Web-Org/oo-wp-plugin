@@ -83,7 +83,7 @@ abstract class FormModelBuilder
 	 *
 	 */
 
-	protected function readFieldnames($module, bool $withInactive = false, $isCheckType = false)
+	protected function readFieldnames($module, bool $withInactive = false)
 	{
 		try {
 			$this->_pFieldnames->loadLanguage();

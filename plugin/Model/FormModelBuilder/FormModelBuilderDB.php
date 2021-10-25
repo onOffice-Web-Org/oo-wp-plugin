@@ -123,9 +123,9 @@ abstract class FormModelBuilderDB
 	 *
 	 */
 
-	public function getOnlyDefaultSortByFields($module, $isCheckType = false)
+	public function getOnlyDefaultSortByFields($module)
 	{
-		$fieldnames = $this->readFieldnames($module, false, $isCheckType);
+		$fieldnames = $this->readFieldnames($module, false);
 		$pDefaultSorting = new FieldDefaultSorting();
 		$defaultFields = $pDefaultSorting->getDefaultSortByFields($module);
 		natcasesort($fieldnames);
