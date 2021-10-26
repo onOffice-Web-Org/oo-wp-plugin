@@ -47,11 +47,38 @@ class AdminPageModules
 
 	public function __construct($pageSlug)
 	{
+		$this->addFormModelDetailView($pageSlug);
 		$this->addFormModelFavorites($pageSlug);
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelPagination($pageSlug);
 
 		parent::__construct($pageSlug);
+	}
+
+    /**
+     *
+     * @param string $pageSlug
+     *
+     */
+	private function addFormModelDetailView(string $pageSlug)
+	{
+		$groupSlugView = 'onoffice-detail-view';
+		$showTitleInUrl = __('Show title in URL', 'onoffice-for-wp-websites');
+		$pInputModelShowTitleUrl = new InputModelOption($groupSlugView, 'showTitleUrl',
+			$showTitleInUrl, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModelShowTitleUrl->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowTitleUrl->setValuesAvailable(1);
+		$pInputModelShowTitleUrl->setValue(get_option($pInputModelShowTitleUrl->getIdentifier()) == 1);
+		$pInputModelShowTitleUrl->setDescriptionTextHTML('If this checkbox is selected, the title of the property will be part of the URLs of the detail views.
+		The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used.');
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelShowTitleUrl);
+		$pFormModel->setGroupSlug($groupSlugView);
+		$pFormModel->setPageSlug($pageSlug);
+		$pFormModel->setLabel(__('Detail View URLs', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
 	}
 
 
