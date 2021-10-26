@@ -35,10 +35,10 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 	while ( $currentEstate = $pEstates->estateIterator() ) { ?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
-            <?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
-                <span style="padding:0 15px"><?php echo ucfirst($currentEstate['vermarktungsstatus']); ?></span>
-                <?php unset($currentEstate['vermarktungsstatus']); ?>
-            <?php } ?>
+			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
+				<span style="padding:0 15px"><?php echo ucfirst($currentEstate['vermarktungsstatus']); ?></span>
+				<?php unset($currentEstate['vermarktungsstatus']); ?>
+			<?php } ?>
 		</div>
 		<div class="oo-details-main">
 			<div class="oo-detailsgallery" id="oo-galleryslide">
