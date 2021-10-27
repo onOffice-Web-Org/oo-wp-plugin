@@ -306,11 +306,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 			'radius_active' => 1,
 			'geo_order' => 'street,zip,city,country,radius'
 		);
-		$name = $data['name'];
-		$result = $this->_pWPDB->query("SELECT name from $tableName where name = '$name'" );
-		if (!$result) {
-			$this->_pWPDB->insert($tableName, $data);
-		}
+		$query = "INSERT IGNORE $tableName (name, form_type, template, country_active, zip_active, street_active, radius_active, geo_order)";
+		$query .= "VALUES ('{$data['name']}', '{$data['form_type']}', '{$data['template']}', {$data['country_active']}, {$data['zip_active']}, {$data['street_active']}, {$data['radius_active']}, '{$data['geo_order']}')";
+		$this->_pWPDB->query($query);
 
 		$defaultFormId = $this->_pWPDB->insert_id;
 		$this->installDataQueryFormFieldConfig($defaultFormId);
