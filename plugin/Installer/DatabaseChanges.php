@@ -160,7 +160,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 20) {
-			$this->addColumnContactTypePluginFormTable();
+			dbDelta($this->getQueryAddColumnContactTypePluginFormTable());
 			$dbversion = 21;
 		}
 
@@ -296,19 +296,22 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$template = $templatePathsForm;
 			}
 		}
-		$this->_pWPDB->insert(
-			$tableName,
-			array(
-				'name' => 'Default Form',
-				'form_type' => 'contact',
-				'template' => $template,
-				'country_active' => 1,
-				'zip_active' => 1,
-				'street_active' => 1,
-				'radius_active' => 1,
-				'geo_order' => 'street,zip,city,country,radius'
-			)
+		$data = array(
+			'name' => 'Default Form',
+			'form_type' => 'contact',
+			'template' => $template,
+			'country_active' => 1,
+			'zip_active' => 1,
+			'street_active' => 1,
+			'radius_active' => 1,
+			'geo_order' => 'street,zip,city,country,radius'
 		);
+		$name = $data['name'];
+		$result = $this->_pWPDB->query("SELECT name from $tableName where name = '$name'" );
+		if (!$result) {
+			$this->_pWPDB->insert($tableName, $data);
+		}
+
 		$defaultFormId = $this->_pWPDB->insert_id;
 		$this->installDataQueryFormFieldConfig($defaultFormId);
 	}
@@ -689,14 +692,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
-	public function addColumnContactTypePluginFormTable()
+	public function getQueryAddColumnContactTypePluginFormTable() :string
 	{
 		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
 		$tableName = $prefix . "oo_plugin_forms";
 
-		return $this->_pWPDB->query("ALTER TABLE $tableName 
-				ADD COLUMN `contact_type` varchar(255) NULL DEFAULT NULL 
-				");
+		return "CREATE TABLE $tableName (
+			`contact_type` varchar(255) NULL DEFAULT NULL
+		) $charsetCollate;";
 	}
 
 
