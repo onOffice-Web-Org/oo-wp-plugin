@@ -27,6 +27,7 @@ use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\Table\AddressListTable;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerDeleteListViewEstate;
+use onOffice\WPlugin\Record\RecordManagerDuplicateListViewAddress;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function __;
 use function add_action;
@@ -134,6 +135,24 @@ class AdminPageAddressList
 		};
 
 		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDeleteAddress, 10, 3);
+
+		$pClosureDuplicateAddress = function (string $redirectTo, Table\WP\ListTable $pTable)
+		use ($pDI): string {
+			if (in_array($pTable->current_action(), ['duplicate', 'bulk_duplicate'])) {
+				check_admin_referer('bulk-' . $pTable->getArgs()['plural']);
+				if (!(isset($_GET['listViewId']))) {
+					wp_die('No List Views for duplicating!');
+				}
+
+				/* @var $pRecordManagerDuplicateListViewAddress RecordManagerDuplicateListViewAddress */
+				$pRecordManagerDuplicateListViewAddress = $pDI->get(RecordManagerDuplicateListViewAddress::class);
+				$listViewRootId = $_GET['listViewId'];
+				$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
+			}
+			return $redirectTo;
+		};
+
+		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDuplicateAddress, 10, 3);
 		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-addresses', function(): Table\WP\ListTable {
 			return $this->_pAddressListTable;
 		});

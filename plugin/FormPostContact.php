@@ -180,7 +180,9 @@ class FormPostContact
 			'estatedata' => ["objekttitel", "ort", "plz", "land"],
 			'estateurl' => home_url($pWPWrapper->getRequest()),
 		];
-
+		if ($this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
+			$requestParams['addressdata']['newsletter_aktiv'] = true;
+		}
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
 		}

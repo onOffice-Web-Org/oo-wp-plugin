@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2021 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -32,17 +32,36 @@ use WP_UnitTestCase;
 class TestClassFormModelBuilderDBForm
 	extends WP_UnitTestCase
 {
+
+
 	/** @var InputModelDBFactory */
 	private $_pInputModelFactoryDBEntry;
+
 	/**
 	 * @before
 	 */
 	public function prepare()
 	{
-		$this->_pInputModelFactoryDBEntry = new InputModelDBFactory(new InputModelDBFactoryConfigForm());
-
+		$this->_pInputModelFactoryDBEntry = new InputModelDBFactory(new InputModelDBFactoryConfigForm);
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRecipientContactForm
+	 */
+	public function testCreateInputModelRecipientContactForm()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->createInputModelRecipientContactForm();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
+	}
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelContactType

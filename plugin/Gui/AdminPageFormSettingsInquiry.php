@@ -28,11 +28,11 @@ use function __;
 
 /**
  *
- * Class for Interest and owner forms with additional check for Email address
+ * Class for forms with additional check for Email address
  *
  */
 
-class AdminPageFormSettingsInterestOwner
+class AdminPageFormSettingsInquiry
 	extends AdminPageFormSettingsContact
 {
 	/** */

@@ -100,6 +100,8 @@ class Installer
 		delete_option('onoffice-maps-mapprovider');
 		delete_option('onoffice-settings-apisecret');
 		delete_option('onoffice-settings-apikey');
+		delete_option('onoffice-detail-view-showTitleUrl');
+		delete_option('onoffice-pagination-paginationprovider');
 
 		self::flushRules();
 	}
