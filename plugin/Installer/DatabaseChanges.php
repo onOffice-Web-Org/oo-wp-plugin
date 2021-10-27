@@ -132,7 +132,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateSortByUserDefinedDefault();
 			$dbversion = 15;
 		}
-		
+
 		if ($dbversion == 15) {
 			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
@@ -160,7 +160,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 20) {
-			dbDelta( $this->getQueryAddColumnContactTypePluginFormTable() );
+			$this->addColumnContactTypePluginFormTable();
 			$dbversion = 21;
 		}
 
@@ -689,14 +689,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
-    public function getQueryAddColumnContactTypePluginFormTable(): string
-    {
-        $prefix = $this->getPrefix();
-        $tableName = $prefix."oo_plugin_forms";
+	public function addColumnContactTypePluginFormTable()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
 
-        return "ALTER TABLE $tableName 
+		return $this->_pWPDB->query("ALTER TABLE $tableName 
 				ADD COLUMN `contact_type` varchar(255) NULL DEFAULT NULL 
-				";
+				");
 	}
 
 
