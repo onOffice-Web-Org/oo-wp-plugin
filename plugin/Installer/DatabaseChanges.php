@@ -307,7 +307,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 			'geo_order' => 'street,zip,city,country,radius'
 		);
 		$query = "INSERT IGNORE $tableName (name, form_type, template, country_active, zip_active, street_active, radius_active, geo_order)";
-		$query .= "VALUES ('{$data['name']}', '{$data['form_type']}', '{$data['template']}', {$data['country_active']}, {$data['zip_active']}, {$data['street_active']}, {$data['radius_active']}, '{$data['geo_order']}')";
+		$query .= "VALUES (";
+		$query .= "'" . esc_sql($data['name']) ."',";
+		$query .= "'" . esc_sql($data['form_type']) ."',";
+		$query .= "'" . esc_sql($data['template']) ."',";
+		$query .= esc_sql($data['country_active']) . ",";
+		$query .= esc_sql($data['zip_active']) . ",";
+		$query .= esc_sql($data['street_active']) . ",";
+		$query .= esc_sql($data['radius_active']) . ",";
+		$query .= "'" . esc_sql($data['geo_order']) ."')";
 		$this->_pWPDB->query($query);
 
 		$defaultFormId = $this->_pWPDB->insert_id;
