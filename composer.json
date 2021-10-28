@@ -1,7 +1,7 @@
 {
     "config": {
         "platform": {
-            "php": "7.0.33"
+            "php": "7.2.0"
         }
     },
 	"require-dev": {
@@ -26,8 +26,8 @@
 		}
 	},
 	"require": {
-		"php": ">=7.0.0",
-		"php-di/php-di": "^6.0",
+		"php": ">=7.2.0",
+		"php-di/php-di": "^6.3.5",
 		"ext-curl": "*",
 		"select2/select2": "^4.0"
 	}
