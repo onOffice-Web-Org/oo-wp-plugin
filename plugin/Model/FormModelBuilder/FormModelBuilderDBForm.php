@@ -343,7 +343,7 @@ class FormModelBuilderDBForm
      */
     public function createInputModelContactType()
     {
-        $labelContactType = __('Contact Type', 'onoffice-for-wp-websites');
+        $labelContactType = __('Contact Type of New Address', 'onoffice-for-wp-websites');
         $pInputModelFormContactType = $this->getInputModelDBFactory()->create
         (InputModelDBFactoryConfigForm::INPUT_FORM_CONTACT_TYPE, $labelContactType);
         $field = $pInputModelFormContactType->getField();
@@ -364,9 +364,14 @@ class FormModelBuilderDBForm
                 ->buildFieldsCollection($pFieldLoader);
             $fields = $pFieldCollectionAddressEstate->getFieldsByModule($module);
             $result = [];
+			var_dump($fields['ArtDaten']);
+			exit();
             if (!empty($fields['ArtDaten']->getPermittedvalues())) {
                 foreach ($fields['ArtDaten']->getPermittedvalues() as $field => $type) {
-                    $result[$field] = $field;
+                    $result[$field] = $type;
+					if (empty($type)) {
+						$result[$field] = $field;
+					}
                 }
             }
 

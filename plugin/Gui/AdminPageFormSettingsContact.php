@@ -115,6 +115,11 @@ class AdminPageFormSettingsContact
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
+		if ($this->_showContactTypeSelect) {
+			$pInputModelContactType = $pFormModelBuilder->createInputModelContactType();
+			$pFormModelFormSpecific->addInputModel($pInputModelContactType);
+		}
+
 		if ($this->_showNewsletterCheckbox) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
@@ -123,11 +128,6 @@ class AdminPageFormSettingsContact
 		if ($this->_showEstateContextCheckbox) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
-		}
-
-		if ($this->_showContactTypeSelect) {
-			$pInputModelContactType = $pFormModelBuilder->createInputModelContactType();
-			$pFormModelFormSpecific->addInputModel($pInputModelContactType);
 		}
 
 		$this->addFormModel($pFormModelFormSpecific);
