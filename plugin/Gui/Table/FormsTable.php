@@ -93,14 +93,17 @@ class FormsTable
 		$pRecordRead->setOffset($offset);
 		$pRecordRead->addColumn('form_id', 'ID');
 		$pRecordRead->addColumn('name');
+		$pRecordRead->addColumn('template');
 		$pRecordRead->addColumn('form_type');
 		$pRecordRead->addColumn('name', 'shortcode');
-
+		$pRecordRead->addColumn('page_shortcode');
 		if ($this->_listType != 'all' && $this->_listType != null) {
 			$pRecordRead->addWhere("`form_type` = '".esc_sql($this->_listType)."'");
 		}
 
-		$this->setItems($pRecordRead->getRecords());
+		$pRecord = $pRecordRead->getRecords();
+		$pRecord = $this->handleRecord($pRecord);
+		$this->setItems($pRecord);
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args( array(
@@ -112,6 +115,31 @@ class FormsTable
 		$this->_countByType = $pRecordRead->getCountByType();
 	}
 
+	private function handleRecord($listRecord)
+	{
+		if (empty($listRecord))
+		{
+			return [];
+		}
+		foreach ($listRecord as &$record)
+		{
+			if (!empty($record->page_shortcode))
+			{
+				$listPageID = explode(',',$record->page_shortcode);
+				$page = '';
+				foreach ($listPageID as $pageID)
+				{
+					if (!empty($page))
+					{
+						$page .= ',';
+					}
+					$page .= "<a href='".get_edit_post_link((int)$pageID)."' target='_blank'>".get_the_title((int)$pageID)."</a>";
+				}
+				$record->page_shortcode = $page;
+			}
+		}
+		return $listRecord;
+	}
 
 	/**
 	 *
@@ -122,8 +150,10 @@ class FormsTable
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of Form', 'onoffice-for-wp-websites'),
+			'template' => __('Tempaltes', 'onoffice-for-wp-websites'),
 			'form_type' => __('Type of Form', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
+			'page_shortcode' => __('Page with Shortcode', 'onoffice-for-wp-websites'),
 		);
 
 		$hidden = array('ID', 'filterId');

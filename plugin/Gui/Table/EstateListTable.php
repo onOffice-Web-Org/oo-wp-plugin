@@ -104,12 +104,16 @@ class EstateListTable extends ListTable
 		$pRecordRead->addColumn('listview_id', 'ID');
 		$pRecordRead->addColumn('name');
 		$pRecordRead->addColumn('filterId');
+		$pRecordRead->addColumn('template');
 		$pRecordRead->addColumn('show_status');
 		$pRecordRead->addColumn('list_type');
 		$pRecordRead->addColumn('name', 'shortcode');
+		$pRecordRead->addColumn('page_shortcode');
 		$pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites')");
 
-		$this->setItems($pRecordRead->getRecords());
+		$pRecord = $pRecordRead->getRecords();
+		$pRecord = $this->handleRecord($pRecord);
+		$this->setItems($pRecord);
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args([
@@ -119,6 +123,31 @@ class EstateListTable extends ListTable
 		]);
 	}
 
+	private function handleRecord($listRecord)
+	{
+		if (empty($listRecord))
+		{
+			return [];
+		}
+		foreach ($listRecord as &$record)
+		{
+			if (!empty($record->page_shortcode))
+			{
+				$listPageID = explode(',',$record->page_shortcode);
+				$page = '';
+				foreach ($listPageID as $pageID)
+				{
+					if (!empty($page))
+					{
+						$page .= ',';
+					}
+					$page .= "<a href='".get_edit_post_link((int)$pageID)."' target='_blank'>".get_the_title((int)$pageID)."</a>";
+				}
+				$record->page_shortcode = $page;
+			}
+		}
+		return $listRecord;
+	}
 
 	/**
 	 *
@@ -130,9 +159,11 @@ class EstateListTable extends ListTable
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of View', 'onoffice-for-wp-websites'),
 			'filtername' => __('Filter', 'onoffice-for-wp-websites'),
+			'template' => __('Tempaltes', 'onoffice-for-wp-websites'),
 			'show_status' => __('Show Status', 'onoffice-for-wp-websites'),
 			'list_type' => __('Type of List', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
+			'page_shortcode' => __('Page with Shortcode', 'onoffice-for-wp-websites'),
 		];
 
 		$hidden = ['ID', 'filterId'];
