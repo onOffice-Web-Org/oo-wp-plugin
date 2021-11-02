@@ -1058,3 +1058,15 @@ msgstr "Contactpersoon"
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documenten"
+
+#: plugin/Gui/AdminPageModules.php:79
+msgid "Detail View URLs"
+msgstr "URL's voor detailweergave"
+
+#: plugin/Gui/AdminPageModules.php:66
+msgid "Show title in URL"
+msgstr "Toon titel in URL"
+
+#: plugin/Gui/AdminPageModules.php:72
+msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
+msgstr "Als dit selectievakje is ingeschakeld, maakt de titel van de eigenschap deel uit van de URL's van de detailweergaven. De titel wordt achter het recordnummer geplaatst, b.v. <code>/1234-nice-location-with-view</code>. Niet meer dan de eerste vijf woorden van de titel worden gebruikt."

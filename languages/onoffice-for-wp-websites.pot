@@ -1051,3 +1051,15 @@ msgstr ""
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:79
+msgid "Detail View URLs"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:66
+msgid "Show title in URL"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:72
+msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
+msgstr ""
