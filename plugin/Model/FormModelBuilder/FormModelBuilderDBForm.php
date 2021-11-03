@@ -364,14 +364,9 @@ class FormModelBuilderDBForm
                 ->buildFieldsCollection($pFieldLoader);
             $fields = $pFieldCollectionAddressEstate->getFieldsByModule($module);
             $result = [];
-			var_dump($fields['ArtDaten']);
-			exit();
             if (!empty($fields['ArtDaten']->getPermittedvalues())) {
                 foreach ($fields['ArtDaten']->getPermittedvalues() as $field => $type) {
-                    $result[$field] = $type;
-					if (empty($type)) {
-						$result[$field] = $field;
-					}
+                    $result[$field] = !empty($type) ? $type: $field;
                 }
             }
 
