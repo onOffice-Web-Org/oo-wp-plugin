@@ -116,6 +116,9 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				<h2><?php echo esc_html__('Contact person', 'onoffice'); ?></h2>
 				<?php
 				foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
+					<?php if (!empty($contactData['imageUrl'])): ?>
+						<img src="<?php echo $contactData['imageUrl'] ?>" alt="Girl in a jacket" height="150px">
+					<?php endif; ?>
 					<div class="oo-aspname">
 						<strong><?php echo $contactData['Anrede'].'&nbsp;'.$contactData['Vorname'].'&nbsp;'.$contactData['Name']; ?></strong>
 					</div>
@@ -125,7 +128,24 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					</div>
 					<div class="oo-aspcontact">
 						<span><?php echo $contactData['Telefon1']; ?></span>
+						<span><?php echo $contactData['defaultemail']; ?></span>
 					</div>
+					<?php
+                    $defaultField = $pEstates->getDataView()->getDefaultAddressFields();
+					foreach ($defaultField as $field) {
+						unset($contactData[$field]);
+					}
+                    foreach ($contactData as $field) {
+						if (is_array($field)) {
+							echo '<div class="oo-aspinfo">';
+							foreach ($field as $item) {
+								echo '<p>' . esc_html($item) . '</p>';
+							}
+							echo '</div>';
+						} elseif (!empty($field)) {
+							echo '<div class="oo-aspinfo"><span>' . esc_html($field) . '</span></div>';
+						}
+					} ?>
 				<?php endforeach; ?>
 			</div>
 			<div class="oo-detailsexpose">
