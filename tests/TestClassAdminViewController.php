@@ -30,6 +30,8 @@ use WP_UnitTestCase;
 use function is_admin;
 use function set_current_screen;
 use function wp_scripts;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\SDK\Cache\onOfficeSDKCache;
@@ -52,12 +54,17 @@ class TestClassAdminViewController
 		$pWPScreen->in_admin('site');
 		set_current_screen($pWPScreen);
 
-		$pSDKWrapper = $this->getMockBuilder(SDKWrapper::class)
-			->getMock();
-		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
-		$pCache->expects($this->once())->method('getHttpResponseByParameterArray');
-		$cacheInstance = [$pCache];
-		$pSDKWrapper->expects($this->once())->method('getCache')->will($this->returnValue($cacheInstance));
+		global $wpdb;
+
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
+//		$pSDKWrapper = $this->getMockBuilder(SDKWrapper::class)
+//			->getMock();
+//		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
+//		$pCache->expects($this->once())->method('getHttpResponseByParameterArray');
+//		$cacheInstance = [$pCache];
+//		$pSDKWrapper->expects($this->once())->method('getCache')->will($this->returnValue($cacheInstance));
 	}
 
 	/**
