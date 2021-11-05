@@ -73,13 +73,11 @@ class AdminPageEstateUnitSettings
 		$this->addFormModel($pFormModelName);
 
 		$pInputModelRecords = $pFormModelBuilder->createInputModelRecordsPerPage();
-		$pInputModelRandomOrder = $pFormModelBuilder->createInputModelRandomOrder();
 		$pFormModelRecords = new Model\FormModel();
 		$pFormModelRecords->setPageSlug($this->getPageSlug());
 		$pFormModelRecords->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$pFormModelRecords->setLabel(__('Records', 'onoffice-for-wp-websites'));
 		$pFormModelRecords->addInputModel($pInputModelRecords);
-		$pFormModelRecords->addInputModel($pInputModelRandomOrder);
 		$this->addFormModel($pFormModelRecords);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');

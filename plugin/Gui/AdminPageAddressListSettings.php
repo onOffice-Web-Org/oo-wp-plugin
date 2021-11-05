@@ -84,6 +84,7 @@ class AdminPageAddressListSettings
 		$this->addFormModelPictureTypes();
 		$this->addFormModelTemplate();
 		$this->addFormModelRecordsFilter();
+		$this->addFormModelRecordsSorting();
 	}
 
 
@@ -127,19 +128,29 @@ class AdminPageAddressListSettings
 	{
 		$pInputModelFilter = $this->_pFormModelBuilderAddress->createInputModelFilter();
 		$pInputModelRecordCount = $this->_pFormModelBuilderAddress->createInputModelRecordsPerPage();
-		$pInputModelSortBy = $this->_pFormModelBuilderAddress->createInputModelSortBy
-			(onOfficeSDK::MODULE_ADDRESS);
-		$pInputModelSortOrder = $this->_pFormModelBuilderAddress->createInputModelSortOrder();
 		$pFormModelFilterRecords = new FormModel();
 		$pFormModelFilterRecords->setPageSlug($this->getPageSlug());
 		$pFormModelFilterRecords->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$pFormModelFilterRecords->setLabel(__('Filter & Records', 'onoffice-for-wp-websites'));
 		$pFormModelFilterRecords->addInputModel($pInputModelFilter);
 		$pFormModelFilterRecords->addInputModel($pInputModelRecordCount);
-		$pFormModelFilterRecords->addInputModel($pInputModelSortBy);
-		$pFormModelFilterRecords->addInputModel($pInputModelSortOrder);
 		$this->addFormModel($pFormModelFilterRecords);
+
+
 	}
+
+	private function addFormModelRecordsSorting(){
+        $pInputModelSortBy = $this->_pFormModelBuilderAddress->createInputModelSortBy
+        (onOfficeSDK::MODULE_ADDRESS);
+        $pInputModelSortOrder = $this->_pFormModelBuilderAddress->createInputModelSortOrder();
+        $pFormModelFilterRecords = new FormModel();
+        $pFormModelFilterRecords->setPageSlug($this->getPageSlug());
+        $pFormModelFilterRecords->setGroupSlug(self::FORM_VIEW_RECORDS_SORTING);
+        $pFormModelFilterRecords->setLabel(__('Sorting', 'onoffice-for-wp-websites'));
+        $pFormModelFilterRecords->addInputModel($pInputModelSortBy);
+        $pFormModelFilterRecords->addInputModel($pInputModelSortOrder);
+        $this->addFormModel($pFormModelFilterRecords);
+    }
 
 
 	/**
@@ -172,6 +183,9 @@ class AdminPageAddressListSettings
 
 		$pFormFilterRecords = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$this->createMetaBoxByForm($pFormFilterRecords, 'normal');
+
+        $pFormFilterRecords = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_SORTING);
+        $this->createMetaBoxByForm($pFormFilterRecords, 'normal');
 	}
 
 
