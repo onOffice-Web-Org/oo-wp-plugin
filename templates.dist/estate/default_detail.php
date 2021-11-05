@@ -117,7 +117,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				<?php
 				foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
 					<?php if (!empty($contactData['imageUrl'])): ?>
-						<img src="<?php echo $contactData['imageUrl'] ?>" alt="Girl in a jacket" height="150px">
+						<img src="<?php echo $contactData['imageUrl'] ?>" height="150px">
 					<?php endif; ?>
 					<div class="oo-aspname">
 						<strong><?php echo $contactData['Anrede'].'&nbsp;'.$contactData['Vorname'].'&nbsp;'.$contactData['Name']; ?></strong>
