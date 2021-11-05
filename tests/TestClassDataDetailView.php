@@ -68,6 +68,8 @@ class TestClassDataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
+		'defaultemail',
+		'imageUrl',
 	];
 	/**
 	 *
