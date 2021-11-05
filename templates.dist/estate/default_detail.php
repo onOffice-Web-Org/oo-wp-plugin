@@ -143,7 +143,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 							}
 							echo '</div>';
 						} elseif (!empty($field)) {
-							echo '<div class="oo-aspinfo"><span>' . esc_html($field) . '</span></div>';
+							echo '<div class="oo-aspinfo"><p>' . esc_html($field) . '</p></div>';
 						}
 					} ?>
 				<?php endforeach; ?>
