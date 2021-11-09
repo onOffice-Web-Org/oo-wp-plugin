@@ -71,7 +71,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->setMethods(['getInputModelDBFactory', 'createInputModelSortBySetting', 'getValue'])
 			->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
