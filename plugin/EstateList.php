@@ -32,6 +32,7 @@ use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
@@ -49,6 +50,7 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\WP\WPPageWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
@@ -117,6 +119,34 @@ class EstateList
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
+	}
+
+	public function redirectUrlValid()
+	{
+		if (!$this->_pDataView instanceof DataDetailView) {
+			return true;
+		}
+		$pageWrapper  = new WPPageWrapper();
+		$currentLink = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$currentLink = rtrim($currentLink, '/');
+		$uri = $_SERVER['REQUEST_URI'];
+		$pageId = $this->_pDataView->getPageId();
+		if (!empty($pageId)) {
+			$pageName = $pageWrapper->getPageUriByPageId($pageId);
+			preg_match('/^(\/' . preg_quote($pageName) .')\/([0-9]+)(-([^$]+))?\/?$/', $uri, $matches);
+			$fullLink = '';
+			if (!empty($matches[2]) && $pageId !== 0) { //Check pass rule and has Unique ID
+				$estate = $this->_currentEstate['mainId'];
+				$title = $this->_currentEstate['title'] ?? '';
+				$url = get_page_link($pageId);
+				$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate, $title);
+			}
+			if ($this->_pLanguageSwitcher->isOptionShowTitleUrl() && $fullLink != $currentLink) {
+				header("HTTP/1.1 301 Moved Permanently");
+				header("Location: $fullLink");
+				exit();
+			}
+		}
 	}
 
 	/**
@@ -389,6 +419,8 @@ class EstateList
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
+
+		$this->redirectUrlValid();
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
