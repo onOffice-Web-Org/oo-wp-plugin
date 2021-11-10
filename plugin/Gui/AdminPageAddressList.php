@@ -59,6 +59,7 @@ class AdminPageAddressList
 	{
 		$this->generatePageMainTitle(__('Addresses', 'onoffice-for-wp-websites'));
 		$this->_pAddressListTable->prepare_items();
+		$this->generateSearchForm();
 		echo '<p>';
 		echo '<form method="post">';
 		echo $this->_pAddressListTable->views();
@@ -88,8 +89,14 @@ class AdminPageAddressList
 		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
-
-
+	public function generateSearchForm()
+	{
+		echo '<form action="'.admin_url('admin.php').'" method="get" id="onoffice-form-search">
+			<input type="hidden" id="fname" name="page" value="onoffice-addresses">
+			<input type="text" id="fname" name="search">
+			<input type="submit" value="Search Addresses">
+			</form>';
+	}
 	/**
 	 *
 	 */
@@ -114,49 +121,49 @@ class AdminPageAddressList
 	public function preOutput()
 	{
 		$this->_pAddressListTable = new AddressListTable();
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pDI = $pContainerBuilder->build();
-		$pClosureDeleteAddress = function(string $redirectTo, Table\WP\ListTable $pTable, array $recordIds)
-			use ($pDI): string
-		{
-			/* @var $pBulkDeleteRecord BulkDeleteRecord */
-			$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
-			/* @var $pRecordManagerDelete RecordManagerDeleteListViewEstate */
-			$pRecordManagerDelete = $pDI->get(RecordManagerDeleteListViewAddress::class);
-			if (in_array($pTable->current_action(), ['delete', 'bulk_delete'])) {
-				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
-				$itemsDeleted = $pBulkDeleteRecord->delete
-					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ADDRESS, $recordIds);
-				$redirectTo = add_query_arg(['delete' => $itemsDeleted],
-					admin_url('admin.php?page=onoffice-addresses'));
-			}
-			return $redirectTo;
-		};
+//		$pContainerBuilder = new ContainerBuilder;
+//		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+//		$pDI = $pContainerBuilder->build();
+//		$pClosureDeleteAddress = function(string $redirectTo, Table\WP\ListTable $pTable, array $recordIds)
+//			use ($pDI): string
+//		{
+//			/* @var $pBulkDeleteRecord BulkDeleteRecord */
+//			$pBulkDeleteRecord = $pDI->get(BulkDeleteRecord::class);
+//			/* @var $pRecordManagerDelete RecordManagerDeleteListViewEstate */
+//			$pRecordManagerDelete = $pDI->get(RecordManagerDeleteListViewAddress::class);
+//			if (in_array($pTable->current_action(), ['delete', 'bulk_delete'])) {
+//				check_admin_referer('bulk-'.$pTable->getArgs()['plural']);
+//				$itemsDeleted = $pBulkDeleteRecord->delete
+//					($pRecordManagerDelete, UserCapabilities::RULE_EDIT_VIEW_ADDRESS, $recordIds);
+//				$redirectTo = add_query_arg(['delete' => $itemsDeleted],
+//					admin_url('admin.php?page=onoffice-addresses'));
+//			}
+//			return $redirectTo;
+//		};
+//
+//		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDeleteAddress, 10, 3);
+//
+//		$pClosureDuplicateAddress = function (string $redirectTo, Table\WP\ListTable $pTable)
+//		use ($pDI): string {
+//			if (in_array($pTable->current_action(), ['duplicate', 'bulk_duplicate'])) {
+//				check_admin_referer('bulk-' . $pTable->getArgs()['plural']);
+//				if (!(isset($_GET['listViewId']))) {
+//					wp_die('No List Views for duplicating!');
+//				}
+//
+//				/* @var $pRecordManagerDuplicateListViewAddress RecordManagerDuplicateListViewAddress */
+//				$pRecordManagerDuplicateListViewAddress = $pDI->get(RecordManagerDuplicateListViewAddress::class);
+//				$listViewRootId = $_GET['listViewId'];
+//				$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
+//			}
+//			return $redirectTo;
+//		};
+//
+//		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDuplicateAddress, 10, 3);
+//		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-addresses', function(): Table\WP\ListTable {
+//			return $this->_pAddressListTable;
+//		});
 
-		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDeleteAddress, 10, 3);
-
-		$pClosureDuplicateAddress = function (string $redirectTo, Table\WP\ListTable $pTable)
-		use ($pDI): string {
-			if (in_array($pTable->current_action(), ['duplicate', 'bulk_duplicate'])) {
-				check_admin_referer('bulk-' . $pTable->getArgs()['plural']);
-				if (!(isset($_GET['listViewId']))) {
-					wp_die('No List Views for duplicating!');
-				}
-
-				/* @var $pRecordManagerDuplicateListViewAddress RecordManagerDuplicateListViewAddress */
-				$pRecordManagerDuplicateListViewAddress = $pDI->get(RecordManagerDuplicateListViewAddress::class);
-				$listViewRootId = $_GET['listViewId'];
-				$pRecordManagerDuplicateListViewAddress->duplicateByName($listViewRootId);
-			}
-			return $redirectTo;
-		};
-
-		add_filter('handle_bulk_actions-onoffice_page_onoffice-addresses', $pClosureDuplicateAddress, 10, 3);
-		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-addresses', function(): Table\WP\ListTable {
-			return $this->_pAddressListTable;
-		});
-
-		parent::preOutput();
+//		parent::preOutput();
 	}
 }

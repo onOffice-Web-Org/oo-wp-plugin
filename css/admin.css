@@ -260,3 +260,7 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	text-align: left;
 	margin-top: 0;
 }
+#onoffice-form-search {
+	display: flex;
+	float: right;
+}
