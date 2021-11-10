@@ -55,7 +55,6 @@ class AdminPageEstateList
 		$this->generateFormSearch();
 		echo '<p>';
 		echo '<form method="post">';
-
 		$this->_pEstateListTable->display();
 		echo '</form>';
 		echo '</p>';
