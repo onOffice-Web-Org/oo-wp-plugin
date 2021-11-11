@@ -48,6 +48,7 @@ use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Utility\RedirectIfOldUrl;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\WP\WPPageWrapper;
@@ -101,6 +102,12 @@ class EstateList
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;
 
+	/** @var RedirectIfOldUrl */
+	private $_redirectIfOldUrl;
+
+	/** @var bool */
+	private bool $_isOverride_DataView = false;
+
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -119,34 +126,7 @@ class EstateList
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
-	}
-
-	public function redirectUrlValid()
-	{
-		if (!$this->_pDataView instanceof DataDetailView) {
-			return true;
-		}
-		$pageWrapper  = new WPPageWrapper();
-		$currentLink = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-		$currentLink = rtrim($currentLink, '/');
-		$uri = $_SERVER['REQUEST_URI'];
-		$pageId = $this->_pDataView->getPageId();
-		if (!empty($pageId)) {
-			$pageName = $pageWrapper->getPageUriByPageId($pageId);
-			preg_match('/^(\/' . preg_quote($pageName) .')\/([0-9]+)(-([^$]+))?\/?$/', $uri, $matches);
-			$fullLink = '';
-			if (!empty($matches[2]) && $pageId !== 0) { //Check pass rule and has Unique ID
-				$estate = $this->_currentEstate['mainId'];
-				$title = $this->_currentEstate['title'] ?? '';
-				$url = get_page_link($pageId);
-				$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate, $title);
-			}
-			if ($this->_pLanguageSwitcher->isOptionShowTitleUrl() && $fullLink != $currentLink) {
-				header("HTTP/1.1 301 Moved Permanently");
-				header("Location: $fullLink");
-				exit();
-			}
-		}
+		$this->_redirectIfOldUrl = $pContainer->get(RedirectIfOldUrl::class);
 	}
 
 	/**
@@ -324,10 +304,10 @@ class EstateList
 		}
 
 		// only do georange search if requested in listview configuration
-		if ($pListView instanceof DataViewFilterableFields &&
-			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true)) {
+		if (($pListView instanceof DataViewFilterableFields &&
+			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true))
+			|| $this->isIsOverrideDataView()) {
 			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
-
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
 			}
@@ -420,7 +400,12 @@ class EstateList
 			$this->_currentEstate['id'];
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
-		$this->redirectUrlValid();
+		if ($this->_pDataView instanceof DataDetailView) {
+			$pageId = $this->_pDataView->getPageId();
+			$estateId = $this->_currentEstate['mainId'];
+			$estateTitle = $this->_currentEstate['title'];
+			$this->_redirectIfOldUrl->redirectDetailView($pageId, $estateId, $estateTitle);
+		}
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
@@ -697,6 +682,18 @@ class EstateList
 	{
 		return array_column($this->_records, 'id');
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function isIsOverrideDataView(): bool
+		{ return $this->_isOverride_DataView; }
+
+	/**
+	 * @param $isOverride_DataView
+	 */
+	public function setIsOverrideDataView($isOverride_DataView): void
+		{ $this->_isOverride_DataView = $isOverride_DataView; }
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()
