@@ -52,7 +52,9 @@ class AdminPageEstateList
 	public function renderContent()
 	{
 		$this->_pEstateListTable->prepare_items();
-		$this->generateFormSearch();
+		$page = '<input type="hidden" id="fname" name="page" value="onoffice-estates">';
+		$buttonSearch = 'Search Estate Views';
+		$this->generateSearchForm($page,$buttonSearch);
 		echo '<p>';
 		echo '<form method="post">';
 		$this->_pEstateListTable->display();
@@ -85,13 +87,6 @@ class AdminPageEstateList
 		echo '<hr class="wp-header-end">';
 	}
 
-	private function generateFormSearch(){
-		echo '<form action="'.admin_url('admin.php').'" method="get" id="onoffice-form-search">
-			<input type="hidden" id="fname" name="page" value="onoffice-estates">
-			<input type="text" id="fname" name="search">
-			<input type="submit" value="Search Estate Views">
-			</form>';
-	}
 	/**
 	 *
 	 */

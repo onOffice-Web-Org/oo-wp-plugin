@@ -96,7 +96,10 @@ class AdminPageFormList
 		$this->generatePageMainTitle(__('Forms', 'onoffice-for-wp-websites'));
 
 		$this->_pFormsTable->prepare_items();
-		$this->generateFormSearch();
+		$page = '<input type="hidden" id="fname" name="type" value="'.$_GET['type'].'">
+			<input type="hidden" id="fname" name="page" value="onoffice-forms">';
+		$buttonSearch = 'Search Forms';
+		$this->generateSearchForm($page,$buttonSearch);
 		echo '<p>';
 		echo '<form method="post">';
 		echo $this->_pFormsTable->views();
@@ -134,14 +137,6 @@ class AdminPageFormList
 		}
 	}
 
-	private function generateFormSearch(){
-		echo '<form action="'.admin_url('admin.php').'" method="get" id="onoffice-form-search">
-			<input type="hidden" id="fname" name="type" value="'.$_GET['type'].'">
-			<input type="hidden" id="fname" name="page" value="onoffice-forms">
-			<input type="text" id="fname" name="search">
-			<input type="submit" value="Search Forms">
-			</form>';
-	}
 	/**
 	 *
 	 */

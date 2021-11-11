@@ -59,7 +59,9 @@ class AdminPageAddressList
 	{
 		$this->generatePageMainTitle(__('Addresses', 'onoffice-for-wp-websites'));
 		$this->_pAddressListTable->prepare_items();
-		$this->generateSearchForm();
+		$page = '<input type="hidden" id="fname" name="page" value="onoffice-addresses">';
+		$buttonSearch = 'Search Addresses';
+		$this->generateSearchForm($page,$buttonSearch);
 		echo '<p>';
 		echo '<form method="post">';
 		echo $this->_pAddressListTable->views();
@@ -90,18 +92,6 @@ class AdminPageAddressList
 		echo '<hr class="wp-header-end">';
 	}
 
-	/**
-	 *
-	 */
-
-	public function generateSearchForm()
-	{
-		echo '<form action="'.admin_url('admin.php').'" method="get" id="onoffice-form-search">
-			<input type="hidden" id="fname" name="page" value="onoffice-addresses">
-			<input type="text" id="fname" name="search">
-			<input type="submit" value="Search Addresses">
-			</form>';
-	}
 	/**
 	 *
 	 */
