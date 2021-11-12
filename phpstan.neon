@@ -4,7 +4,7 @@ parameters:
         - config
         - plugin
         - tests
-    excludes_analyse:
+    excludePaths:
         - SDK
         - '/tmp/wordpress/'
         - 'tests/bootstrap.php'
