@@ -11,7 +11,8 @@
 		"symfony/process": "^3.4",
         "phpcompatibility/php-compatibility": "*",
 		"wp-cli/i18n-command": "*",
-        "ext-xdebug": "*"
+        "ext-xdebug": "*",
+        "yoast/phpunit-polyfills": "^1.0"
     },
     "prefer-stable" : true,
 	"autoload": {
