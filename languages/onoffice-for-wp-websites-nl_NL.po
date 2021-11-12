@@ -270,6 +270,10 @@ msgstr "Google Kaarten"
 msgid "Index PDF Brochure"
 msgstr "Index PDF brochure"
 
+#: plugin/Gui/AdminPageApiSettings.php:161
+msgid "Search engine"
+msgstr "Search engine"
+
 #: plugin/Gui/AdminPageApiSettings.php:180
 msgid "Google Bot"
 msgstr "Google Bot"

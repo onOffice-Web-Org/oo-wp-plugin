@@ -251,7 +251,7 @@ msgid "Index PDF Brochure"
 msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:180
-msgid "Google Bot"
+msgid "Search engine"
 msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:219
