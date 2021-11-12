@@ -370,7 +370,7 @@ msgstr "Immobiliendaten"
 #, fuzzy
 #| msgid "Contact person"
 msgid "Contact Form"
-msgstr "Ansprechpartner"
+msgstr "Kontaktformular"
 
 #: plugin/Gui/AdminPageEstateDetail.php:304
 msgid "Additional Media"
@@ -916,9 +916,10 @@ msgid "Newsletter"
 msgstr "Newsletter"
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:76
+#, fuzzy
 msgid ""
 "Check for Duplicates (override existing address if the email is the same)"
-msgstr ""
+msgstr "Dublettenprüfung"
 
 #: plugin/Model/InputModel/InputModelConfigurationFormContact.php:78
 msgid "Check for Duplicates"
