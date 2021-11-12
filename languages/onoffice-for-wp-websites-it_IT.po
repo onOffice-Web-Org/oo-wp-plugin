@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2021-11-12T15:10:37+07:00\n"
+"POT-Creation-Date: 2021-10-22T11:20:08+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -273,10 +273,8 @@ msgid "Index PDF Brochure"
 msgstr "Index PDF brochure"
 
 #: plugin/Gui/AdminPageApiSettings.php:180
-#, fuzzy
-#| msgid "Search Criteria"
-msgid "Search engine"
-msgstr "Criteri di ricerca"
+msgid "Google Bot"
+msgstr "Google Bot"
 
 #: plugin/Gui/AdminPageApiSettings.php:219
 msgid "The keys are OK."
@@ -1151,6 +1149,3 @@ msgstr "Persona di contatto"
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documenti"
-
-#~ msgid "Google Bot"
-#~ msgstr "Google Bot"
