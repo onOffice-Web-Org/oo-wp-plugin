@@ -106,7 +106,7 @@ class EstateList
 	private $_redirectIfOldUrl;
 
 	/** @var bool */
-	private bool $_isOverride_DataView = false;
+	private $_isOverride_DataView = false;
 
 	/**
 	 * @param DataView $pDataView
