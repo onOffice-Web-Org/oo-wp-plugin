@@ -48,6 +48,7 @@ class InputFieldCheckboxRenderer
 	 *
 	 * @param string $name
 	 * @param mixed $value
+	 * @param mixed $description
 	 *
 	 */
 
@@ -128,7 +129,7 @@ class InputFieldCheckboxRenderer
 				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
-				.($this->_descriptionTextHTML !== '' ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '');
+				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '');
 		}
 	}
 

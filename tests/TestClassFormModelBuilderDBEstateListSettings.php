@@ -186,4 +186,14 @@ class TestClassFormModelBuilderDBEstateListSettings
 
 		$this->assertEquals(FormModelBuilderDBEstateListSettings::getListViewLabels(), $expected);
 	}
+
+    public function testCreateSortableFieldList()
+    {
+        $pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $instance = $pInstance->createSortableFieldList('address', 'checkbox', false);
+        $this->assertEquals($instance->getReferencedInputModels(), null);
+    }
 }
