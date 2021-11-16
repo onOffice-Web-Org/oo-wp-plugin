@@ -214,30 +214,7 @@ class EstateList
 		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
-		$lang = Language::getDefault();
-		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 1)
-		{
-			foreach ($this->_records as $key => $record) {
-				!empty($this->_records[$key]['elements']['objekttitel']) ? apply_filters('get_post_metadata','onoffice_title') : '';
-				!empty($this->_records[$key]['elements']['objektbeschreibung']) ? apply_filters('get_post_metadata','onoffice_description') : '';
-				!empty($this->_records[$key]['elements']['ort']) ? apply_filters('get_post_metadata','onoffice_city') : '';
-				!empty($this->_records[$key]['elements']['plz']) ? apply_filters('get_post_metadata','onoffice_postal_code') : '';
-				!empty($this->_records[$key]['elements']['objektart']) ? apply_filters('get_post_metadata','onoffice_property_class') : '';
-				!empty($this->_records[$key]['elements']['vermarktungsart']) ? apply_filters('get_post_metadata','onoffice_marketing_method') : '';
-				!empty($this->_records[$key]['elements']['Id']) ? apply_filters('get_post_metadata','onoffice_id') : '';
-				if ($lang == 'DEU')
-				{
-					!empty($this->_records[$key]['elements']['objekttitel']) ? apply_filters('get_post_metadata','onoffice_titel') : '';
-					!empty($this->_records[$key]['elements']['objektbeschreibung']) ? apply_filters('get_post_metadata','onoffice_beschreibung') : '';
-					!empty($this->_records[$key]['elements']['ort']) ? apply_filters('get_post_metadata','onoffice_ort') : '';
-					!empty($this->_records[$key]['elements']['plz']) ? apply_filters('get_post_metadata','onoffice_plz') : '';
-					!empty($this->_records[$key]['elements']['objektart']) ? apply_filters('get_post_metadata','onoffice_objektart') : '';
-					!empty($this->_records[$key]['elements']['vermarktungsart']) ? apply_filters('get_post_metadata','onoffice_vermarktungsart') : '';
-					!empty($this->_records[$key]['elements']['Id']) ? apply_filters('get_post_metadata','onoffice_datensatznr') : '';
 
-				}
-			}
-		}
 	}
 
 	/**
@@ -429,8 +406,31 @@ class EstateList
 		{
 			$recordModified['onoffice-settings-title-and-description'] = true;
 		}
-		$pArrayContainer = new ArrayContainerEscape($recordModified);
+		$lang = Language::getDefault();
+		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 1)
+		{
+			foreach ($recordModified as $key => $record) {
+				!empty($recordModified['objekttitel']) ? apply_filters('get_post_metadata','onoffice_title') : '';
+				!empty($recordModified['objektbeschreibung']) ? apply_filters('get_post_metadata','onoffice_description') : '';
+				!empty($recordModified['ort']) ? apply_filters('get_post_metadata','onoffice_city') : '';
+				!empty($recordModified['plz']) ? apply_filters('get_post_metadata','onoffice_postal_code') : '';
+				!empty($recordModified['objektart']) ? apply_filters('get_post_metadata','onoffice_property_class') : '';
+				!empty($recordModified['vermarktungsart']) ? apply_filters('get_post_metadata','onoffice_marketing_method') : '';
+				!empty($recordModified['Id']) ? apply_filters('get_post_metadata','onoffice_id') : '';
+				if ($lang == 'DEU')
+				{
+					!empty($recordModified['objekttitel']) ? apply_filters('get_post_metadata','onoffice_titel') : '';
+					!empty($recordModified['objektbeschreibung']) ? apply_filters('get_post_metadata','onoffice_beschreibung') : '';
+					!empty($recordModified['ort']) ? apply_filters('get_post_metadata','onoffice_ort') : '';
+					!empty($recordModified['plz']) ? apply_filters('get_post_metadata','onoffice_plz') : '';
+					!empty($recordModified['objektart']) ? apply_filters('get_post_metadata','onoffice_objektart') : '';
+					!empty($recordModified['vermarktungsart']) ? apply_filters('get_post_metadata','onoffice_vermarktungsart') : '';
+					!empty($recordModified['Id']) ? apply_filters('get_post_metadata','onoffice_datensatznr') : '';
 
+				}
+			}
+		}
+		$pArrayContainer = new ArrayContainerEscape($recordModified);
 		return $pArrayContainer;
 	}
 
