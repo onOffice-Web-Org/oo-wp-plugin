@@ -104,6 +104,7 @@ class FormsTable
 		$pRecord = $pRecordRead->getRecords();
 		$pRecord = $this->handleRecord($pRecord);
 		$this->setItems($pRecord);
+		$this->setItems($pRecordRead->getRecordsSortedAlphabetically());
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args( array(
@@ -283,6 +284,10 @@ class FormsTable
 
 		$actions = [];
 		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit').'</a>';
+		$actions['duplicate'] = "<a class='button-duplicate' href='"
+			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-forms&action=bulk_duplicate&form=' . $pItem->name,
+				'bulk-forms'))
+			. "'>" . esc_html__('Duplicate', 'onoffice-for-wp-websites') . "</a>";
 		$actions['delete'] = "<a class='submitdelete' href='"
 			.wp_nonce_url(admin_url('admin.php').'?page=onoffice-forms&action=bulk_delete&form[]='.$pItem->ID, 'bulk-forms')
 			."' onclick=\"if ( confirm( '"

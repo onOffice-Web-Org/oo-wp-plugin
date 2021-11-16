@@ -81,6 +81,7 @@ class AddressListTable
 		$pRecordRead->addColumn('name', 'shortcode');
 		$pRecordRead->addColumn('page_shortcode');
 
+		$this->setItems($pRecordRead->getRecordsSortedAlphabetically());
 		$pRecord = $pRecordRead->getRecords();
 		$pRecord = $this->handleRecord($pRecord);
 		$this->setItems($pRecord);
@@ -208,6 +209,10 @@ class AddressListTable
 
 		$actions = [];
 		$actions['edit'] = '<a href="'.esc_attr($editLink).'">'.esc_html__('Edit').'</a>';
+		$actions['duplicate'] = "<a class='button-duplicate' href='"
+			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-addresses&action=bulk_duplicate&listViewId=' . $pItem->name,
+				'bulk-addresslists'))
+			. "'>" . esc_html__('Duplicate', 'onoffice-for-wp-websites') . "</a>";
 		$actions['delete'] = "<a class='submitdelete' href='"
 			.wp_nonce_url(admin_url('admin.php').'?page=onoffice-addresses&action=bulk_delete&addresslist[]='.$pItem->ID, 'bulk-addresslists')
 			."' onclick=\"if ( confirm( '"
