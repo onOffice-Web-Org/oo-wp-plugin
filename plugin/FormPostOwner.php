@@ -87,17 +87,22 @@ class FormPostOwner
 
 		$recipient = $pDataFormConfiguration->getRecipient();
 		$subject = $pDataFormConfiguration->getSubject();
-		$checkduplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
-		$contactType = $pDataFormConfiguration->getContactType();
 
-		$addressId = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
-			->createOrCompleteAddress($pFormData, $checkduplicate, $contactType);
-		$estateData = $this->getEstateData();
-		$estateId = $this->createEstate($estateData);
-		$this->createOwnerRelation($estateId, $addressId);
-
-		if (null != $recipient) {
-			$this->sendContactRequest($recipient, $estateId, $estateData, $subject);
+		try {
+			if ( $pDataFormConfiguration->getCreateOwner() ) {
+				$checkduplicate = $pDataFormConfiguration->getCheckDuplicateOnCreateAddress();
+				$contactType = $pDataFormConfiguration->getContactType();
+				$addressId  = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
+				                                                 ->createOrCompleteAddress( $pFormData,
+					                                                 $checkduplicate, $contactType);
+				$estateData = $this->getEstateData();
+				$estateId   = $this->createEstate( $estateData );
+				$this->createOwnerRelation( $estateId, $addressId );
+			}
+		} finally {
+			if ( null != $recipient ) {
+				$this->sendContactRequest( $recipient, $estateId ?? 0, $estateData ?? [], $subject );
+			}
 		}
 	}
 

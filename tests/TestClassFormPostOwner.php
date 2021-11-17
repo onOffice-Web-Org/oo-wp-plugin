@@ -627,6 +627,7 @@ class TestClassFormPostOwner
 		$pDataFormConfiguration->setRecipient('test@my-onoffice.com');
 		$pDataFormConfiguration->setPages(2);
 		$pDataFormConfiguration->setFormName('test');
+		$pDataFormConfiguration->setCreateOwner(true);
 
 		return $pDataFormConfiguration;
 	}

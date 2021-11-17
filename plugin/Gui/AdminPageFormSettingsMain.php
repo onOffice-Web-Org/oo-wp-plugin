@@ -118,7 +118,8 @@ class AdminPageFormSettingsMain
 				/* @var $pAdminPage AdminPageFormSettingsInquiry */
 				$pAdminPage->setShowSearchCriteriaFields(true);
 				$pAdminPage->setShowAddressFields(true);
-				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
+				$pAdminPage->setShowCreateInterest(true);
+				$pAdminPage->setShowCheckDuplicatesInterestOwner(true);
 				$pAdminPage->setShowGeoPositionSettings(true);
 				$pAdminPage->setShowContactTypeSelect(true);
 				break;
@@ -126,7 +127,8 @@ class AdminPageFormSettingsMain
 				/* @var $pAdminPage AdminPageFormSettingsInquiry */
 				$pAdminPage->setShowEstateFields(true);
 				$pAdminPage->setShowAddressFields(true);
-				$pAdminPage->setShowCheckDuplicates(true); // address will be created anyway
+				$pAdminPage->setShowCreateOwner(true);
+				$pAdminPage->setShowCheckDuplicatesInterestOwner(true);
 				$pAdminPage->setShowMessageInput(true);
 				$pAdminPage->setShowContactTypeSelect(true);
 				break;

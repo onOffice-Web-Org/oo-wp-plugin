@@ -79,14 +79,20 @@ class FormPostInterest
 		$pFormConfiguration = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfiguration->getRecipient();
 		$subject = $pFormConfiguration->getSubject();
-		$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
-		$contactType = $pFormConfiguration->getContactType();
-		$addressId = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
-			->createOrCompleteAddress($pFormData, $checkduplicate, $contactType);
-		$this->createSearchcriteria($pFormData, $addressId);
 
-		if ($recipient != null) {
-			$this->sendEmail($pFormData, $recipient, $subject);
+		try {
+			if ( $pFormConfiguration->getCreateInterest() ) {
+				$checkduplicate = $pFormConfiguration->getCheckDuplicateOnCreateAddress();
+						$contactType = $pFormConfiguration->getContactType();
+				$addressId = $this->_pFormPostInterestConfiguration->getFormAddressCreator()
+				                                                   ->createOrCompleteAddress( $pFormData,
+					                                                   $checkduplicate, $contactType);
+				$this->createSearchcriteria( $pFormData, $addressId );
+			}
+		} finally {
+			if ( $recipient != null ) {
+				$this->sendEmail( $pFormData, $recipient, $subject );
+			}
 		}
 	}
 

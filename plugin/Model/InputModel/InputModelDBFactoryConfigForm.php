@@ -48,7 +48,16 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_CREATEADDRESS = 'formCreateAddress';
 
 	/** */
+	const INPUT_FORM_CREATEINTEREST = 'formCreateInterest';
+
+	/** */
+	const INPUT_FORM_CREATEOWNER = 'formCreateOwner';
+
+	/** */
 	const INPUT_FORM_CHECKDUPLICATES = 'formCheckDuplicates';
+
+	/** */
+	const INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER = 'formCheckDuplicatesInterestOwner';
 
 	/** */
 	const INPUT_FORM_REQUIRES_CAPTCHA = 'formRequiresCaptcha';
@@ -110,11 +119,23 @@ class InputModelDBFactoryConfigForm
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'createaddress',
 		],
+		self::INPUT_FORM_CREATEINTEREST => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'createaddress',
+		],
+		self::INPUT_FORM_CREATEOWNER => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'createaddress',
+		],
 		self::INPUT_FORM_LIMIT_RESULTS => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'limitresults',
 		],
 		self::INPUT_FORM_CHECKDUPLICATES => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'checkduplicates',
+		],
+		self::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'checkduplicates',
 		],
