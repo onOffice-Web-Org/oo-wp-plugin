@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 20;
+	const MAX_VERSION = 21;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -159,10 +159,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 20;
 		}
 
-        if ($dbversion == 20) {
+		if ($dbversion == 20) {
+			$this->updateCreateAddressFieldOfIntersetAndOwnerForm();
             dbDelta( $this->getCreateQueryListviews() );
-            $dbversion = 21;
-        }
+			$dbversion = 21;
+		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
@@ -234,8 +235,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`sortBySetting` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
 			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
-			`page_shortcode` tinytext NOT NULL,
-			`sorting_type_direction` varchar(100) NOT NULL,
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -298,28 +297,19 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$template = $templatePathsForm;
 			}
 		}
-        $data = array(
-            'name' => 'Default Form',
-            'form_type' => 'contact',
-            'template' => $template,
-            'country_active' => 1,
-            'zip_active' => 1,
-            'street_active' => 1,
-            'radius_active' => 1,
-            'geo_order' => 'street,zip,city,country,radius'
-        );
-        $query = "INSERT IGNORE $tableName (name, form_type, template, country_active, zip_active, street_active, radius_active, geo_order)";
-        $query .= "VALUES (";
-        $query .= "'" . esc_sql($data['name']) ."',";
-        $query .= "'" . esc_sql($data['form_type']) ."',";
-        $query .= "'" . esc_sql($data['template']) ."',";
-        $query .= esc_sql($data['country_active']) . ",";
-        $query .= esc_sql($data['zip_active']) . ",";
-        $query .= esc_sql($data['street_active']) . ",";
-        $query .= esc_sql($data['radius_active']) . ",";
-        $query .= "'" . esc_sql($data['geo_order']) ."')";
-        $this->_pWPDB->query($query);
-
+		$this->_pWPDB->insert(
+			$tableName,
+			array(
+				'name' => 'Default Form',
+				'form_type' => 'contact',
+				'template' => $template,
+				'country_active' => 1,
+				'zip_active' => 1,
+				'street_active' => 1,
+				'radius_active' => 1,
+				'geo_order' => 'street,zip,city,country,radius'
+			)
+		);
 		$defaultFormId = $this->_pWPDB->insert_id;
 		$this->installDataQueryFormFieldConfig($defaultFormId);
 	}
@@ -698,6 +688,21 @@ class DatabaseChanges implements DatabaseChangesInterface
 					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
 			}
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function updateCreateAddressFieldOfIntersetAndOwnerForm()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_forms
+				SET `createaddress` = 1
+				WHERE `form_type` = 'interest' OR `form_type` = 'owner'";
+
+		$this->_pWPDB->query($sql);
 	}
 
 

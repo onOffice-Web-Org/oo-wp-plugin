@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.2 =
+
+**Changes**
+
+* Contact, interest, and owner forms now all have a checkbox that configures whether an address is created. The dublicate checkbox gets a new label Check for Duplicates (override existing address if the email is the same) 
+
 = 2.20.1 =
 
 **Changes**

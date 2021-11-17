@@ -57,7 +57,16 @@ class AdminPageFormSettingsContact
 	private $_showCreateAddress = false;
 
 	/** @var bool */
+	private $_showCreateInterest = false;
+
+	/** @var bool */
+	private $_showCreateOwner = false;
+
+	/** @var bool */
 	private $_showCheckDuplicates = false;
+
+	/** @var bool */
+	private $_showCheckDuplicatesInterestOwner = false;
 
 	/** @var bool */
 	private $_showNewsletterCheckbox = false;
@@ -71,6 +80,7 @@ class AdminPageFormSettingsContact
 
 	/**
 	 *
+	 * @throws \Exception
 	 */
 
 	protected function buildForms()
@@ -107,8 +117,29 @@ class AdminPageFormSettingsContact
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
+		if ($this->_showCreateInterest) {
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEINTEREST);
+			if (empty($pInputModelBuilder->getValues())) {
+				$pInputModel->setValue(true);
+			}
+			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
+		if ($this->_showCreateOwner) {
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEOWNER);
+			if (empty($pInputModelBuilder->getValues())) {
+				$pInputModel->setValue(true);
+			}
+			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
+			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
+		if ($this->_showCheckDuplicatesInterestOwner) {
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -227,6 +258,10 @@ class AdminPageFormSettingsContact
 	public function setShowCheckDuplicates(bool $showCheckDuplicates)
 		{ $this->_showCheckDuplicates = $showCheckDuplicates; }
 
+	/** @param bool $showCheckDuplicatesInterestOwner */
+	public function setShowCheckDuplicatesInterestOwner(bool $showCheckDuplicatesInterestOwner)
+		{ $this->_showCheckDuplicatesInterestOwner = $showCheckDuplicatesInterestOwner; }
+
 	/** @param bool $showNewsletterCheckbox */
 	public function setShowNewsletterCheckbox(bool $showNewsletterCheckbox)
 		{ $this->_showNewsletterCheckbox = $showNewsletterCheckbox; }
@@ -238,4 +273,18 @@ class AdminPageFormSettingsContact
 	/** @param bool $showEstateContextCheckbox */
 	public function setShowEstateContextCheckbox(bool $showEstateContextCheckbox)
 		{ $this->_showEstateContextCheckbox = $showEstateContextCheckbox; }
+
+	/**
+	 * @param bool $showCreateInterest
+	 */
+	public function setShowCreateInterest( bool $showCreateInterest ) {
+		$this->_showCreateInterest = $showCreateInterest;
+	}
+
+	/**
+	 * @param bool $showCreateOwner
+	 */
+	public function setShowCreateOwner( bool $showCreateOwner ) {
+		$this->_showCreateOwner = $showCreateOwner;
+	}
 }
