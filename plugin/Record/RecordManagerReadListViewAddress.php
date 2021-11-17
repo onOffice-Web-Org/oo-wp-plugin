@@ -85,24 +85,15 @@ class RecordManagerReadListViewAddress
 
         if (!empty($_GET["search"]))
 		{
-				$where .= "AND name LIKE '%".$_GET['search']."%' OR template LIKE '%".$_GET['search']."%'";
+			$where .= "AND name LIKE '%".$_GET['search']."%' OR template LIKE '%".$_GET['search']."%'";
+		}
+        $sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
+			FROM {$prefix}oo_plugin_listviews_address
+			{$join}
+			WHERE {$where}
+			ORDER BY `name` ASC
+			LIMIT {$this->getOffset()}, {$this->getLimit()}";
 
-			$sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
-				FROM {$prefix}oo_plugin_listviews_address
-				{$join}
-				WHERE {$where}
-				ORDER BY `name` ASC
-				LIMIT {$this->getOffset()}, {$this->getLimit()}";
-		}
-        else
-		{
-			$sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
-				FROM {$prefix}oo_plugin_listviews_address
-				{$join}
-				WHERE {$where}
-				ORDER BY `name` ASC
-				LIMIT {$this->getOffset()}, {$this->getLimit()}";
-		}
 
 
         $this->setFoundRows($pWpDb->get_results($sql, OBJECT));
