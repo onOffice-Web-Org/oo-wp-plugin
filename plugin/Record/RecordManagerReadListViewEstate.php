@@ -91,13 +91,12 @@ class RecordManagerReadListViewEstate
 		{
 			$where .= "AND name LIKE '%".$_GET['search']."%' OR template LIKE '%".$_GET['search']."%'";
 		}
-
-		$sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
-			FROM {$prefix}oo_plugin_listviews
-			{$join}
-			WHERE {$where}
-			ORDER BY `name` ASC
-			LIMIT {$this->getOffset()}, {$this->getLimit()}";
+        $sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
+								FROM {$prefix}oo_plugin_listviews
+								{$join}
+								WHERE {$where}
+								ORDER BY `name` ASC
+								LIMIT {$this->getOffset()}, {$this->getLimit()}";
 
         $this->setFoundRows($pWpDb->get_results($sql, OBJECT));
         $this->setCountOverall($pWpDb->get_var('SELECT FOUND_ROWS()'));
