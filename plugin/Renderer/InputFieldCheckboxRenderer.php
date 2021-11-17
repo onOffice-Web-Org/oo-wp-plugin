@@ -52,11 +52,12 @@ class InputFieldCheckboxRenderer
 	 *
 	 */
 
-	public function __construct($name, $value,$description = '')
+	public function __construct($name, $value, $description = '')
 	{
 		$this->_descriptionTextHTML = $description;
 		parent::__construct('checkbox', $name, $value);
 	}
+
 
 	/**
 	 *
