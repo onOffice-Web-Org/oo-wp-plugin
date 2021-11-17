@@ -73,6 +73,36 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.2 =
+
+**Changes**
+
+* Contact, interest, and owner forms now all have a checkbox that configures whether an address is created. The dublicate checkbox gets a new label Check for Duplicates (override existing address if the email is the same) 
+
+= 2.20.1 =
+
+**Changes**
+
+* The URL now also contains id and title.
+
+= 2.20.0 =
+
+**Changes**
+
+* Allow duplicating of all lists.
+
+= 2.19.7 =
+
+**Changes**
+
+* When indexing for a PDF-Exposé is turned of, that's now applied to all search engines.
+
+= 2.19.6 =
+
+**Changes**
+
+* Adjusted the hint text, label and position of the email-address field. 
+
 = 2.19.5 =
 
 **Changes**
