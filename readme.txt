@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.3 =
+
+**Changes**
+
+* The plugin is now represented by the onOffice logo.
+
 = 2.20.2 =
 
 **Changes**
