@@ -98,7 +98,7 @@ class AdminPageFormList
 		$this->_pFormsTable->prepare_items();
 		$page = '<input type="hidden" id="fname" name="type" value="'.$_GET['type'].'">
 			<input type="hidden" id="fname" name="page" value="onoffice-forms">';
-		$buttonSearch = 'Search Forms';
+		$buttonSearch = __('Search Forms', 'onoffice-for-wp-websites');
 		$this->generateSearchForm($page,$buttonSearch);
 		echo '<p>';
 		echo '<form method="post">';

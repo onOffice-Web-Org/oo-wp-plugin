@@ -59,7 +59,15 @@ msgstr "Por favor, configure primero sus credenciales de la API de onOffice!"
 #: plugin/Gui/AdminPageSimilarEstates.php:145
 msgid "onOffice"
 msgstr "onOffice"
-
+#: plugin/Gui/AdminPageAddressList.php:63
+msgid "Search Addresses"
+msgstr "Direcciones de búsqueda"
+#: plugin/Gui/AdminPageEstateList.php:56
+msgid "Search Estate Views"
+msgstr "Buscar vistas inmobiliarias"
+#: plugin/Gui/AdminPageFormList.php:101
+msgid "Search Forms"
+msgstr "Formularios de búsqueda"
 #: plugin/Controller/AdminViewController.php:154
 #: plugin/Gui/AdminPageAddressList.php:59
 msgid "Addresses"

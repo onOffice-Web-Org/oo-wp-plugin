@@ -55,7 +55,15 @@ msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
 #: plugin/Gui/AdminPageSimilarEstates.php:145
 msgid "onOffice"
 msgstr "onOffice"
-
+#: plugin/Gui/AdminPageAddressList.php:63
+msgid "Search Addresses"
+msgstr "Adressen suchen"
+#: plugin/Gui/AdminPageEstateList.php:56
+msgid "Search Estate Views"
+msgstr "Nachlassansichten durchsuchen"
+#: plugin/Gui/AdminPageFormList.php:101
+msgid "Search Forms"
+msgstr "Formulare durchsuchen"
 #: plugin/Controller/AdminViewController.php:154
 #: plugin/Gui/AdminPageAddressList.php:59
 msgid "Addresses"
