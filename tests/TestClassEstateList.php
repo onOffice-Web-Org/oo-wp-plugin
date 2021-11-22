@@ -274,10 +274,6 @@ class TestClassEstateList
 
 	public function testGetEstatePictures()
 	{
-		$pEstatePicturesMock = new EstateFiles;
-		$this->_pEnvironment->method('getEstateFiles')
-			->willReturn($pEstatePicturesMock);
-
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
 
@@ -292,10 +288,6 @@ class TestClassEstateList
 
 	public function testGetEstatePictureUrl()
 {
-	$pEstatePicturesMock = new EstateFiles;
-	$this->_pEnvironment->method('getEstateFiles')
-		->willReturn($pEstatePicturesMock);
-
 	$this->_pEstateList->loadEstates();
 	$this->_pEstateList->estateIterator();
 	$this->assertEquals($this->_estatePicturesByEstateId[15][2]['url'],
@@ -358,11 +350,6 @@ class TestClassEstateList
 	 */
 	private function doTestGetEstatePictureMethodGeneric(string $methodName, array $expectedResults)
 	{
-		$pEstateFiles = new EstateFiles;
-
-		$this->_pEnvironment->method('getEstateFiles')
-			->willReturn($pEstateFiles);
-
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals($expectedResults[0], $this->_pEstateList->$methodName(2));
@@ -825,6 +812,9 @@ class TestClassEstateList
 				'getDataDetailViewHandler',
 			])
 			->getMock();
+		$pEstatePicturesMock = new EstateFiles;
+		$this->_pEnvironment->method('getEstateFiles')
+			->willReturn($pEstatePicturesMock);
 		$pDataListView = $this->getDataView();
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setConstructorArgs([$this->_pContainer])
