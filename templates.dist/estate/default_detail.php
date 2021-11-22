@@ -58,11 +58,16 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					if ( $value == "" ) {
 						continue;
 					}
+                    if ($field == 'multiParkingLot') {
+                        include 'ParkingLot.php';
+                        continue;
+                    }
 					echo '<div class="oo-detailslisttd">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'."\n"
 						.'<div class="oo-detailslisttd">'
 							.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
 							.'</div>'."\n";
-				} ?>
+				}
+                ?>
 			</div>
 
 			<?php if ( $currentEstate["objektbeschreibung"] !== "" ) { ?>
