@@ -46,9 +46,9 @@ abstract class AdminPage
 
 	public function generateSearchForm($page,$button)
 	{
-		echo html_entity_decode(htmlentities('<form action="'.admin_url('admin.php').'" method="get" id="onoffice-form-search">'.$page.
+		echo '<form action="'.admin_url('admin.php').'" method="get" id="onoffice-form-search">'.html_entity_decode(htmlentities($page)).
 			'<input type="text" id="fname" name="search">
-			<input type="submit" value="'.$button.'">
-			</form>'));
+			<input type="submit" value="'.html_entity_decode(htmlentities($button)).'">
+			</form>';
 	}
 }
