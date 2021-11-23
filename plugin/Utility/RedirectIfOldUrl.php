@@ -31,7 +31,7 @@ class RedirectIfOldUrl
 		if (empty($matches[2])) { //Check pass rule and has Unique ID
 			return true;
 		}
-		if ($this->_pLanguageSwitcher->isOptionShowTitleUrl() && $fullLink != $currentLink) {
+		if ($fullLink != $currentLink) {
 			wp_redirect($fullLink, 301);
 			exit;
 		}
