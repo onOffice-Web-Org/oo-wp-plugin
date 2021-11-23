@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.4 =
+
+**Changes**
+
+* The plugin no longer overwrites the theme folder when updating the theme. 
+
 = 2.20.3 =
 
 **Changes**
