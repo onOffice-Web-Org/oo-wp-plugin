@@ -75,6 +75,7 @@ class TestClassRedirectIfOldUrl
 	 */
 	public function testRedirectDetailViewSameUrl()
 	{
+		add_option('onoffice-detail-view-showTitleUrl', true);
 		global $wp;
 		global $wp_filter;
 		$wp->request = 'detail-view/123-show-title-url';
