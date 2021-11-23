@@ -398,6 +398,10 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
+		if (!$this->getShowReferenceStatus() && $recordModified['vermarktungsstatus'] === 'Reference') {
+			$recordModified['vermarktungsstatus'] = '';
+		}
+
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 
 		return $pArrayContainer;
@@ -656,6 +660,15 @@ class EstateList
 	{
 		return $this->_pDataView instanceof DataListView &&
 			$this->_pDataView->getShowStatus();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getShowReferenceStatus(): bool
+	{
+		return $this->_pDataView instanceof DataListView &&
+			$this->_pDataView->getShowReferenceStatus();
 	}
 
 	/**

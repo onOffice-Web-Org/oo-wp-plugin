@@ -132,7 +132,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateSortByUserDefinedDefault();
 			$dbversion = 15;
 		}
-		
+
 		if ($dbversion == 15) {
 			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
@@ -162,6 +162,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 20) {
 			$this->updateCreateAddressFieldOfIntersetAndOwnerForm();
 			$dbversion = 21;
+		}
+
+		if ($dbversion == 21) {
+			dbDelta($this->getQueryAddColumnShowReferenceEstateTableEstateView());
+			$dbversion = 22;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -687,6 +692,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
 			}
 		}
+	}
+
+	/**
+	 *
+	 */
+	private function getQueryAddColumnShowReferenceEstateTableEstateView()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix."oo_plugin_listviews";
+		return "ALTER TABLE {$tableName} ADD COLUMN `show_reference_estate` tinyint(1) NOT NULL DEFAULT '0'";
 	}
 
 
