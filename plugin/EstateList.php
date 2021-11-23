@@ -106,7 +106,7 @@ class EstateList
 	private $_redirectIfOldUrl;
 
 	/** @var bool */
-	private bool $_isOverride_DataView = false;
+	private $_isOverride_DataView = false;
 
 	/**
 	 * @param DataView $pDataView
@@ -692,7 +692,7 @@ class EstateList
 	/**
 	 * @param $isOverride_DataView
 	 */
-	public function setIsOverrideDataView($isOverride_DataView): void
+	public function setIsOverrideDataView($isOverride_DataView)
 		{ $this->_isOverride_DataView = $isOverride_DataView; }
 
 	/** @return EstateFiles */
