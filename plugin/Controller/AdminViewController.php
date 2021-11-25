@@ -402,7 +402,7 @@ class AdminViewController
 		$pWPOptionWrapper = new WPOptionWrapperDefault();
 		if ( count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0 && $pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {
 			echo '<div class="notice notice-warning is-dismissible">
-						<p> '.__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.'
+						<p> '.esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.'
 							.'You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.'
 							.'We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description.'
 							.'This allows you to manage the title and description with your active SEO plugin.','onoffice-for-wp-websites')

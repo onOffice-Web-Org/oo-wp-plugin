@@ -404,42 +404,17 @@ class EstateList
 		}
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
 		{
-			$recordModified['onoffice-settings-title-and-description'] = true;
+			add_action('wp_head',function ($recordModified){
+			?>
+				<title><?php echo $recordModified["objekttitel"]; ?></title>
+				<meta name="description" content="<?php echo $recordModified["objektbeschreibung"]; ?>">
+			<?php
+			});
 		}
-		$lang = Language::getDefault();
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 1)
 		{
-			$listCustomField = [
-				'EN' => [
-					'objekttitel' => apply_filters('get_post_metadata','onoffice_title'),
-					'objektbeschreibung' => apply_filters('get_post_metadata','onoffice_description'),
-					'ort' => apply_filters('get_post_metadata','onoffice_city'),
-					'plz' => apply_filters('get_post_metadata','onoffice_postal_code'),
-					'objektart' => apply_filters('get_post_metadata','onoffice_property_class'),
-					'vermarktungsart' => apply_filters('get_post_metadata','onoffice_marketing_method'),
-					'Id' => apply_filters('get_post_metadata','onoffice_id')
-				],
-				'DEU' => [
-					'objekttitel' => apply_filters('get_post_metadata','onoffice_titel'),
-					'objektbeschreibung' => apply_filters('get_post_metadata','onoffice_beschreibung'),
-					'ort' => apply_filters('get_post_metadata','onoffice_ort'),
-					'plz' => apply_filters('get_post_metadata','onoffice_plz'),
-					'objektart' => apply_filters('get_post_metadata','onoffice_objektart'),
-					'vermarktungsart' => apply_filters('get_post_metadata','onoffice_vermarktungsart'),
-					'Id' => apply_filters('get_post_metadata','onoffice_datensatznr')
-				],
-
-			];
-			foreach ($recordModified as $key => $record) {
-				if ($lang == 'DEU')
-				{
-					$recordModified[$key] = $listCustomField[$lang][$key];
-				}
-				else
-				{
-					$recordModified[$key] = $listCustomField['EN'][$key];
-				}
-			}
+			$estateListHandle = new EstateListHandle();
+			$recordModified = $estateListHandle->handleRecord($recordModified);
 		}
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 		return $pArrayContainer;
