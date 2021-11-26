@@ -47,6 +47,9 @@ class FieldsCollectionToContentFieldLabelArrayConverter
 		foreach ($pFieldsCollection->getFieldsByModule($module) as $key => $pField) {
 			$content = $pField->getCategory() ?: __('(unnamed category)', 'onoffice-for-wp-websites');
 
+            if ($content == __('(unnamed category)', 'onoffice-for-wp-websites') && $pField->getName() == 'message') {
+                continue;
+            }
 			$categories []= $content;
 			$result[$content][$key] = $pField->getLabel();
 		}
