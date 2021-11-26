@@ -33,6 +33,7 @@ use function plugins_url;
 use function wp_enqueue_script;
 use function wp_localize_script;
 use function wp_register_script;
+use function add_screen_option;
 
 /**
  *
@@ -109,6 +110,11 @@ class AdminPageEstateList
 
 	public function preOutput()
 	{
+		$screen = get_current_screen();
+		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-estates") {
+			add_screen_option('per_page', array('option' => 'onoffice_estate_listview_per_page'));
+		}
+
 		$this->_pEstateListTable = new EstateListTable();
 		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): Table\WP\ListTable {
 			return $this->_pEstateListTable;

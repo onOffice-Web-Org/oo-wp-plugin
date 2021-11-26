@@ -68,7 +68,7 @@ class EstateListTable extends ListTable
 			'screen' => $args['screen'] ?? null,
 		]);
 
-		$this->_itemsPerPage = $this->get_items_per_page('onoffice-estate-listview_per_page', 10);
+		$this->_itemsPerPage = $this->get_items_per_page('onoffice_estate_listview_per_page', 20);
 		$this->_pFilterCall = new FilterCall(onOfficeSDK::MODULE_ESTATE);
 	}
 
@@ -114,8 +114,8 @@ class EstateListTable extends ListTable
 
 		$this->set_pagination_args([
 			'total_items' => $itemsCount,
-			'per_page' => $this->_itemsPerPage,
-			'total_pages' => ceil($itemsCount / 10),
+			'per_page' => $itemsPerPage,
+			'total_pages' => ceil($itemsCount / $itemsPerPage),
 		]);
 	}
 

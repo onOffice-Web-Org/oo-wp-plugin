@@ -36,6 +36,7 @@ use function add_query_arg;
 use function admin_url;
 use function check_admin_referer;
 use function esc_html__;
+use function add_screen_option;
 
 /**
  *
@@ -113,6 +114,11 @@ class AdminPageAddressList
 
 	public function preOutput()
 	{
+		$screen = get_current_screen();
+		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-addresses") {
+			add_screen_option( 'per_page', array('option' => 'onoffice_address_listview_per_page') );
+		}
+
 		$this->_pAddressListTable = new AddressListTable();
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
