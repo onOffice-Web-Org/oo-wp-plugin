@@ -300,6 +300,7 @@ class TestClassFormPostInterest
 		$pConfig->setSubject('Interest');
 		$pConfig->setTemplate('testtemplate.php');
 		$pConfig->setFormType(Form::TYPE_INTEREST);
+		$pConfig->setCreateInterest(true);
 
 		return $pConfig;
 	}
