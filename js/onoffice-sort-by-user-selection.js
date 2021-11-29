@@ -8,11 +8,6 @@ jQuery(document).ready(function($) {
             'oopluginlistviews-sortby'
         ];
 
-        var defaultsorts = [
-            'oopluginlistviews-sortby',
-            'oopluginlistviews-sortorder'
-        ];
-
         $("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").change(function (){
             if(!this.checked) {
                 sortbynames.forEach(function(item){
@@ -20,24 +15,6 @@ jQuery(document).ready(function($) {
                 });
             }
         });
-
-        if ($("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").prop('checked') == true) {
-            sortbynames.forEach(function(item){
-                $("#viewrecordsfilter").find("[name="+item+"]").parent().show();
-            });
-
-            defaultsorts.forEach(function(item){
-                $("#viewrecordsfilter").find("[name="+item+"]").parent().hide();
-            });
-        } else {
-            sortbynames.forEach(function(item){
-                $("#viewrecordsfilter").find("[name="+item+"]").parent().hide();
-            });
-
-            defaultsorts.forEach(function(item){
-                $("#viewrecordsfilter").find("[name="+item+"]").parent().show();
-            });
-        }
     };
 
     onOffice.generateSortByUserDefinedDefault = function() {

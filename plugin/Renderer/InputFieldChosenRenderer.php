@@ -50,9 +50,13 @@ class InputFieldChosenRenderer
 				$output .= '</optgroup>';
 			}
 		} else {
+			$selectedValue = $this->getSelectedValue();
 			foreach ($values as $key => $label) {
 				$selected = null;
-				if (in_array($key, $this->getSelectedValue())) {
+				if (
+					(is_array($selectedValue) && in_array($key, $this->getSelectedValue()))
+					|| $key === $selectedValue
+				) {
 					$selected = 'selected="selected"';
 				}
 				$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
