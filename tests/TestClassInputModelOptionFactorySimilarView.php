@@ -60,6 +60,7 @@ class TestClassInputModelOptionFactorySimilarView
 
 		$this->assertEquals($pInputModelOption->getOptionGroup(), 'onoffice');
 		$this->assertEquals($pInputModelOption->getName(), 'enablesimilarestates');
+		$this->assertEquals($pInputModelOption->getDescriptionTextHTML(), null);
 		$this->assertEquals($pInputModelOption->getDescriptionRadioTextHtmls(), []);
 	}
 
