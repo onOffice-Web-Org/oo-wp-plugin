@@ -73,6 +73,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.6 =
+
+**Fixes**
+
+* Errors occured when creating or editing any form and also in the frontend on pages where the forms' shortcodes are used. The cause of the errors has been found and the errors were fixed. 
+
+* Fixed minor bugs.
+
 = 2.20.5 =
 
 **Changes**
