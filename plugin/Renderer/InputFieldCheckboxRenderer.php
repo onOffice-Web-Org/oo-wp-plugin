@@ -42,17 +42,22 @@ class InputFieldCheckboxRenderer
 	/** @var array */
 	private $_checkedValues = [];
 
+	/** @var string */
+	private $_descriptionTextHTML = '';
 	/**
 	 *
 	 * @param string $name
 	 * @param mixed $value
+	 * @param mixed $description
 	 *
 	 */
 
-	public function __construct($name, $value)
+	public function __construct($name, $value, $description = '')
 	{
+		$this->_descriptionTextHTML = $description;
 		parent::__construct('checkbox', $name, $value);
 	}
+
 
 	/**
 	 *
@@ -124,7 +129,8 @@ class InputFieldCheckboxRenderer
 				.'" value="'.esc_html($this->getValue()).'"'
 				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
 				.$this->renderAdditionalAttributes()
-				.' id="'.esc_html($this->getGuiId()).'">';
+				.' id="'.esc_html($this->getGuiId()).'">'
+				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '');
 		}
 	}
 
