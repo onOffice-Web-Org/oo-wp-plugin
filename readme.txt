@@ -73,6 +73,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.7 =
+
+**Fixes**
+
+* The fallback e-mail description layout has been fixed.
+
+* The default value for radius is now displayed in the frontend porperty list.
+
 = 2.20.6 =
 
 **Fixes**
