@@ -90,7 +90,7 @@ class EstateUnitsTable extends ListTable
 		$pRecordRead->addColumn('name', 'shortcode');
 		$pRecordRead->addWhere("`list_type` = 'units'");
 
-		$this->setItems($pRecordRead->getRecords());
+		$this->setItems($pRecordRead->getRecordsSortedAlphabetically());
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args( array(
@@ -157,6 +157,10 @@ class EstateUnitsTable extends ListTable
 
 		$actions = [];
 		$actions['edit'] = '<a href="'.$editLink.'">'.esc_html__('Edit').'</a>';
+		$actions['duplicate'] = "<a class='button-duplicate' href='"
+			. esc_attr(wp_nonce_url(admin_url('admin.php') . '?page=onoffice-estates&action=bulk_duplicate&listVewId=' . $pItem->ID,
+				'bulk-estatelists'))
+			. "'>" . esc_html__('Duplicate', 'onoffice-for-wp-websites') . "</a>";
 		$actions['delete'] = "<a class='submitdelete' href='"
 			.wp_nonce_url(admin_url('admin.php').'?page=onoffice-estates&tab=units&action=bulk_delete&estatelist[]='.$pItem->ID, 'bulk-estatelists')
 			."' onclick=\"if ( confirm( '"
