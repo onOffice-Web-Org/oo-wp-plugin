@@ -72,14 +72,14 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php if ( $currentEstate["objektbeschreibung"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Description', 'onoffice'); ?></h2>
-					<?php echo $currentEstate["objektbeschreibung"]."\n"; ?>
+					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
 				</div>
 			<?php } ?>
 
 			<?php if ( $currentEstate["lage"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Location', 'onoffice'); ?></h2>
-					<?php echo $currentEstate["lage"]."\n"; ?>
+					<?php echo nl2br($currentEstate["lage"]); ?>
 				</div>
 			<?php }
 
@@ -96,14 +96,14 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php if ( $currentEstate["ausstatt_beschr"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Equipment', 'onoffice'); ?></h2>
-					<?php echo $currentEstate["ausstatt_beschr"]."\n"; ?>
+					<?php echo nl2br($currentEstate["ausstatt_beschr"]); ?>
 				</div>
 			<?php } ?>
 
 			<?php if ( $currentEstate["sonstige_angaben"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Other Information', 'onoffice'); ?></h2>
-					<?php echo $currentEstate["sonstige_angaben"]."\n"; ?>
+					<?php echo nl2br($currentEstate["sonstige_angaben"]); ?>
 				</div>
 			<?php } ?>
 
