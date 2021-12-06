@@ -59,12 +59,6 @@ class TestClassAdminViewController
 		$pWpOption = new WPOptionWrapperTest();
 		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
 		$pDbChanges->install();
-//		$pSDKWrapper = $this->getMockBuilder(SDKWrapper::class)
-//			->getMock();
-//		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
-//		$pCache->expects($this->once())->method('getHttpResponseByParameterArray');
-//		$cacheInstance = [$pCache];
-//		$pSDKWrapper->expects($this->once())->method('getCache')->will($this->returnValue($cacheInstance));
 	}
 
 	/**

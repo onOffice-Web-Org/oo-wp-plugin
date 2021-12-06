@@ -296,19 +296,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$template = $templatePathsForm;
 			}
 		}
-//		$this->_pWPDB->insert(
-//			$tableName,
-//			array(
-//				'name' => 'Default Form',
-//				'form_type' => 'contact',
-//				'template' => $template,
-//				'country_active' => 1,
-//				'zip_active' => 1,
-//				'street_active' => 1,
-//				'radius_active' => 1,
-//				'geo_order' => 'street,zip,city,country,radius'
-//			)
-//		);
 		$data = array(
 			'name' => 'Default Form',
 			'form_type' => 'contact',
