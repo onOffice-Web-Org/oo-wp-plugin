@@ -52,7 +52,7 @@ class AdminPageEstateList
 	public function renderContent()
 	{
 		$this->_pEstateListTable->prepare_items();
-		$page = '<input type="hidden" id="fname" name="page" value="onoffice-estates">';
+		$page = 'onoffice-estates';
 		$buttonSearch = __('Search Estate Views', 'onoffice-for-wp-websites');
 		$this->generateSearchForm($page,$buttonSearch);
 		echo '<p>';

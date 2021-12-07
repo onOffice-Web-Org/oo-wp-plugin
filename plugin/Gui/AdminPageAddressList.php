@@ -59,7 +59,7 @@ class AdminPageAddressList
 	{
 		$this->generatePageMainTitle(__('Addresses', 'onoffice-for-wp-websites'));
 		$this->_pAddressListTable->prepare_items();
-		$page = '<input type="hidden" id="fname" name="page" value="onoffice-addresses">';
+		$page = 'onoffice-addresses';
 		$buttonSearch = __('Search Addresses', 'onoffice-for-wp-websites');
 		$this->generateSearchForm($page,$buttonSearch);
 		echo '<p>';
