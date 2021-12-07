@@ -46,6 +46,7 @@ abstract class AdminPage
 
 	public function generateSearchForm($page,$button,$type = null)
 	{
+        $inputType = '';
         if (!empty($type))
         {
             $inputType = "<input type='hidden' id='fname' name='type' value='".esc_html($type)."'>";
