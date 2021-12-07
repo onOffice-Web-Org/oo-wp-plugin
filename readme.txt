@@ -73,6 +73,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.8 =
+
+**Fixes**
+
+* The field "vermarktungsstatus" is no longer added to the detail view when the plugin is installed.
+
+* The saving message now also appears in case a numeric field is added to the configuration.
+
 = 2.20.7 =
 
 **Fixes**
