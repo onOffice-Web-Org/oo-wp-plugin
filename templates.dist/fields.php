@@ -236,7 +236,7 @@ if (!function_exists('renderParkingLot')) {
 			}
 			$element = sprintf(__('%1$s at %2$s'), getParkingName($key, $parking['Count']), formatPrice($parking['Price'], $language, $locale));
 			if (!empty($parking['MarketingType'])) {
-				$element .= __(" ({$parking['MarketingType']})");
+				$element .= ' (' . $parking['MarketingType'] . ')';
 			}
 			array_push($messages, $element);
 		}
