@@ -165,7 +165,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 21) {
-			dbDelta($this->getQueryAddColumnContactTypePluginFormTable());
+			dbDelta($this->getCreateQueryForms());
 			$dbversion = 22;
 		}
 
@@ -279,6 +279,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',
+			`contact_type` varchar(255) NULL DEFAULT NULL,
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -702,18 +703,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 			}
 		}
 	}
-
-	public function getQueryAddColumnContactTypePluginFormTable() :string
-	{
-		$prefix = $this->getPrefix();
-		$charsetCollate = $this->getCharsetCollate();
-		$tableName = $prefix . "oo_plugin_forms";
-
-		return "CREATE TABLE $tableName (
-			`contact_type` varchar(255) NULL DEFAULT NULL
-		) $charsetCollate;";
-	}
-
 
 	/**
 	 *
