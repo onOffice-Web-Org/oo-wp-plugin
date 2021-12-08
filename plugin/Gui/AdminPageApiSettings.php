@@ -58,9 +58,9 @@ class AdminPageApiSettings
 		parent::__construct($pageSlug);
 		$this->_encrypter = $this->getContainer()->make(SymmetricEncryption::class);
 		$this->addFormModelAPI();
-        $this->addFormModelMapProvider($pageSlug);
+		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleCaptcha();
-        $this->addFormModelDetailView($pageSlug);
+		$this->addFormModelDetailView($pageSlug);
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleBotSettings();
 	}
