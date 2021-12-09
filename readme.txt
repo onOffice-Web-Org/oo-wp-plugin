@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.9 =
+
+**Fixes**
+
+* Wherever fields are used (real estate, addresses, forms) the ID of the field, which appears after the field tile is expanded, can now be selected and copied.
+
 = 2.20.8 =
 
 **Fixes**
