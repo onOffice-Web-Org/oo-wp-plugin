@@ -73,6 +73,56 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.9 =
+
+**Fixes**
+
+* Wherever fields are used (real estate, addresses, forms) the ID of the field, which appears after the field tile is expanded, can now be selected and copied.
+
+= 2.20.8 =
+
+**Fixes**
+
+* The field "vermarktungsstatus" is no longer added to the detail view when the plugin is installed.
+
+* The saving message now also appears in case a numeric field is added to the configuration.
+
+= 2.20.7 =
+
+**Fixes**
+
+* The fallback e-mail description layout has been fixed.
+
+* The default value for radius is now displayed in the frontend porperty list.
+
+= 2.20.6 =
+
+**Fixes**
+
+* Errors occured when creating or editing any form and also in the frontend on pages where the forms' shortcodes are used. The cause of the errors has been found and the errors were fixed. 
+
+* Fixed minor bugs.
+
+= 2.20.5 =
+
+**Changes**
+
+* The option for indexing PDF brochures has now an understandable label which tells the user what he/ she can expact when selecting it. 
+
+* In the default_detail.php template, free texts are now displayed with line breaks.
+
+= 2.20.4 =
+
+**Changes**
+
+* The plugin no longer overwrites the theme folder when updating the theme. 
+
+= 2.20.3 =
+
+**Changes**
+
+* The plugin is now represented by the onOffice logo.
+
 = 2.20.2 =
 
 **Changes**
