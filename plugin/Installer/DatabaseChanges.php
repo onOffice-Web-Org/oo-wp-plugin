@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 21;
+	const MAX_VERSION = 22;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -160,10 +160,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 20) {
+			$this->updateCreateAddressFieldOfIntersetAndOwnerForm();
+			$dbversion = 21;
+		}
+
+		if ($dbversion == 21) {
 			dbDelta($this->getCreateQueryListviews());
 			dbDelta($this->getCreateQueryListViewsAddress());
 			dbDelta($this->getCreateQueryForms());
-			$dbversion = 21;
+			$dbversion = 22;
 		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
@@ -699,6 +704,21 @@ class DatabaseChanges implements DatabaseChangesInterface
 					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
 			}
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function updateCreateAddressFieldOfIntersetAndOwnerForm()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_forms
+				SET `createaddress` = 1
+				WHERE `form_type` = 'interest' OR `form_type` = 'owner'";
+
+		$this->_pWPDB->query($sql);
 	}
 
 

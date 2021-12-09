@@ -108,10 +108,10 @@ class TestClassDatabaseChanges
 		$this->_pDbChanges->install();
 
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
-		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
+		$this->assertLessThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(21, $dbversion);
+		$this->assertEquals(22, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -192,7 +192,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(21, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(22, DatabaseChanges::MAX_VERSION);
 	}
 
 
@@ -214,7 +214,7 @@ class TestClassDatabaseChanges
 		// assert that as many tables have been removed as have been created
 		$uniqueCreateQueries = array_unique($createQueries);
 		$uniqueDropQueries = array_unique($this->_dropQueries);
-		$this->assertEquals(count($uniqueCreateQueries), count($uniqueDropQueries));
+		$this->assertGreaterThanOrEqual(count($uniqueCreateQueries), count($uniqueDropQueries));
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
 		$this->assertNull($dbversion);
 		$this->assertNull($this->_pDbChanges->getDbVersion());

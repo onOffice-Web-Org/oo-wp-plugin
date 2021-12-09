@@ -318,6 +318,7 @@ class DataFormConfigurationFactory
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setPages($row['pages']);
+		$pConfig->setCreateOwner((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
 	}
 
@@ -333,6 +334,7 @@ class DataFormConfigurationFactory
 	{
 		$pConfig->setRecipient($row['recipient']);
 		$pConfig->setSubject($row['subject']);
+		$pConfig->setCreateInterest((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
 	}
 

@@ -81,6 +81,7 @@ class DataListViewFactory
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_STREET,
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_ZIP,
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS => $row['radius']
 		];
 
 		$geoFieldsActive = array_intersect_key($geoFieldsAll, $row);
