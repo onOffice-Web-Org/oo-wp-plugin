@@ -73,6 +73,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.10 =
+
+**Changes**
+
+* The explanation of the option "Show title in URL" can now be translated
+
+* In local host the error message "Please configure your API credentials first" is no longer displayed and similar estates are now shown as expected.
+
 = 2.20.9 =
 
 **Fixes**
