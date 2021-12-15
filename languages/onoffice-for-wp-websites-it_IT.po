@@ -1150,6 +1150,18 @@ msgstr "Persona di contatto"
 msgid "Documents"
 msgstr "Documenti"
 
+#: plugin/Gui/AdminPageModules.php:79
+msgid "Detail View URLs"
+msgstr "URL di visualizzazione dettagli"
+
+#: plugin/Gui/AdminPageModules.php:66
+msgid "Show title in URL"
+msgstr "Mostra titolo nell'URL"
+
+#: plugin/Gui/AdminPageModules.php:72
+msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
+msgstr "Se questa casella di controllo è selezionata, il titolo della proprietà farà parte degli URL delle viste di dettaglio. Il titolo è posto dopo il numero del record, ad es. <code>/1234-nice-location-with-view</code>. Non vengono utilizzate più delle prime cinque parole del titolo."
+
 #: plugin/Gui/AdminPageFormSettingsContact.php:117
 msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the"
 msgstr "Se il modulo di contatto si trova in una pagina immobiliare, puoi collegare l'indirizzo creato a tale proprietà aprendo l'e-mail che ricevi in onOffice enterprise o utilizzando il"

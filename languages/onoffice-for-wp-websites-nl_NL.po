@@ -1147,6 +1147,18 @@ msgstr "Contactpersoon"
 msgid "Documents"
 msgstr "Documenten"
 
+#: plugin/Gui/AdminPageModules.php:79
+msgid "Detail View URLs"
+msgstr "URL's voor detailweergave"
+
+#: plugin/Gui/AdminPageModules.php:66
+msgid "Show title in URL"
+msgstr "Toon titel in URL"
+
+#: plugin/Gui/AdminPageModules.php:72
+msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
+msgstr "Als dit selectievakje is ingeschakeld, maakt de titel van de eigenschap deel uit van de URL's van de detailweergaven. De titel wordt achter het recordnummer geplaatst, b.v. <code>/1234-nice-location-with-view</code>. Niet meer dan de eerste vijf woorden van de titel worden gebruikt."
+
 #: plugin/Gui/AdminPageFormSettingsContact.php:117
 msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the"
 msgstr "Als het contactformulier op een landgoedpagina staat, kunt u het aangemaakte adres aan dat landgoed koppelen door de e-mail te openen die u ontvangt in onOffice enterprise of door de"
