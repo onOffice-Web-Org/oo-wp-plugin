@@ -1152,3 +1152,11 @@ msgstr "Dokumente"
 
 #~ msgid "Don't show reference estates"
 #~ msgstr "Referenzobjekte nicht anzeigen"
+
+#: plugin/Gui/AdminPageFormSettingsContact.php:117
+msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the"
+msgstr "Wenn sich das Kontaktformular auf einer Nachlassseite befindet, können Sie die erstellte Adresse mit diesem Nachlass verknüpfen, indem Sie die E-Mail, die Sie in onOffice enterprise erhalten, öffnen oder das"
+
+#: plugin/Gui/AdminPageFormSettingsContact.php:118
+msgid "request manager"
+msgstr "anfragemanager"

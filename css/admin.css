@@ -262,3 +262,9 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	display: block;
 	margin: auto;
 }
+
+#viewformspecific .hint-text, #viewformspecific a{
+	color: #646970;
+	font-style: italic;
+	text-decoration: none;
+}

@@ -1064,3 +1064,11 @@ msgstr ""
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsContact.php:117
+msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the"
+msgstr ""
+
+#: plugin/Gui/AdminPageFormSettingsContact.php:118
+msgid "request manager"
+msgstr ""

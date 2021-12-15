@@ -113,7 +113,7 @@ class InputFieldCheckboxRenderer
 	public function render()
 	{
 		$pFieldsCollection = $this->buildFieldsCollection();
-		$hintText = !empty($this->getHint()) ? '<p class="hint-text">' . esc_html($this->getHint()) . '</p>' : "";
+		$hintText = !empty($this->getHint()) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
