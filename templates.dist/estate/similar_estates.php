@@ -14,10 +14,14 @@
 				$estatePictures = $pEstates->getEstatePictures();
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstates->getEstatePictureValues( $id );
-					if ( $pEstates->getAccessControl() ) {
-						echo '<a href="'.$pEstates->getEstateLink().'" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+					if ( $pEstates->getReferenz() === "1" ) {
+						if ( $pEstates->getAccessControl() ) {
+							echo '<a href="'.$pEstates->getEstateLink().'" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+						} else {
+							echo '<a href="javascript:void(0)" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+						}
 					} else {
-						echo '<a href="javascript:void(0)" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
+						echo '<a href="'.$pEstates->getEstateLink().'" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
 					}
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
@@ -43,7 +47,13 @@
 						} ?>
 					</div>
 					<div class="oo-detailslink">
-                        <?php if ($pEstates->getAccessControl()) { ?>
+						<?php if ($pEstates->getReferenz() === "1") { ?>
+							<?php if ($pEstates->getAccessControl()) { ?>
+								<a href="<?php echo $pEstates->getEstateLink(); ?>">
+									<?php esc_html_e('Show Details', 'onoffice'); ?>
+								</a>
+							<?php } ?>
+						<?php } else { ?>
 							<a href="<?php echo $pEstates->getEstateLink(); ?>">
 								<?php esc_html_e('Show Details', 'onoffice'); ?>
 							</a>

@@ -47,6 +47,7 @@ use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Field\EstateKindTypeReader;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\Form\Preview\FormPreviewApplicantSearch;
@@ -192,10 +193,19 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 
 	if ($estateId !== '') {
 		$accessControl = $pDataDetailViewHandler->getDetailView()->getAccessControls();
+
 		if (!$accessControl) {
-			$pWP->handle_404();
-			include( get_query_template( '404' ) );
-			die();
+			$estateListFactory = new EstateListFactory($pDataDetailViewHandler);
+			$pEstateDetail = $estateListFactory->createEstateDetail($estateId);
+			$pEstateDetail->loadEstates();
+			$pEstateDetail->estateIterator();
+			$referenz = $pEstateDetail->getReferenz();
+
+			if ($referenz === "1") {
+				$pWP->handle_404();
+				include( get_query_template( '404' ) );
+				die();
+			}
 		}
 		$estateId = (int)$estateId;
 		if ($estateId === 0 || !$pEstateIdGuard->isValid($estateId)) {

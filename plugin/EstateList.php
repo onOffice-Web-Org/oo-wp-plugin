@@ -99,6 +99,9 @@ class EstateList
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;
 
+	/** @var string */
+	private $_referenz = "0";
+
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -392,6 +395,7 @@ class EstateList
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
+		$this->setReferenz($recordRaw['referenz']);
 
 		if ($this->getShowEstateMarketingStatus()) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
@@ -723,4 +727,12 @@ class EstateList
 	/** @return EstateListEnvironment */
 	public function getEnvironment(): EstateListEnvironment
 		{ return $this->_pEnvironment; }
+
+	/** @return string */
+	public function getReferenz(): string
+	{ return $this->_referenz; }
+
+	/** @param string $referenz */
+	public function setReferenz(string $referenz)
+	{ $this->_referenz = $referenz; }
 }
