@@ -22,11 +22,13 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Utility\RedirectIfOldUrl;
+use onOffice\WPlugin\WP\WPRedirectWrapper;
 
 class TestClassRedirectIfOldUrl
 	extends \WP_UnitTestCase
@@ -88,6 +90,32 @@ class TestClassRedirectIfOldUrl
 			'post_title' => 'Detail View',
 			'post_type' => 'page',
 		]);
+		$wp_filter['save_post'] = $savePostBackup;
+		$this->assertTrue($this->_pRedirectIfOldUrl->redirectDetailView($pWPPost->ID, 123, 'Show Title Url'));
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Utility\RedirectIfOldUrl::redirectDetailView
+	 */
+	public function testRedirectDetailViewSameUrlWithoutOption()
+	{
+		global $wp;
+		global $wp_filter;
+		$wp->request = 'detail-view/123-show-title-url';
+		$this->set_permalink_structure('/%postname%/');
+		$savePostBackup = $wp_filter['save_post'];
+		$wp_filter['save_post'] = new \WP_Hook;
+		$pWPPost = self::factory()->post->create_and_get([
+			'post_author' => 1,
+			'post_content' => '[oo_estate view="detail"]',
+			'post_title' => 'Detail View',
+			'post_type' => 'page',
+		]);
+		$redirect = $this->getMockBuilder(WPRedirectWrapper::class)
+			->setMethods(['redirect'])
+			->getMock();
+		$redirect->method('redirect')->willReturn(true);
+		$this->_pRedirectIfOldUrl->setRedirectWrapper($redirect);
 		$wp_filter['save_post'] = $savePostBackup;
 		$this->assertTrue($this->_pRedirectIfOldUrl->redirectDetailView($pWPPost->ID, 123, 'Show Title Url'));
 	}

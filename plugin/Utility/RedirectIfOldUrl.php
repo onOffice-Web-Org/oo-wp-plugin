@@ -5,11 +5,14 @@ namespace onOffice\WPlugin\Utility;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\WP\WPPageWrapper;
+use onOffice\WPlugin\WP\WPRedirectWrapper;
 
 class RedirectIfOldUrl
 {
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;
+	private $_wpPageWrapper;
+	private $_wpRedirectWrapper;
 
 	public function __construct()
 	{
@@ -17,22 +20,23 @@ class RedirectIfOldUrl
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
+		$this->_wpPageWrapper = $pContainer->get(WPPageWrapper::class);
+		$this->_wpRedirectWrapper = $pContainer->get(WPRedirectWrapper::class);
 	}
 
 	public function redirectDetailView($pageId, $estateId, $estateTitle)
 	{
 		$currentLink = $this->getCurrentLink();
-		$pageWrapper  = new WPPageWrapper();
-		$pageName = $pageWrapper->getPageUriByPageId($pageId);
-		$url = get_page_link($pageId);
+		$url =  $this->_wpPageWrapper->getPageLinkByPageId($pageId);
 		$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estateId, $estateTitle);
 		$uri = $this->getUri();
+		$pageName = $this->_wpPageWrapper->getPageUriByPageId($pageId);
 		preg_match('/^(' . preg_quote($pageName) .')\/([0-9]+)(-([^$]+))?\/?$/', $uri, $matches);
 		if (empty($matches[2])) { //Check pass rule and has Unique ID
 			return true;
 		}
 		if ($fullLink != $currentLink) {
-			wp_redirect($fullLink, 301);
+			$this->_wpRedirectWrapper->redirect($fullLink);
 			exit;
 		}
 
@@ -49,5 +53,10 @@ class RedirectIfOldUrl
 	{
 		global $wp;
 		return home_url(add_query_arg(array(), $wp->request));
+	}
+
+	public function setRedirectWrapper($redirectWrapper)
+	{
+		$this->_wpRedirectWrapper = $redirectWrapper;
 	}
 }
