@@ -88,6 +88,9 @@ abstract class InputModelBase
 	private $_placeholder = null;
 
 	/** @var string */
+	private $_hint = null;
+
+	/** @var string */
 	private $_id = null;
 
 	/** @var array For referenced input models only */
@@ -104,6 +107,9 @@ abstract class InputModelBase
 
 	/** @var array */
 	private $_labelOnlyValues = [];
+
+    /** @var string */
+    private $_descriptionTextHTML = '';
 
 	/**
 	 *
@@ -177,6 +183,14 @@ abstract class InputModelBase
 	public function setPlaceholder($placeholder)
 		{ $this->_placeholder = $placeholder; }
 
+	/** @return string */
+	public function getHint()
+	{ return $this->_hint; }
+
+	/** @param string $hint */
+	public function setHint($hint)
+	{ $this->_hint = $hint; }
+
 	/** @param string $id */
 	public function setId($id)
 		{ $this->_id = $id; }
@@ -224,4 +238,13 @@ abstract class InputModelBase
 	/** @param array $labelOnlyValues */
 	public function setLabelOnlyValues(array $labelOnlyValues)
 		{ $this->_labelOnlyValues = $labelOnlyValues; }
+
+    /** @return string */
+    public function getDescriptionTextHTML()
+    	{ return $this->_descriptionTextHTML; }
+
+    /** @param string $descriptionTextHTML */
+    public function setDescriptionTextHTML(string $textHTML)
+    	{ $this->_descriptionTextHTML = $textHTML; }
+
 }

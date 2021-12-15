@@ -69,8 +69,7 @@ class DataDetailView
 		'objektbeschreibung',
 		'lage',
 		'ausstatt_beschr',
-		'sonstige_angaben',
-		'vermarktungsstatus'
+		'sonstige_angaben'
 	];
 
 	/** @var string[] */
@@ -106,6 +105,7 @@ class DataDetailView
 
 	/** @var bool */
 	private $_showStatus = 0;
+
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
@@ -203,7 +203,6 @@ class DataDetailView
 	/** @var string[] $addressFields */
 	public function setAddressFields(array $addressFields)
 		{ $this->_addressFields = $addressFields; }
-
 	/** @return int */
 	public function getMovieLinks(): int
 		{ return $this->_movieLinks; }

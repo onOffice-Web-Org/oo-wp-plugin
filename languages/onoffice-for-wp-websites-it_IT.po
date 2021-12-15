@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2021-08-25T14:43:12+07:00\n"
+"POT-Creation-Date: 2021-10-22T11:20:08+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -99,7 +99,7 @@ msgstr ""
 "prendere in considerazione la possibilità di rivedere il tuo %s."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
-#: plugin/Controller/EstateViewDocumentTitleBuilder.php:76
+#: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
 msgid "%2$s (%3$s) in %4$s - %5$s"
 msgstr "%2$s in %3$s a %4$s - %5$s"
 
@@ -132,7 +132,7 @@ msgid "Search Criteria"
 msgstr "Criteri di ricerca"
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:182
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:142
+#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:177
 msgid "Form Specific Fields"
 msgstr "Campi specifici del modulo"
 
@@ -194,7 +194,7 @@ msgstr "scegliere il nome"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:116
 #: plugin/Gui/AdminPageEstateDetail.php:278
-#: plugin/Gui/AdminPageEstateListSettings.php:125
+#: plugin/Gui/AdminPageEstateListSettings.php:124
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
 #: plugin/Gui/AdminPageFormSettingsBase.php:409
 msgid "Layout & Design"
@@ -205,7 +205,7 @@ msgid "Filter & Records"
 msgstr "Filtrare e registrare"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:155
-#: plugin/Gui/AdminPageEstateDetail.php:287
+#: plugin/Gui/AdminPageEstateDetail.php:295
 #: plugin/Gui/AdminPageEstateListSettings.php:133
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
@@ -272,9 +272,9 @@ msgstr "Google Maps"
 msgid "Index PDF Brochure"
 msgstr "Index PDF brochure"
 
-#: plugin/Gui/AdminPageApiSettings.php:180
-msgid "Google Bot"
-msgstr "Google Bot"
+#: plugin/Gui/AdminPageApiSettings.php:161
+msgid "Search engine"
+msgstr "Search engine"
 
 #: plugin/Gui/AdminPageApiSettings.php:219
 msgid "The keys are OK."
@@ -311,6 +311,10 @@ msgid ""
 msgstr ""
 "Per poter utilizzare Google reCAPTCHA, è necessario fornire le chiavi. Sei "
 "libero di abilitarlo nelle impostazioni del modulo per un uso successivo."
+
+#: plugin/Gui/AdminPageApiSettings.php:262
+msgid "Save changes and clear API cache"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:274
 msgid "The cache was cleaned."
@@ -366,9 +370,11 @@ msgstr "Campi della persona di contatto"
 msgid "Real Estate Fields"
 msgstr "Campi dati immobiliari"
 
-#: plugin/Gui/AdminPageEstateDetail.php:295
-msgid "Access Control"
-msgstr ""
+#: plugin/Gui/AdminPageEstateDetail.php:287
+#, fuzzy
+#| msgid "Contact person"
+msgid "Contact Form"
+msgstr "Persona di contatto"
 
 #: plugin/Gui/AdminPageEstateDetail.php:304
 msgid "Additional Media"
@@ -397,7 +403,7 @@ msgstr "Documenti scaricabili"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:150
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:170
+#: plugin/Gui/AdminPageFormSettingsContact.php:205
 msgid "Geo Fields"
 msgstr "Campi geografici"
 
@@ -433,7 +439,7 @@ msgid "Records"
 msgstr "I record"
 
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
-#: plugin/Gui/AdminPageFormSettingsContact.php:96
+#: plugin/Gui/AdminPageFormSettingsContact.php:110
 msgid "Form Specific Options"
 msgstr "Opzioni specifiche del modulo"
 
@@ -455,7 +461,7 @@ msgstr ""
 
 #. translators: %s is a translated module name
 #: plugin/Gui/AdminPageFormSettingsBase.php:276
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:506
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:524
 msgid "Module: %s"
 msgstr "Modulo %s"
 
@@ -468,8 +474,8 @@ msgid "Add Language"
 msgstr "Aggiungi lingua"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:281
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:388
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:415
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:406
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:433
 msgid "Choose Language"
 msgstr "Scegliere la lingua"
 
@@ -502,7 +508,7 @@ msgstr "No"
 msgid "Yes"
 msgstr "Sì"
 
-#: plugin/Gui/AdminPageFormSettingsInterestOwner.php:92
+#: plugin/Gui/AdminPageFormSettingsInquiry.php:92
 msgid "Please provide an Email address!"
 msgstr "Si prega di fornire un indirizzo e-mail!"
 
@@ -617,7 +623,7 @@ msgstr "Mostra stato"
 #: plugin/Gui/Table/EstateListTable.php:134
 #: plugin/Gui/Table/EstateListTable.php:213
 #: plugin/Gui/Table/EstateUnitsTable.php:115
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:295
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:299
 msgid "Type of List"
 msgstr "Tipo di lista"
 
@@ -680,7 +686,7 @@ msgid "View Name"
 msgstr "Visualizza Nome"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:104
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:437
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:441
 msgid "Sort by"
 msgstr "Ordina per"
 
@@ -701,7 +707,7 @@ msgid "Descending"
 msgstr "Scendendo"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:274
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:245
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr "Modello"
@@ -726,57 +732,58 @@ msgid "Hidden"
 msgstr "Nascosto"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:181
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:343
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:361
 msgid "Reduce values according to selected filter"
 msgstr "Ridurre i valori in base al filtro selezionato"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:314
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:318
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:300
 msgid "Show Estate Status"
 msgstr "Mostra lo stato della proprietà"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:334
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:108
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:338
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:103
 msgid "Random Order"
 msgstr "Ordine casuale"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:381
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:166
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:385
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:137
 msgid "PDF-Expose"
 msgstr "Esposizione PDF"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:403
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:407
 msgid "Default"
 msgstr "Predefinito"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:404
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:408
 msgid "Reference Estates"
 msgstr "Estates di riferimento"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:405
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:409
 msgid "Favorites List"
 msgstr "Elenco dei preferiti"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:418
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:422
 msgid "Sort by User Selection"
 msgstr "Ordenar por selección de usuario"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:461
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:465
 msgid "Standard Sort"
 msgstr "Ordenar por defecto"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:503
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:507
 msgid "lowest First / highest First"
 msgstr "più basso primo / più alto primo"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:504
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:508
 msgid "ascending / descending"
 msgstr "ascendente / discendente"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:507
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:511
 msgid "Formulation of sorting directions"
 msgstr "Formulación de direcciones de clasificación"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:92
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:87
 msgid "Unit List"
 msgstr "Elenco unità"
 
@@ -800,70 +807,77 @@ msgstr ", Incorporare il codice: "
 msgid "Recipient's E-Mail Address"
 msgstr "Indirizzo e-mail del destinatario"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:275
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:285
+#, fuzzy
+#| msgid "Edit Address List"
+msgid "Email address"
+msgstr "Modifica elenco indirizzi"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:292
 msgid "john.doe@example.com"
 msgstr "john.doe@example.com"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:289
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:293
+msgid ""
+"Note that if the contact form is on an estate detail page and the estate has "
+"a contact person, the email will be sent to their email address. Otherwise "
+"this email address will receive the email."
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:307
 msgid "(won't work until set up globally)"
 msgstr "(non funzionerà fino a quando non sarà installato a livello globale)"
 
 #. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:295
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:313
 msgid "Requires Captcha %s"
 msgstr "Richiede Captcha %s"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:308
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:326
 msgid "Result Limit"
 msgstr "Risultato Limite di risultato"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:326
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:344
 msgid "Required"
 msgstr "Richiesto"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:383
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:397
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:401
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:415
 msgid "Add language"
 msgstr "Aggiungi lingua"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:410
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:420
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:428
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:438
 #, fuzzy
 #| msgid "Add language"
 msgid "Add custom label language"
 msgstr "Aggiungi lingua"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:478
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:496
 msgid "Module"
 msgstr "Modulo"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:137
-#, fuzzy
-#| msgid "The detail view has been saved."
-msgid "Allow detail view for reference estates"
-msgstr "La vista di dettaglio è stata salvata."
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:187
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:158
 msgid "Movie Links"
 msgstr "Link di film"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:193
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:164
 msgid "Disabled"
 msgstr "Disabili"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:194
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:165
 msgid "Link"
 msgstr "Collegamento"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:195
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:166
 msgid "Player"
 msgstr "Giocatore"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:310
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:281
 msgid "Select Contact Form"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:314
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:285
 #, fuzzy
 #| msgid "Contact person"
 msgid "No Contact Form"
@@ -900,23 +914,42 @@ msgstr "Raggio"
 msgid "Amount of Estates"
 msgstr "Quantità di immobili"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:63
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:72
 msgid "Set Estate Context as Heading"
 msgstr "Immobilienkontext als Überschrift („Ihre Anfrage zu …“)"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:65
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:74
 msgid "Newsletter"
 msgstr "Newsletter"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:67
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:76
+msgid ""
+"Check for Duplicates (override existing address if the email is the same)"
+msgstr ""
+
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:78
+#, fuzzy
+#| msgid "Check for Duplicates"
 msgid "Check for Duplicates"
 msgstr "Verificare la presenza di duplicati"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:69
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:80
 msgid "Create Address"
 msgstr "Crea indirizzo"
 
-#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:71
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:82
+#, fuzzy
+#| msgid "Create Address"
+msgid "Create Address and Search Profile"
+msgstr "Crea indirizzo"
+
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:84
+#, fuzzy
+#| msgid "Create Address"
+msgid "Create Address and Property"
+msgstr "Crea indirizzo"
+
+#: plugin/Model/InputModel/InputModelConfigurationFormContact.php:86
 msgid "Subject (optional)"
 msgstr "Oggetto (facoltativo)"
 
@@ -1117,7 +1150,14 @@ msgstr "Persona di contatto"
 msgid "Documents"
 msgstr "Documenti"
 
-#, fuzzy
-#~| msgid "Contact person"
-#~ msgid "Contact Form"
-#~ msgstr "Persona di contatto"
+#: plugin/Gui/AdminPageModules.php:79
+msgid "Detail View URLs"
+msgstr "URL di visualizzazione dettagli"
+
+#: plugin/Gui/AdminPageModules.php:66
+msgid "Show title in URL"
+msgstr "Mostra titolo nell'URL"
+
+#: plugin/Gui/AdminPageModules.php:72
+msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
+msgstr "Se questa casella di controllo è selezionata, il titolo della proprietà farà parte degli URL delle viste di dettaglio. Il titolo è posto dopo il numero del record, ad es. <code>/1234-nice-location-with-view</code>. Non vengono utilizzate più delle prime cinque parole del titolo."
