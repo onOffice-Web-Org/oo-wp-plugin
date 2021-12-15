@@ -23,27 +23,27 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Renderer\InputFieldTextRenderer;
+use onOffice\WPlugin\Renderer\InputFieldCheckboxRenderer;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class TestClassInputFieldTextRenderer
+class TestClassInputFieldCheckboxRenderer
 	extends \WP_UnitTestCase
 {
 	/**
 	 *
 	 */
-	public function testRenderHintFallbackEmail()
+	public function testRenderHintText()
 	{
-		$pSubject = new InputFieldTextRenderer('text', 'testRenderer');
-		$pSubject->setValue('john.doe@example.com');
-		$pSubject->setHint('Test Content Hint Fallback Email');
+		$pSubject = new InputFieldCheckboxRenderer('oopluginforms-createaddress', '1');
+		$txtHint = 'Test Content Hint';
+		$pSubject->setHint($txtHint);
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="text" name="testRenderer" value="john.doe@example.com" id="text_1" ><p class="hint-fallback-email hint-text">Test Content Hint Fallback Email</p>',
+		$this->assertEquals('<input type="checkbox" name="oopluginforms-createaddress" value="1" class="onoffice-input" id="checkbox_8"><p class="hint-text">Test Content Hint</p>',
 			$output);
 	}
 }
