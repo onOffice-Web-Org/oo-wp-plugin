@@ -75,6 +75,7 @@ class DataDetailView
 
 	/** @var string[] */
 	private $_addressFields = [
+		'imageUrl',
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -85,7 +86,6 @@ class DataDetailView
 		'Telefon1',
 		'mobile',
 		'defaultemail',
-		'imageUrl',
 	];
 
 	/** @var string[] */

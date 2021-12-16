@@ -115,35 +115,24 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<div class="oo-asp">
 				<h2><?php echo esc_html__('Contact person', 'onoffice'); ?></h2>
 				<?php
+				$addressFields = $pEstates->getAddressFields();
 				foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
-					<?php if (!empty($contactData['imageUrl'])): ?>
-						<img src="<?php echo $contactData['imageUrl'] ?>" height="150px">
-					<?php endif; ?>
-					<div class="oo-aspname">
-						<strong><?php echo $contactData['Anrede'].'&nbsp;'.$contactData['Vorname'].'&nbsp;'.$contactData['Name']; ?></strong>
-					</div>
-					<div class="oo-asplocation">
-						<span><?php echo $contactData['Strasse']; ?></span>
-						<span><?php echo $contactData['Plz'].'&nbsp;'.$contactData['Ort']; ?></span>
-					</div>
-					<div class="oo-aspcontact">
-						<span><?php echo $contactData['Telefon1']; ?></span>
-						<span><?php echo $contactData['defaultemail']; ?></span>
-					</div>
 					<?php
-                    $defaultField = $pEstates->getDataView()->getDefaultAddressFields();
-					foreach ($defaultField as $field) {
-						unset($contactData[$field]);
-					}
-                    foreach ($contactData as $field) {
-						if (is_array($field)) {
+					foreach ($addressFields as $field) {
+						if (empty($contactData[$field])) {
+							continue;
+						}
+
+						if ($field === 'imageUrl') {
+							echo '<div class="oo-aspinfo"><img src=' . esc_html($contactData[$field]) . ' height="150px"></div>';
+						} elseif (is_array($contactData[$field])) {
 							echo '<div class="oo-aspinfo">';
-							foreach ($field as $item) {
+							foreach ($contactData[$field] as $item) {
 								echo '<p>' . esc_html($item) . '</p>';
 							}
 							echo '</div>';
 						} elseif (!empty($field)) {
-							echo '<div class="oo-aspinfo"><p>' . esc_html($field) . '</p></div>';
+							echo '<div class="oo-aspinfo"><p>' . esc_html($contactData[$field]) . '</p></div>';
 						}
 					} ?>
 				<?php endforeach; ?>
