@@ -1,7 +1,6 @@
 var onOffice = onOffice || {};
 jQuery(document).ready(function($) {
     let sortingSelection = $("#viewrecordssorting").find("[name=oopluginlistviews-sortingtypedirection]").val();
-    console.log(sortingSelection)
     onOffice.sortingSelection = function(sortingSelection) {
         $("#viewrecordssorting").find('p.wp-clearfix').hide();
 
