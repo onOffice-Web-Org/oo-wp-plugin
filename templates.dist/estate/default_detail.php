@@ -34,7 +34,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 	$pEstates->resetEstateIterator();
 	while ( $currentEstate = $pEstates->estateIterator() ) { ?>
 		<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
-            <span style="padding:0 15px"><?php echo ucfirst($currentEstate['vermarktungsstatus']); ?></span>
+			<span style="padding:0 15px"><?php echo ucfirst($currentEstate['vermarktungsstatus']); ?></span>
 			<?php unset($currentEstate['vermarktungsstatus']); ?>
 		<?php } ?>
 		<div class="oo-detailsheadline">

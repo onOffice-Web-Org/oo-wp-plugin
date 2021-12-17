@@ -83,9 +83,9 @@ class RecordManagerReadListViewAddress
         $join = implode("\n", $this->getJoins());
         $where = "(".implode(") AND (", $this->getWhere()).")";
         if (!empty($_GET["search"]))
-		{
-			$where .= "AND name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%'";
-		}
+        {
+            $where .= "AND name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%'";
+        }
         $sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
 				FROM {$prefix}oo_plugin_listviews_address
 				{$join}
