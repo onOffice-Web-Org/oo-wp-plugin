@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
@@ -59,9 +60,10 @@ class AdminPageApiSettings
 		$this->_encrypter = $this->getContainer()->make(SymmetricEncryption::class);
 		$this->addFormModelAPI();
 		$this->addFormModelMapProvider($pageSlug);
-		$this->addFormModelGoogleCaptcha();
-		$this->addFormModelDetailView($pageSlug);
 		$this->addFormModelGoogleMapsKey();
+        $this->addFormModelGoogleCaptcha();
+        $this->addFormModelFavorites($pageSlug);$this->addFormModelPagination($pageSlug);
+        $this->addFormModelDetailView($pageSlug);
 		$this->addFormModelGoogleBotSettings();
 	}
 
@@ -330,6 +332,65 @@ class AdminPageApiSettings
         $pFormModel->setGroupSlug($groupSlugView);
         $pFormModel->setPageSlug($pageSlug);
         $pFormModel->setLabel(__('Detail View URLs', 'onoffice-for-wp-websites'));
+
+        $this->addFormModel($pFormModel);
+    }
+
+    /**
+     *
+     * @param string $pageSlug
+     *
+     */
+    private function addFormModelFavorites(string $pageSlug)
+    {
+        $groupSlugFavs = 'onoffice-favorization';
+        $enableFavLabel = __('Enable Watchlist', 'onoffice-for-wp-websites');
+        $favButtonLabel = __('Expression used', 'onoffice-for-wp-websites');
+        $pInputModelEnableFav = new InputModelOption($groupSlugFavs, 'enableFav',
+            $enableFavLabel, InputModelOption::SETTING_TYPE_BOOLEAN);
+        $pInputModelEnableFav->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+        $pInputModelEnableFav->setValuesAvailable(1);
+        $pInputModelEnableFav->setValue(get_option($pInputModelEnableFav->getIdentifier()) == 1);
+        $pInputModelFavButtonLabel = new InputModelOption($groupSlugFavs, 'favButtonLabelFav',
+            $favButtonLabel, InputModelOption::SETTING_TYPE_NUMBER);
+        $pInputModelFavButtonLabel->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
+        $pInputModelFavButtonLabel->setValue(get_option($pInputModelFavButtonLabel->getIdentifier()));
+        $pInputModelFavButtonLabel->setValuesAvailable([
+            Favorites::KEY_SETTING_MEMORIZE => __('Watchlist', 'onoffice-for-wp-websites'),
+            Favorites::KEY_SETTING_FAVORIZE => __('Favorise', 'onoffice-for-wp-websites'),
+        ]);
+
+        $pFormModel = new FormModel();
+        $pFormModel->addInputModel($pInputModelEnableFav);
+        $pFormModel->addInputModel($pInputModelFavButtonLabel);
+        $pFormModel->setGroupSlug($groupSlugFavs);
+        $pFormModel->setPageSlug($pageSlug);
+        $pFormModel->setLabel(__('Watchlist', 'onoffice-for-wp-websites'));
+
+        $this->addFormModel($pFormModel);
+    }
+
+    /**
+     * @param string $pageSlug
+     */
+    private function addFormModelPagination(string $pageSlug)
+    {
+        $groupSlugPaging = 'onoffice-pagination';
+        $pagingLabel = __('Pagination', 'onoffice-for-wp-websites');
+        $pInputModelPagingProvider = new InputModelOption($groupSlugPaging, 'paginationbyonoffice',
+            $pagingLabel, InputModelOption::SETTING_TYPE_NUMBER);
+        $pInputModelPagingProvider->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
+        $selectedValue = get_option($pInputModelPagingProvider->getIdentifier(), 0);
+        $pInputModelPagingProvider->setValue($selectedValue);
+        $pInputModelPagingProvider->setValuesAvailable([
+            0 => __('By WP Theme', 'onoffice-for-wp-websites'),
+            1 => __('By onOffice-Plugin', 'onoffice-for-wp-websites')
+        ]);
+        $pFormModel = new FormModel();
+        $pFormModel->addInputModel($pInputModelPagingProvider);
+        $pFormModel->setGroupSlug($groupSlugPaging);
+        $pFormModel->setPageSlug($pageSlug);
+        $pFormModel->setLabel($pagingLabel);
 
         $this->addFormModel($pFormModel);
     }
