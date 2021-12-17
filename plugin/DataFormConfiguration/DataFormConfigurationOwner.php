@@ -33,6 +33,10 @@ use onOffice\SDK\onOfficeSDK;
 class DataFormConfigurationOwner
 	extends DataFormConfiguration
 {
+	/** @var bool */
+	private $_createOwner = true;
+
+
 	/**
 	 *
 	 */
@@ -80,6 +84,14 @@ class DataFormConfigurationOwner
 	/** @return bool */
 	public function getPages()
 		{ return $this->_pages; }
+
+	/** @return bool */
+	public function getCreateOwner(): bool
+	{ return $this->_createOwner; }
+
+	/** @param bool $createOwner */
+	public function setCreateOwner(bool $createOwner)
+	{ $this->_createOwner = $createOwner; }
 
 	/** @param bool $checkDuplicateOnCreateAddress */
 	public function setCheckDuplicateOnCreateAddress($checkDuplicateOnCreateAddress)

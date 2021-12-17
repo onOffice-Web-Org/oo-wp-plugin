@@ -135,6 +135,6 @@ class TestClassPdfDownload
 			->with($pPdfDocumentModel, $url);
 		$pSubject = new PdfDownload($this->_pPdfDocumentFetcher, $this->_pPdfDocumentModelValidator, $this->_pHttpHeadersGeneric, $this->_pWPOptionWrapper);
 		$pSubject->download($pPdfDocumentModel);
-		$this->assertEquals(['X-Robots-Tag: googlebot: noindex, nofollow'], xdebug_get_headers());
+		$this->assertEquals(['X-Robots-Tag: noindex, nofollow'], xdebug_get_headers());
     }
 }

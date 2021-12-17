@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
+use onOffice\WPlugin\API\APIAvailabilityChecker;
 use onOffice\WPlugin\Cache\CacheHandler;
 use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
@@ -42,7 +43,8 @@ class TestClassCacheHandler
 	/** @var CacheHandler */
 	private $_pCacheHandler = null;
 
-
+    /** @var APIAvailabilityChecker */
+    private $_pApiChecker = null;
 	/**
 	 *
 	 * @before
@@ -53,7 +55,10 @@ class TestClassCacheHandler
 	{
 		$this->_pSDKWrapper = $this->getMockBuilder(SDKWrapper::class)
 			->getMock();
-		$this->_pCacheHandler = new CacheHandler($this->_pSDKWrapper);
+		$this->_pApiChecker = $this->getMockBuilder(APIAvailabilityChecker::class)
+			->disableOriginalConstructor()
+			->getMock();
+        $this->_pCacheHandler = new CacheHandler($this->_pSDKWrapper, $this->_pApiChecker);
 	}
 
 
@@ -77,10 +82,11 @@ class TestClassCacheHandler
 
 	public function testClean()
 	{
+		$this->_pApiChecker->expects($this->exactly(1))->method('isAvailable')->will($this->returnValue(true));
 		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
-		$pCache->expects($this->once())->method('cleanup');
+		$pCache->expects($this->exactly(1))->method('cleanup');
 		$cacheInstance = [$pCache];
-		$this->_pSDKWrapper->expects($this->once())->method('getCache')->will($this->returnValue($cacheInstance));
+		$this->_pSDKWrapper->expects($this->exactly(1))->method('getCache')->will($this->returnValue($cacheInstance));
 		$this->_pCacheHandler->clean();
 	}
 }
