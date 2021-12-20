@@ -108,7 +108,7 @@ class TestClassDatabaseChanges
 		$this->_pDbChanges->install();
 
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
-		$this->assertLessThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
+		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
 		$this->assertEquals(22, $dbversion);
