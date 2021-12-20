@@ -143,8 +143,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->migrationsDataSimilarEstates();
 			$dbversion = 17;
 		}
+
 		if ($dbversion == 17) {
-			$this->installDataQueryForms();
 			$dbversion = 18;
 		}
 
