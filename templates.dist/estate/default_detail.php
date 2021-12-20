@@ -131,7 +131,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 								echo '<p>' . esc_html($item) . '</p>';
 							}
 							echo '</div>';
-						} elseif (!empty($field)) {
+						} else {
 							echo '<div class="oo-aspinfo"><p>' . esc_html($contactData[$field]) . '</p></div>';
 						}
 					} ?>
