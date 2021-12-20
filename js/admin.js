@@ -22,7 +22,8 @@ jQuery(document).ready(function($){
 	});
 
 	$('.filter-fields-list').sortable({
-		axis: 'y'
+		axis: 'y',
+		handle: '.menu-item-bar',
 	});
 
 	$('.property-detail-items-list').sortable({
