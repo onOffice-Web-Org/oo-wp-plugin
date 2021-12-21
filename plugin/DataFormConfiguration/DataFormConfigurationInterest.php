@@ -33,6 +33,10 @@ use onOffice\SDK\onOfficeSDK;
 class DataFormConfigurationInterest
 	extends DataFormConfiguration
 {
+	/** @var bool */
+	private $_createInterest = true;
+
+
 	/**
 	 *
 	 */
@@ -71,6 +75,14 @@ class DataFormConfigurationInterest
 	/** @return string */
 	public function getRecipient()
 		{ return $this->_recipient; }
+
+	/** @return bool */
+	public function getCreateInterest(): bool
+	{ return $this->_createInterest; }
+
+	/** @param bool $createInterest */
+	public function setCreateInterest(bool $createInterest)
+	{ $this->_createInterest = $createInterest; }
 
 	/** @param bool $checkDuplicateOnCreateAddress */
 	public function setCheckDuplicateOnCreateAddress($checkDuplicateOnCreateAddress)
