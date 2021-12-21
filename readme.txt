@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.11 =
+
+**Changes**
+
+* When you submit the form, the mail that is sent does now also contains  information about the  newsletter activation fields in case they were not selected in the form.
+
 = 2.20.10 =
 
 **Changes**
