@@ -1229,3 +1229,15 @@ msgstr "Dokumente"
 
 #~ msgid "Don't show reference estates"
 #~ msgstr "Referenzobjekte nicht anzeigen"
+
+#: plugin/Gui/AdminPageModules.php:79
+msgid "Detail View URLs"
+msgstr "URLs der Detailansicht"
+
+#: plugin/Gui/AdminPageModules.php:66
+msgid "Show title in URL"
+msgstr "Titel in URL anzeigen"
+
+#: plugin/Gui/AdminPageModules.php:72
+msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
+msgstr "Wenn dieses Kontrollkästchen aktiviert ist, wird der Titel der Eigenschaft Teil der URLs der Detailansichten. Der Titel wird nach der Datensatznummer platziert, z.B. <code>/1234-nice-location-with-view</code>. Es werden nicht mehr als die ersten fünf Wörter des Titels verwendet."

@@ -53,8 +53,7 @@ class TestClassDataDetailView
 		'objektbeschreibung',
 		'lage',
 		'ausstatt_beschr',
-		'sonstige_angaben',
-		'vermarktungsstatus'
+		'sonstige_angaben'
 	];
 
 	/** */
