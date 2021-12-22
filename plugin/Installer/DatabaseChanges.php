@@ -283,39 +283,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	/**
 	 *
-	 */
-
-	private function installDataQueryForms()
-	{
-		$prefix = $this->getPrefix();
-		$tableName = $prefix . "oo_plugin_forms";
-		$allTemplatePathsForm = $this->readTemplatePaths('form');
-		$template = '';
-		foreach ($allTemplatePathsForm as $templatePathsForm) {
-			if (basename($templatePathsForm) === 'defaultform.php') {
-				$template = $templatePathsForm;
-			}
-		}
-		$this->_pWPDB->insert(
-			$tableName,
-			array(
-				'name' => 'Default Form',
-				'form_type' => 'contact',
-				'template' => $template,
-				'country_active' => 1,
-				'zip_active' => 1,
-				'street_active' => 1,
-				'radius_active' => 1,
-				'geo_order' => 'street,zip,city,country,radius'
-			)
-		);
-		$defaultFormId = $this->_pWPDB->insert_id;
-		$this->installDataQueryFormFieldConfig($defaultFormId);
-	}
-
-
-	/**
-	 *
 	 * @return string
 	 *
 	 */
