@@ -73,6 +73,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.12 =
+
+**Fixes**
+
+* The property status is now displayed in the detail view below the property title and no longer in the fields as marketing status.
+
+* Separator line, black hint, red hint, file and user are no longer selectable in the configuration for any list or form in the backend. (also not for addresses and estates).
+
 = 2.20.11 =
 
 **Changes**
