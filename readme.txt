@@ -73,12 +73,6 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= 2.20.13 =
-
-**Fixes**
-
-* minor bug fixes
-
 = 2.20.12 =
 
 **Fixes**
