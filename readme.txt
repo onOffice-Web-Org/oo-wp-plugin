@@ -73,6 +73,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.20.5 =
+
+**Changes**
+
+* The option for indexing PDF brochures has now an understandable label which tells the user what he/ she can expact when selecting it. 
+
+* In the default_detail.php template, free texts are now displayed with line breaks.
+
 = 2.20.4 =
 
 **Changes**
