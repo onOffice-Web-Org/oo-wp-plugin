@@ -156,6 +156,12 @@
 	text-decoration: none !important;
 }
 
+.oo-detailslink a:focus {
+	opacity: 0.8;
+	text-decoration: none !important;
+	background: #80acd3 !important;
+}
+
 .favorize {
 	border: 1px solid #839fce;
 	cursor: pointer;
