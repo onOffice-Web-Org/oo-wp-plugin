@@ -1147,3 +1147,15 @@ msgstr "Persona de contacto: "
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documentos"
+
+#: plugin/Gui/AdminPageModules.php:79
+msgid "Detail View URLs"
+msgstr "URL de vista detallada"
+
+#: plugin/Gui/AdminPageModules.php:66
+msgid "Show title in URL"
+msgstr "Mostrar título en URL"
+
+#: plugin/Gui/AdminPageModules.php:72
+msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
+msgstr "Si esta casilla de verificación está seleccionada, el título de la propiedad formará parte de las URL de las vistas detalladas. El título se coloca después del número de registro, p. Ej. <code> / 1234-nice-location-with-view </code>. No se utilizan más de las primeras cinco palabras del título."
