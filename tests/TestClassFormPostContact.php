@@ -149,6 +149,10 @@ class TestClassFormPostContact
 				$pFieldAnrede->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 				$pFieldsCollection->addField($pFieldAnrede);
 
+				$pFieldNewsletter = new Field('newsletter', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldNewsletter->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pFieldsCollection->addField($pFieldNewsletter);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -165,6 +169,7 @@ class TestClassFormPostContact
 		$this->_pFormPostContact = $this->_pContainer->get(FormPostContact::class);
 
 		$this->configureSDKWrapperForContactAddress();
+		$this->configureSDKWrapperForContactAddressWithNewsLetter();
 		$this->configureSDKWrapperForCreateAddress();
 		$this->configureSDKWrapperForCreateAddressWithDuplicateCheck();
 		$this->configureSDKWrapperForFieldsAddressEstate();
@@ -186,6 +191,7 @@ class TestClassFormPostContact
 				'Ort' => 'Aachen',
 				'Telefon1' => '0815/2345677',
 				'AGB_akzeptiert' => true,
+				'newsletter_aktiv' => false
 			],
 			'estateid' => 1337,
 			'message' => null,
@@ -203,6 +209,37 @@ class TestClassFormPostContact
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_DO, 'contactaddress', '', $parameters, null, $response);
 	}
+
+	private function configureSDKWrapperForContactAddressWithNewsLetter()
+	{
+		$parameters = [
+			'addressdata' => [
+				'Vorname' => 'John',
+				'Name' => 'Doe',
+				'Email' => 'john.doe@my-onoffice.com',
+				'Plz' => '52068',
+				'Ort' => 'Aachen',
+				'Telefon1' => '0815/2345677',
+				'AGB_akzeptiert' => true,
+				'newsletter_aktiv' => true
+			],
+			'estateid' => 1337,
+			'message' => null,
+			'subject' => '¡A new Contact!'.' '.FormPostContact::PORTALFILTER_IDENTIFIER,
+			'referrer' => '/test/page',
+			'formtype' => 'contact',
+			'estatedata' => ["objekttitel", "ort", "plz", "land"],
+			'estateurl' => 'http://example.org',
+			'recipient' => 'test@my-onoffice.com',
+		];
+
+		$responseJson = file_get_contents(__DIR__.'/resources/ApiResponseDoContactaddress.json');
+		$response = json_decode($responseJson, true);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_DO, 'contactaddress', '', $parameters, null, $response);
+	}
+
 
 
 	/**
@@ -241,6 +278,7 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
 			'AGB_akzeptiert' => true,
+			"newsletter" => true,
 			'checkDuplicate' => true,
 		];
 
@@ -267,6 +305,7 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
 			'AGB_akzeptiert' => true,
+			"newsletter" => true,
 			'checkDuplicate' => false,
 		];
 
@@ -383,6 +422,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->addInput('Ort', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('Telefon1', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('newsletter', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->setRecipient('test@my-onoffice.com');
 		$pDataFormConfiguration->setCreateAddress(false);
 		$pDataFormConfiguration->setFormType(Form::TYPE_CONTACT);
@@ -440,6 +480,7 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'Telefon1' => '0815/2345677',
 			'AGB_akzeptiert' => 'y',
+			'newsletter' => 'y',
 			'Id' => '1337',
 			'Anrede' => '',
 		];

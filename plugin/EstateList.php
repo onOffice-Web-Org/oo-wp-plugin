@@ -35,6 +35,7 @@ use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
@@ -166,7 +167,6 @@ class EstateList
 		{
 			$pDataListView = $this->_pDataView;
 		}
-
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$this->loadRecords($currentPage);
 
@@ -303,6 +303,15 @@ class EstateList
 			}
 		}
 
+		// only do georange search if requested in similar estate configuration
+		if ($pListView instanceof DataViewSimilarEstates) {
+			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
+
+			if ($geoRangeSearchParameters !== []) {
+				$requestParams['georangesearch'] = $geoRangeSearchParameters;
+			}
+		}
+
 		return $requestParams;
 	}
 
@@ -375,11 +384,11 @@ class EstateList
 		if (false === $currentRecord) {
 			return false;
 		}
-
 		$this->_currentEstate['id'] = $currentRecord['id'];
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
+		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
@@ -424,12 +433,13 @@ class EstateList
 	{
 		$pageId = $this->_pEnvironment->getDataDetailViewHandler()
 			->getDetailView()->getPageId();
-		$fullLink = '#';
 
+		$fullLink = '#';
 		if ($pageId !== 0) {
 			$estate = $this->_currentEstate['mainId'];
+			$title = $this->_currentEstate['title'] ?? '';
 			$url = get_page_link($pageId);
-			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate);
+			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate, $title);
 		}
 
 		return $fullLink;
@@ -621,6 +631,12 @@ class EstateList
 		$fieldsValues = $pContainer->get(OutputFields::class)
 			->getVisibleFilterableFields($this->_pDataView,
 				$pFieldsCollection, new GeoPositionFieldHandler);
+
+		if (array_key_exists("radius",$fieldsValues))
+		{
+			$geoFields = $this->_pDataView->getGeoFields();
+			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
+		}
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
