@@ -44,41 +44,6 @@ class FieldModuleCollectionDecoratorReadAddress
 			'length' => null,
 			'label' => 'Image',
 		],
-		'phone' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Phone',
-		],
-		'email' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 80,
-			'label' => 'E-Mail',
-		],
-		'fax' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Fax',
-		],
-		'mobile' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Mobile',
-		],
-		'defaultphone' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Phone',
-		],
-		'defaultemail' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 80,
-			'label' => 'E-Mail',
-		],
-		'defaultfax' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Fax',
-		],
 	];
 
 

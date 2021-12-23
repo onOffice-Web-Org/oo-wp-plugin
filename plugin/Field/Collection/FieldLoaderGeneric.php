@@ -77,6 +77,48 @@ class FieldLoaderGeneric
 			$module = $moduleProperties['id'];
 			$fieldArray = $moduleProperties['elements'];
 
+			if ($module === "address") {
+				$newFieldArray = [
+					'email' => [
+						'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+						'length' => 80,
+						'default' => null,
+						'permittedvalues' => null,
+						'label' => 'E-Mail',
+						'tablename' => 'Kontakt',
+						"content" => "Contact"
+					],
+					'phone' => [
+						'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+						'length' => 40,
+						'default' => null,
+						'permittedvalues' => null,
+						'label' => 'Phone',
+						'tablename' => 'Stammdaten',
+						"content" => "Master data"
+					],
+					'fax' => [
+						'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+						'length' => 40,
+						'default' => null,
+						'permittedvalues' => null,
+						'label' => 'Fax',
+						'tablename' => 'Stammdaten',
+						"content" => "Master data"
+					],
+					'mobile' => [
+						'type' => FieldTypes::FIELD_TYPE_VARCHAR,
+						'length' => 40,
+						'default' => null,
+						'permittedvalues' => null,
+						'label' => 'Mobile',
+						'tablename' => 'Stammdaten',
+						"content" => "Master data"
+					],
+				];
+				$fieldArray = array_merge($fieldArray, $newFieldArray);
+			}
+
 			if (isset($fieldArray['label'])) {
 				unset($fieldArray['label']);
 			}

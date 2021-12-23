@@ -23,8 +23,10 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
-use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataSimilarView;
+use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
 use function dbDelta;
@@ -34,7 +36,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 21;
+	const MAX_VERSION = 22;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -164,6 +166,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 21;
 		}
 
+		if ($dbversion == 21) {
+			$this->checkContactFieldInDefaultDetail();
+			$dbversion = 22;
+		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -787,5 +793,36 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		return $templates;
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function checkContactFieldInDefaultDetail() {
+		$viewOptionKey = DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY;
+		$dataDetailView = $this->_pWpOption->getOption($viewOptionKey, null);
+		$defaultFields = ['defaultemail' => 'Email', 'defaultphone' => 'Telefon1', 'defaultfax' => 'Telefax1'];
+		$addressFields = $dataDetailView->getAddressFields();
+
+		foreach ($defaultFields as $defaultField => $newField) {
+			if (in_array($defaultField, $addressFields)) {
+				$key = array_search($defaultField, $addressFields);
+				unset($addressFields[$key]);
+
+				if (!in_array($newField, $addressFields)) {
+					$addressFields[$key] = $newField;
+				}
+			}
+		}
+		ksort($addressFields);
+		$dataDetailView->setAddressFields($addressFields);
+
+		if ($this->_pWpOption->getOption($viewOptionKey) !== false) {
+			$this->_pWpOption->updateOption($viewOptionKey, $dataDetailView);
+		} else {
+			$this->_pWpOption->addOption($viewOptionKey, $dataDetailView);
+		}
 	}
 }

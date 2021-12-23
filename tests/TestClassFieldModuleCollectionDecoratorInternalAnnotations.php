@@ -43,32 +43,6 @@ class TestClassFieldModuleCollectionDecoratorInternalAnnotations
 	 *
 	 */
 
-	public function testGetFieldByModuleAndName()
-	{
-		$pDecoratorAddress = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection);
-		$module = onOfficeSDK::MODULE_ADDRESS;
-		$pFieldDefaultPhoneExternal = $pDecoratorAddress->getFieldByModuleAndName($module, 'defaultphone');
-		$pFieldDefaultMailExternal = $pDecoratorAddress->getFieldByModuleAndName($module, 'defaultemail');
-		$pFieldDefaultFaxExternal = $pDecoratorAddress->getFieldByModuleAndName($module, 'defaultfax');
-		$this->assertEquals('Phone', $pFieldDefaultPhoneExternal ->getLabel());
-		$this->assertEquals('E-Mail', $pFieldDefaultMailExternal->getLabel());
-		$this->assertEquals('Fax', $pFieldDefaultFaxExternal->getLabel());
-
-		$pDecoratorAnnotations = new FieldModuleCollectionDecoratorInternalAnnotations
-			($pDecoratorAddress);
-		$pFieldDefaultPhone = $pDecoratorAnnotations->getFieldByModuleAndName($module, 'defaultphone');
-		$pFieldDefaultMail = $pDecoratorAnnotations->getFieldByModuleAndName($module, 'defaultemail');
-		$pFieldDefaultFax = $pDecoratorAnnotations->getFieldByModuleAndName($module, 'defaultfax');
-		$this->assertEquals('Phone (Marked as default in onOffice)', $pFieldDefaultPhone->getLabel());
-		$this->assertEquals('E-Mail (Marked as default in onOffice)', $pFieldDefaultMail->getLabel());
-		$this->assertEquals('Fax (Marked as default in onOffice)', $pFieldDefaultFax->getLabel());
-	}
-
-
-	/**
-	 *
-	 */
-
 	public function testGetAllFields()
 	{
 		$pDecoratorAddress = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection);
