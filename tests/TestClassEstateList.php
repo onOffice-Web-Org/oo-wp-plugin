@@ -751,9 +751,6 @@ class TestClassEstateList
 		]);
 		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
 			($pEstateStatusLabel);
-		$pEstateListMock = $this->getMockBuilder(EstateList::class)
-			->setConstructorArgs([$pDataListView, $this->_pEnvironment])
-			->getMock();
 	}
 
 

@@ -234,7 +234,7 @@ if (!function_exists('renderParkingLot')) {
 			if (!$parking['Count']) {
 				continue;
 			}
-			$element = sprintf(__('%1$s at %2$s'), getParkingName($key, $parking['Count']), formatPrice($parking['Price'], $language, $locale));
+			$element = sprintf(__('%1$s at %2$s', 'onoffice'), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale));
 			if (!empty($parking['MarketingType'])) {
 				$element .= ' (' . $parking['MarketingType'] . ')';
 			}
@@ -244,8 +244,8 @@ if (!function_exists('renderParkingLot')) {
 	}
 }
 
-if (!function_exists('formatPrice')) {
-	function formatPrice(string $str, string $language, string $locale): string
+if (!function_exists('formatPriceParking')) {
+	function formatPriceParking(string $str, string $language, string $locale): string
 	{
 		$digit = intval(substr(strrchr($str, "."), 1));
 		if (class_exists(NumberFormatter::class)) {
@@ -265,10 +265,10 @@ if (!function_exists('formatPrice')) {
 			}
 			switch ($language) {
 				case 'ENG':
-					$str = sprintf(__('€%1$s'), $str);
+					$str = sprintf(__('€%1$s', 'onoffice'), $str);
 					break;
 				default:
-					$str = sprintf(__('%1$s €'), $str);
+					$str = sprintf(__('%1$s €', 'onoffice'), $str);
 					break;
 			}
 			return $str;
