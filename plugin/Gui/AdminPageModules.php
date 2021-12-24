@@ -47,10 +47,37 @@ class AdminPageModules
 
 	public function __construct($pageSlug)
 	{
+		$this->addFormModelDetailView($pageSlug);
 		$this->addFormModelFavorites($pageSlug);
 		$this->addFormModelMapProvider($pageSlug);
+		$this->addFormModelPagination($pageSlug);
 
 		parent::__construct($pageSlug);
+	}
+
+    /**
+     *
+     * @param string $pageSlug
+     *
+     */
+	private function addFormModelDetailView(string $pageSlug)
+	{
+		$groupSlugView = 'onoffice-detail-view';
+		$showTitleInUrl = __('Show title in URL', 'onoffice-for-wp-websites');
+		$pInputModelShowTitleUrl = new InputModelOption($groupSlugView, 'showTitleUrl',
+			$showTitleInUrl, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$pInputModelShowTitleUrl->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowTitleUrl->setValuesAvailable(1);
+		$pInputModelShowTitleUrl->setValue(get_option($pInputModelShowTitleUrl->getIdentifier()) == 1);
+		$pInputModelShowTitleUrl->setDescriptionTextHTML(__('If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used.', 'onoffice-for-wp-websites'));
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelShowTitleUrl);
+		$pFormModel->setGroupSlug($groupSlugView);
+		$pFormModel->setPageSlug($pageSlug);
+		$pFormModel->setLabel(__('Detail View URLs', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
 	}
 
 
@@ -119,6 +146,30 @@ class AdminPageModules
 		$this->addFormModel($pFormModel);
 	}
 
+	/**
+	 * @param string $pageSlug
+	 */
+	private function addFormModelPagination(string $pageSlug)
+	{
+		$groupSlugPaging = 'onoffice-pagination';
+		$pagingLabel = __('Pagination', 'onoffice-for-wp-websites');
+		$pInputModelPagingProvider = new InputModelOption($groupSlugPaging, 'paginationbyonoffice',
+			$pagingLabel, InputModelOption::SETTING_TYPE_NUMBER);
+		$pInputModelPagingProvider->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
+		$selectedValue = get_option($pInputModelPagingProvider->getIdentifier(), 0);
+		$pInputModelPagingProvider->setValue($selectedValue);
+		$pInputModelPagingProvider->setValuesAvailable([
+			0 => __('By WP Theme', 'onoffice-for-wp-websites'),
+			1 => __('By onOffice-Plugin', 'onoffice-for-wp-websites')
+		]);
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelPagingProvider);
+		$pFormModel->setGroupSlug($groupSlugPaging);
+		$pFormModel->setPageSlug($pageSlug);
+		$pFormModel->setLabel($pagingLabel);
+
+		$this->addFormModel($pFormModel);
+	}
 
 	/**
 	 *

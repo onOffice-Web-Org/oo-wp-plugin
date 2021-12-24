@@ -166,18 +166,18 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
-		$labelGoogleBotIndexPdfExpose = __('Index PDF Brochure', 'onoffice-for-wp-websites');
+		$labelGoogleBotIndexPdfExpose = __('Allow indexing of PDF brochures', 'onoffice-for-wp-websites');
 		$pInputModeGoogleBotIndexPdfExpose = new InputModelOption('onoffice-settings', 'google-bot-index-pdf-expose',
 			$labelGoogleBotIndexPdfExpose, InputModelOption::SETTING_TYPE_BOOLEAN);
 		$pInputModeGoogleBotIndexPdfExpose->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModeGoogleBotIndexPdfExpose->setValuesAvailable(1);
 		$pInputModeGoogleBotIndexPdfExpose->setValue(get_option($pInputModeGoogleBotIndexPdfExpose->getIdentifier()) == 1);
-
+		$pInputModeGoogleBotIndexPdfExpose->setDescriptionTextHTML(__('If you allow indexing, your search engine ranking can be negatively affected and your brochures can be available from search engines even months after the corresponding estate is deleted.','onoffice-for-wp-websites'));
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModeGoogleBotIndexPdfExpose);
 		$pFormModel->setGroupSlug('onoffice-google-bot');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('Google Bot', 'onoffice-for-wp-websites'));
+		$pFormModel->setLabel(__('Search engine', 'onoffice-for-wp-websites'));
 
 		$this->addFormModel($pFormModel);
 	}
@@ -259,7 +259,7 @@ class AdminPageApiSettings
 		settings_fields($this->getPageSlug());
 		do_settings_sections($this->getPageSlug());
 
-		submit_button();
+		submit_button(__('Save changes and clear API cache', 'onoffice-for-wp-websites'));
 		echo '</form>';
 	}
 

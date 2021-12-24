@@ -28,6 +28,8 @@ use DI\NotFoundException;
 use Exception;
 use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Template\TemplateCallbackBuilder;
+use onOffice\WPlugin\Utility\__String;
+use RuntimeException;
 use const WP_PLUGIN_DIR;
 
 /**
@@ -119,12 +121,25 @@ class Template
 
 	/**
 	 * @return string
+	 * @throws RuntimeException
 	 */
 	protected function buildFilePath(): string
 	{
-		return WP_PLUGIN_DIR.'/'.$this->_templateName;
+		if (__String::getNew($this->_templateName)->startsWith('onoffice-theme/')) {
+			$templatePath = realpath(get_template_directory().'/'.$this->_templateName);
+			if (!__String::getNew($templatePath)->startsWith(realpath(get_template_directory()))) {
+				throw new RuntimeException('Invalid template path');
+			}
+			return $templatePath;
+		}
+		$pluginDirName = basename(ONOFFICE_PLUGIN_DIR);
+		$templatePath = realpath(WP_PLUGIN_DIR.'/'.$this->_templateName);
+		if (!__String::getNew($templatePath)->startsWith(realpath(WP_PLUGIN_DIR.'/onoffice-personalized/')) &&
+			!__String::getNew($templatePath)->startsWith(realpath(WP_PLUGIN_DIR.'/'.$pluginDirName.'/templates.dist/'))) {
+			throw new RuntimeException('Invalid template path');
+		}
+		return $templatePath;
 	}
-
 
 	/**
 	 * @param string $templateName
