@@ -81,7 +81,7 @@ class TestClassDatabaseChanges
 	{
 		global $wpdb;
 		$dataDetailView = new DataDetailView();
-		$dataDetailView->setAddressFields(['a' => 'a']);
+		$dataDetailView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 		$this->_pWpOption = new WPOptionWrapperTest();
 		$this->_pWpOption->addOption('onoffice-default-view', $dataDetailView);
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);

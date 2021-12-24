@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
 
@@ -39,6 +40,22 @@ use WP_UnitTestCase;
 class TestClassFieldModuleCollectionDecoratorInternalAnnotations
 	extends WP_UnitTestCase
 {
+	/**
+	 *
+	 */
+
+	public function testGetFieldByModuleAndName()
+	{
+		$pDecoratorSearchcriteria = new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection);
+		$module = onOfficeSDK::MODULE_SEARCHCRITERIA;
+
+		$pDecoratorAnnotations = new FieldModuleCollectionDecoratorInternalAnnotations
+		($pDecoratorSearchcriteria);
+		$pFieldDefault = $pDecoratorAnnotations->getFieldByModuleAndName($module, 'krit_bemerkung_oeffentlich');
+		$this->assertEquals('Search Criteria Comment (external)', $pFieldDefault->getLabel());
+	}
+
+
 	/**
 	 *
 	 */

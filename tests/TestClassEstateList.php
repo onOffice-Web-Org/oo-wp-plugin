@@ -382,23 +382,23 @@ class TestClassEstateList
 	public function testGetEstateContacts()
 	{
 		$valueMap = [
-			['50', ['Vorname' => 'John', 'Name' => 'Doe']],
-			['52', ['Vorname' => 'Max', 'Name' => 'Mustermann']],
+			['50', ['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email',]],
+			['52', ['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email']],
 		];
 		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
 			->setMethods(['__construct', 'getAddressById', 'loadAdressesById'])
 			->getMock();
-		$pAddressDataMock->expects($this->once())->method('loadAdressesById')->with([50, 52], ['Vorname', 'Name']);
+		$pAddressDataMock->expects($this->once())->method('loadAdressesById')->with([50, 52], ['Vorname', 'Name', "Email"]);
 		$pAddressDataMock->method('getAddressById')->willReturnMap($valueMap);
 		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals([], $this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
-		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe'])],
+		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email'])],
 			$this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
-		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann'])],
+		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email'])],
 			$this->_pEstateList->getEstateContacts());
 	}
 
@@ -769,7 +769,7 @@ class TestClassEstateList
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);
 		$pDataView->setPictureTypes(['Titelbild', 'Foto']);
-		$pDataView->setAddressFields(['Vorname', 'Name']);
+		$pDataView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 		$pDataView->setShowStatus(true);
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
 		$pDataView->setExpose('testExpose');
