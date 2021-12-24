@@ -336,69 +336,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	/**
 	 *
-	 */
-
-	private function installDataQueryFormFieldConfig($defaultFormId)
-	{
-		$prefix = $this->getPrefix();
-		$tableName = $prefix . "oo_plugin_form_fieldconfig";
-
-		$rows = array(
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 1,
-				'fieldname' => 'Vorname',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 2,
-				'fieldname' => 'Name',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 3,
-				'fieldname' => 'Strasse',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 4,
-				'fieldname' => 'Plz',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 5,
-				'fieldname' => 'Ort',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 6,
-				'fieldname' => 'Telefon1',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 7,
-				'fieldname' => 'Email',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 8,
-				'fieldname' => 'message'
-			)
-		);
-		foreach ($rows as $row) {
-			$this->_pWPDB->insert($tableName, $row);
-		}
-	}
-
-	/**
-	 *
 	 * @return string
 	 *
 	 */
