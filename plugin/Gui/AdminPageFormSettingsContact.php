@@ -114,8 +114,7 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCreateAddress) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS);
-			$txtHint = __( 'If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the', 'onoffice-for-wp-websites') 
-					. ' <a href="' . __("https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en") . '">' . __( 'request manager', 'onoffice-for-wp-websites') . '</a>';
+			$txtHint = __("If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the <a href='https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en'>request manager</a>", "onoffice-for-wp-websites");
 			$pInputModel->setHint($txtHint);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}

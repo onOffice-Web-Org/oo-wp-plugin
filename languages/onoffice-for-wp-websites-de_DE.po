@@ -1166,9 +1166,5 @@ msgid "If this checkbox is selected, the title of the property will be part of t
 msgstr "Wenn dieses Kontrollkästchen aktiviert ist, wird der Titel der Eigenschaft Teil der URLs der Detailansichten. Der Titel wird nach der Datensatznummer platziert, z.B. <code>/1234-nice-location-with-view</code>. Es werden nicht mehr als die ersten fünf Wörter des Titels verwendet."
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:117
-msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the"
-msgstr "Wenn sich das Kontaktformular auf einer Nachlassseite befindet, können Sie die erstellte Adresse mit diesem Nachlass verknüpfen, indem Sie die E-Mail, die Sie in onOffice enterprise erhalten, öffnen oder das"
-
-#: plugin/Gui/AdminPageFormSettingsContact.php:118
-msgid "request manager"
-msgstr "anfragemanager"
+msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the <a href='https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en'>request manager</a>"
+msgstr "Wenn sich das Kontaktformular auf einer Nachlassseite befindet, können Sie die erstellte Adresse mit diesem Nachlass verknüpfen, indem Sie die E-Mail, die Sie in onOffice enterprise erhalten, öffnen oder das <a href='https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en'>anfragemanager</a>"

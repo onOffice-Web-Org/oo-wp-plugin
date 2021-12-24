@@ -1161,9 +1161,5 @@ msgid "If this checkbox is selected, the title of the property will be part of t
 msgstr "Si esta casilla de verificación está seleccionada, el título de la propiedad formará parte de las URL de las vistas detalladas. El título se coloca después del número de registro, p. Ej. <code> / 1234-nice-location-with-view </code>. No se utilizan más de las primeras cinco palabras del título."
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:117
-msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the"
-msgstr "Si el formulario de contacto está en la página de una propiedad, puede vincular la dirección creada a esa propiedad abriendo el correo electrónico que recibe en la empresa onOffice o utilizando el"
-
-#: plugin/Gui/AdminPageFormSettingsContact.php:118
-msgid "request manager"
-msgstr "administrador de solicitudes"
+msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the <a href='https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en'>request manager</a>"
+msgstr "Si el formulario de contacto está en la página de una propiedad, puede vincular la dirección creada a esa propiedad abriendo el correo electrónico que recibe en la empresa onOffice o utilizando el <a href='https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en'>administrador de solicitudes</a>"
