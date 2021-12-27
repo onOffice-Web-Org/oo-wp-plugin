@@ -214,7 +214,7 @@ class TestClassDatabaseChanges
 		// assert that as many tables have been removed as have been created
 		$uniqueCreateQueries = array_unique($createQueries);
 		$uniqueDropQueries = array_unique($this->_dropQueries);
-		$this->assertGreaterThanOrEqual(count($uniqueCreateQueries), count($uniqueDropQueries));
+		$this->assertEquals(count($uniqueCreateQueries), count($uniqueDropQueries));
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
 		$this->assertNull($dbversion);
 		$this->assertNull($this->_pDbChanges->getDbVersion());
