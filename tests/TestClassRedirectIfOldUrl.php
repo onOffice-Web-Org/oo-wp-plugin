@@ -26,8 +26,10 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Factory\AddressListFactory;
 use onOffice\WPlugin\Utility\RedirectIfOldUrl;
+use onOffice\WPlugin\WP\WPPageWrapper;
 use onOffice\WPlugin\WP\WPRedirectWrapper;
 
 class TestClassRedirectIfOldUrl
@@ -100,24 +102,30 @@ class TestClassRedirectIfOldUrl
 	public function testRedirectDetailViewSameUrlWithoutOption()
 	{
 		global $wp;
-		global $wp_filter;
-		$wp->request = 'detail-view/123-show-title-url';
-		$this->set_permalink_structure('/%postname%/');
-		$savePostBackup = $wp_filter['save_post'];
-		$wp_filter['save_post'] = new \WP_Hook;
-		$pWPPost = self::factory()->post->create_and_get([
-			'post_author' => 1,
-			'post_content' => '[oo_estate view="detail"]',
-			'post_title' => 'Detail View',
-			'post_type' => 'page',
-		]);
-		$redirect = $this->getMockBuilder(WPRedirectWrapper::class)
+		$wp->request = 'detail-view/3333';
+		$wpPageWrapper = $this->getMockBuilder(WPPageWrapper::class)
+			->setMethods(['getPageLinkByPageId', 'getPageUriByPageId'])
+			->getMock();
+
+		$wpPageWrapper->method('getPageLinkByPageId')->willReturn('https://abc.com');
+		$wpPageWrapper->method('getPageUriByPageId')->willReturn('test-net');
+
+		$pLanguageSwitcher = $this->getMockBuilder(EstateDetailUrl::class)
+			->setMethods(['createEstateDetailLink'])
+			->getMock();
+		$pLanguageSwitcher->method('createEstateDetailLink')->willReturn('https://abc.com/detail/33-test-post');
+
+		$wpRedirectWrapper = $this->getMockBuilder(WPRedirectWrapper::class)
 			->setMethods(['redirect'])
 			->getMock();
-		$redirect->method('redirect')->willReturn(true);
-		$this->_pRedirectIfOldUrl->setRedirectWrapper($redirect);
-		$wp_filter['save_post'] = $savePostBackup;
-		$this->assertTrue($this->_pRedirectIfOldUrl->redirectDetailView($pWPPost->ID, 123, 'Show Title Url'));
+		$wpRedirectWrapper->method('redirect')->willReturn(true);
+
+		 $redirectIfOldUrl = new RedirectIfOldUrl();
+		 $redirectIfOldUrl->setPLanguageSwitcher($pLanguageSwitcher);
+		 $redirectIfOldUrl->setWpRedirectWrapper($wpRedirectWrapper);
+		 $redirectIfOldUrl->setWpPageWrapper($wpPageWrapper);
+
+		 $this->assertTrue($redirectIfOldUrl->redirectDetailView(1, 1, 'tes post'));
 	}
 
 	/**

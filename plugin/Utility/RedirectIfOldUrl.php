@@ -55,8 +55,27 @@ class RedirectIfOldUrl
 		return home_url(add_query_arg(array(), $wp->request));
 	}
 
-	public function setRedirectWrapper($redirectWrapper)
+	/**
+	 * @param EstateDetailUrl $pLanguageSwitcher
+	 */
+	public function setPLanguageSwitcher($pLanguageSwitcher): void
 	{
-		$this->_wpRedirectWrapper = $redirectWrapper;
+		$this->_pLanguageSwitcher = $pLanguageSwitcher;
+	}
+
+	/**
+	 * @param mixed|WPRedirectWrapper $wpRedirectWrapper
+	 */
+	public function setWpRedirectWrapper($wpRedirectWrapper): void
+	{
+		$this->_wpRedirectWrapper = $wpRedirectWrapper;
+	}
+
+	/**
+	 * @param mixed|WPPageWrapper $wpPageWrapper
+	 */
+	public function setWpPageWrapper($wpPageWrapper): void
+	{
+		$this->_wpPageWrapper = $wpPageWrapper;
 	}
 }
