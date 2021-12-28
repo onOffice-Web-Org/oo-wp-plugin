@@ -156,7 +156,7 @@
 	text-decoration: none !important;
 }
 
-.oo-detailslink a:focus {
+.oo-details-btn:focus {
 	opacity: 0.8;
 	text-decoration: none !important;
 	background: #80acd3 !important;

@@ -6,15 +6,19 @@
 <div class="oo-listframe" id="oo-similarframe">
 	<?php
 	while ( $currentEstate = $pEstates->estateIterator() ) {
-	$marketingStatus = $currentEstate['vermarktungsstatus'];
-	unset($currentEstate['vermarktungsstatus']); ?>
+		$marketingStatus = $currentEstate['vermarktungsstatus'];
+		unset($currentEstate['vermarktungsstatus']);
+        $estateId = $pEstates->getCurrentEstateId();
+        $rawValues = $pEstates->getRawValues();
+		$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
+		?>
 		<div class="oo-listobject">
 			<div class="oo-listobjectwrap">
 				<?php
 				$estatePictures = $pEstates->getEstatePictures();
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstates->getEstatePictureValues( $id );
-					if ( $pEstates->getReferenz() === "1" ) {
+					if ( $referenz === "1" ) {
 						if ( $pEstates->getAccessControl() ) {
 							echo '<a href="'.$pEstates->getEstateLink().'" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
 						} else {
@@ -47,14 +51,14 @@
 						} ?>
 					</div>
 					<div class="oo-detailslink">
-						<?php if ($pEstates->getReferenz() === "1") { ?>
+						<?php if ($referenz === "1") { ?>
 							<?php if ($pEstates->getAccessControl()) { ?>
-								<a href="<?php echo $pEstates->getEstateLink(); ?>">
+								<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>">
 									<?php esc_html_e('Show Details', 'onoffice'); ?>
 								</a>
 							<?php } ?>
 						<?php } else { ?>
-							<a href="<?php echo $pEstates->getEstateLink(); ?>">
+							<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>">
 								<?php esc_html_e('Show Details', 'onoffice'); ?>
 							</a>
 						<?php } ?>

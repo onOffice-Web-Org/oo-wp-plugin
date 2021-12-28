@@ -199,7 +199,8 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			$pEstateDetail = $estateListFactory->createEstateDetail($estateId);
 			$pEstateDetail->loadEstates();
 			$pEstateDetail->estateIterator();
-			$referenz = $pEstateDetail->getReferenz();
+			$rawValues = $pEstateDetail->getRawValues();
+			$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
 
 			if ($referenz === "1") {
 				$pWP->handle_404();
