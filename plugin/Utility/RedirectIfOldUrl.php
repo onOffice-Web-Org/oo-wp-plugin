@@ -58,7 +58,7 @@ class RedirectIfOldUrl
 	/**
 	 * @param EstateDetailUrl $pLanguageSwitcher
 	 */
-	public function setPLanguageSwitcher($pLanguageSwitcher): void
+	public function setPLanguageSwitcher($pLanguageSwitcher)
 	{
 		$this->_pLanguageSwitcher = $pLanguageSwitcher;
 	}
@@ -66,7 +66,7 @@ class RedirectIfOldUrl
 	/**
 	 * @param mixed|WPRedirectWrapper $wpRedirectWrapper
 	 */
-	public function setWpRedirectWrapper($wpRedirectWrapper): void
+	public function setWpRedirectWrapper($wpRedirectWrapper)
 	{
 		$this->_wpRedirectWrapper = $wpRedirectWrapper;
 	}
@@ -74,7 +74,7 @@ class RedirectIfOldUrl
 	/**
 	 * @param mixed|WPPageWrapper $wpPageWrapper
 	 */
-	public function setWpPageWrapper($wpPageWrapper): void
+	public function setWpPageWrapper($wpPageWrapper)
 	{
 		$this->_wpPageWrapper = $wpPageWrapper;
 	}
