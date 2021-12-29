@@ -662,6 +662,21 @@ class TestClassEstateList
 		$this->assertInstanceOf(GeoSearchBuilderFromInputVars::class, $this->_pEstateList->getGeoSearchBuilder());
 	}
 
+	/**
+	 *
+	 */
+	public function testShowReferenceStatus()
+	{
+		$EstateListMock = $this->getMockBuilder(EstateList::class)
+			->disableOriginalConstructor()
+			->setMethods(['getShowReferenceStatus'])
+			->getMock();
+		$EstateListMock->method('getShowReferenceStatus')->willReturn(false);
+		$this->_pEstateList->loadEstates();
+		$result = $this->_pEstateList->estateIterator();
+		$this->assertEquals('', $result['vermarktungsstatus']);
+	}
+
 
 	/**
 	 *
