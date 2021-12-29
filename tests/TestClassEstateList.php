@@ -196,6 +196,17 @@ class TestClassEstateList
 	 *
 	 */
 
+	public function testGetRawValues()
+	{
+		$this->_pEstateList->loadEstates();
+		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->getRawValues());
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testGetFieldLabel()
 	{
 		$pFields = new FieldsCollection();
