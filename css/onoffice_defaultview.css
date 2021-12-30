@@ -235,14 +235,14 @@
 }
 
 .oo-asplocation {
+	margin-bottom: 10px;
+}
+
+.contact-info {
 	margin-bottom: 15px;
 }
 
-.oo-aspinfo {
-	margin-bottom: 15px;
-}
-
-.oo-aspinfo p{
+.contact-info p{
 	margin: 0;
 }
 

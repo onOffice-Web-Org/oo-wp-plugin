@@ -124,15 +124,15 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						}
 
 						if ($field === 'imageUrl') {
-							echo '<div class="oo-aspinfo"><img src=' . esc_html($contactData[$field]) . ' height="150px"></div>';
+							echo '<div class="oo-aspinfo contact-info"><img src="' . esc_html($contactData[$field]) . '" height="150px"></div>';
 						} elseif (is_array($contactData[$field])) {
-							echo '<div class="oo-aspinfo">';
+							echo '<div class="oo-aspinfo contact-info">';
 							foreach ($contactData[$field] as $item) {
 								echo '<p>' . esc_html($item) . '</p>';
 							}
 							echo '</div>';
 						} else {
-							echo '<div class="oo-aspinfo"><p>' . esc_html($contactData[$field]) . '</p></div>';
+							echo '<div class="oo-aspinfo contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
 						}
 					} ?>
 				<?php endforeach; ?>
