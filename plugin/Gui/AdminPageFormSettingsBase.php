@@ -398,6 +398,8 @@ abstract class AdminPageFormSettingsBase
 		if ($this->getListViewId() !== null) {
 			$pInputModelEmbedCode = $this->_pFormModelBuilder->createInputModelEmbedCode();
 			$pFormModelName->addInputModel($pInputModelEmbedCode);
+			$pInputModelButton = $this->_pFormModelBuilder->createInputModelButton();
+			$pFormModelName->addInputModel($pInputModelButton);
 		}
 
 		$this->addFormModel($pFormModelName);

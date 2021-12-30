@@ -86,7 +86,12 @@ class AdminPageEstateListSettings
 		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
-
+		if ($this->getListViewId() !== null) {
+			$pInputModelEmbedCode = $pFormModelBuilder->createInputModelEmbedCode($this->getListViewId());
+			$pFormModelName->addInputModel($pInputModelEmbedCode);
+			$pInputModelButton = $pFormModelBuilder->createInputModelButton();
+			$pFormModelName->addInputModel($pInputModelButton);
+		}
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pInputModelSortBy = $pFormModelBuilder->createInputModelSortBy(onOfficeSDK::MODULE_ESTATE);

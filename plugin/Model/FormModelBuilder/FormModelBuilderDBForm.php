@@ -253,10 +253,19 @@ class FormModelBuilderDBForm
 		$formName = $this->getValue($name);
 
 		$code = '[oo_form form="'.$formName.'"]';
-		$pInputModeLabel = new InputModelLabel(__(', Embed Code: ', 'onoffice-for-wp-websites'), $code);
+		$pInputModeLabel = new InputModelLabel(__(', shortcode: ', 'onoffice-for-wp-websites'), $code);
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
 
+		return $pInputModeLabel;
+	}
+
+	public function createInputModelButton()
+	{
+		$button = '<button type="button">Copy!</button>';
+		$pInputModeLabel = new InputModelLabel('', $button);
+		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
+		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
 		return $pInputModeLabel;
 	}
 
