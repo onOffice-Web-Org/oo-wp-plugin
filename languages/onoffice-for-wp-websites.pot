@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-10-22T11:20:08+07:00\n"
+"POT-Creation-Date: 2021-12-30T10:13:28+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -39,18 +39,18 @@ msgid "Please configure your onOffice API credentials first!"
 msgstr ""
 
 #: plugin/Controller/AdminViewController.php:148
-#: plugin/Gui/AdminPageAddressList.php:78
+#: plugin/Gui/AdminPageAddressList.php:79
 #: plugin/Gui/AdminPageBase.php:88
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
 #: plugin/Gui/AdminPageEstateUnitList.php:66
-#: plugin/Gui/AdminPageFormList.php:179
+#: plugin/Gui/AdminPageFormList.php:181
 #: plugin/Gui/AdminPageSimilarEstates.php:145
 msgid "onOffice"
 msgstr ""
 
 #: plugin/Controller/AdminViewController.php:154
-#: plugin/Gui/AdminPageAddressList.php:59
+#: plugin/Gui/AdminPageAddressList.php:60
 msgid "Addresses"
 msgstr ""
 
@@ -60,7 +60,7 @@ msgid "Estates"
 msgstr ""
 
 #: plugin/Controller/AdminViewController.php:172
-#: plugin/Gui/AdminPageFormList.php:95
+#: plugin/Gui/AdminPageFormList.php:96
 msgid "Forms"
 msgstr ""
 
@@ -163,10 +163,10 @@ msgstr[1] ""
 msgid "No form was deleted."
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressList.php:87
+#: plugin/Gui/AdminPageAddressList.php:88
 #: plugin/Gui/AdminPageEstateList.php:83
 #: plugin/Gui/AdminPageEstateUnitList.php:78
-#: plugin/Gui/AdminPageFormList.php:197
+#: plugin/Gui/AdminPageFormList.php:199
 msgid "Add New"
 msgstr ""
 
@@ -360,7 +360,7 @@ msgid "There was a problem saving the detail view."
 msgstr ""
 
 #: plugin/Gui/AdminPageEstateList.php:95
-#: plugin/Gui/AdminPageFormList.php:143
+#: plugin/Gui/AdminPageFormList.php:144
 msgid "Are you sure you want to delete the selected items?"
 msgstr ""
 
@@ -471,48 +471,56 @@ msgstr ""
 msgid "Please provide an Email address!"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:67
-msgid "Enable Watchlist"
-msgstr ""
-
-#: plugin/Gui/AdminPageModules.php:68
-msgid "Expression used"
+#: plugin/Gui/AdminPageModules.php:66
+msgid "Show title in URL"
 msgstr ""
 
 #: plugin/Gui/AdminPageModules.php:79
-#: plugin/Gui/AdminPageModules.php:88
+msgid "Detail View URLs"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:94
+msgid "Enable Watchlist"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:95
+msgid "Expression used"
+msgstr ""
+
+#: plugin/Gui/AdminPageModules.php:106
+#: plugin/Gui/AdminPageModules.php:115
 msgid "Watchlist"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:80
+#: plugin/Gui/AdminPageModules.php:107
 msgid "Favorise"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:103
+#: plugin/Gui/AdminPageModules.php:130
 msgid "Map Provider"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:110
+#: plugin/Gui/AdminPageModules.php:137
 msgid "OpenStreetMap"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:111
+#: plugin/Gui/AdminPageModules.php:138
 msgid "Google Maps"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:118
+#: plugin/Gui/AdminPageModules.php:145
 msgid "Maps"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:129
+#: plugin/Gui/AdminPageModules.php:156
 msgid "Pagination"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:136
+#: plugin/Gui/AdminPageModules.php:163
 msgid "By WP Theme"
 msgstr ""
 
-#: plugin/Gui/AdminPageModules.php:137
+#: plugin/Gui/AdminPageModules.php:164
 msgid "By onOffice-Plugin"
 msgstr ""
 
@@ -552,10 +560,17 @@ msgstr ""
 msgid "Shortcode"
 msgstr ""
 
+#: plugin/Gui/Table/AddressListTable.php:183
+#: plugin/Gui/Table/EstateListTable.php:270
+#: plugin/Gui/Table/EstateUnitsTable.php:163
+#: plugin/Gui/Table/FormsTable.php:259
+msgid "Duplicate"
+msgstr ""
+
 #. translators: %s is the name of the list view.
 #. translators: %s is the name of the list view.
-#: plugin/Gui/Table/AddressListTable.php:185
-#: plugin/Gui/Table/EstateListTable.php:281
+#: plugin/Gui/Table/AddressListTable.php:189
+#: plugin/Gui/Table/EstateListTable.php:276
 msgid ""
 "You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -589,19 +604,8 @@ msgstr ""
 msgid "(Unknown Filter (ID: %s))"
 msgstr ""
 
-#. translators: %s is the name of the list view.
-#: plugin/Gui/Table/EstateListTable.php:273
-msgid ""
-"You are about to duplicate the listview '%s'\n"
-"  'Cancel' to stop, 'OK' to duplicate."
-msgstr ""
-
-#: plugin/Gui/Table/EstateListTable.php:275
-msgid "Duplicate"
-msgstr ""
-
 #. translators: %s is the name of the unit view.
-#: plugin/Gui/Table/EstateUnitsTable.php:165
+#: plugin/Gui/Table/EstateUnitsTable.php:169
 msgid ""
 "You are about to delete the unit view '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -618,7 +622,7 @@ msgid "Type of Form"
 msgstr ""
 
 #. translators: %s is the name of the form.
-#: plugin/Gui/Table/FormsTable.php:261
+#: plugin/Gui/Table/FormsTable.php:265
 msgid ""
 "You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -914,7 +918,7 @@ msgstr ""
 msgid "Street"
 msgstr ""
 
-#: plugin/Record/RecordManagerReadListViewAddress.php:93
+#: plugin/Record/RecordManagerReadListViewAddress.php:120
 msgid "unknown address list name"
 msgstr ""
 
@@ -1056,6 +1060,55 @@ msgstr ""
 #: plugin/WP/UnknownPageException.php:45
 msgid "Bad path \"%s\". The Page was not found."
 msgstr ""
+
+#. translators: %s is the amount of carports
+#: templates.dist/fields.php:285
+msgid "%1$s carport"
+msgid_plural "%1$s carports"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s is the amount of duplexes
+#: templates.dist/fields.php:289
+msgid "%1$s duplex"
+msgid_plural "%1$s duplexes"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s is the amount of parking spaces
+#: templates.dist/fields.php:293
+msgid "%1$s parking space"
+msgid_plural "%1$s parking spaces"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s is the amount of garages
+#: templates.dist/fields.php:297
+msgid "%1$s garage"
+msgid_plural "%1$s garages"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s is the amount of multi story garages
+#: templates.dist/fields.php:301
+msgid "%1$s multi story garage"
+msgid_plural "%1$s multi story garages"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s is the amount of underground garages
+#: templates.dist/fields.php:305
+msgid "%1$s underground garage"
+msgid_plural "%1$s underground garages"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s is the amount of other parking lots
+#: templates.dist/fields.php:309
+msgid "%1$s other parking lot"
+msgid_plural "%1$s other parking lots"
+msgstr[0] ""
+msgstr[1] ""
 
 #: tests/resources/templates/default_detail.php:42
 msgid "Contact person"
