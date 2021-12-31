@@ -181,6 +181,9 @@ msgstr "Neu"
 msgid "Edit Address List"
 msgstr "Adressliste bearbeiten"
 
+#:  plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:140
+msgid "Shortcode"
+msgstr "Kurzcode"
 #: plugin/Gui/AdminPageAddressListSettings.php:100
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
@@ -797,8 +800,8 @@ msgid "Type of Form: "
 msgstr "Formularart: "
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:256
-msgid ", Embed Code: "
-msgstr ", Embed Code: "
+msgid ", shortcode: "
+msgstr ", kurzcode: "
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:268
 msgid "Recipient's E-Mail Address"

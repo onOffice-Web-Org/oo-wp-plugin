@@ -183,7 +183,9 @@ msgstr "Nieuw toevoegen"
 #: plugin/Gui/AdminPageAddressListSettings.php:63
 msgid "Edit Address List"
 msgstr "Adreslijst bewerken"
-
+#:  plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:140
+msgid "Shortcode"
+msgstr "Korte code"
 #: plugin/Gui/AdminPageAddressListSettings.php:100
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
@@ -797,8 +799,8 @@ msgid "Type of Form: "
 msgstr "Type formulier: "
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:256
-msgid ", Embed Code: "
-msgstr "Embed Code: "
+msgid ",  shortcode: "
+msgstr ", korte code: "
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:268
 msgid "Recipient's E-Mail Address"

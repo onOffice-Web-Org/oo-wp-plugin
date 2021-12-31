@@ -42,13 +42,21 @@ onOffice.ajaxSaver = function(outerDiv) {
 			}
 
 			var message = onOffice.settings[responseMessageKey];
+			var getUrl = window.location.href;
+
+			var getUrlPageEdit = getUrl.split( '&' );
+			var urlPageEdit = '';
 			if (responseCode === true) {
 				$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
 					message + '</p></div>');
 
 				onOffice.sortByUserSelection();
 				onOffice.generateSortByUserDefinedDefault();
-
+				if (getUrlPageEdit.length != 0)
+				{
+					urlPageEdit = getUrlPageEdit[0] + "&id=" + onOffice.settings.record_id;
+					window.location.replace(urlPageEdit);
+				}
 			} else {
 				$('#onoffice-notice-wrapper').append('<div class="notice notice-error is-dismissible"><p>' +
 					message + '</p></div>');
