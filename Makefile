@@ -20,6 +20,7 @@ add-version: copy-files-release
 
 composer-install-nodev:
 	cd $(PREFIX)/onoffice; composer install --no-dev -a
+	find $(PREFIX)/onoffice '-type' 'l' '-exec' 'unlink' '{}' ';'
 
 pot:
 	vendor/bin/wp i18n make-pot . languages/onoffice-for-wp-websites.pot --skip-js
