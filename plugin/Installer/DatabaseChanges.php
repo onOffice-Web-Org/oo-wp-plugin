@@ -159,6 +159,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 20;
 		}
 
+        if ($dbversion == 20) {
+            $this->updateCreateAddressFieldOfIntersetAndOwnerForm();
+            $dbversion = 21;
+        }
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
