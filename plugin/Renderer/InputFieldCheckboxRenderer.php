@@ -43,6 +43,9 @@ class InputFieldCheckboxRenderer
 	private $_checkedValues = [];
 
 	/** @var string */
+	private $_hint = '';
+
+	/** @var string */
 	private $_descriptionTextHTML = '';
 	/**
 	 *
@@ -110,7 +113,7 @@ class InputFieldCheckboxRenderer
 	public function render()
 	{
 		$pFieldsCollection = $this->buildFieldsCollection();
-
+		$hintText = !empty($this->getHint()) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
@@ -122,7 +125,7 @@ class InputFieldCheckboxRenderer
 					.$this->renderAdditionalAttributes()
 					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
-					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
+					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'.$hintText;
 			}
 		} else {
 			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
@@ -130,9 +133,17 @@ class InputFieldCheckboxRenderer
 				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
-				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '');
+				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '').$hintText;
 		}
 	}
+	
+	/** @return string */
+	public function getHint()
+	{ return $this->_hint; }
+
+	/** @param string $hint */
+	public function setHint(string $hint)
+	{ $this->_hint = $hint; }
 
 
 	/** @param array $checkedValues */
