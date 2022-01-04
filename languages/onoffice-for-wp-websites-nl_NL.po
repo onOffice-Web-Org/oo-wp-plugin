@@ -710,6 +710,9 @@ msgstr "Aflopend"
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr "Sjabloon"
+#: #: plugin/Renderer/InputFieldButtonRenderer.php:58
+msgid "Copy !"
+msgstr "Kopiëren !"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119

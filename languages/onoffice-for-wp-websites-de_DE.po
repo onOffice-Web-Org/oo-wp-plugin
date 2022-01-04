@@ -711,6 +711,9 @@ msgstr "Absteigend"
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr "Template"
+#: #: plugin/Renderer/InputFieldButtonRenderer.php:58
+msgid "Copy !"
+msgstr "Kopieren !"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119

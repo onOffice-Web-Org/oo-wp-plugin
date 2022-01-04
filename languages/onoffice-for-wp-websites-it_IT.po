@@ -714,6 +714,10 @@ msgstr "Scendendo"
 msgid "Template"
 msgstr "Modello"
 
+#: #: plugin/Renderer/InputFieldButtonRenderer.php:58
+msgid "Copy !"
+msgstr "copia !"
+
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119
 msgid "List View"

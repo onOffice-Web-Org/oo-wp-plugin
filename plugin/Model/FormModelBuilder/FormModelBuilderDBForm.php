@@ -262,10 +262,8 @@ class FormModelBuilderDBForm
 
 	public function createInputModelButton()
 	{
-		$button = '<button type="button">Copy!</button>';
-		$pInputModeLabel = new InputModelLabel('', $button);
-		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
-		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
+		$pInputModeLabel = new InputModelLabel('', '');
+		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_BUTTON);
 		return $pInputModeLabel;
 	}
 
