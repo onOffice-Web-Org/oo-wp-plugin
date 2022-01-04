@@ -184,7 +184,7 @@ class AdminPageAddressListSettings
 		$pFormFilterRecords = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$this->createMetaBoxByForm($pFormFilterRecords, 'normal');
 
-		$pFormFilterRecords = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_SORTING);
+        $pFormFilterRecords = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_SORTING);
         $this->createMetaBoxByForm($pFormFilterRecords, 'normal');
 	}
 
