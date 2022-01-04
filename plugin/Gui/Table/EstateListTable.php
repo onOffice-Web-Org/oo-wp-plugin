@@ -130,7 +130,8 @@ class EstateListTable extends ListTable
 		{
 			return [];
 		}
-		foreach ($listRecord as &$record)
+		$recordEstate = [];
+		foreach ($listRecord as $record)
 		{
 			if (!empty($record->page_shortcode))
 			{
@@ -142,12 +143,13 @@ class EstateListTable extends ListTable
 					{
 						$page .= ',';
 					}
-					$page .= "<a href='".get_edit_post_link((int)$pageID)."' target='_blank'>".get_the_title((int)$pageID)."</a>";
+					$page .= "<a href='".esc_attr(get_edit_post_link((int)$pageID))."' target='_blank'>".esc_html(get_the_title((int)$pageID))."</a>";
 				}
 				$record->page_shortcode = $page;
 			}
+			$recordEstate[] = $record;
 		}
-		return $listRecord;
+		return $recordEstate;
 	}
 
 	/**

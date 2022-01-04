@@ -321,9 +321,11 @@ class DetailViewPostSaveController
 			}
 			if (strpos($view->page_shortcode,(string)$postID)!== false)
 			{
-				$pageID = chop($view->page_shortcode,$postID);
-				$pageID = trim($pageID,",");
-				$pageID = str_replace(",,",",",$pageID);
+				$pageShortCode = explode(",",$view->page_shortcode);
+				if (($keyPageDelete = array_search($postID, $pageShortCode)) !== false) {
+					unset($pageShortCode[$keyPageDelete]);
+				}
+				$pageID = implode(",",$pageShortCode);
 				$pRecordReadListView->updateColumnPageShortCode($pageID,$view->$primaKey,$tableName,$column);
 			}
 

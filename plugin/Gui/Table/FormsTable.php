@@ -151,7 +151,7 @@ class FormsTable
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of Form', 'onoffice-for-wp-websites'),
-			'template' => __('Tempaltes', 'onoffice-for-wp-websites'),
+			'template' => __('Templates', 'onoffice-for-wp-websites'),
 			'form_type' => __('Type of Form', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 			'page_shortcode' => __('Page with Shortcode', 'onoffice-for-wp-websites'),
