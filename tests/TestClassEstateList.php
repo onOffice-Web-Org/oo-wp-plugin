@@ -796,6 +796,7 @@ class TestClassEstateList
 			'objekt_des_tages',
 		]);
 		$redirectIfOldUrl = $this->getMockBuilder(Redirector::class)
+			->disableOriginalConstructor()
 			->setMethods(['redirectDetailView'])
 			->getMock();
 		$redirectIfOldUrl->method('redirectDetailView')->willReturn(true);
