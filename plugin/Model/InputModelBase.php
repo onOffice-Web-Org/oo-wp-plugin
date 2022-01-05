@@ -252,10 +252,10 @@ abstract class InputModelBase
 
 
 	/** @return string */
-	public function getDescriptionRadioTextHtmls()
+	public function getDescriptionRadioTextHTML()
 	{ return $this->_descriptionRadioTextHtmls; }
 
 	/** @param string $descriptionTextHTML */
-	public function setDescriptionRadioTextHtmls(array $textHTML)
+	public function setDescriptionRadioTextHTML(array $textHTML)
 	{ $this->_descriptionRadioTextHtmls = $textHTML; }
 }

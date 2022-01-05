@@ -120,7 +120,7 @@ class EstateList
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
-		$this->_pWPOptionWrapper = new WPOptionWrapperDefault();
+		$this->_pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
 	}
 
 	/**
