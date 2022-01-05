@@ -57,7 +57,7 @@ use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
-use onOffice\WPlugin\Utility\RedirectIfOldUrl;
+use onOffice\WPlugin\Utility\Redirector;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -795,7 +795,7 @@ class TestClassEstateList
 			'courtage_frei',
 			'objekt_des_tages',
 		]);
-		$redirectIfOldUrl = $this->getMockBuilder(RedirectIfOldUrl::class)
+		$redirectIfOldUrl = $this->getMockBuilder(Redirector::class)
 			->setMethods(['redirectDetailView'])
 			->getMock();
 		$redirectIfOldUrl->method('redirectDetailView')->willReturn(true);

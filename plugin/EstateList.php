@@ -48,7 +48,7 @@ use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Utility\RedirectIfOldUrl;
+use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\WP\WPPageWrapper;
@@ -102,7 +102,7 @@ class EstateList
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;
 
-	/** @var RedirectIfOldUrl */
+	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
 	/** @var bool */
@@ -126,7 +126,7 @@ class EstateList
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
-		$this->_redirectIfOldUrl = $pContainer->get(RedirectIfOldUrl::class);
+		$this->_redirectIfOldUrl = $pContainer->get(Redirector::class);
 	}
 
 	/**

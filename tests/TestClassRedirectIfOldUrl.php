@@ -24,42 +24,46 @@ namespace onOffice\tests;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
-use onOffice\WPlugin\DataView\DataDetailView;
-use onOffice\WPlugin\Factory\AddressListFactory;
-use onOffice\WPlugin\Utility\RedirectIfOldUrl;
+use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPPageWrapper;
-use onOffice\WPlugin\WP\WPRedirectWrapper;
+use onOffice\tests\RedirectWrapperMocker;
 
 class TestClassRedirectIfOldUrl
 	extends \WP_UnitTestCase
 {
 	/**
-	 * @var RedirectIfOldUrl
+	 * @var Redirector
 	 */
 	private $_pRedirectIfOldUrl;
+
+	/** @var Container */
+	private $_pContainer;
 
 	/**
 	 * @before
 	 */
 	public function prepare()
 	{
-		$this->_pRedirectIfOldUrl = new RedirectIfOldUrl();
 		global $wp;
 		$wp->request = 'detail-view/123';
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pRedirectIfOldUrl = $this->_pContainer->get(Redirector::class);
+
 	}
 
 	/**
 	 *
 	 */
-	public function testInstance()
+	public function stestInstance()
 	{
-		$this->assertInstanceOf(RedirectIfOldUrl::class, $this->_pRedirectIfOldUrl);
+		$this->assertInstanceOf(Redirector::class, $this->_pRedirectIfOldUrl);
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Utility\RedirectIfOldUrl::getCurrentLink
+	 * @covers \onOffice\WPlugin\Utility\Redirector::getCurrentLink
 	 */
 	public function testGetCurrentLink()
 	{
@@ -67,7 +71,7 @@ class TestClassRedirectIfOldUrl
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Utility\RedirectIfOldUrl::getUri
+	 * @covers \onOffice\WPlugin\Utility\Redirector::getUri
 	 */
 	public function testGetUri()
 	{
@@ -75,7 +79,7 @@ class TestClassRedirectIfOldUrl
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Utility\RedirectIfOldUrl::redirectDetailView
+	 * @covers \onOffice\WPlugin\Utility\Redirector::redirectDetailView
 	 */
 	public function testRedirectDetailViewSameUrl()
 	{
@@ -97,39 +101,27 @@ class TestClassRedirectIfOldUrl
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Utility\RedirectIfOldUrl::redirectDetailView
+	 * @covers \onOffice\WPlugin\Utility\Redirector::redirectDetailView
 	 */
 	public function testRedirectDetailViewSameUrlWithoutOption()
 	{
 		global $wp;
 		$wp->request = 'detail-view/3333';
-		$wpPageWrapper = $this->getMockBuilder(WPPageWrapper::class)
-			->setMethods(['getPageLinkByPageId', 'getPageUriByPageId'])
-			->getMock();
-
-		$wpPageWrapper->method('getPageLinkByPageId')->willReturn('https://abc.com');
-		$wpPageWrapper->method('getPageUriByPageId')->willReturn('test-net');
-
-		$pLanguageSwitcher = $this->getMockBuilder(EstateDetailUrl::class)
-			->setMethods(['createEstateDetailLink'])
-			->getMock();
-		$pLanguageSwitcher->method('createEstateDetailLink')->willReturn('https://abc.com/detail/33-test-post');
-
-		$wpRedirectWrapper = $this->getMockBuilder(WPRedirectWrapper::class)
-			->setMethods(['redirect'])
-			->getMock();
-		$wpRedirectWrapper->method('redirect')->willReturn(true);
-
-		 $redirectIfOldUrl = new RedirectIfOldUrl();
-		 $redirectIfOldUrl->setPLanguageSwitcher($pLanguageSwitcher);
-		 $redirectIfOldUrl->setWpRedirectWrapper($wpRedirectWrapper);
-		 $redirectIfOldUrl->setWpPageWrapper($wpPageWrapper);
-
-		 $this->assertTrue($redirectIfOldUrl->redirectDetailView(1, 1, 'tes post'));
+		$pWPPost = self::factory()->post->create_and_get([
+			'post_author' => 1,
+			'post_content' => '[oo_estate view="detail"]',
+			'post_title' => 'Detail View',
+			'post_type' => 'page',
+		]);
+		$pLanguageSwitcher = new EstateDetailUrl();
+		$wpRedirectWrapperMocker = new RedirectWrapperMocker();
+		$wpPageWrapper = new WPPageWrapper();
+		$redirectIfOldUrl = new Redirector($pLanguageSwitcher, $wpPageWrapper, $wpRedirectWrapperMocker);
+		$this->assertTrue($redirectIfOldUrl->redirectDetailView($pWPPost->ID, 1, 'tes post'));
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Utility\RedirectIfOldUrl::redirectDetailView
+	 * @covers \onOffice\WPlugin\Utility\Redirector::redirectDetailView
 	 */
 	public function testRedirectDetailViewNotMatchRule()
 	{
