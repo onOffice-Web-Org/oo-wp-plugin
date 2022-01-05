@@ -24,6 +24,8 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Cache;
 
 use onOffice\SDK\Cache\onOfficeSDKCache;
+use onOffice\WPlugin\API\APIAvailabilityChecker;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\SDKWrapper;
 
 
@@ -36,16 +38,19 @@ class CacheHandler
 	/** @var SDKWrapper */
 	private $_pSDKWrapper = null;
 
+	/** @var APIAvailabilityChecker */
+	private $_pApiChecker = null;
 
 	/**
 	 *
 	 * @param SDKWrapper $pSDKWrapper
-	 *
+	 * @param APIAvailabilityChecker $pApiChecker
 	 */
 
-	public function __construct(SDKWrapper $pSDKWrapper)
+	public function __construct(SDKWrapper $pSDKWrapper, APIAvailabilityChecker $pApiChecker)
 	{
 		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->_pApiChecker = $pApiChecker;
 	}
 
 
@@ -64,13 +69,16 @@ class CacheHandler
 
 	/**
 	 *
+	 * @throws ApiClientException
 	 */
 
 	public function clean()
 	{
-		foreach ($this->_pSDKWrapper->getCache() as $pCache) {
-			/* @var $pCache onOfficeSDKCache */
-			$pCache->cleanup();
+		if($this->_pApiChecker->isAvailable()){
+			foreach ($this->_pSDKWrapper->getCache() as $pCache) {
+				/* @var $pCache onOfficeSDKCache */
+				$pCache->cleanup();
+			}
 		}
 	}
 }
