@@ -149,6 +149,10 @@ class TestClassFormPostContact
 				$pFieldAnrede->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 				$pFieldsCollection->addField($pFieldAnrede);
 
+				$pFieldNewsletter = new Field('newsletter', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldNewsletter->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pFieldsCollection->addField($pFieldNewsletter);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -187,6 +191,7 @@ class TestClassFormPostContact
 				'Ort' => 'Aachen',
 				'Telefon1' => '0815/2345677',
 				'AGB_akzeptiert' => true,
+				'newsletter_aktiv' => false
 			],
 			'estateid' => 1337,
 			'message' => null,
@@ -273,6 +278,7 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
 			'AGB_akzeptiert' => true,
+			"newsletter" => true,
 			'checkDuplicate' => true,
 		];
 
@@ -299,6 +305,7 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
 			'AGB_akzeptiert' => true,
+			"newsletter" => true,
 			'checkDuplicate' => false,
 		];
 
@@ -415,6 +422,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->addInput('Ort', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('Telefon1', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('newsletter', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->setRecipient('test@my-onoffice.com');
 		$pDataFormConfiguration->setCreateAddress(false);
 		$pDataFormConfiguration->setFormType(Form::TYPE_CONTACT);
@@ -473,6 +481,7 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'Telefon1' => '0815/2345677',
 			'AGB_akzeptiert' => 'y',
+			'newsletter' => 'y',
 			'Id' => '1337',
 			'Anrede' => '',
 		];

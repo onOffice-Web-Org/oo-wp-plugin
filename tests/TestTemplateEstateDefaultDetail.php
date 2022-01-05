@@ -65,6 +65,7 @@ class TestTemplateEstateDefaultDetail
 			'objektart' => 'Grundstück',
 			'objekttyp' => 'Wohnen',
 			'vermarktungsart' => 'Kauf',
+			'vermarktungsstatus' => 'zzz',
 			'plz' => '52078',
 			'ort' => 'Aachen',
 			'objektnr_extern' => 'AP001',
