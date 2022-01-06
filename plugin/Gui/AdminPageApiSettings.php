@@ -63,8 +63,8 @@ class AdminPageApiSettings
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptcha();
 		$this->addFormModelFavorites($pageSlug);
+        $this->addFormModelDetailView($pageSlug);
 		$this->addFormModelPagination($pageSlug);
-		$this->addFormModelDetailView($pageSlug);
 		$this->addFormModelGoogleBotSettings();
 	}
 
