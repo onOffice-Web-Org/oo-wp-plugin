@@ -33,12 +33,12 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 	<?php
 	$pEstates->resetEstateIterator();
 	while ( $currentEstate = $pEstates->estateIterator() ) { ?>
-		<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
-            <span style="padding:0 15px"><?php echo ucfirst($currentEstate['vermarktungsstatus']); ?></span>
-			<?php unset($currentEstate['vermarktungsstatus']); ?>
-		<?php } ?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
+			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
+				<span style="padding:0 15px"><?php echo ucfirst($currentEstate['vermarktungsstatus']); ?></span>
+				<?php unset($currentEstate['vermarktungsstatus']); ?>
+			<?php } ?>
 		</div>
 		<div class="oo-details-main">
 			<div class="oo-detailsgallery" id="oo-galleryslide">
@@ -72,14 +72,14 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php if ( $currentEstate["objektbeschreibung"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Description', 'onoffice'); ?></h2>
-					<?php echo $currentEstate["objektbeschreibung"]."\n"; ?>
+					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
 				</div>
 			<?php } ?>
 
 			<?php if ( $currentEstate["lage"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Location', 'onoffice'); ?></h2>
-					<?php echo $currentEstate["lage"]."\n"; ?>
+					<?php echo nl2br($currentEstate["lage"]); ?>
 				</div>
 			<?php }
 
@@ -96,14 +96,14 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php if ( $currentEstate["ausstatt_beschr"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Equipment', 'onoffice'); ?></h2>
-					<?php echo $currentEstate["ausstatt_beschr"]."\n"; ?>
+					<?php echo nl2br($currentEstate["ausstatt_beschr"]); ?>
 				</div>
 			<?php } ?>
 
 			<?php if ( $currentEstate["sonstige_angaben"] !== "" ) { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Other Information', 'onoffice'); ?></h2>
-					<?php echo $currentEstate["sonstige_angaben"]."\n"; ?>
+					<?php echo nl2br($currentEstate["sonstige_angaben"]); ?>
 				</div>
 			<?php } ?>
 
@@ -115,17 +115,26 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<div class="oo-asp">
 				<h2><?php echo esc_html__('Contact person', 'onoffice'); ?></h2>
 				<?php
+				$addressFields = $pEstates->getAddressFields();
 				foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
-					<div class="oo-aspname">
-						<strong><?php echo $contactData['Anrede'].'&nbsp;'.$contactData['Vorname'].'&nbsp;'.$contactData['Name']; ?></strong>
-					</div>
-					<div class="oo-asplocation">
-						<span><?php echo $contactData['Strasse']; ?></span>
-						<span><?php echo $contactData['Plz'].'&nbsp;'.$contactData['Ort']; ?></span>
-					</div>
-					<div class="oo-aspcontact">
-						<span><?php echo $contactData['Telefon1']; ?></span>
-					</div>
+					<?php
+					foreach ($addressFields as $field) {
+						if (empty($contactData[$field])) {
+							continue;
+						}
+
+						if ($field === 'imageUrl') {
+							echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($contactData[$field]) . '" height="150px"></div>';
+						} elseif (is_array($contactData[$field])) {
+							echo '<div class="oo-aspinfo oo-contact-info">';
+							foreach ($contactData[$field] as $item) {
+								echo '<p>' . esc_html($item) . '</p>';
+							}
+							echo '</div>';
+						} else {
+							echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
+						}
+					} ?>
 				<?php endforeach; ?>
 			</div>
 			<div class="oo-detailsexpose">

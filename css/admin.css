@@ -254,9 +254,11 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 #viewformspecific .inside{
 	overflow: hidden;
 }
-#viewformspecific .inside .hint-fallback-email{
-	float: right;
-	width: 50%;
-	text-align: left;
-	margin-top: 0;
+
+#adminmenu #toplevel_page_onoffice .wp-menu-image img {
+	height: 20px !important;
+	text-align: center !important;
+	line-height: 20px !important;
+	display: block;
+	margin: auto;
 }
