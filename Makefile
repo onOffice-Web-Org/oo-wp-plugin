@@ -6,7 +6,7 @@ ifeq ($(OO_PLUGIN_VERSION),)
 	OO_PLUGIN_VERSION := $(shell git describe --tags --always)
 endif
 
-.PHONY: clean-zip clean-target clean release
+.PHONY: clean-zip clean-target clean release copy-files-release composer-install-nodev change-title add-version pot
 
 copy-files-release:
 	install -d $(PREFIX)/onoffice

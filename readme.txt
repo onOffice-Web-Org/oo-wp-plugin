@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.0 =
+
+**Changes**
+
+* Display all of a contact person's data on the estate detail page
+
 = 2.20.12 =
 
 **Fixes**
