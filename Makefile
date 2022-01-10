@@ -6,11 +6,11 @@ ifeq ($(OO_PLUGIN_VERSION),)
 	OO_PLUGIN_VERSION := $(shell git describe --tags --always)
 endif
 
-.PHONY: clean-zip clean-target clean release
+.PHONY: clean-zip clean-target clean release copy-files-release composer-install-nodev change-title add-version pot
 
 copy-files-release:
 	install -d $(PREFIX)/onoffice
-	find * -type f \( ! -path "bin/*" ! -path "build/*" ! -path "./.*" ! -path "nbproject/*"  ! -path "tests/*" ! -iname ".*" ! -iname "Readme.md" ! -iname "phpstan.neon" ! -iname "phpunit.xml*" ! -iname "Makefile" ! -iname "phpcs.xml*" \) -exec install -v -D -T ./{} $(PREFIX)/onoffice/{} \;
+	find * -type f \( ! -path "bin/*" ! -path "build/*" ! -path "vendor/bin/*" ! -path "./.*" ! -path "nbproject/*"  ! -path "tests/*" ! -iname ".*" ! -iname "Readme.md" ! -iname "phpstan.neon" ! -iname "phpstan-baseline.neon" ! -iname "phpunit.xml*" ! -iname "Makefile" ! -iname "phpcs.xml*" \) -exec install -v -D -T ./{} $(PREFIX)/onoffice/{} \;
 
 change-title: copy-files-release
 	sed -i -r "s/(Plugin Name: .+) \(dev\)$$/\1/" $(PREFIX)/onoffice/plugin.php
@@ -20,6 +20,7 @@ add-version: copy-files-release
 
 composer-install-nodev:
 	cd $(PREFIX)/onoffice; composer install --no-dev -a
+	find $(PREFIX)/onoffice '-type' 'l' '-exec' 'unlink' '{}' ';'
 
 pot:
 	vendor/bin/wp i18n make-pot . languages/onoffice-for-wp-websites.pot --skip-js

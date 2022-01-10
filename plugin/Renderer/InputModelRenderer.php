@@ -129,7 +129,7 @@ class InputModelRenderer
 
 			case InputModelOption::HTML_TYPE_CHECKBOX:
 				$pInstance = new InputFieldCheckboxRenderer($elementName,
-					$pInputModel->getValuesAvailable());
+					$pInputModel->getValuesAvailable(),  $pInputModel->getDescriptionTextHTML());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				break;
 
@@ -186,6 +186,9 @@ class InputModelRenderer
 						$pInstance->addAdditionalAttribute('placeholder', $placeholder);
 					}
 					$pInstance->setValue($pInputModel->getValue());
+				}
+				if ($pInputModel->getHint() != null) {
+					$pInstance->setHint($pInputModel->getHint());
 				}
 
 				break;

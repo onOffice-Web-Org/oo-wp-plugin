@@ -30,6 +30,7 @@ use onOffice\WPlugin\Form\BulkDeleteRecord;
 use onOffice\WPlugin\Gui\Table\FormsTable;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Record\RecordManagerDeleteForm;
+use onOffice\WPlugin\Record\RecordManagerDuplicateListViewForm;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Translation\FormTranslation;
 use onOffice\WPlugin\Utility\__String;
@@ -163,6 +164,7 @@ class AdminPageFormList
 		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pDI = $pDIBuilder->build();
 		$this->registerDeleteAction($pDI);
+		$this->registerDuplicateAction($pDI);
 
 		parent::preOutput();
 	}
@@ -237,6 +239,36 @@ class AdminPageFormList
 		};
 
 		add_filter('handle_bulk_actions-onoffice_page_onoffice-forms', $pClosureDeleteForm, 10, 3);
+		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-forms', function(): Table\WP\ListTable {
+			return $this->_pFormsTable;
+		});
+	}
+
+
+	/**
+	 *
+	 * @param Container $pDI
+	 */
+
+	private function registerDuplicateAction(Container $pDI)
+	{
+		$pClosureDuplicateForm = function(string $redirectTo, Table\WP\ListTable $pTable)
+		use ($pDI): string
+		{
+			if (in_array($pTable->current_action(), ['duplicate', 'bulk_duplicate'])) {
+				check_admin_referer('bulk-' . $pTable->getArgs()['plural']);
+				if (!(isset($_GET['form']))) {
+					wp_die('No List Views for duplicating!');
+				}
+
+				/* @var $pRecordManagerDuplicateListViewForm RecordManagerDuplicateListViewForm */
+				$pRecordManagerDuplicateListViewForm = $pDI->get(RecordManagerDuplicateListViewForm::class);
+				$listViewRootName = $_GET['form'];
+				$pRecordManagerDuplicateListViewForm->duplicateByName($listViewRootName);
+			}
+			return $redirectTo;
+		};
+		add_filter('handle_bulk_actions-onoffice_page_onoffice-forms', $pClosureDuplicateForm, 10, 3);
 		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-forms', function(): Table\WP\ListTable {
 			return $this->_pFormsTable;
 		});

@@ -53,4 +53,18 @@ class TestClassInputFieldLabelRenderer
 		$pRenderer->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
 		$this->assertEquals(InputModelLabel::VALUE_ENCLOSURE_CODE, $pRenderer->getValueEnclosure());
 	}
+
+
+    /**
+     *
+     */
+    public function testRenderWithValues()
+    {
+        $pRenderer = new InputFieldLabelRenderer(null, 'testIdentifier');
+        $pRenderer->setValue('John Doe');
+        ob_start();
+        $pRenderer->render();
+        $output = ob_get_clean();
+        $this->assertEquals('<span class="viewusage" id="_2" ><span class="italic">John Doe</span></span>', $output);
+    }
 }

@@ -265,3 +265,15 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
     position: relative;
     float: right;
 }
+
+#viewformspecific .inside{
+	overflow: hidden;
+}
+
+#adminmenu #toplevel_page_onoffice .wp-menu-image img {
+	height: 20px !important;
+	text-align: center !important;
+	line-height: 20px !important;
+	display: block;
+	margin: auto;
+}

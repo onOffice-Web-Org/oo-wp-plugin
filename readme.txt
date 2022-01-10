@@ -73,6 +73,120 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.0 =
+
+**Changes**
+
+* Display all of a contact person's data on the estate detail page
+
+= 2.20.12 =
+
+**Fixes**
+
+* The property status is now displayed in the detail view below the property title and no longer in the fields as marketing status.
+
+* Separator line, black hint, red hint, file and user are no longer selectable in the configuration for any list or form in the backend. (also not for addresses and estates).
+
+= 2.20.11 =
+
+**Changes**
+
+* When you submit the form, the mail that is sent does now also contains  information about the  newsletter activation fields in case they were not selected in the form.
+
+= 2.20.10 =
+
+**Changes**
+
+* The explanation of the option "Show title in URL" can now be translated
+
+* In local host the error message "Please configure your API credentials first" is no longer displayed and similar estates are now shown as expected.
+
+= 2.20.9 =
+
+**Fixes**
+
+* Wherever fields are used (real estate, addresses, forms) the ID of the field, which appears after the field tile is expanded, can now be selected and copied.
+
+= 2.20.8 =
+
+**Fixes**
+
+* The field "vermarktungsstatus" is no longer added to the detail view when the plugin is installed.
+
+* The saving message now also appears in case a numeric field is added to the configuration.
+
+= 2.20.7 =
+
+**Fixes**
+
+* The fallback e-mail description layout has been fixed.
+
+* The default value for radius is now displayed in the frontend porperty list.
+
+= 2.20.6 =
+
+**Fixes**
+
+* Errors occured when creating or editing any form and also in the frontend on pages where the forms' shortcodes are used. The cause of the errors has been found and the errors were fixed. 
+
+* Fixed minor bugs.
+
+= 2.20.5 =
+
+**Changes**
+
+* The option for indexing PDF brochures has now an understandable label which tells the user what he/ she can expact when selecting it. 
+
+* In the default_detail.php template, free texts are now displayed with line breaks.
+
+= 2.20.4 =
+
+**Changes**
+
+* The plugin no longer overwrites the theme folder when updating the theme. 
+
+= 2.20.3 =
+
+**Changes**
+
+* The plugin is now represented by the onOffice logo.
+
+= 2.20.2 =
+
+**Changes**
+
+* Contact, interest, and owner forms now all have a checkbox that configures whether an address is created. The dublicate checkbox gets a new label Check for Duplicates (override existing address if the email is the same) 
+
+= 2.20.1 =
+
+**Changes**
+
+* The URL now also contains id and title.
+
+= 2.20.0 =
+
+**Changes**
+
+* Allow duplicating of all lists.
+
+= 2.19.7 =
+
+**Changes**
+
+* When indexing for a PDF-Exposé is turned of, that's now applied to all search engines.
+
+= 2.19.6 =
+
+**Changes**
+
+* Adjusted the hint text, label and position of the email-address field. 
+
+= 2.19.5 =
+
+**Changes**
+
+* Configuration of fallback email address is now required in the settings for contact forms.
+
 = 2.19.4 =
 
 **Changes**
