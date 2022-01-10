@@ -27,6 +27,7 @@ use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
 use WP_UnitTestCase;
 
@@ -196,4 +197,29 @@ class TestClassFormModelBuilderDBEstateListSettings
         $instance = $pInstance->createSortableFieldList('address', 'checkbox', false);
         $this->assertEquals($instance->getReferencedInputModels(), null);
     }
+
+	public function testCreateInputModelEmbedCode()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+		$pInputModelFormEmbedCode = $pInstance->createInputModelEmbedCode();
+		$this->assertInstanceOf(InputModelLabel::class, $pInputModelFormEmbedCode);
+		$this->assertEquals($pInputModelFormEmbedCode->getHtmlType(), 'label');
+	}
+
+	public function testCreateInputModelButton()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+		$pInputModelButton = $pInstance->createInputModelButton();
+		$this->assertInstanceOf(InputModelLabel::class, $pInputModelButton);
+		$this->assertEquals($pInputModelButton->getHtmlType(), 'button');
+	}
 }
