@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use Exception;
 use onOffice\WPlugin\Controller\AdminViewController;
+use onOffice\WPlugin\Gui\AdminPageEstateDetail;
 use WP_Screen;
 use WP_UnitTestCase;
 use function is_admin;
@@ -116,5 +117,67 @@ class TestClassAdminViewController
 			'<a href="https://example.org/test">test</a>',
 		];
 		$this->assertEquals($expectedResult, $result);
+	}
+
+	/**
+	 * @depends testOnInit
+	 * @param AdminViewController $pAdminViewController
+	 * @throws Exception
+	 * @global array $wp_filter
+	 */
+	public function testDisableHideMetaboxes(AdminViewController $pAdminViewController)
+	{
+		global $wp_filter;
+		$wp_filter = [];
+		$pAdminViewController->disableHideMetaboxes();
+		$this->assertCount(1, $wp_filter);
+	}
+
+	/**
+	 * @depends testOnInit
+	 * @param AdminViewController $pAdminViewController
+	 * @throws Exception
+	 */
+	public function testEnqueueCss(AdminViewController $pAdminViewController)
+	{
+		$pAdminViewController->enqueue_css();
+		$this->assertCount(2, wp_styles()->queue);
+	}
+
+	/**
+	 * @depends testOnInit
+	 * @param AdminViewController $pAdminViewController
+	 * @throws Exception
+	 * @global array $wp_filter
+	 */
+	public function testEnqueueExtraJs(AdminViewController $pAdminViewController)
+	{
+		global $wp_filter;
+		$wp_filter['admin_page_onoffice-editlistview'] = new \WP_Hook;
+
+		/* @var $pWpHook WP_Hook */
+		$pWpHook = $wp_filter['admin_page_onoffice-editlistview'];
+		$adminPage = new AdminPageEstateDetail('admin_page_onoffice-editlistview');
+		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
+		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-editlistview");
+		$this->assertEquals(['admin-js'], wp_scripts()->queue);
+	}
+
+	/**
+	 * @depends testOnInit
+	 * @param AdminViewController $pAdminViewController
+	 * @throws Exception
+	 * @global array $wp_filter
+	 */
+	public function testEnqueueExtraJsWithNullHook(AdminViewController $pAdminViewController)
+	{
+		global $wp_filter;
+		$wp_filter['admin_page_onoffice-editlistview'] = new \WP_Hook;
+
+		/* @var $pWpHook WP_Hook */
+		$pWpHook = $wp_filter['admin_page_onoffice-editlistview'];
+		$pWpHook->callbacks = [[['function' => ['a']]]];
+		$pAdminViewController->enqueueExtraJs("admin_onoffice_test");
+		$this->assertCount(0, wp_scripts()->queue);
 	}
 }

@@ -73,7 +73,7 @@ class DataListViewFactory
 		$pListView->setAvailableOptions($row['availableOptions']);
 		$pListView->setSortBySetting((int)$row['sortBySetting']);
 		$pListView->setSortByUserDefinedDefault($row['sortByUserDefinedDefault']);
-		$pListView->setSortByUserDefinedDirection($row['sortByUserDefinedDirection']);
+		$pListView->setSortByUserDefinedDirection((int) $row['sortByUserDefinedDirection']);
 		$pListView->setSortByUserValues($row[DataListView::SORT_BY_USER_VALUES]);
 
 		$geoFieldsAll = [
@@ -81,6 +81,7 @@ class DataListViewFactory
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_STREET,
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_ZIP,
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS => $row['radius']
 		];
 
 		$geoFieldsActive = array_intersect_key($geoFieldsAll, $row);

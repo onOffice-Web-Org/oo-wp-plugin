@@ -35,6 +35,9 @@ use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerUpdateListViewAddress;
 use stdClass;
+use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
+use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 use function wp_enqueue_script;
 
@@ -70,12 +73,14 @@ class AdminPageAddressListSettings
 
 	protected function buildForms()
 	{
+		$pEnvironment = new AddressListEnvironmentDefault();
 		$this->_pFormModelBuilderAddress = new FormModelBuilderDBAddress();
 		$pFormModel = $this->_pFormModelBuilderAddress->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);
-
-		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS);
-
+		$pBuilderShort = $pEnvironment->getFieldsCollectionBuilderShort();
+		$pFieldsCollection = new FieldsCollection();
+		$pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ADDRESS,$pFieldsCollection);
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ADDRESS, $this->_pFormModelBuilderAddress, $fieldNames);
 		$this->addSortableFieldsList(array(onOfficeSDK::MODULE_ADDRESS), $this->_pFormModelBuilderAddress,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);

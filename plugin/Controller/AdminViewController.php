@@ -148,7 +148,7 @@ class AdminViewController
 		add_menu_page( __('onOffice', 'onoffice-for-wp-websites'), __('onOffice', 'onoffice-for-wp-websites'),
 			$roleMainPage, $this->_pageSlug, function() use ($pDI) {
 				echo $pDI->get(MainPage::class)->render();
-			}, 'dashicons-admin-home');
+			}, plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'images/onOffice-Logo-screen_wp-grey.svg');
 
 		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
 		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'), __('Addresses', 'onoffice-for-wp-websites'),
