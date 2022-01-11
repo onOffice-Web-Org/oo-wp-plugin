@@ -10,13 +10,13 @@ use onOffice\WPlugin\WP\WPRedirectWrapper;
 class Redirector
 {
 	/** @var EstateDetailUrl */
-	private $_pLanguageSwitcher;
+	private $_wpEstateDetailUrl;
 	private $_wpPageWrapper;
 	private $_wpRedirectWrapper;
 
 	public function __construct(EstateDetailUrl $estateDetailUrl, WPPageWrapper $pageWrapper, WPRedirectWrapper $redirectWrapper)
 	{
-		$this->_pLanguageSwitcher = $estateDetailUrl;
+		$this->_wpEstateDetailUrl = $estateDetailUrl;
 		$this->_wpPageWrapper = $pageWrapper;
 		$this->_wpRedirectWrapper = $redirectWrapper;
 	}
@@ -25,7 +25,7 @@ class Redirector
 	{
 		$currentLink = $this->getCurrentLink();
 		$url =  $this->_wpPageWrapper->getPageLinkByPageId($pageId);
-		$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estateId, $estateTitle);
+		$fullLink = $this->_wpEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateTitle);
 		$uri = $this->getUri();
 		$pageName = $this->_wpPageWrapper->getPageUriByPageId($pageId);
 		preg_match('/^(' . preg_quote($pageName) .')\/([0-9]+)(-([^$]+))?\/?$/', $uri, $matches);
