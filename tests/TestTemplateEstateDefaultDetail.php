@@ -24,6 +24,8 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\ArrayContainerEscape;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\EstateDetail;
 use WP_UnitTestCase;
 
@@ -38,6 +40,8 @@ class TestTemplateEstateDefaultDetail
 	 */
 	public function prepare()
 	{
+		$pDataView = new DataDetailView();
+
 		$this->_pEstate = $this->getMockBuilder(EstateDetail::class)
 			->setMethods([
 				'getEstateUnits',
@@ -55,10 +59,10 @@ class TestTemplateEstateDefaultDetail
 				'getCurrentEstateId',
 				'getSimilarEstates',
 				'getEstateLinks',
-				'getLinkEmbedPlayers'
-
+				'getLinkEmbedPlayers',
+				'getDetailView',
 			])
-			->disableOriginalConstructor()
+			->setConstructorArgs([$pDataView])
 			->getMock();
 
 		$this->_pEstate->method('getEstateUnits')->willReturn('Estate Units here');
@@ -68,6 +72,7 @@ class TestTemplateEstateDefaultDetail
 			'objektart' => 'Grundstück',
 			'objekttyp' => 'Wohnen',
 			'vermarktungsart' => 'Kauf',
+			'vermarktungsstatus' => 'zzz',
 			'plz' => '52078',
 			'ort' => 'Aachen',
 			'objektnr_extern' => 'AP001',
@@ -120,6 +125,7 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
 		$this->_pEstate->method('getEstateLinks')->willReturn([$oguloLink]);
 		$this->_pEstate->method('getLinkEmbedPlayers')->willReturn([]);
+		$this->_pEstate->method('getDetailView')->willReturn('1');
 	}
 
 	/**

@@ -60,6 +60,7 @@ class TestClassDataListViewFactory
 		'sortByUserDefinedDefault' => 'kaufpreis',
 		'sortByUserDefinedDirection' => 1,
 		'sortbyuservalues' => ['kaufpreis,anzahl_zimmer'],
+		'radius' => '200',
 	];
 
 	/**

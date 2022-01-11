@@ -54,12 +54,12 @@ class TestClassDataDetailView
 		'objektbeschreibung',
 		'lage',
 		'ausstatt_beschr',
-		'sonstige_angaben',
-		'vermarktungsstatus'
+		'sonstige_angaben'
 	];
 
 	/** */
 	const DEFAULT_FIELDS_ADDRESS = [
+		'imageUrl',
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -69,6 +69,7 @@ class TestClassDataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
+		'defaultemail',
 	];
 	/**
 	 *
