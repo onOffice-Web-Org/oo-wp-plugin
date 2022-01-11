@@ -50,12 +50,6 @@ abstract class FormModelBuilder
 	/** @var Fieldnames */
 	private $_pFieldnames = null;
 
-	const ORDER_OF_TEMPLATES_FOLDER = [
-		"Personalized (Theme)" => 1,
-		"Personalized (Plugin)" => 2,
-		"Included" => 3,
-	];
-
 	/**
 	 * @param string $pageSlug
 	 * @return FormModel
@@ -125,39 +119,11 @@ abstract class FormModelBuilder
 			.'templates.dist/'.$directory.'/'.$pattern.'.php');
 		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR)
 			.'onoffice-personalized/templates/'.$directory.'/'.$pattern.'.php');
-			$templateThemeFiles = glob(get_stylesheet_directory()
+        $templateThemeFiles = glob(get_stylesheet_directory()
 			.'/onoffice-theme/templates/'.$directory.'/'.$pattern.'.php');
 		
 		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles, $templateThemeFiles);
-		$templateFolderData = array();
-
-		$plugin_name = basename(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php'));
-		foreach ($templatesAll as $filePath) {
-			$fileName = substr(strrchr($filePath, "/"), 1);
-			if (strpos($filePath, 'themes') !== false) {
-				$filePath = __String::getNew($filePath)->replace(get_template_directory() . '/', '');
-				$templateTitle = 'Personalized (Theme)';
-				$shortPath = '/onoffice-theme/templates/' . $directory . '/';
-			} else {
-				$filePath = __String::getNew($filePath)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
-				if (strpos($filePath, 'onoffice-personalized') !== false) {
-					$templateTitle = 'Personalized (Plugin)';
-					$shortPath = 'onoffice-personalized/templates/' . $directory . '/';
-				} else {
-					$templateTitle = 'Included';
-					$shortPath = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
-				}
-			}
-			$folderOrder = self::ORDER_OF_TEMPLATES_FOLDER[$templateTitle];
-			$templatePathGroupByFolder[$templateTitle][$filePath] = $fileName;
-
-			$templateFolderData[$folderOrder]['path'] = $templatePathGroupByFolder[$templateTitle];
-			$templateFolderData[$folderOrder]['title'] = $templateTitle;
-			$templateFolderData[$folderOrder]['folder'] = $shortPath;
-		}
-
-		ksort($templateFolderData);
-		return $templateFolderData;
+        return (new TemplateCall())->readTemplates($templatesAll, $directory);
 	}
 
 	/**
