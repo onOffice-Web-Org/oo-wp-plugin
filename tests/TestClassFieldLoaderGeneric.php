@@ -84,7 +84,7 @@ class TestClassFieldLoaderGeneric
 	public function testLoad()
 	{
 		$result = iterator_to_array($this->_pFieldLoader->load());
-		$this->assertCount(204, $result);
+		$this->assertCount(188, $result);
 
 		foreach ($result as $fieldname => $fieldProperties) {
 			$this->assertInternalType('string', $fieldname);
@@ -102,7 +102,7 @@ class TestClassFieldLoaderGeneric
 				$this->assertArrayNotHasKey('Systembenutzer', $fieldProperties['permittedvalues']);
 			}
 			if ($actualModule == onOfficeSDK::MODULE_ADDRESS && !empty($fieldProperties['type'])) {
-				$this->assertFalse(in_array($fieldProperties['type'], ['user', 'datei', 'redhint', 'blackhint', 'dividingline']));
+				$this->assertFalse(in_array($fieldProperties['type'], ['user', 'date', 'redhint', 'blackhint', 'dividingline']));
 			}
 		}
 	}
