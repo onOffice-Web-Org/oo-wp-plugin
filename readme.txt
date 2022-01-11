@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.1 =
+
+**Changes**
+
+* When creating new contact forms, the option "Create address" is now checked.
+
 = 2.21.0 =
 
 **Changes**
