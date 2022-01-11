@@ -55,6 +55,14 @@ class TestClassTemplateCall
 
 	/** @var array */
 	private $_expectationTemplatePath = [
+		1 => [
+			'path' => [
+				'...\wordpress\wp-content\plugins/onoffice-themes/templates/address/SearchFormAddress.php' => "SearchFormAddress.php",
+				'...\wordpress\wp-content\plugins/onoffice-themes/templates/address/default.php' => "default.php"
+			],
+			'title' => "Personalized (Theme)",
+			'folder' => "/onoffice-theme/templates/address/"
+		],
 		2 => [
 			'path' => [
 				'...\wordpress\wp-content\plugins/onoffice-personalized/templates/address/SearchFormAddress.php' => "SearchFormAddress.php",
@@ -126,7 +134,10 @@ class TestClassTemplateCall
 			"...\wordpress\wp-content\plugins/onoffice-personalized/templates/address/SearchFormAddress.php",
 			"...\wordpress\wp-content\plugins/onoffice-personalized/templates/address/default.php"
 		];
-		$templateThemeFiles = [];
+		$templateThemeFiles = [
+			"...\wordpress\wp-content\plugins/onoffice-themes/templates/address/SearchFormAddress.php",
+			"...\wordpress\wp-content\plugins/onoffice-themes/templates/address/default.php"
+		];
 
 		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles, $templateThemeFiles);
 		$templatePath = $pTemplateCall->readTemplates($templatesAll, 'address');
