@@ -25,9 +25,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
-use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataDetailView;
-use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\EstateDetail;
 use WP_UnitTestCase;
