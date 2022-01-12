@@ -124,34 +124,6 @@ class EstateListTable extends ListTable
 		]);
 	}
 
-	private function handleRecord($listRecord)
-	{
-		if (empty($listRecord))
-		{
-			return [];
-		}
-		$recordEstate = [];
-		foreach ($listRecord as $record)
-		{
-			if (!empty($record->page_shortcode))
-			{
-				$listPageID = explode(',',$record->page_shortcode);
-				$page = '';
-				foreach ($listPageID as $pageID)
-				{
-					if (!empty($page))
-					{
-						$page .= ',';
-					}
-					$page .= "<a href='".esc_attr(get_edit_post_link((int)$pageID))."' target='_blank'>".esc_html(get_the_title((int)$pageID))."</a>";
-				}
-				$record->page_shortcode = $page;
-			}
-			$recordEstate[] = $record;
-		}
-		return $recordEstate;
-	}
-
 	/**
 	 *
 	 */

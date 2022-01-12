@@ -116,31 +116,6 @@ class FormsTable
 		$this->_countByType = $pRecordRead->getCountByType();
 	}
 
-	private function handleRecord($listRecord)
-	{
-		if (empty($listRecord))
-		{
-			return [];
-		}
-		foreach ($listRecord as &$record)
-		{
-			if (!empty($record->page_shortcode))
-			{
-				$listPageID = explode(',',$record->page_shortcode);
-				$page = '';
-				foreach ($listPageID as $pageID)
-				{
-					if (!empty($page))
-					{
-						$page .= ',';
-					}
-					$page .= "<a href='".get_edit_post_link((int)$pageID)."' target='_blank'>".get_the_title((int)$pageID)."</a>";
-				}
-				$record->page_shortcode = $page;
-			}
-		}
-		return $listRecord;
-	}
 
 	/**
 	 *
