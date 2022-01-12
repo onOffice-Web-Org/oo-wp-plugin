@@ -58,6 +58,7 @@ class TestClassDataDetailView
 
 	/** */
 	const DEFAULT_FIELDS_ADDRESS = [
+		'imageUrl',
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -67,6 +68,7 @@ class TestClassDataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
+		'defaultemail',
 	];
 	/**
 	 *

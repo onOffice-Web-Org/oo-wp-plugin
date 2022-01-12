@@ -244,6 +244,14 @@
 	margin-bottom: 10px;
 }
 
+.oo-contact-info {
+	margin-bottom: 15px;
+}
+
+.oo-contact-info p{
+	margin: 0;
+}
+
 .oo-similar {
 	width: 100%;
 }
