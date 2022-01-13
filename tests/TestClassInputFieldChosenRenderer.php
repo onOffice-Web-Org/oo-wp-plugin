@@ -65,6 +65,18 @@ class TestClassInputFieldChosenRenderer
 	public function testRenderWithValues()
 	{
 		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
+		$pSubject->setSelectedValue(['johndoe']);
+		$pSubject->setOoModule('johndoe');
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('johndoe', $pSubject->getOoModule());
+		$this->assertEquals('<select name="testRenderer" id="select_1" multiple >'
+			. '<option value="johndoe" selected="selected">John Doe</option><option value="konradzuse" >'
+			. 'Konrad Zuse</option></select>', $output);
+	}
+}
 		$dataValueGroup = [
 			'group' => [
 				'Popular' => [

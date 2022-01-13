@@ -631,6 +631,12 @@ class EstateList
 		$fieldsValues = $pContainer->get(OutputFields::class)
 			->getVisibleFilterableFields($this->_pDataView,
 				$pFieldsCollection, new GeoPositionFieldHandler);
+
+		if (array_key_exists("radius",$fieldsValues))
+		{
+			$geoFields = $this->_pDataView->getGeoFields();
+			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
+		}
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
@@ -665,6 +671,10 @@ class EstateList
 	{
 		return array_column($this->_records, 'id');
 	}
+
+	/** @return array */
+	public function getAddressFields(): array
+		{ return $this->_pDataView->getAddressFields(); }
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()
