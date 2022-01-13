@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.2 =
+
+**Fixes**
+
+* MonsterInsights plugin can now be used together with our WP plugin.
+
 = 2.21.1 =
 
 **Changes**
