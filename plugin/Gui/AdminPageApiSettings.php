@@ -185,7 +185,7 @@ class AdminPageApiSettings
 			__('Do not modify', 'onoffice-for-wp-websites'),
 		]);
 		$pInputModeTitleAndDescription->setValue(get_option($pInputModeTitleAndDescription->getIdentifier()));
-		$pInputModeTitleAndDescription->setDescriptionRadioTextHtmls([
+		$pInputModeTitleAndDescription->setDescriptionRadioTextHTML([
 			add_action('admin_notices', [$pAdminViewController, 'general_admin_notice_SEO']).esc_html__('This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.', 'onoffice-for-wp-websites'),
 			esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites').
 			'<details>

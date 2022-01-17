@@ -32,6 +32,12 @@ use onOffice\WPlugin\Renderer\InputFieldRadioRenderer;
 class TestClassInputFieldRadioRenderer
 	extends \WP_UnitTestCase
 {
+	public function testConstruct()
+	{
+		$pInputFieldRadioRenderer = new InputFieldRadioRenderer('testInputName','testInputValue');
+		$this->assertEquals('testInputName', $pInputFieldRadioRenderer->getName());
+		$this->assertEquals('testInputValue', $pInputFieldRadioRenderer->getValue());
+	}
 	/**
 	 *
 	 */
@@ -51,12 +57,12 @@ class TestClassInputFieldRadioRenderer
 	{
 		$pSubject = new InputFieldRadioRenderer('testRenderer', []);
 		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
-		$pSubject->setCheckedValue('johndoe');
+		$pSubject->setCheckedValue(['johndoe']);
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('johndoe', $pSubject->getCheckedValue());
-		$this->assertEquals('<input type="radio" name="testRenderer" value="johndoe" checked="checked"  id="labelradio_1bjohndoe">'
+		$this->assertEquals(['johndoe'], $pSubject->getCheckedValue());
+		$this->assertEquals('<input type="radio" name="testRenderer" value="johndoe" id="labelradio_1bjohndoe">'
 			. '<label for="labelradio_1bjohndoe">John Doe</label>'
 			. ' <input type="radio" name="testRenderer" value="konradzuse" id="labelradio_1bkonradzuse">'
 			. '<label for="labelradio_1bkonradzuse">Konrad Zuse</label> ', $output);
