@@ -74,6 +74,7 @@ class DataDetailView
 
 	/** @var string[] */
 	private $_addressFields = [
+		'imageUrl',
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -83,6 +84,22 @@ class DataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
+		'defaultemail',
+	];
+
+	/** @var string[] */
+	private $_defaultAddressFields = [
+		'Anrede',
+		'Vorname',
+		'Name',
+		'Zusatz1',
+		'Strasse',
+		'Plz',
+		'Ort',
+		'Telefon1',
+		'mobile',
+		'defaultemail',
+		'imageUrl',
 	];
 
 	/** @var string[] */
@@ -160,6 +177,10 @@ class DataDetailView
 	/** @return string[] */
 	public function getAddressFields(): array
 		{ return $this->_addressFields; }
+
+	/** @return string[] */
+	public function getDefaultAddressFields(): array
+		{ return $this->_defaultAddressFields; }
 
 	/** @return int */
 	public function getPageId(): int
