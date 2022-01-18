@@ -376,10 +376,8 @@ class AdminViewController
 
 	public function displayAPIError()
 	{
-		$pFieldnames = new Fieldnames(new FieldsCollection());
-
 		try {
-			$pFieldnames->loadLanguage();
+			$this->getField()->loadLanguage();
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$class = 'notice notice-error';
 			$label = __('API token and secret', 'onoffice-for-wp-websites');
@@ -390,5 +388,10 @@ class AdminViewController
 
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		}
+	}
+
+	public function getField()
+	{
+		return new Fieldnames(new FieldsCollection());
 	}
 }
