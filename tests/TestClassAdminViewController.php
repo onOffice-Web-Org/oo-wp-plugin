@@ -240,7 +240,8 @@ class TestClassAdminViewController
 			->setMethods(['getField'])
 			->getMock();
 		$pAdminViewController->method('getField')->willReturn($fieldNamesMock);
-		$this->expectOutputString('<div class="notice notice-error"><p>It looks like you did not enter any valid API credentials. Please consider reviewing your <a href="admin.php?page=onoffice-settings">API token and secret</a>.</p></div>', $pAdminViewController->displayAPIError());
+		$pAdminViewController->displayAPIError();
+		$this->expectOutputString('<div class="notice notice-error"><p>It looks like you did not enter any valid API credentials. Please consider reviewing your <a href="admin.php?page=onoffice-settings">API token and secret</a>.</p></div>');
 	}
 
 	public function testGetField()
