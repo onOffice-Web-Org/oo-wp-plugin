@@ -43,7 +43,7 @@ class FieldModuleCollectionDecoratorFormContact
 				'permittedvalues' => [],
 				'default' => false,
 				'label' => 'Newsletter',
-			],
+			]
 		],
 		'' => [
 			'message' => [
@@ -52,6 +52,15 @@ class FieldModuleCollectionDecoratorFormContact
 				'permittedvalues' => [],
 				'default' => null,
 				'label' => 'Message',
+			],
+		],
+		onOfficeSDK::MODULE_ESTATE => [
+			'krit_bemerkung_oeffentlich' => [
+				'type' => FieldTypes::FIELD_TYPE_TEXT,
+				'length' => null,
+				'permittedvalues' => [],
+				'default' => null,
+				'label' => 'Comment',
 			],
 		],
 	];
