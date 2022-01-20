@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.3 =
+
+**Fixes**
+
+* The menu entry now behaves the same way as the other default menu entries.
+
 = 2.21.2 =
 
 **Fixes**
