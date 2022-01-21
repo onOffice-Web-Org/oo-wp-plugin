@@ -264,8 +264,12 @@ msgstr "Google Maps-Key"
 #: plugin/Gui/AdminPageApiSettings.php:169
 #, fuzzy
 #| msgid "Index PDF brochure"
-msgid "Index PDF Brochure"
-msgstr "Index PDF brochure"
+msgid "Allow indexing of PDF brochures"
+msgstr "Indexierung von PDF-Exposés erlauben"
+
+#: plugin/Gui/AdminPageApiSettings.php:175
+msgid "If you allow indexing, your search engine ranking can be negatively affected and your brochures can be available from search engines even months after the corresponding estate is deleted."
+msgstr "Wenn Sie die Indexierung von Exposés erlauben, kann dies Ihr Suchmaschinen-Ranking verschlechtern und es können Exposés auch nach dem Entfernen der Immobilie von der Website noch mehrere Monate lang in Suchmaschinen auffindbar sein"
 
 #: plugin/Gui/AdminPageApiSettings.php:180
 msgid "Search engine"
@@ -1148,3 +1152,15 @@ msgstr "Dokumente"
 
 #~ msgid "Don't show reference estates"
 #~ msgstr "Referenzobjekte nicht anzeigen"
+
+#: plugin/Gui/AdminPageModules.php:79
+msgid "Detail View URLs"
+msgstr "URLs der Detailansicht"
+
+#: plugin/Gui/AdminPageModules.php:66
+msgid "Show title in URL"
+msgstr "Titel in URL anzeigen"
+
+#: plugin/Gui/AdminPageModules.php:72
+msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
+msgstr "Wenn dieses Kontrollkästchen aktiviert ist, wird der Titel der Eigenschaft Teil der URLs der Detailansichten. Der Titel wird nach der Datensatznummer platziert, z.B. <code>/1234-nice-location-with-view</code>. Es werden nicht mehr als die ersten fünf Wörter des Titels verwendet."

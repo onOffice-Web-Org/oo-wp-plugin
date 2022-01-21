@@ -108,6 +108,9 @@ class ViewFieldModifierHandler
 		}
 
 		$fields = array_values(array_unique($apiFields));
+		if (($key = array_search('vermarktungsstatus', $fields)) !== false) {
+			unset($fields[$key]);
+		}
 		return array_diff($fields, $this->_pViewFieldModifierFactory->getForbiddenAPIFields());
 	}
 
