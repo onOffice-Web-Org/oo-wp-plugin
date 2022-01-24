@@ -221,7 +221,7 @@ class AdminPageAddressListSettings
 			/* @var $pRecordManagerUpdate RecordManagerUpdateListViewAddress */
 			$pRecordManagerUpdate = RecordManagerFactory::createByTypeAndAction($type, $action, $recordId);
 			$result = $pRecordManagerUpdate->updateByRow($row[RecordManager::TABLENAME_LIST_VIEW_ADDRESS]);
-			$result = $result || $pRecordManagerUpdate->updateRelations($row, $recordId);
+			$result = $result && $pRecordManagerUpdate->updateRelations($row, $recordId);
 		} else {
 			$action = RecordManagerFactory::ACTION_INSERT;
 			/* @var $pRecordManagerInsert RecordManagerInsertGeneric */
