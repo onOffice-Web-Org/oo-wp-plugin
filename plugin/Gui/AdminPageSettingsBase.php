@@ -463,6 +463,10 @@ abstract class AdminPageSettingsBase
 		wp_register_script('oo-sanitize-shortcode-name',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/onoffice-sanitize-shortcode-name.js',
 			['jquery'], '', true);
+
+		wp_register_script('oo-copy-shortcode',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/onoffice-copycode.js',
+			['jquery'], '', true);
 	}
 
 
