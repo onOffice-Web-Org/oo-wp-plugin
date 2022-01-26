@@ -23,6 +23,8 @@ namespace onOffice\WPlugin\Gui\Table;
 
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
+use onOffice\WPlugin\Controller\Exception\UnknownFilterException;
+use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\FilterCall;
 use onOffice\SDK\onOfficeSDK;
 use function __;
