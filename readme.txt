@@ -73,6 +73,24 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.4 =
+
+**Changes**
+
+* All settings are bundled into a single page called "Settings" (effectively, remove the "Modules" page) with a changed order.
+
+= 2.21.3 =
+
+**Fixes**
+
+* The menu entry now behaves the same way as the other default menu entries.
+
+= 2.21.2 =
+
+**Fixes**
+
+* MonsterInsights plugin can now be used together with our WP plugin.
+
 = 2.21.1 =
 
 **Changes**
