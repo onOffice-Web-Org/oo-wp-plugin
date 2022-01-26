@@ -93,6 +93,7 @@ class FormsTable
 		$pRecordRead->setOffset($offset);
 		$pRecordRead->addColumn('form_id', 'ID');
 		$pRecordRead->addColumn('name');
+		$pRecordRead->addColumn('recipient');
 		$pRecordRead->addColumn('template');
 		$pRecordRead->addColumn('form_type');
 		$pRecordRead->addColumn('name', 'shortcode');
@@ -101,10 +102,9 @@ class FormsTable
 			$pRecordRead->addWhere("`form_type` = '".esc_sql($this->_listType)."'");
 		}
 
-		$pRecord = $pRecordRead->getRecords();
+		$pRecord = $pRecordRead->getRecordsSortedAlphabetically();
 		$pRecord = $this->handleRecord($pRecord);
 		$this->setItems($pRecord);
-		$this->setItems($pRecordRead->getRecordsSortedAlphabetically());
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args( array(
@@ -126,6 +126,7 @@ class FormsTable
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of Form', 'onoffice-for-wp-websites'),
+			'recipient' => __('Email Address', 'onoffice-for-wp-websites'),
 			'template' => __('Templates', 'onoffice-for-wp-websites'),
 			'form_type' => __('Type of Form', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
