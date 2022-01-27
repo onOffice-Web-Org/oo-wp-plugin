@@ -42,13 +42,10 @@ class TestClassRecordManagerReadListViewAddress
 	public function testConstruct()
 	{
 		$pRecordManager = new RecordManagerReadListViewAddress();
-		$pClosureReadValues = Closure::bind(function() {
-			return [
-				$this->getMainTable(),
-				$this->getIdColumnMain(),
-			];
-		}, $pRecordManager, RecordManagerReadListViewAddress::class);
+		$pMainTable = $pRecordManager->getMainTable();
+		$pIdColumnMain = $pRecordManager->getIdColumnMain();
 
-		$this->assertEquals(['oo_plugin_listviews_address', 'listview_address_id'], $pClosureReadValues());
+		$this->assertEquals('oo_plugin_listviews_address', $pMainTable);
+		$this->assertEquals('listview_address_id', $pIdColumnMain);
 	}
 }

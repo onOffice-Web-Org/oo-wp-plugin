@@ -42,13 +42,11 @@ class TestClassRecordManagerReadForm
 	public function testConstruct()
 	{
 		$pRecordManager = new RecordManagerReadForm();
-		$pClosureReadValues = Closure::bind(function() {
-			return [
-				$this->getMainTable(),
-				$this->getIdColumnMain(),
-			];
-		}, $pRecordManager, RecordManagerReadForm::class);
 
-		$this->assertEquals(['oo_plugin_forms', 'form_id'], $pClosureReadValues());
+		$pMainTable = $pRecordManager->getMainTable();
+		$pIdColumnMain = $pRecordManager->getIdColumnMain();
+
+		$this->assertEquals('oo_plugin_forms', $pMainTable);
+		$this->assertEquals('form_id', $pIdColumnMain);
 	}
 }
