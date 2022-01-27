@@ -73,6 +73,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.5 =
+
+**Changes**
+
+* The Id in the URL is now also shown like  [url]/1234-sonnige-waermende-10qm-wohnung-m/ and makes a redirect to [url]/1234-sonnige-waermende-10qm-wohnung-mit/
+
 = 2.21.4 =
 
 **Changes**
