@@ -57,6 +57,7 @@ use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\Redirector;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -662,6 +663,50 @@ class TestClassEstateList
 		$this->assertInstanceOf(GeoSearchBuilderFromInputVars::class, $this->_pEstateList->getGeoSearchBuilder());
 	}
 
+	public function testRedirectIfOldUrl()
+	{
+		global $wp_filter;
+		$this->set_permalink_structure('/%postname%/');
+		$savePostBackup = $wp_filter['save_post'];
+		$wp_filter['save_post'] = new \WP_Hook;
+		$pWPPost = self::factory()->post->create_and_get([
+			'post_author' => 1,
+			'post_content' => '[oo_estate view="detail"]',
+			'post_title' => 'Detail View',
+			'post_type' => 'page',
+		]);
+		$wp_filter['save_post'] = $savePostBackup;
+
+		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
+			->setConstructorArgs([$this->_pContainer])
+			->setMethods(['getRecordsPerPage',
+				'getSortby',
+				'getSortorder',
+				'getFilterId',
+				'getFields',
+				'getPictureTypes',
+				'getAddressFields',
+				'getFilterableFields',
+				'getPageId'
+			])
+			->getMock();
+		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
+		$pDataDetailView->method('getSortby')->willReturn('Id');
+		$pDataDetailView->method('getSortorder')->willReturn('ASC');
+		$pDataDetailView->method('getFilterId')->willReturn(12);
+		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp']);
+		$pDataDetailView->method('getPictureTypes')->willReturn(['Titelbild', 'Foto']);
+		$pDataDetailView->method('getAddressFields')->willReturn(['Vorname', 'Name']);
+		$pDataDetailView->method('getFilterableFields')->willReturn([GeoPosition::FIELD_GEO_POSITION]);
+		$pDataDetailView->method('getPageId')->willReturn($pWPPost->ID);
+
+		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
+		$this->_pEstateList->setIsOverrideDataView(true);
+		$this->_pEstateList->loadEstates();
+
+		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
+	}
+
 
 	/**
 	 *
@@ -750,6 +795,12 @@ class TestClassEstateList
 			'courtage_frei',
 			'objekt_des_tages',
 		]);
+		$redirectIfOldUrl = $this->getMockBuilder(Redirector::class)
+			->disableOriginalConstructor()
+			->setMethods(['redirectDetailView'])
+			->getMock();
+		$redirectIfOldUrl->method('redirectDetailView')->willReturn(true);
+
 		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
 			($pEstateStatusLabel);
 	}
