@@ -108,6 +108,9 @@ abstract class AdminPageFormSettingsBase
 	/** @var FormModelBuilderDBForm */
 	private $_pFormModelBuilder = null;
 
+	/** @var bool */
+	private $_showMessageField = true;
+
 	/**
 	 * @param string $pageSlug
 	 * @throws Exception
@@ -432,7 +435,7 @@ abstract class AdminPageFormSettingsBase
 		$this->cleanPreviousBoxes();
 		$pDefaultFieldsCollection = $this->buildFieldsCollectionForCurrentForm();
 		$pFieldsCollectionConverter = new FieldsCollectionToContentFieldLabelArrayConverter();
-
+		$pFieldsCollectionConverter->setShowMessageField($this->_showMessageField);
 		foreach ($this->getCurrentFormModules() as $module) {
 			$fieldNames = $pFieldsCollectionConverter->convert($pDefaultFieldsCollection, $module);
 
@@ -662,4 +665,8 @@ abstract class AdminPageFormSettingsBase
 	/** @param bool $showSearchCriteriaFields */
 	public function setShowSearchCriteriaFields(bool $showSearchCriteriaFields)
 		{ $this->_showSearchCriteriaFields = $showSearchCriteriaFields; }
+
+	/** @param bool $showMessageField */
+	public function setShowMessageField(bool $showMessageField)
+	{ $this->_showMessageField = $showMessageField; }
 }
