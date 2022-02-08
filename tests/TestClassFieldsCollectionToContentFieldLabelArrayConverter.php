@@ -124,6 +124,9 @@ class TestClassFieldsCollectionToContentFieldLabelArrayConverter
 			'testCategory1' => [
 				'testField2' => 'C Test Label 2',
 			],
+			'(unnamed category)' => [
+				'message' => 'Message'
+			]
 		];
 
 		$result = $this->_pSubject->convert($pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);

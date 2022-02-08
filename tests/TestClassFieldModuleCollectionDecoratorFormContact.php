@@ -130,7 +130,7 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 	private function getExpectedFieldMessage(): Field
 	{
 		$pFieldMessage = new Field('message', '', 'Message');
-		$pFieldMessage->setCategory('');
+		$pFieldMessage->setCategory('Form Specific Fields');
 		$pFieldMessage->setDefault(null);
 		$pFieldMessage->setLength(0);
 		$pFieldMessage->setPermittedvalues([]);
