@@ -108,6 +108,9 @@ abstract class AdminPageFormSettingsBase
 	/** @var FormModelBuilderDBForm */
 	private $_pFormModelBuilder = null;
 
+	/** @var bool message field has no module */
+	private $_showMessageInput = false;
+
 	/**
 	 * @param string $pageSlug
 	 * @throws Exception
@@ -439,8 +442,10 @@ abstract class AdminPageFormSettingsBase
 			foreach (array_keys($fieldNames) as $category) {
 				$slug = $this->generateGroupSlugByModuleCategory($module, $category);
 				$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
-				$pFormFieldsConfig->setOoModule($module);
-				$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+				if (!is_null($pFormFieldsConfig)) {
+					$pFormFieldsConfig->setOoModule($module);
+					$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+				}
 			}
 		}
 	}
@@ -662,4 +667,12 @@ abstract class AdminPageFormSettingsBase
 	/** @param bool $showSearchCriteriaFields */
 	public function setShowSearchCriteriaFields(bool $showSearchCriteriaFields)
 		{ $this->_showSearchCriteriaFields = $showSearchCriteriaFields; }
+
+	/** @return bool */
+	public function getShowMessageInput(): bool
+	{ return $this->_showMessageInput; }
+
+	/** @param bool $showMessageInput */
+	public function setShowMessageInput(bool $showMessageInput)
+	{ $this->_showMessageInput = $showMessageInput; }
 }
