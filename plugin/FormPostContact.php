@@ -167,6 +167,8 @@ class FormPostContact
 
 	private function sendContactRequest(FormData $pFormData, string $recipient = '', $subject = null)
 	{
+		$pFormConfig = $pFormData->getDataFormConfiguration();
+		$contactType = $pFormConfig->getContactType();
 		$values = $pFormData->getValues();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
@@ -181,6 +183,9 @@ class FormPostContact
 			'estatedata' => ["objekttitel", "ort", "plz", "land"],
 			'estateurl' => home_url($pWPWrapper->getRequest()),
 		];
+		if (isset($addressData['ArtDaten']) && !empty($contactType)) {
+			$requestParams['addressdata']['ArtDaten'] = $contactType;
+		}
 		if (isset($addressData['newsletter'])) {
 			$requestParams['addressdata']['newsletter_aktiv'] = $this->_pFormPostContactConfiguration
 				->getNewsletterAccepted();
@@ -189,7 +194,6 @@ class FormPostContact
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
 		}
-
 		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
