@@ -54,6 +54,7 @@ use function esc_url;
 use function get_page_link;
 use function home_url;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 
 class EstateList
 	implements EstateListBase
@@ -101,6 +102,8 @@ class EstateList
 	private $_pLanguageSwitcher;
 
 	private $_pWPOptionWrapper;
+
+    private $_pContainer;
 
 	/**
 	 * @param DataView $pDataView
@@ -404,12 +407,16 @@ class EstateList
 		}
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
 		{
-			add_action('wp_head',function ($recordModified){
-			?>
-				<title><?php echo $recordModified["objekttitel"]; ?></title>
-				<meta name="description" content="<?php echo $recordModified["objektbeschreibung"]; ?>">
-			<?php
-			});
+            add_filter('document_title_parts', function() use ($recordModified) {
+                if (isset($recordModified["objekttitel"]))
+                {
+                    return [$recordModified["objekttitel"]];
+                }
+               return [];
+            }, 10, 2);
+            add_action( 'wp_head', function () use($recordModified) {
+                echo '<meta name="description" content="' . $recordModified["objektbeschreibung"] ?? null . '" />';
+            });
 		}
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 1)
 		{
@@ -688,6 +695,10 @@ class EstateList
 	{
 		return array_column($this->_records, 'id');
 	}
+
+	/** @return array */
+	public function getAddressFields(): array
+		{ return $this->_pDataView->getAddressFields(); }
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()

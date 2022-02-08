@@ -77,7 +77,7 @@ class InputFieldRadioRenderer
 					.$this->renderAdditionalAttributes()
 					.' id="'.esc_html($inputId).'">'
 					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label> '
-					.($this->_descriptionTextHtmls[$key] !== '' ? '<p class="description">'.$this->_descriptionTextHtmls[$key].'</p><br>' : '');
+					.( !empty($this->_descriptionTextHtmls[$key]) ? '<p class="description">'.$this->_descriptionTextHtmls[$key].'</p><br>' : '');
 			}
 		}
 		else
