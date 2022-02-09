@@ -165,7 +165,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 21) {
-			dbDelta($this->getQueryAddColumnShowReferenceEstateTableEstateView());
+			dbDelta($this->getCreateQueryListviews());
 			$dbversion = 22;
 		}
 
@@ -239,6 +239,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`sortBySetting` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
 			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
+			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -716,17 +717,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 				WHERE `form_type` = 'interest' OR `form_type` = 'owner'";
 
 		$this->_pWPDB->query($sql);
-	}
-
-	/**
-	 *
-	 */
-	private function getQueryAddColumnShowReferenceEstateTableEstateView()
-	{
-		$prefix = $this->getPrefix();
-		$charsetCollate = $this->getCharsetCollate();
-		$tableName = $prefix."oo_plugin_listviews";
-		return "CREATE TABLE $tableName (`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0') $charsetCollate";
 	}
 
 
