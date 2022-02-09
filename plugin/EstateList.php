@@ -685,6 +685,10 @@ class EstateList
 		return array_column($this->_records, 'id');
 	}
 
+	/** @return array */
+	public function getAddressFields(): array
+		{ return $this->_pDataView->getAddressFields(); }
+
 	/** @return EstateFiles */
 	protected function getEstateFiles()
 		{ return $this->_pEstateFiles; }

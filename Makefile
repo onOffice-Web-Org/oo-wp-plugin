@@ -6,7 +6,7 @@ ifeq ($(OO_PLUGIN_VERSION),)
 	OO_PLUGIN_VERSION := $(shell git describe --tags --always)
 endif
 
-.PHONY: clean-zip clean-target clean release
+.PHONY: clean-zip clean-target clean release copy-files-release composer-install-nodev change-title add-version pot
 
 copy-files-release:
 	install -d $(PREFIX)/onoffice
@@ -20,6 +20,7 @@ add-version: copy-files-release
 
 composer-install-nodev:
 	cd $(PREFIX)/onoffice; composer install --no-dev -a
+	find $(PREFIX)/onoffice '-type' 'l' '-exec' 'unlink' '{}' ';'
 
 pot:
 	vendor/bin/wp i18n make-pot . languages/onoffice-for-wp-websites.pot --skip-js
