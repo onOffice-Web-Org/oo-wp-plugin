@@ -1,5 +1,13 @@
 <?php $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben"); ?>
 
+<style>
+	.oo-details-btn:focus {
+		opacity: 0.8;
+		text-decoration: none !important;
+		background: #80acd3 !important;
+	}
+</style>
+
 <div class="oo-detailsheadline">
 	<h2><?php esc_html_e('More Estates like this', 'onoffice');?></h2>
 </div>

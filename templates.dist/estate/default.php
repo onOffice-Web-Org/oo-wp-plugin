@@ -31,6 +31,14 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 ?>
 
+<style>
+	.oo-details-btn:focus {
+		opacity: 0.8;
+		text-decoration: none !important;
+		background: #80acd3 !important;
+	}
+</style>
+
 <div class="oo-estate-map">
     <?php require('map/map.php'); ?>
 </div>
