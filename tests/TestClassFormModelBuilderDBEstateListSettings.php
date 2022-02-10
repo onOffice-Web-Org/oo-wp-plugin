@@ -65,26 +65,6 @@ class TestClassFormModelBuilderDBEstateListSettings
 
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortBySetting
-	 */
-	public function testCreateInputModelSortBySetting()
-	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
-			->getMock();
-
-		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
-		$pInstance->method('getValue')->willReturn('1');
-
-		$pInputModelDB = $pInstance->createInputModelSortBySetting();
-		$this->assertInstanceOf(InputModelDB::class,$pInputModelDB);
-		$this->assertEquals($pInputModelDB->getValue(), '1');
-		$this->assertEquals($pInputModelDB->getHtmlType(), InputModelOption::HTML_TYPE_CHECKBOX);
-	}
-
-
-	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
 	 */
 	public function testCreateInputModelSortByChosen()

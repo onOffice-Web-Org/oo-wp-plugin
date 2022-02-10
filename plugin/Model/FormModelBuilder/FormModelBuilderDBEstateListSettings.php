@@ -417,25 +417,6 @@ class FormModelBuilderDBEstateListSettings
 	 *
 	 */
 
-	public function createInputModelSortBySetting()
-	{
-		$label = __('Sort by User Selection', 'onoffice-for-wp-websites');
-		$pInputModel = $this->getInputModelDBFactory()->create
-				(InputModelDBFactory::INPUT_SORT_BY_SETTING, $label);
-		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModel->setValue($this->getValue($pInputModel->getField()));
-		$pInputModel->setValuesAvailable(1);
-
-		return $pInputModel;
-	}
-
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
 	public function createInputModelSortByChosen()
 	{
 		$label = __('Sort by', 'onoffice-for-wp-websites');
@@ -515,4 +496,21 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel->setValuesAvailable($userDefinedSortDirectionValues);
 		return $pInputModel;
 	}
+
+	public function createInputModelSortingSelection()
+    {
+        $label = __('Sorting', 'onoffice-for-wp-websites');
+
+        $userSortingDirectionValues = [
+            'default_sort' => __('Default sort', 'onoffice-for-wp-websites'),
+            'user_selection' => __('User selection', 'onoffice-for-wp-websites'),
+            'random_order' => __('Random order', 'onoffice-for-wp-websites'),
+        ];
+
+        $pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORTING_DIRECTION, $label);
+        $pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+        $pInputModel->setValue($this->getValue($pInputModel->getField()));
+        $pInputModel->setValuesAvailable($userSortingDirectionValues);
+        return $pInputModel;
+    }
 }
