@@ -47,14 +47,6 @@ abstract class LinksTypes
 	const FILE_TYPE_OBJECT_LINK = 'Objekt-Link';
 	const FILE_TYPE_LINK = 'Link';
 
-	/** @var string[] */
-	private static $_linkTypes = [
-		self::FILE_TYPE_OGULO_LINK,
-		self::FILE_TYPE_OBJECT_LINK,
-		self::FILE_TYPE_LINK,
-	];
-
-
 	/**
 	 *
 	 * @param string $type

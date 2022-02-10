@@ -241,3 +241,9 @@ if (!empty($shortCodeForm)) {
 		<?php echo do_shortcode($shortCodeForm); ?>
 	</div>
 <?php } ?>
+<style>
+    .oo-video .player-title {
+        text-decoration: none;
+        color: #000;
+    }
+</style>
