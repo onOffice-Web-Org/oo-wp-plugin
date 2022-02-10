@@ -2,7 +2,7 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 5.7
+Tested up to: 5.9
 Requires PHP: 7.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -163,7 +163,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixes**
 
-* Errors occured when creating or editing any form and also in the frontend on pages where the forms' shortcodes are used. The cause of the errors has been found and the errors were fixed. 
+* Errors occured when creating or editing any form and also in the frontend on pages where the forms' shortcodes are used. The cause of the errors has been found and the errors were fixed.
 
 * Fixed minor bugs.
 
@@ -171,7 +171,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changes**
 
-* The option for indexing PDF brochures has now an understandable label which tells the user what he/ she can expact when selecting it. 
+* The option for indexing PDF brochures has now an understandable label which tells the user what he/ she can expact when selecting it.
 
 * In the default_detail.php template, free texts are now displayed with line breaks.
 
@@ -179,7 +179,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changes**
 
-* The plugin no longer overwrites the theme folder when updating the theme. 
+* The plugin no longer overwrites the theme folder when updating the theme.
 
 = 2.20.3 =
 
@@ -191,7 +191,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changes**
 
-* Contact, interest, and owner forms now all have a checkbox that configures whether an address is created. The dublicate checkbox gets a new label Check for Duplicates (override existing address if the email is the same) 
+* Contact, interest, and owner forms now all have a checkbox that configures whether an address is created. The dublicate checkbox gets a new label Check for Duplicates (override existing address if the email is the same)
 
 = 2.20.1 =
 
@@ -215,7 +215,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changes**
 
-* Adjusted the hint text, label and position of the email-address field. 
+* Adjusted the hint text, label and position of the email-address field.
 
 = 2.19.5 =
 
@@ -279,7 +279,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **New**
 
-* Pagination can now be handled by the theme or the plugin. 
+* Pagination can now be handled by the theme or the plugin.
 
 = 2.16.0 =
 
@@ -401,7 +401,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixes**
 
-* Fix translations for forgotten lazy translated strings 
+* Fix translations for forgotten lazy translated strings
 
 = 2.8.0 =
 
@@ -430,7 +430,7 @@ Start editing inside the `onoffice-personalized` folder.
 = 2.7.15 =
 
 **Fixes**
- 
+
 * Fix of pagination in static pages
 
 = 2.7.14 =
