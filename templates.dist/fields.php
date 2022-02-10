@@ -234,6 +234,7 @@ if (!function_exists('renderParkingLot')) {
 			if (!$parking['Count']) {
 				continue;
 			}
+			/* translators: %s will be replaced with the translated field name. */
 			$element = sprintf(__('%1$s at %2$s'), getParkingName($key, $parking['Count']), formatPrice($parking['Price'], $language, $locale));
 			if (!empty($parking['MarketingType'])) {
 				$element .= __(" ({$parking['MarketingType']})");
