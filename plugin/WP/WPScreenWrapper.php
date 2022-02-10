@@ -36,4 +36,11 @@ interface WPScreenWrapper
 	 */
 
 	public function getID(): string;
+
+
+	/**
+	 * @param $optionName
+	 * @return mixed
+	 */
+	public function getScreenOption($optionName);
 }
