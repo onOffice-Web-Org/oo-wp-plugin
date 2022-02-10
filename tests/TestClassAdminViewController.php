@@ -67,11 +67,7 @@ class TestClassAdminViewController
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
 
-		global $wpdb;
 
-		$pWpOption = new WPOptionWrapperTest();
-		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
-		$pDbChanges->install();
 	}
 
 	/**
@@ -105,6 +101,11 @@ class TestClassAdminViewController
 	 */
 	public function testRegisterMenu(AdminViewController $pAdminViewController)
 	{
+		global $wpdb;
+
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
 		global $wp_filter;
 		$wp_filter = [];
 		$pAdminViewController->register_menu();
