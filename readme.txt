@@ -73,6 +73,114 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.6 =
+
+**Fixes**
+
+* Reverts the changes from release v2.21.5 due to bugs.
+
+= 2.21.5 =
+
+**Changes**
+
+* The Id in the URL is now also shown like  [url]/1234-sonnige-waermende-10qm-wohnung-m/ and makes a redirect to [url]/1234-sonnige-waermende-10qm-wohnung-mit/
+
+= 2.21.4 =
+
+**Changes**
+
+* All settings are bundled into a single page called "Settings" (effectively, remove the "Modules" page) with a changed order.
+
+= 2.21.3 =
+
+**Fixes**
+
+* The menu entry now behaves the same way as the other default menu entries.
+
+= 2.21.2 =
+
+**Fixes**
+
+* MonsterInsights plugin can now be used together with our WP plugin.
+
+= 2.21.1 =
+
+**Changes**
+
+* When creating new contact forms, the option "Create address" is now checked.
+
+= 2.21.0 =
+
+**Changes**
+
+* Display all of a contact person's data on the estate detail page
+
+= 2.20.12 =
+
+**Fixes**
+
+* The property status is now displayed in the detail view below the property title and no longer in the fields as marketing status.
+
+* Separator line, black hint, red hint, file and user are no longer selectable in the configuration for any list or form in the backend. (also not for addresses and estates).
+
+= 2.20.11 =
+
+**Changes**
+
+* When you submit the form, the mail that is sent does now also contains  information about the  newsletter activation fields in case they were not selected in the form.
+
+= 2.20.10 =
+
+**Changes**
+
+* The explanation of the option "Show title in URL" can now be translated
+
+* In local host the error message "Please configure your API credentials first" is no longer displayed and similar estates are now shown as expected.
+
+= 2.20.9 =
+
+**Fixes**
+
+* Wherever fields are used (real estate, addresses, forms) the ID of the field, which appears after the field tile is expanded, can now be selected and copied.
+
+= 2.20.8 =
+
+**Fixes**
+
+* The field "vermarktungsstatus" is no longer added to the detail view when the plugin is installed.
+
+* The saving message now also appears in case a numeric field is added to the configuration.
+
+= 2.20.7 =
+
+**Fixes**
+
+* The fallback e-mail description layout has been fixed.
+
+* The default value for radius is now displayed in the frontend porperty list.
+
+= 2.20.6 =
+
+**Fixes**
+
+* Errors occured when creating or editing any form and also in the frontend on pages where the forms' shortcodes are used. The cause of the errors has been found and the errors were fixed. 
+
+* Fixed minor bugs.
+
+= 2.20.5 =
+
+**Changes**
+
+* The option for indexing PDF brochures has now an understandable label which tells the user what he/ she can expact when selecting it. 
+
+* In the default_detail.php template, free texts are now displayed with line breaks.
+
+= 2.20.4 =
+
+**Changes**
+
+* The plugin no longer overwrites the theme folder when updating the theme. 
+
 = 2.20.3 =
 
 **Changes**

@@ -42,9 +42,8 @@ class InputFieldCheckboxRenderer
 	/** @var array */
 	private $_checkedValues = [];
 
-    /** @var string */
-    private $_descriptionTextHTML = '';
-
+	/** @var string */
+	private $_descriptionTextHTML = '';
 	/**
 	 *
 	 * @param string $name
