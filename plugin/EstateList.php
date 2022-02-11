@@ -53,6 +53,7 @@ use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
 use function home_url;
+use function esc_attr;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 
@@ -415,7 +416,7 @@ class EstateList
                return [];
             }, 10, 2);
             add_action( 'wp_head', function () use($recordModified) {
-                echo '<meta name="description" content="' . $recordModified["objektbeschreibung"] ?? null . '" />';
+                echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
             });
 		}
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 1)
