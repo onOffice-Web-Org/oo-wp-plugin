@@ -22,8 +22,10 @@
 namespace onOffice\tests;
 
 use Closure;
+use DI\ContainerBuilder;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use WP_UnitTestCase;
+use function cli\confirm;
 
 /**
  *
@@ -35,6 +37,24 @@ use WP_UnitTestCase;
 class TestClassRecordManagerReadListViewAddress
 	extends WP_UnitTestCase
 {
+	private $_pRecordManagerReadListViewAddress = null;
+
+	/**
+	 *
+	 * @before
+	 *
+	 */
+
+	public function prepare()
+	{
+		$this->_pWPDBMock = $this->getMockBuilder(\wpdb::class)
+			->disableOriginalConstructor()
+			->setMethods(['get_results'])
+			->getMock();
+
+		$this->_pRecordManagerReadListViewAddress = $this->getMockBuilder(RecordManagerReadListViewAddress::class)
+			->getMock();
+	}
 	/**
 	 *
 	 */
@@ -47,5 +67,91 @@ class TestClassRecordManagerReadListViewAddress
 
 		$this->assertEquals('oo_plugin_listviews_address', $pMainTable);
 		$this->assertEquals('listview_address_id', $pIdColumnMain);
+	}
+
+	private function getBasicFieldsArray(int $addressId): array
+	{
+		$fields = [
+			[
+				'address_fieldconfig_id' => '1',
+				'form_id' => $addressId,
+				'order' => '1',
+				'fieldname' => 'Test 1',
+				'filterable' => 0,
+				'hidden' => 0,
+			],
+			[
+				'address_fieldconfig_id' => '1',
+				'form_id' => $addressId,
+				'order' => '1',
+				'fieldname' => 'Test 2',
+				'filterable' => 0,
+				'hidden' => 0,
+			],
+			[
+				'address_fieldconfig_id' => '1',
+				'form_id' => $addressId,
+				'order' => '1',
+				'fieldname' => 'Test 3',
+				'filterable' => 0,
+				'hidden' => 0,
+			],
+			[
+				'address_fieldconfig_id' => '1',
+				'form_id' => $addressId,
+				'order' => '1',
+				'fieldname' => 'Test 4',
+				'filterable' => 0,
+				'hidden' => 0,
+			],
+		];
+
+		return $fields;
+	}
+
+	private function getBaseRow(int $addressId): array
+	{
+		return [
+			'listview_address_id' => $addressId,
+			'name' => 'testAddress' . $addressId,
+			'filterId' => 0,
+			'sortby' => 'KdNr',
+			'sortorder' => 'ASC',
+			'template' => 'testtemplate.php',
+			'recordsPerPage' => 20,
+			'showPhoto' => '0',
+			'page_shortcode' => 500,
+		];
+	}
+
+	public function testGetRecords()
+	{
+		$pFieldsForm = $this->_pRecordManagerReadListViewAddress->getRecords();
+		$this->assertEquals(null,$pFieldsForm);
+	}
+
+	public function testGetRecordsSortedAlphabetically()
+	{
+		$pFieldsFormSortAlphabe = $this->_pRecordManagerReadListViewAddress->getRecordsSortedAlphabetically();
+		$this->assertEquals(null,$pFieldsFormSortAlphabe);
+	}
+
+
+	public function testGetRowByName()
+	{
+		$this->_pRecordManagerReadListViewAddress->method('getRowByName')->will($this->returnValueMap([
+			['testAddress1', $this->getBaseRow(1)]
+		]));
+		$pRowAddress = $this->_pRecordManagerReadListViewAddress->getRowByName('testAddress1');
+		$this->assertEquals(9, count($pRowAddress));
+	}
+
+	public function testReadFieldconfigByListviewId()
+	{
+		$this->_pRecordManagerReadListViewAddress->method('readFieldconfigByListviewId')->will($this->returnValueMap([
+			[1, $this->getBasicFieldsArray(1)]
+		]));
+		$pFieldsAddress = $this->_pRecordManagerReadListViewAddress->readFieldconfigByListviewId(1);
+		$this->assertEquals(4, count($pFieldsAddress));
 	}
 }

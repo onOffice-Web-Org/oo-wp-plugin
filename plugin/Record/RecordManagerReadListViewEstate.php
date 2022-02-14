@@ -80,7 +80,7 @@ class RecordManagerReadListViewEstate
      *
      */
 
-    public function getRecordsSortedAlphabetically()
+    public function getRecordsSortedAlphabetically():array
     {
         $prefix = $this->getTablePrefix();
         $pWpDb = $this->getWpdb();

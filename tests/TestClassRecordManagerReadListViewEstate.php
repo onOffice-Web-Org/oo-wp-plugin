@@ -35,6 +35,24 @@ use WP_UnitTestCase;
 class TestClassRecordManagerReadListViewEstate
 	extends WP_UnitTestCase
 {
+	private $_pRecordManagerReadListViewEstate = null;
+
+	/**
+	 *
+	 * @before
+	 *
+	 */
+
+	public function prepare()
+	{
+		$this->_pWPDBMock = $this->getMockBuilder(\wpdb::class)
+			->disableOriginalConstructor()
+			->setMethods(['get_results'])
+			->getMock();
+
+		$this->_pRecordManagerReadListViewEstate = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
+			->getMock();
+	}
 	/**
 	 *
 	 */
@@ -50,5 +68,17 @@ class TestClassRecordManagerReadListViewEstate
 		}, $pRecordManager, RecordManagerReadListViewEstate::class);
 
 		$this->assertEquals(['oo_plugin_listviews', 'listview_id'], $pClosureReadValues());
+	}
+
+	public function testGetRecords()
+	{
+		$pFieldsForm = $this->_pRecordManagerReadListViewEstate->getRecords();
+		$this->assertEquals(null,$pFieldsForm);
+	}
+
+	public function testGetRecordsSortedAlphabetically()
+	{
+		$pFieldsFormSortAlphabe = $this->_pRecordManagerReadListViewEstate->getRecordsSortedAlphabetically();
+		$this->assertEquals(null,$pFieldsFormSortAlphabe);
 	}
 }
