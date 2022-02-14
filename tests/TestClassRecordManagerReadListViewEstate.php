@@ -45,11 +45,6 @@ class TestClassRecordManagerReadListViewEstate
 
 	public function prepare()
 	{
-		$this->_pWPDBMock = $this->getMockBuilder(\wpdb::class)
-			->disableOriginalConstructor()
-			->setMethods(['get_results'])
-			->getMock();
-
 		$this->_pRecordManagerReadListViewEstate = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
 			->getMock();
 	}

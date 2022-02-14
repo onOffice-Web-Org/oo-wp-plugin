@@ -47,11 +47,6 @@ class TestClassRecordManagerReadListViewAddress
 
 	public function prepare()
 	{
-		$this->_pWPDBMock = $this->getMockBuilder(\wpdb::class)
-			->disableOriginalConstructor()
-			->setMethods(['get_results'])
-			->getMock();
-
 		$this->_pRecordManagerReadListViewAddress = $this->getMockBuilder(RecordManagerReadListViewAddress::class)
 			->getMock();
 	}
