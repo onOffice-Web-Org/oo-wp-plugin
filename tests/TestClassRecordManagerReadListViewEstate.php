@@ -79,6 +79,6 @@ class TestClassRecordManagerReadListViewEstate
 	public function testGetRecordsSortedAlphabetically()
 	{
 		$pFieldsFormSortAlphabe = $this->_pRecordManagerReadListViewEstate->getRecordsSortedAlphabetically();
-		$this->assertEquals(null,$pFieldsFormSortAlphabe);
+		$this->assertEquals([],$pFieldsFormSortAlphabe);
 	}
 }

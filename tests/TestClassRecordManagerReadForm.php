@@ -152,7 +152,7 @@ class TestClassRecordManagerReadForm
 	public function testGetRecordsSortedAlphabetically()
 	{
 		$pFieldsFormSortAlphabe = $this->_pRecordManagerReadForm->getRecordsSortedAlphabetically();
-		$this->assertEquals(null,$pFieldsFormSortAlphabe);
+		$this->assertEquals([],$pFieldsFormSortAlphabe);
 	}
 
 	public function testGetAllRecords()

@@ -133,7 +133,7 @@ class TestClassRecordManagerReadListViewAddress
 	public function testGetRecordsSortedAlphabetically()
 	{
 		$pFieldsFormSortAlphabe = $this->_pRecordManagerReadListViewAddress->getRecordsSortedAlphabetically();
-		$this->assertEquals(null,$pFieldsFormSortAlphabe);
+		$this->assertEquals([],$pFieldsFormSortAlphabe);
 	}
 
 
