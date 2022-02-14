@@ -402,10 +402,6 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
-		if (!$this->getShowReferenceStatus() && $recordModified['vermarktungsstatus'] === 'Reference') {
-			$recordModified['vermarktungsstatus'] = '';
-		}
-
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 
 		return $pArrayContainer;

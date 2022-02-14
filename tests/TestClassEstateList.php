@@ -786,6 +786,7 @@ class TestClassEstateList
 		$pDataView->setPictureTypes(['Titelbild', 'Foto']);
 		$pDataView->setAddressFields(['Vorname', 'Name']);
 		$pDataView->setShowStatus(true);
+		$pDataView->setShowReferenceStatus(true);
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
 		$pDataView->setExpose('testExpose');
 		return $pDataView;
