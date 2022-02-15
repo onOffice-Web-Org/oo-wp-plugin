@@ -268,8 +268,8 @@ class EstateList
 			];
 		}
 
-		if ($this->getShowReferenceStatus()) {
-			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+		if (!$this->getShowReferenceStatus()) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 		}
 
 		$requestParams += $this->addExtraParams();
