@@ -59,6 +59,7 @@ class AdminPageApiSettings
 		parent::__construct($pageSlug);
 		$this->_encrypter = $this->getContainer()->make(SymmetricEncryption::class);
 		$this->addFormModelAPI();
+		$this->addFormModelEmail();
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptcha();
@@ -111,6 +112,25 @@ class AdminPageApiSettings
 		$this->addFormModel($pFormModel);
 	}
 
+	private function addFormModelEmail()
+	{
+		$labelDefaultEmailAddress = __('Default Email Address', 'onoffice-for-wp-websites');
+		$pInputModelDefaultEmailAddress = new InputModelOption
+		('onoffice-settings', 'default-email-key', $labelDefaultEmailAddress, 'string');
+		$optionDefaultEmail = $pInputModelDefaultEmailAddress->getIdentifier();
+		$pInputModelDefaultEmailAddress->setSanitizeCallback(function($email) {
+			return $this->checkEmail($email);
+		});
+		$pInputModelDefaultEmailAddress->setValue(get_option($optionDefaultEmail, $pInputModelDefaultEmailAddress->getDefault()));
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelDefaultEmailAddress);
+		$pFormModel->setGroupSlug('onoffice-default-email-key');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('Email', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
+	}
 
 	/**
 	 *
@@ -212,6 +232,10 @@ class AdminPageApiSettings
 		return $password;
 	}
 
+	public function checkEmail($email)
+	{
+		return is_email($email);
+	}
 
 	/**
 	 *

@@ -61,6 +61,14 @@ onOffice.checkboxAdmin = function() {
 				element: "select[name=oopluginlistviews-sortByUserDefinedDirection]",
 				invert: true
 			}
+		],
+
+        // view: form
+		"input[name=oopluginforms-defaultrecipient]": [
+			{
+				element: "input[name=oopluginforms-recipient]",
+				invert: true
+			}
 		]
 	};
 };
