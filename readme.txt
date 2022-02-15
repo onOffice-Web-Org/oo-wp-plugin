@@ -23,6 +23,8 @@ Using a short code, you bring real estates, addresses or forms to your website -
 
 The user-friendly plugin enables a quick link between onOffice and your WordPress page: Present real estate and your team on the website and generate leads via forms. You stay in control and are 100% flexible.
 
+You can find tutorials, documentation and support on our [documentation website](https://wpplugindoc.onoffice.de/?lang=en).
+
 = Real estate =
 Create lists, design the real estate presentation and offer synopsis for downloading with a few easy steps.
 
