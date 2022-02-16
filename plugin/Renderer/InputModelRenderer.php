@@ -132,7 +132,7 @@ class InputModelRenderer
 					$pInputModel->getValuesAvailable(),  $pInputModel->getDescriptionTextHTML());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				if ($pInputModel->getHint() != null) {
-					$pInstance->setHint($pInputModel->getHint());
+					$pInstance->setHintHtml($pInputModel->getHint());
 				}
 				break;
 

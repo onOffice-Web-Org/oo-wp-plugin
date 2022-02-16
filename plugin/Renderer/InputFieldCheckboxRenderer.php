@@ -138,11 +138,11 @@ class InputFieldCheckboxRenderer
 	}
 	
 	/** @return string */
-	public function getHint()
+	public function getHintHtml()
 	{ return $this->_hint; }
 
 	/** @param string $hint */
-	public function setHint(string $hint)
+	public function setHintHtml(string $hint)
 	{ $this->_hint = $hint; }
 
 
