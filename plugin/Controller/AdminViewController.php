@@ -401,7 +401,7 @@ class AdminViewController
 	{
 		$pRecordReadManager = new RecordManagerReadForm();
 
-		if (get_option('onoffice-settings-default-email-key', 'onoffice-for-wp-websites') == null
+		if (get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites') == null
 			&& $pRecordReadManager->getCountAllRecord() != $pRecordReadManager->getCountNoDefaultRecipientRecord())
 		{
 			$class = 'notice notice-error';

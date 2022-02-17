@@ -268,8 +268,8 @@ class FormModelBuilderDBForm
 	{
 		$addition = '';
 
-        if (get_option('onoffice-settings-default-email-key', '') !== '') {
-            $addition = '('.get_option('onoffice-settings-default-email-key', 'onoffice-for-wp-websites').')';
+        if (get_option('onoffice-settings-default-email', '') !== '') {
+			$addition = '('.get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites').')';
         }
 
         $labelDefaultData = sprintf(__('Use default email address %s', 'onoffice-for-wp-websites'), $addition);
