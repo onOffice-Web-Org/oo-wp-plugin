@@ -709,7 +709,7 @@ msgstr "Scendendo"
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:245
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
-msgid "Template"
+msgid "Templates"
 msgstr "Modello"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
