@@ -28,7 +28,7 @@ class Redirector
 		$fullLink = $this->_wpEstateDetailUrl->createEstateDetailLink($url, $estateId, $estateTitle);
 		$uri = $this->getUri();
 		$pageName = $this->_wpPageWrapper->getPageUriByPageId($pageId);
-		preg_match('/^(' . preg_quote($pageName) .')\/([0-9]+)(-([^$]+))?\/?$/', $uri, $matches);
+		preg_match('/^(' . preg_quote($pageName, '/') .')\/([0-9]+)(-([^$]+))?\/?$/', $uri, $matches);
 		if (empty($matches[2])) { //Check pass rule and has Unique ID
 			return true;
 		}
