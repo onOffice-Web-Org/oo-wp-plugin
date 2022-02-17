@@ -21,11 +21,8 @@
 
 namespace onOffice\tests;
 
-use Closure;
-use DI\ContainerBuilder;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use WP_UnitTestCase;
-use function cli\confirm;
 
 /**
  *

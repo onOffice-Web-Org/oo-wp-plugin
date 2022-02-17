@@ -21,14 +21,10 @@
 
 namespace onOffice\tests;
 
-use Closure;
-use DI\ContainerBuilder;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
-use onOffice\WPlugin\Record\RecordManager;
 use WP_UnitTestCase;
 use onOffice\WPlugin\Form;
 use onOffice\SDK\onOfficeSDK;
-use wpdb;
 /**
  *
  * @url http://www.onoffice.de
