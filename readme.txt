@@ -75,6 +75,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.7 =
+
+**Changes**
+
+* Users can decide in the plugin whether the references are output or not, without needing to set up a filter in onOffice.
+
 = 2.21.6 =
 
 **Fixes**
