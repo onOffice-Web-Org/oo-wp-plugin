@@ -42,6 +42,9 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_RECIPIENT = 'formRecipient';
 
 	/** */
+	const INPUT_FORM_DEFAULT_RECIPIENT = 'formDefaultRecipient';
+
+	/** */
 	const INPUT_FORM_SUBJECT = 'formSubject';
 
 	/** */
@@ -107,6 +110,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_RECIPIENT => [
 			self::KEY_TABLE => 'oo_plugin_forms',
 			self::KEY_FIELD => 'recipient',
+		],
+		self::INPUT_FORM_DEFAULT_RECIPIENT => [
+			self::KEY_TABLE => 'oo_plugin_forms',
+			self::KEY_FIELD => 'default_recipient',
 		],
 		self::INPUT_FORM_SUBJECT => [
 			self::KEY_TABLE => 'oo_plugin_forms',

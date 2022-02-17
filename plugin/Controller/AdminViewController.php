@@ -38,6 +38,7 @@ use onOffice\WPlugin\Gui\AdminPageEstateUnitSettings;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\AdminPageFormSettingsMain;
 use onOffice\WPlugin\Gui\AdminPageModules;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
@@ -133,6 +134,7 @@ class AdminViewController
 	public function register_menu()
 	{
 		add_action('admin_notices', [$this, 'displayAPIError']);
+		add_action('admin_notices', [$this, 'displayEmptyUsedDefaultEmailError']);
 		$pUserCapabilities = new UserCapabilities;
 		$roleMainPage = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_VIEW_MAIN_PAGE);
 		$roleAddress = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_ADDRESS);
@@ -393,5 +395,24 @@ class AdminViewController
 	public function getField()
 	{
 		return new Fieldnames(new FieldsCollection());
+	}
+
+	public function displayEmptyUsedDefaultEmailError()
+	{
+		$pRecordReadManager = new RecordManagerReadForm();
+
+		if (get_option('onoffice-settings-default-email-key', 'onoffice-for-wp-websites') == null
+			&& $pRecordReadManager->getCountAllRecord() != $pRecordReadManager->getCountNoDefaultRecipientRecord())
+		{
+			$class = 'notice notice-error';
+			$label = __('plugin settings', 'onoffice-for-wp-websites');
+			$defaultEmailAddressLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+			/* translators: %s will be replaced with the translation of 'API token and secret'. */
+			$message = sprintf(esc_html(__('The onOffice plugin is missing a default email address. Forms that use it '
+				.'will not send emails. Please add a default email address in the %s.', 'onoffice-for-wp-websites')),
+				$defaultEmailAddressLink);
+
+			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		}
 	}
 }

@@ -262,10 +262,30 @@ class FormModelBuilderDBForm
 
 	/**
 	 * @return InputModelDB
+	 * @throws Exception
+	 */
+	public function createInputModelDefaultRecipient(): InputModelDB
+	{
+		$addition = '';
+
+        if (get_option('onoffice-settings-default-email-key', '') !== '') {
+            $addition = '('.get_option('onoffice-settings-default-email-key', 'onoffice-for-wp-websites').')';
+        }
+
+        $labelDefaultData = sprintf(__('Use default email address %s', 'onoffice-for-wp-websites'), $addition);
+		$selectedValue = $this->getValue('default_recipient', false);
+		$pInputModelFormDefaultData = $this->generateGenericCheckbox($labelDefaultData,
+			InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue);
+
+		return $pInputModelFormDefaultData;
+	}
+
+	/**
+	 * @return InputModelDB
 	 */
 	public function createInputModelRecipient()
 	{
-		$labelRecipient = __('Recipient\'s E-Mail Address', 'onoffice-for-wp-websites');
+		$labelRecipient = __('Override Recipient\'s E-Mail Address', 'onoffice-for-wp-websites');
 		$selectedRecipient = $this->getValue('recipient');
 
 		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create
@@ -282,7 +302,7 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelRecipientContactForm()
 	{
-		$labelRecipient = __('Email address', 'onoffice-for-wp-websites');
+		$labelRecipient = __('Override email address', 'onoffice-for-wp-websites');
 		$selectedRecipient = $this->getValue('recipient');
 
 		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create

@@ -84,7 +84,11 @@ class FormPostContact
 	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
-		$recipient = $pFormConfig->getRecipient();
+		if ($pFormConfig->getDefaultRecipient()) {
+			$recipient = get_option('onoffice-settings-default-email-key', 'onoffice-for-wp-websites');
+		} else {
+			$recipient = $pFormConfig->getRecipient();
+		}
 		$subject = $pFormConfig->getSubject();
 
 		try {
