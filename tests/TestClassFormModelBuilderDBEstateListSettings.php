@@ -196,4 +196,23 @@ class TestClassFormModelBuilderDBEstateListSettings
         $instance = $pInstance->createSortableFieldList('address', 'checkbox', false);
         $this->assertEquals($instance->getReferencedInputModels(), null);
     }
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowReferenceEstate
+	 */
+	public function testCreateInputModelShowReferenceEstate()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('0');
+
+		$pInputModelDB = $pInstance->createInputModelShowReferenceEstate();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getValue(), '0');
+		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
+	}
 }
