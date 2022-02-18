@@ -265,6 +265,10 @@ class EstateList
 			];
 		}
 
+		if (!$this->getShowReferenceStatus()) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		}
+
 		$requestParams += $this->addExtraParams();
 
 		return $requestParams;
@@ -658,6 +662,15 @@ class EstateList
 	{
 		return $this->_pDataView instanceof DataListView &&
 			$this->_pDataView->getShowStatus();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getShowReferenceStatus(): bool
+	{
+		return $this->_pDataView instanceof DataListView &&
+			$this->_pDataView->getShowReferenceStatus();
 	}
 
 	/**
