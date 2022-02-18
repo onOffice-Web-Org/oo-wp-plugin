@@ -46,6 +46,7 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
+use onOffice\WPlugin\DataView\DataDetailViewCheckAccessControl;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Field\EstateKindTypeReader;
@@ -192,24 +193,11 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 	$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class);
 
 	if ($estateId !== '') {
-		$accessControl = $pDataDetailViewHandler->getDetailView()->getAccessControls();
-
-		if (!$accessControl) {
-			$estateListFactory = new EstateListFactory($pDataDetailViewHandler);
-			$pEstateDetail = $estateListFactory->createEstateDetail($estateId);
-			$pEstateDetail->loadEstates();
-			$pEstateDetail->estateIterator();
-			$rawValues = $pEstateDetail->getRawValues();
-			$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
-
-			if ($referenz === "1") {
-				$pWP->handle_404();
-				include( get_query_template( '404' ) );
-				die();
-			}
-		}
 		$estateId = (int)$estateId;
-		if ($estateId === 0 || !$pEstateIdGuard->isValid($estateId)) {
+		$pDataDetailViewCheckAccessControl = new DataDetailViewCheckAccessControl($estateId);
+		$accessControlChecker = $pDataDetailViewCheckAccessControl->checkAccessControl();
+
+		if ($estateId === 0 || !$accessControlChecker|| !$pEstateIdGuard->isValid($estateId)) {
 			$pWP->handle_404();
 			include(get_query_template('404'));
 			die();

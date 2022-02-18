@@ -139,7 +139,7 @@ class FormModelBuilderEstateDetailSettings
 			$allAccessControl);
 		$pInputModelAccessControl->setHtmlType( InputModelOption::HTML_TYPE_CHECKBOX );
 		$pInputModelAccessControl->setValuesAvailable( 'Access_Control' );
-		$accessControl = $this->_pDataDetailView->getAccessControls();
+		$accessControl = $this->_pDataDetailView->hasDetailView();
 		$pInputModelAccessControl->setValue( $accessControl );
 
 		return $pInputModelAccessControl;

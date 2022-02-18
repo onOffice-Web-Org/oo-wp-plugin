@@ -72,7 +72,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
 					if ( $referenz === "1" ) {
-						if ( $pEstatesClone->getAccessControl() ) {
+						if ( $pEstatesClone->hasDetailView() ) {
 							echo '<a href="' . esc_url( $pEstatesClone->getEstateLink() ) . '" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
 						} else {
 							echo '<a href="javascript:void(0)" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
@@ -105,7 +105,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					</div>
 					<div class="oo-detailslink">
 						<?php if ($referenz === "1") { ?>
-							<?php if ($pEstatesClone->getAccessControl()) { ?>
+							<?php if ($pEstatesClone->hasDetailView()) { ?>
 								<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
 									<?php esc_html_e('Show Details', 'onoffice'); ?>
 								</a>

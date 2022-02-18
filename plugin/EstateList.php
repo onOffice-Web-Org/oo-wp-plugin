@@ -537,9 +537,9 @@ class EstateList
 	 * @throws NotFoundException
 	 */
 
-	public function getAccessControl(): bool
+	public function hasDetailView(): bool
     {
-		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->getAccessControls();
+		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->hasDetailView();
 	}
 
 	/**

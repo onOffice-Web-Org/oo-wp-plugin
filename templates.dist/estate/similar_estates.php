@@ -27,7 +27,7 @@
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstates->getEstatePictureValues( $id );
 					if ( $referenz === "1" ) {
-						if ( $pEstates->getAccessControl() ) {
+						if ( $pEstates->hasDetailView() ) {
 							echo '<a href="'.$pEstates->getEstateLink().'" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
 						} else {
 							echo '<a href="javascript:void(0)" style="background-image: url('.esc_url($pEstates->getEstatePictureUrl( $id )).');" class="oo-listimage">';
@@ -60,7 +60,7 @@
 					</div>
 					<div class="oo-detailslink">
 						<?php if ($referenz === "1") { ?>
-							<?php if ($pEstates->getAccessControl()) { ?>
+							<?php if ($pEstates->hasDetailView()) { ?>
 								<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>">
 									<?php esc_html_e('Show Details', 'onoffice'); ?>
 								</a>

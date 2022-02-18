@@ -162,7 +162,7 @@ class DataDetailView
 		{ return $this->_pictureTypes; }
 
 	/** @return bool */
-	public function getAccessControls(): bool
+	public function hasDetailView(): bool
 		{ return $this->_accessControls; }
 
 	/** @return string */
@@ -202,7 +202,7 @@ class DataDetailView
 		{ $this->_pictureTypes = $pictureTypes; }
 
 	/** @param bool $accessControl */
-	public function setAccessControls(bool $accessControl)
+	public function setHasDetailView(bool $accessControl)
 		{ $this->_accessControls = $accessControl; }
 
 	/** @param string $template */
