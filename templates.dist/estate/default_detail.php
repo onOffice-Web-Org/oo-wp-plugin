@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *    Copyright (C) 2020  onOffice GmbH
@@ -32,7 +33,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-	while ( $currentEstate = $pEstates->estateIterator() ) { ?>
+	while ($currentEstate = $pEstates->estateIterator()) { ?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
 			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
@@ -44,63 +45,65 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<div class="oo-detailsgallery" id="oo-galleryslide">
 				<?php
 				$estatePictures = $pEstates->getEstatePictures();
-				foreach ( $estatePictures as $id ) {
-					printf('<div class="oo-detailspicture" style="background-image: url(\'%s\');"></div>'."\n",
-						esc_url($pEstates->getEstatePictureUrl($id)));
+				foreach ($estatePictures as $id) {
+					printf(
+						'<div class="oo-detailspicture" style="background-image: url(\'%s\');"></div>' . "\n",
+						esc_url($pEstates->getEstatePictureUrl($id))
+					);
 				}
-			?>
+				?>
 			</div>
 			<div class="oo-detailstable">
 				<?php
-				foreach ( $currentEstate as $field => $value ) {
-					if ( is_numeric( $value ) && 0 == $value ) {
+				foreach ($currentEstate as $field => $value) {
+					if (is_numeric($value) && 0 == $value) {
 						continue;
 					}
-					if ( in_array($field, $dontEcho) ) {
+					if (in_array($field, $dontEcho)) {
 						continue;
 					}
-					if ( $value == "" ) {
+					if ($value == "") {
 						continue;
 					}
-					echo '<div class="oo-detailslisttd">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'."\n"
-						.'<div class="oo-detailslisttd">'
-							.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-							.'</div>'."\n";
+					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
+						. '<div class="oo-detailslisttd">'
+						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
+						. '</div>' . "\n";
 				} ?>
 			</div>
 
-			<?php if ( $currentEstate["objektbeschreibung"] !== "" ) { ?>
+			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Description', 'onoffice'); ?></h2>
 					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
 				</div>
 			<?php } ?>
 
-			<?php if ( $currentEstate["lage"] !== "" ) { ?>
+			<?php if ($currentEstate["lage"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Location', 'onoffice'); ?></h2>
 					<?php echo nl2br($currentEstate["lage"]); ?>
 				</div>
 			<?php }
 
-            ob_start();
-            require('map/map.php');
-            $mapContent = ob_get_clean();
-            if ($mapContent != '') { ?>
-            <div class="oo-detailsmap">
-                <h2><?php esc_html_e('Map', 'onoffice'); ?></h2>
-                <?php echo $mapContent; ?>
-            </div>
-            <?php } ?>
+			ob_start();
+			require('map/map.php');
+			$mapContent = ob_get_clean();
+			if ($mapContent != '') { ?>
+				<div class="oo-detailsmap">
+					<h2><?php esc_html_e('Map', 'onoffice'); ?></h2>
+					<?php echo $mapContent; ?>
+				</div>
+			<?php } ?>
 
-			<?php if ( $currentEstate["ausstatt_beschr"] !== "" ) { ?>
+			<?php if ($currentEstate["ausstatt_beschr"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Equipment', 'onoffice'); ?></h2>
 					<?php echo nl2br($currentEstate["ausstatt_beschr"]); ?>
 				</div>
 			<?php } ?>
 
-			<?php if ( $currentEstate["sonstige_angaben"] !== "" ) { ?>
+			<?php if ($currentEstate["sonstige_angaben"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Other Information', 'onoffice'); ?></h2>
 					<?php echo nl2br($currentEstate["sonstige_angaben"]); ?>
@@ -108,7 +111,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php } ?>
 
 			<div class="oo-units">
-				<?php echo $pEstates->getEstateUnits( ); ?>
+				<?php echo $pEstates->getEstateUnits(); ?>
 			</div>
 		</div>
 		<div class="oo-details-sidebar">
@@ -123,6 +126,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					'Anrede',
 					'Vorname',
 					'Name',
+					'Zusatz1', // Company
 					'Strasse',
 					'Plz',
 					'Ort'
@@ -137,6 +141,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					$firstName = $contactData['Vorname'];
 					$lastName = $contactData['Name'];
 
+					$company = $contactData['Zusatz1'];
 					$street = $contactData['Strasse'];
 					$postCode = $contactData['Plz'];
 					$town = $contactData['Ort'];
@@ -154,6 +159,11 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($formOfAddress . " " . $lastName) . '</p></div>';
 					} elseif ($firstName) {
 						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($firstName) . '</p></div>';
+					}
+
+					// Output company
+					if ($company) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($company) . '</p></div>';
 					}
 
 					// Output address, depending on available fields.
@@ -186,7 +196,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				<?php endforeach; ?>
 			</div>
 			<div class="oo-detailsexpose">
-				<?php if ($pEstates->getDocument() != ''): ?>
+				<?php if ($pEstates->getDocument() != '') : ?>
 					<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
 					<a href="<?php echo $pEstates->getDocument(); ?>">
 						<?php esc_html_e('PDF expose', 'onoffice'); ?>
@@ -196,27 +206,27 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 			<?php $estateMovieLinks = $pEstates->getEstateMovieLinks();
 			foreach ($estateMovieLinks as $movieLink) {
-				echo '<div class="oo-video"><a href="'.esc_attr($movieLink['url']).'" title="'.esc_attr($movieLink['title']).'">'
-					.esc_html($movieLink['title']).'</a></div>';
+				echo '<div class="oo-video"><a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '">'
+					. esc_html($movieLink['title']) . '</a></div>';
 			}
 
 			$movieOptions = array('width' => 500); // optional
 
 			foreach ($pEstates->getMovieEmbedPlayers($movieOptions) as $movieInfos) {
-				echo '<div class="oo-video"><h2>'.esc_html($movieInfos['title']).'</h2>';
+				echo '<div class="oo-video"><h2>' . esc_html($movieInfos['title']) . '</h2>';
 				echo $movieInfos['player'];
 				echo '</div>';
 			} ?>
 
 		</div>
 		<?php
-		if (get_option('onoffice-pagination-paginationbyonoffice')){ ?>
-            <div>
+		if (get_option('onoffice-pagination-paginationbyonoffice')) { ?>
+			<div>
 				<?php
 				wp_link_pages();
 				?>
-            </div>
-		<?php }?>
+			</div>
+		<?php } ?>
 		<div class="oo-similar">
 			<?php echo $pEstates->getSimilarEstates(); ?>
 		</div>
@@ -227,7 +237,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <?php
 $shortCodeForm = $pEstates->getShortCodeForm();
 if (!empty($shortCodeForm)) {
-	?>
+?>
 	<div class="detail-contact-form">
 		<?php echo do_shortcode($shortCodeForm); ?>
 	</div>
