@@ -173,8 +173,6 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					}
 					if ($postCode && $town) {
 						echo '<div class="oo-aspinfo oo-contact-info"><p>' . $streetOutput . esc_html($postCode . " " . $town) . '</p></div>';
-					} elseif ($postCode) {
-						echo '<div class="oo-aspinfo oo-contact-info"><p>' . $streetOutput . esc_html($postCode) . '</p></div>';
 					} elseif ($town) {
 						echo '<div class="oo-aspinfo oo-contact-info"><p>' . $streetOutput . esc_html($town) . '</p></div>';
 					}
