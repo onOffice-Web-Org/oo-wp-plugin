@@ -115,16 +115,64 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<div class="oo-asp">
 				<h2><?php echo esc_html__('Contact person', 'onoffice'); ?></h2>
 				<?php
-				$addressFields = $pEstates->getAddressFields();
-				foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
+				$configuredAddressFields = $pEstates->getAddressFields();
+				// Remove the fields that receive special treatment.
+				// These fields will be handled separately, so that they are displayed grouped together.
+				$addressFields = array_diff($configuredAddressFields, [
+					'imageUrl',
+					'Anrede',
+					'Vorname',
+					'Name',
+					'Strasse',
+					'Plz',
+					'Ort'
+				]);
+
+				foreach ($pEstates->getEstateContacts() as $contactData) : ?>
 					<?php
+
+					$imageUrl = $contactData['imageUrl'];
+
+					$formOfAddress = $contactData['Anrede'];
+					$firstName = $contactData['Vorname'];
+					$lastName = $contactData['Name'];
+
+					$street = $contactData['Strasse'];
+					$postCode = $contactData['Plz'];
+					$town = $contactData['Ort'];
+
+					if ($imageUrl) {
+						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px"></div>';
+					}
+
+					// Output name, depending on available fields.
+					if ($formOfAddress && $firstName && $lastName) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($formOfAddress . " " . $firstName . " " . $lastName) . '</p></div>';
+					} elseif ($firstName && $lastName) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($firstName . " " . $lastName) . '</p></div>';
+					} elseif ($formOfAddress && $lastName) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($formOfAddress . " " . $lastName) . '</p></div>';
+					} elseif ($firstName) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($firstName) . '</p></div>';
+					}
+
+					// Output address, depending on available fields.
+					$streetOutput = "";
+					if ($street) {
+						$streetOutput = esc_html($street) . "<br>";
+					}
+					if ($postCode && $town) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . $streetOutput . esc_html($postCode . " " . $town) . '</p></div>';
+					} elseif ($postCode) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . $streetOutput . esc_html($postCode) . '</p></div>';
+					} elseif ($town) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . $streetOutput . esc_html($town) . '</p></div>';
+					}
+
+					// Output all other configured fields.
 					foreach ($addressFields as $field) {
 						if (empty($contactData[$field])) {
 							continue;
-						}
-
-						if ($field === 'imageUrl') {
-							echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($contactData[$field]) . '" height="150px"></div>';
 						} elseif (is_array($contactData[$field])) {
 							echo '<div class="oo-aspinfo oo-contact-info">';
 							foreach ($contactData[$field] as $item) {
