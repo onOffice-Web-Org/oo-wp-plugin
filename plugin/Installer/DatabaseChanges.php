@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 22;
+	const MAX_VERSION = 23;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -166,9 +166,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		if ($dbversion == 21) {
 			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 22;
+		}
+
+		if ($dbversion == 22) {
+			dbDelta($this->getCreateQueryListviews());
 			dbDelta($this->getCreateQueryListViewsAddress());
 			dbDelta($this->getCreateQueryForms());
-			$dbversion = 22;
+			$dbversion = 23;
 		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
@@ -240,6 +245,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`sortBySetting` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
 			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
+			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
@@ -325,6 +331,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$query .= esc_sql($data['radius_active']) . ",";
 		$query .= "'" . esc_sql($data['geo_order']) ."')";
 		$this->_pWPDB->query($query);
+
 		$defaultFormId = $this->_pWPDB->insert_id;
 		$this->installDataQueryFormFieldConfig($defaultFormId);
 	}
