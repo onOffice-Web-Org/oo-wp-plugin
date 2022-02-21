@@ -116,7 +116,7 @@ class AdminPageApiSettings
 	{
 		$labelDefaultEmailAddress = __('Default Email Address', 'onoffice-for-wp-websites');
 		$pInputModelDefaultEmailAddress = new InputModelOption
-		('onoffice-settings', 'default-email-key', $labelDefaultEmailAddress, 'string');
+		('onoffice-settings', 'default-email', $labelDefaultEmailAddress, 'string');
 		$optionDefaultEmail = $pInputModelDefaultEmailAddress->getIdentifier();
 		$pInputModelDefaultEmailAddress->setSanitizeCallback(function ($email) {
 			return $this->checkEmail($email);
@@ -125,7 +125,7 @@ class AdminPageApiSettings
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelDefaultEmailAddress);
-		$pFormModel->setGroupSlug('onoffice-default-email-key');
+		$pFormModel->setGroupSlug('onoffice-default-email');
 		$pFormModel->setPageSlug($this->getPageSlug());
 		$pFormModel->setLabel(__('Email', 'onoffice-for-wp-websites'));
 
