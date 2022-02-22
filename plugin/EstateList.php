@@ -268,6 +268,10 @@ class EstateList
 			];
 		}
 
+		if (!$this->getShowReferenceStatus()) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		}
+
 		$requestParams += $this->addExtraParams();
 
 		return $requestParams;
@@ -665,12 +669,25 @@ class EstateList
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function getShowReferenceStatus(): bool
+	{
+		return $this->_pDataView instanceof DataListView &&
+			$this->_pDataView->getShowReferenceStatus();
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getEstateIds(): array
 	{
 		return array_column($this->_records, 'id');
 	}
+
+	/** @return array */
+	public function getAddressFields(): array
+		{ return $this->_pDataView->getAddressFields(); }
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()
