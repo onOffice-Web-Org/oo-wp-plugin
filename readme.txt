@@ -75,6 +75,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.21.8 =
+
+**Changes**
+
+* In enterprise forms where the HTML attribute step is used the value is now set to 1 instead of 0,1 for example for all values that are floats. Users can still input decimal numbers, but is more natural for most fields.
+
 = 2.21.7 =
 
 **Changes**
