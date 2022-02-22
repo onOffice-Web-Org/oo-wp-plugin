@@ -122,7 +122,7 @@ class AdminPageFormSettingsContact
 			$link = sprintf($linkTag, $linkLabel);
 			$textWithoutLink = esc_html__("If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the %s", 'onoffice-for-wp-websites');
 			$txtHint = sprintf($textWithoutLink, $link);
-			$pInputModel->setHint($txtHint);
+			$pInputModel->setHintHtml($txtHint);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
