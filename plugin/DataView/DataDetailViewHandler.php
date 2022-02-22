@@ -21,9 +21,11 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use PHPStan\Rules\Variables\VariableCloningRule;
 
 
 /**
@@ -67,7 +69,15 @@ class DataDetailViewHandler
 		{
 			$pResult = $pAlternate;
 		}
-
+        if(empty($pResult->getPageId()))
+        {
+            $pRecordPostMeta = new RecordManagerPostMeta();
+            $pageInPostMeta = $pRecordPostMeta->getPageIdInPostMeta();
+            if (!empty($pageInPostMeta["post_id"]))
+            {
+                $pResult->setPageId($pageInPostMeta["post_id"]);
+            }
+        }
 		return $pResult;
 	}
 
