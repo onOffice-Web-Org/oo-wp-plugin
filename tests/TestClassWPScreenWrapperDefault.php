@@ -60,12 +60,8 @@ class TestClassWPScreenWrapperDefault
 	{
 		set_current_screen('testscreen_perpage');
 		add_screen_option('per_page', array('option' => 'per_page_option_test'));
-		$pWPScreenFactory = $this->getMockBuilder(WPScreenFactory::class)
-			->getMock();
-		$pWPScreenFactory->expects($this->once())->method('getCurrentScreen')
-			->will($this->returnValue(get_current_screen()));
-		$pWPScreenWrapperDefault = new WPScreenWrapperDefault($pWPScreenFactory);
-		$optionPerPage = $pWPScreenWrapperDefault->getScreenOption('per_page');
+		$pWPScreenFactory = new WPScreenFactory();
+		$optionPerPage = $pWPScreenFactory->getCurrentScreen()->get_option('per_page');
 		$this->assertNotEmpty($optionPerPage);
 		$this->assertSame('per_page_option_test', $optionPerPage['option']);
 	}

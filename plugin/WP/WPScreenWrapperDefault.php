@@ -57,17 +57,4 @@ class WPScreenWrapperDefault
 	{
 		return $this->_pWPScreenFactory->getCurrentScreen()->id;
 	}
-
-
-	/**
-	 *
-	 * @param $optionName
-	 * @return mixed
-	 *
-	 */
-
-	public function getScreenOption($optionName)
-	{
-		return $this->_pWPScreenFactory->getCurrentScreen()->get_option($optionName);
-	}
 }
