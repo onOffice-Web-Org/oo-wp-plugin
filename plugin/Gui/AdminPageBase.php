@@ -118,7 +118,7 @@ abstract class AdminPageBase
 
 	protected function removeFieldsInFormModel($slug, string $removeField)
 	{
-		$inputModels = $this->_formModels[$slug]->getInputModel();
+		$inputModels = $this->getFormModels()[$slug]->getInputModel();
 		/** @var InputModelDB $inputModel */
 		foreach ($inputModels as $inputModel) {
 			$availableValues = $inputModel->getValuesAvailable();
