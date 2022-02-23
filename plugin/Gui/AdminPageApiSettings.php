@@ -117,10 +117,8 @@ class AdminPageApiSettings
 		$labelDefaultEmailAddress = __('Default Email Address', 'onoffice-for-wp-websites');
 		$pInputModelDefaultEmailAddress = new InputModelOption
 		('onoffice-settings', 'default-email', $labelDefaultEmailAddress, 'string');
+        $pInputModelDefaultEmailAddress->setHtmlType(InputModelOption::HTML_TYPE_EMAIL);
 		$optionDefaultEmail = $pInputModelDefaultEmailAddress->getIdentifier();
-		$pInputModelDefaultEmailAddress->setSanitizeCallback(function ($email) {
-			return $this->checkEmail($email);
-		});
 		$pInputModelDefaultEmailAddress->setValue(get_option($optionDefaultEmail, $pInputModelDefaultEmailAddress->getDefault()));
 
 		$pFormModel = new FormModel();
@@ -230,11 +228,6 @@ class AdminPageApiSettings
 			$password = $this->_encrypter->encrypt($password, ONOFFICE_CREDENTIALS_ENC_KEY);
 		}
 		return $password;
-	}
-
-	public function checkEmail($email)
-	{
-		return is_email($email);
 	}
 
 	/**

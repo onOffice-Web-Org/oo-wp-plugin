@@ -63,6 +63,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_NUMBER = 'number';
 
+	/** */
+	const HTML_TYPE_EMAIL = 'email';
+
 	/** @var string */
 	private $_name = null;
 
