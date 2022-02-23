@@ -23,6 +23,8 @@ Using a short code, you bring real estates, addresses or forms to your website -
 
 The user-friendly plugin enables a quick link between onOffice and your WordPress page: Present real estate and your team on the website and generate leads via forms. You stay in control and are 100% flexible.
 
+You can find tutorials, documentation and support on our [documentation website](https://wpplugindoc.onoffice.de/?lang=en).
+
 = Real estate =
 Create lists, design the real estate presentation and offer synopsis for downloading with a few easy steps.
 
@@ -72,6 +74,18 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.21.8 =
+
+**Changes**
+
+* In enterprise forms where the HTML attribute step is used the value is now set to 1 instead of 0,1 for example for all values that are floats. Users can still input decimal numbers, but is more natural for most fields.
+
+= 2.21.7 =
+
+**Changes**
+
+* Users can decide in the plugin whether the references are output or not, without needing to set up a filter in onOffice.
 
 = 2.21.6 =
 
