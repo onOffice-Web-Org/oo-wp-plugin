@@ -21,7 +21,6 @@
 
 namespace onOffice\tests;
 
-use Closure;
 use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use WP_UnitTestCase;
 
@@ -50,19 +49,6 @@ class TestClassRecordManagerPostMeta
     {
         $this->_pRecordManagerPostMeta = $this->getMockBuilder(RecordManagerPostMeta::class)
             ->getMock();
-    }
-    /**
-     *
-     */
-
-    public function testConstruct()
-    {
-        $pRecordManager = new RecordManagerPostMeta();
-        $pMainTable = $pRecordManager->getMainTable();
-        $pIdColumnMain = $pRecordManager->getIdColumnMain();
-
-        $this->assertEquals('postmeta', $pMainTable);
-        $this->assertEquals('meta_id', $pIdColumnMain);
     }
 
     /**

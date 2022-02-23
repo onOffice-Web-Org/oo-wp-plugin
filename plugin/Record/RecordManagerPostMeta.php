@@ -21,10 +21,7 @@
 
 namespace onOffice\WPlugin\Record;
 
-use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use const ARRAY_A;
-use const OBJECT;
-use function esc_sql;
 
 /**
  *
@@ -35,60 +32,6 @@ use function esc_sql;
 
 class RecordManagerPostMeta
 {
-    /**
-     *
-     */
-    const TABLENAME_POSTMETA = 'postmeta';
-
-    /**
-     * @var string
-     */
-    private $_mainTable;
-
-    /**
-     * @var string
-     */
-    private $_idColumnMain;
-
-
-    public function __construct()
-    {
-        $this->setMainTable(self::TABLENAME_POSTMETA);
-        $this->setIdColumnMain('meta_id');
-    }
-
-    /**
-     * @param string $mainTable
-     */
-    public function setMainTable(string $mainTable)
-    {
-        $this->_mainTable = $mainTable;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMainTable()
-    {
-        return $this->_mainTable;
-    }
-
-    /**
-     * @param string $idColumnMain
-     */
-    public function setIdColumnMain(string $idColumnMain)
-    {
-        $this->_idColumnMain = $idColumnMain;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdColumnMain()
-    {
-        return $this->_idColumnMain;
-    }
-
     /**
      *
      * @return array
@@ -105,6 +48,4 @@ class RecordManagerPostMeta
         $post_meta_results = $wpdb->get_row( $post_meta_sql ,ARRAY_A);
         return $post_meta_results;
     }
-
-
 }

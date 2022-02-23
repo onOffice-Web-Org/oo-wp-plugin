@@ -25,7 +25,6 @@ use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
-use PHPStan\Rules\Variables\VariableCloningRule;
 
 
 /**
