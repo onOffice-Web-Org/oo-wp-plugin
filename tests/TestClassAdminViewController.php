@@ -172,7 +172,7 @@ class TestClassAdminViewController
 		$adminPage = new AdminPageEstateDetail('admin_page_onoffice-editlistview');
 		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
 		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-editlistview");
-		$this->assertEquals(['admin-js'], wp_scripts()->queue);
+		$this->assertEquals(['update-duplicate-check-warning-option', 'admin-js'], wp_scripts()->queue);
 	}
 
 	/**
@@ -190,7 +190,7 @@ class TestClassAdminViewController
 		$pWpHook = $wp_filter['admin_page_onoffice-editlistview'];
 		$pWpHook->callbacks = [[['function' => ['a']]]];
 		$pAdminViewController->enqueueExtraJs("admin_onoffice_test");
-		$this->assertCount(0, wp_scripts()->queue);
+		$this->assertCount(1, wp_scripts()->queue);
 	}
 
 	public function testAdminPageAjax()
