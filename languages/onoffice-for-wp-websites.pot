@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-02-15T13:55:24+07:00\n"
+"POT-Creation-Date: 2022-02-23T10:30:04+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Please configure your onOffice API credentials first!"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:148
+#: plugin/Controller/AdminViewController.php:149
 #: plugin/Gui/AdminPageAddressList.php:79
 #: plugin/Gui/AdminPageBase.php:88
 #: plugin/Gui/AdminPageEstateDetail.php:203
@@ -49,34 +49,39 @@ msgstr ""
 msgid "onOffice"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:154
+#: plugin/Controller/AdminViewController.php:155
 #: plugin/Gui/AdminPageAddressList.php:60
 msgid "Addresses"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:160
 #: plugin/Controller/AdminViewController.php:161
+#: plugin/Controller/AdminViewController.php:162
 msgid "Estates"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:172
+#: plugin/Controller/AdminViewController.php:173
 #: plugin/Gui/AdminPageFormList.php:96
 msgid "Forms"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:204
 #: plugin/Controller/AdminViewController.php:205
-#: plugin/Controller/AdminViewController.php:367
+#: plugin/Controller/AdminViewController.php:206
+#: plugin/Controller/AdminViewController.php:373
 msgid "Settings"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:383
+#: plugin/Controller/AdminViewController.php:389
 msgid "API token and secret"
 msgstr ""
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:386
+#: plugin/Controller/AdminViewController.php:392
 msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
+msgstr ""
+
+#. translators: %s will be replaced with the translation of 'API token and secret'.
+#: plugin/Controller/AdminViewController.php:409
+msgid "We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner"
 msgstr ""
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
@@ -526,7 +531,7 @@ msgstr ""
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:141
 #: plugin/Gui/AdminPageFormSettingsContact.php:147
-msgid "Be aware that when activated the duplicate checkcan overwrite address records. This function will be removed in the future. Use at your own risk."
+msgid "Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk."
 msgstr ""
 
 #: plugin/Gui/AdminPageFormSettingsInquiry.php:92

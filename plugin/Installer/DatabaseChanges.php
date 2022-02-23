@@ -166,6 +166,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		if ($dbversion == 21) {
 			$this->deactivateCheckDuplicateOfForm();
+			$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
 			$dbversion = 22;
 		}
 

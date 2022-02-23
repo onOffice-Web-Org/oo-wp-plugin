@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-02-15T13:55:24+07:00\n"
+"POT-Creation-Date: 2022-02-23T10:30:04+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -50,7 +50,7 @@ msgstr "https://es.onoffice.com/"
 msgid "Please configure your onOffice API credentials first!"
 msgstr "Por favor, configure primero sus credenciales de la API de onOffice!"
 
-#: plugin/Controller/AdminViewController.php:148
+#: plugin/Controller/AdminViewController.php:149
 #: plugin/Gui/AdminPageAddressList.php:79 plugin/Gui/AdminPageBase.php:88
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:71
@@ -60,39 +60,48 @@ msgstr "Por favor, configure primero sus credenciales de la API de onOffice!"
 msgid "onOffice"
 msgstr "onOffice"
 
-#: plugin/Controller/AdminViewController.php:154
+#: plugin/Controller/AdminViewController.php:155
 #: plugin/Gui/AdminPageAddressList.php:60
 msgid "Addresses"
 msgstr "Direcciones"
 
-#: plugin/Controller/AdminViewController.php:160
 #: plugin/Controller/AdminViewController.php:161
+#: plugin/Controller/AdminViewController.php:162
 msgid "Estates"
 msgstr "Propiedades"
 
-#: plugin/Controller/AdminViewController.php:172
+#: plugin/Controller/AdminViewController.php:173
 #: plugin/Gui/AdminPageFormList.php:96
 msgid "Forms"
 msgstr "Formularios"
 
-#: plugin/Controller/AdminViewController.php:204
 #: plugin/Controller/AdminViewController.php:205
-#: plugin/Controller/AdminViewController.php:367
+#: plugin/Controller/AdminViewController.php:206
+#: plugin/Controller/AdminViewController.php:373
 msgid "Settings"
 msgstr "Ajustes"
 
-#: plugin/Controller/AdminViewController.php:383
+#: plugin/Controller/AdminViewController.php:389
 msgid "API token and secret"
 msgstr "Token de la API y secreto"
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:386
+#: plugin/Controller/AdminViewController.php:392
 msgid ""
 "It looks like you did not enter any valid API credentials. Please consider "
 "reviewing your %s."
 msgstr ""
 "Parece que no ha introducido ninguna credencial de API válida. Por favor, "
 "considere la posibilidad de revisar su %s..."
+
+#. translators: %s will be replaced with the translation of 'API token and secret'.
+#: plugin/Controller/AdminViewController.php:409
+msgid ""
+"We have deactivated the plugin's duplicate check for all of your forms, "
+"because the duplicate check can unintentionally overwrite address records. "
+"This function will be removed in the future. The option has been deactivated "
+"for these forms: Contact, Interest, Owner"
+msgstr ""
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
@@ -581,7 +590,7 @@ msgstr "Sí"
 #: plugin/Gui/AdminPageFormSettingsContact.php:141
 #: plugin/Gui/AdminPageFormSettingsContact.php:147
 msgid ""
-"Be aware that when activated the duplicate checkcan overwrite address "
+"Be aware that when activated the duplicate check can overwrite address "
 "records. This function will be removed in the future. Use at your own risk."
 msgstr ""
 

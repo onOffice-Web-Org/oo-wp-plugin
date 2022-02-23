@@ -138,13 +138,13 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
-			$pInputModel->setHint(__('Be aware that when activated the duplicate checkcan overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
+			$pInputModel->setHint(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
 		if ($this->_showCheckDuplicatesInterestOwner) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER);
-			$pInputModel->setHint(__('Be aware that when activated the duplicate checkcan overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
+			$pInputModel->setHint(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
