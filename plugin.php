@@ -194,8 +194,8 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 
 	if ($estateId !== '') {
 		$estateId = (int)$estateId;
-		$pDataDetailViewCheckAccessControl = new DataDetailViewCheckAccessControl($estateId);
-		$accessControlChecker = $pDataDetailViewCheckAccessControl->checkAccessControl();
+		$pDataDetailViewCheckAccessControl = new DataDetailViewCheckAccessControl();
+		$accessControlChecker = $pDataDetailViewCheckAccessControl->checkAccessControl($estateId);
 
 		if ($estateId === 0 || !$accessControlChecker|| !$pEstateIdGuard->isValid($estateId)) {
 			$pWP->handle_404();

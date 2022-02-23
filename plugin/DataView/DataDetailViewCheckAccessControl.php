@@ -24,11 +24,6 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\DataView;
 
 
-use DI\DependencyException;
-use DI\NotFoundException;
-use onOffice\SDK\Exception\HttpFetchNoResultException;
-use onOffice\WPlugin\API\ApiClientException;
-use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Factory\EstateListFactory;
 
 /**
@@ -39,42 +34,40 @@ use onOffice\WPlugin\Factory\EstateListFactory;
  * DO NOT MOVE OR RENAME - NAME AND/OR NAMESPACE MAY BE USED IN SERIALIZED DATA
  *
  */
-
 class DataDetailViewCheckAccessControl
 {
 	/** @var DataDetailViewHandler */
 	private $pDataDetailViewHandler = null;
 
-	/** @var int */
-	private $estateId = null;
-
 
 	/**
-	 * @param int $estateId
+	 *
 	 */
 
-	public function __construct(int $estateId)
+	public function __construct()
 	{
-		$this->estateId = $estateId;
 		$this->pDataDetailViewHandler = new DataDetailViewHandler();
 	}
 
 
 	/**
+	 *
+	 * @param int $estateId
 	 * @return bool
+	 *
 	 */
 
-	public function checkAccessControl(): bool
+	public function checkAccessControl(int $estateId): bool
 	{
 		$accessControl = $this->pDataDetailViewHandler->getDetailView()->hasDetailView();
 
 		if (!$accessControl) {
 			$estateListFactory = new EstateListFactory($this->pDataDetailViewHandler);
-			$pEstateDetail = $estateListFactory->createEstateDetail($this->estateId);
+			$pEstateDetail = $estateListFactory->createEstateDetail($estateId);
 			$pEstateDetail->loadEstates();
 			$pEstateDetail->estateIterator();
 			$rawValues = $pEstateDetail->getRawValues();
-			$referenz = $rawValues->getValueRaw($this->estateId)['elements']['referenz'];
+			$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
 
 			if ($referenz === "1") {
 				return false;
