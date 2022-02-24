@@ -405,11 +405,11 @@ class AdminViewController
 	{
 		if (get_option('onoffice-duplicate-check-warning', 'onoffice-for-wp-websites') === "1") {
 			$class = 'notice notice-error duplicate-check-notify is-dismissible';
-			/* translators: %s will be replaced with the translation of 'API token and secret'. */
 			$message = esc_html(__("We have deactivated the plugin's duplicate check for all of your forms, "
 				. "because the duplicate check can unintentionally overwrite address records. This function will be removed "
 				. "in the future. The option has been deactivated for these forms: Contact, Interest, Owner",
 				'onoffice-for-wp-websites'));
+
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		}
 	}
