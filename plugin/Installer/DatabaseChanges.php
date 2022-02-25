@@ -673,29 +673,4 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		$this->_pWpOption->deleteOption('oo_plugin_db_version');
 	}
-
-	/**
-	 *
-	 * @param string $directory
-	 * @param string $pattern
-	 * @return array
-	 *
-	 */
-
-	protected function readTemplatePaths($directory, $pattern = '*')
-	{
-		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php')
-			. 'templates.dist/' . $directory . '/' . $pattern . '.php');
-		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR)
-			. 'onoffice-personalized/templates/' . $directory . '/' . $pattern . '.php');
-		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
-		$templates = array();
-
-		foreach ($templatesAll as $value) {
-			$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
-			$templates[$value] = $value;
-		}
-
-		return $templates;
-	}
 }
