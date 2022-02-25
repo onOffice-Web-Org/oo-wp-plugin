@@ -49,7 +49,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'length' => 80,
 			'default' => null,
 			'permittedvalues' => null,
-			'label' => 'E-Mail',
+			'label' => 'All e-mail addresses',
 			'tablename' => 'Kontakt',
 			"content" => "Contact"
 		],
@@ -58,7 +58,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'length' => 40,
 			'default' => null,
 			'permittedvalues' => null,
-			'label' => 'Phone',
+			'label' => 'All non-mobile phone numbers',
 			'tablename' => 'Stammdaten',
 			"content" => "Master data"
 		],
@@ -67,7 +67,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'length' => 40,
 			'default' => null,
 			'permittedvalues' => null,
-			'label' => 'Fax',
+			'label' => 'All fax numbers',
 			'tablename' => 'Stammdaten',
 			"content" => "Master data"
 		],
@@ -76,7 +76,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'length' => 40,
 			'default' => null,
 			'permittedvalues' => null,
-			'label' => 'Mobile',
+			'label' => 'All mobile numbers',
 			'tablename' => 'Stammdaten',
 			"content" => "Master data"
 		],

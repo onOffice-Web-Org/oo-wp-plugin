@@ -110,11 +110,21 @@ class FieldsCollection implements FieldModuleCollection
 
 	public function merge(FieldModuleCollection $pFieldsCollection, string $fallbackCategoryName = '')
 	{
+		$changeLabelFields = [
+			'Email' => 'Default e-mail address',
+			'Telefon1' => 'Default phone number',
+			'Telefax1' => 'Default fax number'
+		];
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
 			/** @var $pFieldCopy Field */
 			$pFieldCopy = clone $pField;
 			if ($pFieldCopy->getCategory() === '') {
 				$pFieldCopy->setCategory($fallbackCategoryName);
+			}
+			foreach ($changeLabelFields as $key => $label) {
+				if ($pFieldCopy->getName() === $key) {
+					$pFieldCopy->setLabel($label);
+				}
 			}
 
 			$this->addField($pFieldCopy);
