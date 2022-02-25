@@ -127,10 +127,14 @@ class FormFieldValidator
 		if (FieldTypes::isMultipleSelectType($type)) {
 			$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_DEFAULT, FILTER_FORCE_ARRAY);
 			return array_filter($value) === [];
-		} else {
-			$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_SANITIZE_STRING);
-			return trim($value) === '';
 		}
+
+		if ($type === 'boolean') {
+			return false;
+		}
+
+		$value = $this->_pRequestSanitizer->getFilteredPost($fieldName, FILTER_SANITIZE_STRING);
+		return trim($value) === '';
 	}
 
 
@@ -185,6 +189,12 @@ class FormFieldValidator
 
 			case FieldTypes::FIELD_TYPE_FLOAT:
 				$returnValue = (float) $returnValue;
+				break;
+
+			case FieldTypes::FIELD_TYPE_BOOLEAN:
+				if (empty($returnValue)) {
+					$returnValue = 'n';
+				}
 				break;
 		}
 

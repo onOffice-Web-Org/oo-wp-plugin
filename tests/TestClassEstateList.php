@@ -662,6 +662,21 @@ class TestClassEstateList
 		$this->assertInstanceOf(GeoSearchBuilderFromInputVars::class, $this->_pEstateList->getGeoSearchBuilder());
 	}
 
+	/**
+	 *
+	 */
+	public function testShowReferenceStatus()
+	{
+		$EstateListMock = $this->getMockBuilder(EstateList::class)
+			->disableOriginalConstructor()
+			->setMethods(['getShowReferenceStatus'])
+			->getMock();
+		$EstateListMock->method('getShowReferenceStatus')->willReturn(false);
+		$this->_pEstateList->loadEstates();
+		$result = $this->_pEstateList->estateIterator();
+		$this->assertEquals('', $result['vermarktungsstatus']);
+	}
+
 
 	/**
 	 *
@@ -771,6 +786,7 @@ class TestClassEstateList
 		$pDataView->setPictureTypes(['Titelbild', 'Foto']);
 		$pDataView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 		$pDataView->setShowStatus(true);
+		$pDataView->setShowReferenceStatus(false);
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
 		$pDataView->setExpose('testExpose');
 		return $pDataView;

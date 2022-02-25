@@ -55,6 +55,6 @@ class WPScreenWrapperDefault
 
 	public function getID(): string
 	{
-		return $this->_pWPScreenFactory->getCurrentScreen()->id;
+		return $this->_pWPScreenFactory->getCurrentScreen()->id ?? '';
 	}
 }

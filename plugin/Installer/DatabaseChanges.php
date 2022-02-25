@@ -36,7 +36,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 22;
+	const MAX_VERSION = 23;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -134,7 +134,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateSortByUserDefinedDefault();
 			$dbversion = 15;
 		}
-		
+
 		if ($dbversion == 15) {
 			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
@@ -167,9 +167,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 21) {
-			$this->checkContactFieldInDefaultDetail();
+			dbDelta($this->getCreateQueryListviews());
 			$dbversion = 22;
 		}
+
+		if ($dbversion == 22) {
+			$this->checkContactFieldInDefaultDetail();
+			$dbversion = 23;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -240,6 +246,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`sortBySetting` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
 			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
+			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -302,19 +309,28 @@ class DatabaseChanges implements DatabaseChangesInterface
 				$template = $templatePathsForm;
 			}
 		}
-		$this->_pWPDB->insert(
-			$tableName,
-			array(
-				'name' => 'Default Form',
-				'form_type' => 'contact',
-				'template' => $template,
-				'country_active' => 1,
-				'zip_active' => 1,
-				'street_active' => 1,
-				'radius_active' => 1,
-				'geo_order' => 'street,zip,city,country,radius'
-			)
+		$data = array(
+			'name' => 'Default Form',
+			'form_type' => 'contact',
+			'template' => $template,
+			'country_active' => 1,
+			'zip_active' => 1,
+			'street_active' => 1,
+			'radius_active' => 1,
+			'geo_order' => 'street,zip,city,country,radius'
 		);
+		$query = "INSERT IGNORE $tableName (name, form_type, template, country_active, zip_active, street_active, radius_active, geo_order)";
+		$query .= "VALUES (";
+		$query .= "'" . esc_sql($data['name']) ."',";
+		$query .= "'" . esc_sql($data['form_type']) ."',";
+		$query .= "'" . esc_sql($data['template']) ."',";
+		$query .= esc_sql($data['country_active']) . ",";
+		$query .= esc_sql($data['zip_active']) . ",";
+		$query .= esc_sql($data['street_active']) . ",";
+		$query .= esc_sql($data['radius_active']) . ",";
+		$query .= "'" . esc_sql($data['geo_order']) ."')";
+		$this->_pWPDB->query($query);
+
 		$defaultFormId = $this->_pWPDB->insert_id;
 		$this->installDataQueryFormFieldConfig($defaultFormId);
 	}

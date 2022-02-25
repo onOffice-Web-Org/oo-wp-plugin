@@ -23,6 +23,8 @@ Using a short code, you bring real estates, addresses or forms to your website -
 
 The user-friendly plugin enables a quick link between onOffice and your WordPress page: Present real estate and your team on the website and generate leads via forms. You stay in control and are 100% flexible.
 
+You can find tutorials, documentation and support on our [documentation website](https://wpplugindoc.onoffice.de/?lang=en).
+
 = Real estate =
 Create lists, design the real estate presentation and offer synopsis for downloading with a few easy steps.
 
@@ -72,6 +74,74 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.21.8 =
+
+**Changes**
+
+* In enterprise forms where the HTML attribute step is used the value is now set to 1 instead of 0,1 for example for all values that are floats. Users can still input decimal numbers, but is more natural for most fields.
+
+= 2.21.7 =
+
+**Changes**
+
+* Users can decide in the plugin whether the references are output or not, without needing to set up a filter in onOffice.
+
+= 2.21.6 =
+
+**Fixes**
+
+* Reverts the changes from release v2.21.5 due to bugs.
+
+= 2.21.5 =
+
+**Changes**
+
+* The Id in the URL is now also shown like  [url]/1234-sonnige-waermende-10qm-wohnung-m/ and makes a redirect to [url]/1234-sonnige-waermende-10qm-wohnung-mit/
+
+= 2.21.4 =
+
+**Changes**
+
+* All settings are bundled into a single page called "Settings" (effectively, remove the "Modules" page) with a changed order.
+
+= 2.21.3 =
+
+**Fixes**
+
+* The menu entry now behaves the same way as the other default menu entries.
+
+= 2.21.2 =
+
+**Fixes**
+
+* MonsterInsights plugin can now be used together with our WP plugin.
+
+= 2.21.1 =
+
+**Changes**
+
+* When creating new contact forms, the option "Create address" is now checked.
+
+= 2.21.0 =
+
+**Changes**
+
+* Display all of a contact person's data on the estate detail page
+
+= 2.20.12 =
+
+**Fixes**
+
+* The property status is now displayed in the detail view below the property title and no longer in the fields as marketing status.
+
+* Separator line, black hint, red hint, file and user are no longer selectable in the configuration for any list or form in the backend. (also not for addresses and estates).
+
+= 2.20.11 =
+
+**Changes**
+
+* When you submit the form, the mail that is sent does now also contains  information about the  newsletter activation fields in case they were not selected in the form.
 
 = 2.20.10 =
 

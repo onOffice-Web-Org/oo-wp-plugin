@@ -114,6 +114,9 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCreateAddress) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEADDRESS);
+			if (empty($pInputModelBuilder->getValues())) {
+				$pInputModel->setValue(true);
+			}
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
