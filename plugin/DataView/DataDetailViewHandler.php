@@ -49,10 +49,11 @@ class DataDetailViewHandler
 	/**
 	 * @param WPOptionWrapperBase $pWPOptionWrapper
 	 */
-	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
+	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null,RecordManagerPostMeta $pRecordPostMeta = null)
 	{
 		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
-        $this->_pRecordPostMeta = new RecordManagerPostMeta();
+		$this->_pRecordPostMeta = $pRecordPostMeta ?? new RecordManagerPostMeta();
+		
 	}
 
 
