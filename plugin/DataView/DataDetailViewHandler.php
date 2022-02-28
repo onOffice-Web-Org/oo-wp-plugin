@@ -42,6 +42,9 @@ class DataDetailViewHandler
 	/** @var WPOptionWrapperBase */
 	private $_pWPOptionWrapper;
 
+    /** @var  RecordManagerPostMeta */
+    private $_pRecordPostMeta;
+
 
 	/**
 	 * @param WPOptionWrapperBase $pWPOptionWrapper
@@ -49,6 +52,7 @@ class DataDetailViewHandler
 	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
 	{
 		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
+        $this->_pRecordPostMeta = new RecordManagerPostMeta();
 	}
 
 
@@ -70,8 +74,7 @@ class DataDetailViewHandler
 		}
         if(empty($pResult->getPageId()))
         {
-            $pRecordPostMeta = new RecordManagerPostMeta();
-            $pageInPostMeta = $pRecordPostMeta->getPageIdInPostMeta();
+            $pageInPostMeta = $this->_pRecordPostMeta->getPageId();
             if (!empty($pageInPostMeta["post_id"]))
             {
                 $pResult->setPageId($pageInPostMeta["post_id"]);

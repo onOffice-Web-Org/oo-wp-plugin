@@ -38,7 +38,7 @@ class RecordManagerPostMeta
      *
      */
 
-    public function getPageIdInPostMeta()
+    public function getPageId()
     {
         global $wpdb;
         $prefix = $wpdb->prefix;
