@@ -232,11 +232,19 @@ class AdminPageAddressListSettings
 
 			try {
 				$recordId = $pRecordManagerInsert->insertByRow($row);
-
+				$rowInsertAdditionalValues = [];
 				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
 				$row = $this->prepareRelationValues(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS,
 					'listview_address_id', $row, $recordId);
-				$pRecordManagerInsert->insertAdditionalValues($row);
+				if (!isset($row[RecordManager::TABLENAME_FIELDCONFIG_ADDRESS]))
+				{
+					$rowInsertAdditionalValues[RecordManager::TABLENAME_FIELDCONFIG_ADDRESS] = $row;
+					$pRecordManagerInsert->insertAdditionalValues($rowInsertAdditionalValues);
+				}
+				else
+				{
+					$pRecordManagerInsert->insertAdditionalValues($row);
+				}
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {
 				$result = false;
