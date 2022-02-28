@@ -435,7 +435,6 @@ abstract class AdminPageFormSettingsBase
 		$this->cleanPreviousBoxes();
 		$pDefaultFieldsCollection = $this->buildFieldsCollectionForCurrentForm();
 		$pFieldsCollectionConverter = new FieldsCollectionToContentFieldLabelArrayConverter();
-		$pFieldsCollectionConverter->setShowMessageField($this->_showMessageField);
 		foreach ($this->getCurrentFormModules() as $module) {
 			$fieldNames = $pFieldsCollectionConverter->convert($pDefaultFieldsCollection, $module);
 
@@ -480,6 +479,10 @@ abstract class AdminPageFormSettingsBase
 				$pDefaultFieldsCollection->removeFieldByModuleAndName
 					($pField->getModule(), $pField->getName());
 			}
+		}
+
+		if (!$this->_showMessageField) {
+			$pDefaultFieldsCollection->removeFieldByModuleAndName('', 'message');
 		}
 
 		/** @var FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm */

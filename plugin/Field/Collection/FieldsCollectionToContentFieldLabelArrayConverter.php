@@ -47,9 +47,6 @@ class FieldsCollectionToContentFieldLabelArrayConverter
 		$categories = [];
 
 		foreach ($pFieldsCollection->getFieldsByModule($module) as $key => $pField) {
-			if (!$this->_showMessageField && $key === 'message') {
-				continue;
-			}
 			$content = $pField->getCategory() ?: __('(unnamed category)', 'onoffice-for-wp-websites');
 
 			$categories []= $content;
@@ -62,8 +59,4 @@ class FieldsCollectionToContentFieldLabelArrayConverter
 
 		return $result;
 	}
-
-	/** @param bool $showMessageField */
-	public function setShowMessageField(bool $showMessageField)
-	{ $this->_showMessageField = $showMessageField; }
 }
