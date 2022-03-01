@@ -75,6 +75,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.22.0 =
+
+**Changes**
+
+* After installing the WP-Plugin there is no longer a default form generated. This is because previously it was impossible to enter an e-mail-address in the form by default.
+
+* Compatibility with WordPress 5.9 has been tested.
+
 = 2.21.8 =
 
 **Changes**
