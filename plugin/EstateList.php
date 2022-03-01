@@ -105,9 +105,6 @@ class EstateList
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
-	/** @var bool */
-	private $_isOverride_DataView = false;
-
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -309,8 +306,7 @@ class EstateList
 
 		// only do georange search if requested in listview configuration
 		if (($pListView instanceof DataViewFilterableFields &&
-			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true))
-			|| $this->isIsOverrideDataView()) {
+			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true))) {
 			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
@@ -701,18 +697,6 @@ class EstateList
 	{
 		return array_column($this->_records, 'id');
 	}
-
-	/**
-	 * @return bool
-	 */
-	public function isIsOverrideDataView(): bool
-		{ return $this->_isOverride_DataView; }
-
-	/**
-	 * @param $isOverride_DataView
-	 */
-	public function setIsOverrideDataView($isOverride_DataView)
-		{ $this->_isOverride_DataView = $isOverride_DataView; }
 
 	/** @return array */
 	public function getAddressFields(): array

@@ -35,8 +35,6 @@ class Redirector
 		if ($fullLink != $currentLink) {
 			$this->_wpRedirectWrapper->redirect($fullLink);
 		}
-
-		return true;
 	}
 
 	public function getUri()

@@ -97,7 +97,7 @@ class TestClassRedirectIfOldUrl
 			'post_type' => 'page',
 		]);
 		$wp_filter['save_post'] = $savePostBackup;
-		$this->assertTrue($this->_pRedirectIfOldUrl->redirectDetailView($pWPPost->ID, 123, 'Show Title Url'));
+		$this->assertNull($this->_pRedirectIfOldUrl->redirectDetailView($pWPPost->ID, 123, 'Show Title Url'));
 	}
 
 	/**
@@ -117,7 +117,7 @@ class TestClassRedirectIfOldUrl
 		$wpRedirectWrapperMocker = new RedirectWrapperMocker();
 		$wpPageWrapper = new WPPageWrapper();
 		$redirectIfOldUrl = new Redirector($pLanguageSwitcher, $wpPageWrapper, $wpRedirectWrapperMocker);
-		$this->assertTrue($redirectIfOldUrl->redirectDetailView($pWPPost->ID, 1, 'tes post'));
+		$this->assertNull($redirectIfOldUrl->redirectDetailView($pWPPost->ID, 1, 'tes post'));
 	}
 
 	/**

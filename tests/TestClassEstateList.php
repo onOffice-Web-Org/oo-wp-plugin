@@ -701,7 +701,6 @@ class TestClassEstateList
 		$pDataDetailView->method('getPageId')->willReturn($pWPPost->ID);
 
 		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
-		$this->_pEstateList->setIsOverrideDataView(true);
 		$this->_pEstateList->loadEstates();
 
 		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
@@ -751,6 +750,14 @@ class TestClassEstateList
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
+
+		unset($parametersReadEstate['georangesearch']);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
+		unset($parametersReadEstateRaw['georangesearch']);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
+
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', [
 				'parentids' => [15, 1051, 1082, 1193, 1071],
