@@ -40,9 +40,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 
 		$selectedValue = $properties['value'];
 		$inputType = 'type="text" ';
-		if ($properties['type'] === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT) {
-			$inputType = 'type="number" step="0.1" ';
-		} elseif ($properties['type'] === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER) {
+		if (in_array($properties['type'], [onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT, onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER])) {
 			$inputType = 'type="number" step="1" ';
 		} elseif ($properties['type'] === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_DATE) {
 			$inputType = 'type="date" ';
@@ -177,7 +175,7 @@ if (!function_exists('renderFormField')) {
 				$value = 'value="y" '.($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float') {
-				$inputType = 'type="number" step="0.01" ';
+				$inputType = 'type="number" step="1" ';
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER ||
 					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal') {
 				$inputType = 'type="number" step="1" ';
@@ -225,6 +223,7 @@ if (!function_exists('renderRegionalAddition')) {
 		return $output;
 	}
 }
+
 
 if (!function_exists('renderParkingLot')) {
 	function renderParkingLot(array $parkingArray, string $language, string $locale = 'de_DE'): array
