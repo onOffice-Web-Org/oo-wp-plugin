@@ -158,7 +158,7 @@ class TestClassDataFormConfigurationFactory
 					$this->assertEmpty($pDataFormConfiguration->getRecipient());
 					$this->assertEmpty($pDataFormConfiguration->getSubject());
 					$this->assertFalse($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
-					$this->assertFalse($pDataFormConfiguration->getCreateAddress());
+					$this->assertTrue($pDataFormConfiguration->getCreateAddress());
 					$this->assertFalse($pDataFormConfiguration->getNewsletterCheckbox());
 					break;
 				case Form::TYPE_OWNER:
