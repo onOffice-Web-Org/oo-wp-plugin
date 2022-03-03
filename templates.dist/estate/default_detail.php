@@ -124,6 +124,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				$addressFields = array_diff($configuredAddressFields, [
 					'imageUrl',
 					'Anrede',
+					'Titel',
 					'Vorname',
 					'Name',
 					'Zusatz1', // Company
@@ -138,6 +139,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					$imageUrl = $contactData['imageUrl'];
 
 					$formOfAddress = $contactData['Anrede'];
+					$title = $contactData['Titel'];
 					$firstName = $contactData['Vorname'];
 					$lastName = $contactData['Name'];
 
@@ -151,14 +153,22 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					}
 
 					// Output name, depending on available fields.
-					if ($formOfAddress && $firstName && $lastName) {
-						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($formOfAddress . " " . $firstName . " " . $lastName) . '</p></div>';
-					} elseif ($firstName && $lastName) {
-						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($firstName . " " . $lastName) . '</p></div>';
-					} elseif ($formOfAddress && $lastName) {
-						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($formOfAddress . " " . $lastName) . '</p></div>';
-					} elseif ($firstName) {
-						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($firstName) . '</p></div>';
+					$nameComponents = [];
+					if ($formOfAddress) {
+						$nameComponents[] = $formOfAddress;
+					}
+					if ($title) {
+						$nameComponents[] = $title;
+					}
+					if ($firstName) {
+						$nameComponents[] = $firstName;
+					}
+					if ($lastName) {
+						$nameComponents[] = $lastName;
+					}
+					$nameOutput = join(" ", $nameComponents);
+					if ($nameOutput) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($nameOutput) . '</p></div>';
 					}
 
 					// Output company
@@ -169,12 +179,22 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					// Output address, depending on available fields.
 					$streetOutput = "";
 					if ($street) {
-						$streetOutput = esc_html($street) . "<br>";
+						$streetOutput = $street;
 					}
-					if ($postCode && $town) {
-						echo '<div class="oo-aspinfo oo-contact-info"><p>' . $streetOutput . esc_html($postCode . " " . $town) . '</p></div>';
-					} elseif ($town) {
-						echo '<div class="oo-aspinfo oo-contact-info"><p>' . $streetOutput . esc_html($town) . '</p></div>';
+					$cityComponents = [];
+					if ($postCode) {
+						$cityComponents[] = $postCode;
+					}
+					if ($town) {
+						$cityComponents[] = $town;
+					}
+					$cityOutput = join(" ", $cityComponents);
+					if ($streetOutput && $cityOutput) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($streetOutput) . "<br>" . esc_html($cityOutput) . '</p></div>';
+					} else if ($streetOutput) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($streetOutput) . '</p></div>';
+					} else if ($cityOutput) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($cityOutput) . '</p></div>';
 					}
 
 					// Output all other configured fields.
