@@ -75,6 +75,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.22.1 =
+
+**Changes**
+
+* For the form types contact form, prospect form, owner form an additional setting that defines the contact type is introduced. Before that it was not possible to select the contact type the address is created with.
+
 = 2.22.0 =
 
 **Changes**
