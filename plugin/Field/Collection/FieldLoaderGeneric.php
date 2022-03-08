@@ -89,7 +89,8 @@ class FieldLoaderGeneric
 				) {
 					continue;
 				}
-				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz' && get_current_screen()->is_user) {
+				$isUser = isset(get_current_screen()->is_user) ? get_current_screen()->is_user :  null;
+				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz' && $isUser) {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 					$this->_pRegionController->fetchRegions();
 					$regions = $this->_pRegionController->getRegions();
