@@ -50,6 +50,9 @@ class FieldLoaderGeneric
 	/** @var RegionFilter */
 	private $_pRegionFilter;
 
+	/** @var bool  */
+	private $_pShowRegion = false;
+
 	/**
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param RegionController $pRegionController
@@ -89,7 +92,7 @@ class FieldLoaderGeneric
 					continue;
 				}
 
-				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz') {
+				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz' && $this->_pShowRegion) {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 					$this->_pRegionController->fetchRegions();
 					$regions = $this->_pRegionController->getRegions();
