@@ -121,6 +121,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowCreateInterest(true);
 				$pAdminPage->setShowCheckDuplicatesInterestOwner(true);
 				$pAdminPage->setShowGeoPositionSettings(true);
+				$pAdminPage->setShowContactTypeSelect(true);
 				break;
 			case Form::TYPE_OWNER:
 				/* @var $pAdminPage AdminPageFormSettingsInquiry */
@@ -129,6 +130,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowCreateOwner(true);
 				$pAdminPage->setShowCheckDuplicatesInterestOwner(true);
 				$pAdminPage->setShowMessageInput(true);
+				$pAdminPage->setShowContactTypeSelect(true);
 				break;
 			case Form::TYPE_CONTACT:
 				/* @var $pAdminPage AdminPageFormSettingsContact */
@@ -138,6 +140,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowMessageInput(true);
 				$pAdminPage->setShowNewsletterCheckbox(true);
 				$pAdminPage->setShowEstateContextCheckbox(true);
+				$pAdminPage->setShowContactTypeSelect(true);
 				break;
 			case Form::TYPE_APPLICANT_SEARCH:
 				/* @var $pAdminPage AdminPageFormSettingsApplicantSearch */

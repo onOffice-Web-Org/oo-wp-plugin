@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 22;
+	const MAX_VERSION = 23;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -169,6 +169,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 22;
 		}
 
+		if ($dbversion == 22) {
+			dbDelta($this->getCreateQueryForms());
+			$dbversion = 23;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -280,13 +285,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',
+			`contact_type` varchar(255) NULL DEFAULT NULL,
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
 
 		return $sql;
 	}
-
 	/**
 	 *
 	 * @return string
@@ -598,7 +603,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 			}
 		}
 	}
-
 
 	/**
 	 *
