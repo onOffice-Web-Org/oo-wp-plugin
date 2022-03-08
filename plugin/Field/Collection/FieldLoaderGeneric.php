@@ -50,8 +50,6 @@ class FieldLoaderGeneric
 	/** @var RegionFilter */
 	private $_pRegionFilter;
 
-	/** @var bool  */
-	private $_pShowRegion = false;
 
 	/**
 	 * @param SDKWrapper $pSDKWrapper
@@ -91,8 +89,7 @@ class FieldLoaderGeneric
 				) {
 					continue;
 				}
-
-				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz' && $this->_pShowRegion) {
+				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz' && get_current_screen()->is_user) {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 					$this->_pRegionController->fetchRegions();
 					$regions = $this->_pRegionController->getRegions();
