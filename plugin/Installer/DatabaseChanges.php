@@ -172,8 +172,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 22) {
-			$this->checkContactFieldInDefaultDetail();
+			dbDelta($this->getCreateQueryForms());
 			$dbversion = 23;
+		}
+
+		if ($dbversion == 23) {
+			$this->checkContactFieldInDefaultDetail();
+			$dbversion = 24;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -287,6 +292,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',
+			`contact_type` varchar(255) NULL DEFAULT NULL,
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
