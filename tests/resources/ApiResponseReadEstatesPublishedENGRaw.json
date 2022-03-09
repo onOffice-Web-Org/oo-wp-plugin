@@ -18,6 +18,12 @@
 					"op": "=",
 					"val": 1
 				}
+			],
+			"referenz": [
+				{
+					"op": "=",
+					"val": 0
+				}
 			]
 		},
 		"estatelanguage": "ENG",
