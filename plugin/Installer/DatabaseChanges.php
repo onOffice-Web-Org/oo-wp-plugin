@@ -36,7 +36,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 23;
+	const MAX_VERSION = 24;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -694,7 +694,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	public function checkContactFieldInDefaultDetail() {
 		$viewOptionKey = DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY;
-		$dataDetailView = $this->_pWpOption->getOption($viewOptionKey, null);
+		$pDataDetailViewHandler = new DataDetailViewHandler($this->_pWpOption);
+		$dataDetailView = $pDataDetailViewHandler->getDetailView();
 		$defaultFields = ['defaultemail' => 'Email', 'defaultphone' => 'Telefon1', 'defaultfax' => 'Telefax1'];
 		$addressFields = $dataDetailView->getAddressFields();
 
