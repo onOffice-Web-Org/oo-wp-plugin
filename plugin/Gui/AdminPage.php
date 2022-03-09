@@ -44,18 +44,24 @@ abstract class AdminPage
 		}
 	}
 
-	public function generateSearchForm($page,$button,$type = null)
+	public function generateSearchForm($page,$button,$type = null, $tab = null)
 	{
 		$inputType = '';
+		$inputTab = '';
 		if ($type !== null)
 		{
 			$inputType = "<input type='hidden' id='fname' name='type' value='".esc_html($type)."'>";
 	 	}
+		if ($tab !== null)
+		{
+			$inputTab = "<input type='hidden' id='fname' name='tab' value='".esc_html($tab)."'>";
+		}
 		echo "<form action='".esc_attr(admin_url('admin.php'))."' method='get' id='onoffice-form-search'>
 			<input type='hidden' id='fname' name='page' value='".esc_html($page)."'>
 			".$inputType."
+			".$inputTab."
 			<input type='text' id='fname' name='search'>
-			<input type='submit' value='".esc_attr($button)."'>
+			<input type='submit' value='".esc_attr($button)."' id='onoffice-input-submit'>
 			</form>";
 	}
 }
