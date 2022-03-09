@@ -130,12 +130,12 @@ class EstateListTable extends ListTable
 	{
 		$columns = [
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of View', 'onoffice-for-wp-websites'),
-			'filtername' => __('Filter', 'onoffice-for-wp-websites'),
-			'template' => __('Templates', 'onoffice-for-wp-websites'),
-			'list_type' => __('Type of List', 'onoffice-for-wp-websites'),
+			'name' => __('List name', 'onoffice-for-wp-websites'),
+			'filtername' => __('Selected filter', 'onoffice-for-wp-websites'),
+			'template' => __('Template', 'onoffice-for-wp-websites'),
+			'list_type' => __('List type', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
-			'page_shortcode' => __('Page with Shortcode', 'onoffice-for-wp-websites'),
+			'page_shortcode' => __('Pages using the shortcode', 'onoffice-for-wp-websites'),
 		];
 
 		$hidden = ['ID', 'filterId'];

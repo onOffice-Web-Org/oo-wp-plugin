@@ -77,6 +77,9 @@ class AdminPageFormSettingsContact
 	/** @var bool */
 	private $_showEstateContextCheckbox = false;
 
+    /** @var bool */
+    private $_showContactTypeSelect = false;
+
 
 	/**
 	 *
@@ -139,6 +142,11 @@ class AdminPageFormSettingsContact
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
+		if ($this->_showContactTypeSelect) {
+			$pInputModelContactType = $pFormModelBuilder->createInputModelContactType();
+			$pFormModelFormSpecific->addInputModel($pInputModelContactType);
 		}
 
 		if ($this->_showCheckDuplicatesInterestOwner) {
@@ -276,6 +284,10 @@ class AdminPageFormSettingsContact
 	/** @param bool $showEstateContextCheckbox */
 	public function setShowEstateContextCheckbox(bool $showEstateContextCheckbox)
 		{ $this->_showEstateContextCheckbox = $showEstateContextCheckbox; }
+
+    /** @param bool $showContactTypeSelect */
+    public function setShowContactTypeSelect(bool $showContactTypeSelect)
+		{ $this->_showContactTypeSelect = $showContactTypeSelect; }
 
 	/**
 	 * @param bool $showCreateInterest

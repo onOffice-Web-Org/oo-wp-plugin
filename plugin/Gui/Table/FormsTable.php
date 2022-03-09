@@ -125,12 +125,12 @@ class FormsTable
 	{
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of Form', 'onoffice-for-wp-websites'),
-			'recipient' => __('Email Address', 'onoffice-for-wp-websites'),
-			'template' => __('Templates', 'onoffice-for-wp-websites'),
-			'form_type' => __('Type of Form', 'onoffice-for-wp-websites'),
+			'name' => __('Form name', 'onoffice-for-wp-websites'),
+			'recipient' => __('Recipient e-mail address', 'onoffice-for-wp-websites'),
+			'template' => __('Template', 'onoffice-for-wp-websites'),
+			'form_type' => __('Form type', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
-			'page_shortcode' => __('Page with Shortcode', 'onoffice-for-wp-websites'),
+			'page_shortcode' => __('Pages using the shortcode', 'onoffice-for-wp-websites'),
 		);
 
 		$hidden = array('ID', 'filterId');
