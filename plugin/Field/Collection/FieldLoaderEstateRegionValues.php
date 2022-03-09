@@ -38,7 +38,7 @@ use onOffice\WPlugin\Types\FieldTypes;
  *
  */
 
-class FieldLoaderGeneric
+class FieldLoaderEstateRegionValues
 	implements FieldLoader
 {
 	/** @var SDKWrapper */
@@ -81,23 +81,18 @@ class FieldLoaderGeneric
 			if (isset($fieldArray['label'])) {
 				unset($fieldArray['label']);
 			}
-			$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
-				if (
-					($module === onOfficeSDK::MODULE_ADDRESS && $fieldProperties['tablename'] === 'addressFaktura')
-					|| in_array($fieldProperties['type'], $listTypeUnSupported)
-				) {
-					continue;
+				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz') {
+					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
+					$this->_pRegionController->fetchRegions();
+					$regions = $this->_pRegionController->getRegions();
+					$fieldProperties['permittedvalues'] = $this->_pRegionFilter
+						->buildRegions($regions);
+					$fieldProperties['labelOnlyValues'] = $this->_pRegionFilter
+						->collectLabelOnlyValues($regions);
+					$fieldProperties['module'] = $module;
+					yield $fieldName => $fieldProperties;
 				}
-
-				if ($module === onOfficeSDK::MODULE_ADDRESS && $fieldName == 'ArtDaten') {
-					$permittedValues = $fieldProperties['permittedvalues'];
-					unset($permittedValues['Systembenutzer']);
-					$fieldProperties['permittedvalues'] = $permittedValues;
-				}
-
-				$fieldProperties['module'] = $module;
-				yield $fieldName => $fieldProperties;
 			}
 		}
 	}
@@ -118,7 +113,7 @@ class FieldLoaderGeneric
 		];
 
 		$pApiClientActionFields = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
+		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
 		$pApiClientActionFields->setParameters($parametersGetFieldList);
 		$pApiClientActionFields->addRequestToQueue()->sendRequests();
 
