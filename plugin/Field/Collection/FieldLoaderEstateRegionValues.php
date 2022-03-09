@@ -82,7 +82,7 @@ class FieldLoaderEstateRegionValues
 				unset($fieldArray['label']);
 			}
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
-				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz') {
+				if ( $fieldName === 'regionaler_zusatz') {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 					$this->_pRegionController->fetchRegions();
 					$regions = $this->_pRegionController->getRegions();
@@ -108,7 +108,7 @@ class FieldLoaderEstateRegionValues
 			'showContent' => true,
 			'showTable' => true,
 			'language' => Language::getDefault(),
-			'modules' => [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE],
+			'modules' => [onOfficeSDK::MODULE_ESTATE],
 			'realDataTypes' => true
 		];
 
