@@ -869,6 +869,12 @@ msgstr "Pflichtangabe"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:401
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:415
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:345
+msgid "Contact Type of New Address"
+msgstr "Kontaktart der neuen Adresse"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:390
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:404
 msgid "Add language"
 msgstr "Sprache hinzufügen"
 
