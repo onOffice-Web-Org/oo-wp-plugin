@@ -27,6 +27,7 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 
+use PHPStan\Rules\Variables\VariableCloningRule;
 use WP_Post;
 
 /**
@@ -131,6 +132,7 @@ class DetailViewPostSaveController
 			flush_rewrite_rules();
 		}
 		$pPost = get_post($postId);
+//		var_dump($pPost);
 		$this->deletePageUseShortCode($pPost);
 	}
 
@@ -257,8 +259,12 @@ class DetailViewPostSaveController
 		$listViewAddress = $this->getListViewAddress();
 		$listForm = $this->getListForm();
 		$isRevision = wp_is_post_revision($post);
+//		var_dump($isRevision);
+//		die();
 		if (!$isRevision) {
 			$postContent = $post->post_content;
+//			var_dump(strpos($postContent,'oo_address') !== false);
+//			die();
 			$postID = $post->ID;
 			if (empty($postID))
 			{
@@ -317,7 +323,7 @@ class DetailViewPostSaveController
 			$pageID = '';
 			if (empty($view->page_shortcode))
 			{
-				break;
+				continue;
 			}
 			if (strpos($view->page_shortcode,(string)$postID)!== false)
 			{
