@@ -75,6 +75,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.22.2 =
+
+**Changes**
+
+* Deactivates the duplicate check for addresses created with forms.
+
 = 2.22.1 =
 
 **Changes**
