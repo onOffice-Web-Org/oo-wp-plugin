@@ -99,7 +99,8 @@ class AdminPageFormList
 		$page = 'onoffice-forms';
 		$buttonSearch = __('Search Forms', 'onoffice-for-wp-websites');
 		$type = isset($_GET['type']) ? esc_html($_GET['type']) : '';
-		$this->generateSearchForm($page,$buttonSearch,$type);
+		$id = 'onoffice-form-search-form';
+		$this->generateSearchForm($page,$buttonSearch,$type,null,$id);
 		echo '<p>';
 		echo '<form method="post">';
 		echo $this->_pFormsTable->views();

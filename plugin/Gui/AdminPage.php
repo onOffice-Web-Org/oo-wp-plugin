@@ -44,7 +44,7 @@ abstract class AdminPage
 		}
 	}
 
-	public function generateSearchForm($page,$button,$type = null, $tab = null)
+	public function generateSearchForm($page,$button,$type = null, $tab = null, $id = null)
 	{
 		$inputType = '';
 		$inputTab = '';
@@ -56,7 +56,7 @@ abstract class AdminPage
 		{
 			$inputTab = "<input type='hidden' id='fname' name='tab' value='".esc_html($tab)."'>";
 		}
-		echo "<form action='".esc_attr(admin_url('admin.php'))."' method='get' id='onoffice-form-search'>
+		echo "<form action='".esc_attr(admin_url('admin.php'))."' method='get' id='".esc_html($id)."'>
 			<input type='hidden' id='fname' name='page' value='".esc_html($page)."'>
 			".$inputType."
 			".$inputTab."

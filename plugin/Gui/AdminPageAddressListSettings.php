@@ -193,7 +193,11 @@ class AdminPageAddressListSettings
 			$slug = $this->generateGroupSlugByModuleCategory
 				(onOfficeSDK::MODULE_ADDRESS, $category);
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
-			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+			if (isset($pFormFieldsConfig))
+			{
+				$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+			}
+
 		}
 	}
 

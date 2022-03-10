@@ -54,7 +54,8 @@ class AdminPageEstateList
 		$this->_pEstateListTable->prepare_items();
 		$page = 'onoffice-estates';
 		$buttonSearch = __('Search Estate Views', 'onoffice-for-wp-websites');
-		$this->generateSearchForm($page,$buttonSearch);
+		$id = 'onoffice-form-search-estate';
+		$this->generateSearchForm($page,$buttonSearch,null, null, $id);
 		echo '<p>';
 		echo '<form method="post">';
 		$this->_pEstateListTable->display();

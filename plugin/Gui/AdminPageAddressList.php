@@ -61,7 +61,8 @@ class AdminPageAddressList
 		$this->_pAddressListTable->prepare_items();
 		$page = 'onoffice-addresses';
 		$buttonSearch = __('Search Addresses', 'onoffice-for-wp-websites');
-		$this->generateSearchForm($page,$buttonSearch);
+		$id = 'onoffice-form-search-address';
+		$this->generateSearchForm($page,$buttonSearch, null,null,$id);
 		echo '<p>';
 		echo '<form method="post">';
 		echo $this->_pAddressListTable->views();
