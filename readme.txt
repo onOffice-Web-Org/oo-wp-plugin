@@ -2,7 +2,7 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 5.7
+Tested up to: 5.9
 Requires PHP: 7.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -22,6 +22,8 @@ The plugin includes three modules:
 Using a short code, you bring real estates, addresses or forms to your website - you are as flexible in design as you are used to from onOffice.
 
 The user-friendly plugin enables a quick link between onOffice and your WordPress page: Present real estate and your team on the website and generate leads via forms. You stay in control and are 100% flexible.
+
+You can find tutorials, documentation and support on our [documentation website](https://wpplugindoc.onoffice.de/?lang=en).
 
 = Real estate =
 Create lists, design the real estate presentation and offer synopsis for downloading with a few easy steps.
@@ -73,11 +75,137 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.22.2 =
+
+**Changes**
+
+* Deactivates the duplicate check for addresses created with forms.
+
+= 2.22.1 =
+
+**Changes**
+
+* For the form types contact form, prospect form, owner form an additional setting that defines the contact type is introduced. Before that it was not possible to select the contact type the address is created with.
+
+= 2.22.0 =
+
+**Changes**
+
+* After installing the WP-Plugin there is no longer a default form generated. This is because previously it was impossible to enter an e-mail-address in the form by default.
+
+* Compatibility with WordPress 5.9 has been tested.
+
+= 2.21.8 =
+
+**Changes**
+
+* In enterprise forms where the HTML attribute step is used the value is now set to 1 instead of 0,1 for example for all values that are floats. Users can still input decimal numbers, but is more natural for most fields.
+
+= 2.21.7 =
+
+**Changes**
+
+* Users can decide in the plugin whether the references are output or not, without needing to set up a filter in onOffice.
+
+= 2.21.6 =
+
+**Fixes**
+
+* Reverts the changes from release v2.21.5 due to bugs.
+
+= 2.21.5 =
+
+**Changes**
+
+* The Id in the URL is now also shown like  [url]/1234-sonnige-waermende-10qm-wohnung-m/ and makes a redirect to [url]/1234-sonnige-waermende-10qm-wohnung-mit/
+
+= 2.21.4 =
+
+**Changes**
+
+* All settings are bundled into a single page called "Settings" (effectively, remove the "Modules" page) with a changed order.
+
+= 2.21.3 =
+
+**Fixes**
+
+* The menu entry now behaves the same way as the other default menu entries.
+
+= 2.21.2 =
+
+**Fixes**
+
+* MonsterInsights plugin can now be used together with our WP plugin.
+
+= 2.21.1 =
+
+**Changes**
+
+* When creating new contact forms, the option "Create address" is now checked.
+
+= 2.21.0 =
+
+**Changes**
+
+* Display all of a contact person's data on the estate detail page
+
+= 2.20.12 =
+
+**Fixes**
+
+* The property status is now displayed in the detail view below the property title and no longer in the fields as marketing status.
+
+* Separator line, black hint, red hint, file and user are no longer selectable in the configuration for any list or form in the backend. (also not for addresses and estates).
+
+= 2.20.11 =
+
+**Changes**
+
+* When you submit the form, the mail that is sent does now also contains  information about the  newsletter activation fields in case they were not selected in the form.
+
+= 2.20.10 =
+
+**Changes**
+
+* The explanation of the option "Show title in URL" can now be translated
+
+* In local host the error message "Please configure your API credentials first" is no longer displayed and similar estates are now shown as expected.
+
+= 2.20.9 =
+
+**Fixes**
+
+* Wherever fields are used (real estate, addresses, forms) the ID of the field, which appears after the field tile is expanded, can now be selected and copied.
+
+= 2.20.8 =
+
+**Fixes**
+
+* The field "vermarktungsstatus" is no longer added to the detail view when the plugin is installed.
+
+* The saving message now also appears in case a numeric field is added to the configuration.
+
+= 2.20.7 =
+
+**Fixes**
+
+* The fallback e-mail description layout has been fixed.
+
+* The default value for radius is now displayed in the frontend porperty list.
+
+= 2.20.6 =
+
+**Fixes**
+
+* Errors occured when creating or editing any form and also in the frontend on pages where the forms' shortcodes are used. The cause of the errors has been found and the errors were fixed.
+
+* Fixed minor bugs.
+
 = 2.20.5 =
 
 **Changes**
 
-* The option for indexing PDF brochures has now an understandable label which tells the user what he/ she can expact when selecting it. 
+* The option for indexing PDF brochures has now an understandable label which tells the user what he/ she can expact when selecting it.
 
 * In the default_detail.php template, free texts are now displayed with line breaks.
 
@@ -85,7 +213,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changes**
 
-* The plugin no longer overwrites the theme folder when updating the theme. 
+* The plugin no longer overwrites the theme folder when updating the theme.
 
 = 2.20.3 =
 
@@ -97,7 +225,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changes**
 
-* Contact, interest, and owner forms now all have a checkbox that configures whether an address is created. The dublicate checkbox gets a new label Check for Duplicates (override existing address if the email is the same) 
+* Contact, interest, and owner forms now all have a checkbox that configures whether an address is created. The dublicate checkbox gets a new label Check for Duplicates (override existing address if the email is the same)
 
 = 2.20.1 =
 
@@ -121,7 +249,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changes**
 
-* Adjusted the hint text, label and position of the email-address field. 
+* Adjusted the hint text, label and position of the email-address field.
 
 = 2.19.5 =
 
@@ -185,7 +313,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **New**
 
-* Pagination can now be handled by the theme or the plugin. 
+* Pagination can now be handled by the theme or the plugin.
 
 = 2.16.0 =
 
@@ -307,7 +435,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixes**
 
-* Fix translations for forgotten lazy translated strings 
+* Fix translations for forgotten lazy translated strings
 
 = 2.8.0 =
 
@@ -336,7 +464,7 @@ Start editing inside the `onoffice-personalized` folder.
 = 2.7.15 =
 
 **Fixes**
- 
+
 * Fix of pagination in static pages
 
 = 2.7.14 =

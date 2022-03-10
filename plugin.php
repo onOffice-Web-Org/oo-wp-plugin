@@ -34,7 +34,7 @@ Domain Path: /languages
 
 defined( 'ABSPATH' ) or die();
 
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
@@ -237,5 +237,14 @@ add_filter('set-screen-option', function ($status, $option, $value) {
 	}
 	return $status;
 }, 10, 3);
+
+function update_duplicate_check_warning_option()
+{
+	update_option('onoffice-duplicate-check-warning', 0);
+	echo true;
+	wp_die();
+}
+
+add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
 return $pDI;

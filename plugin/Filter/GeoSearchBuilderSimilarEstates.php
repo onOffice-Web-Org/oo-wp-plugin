@@ -87,8 +87,9 @@ class GeoSearchBuilderSimilarEstates
 	private function buildParametersByCoordinates(GeoCoordinates $pGeoCoordinates): array
 	{
 		return [
-			'latitude' => $pGeoCoordinates->getLatitude(),
-			'longitude' => $pGeoCoordinates->getLongitude(),
+			// latitude and longitude with float data type cause API error like "hmac is invalid" 
+			'latitude' => strval($pGeoCoordinates->getLatitude()),
+			'longitude' => strval($pGeoCoordinates->getLongitude()),
 			'radius' => $this->_pDataViewSimilarEstates->getRadius(),
 		];
 	}
