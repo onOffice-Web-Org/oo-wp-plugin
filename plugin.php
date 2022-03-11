@@ -194,7 +194,8 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 
 	if ($estateId !== '') {
 		$estateId = (int)$estateId;
-		$pDataDetailViewCheckAccessControl = new DataDetailViewCheckAccessControl();
+		/** @var DataDetailViewCheckAccessControl $pDataDetailViewCheckAccessControl */
+		$pDataDetailViewCheckAccessControl = $pDI->get(DataDetailViewCheckAccessControl::class);
 		$accessControlChecker = $pDataDetailViewCheckAccessControl->checkAccessControl($estateId);
 
 		if ($estateId === 0 || !$accessControlChecker|| !$pEstateIdGuard->isValid($estateId)) {

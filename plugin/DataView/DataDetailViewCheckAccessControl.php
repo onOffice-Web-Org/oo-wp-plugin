@@ -44,9 +44,9 @@ class DataDetailViewCheckAccessControl
 	 *
 	 */
 
-	public function __construct()
+	public function __construct(DataDetailViewHandler $pDataDetailViewHandler = null)
 	{
-		$this->pDataDetailViewHandler = new DataDetailViewHandler();
+		$this->pDataDetailViewHandler = $pDataDetailViewHandler ?? new DataDetailViewHandler();
 	}
 
 

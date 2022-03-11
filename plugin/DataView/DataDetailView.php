@@ -105,9 +105,6 @@ class DataDetailView
 	/** @var string[] */
 	private $_pictureTypes = [];
 
-	/** @var bool */
-	private $_accessControls = true;
-
 	/** @var string */
 	private $_template = '';
 
@@ -163,7 +160,7 @@ class DataDetailView
 
 	/** @return bool */
 	public function hasDetailView(): bool
-		{ return $this->_accessControls; }
+		{ return (bool)get_option('detail-view-access-control', 1); }
 
 	/** @return string */
 	public function getTemplate(): string
@@ -203,7 +200,7 @@ class DataDetailView
 
 	/** @param bool $accessControl */
 	public function setHasDetailView(bool $accessControl)
-		{ $this->_accessControls = $accessControl; }
+		{ update_option( 'detail-view-access-control', $accessControl, true); }
 
 	/** @param string $template */
 	public function setTemplate(string $template)

@@ -93,7 +93,7 @@ class TestClassDataDetailViewHandler
 		$this->assertEquals($pDataDetailview->getPictureTypes(), []);
 		$this->assertEquals($pDataDetailview->getExpose(), '');
 		$this->assertEquals($pDataDetailview->getAddressFields(), []);
-		$this->assertEquals($pDataDetailview->hasDetailView(), false);
+		$this->assertEquals($pDataDetailview->hasDetailView(), true);
 		$this->assertEquals($pDataDetailview->getMovieLinks(), MovieLinkTypes::MOVIE_LINKS_NONE);
 		$this->assertEquals($pDataDetailview->getName(), 'detail');
 		$this->assertEquals($pDataDetailview->getPageId(), 0);
