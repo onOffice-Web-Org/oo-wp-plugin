@@ -28,6 +28,10 @@
 	margin-top: 0;
 }
 
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list .oo-template-folder-path {
+	color: #646970;
+}
+
 #onoffice-ajax input[name=oopluginlistviewsaddress-name],
 #onoffice-ajax input[name=oopluginlistviews-name],
 #onoffice-ajax input[name=oopluginforms-name] {
