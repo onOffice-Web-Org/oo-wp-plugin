@@ -133,6 +133,7 @@ class AdminViewController
 	public function register_menu()
 	{
 		add_action('admin_notices', [$this, 'displayAPIError']);
+		add_action('admin_notices', [$this, 'displayDeactivateDuplicateCheckWarning']);
 		$pUserCapabilities = new UserCapabilities;
 		$roleMainPage = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_VIEW_MAIN_PAGE);
 		$roleAddress = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_ADDRESS);
@@ -313,6 +314,11 @@ class AdminViewController
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
 
+			wp_register_script('update-duplicate-check-warning-option', plugins_url('js/onoffice-duplicate-check-option-update.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
+				array('jquery'));
+			wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+			wp_enqueue_script('update-duplicate-check-warning-option');
+
 			if ($pObject !== null) {
 				$pObject->doExtraEnqueues();
 			}
@@ -385,6 +391,24 @@ class AdminViewController
 			/* translators: %s will be replaced with the translation of 'API token and secret'. */
 			$message = sprintf(esc_html(__('It looks like you did not enter any valid API '
 				.'credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites')), $loginCredentialsLink);
+
+			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function displayDeactivateDuplicateCheckWarning()
+	{
+		if (get_option('onoffice-duplicate-check-warning', 'onoffice-for-wp-websites') === "1") {
+			$class = 'notice notice-error duplicate-check-notify is-dismissible';
+			$message = esc_html(__("We have deactivated the plugin's duplicate check for all of your forms, "
+				. "because the duplicate check can unintentionally overwrite address records. This function will be removed "
+				. "in the future. The option has been deactivated for these forms: Contact, Interest, Owner",
+				'onoffice-for-wp-websites'));
 
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		}
