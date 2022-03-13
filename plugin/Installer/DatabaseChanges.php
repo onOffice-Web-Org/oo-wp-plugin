@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 23;
+	const MAX_VERSION = 24;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -172,6 +172,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 22) {
 			dbDelta($this->getCreateQueryForms());
 			$dbversion = 23;
+		}
+
+		if ($dbversion == 23) {
+			$this->deactivateCheckDuplicateOfForm();
+			$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+			$dbversion = 24;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -614,6 +620,20 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$sql = "UPDATE {$prefix}oo_plugin_forms
 				SET `createaddress` = 1
 				WHERE `form_type` = 'interest' OR `form_type` = 'owner'";
+
+		$this->_pWPDB->query($sql);
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function deactivateCheckDuplicateOfForm()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_forms
+				SET `checkduplicates` = 0";
 
 		$this->_pWPDB->query($sql);
 	}
