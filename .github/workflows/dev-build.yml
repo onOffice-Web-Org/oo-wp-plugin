@@ -53,6 +53,9 @@ jobs:
         name: onoffice-${{ env.DEV_BUILD_VERSION }}-please-unpack
         path: /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION }}.zip  # Uploading a .zip leads to a .zip inside a .zip, but uploading the folder takes significantly longer.
 
+    - name: Clean up
+      run: rm -r /tmp/release
+
     - name: Post comment
       uses: mshick/add-pr-comment@v1
       with:
