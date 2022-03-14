@@ -16,6 +16,9 @@ jobs:
         # We need to fetch more than just the most recent commit,
         # since we later use `git describe`.
         fetch-depth: 0
+        # The trigger makes this run on a merge commit, but we want to run
+        # on the latest commit before the review.
+        ref: ${{ github.event.pull_request.head.sha }}
         submodules: recursive
 
     - name: Setup PHP
@@ -35,9 +38,7 @@ jobs:
       run: PREFIX=/tmp/release make test-zip
 
     - name: Get version name
-      # The pull_request_review trigger runs on a merge commit, but we want the commit before the review.
-      # A merge commit has two parents and the one from the PR seems to be at HEAD^2.
-      run: echo "DEV_BUILD_VERSION=$(git describe --tags HEAD^2)" >> $GITHUB_ENV  
+      run: echo "DEV_BUILD_VERSION=$(git describe --tags)" >> $GITHUB_ENV  
 
     - name: Set version in plugin
       run: sed -i -r "s/Version:\ [^$]+$/Version:\ ${{ env.DEV_BUILD_VERSION }}/" /tmp/release/onoffice/plugin.php
