@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -181,7 +182,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 24) {
-			$this->_pWpOption->addOption( 'detail-view-access-control', true, true);
+			$this->setDataDetailViewAccessControlValue();
 			$dbversion = 25;
 		}
 
@@ -701,5 +702,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		$this->_pWpOption->deleteOption('oo_plugin_db_version');
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function setDataDetailViewAccessControlValue()
+	{
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setHasDetailView(true);
+		$pDataDetailViewHandler->saveDetailView($pDetailView);
 	}
 }

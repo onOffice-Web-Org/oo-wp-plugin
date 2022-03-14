@@ -39,14 +39,20 @@ class DataDetailViewCheckAccessControl
 	/** @var DataDetailViewHandler */
 	private $pDataDetailViewHandler = null;
 
+	/** @var EstateListFactory */
+	private $estateListFactory;
+
 
 	/**
 	 *
 	 */
 
-	public function __construct(DataDetailViewHandler $pDataDetailViewHandler = null)
-	{
+	public function __construct(
+		DataDetailViewHandler $pDataDetailViewHandler = null,
+		EstateListFactory $pEstateDetailFactory = null
+	) {
 		$this->pDataDetailViewHandler = $pDataDetailViewHandler ?? new DataDetailViewHandler();
+		$this->estateListFactory = $pEstateDetailFactory ?? new EstateListFactory($this->pDataDetailViewHandler);
 	}
 
 
@@ -62,8 +68,7 @@ class DataDetailViewCheckAccessControl
 		$accessControl = $this->pDataDetailViewHandler->getDetailView()->hasDetailView();
 
 		if (!$accessControl) {
-			$estateListFactory = new EstateListFactory($this->pDataDetailViewHandler);
-			$pEstateDetail = $estateListFactory->createEstateDetail($estateId);
+			$pEstateDetail = $this->estateListFactory->createEstateDetail($estateId);
 			$pEstateDetail->loadEstates();
 			$pEstateDetail->estateIterator();
 			$rawValues = $pEstateDetail->getRawValues();

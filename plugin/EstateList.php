@@ -53,7 +53,6 @@ use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
 use function home_url;
-use function get_option;
 
 class EstateList
 	implements EstateListBase
