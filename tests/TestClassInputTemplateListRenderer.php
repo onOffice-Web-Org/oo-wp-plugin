@@ -31,184 +31,184 @@ use onOffice\WPlugin\Renderer\InputFieldTemplateListRenderer;
  * @preserveGlobalState disabled
  */
 class TestClassInputTemplateListRenderer
-    extends \WP_UnitTestCase
+	extends \WP_UnitTestCase
 {
-    /**
-     *
-     */
-    public function testRenderEmptyValues()
-    {
-        $_GET = [
-            'page' => 'onoffice-estates',
-            'tab' => 'similar-estates'
-        ];
-        $pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
-        ob_start();
-        $pSubject->render();
-        $output = ob_get_clean();
-        $this->assertEquals('<div class="template-list"></div>', $output);
-    }
+	/**
+	 *
+	 */
+	public function testRenderEmptyValues()
+	{
+		$_GET = [
+			'page' => 'onoffice-estates',
+			'tab' => 'similar-estates'
+		];
+		$pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<div class="template-list"></div>', $output);
+	}
 
-    /**
-     *
-     */
-    public function testRenderEmptyChecked()
-    {
-        $_GET = [
-            'page' => 'onoffice-estates',
-            'tab' => 'detail'
-        ];
-        $pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
-        $pSubject->setValue([
-            [
-                'path' => [
-                    'abc' => 'abc',
-                ],
-                'title' => 'abc',
-                'folder' => 'abc'
-            ]
-        ]);
-        ob_start();
-        $pSubject->render();
-        $output = ob_get_clean();
-        $this->assertEquals('<div class="template-list"><input type="radio" name="testRenderer" '
-            .'value="abc" id="labelradio_1babc"><label for="labelradio_1babc">abc'
-            .'</label><br><p>(in the folder abc)</p></div>', $output);
-    }
+	/**
+	 *
+	 */
+	public function testRenderEmptyChecked()
+	{
+		$_GET = [
+			'page' => 'onoffice-estates',
+			'tab' => 'detail'
+		];
+		$pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
+		$pSubject->setValue([
+			[
+				'path' => [
+					'abc' => 'abc',
+				],
+				'title' => 'abc',
+				'folder' => 'abc'
+			]
+		]);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<div class="template-list"><input type="radio" name="testRenderer" '
+			.'value="abc" id="labelradio_1babc"><label for="labelradio_1babc">abc'
+			.'</label><br><p class="oo-template-folder-path">(in the folder abc)</p></div>', $output);
+	}
 
-    /**
-     *
-     */
-    public function testRenderWithOneValue()
-    {
-        $pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
-        $pSubject->setCheckedValue('abc');
+	/**
+	 *
+	 */
+	public function testRenderWithOneValue()
+	{
+		$pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
+		$pSubject->setCheckedValue('abc');
 
-        $pSubject->setValue([
-            [
-                'path' => [
-                    'abc' => 'abc',
-                ],
-                'title' => 'abc',
-                'folder' => 'abc'
-            ]
-        ]);
-        ob_start();
-        $pSubject->render();
-        $output = ob_get_clean();
-        $this->assertEquals('<div class="template-list">'
-            . '<input type="radio" name="testRenderer" value="abc" checked="checked"  id="labelradio_1babc">'
-            . '<label for="labelradio_1babc">abc</label><br><p>(in the folder abc)</p></div>', $output);
-    }
+		$pSubject->setValue([
+			[
+				'path' => [
+					'abc' => 'abc',
+				],
+				'title' => 'abc',
+				'folder' => 'abc'
+			]
+		]);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<div class="template-list">'
+			. '<input type="radio" name="testRenderer" value="abc" checked="checked"  id="labelradio_1babc">'
+			. '<label for="labelradio_1babc">abc</label><br><p class="oo-template-folder-path">(in the folder abc)</p></div>', $output);
+	}
 
-    /**
-     *
-     */
-    public function testRenderWithMoreValues()
-    {
-        $pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
-        $pSubject->setCheckedValue('abc');
+	/**
+	 *
+	 */
+	public function testRenderWithMoreValues()
+	{
+		$pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
+		$pSubject->setCheckedValue('abc');
 
-        $pSubject->setValue([
-            [
-                'path' => [
-                    'abc' => 'abc',
-                ],
-                'title' => 'abc',
-                'folder' => 'abc'
-            ],
-            [
-                'path' => [
-                    'qwe' => 'qwe',
-                ],
-                'title' => 'qwe',
-                'folder' => 'qwe'
-            ]
-        ]);
-        ob_start();
-        $pSubject->render();
-        $output = ob_get_clean();
-        $this->assertEquals('<div class="template-list"><details open><summary>abc</summary>'
-            . '<input type="radio" name="testRenderer" value="abc" checked="checked"  id="labelradio_1babc">'
-            . '<label for="labelradio_1babc">abc</label><br><p>(in the folder abc)</p></details><details>'
-            . '<summary>qwe</summary><input type="radio" name="testRenderer" value="qwe" id="labelradio_1bqwe">'
-            . '<label for="labelradio_1bqwe">qwe</label><br><p>(in the folder qwe)</p></details></div>', $output);
-    }
+		$pSubject->setValue([
+			[
+				'path' => [
+					'abc' => 'abc',
+				],
+				'title' => 'abc',
+				'folder' => 'abc'
+			],
+			[
+				'path' => [
+					'qwe' => 'qwe',
+				],
+				'title' => 'qwe',
+				'folder' => 'qwe'
+			]
+		]);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<div class="template-list"><details open><summary>abc</summary>'
+			. '<input type="radio" name="testRenderer" value="abc" checked="checked"  id="labelradio_1babc">'
+			. '<label for="labelradio_1babc">abc</label><br><p class="oo-template-folder-path">(in the folder abc)</p></details><details>'
+			. '<summary>qwe</summary><input type="radio" name="testRenderer" value="qwe" id="labelradio_1bqwe">'
+			. '<label for="labelradio_1bqwe">qwe</label><br><p class="oo-template-folder-path">(in the folder qwe)</p></details></div>', $output);
+	}
 
-    /**
-     *
-     */
-    public function testRenderWithCheckedNotMatchValues()
-    {
-        $_GET = [
-            'page' => 'onoffice-editform',
-            'tab' => 'detail',
-            'type' => 'contact',
-            'id' => null
-        ];
-        $pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
-        $pSubject->setCheckedValue('asd');
+	/**
+	 *
+	 */
+	public function testRenderWithCheckedNotMatchValues()
+	{
+		$_GET = [
+			'page' => 'onoffice-editform',
+			'tab' => 'detail',
+			'type' => 'contact',
+			'id' => null
+		];
+		$pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
+		$pSubject->setCheckedValue('asd');
 
-        $pSubject->setValue([
-            [
-                'path' => [
-                    'abc' => 'abc',
-                ],
-                'title' => 'abc',
-                'folder' => 'abc'
-            ],
-            [
-                'path' => [
-                    'qwe' => 'qwe',
-                ],
-                'title' => 'qwe',
-                'folder' => 'qwe'
-            ]
-        ]);
-        ob_start();
-        $pSubject->render();
-        $output = ob_get_clean();
-        $this->assertEquals('<div class="template-list"><details><summary>abc</summary>'
-            .'<input type="radio" name="testRenderer" value="abc" id="labelradio_1babc">'
-            .'<label for="labelradio_1babc">abc</label><br><p>(in the folder abc)</p></details><details>'
-            .'<summary>qwe</summary><input type="radio" name="testRenderer" value="qwe" id="labelradio_1bqwe">'
-            .'<label for="labelradio_1bqwe">qwe</label><br><p>(in the folder qwe)</p></details></div>', $output);
-    }
+		$pSubject->setValue([
+			[
+				'path' => [
+					'abc' => 'abc',
+				],
+				'title' => 'abc',
+				'folder' => 'abc'
+			],
+			[
+				'path' => [
+					'qwe' => 'qwe',
+				],
+				'title' => 'qwe',
+				'folder' => 'qwe'
+			]
+		]);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<div class="template-list"><details><summary>abc</summary>'
+			.'<input type="radio" name="testRenderer" value="abc" id="labelradio_1babc">'
+			.'<label for="labelradio_1babc">abc</label><br><p class="oo-template-folder-path">(in the folder abc)</p></details><details>'
+			.'<summary>qwe</summary><input type="radio" name="testRenderer" value="qwe" id="labelradio_1bqwe">'
+			.'<label for="labelradio_1bqwe">qwe</label><br><p class="oo-template-folder-path">(in the folder qwe)</p></details></div>', $output);
+	}
 
 
-    /**
-     *
-     */
-    public function testRenderWithAddressType()
-    {
-        $_GET = [
-            'page' => 'onoffice-editlistviewaddress',
-        ];
-        $pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
-        $pSubject->setCheckedValue('asd');
-        $pSubject->setValue([
-            [
-                'path' => [
-                    'abc' => 'abc',
-                ],
-                'title' => 'abc',
-                'folder' => 'abc'
-            ],
-            [
-                'path' => [
-                    'qwe' => 'qwe',
-                ],
-                'title' => 'qwe',
-                'folder' => 'qwe'
-            ]
-        ]);
-        ob_start();
-        $pSubject->render();
-        $output = ob_get_clean();
-        $this->assertEquals('<div class="template-list"><details><summary>abc</summary>'
-            .'<input type="radio" name="testRenderer" value="abc" id="labelradio_1babc">'
-            .'<label for="labelradio_1babc">abc</label><br><p>(in the folder abc)</p></details><details>'
-            .'<summary>qwe</summary><input type="radio" name="testRenderer" value="qwe" id="labelradio_1bqwe">'
-            .'<label for="labelradio_1bqwe">qwe</label><br><p>(in the folder qwe)</p></details></div>', $output);
-    }
+	/**
+	 *
+	 */
+	public function testRenderWithAddressType()
+	{
+		$_GET = [
+			'page' => 'onoffice-editlistviewaddress',
+		];
+		$pSubject = new InputFieldTemplateListRenderer('testRenderer', []);
+		$pSubject->setCheckedValue('asd');
+		$pSubject->setValue([
+			[
+				'path' => [
+					'abc' => 'abc',
+				],
+				'title' => 'abc',
+				'folder' => 'abc'
+			],
+			[
+				'path' => [
+					'qwe' => 'qwe',
+				],
+				'title' => 'qwe',
+				'folder' => 'qwe'
+			]
+		]);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<div class="template-list"><details><summary>abc</summary>'
+			.'<input type="radio" name="testRenderer" value="abc" id="labelradio_1babc">'
+			.'<label for="labelradio_1babc">abc</label><br><p class="oo-template-folder-path">(in the folder abc)</p></details><details>'
+			.'<summary>qwe</summary><input type="radio" name="testRenderer" value="qwe" id="labelradio_1bqwe">'
+			.'<label for="labelradio_1bqwe">qwe</label><br><p class="oo-template-folder-path">(in the folder qwe)</p></details></div>', $output);
+	}
 }

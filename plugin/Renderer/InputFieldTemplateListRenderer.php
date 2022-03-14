@@ -98,7 +98,7 @@ class InputFieldTemplateListRenderer
 					. ' id="' . esc_html($inputId) . '">'
 					. '<label for="' . esc_html($inputId) . '">' . esc_html($label) . '</label><br>';
 			}
-			echo "<p class='oo-template-folder-path'>". esc_html("(in the folder " . $templateValue['folder'] . ")") ."</p>";
+			echo '<p class="oo-template-folder-path">'. esc_html("(in the folder " . $templateValue['folder'] . ")") ."</p>";
 			echo (count($this->getValue()) > 1) ? '</details>' : '';
 		}
 		echo '</div>';
