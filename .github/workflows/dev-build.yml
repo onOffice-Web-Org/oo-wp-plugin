@@ -13,7 +13,9 @@ jobs:
     - name: Checkout from GIT
       uses: actions/checkout@v2
       with:
-        fetch-depth: 0  # We later want to describe the parent's hash.
+        # We need to fetch more than just the most recent commit,
+        # since we later use `git describe`.
+        fetch-depth: 0
         submodules: recursive
 
     - name: Setup PHP
@@ -33,7 +35,7 @@ jobs:
       run: PREFIX=/tmp/release make test-zip
 
     - name: Get version name
-      # This runs on a merge commit, but we want the commit before the review.
+      # The pull_request_review trigger runs on a merge commit, but we want the commit before the review.
       # A merge commit has two parents and the one from the PR seems to be at HEAD^2.
       run: echo "DEV_BUILD_VERSION=$(git describe --tags HEAD^2)" >> $GITHUB_ENV  
 
