@@ -91,8 +91,17 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
+
+		$pInstance->method('readFieldnames')
+			->with('estate')
+			->willReturn([
+				'wohnflaeche' => 'wohnflaeche',
+				'grundstuecksflaeche' => 'grundstuecksflaeche',
+				'gesamtflaeche' => 'gesamtflaeche',
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
 
 		$pInstance->method('getOnlyDefaultSortByFields')
 			->with('estate')
@@ -115,8 +124,18 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
+
+		$pInstance->method('readFieldnames')
+			->with('estate')
+			->willReturn([
+				'wohnflaeche' => 'wohnflaeche',
+				'grundstuecksflaeche' => 'grundstuecksflaeche',
+				'gesamtflaeche' => 'gesamtflaeche',
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
+
 
 		$pInstance->method('getOnlyDefaultSortByFields')
 			->with('estate')
@@ -134,6 +153,11 @@ class TestClassFormModelBuilderDBEstateListSettings
 				'Popular' => [
 					'kaufpreis' => 'Kaufpreis',
 					'kaltmiete' => 'Kaltmiete'
+				],
+				'All' => [
+					'wohnflaeche' => 'wohnflaeche',
+					'grundstuecksflaeche' => 'grundstuecksflaeche',
+					'gesamtflaeche' => 'gesamtflaeche',
 				]
 			]
 		];
@@ -147,14 +171,19 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
 
-		$pInstance->method('getOnlyDefaultSortByFields')
+		$pInstance->method('readFieldnames')
 			->with('estate')
 			->willReturn([
 				'data1' => 'Data 1',
-				'data2' => 'Data 2']);
+				'data2' => 'Data 2'
+			]);
+
+		$pInstance->method('getOnlyDefaultSortByFields')
+			->with('estate')
+			->willReturn([]);
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
 		$pInstance->method('getValue')->with('sortbyuservalues')->willReturn(null);
@@ -179,8 +208,18 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
+
+		$pInstance->method('readFieldnames')
+			->with('estate')
+			->willReturn([
+				'wohnflaeche' => 'wohnflaeche',
+				'grundstuecksflaeche' => 'grundstuecksflaeche',
+				'gesamtflaeche' => 'gesamtflaeche',
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
+
 
 		$pInstance->method('getOnlyDefaultSortByFields')
 			->with('estate')
@@ -251,15 +290,15 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals(FormModelBuilderDBEstateListSettings::getListViewLabels(), $expected);
 	}
 
-    public function testCreateSortableFieldList()
-    {
-        $pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+	public function testCreateSortableFieldList()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->getMock();
 
-        $instance = $pInstance->createSortableFieldList('address', 'checkbox', false);
-        $this->assertEquals($instance->getReferencedInputModels(), null);
-    }
+		$instance = $pInstance->createSortableFieldList('address', 'checkbox', false);
+		$this->assertEquals($instance->getReferencedInputModels(), null);
+	}
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowReferenceEstate

@@ -64,19 +64,16 @@ class TestClassFieldDefaultSorting
 		$pFieldDefaultSorting = new FieldDefaultSorting();
 		$sorting = $pFieldDefaultSorting->getDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
 		$expectation = [
+			'erstellt_am',
+			'letzte_aktion',
+			'verkauft_am',
+			'objektnr_extern',
 			'kaufpreis',
 			'kaltmiete',
-			'pacht',
 			'wohnflaeche',
-			'anzahl_zimmer',
-			'ort',
 			'grundstuecksflaeche',
 			'gesamtflaeche',
-			'erstellt_am',
-			'geaendert_am',
-			'verkauft_am',
-			'letzte_aktion',
-			'objektnr_extern',
+			'anzahl_zimmer',
 			'anzahl_badezimmer'
 		];
 
