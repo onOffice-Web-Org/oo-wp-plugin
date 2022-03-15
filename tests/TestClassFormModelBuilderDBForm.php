@@ -57,15 +57,6 @@ class TestClassFormModelBuilderDBForm
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
-	}
-
-	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRecipientContactForm
-	 */
-	public function testCreateInputModelRecipientContactForm()
-	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
-
 		$this->_pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
 			->disableOriginalConstructor()
 			->setMethods(['getInputModelDBFactory', 'getValue'])
@@ -74,6 +65,10 @@ class TestClassFormModelBuilderDBForm
 		$this->_pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
 		$this->_pInstance->method('getValue')->willReturn('1');
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRecipientContactForm
+	 */
 
 
 	/**
@@ -148,7 +143,7 @@ class TestClassFormModelBuilderDBForm
 	{
 		$fieldCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilder::class)
 			->disableOriginalConstructor()
-			->setMethods([ 'buildFieldsCollection'])
+			->setMethods(['buildFieldsCollection'])
 			->getMock();
 
 		$ex = $this->_pContainer->get(APIClientCredentialsException::class);
@@ -161,6 +156,9 @@ class TestClassFormModelBuilderDBForm
 		$pInstance = $this->_pContainer->get(FormModelBuilderDBForm::class);
 
 		$result = $pInstance->getDataContactType('address');
+
+		$this->assertEquals([], $result);
+	}
 	public function testCreateInputModelName()
 	{
 
@@ -210,9 +208,5 @@ class TestClassFormModelBuilderDBForm
 		$pInputModelIsAvailableOptions = $this->_pInstance->getInputModelIsAvailableOptions();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelIsAvailableOptions);
 		$this->assertEquals($pInputModelIsAvailableOptions->getHtmlType(), 'checkbox');
-	}
-
-
-		$this->assertEquals([], $result);
 	}
 }
