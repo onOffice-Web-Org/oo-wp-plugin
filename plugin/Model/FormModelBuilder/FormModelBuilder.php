@@ -29,6 +29,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 use const ONOFFICE_PLUGIN_DIR;
 use function plugin_dir_path;
@@ -88,14 +89,14 @@ abstract class FormModelBuilder
 		try {
 			$this->_pFieldnames->loadLanguage();
 			$fieldnames = $this->_pFieldnames->getFieldList($module);
-			$typeSupport = ['integer', 'float', 'varchar', 'text', 'date', 'datetime', 'boolean'];
+
 			if ($withInactive) {
 				$pFieldnamesInactive = new Fieldnames(new FieldsCollection(), true);
 				$pFieldnamesInactive->loadLanguage();
 				$fieldnames += $pFieldnamesInactive->getFieldList($module);
 			}
 			foreach ($fieldnames as $key => $field) {
-				if (!in_array($field['type'], $typeSupport)) {
+				if (!FieldTypes::isSupportType($field['type'])) {
 					unset($fieldnames[$key]);
 				}
 			}
