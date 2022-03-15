@@ -224,4 +224,13 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 	}
 });
 
+function update_duplicate_check_warning_option()
+{
+	update_option('onoffice-duplicate-check-warning', 0);
+	echo true;
+	wp_die();
+}
+
+add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
+
 return $pDI;
