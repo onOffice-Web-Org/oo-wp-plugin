@@ -5,7 +5,10 @@ namespace onOffice\WPlugin;
 class EstateListHandle
 {
 
-	private $_listCustomField = array();
+	/**
+	 * @var array[]
+	 */
+	private $_listCustomField;
 	public function __construct()
 	{
 		$this->_listCustomField = [
@@ -49,5 +52,21 @@ class EstateListHandle
 			}
 		}
 		return $recordModified;
+	}
+
+	/**
+	 * @param array $listCustomField
+	 */
+	public function setListCustomField(array $listCustomField)
+	{
+		$this->_listCustomField = $listCustomField;
+	}
+
+	/**
+	 * @return array[]
+	 */
+	public function getListCustomField()
+	{
+		return $this->_listCustomField;
 	}
 }

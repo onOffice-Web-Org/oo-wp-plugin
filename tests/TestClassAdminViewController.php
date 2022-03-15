@@ -172,7 +172,7 @@ class TestClassAdminViewController
 		$adminPage = new AdminPageEstateDetail('admin_page_onoffice-editlistview');
 		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
 		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-editlistview");
-		$this->assertEquals(['admin-js'], wp_scripts()->queue);
+		$this->assertEquals(['update-duplicate-check-warning-option', 'admin-js'], wp_scripts()->queue);
 	}
 
 	/**
@@ -190,7 +190,7 @@ class TestClassAdminViewController
 		$pWpHook = $wp_filter['admin_page_onoffice-editlistview'];
 		$pWpHook->callbacks = [[['function' => ['a']]]];
 		$pAdminViewController->enqueueExtraJs("admin_onoffice_test");
-		$this->assertCount(0, wp_scripts()->queue);
+		$this->assertCount(1, wp_scripts()->queue);
 	}
 
 	public function testAdminPageAjax()
@@ -242,6 +242,23 @@ class TestClassAdminViewController
 		$pAdminViewController->method('getField')->willReturn($fieldNamesMock);
 		$pAdminViewController->displayAPIError();
 		$this->expectOutputString('<div class="notice notice-error"><p>It looks like you did not enter any valid API credentials. Please consider reviewing your <a href="admin.php?page=onoffice-settings">API token and secret</a>.</p></div>');
+	}
+
+	public function testDisplayDeactivateDuplicateCheckWarningWithoutOption()
+	{
+		$pAdminViewController = new AdminViewController();
+		$this->assertNull($pAdminViewController->displayDeactivateDuplicateCheckWarning());
+	}
+
+	public function testDisplayDeactivateDuplicateCheckWarningWithOption()
+	{
+		add_option('onoffice-duplicate-check-warning', '1');
+		$pAdminViewController = new AdminViewController();
+		$pAdminViewController->displayDeactivateDuplicateCheckWarning();
+		$this->expectOutputString('<div class="notice notice-error duplicate-check-notify is-dismissible"><p>'
+			. 'We have deactivated the plugin&#039;s duplicate check for all of your forms, because the duplicate '
+			. 'check can unintentionally overwrite address records. This function will be removed in the future. '
+			. 'The option has been deactivated for these forms: Contact, Interest, Owner</p></div>');
 	}
 
 	public function testGetField()

@@ -133,6 +133,7 @@ class AdminViewController
 	public function register_menu()
 	{
 		add_action('admin_notices', [$this, 'displayAPIError']);
+		add_action('admin_notices', [$this, 'displayDeactivateDuplicateCheckWarning']);
 		$pUserCapabilities = new UserCapabilities;
 		$roleMainPage = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_VIEW_MAIN_PAGE);
 		$roleAddress = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_ADDRESS);
@@ -313,6 +314,11 @@ class AdminViewController
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
 
+			wp_register_script('update-duplicate-check-warning-option', plugins_url('js/onoffice-duplicate-check-option-update.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
+				array('jquery'));
+			wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+			wp_enqueue_script('update-duplicate-check-warning-option');
+
 			if ($pObject !== null) {
 				$pObject->doExtraEnqueues();
 			}
@@ -390,21 +396,42 @@ class AdminViewController
 		}
 	}
 
+
+	/**
+	 *
+	 */
+
+	public function displayDeactivateDuplicateCheckWarning()
+	{
+		if (get_option('onoffice-duplicate-check-warning', 'onoffice-for-wp-websites') === "1") {
+			$class = 'notice notice-error duplicate-check-notify is-dismissible';
+			$message = esc_html(__("We have deactivated the plugin's duplicate check for all of your forms, "
+				. "because the duplicate check can unintentionally overwrite address records. This function will be removed "
+				. "in the future. The option has been deactivated for these forms: Contact, Interest, Owner",
+				'onoffice-for-wp-websites'));
+
+			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		}
+	}
+
 	public function getField()
 	{
 		return new Fieldnames(new FieldsCollection());
 	}
 
 	public function general_admin_notice_SEO(){
-		$pWPOptionWrapper = new WPOptionWrapperDefault();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
 		if ( count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0 && $pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {
 			echo '<div class="notice notice-warning is-dismissible">
-						<p> '.esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.'
-							.'You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.'
-							.'We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description.'
-							.'This allows you to manage the title and description with your active SEO plugin.','onoffice-for-wp-websites')
+           				<p> '.esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.','onoffice-for-wp-websites').'
+              				'.esc_html__('You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.','onoffice-for-wp-websites').'<br>
+              				'.esc_html__('We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites').'
+              				'.esc_html__('This allows you to manage the title and description with your active SEO plugin.','onoffice-for-wp-websites')
 						.'</p>
-					</div>';
+        			</div>';
 		}
 	}
 }

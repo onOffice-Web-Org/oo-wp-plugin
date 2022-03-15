@@ -192,23 +192,31 @@ class AdminPageApiSettings
 		]);
 		$pInputModeTitleAndDescription->setValue(get_option($pInputModeTitleAndDescription->getIdentifier()));
 		$pInputModeTitleAndDescription->setDescriptionRadioTextHTML([
-			add_action('admin_notices', [$pAdminViewController, 'general_admin_notice_SEO']).esc_html__('This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.', 'onoffice-for-wp-websites'),
-			esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites').
-			'<details>
-				<summary>'.esc_html__('Available custom fields','onoffice-for-wp-websites').'</summary>
-					<p>'.esc_html__('When this option is active, the plugin makes the following custom fields available in the detail view.'
+			'<div class="fill-out">
+				 <p id="notice-seo">
+					'. esc_html__('We have detected an active SEO plugin: Yoast SEO. This option can lead to conflicts with the SEO plugin.','onoffice-for-wp-websites').'<br>
+					'. esc_html__('We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites').'
+				 </p>
+				 <p class="description-notice">
+					'.esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites').'
+				 </p>
+				 <details>
+					<summary>'.esc_html__('Available custom fields','onoffice-for-wp-websites').'</summary>
+					   <p>'.esc_html__('When this option is active, the plugin makes the following custom fields available in the detail view.'
 							.'These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate.'
 							."For information on how to use custom fields consult you SEO plugin's documentation.",'onoffice-for-wp-websites').'<br>'.
-			esc_html__('These custom fields are only available in the detail view and on no other page.','onoffice-for-wp-websites').'<br>
-						- '. esc_html__('Title (onoffice_title)','onoffice-for-wp-websites').'<br>
-						- '. esc_html__('Description (onoffice_description)','onoffice-for-wp-websites').'<br>
-						- '. esc_html__('Place (onoffice_place)','onoffice-for-wp-websites').'<br>
-						- '. esc_html__('Postal code (onoffice_postal_code)','onoffice-for-wp-websites').'<br>
-						- '. esc_html__('Property class (onoffice_property_class)','onoffice-for-wp-websites').'<br>
-						- '. esc_html__('Marketing method (onoffice_marketing_method)','onoffice-for-wp-websites').'<br>
-						- '. esc_html__('Data Record Ref No. (onoffice_id)','onoffice-for-wp-websites').'<br>
-			</details>'
+						esc_html__('These custom fields are only available in the detail view and on no other page.','onoffice-for-wp-websites').'<br>
+					   - '. esc_html__('Title (onoffice_title)','onoffice-for-wp-websites').'<br>
+					   - '. esc_html__('Description (onoffice_description)','onoffice-for-wp-websites').'<br>
+					   - '. esc_html__('Place (onoffice_place)','onoffice-for-wp-websites').'<br>
+					   - '. esc_html__('Postal code (onoffice_postal_code)','onoffice-for-wp-websites').'<br>
+					   - '. esc_html__('Property class (onoffice_property_class)','onoffice-for-wp-websites').'<br>
+					   - '. esc_html__('Marketing method (onoffice_marketing_method)','onoffice-for-wp-websites').'<br>
+					   - '. esc_html__('Data Record Ref No. (onoffice_id)','onoffice-for-wp-websites').'<br>
+				 </details>
+			  </div>'
 		]);
+
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModeTitleAndDescription);
