@@ -461,24 +461,15 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel = $this->getInputModelDBFactory()->create
 				(InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true);
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
-		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
-		$arrayGroupPopular = ['erstellt_am', 'letzte_aktion', 'verkauft_am', 'objektnr_extern',
-			'kaufpreis', 'kaltmiete', 'wohnflaeche', 'grundstuecksflaeche', 'gesamtflaeche',
-			'anzahl_zimmer', 'anzahl_badezimmer'];
+		$fieldnames = $this->readFieldnames(onOfficeSDK::MODULE_ESTATE, false);
+		$valuePopular = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
 		$data = [];
 		if (!empty($fieldnames)) {
-			$valuePopular = [];
-			$valueAll = [];
-			foreach ($fieldnames as $key => $field) {
-				if (in_array($key, $arrayGroupPopular)) {
-					$valuePopular[$key] = $field;
-				} else {
-					$valueAll[$key] = $field;
-				}
-			}
 			if (!empty($valuePopular)) {
 				$data['group']['Popular'] = $valuePopular;
 			}
+
+			$valueAll = array_diff_key($fieldnames, $valuePopular);
 			if (!empty($valueAll)) {
 				$data['group']['All'] = $valueAll;
 			}

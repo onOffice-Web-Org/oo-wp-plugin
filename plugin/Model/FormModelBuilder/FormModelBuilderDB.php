@@ -131,9 +131,9 @@ abstract class FormModelBuilderDB
 		natcasesort($fieldnames);
 		$defaultActiveFields = array();
 
-		foreach ($fieldnames as $key => $value) {
-			if (in_array($key, $defaultFields)) {
-				$defaultActiveFields[$key] = $value;
+		foreach ($defaultFields as $value) {
+			if (array_key_exists($value, $fieldnames)) {
+				$defaultActiveFields[] = $fieldnames[$value];
 			}
 		}
 
