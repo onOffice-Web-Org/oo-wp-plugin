@@ -741,6 +741,34 @@ msgstr "Scendendo"
 msgid "Template"
 msgstr "Modello"
 
+#: plugin/Gui/Table/EstateListTable.php:133
+msgid "List name"
+msgstr "Lista nome"
+
+#: plugin/Gui/Table/EstateListTable.php:134
+msgid "Selected filter"
+msgstr "Filtro selezionato"
+#: plugin/Gui/Table/EstateListTable.php:136
+msgid "List type"
+msgstr "Tipo di elenco"
+
+#: plugin/Gui/Table/EstateListTable.php:138
+msgid "Pages using the shortcode"
+msgstr "Pagine che utilizzano lo shortcode"
+
+#: plugin/Gui/Table/AddressListTable.php:128
+msgid "Form name"
+msgstr "Nome del modulo"
+
+#: plugin/Gui/Table/AddressListTable.php:129
+msgid "Recipient e-mail address"
+msgstr "Indirizzo e-mail del destinatario"
+
+#: plugin/Gui/Table/AddressListTable.php:131
+msgid "Form type"
+msgstr "Tipo di modulo"
+
+
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119
 msgid "List View"
