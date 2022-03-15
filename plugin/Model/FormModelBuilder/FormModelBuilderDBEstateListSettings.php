@@ -136,8 +136,8 @@ class FormModelBuilderDBEstateListSettings
 
 		$listName = $this->getValue($name);
 
-		$code = '[oo_estate view=="'.$listName.'"]';
-		$pInputModeLabel = new InputModelLabel(__('Shortcode: ', 'onoffice-for-wp-websites'), $code);
+		$codes = '[oo_estate view=="'.$listName.'"]';
+		$pInputModeLabel = new InputModelLabel(__('Shortcode: ', 'onoffice-for-wp-websites'), $codes);
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
 
@@ -347,6 +347,25 @@ class FormModelBuilderDBEstateListSettings
 			(InputModelDBFactory::INPUT_SHOW_STATUS, $labelShowStatus);
 		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelShowStatus->setValue($this->getValue('show_status'));
+		$pInputModelShowStatus->setValuesAvailable(1);
+
+		return $pInputModelShowStatus;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelShowReferenceEstate()
+	{
+		$labelShowReferenceEstate = __('Show reference estates', 'onoffice-for-wp-websites');
+
+		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_SHOW_REFERENCE_ESTATE, $labelShowReferenceEstate);
+		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowStatus->setValue($this->getValue('show_reference_estate') ?? 1);
 		$pInputModelShowStatus->setValuesAvailable(1);
 
 		return $pInputModelShowStatus;

@@ -55,7 +55,7 @@ class InputFieldButtonRenderer
 	{
 		$id = HtmlIdGenerator::generateByString($this->_id);
 		echo '<input type="button" class="button" id="button-copy" name="'
-			.esc_attr($id).'" value="'.esc_html__('Copy !', 'onoffice-for-wp-websites').'" '
+			.esc_attr($id).'" value="'.esc_html__('Copy', 'onoffice-for-wp-websites').'" '
 			.'data-onoffice-category="'.esc_attr($this->_label).'"'
 			. $this->renderAdditionalAttributes().'>';
 	}

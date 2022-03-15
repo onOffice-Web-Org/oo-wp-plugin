@@ -439,6 +439,9 @@ abstract class AdminPageSettingsBase
 		wp_register_script('admin-js', plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/admin.js',
 			['jquery'], '', true);
 
+		wp_register_script('oo-reference-estate-js',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/onoffice-reference-estate-select.js', ['jquery'], '', true);
+
 		wp_register_script('oo-checkbox-js',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/checkbox.js', ['jquery'], '', true);
 		wp_register_script('onoffice-default-form-values-js',
