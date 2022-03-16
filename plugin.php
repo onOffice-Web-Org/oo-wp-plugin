@@ -34,7 +34,7 @@ Domain Path: /languages
 
 defined( 'ABSPATH' ) or die();
 
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
@@ -106,7 +106,7 @@ add_action('init', function() use ($pAdminViewController) {
 }, 11);
 add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
-
+add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
 add_action('plugins_loaded', function() {
 	load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
 	// Check 'onoffice-personalized' Folder exists
@@ -223,5 +223,14 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			->preview((string)$pWP->query_vars['preview_name']));
 	}
 });
+
+function update_duplicate_check_warning_option()
+{
+	update_option('onoffice-duplicate-check-warning', 0);
+	echo true;
+	wp_die();
+}
+
+add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
 return $pDI;

@@ -133,6 +133,7 @@ class AdminViewController
 	public function register_menu()
 	{
 		add_action('admin_notices', [$this, 'displayAPIError']);
+		add_action('admin_notices', [$this, 'displayDeactivateDuplicateCheckWarning']);
 		$pUserCapabilities = new UserCapabilities;
 		$roleMainPage = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_VIEW_MAIN_PAGE);
 		$roleAddress = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_ADDRESS);
@@ -180,12 +181,6 @@ class AdminViewController
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'initSubClassForGet'));
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'checkForms'));
-
-		// Modules
-		$pAdminPageModules = new AdminPageModules($this->_pageSlug);
-		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice-for-wp-websites'), __('Modules', 'onoffice-for-wp-websites'),
-			$roleModules, $this->_pageSlug.'-modules', array($pAdminPageModules, 'render'));
-		add_action( 'admin_init', array($pAdminPageModules, 'registerForms'));
 
 		// Estates: edit list view (hidden page)
 		$hookEditList = add_submenu_page(null, null, null, $roleEstate, $this->_pageSlug.'-editlistview',
@@ -319,6 +314,11 @@ class AdminViewController
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
 
+			wp_register_script('update-duplicate-check-warning-option', plugins_url('js/onoffice-duplicate-check-option-update.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
+				array('jquery'));
+			wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+			wp_enqueue_script('update-duplicate-check-warning-option');
+
 			if ($pObject !== null) {
 				$pObject->doExtraEnqueues();
 			}
@@ -382,10 +382,8 @@ class AdminViewController
 
 	public function displayAPIError()
 	{
-		$pFieldnames = new Fieldnames(new FieldsCollection());
-
 		try {
-			$pFieldnames->loadLanguage();
+			$this->getField()->loadLanguage();
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$class = 'notice notice-error';
 			$label = __('API token and secret', 'onoffice-for-wp-websites');
@@ -396,5 +394,28 @@ class AdminViewController
 
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		}
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function displayDeactivateDuplicateCheckWarning()
+	{
+		if (get_option('onoffice-duplicate-check-warning', 'onoffice-for-wp-websites') === "1") {
+			$class = 'notice notice-error duplicate-check-notify is-dismissible';
+			$message = esc_html(__("We have deactivated the plugin's duplicate check for all of your forms, "
+				. "because the duplicate check can unintentionally overwrite address records. This function will be removed "
+				. "in the future. The option has been deactivated for these forms: Contact, Interest, Owner",
+				'onoffice-for-wp-websites'));
+
+			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		}
+	}
+
+	public function getField()
+	{
+		return new Fieldnames(new FieldsCollection());
 	}
 }

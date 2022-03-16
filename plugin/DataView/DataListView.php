@@ -127,6 +127,9 @@ class DataListView
 	/** @var bool */
 	private $_adjustableSorting = false;
 
+		/** @var bool */
+	private $_showReferenceStatus = false;
+
 
 	/**
 	 *
@@ -332,5 +335,21 @@ class DataListView
 	public function isAdjustableSorting(): bool
 	{
 		return $this->_adjustableSorting;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getShowReferenceStatus(): bool
+	{
+		return $this->_showReferenceStatus;
+	}
+
+	/**
+	 * @param bool $showReferenceStatus
+	 */
+	public function setShowReferenceStatus(bool $showReferenceStatus)
+	{
+		$this->_showReferenceStatus = $showReferenceStatus;
 	}
 }
