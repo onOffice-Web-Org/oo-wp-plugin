@@ -31,8 +31,6 @@ use onOffice\WPlugin\Types\FieldsCollection;
 
 class FieldsCollectionToContentFieldLabelArrayConverter
 {
-
-	private $_showMessageField = true;
 	/**
 	 *
 	 * @param FieldsCollection $pFieldsCollection

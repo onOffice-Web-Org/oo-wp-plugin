@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 25;
+	const MAX_VERSION = 26;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -186,6 +186,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryForms());
 			$dbversion = 25;
 		}
+		if ($dbversion == 25) {
+			dbDelta($this->deleteMessageFieldApplicantSearchForm());
+			$dbversion = 26;
+		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -223,6 +227,24 @@ class DatabaseChanges implements DatabaseChangesInterface
 	}
 
 
+	private function deleteMessageFieldApplicantSearchForm()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
+		$tableFieldConfig = $prefix . "oo_plugin_form_fieldconfig";
+
+		$rows = $this->_pWPDB->get_results("SELECT `form_id` FROM {$tableName} WHERE form_type = 'applicantsearch'");
+
+		foreach ($rows as $applicantSearchFormId) {
+			$allFieldMessages = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
+										WHERE `fieldname` = 'message'
+										AND `form_id` = '{$applicantSearchFormId->form_id}'");
+			foreach ($allFieldMessages as $fieldMessage) {
+				$this->_pWPDB->delete($tableFieldConfig,
+					array('form_fieldconfig_id' => $fieldMessage->form_fieldconfig_id));
+			}
+		}
+	}
 	/**
 	 *
 	 * @return string

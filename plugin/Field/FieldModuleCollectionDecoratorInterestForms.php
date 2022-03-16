@@ -31,7 +31,7 @@ use onOffice\WPlugin\Types\FieldTypes;
  *
  */
 
-class FieldModuleCollectionDecoratorFormContact
+class FieldModuleCollectionDecoratorInterestForms
 	extends FieldModuleCollectionDecoratorAbstract
 {
 	/** @var array */
@@ -52,6 +52,15 @@ class FieldModuleCollectionDecoratorFormContact
 				'permittedvalues' => [],
 				'default' => null,
 				'label' => 'Message',
+			],
+		],
+		onOfficeSDK::MODULE_ESTATE => [
+			'krit_bemerkung_oeffentlich' => [
+				'type' => FieldTypes::FIELD_TYPE_TEXT,
+				'length' => null,
+				'permittedvalues' => [],
+				'default' => null,
+				'label' => 'Comment',
 			],
 		],
 	];
