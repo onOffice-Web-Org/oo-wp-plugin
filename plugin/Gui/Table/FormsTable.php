@@ -93,14 +93,18 @@ class FormsTable
 		$pRecordRead->setOffset($offset);
 		$pRecordRead->addColumn('form_id', 'ID');
 		$pRecordRead->addColumn('name');
+		$pRecordRead->addColumn('recipient');
+		$pRecordRead->addColumn('template');
 		$pRecordRead->addColumn('form_type');
 		$pRecordRead->addColumn('name', 'shortcode');
-
+		$pRecordRead->addColumn('page_shortcode');
 		if ($this->_listType != 'all' && $this->_listType != null) {
 			$pRecordRead->addWhere("`form_type` = '".esc_sql($this->_listType)."'");
 		}
 
-		$this->setItems($pRecordRead->getRecordsSortedAlphabetically());
+		$pRecord = $pRecordRead->getRecordsSortedAlphabetically();
+		$pRecord = $this->handleRecord($pRecord);
+		$this->setItems($pRecord);
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args( array(
@@ -121,9 +125,12 @@ class FormsTable
 	{
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of Form', 'onoffice-for-wp-websites'),
-			'form_type' => __('Type of Form', 'onoffice-for-wp-websites'),
+			'name' => __('Form name', 'onoffice-for-wp-websites'),
+			'recipient' => __('Recipient e-mail address', 'onoffice-for-wp-websites'),
+			'template' => __('Template', 'onoffice-for-wp-websites'),
+			'form_type' => __('Form type', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
+			'page_shortcode' => __('Pages using the shortcode', 'onoffice-for-wp-websites'),
 		);
 
 		$hidden = array('ID', 'filterId');

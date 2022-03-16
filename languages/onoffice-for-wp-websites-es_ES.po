@@ -741,6 +741,34 @@ msgstr "Descendente"
 msgid "Template"
 msgstr "Plantilla"
 
+#: plugin/Gui/Table/EstateListTable.php:133
+msgid "List name"
+msgstr "Lista de nombres"
+
+#: plugin/Gui/Table/EstateListTable.php:134
+msgid "Selected filter"
+msgstr "Filtro seleccionado"
+
+#: plugin/Gui/Table/EstateListTable.php:136
+msgid "List type"
+msgstr "Tipo de lista"
+
+#: plugin/Gui/Table/EstateListTable.php:138
+msgid "Pages using the shortcode"
+msgstr "Páginas que usan el shortcode"
+
+#: plugin/Gui/Table/AddressListTable.php:128
+msgid "Form name"
+msgstr "Nombre del formulario"
+
+#: plugin/Gui/Table/AddressListTable.php:129
+msgid "Recipient e-mail address"
+msgstr "Dirección de Correo Electrónico del Destinatario"
+
+#: plugin/Gui/Table/AddressListTable.php:131
+msgid "Form type"
+msgstr "tipo de formulario"
+
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119
 msgid "List View"
