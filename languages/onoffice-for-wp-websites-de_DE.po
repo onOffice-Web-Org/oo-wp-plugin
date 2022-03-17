@@ -738,9 +738,37 @@ msgstr "Absteigend"
 msgid "Template"
 msgstr "Template"
 
+#: plugin/Gui/Table/EstateListTable.php:133
+msgid "List name"
+msgstr "Listennamen"
+
+#: plugin/Gui/Table/EstateListTable.php:134
+msgid "Selected filter"
+msgstr "Ausgewählter Filter"
+
+#: plugin/Gui/Table/EstateListTable.php:136
+msgid "List type"
+msgstr "Listentyp"
+
+#: plugin/Gui/Table/EstateListTable.php:138
+msgid "Pages using the shortcode"
+msgstr "Seiten, die den Shortcode verwenden"
+
+#: plugin/Gui/Table/AddressListTable.php:128
+msgid "Form name"
+msgstr "Formularname"
+
+#: plugin/Gui/Table/AddressListTable.php:129
+msgid "Recipient e-mail address"
+msgstr "Empfänger E-Mail-Adresse"
+
+#: plugin/Gui/Table/AddressListTable.php:131
+msgid "Form type"
+msgstr "Formulartyp"
+
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119
-msgid "List View"
+#: plugin/Gui/Table/EstateListTable.php:134
+msgid "Selected filter"
 msgstr "Listenansicht"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:148

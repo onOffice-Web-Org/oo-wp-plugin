@@ -735,13 +735,41 @@ msgstr "Aflopend"
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:245
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
-msgid "Template"
+msgid "Templates"
 msgstr "Sjabloon"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119
 msgid "List View"
 msgstr "Lijstweergave"
+
+#: plugin/Gui/Table/EstateListTable.php:133
+msgid "List name"
+msgstr "Lijstnaam"
+
+#: plugin/Gui/Table/EstateListTable.php:134
+msgid "Selected filter"
+msgstr "Geselecteerd filter"
+
+#: plugin/Gui/Table/EstateListTable.php:136
+msgid "List type"
+msgstr "Lijsttype"
+
+#: plugin/Gui/Table/EstateListTable.php:138
+msgid "Pages using the shortcode"
+msgstr "Pagina's die de shortcode gebruiken"
+
+#: plugin/Gui/Table/AddressListTable.php:128
+msgid "Form name"
+msgstr "Formulier naam"
+
+#: plugin/Gui/Table/AddressListTable.php:129
+msgid "Recipient e-mail address"
+msgstr "Emailadres van ontvanger"
+
+#: plugin/Gui/Table/AddressListTable.php:131
+msgid "Form type"
+msgstr "Formuliertype"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:148
 msgid "Passport Photo"
