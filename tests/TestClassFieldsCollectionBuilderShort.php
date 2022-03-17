@@ -32,6 +32,7 @@ use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
 use onOffice\WPlugin\Field\Collection\FieldLoaderSearchCriteria;
 use onOffice\WPlugin\Field\Collection\FieldRowConverterSearchCriteria;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -171,8 +172,8 @@ class TestClassFieldsCollectionBuilderShort
 	public function testAddFieldsFormBackend()
 	{
 		$pFieldsCollection = new FieldsCollection();
-		$this->assertSame($this->_pSubject, $this->_pSubject->addFieldsFormBackend($pFieldsCollection));
-		$this->assertCount(5, $pFieldsCollection->getAllFields());
+		$this->assertSame($this->_pSubject, $this->_pSubject->addFieldsFormBackend($pFieldsCollection,Form::TYPE_INTEREST));
+		$this->assertCount(4, $pFieldsCollection->getAllFields());
 	}
 
 
@@ -186,7 +187,7 @@ class TestClassFieldsCollectionBuilderShort
 	{
 		$pFieldsCollection = new FieldsCollection();
 		$this->assertSame($this->_pSubject, $this->_pSubject->addFieldsFormFrontend($pFieldsCollection));
-		$this->assertCount(10, $pFieldsCollection->getAllFields());
+		$this->assertCount(9, $pFieldsCollection->getAllFields());
 	}
 
 
@@ -216,10 +217,10 @@ class TestClassFieldsCollectionBuilderShort
 		$pFieldsCollection = new FieldsCollection();
 		$this->_pSubject
 			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsFormBackend($pFieldsCollection)
+			->addFieldsFormBackend($pFieldsCollection,Form::TYPE_INTEREST)
 			->addFieldsFormFrontend($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
 			->addFieldsSearchCriteriaSpecificBackend($pFieldsCollection);
-		$this->assertCount(30, $pFieldsCollection->getAllFields());
+		$this->assertCount(28, $pFieldsCollection->getAllFields());
 	}
 }

@@ -52,7 +52,6 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 		$expectedResult = [
 			$this->getExpectedFieldNewsletter(),
 			$this->getExpectedFieldMessage(),
-			$this->getExpectedFieldComment(),
 		];
 		$this->assertEquals($expectedResult, $pFieldModuleDecorator->getAllFields());
 	}
@@ -140,23 +139,7 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 		return $pFieldMessage;
 	}
 
-		/**
-	 *
-	 * @return Field
-	 *
-	 */
 
-	private function getExpectedFieldComment(): Field
-	{
-		$pFieldMessage = new Field('krit_bemerkung_oeffentlich', onOfficeSDK::MODULE_ESTATE, 'Comment');
-		$pFieldMessage->setCategory('');
-		$pFieldMessage->setDefault(null);
-		$pFieldMessage->setLength(0);
-		$pFieldMessage->setPermittedvalues([]);
-		$pFieldMessage->setType(FieldTypes::FIELD_TYPE_TEXT);
-
-		return $pFieldMessage;
-	}
 
 
 	/**

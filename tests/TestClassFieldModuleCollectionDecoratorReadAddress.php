@@ -62,7 +62,7 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 	{
 		$pDecoratorReadAddress = new FieldModuleCollectionDecoratorReadAddress
 			(new FieldsCollection());
-		$countOverall = count($pDecoratorReadAddress->getNewAddressFields()) + 3;
+		$countOverall = count($pDecoratorReadAddress->getNewAddressFields()) + 2;
 		$pDecoratorContactForm = new FieldModuleCollectionDecoratorFormContact($pDecoratorReadAddress);
 		$this->assertEquals($countOverall, count($pDecoratorContactForm->getAllFields()));
 	}

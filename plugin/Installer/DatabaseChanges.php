@@ -187,7 +187,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 25;
 		}
 		if ($dbversion == 25) {
-			dbDelta($this->deleteMessageFieldApplicantSearchForm());
+			$this->deleteMessageFieldApplicantSearchForm();
 			$dbversion = 26;
 		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
