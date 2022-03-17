@@ -41,6 +41,7 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\UnknownViewException;
+use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\EstateUnits;
@@ -668,6 +669,21 @@ class TestClassEstateList
 	public function testShowReferenceStatus()
 	{
 		$EstateListMock = $this->getMockBuilder(EstateList::class)
+			->disableOriginalConstructor()
+			->setMethods(['getShowReferenceStatus'])
+			->getMock();
+		$EstateListMock->method('getShowReferenceStatus')->willReturn(false);
+		$this->_pEstateList->loadEstates();
+		$result = $this->_pEstateList->estateIterator();
+		$this->assertEquals('', $result['vermarktungsstatus']);
+	}
+
+	/**
+	 *
+	 */
+	public function testShowReferenceStatusForDetailPage()
+	{
+		$EstateListMock = $this->getMockBuilder(EstateDetail::class)
 			->disableOriginalConstructor()
 			->setMethods(['getShowReferenceStatus'])
 			->getMock();
