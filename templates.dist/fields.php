@@ -40,9 +40,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 
 		$selectedValue = $properties['value'];
 		$inputType = 'type="text" ';
-		if ($properties['type'] === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT) {
-			$inputType = 'type="number" step="0.1" ';
-		} elseif ($properties['type'] === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER) {
+		if (in_array($properties['type'], [onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT, onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER])) {
 			$inputType = 'type="number" step="1" ';
 		} elseif ($properties['type'] === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_DATE) {
 			$inputType = 'type="date" ';
@@ -177,7 +175,7 @@ if (!function_exists('renderFormField')) {
 				$value = 'value="y" '.($pForm->getFieldValue($fieldName, true) == 1 ? 'checked="checked"' : '');
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_FLOAT ||
 				$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float') {
-				$inputType = 'type="number" step="0.01" ';
+				$inputType = 'type="number" step="1" ';
 			} elseif ($typeCurrentInput === onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER ||
 					$typeCurrentInput === 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal') {
 				$inputType = 'type="number" step="1" ';
@@ -223,5 +221,96 @@ if (!function_exists('renderRegionalAddition')) {
 		$output .= ob_get_clean();
 		$output .= '</select>';
 		return $output;
+	}
+}
+
+
+if (!function_exists('renderParkingLot')) {
+	function renderParkingLot(array $parkingArray, string $language, string $locale = 'de_DE'): array
+	{
+		$messages = [];
+		foreach ($parkingArray as $key => $parking) {
+			if (!$parking['Count']) {
+				continue;
+			}
+			/* translators: 1: Name of parking lot, 2: Price */
+			$element = sprintf(__('%1$s at %2$s', 'onoffice'), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale));
+			if (!empty($parking['MarketingType'])) {
+				$element .= ' (' . $parking['MarketingType'] . ')';
+			}
+			array_push($messages, $element);
+		}
+		return $messages;
+	}
+}
+
+if (!function_exists('formatPriceParking')) {
+	function formatPriceParking(string $str, string $language, string $locale): string
+	{
+		$digit = intval(substr(strrchr($str, "."), 1));
+		if (class_exists(NumberFormatter::class)) {
+			$format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+			if ($digit) {
+				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);
+			} else {
+				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
+			}
+			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str, "EUR"));
+		} else {
+			if ($digit) {
+				$str = floatval($str);
+				$str = number_format_i18n($str, 2);
+			} else {
+				$str = number_format_i18n(intval($str));
+			}
+			switch ($language) {
+				case 'ENG':
+					$str = sprintf(__('€%1$s', 'onoffice'), $str);
+					break;
+				default:
+					$str = sprintf(__('%1$s €', 'onoffice'), $str);
+					break;
+			}
+			return $str;
+		}
+	}
+}
+
+if (!function_exists('getParkingName')) {
+	function getParkingName(string $parkingName, int $count): string
+	{
+		switch ($parkingName) {
+			case 'carport':
+				/* translators: %s is the amount of carports */
+				$str = _n('%1$s carport', '%1$s carports', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'duplex':
+				/* translators: %s is the amount of duplexes */
+				$str = _n('%1$s duplex', '%1$s duplexes', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'parkingSpace':
+				/* translators: %s is the amount of parking spaces */
+				$str = _n('%1$s parking space', '%1$s parking spaces', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'garage':
+				/* translators: %s is the amount of garages */
+				$str = _n('%1$s garage', '%1$s garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'multiStoryGarage':
+				/* translators: %s is the amount of multi story garages */
+				$str = _n('%1$s multi story garage', '%1$s multi story garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'undergroundGarage':
+				/* translators: %s is the amount of underground garages */
+				$str = _n('%1$s underground garage', '%1$s underground garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'otherParkingLot':
+				/* translators: %s is the amount of other parking lots */
+				$str = _n('%1$s other parking lot', '%1$s other parking lots', $count, 'onoffice-for-wp-websites');
+				break;
+			default:
+				$str = $parkingName;
+		}
+		return esc_html(sprintf($str, $count));
 	}
 }

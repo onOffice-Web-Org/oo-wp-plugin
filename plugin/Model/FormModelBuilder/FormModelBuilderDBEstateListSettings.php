@@ -266,13 +266,17 @@ class FormModelBuilderDBEstateListSettings
 	 *
 	 * @param string $module
 	 * @param string $htmlType
+	 * @param bool $isShow
 	 * @return InputModelDB
 	 *
 	 */
 
-	public function createSortableFieldList($module, $htmlType)
+	public function createSortableFieldList($module, $htmlType, bool $isShow = true): InputModelDB
 	{
 		$pSortableFieldsList = parent::createSortableFieldList($module, $htmlType);
+		if (! $isShow) {
+			return $pSortableFieldsList;
+		}
 		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
 		$pInputModelIsHidden = $this->getInputModelIsHidden();
 		$pInputModelIsAvailableOptions = $this->getInputModelAvailableOptions();
@@ -317,6 +321,25 @@ class FormModelBuilderDBEstateListSettings
 			(InputModelDBFactory::INPUT_SHOW_STATUS, $labelShowStatus);
 		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelShowStatus->setValue($this->getValue('show_status'));
+		$pInputModelShowStatus->setValuesAvailable(1);
+
+		return $pInputModelShowStatus;
+	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelShowReferenceEstate()
+	{
+		$labelShowReferenceEstate = __('Show reference estates', 'onoffice-for-wp-websites');
+
+		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_SHOW_REFERENCE_ESTATE, $labelShowReferenceEstate);
+		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowStatus->setValue($this->getValue('show_reference_estate') ?? 1);
 		$pInputModelShowStatus->setValuesAvailable(1);
 
 		return $pInputModelShowStatus;

@@ -34,7 +34,7 @@ Domain Path: /languages
 
 defined( 'ABSPATH' ) or die();
 
-require 'vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 define('ONOFFICE_PLUGIN_DIR', __DIR__);
 

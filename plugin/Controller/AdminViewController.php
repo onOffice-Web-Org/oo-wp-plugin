@@ -148,7 +148,7 @@ class AdminViewController
 		add_menu_page( __('onOffice', 'onoffice-for-wp-websites'), __('onOffice', 'onoffice-for-wp-websites'),
 			$roleMainPage, $this->_pageSlug, function() use ($pDI) {
 				echo $pDI->get(MainPage::class)->render();
-			}, 'dashicons-admin-home');
+			}, plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'images/onOffice-Logo-screen_wp-grey.svg');
 
 		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
 		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'), __('Addresses', 'onoffice-for-wp-websites'),
@@ -180,12 +180,6 @@ class AdminViewController
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'initSubClassForGet'));
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'handleAdminNotices'));
 		add_action( 'load-'.$hookEditForm, array($this->_pAdminPageFormSettings, 'checkForms'));
-
-		// Modules
-		$pAdminPageModules = new AdminPageModules($this->_pageSlug);
-		add_submenu_page( $this->_pageSlug, __('Modules', 'onoffice-for-wp-websites'), __('Modules', 'onoffice-for-wp-websites'),
-			$roleModules, $this->_pageSlug.'-modules', array($pAdminPageModules, 'render'));
-		add_action( 'admin_init', array($pAdminPageModules, 'registerForms'));
 
 		// Estates: edit list view (hidden page)
 		$hookEditList = add_submenu_page(null, null, null, $roleEstate, $this->_pageSlug.'-editlistview',
@@ -382,10 +376,8 @@ class AdminViewController
 
 	public function displayAPIError()
 	{
-		$pFieldnames = new Fieldnames(new FieldsCollection());
-
 		try {
-			$pFieldnames->loadLanguage();
+			$this->getField()->loadLanguage();
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$class = 'notice notice-error';
 			$label = __('API token and secret', 'onoffice-for-wp-websites');
@@ -396,5 +388,10 @@ class AdminViewController
 
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		}
+	}
+
+	public function getField()
+	{
+		return new Fieldnames(new FieldsCollection());
 	}
 }

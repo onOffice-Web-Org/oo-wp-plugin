@@ -28,6 +28,7 @@ use Exception;
 use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\WPlugin\Controller\EstateViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use WP_Embed;
@@ -243,5 +244,13 @@ class EstateDetail
 	public function setEstateId(int $estateId)
 	{
 		$this->_estateId = $estateId;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getShowEstateMarketingStatus(): bool
+	{
+		return $this->getDataView()->getShowStatus();
 	}
 }

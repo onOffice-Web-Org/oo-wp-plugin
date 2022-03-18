@@ -93,6 +93,7 @@ class AdminPageEstateListSettings
 		$pInputModelSortOrder = $pFormModelBuilder->createInputModelSortOrder();
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
+		$pInputModelShowReferenceEstate = $pFormModelBuilder->createInputModelShowReferenceEstate();
 		$pInputModelRandomSort = $pFormModelBuilder->createInputModelRandomSort();
 
 		$pInputModelSortBySetting = $pFormModelBuilder->createInputModelSortBySetting();
@@ -116,6 +117,7 @@ class AdminPageEstateListSettings
 
 		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
 		$pFormModelRecordsFilter->addInputModel($pInputModelShowStatus);
+		$pFormModelRecordsFilter->addInputModel($pInputModelShowReferenceEstate);
 		$this->addFormModel($pFormModelRecordsFilter);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');
@@ -124,6 +126,7 @@ class AdminPageEstateListSettings
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowStatus);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
@@ -262,6 +265,7 @@ class AdminPageEstateListSettings
 	{
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
+		wp_enqueue_script('oo-reference-estate-js');
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 	}

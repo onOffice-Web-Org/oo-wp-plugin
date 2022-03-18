@@ -53,11 +53,12 @@ class TestClassDataDetailView
 		'objektbeschreibung',
 		'lage',
 		'ausstatt_beschr',
-		'sonstige_angaben',
+		'sonstige_angaben'
 	];
 
 	/** */
 	const DEFAULT_FIELDS_ADDRESS = [
+		'imageUrl',
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -67,6 +68,7 @@ class TestClassDataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
+		'defaultemail',
 	];
 	/**
 	 *
@@ -84,6 +86,7 @@ class TestClassDataDetailView
 		$this->assertEquals([], $pDataDetailView->getPictureTypes());
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
+		$this->assertFalse($pDataDetailView->getShowStatus());
 	}
 
 	/**
@@ -111,6 +114,8 @@ class TestClassDataDetailView
 		$this->assertEquals('/test/template1.test', $pDataDetailView->getTemplate());
 		$pDataDetailView->setShortCodeForm('[oo_form form="Contact Form"]');
 		$this->assertEquals('[oo_form form="Contact Form"]', $pDataDetailView->getShortCodeForm());
+		$pDataDetailView->setShowStatus(true);
+		$this->assertTrue($pDataDetailView->getShowStatus());
 	}
 
 	/**

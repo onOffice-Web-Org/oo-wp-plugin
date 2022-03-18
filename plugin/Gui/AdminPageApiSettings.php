@@ -21,9 +21,11 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
+use onOffice\WPlugin\Types\MapProvider;
 use function __;
 use function admin_url;
 use function do_settings_sections;
@@ -57,8 +59,12 @@ class AdminPageApiSettings
 		parent::__construct($pageSlug);
 		$this->_encrypter = $this->getContainer()->make(SymmetricEncryption::class);
 		$this->addFormModelAPI();
-		$this->addFormModelGoogleCaptcha();
+		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
+		$this->addFormModelGoogleCaptcha();
+		$this->addFormModelFavorites($pageSlug);
+        $this->addFormModelDetailView($pageSlug);
+		$this->addFormModelPagination($pageSlug);
 		$this->addFormModelGoogleBotSettings();
 	}
 
@@ -166,18 +172,18 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
-		$labelGoogleBotIndexPdfExpose = __('Index PDF Brochure', 'onoffice-for-wp-websites');
+		$labelGoogleBotIndexPdfExpose = __('Allow indexing of PDF brochures', 'onoffice-for-wp-websites');
 		$pInputModeGoogleBotIndexPdfExpose = new InputModelOption('onoffice-settings', 'google-bot-index-pdf-expose',
 			$labelGoogleBotIndexPdfExpose, InputModelOption::SETTING_TYPE_BOOLEAN);
 		$pInputModeGoogleBotIndexPdfExpose->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModeGoogleBotIndexPdfExpose->setValuesAvailable(1);
 		$pInputModeGoogleBotIndexPdfExpose->setValue(get_option($pInputModeGoogleBotIndexPdfExpose->getIdentifier()) == 1);
-
+		$pInputModeGoogleBotIndexPdfExpose->setDescriptionTextHTML(__('If you allow indexing, your search engine ranking can be negatively affected and your brochures can be available from search engines even months after the corresponding estate is deleted.','onoffice-for-wp-websites'));
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModeGoogleBotIndexPdfExpose);
 		$pFormModel->setGroupSlug('onoffice-google-bot');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('Google Bot', 'onoffice-for-wp-websites'));
+		$pFormModel->setLabel(__('Search engine', 'onoffice-for-wp-websites'));
 
 		$this->addFormModel($pFormModel);
 	}
@@ -259,7 +265,7 @@ class AdminPageApiSettings
 		settings_fields($this->getPageSlug());
 		do_settings_sections($this->getPageSlug());
 
-		submit_button();
+		submit_button(__('Save changes and clear API cache', 'onoffice-for-wp-websites'));
 		echo '</form>';
 	}
 
@@ -275,4 +281,117 @@ class AdminPageApiSettings
 
 		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
 	}
+
+    /**
+     *
+     * @param string $pageSlug
+     *
+     */
+
+    private function addFormModelMapProvider(string $pageSlug)
+    {
+        $groupSlugMaps = 'onoffice-maps';
+        $mapProviderLabel = __('Map Provider', 'onoffice-for-wp-websites');
+        $pInputModelMapProvider = new InputModelOption($groupSlugMaps, 'mapprovider',
+            $mapProviderLabel, InputModelOption::SETTING_TYPE_NUMBER);
+        $pInputModelMapProvider->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
+        $selectedValue = get_option($pInputModelMapProvider->getIdentifier(), MapProvider::PROVIDER_DEFAULT);
+        $pInputModelMapProvider->setValue($selectedValue);
+        $pInputModelMapProvider->setValuesAvailable([
+            MapProvider::OPEN_STREET_MAPS => __('OpenStreetMap', 'onoffice-for-wp-websites'),
+            MapProvider::GOOGLE_MAPS => __('Google Maps', 'onoffice-for-wp-websites'),
+        ]);
+
+        $pFormModel = new FormModel();
+        $pFormModel->addInputModel($pInputModelMapProvider);
+        $pFormModel->setGroupSlug($groupSlugMaps);
+        $pFormModel->setPageSlug($pageSlug);
+        $pFormModel->setLabel(__('Maps', 'onoffice-for-wp-websites'));
+
+        $this->addFormModel($pFormModel);
+    }
+
+    /**
+     *
+     * @param string $pageSlug
+     *
+     */
+    private function addFormModelDetailView(string $pageSlug)
+    {
+        $groupSlugView = 'onoffice-detail-view';
+        $showTitleInUrl = __('Show title in URL', 'onoffice-for-wp-websites');
+        $pInputModelShowTitleUrl = new InputModelOption($groupSlugView, 'showTitleUrl',
+            $showTitleInUrl, InputModelOption::SETTING_TYPE_BOOLEAN);
+        $pInputModelShowTitleUrl->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+        $pInputModelShowTitleUrl->setValuesAvailable(1);
+        $pInputModelShowTitleUrl->setValue(get_option($pInputModelShowTitleUrl->getIdentifier()) == 1);
+        $pInputModelShowTitleUrl->setDescriptionTextHTML(__('If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used.', 'onoffice-for-wp-websites'));
+
+        $pFormModel = new FormModel();
+        $pFormModel->addInputModel($pInputModelShowTitleUrl);
+        $pFormModel->setGroupSlug($groupSlugView);
+        $pFormModel->setPageSlug($pageSlug);
+        $pFormModel->setLabel(__('Detail View URLs', 'onoffice-for-wp-websites'));
+
+        $this->addFormModel($pFormModel);
+    }
+
+    /**
+     *
+     * @param string $pageSlug
+     *
+     */
+    private function addFormModelFavorites(string $pageSlug)
+    {
+        $groupSlugFavs = 'onoffice-favorization';
+        $enableFavLabel = __('Enable Watchlist', 'onoffice-for-wp-websites');
+        $favButtonLabel = __('Expression used', 'onoffice-for-wp-websites');
+        $pInputModelEnableFav = new InputModelOption($groupSlugFavs, 'enableFav',
+            $enableFavLabel, InputModelOption::SETTING_TYPE_BOOLEAN);
+        $pInputModelEnableFav->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+        $pInputModelEnableFav->setValuesAvailable(1);
+        $pInputModelEnableFav->setValue(get_option($pInputModelEnableFav->getIdentifier()) == 1);
+        $pInputModelFavButtonLabel = new InputModelOption($groupSlugFavs, 'favButtonLabelFav',
+            $favButtonLabel, InputModelOption::SETTING_TYPE_NUMBER);
+        $pInputModelFavButtonLabel->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
+        $pInputModelFavButtonLabel->setValue(get_option($pInputModelFavButtonLabel->getIdentifier()));
+        $pInputModelFavButtonLabel->setValuesAvailable([
+            Favorites::KEY_SETTING_MEMORIZE => __('Watchlist', 'onoffice-for-wp-websites'),
+            Favorites::KEY_SETTING_FAVORIZE => __('Favorise', 'onoffice-for-wp-websites'),
+        ]);
+
+        $pFormModel = new FormModel();
+        $pFormModel->addInputModel($pInputModelEnableFav);
+        $pFormModel->addInputModel($pInputModelFavButtonLabel);
+        $pFormModel->setGroupSlug($groupSlugFavs);
+        $pFormModel->setPageSlug($pageSlug);
+        $pFormModel->setLabel(__('Watchlist', 'onoffice-for-wp-websites'));
+
+        $this->addFormModel($pFormModel);
+    }
+
+    /**
+     * @param string $pageSlug
+     */
+    private function addFormModelPagination(string $pageSlug)
+    {
+        $groupSlugPaging = 'onoffice-pagination';
+        $pagingLabel = __('Pagination', 'onoffice-for-wp-websites');
+        $pInputModelPagingProvider = new InputModelOption($groupSlugPaging, 'paginationbyonoffice',
+            $pagingLabel, InputModelOption::SETTING_TYPE_NUMBER);
+        $pInputModelPagingProvider->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
+        $selectedValue = get_option($pInputModelPagingProvider->getIdentifier(), 0);
+        $pInputModelPagingProvider->setValue($selectedValue);
+        $pInputModelPagingProvider->setValuesAvailable([
+            0 => __('By WP Theme', 'onoffice-for-wp-websites'),
+            1 => __('By onOffice-Plugin', 'onoffice-for-wp-websites')
+        ]);
+        $pFormModel = new FormModel();
+        $pFormModel->addInputModel($pInputModelPagingProvider);
+        $pFormModel->setGroupSlug($groupSlugPaging);
+        $pFormModel->setPageSlug($pageSlug);
+        $pFormModel->setLabel($pagingLabel);
+
+        $this->addFormModel($pFormModel);
+    }
 }

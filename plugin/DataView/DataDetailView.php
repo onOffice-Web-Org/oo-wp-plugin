@@ -69,11 +69,12 @@ class DataDetailView
 		'objektbeschreibung',
 		'lage',
 		'ausstatt_beschr',
-		'sonstige_angaben',
+		'sonstige_angaben'
 	];
 
 	/** @var string[] */
 	private $_addressFields = [
+		'imageUrl',
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -83,6 +84,22 @@ class DataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
+		'defaultemail',
+	];
+
+	/** @var string[] */
+	private $_defaultAddressFields = [
+		'Anrede',
+		'Vorname',
+		'Name',
+		'Zusatz1',
+		'Strasse',
+		'Plz',
+		'Ort',
+		'Telefon1',
+		'mobile',
+		'defaultemail',
+		'imageUrl',
 	];
 
 	/** @var string[] */
@@ -99,6 +116,9 @@ class DataDetailView
 
 	/** @var int */
 	private $_pageId = 0;
+
+	/** @var bool */
+	private $_showStatus = 0;
 
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
@@ -158,6 +178,10 @@ class DataDetailView
 	public function getAddressFields(): array
 		{ return $this->_addressFields; }
 
+	/** @return string[] */
+	public function getDefaultAddressFields(): array
+		{ return $this->_defaultAddressFields; }
+
 	/** @return int */
 	public function getPageId(): int
 		{ return $this->_pageId; }
@@ -189,7 +213,6 @@ class DataDetailView
 	/** @var string[] $addressFields */
 	public function setAddressFields(array $addressFields)
 		{ $this->_addressFields = $addressFields; }
-
 	/** @return int */
 	public function getMovieLinks(): int
 		{ return $this->_movieLinks; }
@@ -217,5 +240,13 @@ class DataDetailView
 	/** @return bool */
 	public function getRandom(): bool
 		{  return false; }
+
+	/** @return bool */
+	public function getShowStatus(): bool
+	{ return (bool) $this->_showStatus; }
+
+	/** @param bool $status */
+	public function setShowStatus(bool $status)
+	{ $this->_showStatus = $status; }
 
 }

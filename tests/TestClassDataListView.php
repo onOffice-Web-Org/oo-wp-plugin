@@ -297,4 +297,16 @@ class TestClassDataListView
 		$this->_pSubject->setAdjustableSorting(true);
 		$this->assertTrue($this->_pSubject->isAdjustableSorting());
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testShowReferenceStatus()
+	{
+		$this->assertFalse($this->_pSubject->getShowReferenceStatus());
+		$this->_pSubject->setShowReferenceStatus(true);
+		$this->assertTrue($this->_pSubject->getShowReferenceStatus());
+	}
 }
