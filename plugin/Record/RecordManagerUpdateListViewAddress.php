@@ -94,10 +94,11 @@ class RecordManagerUpdateListViewAddress
 		$pWpDb = $this->getWpdb();
 		$result = true;
 		foreach ($records as $record) {
-			if(is_array($record))
+			if($record == '1')
 			{
-				$result = $result && $pWpDb->insert($prefix . $table, $record);
+				continue;
 			}
+			$result = $result && $pWpDb->insert($prefix . $table, $record);
 		}
 		return $result;
 	}
