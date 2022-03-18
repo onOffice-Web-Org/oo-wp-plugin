@@ -136,7 +136,7 @@ class TestClassSDKWrapper
 	{
 		/** @var DBCache $pDBCaches */
 		$pDBCaches = $this->_pSDKWrapper->getCache();
-		$pDBCaches->clearAll();
+		$pDBCaches[0]->clearAll();
 		$this->assertCount(1, $pDBCaches);
 		$this->assertInstanceOf(DBCache::class, $pDBCaches[0]);
 		$this->assertInstanceOf(onOfficeSDKCache::class, $pDBCaches[0]);
