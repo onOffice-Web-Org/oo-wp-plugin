@@ -140,6 +140,18 @@ class TestClassSDKWrapper
 		$this->assertInstanceOf(onOfficeSDKCache::class, $pDBCaches[0]);
 	}
 
+	/**
+	 *
+	 */
+
+	public function testWriteCache()
+	{
+		/** @var DBCache $pDBCaches */
+		$pDBCaches = $this->_pSDKWrapper->getCache()[0];
+		$pDBCaches->clearAll();
+		$res = $pDBCaches->write([], 'zxc');
+		$this->assertTrue($res);
+	}
 
 	/**
 	 *
@@ -167,5 +179,16 @@ class TestClassSDKWrapper
 			]
 		]], $pAPIClientActionGeneric->getResultRecords());
 		return $pSDKWrapper;
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testWithCurlOptions()
+	{
+		$pSDKWrapper = new SDKWrapper();
+		$this->assertInstanceOf(SDKWrapper::class, $pSDKWrapper->withCurlOptions(['curlOP']));
 	}
 }

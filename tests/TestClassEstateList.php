@@ -66,6 +66,9 @@ use function json_decode;
  * @url http://www.onoffice.de
  * @copyright 2003-2019, onOffice(R) GmbH
  *
+ * @covers onOffice\WPlugin\EstateDetail
+ * @covers onOffice\WPlugin\EstateList
+ *
  */
 
 class TestClassEstateList
