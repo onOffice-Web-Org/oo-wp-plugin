@@ -75,6 +75,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.22.3 =
+
+**Changes**
+
+* The list views in forms, addresses and estates got enriched with additional information. 
+
 = 2.22.2 =
 
 **Changes**
