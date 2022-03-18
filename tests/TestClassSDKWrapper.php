@@ -134,24 +134,14 @@ class TestClassSDKWrapper
 
 	public function testGetCache()
 	{
+		/** @var DBCache $pDBCaches */
 		$pDBCaches = $this->_pSDKWrapper->getCache();
+		$pDBCaches->clearAll();
 		$this->assertCount(1, $pDBCaches);
 		$this->assertInstanceOf(DBCache::class, $pDBCaches[0]);
 		$this->assertInstanceOf(onOfficeSDKCache::class, $pDBCaches[0]);
 	}
 
-	/**
-	 *
-	 */
-
-	public function testWriteCache()
-	{
-		/** @var DBCache $pDBCaches */
-		$pDBCaches = $this->_pSDKWrapper->getCache()[0];
-		$pDBCaches->clearAll();
-		$res = $pDBCaches->write([], 'zxc');
-		$this->assertTrue($res);
-	}
 
 	/**
 	 *
