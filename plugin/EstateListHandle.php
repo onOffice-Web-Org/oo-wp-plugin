@@ -49,14 +49,14 @@ class EstateListHandle
 			{
 				if (array_key_exists($key,$this->_listCustomField[$lang]))
 				{
-					$recordModified[$key] = $this->_listCustomField['DEU'][$key] ?? $recordModified[$key];
+					$recordModified[$key] = !empty($this->_listCustomField['DEU'][$key]) ? $this->_listCustomField['EN'][$key] : $recordModified[$key];
 				}
 			}
 			else
 			{
 				if (array_key_exists($key,$this->_listCustomField['EN']))
 				{
-					$recordModified[$key] = $this->_listCustomField['EN'][$key] ?? $recordModified[$key];
+					$recordModified[$key] =  !empty($this->_listCustomField['EN'][$key]) ? $this->_listCustomField['EN'][$key] : $recordModified[$key];
 				}
 			}
 		}
