@@ -74,14 +74,19 @@ msgstr "Propiedades"
 #: plugin/Gui/AdminPageFormList.php:96
 #: plugin/Controller/AdminViewController.php:405
 msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
-"You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin."
-"We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description."
-"This allows you to manage the title and description with your active SEO plugin."
-msgstr "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
-"You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin."
-"We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description."
-"This allows you to manage the title and description with your active SEO plugin."
-
+msgstr "De onOffice-plug-in heeft een actieve SEO-plug-in gedetecteerd: Yoast SEO."
+msgid "You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin."
+msgstr "U hebt momenteel de onOffice-plug-in geconfigureerd om de titel en beschrijving van de detailpagina in te vullen, wat kan leiden tot conflicten met de SEO-plug-in."
+msgid "This allows you to manage the title and description with your active SEO plugin."
+msgstr "Hiermee kunt u de titel en beschrijving beheren met uw actieve SEO-plug-in."
+msgid "We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description."
+msgstr "We raden u aan naar de instellingen van de onOffice-plug-in te gaan en de onOffice-plug-in zo te configureren dat de titel en beschrijving niet worden gewijzigd."
+#: plugin/Controller/AdminPageApiSettings.php:196
+msgid "We have detected an active SEO plugin: Yoast SEO. This option can lead to conflicts with the SEO plugin."
+msgstr "Hemos detectado un complemento SEO activo: Yoast SEO. Esta opción puede generar conflictos con el complemento SEO."
+#: plugin/Controller/AdminPageApiSettings.php:197
+msgid "We recommend that you configure the onOffice plugin to not modify the title and description."
+msgstr "Le recomendamos que configure el complemento de onOffice para que no modifique el título y la descripción."
 #: plugin/Controller/AdminViewController.php:172
 #: plugin/Gui/AdminPageFormList.php:95
 msgid "Forms"

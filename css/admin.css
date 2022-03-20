@@ -284,15 +284,15 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	width: 20px !important;
 	margin-left: 8px !important;
 }
-.fill-out {
-	margin-left: 20px;
-}
 p#notice-seo {
 	border: 1px solid #c3c4c7;
 	border-left: 4px solid #dba617;
 	background-color: #fff;
-	margin: 0.5em 0;
 	font-size: 13px;
 	line-height: 1.5;
 	padding: 10px;
+}
+
+#notice-seo, .description-notice, .do-not-modify {
+	margin-left: 20px;
 }

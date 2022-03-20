@@ -17,10 +17,13 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-use onOffice\WPlugin\EstateDetail;
-
-/**
+	
+	use DI\ContainerBuilder;
+	use onOffice\WPlugin\EstateDetail;
+	use onOffice\WPlugin\EstateListHandle;
+	use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+	
+	/**
  *
  *  Default template
  *
@@ -32,7 +35,30 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-	while ( $currentEstate = $pEstates->estateIterator() ) { ?>
+    $pContainerBuilder = new ContainerBuilder;
+    $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+    $pContainer = $pContainerBuilder->build();
+    $pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
+	while ( $currentEstate = $pEstates->estateIterator() ) {
+		if ($pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
+		{
+			add_filter('document_title_parts', function() use ($currentEstate) {
+				if (isset($currentEstate["objekttitel"]))
+				{
+					return [$currentEstate["objekttitel"]];
+				}
+				return [];
+			}, 10, 2);
+			add_action( 'wp_head', function () use($currentEstate) {
+				echo '<meta name="description" content="' . esc_attr($currentEstate["objektbeschreibung"] ?? null) . '" />';
+			});
+		}
+		if ($pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 1)
+		{
+			$estateListHandle = new EstateListHandle();
+			$currentEstate = $estateListHandle->handleRecord($currentEstate);
+		}
+        ?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
 			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>

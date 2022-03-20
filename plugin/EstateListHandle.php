@@ -2,6 +2,9 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
+
 class EstateListHandle
 {
 
@@ -11,24 +14,30 @@ class EstateListHandle
 	private $_listCustomField;
 	public function __construct()
 	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pEnvironment = new EstateListEnvironmentDefault($pContainer);
+		$pageId = $pEnvironment->getDataDetailViewHandler()
+			->getDetailView()->getPageId();
 		$this->_listCustomField = [
 							'EN' => [
-										'objekttitel' => apply_filters('get_post_metadata','onoffice_title'),
-										'objektbeschreibung' => apply_filters('get_post_metadata','onoffice_description'),
-										'ort' => apply_filters('get_post_metadata','onoffice_city'),
-										'plz' => apply_filters('get_post_metadata','onoffice_postal_code'),
-										'objektart' => apply_filters('get_post_metadata','onoffice_property_class'),
-										'vermarktungsart' => apply_filters('get_post_metadata','onoffice_marketing_method'),
-										'Id' => apply_filters('get_post_metadata','onoffice_id')
+										'objekttitel' => get_metadata('post', $pageId, 'onoffice_title', true),
+										'objektbeschreibung' => get_metadata('post', $pageId, 'onoffice_description', true),
+										'ort' => get_metadata('post', $pageId, 'onoffice_city', true),
+										'plz' => get_metadata('post', $pageId, 'onoffice_postal_code', true),
+										'objektart' => get_metadata('post', $pageId, 'onoffice_property_class', true),
+										'vermarktungsart' => get_metadata('post', $pageId, 'onoffice_marketing_method', true),
+										'Id' => get_metadata('post', $pageId, 'onoffice_id', true),
 									],
 							'DEU' => [
-										'objekttitel' => apply_filters('get_post_metadata','onoffice_titel'),
-										'objektbeschreibung' => apply_filters('get_post_metadata','onoffice_beschreibung'),
-										'ort' => apply_filters('get_post_metadata','onoffice_ort'),
-										'plz' => apply_filters('get_post_metadata','onoffice_plz'),
-										'objektart' => apply_filters('get_post_metadata','onoffice_objektart'),
-										'vermarktungsart' => apply_filters('get_post_metadata','onoffice_vermarktungsart'),
-										'Id' => apply_filters('get_post_metadata','onoffice_datensatznr')
+										'objekttitel' => get_metadata('post', $pageId, 'onoffice_titel', true),
+										'objektbeschreibung' => get_metadata('post', $pageId, 'onoffice_beschreibung', true),
+										'ort' => get_metadata('post', $pageId, 'onoffice_ort', true),
+										'plz' => get_metadata('post', $pageId, 'onoffice_plz', true),
+										'objektart' => get_metadata('post', $pageId, 'onoffice_objektart', true),
+										'vermarktungsart' => get_metadata('post', $pageId, 'onoffice_vermarktungsart', true),
+										'Id' => get_metadata('post', $pageId, 'onoffice_datensatznr', true),
 									]
 						];
 	}
@@ -40,14 +49,14 @@ class EstateListHandle
 			{
 				if (array_key_exists($key,$this->_listCustomField[$lang]))
 				{
-					$recordModified[$key] = $this->_listCustomField[$lang][$key];
+					$recordModified[$key] = $this->_listCustomField['DEU'][$key] ?? $recordModified[$key];
 				}
 			}
 			else
 			{
 				if (array_key_exists($key,$this->_listCustomField['EN']))
 				{
-					$recordModified[$key] = $this->_listCustomField['EN'][$key];
+					$recordModified[$key] = $this->_listCustomField['EN'][$key] ?? $recordModified[$key];
 				}
 			}
 		}
