@@ -40,19 +40,6 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
     $pContainer = $pContainerBuilder->build();
     $pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
 	while ( $currentEstate = $pEstates->estateIterator() ) {
-		if ($pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
-		{
-			add_filter('document_title_parts', function() use ($currentEstate) {
-				if (isset($currentEstate["objekttitel"]))
-				{
-					return [$currentEstate["objekttitel"]];
-				}
-				return [];
-			}, 10, 2);
-			add_action( 'wp_head', function () use($currentEstate) {
-				echo '<meta name="description" content="' . esc_attr($currentEstate["objektbeschreibung"] ?? null) . '" />';
-			});
-		}
 		if ($pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 1)
 		{
 			$estateListHandle = new EstateListHandle();

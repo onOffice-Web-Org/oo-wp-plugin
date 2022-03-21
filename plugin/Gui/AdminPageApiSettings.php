@@ -176,6 +176,9 @@ class AdminPageApiSettings
 	{
 		$descriptionDoNotModify = '
 			<div class="do-not-modify">
+				 <p>
+					'.esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites').'
+				 </p>
 				 <details>
 					<summary>'.esc_html__('Available custom fields','onoffice-for-wp-websites').'</summary>
 					   <p>'.esc_html__('When this option is active, the plugin makes the following custom fields available in the detail view.'
@@ -197,7 +200,7 @@ class AdminPageApiSettings
 					'. esc_html__('We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites').'
 				 </p>';
 		$descriptionFillOut = '<p class="description-notice">
-					'.esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites').'
+					'.esc_html__("This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.",'onoffice-for-wp-websites').'
 				 </p>';
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);

@@ -409,6 +409,19 @@ class EstateList
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
+		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
+		{
+			add_filter('document_title_parts', function() use ($recordModified) {
+				if (isset($recordModified["objekttitel"]))
+				{
+					return [$recordModified["objekttitel"]];
+				}
+				return [];
+			}, 10, 2);
+			add_action( 'wp_head', function () use($recordModified) {
+				echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
+			});
+		}
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 		return $pArrayContainer;
 	}
