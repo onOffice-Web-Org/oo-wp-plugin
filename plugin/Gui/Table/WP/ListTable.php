@@ -167,6 +167,11 @@ abstract class ListTable extends WP_List_Table
 				$pages = implode(',',$listPage);
 				$record->page_shortcode = $pages;
 			}
+			if ($record->default_recipient){
+				$record->recipient = "Default (".get_option('onoffice-settings-default-email', '').")";
+			} else {
+				$record->recipient = "$record->recipient (override)";
+			}
 			$recordHandled[] = $record;
 		}
 		return $recordHandled;

@@ -219,6 +219,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_EMAIL:
 				$pInstance = new InputFieldEmailRenderer('email', $elementName);
 				$pInstance->addAdditionalAttribute('size', '50');
+				$pInstance->addAdditionalAttribute('pattern', '^[\w.-]+@[\w.-]+\.[\w]{2,}$');
 				$pInstance->setValue($pInputModel->getValue());
 				break;
 		}
