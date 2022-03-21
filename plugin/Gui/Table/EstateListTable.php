@@ -104,12 +104,15 @@ class EstateListTable extends ListTable
 		$pRecordRead->addColumn('listview_id', 'ID');
 		$pRecordRead->addColumn('name');
 		$pRecordRead->addColumn('filterId');
-		$pRecordRead->addColumn('show_status');
+		$pRecordRead->addColumn('template');
 		$pRecordRead->addColumn('list_type');
 		$pRecordRead->addColumn('name', 'shortcode');
+		$pRecordRead->addColumn('page_shortcode');
 		$pRecordRead->addWhere("`list_type` IN('default', 'reference', 'favorites')");
 
-		$this->setItems($pRecordRead->getRecordsSortedAlphabetically());
+		$pRecord = $pRecordRead->getRecordsSortedAlphabetically();
+		$pRecord = $this->handleRecord($pRecord);
+		$this->setItems($pRecord);
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args([
@@ -119,7 +122,6 @@ class EstateListTable extends ListTable
 		]);
 	}
 
-
 	/**
 	 *
 	 */
@@ -128,11 +130,12 @@ class EstateListTable extends ListTable
 	{
 		$columns = [
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of View', 'onoffice-for-wp-websites'),
-			'filtername' => __('Filter', 'onoffice-for-wp-websites'),
-			'show_status' => __('Show Status', 'onoffice-for-wp-websites'),
-			'list_type' => __('Type of List', 'onoffice-for-wp-websites'),
+			'name' => __('List name', 'onoffice-for-wp-websites'),
+			'filtername' => __('Selected filter', 'onoffice-for-wp-websites'),
+			'template' => __('Template', 'onoffice-for-wp-websites'),
+			'list_type' => __('List type', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
+			'page_shortcode' => __('Pages using the shortcode', 'onoffice-for-wp-websites'),
 		];
 
 		$hidden = ['ID', 'filterId'];

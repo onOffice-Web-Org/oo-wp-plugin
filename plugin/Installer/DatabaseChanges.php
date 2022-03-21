@@ -34,7 +34,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 22;
+	const MAX_VERSION = 25;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -169,6 +169,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 22;
 		}
 
+		if ($dbversion == 22) {
+			dbDelta($this->getCreateQueryForms());
+			$dbversion = 23;
+		}
+
+		if ($dbversion == 23) {
+			$this->deactivateCheckDuplicateOfForm();
+			$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+			$dbversion = 24;
+		}
+
+		if ($dbversion == 24) {
+			dbDelta($this->getCreateQueryListviews());
+			dbDelta($this->getCreateQueryListViewsAddress());
+			dbDelta($this->getCreateQueryForms());
+			$dbversion = 25;
+		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -240,6 +257,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
 			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
+			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -280,13 +298,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',
+			`contact_type` varchar(255) NULL DEFAULT NULL,
+			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
 
 		return $sql;
 	}
-
 	/**
 	 *
 	 * @return string
@@ -451,6 +470,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`template` tinytext NOT NULL,
 			`recordsPerPage` int(10) NOT NULL DEFAULT '10',
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
+			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -599,7 +619,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
-
 	/**
 	 *
 	 */
@@ -610,6 +629,20 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$sql = "UPDATE {$prefix}oo_plugin_forms
 				SET `createaddress` = 1
 				WHERE `form_type` = 'interest' OR `form_type` = 'owner'";
+
+		$this->_pWPDB->query($sql);
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function deactivateCheckDuplicateOfForm()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_forms
+				SET `checkduplicates` = 0";
 
 		$this->_pWPDB->query($sql);
 	}

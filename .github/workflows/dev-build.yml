@@ -1,0 +1,68 @@
+name: Development build
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  dev-build:
+    if: github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    name: Development build after approving review
+    steps:
+    - name: Checkout from GIT
+      uses: actions/checkout@v2
+      with:
+        # We need to fetch more than just the most recent commit,
+        # since we later use `git describe`.
+        fetch-depth: 0
+        # The trigger makes this run on a merge commit, but we want to run
+        # on the latest commit before the review.
+        ref: ${{ github.event.pull_request.head.sha }}
+        submodules: recursive
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        extensions: mbstring, mysqli, intl, curl  # optional, setup extensions
+        coverage: xdebug  # optional, setup coverage driver
+
+    - name: Check PHP Version
+      run: php -v
+
+    - name: Composer install
+      run: composer install
+
+    - name: Build for development
+      run: PREFIX=/tmp/release make test-zip
+
+    - name: Get version name
+      run: echo "DEV_BUILD_VERSION=$(git describe --tags)" >> $GITHUB_ENV  
+
+    - name: Set version in plugin
+      run: sed -i -r "s/Version:\ [^$]+$/Version:\ ${{ env.DEV_BUILD_VERSION }}/" /tmp/release/onoffice/plugin.php
+
+    - run: cat /tmp/release/onoffice/plugin.php
+
+    - name: Zip files
+      run: (cd /tmp/release/ && zip -r ./onoffice-${{ env.DEV_BUILD_VERSION}}.zip ./onoffice/)  # To prevent nested paths (like /tmp/release/onoffice/readme.txt) we have to cd into the directory.
+
+    - name: Upload zip
+      uses: actions/upload-artifact@v3
+      with:
+        name: onoffice-${{ env.DEV_BUILD_VERSION }}-please-unpack
+        path: /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION }}.zip  # Uploading a .zip leads to a .zip inside a .zip, but uploading the folder takes significantly longer.
+
+    - name: Clean up
+      run: rm -r /tmp/release
+
+    - name: Post comment
+      uses: mshick/add-pr-comment@v1
+      with:
+        message: |
+          Install the approved version:
+          1. Download `onoffice-${{ env.DEV_BUILD_VERSION }}-please-unpack.zip` from https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.
+          2. Unpack the downloaded file to get another .zip file.
+          3. Upload that inner .zip file to WordPress.
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
