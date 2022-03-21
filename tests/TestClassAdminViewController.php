@@ -37,8 +37,11 @@ use WP_UnitTestCase;
 use function is_admin;
 use function set_current_screen;
 use function wp_scripts;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 
-
+use onOffice\WPlugin\SDKWrapper;
+use onOffice\SDK\Cache\onOfficeSDKCache;
 /**
  *
  * @runTestsInSeparateProcesses
@@ -63,6 +66,8 @@ class TestClassAdminViewController
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
+
+
 	}
 
 	/**
@@ -96,6 +101,11 @@ class TestClassAdminViewController
 	 */
 	public function testRegisterMenu(AdminViewController $pAdminViewController)
 	{
+		global $wpdb;
+
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
 		global $wp_filter;
 		$wp_filter = [];
 		$pAdminViewController->register_menu();
