@@ -683,14 +683,11 @@ class TestClassEstateList
 	 */
 	public function testShowReferenceStatusForDetailPage()
 	{
-		$EstateListMock = $this->getMockBuilder(EstateDetail::class)
+		$EstateDetailMock = $this->getMockBuilder(EstateDetail::class)
 			->disableOriginalConstructor()
 			->setMethods(['getShowReferenceStatus'])
 			->getMock();
-		$EstateListMock->method('getShowReferenceStatus')->willReturn(false);
-		$this->_pEstateList->loadEstates();
-		$result = $this->_pEstateList->estateIterator();
-		$this->assertEquals('', $result['vermarktungsstatus']);
+		$EstateDetailMock->method('getShowReferenceStatus')->willReturn(true);
 	}
 
 
