@@ -680,19 +680,6 @@ class TestClassEstateList
 
 	/**
 	 *
-	 */
-	public function testShowReferenceStatusForDetailPage()
-	{
-		$EstateDetailMock = $this->getMockBuilder(EstateDetail::class)
-			->disableOriginalConstructor()
-			->setMethods(['getShowReferenceStatus'])
-			->getMock();
-		$EstateDetailMock->method('getShowReferenceStatus')->willReturn(true);
-	}
-
-
-	/**
-	 *
 	 * @before
 	 *
 	 */
