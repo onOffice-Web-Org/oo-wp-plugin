@@ -121,6 +121,32 @@ class RecordManagerReadForm
 		return $result;
 	}
 
+	public function getCountAllRecord()
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT COUNT(`form_id`) as count
+				FROM {$prefix}oo_plugin_forms";
+
+		$rowCount = $pWpDb->get_var($sql);
+
+		return $rowCount;
+	}
+
+	public function getCountNoDefaultRecipientRecord()
+	{
+		$prefix = $this->getTablePrefix();
+		$pWpDb = $this->getWpdb();
+
+		$sql = "SELECT COUNT(`form_id`) as count
+				FROM {$prefix}oo_plugin_forms WHERE `default_recipient` = 0";
+
+		$rowCount = $pWpDb->get_var($sql);
+
+		return $rowCount;
+	}
+
 	/**
 	 *
 	 * @param string $formName

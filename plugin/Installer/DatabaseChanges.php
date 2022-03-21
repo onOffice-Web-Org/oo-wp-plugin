@@ -166,6 +166,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		if ($dbversion == 21) {
 			dbDelta($this->getCreateQueryListviews());
+            dbDelta($this->getCreateQueryForms());
 			$dbversion = 22;
 		}
 
@@ -298,6 +299,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',
+			`default_recipient` tinyint(1) NOT NULL DEFAULT '0',
 			`contact_type` varchar(255) NULL DEFAULT NULL,
 			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`form_id`),
