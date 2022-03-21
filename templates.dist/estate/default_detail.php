@@ -63,7 +63,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						continue;
 					}
                     if ($field == 'multiParkingLot') {
-                        include 'ParkingLot.php';
+	                    require('parkingLot/ParkingLot.php');
                         continue;
                     }
 					echo '<div class="oo-detailslisttd">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'."\n"
