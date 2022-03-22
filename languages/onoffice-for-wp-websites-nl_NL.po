@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-03-14T16:59:18+07:00\n"
+"POT-Creation-Date: 2022-03-22T16:46:30+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -196,7 +196,7 @@ msgid "choose name"
 msgstr "naam kiezen"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:121
-#: plugin/Gui/AdminPageEstateDetail.php:278
+#: plugin/Gui/AdminPageEstateDetail.php:279
 #: plugin/Gui/AdminPageEstateListSettings.php:127
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
 #: plugin/Gui/AdminPageFormSettingsBase.php:409
@@ -208,7 +208,7 @@ msgid "Filter & Records"
 msgstr "Filter & dossiers"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:160
-#: plugin/Gui/AdminPageEstateDetail.php:295
+#: plugin/Gui/AdminPageEstateDetail.php:289
 #: plugin/Gui/AdminPageEstateListSettings.php:136
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
@@ -447,21 +447,19 @@ msgstr "Ansprechpartner-Felder"
 msgid "Real Estate Fields"
 msgstr "Vastgoedgegevensvelden"
 
-#: plugin/Gui/AdminPageEstateDetail.php:287
-#, fuzzy
-#| msgid "Contact person"
-msgid "Contact Form"
-msgstr "Contactpersoon"
+#: plugin/Gui/AdminPageEstateDetail.php:297
+msgid "Access Control"
+msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:304
+#: plugin/Gui/AdminPageEstateDetail.php:306
 msgid "Additional Media"
 msgstr "Extra media"
 
-#: plugin/Gui/AdminPageEstateDetail.php:420
+#: plugin/Gui/AdminPageEstateDetail.php:422
 msgid "The detail view has been saved."
 msgstr "Het detailaanzicht is opgeslagen."
 
-#: plugin/Gui/AdminPageEstateDetail.php:421
+#: plugin/Gui/AdminPageEstateDetail.php:423
 msgid "There was a problem saving the detail view."
 msgstr "Er was een probleem met het bewaren van het detailaanzicht."
 
@@ -574,12 +572,12 @@ msgid "Default Value Up To:"
 msgstr "Standaardwaarde tot:"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:317
-#: plugin/Gui/Table/EstateListTable.php:171
+#: plugin/Gui/Table/EstateListTable.php:174
 msgid "No"
 msgstr "Nee"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:318
-#: plugin/Gui/Table/EstateListTable.php:171
+#: plugin/Gui/Table/EstateListTable.php:174
 msgid "Yes"
 msgstr "Ja"
 
@@ -614,37 +612,78 @@ msgstr "Het detailaanzicht is opgeslagen."
 msgid "There was a problem saving the similar estates view."
 msgstr "Er was een probleem met het bewaren van het detailaanzicht."
 
-#: plugin/Gui/Table/AddressListTable.php:103
-#: plugin/Gui/Table/AddressListTable.php:146
-#: plugin/Gui/Table/EstateListTable.php:131
-#: plugin/Gui/Table/EstateListTable.php:210
+#: plugin/Gui/Table/AddressListTable.php:118
+#: plugin/Gui/Table/EstateListTable.php:193
+msgid "(Needs valid API credentials)"
+msgstr "(Heeft geldige API-gegevens nodig)"
+
+#. translators: %s will be replaced with a number.
+#: plugin/Gui/Table/AddressListTable.php:121
+#: plugin/Gui/Table/EstateListTable.php:196
+msgid "(Unknown Filter (ID: %s))"
+msgstr "(Onbekende filter (ID: %s))"
+
+#: plugin/Gui/Table/AddressListTable.php:136
+#: plugin/Gui/Table/EstateListTable.php:213
 #: plugin/Gui/Table/EstateUnitsTable.php:62
 #: plugin/Gui/Table/EstateUnitsTable.php:114
 msgid "Name of View"
 msgstr "Naam van het uitzicht"
 
-#: plugin/Gui/Table/AddressListTable.php:104
-#: plugin/Gui/Table/AddressListTable.php:147
-#: plugin/Gui/Table/EstateListTable.php:135
+#: plugin/Gui/Table/AddressListTable.php:137
 #: plugin/Gui/Table/EstateListTable.php:214
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:125
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:135
+msgid "Filter"
+msgstr "Filter"
+
+#: plugin/Gui/Table/AddressListTable.php:138
+#: plugin/Gui/Table/AddressListTable.php:183
+#: plugin/Gui/Table/EstateListTable.php:137
+#: plugin/Gui/Table/EstateListTable.php:217
 #: plugin/Gui/Table/EstateUnitsTable.php:63
 #: plugin/Gui/Table/EstateUnitsTable.php:116
-#: plugin/Gui/Table/FormsTable.php:126 plugin/Gui/Table/FormsTable.php:151
+#: plugin/Gui/Table/FormsTable.php:132 plugin/Gui/Table/FormsTable.php:158
 msgid "Shortcode"
 msgstr "Verkorte code"
 
-#: plugin/Gui/Table/AddressListTable.php:183
-#: plugin/Gui/Table/EstateListTable.php:270
+#: plugin/Gui/Table/AddressListTable.php:180
+#: plugin/Gui/Table/EstateListTable.php:133
+msgid "List name"
+msgstr "Lijstnaam"
+
+#: plugin/Gui/Table/AddressListTable.php:181
+#: plugin/Gui/Table/EstateListTable.php:134
+msgid "Selected filter"
+msgstr "Geselecteerd filter"
+
+#: plugin/Gui/Table/AddressListTable.php:182
+#: plugin/Gui/Table/EstateListTable.php:135 plugin/Gui/Table/FormsTable.php:130
+#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:265
+#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
+#, fuzzy
+#| msgid "Templates"
+msgid "Template"
+msgstr "Sjabloon"
+
+#: plugin/Gui/Table/AddressListTable.php:184
+#: plugin/Gui/Table/EstateListTable.php:138 plugin/Gui/Table/FormsTable.php:133
+msgid "Pages using the shortcode"
+msgstr "Pagina's die de shortcode gebruiken"
+
+#: plugin/Gui/Table/AddressListTable.php:220
+#: plugin/Gui/Table/EstateListTable.php:273
 #: plugin/Gui/Table/EstateUnitsTable.php:163
-#: plugin/Gui/Table/FormsTable.php:259
+#: plugin/Gui/Table/FormsTable.php:266
 #, fuzzy
 #| msgid "Check for Duplicates"
 msgid "Duplicate"
 msgstr "Controleer op duplicaten"
 
 #. translators: %s is the name of the list view.
-#: plugin/Gui/Table/AddressListTable.php:189
-#: plugin/Gui/Table/EstateListTable.php:276
+#: plugin/Gui/Table/AddressListTable.php:226
+#: plugin/Gui/Table/EstateListTable.php:279
 msgid ""
 "You are about to delete the listview '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -652,33 +691,19 @@ msgstr ""
 "Sie sind dabei, die Listenansicht '%s' zu löschen.\n"
 "Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
-#: plugin/Gui/Table/EstateListTable.php:132
-#: plugin/Gui/Table/EstateListTable.php:211
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:125
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:135
-msgid "Filter"
-msgstr "Filter"
+#: plugin/Gui/Table/EstateListTable.php:136
+msgid "List type"
+msgstr "Lijsttype"
 
-#: plugin/Gui/Table/EstateListTable.php:133
-#: plugin/Gui/Table/EstateListTable.php:212
+#: plugin/Gui/Table/EstateListTable.php:215
 msgid "Show Status"
 msgstr "Toon status"
 
-#: plugin/Gui/Table/EstateListTable.php:134
-#: plugin/Gui/Table/EstateListTable.php:213
+#: plugin/Gui/Table/EstateListTable.php:216
 #: plugin/Gui/Table/EstateUnitsTable.php:115
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:299
 msgid "Type of List"
 msgstr "Type lijst"
-
-#: plugin/Gui/Table/EstateListTable.php:190
-msgid "(Needs valid API credentials)"
-msgstr "(Heeft geldige API-gegevens nodig)"
-
-#. translators: %s will be replaced with a number.
-#: plugin/Gui/Table/EstateListTable.php:193
-msgid "(Unknown Filter (ID: %s))"
-msgstr "(Onbekende filter (ID: %s))"
 
 #. translators: %s is the name of the unit view.
 #: plugin/Gui/Table/EstateUnitsTable.php:169
@@ -689,16 +714,28 @@ msgstr ""
 "Sie sind dabei, die Einheitenliste '%s' zu löschen.\n"
 "Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
-#: plugin/Gui/Table/FormsTable.php:124 plugin/Gui/Table/FormsTable.php:149
+#: plugin/Gui/Table/FormsTable.php:128
+msgid "Form name"
+msgstr "Formulier naam"
+
+#: plugin/Gui/Table/FormsTable.php:129
+msgid "Recipient e-mail address"
+msgstr "Emailadres van ontvanger"
+
+#: plugin/Gui/Table/FormsTable.php:131
+msgid "Form type"
+msgstr "Formuliertype"
+
+#: plugin/Gui/Table/FormsTable.php:156
 msgid "Name of Form"
 msgstr "Naam van het formulier"
 
-#: plugin/Gui/Table/FormsTable.php:125 plugin/Gui/Table/FormsTable.php:150
+#: plugin/Gui/Table/FormsTable.php:157
 msgid "Type of Form"
 msgstr "Soort formulier"
 
 #. translators: %s is the name of the form.
-#: plugin/Gui/Table/FormsTable.php:265
+#: plugin/Gui/Table/FormsTable.php:272
 msgid ""
 "You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -731,44 +768,10 @@ msgstr "Oplopend"
 msgid "Descending"
 msgstr "Aflopend"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:245
-#: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
-msgid "Templates"
-msgstr "Sjabloon"
-
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119
 msgid "List View"
 msgstr "Lijstweergave"
-
-#: plugin/Gui/Table/EstateListTable.php:133
-msgid "List name"
-msgstr "Lijstnaam"
-
-#: plugin/Gui/Table/EstateListTable.php:134
-msgid "Selected filter"
-msgstr "Geselecteerd filter"
-
-#: plugin/Gui/Table/EstateListTable.php:136
-msgid "List type"
-msgstr "Lijsttype"
-
-#: plugin/Gui/Table/EstateListTable.php:138
-msgid "Pages using the shortcode"
-msgstr "Pagina's die de shortcode gebruiken"
-
-#: plugin/Gui/Table/AddressListTable.php:128
-msgid "Form name"
-msgstr "Formulier naam"
-
-#: plugin/Gui/Table/AddressListTable.php:129
-msgid "Recipient e-mail address"
-msgstr "Emailadres van ontvanger"
-
-#: plugin/Gui/Table/AddressListTable.php:131
-msgid "Form type"
-msgstr "Formuliertype"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:148
 msgid "Passport Photo"
@@ -790,7 +793,7 @@ msgid "Reduce values according to selected filter"
 msgstr "Verminder de waarden volgens de gekozen filter"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:318
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:300
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:320
 msgid "Show Estate Status"
 msgstr "Toon status van het landgoed"
 
@@ -806,7 +809,7 @@ msgid "Random Order"
 msgstr "Willekeurige volgorde"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:404
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:137
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:157
 msgid "PDF-Expose"
 msgstr "PDF-blootstelling"
 
@@ -920,27 +923,33 @@ msgstr "Taal toevoegen"
 msgid "Module"
 msgstr "Module"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:158
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:136
+#, fuzzy
+#| msgid "Reference Estates"
+msgid "Allow detail view for reference estates"
+msgstr "Referentie Landgoederen"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:178
 msgid "Movie Links"
 msgstr "Filmlinks"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:164
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:184
 msgid "Disabled"
 msgstr "Uitgeschakeld"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:165
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:185
 msgid "Link"
 msgstr "Link"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:166
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:186
 msgid "Player"
 msgstr "Speler"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:281
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:301
 msgid "Select Contact Form"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:285
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:305
 #, fuzzy
 #| msgid "Contact person"
 msgid "No Contact Form"
@@ -1216,6 +1225,11 @@ msgstr "Contactpersoon"
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documenten"
+
+#, fuzzy
+#~| msgid "Contact person"
+#~ msgid "Contact Form"
+#~ msgstr "Contactpersoon"
 
 #~ msgid "Modules"
 #~ msgstr "Modules"
