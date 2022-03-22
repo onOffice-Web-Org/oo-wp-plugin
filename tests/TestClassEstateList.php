@@ -67,6 +67,9 @@ use function json_decode;
  * @url http://www.onoffice.de
  * @copyright 2003-2019, onOffice(R) GmbH
  *
+ * @covers onOffice\WPlugin\EstateDetail
+ * @covers onOffice\WPlugin\EstateList
+ *
  */
 
 class TestClassEstateList
@@ -190,6 +193,17 @@ class TestClassEstateList
 	{
 		$this->_pEstateList->loadEstates();
 		$this->assertEquals(9, $this->_pEstateList->getEstateOverallCount());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetRawValues()
+	{
+		$this->_pEstateList->loadEstates();
+		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->getRawValues());
 	}
 
 
@@ -355,6 +369,29 @@ class TestClassEstateList
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals($expectedResults[0], $this->_pEstateList->$methodName(2));
 		$this->assertEquals($expectedResults[1], $this->_pEstateList->$methodName(3));
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testHasDetailView()
+	{
+		$valueMap = true;
+		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
+		                         ->setMethods(['__construct', 'hasDetailView'])
+		                         ->getMock();
+		$pDataDetailView->expects($this->once())->method('hasDetailView')->willReturn($valueMap);
+
+		$pDataDetailViewHandlerMock = $this->getMockBuilder(DataDetailViewHandler::class)
+		                         ->setMethods(['__construct', 'getDetailView'])
+		                         ->getMock();
+		$pDataDetailViewHandlerMock->expects($this->once())->method('getDetailView')->willReturn($pDataDetailView);
+
+		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandlerMock);
+
+		$this->assertEquals($valueMap, $this->_pEstateList->hasDetailView());
 	}
 
 

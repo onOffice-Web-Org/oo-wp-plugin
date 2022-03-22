@@ -48,6 +48,7 @@ class TestClassInputModelLabel
 		$this->assertEquals('hello', $pModel->getLabel());
 		$this->assertEquals('world', $pModel->getValue());
 		$this->assertEquals(InputModelLabel::VALUE_ENCLOSURE_ITALIC, $pModel->getValueEnclosure());
+		$this->assertEmpty($pModel->getIdentifier());
 
 		$pModel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
 		$this->assertEquals(InputModelLabel::VALUE_ENCLOSURE_CODE, $pModel->getValueEnclosure());
