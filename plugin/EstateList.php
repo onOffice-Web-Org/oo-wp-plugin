@@ -673,8 +673,11 @@ class EstateList
 	 */
 	public function getShowReferenceStatus(): bool
 	{
-		return $this->_pDataView instanceof DataListView &&
-			$this->_pDataView->getShowReferenceStatus();
+			if ($this->_pDataView instanceof DataListView) {
+					return $this->_pDataView->getShowReferenceStatus();
+			} else {
+					return true;
+			}
 	}
 
 	/**
