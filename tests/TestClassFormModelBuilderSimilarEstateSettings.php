@@ -30,6 +30,7 @@ use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactorySimilarView;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
 
@@ -143,6 +144,52 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInputModelDB = $pInstance->createInputModelSimilarEstateMarketingMethod();
 		$this->assertEquals($pInputModelDB->getValue(), '1');
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelFieldsConfigByCategory
+	 */
+	public function testCreateInputModelFieldsConfigByCategory()
+	{
+		$formModel = new FormModelBuilderSimilarEstateSettings();
+		$result = $formModel->createInputModelFieldsConfigByCategory('1', ['name'], 'label');
+		$this->assertInstanceOf(InputModelOption::class, $result);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelFieldsConfigByCategory
+	 */
+	public function testCreateInputModelFieldsConfigByCategoryEmptyValue()
+	{
+		$formModel = new FormModelBuilderSimilarEstateSettings();
+		$result = $formModel->createInputModelFieldsConfigByCategory('1', ['name'], 'label');
+		$formModel->setValues(['']);
+		$this->assertEmpty($result->getValue());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelTemplate
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::setInputModelSimilarViewFactory
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::getTemplateValueByField
+	 */
+	public function testCreateInputModelTemplate()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->setInputModelSimilarViewFactory($this->_pInputModelOptionFactorySimilarViewDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->createInputModelTemplate(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE);
+		$this->assertEquals($pInputModelDB->getHtmlType(), InputModelOption::HTML_TYPE_SELECT);
 	}
 
 	/**
