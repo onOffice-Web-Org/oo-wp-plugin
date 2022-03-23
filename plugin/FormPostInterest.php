@@ -127,7 +127,6 @@ class FormPostInterest
 		$filledSearchCriteriaData = $this->_pFormPostInterestConfiguration->getSearchcriteriaFields()
 			->getFieldLabelsOfInputs($pFormData->getSearchcriteriaData());
 		$searchCriterias = $this->createStringFromInputData($filledSearchCriteriaData);
-		$comment = $values['krit_bemerkung_oeffentlich'] ?? '';
 		$message = $values['message'] ?? '';
 		$message .= "\nSuchkriterien des Interessenten:\n".
 					"$searchCriterias";
@@ -138,7 +137,6 @@ class FormPostInterest
 			'formtype' => $pFormData->getFormtype(),
 			'referrer' => filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '',
 			'recipient' => $recipient,
-			'krit_bemerkung_oeffentlich' => $comment,
 		];
 
 		if ($recipient !== '') {
