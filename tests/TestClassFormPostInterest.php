@@ -88,7 +88,7 @@ class TestClassFormPostInterest
 					'showContent' => true,
 					'showTable' => true,
 					'language' => 'ENG',
-					'modules' => ['address', 'estate','searchcriteria', ''],
+					'modules' => ['address', 'estate'],
 			], null, $responseArrayFields);
 
 		$this->_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);

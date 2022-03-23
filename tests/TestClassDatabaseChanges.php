@@ -182,7 +182,7 @@ class TestClassDatabaseChanges
 
 		$this->_pWPDBMock->expects($this->exactly(4))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput,$formsOutput, $fieldConfigOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput);
 
 		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
 			->will($this->returnValue(true));
