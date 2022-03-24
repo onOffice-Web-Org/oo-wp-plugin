@@ -23,6 +23,10 @@ namespace onOffice\WPlugin\Gui\Table;
 
 use onOffice\WPlugin\Gui\Table\WP\ListTable;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
+use onOffice\WPlugin\Controller\Exception\UnknownFilterException;
+use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\FilterCall;
+use onOffice\SDK\onOfficeSDK;
 use function __;
 use function admin_url;
 use function esc_html;
@@ -43,6 +47,8 @@ class AddressListTable
 	/** @var int */
 	private $_itemsPerPage = null;
 
+	/** @var FilterCall */
+	private $_pFilterCall = null;
 
 	/**
 	 *
@@ -59,6 +65,7 @@ class AddressListTable
 		]);
 
 		$this->_itemsPerPage = $this->get_items_per_page('onoffice-address-listview_per_page', 10);
+		$this->_pFilterCall = new FilterCall(onOfficeSDK::MODULE_ADDRESS);
 	}
 
 
@@ -77,9 +84,14 @@ class AddressListTable
 		$pRecordRead->setOffset($offset);
 		$pRecordRead->addColumn('listview_address_id', 'ID');
 		$pRecordRead->addColumn('name');
+		$pRecordRead->addColumn('filterId');
+		$pRecordRead->addColumn('template');
 		$pRecordRead->addColumn('name', 'shortcode');
+		$pRecordRead->addColumn('page_shortcode');
 
-		$this->setItems($pRecordRead->getRecordsSortedAlphabetically());
+		$pRecord = $pRecordRead->getRecordsSortedAlphabetically();
+		$pRecord = $this->handleRecord($pRecord);
+		$this->setItems($pRecord);
 		$itemsCount = $pRecordRead->getCountOverall();
 
 		$this->set_pagination_args([
@@ -88,8 +100,29 @@ class AddressListTable
 			'total_pages' => ceil($itemsCount / 10)
 		]);
 	}
+	/**
+	 *
+	 * @param object $pItem
+	 * @return string
+	 *
+	 */
 
-
+	protected function column_filtername($pItem)
+	{
+		$filterName = '';
+		try {
+			if ($pItem->filterId != 0) {
+				$filterName = $this->_pFilterCall->getFilternameById($pItem->filterId);
+			}
+		} catch (APIClientCredentialsException $pCredentialsException) {
+			$filterName = __('(Needs valid API credentials)', 'onoffice-for-wp-websites');
+		} catch (UnknownFilterException $pFilterException) {
+			/* translators: %s will be replaced with a number. */
+			$filterName = sprintf(__('(Unknown Filter (ID: %s))', 'onoffice-for-wp-websites'),
+				$pFilterException->getFilterId());
+		}
+		return $filterName;
+	}
 	/**
 	 *
 	 * @return array
@@ -101,6 +134,7 @@ class AddressListTable
 		return [
 			'cb' => '<input type="checkbox" />',
 			'name' => __('Name of View', 'onoffice-for-wp-websites'),
+			'filtername' => __('Filter', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
 		];
 	}
@@ -143,11 +177,14 @@ class AddressListTable
 	{
 		$columns = [
 			'cb' => '<input type="checkbox" />',
-			'name' => __('Name of View', 'onoffice-for-wp-websites'),
+			'name' => __('List name', 'onoffice-for-wp-websites'),
+			'filtername' => __('Selected filter', 'onoffice-for-wp-websites'),
+			'template' => __('Template', 'onoffice-for-wp-websites'),
 			'shortcode' => __('Shortcode', 'onoffice-for-wp-websites'),
+			'page_shortcode' => __('Pages using the shortcode', 'onoffice-for-wp-websites'),
 		];
 
-		$hidden = ['ID'];
+		$hidden = ['ID','filterId'];
 		$sortable = [];
 
 		$this->_column_headers = [$columns, $hidden, $sortable,

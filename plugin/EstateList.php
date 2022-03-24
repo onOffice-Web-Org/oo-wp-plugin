@@ -276,7 +276,11 @@ class EstateList
 			];
 		}
 
-		if (!$this->getShowReferenceStatus()) {
+		if ($pListView->getName() === 'detail') {
+			if (!$this->hasDetailView()) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			}
+		} elseif (!$this->getShowReferenceStatus()) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 		}
 
@@ -411,19 +415,24 @@ class EstateList
 		}
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
 		{
-			add_filter('document_title_parts', function() use ($recordModified) {
+			add_filter('pre_get_document_title', function($title_parts_array) use ($recordModified) {
 				if (isset($recordModified["objekttitel"]))
 				{
-					return [$recordModified["objekttitel"]];
+					$title_parts_array = $recordModified["objekttitel"];
 				}
-				return [];
-			}, 10, 2);
+				return $title_parts_array;
+			},999,1);
 			add_action( 'wp_head', function () use($recordModified) {
 				echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
 			});
 		}
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 		return $pArrayContainer;
+	}
+
+	public function getRawValues(): ArrayContainerEscape
+	{
+		return new ArrayContainerEscape($this->_recordsRaw);
 	}
 
 	/**
@@ -546,6 +555,18 @@ class EstateList
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstatePictureValues($imageId, $currentEstate);
+	}
+
+	/**
+	 *
+	 * @return bool
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function hasDetailView(): bool
+    {
+		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->hasDetailView();
 	}
 
 	/**
@@ -692,8 +713,11 @@ class EstateList
 	 */
 	public function getShowReferenceStatus(): bool
 	{
-		return $this->_pDataView instanceof DataListView &&
-			$this->_pDataView->getShowReferenceStatus();
+			if ($this->_pDataView instanceof DataListView) {
+					return $this->_pDataView->getShowReferenceStatus();
+			} else {
+					return true;
+			}
 	}
 
 	/**

@@ -320,11 +320,11 @@ msgstr "Available custom fields"
 
 #: plugin/Gui/AdminPageApiSettings.php:191
 msgid "When this option is active, the plugin makes the following custom fields available in the detail view."
-"These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate."
-"For information on how to use custom fields consult you SEO plugin's documentation."
+" These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate."
+" For information on how to use custom fields consult you SEO plugin's documentation."
 msgstr "When this option is active, the plugin makes the following custom fields available in the detail view."
-"These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate."
-"For information on how to use custom fields consult you SEO plugin's documentation."
+" These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate."
+" For information on how to use custom fields consult you SEO plugin's documentation."
 
 #: plugin/Gui/AdminPageApiSettings.php:194
 msgid "These custom fields are only available in the detail view and on no other page."
@@ -825,6 +825,34 @@ msgstr "Descendente"
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr "Plantilla"
+
+#: plugin/Gui/Table/EstateListTable.php:133
+msgid "List name"
+msgstr "Lista de nombres"
+
+#: plugin/Gui/Table/EstateListTable.php:134
+msgid "Selected filter"
+msgstr "Filtro seleccionado"
+
+#: plugin/Gui/Table/EstateListTable.php:136
+msgid "List type"
+msgstr "Tipo de lista"
+
+#: plugin/Gui/Table/EstateListTable.php:138
+msgid "Pages using the shortcode"
+msgstr "Páginas que usan el shortcode"
+
+#: plugin/Gui/Table/AddressListTable.php:128
+msgid "Form name"
+msgstr "Nombre del formulario"
+
+#: plugin/Gui/Table/AddressListTable.php:129
+msgid "Recipient e-mail address"
+msgstr "Dirección de Correo Electrónico del Destinatario"
+
+#: plugin/Gui/Table/AddressListTable.php:131
+msgid "Form type"
+msgstr "tipo de formulario"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119

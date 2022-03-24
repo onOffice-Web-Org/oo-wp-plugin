@@ -39,6 +39,7 @@ use onOffice\WPlugin\Utility\SymmetricEncryption;
 use function settings_fields;
 use function submit_button;
 use onOffice\WPlugin\Controller\AdminViewController;
+use function wp_enqueue_style;
 /**
  *
  */
@@ -68,6 +69,7 @@ class AdminPageApiSettings
         $this->addFormModelDetailView($pageSlug);
 		$this->addFormModelPagination($pageSlug);
 		$this->addFormModelGoogleBotSettings();
+		$this->enqueue_js();
 	}
 
 
@@ -182,8 +184,8 @@ class AdminPageApiSettings
 				 <details>
 					<summary>'.esc_html__('Available custom fields','onoffice-for-wp-websites').'</summary>
 					   <p>'.esc_html__('When this option is active, the plugin makes the following custom fields available in the detail view.'
-				.'These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate.'
-				."For information on how to use custom fields consult you SEO plugin's documentation.",'onoffice-for-wp-websites').'<br>'.
+				.' These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate.'
+				." For information on how to use custom fields consult you SEO plugin's documentation.",'onoffice-for-wp-websites').'<br>'.
 			esc_html__('These custom fields are only available in the detail view and on no other page.','onoffice-for-wp-websites').'<br>
 					   - '. esc_html__('Title (onoffice_title)','onoffice-for-wp-websites').'<br>
 					   - '. esc_html__('Description (onoffice_description)','onoffice-for-wp-websites').'<br>
@@ -448,4 +450,12 @@ class AdminPageApiSettings
 
         $this->addFormModel($pFormModel);
     }
+	
+	public function enqueue_js()
+	{
+		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+		wp_register_script('onoffice-setting-api', plugins_url
+		('/js/onoffice-setting-api.js', $pluginPath), 'google-recaptcha');
+		wp_enqueue_script('onoffice-setting-api');
+	}
 }
