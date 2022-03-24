@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
@@ -41,13 +42,18 @@ class DataDetailViewHandler
 	/** @var WPOptionWrapperBase */
 	private $_pWPOptionWrapper;
 
+    /** @var  RecordManagerPostMeta */
+    private $_pRecordPostMeta;
+
 
 	/**
 	 * @param WPOptionWrapperBase $pWPOptionWrapper
 	 */
-	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
+	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null,RecordManagerPostMeta $pRecordPostMeta = null)
 	{
 		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
+		$this->_pRecordPostMeta = $pRecordPostMeta ?? new RecordManagerPostMeta();
+		
 	}
 
 
@@ -67,7 +73,14 @@ class DataDetailViewHandler
 		{
 			$pResult = $pAlternate;
 		}
-
+        if(empty($pResult->getPageId()))
+        {
+            $pageInPostMeta = $this->_pRecordPostMeta->getPageId();
+            if (!empty($pageInPostMeta["post_id"]))
+            {
+                $pResult->setPageId($pageInPostMeta["post_id"]);
+            }
+        }
 		return $pResult;
 	}
 
