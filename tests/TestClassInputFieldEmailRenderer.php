@@ -42,7 +42,7 @@ class TestClassInputFieldEmailRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="email" name="testRenderer" value="john.doe@example.com" id="email_1">',
+		$this->assertEquals('<input type="email" name="testRenderer" value="john.doe@example.com" id="email_1" >',
 			$output);
 	}
 }
