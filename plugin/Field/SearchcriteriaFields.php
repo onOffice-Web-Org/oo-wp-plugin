@@ -119,9 +119,9 @@ class SearchcriteriaFields
 
 			if (FieldTypes::isRangeType($pField->getType()))
 			{
-				if (stristr($name, self::RANGE_FROM)) {
+				if (__String::getNew($name)->endsWith(self::RANGE_FROM)) {
 					$output[$pField->getLabel().' (min)'] = $value;
-				} elseif (stristr($name, self::RANGE_UPTO)) {
+				} elseif  (__String::getNew($name)->endsWith(self::RANGE_UPTO)) {
 					$output[$pField->getLabel().' (max)'] = $value;
 				} else {
 					$output[$pField->getLabel()] = $value;
