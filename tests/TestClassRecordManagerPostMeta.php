@@ -57,6 +57,6 @@ class TestClassRecordManagerPostMeta
     public function testGetPageIdInPostMeta()
     {
         $pFieldsPostMeta = $this->_pRecordManagerPostMeta->getPageId();
-        $this->assertEquals(null,$pFieldsPostMeta);
+        $this->assertEquals([],$pFieldsPostMeta);
     }
 }

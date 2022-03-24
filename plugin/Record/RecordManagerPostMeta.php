@@ -46,6 +46,10 @@ class RecordManagerPostMeta
                         FROM {$prefix}postmeta
                         WHERE meta_key not like '\_%' and meta_value like '%[oo_estate%'";
         $post_meta_results = $wpdb->get_row( $post_meta_sql ,ARRAY_A);
+		if (empty($post_meta_results))
+		{
+			return [];
+		}
         return $post_meta_results;
     }
 }
