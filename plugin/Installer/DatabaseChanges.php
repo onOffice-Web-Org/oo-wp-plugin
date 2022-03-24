@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -34,7 +35,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 25;
+	const MAX_VERSION = 26;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -187,6 +188,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta($this->getCreateQueryForms());
 			$dbversion = 25;
 		}
+		if ($dbversion == 25) {
+			$this->setDataDetailViewAccessControlValue();
+			$dbversion = 26;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -707,5 +713,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		$this->_pWpOption->deleteOption('oo_plugin_db_version');
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function setDataDetailViewAccessControlValue()
+	{
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setHasDetailView(true);
+		$pDataDetailViewHandler->saveDetailView($pDetailView);
 	}
 }
