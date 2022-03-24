@@ -421,12 +421,14 @@ class AdminViewController
 		return new Fieldnames(new FieldsCollection());
 	}
 
-	public function displayUsingEmptyDefaultEmailError()
+	public function displayUsingEmptyDefaultEmailError(RecordManagerReadForm $pRecordReadManager = null)
 	{
-		$pRecordReadManager = new RecordManagerReadForm();
+		if (is_null($pRecordReadManager)) {
+			$pRecordReadManager = new RecordManagerReadForm();
+		}
 
 		if (!get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites')
-			&& $pRecordReadManager->getCountAllRecord() != $pRecordReadManager->getCountNoDefaultRecipientRecord())
+			&& $pRecordReadManager->getCountDefaultRecipientRecord() != 0)
 		{
 			$class = 'notice notice-error';
 			$label = __('plugin settings', 'onoffice-for-wp-websites');
