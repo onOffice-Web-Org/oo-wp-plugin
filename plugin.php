@@ -46,6 +46,9 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
+use onOffice\WPlugin\DataView\DataDetailViewCheckAccessControl;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Field\EstateKindTypeReader;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\Form\Preview\FormPreviewApplicantSearch;
@@ -186,10 +189,16 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 	$estateId = $pWP->query_vars['estate_id'] ?? '';
 	/** @var EstateIdRequestGuard $pEstateIdGuard */
 	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
+	/** @var DataDetailViewHandler $pDataDetailViewHandler */
+	$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class);
 
 	if ($estateId !== '') {
 		$estateId = (int)$estateId;
-		if ($estateId === 0 || !$pEstateIdGuard->isValid($estateId)) {
+		/** @var DataDetailViewCheckAccessControl $pDataDetailViewCheckAccessControl */
+		$pDataDetailViewCheckAccessControl = $pDI->get(DataDetailViewCheckAccessControl::class);
+		$accessControlChecker = $pDataDetailViewCheckAccessControl->checkAccessControl($estateId);
+
+		if ($estateId === 0 || !$accessControlChecker|| !$pEstateIdGuard->isValid($estateId)) {
 			$pWP->handle_404();
 			include(get_query_template('404'));
 			die();
