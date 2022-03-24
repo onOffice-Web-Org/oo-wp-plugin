@@ -26,9 +26,9 @@ namespace onOffice\WPlugin\Field\Collection;
 use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Language;
-use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\Region\RegionFilter;
 use onOffice\WPlugin\SDKWrapper;
@@ -56,20 +56,24 @@ class FieldLoaderEstateRegionValues
 	 * @param RegionController $pRegionController
 	 * @param RegionFilter $pRegionFilter
 	 */
+
 	public function __construct(
 		SDKWrapper $pSDKWrapper,
 		RegionController $pRegionController,
-		RegionFilter $pRegionFilter)
-	{
+		RegionFilter $pRegionFilter
+	) {
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pRegionController = $pRegionController;
 		$this->_pRegionFilter = $pRegionFilter;
 	}
 
+
 	/**
 	 * @return Generator
 	 * @throws APIEmptyResultException
+	 * @throws ApiClientException
 	 */
+
 	public function load(): Generator
 	{
 		$result = $this->sendRequest();
@@ -82,7 +86,7 @@ class FieldLoaderEstateRegionValues
 				unset($fieldArray['label']);
 			}
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
-				if ( $fieldName === 'regionaler_zusatz') {
+				if ($fieldName === 'regionaler_zusatz') {
 					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
 					$this->_pRegionController->fetchRegions();
 					$regions = $this->_pRegionController->getRegions();
@@ -97,16 +101,19 @@ class FieldLoaderEstateRegionValues
 		}
 	}
 
+
 	/**
 	 * @return array
-	 * @throws APIEmptyResultException
+	 * @throws ApiClientException
 	 */
+
 	private function sendRequest(): array
 	{
 		$parametersGetFieldList = [
 			'labels' => true,
 			'showContent' => true,
 			'showTable' => true,
+			'fieldList' => ['regionaler_zusatz'],
 			'language' => Language::getDefault(),
 			'modules' => [onOfficeSDK::MODULE_ESTATE],
 			'realDataTypes' => true
