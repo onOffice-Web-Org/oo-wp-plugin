@@ -253,6 +253,10 @@ msgstr "Segreto API"
 msgid "API settings"
 msgstr "Impostazioni API"
 
+#: plugin/Gui/AdminPageApiSettings.php:109
+msgid "API settings (encrypted)"
+msgstr "Impostazioni API (crittografate)"
+
 #: plugin/Gui/AdminPageApiSettings.php:121
 msgid "Site Key"
 msgstr "Chiave del sito"

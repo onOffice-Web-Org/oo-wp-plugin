@@ -249,6 +249,10 @@ msgstr "API-Secret"
 msgid "API settings"
 msgstr "API Einstellungen"
 
+#: plugin/Gui/AdminPageApiSettings.php:109
+msgid "API settings (encrypted)"
+msgstr "API-Einstellungen (verschlüsselt)"
+
 #: plugin/Gui/AdminPageApiSettings.php:121
 msgid "Site Key"
 msgstr "Site Key"

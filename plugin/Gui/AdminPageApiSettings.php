@@ -36,9 +36,6 @@ use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
 use function settings_fields;
 use function submit_button;
-use onOffice\WPlugin\Fieldnames;
-use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\API\APIClientCredentialsException;
 /**
  *
  */
@@ -94,27 +91,40 @@ class AdminPageApiSettings
 		$pInputModelApiSecret = new InputModelOption('onoffice-settings', 'apisecret', $labelSecret, 'string');
 		$pInputModelApiSecret->setIsPassword(true);
 		$optionNameSecret = $pInputModelApiSecret->getIdentifier();
+		$apiSecret = get_option($optionNameSecret);
+		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+			try {
+				$apiSecretDecrypt = $this->_encrypter->decrypt(get_option($optionNameSecret), ONOFFICE_CREDENTIALS_ENC_KEY);
+			} catch (\RuntimeException $e) {
+				$apiSecretDecrypt = $apiSecret;
+			}
+			$apiSecret = $apiSecretDecrypt;
+		}
+		$pInputModelApiSecret->setValue($apiSecret);
 		$pInputModelApiKey->setSanitizeCallback(function ($apiKey) {
 			return $this->encrypteCredentials($apiKey);
 		});
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
 			$password = $this->encrypteCredentials($password);
+			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY') && empty($password)) {
+				
+				$password = $this->encrypteCredentials($this->checkPassword($password, $optionNameSecret));
+			}
 			return $this->checkPassword($password, $optionNameSecret);
 		});
-		$pInputModelApiSecret->setValue(get_option($optionNameSecret, $pInputModelApiSecret->getDefault()));
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelApiSecret);
 		$pFormModel->addInputModel($pInputModelApiKey);
 		$pFormModel->setGroupSlug('onoffice-api');
 		$pFormModel->setPageSlug($this->getPageSlug());
-
-		$pFieldnames = new Fieldnames(new FieldsCollection());
-
-		try {
-			$pFieldnames->loadLanguage();
-			$pFormModel->setLabel(__('API settings', 'onoffice-for-wp-websites'));
-		} catch (APIClientCredentialsException $pCredentialsException) {
+		
+		
+		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+			$pFormModel->setLabel(__('API settings (encrypted)', 'onoffice-for-wp-websites'));
+		}
+		else
+		{
 			$pFormModel->setLabel(__('API settings', 'onoffice-for-wp-websites'));
 		}
 

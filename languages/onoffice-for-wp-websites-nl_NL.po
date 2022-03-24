@@ -252,6 +252,10 @@ msgstr "API geheim"
 msgid "API settings"
 msgstr "API-instellingen"
 
+#: plugin/Gui/AdminPageApiSettings.php:109
+msgid "API settings (encrypted)"
+msgstr "API-instellingen (versleuteld)"
+
 #: plugin/Gui/AdminPageApiSettings.php:121
 msgid "Site Key"
 msgstr "Sleutel van de site"
