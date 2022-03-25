@@ -67,6 +67,3 @@ form[data-applicant-form-id] #spinner {
     width: 40px;
     vertical-align: middle;
 }
-.oo-listinfo .oo-listinfotable .oo-detailslisttd {
-    display: inline-table;
-}

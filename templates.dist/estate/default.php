@@ -30,7 +30,11 @@ require 'SearchForm.php';
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
 
 ?>
-
+<style type="text/css">
+	.oo-listinfo .oo-listinfotable .oo-detailslisttd {
+		display: inline-table;
+	}
+</style>
 <div class="oo-estate-map">
     <?php require('map/map.php'); ?>
 </div>
