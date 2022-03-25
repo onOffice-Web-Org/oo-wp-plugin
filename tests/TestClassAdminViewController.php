@@ -269,14 +269,14 @@ class TestClassAdminViewController
 			->getMock();
 		$recordManagerReadForm->method('getCountDefaultRecipientRecord')->will($this->returnValue('1'));
 
-        $pAdminViewController = $this->getMockBuilder(AdminViewController::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getRecordManagerReadForm'])
-            ->getMock();
+		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
+			->disableOriginalConstructor()
+			->setMethods(['getRecordManagerReadForm'])
+			->getMock();
 
-        $pAdminViewController->method('getRecordManagerReadForm')
-            ->willReturn($recordManagerReadForm);
-        $pAdminViewController->displayUsingEmptyDefaultEmailError();
+		$pAdminViewController->method('getRecordManagerReadForm')
+			->willReturn($recordManagerReadForm);
+		$pAdminViewController->displayUsingEmptyDefaultEmailError();
 		$this->expectOutputString('<div class="notice notice-error"><p>The onOffice plugin is missing a default email address. Forms that use it will not send emails. Please add a default email address in the <a href="admin.php?page=onoffice-settings">plugin settings</a>.</p></div>');
 	}
 
