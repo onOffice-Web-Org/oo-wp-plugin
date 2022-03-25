@@ -43,11 +43,11 @@ class TestClassInputModelOptionAdapterArray
 
 	public function testGenerateValuesArray()
 	{
-		$pModel = new InputModelOption('hello', 'world', 'label', 'type');
-		$pModel->setValue('value');
-		$pInputModelDBAdapterArray = new InputModelOptionAdapterArray();
-		$pInputModelDBAdapterArray->addInputModelOption($pModel);
-		$result = $pInputModelDBAdapterArray->generateValuesArray();
-		$this->assertEquals($result, ["world" => "value"]);
+		$pInputModelOption = new InputModelOption('_optionGroup', 'name', 'label', 'boolean');
+		$pInputModelOption->setValue('value');
+		$pInputModelOptionAdapterArray = new InputModelOptionAdapterArray();
+		$pInputModelOptionAdapterArray->addInputModelOption($pInputModelOption);
+		$value = $pInputModelOptionAdapterArray->generateValuesArray();
+		$this->assertEquals(['name' => 'value'], $value);
 	}
 }

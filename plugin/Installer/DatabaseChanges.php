@@ -243,7 +243,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		foreach ($rows as $applicantSearchForm) {
 			$allFieldMessages = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM " . $tableFieldConfig . " 
-																	WHERE `fieldname` = 'message' AND `form_id` = ".esc_sql($applicantSearchForm->form_id). " ");
+										WHERE `fieldname` = 'message' 
+										AND `form_id` = " . esc_sql($applicantSearchForm->form_id) . " ");
 			foreach ($allFieldMessages as $fieldMessage) {
 				$this->_pWPDB->delete($tableFieldConfig,
 					array('form_fieldconfig_id' => $fieldMessage->form_fieldconfig_id));
