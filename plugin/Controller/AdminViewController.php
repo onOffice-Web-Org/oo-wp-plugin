@@ -421,14 +421,9 @@ class AdminViewController
 		return new Fieldnames(new FieldsCollection());
 	}
 
-	public function displayUsingEmptyDefaultEmailError(RecordManagerReadForm $pRecordReadManager = null)
+	public function displayUsingEmptyDefaultEmailError()
 	{
-		if (is_null($pRecordReadManager)) {
-			$pRecordReadManager = new RecordManagerReadForm();
-		}
-
-		if (!get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites')
-			&& $pRecordReadManager->getCountDefaultRecipientRecord() != 0)
+		if (!get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites') && $this->getRecordManagerReadForm()->getCountDefaultRecipientRecord() != 0)
 		{
 			$class = 'notice notice-error';
 			$label = __('plugin settings', 'onoffice-for-wp-websites');
@@ -440,5 +435,10 @@ class AdminViewController
 
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		}
+	}
+
+	public function getRecordManagerReadForm()
+	{
+		return new RecordManagerReadForm();
 	}
 }
