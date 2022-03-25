@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -34,7 +35,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 26;
+	const MAX_VERSION = 27;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -187,8 +188,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 25;
 		}
 		if ($dbversion == 25) {
-			$this->deleteMessageFieldApplicantSearchForm();
+			$this->setDataDetailViewAccessControlValue();
 			$dbversion = 26;
+		}
+
+		if ($dbversion == 26) {
+			$this->deleteMessageFieldApplicantSearchForm();
+			$dbversion = 27;
 		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
@@ -236,9 +242,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$rows = $this->_pWPDB->get_results("SELECT `form_id` FROM {$tableName} WHERE form_type = 'applicantsearch'");
 
 		foreach ($rows as $applicantSearchForm) {
-			$allFieldMessages = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
-										WHERE `fieldname` = 'message'
-										AND `form_id` = '{$this->_pWPDB->_escape($applicantSearchForm->form_id)}'");
+			$allFieldMessages = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM " . $tableFieldConfig . " 
+																	WHERE `fieldname` = 'message' AND `form_id` = ".esc_sql($applicantSearchForm->form_id). " ");
 			foreach ($allFieldMessages as $fieldMessage) {
 				$this->_pWPDB->delete($tableFieldConfig,
 					array('form_fieldconfig_id' => $fieldMessage->form_fieldconfig_id));
@@ -633,7 +638,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		foreach ($rows as $applicantSearchForm) {
 			$allFieldComments = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
 										WHERE `fieldname` = 'krit_bemerkung_oeffentlich'
-										AND `form_id` = '{$this->_pWPDB->_escape($applicantSearchForm->form_id)}'");
+										AND `form_id` = ".esc_sql($applicantSearchForm->form_id)." ");
 			foreach ($allFieldComments as $fieldComment) {
 				$this->_pWPDB->delete($tableFieldConfig,
 					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
@@ -727,5 +732,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		$this->_pWpOption->deleteOption('oo_plugin_db_version');
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function setDataDetailViewAccessControlValue()
+	{
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setHasDetailView(true);
+		$pDataDetailViewHandler->saveDetailView($pDetailView);
 	}
 }

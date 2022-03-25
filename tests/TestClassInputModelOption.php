@@ -3,6 +3,7 @@
 /**
  *
  *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +24,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use Closure;
 use onOffice\WPlugin\Model\InputModelOption;
 use WP_UnitTestCase;
 
@@ -39,6 +41,52 @@ class TestClassInputModelOption
 	 *
 	 */
 
+	public function testDefaultValues(): InputModelOption
+	{
+		$pInputModelOption = new InputModelOption('_optionGroup', 'name', 'label', 'boolean');
+		$this->assertEquals('_optionGroup', $pInputModelOption->getOptionGroup());
+		$this->assertEquals('name', $pInputModelOption->getName());
+		$this->assertEquals('label', $pInputModelOption->getLabel());
+		$this->assertEquals('boolean', $pInputModelOption->getType());
+		$this->assertFalse($pInputModelOption->getDefault());
+		return $pInputModelOption;
+	}
+
+
+	/**
+	 *
+	 * @depends testDefaultValues
+	 *
+	 */
+
+	public function testSetter(InputModelOption $pInputModelOption): InputModelOption
+	{
+		$pInputModelOption->setDescription('testTable');
+		$this->assertEquals('testTable', $pInputModelOption->getDescription());
+		$pInputModelOption->setDefault(true);
+		$this->assertTrue($pInputModelOption->getDefault());
+		$pInputModelOption->setShowInRest(true);
+		$this->assertTrue($pInputModelOption->getShowInRest());
+		$pInputModelOption->setSanitizeCallback(function () {
+			return true;
+		});
+		$this->assertInstanceOf(Closure::class, $pInputModelOption->getSanitizeCallback());
+		$pInputModelOption->setType('int');
+		$this->assertEquals('int', $pInputModelOption->getType());
+		return $pInputModelOption;
+	}
+
+
+	/**
+	 *
+	 * @depends testSetter
+	 *
+	 */
+
+	public function testGetIdentifier(InputModelOption $pInputModelOption)
+	{
+		$this->assertEquals('_optionGroup-name', $pInputModelOption->getIdentifier());
+	}
 	public function testGetAndSetValues()
 	{
 		$pModel = new InputModelOption('hello', 'world', 'label', 'type');

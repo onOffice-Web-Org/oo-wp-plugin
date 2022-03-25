@@ -268,7 +268,11 @@ class EstateList
 			];
 		}
 
-		if (!$this->getShowReferenceStatus()) {
+		if ($pListView->getName() === 'detail') {
+			if (!$this->hasDetailView()) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			}
+		} elseif (!$this->getShowReferenceStatus()) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 		}
 
@@ -407,6 +411,11 @@ class EstateList
 		return $pArrayContainer;
 	}
 
+	public function getRawValues(): ArrayContainerEscape
+	{
+		return new ArrayContainerEscape($this->_recordsRaw);
+	}
+
 	/**
 	 * @return int
 	 * @throws API\ApiClientException
@@ -527,6 +536,18 @@ class EstateList
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstatePictureValues($imageId, $currentEstate);
+	}
+
+	/**
+	 *
+	 * @return bool
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function hasDetailView(): bool
+    {
+		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->hasDetailView();
 	}
 
 	/**
@@ -673,8 +694,11 @@ class EstateList
 	 */
 	public function getShowReferenceStatus(): bool
 	{
-		return $this->_pDataView instanceof DataListView &&
-			$this->_pDataView->getShowReferenceStatus();
+			if ($this->_pDataView instanceof DataListView) {
+					return $this->_pDataView->getShowReferenceStatus();
+			} else {
+					return true;
+			}
 	}
 
 	/**

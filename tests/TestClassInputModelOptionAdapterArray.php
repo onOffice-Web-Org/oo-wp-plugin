@@ -2,6 +2,7 @@
 
 /**
  *
+ *    Copyright (C) 2019 onOffice GmbH
  *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify

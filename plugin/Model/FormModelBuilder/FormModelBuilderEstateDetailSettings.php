@@ -129,6 +129,26 @@ class FormModelBuilderEstateDetailSettings
 	/**
 	 *
 	 * @return InputModelDB
+	 * @throws ExceptionInputModelMissingField
+	 */
+
+	public function createInputAccessControl() {
+		$allAccessControl = __('Allow detail view for reference estates', 'onoffice-for-wp-websites');
+
+		$pInputModelAccessControl = $this->_pInputModelDetailViewFactory->create( InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL,
+			$allAccessControl);
+		$pInputModelAccessControl->setHtmlType( InputModelOption::HTML_TYPE_CHECKBOX );
+		$pInputModelAccessControl->setValuesAvailable( 'Access_Control' );
+		$accessControl = $this->_pDataDetailView->hasDetailView();
+		$pInputModelAccessControl->setValue( $accessControl );
+
+		return $pInputModelAccessControl;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
 	 *
 	 */
 
