@@ -99,7 +99,6 @@ class AdminPageFormSettingsApplicantSearch
 	}
 
 
-
 	/**
 	 *
 	 * @param stdClass $pValues

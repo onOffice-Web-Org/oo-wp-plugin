@@ -108,7 +108,6 @@ abstract class AdminPageFormSettingsBase
 	/** @var FormModelBuilderDBForm */
 	private $_pFormModelBuilder = null;
 
-
 	/**
 	 * @param string $pageSlug
 	 * @throws Exception

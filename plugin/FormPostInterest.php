@@ -136,7 +136,7 @@ class FormPostInterest
 			'subject' => sanitize_text_field($subject),
 			'formtype' => $pFormData->getFormtype(),
 			'referrer' => filter_input(INPUT_SERVER, 'REQUEST_URI') ?? '',
-			'recipient' => $recipient,
+			'recipient' => $recipient
 		];
 
 		if ($recipient !== '') {
@@ -188,6 +188,7 @@ class FormPostInterest
 		$pApiClientAction->setParameters($requestParams);
 		$pApiClientAction->addRequestToQueue();
 		$pSDKWrapper->sendRequests();
+
 		if (!$pApiClientAction->getResultStatus()) {
 			throw new ApiClientException($pApiClientAction);
 		}
