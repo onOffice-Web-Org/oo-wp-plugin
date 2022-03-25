@@ -75,6 +75,24 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.22.3 =
+
+**Changes**
+
+* The list views in forms, addresses and estates got enriched with additional information. 
+
+= 2.22.2 =
+
+**Changes**
+
+* Deactivates the duplicate check for addresses created with forms.
+
+= 2.22.1 =
+
+**Changes**
+
+* For the form types contact form, prospect form, owner form an additional setting that defines the contact type is introduced. Before that it was not possible to select the contact type the address is created with.
+
 = 2.22.0 =
 
 **Changes**

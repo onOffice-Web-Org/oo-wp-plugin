@@ -131,6 +131,9 @@ class InputModelRenderer
 				$pInstance = new InputFieldCheckboxRenderer($elementName,
 					$pInputModel->getValuesAvailable(),  $pInputModel->getDescriptionTextHTML());
 				$pInstance->setCheckedValues($pInputModel->getValue());
+				if ($pInputModel->getHint() != null) {
+					$pInstance->setHint($pInputModel->getHint());
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST:

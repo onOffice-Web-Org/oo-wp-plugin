@@ -2,9 +2,7 @@
 
 use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\Language;
-
-require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'fields.php';
-
+require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'fields.php';
 /** @var EstateDetail $pEstates */
 /** @var $field */
 /** @var $currentEstate */
