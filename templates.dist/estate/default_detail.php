@@ -35,12 +35,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-    $pContainerBuilder = new ContainerBuilder;
-    $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-    $pContainer = $pContainerBuilder->build();
-    $pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
 	while ( $currentEstate = $pEstates->estateIterator() ) {
-		if ($pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 1)
+		if (get_option('onoffice-settings-title-and-description') == 1)
 		{
 			$estateListHandle = new EstateListHandle();
 			$currentEstate = $estateListHandle->handleRecord($currentEstate);
