@@ -75,6 +75,16 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.22.4 =
+
+**Fixes**
+
+* Fixes detail few being inaccessible for reference estates.
+
+**Changes**
+
+* Adds a checkbox to control whether the detail pages of reference estates are accessible or should be restricted with 404 Not Found.
+
 = 2.22.3 =
 
 **Changes**

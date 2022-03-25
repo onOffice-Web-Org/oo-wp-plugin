@@ -30,7 +30,13 @@ require 'SearchForm.php';
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
 
 ?>
-<style type="text/css">
+
+<style>
+	.oo-details-btn:focus {
+		opacity: 0.8;
+		text-decoration: none !important;
+		background: #80acd3 !important;
+	}
 	.oo-listinfo .oo-listinfotable .oo-detailslisttd {
 		display: inline-table;
 	}
@@ -58,6 +64,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
 		unset($currentEstate['vermarktungsstatus']);
 		$estateId = $pEstatesClone->getCurrentEstateId();
+		$rawValues = $pEstatesClone->getRawValues();
+		$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
 	?>
 		<div class="oo-listobject">
 			<div class="oo-listobjectwrap">
@@ -65,7 +73,15 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				$estatePictures = $pEstatesClone->getEstatePictures();
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
-					echo '<a href="'.esc_url($pEstatesClone->getEstateLink()).'" style="background-image: url('.esc_url($pEstatesClone->getEstatePictureUrl($id, ['height' => 350])).');" class="oo-listimage estate-status">';
+					if ( $referenz === "1" ) {
+						if ( $pEstatesClone->hasDetailView() ) {
+							echo '<a href="' . esc_url( $pEstatesClone->getEstateLink() ) . '" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
+						} else {
+							echo '<a href="javascript:void(0)" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
+						}
+					} else {
+						echo '<a href="' . esc_url( $pEstatesClone->getEstateLink() ) . '" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
+					}
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
 					}
@@ -94,9 +110,17 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						} ?>
 					</div>
 					<div class="oo-detailslink">
-						<a href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
-							<?php esc_html_e('Show Details', 'onoffice'); ?>
-						</a>
+						<?php if ($referenz === "1") { ?>
+							<?php if ($pEstatesClone->hasDetailView()) { ?>
+								<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
+									<?php esc_html_e('Show Details', 'onoffice'); ?>
+								</a>
+							<?php } ?>
+						<?php } else { ?>
+							<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
+                                <?php esc_html_e('Show Details', 'onoffice'); ?>
+                            </a>
+                        <?php } ?>
                         <?php if (Favorites::isFavorizationEnabled()): ?>
                             <button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
                                 <?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
