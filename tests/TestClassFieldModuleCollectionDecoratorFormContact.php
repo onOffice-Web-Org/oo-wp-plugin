@@ -140,8 +140,6 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 	}
 
 
-
-
 	/**
 	 *
 	 * @return FieldsCollection

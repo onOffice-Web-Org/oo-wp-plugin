@@ -2,7 +2,6 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
  *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
@@ -29,9 +28,6 @@ use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
 use WP_UnitTestCase;
 
 /**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
 class TestClassInputModelOptionAdapterArray
