@@ -35,10 +35,10 @@ jobs:
       run: composer install
 
     - name: Build for development
-      run: PREFIX=/tmp/release make release
+      run: PREFIX=/tmp/release make test-zip
 
     - name: Get version name
-      run: echo "DEV_BUILD_VERSION=$(git describe --tags)" >> $GITHUB_ENV  
+      run: echo "DEV_BUILD_VERSION=$(git describe --tags --always)" >> $GITHUB_ENV  
 
     - name: Zip files
       run: (cd /tmp/release/ && zip -r ./onoffice-${{ env.DEV_BUILD_VERSION}}.zip ./onoffice/)  # To prevent nested paths (like /tmp/release/onoffice/readme.txt) we have to cd into the directory.
