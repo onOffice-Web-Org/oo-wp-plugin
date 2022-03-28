@@ -31,7 +31,7 @@ pot:
 release: pot copy-files-release change-title add-version composer-install-nodev
 
 test-zip: pot copy-files-release add-version composer-install-nodev
-	cd $(PREFIX); zip -r onoffice.zip onoffice/
+	cd $(PREFIX); zip -r onoffice-$(OO_PLUGIN_VERSION).zip onoffice/
 
 clean-zip:
 	rm -f $(PREFIX)/onoffice.zip
