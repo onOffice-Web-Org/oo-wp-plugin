@@ -75,6 +75,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.22.5 =
+
+**Fixes**
+
+* When there are no estates that show up on the map, there is no longer a gap in the estate list where the map would be.
+
 = 2.22.4 =
 
 **Fixes**
