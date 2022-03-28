@@ -97,17 +97,16 @@ class AdminPageApiSettings
 			return $this->encrypteCredentials($apiKey);
 		});
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
-			$password = $this->encrypteCredentials($password);
-			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY') && empty($password)) {
+			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY') && empty(get_option('ONOFFICE_CREDENTIALS_ENC_KEY')) ) {
 				$password = $this->encrypteCredentials($this->checkPassword($password, $optionNameSecret));
 				update_option('ONOFFICE_CREDENTIALS_ENC_KEY',ONOFFICE_CREDENTIALS_ENC_KEY);
-			}
-			if (!defined('ONOFFICE_CREDENTIALS_ENC_KEY') && empty($password) && get_option('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+			} elseif( !defined('ONOFFICE_CREDENTIALS_ENC_KEY') && get_option('ONOFFICE_CREDENTIALS_ENC_KEY')) {
 				try {
 					$password = $this->_encrypter->decrypt(get_option($optionNameSecret), get_option('ONOFFICE_CREDENTIALS_ENC_KEY'));
 				} catch (\RuntimeException $e) {
 					$password = get_option($optionNameSecret);
 				}
+				update_option('ONOFFICE_CREDENTIALS_ENC_KEY','');
 			}
 			return $this->checkPassword($password, $optionNameSecret);
 		});
