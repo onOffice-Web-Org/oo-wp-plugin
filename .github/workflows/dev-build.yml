@@ -35,15 +35,10 @@ jobs:
       run: composer install
 
     - name: Build for development
-      run: PREFIX=/tmp/release make test-zip
+      run: PREFIX=/tmp/release make release
 
     - name: Get version name
       run: echo "DEV_BUILD_VERSION=$(git describe --tags)" >> $GITHUB_ENV  
-
-    - name: Set version in plugin
-      run: sed -i -r "s/Version:\ [^$]+$/Version:\ ${{ env.DEV_BUILD_VERSION }}/" /tmp/release/onoffice/plugin.php
-
-    - run: cat /tmp/release/onoffice/plugin.php
 
     - name: Zip files
       run: (cd /tmp/release/ && zip -r ./onoffice-${{ env.DEV_BUILD_VERSION}}.zip ./onoffice/)  # To prevent nested paths (like /tmp/release/onoffice/readme.txt) we have to cd into the directory.
@@ -52,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: onoffice-${{ env.DEV_BUILD_VERSION }}-please-unpack
-        path: /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION }}.zip  # Uploading a .zip leads to a .zip inside a .zip, but uploading the folder takes significantly longer.
+        path: /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION }}.zip  # Uploading a .zip leads to a .zip inside a .zip, but if we would uploading the folder is very slow, so we prefer the nested .zip.
 
     - name: Clean up
       run: rm -r /tmp/release
