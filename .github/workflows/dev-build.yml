@@ -47,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: onoffice-${{ env.DEV_BUILD_VERSION }}-please-unpack
-        path: /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION }}.zip  # Uploading a .zip leads to a .zip inside a .zip, but if we would uploading the folder is very slow, so we prefer the nested .zip.
+        path: /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION }}.zip  # Uploading a .zip leads to a .zip inside a .zip. But uploading the folder directly is very slow, so we prefer the nested .zip.
 
     - name: Clean up
       run: rm -r /tmp/release
