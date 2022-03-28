@@ -92,14 +92,6 @@ class AdminPageApiSettings
 		$pInputModelApiSecret->setIsPassword(true);
 		$optionNameSecret = $pInputModelApiSecret->getIdentifier();
 		$apiSecret = get_option($optionNameSecret);
-		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
-			try {
-				$apiSecretDecrypt = $this->_encrypter->decrypt(get_option($optionNameSecret), ONOFFICE_CREDENTIALS_ENC_KEY);
-			} catch (\RuntimeException $e) {
-				$apiSecretDecrypt = $apiSecret;
-			}
-			$apiSecret = $apiSecretDecrypt;
-		}
 		$pInputModelApiSecret->setValue($apiSecret);
 		$pInputModelApiKey->setSanitizeCallback(function ($apiKey) {
 			return $this->encrypteCredentials($apiKey);
@@ -107,8 +99,15 @@ class AdminPageApiSettings
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
 			$password = $this->encrypteCredentials($password);
 			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY') && empty($password)) {
-				
 				$password = $this->encrypteCredentials($this->checkPassword($password, $optionNameSecret));
+				update_option('ONOFFICE_CREDENTIALS_ENC_KEY',ONOFFICE_CREDENTIALS_ENC_KEY);
+			}
+			if (!defined('ONOFFICE_CREDENTIALS_ENC_KEY') && empty($password) && get_option('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+				try {
+					$password = $this->_encrypter->decrypt(get_option($optionNameSecret), get_option('ONOFFICE_CREDENTIALS_ENC_KEY'));
+				} catch (\RuntimeException $e) {
+					$password = get_option($optionNameSecret);
+				}
 			}
 			return $this->checkPassword($password, $optionNameSecret);
 		});
