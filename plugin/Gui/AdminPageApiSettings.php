@@ -36,6 +36,7 @@ use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
 use function settings_fields;
 use function submit_button;
+
 /**
  *
  */
@@ -115,6 +116,7 @@ class AdminPageApiSettings
 			}
 			return $this->checkPassword($password, $optionNameSecret);
 		});
+
 		$pInputModelApiSecret->setValue(get_option($optionNameSecret, $pInputModelApiSecret->getDefault()));
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelApiSecret);
