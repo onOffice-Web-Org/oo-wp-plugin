@@ -69,7 +69,6 @@ class AdminPageApiSettings
         $this->addFormModelDetailView($pageSlug);
 		$this->addFormModelPagination($pageSlug);
 		$this->addFormModelGoogleBotSettings();
-		$this->enqueue_js();
 	}
 
 
@@ -450,12 +449,4 @@ class AdminPageApiSettings
 
         $this->addFormModel($pFormModel);
     }
-	
-	public function enqueue_js()
-	{
-		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
-		wp_register_script('onoffice-setting-api', plugins_url
-		('/js/onoffice-setting-api.js', $pluginPath), 'google-recaptcha');
-		wp_enqueue_script('onoffice-setting-api');
-	}
 }

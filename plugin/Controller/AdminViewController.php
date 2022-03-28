@@ -424,7 +424,9 @@ class AdminViewController
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
 		$pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
-		if ( count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0 && $pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {
+		if ( count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0
+			&& $pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0
+			&& get_current_screen()->id !== 'onoffice_page_onoffice-settings') {
 			echo '<div class="notice notice-warning is-dismissible">
            				<p> '.esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.','onoffice-for-wp-websites').'
               				'.esc_html__('You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.','onoffice-for-wp-websites').'<br>

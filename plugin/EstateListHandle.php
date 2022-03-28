@@ -2,6 +2,7 @@
 
 namespace onOffice\WPlugin;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 
 class EstateListHandle
@@ -18,7 +19,10 @@ class EstateListHandle
 	private $_listCustomField;
 	public function __construct()
 	{
-		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pDataDetailViewHandler = $pContainer->get(DataDetailViewHandler::class);
 		$pDetailView = $pDataDetailViewHandler->getDetailView();
 		$this->_pageIdDetail = $pDetailView->getPageId();
 		$this->_listCustomField = $this->getMetaDataPageDetail($this->_pageIdDetail);
