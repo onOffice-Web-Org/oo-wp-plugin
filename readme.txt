@@ -75,6 +75,28 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 2.22.5 =
+
+**Fixes**
+
+* When there are no estates that show up on the map, there is no longer a gap in the estate list where the map would be.
+
+= 2.22.4 =
+
+**Fixes**
+
+* Fixes detail few being inaccessible for reference estates.
+
+**Changes**
+
+* Adds a checkbox to control whether the detail pages of reference estates are accessible or should be restricted with 404 Not Found.
+
+= 2.22.3 =
+
+**Changes**
+
+* The list views in forms, addresses and estates got enriched with additional information. 
+
 = 2.22.2 =
 
 **Changes**
