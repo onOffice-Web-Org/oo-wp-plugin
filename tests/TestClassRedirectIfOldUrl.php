@@ -103,26 +103,6 @@ class TestClassRedirectIfOldUrl
 	/**
 	 * @covers \onOffice\WPlugin\Utility\Redirector::redirectDetailView
 	 */
-	public function testRedirectDetailViewSameUrlWithoutOption()
-	{
-		global $wp;
-		$wp->request = 'detail-view/3333';
-		$pWPPost = self::factory()->post->create_and_get([
-			'post_author' => 1,
-			'post_content' => '[oo_estate view="detail"]',
-			'post_title' => 'Detail View',
-			'post_type' => 'page',
-		]);
-		$pLanguageSwitcher = new EstateDetailUrl();
-		$wpRedirectWrapperMocker = new RedirectWrapperMocker();
-		$wpPageWrapper = new WPPageWrapper();
-		$redirectIfOldUrl = new Redirector($pLanguageSwitcher, $wpPageWrapper, $wpRedirectWrapperMocker);
-		$this->assertNull($redirectIfOldUrl->redirectDetailView($pWPPost->ID, 1, 'tes post'));
-	}
-
-	/**
-	 * @covers \onOffice\WPlugin\Utility\Redirector::redirectDetailView
-	 */
 	public function testRedirectDetailViewNotMatchRule()
 	{
 		global $wp;
