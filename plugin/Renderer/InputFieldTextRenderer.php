@@ -32,9 +32,6 @@ class InputFieldTextRenderer
 	extends InputFieldRenderer
 {
 
-	/** @var string */
-	private $_hint = '';
-
 
 	/**
 	 *
@@ -68,12 +65,4 @@ class InputFieldTextRenderer
 			.' '.$this->renderAdditionalAttributes()
 			.'>'.$textHtml;
 	}
-
-	/** @return string */
-	public function getHint()
-	{ return $this->_hint; }
-
-	/** @param string $hint */
-	public function setHint(string $hint)
-	{ $this->_hint = $hint; }
 }

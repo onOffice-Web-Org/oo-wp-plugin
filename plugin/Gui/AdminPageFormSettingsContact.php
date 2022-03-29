@@ -77,6 +77,9 @@ class AdminPageFormSettingsContact
 	/** @var bool */
 	private $_showEstateContextCheckbox = false;
 
+    /** @var bool */
+    private $_showContactTypeSelect = false;
+
 
 	/**
 	 *
@@ -144,11 +147,18 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
+			$pInputModel->setHint(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
+		if ($this->_showContactTypeSelect) {
+			$pInputModelContactType = $pFormModelBuilder->createInputModelContactType();
+			$pFormModelFormSpecific->addInputModel($pInputModelContactType);
 		}
 
 		if ($this->_showCheckDuplicatesInterestOwner) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER);
+			$pInputModel->setHint(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -282,6 +292,10 @@ class AdminPageFormSettingsContact
 	/** @param bool $showEstateContextCheckbox */
 	public function setShowEstateContextCheckbox(bool $showEstateContextCheckbox)
 		{ $this->_showEstateContextCheckbox = $showEstateContextCheckbox; }
+
+    /** @param bool $showContactTypeSelect */
+    public function setShowContactTypeSelect(bool $showContactTypeSelect)
+		{ $this->_showContactTypeSelect = $showContactTypeSelect; }
 
 	/**
 	 * @param bool $showCreateInterest

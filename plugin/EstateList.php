@@ -32,7 +32,6 @@ use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
-use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
@@ -48,10 +47,8 @@ use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\WP\WPPageWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
@@ -102,12 +99,6 @@ class EstateList
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;
 
-	/** @var Redirector */
-	private $_redirectIfOldUrl;
-
-	/** @var bool */
-	private $_isOverride_DataView = false;
-
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -126,7 +117,6 @@ class EstateList
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
-		$this->_redirectIfOldUrl = $pContainer->get(Redirector::class);
 	}
 
 	/**
@@ -278,6 +268,14 @@ class EstateList
 			];
 		}
 
+		if ($pListView->getName() === 'detail') {
+			if (!$this->hasDetailView()) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			}
+		} elseif (!$this->getShowReferenceStatus()) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		}
+
 		$requestParams += $this->addExtraParams();
 
 		return $requestParams;
@@ -304,10 +302,10 @@ class EstateList
 		}
 
 		// only do georange search if requested in listview configuration
-		if (($pListView instanceof DataViewFilterableFields &&
-			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true))
-			|| $this->isIsOverrideDataView()) {
+		if ($pListView instanceof DataViewFilterableFields &&
+			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true)) {
 			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
+
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
 			}
@@ -400,13 +398,6 @@ class EstateList
 			$this->_currentEstate['id'];
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
-		if ($this->_pDataView instanceof DataDetailView) {
-			$pageId = $this->_pDataView->getPageId();
-			$estateId = $this->_currentEstate['mainId'];
-			$estateTitle = $this->_currentEstate['title'];
-			$this->_redirectIfOldUrl->redirectDetailView($pageId, $estateId, $estateTitle);
-		}
-
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
 
@@ -418,6 +409,11 @@ class EstateList
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 
 		return $pArrayContainer;
+	}
+
+	public function getRawValues(): ArrayContainerEscape
+	{
+		return new ArrayContainerEscape($this->_recordsRaw);
 	}
 
 	/**
@@ -540,6 +536,18 @@ class EstateList
 	{
 		$currentEstate = $this->_currentEstate['id'];
 		return $this->_pEstateFiles->getEstatePictureValues($imageId, $currentEstate);
+	}
+
+	/**
+	 *
+	 * @return bool
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function hasDetailView(): bool
+    {
+		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->hasDetailView();
 	}
 
 	/**
@@ -682,24 +690,24 @@ class EstateList
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function getShowReferenceStatus(): bool
+	{
+			if ($this->_pDataView instanceof DataListView) {
+					return $this->_pDataView->getShowReferenceStatus();
+			} else {
+					return true;
+			}
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getEstateIds(): array
 	{
 		return array_column($this->_records, 'id');
 	}
-
-	/**
-	 * @return bool
-	 */
-	public function isIsOverrideDataView(): bool
-		{ return $this->_isOverride_DataView; }
-
-	/**
-	 * @param $isOverride_DataView
-	 */
-	public function setIsOverrideDataView($isOverride_DataView)
-		{ $this->_isOverride_DataView = $isOverride_DataView; }
 
 	/** @return array */
 	public function getAddressFields(): array

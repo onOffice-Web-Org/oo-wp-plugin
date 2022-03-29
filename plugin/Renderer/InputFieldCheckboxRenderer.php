@@ -114,6 +114,10 @@ class InputFieldCheckboxRenderer
 	{
 		$pFieldsCollection = $this->buildFieldsCollection();
 		$hintText = !empty($this->_hint) ? '<p class="hint-text">' . $this->_hint . '</p>' : "";
+		$textHtml = '';
+		if (!empty($this->getHint())) {
+			$textHtml = '<p class="hint-fallback-email">' . esc_html($this->getHint()) . '</p>';
+		}
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
@@ -127,6 +131,7 @@ class InputFieldCheckboxRenderer
 					.' id="'.esc_html($inputId).'">'
 					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'.$hintText;
 			}
+			echo $textHtml;
 		} else {
 			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 				.'" value="'.esc_html($this->getValue()).'"'
@@ -134,6 +139,8 @@ class InputFieldCheckboxRenderer
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
 				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '').$hintText;
+				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '')
+				.$textHtml;
 		}
 	}
 	

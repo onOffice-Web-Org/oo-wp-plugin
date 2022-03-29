@@ -21,54 +21,29 @@
 
 declare (strict_types=1);
 
-namespace onOffice\WPlugin\WP;
+namespace onOffice\tests;
 
-use WP_Post;
-use function get_page_by_path;
+use onOffice\WPlugin\Model\InputModelOption;
+use onOffice\WPlugin\Model\InputModelOptionAdapterArray;
+use WP_UnitTestCase;
 
 /**
  *
  */
-
-class WPPageWrapper
+class TestClassInputModelOptionAdapterArray
+	extends WP_UnitTestCase
 {
 	/**
 	 *
-	 * @param string $path
-	 * @return WP_Post
-	 * @throws UnknownPageException
-	 *
 	 */
 
-	public function getPageByPath(string $path): WP_Post
+	public function testGenerateValuesArray()
 	{
-		$pPost = get_page_by_path($path);
-		if ($pPost === null) {
-			throw new UnknownPageException($path);
-		}
-		return $pPost;
-	}
-
-
-	/**
-	 *
-	 * @param WP_Post $pPost
-	 * @return string
-	 *
-	 */
-
-	public function getPageLinkByPost(WP_Post $pPost): string
-	{
-		return get_permalink($pPost);
-	}
-
-	public function getPageLinkById(int $pageId): string
-	{
-		return get_permalink($pageId);
-	}
-
-	public function getPageUriByPageId(int $pageId): string
-	{
-		return get_page_uri($pageId) ?: '';
+		$pInputModelOption = new InputModelOption('_optionGroup', 'name', 'label', 'boolean');
+		$pInputModelOption->setValue('value');
+		$pInputModelOptionAdapterArray = new InputModelOptionAdapterArray();
+		$pInputModelOptionAdapterArray->addInputModelOption($pInputModelOption);
+		$value = $pInputModelOptionAdapterArray->generateValuesArray();
+		$this->assertEquals(['name' => 'value'], $value);
 	}
 }
