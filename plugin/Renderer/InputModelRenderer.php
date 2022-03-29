@@ -167,7 +167,8 @@ class InputModelRenderer
 
 			case InputModelOption::HTML_TYPE_RADIO:
 				$pInstance = new InputFieldRadioRenderer($elementName,
-					$pInputModel->getValuesAvailable(),$pInputModel->getDescriptionRadioTextHTML());
+					$pInputModel->getValuesAvailable(),
+					$pInputModel->getDescriptionRadioTextHTML());
 				$pInstance->setCheckedValue($pInputModel->getValue());
 				break;
 
