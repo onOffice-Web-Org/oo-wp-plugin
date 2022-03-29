@@ -242,4 +242,33 @@ function update_duplicate_check_warning_option()
 
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
+function update_file_version($wpFileData)
+{
+	foreach ($wpFileData->queue as $script) {
+		$src = $wpFileData->registered[$script]->src;
+		$filePathExplode = explode('oo-wp-plugin', $src);
+		if (strpos($src, "oo-wp-plugin") !== false) {
+			$timeModified = filemtime(ONOFFICE_PLUGIN_DIR . end($filePathExplode));
+			$wpFileData->registered[$script]->ver = $timeModified;
+		}
+	}
+}
+
+add_action('wp_print_scripts', function () {
+	global $wp_scripts;
+	update_file_version($wp_scripts);
+});
+
+//update css file in frontend
+add_action('wp_print_styles', function () {
+	global $wp_styles;
+	update_file_version($wp_styles);
+});
+
+//update css file in backend
+add_action('admin_print_styles', function () {
+	global $wp_styles;
+	update_file_version($wp_styles);
+});
+
 return $pDI;
