@@ -54,6 +54,7 @@ class TestClassDataDetailViewHandler
 		],
 		'expose' => 'testexposetype',
 		'addressfields' => ['Vorname', 'Name'],
+		'access-control' => true,
 		'movielinks' => MovieLinkTypes::MOVIE_LINKS_PLAYER
 	];
 
@@ -74,6 +75,7 @@ class TestClassDataDetailViewHandler
 		$this->assertEquals($row['expose'], $pDataDetailview->getExpose());
 		$this->assertEquals($row['addressfields'], $pDataDetailview->getAddressFields());
 		$this->assertEquals($row['movielinks'], $pDataDetailview->getMovieLinks());
+		$this->assertEquals($row['access-control'], $pDataDetailview->hasDetailView());
 	}
 
 
@@ -91,6 +93,7 @@ class TestClassDataDetailViewHandler
 		$this->assertEquals($pDataDetailview->getPictureTypes(), []);
 		$this->assertEquals($pDataDetailview->getExpose(), '');
 		$this->assertEquals($pDataDetailview->getAddressFields(), []);
+		$this->assertEquals($pDataDetailview->hasDetailView(), false);
 		$this->assertEquals($pDataDetailview->getMovieLinks(), MovieLinkTypes::MOVIE_LINKS_NONE);
 		$this->assertEquals($pDataDetailview->getName(), 'detail');
 		$this->assertEquals($pDataDetailview->getPageId(), 0);
