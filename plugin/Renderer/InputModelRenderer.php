@@ -134,9 +134,6 @@ class InputModelRenderer
 				if ($pInputModel->getHintHtml() != null) {
 					$pInstance->setHintHtml($pInputModel->getHintHtml());
 				}
-				if ($pInputModel->getHint() != null) {
-					$pInstance->setHint($pInputModel->getHint());
-				}
 				break;
 
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST:
