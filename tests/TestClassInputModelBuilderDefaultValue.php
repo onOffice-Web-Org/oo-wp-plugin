@@ -95,6 +95,37 @@ class TestClassInputModelBuilderDefaultValue
 		];
 	}
 
+	public function testGetAndSetData() {
+		$pInputModelBase = new InputModelDB('testInput', 'testLabel');
+		$pExpectedInputModelSingleSelect = clone $pInputModelBase;
+		$pExpectedInputModelSingleSelect->setHtmlType(InputModelDB::HTML_TYPE_SELECT);
+		$pExpectedInputModelSingleSelect->setValue('');
+		$pExpectedInputModelSingleSelect->setValuesAvailable(['' => '']);
+		$pExpectedInputModelSingleSelect->setPlaceholder(true);
+		$pExpectedInputModelSingleSelect->setHint('hit');
+		$pExpectedInputModelSingleSelect->setId('id');
+		$pExpectedInputModelSingleSelect->addReferencedInputModel($pInputModelBase);
+		$pExpectedInputModelSingleSelect->setSpecialDivId('SpecialDivId');
+		$pExpectedInputModelSingleSelect->setOoModule('Module');
+		$pExpectedInputModelSingleSelect->setLabelOnlyValues(['Label']);
+		$pExpectedInputModelSingleSelect->setIsMulti(true);
+		$pExpectedInputModelSingleSelect->setValueCallback(function () {
+			return true;
+		});
+
+		$this->assertInstanceOf(InputModelDB::class, $pExpectedInputModelSingleSelect);
+		$this->assertEquals(InputModelBase::HTML_TYPE_SELECT, $pExpectedInputModelSingleSelect->getHtmlType());
+		$this->assertTrue($pExpectedInputModelSingleSelect->getPlaceholder());
+		$this->assertEquals('hit', $pExpectedInputModelSingleSelect->getHint());
+		$this->assertEquals('id', $pExpectedInputModelSingleSelect->getId());
+		$this->assertEquals('SpecialDivId', $pExpectedInputModelSingleSelect->getSpecialDivId());
+		$this->assertEquals('Module', $pExpectedInputModelSingleSelect->getOoModule());
+		$this->assertEquals(['Label'], $pExpectedInputModelSingleSelect->getLabelOnlyValues());
+		$this->assertTrue($pExpectedInputModelSingleSelect->getIsMulti());
+		$this->assertNotEmpty($pExpectedInputModelSingleSelect->getReferencedInputModels());
+		$this->assertInstanceOf(Closure::class, $pExpectedInputModelSingleSelect->getValueCallback());
+	}
+
 	/**
 	 * @return Closure
 	 */

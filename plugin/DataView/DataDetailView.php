@@ -109,6 +109,9 @@ class DataDetailView
 	/** @var string */
 	private $_template = '';
 
+	/** @var bool */
+	private $_accessControls = true;
+
 	/** @var string */
 	private $_shortCodeForm = '';
 
@@ -168,6 +171,10 @@ class DataDetailView
 	public function getPictureTypes(): array
 		{ return $this->_pictureTypes; }
 
+	/** @return bool */
+	public function hasDetailView(): bool
+		{ return $this->_accessControls; }
+
 	/** @return string */
 	public function getTemplate(): string
 		{ return $this->_template; }
@@ -203,6 +210,10 @@ class DataDetailView
 	/** @param array $pictureTypes */
 	public function setPictureTypes(array $pictureTypes)
 		{ $this->_pictureTypes = $pictureTypes; }
+
+	/** @param bool $accessControl */
+	public function setHasDetailView(bool $accessControl)
+		{ $this->_accessControls = $accessControl; }
 
 	/** @param string $template */
 	public function setTemplate(string $template)

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -34,7 +35,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 21;
+	const MAX_VERSION = 26;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -132,7 +133,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateSortByUserDefinedDefault();
 			$dbversion = 15;
 		}
-		
+
 		if ($dbversion == 15) {
 			dbDelta( $this->getCreateQueryFieldConfigDefaults() );
 			dbDelta( $this->getCreateQueryFieldConfigDefaultsValues() );
@@ -143,8 +144,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->migrationsDataSimilarEstates();
 			$dbversion = 17;
 		}
+
 		if ($dbversion == 17) {
-			$this->installDataQueryForms();
 			$dbversion = 18;
 		}
 
@@ -162,6 +163,33 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 20) {
 			$this->updateCreateAddressFieldOfIntersetAndOwnerForm();
 			$dbversion = 21;
+		}
+
+		if ($dbversion == 21) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 22;
+		}
+
+		if ($dbversion == 22) {
+			dbDelta($this->getCreateQueryForms());
+			$dbversion = 23;
+		}
+
+		if ($dbversion == 23) {
+			$this->deactivateCheckDuplicateOfForm();
+			$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+			$dbversion = 24;
+		}
+
+		if ($dbversion == 24) {
+			dbDelta($this->getCreateQueryListviews());
+			dbDelta($this->getCreateQueryListViewsAddress());
+			dbDelta($this->getCreateQueryForms());
+			$dbversion = 25;
+		}
+		if ($dbversion == 25) {
+			$this->setDataDetailViewAccessControlValue();
+			$dbversion = 26;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -234,6 +262,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`sortBySetting` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Sortierung nach Benutzerwahl: 0 means preselected, 1 means userDefined',
 			`sortByUserDefinedDefault` VARCHAR(200) NOT NULL COMMENT 'Standardsortierung',
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
+			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
+			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -274,46 +304,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',
+			`contact_type` varchar(255) NULL DEFAULT NULL,
+			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`form_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
 
 		return $sql;
 	}
-
-	/**
-	 *
-	 */
-
-	private function installDataQueryForms()
-	{
-		$prefix = $this->getPrefix();
-		$tableName = $prefix . "oo_plugin_forms";
-		$allTemplatePathsForm = $this->readTemplatePaths('form');
-		$template = '';
-		foreach ($allTemplatePathsForm as $templatePathsForm) {
-			if (basename($templatePathsForm) === 'defaultform.php') {
-				$template = $templatePathsForm;
-			}
-		}
-		$this->_pWPDB->insert(
-			$tableName,
-			array(
-				'name' => 'Default Form',
-				'form_type' => 'contact',
-				'template' => $template,
-				'country_active' => 1,
-				'zip_active' => 1,
-				'street_active' => 1,
-				'radius_active' => 1,
-				'geo_order' => 'street,zip,city,country,radius'
-			)
-		);
-		$defaultFormId = $this->_pWPDB->insert_id;
-		$this->installDataQueryFormFieldConfig($defaultFormId);
-	}
-
-
 	/**
 	 *
 	 * @return string
@@ -365,69 +363,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		) $charsetCollate;";
 
 		return $sql;
-	}
-
-	/**
-	 *
-	 */
-
-	private function installDataQueryFormFieldConfig($defaultFormId)
-	{
-		$prefix = $this->getPrefix();
-		$tableName = $prefix . "oo_plugin_form_fieldconfig";
-
-		$rows = array(
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 1,
-				'fieldname' => 'Vorname',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 2,
-				'fieldname' => 'Name',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 3,
-				'fieldname' => 'Strasse',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 4,
-				'fieldname' => 'Plz',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 5,
-				'fieldname' => 'Ort',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 6,
-				'fieldname' => 'Telefon1',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 7,
-				'fieldname' => 'Email',
-				'module' => 'address'
-			),
-			array(
-				'form_id' => $defaultFormId,
-				'order' => 8,
-				'fieldname' => 'message'
-			)
-		);
-		foreach ($rows as $row) {
-			$this->_pWPDB->insert($tableName, $row);
-		}
 	}
 
 	/**
@@ -541,6 +476,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`template` tinytext NOT NULL,
 			`recordsPerPage` int(10) NOT NULL DEFAULT '10',
 			`showPhoto` tinyint(1) NOT NULL DEFAULT '0',
+			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`listview_address_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";
@@ -689,7 +625,6 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
-
 	/**
 	 *
 	 */
@@ -700,6 +635,20 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$sql = "UPDATE {$prefix}oo_plugin_forms
 				SET `createaddress` = 1
 				WHERE `form_type` = 'interest' OR `form_type` = 'owner'";
+
+		$this->_pWPDB->query($sql);
+	}
+
+
+	/**
+	 *
+	 */
+
+	private function deactivateCheckDuplicateOfForm()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_forms
+				SET `checkduplicates` = 0";
 
 		$this->_pWPDB->query($sql);
 	}
@@ -764,28 +713,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$this->_pWpOption->deleteOption('oo_plugin_db_version');
 	}
 
+
 	/**
-	 *
-	 * @param string $directory
-	 * @param string $pattern
-	 * @return array
-	 *
+	 * @return void
 	 */
 
-	protected function readTemplatePaths($directory, $pattern = '*')
+	public function setDataDetailViewAccessControlValue()
 	{
-		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php')
-			. 'templates.dist/' . $directory . '/' . $pattern . '.php');
-		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR)
-			. 'onoffice-personalized/templates/' . $directory . '/' . $pattern . '.php');
-		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles);
-		$templates = array();
-
-		foreach ($templatesAll as $value) {
-			$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
-			$templates[$value] = $value;
-		}
-
-		return $templates;
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setHasDetailView(true);
+		$pDataDetailViewHandler->saveDetailView($pDetailView);
 	}
 }
