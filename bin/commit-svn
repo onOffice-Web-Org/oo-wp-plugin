@@ -59,7 +59,7 @@ if [ "${WD%%/tmp/*}" ]; then
 	exit 5
 fi
 
-# Clean out the entire folder except for SVN-files.
+# Clean out the entire folder except for SVN-related files.
 
 find . ! -path './.svn' ! -path './.svn/*' ! -path '.' ! -path '.svn' -type d -exec rm -rf {} +
 find . ! -path './.svn/*' ! -path '.' ! -path '.svn/*' -type f -exec rm -f {} +
