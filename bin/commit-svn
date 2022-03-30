@@ -32,6 +32,8 @@ RELEASE_DIR=`mktemp -d`
 PREFIX=$RELEASE_DIR make release
 cd "$RELEASE_DIR/onoffice"
 
+# Set new stable tag in readme.txt. (For details, see https://developer.wordpress.org/plugins/wordpress-org/how-your-readme-txt-works/#how-the-readme-is-parsed)
+
 if [ "$2" = "--stable" ]; then
 	ed readme.txt <<EDSCRIPT
 7
@@ -57,17 +59,24 @@ if [ "${WD%%/tmp/*}" ]; then
 	exit 5
 fi
 
+# Clean out the entire folder except for SVN-files.
+
 find . ! -path './.svn' ! -path './.svn/*' ! -path '.' ! -path '.svn' -type d -exec rm -rf {} +
 find . ! -path './.svn/*' ! -path '.' ! -path '.svn/*' -type f -exec rm -f {} +
 
+# Copy over the built files.
+
 cp -R $RELEASE_DIR/onoffice/* .
+
+# Add the built files to SVN.
 
 svn add . --force
 
-# remove deleted files
-# xargs -r is a GNU extension
+# SVN does not automatically detect which files were removed, so we need to tell it.
+# In `svn status`, "missing" files are marked with a ! at the beginning of the line, so we can `svn rm` all those files to let SVN know which files are no longer needed.
 svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
 
+# Commit to trunk and add a new tag.
 svn commit -m "Import tag '$NEW_TAG' to trunk" --non-interactive --username "${SVN_USER}" --password "${SVN_PASSWORD}" || exit 6;
 svn copy --username "${SVN_USER}" --password "${SVN_PASSWORD}" --non-interactive "${SVNURL}/${TRUNK_PATH}" "${SVNURL}/${TAG_PATH}/$NEW_TAG" -m "Create tag '$NEW_TAG'"
 
