@@ -326,7 +326,6 @@ class AdminPageAddressListSettings
 		wp_enqueue_script('oo-checkbox-js');
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviewsaddress-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
-		wp_enqueue_script('oo-copy-shortcode');
 
 	}
 }
