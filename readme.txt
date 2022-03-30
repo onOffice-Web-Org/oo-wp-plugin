@@ -85,7 +85,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixes**
 
-* Fixes detail few being inaccessible for reference estates.
+* Fixes detail view being inaccessible for reference estates.
 
 **Changes**
 
