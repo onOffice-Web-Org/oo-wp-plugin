@@ -43,9 +43,9 @@ class RecordManagerPostMeta
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$post_meta_sql="SELECT `post_id`
-						FROM {$prefix}postmeta
-						WHERE meta_key not like '\_%' and meta_value like '%[oo_estate%'
-						ORDER BY post_id DESC ";
+				FROM {$prefix}postmeta
+				WHERE meta_key not like '\_%' and meta_value like '%[oo_estate%'
+				ORDER BY post_id DESC ";
 		$post_meta_results = $wpdb->get_row( $post_meta_sql ,ARRAY_A);
 		if (empty($post_meta_results))
 		{
