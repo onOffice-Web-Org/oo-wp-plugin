@@ -40,16 +40,17 @@ class RecordManagerPostMeta
 
     public function getPageId(): array
     {
-        global $wpdb;
-        $prefix = $wpdb->prefix;
-        $post_meta_sql="SELECT `post_id`
-                        FROM {$prefix}postmeta
-                        WHERE meta_key not like '\_%' and meta_value like '%[oo_estate%'";
-        $post_meta_results = $wpdb->get_row( $post_meta_sql ,ARRAY_A);
+		global $wpdb;
+		$prefix = $wpdb->prefix;
+		$post_meta_sql="SELECT `post_id`
+						FROM {$prefix}postmeta
+						WHERE meta_key not like '\_%' and meta_value like '%[oo_estate%'
+						ORDER BY post_id DESC ";
+		$post_meta_results = $wpdb->get_row( $post_meta_sql ,ARRAY_A);
 		if (empty($post_meta_results))
 		{
 			return [];
 		}
-        return $post_meta_results;
+		return $post_meta_results;
     }
 }
