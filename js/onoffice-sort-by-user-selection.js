@@ -4,7 +4,6 @@ jQuery(document).ready(function($) {
         var sortbynames = [
             'oopluginlistviews-sortByUserDefinedDefault',
             'oopluginsortbyuservalues-sortbyuservalue',
-            'oopluginlistviews-sortByUserDefinedDirection',
             'oopluginlistviews-sortby'
         ];
 
@@ -13,6 +12,8 @@ jQuery(document).ready(function($) {
                 sortbynames.forEach(function(item){
                     $("#viewrecordsfilter").find("[name="+item+"]").val(null).trigger("chosen:updated");
                 });
+				$("#viewrecordsfilter").find("[name='oopluginlistviews-sortByUserDefinedDirection']")
+					.val(0).trigger("chosen:updated");
             }
         });
     };

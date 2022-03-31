@@ -89,7 +89,6 @@ class AdminPageEstateListSettings
 
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
-		$pInputModelSortBy = $pFormModelBuilder->createInputModelSortBy(onOfficeSDK::MODULE_ESTATE);
 		$pInputModelSortOrder = $pFormModelBuilder->createInputModelSortOrder();
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
@@ -111,7 +110,6 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->addInputModel($pInputModelSortByChosen);
 		$pFormModelRecordsFilter->addInputModel($pInputModelSortByDefault);
 		$pFormModelRecordsFilter->addInputModel($pInputModelSortByspec);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
 		$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
 
