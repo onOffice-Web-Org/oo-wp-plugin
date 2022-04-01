@@ -30,6 +30,8 @@ pot:
 
 release: pot copy-files-release change-title add-version composer-install-nodev
 
+unprocessed-release: pot copy-files-release composer-install-nodev
+
 test-zip: pot copy-files-release add-version composer-install-nodev
 	cd $(PREFIX); zip -r onoffice.zip onoffice/
 
