@@ -49,13 +49,9 @@ jobs:
       - name: Build release
         run: PREFIX=/tmp/release make unprocessed-release
 
-      - run: cat /tmp/release/onoffice/plugin.php
-
       - name: Override version
         if: ${{ inputs.overrideVersion != '' }}
         run: 'sed -i "s/Version: ${{ inputs.expectedVersion }}/Version: ${{ inputs.overrideVersion }}/" /tmp/release/onoffice/plugin.php'
-
-      - run: cat /tmp/release/onoffice/plugin.php
 
       - name: Zip release
         run: |
