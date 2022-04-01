@@ -29,15 +29,15 @@ jobs:
         run: echo "::set-output name=developmentVersion::$( git describe --tags | sed -n 's/v\(\)/\1/p')"
 
   build:
-    name: Build release
+    name: Build
     needs: get-versions
     uses: ./.github/workflows/build-release.yml
     with:
       expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
       overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
   
-  dev-release:
-    name: Development release
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     environment: WordPress SVN
     needs: [get-versions, build]
