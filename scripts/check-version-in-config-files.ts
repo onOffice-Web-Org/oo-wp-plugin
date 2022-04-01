@@ -33,16 +33,24 @@ async function check() {
     `The 'readme.txt' has a 'Stable tag' with the wrong version. It points to ${versionInReadme}, but the new version is ${newVersion}.`,
   );
 
-  const versionInChangelog = readme.match(
-    /==\s*Changelog\s*==.*?=\s*(.+?)\s*=/s,
+  const versionsInChangelog = readme.match(
+    /==\s*Changelog\s*==.*?(?:=\s*(.+?)\s*=.*?)?(?:=\s*(.+?)\s*=)/s,
   )
-    ?.at(1);
-  assertValidVersion(
-    versionInChangelog,
-    newVersion,
+  if (versionsInChangelog === null) {
+    console.error(
     `Could not find the Changelog in the 'readme.txt'. Make sure there is a line '== Changelog ==' and below it an entry '= ${newVersion} ='.`,
-    `The newest changelog entry in the 'readme.txt' has the wrong version. It points to ${versionInChangelog}, but the new version is ${newVersion}.`,
-  );
+    )
+    Deno.exit(1)
+  }
+
+  const newestVersionInChangelog = versionsInChangelog?.at(1);
+  const secondVersionInChangelog = versionsInChangelog?.at(2);
+  if (newestVersionInChangelog !== newVersion && secondVersionInChangelog !== newVersion) {
+    console.error(
+    `The two most recent changelog entries in the 'readme.txt' have the wrong version. They point to ${newestVersionInChangelog} and ${secondVersionInChangelog}, but the new version is ${newVersion}.`,
+    );
+    Deno.exit(1);
+  }
 
   const pluginPhp = await Deno.readTextFile("./plugin.php");
 
