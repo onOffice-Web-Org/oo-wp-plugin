@@ -86,7 +86,9 @@ jobs:
         run: svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
 
       - run: svn status
+        working-directory: /tmp/svn
       - run: svn diff
+        working-directory: /tmp/svn
       - run: echo "Import version '${{ needs.get-versions.ouputs.developmentVersion }}' to trunk"
 
       # - name: Commit to trunk
