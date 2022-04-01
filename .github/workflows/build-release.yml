@@ -26,7 +26,7 @@ jobs:
       - name: Checkout from GIT
         uses: actions/checkout@v2
         with:
-          ref: {{ inputs.ref }}
+          ref: ${{ inputs.ref }}
           submodules: recursive
 
       - name: Setup Deno
