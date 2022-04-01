@@ -73,11 +73,10 @@ jobs:
         # With 'awk' we extract each file name and transform it into the right command, and 'xargs' executes each such command.
         run: svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
 
-      - run: svn status
+      - name: Commit to trunk
         working-directory: /tmp/svn
+        run: svn commit -m "Import version '${{ needs.get-version.outputs.currentVersion }}' to trunk" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ secrets.SVN_PASSWORD }}"
 
-      - run: svn diff
+      - name: Copy to tag
         working-directory: /tmp/svn
-
-      - run: echo "Import version '${{ needs.get-version.outputs.currentVersion }}' to trunk"
-      - run: echo "${{ env.SVN_URL }}/tags/${{ needs.get-version.outputs.currentVersion }}"
+        run: svn copy -m "Copy trunk to tag '${{ needs.get-version.outputs.currentVersion }}'" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ secrets.SVN_PASSWORD }}" ${{ env.SVN_URL }}/trunk ${{ env.SVN_URL }}/tags/${{ needs.get-version.outputs.currentVersion }}
