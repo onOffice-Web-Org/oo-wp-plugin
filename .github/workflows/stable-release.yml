@@ -72,5 +72,5 @@ jobs:
         # With 'awk' we extract each file name and transform it into the right command, and 'xargs' executes each such command.
         run: svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
 
-      - run: svn status
+      - run: svn diff
         working-directory: /tmp/svn
