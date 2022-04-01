@@ -34,7 +34,7 @@ jobs:
     name: Build development release
     needs: get-versions
     # We cannot use a relative path here, or GitHub Actions does not find the workflow. This might be a bug in GitHub Actions.
-    uses: jmaas-onoffice/oo-wp-plugin/.github/workflows/build-release.yml@master
+    uses: onOfficeGmbH/oo-wp-plugin/.github/workflows/build-release.yml@master
     with:
       # The trigger makes this run on a merge commit, but we want to run
       # on the latest commit before the review.
