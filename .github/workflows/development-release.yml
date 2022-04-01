@@ -39,7 +39,8 @@ jobs:
   dev-release:
     name: Development release
     runs-on: ubuntu-latest
-    needs: build
+    environment: WordPress SVN
+    needs: [get-versions, build]
     env:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
@@ -84,5 +85,10 @@ jobs:
         # With 'awk' we extract each file name and transform it into the right command, and 'xargs' executes each such command.
         run: svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
 
+      - run: svn status
       - run: svn diff
-        working-directory: /tmp/svn
+      - run: echo "Import version '${{ needs.get-versions.ouputs.developmentVersion }}' to trunk"
+
+      # - name: Commit to trunk
+      #   working-directory: /tmp/svn
+      #   run: svn commit -m "Import version '${{ needs.get-versions.ouputs.developmentVersion }}' to trunk" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ SVN_PASSWORD }}"
