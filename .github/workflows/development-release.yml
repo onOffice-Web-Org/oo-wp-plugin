@@ -34,7 +34,7 @@ jobs:
     uses: ./.github/workflows/build-release.yml
     with:
       expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
-      overrideVersion: ${{ needs.get-versions.ouputs.developmentVersion }}
+      overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
   
   dev-release:
     name: Development release
@@ -89,7 +89,7 @@ jobs:
         working-directory: /tmp/svn
       - run: svn diff
         working-directory: /tmp/svn
-      - run: echo "Import version '${{ needs.get-versions.ouputs.developmentVersion }}' to trunk"
+      - run: echo "Import version '${{ needs.get-versions.outputs.developmentVersion }}' to trunk"
 
       # - name: Commit to trunk
       #   working-directory: /tmp/svn
