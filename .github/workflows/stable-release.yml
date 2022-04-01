@@ -29,7 +29,7 @@ jobs:
     name: Deploy to WordPress SVN
     runs-on: ubuntu-latest
     environment: WordPress SVN
-    needs: [get-versions, build]
+    needs: [get-version, build]
     env:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
