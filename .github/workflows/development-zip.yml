@@ -19,6 +19,7 @@ jobs:
           # We need to fetch more than just the most recent commit,
           # since we later use `git describe`.
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
           
       - name: Get latest stable plugin version (without leading 'v')
         id: get-stable-version
