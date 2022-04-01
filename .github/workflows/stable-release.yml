@@ -80,4 +80,5 @@ jobs:
       - run: svn diff
         working-directory: /tmp/svn
 
-      - run: echo "Import version '${{ needs.get-versions.outputs.developmentVersion }}' to trunk"
+      - run: echo "Import version '${{ needs.get-version.outputs.currentVersion }}' to trunk"
+      - run: echo "${{ env.SVN_URL }}/tags/${{ needs.get-version.outputs.currentVersion }}"
