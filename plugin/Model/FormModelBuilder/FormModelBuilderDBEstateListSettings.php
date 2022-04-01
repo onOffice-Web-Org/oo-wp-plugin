@@ -136,7 +136,7 @@ class FormModelBuilderDBEstateListSettings
 
 		$listName = $this->getValue($name);
 
-		$codes = '[oo_estate view=="'.$listName.'"]';
+		$codes = '[oo_estate view="'.$listName.'"]';
 		$pInputModeLabel = new InputModelLabel(__('Shortcode: ', 'onoffice-for-wp-websites'), $codes);
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);

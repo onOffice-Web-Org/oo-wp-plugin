@@ -237,6 +237,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 			->disableOriginalConstructor()
 			->setMethods(['getInputModelDBFactory', 'getValue'])
 			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
 		$pInputModelButton = $pInstance->createInputModelButton();
 		$this->assertInstanceOf(InputModelLabel::class, $pInputModelButton);
 		$this->assertEquals($pInputModelButton->getHtmlType(), 'button');
