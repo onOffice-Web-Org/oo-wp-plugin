@@ -154,6 +154,7 @@ class TestClassEstateListInputVariableReader
 	/**
 	 *
 	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
+	 * @covers onOffice\WPlugin\Controller\InputVariableReaderConfigTest::getTimezoneString
 	 *
 	 */
 
@@ -208,6 +209,7 @@ class TestClassEstateListInputVariableReader
 	/**
 	 *
 	 * @covers onOffice\WPlugin\Controller\InputVariableReader::getFieldValue
+	 * @covers onOffice\WPlugin\Controller\InputVariableReaderConfigTest::setValueArray
 	 *
 	 */
 
