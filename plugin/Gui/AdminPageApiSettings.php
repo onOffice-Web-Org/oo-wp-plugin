@@ -96,27 +96,14 @@ class AdminPageApiSettings
 			return $this->encrypteCredentials($apiKey);
 		});
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
-			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY'))
-			{
-				if (empty(get_option('ONOFFICE_CREDENTIALS_ENC_KEY')))
-				{
-					$password = $this->encrypteCredentials($this->checkPassword($password, $optionNameSecret));
-				}
-				update_option('ONOFFICE_CREDENTIALS_ENC_KEY',ONOFFICE_CREDENTIALS_ENC_KEY);
-			} else {
-				if (get_option('ONOFFICE_CREDENTIALS_ENC_KEY'))
-				{
-					try {
-						$password = $this->_encrypter->decrypt(get_option($optionNameSecret), get_option('ONOFFICE_CREDENTIALS_ENC_KEY'));
-					} catch (\RuntimeException $e) {
-						$password = get_option($optionNameSecret);
-					}
-					update_option('ONOFFICE_CREDENTIALS_ENC_KEY','');
-				}
+			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+				$password = $this->encrypteCredentials($this->checkPassword($password, $optionNameSecret));
+				update_option('onoffice-is-encryptcredent', true);
+				return $this->checkPassword($password, $optionNameSecret);
 			}
+			update_option('onoffice-is-encryptcredent', false);
 			return $this->checkPassword($password, $optionNameSecret);
 		});
-
 		$pInputModelApiSecret->setValue(get_option($optionNameSecret, $pInputModelApiSecret->getDefault()));
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelApiSecret);
@@ -125,7 +112,7 @@ class AdminPageApiSettings
 		$pFormModel->setPageSlug($this->getPageSlug());
 		
 		
-		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+		if (get_option('onoffice-is-encryptcredent')) {
 			$pFormModel->setLabel(__('API settings (encrypted)', 'onoffice-for-wp-websites'));
 		}
 		else
