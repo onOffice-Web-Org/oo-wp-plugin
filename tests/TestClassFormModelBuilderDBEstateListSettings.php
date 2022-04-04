@@ -219,28 +219,16 @@ class TestClassFormModelBuilderDBEstateListSettings
 
 	public function testCreateInputModelEmbedCode()
 	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
-			->getMock();
-
-		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
-		$pInstance->method('getValue')->willReturn('1');
-		$pInputModelFormEmbedCode = $pInstance->createInputModelEmbedCode();
+		$pFormModelBuilderDBEstateListSettings = new FormModelBuilderDBEstateListSettings();
+		$pInputModelFormEmbedCode = $pFormModelBuilderDBEstateListSettings->createInputModelEmbedCode();
 		$this->assertInstanceOf(InputModelLabel::class, $pInputModelFormEmbedCode);
 		$this->assertEquals($pInputModelFormEmbedCode->getHtmlType(), 'label');
 	}
 
 	public function testCreateInputModelButton()
 	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
-			->getMock();
-
-		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
-		$pInstance->method('getValue')->willReturn('1');
-		$pInputModelButton = $pInstance->createInputModelButton();
+		$pFormModelBuilderDBEstateListSettings = new FormModelBuilderDBEstateListSettings();
+		$pInputModelButton = $pFormModelBuilderDBEstateListSettings->createInputModelButton();
 		$this->assertInstanceOf(InputModelLabel::class, $pInputModelButton);
 		$this->assertEquals($pInputModelButton->getHtmlType(), 'button');
 	}
