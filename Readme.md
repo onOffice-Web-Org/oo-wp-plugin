@@ -22,7 +22,7 @@ PREFIX=/tmp make release
 
 This will generate the directory /tmp/onoffice with the plugin data.
 
-For more details on how to set up and build a .zip file you can upload directly to WordPress, see [BUILDING.md](./BUILDING.md).
+For more details on how to set up and build a .zip file you can upload directly to WordPress, see [Building.md](./documentation/Building.md).
 
 ## Getting Started
 
