@@ -84,7 +84,7 @@ class AdminPageEstateDetail
 	const FORM_VIEW_LAYOUT_DESIGN = 'viewlayoutdesign';
 
 	/** */
-	const FORM_VIEW_CONTACT_FORM = 'viewcontactform';
+	const FORM_VIEW_ACCESS_CONTROL = 'viewaccesscontrol';
 
 	/** */
 	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
@@ -220,8 +220,8 @@ class AdminPageEstateDetail
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'normal');
 
-		$pFormContactForm = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_FORM);
-		$this->createMetaBoxByForm($pFormContactForm, 'normal');
+		$pFormAccessControl = $this->getFormModelByGroupSlug( self::FORM_VIEW_ACCESS_CONTROL );
+		$this->createMetaBoxByForm( $pFormAccessControl, 'normal' );
 
 		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
 		$this->createMetaBoxByForm($pFormDocumentTypes, 'side');
@@ -271,22 +271,16 @@ class AdminPageEstateDetail
 		$this->addFormModel($pFormModel);
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
+		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
 		$pInputShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$pFormModelLayoutDesign->addInputModel( $pInputModelShortCodeForm );
 		$pFormModelLayoutDesign->addInputModel($pInputShowStatus);
 		$this->addFormModel($pFormModelLayoutDesign);
-
-		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
-		$pFormModelShortCodeForm = new FormModel();
-		$pFormModelShortCodeForm->setPageSlug($this->getPageSlug());
-		$pFormModelShortCodeForm->setGroupSlug(self::FORM_VIEW_CONTACT_FORM);
-		$pFormModelShortCodeForm->setLabel(__('Contact Form', 'onoffice-for-wp-websites'));
-		$pFormModelShortCodeForm->addInputModel($pInputModelShortCodeForm);
-		$this->addFormModel($pFormModelShortCodeForm);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
 		$pFormModelPictureTypes = new FormModel();
@@ -295,6 +289,14 @@ class AdminPageEstateDetail
 		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
+
+		$pInputModelAccessControl = $pFormModelBuilder->createInputAccessControl();
+		$pFormModelAccessControl  = new FormModel();
+		$pFormModelAccessControl->setPageSlug( $this->getPageSlug() );
+		$pFormModelAccessControl->setGroupSlug( self::FORM_VIEW_ACCESS_CONTROL );
+		$pFormModelAccessControl->setLabel( __( 'Access Control', 'onoffice-for-wp-websites' ) );
+		$pFormModelAccessControl->addInputModel( $pInputModelAccessControl );
+		$this->addFormModel( $pFormModelAccessControl );
 
 		$pInputModelDocumentTypes = $pFormModelBuilder->createInputModelExpose();
 		$pInputModelMovieLinks = $pFormModelBuilder->createInputModelMovieLinks();
