@@ -3,26 +3,9 @@
 
 Integrate real estates, contact forms and contact persons from the onOffice Software into your WordPress website.
 
-## Installation
+## Set up for development
 
-### For Development
-
-* Clone this repository recursively: `git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git`.
-* Install the development dependencies: `composer install`.
-
-### Building a Release
-
-The included Makefile can be used to generate a release. This strips down configuration files for several development tools, as well as unit tests.
-Composer is still required.
-
-```
-git clone --recursive https://github.com/onOfficeGmbH/oo-wp-plugin.git
-PREFIX=/tmp make release
-```
-
-This will generate the directory /tmp/onoffice with the plugin data.
-
-For more details on how to set up and build a .zip file you can upload directly to WordPress, see [Building.md](./documentation/Building.md).
+In [./documentation/Building.md](./documentation/Building.md) you can find instructions for how to set up your development environment. There are also instructions for making a .zip file that you can upload to WordPress.
 
 ## Getting Started
 
