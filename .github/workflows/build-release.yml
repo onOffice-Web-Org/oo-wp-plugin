@@ -26,6 +26,7 @@ jobs:
       - name: Checkout from GIT
         uses: actions/checkout@v2
         with:
+          ref: ${{ inputs.ref }}
           submodules: recursive
 
       - name: Setup Deno
@@ -46,15 +47,11 @@ jobs:
         run: composer install
 
       - name: Build release
-        run: PREFIX=/tmp/release make unprocessed-release
-
-      - run: cat /tmp/release/onoffice/plugin.php
+        run: PREFIX=/tmp/release make release
 
       - name: Override version
         if: ${{ inputs.overrideVersion != '' }}
         run: 'sed -i "s/Version: ${{ inputs.expectedVersion }}/Version: ${{ inputs.overrideVersion }}/" /tmp/release/onoffice/plugin.php'
-
-      - run: cat /tmp/release/onoffice/plugin.php
 
       - name: Zip release
         run: |

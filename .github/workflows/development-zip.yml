@@ -19,6 +19,7 @@ jobs:
           # We need to fetch more than just the most recent commit,
           # since we later use `git describe`.
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
           
       - name: Get latest stable plugin version (without leading 'v')
         id: get-stable-version
@@ -73,7 +74,7 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            Install the approved version:
+            Steps to install the approved version:
             1. Download `onoffice-${{ needs.get-versions.outputs.developmentVersion }}-please-unpack.zip` from https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.
             2. Unpack the downloaded file to get another .zip file.
             3. Upload that inner .zip file to WordPress.
