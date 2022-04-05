@@ -17,11 +17,9 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-	
-	use DI\ContainerBuilder;
-	use onOffice\WPlugin\EstateDetail;
-	use onOffice\WPlugin\EstateListHandle;
-	use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+
+use onOffice\WPlugin\EstateDetail;
+use onOffice\WPlugin\EstateListHandle;
 	
 	/**
  *

@@ -424,7 +424,7 @@ class EstateList
 			},999,1);
 			add_action( 'wp_head', function () use($recordModified) {
 				echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
-			},PHP_INT_MAX);
+			},1);
 		}
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 		return $pArrayContainer;
