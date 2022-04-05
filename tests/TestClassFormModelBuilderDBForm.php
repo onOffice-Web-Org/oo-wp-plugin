@@ -46,6 +46,7 @@ class TestClassFormModelBuilderDBForm
 	/** @var InputModelDBFactory */
 	private $_pInputModelFactoryDBEntry;
 
+	/** @var FormModelBuilderDBForm */
 	private $_pInstance;
 
 	/**
@@ -57,13 +58,7 @@ class TestClassFormModelBuilderDBForm
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
-		$this->_pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
-			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
-			->getMock();
-
-		$this->_pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
-		$this->_pInstance->method('getValue')->willReturn('1');
+		$this->_pInstance = new FormModelBuilderDBForm($this->_pContainer);
 	}
 
 	/**
@@ -159,50 +154,70 @@ class TestClassFormModelBuilderDBForm
 
 		$this->assertEquals([], $result);
 	}
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelName
+	 */
 	public function testCreateInputModelName()
 	{
-
 		$pInputModelName = $this->_pInstance->createInputModelName();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelName);
 		$this->assertEquals($pInputModelName->getHtmlType(), 'text');
 	}
-
-
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelEmbedCode
+	 */
 	public function testCreateInputModelEmbedCode()
 	{
 		$pInputModelFormEmbedCode = $this->_pInstance->createInputModelEmbedCode();
 		$this->assertInstanceOf(InputModelLabel::class, $pInputModelFormEmbedCode);
 		$this->assertEquals($pInputModelFormEmbedCode->getHtmlType(), 'label');
 	}
-
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelButton
+	 */
 	public function testCreateInputModelButton()
 	{
 		$pInputModelButton = $this->_pInstance->createInputModelButton();
 		$this->assertInstanceOf(InputModelLabel::class, $pInputModelButton);
 		$this->assertEquals($pInputModelButton->getHtmlType(), 'button');
 	}
-
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelResultLimit
+	 */
 	public function testCreateInputModelResultLimit()
 	{
 		$pInputModelResultLimit = $this->_pInstance->createInputModelResultLimit();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelResultLimit);
 		$this->assertEquals($pInputModelResultLimit->getHtmlType(), 'text');
 	}
-
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRecipient
+	 */
 	public function testCreateInputModelRecipient()
 	{
 		$pInputModelRecipient = $this->_pInstance->createInputModelRecipient();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelRecipient);
 		$this->assertEquals($pInputModelRecipient->getHtmlType(), 'text');
 	}
-
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsRequired
+	 */
 	public function testGetInputModelIsRequired()
 	{
 		$pInputModelIsRequired = $this->_pInstance->getInputModelIsRequired();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelIsRequired);
 		$this->assertEquals($pInputModelIsRequired->getHtmlType(), 'checkbox');
 	}
-
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsAvailableOptions
+	 */
 	public function testGetInputModelIsAvailableOptions()
 	{
 		$pInputModelIsAvailableOptions = $this->_pInstance->getInputModelIsAvailableOptions();
