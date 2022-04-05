@@ -4,6 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.9
 Requires PHP: 7.0
+Stable tag: 2.22.5
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -85,7 +86,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixes**
 
-* Fixes detail few being inaccessible for reference estates.
+* Fixes detail view being inaccessible for reference estates.
 
 **Changes**
 
