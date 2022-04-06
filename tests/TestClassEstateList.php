@@ -41,6 +41,7 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\UnknownViewException;
+use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\EstateUnits;
@@ -65,6 +66,9 @@ use function json_decode;
  *
  * @url http://www.onoffice.de
  * @copyright 2003-2019, onOffice(R) GmbH
+ *
+ * @covers onOffice\WPlugin\EstateDetail
+ * @covers onOffice\WPlugin\EstateList
  *
  */
 
@@ -189,6 +193,17 @@ class TestClassEstateList
 	{
 		$this->_pEstateList->loadEstates();
 		$this->assertEquals(9, $this->_pEstateList->getEstateOverallCount());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testGetRawValues()
+	{
+		$this->_pEstateList->loadEstates();
+		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->getRawValues());
 	}
 
 
@@ -354,6 +369,29 @@ class TestClassEstateList
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals($expectedResults[0], $this->_pEstateList->$methodName(2));
 		$this->assertEquals($expectedResults[1], $this->_pEstateList->$methodName(3));
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testHasDetailView()
+	{
+		$valueMap = true;
+		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
+		                         ->setMethods(['__construct', 'hasDetailView'])
+		                         ->getMock();
+		$pDataDetailView->expects($this->once())->method('hasDetailView')->willReturn($valueMap);
+
+		$pDataDetailViewHandlerMock = $this->getMockBuilder(DataDetailViewHandler::class)
+		                         ->setMethods(['__construct', 'getDetailView'])
+		                         ->getMock();
+		$pDataDetailViewHandlerMock->expects($this->once())->method('getDetailView')->willReturn($pDataDetailView);
+
+		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandlerMock);
+
+		$this->assertEquals($valueMap, $this->_pEstateList->hasDetailView());
 	}
 
 
@@ -676,7 +714,6 @@ class TestClassEstateList
 		$result = $this->_pEstateList->estateIterator();
 		$this->assertEquals('', $result['vermarktungsstatus']);
 	}
-
 
 	/**
 	 *

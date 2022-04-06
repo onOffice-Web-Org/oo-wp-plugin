@@ -4,6 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.9
 Requires PHP: 7.0
+Stable tag: 2.22.5
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -74,6 +75,28 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 2.22.5 =
+
+**Fixes**
+
+* When there are no estates that show up on the map, there is no longer a gap in the estate list where the map would be.
+
+= 2.22.4 =
+
+**Fixes**
+
+* Fixes detail view being inaccessible for reference estates.
+
+**Changes**
+
+* Adds a checkbox to control whether the detail pages of reference estates are accessible or should be restricted with 404 Not Found.
+
+= 2.22.3 =
+
+**Changes**
+
+* The list views in forms, addresses and estates got enriched with additional information. 
 
 = 2.22.2 =
 

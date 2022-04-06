@@ -168,4 +168,15 @@ class TestClassSDKWrapper
 		]], $pAPIClientActionGeneric->getResultRecords());
 		return $pSDKWrapper;
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testWithCurlOptions()
+	{
+		$pSDKWrapper = new SDKWrapper();
+		$this->assertInstanceOf(SDKWrapper::class, $pSDKWrapper->withCurlOptions(['curlOP']));
+	}
 }
