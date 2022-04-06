@@ -37,8 +37,10 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		text-decoration: none !important;
 		background: #80acd3 !important;
 	}
+	.oo-listinfo .oo-listinfotable .oo-detailslisttd {
+		display: inline-table;
+	}
 </style>
-
 <div class="oo-estate-map">
     <?php require('map/map.php'); ?>
 </div>
@@ -98,6 +100,10 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 								continue;
 							}
 							if ( $value == "" ) {
+								continue;
+							}
+							if ($field == 'multiParkingLot') {
+								require('parkingLot/ParkingLot.php');
 								continue;
 							}
 							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';

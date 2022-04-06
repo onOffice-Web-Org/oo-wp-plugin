@@ -39,8 +39,6 @@ use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModel;
-use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
@@ -49,7 +47,6 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
 use function home_url;
@@ -407,7 +404,6 @@ class EstateList
 		}
 
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
-
 		return $pArrayContainer;
 	}
 
