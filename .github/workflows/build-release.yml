@@ -63,4 +63,5 @@ jobs:
         with:
           name: release
           path: /tmp/release/release.zip
+          retention-days: 7
 
