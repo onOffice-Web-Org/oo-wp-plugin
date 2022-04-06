@@ -26,7 +26,9 @@ namespace onOffice\tests;
 use onOffice\WPlugin\WP\UnknownPageException;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use WP_UnitTestCase;
-
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 
 /**
  * @preserveGlobalState disabled
@@ -61,6 +63,11 @@ class TestClassWPPageWrapper
 	 */
 	public function prepare()
 	{
+		global $wpdb;
+
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
 		$this->set_permalink_structure('/%year%/%monthnum%/%day%/%postname%/');
 		$this->_pSubject = new WPPageWrapper();
 		// set this even though the permalink for pages always is %postname%
@@ -71,7 +78,6 @@ class TestClassWPPageWrapper
 			'post_status' => 'publish',
 			'post_date' => '2016-05-01 13:37:37',
 		]);
-
 		$postData = self::POST_DATA;
 		$postData['post_parent'] = $this->_ancestorId;
 		$this->_postId = wp_insert_post($postData);
