@@ -117,7 +117,7 @@ class TestClassDatabaseChanges
 
 	public function testInstallMigrationsDataSimilarEstates(): array
 	{
-		add_option('oo_plugin_db_version', '21');
+		add_option('oo_plugin_db_version', '20');
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->_pDbChanges->install();
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
