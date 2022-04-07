@@ -86,6 +86,10 @@ Start editing inside the `onoffice-personalized` folder.
 
 * If there are many regions configured in onOffice enterprise, the estate list settings will now load much faster.
 
+= Previous changes =
+
+You can view all previous changes in our [changelog.txt](https://github.com/onOfficeGmbH/oo-wp-plugin/blob/master/changelog.txt).
+
 == Arbitrary section ==
 
 = Development =
