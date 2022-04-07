@@ -106,24 +106,23 @@ abstract class FormModelBuilder
 
 
 	/**
+	 * @param $directory
+	 * @param $pattern
 	 *
-	 * @param string $directory
-	 * @param string $pattern
 	 * @return array
-	 *
 	 */
 
-	protected function readTemplatePaths($directory, $pattern = '*')
-	{
-		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR.'/index.php')
-			.'templates.dist/'.$directory.'/'.$pattern.'.php');
-		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR)
-			.'onoffice-personalized/templates/'.$directory.'/'.$pattern.'.php');
-		$templateThemeFiles = glob(get_stylesheet_directory()
-			.'/onoffice-theme/templates/'.$directory.'/'.$pattern.'.php');
-		
-		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles, $templateThemeFiles);
-        return (new TemplateCall())->readTemplates($templatesAll, $directory);
+	protected function readTemplatePaths( $directory, $pattern = '*' ) {
+		$templateGlobFiles  = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR . '/index.php' )
+		                            . 'templates.dist/' . $directory . '/' . $pattern . '.php' );
+		$templateLocalFiles = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
+		                            . 'onoffice-personalized/templates/' . $directory . '/' . $pattern . '.php' );
+		$templateThemeFiles = glob( get_stylesheet_directory()
+		                            . '/onoffice-theme/templates/' . $directory . '/' . $pattern . '.php' );
+
+		$templatesAll = array_merge( $templateGlobFiles, $templateLocalFiles, $templateThemeFiles );
+
+		return ( new TemplateCall() )->readTemplates( $templatesAll, $directory );
 	}
 
 	/**

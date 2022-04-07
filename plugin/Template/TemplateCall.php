@@ -94,39 +94,52 @@ class TemplateCall
 
 
 	/**
+	 * @param $templatesAll
+	 * @param $directory
 	 *
+	 * @return array
 	 */
 
-	public function readTemplates($templatesAll, $directory): array
-	{
+	public function readTemplates( $templatesAll, $directory ): array {
 		$templateFolderData = array();
+		$hasTemplateFolder  = false;
+		$hasPluginFolder    = false;
+		$plugin_name        = basename( plugin_dir_path( ONOFFICE_PLUGIN_DIR . '/index.php' ) );
 
-		$plugin_name = basename(plugin_dir_path(ONOFFICE_PLUGIN_DIR . '/index.php'));
-		foreach ($templatesAll as $filePath) {
-			$fileName = substr(strrchr($filePath, "/"), 1);
-			if (strpos($filePath, 'themes') !== false) {
-				$filePath = __String::getNew($filePath)->replace(get_template_directory() . '/', '');
-				$templateTitle = 'Personalized (Theme)';
-				$shortPath = '/onoffice-theme/templates/' . $directory . '/';
+		foreach ( $templatesAll as $filePath ) {
+			$fileName = substr( strrchr( $filePath, "/" ), 1 );
+			if ( strpos( $filePath, 'themes' ) !== false ) {
+				$hasTemplateFolder = true;
+				$filePath          = __String::getNew( $filePath )->replace( get_template_directory() . '/', '' );
+				$templateTitle     = 'Personalized (Theme)';
+				$shortPath         = '/onoffice-theme/templates/' . $directory . '/';
 			} else {
-				$filePath = __String::getNew($filePath)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
-				if (strpos($filePath, 'onoffice-personalized') !== false) {
-					$templateTitle = 'Personalized (Plugin)';
-					$shortPath = 'onoffice-personalized/templates/' . $directory . '/';
+				$filePath = __String::getNew( $filePath )->replace( plugin_dir_path( ONOFFICE_PLUGIN_DIR ), '' );
+				if ( strpos( $filePath, 'onoffice-personalized' ) !== false ) {
+					$hasPluginFolder = true;
+					$templateTitle   = 'Personalized (Plugin)';
+					$shortPath       = 'onoffice-personalized/templates/' . $directory . '/';
 				} else {
 					$templateTitle = 'Included';
-					$shortPath = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
+					$shortPath     = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
 				}
 			}
-			$folderOrder = self::ORDER_OF_TEMPLATES_FOLDER[$templateTitle];
-			$templatePathGroupByFolder[$templateTitle][$filePath] = $fileName;
+			$folderOrder                                              = self::ORDER_OF_TEMPLATES_FOLDER[ $templateTitle ];
+			$templatePathGroupByFolder[ $templateTitle ][ $filePath ] = $fileName;
 
-			$templateFolderData[$folderOrder]['path'] = $templatePathGroupByFolder[$templateTitle];
-			$templateFolderData[$folderOrder]['title'] = $templateTitle;
-			$templateFolderData[$folderOrder]['folder'] = $shortPath;
+			$templateFolderData[ $folderOrder ]['path']   = $templatePathGroupByFolder[ $templateTitle ];
+			$templateFolderData[ $folderOrder ]['title']  = $templateTitle;
+			$templateFolderData[ $folderOrder ]['folder'] = $shortPath;
 		}
+		if ( $hasTemplateFolder !== $hasPluginFolder ) {
+			foreach ( $templateFolderData as $key => $templateData ) {
+				if ( strpos( $templateData['title'], "Personalized" ) !== false ) {
+					$templateFolderData[ $key ]['title'] = "Personalized";
+				}
+			}
+		}
+		ksort( $templateFolderData );
 
-		ksort($templateFolderData);
 		return $templateFolderData;
 	}
 
