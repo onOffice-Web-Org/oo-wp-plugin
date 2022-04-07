@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
@@ -105,6 +106,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
 		$pDataDetailView->setFields($row[DataDetailView::FIELDS] ?? []);
 		$pDataDetailView->setPictureTypes($row[DataDetailView::PICTURES] ?? []);
+		$pDataDetailView->setHasDetailView((bool)($row[InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL] ?? ''));
 		$pDataDetailView->setExpose($row['expose'] ?? '');
 		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
 		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);

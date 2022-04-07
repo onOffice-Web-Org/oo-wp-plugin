@@ -58,6 +58,7 @@ class TestClassDataDetailView
 
 	/** */
 	const DEFAULT_FIELDS_ADDRESS = [
+		'imageUrl',
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -67,6 +68,7 @@ class TestClassDataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
+		'defaultemail',
 	];
 	/**
 	 *
@@ -82,6 +84,7 @@ class TestClassDataDetailView
 		$this->assertEquals('detail', $pDataDetailView->getName());
 		$this->assertEquals(0, $pDataDetailView->getPageId());
 		$this->assertEquals([], $pDataDetailView->getPictureTypes());
+		$this->assertEquals(true, $pDataDetailView->hasDetailView());
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
 		$this->assertFalse($pDataDetailView->getShowStatus());
@@ -108,6 +111,8 @@ class TestClassDataDetailView
 		$pDataDetailView->setPictureTypes(['testpicturetype1', 'testpicturetype2']);
 		$this->assertEquals(['testpicturetype1', 'testpicturetype2'],
 			$pDataDetailView->getPictureTypes());
+		$pDataDetailView->setHasDetailView(true);
+		$this->assertEquals(true, $pDataDetailView->hasDetailView());
 		$pDataDetailView->setTemplate('/test/template1.test');
 		$this->assertEquals('/test/template1.test', $pDataDetailView->getTemplate());
 		$pDataDetailView->setShortCodeForm('[oo_form form="Contact Form"]');
