@@ -30,6 +30,8 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
 use onOffice\WPlugin\Model\InputModelDB;
 use WP_UnitTestCase;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 
 class TestClassFormModelBuilderDBAddress
 	extends WP_UnitTestCase
@@ -56,6 +58,11 @@ class TestClassFormModelBuilderDBAddress
 	 */
 	public function testCreateInputModelFilter()
 	{
+		global $wpdb;
+
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
 			->disableOriginalConstructor()
 			->setMethods(['getInputModelDBFactory', 'getValue'])
