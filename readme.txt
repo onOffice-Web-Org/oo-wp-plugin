@@ -76,13 +76,17 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= 3.0 =
+= Unreleased =
 
-**Changes**
+**Added**
 
-* The minimum PHP version was set to PHP 7.2.
+* In the overview for estate lists, address lists, and forms, you can now choose how many entries to show per page in the "Screen options".
 
-**Fixes**
+**Removed**
+
+* Drop support for older PHP version. The minimum version is now PHP 7.2.
+
+**Fixed**
 
 * If there are many regions configured in onOffice enterprise, the estate list settings will now load much faster.
 
