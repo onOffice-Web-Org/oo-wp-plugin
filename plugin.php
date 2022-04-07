@@ -135,6 +135,43 @@ add_filter('document_title_parts', function($title) use ($pDI) {
 	return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
 }, 10, 2);
 
+if (count(array_intersect(["wordpress-seo/wp-seo.php"], get_option("active_plugins"))) > 0) {
+	//objekttitel Field
+	add_action('wpseo_register_extra_replacements', function () {
+			wpseo_register_var_replacement('%%onoffice_title%%', 'objekttitelFieldCallback', 'advanced');
+		}
+	);
+	add_action('wpseo_register_extra_replacements', function () {
+			wpseo_register_var_replacement('%%onoffice_titel%%', 'objekttitelFieldCallback', 'advanced');
+		}
+	);
+
+	function objekttitelFieldCallback($title)
+	{
+		$pDIBuilder = new ContainerBuilder();
+		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pDI = $pDIBuilder->build();
+		return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitleField($title, '%1$s');
+	}
+    //vermarktungsart Field
+	add_action('wpseo_register_extra_replacements', function () {
+			wpseo_register_var_replacement('%%onoffice_vermarktungsart%%', 'vermarktungsartFieldCallback', 'advanced');
+		}
+	);
+	add_action('wpseo_register_extra_replacements', function () {
+			wpseo_register_var_replacement('%%onoffice_marketing_method%%', 'vermarktungsartFieldCallback', 'advanced');
+		}
+	);
+
+	function vermarktungsartFieldCallback($title)
+	{
+		$pDIBuilder = new ContainerBuilder();
+		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pDI = $pDIBuilder->build();
+		return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitleField($title, '%2$s');
+	}
+}
+
 add_filter('wpml_ls_language_url', function($url) use ($pDI){
 	$pWPQueryWrapper = $pDI->get(WPQueryWrapper::class);
 	$estateId = (int) $pWPQueryWrapper->getWPQuery()->get('estate_id', 0);

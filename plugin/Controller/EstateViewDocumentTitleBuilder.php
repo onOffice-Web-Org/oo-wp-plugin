@@ -54,7 +54,6 @@ class EstateViewDocumentTitleBuilder
 		if ($estateId === 0) {
 			return $title;
 		}
-
 		$title['title'] = $this->_pEstateTitleBuilder->buildTitle($estateId, '%1$s');
 		$titleLength = __String::getNew($title['title'])->length();
 
@@ -65,6 +64,22 @@ class EstateViewDocumentTitleBuilder
 			$format = __('%2$s (%3$s) in %4$s - %5$s', 'onoffice-for-wp-websites');
 			$title['title'] = $this->_pEstateTitleBuilder->buildTitle($estateId, $format);
 		}
+		return $title;
+	}
+
+	/**
+	 * @param string $title see Wordpress internal function wp_get_document_title()
+	 * @param string $format
+	 * @return string
+	 */
+	public function buildDocumentTitleField(string $title, string $format): string
+	{
+		$estateId = (int)$this->_pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
+		if ($estateId === 0) {
+			return '';
+		}
+		$title = $this->_pEstateTitleBuilder->buildTitle($estateId, $format);
+		var_dump($title);
 
 		return $title;
 	}
