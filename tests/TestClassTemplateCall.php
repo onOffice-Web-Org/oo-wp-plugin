@@ -76,7 +76,7 @@ class TestClassTemplateCall
 				'...\wordpress\wp-content\plugins\oo-wp-plugin/templates.dist/address/SearchFormAddress.php' => "SearchFormAddress.php",
 				'.\wordpress\wp-content\plugins\oo-wp-plugin/templates.dist/address/default.php' => "default.php",
 			],
-			'title' => "Included",
+			'title' => "Default",
 			'folder' => "oo-wp-plugin/templates.dist/address/"
 		]
 	];
