@@ -53,6 +53,10 @@ class AdminPageEstateList
 	public function renderContent()
 	{
 		$this->_pEstateListTable->prepare_items();
+		$page = 'onoffice-estates';
+		$buttonSearch = __('Search Estate Views', 'onoffice-for-wp-websites');
+		$id = 'onoffice-form-search-estate';
+		$this->generateSearchForm($page,$buttonSearch,null, null, $id);
 		echo '<p>';
 		echo '<form method="post">';
 		$this->_pEstateListTable->display();
@@ -84,7 +88,6 @@ class AdminPageEstateList
 		echo '<a href="'.esc_attr($newLink).'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
-
 
 	/**
 	 *

@@ -48,6 +48,11 @@ class AdminPageEstateUnitList
 	public function renderContent()
 	{
 		$this->_pEstateUnitsTable->prepare_items();
+		$page = 'onoffice-estates';
+		$buttonSearch = __('Search Estate Views', 'onoffice-for-wp-websites');
+		$tab = isset($_GET['tab']) ? esc_html($_GET['tab']) : '';
+		$id = 'onoffice-form-search-estate';
+		$this->generateSearchForm($page,$buttonSearch,null,$tab,$id);
 		echo '<p>';
 		echo '<form method="post">';
 		$this->_pEstateUnitsTable->display();

@@ -60,6 +60,10 @@ class AdminPageAddressList
 	{
 		$this->generatePageMainTitle(__('Addresses', 'onoffice-for-wp-websites'));
 		$this->_pAddressListTable->prepare_items();
+		$page = 'onoffice-addresses';
+		$buttonSearch = __('Search Addresses', 'onoffice-for-wp-websites');
+		$id = 'onoffice-form-search-address';
+		$this->generateSearchForm($page,$buttonSearch, null,null,$id);
 		echo '<p>';
 		echo '<form method="post">';
 		echo $this->_pAddressListTable->views();
@@ -89,7 +93,6 @@ class AdminPageAddressList
 		echo '<a href="'.$newLink.'" class="page-title-action">'.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		echo '<hr class="wp-header-end">';
 	}
-
 
 	/**
 	 *
