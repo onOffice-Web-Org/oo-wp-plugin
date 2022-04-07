@@ -80,7 +80,7 @@ class FieldLoaderGeneric
 			if (isset($fieldArray['label'])) {
 				unset($fieldArray['label']);
 			}
-			$listTypeUnSupported = ['user', 'date', 'redhint', 'blackhint', 'dividingline'];
+			$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
 				if (
 					($module === onOfficeSDK::MODULE_ADDRESS && $fieldProperties['tablename'] === 'addressFaktura')
