@@ -1,16 +1,15 @@
 name: Unit tests
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or by cron schedule
   push:
     branches:
-      -  '*'    # push to any branch
+      - master
   pull_request:
+    branches:
+      - master
   schedule:
     - cron: "0 13 * * 1" # Every Monday at 1PM UTC (9AM EST)
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   unittest:
     runs-on: ${{ matrix.operating-system }}
