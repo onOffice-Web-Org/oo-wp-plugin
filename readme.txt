@@ -82,6 +82,10 @@ Start editing inside the `onoffice-personalized` folder.
 
 * The minimum PHP version was set to PHP 7.2.
 
+**Fixes**
+
+* If there are many regions configured in onOffice enterprise, the estate list settings will now load much faster.
+
 = 2.22.5 =
 
 **Fixes**
