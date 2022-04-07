@@ -55,7 +55,7 @@ class TemplateCall
 	const ORDER_OF_TEMPLATES_FOLDER = [
 		"Personalized (Theme)" => 1,
 		"Personalized (Plugin)" => 2,
-		"Included" => 3,
+		"Default" => 3,
 	];
 
 
@@ -120,7 +120,7 @@ class TemplateCall
 					$templateTitle   = 'Personalized (Plugin)';
 					$shortPath       = 'onoffice-personalized/templates/' . $directory . '/';
 				} else {
-					$templateTitle = 'Included';
+					$templateTitle = 'Default';
 					$shortPath     = $plugin_name . '/' . 'templates.dist/' . $directory . '/';
 				}
 			}
