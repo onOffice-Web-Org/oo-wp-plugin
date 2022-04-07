@@ -24,7 +24,7 @@ jobs:
       - name: Get project ID
         run: echo "PROJECT_ID=$(echo "${{ github.event.pull_request.title }}" | sed -r 's/.*P#([0-9]{5}).*/\1/g')" >> $GITHUB_ENV  
 
-      - name: Send mail test
+      - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
           # EMAIL_SERVER_ADDRESS is the URL of the SMTP server. Example: smtp.example.org
