@@ -1,0 +1,81 @@
+name: Share development zip
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  get-versions:
+    if: github.event.review.state == 'approved'
+    name: Get versions
+    runs-on: ubuntu-latest
+    outputs:
+      stableVersion: ${{ steps.get-stable-version.outputs.stableVersion }}
+      developmentVersion: ${{ steps.get-development-version.outputs.developmentVersion }}
+    steps:
+      - name: Checkout from GIT
+        uses: actions/checkout@v2
+        with:
+          # We need to fetch more than just the most recent commit,
+          # since we later use `git describe`.
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+          
+      - name: Get latest stable plugin version (without leading 'v')
+        id: get-stable-version
+        # Remove the leading 'v' from the tag.
+        run: echo "::set-output name=stableVersion::$( git describe --tags --abbrev=0 | sed -n 's/v\(\)/\1/p')"
+
+      - name: Output development version
+        id: get-development-version
+        # Remove the leading 'v'.
+        run: echo "::set-output name=developmentVersion::$( git describe --tags | sed -n 's/v\(\)/\1/p')"
+
+  dev-build:
+    name: Build development release
+    needs: get-versions
+    # We cannot use a relative path here, or GitHub Actions does not find the workflow. This might be a bug in GitHub Actions.
+    uses: onOfficeGmbH/oo-wp-plugin/.github/workflows/build-release.yml@master
+    with:
+      # The trigger makes this run on a merge commit, but we want to run
+      # on the latest commit before the review.
+      ref: ${{ github.event.pull_request.head.sha }}
+      expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
+      overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
+  
+  comment:
+    name: Pack a development zip and comment on the PR
+    runs-on: ubuntu-latest
+    needs: [get-versions, dev-build]
+    steps:
+      - name: Download release
+        uses: actions/download-artifact@v3
+        with:
+          name: release
+          path: /tmp/release/onoffice-for-wp-websites
+
+      - name: Unzip release
+        working-directory: /tmp/release/onoffice-for-wp-websites/
+        run: |
+          unzip release.zip
+          rm release.zip
+
+      - name: Create development zip
+        working-directory: /tmp/release/  # To prevent nested paths (like /tmp/release/onoffice/readme.txt) we need to be in this directory.
+        run: zip -r ./onoffice-${{ needs.get-versions.outputs.developmentVersion }}.zip ./onoffice-for-wp-websites/ 
+
+      - name: Upload development zip
+        uses: actions/upload-artifact@v3
+        with:
+          name: onoffice-${{ needs.get-versions.outputs.developmentVersion }}-please-unpack
+          path: /tmp/release/onoffice-${{ needs.get-versions.outputs.developmentVersion }}.zip  # Uploading a .zip leads to a .zip inside a .zip, but uploading the folder takes significantly longer.
+
+      - name: Post comment to PR
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            Steps to install the approved version:
+            1. Download `onoffice-${{ needs.get-versions.outputs.developmentVersion }}-please-unpack.zip` from https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.
+            2. Unpack the downloaded file to get another .zip file.
+            3. Upload that inner .zip file to WordPress.
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

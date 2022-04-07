@@ -49,6 +49,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 		'show_reference' => true,
 		'radius' => 35,
 		'amount' => 13,
+		'access-control' => true,
 		'enablesimilarestates' => true,
 		'show_status' => true
 	];
@@ -110,6 +111,28 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInstance->generate('test');
 
 		$pInputModelDB = $pInstance->createInputModelPictureTypes();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputAccessControl
+	 */
+	public function testCreateInputAccessControl()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataDetailViewHandler($pWPOptionsWrapper);
+		$this->_pDataDetailView = $pDataSimilarEstatesSettingsHandler->createDetailViewByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getValue'])
+		                  ->getMock();
+		$pInstance->generate('test');
+
+		$pInputModelDB = $pInstance->createInputAccessControl();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
 
