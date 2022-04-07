@@ -111,7 +111,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(25, $dbversion);
+		$this->assertEquals(26, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -139,9 +139,9 @@ class TestClassDatabaseChanges
 		$this->assertEquals('Field 1', $newFields[0]);
 		$this->assertEquals('Field 2', $newFields[1]);
 		$this->assertEquals('Field 3', $newFields[2]);
-		$this->assertTrue(true, $newRadius);
-		$this->assertTrue(true, $newSameKind);
-		$this->assertTrue(true, $newSameMarketingMethod);
+		$this->assertEquals(35, $newRadius);
+		$this->assertTrue($newSameKind);
+		$this->assertTrue($newSameMarketingMethod);
 		$this->assertEquals(35, $newSamePostalCode);
 		$this->assertEquals(13, $newAmount);
 		$this->assertEquals('/test/similar/template.php', $newSimilarEstatesTemplate);
@@ -192,7 +192,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(25, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(26, DatabaseChanges::MAX_VERSION);
 	}
 
 

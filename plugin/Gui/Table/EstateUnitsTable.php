@@ -33,7 +33,7 @@ use onOffice\WPlugin\Gui\AdminPageEstateListSettingsBase;
 class EstateUnitsTable extends ListTable
 {
 	/** @var int */
-	private $_itemsPerPage = 10;
+	private $_itemsPerPage = null;
 
 
 	/**
@@ -49,6 +49,9 @@ class EstateUnitsTable extends ListTable
 			'plural' => 'estatelists',
 			'screen' => $args['screen'] ?? null,
 		));
+
+		$this->_itemsPerPage = $this->get_items_per_page('onoffice_estate_units_listview_per_page', 20);
+
 	}
 
 	/**
@@ -95,8 +98,8 @@ class EstateUnitsTable extends ListTable
 
 		$this->set_pagination_args( array(
 			'total_items' => $itemsCount,
-			'per_page' => $this->_itemsPerPage,
-			'total_pages' => ceil($itemsCount / 10)
+			'per_page' => $itemsPerPage,
+			'total_pages' => ceil($itemsCount / $itemsPerPage)
 		) );
 	}
 

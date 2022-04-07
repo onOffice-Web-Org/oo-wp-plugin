@@ -20,12 +20,12 @@
  */
 
 /*
-Plugin Name: onOffice for WP-Websites (dev)
+Plugin Name: onOffice for WP-Websites
 Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 2.0
+Version: 2.22.5
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -46,6 +46,9 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
+use onOffice\WPlugin\DataView\DataDetailViewCheckAccessControl;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Field\EstateKindTypeReader;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\Form\Preview\FormPreviewApplicantSearch;
@@ -186,10 +189,16 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 	$estateId = $pWP->query_vars['estate_id'] ?? '';
 	/** @var EstateIdRequestGuard $pEstateIdGuard */
 	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
+	/** @var DataDetailViewHandler $pDataDetailViewHandler */
+	$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class);
 
 	if ($estateId !== '') {
 		$estateId = (int)$estateId;
-		if ($estateId === 0 || !$pEstateIdGuard->isValid($estateId)) {
+		/** @var DataDetailViewCheckAccessControl $pDataDetailViewCheckAccessControl */
+		$pDataDetailViewCheckAccessControl = $pDI->get(DataDetailViewCheckAccessControl::class);
+		$accessControlChecker = $pDataDetailViewCheckAccessControl->checkAccessControl($estateId);
+
+		if ($estateId === 0 || !$accessControlChecker|| !$pEstateIdGuard->isValid($estateId)) {
 			$pWP->handle_404();
 			include(get_query_template('404'));
 			die();
@@ -223,6 +232,20 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			->preview((string)$pWP->query_vars['preview_name']));
 	}
 });
+
+add_filter('set-screen-option', function ($status, $option, $value) {
+	$pagination_screen_option = array(
+		"onoffice_address_listview_per_page",
+		"onoffice_estate_listview_per_page",
+		"onoffice_forms_forms_per_page",
+		"onoffice_estate_units_listview_per_page"
+	);
+
+	if (in_array($option, $pagination_screen_option)) {
+		return $value;
+	}
+	return $status;
+}, 10, 3);
 
 function update_duplicate_check_warning_option()
 {
