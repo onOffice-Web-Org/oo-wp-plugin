@@ -25,7 +25,7 @@ jobs:
       expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
 
   deploy:
-    name: Deploy to WordPress SVN
+    name: Deploy stable version
     runs-on: ubuntu-latest
     environment: WordPress SVN
     needs: [get-version, build]

@@ -37,7 +37,7 @@ jobs:
       overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
   
   deploy:
-    name: Deploy
+    name: Deploy development version
     runs-on: ubuntu-latest
     environment: WordPress SVN
     needs: [get-versions, build]
