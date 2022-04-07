@@ -80,7 +80,9 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Added**
 
-* In the overview for estate lists, address lists, and forms, you can now choose how many entries to show per page in the "Screen options".
+* In the overview for estate lists, address lists, and forms:
+  * You can now search for a specific item with the search form in the top right of the overview.
+  * You can now choose how many entries to show per page in the "Screen options".
 
 **Removed**
 
