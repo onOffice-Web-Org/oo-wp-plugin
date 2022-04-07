@@ -79,7 +79,6 @@ class EstateViewDocumentTitleBuilder
 			return '';
 		}
 		$title = $this->_pEstateTitleBuilder->buildTitle($estateId, $format);
-		var_dump($title);
 
 		return $title;
 	}
