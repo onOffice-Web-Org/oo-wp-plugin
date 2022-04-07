@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 3.0 =
+
+**Changes**
+
+* The minimum PHP version was set to PHP 7.2.
+
 = 2.22.5 =
 
 **Fixes**
