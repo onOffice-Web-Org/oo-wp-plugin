@@ -195,4 +195,21 @@ class FieldsCollectionBuilderShort
 		$pFieldsCollection->merge($pFieldsCollectionGeo);
 		return $this;
 	}
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function addFieldsAddressEstateWithRegionValues(FieldsCollection $pFieldsCollection): self
+	{
+		$pFieldLoader = $this->_pContainer->get(FieldLoaderEstateRegionValues::class);
+		$pFieldCollectionAddressEstate = $this->_pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
+		$pFieldsCollection->merge($pFieldCollectionAddressEstate);
+		return $this;
+	}
 }
