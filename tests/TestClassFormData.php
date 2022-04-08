@@ -63,7 +63,8 @@ class TestClassFormData
 		'testInput8__bis' => 55,
 		'testInput9' => 'wood',
 		'regionaler_zusatz' => 'AachenStadt',
-		'testBoolInput' => 'y'
+		'testBoolInput' => 'y',
+		'message' => 'abc'
 	];
 
 
@@ -92,6 +93,7 @@ class TestClassFormData
 			'testInput9' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'regionaler_zusatz' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'testBoolInput' => onOfficeSDK::MODULE_ADDRESS,
+			'message' => ''
 		]);
 
 		$pDataFormConfiguration->setRequiredFields([

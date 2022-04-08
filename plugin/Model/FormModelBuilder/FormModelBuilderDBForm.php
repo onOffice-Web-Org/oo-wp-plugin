@@ -150,7 +150,7 @@ class FormModelBuilderDBForm
 		$pFieldsCollectionBuilder
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
-			->addFieldsFormBackend($pFieldsCollection);
+			->addFieldsFormBackend($pFieldsCollection,$this->getFormType());
 		return $pFieldsCollection;
 	}
 

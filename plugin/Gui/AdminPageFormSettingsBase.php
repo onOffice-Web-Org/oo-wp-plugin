@@ -472,7 +472,7 @@ abstract class AdminPageFormSettingsBase
 				->addFieldsSearchCriteriaSpecificBackend($pDefaultFieldsCollection);
 		}
 
-		$pFieldsCollectionBuilder->addFieldsFormBackend($pDefaultFieldsCollection);
+		$pFieldsCollectionBuilder->addFieldsFormBackend($pDefaultFieldsCollection,$this->getType());
 
 		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
 			if (!in_array($pField->getModule(), $modules, true)) {
