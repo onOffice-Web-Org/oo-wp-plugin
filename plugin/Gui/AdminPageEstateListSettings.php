@@ -114,7 +114,6 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
 
 		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
-		$pFormModelRecordsFilter->addInputModel($pInputModelShowStatus);
 		$pFormModelRecordsFilter->addInputModel($pInputModelShowReferenceEstate);
 		$this->addFormModel($pFormModelRecordsFilter);
 

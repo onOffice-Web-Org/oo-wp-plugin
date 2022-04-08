@@ -28,7 +28,9 @@ class InputFieldChosenRenderer
 	/** @var boolean */
 	private $_multiple = true;
 
-	//put your code here
+	/**
+	 * @return void
+	 */
 	public function render()
 	{
 		$output = '<select name="'.esc_html($this->getName()).'"'

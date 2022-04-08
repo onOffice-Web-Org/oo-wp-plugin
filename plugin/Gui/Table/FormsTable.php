@@ -74,7 +74,7 @@ class FormsTable
 		$args['screen'] = get_current_screen()->id;
 		parent::__construct($args);
 
-		$this->_itemsPerPage = $this->get_items_per_page('onoffice-forms-forms_per_page', 10);
+		$this->_itemsPerPage = $this->get_items_per_page('onoffice_forms_forms_per_page', 20);
 	}
 
 
@@ -109,8 +109,8 @@ class FormsTable
 
 		$this->set_pagination_args( array(
 			'total_items' => $itemsCount,
-			'per_page' => $this->_itemsPerPage,
-			'total_pages' => ceil($itemsCount / 10)
+			'per_page' => $itemsPerPage,
+			'total_pages' => ceil($itemsCount / $itemsPerPage)
 		) );
 
 		$this->_countByType = $pRecordRead->getCountByType();

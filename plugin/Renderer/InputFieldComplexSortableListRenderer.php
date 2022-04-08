@@ -33,7 +33,6 @@ use function esc_html;
 class InputFieldComplexSortableListRenderer
 	extends InputFieldCheckboxRenderer
 {
-
 	/** @var array */
 	private $_inactiveFields = null;
 
@@ -107,7 +106,7 @@ class InputFieldComplexSortableListRenderer
 		if ($this->_inactiveFields === null) {
 			$this->_inactiveFields = [];
 
-			$pFieldnames = new Fieldnames(new FieldsCollection(), true);
+			$pFieldnames = $this->getFieldnames(new FieldsCollection(), true);
 			$pFieldnames->loadLanguage();
 
 			$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
