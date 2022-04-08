@@ -34,9 +34,6 @@ class InputFieldLabelRenderer
 	extends InputFieldRenderer
 {
 	/** @var string */
-	private $_label = null;
-
-	/** @var string */
 	private $_valueEnclosure = InputModelLabel::VALUE_ENCLOSURE_ITALIC;
 
 	/** @var array */
@@ -60,18 +57,10 @@ class InputFieldLabelRenderer
 
 		echo '<span class="viewusage" id="'.esc_html($this->getGuiId()).'" '
 				.$this->renderAdditionalAttributes().'>'
-				.esc_html($this->_label).$additional
+				.esc_html($this->getLabel()).$additional
 			.'</span>';
 	}
 
-
-	/** @return string */
-	public function getLabel()
-		{ return $this->_label; }
-
-	/** @param string $label */
-	public function setLabel($label)
-		{ $this->_label = $label; }
 
 	/** @return string */
 	public function getValueEnclosure()
