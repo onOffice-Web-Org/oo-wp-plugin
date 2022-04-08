@@ -46,7 +46,9 @@ class InputFieldCheckboxRenderer
 	private $_hint = '';
 
 	/** @var string */
-	private $_descriptionTextHTML = '';
+	private $_descriptionTextHTML;
+
+
 	/**
 	 *
 	 * @param string $name
@@ -81,6 +83,7 @@ class InputFieldCheckboxRenderer
 		}
 	}
 
+
 	/**
 	 *
 	 * @return FieldsCollection
@@ -105,6 +108,7 @@ class InputFieldCheckboxRenderer
 		return $pFieldsCollection;
 	}
 
+
 	/**
 	 *
 	 * @throws Exception
@@ -125,7 +129,7 @@ class InputFieldCheckboxRenderer
 
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 					.'" value="'.esc_html($key).'"'
-					.(is_array($this->_checkedValues) && in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
+					.(is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()) ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
 					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
@@ -135,7 +139,7 @@ class InputFieldCheckboxRenderer
 		} else {
 			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 				.'" value="'.esc_html($this->getValue()).'"'
-				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
+				.($this->getValue() == $this->getCheckedValues() ? ' checked="checked" ' : '')
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
 				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '')

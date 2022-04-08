@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use Exception;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -31,20 +33,19 @@ namespace onOffice\WPlugin\Renderer;
 class InputFieldTextRenderer
 	extends InputFieldRenderer
 {
-
-
 	/**
 	 *
 	 * @param string $type
 	 * @param string $name
 	 * @param string $value
 	 *
+	 * @throws Exception
 	 */
 
 	public function __construct($type, $name, $value = null)
 	{
 		if (!in_array($type, array('text', 'hidden'))) {
-			throw new \Exception(' wrong type!');
+			throw new Exception(' wrong type!');
 		}
 		parent::__construct($type, $name, $value);
 	}
