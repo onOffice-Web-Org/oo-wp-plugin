@@ -111,12 +111,13 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(22, $dbversion);
+		$this->assertEquals(26, $dbversion);
 		return $this->_createQueries;
 	}
 
 	public function testInstallMigrationsDataSimilarEstates(): array
 	{
+		$this->_pDbChanges->deinstall();
 		add_option('oo_plugin_db_version', '16');
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->_pDbChanges->install();
@@ -138,9 +139,9 @@ class TestClassDatabaseChanges
 		$this->assertEquals('Field 1', $newFields[0]);
 		$this->assertEquals('Field 2', $newFields[1]);
 		$this->assertEquals('Field 3', $newFields[2]);
-		$this->assertTrue(true, $newRadius);
-		$this->assertTrue(true, $newSameKind);
-		$this->assertTrue(true, $newSameMarketingMethod);
+		$this->assertEquals(35, $newRadius);
+		$this->assertTrue($newSameKind);
+		$this->assertTrue($newSameMarketingMethod);
 		$this->assertEquals(35, $newSamePostalCode);
 		$this->assertEquals(13, $newAmount);
 		$this->assertEquals('/test/similar/template.php', $newSimilarEstatesTemplate);
@@ -191,7 +192,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(22, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(26, DatabaseChanges::MAX_VERSION);
 	}
 
 

@@ -48,6 +48,9 @@ abstract class InputFieldRenderer
 	/** @var string */
 	private $_oOModule = '';
 
+	/** @var string */
+	private $_hint = '';
+
 
 	/**
 	 *
@@ -156,4 +159,12 @@ abstract class InputFieldRenderer
 	/** @return string */
 	public function getOoModule(): string
 		{ return $this->_oOModule; }
+
+	/** @return string */
+	public function getHint()
+	{ return $this->_hint; }
+
+	/** @param string $hint */
+	public function setHint(string $hint)
+	{ $this->_hint = $hint; }
 }
