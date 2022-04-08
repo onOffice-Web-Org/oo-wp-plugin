@@ -133,7 +133,7 @@ abstract class FormModelBuilderDB
 
 		foreach ($defaultFields as $value) {
 			if (array_key_exists($value, $fieldnames)) {
-				$defaultActiveFields[] = $fieldnames[$value];
+				$defaultActiveFields[$value] = $fieldnames[$value];
 			}
 		}
 

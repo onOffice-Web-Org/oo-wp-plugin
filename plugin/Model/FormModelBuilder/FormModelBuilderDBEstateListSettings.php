@@ -471,6 +471,7 @@ class FormModelBuilderDBEstateListSettings
 
 			$valueAll = array_diff_key($fieldnames, $valuePopular);
 			if (!empty($valueAll)) {
+				natcasesort( $valueAll );
 				$data['group']['All'] = $valueAll;
 			}
 		}
@@ -480,6 +481,7 @@ class FormModelBuilderDBEstateListSettings
 			$value = [];
 		}
 		$pInputModel->setValue($value);
+
 		return $pInputModel;
 	}
 
@@ -504,7 +506,7 @@ class FormModelBuilderDBEstateListSettings
 		if ($values == null) {
 			$values = [];
 		}
-		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
+		$fieldnames = $this->readFieldnames(onOfficeSDK::MODULE_ESTATE, false);
 		$defaultValues = [];
 		foreach ($values as $value)	{
 			if (array_key_exists($value, $fieldnames)) {

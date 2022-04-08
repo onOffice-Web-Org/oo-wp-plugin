@@ -35,14 +35,14 @@ class InputFieldChosenRenderer
 					.$this->renderAdditionalAttributes()
 					.' id="'.esc_html($this->getGuiId()).'"'
 					. ($this->getMultiple() ? ' multiple' : '')
-					. '>';
+					. ' style="width: 230px;">';
 		$values = $this->getValue();
 		if (array_key_exists('group', $values)) {
 			foreach ($values['group'] as $k => $group) {
 				$output .= '<optgroup label="' . esc_html($k) . '">';
 				foreach ($group as $key => $label) {
 					$selected = null;
-					if (in_array($key, $this->getSelectedValue())) {
+					if ( in_array( $key, $this->getSelectedValue(), true ) ) {
 						$selected = 'selected="selected"';
 					}
 					$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
