@@ -14,6 +14,8 @@ jQuery(document).ready(function($) {
 				});
 				$("#viewrecordsfilter").find("[name='oopluginlistviews-sortByUserDefinedDirection']")
 					.val(0).trigger("chosen:updated");
+				$("#viewrecordsfilter").find("[name=oopluginlistviews-sortByUserDefinedDefault]")
+					.find("option").remove();
 			}
 		});
 	};
