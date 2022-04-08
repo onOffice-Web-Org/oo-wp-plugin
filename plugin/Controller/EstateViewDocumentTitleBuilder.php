@@ -78,6 +78,7 @@ class EstateViewDocumentTitleBuilder
 		if ($estateId === 0) {
 			return '';
 		}
+
 		return $this->_pEstateTitleBuilder->buildTitle($estateId, $format);
 	}
 }

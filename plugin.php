@@ -137,38 +137,34 @@ add_filter('document_title_parts', function($title) use ($pDI) {
 
 if (in_array('wordpress-seo/wp-seo.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 	//objekttitel Field
-	add_action('wpseo_register_extra_replacements', function () {
-			wpseo_register_var_replacement('%%onoffice_title%%', 'objekttitelFieldCallback', 'advanced');
+	add_action('wpseo_register_extra_replacements', function () use ($pDI){
+		wpseo_register_var_replacement('%%onoffice_titel%%', function () use ($pDI){
+			return fieldCallback($pDI, '%1$s');
+		} , 'advanced');
 		}
 	);
-	add_action('wpseo_register_extra_replacements', function () {
-			wpseo_register_var_replacement('%%onoffice_titel%%', 'objekttitelFieldCallback', 'advanced');
+	add_action('wpseo_register_extra_replacements', function () use ($pDI){
+		wpseo_register_var_replacement('%%onoffice_title%%', function () use ($pDI){
+				return fieldCallback($pDI, '%1$s');
+			} , 'advanced');
 		}
 	);
-
-	function objekttitelFieldCallback()
-	{
-		$pDIBuilder = new ContainerBuilder();
-		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pDI = $pDIBuilder->build();
-		return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitleField( '%1$s');
-	}
 	//vermarktungsart Field
-	add_action('wpseo_register_extra_replacements', function () {
-			wpseo_register_var_replacement('%%onoffice_vermarktungsart%%', 'vermarktungsartFieldCallback', 'advanced');
+	add_action('wpseo_register_extra_replacements', function () use ($pDI){
+		wpseo_register_var_replacement('%%onoffice_vermarktungsart%%', function () use ($pDI){
+				return fieldCallback($pDI, '%2$s');
+			} , 'advanced');
 		}
 	);
-	add_action('wpseo_register_extra_replacements', function () {
-			wpseo_register_var_replacement('%%onoffice_marketing_method%%', 'vermarktungsartFieldCallback', 'advanced');
+	add_action('wpseo_register_extra_replacements', function () use ($pDI){
+		wpseo_register_var_replacement('%%onoffice_marketing_method%%', function () use ($pDI){
+				return fieldCallback($pDI, '%2$s');
+			} , 'advanced');
 		}
 	);
 
-	function vermarktungsartFieldCallback()
-	{
-		$pDIBuilder = new ContainerBuilder();
-		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pDI = $pDIBuilder->build();
-		return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitleField('%2$s');
+	function fieldCallback( $pDI, $format ) {
+		return $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField( $format );
 	}
 }
 
