@@ -1,6 +1,6 @@
 var onOffice = onOffice || {};
 onOffice.settings = onOffice_loc_settings;
-
+const LIST_SCREEN_RELOAD = ["admin_page_onoffice-editlistview","admin_page_onoffice-editform"];
 onOffice.ajaxSaver = function(outerDiv) {
 	if (typeof $ === 'undefined') {
 		$ = jQuery;
@@ -23,6 +23,7 @@ onOffice.ajaxSaver = function(outerDiv) {
 		data.action = onOffice.settings.action;
 		data.nonce = onOffice.settings.nonce;
 		data.values = JSON.stringify(values);
+		var current_screen = onOffice.settings.current_screen;
 		var mergeElement = onOffice.settings.merge;
 		for (var i in mergeElement) {
 			var newKey = mergeElement[i];
@@ -52,7 +53,7 @@ onOffice.ajaxSaver = function(outerDiv) {
 
 				onOffice.sortByUserSelection();
 				onOffice.generateSortByUserDefinedDefault();
-				if (getUrlPageEdit.length != 0)
+				if (getUrlPageEdit.length != 0 && LIST_SCREEN_RELOAD.includes(current_screen))
 				{
 					urlPageEdit = getUrlPageEdit[0] + "&id=" + onOffice.settings.record_id;
 					window.location.replace(urlPageEdit);

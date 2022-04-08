@@ -238,7 +238,7 @@ class FormModelBuilderDBForm
 		$formType = $this->getFormType();
 		$pFormTranslation = new FormTranslation();
 		$translation = $pFormTranslation->getPluralTranslationForForm($formType, 1);
-		$pInputModeLabel = new InputModelLabel(__('Type of Form: ', 'onoffice-for-wp-websites'), $translation);
+		$pInputModeLabel = new InputModelLabel(__('Type: ', 'onoffice-for-wp-websites'), $translation);
 
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 

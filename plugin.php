@@ -233,6 +233,20 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 	}
 });
 
+add_filter('set-screen-option', function ($status, $option, $value) {
+	$pagination_screen_option = array(
+		"onoffice_address_listview_per_page",
+		"onoffice_estate_listview_per_page",
+		"onoffice_forms_forms_per_page",
+		"onoffice_estate_units_listview_per_page"
+	);
+
+	if (in_array($option, $pagination_screen_option)) {
+		return $value;
+	}
+	return $status;
+}, 10, 3);
+
 function update_duplicate_check_warning_option()
 {
 	update_option('onoffice-duplicate-check-warning', 0);

@@ -58,6 +58,17 @@ msgstr "onOffice"
 
 #: plugin/Controller/AdminViewController.php:155
 #: plugin/Gui/AdminPageAddressList.php:60
+#: plugin/Gui/AdminPageAddressList.php:63
+msgid "Search Addresses"
+msgstr "Adressen suchen"
+#: plugin/Gui/AdminPageEstateList.php:56
+msgid "Search Estate Views"
+msgstr "Nachlassansichten durchsuchen"
+#: plugin/Gui/AdminPageFormList.php:101
+msgid "Search Forms"
+msgstr "Formulare durchsuchen"
+#: plugin/Controller/AdminViewController.php:154
+#: plugin/Gui/AdminPageAddressList.php:59
 msgid "Addresses"
 msgstr "Adressen"
 
@@ -856,9 +867,9 @@ msgstr "Formular"
 msgid "Form Name"
 msgstr "Formularname"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:237
-msgid "Type of Form: "
-msgstr "Formularart: "
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:241
+msgid "Type: "
+msgstr "Typ: "
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:256
 msgid ", shortcode: "
