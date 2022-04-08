@@ -72,14 +72,12 @@ class EstateViewDocumentTitleBuilder
 	 * @param string $format
 	 * @return string
 	 */
-	public function buildDocumentTitleField(string $title, string $format): string
+	public function buildDocumentTitleField(string $format): string
 	{
 		$estateId = (int)$this->_pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
 		if ($estateId === 0) {
 			return '';
 		}
-		$title = $this->_pEstateTitleBuilder->buildTitle($estateId, $format);
-
-		return $title;
+		return $this->_pEstateTitleBuilder->buildTitle($estateId, $format);
 	}
 }

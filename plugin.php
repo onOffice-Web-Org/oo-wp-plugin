@@ -135,7 +135,7 @@ add_filter('document_title_parts', function($title) use ($pDI) {
 	return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
 }, 10, 2);
 
-if (count(array_intersect(["wordpress-seo/wp-seo.php"], get_option("active_plugins"))) > 0) {
+if (in_array('wordpress-seo/wp-seo.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 	//objekttitel Field
 	add_action('wpseo_register_extra_replacements', function () {
 			wpseo_register_var_replacement('%%onoffice_title%%', 'objekttitelFieldCallback', 'advanced');
@@ -146,14 +146,14 @@ if (count(array_intersect(["wordpress-seo/wp-seo.php"], get_option("active_plugi
 		}
 	);
 
-	function objekttitelFieldCallback($title)
+	function objekttitelFieldCallback()
 	{
 		$pDIBuilder = new ContainerBuilder();
 		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pDI = $pDIBuilder->build();
-		return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitleField($title, '%1$s');
+		return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitleField( '%1$s');
 	}
-    //vermarktungsart Field
+	//vermarktungsart Field
 	add_action('wpseo_register_extra_replacements', function () {
 			wpseo_register_var_replacement('%%onoffice_vermarktungsart%%', 'vermarktungsartFieldCallback', 'advanced');
 		}
@@ -163,12 +163,12 @@ if (count(array_intersect(["wordpress-seo/wp-seo.php"], get_option("active_plugi
 		}
 	);
 
-	function vermarktungsartFieldCallback($title)
+	function vermarktungsartFieldCallback()
 	{
 		$pDIBuilder = new ContainerBuilder();
 		$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pDI = $pDIBuilder->build();
-		return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitleField($title, '%2$s');
+		return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitleField('%2$s');
 	}
 }
 
