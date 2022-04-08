@@ -91,6 +91,7 @@ Start editing inside the `onoffice-personalized` folder.
 **Fixed**
 
 * If there are many regions configured in onOffice enterprise, the estate list settings will now load much faster.
+* The default template for the detail view now groups together the contact person's fields that belong together. For example, title, first and last name are grouped as one line.
 
 = 2.22.5 =
 
