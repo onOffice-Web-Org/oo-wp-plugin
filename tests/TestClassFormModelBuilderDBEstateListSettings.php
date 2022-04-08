@@ -244,8 +244,17 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
+
+		$pInstance->method('readFieldnames')
+				  ->with('estate')
+				  ->willReturn([
+					  'wohnflaeche' => 'wohnflaeche',
+					  'grundstuecksflaeche' => 'grundstuecksflaeche',
+					  'gesamtflaeche' => 'gesamtflaeche',
+					  'kaufpreis' => 'Kaufpreis',
+					  'kaltmiete' => 'Kaltmiete']);
 
 		$pInstance->method('getOnlyDefaultSortByFields')
 			->with('estate')
