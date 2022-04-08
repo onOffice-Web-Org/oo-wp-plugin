@@ -61,7 +61,7 @@ abstract class AdminPage
 			".$inputType."
 			".$inputTab."
 			<input type='text' id='fname' name='search'>
-			<input type='submit' class='button action' value='".esc_attr($button)."' id='onoffice-input-submit'>
+			<input type='submit' class='button action' value='".esc_attr($button)."'>
 			</form>";
 	}
 }
