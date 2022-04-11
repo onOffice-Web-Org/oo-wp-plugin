@@ -15,10 +15,10 @@ async function check() {
   }
 
   const newVersion = Deno.args[0];
-  const isValidVersion = /^\d+.\d+.\d+$/.test(newVersion)
+  const isValidVersion = /^\d+.\d+$/.test(newVersion)
   if (!isValidVersion) {
     console.error(
-      `The given version '${newVersion} is not valid. The version has to be in the form 'v1.2.3'.`,
+      `The given version '${newVersion} is not valid. The version has to be in the form '1.2'.`,
     );
     Deno.exit(1);
   }
