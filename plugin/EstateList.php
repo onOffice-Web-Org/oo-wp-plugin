@@ -686,8 +686,7 @@ class EstateList
 	 */
 	public function getShowEstateMarketingStatus(): bool
 	{
-		return $this->_pDataView instanceof DataListView &&
-			$this->_pDataView->getShowStatus();
+		return true;
 	}
 
 	/**
