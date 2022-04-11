@@ -686,7 +686,7 @@ class EstateList
 	 */
 	public function getShowEstateMarketingStatus(): bool
 	{
-		return true;
+		return false;
 	}
 
 	/**
