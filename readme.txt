@@ -86,7 +86,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Removed**
 
-* Drop support for older PHP version. The minimum version is now PHP 7.2.
+* Drop support for older PHP versions. The minimum version is now PHP 7.2.
 
 **Fixed**
 
