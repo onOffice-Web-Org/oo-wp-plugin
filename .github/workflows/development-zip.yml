@@ -3,10 +3,12 @@ name: Share development zip
 on:
   pull_request_review:
     types: [submitted]
+  issue_comment:
+    types: [created, edited]
 
 jobs:
   get-versions:
-    if: github.event.review.state == 'approved'
+    if: (github.event.review && github.event.review.state == 'approved') || (github.event.issue && github.event.pull_request && contains(github.event.comment, '/zip'))
     name: Get versions
     runs-on: ubuntu-latest
     outputs:
