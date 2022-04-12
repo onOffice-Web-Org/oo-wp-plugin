@@ -26,9 +26,9 @@ namespace onOffice\WPlugin\Field\Collection;
 use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Language;
-use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\Region\RegionFilter;
 use onOffice\WPlugin\SDKWrapper;
@@ -38,7 +38,7 @@ use onOffice\WPlugin\Types\FieldTypes;
  *
  */
 
-class FieldLoaderGeneric
+class FieldLoaderEstateRegionValues
 	implements FieldLoader
 {
 	/** @var SDKWrapper */
@@ -56,20 +56,24 @@ class FieldLoaderGeneric
 	 * @param RegionController $pRegionController
 	 * @param RegionFilter $pRegionFilter
 	 */
+
 	public function __construct(
 		SDKWrapper $pSDKWrapper,
 		RegionController $pRegionController,
-		RegionFilter $pRegionFilter)
-	{
+		RegionFilter $pRegionFilter
+	) {
 		$this->_pSDKWrapper = $pSDKWrapper;
 		$this->_pRegionController = $pRegionController;
 		$this->_pRegionFilter = $pRegionFilter;
 	}
 
+
 	/**
 	 * @return Generator
 	 * @throws APIEmptyResultException
+	 * @throws ApiClientException
 	 */
+
 	public function load(): Generator
 	{
 		$result = $this->sendRequest();
@@ -81,44 +85,42 @@ class FieldLoaderGeneric
 			if (isset($fieldArray['label'])) {
 				unset($fieldArray['label']);
 			}
-			$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
-				if (
-					($module === onOfficeSDK::MODULE_ADDRESS && $fieldProperties['tablename'] === 'addressFaktura')
-					|| in_array($fieldProperties['type'], $listTypeUnSupported)
-				) {
-					continue;
+				if ($fieldName === 'regionaler_zusatz') {
+					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
+					$this->_pRegionController->fetchRegions();
+					$regions = $this->_pRegionController->getRegions();
+					$fieldProperties['permittedvalues'] = $this->_pRegionFilter
+						->buildRegions($regions);
+					$fieldProperties['labelOnlyValues'] = $this->_pRegionFilter
+						->collectLabelOnlyValues($regions);
+					$fieldProperties['module'] = $module;
+					yield $fieldName => $fieldProperties;
 				}
-
-				if ($module === onOfficeSDK::MODULE_ADDRESS && $fieldName == 'ArtDaten') {
-					$permittedValues = $fieldProperties['permittedvalues'];
-					unset($permittedValues['Systembenutzer']);
-					$fieldProperties['permittedvalues'] = $permittedValues;
-				}
-
-				$fieldProperties['module'] = $module;
-				yield $fieldName => $fieldProperties;
 			}
 		}
 	}
 
+
 	/**
 	 * @return array
-	 * @throws APIEmptyResultException
+	 * @throws ApiClientException
 	 */
+
 	private function sendRequest(): array
 	{
 		$parametersGetFieldList = [
 			'labels' => true,
 			'showContent' => true,
 			'showTable' => true,
+			'fieldList' => ['regionaler_zusatz'],
 			'language' => Language::getDefault(),
-			'modules' => [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE],
+			'modules' => [onOfficeSDK::MODULE_ESTATE],
 			'realDataTypes' => true
 		];
 
 		$pApiClientActionFields = new APIClientActionGeneric
-			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
+		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
 		$pApiClientActionFields->setParameters($parametersGetFieldList);
 		$pApiClientActionFields->addRequestToQueue()->sendRequests();
 

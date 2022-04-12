@@ -83,4 +83,20 @@ class TestClassInputModelOption
 	{
 		$this->assertEquals('_optionGroup-name', $pInputModelOption->getIdentifier());
 	}
+	public function testGetAndSetValues()
+	{
+		$pModel = new InputModelOption('hello', 'world', 'label', 'type');
+		$pModel->setType('Type');
+		$pModel->setDescription('Description');
+		$pModel->setDefault('Default');
+		$pModel->setShowInRest(true);
+		$pModel->setSanitizeCallback(function () {
+			return true;
+		});
+		$this->assertEquals($pModel->getType(), "Type");
+		$this->assertEquals($pModel->getDescription(), "Description");
+		$this->assertEquals($pModel->getDefault(), "Default");
+		$this->assertEquals($pModel->getShowInRest(), true);
+		$this->assertNotEmpty($pModel->getSanitizeCallback());
+	}
 }
