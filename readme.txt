@@ -90,6 +90,8 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixed**
 
+* The detail page can now have a parent page. Previously there would be an error.
+* When the URL of a detail page changes (for example when the estate's title changes), visitors will be redirected to the correct URL.
 * If there are many regions configured in onOffice enterprise, the estate list settings will now load much faster.
 * The default template for the detail view now groups together the contact person's fields that belong together. For example, title, first and last name are grouped as one line.
 * The "Show Estate Status" checkbox in the estate list settings is no longer shown twice.
