@@ -48,6 +48,7 @@ use function plugins_url;
 use function wp_enqueue_script;
 use function wp_localize_script;
 use function wp_register_script;
+use function add_screen_option;
 
 /**
  *
@@ -96,6 +97,11 @@ class AdminPageFormList
 		$this->generatePageMainTitle(__('Forms', 'onoffice-for-wp-websites'));
 
 		$this->_pFormsTable->prepare_items();
+		$page = 'onoffice-forms';
+		$buttonSearch = __('Search Forms', 'onoffice-for-wp-websites');
+		$type = isset($_GET['type']) ? esc_html($_GET['type']) : '';
+		$id = 'onoffice-form-search-form';
+		$this->generateSearchForm($page,$buttonSearch,$type,null,$id);
 		echo '<p>';
 		echo '<form method="post">';
 		echo $this->_pFormsTable->views();
@@ -133,7 +139,6 @@ class AdminPageFormList
 		}
 	}
 
-
 	/**
 	 *
 	 */
@@ -158,6 +163,11 @@ class AdminPageFormList
 
 	public function preOutput()
 	{
+		$screen = get_current_screen();
+		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-forms") {
+			add_screen_option('per_page', array('option' => 'onoffice_forms_forms_per_page'));
+		}
+
 		$this->_pFormsTable = new FormsTable();
 		$this->_pFormsTable->setListType($this->getTab());
 		$pDIBuilder = new ContainerBuilder();
