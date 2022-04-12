@@ -8,7 +8,7 @@ on:
 
 jobs:
   get-versions:
-    if: (github.event.review && github.event.review.state == 'approved') || (github.event.issue && github.event.pull_request && contains(github.event.comment, '/zip'))
+    if: (github.event.review && github.event.review.state == 'approved') || (github.event.issue && github.event.pull_request && contains(github.event.comment.body, '/zip'))
     name: Get versions
     runs-on: ubuntu-latest
     outputs:
