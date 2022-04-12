@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-03-22T16:46:30+07:00\n"
+"POT-Creation-Date: 2022-04-12T15:28:07+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -47,28 +47,17 @@ msgid "Please configure your onOffice API credentials first!"
 msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
 
 #: plugin/Controller/AdminViewController.php:149
-#: plugin/Gui/AdminPageAddressList.php:79 plugin/Gui/AdminPageBase.php:88
+#: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:88
 #: plugin/Gui/AdminPageEstateDetail.php:203
-#: plugin/Gui/AdminPageEstateList.php:71
-#: plugin/Gui/AdminPageEstateUnitList.php:66
-#: plugin/Gui/AdminPageFormList.php:181
+#: plugin/Gui/AdminPageEstateList.php:76
+#: plugin/Gui/AdminPageEstateUnitList.php:72
+#: plugin/Gui/AdminPageFormList.php:191
 #: plugin/Gui/AdminPageSimilarEstates.php:145
 msgid "onOffice"
 msgstr "onOffice"
 
 #: plugin/Controller/AdminViewController.php:155
-#: plugin/Gui/AdminPageAddressList.php:60
-#: plugin/Gui/AdminPageAddressList.php:63
-msgid "Search Addresses"
-msgstr "Adressen suchen"
-#: plugin/Gui/AdminPageEstateList.php:56
-msgid "Search Estate Views"
-msgstr "Nachlassansichten durchsuchen"
-#: plugin/Gui/AdminPageFormList.php:101
-msgid "Search Forms"
-msgstr "Formulare durchsuchen"
-#: plugin/Controller/AdminViewController.php:154
-#: plugin/Gui/AdminPageAddressList.php:59
+#: plugin/Gui/AdminPageAddressList.php:61
 msgid "Addresses"
 msgstr "Adressen"
 
@@ -78,7 +67,7 @@ msgid "Estates"
 msgstr "Immobilien"
 
 #: plugin/Controller/AdminViewController.php:173
-#: plugin/Gui/AdminPageFormList.php:96
+#: plugin/Gui/AdminPageFormList.php:97
 msgid "Forms"
 msgstr "Formulare"
 
@@ -142,7 +131,7 @@ msgstr "Geo-Position"
 msgid "Search Criteria"
 msgstr "Suchkriterium"
 
-#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:182
+#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
 #: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:190
 msgid "Form Specific Fields"
 msgstr "Formspezifische Felder"
@@ -160,7 +149,7 @@ msgid "Submit"
 msgstr "Absenden"
 
 #. translators: %1$s is the estate title, %5$s is the estate ID
-#: plugin/Form.php:572
+#: plugin/Form.php:573
 msgid "Your Inquiry about Real Estate “%1$s” (%5$s)"
 msgstr "Ihre Anfrage zu der Immobilie „%1$s“ (%5$s)"
 
@@ -186,9 +175,13 @@ msgstr[1] "%s Formulare wurden gelöscht."
 msgid "No form was deleted."
 msgstr "Formular wurde nicht gelöscht."
 
-#: plugin/Gui/AdminPageAddressList.php:88 plugin/Gui/AdminPageEstateList.php:83
-#: plugin/Gui/AdminPageEstateUnitList.php:78
-#: plugin/Gui/AdminPageFormList.php:199
+#: plugin/Gui/AdminPageAddressList.php:64
+msgid "Search Addresses"
+msgstr "Adressen suchen"
+
+#: plugin/Gui/AdminPageAddressList.php:93 plugin/Gui/AdminPageEstateList.php:88
+#: plugin/Gui/AdminPageEstateUnitList.php:84
+#: plugin/Gui/AdminPageFormList.php:209
 msgid "Add New"
 msgstr "Neu"
 
@@ -205,7 +198,7 @@ msgstr "Name auswählen"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:121
 #: plugin/Gui/AdminPageEstateDetail.php:279
-#: plugin/Gui/AdminPageEstateListSettings.php:127
+#: plugin/Gui/AdminPageEstateListSettings.php:126
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
 #: plugin/Gui/AdminPageFormSettingsBase.php:409
 msgid "Layout & Design"
@@ -217,7 +210,7 @@ msgstr "Filter & Datensätze"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:160
 #: plugin/Gui/AdminPageEstateDetail.php:289
-#: plugin/Gui/AdminPageEstateListSettings.php:136
+#: plugin/Gui/AdminPageEstateListSettings.php:135
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
 msgstr "Fotoarten"
@@ -409,7 +402,7 @@ msgstr ""
 msgid "By onOffice-Plugin"
 msgstr "onOffice"
 
-#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateList.php:78
+#: plugin/Gui/AdminPageEstate.php:87 plugin/Gui/AdminPageEstateList.php:83
 msgid "List Views"
 msgstr "Listenansichten"
 
@@ -475,7 +468,12 @@ msgstr "Die Detailansicht wurde gespeichert."
 msgid "There was a problem saving the detail view."
 msgstr "Es ist einen Fehler beim Speichern der Detailansicht aufgetreten."
 
-#: plugin/Gui/AdminPageEstateList.php:95 plugin/Gui/AdminPageFormList.php:144
+#: plugin/Gui/AdminPageEstateList.php:57
+#: plugin/Gui/AdminPageEstateUnitList.php:52
+msgid "Search Estate Views"
+msgstr "Nachlassansichten durchsuchen"
+
+#: plugin/Gui/AdminPageEstateList.php:99 plugin/Gui/AdminPageFormList.php:149
 msgid "Are you sure you want to delete the selected items?"
 msgstr "Möchten Sie das ausgewählte Element wirklich löschen?"
 
@@ -483,18 +481,18 @@ msgstr "Möchten Sie das ausgewählte Element wirklich löschen?"
 msgid "Filters & Records"
 msgstr "Filter & Datensätze"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:144
+#: plugin/Gui/AdminPageEstateListSettings.php:143
 #: plugin/Gui/AdminPageEstateUnitSettings.php:105
 msgid "Downloadable Documents"
 msgstr "Dokumente zum Herunterladen"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:153
+#: plugin/Gui/AdminPageEstateListSettings.php:152
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
 #: plugin/Gui/AdminPageFormSettingsContact.php:218
 msgid "Geo Fields"
 msgstr "Umkreisfelder"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:159
+#: plugin/Gui/AdminPageEstateListSettings.php:158
 msgid ""
 "At least the following fields must be active: country, radius and city or "
 "postcode."
@@ -514,7 +512,7 @@ msgstr ""
 "sicher, dass keine andere Ansicht mit diesem Namen existiert, auch wenn sie "
 "einen anderen Typen hat."
 
-#: plugin/Gui/AdminPageEstateUnitList.php:73
+#: plugin/Gui/AdminPageEstateUnitList.php:79
 msgid "Units Lists"
 msgstr "Einheitenlisten"
 
@@ -525,6 +523,10 @@ msgstr "Einheitenlisten bearbeiten"
 #: plugin/Gui/AdminPageEstateUnitSettings.php:80
 msgid "Records"
 msgstr "Datensätze"
+
+#: plugin/Gui/AdminPageFormList.php:101
+msgid "Search Forms"
+msgstr "Formulare durchsuchen"
 
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
 #: plugin/Gui/AdminPageFormSettingsContact.php:113
@@ -638,8 +640,8 @@ msgstr "(Unbekannter Filter (ID: %s))"
 
 #: plugin/Gui/Table/AddressListTable.php:136
 #: plugin/Gui/Table/EstateListTable.php:213
-#: plugin/Gui/Table/EstateUnitsTable.php:62
-#: plugin/Gui/Table/EstateUnitsTable.php:114
+#: plugin/Gui/Table/EstateUnitsTable.php:65
+#: plugin/Gui/Table/EstateUnitsTable.php:117
 msgid "Name of View"
 msgstr "Name der Ansicht"
 
@@ -654,8 +656,8 @@ msgstr "Filter"
 #: plugin/Gui/Table/AddressListTable.php:183
 #: plugin/Gui/Table/EstateListTable.php:137
 #: plugin/Gui/Table/EstateListTable.php:217
-#: plugin/Gui/Table/EstateUnitsTable.php:63
-#: plugin/Gui/Table/EstateUnitsTable.php:116
+#: plugin/Gui/Table/EstateUnitsTable.php:66
+#: plugin/Gui/Table/EstateUnitsTable.php:119
 #: plugin/Gui/Table/FormsTable.php:132 plugin/Gui/Table/FormsTable.php:158
 msgid "Shortcode"
 msgstr "Shortcode"
@@ -685,7 +687,7 @@ msgstr "Seiten, die den Shortcode verwenden"
 
 #: plugin/Gui/Table/AddressListTable.php:220
 #: plugin/Gui/Table/EstateListTable.php:273
-#: plugin/Gui/Table/EstateUnitsTable.php:163
+#: plugin/Gui/Table/EstateUnitsTable.php:166
 #: plugin/Gui/Table/FormsTable.php:266
 msgid "Duplicate"
 msgstr "Duplizieren"
@@ -709,13 +711,13 @@ msgid "Show Status"
 msgstr "Status anzeigen"
 
 #: plugin/Gui/Table/EstateListTable.php:216
-#: plugin/Gui/Table/EstateUnitsTable.php:115
+#: plugin/Gui/Table/EstateUnitsTable.php:118
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:299
 msgid "Type of List"
 msgstr "Listenart"
 
 #. translators: %s is the name of the unit view.
-#: plugin/Gui/Table/EstateUnitsTable.php:169
+#: plugin/Gui/Table/EstateUnitsTable.php:172
 msgid ""
 "You are about to delete the unit view '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -1071,11 +1073,11 @@ msgstr "Ort"
 msgid "Street"
 msgstr "Straße"
 
-#: plugin/Record/RecordManagerReadListViewAddress.php:120
+#: plugin/Record/RecordManagerReadListViewAddress.php:123
 msgid "unknown address list name"
 msgstr "Unbekannter Adresslistenname"
 
-#: plugin/Renderer/InputFieldCheckboxButtonRenderer.php:67
+#: plugin/Renderer/InputFieldCheckboxButtonRenderer.php:64
 msgid "Add to List >>"
 msgstr "Hinzufügen >>"
 
@@ -1087,12 +1089,12 @@ msgstr "Feldname:"
 msgid "Delete"
 msgstr "Löschen"
 
-#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:127
-#: plugin/Renderer/InputFieldComplexSortableListRenderer.php:77
+#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:126
+#: plugin/Renderer/InputFieldComplexSortableListRenderer.php:76
 msgid "Disabled in onOffice"
 msgstr "In onOffice deaktiviert"
 
-#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:139
+#: plugin/Renderer/InputFieldComplexSortableDetailListRenderer.php:138
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -1100,7 +1102,7 @@ msgstr "Bearbeiten"
 msgid "(in the folder \"%s\")"
 msgstr ""
 
-#: plugin/Renderer/InputModelRenderer.php:185
+#: plugin/Renderer/InputModelRenderer.php:188
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
