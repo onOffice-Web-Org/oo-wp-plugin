@@ -242,4 +242,8 @@ function update_duplicate_check_warning_option()
 
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
+add_action( 'init', function () {
+	ob_start();
+} );
+
 return $pDI;
