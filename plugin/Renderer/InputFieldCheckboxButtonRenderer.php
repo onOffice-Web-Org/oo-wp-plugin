@@ -36,9 +36,6 @@ class InputFieldCheckboxButtonRenderer
 	/** @var string */
 	private $_id = null;
 
-	/** @var string */
-	private $_label = null;
-
 
 	/**
 	 *
@@ -65,7 +62,7 @@ class InputFieldCheckboxButtonRenderer
 		echo '<p>'
 			.'<input type="button" class="inputFieldCheckboxButton button" name="'
 				.esc_attr($id).'" value="'.esc_html__('Add to List >>', 'onoffice-for-wp-websites').'" '
-				.'data-onoffice-category="'.esc_attr($this->_label).'"'
+				.'data-onoffice-category="'.esc_attr($this->getLabel()).'"'
 				. $this->renderAdditionalAttributes().'>'
 			.'</p>';
 	}
@@ -78,12 +75,4 @@ class InputFieldCheckboxButtonRenderer
 	/** @return string */
 	public function getId()
 		{ return $this->_id; }
-
-	/** @return string */
-	public function getLabel()
-		{ return $this->_label; }
-
-	/** @param string $label */
-	public function setLabel($label)
-		{ $this->_label = $label; }
 }
