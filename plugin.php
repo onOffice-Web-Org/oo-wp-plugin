@@ -162,10 +162,38 @@ if (in_array('wordpress-seo/wp-seo.php', apply_filters('active_plugins', get_opt
 			} , 'advanced');
 		}
 	);
+}
 
-	function fieldCallback( $pDI, $format ) {
-		return $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField( $format );
-	}
+if (in_array('seo-by-rank-math/rank-math.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+	add_action( 'rank_math/vars/register_extra_replacements', function () use ($pDI){
+		RankMath\Helper::register_var_replacement(
+			'onoffice_title',function () use ($pDI){
+			return fieldCallback($pDI, '%1$s');
+		},
+			array(
+				'name' => esc_html__( 'onoffice title', 'rank-math' ),
+				'desc' => esc_html__( 'onoffice title', 'rank-math' ),
+				'example' => '1 Charmantes Landhaus in Südfrankreich'
+			)
+		);
+	});
+	add_action( 'rank_math/vars/register_extra_replacements', function () use ($pDI){
+		RankMath\Helper::register_var_replacement(
+			'onoffice_marketing_method',function () use ($pDI){
+			return fieldCallback($pDI, '%3$s');
+		},
+			array(
+				'name' => esc_html__( 'onoffice marketing method', 'rank-math' ),
+				'desc' => esc_html__( 'onoffice marketing method', 'rank-math' ),
+				'example' => 'Rents'
+			)
+		);
+	});
+}
+
+// Return title custom onOffice
+function fieldCallback( $pDI, $format ) {
+	return $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField( $format );
 }
 
 add_filter('wpml_ls_language_url', function($url) use ($pDI){
