@@ -97,7 +97,7 @@ class TestClassUserCapabilities
 	 *
 	 */
 
-	public function tearDown()
+	public function tear_down()
 	{
 		wp_get_current_user()->remove_cap('edit_pages');
 

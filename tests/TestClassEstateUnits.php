@@ -96,7 +96,7 @@ objekttitel: Bürogebäude in Frankfurt
 	 *
 	 */
 
-	public function setUp()
+	public function set_up()
 	{
 		parent::set_up();
 

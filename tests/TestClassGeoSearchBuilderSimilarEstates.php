@@ -50,7 +50,7 @@ class TestClassGeoSearchBuilderSimilarEstates
 	 *
 	 */
 
-	public function setUp()
+	public function set_up()
 	{
 		parent::set_up();
 
