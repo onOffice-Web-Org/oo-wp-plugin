@@ -49,7 +49,7 @@ class TestClassFormPreviewEstate
 			->willReturn($pDefaultFilterBuilder);
 		$pApiClientAction
 			->expects($this->once())
-			->id(1)
+			->id("1")
 			->method('withActionIdAndResourceType')
 			->with(onOfficeSDK::ACTION_ID_READ, 'estate')
 			->willReturnSelf();

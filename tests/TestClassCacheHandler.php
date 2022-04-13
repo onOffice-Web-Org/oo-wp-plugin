@@ -68,7 +68,7 @@ class TestClassCacheHandler
 
 	public function testClear()
 	{
-		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
+		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->disableOriginalConstructor()->getMock();
 		$pCache->expects($this->once())->method('clearAll');
 		$cacheInstance = [$pCache];
 		$this->_pSDKWrapper->expects($this->once())->method('getCache')->will($this->returnValue($cacheInstance));
@@ -83,7 +83,7 @@ class TestClassCacheHandler
 	public function testClean()
 	{
 		$this->_pApiChecker->expects($this->exactly(1))->method('isAvailable')->will($this->returnValue(true));
-		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->getMock();
+		$pCache = $this->getMockBuilder(onOfficeSDKCache::class)->disableOriginalConstructor()->getMock();
 		$pCache->expects($this->exactly(1))->method('cleanup');
 		$cacheInstance = [$pCache];
 		$this->_pSDKWrapper->expects($this->exactly(1))->method('getCache')->will($this->returnValue($cacheInstance));

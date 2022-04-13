@@ -105,7 +105,7 @@ class TestClassFormPreviewApplicantSearch
 		$pFormPostApplicantSeach
 			->expects($this->once())
 			->method('initialCheck')
-			->id(1)
+			->id("1")
 			->with($pDataFormConfiguration, 1);
 		$pFormPostApplicantSeach
 			->expects($this->once())
