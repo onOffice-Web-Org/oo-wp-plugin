@@ -51,9 +51,9 @@ class TestClassInputVariableReaderConfigFieldnames
 	 *
 	 */
 
-	public function set_up()
+	public function setUp()
 	{
-		parent::set_up();
+		parent::setUp();
 		$_POST = [];
 		$_GET = ['phptest' => 123, 'phptest1' => ['c']];
 		$_REQUEST = array_merge($_GET, $_POST);

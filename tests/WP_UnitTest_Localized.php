@@ -59,7 +59,7 @@ abstract class WP_UnitTest_Localized
 	 *
 	 */
 
-	public function set_up()
+	public function setUp()
 	{
 		parent::set_up();
 		$this->switchLocale('de_DE');
@@ -117,7 +117,7 @@ abstract class WP_UnitTest_Localized
 	 *
 	 */
 
-	public static function tear_down_after_class()
+	public static function tearDownAfterClass()
 	{
 		unload_textdomain('onoffice-for-wp-websites');
 		unload_textdomain('onoffice');

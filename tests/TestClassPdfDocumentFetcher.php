@@ -45,7 +45,7 @@ class TestClassPdfDocumentFetcher
 	/** @var APIClientActionGeneric */
 	private $_pAPIClientAction;
 
-	static public function set_up_before_class()
+	static public function setUpBeforeClass()
 	{
 		parent::set_up_before_class();
 		$command = ['php', '-S', 'localhost:8008', '-t', './resources/HTTP/'];
@@ -120,7 +120,7 @@ class TestClassPdfDocumentFetcher
 		$pPdfDocumentFetcher->proxyResult($pPdfDocumentModel, 'http://localhost:8008/does/not/exist.txt');
 	}
 
-	public static function tear_down_after_class()
+	public static function tearDownAfterClass()
 	{
 		parent::tear_down_after_class();
 		self::$_pProcess->stop();

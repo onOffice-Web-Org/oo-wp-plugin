@@ -42,7 +42,7 @@ class TestClassAddressViewFieldModifierTypes
 	 *
 	 */
 
-	public function set_up(): void
+	public function setUp(): void
 	{
 		parent::set_up();
 		$this->setViewFieldModifierTypes( new AddressViewFieldModifierTypes() );
