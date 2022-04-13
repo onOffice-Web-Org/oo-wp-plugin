@@ -110,8 +110,8 @@ class TestClassWPScriptStyleTest
 	public function testRegisterScriptDouble(WPScriptStyleTest $pWPScriptStyleTest)
 	{
 		$pWPScriptStyleTest->registerScript('testhandle1', '/test/src.js');
-		$this->expectedException(\Exception::class);
-		$this->expectedExceptionMessage("Script testhandle1 already registered");
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage("Script testhandle1 already registered");
 	}
 
 
@@ -125,8 +125,8 @@ class TestClassWPScriptStyleTest
 	public function testRegisterStyleDouble(WPScriptStyleTest $pWPScriptStyleTest)
 	{
 		$pWPScriptStyleTest->registerStyle('testhandlecss', '/test/src.css');
-		$this->expectedException(\Exception::class);
-		$this->expectedExceptionMessage("Style testhandlecss already registered");
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage("Style testhandlecss already registered");
 	}
 
 
@@ -166,8 +166,8 @@ class TestClassWPScriptStyleTest
 	{
 		$pWPScriptStyleTest = new WPScriptStyleTest();
 		$pWPScriptStyleTest->enqueueScript('testNonEnqueuedJs');
-		$this->expectedException(\Exception::class);
-		$this->expectedExceptionMessage("Script testNonEnqueuedJs not registered");
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage("Script testNonEnqueuedJs not registered");
 	}
 
 
@@ -179,8 +179,8 @@ class TestClassWPScriptStyleTest
 	{
 		$pWPScriptStyleTest = new WPScriptStyleTest();
 		$pWPScriptStyleTest->enqueueStyle('testNonEnqueuedCss');
-		$this->expectedException(\Exception::class);
-		$this->expectedExceptionMessage("Style testNonEnqueuedCss not registered");
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage("Style testNonEnqueuedCss not registered");
 	}
 
 
@@ -208,7 +208,7 @@ class TestClassWPScriptStyleTest
 	{
 		$pWPScriptStyleTest = new WPScriptStyleTest();
 		$pWPScriptStyleTest->localizeScript('nonRegistered', 'global_js_var1', ['hello' => 'world']);
-		$this->expectedException(\Exception::class);
-		$this->expectedExceptionMessage("Script nonRegistered not registered");
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage("Script nonRegistered not registered");
 	}
 }
