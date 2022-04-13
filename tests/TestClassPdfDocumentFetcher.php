@@ -45,7 +45,7 @@ class TestClassPdfDocumentFetcher
 	/** @var APIClientActionGeneric */
 	private $_pAPIClientAction;
 
-	static public function setUpBeforeClass()
+	static public function set_up_before_class()
 	{
 		parent::set_up_before_class();
 		$command = ['php', '-S', 'localhost:8008', '-t', './resources/HTTP/'];
