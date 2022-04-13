@@ -42,10 +42,10 @@ class TestClassAddressViewFieldModifierTypes
 	 *
 	 */
 
-	public function setUp()
+	public function setUp(): void
 	{
-		parent::setUp();
-		$this->setViewFieldModifierTypes(new AddressViewFieldModifierTypes);
+		parent::set_up();
+		$this->setViewFieldModifierTypes( new AddressViewFieldModifierTypes() );
 	}
 
 
@@ -53,7 +53,7 @@ class TestClassAddressViewFieldModifierTypes
 	 *
 	 */
 
-	public function testGetForbiddenAPIFields()
+	public function testGetForbiddenAPIFields(): void
 	{
 		$this->assertEquals([], $this->getViewFieldModifierTypes()->getForbiddenAPIFields());
 	}
