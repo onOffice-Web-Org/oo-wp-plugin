@@ -50,7 +50,7 @@ abstract class WP_UnitTest_Localized
 	 *
 	 */
 
-	public static function set_up_before_class()
+	public static function setUpBeforeClass()
 	{
 		parent::set_up_before_class();
 	}
@@ -105,7 +105,7 @@ abstract class WP_UnitTest_Localized
 	 *
 	 */
 
-	public function tear_down()
+	public function tearDown()
 	{
 		if ($this->_localeSwitched) {
 			restore_current_locale();
