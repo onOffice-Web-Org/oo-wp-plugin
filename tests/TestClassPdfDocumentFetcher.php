@@ -120,9 +120,9 @@ class TestClassPdfDocumentFetcher
 		$pPdfDocumentFetcher->proxyResult($pPdfDocumentModel, 'http://localhost:8008/does/not/exist.txt');
 	}
 
-	public static function tearDownAfterClass()
+	public static function tear_down_after_class()
 	{
-		parent::tearDownAfterClass();
+		parent::tear_down_after_class();
 		self::$_pProcess->stop();
 	}
 }
