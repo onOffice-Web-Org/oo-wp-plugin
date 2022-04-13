@@ -47,7 +47,7 @@ class TestClassPdfDocumentFetcher
 
 	static public function setUpBeforeClass()
 	{
-		parent::setUpBeforeClass();
+		parent::set_up_before_class();
 		$command = ['php', '-S', 'localhost:8008', '-t', './resources/HTTP/'];
 		self::$_pProcess = new Process($command, __DIR__);
 		self::$_pProcess->start();
