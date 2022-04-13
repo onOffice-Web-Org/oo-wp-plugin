@@ -62,7 +62,7 @@ class TestClassDefaultFilterBuilderListView
 
 	public function setUp()
 	{
-		parent::set_up();
+		parent::setUp();
 		$this->switchLocale('en_US');
 	}
 

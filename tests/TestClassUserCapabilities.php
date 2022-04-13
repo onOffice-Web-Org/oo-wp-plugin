@@ -101,6 +101,6 @@ class TestClassUserCapabilities
 	{
 		wp_get_current_user()->remove_cap('edit_pages');
 
-		parent::tear_down();
+		parent::tearDown();
 	}
 }

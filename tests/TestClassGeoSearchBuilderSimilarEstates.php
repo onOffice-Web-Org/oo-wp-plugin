@@ -52,7 +52,7 @@ class TestClassGeoSearchBuilderSimilarEstates
 
 	public function setUp()
 	{
-		parent::set_up();
+		parent::setUp();
 
 		$pDataViewSimilarEstates = new DataViewSimilarEstates();
 		$this->_pFilterConfiguration = new FilterConfigurationSimilarEstates
