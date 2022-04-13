@@ -61,7 +61,8 @@ class TestClassTemplateCall
 				'...\wordpress\wp-content\plugins/onoffice-themes/templates/address/default.php' => "default.php"
 			],
 			'title' => "Personalized (Theme)",
-			'folder' => "/onoffice-theme/templates/address/"
+			'folder' => "onoffice-theme/templates/address",
+			'order' => 1
 		],
 		2 => [
 			'path' => [
@@ -69,15 +70,17 @@ class TestClassTemplateCall
 				'...\wordpress\wp-content\plugins/onoffice-personalized/templates/address/default.php' => "default.php"
 			],
 			'title' => "Personalized (Plugin)",
-			'folder' => "onoffice-personalized/templates/address/"
+			'folder' => "onoffice-personalized/templates/address",
+			'order' => 2
 		],
 		3 => [
 			'path' => [
 				'...\wordpress\wp-content\plugins\oo-wp-plugin/templates.dist/address/SearchFormAddress.php' => "SearchFormAddress.php",
 				'.\wordpress\wp-content\plugins\oo-wp-plugin/templates.dist/address/default.php' => "default.php",
 			],
-			'title' => "Default",
-			'folder' => "oo-wp-plugin/templates.dist/address/"
+			'title' => "Included",
+			'folder' => "oo-wp-plugin/templates.dist/address",
+			'order' => 3
 		]
 	];
 
@@ -126,21 +129,20 @@ class TestClassTemplateCall
 	{
 		$pTemplateCall = new TemplateCall(TemplateCall::TEMPLATE_TYPE_EXPOSE);
 
-		$templateGlobFiles = [
+		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_INCLUDED ] = [
 			"...\wordpress\wp-content\plugins\oo-wp-plugin/templates.dist/address/SearchFormAddress.php",
 			".\wordpress\wp-content\plugins\oo-wp-plugin/templates.dist/address/default.php"
 		];
-		$templateLocalFiles = [
+		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ]   = [
 			"...\wordpress\wp-content\plugins/onoffice-personalized/templates/address/SearchFormAddress.php",
 			"...\wordpress\wp-content\plugins/onoffice-personalized/templates/address/default.php"
 		];
-		$templateThemeFiles = [
+		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_THEME ]    = [
 			"...\wordpress\wp-content\plugins/onoffice-themes/templates/address/SearchFormAddress.php",
 			"...\wordpress\wp-content\plugins/onoffice-themes/templates/address/default.php"
 		];
+		$templatePath = $pTemplateCall->formatTemplatesData($templatesAll, 'address');
 
-		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles, $templateThemeFiles);
-		$templatePath = $pTemplateCall->readTemplates($templatesAll, 'address');
 		$this->assertEquals($this->_expectationTemplatePath, $templatePath);
 	}
 }
