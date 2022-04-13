@@ -101,7 +101,7 @@ land: Testcountry
 
 	public function setUp()
 	{
-		parent::setUp();
+		parent::set_up();
 		$pDataDetailView = new DataViewSimilarEstates();
 		$pDataDetailView->setTemplate('resources/templates/unitlist.php');
 		$pEnvironment = new EstateViewSimilarEstatesEnvironmentTest($pDataDetailView);

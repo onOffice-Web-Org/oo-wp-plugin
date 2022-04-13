@@ -73,7 +73,7 @@ class TestClassFormData
 
 	public function setUp()
 	{
-		parent::setUp();
+		parent::set_up();
 
 		$pDataFormConfiguration = new DataFormConfiguration();
 		$pDataFormConfiguration->setFormName('Testform');

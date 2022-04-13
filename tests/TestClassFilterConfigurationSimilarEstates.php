@@ -48,7 +48,7 @@ class TestClassFilterConfigurationSimilarEstates
 
 	public function setUp()
 	{
-		parent::setUp();
+		parent::set_up();
 
 		$this->_pDataViewSimilarEstates = new DataViewSimilarEstates();
 		$this->_pDataViewSimilarEstates->setRecordsPerPage(13);

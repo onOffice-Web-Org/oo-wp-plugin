@@ -98,7 +98,7 @@ objekttitel: Bürogebäude in Frankfurt
 
 	public function setUp()
 	{
-		parent::setUp();
+		parent::set_up();
 
 		$apiResponseGetUnits = file_get_contents(__DIR__.'/resources/ApiResponseGetRelationUnits.json');
 		$apiResponseGetUnitsArray = json_decode($apiResponseGetUnits, true);
