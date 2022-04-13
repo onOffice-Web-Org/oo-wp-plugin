@@ -47,6 +47,8 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilder;
 use function esc_url;
 use function get_page_link;
 use function home_url;
@@ -370,7 +372,12 @@ class EstateList
 	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
 		global $numpages, $multipage, $more, $paged;
-
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pFieldLoader = $pContainer->get(FieldLoaderGeneric::class);
+		$pFieldCollectionAddressEstate = $pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
 		if (null !== $this->_numEstatePages &&
 			!$this->_pDataView->getRandom()) {
 			$multipage = true;
@@ -396,6 +403,10 @@ class EstateList
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
+		$fields = $pFieldCollectionAddressEstate->getFieldsByModule(onOfficeSDK::MODULE_ESTATE);
+		if (!empty($fields['waehrung']->getPermittedvalues())) {
+			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fields['waehrung']->getPermittedvalues());
+		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
 
 		if ($this->getShowEstateMarketingStatus()) {

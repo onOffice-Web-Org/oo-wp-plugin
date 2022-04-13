@@ -11,7 +11,10 @@ $language = new Language();
 $languageDefault = Language::getDefault();
 $locale = $language->getLocale();
 $value = $currentEstate->getValueRaw('multiParkingLot');
-$result = renderParkingLot($value, $languageDefault, $locale);
+$currency = $currentEstate->getValueRaw('waehrung');
+$codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
+unset($currentEstate['codeWaehrung']);
+$result = renderParkingLot($value, $languageDefault, $locale, $codeCurrency, $currency);
 
 echo '<div class="oo-detailslisttd">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'."\n"
 	.'<div class="oo-detailslisttd">'

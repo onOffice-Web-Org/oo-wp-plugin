@@ -226,7 +226,7 @@ if (!function_exists('renderRegionalAddition')) {
 
 
 if (!function_exists('renderParkingLot')) {
-	function renderParkingLot(array $parkingArray, string $language, string $locale = 'de_DE'): array
+	function renderParkingLot(array $parkingArray, string $language, string $locale = 'de_DE', string $codeCurrency, string $currency): array
 	{
 		$messages = [];
 		foreach ($parkingArray as $key => $parking) {
@@ -234,7 +234,7 @@ if (!function_exists('renderParkingLot')) {
 				continue;
 			}
 			/* translators: 1: Name of parking lot, 2: Price */
-			$element = sprintf(__('%1$s at %2$s', 'onoffice'), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale));
+			$element = sprintf(__('%1$s at %2$s', 'onoffice'), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
 			if (!empty($parking['MarketingType'])) {
 				$element .= ' (' . $parking['MarketingType'] . ')';
 			}
@@ -245,7 +245,7 @@ if (!function_exists('renderParkingLot')) {
 }
 
 if (!function_exists('formatPriceParking')) {
-	function formatPriceParking(string $str, string $language, string $locale): string
+	function formatPriceParking(string $str, string $language, string $locale, string $codeCurrentcy, string $currency): string
 	{
 		$digit = intval(substr(strrchr($str, "."), 1));
 		if (class_exists(NumberFormatter::class)) {
@@ -255,20 +255,28 @@ if (!function_exists('formatPriceParking')) {
 			} else {
 				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
 			}
-			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str, "EUR"));
+			if (empty($codeCurrentcy))
+			{
+				$codeCurrentcy = "EUR";
+			}
+			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str,$codeCurrentcy));
 		} else {
+			if (empty($currency))
+			{
+				$currency = '€';
+			}
 			if ($digit) {
 				$str = floatval($str);
-				$str = number_format_i18n($str, 2);
+				$str = number_format($str, 2,',','.');
 			} else {
-				$str = number_format_i18n(intval($str));
+				$str = number_format(intval($str),0,',','.');
 			}
 			switch ($language) {
 				case 'ENG':
-					$str = sprintf(__('€%1$s', 'onoffice'), $str);
+					$str = sprintf(__($currency.'%1$s', 'onoffice'), $str);
 					break;
 				default:
-					$str = sprintf(__('%1$s €', 'onoffice'), $str);
+					$str = sprintf(__('%1$s '.$currency, 'onoffice'), $str);
 					break;
 			}
 			return $str;
