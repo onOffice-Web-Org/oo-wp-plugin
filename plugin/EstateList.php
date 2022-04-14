@@ -458,14 +458,19 @@ class EstateList
 	public function getEstateLink(): string
 	{
 		$pageId = $this->_pEnvironment->getDataDetailViewHandler()
-			->getDetailView()->getPageId();
+		                              ->getDetailView()->getPageId();
 
 		$fullLink = '#';
-		if ($pageId !== 0) {
-			$estate = $this->_currentEstate['mainId'];
-			$title = $this->_currentEstate['title'] ?? '';
-			$url = get_page_link($pageId);
-			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate, $title);
+		if ( $pageId !== 0 ) {
+			$estate   = $this->_currentEstate['mainId'];
+			$title    = $this->_currentEstate['title'] ?? '';
+			$url      = get_page_link( $pageId );
+			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink( $url, $estate, $title );
+
+			$fullLinkElements = parse_url( $fullLink );
+			if ( empty( $fullLinkElements['query'] ) ) {
+				$fullLink .= '/';
+			}
 		}
 
 		return $fullLink;
