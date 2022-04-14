@@ -91,7 +91,11 @@ class TestClassFieldsCollectionBuilder
 		$this->assertCount(2, $pFieldsCollection->getAllFields());
 
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
-			$this->assertArraySubset($this->_exampleRows[$pField->getName()], $pField->getAsRow());
+			$this->assertTrue(
+				empty( array_diff_key( $this->_exampleRows[ $pField->getName() ],
+					$pField->getAsRow() ) ) && empty( array_diff_key( $pField->getAsRow(),
+					$this->_exampleRows[ $pField->getName() ] )
+				) );
 		}
 	}
 }
