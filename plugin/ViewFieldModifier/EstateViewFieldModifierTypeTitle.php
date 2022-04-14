@@ -65,6 +65,27 @@ class EstateViewFieldModifierTypeTitle
 		return array_values(array_unique(array_merge($this->_viewFields, $titleFields)));
 	}
 
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getAPICustomFields(): array
+	{
+		$titleFields = [
+			'objekttitel',
+			'objektbeschreibung',
+			'ort',
+			'plz',
+			'objektart',
+			'vermarktungsart',
+			'Id'
+		];
+
+		return array_values(array_unique(array_merge($this->_viewFields, $titleFields)));
+	}
+
 
 	/**
 	 *
@@ -75,6 +96,17 @@ class EstateViewFieldModifierTypeTitle
 	public function getVisibleFields(): array
 	{
 		return $this->getAPIFields();
+	}
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getVisibleCustomFields(): array
+	{
+		return $this->getAPICustomFields();
 	}
 
 

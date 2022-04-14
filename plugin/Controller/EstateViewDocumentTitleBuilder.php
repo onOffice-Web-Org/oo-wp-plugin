@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use Exception;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
@@ -71,6 +72,7 @@ class EstateViewDocumentTitleBuilder
 	 * @param string $title see Wordpress internal function wp_get_document_title()
 	 * @param string $format
 	 * @return string
+	 * @throws Exception
 	 */
 	public function buildDocumentTitleField(string $format): string
 	{
@@ -79,6 +81,6 @@ class EstateViewDocumentTitleBuilder
 			return '';
 		}
 
-		return $this->_pEstateTitleBuilder->buildTitle($estateId, $format);
+		return $this->_pEstateTitleBuilder->buildCustomFieldTitle($estateId, $format);
 	}
 }

@@ -135,65 +135,51 @@ add_filter('document_title_parts', function($title) use ($pDI) {
 	return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
 }, 10, 2);
 
-if (in_array('wordpress-seo/wp-seo.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-	//objekttitel Field
-	add_action('wpseo_register_extra_replacements', function () use ($pDI){
-		wpseo_register_var_replacement('%%onoffice_titel%%', function () use ($pDI){
-			return fieldCallback($pDI, '%1$s');
-		} , 'advanced');
+add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pDI) {
+	$pDataDetailViewHandler = $pDI->get(DataDetailViewHandler::class);
+	$pDetailView = $pDataDetailViewHandler->getDetailView();
+	$detail_page_id = $pDetailView->getPageId();
+	if ($object_id == $detail_page_id) {
+		switch ($meta_key) {
+			case ("onoffice_title"):
+			case ("onoffice_titel"):
+				return customFieldCallback($pDI, '%1$s');
+				break;
+			case ("onoffice_description"):
+			case ("onoffice_beschreibung"):
+				return customFieldCallback($pDI, '%2$s');
+				break;
+			case ("onoffice_city"):
+			case ("onoffice_ort"):
+				return customFieldCallback($pDI, '%3$s');
+				break;
+			case ("onoffice_postal_code"):
+			case ("onoffice_plz"):
+				return customFieldCallback($pDI, '%4$s');
+				break;
+			case ("onoffice_property_class"):
+			case ("onoffice_objektart"):
+				return customFieldCallback($pDI, '%5$s');
+				break;
+			case ("onoffice_marketing_method"):
+			case ("onoffice_vermarktungsart"):
+				return customFieldCallback($pDI, '%6$s');
+				break;
+			case ("onoffice_id"):
+			case ("onoffice_datensatznr"):
+				return customFieldCallback($pDI, '%7$s');
+				break;
+			default:
+				return null;
 		}
-	);
-	add_action('wpseo_register_extra_replacements', function () use ($pDI){
-		wpseo_register_var_replacement('%%onoffice_title%%', function () use ($pDI){
-				return fieldCallback($pDI, '%1$s');
-			} , 'advanced');
-		}
-	);
-	//vermarktungsart Field
-	add_action('wpseo_register_extra_replacements', function () use ($pDI){
-		wpseo_register_var_replacement('%%onoffice_vermarktungsart%%', function () use ($pDI){
-				return fieldCallback($pDI, '%2$s');
-			} , 'advanced');
-		}
-	);
-	add_action('wpseo_register_extra_replacements', function () use ($pDI){
-		wpseo_register_var_replacement('%%onoffice_marketing_method%%', function () use ($pDI){
-				return fieldCallback($pDI, '%2$s');
-			} , 'advanced');
-		}
-	);
-}
+	} else {
+		return null;
+	}
+}, 1, 3);
 
-if (in_array('seo-by-rank-math/rank-math.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-	add_action( 'rank_math/vars/register_extra_replacements', function () use ($pDI){
-		RankMath\Helper::register_var_replacement(
-			'onoffice_title',function () use ($pDI){
-			return fieldCallback($pDI, '%1$s');
-		},
-			array(
-				'name' => esc_html__( 'onoffice title', 'rank-math' ),
-				'desc' => esc_html__( 'onoffice title', 'rank-math' ),
-				'example' => '1 Charmantes Landhaus in Südfrankreich'
-			)
-		);
-	});
-	add_action( 'rank_math/vars/register_extra_replacements', function () use ($pDI){
-		RankMath\Helper::register_var_replacement(
-			'onoffice_marketing_method',function () use ($pDI){
-			return fieldCallback($pDI, '%3$s');
-		},
-			array(
-				'name' => esc_html__( 'onoffice marketing method', 'rank-math' ),
-				'desc' => esc_html__( 'onoffice marketing method', 'rank-math' ),
-				'example' => 'Rents'
-			)
-		);
-	});
-}
-
-// Return title custom onOffice
-function fieldCallback( $pDI, $format ) {
-	return $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField( $format );
+// Return title custom by custom field onOffice
+function customFieldCallback( $pDI, $format) {
+	return $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField($format);
 }
 
 add_filter('wpml_ls_language_url', function($url) use ($pDI){
@@ -304,3 +290,5 @@ function update_duplicate_check_warning_option()
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
 return $pDI;
+
+
