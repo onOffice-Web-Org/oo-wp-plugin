@@ -331,4 +331,16 @@ class AdminPageAddressListSettings
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 
 	}
+
+	/**
+	 * @param array $row
+	 * @return bool
+	 */
+	protected function checkFixedValues($row)
+	{
+		$table = RecordManager::TABLENAME_LIST_VIEW_ADDRESS;
+		$result = isset($row[$table]['name']) && $row[$table]['name'] != null;
+
+		return $result;
+	}
 }
