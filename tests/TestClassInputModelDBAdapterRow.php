@@ -104,14 +104,14 @@ class TestClassInputModelDBAdapterRow
 		$this->assertArrayHasKey('oo_plugin_forms', $values);
 		$this->assertArrayHasKey('oo_plugin_address_fieldconfig', $values);
 
-		$this->assertIndexArraySubset(array(
+		$this->assertArraySubset(array(
 			'testColumn' => 'asdf',
 			'otherTestColumn' => 'bonjour'
 		), $values['testTable'], true);
 
-		$this->assertIndexArraySubset(array(
+		$this->assertArraySubset(array(
 			'createaddress' => 0, // null to intcast here
-		), $values['oo_plugin_forms']);
+		), $values['oo_plugin_forms'], true);
 
 		$this->assertArraySubset(array(
 			'form_id' => [3],
