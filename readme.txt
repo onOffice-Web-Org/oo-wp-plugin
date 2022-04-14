@@ -86,12 +86,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Removed**
 
-* Drop support for older PHP version. The minimum version is now PHP 7.2.
+* Drop support for older PHP versions. The minimum version is now PHP 7.2.
 
 **Fixed**
 
 * If there are many regions configured in onOffice enterprise, the estate list settings will now load much faster.
 * The default template for the detail view now groups together the contact person's fields that belong together. For example, title, first and last name are grouped as one line.
+* The "Show Estate Status" checkbox in the estate list settings is no longer shown twice.
+* Some invalid fields can no longer be selected for the applicant search form.
 
 = 2.22.5 =
 
