@@ -55,26 +55,26 @@ class TestClassFormPreviewEstate
 			->willReturnSelf();
 		$pApiClientAction
 			->expects($this->once())
-			->after(1)
+			->after("1")
 			->id("2")
 			->method('setParameters')
 			->with(['listlimit' => 0, 'filter' => ['veroeffentlichen' => [['op' => '=', 'val' => 1]]], 'filterid' => 24])
 			->willReturnSelf();
 		$pApiClientAction
 			->expects($this->once())
-			->after(2)
+			->after("2")
 			->id("3")
 			->method('addRequestToQueue')
 			->willReturnSelf();
 		$pApiClientAction
 			->expects($this->once())
-			->after(3)
+			->after("3")
 			->id("4")
 			->method('sendRequests')
 			->willReturnSelf();
 		$pApiClientAction
 			->expects($this->once())
-			->after(4)
+			->after("4")
 			->id("5")
 			->method('getResultMeta')
 			->willReturn(['cntabsolute' => 5]);

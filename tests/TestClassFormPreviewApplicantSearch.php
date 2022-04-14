@@ -110,7 +110,7 @@ class TestClassFormPreviewApplicantSearch
 		$pFormPostApplicantSeach
 			->expects($this->once())
 			->method('getAbsolutCountResults')
-			->after(1)
+			->after('1')
 			->willReturn(6);
 
 		/** @var MockObject $pFormPostFactory */
