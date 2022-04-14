@@ -34,6 +34,7 @@ class InputFieldRadioRenderer
 	/** @var array */
 	private $_checkedValue = null;
 
+
 	/**
 	 *
 	 * @param string $name
@@ -56,6 +57,7 @@ class InputFieldRadioRenderer
 	public function getCheckedValue()
 		{ return $this->_checkedValue; }
 
+
 	/**
 	 *
 	 */
@@ -69,7 +71,7 @@ class InputFieldRadioRenderer
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 					.'" value="'.esc_html($key).'"'
-					.($key == $this->_checkedValue ? ' checked="checked" ' : '')
+					.($key == $this->getCheckedValue() ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
 					.' id="'.esc_html($inputId).'">'
 					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label> ';
