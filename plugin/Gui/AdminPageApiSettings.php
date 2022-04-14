@@ -103,8 +103,7 @@ class AdminPageApiSettings
 				} catch (\RuntimeException $e) {
 					$passwordDecrypt = $password;
 				}
-				$password = $passwordDecrypt;
-				$password = $this->encrypteCredentials($password);
+				$password = $this->encrypteCredentials($passwordDecrypt);
 				update_option('onoffice-is-encryptcredent', true);
 			} else {
 				update_option('onoffice-is-encryptcredent', false);
