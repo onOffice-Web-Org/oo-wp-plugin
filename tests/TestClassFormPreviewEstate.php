@@ -49,33 +49,33 @@ class TestClassFormPreviewEstate
 			->willReturn($pDefaultFilterBuilder);
 		$pApiClientAction
 			->expects($this->once())
-			->id(1)
+			->id("1")
 			->method('withActionIdAndResourceType')
 			->with(onOfficeSDK::ACTION_ID_READ, 'estate')
 			->willReturnSelf();
 		$pApiClientAction
 			->expects($this->once())
 			->after(1)
-			->id(2)
+			->id("2")
 			->method('setParameters')
 			->with(['listlimit' => 0, 'filter' => ['veroeffentlichen' => [['op' => '=', 'val' => 1]]], 'filterid' => 24])
 			->willReturnSelf();
 		$pApiClientAction
 			->expects($this->once())
 			->after(2)
-			->id(3)
+			->id("3")
 			->method('addRequestToQueue')
 			->willReturnSelf();
 		$pApiClientAction
 			->expects($this->once())
 			->after(3)
-			->id(4)
+			->id("4")
 			->method('sendRequests')
 			->willReturnSelf();
 		$pApiClientAction
 			->expects($this->once())
 			->after(4)
-			->id(5)
+			->id("5")
 			->method('getResultMeta')
 			->willReturn(['cntabsolute' => 5]);
 		return new FormPreviewEstate($pDataListViewFactory, $pApiClientAction, $pDefaultFilterBuilderFactory);
