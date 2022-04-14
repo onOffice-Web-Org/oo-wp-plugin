@@ -97,11 +97,18 @@ class AdminPageApiSettings
 		});
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
 			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
-				$password = $this->encrypteCredentials($this->checkPassword($password, $optionNameSecret));
+				$password = $this->checkPassword($password, $optionNameSecret);
+				try {
+					$passwordDecrypt = $this->_encrypter->decrypt($password, ONOFFICE_CREDENTIALS_ENC_KEY);
+				} catch (\RuntimeException $e) {
+					$passwordDecrypt = $password;
+				}
+				$password = $passwordDecrypt;
+				$password = $this->encrypteCredentials($password);
 				update_option('onoffice-is-encryptcredent', true);
-				return $this->checkPassword($password, $optionNameSecret);
+			} else {
+				update_option('onoffice-is-encryptcredent', false);
 			}
-			update_option('onoffice-is-encryptcredent', false);
 			return $this->checkPassword($password, $optionNameSecret);
 		});
 		$pInputModelApiSecret->setValue(get_option($optionNameSecret, $pInputModelApiSecret->getDefault()));

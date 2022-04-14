@@ -197,9 +197,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 27;
 		}
 		if ($dbversion == 27) {
+			$this->_pWpOption->addOption('onoffice-is-encryptcredent', false);
 			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY'))
 			{
-				$this->_pWpOption->addOption('onoffice-is-encryptcredent', true);
+				$this->_pWpOption->updateOption('onoffice-is-encryptcredent', true);
 			}
 			$dbversion = 28;
 		}
