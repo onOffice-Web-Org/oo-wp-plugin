@@ -85,7 +85,7 @@ class TestClassScriptLoaderMapGoogleMaps
 		$this->_pWPOptionWrapper->addOption('onoffice-settings-googlemaps-key', 'abcdef123');
 		$this->_pSubject->register();
 		$registeredScripts = $this->_pWPScriptStyle->getRegisteredScripts();
-		$this->assertAssocArraySubset($this->_scriptsExpectation, $registeredScripts);
+		$this->assertArraySubset($this->_scriptsExpectation, $registeredScripts);
 		$this->assertEmpty($this->_pWPScriptStyle->getRegisteredStyles());
 
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['gmapsinit']['src']);
