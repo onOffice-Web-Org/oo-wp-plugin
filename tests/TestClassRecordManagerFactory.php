@@ -151,15 +151,10 @@ class TestClassRecordManagerFactory
 	}
 
 
-	/**
-	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Class not found in mapping.
-	 *
-	 */
-
 	public function testUnknownClass()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Class not found in mapping.');
 		$pRecordManagerFactory = new RecordManagerFactory();
 		$pRecordManagerFactory->create('unknown', 'unknown');
 	}

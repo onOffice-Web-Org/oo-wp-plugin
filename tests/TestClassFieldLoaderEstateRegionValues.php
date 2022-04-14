@@ -122,7 +122,7 @@ class TestClassFieldLoaderEstateRegionValues
 		$result = iterator_to_array($this->_pFieldLoader->load());
 		$this->assertCount(1, $result);
 		foreach ($result as $fieldname => $fieldProperties) {
-			$this->assertInternalType('string', $fieldname);
+			$this->assertIsString($fieldname);
 			$actualModule = $fieldProperties['module'];
 			$this->assertContains($actualModule,
 				[onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE], 'Module: ' . $actualModule);
