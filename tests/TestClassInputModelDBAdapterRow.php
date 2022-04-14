@@ -53,7 +53,7 @@ class TestClassInputModelDBAdapterRow
 			'oo_plugin_listviews' => 'listview_id',
 			'oo_plugin_forms' => 'form_id',
 		);
-		$this->assertArraySubset($subset, $primaryKeys);
+		$this->assertAssocArraySubset($subset, $primaryKeys);
 	}
 
 
@@ -104,20 +104,20 @@ class TestClassInputModelDBAdapterRow
 		$this->assertArrayHasKey('oo_plugin_forms', $values);
 		$this->assertArrayHasKey('oo_plugin_address_fieldconfig', $values);
 
-		$this->assertIndexArraySubset(array(
+		$this->assertAssocArraySubset(array(
 			'testColumn' => 'asdf',
 			'otherTestColumn' => 'bonjour'
 		), $values['testTable'], true);
 
-		$this->assertIndexArraySubset(array(
+		$this->assertAssocArraySubset(array(
 			'createaddress' => 0, // null to intcast here
 		), $values['oo_plugin_forms']);
 
-		$this->assertArraySubset(array(
+		$this->assertAssocArraySubset(array(
 			'form_id' => [3],
 		), $values['oo_plugin_forms'], true);
 
-		$this->assertArraySubset(array(
+		$this->assertAssocArraySubset(array(
 			array (
 			  'fieldname' => 'test',
 			  'listview_address_id' => 1337,
