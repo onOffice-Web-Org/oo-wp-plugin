@@ -184,12 +184,10 @@ class TestClassGeoSearchBuilderFromInputVars
 		], $parameters);
 	}
 
-	/**
-	 * @expectedException Exception
-	 * @expectedExceptionMessage pView cannot be null
-	 */
 	public function testNoView()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('pView cannot be null');
 		$pGeoSearchBuilderFromInputVars = new GeoSearchBuilderFromInputVars();
 		$pGeoSearchBuilderFromInputVars->buildParameters();
 	}

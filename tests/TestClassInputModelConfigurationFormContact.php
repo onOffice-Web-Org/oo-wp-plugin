@@ -46,7 +46,7 @@ class TestClassInputModelConfigurationFormContact
 		$pInputModelConfigurationFormContact = new InputModelConfigurationFormContact();
 		$config = $pInputModelConfigurationFormContact->getConfig();
 		$this->assertInstanceOf(InputModelConfiguration::class, $pInputModelConfigurationFormContact);
-		$this->assertInternalType('array', $config);
+		$this->assertIsArray($config);
 
 		$pReflection = new ReflectionClass(InputModelDBFactoryConfigForm::class);
 		$factoryConfigContants = $pReflection->getConstants();

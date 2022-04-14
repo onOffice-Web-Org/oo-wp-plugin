@@ -54,11 +54,11 @@ class TestClassAdminNoticeHandlerListViewDeletion
 
 	public function testHandleListViewSuccess()
 	{
-		$this->assertContains('1 list view has been deleted.',
+		$this->assertStringContainsString('1 list view has been deleted.',
 			$this->_pAdminNoticeHandlerListViewDeletion->handleListView(1));
-		$this->assertContains('2 list views have been deleted.',
+		$this->assertStringContainsString('2 list views have been deleted.',
 			$this->_pAdminNoticeHandlerListViewDeletion->handleListView(2));
-		$this->assertContains('notice-success',
+		$this->assertStringContainsString('notice-success',
 			$this->_pAdminNoticeHandlerListViewDeletion->handleListView(1));
 	}
 
@@ -79,11 +79,11 @@ class TestClassAdminNoticeHandlerListViewDeletion
 
 	public function testHandleFormSuccess()
 	{
-		$this->assertContains('1 form has been deleted.',
+		$this->assertStringContainsString('1 form has been deleted.',
 			$this->_pAdminNoticeHandlerListViewDeletion->handleFormView(1));
-		$this->assertContains('2 forms have been deleted.',
+		$this->assertStringContainsString('2 forms have been deleted.',
 			$this->_pAdminNoticeHandlerListViewDeletion->handleFormView(2));
-		$this->assertContains('notice-success',
+		$this->assertStringContainsString('notice-success',
 			$this->_pAdminNoticeHandlerListViewDeletion->handleFormView(1));
 	}
 
@@ -104,7 +104,7 @@ class TestClassAdminNoticeHandlerListViewDeletion
 
 	private function checkHandleError(string $term, string $result)
 	{
-		$this->assertContains('No '.$term.' was deleted.', $result);
-		$this->assertContains('notice-error', $result);
+		$this->assertStringContainsString('No '.$term.' was deleted.', $result);
+		$this->assertStringContainsString('notice-error', $result);
 	}
 }

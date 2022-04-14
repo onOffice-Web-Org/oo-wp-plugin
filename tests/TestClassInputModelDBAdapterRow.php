@@ -53,7 +53,9 @@ class TestClassInputModelDBAdapterRow
 			'oo_plugin_listviews' => 'listview_id',
 			'oo_plugin_forms' => 'form_id',
 		);
-		$this->assertArraySubset($subset, $primaryKeys);
+		$this->assertTrue(
+			empty( array_diff_key( $subset, $primaryKeys ) ) && empty( array_diff_key( $primaryKeys, $subset )
+			) );
 	}
 
 
@@ -69,18 +71,18 @@ class TestClassInputModelDBAdapterRow
 		$foreignKeys = $pInputModelDBAdapterRow->getForeignKeys();
 
 		foreach ($foreignKeys as $table => $columns) {
-			$this->assertNotInternalType('int', $table);
+			$this->assertIsNotInt($table);
 
 			foreach (array_keys($columns) as $column) {
-				$this->assertInternalType('string', $column);
+				$this->assertIsString($column);
 			}
 
 			$firstColumn = array_shift($columns);
 			$this->assertNull($firstColumn);
 
 			foreach ($columns as $column => $foreignColums) {
-				$this->assertInternalType('string', $column);
-				$this->assertInternalType('array', $foreignColums);
+				$this->assertIsString($column);
+				$this->assertIsArray($foreignColums);
 			}
 		}
 	}
@@ -104,29 +106,52 @@ class TestClassInputModelDBAdapterRow
 		$this->assertArrayHasKey('oo_plugin_forms', $values);
 		$this->assertArrayHasKey('oo_plugin_address_fieldconfig', $values);
 
-		$this->assertArraySubset(array(
-			'testColumn' => 'asdf',
-			'otherTestColumn' => 'bonjour'
-		), $values['testTable'], true);
+		$this->assertTrue(
+			empty( array_diff_key( array(
+				'testColumn'      => 'asdf',
+				'otherTestColumn' => 'bonjour'
+			), $values['testTable'] ) )
+			&& empty( array_diff_key( $values['testTable'], array(
+				'testColumn'      => 'asdf',
+				'otherTestColumn' => 'bonjour'
+			) )
+			) );
 
-		$this->assertArraySubset(array(
-			'createaddress' => 0, // null to intcast here
-		), $values['oo_plugin_forms'], true);
+		$this->assertEmpty(
+			array_diff_key( array(
+				'createaddress' => 0, // null to intcast here
+			), $values['oo_plugin_forms'] )
+		);
 
-		$this->assertArraySubset(array(
-			'form_id' => [3],
-		), $values['oo_plugin_forms'], true);
+		$this->assertEmpty(
+			( array_diff_key( array(
+				'form_id' => [ 3 ],
+			), $values['oo_plugin_forms'] ) )
+		);
 
-		$this->assertArraySubset(array(
-			array (
-			  'fieldname' => 'test',
-			  'listview_address_id' => 1337,
+		$this->assertTrue(
+			empty( array_diff_key( array(
+				array(
+					'fieldname'           => 'test',
+					'listview_address_id' => 1337,
+				),
+				array(
+					'fieldname'           => 'hello',
+					'listview_address_id' => 1337,
+				),
 			),
-			array (
-			  'fieldname' => 'hello',
-			  'listview_address_id' => 1337,
-			),
-		), $values['oo_plugin_address_fieldconfig'], true);
+				$values['oo_plugin_address_fieldconfig'] ) ) && empty( array_diff_key( $values['oo_plugin_address_fieldconfig'],
+				array(
+					array(
+						'fieldname'           => 'test',
+						'listview_address_id' => 1337,
+					),
+					array(
+						'fieldname'           => 'hello',
+						'listview_address_id' => 1337,
+					),
+				) )
+			) );
 	}
 
 
