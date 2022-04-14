@@ -69,18 +69,18 @@ class TestClassInputModelDBAdapterRow
 		$foreignKeys = $pInputModelDBAdapterRow->getForeignKeys();
 
 		foreach ($foreignKeys as $table => $columns) {
-			$this->assertNotInternalType('int', $table);
+			$this->assertIsNotInt($table);
 
 			foreach (array_keys($columns) as $column) {
-				$this->assertInternalType('string', $column);
+				$this->assertIsString($column);
 			}
 
 			$firstColumn = array_shift($columns);
 			$this->assertNull($firstColumn);
 
 			foreach ($columns as $column => $foreignColums) {
-				$this->assertInternalType('string', $column);
-				$this->assertInternalType('array', $foreignColums);
+				$this->assertIsString($column);
+				$this->assertIsArray($foreignColums);
 			}
 		}
 	}

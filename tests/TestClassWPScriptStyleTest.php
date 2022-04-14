@@ -103,14 +103,13 @@ class TestClassWPScriptStyleTest
 	/**
 	 *
 	 * @depends testRegisteredScripts
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Script testhandle1 already registered
 	 * @param WPScriptStyleTest $pWPScriptStyleTest
 	 *
 	 */
-
 	public function testRegisterScriptDouble(WPScriptStyleTest $pWPScriptStyleTest)
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Script testhandle1 already registered');
 		$pWPScriptStyleTest->registerScript('testhandle1', '/test/src.js');
 	}
 
@@ -118,14 +117,13 @@ class TestClassWPScriptStyleTest
 	/**
 	 *
 	 * @depends testRegisteredStyles
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Style testhandlecss already registered
 	 * @param WPScriptStyleTest $pWPScriptStyleTest
 	 *
 	 */
-
 	public function testRegisterStyleDouble(WPScriptStyleTest $pWPScriptStyleTest)
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Style testhandlecss already registered');
 		$pWPScriptStyleTest->registerStyle('testhandlecss', '/test/src.css');
 	}
 
@@ -158,29 +156,19 @@ class TestClassWPScriptStyleTest
 	}
 
 
-	/**
-	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Script testNonEnqueuedJs not registered
-	 *
-	 */
-
 	public function testEnqueueNonRegisteredScript()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Script testNonEnqueuedJs not registered');
 		$pWPScriptStyleTest = new WPScriptStyleTest();
 		$pWPScriptStyleTest->enqueueScript('testNonEnqueuedJs');
 	}
 
 
-	/**
-	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Style testNonEnqueuedCss not registered
-	 *
-	 */
-
 	public function testEnqueueNonRegisteredStyle()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Style testNonEnqueuedCss not registered');
 		$pWPScriptStyleTest = new WPScriptStyleTest();
 		$pWPScriptStyleTest->enqueueStyle('testNonEnqueuedCss');
 	}
@@ -202,15 +190,10 @@ class TestClassWPScriptStyleTest
 	}
 
 
-	/**
-	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Script nonRegistered not registered
-	 *
-	 */
-
 	public function testLocalizeScriptNonRegistered()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Script nonRegistered not registered');
 		$pWPScriptStyleTest = new WPScriptStyleTest();
 		$pWPScriptStyleTest->localizeScript('nonRegistered', 'global_js_var1', ['hello' => 'world']);
 	}

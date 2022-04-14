@@ -34,15 +34,10 @@ use WP_UnitTestCase;
 class TestClassDefaultFilterBuilderDetailView
 	extends WP_UnitTestCase
 {
-	/**
-	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage EstateId must not be 0
-	 *
-	 */
-
 	public function testBuildFilterNoEstateId()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('EstateId must not be 0');
 		$pInstance = new DefaultFilterBuilderDetailView();
 		$pInstance->buildFilter();
 	}

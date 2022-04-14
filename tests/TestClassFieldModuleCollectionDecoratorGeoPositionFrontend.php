@@ -117,14 +117,9 @@ class TestClassFieldModuleCollectionDecoratorGeoPositionFrontend
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
-	 *
-	 */
-
 	public function testGetFieldByModuleAndNameUnknown()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$module = onOfficeSDK::MODULE_ESTATE;
 		$this->_pSubject->getFieldByModuleAndName($module, 'testasdf');
 	}
