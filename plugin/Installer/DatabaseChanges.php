@@ -35,7 +35,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 27;
+	const MAX_VERSION = 28;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -193,11 +193,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 26) {
+			$this->deleteMessageFieldApplicantSearchForm();
+			$dbversion = 27;
+		}
+		if ($dbversion == 27) {
 			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY'))
 			{
 				$this->_pWpOption->addOption('onoffice-is-encryptcredent', true);
 			}
-			$dbversion = 27;
+			$dbversion = 28;
 		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
@@ -236,6 +240,24 @@ class DatabaseChanges implements DatabaseChangesInterface
 	}
 
 
+	private function deleteMessageFieldApplicantSearchForm()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_forms";
+		$tableFieldConfig = $prefix . "oo_plugin_form_fieldconfig";
+
+		$rows = $this->_pWPDB->get_results("SELECT `form_id` FROM {$tableName} WHERE form_type = 'applicantsearch'");
+
+		foreach ($rows as $applicantSearchForm) {
+			$allFieldMessages = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM " . $tableFieldConfig . "
+										WHERE `fieldname` = 'message'
+										AND `form_id` = " . esc_sql($applicantSearchForm->form_id) . " ");
+			foreach ($allFieldMessages as $fieldMessage) {
+				$this->_pWPDB->delete($tableFieldConfig,
+					array('form_fieldconfig_id' => $fieldMessage->form_fieldconfig_id));
+			}
+		}
+	}
 	/**
 	 *
 	 * @return string
@@ -621,10 +643,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		$rows = $this->_pWPDB->get_results("SELECT `form_id` FROM {$tableName} WHERE form_type = 'applicantsearch'");
 
-		foreach ($rows as $applicantSearchFormId) {
+		foreach ($rows as $applicantSearchForm) {
 			$allFieldComments = $this->_pWPDB->get_results("SELECT form_fieldconfig_id FROM $tableFieldConfig
 										WHERE `fieldname` = 'krit_bemerkung_oeffentlich'
-										AND `form_id` = '{$this->_pWPDB->_escape($applicantSearchFormId->form_id)}'");
+										AND `form_id` = ".esc_sql($applicantSearchForm->form_id)." ");
 			foreach ($allFieldComments as $fieldComment) {
 				$this->_pWPDB->delete($tableFieldConfig,
 					array('form_fieldconfig_id' => $fieldComment->form_fieldconfig_id));
