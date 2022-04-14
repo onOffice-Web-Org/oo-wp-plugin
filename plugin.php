@@ -140,7 +140,7 @@ add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pD
 	$pDetailView = $pDataDetailViewHandler->getDetailView();
 	$detail_page_id = $pDetailView->getPageId();
 	if ($object_id == $detail_page_id) {
-		$arr = ["onoffice_titel" => '%1$s', "onoffice_title" => '%1$s',
+		$list_meta_keys = ["onoffice_titel" => '%1$s', "onoffice_title" => '%1$s',
 				"onoffice_beschreibung" => '%2$s',"onoffice_description" => '%2$s',
 				"onoffice_ort" => '%3$s',"onoffice_city" => '%3$s',
 				"onoffice_plz" => '%4$s',"onoffice_postal_code" => '%4$s',
@@ -148,8 +148,8 @@ add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pD
 				"onoffice_vermarktungsart" => '%6$s',"onoffice_marketing_method" => '%6$s',
 				"onoffice_datensatznr" => '%7$s',"onoffice_id" => '%7$s'
 		];
-		if(isset($arr[$meta_key])){
-			return customFieldCallback($pDI, $arr[$meta_key]);
+		if(isset($list_meta_keys[$meta_key])){
+			return customFieldCallback($pDI, $list_meta_keys[$meta_key]);
 		}
 	} else {
 		return null;
