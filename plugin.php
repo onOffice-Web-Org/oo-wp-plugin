@@ -140,37 +140,16 @@ add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pD
 	$pDetailView = $pDataDetailViewHandler->getDetailView();
 	$detail_page_id = $pDetailView->getPageId();
 	if ($object_id == $detail_page_id) {
-		switch ($meta_key) {
-			case ("onoffice_title"):
-			case ("onoffice_titel"):
-				return customFieldCallback($pDI, '%1$s');
-				break;
-			case ("onoffice_description"):
-			case ("onoffice_beschreibung"):
-				return customFieldCallback($pDI, '%2$s');
-				break;
-			case ("onoffice_city"):
-			case ("onoffice_ort"):
-				return customFieldCallback($pDI, '%3$s');
-				break;
-			case ("onoffice_postal_code"):
-			case ("onoffice_plz"):
-				return customFieldCallback($pDI, '%4$s');
-				break;
-			case ("onoffice_property_class"):
-			case ("onoffice_objektart"):
-				return customFieldCallback($pDI, '%5$s');
-				break;
-			case ("onoffice_marketing_method"):
-			case ("onoffice_vermarktungsart"):
-				return customFieldCallback($pDI, '%6$s');
-				break;
-			case ("onoffice_id"):
-			case ("onoffice_datensatznr"):
-				return customFieldCallback($pDI, '%7$s');
-				break;
-			default:
-				return null;
+		$arr = ["onoffice_titel" => '%1$s', "onoffice_title" => '%1$s',
+				"onoffice_beschreibung" => '%2$s',"onoffice_description" => '%2$s',
+				"onoffice_ort" => '%3$s',"onoffice_city" => '%3$s',
+				"onoffice_plz" => '%4$s',"onoffice_postal_code" => '%4$s',
+				"onoffice_objektart" => '%5$s',"onoffice_property_class" => '%5$s',
+				"onoffice_vermarktungsart" => '%6$s',"onoffice_marketing_method" => '%6$s',
+				"onoffice_datensatznr" => '%7$s',"onoffice_id" => '%7$s'
+		];
+		if(isset($arr[$meta_key])){
+			return customFieldCallback($pDI, $arr[$meta_key]);
 		}
 	} else {
 		return null;
