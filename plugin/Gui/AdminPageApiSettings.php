@@ -93,6 +93,14 @@ class AdminPageApiSettings
 		$pInputModelApiSecret->setIsPassword(true);
 		$optionNameSecret = $pInputModelApiSecret->getIdentifier();
 		$pInputModelApiKey->setSanitizeCallback(function ($apiKey) {
+			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+				try {
+					$apiKeyDecrypt = $this->_encrypter->decrypt($apiKey, ONOFFICE_CREDENTIALS_ENC_KEY);
+				} catch (\RuntimeException $e) {
+					$apiKeyDecrypt = $apiKey;
+				}
+				$apiKey = $apiKeyDecrypt;
+			}
 			return $this->encrypteCredentials($apiKey);
 		});
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
