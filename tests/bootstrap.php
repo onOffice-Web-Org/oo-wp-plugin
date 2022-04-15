@@ -46,7 +46,7 @@ if (PHP_VERSION_ID >= 70400) {
 			}
 		}
 
-		$utilPrefix = class_exists('PHPUnit_Util_ErrorHandler') ? 'PHPUnit_Util_' : 'PHPUnit\Util\\';
+		$utilPrefix = class_exists('PHPUnit_Util_ErrorHandler') ? 'PHPUnit_Util_' : 'PHPUnit\src\Util\\';
 		$errorHandler = $utilPrefix . 'ErrorHandler';
 
 		// Any other error should be left up to PHPUnit to handle
