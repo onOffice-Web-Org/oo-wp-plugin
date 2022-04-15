@@ -111,7 +111,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(26, $dbversion);
+		$this->assertEquals(27, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -158,7 +158,7 @@ class TestClassDatabaseChanges
 		$this->_pWpOption->addOption('oo_plugin_db_version', '18');
 		$formsOutput = [
 			(object)[
-				'form_id' => '2',
+				'form_id' => '3',
 				'name' => 'Applicant Search Form',
 				'form_type' => 'applicantsearch',
 			]
@@ -166,8 +166,50 @@ class TestClassDatabaseChanges
 		$fieldConfigOutput = [
 			(object)[
 				'form_fieldconfig_id' => '1',
-				'form_id' => '2',
+				'form_id' => '3',
 				'fieldname' => 'krit_bemerkung_oeffentlich'
+			],
+			(object)[
+				'form_fieldconfig_id' => '2',
+				'form_id' => '3',
+				'fieldname' => 'message'
+			]
+		];
+
+		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
+			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->getMock();
+
+		$this->_pWPDBMock->expects($this->exactly(4))
+			->method('get_results')
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput);
+
+		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
+			->will($this->returnValue(true));
+
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock);
+		$this->_pDbChanges->install();
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::deleteMessageFieldApplicantSearchForm
+	 */
+
+	public function testDeleteMessageFieldApplicantSearchForm()
+	{
+		$this->_pWpOption->addOption('oo_plugin_db_version', '25');
+		$formsOutput = [
+			(object)[
+				'form_id' => '3',
+				'name' => 'Applicant Search Form',
+				'form_type' => 'applicantsearch',
+			]
+		];
+		$fieldConfigOutput = [
+			(object)[
+				'form_fieldconfig_id' => '2',
+				'form_id' => '3',
+				'fieldname' => 'message'
 			]
 		];
 
@@ -192,7 +234,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(26, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(27, DatabaseChanges::MAX_VERSION);
 	}
 
 
