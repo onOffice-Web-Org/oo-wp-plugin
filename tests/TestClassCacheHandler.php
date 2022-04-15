@@ -68,7 +68,7 @@ class TestClassCacheHandler
 
 	public function testClear()
 	{
-		$pCache = $this->getMockBuilder( onOfficeSDKCache::class )->setConstructorArgs( [] )->getMock();
+		$pCache = $this->getMockBuilder( onOfficeSDKCache::class )->setConstructorArgs( [[]] )->getMock();
 		$pCache->expects($this->once())->method('clearAll');
 		$cacheInstance = [$pCache];
 		$this->_pSDKWrapper->expects($this->once())->method('getCache')->will($this->returnValue($cacheInstance));
