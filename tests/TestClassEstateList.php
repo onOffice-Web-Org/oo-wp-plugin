@@ -260,7 +260,7 @@ class TestClassEstateList
 		$pDataDetailView->setPageId($pWPPost->ID);
 
 		// slash missing at the end, which WP inserts in production
-		$this->assertEquals('http://example.org/details/15', $this->_pEstateList->getEstateLink());
+		$this->assertEquals('http://example.org/details/15/', $this->_pEstateList->getEstateLink());
 	}
 
 
