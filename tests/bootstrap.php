@@ -49,7 +49,8 @@ if (PHP_VERSION_ID >= 70400) {
 			}
 		}
 
-		return new ErrorHandler($errno, $errstr, $errfile, $errline);
+		$errorHandler = new ErrorHandler(true, true, true, true);
+		return $errorHandler($errno, $errstr, $errfile, $errline);
 	};
 
 	set_error_handler($customErrorHandler);
