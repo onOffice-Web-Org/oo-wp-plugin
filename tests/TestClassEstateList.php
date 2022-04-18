@@ -124,18 +124,18 @@ class TestClassEstateList
 	 */
 	public function prepare()
 	{
-        $pContainerBuilder = new ContainerBuilder();
-        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-        $pContainer = $pContainerBuilder->build();
-        $pFieldLoaderGeneric = $this->getMockBuilder(FieldLoaderGeneric::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['load'])
-            ->getMock();
-        $pFieldLoaderGeneric->method('load')->will($this->returnCallback(function(): Generator {
-            yield from $this->_exampleRowsByModule['address'] + $this->_exampleRowsByModule['estate'];
-        }));
-        $pContainer->set(FieldLoaderGeneric::class, $pFieldLoaderGeneric);
-        $this->_pEstateList = $pContainer->get(EstateList::class);
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pFieldLoaderGeneric = $this->getMockBuilder(FieldLoaderGeneric::class)
+			->disableOriginalConstructor()
+			->setMethods(['load'])
+			->getMock();
+		$pFieldLoaderGeneric->method('load')->will($this->returnCallback(function(): Generator {
+			yield from $this->_exampleRowsByModule['address'] + $this->_exampleRowsByModule['estate'];
+		}));
+		$pContainer->set(FieldLoaderGeneric::class, $pFieldLoaderGeneric);
+		$this->_pEstateList = $pContainer->get(EstateList::class);
 		
 		$fieldCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilder::class)
 			->disableOriginalConstructor()
