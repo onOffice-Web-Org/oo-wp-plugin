@@ -35,6 +35,9 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
     ul.oo-listparking {
         padding: 0;
     }
+    .oo-listtd {
+        width: 48%;
+    }
 </style>
 <div class="oo-estate-map">
     <?php require('map/map.php'); ?>

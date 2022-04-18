@@ -120,42 +120,42 @@ class TestClassEstateList
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
-	 * 
+	 *
 	 */
 	public function prepare()
 	{
-    $pContainerBuilder = new ContainerBuilder();
-    $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-    $pContainer = $pContainerBuilder->build();
-    $pFieldLoaderGeneric = $this->getMockBuilder(FieldLoaderGeneric::class)
-       ->disableOriginalConstructor()
-       ->setMethods(['load'])
-       ->getMock();
-    $pFieldLoaderGeneric->method('load')->will($this->returnCallback(function(): Generator {
-       yield from $this->_exampleRowsByModule['address'] + $this->_exampleRowsByModule['estate'];
-    }));
-    $pContainer->set(FieldLoaderGeneric::class, $pFieldLoaderGeneric);
-    $this->_pEstateList = $pContainer->get(EstateList::class);
+        $pContainerBuilder = new ContainerBuilder();
+        $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+        $pContainer = $pContainerBuilder->build();
+        $pFieldLoaderGeneric = $this->getMockBuilder(FieldLoaderGeneric::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['load'])
+            ->getMock();
+        $pFieldLoaderGeneric->method('load')->will($this->returnCallback(function(): Generator {
+            yield from $this->_exampleRowsByModule['address'] + $this->_exampleRowsByModule['estate'];
+        }));
+        $pContainer->set(FieldLoaderGeneric::class, $pFieldLoaderGeneric);
+        $this->_pEstateList = $pContainer->get(EstateList::class);
 		
-	$fieldCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilder::class)
-		->disableOriginalConstructor()
-		->setMethods([ 'buildFieldsCollection'])
-		->getMock();
+		$fieldCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilder::class)
+			->disableOriginalConstructor()
+			->setMethods([ 'buildFieldsCollection'])
+			->getMock();
 	
-	$pFieldsCollection = $this->getMockBuilder(FieldsCollection::class)
-		->disableOriginalConstructor()
-		->setMethods(['getFieldByModuleAndName'])
-		->getMock();
+		$pFieldsCollection = $this->getMockBuilder(FieldsCollection::class)
+			->disableOriginalConstructor()
+			->setMethods(['getFieldByModuleAndName'])
+			->getMock();
 	
-	$mockData = [
-		'test' => 'abc'
-	];
-	$mockField = new Field('waehrung', onOfficeSDK::MODULE_ESTATE, 'Prices');
-	$mockField->setPermittedvalues($mockData);
-	
-	$pFieldsCollection->method('getFieldByModuleAndName')->willReturn(['waehrung' => $mockField]);
-	$fieldCollectionBuilder->method('buildFieldsCollection')->willReturn($pFieldsCollection);
-	$this->_pContainer->set(FieldsCollectionBuilder::class, $fieldCollectionBuilder);
+		$mockData = [
+			'test' => 'abc'
+		];
+		$mockField = new Field('waehrung', onOfficeSDK::MODULE_ESTATE, 'Prices');
+		$mockField->setPermittedvalues($mockData);
+		
+		$pFieldsCollection->method('getFieldByModuleAndName')->willReturn(['waehrung' => $mockField]);
+		$fieldCollectionBuilder->method('buildFieldsCollection')->willReturn($pFieldsCollection);
+		$this->_pContainer->set(FieldsCollectionBuilder::class, $fieldCollectionBuilder);
 	}
 	
 	
