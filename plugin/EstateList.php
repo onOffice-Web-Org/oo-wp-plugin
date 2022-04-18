@@ -97,6 +97,9 @@ class EstateList
 
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;
+	
+	/** @var FieldsCollection */
+	private $__pFieldCollection;
 
 	/**
 	 * @param DataView $pDataView
@@ -109,6 +112,9 @@ class EstateList
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$pContainer = $pContainerBuilder->build();
+		$pFieldLoaderGeneric = $pContainer->get(FieldLoaderGeneric::class);
+		$this->_pFieldCollection = $pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoaderGeneric);
 		$this->_pEnvironment = $pEnvironment ?? new EstateListEnvironmentDefault($pContainer);
 		$this->_pDataView = $pDataView;
 		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
@@ -372,12 +378,6 @@ class EstateList
 	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
 		global $numpages, $multipage, $more, $paged;
-		$pDIContainerBuilder = new ContainerBuilder();
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIContainerBuilder->build();
-		$pFieldLoader = $pContainer->get(FieldLoaderGeneric::class);
-		$pFieldCollectionAddressEstate = $pContainer->get(FieldsCollectionBuilder::class)
-			->buildFieldsCollection($pFieldLoader);
 		if (null !== $this->_numEstatePages &&
 			!$this->_pDataView->getRandom()) {
 			$multipage = true;
@@ -403,9 +403,9 @@ class EstateList
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
-		$fields = $pFieldCollectionAddressEstate->getFieldsByModule(onOfficeSDK::MODULE_ESTATE);
-		if (!empty($fields['waehrung']->getPermittedvalues())) {
-			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fields['waehrung']->getPermittedvalues());
+		$fieldWaehrung = $this->_pFieldCollection->getFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE,'waehrung');
+		if (!empty($fieldWaehrung->getPermittedvalues())) {
+			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung->getPermittedvalues());
 		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
 

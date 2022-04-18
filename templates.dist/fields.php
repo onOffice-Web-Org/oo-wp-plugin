@@ -226,7 +226,7 @@ if (!function_exists('renderRegionalAddition')) {
 
 
 if (!function_exists('renderParkingLot')) {
-	function renderParkingLot(array $parkingArray, string $language, string $locale = 'de_DE', string $codeCurrency, string $currency): array
+	function renderParkingLot(array $parkingArray, string $language, string $locale, string $codeCurrency, string $currency): array
 	{
 		$messages = [];
 		foreach ($parkingArray as $key => $parking) {
@@ -245,7 +245,7 @@ if (!function_exists('renderParkingLot')) {
 }
 
 if (!function_exists('formatPriceParking')) {
-	function formatPriceParking(string $str, string $language, string $locale, string $codeCurrentcy, string $currency): string
+	function formatPriceParking(string $str, string $language, string $locale, string $codeCurrency, string $currency): string
 	{
 		$digit = intval(substr(strrchr($str, "."), 1));
 		if (class_exists(NumberFormatter::class)) {
@@ -255,11 +255,11 @@ if (!function_exists('formatPriceParking')) {
 			} else {
 				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
 			}
-			if (empty($codeCurrentcy))
+			if (empty($codeCurrency))
 			{
-				$codeCurrentcy = "EUR";
+				$codeCurrency = "EUR";
 			}
-			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str,$codeCurrentcy));
+			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str,$codeCurrency));
 		} else {
 			if (empty($currency))
 			{

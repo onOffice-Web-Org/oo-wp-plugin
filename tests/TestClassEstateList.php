@@ -45,6 +45,7 @@ use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\EstateFiles;
 use onOffice\WPlugin\EstateList;
 use onOffice\WPlugin\EstateUnits;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilder;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Fieldnames;
@@ -59,6 +60,8 @@ use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use WP_Rewrite;
+use Generator;
+use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
 use WP_UnitTestCase;
 use function json_decode;
 
@@ -113,8 +116,49 @@ class TestClassEstateList
 			],
 		],
 	];
-
-
+	
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * 
+	 */
+	public function prepare()
+	{
+    $pContainerBuilder = new ContainerBuilder();
+    $pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+    $pContainer = $pContainerBuilder->build();
+    $pFieldLoaderGeneric = $this->getMockBuilder(FieldLoaderGeneric::class)
+       ->disableOriginalConstructor()
+       ->setMethods(['load'])
+       ->getMock();
+    $pFieldLoaderGeneric->method('load')->will($this->returnCallback(function(): Generator {
+       yield from $this->_exampleRowsByModule['address'] + $this->_exampleRowsByModule['estate'];
+    }));
+    $pContainer->set(FieldLoaderGeneric::class, $pFieldLoaderGeneric);
+    $this->_pEstateList = $pContainer->get(EstateList::class);
+		
+	$fieldCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilder::class)
+		->disableOriginalConstructor()
+		->setMethods([ 'buildFieldsCollection'])
+		->getMock();
+	
+	$pFieldsCollection = $this->getMockBuilder(FieldsCollection::class)
+		->disableOriginalConstructor()
+		->setMethods(['getFieldByModuleAndName'])
+		->getMock();
+	
+	$mockData = [
+		'test' => 'abc'
+	];
+	$mockField = new Field('waehrung', onOfficeSDK::MODULE_ESTATE, 'Prices');
+	$mockField->setPermittedvalues($mockData);
+	
+	$pFieldsCollection->method('getFieldByModuleAndName')->willReturn(['waehrung' => $mockField]);
+	$fieldCollectionBuilder->method('buildFieldsCollection')->willReturn($pFieldsCollection);
+	$this->_pContainer->set(FieldsCollectionBuilder::class, $fieldCollectionBuilder);
+	}
+	
+	
 	/**
 	 *
 	 */
