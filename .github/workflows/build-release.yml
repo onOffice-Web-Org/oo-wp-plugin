@@ -47,21 +47,21 @@ jobs:
         run: composer install
 
       - name: Build release
-        run: PREFIX=/tmp/release make release
+        run: PREFIX=/tmp/release/ make release
 
       - name: Override version
         if: ${{ inputs.overrideVersion != '' }}
-        run: 'sed -i "s/Version: ${{ inputs.expectedVersion }}/Version: ${{ inputs.overrideVersion }}/" /tmp/release/onoffice/plugin.php'
+        run: 'sed -i "s/Version: ${{ inputs.expectedVersion }}/Version: ${{ inputs.overrideVersion }}/" /tmp/release/plugin.php'
 
       - name: Zip release
         run: |
-          cd /tmp/release/onoffice
+          cd /tmp/release/
           zip -r ../release.zip .
 
       - name: Upload release as artifact
         uses: actions/upload-artifact@v3
         with:
           name: release
-          path: /tmp/release/release.zip
+          path: /tmp/release.zip
           retention-days: 7
 
