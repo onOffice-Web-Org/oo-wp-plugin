@@ -167,6 +167,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		if ($dbversion == 21) {
 			dbDelta($this->getCreateQueryListviews());
+			$this->updateShowReferenceEstate();
 			$dbversion = 22;
 		}
 
@@ -746,5 +747,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDetailView = $pDataDetailViewHandler->getDetailView();
 		$pDetailView->setHasDetailView(true);
 		$pDataDetailViewHandler->saveDetailView($pDetailView);
+	}
+
+	public function updateShowReferenceEstate()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_listviews
+				SET `show_reference_estate` = 1
+				WHERE `list_type` = 'reference'";
+
+		$this->_pWPDB->query($sql);
 	}
 }
