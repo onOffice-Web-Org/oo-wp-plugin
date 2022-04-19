@@ -311,17 +311,15 @@ class AdminViewController
 
 	public function enqueueExtraJs($hook)
 	{
-		if (__String::getNew($hook)->contains('onoffice')) {
-			$pObject = $this->getObjectByHook($hook);
+		$pObject = $this->getObjectByHook($hook);
 
-			wp_register_script('update-duplicate-check-warning-option', plugins_url('js/onoffice-duplicate-check-option-update.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
-				array('jquery'));
-			wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
-			wp_enqueue_script('update-duplicate-check-warning-option');
+		wp_register_script('update-duplicate-check-warning-option', plugins_url('js/onoffice-duplicate-check-option-update.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
+			array('jquery'));
+		wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_enqueue_script('update-duplicate-check-warning-option');
 
-			if ($pObject !== null) {
-				$pObject->doExtraEnqueues();
-			}
+		if ($pObject !== null) {
+			$pObject->doExtraEnqueues();
 		}
 	}
 
