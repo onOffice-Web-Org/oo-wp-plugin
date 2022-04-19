@@ -39,6 +39,8 @@ use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerModel;
+use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\OutputFields;
 use onOffice\WPlugin\Field\UnknownFieldException;
@@ -47,6 +49,7 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
 use function home_url;
@@ -370,6 +373,7 @@ class EstateList
 	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
 		global $numpages, $multipage, $more, $paged;
+
 		if (null !== $this->_numEstatePages &&
 			!$this->_pDataView->getRandom()) {
 			$multipage = true;
@@ -378,8 +382,10 @@ class EstateList
 			$more = true;
 			$numpages = $this->_numEstatePages;
 		}
+
 		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
 			($this->_pDataView->getFields(), $modifier);
+
 		$currentRecord = current($this->_records);
 		next($this->_records);
 
@@ -405,6 +411,7 @@ class EstateList
 		}
 
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
+
 		return $pArrayContainer;
 	}
 

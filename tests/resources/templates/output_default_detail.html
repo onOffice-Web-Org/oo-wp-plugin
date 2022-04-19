@@ -1,3 +1,11 @@
+<style>
+	ul.oo-listparking {
+		padding: 0 10px;
+	}
+	.clear {
+		width: 25%;
+	}
+</style>
 <div class="oo-detailview">
 			<div class="oo-detailsheadline">
 			<h1>flach begrüntes Grundstück</h1>
@@ -24,11 +32,6 @@
 <div class="oo-detailslisttd">ca. 5.400 m²</div>
 <div class="oo-detailslisttd">label-kaufpreis</div>
 <div class="oo-detailslisttd">80.000,00 €</div>
-					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
-						. '<div class="oo-detailslisttd">'
-						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-						. '</div>' . "\n";
-				} ?>
 			</div>
 
 							<div class="oo-detailsfreetext">

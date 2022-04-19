@@ -32,21 +32,21 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 ?>
 
 <style>
-    .oo-details-btn:focus {
-        opacity: 0.8;
-        text-decoration: none !important;
-        background: #80acd3 !important;
-    }
-    .oo-listinfotable {
-        display: flex;
-        flex-wrap: wrap;
-    }
-    ul.oo-listparking {
-        padding: 0 10px;
-    }
-    .clear {
-        width: 50%;
-    }
+	.oo-details-btn:focus {
+		opacity: 0.8;
+		text-decoration: none !important;
+		background: #80acd3 !important;
+	}
+	.oo-listinfotable {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	ul.oo-listparking {
+		padding: 0 10px;
+	}
+	.clear {
+		width: 50%;
+	}
 </style>
 <div class="oo-estate-map">
     <?php require('map/map.php'); ?>
