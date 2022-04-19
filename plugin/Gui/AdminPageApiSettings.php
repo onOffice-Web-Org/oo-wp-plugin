@@ -80,9 +80,13 @@ class AdminPageApiSettings
 		$pInputModelApiKey = new InputModelOption('onoffice-settings', 'apikey', $labelKey, 'string');
 		$optionNameKey = $pInputModelApiKey->getIdentifier();
 		$apiKey = get_option($optionNameKey);
-		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')
+			&& defined('ONOFFICE_CREDENTIALS_ENC_KEY') != get_option('onoffice-credentials-enc-key')) {
+			update_option('onoffice-credentials-enc-key', ONOFFICE_CREDENTIALS_ENC_KEY);
+		}
+		if (!empty(get_option('onoffice-credentials-enc-key'))) {
 			try {
-				$apiKeyDecrypt = $this->_encrypter->decrypt(get_option($optionNameKey), ONOFFICE_CREDENTIALS_ENC_KEY);
+				$apiKeyDecrypt = $this->_encrypter->decrypt(get_option($optionNameKey), get_option('onoffice-credentials-enc-key'));
 			} catch (\RuntimeException $e) {
 				$apiKeyDecrypt = $apiKey;
 			}
@@ -133,7 +137,9 @@ class AdminPageApiSettings
 		{
 			$pFormModel->setLabel(__('API settings', 'onoffice-for-wp-websites'));
 		}
-
+//		if (!defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
+//			update_option('onoffice-credentials-enc-key', false);
+//		}
 		$this->addFormModel($pFormModel);
 	}
 
