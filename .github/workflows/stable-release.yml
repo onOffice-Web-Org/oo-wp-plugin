@@ -9,6 +9,9 @@ jobs:
   get-version:
     name: Get current version
     runs-on: ubuntu-latest
+    # We don't actually need this environment here, but we want to trigger the workflow review now.
+    # Otherwise the admin will have to wait until the last step before they will be prompted to allow the workflow run.
+    environment: WordPress SVN
     outputs:
       currentVersion: ${{ steps.get-version.outputs.version }}
     steps:
