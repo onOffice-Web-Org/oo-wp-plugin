@@ -12,20 +12,17 @@ require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPA
 $language = new Language();
 $languageDefault = Language::getDefault();
 $locale = $language->getLocale();
-if (empty($locale))
-{
+if (empty($locale)) {
 	$locale = 'de_DE';
 }
 $value = $currentEstate->getValueRaw('multiParkingLot');
 $currency = $currentEstate->getValueRaw('waehrung');
 $codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
 unset($currentEstate['codeWaehrung']);
-if (empty($currency))
-{
+if (empty($currency)) {
 	$currency = '€';
 }
-if (empty($codeCurrency))
-{
+if (empty($codeCurrency)) {
 	$codeCurrency = "EUR";
 }
 $result = renderParkingLot($value, $languageDefault, $locale, $codeCurrency, $currency);
@@ -33,12 +30,10 @@ $pDataView = $pEstates->getDataView();
 $class =  ($pDataView instanceof DataDetailView) ? 'oo-detailslisttd' : 'oo-listtd';
 $detailParkingLot = '';
 
-if (!empty($result))
-{
+if (!empty($result)) {
 	$detailParkingLot .= '<div class="'.$class.'">';
 		$detailParkingLot .= '<ul class="oo-listparking">';
-		foreach ($result as $detail)
-		{
+		foreach ($result as $detail) {
 			$detailParkingLot .= '<li>' .  esc_html($detail) . '</li>';
 		}
 		$detailParkingLot .= '</ul>';
@@ -48,9 +43,7 @@ $elementParkingLot =  '<div class="'.$class.'">'.esc_html($pEstates->getFieldLab
 if (!empty($detailParkingLot))
 {
 	$elementParkingLot .= $detailParkingLot;
-}
-else
-{
+} else {
 	$elementParkingLot .= '<div class="clear"></div>';
 }
 echo $elementParkingLot;
