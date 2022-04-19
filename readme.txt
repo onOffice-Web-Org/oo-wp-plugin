@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.9
 Requires PHP: 7.2
-Stable tag: 2.22.5
+Stable tag: 3.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -76,7 +76,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= Unreleased =
+= 3.0 =
 
 **Added**
 
@@ -86,17 +86,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Removed**
 
-* Drop support for older PHP version. The minimum version is now PHP 7.2.
+* Drop support for older PHP versions. The minimum version is now PHP 7.2.
 
 **Fixed**
 
 * If there are many regions configured in onOffice enterprise, the estate list settings will now load much faster.
-
-= 2.22.5 =
-
-**Fixes**
-
-* When there are no estates that show up on the map, there is no longer a gap in the estate list where the map would be.
+* The default template for the detail view now groups together the contact person's fields that belong together. For example, title, first and last name are grouped as one line.
+* The "Show Estate Status" checkbox in the estate list settings is no longer shown twice.
+* Some invalid fields can no longer be selected for the applicant search form.
 
 = Previous changes =
 
