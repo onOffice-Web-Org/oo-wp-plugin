@@ -1,6 +1,6 @@
 <?php
 	
-use DI\ContainerBuilder;
+
 use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\DataView\DataDetailView;
@@ -20,6 +20,14 @@ $value = $currentEstate->getValueRaw('multiParkingLot');
 $currency = $currentEstate->getValueRaw('waehrung');
 $codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
 unset($currentEstate['codeWaehrung']);
+if (empty($currency))
+{
+	$currency = '€';
+}
+if (empty($codeCurrency))
+{
+	$codeCurrency = "EUR";
+}
 $result = renderParkingLot($value, $languageDefault, $locale, $codeCurrency, $currency);
 $pDataView = $pEstates->getDataView();
 $class =  ($pDataView instanceof DataDetailView) ? 'oo-detailslisttd' : 'oo-listtd';
@@ -36,9 +44,13 @@ if (!empty($result))
 		$detailParkingLot .= '</ul>';
 	$detailParkingLot .= '</div>';
 }
-$elementParkingLot =  '<div class="'.$class.' parking">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'."\n";
+$elementParkingLot =  '<div class="'.$class.'">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'."\n";
 if (!empty($detailParkingLot))
 {
 	$elementParkingLot .= $detailParkingLot;
+}
+else
+{
+	$elementParkingLot .= '<div class="clear"></div>';
 }
 echo $elementParkingLot;

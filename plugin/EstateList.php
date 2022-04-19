@@ -47,8 +47,6 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
-use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilder;
 use function esc_url;
 use function get_page_link;
 use function home_url;

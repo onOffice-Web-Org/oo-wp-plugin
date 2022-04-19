@@ -20,7 +20,6 @@
  */
 
 use onOffice\WPlugin\EstateDetail;
-
 /**
  *
  *  Default template
@@ -31,12 +30,11 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 /** @var EstateDetail $pEstates */
 ?>
 <style>
-    .parking {
-        display: inline-table;
-        padding-right: 5px;
-    }
     ul.oo-listparking {
-        padding: 0;
+        padding: 0 10px;
+    }
+    .clear {
+        width: 25%;
     }
 </style>
 <div class="oo-detailview">
@@ -65,6 +63,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<div class="oo-detailstable">
 				<?php
 				foreach ($currentEstate as $field => $value) {
+     
+     
 					if (is_numeric($value) && 0 == $value) {
 						continue;
 					}
@@ -91,7 +91,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
 				</div>
 			<?php } ?>
-
+   
 			<?php if ($currentEstate["lage"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Location', 'onoffice'); ?></h2>

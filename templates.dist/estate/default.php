@@ -32,11 +32,20 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 ?>
 
 <style>
-    ul.oo-listparking {
-        padding: 0;
+    .oo-details-btn:focus {
+        opacity: 0.8;
+        text-decoration: none !important;
+        background: #80acd3 !important;
     }
-    .oo-listtd {
-        width: 48%;
+    .oo-listinfotable {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    ul.oo-listparking {
+        padding: 0 10px;
+    }
+    .clear {
+        width: 50%;
     }
 </style>
 <div class="oo-estate-map">
