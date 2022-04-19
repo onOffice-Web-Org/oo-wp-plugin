@@ -47,7 +47,7 @@ jobs:
         run: composer install
 
       - name: Build release
-        run: PREFIX=/tmp/release make unprocessed-release
+        run: PREFIX=/tmp/release make release
 
       - name: Override version
         if: ${{ inputs.overrideVersion != '' }}
@@ -63,4 +63,5 @@ jobs:
         with:
           name: release
           path: /tmp/release/release.zip
+          retention-days: 7
 
