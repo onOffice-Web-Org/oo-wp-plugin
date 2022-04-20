@@ -62,14 +62,9 @@ class TestClassInputModelDBFactoryConfigGeoFields
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Controller\Exception\UnknownModuleException
-	 *
-	 */
-
 	public function testGetConfigUnknownModule()
 	{
+		$this->expectException(\onOffice\WPlugin\Controller\Exception\UnknownModuleException::class);
 		$pSubject = new InputModelDBFactoryConfigGeoFields('unknown');
 		$pSubject->getConfig();
 	}
