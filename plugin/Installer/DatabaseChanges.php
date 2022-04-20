@@ -64,6 +64,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
 		if ($dbversion === null) {
+			$isNewInstall = true;
 			dbDelta( $this->getCreateQueryCache() );
 
 			$dbversion = 1.0;
@@ -176,8 +177,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 23) {
-			$this->deactivateCheckDuplicateOfForm();
-			$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+			if (!isset($isNewInstall)){
+				$this->deactivateCheckDuplicateOfForm();
+				$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+			}
 			$dbversion = 24;
 		}
 
