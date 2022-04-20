@@ -106,15 +106,10 @@ class TestClassDefaultValueUpdate
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Field\DefaultValue\DefaultValueSaveException
-	 * @expectedExceptionMessage defaultsId cannot be 0
-	 *
-	 */
-
 	public function testFailedPreCheck()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\DefaultValue\DefaultValueSaveException::class);
+		$this->expectExceptionMessage('defaultsId cannot be 0');
 		$pField = new Field('testFieldSingleselect1', 'testModule');
 		$pModel = new DefaultValueModelSingleselect(13, $pField);
 		$pModel->setValue('testValue');
@@ -122,15 +117,10 @@ class TestClassDefaultValueUpdate
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Field\DefaultValue\DefaultValueSaveException
-	 * @expectedExceptionMessage Insert/Delete/Update failed
-	 *
-	 */
-
 	public function testFailedCheckWPDB()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\DefaultValue\DefaultValueSaveException::class);
+		$this->expectExceptionMessage('Insert/Delete/Update failed');
 		$this->_pWPDB->expects($this->once())->method('delete')
 			->with('wp_test_oo_plugin_fieldconfig_form_defaults_values', ['defaults_id' => 445])
 			->will($this->returnValue(false));

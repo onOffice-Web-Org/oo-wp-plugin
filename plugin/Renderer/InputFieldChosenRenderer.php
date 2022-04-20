@@ -25,7 +25,9 @@ namespace onOffice\WPlugin\Renderer;
 class InputFieldChosenRenderer
 	extends InputFieldSelectRenderer
 {
-	//put your code here
+	/**
+	 * @return void
+	 */
 	public function render()
 	{
 		$output = '<select name="'.esc_html($this->getName()).'"'
