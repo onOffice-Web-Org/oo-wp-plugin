@@ -137,9 +137,6 @@ class AdminPageApiSettings
 		{
 			$pFormModel->setLabel(__('API settings', 'onoffice-for-wp-websites'));
 		}
-//		if (!defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
-//			update_option('onoffice-credentials-enc-key', false);
-//		}
 		$this->addFormModel($pFormModel);
 	}
 
