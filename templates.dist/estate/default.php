@@ -37,7 +37,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		text-decoration: none !important;
 		background: #80acd3 !important;
 	}
-	.oo-listinfotable {
+	.oo-listinfotableview {
 		display: flex;
 		flex-wrap: wrap;
 	}
@@ -98,7 +98,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					<div class="oo-listtitle">
 						<?php echo $currentEstate["objekttitel"]; ?>
 					</div>
-					<div class="oo-listinfotable">
+					<div class="oo-listinfotable oo-listinfotableview">
 						<?php foreach ( $currentEstate as $field => $value ) {
 							if ( is_numeric( $value ) && 0 == $value ) {
 								continue;

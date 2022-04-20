@@ -25,47 +25,37 @@ namespace onOffice\tests;
 
 use DI\Container;
 use DI\ContainerBuilder;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
-use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
 use onOffice\WPlugin\Model\InputModelDB;
 use WP_UnitTestCase;
-use onOffice\WPlugin\Installer\DatabaseChanges;
-use onOffice\WPlugin\WP\WPOptionWrapperTest;
 
-class TestClassFormModelBuilderDBAddress
+class TestClassFormModelBuilderDBEstateUnitListSettings
 	extends WP_UnitTestCase
 {
 	/** @var Container */
 	private $_pContainer;
-
-	/** @var InputModelDBFactory */
-	private $_pInputModelFactoryDBEntry;
-
+	
+	/** @var FormModelBuilderDBAddress */
+	private $_pInstance;
+	
 	/**
 	 * @before
 	 */
 	public function prepare()
 	{
-		$this->_pInputModelFactoryDBEntry = new InputModelDBFactory(new InputModelDBFactoryConfigAddress);
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pInstance = $this->_pContainer->get(FormModelBuilderDBEstateUnitListSettings::class);
 	}
-
+	
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress::createInputModelPictureTypes
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings::createInputModelRandomOrder
 	 */
-	public function testCreateInputModelPictureTypes()
+	public function testCreateInputModelRandomOrder()
 	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
-			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
-			->getMock();
-		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
-		$pInstance->method('getValue')->willReturn('1');
-
-		$pInputModelDB = $pInstance->createInputModelPictureTypes();
+		$pInputModelDB = $this->_pInstance->createInputModelRandomOrder();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
