@@ -12,9 +12,7 @@ require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPA
 $language = new Language();
 $languageDefault = Language::getDefault();
 $locale = $language->getLocale();
-if (empty($locale)) {
-	$locale = 'de_DE';
-}
+$locale = !empty($locale) ? $locale : 'de_DE';
 $value = $currentEstate->getValueRaw('multiParkingLot');
 $currency = $currentEstate->getValueRaw('waehrung');
 $codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
