@@ -56,11 +56,13 @@ class InputModelRenderer
 		}
 	}
 
+
 	/**
 	 * @param FormModel $pFormModel
 	 * @return void
 	 * @throws Exception
 	 */
+
 	public function buildForAjax(FormModel $pFormModel)
 	{
 		if ($pFormModel->getIsInvisibleForm()) {
@@ -103,6 +105,7 @@ class InputModelRenderer
 			}
 		}
 	}
+
 
 	/**
 	 *
@@ -244,10 +247,12 @@ class InputModelRenderer
 		return $pInstance;
 	}
 
+
 	/**
 	 * @param InputModelBase $pInputModel
 	 * @return string New name of HTML element, with brackets if multi == true
 	 */
+
 	private function getHtmlElementName(InputModelBase $pInputModel): string
 	{
 		$name = $pInputModel->getIdentifier();

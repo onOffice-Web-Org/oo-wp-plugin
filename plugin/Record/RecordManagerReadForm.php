@@ -79,13 +79,17 @@ class RecordManagerReadForm
      *
      */
 
-    public function getRecordsSortedAlphabetically()
+    public function getRecordsSortedAlphabetically():array
     {
         $prefix = $this->getTablePrefix();
         $pWpDb = $this->getWpdb();
         $columns = implode(', ', $this->getColumns());
         $join = implode("\n", $this->getJoins());
         $where = "(".implode(") AND (", $this->getWhere()).")";
+        if (!empty($_GET["search"]))
+        {
+            $where .= "AND (name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%' OR recipient LIKE '%".esc_sql($_GET['search'])."%' OR subject LIKE '%".esc_sql($_GET['search'])."%')";
+        }
         $sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
 				FROM {$prefix}oo_plugin_forms
 				{$join}

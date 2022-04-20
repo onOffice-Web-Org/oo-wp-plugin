@@ -1,0 +1,85 @@
+name: Stable Release
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  get-version:
+    name: Get current version
+    runs-on: ubuntu-latest
+    # We don't actually need this environment here, but we want to trigger the workflow review now.
+    # Otherwise the admin will have to wait until the last step before they will be prompted to allow the workflow run.
+    environment: WordPress SVN
+    outputs:
+      currentVersion: ${{ steps.get-version.outputs.version }}
+    steps:
+      - name: Get version
+        id: get-version
+        # Remove the leading 'v' from the tag.
+        run: echo "::set-output name=version::$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')"
+
+  build:
+    name: Build release
+    needs: get-version
+    uses: ./.github/workflows/build-release.yml
+    with:
+      expectedVersion: ${{ needs.get-version.outputs.currentVersion }}
+
+  deploy:
+    name: Deploy stable version
+    runs-on: ubuntu-latest
+    environment: WordPress SVN
+    needs: [get-version, build]
+    env:
+      SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
+    steps:
+      - name: Download release
+        uses: actions/download-artifact@v3
+        with:
+          name: release
+          path: /tmp/release
+
+      - name: Unzip release
+        working-directory: /tmp/release
+        run: |
+          unzip release.zip
+          rm release.zip
+
+      - name: Make directory for updating SVN
+        run: mkdir /tmp/svn
+
+      - name: Checkout current trunk
+        working-directory: /tmp/svn
+        run: svn co ${{ env.SVN_URL }}/trunk .
+
+      - name: Remove all files
+        working-directory: /tmp/svn
+        # Files that were removed should also be removed from SVN.
+        # To be able to see which files need to be removed, we clean out everything except the '.svn/' folder.
+        run: find . ! -path '.' ! -path './.svn*' -delete
+
+      - name: Copy release files
+        working-directory: /tmp/svn
+        run: cp -r /tmp/release/* .
+
+      - name: Add all files to SVN
+        working-directory: /tmp/svn
+        run: svn add --force .
+
+      - name: Inform SVN about removed files
+        working-directory: /tmp/svn
+        # SVN does not automatically detect which files were removed.
+        # 'svn status' returns a list of changed files and "missing" files are marked with a '!' at the beginning of the line.
+        # We apply 'svn rm --force <file path>' on each of those "missing" files so that SVN knows to remove them.
+        # With 'awk' we extract each file name and transform it into the right command, and 'xargs' executes each such command.
+        run: svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
+
+      - name: Commit to trunk
+        working-directory: /tmp/svn
+        run: svn commit -m "Import stable version '${{ needs.get-version.outputs.currentVersion }}' to trunk" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ secrets.SVN_PASSWORD }}"
+
+      - name: Copy to tag
+        working-directory: /tmp/svn
+        run: svn copy -m "Copy trunk to tag '${{ needs.get-version.outputs.currentVersion }}'" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ secrets.SVN_PASSWORD }}" ${{ env.SVN_URL }}/trunk ${{ env.SVN_URL }}/tags/${{ needs.get-version.outputs.currentVersion }}

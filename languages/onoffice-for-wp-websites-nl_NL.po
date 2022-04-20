@@ -61,6 +61,17 @@ msgstr "onOffice"
 
 #: plugin/Controller/AdminViewController.php:157
 #: plugin/Gui/AdminPageAddressList.php:60
+#: plugin/Gui/AdminPageAddressList.php:63
+msgid "Search Addresses"
+msgstr "Zoek adressen"
+#: plugin/Gui/AdminPageEstateList.php:56
+msgid "Search Estate Views"
+msgstr "Zoek landgoedweergaven"
+#: plugin/Gui/AdminPageFormList.php:101
+msgid "Search Forms"
+msgstr "Zoekformulieren"
+#: plugin/Controller/AdminViewController.php:154
+#: plugin/Gui/AdminPageAddressList.php:59
 msgid "Addresses"
 msgstr "Adressen"
 

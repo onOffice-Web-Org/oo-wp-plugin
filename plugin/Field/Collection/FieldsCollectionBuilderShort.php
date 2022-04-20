@@ -33,6 +33,7 @@ use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelForm;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -101,11 +102,19 @@ class FieldsCollectionBuilderShort
 	 * @throws NotFoundException
 	 */
 
-	public function addFieldsFormBackend(FieldsCollection $pFieldsCollection): self
+	public function addFieldsFormBackend(FieldsCollection $pFieldsCollection,string $typeForm): self
 	{
-		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorInternalAnnotations
+		if ($typeForm == Form::TYPE_APPLICANT_SEARCH)
+		{
+			$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorInternalAnnotations
+			(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection));
+		}
+		else
+		{
+			$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorInternalAnnotations
 			(new FieldModuleCollectionDecoratorSearchcriteria
-				(new FieldModuleCollectionDecoratorFormContact(new FieldsCollection)));
+			(new FieldModuleCollectionDecoratorFormContact(new FieldsCollection)));
+		}
 		$pFieldsCollection->merge($pFieldsCollectionTmp);
 		$pFieldCategoryConverterGeoPos = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoBackend::class);
 		$pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
@@ -184,6 +193,23 @@ class FieldsCollectionBuilderShort
 			(FieldCategoryToFieldConverterSearchCriteriaGeoBackend::class);
 		$pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
 		$pFieldsCollection->merge($pFieldsCollectionGeo);
+		return $this;
+	}
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function addFieldsAddressEstateWithRegionValues(FieldsCollection $pFieldsCollection): self
+	{
+		$pFieldLoader = $this->_pContainer->get(FieldLoaderEstateRegionValues::class);
+		$pFieldCollectionAddressEstate = $this->_pContainer->get(FieldsCollectionBuilder::class)
+			->buildFieldsCollection($pFieldLoader);
+		$pFieldsCollection->merge($pFieldCollectionAddressEstate);
 		return $this;
 	}
 }
