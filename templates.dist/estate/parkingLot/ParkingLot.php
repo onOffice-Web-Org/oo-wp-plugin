@@ -19,12 +19,8 @@ $value = $currentEstate->getValueRaw('multiParkingLot');
 $currency = $currentEstate->getValueRaw('waehrung');
 $codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
 unset($currentEstate['codeWaehrung']);
-if (empty($currency)) {
-	$currency = '€';
-}
-if (empty($codeCurrency)) {
-	$codeCurrency = "EUR";
-}
+$currency = !empty($currency) ? $currency : '€';
+$codeCurrency = !empty($codeCurrency) ? $codeCurrency : 'EUR';
 $result = renderParkingLot($value, $languageDefault, $locale, $codeCurrency, $currency);
 $pDataView = $pEstates->getDataView();
 $class =  ($pDataView instanceof DataDetailView) ? 'oo-detailslisttd' : 'oo-listtd';
