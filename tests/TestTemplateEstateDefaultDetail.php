@@ -131,7 +131,6 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('hasDetailView')->willReturn(true);
 		$this->_pEstate->method('getEstateLinks')->willReturn([$oguloLink]);
 		$this->_pEstate->method('getLinkEmbedPlayers')->willReturn([]);
-		$this->_pEstate->method('hasDetailView')->willReturn(['Similar Estates here']);
 		$this->_pEstate->method('getDetailView')->willReturn('1');
 	}
 
