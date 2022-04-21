@@ -182,7 +182,7 @@ class FormModelBuilderEstateDetailSettings
 			(InputModelOptionFactoryDetailView::INPUT_MOVIE_LINKS, $labelMovieLinks);
 		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$options = array(
-			MovieLinkTypes::MOVIE_LINKS_NONE => __('Disabled', 'onoffice-for-wp-websites'),
+			MovieLinkTypes::MOVIE_LINKS_NONE => __('Deactivated', 'onoffice-for-wp-websites'),
 			MovieLinkTypes::MOVIE_LINKS_LINK => __('Link', 'onoffice-for-wp-websites'),
 			MovieLinkTypes::MOVIE_LINKS_PLAYER => __('Player', 'onoffice-for-wp-websites'),
 		);
@@ -206,7 +206,7 @@ class FormModelBuilderEstateDetailSettings
 		(InputModelOptionFactoryDetailView::INPUT_OGULO_LINKS, $labelOguloLinks);
 		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$options = array(
-			LinksTypes::LINKS_DEACTIVATED => __('Disabled', 'onoffice-for-wp-websites'),
+			LinksTypes::LINKS_DEACTIVATED => __('Deactivated', 'onoffice-for-wp-websites'),
 			LinksTypes::LINKS_LINK => __('Link', 'onoffice-for-wp-websites'),
 			LinksTypes::LINKS_EMBEDDED => __('Embedded', 'onoffice-for-wp-websites'),
 		);
@@ -229,7 +229,7 @@ class FormModelBuilderEstateDetailSettings
 		(InputModelOptionFactoryDetailView::INPUT_OBJECT_LINKS, $labelObjectLinks);
 		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$options = array(
-			LinksTypes::LINKS_DEACTIVATED => __('Disabled', 'onoffice-for-wp-websites'),
+			LinksTypes::LINKS_DEACTIVATED => __('Deactivated', 'onoffice-for-wp-websites'),
 			LinksTypes::LINKS_LINK => __('Link', 'onoffice-for-wp-websites'),
 			LinksTypes::LINKS_EMBEDDED => __('Embedded', 'onoffice-for-wp-websites'),
 		);
@@ -252,7 +252,7 @@ class FormModelBuilderEstateDetailSettings
 		(InputModelOptionFactoryDetailView::INPUT_LINKS, $labelLinks);
 		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$options = array(
-			LinksTypes::LINKS_DEACTIVATED => __('Disabled', 'onoffice-for-wp-websites'),
+			LinksTypes::LINKS_DEACTIVATED => __('Deactivated', 'onoffice-for-wp-websites'),
 			LinksTypes::LINKS_LINK => __('Link', 'onoffice-for-wp-websites'),
 			LinksTypes::LINKS_EMBEDDED => __('Embedded', 'onoffice-for-wp-websites'),
 		);
