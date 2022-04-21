@@ -140,13 +140,13 @@ add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pD
 	$pDetailView = $pDataDetailViewHandler->getDetailView();
 	$detail_page_id = $pDetailView->getPageId();
 	if ($object_id == $detail_page_id) {
-		$list_meta_keys = ["onoffice_titel" => '%1$s', "onoffice_title" => '%1$s',
-				"onoffice_beschreibung" => '%2$s',"onoffice_description" => '%2$s',
-				"onoffice_ort" => '%3$s',"onoffice_city" => '%3$s',
-				"onoffice_plz" => '%4$s',"onoffice_postal_code" => '%4$s',
-				"onoffice_objektart" => '%5$s',"onoffice_property_class" => '%5$s',
-				"onoffice_vermarktungsart" => '%6$s',"onoffice_marketing_method" => '%6$s',
-				"onoffice_datensatznr" => '%7$s',"onoffice_id" => '%7$s'
+		$list_meta_keys = ["onoffice_titel" => 'objekttitel', "onoffice_title" => 'objekttitel',
+				"onoffice_beschreibung" => 'objektbeschreibung',"onoffice_description" => 'objektbeschreibung',
+				"onoffice_ort" => 'ort',"onoffice_city" => 'ort',
+				"onoffice_plz" => 'plz',"onoffice_postal_code" => 'plz',
+				"onoffice_objektart" => 'objektart',"onoffice_property_class" => 'objektart',
+				"onoffice_vermarktungsart" => 'vermarktungsart',"onoffice_marketing_method" => 'vermarktungsart',
+				"onoffice_datensatznr" => 'Id',"onoffice_id" => 'Id'
 		];
 		if(isset($list_meta_keys[$meta_key])){
 			return customFieldCallback($pDI, $list_meta_keys[$meta_key]);

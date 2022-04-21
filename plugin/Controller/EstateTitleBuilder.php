@@ -141,7 +141,7 @@ class EstateTitleBuilder
 			$fetchedValues = array_map([$pEstateIterator, 'getValueRaw'], $fieldsForTitle);
 			$values = array_combine($fieldsForTitle, $fetchedValues);
 			$this->_pEstateDetail->resetEstateIterator();
-
+			
 			return $this->buildEstateCustomTitle($format, $values);
 		}
 
@@ -173,8 +173,7 @@ class EstateTitleBuilder
 
 	private function buildEstateCustomTitle(string $format, array $values): string
 	{
-		return sprintf($format, $values['objekttitel'], $values['objektbeschreibung'],
-			$values['ort'], $values['plz'], $values['objektart'], $values['vermarktungsart'], $values['Id']);
+		return sprintf('%s', $values[$format]);
 	}
 
 

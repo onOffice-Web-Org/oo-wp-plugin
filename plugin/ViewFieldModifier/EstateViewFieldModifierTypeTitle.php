@@ -83,7 +83,7 @@ class EstateViewFieldModifierTypeTitle
 			'Id'
 		];
 
-		return array_values(array_unique(array_merge($this->_viewFields, $titleFields)));
+		return $titleFields;
 	}
 
 
