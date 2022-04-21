@@ -121,7 +121,7 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
-		$this->_pEstate->method('hasDetailView')->willReturn(['Similar Estates here']);
+		$this->_pEstate->method('hasDetailView')->willReturn(true);
 		$this->_pEstate->method('getDetailView')->willReturn('1');
 	}
 

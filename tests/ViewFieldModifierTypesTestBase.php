@@ -78,7 +78,7 @@ abstract class ViewFieldModifierTypesTestBase
 		$mapping = $this->_pViewFieldModifierTypes->getMapping();
 
 		foreach ($mapping as $type => $class) {
-			$this->assertInternalType('string', $type);
+			$this->assertIsString($type);
 			$this->assertStringStartsWith('onOffice\\WPlugin\\', $class);
 			$this->assertTrue(class_exists($class), 'Class does not exist');
 		}

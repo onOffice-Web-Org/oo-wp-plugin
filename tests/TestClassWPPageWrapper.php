@@ -81,7 +81,7 @@ class TestClassWPPageWrapper
 		$postData = self::POST_DATA;
 		$postData['post_parent'] = $this->_ancestorId;
 		$this->_postId = wp_insert_post($postData);
-		$this->assertInternalType('integer', $this->_postId);
+		$this->assertIsInt($this->_postId);
 		$this->assertGreaterThan(0, $this->_postId);
 	}
 

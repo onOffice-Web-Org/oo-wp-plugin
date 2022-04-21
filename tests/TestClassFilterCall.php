@@ -92,14 +92,9 @@ class TestClassFilterCall
 	}
 
 
-	/**
-	 *
-	 * @expectedException onOffice\WPlugin\Controller\Exception\UnknownFilterException
-	 *
-	 */
-
 	public function testGetFilternameByIdUnknown()
 	{
+		$this->expectException(\onOffice\WPlugin\Controller\Exception\UnknownFilterException::class);
 		$this->_pFilterCall->getFilternameById(1337);
 	}
 
