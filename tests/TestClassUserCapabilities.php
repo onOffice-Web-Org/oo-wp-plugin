@@ -53,14 +53,9 @@ class TestClassUserCapabilities
 	}
 
 
-	/**
-	 *
-	 * @expectedException \UnexpectedValueException
-	 *
-	 */
-
 	public function testGetCapabilityForRuleUnknown()
 	{
+		$this->expectException(\UnexpectedValueException::class);
 		$pUserCapabilities = new UserCapabilities();
 		$pUserCapabilities->getCapabilityForRule('unknown');
 	}
@@ -78,14 +73,9 @@ class TestClassUserCapabilities
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Controller\Exception\UserCapabilitiesException
-	 *
-	 */
-
 	public function testCheckIfCurrentUserCanFail()
 	{
+		$this->expectException(\onOffice\WPlugin\Controller\Exception\UserCapabilitiesException::class);
 		wp_get_current_user()->remove_cap('edit_pages');
 
 		$pUserCapabilities = new UserCapabilities();
@@ -97,10 +87,10 @@ class TestClassUserCapabilities
 	 *
 	 */
 
-	public function tearDown()
+	public function tear_down()
 	{
 		wp_get_current_user()->remove_cap('edit_pages');
 
-		parent::tearDown();
+		parent::tear_down();
 	}
 }

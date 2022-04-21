@@ -47,7 +47,7 @@ class TestClassImpressum
 	 *
 	 */
 
-	public function setUp()
+	public function set_up()
 	{
 		$readImpressum = file_get_contents
 			(__DIR__.'/resources/ApiResponseReadImpressum.json');

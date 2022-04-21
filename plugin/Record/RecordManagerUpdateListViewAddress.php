@@ -94,7 +94,11 @@ class RecordManagerUpdateListViewAddress
 		$pWpDb = $this->getWpdb();
 		$result = true;
 		foreach ($records as $record) {
-			$result = $result && $pWpDb->insert($prefix.$table, $record);
+			if($record == '1')
+			{
+				continue;
+			}
+			$result = $result && $pWpDb->insert($prefix . $table, $record);
 		}
 		return $result;
 	}

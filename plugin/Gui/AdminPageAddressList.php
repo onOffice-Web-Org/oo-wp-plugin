@@ -36,6 +36,7 @@ use function add_query_arg;
 use function admin_url;
 use function check_admin_referer;
 use function esc_html__;
+use function add_screen_option;
 
 /**
  *
@@ -59,6 +60,10 @@ class AdminPageAddressList
 	{
 		$this->generatePageMainTitle(__('Addresses', 'onoffice-for-wp-websites'));
 		$this->_pAddressListTable->prepare_items();
+		$page = 'onoffice-addresses';
+		$buttonSearch = __('Search Addresses', 'onoffice-for-wp-websites');
+		$id = 'onoffice-form-search-address';
+		$this->generateSearchForm($page,$buttonSearch, null,null,$id);
 		echo '<p>';
 		echo '<form method="post">';
 		echo $this->_pAddressListTable->views();
@@ -89,7 +94,6 @@ class AdminPageAddressList
 		echo '<hr class="wp-header-end">';
 	}
 
-
 	/**
 	 *
 	 */
@@ -113,6 +117,11 @@ class AdminPageAddressList
 
 	public function preOutput()
 	{
+		$screen = get_current_screen();
+		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-addresses") {
+			add_screen_option( 'per_page', array('option' => 'onoffice_address_listview_per_page') );
+		}
+
 		$this->_pAddressListTable = new AddressListTable();
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);

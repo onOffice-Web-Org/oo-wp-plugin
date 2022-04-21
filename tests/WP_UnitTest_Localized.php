@@ -50,18 +50,18 @@ abstract class WP_UnitTest_Localized
 	 *
 	 */
 
-	public static function setUpBeforeClass()
+	public static function set_up_before_class()
 	{
-		parent::setUpBeforeClass();
+		parent::set_up_before_class();
 	}
 
 	/**
 	 *
 	 */
 
-	public function setUp()
+	public function set_up()
 	{
-		parent::setUp();
+		parent::set_up();
 		$this->switchLocale('de_DE');
 	}
 
@@ -105,22 +105,22 @@ abstract class WP_UnitTest_Localized
 	 *
 	 */
 
-	public function tearDown()
+	public function tear_down()
 	{
 		if ($this->_localeSwitched) {
 			restore_current_locale();
 		}
-		parent::tearDown();
+		parent::tear_down();
 	}
 
 	/**
 	 *
 	 */
 
-	public static function tearDownAfterClass()
+	public static function tear_down_after_class()
 	{
 		unload_textdomain('onoffice-for-wp-websites');
 		unload_textdomain('onoffice');
-		parent::tearDownAfterClass();
+		parent::tear_down_after_class();
 	}
 }

@@ -179,14 +179,9 @@ class TestClassPdfDocumentModelValidator
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\PDF\PdfDocumentModelValidationException
-	 *
-	 */
-
 	public function testValidateForUnknownListView()
 	{
+		$this->expectException(\onOffice\WPlugin\PDF\PdfDocumentModelValidationException::class);
 		$pException = new UnknownViewException();
 		$this->_pDataListviewFactory->expects($this->once())->method('getListViewByName')->with('list')
 			->will($this->throwException($pException));
@@ -195,14 +190,9 @@ class TestClassPdfDocumentModelValidator
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\PDF\PdfDocumentModelValidationException
-	 *
-	 */
-
 	public function testValidateForUnknownExpose()
 	{
+		$this->expectException(\onOffice\WPlugin\PDF\PdfDocumentModelValidationException::class);
 		$pDataListview = new DataListView(13, 'list');
 		$this->_pDataListviewFactory->expects($this->once())->method('getListViewByName')->with('list')
 			->willReturn($pDataListview);

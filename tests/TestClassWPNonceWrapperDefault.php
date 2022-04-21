@@ -62,14 +62,9 @@ class TestClassWPNonceWrapperDefault
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\WP\WPNonceVerificationException
-	 *
-	 */
-
 	public function testVerifyInvalid()
 	{
+		$this->expectException(\onOffice\WPlugin\WP\WPNonceVerificationException::class);
 		$pWPNonceWrapperDefault = new WPNonceWrapperDefault();
 		$pWPNonceWrapperDefault->verify('abc', 'testaction');
 	}
@@ -118,14 +113,9 @@ class TestClassWPNonceWrapperDefault
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\WP\WPRedirectException
-	 *
-	 */
-
 	public function testSafeRedirectFail()
 	{
+		$this->expectException(\onOffice\WPlugin\WP\WPRedirectException::class);
 		add_filter('wp_redirect', function(string $location) {
 			if ($location === 'https://example.org/test1') {
 				return false;
