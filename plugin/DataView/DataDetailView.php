@@ -74,6 +74,7 @@ class DataDetailView
 
 	/** @var string[] */
 	private $_addressFields = [
+		'imageUrl',
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -83,6 +84,22 @@ class DataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
+		'defaultemail',
+	];
+
+	/** @var string[] */
+	private $_defaultAddressFields = [
+		'Anrede',
+		'Vorname',
+		'Name',
+		'Zusatz1',
+		'Strasse',
+		'Plz',
+		'Ort',
+		'Telefon1',
+		'mobile',
+		'defaultemail',
+		'imageUrl',
 	];
 
 	/** @var string[] */
@@ -90,6 +107,9 @@ class DataDetailView
 
 	/** @var string */
 	private $_template = '';
+
+	/** @var bool */
+	private $_accessControls = true;
 
 	/** @var string */
 	private $_shortCodeForm = '';
@@ -141,6 +161,10 @@ class DataDetailView
 	public function getPictureTypes(): array
 		{ return $this->_pictureTypes; }
 
+	/** @return bool */
+	public function hasDetailView(): bool
+		{ return $this->_accessControls; }
+
 	/** @return string */
 	public function getTemplate(): string
 		{ return $this->_template; }
@@ -161,6 +185,10 @@ class DataDetailView
 	public function getAddressFields(): array
 		{ return $this->_addressFields; }
 
+	/** @return string[] */
+	public function getDefaultAddressFields(): array
+		{ return $this->_defaultAddressFields; }
+
 	/** @return int */
 	public function getPageId(): int
 		{ return $this->_pageId; }
@@ -172,6 +200,10 @@ class DataDetailView
 	/** @param array $pictureTypes */
 	public function setPictureTypes(array $pictureTypes)
 		{ $this->_pictureTypes = $pictureTypes; }
+
+	/** @param bool $accessControl */
+	public function setHasDetailView(bool $accessControl)
+		{ $this->_accessControls = $accessControl; }
 
 	/** @param string $template */
 	public function setTemplate(string $template)

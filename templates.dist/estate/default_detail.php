@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *    Copyright (C) 2020  onOffice GmbH
@@ -32,7 +33,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-	while ( $currentEstate = $pEstates->estateIterator() ) { ?>
+	while ($currentEstate = $pEstates->estateIterator()) { ?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
 			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
@@ -44,63 +45,65 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<div class="oo-detailsgallery" id="oo-galleryslide">
 				<?php
 				$estatePictures = $pEstates->getEstatePictures();
-				foreach ( $estatePictures as $id ) {
-					printf('<div class="oo-detailspicture" style="background-image: url(\'%s\');"></div>'."\n",
-						esc_url($pEstates->getEstatePictureUrl($id)));
+				foreach ($estatePictures as $id) {
+					printf(
+						'<div class="oo-detailspicture" style="background-image: url(\'%s\');"></div>' . "\n",
+						esc_url($pEstates->getEstatePictureUrl($id))
+					);
 				}
-			?>
+				?>
 			</div>
 			<div class="oo-detailstable">
 				<?php
-				foreach ( $currentEstate as $field => $value ) {
-					if ( is_numeric( $value ) && 0 == $value ) {
+				foreach ($currentEstate as $field => $value) {
+					if (is_numeric($value) && 0 == $value) {
 						continue;
 					}
-					if ( in_array($field, $dontEcho) ) {
+					if (in_array($field, $dontEcho)) {
 						continue;
 					}
-					if ( $value == "" ) {
+					if ($value == "") {
 						continue;
 					}
-					echo '<div class="oo-detailslisttd">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'."\n"
-						.'<div class="oo-detailslisttd">'
-							.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
-							.'</div>'."\n";
+					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
+						. '<div class="oo-detailslisttd">'
+						. (is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value))
+						. '</div>' . "\n";
 				} ?>
 			</div>
 
-			<?php if ( $currentEstate["objektbeschreibung"] !== "" ) { ?>
+			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Description', 'onoffice'); ?></h2>
 					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
 				</div>
 			<?php } ?>
 
-			<?php if ( $currentEstate["lage"] !== "" ) { ?>
+			<?php if ($currentEstate["lage"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Location', 'onoffice'); ?></h2>
 					<?php echo nl2br($currentEstate["lage"]); ?>
 				</div>
 			<?php }
 
-            ob_start();
-            require('map/map.php');
-            $mapContent = ob_get_clean();
-            if ($mapContent != '') { ?>
-            <div class="oo-detailsmap">
-                <h2><?php esc_html_e('Map', 'onoffice'); ?></h2>
-                <?php echo $mapContent; ?>
-            </div>
-            <?php } ?>
+			ob_start();
+			require('map/map.php');
+			$mapContent = ob_get_clean();
+			if ($mapContent != '') { ?>
+				<div class="oo-detailsmap">
+					<h2><?php esc_html_e('Map', 'onoffice'); ?></h2>
+					<?php echo $mapContent; ?>
+				</div>
+			<?php } ?>
 
-			<?php if ( $currentEstate["ausstatt_beschr"] !== "" ) { ?>
+			<?php if ($currentEstate["ausstatt_beschr"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Equipment', 'onoffice'); ?></h2>
 					<?php echo nl2br($currentEstate["ausstatt_beschr"]); ?>
 				</div>
 			<?php } ?>
 
-			<?php if ( $currentEstate["sonstige_angaben"] !== "" ) { ?>
+			<?php if ($currentEstate["sonstige_angaben"] !== "") { ?>
 				<div class="oo-detailsfreetext">
 					<h2><?php esc_html_e('Other Information', 'onoffice'); ?></h2>
 					<?php echo nl2br($currentEstate["sonstige_angaben"]); ?>
@@ -108,28 +111,110 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			<?php } ?>
 
 			<div class="oo-units">
-				<?php echo $pEstates->getEstateUnits( ); ?>
+				<?php echo $pEstates->getEstateUnits(); ?>
 			</div>
 		</div>
 		<div class="oo-details-sidebar">
 			<div class="oo-asp">
 				<h2><?php echo esc_html__('Contact person', 'onoffice'); ?></h2>
 				<?php
-				foreach ( $pEstates->getEstateContacts() as $contactData ) : ?>
-					<div class="oo-aspname">
-						<strong><?php echo $contactData['Anrede'].'&nbsp;'.$contactData['Vorname'].'&nbsp;'.$contactData['Name']; ?></strong>
-					</div>
-					<div class="oo-asplocation">
-						<span><?php echo $contactData['Strasse']; ?></span>
-						<span><?php echo $contactData['Plz'].'&nbsp;'.$contactData['Ort']; ?></span>
-					</div>
-					<div class="oo-aspcontact">
-						<span><?php echo $contactData['Telefon1']; ?></span>
-					</div>
+				$configuredAddressFields = $pEstates->getAddressFields();
+				// Remove the fields that receive special treatment.
+				// These fields will be handled separately, so that they are displayed grouped together.
+				$addressFields = array_diff($configuredAddressFields, [
+					'imageUrl',
+					'Anrede',
+					'Titel',
+					'Vorname',
+					'Name',
+					'Zusatz1', // Company
+					'Strasse',
+					'Plz',
+					'Ort'
+				]);
+
+				foreach ($pEstates->getEstateContacts() as $contactData) : ?>
+					<?php
+
+					$imageUrl = $contactData['imageUrl'];
+
+					$formOfAddress = $contactData['Anrede'];
+					$title = $contactData['Titel'];
+					$firstName = $contactData['Vorname'];
+					$lastName = $contactData['Name'];
+
+					$company = $contactData['Zusatz1'];
+					$street = $contactData['Strasse'];
+					$postCode = $contactData['Plz'];
+					$town = $contactData['Ort'];
+
+					if ($imageUrl) {
+						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px"></div>';
+					}
+
+					// Output name, depending on available fields.
+					$nameComponents = [];
+					if ($formOfAddress) {
+						$nameComponents[] = $formOfAddress;
+					}
+					if ($title) {
+						$nameComponents[] = $title;
+					}
+					if ($firstName) {
+						$nameComponents[] = $firstName;
+					}
+					if ($lastName) {
+						$nameComponents[] = $lastName;
+					}
+					$nameOutput = join(" ", $nameComponents);
+					if ($nameOutput) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($nameOutput) . '</p></div>';
+					}
+
+					// Output company
+					if ($company) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($company) . '</p></div>';
+					}
+
+					// Output address, depending on available fields.
+					$streetOutput = "";
+					if ($street) {
+						$streetOutput = $street;
+					}
+					$cityComponents = [];
+					if ($postCode) {
+						$cityComponents[] = $postCode;
+					}
+					if ($town) {
+						$cityComponents[] = $town;
+					}
+					$cityOutput = join(" ", $cityComponents);
+					if ($streetOutput && $cityOutput) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($streetOutput) . "<br>" . esc_html($cityOutput) . '</p></div>';
+					} else if ($streetOutput) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($streetOutput) . '</p></div>';
+					} else if ($cityOutput) {
+						echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($cityOutput) . '</p></div>';
+					}
+
+					// Output all other configured fields.
+					foreach ($addressFields as $field) {
+						if (empty($contactData[$field])) {
+							continue;
+						} elseif (is_array($contactData[$field])) {
+							echo '<div class="oo-aspinfo oo-contact-info">';
+							foreach ($contactData[$field] as $item) {
+								echo '<p>' . esc_html($item) . '</p>';
+							}
+							echo '</div>';
+						} else {
+							echo '<div class="oo-aspinfo oo-contact-info"><p>' . esc_html($contactData[$field]) . '</p></div>';
+						}
+					} ?>
 				<?php endforeach; ?>
 			</div>
 			<div class="oo-detailsexpose">
-				<?php if ($pEstates->getDocument() != ''): ?>
+				<?php if ($pEstates->getDocument() != '') : ?>
 					<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
 					<a href="<?php echo $pEstates->getDocument(); ?>">
 						<?php esc_html_e('PDF expose', 'onoffice'); ?>
@@ -139,27 +224,27 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 			<?php $estateMovieLinks = $pEstates->getEstateMovieLinks();
 			foreach ($estateMovieLinks as $movieLink) {
-				echo '<div class="oo-video"><a href="'.esc_attr($movieLink['url']).'" title="'.esc_attr($movieLink['title']).'">'
-					.esc_html($movieLink['title']).'</a></div>';
+				echo '<div class="oo-video"><a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '">'
+					. esc_html($movieLink['title']) . '</a></div>';
 			}
 
 			$movieOptions = array('width' => 500); // optional
 
 			foreach ($pEstates->getMovieEmbedPlayers($movieOptions) as $movieInfos) {
-				echo '<div class="oo-video"><h2>'.esc_html($movieInfos['title']).'</h2>';
+				echo '<div class="oo-video"><h2>' . esc_html($movieInfos['title']) . '</h2>';
 				echo $movieInfos['player'];
 				echo '</div>';
 			} ?>
 
 		</div>
 		<?php
-		if (get_option('onoffice-pagination-paginationbyonoffice')){ ?>
-            <div>
+		if (get_option('onoffice-pagination-paginationbyonoffice')) { ?>
+			<div>
 				<?php
 				wp_link_pages();
 				?>
-            </div>
-		<?php }?>
+			</div>
+		<?php } ?>
 		<div class="oo-similar">
 			<?php echo $pEstates->getSimilarEstates(); ?>
 		</div>
@@ -170,7 +255,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <?php
 $shortCodeForm = $pEstates->getShortCodeForm();
 if (!empty($shortCodeForm)) {
-	?>
+?>
 	<div class="detail-contact-form">
 		<?php echo do_shortcode($shortCodeForm); ?>
 	</div>

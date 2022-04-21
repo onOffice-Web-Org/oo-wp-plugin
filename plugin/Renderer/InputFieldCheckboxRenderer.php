@@ -39,11 +39,10 @@ use function esc_html;
 class InputFieldCheckboxRenderer
 	extends InputFieldRenderer
 {
-	/** @var array */
-	private $_checkedValues = [];
-
 	/** @var string */
-	private $_descriptionTextHTML = '';
+	private $_descriptionTextHTML;
+
+
 	/**
 	 *
 	 * @param string $name
@@ -78,6 +77,7 @@ class InputFieldCheckboxRenderer
 		}
 	}
 
+
 	/**
 	 *
 	 * @return FieldsCollection
@@ -102,6 +102,7 @@ class InputFieldCheckboxRenderer
 		return $pFieldsCollection;
 	}
 
+
 	/**
 	 *
 	 * @throws Exception
@@ -110,7 +111,10 @@ class InputFieldCheckboxRenderer
 	public function render()
 	{
 		$pFieldsCollection = $this->buildFieldsCollection();
-
+		$textHtml = '';
+		if (!empty($this->getHint())) {
+			$textHtml = '<p class="hint-fallback-email">' . esc_html($this->getHint()) . '</p>';
+		}
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
@@ -118,28 +122,21 @@ class InputFieldCheckboxRenderer
 
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 					.'" value="'.esc_html($key).'"'
-					.(is_array($this->_checkedValues) && in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
+					.(is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()) ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
 					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
 					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
 			}
+			echo $textHtml;
 		} else {
 			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 				.'" value="'.esc_html($this->getValue()).'"'
-				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
+				.($this->getValue() == $this->getCheckedValues() ? ' checked="checked" ' : '')
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
-				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '');
+				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '')
+				.$textHtml;
 		}
 	}
-
-
-	/** @param array $checkedValues */
-	public function setCheckedValues($checkedValues)
-		{ $this->_checkedValues = $checkedValues;}
-
-	/** @return array */
-	public function getCheckedValues()
-		{ return $this->_checkedValues; }
 }

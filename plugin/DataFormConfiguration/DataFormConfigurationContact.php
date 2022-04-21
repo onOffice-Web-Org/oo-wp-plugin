@@ -36,7 +36,7 @@ class DataFormConfigurationContact
 	extends DataFormConfiguration
 {
 	/** @var bool */
-	private $_createAddress = false;
+	private $_createAddress = true;
 
 	/** @var bool */
 	private $_checkDuplicateOnCreateAddress = false;

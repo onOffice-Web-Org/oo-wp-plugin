@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use Exception;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -31,23 +33,19 @@ namespace onOffice\WPlugin\Renderer;
 class InputFieldTextRenderer
 	extends InputFieldRenderer
 {
-
-	/** @var string */
-	private $_hint = '';
-
-
 	/**
 	 *
 	 * @param string $type
 	 * @param string $name
 	 * @param string $value
 	 *
+	 * @throws Exception
 	 */
 
 	public function __construct($type, $name, $value = null)
 	{
 		if (!in_array($type, array('text', 'hidden'))) {
-			throw new \Exception(' wrong type!');
+			throw new Exception(' wrong type!');
 		}
 		parent::__construct($type, $name, $value);
 	}
@@ -68,12 +66,4 @@ class InputFieldTextRenderer
 			.' '.$this->renderAdditionalAttributes()
 			.'>'.$textHtml;
 	}
-
-	/** @return string */
-	public function getHint()
-	{ return $this->_hint; }
-
-	/** @param string $hint */
-	public function setHint(string $hint)
-	{ $this->_hint = $hint; }
 }
