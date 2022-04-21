@@ -193,7 +193,10 @@ class AdminPageAddressListSettings
 			$slug = $this->generateGroupSlugByModuleCategory
 				(onOfficeSDK::MODULE_ADDRESS, $category);
 			$pFormFieldsConfig = $this->getFormModelByGroupSlug($slug);
-			$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+			if (!is_null($pFormFieldsConfig))
+			{
+				$this->createMetaBoxByForm($pFormFieldsConfig, 'side');
+			}
 		}
 	}
 
@@ -327,5 +330,17 @@ class AdminPageAddressListSettings
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviewsaddress-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 
+	}
+
+	/**
+	 * @param array $row
+	 * @return bool
+	 */
+	protected function checkFixedValues($row)
+	{
+		$table = RecordManager::TABLENAME_LIST_VIEW_ADDRESS;
+		$result = isset($row[$table]['name']) && $row[$table]['name'] != null;
+
+		return $result;
 	}
 }

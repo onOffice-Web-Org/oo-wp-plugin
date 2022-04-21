@@ -185,14 +185,9 @@ class TestClassFieldnames
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
-	 *
-	 */
-
 	public function testGetFieldInformationUnknown()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$pFieldnames = $this->getNewFieldnames();
 		$pFieldnames->loadLanguage();
 		// get unknown field
@@ -249,14 +244,9 @@ class TestClassFieldnames
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
-	 *
-	 */
-
 	public function testGetTypeUnknown()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$pFieldnames = $this->getNewFieldnames();
 		$pFieldnames->loadLanguage();
 		$pFieldnames->getType('Unknown', onOfficeSDK::MODULE_ADDRESS);

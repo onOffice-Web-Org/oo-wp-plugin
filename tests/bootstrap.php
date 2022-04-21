@@ -5,7 +5,10 @@
  * @package Onoffice_Gui
  */
 
+use onOffice\tests\Mocks\DatabaseChangesDummy;
 use onOffice\WPlugin\Installer\DatabaseChangesInterface;
+use PHPUnit\Util\ErrorHandler;
+
 use function DI\autowire;
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
@@ -27,7 +30,7 @@ require_once $_tests_dir . '/includes/functions.php';
  */
 function _manually_load_plugin() {
 	$pDI = require dirname( dirname( __FILE__ ) ) . '/plugin.php';
-	$pDI->set(DatabaseChangesInterface::class, autowire(\onOffice\tests\Mocks\DatabaseChangesDummy::class));
+	$pDI->set(DatabaseChangesInterface::class, autowire( DatabaseChangesDummy::class));
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
@@ -46,11 +49,8 @@ if (PHP_VERSION_ID >= 70400) {
 			}
 		}
 
-		$utilPrefix = class_exists('PHPUnit_Util_ErrorHandler') ? 'PHPUnit_Util_' : 'PHPUnit\Util\\';
-		$errorHandler = $utilPrefix . 'ErrorHandler';
-
-		// Any other error should be left up to PHPUnit to handle
-		return $errorHandler::handleError($errno, $errstr, $errfile, $errline);
+		$errorHandler = new ErrorHandler(true, true, true, true);
+		return $errorHandler($errno, $errstr, $errfile, $errline);
 	};
 
 	set_error_handler($customErrorHandler);

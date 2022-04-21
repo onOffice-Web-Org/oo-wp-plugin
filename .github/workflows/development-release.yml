@@ -7,6 +7,9 @@ jobs:
   get-versions:
     name: Get versions
     runs-on: ubuntu-latest
+    # We don't actually need this environment here, but we want to trigger the workflow review now.
+    # Otherwise the admin will have to wait until the last step before they will be prompted to allow the workflow run.
+    environment: WordPress SVN
     outputs:
       stableVersion: ${{ steps.get-stable-version.outputs.stableVersion }}
       developmentVersion: ${{ steps.get-development-version.outputs.developmentVersion }}
@@ -37,7 +40,7 @@ jobs:
       overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
   
   deploy:
-    name: Deploy
+    name: Deploy development version
     runs-on: ubuntu-latest
     environment: WordPress SVN
     needs: [get-versions, build]
@@ -87,4 +90,4 @@ jobs:
 
       - name: Commit to trunk
         working-directory: /tmp/svn
-        run: svn commit -m "Import version '${{ needs.get-versions.outputs.developmentVersion }}' to trunk" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ secrets.SVN_PASSWORD }}"
+        run: svn commit -m "Import development version '${{ needs.get-versions.outputs.developmentVersion }}' to trunk" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ secrets.SVN_PASSWORD }}"
