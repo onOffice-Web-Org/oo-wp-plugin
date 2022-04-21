@@ -125,14 +125,9 @@ class TestClassInputModelDBBuilderGeneric
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
-	 *
-	 */
-
 	public function testBuildWithError()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$this->_pInputModelDBBuilderGeneric->build('testestasdasd');
 	}
 

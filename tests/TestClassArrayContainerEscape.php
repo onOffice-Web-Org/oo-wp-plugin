@@ -144,14 +144,9 @@ class TestClassArrayContainerEscape
 	}
 
 
-	/**
-	 *
-	 * @expectedException \Exception
-	 *
-	 */
-
 	public function testException()
 	{
+		$this->expectException(\Exception::class);
 		$pArrayContainerEscape = new ArrayContainerEscape([
 			'asd' => 'hello',
 		]);
