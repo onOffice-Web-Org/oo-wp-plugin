@@ -62,10 +62,12 @@ class DetailViewPostSaveController
 	 */
 
 	public function onSavePost($postId) {
+
 		$pPost = WP_Post::get_instance($postId);
 		if ($pPost->post_status === 'trash') {
 			return;
 		}
+
 		$isRevision = wp_is_post_revision($pPost);
 
 		if (!$isRevision) {

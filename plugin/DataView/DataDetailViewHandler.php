@@ -43,8 +43,8 @@ class DataDetailViewHandler
 	/** @var WPOptionWrapperBase */
 	private $_pWPOptionWrapper;
 
-    /** @var  RecordManagerPostMeta */
-    private $_pRecordPostMeta;
+	/** @var  RecordManagerPostMeta */
+	private $_pRecordPostMeta;
 
 
 	/**
@@ -74,14 +74,14 @@ class DataDetailViewHandler
 		{
 			$pResult = $pAlternate;
 		}
-        if(empty($pResult->getPageId()))
-        {
-            $pageInPostMeta = $this->_pRecordPostMeta->getPageId();
-            if (!empty($pageInPostMeta["post_id"]))
-            {
-                $pResult->setPageId($pageInPostMeta["post_id"]);
-            }
-        }
+		if(empty($pResult->getPageId()))
+		{
+			$pageInPostMeta = $this->_pRecordPostMeta->getPageId();
+			if (!empty($pageInPostMeta["post_id"]))
+			{
+				$pResult->setPageId($pageInPostMeta["post_id"]);
+			}
+		}
 		return $pResult;
 	}
 
