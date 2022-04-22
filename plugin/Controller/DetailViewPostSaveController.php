@@ -78,7 +78,7 @@ class DetailViewPostSaveController
 			$postContent = $pPost->post_content;
 			$postType = $pPost->post_type;
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
-			
+
 			if ($viewContained && $postType == 'page') {
 				$pDetailView->setPageId((int)$postId);
 				$pDataDetailViewHandler->saveDetailView($pDetailView);

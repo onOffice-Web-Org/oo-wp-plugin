@@ -46,7 +46,6 @@ class DataDetailViewHandler
 	/** @var  RecordManagerPostMeta */
 	private $_pRecordPostMeta;
 
-
 	/**
 	 * @param WPOptionWrapperBase $pWPOptionWrapper
 	 */
@@ -74,6 +73,7 @@ class DataDetailViewHandler
 		{
 			$pResult = $pAlternate;
 		}
+
 		if(empty($pResult->getPageId()))
 		{
 			$pageInPostMeta = $this->_pRecordPostMeta->getPageId();

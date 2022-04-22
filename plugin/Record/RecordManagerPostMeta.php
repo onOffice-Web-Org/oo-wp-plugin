@@ -32,14 +32,14 @@ use const ARRAY_A;
 
 class RecordManagerPostMeta
 {
-    /**
-     *
-     * @return array
-     *
-     */
+	/**
+	*
+	* @return array
+	*
+	*/
 
-    public function getPageId(): array
-    {
+	public function getPageId(): array
+	{
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$post_meta_sql="SELECT `post_id`
