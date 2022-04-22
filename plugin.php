@@ -136,20 +136,28 @@ add_filter('document_title_parts', function($title) use ($pDI) {
 }, 10, 2);
 
 add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pDI) {
-	$pDataDetailViewHandler = $pDI->get(DataDetailViewHandler::class);
+	$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class );
 	$pDetailView = $pDataDetailViewHandler->getDetailView();
 	$detail_page_id = $pDetailView->getPageId();
-	if ($object_id == $detail_page_id) {
-		$list_meta_keys = ["onoffice_titel" => 'objekttitel', "onoffice_title" => 'objekttitel',
-				"onoffice_beschreibung" => 'objektbeschreibung',"onoffice_description" => 'objektbeschreibung',
-				"onoffice_ort" => 'ort',"onoffice_city" => 'ort',
-				"onoffice_plz" => 'plz',"onoffice_postal_code" => 'plz',
-				"onoffice_objektart" => 'objektart',"onoffice_property_class" => 'objektart',
-				"onoffice_vermarktungsart" => 'vermarktungsart',"onoffice_marketing_method" => 'vermarktungsart',
-				"onoffice_datensatznr" => 'Id',"onoffice_id" => 'Id'
+	if ( $object_id == $detail_page_id ) {
+		$list_meta_keys = [
+			"onoffice_titel"            => 'objekttitel',
+			"onoffice_title"            => 'objekttitel',
+			"onoffice_beschreibung"     => 'objektbeschreibung',
+			"onoffice_description"      => 'objektbeschreibung',
+			"onoffice_ort"              => 'ort',
+			"onoffice_city"             => 'ort',
+			"onoffice_plz"              => 'plz',
+			"onoffice_postal_code"      => 'plz',
+			"onoffice_objektart"        => 'objektart',
+			"onoffice_property_class"   => 'objektart',
+			"onoffice_vermarktungsart"  => 'vermarktungsart',
+			"onoffice_marketing_method" => 'vermarktungsart',
+			"onoffice_datensatznr"      => 'Id',
+			"onoffice_id"               => 'Id'
 		];
-		if(isset($list_meta_keys[$meta_key])){
-			return customFieldCallback($pDI, $list_meta_keys[$meta_key]);
+		if ( isset( $list_meta_keys[ $meta_key ] ) ) {
+			return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ] );
 		}
 	} else {
 		return null;
