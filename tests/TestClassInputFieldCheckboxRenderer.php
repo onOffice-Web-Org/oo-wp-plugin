@@ -29,6 +29,8 @@ use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Renderer\InputFieldCheckboxRenderer;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
 
 /**
@@ -53,93 +55,44 @@ class TestClassInputFieldCheckboxRenderer
 
 	public function testRenderEmptyValues()
 	{
-		$pMockCheckboxFieldRenderer = $this->getMockBuilder(InputFieldCheckboxRenderer::class)
-			->setConstructorArgs(['testRenderer', ''])
-			->setMethods(['buildFieldsCollection', 'isMultipleSelect'])
-			->getMock();
-		$fieldCollection = new FieldsCollection();
-		$pMockCheckboxFieldRenderer
-			->method('buildFieldsCollection')
-			->willReturn($fieldCollection);
-		$pMockCheckboxFieldRenderer
-			->method('isMultipleSelect')
-			->will($this->returnValue(false));
+		global $wpdb;
+
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
 		ob_start();
-		$pMockCheckboxFieldRenderer->render();
+		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('','');
+		$pCheckboxFieldRenderer->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="checkbox" name="testRenderer" value="" id="checkbox_1">', $output);
+		$this->assertEquals('<input type="checkbox" name="" value="" id="checkbox_1">', $output);
 	}
 
 	public function testRenderWithValues()
 	{
-		$pMockCheckboxFieldRenderer = $this->getMockBuilder(InputFieldCheckboxRenderer::class)
-			->setConstructorArgs(['testRenderer', 1])
-			->setMethods(['buildFieldsCollection', 'isMultipleSelect'])
-			->getMock();
-		$fieldCollection = new FieldsCollection();
-		$pMockCheckboxFieldRenderer
-			->method('buildFieldsCollection')
-			->willReturn($fieldCollection);
-		$pMockCheckboxFieldRenderer
-			->method('isMultipleSelect')
-			->will($this->returnValue(false));
+		global $wpdb;
+
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
 		ob_start();
-		$pMockCheckboxFieldRenderer->render();
+		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('testRenderer',1);
+		$pCheckboxFieldRenderer->render();
 		$output = ob_get_clean();
 		$this->assertEquals('<input type="checkbox" name="testRenderer" value="1" id="checkbox_1">', $output);
 	}
 
 	public function testRenderWithArrayValue()
 	{
-		$pMockCheckboxFieldRenderer = $this->getMockBuilder(InputFieldCheckboxRenderer::class)
-			->setConstructorArgs(['testRenderer', [1,2]])
-			->setMethods(['buildFieldsCollection', 'isMultipleSelect'])
-			->getMock();
-		$fieldCollection = new FieldsCollection();
-		$pMockCheckboxFieldRenderer
-			->method('buildFieldsCollection')
-			->willReturn($fieldCollection);
-		$pMockCheckboxFieldRenderer
-			->method('isMultipleSelect')
-			->will($this->returnValue(false));
+		global $wpdb;
+
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
 		ob_start();
-		$pMockCheckboxFieldRenderer->render();
+		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('testRenderer',[1,2]);
+		$pCheckboxFieldRenderer->render();
 		$output = ob_get_clean();
 		$this->assertEquals('<input type="checkbox" name="testRenderer" value="0" onoffice-multipleSelectType="0" id="labelcheckbox_1b0"><label for="labelcheckbox_1b0">1</label><br><input type="checkbox" name="testRenderer" value="1" onoffice-multipleSelectType="0" id="labelcheckbox_1b1"><label for="labelcheckbox_1b1">2</label><br>', $output);
-	}
-
-	public function testIsMultipleSelect()
-	{
-		$pMockCheckboxFieldRenderer = $this->getMockBuilder(InputFieldCheckboxRenderer::class)
-			->setConstructorArgs(['testRenderer', 1])
-			->setMethods(['getOoModule'])
-			->getMock();
-		$pMockCheckboxFieldRenderer
-			->method('getOoModule')
-			->willReturn('address');
-
-		$fieldCollection = new FieldsCollection();
-
-		$result = $pMockCheckboxFieldRenderer->isMultipleSelect('Addr', $fieldCollection);
-		$this->assertFalse($result);
-	}
-
-	public function testIsMultipleSelectIsTrue()
-	{
-		$pMockCheckboxFieldRenderer = $this->getMockBuilder(InputFieldCheckboxRenderer::class)
-			->setConstructorArgs(['testRenderer', 1])
-			->setMethods(['getOoModule'])
-			->getMock();
-		$pMockCheckboxFieldRenderer
-			->method('getOoModule')
-			->willReturn('address');
-
-		$field = new Field('Addr', 'address', 'Addr');
-		$field->setType('multiselect');
-		$fieldCollection = new FieldsCollection();
-		$fieldCollection->addField($field);
-		$result = $pMockCheckboxFieldRenderer->isMultipleSelect('Addr', $fieldCollection);
-		$this->assertTrue($result);
 	}
 
 	public function testSetCheckedValues()

@@ -163,20 +163,8 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelOguloLinks()
 	{
-		$row = self::VALUES_BY_ROW;
-
-		$pWPOptionsWrapper = new WPOptionWrapperTest();
-		$pDataSimilarEstatesSettingsHandler = new DataDetailViewHandler($pWPOptionsWrapper);
-		$this->_pDataDetailView = $pDataSimilarEstatesSettingsHandler->createDetailViewByValues($row);
-
-
-		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getValue'])
-			->getMock();
-		$pInstance->generate('test');
-
-		$pInputModelDB = $pInstance->createInputModelOguloLinks();
+		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings();
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelOguloLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
 
@@ -185,20 +173,8 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelObjectLinks()
 	{
-		$row = self::VALUES_BY_ROW;
-
-		$pWPOptionsWrapper = new WPOptionWrapperTest();
-		$pDataSimilarEstatesSettingsHandler = new DataDetailViewHandler($pWPOptionsWrapper);
-		$this->_pDataDetailView = $pDataSimilarEstatesSettingsHandler->createDetailViewByValues($row);
-
-
-		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getValue'])
-			->getMock();
-		$pInstance->generate('test');
-
-		$pInputModelDB = $pInstance->createInputModelObjectLinks();
+		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings();
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelObjectLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
 
@@ -207,20 +183,8 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelLinks()
 	{
-		$row = self::VALUES_BY_ROW;
-
-		$pWPOptionsWrapper = new WPOptionWrapperTest();
-		$pDataSimilarEstatesSettingsHandler = new DataDetailViewHandler($pWPOptionsWrapper);
-		$this->_pDataDetailView = $pDataSimilarEstatesSettingsHandler->createDetailViewByValues($row);
-
-
-		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getValue'])
-			->getMock();
-		$pInstance->generate('test');
-
-		$pInputModelDB = $pInstance->createInputModelLinks();
+		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings();
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelLinks();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
 
@@ -229,19 +193,8 @@ class TestClassFormModelBuilderEstateDetailSettings
 	 */
 	public function testCreateInputModelShowStatus()
 	{
-		$row = self::VALUES_BY_ROW;
-
-		$pWPOptionsWrapper = new WPOptionWrapperTest();
-		$pDataDetailViewHandler = new DataDetailViewHandler($pWPOptionsWrapper);
-		$this->_pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($row);
-
-		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getValue'])
-			->getMock();
-		$pInstance->generate('test');
-
-		$pInputModelDB = $pInstance->createInputModelShowStatus();
+		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings();
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelShowStatus();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
 
