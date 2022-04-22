@@ -44,7 +44,7 @@ class RecordManagerPostMeta
 		$prefix = $wpdb->prefix;
 		$post_meta_sql="SELECT `post_id`
 				FROM {$prefix}postmeta postmeta
-				INNER JOIN {$prefix}posts post on postmeta.post_id = post.id
+				INNER JOIN {$prefix}posts post on postmeta.post_id = post.ID
 				WHERE postmeta.meta_key not like '\_%' and postmeta.meta_value like '%[oo_estate%' and post.post_type = 'page'
 				ORDER BY postmeta.post_id DESC ";
 		$post_meta_results = $wpdb->get_row( $post_meta_sql ,ARRAY_A);
