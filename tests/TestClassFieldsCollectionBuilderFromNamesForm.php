@@ -54,11 +54,9 @@ class TestClassFieldsCollectionBuilderFromNamesForm
 		$this->assertEquals($pExpectedFieldsCollection, $pNewFieldsCollection);
 	}
 
-	/**
-	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
-	 */
 	public function testBuildFieldsCollectionUnknownField()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$pBaseFieldsCollection = $this->buildExampleFieldsCollection();
 		$this->_pSubject->buildFieldsCollectionFromBaseCollection(['testUnknown'], $pBaseFieldsCollection);
 	}
