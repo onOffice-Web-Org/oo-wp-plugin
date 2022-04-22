@@ -219,7 +219,7 @@ class EstateDetail
 			$newOptions = array_intersect_key($options, $allowedOptions);
 			foreach ($links as $linkId => $properties) {
 				$player = '<iframe width="' . esc_attr($newOptions['width']) . '" height="' . esc_attr($newOptions['height']) . '" src="' . esc_attr($properties['url']) .'" style="border: none"
-allowfullscreen=""></iframe>';
+							allowfullscreen=""></iframe>';
 				$newProperties = $properties;
 				$newProperties['player'] = $player;
 				$result[$linkId] = $newProperties;
