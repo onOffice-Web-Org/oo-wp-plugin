@@ -77,7 +77,6 @@ class EstateFiles
 			if (!$pAPIClientAction->getResultStatus()) {
 				throw new HttpFetchNoResultException();
 			}
-
 			$this->collectEstateFiles($pAPIClientAction->getResultRecords());
 		}
 	}

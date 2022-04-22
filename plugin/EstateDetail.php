@@ -126,6 +126,7 @@ class EstateDetail
 	{
 		$result = array();
 		$estateId = $this->getCurrentEstateId();
+
 		if ($this->getDataView()->getMovieLinks() === MovieLinkTypes::MOVIE_LINKS_LINK) {
 			$result = $this->getEstateFiles()->getEstateMovieLinks($estateId);
 		}

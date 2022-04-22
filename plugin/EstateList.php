@@ -467,6 +467,7 @@ class EstateList
 		$estateId = $this->_currentEstate['id'];
 		$estateFiles = [];
 		$estateImages = $this->_pEstateFiles->getEstatePictures($estateId);
+
 		foreach ($estateImages as $image) {
 			if (null !== $types && !in_array($image['type'], $types, true)) {
 				continue;
