@@ -51,15 +51,15 @@ class TestClassInputFieldCheckboxRenderer
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
+		global $wpdb;
+		
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
 	}
 
 	public function testRenderEmptyValues()
 	{
-		global $wpdb;
-
-		$pWpOption = new WPOptionWrapperTest();
-		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
-		$pDbChanges->install();
 		ob_start();
 		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('','');
 		$pCheckboxFieldRenderer->render();
@@ -69,11 +69,6 @@ class TestClassInputFieldCheckboxRenderer
 
 	public function testRenderWithValues()
 	{
-		global $wpdb;
-
-		$pWpOption = new WPOptionWrapperTest();
-		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
-		$pDbChanges->install();
 		ob_start();
 		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('testRenderer',1);
 		$pCheckboxFieldRenderer->render();
@@ -83,11 +78,6 @@ class TestClassInputFieldCheckboxRenderer
 
 	public function testRenderWithArrayValue()
 	{
-		global $wpdb;
-
-		$pWpOption = new WPOptionWrapperTest();
-		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
-		$pDbChanges->install();
 		ob_start();
 		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('testRenderer',[1,2]);
 		$pCheckboxFieldRenderer->render();
