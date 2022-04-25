@@ -76,7 +76,6 @@ class DetailViewPostSaveController
 
 			$detailViewName = $pDetailView->getName();
 			$postContent = $pPost->post_content;
-			$postType = $pPost->post_type;
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
 			if ($viewContained) {
