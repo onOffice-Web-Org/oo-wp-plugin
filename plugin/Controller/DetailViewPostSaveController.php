@@ -79,7 +79,7 @@ class DetailViewPostSaveController
 			$postType = $pPost->post_type;
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
-			if ($viewContained && $postType == 'page') {
+			if ($viewContained) {
 				$pDetailView->setPageId((int)$postId);
 				$pDataDetailViewHandler->saveDetailView($pDetailView);
 				$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
