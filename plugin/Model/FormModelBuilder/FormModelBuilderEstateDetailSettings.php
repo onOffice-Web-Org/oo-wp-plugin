@@ -64,19 +64,22 @@ class FormModelBuilderEstateDetailSettings
 	/** @var DataDetailView */
 	private $_pDataDetailView = null;
 
+	/** @var Fieldnames */
+	private $_pFieldnames = null;
+
 
 	/**
 	 *
 	 */
 
-	public function __construct()
+	public function __construct(Fieldnames $_pFieldnames = null)
 	{
 		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
 			(new FieldModuleCollectionDecoratorReadAddress
 				(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection())));
-		$pFieldnames = new Fieldnames($pFieldCollection);
-		$pFieldnames->loadLanguage();
-		$this->setFieldnames($pFieldnames);
+		$this->_pFieldnames = $_pFieldnames ?? new Fieldnames($pFieldCollection);
+		$this->_pFieldnames->loadLanguage();
+		$this->setFieldnames($this->_pFieldnames);
 	}
 
 
