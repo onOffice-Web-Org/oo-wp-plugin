@@ -206,6 +206,17 @@ class FormsTable
 			.esc_html($pItem->name).'&quot;]">';
 	}
 
+    protected function column_recipient($pItem)
+    {
+        $emailStatusMissing = 'missing';
+        $pos = strpos($pItem->recipient, $emailStatusMissing);
+        $recipientEmail = substr($pItem->recipient, 0, $pos);
+        if ($pos) {
+            return esc_html($recipientEmail) . '<i>' . esc_html($emailStatusMissing) . '</i>)';
+        } else {
+            return esc_html($pItem->recipient);
+        }
+    }
 
 	/**
 	 *

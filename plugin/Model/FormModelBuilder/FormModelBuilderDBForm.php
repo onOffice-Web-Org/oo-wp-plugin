@@ -270,10 +270,10 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelDefaultRecipient(): InputModelDB
 	{
-		$addition = '';
-
         if (get_option('onoffice-settings-default-email', '') !== '') {
 			$addition = '('.get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites').')';
+        } else {
+            $addition = '(missing)';
         }
 
         $labelDefaultData = sprintf(__('Use default email address %s', 'onoffice-for-wp-websites'), $addition);
@@ -313,7 +313,6 @@ class FormModelBuilderDBForm
 		(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
-		$pInputModelFormRecipient->setPlaceholder(__('john.doe@example.com', 'onoffice-for-wp-websites'));
 		$pInputModelFormRecipient->setHint(__('Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email.', 'onoffice-for-wp-websites'));
 
 		return $pInputModelFormRecipient;
