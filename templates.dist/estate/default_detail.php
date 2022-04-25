@@ -224,9 +224,9 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 			<?php $estateMovieLinks = $pEstates->getEstateMovieLinks();
 			foreach ($estateMovieLinks as $movieLink) {
-				echo '<div>'.esc_html(!empty($movieLink['title']) ? $movieLink['title'] : 'Movies-Link') . '</div>';
+				echo '<div>'.esc_html(!empty($movieLink['title']) ? $movieLink['title'] : $movieLink['type']) . '</div>';
 				echo '<div class="oo-video"><a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '">'
-					. esc_html($movieLink['title']) . '</a></div>';
+					. esc_html(!empty($movieLink['title']) ? $movieLink['title'] : $movieLink['type']) . '</a></div>';
 			}
 
 			$movieOptions = array('width' => 500); // optional
