@@ -614,6 +614,9 @@ msgid ""
 "to that estate by opening the email you receive in onOffice enterprise or "
 "using the %s."
 msgstr ""
+"Wenn sich das Kontaktformular auf einer Nachlassseite befindet, können Sie "
+"die erstellte Adresse mit diesem Nachlass verknüpfen, indem Sie die "
+"erhaltene E-Mail in onOffice enterprise öffnen oder die verwenden %s."
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:152
 #: plugin/Gui/AdminPageFormSettingsContact.php:163
@@ -621,6 +624,9 @@ msgid ""
 "Be aware that when activated the duplicate check can overwrite address "
 "records. This function will be removed in the future. Use at your own risk."
 msgstr ""
+"Beachten Sie, dass bei aktivierter Dublettenprüfung Adressdatensätze "
+"überschrieben werden können. Diese Funktion wird in Zukunft entfernt. "
+"Benutzung auf eigene Gefahr."
 
 #: plugin/Gui/AdminPageFormSettingsInquiry.php:92
 msgid "Please provide an Email address!"
@@ -919,6 +925,10 @@ msgid ""
 "a contact person, the email will be sent to their email address. Otherwise "
 "this email address will receive the email."
 msgstr ""
+"Beachten Sie, dass, wenn sich das Kontaktformular auf einer Detailseite des "
+"Nachlasses befindet und der Nachlass eine Kontaktperson hat, die E-Mail an "
+"deren E-Mail-Adresse gesendet wird. Andernfalls erhält diese E-Mail-Adresse "
+"die E-Mail."
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:311
 msgid "(won't work until set up globally)"
