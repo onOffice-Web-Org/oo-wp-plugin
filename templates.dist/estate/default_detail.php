@@ -268,8 +268,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			foreach ($pEstates->getLinkEmbedPlayers('object', $objectOptions) as $linkInfos) {
 			echo '<div class="oo-video">
 					<a class="player-title" target="_blank" href="' . esc_attr($linkInfos['url']) . '">
-						<h5>'.esc_html(!empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']).'
-						<svg width="16px" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve"><style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style><path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/></svg></h5>
+						<div>'.esc_html(!empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']).'
+						<svg width="16px" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve"><style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style><path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/></svg></div>
 					</a>';
 				echo $linkInfos['player'];
 				echo '</div>';
@@ -287,8 +287,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			foreach ($pEstates->getLinkEmbedPlayers('link', $linkOptions) as $linkInfos) {
 				echo '<div class="oo-video">
 					<a class="player-title" target="_blank" href="' . esc_attr($linkInfos['url']) . '">
-						<h5>'.esc_html(!empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']).'
-						<svg width="16px" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve"><style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style><path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/></svg></h5>
+						<div>'.esc_html(!empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']).'
+						<svg width="16px" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve"><style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style><path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/></svg></div>
 					</a>';
 				echo $linkInfos['player'];
 				echo '</div>';
