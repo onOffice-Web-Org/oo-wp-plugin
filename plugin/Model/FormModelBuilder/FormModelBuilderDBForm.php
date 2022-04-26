@@ -270,13 +270,15 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelDefaultRecipient(): InputModelDB
 	{
+		$addition = '';
 		$isDefaultEmailMissing = false;
-        if (get_option('onoffice-settings-default-email', '') !== '') {
+		$italicLabel = '';
+		if (get_option('onoffice-settings-default-email', '') !== '') {
 			$addition = '('.get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites').')';
-        } else {
-            $addition = __('missing', 'onoffice-for-wp-websites');
+		} else {
+			$italicLabel = __('missing', 'onoffice-for-wp-websites');
 			$isDefaultEmailMissing = true;
-        }
+		}
 
 		$selectedValue = $this->getValue('default_recipient', false);
 		if (!$isDefaultEmailMissing) {
@@ -285,7 +287,6 @@ class FormModelBuilderDBForm
 				InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue);
 		} else {
 			$labelDefaultData = __('Use default email address ', 'onoffice-for-wp-websites');
-			$italicLabel = $addition;
 			$pInputModelFormDefaultData = $this->generateItalicLabelCheckbox($labelDefaultData,
 				InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue, $italicLabel);
 		}

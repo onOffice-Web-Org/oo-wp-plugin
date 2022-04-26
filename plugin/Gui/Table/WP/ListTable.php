@@ -167,12 +167,12 @@ abstract class ListTable extends WP_List_Table
 				$pages = implode(',',$listPage);
 				$record->page_shortcode = $pages;
 			}
-			if ($record->default_recipient){
-                if (get_option('onoffice-settings-default-email', '')) {
-                    $record->recipient = esc_html("Default (" . get_option('onoffice-settings-default-email', '') . ")");
-                } else {
-                    $record->recipient = esc_html("Default (missing)");
-                }
+			if ($record->default_recipient) {
+				if (get_option('onoffice-settings-default-email', '')) {
+					$record->recipient = esc_html("Default (" . get_option('onoffice-settings-default-email', '') . ")");
+				} else {
+					$record->recipient = esc_html("Default (missing)");
+				}
 			} else {
 				$record->recipient = esc_html($record->recipient . " (override)");
 			}

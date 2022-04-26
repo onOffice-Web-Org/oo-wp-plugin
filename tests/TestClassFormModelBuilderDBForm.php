@@ -182,6 +182,7 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
 	}
+
 	public function testGetInputModelIsRequired()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
@@ -193,6 +194,22 @@ class TestClassFormModelBuilderDBForm
 		$pInstance->method('getValue')->willReturn('1');
 
 		$pInputModelDB = $pInstance->getInputModelIsRequired();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	public function testGetInputModelIsAvailableOptions()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->getInputModelIsAvailableOptions();
 
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
