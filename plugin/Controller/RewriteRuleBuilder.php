@@ -63,11 +63,11 @@ class RewriteRuleBuilder
 
 	public function addDynamicRewriteRules()
 	{
-		$detailPageId = $this->_pDataDetailViewHandler->getDetailView()->getPageId();
-		if ($detailPageId !== 0) {
-			$pagename = $this->_pWPPageWrapper->getPageUriByPageId($detailPageId);
-			add_rewrite_rule('^('.preg_quote($pagename).')/([0-9]+)(-([^$]+))?/?$',
-				'index.php?pagename='.urlencode($pagename).'&view=$matches[1]&estate_id=$matches[2]','top');
+		$detailPageIds = $this->_pDataDetailViewHandler->getDetailView()->getPageIdsHaveDetailShortCode();
+		foreach ( $detailPageIds as $detailPageId ) {
+			$pageName = $this->_pWPPageWrapper->getPageUriByPageId( $detailPageId );
+			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^$]+))?/?$',
+				'index.php?pagename=' . urlencode( $pageName ) . '&view=$matches[1]&estate_id=$matches[2]', 'top' );
 		}
 	}
 }

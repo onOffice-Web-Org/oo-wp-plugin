@@ -80,6 +80,7 @@ class DetailViewPostSaveController
 
 			if ($viewContained) {
 				$pDetailView->setPageId((int)$postId);
+				$pDetailView->addToPageIdsHaveDetailShortCode( (int) $postId );
 				$pDataDetailViewHandler->saveDetailView($pDetailView);
 				$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
 				flush_rewrite_rules();
@@ -90,6 +91,7 @@ class DetailViewPostSaveController
 
 				if ($detailInPreviousRev || $pDetailView->getPageId() === $postId) {
 					$pDetailView->setPageId(0);
+					$pDetailView->removeFromPageIdsHaveDetailShortCode( (int) $postId );
 					$pDataDetailViewHandler->saveDetailView($pDetailView);
 					$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
 					flush_rewrite_rules();
@@ -117,21 +119,35 @@ class DetailViewPostSaveController
 	 * In case it contains the detail view name we need to remove the ID from the
 	 * \onOffice\WPlugin\DataView\DataDetailView.
 	 *
-	 * @param int $postId
-	 *
 	 */
 
-	public function onMoveTrash($postId) {
-		$pDataDetailViewHandler = new DataDetailViewHandler();
-		$pDetailView = $pDataDetailViewHandler->getDetailView();
+	public function onMoveTrash() {
+		$posts = $_GET['post'];
+		if ( isset( $posts ) ) {
+			$pDataDetailViewHandler = new DataDetailViewHandler();
+			$pDetailView            = $pDataDetailViewHandler->getDetailView();
+			$detailPageIds          = $pDetailView->getPageIdsHaveDetailShortCode();
+			$hasDetailPost          = false;
 
-		if ($pDetailView->getPageId() === (int)$postId) {
-			$pDetailView->setPageId(0);
-			$pDataDetailViewHandler->saveDetailView($pDetailView);
-			flush_rewrite_rules();
+			foreach ( $posts as $postId ) {
+				if ( in_array( $postId, $detailPageIds ) ) {
+					$pDetailView->removeFromPageIdsHaveDetailShortCode( (int) $postId );
+					$hasDetailPost = true;
+				}
+				$pPost = get_post( $postId );
+				$this->deletePageUseShortCode( $pPost );
+			}
+			if ( $hasDetailPost ) {
+				if ( empty( $pDetailView->getPageIdsHaveDetailShortCode() ) ) {
+					$pDetailView->setPageId( 0 );
+				} elseif ( in_array( $pDetailView->getPageId(), $posts ) ) {
+					$firstDetailPageId = min( array_keys( $detailPageIds ) );
+					$pDetailView->setPageId( (int) $detailPageIds[ $firstDetailPageId ] );
+				}
+				$pDataDetailViewHandler->saveDetailView( $pDetailView );
+				flush_rewrite_rules();
+			}
 		}
-		$pPost = get_post($postId);
-		$this->deletePageUseShortCode($pPost);
 	}
 
 

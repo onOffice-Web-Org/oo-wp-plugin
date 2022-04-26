@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataSimilarView;
@@ -35,7 +37,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 27;
+	const MAX_VERSION = 28;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -196,6 +198,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->deleteMessageFieldApplicantSearchForm();
 			$dbversion = 27;
 		}
+
+		if ($dbversion == 27) {
+			$this->checkAllPageIdsHaveDetailShortCode();
+			$this->_pWpOption->addOption( 'add-detail-posts-to-rewrite-rules', false );
+			$dbversion = 28;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -746,5 +755,27 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDetailView = $pDataDetailViewHandler->getDetailView();
 		$pDetailView->setHasDetailView(true);
 		$pDataDetailViewHandler->saveDetailView($pDetailView);
+	}
+
+
+	/**
+	 *
+	 * @return void
+	 *
+	 */
+
+	public function checkAllPageIdsHaveDetailShortCode(): void
+	{
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView            = $pDataDetailViewHandler->getDetailView();
+		$shortCode              = '[oo_estate view="' . $pDetailView->getName() . '"]';
+
+		$listDetailPosts = $this->_pWPDB->get_results( "SELECT `ID` FROM wp_posts 
+														WHERE post_status = 'publish'
+														AND post_content LIKE '%" . $shortCode . "%'", ARRAY_A );
+		foreach ( $listDetailPosts as $post ) {
+			$pDetailView->addToPageIdsHaveDetailShortCode( (int) $post['ID'] );
+		}
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 }

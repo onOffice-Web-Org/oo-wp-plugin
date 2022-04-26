@@ -404,11 +404,14 @@ class EstateList
 			$this->_currentEstate['id'];
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
-		if ($this->_pDataView instanceof DataDetailView) {
-			$pageId = $this->_pDataView->getPageId();
-			$estateId = $this->_currentEstate['mainId'];
-			$estateTitle = $this->_currentEstate['title'];
-			$this->_redirectIfOldUrl->redirectDetailView($pageId, $estateId, $estateTitle);
+		if ( $this->_pDataView instanceof DataDetailView ) {
+			$currentPageId = get_the_ID();
+			$pageIds       = $this->_pDataView->getPageIdsHaveDetailShortCode();
+			if ( in_array( $currentPageId, $pageIds ) ) {
+				$estateId    = $this->_currentEstate['mainId'];
+				$estateTitle = $this->_currentEstate['title'];
+				$this->_redirectIfOldUrl->redirectDetailView( $currentPageId, $estateId, $estateTitle );
+			}
 		}
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
