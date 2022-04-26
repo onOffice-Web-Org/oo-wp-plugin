@@ -214,4 +214,36 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
+
+	public function testCreateInputModelResultLimit()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->createInputModelResultLimit();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
+	}
+
+	public function testCreateInputModelFieldsConfigByCategory()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->createInputModelFieldsConfigByCategory('category','name','label');
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkboxWithSubmitButton');
+	}
 }
