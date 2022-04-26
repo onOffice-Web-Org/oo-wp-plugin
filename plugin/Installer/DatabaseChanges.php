@@ -769,8 +769,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDetailView            = $pDataDetailViewHandler->getDetailView();
 		$shortCode              = '[oo_estate view="' . $pDetailView->getName() . '"]';
+		$tableName              = $this->getPrefix() . "posts";
 
-		$listDetailPosts = $this->_pWPDB->get_results( "SELECT `ID` FROM wp_posts 
+		$listDetailPosts = $this->_pWPDB->get_results( "SELECT `ID` FROM {$tableName}
 														WHERE post_status = 'publish'
 														AND post_content LIKE '%" . $shortCode . "%'", ARRAY_A );
 		foreach ( $listDetailPosts as $post ) {
