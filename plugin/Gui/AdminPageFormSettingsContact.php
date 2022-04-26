@@ -120,9 +120,9 @@ class AdminPageFormSettingsContact
 			if (empty($pInputModelBuilder->getValues())) {
 				$pInputModel->setValue(true);
 			}
-			$linkLabel = esc_html__("Request Manager", 'onoffice-for-wp-websites');
-			$linkTag = "<a href='https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en'>%s</a>";
-			$link = sprintf($linkTag, $linkLabel);
+			$linkLabel = __('Request Manager', 'onoffice-for-wp-websites');
+			$linkUrl = esc_html__('https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en', 'onoffice-for-wp-websites');
+			$link = sprintf("<a href='%s'>%s</a>", $linkUrl, $linkLabel);
 			$textWithoutLink = esc_html__("If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the %s.", 'onoffice-for-wp-websites');
 			$txtHint = sprintf($textWithoutLink, $link);
 			$pInputModel->setHintHtml($txtHint);
