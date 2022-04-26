@@ -279,7 +279,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_TEXT:
 			case InputModelOption::HTML_TYPE_HIDDEN:
 			case InputModelOption::HTML_TYPE_NUMBER:
-            case InputModelOption::HTML_TYPE_EMAIL:
+			case InputModelOption::HTML_TYPE_EMAIL:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}

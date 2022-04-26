@@ -117,7 +117,7 @@ class AdminPageApiSettings
 		$labelDefaultEmailAddress = __('Default Email Address', 'onoffice-for-wp-websites');
 		$pInputModelDefaultEmailAddress = new InputModelOption
 		('onoffice-settings', 'default-email', $labelDefaultEmailAddress, 'string');
-        $pInputModelDefaultEmailAddress->setHtmlType(InputModelOption::HTML_TYPE_EMAIL);
+		$pInputModelDefaultEmailAddress->setHtmlType(InputModelOption::HTML_TYPE_EMAIL);
 		$optionDefaultEmail = $pInputModelDefaultEmailAddress->getIdentifier();
 		$pInputModelDefaultEmailAddress->setValue(get_option($optionDefaultEmail, $pInputModelDefaultEmailAddress->getDefault()));
 
