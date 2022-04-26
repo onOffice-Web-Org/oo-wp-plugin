@@ -260,7 +260,7 @@ abstract class InputModelBase
 		{ return $this->_italicLabel; }
 
 	/** @param string $italicLabel */
-	public function setItalicLabel(string $italicLabel): void
+	public function setItalicLabel(string $italicLabel)
 		{ $this->_italicLabel = $italicLabel; }
 
 }
