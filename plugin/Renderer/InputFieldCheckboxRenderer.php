@@ -133,7 +133,8 @@ class InputFieldCheckboxRenderer
 					.$this->renderAdditionalAttributes()
 					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
-					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'.$hintText;
+					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
+					.$hintText;
 			}
 			echo $textHtml;
 		} else {

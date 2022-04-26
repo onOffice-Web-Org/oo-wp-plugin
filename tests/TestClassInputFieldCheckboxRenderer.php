@@ -33,37 +33,49 @@ use onOffice\WPlugin\WP\WPOptionWrapperTest;
 class TestClassInputFieldCheckboxRenderer
 	extends \WP_UnitTestCase
 {
+	/**
+	 * @before
+	 */
+	public function prepare()
+	{
+		global $wpdb;
+		
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
+	}
+	
+	/**
+	 * @throws \Exception
+	 */
 	public function testRenderEmptyValues()
 	{
 		$pSubject = new InputFieldCheckboxRenderer('testRenderer',true);
 		ob_start();
-		global $wpdb;
-
-		$pWpOption = new WPOptionWrapperTest();
-		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
-		$pDbChanges->install();
 		$pSubject->render();
 		$output = ob_get_clean();
 		$this->assertEquals('<input type="checkbox" name="testRenderer" value="1" id="checkbox_1">', $output);
 	}
-
+	
+	/**
+	 * @throws \Exception
+	 */
 	public function testRenderWithValues()
 	{
 		$pSubject = new InputFieldCheckboxRenderer('testRenderer', true);
 		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
 		$pSubject->setCheckedValues(['johndoe']);
 		ob_start();
-		global $wpdb;
-		$pWpOption = new WPOptionWrapperTest();
-		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
-		$pDbChanges->install();
 		$pSubject->render();
 		$output = ob_get_clean();
 		$this->assertEquals('<input type="checkbox" name="testRenderer" value="johndoe" checked="checked"  onoffice-multipleSelectType="0" id="labelcheckbox_1bjohndoe">'
 			. '<label for="labelcheckbox_1bjohndoe">John Doe</label>'
 			. '<br><input type="checkbox" name="testRenderer" value="konradzuse" onoffice-multipleSelectType="0" id="labelcheckbox_1bkonradzuse"><label for="labelcheckbox_1bkonradzuse">Konrad Zuse</label><br>', $output);
 	}
-
+	
+	/**
+	 *
+	 */
 	public function testGetHintHTML()
 	{
 		$pSubject = new InputFieldCheckboxRenderer('testRenderer', true);
