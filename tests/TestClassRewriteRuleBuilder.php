@@ -98,6 +98,7 @@ class TestClassRewriteRuleBuilder
 			->getMock();
 
 		$pDataDetailView = new DataDetailView;
+		$pDataDetailView->addToPageIdsHaveDetailShortCode(13);
 		$pDataDetailView->setPageId(13);
 		$pDataDetailViewHandler->expects($this->once())
 			->method('getDetailView')
