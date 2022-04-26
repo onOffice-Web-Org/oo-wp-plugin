@@ -764,7 +764,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 *
 	 */
 
-	public function checkAllPageIdsHaveDetailShortCode(): void
+	public function checkAllPageIdsHaveDetailShortCode()
 	{
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDetailView            = $pDataDetailViewHandler->getDetailView();

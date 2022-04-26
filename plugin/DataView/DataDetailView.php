@@ -268,10 +268,10 @@ class DataDetailView
 		{ return $this->_pageIdsHaveDetailShortCode; }
 
 	/** @param int $pageId */
-	public function addToPageIdsHaveDetailShortCode(int $pageId): void
+	public function addToPageIdsHaveDetailShortCode(int $pageId)
 		{ $this->_pageIdsHaveDetailShortCode[$pageId] = $pageId; }
 
 	/** @param int $pageId */
-	public function removeFromPageIdsHaveDetailShortCode(int $pageId): void
+	public function removeFromPageIdsHaveDetailShortCode(int $pageId)
 		{ unset($this->_pageIdsHaveDetailShortCode[$pageId]); }
 }
