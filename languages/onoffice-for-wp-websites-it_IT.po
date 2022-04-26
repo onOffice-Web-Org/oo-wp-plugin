@@ -610,11 +610,6 @@ msgstr ""
 "manager/?lang=en"
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:128
-#, fuzzy
-#| msgid ""
-#| "If the contact form is on an estate page, you can link the created "
-#| "address to that estate by opening the email you receive in onOffice "
-#| "enterprise or using the %s"
 msgid ""
 "If the contact form is on an estate page, you can link the created address "
 "to that estate by opening the email you receive in onOffice enterprise or "
@@ -622,7 +617,7 @@ msgid ""
 msgstr ""
 "Se il modulo di contatto si trova su una pagina di proprietà, puoi collegare "
 "l'indirizzo creato a quella proprietà aprendo l'e-mail che ricevi in ​​"
-"onOffice enterprise o utilizzando il %s"
+"onOffice enterprise o utilizzando il %s."
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:152
 #: plugin/Gui/AdminPageFormSettingsContact.php:163

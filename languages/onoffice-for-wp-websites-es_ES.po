@@ -609,11 +609,6 @@ msgid ""
 msgstr ""
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:128
-#, fuzzy
-#| msgid ""
-#| "If the contact form is on an estate page, you can link the created "
-#| "address to that estate by opening the email you receive in onOffice "
-#| "enterprise or using the %s"
 msgid ""
 "If the contact form is on an estate page, you can link the created address "
 "to that estate by opening the email you receive in onOffice enterprise or "
@@ -621,7 +616,7 @@ msgid ""
 msgstr ""
 "Si el formulario de contacto está en una página de estado, puede vincular la "
 "dirección creada a ese estado abriendo el correo electrónico que recibe en "
-"onOffice Enterprise o usando el %s"
+"onOffice Enterprise o usando el %s."
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:152
 #: plugin/Gui/AdminPageFormSettingsContact.php:163

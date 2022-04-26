@@ -607,11 +607,6 @@ msgstr ""
 "manager/?lang=en"
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:128
-#, fuzzy
-#| msgid ""
-#| "If the contact form is on an estate page, you can link the created "
-#| "address to that estate by opening the email you receive in onOffice "
-#| "enterprise or using the %s"
 msgid ""
 "If the contact form is on an estate page, you can link the created address "
 "to that estate by opening the email you receive in onOffice enterprise or "
@@ -619,7 +614,7 @@ msgid ""
 msgstr ""
 "Als het contactformulier op een landgoedpagina staat, kunt u het aangemaakte "
 "adres aan dat landgoed koppelen door de e-mail te openen die u in onOffice "
-"enterprise ontvangt of door de %s te gebruiken"
+"enterprise ontvangt of door de te gebruiken %s."
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:152
 #: plugin/Gui/AdminPageFormSettingsContact.php:163
