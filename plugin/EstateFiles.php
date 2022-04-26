@@ -177,6 +177,8 @@ class EstateFiles
 			case 'link':
 				$callback = LinksTypes::class.'::isLink';
 				break;
+			default :
+				break;
 		}
 
 		return $this->getFilesOfTypeByCallback($estateId, $callback);
