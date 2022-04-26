@@ -270,16 +270,25 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelDefaultRecipient(): InputModelDB
 	{
+		$isDefaultEmailMissing = false;
         if (get_option('onoffice-settings-default-email', '') !== '') {
 			$addition = '('.get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites').')';
         } else {
-            $addition = '(missing)';
+            $addition = __('missing', 'onoffice-for-wp-websites');
+			$isDefaultEmailMissing = true;
         }
 
-        $labelDefaultData = sprintf(__('Use default email address %s', 'onoffice-for-wp-websites'), $addition);
 		$selectedValue = $this->getValue('default_recipient', false);
-		$pInputModelFormDefaultData = $this->generateGenericCheckbox($labelDefaultData,
-			InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue);
+		if (!$isDefaultEmailMissing) {
+			$labelDefaultData = sprintf(__('Use default email address %s', 'onoffice-for-wp-websites'), $addition);
+			$pInputModelFormDefaultData = $this->generateGenericCheckbox($labelDefaultData,
+				InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue);
+		} else {
+			$labelDefaultData = __('Use default email address ', 'onoffice-for-wp-websites');
+			$italicLabel = $addition;
+			$pInputModelFormDefaultData = $this->generateItalicLabelCheckbox($labelDefaultData,
+				InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue, $italicLabel);
+		}
 
 		return $pInputModelFormDefaultData;
 	}
@@ -519,6 +528,29 @@ class FormModelBuilderDBForm
 		}
 
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValue((int)$checked);
+		$pInputModel->setValuesAvailable(1);
+		return $pInputModel;
+	}
+
+	/**
+	 * @param string $label
+	 * @param string $type
+	 * @param bool $checked
+	 * @param string $italicLabel
+	 * @return InputModelDB
+	 * @throws Exception
+	 */
+	private function generateItalicLabelCheckbox(string $label, string $type, bool $checked, string $italicLabel):
+		InputModelDB
+	{
+		$pInputModel = $this->getInputModelDBFactory()->create($type, $label);
+		if ($pInputModel === null) {
+			throw new Exception('Unknown input model type');
+		}
+
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_ITALIC_LABEL_CHECKBOX);
+		$pInputModel->setItalicLabel($italicLabel);
 		$pInputModel->setValue((int)$checked);
 		$pInputModel->setValuesAvailable(1);
 		return $pInputModel;

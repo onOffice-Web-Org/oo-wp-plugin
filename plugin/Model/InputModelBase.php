@@ -66,6 +66,8 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_EMAIL = 'email';
 
+	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
+
 	/** @var string */
 	private $_name = null;
 
@@ -113,6 +115,9 @@ abstract class InputModelBase
 
     /** @var string */
     private $_descriptionTextHTML = '';
+
+	/** @var string */
+	private $_italicLabel = '';
 
 	/**
 	 *
@@ -249,5 +254,13 @@ abstract class InputModelBase
     /** @param string $descriptionTextHTML */
     public function setDescriptionTextHTML(string $textHTML)
     	{ $this->_descriptionTextHTML = $textHTML; }
+
+	/**@return string */
+	public function getItalicLabel(): string
+		{ return $this->_italicLabel; }
+
+	/** @param string $italicLabel */
+	public function setItalicLabel(string $italicLabel): void
+		{ $this->_italicLabel = $italicLabel; }
 
 }

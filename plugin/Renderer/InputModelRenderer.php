@@ -71,7 +71,14 @@ class InputModelRenderer
 
 		foreach ($pFormModel->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel, $pFormModel);
-			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL) {
+			if ($pInputModel->getHtmlType() == InputModelBase::HTML_TYPE_ITALIC_LABEL_CHECKBOX) {
+				echo '<p id="" class="wp-clearfix">';
+				echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
+				echo esc_html__($pInputModel->getLabel()).'(<i>'.esc_html($pInputModel->getItalicLabel()).'</i>)';
+				echo '</label>';
+				$pInputField->render();
+				echo '</p>';
+			} elseif ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL) {
 				echo '<p id="" class="wp-clearfix">';
 				echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
 				echo esc_html__($pInputModel->getLabel());
@@ -223,6 +230,15 @@ class InputModelRenderer
 				$pInstance = new InputFieldEmailRenderer('email', $elementName);
 				$pInstance->addAdditionalAttribute('size', '50');
 				$pInstance->setValue($pInputModel->getValue());
+				break;
+
+			case InputModelOption::HTML_TYPE_ITALIC_LABEL_CHECKBOX:
+				$pInstance = new InputFieldItalicLabelCheckboxRenderer($elementName,
+					$pInputModel->getValuesAvailable(),  $pInputModel->getDescriptionTextHTML());
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				if ($pInputModel->getHint() != null) {
+					$pInstance->setHint($pInputModel->getHint());
+				}
 				break;
 		}
 
