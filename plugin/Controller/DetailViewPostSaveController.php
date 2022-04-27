@@ -21,6 +21,9 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\Container;
+use DI\ContainerBuilder;
+use Exception;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
@@ -41,16 +44,22 @@ class DetailViewPostSaveController
 	/** @var RewriteRuleBuilder */
 	private $_pRewriteRuleBuilder;
 
+	/** @var Container */
+	private $_pContainer;
 
 	/**
 	 *
 	 * @param RewriteRuleBuilder $pRewriteRuleBuilder
 	 *
+	 * @throws Exception
 	 */
 
 	public function __construct(RewriteRuleBuilder $pRewriteRuleBuilder)
 	{
 		$this->_pRewriteRuleBuilder = $pRewriteRuleBuilder;
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pDIContainerBuilder->build();
 	}
 
 
@@ -71,7 +80,7 @@ class DetailViewPostSaveController
 		$isRevision = wp_is_post_revision($pPost);
 
 		if (!$isRevision) {
-			$pDataDetailViewHandler = new DataDetailViewHandler();
+			$pDataDetailViewHandler = $this->_pContainer->get(DataDetailViewHandler::class);
 			$pDetailView = $pDataDetailViewHandler->getDetailView();
 
 			$detailViewName = $pDetailView->getName();
@@ -124,7 +133,7 @@ class DetailViewPostSaveController
 	public function onMoveTrash() {
 		$posts = $_GET['post'];
 		if ( isset( $posts ) ) {
-			$pDataDetailViewHandler = new DataDetailViewHandler();
+			$pDataDetailViewHandler = $this->_pContainer->get(DataDetailViewHandler::class);
 			$pDetailView            = $pDataDetailViewHandler->getDetailView();
 			$detailPageIds          = $pDetailView->getPageIdsHaveDetailShortCode();
 			$hasDetailPost          = false;

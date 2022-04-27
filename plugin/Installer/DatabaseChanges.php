@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use DI\Container;
 use DI\ContainerBuilder;
+use Exception;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Utility\__String;
@@ -45,13 +47,22 @@ class DatabaseChanges implements DatabaseChangesInterface
 	/** @var wpdb */
 	private $_pWPDB;
 
+	/** @var Container */
+	private $_pContainer;
+
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
+	 * @param wpdb $pWPDB
+	 *
+	 * @throws Exception
 	 */
-	public function __construct(WPOptionWrapperBase $pWpOption, \wpdb $pWPDB)
+	public function __construct(WPOptionWrapperBase $pWpOption, wpdb $pWPDB)
 	{
 		$this->_pWpOption = $pWpOption;
 		$this->_pWPDB = $pWPDB;
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pDIContainerBuilder->build();
 	}
 
 	/**
@@ -766,7 +777,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	public function checkAllPageIdsHaveDetailShortCode()
 	{
-		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDataDetailViewHandler = $this->_pContainer->get(DataDetailViewHandler::class);
 		$pDetailView            = $pDataDetailViewHandler->getDetailView();
 		$shortCode              = '[oo_estate view="' . $pDetailView->getName() . '"]';
 		$tableName              = $this->getPrefix() . "posts";
