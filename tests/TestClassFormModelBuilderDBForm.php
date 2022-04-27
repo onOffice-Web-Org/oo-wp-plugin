@@ -44,7 +44,11 @@ class TestClassFormModelBuilderDBForm
 
 	/** @var InputModelDBFactory */
 	private $_pInputModelFactoryDBEntry;
-
+	
+	/** @var FormModelBuilderDBForm */
+	private $_pInstance;
+	
+	
 	/**
 	 * @before
 	 */
@@ -54,6 +58,7 @@ class TestClassFormModelBuilderDBForm
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pInstance = new FormModelBuilderDBForm($this->_pContainer);
 	}
 
 	/**
@@ -151,5 +156,25 @@ class TestClassFormModelBuilderDBForm
 		$result = $pInstance->getDataContactType('address');
 
 		$this->assertEquals([], $result);
+	}
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRecipient
+	 */
+	public function testCreateInputModelRecipient()
+	{
+		$pInputModelRecipient = $this->_pInstance->createInputModelRecipient();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelRecipient);
+		$this->assertEquals($pInputModelRecipient->getHtmlType(), 'text');
+	}
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsRequired
+	 */
+	public function testGetInputModelIsRequired()
+	{
+		$pInputModelIsRequired = $this->_pInstance->getInputModelIsRequired();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelIsRequired);
+		$this->assertEquals($pInputModelIsRequired->getHtmlType(), 'checkbox');
 	}
 }
