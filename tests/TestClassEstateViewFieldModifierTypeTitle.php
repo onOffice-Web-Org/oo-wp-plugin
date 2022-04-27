@@ -105,4 +105,21 @@ class TestClassEstateViewFieldModifierTypeTitle
 		// this won't do any change
 		$this->assertEquals($this->_exampleRecord, $record);
 	}
+	
+	public function testApiCustomFields()
+	{
+		$expectation = [
+			'objekttitel',
+			'objektbeschreibung',
+			'ort',
+			'plz',
+			'objektart',
+			'vermarktungsart',
+			'Id'
+		];
+		
+		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
+		$apiCustomFields = $pEstateViewFieldModifierTypeTitle->getAPICustomFields();
+		$this->assertEquals($expectation, $apiCustomFields);
+	}
 }

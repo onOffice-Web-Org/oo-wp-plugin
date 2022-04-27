@@ -45,7 +45,7 @@ class TestClassEstateViewDocumentTitleBuilder
 		$this->_pContainer = $pContainerBuilder->build();
 		$pEstateTitleBuilder = $this->getMockBuilder(EstateTitleBuilder::class)
 			->disableOriginalConstructor()
-			->setMethods(['buildTitle'])
+			->setMethods(['buildTitle','buildCustomFieldTitle'])
 			->getMock();
 		$pWPQuery = $this->getMockBuilder(\WP_Query::class)->disableOriginalConstructor()->getMock();
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
@@ -97,5 +97,39 @@ class TestClassEstateViewDocumentTitleBuilder
 		$input = ['title' => 'test'];
 		$output = $pSubject->buildDocumentTitle($input);
 		$this->assertEquals(['title' => 'Mansion (Sale) in Takatukaland - WP1234'], $output);
+	}
+	
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testBuildDocumentTitleFieldForEmptyEstateId()
+	{
+		$this->_pContainer->get(WPQueryWrapper::class)->getWPQuery()
+			->method('get')
+			->will($this->returnValue(0));
+		$pSubject = $this->_pContainer->get(EstateViewDocumentTitleBuilder::class);
+		$input = 'title';
+		$output = $pSubject->buildDocumentTitleField($input);
+		$this->assertEmpty($output);
+	}
+	
+	/**
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
+	 */
+	public function testBuildDocumentTitleFieldForShortTitle()
+	{
+		$this->_pContainer->get(WPQueryWrapper::class)->getWPQuery()
+			->method('get')
+			->will($this->returnValue(13));
+		$this->_pContainer->get(EstateTitleBuilder::class)->expects($this->once())
+			->method('buildCustomFieldTitle')
+			->with(13, 'title')
+			->will($this->returnValue('Nice Mansion in Takatukaland'));
+		$pSubject = $this->_pContainer->get(EstateViewDocumentTitleBuilder::class);
+		$input = 'title';
+		$output = $pSubject->buildDocumentTitleField($input);
+		$this->assertEquals('Nice Mansion in Takatukaland', $output);
 	}
 }
