@@ -1,0 +1,67 @@
+name: Build Release
+
+on:
+  workflow_call:
+    inputs: 
+      ref:
+        description: "The ref to check out. When not given, we use actions/checkout@v2's default behavior."
+        type: string
+        required: false
+        default: ''
+      expectedVersion:
+        description: "The version that should be present in the config files like readme.txt and plugin.php."
+        type: string
+        required: true
+      overrideVersion:
+        description: "A version to set in plugin.php after the build. Useful for development versions."
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout from GIT
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ inputs.ref }}
+          submodules: recursive
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Check version
+        run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ inputs.expectedVersion }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.2
+          extensions: mbstring, mysqli, intl, curl
+
+      - name: Install development dependencies
+        run: composer install
+
+      - name: Build release
+        run: PREFIX=/tmp/release/ make release
+
+      - name: Override version
+        if: ${{ inputs.overrideVersion != '' }}
+        run: 'sed -i "s/Version: ${{ inputs.expectedVersion }}/Version: ${{ inputs.overrideVersion }}/" /tmp/release/plugin.php'
+
+      - name: Zip release
+        run: |
+          cd /tmp/release/
+          zip -r ../release.zip .
+
+      - name: Upload release as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: /tmp/release.zip
+          retention-days: 7
+

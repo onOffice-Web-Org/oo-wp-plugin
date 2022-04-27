@@ -122,14 +122,9 @@ class TestClassDataFormConfigurationFactory
 	}
 
 
-	/**
-	 *
-	 * @expectedException onOffice\WPlugin\DataFormConfiguration\UnknownFormException
-	 *
-	 */
-
 	public function testCreateEmptyNoType()
 	{
+		$this->expectException(\onOffice\WPlugin\DataFormConfiguration\UnknownFormException::class);
 		$this->_pDataFormConfigurationFactory->createEmpty();
 	}
 

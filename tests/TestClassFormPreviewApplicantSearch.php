@@ -105,12 +105,12 @@ class TestClassFormPreviewApplicantSearch
 		$pFormPostApplicantSeach
 			->expects($this->once())
 			->method('initialCheck')
-			->id(1)
+			->id("1")
 			->with($pDataFormConfiguration, 1);
 		$pFormPostApplicantSeach
 			->expects($this->once())
 			->method('getAbsolutCountResults')
-			->after(1)
+			->after('1')
 			->willReturn(6);
 
 		/** @var MockObject $pFormPostFactory */

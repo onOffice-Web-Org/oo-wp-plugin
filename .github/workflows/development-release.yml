@@ -1,0 +1,93 @@
+name: Development Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  get-versions:
+    name: Get versions
+    runs-on: ubuntu-latest
+    # We don't actually need this environment here, but we want to trigger the workflow review now.
+    # Otherwise the admin will have to wait until the last step before they will be prompted to allow the workflow run.
+    environment: WordPress SVN
+    outputs:
+      stableVersion: ${{ steps.get-stable-version.outputs.stableVersion }}
+      developmentVersion: ${{ steps.get-development-version.outputs.developmentVersion }}
+    steps:
+      - name: Checkout from GIT
+        uses: actions/checkout@v2
+        with:
+          # We need to fetch more than just the most recent commit,
+          # since we later use `git describe`.
+          fetch-depth: 0
+          
+      - name: Get latest stable plugin version (without leading 'v')
+        id: get-stable-version
+        # Remove the leading 'v' from the tag.
+        run: echo "::set-output name=stableVersion::$( git describe --tags --abbrev=0 | sed -n 's/v\(\)/\1/p')"
+
+      - name: Output development version
+        id: get-development-version
+        # Remove the leading 'v'.
+        run: echo "::set-output name=developmentVersion::$( git describe --tags | sed -n 's/v\(\)/\1/p')"
+
+  build:
+    name: Build
+    needs: get-versions
+    uses: ./.github/workflows/build-release.yml
+    with:
+      expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
+      overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
+  
+  deploy:
+    name: Deploy development version
+    runs-on: ubuntu-latest
+    environment: WordPress SVN
+    needs: [get-versions, build]
+    env:
+      SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
+    steps:
+      - name: Download release
+        uses: actions/download-artifact@v3
+        with:
+          name: release
+          path: /tmp/release
+
+      - name: Unzip release
+        working-directory: /tmp/release
+        run: |
+          unzip release.zip
+          rm release.zip
+
+      - name: Make directory for updating SVN
+        run: mkdir /tmp/svn
+
+      - name: Checkout current trunk
+        working-directory: /tmp/svn
+        run: svn co ${{ env.SVN_URL }}/trunk .
+
+      - name: Remove all files
+        working-directory: /tmp/svn
+        # Files that were removed should also be removed from SVN.
+        # To be able to see which files need to be removed, we clean out everything except the '.svn/' folder.
+        run: find . ! -path '.' ! -path './.svn*' -delete
+
+      - name: Copy release files
+        working-directory: /tmp/svn
+        run: cp -r /tmp/release/* .
+
+      - name: Add all files to SVN
+        working-directory: /tmp/svn
+        run: svn add --force .
+
+      - name: Inform SVN about removed files
+        working-directory: /tmp/svn
+        # SVN does not automatically detect which files were removed.
+        # 'svn status' returns a list of changed files and "missing" files are marked with a '!' at the beginning of the line.
+        # We apply 'svn rm --force <file path>' on each of those "missing" files so that SVN knows to remove them.
+        # With 'awk' we extract each file name and transform it into the right command, and 'xargs' executes each such command.
+        run: svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
+
+      - name: Commit to trunk
+        working-directory: /tmp/svn
+        run: svn commit -m "Import development version '${{ needs.get-versions.outputs.developmentVersion }}' to trunk" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ secrets.SVN_PASSWORD }}"
