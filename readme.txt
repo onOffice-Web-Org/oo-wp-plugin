@@ -81,6 +81,7 @@ Start editing inside the `onoffice-personalized` folder.
 **Fixed**
 
 * Address lists can no longer be saved without a name.
+* In interest forms, search criteria fields that are displayed as a select field are now actually required to send the form.
 
 = 3.0 =
 
