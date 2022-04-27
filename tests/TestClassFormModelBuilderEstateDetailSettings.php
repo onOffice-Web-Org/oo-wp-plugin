@@ -194,5 +194,21 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 		$this->assertEquals($pInputModelDB->getValue(), '');
 	}
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelExpose
+	 */
+	public function testCreateInputModelExpose()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['readExposes'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->method('readExposes')->willReturn('');
+		$pInputModelDB = $pInstance->createInputModelTemplate();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+		$this->assertEquals($pInputModelDB->getValue(), '');
+	}
 
 }

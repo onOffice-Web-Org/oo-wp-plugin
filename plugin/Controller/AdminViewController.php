@@ -60,7 +60,7 @@ use function wp_create_nonce;
 use function wp_enqueue_script;
 use function wp_enqueue_style;
 use function wp_localize_script;
-use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+
 /**
  *
  */

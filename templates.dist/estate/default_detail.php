@@ -20,8 +20,7 @@
  */
 
 use onOffice\WPlugin\EstateDetail;
-	
-	/**
+/**
  *
  *  Default template
  *
