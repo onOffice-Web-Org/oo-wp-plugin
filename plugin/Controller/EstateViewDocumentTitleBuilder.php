@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use Exception;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
@@ -67,5 +68,21 @@ class EstateViewDocumentTitleBuilder
 		}
 
 		return $title;
+	}
+	
+	/**
+	 * @param string $title see Wordpress internal function wp_get_document_title()
+	 * @param string $format
+	 * @return string
+	 * @throws Exception
+	 */
+	public function buildDocumentTitleField(string $format): string
+	{
+		$estateId = (int)$this->_pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
+		if ($estateId === 0) {
+			return '';
+		}
+		
+		return $this->_pEstateTitleBuilder->buildCustomFieldTitle($estateId, $format);
 	}
 }

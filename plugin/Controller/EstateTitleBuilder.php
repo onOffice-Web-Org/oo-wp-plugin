@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
+use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\EstateDetail;
@@ -108,7 +109,45 @@ class EstateTitleBuilder
 		}
 		return '';
 	}
-
+	
+	/**
+	 *
+	 * @param int $estateId
+	 * @param string $format
+	 *
+	 * The Format consists of:
+	 * %1$s: 'objekttitel',
+	 * %2$s: 'objektbeschreibung',
+	 * %3$s: 'ort',
+	 * %4$s: 'plz',
+	 * %5$s: 'objektart',
+	 * %6$s: 'vermarktungsart',
+	 * %7$s: 'Id'
+	 *
+	 * @return string
+	 * @throws Exception
+	 */
+	
+	public function buildCustomFieldTitle(int $estateId, string $format): string
+	{
+		$this->_pDefaultFilterBuilder->setEstateId($estateId);
+		$this->_pEstateDetail->loadSingleEstate($estateId);
+		$modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE;
+		$pEstateIterator = $this->_pEstateDetail->estateIterator($modifier);
+		$pEstateFieldModifier = $this->_pViewFieldModifierFactory->create($modifier);
+		$fieldsForTitle = $pEstateFieldModifier->getVisibleCustomFields();
+		
+		if ($pEstateIterator !== false) {
+			$fetchedValues = array_map([$pEstateIterator, 'getValueRaw'], $fieldsForTitle);
+			$values = array_combine($fieldsForTitle, $fetchedValues);
+			$this->_pEstateDetail->resetEstateIterator();
+			
+			return $this->buildEstateCustomTitle($format, $values);
+		}
+		
+		return '';
+	}
+	
 
 	/**
 	 *
@@ -123,7 +162,20 @@ class EstateTitleBuilder
 		return sprintf($format, $values['objekttitel'], $values['objektart'],
 			$values['vermarktungsart'], $values['ort'], $values['objektnr_extern']);
 	}
-
+	
+	/**
+	 *
+	 * @param string $format
+	 * @param array $values
+	 * @return string
+	 *
+	 */
+	
+	private function buildEstateCustomTitle(string $format, array $values): string
+	{
+		return sprintf('%s', $values[$format]);
+	}
+	
 
 	/**
 	 *
