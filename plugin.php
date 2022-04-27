@@ -96,7 +96,7 @@ add_action('admin_menu', [$pAdminViewController, 'register_menu']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
-add_action('admin_notices', [$pAdminViewController, 'general_admin_notice_SEO']);
+add_action('admin_notices', [$pAdminViewController, 'generalAdminNoticeSEO']);
 add_action('wp_enqueue_scripts', [CaptchaDataChecker::class, 'registerScripts']);
 add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
 add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
