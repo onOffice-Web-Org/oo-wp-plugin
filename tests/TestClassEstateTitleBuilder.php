@@ -157,7 +157,7 @@ class TestClassEstateTitleBuilder
 		];
 		$pViewFieldModifier = new EstateViewFieldModifierTypeTitle([]);
 		$pViewFieldModifierFactory = $this->_pEstateTitleBuilder->getViewFieldModifierFactory();
-		$pViewFieldModifierFactory->expects($this->exactly(2))->method('create')
+		$pViewFieldModifierFactory->expects($this->exactly($this->once()))->method('create')
 			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
 			->will($this->returnValue($pViewFieldModifier));
 		$pEstateList = $this->_pEstateTitleBuilder->getEstateDetail();
