@@ -37,6 +37,11 @@ use WP_UnitTestCase;
 
 /**
  *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2018, onOffice(R) GmbH
+ *
+ * @covers \onOffice\WPlugin\Controller\EstateTitleBuilder
+ *
  */
 
 class TestClassEstateTitleBuilder
@@ -135,7 +140,7 @@ class TestClassEstateTitleBuilder
 	}
 	
 	/**
-	 *
+	 * @covers \onOffice\WPlugin\Controller\EstateTitleBuilder::buildCustomFieldTitle
 	 */
 	public function testBuildCustomFieldTitle()
 	{
@@ -157,7 +162,7 @@ class TestClassEstateTitleBuilder
 		];
 		$pViewFieldModifier = new EstateViewFieldModifierTypeTitle([]);
 		$pViewFieldModifierFactory = $this->_pEstateTitleBuilder->getViewFieldModifierFactory();
-		$pViewFieldModifierFactory->expects($this->exactly($this->once()))->method('create')
+		$pViewFieldModifierFactory->expects($this->exactly(1))->method('create')
 			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
 			->will($this->returnValue($pViewFieldModifier));
 		$pEstateList = $this->_pEstateTitleBuilder->getEstateDetail();
