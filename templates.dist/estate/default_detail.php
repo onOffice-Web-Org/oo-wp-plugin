@@ -20,7 +20,6 @@
  */
 
 use onOffice\WPlugin\EstateDetail;
-use onOffice\WPlugin\EstateListHandle;
 	
 	/**
  *
@@ -34,13 +33,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-	while ( $currentEstate = $pEstates->estateIterator() ) {
-		if (get_option('onoffice-settings-title-and-description') == 1)
-		{
-			$estateListHandle = new EstateListHandle();
-			$currentEstate = $estateListHandle->handleRecord($currentEstate);
-		}
-        ?>
+	while ($currentEstate = $pEstates->estateIterator()) { ?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
 			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>

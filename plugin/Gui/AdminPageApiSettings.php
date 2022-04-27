@@ -237,7 +237,6 @@ class AdminPageApiSettings
 		$pFormModel->addInputModel($pInputModeGoogleBotIndexPdfExpose);
 		$pFormModel->setGroupSlug('onoffice-google-bot');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('Search engine', 'onoffice-for-wp-websites'));
 		$pFormModel->setLabel(__('SEO', 'onoffice-for-wp-websites'));
 
 		$this->addFormModel($pFormModel);
