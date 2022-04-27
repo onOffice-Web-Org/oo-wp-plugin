@@ -80,34 +80,25 @@ class AdminPageApiSettings
 		$pInputModelApiKey = new InputModelOption('onoffice-settings', 'apikey', $labelKey, 'string');
 		$optionNameKey = $pInputModelApiKey->getIdentifier();
 		$apiKey = get_option($optionNameKey);
-		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')
-			&& defined('ONOFFICE_CREDENTIALS_ENC_KEY') != get_option('onoffice-credentials-enc-key')) {
-			update_option('onoffice-credentials-enc-key', ONOFFICE_CREDENTIALS_ENC_KEY);
-		}
-		if (!empty(get_option('onoffice-credentials-enc-key'))) {
+		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
 			try {
-				$apiKeyDecrypt = $this->_encrypter->decrypt(get_option($optionNameKey), get_option('onoffice-credentials-enc-key'));
+				$apiKeyDecrypt = $this->_encrypter->decrypt(get_option($optionNameKey), ONOFFICE_CREDENTIALS_ENC_KEY);
 			} catch (\RuntimeException $e) {
 				$apiKeyDecrypt = $apiKey;
 			}
 			$apiKey = $apiKeyDecrypt;
+		} else {
+			update_option('onoffice-is-encryptcredent', false);
 		}
 		$pInputModelApiKey->setValue($apiKey);
 		$pInputModelApiSecret = new InputModelOption('onoffice-settings', 'apisecret', $labelSecret, 'string');
 		$pInputModelApiSecret->setIsPassword(true);
 		$optionNameSecret = $pInputModelApiSecret->getIdentifier();
-		$pInputModelApiKey->setSanitizeCallback(function ($apiKey) use ($optionNameKey) {
-			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY') && !get_option($optionNameKey)) {
-				try {
-					$apiKeyDecrypt = $this->_encrypter->decrypt($apiKey, ONOFFICE_CREDENTIALS_ENC_KEY);
-				} catch (\RuntimeException $e) {
-					$apiKeyDecrypt = $apiKey;
-				}
-				$apiKey = $apiKeyDecrypt;
-			}
+		$pInputModelApiKey->setSanitizeCallback(function ($apiKey) {
 			return $this->encrypteCredentials($apiKey);
 		});
 		$pInputModelApiSecret->setSanitizeCallback(function($password) use ($optionNameSecret) {
+			$password = $this->encrypteCredentials($password);
 			if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
 				$password = $this->checkPassword($password, $optionNameSecret);
 				try {
@@ -116,27 +107,24 @@ class AdminPageApiSettings
 					$passwordDecrypt = $password;
 				}
 				$password = $this->encrypteCredentials($passwordDecrypt);
-				update_option('onoffice-is-encryptcredent', true);
 			} else {
 				update_option('onoffice-is-encryptcredent', false);
 			}
 			return $this->checkPassword($password, $optionNameSecret);
 		});
 		$pInputModelApiSecret->setValue(get_option($optionNameSecret, $pInputModelApiSecret->getDefault()));
+
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelApiSecret);
 		$pFormModel->addInputModel($pInputModelApiKey);
 		$pFormModel->setGroupSlug('onoffice-api');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		
-		
 		if (get_option('onoffice-is-encryptcredent')) {
 			$pFormModel->setLabel(__('API settings (encrypted)', 'onoffice-for-wp-websites'));
-		}
-		else
-		{
+		} else {
 			$pFormModel->setLabel(__('API settings', 'onoffice-for-wp-websites'));
 		}
+
 		$this->addFormModel($pFormModel);
 	}
 
@@ -237,6 +225,7 @@ class AdminPageApiSettings
 	{
 		if ($password && defined('ONOFFICE_CREDENTIALS_ENC_KEY') && ONOFFICE_CREDENTIALS_ENC_KEY) {
 			$password = $this->_encrypter->encrypt($password, ONOFFICE_CREDENTIALS_ENC_KEY);
+			update_option('onoffice-is-encryptcredent', true);
 		}
 		return $password;
 	}
