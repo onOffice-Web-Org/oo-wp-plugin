@@ -162,16 +162,16 @@ class TestClassEstateTitleBuilder
 		];
 		$pViewFieldModifier = new EstateViewFieldModifierTypeTitle([]);
 		$pViewFieldModifierFactory = $this->_pEstateTitleBuilder->getViewFieldModifierFactory();
-		$pViewFieldModifierFactory->expects($this->exactly(1))->method('create')
+		$pViewFieldModifierFactory->expects($this->once())->method('create')
 			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
 			->will($this->returnValue($pViewFieldModifier));
 		$pEstateList = $this->_pEstateTitleBuilder->getEstateDetail();
-		$pEstateList->expects($this->exactly(2))->method('loadSingleEstate')->with(3);
-		$pEstateList->expects($this->exactly(2))->method('estateIterator')
+		$pEstateList->expects($this->once())->method('loadSingleEstate')->with(3);
+		$pEstateList->expects($this->once())->method('estateIterator')
 			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
 			->will($this->onConsecutiveCalls($this->getArrayContainer(), false));
 		$pDefaultFilterBuilder = $this->_pEstateTitleBuilder->getDefaultFilterBuilder();
-		$pDefaultFilterBuilder->expects($this->exactly(2))->method('setEstateId')->with(3);
+		$pDefaultFilterBuilder->expects($this->once())->method('setEstateId')->with(3);
 		$title = $this->_pEstateTitleBuilder->buildCustomFieldTitle(3, $format['onoffice_titel']);
 		$this->assertEquals('Beautiful Apartment', $title);
 	}
