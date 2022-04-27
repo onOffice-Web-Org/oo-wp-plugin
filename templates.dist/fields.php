@@ -84,7 +84,7 @@ if (!function_exists('renderFieldEstateSearch')) {
 			$htmlSelect .= '</select>';
 			echo $htmlSelect;
 		} elseif ($inputName === 'regionaler_zusatz') {
-			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], $properties['permittedvalues'] ?? null);
+			echo renderRegionalAddition($inputName, $selectedValue ?? [], true, $properties['label'], false, $properties['permittedvalues'] ?? null);
 		} elseif ($inputName === 'country') {
 			echo '<select class="custom-single-select" size="1" name="' . esc_attr($inputName) . '">';
 			printCountry($properties['permittedvalues'], $selectedValue);
@@ -121,12 +121,17 @@ if (!function_exists('renderFormField')) {
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
 
+		$requiredAttribute = "";
+		if ($isRequired) {
+			$requiredAttribute = "required";
+		}
+
 		if ($fieldName == 'range') {
 			$typeCurrentInput = onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_INTEGER;
 		}
 
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
-			$output .= '<select class="custom-single-select" size="1" name="' . esc_html($fieldName) . '">';
+			$output .= '<select class="custom-single-select" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
 			/* translators: %s will be replaced with the translated field name. */
 			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
@@ -143,7 +148,7 @@ if (!function_exists('renderFormField')) {
 			if (!is_array($selectedValue)) {
 				$selectedValue = [];
 			}
-			$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel, $permittedValues ?? null);
+			$output .= renderRegionalAddition($fieldName, $selectedValue, true, $fieldLabel, $isRequired, $permittedValues ?? null);
 		} elseif (
 			\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_MULTISELECT === $typeCurrentInput ||
 			(\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT === $typeCurrentInput &&
@@ -165,7 +170,7 @@ if (!function_exists('renderFormField')) {
 				}
 				$htmlOptions .= '<option value="' . esc_attr($key) . '".' . ($isSelected ? ' selected' : '') . '>' . esc_html($value) . '</option>';
 			}
-			$output = '<select class="custom-multiple-select form-control" name="' . esc_html($fieldName) . '[]" multiple="multiple">';
+			$output = '<select class="custom-multiple-select form-control" name="' . esc_html($fieldName) . '[]" multiple="multiple" ' . $requiredAttribute . '>';
 			$output .= $htmlOptions;
 			$output .= '</select>';
 		} else {
@@ -207,12 +212,18 @@ if (!function_exists('renderFormField')) {
 
 
 if (!function_exists('renderRegionalAddition')) {
-	function renderRegionalAddition(string $inputName, array $selectedValue, bool $multiple, string $fieldLabel, array $permittedValues = null): string
+	function renderRegionalAddition(string $inputName, array $selectedValue, bool $multiple, string $fieldLabel, bool $isRequired, array $permittedValues = null): string
 	{
 		$output = '';
 		$name = esc_attr($inputName) . ($multiple ? '[]' : '');
 		$multipleAttr = $multiple ? 'multiple size="5"' : 'size="1"';
-		$output .= '<select name="' . $name . '" ' . $multipleAttr . '>';
+
+		$requiredAttribute = "";
+		if ($isRequired) {
+			$requiredAttribute = "required";
+		}
+
+		$output .= '<select name="' . $name . '" ' . $multipleAttr . ' ' . $requiredAttribute . '>';
 		$pRegionController = new RegionController();
 
 		if ($permittedValues !== null) {
