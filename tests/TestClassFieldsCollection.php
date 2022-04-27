@@ -156,14 +156,9 @@ class TestClassFieldsCollection
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
-	 *
-	 */
-
 	public function testRemoveFieldByModuleAndNameUnknownField()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$pCollection = $this->createPrefilledFieldsCollection();
 		// Exception expected, because Marilyn is in testModuleB
 		$pCollection->removeFieldByModuleAndName('testModuleA', 'Marilyn');
@@ -199,11 +194,10 @@ class TestClassFieldsCollection
 
 	/**
 	 * @throws UnknownFieldException
-	 * @expectedException \onOffice\WPlugin\Field\UnknownFieldException
 	 */
-
 	public function testGetFieldByKeyUnsafeFailure()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$pCollection = $this->createPrefilledFieldsCollection();
 		$pCollection->getFieldByKeyUnsafe('Steve');
 	}

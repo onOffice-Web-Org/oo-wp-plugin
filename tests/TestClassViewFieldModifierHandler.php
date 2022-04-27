@@ -104,15 +104,10 @@ class TestClassViewFieldModifierHandler
 	}
 
 
-	/**
-	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Unknown Modifier
-	 *
-	 */
-
 	public function testNoModifierReduceRecord()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Unknown Modifier');
 		$pViewFieldModifierHandler = new ViewFieldModifierHandler
 			(['test1', 'test2', 'laengengrad'], onOfficeSDK::MODULE_ESTATE);
 		$pViewFieldModifierHandler->processRecord(['test1' => 'hello']);
