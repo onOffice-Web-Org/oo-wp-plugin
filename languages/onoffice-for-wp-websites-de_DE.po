@@ -960,11 +960,11 @@ msgstr "Deaktiviert"
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:236
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:259
 msgid "Link"
-msgstr "Link"
+msgstr "Verknüpfung"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:190
 msgid "Player"
-msgstr "Player"
+msgstr "Spieler"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:206
 msgid "Ogulo-Links"
@@ -973,10 +973,8 @@ msgstr ""
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:214
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:237
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:260
-#, fuzzy
-#| msgid ", Embed Code: "
 msgid "Embedded"
-msgstr ", Embed Code: "
+msgstr "Eingebettet"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:229
 msgid "Object-Links"
