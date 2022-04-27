@@ -178,5 +178,21 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInputModelDB = $pInstance->createInputModelShowStatus();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelTemplate
+	 */
+	public function testCreateInputModelTemplate()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getTemplateValueByField'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->method('getTemplateValueByField')->willReturn('');
+		$pInputModelDB = $pInstance->createInputModelTemplate(InputModelOptionFactoryDetailView::INPUT_TEMPLATE);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+		$this->assertEquals($pInputModelDB->getValue(), '');
+	}
 
 }
