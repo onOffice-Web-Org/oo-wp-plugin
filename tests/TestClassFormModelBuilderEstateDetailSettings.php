@@ -186,10 +186,10 @@ class TestClassFormModelBuilderEstateDetailSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getTemplateValueByField'])
+			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->method('getTemplateValueByField')->willReturn('');
+		$pInstance->method('getValue')->willReturn('');
 		$pInputModelDB = $pInstance->createInputModelTemplate(InputModelOptionFactoryDetailView::INPUT_TEMPLATE);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 		$this->assertEquals($pInputModelDB->getValue(), '');
