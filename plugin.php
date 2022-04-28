@@ -135,37 +135,37 @@ $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 add_filter('document_title_parts', function($title) use ($pDI) {
 	return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
 }, 10, 2);
-add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pDI) {
-	if (get_option('onoffice-settings-title-and-description') === '1')
-	{
-		$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class );
-		$pDetailView = $pDataDetailViewHandler->getDetailView();
-		$detail_page_id = $pDetailView->getPageId();
-		if ( $object_id == $detail_page_id ) {
-			$list_meta_keys = [
-				"onoffice_titel"            => 'objekttitel',
-				"onoffice_title"            => 'objekttitel',
-				"onoffice_beschreibung"     => 'objektbeschreibung',
-				"onoffice_description"      => 'objektbeschreibung',
-				"onoffice_ort"              => 'ort',
-				"onoffice_city"             => 'ort',
-				"onoffice_plz"              => 'plz',
-				"onoffice_postal_code"      => 'plz',
-				"onoffice_objektart"        => 'objektart',
-				"onoffice_property_class"   => 'objektart',
-				"onoffice_vermarktungsart"  => 'vermarktungsart',
-				"onoffice_marketing_method" => 'vermarktungsart',
-				"onoffice_datensatznr"      => 'Id',
-				"onoffice_id"               => 'Id'
-			];
-			if ( isset( $list_meta_keys[ $meta_key ] ) ) {
-				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ] );
+if (get_option('onoffice-settings-title-and-description') === '1')
+{
+	add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pDI) {
+			$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class );
+			$pDetailView = $pDataDetailViewHandler->getDetailView();
+			$detail_page_id = $pDetailView->getPageId();
+			if ( $object_id == $detail_page_id ) {
+				$list_meta_keys = [
+					"onoffice_titel"            => 'objekttitel',
+					"onoffice_title"            => 'objekttitel',
+					"onoffice_beschreibung"     => 'objektbeschreibung',
+					"onoffice_description"      => 'objektbeschreibung',
+					"onoffice_ort"              => 'ort',
+					"onoffice_city"             => 'ort',
+					"onoffice_plz"              => 'plz',
+					"onoffice_postal_code"      => 'plz',
+					"onoffice_objektart"        => 'objektart',
+					"onoffice_property_class"   => 'objektart',
+					"onoffice_vermarktungsart"  => 'vermarktungsart',
+					"onoffice_marketing_method" => 'vermarktungsart',
+					"onoffice_datensatznr"      => 'Id',
+					"onoffice_id"               => 'Id'
+				];
+				if ( isset( $list_meta_keys[ $meta_key ] ) ) {
+					return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ] );
+				}
+			} else {
+				return null;
 			}
-		} else {
-			return null;
-		}
-	}
-}, 1, 3);
+	}, 1, 3);
+}
 
 // Return title custom by custom field onOffice
 function customFieldCallback( $pDI, $format) {

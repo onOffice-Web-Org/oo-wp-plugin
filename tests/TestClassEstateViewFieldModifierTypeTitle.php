@@ -106,6 +106,9 @@ class TestClassEstateViewFieldModifierTypeTitle
 		$this->assertEquals($this->_exampleRecord, $record);
 	}
 	
+	/**
+	 * @covers onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeTitle::getAPICustomFields
+	 */
 	public function testApiCustomFields()
 	{
 		$expectation = [
@@ -121,5 +124,26 @@ class TestClassEstateViewFieldModifierTypeTitle
 		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
 		$apiCustomFields = $pEstateViewFieldModifierTypeTitle->getAPICustomFields();
 		$this->assertEquals($expectation, $apiCustomFields);
+	}
+	
+	/**
+	 * @covers onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeTitle::getVisibleCustomFields
+	 */
+	
+	public function testVisibleCustomFields()
+	{
+		$expectation = [
+			'objekttitel',
+			'objektbeschreibung',
+			'ort',
+			'plz',
+			'objektart',
+			'vermarktungsart',
+			'Id'
+		];
+		
+		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
+		$visibleCustomFields = $pEstateViewFieldModifierTypeTitle->getVisibleCustomFields();
+		$this->assertEquals($expectation, $visibleCustomFields);
 	}
 }
