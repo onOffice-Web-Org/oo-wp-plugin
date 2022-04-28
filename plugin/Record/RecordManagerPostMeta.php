@@ -49,8 +49,7 @@ class RecordManagerPostMeta
 		$Container = $pDIContainerBuilder->build();
 		$pDetailView = $Container->get(DataDetailView::class);
 		$shortCode = '[oo_estate view="' . $pDetailView->getName() . '"]';
-//		var_dump($shortCode);
-//		die();
+
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$post_meta_sql="SELECT `post_id`
