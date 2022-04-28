@@ -21,6 +21,9 @@
 
 namespace onOffice\WPlugin\Record;
 
+use DI\Container;
+use DI\ContainerBuilder;
+use onOffice\WPlugin\DataView\DataDetailView;
 use const ARRAY_A;
 
 /**
@@ -32,6 +35,22 @@ use const ARRAY_A;
 
 class RecordManagerPostMeta
 {
+	/** @var Container */
+	private $_pContainer;
+	
+	/**
+	 *
+	 * @param Container $pContainer
+	 *
+	 */
+	
+	public function __construct()
+	{
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pDIContainerBuilder->build();
+	}
+	
 	/**
 	*
 	* @return array
@@ -40,12 +59,15 @@ class RecordManagerPostMeta
 
 	public function getPageId(): array
 	{
+		$pDetailView = $this->_pContainer->get(DataDetailView::class);
+		$shortCode = '[oo_estate view="' . $pDetailView->getName() . '"]';
+		
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$post_meta_sql="SELECT `post_id`
 				FROM {$prefix}postmeta postmeta
 				INNER JOIN {$prefix}posts post on postmeta.post_id = post.ID
-				WHERE postmeta.meta_key not like '\_%' and postmeta.meta_value like '%[oo_estate%' and post.post_type = 'page'
+				WHERE postmeta.meta_key not like '\_%' and postmeta.meta_value like '%" . $shortCode . "%' and post.post_type = 'page'
 				ORDER BY postmeta.post_id DESC ";
 		$post_meta_results = $wpdb->get_row( $post_meta_sql ,ARRAY_A);
 
