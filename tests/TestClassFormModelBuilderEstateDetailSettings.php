@@ -189,10 +189,9 @@ class TestClassFormModelBuilderEstateDetailSettings
 			->setMethods(['getValue'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->method('getValue')->willReturn('');
+		$pInstance->method('getValue')->willReturn('1');
 		$pInputModelDB = $pInstance->createInputModelTemplate(InputModelOptionFactoryDetailView::INPUT_TEMPLATE);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
-		$this->assertEquals($pInputModelDB->getValue(), '');
 	}
 	
 	/**
@@ -205,10 +204,9 @@ class TestClassFormModelBuilderEstateDetailSettings
 			->setMethods(['readExposes'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->method('readExposes')->willReturn('');
+		$pInstance->method('readExposes')->willReturn('1');
 		$pInputModelDB = $pInstance->createInputModelTemplate();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
-		$this->assertEquals($pInputModelDB->getValue(), '');
 	}
 
 }
