@@ -66,7 +66,7 @@ class RewriteRuleBuilder
 		$detailPageIds = $this->_pDataDetailViewHandler->getDetailView()->getPageIdsHaveDetailShortCode();
 		foreach ( $detailPageIds as $detailPageId ) {
 			$pageName = $this->_pWPPageWrapper->getPageUriByPageId( $detailPageId );
-			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^$]+))?/?$',
+			add_rewrite_rule( '^(' . preg_quote( $pageName ) . ')/([0-9]+)(-([^$]+)?)?/?$',
 				'index.php?pagename=' . urlencode( $pageName ) . '&view=$matches[1]&estate_id=$matches[2]', 'top' );
 		}
 	}
