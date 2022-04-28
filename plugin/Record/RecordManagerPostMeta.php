@@ -35,21 +35,6 @@ use const ARRAY_A;
 
 class RecordManagerPostMeta
 {
-	/** @var Container */
-	private $_pContainer;
-	
-	/**
-	 *
-	 * @param Container $pContainer
-	 *
-	 */
-	
-	public function __construct()
-	{
-		$pDIContainerBuilder = new ContainerBuilder;
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$this->_pContainer = $pDIContainerBuilder->build();
-	}
 	
 	/**
 	*
@@ -59,9 +44,13 @@ class RecordManagerPostMeta
 
 	public function getPageId(): array
 	{
-		$pDetailView = $this->_pContainer->get(DataDetailView::class);
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$Container = $pDIContainerBuilder->build();
+		$pDetailView = $Container->get(DataDetailView::class);
 		$shortCode = '[oo_estate view="' . $pDetailView->getName() . '"]';
-		
+//		var_dump($shortCode);
+//		die();
 		global $wpdb;
 		$prefix = $wpdb->prefix;
 		$post_meta_sql="SELECT `post_id`

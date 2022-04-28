@@ -47,8 +47,7 @@ class TestClassRecordManagerPostMeta
      */
     public function prepare()
     {
-        $this->_pRecordManagerPostMeta = $this->getMockBuilder(RecordManagerPostMeta::class)
-            ->getMock();
+        $this->_pRecordManagerPostMeta = new RecordManagerPostMeta();
     }
 
     /**
