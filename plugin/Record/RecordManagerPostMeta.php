@@ -55,10 +55,21 @@ class RecordManagerPostMeta
 		$post_meta_sql="SELECT `post_id`
 				FROM {$prefix}postmeta postmeta
 				INNER JOIN {$prefix}posts post on postmeta.post_id = post.ID
-				WHERE postmeta.meta_key not like '\_%' and postmeta.meta_value like '%" . $shortCode . "%' and post.post_type = 'page'
+				WHERE postmeta.meta_key not like '\_%'
+					and postmeta.meta_value like '%" . $shortCode . "%'
+					and post.post_type = 'page'
+					and post.post_status IN ('publish', 'draft')
 				ORDER BY postmeta.post_id DESC ";
 		$post_meta_results = $wpdb->get_row( $post_meta_sql ,ARRAY_A);
 
 		return empty($post_meta_results) ? [] : $post_meta_results;
     }
+	
+	public function deletePostMataUseCustomField(string $metaKey)
+	{
+		global $wpdb;
+		$prefix = $wpdb->prefix;
+		$tablePostMeta = $prefix . "postmeta";
+		$wpdb->delete($tablePostMeta, array('meta_key' => $metaKey));
+	}
 }

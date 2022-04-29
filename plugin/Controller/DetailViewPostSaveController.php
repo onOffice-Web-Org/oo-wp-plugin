@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
@@ -40,7 +41,9 @@ class DetailViewPostSaveController
 {
 	/** @var RewriteRuleBuilder */
 	private $_pRewriteRuleBuilder;
-
+	
+	/** @var  RecordManagerPostMeta */
+	private $_pRecordPostMeta;
 
 	/**
 	 *
@@ -48,9 +51,10 @@ class DetailViewPostSaveController
 	 *
 	 */
 
-	public function __construct(RewriteRuleBuilder $pRewriteRuleBuilder)
+	public function __construct(RewriteRuleBuilder $pRewriteRuleBuilder, RecordManagerPostMeta $pRecordPostMeta = null)
 	{
 		$this->_pRewriteRuleBuilder = $pRewriteRuleBuilder;
+		$this->_pRecordPostMeta = $pRecordPostMeta ?? new RecordManagerPostMeta();
 	}
 
 
@@ -331,6 +335,20 @@ class DetailViewPostSaveController
 				$pRecordReadListView->updateColumnPageShortCode($pageID,$view->$primaKey,$tableName,$column);
 			}
 
+		}
+	}
+	
+	public function onDeletePost($postId)
+	{
+		$pPost = WP_Post::get_instance($postId);
+		if ($pPost->post_status === 'trash') {
+			return;
+		}
+		
+		$isRevision = wp_is_post_revision($pPost);
+		if (!$isRevision) {
+			$postExcerpt = $pPost->post_excerpt;
+			$this->_pRecordPostMeta->deletePostMataUseCustomField($postExcerpt);
 		}
 	}
 }
