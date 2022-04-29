@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\Installer;
 
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -65,6 +66,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
 		if ($dbversion === null) {
 			dbDelta( $this->getCreateQueryCache() );
+			$this->setDetailTemplate();
 
 			$dbversion = 1.0;
 			$this->_pWpOption->addOption( 'oo_plugin_db_version', $dbversion, true );
@@ -745,6 +747,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDetailView = $pDataDetailViewHandler->getDetailView();
 		$pDetailView->setHasDetailView(true);
+		$pDataDetailViewHandler->saveDetailView($pDetailView);
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function setDetailTemplate()
+	{
+		$pFormModelBuilder = new FormModelBuilderEstateDetailSettings();
+		$detailTemplatesList = $pFormModelBuilder->readTemplatePaths('estate', 'default_detail');
+		$firstTemplatePath = reset($detailTemplatesList)['path'];
+
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setTemplate(key($firstTemplatePath));
 		$pDataDetailViewHandler->saveDetailView($pDetailView);
 	}
 }
