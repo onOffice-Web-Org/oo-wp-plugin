@@ -86,8 +86,14 @@ class TestClassScriptLoaderOsm
 		$this->_pSubject->register();
 		$registeredScripts = $this->_pWPScriptStyle->getRegisteredScripts();
 		$registeredStyles = $this->_pWPScriptStyle->getRegisteredStyles();
-		$this->assertArraySubset($this->_stylesExpectation, $registeredStyles);
-		$this->assertArraySubset($this->_scriptsExpectation, $registeredScripts);
+		$this->assertTrue(
+			empty( array_diff_key( $this->_stylesExpectation,
+				$registeredStyles ) ) && empty( array_diff_key( $registeredStyles, $this->_stylesExpectation )
+			) );
+		$this->assertTrue(
+			empty( array_diff_key( $this->_scriptsExpectation,
+				$registeredScripts ) ) && empty( array_diff_key( $registeredScripts, $this->_scriptsExpectation )
+			) );
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredScripts['leaflet-script']['src']);
 		$this->assertStringEndsWith(getcwd().'/third_party/leaflet/leaflet.js', $registeredScripts['leaflet-script']['src']);
 		$this->assertStringStartsWith('http://example.org/wp-content/plugins/', $registeredStyles['leaflet-style']['src']);

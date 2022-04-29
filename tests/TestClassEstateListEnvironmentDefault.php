@@ -109,14 +109,9 @@ class TestClassEstateListEnvironmentDefault
 	}
 
 
-	/**
-	 *
-	 * @expectedException onOffice\WPlugin\DataView\UnknownViewException
-	 *
-	 */
-
 	public function testGetEmptyDefaultFilterBuilder()
 	{
+		$this->expectException(\onOffice\WPlugin\DataView\UnknownViewException::class);
 		$this->_pSubject->getDefaultFilterBuilder();
 	}
 
