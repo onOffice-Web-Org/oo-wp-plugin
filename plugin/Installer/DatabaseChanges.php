@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
@@ -45,6 +47,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 	/** @var wpdb */
 	private $_pWPDB;
 
+	/** @var Container */
+	private $_pContainer;
+
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
 	 */
@@ -52,6 +57,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 	{
 		$this->_pWpOption = $pWpOption;
 		$this->_pWPDB = $pWPDB;
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pDIContainerBuilder->build();
 	}
 
 	/**
@@ -768,7 +776,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$detailTemplatesList = ( new TemplateCall() )->formatTemplatesData( array_filter( $detailTemplatesList ), 'estate' );
 		$firstTemplatePath   = reset( $detailTemplatesList )['path'];
 
-		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
 		$pDetailView            = $pDataDetailViewHandler->getDetailView();
 		$pDetailView->setTemplate( key( $firstTemplatePath ) );
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
