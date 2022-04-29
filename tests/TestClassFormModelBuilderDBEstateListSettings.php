@@ -189,12 +189,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 
 	public function testCreateSortableFieldList()
 	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
-			->disableOriginalConstructor()
-			->getMock();
-
-		$instance = $pInstance->createSortableFieldList('address', 'checkbox', false);
-		$this->assertEquals($instance->getReferencedInputModels(), null);
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+		$instance  = $pInstance->createSortableFieldList( 'address', 'checkbox', false );
+		$this->assertEmpty( $instance->getReferencedInputModels() );
 	}
 
 	/**

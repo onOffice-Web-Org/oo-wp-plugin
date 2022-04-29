@@ -34,17 +34,16 @@ class InputFieldTemplateListRenderer
 {
 	const TEMPLATE_DEFAULT_LIST = [
 		'onoffice-editlistviewaddress' => 'default.php',
-		'onoffice-editlistview' => 'default.php',
-		'onoffice-editunitlist' => 'default_units.php',
-		'onoffice-estates' =>
-			[
-				'similar-estates' => 'similar_estates.php',
-				'detail' => 'default_detail.php'
-			],
-		'onoffice-editform' => [
-			'contact' => 'defaultform.php',
-			'interest' => 'applicantform.php',
-			'owner' => 'ownerform.php',
+		'onoffice-editlistview'        => 'default.php',
+		'onoffice-editunitlist'        => 'default_units.php',
+		'onoffice-estates'             => [
+			'similar-estates' => 'similar_estates.php',
+			'detail'          => 'default_detail.php'
+		],
+		'onoffice-editform'            => [
+			'contact'         => 'defaultform.php',
+			'interest'        => 'applicantform.php',
+			'owner'           => 'ownerform.php',
 			'applicantsearch' => 'applicantsearchform.php',
 		]
 	];
