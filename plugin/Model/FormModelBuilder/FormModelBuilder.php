@@ -112,7 +112,7 @@ abstract class FormModelBuilder
 	 * @return array
 	 */
 
-	public function readTemplatePaths( $directory, $pattern = '*' ) {
+	protected function readTemplatePaths( $directory, $pattern = '*' ) {
 		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_INCLUDED ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR
 										. '/index.php' ) . 'templates.dist/' . $directory . '/' . $pattern . '.php' );
 		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ]   = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )

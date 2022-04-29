@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Installer;
 
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
+use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -757,13 +758,19 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	public function setDetailTemplate()
 	{
-		$pFormModelBuilder = new FormModelBuilderEstateDetailSettings();
-		$detailTemplatesList = $pFormModelBuilder->readTemplatePaths('estate', 'default_detail');
-		$firstTemplatePath = reset($detailTemplatesList)['path'];
+		$detailTemplatesList[ TemplateCall::TEMPLATE_FOLDER_INCLUDED ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR
+		                                    . '/index.php' ) . 'templates.dist/' . 'estate' . '/' . 'default_detail' . '.php' );
+		$detailTemplatesList[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ]   = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
+		                                    . 'onoffice-personalized/templates/' . 'estate' . '/' . 'default_detail' . '.php' );
+		$detailTemplatesList[ TemplateCall::TEMPLATE_FOLDER_THEME ]    = glob( get_stylesheet_directory()
+		                                    . '/onoffice-theme/templates/' . 'estate' . '/' . 'default_detail' . '.php' );
+
+		$detailTemplatesList = ( new TemplateCall() )->formatTemplatesData( array_filter( $detailTemplatesList ), 'estate' );
+		$firstTemplatePath   = reset( $detailTemplatesList )['path'];
 
 		$pDataDetailViewHandler = new DataDetailViewHandler();
-		$pDetailView = $pDataDetailViewHandler->getDetailView();
-		$pDetailView->setTemplate(key($firstTemplatePath));
-		$pDataDetailViewHandler->saveDetailView($pDetailView);
+		$pDetailView            = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setTemplate( key( $firstTemplatePath ) );
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 }
