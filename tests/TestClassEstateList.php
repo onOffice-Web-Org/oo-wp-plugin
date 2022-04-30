@@ -741,9 +741,8 @@ class TestClassEstateList
 		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
 		$this->_pEstateList->loadEstates();
 		update_option( 'home', 'http://example.com/detail' );
-		$output = ob_get_clean();
+		ob_end_clean();
 		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
-		$this->assertNotEmpty($output);
 	}
 
 
