@@ -78,9 +78,15 @@ Start editing inside the `onoffice-personalized` folder.
 
 = Unreleased =
 
+**Changed**
+
+* The selection of the template for lists and forms has been improved.
+
 **Fixed**
 
+* When creating new lists or forms, the correct template will be selected by default.
 * Address lists can no longer be saved without a name.
+* In interest forms, search criteria fields that are displayed as a select field are now actually required to send the form.
 
 = 3.0 =
 

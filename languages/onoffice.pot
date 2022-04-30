@@ -1,17 +1,17 @@
-# Copyright (C) 2021 onOffice GmbH
+# Copyright (C) 2022 onOffice GmbH
 # This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-websites\n"
+"Project-Id-Version: onOffice for WP-Websites 2.22.5\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-06-25T10:44:40+07:00\n"
+"POT-Creation-Date: 2022-04-12T15:28:14+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.4.0\n"
+"X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: onoffice\n"
 
 #. Plugin Name of the plugin
@@ -42,59 +42,61 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: templates.dist/estate/default.php:38
+#: templates.dist/estate/default.php:46
 msgid "Overview of Estates"
 msgstr ""
 
 #. translators: %d will be replaced with a number.
-#: templates.dist/estate/default.php:42
+#: templates.dist/estate/default.php:50
 msgctxt "template"
 msgid "Found %d estates over all."
 msgstr ""
 
-#: templates.dist/estate/default.php:90
-#: templates.dist/estate/similar_estates.php:43
+#: templates.dist/estate/default.php:110
+#: templates.dist/estate/default.php:115
+#: templates.dist/estate/similar_estates.php:65
+#: templates.dist/estate/similar_estates.php:70
 msgid "Show Details"
 msgstr ""
 
-#: templates.dist/estate/default.php:94
-#: templates.dist/estate/default.php:110
+#: templates.dist/estate/default.php:120
+#: templates.dist/estate/default.php:143
 msgid "Add to "
 msgstr ""
 
-#: templates.dist/estate/default.php:116
+#: templates.dist/estate/default.php:149
 msgid "Remove from "
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:70
+#: templates.dist/estate/default_detail.php:74
 msgid "Description"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:77
+#: templates.dist/estate/default_detail.php:81
 msgid "Location"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:87
+#: templates.dist/estate/default_detail.php:91
 msgid "Map"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:94
+#: templates.dist/estate/default_detail.php:98
 msgid "Equipment"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:101
+#: templates.dist/estate/default_detail.php:105
 msgid "Other Information"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:112
+#: templates.dist/estate/default_detail.php:116
 msgid "Contact person"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:129
+#: templates.dist/estate/default_detail.php:142
 msgid "Documents"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:131
+#: templates.dist/estate/default_detail.php:144
 msgid "PDF expose"
 msgstr ""
 
@@ -102,27 +104,11 @@ msgstr ""
 msgid "Entities"
 msgstr ""
 
-#: templates.dist/estate/default_units.php:39
-msgid "Contact person of entity:"
-msgstr ""
-
-#: templates.dist/estate/default_units.php:43
-msgid "Phone:"
-msgstr ""
-
-#: templates.dist/estate/default_units.php:44
-msgid "Fax:"
-msgstr ""
-
-#: templates.dist/estate/default_units.php:46
-msgid "E-Mail:"
-msgstr ""
-
 #: templates.dist/estate/SearchForm.php:38
 msgid "Search"
 msgstr ""
 
-#: templates.dist/estate/similar_estates.php:4
+#: templates.dist/estate/similar_estates.php:12
 msgid "More Estates like this"
 msgstr ""
 
@@ -130,29 +116,29 @@ msgstr ""
 msgid "Choose country"
 msgstr ""
 
-#: templates.dist/fields.php:61
+#: templates.dist/fields.php:59
 msgid "Not Specified"
 msgstr ""
 
-#: templates.dist/fields.php:64
+#: templates.dist/fields.php:62
 msgid "Yes"
 msgstr ""
 
-#: templates.dist/fields.php:67
+#: templates.dist/fields.php:65
 msgid "No"
 msgstr ""
 
-#: templates.dist/fields.php:97
+#: templates.dist/fields.php:95
 msgid "From: "
 msgstr ""
 
-#: templates.dist/fields.php:100
+#: templates.dist/fields.php:98
 msgid "Up to: "
 msgstr ""
 
 #. translators: %s will be replaced with the translated field name.
-#: templates.dist/fields.php:132
-#: templates.dist/fields.php:218
+#: templates.dist/fields.php:130
+#: templates.dist/fields.php:216
 msgid "Choose %s"
 msgstr ""
 
