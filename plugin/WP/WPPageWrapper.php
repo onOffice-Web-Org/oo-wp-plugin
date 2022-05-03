@@ -71,9 +71,4 @@ class WPPageWrapper
 	{
 		return get_page_uri($pageId) ?: '';
 	}
-
-	public function getPageLinkByPageId(int $pageId): string
-	{
-		return get_page_link($pageId);
-	}
 }
