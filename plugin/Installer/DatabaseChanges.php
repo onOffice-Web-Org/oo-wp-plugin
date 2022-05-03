@@ -25,6 +25,8 @@ namespace onOffice\WPlugin\Installer;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Exception;
+use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
@@ -39,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 27;
+	const MAX_VERSION = 28;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -52,8 +54,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
+	 * @param wpdb $pWPDB
+	 *
+	 * @throws Exception
 	 */
-	public function __construct(WPOptionWrapperBase $pWpOption, \wpdb $pWPDB)
+	public function __construct(WPOptionWrapperBase $pWpOption, wpdb $pWPDB)
 	{
 		$this->_pWpOption = $pWpOption;
 		$this->_pWPDB = $pWPDB;
@@ -207,6 +212,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->deleteMessageFieldApplicantSearchForm();
 			$dbversion = 27;
 		}
+
+		if ($dbversion == 27) {
+			$this->checkAllPageIdsHaveDetailShortCode();
+			$this->_pWpOption->addOption( 'add-detail-posts-to-rewrite-rules', false );
+			$dbversion = 28;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -779,6 +791,29 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
 		$pDetailView            = $pDataDetailViewHandler->getDetailView();
 		$pDetailView->setTemplate( key( $firstTemplatePath ) );
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
+
+	/**
+	 *
+	 * @return void
+	 *
+	 */
+
+	public function checkAllPageIdsHaveDetailShortCode()
+	{
+		$pDataDetailViewHandler = $this->_pContainer->get(DataDetailViewHandler::class);
+		$pDetailView            = $pDataDetailViewHandler->getDetailView();
+		$shortCode              = '[oo_estate view="' . $pDetailView->getName() . '"]';
+		$tableName              = $this->getPrefix() . "posts";
+
+		$listDetailPosts = $this->_pWPDB->get_results( "SELECT `ID` FROM {$tableName}
+														WHERE post_status = 'publish'
+														AND post_content LIKE '%" . $shortCode . "%'", ARRAY_A );
+		foreach ( $listDetailPosts as $post ) {
+			$pDetailView->addToPageIdsHaveDetailShortCode( (int) $post['ID'] );
+		}
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 }

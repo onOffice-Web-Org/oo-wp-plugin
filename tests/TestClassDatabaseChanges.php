@@ -95,6 +95,7 @@ class TestClassDatabaseChanges
 		$dataViewSimilarEstates->setRecordsPerPage(13);
 		$dataViewSimilarEstates->setTemplate('/test/similar/template.php');
 		$dataSimilarViewOptions->setDataViewSimilarEstates($dataViewSimilarEstates);
+		$dataSimilarViewOptions->addToPageIdsHaveDetailShortCode(8);
 		add_option('onoffice-default-view', $dataSimilarViewOptions);
 	}
 
@@ -111,7 +112,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(27, $dbversion);
+		$this->assertEquals(28, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -175,14 +176,15 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
+		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(4))
+		$this->_pWPDBMock->expects($this->exactly(5))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds);
 
 		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
 			->will($this->returnValue(true));
@@ -212,14 +214,15 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
+		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(2))
+		$this->_pWPDBMock->expects($this->exactly(3))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds);
 
 		$this->_pWPDBMock->expects($this->once())->method('delete')
 			->will($this->returnValue(true));
@@ -234,7 +237,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(27, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(28, DatabaseChanges::MAX_VERSION);
 	}
 
 

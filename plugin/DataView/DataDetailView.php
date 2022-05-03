@@ -120,6 +120,9 @@ class DataDetailView
 	/** @var int */
 	private $_pageId = 0;
 
+	/** @var array */
+	private $_pageIdsHaveDetailShortCode = [];
+
 	/** @var bool */
 	private $_showStatus = 0;
 
@@ -260,4 +263,15 @@ class DataDetailView
 	public function setShowStatus(bool $status)
 	{ $this->_showStatus = $status; }
 
+	/** @return array */
+	public function getPageIdsHaveDetailShortCode(): array
+		{ return $this->_pageIdsHaveDetailShortCode; }
+
+	/** @param int $pageId */
+	public function addToPageIdsHaveDetailShortCode(int $pageId)
+		{ $this->_pageIdsHaveDetailShortCode[$pageId] = $pageId; }
+
+	/** @param int $pageId */
+	public function removeFromPageIdsHaveDetailShortCode(int $pageId)
+		{ unset($this->_pageIdsHaveDetailShortCode[$pageId]); }
 }

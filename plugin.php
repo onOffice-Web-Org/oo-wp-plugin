@@ -256,4 +256,11 @@ function update_duplicate_check_warning_option()
 
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
+add_action('wp', function () {
+	if (!get_option('add-detail-posts-to-rewrite-rules')) {
+		flush_rewrite_rules(false);
+		delete_option('add-detail-posts-to-rewrite-rules');
+	}
+});
+
 return $pDI;
