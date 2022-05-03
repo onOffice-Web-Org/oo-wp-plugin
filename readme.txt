@@ -84,6 +84,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixed**
 
+* The URL of detail pages is now properly redirected. For example when you change the setting whether the URL should contain the title, old links will get redirected.
 * When creating new lists or forms, the correct template will be selected by default.
 * Address lists can no longer be saved without a name.
 * In interest forms, search criteria fields that are displayed as a select field are now actually required to send the form.
