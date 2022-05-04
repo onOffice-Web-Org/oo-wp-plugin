@@ -141,6 +141,8 @@ class DetailViewPostSaveController
 		}
 		$pPost = get_post($postId);
 		$this->deletePageUseShortCode($pPost);
+		$postExcerpt = $pPost->post_excerpt;
+		$this->_pRecordPostMeta->deletePostMataUseCustomField($postExcerpt);
 	}
 
 
