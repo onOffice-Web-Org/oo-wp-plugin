@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use onOffice\WPlugin\Utility\__String;
@@ -51,10 +52,13 @@ class DetailViewPostSaveController
 	 *
 	 */
 
-	public function __construct(RewriteRuleBuilder $pRewriteRuleBuilder, RecordManagerPostMeta $pRecordPostMeta = null)
+	public function __construct(RewriteRuleBuilder $pRewriteRuleBuilder)
 	{
 		$this->_pRewriteRuleBuilder = $pRewriteRuleBuilder;
-		$this->_pRecordPostMeta = $pRecordPostMeta ?? new RecordManagerPostMeta();
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$Container = $pDIContainerBuilder->build();
+		$this->_pRecordPostMeta = $Container->get(RecordManagerPostMeta::class);
 	}
 
 

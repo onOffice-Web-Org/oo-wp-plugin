@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use onOffice\WPlugin\Types\MovieLinkTypes;
@@ -49,10 +50,13 @@ class DataDetailViewHandler
 	/**
 	 * @param WPOptionWrapperBase $pWPOptionWrapper
 	 */
-	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null, RecordManagerPostMeta $pRecordPostMeta = null)
+	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
 	{
 		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
-		$this->_pRecordPostMeta = $pRecordPostMeta ?? new RecordManagerPostMeta();
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$Container = $pDIContainerBuilder->build();
+		$this->_pRecordPostMeta = $Container->get(RecordManagerPostMeta::class);
 		
 	}
 
@@ -71,6 +75,8 @@ class DataDetailViewHandler
 
 		if ($pResult == null)
 		{
+			var_dump($pResult);
+			die();
 			$pResult = $pAlternate;
 		}
 

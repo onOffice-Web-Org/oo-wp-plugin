@@ -25,6 +25,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataDetailView;
 use const ARRAY_A;
+use wpdb;
 
 /**
  *
@@ -35,7 +36,20 @@ use const ARRAY_A;
 
 class RecordManagerPostMeta
 {
-	
+	/** @var wpdb */
+	private $_pWPDB;
+
+
+	/**
+	 *
+	 * @param wpdb $pWPDB
+	 *
+	 */
+
+	public function __construct(wpdb $pWPDB)
+	{
+		$this->_pWPDB = $pWPDB;
+	}
 	/**
 	*
 	* @return array
@@ -50,8 +64,7 @@ class RecordManagerPostMeta
 		$pDetailView = $Container->get(DataDetailView::class);
 		$shortCode = '[oo_estate view="' . $pDetailView->getName() . '"]';
 
-		global $wpdb;
-		$prefix = $wpdb->prefix;
+		$prefix = $this->_pWPDB->prefix;
 		$post_meta_sql="SELECT `post_id`
 				FROM {$prefix}postmeta postmeta
 				INNER JOIN {$prefix}posts post on postmeta.post_id = post.ID
@@ -60,16 +73,15 @@ class RecordManagerPostMeta
 					and post.post_type = 'page'
 					and post.post_status IN ('publish', 'draft')
 				ORDER BY postmeta.post_id DESC ";
-		$post_meta_results = $wpdb->get_row( $post_meta_sql ,ARRAY_A);
+		$post_meta_results = $this->_pWPDB->get_row( $post_meta_sql ,ARRAY_A);
 
 		return empty($post_meta_results) ? [] : $post_meta_results;
     }
 	
 	public function deletePostMataUseCustomField(string $metaKey)
 	{
-		global $wpdb;
-		$prefix = $wpdb->prefix;
+		$prefix = $this->_pWPDB->prefix;
 		$tablePostMeta = $prefix . "postmeta";
-		$wpdb->delete($tablePostMeta, array('meta_key' => $metaKey));
+		$this->_pWPDB->delete($tablePostMeta, array('meta_key' => $metaKey));
 	}
 }

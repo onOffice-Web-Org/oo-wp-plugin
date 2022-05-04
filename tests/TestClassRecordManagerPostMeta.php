@@ -23,6 +23,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use WP_UnitTestCase;
+use wpdb;
 
 /**
  *
@@ -34,28 +35,45 @@ use WP_UnitTestCase;
 class TestClassRecordManagerPostMeta
     extends WP_UnitTestCase
 {
-    /**
-     * @var object
-     */
-    private $_pRecordManagerPostMeta;
+	/**
+	* @var object
+	*/
+	private $_pRecordManagerPostMeta;
 
+	/** @var wpdb */
+	private $_pWPDB = null;
 
-    /**
-     *
-     * @before
-     *
-     */
-    public function prepare()
-    {
-        $this->_pRecordManagerPostMeta = new RecordManagerPostMeta();
-    }
+	/**
+	*
+	* @before
+	*
+	*/
+	public function prepare()
+	{
+		$this->_pWPDB = $this->getMockBuilder(wpdb::class)
+		->setMethods(['delete'])
+		->disableOriginalConstructor()
+		->getMock();
+		$this->_pWPDB->prefix = 'wp_test_';
+		$this->_pRecordManagerPostMeta = new RecordManagerPostMeta($this->_pWPDB);
+	}
 
-    /**
-     *
-     */
-    public function testGetPageIdInPostMeta()
-    {
-        $pFieldsPostMeta = $this->_pRecordManagerPostMeta->getPageId();
-        $this->assertEquals([], $pFieldsPostMeta);
-    }
+	/**
+	 *
+	 */
+	public function testGetPageIdInPostMeta()
+	{
+		$pFieldsPostMeta = $this->_pRecordManagerPostMeta->getPageId();
+		$this->assertEquals([], $pFieldsPostMeta);
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Record\RecordManagerPostMeta::deletePostMataUseCustomField
+	 */
+	public function testDeletePostMataUseCustomField()
+	{
+		$this->_pWPDB->expects($this->once())->method('delete')
+			->with('wp_test_postmeta', ['meta_key' => 'shortcode']);
+		$this->_pRecordManagerPostMeta->deletePostMataUseCustomField('shortcode');
+	}
 }
