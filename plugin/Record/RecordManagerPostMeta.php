@@ -38,8 +38,11 @@ class RecordManagerPostMeta
 {
 	/** @var wpdb */
 	private $_pWPDB;
-
-
+	
+	
+	/** @var string */
+	private $_shortCodePageDetail;
+	
 	/**
 	 *
 	 * @param wpdb $pWPDB
@@ -49,6 +52,11 @@ class RecordManagerPostMeta
 	public function __construct(wpdb $pWPDB)
 	{
 		$this->_pWPDB = $pWPDB;
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pDetailView = $pContainer->get(DataDetailView::class);
+		$this->_shortCodePageDetail = '[oo_estate view="' . $pDetailView->getName() . '"]';
 	}
 	/**
 	*
@@ -58,29 +66,44 @@ class RecordManagerPostMeta
 
 	public function getPageId(): array
 	{
-		$pDIContainerBuilder = new ContainerBuilder;
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIContainerBuilder->build();
-		$pDetailView = $pContainer->get(DataDetailView::class);
-		$shortCode = '[oo_estate view="' . $pDetailView->getName() . '"]';
+		
 
 		$prefix = $this->_pWPDB->prefix;
 		$post_meta_sql="SELECT `post_id`
 				FROM {$prefix}postmeta postmeta
 				INNER JOIN {$prefix}posts post on postmeta.post_id = post.ID
 				WHERE postmeta.meta_key not like '\_%'
-					and postmeta.meta_value like '%" . $shortCode . "%'
+					and postmeta.meta_value like '%" . $this->_shortCodePageDetail . "%'
 					and post.post_type = 'page'
 					and post.post_status IN ('publish', 'draft')
 				ORDER BY postmeta.post_id DESC ";
 		$post_meta_results = $this->_pWPDB->get_row( $post_meta_sql ,ARRAY_A);
 		return empty($post_meta_results) ? [] : $post_meta_results;
-    }
+	}
 	
-	public function deletePostMataUseCustomField(string $metaKey)
+	/**
+	 * @param string $metaKey
+	 */
+	public function deletePostMetaUseCustomField(string $metaKey)
 	{
 		$prefix = $this->_pWPDB->prefix;
 		$tablePostMeta = $prefix . "postmeta";
-		$this->_pWPDB->delete($tablePostMeta, array('meta_key' => $metaKey));
+		$this->_pWPDB->delete($tablePostMeta, array('meta_key' => $metaKey, 'meta_value' => $this->_shortCodePageDetail));
+	}
+	
+	/**
+	 * @return string
+	 */
+	public function getShortCodePageDetail()
+	{
+		return $this->_shortCodePageDetail;
+	}
+	
+	/**
+	 * @return wpdb
+	 */
+	public function getWPDB()
+	{
+		return $this->_pWPDB;
 	}
 }

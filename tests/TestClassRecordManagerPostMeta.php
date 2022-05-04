@@ -58,6 +58,13 @@ class TestClassRecordManagerPostMeta
 		$this->_pRecordManagerPostMeta = new RecordManagerPostMeta($this->_pWPDB);
 	}
 
+	public function testConstruct()
+	{
+		$pRecordManagerPostMeta = new RecordManagerPostMeta($this->_pWPDB);
+		$this->assertInstanceOf(wpdb::class, $pRecordManagerPostMeta->getWPDB());
+		$this->assertEquals('[oo_estate view="detail"]', $pRecordManagerPostMeta->getShortCodePageDetail());
+	}
+	
 	/**
 	 * @covers \onOffice\WPlugin\Record\RecordManagerPostMeta::getPageId
 	 */
@@ -68,12 +75,12 @@ class TestClassRecordManagerPostMeta
 	}
 
 	/**
-	 * @covers \onOffice\WPlugin\Record\RecordManagerPostMeta::deletePostMataUseCustomField
+	 * @covers \onOffice\WPlugin\Record\RecordManagerPostMeta::deletePostMetaUseCustomField
 	 */
-	public function testDeletePostMataUseCustomField()
+	public function testDeletePostMetaUseCustomField()
 	{
 		$this->_pWPDB->expects($this->once())->method('delete')
-			->with('wp_test_postmeta', ['meta_key' => 'shortcode']);
-		$this->_pRecordManagerPostMeta->deletePostMataUseCustomField('shortcode');
+			->with('wp_test_postmeta', ['meta_key' => 'shortcode','meta_value' => '[oo_estate view="detail"]']);
+		$this->_pRecordManagerPostMeta->deletePostMetaUseCustomField('shortcode');
 	}
 }

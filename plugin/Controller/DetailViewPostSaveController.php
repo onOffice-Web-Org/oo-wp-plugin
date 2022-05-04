@@ -142,7 +142,7 @@ class DetailViewPostSaveController
 		$pPost = get_post($postId);
 		$this->deletePageUseShortCode($pPost);
 		$postExcerpt = $pPost->post_excerpt;
-		$this->_pRecordPostMeta->deletePostMataUseCustomField($postExcerpt);
+		$this->_pRecordPostMeta->deletePostMetaUseCustomField($postExcerpt);
 	}
 
 
@@ -344,6 +344,9 @@ class DetailViewPostSaveController
 		}
 	}
 	
+	/**
+	 * @param $postId
+	 */
 	public function onDeletePost($postId)
 	{
 		$pPost = WP_Post::get_instance($postId);
@@ -354,7 +357,23 @@ class DetailViewPostSaveController
 		$isRevision = wp_is_post_revision($pPost);
 		if (!$isRevision) {
 			$postExcerpt = $pPost->post_excerpt;
-			$this->_pRecordPostMeta->deletePostMataUseCustomField($postExcerpt);
+			$this->_pRecordPostMeta->deletePostMetaUseCustomField($postExcerpt);
 		}
+	}
+	
+	/**
+	 * @return mixed|RecordManagerPostMeta
+	 */
+	public function getRecordPostMeta()
+	{
+		return $this->_pRecordPostMeta;
+	}
+	
+	/**
+	 * @return RewriteRuleBuilder
+	 */
+	public function getRewriteRuleBuilder()
+	{
+		return $this->_pRewriteRuleBuilder;
 	}
 }
