@@ -60,8 +60,8 @@ class RecordManagerPostMeta
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$Container = $pDIContainerBuilder->build();
-		$pDetailView = $Container->get(DataDetailView::class);
+		$pContainer = $pDIContainerBuilder->build();
+		$pDetailView = $pContainer->get(DataDetailView::class);
 		$shortCode = '[oo_estate view="' . $pDetailView->getName() . '"]';
 
 		$prefix = $this->_pWPDB->prefix;

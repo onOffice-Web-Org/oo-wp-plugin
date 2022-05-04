@@ -51,15 +51,15 @@ class TestClassRecordManagerPostMeta
 	public function prepare()
 	{
 		$this->_pWPDB = $this->getMockBuilder(wpdb::class)
-		->setMethods(['delete'])
-		->disableOriginalConstructor()
-		->getMock();
+			->setMethods(['delete'])
+			->disableOriginalConstructor()
+			->getMock();
 		$this->_pWPDB->prefix = 'wp_test_';
 		$this->_pRecordManagerPostMeta = new RecordManagerPostMeta($this->_pWPDB);
 	}
 
 	/**
-	 *
+	 * @covers \onOffice\WPlugin\Record\RecordManagerPostMeta::getPageId
 	 */
 	public function testGetPageIdInPostMeta()
 	{

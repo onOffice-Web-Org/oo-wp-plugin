@@ -55,8 +55,8 @@ class DataDetailViewHandler
 		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$Container = $pDIContainerBuilder->build();
-		$this->_pRecordPostMeta = $Container->get(RecordManagerPostMeta::class);
+		$pContainer = $pDIContainerBuilder->build();
+		$this->_pRecordPostMeta = $pContainer->get(RecordManagerPostMeta::class);
 		
 	}
 
@@ -75,12 +75,10 @@ class DataDetailViewHandler
 
 		if ($pResult == null)
 		{
-			var_dump($pResult);
-			die();
 			$pResult = $pAlternate;
 		}
 
-		if(empty($pResult->getPageId()))
+		if  (empty($pResult->getPageId()))
 		{
 			$pageInPostMeta = $this->_pRecordPostMeta->getPageId();
 			if (!empty($pageInPostMeta["post_id"]))

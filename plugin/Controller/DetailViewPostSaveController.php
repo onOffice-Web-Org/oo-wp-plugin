@@ -57,8 +57,8 @@ class DetailViewPostSaveController
 		$this->_pRewriteRuleBuilder = $pRewriteRuleBuilder;
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$Container = $pDIContainerBuilder->build();
-		$this->_pRecordPostMeta = $Container->get(RecordManagerPostMeta::class);
+		$pContainer = $pDIContainerBuilder->build();
+		$this->_pRecordPostMeta = $pContainer->get(RecordManagerPostMeta::class);
 	}
 
 
