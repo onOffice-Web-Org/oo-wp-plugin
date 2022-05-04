@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-04-26T11:48:18+07:00\n"
+"POT-Creation-Date: 2022-05-04T15:13:47+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -120,7 +120,7 @@ msgstr ""
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
 #: plugin/Fieldnames.php:219
-#: plugin/Gui/AdminPageFormSettingsContact.php:198
+#: plugin/Gui/AdminPageFormSettingsContact.php:196
 msgid "Form Specific Fields"
 msgstr ""
 
@@ -445,7 +445,7 @@ msgstr ""
 
 #: plugin/Gui/AdminPageEstateListSettings.php:152
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:226
+#: plugin/Gui/AdminPageFormSettingsContact.php:224
 msgid "Geo Fields"
 msgstr ""
 
@@ -545,16 +545,16 @@ msgstr ""
 msgid "Request Manager"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:126
+#: plugin/Gui/AdminPageFormSettingsContact.php:124
 msgid "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:128
+#: plugin/Gui/AdminPageFormSettingsContact.php:126
 msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the %s."
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:152
-#: plugin/Gui/AdminPageFormSettingsContact.php:163
+#: plugin/Gui/AdminPageFormSettingsContact.php:150
+#: plugin/Gui/AdminPageFormSettingsContact.php:161
 msgid "Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk."
 msgstr ""
 
@@ -1023,7 +1023,11 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: plugin/Renderer/InputModelRenderer.php:182
+#: plugin/Renderer/InputFieldTemplateListRenderer.php:100
+msgid "(in the folder \"%s\")"
+msgstr ""
+
+#: plugin/Renderer/InputModelRenderer.php:188
 msgid "(Remains unchanged)"
 msgstr ""
 

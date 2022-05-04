@@ -40,6 +40,9 @@ abstract class InputModelBase
 	const HTML_TYPE_RADIO = 'radio';
 
 	/** */
+	const HTML_TYPE_TEMPLATE_LIST = 'templateList';
+
+	/** */
 	const HTML_TYPE_HIDDEN = 'hidden';
 
 	/** */

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-04-26T11:48:18+07:00\n"
+"POT-Creation-Date: 2022-05-04T15:13:47+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -132,7 +132,7 @@ msgid "Search Criteria"
 msgstr "Suchkriterium"
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:198
+#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:196
 msgid "Form Specific Fields"
 msgstr "Formspezifische Felder"
 
@@ -488,7 +488,7 @@ msgstr "Dokumente zum Herunterladen"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:152
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:226
+#: plugin/Gui/AdminPageFormSettingsContact.php:224
 msgid "Geo Fields"
 msgstr "Umkreisfelder"
 
@@ -600,7 +600,7 @@ msgstr "Ja"
 msgid "Request Manager"
 msgstr "Anforderungsmanager"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:126
+#: plugin/Gui/AdminPageFormSettingsContact.php:124
 msgid ""
 "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-"
 "manager/?lang=en"
@@ -608,7 +608,7 @@ msgstr ""
 "https://de.enterprisehilfe.onoffice.com/category/zusatzmodule/"
 "anfragenmanager/"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:128
+#: plugin/Gui/AdminPageFormSettingsContact.php:126
 msgid ""
 "If the contact form is on an estate page, you can link the created address "
 "to that estate by opening the email you receive in onOffice enterprise or "
@@ -616,10 +616,10 @@ msgid ""
 msgstr ""
 "Wenn sich das Kontaktformular auf einer Nachlassseite befindet, können Sie "
 "die erstellte Adresse mit diesem Nachlass verknüpfen, indem Sie die "
-"erhaltene E-Mail in onOffice enterprise öffnen oder die verwenden %s."
+"erhaltene E-Mail in onOffice enterprise öffnen oder das verwenden %s."
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:152
-#: plugin/Gui/AdminPageFormSettingsContact.php:163
+#: plugin/Gui/AdminPageFormSettingsContact.php:150
+#: plugin/Gui/AdminPageFormSettingsContact.php:161
 msgid ""
 "Be aware that when activated the duplicate check can overwrite address "
 "records. This function will be removed in the future. Use at your own risk."
@@ -811,8 +811,6 @@ msgstr "Absteigend"
 msgid "List View"
 msgstr "Listenansichten"
 
-# msgid "Selected filter"
-# msgstr "Listenansicht"
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:148
 msgid "Passport Photo"
 msgstr "Passfoto"
@@ -925,10 +923,6 @@ msgid ""
 "a contact person, the email will be sent to their email address. Otherwise "
 "this email address will receive the email."
 msgstr ""
-"Beachten Sie, dass, wenn sich das Kontaktformular auf einer Detailseite des "
-"Nachlasses befindet und der Nachlass eine Kontaktperson hat, die E-Mail an "
-"deren E-Mail-Adresse gesendet wird. Andernfalls erhält diese E-Mail-Adresse "
-"die E-Mail."
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:311
 msgid "(won't work until set up globally)"
@@ -1129,7 +1123,11 @@ msgstr "In onOffice deaktiviert"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: plugin/Renderer/InputModelRenderer.php:182
+#: plugin/Renderer/InputFieldTemplateListRenderer.php:100
+msgid "(in the folder \"%s\")"
+msgstr ""
+
+#: plugin/Renderer/InputModelRenderer.php:188
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
@@ -1254,19 +1252,6 @@ msgstr "Ansprechpartner"
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Dokumente"
-
-#~ msgid "Deactivated"
-#~ msgstr "Deaktiviert"
-
-#, fuzzy
-#~| msgid ", Embed Code: "
-#~ msgid "Embedded"
-#~ msgstr ", Embed Code: "
-
-#, fuzzy
-#~| msgid "Link"
-#~ msgid "Links"
-#~ msgstr "Link"
 
 #, fuzzy
 #~| msgid "Contact person"

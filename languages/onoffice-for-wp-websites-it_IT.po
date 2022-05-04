@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-04-26T11:48:18+07:00\n"
+"POT-Creation-Date: 2022-05-04T15:13:47+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -136,7 +136,7 @@ msgid "Search Criteria"
 msgstr "Criteri di ricerca"
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:198
+#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:196
 msgid "Form Specific Fields"
 msgstr "Campi specifici del modulo"
 
@@ -488,7 +488,7 @@ msgstr "Documenti scaricabili"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:152
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:226
+#: plugin/Gui/AdminPageFormSettingsContact.php:224
 msgid "Geo Fields"
 msgstr "Campi geografici"
 
@@ -601,7 +601,7 @@ msgstr "Sì"
 msgid "Request Manager"
 msgstr "Gestore delle richieste"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:126
+#: plugin/Gui/AdminPageFormSettingsContact.php:124
 msgid ""
 "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-"
 "manager/?lang=en"
@@ -609,18 +609,18 @@ msgstr ""
 "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-"
 "manager/?lang=en"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:128
+#: plugin/Gui/AdminPageFormSettingsContact.php:126
 msgid ""
 "If the contact form is on an estate page, you can link the created address "
 "to that estate by opening the email you receive in onOffice enterprise or "
 "using the %s."
 msgstr ""
-"Se il modulo di contatto si trova su una pagina di proprietà, puoi collegare "
-"l'indirizzo creato a quella proprietà aprendo l'e-mail che ricevi in ​​"
-"onOffice enterprise o utilizzando il %s."
+"Se il modulo di contatto si trova su una pagina della proprietà, puoi "
+"collegare l'indirizzo creato a quella proprietà aprendo l'e-mail che ricevi "
+"in ​​onOffice enterprise o utilizzando %s."
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:152
-#: plugin/Gui/AdminPageFormSettingsContact.php:163
+#: plugin/Gui/AdminPageFormSettingsContact.php:150
+#: plugin/Gui/AdminPageFormSettingsContact.php:161
 msgid ""
 "Be aware that when activated the duplicate check can overwrite address "
 "records. This function will be removed in the future. Use at your own risk."
@@ -924,10 +924,6 @@ msgid ""
 "a contact person, the email will be sent to their email address. Otherwise "
 "this email address will receive the email."
 msgstr ""
-"Tieni presente che se il modulo di contatto si trova in una pagina dei "
-"dettagli della proprietà e la proprietà ha una persona di contatto, l'e-mail "
-"verrà inviata al suo indirizzo e-mail. In caso contrario, questo indirizzo "
-"email riceverà l'e-mail."
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:311
 msgid "(won't work until set up globally)"
@@ -968,9 +964,9 @@ msgstr "Modulo"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:136
 #, fuzzy
-#| msgid "The detail view has been saved."
+#| msgid "Reference Estates"
 msgid "Allow detail view for reference estates"
-msgstr "La vista di dettaglio è stata salvata."
+msgstr "Estates di riferimento"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:178
 msgid "Movie Links"
@@ -1129,7 +1125,11 @@ msgstr "Disabili in onOffice"
 msgid "Edit"
 msgstr "Modifica"
 
-#: plugin/Renderer/InputModelRenderer.php:182
+#: plugin/Renderer/InputFieldTemplateListRenderer.php:100
+msgid "(in the folder \"%s\")"
+msgstr ""
+
+#: plugin/Renderer/InputModelRenderer.php:188
 msgid "(Remains unchanged)"
 msgstr "(Rimane invariato)"
 
