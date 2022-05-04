@@ -30,6 +30,10 @@
     5. In the description, remove all project and ticket numbers. These are usually at the beginning of the list items. For example, the entry `*  P#60599 Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154` should be edited to `* Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154`.
 3. The workflow run will start automatically.
     - The deployment uses secrets from the "WordPress SVN" [environment](#environment) and needs to be approved.
+4. If something went wrong, you will need to reset the tag. In the following example, the tag is `v3.1`.
+    1. In your console, delete the tag with `git tag -d v3.1`.
+    2. Remove the tag from GitHub with `git push origin :v3.1`. (Only users with admin access to the repository can do this.)
+    3. Re-add a tag by redoing step 2.
 
 ## Environment
 
