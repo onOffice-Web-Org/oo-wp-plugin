@@ -211,7 +211,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 			->setMethods(['readExposes'])
 			->getMock();
 		$pInstance->generate('test');
-		$pInstance->method('readExposes')->willReturn('1');
+		$pInstance->method('readExposes')->willReturn([]);
 		$pInputModelDB = $pInstance->createInputModelExpose();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
