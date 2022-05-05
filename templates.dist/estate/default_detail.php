@@ -226,7 +226,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			foreach ($estateMovieLinks as $movieLink) {
 				echo '<div>'.esc_html(!empty($movieLink['title']) ? $movieLink['title'] : $movieLink['type']) . '</div>';
 				echo '<div class="oo-video">
-						<a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '">'
+						<a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '" style="color: #0073aa">'
 							. esc_html(!empty($movieLink['title']) ? $movieLink['title'] : $movieLink['type'])
 						.'</a>
 					</div>';
@@ -244,7 +244,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			foreach ($estateOguloLinks as $oguloLink) {
 				echo '<div>'.esc_html(!empty($oguloLink['title']) ? $oguloLink['title'] : $oguloLink['type']) . '</div>';
 				echo '<div class="oo-video">
-						<a href="'.esc_attr($oguloLink['url']).'" title="'.esc_attr(!empty($oguloLink['title']) ? $oguloLink['title'] : $oguloLink['type']).'">'
+						<a href="'.esc_attr($oguloLink['url']).'" title="'.esc_attr(!empty($oguloLink['title']) ? $oguloLink['title'] : $oguloLink['type']).'" style="color: #0073aa">'
 							.esc_html(!empty($oguloLink['title']) ? $oguloLink['title'] : $oguloLink['type'])
 						.'</a>
 					</div>';
@@ -270,7 +270,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			foreach ($estateObjectLinks as $objectLink) {
 				echo '<div>'.esc_html(!empty($objectLink['title']) ? $objectLink['title'] : $objectLink['type']) . '</div>';
 				echo '<div class="oo-video">
-						<a href="' . esc_attr($objectLink['url']) . '" title="' . esc_attr(!empty($objectLink['title']) ? $objectLink['title'] : 'Objekt-Link') . '">'
+						<a href="' . esc_attr($objectLink['url']) . '" title="' . esc_attr(!empty($objectLink['title']) ? $objectLink['title'] : 'Objekt-Link') . '" style="color: #0073aa">'
 							.esc_html(!empty($objectLink['title']) ? $objectLink['title'] : $objectLink['type'])
 						.'</a>
 					</div>';
@@ -296,7 +296,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			foreach ($estateLinks as $link) {
 				echo '<div>'.esc_html(!empty($link['title']) ? $link['title'] : $link['type']) . '</div>';
 				echo '<div class="oo-video">
-						<a href="' . esc_attr($link['url']) . '" title="' . esc_attr(!empty($link['title']) ? $link['title'] : 'Link') . '">'
+						<a href="' . esc_attr($link['url']) . '" title="' . esc_attr(!empty($link['title']) ? $link['title'] : 'Link') . '" style="color: #0073aa">'
 							.esc_html(!empty($link['title']) ? $link['title'] : $link['type'])
 						.'</a>
 					</div>';
