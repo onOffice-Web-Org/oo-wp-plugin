@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-04-26T10:27:33+07:00\n"
+"POT-Creation-Date: 2022-05-05T09:19:10+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -938,9 +938,9 @@ msgstr "Module"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
 #, fuzzy
-#| msgid "The detail view has been saved."
+#| msgid "Reference Estates"
 msgid "Allow detail view for reference estates"
-msgstr "Het detailaanzicht is opgeslagen."
+msgstr "Referentie Landgoederen"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
 msgid "Movie Links"
@@ -951,7 +951,7 @@ msgstr "Filmlinks"
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:235
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:258
 msgid "Deactivated"
-msgstr "gedeactiveerd"
+msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:189
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:213
@@ -1127,7 +1127,11 @@ msgstr "Uitgeschakeld in onOffice"
 msgid "Edit"
 msgstr "Bewerken"
 
-#: plugin/Renderer/InputModelRenderer.php:182
+#: plugin/Renderer/InputFieldTemplateListRenderer.php:100
+msgid "(in the folder \"%s\")"
+msgstr ""
+
+#: plugin/Renderer/InputModelRenderer.php:188
 msgid "(Remains unchanged)"
 msgstr "(Blijft ongewijzigd)"
 
@@ -1263,13 +1267,13 @@ msgstr "Contactpersoon"
 msgid "Documents"
 msgstr "Documenten"
 
+#~ msgid "Disabled"
+#~ msgstr "Uitgeschakeld"
+
 #, fuzzy
 #~| msgid "Contact person"
 #~ msgid "Contact Form"
 #~ msgstr "Contactpersoon"
-
-#~ msgid "Disabled"
-#~ msgstr "Uitgeschakeld"
 
 #~ msgid "Modules"
 #~ msgstr "Modules"

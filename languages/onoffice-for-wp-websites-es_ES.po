@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-04-26T10:27:33+07:00\n"
+"POT-Creation-Date: 2022-05-05T09:19:10+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -940,9 +940,9 @@ msgstr "Módulo"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
 #, fuzzy
-#| msgid "The detail view has been saved."
+#| msgid "Reference Estates"
 msgid "Allow detail view for reference estates"
-msgstr "Se ha grabado la vista detallada."
+msgstr "Fincas de referencia"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
 msgid "Movie Links"
@@ -968,7 +968,7 @@ msgstr "Jugador"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:206
 msgid "Ogulo-Links"
-msgstr ""
+msgstr "Ogulo-Links"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:214
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:237
@@ -980,7 +980,7 @@ msgstr "Código de incrustación: "
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:229
 msgid "Object-Links"
-msgstr ""
+msgstr "Object-Links"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:252
 #, fuzzy
@@ -1128,7 +1128,11 @@ msgstr "Desactivado en onOffice"
 msgid "Edit"
 msgstr "Tratar"
 
-#: plugin/Renderer/InputModelRenderer.php:182
+#: plugin/Renderer/InputFieldTemplateListRenderer.php:100
+msgid "(in the folder \"%s\")"
+msgstr ""
+
+#: plugin/Renderer/InputModelRenderer.php:188
 msgid "(Remains unchanged)"
 msgstr "(Permanece sin cambios)"
 
@@ -1263,12 +1267,12 @@ msgstr "Persona de contacto: "
 msgid "Documents"
 msgstr "Documentos"
 
+#~ msgid "Disabled"
+#~ msgstr "Discapacitado"
+
 #, fuzzy
 #~ msgid "Contact Form"
 #~ msgstr "Persona de contacto: "
-
-#~ msgid "Disabled"
-#~ msgstr "Discapacitado"
 
 #~ msgid "Modules"
 #~ msgstr "Módulos"

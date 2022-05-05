@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-04-26T10:27:33+07:00\n"
+"POT-Creation-Date: 2022-05-05T09:19:10+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -786,8 +786,6 @@ msgstr "Absteigend"
 msgid "List View"
 msgstr "Listenansichten"
 
-# msgid "Selected filter"
-# msgstr "Listenansicht"
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:148
 msgid "Passport Photo"
 msgstr "Passfoto"
@@ -960,15 +958,15 @@ msgstr "Deaktiviert"
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:236
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:259
 msgid "Link"
-msgstr "Verknüpfung"
+msgstr "Link"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:190
 msgid "Player"
-msgstr "Spieler"
+msgstr "Player"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:206
 msgid "Ogulo-Links"
-msgstr ""
+msgstr "Ogulo-Links"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:214
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:237
@@ -978,7 +976,7 @@ msgstr "Eingebettet"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:229
 msgid "Object-Links"
-msgstr ""
+msgstr "Objekt-Links"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:252
 #, fuzzy
@@ -1126,7 +1124,11 @@ msgstr "In onOffice deaktiviert"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: plugin/Renderer/InputModelRenderer.php:182
+#: plugin/Renderer/InputFieldTemplateListRenderer.php:100
+msgid "(in the folder \"%s\")"
+msgstr ""
+
+#: plugin/Renderer/InputModelRenderer.php:188
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
@@ -1252,13 +1254,13 @@ msgstr "Ansprechpartner"
 msgid "Documents"
 msgstr "Dokumente"
 
+#~ msgid "Disabled"
+#~ msgstr "Deaktiviert"
+
 #, fuzzy
 #~| msgid "Contact person"
 #~ msgid "Contact Form"
 #~ msgstr "Kontaktformular"
-
-#~ msgid "Disabled"
-#~ msgstr "Deaktiviert"
 
 #~ msgid "Modules"
 #~ msgstr "Module"
