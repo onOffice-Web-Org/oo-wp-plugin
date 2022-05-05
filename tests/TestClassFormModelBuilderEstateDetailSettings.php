@@ -212,7 +212,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 			->getMock();
 		$pInstance->generate('test');
 		$pInstance->method('readExposes')->willReturn('1');
-		$pInputModelDB = $pInstance->createInputModelTemplate();
+		$pInputModelDB = $pInstance->createInputModelExpose();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
 }
