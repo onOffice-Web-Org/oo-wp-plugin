@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-04-27T11:42:47+07:00\n"
+"POT-Creation-Date: 2022-05-05T11:49:41+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -102,35 +102,36 @@ msgid ""
 "for these forms: Contact, Interest, Owner"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:431
+#: plugin/Controller/AdminViewController.php:427
 msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
-msgstr "Il plugin onOffice ha rilevato un plugin SEO attivo: Yoast SEO."
+msgstr "Il plug-in onOffice ha rilevato un plug-in SEO attivo: Yoast SEO."
 
-#: plugin/Controller/AdminViewController.php:432
+#: plugin/Controller/AdminViewController.php:428
 msgid ""
 "You currently have configured the onOffice plugin to fill out the title and "
 "description of the detail page, which can lead to conflicts with the SEO "
 "plugin."
 msgstr ""
-"Voi attualmente hanno configurato il plugin onOffice per compilare il titolo "
-"e descrizione della pagina di dettaglio, che può portare a conflitti con il "
-"plugin SEO."
+"Al momento hai configurato il plug-in onOffice per compilare il titolo e la "
+"descrizione della pagina dei dettagli, il che può causare conflitti con il "
+"plug-in SEO."
 
-#: plugin/Controller/AdminViewController.php:433
+#: plugin/Controller/AdminViewController.php:429
 msgid ""
 "We recommend that you go the the onOffice plugin settings and configure the "
 "onOffice plugin to not modify the title and description."
 msgstr ""
-"Ti consigliamo di andare alle impostazioni del plugin onOffice e configurare "
-"il plugin onOffice per non modificare il titolo e la descrizione."
+"Ti consigliamo di accedere alle impostazioni del plug-in onOffice e "
+"configurare il plug-in onOffice per non modificare il titolo e la "
+"descrizione."
 
-#: plugin/Controller/AdminViewController.php:434
+#: plugin/Controller/AdminViewController.php:430
 msgid ""
 "This allows you to manage the title and description with your active SEO "
 "plugin."
 msgstr ""
-"Questo ti permette di gestisci il titolo e la descrizione con il tuo plugin "
-"SEO attivo."
+"Ciò ti consente di gestire il titolo e la descrizione con il tuo plug-in SEO "
+"attivo."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:66
@@ -324,12 +325,12 @@ msgid ""
 "shown estate. For information on how to use custom fields consult you SEO "
 "plugin's documentation."
 msgstr ""
-"Quando questa opzione è attiva, il plugin effettua le seguenti "
-"personalizzazioni campi disponibili nella visualizzazione dei dettagli. "
-"Questi campi personalizzati possono essere utilizzati in Plugin SEO per "
-"compilare il titolo e la descrizione con le informazioni della tenuta "
-"attualmente mostrata. Per informazioni su come utilizzare i campi "
-"personalizzati consulta la documentazione del tuo plugin SEO."
+"Quando questa opzione è attiva, il plug-in rende disponibili i seguenti "
+"campi personalizzati nella vista dettagliata. Questi campi personalizzati "
+"possono essere utilizzati nei plugin SEO per compilare il titolo e la "
+"descrizione con le informazioni della proprietà attualmente mostrata. Per "
+"informazioni su come utilizzare i campi personalizzati consulta la "
+"documentazione del plugin SEO."
 
 #: plugin/Gui/AdminPageApiSettings.php:188
 msgid ""
@@ -341,31 +342,31 @@ msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:189
 msgid "Title (onoffice_title)"
-msgstr "Titolo (onoffice_title)"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:190
 msgid "Description (onoffice_description)"
-msgstr "Descrizione (onoffice_description)"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:191
 msgid "Place (onoffice_place)"
-msgstr "Luogo  (onoffice_place)"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:192
 msgid "Postal code (onoffice_postal_code)"
-msgstr "Codice postale (onoffice_postal_code)"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:193
 msgid "Property class (onoffice_property_class)"
-msgstr "Classe di proprietà (onoffice_property_class)"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:194
 msgid "Marketing method (onoffice_marketing_method)"
-msgstr "Metodo di marketing (onoffice_marketing_method)"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:195
 msgid "Data Record Ref No. (onoffice_id)"
-msgstr "N. rif. record dati  (onoffice_id)"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:200
 msgid ""
@@ -390,8 +391,8 @@ msgid ""
 "using a SEO plugin."
 msgstr ""
 "Questo plugin compilerà il titolo e la descrizione con le informazioni della "
-"proprietà mostrata. Questa opzione è consigliata se non si utilizza un plug-"
-"in SEO."
+"proprietà mostrata. Questa opzione è consigliata se non stai utilizzando un "
+"plug-in SEO."
 
 #: plugin/Gui/AdminPageApiSettings.php:213
 #, fuzzy
@@ -405,6 +406,10 @@ msgid ""
 "and your brochures can be available from search engines even months after "
 "the corresponding estate is deleted."
 msgstr ""
+"Se consenti l'indicizzazione, il tuo posizionamento sui motori di ricerca "
+"può essere influenzato negativamente e le tue brochure possono essere "
+"disponibili sui motori di ricerca anche mesi dopo l'eliminazione della "
+"proprietà corrispondente."
 
 #: plugin/Gui/AdminPageApiSettings.php:221
 msgid "Title and description"
@@ -420,7 +425,7 @@ msgstr "Non modificare"
 
 #: plugin/Gui/AdminPageApiSettings.php:240
 msgid "SEO"
-msgstr "SEO"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:279
 msgid "The keys are OK."
@@ -1070,9 +1075,9 @@ msgstr "Modulo"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:136
 #, fuzzy
-#| msgid "The detail view has been saved."
+#| msgid "Reference Estates"
 msgid "Allow detail view for reference estates"
-msgstr "La vista di dettaglio è stata salvata."
+msgstr "Estates di riferimento"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:178
 msgid "Movie Links"
@@ -1231,7 +1236,11 @@ msgstr "Disabili in onOffice"
 msgid "Edit"
 msgstr "Modifica"
 
-#: plugin/Renderer/InputModelRenderer.php:183
+#: plugin/Renderer/InputFieldTemplateListRenderer.php:100
+msgid "(in the folder \"%s\")"
+msgstr ""
+
+#: plugin/Renderer/InputModelRenderer.php:189
 msgid "(Remains unchanged)"
 msgstr "(Rimane invariato)"
 

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-04-27T11:42:47+07:00\n"
+"POT-Creation-Date: 2022-05-05T11:49:41+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -98,35 +98,36 @@ msgid ""
 "for these forms: Contact, Interest, Owner"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:431
+#: plugin/Controller/AdminViewController.php:427
 msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
 msgstr "Das onOffice-Plugin hat ein aktives SEO-Plugin erkannt: Yoast SEO."
 
-#: plugin/Controller/AdminViewController.php:432
+#: plugin/Controller/AdminViewController.php:428
 msgid ""
 "You currently have configured the onOffice plugin to fill out the title and "
 "description of the detail page, which can lead to conflicts with the SEO "
 "plugin."
 msgstr ""
-"Du haben derzeit das onOffice-Plugin so konfiguriert, dass es den Titel "
-"ausfüllt und Beschreibung der Detailseite, was zu Konflikten mit dem SEO-"
-"Plugin führen kann."
+"Sie haben derzeit das onOffice-Plugin so konfiguriert, dass Titel und "
+"Beschreibung der Detailseite ausgefüllt werden, was zu Konflikten mit dem "
+"SEO-Plugin führen kann."
 
-#: plugin/Controller/AdminViewController.php:433
+#: plugin/Controller/AdminViewController.php:429
 msgid ""
 "We recommend that you go the the onOffice plugin settings and configure the "
 "onOffice plugin to not modify the title and description."
 msgstr ""
-"Wir empfehlen Ihnen, die onOffice-Plugin-Einstellungen aufzurufen und die "
-"onOffice-Plugin, um den Titel und die Beschreibung nicht zu ändern."
+"Wir empfehlen Ihnen, zu den Einstellungen des onOffice-Plugins zu gehen und "
+"das onOffice-Plugin so zu konfigurieren, dass Titel und Beschreibung nicht "
+"geändert werden."
 
-#: plugin/Controller/AdminViewController.php:434
+#: plugin/Controller/AdminViewController.php:430
 msgid ""
 "This allows you to manage the title and description with your active SEO "
 "plugin."
 msgstr ""
-"Damit können Sie Verwalten Sie den Titel und die Beschreibung mit Ihrem "
-"aktiven SEO-Plugin."
+"Auf diese Weise können Sie den Titel und die Beschreibung mit Ihrem aktiven "
+"SEO-Plugin verwalten."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:66
@@ -319,12 +320,12 @@ msgid ""
 "shown estate. For information on how to use custom fields consult you SEO "
 "plugin's documentation."
 msgstr ""
-"Wenn diese Option aktiv ist, macht das Plugin die folgenden "
-"benutzerdefinierten Felder in der Detailansicht verfügbar. Diese "
-"benutzerdefinierten Felder können verwendet werden in SEO-Plugins zum "
-"Ausfüllen des Titels und der Beschreibung mit den Informationen des aktuell "
-"angezeigten Nachlasses. Informationen zur Verwendung von benutzerdefinierten "
-"Feldern konsultieren Sie die Dokumentation Ihres SEO-Plugins."
+"Wenn diese Option aktiv ist, stellt das Plugin die folgenden "
+"benutzerdefinierten Felder in der Detailansicht zur Verfügung. Diese "
+"benutzerdefinierten Felder können in SEO-Plugins verwendet werden, um den "
+"Titel und die Beschreibung mit den Informationen des aktuell angezeigten "
+"Anwesens zu füllen. Informationen zur Verwendung benutzerdefinierter Felder "
+"finden Sie in der Dokumentation Ihres SEO-Plugins."
 
 #: plugin/Gui/AdminPageApiSettings.php:188
 msgid ""
@@ -352,7 +353,7 @@ msgstr "Postleitzahl (onoffice_plz)"
 
 #: plugin/Gui/AdminPageApiSettings.php:193
 msgid "Property class (onoffice_property_class)"
-msgstr "Eigenschapsklasse (onoffice_objektart)"
+msgstr "Eigenschaftsklasse (onoffice_objektart)"
 
 #: plugin/Gui/AdminPageApiSettings.php:194
 msgid "Marketing method (onoffice_marketing_method)"
@@ -360,7 +361,7 @@ msgstr "Marketingmethode (onoffice_vermarktungsart)"
 
 #: plugin/Gui/AdminPageApiSettings.php:195
 msgid "Data Record Ref No. (onoffice_id)"
-msgstr "Datensatz-Ref-Nr.  (onoffice_datensatznr)"
+msgstr "Datensatz-Referenz-Nr. (onoffice_datensatznr)"
 
 #: plugin/Gui/AdminPageApiSettings.php:200
 msgid ""
@@ -419,7 +420,7 @@ msgstr "Nicht ändern"
 
 #: plugin/Gui/AdminPageApiSettings.php:240
 msgid "SEO"
-msgstr "SEO"
+msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:279
 msgid "The keys are OK."
@@ -912,8 +913,10 @@ msgstr "Absteigend"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:94
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:119
+#, fuzzy
+#| msgid "List Views"
 msgid "List View"
-msgstr "Listenansicht"
+msgstr "Listenansichten"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBAddress.php:148
 msgid "Passport Photo"
@@ -1227,7 +1230,11 @@ msgstr "In onOffice deaktiviert"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: plugin/Renderer/InputModelRenderer.php:183
+#: plugin/Renderer/InputFieldTemplateListRenderer.php:100
+msgid "(in the folder \"%s\")"
+msgstr ""
+
+#: plugin/Renderer/InputModelRenderer.php:189
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 

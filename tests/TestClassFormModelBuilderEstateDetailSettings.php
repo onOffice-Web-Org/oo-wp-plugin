@@ -178,20 +178,27 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInputModelDB = $pInstance->createInputModelShowStatus();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
-	
+ 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelTemplate
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::CreateInputModelTemplate
 	 */
 	public function testCreateInputModelTemplate()
 	{
+		$row = self::VALUES_BY_ROW;
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataDetailViewHandler = new DataDetailViewHandler($pWPOptionsWrapper);
+		$this->_pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($row);
+		
 		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getValue'])
+			->setMethods(['getValue', 'readTemplatePaths'])
 			->getMock();
+		$pInstance->expects($this->exactly(1))
+			->method('readTemplatePaths');
 		$pInstance->generate('test');
-		$pInstance->method('getValue')->willReturn('1');
-		$pInputModelDB = $pInstance->createInputModelTemplate(InputModelOptionFactoryDetailView::INPUT_TEMPLATE);
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+		
+		$pInputModelDB = $pInstance->createInputModelTemplate();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'templateList');
 	}
 	
 	/**
@@ -208,5 +215,4 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInputModelDB = $pInstance->createInputModelTemplate();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
-
 }
