@@ -27,7 +27,10 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use onOffice\WPlugin\Record\RecordManagerPostMeta;
+use DI\ContainerBuilder;
 use WP_UnitTestCase;
 
 /**
@@ -58,7 +61,15 @@ class TestClassDataDetailViewHandler
 		'movielinks' => MovieLinkTypes::MOVIE_LINKS_PLAYER
 	];
 
-
+	public function testConstruct()
+	{
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pDetailViewHandler = $pContainer->get(DataDetailViewHandler::class);
+		$this->assertInstanceOf(RecordManagerPostMeta::class, $pDetailViewHandler->getRecordPostMeta());
+		$this->assertInstanceOf(WPOptionWrapperDefault::class, $pDetailViewHandler->getWPOptionWrapper());
+	}
 	/**
 	 *
 	 */

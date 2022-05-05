@@ -66,7 +66,6 @@ class RecordManagerPostMeta
 
 	public function getPageId(): array
 	{
-		
 
 		$prefix = $this->_pWPDB->prefix;
 		$post_meta_sql="SELECT `post_id`

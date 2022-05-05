@@ -130,4 +130,20 @@ class DataDetailViewHandler
 		$pDataDetailView->setShowStatus($row['show_status'] ?? false);
 		return $pDataDetailView;
 	}
+
+	/**
+	 * @return WPOptionWrapperBase|WPOptionWrapperDefault
+	 */
+	public function getWPOptionWrapper()
+	{
+		return $this->_pWPOptionWrapper;
+	}
+
+	/**
+	 * @return mixed|RecordManagerPostMeta
+	 */
+	public function getRecordPostMeta()
+	{
+		return $this->_pRecordPostMeta;
+	}
 }

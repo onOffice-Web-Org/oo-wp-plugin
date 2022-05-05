@@ -39,13 +39,9 @@ class TestClassDetailViewPostSaveController
 	extends WP_UnitTestCase
 {
 	/**
-	 * @var object
+	 * @throws \DI\DependencyException
+	 * @throws \DI\NotFoundException
 	 */
-	private $_pRecordManagerPostMeta;
-	
-	/** @var wpdb */
-	private $_pWPDB = null;
-	
 	public function testConstruct()
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
