@@ -34,7 +34,7 @@ async function check() {
   );
 
   const versionsInChangelog = readme.match(
-    /==\s*Changelog\s*==.*?(?:=\s*(.+?)\s*=.*?)?(?:=\s*(.+?)\s*=)/s,
+    /==\s*Changelog\s*==.*?(?:=\s*(.+?)\s*(?:\(.*?\))?\s*=.*?)?(?:=\s*(.+?)\s*(?:\(.*?\))?\s*=)/s,
   )
   if (versionsInChangelog === null) {
     console.error(
@@ -47,7 +47,7 @@ async function check() {
   const secondVersionInChangelog = versionsInChangelog?.at(2);
   if (newestVersionInChangelog !== newVersion && secondVersionInChangelog !== newVersion) {
     console.error(
-    `The two most recent changelog entries in the 'readme.txt' have the wrong version. They point to ${newestVersionInChangelog} and ${secondVersionInChangelog}, but the new version is ${newVersion}.`,
+    `The two most recent changelog entries in the 'readme.txt' have the wrong version. They point to '${newestVersionInChangelog}' and '${secondVersionInChangelog}', but the new version is ${newVersion}.`,
     );
     Deno.exit(1);
   }
