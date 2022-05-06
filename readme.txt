@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.9
 Requires PHP: 7.2
-Stable tag: 3.0
+Stable tag: 3.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -78,6 +78,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 = Unreleased =
 
+**Fixed**
+
+* In the settings, clicking on the labels now sets the correct controls.
+* Explain how to link addresses from contact forms with the estates.
+
+= 3.1 (2022-05-04) =
+
 **Changed**
 
 * The selection of the template for lists and forms has been improved.
@@ -86,9 +93,9 @@ Start editing inside the `onoffice-personalized` folder.
 
 * When creating new lists or forms, the correct template will be selected by default.
 * Address lists can no longer be saved without a name.
-* In interest forms, search criteria fields that are displayed as a select field are now actually required to send the form.
+* In interest forms, search criteria fields that are displayed as a select field can now be set as required.
 
-= 3.0 =
+= 3.0 (2022-04-19) =
 
 **Added**
 
