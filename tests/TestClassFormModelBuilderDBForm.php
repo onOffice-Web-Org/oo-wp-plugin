@@ -60,11 +60,7 @@ class TestClassFormModelBuilderDBForm
 		$this->_pContainer = $pContainerBuilder->build();
 		$this->_pInstance = new FormModelBuilderDBForm($this->_pContainer);
 	}
-
-	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRecipientContactForm
-	 */
-
+	
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRecipientContactForm
