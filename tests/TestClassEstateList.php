@@ -173,6 +173,9 @@ class TestClassEstateList
 
 		$this->assertFalse($this->_pEstateList->estateIterator());
 		$this->_pEstateList->resetEstateIterator();
+		add_option('onoffice-settings-title-and-description', '0');
+		$title = tests_add_filter('pre_get_document_title',[$this->_pEstateList,'estateIterator']);
+		$this->assertTrue($title);
 		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
 	}
 
