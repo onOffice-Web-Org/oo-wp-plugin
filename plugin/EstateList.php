@@ -415,7 +415,6 @@ class EstateList
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
 		{
 			add_filter('pre_get_document_title', function($title_parts_array) use ($recordModified) {
-				var_dump($recordModified["objekttitel"]);
 				if (isset($recordModified["objekttitel"]))
 				{
 					$title_parts_array = $recordModified["objekttitel"];
