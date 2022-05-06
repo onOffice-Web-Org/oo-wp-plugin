@@ -120,6 +120,12 @@ class AdminPageFormSettingsContact
 			if (empty($pInputModelBuilder->getValues())) {
 				$pInputModel->setValue(true);
 			}
+			$linkLabel = esc_html__('Request Manager', 'onoffice-for-wp-websites');
+			$linkUrl = esc_html__('https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en', 'onoffice-for-wp-websites');
+			$link = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $linkUrl, $linkLabel);
+			$textWithoutLink = esc_html__("If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the %s.", 'onoffice-for-wp-websites');
+			$txtHint = sprintf($textWithoutLink, $link);
+			$pInputModel->setHintHtml($txtHint);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -141,7 +147,7 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
-			$pInputModel->setHint(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
+			$pInputModel->setHintHtml(esc_html__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -152,7 +158,7 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicatesInterestOwner) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER);
-			$pInputModel->setHint(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
+			$pInputModel->setHintHtml(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
