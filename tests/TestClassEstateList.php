@@ -800,12 +800,14 @@ class TestClassEstateList
 			'referenz',
 			'reserviert',
 			'verkauft',
+			"objekttitel",
+			"objektbeschreibung",
 			'exclusive',
 			'neu',
 			'top_angebot',
 			'preisreduktion',
 			'courtage_frei',
-			'objekt_des_tages',
+			'objekt_des_tages'
 		]);
 		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
 			($pEstateStatusLabel);
@@ -821,7 +823,7 @@ class TestClassEstateList
 	private function getDataView(): DataListView
 	{
 		$pDataView = new DataListView(1, 'test');
-		$pDataView->setFields(['Id', 'objektart', 'objekttyp']);
+		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
 		$pDataView->setSortby('Id');
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);

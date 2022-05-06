@@ -55,7 +55,6 @@ use function get_page_link;
 use function home_url;
 use function esc_attr;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
-use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 
 class EstateList
 	implements EstateListBase
@@ -416,6 +415,7 @@ class EstateList
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
 		{
 			add_filter('pre_get_document_title', function($title_parts_array) use ($recordModified) {
+				var_dump($recordModified["objekttitel"]);
 				if (isset($recordModified["objekttitel"]))
 				{
 					$title_parts_array = $recordModified["objekttitel"];
