@@ -123,7 +123,7 @@ class AdminPageFormSettingsContact
 			$linkLabel = esc_html__('Request Manager', 'onoffice-for-wp-websites');
 			$linkUrl = esc_html__('https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en', 'onoffice-for-wp-websites');
 			$link = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $linkUrl, $linkLabel);
-			$textWithoutLink = esc_html__("If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the %s.", 'onoffice-for-wp-websites');
+			$textWithoutLink = esc_html__("By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s.", 'onoffice-for-wp-websites');
 			$txtHint = sprintf($textWithoutLink, $link);
 			$pInputModel->setHintHtml($txtHint);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
