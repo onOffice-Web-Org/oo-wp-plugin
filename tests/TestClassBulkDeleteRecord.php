@@ -80,14 +80,9 @@ class TestClassBulkDeleteRecord
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Controller\Exception\UserCapabilitiesException
-	 *
-	 */
-
 	public function testDeleteNoRight()
 	{
+		$this->expectException(\onOffice\WPlugin\Controller\Exception\UserCapabilitiesException::class);
 		$pException = new \onOffice\WPlugin\Controller\Exception\UserCapabilitiesException();
 		$this->_pUserCapabilities->method('checkIfCurrentUserCan')
 			->with(UserCapabilities::RULE_EDIT_VIEW_FORM)

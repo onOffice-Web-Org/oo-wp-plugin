@@ -15,10 +15,10 @@ async function check() {
   }
 
   const newVersion = Deno.args[0];
-  const isValidVersion = /^\d+.\d+.\d+$/.test(newVersion)
+  const isValidVersion = /^\d+.\d+(.\d+)?$/.test(newVersion)
   if (!isValidVersion) {
     console.error(
-      `The given version '${newVersion} is not valid. The version has to be in the form 'v1.2.3'.`,
+      `The given version '${newVersion} is not valid. The version has to be in the form '3.0' or '1.2.3'.`,
     );
     Deno.exit(1);
   }
@@ -34,7 +34,7 @@ async function check() {
   );
 
   const versionsInChangelog = readme.match(
-    /==\s*Changelog\s*==.*?(?:=\s*(.+?)\s*=.*?)?(?:=\s*(.+?)\s*=)/s,
+    /==\s*Changelog\s*==.*?(?:=\s*(.+?)\s*(?:\(.*?\))?\s*=.*?)?(?:=\s*(.+?)\s*(?:\(.*?\))?\s*=)/s,
   )
   if (versionsInChangelog === null) {
     console.error(
@@ -47,7 +47,7 @@ async function check() {
   const secondVersionInChangelog = versionsInChangelog?.at(2);
   if (newestVersionInChangelog !== newVersion && secondVersionInChangelog !== newVersion) {
     console.error(
-    `The two most recent changelog entries in the 'readme.txt' have the wrong version. They point to ${newestVersionInChangelog} and ${secondVersionInChangelog}, but the new version is ${newVersion}.`,
+    `The two most recent changelog entries in the 'readme.txt' have the wrong version. They point to '${newestVersionInChangelog}' and '${secondVersionInChangelog}', but the new version is ${newVersion}.`,
     );
     Deno.exit(1);
   }

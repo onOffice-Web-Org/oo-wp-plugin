@@ -83,15 +83,10 @@ class TestClassInputModelDB
 	}
 
 
-	/**
-	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Table and field must be set
-	 *
-	 */
-
 	public function testGetIdentifierFailing()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Table and field must be set');
 		$pInputModelDB = new InputModelDB('testInput', 'testLabel');
 		$pInputModelDB->getIdentifier();
 	}

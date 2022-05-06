@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.9
 Requires PHP: 7.2
-Stable tag: 2.22.5
+Stable tag: 3.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -78,6 +78,24 @@ Start editing inside the `onoffice-personalized` folder.
 
 = Unreleased =
 
+**Fixed**
+
+* In the settings, clicking on the labels now sets the correct controls.
+
+= 3.1 (2022-05-04) =
+
+**Changed**
+
+* The selection of the template for lists and forms has been improved.
+
+**Fixed**
+
+* When creating new lists or forms, the correct template will be selected by default.
+* Address lists can no longer be saved without a name.
+* In interest forms, search criteria fields that are displayed as a select field can now be set as required.
+
+= 3.0 (2022-04-19) =
+
 **Added**
 
 * In the overview for estate lists, address lists, and forms:
@@ -86,19 +104,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Removed**
 
-* Drop support for older PHP version. The minimum version is now PHP 7.2.
+* Drop support for older PHP versions. The minimum version is now PHP 7.2.
 
 **Fixed**
 
 * If there are many regions configured in onOffice enterprise, the estate list settings will now load much faster.
 * The default template for the detail view now groups together the contact person's fields that belong together. For example, title, first and last name are grouped as one line.
 * The "Show Estate Status" checkbox in the estate list settings is no longer shown twice.
-
-= 2.22.5 =
-
-**Fixes**
-
-* When there are no estates that show up on the map, there is no longer a gap in the estate list where the map would be.
+* Some invalid fields can no longer be selected for the applicant search form.
 
 = Previous changes =
 
