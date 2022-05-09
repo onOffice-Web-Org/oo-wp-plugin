@@ -23,14 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use DI\Container;
-use DI\ContainerBuilder;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Renderer\InputFieldCheckboxRenderer;
-use onOffice\WPlugin\Types\Field;
-use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use DI\Container;
+use DI\ContainerBuilder;
 use WP_UnitTestCase;
 
 /**
@@ -57,25 +54,45 @@ class TestClassInputFieldCheckboxRenderer
 		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
 		$pDbChanges->install();
 	}
-
+	
+	/**
+	 * @throws \Exception
+	 */
 	public function testRenderEmptyValues()
 	{
+		$pSubject = new InputFieldCheckboxRenderer('testRenderer',true);
 		ob_start();
-		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('','');
-		$pCheckboxFieldRenderer->render();
-		$output = ob_get_clean();
-		$this->assertEquals('<input type="checkbox" name="" value="" id="checkbox_1">', $output);
-	}
-
-	public function testRenderWithValues()
-	{
-		ob_start();
-		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('testRenderer',1);
-		$pCheckboxFieldRenderer->render();
+		$pSubject->render();
 		$output = ob_get_clean();
 		$this->assertEquals('<input type="checkbox" name="testRenderer" value="1" id="checkbox_1">', $output);
 	}
-
+	
+	/**
+	 * @throws \Exception
+	 */
+	public function testRenderWithValues()
+	{
+		$pSubject = new InputFieldCheckboxRenderer('testRenderer', true);
+		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
+		$pSubject->setCheckedValues(['johndoe']);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<input type="checkbox" name="testRenderer" value="johndoe" checked="checked"  onoffice-multipleSelectType="0" id="labelcheckbox_1bjohndoe">'
+			. '<label for="labelcheckbox_1bjohndoe">John Doe</label>'
+			. '<br><input type="checkbox" name="testRenderer" value="konradzuse" onoffice-multipleSelectType="0" id="labelcheckbox_1bkonradzuse"><label for="labelcheckbox_1bkonradzuse">Konrad Zuse</label><br>', $output);
+	}
+	
+	/**
+	 *
+	 */
+	public function testGetHintHTML()
+	{
+		$pSubject = new InputFieldCheckboxRenderer('testRenderer', true);
+		$pSubject->setHintHtml('testRenderer');
+		$this->assertEquals('testRenderer',$pSubject->getHintHtml());
+	}
+	
 	public function testRenderWithArrayValue()
 	{
 		ob_start();
@@ -84,12 +101,11 @@ class TestClassInputFieldCheckboxRenderer
 		$output = ob_get_clean();
 		$this->assertEquals('<input type="checkbox" name="testRenderer" value="0" onoffice-multipleSelectType="0" id="labelcheckbox_1b0"><label for="labelcheckbox_1b0">1</label><br><input type="checkbox" name="testRenderer" value="1" onoffice-multipleSelectType="0" id="labelcheckbox_1b1"><label for="labelcheckbox_1b1">2</label><br>', $output);
 	}
-
+	
 	public function testSetCheckedValues()
 	{
 		$instance = new InputFieldCheckboxRenderer('testRenderer', 1);
 		$instance->setCheckedValues([1,2]);
 		$this->assertEquals([1,2], $instance->getCheckedValues());
 	}
-
 }

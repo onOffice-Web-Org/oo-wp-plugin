@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-05T09:19:10+07:00\n"
+"POT-Creation-Date: 2022-05-09T11:06:22+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -136,7 +136,7 @@ msgid "Search Criteria"
 msgstr "Criterios de búsqueda"
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:190
+#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:196
 msgid "Form Specific Fields"
 msgstr "Campos específicos de formulario"
 
@@ -488,7 +488,7 @@ msgstr "Documentos descargables"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:152
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:218
+#: plugin/Gui/AdminPageFormSettingsContact.php:224
 msgid "Geo Fields"
 msgstr "Campos geográficos"
 
@@ -598,12 +598,43 @@ msgstr "No"
 msgid "Yes"
 msgstr "Sí"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:144
-#: plugin/Gui/AdminPageFormSettingsContact.php:155
+#: plugin/Gui/AdminPageFormSettingsContact.php:123
+msgid "Request Manager"
+msgstr "Administrador de solicitudes"
+
+#: plugin/Gui/AdminPageFormSettingsContact.php:124
+msgid ""
+"https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-"
+"manager/?lang=en"
+msgstr ""
+"https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-"
+"manager/?lang=en"
+
+#: plugin/Gui/AdminPageFormSettingsContact.php:126
+#, fuzzy
+#| msgid ""
+#| "If the contact form is on an estate page, you can link the created "
+#| "address to that estate by opening the email you receive in onOffice "
+#| "enterprise or using the %s."
+msgid ""
+"By default, no link is created to the estate when the plugin creates the "
+"address. If the contact form is on an detail page and you want to link the "
+"address and the requested estate, you can open the email in onOffice "
+"enterprise or use the %s."
+msgstr ""
+"Si el formulario de contacto está en una página de estado, puede vincular la "
+"dirección creada a ese estado abriendo el correo electrónico que recibe en "
+"onOffice Enterprise o usando el %s."
+
+#: plugin/Gui/AdminPageFormSettingsContact.php:150
+#: plugin/Gui/AdminPageFormSettingsContact.php:161
 msgid ""
 "Be aware that when activated the duplicate check can overwrite address "
 "records. This function will be removed in the future. Use at your own risk."
 msgstr ""
+"Tenga en cuenta que, cuando se activa, la comprobación de duplicados puede "
+"sobrescribir los registros de direcciones. Esta función se eliminará en el "
+"futuro. Úselo bajo su propio riesgo."
 
 #: plugin/Gui/AdminPageFormSettingsInquiry.php:92
 msgid "Please provide an Email address!"
@@ -1266,9 +1297,6 @@ msgstr "Persona de contacto: "
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documentos"
-
-#~ msgid "Disabled"
-#~ msgstr "Discapacitado"
 
 #, fuzzy
 #~ msgid "Contact Form"
