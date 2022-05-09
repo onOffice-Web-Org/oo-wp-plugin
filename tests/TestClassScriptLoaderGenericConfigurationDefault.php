@@ -25,6 +25,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
+use onOffice\WPlugin\Template\TemplateCall;
 use WP_UnitTestCase;
 
 /**
@@ -56,6 +57,34 @@ class TestClassScriptLoaderGenericConfigurationDefault
 					$this->stringEndsWith('.css')));
 			$this->assertNotEmpty($pFileModel->getIdentifier());
 			$this->assertNotEmpty($pFileModel->getType());
+		}
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault::getCSSOnofficeStyle
+	 */
+	public function testGetCSSOnofficeStyle()
+	{
+		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
+		$cssOnofficeStyle = $pScriptLoaderGenericConfigurationDefault->getCSSOnofficeStyle();
+		$cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_INCLUDED ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR
+				. '/index.php' ) . 'templates.dist/' . 'onoffice-style.css' );
+		$cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ]   = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
+			. 'onoffice-personalized/templates/' . 'onoffice-style.css' );
+		$cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_THEME ]    = glob( get_stylesheet_directory()
+			. '/onoffice-theme/templates/' . 'onoffice-style.css' );
+		$cssTemplatesList[ 'default' ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR
+				. '/index.php' ) . 'templates.dist/' . 'onoffice_defaultview.css' );
+		$onofficeCssStyleLink = '';
+		if (!empty($cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_THEME ])) {
+			$this->assertEquals($cssOnofficeStyle, get_template_directory_uri() . '/onoffice-theme/templates/onoffice-style.css');
+		} elseif (!empty($cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ])) {
+			$this->assertEquals($cssOnofficeStyle, plugins_url('onoffice-personalized/templates/onoffice-style.css',  ''));
+		} elseif (!empty($cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_INCLUDED ])) {
+			$this->assertEquals($cssOnofficeStyle, plugins_url('templates.dist/onoffice-style.css', $pluginPath));
+		} else {
+			$this->assertEquals($cssOnofficeStyle, plugins_url('css/onoffice_defaultview.css', $pluginPath));
 		}
 	}
 }
