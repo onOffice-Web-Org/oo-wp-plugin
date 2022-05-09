@@ -48,6 +48,9 @@ class InputModelOptionFactoryDetailView
 	const INPUT_EXPOSE = 'expose';
 
 	/** */
+	const INPUT_ACCESS_CONTROL = 'access-control';
+
+	/** */
 	const INPUT_MOVIE_LINKS = 'movielinks';
 
 	/** */
@@ -87,6 +90,9 @@ class InputModelOptionFactoryDetailView
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 		self::INPUT_MOVIE_LINKS => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_ACCESS_CONTROL => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 		self::INPUT_SHOW_STATUS => [

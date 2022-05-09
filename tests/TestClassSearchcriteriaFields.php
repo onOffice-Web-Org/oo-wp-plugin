@@ -53,12 +53,26 @@ class TestClassSearchcriteriaFields
 	public function prepare()
 	{
 		$pFieldsCollectionBuilder = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsSearchCriteria'])
+			->setMethods(['addFieldsSearchCriteria', 'addFieldsAddressEstate'])
 			->setConstructorArgs([new Container])
 			->getMock();
 		$pFieldsCollectionBuilder->method('addFieldsSearchCriteria')->with($this->anything())
 			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection) use
 				($pFieldsCollectionBuilder): FieldsCollectionBuilderShort {
+				$pField1 = new Field('testvarchar', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pField2 = new Field('testvarcharestate', onOfficeSDK::MODULE_ESTATE);
+				$pField2->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pField3 = new Field('testint', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField3->setType(FieldTypes::FIELD_TYPE_INTEGER);
+				$pFieldsCollection->addField($pField1);
+				$pFieldsCollection->addField($pField2);
+				$pFieldsCollection->addField($pField3);
+				return $pFieldsCollectionBuilder;
+			}));
+		$pFieldsCollectionBuilder->method('addFieldsAddressEstate')->with($this->anything())
+			->will($this->returnCallback(function(FieldsCollection $pFieldsCollection) use
+			($pFieldsCollectionBuilder): FieldsCollectionBuilderShort {
 				$pField1 = new Field('testvarchar', onOfficeSDK::MODULE_SEARCHCRITERIA);
 				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pField2 = new Field('testvarcharestate', onOfficeSDK::MODULE_ESTATE);

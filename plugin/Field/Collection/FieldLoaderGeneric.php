@@ -50,6 +50,7 @@ class FieldLoaderGeneric
 	/** @var RegionFilter */
 	private $_pRegionFilter;
 
+
 	/**
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param RegionController $pRegionController
@@ -87,16 +88,6 @@ class FieldLoaderGeneric
 					|| in_array($fieldProperties['type'], $listTypeUnSupported)
 				) {
 					continue;
-				}
-
-				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz') {
-					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
-					$this->_pRegionController->fetchRegions();
-					$regions = $this->_pRegionController->getRegions();
-					$fieldProperties['permittedvalues'] = $this->_pRegionFilter
-						->buildRegions($regions);
-					$fieldProperties['labelOnlyValues'] = $this->_pRegionFilter
-						->collectLabelOnlyValues($regions);
 				}
 
 				if ($module === onOfficeSDK::MODULE_ADDRESS && $fieldName == 'ArtDaten') {

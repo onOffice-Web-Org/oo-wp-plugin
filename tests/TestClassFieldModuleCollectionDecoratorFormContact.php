@@ -88,14 +88,9 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 	}
 
 
-	/**
-	 *
-	 * @expectedException onOffice\WPlugin\Field\UnknownFieldException
-	 *
-	 */
-
 	public function testGetUnknownFieldByModuleAndName()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$pDecorator = new FieldModuleCollectionDecoratorFormContact
 			($this->getPrefilledCollection());
 		$pDecorator->getFieldByModuleAndName('testModuleF', 'testFieldC');
