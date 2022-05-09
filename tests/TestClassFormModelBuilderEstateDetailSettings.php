@@ -94,10 +94,15 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->_pFieldnames = new Fieldnames(new FieldsCollection(), false, $this->_pFieldnamesEnvironment);
 		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView('onoffice');
 	}
-
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::__construct
+	 */
+	
 	public function testConstruct()
 	{
-		$this->assertInstanceOf(Fieldnames::class, $this->_pFieldnames);
+		$pInstance = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$this->assertInstanceOf(FormModelBuilderEstateDetailSettings::class, $pInstance);
 	}
 	
 	/**
