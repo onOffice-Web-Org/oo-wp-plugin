@@ -136,6 +136,7 @@ class SDKWrapper
 				$secretDecrypt = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
 				$tokenDecrypt = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
 			}catch (\RuntimeException $exception){
+				$this->_pSDK->removeCacheInstances();
 				$secretDecrypt = $secret;
 				$tokenDecrypt = $token;
 			}
