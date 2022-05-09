@@ -181,7 +181,7 @@ class EstateFiles
 				break;
 		}
 
-		return $this->getFilesOfTypeByCallback($estateId, $callback);
+		return empty($callback) ? [] : $this->getFilesOfTypeByCallback($estateId, $callback);
 	}
 
 

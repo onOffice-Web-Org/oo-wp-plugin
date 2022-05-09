@@ -118,6 +118,7 @@ class TestClassEstateFiles
 		$this->assertEmpty($this->_pInstance->getEstateLinks(15, 'ogulo'));
 		$this->assertEmpty($this->_pInstance->getEstateLinks(15, 'object'));
 		$this->assertEmpty($this->_pInstance->getEstateLinks(15, 'link'));
+		$this->assertEmpty($this->_pInstance->getEstateLinks(15,''));
 	}
 
 	/**

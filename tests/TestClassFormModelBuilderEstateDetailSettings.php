@@ -95,6 +95,11 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView('onoffice');
 	}
 
+	public function testConstruct()
+	{
+		$this->assertInstanceOf(Fieldnames::class, $this->_pFieldnames);
+	}
+	
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::CreateInputModelShortCodeForm
 	 */
@@ -252,4 +257,22 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInputModelDB = $pInstance->createInputModelTemplate();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'templateList');
 	}
+	
+	/**
+	* @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelExpose
+	*/
+	
+	public function testCreateInputModelExpose()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['readExposes'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->method('readExposes')->willReturn([]);
+		$pInputModelDB = $pInstance->createInputModelExpose();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+	
+	
 }
