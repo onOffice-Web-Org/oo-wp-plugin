@@ -328,4 +328,9 @@ p#notice-seo {
 
 #notice-seo, .description-notice, .do-not-modify {
 	margin-left: 20px;
+
+#viewformspecific .hint-text, #viewformspecific .hint-text a{
+	color: #646970;
+	font-style: italic;
+	text-decoration: none;
 }

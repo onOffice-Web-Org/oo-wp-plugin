@@ -76,6 +76,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= Unreleased =
+
+**Fixed**
+
+* In the settings, clicking on the labels now sets the correct controls.
+* Explain how to link addresses from contact forms with the estates.
+
 = 3.1 (2022-05-04) =
 
 **Changed**

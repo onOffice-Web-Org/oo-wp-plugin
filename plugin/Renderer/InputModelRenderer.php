@@ -134,8 +134,8 @@ class InputModelRenderer
 				$pInstance = new InputFieldCheckboxRenderer($elementName,
 					$pInputModel->getValuesAvailable(),  $pInputModel->getDescriptionTextHTML());
 				$pInstance->setCheckedValues($pInputModel->getValue());
-				if ($pInputModel->getHint() != null) {
-					$pInstance->setHint($pInputModel->getHint());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHintHtml($pInputModel->getHintHtml());
 				}
 				break;
 
@@ -194,8 +194,8 @@ class InputModelRenderer
 					}
 					$pInstance->setValue($pInputModel->getValue());
 				}
-				if ($pInputModel->getHint() != null) {
-					$pInstance->setHint($pInputModel->getHint());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHint($pInputModel->getHintHtml());
 				}
 
 				break;
