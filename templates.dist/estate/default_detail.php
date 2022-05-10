@@ -213,7 +213,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					} ?>
 				<?php endforeach; ?>
 			</div>
-			<div class="oo-detailsexpose">
+			<div class="oo-asp oo-detailsexpose">
 				<?php if ($pEstates->getDocument() != '') : ?>
 					<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
 					<a href="<?php echo $pEstates->getDocument(); ?>">
@@ -244,13 +244,13 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				}
 			}
 
-			// Movies
+			// Videos
 			$movieOptions = array('width' => 500); // optional
 			$estateMoviePlayers = $pEstates->getMovieEmbedPlayers($movieOptions);
 			$estateMovieLinks = $pEstates->getEstateMovieLinks();
 			if (!empty($estateMoviePlayers) || !empty($estateMovieLinks)) {
-				echo '<div style="margin-bottom: 2rem">';
-				echo '<h2 style="margin-bottom: 0.5rem">' . esc_html__('Videos', 'onoffice') . '</h2>';
+				echo '<div class="oo-asp oo-videos">';
+				echo '<h2>' . esc_html__('Videos', 'onoffice') . '</h2>';
 
 				foreach ($estateMoviePlayers as $movieInfos) {
 					echo '<div class="oo-video">';
@@ -274,8 +274,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			$estateOguloEmbeds = $pEstates->getLinkEmbedPlayers('ogulo', $oguloOptions);
 			$estateOguloLinks = $pEstates->getEstateLinks('ogulo');
 			if (!empty($estateOguloEmbeds) || !empty($estateOguloLinks)) {
-				echo '<div style="margin-bottom: 2rem">';
-				echo '<h2 style="margin-bottom: 0.5rem">' . esc_html__('360° tours', 'onoffice') . '</h2>';
+				echo '<div class="oo-asp oo-tours">';
+				echo '<h2>' . esc_html__('360° tours', 'onoffice') . '</h2>';
 
 				foreach ($estateOguloEmbeds as $linkInfos) {
 					echo '<div class="oo-video">';
@@ -299,8 +299,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			$estateObjectEmbeds = $pEstates->getLinkEmbedPlayers('object', $objectOptions);
 			$estateObjectLinks = $pEstates->getEstateLinks('object');
 			if (!empty($estateObjectEmbeds) || !empty($estateObjectLinks)) {
-				echo '<div style="margin-bottom: 2rem">';
-				echo '<h2 style="margin-bottom: 0.5rem">' . esc_html__('Objects', 'onoffice') . '</h2>';
+				echo '<div class="oo-asp oo-objects">';
+				echo '<h2>' . esc_html__('Objects', 'onoffice') . '</h2>';
 
 				foreach ($estateObjectEmbeds as $linkInfos) {
 					echo '<div class="oo-video">';
@@ -324,8 +324,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			$estateLinkEmbeds = $pEstates->getLinkEmbedPlayers('link', $linkOptions);
 			$estateLinks = $pEstates->getEstateLinks('link');
 			if (!empty($estateLinkEmbeds) || !empty($estateLinks)) {
-				echo '<div style="margin-bottom: 2rem">';
-				echo '<h2 style="margin-bottom: 0.5rem">' . esc_html__('Links', 'onoffice') . '</h2>';
+				echo '<div class="oo-asp oo-links">';
+				echo '<h2>' . esc_html__('Links', 'onoffice') . '</h2>';
 
 				foreach ($estateLinkEmbeds as $linkInfos) {
 					echo '<div class="oo-video">';
