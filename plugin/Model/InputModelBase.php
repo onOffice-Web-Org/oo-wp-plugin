@@ -111,7 +111,7 @@ abstract class InputModelBase
 	/** @var array */
 	private $_labelOnlyValues = [];
 
-    /** @var string */
+	/** @var string */
 	private $_descriptionTextHTML = '';
 
 	/** @var array */
