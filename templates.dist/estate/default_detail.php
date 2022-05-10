@@ -222,101 +222,113 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				<?php endif; ?>
 			</div>
 
-			<?php $estateMovieLinks = $pEstates->getEstateMovieLinks();
-			foreach ($estateMovieLinks as $movieLink) {
-				echo '<div>'.esc_html(!empty($movieLink['title']) ? $movieLink['title'] : $movieLink['type']) . '</div>';
-				echo '<div class="oo-video">
-						<a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '" style="color: #0073aa">'
-							. esc_html(!empty($movieLink['title']) ? $movieLink['title'] : $movieLink['type'])
-						.'</a>
-					</div>';
-			}
+			<?php
 
+			/**
+			 * The heading above an embed that links directly to the embedded page.
+			 */
+			function headingLink($url, $title) {
+				return '<a class="player-title" target="_blank" href="' . esc_attr($url) . '">
+					<div>'.esc_html($title).'
+						<svg width="0.7em" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
+							<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
+							<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
+						</svg>
+					</div>
+				</a>';
+			}
+			
+			// Movies
 			$movieOptions = array('width' => 500); // optional
+			$estateMoviePlayers = $pEstates->getMovieEmbedPlayers($movieOptions);
+			$estateMovieLinks = $pEstates->getEstateMovieLinks();
+			if (!empty($estateMoviePlayers) || !empty($estateMovieLinks)) {
+				echo '<h2>' . esc_html__('Videos', 'onoffice') . '</h2>';
 
-			foreach ($pEstates->getMovieEmbedPlayers($movieOptions) as $movieInfos) {
-				echo '<div class="oo-video"><div>' . esc_html($movieInfos['title']) . '</div>';
-				echo $movieInfos['player'];
-				echo '</div>';
-			} ?>
+				// Players
+				foreach ($estateMoviePlayers as $movieInfos) {
+					echo '<div class="oo-video">';
+					echo headingLink($movieInfos['url'], $movieInfos['title']);
+					echo $movieInfos['player'];
+					echo '</div>';
+				}
 
-			<?php $estateOguloLinks = $pEstates->getEstateLinks('ogulo');
-			foreach ($estateOguloLinks as $oguloLink) {
-				echo '<div>'.esc_html(!empty($oguloLink['title']) ? $oguloLink['title'] : $oguloLink['type']) . '</div>';
-				echo '<div class="oo-video">
-						<a href="'.esc_attr($oguloLink['url']).'" title="'.esc_attr(!empty($oguloLink['title']) ? $oguloLink['title'] : $oguloLink['type']).'" style="color: #0073aa">'
-							.esc_html(!empty($oguloLink['title']) ? $oguloLink['title'] : $oguloLink['type'])
-						.'</a>
-					</div>';
+				// Links
+				foreach ($estateMovieLinks as $movieLink) {
+					echo '<div class="oo-video">
+							<a href="' . esc_attr($movieLink['url']) . '" title="' . esc_attr($movieLink['title']) . '" style="color: #0073aa">'
+								. esc_html(!empty($movieLink['title']) ? $movieLink['title'] : $movieLink['type'])
+							.'</a>
+						</div>';
+				}
 			}
 
+			// 360° tours (aka Ogulo)
 			$oguloOptions = array('width' => 560, 'height' => 315); // optional
+			$estateOguloEmbeds = $pEstates->getLinkEmbedPlayers('ogulo', $oguloOptions);
+			$estateOguloLinks = $pEstates->getEstateLinks('ogulo');
+			if (!empty($estateOguloEmbeds) || !empty($estateOguloLinks)) {
+				echo '<h2>' . esc_html__('360° tours', 'onoffice') . '</h2>';
 
-			foreach ($pEstates->getLinkEmbedPlayers('ogulo', $oguloOptions) as $linkInfos) {
-				echo '<div class="oo-video">
-						<a class="player-title" target="_blank" href="' . esc_attr($linkInfos['url']) . '">
-							<div>'.esc_html(!empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']).'
-								<svg width="16px" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
-									<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
-									<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
-								</svg>
-							</div>
-						</a>';
-				echo $linkInfos['player'];
-				echo '</div>';
-			} ?>
-
-			<?php $estateObjectLinks = $pEstates->getEstateLinks('object');
-			foreach ($estateObjectLinks as $objectLink) {
-				echo '<div>'.esc_html(!empty($objectLink['title']) ? $objectLink['title'] : $objectLink['type']) . '</div>';
-				echo '<div class="oo-video">
-						<a href="' . esc_attr($objectLink['url']) . '" title="' . esc_attr(!empty($objectLink['title']) ? $objectLink['title'] : 'Objekt-Link') . '" style="color: #0073aa">'
-							.esc_html(!empty($objectLink['title']) ? $objectLink['title'] : $objectLink['type'])
-						.'</a>
-					</div>';
+				foreach ($estateOguloEmbeds as $linkInfos) {
+					echo '<div class="oo-video">';
+					echo headingLink($linkInfos['url'], !empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']);
+					echo $linkInfos['player'];
+					echo '</div>';
+				}
+				foreach ($estateOguloLinks as $oguloLink) {
+					echo '<div class="oo-video">
+							<a href="'.esc_attr($oguloLink['url']).'" title="'.esc_attr(!empty($oguloLink['title']) ? $oguloLink['title'] : $oguloLink['type']).'" style="color: #0073aa">'
+								.esc_html(!empty($oguloLink['title']) ? $oguloLink['title'] : $oguloLink['type'])
+							.'</a>
+						</div>';
+				}
 			}
 
+			// Objects
 			$objectOptions = array('width' => 560, 'height' => 315); // optional
+			$estateObjectEmbeds = $pEstates->getLinkEmbedPlayers('object', $objectOptions);
+			$estateObjectLinks = $pEstates->getEstateLinks('object');
+			if (!empty($estateObjectEmbeds) || !empty($estateObjectLinks)) {
+				echo '<h2>' . esc_html__('Objects', 'onoffice') . '</h2>';
 
-			foreach ($pEstates->getLinkEmbedPlayers('object', $objectOptions) as $linkInfos) {
-			echo '<div class="oo-video">
-					<a class="player-title" target="_blank" href="' . esc_attr($linkInfos['url']) . '">
-						<div>'.esc_html(!empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']).'
-							<svg width="16px" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
-								<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
-								<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
-							</svg>
-						</div>
-					</a>';
-				echo $linkInfos['player'];
-				echo '</div>';
-			} ?>
-
-			<?php $estateLinks = $pEstates->getEstateLinks('link');
-			foreach ($estateLinks as $link) {
-				echo '<div>'.esc_html(!empty($link['title']) ? $link['title'] : $link['type']) . '</div>';
-				echo '<div class="oo-video">
-						<a href="' . esc_attr($link['url']) . '" title="' . esc_attr(!empty($link['title']) ? $link['title'] : 'Link') . '" style="color: #0073aa">'
-							.esc_html(!empty($link['title']) ? $link['title'] : $link['type'])
-						.'</a>
-					</div>';
+				foreach ($estateObjectEmbeds as $linkInfos) {
+					echo '<div class="oo-video">';
+					echo headingLink($linkInfos['url'], !empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']);
+					echo $linkInfos['player'];
+					echo '</div>';
+				}
+				foreach ($estateObjectLinks as $objectLink) {
+					echo '<div class="oo-video">
+							<a href="'.esc_attr($objectLink['url']).'" title="'.esc_attr(!empty($objectLink['title']) ? $objectLink['title'] : $objectLink['type']).'" style="color: #0073aa">'
+								.esc_html(!empty($objectLink['title']) ? $objectLink['title'] : $objectLink['type'])
+							.'</a>
+						</div>';
+				}
 			}
 
+			// Links
 			$linkOptions = array('width' => 560, 'height' => 315); // optional
+			$estateLinkEmbeds = $pEstates->getLinkEmbedPlayers('link', $linkOptions);
+			$estateLinks = $pEstates->getEstateLinks('link');
+			if (!empty($estateLinkEmbeds) || !empty($estateLinks)) {
+				echo '<h2>' . esc_html__('Links', 'onoffice') . '</h2>';
 
-			foreach ($pEstates->getLinkEmbedPlayers('link', $linkOptions) as $linkInfos) {
-				echo '<div class="oo-video">
-						<a class="player-title" target="_blank" href="' . esc_attr($linkInfos['url']) . '">
-							<div>'.esc_html(!empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']).'
-								<svg width="16px" version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 24 24" xml:space="preserve">
-									<style>.st1{fill:none;stroke:#000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}</style>
-									<path class="st1" d="M23 13.05V23H1V1h9.95M8.57 15.43L23 1M23 9.53V1h-8.5"/>
-								</svg>
-							</div>
-						</a>';
-				echo $linkInfos['player'];
-				echo '</div>';
-			} ?>
+				foreach ($estateLinkEmbeds as $linkInfos) {
+					echo '<div class="oo-video">';
+					echo headingLink($linkInfos['url'], !empty($linkInfos['title']) ? $linkInfos['title'] : $linkInfos['type']);
+					echo $linkInfos['player'];
+					echo '</div>';
+				}
+				foreach ($estateLinks as $link) {
+					echo '<div class="oo-video">
+							<a href="'.esc_attr($link['url']).'" title="'.esc_attr(!empty($link['title']) ? $link['title'] : $link['type']).'" style="color: #0073aa">'
+								.esc_html(!empty($link['title']) ? $link['title'] : $link['type'])
+							.'</a>
+						</div>';
+				}
+			}
+			?>
 
 		</div>
 		<?php
