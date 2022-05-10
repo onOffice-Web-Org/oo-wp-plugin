@@ -78,6 +78,10 @@ Start editing inside the `onoffice-personalized` folder.
 
 = Unreleased =
 
+**Added**
+
+* Besides movie links, other link types from onOffice enterprise can now be configured for the detail view. The included templates support these new link types.
+
 **Fixed**
 
 * In the settings, clicking on the labels now sets the correct controls.
