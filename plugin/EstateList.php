@@ -371,7 +371,7 @@ class EstateList
 			$this->_pEnvironment->getAddressList()->loadAdressesById($allAddressIds, $fields);
 		}
 	}
-
+	
 	/**
 	 * @param string $modifier
 	 * @return ArrayContainerEscape
@@ -414,20 +414,29 @@ class EstateList
 		}
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
 		{
-			add_filter('pre_get_document_title', function($title_parts_array) use ($recordModified) {
-				if (isset($recordModified["objekttitel"]))
-				{
-					$title_parts_array = $recordModified["objekttitel"];
-				}
-				return $title_parts_array;
-			},999,1);
-			add_action( 'wp_head', function () use($recordModified) {
-				echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
-			},1);
+			add_filter('pre_get_document_title', function ($title_parts_array) use ($recordModified) {
+				$this->custom_pre_get_document_title($title_parts_array, $recordModified);
+			}, 999, 1);
+			add_action('wp_head', function () use ($recordModified) {
+				$this->add_meta_description($recordModified);
+			}, 1);
 		}
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 		return $pArrayContainer;
 	}
+
+	public function custom_pre_get_document_title($title_parts_array, $recordModified) {
+		if (isset($recordModified["objekttitel"])) {
+			$title_parts_array = $recordModified["objekttitel"];
+		}
+
+		return $title_parts_array;
+	}
+
+	public function add_meta_description($recordModified) {
+		echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
+	}
+
 
 	public function getRawValues(): ArrayContainerEscape
 	{

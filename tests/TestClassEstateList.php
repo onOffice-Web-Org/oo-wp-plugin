@@ -114,7 +114,6 @@ class TestClassEstateList
 		],
 	];
 
-
 	/**
 	 *
 	 */
@@ -174,8 +173,15 @@ class TestClassEstateList
 		$this->assertFalse($this->_pEstateList->estateIterator());
 		$this->_pEstateList->resetEstateIterator();
 		add_option('onoffice-settings-title-and-description', '0');
-		$title = tests_add_filter('pre_get_document_title',[$this->_pEstateList,'estateIterator']);
-		$this->assertTrue($title);
+		$recordModified = [
+			'objekttitel'        => 'Name id 15',
+			'objektbeschreibung' => 'description test'
+		];
+		$this->assertEquals(has_filter('pre_get_document_title'), 999);
+		$title_parts_array = $this->_pEstateList->custom_pre_get_document_title('', $recordModified);
+		$this->assertEquals($title_parts_array, 'Name id 15');
+		$this->assertEquals(has_action('wp_head'), 1);
+		$this->_pEstateList->add_meta_description($recordModified);
 		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
 	}
 
