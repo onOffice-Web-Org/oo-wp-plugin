@@ -803,14 +803,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	public function checkAllPageIdsHaveDetailShortCode()
 	{
-		$pDataDetailViewHandler = $this->_pContainer->get(DataDetailViewHandler::class);
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
 		$pDetailView            = $pDataDetailViewHandler->getDetailView();
-		$shortCode              = '[oo_estate view="' . $pDetailView->getName() . '"]';
+		$detailViewName         = 'view="' . $pDetailView->getName() . '"';
 		$tableName              = $this->getPrefix() . "posts";
 
 		$listDetailPosts = $this->_pWPDB->get_results( "SELECT `ID` FROM {$tableName}
 														WHERE post_status = 'publish'
-														AND post_content LIKE '%" . $shortCode . "%'", ARRAY_A );
+														AND post_content LIKE '%[oo_estate%" . $detailViewName . "%]%'", ARRAY_A );
 		foreach ( $listDetailPosts as $post ) {
 			$pDetailView->addToPageIdsHaveDetailShortCode( (int) $post['ID'] );
 		}
