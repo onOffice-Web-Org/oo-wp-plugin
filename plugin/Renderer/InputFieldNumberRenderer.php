@@ -33,14 +33,11 @@ use Exception;
 class InputFieldNumberRenderer
 	extends InputFieldRenderer
 {
-
 	/**
 	 *
-	 * @param string $type
 	 * @param string $name
 	 * @param string $value
 	 *
-	 * @throws Exception
 	 */
 
 	public function __construct($name, $value = null)

@@ -21,6 +21,14 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
+use Exception;
+use onOffice\WPlugin\Field\FieldModuleCollection;
+use onOffice\WPlugin\Field\FieldnamesEnvironment;
+use onOffice\WPlugin\Fieldnames;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -47,6 +55,18 @@ abstract class InputFieldRenderer
 
 	/** @var string */
 	private $_oOModule = '';
+
+	/** @var string */
+	private $_hint = '';
+
+	/** @var string */
+	private $_label = null;
+
+	/** @var array */
+	private $_checkedValues = [];
+
+	/** @var array */
+	private $_selectedValue = [];
 
 
 	/**
@@ -106,6 +126,33 @@ abstract class InputFieldRenderer
 
 
 	/**
+	 * @param FieldModuleCollection $pExtraFieldsCollection
+	 * @param bool $inactiveOnly
+	 * @param FieldnamesEnvironment|null $pEnvironment
+	 *
+	 * @return Fieldnames
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws Exception
+	 */
+
+	protected function getFieldnames(
+		FieldModuleCollection $pExtraFieldsCollection,
+		bool $inactiveOnly = false,
+		FieldnamesEnvironment $pEnvironment = null
+	): Fieldnames {
+		$pContainerBuilder = new ContainerBuilder();
+		$pContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH );
+
+		return $pContainerBuilder->build()->make( Fieldnames::class, [
+			'pExtraFieldsCollection' => $pExtraFieldsCollection,
+			'inactiveOnly'           => $inactiveOnly,
+			'pEnvironment'           => $pEnvironment
+		] );
+	}
+
+
+	/**
 	 *
 	 * @return string
 	 *
@@ -156,4 +203,36 @@ abstract class InputFieldRenderer
 	/** @return string */
 	public function getOoModule(): string
 		{ return $this->_oOModule; }
+
+	/** @return string */
+	public function getHint()
+	{ return $this->_hint; }
+
+	/** @param string $hint */
+	public function setHint(string $hint)
+	{ $this->_hint = $hint; }
+
+	/** @return string */
+	public function getLabel()
+		{ return $this->_label; }
+
+	/** @param string $label */
+	public function setLabel( $label )
+		{ $this->_label = $label; }
+
+	/** @param $checkedValues */
+	public function setCheckedValues($checkedValues)
+		{ $this->_checkedValues = $checkedValues;}
+
+	/** @return array */
+	public function getCheckedValues()
+		{ return $this->_checkedValues; }
+
+	/** @param string $selectedValue */
+	public function setSelectedValue($selectedValue)
+		{ $this->_selectedValue = $selectedValue; }
+
+	/** @return array */
+	public function getSelectedValue()
+		{ return $this->_selectedValue; }
 }

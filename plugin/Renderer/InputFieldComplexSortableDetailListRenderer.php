@@ -24,9 +24,7 @@ namespace onOffice\WPlugin\Renderer;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\FieldTypes;
 use function __;
 use function esc_attr;
 use function esc_html;
@@ -99,6 +97,7 @@ class InputFieldComplexSortableDetailListRenderer
 		echo '</ul>';
 	}
 
+
 	/**
 	 *
 	 * @param string $key
@@ -162,7 +161,7 @@ class InputFieldComplexSortableDetailListRenderer
 
 	private function readInactiveFields()
 	{
-		$pFieldnames = new Fieldnames(new FieldsCollection(), true);
+		$pFieldnames = $this->getFieldnames(new FieldsCollection(), true);
 		$pFieldnames->loadLanguage();
 		$fieldnames = $pFieldnames->getFieldList(onOfficeSDK::MODULE_ESTATE);
 		$oldKeys = array_keys($fieldnames);

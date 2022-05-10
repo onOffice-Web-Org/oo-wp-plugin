@@ -429,6 +429,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->setFormName('contactForm');
 		$pDataFormConfiguration->setSubject('¡A new Contact!');
 		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'Email']);
+		$pDataFormConfiguration->setContactTypeField('');
 		$this->mockNewsletterCall();
 
 		return $pDataFormConfiguration;

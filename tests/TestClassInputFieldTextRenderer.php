@@ -43,7 +43,7 @@ class TestClassInputFieldTextRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="text" name="testRenderer" value="john.doe@example.com" id="text_1" ><p class="hint-fallback-email">Test Content Hint Fallback Email</p>',
+		$this->assertEquals('<input type="text" name="testRenderer" value="john.doe@example.com" id="text_1" ><p class="hint-fallback-email hint-text">Test Content Hint Fallback Email</p>',
 			$output);
 	}
 }

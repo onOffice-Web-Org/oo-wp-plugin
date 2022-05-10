@@ -49,6 +49,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 		'show_reference' => true,
 		'radius' => 35,
 		'amount' => 13,
+		'access-control' => true,
 		'enablesimilarestates' => true,
 		'show_status' => true
 	];
@@ -114,6 +115,28 @@ class TestClassFormModelBuilderEstateDetailSettings
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputAccessControl
+	 */
+	public function testCreateInputAccessControl()
+	{
+		$row = self::VALUES_BY_ROW;
+
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataSimilarEstatesSettingsHandler = new DataDetailViewHandler($pWPOptionsWrapper);
+		$this->_pDataDetailView = $pDataSimilarEstatesSettingsHandler->createDetailViewByValues($row);
+
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getValue'])
+		                  ->getMock();
+		$pInstance->generate('test');
+
+		$pInputModelDB = $pInstance->createInputAccessControl();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelMovieLinks
 	 */
 	public function testCreateInputModelMovieLinks()
@@ -155,5 +178,27 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInputModelDB = $pInstance->createInputModelShowStatus();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
+  
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::CreateInputModelTemplate
+	 */
+	public function testCreateInputModelTemplate()
+	{
+		$row = self::VALUES_BY_ROW;
 
+		$pWPOptionsWrapper = new WPOptionWrapperTest();
+		$pDataDetailViewHandler = new DataDetailViewHandler($pWPOptionsWrapper);
+		$this->_pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($row);
+
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getValue', 'readTemplatePaths'])
+			->getMock();
+		$pInstance->expects($this->exactly(1))
+			->method('readTemplatePaths');
+		$pInstance->generate('test');
+
+		$pInputModelDB = $pInstance->createInputModelTemplate();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'templateList');
+	}
 }
