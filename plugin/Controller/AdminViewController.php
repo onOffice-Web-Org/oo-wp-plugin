@@ -419,17 +419,17 @@ class AdminViewController
 		return new Fieldnames(new FieldsCollection());
 	}
 
-	public function generalAdminNoticeSEO(){
-		if ( count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0
-			&& get_option('onoffice-settings-title-and-description') == 0
-			&& get_current_screen()->id !== 'onoffice_page_onoffice-settings') {
+	public function generalAdminNoticeSEO() {
+		if (count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0
+				&& get_option('onoffice-settings-title-and-description') == 0
+				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings') {
 			echo '<div class="notice notice-warning is-dismissible">
-           				<p> '.esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.','onoffice-for-wp-websites').'
-              				'.esc_html__('You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.','onoffice-for-wp-websites').'<br>
-              				'.esc_html__('We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites').'
-              				'.esc_html__('This allows you to manage the title and description with your active SEO plugin.','onoffice-for-wp-websites')
-						.'</p>
-        			</div>';
+						<p> ' . esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.', 'onoffice-for-wp-websites') . '
+							' . esc_html__('You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.', 'onoffice-for-wp-websites') . '<br>
+							' . esc_html__('We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description.', 'onoffice-for-wp-websites') . '
+							' . esc_html__('This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites')
+					. '</p>
+					</div>';
 		}
 	}
 }

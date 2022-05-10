@@ -267,16 +267,35 @@ class TestClassAdminViewController
 		$this->assertInstanceOf(Fieldnames::class, $pAdminViewController->getField());
 	}
 
-	/**
-	 * @depends testOnInit
-	 * @param AdminViewController $pAdminViewController
-	 */
-	public function testGeneralAdminNoticeSEO(AdminViewController $pAdminViewController)
+	public function testGeneralAdminNoticeSEO()
 	{
-		global $wp_filter;
-		$wp_filter = [];
-		$pAdminViewController->add_ajax_actions();
-		$this->assertCount(4, $wp_filter);
+		$this->run_activate_plugin_for_test( 'wordpress-seo/wp-seo.php' );
+		add_option('onoffice-settings-title-and-description', '0');
+		set_current_screen('testscreen01337');
+		$pAdminViewController = new AdminViewController();
+		$pAdminViewController->generalAdminNoticeSEO();
+		$this->expectOutputString('<div class="notice notice-warning is-dismissible">
+						<p> The onOffice plugin has detected an active SEO plugin: Yoast SEO.
+							You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.<br>
+							We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description.
+							This allows you to manage the title and description with your active SEO plugin.</p>
+					</div>');
+	}
+
+	private function run_activate_plugin_for_test( $plugin ) {
+		$current = get_option( 'active_plugins' );
+		$plugin = plugin_basename( trim( $plugin ) );
+
+		if ( !in_array( $plugin, $current ) ) {
+			$current[] = $plugin;
+			sort( $current );
+			do_action( 'activate_plugin', trim( $plugin ) );
+			update_option( 'active_plugins', $current );
+			do_action( 'activate_' . trim( $plugin ) );
+			do_action( 'activated_plugin', trim( $plugin) );
+		}
+
+		return null;
 	}
 
 }
