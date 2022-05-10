@@ -101,7 +101,7 @@ class TestClassSDKWrapper
 	public function prepare()
 	{
 		$this->_pMockSDK = $this->getMockBuilder(onOfficeSDK::class)
-			->setMethods(['call', 'getResponseArray', 'getErrors', 'callGeneric'])
+			->setMethods(['call', 'getResponseArray', 'getErrors', 'callGeneric','removeCacheInstances'])
 			->getMock();
 		$this->_pMockSDK->method('call')
 			->with('testAction', '', null, 'testResource', [])
@@ -152,9 +152,7 @@ class TestClassSDKWrapper
 	{
 		$pSDKWrapper = $pAPIClientActionGeneric->getSDKWrapper();
 		$pSDK = $pSDKWrapper->getSDK();
-		$pSDKWrapper->getWPOptionWrapper()->addOption('onoffice-settings-apikey', '9155cc6adff0bde79ebfcf49563fca40');
-		$pSDKWrapper->getWPOptionWrapper()->addOption('onoffice-settings-apisecret', '59f25b04c1de0a191908b4de1a17e8b82eae569bcb3073c07a8c2b9030f2f603');
-		$pSDK->setCaches([]);
+		$pSDK->expects($this->once())->method('removeCacheInstances');
 		$pSDK->expects($this->once())->method('getErrors')->will($this->returnValue([]));
 		$pSDK->method('getResponseArray')->with(2)
 			->will($this->returnValue(json_decode($this->_expectedResult, true)));
