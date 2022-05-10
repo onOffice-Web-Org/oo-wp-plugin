@@ -71,7 +71,7 @@ class InputFieldCheckboxRenderer
 	 * @return bool
 	 */
 
-	private function isMultipleSelect(string $key, FieldsCollection $pFieldsCollection): bool
+	public function isMultipleSelect(string $key, FieldsCollection $pFieldsCollection): bool
 	{
 		$module = $this->getOoModule();
 
@@ -91,7 +91,7 @@ class InputFieldCheckboxRenderer
 	 * @throws Exception
 	 */
 
-	private function buildFieldsCollection(): FieldsCollection
+	public function buildFieldsCollection(): FieldsCollection
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
