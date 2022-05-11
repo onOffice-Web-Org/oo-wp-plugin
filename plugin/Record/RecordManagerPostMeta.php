@@ -66,29 +66,31 @@ class RecordManagerPostMeta
 
 	public function getPageId(): array
 	{
-
 		$prefix = $this->_pWPDB->prefix;
-		$post_meta_sql="SELECT `post_id`
-				FROM {$prefix}postmeta postmeta
-				INNER JOIN {$prefix}posts post on postmeta.post_id = post.ID
-				WHERE postmeta.meta_key not like '\_%'
-					and postmeta.meta_value like '%" . $this->_shortCodePageDetail . "%'
-					and post.post_type = 'page'
-					and post.post_status IN ('publish', 'draft')
-				ORDER BY postmeta.post_id DESC ";
+		
+		$post_meta_sql = "SELECT postmeta.post_id, postmeta.meta_key
+							FROM {$prefix}postmeta postmeta
+							INNER JOIN {$prefix}posts post on postmeta.post_id = post.ID
+							WHERE postmeta.meta_key not like '\_%'
+								and postmeta.meta_value like '%" . $this->_shortCodePageDetail . "%'
+								and post.post_type = 'page'
+								and post.post_status IN ('publish', 'draft')
+							ORDER BY postmeta.post_id DESC ";
 		$post_meta_results = $this->_pWPDB->get_row( $post_meta_sql ,ARRAY_A);
-		return empty($post_meta_results) ? [] : $post_meta_results;
+		
+		if (!empty($post_meta_results)) {
+			$meta_key = $post_meta_results["meta_key"];
+			$post_excerpt = "SELECT `post_excerpt`
+							FROM {$prefix}posts
+							WHERE `post_excerpt` = '".esc_sql($meta_key)."'
+		                            and post_status IN ('publish')";
+			$post_excerpt_result = $this->_pWPDB->get_row( $post_excerpt ,ARRAY_A);
+			
+			return empty($post_excerpt_result) ? [] : $post_meta_results;
+		}
+		return [];
 	}
 	
-	/**
-	 * @param string $metaKey
-	 */
-	public function deletePostMetaUseCustomField(string $metaKey)
-	{
-		$prefix = $this->_pWPDB->prefix;
-		$tablePostMeta = $prefix . "postmeta";
-		$this->_pWPDB->delete($tablePostMeta, array('meta_key' => $metaKey, 'meta_value' => $this->_shortCodePageDetail));
-	}
 	
 	/**
 	 * @return string
