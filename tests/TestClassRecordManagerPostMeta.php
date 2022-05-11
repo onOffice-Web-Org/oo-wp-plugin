@@ -40,9 +40,6 @@ class TestClassRecordManagerPostMeta
 	*/
 	private $_pRecordManagerPostMeta;
 
-	/** @var wpdb */
-	private $_pWPDB = null;
-
 	/**
 	*
 	* @before
@@ -50,19 +47,14 @@ class TestClassRecordManagerPostMeta
 	*/
 	public function prepare()
 	{
-		$this->_pWPDB = $this->getMockBuilder(wpdb::class)
-			->setMethods(['delete'])
-			->disableOriginalConstructor()
-			->getMock();
-		$this->_pWPDB->prefix = 'wp_test_';
-		$this->_pRecordManagerPostMeta = new RecordManagerPostMeta($this->_pWPDB);
+		global $wpdb;
+		$this->_pRecordManagerPostMeta = new RecordManagerPostMeta($wpdb);
 	}
 
 	public function testConstruct()
 	{
-		$pRecordManagerPostMeta = new RecordManagerPostMeta($this->_pWPDB);
-		$this->assertInstanceOf(wpdb::class, $pRecordManagerPostMeta->getWPDB());
-		$this->assertEquals('[oo_estate view="detail"]', $pRecordManagerPostMeta->getShortCodePageDetail());
+		$this->assertInstanceOf(wpdb::class, $this->_pRecordManagerPostMeta->getWPDB());
+		$this->assertEquals('[oo_estate view="detail"]', $this->_pRecordManagerPostMeta->getShortCodePageDetail());
 	}
 	
 	/**
