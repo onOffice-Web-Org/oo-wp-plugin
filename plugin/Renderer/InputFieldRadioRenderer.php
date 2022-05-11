@@ -68,7 +68,7 @@ class InputFieldRadioRenderer
 		{
 			foreach ($this->getValue() as $key => $label)
 			{
-				$inputId = 'label'.$this->getGuiId().'b'.$key;
+				$inputId = 'label'.$this->getGuiId().'b'.$key.$this->getName();
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 					.'" value="'.esc_html($key).'"'
 					.($key == $this->getCheckedValue() ? ' checked="checked" ' : '')

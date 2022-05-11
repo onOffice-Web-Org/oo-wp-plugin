@@ -48,15 +48,10 @@ class TestClassFilesystemDirect
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Filesystem\FilesystemException
-	 * @expectedExceptionMessage File not found or not readable
-	 *
-	 */
-
 	public function testGetContentsFail()
 	{
+		$this->expectException(\onOffice\WPlugin\Filesystem\FilesystemException::class);
+		$this->expectExceptionMessage('File not found or not readable');
 		$pFilesystemDirect = new FilesystemDirect();
 		$pFilesystemDirect->getContents(__DIR__.'/resources/Filesystem/doesNotExist.txt');
 	}

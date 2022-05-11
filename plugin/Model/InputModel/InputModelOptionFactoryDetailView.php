@@ -54,6 +54,15 @@ class InputModelOptionFactoryDetailView
 	const INPUT_MOVIE_LINKS = 'movielinks';
 
 	/** */
+	const INPUT_OGULO_LINKS = 'ogulolinks';
+
+	/** */
+	const INPUT_OBJECT_LINKS = 'objectlinks';
+
+	/** */
+	const INPUT_LINKS = 'links';
+
+	/** */
 	const INPUT_FIELD_CONFIG = DataDetailView::FIELDS;
 
 	/** */
@@ -97,6 +106,15 @@ class InputModelOptionFactoryDetailView
 		],
 		self::INPUT_SHOW_STATUS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
+		],
+		self::INPUT_OGULO_LINKS => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
+		],
+		self::INPUT_OBJECT_LINKS => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
+		],
+		self::INPUT_LINKS => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
 		]
 	];
 

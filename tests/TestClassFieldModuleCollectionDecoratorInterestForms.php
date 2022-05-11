@@ -89,14 +89,9 @@ class TestClassFieldModuleCollectionDecoratorInterestForms
 	}
 
 
-	/**
-	 *
-	 * @expectedException onOffice\WPlugin\Field\UnknownFieldException
-	 *
-	 */
-
 	public function testGetUnknownFieldByModuleAndName()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$pDecorator = new FieldModuleCollectionDecoratorInterestForms
 		($this->getPrefilledCollection());
 		$pDecorator->getFieldByModuleAndName('testModuleF', 'testFieldC');

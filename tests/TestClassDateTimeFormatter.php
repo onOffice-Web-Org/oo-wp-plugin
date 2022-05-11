@@ -63,10 +63,10 @@ class TestClassDateTimeFormatter
 
 	/**
 	 * Change this, when implementing long date
-	 * @expectedException \Exception
 	 */
 	public function testException()
 	{
+		$this->expectException(\Exception::class);
 		$timestamp = $this->getTimestamp();
 		$pDateTimeFormatter = new DateTimeFormatter();
 
