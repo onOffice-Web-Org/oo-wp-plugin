@@ -139,7 +139,7 @@ abstract class AdminPageAjax
 		$fieldnames = $pFieldnames->getFieldList($module);
 		$resultByContent = array();
 		$categories = array();
-		$listTypeUnSupported = ['user', 'date', 'redhint', 'blackhint', 'dividingline'];
+		$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
 		foreach ($fieldnames as $key => $properties) {
 			if (in_array($properties['type'], $listTypeUnSupported)) {
 				continue;
