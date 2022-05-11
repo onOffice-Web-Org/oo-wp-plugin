@@ -83,7 +83,8 @@ class RecordManagerPostMeta
 			$post_excerpt = "SELECT `post_excerpt`
 							FROM {$prefix}posts
 							WHERE `post_excerpt` = '".esc_sql($meta_key)."'
-		                            and post_status IN ('publish')";
+		                            and post_status IN ('publish')
+		                            and `post_type` = 'acf-field'";
 			$post_excerpt_result = $this->_pWPDB->get_row( $post_excerpt ,ARRAY_A);
 			
 			return empty($post_excerpt_result) ? [] : $post_meta_results;
