@@ -24,6 +24,9 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\ArrayContainerEscape;
+use onOffice\WPlugin\Controller\EstateListEnvironment;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\EstateDetail;
 use WP_UnitTestCase;
 
@@ -33,11 +36,16 @@ class TestTemplateEstateDefaultDetail
 	/** @var EstateDetail */
 	private $_pEstate = null;
 
+	/** @var EstateListEnvironment */
+	private $_pEnvironment = null;
+
 	/**
 	 * @before
 	 */
 	public function prepare()
 	{
+		$pDataView = new DataDetailView();
+
 		$this->_pEstate = $this->getMockBuilder(EstateDetail::class)
 			->setMethods([
 				'getEstateUnits',
@@ -54,8 +62,12 @@ class TestTemplateEstateDefaultDetail
 				'getDocument',
 				'getCurrentEstateId',
 				'getSimilarEstates',
+				'hasDetailView',
+				'getEstateLinks',
+				'getLinkEmbedPlayers',
+				'getDetailView',
 			])
-			->disableOriginalConstructor()
+			->setConstructorArgs([$pDataView])
 			->getMock();
 
 		$this->_pEstate->method('getEstateUnits')->willReturn('Estate Units here');
@@ -65,6 +77,7 @@ class TestTemplateEstateDefaultDetail
 			'objektart' => 'Grundstück',
 			'objekttyp' => 'Wohnen',
 			'vermarktungsart' => 'Kauf',
+			'vermarktungsstatus' => 'zzz',
 			'plz' => '52078',
 			'ort' => 'Aachen',
 			'objektnr_extern' => 'AP001',
@@ -98,6 +111,11 @@ class TestTemplateEstateDefaultDetail
 			'title' => 'test movie',
 		];
 
+		$oguloLink = [
+			'url' => 'https://ogulo.de',
+			'title' => 'test ogulo link',
+		];
+
 		$this->_pEstate->method('getEstateMovieLinks')->willReturn([$movielLink]);
 		$this->_pEstate->method('getShortCodeForm')->willReturn('Contact Form here');
 		$this->_pEstate->method('getMovieEmbedPlayers')->willReturn([]);
@@ -110,6 +128,10 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
+		$this->_pEstate->method('hasDetailView')->willReturn(true);
+		$this->_pEstate->method('getEstateLinks')->willReturn([$oguloLink]);
+		$this->_pEstate->method('getLinkEmbedPlayers')->willReturn([]);
+		$this->_pEstate->method('getDetailView')->willReturn('1');
 	}
 
 	/**

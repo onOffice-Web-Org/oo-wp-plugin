@@ -1,0 +1,52 @@
+name: Email notification for review request
+
+on:
+  pull_request_target:
+    types: [review_requested]
+
+jobs:
+  # We cannot use secrets in `if` conditions for job, so we need to do this workaround.
+  check-reviewer:
+    runs-on: ubuntu-latest
+    outputs:
+      wants-email: ${{ steps.wants-email.outputs.wants-email}}
+    steps:
+      - id: wants-email
+        # EMAIL_RECEIVER_GITHUB_USERNAME is the GitHub username of the person that should receive the email notification for the review request.
+        run: echo "::set-output name=wants-email::${{ github.event.requested_reviewer.login == secrets.EMAIL_RECEIVER_GITHUB_USERNAME}}"
+
+  notify-review-request:
+    runs-on: ubuntu-latest
+    needs: check-reviewer
+    if: needs.check-reviewer.outputs.wants-email == 'true'
+    name: Send email
+    steps:
+      - name: Get project ID
+        run: echo "PROJECT_ID=$(echo "${{ github.event.pull_request.title }}" | sed -r 's/.*P#([0-9]{5}).*/\1/g')" >> $GITHUB_ENV  
+
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          # EMAIL_SERVER_ADDRESS is the URL of the SMTP server. Example: smtp.example.org
+          server_address: ${{ secrets.EMAIL_SERVER_ADDRESS }}
+          server_port: 465
+          # EMAIL_USER is the username that connects to EMAIL_SERVER_ADDRESS.
+          username: ${{ secrets.EMAIL_USER }}
+          # EMAIL_USER is the password that connects to EMAIL_SERVER_ADDRESS.
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "[WP-Plugin] Review requested for ${{ github.event.pull_request.title }}"
+          # EMAIL_RECEIVER_ADDRESS is the email address to send the notification to.
+          to: ${{ secrets.EMAIL_RECEIVER_ADDRESS }}
+          from: WP-Plugin GitHub Action
+          convert_markdown: true
+          # The secret EMAIL_PROJECT_REDIRECT_URL is the URL to which to append the project ID to that will redirect to the corresponding project.
+          # This is kept secret, because we haven't yet confirmed whether this is an official API endpoint that can be used by everyone, or if it for internal purposes and may break unannounced.
+          html_body: |
+            A review was requested for a PR on the [WordPress plugin repo](https://github.com/${{ github.repository }}).
+
+            A ticket was created which you can track on. Please make it visible:
+
+            1. Open the project for [${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }}). ([Quick link](${{ secrets.EMAIL_PROJECT_REDIRECT_URL }}${{ env.PROJECT_ID }}))
+            2. Ensure that the link to the PR is present in the project requirements such that the link is easily accessible when working on tickets.
+            3. Set the project's phase to "In Bearbeitung".
+            4. The ticket should appear in your tasks.

@@ -268,6 +268,14 @@ class EstateList
 			];
 		}
 
+		if ($pListView->getName() === 'detail') {
+			if (!$this->hasDetailView()) {
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+			}
+		} elseif (!$this->getShowReferenceStatus()) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		}
+
 		$requestParams += $this->addExtraParams();
 
 		return $requestParams;
@@ -403,6 +411,11 @@ class EstateList
 		return $pArrayContainer;
 	}
 
+	public function getRawValues(): ArrayContainerEscape
+	{
+		return new ArrayContainerEscape($this->_recordsRaw);
+	}
+
 	/**
 	 * @return int
 	 * @throws API\ApiClientException
@@ -526,6 +539,18 @@ class EstateList
 	}
 
 	/**
+	 *
+	 * @return bool
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function hasDetailView(): bool
+    {
+		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->hasDetailView();
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getEstateContactIds(): array
@@ -619,6 +644,7 @@ class EstateList
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilderShort = $this->_pEnvironment->getFieldsCollectionBuilderShort();
 		$pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$pFieldsCollectionBuilderShort->addFieldsAddressEstateWithRegionValues($pFieldsCollection);
 		$pFieldsCollection->merge
 			(new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection));
 		$pFieldsCollectionFieldDuplicatorForGeoEstate =
@@ -631,6 +657,12 @@ class EstateList
 		$fieldsValues = $pContainer->get(OutputFields::class)
 			->getVisibleFilterableFields($this->_pDataView,
 				$pFieldsCollection, new GeoPositionFieldHandler);
+
+		if (array_key_exists("radius",$fieldsValues))
+		{
+			$geoFields = $this->_pDataView->getGeoFields();
+			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
+		}
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
@@ -659,12 +691,28 @@ class EstateList
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function getShowReferenceStatus(): bool
+	{
+			if ($this->_pDataView instanceof DataListView) {
+					return $this->_pDataView->getShowReferenceStatus();
+			} else {
+					return true;
+			}
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getEstateIds(): array
 	{
 		return array_column($this->_records, 'id');
 	}
+
+	/** @return array */
+	public function getAddressFields(): array
+		{ return $this->_pDataView->getAddressFields(); }
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()

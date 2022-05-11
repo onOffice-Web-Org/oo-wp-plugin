@@ -105,6 +105,7 @@ class TestClassFormPostInterest
 			'vermarktungsart' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'kaufpreis__von' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'kaufpreis__bis' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'krit_bemerkung_oeffentlich' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 		]));
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
@@ -129,6 +130,11 @@ class TestClassFormPostInterest
 				$pField3->setPermittedvalues(['reihenendhaus' => 'Reihenendhaus', 'reihenhaus' => 'Reihenhaus']);
 				$pField3->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 				$pFieldsCollection->addField($pField3);
+
+				$pField4 = new Field('krit_bemerkung_oeffentlich', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField4->setType(FieldTypes::FIELD_TYPE_TEXT);
+				$pField4->setLabel('Comment');
+				$pFieldsCollection->addField($pField4);
 
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
@@ -178,6 +184,10 @@ class TestClassFormPostInterest
 				$pField1->setType(FieldTypes::FIELD_TYPE_VARCHAR);
 				$pFieldsCollection->addField($pField1);
 
+				$pField2 = new Field('message', '');
+				$pField2->setType(FieldTypes::FIELD_TYPE_VARCHAR);
+				$pFieldsCollection->addField($pField2);
+
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -206,6 +216,7 @@ class TestClassFormPostInterest
 			'kaufpreis__von' => '200000.00',
 			'kaufpreis__bis' => '800000.00',
 			'objekttyp' => ['reihenendhaus', 'reihenhaus'],
+			'krit_bemerkung_oeffentlich' => 'comment3'
 		];
 
 		$pConfig = $this->getNewDataFormConfigurationInterest();
@@ -294,6 +305,8 @@ class TestClassFormPostInterest
 		$pConfig->addInput('Email', onOfficeSDK::MODULE_ADDRESS);
 		$pConfig->addInput('vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pConfig->addInput('kaufpreis', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pConfig->addInput('message', '');
+		$pConfig->addInput('krit_bemerkung_oeffentlich', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pConfig->setFormName('interestform');
 		$pConfig->setRecipient('test@my-onoffice.com');
 		$pConfig->setRequiredFields(['Vorname', 'Name', 'vermarktungsart']);
@@ -365,6 +378,7 @@ class TestClassFormPostInterest
 		$parameters = [
 			'data' => [
 				'vermarktungsart' => ['kauf'],
+				'krit_bemerkung_oeffentlich' => 'comment3',
 				'kaufpreis__von' => 200000.00,
 				'kaufpreis__bis' => 800000.00,
 			],
@@ -417,9 +431,9 @@ class TestClassFormPostInterest
 			'addressdata' => [
 				'Vorname' => 'John',
 				'Name' => 'Doe',
-				'Email' => 'john@doemail.com',
+				'Email' => 'john@doemail.com'
 			],
-			'message' => "\nSuchkriterien des Interessenten:\nVermarktungsart: Kauf\nKaufpreis (min): 200000\nKaufpreis (max): 800000",
+			'message' => "\nSuchkriterien des Interessenten:\nVermarktungsart: Kauf\nComment: comment3\nKaufpreis (min): 200000\nKaufpreis (max): 800000",
 			'subject' => 'Interest',
 			'formtype' => Form::TYPE_INTEREST,
 			"referrer" => "",

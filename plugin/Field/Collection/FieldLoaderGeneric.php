@@ -50,6 +50,7 @@ class FieldLoaderGeneric
 	/** @var RegionFilter */
 	private $_pRegionFilter;
 
+
 	/**
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param RegionController $pRegionController
@@ -80,19 +81,13 @@ class FieldLoaderGeneric
 			if (isset($fieldArray['label'])) {
 				unset($fieldArray['label']);
 			}
-
+			$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
 			foreach ($fieldArray as $fieldName => $fieldProperties) {
-				if ($module === onOfficeSDK::MODULE_ADDRESS && $fieldProperties['tablename'] === 'addressFaktura') {
+				if (
+					($module === onOfficeSDK::MODULE_ADDRESS && $fieldProperties['tablename'] === 'addressFaktura')
+					|| in_array($fieldProperties['type'], $listTypeUnSupported)
+				) {
 					continue;
-				}
-				if ($module === onOfficeSDK::MODULE_ESTATE && $fieldName === 'regionaler_zusatz') {
-					$fieldProperties['type'] = FieldTypes::FIELD_TYPE_SINGLESELECT;
-					$this->_pRegionController->fetchRegions();
-					$regions = $this->_pRegionController->getRegions();
-					$fieldProperties['permittedvalues'] = $this->_pRegionFilter
-						->buildRegions($regions);
-					$fieldProperties['labelOnlyValues'] = $this->_pRegionFilter
-						->collectLabelOnlyValues($regions);
 				}
 
 				if ($module === onOfficeSDK::MODULE_ADDRESS && $fieldName == 'ArtDaten') {
@@ -119,6 +114,7 @@ class FieldLoaderGeneric
 			'showTable' => true,
 			'language' => Language::getDefault(),
 			'modules' => [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE],
+			'realDataTypes' => true
 		];
 
 		$pApiClientActionFields = new APIClientActionGeneric

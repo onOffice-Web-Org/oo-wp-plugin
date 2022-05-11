@@ -118,53 +118,33 @@ class TestClassGeoCoordinates
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Types\InvalidGeoCoordinatesException
-	 *
-	 */
-
 	public function testExceptionUnsetLongitudeGetLatitude()
 	{
+		$this->expectException(\onOffice\WPlugin\Types\InvalidGeoCoordinatesException::class);
 		$pGeoCoordinates = new GeoCoordinates(42.42);
 		$pGeoCoordinates->getLatitude();
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Types\InvalidGeoCoordinatesException
-	 *
-	 */
-
 	public function testExceptionUnsetLongitudeGetLongitude()
 	{
+		$this->expectException(\onOffice\WPlugin\Types\InvalidGeoCoordinatesException::class);
 		$pGeoCoordinates = new GeoCoordinates(42.42);
 		$pGeoCoordinates->getLongitude();
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Types\InvalidGeoCoordinatesException
-	 *
-	 */
-
 	public function testExceptionUnsetLatitudeGetLatitude()
 	{
+		$this->expectException(\onOffice\WPlugin\Types\InvalidGeoCoordinatesException::class);
 		$pGeoCoordinates = new GeoCoordinates(null, 13.37);
 		$pGeoCoordinates->getLatitude();
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Types\InvalidGeoCoordinatesException
-	 *
-	 */
-
 	public function testExceptionUnsetLatitudeGetLongitude()
 	{
+		$this->expectException(\onOffice\WPlugin\Types\InvalidGeoCoordinatesException::class);
 		$pGeoCoordinates = new GeoCoordinates(null, 13.37);
 		$pGeoCoordinates->getLongitude();
 	}

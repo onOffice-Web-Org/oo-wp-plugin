@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 
 /**
@@ -69,12 +70,12 @@ class DataDetailView
 		'objektbeschreibung',
 		'lage',
 		'ausstatt_beschr',
-		'sonstige_angaben',
-		'vermarktungsstatus'
+		'sonstige_angaben'
 	];
 
 	/** @var string[] */
 	private $_addressFields = [
+		'imageUrl',
 		'Anrede',
 		'Vorname',
 		'Name',
@@ -84,6 +85,22 @@ class DataDetailView
 		'Ort',
 		'Telefon1',
 		'mobile',
+		'defaultemail',
+	];
+
+	/** @var string[] */
+	private $_defaultAddressFields = [
+		'Anrede',
+		'Vorname',
+		'Name',
+		'Zusatz1',
+		'Strasse',
+		'Plz',
+		'Ort',
+		'Telefon1',
+		'mobile',
+		'defaultemail',
+		'imageUrl',
 	];
 
 	/** @var string[] */
@@ -91,6 +108,9 @@ class DataDetailView
 
 	/** @var string */
 	private $_template = '';
+
+	/** @var bool */
+	private $_accessControls = true;
 
 	/** @var string */
 	private $_shortCodeForm = '';
@@ -103,8 +123,18 @@ class DataDetailView
 
 	/** @var bool */
 	private $_showStatus = 0;
+
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
+
+	/** @var string */
+	private $_oguloLinks = LinksTypes::LINKS_DEACTIVATED;
+
+	/** @var string */
+	private $_objectLinks = LinksTypes::LINKS_DEACTIVATED;
+
+	/** @var string */
+	private $_links = LinksTypes::LINKS_DEACTIVATED;
 
 	/** @var bool */
 	private $_dataDetailViewActive = false;
@@ -141,6 +171,10 @@ class DataDetailView
 	public function getPictureTypes(): array
 		{ return $this->_pictureTypes; }
 
+	/** @return bool */
+	public function hasDetailView(): bool
+		{ return $this->_accessControls; }
+
 	/** @return string */
 	public function getTemplate(): string
 		{ return $this->_template; }
@@ -161,6 +195,10 @@ class DataDetailView
 	public function getAddressFields(): array
 		{ return $this->_addressFields; }
 
+	/** @return string[] */
+	public function getDefaultAddressFields(): array
+		{ return $this->_defaultAddressFields; }
+
 	/** @return int */
 	public function getPageId(): int
 		{ return $this->_pageId; }
@@ -172,6 +210,10 @@ class DataDetailView
 	/** @param array $pictureTypes */
 	public function setPictureTypes(array $pictureTypes)
 		{ $this->_pictureTypes = $pictureTypes; }
+
+	/** @param bool $accessControl */
+	public function setHasDetailView(bool $accessControl)
+		{ $this->_accessControls = $accessControl; }
 
 	/** @param string $template */
 	public function setTemplate(string $template)
@@ -192,10 +234,21 @@ class DataDetailView
 	/** @var string[] $addressFields */
 	public function setAddressFields(array $addressFields)
 		{ $this->_addressFields = $addressFields; }
-
 	/** @return int */
 	public function getMovieLinks(): int
 		{ return $this->_movieLinks; }
+
+	/** @return string */
+	public function getOguloLinks(): string
+		{ return $this->_oguloLinks; }
+
+	/** @return string */
+	public function getObjectLinks(): string
+	{ return $this->_objectLinks; }
+
+	/** @return string */
+	public function getLinks(): string
+	{ return $this->_links; }
 
 	/** @return DataViewSimilarEstates */
 	public function getDataViewSimilarEstates(): DataViewSimilarEstates
@@ -216,6 +269,18 @@ class DataDetailView
 	/** @param int $movieLinks */
 	public function setMovieLinks(int $movieLinks)
 		{ $this->_movieLinks = $movieLinks; }
+
+	/** @param string $oguloLinks */
+	public function setOguloLinks(string $oguloLinks)
+	{ $this->_oguloLinks = $oguloLinks; }
+
+	/** @param string $objectLink */
+	public function setObjectLinks(string $objectLink)
+	{ $this->_objectLinks = $objectLink; }
+
+	/** @param string $links */
+	public function setLinks(string $links)
+	{ $this->_links = $links; }
 
 	/** @return bool */
 	public function getRandom(): bool

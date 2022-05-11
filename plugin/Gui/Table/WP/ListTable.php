@@ -145,4 +145,31 @@ abstract class ListTable extends WP_List_Table
 	/** @return array */
 	protected function getItems()
 		{ return $this->items; }
+
+	protected function handleRecord(array $records)
+	{
+		if (empty($records))
+		{
+			return [];
+		}
+		$recordHandled = [];
+		foreach ($records as $record)
+		{
+			if (!empty($record->page_shortcode))
+			{
+				$listPageID = explode(',',$record->page_shortcode);
+				$pages = '';
+				$listPage = [];
+				foreach ($listPageID as $pageID)
+				{
+					$listPage[] = "<a href='".esc_attr(get_edit_post_link((int)$pageID))."' target='_blank'>".esc_html(get_the_title((int)$pageID))."</a>";
+				}
+				$pages = implode(',',$listPage);
+				$record->page_shortcode = $pages;
+			}
+			$recordHandled[] = $record;
+		}
+		return $recordHandled;
+	}
+
 }

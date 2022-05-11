@@ -107,14 +107,9 @@ class TestClassFormAddressCreator
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\API\ApiClientException
-	 *
-	 */
-
 	public function testCreateOrCompleteAddressFailure()
 	{
+		$this->expectException(\onOffice\WPlugin\API\ApiClientException::class);
 		$this->configureSDKWrapperMockerForAddressCreation(0);
 		$pFormData = $this->createFormData();
 		$this->_pSubject->createOrCompleteAddress($pFormData);
@@ -153,6 +148,14 @@ class TestClassFormAddressCreator
 		$this->assertEquals($expectedValues, $this->_pSubject->getAddressDataForEmail($pFormData));
 	}
 
+	public function testCreateOrCompleteAddressWithContactType()
+	{
+		$this->configureSDKWrapperMockerForAddressCreationWithContactType(1);
+		$pFormData = $this->createFormData();
+		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, 'Admin');
+		$this->assertEquals(1, $result);
+	}
+
 
 	/**
 	 *
@@ -169,6 +172,30 @@ class TestClassFormAddressCreator
 		$pFormData = new FormData($pDataFormConfiguration, 1);
 		$pFormData->setValues($this->_postValues);
 		return $pFormData;
+	}
+
+		/**
+	 *
+	 */
+
+	private function configureSDKWrapperMockerForAddressCreationWithContactType(int $id)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'address',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $id, 'type' => 'address', 'elements' => []],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addCreateAddressResponseToSKDWrapperWithContactType($response);
 	}
 
 
@@ -209,6 +236,16 @@ class TestClassFormAddressCreator
 			'testaddressfield1varchar' => 'testValue',
 			'testaddressfield1multiselect' => ['hut','tut'],
 			'checkDuplicate' => false
+		], null, $response);
+	}
+
+	private function addCreateAddressResponseToSKDWrapperWithContactType(array $response)
+	{
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'address', '', [
+			'testaddressfield1varchar' => 'testValue',
+			'testaddressfield1multiselect' => ['hut','tut'],
+			'checkDuplicate' => false,
+			'ArtDaten' => 'Admin'
 		], null, $response);
 	}
 }

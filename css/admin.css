@@ -13,6 +13,25 @@
 	max-width: 230px;
 }
 
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list input,
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list label,
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list select {
+	float: none;
+	margin: 4px 2px;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list summary {
+	margin: 5px 0;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list p {
+	margin-top: 0;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list .oo-template-folder-path {
+	color: #646970;
+}
+
 #onoffice-ajax input[name=oopluginlistviewsaddress-name],
 #onoffice-ajax input[name=oopluginlistviews-name],
 #onoffice-ajax input[name=oopluginforms-name] {
@@ -254,16 +273,53 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 #viewformspecific .inside{
 	overflow: hidden;
 }
-#viewformspecific .inside .hint-fallback-email{
-	float: right;
-	width: 50%;
-	text-align: left;
-	margin-top: 0;
-}
+
 #adminmenu #toplevel_page_onoffice .wp-menu-image img {
 	height: 20px !important;
 	text-align: center !important;
 	line-height: 20px !important;
-	display: block;
+	display: none;
 	margin: auto;
+	opacity:1;
+}
+
+#toplevel_page_onoffice .wp-menu-image {
+	background-image: url(../images/onOffice-Logo-screen_wp-grey.svg) ;
+	background-size: 60% 60% !important;
+	background-position: center center !important;
+	background-repeat:no-repeat;
+}
+#toplevel_page_onoffice.wp-has-current-submenu .wp-menu-image {
+	background-color: #fff !important;
+	-webkit-mask: url(../images/onOffice-Logo-screen_wp-grey.svg) no-repeat center;
+	mask: url(../images/onOffice-Logo-screen_wp-grey.svg) no-repeat center;
+	width: 20px !important;
+	margin-left: 8px !important;
+}
+#toplevel_page_onoffice:hover .wp-menu-image{
+	background-color: #2271b1;
+	-webkit-mask: url(../images/onOffice-Logo-screen_wp-grey.svg) no-repeat center;
+	mask: url(../images/onOffice-Logo-screen_wp-grey.svg) no-repeat center;
+	width: 20px !important;
+	margin-left: 8px !important;
+}
+#onoffice-form-search-estate {
+	display: flex;
+	float: right;
+	margin-top: -33px;
+}
+#onoffice-form-search-address{
+	display: flex;
+	float: right;
+}
+#onoffice-form-search-form {
+	display: flex;
+	float: right;
+	margin-top: 20px;
+}
+
+#viewformspecific .hint-text, #viewformspecific .hint-text a{
+	color: #646970;
+	font-style: italic;
+	text-decoration: none;
 }

@@ -134,8 +134,9 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$checkDuplicate = $pFormConfig->getCheckDuplicateOnCreateAddress();
+		$contactType = $pFormConfig->getContactType();
 		$addressId = $this->_pFormPostContactConfiguration->getFormAddressCreator()
-			->createOrCompleteAddress($pFormData, $checkDuplicate);
+			->createOrCompleteAddress($pFormData, $checkDuplicate, $contactType);
 
 		if (!$this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
 			// No subscription for newsletter, which is ok
@@ -166,11 +167,14 @@ class FormPostContact
 
 	private function sendContactRequest(FormData $pFormData, string $recipient = '', $subject = null)
 	{
+		$pFormConfig = $pFormData->getDataFormConfiguration();
+		$contactType = $pFormConfig->getContactType();
 		$values = $pFormData->getValues();
 		$pWPQuery = $this->_pFormPostContactConfiguration->getWPQueryWrapper()->getWPQuery();
 		$pWPWrapper = $this->_pFormPostContactConfiguration->getWPWrapper();
+		$addressData = $pFormData->getAddressData($this->getFieldsCollection());
 		$requestParams = [
-			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
+			'addressdata' => $addressData,
 			'estateid' => $values['Id'] ?? $pWPQuery->get('estate_id', null),
 			'message' => $values['message'] ?? null,
 			'subject' => sanitize_text_field($subject.' '.self::PORTALFILTER_IDENTIFIER),
@@ -179,13 +183,17 @@ class FormPostContact
 			'estatedata' => ["objekttitel", "ort", "plz", "land"],
 			'estateurl' => home_url($pWPWrapper->getRequest()),
 		];
-		if ($this->_pFormPostContactConfiguration->getNewsletterAccepted()) {
-			$requestParams['addressdata']['newsletter_aktiv'] = true;
+		if (isset($addressData['ArtDaten']) && !empty($contactType)) {
+			$requestParams['addressdata']['ArtDaten'] = $contactType;
 		}
+		if (isset($addressData['newsletter'])) {
+			$requestParams['addressdata']['newsletter_aktiv'] = $this->_pFormPostContactConfiguration
+				->getNewsletterAccepted();
+		}
+		unset($requestParams['addressdata']['newsletter']);
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
 		}
-
 		$pSDKWrapper = $this->_pFormPostContactConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');

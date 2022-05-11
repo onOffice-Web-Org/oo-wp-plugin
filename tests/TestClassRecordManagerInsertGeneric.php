@@ -89,14 +89,9 @@ class TestClassRecordManagerInsertGeneric
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Record\RecordManagerInsertException
-	 *
-	 */
-
 	public function testInsertByRowFail()
 	{
+		$this->expectException(\onOffice\WPlugin\Record\RecordManagerInsertException::class);
 		$this->_pWPDB->expects($this->once())->method('insert')
 				->will($this->returnValue(false));
 		$this->_pSubject->insertByRow([RecordManager::TABLENAME_FIELDCONFIG => ['a' => ['b']]]);
@@ -145,14 +140,9 @@ class TestClassRecordManagerInsertGeneric
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\Record\RecordManagerInsertException
-	 *
-	 */
-
 	public function testInsertAdditionalValuesFail()
 	{
+		$this->expectException(\onOffice\WPlugin\Record\RecordManagerInsertException::class);
 		$this->_pWPDB->expects($this->once())->method('insert')->will($this->returnValue(false));
 		$this->_pSubject->insertAdditionalValues(['test' => [['a' => 'b']]]);
 	}

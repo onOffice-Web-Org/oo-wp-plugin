@@ -35,15 +35,10 @@ use WP_UnitTestCase;
 class TestClassWPScreenFactory
 	extends WP_UnitTestCase
 {
-	/**
-	 *
-	 * @expectedException Exception
-	 * @expectedExceptionMessage Current Screen is not available
-	 *
-	 */
-
 	public function testGetCurrentScreenUnavailable()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Current Screen is not available');
 		$pWPScreenFactory = new WPScreenFactory();
 		$pWPScreenFactory->getCurrentScreen();
 	}
