@@ -73,14 +73,4 @@ class TestClassRecordManagerPostMeta
 		$pFieldsPostMeta = $this->_pRecordManagerPostMeta->getPageId();
 		$this->assertEquals([], $pFieldsPostMeta);
 	}
-
-	/**
-	 * @covers \onOffice\WPlugin\Record\RecordManagerPostMeta::deletePostMetaUseCustomField
-	 */
-	public function testDeletePostMetaUseCustomField()
-	{
-		$this->_pWPDB->expects($this->once())->method('delete')
-			->with('wp_test_postmeta', ['meta_key' => 'shortcode','meta_value' => '[oo_estate view="detail"]']);
-		$this->_pRecordManagerPostMeta->deletePostMetaUseCustomField('shortcode');
-	}
 }

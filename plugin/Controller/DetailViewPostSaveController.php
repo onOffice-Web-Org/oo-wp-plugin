@@ -141,8 +141,6 @@ class DetailViewPostSaveController
 		}
 		$pPost = get_post($postId);
 		$this->deletePageUseShortCode($pPost);
-		$postExcerpt = $pPost->post_excerpt;
-		$this->_pRecordPostMeta->deletePostMetaUseCustomField($postExcerpt);
 	}
 
 
@@ -344,22 +342,6 @@ class DetailViewPostSaveController
 		}
 	}
 	
-	/**
-	 * @param $postId
-	 */
-	public function onDeletePost($postId)
-	{
-		$pPost = WP_Post::get_instance($postId);
-		if ($pPost->post_status === 'trash') {
-			return;
-		}
-		
-		$isRevision = wp_is_post_revision($pPost);
-		if (!$isRevision) {
-			$postExcerpt = $pPost->post_excerpt;
-			$this->_pRecordPostMeta->deletePostMetaUseCustomField($postExcerpt);
-		}
-	}
 	
 	/**
 	 * @return mixed|RecordManagerPostMeta
