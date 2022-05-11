@@ -21,9 +21,7 @@
 
 namespace onOffice\WPlugin\Controller;
 
-use DI\ContainerBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
-use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
@@ -42,9 +40,6 @@ class DetailViewPostSaveController
 {
 	/** @var RewriteRuleBuilder */
 	private $_pRewriteRuleBuilder;
-	
-	/** @var  RecordManagerPostMeta */
-	private $_pRecordPostMeta;
 
 	/**
 	 *
@@ -55,10 +50,6 @@ class DetailViewPostSaveController
 	public function __construct(RewriteRuleBuilder $pRewriteRuleBuilder)
 	{
 		$this->_pRewriteRuleBuilder = $pRewriteRuleBuilder;
-		$pDIContainerBuilder = new ContainerBuilder;
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIContainerBuilder->build();
-		$this->_pRecordPostMeta = $pContainer->get(RecordManagerPostMeta::class);
 	}
 
 
@@ -340,22 +331,5 @@ class DetailViewPostSaveController
 			}
 
 		}
-	}
-	
-	
-	/**
-	 * @return mixed|RecordManagerPostMeta
-	 */
-	public function getRecordPostMeta()
-	{
-		return $this->_pRecordPostMeta;
-	}
-	
-	/**
-	 * @return RewriteRuleBuilder
-	 */
-	public function getRewriteRuleBuilder()
-	{
-		return $this->_pRewriteRuleBuilder;
 	}
 }
