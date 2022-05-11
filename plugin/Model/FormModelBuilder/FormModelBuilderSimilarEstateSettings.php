@@ -214,7 +214,7 @@ class FormModelBuilderSimilarEstateSettings
 	{
 		$labelTemplate = __('Template', 'onoffice-for-wp-websites');
 		$pInputModelTemplate = $this->_pInputModelSimilarViewFactory->create($field, $labelTemplate);
-		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_TEMPLATE_LIST);
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths('estate'));
 		$pInputModelTemplate->setValue($this->getTemplateValueByField($field));
 

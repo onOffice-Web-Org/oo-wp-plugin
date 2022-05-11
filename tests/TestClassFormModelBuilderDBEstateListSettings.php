@@ -187,15 +187,15 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals(FormModelBuilderDBEstateListSettings::getListViewLabels(), $expected);
 	}
 
-    public function testCreateSortableFieldList()
-    {
-        $pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+	public function testCreateSortableFieldList()
+	{
+		$pInstance = $this->getMockBuilder( FormModelBuilderDBEstateListSettings::class )
+		                  ->disableOriginalConstructor()
+		                  ->getMock();
 
-        $instance = $pInstance->createSortableFieldList('address', 'checkbox', false);
-        $this->assertEquals($instance->getReferencedInputModels(), null);
-    }
+		$instance = $pInstance->createSortableFieldList( 'address', 'checkbox', false );
+		$this->assertEquals( $instance->getReferencedInputModels(), null );
+	}
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowReferenceEstate
@@ -213,6 +213,63 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$pInputModelDB = $pInstance->createInputModelShowReferenceEstate();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getValue(), '0');
+		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelListType
+	 */
+	public function testCreateInputModelListType()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('0');
+
+		$pInputModelDB = $pInstance->createInputModelListType();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getValue(), '0');
+		$this->assertEquals('select', $pInputModelDB->getHtmlType());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowStatus
+	 */
+	public function testCreateInputModelShowStatus()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('0');
+
+		$pInputModelDB = $pInstance->createInputModelShowStatus();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getValue(), '0');
+		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelPictureTypes
+	 */
+	public function testCreateInputModelPictureTypes()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn(null);
+
+		$pInputModelDB = $pInstance->createInputModelPictureTypes();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEmpty($pInputModelDB->getValue());
 		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
 	}
 }

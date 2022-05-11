@@ -40,6 +40,9 @@ abstract class InputModelBase
 	const HTML_TYPE_RADIO = 'radio';
 
 	/** */
+	const HTML_TYPE_TEMPLATE_LIST = 'templateList';
+
+	/** */
 	const HTML_TYPE_HIDDEN = 'hidden';
 
 	/** */
@@ -184,11 +187,11 @@ abstract class InputModelBase
 		{ $this->_placeholder = $placeholder; }
 
 	/** @return string */
-	public function getHint()
+	public function getHintHtml()
 	{ return $this->_hint; }
 
 	/** @param string $hint */
-	public function setHint($hint)
+	public function setHintHtml($hint)
 	{ $this->_hint = $hint; }
 
 	/** @param string $id */

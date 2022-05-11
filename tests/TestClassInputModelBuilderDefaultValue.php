@@ -102,7 +102,7 @@ class TestClassInputModelBuilderDefaultValue
 		$pExpectedInputModelSingleSelect->setValue('');
 		$pExpectedInputModelSingleSelect->setValuesAvailable(['' => '']);
 		$pExpectedInputModelSingleSelect->setPlaceholder(true);
-		$pExpectedInputModelSingleSelect->setHint('hit');
+		$pExpectedInputModelSingleSelect->setHintHtml('hit');
 		$pExpectedInputModelSingleSelect->setId('id');
 		$pExpectedInputModelSingleSelect->addReferencedInputModel($pInputModelBase);
 		$pExpectedInputModelSingleSelect->setSpecialDivId('SpecialDivId');
@@ -116,7 +116,7 @@ class TestClassInputModelBuilderDefaultValue
 		$this->assertInstanceOf(InputModelDB::class, $pExpectedInputModelSingleSelect);
 		$this->assertEquals(InputModelBase::HTML_TYPE_SELECT, $pExpectedInputModelSingleSelect->getHtmlType());
 		$this->assertTrue($pExpectedInputModelSingleSelect->getPlaceholder());
-		$this->assertEquals('hit', $pExpectedInputModelSingleSelect->getHint());
+		$this->assertEquals('hit', $pExpectedInputModelSingleSelect->getHintHtml());
 		$this->assertEquals('id', $pExpectedInputModelSingleSelect->getId());
 		$this->assertEquals('SpecialDivId', $pExpectedInputModelSingleSelect->getSpecialDivId());
 		$this->assertEquals('Module', $pExpectedInputModelSingleSelect->getOoModule());

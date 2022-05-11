@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2021 onOffice GmbH
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -23,27 +23,25 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Renderer\InputFieldTextRenderer;
+use Closure;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use onOffice\WPlugin\Types\LinksTypes;
+use onOffice\WPlugin\Types\MovieLinkTypes;
+use TypeError;
+use WP_UnitTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
-class TestClassInputFieldTextRenderer
-	extends \WP_UnitTestCase
+class TestClassLinkTypes
+	extends WP_UnitTestCase
 {
 	/**
 	 *
 	 */
-	public function testRenderHintFallbackEmail()
+	public function testIsOguloLink()
 	{
-		$pSubject = new InputFieldTextRenderer('text', 'testRenderer');
-		$pSubject->setValue('john.doe@example.com');
-		$pSubject->setHint('Test Content Hint Fallback Email');
-		ob_start();
-		$pSubject->render();
-		$output = ob_get_clean();
-		$this->assertEquals('<input type="text" name="testRenderer" value="john.doe@example.com" id="text_1" ><p class="hint-fallback-email hint-text">Test Content Hint Fallback Email</p>',
-			$output);
+		$this->assertTrue(call_user_func( LinksTypes::class.'::isOguloLink', 'Ogulo-Link'));
+		$this->assertTrue(call_user_func( LinksTypes::class.'::isObjectLink', 'Objekt-Link'));
+		$this->assertTrue(call_user_func( LinksTypes::class.'::isLink', 'Link'));
 	}
+
 }
