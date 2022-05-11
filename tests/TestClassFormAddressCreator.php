@@ -107,14 +107,9 @@ class TestClassFormAddressCreator
 	}
 
 
-	/**
-	 *
-	 * @expectedException \onOffice\WPlugin\API\ApiClientException
-	 *
-	 */
-
 	public function testCreateOrCompleteAddressFailure()
 	{
+		$this->expectException(\onOffice\WPlugin\API\ApiClientException::class);
 		$this->configureSDKWrapperMockerForAddressCreation(0);
 		$pFormData = $this->createFormData();
 		$this->_pSubject->createOrCompleteAddress($pFormData);

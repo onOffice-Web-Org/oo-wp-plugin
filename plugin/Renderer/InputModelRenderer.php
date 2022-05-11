@@ -134,8 +134,8 @@ class InputModelRenderer
 				$pInstance = new InputFieldCheckboxRenderer($elementName,
 					$pInputModel->getValuesAvailable(),  $pInputModel->getDescriptionTextHTML());
 				$pInstance->setCheckedValues($pInputModel->getValue());
-				if ($pInputModel->getHint() != null) {
-					$pInstance->setHint($pInputModel->getHint());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHintHtml($pInputModel->getHintHtml());
 				}
 				break;
 
@@ -174,6 +174,12 @@ class InputModelRenderer
 				$pInstance->setCheckedValue($pInputModel->getValue());
 				break;
 
+			case InputModelOption::HTML_TYPE_TEMPLATE_LIST:
+				$pInstance = new InputFieldTemplateListRenderer($elementName,
+					$pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValue($pInputModel->getValue());
+				break;
+
 			case InputModelOption::HTML_TYPE_TEXT:
 				$pInstance = new InputFieldTextRenderer('text', $elementName);
 				$pInstance->addAdditionalAttribute('size', '50');
@@ -187,8 +193,8 @@ class InputModelRenderer
 					}
 					$pInstance->setValue($pInputModel->getValue());
 				}
-				if ($pInputModel->getHint() != null) {
-					$pInstance->setHint($pInputModel->getHint());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHint($pInputModel->getHintHtml());
 				}
 
 				break;

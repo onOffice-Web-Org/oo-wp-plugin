@@ -49,9 +49,9 @@ class TestClassDefaultFilterBuilderSimilarEstates
 	 *
 	 */
 
-	public function setUp()
+	public function set_up()
 	{
-		parent::setUp();
+		parent::set_up();
 
 		$pDataViewEstates = new DataViewSimilarEstates();
 		$pDataViewEstates->setSameEstateKind(false);

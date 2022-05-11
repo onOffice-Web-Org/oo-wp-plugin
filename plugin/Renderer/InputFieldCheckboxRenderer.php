@@ -39,6 +39,12 @@ use function esc_html;
 class InputFieldCheckboxRenderer
 	extends InputFieldRenderer
 {
+	/** @var array */
+	private $_checkedValues = [];
+
+	/** @var string */
+	private $_hint = '';
+
 	/** @var string */
 	private $_descriptionTextHTML;
 
@@ -65,7 +71,7 @@ class InputFieldCheckboxRenderer
 	 * @return bool
 	 */
 
-	private function isMultipleSelect(string $key, FieldsCollection $pFieldsCollection): bool
+	public function isMultipleSelect(string $key, FieldsCollection $pFieldsCollection): bool
 	{
 		$module = $this->getOoModule();
 
@@ -85,7 +91,7 @@ class InputFieldCheckboxRenderer
 	 * @throws Exception
 	 */
 
-	private function buildFieldsCollection(): FieldsCollection
+	public function buildFieldsCollection(): FieldsCollection
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -111,6 +117,7 @@ class InputFieldCheckboxRenderer
 	public function render()
 	{
 		$pFieldsCollection = $this->buildFieldsCollection();
+		$hintText = !empty($this->_hint) ? '<p class="hint-text">' . $this->_hint . '</p>' : "";
 		$textHtml = '';
 		if (!empty($this->getHint())) {
 			$textHtml = '<p class="hint-fallback-email">' . esc_html($this->getHint()) . '</p>';
@@ -126,7 +133,8 @@ class InputFieldCheckboxRenderer
 					.$this->renderAdditionalAttributes()
 					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
-					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
+					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
+					.$hintText;
 			}
 			echo $textHtml;
 		} else {
@@ -136,7 +144,25 @@ class InputFieldCheckboxRenderer
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
 				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '')
+				.$hintText
 				.$textHtml;
 		}
 	}
+	
+	/** @return string */
+	public function getHintHtml()
+	{ return $this->_hint; }
+
+	/** @param string $hint */
+	public function setHintHtml(string $hint)
+	{ $this->_hint = $hint; }
+
+
+	/** @param array $checkedValues */
+	public function setCheckedValues($checkedValues)
+		{ $this->_checkedValues = $checkedValues;}
+
+	/** @return array */
+	public function getCheckedValues()
+		{ return $this->_checkedValues; }
 }

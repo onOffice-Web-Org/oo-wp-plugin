@@ -37,7 +37,7 @@ jobs:
       overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
   
   deploy:
-    name: Deploy
+    name: Deploy development version
     runs-on: ubuntu-latest
     environment: WordPress SVN
     needs: [get-versions, build]
@@ -87,4 +87,4 @@ jobs:
 
       - name: Commit to trunk
         working-directory: /tmp/svn
-        run: svn commit -m "Import version '${{ needs.get-versions.outputs.developmentVersion }}' to trunk" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ secrets.SVN_PASSWORD }}"
+        run: svn commit -m "Import development version '${{ needs.get-versions.outputs.developmentVersion }}' to trunk" --non-interactive --username "${{ secrets.SVN_USER }}" --password "${{ secrets.SVN_PASSWORD }}"

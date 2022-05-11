@@ -86,14 +86,14 @@ class TestClassFieldLoaderSearchCriteria
 		$this->assertCount(11, $result);
 
 		foreach ($result as $fieldname => $fieldProperties) {
-			$this->assertInternalType('string', $fieldname);
+			$this->assertIsString($fieldname);
 			$actualModule = $fieldProperties['module'];
 			$this->assertEquals($actualModule, onOfficeSDK::MODULE_SEARCHCRITERIA);
 			$this->assertArrayHasKey('module', $fieldProperties);
 			$this->assertArrayHasKey('label', $fieldProperties);
 			$this->assertArrayHasKey('type', $fieldProperties);
 			$this->assertArrayHasKey('permittedvalues', $fieldProperties);
-			$this->assertInternalType('array', $fieldProperties['permittedvalues']);
+			$this->assertIsArray($fieldProperties['permittedvalues']);
 			$this->assertArrayHasKey('content', $fieldProperties);
 			$this->assertArrayHasKey('rangefield', $fieldProperties);
 
