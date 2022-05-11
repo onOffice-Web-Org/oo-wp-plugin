@@ -1,27 +1,37 @@
 var onOffice = onOffice || {};
 jQuery(document).ready(function($) {
-	onOffice.sortByUserSelection = function () {
-		var sortbynames = [
-			'oopluginlistviews-sortByUserDefinedDefault',
-			'oopluginsortbyuservalues-sortbyuservalue',
-			'oopluginlistviews-sortby'
-		];
+	var sortByUserCheckbox = $("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]");
+	var sortbynames = [
+		'oopluginlistviews-sortByUserDefinedDefault',
+		'oopluginsortbyuservalues-sortbyuservalue',
+		'oopluginlistviews-sortby',
+		'oopluginlistviews-sortByUserDefinedDirection',
+	];
+	var defaultsorts = [
+		'oopluginlistviews-sortby',
+		'oopluginlistviews-sortorder'
+	];
 
-		$("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").change(function (){
-			if(!this.checked) {
-				sortbynames.forEach(function(item){
-					$("#viewrecordsfilter").find("[name="+item+"]").val(null).trigger("chosen:updated");
-				});
-				$("#viewrecordsfilter").find("[name='oopluginlistviews-sortByUserDefinedDirection']")
-					.val(0).trigger("chosen:updated");
-				$("#viewrecordsfilter").find("[name=oopluginlistviews-sortByUserDefinedDefault]")
-					.find("option").remove();
-			}
-		});
+	onOffice.sortInputChecker = function () {
+		if (sortByUserCheckbox.prop('checked') == true) {
+			sortbynames.forEach(function (item) {
+				$("#viewrecordsfilter").find("[name=" + item + "]").parent().show();
+			});
+			defaultsorts.forEach(function (item) {
+				$("#viewrecordsfilter").find("[name=" + item + "]").parent().hide();
+			});
+		} else {
+			sortbynames.forEach(function (item) {
+				$("#viewrecordsfilter").find("[name=" + item + "]").parent().hide();
+			});
+			defaultsorts.forEach(function (item) {
+				$("#viewrecordsfilter").find("[name=" + item + "]").parent().show();
+			});
+		}
 	};
 
-	onOffice.generateSortByUserDefinedDefault = function() {
-		if ($("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]").prop('checked') == true) {
+	onOffice.generateSortByUserDefinedDefault = function () {
+		if (sortByUserCheckbox.prop('checked') == true) {
 			var oldSelected = $("#viewrecordsfilter")
 				.find("[name=oopluginlistviews-sortByUserDefinedDefault] :selected").val();
 			var selectedDirection = $("#viewrecordsfilter")
@@ -50,5 +60,9 @@ jQuery(document).ready(function($) {
             standardSortInput.trigger("chosen:updated");
 		}
 	};
-	onOffice.sortByUserSelection();
+
+	onOffice.sortInputChecker();
+	sortByUserCheckbox.change(function () {
+		onOffice.sortInputChecker();
+	});
 });
