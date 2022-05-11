@@ -317,6 +317,12 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	float: right;
 	margin-top: 20px;
 }
+
+#viewformspecific .hint-text, #viewformspecific .hint-text a{
+	color: #646970;
+	font-style: italic;
+	text-decoration: none;
+}
 input#onoffice-input-submit {
 	color: #2271b1;
 	border-color: #2271b1;

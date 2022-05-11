@@ -78,9 +78,15 @@ Start editing inside the `onoffice-personalized` folder.
 
 = Unreleased =
 
+**Added**
+
+* Besides movie links, other link types from onOffice enterprise can now be configured for the detail view. The included templates support these new link types.
+
 **Fixed**
 
+* The warning about the deactivation of the duplicate check introduced in version 2.22.2 can now be closed correctly and does not appear on new installations.
 * In the settings, clicking on the labels now sets the correct controls.
+* Explain how to link addresses from contact forms with the estates.
 
 = 3.1 (2022-05-04) =
 

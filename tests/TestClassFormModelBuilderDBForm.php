@@ -60,7 +60,7 @@ class TestClassFormModelBuilderDBForm
 		$this->_pContainer = $pContainerBuilder->build();
 		$this->_pInstance = new FormModelBuilderDBForm($this->_pContainer);
 	}
-	
+
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRecipientContactForm
@@ -150,7 +150,26 @@ class TestClassFormModelBuilderDBForm
 
 		$this->assertEquals([], $result);
 	}
-	
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsRequired
+	 */
+	public function testGetInputModelIsRequired()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->getInputModelIsRequired();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelName
 	 */
@@ -160,7 +179,7 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelName);
 		$this->assertEquals($pInputModelName->getHtmlType(), 'text');
 	}
-	
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelEmbedCode
 	 */
@@ -170,7 +189,7 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelLabel::class, $pInputModelFormEmbedCode);
 		$this->assertEquals($pInputModelFormEmbedCode->getHtmlType(), 'label');
 	}
-	
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelButton
 	 */
@@ -180,7 +199,7 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelLabel::class, $pInputModelButton);
 		$this->assertEquals($pInputModelButton->getHtmlType(), 'button');
 	}
-	
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelResultLimit
 	 */
@@ -190,7 +209,7 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelResultLimit);
 		$this->assertEquals($pInputModelResultLimit->getHtmlType(), 'text');
 	}
-	
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelRecipient
 	 */
@@ -200,17 +219,7 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelRecipient);
 		$this->assertEquals($pInputModelRecipient->getHtmlType(), 'text');
 	}
-	
-	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsRequired
-	 */
-	public function testGetInputModelIsRequired()
-	{
-		$pInputModelIsRequired = $this->_pInstance->getInputModelIsRequired();
-		$this->assertInstanceOf(InputModelDB::class, $pInputModelIsRequired);
-		$this->assertEquals($pInputModelIsRequired->getHtmlType(), 'checkbox');
-	}
-	
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsAvailableOptions
 	 */

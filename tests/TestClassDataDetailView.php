@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use Closure;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use TypeError;
 use WP_UnitTestCase;
@@ -88,6 +89,9 @@ class TestClassDataDetailView
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
 		$this->assertFalse($pDataDetailView->getShowStatus());
+		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getOguloLinks());
+		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getObjectLinks());
+		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getLinks());
 	}
 
 	/**
