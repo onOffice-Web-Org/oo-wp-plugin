@@ -66,27 +66,14 @@ class TestClassScriptLoaderGenericConfigurationDefault
 	public function testGetCSSOnofficeStyle()
 	{
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ]   = [
+			"...\wordpress\wp-content\plugins/onoffice-personalized/templates/onoffice-style.css"
+		];
+		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_THEME ]    = [
+			"...\wordpress\wp-content\plugins/onoffice-themes/templates/"
+		];
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$cssOnofficeStyle = $pScriptLoaderGenericConfigurationDefault->getCSSOnofficeStyle();
-		$cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
-			. 'onoffice-personalized' );
-		$cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_THEME ] = glob( get_stylesheet_directory()
-			. '/onoffice-theme' );
-		$onofficeCssStyleLink = '';
-		if (!empty($cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_THEME ])) {
-			$onofficeCssStyleLink =  !empty(glob( get_stylesheet_directory()
-				. '/onoffice-theme/templates/' . 'onoffice-style.css' ))
-				? get_template_directory_uri() . '/onoffice-theme/templates/onoffice-style.css'
-				: plugins_url('css/onoffice_defaultview.css', $pluginPath);
-			$this->assertEquals($cssOnofficeStyle, $onofficeCssStyleLink);
-		} elseif (!empty($cssTemplatesList[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ])) {
-			$onofficeCssStyleLink =  !empty(glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
-				. 'onoffice-personalized/templates/' . 'onoffice-style.css' ))
-				? plugins_url('onoffice-personalized/templates/onoffice-style.css',  '')
-				: plugins_url('css/onoffice_defaultview.css', $pluginPath);
-			$this->assertEquals($cssOnofficeStyle, $onofficeCssStyleLink);
-		} else {
-			$this->assertEquals($cssOnofficeStyle, plugins_url('templates.dist/onoffice-style.css', $pluginPath));
-		}
+		$this->assertEquals($cssOnofficeStyle, plugins_url('css/onoffice_defaultview.css', $pluginPath));
 	}
 }

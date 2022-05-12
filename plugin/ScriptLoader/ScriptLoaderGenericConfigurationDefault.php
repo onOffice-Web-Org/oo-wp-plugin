@@ -112,12 +112,12 @@ class ScriptLoaderGenericConfigurationDefault
 		$onofficeCssStyleLink = '';
 		if (!empty($folderTemplates[ TemplateCall::TEMPLATE_FOLDER_THEME ])) {
 			$onofficeCssStyleLink =  !empty(glob( get_stylesheet_directory()
-				. '/onoffice-theme/templates/' . 'onoffice-style.css' ))
+				. '/onoffice-theme/templates/onoffice-style.css' ))
 				? get_template_directory_uri() . '/onoffice-theme/templates/onoffice-style.css'
 				: plugins_url('css/onoffice_defaultview.css', $pluginPath);
 		} elseif (!empty($folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ])) {
 			$onofficeCssStyleLink =  !empty(glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
-				. 'onoffice-personalized/templates/' . 'onoffice-style.css' ))
+				. 'onoffice-personalized/templates/onoffice-style.css' ))
 				? plugins_url('onoffice-personalized/templates/onoffice-style.css',  '')
 				: plugins_url('css/onoffice_defaultview.css', $pluginPath);
 		} else  {
