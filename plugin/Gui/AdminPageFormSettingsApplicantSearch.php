@@ -79,17 +79,6 @@ class AdminPageFormSettingsApplicantSearch
 		$this->addFormModel($pFormModelGeoFields);
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
 
-		if (!$this->getShowMessageInput()) {
-			$category = __('Form Specific Fields', 'onoffice-for-wp-websites');
-			$removeFields = [
-				[
-					'fieldName' => 'message',
-					'category' => $category
-				],
-			];
-			$this->removeFieldsConfiguration(null, $removeFields);
-		}
-
 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
 	}
