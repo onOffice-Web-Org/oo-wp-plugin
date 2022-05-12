@@ -68,7 +68,7 @@ class RecordManagerPostMeta
 	{
 		$prefix = $this->_pWPDB->prefix;
 		
-		$post_meta_sql = "SELECT postmeta.post_id, postmeta.meta_key
+		$post_meta_sql = "SELECT postmeta.post_id
 							FROM {$prefix}postmeta postmeta
 							INNER JOIN {$prefix}posts post on postmeta.post_id = post.ID
 							WHERE postmeta.meta_key not like '\_%'
@@ -78,18 +78,7 @@ class RecordManagerPostMeta
 							ORDER BY postmeta.post_id DESC ";
 		$post_meta_results = $this->_pWPDB->get_row( $post_meta_sql ,ARRAY_A);
 		
-		if (!empty($post_meta_results)) {
-			$meta_key = $post_meta_results["meta_key"];
-			$post_excerpt = "SELECT `post_excerpt`
-							FROM {$prefix}posts
-							WHERE `post_excerpt` = '".esc_sql($meta_key)."'
-		                            and post_status IN ('publish')
-		                            and `post_type` = 'acf-field'";
-			$post_excerpt_result = $this->_pWPDB->get_row( $post_excerpt ,ARRAY_A);
-			
-			return empty($post_excerpt_result) ? [] : $post_meta_results;
-		}
-		return [];
+		return empty($post_excerpt_result) ? [] : $post_meta_results;
 	}
 	
 	

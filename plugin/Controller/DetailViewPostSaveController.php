@@ -41,6 +41,7 @@ class DetailViewPostSaveController
 	/** @var RewriteRuleBuilder */
 	private $_pRewriteRuleBuilder;
 
+
 	/**
 	 *
 	 * @param RewriteRuleBuilder $pRewriteRuleBuilder
