@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-04T15:13:47+07:00\n"
+"POT-Creation-Date: 2022-05-12T02:04:18+02:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -73,16 +73,16 @@ msgstr "Formulare"
 
 #: plugin/Controller/AdminViewController.php:205
 #: plugin/Controller/AdminViewController.php:206
-#: plugin/Controller/AdminViewController.php:373
+#: plugin/Controller/AdminViewController.php:372
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: plugin/Controller/AdminViewController.php:389
+#: plugin/Controller/AdminViewController.php:388
 msgid "API token and secret"
 msgstr "API-Token und Secret"
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:392
+#: plugin/Controller/AdminViewController.php:391
 msgid ""
 "It looks like you did not enter any valid API credentials. Please consider "
 "reviewing your %s."
@@ -90,7 +90,7 @@ msgstr ""
 "Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte überprüfen Sie "
 "Ihr %s."
 
-#: plugin/Controller/AdminViewController.php:408
+#: plugin/Controller/AdminViewController.php:407
 msgid ""
 "We have deactivated the plugin's duplicate check for all of your forms, "
 "because the duplicate check can unintentionally overwrite address records. "
@@ -98,11 +98,11 @@ msgid ""
 "for these forms: Contact, Interest, Owner"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:427
+#: plugin/Controller/AdminViewController.php:426
 msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
 msgstr "Das onOffice-Plugin hat ein aktives SEO-Plugin erkannt: Yoast SEO."
 
-#: plugin/Controller/AdminViewController.php:428
+#: plugin/Controller/AdminViewController.php:427
 msgid ""
 "You currently have configured the onOffice plugin to fill out the title and "
 "description of the detail page, which can lead to conflicts with the SEO "
@@ -112,7 +112,7 @@ msgstr ""
 "Beschreibung der Detailseite ausgefüllt werden, was zu Konflikten mit dem "
 "SEO-Plugin führen kann."
 
-#: plugin/Controller/AdminViewController.php:429
+#: plugin/Controller/AdminViewController.php:428
 msgid ""
 "We recommend that you go the the onOffice plugin settings and configure the "
 "onOffice plugin to not modify the title and description."
@@ -121,7 +121,7 @@ msgstr ""
 "das onOffice-Plugin so zu konfigurieren, dass Titel und Beschreibung nicht "
 "geändert werden."
 
-#: plugin/Controller/AdminViewController.php:430
+#: plugin/Controller/AdminViewController.php:429
 msgid ""
 "This allows you to manage the title and description with your active SEO "
 "plugin."
@@ -130,7 +130,7 @@ msgstr ""
 "SEO-Plugin verwalten."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
-#: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
+#: plugin/Controller/EstateViewDocumentTitleBuilder.php:66
 msgid "%2$s (%3$s) in %4$s - %5$s"
 msgstr "%2$s (%3$s) in %4$s - %5$s"
 
@@ -271,32 +271,32 @@ msgstr ""
 "Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte gehen Sie zurück "
 "und prüfen Ihr %s."
 
-#: plugin/Gui/AdminPageApiSettings.php:78
+#: plugin/Gui/AdminPageApiSettings.php:81
 msgid "API token"
 msgstr "API-Token"
 
-#: plugin/Gui/AdminPageApiSettings.php:79
+#: plugin/Gui/AdminPageApiSettings.php:82
 msgid "API secret"
 msgstr "API-Secret"
 
-#: plugin/Gui/AdminPageApiSettings.php:109
+#: plugin/Gui/AdminPageApiSettings.php:112
 msgid "API settings"
 msgstr "API Einstellungen"
 
-#: plugin/Gui/AdminPageApiSettings.php:121
+#: plugin/Gui/AdminPageApiSettings.php:124
 msgid "Site Key"
 msgstr "Site Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:122
+#: plugin/Gui/AdminPageApiSettings.php:125
 msgid "Secret Key"
 msgstr "Secret Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:143
+#: plugin/Gui/AdminPageApiSettings.php:146
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:158
-#: plugin/Gui/AdminPageApiSettings.php:168
+#: plugin/Gui/AdminPageApiSettings.php:161
+#: plugin/Gui/AdminPageApiSettings.php:171
 msgid "Google Maps Key"
 msgstr "Google Maps-Key"
 
@@ -395,7 +395,7 @@ msgstr ""
 msgid "Allow indexing of PDF brochures"
 msgstr "Indexierung von PDF-Exposés erlauben"
 
-#: plugin/Gui/AdminPageApiSettings.php:181
+#: plugin/Gui/AdminPageApiSettings.php:219
 msgid ""
 "If you allow indexing, your search engine ranking can be negatively affected "
 "and your brochures can be available from search engines even months after "
@@ -426,31 +426,31 @@ msgstr ""
 msgid "The keys are OK."
 msgstr "Die Keys sind OK."
 
-#: plugin/Gui/AdminPageApiSettings.php:226
+#: plugin/Gui/AdminPageApiSettings.php:280
 msgid "There was an error:"
 msgstr "Ein Fehler ist aufgetreten:"
 
-#: plugin/Gui/AdminPageApiSettings.php:227
+#: plugin/Gui/AdminPageApiSettings.php:281
 msgid "The secret parameter is missing."
 msgstr "Der Secret-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:228
+#: plugin/Gui/AdminPageApiSettings.php:282
 msgid "The secret parameter is invalid or malformed."
 msgstr "Der Secret-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:229
+#: plugin/Gui/AdminPageApiSettings.php:283
 msgid "The response parameter is missing."
 msgstr "Der reponse-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:230
+#: plugin/Gui/AdminPageApiSettings.php:284
 msgid "The response parameter is invalid or malformed."
 msgstr "Der response-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:231
+#: plugin/Gui/AdminPageApiSettings.php:285
 msgid "The request is invalid or malformed."
 msgstr "Die Anfrage ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:242
+#: plugin/Gui/AdminPageApiSettings.php:296
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -459,35 +459,35 @@ msgstr ""
 "Sie können reCAPTCHA jedoch schon für die spätere Verwendung in den "
 "Formularen aktivieren."
 
-#: plugin/Gui/AdminPageApiSettings.php:268
+#: plugin/Gui/AdminPageApiSettings.php:322
 msgid "Save changes and clear API cache"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:280
+#: plugin/Gui/AdminPageApiSettings.php:334
 msgid "The cache was cleaned."
 msgstr "Der Cache wurde geleert."
 
-#: plugin/Gui/AdminPageApiSettings.php:294
+#: plugin/Gui/AdminPageApiSettings.php:348
 msgid "Map Provider"
 msgstr "Kartenanbieter"
 
-#: plugin/Gui/AdminPageApiSettings.php:301
+#: plugin/Gui/AdminPageApiSettings.php:355
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: plugin/Gui/AdminPageApiSettings.php:302
+#: plugin/Gui/AdminPageApiSettings.php:356
 msgid "Google Maps"
 msgstr "Google Maps"
 
-#: plugin/Gui/AdminPageApiSettings.php:309
+#: plugin/Gui/AdminPageApiSettings.php:363
 msgid "Maps"
 msgstr "Karten"
 
-#: plugin/Gui/AdminPageApiSettings.php:322
+#: plugin/Gui/AdminPageApiSettings.php:376
 msgid "Show title in URL"
 msgstr "Titel in URL anzeigen"
 
-#: plugin/Gui/AdminPageApiSettings.php:328
+#: plugin/Gui/AdminPageApiSettings.php:382
 msgid ""
 "If this checkbox is selected, the title of the property will be part of the "
 "URLs of the detail views. The title is placed after the record number, e.g. "
@@ -499,36 +499,36 @@ msgstr ""
 "platziert, z.B. <code>/1234-nice-location-with-view</code>. Es werden nicht "
 "mehr als die ersten fünf Wörter des Titels verwendet."
 
-#: plugin/Gui/AdminPageApiSettings.php:334
+#: plugin/Gui/AdminPageApiSettings.php:388
 msgid "Detail View URLs"
 msgstr "URLs der Detailansicht"
 
-#: plugin/Gui/AdminPageApiSettings.php:347
+#: plugin/Gui/AdminPageApiSettings.php:401
 msgid "Enable Watchlist"
 msgstr "Merkliste aktivieren"
 
-#: plugin/Gui/AdminPageApiSettings.php:348
+#: plugin/Gui/AdminPageApiSettings.php:402
 msgid "Expression used"
 msgstr "Zu verwendender Ausdruck"
 
-#: plugin/Gui/AdminPageApiSettings.php:359
-#: plugin/Gui/AdminPageApiSettings.php:368
+#: plugin/Gui/AdminPageApiSettings.php:413
+#: plugin/Gui/AdminPageApiSettings.php:422
 msgid "Watchlist"
 msgstr "Merkliste"
 
-#: plugin/Gui/AdminPageApiSettings.php:360
+#: plugin/Gui/AdminPageApiSettings.php:414
 msgid "Favorise"
 msgstr "Favorisieren"
 
-#: plugin/Gui/AdminPageApiSettings.php:379
+#: plugin/Gui/AdminPageApiSettings.php:433
 msgid "Pagination"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:386
+#: plugin/Gui/AdminPageApiSettings.php:440
 msgid "By WP Theme"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:387
+#: plugin/Gui/AdminPageApiSettings.php:441
 #, fuzzy
 #| msgid "onOffice"
 msgid "By onOffice-Plugin"
@@ -539,7 +539,7 @@ msgid "List Views"
 msgstr "Listenansichten"
 
 #: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageEstateDetail.php:205
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:95
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:99
 msgid "Detail View"
 msgstr "Detailansicht"
 
@@ -588,15 +588,15 @@ msgstr "Immobiliendaten"
 msgid "Access Control"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:306
+#: plugin/Gui/AdminPageEstateDetail.php:309
 msgid "Additional Media"
 msgstr "Zusätzliche Medien"
 
-#: plugin/Gui/AdminPageEstateDetail.php:422
+#: plugin/Gui/AdminPageEstateDetail.php:428
 msgid "The detail view has been saved."
 msgstr "Die Detailansicht wurde gespeichert."
 
-#: plugin/Gui/AdminPageEstateDetail.php:423
+#: plugin/Gui/AdminPageEstateDetail.php:429
 msgid "There was a problem saving the detail view."
 msgstr "Es ist einen Fehler beim Speichern der Detailansicht aufgetreten."
 
@@ -796,6 +796,7 @@ msgid "(Needs valid API credentials)"
 msgstr "(Benötigt gültige API-Zugangsdaten)"
 
 #. translators: %s will be replaced with a number.
+#. translators: %s will be replaced with a number.
 #: plugin/Gui/Table/AddressListTable.php:121
 #: plugin/Gui/Table/EstateListTable.php:196
 msgid "(Unknown Filter (ID: %s))"
@@ -838,7 +839,7 @@ msgstr "Ausgewählter Filter"
 #: plugin/Gui/Table/AddressListTable.php:182
 #: plugin/Gui/Table/EstateListTable.php:135 plugin/Gui/Table/FormsTable.php:130
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:265
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:339
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr "Template"
@@ -855,6 +856,7 @@ msgstr "Seiten, die den Shortcode verwenden"
 msgid "Duplicate"
 msgstr "Duplizieren"
 
+#. translators: %s is the name of the list view.
 #. translators: %s is the name of the list view.
 #: plugin/Gui/Table/AddressListTable.php:226
 #: plugin/Gui/Table/EstateListTable.php:279
@@ -969,7 +971,7 @@ msgid "Reduce values according to selected filter"
 msgstr "Werte durch gewählten Filter reduzieren"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:318
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:320
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:394
 msgid "Show Estate Status"
 msgstr "Immobilienstatus anzeigen"
 
@@ -985,7 +987,7 @@ msgid "Random Order"
 msgstr "Zufällige Reihenfolge"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:404
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:157
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
 msgid "PDF-Expose"
 msgstr "PDF-Exposé"
 
@@ -1099,13 +1101,13 @@ msgstr "Sprache hinzufügen"
 msgid "Module"
 msgstr "Modul"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:136
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
 #, fuzzy
 #| msgid "Don't show reference estates"
 msgid "Allow detail view for reference estates"
 msgstr "Referenzobjekte nicht anzeigen"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:178
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
 msgid "Movie Links"
 msgstr "Film-Links"
 
@@ -1151,7 +1153,7 @@ msgstr "Link"
 msgid "Select Contact Form"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:305
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:379
 #, fuzzy
 #| msgid "Contact person"
 msgid "No Contact Form"
@@ -1291,7 +1293,7 @@ msgstr "Bearbeiten"
 msgid "(in the folder \"%s\")"
 msgstr ""
 
-#: plugin/Renderer/InputModelRenderer.php:188
+#: plugin/Renderer/InputModelRenderer.php:189
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
