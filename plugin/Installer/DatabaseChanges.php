@@ -23,6 +23,11 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use DI\Container;
+use DI\ContainerBuilder;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
+use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
