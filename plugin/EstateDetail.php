@@ -30,6 +30,7 @@ use onOffice\WPlugin\Controller\EstateViewSimilarEstates;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use WP_Embed;
 
@@ -89,8 +90,26 @@ class EstateDetail
 
 		$movieLinksActive = $pDataView->getMovieLinks() !== MovieLinkTypes::MOVIE_LINKS_NONE;
 
+		$oguloLinksActive = $pDataView->getOguloLinks() !== LinksTypes::LINKS_DEACTIVATED;
+
+		$objectLinksActive = $pDataView->getObjectLinks() !== LinksTypes::LINKS_DEACTIVATED;
+
+		$linksActive = $pDataView->getLinks() !== LinksTypes::LINKS_DEACTIVATED;
+
 		if ($movieLinksActive) {
 			$fileCategories []= MovieLinkTypes::FILE_TYPE_MOVIE_LINK;
+		}
+
+		if ($oguloLinksActive) {
+			$fileCategories []= LinksTypes::FILE_TYPE_OGULO_LINK;
+		}
+
+		if ($objectLinksActive) {
+			$fileCategories []= LinksTypes::FILE_TYPE_OBJECT_LINK;
+		}
+
+		if ($linksActive) {
+			$fileCategories []= LinksTypes::FILE_TYPE_LINK;
 		}
 
 		return $fileCategories;
@@ -110,6 +129,27 @@ class EstateDetail
 
 		if ($this->getDataView()->getMovieLinks() === MovieLinkTypes::MOVIE_LINKS_LINK) {
 			$result = $this->getEstateFiles()->getEstateMovieLinks($estateId);
+		}
+
+		return $result;
+	}
+
+	/**
+	 *
+	 * @return array Returns an array if Movie Links are active and displayed as Link
+	 *
+	 */
+
+	public function getEstateLinks($type): array
+	{
+		$result = array();
+		$estateId = $this->getCurrentEstateId();
+		if (
+			($type === 'ogulo' && $this->getDataView()->getOguloLinks() === LinksTypes::LINKS_LINK) ||
+			($type === 'object' && $this->getDataView()->getObjectLinks() === LinksTypes::LINKS_LINK) ||
+			($type === 'link' && $this->getDataView()->getLinks() === LinksTypes::LINKS_LINK)
+		) {
+			$result = $this->getEstateFiles()->getEstateLinks($estateId, $type);
 		}
 
 		return $result;
@@ -156,6 +196,31 @@ class EstateDetail
 
 			foreach ($movieLinks as $linkId => $properties) {
 				$player = $pWpEmbed->shortcode($newOptions, $properties['url']);
+				$newProperties = $properties;
+				$newProperties['player'] = $player;
+				$result[$linkId] = $newProperties;
+			}
+		}
+
+		return $result;
+	}
+
+	public function getLinkEmbedPlayers($type, array $options = [])
+	{
+		$result = array();
+		$estateId = $this->getCurrentEstateId();
+
+		if (
+			($type === 'ogulo' && $this->getDataView()->getOguloLinks() === LinksTypes::LINKS_EMBEDDED) ||
+			($type === 'object' && $this->getDataView()->getObjectLinks() === LinksTypes::LINKS_EMBEDDED) ||
+			($type === 'link' && $this->getDataView()->getLinks() === LinksTypes::LINKS_EMBEDDED)
+		) {
+			$links = $this->getEstateFiles()->getEstateLinks($estateId, $type);
+			$allowedOptions = array_flip(['width', 'height']);
+			$newOptions = array_intersect_key($options, $allowedOptions);
+			foreach ($links as $linkId => $properties) {
+				$player = '<iframe width="' . esc_attr($newOptions['width']) . '" height="' . esc_attr($newOptions['height']) . '" src="' . esc_attr($properties['url']) .'" style="border: none"
+							allowfullscreen=""></iframe>';
 				$newProperties = $properties;
 				$newProperties['player'] = $player;
 				$result[$linkId] = $newProperties;

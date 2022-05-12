@@ -32,6 +32,7 @@ use onOffice\SDK\Exception\HttpFetchNoResultException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Types\ImageTypes;
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\Utility\__String;
 use function esc_url;
@@ -152,6 +153,35 @@ class EstateFiles
 	{
 		$callback = MovieLinkTypes::class.'::isMovieLink';
 		return $this->getFilesOfTypeByCallback($estateId, $callback);
+	}
+
+
+	/**
+	 *
+	 * @param int $estateId
+	 * @return array
+	 *
+	 */
+
+	public function getEstateLinks($estateId, $type = ''): array
+	{
+		$callback = null;
+
+		switch ($type) {
+			case 'ogulo':
+				$callback = LinksTypes::class.'::isOguloLink';
+				break;
+			case 'object':
+				$callback = LinksTypes::class.'::isObjectLink';
+				break;
+			case 'link':
+				$callback = LinksTypes::class.'::isLink';
+				break;
+			default :
+				break;
+		}
+
+		return empty($callback) ? [] : $this->getFilesOfTypeByCallback($estateId, $callback);
 	}
 
 
