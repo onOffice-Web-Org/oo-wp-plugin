@@ -78,7 +78,7 @@ class RecordManagerPostMeta
 							ORDER BY postmeta.post_id DESC ";
 		$post_meta_results = $this->_pWPDB->get_row( $post_meta_sql ,ARRAY_A);
 		
-		return empty($post_excerpt_result) ? [] : $post_meta_results;
+		return empty($post_meta_results) ? [] : $post_meta_results;
 	}
 	
 	
