@@ -80,27 +80,17 @@ class TestClassViewFieldModifierFactory
 	}
 
 
-	/**
-	 *
-	 * @expectedException \UnexpectedValueException
-	 *
-	 */
-
 	public function testCreateUnknown()
 	{
+		$this->expectException(\UnexpectedValueException::class);
 		$pViewFieldModifierFactory = new ViewFieldModifierFactory(onOfficeSDK::MODULE_ESTATE);
 		$pViewFieldModifierFactory->create('unknown');
 	}
 
 
-	/**
-	 *
-	 * @expectedException \UnexpectedValueException
-	 *
-	 */
-
 	public function testGetMappingClassUnknown()
 	{
+		$this->expectException(\UnexpectedValueException::class);
 		$pViewFieldModifierFactory = new ViewFieldModifierFactory('unknownModule');
 		$pViewFieldModifierFactory->getMapping();
 	}

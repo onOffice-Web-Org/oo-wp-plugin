@@ -91,6 +91,13 @@ class AdminPageEstateListSettings
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
+		$pInputModelShowReferenceEstate = $pFormModelBuilder->createInputModelShowReferenceEstate();
+		$pInputModelRandomSort = $pFormModelBuilder->createInputModelRandomSort();
+
+		$pInputModelSortBySetting = $pFormModelBuilder->createInputModelSortBySetting();
+		$pInputModelSortByChosen = $pFormModelBuilder->createInputModelSortByChosen();
+		$pInputModelSortByDefault = $pFormModelBuilder->createInputModelSortByDefault();
+		$pInputModelSortByspec = $pFormModelBuilder->createInputModelSortBySpec();
 
 		$pFormModelRecordsFilter = new FormModel();
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
@@ -98,6 +105,17 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice-for-wp-websites'));
 		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortBySetting);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortByChosen);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortByDefault);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortByspec);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
+		$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
+		$pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
+
+		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
+		$pFormModelRecordsFilter->addInputModel($pInputModelShowReferenceEstate);
+		$this->addFormModel($pFormModelRecordsFilter);
 
 		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
 		$this->addFormModel($pFormModelRecordsFilter);
@@ -269,6 +287,7 @@ class AdminPageEstateListSettings
 	{
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
+		wp_enqueue_script('oo-reference-estate-js');
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 	}

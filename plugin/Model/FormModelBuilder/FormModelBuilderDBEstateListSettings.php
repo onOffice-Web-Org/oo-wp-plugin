@@ -326,6 +326,25 @@ class FormModelBuilderDBEstateListSettings
 		return $pInputModelShowStatus;
 	}
 
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelShowReferenceEstate()
+	{
+		$labelShowReferenceEstate = __('Show reference estates', 'onoffice-for-wp-websites');
+
+		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_SHOW_REFERENCE_ESTATE, $labelShowReferenceEstate);
+		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowStatus->setValue($this->getValue('show_reference_estate') ?? 1);
+		$pInputModelShowStatus->setValuesAvailable(1);
+
+		return $pInputModelShowStatus;
+	}
+
 
 	/**
 	 *

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 
 /**
@@ -108,6 +109,9 @@ class DataDetailView
 	/** @var string */
 	private $_template = '';
 
+	/** @var bool */
+	private $_accessControls = true;
+
 	/** @var string */
 	private $_shortCodeForm = '';
 
@@ -122,6 +126,15 @@ class DataDetailView
 
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
+
+	/** @var string */
+	private $_oguloLinks = LinksTypes::LINKS_DEACTIVATED;
+
+	/** @var string */
+	private $_objectLinks = LinksTypes::LINKS_DEACTIVATED;
+
+	/** @var string */
+	private $_links = LinksTypes::LINKS_DEACTIVATED;
 
 	/** @var bool */
 	private $_dataDetailViewActive = false;
@@ -157,6 +170,10 @@ class DataDetailView
 	/** @return array */
 	public function getPictureTypes(): array
 		{ return $this->_pictureTypes; }
+
+	/** @return bool */
+	public function hasDetailView(): bool
+		{ return $this->_accessControls; }
 
 	/** @return string */
 	public function getTemplate(): string
@@ -194,6 +211,10 @@ class DataDetailView
 	public function setPictureTypes(array $pictureTypes)
 		{ $this->_pictureTypes = $pictureTypes; }
 
+	/** @param bool $accessControl */
+	public function setHasDetailView(bool $accessControl)
+		{ $this->_accessControls = $accessControl; }
+
 	/** @param string $template */
 	public function setTemplate(string $template)
 		{ $this->_template = $template; }
@@ -217,6 +238,18 @@ class DataDetailView
 	public function getMovieLinks(): int
 		{ return $this->_movieLinks; }
 
+	/** @return string */
+	public function getOguloLinks(): string
+		{ return $this->_oguloLinks; }
+
+	/** @return string */
+	public function getObjectLinks(): string
+	{ return $this->_objectLinks; }
+
+	/** @return string */
+	public function getLinks(): string
+	{ return $this->_links; }
+
 	/** @return DataViewSimilarEstates */
 	public function getDataViewSimilarEstates(): DataViewSimilarEstates
 	{ return $this->_pDataViewSimilarEstates; }
@@ -236,6 +269,18 @@ class DataDetailView
 	/** @param int $movieLinks */
 	public function setMovieLinks(int $movieLinks)
 		{ $this->_movieLinks = $movieLinks; }
+
+	/** @param string $oguloLinks */
+	public function setOguloLinks(string $oguloLinks)
+	{ $this->_oguloLinks = $oguloLinks; }
+
+	/** @param string $objectLink */
+	public function setObjectLinks(string $objectLink)
+	{ $this->_objectLinks = $objectLink; }
+
+	/** @param string $links */
+	public function setLinks(string $links)
+	{ $this->_links = $links; }
 
 	/** @return bool */
 	public function getRandom(): bool

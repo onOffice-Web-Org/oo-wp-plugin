@@ -77,6 +77,9 @@ class AdminPageFormSettingsContact
 	/** @var bool */
 	private $_showEstateContextCheckbox = false;
 
+    /** @var bool */
+    private $_showContactTypeSelect = false;
+
 
 	/**
 	 *
@@ -117,6 +120,12 @@ class AdminPageFormSettingsContact
 			if (empty($pInputModelBuilder->getValues())) {
 				$pInputModel->setValue(true);
 			}
+			$linkLabel = esc_html__('Request Manager', 'onoffice-for-wp-websites');
+			$linkUrl = esc_html__('https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en', 'onoffice-for-wp-websites');
+			$link = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $linkUrl, $linkLabel);
+			$textWithoutLink = esc_html__("By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s.", 'onoffice-for-wp-websites');
+			$txtHint = sprintf($textWithoutLink, $link);
+			$pInputModel->setHintHtml($txtHint);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -138,11 +147,18 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
+			$pInputModel->setHintHtml(esc_html__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
+		if ($this->_showContactTypeSelect) {
+			$pInputModelContactType = $pFormModelBuilder->createInputModelContactType();
+			$pFormModelFormSpecific->addInputModel($pInputModelContactType);
 		}
 
 		if ($this->_showCheckDuplicatesInterestOwner) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER);
+			$pInputModel->setHintHtml(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -276,6 +292,10 @@ class AdminPageFormSettingsContact
 	/** @param bool $showEstateContextCheckbox */
 	public function setShowEstateContextCheckbox(bool $showEstateContextCheckbox)
 		{ $this->_showEstateContextCheckbox = $showEstateContextCheckbox; }
+
+    /** @param bool $showContactTypeSelect */
+    public function setShowContactTypeSelect(bool $showContactTypeSelect)
+		{ $this->_showContactTypeSelect = $showContactTypeSelect; }
 
 	/**
 	 * @param bool $showCreateInterest

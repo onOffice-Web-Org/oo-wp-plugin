@@ -43,7 +43,12 @@ class InputFieldCheckboxRenderer
 	private $_checkedValues = [];
 
 	/** @var string */
-	private $_descriptionTextHTML = '';
+	private $_hint = '';
+
+	/** @var string */
+	private $_descriptionTextHTML;
+
+
 	/**
 	 *
 	 * @param string $name
@@ -66,7 +71,7 @@ class InputFieldCheckboxRenderer
 	 * @return bool
 	 */
 
-	private function isMultipleSelect(string $key, FieldsCollection $pFieldsCollection): bool
+	public function isMultipleSelect(string $key, FieldsCollection $pFieldsCollection): bool
 	{
 		$module = $this->getOoModule();
 
@@ -78,6 +83,7 @@ class InputFieldCheckboxRenderer
 		}
 	}
 
+
 	/**
 	 *
 	 * @return FieldsCollection
@@ -85,7 +91,7 @@ class InputFieldCheckboxRenderer
 	 * @throws Exception
 	 */
 
-	private function buildFieldsCollection(): FieldsCollection
+	public function buildFieldsCollection(): FieldsCollection
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -102,6 +108,7 @@ class InputFieldCheckboxRenderer
 		return $pFieldsCollection;
 	}
 
+
 	/**
 	 *
 	 * @throws Exception
@@ -110,7 +117,11 @@ class InputFieldCheckboxRenderer
 	public function render()
 	{
 		$pFieldsCollection = $this->buildFieldsCollection();
-
+		$hintText = !empty($this->_hint) ? '<p class="hint-text">' . $this->_hint . '</p>' : "";
+		$textHtml = '';
+		if (!empty($this->getHint())) {
+			$textHtml = '<p class="hint-fallback-email">' . esc_html($this->getHint()) . '</p>';
+		}
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
@@ -118,21 +129,33 @@ class InputFieldCheckboxRenderer
 
 				echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 					.'" value="'.esc_html($key).'"'
-					.(is_array($this->_checkedValues) && in_array($key, $this->_checkedValues) ? ' checked="checked" ' : '')
+					.(is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()) ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
 					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
-					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>';
+					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
+					.$hintText;
 			}
+			echo $textHtml;
 		} else {
 			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 				.'" value="'.esc_html($this->getValue()).'"'
-				.($this->getValue() == $this->_checkedValues ? ' checked="checked" ' : '')
+				.($this->getValue() == $this->getCheckedValues() ? ' checked="checked" ' : '')
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
-				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '');
+				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '')
+				.$hintText
+				.$textHtml;
 		}
 	}
+	
+	/** @return string */
+	public function getHintHtml()
+	{ return $this->_hint; }
+
+	/** @param string $hint */
+	public function setHintHtml(string $hint)
+	{ $this->_hint = $hint; }
 
 
 	/** @param array $checkedValues */

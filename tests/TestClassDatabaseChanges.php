@@ -111,13 +111,14 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(21, $dbversion);
+		$this->assertEquals(27, $dbversion);
 		return $this->_createQueries;
 	}
 
 	public function testInstallMigrationsDataSimilarEstates(): array
 	{
-		add_option('oo_plugin_db_version', '20');
+		$this->_pDbChanges->deinstall();
+		add_option('oo_plugin_db_version', '16');
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->_pDbChanges->install();
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
@@ -138,9 +139,9 @@ class TestClassDatabaseChanges
 		$this->assertEquals('Field 1', $newFields[0]);
 		$this->assertEquals('Field 2', $newFields[1]);
 		$this->assertEquals('Field 3', $newFields[2]);
-		$this->assertTrue(true, $newRadius);
-		$this->assertTrue(true, $newSameKind);
-		$this->assertTrue(true, $newSameMarketingMethod);
+		$this->assertEquals(35, $newRadius);
+		$this->assertTrue($newSameKind);
+		$this->assertTrue($newSameMarketingMethod);
 		$this->assertEquals(35, $newSamePostalCode);
 		$this->assertEquals(13, $newAmount);
 		$this->assertEquals('/test/similar/template.php', $newSimilarEstatesTemplate);
@@ -157,7 +158,7 @@ class TestClassDatabaseChanges
 		$this->_pWpOption->addOption('oo_plugin_db_version', '18');
 		$formsOutput = [
 			(object)[
-				'form_id' => '2',
+				'form_id' => '3',
 				'name' => 'Applicant Search Form',
 				'form_type' => 'applicantsearch',
 			]
@@ -165,8 +166,50 @@ class TestClassDatabaseChanges
 		$fieldConfigOutput = [
 			(object)[
 				'form_fieldconfig_id' => '1',
-				'form_id' => '2',
+				'form_id' => '3',
 				'fieldname' => 'krit_bemerkung_oeffentlich'
+			],
+			(object)[
+				'form_fieldconfig_id' => '2',
+				'form_id' => '3',
+				'fieldname' => 'message'
+			]
+		];
+
+		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
+			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->getMock();
+
+		$this->_pWPDBMock->expects($this->exactly(4))
+			->method('get_results')
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput);
+
+		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
+			->will($this->returnValue(true));
+
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock);
+		$this->_pDbChanges->install();
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::deleteMessageFieldApplicantSearchForm
+	 */
+
+	public function testDeleteMessageFieldApplicantSearchForm()
+	{
+		$this->_pWpOption->addOption('oo_plugin_db_version', '25');
+		$formsOutput = [
+			(object)[
+				'form_id' => '3',
+				'name' => 'Applicant Search Form',
+				'form_type' => 'applicantsearch',
+			]
+		];
+		$fieldConfigOutput = [
+			(object)[
+				'form_fieldconfig_id' => '2',
+				'form_id' => '3',
+				'fieldname' => 'message'
 			]
 		];
 
@@ -191,7 +234,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(21, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(27, DatabaseChanges::MAX_VERSION);
 	}
 
 

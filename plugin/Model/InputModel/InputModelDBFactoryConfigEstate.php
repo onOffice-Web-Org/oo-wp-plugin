@@ -70,6 +70,10 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'show_status',
 		],
+		InputModelDBFactory::INPUT_SHOW_REFERENCE_ESTATE => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'show_reference_estate',
+		],
 		InputModelDBFactory::INPUT_EXPOSE => [
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'expose',

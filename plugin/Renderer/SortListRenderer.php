@@ -33,12 +33,11 @@ class SortListRenderer
 	const ELEMENT_ID = 'onofficeSortListSelector';
 
 
-
-
 	/**
 	 * @param SortListDataModel $pSortListModel
 	 * @return string
 	 */
+
 	public function createHtmlSelector(SortListDataModel $pSortListModel): string
 	{
 		$isAdjustable = $pSortListModel->isAdjustableSorting();
@@ -57,38 +56,45 @@ class SortListRenderer
 	 * @param string $sortorder
 	 * @return string
 	 */
+
 	private function estimateDirectionLabelBySortorder(SortListDataModel $pSortListModel, string $sortorder): string
 	{
 		$sortorderDirectionLabel = SortListTypes::getSortOrderMapping($pSortListModel->getSortbyUserDirection(), $sortorder);
 		return esc_html($sortorderDirectionLabel);
 	}
 
+
 	/**
 	 * @param SortListDataModel $pSortListModel
 	 * @param string $sortby
 	 * @param string $sortorder
 	 * @return string
 	 */
+
 	private function createOptionLabel(SortListDataModel $pSortListModel, string $sortby, string $sortorder): string
     {
     	$sortOrderDirectionLabel = $this->estimateDirectionLabelBySortorder($pSortListModel, $sortorder);
 		return esc_html($sortby).' ('.$sortOrderDirectionLabel.')';
     }
 
+
 	/**
 	 * @param string $sortby
 	 * @param string $sortorder
 	 * @return string
 	 */
+
     private function createOptionValue(string $sortby, string $sortorder): string
 	{
 		return $sortby.'#'.$sortorder;
 	}
 
+
 	/**
 	 * @param SortListDataModel $pSortListModel
 	 * @return string
 	 */
+
 	private function createSelectedValue(SortListDataModel $pSortListModel): string
 	{
 		$selectedValue = '';
@@ -102,10 +108,12 @@ class SortListRenderer
 		return $selectedValue;
 	}
 
+
 	/**
 	 * @param SortListDataModel $pSortListModel
 	 * @return string
 	 */
+
 	private function createHtml(SortListDataModel $pSortListModel): string
 	{
 		$htmlString = '<select name="userDefinedSelection" id="'.self::ELEMENT_ID.'">';

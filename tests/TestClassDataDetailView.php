@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use Closure;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use TypeError;
 use WP_UnitTestCase;
@@ -84,9 +85,13 @@ class TestClassDataDetailView
 		$this->assertEquals('detail', $pDataDetailView->getName());
 		$this->assertEquals(0, $pDataDetailView->getPageId());
 		$this->assertEquals([], $pDataDetailView->getPictureTypes());
+		$this->assertEquals(true, $pDataDetailView->hasDetailView());
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
 		$this->assertFalse($pDataDetailView->getShowStatus());
+		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getOguloLinks());
+		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getObjectLinks());
+		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getLinks());
 	}
 
 	/**
@@ -110,6 +115,8 @@ class TestClassDataDetailView
 		$pDataDetailView->setPictureTypes(['testpicturetype1', 'testpicturetype2']);
 		$this->assertEquals(['testpicturetype1', 'testpicturetype2'],
 			$pDataDetailView->getPictureTypes());
+		$pDataDetailView->setHasDetailView(true);
+		$this->assertEquals(true, $pDataDetailView->hasDetailView());
 		$pDataDetailView->setTemplate('/test/template1.test');
 		$this->assertEquals('/test/template1.test', $pDataDetailView->getTemplate());
 		$pDataDetailView->setShortCodeForm('[oo_form form="Contact Form"]');
