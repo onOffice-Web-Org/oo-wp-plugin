@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-05-09T14:25:04+07:00\n"
+"POT-Creation-Date: 2022-05-12T09:46:43+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -66,20 +66,20 @@ msgstr ""
 
 #: plugin/Controller/AdminViewController.php:205
 #: plugin/Controller/AdminViewController.php:206
-#: plugin/Controller/AdminViewController.php:373
+#: plugin/Controller/AdminViewController.php:372
 msgid "Settings"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:389
+#: plugin/Controller/AdminViewController.php:388
 msgid "API token and secret"
 msgstr ""
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:392
+#: plugin/Controller/AdminViewController.php:391
 msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:408
+#: plugin/Controller/AdminViewController.php:407
 msgid "We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner"
 msgstr ""
 
@@ -370,7 +370,7 @@ msgstr ""
 
 #: plugin/Gui/AdminPageEstate.php:88
 #: plugin/Gui/AdminPageEstateDetail.php:205
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:95
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:99
 msgid "Detail View"
 msgstr ""
 
@@ -416,15 +416,15 @@ msgstr ""
 msgid "Access Control"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:306
+#: plugin/Gui/AdminPageEstateDetail.php:309
 msgid "Additional Media"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:422
+#: plugin/Gui/AdminPageEstateDetail.php:428
 msgid "The detail view has been saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:423
+#: plugin/Gui/AdminPageEstateDetail.php:429
 msgid "There was a problem saving the detail view."
 msgstr ""
 
@@ -632,7 +632,7 @@ msgstr ""
 #: plugin/Gui/Table/EstateListTable.php:135
 #: plugin/Gui/Table/FormsTable.php:130
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:265
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:339
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr ""
@@ -756,7 +756,7 @@ msgid "Reduce values according to selected filter"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:318
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:320
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:394
 msgid "Show Estate Status"
 msgstr ""
 
@@ -770,7 +770,7 @@ msgid "Random Order"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:404
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:157
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
 msgid "PDF-Expose"
 msgstr ""
 
@@ -877,31 +877,55 @@ msgstr ""
 msgid "Module"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:136
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
 msgid "Allow detail view for reference estates"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:178
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
 msgid "Movie Links"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:184
-msgid "Disabled"
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:188
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:212
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:235
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:258
+msgid "Deactivated"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:185
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:189
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:213
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:236
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:259
 msgid "Link"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:186
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:190
 msgid "Player"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:301
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:206
+msgid "Ogulo-Links"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:214
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:237
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:260
+msgid "Embedded"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:229
+msgid "Object-Links"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:252
+msgid "Links"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:375
 msgid "Select Contact Form"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:305
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:379
 msgid "No Contact Form"
 msgstr ""
 
