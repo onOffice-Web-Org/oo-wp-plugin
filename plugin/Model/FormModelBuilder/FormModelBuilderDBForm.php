@@ -150,7 +150,7 @@ class FormModelBuilderDBForm
 		$pFieldsCollectionBuilder
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsSearchCriteria($pFieldsCollection)
-			->addFieldsFormBackend($pFieldsCollection);
+			->addFieldsFormBackend($pFieldsCollection,$this->getFormType());
 		return $pFieldsCollection;
 	}
 
@@ -294,7 +294,7 @@ class FormModelBuilderDBForm
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
 		$pInputModelFormRecipient->setPlaceholder(__('john.doe@example.com', 'onoffice-for-wp-websites'));
-		$pInputModelFormRecipient->setHint(__('Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email.', 'onoffice-for-wp-websites'));
+		$pInputModelFormRecipient->setHintHtml(__('Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email.', 'onoffice-for-wp-websites'));
 
 		return $pInputModelFormRecipient;
 	}

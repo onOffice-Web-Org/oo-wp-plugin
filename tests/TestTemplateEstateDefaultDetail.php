@@ -63,6 +63,8 @@ class TestTemplateEstateDefaultDetail
 				'getCurrentEstateId',
 				'getSimilarEstates',
 				'hasDetailView',
+				'getEstateLinks',
+				'getLinkEmbedPlayers',
 				'getDetailView',
 			])
 			->setConstructorArgs([$pDataView])
@@ -109,6 +111,11 @@ class TestTemplateEstateDefaultDetail
 			'title' => 'test movie',
 		];
 
+		$oguloLink = [
+			'url' => 'https://ogulo.de',
+			'title' => 'test ogulo link',
+		];
+
 		$this->_pEstate->method('getEstateMovieLinks')->willReturn([$movielLink]);
 		$this->_pEstate->method('getShortCodeForm')->willReturn('Contact Form here');
 		$this->_pEstate->method('getMovieEmbedPlayers')->willReturn([]);
@@ -121,7 +128,9 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
-		$this->_pEstate->method('hasDetailView')->willReturn(['Similar Estates here']);
+		$this->_pEstate->method('hasDetailView')->willReturn(true);
+		$this->_pEstate->method('getEstateLinks')->willReturn([$oguloLink]);
+		$this->_pEstate->method('getLinkEmbedPlayers')->willReturn([]);
 		$this->_pEstate->method('getDetailView')->willReturn('1');
 	}
 
