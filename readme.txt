@@ -84,6 +84,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixed**
 
+* The warning about the deactivation of the duplicate check introduced in version 2.22.2 can now be closed correctly and does not appear on new installations.
 * In the settings, clicking on the labels now sets the correct controls.
 * Explain how to link addresses from contact forms with the estates.
 
