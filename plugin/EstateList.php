@@ -371,13 +371,14 @@ class EstateList
 			$this->_pEnvironment->getAddressList()->loadAdressesById($allAddressIds, $fields);
 		}
 	}
-	
+
 	/**
 	 * @param string $modifier
+	 * @param bool $checkEstateIdRequestGuard
 	 * @return ArrayContainerEscape
-	 * @throws \Exception
+	 * @throws UnknownFieldException
 	 */
-	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, $flag = false)
+	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, $checkEstateIdRequestGuard  = false)
 	{
 		global $numpages, $multipage, $more, $paged;
 
@@ -415,7 +416,7 @@ class EstateList
 
 		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
 		{
-			if($flag == true){
+			if($checkEstateIdRequestGuard == true){
 				add_action('wp_head', function () use ($recordModified){
 					echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
 				});
