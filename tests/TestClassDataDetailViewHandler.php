@@ -43,6 +43,11 @@ use WP_UnitTestCase;
 class TestClassDataDetailViewHandler
 	extends WP_UnitTestCase
 {
+	/**
+	 *
+	 */
+	private $_recordPostMeta;
+	
 	/** */
 	const VALUES_BY_ROW = [
 		'template' => '/test/template.php',
@@ -61,6 +66,19 @@ class TestClassDataDetailViewHandler
 		'movielinks' => MovieLinkTypes::MOVIE_LINKS_PLAYER
 	];
 
+	/**
+	 * @before
+	 */
+	public function prepare()
+	{
+		$this->_recordPostMeta = $this->getMockBuilder(RecordManagerPostMeta::class)
+			->disableOriginalConstructor()
+			->setMethods(['getPageId'])
+			->getMock();
+		$this->_recordPostMeta->method('getPageId')
+			->will($this->returnValue(['post_id' => 1]));
+	}
+	
 	public function testConstruct()
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
