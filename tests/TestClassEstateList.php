@@ -58,6 +58,7 @@ use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -166,15 +167,15 @@ class TestClassEstateList
 		$this->_pEstateList->loadEstates();
 
 		foreach (range(0, 4) as $iter) {
-			$pEstate = $this->_pEstateList->estateIterator();
+			$pEstate = $this->_pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true);
 			$this->assertInstanceOf(ArrayContainerEscape::class, $pEstate);
 		}
 
-		$this->assertFalse($this->_pEstateList->estateIterator());
+		$this->assertFalse($this->_pEstateList->estateIterator( ));
 		$this->_pEstateList->resetEstateIterator();
 		add_option('onoffice-settings-title-and-description', '0');
 		$recordModified = [
-			'objekttitel'        => 'Name id 15'
+			'objekttitel' => 'Name id 15'
 		];
 		$this->assertEquals(has_filter('pre_get_document_title'), 999);
 		$title_parts_array = $this->_pEstateList->custom_pre_get_document_title('', $recordModified);

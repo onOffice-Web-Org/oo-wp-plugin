@@ -377,7 +377,7 @@ class EstateList
 	 * @return ArrayContainerEscape
 	 * @throws \Exception
 	 */
-	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
+	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, $flag = false)
 	{
 		global $numpages, $multipage, $more, $paged;
 
@@ -412,7 +412,8 @@ class EstateList
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
-		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
+
+		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0 && $flag == true )
 		{
 			add_filter('pre_get_document_title', function ($title_parts_array) use ($recordModified) {
 				$this->custom_pre_get_document_title($title_parts_array, $recordModified);
