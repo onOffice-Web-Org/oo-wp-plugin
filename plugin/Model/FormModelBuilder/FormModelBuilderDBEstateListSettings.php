@@ -450,37 +450,69 @@ class FormModelBuilderDBEstateListSettings
 
 
 	/**
+	 * @return array
+	 */
+
+	public function getDataOfSortByInput() {
+		$fieldnames   = $this->readFieldnames( onOfficeSDK::MODULE_ESTATE, false );
+		$valuePopular = $this->getOnlyDefaultSortByFields( onOfficeSDK::MODULE_ESTATE );
+		$data         = [];
+		if ( ! empty( $fieldnames ) ) {
+			if ( ! empty( $valuePopular ) ) {
+				$data['group']['Popular'] = $valuePopular;
+			}
+			$valueAll = array_diff_key( $fieldnames, $valuePopular );
+			if ( ! empty( $valueAll ) ) {
+				natcasesort( $valueAll );
+				$data['group']['All'] = $valueAll;
+			}
+		}
+
+		return $data;
+	}
+
+
+	/**
 	 *
 	 * @return InputModelDB
 	 *
 	 */
 
-	public function createInputModelSortByChosen()
-	{
-		$label = __('Sort by', 'onoffice-for-wp-websites');
+	public function createInputModelSortByChosenStandard() {
+		$label       = __( 'Sort by', 'onoffice-for-wp-websites' );
 		$pInputModel = $this->getInputModelDBFactory()->create
-				(InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true);
-		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
-		$fieldnames = $this->readFieldnames(onOfficeSDK::MODULE_ESTATE, false);
-		$valuePopular = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
-		$data = [];
-		if (!empty($fieldnames)) {
-			if (!empty($valuePopular)) {
-				$data['group']['Popular'] = $valuePopular;
-			}
-
-			$valueAll = array_diff_key($fieldnames, $valuePopular);
-			if (!empty($valueAll)) {
-				natcasesort( $valueAll );
-				$data['group']['All'] = $valueAll;
-			}
-		}
-		$pInputModel->setValuesAvailable($data);
-		$value = $this->getValue(DataListView::SORT_BY_USER_VALUES);
-		if ($value == null) {
+		( InputModelDBFactory::INPUT_SORTBY, $label, true );
+		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_CHOSEN );
+		$pInputModel->setIsMulti( false );
+		$pInputModel->setValuesAvailable( $this->getDataOfSortByInput() );
+		$value = $this->getValue( DataListView::SORT_BY_STANDARD_VALUES );
+		if ( $value == null ) {
 			$value = [];
 		}
-		$pInputModel->setValue($value);
+		$pInputModel->setValue( $value );
+
+		return $pInputModel;
+	}
+
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelSortByChosen() {
+		$label       = __( 'Sort by', 'onoffice-for-wp-websites' );
+		$pInputModel = $this->getInputModelDBFactory()->create
+		( InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true );
+		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_CHOSEN );
+		$pInputModel->setIsMulti( true );
+		$pInputModel->setValuesAvailable( $this->getDataOfSortByInput() );
+		$value = $this->getValue( DataListView::SORT_BY_USER_VALUES );
+		if ( $value == null ) {
+			$value = [];
+		}
+		$pInputModel->setValue( $value );
 
 		return $pInputModel;
 	}
