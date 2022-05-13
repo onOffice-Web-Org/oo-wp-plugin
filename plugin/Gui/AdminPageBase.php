@@ -25,6 +25,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\Model\FormModel;
+use onOffice\WPlugin\Model\InputModelDB;
 use const ONOFFICE_DI_CONFIG_PATH;
 use function esc_html__;
 
@@ -108,6 +109,50 @@ abstract class AdminPageBase
 		$this->_formModels[$key] = $pFormModel;
 	}
 
+
+	/**
+	 * @param $slug
+	 * @param string $removeField
+	 * @return void
+	 */
+
+	protected function removeFieldsInFormModel($slug, string $removeField)
+	{
+		$formModel = $this->getFormModelByGroupSlug($slug);
+		if (!is_null($formModel)) {
+			$inputModels = $formModel->getInputModel();
+			/** @var InputModelDB $inputModel */
+			foreach ($inputModels as $inputModel) {
+				$availableValues = $inputModel->getValuesAvailable();
+				unset($availableValues[$removeField]);
+				$inputModel->setValuesAvailable($availableValues);
+			}
+			$this->checkFormModelValueIsEmptyBySlug($slug);
+		}
+	}
+
+
+	/**
+	 * @param $slug
+	 * @return void
+	 */
+
+	protected function checkFormModelValueIsEmptyBySlug($slug)
+	{
+		$inputModels = $this->_formModels[$slug]->getInputModel();
+		$emptyInputModelsCount = 0;
+		/** @var InputModelDB $inputModel */
+		foreach ($inputModels as $inputModel) {
+			$availableValues = $inputModel->getValuesAvailable();
+			if (empty($availableValues)) {
+				$emptyInputModelsCount++;
+			}
+		}
+
+		if ($emptyInputModelsCount === count($inputModels)) {
+			unset($this->_formModels[$slug]);
+		}
+	}
 
 	/**
 	 *
