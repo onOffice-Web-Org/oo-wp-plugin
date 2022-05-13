@@ -413,14 +413,11 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
-		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0 && $flag == true )
+		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0 && $flag == true)
 		{
-			add_filter('pre_get_document_title', function ($title_parts_array) use ($recordModified) {
-				$this->custom_pre_get_document_title($title_parts_array, $recordModified);
-			}, 999, 1);
-			add_action('wp_head', function () use ($recordModified) {
-				$this->add_meta_description($recordModified);
-			}, 1);
+			add_action('wp_head', function () use ($recordModified){
+				echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
+			});
 		}
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 		return $pArrayContainer;
@@ -432,10 +429,6 @@ class EstateList
 		}
 
 		return $title_parts_array;
-	}
-
-	public function add_meta_description($recordModified) {
-		echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
 	}
 
 
