@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Record;
 
 use onOffice\WPlugin\Factory\EstateListFactory;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /**
  *
@@ -60,6 +61,6 @@ class EstateIdRequestGuard
 	{
 		$pEstateDetail = $this->_pEstateDetailFactory->createEstateDetail($estateId);
 		$pEstateDetail->loadEstates();
-		return $pEstateDetail->estateIterator() !== false;
+		return $pEstateDetail->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true) !== false;
 	}
 }

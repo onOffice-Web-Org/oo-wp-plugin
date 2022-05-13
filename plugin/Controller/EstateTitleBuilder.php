@@ -97,7 +97,7 @@ class EstateTitleBuilder
 		$this->_pDefaultFilterBuilder->setEstateId($estateId);
 		$this->_pEstateDetail->loadSingleEstate($estateId);
 		$modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE;
-		$pEstateIterator = $this->_pEstateDetail->estateIterator($modifier, true);
+		$pEstateIterator = $this->_pEstateDetail->estateIterator($modifier);
 		$pEstateFieldModifier = $this->_pViewFieldModifierFactory->create($modifier);
 		$fieldsForTitle = $pEstateFieldModifier->getVisibleFields();
 

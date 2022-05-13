@@ -135,6 +135,7 @@ $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 add_filter('document_title_parts', function($title) use ($pDI) {
 	return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
 }, 10, 2);
+
 if (get_option('onoffice-settings-title-and-description') === '1')
 {
 	add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pDI) {
