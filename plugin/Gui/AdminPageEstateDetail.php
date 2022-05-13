@@ -299,12 +299,18 @@ class AdminPageEstateDetail
 
 		$pInputModelDocumentTypes = $pFormModelBuilder->createInputModelExpose();
 		$pInputModelMovieLinks = $pFormModelBuilder->createInputModelMovieLinks();
+		$pInputModelOguloLinks = $pFormModelBuilder->createInputModelOguloLinks();
+		$pInputModelObjectLinks = $pFormModelBuilder->createInputModelObjectLinks();
+		$pInputModelLinks = $pFormModelBuilder->createInputModelLinks();
 		$pFormModelDocumentTypes = new FormModel();
 		$pFormModelDocumentTypes->setPageSlug($this->getPageSlug());
 		$pFormModelDocumentTypes->setGroupSlug(self::FORM_VIEW_ADDITIONAL_MEDIA);
 		$pFormModelDocumentTypes->setLabel(__('Additional Media', 'onoffice-for-wp-websites'));
 		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
 		$pFormModelDocumentTypes->addInputModel($pInputModelMovieLinks);
+		$pFormModelDocumentTypes->addInputModel($pInputModelOguloLinks);
+		$pFormModelDocumentTypes->addInputModel($pInputModelObjectLinks);
+		$pFormModelDocumentTypes->addInputModel($pInputModelLinks);
 		$this->addFormModel($pFormModelDocumentTypes);
 
 		$pFieldsCollection = $this->readAllFields();

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 
 /**
@@ -129,6 +130,15 @@ class DataDetailView
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
 
+	/** @var string */
+	private $_oguloLinks = LinksTypes::LINKS_DEACTIVATED;
+
+	/** @var string */
+	private $_objectLinks = LinksTypes::LINKS_DEACTIVATED;
+
+	/** @var string */
+	private $_links = LinksTypes::LINKS_DEACTIVATED;
+
 	/** @var bool */
 	private $_dataDetailViewActive = false;
 
@@ -231,6 +241,18 @@ class DataDetailView
 	public function getMovieLinks(): int
 		{ return $this->_movieLinks; }
 
+	/** @return string */
+	public function getOguloLinks(): string
+		{ return $this->_oguloLinks; }
+
+	/** @return string */
+	public function getObjectLinks(): string
+	{ return $this->_objectLinks; }
+
+	/** @return string */
+	public function getLinks(): string
+	{ return $this->_links; }
+
 	/** @return DataViewSimilarEstates */
 	public function getDataViewSimilarEstates(): DataViewSimilarEstates
 	{ return $this->_pDataViewSimilarEstates; }
@@ -250,6 +272,18 @@ class DataDetailView
 	/** @param int $movieLinks */
 	public function setMovieLinks(int $movieLinks)
 		{ $this->_movieLinks = $movieLinks; }
+
+	/** @param string $oguloLinks */
+	public function setOguloLinks(string $oguloLinks)
+	{ $this->_oguloLinks = $oguloLinks; }
+
+	/** @param string $objectLink */
+	public function setObjectLinks(string $objectLink)
+	{ $this->_objectLinks = $objectLink; }
+
+	/** @param string $links */
+	public function setLinks(string $links)
+	{ $this->_links = $links; }
 
 	/** @return bool */
 	public function getRandom(): bool

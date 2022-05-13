@@ -26,18 +26,28 @@ namespace onOffice\tests;
 use onOffice\WPlugin\Renderer\InputFieldCheckboxRenderer;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use DI\Container;
+use DI\ContainerBuilder;
+use WP_UnitTestCase;
+
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
 class TestClassInputFieldCheckboxRenderer
-	extends \WP_UnitTestCase
+	extends WP_UnitTestCase
 {
+	/** @var Container */
+	private $_pContainer;
+
 	/**
 	 * @before
 	 */
 	public function prepare()
 	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
 		global $wpdb;
 		
 		$pWpOption = new WPOptionWrapperTest();
@@ -81,5 +91,21 @@ class TestClassInputFieldCheckboxRenderer
 		$pSubject = new InputFieldCheckboxRenderer('testRenderer', true);
 		$pSubject->setHintHtml('testRenderer');
 		$this->assertEquals('testRenderer',$pSubject->getHintHtml());
+	}
+	
+	public function testRenderWithArrayValue()
+	{
+		ob_start();
+		$pCheckboxFieldRenderer = new InputFieldCheckboxRenderer('testRenderer',[1,2]);
+		$pCheckboxFieldRenderer->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<input type="checkbox" name="testRenderer" value="0" onoffice-multipleSelectType="0" id="labelcheckbox_1b0"><label for="labelcheckbox_1b0">1</label><br><input type="checkbox" name="testRenderer" value="1" onoffice-multipleSelectType="0" id="labelcheckbox_1b1"><label for="labelcheckbox_1b1">2</label><br>', $output);
+	}
+	
+	public function testSetCheckedValues()
+	{
+		$instance = new InputFieldCheckboxRenderer('testRenderer', 1);
+		$instance->setCheckedValues([1,2]);
+		$this->assertEquals([1,2], $instance->getCheckedValues());
 	}
 }

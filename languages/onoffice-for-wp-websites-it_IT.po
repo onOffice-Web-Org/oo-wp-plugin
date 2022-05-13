@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-04T15:13:47+07:00\n"
+"POT-Creation-Date: 2022-05-09T11:06:22+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -407,7 +407,7 @@ msgid "List Views"
 msgstr "Elenco Viste"
 
 #: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageEstateDetail.php:205
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:95
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:99
 msgid "Detail View"
 msgstr "Vista di dettaglio"
 
@@ -456,15 +456,15 @@ msgstr "Campi dati immobiliari"
 msgid "Access Control"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:306
+#: plugin/Gui/AdminPageEstateDetail.php:309
 msgid "Additional Media"
 msgstr "Supporti aggiuntivi"
 
-#: plugin/Gui/AdminPageEstateDetail.php:422
+#: plugin/Gui/AdminPageEstateDetail.php:428
 msgid "The detail view has been saved."
 msgstr "La vista di dettaglio è stata salvata."
 
-#: plugin/Gui/AdminPageEstateDetail.php:423
+#: plugin/Gui/AdminPageEstateDetail.php:429
 msgid "There was a problem saving the detail view."
 msgstr "C'è stato un problema nel salvare la vista di dettaglio."
 
@@ -610,10 +610,16 @@ msgstr ""
 "manager/?lang=en"
 
 #: plugin/Gui/AdminPageFormSettingsContact.php:126
+#, fuzzy
+#| msgid ""
+#| "If the contact form is on an estate page, you can link the created "
+#| "address to that estate by opening the email you receive in onOffice "
+#| "enterprise or using the %s."
 msgid ""
-"If the contact form is on an estate page, you can link the created address "
-"to that estate by opening the email you receive in onOffice enterprise or "
-"using the %s."
+"By default, no link is created to the estate when the plugin creates the "
+"address. If the contact form is on an detail page and you want to link the "
+"address and the requested estate, you can open the email in onOffice "
+"enterprise or use the %s."
 msgstr ""
 "Se il modulo di contatto si trova su una pagina della proprietà, puoi "
 "collegare l'indirizzo creato a quella proprietà aprendo l'e-mail che ricevi "
@@ -701,7 +707,7 @@ msgstr "Filtro selezionato"
 #: plugin/Gui/Table/AddressListTable.php:182
 #: plugin/Gui/Table/EstateListTable.php:135 plugin/Gui/Table/FormsTable.php:130
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:265
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:339
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr "Modello"
@@ -832,7 +838,7 @@ msgid "Reduce values according to selected filter"
 msgstr "Ridurre i valori in base al filtro selezionato"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:318
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:320
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:394
 msgid "Show Estate Status"
 msgstr "Mostra lo stato della proprietà"
 
@@ -848,7 +854,7 @@ msgid "Random Order"
 msgstr "Ordine casuale"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:404
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:157
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
 msgid "PDF-Expose"
 msgstr "Esposizione PDF"
 
@@ -962,33 +968,59 @@ msgstr "Aggiungi lingua"
 msgid "Module"
 msgstr "Modulo"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:136
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
 #, fuzzy
 #| msgid "Reference Estates"
 msgid "Allow detail view for reference estates"
 msgstr "Estates di riferimento"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:178
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
 msgid "Movie Links"
 msgstr "Link di film"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:184
-msgid "Disabled"
-msgstr "Disabili"
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:188
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:212
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:235
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:258
+msgid "Deactivated"
+msgstr "Disattivato"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:185
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:189
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:213
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:236
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:259
 msgid "Link"
 msgstr "Collegamento"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:186
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:190
 msgid "Player"
 msgstr "Giocatore"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:301
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:206
+msgid "Ogulo-Links"
+msgstr "Ogulo-Links"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:214
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:237
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:260
+msgid "Embedded"
+msgstr "Inserito"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:229
+msgid "Object-Links"
+msgstr "Object-Links"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:252
+#, fuzzy
+#| msgid "Link"
+msgid "Links"
+msgstr "Collegamento"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:375
 msgid "Select Contact Form"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:305
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:379
 #, fuzzy
 #| msgid "Contact person"
 msgid "No Contact Form"
