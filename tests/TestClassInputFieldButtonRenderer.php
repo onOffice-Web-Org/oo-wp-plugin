@@ -23,9 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Model\InputModelLabel;
-use onOffice\WPlugin\Renderer\InputFieldLabelRenderer;
-use onOffice\WPlugin\Renderer\InputFieldRenderer;
+use onOffice\WPlugin\Renderer\InputFieldButtonRenderer;
 use WP_UnitTestCase;
 
 /**
@@ -41,12 +39,13 @@ class TestClassInputFieldButtonRenderer
 	/**
 	 *
 	 */
-
-	public function testAttributes()
+	
+	public function testRenderWithValues()
 	{
-		InputFieldRenderer::resetGuiId();
-		$pRenderer = new InputFieldLabelRenderer(null, 'testIdentifier');
-		$pRenderer->setLabel('hello');
-		$this->assertEquals('hello', $pRenderer->getLabel());
+		$pRenderer = new InputFieldButtonRenderer(null, 'testIdentifier');
+		ob_start();
+		$pRenderer->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<input type="button" class="button" id="button-copy" value="Copy" >', $output);
 	}
 }

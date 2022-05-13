@@ -48,16 +48,17 @@ onOffice.ajaxSaver = function(outerDiv) {
 			var getUrlPageEdit = getUrl.split( '&' );
 			var urlPageEdit = '';
 			if (responseCode === true) {
-				$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
-					message + '</p></div>');
-
-				onOffice.sortByUserSelection();
-				onOffice.generateSortByUserDefinedDefault();
-				if (getUrlPageEdit.length != 0 && LIST_SCREEN_RELOAD.includes(current_screen))
+				if (getUrlPageEdit.length != 0 && LIST_SCREEN_RELOAD.includes(current_screen) && getUrl.search('&id=') == -1)
 				{
 					urlPageEdit = getUrlPageEdit[0] + "&id=" + onOffice.settings.record_id;
 					window.location.replace(urlPageEdit);
+				} else {
+					$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
+						message + '</p></div>');
 				}
+
+				onOffice.sortByUserSelection();
+				onOffice.generateSortByUserDefinedDefault();
 			} else {
 				$('#onoffice-notice-wrapper').append('<div class="notice notice-error is-dismissible"><p>' +
 					message + '</p></div>');

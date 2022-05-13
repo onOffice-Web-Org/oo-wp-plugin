@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin\Renderer;
 
-use onOffice\WPlugin\Utility\HtmlIdGenerator;
 
 /**
  *
@@ -53,27 +52,7 @@ class InputFieldButtonRenderer
 
 	public function render()
 	{
-		$id = HtmlIdGenerator::generateByString($this->_id);
-		echo '<input type="button" class="button" id="button-copy" name="'
-			.esc_attr($id).'" value="'.esc_html__('Copy', 'onoffice-for-wp-websites').'" '
-			.'data-onoffice-category="'.esc_attr($this->_label).'"'
+		echo '<input type="button" class="button" id="button-copy" value="'.esc_html__('Copy', 'onoffice-for-wp-websites').'" '
 			. $this->renderAdditionalAttributes().'>';
 	}
-
-
-	/** @param string $id */
-	public function setId($id)
-	{ $this->_id = $id; }
-
-	/** @return string */
-	public function getId()
-	{ return $this->_id; }
-
-	/** @return string */
-	public function getLabel()
-	{ return $this->_label; }
-
-	/** @param string $label */
-	public function setLabel($label)
-	{ $this->_label = $label; }
 }
