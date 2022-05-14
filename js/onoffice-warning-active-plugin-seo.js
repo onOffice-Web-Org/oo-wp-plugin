@@ -4,7 +4,7 @@ jQuery(document).ready(function ($) {
 		var data = {
 			'action': 'update_active_plugin_seo_option',
 		};
-		// alert(data);
+
 		jQuery.post(warning_active_plugin_vars.ajaxurl, data);
 	});
 
