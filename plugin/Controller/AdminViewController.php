@@ -134,6 +134,7 @@ class AdminViewController
 	{
 		add_action('admin_notices', [$this, 'displayAPIError']);
 		add_action('admin_notices', [$this, 'displayDeactivateDuplicateCheckWarning']);
+		add_action('admin_notices', [$this, 'generalAdminNoticeSEO']);
 		$pUserCapabilities = new UserCapabilities;
 		$roleMainPage = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_VIEW_MAIN_PAGE);
 		$roleAddress = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_ADDRESS);
@@ -316,6 +317,11 @@ class AdminViewController
 		wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('update-duplicate-check-warning-option');
 
+		wp_register_script('warning-active-plugin-SEO', plugins_url('js/onoffice-warning-active-plugin-seo.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
+			array('jquery'));
+		wp_localize_script('warning-active-plugin-SEO', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_enqueue_script('warning-active-plugin-SEO');
+
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
 			if ($pObject !== null) {
@@ -419,16 +425,22 @@ class AdminViewController
 	}
 
 	public function generalAdminNoticeSEO() {
+		$urlOnofficeSetting = admin_url().'admin.php?page=onoffice-settings';
+		$nameOnofficeSetting = esc_html__('onOffice plugin settings','onoffice-for-wp-websites');
+		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
 		if (count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0
 				&& get_option('onoffice-settings-title-and-description') == 0
+				&& get_option('onoffice-active-plugin-seo-warning') == 0
 				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings') {
-					echo '<div class="notice notice-warning is-dismissible">
-						<p> ' . esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.', 'onoffice-for-wp-websites') . '
-							' . esc_html__('You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.', 'onoffice-for-wp-websites') . '<br>
-							' . esc_html__('We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description.', 'onoffice-for-wp-websites') . '
-							' . esc_html__('This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites')
-						.'</p>
-					</div>';
+					echo "<div class='notice notice-warning active-plugin-seo is-dismissible'>
+						<p> " . esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.', 'onoffice-for-wp-websites') . "
+							" . esc_html__('You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.', 'onoffice-for-wp-websites') . "<br>
+							" . esc_html__('We recommend that you go the the', 'onoffice-for-wp-websites') ."
+							".$pluginOnofficeSetting."
+							" . esc_html__('and configure the onOffice plugin to not modify the title and description.', 'onoffice-for-wp-websites') . "
+							" . esc_html__('This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites')
+						."</p>
+					</div>";
 		}
 	}
 }

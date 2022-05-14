@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-12T02:04:18+02:00\n"
+"POT-Creation-Date: 2022-05-14T09:53:46+02:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -49,7 +49,7 @@ msgstr "https://en.onoffice.com/"
 msgid "Please configure your onOffice API credentials first!"
 msgstr "Gelieve eerst uw onOffice API-gegevens te configureren!"
 
-#: plugin/Controller/AdminViewController.php:149
+#: plugin/Controller/AdminViewController.php:150
 #: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:88
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:76
@@ -59,33 +59,33 @@ msgstr "Gelieve eerst uw onOffice API-gegevens te configureren!"
 msgid "onOffice"
 msgstr "onOffice"
 
-#: plugin/Controller/AdminViewController.php:155
+#: plugin/Controller/AdminViewController.php:156
 #: plugin/Gui/AdminPageAddressList.php:61
 msgid "Addresses"
 msgstr "Adressen"
 
-#: plugin/Controller/AdminViewController.php:161
 #: plugin/Controller/AdminViewController.php:162
+#: plugin/Controller/AdminViewController.php:163
 msgid "Estates"
 msgstr "Landgoederen"
 
-#: plugin/Controller/AdminViewController.php:173
+#: plugin/Controller/AdminViewController.php:174
 #: plugin/Gui/AdminPageFormList.php:97
 msgid "Forms"
 msgstr "Vormen"
 
-#: plugin/Controller/AdminViewController.php:205
 #: plugin/Controller/AdminViewController.php:206
-#: plugin/Controller/AdminViewController.php:372
+#: plugin/Controller/AdminViewController.php:207
+#: plugin/Controller/AdminViewController.php:378
 msgid "Settings"
 msgstr "Instellingen"
 
-#: plugin/Controller/AdminViewController.php:388
+#: plugin/Controller/AdminViewController.php:394
 msgid "API token and secret"
 msgstr "API-token en geheim"
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:391
+#: plugin/Controller/AdminViewController.php:397
 msgid ""
 "It looks like you did not enter any valid API credentials. Please consider "
 "reviewing your %s."
@@ -93,7 +93,7 @@ msgstr ""
 "Het lijkt erop dat u geen geldige API-gegevens hebt ingevoerd. Overweeg "
 "alstublieft om uw %s."
 
-#: plugin/Controller/AdminViewController.php:407
+#: plugin/Controller/AdminViewController.php:413
 msgid ""
 "We have deactivated the plugin's duplicate check for all of your forms, "
 "because the duplicate check can unintentionally overwrite address records. "
@@ -101,34 +101,42 @@ msgid ""
 "for these forms: Contact, Interest, Owner"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:426
+#: plugin/Controller/AdminViewController.php:429
+msgid "onOffice plugin settings"
+msgstr "onOffice plug-in instellingen"
+
+#: plugin/Controller/AdminViewController.php:436
 msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
 msgstr ""
+"De onOffice-plug-in heeft een actieve SEO-plug-in gedetecteerd: Yoast SEO."
 
-#: plugin/Controller/AdminViewController.php:427
+#: plugin/Controller/AdminViewController.php:437
 msgid ""
 "You currently have configured the onOffice plugin to fill out the title and "
 "description of the detail page, which can lead to conflicts with the SEO "
 "plugin."
 msgstr ""
+"U hebt momenteel de onOffice-plug-in geconfigureerd om de titel en "
+"beschrijving van de detailpagina in te vullen, wat kan leiden tot conflicten "
+"met de SEO-plug-in."
 
-#: plugin/Controller/AdminViewController.php:428
-#, fuzzy
-#| msgid ""
-#| "We recommend that you configure the onOffice plugin to not modify the "
-#| "title and description."
+#: plugin/Controller/AdminViewController.php:438
+msgid "We recommend that you go the the"
+msgstr "We raden je aan om naar de"
+
+#: plugin/Controller/AdminViewController.php:440
 msgid ""
-"We recommend that you go the the onOffice plugin settings and configure the "
-"onOffice plugin to not modify the title and description."
+"and configure the onOffice plugin to not modify the title and description."
 msgstr ""
-"We raden u aan de onOffice-plug-in zo te configureren dat de titel en "
-"beschrijving niet worden gewijzigd."
+"en configureer de onOffice-plug-in om de titel en beschrijving niet te "
+"wijzigen."
 
-#: plugin/Controller/AdminViewController.php:429
+#: plugin/Controller/AdminViewController.php:441
 msgid ""
 "This allows you to manage the title and description with your active SEO "
 "plugin."
 msgstr ""
+"Hiermee kunt u de titel en beschrijving beheren met uw actieve SEO-plug-in."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:66
@@ -1426,6 +1434,17 @@ msgstr "Contactpersoon"
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documenten"
+
+#, fuzzy
+#~| msgid ""
+#~| "We recommend that you configure the onOffice plugin to not modify the "
+#~| "title and description."
+#~ msgid ""
+#~ "We recommend that you go the the onOffice plugin settings and configure "
+#~ "the onOffice plugin to not modify the title and description."
+#~ msgstr ""
+#~ "We raden u aan de onOffice-plug-in zo te configureren dat de titel en "
+#~ "beschrijving niet worden gewijzigd."
 
 #~ msgid "Search engine"
 #~ msgstr "Search engine"
