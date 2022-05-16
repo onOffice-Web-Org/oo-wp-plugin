@@ -242,8 +242,8 @@ class InputModelRenderer
 				$pInstance = new InputFieldItalicLabelCheckboxRenderer($elementName,
 					$pInputModel->getValuesAvailable(),  $pInputModel->getDescriptionTextHTML());
 				$pInstance->setCheckedValues($pInputModel->getValue());
-				if ($pInputModel->getHint() != null) {
-					$pInstance->setHint($pInputModel->getHint());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHint($pInputModel->getHintHtml());
 				}
 				break;
 		}
