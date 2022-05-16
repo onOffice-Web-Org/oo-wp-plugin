@@ -189,7 +189,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInstance->method('getValue')->willReturn('1');
 
 		$pInputModelDB = $pInstance->createInputModelTemplate(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE);
-		$this->assertEquals($pInputModelDB->getHtmlType(), InputModelOption::HTML_TYPE_SELECT);
+		$this->assertEquals($pInputModelDB->getHtmlType(), InputModelOption::HTML_TYPE_TEMPLATE_LIST);
 	}
 
 	/**
@@ -260,6 +260,4 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInputModelDB = $pInstance->createInputModelSameEstateAmount();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
 	}
-
-
 }

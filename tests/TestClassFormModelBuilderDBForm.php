@@ -153,6 +153,25 @@ class TestClassFormModelBuilderDBForm
 		$this->assertEquals([], $result);
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsRequired
+	 */
+	public function testGetInputModelIsRequired()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->getInputModelIsRequired();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
+
 	public function testCreateInputModelRecipient()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
@@ -181,22 +200,6 @@ class TestClassFormModelBuilderDBForm
 		$pInputModelDB = $pInstance->createInputModelName();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
-	}
-
-	public function testGetInputModelIsRequired()
-	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
-			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
-			->getMock();
-
-		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
-		$pInstance->method('getValue')->willReturn('1');
-
-		$pInputModelDB = $pInstance->getInputModelIsRequired();
-
-		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
 
 	public function testGetInputModelIsAvailableOptions()
