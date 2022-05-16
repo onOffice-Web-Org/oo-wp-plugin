@@ -23,10 +23,16 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Field\FieldModuleCollection;
+use onOffice\WPlugin\Field\FieldnamesEnvironment;
+use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
+use onOffice\WPlugin\Fieldnames;
+use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
-use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
 use wpdb;
@@ -60,14 +66,46 @@ class TestClassFormModelBuilderEstateDetailSettings
 	/** @var DataSimilarView */
 	private $_pDataDetailView = null;
 
+	/** @var FieldnamesEnvironmentTest */
+	private $_pFieldnamesEnvironment = null;
+
+	/** @var Fieldnames */
+	private $_pFieldnames = null;
+
 	/**
 	 * @before
 	 */
 	public function prepare()
 	{
+		$this->_pFieldnamesEnvironment = new FieldnamesEnvironmentTest();
+		$fieldParameters               = [
+				'labels'      => true,
+				'showContent' => true,
+				'showTable'   => true,
+				'language'    => 'ENG',
+				'modules'     => ['address', 'estate'],
+				'realDataTypes' => true
+		];
+		$pSDKWrapperMocker             = $this->_pFieldnamesEnvironment->getSDKWrapper();
+		$responseGetFields             = json_decode
+		(file_get_contents(__DIR__ . '/resources/ApiResponseGetFields.json'), true);
+		/* @var $pSDKWrapperMocker SDKWrapperMocker */
+		$pSDKWrapperMocker->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+				$fieldParameters, null, $responseGetFields);
+		$this->_pFieldnames = new Fieldnames(new FieldsCollection(), false, $this->_pFieldnamesEnvironment);
 		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView('onoffice');
 	}
-
+	
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::__construct
+	 */
+	
+	public function testConstruct()
+	{
+		$pInstance = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$this->assertInstanceOf(FormModelBuilderEstateDetailSettings::class, $pInstance);
+	}
+	
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::CreateInputModelShortCodeForm
 	 */
@@ -159,23 +197,47 @@ class TestClassFormModelBuilderEstateDetailSettings
 	}
 
 	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelOguloLinks
+	 */
+	public function testCreateInputModelOguloLinks()
+	{
+		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelOguloLinks();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelObjectLinks
+	 */
+	public function testCreateInputModelObjectLinks()
+	{
+		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelObjectLinks();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelLinks
+	 */
+	public function testCreateInputModelLinks()
+	{
+		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelLinks();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+
+	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelShowStatus
+	 * @throws ExceptionInputModelMissingField
 	 */
 	public function testCreateInputModelShowStatus()
 	{
-		$row = self::VALUES_BY_ROW;
-
-		$pWPOptionsWrapper = new WPOptionWrapperTest();
-		$pDataDetailViewHandler = new DataDetailViewHandler($pWPOptionsWrapper);
-		$this->_pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($row);
-
-		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getValue'])
-			->getMock();
-		$pInstance->generate('test');
-
-		$pInputModelDB = $pInstance->createInputModelShowStatus();
+		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelShowStatus();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
   
@@ -201,4 +263,22 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInputModelDB = $pInstance->createInputModelTemplate();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'templateList');
 	}
+	
+	/**
+	* @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelExpose
+	*/
+	
+	public function testCreateInputModelExpose()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['readExposes'])
+			->getMock();
+		$pInstance->generate('test');
+		$pInstance->method('readExposes')->willReturn([]);
+		$pInputModelDB = $pInstance->createInputModelExpose();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
+	}
+	
+	
 }
