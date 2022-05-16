@@ -1,4 +1,12 @@
 jQuery(document).ready(function($){
+	$(window).bind("load", function() {
+		if ( sessionStorage.getItem('message_save_view') ) {
+			message = sessionStorage.getItem('message_save_view');
+			$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
+				message + '</p></div>');
+			sessionStorage.removeItem('message_save_view');
+		}
+	});
 	$('#theme-options-form').submit(function() {
 	   $(this).ajaxSubmit({
 		  onLoading: $('.loader').show(),
