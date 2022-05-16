@@ -271,7 +271,7 @@ class TestClassAdminViewController
 	{
 		$this->run_activate_plugin_for_test( 'wordpress-seo/wp-seo.php' );
 		add_option('onoffice-settings-title-and-description', '0');
-		add_option('onoffice-active-plugin-seo-warning', '0');
+		add_option('onoffice-click-button-close-action', '0');
 		set_current_screen('testscreen01337');
 		$pAdminViewController = new AdminViewController();
 		$pAdminViewController->generalAdminNoticeSEO();
