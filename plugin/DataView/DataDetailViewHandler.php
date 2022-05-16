@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\DataView;
 
+use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -110,6 +111,9 @@ class DataDetailViewHandler
 		$pDataDetailView->setExpose($row['expose'] ?? '');
 		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
 		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
+		$pDataDetailView->setOguloLinks($row['ogulolinks'] ?? LinksTypes::LINKS_DEACTIVATED);
+		$pDataDetailView->setObjectLinks($row['objectlinks'] ?? LinksTypes::LINKS_DEACTIVATED);
+		$pDataDetailView->setLinks($row['links'] ?? LinksTypes::LINKS_DEACTIVATED);
 		$pDataDetailView->setShowStatus($row['show_status'] ?? false);
 		return $pDataDetailView;
 	}

@@ -106,4 +106,30 @@ class TestClassFieldsCollectionToContentFieldLabelArrayConverter
 		$pFieldsCollection->addField($pField4);
 		return $pFieldsCollection;
 	}
+
+	public function testConvertWithoutMessage()
+	{
+		$pField5 = new Field('message', onOfficeSDK::MODULE_ADDRESS);
+		$pField5->setLabel('Message');
+		$pField5->setCategory('(unnamed category)');
+
+		$pFieldsCollection = $this->buildFieldsCollection();
+		$pFieldsCollection->addField($pField5);
+
+		$expectedResult = [
+			'testCategory2' => [
+				'testField3' => 'A Test Label 3',
+				'testField1' => 'Z Test Label 1',
+			],
+			'testCategory1' => [
+				'testField2' => 'C Test Label 2',
+			],
+			'(unnamed category)' => [
+				'message' => 'Message'
+			]
+		];
+
+		$result = $this->_pSubject->convert($pFieldsCollection, onOfficeSDK::MODULE_ADDRESS);
+		$this->assertSame($expectedResult, $result);
+	}
 }
