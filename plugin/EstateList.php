@@ -405,7 +405,6 @@ class EstateList
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
 		if ( $this->_pDataView instanceof DataDetailView ) {
-			ob_start();
 			$currentPageId = get_the_ID();
 			$pageIds       = $this->_pDataView->getPageIdsHaveDetailShortCode();
 			if ( in_array( $currentPageId, $pageIds ) ) {

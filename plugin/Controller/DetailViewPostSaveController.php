@@ -137,7 +137,9 @@ class DetailViewPostSaveController
 			$pDetailView            = $pDataDetailViewHandler->getDetailView();
 			$detailPageIds          = $pDetailView->getPageIdsHaveDetailShortCode();
 			$hasDetailPost          = false;
-
+			if ( ! is_array( $posts ) ) {
+				$posts = [ $posts ];
+			}
 			foreach ( $posts as $postId ) {
 				if ( in_array( $postId, $detailPageIds ) ) {
 					$pDetailView->removeFromPageIdsHaveDetailShortCode( (int) $postId );

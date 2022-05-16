@@ -798,6 +798,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 
+
+	/**
+	 * @return void
+	 */
+
 	public function updateShowReferenceEstateOfList()
 	{
 		$prefix = $this->getPrefix();
