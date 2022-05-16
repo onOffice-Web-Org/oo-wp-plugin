@@ -102,7 +102,7 @@ add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 add_action('oo_cache_cleanup', function() use ($pDI) {
 	$pDI->get(CacheHandler::class)->clean();
 });
-
+add_action('admin_notices', [$pAdminViewController, 'generalAdminNoticeSEO']);
 add_action('init', [$pAdminViewController, 'onInit']);
 add_action('init', function() use ($pAdminViewController) {
 	$pAdminViewController->disableHideMetaboxes();

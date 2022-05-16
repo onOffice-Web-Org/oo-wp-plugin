@@ -134,7 +134,6 @@ class AdminViewController
 	{
 		add_action('admin_notices', [$this, 'displayAPIError']);
 		add_action('admin_notices', [$this, 'displayDeactivateDuplicateCheckWarning']);
-		add_action('admin_notices', [$this, 'generalAdminNoticeSEO']);
 		$pUserCapabilities = new UserCapabilities;
 		$roleMainPage = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_VIEW_MAIN_PAGE);
 		$roleAddress = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_EDIT_VIEW_ADDRESS);
@@ -428,6 +427,10 @@ class AdminViewController
 		$urlOnofficeSetting = admin_url().'admin.php?page=onoffice-settings';
 		$nameOnofficeSetting = esc_html__('onOffice plugin settings','onoffice-for-wp-websites');
 		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
+		if (count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) == 0)
+		{
+			update_option('onoffice-active-plugin-seo-warning', 0);
+		}
 		if (count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0
 				&& get_option('onoffice-settings-title-and-description') == 0
 				&& get_option('onoffice-active-plugin-seo-warning') == 0
