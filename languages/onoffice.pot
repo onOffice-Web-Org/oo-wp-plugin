@@ -2,14 +2,14 @@
 # This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 2.22.5\n"
+"Project-Id-Version: onOffice for WP-Websites 3.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-04-12T15:28:14+07:00\n"
+"POT-Creation-Date: 2022-05-16T10:07:32+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: onoffice\n"
@@ -68,36 +68,52 @@ msgstr ""
 msgid "Remove from "
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:74
+#: templates.dist/estate/default_detail.php:77
 msgid "Description"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:81
+#: templates.dist/estate/default_detail.php:84
 msgid "Location"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:91
+#: templates.dist/estate/default_detail.php:94
 msgid "Map"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:98
+#: templates.dist/estate/default_detail.php:101
 msgid "Equipment"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:105
+#: templates.dist/estate/default_detail.php:108
 msgid "Other Information"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:116
+#: templates.dist/estate/default_detail.php:119
 msgid "Contact person"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:142
+#: templates.dist/estate/default_detail.php:218
 msgid "Documents"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:144
+#: templates.dist/estate/default_detail.php:220
 msgid "PDF expose"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:253
+msgid "Videos"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:278
+msgid "360° tours"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:303
+msgid "Objects"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:328
+msgid "Links"
 msgstr ""
 
 #: templates.dist/estate/default_units.php:29
@@ -112,7 +128,7 @@ msgstr ""
 msgid "More Estates like this"
 msgstr ""
 
-#: templates.dist/fields.php:21
+#: templates.dist/fields.php:23
 msgid "Choose country"
 msgstr ""
 
@@ -128,17 +144,17 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: templates.dist/fields.php:95
+#: templates.dist/fields.php:97
 msgid "From: "
 msgstr ""
 
-#: templates.dist/fields.php:98
+#: templates.dist/fields.php:100
 msgid "Up to: "
 msgstr ""
 
 #. translators: %s will be replaced with the translated field name.
-#: templates.dist/fields.php:130
-#: templates.dist/fields.php:216
+#: templates.dist/fields.php:136
+#: templates.dist/fields.php:235
 msgid "Choose %s"
 msgstr ""
 
