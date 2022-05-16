@@ -1,6 +1,8 @@
 var onOffice = onOffice || {};
 jQuery(document).ready(function($) {
 	var sortByUserCheckbox = $("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]");
+	var sortByUserValue = $("#viewrecordsfilter").find("[name=oopluginsortbyuservalues-sortbyuservalue]");
+	var sortRandom = $("#viewrecordsfilter").find("[name=oopluginlistviews-random]");
 	var sortbynames = [
 		'oopluginlistviews-sortByUserDefinedDefault',
 		'oopluginsortbyuservalues-sortbyuservalue',
@@ -64,5 +66,15 @@ jQuery(document).ready(function($) {
 	onOffice.sortInputChecker();
 	sortByUserCheckbox.change(function () {
 		onOffice.sortInputChecker();
+	});
+	sortByUserValue.change(function () {
+		onOffice.generateSortByUserDefinedDefault();
+	});
+	sortRandom.change(function () {
+		if (sortRandom.prop('checked') == true) {
+			sortByUserCheckbox.prop('disabled', true);
+		} else {
+			sortByUserCheckbox.removeAttr('disabled');
+		}
 	});
 });
