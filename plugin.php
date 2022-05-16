@@ -292,13 +292,13 @@ function update_duplicate_check_warning_option()
 	wp_die();
 }
 
-function update_active_plugin_seo_option()
+function update_status_close_action_button_option()
 {
 	update_option('onoffice-click-button-close-action', 1);
 	echo true;
 	wp_die();
 }
-add_action('wp_ajax_update_active_plugin_seo_option', 'update_active_plugin_seo_option');
+add_action('wp_ajax_update_active_plugin_seo_option', 'update_status_close_action_button_option');
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
 return $pDI;
