@@ -48,7 +48,7 @@ onOffice.ajaxSaver = function(outerDiv) {
 			var getUrlPageEdit = getUrl.split( '&' );
 			var urlPageEdit = '';
 			if (responseCode === true) {
-				if (getUrlPageEdit.length != 0 && LIST_SCREEN_RELOAD.includes(current_screen) && getUrl.search('&id=') == -1)
+				if (getUrlPageEdit.length != 0 && LIST_SCREEN_RELOAD.includes(current_screen))
 				{
 					sessionStorage.setItem('message_save_view',message);
 					urlPageEdit = getUrlPageEdit[0] + "&id=" + onOffice.settings.record_id;
