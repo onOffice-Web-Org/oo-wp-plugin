@@ -112,6 +112,36 @@ class TestClassInputFieldChosenRenderer
 			.'</select>', $output);
 	}
 
+
+	/**
+	 *
+	 */
+	public function testRenderSingleSelectedValue()
+	{
+		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		$dataValueGroup = [
+			'group' => [
+				'Popular' => [
+					'kaufpreis' => 'Kaufpreis',
+					'kaltmiete' => 'Kaltmiete'
+				]
+			]
+		];
+		$pSubject->setMultiple(false);
+		$pSubject->setValue($dataValueGroup);
+		$pSubject->setSelectedValue('kaufpreis');
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer" id="select_1" style="width: 230px;">'
+		                    .'<optgroup label="Popular">'
+		                    .'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
+		                    .'<option value="kaltmiete" >Kaltmiete</option>'
+		                    .'</optgroup>'
+		                    .'</select>', $output);
+	}
+
+
 	/**
 	 *
 	 */

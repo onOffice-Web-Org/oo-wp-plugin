@@ -117,6 +117,55 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals('chosen', $pInputModelDB->getHtmlType());
 	}
 
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosenStandard
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getDataOfSortByInput
+	 */
+	public function testCreateInputModelSortByChosenStandard()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+		                  ->getMock();
+
+		$pInstance->method('readFieldnames')
+		          ->with('estate')
+		          ->willReturn([
+			          'wohnflaeche' => 'wohnflaeche',
+			          'grundstuecksflaeche' => 'grundstuecksflaeche',
+			          'gesamtflaeche' => 'gesamtflaeche',
+			          'kaufpreis' => 'Kaufpreis',
+			          'kaltmiete' => 'Kaltmiete']);
+
+		$pInstance->method('getOnlyDefaultSortByFields')
+		          ->with('estate')
+		          ->willReturn([
+			          'kaufpreis' => 'Kaufpreis',
+			          'kaltmiete' => 'Kaltmiete']);
+		$data = [
+			"group" => [
+				"Popular" => [
+					"kaufpreis" => "Kaufpreis",
+					"kaltmiete" => "Kaltmiete"
+				],
+				"All"     => [
+					"gesamtflaeche"       => "gesamtflaeche",
+					"grundstuecksflaeche" => "grundstuecksflaeche",
+					"wohnflaeche"         => "wohnflaeche",
+				]
+			]
+		];
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->with('sortby')->willReturn(null);
+
+		$pInputModelDB = $pInstance->createInputModelSortByChosenStandard();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals('chosen', $pInputModelDB->getHtmlType());
+		$this->assertEquals($data, $pInstance->getDataOfSortByInput());
+	}
+
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
 	 */
@@ -383,5 +432,25 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEmpty($pInputModelDB->getValue());
 		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
+	}
+
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelExpose
+	 */
+	public function testCreateInputModelExpose()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+		                  ->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('0');
+
+		$pInputModelDB = $pInstance->createInputModelExpose();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getValue(), '0');
+		$this->assertEquals('select', $pInputModelDB->getHtmlType());
 	}
 }
