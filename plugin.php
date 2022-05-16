@@ -96,14 +96,13 @@ add_action('admin_menu', [$pAdminViewController, 'register_menu']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
 add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
-add_action('admin_notices', [$pAdminViewController, 'generalAdminNoticeSEO']);
 add_action('wp_enqueue_scripts', [CaptchaDataChecker::class, 'registerScripts']);
 add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
 add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 add_action('oo_cache_cleanup', function() use ($pDI) {
 	$pDI->get(CacheHandler::class)->clean();
 });
-
+add_action('admin_notices', [$pAdminViewController, 'generalAdminNoticeSEO']);
 add_action('init', [$pAdminViewController, 'onInit']);
 add_action('init', function() use ($pAdminViewController) {
 	$pAdminViewController->disableHideMetaboxes();
@@ -293,6 +292,13 @@ function update_duplicate_check_warning_option()
 	wp_die();
 }
 
+function update_active_plugin_seo_option()
+{
+	update_option('onoffice-active-plugin-seo-warning', 1);
+	echo true;
+	wp_die();
+}
+add_action('wp_ajax_update_active_plugin_seo_option', 'update_active_plugin_seo_option');
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
 return $pDI;

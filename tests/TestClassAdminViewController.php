@@ -172,7 +172,7 @@ class TestClassAdminViewController
 		$adminPage = new AdminPageEstateDetail('admin_page_onoffice-editlistview');
 		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
 		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-editlistview");
-		$this->assertEquals(['update-duplicate-check-warning-option', 'admin-js'], wp_scripts()->queue);
+		$this->assertEquals(['update-duplicate-check-warning-option', 'warning-active-plugin-SEO', 'admin-js'], wp_scripts()->queue);
 	}
 
 	/**
@@ -190,7 +190,7 @@ class TestClassAdminViewController
 		$pWpHook = $wp_filter['admin_page_onoffice-editlistview'];
 		$pWpHook->callbacks = [[['function' => ['a']]]];
 		$pAdminViewController->enqueueExtraJs("admin_onoffice_test");
-		$this->assertCount(1, wp_scripts()->queue);
+		$this->assertCount(2, wp_scripts()->queue);
 	}
 
 	public function testAdminPageAjax()
@@ -271,15 +271,18 @@ class TestClassAdminViewController
 	{
 		$this->run_activate_plugin_for_test( 'wordpress-seo/wp-seo.php' );
 		add_option('onoffice-settings-title-and-description', '0');
+		add_option('onoffice-active-plugin-seo-warning', '0');
 		set_current_screen('testscreen01337');
 		$pAdminViewController = new AdminViewController();
 		$pAdminViewController->generalAdminNoticeSEO();
-		$this->expectOutputString('<div class="notice notice-warning is-dismissible">
+		$this->expectOutputString("<div class='notice notice-warning active-plugin-seo is-dismissible'>
 						<p> The onOffice plugin has detected an active SEO plugin: Yoast SEO.
 							You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.<br>
-							We recommend that you go the the onOffice plugin settings and configure the onOffice plugin to not modify the title and description.
+							We recommend that you go the the
+							<a href='http://example.org/wp-admin/admin.php?page=onoffice-settings' target='_blank' rel='noopener'>onOffice plugin settings</a>
+							and configure the onOffice plugin to not modify the title and description.
 							This allows you to manage the title and description with your active SEO plugin.</p>
-					</div>');
+					</div>");
 	}
 
 	private function run_activate_plugin_for_test( $plugin ) {

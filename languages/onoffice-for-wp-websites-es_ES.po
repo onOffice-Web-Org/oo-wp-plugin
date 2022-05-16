@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-12T02:04:18+02:00\n"
+"POT-Creation-Date: 2022-05-14T09:53:46+02:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -50,7 +50,7 @@ msgstr "https://es.onoffice.com/"
 msgid "Please configure your onOffice API credentials first!"
 msgstr "Por favor, configure primero sus credenciales de la API de onOffice!"
 
-#: plugin/Controller/AdminViewController.php:149
+#: plugin/Controller/AdminViewController.php:150
 #: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:88
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:76
@@ -60,33 +60,33 @@ msgstr "Por favor, configure primero sus credenciales de la API de onOffice!"
 msgid "onOffice"
 msgstr "onOffice"
 
-#: plugin/Controller/AdminViewController.php:155
+#: plugin/Controller/AdminViewController.php:156
 #: plugin/Gui/AdminPageAddressList.php:61
 msgid "Addresses"
 msgstr "Direcciones"
 
-#: plugin/Controller/AdminViewController.php:161
 #: plugin/Controller/AdminViewController.php:162
+#: plugin/Controller/AdminViewController.php:163
 msgid "Estates"
 msgstr "Propiedades"
 
-#: plugin/Controller/AdminViewController.php:173
+#: plugin/Controller/AdminViewController.php:174
 #: plugin/Gui/AdminPageFormList.php:97
 msgid "Forms"
 msgstr "Formularios"
 
-#: plugin/Controller/AdminViewController.php:205
 #: plugin/Controller/AdminViewController.php:206
-#: plugin/Controller/AdminViewController.php:372
+#: plugin/Controller/AdminViewController.php:207
+#: plugin/Controller/AdminViewController.php:378
 msgid "Settings"
 msgstr "Ajustes"
 
-#: plugin/Controller/AdminViewController.php:388
+#: plugin/Controller/AdminViewController.php:394
 msgid "API token and secret"
 msgstr "Token de la API y secreto"
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:391
+#: plugin/Controller/AdminViewController.php:397
 msgid ""
 "It looks like you did not enter any valid API credentials. Please consider "
 "reviewing your %s."
@@ -94,7 +94,7 @@ msgstr ""
 "Parece que no ha introducido ninguna credencial de API válida. Por favor, "
 "considere la posibilidad de revisar su %s..."
 
-#: plugin/Controller/AdminViewController.php:407
+#: plugin/Controller/AdminViewController.php:413
 msgid ""
 "We have deactivated the plugin's duplicate check for all of your forms, "
 "because the duplicate check can unintentionally overwrite address records. "
@@ -102,28 +102,43 @@ msgid ""
 "for these forms: Contact, Interest, Owner"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:426
+#: plugin/Controller/AdminViewController.php:429
+msgid "onOffice plugin settings"
+msgstr "Configuración del complemento onOffice"
+
+#: plugin/Controller/AdminViewController.php:436
 msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
 msgstr ""
+"El complemento onOffice ha detectado un complemento SEO activo: Yoast SEO."
 
-#: plugin/Controller/AdminViewController.php:427
+#: plugin/Controller/AdminViewController.php:437
 msgid ""
 "You currently have configured the onOffice plugin to fill out the title and "
 "description of the detail page, which can lead to conflicts with the SEO "
 "plugin."
 msgstr ""
+"Actualmente ha configurado el complemento de onOffice para completar el "
+"título y la descripción de la página de detalles, lo que puede generar "
+"conflictos con el complemento de SEO."
 
-#: plugin/Controller/AdminViewController.php:428
+#: plugin/Controller/AdminViewController.php:438
+msgid "We recommend that you go the the"
+msgstr "Te recomendamos que vayas al"
+
+#: plugin/Controller/AdminViewController.php:440
 msgid ""
-"We recommend that you go the the onOffice plugin settings and configure the "
-"onOffice plugin to not modify the title and description."
+"and configure the onOffice plugin to not modify the title and description."
 msgstr ""
+"y configure el complemento onOffice para que no modifique el título y la "
+"descripción."
 
-#: plugin/Controller/AdminViewController.php:429
+#: plugin/Controller/AdminViewController.php:441
 msgid ""
 "This allows you to manage the title and description with your active SEO "
 "plugin."
 msgstr ""
+"Esto le permite administrar el título y la descripción con su complemento "
+"SEO activo."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:66
@@ -302,10 +317,12 @@ msgid ""
 "This plugin will not modify the title and description. This enables other "
 "plugins to manage those tags."
 msgstr ""
+"Este complemento no modificará el título y la descripción. Esto permite que "
+"otros complementos administren esas etiquetas."
 
 #: plugin/Gui/AdminPageApiSettings.php:184
 msgid "Available custom fields"
-msgstr ""
+msgstr "Campos personalizados disponibles"
 
 #: plugin/Gui/AdminPageApiSettings.php:185
 msgid ""
@@ -315,16 +332,24 @@ msgid ""
 "shown estate. For information on how to use custom fields consult you SEO "
 "plugin's documentation."
 msgstr ""
+"Cuando esta opción está activa, el complemento hace que los siguientes "
+"campos personalizados estén disponibles en la vista de detalles. Estos "
+"campos personalizados se pueden usar en los complementos de SEO para "
+"completar el título y la descripción con la información del estado que se "
+"muestra actualmente. Para obtener información sobre cómo usar los campos "
+"personalizados, consulte la documentación de su complemento SEO."
 
 #: plugin/Gui/AdminPageApiSettings.php:188
 msgid ""
 "These custom fields are only available in the detail view and on no other "
 "page."
 msgstr ""
+"Estos campos personalizados solo están disponibles en la vista de detalles y "
+"en ninguna otra página."
 
 #: plugin/Gui/AdminPageApiSettings.php:189
 msgid "Title (onoffice_title)"
-msgstr ""
+msgstr "Título (onoffice_title)"
 
 #: plugin/Gui/AdminPageApiSettings.php:190
 msgid "Description (onoffice_description)"
@@ -332,35 +357,39 @@ msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:191
 msgid "Place (onoffice_place)"
-msgstr ""
+msgstr "Lugar  (onoffice_place)"
 
 #: plugin/Gui/AdminPageApiSettings.php:192
 msgid "Postal code (onoffice_postal_code)"
-msgstr ""
+msgstr "Código postal  (onoffice_postal_code)"
 
 #: plugin/Gui/AdminPageApiSettings.php:193
 msgid "Property class (onoffice_property_class)"
-msgstr ""
+msgstr "Clase de propiedad (onoffice_property_class)"
 
 #: plugin/Gui/AdminPageApiSettings.php:194
 msgid "Marketing method (onoffice_marketing_method)"
-msgstr ""
+msgstr "Método de marketing  (onoffice_marketing_method)"
 
 #: plugin/Gui/AdminPageApiSettings.php:195
 msgid "Data Record Ref No. (onoffice_id)"
-msgstr ""
+msgstr "Número de referencia del registro de datos (onoffice_id)"
 
 #: plugin/Gui/AdminPageApiSettings.php:200
 msgid ""
 "We have detected an active SEO plugin: Yoast SEO. This option can lead to "
 "conflicts with the SEO plugin."
 msgstr ""
+"Hemos detectado un complemento SEO activo: Yoast SEO. Esta opción puede "
+"generar conflictos con el complemento SEO."
 
 #: plugin/Gui/AdminPageApiSettings.php:201
 msgid ""
 "We recommend that you configure the onOffice plugin to not modify the title "
 "and description."
 msgstr ""
+"Le recomendamos que configure el complemento de onOffice para que no "
+"modifique el título y la descripción."
 
 #: plugin/Gui/AdminPageApiSettings.php:204
 msgid ""
@@ -368,6 +397,9 @@ msgid ""
 "from the estate that is shown. This option is recommended if you are not "
 "using a SEO plugin."
 msgstr ""
+"Este complemento completará el título y la descripción con la información "
+"del patrimonio que se muestra. Se recomienda esta opción si no está "
+"utilizando un complemento de SEO."
 
 #: plugin/Gui/AdminPageApiSettings.php:213
 #, fuzzy
@@ -384,15 +416,15 @@ msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:221
 msgid "Title and description"
-msgstr ""
+msgstr "Título y descripción"
 
 #: plugin/Gui/AdminPageApiSettings.php:226
 msgid "Fill out"
-msgstr ""
+msgstr "Llenar"
 
 #: plugin/Gui/AdminPageApiSettings.php:227
 msgid "Do not modify"
-msgstr ""
+msgstr "No modificar"
 
 #: plugin/Gui/AdminPageApiSettings.php:240
 msgid "SEO"
