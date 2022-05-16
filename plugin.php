@@ -294,7 +294,7 @@ function update_duplicate_check_warning_option()
 
 function update_active_plugin_seo_option()
 {
-	update_option('onoffice-active-plugin-seo-warning', 1);
+	update_option('onoffice-click-button-close-action', 1);
 	echo true;
 	wp_die();
 }
