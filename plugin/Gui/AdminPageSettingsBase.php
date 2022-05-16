@@ -145,7 +145,21 @@ abstract class AdminPageSettingsBase
 		$pInputModelRenderer = $this->getContainer()->get(InputModelRenderer::class);
 		$pFormViewName = $this->getFormModelByGroupSlug(self::FORM_RECORD_NAME);
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
-
+		$listTypeUnSupported = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
+		foreach ($pFormViewSortableFields->getInputModel() as $pInputModel) {
+			$fieldNames = $pInputModel->getValue();
+			$fieldAvailable = $pInputModel->getValuesAvailable ();
+			foreach ($fieldNames  as $fieldName)
+			{
+				if (in_array ($fieldAvailable[$fieldName]['type'],$listTypeUnSupported))
+				{
+					if (($key = array_search($fieldName, $fieldNames)) !== false) {
+						unset($fieldNames[$key]);
+					}
+				}
+			}
+			$pInputModel->setValue ($fieldNames);
+		}
 		wp_nonce_field( $this->getPageSlug() );
 
 		$this->generatePageMainTitle($this->_pageTitle);
