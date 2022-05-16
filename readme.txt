@@ -85,6 +85,7 @@ Start editing inside the `onoffice-personalized` folder.
 **Fixed**
 
 * The warning about the deactivation of the duplicate check introduced in version 2.22.2 can now be closed correctly and does not appear on new installations.
+* For contact forms, the message field no longer appears twice.
 * In the settings, clicking on the labels now sets the correct controls.
 * Explain how to link addresses from contact forms with the estates.
 
@@ -99,6 +100,7 @@ Start editing inside the `onoffice-personalized` folder.
 * When creating new lists or forms, the correct template will be selected by default.
 * Address lists can no longer be saved without a name.
 * In interest forms, search criteria fields that are displayed as a select field can now be set as required.
+* When updating from version 2.21.6 or earlier, the setting for showing reference estates is now set for all estate list for backwards compatiblity.
 
 = 3.0 (2022-04-19) =
 
