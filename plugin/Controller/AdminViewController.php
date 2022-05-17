@@ -434,7 +434,7 @@ class AdminViewController
 				echo "<div class='notice notice-warning active-plugin-seo is-dismissible'>
 						<p> " . esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.', 'onoffice-for-wp-websites') . "
 							" . esc_html__('You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.', 'onoffice-for-wp-websites') . "<br>
-							" . esc_html__('We recommend that you go the the', 'onoffice-for-wp-websites') . "
+							" . esc_html__('We recommend that you go to the', 'onoffice-for-wp-websites') . "
 							" . $pluginOnofficeSetting . "
 							" . esc_html__('and configure the onOffice plugin to not modify the title and description.', 'onoffice-for-wp-websites') . "
 							" . esc_html__('This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites')
