@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
@@ -37,6 +38,9 @@ use WP_UnitTestCase;
 class TestClassScriptLoaderGenericConfigurationDefault
 	extends WP_UnitTestCase
 {
+	/** @var Container */
+	private $_pContainer;
+	
 	/**
 	 * @before
 	 */
