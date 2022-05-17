@@ -62,8 +62,16 @@ jQuery(document).ready(function($) {
             standardSortInput.trigger("chosen:updated");
 		}
 	};
+	onOffice.sortRandomChecker = function () {
+		if (sortRandom.prop('checked') == true) {
+			sortByUserCheckbox.prop('disabled', true);
+		} else {
+			sortByUserCheckbox.removeAttr('disabled');
+		}
+	}
 
 	onOffice.sortInputChecker();
+	onOffice.sortRandomChecker();
 	sortByUserCheckbox.change(function () {
 		onOffice.sortInputChecker();
 	});
@@ -71,10 +79,6 @@ jQuery(document).ready(function($) {
 		onOffice.generateSortByUserDefinedDefault();
 	});
 	sortRandom.change(function () {
-		if (sortRandom.prop('checked') == true) {
-			sortByUserCheckbox.prop('disabled', true);
-		} else {
-			sortByUserCheckbox.removeAttr('disabled');
-		}
+		onOffice.sortRandomChecker();
 	});
 });
