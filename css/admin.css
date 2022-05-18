@@ -317,7 +317,7 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	float: right;
 	margin-top: 20px;
 }
-p#notice-seo {
+#notice-seo {
 	border: 1px solid #c3c4c7;
 	border-left: 4px solid #dba617;
 	background-color: #fff;

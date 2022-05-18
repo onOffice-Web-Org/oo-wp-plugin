@@ -41,6 +41,7 @@ use onOffice\WPlugin\Gui\AdminPageModules;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
+use Parsedown;
 use WP_Hook;
 use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
@@ -427,19 +428,29 @@ class AdminViewController
 		$urlOnofficeSetting = admin_url().'admin.php?page=onoffice-settings';
 		$nameOnofficeSetting = esc_html__('onOffice plugin settings','onoffice-for-wp-websites');
 		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
+		$pluginSEO = [];
+		if (count(array_intersect(["wpseo/wp-seo.php"], get_option("active_plugins"))) > 0) {
+			$pluginSEO['wp_seo'] = 'wpSEO';
+		}
+		if (count(array_intersect(["seo-by-rank-math/rank-math.php"], get_option("active_plugins"))) > 0) {
+			$pluginSEO['rank_math_seo'] = 'Rank Math SEO';
+		}
+		if (count(array_intersect(["wordpress-seo/wp-seo.php"], get_option("active_plugins"))) > 0) {
+			$pluginSEO['yoast_seo'] = 'Yoast SEO';
+		}
+		$listNamePluginSEO = implode(", ", $pluginSEO);
 		if (count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0) {
 			if (get_option('onoffice-click-button-close-action') == 0
 				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings'
 				&& get_option('onoffice-settings-title-and-description') == 0) {
-				echo "<div class='notice notice-warning active-plugin-seo is-dismissible'>
-						<p> " . esc_html__('The onOffice plugin has detected an active SEO plugin: Yoast SEO.', 'onoffice-for-wp-websites') . "
-							" . esc_html__('You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.', 'onoffice-for-wp-websites') . "<br>
-							" . esc_html__('We recommend that you go to the', 'onoffice-for-wp-websites') . "
-							" . $pluginOnofficeSetting . "
-							" . esc_html__('and configure the onOffice plugin to not modify the title and description.', 'onoffice-for-wp-websites') . "
-							" . esc_html__('This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites')
-						. "</p>
-					</div>";
+				$class = 'notice notice-warning active-plugin-seo is-dismissible';
+				$message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.
+													We recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
+				$message = Parsedown::instance()
+					->setBreaksEnabled(true)->text(
+						$message
+					);
+				printf('<div class="%1$s">%2$s</div>', esc_attr($class), $message);
 			}
 		} else {
 			update_option('onoffice-click-button-close-action', 0);

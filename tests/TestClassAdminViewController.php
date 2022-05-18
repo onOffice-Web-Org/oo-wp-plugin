@@ -275,14 +275,8 @@ class TestClassAdminViewController
 		set_current_screen('testscreen01337');
 		$pAdminViewController = new AdminViewController();
 		$pAdminViewController->generalAdminNoticeSEO();
-		$this->expectOutputString("<div class='notice notice-warning active-plugin-seo is-dismissible'>
-						<p> The onOffice plugin has detected an active SEO plugin: Yoast SEO.
-							You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.<br>
-							We recommend that you go the the
-							<a href='http://example.org/wp-admin/admin.php?page=onoffice-settings' target='_blank' rel='noopener'>onOffice plugin settings</a>
-							and configure the onOffice plugin to not modify the title and description.
-							This allows you to manage the title and description with your active SEO plugin.</p>
-					</div>");
+		$this->expectOutputString("<div class=\"notice notice-warning active-plugin-seo is-dismissible\"><p>The onOffice plugin has detected an active SEO plugin: Yoast SEO. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.<br />
+We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?page=onoffice-settings' target='_blank' rel='noopener'>onOffice plugin settings</a> and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.</p></div>");
 	}
 
 	private function run_activate_plugin_for_test( $plugin ) {

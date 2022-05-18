@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-14T09:53:46+02:00\n"
+"POT-Creation-Date: 2022-05-18T15:39:02+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -50,12 +50,12 @@ msgid "Please configure your onOffice API credentials first!"
 msgstr "Gelieve eerst uw onOffice API-gegevens te configureren!"
 
 #: plugin/Controller/AdminViewController.php:150
-#: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:88
-#: plugin/Gui/AdminPageEstateDetail.php:203
+#: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:89
+#: plugin/Gui/AdminPageEstateDetail.php:202
 #: plugin/Gui/AdminPageEstateList.php:76
 #: plugin/Gui/AdminPageEstateUnitList.php:72
 #: plugin/Gui/AdminPageFormList.php:191
-#: plugin/Gui/AdminPageSimilarEstates.php:145
+#: plugin/Gui/AdminPageSimilarEstates.php:144
 msgid "onOffice"
 msgstr "onOffice"
 
@@ -105,38 +105,22 @@ msgstr ""
 msgid "onOffice plugin settings"
 msgstr "onOffice plug-in instellingen"
 
-#: plugin/Controller/AdminViewController.php:436
-msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
-msgstr ""
-"De onOffice-plug-in heeft een actieve SEO-plug-in gedetecteerd: Yoast SEO."
-
-#: plugin/Controller/AdminViewController.php:437
+#: plugin/Controller/AdminViewController.php:447
 msgid ""
-"You currently have configured the onOffice plugin to fill out the title and "
-"description of the detail page, which can lead to conflicts with the SEO "
-"plugin."
+"The onOffice plugin has detected an active SEO plugin: %s. You currently "
+"have configured the onOffice plugin to fill out the title and description of "
+"the detail page, which can lead to conflicts with the SEO plugin.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\tWe recommend that you go to the %s and configure "
+"the onOffice plugin to not modify the title and description. This allows you "
+"to manage the title and description with your active SEO plugin."
 msgstr ""
-"U hebt momenteel de onOffice-plug-in geconfigureerd om de titel en "
-"beschrijving van de detailpagina in te vullen, wat kan leiden tot conflicten "
-"met de SEO-plug-in."
-
-#: plugin/Controller/AdminViewController.php:438
-msgid "We recommend that you go the the"
-msgstr "We raden je aan om naar de"
-
-#: plugin/Controller/AdminViewController.php:440
-msgid ""
-"and configure the onOffice plugin to not modify the title and description."
-msgstr ""
-"en configureer de onOffice-plug-in om de titel en beschrijving niet te "
-"wijzigen."
-
-#: plugin/Controller/AdminViewController.php:441
-msgid ""
-"This allows you to manage the title and description with your active SEO "
-"plugin."
-msgstr ""
-"Hiermee kunt u de titel en beschrijving beheren met uw actieve SEO-plug-in."
+"De onOffice-plug-in heeft een actieve SEO-plug-in gedetecteerd: %s. U hebt "
+"momenteel de onOffice-plug-in geconfigureerd om de titel en beschrijving van "
+"de detailpagina in te vullen, wat kan leiden tot conflicten met de SEO-plug-"
+"in.\n"
+"We raden u aan naar %s te gaan en de onOffice-plug-in te configureren om de "
+"titel en beschrijving niet te wijzigen. Hiermee kunt u de titel en "
+"beschrijving beheren met uw actieve SEO-plug-in."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:66
@@ -172,7 +156,7 @@ msgid "Search Criteria"
 msgstr "Zoekcriteria"
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:196
+#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:192
 msgid "Form Specific Fields"
 msgstr "Vorm-specifieke velden"
 
@@ -232,15 +216,15 @@ msgstr "Adreslijst bewerken"
 #: plugin/Gui/AdminPageAddressListSettings.php:105
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:392
+#: plugin/Gui/AdminPageFormSettingsBase.php:395
 msgid "choose name"
 msgstr "naam kiezen"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:121
-#: plugin/Gui/AdminPageEstateDetail.php:279
+#: plugin/Gui/AdminPageEstateDetail.php:278
 #: plugin/Gui/AdminPageEstateListSettings.php:126
 #: plugin/Gui/AdminPageEstateUnitSettings.php:89
-#: plugin/Gui/AdminPageFormSettingsBase.php:409
+#: plugin/Gui/AdminPageFormSettingsBase.php:412
 msgid "Layout & Design"
 msgstr "Lay-out & ontwerp"
 
@@ -249,7 +233,7 @@ msgid "Filter & Records"
 msgstr "Filter & dossiers"
 
 #: plugin/Gui/AdminPageAddressListSettings.php:160
-#: plugin/Gui/AdminPageEstateDetail.php:289
+#: plugin/Gui/AdminPageEstateDetail.php:288
 #: plugin/Gui/AdminPageEstateListSettings.php:135
 #: plugin/Gui/AdminPageEstateUnitSettings.php:97
 msgid "Photo Types"
@@ -280,36 +264,36 @@ msgstr ""
 "Het lijkt erop dat u geen geldige API-gegevens hebt ingevoerd. Ga "
 "alsjeblieft terug en bekijk je %s."
 
-#: plugin/Gui/AdminPageApiSettings.php:81
+#: plugin/Gui/AdminPageApiSettings.php:82
 msgid "API token"
 msgstr "API-token"
 
-#: plugin/Gui/AdminPageApiSettings.php:82
+#: plugin/Gui/AdminPageApiSettings.php:83
 msgid "API secret"
 msgstr "API geheim"
 
-#: plugin/Gui/AdminPageApiSettings.php:112
+#: plugin/Gui/AdminPageApiSettings.php:113
 msgid "API settings"
 msgstr "API-instellingen"
 
-#: plugin/Gui/AdminPageApiSettings.php:124
+#: plugin/Gui/AdminPageApiSettings.php:125
 msgid "Site Key"
 msgstr "Sleutel van de site"
 
-#: plugin/Gui/AdminPageApiSettings.php:125
+#: plugin/Gui/AdminPageApiSettings.php:126
 msgid "Secret Key"
 msgstr "Geheime sleutel"
 
-#: plugin/Gui/AdminPageApiSettings.php:146
+#: plugin/Gui/AdminPageApiSettings.php:147
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:161
-#: plugin/Gui/AdminPageApiSettings.php:171
+#: plugin/Gui/AdminPageApiSettings.php:162
+#: plugin/Gui/AdminPageApiSettings.php:172
 msgid "Google Maps Key"
 msgstr "Google Kaarten"
 
-#: plugin/Gui/AdminPageApiSettings.php:181
+#: plugin/Gui/AdminPageApiSettings.php:190
 msgid ""
 "This plugin will not modify the title and description. This enables other "
 "plugins to manage those tags."
@@ -317,77 +301,58 @@ msgstr ""
 "Deze plug-in zal de titel en beschrijving niet wijzigen. Hierdoor kunnen "
 "andere plug-ins die tags beheren."
 
-#: plugin/Gui/AdminPageApiSettings.php:184
+#: plugin/Gui/AdminPageApiSettings.php:191
 msgid "Available custom fields"
 msgstr "Beschikbare aangepaste velden"
 
-#: plugin/Gui/AdminPageApiSettings.php:185
+#: plugin/Gui/AdminPageApiSettings.php:192
 msgid ""
 "When this option is active, the plugin makes the following custom fields "
 "available in the detail view. These custom fields can be used in SEO plugins "
 "to fill out the title and description with the information of the currently "
 "shown estate. For information on how to use custom fields consult you SEO "
-"plugin's documentation."
+"plugin's documentation.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\tThese custom fields are only available in the "
+"detail view and on no other page.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Title (onoffice_title)\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Description (onoffice_description)\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Place (onoffice_place)\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Postal code (onoffice_postal_code)\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Property class (onoffice_property_class)\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Marketing method "
+"(onoffice_marketing_method)\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Data Record Ref No. (onoffice_id)"
 msgstr ""
 "Als deze optie actief is, maakt de plug-in de volgende aangepaste velden "
 "beschikbaar in de detailweergave. Deze aangepaste velden kunnen worden "
 "gebruikt in SEO-plug-ins om de titel en beschrijving in te vullen met de "
 "informatie van het momenteel getoonde landgoed. Raadpleeg de documentatie "
-"van de SEO-plug-in voor informatie over het gebruik van aangepaste velden."
-
-#: plugin/Gui/AdminPageApiSettings.php:188
-msgid ""
-"These custom fields are only available in the detail view and on no other "
-"page."
-msgstr ""
+"van de SEO-plug-in voor informatie over het gebruik van aangepaste velden.\n"
 "Deze aangepaste velden zijn alleen beschikbaar in de detailweergave en op "
-"geen enkele andere pagina."
+"geen enkele andere pagina.\n"
+"\\- Titel (onoffice_title)\n"
+"\\- Beschrijving (onoffice_description)\n"
+"\\- Plaats (onoffice_place)\n"
+"\\- Postcode (onoffice_postal_code)\n"
+"\\- Eigenschapsklasse (onoffice_property_class)\n"
+"\\- Marketingmethode (onoffice_marketing_methode)\n"
+"\\- Referentienummer gegevensrecord (onoffice_id)"
 
-#: plugin/Gui/AdminPageApiSettings.php:189
-msgid "Title (onoffice_title)"
-msgstr ""
-
-#: plugin/Gui/AdminPageApiSettings.php:190
-msgid "Description (onoffice_description)"
-msgstr ""
-
-#: plugin/Gui/AdminPageApiSettings.php:191
-msgid "Place (onoffice_place)"
-msgstr ""
-
-#: plugin/Gui/AdminPageApiSettings.php:192
-msgid "Postal code (onoffice_postal_code)"
-msgstr ""
-
-#: plugin/Gui/AdminPageApiSettings.php:193
-msgid "Property class (onoffice_property_class)"
-msgstr ""
-
-#: plugin/Gui/AdminPageApiSettings.php:194
-msgid "Marketing method (onoffice_marketing_method)"
-msgstr ""
-
-#: plugin/Gui/AdminPageApiSettings.php:195
-msgid "Data Record Ref No. (onoffice_id)"
-msgstr ""
-
-#: plugin/Gui/AdminPageApiSettings.php:200
+#: plugin/Gui/AdminPageApiSettings.php:212
+#, fuzzy
+#| msgid ""
+#| "We recommend that you configure the onOffice plugin to not modify the "
+#| "title and description."
 msgid ""
-"We have detected an active SEO plugin: Yoast SEO. This option can lead to "
-"conflicts with the SEO plugin."
-msgstr ""
-"We hebben een actieve SEO-plug-in gedetecteerd: Yoast SEO. Deze optie kan "
-"leiden tot conflicten met de SEO-plug-in."
-
-#: plugin/Gui/AdminPageApiSettings.php:201
-msgid ""
-"We recommend that you configure the onOffice plugin to not modify the title "
-"and description."
+"We have detected an active SEO plugin: %s. This option can lead to conflicts "
+"with the SEO plugin.\n"
+"\t\t\t\t\t\t\t\t\t\t\t\t\tWe recommend that you configure the onOffice "
+"plugin to not modify the title and description."
 msgstr ""
 "We raden u aan de onOffice-plug-in zo te configureren dat de titel en "
 "beschrijving niet worden gewijzigd."
 
-#: plugin/Gui/AdminPageApiSettings.php:204
+#: plugin/Gui/AdminPageApiSettings.php:220
 msgid ""
 "This plugin will fill out the title and description with the information "
 "from the estate that is shown. This option is recommended if you are not "
@@ -397,13 +362,13 @@ msgstr ""
 "getoonde landgoed. Deze optie wordt aanbevolen als u geen SEO-plug-in "
 "gebruikt."
 
-#: plugin/Gui/AdminPageApiSettings.php:213
+#: plugin/Gui/AdminPageApiSettings.php:229
 #, fuzzy
 #| msgid "Index PDF brochure"
 msgid "Allow indexing of PDF brochures"
 msgstr "Index PDF brochure"
 
-#: plugin/Gui/AdminPageApiSettings.php:219
+#: plugin/Gui/AdminPageApiSettings.php:235
 msgid ""
 "If you allow indexing, your search engine ranking can be negatively affected "
 "and your brochures can be available from search engines even months after "
@@ -413,51 +378,51 @@ msgstr ""
 "beïnvloed en kunnen uw brochures zelfs maanden nadat het betreffende domein "
 "is verwijderd beschikbaar zijn via zoekmachines."
 
-#: plugin/Gui/AdminPageApiSettings.php:221
+#: plugin/Gui/AdminPageApiSettings.php:237
 msgid "Title and description"
 msgstr "Titel en beschrijving"
 
-#: plugin/Gui/AdminPageApiSettings.php:226
+#: plugin/Gui/AdminPageApiSettings.php:242
 msgid "Fill out"
 msgstr "Invullen"
 
-#: plugin/Gui/AdminPageApiSettings.php:227
+#: plugin/Gui/AdminPageApiSettings.php:243
 msgid "Do not modify"
 msgstr "Niet wijzigen"
 
-#: plugin/Gui/AdminPageApiSettings.php:240
+#: plugin/Gui/AdminPageApiSettings.php:256
 msgid "SEO"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:279
+#: plugin/Gui/AdminPageApiSettings.php:295
 msgid "The keys are OK."
 msgstr "De sleutels zijn in orde."
 
-#: plugin/Gui/AdminPageApiSettings.php:280
+#: plugin/Gui/AdminPageApiSettings.php:296
 msgid "There was an error:"
 msgstr "Er was een fout:"
 
-#: plugin/Gui/AdminPageApiSettings.php:281
+#: plugin/Gui/AdminPageApiSettings.php:297
 msgid "The secret parameter is missing."
 msgstr "De geheime parameter ontbreekt."
 
-#: plugin/Gui/AdminPageApiSettings.php:282
+#: plugin/Gui/AdminPageApiSettings.php:298
 msgid "The secret parameter is invalid or malformed."
 msgstr "De geheime parameter is ongeldig of misvormd."
 
-#: plugin/Gui/AdminPageApiSettings.php:283
+#: plugin/Gui/AdminPageApiSettings.php:299
 msgid "The response parameter is missing."
 msgstr "De antwoordparameter ontbreekt."
 
-#: plugin/Gui/AdminPageApiSettings.php:284
+#: plugin/Gui/AdminPageApiSettings.php:300
 msgid "The response parameter is invalid or malformed."
 msgstr "De responsparameter is ongeldig of misvormd."
 
-#: plugin/Gui/AdminPageApiSettings.php:285
+#: plugin/Gui/AdminPageApiSettings.php:301
 msgid "The request is invalid or malformed."
 msgstr "Het verzoek is ongeldig of misvormd."
 
-#: plugin/Gui/AdminPageApiSettings.php:296
+#: plugin/Gui/AdminPageApiSettings.php:312
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -466,35 +431,35 @@ msgstr ""
 "staat u vrij om dit in de formulierinstellingen in te schakelen voor later "
 "gebruik."
 
-#: plugin/Gui/AdminPageApiSettings.php:322
+#: plugin/Gui/AdminPageApiSettings.php:338
 msgid "Save changes and clear API cache"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:334
+#: plugin/Gui/AdminPageApiSettings.php:350
 msgid "The cache was cleaned."
 msgstr "De cache is schoongemaakt."
 
-#: plugin/Gui/AdminPageApiSettings.php:348
+#: plugin/Gui/AdminPageApiSettings.php:364
 msgid "Map Provider"
 msgstr "Kaartaanbieder"
 
-#: plugin/Gui/AdminPageApiSettings.php:355
+#: plugin/Gui/AdminPageApiSettings.php:371
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: plugin/Gui/AdminPageApiSettings.php:356
+#: plugin/Gui/AdminPageApiSettings.php:372
 msgid "Google Maps"
 msgstr "Google Kaarten"
 
-#: plugin/Gui/AdminPageApiSettings.php:363
+#: plugin/Gui/AdminPageApiSettings.php:379
 msgid "Maps"
 msgstr "Kaarten"
 
-#: plugin/Gui/AdminPageApiSettings.php:376
+#: plugin/Gui/AdminPageApiSettings.php:392
 msgid "Show title in URL"
 msgstr "Toon titel in URL"
 
-#: plugin/Gui/AdminPageApiSettings.php:382
+#: plugin/Gui/AdminPageApiSettings.php:398
 msgid ""
 "If this checkbox is selected, the title of the property will be part of the "
 "URLs of the detail views. The title is placed after the record number, e.g. "
@@ -506,36 +471,36 @@ msgstr ""
 "recordnummer geplaatst, b.v. <code>/1234-nice-location-with-view</code>. "
 "Niet meer dan de eerste vijf woorden van de titel worden gebruikt."
 
-#: plugin/Gui/AdminPageApiSettings.php:388
+#: plugin/Gui/AdminPageApiSettings.php:404
 msgid "Detail View URLs"
 msgstr "URL's voor detailweergave"
 
-#: plugin/Gui/AdminPageApiSettings.php:401
+#: plugin/Gui/AdminPageApiSettings.php:417
 msgid "Enable Watchlist"
 msgstr "Watchlist inschakelen"
 
-#: plugin/Gui/AdminPageApiSettings.php:402
+#: plugin/Gui/AdminPageApiSettings.php:418
 msgid "Expression used"
 msgstr "Gebruikte expressie"
 
-#: plugin/Gui/AdminPageApiSettings.php:413
-#: plugin/Gui/AdminPageApiSettings.php:422
+#: plugin/Gui/AdminPageApiSettings.php:429
+#: plugin/Gui/AdminPageApiSettings.php:438
 msgid "Watchlist"
 msgstr "Kijklijst"
 
-#: plugin/Gui/AdminPageApiSettings.php:414
+#: plugin/Gui/AdminPageApiSettings.php:430
 msgid "Favorise"
 msgstr "Favoriet"
 
-#: plugin/Gui/AdminPageApiSettings.php:433
+#: plugin/Gui/AdminPageApiSettings.php:449
 msgid "Pagination"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:440
+#: plugin/Gui/AdminPageApiSettings.php:456
 msgid "By WP Theme"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:441
+#: plugin/Gui/AdminPageApiSettings.php:457
 #, fuzzy
 #| msgid "onOffice"
 msgid "By onOffice-Plugin"
@@ -545,13 +510,13 @@ msgstr "onOffice"
 msgid "List Views"
 msgstr "Lijst met meningen"
 
-#: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageEstateDetail.php:205
+#: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageEstateDetail.php:204
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:99
 msgid "Detail View"
 msgstr "Detailweergave"
 
-#: plugin/Gui/AdminPageEstate.php:89 plugin/Gui/AdminPageSimilarEstates.php:147
-#: plugin/Gui/AdminPageSimilarEstates.php:200
+#: plugin/Gui/AdminPageEstate.php:89 plugin/Gui/AdminPageSimilarEstates.php:146
+#: plugin/Gui/AdminPageSimilarEstates.php:199
 msgid "Similar Estates"
 msgstr "Vergelijkbare Landgoederen"
 
@@ -559,22 +524,16 @@ msgstr "Vergelijkbare Landgoederen"
 msgid "Unit Lists"
 msgstr "Eenheid Lijsten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:121
-#: plugin/Gui/AdminPageEstateListSettings.php:67
-#: plugin/Gui/AdminPageSimilarEstates.php:98
-msgid "Edit List View"
-msgstr "Lijstweergave bewerken"
-
 #. translators: %s will be replaced with a link to the appropriate page.
-#: plugin/Gui/AdminPageEstateDetail.php:131
+#: plugin/Gui/AdminPageEstateDetail.php:130
 msgid "Detail view in use on page %s"
 msgstr "Detailaanzicht in gebruik op pagina %s"
 
-#: plugin/Gui/AdminPageEstateDetail.php:133
+#: plugin/Gui/AdminPageEstateDetail.php:132
 msgid "Edit Page"
 msgstr "Pagina bewerken"
 
-#: plugin/Gui/AdminPageEstateDetail.php:135
+#: plugin/Gui/AdminPageEstateDetail.php:134
 msgid ""
 "Detail view is not in use yet. Insert this code on a page to get the detail "
 "view there:"
@@ -582,28 +541,28 @@ msgstr ""
 "Detailweergave is nog niet in gebruik. Voeg deze code in op een pagina om "
 "daar de detailweergave te krijgen:"
 
-#: plugin/Gui/AdminPageEstateDetail.php:161
+#: plugin/Gui/AdminPageEstateDetail.php:160
 msgid "Contact Person Fields"
 msgstr "Ansprechpartner-Felder"
 
-#: plugin/Gui/AdminPageEstateDetail.php:176
-#: plugin/Gui/AdminPageSimilarEstates.php:119
+#: plugin/Gui/AdminPageEstateDetail.php:175
+#: plugin/Gui/AdminPageSimilarEstates.php:118
 msgid "Real Estate Fields"
 msgstr "Vastgoedgegevensvelden"
 
-#: plugin/Gui/AdminPageEstateDetail.php:297
+#: plugin/Gui/AdminPageEstateDetail.php:296
 msgid "Access Control"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:309
+#: plugin/Gui/AdminPageEstateDetail.php:308
 msgid "Additional Media"
 msgstr "Extra media"
 
-#: plugin/Gui/AdminPageEstateDetail.php:428
+#: plugin/Gui/AdminPageEstateDetail.php:427
 msgid "The detail view has been saved."
 msgstr "Het detailaanzicht is opgeslagen."
 
-#: plugin/Gui/AdminPageEstateDetail.php:429
+#: plugin/Gui/AdminPageEstateDetail.php:428
 msgid "There was a problem saving the detail view."
 msgstr "Er was een probleem met het bewaren van het detailaanzicht."
 
@@ -616,6 +575,10 @@ msgstr "Zoek landgoedweergaven"
 msgid "Are you sure you want to delete the selected items?"
 msgstr "Weet u zeker dat u de geselecteerde items wilt verwijderen?"
 
+#: plugin/Gui/AdminPageEstateListSettings.php:67
+msgid "Edit List View"
+msgstr "Lijstweergave bewerken"
+
 #: plugin/Gui/AdminPageEstateListSettings.php:107
 msgid "Filters & Records"
 msgstr "Filters & dossiers"
@@ -627,7 +590,7 @@ msgstr "Downloadbare documenten"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:152
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:224
+#: plugin/Gui/AdminPageFormSettingsContact.php:231
 msgid "Geo Fields"
 msgstr "Geo Velden"
 
@@ -667,19 +630,19 @@ msgid "Search Forms"
 msgstr "Zoekformulieren"
 
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
-#: plugin/Gui/AdminPageFormSettingsContact.php:113
+#: plugin/Gui/AdminPageFormSettingsContact.php:111
 msgid "Form Specific Options"
 msgstr "Vorm-specifieke opties"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:118
+#: plugin/Gui/AdminPageFormSettingsBase.php:121
 msgid "Edit Form"
 msgstr "Formulier bewerken"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:266
+#: plugin/Gui/AdminPageFormSettingsBase.php:269
 msgid "The Form was saved."
 msgstr "Het formulier is opgeslagen."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:267
+#: plugin/Gui/AdminPageFormSettingsBase.php:270
 msgid ""
 "There was a problem saving the form. Please make sure the name of the form "
 "is unique."
@@ -688,57 +651,57 @@ msgstr ""
 "naam van het formulier uniek is."
 
 #. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:276
+#: plugin/Gui/AdminPageFormSettingsBase.php:279
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:567
 msgid "Module: %s"
 msgstr "Module %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:277
+#: plugin/Gui/AdminPageFormSettingsBase.php:280
 msgid "Edit Values"
 msgstr "Waarden bewerken"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:280
+#: plugin/Gui/AdminPageFormSettingsBase.php:283
 msgid "Add Language"
 msgstr "Taal toevoegen"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:281
+#: plugin/Gui/AdminPageFormSettingsBase.php:284
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:449
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:476
 msgid "Choose Language"
 msgstr "Kies de taal"
 
 #. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:283
+#: plugin/Gui/AdminPageFormSettingsBase.php:286
 msgid "Default Value: %s"
 msgstr "Standaardwaarde: %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:284
+#: plugin/Gui/AdminPageFormSettingsBase.php:287
 msgid "Custom Label: %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:285
+#: plugin/Gui/AdminPageFormSettingsBase.php:288
 msgid "Default Value From:"
 msgstr "Standaardwaarde van:"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:286
+#: plugin/Gui/AdminPageFormSettingsBase.php:289
 msgid "Default Value Up To:"
 msgstr "Standaardwaarde tot:"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:317
+#: plugin/Gui/AdminPageFormSettingsBase.php:320
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "No"
 msgstr "Nee"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:318
+#: plugin/Gui/AdminPageFormSettingsBase.php:321
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "Yes"
 msgstr "Ja"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:123
+#: plugin/Gui/AdminPageFormSettingsContact.php:121
 msgid "Request Manager"
 msgstr "Verzoekmanager"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:124
+#: plugin/Gui/AdminPageFormSettingsContact.php:122
 msgid ""
 "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-"
 "manager/?lang=en"
@@ -746,7 +709,7 @@ msgstr ""
 "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-"
 "manager/?lang=en"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:126
+#: plugin/Gui/AdminPageFormSettingsContact.php:124
 msgid ""
 "By default, no link is created to the estate when the plugin creates the "
 "address. If the contact form is on an detail page and you want to link the "
@@ -757,8 +720,8 @@ msgstr ""
 "adres aan dat landgoed koppelen door de e-mail te openen die u in onOffice "
 "enterprise ontvangt of door de te gebruiken %s ."
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:150
-#: plugin/Gui/AdminPageFormSettingsContact.php:161
+#: plugin/Gui/AdminPageFormSettingsContact.php:148
+#: plugin/Gui/AdminPageFormSettingsContact.php:159
 msgid ""
 "Be aware that when activated the duplicate check can overwrite address "
 "records. This function will be removed in the future. Use at your own risk."
@@ -775,17 +738,17 @@ msgstr "Geef a.u.b. een e-mailadres op!"
 msgid "Fields"
 msgstr "Velden contactpersoon"
 
-#: plugin/Gui/AdminPageSettingsBase.php:407
+#: plugin/Gui/AdminPageSettingsBase.php:422
 msgid "Fields Configuration"
 msgstr "Velden Configuratie"
 
-#: plugin/Gui/AdminPageSimilarEstates.php:319
+#: plugin/Gui/AdminPageSimilarEstates.php:318
 #, fuzzy
 #| msgid "The detail view has been saved."
 msgid "The similar estates view has been saved."
 msgstr "Het detailaanzicht is opgeslagen."
 
-#: plugin/Gui/AdminPageSimilarEstates.php:320
+#: plugin/Gui/AdminPageSimilarEstates.php:319
 #, fuzzy
 #| msgid "There was a problem saving the detail view."
 msgid "There was a problem saving the similar estates view."
@@ -796,7 +759,6 @@ msgstr "Er was een probleem met het bewaren van het detailaanzicht."
 msgid "(Needs valid API credentials)"
 msgstr "(Heeft geldige API-gegevens nodig)"
 
-#. translators: %s will be replaced with a number.
 #. translators: %s will be replaced with a number.
 #: plugin/Gui/Table/AddressListTable.php:121
 #: plugin/Gui/Table/EstateListTable.php:196
@@ -861,7 +823,6 @@ msgstr "Pagina's die de shortcode gebruiken"
 msgid "Duplicate"
 msgstr "Controleer op duplicaten"
 
-#. translators: %s is the name of the list view.
 #. translators: %s is the name of the list view.
 #: plugin/Gui/Table/AddressListTable.php:226
 #: plugin/Gui/Table/EstateListTable.php:279
@@ -1435,13 +1396,65 @@ msgstr "Contactpersoon"
 msgid "Documents"
 msgstr "Documenten"
 
-#, fuzzy
-#~| msgid ""
-#~| "We recommend that you configure the onOffice plugin to not modify the "
-#~| "title and description."
+#~ msgid "The onOffice plugin has detected an active SEO plugin: Yoast SEO."
+#~ msgstr ""
+#~ "De onOffice-plug-in heeft een actieve SEO-plug-in gedetecteerd: Yoast SEO."
+
 #~ msgid ""
-#~ "We recommend that you go the the onOffice plugin settings and configure "
-#~ "the onOffice plugin to not modify the title and description."
+#~ "You currently have configured the onOffice plugin to fill out the title "
+#~ "and description of the detail page, which can lead to conflicts with the "
+#~ "SEO plugin."
+#~ msgstr ""
+#~ "U hebt momenteel de onOffice-plug-in geconfigureerd om de titel en "
+#~ "beschrijving van de detailpagina in te vullen, wat kan leiden tot "
+#~ "conflicten met de SEO-plug-in."
+
+#~ msgid "We recommend that you go the the"
+#~ msgstr "We raden je aan om naar de"
+
+#~ msgid ""
+#~ "and configure the onOffice plugin to not modify the title and description."
+#~ msgstr ""
+#~ "en configureer de onOffice-plug-in om de titel en beschrijving niet te "
+#~ "wijzigen."
+
+#~ msgid ""
+#~ "This allows you to manage the title and description with your active SEO "
+#~ "plugin."
+#~ msgstr ""
+#~ "Hiermee kunt u de titel en beschrijving beheren met uw actieve SEO-plug-"
+#~ "in."
+
+#~ msgid ""
+#~ "When this option is active, the plugin makes the following custom fields "
+#~ "available in the detail view. These custom fields can be used in SEO "
+#~ "plugins to fill out the title and description with the information of the "
+#~ "currently shown estate. For information on how to use custom fields "
+#~ "consult you SEO plugin's documentation."
+#~ msgstr ""
+#~ "Als deze optie actief is, maakt de plug-in de volgende aangepaste velden "
+#~ "beschikbaar in de detailweergave. Deze aangepaste velden kunnen worden "
+#~ "gebruikt in SEO-plug-ins om de titel en beschrijving in te vullen met de "
+#~ "informatie van het momenteel getoonde landgoed. Raadpleeg de documentatie "
+#~ "van de SEO-plug-in voor informatie over het gebruik van aangepaste velden."
+
+#~ msgid ""
+#~ "These custom fields are only available in the detail view and on no other "
+#~ "page."
+#~ msgstr ""
+#~ "Deze aangepaste velden zijn alleen beschikbaar in de detailweergave en op "
+#~ "geen enkele andere pagina."
+
+#~ msgid ""
+#~ "We have detected an active SEO plugin: Yoast SEO. This option can lead to "
+#~ "conflicts with the SEO plugin."
+#~ msgstr ""
+#~ "We hebben een actieve SEO-plug-in gedetecteerd: Yoast SEO. Deze optie kan "
+#~ "leiden tot conflicten met de SEO-plug-in."
+
+#~ msgid ""
+#~ "We recommend that you configure the onOffice plugin to not modify the "
+#~ "title and description."
 #~ msgstr ""
 #~ "We raden u aan de onOffice-plug-in zo te configureren dat de titel en "
 #~ "beschrijving niet worden gewijzigd."
