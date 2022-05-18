@@ -100,6 +100,7 @@ Start editing inside the `onoffice-personalized` folder.
 * When creating new lists or forms, the correct template will be selected by default.
 * Address lists can no longer be saved without a name.
 * In interest forms, search criteria fields that are displayed as a select field can now be set as required.
+* When updating from version 2.21.6 or earlier, the setting for showing reference estates is now set for all estate list for backwards compatiblity.
 
 = 3.0 (2022-04-19) =
 

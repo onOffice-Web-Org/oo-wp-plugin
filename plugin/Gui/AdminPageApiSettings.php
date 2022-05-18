@@ -40,6 +40,7 @@ use function settings_fields;
 use function submit_button;
 use onOffice\WPlugin\Controller\AdminViewController;
 use function wp_enqueue_style;
+use Parsedown;
 /**
  *
  */
@@ -175,31 +176,46 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
-		$descriptionDoNotModify = '
-			<div class="do-not-modify">
-				 <p>
-					'.esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites').'
-				 </p>
-				 <details>
-					<summary>'.esc_html__('Available custom fields','onoffice-for-wp-websites').'</summary>
-					   <p>'.esc_html__('When this option is active, the plugin makes the following custom fields available in the detail view.'
-				.' These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate.'
-				." For information on how to use custom fields consult you SEO plugin's documentation.",'onoffice-for-wp-websites').'<br>'.
-			esc_html__('These custom fields are only available in the detail view and on no other page.','onoffice-for-wp-websites').'<br>
-					   - '. esc_html__('Title (onoffice_title)','onoffice-for-wp-websites').'<br>
-					   - '. esc_html__('Description (onoffice_description)','onoffice-for-wp-websites').'<br>
-					   - '. esc_html__('Place (onoffice_place)','onoffice-for-wp-websites').'<br>
-					   - '. esc_html__('Postal code (onoffice_postal_code)','onoffice-for-wp-websites').'<br>
-					   - '. esc_html__('Property class (onoffice_property_class)','onoffice-for-wp-websites').'<br>
-					   - '. esc_html__('Marketing method (onoffice_marketing_method)','onoffice-for-wp-websites').'<br>
-					   - '. esc_html__('Data Record Ref No. (onoffice_id)','onoffice-for-wp-websites').'<br>
-				 </details>
-			</div>';
-		$descriptionNoticeSeo = '
-				 <p id="notice-seo">
-					'. esc_html__('We have detected an active SEO plugin: Yoast SEO. This option can lead to conflicts with the SEO plugin.','onoffice-for-wp-websites').'<br>
-					'. esc_html__('We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites').'
-				 </p>';
+		$pluginSEO = [];
+		if (count(array_intersect(["wpseo/wp-seo.php"], get_option("active_plugins"))) > 0){
+			$pluginSEO['wp_seo'] = 'wpSEO';
+		}
+		if (count(array_intersect(["seo-by-rank-math/rank-math.php"], get_option("active_plugins"))) > 0){
+			$pluginSEO['rank_math_seo'] = 'Rank Math SEO';
+		}
+		if (count(array_intersect(["wordpress-seo/wp-seo.php"], get_option("active_plugins"))) > 0){
+			$pluginSEO['yoast_seo'] = 'Yoast SEO';
+		}
+		$listNamePluginSEO = implode(", ",$pluginSEO);
+		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
+		$summaryDetailDoNotModify =  esc_html__('Available custom fields','onoffice-for-wp-websites');
+		$descriptionDetailDoNotModify = esc_html__('When this option is active, the plugin makes the following custom fields available in the detail view. These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate. For information on how to use custom fields consult you SEO plugin\'s documentation.
+							These custom fields are only available in the detail view and on no other page.
+								\- Title (onoffice_title)
+								\- Description (onoffice_description)
+								\- Place (onoffice_place)
+								\- Postal code (onoffice_postal_code)
+								\- Property class (onoffice_property_class)
+								\- Marketing method (onoffice_marketing_method)
+								\- Data Record Ref No. (onoffice_id)', 'onoffice-for-wp-websites');
+		$descriptionDetailDoNotModify =  Parsedown::instance()
+			->setBreaksEnabled(true)->text(
+				$descriptionDetailDoNotModify
+			);
+		$descriptionDoNotModify = sprintf('<div class="do-not-modify">
+								<p>%1$s</p>
+								<details>
+									<summary>%2$s</summary>
+									<p>%3$s</p>
+								</details>
+							</div>', $titleDoNotModify, $summaryDetailDoNotModify, $descriptionDetailDoNotModify);
+		$messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.
+								We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
+		$messageNoticeSEO =  Parsedown::instance()
+			->setBreaksEnabled(true)->text(
+				$messageNoticeSEO
+			);
+		$descriptionNoticeSeo = sprintf('<div id="notice-seo">%s</div>', $messageNoticeSEO);
 		$descriptionFillOut = '<p class="description-notice">
 					'.esc_html__("This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.",'onoffice-for-wp-websites').'
 				 </p>';
