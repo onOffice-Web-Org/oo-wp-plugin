@@ -190,27 +190,27 @@ class AdminPageApiSettings
 		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
 		$summaryDetailDoNotModify =  esc_html__('Available custom fields','onoffice-for-wp-websites');
 		$descriptionDetailDoNotModify = esc_html__('When this option is active, the plugin makes the following custom fields available in the detail view. These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate. For information on how to use custom fields consult you SEO plugin\'s documentation.
-													These custom fields are only available in the detail view and on no other page.
-														\- Title (onoffice_title)
-														\- Description (onoffice_description)
-														\- Place (onoffice_place)
-														\- Postal code (onoffice_postal_code)
-														\- Property class (onoffice_property_class)
-														\- Marketing method (onoffice_marketing_method)
-														\- Data Record Ref No. (onoffice_id)', 'onoffice-for-wp-websites');
+							These custom fields are only available in the detail view and on no other page.
+								\- Title (onoffice_title)
+								\- Description (onoffice_description)
+								\- Place (onoffice_place)
+								\- Postal code (onoffice_postal_code)
+								\- Property class (onoffice_property_class)
+								\- Marketing method (onoffice_marketing_method)
+								\- Data Record Ref No. (onoffice_id)', 'onoffice-for-wp-websites');
 		$descriptionDetailDoNotModify =  Parsedown::instance()
 			->setBreaksEnabled(true)->text(
 				$descriptionDetailDoNotModify
 			);
 		$descriptionDoNotModify = sprintf('<div class="do-not-modify">
-														<p>%1$s</p>
-														<details>
-															<summary>%2$s</summary>
-															<p>%3$s</p>
-														</details>
-													</div>', $titleDoNotModify, $summaryDetailDoNotModify, $descriptionDetailDoNotModify);
+								<p>%1$s</p>
+								<details>
+									<summary>%2$s</summary>
+									<p>%3$s</p>
+								</details>
+							</div>', $titleDoNotModify, $summaryDetailDoNotModify, $descriptionDetailDoNotModify);
 		$messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.
-													We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
+								We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
 		$messageNoticeSEO =  Parsedown::instance()
 			->setBreaksEnabled(true)->text(
 				$messageNoticeSEO
