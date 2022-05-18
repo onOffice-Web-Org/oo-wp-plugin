@@ -19,6 +19,7 @@
  *
  */
 
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\EstateDetail;
 
 /**
@@ -147,6 +148,10 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					$street = $contactData['Strasse'];
 					$postCode = $contactData['Plz'];
 					$town = $contactData['Ort'];
+
+					foreach ( DataDetailView::DEFAULT_FIELDS_REPLACE as $defaultField => $newField ) {
+						$contactData[ $defaultField ] = $contactData[ $newField ];
+					}
 
 					if ($imageUrl) {
 						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px"></div>';

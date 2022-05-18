@@ -810,13 +810,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 */
 
 	public function checkContactFieldInDefaultDetail() {
-		$viewOptionKey = DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY;
-		$pDataDetailViewHandler = new DataDetailViewHandler($this->_pWpOption);
-		$dataDetailView = $pDataDetailViewHandler->getDetailView();
-		$defaultFields = ['defaultemail' => 'Email', 'defaultphone' => 'Telefon1', 'defaultfax' => 'Telefax1'];
-		$addressFields = $dataDetailView->getAddressFields();
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$addressFields = $pDetailView->getAddressFields();
 
-		foreach ($defaultFields as $defaultField => $newField) {
+		foreach (DataDetailView::DEFAULT_FIELDS_REPLACE as $defaultField => $newField) {
 			if (in_array($defaultField, $addressFields)) {
 				$key = array_search($defaultField, $addressFields);
 				unset($addressFields[$key]);
@@ -827,12 +825,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			}
 		}
 		ksort($addressFields);
-		$dataDetailView->setAddressFields($addressFields);
-
-		if ($this->_pWpOption->getOption($viewOptionKey) !== false) {
-			$this->_pWpOption->updateOption($viewOptionKey, $dataDetailView);
-		} else {
-			$this->_pWpOption->addOption($viewOptionKey, $dataDetailView);
-		}
+		$pDetailView->setAddressFields($addressFields);
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 }

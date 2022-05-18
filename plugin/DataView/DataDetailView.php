@@ -142,6 +142,8 @@ class DataDetailView
 	/** @var DataViewSimilarEstates */
 	private $_pDataViewSimilarEstates = null;
 
+	const DEFAULT_FIELDS_REPLACE = [ 'defaultemail' => 'Email', 'defaultphone' => 'Telefon1', 'defaultfax' => 'Telefax1' ];
+
 
 	/**
 	 *
