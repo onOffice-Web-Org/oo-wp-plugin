@@ -81,6 +81,9 @@ class InputModelDBFactory
 	/** */
 	const INPUT_SORT_BY_USER_DEFINED_DIRECTION = 'sortByUserDefinedDirection';
 
+    /** */
+    const INPUT_SORTING_DIRECTION = 'sortingTypeDirection';
+
 	/** */
 	const INPUT_FIELD_CONFIG = 'fieldConfig';
 

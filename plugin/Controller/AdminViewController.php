@@ -238,6 +238,8 @@ class AdminViewController
 
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
 
+        wp_register_script('oo-sort-by-user-selection',
+            plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-sorting-selection.js', ['jquery'], '', true);
 		wp_register_script('oo-sort-by-user-selection',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-sort-by-user-selection.js', ['jquery'], '', true);
 
