@@ -24,7 +24,6 @@ namespace onOffice\WPlugin\DataView;
 use onOffice\WPlugin\Types\LinksTypes;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
-use onOffice\WPlugin\Record\RecordManagerPostMeta;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
@@ -54,10 +53,6 @@ class DataDetailViewHandler
 	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
 	{
 		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
-		$pDIContainerBuilder = new ContainerBuilder;
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIContainerBuilder->build();
-		$this->_pRecordPostMeta = $pContainer->get(RecordManagerPostMeta::class);
 		
 	}
 
@@ -79,14 +74,6 @@ class DataDetailViewHandler
 			$pResult = $pAlternate;
 		}
 
-		if  (empty($pResult->getPageId()))
-		{
-			$pageInPostMeta = $this->_pRecordPostMeta->getPageId();
-			if (!empty($pageInPostMeta["post_id"]))
-			{
-				$pResult->setPageId($pageInPostMeta["post_id"]);
-			}
-		}
 		return $pResult;
 	}
 
@@ -133,21 +120,5 @@ class DataDetailViewHandler
 		$pDataDetailView->setLinks($row['links'] ?? LinksTypes::LINKS_DEACTIVATED);
 		$pDataDetailView->setShowStatus($row['show_status'] ?? false);
 		return $pDataDetailView;
-	}
-
-	/**
-	 * @return WPOptionWrapperBase|WPOptionWrapperDefault
-	 */
-	public function getWPOptionWrapper()
-	{
-		return $this->_pWPOptionWrapper;
-	}
-
-	/**
-	 * @return mixed|RecordManagerPostMeta
-	 */
-	public function getRecordPostMeta()
-	{
-		return $this->_pRecordPostMeta;
 	}
 }

@@ -77,14 +77,25 @@ class DetailViewPostSaveController
 			$detailViewName = $pDetailView->getName();
 			$postContent = $pPost->post_content;
 			$postType = $pPost->post_type;
+			$metaKeys = get_post_meta($postId, '', true);
+
+			$viewContainedCustomField = false;
+			foreach ($metaKeys as $metaKey) {
+				$viewContained = $this->postContainsViewName($metaKey[0], $detailViewName);
+				if ($viewContained) {
+					$viewContainedCustomField = $viewContained;
+				}
+			}
+
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
-			if ($viewContained && $postType == 'page') {
-				$pDetailView->setPageId((int)$postId);
-				$pDataDetailViewHandler->saveDetailView($pDetailView);
-				$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
-				flush_rewrite_rules();
-
+			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && empty($postContent && ! $viewContained))) {
+				if ($postType == 'page') {
+					$pDetailView->setPageId((int) $postId);
+					$pDataDetailViewHandler->saveDetailView($pDetailView);
+					$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
+					flush_rewrite_rules();
+				}
 			} elseif ($pDetailView->getPageId() !== 0) {
 				$postRevisions = wp_get_post_revisions($postId);
 				$detailInPreviousRev = array_key_exists($pDetailView->getPageId(), $postRevisions);

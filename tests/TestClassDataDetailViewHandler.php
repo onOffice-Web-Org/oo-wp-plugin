@@ -67,28 +67,6 @@ class TestClassDataDetailViewHandler
 	];
 
 	/**
-	 * @before
-	 */
-	public function prepare()
-	{
-		$this->_recordPostMeta = $this->getMockBuilder(RecordManagerPostMeta::class)
-			->disableOriginalConstructor()
-			->setMethods(['getPageId'])
-			->getMock();
-		$this->_recordPostMeta->method('getPageId')
-			->will($this->returnValue(['post_id' => 1]));
-	}
-	
-	public function testConstruct()
-	{
-		$pDIContainerBuilder = new ContainerBuilder;
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pDIContainerBuilder->build();
-		$pDetailViewHandler = $pContainer->get(DataDetailViewHandler::class);
-		$this->assertInstanceOf(RecordManagerPostMeta::class, $pDetailViewHandler->getRecordPostMeta());
-		$this->assertInstanceOf(WPOptionWrapperDefault::class, $pDetailViewHandler->getWPOptionWrapper());
-	}
-	/**
 	 *
 	 */
 
