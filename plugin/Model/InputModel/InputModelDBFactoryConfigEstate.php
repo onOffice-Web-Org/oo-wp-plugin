@@ -118,11 +118,6 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortByUserDefinedDirection',
 		],
-
-        InputModelDBFactory::INPUT_SORTING_DIRECTION => [
-            self::KEY_TABLE => 'oo_plugin_listviews',
-            self::KEY_FIELD => 'sorting_type_direction',
-        ],
 	];
 
 

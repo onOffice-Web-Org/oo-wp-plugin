@@ -1,84 +1,94 @@
 var onOffice = onOffice || {};
-jQuery(document).ready(function($) {
-	var sortByUserCheckbox = $("#viewrecordsfilter").find("[name=oopluginlistviews-sortBySetting]");
-	var sortByUserValue = $("#viewrecordsfilter").find("[name=oopluginsortbyuservalues-sortbyuservalue]");
-	var sortRandom = $("#viewrecordsfilter").find("[name=oopluginlistviews-random]");
-	var sortbynames = [
-		'oopluginlistviews-sortByUserDefinedDefault',
-		'oopluginsortbyuservalues-sortbyuservalue',
-		'oopluginlistviews-sortby',
-		'oopluginlistviews-sortByUserDefinedDirection',
-	];
-	var defaultsorts = [
-		'oopluginlistviews-sortby',
-		'oopluginlistviews-sortorder'
-	];
+jQuery(document).ready(function ($) {
+    var sortByUserValue = $("#viewrecordssorting").find("[name=oopluginsortbyuservalues-sortbyuservalue]");
+    var sortRamdom = $("#viewrecordssorting").find("[name=oopluginlistviews-random]");
+    var sortingSelection = $("#viewrecordssorting").find("[name=oopluginlistviews-sortBySetting]");
+    sortRamdom.attr('type', 'hidden');
+    var displayFieldsDefaultSortValue = [
+        'oopluginlistviews-sortBySetting',
+        'oopluginlistviews-sortby',
+        'oopluginlistviews-sortorder',
+    ];
 
-	onOffice.sortInputChecker = function () {
-		if (sortByUserCheckbox.prop('checked') == true) {
-			sortbynames.forEach(function (item) {
-				$("#viewrecordsfilter").find("[name=" + item + "]").parent().show();
-			});
-			defaultsorts.forEach(function (item) {
-				$("#viewrecordsfilter").find("[name=" + item + "]").parent().hide();
-			});
-		} else {
-			sortbynames.forEach(function (item) {
-				$("#viewrecordsfilter").find("[name=" + item + "]").parent().hide();
-			});
-			defaultsorts.forEach(function (item) {
-				$("#viewrecordsfilter").find("[name=" + item + "]").parent().show();
-			});
-		}
-	};
+    var displayFieldsRandomSortValue = [
+        'oopluginlistviews-sortBySetting',
+    ];
 
-	onOffice.generateSortByUserDefinedDefault = function () {
-		if (sortByUserCheckbox.prop('checked') == true) {
-			var oldSelected = $("#viewrecordsfilter")
-				.find("[name=oopluginlistviews-sortByUserDefinedDefault] :selected").val();
-			var selectedDirection = $("#viewrecordsfilter")
-				.find("[name=oopluginlistviews-sortByUserDefinedDirection] :selected").val();
-			var standardSortInput = $("#viewrecordsfilter")
-				.find("[name=oopluginlistviews-sortByUserDefinedDefault]");
-			var sortByInput = $("#viewrecordsfilter")
-				.find("[name=oopluginsortbyuservalues-sortbyuservalue] optgroup option:selected");
-			var directions = ['ASC', 'DESC'];
-			var translationsMapping = onoffice_mapping_translations[selectedDirection];
+    var displayFieldsUserSelectionValue = [
+        'oopluginlistviews-sortBySetting',
+        'oopluginsortbyuservalues-sortbyuservalue',
+        'oopluginlistviews-sortByUserDefinedDefault',
+        'oopluginlistviews-sortByUserDefinedDirection',
+    ];
 
-            standardSortInput.find("option").remove();
-            if (sortByInput.length > 0) {
-				sortByInput.each(function (i, option) {
-                    for (var i = 0; i < directions.length; i++) {
-                        if (option.value + '#' + directions[i] == oldSelected) {
-                            standardSortInput.append("<option value='" + option.value + '#' + directions[i] + "' selected>"
-								+ option.text + " (" + translationsMapping[directions[i]] + ")" + "</option>");
-                        } else {
-                            standardSortInput.append("<option value='" + option.value + '#' + directions[i] + "'>"
-								+ option.text + " (" + translationsMapping[directions[i]] + ")" + "</option>");
-                        }
+    onOffice.generateSortByUserDefinedDefault = function () {
+        var oldSelected = $("#viewrecordssorting")
+            .find("[name=oopluginlistviews-sortByUserDefinedDefault] :selected").val();
+        var selectedDirection = $("#viewrecordssorting")
+            .find("[name=oopluginlistviews-sortByUserDefinedDirection] :selected").val();
+        var standardSortInput = $("#viewrecordssorting")
+            .find("[name=oopluginlistviews-sortByUserDefinedDefault]");
+        var sortByInput = $("#viewrecordssorting")
+            .find("[name=oopluginsortbyuservalues-sortbyuservalue] optgroup option:selected");
+        var directions = ['ASC', 'DESC'];
+        var translationsMapping = onoffice_mapping_translations[selectedDirection];
+
+        standardSortInput.find("option").remove();
+        if (sortByInput.length > 0) {
+            sortByInput.each(function (i, option) {
+                for (var i = 0; i < directions.length; i++) {
+                    if (option.value + '#' + directions[i] == oldSelected) {
+                        standardSortInput.append("<option value='" + option.value + '#' + directions[i] + "' selected>"
+                            + option.text + " (" + translationsMapping[directions[i]] + ")" + "</option>");
+                    } else {
+                        standardSortInput.append("<option value='" + option.value + '#' + directions[i] + "'>"
+                            + option.text + " (" + translationsMapping[directions[i]] + ")" + "</option>");
                     }
-                });
-            }
-            standardSortInput.trigger("chosen:updated");
-		}
-	};
-	onOffice.sortRandomChecker = function () {
-		if (sortRandom.prop('checked') == true) {
-			sortByUserCheckbox.prop('disabled', true);
-		} else {
-			sortByUserCheckbox.removeAttr('disabled');
-		}
-	}
+                }
+            });
+        }
+        standardSortInput.trigger("chosen:updated");
+    };
 
-	onOffice.sortInputChecker();
-	onOffice.sortRandomChecker();
-	sortByUserCheckbox.change(function () {
-		onOffice.sortInputChecker();
-	});
-	sortByUserValue.change(function () {
-		onOffice.generateSortByUserDefinedDefault();
-	});
-	sortRandom.change(function () {
-		onOffice.sortRandomChecker();
-	});
+    sortByUserValue.change(function () {
+        onOffice.generateSortByUserDefinedDefault();
+    });
+
+    onOffice.sortingSelection = function (sortingSelectionVal) {
+        $("#viewrecordssorting").find('p.wp-clearfix').hide();
+        sortRamdom.val(0);
+
+        if (sortingSelectionVal === '0') {
+            $("#viewrecordssorting").find("input, select").each(function (key, item) {
+                if (displayFieldsDefaultSortValue.includes($(item).attr('name'))) {
+                    $(item).closest('p.wp-clearfix').show();
+                }
+            });
+        } else if (sortingSelectionVal === '1') {
+            $("#viewrecordssorting").find("input, select").each(function (key, item) {
+                if (displayFieldsUserSelectionValue.includes($(item).attr('name'))) {
+                    $(item).closest('p.wp-clearfix').show();
+                }
+            });
+        } else {
+            $("#viewrecordssorting").find("input, select").each(function (key, item) {
+                if (displayFieldsRandomSortValue.includes($(item).attr('name'))) {
+                    $(item).closest('p.wp-clearfix').show();
+                }
+            });
+            sortingSelection.val('')
+            sortRamdom.val(1)
+        }
+
+        onOffice.eventSortingChange();
+    };
+
+    onOffice.eventSortingChange = function () {
+        $("#viewrecordssorting").find("[name=oopluginlistviews-sortBySetting]").on('change', function () {
+            $("#viewrecordssorting").find('p.wp-clearfix').show();
+            let sortingSelection = $("#viewrecordssorting").find("[name=oopluginlistviews-sortBySetting]").val();
+            onOffice.sortingSelection(sortingSelection)
+        })
+    };
+    onOffice.sortingSelection(sortingSelection.val());
 });
