@@ -27,10 +27,7 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
-use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
-use onOffice\WPlugin\Record\RecordManagerPostMeta;
-use DI\ContainerBuilder;
 use WP_UnitTestCase;
 
 /**
@@ -43,11 +40,6 @@ use WP_UnitTestCase;
 class TestClassDataDetailViewHandler
 	extends WP_UnitTestCase
 {
-	/**
-	 *
-	 */
-	private $_recordPostMeta;
-	
 	/** */
 	const VALUES_BY_ROW = [
 		'template' => '/test/template.php',

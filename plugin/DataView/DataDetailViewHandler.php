@@ -22,7 +22,6 @@
 namespace onOffice\WPlugin\DataView;
 
 use onOffice\WPlugin\Types\LinksTypes;
-use DI\ContainerBuilder;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Types\MovieLinkTypes;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
@@ -44,8 +43,6 @@ class DataDetailViewHandler
 	/** @var WPOptionWrapperBase */
 	private $_pWPOptionWrapper;
 
-	/** @var  RecordManagerPostMeta */
-	private $_pRecordPostMeta;
 
 	/**
 	 * @param WPOptionWrapperBase $pWPOptionWrapper
@@ -53,7 +50,6 @@ class DataDetailViewHandler
 	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
 	{
 		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
-		
 	}
 
 
