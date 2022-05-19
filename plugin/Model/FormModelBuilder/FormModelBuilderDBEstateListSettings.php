@@ -573,10 +573,11 @@ class FormModelBuilderDBEstateListSettings
             '' => __('Random order', 'onoffice-for-wp-websites'),
         ];
 
-        $pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_SETTING, $label);
-        $pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-        $pInputModel->setValue($this->getValue($pInputModel->getField()));
-        $pInputModel->setValuesAvailable($userSortingDirectionValues);
-        return $pInputModel;
+	    $pInputModel = $this->getInputModelDBFactory()->create( InputModelDBFactory::INPUT_SORT_BY_SETTING, $label );
+	    $pInputModel->setHtmlType( InputModelOption::HTML_TYPE_SELECT );
+	    $pInputModel->setValue( $this->getValue( $pInputModel->getField() ) ?? '0' );
+	    $pInputModel->setValuesAvailable( $userSortingDirectionValues );
+
+	    return $pInputModel;
     }
 }

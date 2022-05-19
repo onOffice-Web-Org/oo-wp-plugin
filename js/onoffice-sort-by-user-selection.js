@@ -54,7 +54,7 @@ jQuery(document).ready(function ($) {
     onOffice.sortingSelection = function (sortingSelectionVal) {
         if (sortingSelection.length) {
             $("#viewrecordssorting").find('p.wp-clearfix').hide();
-            sortRamdom.val(0);
+            sortRamdom.prop('checked', false);
         }
 
         if (sortingSelectionVal === '0') {
@@ -76,7 +76,7 @@ jQuery(document).ready(function ($) {
                 }
             });
             sortingSelection.val('')
-            sortRamdom.val(1)
+            sortRamdom.prop('checked', true);
         }
 
         onOffice.eventSortingChange();
