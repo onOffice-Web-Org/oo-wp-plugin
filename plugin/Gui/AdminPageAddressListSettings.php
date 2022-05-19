@@ -144,18 +144,23 @@ class AdminPageAddressListSettings
 
 	}
 
-	private function addFormModelRecordsSorting(){
-        $pInputModelSortBy = $this->_pFormModelBuilderAddress->createInputModelSortBy
-        (onOfficeSDK::MODULE_ADDRESS);
-        $pInputModelSortOrder = $this->_pFormModelBuilderAddress->createInputModelSortOrder();
-        $pFormModelFilterRecords = new FormModel();
-        $pFormModelFilterRecords->setPageSlug($this->getPageSlug());
-        $pFormModelFilterRecords->setGroupSlug(self::FORM_VIEW_RECORDS_SORTING);
-        $pFormModelFilterRecords->setLabel(__('Sorting', 'onoffice-for-wp-websites'));
-        $pFormModelFilterRecords->addInputModel($pInputModelSortBy);
-        $pFormModelFilterRecords->addInputModel($pInputModelSortOrder);
-        $this->addFormModel($pFormModelFilterRecords);
-    }
+
+	/**
+	 * @return void
+	 */
+
+	private function addFormModelRecordsSorting() {
+		$pInputModelSortBy       = $this->_pFormModelBuilderAddress->createInputModelSortBy
+		( onOfficeSDK::MODULE_ADDRESS );
+		$pInputModelSortOrder    = $this->_pFormModelBuilderAddress->createInputModelSortOrder();
+		$pFormModelFilterRecords = new FormModel();
+		$pFormModelFilterRecords->setPageSlug( $this->getPageSlug() );
+		$pFormModelFilterRecords->setGroupSlug( self::FORM_VIEW_RECORDS_SORTING );
+		$pFormModelFilterRecords->setLabel( __( 'Sorting', 'onoffice-for-wp-websites' ) );
+		$pFormModelFilterRecords->addInputModel( $pInputModelSortBy );
+		$pFormModelFilterRecords->addInputModel( $pInputModelSortOrder );
+		$this->addFormModel( $pFormModelFilterRecords );
+	}
 
 
 	/**
