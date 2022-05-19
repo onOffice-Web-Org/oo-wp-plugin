@@ -550,7 +550,7 @@ class FormModelBuilderDBForm
 			throw new Exception('Unknown input model type');
 		}
 
-		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_ITALIC_LABEL_CHECKBOX);
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModel->setItalicLabel($italicLabel);
 		$pInputModel->setValue((int)$checked);
 		$pInputModel->setValuesAvailable(1);
