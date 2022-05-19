@@ -422,11 +422,10 @@ class AdminViewController
 
 	public function displayUsingEmptyDefaultEmailError()
 	{
-		if (!get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites') && $this->getRecordManagerReadForm()->getCountDefaultRecipientRecord() != 0)
-		{
-			$class = 'notice notice-error';
-			$label = __('plugin settings', 'onoffice-for-wp-websites');
-			$defaultEmailAddressLink = sprintf('<a href="admin.php?page=onoffice-settings">%s</a>', $label);
+		if ( ! get_option( 'onoffice-settings-default-email', '' ) && $this->getRecordManagerReadForm()->getCountDefaultRecipientRecord() != 0 ) {
+			$class                   = 'notice notice-error';
+			$label                   = __( 'plugin settings', 'onoffice-for-wp-websites' );
+			$defaultEmailAddressLink = sprintf( '<a href="admin.php?page=onoffice-settings">%s</a>', $label );
 			/* translators: %s will be replaced with the translation of 'plugin settings'. */
 			$message = sprintf(esc_html(__('The onOffice plugin is missing a default email address. Forms that use it '
 				.'will not send emails. Please add a default email address in the %s.', 'onoffice-for-wp-websites')),

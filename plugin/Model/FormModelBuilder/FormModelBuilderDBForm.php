@@ -274,7 +274,7 @@ class FormModelBuilderDBForm
 		$isDefaultEmailMissing = false;
 		$italicLabel = '';
 		if (get_option('onoffice-settings-default-email', '') !== '') {
-			$addition = '('.get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites').')';
+			$addition = '('.get_option('onoffice-settings-default-email', '').')';
 		} else {
 			$italicLabel = __('missing', 'onoffice-for-wp-websites');
 			$isDefaultEmailMissing = true;

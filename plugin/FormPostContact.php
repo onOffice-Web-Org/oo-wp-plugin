@@ -85,7 +85,7 @@ class FormPostContact
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		if ($pFormConfig->getDefaultRecipient()) {
-			$recipient = get_option('onoffice-settings-default-email', 'onoffice-for-wp-websites');
+			$recipient = get_option('onoffice-settings-default-email', '');
 		} else {
 			$recipient = $pFormConfig->getRecipient();
 		}
