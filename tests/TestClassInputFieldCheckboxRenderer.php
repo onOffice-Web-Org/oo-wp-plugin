@@ -86,11 +86,11 @@ class TestClassInputFieldCheckboxRenderer
 	/**
 	 *
 	 */
-	public function testGetHintHTML()
+	public function testGetHint()
 	{
 		$pSubject = new InputFieldCheckboxRenderer('testRenderer', true);
-		$pSubject->setHintHtml('testRenderer');
-		$this->assertEquals('testRenderer',$pSubject->getHintHtml());
+		$pSubject->setHint('testRenderer');
+		$this->assertEquals('testRenderer',$pSubject->getHint());
 	}
 	
 	public function testRenderWithArrayValue()
