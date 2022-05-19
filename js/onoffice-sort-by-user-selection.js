@@ -1,6 +1,7 @@
 var onOffice = onOffice || {};
 jQuery(document).ready(function ($) {
     var sortByUserValue = $("#viewrecordssorting").find("[name=oopluginsortbyuservalues-sortbyuservalue]");
+    var sortByUserDefinedDirection = $("#viewrecordssorting").find("[name=oopluginlistviews-sortByUserDefinedDirection]");
     var sortRamdom = $("#viewrecordssorting").find("[name=oopluginlistviews-random]");
     var sortingSelection = $("#viewrecordssorting").find("[name=oopluginlistviews-sortBySetting]");
 
@@ -92,6 +93,10 @@ jQuery(document).ready(function ($) {
     onOffice.sortingSelection(sortingSelection.val());
 
     sortByUserValue.change(function () {
+        onOffice.generateSortByUserDefinedDefault();
+    });
+
+    sortByUserDefinedDirection.change(function () {
         onOffice.generateSortByUserDefinedDefault();
     });
 });
