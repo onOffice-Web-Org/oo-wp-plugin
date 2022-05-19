@@ -89,7 +89,10 @@ class DetailViewPostSaveController
 
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
-			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && empty($postContent && ! $viewContained))) {
+			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField)) {
+				if ($viewContainedCustomField && ! $viewContained) {
+					return;
+				}
 				if ($postType == 'page') {
 					$pDetailView->setPageId((int) $postId);
 					$pDataDetailViewHandler->saveDetailView($pDetailView);
