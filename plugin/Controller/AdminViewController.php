@@ -427,8 +427,7 @@ class AdminViewController
 			$label                   = __( 'plugin settings', 'onoffice-for-wp-websites' );
 			$defaultEmailAddressLink = sprintf( '<a href="admin.php?page=onoffice-settings">%s</a>', $label );
 			/* translators: %s will be replaced with the translation of 'plugin settings'. */
-			$message = sprintf(esc_html(__('The onOffice plugin is missing a default email address. Forms that use it '
-				.'will not send emails. Please add a default email address in the %s.', 'onoffice-for-wp-websites')),
+			$message = sprintf(esc_html(__('The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the %s to dismiss this warning.', 'onoffice-for-wp-websites')),
 				$defaultEmailAddressLink);
 
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);

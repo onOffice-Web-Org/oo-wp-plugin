@@ -277,7 +277,7 @@ class TestClassAdminViewController
 		$pAdminViewController->method('getRecordManagerReadForm')
 			->willReturn($recordManagerReadForm);
 		$pAdminViewController->displayUsingEmptyDefaultEmailError();
-		$this->expectOutputString('<div class="notice notice-error"><p>The onOffice plugin is missing a default email address. Forms that use it will not send emails. Please add a default email address in the <a href="admin.php?page=onoffice-settings">plugin settings</a>.</p></div>');
+		$this->expectOutputString('<div class="notice notice-error"><p>The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the <a href="admin.php?page=onoffice-settings">plugin settings</a> to dismiss this warning.</p></div>');
 	}
 
 	public function testGetField()
