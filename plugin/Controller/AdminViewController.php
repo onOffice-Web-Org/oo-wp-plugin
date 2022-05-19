@@ -404,7 +404,7 @@ class AdminViewController
 
 	public function displayDeactivateDuplicateCheckWarning()
 	{
-		if (get_option('onoffice-duplicate-check-warning', 'onoffice-for-wp-websites') === "1") {
+		if ( get_option( 'onoffice-duplicate-check-warning', '' ) === "1" ) {
 			$class = 'notice notice-error duplicate-check-notify is-dismissible';
 			$message = esc_html(__("We have deactivated the plugin's duplicate check for all of your forms, "
 				. "because the duplicate check can unintentionally overwrite address records. This function will be removed "
