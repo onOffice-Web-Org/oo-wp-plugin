@@ -23,7 +23,12 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\ContainerBuilder;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Region\RegionController;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
@@ -71,6 +76,35 @@ class TestClassDatabaseChanges
 		'Field 2',
 		'Field 3'
 	];
+	
+	private $response = [
+			"actionid"=> "urn:onoffice-de-ns:smart:2.5:smartml:action:read",
+			"resourceid"=> "",
+			"resourcetype"=> "address",
+			"cacheable"=> true,
+			"identifier"=> "",
+			"data"=> [
+				"meta"=> [
+					"cntabsolute" => null
+				],
+				"records" => [
+					[
+						"id"=> 13,
+						"type"=> "address",
+						"elements"=> [
+							"id"=> 13,
+							"Name"=> "ind_1996_Feld_adressen19",
+							"KdNr"=> 9,
+							"Vorname"=> "Fred"
+						]
+					]
+				]
+			],
+			"status" => [
+				"errorcode" => 0,
+				"message" => "OK"
+			]
+		];
 
 	/**
 	 * @before
@@ -96,6 +130,29 @@ class TestClassDatabaseChanges
 		$dataViewSimilarEstates->setTemplate('/test/similar/template.php');
 		$dataSimilarViewOptions->setDataViewSimilarEstates($dataViewSimilarEstates);
 		add_option('onoffice-default-view', $dataSimilarViewOptions);
+
+		$fieldParameters = [
+			'labels' => true,
+			'showContent' => true,
+			'showTable' => true,
+			'language' => Language::getDefault(),
+			'modules' => [onOfficeSDK::MODULE_ADDRESS],
+			'realDataTypes' => true
+		];
+		$pSDKWrapper = new SDKWrapperMocker();
+
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+			$fieldParameters, null, $this->response);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pRegionController = $this->getMockBuilder(RegionController::class)
+			->disableOriginalConstructor()
+			->getMock();
+
+		$pContainer->set(RegionController::class, $pRegionController);
+		$pContainer->set(SDKWrapper::class, $pSDKWrapper);
+		
 	}
 
 	/**
@@ -111,7 +168,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(27, $dbversion);
+		$this->assertEquals(28, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -180,7 +237,7 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(4))
+		$this->_pWPDBMock->expects($this->exactly(5))
 			->method('get_results')
 			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput);
 
@@ -217,7 +274,7 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(2))
+		$this->_pWPDBMock->expects($this->exactly(3))
 			->method('get_results')
 			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput);
 
@@ -234,7 +291,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(27, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(28, DatabaseChanges::MAX_VERSION);
 	}
 
 
@@ -294,5 +351,32 @@ class TestClassDatabaseChanges
 		}
 
 		return $query;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::deleteUnSupportDataTypeField
+	 */
+	public function testDeleteFieldUnSupport()
+	{
+		$this->_pWpOption->addOption('oo_plugin_db_version', '27');
+		$fieldConfigOutput = [
+			(object)[
+				'address_fieldconfig_id' => '2',
+				'listview_address_id' => '3',
+				'fieldname' => 'ind_1996_Feld_adressen19'
+			]
+		];
+		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
+			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
+			->getMock();
+
+		$this->_pWPDBMock->expects($this->exactly(1))
+			->method('get_results')
+			->willReturn($fieldConfigOutput);
+		$this->_pWPDBMock->expects($this->once())->method('delete')
+			->will($this->returnValue(true));
+
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock);
+		$this->_pDbChanges->install();
 	}
 }
