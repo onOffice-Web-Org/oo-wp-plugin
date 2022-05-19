@@ -3,7 +3,7 @@ jQuery(document).ready(function ($) {
     var sortByUserValue = $("#viewrecordssorting").find("[name=oopluginsortbyuservalues-sortbyuservalue]");
     var sortRamdom = $("#viewrecordssorting").find("[name=oopluginlistviews-random]");
     var sortingSelection = $("#viewrecordssorting").find("[name=oopluginlistviews-sortBySetting]");
-    sortRamdom.attr('type', 'hidden');
+
     var displayFieldsDefaultSortValue = [
         'oopluginlistviews-sortBySetting',
         'oopluginlistviews-sortby',
@@ -50,13 +50,11 @@ jQuery(document).ready(function ($) {
         standardSortInput.trigger("chosen:updated");
     };
 
-    sortByUserValue.change(function () {
-        onOffice.generateSortByUserDefinedDefault();
-    });
-
     onOffice.sortingSelection = function (sortingSelectionVal) {
-        $("#viewrecordssorting").find('p.wp-clearfix').hide();
-        sortRamdom.val(0);
+        if (sortingSelection.length) {
+            $("#viewrecordssorting").find('p.wp-clearfix').hide();
+            sortRamdom.val(0);
+        }
 
         if (sortingSelectionVal === '0') {
             $("#viewrecordssorting").find("input, select").each(function (key, item) {
@@ -90,5 +88,10 @@ jQuery(document).ready(function ($) {
             onOffice.sortingSelection(sortingSelection)
         })
     };
+
     onOffice.sortingSelection(sortingSelection.val());
+
+    sortByUserValue.change(function () {
+        onOffice.generateSortByUserDefinedDefault();
+    });
 });
