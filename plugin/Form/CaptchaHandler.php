@@ -30,11 +30,11 @@ namespace onOffice\WPlugin\Form;
 
 class CaptchaHandler
 {
-	/** */
 	const SITE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify';
 
-	/** */
 	const RECAPTCHA_RESPONSE_PARAM = 'g-recaptcha-response';
+
+	const RECAPTCHA_V3_THRESHOLD = 0.5;
 
 
 	/** @var string */
@@ -109,8 +109,14 @@ class CaptchaHandler
 	public function getResult(string $response): bool
 	{
 		$result = json_decode($response, true);
+
 		$this->_errorCodes = $result['error-codes'] ?? [];
-		return $result['success'] ?? false;
+
+		if (isset($result['score'])) {
+			return $result['score'] > self::RECAPTCHA_V3_THRESHOLD;
+		} else {
+			return $result['success'] ?? false;
+		}
 	}
 
 
