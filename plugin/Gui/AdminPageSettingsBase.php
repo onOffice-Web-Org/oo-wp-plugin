@@ -75,6 +75,9 @@ abstract class AdminPageSettingsBase
 	/** */
 	const FORM_VIEW_RECORDS_FILTER = 'viewrecordsfilter';
 
+	const FORM_VIEW_RECORDS_SORTING = 'viewrecordssorting';
+
+
 	/** */
 	const VIEW_SAVE_SUCCESSFUL_MESSAGE = 'view_save_success_message';
 
@@ -384,6 +387,21 @@ abstract class AdminPageSettingsBase
 			$pFormModelFieldsConfig->setLabel($category);
 			$pFormModelFieldsConfig->addInputModel($pInputModelFieldsConfig);
 			$this->addFormModel($pFormModelFieldsConfig);
+		}
+	}
+
+
+	/**
+	 *
+	 * @param string|null $module
+	 * @param array $fieldNames
+	 */
+
+	protected function removeFieldsConfiguration($module, array $fieldNames)
+	{
+		foreach ($fieldNames as $fieldsData) {
+			$slug = $this->generateGroupSlugByModuleCategory($module, $fieldsData['category']);
+			$this->removeFieldsInFormModel($slug, $fieldsData['fieldName']);
 		}
 	}
 

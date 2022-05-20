@@ -91,26 +91,6 @@ class FormModelBuilderDBEstateUnitListSettings
 		return $pFormModel;
 	}
 
-
-	/**
-	 *
-	 * @return InputModelDB
-	 *
-	 */
-
-	public function createInputModelRandomOrder()
-	{
-		$labelShowStatus = __('Random Order', 'onoffice-for-wp-websites');
-
-		$pInputModelShowStatus = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_RANDOM_ORDER, $labelShowStatus);
-		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModelShowStatus->setValue($this->getValue('random'));
-		$pInputModelShowStatus->setValuesAvailable(1);
-
-		return $pInputModelShowStatus;
-	}
-
 	/**
 	 * In unit list settings, the field options "Filterable", "Hidden"
 	 * and "Reduce values according to selected filter" has been removed.

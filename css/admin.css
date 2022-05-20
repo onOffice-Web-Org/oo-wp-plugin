@@ -13,6 +13,10 @@
 	max-width: 230px;
 }
 
+#onoffice-ajax .metabox-holder .postbox-container .postbox .chosen-container .chosen-drop {
+	display: grid;
+}
+
 #onoffice-ajax .metabox-holder .postbox-container .postbox .template-list input,
 #onoffice-ajax .metabox-holder .postbox-container .postbox .template-list label,
 #onoffice-ajax .metabox-holder .postbox-container .postbox .template-list select {
@@ -318,7 +322,7 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	margin-top: 20px;
 }
 
-#viewformspecific .hint-text, #viewformspecific .hint-text a{
+#viewformspecific .hint-text {
 	color: #646970;
 	font-style: italic;
 	text-decoration: none;
