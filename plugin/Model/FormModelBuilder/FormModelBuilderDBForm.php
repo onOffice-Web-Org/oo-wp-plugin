@@ -280,7 +280,7 @@ class FormModelBuilderDBForm
 			$isDefaultEmailMissing = true;
 		}
 
-		$selectedValue = $this->getValue('default_recipient', false);
+		$selectedValue = $this->getValue('default_recipient', true);
 		if (!$isDefaultEmailMissing) {
 			$labelDefaultData = sprintf(__('Use default email address %s', 'onoffice-for-wp-websites'), $addition);
 			$pInputModelFormDefaultData = $this->generateGenericCheckbox($labelDefaultData,
