@@ -440,11 +440,11 @@ class AdminViewController
 				$message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.
 								We recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
 				$message = Parsedown::instance()
-					->setSafeMode(true)
+					->setSafeMode(false)
 					->setBreaksEnabled(true)->text(
 						$message
 					);
-				printf('<div class="%1$s">%2$s</div>', esc_attr($class), $message);
+				echo sprintf('<div class="%1$s">%2$s</div>', esc_attr($class), $message);
 			}
 		} else {
 			update_option('onoffice-click-button-close-action', 0);
