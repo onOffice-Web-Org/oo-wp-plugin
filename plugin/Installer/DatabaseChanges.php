@@ -41,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 28;
+	const MAX_VERSION = 29;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -215,8 +215,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 27) {
-			$this->checkContactFieldInDefaultDetail();
+			$this->updateEstateListSortBySetting();
 			$dbversion = 28;
+		}
+
+		if ($dbversion == 28) {
+			$this->checkContactFieldInDefaultDetail();
+			$dbversion = 29;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -796,6 +801,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 
+
+	/**
+	 * @return void
+	 */
+
 	public function updateShowReferenceEstateOfList()
 	{
 		$prefix = $this->getPrefix();
@@ -803,6 +813,22 @@ class DatabaseChanges implements DatabaseChangesInterface
 				SET `show_reference_estate` = 1";
 
 		$this->_pWPDB->query($sql);
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateEstateListSortBySetting()
+	{
+		$prefix = $this->getPrefix();
+		$sql    = "UPDATE {$prefix}oo_plugin_listviews
+				SET `sortBySetting` = '0' 
+				WHERE (`sortBySetting` IS NULL OR `sortBySetting` = '') 
+				AND `random` = 0";
+
+		$this->_pWPDB->query( $sql );
 	}
 
 

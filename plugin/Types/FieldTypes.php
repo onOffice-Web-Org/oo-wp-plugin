@@ -116,6 +116,16 @@ abstract class FieldTypes
 		'limitExceeded',
 	];
 
+	const TYPES_SUPPORT = [
+		'integer',
+		'float',
+		'varchar',
+		'text',
+		'date',
+		'datetime',
+		'boolean'
+	];
+
 	/**
 	 * @param string $type
 	 * @return bool
@@ -131,6 +141,15 @@ abstract class FieldTypes
 	static public function getInputVarSanitizers(): array
 	{
 		return self::INPUT_VAR_SANITIZERS;
+	}
+
+	/**
+	 * @param string $type
+	 * @return bool
+	 */
+	static public function isSupportType(string $type): bool
+	{
+		return in_array($type, self::TYPES_SUPPORT, true);
 	}
 
 	/**
