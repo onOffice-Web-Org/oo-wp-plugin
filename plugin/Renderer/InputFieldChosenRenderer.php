@@ -25,6 +25,9 @@ namespace onOffice\WPlugin\Renderer;
 class InputFieldChosenRenderer
 	extends InputFieldSelectRenderer
 {
+	/** @var boolean */
+	private $_multiple = true;
+
 	/**
 	 * @return void
 	 */
@@ -33,18 +36,54 @@ class InputFieldChosenRenderer
 		$output = '<select name="'.esc_html($this->getName()).'"'
 					.$this->renderAdditionalAttributes()
 					.' id="'.esc_html($this->getGuiId()).'"'
-					.' multiple >';
-
-		foreach ($this->getValue() as $key => $label) {
-			$selected = null;
-			if (in_array($key, $this->getSelectedValue())) {
-				$selected = 'selected="selected"';
+					. ($this->getMultiple() ? ' multiple' : '')
+					. ' style="width: 230px;">';
+		$values = $this->getValue();
+		if (array_key_exists('group', $values)) {
+			foreach ($values['group'] as $k => $group) {
+				$output .= '<optgroup label="' . esc_html($k) . '">';
+				foreach ($group as $key => $label) {
+					$selected = null;
+					if ( is_array( $this->getSelectedValue() ) ) {
+						if ( in_array( $key, $this->getSelectedValue(), true ) ) {
+							$selected = 'selected="selected"';
+						}
+					} elseif ( $key == $this->getSelectedValue() ) {
+						$selected = 'selected="selected"';
+					}
+					$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
+				}
+				$output .= '</optgroup>';
 			}
-			$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
+		} else {
+			$selectedValue = $this->getSelectedValue();
+			foreach ($values as $key => $label) {
+				$selected = null;
+				if (
+					(is_array($selectedValue) && in_array($key, $this->getSelectedValue()))
+					|| $key === $selectedValue
+				) {
+					$selected = 'selected="selected"';
+				}
+				$output .= '<option value="'.esc_html($key).'" '.$selected.'>'.esc_html($label).'</option>';
+			}
 		}
 
 		$output .= '</select>';
 
 		echo $output;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function getMultiple()
+	{ return $this->_multiple; }
+
+	/**
+	 * @param bool $multiple
+	 */
+	public function setMultiple($multiple)
+	{ $this->_multiple = $multiple; }
+
 }
