@@ -335,3 +335,12 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	font-style: italic;
 	text-decoration: none;
 }
+
+.do-not-modify ul {
+	padding-left: 10px;
+}
+
+.do-not-modify li {
+	list-style: disc;
+	margin-left: 25px;
+}

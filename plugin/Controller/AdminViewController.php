@@ -428,18 +428,11 @@ class AdminViewController
 		$urlOnofficeSetting = admin_url().'admin.php?page=onoffice-settings';
 		$nameOnofficeSetting = esc_html__('onOffice plugin settings','onoffice-for-wp-websites');
 		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
-		$pluginSEO = [];
-		if (count(array_intersect(["wpseo/wp-seo.php"], get_option("active_plugins"))) > 0) {
-			$pluginSEO['wp_seo'] = 'wpSEO';
-		}
-		if (count(array_intersect(["seo-by-rank-math/rank-math.php"], get_option("active_plugins"))) > 0) {
-			$pluginSEO['rank_math_seo'] = 'Rank Math SEO';
-		}
-		if (count(array_intersect(["wordpress-seo/wp-seo.php"], get_option("active_plugins"))) > 0) {
-			$pluginSEO['yoast_seo'] = 'Yoast SEO';
-		}
-		$listNamePluginSEO = implode(", ", $pluginSEO);
-		if (count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0) {
+		
+		$listPluginSEOActive = [];
+		$listPluginSEOActive = $this->getPluginSEOActive();
+		$listNamePluginSEO = implode(", ", $listPluginSEOActive);
+		if (count($listPluginSEOActive) > 0) {
 			if (get_option('onoffice-click-button-close-action') == 0
 				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings'
 				&& get_option('onoffice-settings-title-and-description') == 0) {
@@ -447,6 +440,7 @@ class AdminViewController
 				$message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.
 								We recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
 				$message = Parsedown::instance()
+					->setSafeMode(true)
 					->setBreaksEnabled(true)->text(
 						$message
 					);
@@ -455,5 +449,31 @@ class AdminViewController
 		} else {
 			update_option('onoffice-click-button-close-action', 0);
 		}
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getPluginSEOActive():array
+	{
+		$listPluginSEOActive = [];
+		
+		$listPluginSEO = [
+			"wpseo/wp-seo.php" => "wpSEO",
+			"seo-by-rank-math/rank-math.php" => "Rank Math SEO",
+			"wordpress-seo/wp-seo.php" => "Yoast SEO",
+			"all-in-one-seo-pack/all_in_one_seo_pack.php" => "All in One SEO",
+			"autodescription/autodescription.php" => "SEO Framework",
+			"wp-seopress/seopress.php" => "SEOPress",
+			"squirrly-seo/squirrly.php" => "Squirrly SEO"
+		];
+		foreach ($listPluginSEO as $keyPluginSeo => $namePluginSEO)
+		{
+			if( in_array( $keyPluginSeo ,get_option("active_plugins") ) )
+			{
+				array_push($listPluginSEOActive,$namePluginSEO);
+			}
+		}
+		return $listPluginSEOActive;
 	}
 }
