@@ -45,25 +45,6 @@ class TestClassFormModelBuilderDBEstateUnitListSettings
 
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings::createInputModelRandomOrder
-	 */
-	public function testCreateInputModelRandomOrder()
-	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateUnitListSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
-			->getMock();
-
-		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
-		$pInstance->method('getValue')->willReturn('1');
-
-		$pInputModelDB = $pInstance->createInputModelRandomOrder();
-		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
-	}
-
-
-	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings::generate
 	 */
 	public function testGenerate()

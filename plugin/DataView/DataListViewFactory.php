@@ -73,7 +73,7 @@ class DataListViewFactory
 		$pListView->setAvailableOptions($row['availableOptions']);
 		$pListView->setSortBySetting((int)$row['sortBySetting']);
 		$pListView->setSortByUserDefinedDefault($row['sortByUserDefinedDefault']);
-		$pListView->setSortByUserDefinedDirection((int) $row['sortByUserDefinedDirection']);
+		$pListView->setSortByUserDefinedDirection((int)$row['sortByUserDefinedDirection']);
 		$pListView->setSortByUserValues($row[DataListView::SORT_BY_USER_VALUES]);
 		$pListView->setShowReferenceStatus($row['show_reference_estate'] ?? 1);
 
