@@ -80,8 +80,13 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Added**
 
+* In estate lists, you can now sort by any field of suitable field types, even custom fields.
 * Besides movie links, other link types from onOffice enterprise can now be configured for the detail view. The included templates support these new link types.
 * You can now use Google reCAPTCHA v3 keys.
+
+**Changed**
+
+* The controls in the estate list settings for sorting were improved.
 
 **Fixed**
 
