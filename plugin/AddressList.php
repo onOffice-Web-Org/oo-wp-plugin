@@ -35,6 +35,7 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\AddressListEnvironment;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandlerEmpty;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -57,6 +58,12 @@ class AddressList
 		'emailprivate',
 		'emailbusiness',
 		'email',
+	];
+
+	const DEFAULT_FIELDS_REPLACE = [
+		'defaultemail' => 'Email',
+		'defaultphone' => 'Telefon1',
+		'defaultfax'   => 'Telefax1'
 	];
 
 
@@ -196,6 +203,9 @@ class AddressList
 					$additionalContactData[$startString] []= $value;
 				}
 			}
+		}
+		foreach ( self::DEFAULT_FIELDS_REPLACE as $defaultField => $replaceField ) {
+			$additionalContactData[ $defaultField ] = $elements[ $replaceField ];
 		}
 
 		return $additionalContactData;
