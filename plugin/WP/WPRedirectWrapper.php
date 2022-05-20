@@ -7,6 +7,7 @@ namespace onOffice\WPlugin\WP;
 class WPRedirectWrapper
 {
 	public function redirect( string $url ) {
-		echo '<script> location.replace("' . $url . '"); </script>';
+		wp_redirect( $url, 301 );
+		exit();
 	}
 }

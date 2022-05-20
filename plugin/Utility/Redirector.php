@@ -33,25 +33,16 @@ class Redirector
 
 
 	/**
-	 * @param $pageId
 	 * @param $estateId
 	 * @param $estateTitle
 	 *
-	 * @return bool|void
+	 * @return void
 	 */
 
-	public function redirectDetailView( $pageId, $estateId, $estateTitle )
+	public function redirectDetailView( $estateId, $estateTitle )
 	{
 		$currentLink = $this->getCurrentLink();
-		$url         = $this->_wpPageWrapper->getPageLinkByPageId( $pageId );
-		$fullLink    = $this->_wpEstateDetailUrl->createEstateDetailLink( $url, $estateId, $estateTitle, $currentLink );
-
-		$uri      = $this->getUri();
-		$pageName = $this->_wpPageWrapper->getPageUriByPageId( $pageId );
-		preg_match( '/^(' . preg_quote( $pageName, '/' ) . ')\/([0-9]+)(-([^$]+)?)?\/?$/', $uri, $matches );
-		if ( empty( $matches[2] ) ) { //Check pass rule and has Unique ID
-			return true;
-		}
+		$fullLink    = $this->_wpEstateDetailUrl->getUrlWithEstateTitle( $estateId, $estateTitle, $currentLink );
 
 		if ( $fullLink !== $currentLink ) {
 			$this->_wpRedirectWrapper->redirect( $fullLink );

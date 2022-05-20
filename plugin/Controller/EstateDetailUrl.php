@@ -107,4 +107,36 @@ class EstateDetailUrl
 
 		return '-' . $sanitizeTitle;
 	}
+
+
+	public function getUrlWithEstateTitle( int $estateId, string $title = null, string $oldUrl = null ): string
+	{
+		$getParameters = [];
+		$urlElements   = parse_url( $oldUrl );
+		$urlTemp       = $estateId;
+		$slashChar     = '';
+
+		if ( ! empty( $title ) && $this->isOptionShowTitleUrl() ) {
+			$urlTemp .= $this->getSanitizeTitle( $title );
+		}
+		if ( ! empty( $urlElements['query'] ) ) {
+			parse_str( $urlElements['query'], $getParameters );
+		}
+
+		$oldUrlPathArr = explode( '/', $urlElements['path'] );
+		if ( empty( end( $oldUrlPathArr ) ) ) {
+			$slashChar = '/';
+			array_pop( $oldUrlPathArr );
+		}
+		array_pop( $oldUrlPathArr );
+		$newPath = implode( '/', $oldUrlPathArr );
+
+		$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $newPath . '/' . $urlTemp . $slashChar;
+
+		if ( ! empty( $getParameters ) ) {
+			$urlLsSwitcher .= '?' . http_build_query( $getParameters );
+		}
+
+		return $urlLsSwitcher;
+	}
 }

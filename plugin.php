@@ -64,6 +64,7 @@ use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
@@ -203,6 +204,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			include(get_query_template('404'));
 			die();
 		}
+		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( Redirector::class ) );
 	}
 });
 
