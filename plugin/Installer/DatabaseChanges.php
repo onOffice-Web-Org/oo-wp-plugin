@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Installer;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
@@ -814,7 +815,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDetailView = $pDataDetailViewHandler->getDetailView();
 		$addressFields = $pDetailView->getAddressFields();
 
-		foreach (DataDetailView::DEFAULT_FIELDS_REPLACE as $defaultField => $newField) {
+		foreach (AddressList::DEFAULT_FIELDS_REPLACE as $defaultField => $newField) {
 			if (in_array($defaultField, $addressFields)) {
 				$key = array_search($defaultField, $addressFields);
 				unset($addressFields[$key]);

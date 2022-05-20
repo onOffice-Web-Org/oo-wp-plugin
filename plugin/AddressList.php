@@ -205,7 +205,9 @@ class AddressList
 			}
 		}
 		foreach ( self::DEFAULT_FIELDS_REPLACE as $defaultField => $replaceField ) {
-			$additionalContactData[ $defaultField ] = $elements[ $replaceField ];
+			if ( isset( $elements[ $replaceField ] ) ) {
+				$additionalContactData[ $defaultField ] = $elements[ $replaceField ];
+			}
 		}
 
 		return $additionalContactData;
