@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-16T10:07:25+07:00\n"
+"POT-Creation-Date: 2022-05-20T09:33:06+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #. Plugin Name of the plugin
 msgid "onOffice for WP-Websites"
@@ -97,19 +97,28 @@ msgid ""
 "This function will be removed in the future. The option has been deactivated "
 "for these forms: Contact, Interest, Owner"
 msgstr ""
+"Wir haben die Dublettenprüfung des Plugins für alle Ihre Formulare "
+"deaktiviert, da die Dublettenprüfung ungewollt Adressdatensätze "
+"überschreiben kann. Diese Funktion wird in Zukunft entfernt. Die Option "
+"wurde für diese Formulare deaktiviert: Kontakt, Interesse, Inhaber"
 
-#: plugin/Controller/AdminViewController.php:428
+#: plugin/Controller/AdminViewController.php:427
 #, fuzzy
 #| msgid "API settings"
 msgid "plugin settings"
 msgstr "API Einstellungen"
 
 #. translators: %s will be replaced with the translation of 'plugin settings'.
-#: plugin/Controller/AdminViewController.php:431
+#: plugin/Controller/AdminViewController.php:430
 msgid ""
-"The onOffice plugin is missing a default email address. Forms that use it "
-"will not send emails. Please add a default email address in the %s."
+"The onOffice plugin is missing a default email address. You have forms that "
+"use the default email and they will currently not send emails. Please add a "
+"default email address in the %s to dismiss this warning."
 msgstr ""
+"Dem onOffice-Plugin fehlt eine Standard-E-Mail-Adresse. Sie haben Formulare, "
+"die die Standard-E-Mail verwenden, und sie senden derzeit keine E-Mails. "
+"Bitte fügen Sie eine Standard-E-Mail-Adresse in die %s ein, um diese Warnung "
+"zu schließen."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
@@ -273,7 +282,7 @@ msgstr "Fallback-Adresse(optiona)"
 
 #: plugin/Gui/AdminPageApiSettings.php:128
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: plugin/Gui/AdminPageApiSettings.php:139
 msgid "Site Key"
@@ -352,7 +361,7 @@ msgstr ""
 
 #: plugin/Gui/AdminPageApiSettings.php:286
 msgid "Save changes and clear API cache"
-msgstr ""
+msgstr "Änderungen speichern und API-Cache leeren"
 
 #: plugin/Gui/AdminPageApiSettings.php:298
 msgid "The cache was cleaned."
@@ -413,11 +422,11 @@ msgstr "Favorisieren"
 
 #: plugin/Gui/AdminPageApiSettings.php:397
 msgid "Pagination"
-msgstr ""
+msgstr "Paginierung"
 
 #: plugin/Gui/AdminPageApiSettings.php:404
 msgid "By WP Theme"
-msgstr ""
+msgstr "Nach WP-Thema"
 
 #: plugin/Gui/AdminPageApiSettings.php:405
 #, fuzzy
@@ -574,7 +583,7 @@ msgstr ""
 
 #. translators: %s is a translated module name
 #: plugin/Gui/AdminPageFormSettingsBase.php:279
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:619
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:620
 msgid "Module: %s"
 msgstr "Modul: %s"
 
@@ -587,8 +596,8 @@ msgid "Add Language"
 msgstr "Sprache hinzufügen"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:284
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:478
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:505
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:479
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:506
 msgid "Choose Language"
 msgstr "Sprache auswählen"
 
@@ -599,7 +608,7 @@ msgstr "Standardwert: %s"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:287
 msgid "Custom Label: %s"
-msgstr ""
+msgstr "Benutzerdefiniertes Etikett: %s"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:288
 msgid "Default Value From:"
@@ -855,7 +864,7 @@ msgid "Hidden"
 msgstr "Unsichtbar"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:181
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:433
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:434
 msgid "Reduce values according to selected filter"
 msgstr "Werte durch gewählten Filter reduzieren"
 
@@ -960,47 +969,47 @@ msgstr "E-Mail-Adresse des Empfängers"
 msgid "Override email address"
 msgstr "Empfänger E-Mail-Adresse"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:326
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:327
 msgid ""
 "Note that if the contact form is on an estate detail page and the estate has "
 "a contact person, the email will be sent to their email address. Otherwise "
 "this email address will receive the email."
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:340
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:341
 msgid "(won't work until set up globally)"
 msgstr "(funktioniert erst nach der Einrichtung)"
 
 #. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:346
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:347
 msgid "Requires Captcha %s"
 msgstr "Benötigt Captcha %s"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:359
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:360
 msgid "Result Limit"
 msgstr "Maximale Ergebnisanzahl"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:375
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:376
 msgid "Contact Type of New Address"
 msgstr "Kontaktart der neuen Adresse"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:416
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:417
 msgid "Required"
 msgstr "Pflichtangabe"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:473
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:487
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:474
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:488
 msgid "Add language"
 msgstr "Sprache hinzufügen"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:500
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:510
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:501
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:511
 #, fuzzy
 #| msgid "Add language"
 msgid "Add custom label language"
 msgstr "Sprache hinzufügen"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:591
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:592
 msgid "Module"
 msgstr "Modul"
 
@@ -1196,7 +1205,7 @@ msgstr "Bearbeiten"
 msgid "(in the folder \"%s\")"
 msgstr ""
 
-#: plugin/Renderer/InputModelRenderer.php:195
+#: plugin/Renderer/InputModelRenderer.php:189
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
