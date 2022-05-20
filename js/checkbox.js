@@ -35,34 +35,6 @@ onOffice.checkboxAdmin = function() {
 			}
 		],
 
-		// view: estate list
-		"input[name=oopluginlistviews-random]": [
-			{
-				element: "select[name=oopluginlistviews-sortby]",
-				invert: true
-			},
-			{
-				element: "select[name=oopluginlistviews-sortorder]",
-				invert: true
-			},
-			{
-				element: "select[name=oopluginsortbyuservalues-sortbyuservalue]",
-				invert: true
-			},
-			{
-				element: "input[name=oopluginlistviews-sortBySetting]",
-				invert: true
-			},
-			{
-				element: "select[name=oopluginlistviews-sortByUserDefinedDefault]",
-				invert: true
-			},
-			{
-				element: "select[name=oopluginlistviews-sortByUserDefinedDirection]",
-				invert: true
-			}
-		],
-
 		// view: form
 		"input[name=oopluginforms-defaultrecipient]": [
 			{
