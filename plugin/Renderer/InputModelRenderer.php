@@ -197,6 +197,9 @@ class InputModelRenderer
 				if ($pInputModel->getHintHtml() != null) {
 					$pInstance->setHint($pInputModel->getHintHtml());
 				}
+				if ( $pInputModel->isDeactivate() ) {
+					$pInstance->addAdditionalAttribute( 'disabled', true );
+				}
 
 				break;
 			case InputModelOption::HTML_TYPE_HIDDEN:
