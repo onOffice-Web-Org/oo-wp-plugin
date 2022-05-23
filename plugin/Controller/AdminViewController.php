@@ -42,6 +42,8 @@ use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
 use Parsedown;
+use HTMLPurifier_Config;
+use HTMLPurifier;
 use WP_Hook;
 use const ONOFFICE_DI_CONFIG_PATH;
 use const ONOFFICE_PLUGIN_DIR;
@@ -439,12 +441,13 @@ class AdminViewController
 				$class = 'notice notice-warning active-plugin-seo is-dismissible';
 				$message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.
 								We recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
-				$message = Parsedown::instance()
-					->setSafeMode(false)
+				$messageParsedown = Parsedown::instance()
+					->setSafeMode(true)
 					->setBreaksEnabled(true)->text(
 						$message
 					);
-				echo sprintf('<div class="%1$s">%2$s</div>', esc_attr($class), $message);
+				$messageDecodeHTML = html_entity_decode($messageParsedown);
+				echo sprintf('<div class="%1$s">%2$s</div>', esc_attr($class), $messageDecodeHTML);
 			}
 		} else {
 			update_option('onoffice-click-button-close-action', 0);

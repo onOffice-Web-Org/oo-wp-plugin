@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-20T17:38:27+07:00\n"
+"POT-Creation-Date: 2022-05-23T13:24:20+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -46,7 +46,7 @@ msgstr "https://de.onoffice.com/"
 msgid "Please configure your onOffice API credentials first!"
 msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
 
-#: plugin/Controller/AdminViewController.php:150
+#: plugin/Controller/AdminViewController.php:152
 #: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:89
 #: plugin/Gui/AdminPageEstateDetail.php:202
 #: plugin/Gui/AdminPageEstateList.php:76
@@ -56,33 +56,33 @@ msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
 msgid "onOffice"
 msgstr "onOffice"
 
-#: plugin/Controller/AdminViewController.php:156
+#: plugin/Controller/AdminViewController.php:158
 #: plugin/Gui/AdminPageAddressList.php:61
 msgid "Addresses"
 msgstr "Adressen"
 
-#: plugin/Controller/AdminViewController.php:162
-#: plugin/Controller/AdminViewController.php:163
+#: plugin/Controller/AdminViewController.php:164
+#: plugin/Controller/AdminViewController.php:165
 msgid "Estates"
 msgstr "Immobilien"
 
-#: plugin/Controller/AdminViewController.php:174
+#: plugin/Controller/AdminViewController.php:176
 #: plugin/Gui/AdminPageFormList.php:97
 msgid "Forms"
 msgstr "Formulare"
 
-#: plugin/Controller/AdminViewController.php:206
-#: plugin/Controller/AdminViewController.php:207
-#: plugin/Controller/AdminViewController.php:378
+#: plugin/Controller/AdminViewController.php:208
+#: plugin/Controller/AdminViewController.php:209
+#: plugin/Controller/AdminViewController.php:380
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: plugin/Controller/AdminViewController.php:394
+#: plugin/Controller/AdminViewController.php:396
 msgid "API token and secret"
 msgstr "API-Token und Secret"
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:397
+#: plugin/Controller/AdminViewController.php:399
 msgid ""
 "It looks like you did not enter any valid API credentials. Please consider "
 "reviewing your %s."
@@ -90,7 +90,7 @@ msgstr ""
 "Anscheinend sind Ihre API-Zugangsdaten nicht gültig. Bitte überprüfen Sie "
 "Ihr %s."
 
-#: plugin/Controller/AdminViewController.php:413
+#: plugin/Controller/AdminViewController.php:415
 msgid ""
 "We have deactivated the plugin's duplicate check for all of your forms, "
 "because the duplicate check can unintentionally overwrite address records. "
@@ -98,13 +98,11 @@ msgid ""
 "for these forms: Contact, Interest, Owner"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:429
-#, fuzzy
-#| msgid "onOffice"
+#: plugin/Controller/AdminViewController.php:431
 msgid "onOffice plugin settings"
 msgstr "onOffice-Plugin-Einstellungen"
 
-#: plugin/Controller/AdminViewController.php:440
+#: plugin/Controller/AdminViewController.php:442
 msgid ""
 "The onOffice plugin has detected an active SEO plugin: %s. You currently "
 "have configured the onOffice plugin to fill out the title and description of "

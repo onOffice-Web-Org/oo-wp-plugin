@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-05-20T17:38:27+07:00\n"
+"POT-Creation-Date: 2022-05-23T13:24:20+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Please configure your onOffice API credentials first!"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:150
+#: plugin/Controller/AdminViewController.php:152
 #: plugin/Gui/AdminPageAddressList.php:84
 #: plugin/Gui/AdminPageBase.php:89
 #: plugin/Gui/AdminPageEstateDetail.php:202
@@ -49,45 +49,45 @@ msgstr ""
 msgid "onOffice"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:156
+#: plugin/Controller/AdminViewController.php:158
 #: plugin/Gui/AdminPageAddressList.php:61
 msgid "Addresses"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:162
-#: plugin/Controller/AdminViewController.php:163
+#: plugin/Controller/AdminViewController.php:164
+#: plugin/Controller/AdminViewController.php:165
 msgid "Estates"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:174
+#: plugin/Controller/AdminViewController.php:176
 #: plugin/Gui/AdminPageFormList.php:97
 msgid "Forms"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:206
-#: plugin/Controller/AdminViewController.php:207
-#: plugin/Controller/AdminViewController.php:378
+#: plugin/Controller/AdminViewController.php:208
+#: plugin/Controller/AdminViewController.php:209
+#: plugin/Controller/AdminViewController.php:380
 msgid "Settings"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:394
+#: plugin/Controller/AdminViewController.php:396
 msgid "API token and secret"
 msgstr ""
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:397
+#: plugin/Controller/AdminViewController.php:399
 msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:413
+#: plugin/Controller/AdminViewController.php:415
 msgid "We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:429
+#: plugin/Controller/AdminViewController.php:431
 msgid "onOffice plugin settings"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:440
+#: plugin/Controller/AdminViewController.php:442
 msgid ""
 "The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.\n"
 "\t\t\t\t\t\t\t\tWe recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin."
