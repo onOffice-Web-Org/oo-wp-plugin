@@ -79,26 +79,23 @@ class DetailViewPostSaveController
 			$postType = $pPost->post_type;
 			$metaKeys = get_post_meta($postId, '', true);
 
-			$viewContainedCustomField = false;
-			foreach ($metaKeys as $metaKey) {
-				$viewContained = $this->postContainsViewName($metaKey[0], $detailViewName);
-				if ($viewContained) {
-					$viewContainedCustomField = $viewContained;
-				}
-			}
-
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
-			$emptyPostContent = false;
-			if ( ! $viewContained) {
-				if (empty($postContent)) {
-					$emptyPostContent = true;
-				} else {
-					$emptyPostContent = false;
+			$viewContainedCustomField = false;
+			$hasOtherShortcodeInPostContent = false;
+
+			if (!$viewContained && !empty($postContent) && $this->checkOtherShortcodeInPostContent($postContent, $detailViewName)) {
+				$hasOtherShortcodeInPostContent = true;
+			}
+
+			foreach ($metaKeys as $metaKey) {
+				$viewContainedMetaKey = $this->postContainsViewName($metaKey[0], $detailViewName);
+				if ($viewContainedMetaKey) {
+					$viewContainedCustomField = true;
 				}
 			}
 
-			if (($viewContained) || ($viewContainedCustomField && $emptyPostContent)) {
+			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && $hasOtherShortcodeInPostContent == false)) {
 				if ($postType == 'page') {
 					$pDetailView->setPageId((int) $postId);
 					$pDataDetailViewHandler->saveDetailView($pDetailView);
@@ -218,6 +215,30 @@ class DetailViewPostSaveController
 
 		foreach ($matches[3] as $tagParams) {
 			if (__String::getNew($tagParams)->contains($detailviewCode)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 *
+	 * @param string $post
+	 * @param string $viewName
+	 * @return bool
+	 *
+	 */
+
+	private function checkOtherShortcodeInPostContent($post, $viewName) {
+		$matches = array();
+		$regex   = get_shortcode_regex(array('oo_estate'));
+		preg_match_all('/' . $regex . '/ism', $post, $matches);
+
+		$detailviewCode = $this->generateDetailViewCode($viewName);
+
+		foreach ($matches[3] as $tagParams) {
+			if ($tagParams !== $detailviewCode) {
 				return true;
 			}
 		}
