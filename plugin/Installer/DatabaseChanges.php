@@ -222,10 +222,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 28;
 		}
 
-		if ($dbversion == 27) {
+		if ($dbversion == 28) {
 			$this->checkAllPageIdsHaveDetailShortCode();
 			$this->_pWpOption->addOption( 'add-detail-posts-to-rewrite-rules', false );
-			$dbversion = 28;
+			$dbversion = 29;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
