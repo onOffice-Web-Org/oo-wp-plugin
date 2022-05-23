@@ -836,10 +836,8 @@ msgid "Hidden"
 msgstr "Oculto"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:140
-#, fuzzy
-#| msgid "Shortcode"
 msgid "Shortcode: "
-msgstr "Código abreviado"
+msgstr "Código abreviado:"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:207
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:411
@@ -912,16 +910,12 @@ msgid "Form Name"
 msgstr "Nombre del formulario"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:241
-#, fuzzy
-#| msgid "Type of Form: "
 msgid "Type: "
 msgstr "Tipo de formulario: "
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:260
-#, fuzzy
-#| msgid "Shortcode"
 msgid ", shortcode: "
-msgstr "Código abreviado"
+msgstr ", código abreviado:"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:279
 msgid "Recipient's E-Mail Address"
