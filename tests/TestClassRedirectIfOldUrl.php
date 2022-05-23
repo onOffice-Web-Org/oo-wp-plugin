@@ -46,11 +46,11 @@ class TestClassRedirectIfOldUrl
 	public function prepare()
 	{
 		global $wp;
-		$wp->request = 'detail-view/123';
+		$wp->request       = 'detail-view/123';
 		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$this->_pContainer = $pContainerBuilder->build();
-		$this->_pRedirectIfOldUrl = $this->_pContainer->get(Redirector::class);
+		$pContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH );
+		$this->_pContainer        = $pContainerBuilder->build();
+		$this->_pRedirectIfOldUrl = $this->_pContainer->get( Redirector::class );
 
 	}
 
@@ -59,7 +59,7 @@ class TestClassRedirectIfOldUrl
 	 */
 	public function stestInstance()
 	{
-		$this->assertInstanceOf(Redirector::class, $this->_pRedirectIfOldUrl);
+		$this->assertInstanceOf( Redirector::class, $this->_pRedirectIfOldUrl );
 	}
 
 	/**
@@ -67,7 +67,7 @@ class TestClassRedirectIfOldUrl
 	 */
 	public function testGetCurrentLink()
 	{
-		$this->assertEquals('http://example.org/detail-view/123', $this->_pRedirectIfOldUrl->getCurrentLink());
+		$this->assertEquals( 'http://example.org/detail-view/123', $this->_pRedirectIfOldUrl->getCurrentLink() );
 	}
 
 	/**
@@ -75,7 +75,7 @@ class TestClassRedirectIfOldUrl
 	 */
 	public function testGetUri()
 	{
-		$this->assertEquals('detail-view/123', $this->_pRedirectIfOldUrl->getUri());
+		$this->assertEquals( 'detail-view/123', $this->_pRedirectIfOldUrl->getUri() );
 	}
 
 	/**
@@ -83,21 +83,21 @@ class TestClassRedirectIfOldUrl
 	 */
 	public function testRedirectDetailViewSameUrl()
 	{
-		add_option('onoffice-detail-view-showTitleUrl', true);
+		add_option( 'onoffice-detail-view-showTitleUrl', true );
 		global $wp;
 		global $wp_filter;
 		$wp->request = 'detail-view/123-show-title-url';
-		$this->set_permalink_structure('/%postname%/');
-		$savePostBackup = $wp_filter['save_post'];
+		$this->set_permalink_structure( '/%postname%/' );
+		$savePostBackup         = $wp_filter['save_post'];
 		$wp_filter['save_post'] = new \WP_Hook;
-		$pWPPost = self::factory()->post->create_and_get([
-			'post_author' => 1,
+		$pWPPost                = self::factory()->post->create_and_get( [
+			'post_author'  => 1,
 			'post_content' => '[oo_estate view="detail"]',
-			'post_title' => 'Detail View',
-			'post_type' => 'page',
-		]);
+			'post_title'   => 'Detail View',
+			'post_type'    => 'page',
+		] );
 		$wp_filter['save_post'] = $savePostBackup;
-		$this->assertNull($this->_pRedirectIfOldUrl->redirectDetailView($pWPPost->ID, 123, 'Show Title Url'));
+		$this->assertNull( $this->_pRedirectIfOldUrl->redirectDetailView( 123, 'Show Title Url' ) );
 	}
 
 	/**
@@ -108,16 +108,64 @@ class TestClassRedirectIfOldUrl
 		global $wp;
 		global $wp_filter;
 		$wp->request = 'detail-view/abc-123-show-title-difference-url';
-		$this->set_permalink_structure('/%postname%/');
-		$savePostBackup = $wp_filter['save_post'];
+		$this->set_permalink_structure( '/%postname%/' );
+		$savePostBackup         = $wp_filter['save_post'];
 		$wp_filter['save_post'] = new \WP_Hook;
-		$pWPPost = self::factory()->post->create_and_get([
-			'post_author' => 1,
+		$pWPPost                = self::factory()->post->create_and_get( [
+			'post_author'  => 1,
 			'post_content' => '[oo_estate view="detail"]',
-			'post_title' => 'Detail View',
-			'post_type' => 'page',
-		]);
+			'post_title'   => 'Detail View',
+			'post_type'    => 'page',
+		] );
 		$wp_filter['save_post'] = $savePostBackup;
-		$this->assertTrue($this->_pRedirectIfOldUrl->redirectDetailView($pWPPost->ID, 123, 'Show Title Url'));
+		$this->assertTrue( $this->_pRedirectIfOldUrl->redirectDetailView( 123, 'Show Title Url' ) );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function testRedirectDetailViewWithParrentPage()
+	{
+		$this->expectException( \Error::class );
+		$this->expectExceptionMessage( 'Function name must be a string' );
+		global $wp;
+		global $wp_filter;
+		$wp->request = 'e1/detail-view/123-show-title-difference-url';
+		$this->set_permalink_structure( '/%postname%/' );
+		$savePostBackup         = $wp_filter['save_post'];
+		$wp_filter['save_post'] = new \WP_Hook;
+		$pWPPost                = self::factory()->post->create_and_get( [
+			'post_author'  => 1,
+			'post_content' => '[oo_estate view="detail"]',
+			'post_title'   => 'Detail View',
+			'post_type'    => 'page',
+		] );
+		$wp_filter['save_post'] = $savePostBackup;
+		$this->_pRedirectIfOldUrl->redirectDetailView( 123, 'Show Title Url' );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function testRedirectDetailViewWithParrentPageAndUrlNotMatchRule()
+	{
+		global $wp;
+		global $wp_filter;
+		$wp->request = 'e1/detail-view/abc-123-show-title-difference-url';
+		$this->set_permalink_structure( '/%postname%/' );
+		$savePostBackup         = $wp_filter['save_post'];
+		$wp_filter['save_post'] = new \WP_Hook;
+		$pWPPost                = self::factory()->post->create_and_get( [
+			'post_author'  => 1,
+			'post_content' => '[oo_estate view="detail"]',
+			'post_title'   => 'Detail View',
+			'post_type'    => 'page',
+		] );
+		$wp_filter['save_post'] = $savePostBackup;
+		$this->assertTrue( $this->_pRedirectIfOldUrl->redirectDetailView( 123, 'Show Title Url' ) );
 	}
 }

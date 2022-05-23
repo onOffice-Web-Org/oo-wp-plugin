@@ -11,23 +11,18 @@ class Redirector
 	/** @var EstateDetailUrl */
 	private $_wpEstateDetailUrl;
 
-	/** @var WPPageWrapper */
-	private $_wpPageWrapper;
-
 	/** @var WPRedirectWrapper */
 	private $_wpRedirectWrapper;
 
 
 	/**
-	 * @param EstateDetailUrl $estateDetailUrl
-	 * @param WPPageWrapper $pageWrapper
-	 * @param WPRedirectWrapper $redirectWrapper
+	 * @param  EstateDetailUrl  $estateDetailUrl
+	 * @param  WPRedirectWrapper  $redirectWrapper
 	 */
 
-	public function __construct(EstateDetailUrl $estateDetailUrl, WPPageWrapper $pageWrapper, WPRedirectWrapper $redirectWrapper)
+	public function __construct( EstateDetailUrl $estateDetailUrl, WPRedirectWrapper $redirectWrapper )
 	{
 		$this->_wpEstateDetailUrl = $estateDetailUrl;
-		$this->_wpPageWrapper = $pageWrapper;
 		$this->_wpRedirectWrapper = $redirectWrapper;
 	}
 
@@ -36,17 +31,68 @@ class Redirector
 	 * @param $estateId
 	 * @param $estateTitle
 	 *
-	 * @return void
+	 * @return bool|void
 	 */
 
 	public function redirectDetailView( $estateId, $estateTitle )
 	{
-		$currentLink = $this->getCurrentLink();
-		$fullLink    = $this->_wpEstateDetailUrl->getUrlWithEstateTitle( $estateId, $estateTitle, $currentLink );
-
-		if ( $fullLink !== $currentLink ) {
-			$this->_wpRedirectWrapper->redirect( $fullLink );
+		$matches = $this->checkUrlIsMatchRule();
+		if ( empty( $matches[2] ) ) {
+			return true;
 		}
+
+		$oldUrl = $this->getCurrentLink();
+		$newUrl = $this->_wpEstateDetailUrl->getUrlWithEstateTitle( $estateId, $estateTitle, $oldUrl );
+
+		if ( $newUrl !== $oldUrl ) {
+			$isNewUrlValid = $this->checkNewUrlIsValid(
+				array_filter( explode( '/', $newUrl ) ),
+				array_filter( explode( '/', $oldUrl ) )
+			);
+
+			if ( $isNewUrlValid ) {
+				$this->_wpRedirectWrapper->redirect( $newUrl );
+			}
+		}
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+
+	public function checkUrlIsMatchRule()
+	{
+		$uri        = $this->getUri();
+		$uriToArray = explode( '/', $uri );
+		array_pop( $uriToArray );
+		$pagePath = implode( '/', array_filter( $uriToArray ) );
+
+		//Check pass rule and has Unique ID
+		preg_match( '/^(' . preg_quote( $pagePath,
+				'/' ) . ')\/([0-9]+)(-([^$]+)?)?\/?$/', $uri, $matches );
+
+		return $matches;
+	}
+
+
+	/**
+	 * @param  array  $newUrlArr
+	 * @param  array  $oldUrlArr
+	 *
+	 * @return bool
+	 */
+
+	public function checkNewUrlIsValid( array $newUrlArr, array $oldUrlArr )
+	{
+		if ( end( $newUrlArr ) !== end( $oldUrlArr ) ) {
+			array_pop( $newUrlArr );
+			array_pop( $oldUrlArr );
+
+			return empty( array_diff( $newUrlArr, $oldUrlArr ) );
+		}
+
+		return false;
 	}
 
 
