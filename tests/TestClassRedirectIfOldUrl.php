@@ -126,30 +126,6 @@ class TestClassRedirectIfOldUrl
 	 * @return void
 	 */
 
-	public function testRedirectDetailViewWithParrentPage()
-	{
-		$this->expectException( \Error::class );
-		global $wp;
-		global $wp_filter;
-		$wp->request = 'e1/detail-view/123-show-title-difference-url';
-		$this->set_permalink_structure( '/%postname%/' );
-		$savePostBackup         = $wp_filter['save_post'];
-		$wp_filter['save_post'] = new \WP_Hook;
-		$pWPPost                = self::factory()->post->create_and_get( [
-			'post_author'  => 1,
-			'post_content' => '[oo_estate view="detail"]',
-			'post_title'   => 'Detail View',
-			'post_type'    => 'page',
-		] );
-		$wp_filter['save_post'] = $savePostBackup;
-		$this->_pRedirectIfOldUrl->redirectDetailView( 123, 'Show Title Url' );
-	}
-
-
-	/**
-	 * @return void
-	 */
-
 	public function testRedirectDetailViewWithParrentPageAndUrlNotMatchRule()
 	{
 		global $wp;
