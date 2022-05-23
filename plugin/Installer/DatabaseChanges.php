@@ -25,10 +25,12 @@ namespace onOffice\WPlugin\Installer;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
@@ -39,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 28;
+	const MAX_VERSION = 29;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -211,9 +213,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->deleteMessageFieldApplicantSearchForm();
 			$dbversion = 27;
 		}
+
 		if ($dbversion == 27) {
 			$this->updateEstateListSortBySetting();
 			$dbversion = 28;
+		}
+
+		if ($dbversion == 28) {
+			$this->checkContactFieldInDefaultDetail();
+			$dbversion = 29;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -354,6 +362,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		return $sql;
 	}
+
 	/**
 	 *
 	 * @return string
@@ -667,6 +676,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
+
 	/**
 	 *
 	 */
@@ -819,5 +829,30 @@ class DatabaseChanges implements DatabaseChangesInterface
 				AND `random` = 0";
 
 		$this->_pWPDB->query( $sql );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function checkContactFieldInDefaultDetail() {
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$addressFields = $pDetailView->getAddressFields();
+
+		foreach (AddressList::DEFAULT_FIELDS_REPLACE as $defaultField => $newField) {
+			if (in_array($defaultField, $addressFields)) {
+				$key = array_search($defaultField, $addressFields);
+				unset($addressFields[$key]);
+
+				if (!in_array($newField, $addressFields)) {
+					$addressFields[$key] = $newField;
+				}
+			}
+		}
+		ksort($addressFields);
+		$pDetailView->setAddressFields($addressFields);
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 }
