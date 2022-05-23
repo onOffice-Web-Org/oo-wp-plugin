@@ -1,3 +1,3 @@
 jQuery(document).ready(function($){
-    new ClipboardJS('#button-copy');
+	new ClipboardJS('#button-copy');
 });

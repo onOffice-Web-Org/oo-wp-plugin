@@ -146,13 +146,13 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelButton()
 	{
-        $pConfig = new InputModelDBFactoryConfigEstate();
-        $config = $pConfig->getConfig();
-        $name = $config[InputModelDBFactory::INPUT_LISTNAME]
-        [InputModelDBFactoryConfigEstate::KEY_FIELD];
-        $listName = $this->getValue($name);
+		$pConfig = new InputModelDBFactoryConfigEstate();
+		$config = $pConfig->getConfig();
+		$name = $config[InputModelDBFactory::INPUT_LISTNAME]
+		[InputModelDBFactoryConfigEstate::KEY_FIELD];
+		$listName = $this->getValue($name);
 
-        $codes = '[oo_estate view="'.$listName.'"]';
+		$codes = '[oo_estate view="'.$listName.'"]';
 		$pInputModeLabel = new InputModelLabel('', $codes);
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_BUTTON);
 		return $pInputModeLabel;
