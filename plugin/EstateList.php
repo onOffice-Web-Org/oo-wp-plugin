@@ -360,6 +360,18 @@ class EstateList
 
 		$fields = $this->_pDataView->getAddressFields();
 
+		$defaultFields = ['defaultemail' => 'Email', 'defaultphone' => 'Telefon1', 'defaultfax' => 'Telefax1'];
+		foreach ($defaultFields as $defaultField => $newField) {
+			if (in_array($defaultField, $fields)) {
+				$key = array_search($defaultField, $fields);
+				unset($fields[$key]);
+				if (!in_array($newField, $fields)) {
+					$fields[$key] = $newField;
+				}
+			}
+		}
+		ksort($fields);
+
 		if ($fields !== [] && $allAddressIds !== []) {
 			$this->_pEnvironment->getAddressList()->loadAdressesById($allAddressIds, $fields);
 		}

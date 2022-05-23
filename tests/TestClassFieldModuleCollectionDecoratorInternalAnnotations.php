@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
 
@@ -45,23 +46,13 @@ class TestClassFieldModuleCollectionDecoratorInternalAnnotations
 
 	public function testGetFieldByModuleAndName()
 	{
-		$pDecoratorAddress = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection);
-		$module = onOfficeSDK::MODULE_ADDRESS;
-		$pFieldDefaultPhoneExternal = $pDecoratorAddress->getFieldByModuleAndName($module, 'defaultphone');
-		$pFieldDefaultMailExternal = $pDecoratorAddress->getFieldByModuleAndName($module, 'defaultemail');
-		$pFieldDefaultFaxExternal = $pDecoratorAddress->getFieldByModuleAndName($module, 'defaultfax');
-		$this->assertEquals('Phone', $pFieldDefaultPhoneExternal ->getLabel());
-		$this->assertEquals('E-Mail', $pFieldDefaultMailExternal->getLabel());
-		$this->assertEquals('Fax', $pFieldDefaultFaxExternal->getLabel());
+		$pDecoratorSearchcriteria = new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection);
+		$module = onOfficeSDK::MODULE_SEARCHCRITERIA;
 
 		$pDecoratorAnnotations = new FieldModuleCollectionDecoratorInternalAnnotations
-			($pDecoratorAddress);
-		$pFieldDefaultPhone = $pDecoratorAnnotations->getFieldByModuleAndName($module, 'defaultphone');
-		$pFieldDefaultMail = $pDecoratorAnnotations->getFieldByModuleAndName($module, 'defaultemail');
-		$pFieldDefaultFax = $pDecoratorAnnotations->getFieldByModuleAndName($module, 'defaultfax');
-		$this->assertEquals('Phone (Marked as default in onOffice)', $pFieldDefaultPhone->getLabel());
-		$this->assertEquals('E-Mail (Marked as default in onOffice)', $pFieldDefaultMail->getLabel());
-		$this->assertEquals('Fax (Marked as default in onOffice)', $pFieldDefaultFax->getLabel());
+		($pDecoratorSearchcriteria);
+		$pFieldDefault = $pDecoratorAnnotations->getFieldByModuleAndName($module, 'krit_bemerkung_oeffentlich');
+		$this->assertEquals('Search Criteria Comment (external)', $pFieldDefault->getLabel());
 	}
 
 

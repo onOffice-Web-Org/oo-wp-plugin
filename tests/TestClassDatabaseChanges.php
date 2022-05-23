@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
@@ -78,8 +80,10 @@ class TestClassDatabaseChanges
 	public function prepare()
 	{
 		global $wpdb;
-
+		$dataDetailView = new DataDetailView();
+		$dataDetailView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 		$this->_pWpOption = new WPOptionWrapperTest();
+		$this->_pWpOption->addOption('onoffice-default-view', $dataDetailView);
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
 
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
