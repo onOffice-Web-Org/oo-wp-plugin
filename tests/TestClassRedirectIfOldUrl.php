@@ -129,7 +129,6 @@ class TestClassRedirectIfOldUrl
 	public function testRedirectDetailViewWithParrentPage()
 	{
 		$this->expectException( \Error::class );
-		$this->expectExceptionMessage( 'Function name must be a string' );
 		global $wp;
 		global $wp_filter;
 		$wp->request = 'e1/detail-view/123-show-title-difference-url';
