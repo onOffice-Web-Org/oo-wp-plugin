@@ -212,7 +212,7 @@ class InputModelRenderer
 
 				break;
 			case InputModelBase::HTML_TYPE_BUTTON:
-				$pInstance = new InputFieldButtonRenderer(null, $pInputModel->getValue());
+				$pInstance = new InputFieldButtonRenderer(null, '', $pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
 				break;
 

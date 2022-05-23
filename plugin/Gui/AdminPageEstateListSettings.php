@@ -281,6 +281,7 @@ class AdminPageEstateListSettings
 		wp_enqueue_script('oo-reference-estate-js');
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
+		wp_enqueue_script('oo-clipboard');
 		wp_enqueue_script('oo-copy-shortcode');
 	}
 }
