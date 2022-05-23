@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= Unreleased =
+
+**Changed**
+
+* We removed some redundant fields for the contact person and improved their labels in the detail view settings. This change is backwards compatible, your templates will continue to work without changes.
+
 = 3.2 (2022-05-23) =
 
 **Added**
