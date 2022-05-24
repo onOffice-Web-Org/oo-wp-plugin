@@ -176,28 +176,24 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
-		$pluginSEO = [];
-		if (count(array_intersect(["wpseo/wp-seo.php"], get_option("active_plugins"))) > 0){
-			$pluginSEO['wp_seo'] = 'wpSEO';
-		}
-		if (count(array_intersect(["seo-by-rank-math/rank-math.php"], get_option("active_plugins"))) > 0){
-			$pluginSEO['rank_math_seo'] = 'Rank Math SEO';
-		}
-		if (count(array_intersect(["wordpress-seo/wp-seo.php"], get_option("active_plugins"))) > 0){
-			$pluginSEO['yoast_seo'] = 'Yoast SEO';
-		}
-		$listNamePluginSEO = implode(", ",$pluginSEO);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pAdminViewController = $pContainer->get(AdminViewController::class);
+		$listPluginSEOActive = [];
+		$listPluginSEOActive = $pAdminViewController->getPluginSEOActive();
+		$listNamePluginSEO = implode(", ",$listPluginSEOActive);
 		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
 		$summaryDetailDoNotModify =  esc_html__('Available custom fields','onoffice-for-wp-websites');
 		$descriptionDetailDoNotModify = esc_html__('When this option is active, the plugin makes the following custom fields available in the detail view. These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate. For information on how to use custom fields consult you SEO plugin\'s documentation.
 							These custom fields are only available in the detail view and on no other page.
-								\- Title (onoffice_title)
-								\- Description (onoffice_description)
-								\- Place (onoffice_place)
-								\- Postal code (onoffice_postal_code)
-								\- Property class (onoffice_property_class)
-								\- Marketing method (onoffice_marketing_method)
-								\- Data Record Ref No. (onoffice_id)', 'onoffice-for-wp-websites');
+								- Title (onoffice_title)
+								- Description (onoffice_description)
+								- Place (onoffice_place)
+								- Postal code (onoffice_postal_code)
+								- Property class (onoffice_property_class)
+								- Marketing method (onoffice_marketing_method)
+								- Data Record Ref No. (onoffice_id)', 'onoffice-for-wp-websites');
 		$descriptionDetailDoNotModify =  Parsedown::instance()
 			->setBreaksEnabled(true)->text(
 				$descriptionDetailDoNotModify
@@ -219,11 +215,7 @@ class AdminPageApiSettings
 		$descriptionFillOut = '<p class="description-notice">
 					'.esc_html__("This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.",'onoffice-for-wp-websites').'
 				 </p>';
-		$pContainerBuilder = new ContainerBuilder;
-		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$pContainer = $pContainerBuilder->build();
-		$pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
-		if ( count(array_intersect(["wordpress-seo/wp-seo.php", "seo-by-rank-math/rank-math.php", "wpseo/wpseo.php"], get_option("active_plugins"))) > 0 && $pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0) {
+		if ( count($listPluginSEOActive) > 0 && get_option('onoffice-settings-title-and-description') == 0) {
 			$descriptionFillOut = $descriptionNoticeSeo.$descriptionFillOut;
 		}
 		$labelGoogleBotIndexPdfExpose = __('Allow indexing of PDF brochures', 'onoffice-for-wp-websites');

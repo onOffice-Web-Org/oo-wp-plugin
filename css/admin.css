@@ -330,8 +330,17 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	margin-left: 20px;
 }
 
-#viewformspecific .hint-text, #viewformspecific .hint-text a{
+#viewformspecific .hint-text {
 	color: #646970;
 	font-style: italic;
 	text-decoration: none;
+}
+
+.do-not-modify ul {
+	padding-left: 10px;
+}
+
+.do-not-modify li {
+	list-style: disc;
+	margin-left: 25px;
 }

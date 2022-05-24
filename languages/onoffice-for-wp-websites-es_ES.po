@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-18T15:39:02+07:00\n"
+"POT-Creation-Date: 2022-05-20T17:38:27+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -106,14 +106,14 @@ msgstr ""
 msgid "onOffice plugin settings"
 msgstr "Configuración del complemento onOffice"
 
-#: plugin/Controller/AdminViewController.php:447
+#: plugin/Controller/AdminViewController.php:440
 msgid ""
 "The onOffice plugin has detected an active SEO plugin: %s. You currently "
 "have configured the onOffice plugin to fill out the title and description of "
 "the detail page, which can lead to conflicts with the SEO plugin.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\tWe recommend that you go to the %s and configure "
-"the onOffice plugin to not modify the title and description. This allows you "
-"to manage the title and description with your active SEO plugin."
+"\t\t\t\t\t\t\t\tWe recommend that you go to the %s and configure the "
+"onOffice plugin to not modify the title and description. This allows you to "
+"manage the title and description with your active SEO plugin."
 msgstr ""
 "El complemento onOffice ha detectado un complemento SEO activo: %s. "
 "Actualmente ha configurado el complemento de onOffice para completar el "
@@ -295,7 +295,7 @@ msgstr "Google reCAPTCHA"
 msgid "Google Maps Key"
 msgstr "Google Maps"
 
-#: plugin/Gui/AdminPageApiSettings.php:190
+#: plugin/Gui/AdminPageApiSettings.php:186
 msgid ""
 "This plugin will not modify the title and description. This enables other "
 "plugins to manage those tags."
@@ -303,27 +303,26 @@ msgstr ""
 "Este complemento no modificará el título y la descripción. Esto permite que "
 "otros complementos administren esas etiquetas."
 
-#: plugin/Gui/AdminPageApiSettings.php:191
+#: plugin/Gui/AdminPageApiSettings.php:187
 msgid "Available custom fields"
 msgstr "Campos personalizados disponibles"
 
-#: plugin/Gui/AdminPageApiSettings.php:192
+#: plugin/Gui/AdminPageApiSettings.php:188
 msgid ""
 "When this option is active, the plugin makes the following custom fields "
 "available in the detail view. These custom fields can be used in SEO plugins "
 "to fill out the title and description with the information of the currently "
 "shown estate. For information on how to use custom fields consult you SEO "
 "plugin's documentation.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\tThese custom fields are only available in the "
-"detail view and on no other page.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Title (onoffice_title)\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Description (onoffice_description)\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Place (onoffice_place)\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Postal code (onoffice_postal_code)\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Property class (onoffice_property_class)\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Marketing method "
-"(onoffice_marketing_method)\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\\- Data Record Ref No. (onoffice_id)"
+"\t\t\t\t\t\t\tThese custom fields are only available in the detail view and "
+"on no other page.\n"
+"\t\t\t\t\t\t\t\t- Title (onoffice_title)\n"
+"\t\t\t\t\t\t\t\t- Description (onoffice_description)\n"
+"\t\t\t\t\t\t\t\t- Place (onoffice_place)\n"
+"\t\t\t\t\t\t\t\t- Postal code (onoffice_postal_code)\n"
+"\t\t\t\t\t\t\t\t- Property class (onoffice_property_class)\n"
+"\t\t\t\t\t\t\t\t- Marketing method (onoffice_marketing_method)\n"
+"\t\t\t\t\t\t\t\t- Data Record Ref No. (onoffice_id)"
 msgstr ""
 "Cuando esta opción está activa, el complemento hace que los siguientes "
 "campos personalizados estén disponibles en la vista de detalles. Estos "
@@ -331,31 +330,29 @@ msgstr ""
 "completar el título y la descripción con la información del estado que se "
 "muestra actualmente. Para obtener información sobre cómo usar los campos "
 "personalizados, consulte la documentación de su complemento SEO.\n"
-"Estos campos personalizados solo están disponibles en la vista de detalles y "
-"en ninguna otra página.\n"
-"\\- Título (onoffice_title)\n"
-"\\- Descripción (onoffice_description)\n"
-"\\- Lugar (lugar_en_la_oficina)\n"
-"\\- Código postal (onoffice_postal_code)\n"
-"\\- Clase de propiedad (onoffice_property_class)\n"
-"\\- Método de marketing (onoffice_marketing_method)\n"
-"\\- Número de referencia del registro de datos (onoffice_id)"
+"\t\t\t\t\t\t\tEstos campos personalizados solo están disponibles en la vista "
+"de detalles y en ninguna otra página.\n"
+"\t\t\t\t\t\t\t\t- Título (onoffice_title)\n"
+"\t\t\t\t\t\t\t\t- Descripción (onoffice_description)\n"
+"\t\t\t\t\t\t\t\t- Lugar (onoffice_place)\n"
+"\t\t\t\t\t\t\t\t- Código postal  (onoffice_postal_code)\n"
+"\t\t\t\t\t\t\t\t- Clase de propiedad (onoffice_property_class)\n"
+"\t\t\t\t\t\t\t\t- Método de marketing (onoffice_marketing_method)\n"
+"\t\t\t\t\t\t\t\t- Número de referencia del registro de datos (onoffice_id)"
 
-#: plugin/Gui/AdminPageApiSettings.php:212
-#, fuzzy
-#| msgid ""
-#| "We have detected an active SEO plugin: Yoast SEO. This option can lead to "
-#| "conflicts with the SEO plugin."
+#: plugin/Gui/AdminPageApiSettings.php:208
 msgid ""
 "We have detected an active SEO plugin: %s. This option can lead to conflicts "
 "with the SEO plugin.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\tWe recommend that you configure the onOffice "
-"plugin to not modify the title and description."
+"\t\t\t\t\t\t\t\tWe recommend that you configure the onOffice plugin to not "
+"modify the title and description."
 msgstr ""
-"Hemos detectado un complemento SEO activo: Yoast SEO. Esta opción puede "
-"generar conflictos con el complemento SEO."
+"Hemos detectado un plugin de SEO activo: %s. Esta opción puede generar "
+"conflictos con el complemento SEO.\n"
+"Le recomendamos que configure el complemento de onOffice para que no "
+"modifique el título y la descripción."
 
-#: plugin/Gui/AdminPageApiSettings.php:220
+#: plugin/Gui/AdminPageApiSettings.php:216
 msgid ""
 "This plugin will fill out the title and description with the information "
 "from the estate that is shown. This option is recommended if you are not "
@@ -365,64 +362,64 @@ msgstr ""
 "del patrimonio que se muestra. Se recomienda esta opción si no está "
 "utilizando un complemento de SEO."
 
-#: plugin/Gui/AdminPageApiSettings.php:229
+#: plugin/Gui/AdminPageApiSettings.php:221
 #, fuzzy
 #| msgid "Index PDF brochure"
 msgid "Allow indexing of PDF brochures"
 msgstr "Index PDF brochure"
 
-#: plugin/Gui/AdminPageApiSettings.php:235
+#: plugin/Gui/AdminPageApiSettings.php:227
 msgid ""
 "If you allow indexing, your search engine ranking can be negatively affected "
 "and your brochures can be available from search engines even months after "
 "the corresponding estate is deleted."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:237
+#: plugin/Gui/AdminPageApiSettings.php:229
 msgid "Title and description"
 msgstr "Título y descripción"
 
-#: plugin/Gui/AdminPageApiSettings.php:242
+#: plugin/Gui/AdminPageApiSettings.php:234
 msgid "Fill out"
 msgstr "Llenar"
 
-#: plugin/Gui/AdminPageApiSettings.php:243
+#: plugin/Gui/AdminPageApiSettings.php:235
 msgid "Do not modify"
 msgstr "No modificar"
 
-#: plugin/Gui/AdminPageApiSettings.php:256
+#: plugin/Gui/AdminPageApiSettings.php:248
 msgid "SEO"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:295
+#: plugin/Gui/AdminPageApiSettings.php:287
 msgid "The keys are OK."
 msgstr "Las llaves están bien."
 
-#: plugin/Gui/AdminPageApiSettings.php:296
+#: plugin/Gui/AdminPageApiSettings.php:288
 msgid "There was an error:"
 msgstr "Hubo un error:"
 
-#: plugin/Gui/AdminPageApiSettings.php:297
+#: plugin/Gui/AdminPageApiSettings.php:289
 msgid "The secret parameter is missing."
 msgstr "Falta el parámetro secreto."
 
-#: plugin/Gui/AdminPageApiSettings.php:298
+#: plugin/Gui/AdminPageApiSettings.php:290
 msgid "The secret parameter is invalid or malformed."
 msgstr "El parámetro secreto es inválido o malformado."
 
-#: plugin/Gui/AdminPageApiSettings.php:299
+#: plugin/Gui/AdminPageApiSettings.php:291
 msgid "The response parameter is missing."
 msgstr "Falta el parámetro de respuesta."
 
-#: plugin/Gui/AdminPageApiSettings.php:300
+#: plugin/Gui/AdminPageApiSettings.php:292
 msgid "The response parameter is invalid or malformed."
 msgstr "El parámetro de respuesta es inválido o malformado."
 
-#: plugin/Gui/AdminPageApiSettings.php:301
+#: plugin/Gui/AdminPageApiSettings.php:293
 msgid "The request is invalid or malformed."
 msgstr "La solicitud es inválida o malformada."
 
-#: plugin/Gui/AdminPageApiSettings.php:312
+#: plugin/Gui/AdminPageApiSettings.php:304
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -430,35 +427,35 @@ msgstr ""
 "Para poder utilizar Google reCAPTCHA, necesita proporcionar sus claves. "
 "Puede habilitarlo en la configuración del formulario para su uso posterior."
 
-#: plugin/Gui/AdminPageApiSettings.php:338
+#: plugin/Gui/AdminPageApiSettings.php:330
 msgid "Save changes and clear API cache"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:350
+#: plugin/Gui/AdminPageApiSettings.php:342
 msgid "The cache was cleaned."
 msgstr "Se ha limpiado la caché."
 
-#: plugin/Gui/AdminPageApiSettings.php:364
+#: plugin/Gui/AdminPageApiSettings.php:356
 msgid "Map Provider"
 msgstr "Proveedor de mapas"
 
-#: plugin/Gui/AdminPageApiSettings.php:371
+#: plugin/Gui/AdminPageApiSettings.php:363
 msgid "OpenStreetMap"
 msgstr "Mapa de OpenStreet"
 
-#: plugin/Gui/AdminPageApiSettings.php:372
+#: plugin/Gui/AdminPageApiSettings.php:364
 msgid "Google Maps"
 msgstr "Google Maps"
 
-#: plugin/Gui/AdminPageApiSettings.php:379
+#: plugin/Gui/AdminPageApiSettings.php:371
 msgid "Maps"
 msgstr "Mapas"
 
-#: plugin/Gui/AdminPageApiSettings.php:392
+#: plugin/Gui/AdminPageApiSettings.php:384
 msgid "Show title in URL"
 msgstr "Mostrar título en URL"
 
-#: plugin/Gui/AdminPageApiSettings.php:398
+#: plugin/Gui/AdminPageApiSettings.php:390
 msgid ""
 "If this checkbox is selected, the title of the property will be part of the "
 "URLs of the detail views. The title is placed after the record number, e.g. "
@@ -470,36 +467,36 @@ msgstr ""
 "después del número de registro, p. Ej. <code> / 1234-nice-location-with-view "
 "</code>. No se utilizan más de las primeras cinco palabras del título."
 
-#: plugin/Gui/AdminPageApiSettings.php:404
+#: plugin/Gui/AdminPageApiSettings.php:396
 msgid "Detail View URLs"
 msgstr "URL de vista detallada"
 
-#: plugin/Gui/AdminPageApiSettings.php:417
+#: plugin/Gui/AdminPageApiSettings.php:409
 msgid "Enable Watchlist"
 msgstr "Activar Watchlist"
 
-#: plugin/Gui/AdminPageApiSettings.php:418
+#: plugin/Gui/AdminPageApiSettings.php:410
 msgid "Expression used"
 msgstr "Expresión utilizada"
 
-#: plugin/Gui/AdminPageApiSettings.php:429
-#: plugin/Gui/AdminPageApiSettings.php:438
+#: plugin/Gui/AdminPageApiSettings.php:421
+#: plugin/Gui/AdminPageApiSettings.php:430
 msgid "Watchlist"
 msgstr "Lista de observación"
 
-#: plugin/Gui/AdminPageApiSettings.php:430
+#: plugin/Gui/AdminPageApiSettings.php:422
 msgid "Favorise"
 msgstr "Favorecer"
 
-#: plugin/Gui/AdminPageApiSettings.php:449
+#: plugin/Gui/AdminPageApiSettings.php:441
 msgid "Pagination"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:456
+#: plugin/Gui/AdminPageApiSettings.php:448
 msgid "By WP Theme"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:457
+#: plugin/Gui/AdminPageApiSettings.php:449
 #, fuzzy
 #| msgid "onOffice"
 msgid "By onOffice-Plugin"
