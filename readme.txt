@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.9
 Requires PHP: 7.2
-Stable tag: 3.1
+Stable tag: 3.2
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -77,6 +77,12 @@ Start editing inside the `onoffice-personalized` folder.
 == Changelog ==
 
 = Unreleased =
+
+**Changed**
+
+* We removed some redundant fields for the contact person and improved their labels in the detail view settings. This change is backwards compatible, your templates will continue to work without changes.
+
+= 3.2 (2022-05-23) =
 
 **Added**
 
