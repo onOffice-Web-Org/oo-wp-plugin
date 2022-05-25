@@ -299,13 +299,14 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelRecipient()
 	{
-		$labelRecipient = __('Override Recipient\'s E-Mail Address', 'onoffice-for-wp-websites');
+		$labelRecipient = __('Override email address', 'onoffice-for-wp-websites');
 		$selectedRecipient = $this->getValue('recipient');
 
 		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create
 			(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
+		$pInputModelFormRecipient->setDeactivate(true);
 
 		return $pInputModelFormRecipient;
 	}
