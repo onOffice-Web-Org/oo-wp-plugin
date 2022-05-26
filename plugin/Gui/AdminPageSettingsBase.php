@@ -141,6 +141,7 @@ abstract class AdminPageSettingsBase
 
 	public function renderContent()
 	{
+		echo '<form method="post">';
 		do_action('add_meta_boxes', get_current_screen()->id, null);
 		$this->generateMetaBoxes();
 
@@ -185,6 +186,7 @@ abstract class AdminPageSettingsBase
 		echo '</div>';
 		do_settings_sections( $this->getPageSlug() );
 		submit_button(null, 'primary', 'send_ajax');
+		echo '</form>';
 
 		echo '<script>'
 			.'jQuery(document).ready(function(){'
