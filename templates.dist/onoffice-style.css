@@ -92,12 +92,12 @@
 }
 
 .oo-listobjectwrap {
-    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.25);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.25);
     transition: all 0.3s;
 }
 
 .oo-listobject:hover .oo-listobjectwrap {
-    box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.50);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.50);
 }
 
 .oo-listimage {
@@ -159,6 +159,7 @@
     border: 1px solid #839fce;
     cursor: pointer;
 }
+
 /* details */
 .oo-detailsheadline {
     padding: 10px 15px;
@@ -229,7 +230,7 @@
     border-bottom: 2px solid #efefef;
 }
 
-.oo-aspname, .oo-video, .oo-detailsexpose{
+.oo-aspname, .oo-video, .oo-detailsexpose {
     margin-bottom: 15px;
 }
 
@@ -241,7 +242,7 @@
     margin-bottom: 15px;
 }
 
-.oo-contact-info p{
+.oo-contact-info p {
     margin: 0;
 }
 
@@ -257,6 +258,7 @@
 #oo-similarframe .oo-listobject {
     width: inherit;
 }
+
 /* responsive */
 @media only screen and (max-width: 991px) {
     .oo-listobject, .oo-searchformfield {
