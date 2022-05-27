@@ -232,6 +232,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 29) {
 			$this->checkAllPageIdsHaveDetailShortCode();
 			$this->_pWpOption->addOption( 'add-detail-posts-to-rewrite-rules', false );
+			$this->_pWpOption->updateOption( 'onoffice-detail-view-showTitleUrl', true );
 			$dbversion = 30;
 		}
 
