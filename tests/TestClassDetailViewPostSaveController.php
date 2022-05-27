@@ -66,7 +66,9 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 	public function prepare()
 	{
 		$this->_pDataDetailViewHandler = new DataDetailViewHandler();
-		$this->_pDataDetailView        = new DataDetailView();
+		$this->_pDataDetailView = $this->_pDataDetailViewHandler->getDetailView();
+		$this->_pDataDetailView->setHasDetailView(false);
+		$this->_pDataDetailViewHandler->saveDetailView($this->_pDataDetailView);
 
 		$this->_pWPPageWrapper = $this->getMockBuilder( WPPageWrapper::class )
 		                              ->setMethods( [ 'getPageUriByPageId' ] )
