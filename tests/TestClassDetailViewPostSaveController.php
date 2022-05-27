@@ -97,7 +97,6 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 			'post_content' => '[oo_test view="detail"]',
 			'post_title'   => 'Details',
 			'post_type'    => 'page',
-			'post_status'  => 'trash',
 		] );
 
 		$this->_pDetailViewPostSaveController->onSavePostTest( $pWPPost->ID );
