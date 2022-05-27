@@ -100,7 +100,7 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 	{
 		$pWPPost = self::factory()->post->create_and_get( [
 			'post_author'  => 1,
-			'post_content' => '[oo_estatetest view="list"]',
+			'post_content' => '[oo_test view="list"]',
 			'post_title'   => 'Details',
 			'post_type'    => 'page',
 		] );
@@ -108,7 +108,7 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$pRevision = self::factory()->post->create_and_get( [
 			'post_parent'  => $pWPPost->ID,
 			'post_author'  => 1,
-			'post_content' => '[oo_estatetest view="list"]',
+			'post_content' => '[oo_test view="list"]',
 			'post_title'   => 'Details',
 			'post_type'    => 'revision',
 			'post_status'  => 'inherit',
@@ -129,7 +129,7 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 		$pWPPost = self::factory()->post->create_and_get( [
 			'post_author'  => 1,
-			'post_content' => '[oo_estatetest view="detail"]',
+			'post_content' => '[oo_test view="detail"]',
 			'post_title'   => 'Test Post',
 			'post_type'    => 'page',
 		] );
