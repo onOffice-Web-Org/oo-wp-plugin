@@ -53,11 +53,6 @@ class DetailViewPostSaveController
 		$this->_pRewriteRuleBuilder = $pRewriteRuleBuilder;
 	}
 
-	public function onSavePostTest($postId)
-	{
-		$pPost = WP_Post::get_instance( $postId );
-		return $pPost->ID;
-	}
 
 	/**
 	 *

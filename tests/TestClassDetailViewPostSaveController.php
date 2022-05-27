@@ -87,18 +87,6 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$this->_pDetailViewPostSaveController = new DetailViewPostSaveController( $pSubject );
 	}
 
-	public function testReturnNullForTrashStatus()
-	{
-		$pWPPost = self::factory()->post->create_and_get( [
-			'post_author'  => 1,
-			'post_content' => '[oo_test view="detail"]',
-			'post_title'   => 'Details',
-			'post_type'    => 'page',
-		] );
-
-		$this->assertEquals( $pWPPost->ID, $this->_pDetailViewPostSaveController->onSavePostTest( $pWPPost->ID ) );
-	}
-
 	public function testOtherShortCodeInContent()
 	{
 		$pWPPost = self::factory()->post->create_and_get( [
