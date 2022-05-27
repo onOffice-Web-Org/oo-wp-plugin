@@ -27,6 +27,8 @@ use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use WP_UnitTestCase;
 
@@ -76,7 +78,11 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 		$pSubject = new RewriteRuleBuilder( $this->_pDataDetailViewHandler,
 			$this->_pWPPageWrapper );
+		global $wpdb;
 
+		$pWpOption = new WPOptionWrapperTest();
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges->install();
 		$this->_pDetailViewPostSaveController = new DetailViewPostSaveController( $pSubject );
 	}
 
@@ -87,7 +93,7 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 		$pWPPost = self::factory()->post->create_and_get( [
 			'post_author'  => 1,
-			'post_content' => '[oo_estatetest view="detail"]',
+			'post_content' => '[oo_test view="detail"]',
 			'post_title'   => 'Details',
 			'post_type'    => 'page',
 			'post_status'  => 'trash',

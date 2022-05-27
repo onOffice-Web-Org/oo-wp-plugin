@@ -280,14 +280,17 @@ class DetailViewPostSaveController
 			}
 			if (strpos($postContent,'oo_estate') !== false)
 			{
+				var_dump('1');
 				$this->addPageShortCode($listView,$post,'oo_estate','view',"oo_plugin_listviews","listview_id","listview_id");
 			}
 			if (strpos($postContent,'oo_address') !== false)
 			{
+				var_dump('2');
 				$this->addPageShortCode($listViewAddress,$post,'oo_address','view',"oo_plugin_listviews_address","listview_address_id","listview_address_id");
 			}
 			if (strpos($postContent,'oo_form') !== false)
 			{
+				var_dump('3');
 				$this->addPageShortCode($listForm,$post,'oo_form','form',"oo_plugin_forms","form_id","form_id");
 			}
 
