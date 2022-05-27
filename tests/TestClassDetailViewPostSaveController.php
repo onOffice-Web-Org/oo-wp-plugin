@@ -61,21 +61,31 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 	private $_pWPPageWrapper;
 
 	/**
+	 *
+	 */
+	private $_wp_filter;
+
+	/**
 	 * @before
 	 */
 	public function prepare()
 	{
+		global $wp_filter;
+		$this->_wp_filter              = $wp_filter;
 		$this->_pDataDetailViewHandler = new DataDetailViewHandler();
-		$this->_pDataDetailView        = new DataDetailView();
+		$this->_pDataDetailView        = $this->_pDataDetailViewHandler->getDetailView();
 
 		$this->_pWPPageWrapper = $this->getMockBuilder( WPPageWrapper::class )
 		                              ->setMethods( [ 'getPageUriByPageId' ] )
 		                              ->getMock();
 
-		$pSubject = new RewriteRuleBuilder( $this->_pDataDetailViewHandler,
-			$this->_pWPPageWrapper );
-
+		$pSubject = $this->getMockBuilder( RewriteRuleBuilder::class )
+		                 ->setMethods( [ 'addDynamicRewriteRules' ] )
+		                 ->setConstructorArgs( [ $this->_pDataDetailViewHandler, $this->_pWPPageWrapper ] )
+		                 ->getMock();
+		$pSubject->method( 'addDynamicRewriteRules' );
 		$this->_pDetailViewPostSaveController = new DetailViewPostSaveController( $pSubject );
+
 	}
 
 	public function testReturnNullForTrashStatus()
@@ -83,25 +93,34 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$this->_pDataDetailView->setPageId( 13 );
 		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
 
-		$pWPPost = self::factory()->post->create_and_get( [
+		$this->set_permalink_structure( '/%postname%/' );
+		$savePostBackup                = $this->_wp_filter['save_post'];
+		$this->_wp_filter['save_post'] = new \WP_Hook;
+
+		$pWPPost                       = self::factory()->post->create_and_get( [
 			'post_author'  => 1,
 			'post_content' => '[oo_estate view="detail"]',
 			'post_title'   => 'Details',
 			'post_type'    => 'page',
 			'post_status'  => 'trash',
 		] );
-
+		$this->_wp_filter['save_post'] = $savePostBackup;
 		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID ) );
 	}
 
 	public function testOtherShortCodeInContent()
 	{
-		$pWPPost = self::factory()->post->create_and_get( [
+		$this->set_permalink_structure( '/%postname%/' );
+		$savePostBackup                = $this->_wp_filter['save_post'];
+		$this->_wp_filter['save_post'] = new \WP_Hook;
+
+		$pWPPost                       = self::factory()->post->create_and_get( [
 			'post_author'  => 1,
 			'post_content' => '[oo_estate view="list"]',
 			'post_title'   => 'Details',
 			'post_type'    => 'page',
 		] );
+		$this->_wp_filter['save_post'] = $savePostBackup;
 
 		$pRevision = self::factory()->post->create_and_get( [
 			'post_parent'  => $pWPPost->ID,
@@ -125,7 +144,10 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$this->_pDataDetailView->setPageId( 13 );
 		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
 
-		$pWPPost = self::factory()->post->create_and_get( [
+		$this->set_permalink_structure( '/%postname%/' );
+		$savePostBackup                = $this->_wp_filter['save_post'];
+		$this->_wp_filter['save_post'] = new \WP_Hook;
+		$pWPPost                       = self::factory()->post->create_and_get( [
 			'post_author'  => 1,
 			'post_content' => '[oo_estate view="detail"]',
 			'post_title'   => 'Test Post',
@@ -133,7 +155,7 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		] );
 
 		add_post_meta( $pWPPost->ID, 'view', '[oo_estate view="detail"]' );
-
+		$this->_wp_filter['save_post'] = $savePostBackup;
 		$this->_pWPPageWrapper->method( 'getPageUriByPageId' )
 		                      ->with( $pWPPost->ID )
 		                      ->willReturn( 'test-post' );
