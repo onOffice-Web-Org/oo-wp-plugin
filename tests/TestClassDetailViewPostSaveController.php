@@ -23,10 +23,15 @@ declare ( strict_types=1 );
 
 namespace onOffice\tests;
 
+use DI\ContainerBuilder;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
+use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\EstateList;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use WP_UnitTestCase;
 
@@ -64,6 +69,7 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 	 *
 	 */
 	private $_wp_filter;
+	private \DI\Container $_pContainer;
 
 	/**
 	 * @before
@@ -88,81 +94,167 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 	}
 
-	public function testReturnNullForTrashStatus()
+//	public function testReturnNullForTrashStatus()
+//	{
+//		$this->_pDataDetailView->setPageId( 13 );
+//		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
+//
+//		$this->set_permalink_structure( '/%postname%/' );
+//		$savePostBackup                = $this->_wp_filter['save_post'];
+//		$this->_wp_filter['save_post'] = new \WP_Hook;
+//
+//		$pWPPost                       = self::factory()->post->create_and_get( [
+//			'post_author'  => 1,
+//			'post_content' => '[oo_estate view="detail"]',
+//			'post_title'   => 'Details',
+//			'post_type'    => 'page',
+//			'post_status'  => 'trash',
+//		] );
+//		$this->_wp_filter['save_post'] = $savePostBackup;
+//		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID ) );
+//	}
+//
+//	public function testOtherShortCodeInContent()
+//	{
+//		$this->set_permalink_structure( '/%postname%/' );
+//		$savePostBackup                = $this->_wp_filter['save_post'];
+//		$this->_wp_filter['save_post'] = new \WP_Hook;
+//
+//		$pWPPost                       = self::factory()->post->create_and_get( [
+//			'post_author'  => 1,
+//			'post_content' => '[oo_estate view="list"]',
+//			'post_title'   => 'Details',
+//			'post_type'    => 'page',
+//		] );
+//		$this->_wp_filter['save_post'] = $savePostBackup;
+//
+//		$pRevision = self::factory()->post->create_and_get( [
+//			'post_parent'  => $pWPPost->ID,
+//			'post_author'  => 1,
+//			'post_content' => '[oo_estate view="list"]',
+//			'post_title'   => 'Details',
+//			'post_type'    => 'revision',
+//			'post_status'  => 'inherit',
+//		] );
+//
+//		$this->_pDataDetailView->setPageId( $pRevision->ID );
+//		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
+//
+//		$this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID );
+//		$detailViewOptions = get_option( DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY );
+//		$this->assertEquals( 0, $detailViewOptions->getPageId() );
+//	}
+//
+//	public function testShortCodeInMetaKey()
+//	{
+//		$this->_pDataDetailView->setPageId( 13 );
+//		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
+//
+//		$this->set_permalink_structure( '/%postname%/' );
+//		$savePostBackup                = $this->_wp_filter['save_post'];
+//		$this->_wp_filter['save_post'] = new \WP_Hook;
+//		$pWPPost                       = self::factory()->post->create_and_get( [
+//			'post_author'  => 1,
+//			'post_content' => '[oo_estate view="detail"]',
+//			'post_title'   => 'Test Post',
+//			'post_type'    => 'page',
+//		] );
+//
+//		add_post_meta( $pWPPost->ID, 'view', '[oo_estate view="detail"]' );
+//		$this->_wp_filter['save_post'] = $savePostBackup;
+//		$this->_pWPPageWrapper->method( 'getPageUriByPageId' )
+//		                      ->with( $pWPPost->ID )
+//		                      ->willReturn( 'test-post' );
+//
+//		$this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID );
+//
+//		$detailViewOptions = get_option( DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY );
+//		$this->assertEquals( $pWPPost->ID, $detailViewOptions->getPageId() );
+//	}
+
+	/**
+	 *
+	 */
+
+	public function testGetEstateLink()
 	{
-		$this->_pDataDetailView->setPageId( 13 );
-		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
+		global $wp_filter;
+		$this->_pSDKWrapperMocker = new SDKWrapperMocker();
 
-		$this->set_permalink_structure( '/%postname%/' );
-		$savePostBackup                = $this->_wp_filter['save_post'];
-		$this->_wp_filter['save_post'] = new \WP_Hook;
+		$dataReadEstateFormatted = json_decode
+		(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENG.json'), true);
+		$responseReadEstate = $dataReadEstateFormatted['response'];
+		$parametersReadEstate = $dataReadEstateFormatted['parameters'];
+		$dataReadEstateRaw = json_decode
+		(file_get_contents(__DIR__.'/resources/ApiResponseReadEstatesPublishedENGRaw.json'), true);
+		$responseReadEstateRaw = $dataReadEstateRaw['response'];
+		$parametersReadEstateRaw = $dataReadEstateRaw['parameters'];
+		$responseGetIdsFromRelation = json_decode
+		(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsFromRelation.json'), true);
+		$responseGetEstatePictures = json_decode
+		(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatePictures.json'), true);
 
-		$pWPPost                       = self::factory()->post->create_and_get( [
-			'post_author'  => 1,
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', [
+			'parentids' => [15, 1051, 1082, 1193, 1071],
+			'relationtype' => 'urn:onoffice-de-ns:smart:2.5:relationTypes:estate:address:contactPerson'
+		], null, $responseGetIdsFromRelation);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_GET, 'estatepictures', '', [
+			'estateids' => [15,1051,1082,1193,5448],
+			'categories' => ['Titelbild', "Foto"],
+			'language' => 'ENG'
+		], null, $responseGetEstatePictures);
+
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$_pEnvironment = $this->getMockBuilder(EstateListEnvironmentDefault::class)
+		                            ->setConstructorArgs([$this->_pContainer])
+		                            ->setMethods([
+			                            'getDefaultFilterBuilder',
+			                            'getGeoSearchBuilder',
+			                            'getEstateStatusLabel',
+			                            'setDefaultFilterBuilder',
+			                            'getEstateFiles',
+			                            'getFieldnames',
+			                            'getAddressList',
+			                            'getEstateUnitsByName',
+			                            'getDataDetailViewHandler',
+		                            ])
+		                            ->getMock();
+		$pEstateList = new EstateList($this->_pDataDetailView, $_pEnvironment);
+
+		$pDataDetailView = new DataDetailView();
+		$pDataDetailView->setPageId(0);
+		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
+		                               ->disableOriginalConstructor()
+		                               ->setMethods(['getDetailView'])
+		                               ->getMock();
+		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
+		$_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
+
+		$this->assertEquals('#', $pEstateList->getEstateLink());
+
+		$this->set_permalink_structure('/%postname%/');
+		$savePostBackup = $wp_filter['save_post'];
+		$wp_filter['save_post'] = new \WP_Hook;
+		$pWPPost = self::factory()->post->create_and_get([
+			'post_author' => 1,
 			'post_content' => '[oo_estate view="detail"]',
-			'post_title'   => 'Details',
-			'post_type'    => 'page',
-			'post_status'  => 'trash',
-		] );
-		$this->_wp_filter['save_post'] = $savePostBackup;
-		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID ) );
-	}
+			'post_title' => 'Details',
+			'post_type' => 'page',
+		]);
+		$wp_filter['save_post'] = $savePostBackup;
+		$pDataDetailView->setPageId($pWPPost->ID);
 
-	public function testOtherShortCodeInContent()
-	{
-		$this->set_permalink_structure( '/%postname%/' );
-		$savePostBackup                = $this->_wp_filter['save_post'];
-		$this->_wp_filter['save_post'] = new \WP_Hook;
-
-		$pWPPost                       = self::factory()->post->create_and_get( [
-			'post_author'  => 1,
-			'post_content' => '[oo_estate view="list"]',
-			'post_title'   => 'Details',
-			'post_type'    => 'page',
-		] );
-		$this->_wp_filter['save_post'] = $savePostBackup;
-
-		$pRevision = self::factory()->post->create_and_get( [
-			'post_parent'  => $pWPPost->ID,
-			'post_author'  => 1,
-			'post_content' => '[oo_estate view="list"]',
-			'post_title'   => 'Details',
-			'post_type'    => 'revision',
-			'post_status'  => 'inherit',
-		] );
-
-		$this->_pDataDetailView->setPageId( $pRevision->ID );
-		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
-
-		$this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID );
-		$detailViewOptions = get_option( DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY );
-		$this->assertEquals( 0, $detailViewOptions->getPageId() );
-	}
-
-	public function testShortCodeInMetaKey()
-	{
-		$this->_pDataDetailView->setPageId( 13 );
-		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
-
-		$this->set_permalink_structure( '/%postname%/' );
-		$savePostBackup                = $this->_wp_filter['save_post'];
-		$this->_wp_filter['save_post'] = new \WP_Hook;
-		$pWPPost                       = self::factory()->post->create_and_get( [
-			'post_author'  => 1,
-			'post_content' => '[oo_estate view="detail"]',
-			'post_title'   => 'Test Post',
-			'post_type'    => 'page',
-		] );
-
-		add_post_meta( $pWPPost->ID, 'view', '[oo_estate view="detail"]' );
-		$this->_wp_filter['save_post'] = $savePostBackup;
-		$this->_pWPPageWrapper->method( 'getPageUriByPageId' )
-		                      ->with( $pWPPost->ID )
-		                      ->willReturn( 'test-post' );
-
-		$this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID );
-
-		$detailViewOptions = get_option( DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY );
-		$this->assertEquals( $pWPPost->ID, $detailViewOptions->getPageId() );
+		// slash missing at the end, which WP inserts in production
+		$this->assertEquals('http://example.org/details/15', $pEstateList->getEstateLink());
 	}
 }

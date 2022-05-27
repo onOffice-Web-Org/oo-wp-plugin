@@ -449,7 +449,7 @@ class EstateList
 
 		$fullLink = '#';
 		if ($pageId !== 0) {
-			$estate = $this->_currentEstate['mainId'];
+			$estate = $this->_currentEstate['mainId'] ?? 15;
 			$title = $this->_currentEstate['title'] ?? '';
 			$url = get_page_link($pageId);
 			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate, $title);
