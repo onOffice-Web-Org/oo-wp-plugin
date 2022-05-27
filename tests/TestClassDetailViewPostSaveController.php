@@ -117,7 +117,7 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		) $charsetCollate;";
 
 		dbDelta($sql);
-		$this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID );
+		$this->_pDetailViewPostSaveController->onSavePostTest( $pWPPost->ID );
 		$this->assertEquals( 13, $this->_pDataDetailView->getPageId() );
 	}
 
