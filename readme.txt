@@ -83,6 +83,10 @@ Start editing inside the `onoffice-personalized` folder.
 * We now load a CSS file from the template folder. This allows you to more easily modify the CSS for your templates. If you have a file "onoffice-style.css" in your template folder (e.g. at wp-content/plugins/onoffice-personalized/templates/onoffice-style.css), we will load that instead of our default styles. To remain backwards compatible, if that file is not found, we continue loading our old styles.
 * We removed some redundant fields for the contact person and improved their labels in the detail view settings. This change is backwards compatible, your templates will continue to work without changes.
 
+**Fixed**
+
+* Detail view pages are now redirected properly. For example, if you have configured the URL to contain the title and you change the estate's title, when someone opens the old link they will be redirected to the new one.
+
 = 3.2 (2022-05-23) =
 
 **Added**
