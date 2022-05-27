@@ -2,14 +2,14 @@
 # This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 3.0\n"
+"Project-Id-Version: onOffice for WP-Websites 3.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-05-04T15:13:47+07:00\n"
+"POT-Creation-Date: 2022-05-23T09:43:38+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -40,7 +40,7 @@ msgstr ""
 
 #: plugin/Controller/AdminViewController.php:149
 #: plugin/Gui/AdminPageAddressList.php:84
-#: plugin/Gui/AdminPageBase.php:88
+#: plugin/Gui/AdminPageBase.php:89
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:76
 #: plugin/Gui/AdminPageEstateUnitList.php:72
@@ -66,20 +66,20 @@ msgstr ""
 
 #: plugin/Controller/AdminViewController.php:205
 #: plugin/Controller/AdminViewController.php:206
-#: plugin/Controller/AdminViewController.php:373
+#: plugin/Controller/AdminViewController.php:372
 msgid "Settings"
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:389
+#: plugin/Controller/AdminViewController.php:388
 msgid "API token and secret"
 msgstr ""
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:392
+#: plugin/Controller/AdminViewController.php:391
 msgid "It looks like you did not enter any valid API credentials. Please consider reviewing your %s."
 msgstr ""
 
-#: plugin/Controller/AdminViewController.php:408
+#: plugin/Controller/AdminViewController.php:407
 msgid "We have deactivated the plugin's duplicate check for all of your forms, because the duplicate check can unintentionally overwrite address records. This function will be removed in the future. The option has been deactivated for these forms: Contact, Interest, Owner"
 msgstr ""
 
@@ -119,8 +119,8 @@ msgid "Search Criteria"
 msgstr ""
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Fieldnames.php:219
-#: plugin/Gui/AdminPageFormSettingsContact.php:196
+#: plugin/Fieldnames.php:220
+#: plugin/Gui/AdminPageFormSettingsContact.php:192
 msgid "Form Specific Fields"
 msgstr ""
 
@@ -178,37 +178,43 @@ msgstr ""
 msgid "Edit Address List"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:105
+#: plugin/Gui/AdminPageAddressListSettings.php:106
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:392
+#: plugin/Gui/AdminPageFormSettingsBase.php:395
 msgid "choose name"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:121
+#: plugin/Gui/AdminPageAddressListSettings.php:122
 #: plugin/Gui/AdminPageEstateDetail.php:279
-#: plugin/Gui/AdminPageEstateListSettings.php:126
-#: plugin/Gui/AdminPageEstateUnitSettings.php:89
-#: plugin/Gui/AdminPageFormSettingsBase.php:409
+#: plugin/Gui/AdminPageEstateListSettings.php:132
+#: plugin/Gui/AdminPageEstateUnitSettings.php:87
+#: plugin/Gui/AdminPageFormSettingsBase.php:412
 msgid "Layout & Design"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:141
+#: plugin/Gui/AdminPageAddressListSettings.php:139
 msgid "Filter & Records"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:160
+#: plugin/Gui/AdminPageAddressListSettings.php:159
+#: plugin/Gui/AdminPageEstateListSettings.php:118
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:568
+msgid "Sorting"
+msgstr ""
+
+#: plugin/Gui/AdminPageAddressListSettings.php:176
 #: plugin/Gui/AdminPageEstateDetail.php:289
-#: plugin/Gui/AdminPageEstateListSettings.php:135
-#: plugin/Gui/AdminPageEstateUnitSettings.php:97
+#: plugin/Gui/AdminPageEstateListSettings.php:141
+#: plugin/Gui/AdminPageEstateUnitSettings.php:95
 msgid "Photo Types"
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:314
+#: plugin/Gui/AdminPageAddressListSettings.php:333
 msgid "The address list was saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageAddressListSettings.php:315
+#: plugin/Gui/AdminPageAddressListSettings.php:334
 msgid "There was a problem saving the list. Please make sure the name of the list is unique."
 msgstr ""
 
@@ -366,7 +372,7 @@ msgstr ""
 
 #: plugin/Gui/AdminPageEstate.php:88
 #: plugin/Gui/AdminPageEstateDetail.php:205
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:95
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:99
 msgid "Detail View"
 msgstr ""
 
@@ -412,15 +418,15 @@ msgstr ""
 msgid "Access Control"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:306
+#: plugin/Gui/AdminPageEstateDetail.php:309
 msgid "Additional Media"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:422
+#: plugin/Gui/AdminPageEstateDetail.php:428
 msgid "The detail view has been saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:423
+#: plugin/Gui/AdminPageEstateDetail.php:429
 msgid "There was a problem saving the detail view."
 msgstr ""
 
@@ -434,22 +440,22 @@ msgstr ""
 msgid "Are you sure you want to delete the selected items?"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateListSettings.php:107
+#: plugin/Gui/AdminPageEstateListSettings.php:99
 msgid "Filters & Records"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateListSettings.php:143
-#: plugin/Gui/AdminPageEstateUnitSettings.php:105
+#: plugin/Gui/AdminPageEstateListSettings.php:149
+#: plugin/Gui/AdminPageEstateUnitSettings.php:103
 msgid "Downloadable Documents"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateListSettings.php:152
+#: plugin/Gui/AdminPageEstateListSettings.php:158
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:224
+#: plugin/Gui/AdminPageFormSettingsContact.php:231
 msgid "Geo Fields"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateListSettings.php:158
+#: plugin/Gui/AdminPageEstateListSettings.php:164
 msgid "At least the following fields must be active: country, radius and city or postcode."
 msgstr ""
 
@@ -469,7 +475,7 @@ msgstr ""
 msgid "Edit Units View"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateUnitSettings.php:80
+#: plugin/Gui/AdminPageEstateUnitSettings.php:79
 msgid "Records"
 msgstr ""
 
@@ -478,83 +484,83 @@ msgid "Search Forms"
 msgstr ""
 
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
-#: plugin/Gui/AdminPageFormSettingsContact.php:113
+#: plugin/Gui/AdminPageFormSettingsContact.php:111
 msgid "Form Specific Options"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:118
+#: plugin/Gui/AdminPageFormSettingsBase.php:121
 msgid "Edit Form"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:266
+#: plugin/Gui/AdminPageFormSettingsBase.php:269
 msgid "The Form was saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:267
+#: plugin/Gui/AdminPageFormSettingsBase.php:270
 msgid "There was a problem saving the form. Please make sure the name of the form is unique."
 msgstr ""
 
 #. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:276
+#: plugin/Gui/AdminPageFormSettingsBase.php:279
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:567
 msgid "Module: %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:277
+#: plugin/Gui/AdminPageFormSettingsBase.php:280
 msgid "Edit Values"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:280
+#: plugin/Gui/AdminPageFormSettingsBase.php:283
 msgid "Add Language"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:281
+#: plugin/Gui/AdminPageFormSettingsBase.php:284
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:449
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:476
 msgid "Choose Language"
 msgstr ""
 
 #. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:283
+#: plugin/Gui/AdminPageFormSettingsBase.php:286
 msgid "Default Value: %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:284
+#: plugin/Gui/AdminPageFormSettingsBase.php:287
 msgid "Custom Label: %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:285
+#: plugin/Gui/AdminPageFormSettingsBase.php:288
 msgid "Default Value From:"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:286
+#: plugin/Gui/AdminPageFormSettingsBase.php:289
 msgid "Default Value Up To:"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:317
+#: plugin/Gui/AdminPageFormSettingsBase.php:320
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "No"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:318
+#: plugin/Gui/AdminPageFormSettingsBase.php:321
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "Yes"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:123
+#: plugin/Gui/AdminPageFormSettingsContact.php:121
 msgid "Request Manager"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:124
+#: plugin/Gui/AdminPageFormSettingsContact.php:122
 msgid "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:126
-msgid "If the contact form is on an estate page, you can link the created address to that estate by opening the email you receive in onOffice enterprise or using the %s."
+#: plugin/Gui/AdminPageFormSettingsContact.php:124
+msgid "By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s."
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:150
-#: plugin/Gui/AdminPageFormSettingsContact.php:161
+#: plugin/Gui/AdminPageFormSettingsContact.php:148
+#: plugin/Gui/AdminPageFormSettingsContact.php:159
 msgid "Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk."
 msgstr ""
 
@@ -562,11 +568,11 @@ msgstr ""
 msgid "Please provide an Email address!"
 msgstr ""
 
-#: plugin/Gui/AdminPageSettingsBase.php:177
+#: plugin/Gui/AdminPageSettingsBase.php:180
 msgid "Fields"
 msgstr ""
 
-#: plugin/Gui/AdminPageSettingsBase.php:407
+#: plugin/Gui/AdminPageSettingsBase.php:425
 msgid "Fields Configuration"
 msgstr ""
 
@@ -628,7 +634,7 @@ msgstr ""
 #: plugin/Gui/Table/EstateListTable.php:135
 #: plugin/Gui/Table/FormsTable.php:130
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:265
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:339
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
 msgid "Template"
 msgstr ""
@@ -707,7 +713,8 @@ msgid "View Name"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:104
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:460
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:463
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:486
 msgid "Sort by"
 msgstr ""
 
@@ -752,7 +759,7 @@ msgid "Reduce values according to selected filter"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:318
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:320
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:394
 msgid "Show Estate Status"
 msgstr ""
 
@@ -761,12 +768,11 @@ msgid "Show reference estates"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:357
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:103
 msgid "Random Order"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:404
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:157
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
 msgid "PDF-Expose"
 msgstr ""
 
@@ -782,24 +788,32 @@ msgstr ""
 msgid "Favorites List"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:441
-msgid "Sort by User Selection"
-msgstr ""
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:484
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:510
 msgid "Standard Sort"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:526
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:549
 msgid "lowest First / highest First"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:527
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:550
 msgid "ascending / descending"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:530
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:553
 msgid "Formulation of sorting directions"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:571
+msgid "Default sort"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:572
+msgid "User selection"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:573
+msgid "Random order"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:87
@@ -873,31 +887,55 @@ msgstr ""
 msgid "Module"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:136
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:140
 msgid "Allow detail view for reference estates"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:178
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:182
 msgid "Movie Links"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:184
-msgid "Disabled"
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:188
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:212
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:235
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:258
+msgid "Deactivated"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:185
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:189
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:213
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:236
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:259
 msgid "Link"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:186
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:190
 msgid "Player"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:301
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:206
+msgid "Ogulo-Links"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:214
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:237
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:260
+msgid "Embedded"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:229
+msgid "Object-Links"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:252
+msgid "Links"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:375
 msgid "Select Contact Form"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:305
+#: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:379
 msgid "No Contact Form"
 msgstr ""
 

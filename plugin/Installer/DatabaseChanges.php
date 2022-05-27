@@ -25,10 +25,12 @@ namespace onOffice\WPlugin\Installer;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use onOffice\WPlugin\AddressList;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
@@ -39,7 +41,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 27;
+	const MAX_VERSION = 29;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -74,6 +76,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
 		if ($dbversion === null) {
+			$isNewInstall = true;
 			dbDelta( $this->getCreateQueryCache() );
 			$this->setDetailTemplate();
 
@@ -178,6 +181,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		if ($dbversion == 21) {
 			dbDelta($this->getCreateQueryListviews());
+			$this->updateShowReferenceEstateOfList();
 			$dbversion = 22;
 		}
 
@@ -187,8 +191,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 23) {
-			$this->deactivateCheckDuplicateOfForm();
-			$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+			if (!isset($isNewInstall)){
+				$this->deactivateCheckDuplicateOfForm();
+				$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+			}
 			$dbversion = 24;
 		}
 
@@ -207,6 +213,17 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->deleteMessageFieldApplicantSearchForm();
 			$dbversion = 27;
 		}
+
+		if ($dbversion == 27) {
+			$this->updateEstateListSortBySetting();
+			$dbversion = 28;
+		}
+
+		if ($dbversion == 28) {
+			$this->checkContactFieldInDefaultDetail();
+			$dbversion = 29;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -345,6 +362,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		return $sql;
 	}
+
 	/**
 	 *
 	 * @return string
@@ -658,6 +676,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
+
 	/**
 	 *
 	 */
@@ -779,6 +798,61 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
 		$pDetailView            = $pDataDetailViewHandler->getDetailView();
 		$pDetailView->setTemplate( key( $firstTemplatePath ) );
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateShowReferenceEstateOfList()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_listviews
+				SET `show_reference_estate` = 1";
+
+		$this->_pWPDB->query($sql);
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateEstateListSortBySetting()
+	{
+		$prefix = $this->getPrefix();
+		$sql    = "UPDATE {$prefix}oo_plugin_listviews
+				SET `sortBySetting` = '0' 
+				WHERE (`sortBySetting` IS NULL OR `sortBySetting` = '') 
+				AND `random` = 0";
+
+		$this->_pWPDB->query( $sql );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function checkContactFieldInDefaultDetail() {
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$addressFields = $pDetailView->getAddressFields();
+
+		foreach (AddressList::DEFAULT_FIELDS_REPLACE as $defaultField => $newField) {
+			if (in_array($defaultField, $addressFields)) {
+				$key = array_search($defaultField, $addressFields);
+				unset($addressFields[$key]);
+
+				if (!in_array($newField, $addressFields)) {
+					$addressFields[$key] = $newField;
+				}
+			}
+		}
+		ksort($addressFields);
+		$pDetailView->setAddressFields($addressFields);
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 }

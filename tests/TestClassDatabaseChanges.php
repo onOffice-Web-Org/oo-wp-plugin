@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
@@ -78,8 +80,10 @@ class TestClassDatabaseChanges
 	public function prepare()
 	{
 		global $wpdb;
-
+		$dataDetailView = new DataDetailView();
+		$dataDetailView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 		$this->_pWpOption = new WPOptionWrapperTest();
+		$this->_pWpOption->addOption('onoffice-default-view', $dataDetailView);
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
 
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
@@ -111,7 +115,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(27, $dbversion);
+		$this->assertEquals(29, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -234,7 +238,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(27, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(29, DatabaseChanges::MAX_VERSION);
 	}
 
 

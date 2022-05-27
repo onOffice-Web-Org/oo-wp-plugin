@@ -19,11 +19,9 @@
  *
  */
 
-declare(strict_types=1);
+declare (strict_types=1);
 
-namespace onOffice\WPlugin\Field;
-
-use onOffice\SDK\onOfficeSDK;
+namespace onOffice\WPlugin\Types;
 
 /**
  *
@@ -32,40 +30,54 @@ use onOffice\SDK\onOfficeSDK;
  *
  */
 
-class FieldDefaultSorting
+abstract class LinksTypes
 {
-	/** @var array */
-	private $_defaultSortByFields = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'KdNr',
-			'Eintragsdatum',
-			'Name',
-		],
-		onOfficeSDK::MODULE_ESTATE => [
-			'erstellt_am',
-			'letzte_aktion',
-			'verkauft_am',
-			'objektnr_extern',
-			'kaufpreis',
-			'kaltmiete',
-			'wohnflaeche',
-			'grundstuecksflaeche',
-			'gesamtflaeche',
-			'anzahl_zimmer',
-			'anzahl_badezimmer'
-		]
-	];
+	/** */
+	const LINKS_DEACTIVATED = 'deactivated';
+
+	/** */
+	const LINKS_LINK = 'link';
+
+	/** */
+	const LINKS_EMBEDDED = 'embedded';
 
 
+	/** */
+	const FILE_TYPE_OGULO_LINK = 'Ogulo-Link';
+	const FILE_TYPE_OBJECT_LINK = 'Objekt-Link';
+	const FILE_TYPE_LINK = 'Link';
 
 	/**
 	 *
-	 * @return array
+	 * @param string $type
+	 * @return bool
 	 *
 	 */
 
-	public function getDefaultSortByFields(string $module): array
+	static public function isOguloLink(string $type): bool
 	{
-		return $this->_defaultSortByFields[$module] ?? [];
+		return $type === self::FILE_TYPE_OGULO_LINK;
+	}
+
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
+	static public function isObjectLink(string $type): bool
+	{
+		return $type === self::FILE_TYPE_OBJECT_LINK;
+	}
+
+	/**
+	 *
+	 * @param string $type
+	 * @return bool
+	 *
+	 */
+	static public function isLink(string $type): bool
+	{
+		return $type === self::FILE_TYPE_LINK;
 	}
 }

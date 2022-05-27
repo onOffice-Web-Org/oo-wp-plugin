@@ -24,41 +24,156 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Renderer\InputFieldChosenRenderer;
+use onOffice\WPlugin\Renderer\InputFieldSelectRenderer;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
+
 class TestClassInputFieldChosenRenderer
 	extends \WP_UnitTestCase
 {
 	/**
 	 *
 	 */
-	public function testRenderEmptyValues()
+	public function testRenderMultiple()
 	{
 		$pSubject = new InputFieldChosenRenderer('testRenderer');
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer" id="select_1" multiple ></select>', $output);
+		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;"></select>', $output);
 	}
 
 	/**
 	 *
 	 */
+	public function testRenderNotMultiple()
+	{
+		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		ob_start();
+		$pSubject->setMultiple(false);
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer" id="select_1" style="width: 230px;"></select>', $output);
+	}
+
+		/**
+	 *
+	 */
 	public function testRenderWithValues()
 	{
 		$pSubject = new InputFieldChosenRenderer('testRenderer');
-		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
-		$pSubject->setSelectedValue(['johndoe']);
-		$pSubject->setOoModule('johndoe');
+		$dataValueGroup = [
+			'group' => [
+				'Popular' => [
+					'kaufpreis' => 'Kaufpreis',
+					'kaltmiete' => 'Kaltmiete'
+				]
+			]
+		];
+		$pSubject->setValue($dataValueGroup);
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('johndoe', $pSubject->getOoModule());
-		$this->assertEquals('<select name="testRenderer" id="select_1" multiple >'
-			. '<option value="johndoe" selected="selected">John Doe</option><option value="konradzuse" >'
-			. 'Konrad Zuse</option></select>', $output);
+		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;">'
+			.'<optgroup label="Popular">'
+				.'<option value="kaufpreis" >Kaufpreis</option>'
+				.'<option value="kaltmiete" >Kaltmiete</option>'
+			.'</optgroup>'
+			.'</select>', $output);
+	}
+
+	/**
+	 *
+	 */
+	public function testRenderSelectedValue()
+	{
+		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		$dataValueGroup = [
+			'group' => [
+				'Popular' => [
+					'kaufpreis' => 'Kaufpreis',
+					'kaltmiete' => 'Kaltmiete'
+				]
+			]
+		];
+		$pSubject->setValue($dataValueGroup);
+		$pSubject->setSelectedValue(['kaufpreis']);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;">'
+			.'<optgroup label="Popular">'
+			.'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
+			.'<option value="kaltmiete" >Kaltmiete</option>'
+			.'</optgroup>'
+			.'</select>', $output);
+	}
+
+
+	/**
+	 *
+	 */
+	public function testRenderSingleSelectedValue()
+	{
+		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		$dataValueGroup = [
+			'group' => [
+				'Popular' => [
+					'kaufpreis' => 'Kaufpreis',
+					'kaltmiete' => 'Kaltmiete'
+				]
+			]
+		];
+		$pSubject->setMultiple(false);
+		$pSubject->setValue($dataValueGroup);
+		$pSubject->setSelectedValue('kaufpreis');
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer" id="select_1" style="width: 230px;">'
+		                    .'<optgroup label="Popular">'
+		                    .'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
+		                    .'<option value="kaltmiete" >Kaltmiete</option>'
+		                    .'</optgroup>'
+		                    .'</select>', $output);
+	}
+
+
+	/**
+	 *
+	 */
+	public function testRenderNotGroup()
+	{
+		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		$dataValue = ['kaufpreis' => 'Kaufpreis', 'kaltmiete' => 'Kaltmiete'];
+		$pSubject->setValue($dataValue);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;">'
+			.'<option value="kaufpreis" >Kaufpreis</option>'
+			.'<option value="kaltmiete" >Kaltmiete</option>'
+			.'</select>', $output);
+	}
+
+	/**
+	 *
+	 */
+	public function testRenderNotGroupSelected()
+	{
+		$pSubject = new InputFieldChosenRenderer('testRenderer');
+		$dataValue = ['kaufpreis' => 'Kaufpreis', 'kaltmiete' => 'Kaltmiete'];
+		$pSubject->setValue($dataValue);
+		$pSubject->setSelectedValue(['kaufpreis']);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;">'
+			.'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
+			.'<option value="kaltmiete" >Kaltmiete</option>'
+			.'</select>', $output);
 	}
 }

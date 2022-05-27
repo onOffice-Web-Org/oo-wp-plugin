@@ -39,11 +39,7 @@ class FieldModuleCollectionDecoratorInternalAnnotations
 {
 	/** @var array */
 	private $_fieldAnnotations = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'defaultphone' => 'Phone (Marked as default in onOffice)',
-			'defaultemail' => 'E-Mail (Marked as default in onOffice)',
-			'defaultfax' => 'Fax (Marked as default in onOffice)',
-		],
+		onOfficeSDK::MODULE_ADDRESS => [],
 		onOfficeSDK::MODULE_SEARCHCRITERIA => [
 			'krit_bemerkung_oeffentlich' => 'Search Criteria Comment (external)',
 		],

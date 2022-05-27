@@ -19,53 +19,29 @@
  *
  */
 
-declare(strict_types=1);
+declare (strict_types=1);
 
-namespace onOffice\WPlugin\Field;
+namespace onOffice\tests;
 
-use onOffice\SDK\onOfficeSDK;
+use Closure;
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataViewSimilarEstates;
+use onOffice\WPlugin\Types\LinksTypes;
+use onOffice\WPlugin\Types\MovieLinkTypes;
+use TypeError;
+use WP_UnitTestCase;
 
-/**
- *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
- */
-
-class FieldDefaultSorting
+class TestClassLinkTypes
+	extends WP_UnitTestCase
 {
-	/** @var array */
-	private $_defaultSortByFields = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'KdNr',
-			'Eintragsdatum',
-			'Name',
-		],
-		onOfficeSDK::MODULE_ESTATE => [
-			'erstellt_am',
-			'letzte_aktion',
-			'verkauft_am',
-			'objektnr_extern',
-			'kaufpreis',
-			'kaltmiete',
-			'wohnflaeche',
-			'grundstuecksflaeche',
-			'gesamtflaeche',
-			'anzahl_zimmer',
-			'anzahl_badezimmer'
-		]
-	];
-
-
-
 	/**
 	 *
-	 * @return array
-	 *
 	 */
-
-	public function getDefaultSortByFields(string $module): array
+	public function testIsOguloLink()
 	{
-		return $this->_defaultSortByFields[$module] ?? [];
+		$this->assertTrue(call_user_func( LinksTypes::class.'::isOguloLink', 'Ogulo-Link'));
+		$this->assertTrue(call_user_func( LinksTypes::class.'::isObjectLink', 'Objekt-Link'));
+		$this->assertTrue(call_user_func( LinksTypes::class.'::isLink', 'Link'));
 	}
+
 }
