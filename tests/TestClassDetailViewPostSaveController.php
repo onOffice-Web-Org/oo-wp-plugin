@@ -82,12 +82,15 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 		$pWpOption = new WPOptionWrapperTest();
 		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+
 		$pDbChanges->install();
 		$this->_pDetailViewPostSaveController = new DetailViewPostSaveController( $pSubject );
 	}
 
 	public function testReturnNullForTrashStatus()
 	{
+		global $wpdb;
+		var_dump('zzz');
 		$this->_pDataDetailView->setPageId( 13 );
 		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
 
@@ -98,6 +101,22 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 			'post_type'    => 'page',
 			'post_status'  => 'trash',
 		] );
+
+		$prefix = $wpdb->prefix;
+		$charsetCollate = $wpdb->get_charset_collate();
+		$tableName = $prefix."oo_plugin_cache";
+		$sql = "CREATE TABLE $tableName (
+			cache_id bigint(20) NOT NULL AUTO_INCREMENT,
+			cache_parameters text NOT NULL,
+			cache_parameters_hashed varchar(32) NOT NULL,
+			cache_response mediumtext NOT NULL,
+			cache_created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY  (cache_id),
+			UNIQUE KEY cache_parameters_hashed (cache_parameters_hashed),
+			KEY cache_created (cache_created)
+		) $charsetCollate;";
+
+		dbDelta($sql);
 		$this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID );
 		$this->assertEquals( 13, $this->_pDataDetailView->getPageId() );
 	}
