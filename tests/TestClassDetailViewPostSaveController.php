@@ -69,7 +69,6 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 	 *
 	 */
 	private $_wp_filter;
-	private \DI\Container $_pContainer;
 
 	/**
 	 * @before
@@ -213,10 +212,10 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$this->_pContainer = $pContainerBuilder->build();
-		$this->_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
+		$_pContainer = $pContainerBuilder->build();
+		$_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
 		$_pEnvironment = $this->getMockBuilder(EstateListEnvironmentDefault::class)
-		                            ->setConstructorArgs([$this->_pContainer])
+		                            ->setConstructorArgs([$_pContainer])
 		                            ->setMethods([
 			                            'getDefaultFilterBuilder',
 			                            'getGeoSearchBuilder',
