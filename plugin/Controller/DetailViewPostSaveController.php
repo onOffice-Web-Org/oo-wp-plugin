@@ -56,7 +56,7 @@ class DetailViewPostSaveController
 	public function onSavePostTest($postId)
 	{
 		$pPost = WP_Post::get_instance( $postId );
-		return 2;
+		return $pPost->ID;
 	}
 
 	/**

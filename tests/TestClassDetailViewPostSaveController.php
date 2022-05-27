@@ -89,9 +89,6 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 	public function testReturnNullForTrashStatus()
 	{
-		$this->_pDataDetailView->setPageId( 13 );
-		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
-
 		$pWPPost = self::factory()->post->create_and_get( [
 			'post_author'  => 1,
 			'post_content' => '[oo_test view="detail"]',
@@ -99,8 +96,7 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 			'post_type'    => 'page',
 		] );
 
-		$this->_pDetailViewPostSaveController->onSavePostTest( $pWPPost->ID );
-		$this->assertEquals( 13, $this->_pDataDetailView->getPageId() );
+		$this->assertEquals( $pWPPost->ID, $this->_pDetailViewPostSaveController->onSavePostTest( $pWPPost->ID ) );
 	}
 
 	public function testOtherShortCodeInContent()
