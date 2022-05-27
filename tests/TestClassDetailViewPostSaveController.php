@@ -98,8 +98,8 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 			'post_type'    => 'page',
 			'post_status'  => 'trash',
 		] );
-
-		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID ) );
+		$this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID );
+		$this->assertEquals( 13, $this->_pDataDetailView->getPageId() );
 	}
 
 	public function testOtherShortCodeInContent()
