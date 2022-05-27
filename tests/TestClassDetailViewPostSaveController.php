@@ -93,25 +93,25 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 	}
 
-//	public function testReturnNullForTrashStatus()
-//	{
-//		$this->_pDataDetailView->setPageId( 13 );
-//		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
-//
-//		$this->set_permalink_structure( '/%postname%/' );
-//		$savePostBackup                = $this->_wp_filter['save_post'];
-//		$this->_wp_filter['save_post'] = new \WP_Hook;
-//
-//		$pWPPost                       = self::factory()->post->create_and_get( [
-//			'post_author'  => 1,
-//			'post_content' => '[oo_estate view="detail"]',
-//			'post_title'   => 'Details',
-//			'post_type'    => 'page',
-//			'post_status'  => 'trash',
-//		] );
-//		$this->_wp_filter['save_post'] = $savePostBackup;
-//		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID ) );
-//	}
+	public function testReturnNullForTrashStatus()
+	{
+		$this->_pDataDetailView->setPageId( 13 );
+		$this->_pDataDetailViewHandler->saveDetailView( $this->_pDataDetailView );
+
+		$this->set_permalink_structure( '/%postname%/' );
+		$savePostBackup                = $this->_wp_filter['save_post'];
+		$this->_wp_filter['save_post'] = new \WP_Hook;
+
+		$pWPPost                       = self::factory()->post->create_and_get( [
+			'post_author'  => 1,
+			'post_content' => '[oo_estate view="detail"]',
+			'post_title'   => 'Details',
+			'post_type'    => 'page',
+			'post_status'  => 'trash',
+		] );
+		$this->_wp_filter['save_post'] = $savePostBackup;
+		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID ) );
+	}
 //
 //	public function testOtherShortCodeInContent()
 //	{
@@ -245,15 +245,16 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$savePostBackup = $wp_filter['save_post'];
 		$wp_filter['save_post'] = new \WP_Hook;
 		$pWPPost = self::factory()->post->create_and_get([
-			'post_author' => 1,
+			'post_author'  => 1,
 			'post_content' => '[oo_estate view="detail"]',
-			'post_title' => 'Details',
-			'post_type' => 'page',
+			'post_title'   => 'Details',
+			'post_type'    => 'page',
+			'post_status'  => 'trash',
 		]);
 		$wp_filter['save_post'] = $savePostBackup;
 		$pDataDetailView->setPageId($pWPPost->ID);
 
 		// slash missing at the end, which WP inserts in production
-		$this->assertEquals('http://example.org/details/15', $pEstateList->getEstateLink());
+		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID ) );
 	}
 }
