@@ -93,6 +93,10 @@ class WPOptionWrapperTest
 
 	public function updateOption(string $option, $value, bool $autoload = null): bool
 	{
+		if ( ! isset( $this->_options[ $option ] ) ) {
+			return $this->addOption( $option, $value );
+		}
+
 		$valueChanged = $this->_options[$option] !== $value;
 		if (isset($this->_options[$option])) {
 			$this->_options[$option] = $value;
