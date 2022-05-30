@@ -229,6 +229,12 @@ class InputModelRenderer
 				$pInstance = new InputFieldNumberRenderer($elementName);
 				$pInstance->setValue($pInputModel->getValue());
 				break;
+
+			case InputModelOption::HTML_TYPE_EMAIL:
+				$pInstance = new InputFieldEmailRenderer('email', $elementName);
+				$pInstance->addAdditionalAttribute('size', '50');
+				$pInstance->setValue($pInputModel->getValue());
+				break;
 		}
 
 		if ($pInstance !== null) {

@@ -49,6 +49,9 @@ abstract class InputModelBase
 	const HTML_TYPE_TEXT = 'text';
 
 	/** */
+	const HTML_TYPE_EMAIL = 'email';
+
+	/** */
 	const HTML_TYPE_LABEL = 'label';
 
 	/** */
