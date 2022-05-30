@@ -12,22 +12,8 @@ onOffice.ajaxSaver = function(outerDiv) {
 	this.register = function() {
 		var proto = this;
 		this._outerDiv.find('#send_ajax').on('click', function() {
-			var isValid = true;
-			var invalidInput;
-			$('input[type=email]').each(function (index, input) {
-				if (!input.checkValidity()) {
-					isValid = false;
-					invalidInput = input;
-					return false;
-				}
-			})
-			if (isValid) {
-				window.scrollTo(0, 0);
-				proto.save();
-			} else {
-				invalidInput.reportValidity();
-				invalidInput.focus();
-			}
+			window.scrollTo(0, 0);
+			proto.save();
 		});
 	};
 
