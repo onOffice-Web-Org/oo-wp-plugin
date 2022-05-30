@@ -36,7 +36,6 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
-use onOffice\WPlugin\Model\InputModelLabel;
 use function __;
 
 /**
@@ -124,39 +123,6 @@ class FormModelBuilderDBEstateListSettings
 		return $pFormModel;
 	}
 
-	/**
-	 * @return InputModelLabel
-	 */
-	public function createInputModelEmbedCode()
-	{
-		$pConfig = new InputModelDBFactoryConfigEstate();
-		$config = $pConfig->getConfig();
-		$name = $config[InputModelDBFactory::INPUT_LISTNAME]
-		[InputModelDBFactoryConfigEstate::KEY_FIELD];
-
-		$listName = $this->getValue($name);
-
-		$codes = '[oo_estate view="'.$listName.'"]';
-		$pInputModeLabel = new InputModelLabel(__('Shortcode: ', 'onoffice-for-wp-websites'), $codes);
-		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
-		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
-
-		return $pInputModeLabel;
-	}
-
-	public function createInputModelButton()
-	{
-		$pConfig = new InputModelDBFactoryConfigEstate();
-		$config = $pConfig->getConfig();
-		$name = $config[InputModelDBFactory::INPUT_LISTNAME]
-		[InputModelDBFactoryConfigEstate::KEY_FIELD];
-		$listName = $this->getValue($name);
-
-		$codes = '[oo_estate view="'.$listName.'"]';
-		$pInputModeLabel = new InputModelLabel('', $codes);
-		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_BUTTON);
-		return $pInputModeLabel;
-	}
 	/**
 	 *
 	 * @return InputModelDB

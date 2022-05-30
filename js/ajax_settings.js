@@ -1,6 +1,5 @@
 var onOffice = onOffice || {};
 onOffice.settings = onOffice_loc_settings;
-const LIST_SCREEN_RELOAD = ["admin_page_onoffice-editlistview","admin_page_onoffice-editform"];
 onOffice.ajaxSaver = function(outerDiv) {
 	if (typeof $ === 'undefined') {
 		$ = jQuery;
@@ -48,15 +47,8 @@ onOffice.ajaxSaver = function(outerDiv) {
 			var getUrlPageEdit = getUrl.split( '&' );
 			var urlPageEdit = '';
 			if (responseCode === true) {
-				if (getUrlPageEdit.length != 0 && LIST_SCREEN_RELOAD.includes(current_screen))
-				{
-					sessionStorage.setItem('message_save_view',message);
-					urlPageEdit = getUrlPageEdit[0] + "&id=" + onOffice.settings.record_id;
-					window.location.replace(urlPageEdit);
-				} else {
-					$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
-						message + '</p></div>');
-				}
+				$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
+					message + '</p></div>');
 			} else {
 				$('#onoffice-notice-wrapper').append('<div class="notice notice-error is-dismissible"><p>' +
 					message + '</p></div>');

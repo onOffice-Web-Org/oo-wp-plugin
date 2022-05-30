@@ -86,12 +86,6 @@ class AdminPageEstateListSettings
 		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
-		if ($this->getListViewId() !== null) {
-			$pInputModelEmbedCode = $pFormModelBuilder->createInputModelEmbedCode($this->getListViewId());
-			$pFormModelName->addInputModel($pInputModelEmbedCode);
-			$pInputModelButton = $pFormModelBuilder->createInputModelButton();
-			$pFormModelName->addInputModel($pInputModelButton);
-		}
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
@@ -281,7 +275,5 @@ class AdminPageEstateListSettings
 		wp_enqueue_script('oo-reference-estate-js');
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
-		wp_enqueue_script('oo-clipboard');
-		wp_enqueue_script('oo-copy-shortcode');
 	}
 }

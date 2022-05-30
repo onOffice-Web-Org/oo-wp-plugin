@@ -227,7 +227,6 @@ class AdminViewController
 		if ($hook == '' || !array_key_exists($hook, $this->_ajaxHooks)) {
 			return;
 		}
-		$currentScreen = get_current_screen()->id;
 		$pAdminView = $this->_ajaxHooks[$hook];
 		$ajaxDataAdminPage = $pAdminView->getEnqueueData();
 		$ajaxDataGeneral = [
