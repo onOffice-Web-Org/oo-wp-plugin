@@ -742,7 +742,7 @@ class TestClassEstateList
 		$pDataDetailView->method('getSortby')->willReturn('Id');
 		$pDataDetailView->method('getSortorder')->willReturn('ASC');
 		$pDataDetailView->method('getFilterId')->willReturn(12);
-		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp']);
+		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
 		$pDataDetailView->method('getPictureTypes')->willReturn(['Titelbild', 'Foto']);
 		$pDataDetailView->method('getAddressFields')->willReturn(['Vorname', 'Name']);
 		$pDataDetailView->method('getFilterableFields')->willReturn([GeoPosition::FIELD_GEO_POSITION]);
