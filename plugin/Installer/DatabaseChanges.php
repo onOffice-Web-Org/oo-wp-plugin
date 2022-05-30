@@ -28,6 +28,9 @@ use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
+use onOffice\WPlugin\AddressList;
+use Exception;
+use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Language;
@@ -35,6 +38,7 @@ use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
@@ -45,7 +49,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 28;
+	const MAX_VERSION = 30;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -58,8 +62,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
+	 * @param wpdb $pWPDB
+	 *
+	 * @throws Exception
 	 */
-	public function __construct(WPOptionWrapperBase $pWpOption, \wpdb $pWPDB)
+	public function __construct(WPOptionWrapperBase $pWpOption, wpdb $pWPDB)
 	{
 		$this->_pWpOption = $pWpOption;
 		$this->_pWPDB = $pWPDB;
@@ -218,14 +225,27 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 27;
 		}
 		
+
 		if ($dbversion == 27) {
 			$this->updateEstateListSortBySetting();
 			$dbversion = 28;
 		}
 
 		if ($dbversion == 28) {
-			$this->deleteUnSupportDataTypeField();
+			$this->checkContactFieldInDefaultDetail();
 			$dbversion = 29;
+		}
+
+		if ($dbversion == 29) {
+			$this->checkAllPageIdsHaveDetailShortCode();
+			$this->_pWpOption->addOption( 'add-detail-posts-to-rewrite-rules', false );
+			$this->_pWpOption->updateOption( 'onoffice-detail-view-showTitleUrl', true );
+			$dbversion = 30;
+		}
+
+		if ($dbversion == 30) {
+			$this->deleteUnSupportDataTypeField();
+			$dbversion = 31;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -366,6 +386,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		return $sql;
 	}
+
 	/**
 	 *
 	 * @return string
@@ -679,6 +700,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
+
 	/**
 	 *
 	 */
@@ -870,5 +892,53 @@ class DatabaseChanges implements DatabaseChangesInterface
 				AND `random` = 0";
 
 		$this->_pWPDB->query( $sql );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function checkContactFieldInDefaultDetail() {
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$addressFields = $pDetailView->getAddressFields();
+
+		foreach (AddressList::DEFAULT_FIELDS_REPLACE as $defaultField => $newField) {
+			if (in_array($defaultField, $addressFields)) {
+				$key = array_search($defaultField, $addressFields);
+				unset($addressFields[$key]);
+
+				if (!in_array($newField, $addressFields)) {
+					$addressFields[$key] = $newField;
+				}
+			}
+		}
+		ksort($addressFields);
+		$pDetailView->setAddressFields($addressFields);
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
+
+	/**
+	 *
+	 * @return void
+	 *
+	 */
+
+	public function checkAllPageIdsHaveDetailShortCode()
+	{
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
+		$pDetailView            = $pDataDetailViewHandler->getDetailView();
+		$detailViewName         = 'view="' . $pDetailView->getName() . '"';
+		$tableName              = $this->getPrefix() . "posts";
+
+		$listDetailPosts = $this->_pWPDB->get_results( "SELECT `ID` FROM {$tableName}
+														WHERE post_status = 'publish'
+														AND post_content LIKE '%[oo_estate%" . $detailViewName . "%]%'", ARRAY_A );
+		foreach ( $listDetailPosts as $post ) {
+			$pDetailView->addToPageIdsHaveDetailShortCode( (int) $post['ID'] );
+		}
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 }
