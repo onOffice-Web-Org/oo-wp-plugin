@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php-versions: ['7.2','7.3', '7.4']
+        php-versions: ['7.3', '7.4', '8.0']
     name: Unittest on ${{ matrix.operating-system }} with PHP version ${{ matrix.php-versions }}
     steps:
     - name: Set up MySQL
@@ -53,14 +53,14 @@ jobs:
         ./vendor/bin/phpunit --fail-on-warning --fail-on-risky --disallow-test-output --coverage-clover build/logs/clover.xml
 
     - name: Upload coverage results to coveralls.io
-      if: matrix.php-versions == '7.2'
+      if: matrix.php-versions == '7.3'
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         vendor/bin/php-coveralls --coverage_clover=build/logs/clover.xml -v
 
     - name: Smoke tests phpstan and PHP-Compability (using phpcs) with PHP ${{ matrix.php-versions }}
-      if: matrix.php-versions == '7.2'
+      if: matrix.php-versions == '7.3'
       run: |
         composer update phpstan/phpstan --ignore-platform-reqs
         vendor/bin/phpcs --config-set installed_paths vendor/phpcompatibility/php-compatibility

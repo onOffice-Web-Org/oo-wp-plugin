@@ -3,7 +3,7 @@ Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.0
-Requires PHP: 7.2
+Requires PHP: 7.3
 Stable tag: 3.2
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
