@@ -58,6 +58,7 @@ use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Utility\Redirector;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
@@ -259,7 +260,7 @@ class TestClassEstateList
 		$pDataDetailView->setPageId($pWPPost->ID);
 
 		// slash missing at the end, which WP inserts in production
-		$this->assertEquals('http://example.org/details/15', $this->_pEstateList->getEstateLink());
+		$this->assertEquals('http://example.org/details/15/', $this->_pEstateList->getEstateLink());
 	}
 
 
@@ -420,23 +421,23 @@ class TestClassEstateList
 	public function testGetEstateContacts()
 	{
 		$valueMap = [
-			['50', ['Vorname' => 'John', 'Name' => 'Doe']],
-			['52', ['Vorname' => 'Max', 'Name' => 'Mustermann']],
+			['50', ['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email',]],
+			['52', ['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email']],
 		];
 		$pAddressDataMock = $this->getMockBuilder(AddressList::class)
 			->setMethods(['__construct', 'getAddressById', 'loadAdressesById'])
 			->getMock();
-		$pAddressDataMock->expects($this->once())->method('loadAdressesById')->with([50, 52], ['Vorname', 'Name']);
+		$pAddressDataMock->expects($this->once())->method('loadAdressesById')->with([50, 52], ['Vorname', 'Name', "Email"]);
 		$pAddressDataMock->method('getAddressById')->willReturnMap($valueMap);
 		$this->_pEnvironment->method('getAddressList')->willReturn($pAddressDataMock);
 		$this->_pEstateList->loadEstates();
 		$this->_pEstateList->estateIterator();
 		$this->assertEquals([], $this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
-		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe'])],
+		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'John', 'Name' => 'Doe', 'defaultemail' => 'Email'])],
 			$this->_pEstateList->getEstateContacts());
 		$this->_pEstateList->estateIterator();
-		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann'])],
+		$this->assertEquals([new ArrayContainerEscape(['Vorname' => 'Max', 'Name' => 'Mustermann', 'defaultemail' => 'Email'])],
 			$this->_pEstateList->getEstateContacts());
 	}
 
@@ -700,6 +701,50 @@ class TestClassEstateList
 		$this->assertInstanceOf(GeoSearchBuilderFromInputVars::class, $this->_pEstateList->getGeoSearchBuilder());
 	}
 
+	public function testRedirectIfOldUrl()
+	{
+		global $wp_filter;
+		$this->set_permalink_structure('/%postname%/');
+		$savePostBackup = $wp_filter['save_post'];
+		$wp_filter['save_post'] = new \WP_Hook;
+		$pWPPost = self::factory()->post->create_and_get([
+			'post_author' => 1,
+			'post_content' => '[oo_estate view="detail"]',
+			'post_title' => 'Detail View',
+			'post_type' => 'page',
+		]);
+		$wp_filter['save_post'] = $savePostBackup;
+
+		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
+			->setConstructorArgs([$this->_pContainer])
+			->setMethods(['getRecordsPerPage',
+				'getSortby',
+				'getSortorder',
+				'getFilterId',
+				'getFields',
+				'getPictureTypes',
+				'getAddressFields',
+				'getFilterableFields',
+				'getPageId'
+			])
+			->getMock();
+		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
+		$pDataDetailView->method('getSortby')->willReturn('Id');
+		$pDataDetailView->method('getSortorder')->willReturn('ASC');
+		$pDataDetailView->method('getFilterId')->willReturn(12);
+		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp']);
+		$pDataDetailView->method('getPictureTypes')->willReturn(['Titelbild', 'Foto']);
+		$pDataDetailView->method('getAddressFields')->willReturn(['Vorname', 'Name']);
+		$pDataDetailView->method('getFilterableFields')->willReturn([GeoPosition::FIELD_GEO_POSITION]);
+		$pDataDetailView->method('getPageId')->willReturn($pWPPost->ID);
+
+		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
+		$this->_pEstateList->loadEstates();
+		update_option( 'home', 'http://example.com/detail' );
+		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
+	}
+
+
 	/**
 	 *
 	 */
@@ -742,6 +787,14 @@ class TestClassEstateList
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
+
+		unset($parametersReadEstate['georangesearch']);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
+		unset($parametersReadEstateRaw['georangesearch']);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
+
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', [
 				'parentids' => [15, 1051, 1082, 1193, 1071],
@@ -802,6 +855,12 @@ class TestClassEstateList
 			'courtage_frei',
 			'objekt_des_tages',
 		]);
+		$redirectIfOldUrl = $this->getMockBuilder(Redirector::class)
+			->disableOriginalConstructor()
+			->setMethods(['redirectDetailView'])
+			->getMock();
+		$redirectIfOldUrl->method('redirectDetailView')->willReturn(true);
+
 		$this->_pEnvironment->method('getEstateStatusLabel')->willReturn
 			($pEstateStatusLabel);
 	}
@@ -821,7 +880,7 @@ class TestClassEstateList
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);
 		$pDataView->setPictureTypes(['Titelbild', 'Foto']);
-		$pDataView->setAddressFields(['Vorname', 'Name']);
+		$pDataView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 		$pDataView->setShowStatus(true);
 		$pDataView->setShowReferenceStatus(false);
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);

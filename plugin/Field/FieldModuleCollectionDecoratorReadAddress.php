@@ -40,44 +40,75 @@ class FieldModuleCollectionDecoratorReadAddress
 	/** @var array */
 	private $_addressFields = [
 		'imageUrl' => [
-			'type' => FieldTypes::FIELD_TYPE_TEXT,
+			'type'   => FieldTypes::FIELD_TYPE_TEXT,
 			'length' => null,
-			'label' => 'Image',
+			'label'  => 'Image',
 		],
-		'phone' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Phone',
+		'email'    => [
+			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length'          => 80,
+			'default'         => null,
+			'permittedvalues' => null,
+			'label'           => 'All e-mail addresses',
+			'tablename'       => 'Kontakt',
+			"content"         => "Contact"
 		],
-		'email' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 80,
-			'label' => 'E-Mail',
+		'phone'    => [
+			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length'          => 40,
+			'default'         => null,
+			'permittedvalues' => null,
+			'label'           => 'All non-mobile phone numbers',
+			'tablename'       => 'Stammdaten',
+			"content"         => "Master data"
 		],
-		'fax' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Fax',
+		'fax'      => [
+			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length'          => 40,
+			'default'         => null,
+			'permittedvalues' => null,
+			'label'           => 'All fax numbers',
+			'tablename'       => 'Stammdaten',
+			"content"         => "Master data"
 		],
-		'mobile' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Mobile',
+		'mobile'   => [
+			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length'          => 40,
+			'default'         => null,
+			'permittedvalues' => null,
+			'label'           => 'All mobile numbers',
+			'tablename'       => 'Stammdaten',
+			"content"         => "Master data"
 		],
-		'defaultphone' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Phone',
+		'Email'    => [
+			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length'          => 100,
+			'default'         => null,
+			'permittedvalues' => null,
+			'label'           => 'Default e-mail address',
+			'module'          => 'address',
+			'tablename'       => 'Kontakt',
+			"content"         => "Contact"
 		],
-		'defaultemail' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 80,
-			'label' => 'E-Mail',
+		'Telefon1' => [
+			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length'          => 40,
+			'default'         => null,
+			'permittedvalues' => null,
+			'label'           => 'Default phone number',
+			'module'          => 'address',
+			'tablename'       => 'Stammdaten',
+			"content"         => "Master data"
 		],
-		'defaultfax' => [
-			'type' => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length' => 40,
-			'label' => 'Fax',
+		'Telefax1' => [
+			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length'          => 40,
+			'default'         => null,
+			'permittedvalues' => null,
+			'label'           => 'Default fax number',
+			'module'          => 'address',
+			'tablename'       => 'Stammdaten',
+			"content"         => "Master data"
 		],
 	];
 

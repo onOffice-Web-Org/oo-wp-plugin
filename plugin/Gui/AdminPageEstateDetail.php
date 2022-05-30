@@ -118,7 +118,6 @@ class AdminPageEstateDetail
 
 		wp_nonce_field( $this->getPageSlug() );
 
-		$this->generatePageMainTitle(__('Edit List View', 'onoffice-for-wp-websites'));
 		echo '<div id="onoffice-ajax">';
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );

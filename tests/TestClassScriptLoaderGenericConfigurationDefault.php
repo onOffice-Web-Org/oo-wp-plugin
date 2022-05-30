@@ -23,8 +23,12 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
+use DI\ContainerBuilder;
 use onOffice\WPlugin\ScriptLoader\IncludeFileModel;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault;
+use onOffice\WPlugin\Template;
+use onOffice\WPlugin\Template\TemplateCall;
 use WP_UnitTestCase;
 
 /**
@@ -34,6 +38,20 @@ use WP_UnitTestCase;
 class TestClassScriptLoaderGenericConfigurationDefault
 	extends WP_UnitTestCase
 {
+	/** @var Container */
+	private $_pContainer;
+	
+	/**
+	 * @before
+	 */
+	public function prepare()
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$pTemplate = new TemplateMocker(__DIR__.'/resources/templates');
+		$this->_pContainer->set(Template::class, $pTemplate);
+	}
 	/**
 	 *
 	 */
@@ -57,5 +75,16 @@ class TestClassScriptLoaderGenericConfigurationDefault
 			$this->assertNotEmpty($pFileModel->getIdentifier());
 			$this->assertNotEmpty($pFileModel->getType());
 		}
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault::getCSSOnofficeStyle
+	 */
+	public function testGetCSSOnofficeStyle()
+	{
+		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
+		$cssOnofficeStyle = $pScriptLoaderGenericConfigurationDefault->getCSSOnofficeStyle();
+		$this->assertEquals($cssOnofficeStyle, plugins_url('templates.dist/onoffice-style.css', $pluginPath));
 	}
 }
