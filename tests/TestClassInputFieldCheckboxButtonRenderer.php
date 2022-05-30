@@ -23,6 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Renderer\InputFieldCheckboxButtonRenderer;
 use onOffice\WPlugin\Renderer\InputFieldRenderer;
 use onOffice\WPlugin\Installer\DatabaseChanges;
@@ -50,8 +51,11 @@ class TestClassInputFieldCheckboxButtonRenderer
         $pRenderer->setValue('John Doe');
         ob_start();
         global $wpdb;
+		$dataDetailView = new DataDetailView();
+		$dataDetailView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 
         $pWpOption = new WPOptionWrapperTest();
+		$pWpOption->addOption('onoffice-default-view', $dataDetailView);
         $pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
         $pDbChanges->install();
         $pRenderer->render();
@@ -70,7 +74,11 @@ class TestClassInputFieldCheckboxButtonRenderer
         ob_start();
         global $wpdb;
 
+		$dataDetailView = new DataDetailView();
+		$dataDetailView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
+
         $pWpOption = new WPOptionWrapperTest();
+		$pWpOption->addOption('onoffice-default-view', $dataDetailView);
         $pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
         $pDbChanges->install();
         $pSubject->render();

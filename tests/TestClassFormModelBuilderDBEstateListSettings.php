@@ -23,9 +23,11 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use WP_UnitTestCase;
@@ -65,34 +67,23 @@ class TestClassFormModelBuilderDBEstateListSettings
 
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortBySetting
-	 */
-	public function testCreateInputModelSortBySetting()
-	{
-		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
-			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue'])
-			->getMock();
-
-		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
-		$pInstance->method('getValue')->willReturn('1');
-
-		$pInputModelDB = $pInstance->createInputModelSortBySetting();
-		$this->assertInstanceOf(InputModelDB::class,$pInputModelDB);
-		$this->assertEquals($pInputModelDB->getValue(), '1');
-		$this->assertEquals($pInputModelDB->getHtmlType(), InputModelOption::HTML_TYPE_CHECKBOX);
-	}
-
-
-	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
 	 */
 	public function testCreateInputModelSortByChosen()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
+
+		$pInstance->method('readFieldnames')
+			->with('estate')
+			->willReturn([
+				'wohnflaeche' => 'wohnflaeche',
+				'grundstuecksflaeche' => 'grundstuecksflaeche',
+				'gesamtflaeche' => 'gesamtflaeche',
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
 
 		$pInstance->method('getOnlyDefaultSortByFields')
 			->with('estate')
@@ -108,6 +99,139 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals('chosen', $pInputModelDB->getHtmlType());
 	}
 
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosenStandard
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getDataOfSortByInput
+	 */
+	public function testCreateInputModelSortByChosenStandard()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+		                  ->getMock();
+
+		$pInstance->method('readFieldnames')
+		          ->with('estate')
+		          ->willReturn([
+			          'wohnflaeche' => 'wohnflaeche',
+			          'grundstuecksflaeche' => 'grundstuecksflaeche',
+			          'gesamtflaeche' => 'gesamtflaeche',
+			          'kaufpreis' => 'Kaufpreis',
+			          'kaltmiete' => 'Kaltmiete']);
+
+		$pInstance->method('getOnlyDefaultSortByFields')
+		          ->with('estate')
+		          ->willReturn([
+			          'kaufpreis' => 'Kaufpreis',
+			          'kaltmiete' => 'Kaltmiete']);
+		$data = [
+			"group" => [
+				"Popular" => [
+					"kaufpreis" => "Kaufpreis",
+					"kaltmiete" => "Kaltmiete"
+				],
+				"All"     => [
+					"gesamtflaeche"       => "gesamtflaeche",
+					"grundstuecksflaeche" => "grundstuecksflaeche",
+					"wohnflaeche"         => "wohnflaeche",
+				]
+			]
+		];
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->with('sortby')->willReturn(null);
+
+		$pInputModelDB = $pInstance->createInputModelSortByChosenStandard();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals('chosen', $pInputModelDB->getHtmlType());
+		$this->assertEquals($data, $pInstance->getDataOfSortByInput());
+	}
+
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
+	 */
+	public function testCreateInputModelSortByChosenGroup()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+			->getMock();
+
+		$pInstance->method('readFieldnames')
+			->with('estate')
+			->willReturn([
+				'wohnflaeche' => 'wohnflaeche',
+				'grundstuecksflaeche' => 'grundstuecksflaeche',
+				'gesamtflaeche' => 'gesamtflaeche',
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
+
+
+		$pInstance->method('getOnlyDefaultSortByFields')
+			->with('estate')
+			->willReturn([
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->with('sortbyuservalues')->willReturn(null);
+
+		$pInputModelDB = $pInstance->createInputModelSortByChosen();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$expectValue = [
+			'group' => [
+				'Popular' => [
+					'kaufpreis' => 'Kaufpreis',
+					'kaltmiete' => 'Kaltmiete'
+				],
+				'All' => [
+					'wohnflaeche' => 'wohnflaeche',
+					'grundstuecksflaeche' => 'grundstuecksflaeche',
+					'gesamtflaeche' => 'gesamtflaeche',
+				]
+			]
+		];
+		$this->assertEquals($expectValue, $pInputModelDB->getValuesAvailable());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByChosen
+	 */
+	public function testCreateInputModelSortByChosenGroupNotPopular()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
+			->getMock();
+
+		$pInstance->method('readFieldnames')
+			->with('estate')
+			->willReturn([
+				'data1' => 'Data 1',
+				'data2' => 'Data 2'
+			]);
+
+		$pInstance->method('getOnlyDefaultSortByFields')
+			->with('estate')
+			->willReturn([]);
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->with('sortbyuservalues')->willReturn(null);
+
+		$pInputModelDB = $pInstance->createInputModelSortByChosen();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$expectValue = [
+			'group' => [
+				'All' => [
+					'data1' => 'Data 1',
+					'data2' => 'Data 2'
+				]
+			]
+		];
+		$this->assertEquals($expectValue, $pInputModelDB->getValuesAvailable());
+	}
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortByDefault
 	 */
@@ -115,8 +239,18 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
+
+		$pInstance->method('readFieldnames')
+			->with('estate')
+			->willReturn([
+				'wohnflaeche' => 'wohnflaeche',
+				'grundstuecksflaeche' => 'grundstuecksflaeche',
+				'gesamtflaeche' => 'gesamtflaeche',
+				'kaufpreis' => 'Kaufpreis',
+				'kaltmiete' => 'Kaltmiete']);
+
 
 		$pInstance->method('getOnlyDefaultSortByFields')
 			->with('estate')
@@ -141,8 +275,17 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 			->disableOriginalConstructor()
-			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readFieldnames'])
 			->getMock();
+
+		$pInstance->method('readFieldnames')
+				  ->with('estate')
+				  ->willReturn([
+					  'wohnflaeche' => 'wohnflaeche',
+					  'grundstuecksflaeche' => 'grundstuecksflaeche',
+					  'gesamtflaeche' => 'gesamtflaeche',
+					  'kaufpreis' => 'Kaufpreis',
+					  'kaltmiete' => 'Kaltmiete']);
 
 		$pInstance->method('getOnlyDefaultSortByFields')
 			->with('estate')
@@ -187,15 +330,6 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals(FormModelBuilderDBEstateListSettings::getListViewLabels(), $expected);
 	}
 
-	public function testCreateSortableFieldList()
-	{
-		$pInstance = $this->getMockBuilder( FormModelBuilderDBEstateListSettings::class )
-		                  ->disableOriginalConstructor()
-		                  ->getMock();
-
-		$instance = $pInstance->createSortableFieldList( 'address', 'checkbox', false );
-		$this->assertEquals( $instance->getReferencedInputModels(), null );
-	}
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowReferenceEstate
@@ -271,5 +405,62 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEmpty($pInputModelDB->getValue());
 		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
+	}
+
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelExpose
+	 */
+	public function testCreateInputModelExpose()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', 'readExposes'])
+		                  ->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('0');
+		$pInstance->method('readExposes')->willReturn(['testExp']);
+
+		$pInputModelDB = $pInstance->createInputModelExpose();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getValue(), '0');
+		$this->assertEquals('select', $pInputModelDB->getHtmlType());
+	}
+
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelIsFilterable
+	 */
+	public function testGetInputModelIsFilterable()
+	{
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+
+		$pInputModelDB = $pInstance->getInputModelIsFilterable();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
+		$this->assertEquals([$pInstance, 'callbackValueInputModelIsFilterable'], $pInputModelDB->getValueCallback());
+	}
+
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelFilter
+	 */
+	public function testCreateInputModelFilter()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', "readFilters"])
+		                  ->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('readFilters')->with(onOfficeSDK::MODULE_ESTATE)->willReturn(['a']);
+		$pInstance->method('getValue')->willReturn('0');
+
+		$pInputModelDB = $pInstance->createInputModelFilter();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getValue(), '0');
+		$this->assertEquals($pInputModelDB->getValuesAvailable(), [""]);
+		$this->assertEquals('select', $pInputModelDB->getHtmlType());
 	}
 }

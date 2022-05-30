@@ -136,18 +136,15 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 				foreach ($pEstates->getEstateContacts() as $contactData) : ?>
 					<?php
-
-					$imageUrl = $contactData['imageUrl'];
-
+					$imageUrl      = $contactData['imageUrl'];
 					$formOfAddress = $contactData['Anrede'];
-					$title = $contactData['Titel'];
-					$firstName = $contactData['Vorname'];
-					$lastName = $contactData['Name'];
-
-					$company = $contactData['Zusatz1'];
-					$street = $contactData['Strasse'];
-					$postCode = $contactData['Plz'];
-					$town = $contactData['Ort'];
+					$title         = $contactData['Titel'];
+					$firstName     = $contactData['Vorname'];
+					$lastName      = $contactData['Name'];
+					$company       = $contactData['Zusatz1'];
+					$street        = $contactData['Strasse'];
+					$postCode      = $contactData['Plz'];
+					$town          = $contactData['Ort'];
 
 					if ($imageUrl) {
 						echo '<div class="oo-aspinfo oo-contact-info"><img src="' . esc_html($imageUrl) . '" height="150px"></div>';

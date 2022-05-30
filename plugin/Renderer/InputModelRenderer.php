@@ -218,6 +218,7 @@ class InputModelRenderer
 					$pInputModel->getIdentifier(),
 					$pInputModel->getValuesAvailable());
 				$pInstance->addAdditionalAttribute('class', 'chosen-select');
+				$pInstance->setMultiple($pInputModel->getIsMulti());
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				break;
 

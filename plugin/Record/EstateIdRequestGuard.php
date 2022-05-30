@@ -23,8 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Record;
 
+use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
+use onOffice\WPlugin\Utility\Redirector;
 
 /**
  *
@@ -36,6 +38,9 @@ class EstateIdRequestGuard
 {
 	/** @var EstateListFactory */
 	private $_pEstateDetailFactory;
+
+	/** * @var ArrayContainerEscape */
+	private $_estateData;
 
 
 	/**
@@ -61,6 +66,21 @@ class EstateIdRequestGuard
 	{
 		$pEstateDetail = $this->_pEstateDetailFactory->createEstateDetail($estateId);
 		$pEstateDetail->loadEstates();
-		return $pEstateDetail->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true) !== false;
+		$this->_estateData = $pEstateDetail->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true);
+		return $this->_estateData !== false;
+	}
+
+
+	/**
+	 *
+	 * @param  int  $estateId
+	 * @param  Redirector  $pRedirector
+	 *
+	 * @return void
+	 */
+
+	public function estateDetailUrlChecker( int $estateId, Redirector $pRedirector ) {
+		$estateTitle = $this->_estateData->getValue( 'objekttitel' );
+		$pRedirector->redirectDetailView( $estateId, $estateTitle );
 	}
 }

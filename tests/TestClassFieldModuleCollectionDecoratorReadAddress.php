@@ -77,20 +77,6 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 		$pDecorator = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
 		$module = onOfficeSDK::MODULE_ADDRESS;
 		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			($module, 'phone'));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			($module, 'defaultphone'));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			($module, 'fax'));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			($module, 'defaultfax'));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			($module, 'email'));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			($module, 'defaultemail'));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-			($module, 'mobile'));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
 			($module, 'imageUrl'));
 	}
 
@@ -103,13 +89,6 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 	{
 		$pDecorator = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
 		$module = onOfficeSDK::MODULE_ADDRESS;
-		$this->assertTrue($pDecorator->containsFieldByModule($module, 'phone'));
-		$this->assertTrue($pDecorator->containsFieldByModule($module, 'defaultphone'));
-		$this->assertTrue($pDecorator->containsFieldByModule($module, 'fax'));
-		$this->assertTrue($pDecorator->containsFieldByModule($module, 'defaultfax'));
-		$this->assertTrue($pDecorator->containsFieldByModule($module, 'email'));
-		$this->assertTrue($pDecorator->containsFieldByModule($module, 'defaultemail'));
-		$this->assertTrue($pDecorator->containsFieldByModule($module, 'mobile'));
 		$this->assertTrue($pDecorator->containsFieldByModule($module, 'imageUrl'));
 		$this->assertFalse($pDecorator->containsFieldByModule($module, 'testUnknown'));
 	}
@@ -129,7 +108,7 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 
 		foreach ($newAddressFields as $fieldName => $data) {
 			$pField = new Field($fieldName, onOfficeSDK::MODULE_ADDRESS, __($data['label'], 'onoffice-for-wp-websites'));
-			$pField->setCategory(__($data['category'] ?? '', 'onoffice-for-wp-websites'));
+			$pField->setCategory(__($data['content'] ?? '', 'onoffice-for-wp-websites'));
 			$pField->setDefault($data['default'] ?? null);
 			$pField->setLength($data['length'] ?? 0);
 			$pField->setPermittedvalues($data['permittedvalues'] ?? []);

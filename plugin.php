@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 3.1
+Version: 3.2
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -64,6 +64,7 @@ use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
 define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
@@ -241,6 +242,7 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 			include(get_query_template('404'));
 			die();
 		}
+		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( Redirector::class ) );
 	}
 });
 
@@ -300,5 +302,12 @@ function update_status_close_action_button_option()
 }
 add_action('wp_ajax_update_active_plugin_seo_option', 'update_status_close_action_button_option');
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
+
+add_action('wp', function () {
+	if (!get_option('add-detail-posts-to-rewrite-rules')) {
+		flush_rewrite_rules(false);
+		delete_option('add-detail-posts-to-rewrite-rules');
+	}
+});
 
 return $pDI;

@@ -84,6 +84,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 				'showTable'   => true,
 				'language'    => 'ENG',
 				'modules'     => ['address', 'estate'],
+				'realDataTypes' => true,
 		];
 		$pSDKWrapperMocker             = $this->_pFieldnamesEnvironment->getSDKWrapper();
 		$responseGetFields             = json_decode
