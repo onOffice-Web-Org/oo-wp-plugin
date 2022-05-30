@@ -66,13 +66,13 @@ class TestClassRecordManagerDeleteListViewAddress
 	public function testDeleteByIds()
 	{
 		$this->_pWPDB->expects( $this->exactly( 0 ) )->method( 'delete' )
-		             ->withConsecutive( 'wp_test_oo_plugin_listviews_address', [ 'listview_address_id' => 3 ] );
+		             ->withConsecutive( ['wp_test_oo_plugin_listviews_address', [ 'listview_address_id' => 3 ]] );
 		$this->_pWPDB->expects( $this->once() )->method( 'delete' )
-		             ->withConsecutive( 'wp_test_oo_plugin_address_fieldconfig', [ 'listview_address_id' => 3 ] );
+		             ->withConsecutive( ['wp_test_oo_plugin_address_fieldconfig', [ 'listview_address_id' => 3 ]] );
 		$this->_pWPDB->expects( $this->exactly( 2 ) )->method( 'delete' )
-		             ->withConsecutive( 'wp_test_oo_plugin_listviews_address', [ 'listview_address_id' => 4 ] );
+		             ->withConsecutive( ['wp_test_oo_plugin_listviews_address', [ 'listview_address_id' => 4 ]] );
 		$this->_pWPDB->expects( $this->exactly( 3 ) )->method( 'delete' )
-		             ->withConsecutive( 'wp_test_oo_plugin_address_fieldconfig', [ 'listview_address_id' => 4 ] );
+		             ->withConsecutive( ['wp_test_oo_plugin_address_fieldconfig', [ 'listview_address_id' => 4 ]] );
 		$this->_pSubject->deleteByIds( [ 3, 4 ] );
 	}
 }
