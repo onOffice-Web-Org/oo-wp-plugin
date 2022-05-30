@@ -240,6 +240,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->_pWpOption->addOption('onoffice-is-encryptcredent', false);
 			$dbversion = 31;
 		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 

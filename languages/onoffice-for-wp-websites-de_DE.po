@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-12T09:46:43+07:00\n"
+"POT-Creation-Date: 2022-05-30T16:10:24+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #. Plugin Name of the plugin
 msgid "onOffice for WP-Websites"
@@ -47,12 +47,12 @@ msgid "Please configure your onOffice API credentials first!"
 msgstr "Bitte konfigurieren Sie zuerst Ihren API-Zugang!"
 
 #: plugin/Controller/AdminViewController.php:149
-#: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:88
-#: plugin/Gui/AdminPageEstateDetail.php:203
+#: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:89
+#: plugin/Gui/AdminPageEstateDetail.php:202
 #: plugin/Gui/AdminPageEstateList.php:76
 #: plugin/Gui/AdminPageEstateUnitList.php:72
 #: plugin/Gui/AdminPageFormList.php:191
-#: plugin/Gui/AdminPageSimilarEstates.php:145
+#: plugin/Gui/AdminPageSimilarEstates.php:144
 msgid "onOffice"
 msgstr "onOffice"
 
@@ -132,7 +132,7 @@ msgid "Search Criteria"
 msgstr "Suchkriterium"
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:196
+#: plugin/Fieldnames.php:220 plugin/Gui/AdminPageFormSettingsContact.php:192
 msgid "Form Specific Fields"
 msgstr "Formspezifische Felder"
 
@@ -189,37 +189,45 @@ msgstr "Neu"
 msgid "Edit Address List"
 msgstr "Adressliste bearbeiten"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:105
+#: plugin/Gui/AdminPageAddressListSettings.php:106
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:392
+#: plugin/Gui/AdminPageFormSettingsBase.php:395
 msgid "choose name"
 msgstr "Name auswählen"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:121
-#: plugin/Gui/AdminPageEstateDetail.php:279
-#: plugin/Gui/AdminPageEstateListSettings.php:126
-#: plugin/Gui/AdminPageEstateUnitSettings.php:89
-#: plugin/Gui/AdminPageFormSettingsBase.php:409
+#: plugin/Gui/AdminPageAddressListSettings.php:122
+#: plugin/Gui/AdminPageEstateDetail.php:278
+#: plugin/Gui/AdminPageEstateListSettings.php:132
+#: plugin/Gui/AdminPageEstateUnitSettings.php:87
+#: plugin/Gui/AdminPageFormSettingsBase.php:412
 msgid "Layout & Design"
 msgstr "Layout & Design"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:141
+#: plugin/Gui/AdminPageAddressListSettings.php:139
 msgid "Filter & Records"
 msgstr "Filter & Datensätze"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:160
-#: plugin/Gui/AdminPageEstateDetail.php:289
-#: plugin/Gui/AdminPageEstateListSettings.php:135
-#: plugin/Gui/AdminPageEstateUnitSettings.php:97
+#: plugin/Gui/AdminPageAddressListSettings.php:159
+#: plugin/Gui/AdminPageEstateListSettings.php:118
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:568
+#, fuzzy
+#| msgid "Settings"
+msgid "Sorting"
+msgstr "Einstellungen"
+
+#: plugin/Gui/AdminPageAddressListSettings.php:176
+#: plugin/Gui/AdminPageEstateDetail.php:288
+#: plugin/Gui/AdminPageEstateListSettings.php:141
+#: plugin/Gui/AdminPageEstateUnitSettings.php:95
 msgid "Photo Types"
 msgstr "Fotoarten"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:314
+#: plugin/Gui/AdminPageAddressListSettings.php:333
 msgid "The address list was saved."
 msgstr "Die Adressliste wurde gespeichert."
 
-#: plugin/Gui/AdminPageAddressListSettings.php:315
+#: plugin/Gui/AdminPageAddressListSettings.php:334
 msgid ""
 "There was a problem saving the list. Please make sure the name of the list "
 "is unique."
@@ -410,13 +418,13 @@ msgstr "onOffice"
 msgid "List Views"
 msgstr "Listenansichten"
 
-#: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageEstateDetail.php:205
+#: plugin/Gui/AdminPageEstate.php:88 plugin/Gui/AdminPageEstateDetail.php:204
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:99
 msgid "Detail View"
 msgstr "Detailansicht"
 
-#: plugin/Gui/AdminPageEstate.php:89 plugin/Gui/AdminPageSimilarEstates.php:147
-#: plugin/Gui/AdminPageSimilarEstates.php:200
+#: plugin/Gui/AdminPageEstate.php:89 plugin/Gui/AdminPageSimilarEstates.php:146
+#: plugin/Gui/AdminPageSimilarEstates.php:199
 msgid "Similar Estates"
 msgstr "Ähnliche Immobilien"
 
@@ -424,22 +432,16 @@ msgstr "Ähnliche Immobilien"
 msgid "Unit Lists"
 msgstr "Einheitenlisten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:121
-#: plugin/Gui/AdminPageEstateListSettings.php:67
-#: plugin/Gui/AdminPageSimilarEstates.php:98
-msgid "Edit List View"
-msgstr "Listenansicht bearbeiten"
-
 #. translators: %s will be replaced with a link to the appropriate page.
-#: plugin/Gui/AdminPageEstateDetail.php:131
+#: plugin/Gui/AdminPageEstateDetail.php:130
 msgid "Detail view in use on page %s"
 msgstr "Detailansicht ist auf der Seite %s eingebunden"
 
-#: plugin/Gui/AdminPageEstateDetail.php:133
+#: plugin/Gui/AdminPageEstateDetail.php:132
 msgid "Edit Page"
 msgstr "Seite bearbeiten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:135
+#: plugin/Gui/AdminPageEstateDetail.php:134
 msgid ""
 "Detail view is not in use yet. Insert this code on a page to get the detail "
 "view there:"
@@ -447,28 +449,28 @@ msgstr ""
 "Die Detailansicht wird gerade nicht verwendet. Fügen Sie diesen Code auf "
 "einer Seite ein, um die Detailansicht dort zu sehen:"
 
-#: plugin/Gui/AdminPageEstateDetail.php:161
+#: plugin/Gui/AdminPageEstateDetail.php:160
 msgid "Contact Person Fields"
 msgstr "Ansprechpartnerdaten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:176
-#: plugin/Gui/AdminPageSimilarEstates.php:119
+#: plugin/Gui/AdminPageEstateDetail.php:175
+#: plugin/Gui/AdminPageSimilarEstates.php:118
 msgid "Real Estate Fields"
 msgstr "Immobiliendaten"
 
-#: plugin/Gui/AdminPageEstateDetail.php:297
+#: plugin/Gui/AdminPageEstateDetail.php:296
 msgid "Access Control"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:309
+#: plugin/Gui/AdminPageEstateDetail.php:308
 msgid "Additional Media"
 msgstr "Zusätzliche Medien"
 
-#: plugin/Gui/AdminPageEstateDetail.php:428
+#: plugin/Gui/AdminPageEstateDetail.php:427
 msgid "The detail view has been saved."
 msgstr "Die Detailansicht wurde gespeichert."
 
-#: plugin/Gui/AdminPageEstateDetail.php:429
+#: plugin/Gui/AdminPageEstateDetail.php:428
 msgid "There was a problem saving the detail view."
 msgstr "Es ist einen Fehler beim Speichern der Detailansicht aufgetreten."
 
@@ -481,22 +483,26 @@ msgstr "Nachlassansichten durchsuchen"
 msgid "Are you sure you want to delete the selected items?"
 msgstr "Möchten Sie das ausgewählte Element wirklich löschen?"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:107
+#: plugin/Gui/AdminPageEstateListSettings.php:67
+msgid "Edit List View"
+msgstr "Listenansicht bearbeiten"
+
+#: plugin/Gui/AdminPageEstateListSettings.php:99
 msgid "Filters & Records"
 msgstr "Filter & Datensätze"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:143
-#: plugin/Gui/AdminPageEstateUnitSettings.php:105
+#: plugin/Gui/AdminPageEstateListSettings.php:149
+#: plugin/Gui/AdminPageEstateUnitSettings.php:103
 msgid "Downloadable Documents"
 msgstr "Dokumente zum Herunterladen"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:152
+#: plugin/Gui/AdminPageEstateListSettings.php:158
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:224
+#: plugin/Gui/AdminPageFormSettingsContact.php:231
 msgid "Geo Fields"
 msgstr "Umkreisfelder"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:158
+#: plugin/Gui/AdminPageEstateListSettings.php:164
 msgid ""
 "At least the following fields must be active: country, radius and city or "
 "postcode."
@@ -524,7 +530,7 @@ msgstr "Einheitenlisten"
 msgid "Edit Units View"
 msgstr "Einheitenlisten bearbeiten"
 
-#: plugin/Gui/AdminPageEstateUnitSettings.php:80
+#: plugin/Gui/AdminPageEstateUnitSettings.php:79
 msgid "Records"
 msgstr "Datensätze"
 
@@ -533,19 +539,19 @@ msgid "Search Forms"
 msgstr "Formulare durchsuchen"
 
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
-#: plugin/Gui/AdminPageFormSettingsContact.php:113
+#: plugin/Gui/AdminPageFormSettingsContact.php:111
 msgid "Form Specific Options"
 msgstr "Formularspezifische Optionen"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:118
+#: plugin/Gui/AdminPageFormSettingsBase.php:121
 msgid "Edit Form"
 msgstr "Formular bearbeiten"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:266
+#: plugin/Gui/AdminPageFormSettingsBase.php:269
 msgid "The Form was saved."
 msgstr "Das Formular wurde gespeichert."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:267
+#: plugin/Gui/AdminPageFormSettingsBase.php:270
 msgid ""
 "There was a problem saving the form. Please make sure the name of the form "
 "is unique."
@@ -554,57 +560,57 @@ msgstr ""
 "Sie, ob der Formularname eindeutig ist."
 
 #. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:276
+#: plugin/Gui/AdminPageFormSettingsBase.php:279
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:567
 msgid "Module: %s"
 msgstr "Modul: %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:277
+#: plugin/Gui/AdminPageFormSettingsBase.php:280
 msgid "Edit Values"
 msgstr "Werte bearbeiten"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:280
+#: plugin/Gui/AdminPageFormSettingsBase.php:283
 msgid "Add Language"
 msgstr "Sprache hinzufügen"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:281
+#: plugin/Gui/AdminPageFormSettingsBase.php:284
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:449
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:476
 msgid "Choose Language"
 msgstr "Sprache auswählen"
 
 #. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:283
+#: plugin/Gui/AdminPageFormSettingsBase.php:286
 msgid "Default Value: %s"
 msgstr "Standardwert: %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:284
+#: plugin/Gui/AdminPageFormSettingsBase.php:287
 msgid "Custom Label: %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:285
+#: plugin/Gui/AdminPageFormSettingsBase.php:288
 msgid "Default Value From:"
 msgstr "Standardwert von:"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:286
+#: plugin/Gui/AdminPageFormSettingsBase.php:289
 msgid "Default Value Up To:"
 msgstr "Standardwert bis:"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:317
+#: plugin/Gui/AdminPageFormSettingsBase.php:320
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "No"
 msgstr "Nein"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:318
+#: plugin/Gui/AdminPageFormSettingsBase.php:321
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "Yes"
 msgstr "Ja"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:123
+#: plugin/Gui/AdminPageFormSettingsContact.php:121
 msgid "Request Manager"
 msgstr "Anforderungsmanager"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:124
+#: plugin/Gui/AdminPageFormSettingsContact.php:122
 msgid ""
 "https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-"
 "manager/?lang=en"
@@ -612,7 +618,7 @@ msgstr ""
 "https://de.enterprisehilfe.onoffice.com/category/zusatzmodule/"
 "anfragenmanager/"
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:126
+#: plugin/Gui/AdminPageFormSettingsContact.php:124
 #, fuzzy
 #| msgid ""
 #| "If the contact form is on an estate page, you can link the created "
@@ -628,8 +634,8 @@ msgstr ""
 "die erstellte Adresse mit diesem Nachlass verknüpfen, indem Sie die "
 "erhaltene E-Mail in onOffice enterprise öffnen oder das verwenden %s."
 
-#: plugin/Gui/AdminPageFormSettingsContact.php:150
-#: plugin/Gui/AdminPageFormSettingsContact.php:161
+#: plugin/Gui/AdminPageFormSettingsContact.php:148
+#: plugin/Gui/AdminPageFormSettingsContact.php:159
 msgid ""
 "Be aware that when activated the duplicate check can overwrite address "
 "records. This function will be removed in the future. Use at your own risk."
@@ -642,21 +648,21 @@ msgstr ""
 msgid "Please provide an Email address!"
 msgstr "Bitte geben Sie eine E-Mail-Adresse an!"
 
-#: plugin/Gui/AdminPageSettingsBase.php:177
+#: plugin/Gui/AdminPageSettingsBase.php:180
 msgid "Fields"
 msgstr "Felder"
 
-#: plugin/Gui/AdminPageSettingsBase.php:407
+#: plugin/Gui/AdminPageSettingsBase.php:425
 msgid "Fields Configuration"
 msgstr "Feldeinstellungen"
 
-#: plugin/Gui/AdminPageSimilarEstates.php:319
+#: plugin/Gui/AdminPageSimilarEstates.php:318
 #, fuzzy
 #| msgid "The detail view has been saved."
 msgid "The similar estates view has been saved."
 msgstr "Die Detailansicht wurde gespeichert."
 
-#: plugin/Gui/AdminPageSimilarEstates.php:320
+#: plugin/Gui/AdminPageSimilarEstates.php:319
 #, fuzzy
 #| msgid "There was a problem saving the detail view."
 msgid "There was a problem saving the similar estates view."
@@ -794,7 +800,8 @@ msgid "View Name"
 msgstr "Name der Ansicht"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:104
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:460
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:463
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:486
 msgid "Sort by"
 msgstr "Sortierkriterium"
 
@@ -852,7 +859,6 @@ msgid "Show reference estates"
 msgstr "Referenzobjekte nicht anzeigen"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:357
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:103
 msgid "Random Order"
 msgstr "Zufällige Reihenfolge"
 
@@ -873,25 +879,51 @@ msgstr "Referenzimmobilien"
 msgid "Favorites List"
 msgstr "Favoritenliste"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:441
-msgid "Sort by User Selection"
-msgstr "Sortierung nach Benutzerauswahl"
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:443
+msgid "Popular"
+msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:484
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:448
+#, fuzzy
+#| msgctxt "forms"
+#| msgid "All"
+#| msgid_plural "All"
+msgid "All"
+msgstr "Alle"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:510
 msgid "Standard Sort"
 msgstr "Standardsortierung"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:526
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:549
 msgid "lowest First / highest First"
 msgstr "niedrigste zuerst / höchste zuerst"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:527
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:550
 msgid "ascending / descending"
 msgstr "aufsteigend / absteigend"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:530
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:553
 msgid "Formulation of sorting directions"
 msgstr "Formulierung der Sortierrichtungen"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:571
+#, fuzzy
+#| msgid "Default"
+msgid "Default sort"
+msgstr "Standard"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:572
+#, fuzzy
+#| msgid "Sort by User Selection"
+msgid "User selection"
+msgstr "Sortierung nach Benutzerauswahl"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:573
+#, fuzzy
+#| msgid "Random Order"
+msgid "Random order"
+msgstr "Zufällige Reihenfolge"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:87
 msgid "Unit List"
@@ -1167,16 +1199,16 @@ msgstr ""
 msgid "(Remains unchanged)"
 msgstr "(Bleibt unverändert)"
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:88
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:90
 msgid "0 matches"
 msgstr "0 Treffer"
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:89
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:91
 msgid "Show exact match"
 msgstr "Einen Treffer anzeigen"
 
 #. translators: %s is the amount of results
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:91
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:93
 msgid "Show %s matches"
 msgstr "%s Treffer anzeigen"
 

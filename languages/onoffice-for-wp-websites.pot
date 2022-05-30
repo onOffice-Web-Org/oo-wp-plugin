@@ -2,14 +2,14 @@
 # This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 3.1\n"
+"Project-Id-Version: onOffice for WP-Websites 3.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-05-23T09:43:38+02:00\n"
+"POT-Creation-Date: 2022-05-30T16:10:24+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
@@ -41,11 +41,11 @@ msgstr ""
 #: plugin/Controller/AdminViewController.php:149
 #: plugin/Gui/AdminPageAddressList.php:84
 #: plugin/Gui/AdminPageBase.php:89
-#: plugin/Gui/AdminPageEstateDetail.php:203
+#: plugin/Gui/AdminPageEstateDetail.php:202
 #: plugin/Gui/AdminPageEstateList.php:76
 #: plugin/Gui/AdminPageEstateUnitList.php:72
 #: plugin/Gui/AdminPageFormList.php:191
-#: plugin/Gui/AdminPageSimilarEstates.php:145
+#: plugin/Gui/AdminPageSimilarEstates.php:144
 msgid "onOffice"
 msgstr ""
 
@@ -186,7 +186,7 @@ msgid "choose name"
 msgstr ""
 
 #: plugin/Gui/AdminPageAddressListSettings.php:122
-#: plugin/Gui/AdminPageEstateDetail.php:279
+#: plugin/Gui/AdminPageEstateDetail.php:278
 #: plugin/Gui/AdminPageEstateListSettings.php:132
 #: plugin/Gui/AdminPageEstateUnitSettings.php:87
 #: plugin/Gui/AdminPageFormSettingsBase.php:412
@@ -204,7 +204,7 @@ msgid "Sorting"
 msgstr ""
 
 #: plugin/Gui/AdminPageAddressListSettings.php:176
-#: plugin/Gui/AdminPageEstateDetail.php:289
+#: plugin/Gui/AdminPageEstateDetail.php:288
 #: plugin/Gui/AdminPageEstateListSettings.php:141
 #: plugin/Gui/AdminPageEstateUnitSettings.php:95
 msgid "Photo Types"
@@ -235,133 +235,137 @@ msgstr ""
 msgid "API secret"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:109
+#: plugin/Gui/AdminPageApiSettings.php:123
+msgid "API settings (encrypted)"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:125
 msgid "API settings"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:121
+#: plugin/Gui/AdminPageApiSettings.php:138
 msgid "Site Key"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:122
+#: plugin/Gui/AdminPageApiSettings.php:139
 msgid "Secret Key"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:143
+#: plugin/Gui/AdminPageApiSettings.php:160
 msgid "Google reCAPTCHA"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:158
-#: plugin/Gui/AdminPageApiSettings.php:168
+#: plugin/Gui/AdminPageApiSettings.php:175
+#: plugin/Gui/AdminPageApiSettings.php:185
 msgid "Google Maps Key"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:175
+#: plugin/Gui/AdminPageApiSettings.php:192
 msgid "Allow indexing of PDF brochures"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:181
+#: plugin/Gui/AdminPageApiSettings.php:198
 msgid "If you allow indexing, your search engine ranking can be negatively affected and your brochures can be available from search engines even months after the corresponding estate is deleted."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:186
+#: plugin/Gui/AdminPageApiSettings.php:203
 msgid "Search engine"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:225
+#: plugin/Gui/AdminPageApiSettings.php:243
 msgid "The keys are OK."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:226
+#: plugin/Gui/AdminPageApiSettings.php:244
 msgid "There was an error:"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:227
+#: plugin/Gui/AdminPageApiSettings.php:245
 msgid "The secret parameter is missing."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:228
+#: plugin/Gui/AdminPageApiSettings.php:246
 msgid "The secret parameter is invalid or malformed."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:229
+#: plugin/Gui/AdminPageApiSettings.php:247
 msgid "The response parameter is missing."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:230
+#: plugin/Gui/AdminPageApiSettings.php:248
 msgid "The response parameter is invalid or malformed."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:231
+#: plugin/Gui/AdminPageApiSettings.php:249
 msgid "The request is invalid or malformed."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:242
+#: plugin/Gui/AdminPageApiSettings.php:260
 msgid "In order to use Google reCAPTCHA, you need to provide your keys. You're free to enable it in the form settings for later use."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:268
+#: plugin/Gui/AdminPageApiSettings.php:286
 msgid "Save changes and clear API cache"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:280
+#: plugin/Gui/AdminPageApiSettings.php:298
 msgid "The cache was cleaned."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:294
+#: plugin/Gui/AdminPageApiSettings.php:312
 msgid "Map Provider"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:301
+#: plugin/Gui/AdminPageApiSettings.php:319
 msgid "OpenStreetMap"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:302
+#: plugin/Gui/AdminPageApiSettings.php:320
 msgid "Google Maps"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:309
+#: plugin/Gui/AdminPageApiSettings.php:327
 msgid "Maps"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:322
+#: plugin/Gui/AdminPageApiSettings.php:340
 msgid "Show title in URL"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:328
+#: plugin/Gui/AdminPageApiSettings.php:346
 msgid "If this checkbox is selected, the title of the property will be part of the URLs of the detail views. The title is placed after the record number, e.g. <code>/1234-nice-location-with-view</code>. No more than the first five words of the title are used."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:334
+#: plugin/Gui/AdminPageApiSettings.php:352
 msgid "Detail View URLs"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:347
+#: plugin/Gui/AdminPageApiSettings.php:365
 msgid "Enable Watchlist"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:348
+#: plugin/Gui/AdminPageApiSettings.php:366
 msgid "Expression used"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:359
-#: plugin/Gui/AdminPageApiSettings.php:368
+#: plugin/Gui/AdminPageApiSettings.php:377
+#: plugin/Gui/AdminPageApiSettings.php:386
 msgid "Watchlist"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:360
+#: plugin/Gui/AdminPageApiSettings.php:378
 msgid "Favorise"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:379
+#: plugin/Gui/AdminPageApiSettings.php:397
 msgid "Pagination"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:386
+#: plugin/Gui/AdminPageApiSettings.php:404
 msgid "By WP Theme"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:387
+#: plugin/Gui/AdminPageApiSettings.php:405
 msgid "By onOffice-Plugin"
 msgstr ""
 
@@ -371,14 +375,14 @@ msgid "List Views"
 msgstr ""
 
 #: plugin/Gui/AdminPageEstate.php:88
-#: plugin/Gui/AdminPageEstateDetail.php:205
+#: plugin/Gui/AdminPageEstateDetail.php:204
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:99
 msgid "Detail View"
 msgstr ""
 
 #: plugin/Gui/AdminPageEstate.php:89
-#: plugin/Gui/AdminPageSimilarEstates.php:147
-#: plugin/Gui/AdminPageSimilarEstates.php:200
+#: plugin/Gui/AdminPageSimilarEstates.php:146
+#: plugin/Gui/AdminPageSimilarEstates.php:199
 msgid "Similar Estates"
 msgstr ""
 
@@ -386,47 +390,41 @@ msgstr ""
 msgid "Unit Lists"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:121
-#: plugin/Gui/AdminPageEstateListSettings.php:67
-#: plugin/Gui/AdminPageSimilarEstates.php:98
-msgid "Edit List View"
-msgstr ""
-
 #. translators: %s will be replaced with a link to the appropriate page.
-#: plugin/Gui/AdminPageEstateDetail.php:131
+#: plugin/Gui/AdminPageEstateDetail.php:130
 msgid "Detail view in use on page %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:133
+#: plugin/Gui/AdminPageEstateDetail.php:132
 msgid "Edit Page"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:135
+#: plugin/Gui/AdminPageEstateDetail.php:134
 msgid "Detail view is not in use yet. Insert this code on a page to get the detail view there:"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:161
+#: plugin/Gui/AdminPageEstateDetail.php:160
 msgid "Contact Person Fields"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:176
-#: plugin/Gui/AdminPageSimilarEstates.php:119
+#: plugin/Gui/AdminPageEstateDetail.php:175
+#: plugin/Gui/AdminPageSimilarEstates.php:118
 msgid "Real Estate Fields"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:297
+#: plugin/Gui/AdminPageEstateDetail.php:296
 msgid "Access Control"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:309
+#: plugin/Gui/AdminPageEstateDetail.php:308
 msgid "Additional Media"
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:428
+#: plugin/Gui/AdminPageEstateDetail.php:427
 msgid "The detail view has been saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageEstateDetail.php:429
+#: plugin/Gui/AdminPageEstateDetail.php:428
 msgid "There was a problem saving the detail view."
 msgstr ""
 
@@ -438,6 +436,10 @@ msgstr ""
 #: plugin/Gui/AdminPageEstateList.php:99
 #: plugin/Gui/AdminPageFormList.php:149
 msgid "Are you sure you want to delete the selected items?"
+msgstr ""
+
+#: plugin/Gui/AdminPageEstateListSettings.php:67
+msgid "Edit List View"
 msgstr ""
 
 #: plugin/Gui/AdminPageEstateListSettings.php:99
@@ -576,11 +578,11 @@ msgstr ""
 msgid "Fields Configuration"
 msgstr ""
 
-#: plugin/Gui/AdminPageSimilarEstates.php:319
+#: plugin/Gui/AdminPageSimilarEstates.php:318
 msgid "The similar estates view has been saved."
 msgstr ""
 
-#: plugin/Gui/AdminPageSimilarEstates.php:320
+#: plugin/Gui/AdminPageSimilarEstates.php:319
 msgid "There was a problem saving the similar estates view."
 msgstr ""
 
@@ -786,6 +788,14 @@ msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:428
 msgid "Favorites List"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:443
+msgid "Popular"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:448
+msgid "All"
 msgstr ""
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:510
@@ -1069,16 +1079,16 @@ msgstr ""
 msgid "(Remains unchanged)"
 msgstr ""
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:88
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:90
 msgid "0 matches"
 msgstr ""
 
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:89
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:91
 msgid "Show exact match"
 msgstr ""
 
 #. translators: %s is the amount of results
-#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:91
+#: plugin/ScriptLoader/ScriptLoaderGenericConfigurationDefault.php:93
 msgid "Show %s matches"
 msgstr ""
 
