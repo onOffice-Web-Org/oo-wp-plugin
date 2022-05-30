@@ -11,24 +11,9 @@ onOffice.ajaxSaver = function(outerDiv) {
 (function() {
 	this.register = function() {
 		var proto = this;
-		var form = $("form");
-		var typesNeedValid = ['email'];
-
-		form.submit(function (e) {
-			e.preventDefault();
-		});
-		this._outerDiv.find('#send_ajax').on('click', function () {
-			var isValid = true;
-			form.find(':input').each(function (index, input) {
-				if (!input.checkValidity() && $.inArray(input.getAttribute('type'), typesNeedValid) !== -1) {
-					isValid = false;
-					return false;
-				}
-			});
-			if (isValid) {
-				window.scrollTo(0, 0);
-				proto.save();
-			}
+		this._outerDiv.find('#send_ajax').on('click', function() {
+			window.scrollTo(0, 0);
+			proto.save();
 		});
 	};
 
