@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-05-09T11:06:22+07:00\n"
+"POT-Creation-Date: 2022-05-25T09:40:17+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Domain: onoffice-for-wp-websites\n"
 
 #. Plugin Name of the plugin
@@ -49,8 +49,8 @@ msgstr "https://en.onoffice.com/"
 msgid "Please configure your onOffice API credentials first!"
 msgstr "Gelieve eerst uw onOffice API-gegevens te configureren!"
 
-#: plugin/Controller/AdminViewController.php:149
-#: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:88
+#: plugin/Controller/AdminViewController.php:151
+#: plugin/Gui/AdminPageAddressList.php:84 plugin/Gui/AdminPageBase.php:89
 #: plugin/Gui/AdminPageEstateDetail.php:203
 #: plugin/Gui/AdminPageEstateList.php:76
 #: plugin/Gui/AdminPageEstateUnitList.php:72
@@ -59,33 +59,33 @@ msgstr "Gelieve eerst uw onOffice API-gegevens te configureren!"
 msgid "onOffice"
 msgstr "onOffice"
 
-#: plugin/Controller/AdminViewController.php:155
+#: plugin/Controller/AdminViewController.php:157
 #: plugin/Gui/AdminPageAddressList.php:61
 msgid "Addresses"
 msgstr "Adressen"
 
-#: plugin/Controller/AdminViewController.php:161
-#: plugin/Controller/AdminViewController.php:162
+#: plugin/Controller/AdminViewController.php:163
+#: plugin/Controller/AdminViewController.php:164
 msgid "Estates"
 msgstr "Landgoederen"
 
-#: plugin/Controller/AdminViewController.php:173
+#: plugin/Controller/AdminViewController.php:175
 #: plugin/Gui/AdminPageFormList.php:97
 msgid "Forms"
 msgstr "Vormen"
 
-#: plugin/Controller/AdminViewController.php:205
-#: plugin/Controller/AdminViewController.php:206
-#: plugin/Controller/AdminViewController.php:373
+#: plugin/Controller/AdminViewController.php:207
+#: plugin/Controller/AdminViewController.php:208
+#: plugin/Controller/AdminViewController.php:374
 msgid "Settings"
 msgstr "Instellingen"
 
-#: plugin/Controller/AdminViewController.php:389
+#: plugin/Controller/AdminViewController.php:390
 msgid "API token and secret"
 msgstr "API-token en geheim"
 
 #. translators: %s will be replaced with the translation of 'API token and secret'.
-#: plugin/Controller/AdminViewController.php:392
+#: plugin/Controller/AdminViewController.php:393
 msgid ""
 "It looks like you did not enter any valid API credentials. Please consider "
 "reviewing your %s."
@@ -93,13 +93,38 @@ msgstr ""
 "Het lijkt erop dat u geen geldige API-gegevens hebt ingevoerd. Overweeg "
 "alstublieft om uw %s."
 
-#: plugin/Controller/AdminViewController.php:408
+#: plugin/Controller/AdminViewController.php:409
 msgid ""
 "We have deactivated the plugin's duplicate check for all of your forms, "
 "because the duplicate check can unintentionally overwrite address records. "
 "This function will be removed in the future. The option has been deactivated "
 "for these forms: Contact, Interest, Owner"
 msgstr ""
+"We hebben de duplicaatcontrole van de plug-in gedeactiveerd voor al uw "
+"formulieren, omdat de duplicaatcontrole onbedoeld adresrecords kan "
+"overschrijven. Deze functie wordt in de toekomst verwijderd. De optie is "
+"gedeactiveerd voor deze formulieren: Contact, Interesse, Eigenaar"
+
+#: plugin/Controller/AdminViewController.php:427
+#, fuzzy
+#| msgid "API settings"
+msgid "plugin settings"
+msgstr "API-instellingen"
+
+#. translators: %s will be replaced with the translation of 'plugin settings'.
+#: plugin/Controller/AdminViewController.php:430
+#, fuzzy
+#| msgid ""
+#| "The onOffice plugin is missing a default email address. Forms that use it "
+#| "will not send emails. Please add a default email address in the %s."
+msgid ""
+"The onOffice plugin is missing a default email address. You have forms that "
+"use the default email and they will currently not send emails. Please add a "
+"default email address in the %s to dismiss this warning."
+msgstr ""
+"De onOffice-plug-in mist een standaard e-mailadres. Formulieren die het "
+"gebruiken, verzenden geen e-mails. Voeg een standaard e-mailadres toe in de "
+"%s."
 
 #. translators: %2$s is the kind of estate, %3$s the markting type, %4$s the city, %5$s is the estate number. Example: House (Sale) in Aachen - JJ12345
 #: plugin/Controller/EstateViewDocumentTitleBuilder.php:65
@@ -135,7 +160,7 @@ msgid "Search Criteria"
 msgstr "Zoekcriteria"
 
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Fieldnames.php:219 plugin/Gui/AdminPageFormSettingsContact.php:196
+#: plugin/Fieldnames.php:220 plugin/Gui/AdminPageFormSettingsContact.php:194
 msgid "Form Specific Fields"
 msgstr "Vorm-specifieke velden"
 
@@ -192,37 +217,45 @@ msgstr "Nieuw toevoegen"
 msgid "Edit Address List"
 msgstr "Adreslijst bewerken"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:105
+#: plugin/Gui/AdminPageAddressListSettings.php:106
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:392
+#: plugin/Gui/AdminPageFormSettingsBase.php:395
 msgid "choose name"
 msgstr "naam kiezen"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:121
+#: plugin/Gui/AdminPageAddressListSettings.php:122
 #: plugin/Gui/AdminPageEstateDetail.php:279
-#: plugin/Gui/AdminPageEstateListSettings.php:126
-#: plugin/Gui/AdminPageEstateUnitSettings.php:89
-#: plugin/Gui/AdminPageFormSettingsBase.php:409
+#: plugin/Gui/AdminPageEstateListSettings.php:132
+#: plugin/Gui/AdminPageEstateUnitSettings.php:87
+#: plugin/Gui/AdminPageFormSettingsBase.php:412
 msgid "Layout & Design"
 msgstr "Lay-out & ontwerp"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:141
+#: plugin/Gui/AdminPageAddressListSettings.php:139
 msgid "Filter & Records"
 msgstr "Filter & dossiers"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:160
+#: plugin/Gui/AdminPageAddressListSettings.php:159
+#: plugin/Gui/AdminPageEstateListSettings.php:118
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:568
+#, fuzzy
+#| msgid "Settings"
+msgid "Sorting"
+msgstr "Instellingen"
+
+#: plugin/Gui/AdminPageAddressListSettings.php:176
 #: plugin/Gui/AdminPageEstateDetail.php:289
-#: plugin/Gui/AdminPageEstateListSettings.php:135
-#: plugin/Gui/AdminPageEstateUnitSettings.php:97
+#: plugin/Gui/AdminPageEstateListSettings.php:141
+#: plugin/Gui/AdminPageEstateUnitSettings.php:95
 msgid "Photo Types"
 msgstr "Soorten foto's"
 
-#: plugin/Gui/AdminPageAddressListSettings.php:314
+#: plugin/Gui/AdminPageAddressListSettings.php:333
 msgid "The address list was saved."
 msgstr "De adreslijst is opgeslagen."
 
-#: plugin/Gui/AdminPageAddressListSettings.php:315
+#: plugin/Gui/AdminPageAddressListSettings.php:334
 msgid ""
 "There was a problem saving the list. Please make sure the name of the list "
 "is unique."
@@ -243,81 +276,91 @@ msgstr ""
 "Het lijkt erop dat u geen geldige API-gegevens hebt ingevoerd. Ga "
 "alsjeblieft terug en bekijk je %s."
 
-#: plugin/Gui/AdminPageApiSettings.php:78
+#: plugin/Gui/AdminPageApiSettings.php:79
 msgid "API token"
 msgstr "API-token"
 
-#: plugin/Gui/AdminPageApiSettings.php:79
+#: plugin/Gui/AdminPageApiSettings.php:80
 msgid "API secret"
 msgstr "API geheim"
 
-#: plugin/Gui/AdminPageApiSettings.php:109
+#: plugin/Gui/AdminPageApiSettings.php:110
 msgid "API settings"
 msgstr "API-instellingen"
 
-#: plugin/Gui/AdminPageApiSettings.php:121
+#: plugin/Gui/AdminPageApiSettings.php:117
+#, fuzzy
+#| msgid "Edit Address List"
+msgid "Default Email Address"
+msgstr "Adreslijst bewerken"
+
+#: plugin/Gui/AdminPageApiSettings.php:128
+msgid "Email"
+msgstr ""
+
+#: plugin/Gui/AdminPageApiSettings.php:139
 msgid "Site Key"
 msgstr "Sleutel van de site"
 
-#: plugin/Gui/AdminPageApiSettings.php:122
+#: plugin/Gui/AdminPageApiSettings.php:140
 msgid "Secret Key"
 msgstr "Geheime sleutel"
 
-#: plugin/Gui/AdminPageApiSettings.php:143
+#: plugin/Gui/AdminPageApiSettings.php:161
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:158
-#: plugin/Gui/AdminPageApiSettings.php:168
+#: plugin/Gui/AdminPageApiSettings.php:176
+#: plugin/Gui/AdminPageApiSettings.php:186
 msgid "Google Maps Key"
 msgstr "Google Kaarten"
 
-#: plugin/Gui/AdminPageApiSettings.php:175
+#: plugin/Gui/AdminPageApiSettings.php:193
 #, fuzzy
 #| msgid "Index PDF brochure"
 msgid "Allow indexing of PDF brochures"
 msgstr "Index PDF brochure"
 
-#: plugin/Gui/AdminPageApiSettings.php:181
+#: plugin/Gui/AdminPageApiSettings.php:199
 msgid ""
 "If you allow indexing, your search engine ranking can be negatively affected "
 "and your brochures can be available from search engines even months after "
 "the corresponding estate is deleted."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:186
+#: plugin/Gui/AdminPageApiSettings.php:204
 msgid "Search engine"
 msgstr "Search engine"
 
-#: plugin/Gui/AdminPageApiSettings.php:225
+#: plugin/Gui/AdminPageApiSettings.php:243
 msgid "The keys are OK."
 msgstr "De sleutels zijn in orde."
 
-#: plugin/Gui/AdminPageApiSettings.php:226
+#: plugin/Gui/AdminPageApiSettings.php:244
 msgid "There was an error:"
 msgstr "Er was een fout:"
 
-#: plugin/Gui/AdminPageApiSettings.php:227
+#: plugin/Gui/AdminPageApiSettings.php:245
 msgid "The secret parameter is missing."
 msgstr "De geheime parameter ontbreekt."
 
-#: plugin/Gui/AdminPageApiSettings.php:228
+#: plugin/Gui/AdminPageApiSettings.php:246
 msgid "The secret parameter is invalid or malformed."
 msgstr "De geheime parameter is ongeldig of misvormd."
 
-#: plugin/Gui/AdminPageApiSettings.php:229
+#: plugin/Gui/AdminPageApiSettings.php:247
 msgid "The response parameter is missing."
 msgstr "De antwoordparameter ontbreekt."
 
-#: plugin/Gui/AdminPageApiSettings.php:230
+#: plugin/Gui/AdminPageApiSettings.php:248
 msgid "The response parameter is invalid or malformed."
 msgstr "De responsparameter is ongeldig of misvormd."
 
-#: plugin/Gui/AdminPageApiSettings.php:231
+#: plugin/Gui/AdminPageApiSettings.php:249
 msgid "The request is invalid or malformed."
 msgstr "Het verzoek is ongeldig of misvormd."
 
-#: plugin/Gui/AdminPageApiSettings.php:242
+#: plugin/Gui/AdminPageApiSettings.php:260
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -326,35 +369,35 @@ msgstr ""
 "staat u vrij om dit in de formulierinstellingen in te schakelen voor later "
 "gebruik."
 
-#: plugin/Gui/AdminPageApiSettings.php:268
+#: plugin/Gui/AdminPageApiSettings.php:286
 msgid "Save changes and clear API cache"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:280
+#: plugin/Gui/AdminPageApiSettings.php:298
 msgid "The cache was cleaned."
 msgstr "De cache is schoongemaakt."
 
-#: plugin/Gui/AdminPageApiSettings.php:294
+#: plugin/Gui/AdminPageApiSettings.php:312
 msgid "Map Provider"
 msgstr "Kaartaanbieder"
 
-#: plugin/Gui/AdminPageApiSettings.php:301
+#: plugin/Gui/AdminPageApiSettings.php:319
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: plugin/Gui/AdminPageApiSettings.php:302
+#: plugin/Gui/AdminPageApiSettings.php:320
 msgid "Google Maps"
 msgstr "Google Kaarten"
 
-#: plugin/Gui/AdminPageApiSettings.php:309
+#: plugin/Gui/AdminPageApiSettings.php:327
 msgid "Maps"
 msgstr "Kaarten"
 
-#: plugin/Gui/AdminPageApiSettings.php:322
+#: plugin/Gui/AdminPageApiSettings.php:340
 msgid "Show title in URL"
 msgstr "Toon titel in URL"
 
-#: plugin/Gui/AdminPageApiSettings.php:328
+#: plugin/Gui/AdminPageApiSettings.php:346
 msgid ""
 "If this checkbox is selected, the title of the property will be part of the "
 "URLs of the detail views. The title is placed after the record number, e.g. "
@@ -366,36 +409,36 @@ msgstr ""
 "recordnummer geplaatst, b.v. <code>/1234-nice-location-with-view</code>. "
 "Niet meer dan de eerste vijf woorden van de titel worden gebruikt."
 
-#: plugin/Gui/AdminPageApiSettings.php:334
+#: plugin/Gui/AdminPageApiSettings.php:352
 msgid "Detail View URLs"
 msgstr "URL's voor detailweergave"
 
-#: plugin/Gui/AdminPageApiSettings.php:347
+#: plugin/Gui/AdminPageApiSettings.php:365
 msgid "Enable Watchlist"
 msgstr "Watchlist inschakelen"
 
-#: plugin/Gui/AdminPageApiSettings.php:348
+#: plugin/Gui/AdminPageApiSettings.php:366
 msgid "Expression used"
 msgstr "Gebruikte expressie"
 
-#: plugin/Gui/AdminPageApiSettings.php:359
-#: plugin/Gui/AdminPageApiSettings.php:368
+#: plugin/Gui/AdminPageApiSettings.php:377
+#: plugin/Gui/AdminPageApiSettings.php:386
 msgid "Watchlist"
 msgstr "Kijklijst"
 
-#: plugin/Gui/AdminPageApiSettings.php:360
+#: plugin/Gui/AdminPageApiSettings.php:378
 msgid "Favorise"
 msgstr "Favoriet"
 
-#: plugin/Gui/AdminPageApiSettings.php:379
+#: plugin/Gui/AdminPageApiSettings.php:397
 msgid "Pagination"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:386
+#: plugin/Gui/AdminPageApiSettings.php:404
 msgid "By WP Theme"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:387
+#: plugin/Gui/AdminPageApiSettings.php:405
 #, fuzzy
 #| msgid "onOffice"
 msgid "By onOffice-Plugin"
@@ -476,22 +519,22 @@ msgstr "Zoek landgoedweergaven"
 msgid "Are you sure you want to delete the selected items?"
 msgstr "Weet u zeker dat u de geselecteerde items wilt verwijderen?"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:107
+#: plugin/Gui/AdminPageEstateListSettings.php:99
 msgid "Filters & Records"
 msgstr "Filters & dossiers"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:143
-#: plugin/Gui/AdminPageEstateUnitSettings.php:105
+#: plugin/Gui/AdminPageEstateListSettings.php:149
+#: plugin/Gui/AdminPageEstateUnitSettings.php:103
 msgid "Downloadable Documents"
 msgstr "Downloadbare documenten"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:152
+#: plugin/Gui/AdminPageEstateListSettings.php:158
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:224
+#: plugin/Gui/AdminPageFormSettingsContact.php:233
 msgid "Geo Fields"
 msgstr "Geo Velden"
 
-#: plugin/Gui/AdminPageEstateListSettings.php:158
+#: plugin/Gui/AdminPageEstateListSettings.php:164
 msgid ""
 "At least the following fields must be active: country, radius and city or "
 "postcode."
@@ -518,7 +561,7 @@ msgstr "Eenheden Lijsten"
 msgid "Edit Units View"
 msgstr "Eenheden weergeven"
 
-#: plugin/Gui/AdminPageEstateUnitSettings.php:80
+#: plugin/Gui/AdminPageEstateUnitSettings.php:79
 msgid "Records"
 msgstr "Verslagen"
 
@@ -527,19 +570,19 @@ msgid "Search Forms"
 msgstr "Zoekformulieren"
 
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:61
-#: plugin/Gui/AdminPageFormSettingsContact.php:113
+#: plugin/Gui/AdminPageFormSettingsContact.php:112
 msgid "Form Specific Options"
 msgstr "Vorm-specifieke opties"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:118
+#: plugin/Gui/AdminPageFormSettingsBase.php:121
 msgid "Edit Form"
 msgstr "Formulier bewerken"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:266
+#: plugin/Gui/AdminPageFormSettingsBase.php:269
 msgid "The Form was saved."
 msgstr "Het formulier is opgeslagen."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:267
+#: plugin/Gui/AdminPageFormSettingsBase.php:270
 msgid ""
 "There was a problem saving the form. Please make sure the name of the form "
 "is unique."
@@ -548,48 +591,48 @@ msgstr ""
 "naam van het formulier uniek is."
 
 #. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:276
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:567
+#: plugin/Gui/AdminPageFormSettingsBase.php:279
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:621
 msgid "Module: %s"
 msgstr "Module %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:277
+#: plugin/Gui/AdminPageFormSettingsBase.php:280
 msgid "Edit Values"
 msgstr "Waarden bewerken"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:280
+#: plugin/Gui/AdminPageFormSettingsBase.php:283
 msgid "Add Language"
 msgstr "Taal toevoegen"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:281
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:449
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:476
+#: plugin/Gui/AdminPageFormSettingsBase.php:284
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:480
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:507
 msgid "Choose Language"
 msgstr "Kies de taal"
 
 #. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:283
+#: plugin/Gui/AdminPageFormSettingsBase.php:286
 msgid "Default Value: %s"
 msgstr "Standaardwaarde: %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:284
+#: plugin/Gui/AdminPageFormSettingsBase.php:287
 msgid "Custom Label: %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:285
+#: plugin/Gui/AdminPageFormSettingsBase.php:288
 msgid "Default Value From:"
 msgstr "Standaardwaarde van:"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:286
+#: plugin/Gui/AdminPageFormSettingsBase.php:289
 msgid "Default Value Up To:"
 msgstr "Standaardwaarde tot:"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:317
+#: plugin/Gui/AdminPageFormSettingsBase.php:320
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "No"
 msgstr "Nee"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:318
+#: plugin/Gui/AdminPageFormSettingsBase.php:321
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "Yes"
 msgstr "Ja"
@@ -632,15 +675,15 @@ msgstr ""
 "adresrecords kan overschrijven. Deze functie wordt in de toekomst "
 "verwijderd. Gebruik op eigen risico."
 
-#: plugin/Gui/AdminPageFormSettingsInquiry.php:92
+#: plugin/Gui/AdminPageFormSettingsInquiry.php:93
 msgid "Please provide an Email address!"
 msgstr "Geef a.u.b. een e-mailadres op!"
 
-#: plugin/Gui/AdminPageSettingsBase.php:177
+#: plugin/Gui/AdminPageSettingsBase.php:180
 msgid "Fields"
 msgstr "Velden contactpersoon"
 
-#: plugin/Gui/AdminPageSettingsBase.php:407
+#: plugin/Gui/AdminPageSettingsBase.php:425
 msgid "Fields Configuration"
 msgstr "Velden Configuratie"
 
@@ -687,7 +730,7 @@ msgstr "Filter"
 #: plugin/Gui/Table/EstateListTable.php:217
 #: plugin/Gui/Table/EstateUnitsTable.php:66
 #: plugin/Gui/Table/EstateUnitsTable.php:119
-#: plugin/Gui/Table/FormsTable.php:132 plugin/Gui/Table/FormsTable.php:158
+#: plugin/Gui/Table/FormsTable.php:133 plugin/Gui/Table/FormsTable.php:159
 msgid "Shortcode"
 msgstr "Verkorte code"
 
@@ -702,7 +745,7 @@ msgid "Selected filter"
 msgstr "Geselecteerd filter"
 
 #: plugin/Gui/Table/AddressListTable.php:182
-#: plugin/Gui/Table/EstateListTable.php:135 plugin/Gui/Table/FormsTable.php:130
+#: plugin/Gui/Table/EstateListTable.php:135 plugin/Gui/Table/FormsTable.php:131
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:193
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:339
 #: plugin/Model/FormModelBuilder/FormModelBuilderSimilarEstateSettings.php:215
@@ -712,14 +755,14 @@ msgid "Template"
 msgstr "Sjabloon"
 
 #: plugin/Gui/Table/AddressListTable.php:184
-#: plugin/Gui/Table/EstateListTable.php:138 plugin/Gui/Table/FormsTable.php:133
+#: plugin/Gui/Table/EstateListTable.php:138 plugin/Gui/Table/FormsTable.php:134
 msgid "Pages using the shortcode"
 msgstr "Pagina's die de shortcode gebruiken"
 
 #: plugin/Gui/Table/AddressListTable.php:220
 #: plugin/Gui/Table/EstateListTable.php:273
 #: plugin/Gui/Table/EstateUnitsTable.php:166
-#: plugin/Gui/Table/FormsTable.php:266
+#: plugin/Gui/Table/FormsTable.php:267
 #, fuzzy
 #| msgid "Check for Duplicates"
 msgid "Duplicate"
@@ -758,28 +801,28 @@ msgstr ""
 "Sie sind dabei, die Einheitenliste '%s' zu löschen.\n"
 "Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
-#: plugin/Gui/Table/FormsTable.php:128
+#: plugin/Gui/Table/FormsTable.php:129
 msgid "Form name"
 msgstr "Formulier naam"
 
-#: plugin/Gui/Table/FormsTable.php:129
+#: plugin/Gui/Table/FormsTable.php:130
 msgid "Recipient e-mail address"
 msgstr "Emailadres van ontvanger"
 
-#: plugin/Gui/Table/FormsTable.php:131
+#: plugin/Gui/Table/FormsTable.php:132
 msgid "Form type"
 msgstr "Formuliertype"
 
-#: plugin/Gui/Table/FormsTable.php:156
+#: plugin/Gui/Table/FormsTable.php:157
 msgid "Name of Form"
 msgstr "Naam van het formulier"
 
-#: plugin/Gui/Table/FormsTable.php:157
+#: plugin/Gui/Table/FormsTable.php:158
 msgid "Type of Form"
 msgstr "Soort formulier"
 
 #. translators: %s is the name of the form.
-#: plugin/Gui/Table/FormsTable.php:272
+#: plugin/Gui/Table/FormsTable.php:273
 msgid ""
 "You are about to delete the form '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
@@ -787,12 +830,27 @@ msgstr ""
 "Sie sind dabei, das Formular '%s' zu löschen.\n"
 "Bitte wählen Sie \"Abbrechen\" zum Beenden oder \"OK\" zum Bestätigen."
 
+#: plugin/Gui/Table/WP/ListTable.php:167 plugin/Gui/Table/WP/ListTable.php:170
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:426
+msgid "Default"
+msgstr "Standaard"
+
+#: plugin/Gui/Table/WP/ListTable.php:171
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:279
+msgid "missing"
+msgstr "vermist"
+
+#: plugin/Gui/Table/WP/ListTable.php:174
+msgid "%s (override)"
+msgstr "%s (afjakkeren)"
+
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:83
 msgid "View Name"
 msgstr "Naam bekijken"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDB.php:104
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:460
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:463
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:486
 msgid "Sort by"
 msgstr "Sorteer op"
 
@@ -832,7 +890,7 @@ msgid "Hidden"
 msgstr "Verborgen"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:181
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:404
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:435
 msgid "Reduce values according to selected filter"
 msgstr "Verminder de waarden volgens de gekozen filter"
 
@@ -848,7 +906,6 @@ msgid "Show reference estates"
 msgstr "Referentie Landgoederen"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:357
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:103
 msgid "Random Order"
 msgstr "Willekeurige volgorde"
 
@@ -856,10 +913,6 @@ msgstr "Willekeurige volgorde"
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:161
 msgid "PDF-Expose"
 msgstr "PDF-blootstelling"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:426
-msgid "Default"
-msgstr "Standaard"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:427
 msgid "Reference Estates"
@@ -869,25 +922,47 @@ msgstr "Referentie Landgoederen"
 msgid "Favorites List"
 msgstr "Favorieten Lijst"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:441
-msgid "Sort by User Selection"
-msgstr "Ordenar por selección de usuario"
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:443
+msgid "Popular"
+msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:484
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:448
+msgid "All"
+msgstr ""
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:510
 msgid "Standard Sort"
 msgstr "Ordenar por defecto"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:526
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:549
 msgid "lowest First / highest First"
 msgstr "laagste eerst / hoogste eerst"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:527
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:550
 msgid "ascending / descending"
 msgstr "oplopend / aflopend"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:530
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:553
 msgid "Formulation of sorting directions"
 msgstr "Formulering van de sorteerrichtingen"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:571
+#, fuzzy
+#| msgid "Default"
+msgid "Default sort"
+msgstr "Standaard"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:572
+#, fuzzy
+#| msgid "Sort by User Selection"
+msgid "User selection"
+msgstr "Ordenar por selección de usuario"
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateListSettings.php:573
+#, fuzzy
+#| msgid "Random Order"
+msgid "Random order"
+msgstr "Willekeurige volgorde"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBEstateUnitListSettings.php:87
 msgid "Unit List"
@@ -909,61 +984,62 @@ msgstr "Type formulier: "
 msgid ", Embed Code: "
 msgstr "Embed Code: "
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:272
-msgid "Recipient's E-Mail Address"
-msgstr "E-mailadres van de ontvanger"
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:285
+msgid "Use default email address %s"
+msgstr "Emailadres van ontvanger %s"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:289
+msgid "Use default email address "
+msgstr "Emailadres van ontvanger "
+
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:302
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:320
 #, fuzzy
-#| msgid "Edit Address List"
-msgid "Email address"
-msgstr "Adreslijst bewerken"
+#| msgid "Recipient e-mail address"
+msgid "Override email address"
+msgstr "Emailadres van ontvanger"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:296
-msgid "john.doe@example.com"
-msgstr "john.doe@example.com"
-
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:297
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:328
 msgid ""
 "Note that if the contact form is on an estate detail page and the estate has "
 "a contact person, the email will be sent to their email address. Otherwise "
 "this email address will receive the email."
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:311
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:342
 msgid "(won't work until set up globally)"
 msgstr "(zal niet werken totdat het wereldwijd is opgezet)"
 
 #. translators: %s will be replaced with the translation of '(won't work until set up globally)', if captcha hasn't been set up appropriately yet, or blank otherwise.
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:317
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:348
 msgid "Requires Captcha %s"
 msgstr "Vereist Captcha %s"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:330
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:361
 msgid "Result Limit"
 msgstr "Resultatielimiet"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:346
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:377
 msgid "Contact Type of New Address"
 msgstr ""
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:387
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:418
 msgid "Required"
 msgstr "Vereist"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:444
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:458
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:475
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:489
 msgid "Add language"
 msgstr "Taal toevoegen"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:471
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:481
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:502
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:512
 #, fuzzy
 #| msgid "Add language"
 msgid "Add custom label language"
 msgstr "Taal toevoegen"
 
-#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:539
+#: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:593
 msgid "Module"
 msgstr "Module"
 
@@ -1162,7 +1238,7 @@ msgstr "Bewerken"
 msgid "(in the folder \"%s\")"
 msgstr ""
 
-#: plugin/Renderer/InputModelRenderer.php:188
+#: plugin/Renderer/InputModelRenderer.php:189
 msgid "(Remains unchanged)"
 msgstr "(Blijft ongewijzigd)"
 
@@ -1297,6 +1373,14 @@ msgstr "Contactpersoon"
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documenten"
+
+#, fuzzy
+#~| msgid "Recipient's E-Mail Address"
+#~ msgid "Override Recipient's E-Mail Address"
+#~ msgstr "E-mailadres van de ontvanger"
+
+#~ msgid "john.doe@example.com"
+#~ msgstr "john.doe@example.com"
 
 #~ msgid "Disabled"
 #~ msgstr "Uitgeschakeld"
