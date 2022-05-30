@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\ScriptLoader;
 
 use onOffice\WPlugin\Favorites;
+use onOffice\WPlugin\Template\TemplateCall;
 use const ONOFFICE_PLUGIN_DIR;
 use function plugins_url;
 
@@ -45,6 +46,7 @@ class ScriptLoaderGenericConfigurationDefault
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$script = IncludeFileModel::TYPE_SCRIPT;
 		$style = IncludeFileModel::TYPE_STYLE;
+
 		$values = [
 			(new IncludeFileModel($script, 'select2', plugins_url('/vendor/select2/select2/dist/js/select2.min.js', $pluginPath)))
 				->setLoadInFooter(true),
@@ -75,7 +77,7 @@ class ScriptLoaderGenericConfigurationDefault
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
 			new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath)),
 			new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath)),
-			new IncludeFileModel($style, 'onoffice_defaultview', plugins_url('/css/onoffice_defaultview.css', $pluginPath)),
+			new IncludeFileModel($style, 'onoffice_style', $this->getCSSOnofficeStyle()),
 			new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath))
 		];
 
@@ -94,5 +96,34 @@ class ScriptLoaderGenericConfigurationDefault
 		]);
 
 		return $values;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCSSOnofficeStyle(): string
+	{
+		$pluginPath = ONOFFICE_PLUGIN_DIR . '/index.php';
+
+		$folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
+		                                                                 . 'onoffice-personalized' );
+		$folderTemplates[ TemplateCall::TEMPLATE_FOLDER_THEME ]  = glob( get_stylesheet_directory()
+		                                                                 . '/onoffice-theme' );
+
+		if ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_THEME ] ) ) {
+			$onofficeCssStyleLink = ! empty( glob( get_stylesheet_directory()
+			                                       . '/onoffice-theme/templates/onoffice-style.css' ) )
+				? get_template_directory_uri() . '/onoffice-theme/templates/onoffice-style.css'
+				: plugins_url( 'css/onoffice_defaultview.css', $pluginPath );
+		} elseif ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ] ) ) {
+			$onofficeCssStyleLink = ! empty( glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
+			                                       . 'onoffice-personalized/templates/onoffice-style.css' ) )
+				? plugins_url( 'onoffice-personalized/templates/onoffice-style.css', '' )
+				: plugins_url( 'css/onoffice_defaultview.css', $pluginPath );
+		} else {
+			$onofficeCssStyleLink = plugins_url( 'templates.dist/onoffice-style.css', $pluginPath );
+		}
+
+		return $onofficeCssStyleLink;
 	}
 }

@@ -23,6 +23,8 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
@@ -78,8 +80,10 @@ class TestClassDatabaseChanges
 	public function prepare()
 	{
 		global $wpdb;
-
+		$dataDetailView = new DataDetailView();
+		$dataDetailView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 		$this->_pWpOption = new WPOptionWrapperTest();
+		$this->_pWpOption->addOption('onoffice-default-view', $dataDetailView);
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
 
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
@@ -95,6 +99,7 @@ class TestClassDatabaseChanges
 		$dataViewSimilarEstates->setRecordsPerPage(13);
 		$dataViewSimilarEstates->setTemplate('/test/similar/template.php');
 		$dataSimilarViewOptions->setDataViewSimilarEstates($dataViewSimilarEstates);
+		$dataSimilarViewOptions->addToPageIdsHaveDetailShortCode(8);
 		add_option('onoffice-default-view', $dataSimilarViewOptions);
 	}
 
@@ -111,7 +116,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(28, $dbversion);
+		$this->assertEquals(30, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -175,14 +180,15 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
+		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(4))
+		$this->_pWPDBMock->expects($this->exactly(5))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds);
 
 		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
 			->will($this->returnValue(true));
@@ -212,14 +218,15 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
+		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(2))
+		$this->_pWPDBMock->expects($this->exactly(3))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds);
 
 		$this->_pWPDBMock->expects($this->once())->method('delete')
 			->will($this->returnValue(true));
@@ -234,7 +241,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(28, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(30, DatabaseChanges::MAX_VERSION);
 	}
 
 

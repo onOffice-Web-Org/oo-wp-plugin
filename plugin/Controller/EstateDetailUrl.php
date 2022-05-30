@@ -27,53 +27,76 @@ namespace onOffice\WPlugin\Controller;
 class EstateDetailUrl
 {
 	const MAXIMUM_WORD_TITLE = 5;
+
+
 	/**
 	 * @param string $url
 	 * @param int $estateId
+	 * @param string|null $title
+	 * @param string|null $oldUrl
+	 *
 	 * @return string
 	 */
-	public function createEstateDetailLink(string $url, int $estateId, string $title = null): string
+
+	public function createEstateDetailLink(
+		string $url,
+		int $estateId,
+		string $title = null,
+		string $oldUrl = null ): string
 	{
 		$urlLsSwitcher = $url;
+		$slashChar     = '';
 
-		if ($estateId !== 0){
-			$urlElements = parse_url($url);
+		if ( $estateId !== 0 ) {
+			$urlElements   = parse_url( $url );
 			$getParameters = [];
 
-			if (! empty($urlElements['query'])) {
-				parse_str($urlElements['query'], $getParameters);
+			if ( ! empty( $urlElements['query'] ) ) {
+				parse_str( $urlElements['query'], $getParameters );
+			}
+
+			if ( ! is_null( $oldUrl ) ) {
+				$oldUrlElements = parse_url( $oldUrl );
+				$oldUrlPathArr  = explode( '/', $oldUrlElements['path'] );
+				if ( empty( end( $oldUrlPathArr ) ) ) {
+					$slashChar = '/';
+				}
 			}
 
 			$urlTemp = $estateId;
 
-			if ($this->isOptionShowTitleUrl() && !empty($title)) {
-				$urlTemp .= $this->getSanitizeTitle($title);
+			if ( ! empty( $title ) && $this->isOptionShowTitleUrl() ) {
+				$urlTemp .= $this->getSanitizeTitle( $title );
 			}
 
-			$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $urlElements['path'] . $urlTemp;
+			$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $urlElements['path'] . $urlTemp . $slashChar;
 
-			if (! empty($getParameters)) {
-				$urlLsSwitcher = $urlLsSwitcher . '?' . http_build_query($getParameters);
+			if ( ! empty( $getParameters ) ) {
+				$urlLsSwitcher .= '?' . http_build_query( $getParameters );
 			}
 		}
 
 		return $urlLsSwitcher;
 	}
 
+
 	/**
 	 *
 	 * @return bool
 	 *
 	 */
+
 	public function isOptionShowTitleUrl()
 	{
 		return get_option('onoffice-detail-view-showTitleUrl',  false);
 	}
 
+
 	/**
 	 * @param string $title
 	 * @return string
 	 */
+
 	public function getSanitizeTitle(string $title): string
 	{
 		$sanitizeTitle = sanitize_title($title);
@@ -83,5 +106,37 @@ class EstateDetailUrl
 		}
 
 		return '-' . $sanitizeTitle;
+	}
+
+
+	public function getUrlWithEstateTitle( int $estateId, string $title = null, string $oldUrl = null ): string
+	{
+		$getParameters = [];
+		$urlElements   = parse_url( $oldUrl );
+		$urlTemp       = $estateId;
+		$slashChar     = '';
+
+		if ( ! empty( $title ) && $this->isOptionShowTitleUrl() ) {
+			$urlTemp .= $this->getSanitizeTitle( $title );
+		}
+		if ( ! empty( $urlElements['query'] ) ) {
+			parse_str( $urlElements['query'], $getParameters );
+		}
+
+		$oldUrlPathArr = explode( '/', $urlElements['path'] );
+		if ( empty( end( $oldUrlPathArr ) ) ) {
+			$slashChar = '/';
+			array_pop( $oldUrlPathArr );
+		}
+		array_pop( $oldUrlPathArr );
+		$newPath = implode( '/', $oldUrlPathArr );
+
+		$urlLsSwitcher = $urlElements['scheme'] . '://' . $urlElements['host'] . $newPath . '/' . $urlTemp . $slashChar;
+
+		if ( ! empty( $getParameters ) ) {
+			$urlLsSwitcher .= '?' . http_build_query( $getParameters );
+		}
+
+		return $urlLsSwitcher;
 	}
 }

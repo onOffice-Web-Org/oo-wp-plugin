@@ -473,12 +473,12 @@ class FormModelBuilderDBEstateListSettings
 		$data         = [];
 		if ( ! empty( $fieldnames ) ) {
 			if ( ! empty( $valuePopular ) ) {
-				$data['group']['Popular'] = $valuePopular;
+				$data['group'][__('Popular', 'onoffice-for-wp-websites')] = $valuePopular;
 			}
 			$valueAll = array_diff_key( $fieldnames, $valuePopular );
 			if ( ! empty( $valueAll ) ) {
 				natcasesort( $valueAll );
-				$data['group']['All'] = $valueAll;
+				$data['group'][__('All', 'onoffice-for-wp-websites')] = $valueAll;
 			}
 		}
 
