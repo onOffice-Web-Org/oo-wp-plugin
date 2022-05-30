@@ -60,6 +60,19 @@ class TestClassFieldTypes
 	 *
 	 */
 
+	public function testIsSupportType()
+	{
+		foreach (FieldTypes::TYPES_SUPPORT as $type) {
+			$this->assertTrue(FieldTypes::isSupportType($type));
+		}
+		$this->assertFalse(FieldTypes::isSupportType("zzz"));
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function testIsNumericType()
 	{
 		$this->assertTrue(FieldTypes::isNumericType(FieldTypes::FIELD_TYPE_FLOAT));

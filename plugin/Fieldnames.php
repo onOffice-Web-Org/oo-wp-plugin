@@ -84,6 +84,7 @@ class Fieldnames
 			'showTable' => true,
 			'language' => $this->_pEnvironment->getLanguage(),
 			'modules' => [onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE],
+			'realDataTypes' => true,
 		];
 
 		if ($this->_inactiveOnly) {
