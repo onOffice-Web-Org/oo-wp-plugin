@@ -72,7 +72,7 @@ class TestClassFormModelBuilderDBForm
 
 		$pInputModelDB = $pInstance->createInputModelRecipientContactForm();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals( 'text', $pInputModelDB->getHtmlType() );
+		$this->assertEquals( 'email', $pInputModelDB->getHtmlType() );
 	}
 
 	/**
@@ -276,7 +276,7 @@ class TestClassFormModelBuilderDBForm
 
 		$pInputModelDB = $pInstance->createInputModelRecipient();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals( 'text', $pInputModelDB->getHtmlType() );
+		$this->assertEquals( 'email', $pInputModelDB->getHtmlType() );
 	}
 
 	public function testCreateInputModelName()
