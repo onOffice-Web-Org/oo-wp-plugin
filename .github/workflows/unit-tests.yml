@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         operating-system: [ubuntu-latest]
-        php-versions: ['7.3', '7.4', '8.0']
+        php-versions: ['7.2', '7.4', '8.0']
     name: Unittest on ${{ matrix.operating-system }} with PHP version ${{ matrix.php-versions }}
     steps:
     - name: Set up MySQL
@@ -43,6 +43,12 @@ jobs:
     - name: Composer install
       run: |
         composer install
+
+    - name: Composer update by php version
+      if: matrix.php-versions == '7.2'
+      run: |
+        composer config platform.php 7.2
+        composer update
 
     - name: Install WP Tests
       run: bash scripts/install-wp-tests.sh wordpress_test root 'testMySQLPassword123' 172.17.0.1 latest
