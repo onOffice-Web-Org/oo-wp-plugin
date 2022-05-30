@@ -238,7 +238,7 @@ class FormModelBuilderDBForm
 		$formType = $this->getFormType();
 		$pFormTranslation = new FormTranslation();
 		$translation = $pFormTranslation->getPluralTranslationForForm($formType, 1);
-		$pInputModeLabel = new InputModelLabel(__('Type of Form: ', 'onoffice-for-wp-websites'), $translation);
+		$pInputModeLabel = new InputModelLabel(__('Type: ', 'onoffice-for-wp-websites'), $translation);
 
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 
@@ -257,10 +257,24 @@ class FormModelBuilderDBForm
 		$formName = $this->getValue($name);
 
 		$code = '[oo_form form="'.$formName.'"]';
-		$pInputModeLabel = new InputModelLabel(__(', Embed Code: ', 'onoffice-for-wp-websites'), $code);
+		$pInputModeLabel = new InputModelLabel(__(', shortcode: ', 'onoffice-for-wp-websites'), $code);
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
 
+		return $pInputModeLabel;
+	}
+
+	public function createInputModelButton()
+	{
+		$pConfig = new InputModelDBFactoryConfigForm();
+		$config = $pConfig->getConfig();
+		$name = $config[InputModelDBFactoryConfigForm::INPUT_FORM_NAME]
+		[InputModelDBFactoryConfigForm::KEY_FIELD];
+		$formName = $this->getValue($name);
+		
+		$code = '[oo_form form="'.$formName.'"]';
+		$pInputModeLabel = new InputModelLabel('', $code);
+		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_BUTTON);
 		return $pInputModeLabel;
 	}
 

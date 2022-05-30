@@ -227,13 +227,14 @@ class AdminViewController
 		if ($hook == '' || !array_key_exists($hook, $this->_ajaxHooks)) {
 			return;
 		}
-
+		$currentScreen = get_current_screen()->id;
 		$pAdminView = $this->_ajaxHooks[$hook];
 		$ajaxDataAdminPage = $pAdminView->getEnqueueData();
 		$ajaxDataGeneral = [
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'action' => $hook,
 			'nonce' => wp_create_nonce($hook),
+			'current_screen' => $currentScreen
 		];
 
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);

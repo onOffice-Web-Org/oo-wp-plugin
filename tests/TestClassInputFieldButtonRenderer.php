@@ -19,11 +19,12 @@
  *
  */
 
-declare(strict_types=1);
+declare (strict_types=1);
 
-namespace onOffice\WPlugin\Field;
+namespace onOffice\tests;
 
-use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Renderer\InputFieldButtonRenderer;
+use WP_UnitTestCase;
 
 /**
  *
@@ -32,40 +33,19 @@ use onOffice\SDK\onOfficeSDK;
  *
  */
 
-class FieldDefaultSorting
+class TestClassInputFieldButtonRenderer
+	extends WP_UnitTestCase
 {
-	/** @var array */
-	private $_defaultSortByFields = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'KdNr',
-			'Eintragsdatum',
-			'Name',
-		],
-		onOfficeSDK::MODULE_ESTATE => [
-			'erstellt_am',
-			'letzte_aktion',
-			'verkauft_am',
-			'objektnr_extern',
-			'kaufpreis',
-			'kaltmiete',
-			'wohnflaeche',
-			'grundstuecksflaeche',
-			'gesamtflaeche',
-			'anzahl_zimmer',
-			'anzahl_badezimmer'
-		]
-	];
-
-
-
 	/**
 	 *
-	 * @return array
-	 *
 	 */
-
-	public function getDefaultSortByFields(string $module): array
+	
+	public function testRenderWithValues()
 	{
-		return $this->_defaultSortByFields[$module] ?? [];
+		$pRenderer = new InputFieldButtonRenderer(null, 'testIdentifier');
+		ob_start();
+		$pRenderer->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<input type="button" class="button clipboard" id="button-copy" data-clipboard-text="" value="Copy" >', $output);
 	}
 }

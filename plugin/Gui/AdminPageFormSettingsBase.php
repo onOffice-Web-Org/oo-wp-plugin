@@ -401,6 +401,8 @@ abstract class AdminPageFormSettingsBase
 		if ($this->getListViewId() !== null) {
 			$pInputModelEmbedCode = $this->_pFormModelBuilder->createInputModelEmbedCode();
 			$pFormModelName->addInputModel($pInputModelEmbedCode);
+			$pInputModelButton = $this->_pFormModelBuilder->createInputModelButton();
+			$pFormModelName->addInputModel($pInputModelButton);
 		}
 
 		$this->addFormModel($pFormModelName);
@@ -612,6 +614,8 @@ abstract class AdminPageFormSettingsBase
 
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginforms-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
+		wp_enqueue_script('oo-clipboard');
+		wp_enqueue_script('oo-copy-shortcode');
 	}
 
 	/**

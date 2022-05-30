@@ -219,9 +219,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 		
 		if ($dbversion == 27) {
-			$this->deleteUnSupportDataTypeField();
+			$this->updateEstateListSortBySetting();
 			$dbversion = 28;
 		}
+
+		if ($dbversion == 28) {
+			$this->deleteUnSupportDataTypeField();
+			$dbversion = 29;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -797,6 +803,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 
+
+	/**
+	 * @return void
+	 */
+
 	public function updateShowReferenceEstateOfList()
 	{
 		$prefix = $this->getPrefix();
@@ -844,5 +855,20 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pApiClientActionFields->addRequestToQueue()->sendRequests();
 
 		return $pApiClientActionFields->getResultRecords();
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateEstateListSortBySetting()
+	{
+		$prefix = $this->getPrefix();
+		$sql    = "UPDATE {$prefix}oo_plugin_listviews
+				SET `sortBySetting` = '0' 
+				WHERE (`sortBySetting` IS NULL OR `sortBySetting` = '') 
+				AND `random` = 0";
+
+		$this->_pWPDB->query( $sql );
 	}
 }

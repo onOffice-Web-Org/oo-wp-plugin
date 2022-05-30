@@ -66,6 +66,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_NUMBER = 'number';
 
+	/** */
+	const HTML_TYPE_BUTTON = 'button';
+
 	/** @var string */
 	private $_name = null;
 

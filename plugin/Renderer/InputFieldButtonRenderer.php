@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,53 +19,40 @@
  *
  */
 
-declare(strict_types=1);
+namespace onOffice\WPlugin\Renderer;
 
-namespace onOffice\WPlugin\Field;
-
-use onOffice\SDK\onOfficeSDK;
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
+ * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
-class FieldDefaultSorting
+class InputFieldButtonRenderer
+	extends InputFieldRenderer
 {
-	/** @var array */
-	private $_defaultSortByFields = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'KdNr',
-			'Eintragsdatum',
-			'Name',
-		],
-		onOfficeSDK::MODULE_ESTATE => [
-			'erstellt_am',
-			'letzte_aktion',
-			'verkauft_am',
-			'objektnr_extern',
-			'kaufpreis',
-			'kaltmiete',
-			'wohnflaeche',
-			'grundstuecksflaeche',
-			'gesamtflaeche',
-			'anzahl_zimmer',
-			'anzahl_badezimmer'
-		]
-	];
+	/** @var string */
+	private $_id = null;
 
+	/** @var string */
+	private $_label = null;
 
 
 	/**
 	 *
-	 * @return array
+	 * @param string $name
+	 * @param mixed $value
 	 *
 	 */
 
-	public function getDefaultSortByFields(string $module): array
+	/**
+	 *
+	 */
+
+	public function render()
 	{
-		return $this->_defaultSortByFields[$module] ?? [];
+		echo '<input type="button" class="button clipboard" id="button-copy" data-clipboard-text="'.esc_html($this->getValue()).'" value="'.esc_html__('Copy', 'onoffice-for-wp-websites').'" '
+			. $this->renderAdditionalAttributes().'>';
 	}
 }

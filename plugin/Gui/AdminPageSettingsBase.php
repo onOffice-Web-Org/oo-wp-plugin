@@ -75,6 +75,9 @@ abstract class AdminPageSettingsBase
 	/** */
 	const FORM_VIEW_RECORDS_FILTER = 'viewrecordsfilter';
 
+	const FORM_VIEW_RECORDS_SORTING = 'viewrecordssorting';
+
+
 	/** */
 	const VIEW_SAVE_SUCCESSFUL_MESSAGE = 'view_save_success_message';
 
@@ -480,6 +483,14 @@ abstract class AdminPageSettingsBase
 
 		wp_register_script('oo-sanitize-shortcode-name',
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/onoffice-sanitize-shortcode-name.js',
+			['jquery'], '', true);
+
+		wp_register_script('oo-clipboard',
+		plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/clipboard/clipboard.min.js',
+			['jquery'], '', true);
+
+		wp_register_script('oo-copy-shortcode',
+		plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/onoffice-copycode.js',
 			['jquery'], '', true);
 	}
 

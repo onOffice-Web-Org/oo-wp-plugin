@@ -1,4 +1,13 @@
 jQuery(document).ready(function($){
+	if ( sessionStorage.getItem('message_save_view') ) {
+		message = sessionStorage.getItem('message_save_view');
+		$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
+			message + '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>');
+		sessionStorage.removeItem('message_save_view');
+	}
+	$('.notice-save-view.notice-dismiss').click(function () {
+		$('#onoffice-notice-wrapper').empty();
+	});
 	$('#theme-options-form').submit(function() {
 	   $(this).ajaxSubmit({
 		  onLoading: $('.loader').show(),

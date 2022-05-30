@@ -211,12 +211,17 @@ class InputModelRenderer
 				$pInstance->setValueEnclosure($pInputModel->getValueEnclosure());
 
 				break;
+			case InputModelBase::HTML_TYPE_BUTTON:
+				$pInstance = new InputFieldButtonRenderer(null, '', $pInputModel->getValue());
+				$pInstance->setLabel($pInputModel->getLabel());
+				break;
 
 			case InputModelBase::HTML_TYPE_CHOSEN:
 				$pInstance = new InputFieldChosenRenderer(
 					$pInputModel->getIdentifier(),
 					$pInputModel->getValuesAvailable());
 				$pInstance->addAdditionalAttribute('class', 'chosen-select');
+				$pInstance->setMultiple($pInputModel->getIsMulti());
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				break;
 
