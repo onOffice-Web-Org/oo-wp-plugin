@@ -431,19 +431,46 @@ class FormModelBuilderDBEstateListSettings
 
 
 	/**
+	 * @return array
+	 */
+
+	public function getDataOfSortByInput() {
+		$fieldnames   = $this->readFieldnames( onOfficeSDK::MODULE_ESTATE, false );
+		$valuePopular = $this->getOnlyDefaultSortByFields( onOfficeSDK::MODULE_ESTATE );
+		$data         = [];
+		if ( ! empty( $fieldnames ) ) {
+			if ( ! empty( $valuePopular ) ) {
+				$data['group'][__('Popular', 'onoffice-for-wp-websites')] = $valuePopular;
+			}
+			$valueAll = array_diff_key( $fieldnames, $valuePopular );
+			if ( ! empty( $valueAll ) ) {
+				natcasesort( $valueAll );
+				$data['group'][__('All', 'onoffice-for-wp-websites')] = $valueAll;
+			}
+		}
+
+		return $data;
+	}
+
+
+	/**
 	 *
 	 * @return InputModelDB
 	 *
 	 */
 
-	public function createInputModelSortBySetting()
-	{
-		$label = __('Sort by User Selection', 'onoffice-for-wp-websites');
+	public function createInputModelSortByChosenStandard() {
+		$label       = __( 'Sort by', 'onoffice-for-wp-websites' );
 		$pInputModel = $this->getInputModelDBFactory()->create
-				(InputModelDBFactory::INPUT_SORT_BY_SETTING, $label);
-		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
-		$pInputModel->setValue($this->getValue($pInputModel->getField()));
-		$pInputModel->setValuesAvailable(1);
+		( InputModelDBFactory::INPUT_SORTBY, $label, true );
+		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_CHOSEN );
+		$pInputModel->setIsMulti( false );
+		$pInputModel->setValuesAvailable( $this->getDataOfSortByInput() );
+		$value = $this->getValue( DataListView::SORT_BY_STANDARD_VALUES );
+		if ( $value == null ) {
+			$value = [];
+		}
+		$pInputModel->setValue( $value );
 
 		return $pInputModel;
 	}
@@ -455,20 +482,19 @@ class FormModelBuilderDBEstateListSettings
 	 *
 	 */
 
-	public function createInputModelSortByChosen()
-	{
-		$label = __('Sort by', 'onoffice-for-wp-websites');
+	public function createInputModelSortByChosen() {
+		$label       = __( 'Sort by', 'onoffice-for-wp-websites' );
 		$pInputModel = $this->getInputModelDBFactory()->create
-				(InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true);
-		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
-		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
-		$pInputModel->setValuesAvailable($fieldnames);
-		$value = $this->getValue(DataListView::SORT_BY_USER_VALUES);
-
-		if ($value == null) {
+		( InputModelDBFactory::INPUT_SORT_BY_CHOSEN, $label, true );
+		$pInputModel->setHtmlType( InputModelOption::HTML_TYPE_CHOSEN );
+		$pInputModel->setIsMulti( true );
+		$pInputModel->setValuesAvailable( $this->getDataOfSortByInput() );
+		$value = $this->getValue( DataListView::SORT_BY_USER_VALUES );
+		if ( $value == null ) {
 			$value = [];
 		}
-		$pInputModel->setValue($value);
+		$pInputModel->setValue( $value );
+
 		return $pInputModel;
 	}
 
@@ -483,20 +509,18 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$label = __('Standard Sort', 'onoffice-for-wp-websites');
 		$pInputModel = $this->getInputModelDBFactory()->create(InputModelDBFactory::INPUT_SORT_BY_DEFAULT, $label);
-		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHOSEN);
 
 		$selectedValue = $this->getValue($pInputModel->getField());
 		$pInputModel->setValue($selectedValue);
 		$values = $this->getValue(DataListView::SORT_BY_USER_VALUES);
-
 		$sortBySpec = $this->getValue(InputModelDBFactory::INPUT_SORT_BY_USER_DEFINED_DIRECTION);
 
 		if ($values == null) {
 			$values = [];
 		}
-		$fieldnames = $this->getOnlyDefaultSortByFields(onOfficeSDK::MODULE_ESTATE);
+		$fieldnames = $this->readFieldnames(onOfficeSDK::MODULE_ESTATE, false);
 		$defaultValues = [];
-
 		foreach ($values as $value)	{
 			if (array_key_exists($value, $fieldnames)) {
 				$defaultValues[$value.'#'.SortListTypes::SORTORDER_ASC] =
@@ -508,7 +532,6 @@ class FormModelBuilderDBEstateListSettings
 						$sortBySpec, SortListTypes::SORTORDER_DESC).')';
 			}
 		}
-
 		$pInputModel->setValuesAvailable($defaultValues);
 		return $pInputModel;
 	}
@@ -534,4 +557,27 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModel->setValuesAvailable($userDefinedSortDirectionValues);
 		return $pInputModel;
 	}
+
+
+	/**
+	 * @return InputModelDB
+	 */
+
+	public function createInputModelSortingSelection()
+    {
+        $label = __('Sorting', 'onoffice-for-wp-websites');
+
+        $userSortingDirectionValues = [
+            '0' => __('Default sort', 'onoffice-for-wp-websites'),
+            '1' => __('User selection', 'onoffice-for-wp-websites'),
+            '' => __('Random order', 'onoffice-for-wp-websites'),
+        ];
+
+	    $pInputModel = $this->getInputModelDBFactory()->create( InputModelDBFactory::INPUT_SORT_BY_SETTING, $label );
+	    $pInputModel->setHtmlType( InputModelOption::HTML_TYPE_SELECT );
+	    $pInputModel->setValue( $this->getValue( $pInputModel->getField() ) ?? '0' );
+	    $pInputModel->setValuesAvailable( $userSortingDirectionValues );
+
+	    return $pInputModel;
+    }
 }

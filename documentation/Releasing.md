@@ -22,18 +22,20 @@
     - Test it.
     - Translate it. (This requires a development release so that the translations show up.)
     - Document it.
-2. To trigger the release, you create a new tag. This is easiest to do by creating a release on GitHub:
+2. Update the version number in `readme.txt` and `plugin.php`.
+    - To check if e.g. version `3.2` is configured correctly, you can run the [Deno](https://deno.land/) script `deno run --allow-read ./scripts/check-version-in-config-files.ts 3.2`. It will guide you through all the places that need to be updated.
+3. To trigger the release, you create a new tag. This is easiest to do by creating a release on GitHub:
     1. Go to https://github.com/onOfficeGmbH/oo-wp-plugin/releases.
     2. In the top right, click on "Draft new release".
     3. For "Choose a tag" enter the new version and create a new tag.
     4. To the right, click on "Auto-generate release notes".
     5. In the description, remove all project and ticket numbers. These are usually at the beginning of the list items. For example, the entry `*  P#60599 Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154` should be edited to `* Space for map is taken even when the map is not shown by @tung-le-esg in https://github.com/onOfficeGmbH/oo-wp-plugin/pull/154`.
-3. The workflow run will start automatically.
+4. The workflow run will start automatically.
     - The deployment uses secrets from the "WordPress SVN" [environment](#environment) and needs to be approved.
-4. If something went wrong, you will need to reset the tag. In the following example, the tag is `v3.1`.
+5. If something went wrong, you will need to reset the tag. In the following example, the tag is `v3.1`.
     1. In your console, delete the tag with `git tag -d v3.1`.
     2. Remove the tag from GitHub with `git push origin :v3.1`. (Only users with admin access to the repository can do this.)
-    3. Re-add a tag by redoing step 2.
+    3. Re-add a tag by redoing step 3.
 
 ## Environment
 

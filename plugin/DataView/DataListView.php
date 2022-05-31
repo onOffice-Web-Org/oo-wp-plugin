@@ -58,6 +58,9 @@ class DataListView
 	/** */
 	const SORT_BY_USER_VALUES = 'sortbyuservalues';
 
+	/** */
+	const SORT_BY_STANDARD_VALUES = 'sortby';
+
 	/** @var int */
 	private $_id = null;
 

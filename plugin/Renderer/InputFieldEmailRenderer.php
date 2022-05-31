@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2017 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,53 +19,44 @@
  *
  */
 
-declare(strict_types=1);
-
-namespace onOffice\WPlugin\Field;
-
-use onOffice\SDK\onOfficeSDK;
+namespace onOffice\WPlugin\Renderer;
 
 /**
  *
  * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
+ * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
 
-class FieldDefaultSorting
+class InputFieldEmailRenderer
+	extends InputFieldRenderer
 {
-	/** @var array */
-	private $_defaultSortByFields = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'KdNr',
-			'Eintragsdatum',
-			'Name',
-		],
-		onOfficeSDK::MODULE_ESTATE => [
-			'erstellt_am',
-			'letzte_aktion',
-			'verkauft_am',
-			'objektnr_extern',
-			'kaufpreis',
-			'kaltmiete',
-			'wohnflaeche',
-			'grundstuecksflaeche',
-			'gesamtflaeche',
-			'anzahl_zimmer',
-			'anzahl_badezimmer'
-		]
-	];
-
-
-
 	/**
 	 *
-	 * @return array
+	 * @param string $type
+	 * @param string $name
+	 * @param string $value
 	 *
 	 */
 
-	public function getDefaultSortByFields(string $module): array
+	public function __construct($type, $name, $value = null)
 	{
-		return $this->_defaultSortByFields[$module] ?? [];
+		if (!in_array($type, array('email', 'hidden'))) {
+			throw new \Exception(' wrong type!');
+		}
+		parent::__construct($type, $name, $value);
+	}
+
+	/**
+	 *
+	 */
+
+	public function render()
+	{
+		$textHtml = '';
+		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
+			.'" value="'.esc_html($this->getValue()).'" id="'.esc_html($this->getGuiId()).'"'
+			.' '.$this->renderAdditionalAttributes()
+			.'>'.$textHtml;
 	}
 }

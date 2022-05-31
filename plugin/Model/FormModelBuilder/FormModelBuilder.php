@@ -29,6 +29,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 use const ONOFFICE_PLUGIN_DIR;
 use function plugin_dir_path;
@@ -94,7 +95,11 @@ abstract class FormModelBuilder
 				$pFieldnamesInactive->loadLanguage();
 				$fieldnames += $pFieldnamesInactive->getFieldList($module);
 			}
-
+			foreach ($fieldnames as $key => $field) {
+				if (!FieldTypes::isSupportType($field['type'])) {
+					unset($fieldnames[$key]);
+				}
+			}
 			$resultLabel = array_column($fieldnames, 'label');
 			$result = array_combine(array_keys($fieldnames), $resultLabel);
 		} catch (APIClientCredentialsException $pCredentialsException) {
