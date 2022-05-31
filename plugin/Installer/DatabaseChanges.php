@@ -25,16 +25,20 @@ namespace onOffice\WPlugin\Installer;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
 use Exception;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Language;
 use wpdb;
 use function dbDelta;
 use function esc_sql;
@@ -53,6 +57,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	/** @var Container */
 	private $_pContainer;
+
+	/** @var SDKWrapper */
+	private $_pSDKWrapper = null;
 
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
@@ -239,6 +246,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 30) {
 			dbDelta($this->getCreateQueryForms());
 			$dbversion = 31;
+		}
+
+		if ($dbversion == 31) {
+			$this->deleteUnSupportDataTypeField();
+			$dbversion = 32;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
@@ -895,5 +907,41 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDetailView->addToPageIdsHaveDetailShortCode( (int) $post['ID'] );
 		}
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
+	public function deleteUnSupportDataTypeField() {
+		$prefix                     = $this->getPrefix();
+		$tableFieldConfig           = $prefix . "oo_plugin_address_fieldconfig";
+		$fieldnameSelectOnDatabases = $this->_pWPDB->get_results("SELECT DISTINCT `fieldname`  FROM {$tableFieldConfig}", ARRAY_A);
+		$fieldnameFromAPIs          = $this->getFieldsFromAPI();
+		$listTypeUnSupported        = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
+		foreach ($fieldnameSelectOnDatabases as $fieldnameSelectOnDatabase) {
+			foreach ($fieldnameFromAPIs as $fieldnameFromAPI) {
+				$fieldList = $fieldnameFromAPI['elements'];
+				if (in_array($fieldList[ $fieldnameSelectOnDatabase['fieldname'] ]['type'], $listTypeUnSupported)) {
+					$this->_pWPDB->delete($tableFieldConfig,
+							array('fieldname' => $fieldnameSelectOnDatabase['fieldname']));
+				}
+			}
+		}
+	}
+
+	public function getFieldsFromAPI() {
+		$this->_pSDKWrapper     = $this->_pContainer->get(SDKWrapper::class);
+		$parametersGetFieldList = [
+				'labels'        => true,
+				'showContent'   => true,
+				'showTable'     => true,
+				'language'      => Language::getDefault(),
+				'modules'       => [onOfficeSDK::MODULE_ADDRESS],
+				'realDataTypes' => true
+		];
+
+		$pApiClientActionFields = new APIClientActionGeneric
+		($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'fields');
+		$pApiClientActionFields->setParameters($parametersGetFieldList);
+		$pApiClientActionFields->addRequestToQueue()->sendRequests();
+
+		return $pApiClientActionFields->getResultRecords();
 	}
 }
