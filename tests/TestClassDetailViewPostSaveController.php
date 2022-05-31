@@ -27,6 +27,8 @@ use onOffice\WPlugin\Controller\DetailViewPostSaveController;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use onOffice\WPlugin\WP\WPPageWrapper;
 use WP_UnitTestCase;
 
@@ -60,14 +62,18 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 	 */
 	private $_pWPPageWrapper;
 
+
 	/**
 	 * @before
 	 */
+
 	public function prepare()
 	{
-		$this->_pDataDetailViewHandler = new DataDetailViewHandler();
+		global $wpdb;
+
+		$pWpOption = new WPOptionWrapperTest();
+		$this->_pDataDetailViewHandler = new DataDetailViewHandler($pWpOption);
 		$this->_pDataDetailView = $this->_pDataDetailViewHandler->getDetailView();
-		$this->_pDataDetailView->setHasDetailView(false);
 		$this->_pDataDetailViewHandler->saveDetailView($this->_pDataDetailView);
 
 		$this->_pWPPageWrapper = $this->getMockBuilder( WPPageWrapper::class )
@@ -77,8 +83,16 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$pSubject = new RewriteRuleBuilder( $this->_pDataDetailViewHandler,
 			$this->_pWPPageWrapper );
 
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+
+		$pDbChanges->install();
 		$this->_pDetailViewPostSaveController = new DetailViewPostSaveController( $pSubject );
 	}
+
+
+	/**
+	 *
+	 */
 
 	public function testReturnNullForTrashStatus()
 	{
@@ -95,6 +109,11 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 
 		$this->assertNull( $this->_pDetailViewPostSaveController->onSavePost( $pWPPost->ID ) );
 	}
+
+
+	/**
+	 *
+	 */
 
 	public function testOtherShortCodeInContent()
 	{
@@ -121,6 +140,11 @@ class TestClassDetailViewPostSaveController extends WP_UnitTestCase
 		$detailViewOptions = get_option( DataDetailViewHandler::DEFAULT_VIEW_OPTION_KEY );
 		$this->assertEquals( 0, $detailViewOptions->getPageId() );
 	}
+
+
+	/**
+	 *
+	 */
 
 	public function testShortCodeInMetaKey()
 	{
