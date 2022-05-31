@@ -201,8 +201,15 @@ class FormsTable
 
 	protected function column_shortcode($pItem)
 	{
+		if ( wp_is_using_https() ) {
+			return '<input type="text" readonly value="[oo_form form=&quot;'
+			       . esc_html( $pItem->name ) . '&quot;]"><input type="button" class="button clipboard" id="button-copy" data-clipboard-text="[oo_form form=&quot;'
+			       . esc_html( $pItem->name ) . '&quot;]" value="' . esc_html__( 'Copy',
+					'onoffice-for-wp-websites' ) . '" >';
+		}
+
 		return '<input type="text" readonly value="[oo_form form=&quot;'
-			.esc_html($pItem->name).'&quot;]">';
+		       . esc_html( $pItem->name ) . '&quot;]">';
 	}
 
 

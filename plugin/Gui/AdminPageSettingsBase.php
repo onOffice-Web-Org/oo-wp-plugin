@@ -485,10 +485,6 @@ abstract class AdminPageSettingsBase
 			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/onoffice-sanitize-shortcode-name.js',
 			['jquery'], '', true);
 
-		wp_register_script('oo-clipboard',
-		plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/clipboard/clipboard.min.js',
-			['jquery'], '', true);
-
 		wp_register_script('oo-copy-shortcode',
 		plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'/js/onoffice-copycode.js',
 			['jquery'], '', true);
