@@ -90,13 +90,6 @@ class DetailViewPostSaveController
 
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
-			if ($viewContained) {
-				$pDetailView->setPageId((int)$postId);
-				$pDetailView->addToPageIdsHaveDetailShortCode( (int) $postId );
-				$pDataDetailViewHandler->saveDetailView($pDetailView);
-				$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
-				flush_rewrite_rules();
-
 			$viewContainedCustomField = false;
 			$hasOtherShortcodeInPostContent = false;
 
@@ -114,6 +107,7 @@ class DetailViewPostSaveController
 			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && $hasOtherShortcodeInPostContent == false)) {
 				if ($postType == 'page') {
 					$pDetailView->setPageId((int) $postId);
+					$pDetailView->addToPageIdsHaveDetailShortCode( (int) $postId );
 					$pDataDetailViewHandler->saveDetailView($pDetailView);
 					$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
 					flush_rewrite_rules();
