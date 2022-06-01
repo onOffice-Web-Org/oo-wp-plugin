@@ -46,6 +46,10 @@ class TestClassInputFieldButtonRenderer
 		ob_start();
 		$pRenderer->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="button" class="button clipboard" id="button-copy" data-clipboard-text="" value="Copy" >', $output);
+		if ( wp_is_using_https() ) {
+			$this->assertEquals('<input type="button" class="button clipboard" id="button-copy" data-clipboard-text="" value="Copy" >', $output);
+		} else {
+			$this->assertEquals('', $output);
+		}
 	}
 }
