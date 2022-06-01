@@ -280,16 +280,47 @@ class FormModelBuilderDBForm
 
 	/**
 	 * @return InputModelDB
+	 * @throws Exception
+	 */
+	public function createInputModelDefaultRecipient(): InputModelDB
+	{
+		$addition = '';
+		$isDefaultEmailMissing = false;
+		$italicLabel = '';
+		if (get_option('onoffice-settings-default-email', '') !== '') {
+			$addition = '('.get_option('onoffice-settings-default-email', '').')';
+		} else {
+			$italicLabel = __('missing', 'onoffice-for-wp-websites');
+			$isDefaultEmailMissing = true;
+		}
+
+		$selectedValue = $this->getValue('default_recipient', true);
+		if (!$isDefaultEmailMissing) {
+			$labelDefaultData = sprintf(__('Use default email address %s', 'onoffice-for-wp-websites'), $addition);
+			$pInputModelFormDefaultData = $this->generateGenericCheckbox($labelDefaultData,
+				InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue);
+		} else {
+			$labelDefaultData = __('Use default email address ', 'onoffice-for-wp-websites');
+			$pInputModelFormDefaultData = $this->generateItalicLabelCheckbox($labelDefaultData,
+				InputModelDBFactoryConfigForm::INPUT_FORM_DEFAULT_RECIPIENT, $selectedValue, $italicLabel);
+		}
+
+		return $pInputModelFormDefaultData;
+	}
+
+	/**
+	 * @return InputModelDB
 	 */
 	public function createInputModelRecipient()
 	{
-		$labelRecipient = __('Recipient\'s E-Mail Address', 'onoffice-for-wp-websites');
+		$labelRecipient = __('Override email address', 'onoffice-for-wp-websites');
 		$selectedRecipient = $this->getValue('recipient');
 
 		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create
 			(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_EMAIL);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
+		$pInputModelFormRecipient->setDeactivate(true);
 
 		return $pInputModelFormRecipient;
 	}
@@ -300,14 +331,14 @@ class FormModelBuilderDBForm
 	 */
 	public function createInputModelRecipientContactForm()
 	{
-		$labelRecipient = __('Email address', 'onoffice-for-wp-websites');
+		$labelRecipient = __('Override email address', 'onoffice-for-wp-websites');
 		$selectedRecipient = $this->getValue('recipient');
 
 		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
 		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_EMAIL);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
-		$pInputModelFormRecipient->setPlaceholder(__('john.doe@example.com', 'onoffice-for-wp-websites'));
+		$pInputModelFormRecipient->setDeactivate(true);
 		$pInputModelFormRecipient->setHintHtml(__('Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email.', 'onoffice-for-wp-websites'));
 
 		return $pInputModelFormRecipient;
@@ -514,6 +545,29 @@ class FormModelBuilderDBForm
 		}
 
 		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValue((int)$checked);
+		$pInputModel->setValuesAvailable(1);
+		return $pInputModel;
+	}
+
+	/**
+	 * @param string $label
+	 * @param string $type
+	 * @param bool $checked
+	 * @param string $italicLabel
+	 * @return InputModelDB
+	 * @throws Exception
+	 */
+	private function generateItalicLabelCheckbox(string $label, string $type, bool $checked, string $italicLabel):
+		InputModelDB
+	{
+		$pInputModel = $this->getInputModelDBFactory()->create($type, $label);
+		if ($pInputModel === null) {
+			throw new Exception('Unknown input model type');
+		}
+
+		$pInputModel->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModel->setItalicLabel($italicLabel);
 		$pInputModel->setValue((int)$checked);
 		$pInputModel->setValuesAvailable(1);
 		return $pInputModel;

@@ -146,29 +146,39 @@ abstract class ListTable extends WP_List_Table
 	protected function getItems()
 		{ return $this->items; }
 
-	protected function handleRecord(array $records)
+	protected function handleRecord( array $records )
 	{
-		if (empty($records))
-		{
+		if ( empty( $records ) ) {
 			return [];
 		}
 		$recordHandled = [];
-		foreach ($records as $record)
-		{
-			if (!empty($record->page_shortcode))
-			{
-				$listPageID = explode(',',$record->page_shortcode);
-				$pages = '';
-				$listPage = [];
-				foreach ($listPageID as $pageID)
-				{
-					$listPage[] = "<a href='".esc_attr(get_edit_post_link((int)$pageID))."' target='_blank'>".esc_html(get_the_title((int)$pageID))."</a>";
+		foreach ( $records as $record ) {
+			if ( ! empty( $record->page_shortcode ) ) {
+				$listPageID = explode( ',', $record->page_shortcode );
+				$listPage   = [];
+				foreach ( $listPageID as $pageID ) {
+					$listPage[] = "<a href='" . esc_attr( get_edit_post_link( (int) $pageID ) ) . "' target='_blank'>" . esc_html( get_the_title( (int) $pageID ) ) . "</a>";
 				}
-				$pages = implode(',',$listPage);
+				$pages                  = implode( ',', $listPage );
 				$record->page_shortcode = $pages;
+			}
+			if ( $record->default_recipient ) {
+				if ( get_option( 'onoffice-settings-default-email', '' ) ) {
+					$record->recipient = esc_html( __( "Default", 'onoffice-for-wp-websites' ) . ' (' .
+					                               get_option( 'onoffice-settings-default-email', '' ) . ')' );
+				} else {
+					$record->recipient = esc_html( __( "Default",
+							'onoffice-for-wp-websites' ) ) . " <i>(" . __( "missing", 'onoffice-for-wp-websites' ) . ")</i>";
+				}
+			} else {
+				$record->recipient = sprintf( esc_html( __( "%s (override)", 'onoffice-for-wp-websites' ) ), $record->recipient );
+			}
+			if ( $record->form_type === 'applicantsearch' ) {
+				$record->recipient = esc_html( '-' );
 			}
 			$recordHandled[] = $record;
 		}
+
 		return $recordHandled;
 	}
 

@@ -3,7 +3,7 @@ Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.0
-Requires PHP: 7.2
+Requires PHP: 7.3
 Stable tag: 3.2
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -77,6 +77,14 @@ Start editing inside the `onoffice-personalized` folder.
 == Changelog ==
 
 = Unreleased =
+
+**Removed**
+
+* Drop support for older PHP versions. The minimum version is now PHP 7.3.
+
+**Added**
+
+* You can now set a default email address that your forms can use, so that you can more easily change it.
 
 **Changed**
 

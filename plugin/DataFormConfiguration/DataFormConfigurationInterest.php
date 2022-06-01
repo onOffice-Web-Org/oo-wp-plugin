@@ -64,6 +64,9 @@ class DataFormConfigurationInterest
 	/** @var string */
 	private $_recipient = null;
 
+	/** @var bool */
+	private $_defaultRecipient = false;
+
 	/** @return bool */
 	public function getCheckDuplicateOnCreateAddress()
 		{ return $this->_checkDuplicateOnCreateAddress; }
@@ -75,6 +78,10 @@ class DataFormConfigurationInterest
 	/** @return string */
 	public function getRecipient()
 		{ return $this->_recipient; }
+
+	/** @return bool */
+	public function getDefaultRecipient()
+	{ return $this->_defaultRecipient; }
 
 	/** @return bool */
 	public function getCreateInterest(): bool
@@ -95,4 +102,8 @@ class DataFormConfigurationInterest
 	/** @param string $recipient */
 	public function setRecipient($recipient)
 		{ $this->_recipient = $recipient; }
+
+	/** @param bool $defaultRecipient */
+	public function setDefaultRecipient(bool $defaultRecipient)
+	{ $this->_defaultRecipient = $defaultRecipient; }
 }

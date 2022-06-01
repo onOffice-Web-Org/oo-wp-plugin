@@ -31,6 +31,7 @@ use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Gui\AdminPageEstate;
 use onOffice\WPlugin\Gui\AdminPageEstateDetail;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_Screen;
 use WP_UnitTestCase;
@@ -259,6 +260,24 @@ class TestClassAdminViewController
 			. 'We have deactivated the plugin&#039;s duplicate check for all of your forms, because the duplicate '
 			. 'check can unintentionally overwrite address records. This function will be removed in the future. '
 			. 'The option has been deactivated for these forms: Contact, Interest, Owner</p></div>');
+	}
+
+	public function testDisplayUsingEmptyDefaultEmailError()
+	{
+		add_option('onoffice-settings-default-email', false);
+		$recordManagerReadForm = $this->getMockBuilder(RecordManagerReadForm::class)
+			->getMock();
+		$recordManagerReadForm->method('getCountDefaultRecipientRecord')->will($this->returnValue('1'));
+
+		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
+			->disableOriginalConstructor()
+			->setMethods(['getRecordManagerReadForm'])
+			->getMock();
+
+		$pAdminViewController->method('getRecordManagerReadForm')
+			->willReturn($recordManagerReadForm);
+		$pAdminViewController->displayUsingEmptyDefaultEmailError();
+		$this->expectOutputString('<div class="notice notice-error"><p>The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the <a href="admin.php?page=onoffice-settings">plugin settings</a> to dismiss this warning.</p></div>');
 	}
 
 	public function testGetField()
