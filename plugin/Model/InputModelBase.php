@@ -66,11 +66,19 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_NUMBER = 'number';
 
+	/** */
+	const HTML_TYPE_EMAIL = 'email';
+
+	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
+
 	/** @var string */
 	private $_name = null;
 
 	/** @var mixed */
 	private $_value = null;
+
+	/** @var mixed */
+	private $_deactivate = false;
 
 	/** @var string */
 	private $_label = null;
@@ -116,6 +124,9 @@ abstract class InputModelBase
 
 	/** @var array */
 	private $_descriptionRadioTextHTML = [];
+
+	/** @var string */
+	private $_italicLabel = '';
 
 	/**
 	 *
@@ -164,6 +175,14 @@ abstract class InputModelBase
 	/** @param mixed $value */
 	public function setValue($value)
 		{ $this->_value = $value; }
+
+	/** @param mixed $deactivate */
+	public function setDeactivate($deactivate)
+		{ $this->_deactivate = $deactivate; }
+
+	/** @return mixed */
+	public function isDeactivate()
+		{ return $this->_deactivate; }
 
 	/** @return array */
 	public function getValuesAvailable()
@@ -261,4 +280,13 @@ abstract class InputModelBase
 	/** @param string $descriptionTextHTML */
 	public function setDescriptionRadioTextHTML(array $textHTML)
 	{ $this->_descriptionRadioTextHTML = $textHTML; }
+	
+	/**@return string */
+	public function getItalicLabel(): string
+		{ return $this->_italicLabel; }
+
+	/** @param string $italicLabel */
+	public function setItalicLabel(string $italicLabel)
+		{ $this->_italicLabel = $italicLabel; }
+
 }
