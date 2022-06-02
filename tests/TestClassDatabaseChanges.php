@@ -23,9 +23,13 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
+use DI\ContainerBuilder;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
@@ -74,6 +78,9 @@ class TestClassDatabaseChanges
 		'Field 3'
 	];
 
+	/** @var Container */
+	private $_pContainer;
+
 	/**
 	 * @before
 	 */
@@ -84,7 +91,25 @@ class TestClassDatabaseChanges
 		$dataDetailView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 		$this->_pWpOption = new WPOptionWrapperTest();
 		$this->_pWpOption->addOption('onoffice-default-view', $dataDetailView);
-		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$fieldParameters = [
+				'labels' => true,
+				'showContent' => true,
+				'showTable' => true,
+				'language' => 'ENG',
+				'modules' => ['address'],
+				'realDataTypes' => true
+		];
+		$pSDKWrapper = new SDKWrapperMocker();
+		$responseGetFields = json_decode
+		(file_get_contents(__DIR__.'/resources/ApiResponseGetFieldsAddress.json'), true);
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+				$fieldParameters, null, $responseGetFields);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pContainer->set(SDKWrapper::class, $pSDKWrapper);
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb, $this->_pContainer);
 
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
 		$dataSimilarViewOptions->name = "onoffice-default-view";
@@ -110,7 +135,7 @@ class TestClassDatabaseChanges
 	public function testInstall(): array
 	{
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
-		$this->_pDbChanges->install();
+		$this->_pDbChanges->install($this->_pContainer);
 
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
@@ -180,20 +205,23 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
+		$fields = [
+			['fieldname' => 'ind_1472_Feld_adressen2']
+		];
 		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(5))
+		$this->_pWPDBMock->expects($this->exactly(6))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $fields);
 
-		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
+		$this->_pWPDBMock->expects($this->exactly(5))->method('delete')
 			->will($this->returnValue(true));
 
-		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock);
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock, $this->_pContainer);
 		$this->_pDbChanges->install();
 	}
 
@@ -219,19 +247,22 @@ class TestClassDatabaseChanges
 			]
 		];
 		$detailPageIds = [[ "ID" => 8 ]];
+		$fields = [
+				['fieldname' => 'ind_1472_Feld_adressen2']
+		];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(3))
+		$this->_pWPDBMock->expects($this->exactly(4))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $fields);
 
-		$this->_pWPDBMock->expects($this->once())->method('delete')
+		$this->_pWPDBMock->expects($this->exactly(2))->method('delete')
 			->will($this->returnValue(true));
 
-		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock);
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock, $this->_pContainer);
 		$this->_pDbChanges->install();
 	}
 
@@ -241,7 +272,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(31, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(32, DatabaseChanges::MAX_VERSION);
 	}
 
 

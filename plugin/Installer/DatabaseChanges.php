@@ -25,9 +25,13 @@ namespace onOffice\WPlugin\Installer;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use DI\DependencyException;
+use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\AddressList;
 use Exception;
+use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\Controller\AddressListEnvironmentDefault;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
@@ -47,7 +51,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 31;
+	const MAX_VERSION = 32;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -64,16 +68,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
 	 * @param wpdb $pWPDB
-	 *
+	 * @param Container|null $pContainer
 	 * @throws Exception
 	 */
-	public function __construct(WPOptionWrapperBase $pWpOption, wpdb $pWPDB)
+	public function __construct(WPOptionWrapperBase $pWpOption, wpdb $pWPDB, Container $pContainer = null)
 	{
 		$this->_pWpOption = $pWpOption;
 		$this->_pWPDB = $pWPDB;
-		$pDIContainerBuilder = new ContainerBuilder;
-		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-		$this->_pContainer = $pDIContainerBuilder->build();
+		$this->_pContainer = $pContainer ?? $this->buildContainer();
 	}
 
 	/**
@@ -926,6 +928,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
+	/**
+	 * @return array
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
 	public function getFieldsFromAPI() {
 		$this->_pSDKWrapper     = $this->_pContainer->get(SDKWrapper::class);
 		$parametersGetFieldList = [
@@ -943,5 +951,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pApiClientActionFields->addRequestToQueue()->sendRequests();
 
 		return $pApiClientActionFields->getResultRecords();
+	}
+
+	/**
+	 * @return Container
+	 * @throws Exception
+	 */
+	public function buildContainer(): Container
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		return $pContainerBuilder->build();
 	}
 }
