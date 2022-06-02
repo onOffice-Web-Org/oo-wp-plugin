@@ -49,8 +49,8 @@ class FieldModuleCollectionDecoratorReadAddress
 			'length'          => 80,
 			'default'         => null,
 			'permittedvalues' => null,
-			'label'           => 'All e-mail addresses',
-			'tablename'       => 'Kontakt',
+			'label'           => 'all e-mail address',
+			'tablename'       => 'Contact',
 			"content"         => "Contact"
 		],
 		'phone'    => [
@@ -59,7 +59,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'default'         => null,
 			'permittedvalues' => null,
 			'label'           => 'All non-mobile phone numbers',
-			'tablename'       => 'Stammdaten',
+			'tablename'       => 'Master data',
 			"content"         => "Master data"
 		],
 		'fax'      => [
@@ -68,7 +68,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'default'         => null,
 			'permittedvalues' => null,
 			'label'           => 'All fax numbers',
-			'tablename'       => 'Stammdaten',
+			'tablename'       => 'Master data',
 			"content"         => "Master data"
 		],
 		'mobile'   => [
@@ -77,18 +77,8 @@ class FieldModuleCollectionDecoratorReadAddress
 			'default'         => null,
 			'permittedvalues' => null,
 			'label'           => 'All mobile numbers',
-			'tablename'       => 'Stammdaten',
+			'tablename'       => 'Master data',
 			"content"         => "Master data"
-		],
-		'Email'    => [
-			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length'          => 100,
-			'default'         => null,
-			'permittedvalues' => null,
-			'label'           => 'Default e-mail address',
-			'module'          => 'address',
-			'tablename'       => 'Kontakt',
-			"content"         => "Contact"
 		],
 		'Telefon1' => [
 			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
@@ -97,7 +87,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'Default phone number',
 			'module'          => 'address',
-			'tablename'       => 'Stammdaten',
+			'tablename'       => 'Master data',
 			"content"         => "Master data"
 		],
 		'Telefax1' => [
@@ -107,10 +97,83 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'Default fax number',
 			'module'          => 'address',
-			'tablename'       => 'Stammdaten',
+			'tablename'       => 'Master data',
 			"content"         => "Master data"
 		],
 	];
+
+	private $_deLanguageAddressFields = [
+			'imageUrl' => [
+					'type'   => FieldTypes::FIELD_TYPE_TEXT,
+					'length' => null,
+					'label'  => 'Image tieng duc',
+			],
+			'email'    => [
+					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length'          => 80,
+					'default'         => null,
+					'permittedvalues' => null,
+					'label'           => 'all e-mail address  tieng duc',
+					'tablename'       => 'Kontakt',
+					"content"         => "Kontakt"
+			],
+			'phone'    => [
+					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length'          => 40,
+					'default'         => null,
+					'permittedvalues' => null,
+					'label'           => 'All non-mobile phone numbers tieng duc',
+					'tablename'       => 'Stammdaten',
+					"content"         => "Stammdaten"
+			],
+			'fax'      => [
+					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length'          => 40,
+					'default'         => null,
+					'permittedvalues' => null,
+					'label'           => 'All fax numbers tieng duc',
+					'tablename'       => 'Stammdaten',
+					"content"         => "Stammdaten"
+			],
+			'mobile'   => [
+					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length'          => 40,
+					'default'         => null,
+					'permittedvalues' => null,
+					'label'           => 'All mobile numbers tieng duc',
+					'tablename'       => 'Stammdaten',
+					"content"         => "Stammdaten"
+			],
+			'Telefon1' => [
+					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length'          => 40,
+					'default'         => null,
+					'permittedvalues' => null,
+					'label'           => 'Default phone number tieng duc',
+					'module'          => 'address',
+					'tablename'       => 'Stammdaten',
+					"content"         => "Stammdaten"
+			],
+			'Telefax1' => [
+					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+					'length'          => 40,
+					'default'         => null,
+					'permittedvalues' => null,
+					'label'           => 'Default fax number tieng duc',
+					'module'          => 'address',
+					'tablename'       => 'Stammdaten',
+					"content"         => "Stammdaten"
+			],
+	];
+
+	public function getAddressFields(){
+		$currentLocale = get_locale();
+		if($currentLocale == 'de_DE'){
+			return $this->_deLanguageAddressFields;
+		}else{
+			return $this->_addressFields;
+		}
+	}
 
 
 	/**
@@ -121,6 +184,7 @@ class FieldModuleCollectionDecoratorReadAddress
 
 	public function getAllFields(): array
 	{
+		$this->_addressFields = $this->getAddressFields();
 		$newFields = [];
 		foreach ($this->_addressFields as $name => $row) {
 			$row['module'] = onOfficeSDK::MODULE_ADDRESS;
@@ -140,6 +204,7 @@ class FieldModuleCollectionDecoratorReadAddress
 
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
+		$this->_addressFields = $this->getAddressFields();
 		if ($module === onOfficeSDK::MODULE_ADDRESS) {
 			$row = $this->_addressFields[$name] ?? null;
 			if ($row !== null) {
@@ -161,6 +226,7 @@ class FieldModuleCollectionDecoratorReadAddress
 
 	public function containsFieldByModule(string $module, string $name): bool
 	{
+		$this->_addressFields = $this->getAddressFields();
 		return ($module === onOfficeSDK::MODULE_ADDRESS &&
 			isset($this->_addressFields[$name])) ||
 			parent::containsFieldByModule($module, $name);
@@ -175,6 +241,7 @@ class FieldModuleCollectionDecoratorReadAddress
 
 	public function getNewAddressFields(): array
 	{
+		$this->_addressFields = $this->getAddressFields();
 		return $this->_addressFields;
 	}
 }
