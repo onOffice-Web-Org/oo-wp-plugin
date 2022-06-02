@@ -1,6 +1,8 @@
 var onOffice = onOffice || {};
 onOffice.settings = onOffice_loc_settings;
-const LIST_SCREEN_RELOAD = ["admin_page_onoffice-editlistview","admin_page_onoffice-editform"];
+const estatePage = 'admin_page_onoffice-editlistview';
+const formPage = 'admin_page_onoffice-editform';
+const LIST_SCREEN_RELOAD = [estatePage, formPage];
 onOffice.ajaxSaver = function(outerDiv) {
 	if (typeof $ === 'undefined') {
 		$ = jQuery;
@@ -61,15 +63,20 @@ onOffice.ajaxSaver = function(outerDiv) {
 			var getUrl = window.location.href;
 
 			var getUrlPageEdit = getUrl.split( '&' );
-			var urlPageEdit = '';
 			if (responseCode === true) {
 				if (getUrlPageEdit.length != 0 && LIST_SCREEN_RELOAD.includes(current_screen))
 				{
 					var url = new URL(window.location);
 					url.searchParams.set('id', onOffice.settings.record_id);
-					window.history.pushState({}, '', url);
+					window.history.replaceState({}, '', url);
 					$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
 						message + '</p></div>');
+          if (current_screen === estatePage) {
+            $('#post-body-content p:first').nextAll().remove();
+          } else {
+            $('#post-body-content .viewusage:first').nextAll().remove();
+          }
+          $('#post-body-content').append(jsonResponse.shortcodeContent);
 				} else {
 					$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
 						message + '</p></div>');
@@ -78,7 +85,6 @@ onOffice.ajaxSaver = function(outerDiv) {
 				$('#onoffice-notice-wrapper').html('<div class="notice notice-error is-dismissible"><p>' +
 					message + '</p></div>');
 			}
-			$(document).trigger('wp-updates-notice-added');
 		});
 	};
 
