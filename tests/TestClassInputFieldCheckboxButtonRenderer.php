@@ -23,15 +23,46 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use DI\Container;
+use DI\ContainerBuilder;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Renderer\InputFieldCheckboxButtonRenderer;
 use onOffice\WPlugin\Renderer\InputFieldRenderer;
 use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 
 class TestClassInputFieldCheckboxButtonRenderer
     extends \WP_UnitTestCase
 {
+	/** @var Container */
+	private $_pContainer;
+
+	/**
+	 * @before
+	 */
+	public function prepare()
+	{
+		$fieldParameters = [
+				'labels' => true,
+				'showContent' => true,
+				'showTable' => true,
+				'language' => 'ENG',
+				'modules' => ['address'],
+				'realDataTypes' => true
+		];
+		$pSDKWrapper = new SDKWrapperMocker();
+		$responseGetFields = json_decode
+		(file_get_contents(__DIR__.'/resources/ApiResponseGetFieldsAddress.json'), true);
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+				$fieldParameters, null, $responseGetFields);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pContainer->set(SDKWrapper::class, $pSDKWrapper);
+	}
+
     public function testAttributes()
     {
         InputFieldRenderer::resetGuiId();
@@ -56,7 +87,7 @@ class TestClassInputFieldCheckboxButtonRenderer
 
         $pWpOption = new WPOptionWrapperTest();
 		$pWpOption->addOption('onoffice-default-view', $dataDetailView);
-        $pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+        $pDbChanges = new DatabaseChanges($pWpOption, $wpdb, $this->_pContainer);
         $pDbChanges->install();
         $pRenderer->render();
         $output = ob_get_clean();
@@ -79,7 +110,7 @@ class TestClassInputFieldCheckboxButtonRenderer
 
         $pWpOption = new WPOptionWrapperTest();
 		$pWpOption->addOption('onoffice-default-view', $dataDetailView);
-        $pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+        $pDbChanges = new DatabaseChanges($pWpOption, $wpdb, $this->_pContainer);
         $pDbChanges->install();
         $pSubject->render();
         $output = ob_get_clean();

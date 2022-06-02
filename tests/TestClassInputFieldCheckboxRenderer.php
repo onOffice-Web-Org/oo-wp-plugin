@@ -23,8 +23,10 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Renderer\InputFieldCheckboxRenderer;
 use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use DI\Container;
 use DI\ContainerBuilder;
@@ -48,10 +50,24 @@ class TestClassInputFieldCheckboxRenderer
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
+		$fieldParameters = [
+				'labels' => true,
+				'showContent' => true,
+				'showTable' => true,
+				'language' => 'ENG',
+				'modules' => ['address'],
+				'realDataTypes' => true
+		];
+		$pSDKWrapper = new SDKWrapperMocker();
+		$responseGetFields = json_decode
+		(file_get_contents(__DIR__.'/resources/ApiResponseGetFieldsAddress.json'), true);
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+				$fieldParameters, null, $responseGetFields);
+		$this->_pContainer->set(SDKWrapper::class, $pSDKWrapper);
 		global $wpdb;
 		
 		$pWpOption = new WPOptionWrapperTest();
-		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb, $this->_pContainer);
 		$pDbChanges->install();
 	}
 	

@@ -25,10 +25,12 @@ namespace onOffice\tests;
 
 use DI\Container;
 use DI\ContainerBuilder;
+use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\SDKWrapper;
 use WP_UnitTestCase;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
@@ -61,7 +63,24 @@ class TestClassFormModelBuilderDBAddress
 		global $wpdb;
 
 		$pWpOption = new WPOptionWrapperTest();
-		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb);
+		$fieldParameters = [
+				'labels' => true,
+				'showContent' => true,
+				'showTable' => true,
+				'language' => 'ENG',
+				'modules' => ['address'],
+				'realDataTypes' => true
+		];
+		$pSDKWrapper = new SDKWrapperMocker();
+		$responseGetFields = json_decode
+		(file_get_contents(__DIR__.'/resources/ApiResponseGetFieldsAddress.json'), true);
+		$pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'fields', '',
+				$fieldParameters, null, $responseGetFields);
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pContainerBuilder->build();
+		$this->_pContainer->set(SDKWrapper::class, $pSDKWrapper);
+		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb, $this->_pContainer);
 		$pDbChanges->install();
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBAddress::class)
 			->disableOriginalConstructor()
