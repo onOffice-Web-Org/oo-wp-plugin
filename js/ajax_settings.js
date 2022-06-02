@@ -43,6 +43,7 @@ onOffice.ajaxSaver = function(outerDiv) {
 			var newKey = mergeElement[i];
 			data[newKey] = onOffice.settings[newKey];
 		}
+		$('#onoffice-notice-wrapper').empty();
 
 		jQuery.post(onOffice.settings.ajax_url, data, function(response) {
 			var responseCode, responseMessageKey;
@@ -64,15 +65,17 @@ onOffice.ajaxSaver = function(outerDiv) {
 			if (responseCode === true) {
 				if (getUrlPageEdit.length != 0 && LIST_SCREEN_RELOAD.includes(current_screen))
 				{
-					sessionStorage.setItem('message_save_view',message);
-					urlPageEdit = getUrlPageEdit[0] + "&id=" + onOffice.settings.record_id;
-					window.location.replace(urlPageEdit);
+					var url = new URL(window.location);
+					url.searchParams.set('id', onOffice.settings.record_id);
+					window.history.pushState({}, '', url);
+					$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
+						message + '</p></div>');
 				} else {
-					$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
+					$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
 						message + '</p></div>');
 				}
 			} else {
-				$('#onoffice-notice-wrapper').append('<div class="notice notice-error is-dismissible"><p>' +
+				$('#onoffice-notice-wrapper').html('<div class="notice notice-error is-dismissible"><p>' +
 					message + '</p></div>');
 			}
 			$(document).trigger('wp-updates-notice-added');
