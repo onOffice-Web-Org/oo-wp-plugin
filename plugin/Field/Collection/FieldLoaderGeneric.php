@@ -75,6 +75,7 @@ class FieldLoaderGeneric
 	{
 		$newAddressFields = FieldModuleCollectionDecoratorReadAddress::getNewAddressFieldsWithTableNameKey();
 		$result           = $this->sendRequest();
+		$screen           = get_current_screen();
 
 		foreach ($result as $moduleProperties) {
 			$module = $moduleProperties['id'];
@@ -96,6 +97,18 @@ class FieldLoaderGeneric
 					$permittedValues = $fieldProperties['permittedvalues'];
 					unset($permittedValues['Systembenutzer']);
 					$fieldProperties['permittedvalues'] = $permittedValues;
+				}
+
+				if ($screen->id === "onoffice_page_onoffice-estates") {
+					if ( empty( $fieldProperties['content'] ) ) {
+						$fieldProperties['content'] = __( 'Form Specific Fields', 'onoffice-for-wp-websites' );
+					}
+
+					foreach ( $newAddressFields[''] as $addressFieldName => $addressFieldProperties ) {
+						$addressFieldProperties['content'] = __( 'Form Specific Fields', 'onoffice-for-wp-websites' );
+						$addressFieldProperties['module']  = $module;
+						yield $addressFieldName => $addressFieldProperties;
+					}
 				}
 
 				if ( isset( $newAddressFields[ $fieldProperties['tablename'] ] ) ) {

@@ -46,6 +46,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'All non-mobile phone numbers',
 			'tablename'       => 'Stammdaten',
+			'module'          => 'address',
 			"content"         => "Master data"
 		],
 		'fax'      => [
@@ -55,6 +56,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'All fax numbers',
 			'tablename'       => 'Stammdaten',
+			'module'          => 'address',
 			"content"         => "Master data"
 		],
 		'mobile'   => [
@@ -64,6 +66,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'All mobile numbers',
 			'tablename'       => 'Stammdaten',
+			'module'          => 'address',
 			"content"         => "Master data"
 		],
 		'Telefon1' => [
@@ -97,6 +100,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'All e-mail addresses',
 			'tablename'       => 'Kontakt',
+			'module'          => 'address',
 			"content"         => "Contact"
 		],
 		'Email' => [
@@ -116,6 +120,7 @@ class FieldModuleCollectionDecoratorReadAddress
 		'imageUrl' => [
 			'type'   => FieldTypes::FIELD_TYPE_TEXT,
 			'length' => null,
+			'module' => 'address',
 			'label'  => 'Image',
 		],
 	];
