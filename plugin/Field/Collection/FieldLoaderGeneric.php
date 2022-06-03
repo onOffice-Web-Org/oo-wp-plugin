@@ -103,8 +103,8 @@ class FieldLoaderGeneric
 						$addressFieldProperties['content'] = $fieldProperties['content'];
 						$addressFieldProperties['module']  = $module;
 						yield $addressFieldName => $addressFieldProperties;
-						unset( $newAddressFields[ $fieldProperties['tablename'] ] );
 					}
+					unset( $newAddressFields[ $fieldProperties['tablename'] ] );
 				}
 
 				$fieldProperties['module'] = $module;
