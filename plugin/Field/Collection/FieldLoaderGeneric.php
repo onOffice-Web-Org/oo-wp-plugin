@@ -27,6 +27,7 @@ use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\APIEmptyResultException;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
@@ -72,7 +73,8 @@ class FieldLoaderGeneric
 	 */
 	public function load(): Generator
 	{
-		$result = $this->sendRequest();
+		$newAddressFields = FieldModuleCollectionDecoratorReadAddress::getNewAddressFieldsWithTableNameKey();
+		$result           = $this->sendRequest();
 
 		foreach ($result as $moduleProperties) {
 			$module = $moduleProperties['id'];
@@ -94,6 +96,15 @@ class FieldLoaderGeneric
 					$permittedValues = $fieldProperties['permittedvalues'];
 					unset($permittedValues['Systembenutzer']);
 					$fieldProperties['permittedvalues'] = $permittedValues;
+				}
+
+				if ( isset( $newAddressFields[ $fieldProperties['tablename'] ] ) ) {
+					foreach ( $newAddressFields[ $fieldProperties['tablename'] ] as $addressFieldName => $addressFieldProperties ) {
+						$addressFieldProperties['content'] = $fieldProperties['content'];
+						$addressFieldProperties['module']  = $module;
+						yield $addressFieldName => $addressFieldProperties;
+						unset( $newAddressFields[ $fieldProperties['tablename'] ] );
+					}
 				}
 
 				$fieldProperties['module'] = $module;

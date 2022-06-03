@@ -38,28 +38,14 @@ class FieldModuleCollectionDecoratorReadAddress
 	extends FieldModuleCollectionDecoratorAbstract
 {
 	/** @var array */
-	private $_addressFields = [
-		'imageUrl' => [
-			'type'   => FieldTypes::FIELD_TYPE_TEXT,
-			'length' => null,
-			'label'  => 'Image',
-		],
-		'email'    => [
-			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length'          => 80,
-			'default'         => null,
-			'permittedvalues' => null,
-			'label'           => 'all e-mail address',
-			'tablename'       => 'Contact',
-			"content"         => "Contact"
-		],
+	public const ADDRESS_FIELDS_MASTER_DATA = [
 		'phone'    => [
 			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
 			'length'          => 40,
 			'default'         => null,
 			'permittedvalues' => null,
 			'label'           => 'All non-mobile phone numbers',
-			'tablename'       => 'Master data',
+			'tablename'       => 'Stammdaten',
 			"content"         => "Master data"
 		],
 		'fax'      => [
@@ -68,7 +54,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'default'         => null,
 			'permittedvalues' => null,
 			'label'           => 'All fax numbers',
-			'tablename'       => 'Master data',
+			'tablename'       => 'Stammdaten',
 			"content"         => "Master data"
 		],
 		'mobile'   => [
@@ -77,7 +63,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'default'         => null,
 			'permittedvalues' => null,
 			'label'           => 'All mobile numbers',
-			'tablename'       => 'Master data',
+			'tablename'       => 'Stammdaten',
 			"content"         => "Master data"
 		],
 		'Telefon1' => [
@@ -87,7 +73,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'Default phone number',
 			'module'          => 'address',
-			'tablename'       => 'Master data',
+			'tablename'       => 'Stammdaten',
 			"content"         => "Master data"
 		],
 		'Telefax1' => [
@@ -97,83 +83,42 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'Default fax number',
 			'module'          => 'address',
-			'tablename'       => 'Master data',
+			'tablename'       => 'Stammdaten',
 			"content"         => "Master data"
 		],
 	];
 
-	private $_deLanguageAddressFields = [
-			'imageUrl' => [
-					'type'   => FieldTypes::FIELD_TYPE_TEXT,
-					'length' => null,
-					'label'  => 'Image tieng duc',
-			],
-			'email'    => [
-					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-					'length'          => 80,
-					'default'         => null,
-					'permittedvalues' => null,
-					'label'           => 'all e-mail address  tieng duc',
-					'tablename'       => 'Kontakt',
-					"content"         => "Kontakt"
-			],
-			'phone'    => [
-					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-					'length'          => 40,
-					'default'         => null,
-					'permittedvalues' => null,
-					'label'           => 'All non-mobile phone numbers tieng duc',
-					'tablename'       => 'Stammdaten',
-					"content"         => "Stammdaten"
-			],
-			'fax'      => [
-					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-					'length'          => 40,
-					'default'         => null,
-					'permittedvalues' => null,
-					'label'           => 'All fax numbers tieng duc',
-					'tablename'       => 'Stammdaten',
-					"content"         => "Stammdaten"
-			],
-			'mobile'   => [
-					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-					'length'          => 40,
-					'default'         => null,
-					'permittedvalues' => null,
-					'label'           => 'All mobile numbers tieng duc',
-					'tablename'       => 'Stammdaten',
-					"content"         => "Stammdaten"
-			],
-			'Telefon1' => [
-					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-					'length'          => 40,
-					'default'         => null,
-					'permittedvalues' => null,
-					'label'           => 'Default phone number tieng duc',
-					'module'          => 'address',
-					'tablename'       => 'Stammdaten',
-					"content"         => "Stammdaten"
-			],
-			'Telefax1' => [
-					'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-					'length'          => 40,
-					'default'         => null,
-					'permittedvalues' => null,
-					'label'           => 'Default fax number tieng duc',
-					'module'          => 'address',
-					'tablename'       => 'Stammdaten',
-					"content"         => "Stammdaten"
-			],
+	/** @var array */
+	public const ADDRESS_FIELDS_CONTACT = [
+		'email' => [
+			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length'          => 80,
+			'default'         => null,
+			'permittedvalues' => null,
+			'label'           => 'All e-mail addresses',
+			'tablename'       => 'Kontakt',
+			"content"         => "Contact"
+		],
+		'Email' => [
+			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
+			'length'          => 100,
+			'default'         => null,
+			'permittedvalues' => null,
+			'label'           => 'Default e-mail address',
+			'module'          => 'address',
+			'tablename'       => 'Kontakt',
+			"content"         => "Contact"
+		],
 	];
 
-	public function getAddressFields(){
-		$currentLocale = get_locale();
-		if($currentLocale == 'de_DE'){
-			return $this->_deLanguageAddressFields;
-		}else{
-			return $this->_addressFields;
-		}
-	}
+	/** @var array */
+	public const ADDRESS_FIELDS_NO_CATEGORY = [
+		'imageUrl' => [
+			'type'   => FieldTypes::FIELD_TYPE_TEXT,
+			'length' => null,
+			'label'  => 'Image',
+		],
+	];
 
 
 	/**
@@ -184,9 +129,8 @@ class FieldModuleCollectionDecoratorReadAddress
 
 	public function getAllFields(): array
 	{
-		$this->_addressFields = $this->getAddressFields();
 		$newFields = [];
-		foreach ($this->_addressFields as $name => $row) {
+		foreach (self::getNewAddressFields() as $name => $row) {
 			$row['module'] = onOfficeSDK::MODULE_ADDRESS;
 			$newFields []= Field::createByRow($name, $row);
 		}
@@ -204,9 +148,8 @@ class FieldModuleCollectionDecoratorReadAddress
 
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
-		$this->_addressFields = $this->getAddressFields();
 		if ($module === onOfficeSDK::MODULE_ADDRESS) {
-			$row = $this->_addressFields[$name] ?? null;
+			$row = self::getNewAddressFields()[$name] ?? null;
 			if ($row !== null) {
 				$row['module'] = onOfficeSDK::MODULE_ADDRESS;
 				return Field::createByRow($name, $row);
@@ -226,9 +169,8 @@ class FieldModuleCollectionDecoratorReadAddress
 
 	public function containsFieldByModule(string $module, string $name): bool
 	{
-		$this->_addressFields = $this->getAddressFields();
 		return ($module === onOfficeSDK::MODULE_ADDRESS &&
-			isset($this->_addressFields[$name])) ||
+			isset(self::getNewAddressFields()[$name])) ||
 			parent::containsFieldByModule($module, $name);
 	}
 
@@ -239,9 +181,45 @@ class FieldModuleCollectionDecoratorReadAddress
 	 *
 	 */
 
-	public function getNewAddressFields(): array
+	public static function getNewAddressFields(): array
 	{
-		$this->_addressFields = $this->getAddressFields();
-		return $this->_addressFields;
+		return self::ADDRESS_FIELDS_CONTACT + self::ADDRESS_FIELDS_MASTER_DATA + self::ADDRESS_FIELDS_NO_CATEGORY;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public static function getNewAddressFieldsWithTableNameKey(): array
+	{
+		return [
+			''           => self::ADDRESS_FIELDS_NO_CATEGORY,
+			'Kontakt'    => self::ADDRESS_FIELDS_CONTACT,
+			'Stammdaten' => self::ADDRESS_FIELDS_MASTER_DATA,
+		];
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public static function getNewAddressFieldsTranslatedLabel(): array
+	{
+		return [
+			'All non-mobile phone numbers' => __( 'All non-mobile phone numbers', 'onoffice-for-wp-websites' ),
+			'All fax numbers'              => __( 'All fax numbers', 'onoffice-for-wp-websites' ),
+			'All mobile numbers'           => __( 'All mobile numbers', 'onoffice-for-wp-websites' ),
+			'All e-mail addresses'         => __( 'All e-mail addresses', 'onoffice-for-wp-websites' ),
+			'Default phone number'         => __( 'Default phone number', 'onoffice-for-wp-websites' ),
+			'Default fax number'           => __( 'Default fax number', 'onoffice-for-wp-websites' ),
+			'Default e-mail address'       => __( 'Default e-mail address', 'onoffice-for-wp-websites' ),
+			'Image'                        => __( 'Image', 'onoffice-for-wp-websites' ),
+		];
 	}
 }

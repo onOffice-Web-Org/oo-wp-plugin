@@ -62,7 +62,7 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 	{
 		$pDecoratorReadAddress = new FieldModuleCollectionDecoratorReadAddress
 			(new FieldsCollection());
-		$countOverall = count($pDecoratorReadAddress->getNewAddressFields()) + 2;
+		$countOverall = count($pDecoratorReadAddress::getNewAddressFields()) + 2;
 		$pDecoratorContactForm = new FieldModuleCollectionDecoratorFormContact($pDecoratorReadAddress);
 		$this->assertEquals($countOverall, count($pDecoratorContactForm->getAllFields()));
 	}
@@ -103,7 +103,7 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 
 	private function buildExpectedResult(FieldModuleCollectionDecoratorReadAddress $pDecorator): array
 	{
-		$newAddressFields = $pDecorator->getNewAddressFields();
+		$newAddressFields = $pDecorator::getNewAddressFields();
 		$result = [];
 
 		foreach ($newAddressFields as $fieldName => $data) {
