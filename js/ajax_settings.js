@@ -71,12 +71,12 @@ onOffice.ajaxSaver = function(outerDiv) {
 					window.history.replaceState({}, '', url);
 					$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
 						message + '</p></div>');
-          if (current_screen === estatePage) {
-            $('#post-body-content p:first').nextAll().remove();
-          } else {
-            $('#post-body-content .viewusage:first').nextAll().remove();
-          }
-          $('#post-body-content').append(jsonResponse.shortcodeContent);
+					if (current_screen === estatePage) {
+						$('#post-body-content p:first').nextAll().remove();
+					} else {
+						$('#post-body-content .viewusage:first').nextAll().remove();
+					}
+					$('#post-body-content').append(jsonResponse.shortcodeContent);
 				} else {
 					$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
 						message + '</p></div>');

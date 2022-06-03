@@ -246,24 +246,26 @@ abstract class AdminPageSettingsBase
 			$this->updateValues($row, $pResultObject, $recordId);
 		}
 
-		$pResultObject->messageKey = $this->getResponseMessagekey($pResultObject->result);
-    if (array_key_exists('oo_plugin_listviews', $row)) {
-      $pResultObject->shortcodeContent = '<span class="viewusage">' . esc_html__('Shortcode: ', 'onoffice-for-wp-websites') . '<code>[oo_estate view="' . $row['oo_plugin_listviews']['name'] . '"]</code></span>';
-      if (wp_is_using_https()) {
-        $pResultObject->shortcodeContent .= '<input type="button" class="button clipboard" id="button-copy" data-clipboard-text="[oo_estate view="' . $row['oo_plugin_listviews']['name'] . ']" value="' . esc_html__( 'Copy',
-          'onoffice-for-wp-websites' ) . '">';
-      }
+		$pResultObject->messageKey = $this->getResponseMessagekey( $pResultObject->result );
+		if ( array_key_exists( 'oo_plugin_listviews', $row ) ) {
+			$pResultObject->shortcodeContent = '<span class="viewusage">' . esc_html__( 'Shortcode: ',
+					'onoffice-for-wp-websites' ) . '<code>[oo_estate view="' . $row['oo_plugin_listviews']['name'] . '"]</code></span>';
+			if ( wp_is_using_https() ) {
+				$pResultObject->shortcodeContent .= '<input type="button" class="button clipboard" id="button-copy" data-clipboard-text="[oo_estate view="' . $row['oo_plugin_listviews']['name'] . ']" value="' . esc_html__( 'Copy',
+						'onoffice-for-wp-websites' ) . '">';
+			}
 
-    }
+		}
 
-    if (array_key_exists('oo_plugin_forms', $row)) {
-      $pResultObject->shortcodeContent = '<span class="viewusage">' . esc_html__(', shortcode: ', 'onoffice-for-wp-websites') . '<code>[oo_form form="' . $row['oo_plugin_forms']['name'] . '"]</code></span>';
-      if (wp_is_using_https()) {
-        $pResultObject->shortcodeContent .= '<input type="button" class="button clipboard" id="button-copy" data-clipboard-text="[oo_estate view="' . $row['oo_plugin_forms']['name'] . ']" value="' . esc_html__( 'Copy',
-          'onoffice-for-wp-websites' ) . '">';
-      }
-    }
-    $pResultObject->shortcodeContent .= '<p class="wp-clearfix"><label class="howto"></label></p>';
+		if ( array_key_exists( 'oo_plugin_forms', $row ) ) {
+			$pResultObject->shortcodeContent = '<span class="viewusage">' . esc_html__( ', shortcode: ',
+					'onoffice-for-wp-websites' ) . '<code>[oo_form form="' . $row['oo_plugin_forms']['name'] . '"]</code></span>';
+			if ( wp_is_using_https() ) {
+				$pResultObject->shortcodeContent .= '<input type="button" class="button clipboard" id="button-copy" data-clipboard-text="[oo_estate view="' . $row['oo_plugin_forms']['name'] . ']" value="' . esc_html__( 'Copy',
+						'onoffice-for-wp-websites' ) . '">';
+			}
+		}
+		$pResultObject->shortcodeContent .= '<p class="wp-clearfix"><label class="howto"></label></p>';
 
 		echo json_encode($pResultObject);
 
