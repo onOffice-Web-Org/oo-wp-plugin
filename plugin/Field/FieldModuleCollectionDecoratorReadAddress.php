@@ -38,7 +38,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	extends FieldModuleCollectionDecoratorAbstract
 {
 	/** @var array */
-	public const ADDRESS_FIELDS_MASTER_DATA = [
+	const ADDRESS_FIELDS_MASTER_DATA = [
 		'phone'    => [
 			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
 			'length'          => 40,
@@ -89,7 +89,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	];
 
 	/** @var array */
-	public const ADDRESS_FIELDS_CONTACT = [
+	const ADDRESS_FIELDS_CONTACT = [
 		'email' => [
 			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
 			'length'          => 80,
@@ -112,7 +112,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	];
 
 	/** @var array */
-	public const ADDRESS_FIELDS_NO_CATEGORY = [
+	const ADDRESS_FIELDS_NO_CATEGORY = [
 		'imageUrl' => [
 			'type'   => FieldTypes::FIELD_TYPE_TEXT,
 			'length' => null,
