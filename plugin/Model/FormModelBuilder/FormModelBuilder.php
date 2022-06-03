@@ -29,6 +29,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\__String;
 use const ONOFFICE_PLUGIN_DIR;
 use function plugin_dir_path;
@@ -94,7 +95,11 @@ abstract class FormModelBuilder
 				$pFieldnamesInactive->loadLanguage();
 				$fieldnames += $pFieldnamesInactive->getFieldList($module);
 			}
-
+			foreach ($fieldnames as $key => $field) {
+				if (!FieldTypes::isSupportType($field['type'])) {
+					unset($fieldnames[$key]);
+				}
+			}
 			$resultLabel = array_column($fieldnames, 'label');
 			$result = array_combine(array_keys($fieldnames), $resultLabel);
 		} catch (APIClientCredentialsException $pCredentialsException) {
@@ -106,36 +111,21 @@ abstract class FormModelBuilder
 
 
 	/**
+	 * @param $directory
+	 * @param $pattern
 	 *
-	 * @param string $directory
-	 * @param string $pattern
 	 * @return array
-	 *
 	 */
 
-	protected function readTemplatePaths($directory, $pattern = '*')
-	{
-		$templateGlobFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR.'/index.php')
-			.'templates.dist/'.$directory.'/'.$pattern.'.php');
-		$templateLocalFiles = glob(plugin_dir_path(ONOFFICE_PLUGIN_DIR)
-			.'onoffice-personalized/templates/'.$directory.'/'.$pattern.'.php');
-			$templateThemeFiles = glob(get_stylesheet_directory()
-			.'/onoffice-theme/templates/'.$directory.'/'.$pattern.'.php');
-		
-		$templatesAll = array_merge($templateGlobFiles, $templateLocalFiles, $templateThemeFiles);
-		$templates = array();
+	protected function readTemplatePaths( $directory, $pattern = '*' ) {
+		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_INCLUDED ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR
+										. '/index.php' ) . 'templates.dist/' . $directory . '/' . $pattern . '.php' );
+		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ]   = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
+										. 'onoffice-personalized/templates/' . $directory . '/' . $pattern . '.php' );
+		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_THEME ]    = glob( get_stylesheet_directory()
+										. '/onoffice-theme/templates/' . $directory . '/' . $pattern . '.php' );
 
-		foreach ($templatesAll as $value) {
-			if(strpos($value, 'themes') !== false) {
-				$value = __String::getNew($value)->replace(get_template_directory().'/', '');
-				$templates[$value] = $value;
-			}else{
-				$value = __String::getNew($value)->replace(plugin_dir_path(ONOFFICE_PLUGIN_DIR), '');
-				$templates[$value] = $value;
-			}
-		}
-
-		return $templates;
+		return ( new TemplateCall() )->formatTemplatesData( array_filter( $templatesAll ), $directory );
 	}
 
 	/**

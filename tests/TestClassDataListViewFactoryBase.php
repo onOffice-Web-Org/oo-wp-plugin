@@ -58,14 +58,9 @@ class TestClassDataListViewFactoryBase
 	}
 
 
-	/**
-	 *
-	 * @expectedException onOffice\WPlugin\DataView\UnknownViewException
-	 *
-	 */
-
 	public function testGetListviewByNameError()
 	{
+		$this->expectException(\onOffice\WPlugin\DataView\UnknownViewException::class);
 		$this->_pMockRecordManagerRead
 			->method('getRowByName')
 			->will($this->returnValue(null));

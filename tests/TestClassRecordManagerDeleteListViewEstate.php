@@ -67,22 +67,17 @@ class TestClassRecordManagerDeleteListViewEstate
 
 	public function testDeleteByIds()
 	{
-		$this->_pWPDB->expects($this->at(0))->method('delete')
-			->with('wp_test_oo_plugin_listviews', ['listview_id' => 3]);
-		$this->_pWPDB->expects($this->at(1))->method('delete')
-			->with('wp_test_oo_plugin_fieldconfig', ['listview_id' => 3]);
-		$this->_pWPDB->expects($this->at(2))->method('delete')
-			->with('wp_test_oo_plugin_picturetypes', ['listview_id' => 3]);
-		$this->_pWPDB->expects($this->at(3))->method('delete')
-			->with('wp_test_oo_plugin_listview_contactperson', ['listview_id' => 3]);
-		$this->_pWPDB->expects($this->at(4))->method('delete')
-			->with('wp_test_oo_plugin_listviews', ['listview_id' => 4]);
-		$this->_pWPDB->expects($this->at(5))->method('delete')
-			->with('wp_test_oo_plugin_fieldconfig', ['listview_id' => 4]);
-		$this->_pWPDB->expects($this->at(6))->method('delete')
-			->with('wp_test_oo_plugin_picturetypes', ['listview_id' => 4]);
-		$this->_pWPDB->expects($this->at(7))->method('delete')
-			->with('wp_test_oo_plugin_listview_contactperson', ['listview_id' => 4]);
-		$this->_pSubject->deleteByIds([3, 4]);
+		$this->_pWPDB->expects( $this->exactly( 8 ) )->method( 'delete' )
+		             ->withConsecutive(
+			             [ 'wp_test_oo_plugin_listviews', [ 'listview_id' => 3 ] ],
+			             [ 'wp_test_oo_plugin_fieldconfig', [ 'listview_id' => 3 ] ],
+			             [ 'wp_test_oo_plugin_picturetypes', [ 'listview_id' => 3 ] ],
+			             [ 'wp_test_oo_plugin_listview_contactperson', [ 'listview_id' => 3 ] ],
+			             [ 'wp_test_oo_plugin_listviews', [ 'listview_id' => 4 ] ],
+			             [ 'wp_test_oo_plugin_fieldconfig', [ 'listview_id' => 4 ] ],
+			             [ 'wp_test_oo_plugin_picturetypes', [ 'listview_id' => 4 ] ],
+			             [ 'wp_test_oo_plugin_listview_contactperson', [ 'listview_id' => 4 ] ]
+		             );
+		$this->_pSubject->deleteByIds( [ 3, 4 ] );
 	}
 }

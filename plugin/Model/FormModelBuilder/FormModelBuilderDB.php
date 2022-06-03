@@ -131,9 +131,9 @@ abstract class FormModelBuilderDB
 		natcasesort($fieldnames);
 		$defaultActiveFields = array();
 
-		foreach ($fieldnames as $key => $value) {
-			if (in_array($key, $defaultFields)) {
-				$defaultActiveFields[$key] = $value;
+		foreach ($defaultFields as $value) {
+			if (array_key_exists($value, $fieldnames)) {
+				$defaultActiveFields[$value] = $fieldnames[$value];
 			}
 		}
 
@@ -195,7 +195,7 @@ abstract class FormModelBuilderDB
 
 		$pInputModelTemplate = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_TEMPLATE, $labelTemplate);
-		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
+		$pInputModelTemplate->setHtmlType(InputModelOption::HTML_TYPE_TEMPLATE_LIST);
 
 		$pInputModelTemplate->setValuesAvailable($this->readTemplatePaths($path));
 		$pInputModelTemplate->setValue($selectedTemplate);

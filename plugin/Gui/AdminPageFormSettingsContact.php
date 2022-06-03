@@ -47,8 +47,6 @@ class AdminPageFormSettingsContact
 	/** */
 	const FORM_VIEW_GEOFIELDS = 'geofields';
 
-	/** @var bool message field has no module */
-	private $_showMessageInput = false;
 
 	/** @var array */
 	private $_additionalCategories = array();
@@ -105,12 +103,14 @@ class AdminPageFormSettingsContact
 		} else {
 			$pInputModelRecipient = $pFormModelBuilder->createInputModelRecipient();
 		}
+		$pInputModelDefaultRecipient = $pFormModelBuilder->createInputModelDefaultRecipient();
 		$pInputModelSubject = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_SUBJECT);
 		$pInputModelCaptcha = $pFormModelBuilder->createInputModelCaptchaRequired();
 		$pFormModelFormSpecific = new FormModel();
 		$pFormModelFormSpecific->setPageSlug($this->getPageSlug());
 		$pFormModelFormSpecific->setGroupSlug(self::FORM_VIEW_FORM_SPECIFIC);
 		$pFormModelFormSpecific->setLabel(__('Form Specific Options', 'onoffice-for-wp-websites'));
+		$pFormModelFormSpecific->addInputModel($pInputModelDefaultRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelRecipient);
 		$pFormModelFormSpecific->addInputModel($pInputModelSubject);
 		$pFormModelFormSpecific->addInputModel($pInputModelCaptcha);
@@ -120,6 +120,12 @@ class AdminPageFormSettingsContact
 			if (empty($pInputModelBuilder->getValues())) {
 				$pInputModel->setValue(true);
 			}
+			$linkLabel = esc_html__('Request Manager', 'onoffice-for-wp-websites');
+			$linkUrl = esc_html__('https://de.enterprisehilfe.onoffice.com/category/additional-modules/request-manager/?lang=en', 'onoffice-for-wp-websites');
+			$link = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $linkUrl, $linkLabel);
+			$textWithoutLink = esc_html__("By default, no link is created to the estate when the plugin creates the address. If the contact form is on an detail page and you want to link the address and the requested estate, you can open the email in onOffice enterprise or use the %s.", 'onoffice-for-wp-websites');
+			$txtHint = sprintf($textWithoutLink, $link);
+			$pInputModel->setHintHtml($txtHint);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -141,7 +147,7 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
-			$pInputModel->setHint(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
+			$pInputModel->setHintHtml(esc_html__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -152,7 +158,7 @@ class AdminPageFormSettingsContact
 
 		if ($this->_showCheckDuplicatesInterestOwner) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES_INTEREST_OWNER);
-			$pInputModel->setHint(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
+			$pInputModel->setHintHtml(__('Be aware that when activated the duplicate check can overwrite address records. This function will be removed in the future. Use at your own risk.', 'onoffice-for-wp-websites'));
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
@@ -185,9 +191,9 @@ class AdminPageFormSettingsContact
 
 	private function buildMessagesInput(FormModelBuilder $pFormModelBuilder)
 	{
-		if ($this->_showMessageInput) {
+		$category = __('Form Specific Fields', 'onoffice-for-wp-websites');
+		if ($this->getShowMessageInput()) {
 			$pFieldCollection = new FieldModuleCollectionDecoratorFormContact(new FieldsCollection());
-			$category = __('Form Specific Fields', 'onoffice-for-wp-websites');
 			$this->_additionalCategories []= $category;
 			$pFieldMessage = $pFieldCollection->getFieldByModuleAndName('', 'message');
 
@@ -198,6 +204,15 @@ class AdminPageFormSettingsContact
 			];
 			$this->addFieldsConfiguration(null, $pFormModelBuilder, $fieldNameMessage, true);
 			$this->addSortableFieldModule(null);
+		}
+		else {
+			$removeFields = [
+				[
+					'fieldName' => 'message',
+					'category' => $category
+				],
+			];
+			$this->removeFieldsConfiguration(null, $removeFields);
 		}
 	}
 
@@ -259,9 +274,7 @@ class AdminPageFormSettingsContact
 		}
 	}
 
-	/** @param bool $showMessageInput */
-	public function setShowMessageInput(bool $showMessageInput)
-		{ $this->_showMessageInput = $showMessageInput; }
+
 
 	/** @param bool $showCreateAddress */
 	public function setShowCreateAddress(bool $showCreateAddress)

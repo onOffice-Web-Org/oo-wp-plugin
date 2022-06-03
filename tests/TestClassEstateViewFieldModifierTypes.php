@@ -43,9 +43,9 @@ class TestClassEstateViewFieldModifierTypes
 	 *
 	 */
 
-	public function setUp()
+	public function set_up()
 	{
-		parent::setUp();
+		parent::set_up();
 		$this->setViewFieldModifierTypes(new EstateViewFieldModifierTypes);
 	}
 

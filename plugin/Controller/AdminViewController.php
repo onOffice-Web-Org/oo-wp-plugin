@@ -38,6 +38,7 @@ use onOffice\WPlugin\Gui\AdminPageEstateUnitSettings;
 use onOffice\WPlugin\Gui\AdminPageFormList;
 use onOffice\WPlugin\Gui\AdminPageFormSettingsMain;
 use onOffice\WPlugin\Gui\AdminPageModules;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
@@ -133,6 +134,7 @@ class AdminViewController
 	public function register_menu()
 	{
 		add_action('admin_notices', [$this, 'displayAPIError']);
+		add_action('admin_notices', [$this, 'displayUsingEmptyDefaultEmailError']);
 		add_action('admin_notices', [$this, 'displayDeactivateDuplicateCheckWarning']);
 		$pUserCapabilities = new UserCapabilities;
 		$roleMainPage = $pUserCapabilities->getCapabilityForRule(UserCapabilities::RULE_VIEW_MAIN_PAGE);
@@ -311,14 +313,13 @@ class AdminViewController
 
 	public function enqueueExtraJs($hook)
 	{
+		wp_register_script('update-duplicate-check-warning-option', plugins_url('js/onoffice-duplicate-check-option-update.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
+			array('jquery'));
+		wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_enqueue_script('update-duplicate-check-warning-option');
+
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
-
-			wp_register_script('update-duplicate-check-warning-option', plugins_url('js/onoffice-duplicate-check-option-update.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
-				array('jquery'));
-			wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
-			wp_enqueue_script('update-duplicate-check-warning-option');
-
 			if ($pObject !== null) {
 				$pObject->doExtraEnqueues();
 			}
@@ -403,7 +404,7 @@ class AdminViewController
 
 	public function displayDeactivateDuplicateCheckWarning()
 	{
-		if (get_option('onoffice-duplicate-check-warning', 'onoffice-for-wp-websites') === "1") {
+		if ( get_option( 'onoffice-duplicate-check-warning', '' ) === "1" ) {
 			$class = 'notice notice-error duplicate-check-notify is-dismissible';
 			$message = esc_html(__("We have deactivated the plugin's duplicate check for all of your forms, "
 				. "because the duplicate check can unintentionally overwrite address records. This function will be removed "
@@ -417,5 +418,24 @@ class AdminViewController
 	public function getField()
 	{
 		return new Fieldnames(new FieldsCollection());
+	}
+
+	public function displayUsingEmptyDefaultEmailError()
+	{
+		if ( ! get_option( 'onoffice-settings-default-email', '' ) && $this->getRecordManagerReadForm()->getCountDefaultRecipientRecord() != 0 ) {
+			$class                   = 'notice notice-error';
+			$label                   = __( 'plugin settings', 'onoffice-for-wp-websites' );
+			$defaultEmailAddressLink = sprintf( '<a href="admin.php?page=onoffice-settings">%s</a>', $label );
+			/* translators: %s will be replaced with the translation of 'plugin settings'. */
+			$message = sprintf(esc_html(__('The onOffice plugin is missing a default email address. You have forms that use the default email and they will currently not send emails. Please add a default email address in the %s to dismiss this warning.', 'onoffice-for-wp-websites')),
+				$defaultEmailAddressLink);
+
+			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		}
+	}
+
+	public function getRecordManagerReadForm()
+	{
+		return new RecordManagerReadForm();
 	}
 }

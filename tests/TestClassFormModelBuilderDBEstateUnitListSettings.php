@@ -24,6 +24,8 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelDB;
 use WP_UnitTestCase;
 

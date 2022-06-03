@@ -23,8 +23,16 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Installer;
 
+use DI\Container;
+use DI\ContainerBuilder;
+use onOffice\WPlugin\AddressList;
+use Exception;
+use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
+use onOffice\WPlugin\Template\TemplateCall;
 use onOffice\WPlugin\Utility\__String;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\WP\WPOptionWrapperBase;
 use wpdb;
@@ -35,7 +43,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 27;
+	const MAX_VERSION = 31;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -43,13 +51,22 @@ class DatabaseChanges implements DatabaseChangesInterface
 	/** @var wpdb */
 	private $_pWPDB;
 
+	/** @var Container */
+	private $_pContainer;
+
 	/**
 	 * @param WPOptionWrapperBase $pWpOption
+	 * @param wpdb $pWPDB
+	 *
+	 * @throws Exception
 	 */
-	public function __construct(WPOptionWrapperBase $pWpOption, \wpdb $pWPDB)
+	public function __construct(WPOptionWrapperBase $pWpOption, wpdb $pWPDB)
 	{
 		$this->_pWpOption = $pWpOption;
 		$this->_pWPDB = $pWPDB;
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$this->_pContainer = $pDIContainerBuilder->build();
 	}
 
 	/**
@@ -64,7 +81,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$dbversion = $this->_pWpOption->getOption('oo_plugin_db_version', null);
 		if ($dbversion === null) {
+			$isNewInstall = true;
 			dbDelta( $this->getCreateQueryCache() );
+			$this->setDetailTemplate();
 
 			$dbversion = 1.0;
 			$this->_pWpOption->addOption( 'oo_plugin_db_version', $dbversion, true );
@@ -167,6 +186,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		if ($dbversion == 21) {
 			dbDelta($this->getCreateQueryListviews());
+			$this->updateShowReferenceEstateOfList();
 			$dbversion = 22;
 		}
 
@@ -176,8 +196,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 23) {
-			$this->deactivateCheckDuplicateOfForm();
-			$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+			if (!isset($isNewInstall)){
+				$this->deactivateCheckDuplicateOfForm();
+				$this->_pWpOption->addOption('onoffice-duplicate-check-warning', 1);
+			}
 			$dbversion = 24;
 		}
 
@@ -196,6 +218,29 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->deleteMessageFieldApplicantSearchForm();
 			$dbversion = 27;
 		}
+
+		if ($dbversion == 27) {
+			$this->updateEstateListSortBySetting();
+			$dbversion = 28;
+		}
+
+		if ($dbversion == 28) {
+			$this->checkContactFieldInDefaultDetail();
+			$dbversion = 29;
+		}
+
+		if ($dbversion == 29) {
+			$this->checkAllPageIdsHaveDetailShortCode();
+			$this->_pWpOption->addOption( 'add-detail-posts-to-rewrite-rules', false );
+			$this->_pWpOption->updateOption( 'onoffice-detail-view-showTitleUrl', true );
+			$dbversion = 30;
+		}
+
+		if ($dbversion == 30) {
+			dbDelta($this->getCreateQueryForms());
+			$dbversion = 31;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -326,6 +371,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`radius` INT( 10 ) NULL DEFAULT NULL,
 			`geo_order` VARCHAR( 255 ) NOT NULL DEFAULT 'street,zip,city,country,radius',
 			`show_estate_context` tinyint(1) NOT NULL DEFAULT '0',
+			`default_recipient` tinyint(1) NOT NULL DEFAULT '0',
 			`contact_type` varchar(255) NULL DEFAULT NULL,
 			`page_shortcode` tinytext NOT NULL,
 			PRIMARY KEY (`form_id`),
@@ -334,6 +380,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		return $sql;
 	}
+
 	/**
 	 *
 	 * @return string
@@ -647,6 +694,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
+
 	/**
 	 *
 	 */
@@ -746,5 +794,106 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDetailView = $pDataDetailViewHandler->getDetailView();
 		$pDetailView->setHasDetailView(true);
 		$pDataDetailViewHandler->saveDetailView($pDetailView);
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function setDetailTemplate()
+	{
+		$detailTemplatesList[ TemplateCall::TEMPLATE_FOLDER_INCLUDED ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR
+		                                    . '/index.php' ) . 'templates.dist/' . 'estate' . '/' . 'default_detail' . '.php' );
+		$detailTemplatesList[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ]   = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
+		                                    . 'onoffice-personalized/templates/' . 'estate' . '/' . 'default_detail' . '.php' );
+		$detailTemplatesList[ TemplateCall::TEMPLATE_FOLDER_THEME ]    = glob( get_stylesheet_directory()
+		                                    . '/onoffice-theme/templates/' . 'estate' . '/' . 'default_detail' . '.php' );
+
+		$detailTemplatesList = ( new TemplateCall() )->formatTemplatesData( array_filter( $detailTemplatesList ), 'estate' );
+		$firstTemplatePath   = reset( $detailTemplatesList )['path'];
+
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
+		$pDetailView            = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setTemplate( key( $firstTemplatePath ) );
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateShowReferenceEstateOfList()
+	{
+		$prefix = $this->getPrefix();
+		$sql = "UPDATE {$prefix}oo_plugin_listviews
+				SET `show_reference_estate` = 1";
+
+		$this->_pWPDB->query($sql);
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateEstateListSortBySetting()
+	{
+		$prefix = $this->getPrefix();
+		$sql    = "UPDATE {$prefix}oo_plugin_listviews
+				SET `sortBySetting` = '0' 
+				WHERE (`sortBySetting` IS NULL OR `sortBySetting` = '') 
+				AND `random` = 0";
+
+		$this->_pWPDB->query( $sql );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function checkContactFieldInDefaultDetail() {
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$addressFields = $pDetailView->getAddressFields();
+
+		foreach (AddressList::DEFAULT_FIELDS_REPLACE as $defaultField => $newField) {
+			if (in_array($defaultField, $addressFields)) {
+				$key = array_search($defaultField, $addressFields);
+				unset($addressFields[$key]);
+
+				if (!in_array($newField, $addressFields)) {
+					$addressFields[$key] = $newField;
+				}
+			}
+		}
+		ksort($addressFields);
+		$pDetailView->setAddressFields($addressFields);
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
+
+	/**
+	 *
+	 * @return void
+	 *
+	 */
+
+	public function checkAllPageIdsHaveDetailShortCode()
+	{
+		$pDataDetailViewHandler = $this->_pContainer->get( DataDetailViewHandler::class );
+		$pDetailView            = $pDataDetailViewHandler->getDetailView();
+		$detailViewName         = 'view="' . $pDetailView->getName() . '"';
+		$tableName              = $this->getPrefix() . "posts";
+
+		$listDetailPosts = $this->_pWPDB->get_results( "SELECT `ID` FROM {$tableName}
+														WHERE post_status = 'publish'
+														AND post_content LIKE '%[oo_estate%" . $detailViewName . "%]%'", ARRAY_A );
+		foreach ( $listDetailPosts as $post ) {
+			$pDetailView->addToPageIdsHaveDetailShortCode( (int) $post['ID'] );
+		}
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 }

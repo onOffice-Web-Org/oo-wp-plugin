@@ -26,6 +26,7 @@ namespace onOffice\WPlugin\Template;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\Utility\__String;
 
 /**
  *
@@ -41,6 +42,30 @@ class TemplateCall
 	/** */
 	const TEMPLATE_TYPE_MAIL = 'mail';
 
+	const TEMPLATES_FOLDER_INFO = [
+		'theme' => [
+			'title' => 'Personalized (Theme)',
+			'folder' => 'onoffice-theme/templates/',
+			'order' => 1
+		],
+		'plugin' => [
+			'title' => 'Personalized (Plugin)',
+			'folder' => 'onoffice-personalized/templates/',
+			'order' => 2
+		],
+		'included' => [
+			'title' => 'Included',
+			'folder' => '/templates.dist/',
+			'order' => 3
+		],
+	];
+
+	const TEMPLATE_FOLDER_INCLUDED = 'included';
+
+	const TEMPLATE_FOLDER_PLUGIN = 'plugin';
+
+	const TEMPLATE_FOLDER_THEME = 'theme';
+
 
 	/** @var array */
 	private $_templates = [];
@@ -50,6 +75,12 @@ class TemplateCall
 
 	/** @var string */
 	private $_templateType = '';
+
+	const ORDER_OF_TEMPLATES_FOLDER = [
+		"Personalized (Theme)" => 1,
+		"Personalized (Plugin)" => 2,
+		"Default" => 3,
+	];
 
 
 	/**
@@ -83,6 +114,41 @@ class TemplateCall
 			$elements = $template['elements'];
 			$this->_templates[$elements['identifier']] = $elements['title'];
 		}
+	}
+
+
+	/**
+	 * @param $templatesAll
+	 * @param $directory
+	 *
+	 * @return array
+	 */
+
+	public function formatTemplatesData( $templatesAll, $directory ): array {
+		$templateFormatResult = [];
+
+		foreach ( $templatesAll as $key => $templatesFolder ) {
+			$templateInfo           = self::TEMPLATES_FOLDER_INFO[ $key ];
+			$templateInfo['folder'] .= $directory;
+			if ( $key === self::TEMPLATE_FOLDER_INCLUDED ) {
+				$templateInfo['folder'] = basename( plugin_dir_path( ONOFFICE_PLUGIN_DIR . '/index.php' ) ) . $templateInfo['folder'];
+			} elseif ( array_key_exists( 'included', $templatesAll ) && count( $templatesAll ) === 2 ) {
+				// check and update Personalized templates title
+				$templateInfo['title'] = strtok( $templateInfo['title'], " " );
+			}
+			foreach ( $templatesFolder as $path ) {
+				if ( $key === self::TEMPLATE_FOLDER_THEME ) {
+					$formattedPath = __String::getNew( $path )->replace( get_template_directory() . '/', '' );
+				} else {
+					$formattedPath = __String::getNew( $path )->replace( plugin_dir_path( ONOFFICE_PLUGIN_DIR ), '' );
+				}
+				$templateInfo['path'][ $formattedPath ] = substr( strrchr( $path, "/" ), 1 );
+			}
+			$templateFormatResult[ $templateInfo['order'] ] = $templateInfo;
+		}
+		ksort( $templateFormatResult );
+
+		return $templateFormatResult;
 	}
 
 	/** @return array */

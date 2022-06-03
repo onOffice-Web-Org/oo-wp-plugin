@@ -52,6 +52,7 @@ class FieldModuleCollectionDecoratorFormContact
 				'permittedvalues' => [],
 				'default' => null,
 				'label' => 'Message',
+				'content' => 'Form Specific Fields'
 			],
 		],
 	];

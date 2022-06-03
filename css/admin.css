@@ -13,6 +13,29 @@
 	max-width: 230px;
 }
 
+#onoffice-ajax .metabox-holder .postbox-container .postbox .chosen-container .chosen-drop {
+	display: grid;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list input,
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list label,
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list select {
+	float: none;
+	margin: 4px 2px;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list summary {
+	margin: 5px 0;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list p {
+	margin-top: 0;
+}
+
+#onoffice-ajax .metabox-holder .postbox-container .postbox .template-list .oo-template-folder-path {
+	color: #646970;
+}
+
 #onoffice-ajax input[name=oopluginlistviewsaddress-name],
 #onoffice-ajax input[name=oopluginlistviews-name],
 #onoffice-ajax input[name=oopluginforms-name] {
@@ -297,4 +320,10 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	display: flex;
 	float: right;
 	margin-top: 20px;
+}
+
+#viewformspecific .hint-text {
+	color: #646970;
+	font-style: italic;
+	text-decoration: none;
 }

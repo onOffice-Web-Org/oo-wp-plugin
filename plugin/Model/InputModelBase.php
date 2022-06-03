@@ -40,6 +40,9 @@ abstract class InputModelBase
 	const HTML_TYPE_RADIO = 'radio';
 
 	/** */
+	const HTML_TYPE_TEMPLATE_LIST = 'templateList';
+
+	/** */
 	const HTML_TYPE_HIDDEN = 'hidden';
 
 	/** */
@@ -63,11 +66,19 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_NUMBER = 'number';
 
+	/** */
+	const HTML_TYPE_EMAIL = 'email';
+
+	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
+
 	/** @var string */
 	private $_name = null;
 
 	/** @var mixed */
 	private $_value = null;
+
+	/** @var mixed */
+	private $_deactivate = false;
 
 	/** @var string */
 	private $_label = null;
@@ -110,6 +121,9 @@ abstract class InputModelBase
 
     /** @var string */
     private $_descriptionTextHTML = '';
+
+	/** @var string */
+	private $_italicLabel = '';
 
 	/**
 	 *
@@ -159,6 +173,14 @@ abstract class InputModelBase
 	public function setValue($value)
 		{ $this->_value = $value; }
 
+	/** @param mixed $deactivate */
+	public function setDeactivate($deactivate)
+		{ $this->_deactivate = $deactivate; }
+
+	/** @return mixed */
+	public function isDeactivate()
+		{ return $this->_deactivate; }
+
 	/** @return array */
 	public function getValuesAvailable()
 		{ return $this->_valuesAvailable; }
@@ -184,11 +206,11 @@ abstract class InputModelBase
 		{ $this->_placeholder = $placeholder; }
 
 	/** @return string */
-	public function getHint()
+	public function getHintHtml()
 	{ return $this->_hint; }
 
 	/** @param string $hint */
-	public function setHint($hint)
+	public function setHintHtml($hint)
 	{ $this->_hint = $hint; }
 
 	/** @param string $id */
@@ -246,5 +268,13 @@ abstract class InputModelBase
     /** @param string $descriptionTextHTML */
     public function setDescriptionTextHTML(string $textHTML)
     	{ $this->_descriptionTextHTML = $textHTML; }
+
+	/**@return string */
+	public function getItalicLabel(): string
+		{ return $this->_italicLabel; }
+
+	/** @param string $italicLabel */
+	public function setItalicLabel(string $italicLabel)
+		{ $this->_italicLabel = $italicLabel; }
 
 }

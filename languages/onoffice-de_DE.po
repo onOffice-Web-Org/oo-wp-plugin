@@ -162,6 +162,22 @@ msgstr "Dokumente"
 msgid "PDF expose"
 msgstr "PDF-Exposé"
 
+#: templates.dist/estate/default_detail.php:253
+msgid "Videos"
+msgstr "Videos"
+
+#: templates.dist/estate/default_detail.php:278
+msgid "360° tours"
+msgstr "360° Rundgänge"
+
+#: templates.dist/estate/default_detail.php:303
+msgid "Objects"
+msgstr "Objekte"
+
+#: templates.dist/estate/default_detail.php:328
+msgid "Links"
+msgstr "Links"
+
 #: templates.dist/estate/default_units.php:29
 msgid "Entities"
 msgstr "Einheiten"

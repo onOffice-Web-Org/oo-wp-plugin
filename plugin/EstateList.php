@@ -32,6 +32,7 @@ use onOffice\WPlugin\Controller\EstateListBase;
 use onOffice\WPlugin\Controller\EstateListEnvironment;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
@@ -47,8 +48,10 @@ use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
+use onOffice\WPlugin\WP\WPPageWrapper;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
@@ -99,6 +102,9 @@ class EstateList
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;
 
+	/** @var Redirector */
+	private $_redirectIfOldUrl;
+
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -117,6 +123,7 @@ class EstateList
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
+		$this->_redirectIfOldUrl = $pContainer->get(Redirector::class);
 	}
 
 	/**
@@ -302,10 +309,9 @@ class EstateList
 		}
 
 		// only do georange search if requested in listview configuration
-		if ($pListView instanceof DataViewFilterableFields &&
-			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true)) {
+		if (($pListView instanceof DataViewFilterableFields &&
+			in_array(GeoPosition::FIELD_GEO_POSITION, $pListView->getFilterableFields(), true))) {
 			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
-
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
 			}
@@ -359,6 +365,18 @@ class EstateList
 		}
 
 		$fields = $this->_pDataView->getAddressFields();
+
+		$defaultFields = ['defaultemail' => 'Email', 'defaultphone' => 'Telefon1', 'defaultfax' => 'Telefax1'];
+		foreach ($defaultFields as $defaultField => $newField) {
+			if (in_array($defaultField, $fields)) {
+				$key = array_search($defaultField, $fields);
+				unset($fields[$key]);
+				if (!in_array($newField, $fields)) {
+					$fields[$key] = $newField;
+				}
+			}
+		}
+		ksort($fields);
 
 		if ($fields !== [] && $allAddressIds !== []) {
 			$this->_pEnvironment->getAddressList()->loadAdressesById($allAddressIds, $fields);
@@ -449,14 +467,19 @@ class EstateList
 	public function getEstateLink(): string
 	{
 		$pageId = $this->_pEnvironment->getDataDetailViewHandler()
-			->getDetailView()->getPageId();
+		                              ->getDetailView()->getPageId();
 
 		$fullLink = '#';
-		if ($pageId !== 0) {
-			$estate = $this->_currentEstate['mainId'];
-			$title = $this->_currentEstate['title'] ?? '';
-			$url = get_page_link($pageId);
-			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink($url, $estate, $title);
+		if ( $pageId !== 0 ) {
+			$estate   = $this->_currentEstate['mainId'];
+			$title    = $this->_currentEstate['title'] ?? '';
+			$url      = get_page_link( $pageId );
+			$fullLink = $this->_pLanguageSwitcher->createEstateDetailLink( $url, $estate, $title );
+
+			$fullLinkElements = parse_url( $fullLink );
+			if ( empty( $fullLinkElements['query'] ) ) {
+				$fullLink .= '/';
+			}
 		}
 
 		return $fullLink;

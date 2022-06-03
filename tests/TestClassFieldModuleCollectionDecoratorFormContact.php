@@ -88,14 +88,9 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 	}
 
 
-	/**
-	 *
-	 * @expectedException onOffice\WPlugin\Field\UnknownFieldException
-	 *
-	 */
-
 	public function testGetUnknownFieldByModuleAndName()
 	{
+		$this->expectException(\onOffice\WPlugin\Field\UnknownFieldException::class);
 		$pDecorator = new FieldModuleCollectionDecoratorFormContact
 			($this->getPrefilledCollection());
 		$pDecorator->getFieldByModuleAndName('testModuleF', 'testFieldC');
@@ -130,7 +125,7 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 	private function getExpectedFieldMessage(): Field
 	{
 		$pFieldMessage = new Field('message', '', 'Message');
-		$pFieldMessage->setCategory('');
+		$pFieldMessage->setCategory('Form Specific Fields');
 		$pFieldMessage->setDefault(null);
 		$pFieldMessage->setLength(0);
 		$pFieldMessage->setPermittedvalues([]);

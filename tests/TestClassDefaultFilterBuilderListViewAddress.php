@@ -114,15 +114,10 @@ class TestClassDefaultFilterBuilderListViewAddress
 	}
 
 
-	/**
-	 *
-	 * @expectedException \Exception
-	 * @expectedExceptionMessage Module must be address
-	 *
-	 */
-
 	public function testWrongModule()
 	{
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage('Module must be address');
 		$pDataListView = new DataListViewAddress(1, 'test');
 		$this->_pFilterBuilderInputVariables->method('getModule')->willReturn(onOfficeSDK::MODULE_ESTATE);
 		new DefaultFilterBuilderListViewAddress(

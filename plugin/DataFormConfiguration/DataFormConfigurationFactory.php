@@ -264,6 +264,7 @@ class DataFormConfigurationFactory
 	private function configureContact(array $row, DataFormConfigurationContact $pConfig)
 	{
 		$pConfig->setRecipient($row['recipient']);
+		$pConfig->setDefaultRecipient($row['default_recipient']);
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCreateAddress((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress((bool)$row['checkduplicates']);
@@ -317,6 +318,7 @@ class DataFormConfigurationFactory
 	private function configureOwner(array $row, DataFormConfigurationOwner $pConfig)
 	{
 		$pConfig->setRecipient($row['recipient']);
+		$pConfig->setDefaultRecipient($row['default_recipient']);
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setPages($row['pages']);
 		$pConfig->setCreateOwner((bool)$row['createaddress']);
@@ -335,6 +337,7 @@ class DataFormConfigurationFactory
 	private function configureInterest(array $row, DataFormConfigurationInterest $pConfig)
 	{
 		$pConfig->setRecipient($row['recipient']);
+		$pConfig->setDefaultRecipient($row['default_recipient']);
 		$pConfig->setSubject($row['subject']);
 		$pConfig->setCreateInterest((bool)$row['createaddress']);
 		$pConfig->setCheckDuplicateOnCreateAddress($row['checkduplicates']);
