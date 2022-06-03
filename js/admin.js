@@ -1,5 +1,5 @@
 jQuery(document).ready(function($){
-	$('.notice-save-view.notice-dismiss').click(function () {
+	$(document).on('click', '.notice-save-view.notice-dismiss', function () {
 		$('#onoffice-notice-wrapper').empty();
 	});
 	$('#theme-options-form').submit(function() {

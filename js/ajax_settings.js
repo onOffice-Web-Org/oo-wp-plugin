@@ -70,7 +70,7 @@ onOffice.ajaxSaver = function(outerDiv) {
 					url.searchParams.set('id', onOffice.settings.record_id);
 					window.history.replaceState({}, '', url);
 					$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
-						message + '</p></div>');
+						message + '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>');
 					if (current_screen === estatePage) {
 						$('#post-body-content p:first').nextAll().remove();
 					} else {
@@ -79,11 +79,11 @@ onOffice.ajaxSaver = function(outerDiv) {
 					$('#post-body-content').append(jsonResponse.shortcodeContent);
 				} else {
 					$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
-						message + '</p></div>');
+						message + '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>');
 				}
 			} else {
 				$('#onoffice-notice-wrapper').html('<div class="notice notice-error is-dismissible"><p>' +
-					message + '</p></div>');
+					message + '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>');
 			}
 		});
 	};
