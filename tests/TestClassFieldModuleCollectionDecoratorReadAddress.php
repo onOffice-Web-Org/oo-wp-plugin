@@ -113,6 +113,7 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 			$pField->setLength($data['length'] ?? 0);
 			$pField->setPermittedvalues($data['permittedvalues'] ?? []);
 			$pField->setType($data['type']);
+			$pField->setTableName($data['tablename'] ?? '');
 			$result []= $pField;
 		}
 

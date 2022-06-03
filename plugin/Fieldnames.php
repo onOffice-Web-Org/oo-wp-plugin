@@ -237,12 +237,15 @@ class Fieldnames
 			$newContent = $pField->getCategory() !== '' ?
 				$pField->getCategory() : __('Form Specific Fields', 'onoffice-for-wp-websites');
 			$pField->setCategory($newContent);
-			foreach ( $this->_fieldList[ $pField->getModule() ] as $name => $properties ) {
-				if ( ! is_null( $properties['content'] ) && $pField->getTableName() === $properties['tablename'] ) {
-					$pField->setCategory( $properties['content'] );
-					break;
+			if (isset($this->_fieldList[ $pField->getModule() ])) {
+				foreach ( $this->_fieldList[ $pField->getModule() ] as $name => $properties ) {
+					if ( ! is_null( $properties['content'] ) && $pField->getTableName() === $properties['tablename'] ) {
+						$pField->setCategory( $properties['content'] );
+						break;
+					}
 				}
 			}
+
 			$extraFields[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
 		}
 

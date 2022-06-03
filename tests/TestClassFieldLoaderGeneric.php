@@ -83,6 +83,7 @@ class TestClassFieldLoaderGeneric
 
 	public function testLoad()
 	{
+		set_current_screen(__CLASS__);
 		$result = iterator_to_array($this->_pFieldLoader->load());
 		$this->assertCount(208, $result);
 
