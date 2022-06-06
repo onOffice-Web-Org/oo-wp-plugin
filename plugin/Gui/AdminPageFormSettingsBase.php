@@ -482,6 +482,10 @@ abstract class AdminPageFormSettingsBase
 				$pDefaultFieldsCollection->removeFieldByModuleAndName
 					($pField->getModule(), $pField->getName());
 			}
+			if (!$this->getShowMessageInput() && $pField->getName() === 'message') {
+				$pDefaultFieldsCollection->removeFieldByModuleAndName
+				($pField->getModule(), 'message');
+			}
 		}
 
 		/** @var FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm */

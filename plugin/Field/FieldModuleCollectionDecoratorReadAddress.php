@@ -120,8 +120,10 @@ class FieldModuleCollectionDecoratorReadAddress
 		'imageUrl' => [
 			'type'   => FieldTypes::FIELD_TYPE_TEXT,
 			'length' => null,
-			'module' => 'address',
+			'default'         => null,
+			'permittedvalues' => null,
 			'label'  => 'Image',
+			'module' => 'address',
 		],
 	];
 
@@ -135,7 +137,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	public function getAllFields(): array
 	{
 		$newFields = [];
-		foreach (self::getNewAddressFields() as $name => $row) {
+		foreach ($this->getNewAddressFieldsAfterFormat() as $name => $row) {
 			$row['module'] = onOfficeSDK::MODULE_ADDRESS;
 			$newFields []= Field::createByRow($name, $row);
 		}
@@ -154,7 +156,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
 		if ($module === onOfficeSDK::MODULE_ADDRESS) {
-			$row = self::getNewAddressFields()[$name] ?? null;
+			$row = $this->getNewAddressFieldsAfterFormat()[$name] ?? null;
 			if ($row !== null) {
 				$row['module'] = onOfficeSDK::MODULE_ADDRESS;
 				return Field::createByRow($name, $row);
@@ -175,7 +177,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	public function containsFieldByModule(string $module, string $name): bool
 	{
 		return ($module === onOfficeSDK::MODULE_ADDRESS &&
-			isset(self::getNewAddressFields()[$name])) ||
+			isset($this->getNewAddressFieldsAfterFormat()[$name])) ||
 			parent::containsFieldByModule($module, $name);
 	}
 
@@ -205,6 +207,18 @@ class FieldModuleCollectionDecoratorReadAddress
 			'Kontakt'    => self::ADDRESS_FIELDS_CONTACT,
 			'Stammdaten' => self::ADDRESS_FIELDS_MASTER_DATA,
 		];
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getNewAddressFieldsAfterFormat(): array
+	{
+		return $this->formatFieldContent(self::getNewAddressFieldsWithTableNameKey());
 	}
 
 

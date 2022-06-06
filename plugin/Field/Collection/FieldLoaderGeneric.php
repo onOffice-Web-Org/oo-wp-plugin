@@ -27,7 +27,6 @@ use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\APIEmptyResultException;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
@@ -73,9 +72,7 @@ class FieldLoaderGeneric
 	 */
 	public function load(): Generator
 	{
-		$newAddressFields = FieldModuleCollectionDecoratorReadAddress::getNewAddressFieldsWithTableNameKey();
-		$result           = $this->sendRequest();
-		$screen           = get_current_screen();
+		$result = $this->sendRequest();
 
 		foreach ($result as $moduleProperties) {
 			$module = $moduleProperties['id'];
@@ -99,25 +96,8 @@ class FieldLoaderGeneric
 					$fieldProperties['permittedvalues'] = $permittedValues;
 				}
 
-				if ($screen->id === "onoffice_page_onoffice-estates") {
-					if ( empty( $fieldProperties['content'] ) ) {
-						$fieldProperties['content'] = __( 'Form Specific Fields', 'onoffice-for-wp-websites' );
-					}
-
-					foreach ( $newAddressFields[''] as $addressFieldName => $addressFieldProperties ) {
-						$addressFieldProperties['content'] = __( 'Form Specific Fields', 'onoffice-for-wp-websites' );
-						$addressFieldProperties['module']  = $module;
-						yield $addressFieldName => $addressFieldProperties;
-					}
-				}
-
-				if ( isset( $newAddressFields[ $fieldProperties['tablename'] ] ) ) {
-					foreach ( $newAddressFields[ $fieldProperties['tablename'] ] as $addressFieldName => $addressFieldProperties ) {
-						$addressFieldProperties['content'] = $fieldProperties['content'];
-						$addressFieldProperties['module']  = $module;
-						yield $addressFieldName => $addressFieldProperties;
-					}
-					unset( $newAddressFields[ $fieldProperties['tablename'] ] );
+				if ( empty( $fieldProperties['content'] ) ) {
+					$fieldProperties['content'] = __( 'Form Specific Fields', 'onoffice-for-wp-websites' );
 				}
 
 				$fieldProperties['module'] = $module;
@@ -130,7 +110,7 @@ class FieldLoaderGeneric
 	 * @return array
 	 * @throws APIEmptyResultException
 	 */
-	private function sendRequest(): array
+	public function sendRequest(): array
 	{
 		$parametersGetFieldList = [
 			'labels' => true,
