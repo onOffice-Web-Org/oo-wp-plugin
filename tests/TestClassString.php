@@ -126,7 +126,6 @@ class TestClassString
 		$pString = __String::getNew('Knusper knupser Knäuschen, wer knuspert an meinem Häuschen?');
 		$this->assertTrue($pString->endsWith('Häuschen?'));
 		$this->assertTrue($pString->endsWith('?'));
-		$this->assertFalse($pString->endsWith(''));
 		$this->assertFalse($pString->endsWith('Häuschen'));
 	}
 

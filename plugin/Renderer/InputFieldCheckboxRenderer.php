@@ -39,12 +39,6 @@ use function esc_html;
 class InputFieldCheckboxRenderer
 	extends InputFieldRenderer
 {
-	/** @var array */
-	private $_checkedValues = [];
-
-	/** @var string */
-	private $_hint = '';
-
 	/** @var string */
 	private $_descriptionTextHTML;
 
@@ -117,11 +111,7 @@ class InputFieldCheckboxRenderer
 	public function render()
 	{
 		$pFieldsCollection = $this->buildFieldsCollection();
-		$hintText = !empty($this->_hint) ? '<p class="hint-text">' . $this->_hint . '</p>' : "";
-		$textHtml = '';
-		if (!empty($this->getHint())) {
-			$textHtml = '<p class="hint-fallback-email">' . esc_html($this->getHint()) . '</p>';
-		}
+		$textHtml = !empty($this->getHint()) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
@@ -134,9 +124,8 @@ class InputFieldCheckboxRenderer
 					.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 					.' id="'.esc_html($inputId).'">'
 					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
-					.$hintText;
+					.$textHtml;
 			}
-			echo $textHtml;
 		} else {
 			echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 				.'" value="'.esc_html($this->getValue()).'"'
@@ -144,25 +133,7 @@ class InputFieldCheckboxRenderer
 				.$this->renderAdditionalAttributes()
 				.' id="'.esc_html($this->getGuiId()).'">'
 				.(!empty($this->_descriptionTextHTML) && is_string($this->_descriptionTextHTML) ? '<p class="description">'.$this->_descriptionTextHTML.'</p><br>' : '')
-				.$hintText
 				.$textHtml;
 		}
 	}
-	
-	/** @return string */
-	public function getHintHtml()
-	{ return $this->_hint; }
-
-	/** @param string $hint */
-	public function setHintHtml(string $hint)
-	{ $this->_hint = $hint; }
-
-
-	/** @param array $checkedValues */
-	public function setCheckedValues($checkedValues)
-		{ $this->_checkedValues = $checkedValues;}
-
-	/** @return array */
-	public function getCheckedValues()
-		{ return $this->_checkedValues; }
 }

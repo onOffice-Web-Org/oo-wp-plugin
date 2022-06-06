@@ -3,7 +3,7 @@ Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.0
-Requires PHP: 7.2
+Requires PHP: 7.3
 Stable tag: 3.2
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
@@ -78,10 +78,18 @@ Start editing inside the `onoffice-personalized` folder.
 
 = Unreleased =
 
+**Removed**
+
+* Drop support for older PHP versions. The minimum version is now PHP 7.3.
+
+**Added**
+
+* You can now set a default email address that your forms can use, so that you can more easily change it.
+
 **Changed**
 
 * We now load a CSS file from the template folder. This allows you to more easily modify the CSS for your templates. If you have a file "onoffice-style.css" in your template folder (e.g. at wp-content/plugins/onoffice-personalized/templates/onoffice-style.css), we will load that instead of our default styles. To remain backwards compatible, if that file is not found, we continue loading our old styles.
-* We removed some redundant fields for the contact person and improved their labels in the detail view settings. This change is backwards compatible, your templates will continue to work without changes.
+* We removed some redundant fields for the contact person in the detail view and improved their labels in the detail view settings. This change is backwards compatible, your templates will continue to work without changes.
 
 **Fixed**
 

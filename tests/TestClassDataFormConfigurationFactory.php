@@ -151,6 +151,7 @@ class TestClassDataFormConfigurationFactory
 				case Form::TYPE_CONTACT:
 					/* @var $pDataFormConfiguration DataFormConfigurationContact */
 					$this->assertEmpty($pDataFormConfiguration->getRecipient());
+					$this->assertEmpty($pDataFormConfiguration->getDefaultRecipient());
 					$this->assertEmpty($pDataFormConfiguration->getSubject());
 					$this->assertFalse($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertTrue($pDataFormConfiguration->getCreateAddress());
@@ -162,12 +163,14 @@ class TestClassDataFormConfigurationFactory
 					$this->assertFalse($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertEmpty($pDataFormConfiguration->getSubject());
 					$this->assertEmpty($pDataFormConfiguration->getRecipient());
+					$this->assertEmpty($pDataFormConfiguration->getDefaultRecipient());
 					break;
 				case Form::TYPE_INTEREST:
 					/* @var $pDataFormConfiguration DataFormConfigurationInterest */
 					$this->assertFalse($pDataFormConfiguration->getCheckDuplicateOnCreateAddress());
 					$this->assertEmpty($pDataFormConfiguration->getSubject());
 					$this->assertEmpty($pDataFormConfiguration->getRecipient());
+					$this->assertEmpty($pDataFormConfiguration->getDefaultRecipient());
 					break;
 				case Form::TYPE_APPLICANT_SEARCH:
 					/* @var $pDataFormConfiguration DataFormConfigurationApplicantSearch */
@@ -435,6 +438,7 @@ class TestClassDataFormConfigurationFactory
 			'availableOptions' => '1',
 			'show_estate_context' => '0',
 			'contact_type' => '',
+            'default_recipient' => 'default@my-onoffice.com'
 		];
 	}
 }

@@ -34,6 +34,14 @@ onOffice.checkboxAdmin = function() {
 				checkOnActive: true
 			}
 		],
+
+		// view: form
+		"input[name=oopluginforms-defaultrecipient]": [
+			{
+				element: "input[name=oopluginforms-recipient]",
+				invert: true
+			}
+		]
 	};
 };
 

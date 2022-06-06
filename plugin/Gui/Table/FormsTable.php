@@ -98,6 +98,7 @@ class FormsTable
 		$pRecordRead->addColumn('form_type');
 		$pRecordRead->addColumn('name', 'shortcode');
 		$pRecordRead->addColumn('page_shortcode');
+		$pRecordRead->addColumn('default_recipient');
 		if ($this->_listType != 'all' && $this->_listType != null) {
 			$pRecordRead->addWhere("`form_type` = '".esc_sql($this->_listType)."'");
 		}
