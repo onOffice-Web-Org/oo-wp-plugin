@@ -190,7 +190,7 @@ class FieldModuleCollectionDecoratorReadAddress
 
 	public static function getNewAddressFields(): array
 	{
-		return self::ADDRESS_FIELDS_CONTACT + self::ADDRESS_FIELDS_MASTER_DATA + self::ADDRESS_FIELDS_NO_CATEGORY;
+		return self::ADDRESS_FIELDS_NO_CATEGORY + self::ADDRESS_FIELDS_CONTACT + self::ADDRESS_FIELDS_MASTER_DATA;
 	}
 
 

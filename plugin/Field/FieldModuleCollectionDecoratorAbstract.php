@@ -184,7 +184,7 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 	 *
 	 */
 
-	private function getAddressEstateField() {
+	protected function getAddressEstateField() {
 		$pDIContainerBuilder          = new ContainerBuilder;
 		$pContainer                   = $pDIContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH )->build();
 		$pFieldLoader                 = $pContainer->get( FieldLoaderGeneric::class );
@@ -194,5 +194,15 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 			unset( $fieldModule['elements']['label'] );
 			$this->_allAddressEstateField += $fieldModule['elements'];
 		}
+	}
+
+
+	/**
+	 * @param $allAddressEstateField
+	 */
+
+	protected function setAllAddressEstateField($allAddressEstateField)
+	{
+		$this->_allAddressEstateField = $allAddressEstateField;
 	}
 }

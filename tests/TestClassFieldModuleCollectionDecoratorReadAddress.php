@@ -41,16 +41,32 @@ use function __;
 class TestClassFieldModuleCollectionDecoratorReadAddress
 	extends WP_UnitTestCase
 {
+	/** @var FieldModuleCollectionDecoratorReadAddress */
+	private $_pFieldModule = null;
+	/**
+	 *
+	 * @before
+	 *
+	 */
+
+	public function prepare()
+	{
+		$this->_pFieldModule = $this->getMockBuilder(FieldModuleCollectionDecoratorReadAddress::class)
+		                            ->setMethods(['getAddressEstateField', 'getFieldByModuleAndName', 'setAllAddressEstateField'])
+		                            ->setConstructorArgs([new FieldsCollection()])
+		                            ->getMock();
+		$this->_pFieldModule->method('setAllAddressEstateField')->with([FieldModuleCollectionDecoratorReadAddress::getNewAddressFields()]);
+	}
+
+
 	/**
 	 *
 	 */
 
 	public function testGetAllFields()
 	{
-		$pDecoratorReadAddress = new FieldModuleCollectionDecoratorReadAddress
-			(new FieldsCollection());
-		$expectedResult = $this->buildExpectedResult($pDecoratorReadAddress);
-		$this->assertEquals($expectedResult, $pDecoratorReadAddress->getAllFields());
+		$expectedResult = $this->buildExpectedResult($this->_pFieldModule);
+		$this->assertEquals($expectedResult, $this->_pFieldModule->getAllFields());
 	}
 
 
@@ -60,10 +76,8 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 
 	public function testCombined()
 	{
-		$pDecoratorReadAddress = new FieldModuleCollectionDecoratorReadAddress
-			(new FieldsCollection());
-		$countOverall = count($pDecoratorReadAddress::getNewAddressFields()) + 2;
-		$pDecoratorContactForm = new FieldModuleCollectionDecoratorFormContact($pDecoratorReadAddress);
+		$countOverall = count($this->_pFieldModule::getNewAddressFields()) + 2;
+		$pDecoratorContactForm = new FieldModuleCollectionDecoratorFormContact($this->_pFieldModule);
 		$this->assertEquals($countOverall, count($pDecoratorContactForm->getAllFields()));
 	}
 
@@ -74,9 +88,8 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 
 	public function testGetFieldByModuleAndName()
 	{
-		$pDecorator = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
 		$module = onOfficeSDK::MODULE_ADDRESS;
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
+		$this->assertInstanceOf(Field::class, $this->_pFieldModule->getFieldByModuleAndName
 			($module, 'imageUrl'));
 	}
 
@@ -87,10 +100,9 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 
 	public function testContainsFieldByModule()
 	{
-		$pDecorator = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection());
 		$module = onOfficeSDK::MODULE_ADDRESS;
-		$this->assertTrue($pDecorator->containsFieldByModule($module, 'imageUrl'));
-		$this->assertFalse($pDecorator->containsFieldByModule($module, 'testUnknown'));
+		$this->assertTrue($this->_pFieldModule->containsFieldByModule($module, 'imageUrl'));
+		$this->assertFalse($this->_pFieldModule->containsFieldByModule($module, 'testUnknown'));
 	}
 
 
@@ -108,7 +120,7 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 
 		foreach ($newAddressFields as $fieldName => $data) {
 			$pField = new Field($fieldName, onOfficeSDK::MODULE_ADDRESS, __($data['label'], 'onoffice-for-wp-websites'));
-			$pField->setCategory(__($data['content'] ?? '', 'onoffice-for-wp-websites'));
+			$pField->setCategory(__($data['content'] ?? 'Form Specific Fields', 'onoffice-for-wp-websites'));
 			$pField->setDefault($data['default'] ?? null);
 			$pField->setLength($data['length'] ?? 0);
 			$pField->setPermittedvalues($data['permittedvalues'] ?? []);
