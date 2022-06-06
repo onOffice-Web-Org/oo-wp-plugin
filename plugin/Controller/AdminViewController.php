@@ -445,6 +445,7 @@ class AdminViewController
 								We recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
 				$messageParsedown = Parsedown::instance()
 					->setSafeMode(true)
+					->setUrlsLinked(false)
 					->setBreaksEnabled(true)->text(
 						$message
 					);
