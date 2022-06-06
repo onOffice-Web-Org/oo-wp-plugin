@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-06-03T10:34:49+07:00\n"
+"POT-Creation-Date: 2022-06-06T16:29:57+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -155,52 +155,56 @@ msgstr "Descendente"
 msgid "Geo Position"
 msgstr "Posición geográfica"
 
+#: plugin/Field/Collection/FieldLoaderGeneric.php:100
+#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
+#: plugin/Field/Collection/FieldsCollectionToContentFieldLabelArrayConverter.php:48
+#: plugin/Field/FieldModuleCollectionDecoratorAbstract.php:156
+#: plugin/Fieldnames.php:154 plugin/Fieldnames.php:238
+msgid "Form Specific Fields"
+msgstr "Campos específicos de formulario"
+
 #: plugin/Field/Collection/FieldRowConverterSearchCriteria.php:68
 msgid "Search Criteria"
 msgstr "Criterios de búsqueda"
 
-#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Fieldnames.php:220 plugin/Gui/AdminPageFormSettingsContact.php:194
-msgid "Form Specific Fields"
-msgstr "Campos específicos de formulario"
-
-#: plugin/Field/Collection/FieldsCollectionToContentFieldLabelArrayConverter.php:48
-msgid "(unnamed category)"
-msgstr ""
+#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:58
+#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:59
+msgid "Message"
+msgstr "Mensaje"
 
 #: plugin/Field/FieldModuleCollectionDecoratorGeoPositionBackend.php:70
 msgid "Geo Range Search"
 msgstr "Búsqueda por rango geográfico"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:215
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:234
 msgid "All non-mobile phone numbers"
 msgstr "Todos los números de teléfono que no sean móviles"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:216
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:235
 msgid "All fax numbers"
 msgstr "Todos los números de fax"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:217
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:236
 msgid "All mobile numbers"
 msgstr "Todos los números de teléfono móvil"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:218
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:237
 msgid "All e-mail addresses"
 msgstr "Todas las direcciones de correo electrónico"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:219
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:238
 msgid "Default phone number"
 msgstr "Número de teléfono predeterminado"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:220
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:239
 msgid "Default fax number"
 msgstr "Número de fax predeterminado"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:221
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:240
 msgid "Default e-mail address"
 msgstr "Dirección de correo electrónico predeterminada"
 
-#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:222
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:241
 msgid "Image"
 msgstr "Imagen"
 
@@ -560,7 +564,7 @@ msgstr "Documentos descargables"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:158
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:233
+#: plugin/Gui/AdminPageFormSettingsContact.php:198
 msgid "Geo Fields"
 msgstr "Campos geográficos"
 
@@ -716,7 +720,7 @@ msgstr "Por favor proporcione una dirección de correo electrónico!"
 msgid "Fields"
 msgstr "Campos"
 
-#: plugin/Gui/AdminPageSettingsBase.php:425
+#: plugin/Gui/AdminPageSettingsBase.php:410
 msgid "Fields Configuration"
 msgstr "Configuración de campos"
 

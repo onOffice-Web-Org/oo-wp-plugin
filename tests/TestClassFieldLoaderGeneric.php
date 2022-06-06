@@ -85,7 +85,7 @@ class TestClassFieldLoaderGeneric
 	{
 		set_current_screen(__CLASS__);
 		$result = iterator_to_array($this->_pFieldLoader->load());
-		$this->assertCount(208, $result);
+		$this->assertCount(204, $result);
 
 		foreach ($result as $fieldname => $fieldProperties) {
 			$this->assertIsString($fieldname);

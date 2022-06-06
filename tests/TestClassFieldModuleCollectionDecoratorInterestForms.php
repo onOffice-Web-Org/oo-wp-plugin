@@ -50,8 +50,6 @@ class TestClassFieldModuleCollectionDecoratorInterestForms
 		$pFieldModuleDecorator = new FieldModuleCollectionDecoratorInterestForms
 		(new FieldsCollection());
 		$expectedResult = [
-			$this->getExpectedFieldNewsletter(),
-			$this->getExpectedFieldMessage(),
 			$this->getExpectedFieldComment(),
 		];
 		$this->assertEquals($expectedResult, $pFieldModuleDecorator->getAllFields());
