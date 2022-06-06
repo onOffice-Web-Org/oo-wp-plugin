@@ -52,15 +52,6 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 	public function __construct(FieldModuleCollection $pFieldModuleCollection)
 	{
 		$this->_pFieldModuleCollection = $pFieldModuleCollection;
-		$pDIContainerBuilder           = new ContainerBuilder;
-		$pContainer                    = $pDIContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH )->build();
-		$pFieldLoader                  = $pContainer->get( FieldLoaderGeneric::class );
-		$result                        = $pFieldLoader->sendRequest();
-		$this->_allAddressEstateField  = [];
-		foreach ( $result as $fieldModule ) {
-			unset( $fieldModule['elements']['label'] );
-			$this->_allAddressEstateField += $fieldModule['elements'];
-		}
 	}
 
 
@@ -127,8 +118,8 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 	{
 		$newFields = [];
 
-		foreach ($fieldsByModule as $module => $fieldsByModule) {
-			foreach ($fieldsByModule as $name => $row) {
+		foreach ($fieldsByModule as $module => $fields) {
+			foreach ($fields as $name => $row) {
 				$row['module'] = $module;
 				$newFields []= Field::createByRow($name, $row);
 			}
@@ -155,8 +146,10 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 	 *
 	 * @return array
 	 */
+
 	protected function formatFieldContent( $newFields ): array
 	{
+		$this->getAddressEstateField();
 		$newFieldFormat = [];
 
 		foreach ( $newFields[''] as $addressFieldName => $addressFieldProperties ) {
@@ -183,5 +176,23 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 		}
 
 		return $newFieldFormat;
+	}
+
+
+	/**
+	 *
+	 *
+	 */
+
+	private function getAddressEstateField() {
+		$pDIContainerBuilder          = new ContainerBuilder;
+		$pContainer                   = $pDIContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH )->build();
+		$pFieldLoader                 = $pContainer->get( FieldLoaderGeneric::class );
+		$result                       = $pFieldLoader->sendRequest();
+		$this->_allAddressEstateField = [];
+		foreach ( $result as $fieldModule ) {
+			unset( $fieldModule['elements']['label'] );
+			$this->_allAddressEstateField += $fieldModule['elements'];
+		}
 	}
 }
