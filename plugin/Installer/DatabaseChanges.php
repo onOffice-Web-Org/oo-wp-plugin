@@ -251,7 +251,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 31) {
-			$this->deleteUnSupportDataTypeField();
+			$this->deleteUnSupportDataTypeField('oo_plugin_address_fieldconfig');
+			$this->deleteUnSupportDataTypeField('oo_plugin_form_fieldconfig');
 			$dbversion = 32;
 		}
 
@@ -911,9 +912,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 
-	public function deleteUnSupportDataTypeField() {
+	/**
+	 * @param string $nameTable
+	 *
+	 * @throws ApiClientException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function deleteUnSupportDataTypeField(string $nameTable) {
 		$prefix                     = $this->getPrefix();
-		$tableFieldConfig           = $prefix . "oo_plugin_address_fieldconfig";
+		$tableFieldConfig           = $prefix . $nameTable;
 		$fieldnameSelectOnDatabases = $this->_pWPDB->get_results("SELECT DISTINCT `fieldname`  FROM {$tableFieldConfig}", ARRAY_A);
 		$fieldnameFromAPIs          = $this->getFieldsFromAPI();
 		$listTypeUnSupported        = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];

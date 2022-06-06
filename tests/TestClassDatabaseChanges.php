@@ -205,8 +205,11 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
-		$fields = [
+		$fieldAddress = [
 			['fieldname' => 'ind_1472_Feld_adressen2']
+		];
+		$fieldForms = [
+				['fieldname' => 'ind_1472_Feld_adressen2']
 		];
 		$detailPageIds = [[ "ID" => 8 ]];
 
@@ -214,11 +217,11 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(6))
+		$this->_pWPDBMock->expects($this->exactly(7))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $fields);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $fieldAddress, $fieldForms);
 
-		$this->_pWPDBMock->expects($this->exactly(5))->method('delete')
+		$this->_pWPDBMock->expects($this->exactly(6))->method('delete')
 			->will($this->returnValue(true));
 
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock, $this->_pContainer);
@@ -247,7 +250,10 @@ class TestClassDatabaseChanges
 			]
 		];
 		$detailPageIds = [[ "ID" => 8 ]];
-		$fields = [
+		$fieldAddress = [
+				['fieldname' => 'ind_1472_Feld_adressen2']
+		];
+		$fieldForms = [
 				['fieldname' => 'ind_1472_Feld_adressen2']
 		];
 
@@ -255,11 +261,11 @@ class TestClassDatabaseChanges
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(4))
+		$this->_pWPDBMock->expects($this->exactly(5))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $fields);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $fieldAddress, $fieldForms);
 
-		$this->_pWPDBMock->expects($this->exactly(2))->method('delete')
+		$this->_pWPDBMock->expects($this->exactly(3))->method('delete')
 			->will($this->returnValue(true));
 
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $this->_pWPDBMock, $this->_pContainer);
