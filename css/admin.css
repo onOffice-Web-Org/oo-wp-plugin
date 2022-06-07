@@ -341,6 +341,6 @@ body #post-body-content .viewusage, body #post-body-content .wp-clearfix{
 body #post-body-content p.wp-clearfix:nth-child(1){
 	display: block !important;
 }
-#button-copy{
+.button.button-copy{
 	margin-left: 5px;
 }

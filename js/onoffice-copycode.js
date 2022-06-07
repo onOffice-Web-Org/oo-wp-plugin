@@ -1,6 +1,10 @@
 jQuery(document).ready(function($){
-	$('#button-copy').on('click', function (event) {
+	$(document).on('click', '.button-copy', function (event) {
 		var text = $(event.target).attr('data-clipboard-text');
-		navigator.clipboard.writeText(text)
+		navigator.clipboard.writeText(text).then(function () {
+
+		}).catch(function (error) {
+
+		})
 	})
 });
