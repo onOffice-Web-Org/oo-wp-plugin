@@ -229,7 +229,7 @@ class EstateListTable extends ListTable
 	protected function column_shortcode($pItem)
 	{
 		if ( wp_is_using_https() ) {
-			return '<input type="text" style="max-width: calc(100% - 60px);" readonly value="[oo_estate view=&quot;' . esc_html( $pItem->name ) . '&quot;]"><input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;' . esc_html( $pItem->name ) . '&quot;]" value="' . esc_html__( 'Copy',
+			return '<input type="text" style="max-width: 100%; margin-right: 5px" readonly value="[oo_estate view=&quot;' . esc_html( $pItem->name ) . '&quot;]"><input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;' . esc_html( $pItem->name ) . '&quot;]" value="' . esc_html__( 'Copy',
 					'onoffice-for-wp-websites' ) . '" >';
 		}
 

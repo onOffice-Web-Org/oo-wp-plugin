@@ -249,9 +249,9 @@ abstract class AdminPageSettingsBase
 		$pResultObject->messageKey = $this->getResponseMessagekey( $pResultObject->result );
 		if ( array_key_exists( 'oo_plugin_listviews', $row ) ) {
 			$pResultObject->shortcodeContent = '<span class="viewusage">' . esc_html__( 'Shortcode: ',
-					'onoffice-for-wp-websites' ) . '<input type="text" readonly="" value="[oo_estate view=&quot;' . $row['oo_plugin_listviews']['name'] . '&quot;]"></span>';
+					'onoffice-for-wp-websites' ) . '<input style="margin-right: 5px;" type="text" readonly="" value="[oo_estate view=&quot;' . $row['oo_plugin_listviews']['name'] . '&quot;]"></span>';
 			if ( wp_is_using_https() ) {
-				$pResultObject->shortcodeContent .= '<input type="button" class="button clipboard button-copy" data-clipboard-text="[oo_estate view=&quot;' . $row['oo_plugin_listviews']['name'] . '&quot;]" value="' . esc_html__( 'Copy',
+				$pResultObject->shortcodeContent .= '<input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;' . $row['oo_plugin_listviews']['name'] . '&quot;]" value="' . esc_html__( 'Copy',
 						'onoffice-for-wp-websites' ) . '">';
 			}
 
@@ -259,9 +259,9 @@ abstract class AdminPageSettingsBase
 
 		if ( array_key_exists( 'oo_plugin_forms', $row ) ) {
 			$pResultObject->shortcodeContent = '<span class="viewusage">' . esc_html__( ', shortcode: ',
-					'onoffice-for-wp-websites' ) . '<input type="text" readonly="" value="[oo_form form=&quot;' . $row['oo_plugin_forms']['name'] . '&quot;]"></span>';
+					'onoffice-for-wp-websites' ) . '<input style="margin-right: 5px;" type="text" readonly="" value="[oo_form form=&quot;' . $row['oo_plugin_forms']['name'] . '&quot;]"></span>';
 			if ( wp_is_using_https() ) {
-				$pResultObject->shortcodeContent .= '<input type="button" class="button clipboard button-copy" data-clipboard-text="[oo_estate view=&quot;' . $row['oo_plugin_forms']['name'] . '&quot;]" value="' . esc_html__( 'Copy',
+				$pResultObject->shortcodeContent .= '<input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;' . $row['oo_plugin_forms']['name'] . '&quot;]" value="' . esc_html__( 'Copy',
 						'onoffice-for-wp-websites' ) . '">';
 			}
 		}
