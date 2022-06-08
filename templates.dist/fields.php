@@ -120,7 +120,8 @@ if (!function_exists('renderFormField')) {
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
-
+		$fieldDefault = $pForm->getFieldDefault($fieldName, true);
+		
 		$requiredAttribute = "";
 		if ($isRequired) {
 			$requiredAttribute = "required";
@@ -133,7 +134,7 @@ if (!function_exists('renderFormField')) {
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
 			$output .= '<select class="custom-single-select" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
 			/* translators: %s will be replaced with the translated field name. */
-			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)) . '</option>';
+			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldDefault)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
 					$isSelected = in_array($key, $selectedValue, true);
