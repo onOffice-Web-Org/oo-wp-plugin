@@ -127,7 +127,8 @@ class Form
 			$this->_pFormData->setRequiredFields($this->getRequiredFields());
 			$this->_pFormData->setFormtype($pFormConfig->getFormType());
 			$this->_pFormData->setFormSent(false);
-			$this->_pFormData->setValues(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
+			$this->_pFormData->setValues
+				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
 		}
 	}
 
@@ -143,15 +144,16 @@ class Form
 	private function buildFieldsCollectionForForm(
 		FieldsCollection $pFieldsCollection,
 		string $type,
-		DataFormConfiguration $pConfiguration
-	): FieldsCollection {
+		DataFormConfiguration $pConfiguration): FieldsCollection
+	{
 		/** @var FieldsCollectionConfiguratorForm $pFieldsCollectionConfiguratorForm */
 		$pFieldsCollectionConfiguratorForm = $this->_pContainer->get(FieldsCollectionConfiguratorForm::class);
 
 		if ($pConfiguration instanceof DataFormConfigurationApplicantSearch) {
 			/** @var DistinctFieldsHandler $pDistinctFieldsHandler */
 			$pDistinctFieldsHandler = $this->_pContainer->get(DistinctFieldsHandler::class);
-			return $pDistinctFieldsHandler->modifyFieldsCollectionForSearchCriteria($pConfiguration, $pFieldsCollection);
+			return $pDistinctFieldsHandler->modifyFieldsCollectionForSearchCriteria
+				($pConfiguration, $pFieldsCollection);
 		}
 		return $pFieldsCollectionConfiguratorForm->buildForFormType($pFieldsCollection, $type);
 	}
@@ -232,10 +234,8 @@ class Form
 		$newFields = [];
 		$pDataFormConfiguration = $this->getDataFormConfiguration();
 
-		if (
-			$pDataFormConfiguration->getFormType() === self::TYPE_CONTACT &&
-			$pDataFormConfiguration instanceof DataFormConfigurationContact
-		) {
+		if ($pDataFormConfiguration->getFormType() === self::TYPE_CONTACT &&
+			$pDataFormConfiguration instanceof DataFormConfigurationContact) {
 			if ($pDataFormConfiguration->getNewsletterCheckbox()) {
 				$newFields['newsletter'] = onOfficeSDK::MODULE_ADDRESS;
 			}
@@ -256,7 +256,8 @@ class Form
 		/** @var CompoundFieldsFilter $pCompoundFieldsFilter */
 		$pCompoundFieldsFilter = $this->_pContainer->get(CompoundFieldsFilter::class);
 		$requiredFields = $this->getDataFormConfiguration()->getRequiredFields();
-		$requiredFieldsSplitCompound = $pCompoundFieldsFilter->mergeFields($this->_pFieldsCollection, $requiredFields);
+		$requiredFieldsSplitCompound = $pCompoundFieldsFilter->mergeFields
+			($this->_pFieldsCollection, $requiredFields);
 		return $this->executeGeoPositionFix($requiredFieldsSplitCompound);
 	}
 
@@ -295,10 +296,8 @@ class Form
 		$pGeoPosition = new GeoPositionFieldHandler();
 		$pGeoPosition->readValues($this->getDataFormConfiguration());
 
-		if (
-			in_array($field, $pGeoPosition->getActiveFields()) &&
-			in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields, true)
-		) {
+		if (in_array($field, $pGeoPosition->getActiveFields()) &&
+			in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields, true)) {
 			return true;
 		}
 
@@ -407,10 +406,8 @@ class Form
 		$rangeInfos = [];
 
 		foreach ($allFields as $pField) {
-			if (
-				$pField->getModule() === onOfficeSDK::MODULE_SEARCHCRITERIA &&
-				$pField->getIsRangeField()
-			) {
+			if ($pField->getModule() === onOfficeSDK::MODULE_SEARCHCRITERIA &&
+				$pField->getIsRangeField()) {
 				$rangeInfos[$pField->getName()] = $pField->getRangeFieldTranslations();
 			}
 		}
@@ -554,8 +551,8 @@ class Form
 			$values[$pField->getName()] = $value[0] ?? '';
 
 			if ($pField->getIsRangeField()) {
-				$values[$pField->getName() . '__von'] = $value['min'] ?? '';
-				$values[$pField->getName() . '__bis'] = $value['max'] ?? '';
+				$values[$pField->getName().'__von'] = $value['min'] ?? '';
+				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
 			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
 				$values[$pField->getName()] = $value;
 			} elseif (FieldTypes::isStringType($pField->getType())) {
@@ -663,21 +660,15 @@ class Form
 
 	/** @return array */
 	public function getResponseFieldsValues()
-	{
-		return $this->_pFormData->getResponseFieldsValues();
-	}
+	{ return $this->_pFormData->getResponseFieldsValues(); }
 
 
 	/** @return int */
 	public function getCountAbsolutResults(): int
-	{
-		return $this->_countAbsoluteResults;
-	}
+	{ return $this->_countAbsoluteResults; }
 
 
 	/** @var int $countAbsolute */
 	private function setCountAbsoluteResults(int $countAbsolute)
-	{
-		$this->_countAbsoluteResults = $countAbsolute;
-	}
+	{ $this->_countAbsoluteResults = $countAbsolute; }
 }

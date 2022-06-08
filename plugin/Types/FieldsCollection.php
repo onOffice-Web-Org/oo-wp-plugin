@@ -49,7 +49,7 @@ class FieldsCollection implements FieldModuleCollection
 	{
 		$name = $pField->getName();
 		$module = $pField->getModule();
-		$this->_fields[] = $pField;
+		$this->_fields [] = $pField;
 		$this->_fieldsByModule[$module][$name] = $pField;
 	}
 
@@ -111,11 +111,17 @@ class FieldsCollection implements FieldModuleCollection
 	{
 		$changeDefaultFields = [
 			'DSGVOStatus' => 'GDPR status',
-
+			'SpracheKontakt'=>'Language',
+			'KontaktformBevorzugt'=>'Preferred form of contact',
+			'gwgVertragspartner'=>'Contractual partner',
+			'gwgAusweisart'=>'ID type',
+			'newsletter_aktiv'=>'Newsletter',
+			'workContract'=>'Employment',
 		];
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
 			/** @var $pFieldCopy Field */
 			$pFieldCopy = clone $pField;
+
 			if ($pFieldCopy->getCategory() === '') {
 				$pFieldCopy->setCategory($fallbackCategoryName);
 			}

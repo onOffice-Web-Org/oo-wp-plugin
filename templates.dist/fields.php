@@ -122,6 +122,7 @@ if (!function_exists('renderFormField')) {
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
 		$fieldDefault = $pForm->getFieldDefault($fieldName, true);
 		
+		
 		$requiredAttribute = "";
 		if ($isRequired) {
 			$requiredAttribute = "required";
