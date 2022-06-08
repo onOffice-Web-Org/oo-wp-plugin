@@ -344,3 +344,6 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 .button.button-copy{
 	margin-left: 5px;
 }
+.button.button-copy.no-margin {
+	margin: 0;
+}
