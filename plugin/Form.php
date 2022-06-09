@@ -362,7 +362,7 @@ class Form
 			$default = esc_html( $default );
 		}
 
-		return $default ?? '';
+		return is_null($default) ? '' : $default;
 	}
 
 
