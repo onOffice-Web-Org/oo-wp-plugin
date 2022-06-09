@@ -151,7 +151,7 @@ class Fieldnames
 	{
 		foreach ( $this->_fieldList[ onOfficeSDK::MODULE_ADDRESS ] as $key => $fieldList ) {
 			if ( is_null( $fieldList['content'] ) || empty( $fieldList['content'] ) ) {
-				$this->_fieldList[ onOfficeSDK::MODULE_ADDRESS ][ $key ]['content'] = __( 'Form Specific Fields',
+				$this->_fieldList[ onOfficeSDK::MODULE_ADDRESS ][ $key ]['content'] = __( 'Specific Fields',
 					'onoffice-for-wp-websites' );
 			}
 		}
@@ -235,7 +235,7 @@ class Fieldnames
 
 		foreach ($extraFieldsObject as $pField) {
 			$newContent = $pField->getCategory() !== '' ?
-				$pField->getCategory() : __('Form Specific Fields', 'onoffice-for-wp-websites');
+				$pField->getCategory() : __('Specific Fields', 'onoffice-for-wp-websites');
 			$pField->setCategory($newContent);
 			if (isset($this->_fieldList[ $pField->getModule() ])) {
 				foreach ( $this->_fieldList[ $pField->getModule() ] as $name => $properties ) {

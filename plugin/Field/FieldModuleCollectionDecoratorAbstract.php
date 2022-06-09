@@ -153,7 +153,7 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 		$newFieldFormat = [];
 
 		foreach ( $newFields[''] as $addressFieldName => $addressFieldProperties ) {
-			$addressFieldProperties['content']   = __( 'Form Specific Fields', 'onoffice-for-wp-websites' );
+			$addressFieldProperties['content']   = __( 'Specific Fields', 'onoffice-for-wp-websites' );
 			$newFieldFormat[ $addressFieldName ] = $addressFieldProperties;
 		}
 		unset( $newFields[''] );

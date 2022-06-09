@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-06-06T16:29:57+07:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
+"websites\n"
+"POT-Creation-Date: 2022-06-09T13:31:02+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Domain: onoffice-for-wp-websites\n"
 
 #. Plugin Name of the plugin
@@ -159,16 +160,17 @@ msgstr "Posición geográfica"
 #: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
 #: plugin/Field/Collection/FieldsCollectionToContentFieldLabelArrayConverter.php:48
 #: plugin/Field/FieldModuleCollectionDecoratorAbstract.php:156
+#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:59
 #: plugin/Fieldnames.php:154 plugin/Fieldnames.php:238
-msgid "Form Specific Fields"
-msgstr "Campos específicos de formulario"
+#: plugin/Gui/AdminPageFormSettingsBase.php:512
+msgid "Specific Fields"
+msgstr "Campos Específicos"
 
 #: plugin/Field/Collection/FieldRowConverterSearchCriteria.php:68
 msgid "Search Criteria"
 msgstr "Criterios de búsqueda"
 
 #: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:58
-#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:59
 msgid "Message"
 msgstr "Mensaje"
 
@@ -256,7 +258,7 @@ msgstr "Editar lista de direcciones"
 #: plugin/Gui/AdminPageAddressListSettings.php:106
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:395
+#: plugin/Gui/AdminPageFormSettingsBase.php:396
 msgid "choose name"
 msgstr "escoja un nombre"
 
@@ -264,7 +266,7 @@ msgstr "escoja un nombre"
 #: plugin/Gui/AdminPageEstateDetail.php:278
 #: plugin/Gui/AdminPageEstateListSettings.php:132
 #: plugin/Gui/AdminPageEstateUnitSettings.php:87
-#: plugin/Gui/AdminPageFormSettingsBase.php:412
+#: plugin/Gui/AdminPageFormSettingsBase.php:413
 msgid "Layout & Design"
 msgstr "Diseño y diagramación"
 
@@ -608,15 +610,15 @@ msgstr "Formularios de búsqueda"
 msgid "Form Specific Options"
 msgstr "Opciones específicas del formulario"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:121
+#: plugin/Gui/AdminPageFormSettingsBase.php:122
 msgid "Edit Form"
 msgstr "Editar formulario"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:269
+#: plugin/Gui/AdminPageFormSettingsBase.php:270
 msgid "The Form was saved."
 msgstr "El formulario fue guardado."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:270
+#: plugin/Gui/AdminPageFormSettingsBase.php:271
 msgid ""
 "There was a problem saving the form. Please make sure the name of the form "
 "is unique."
@@ -625,20 +627,20 @@ msgstr ""
 "nombre del formulario sea único."
 
 #. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:279
+#: plugin/Gui/AdminPageFormSettingsBase.php:280
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:621
 msgid "Module: %s"
 msgstr "Módulo %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:280
+#: plugin/Gui/AdminPageFormSettingsBase.php:281
 msgid "Edit Values"
 msgstr "Editar valores"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:283
+#: plugin/Gui/AdminPageFormSettingsBase.php:284
 msgid "Add Language"
 msgstr "Añade el idioma"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:284
+#: plugin/Gui/AdminPageFormSettingsBase.php:285
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:480
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:507
 #, fuzzy
@@ -646,30 +648,30 @@ msgid "Choose Language"
 msgstr "escoja un nombre"
 
 #. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:286
+#: plugin/Gui/AdminPageFormSettingsBase.php:287
 msgid "Default Value: %s"
 msgstr "Valor por defecto: %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:287
+#: plugin/Gui/AdminPageFormSettingsBase.php:288
 msgid "Custom Label: %s"
 msgstr ""
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:288
+#: plugin/Gui/AdminPageFormSettingsBase.php:289
 #, fuzzy
 msgid "Default Value From:"
 msgstr "Valor de propuesta para el radio"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:289
+#: plugin/Gui/AdminPageFormSettingsBase.php:290
 #, fuzzy
 msgid "Default Value Up To:"
 msgstr "Valor de propuesta para el radio"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:320
+#: plugin/Gui/AdminPageFormSettingsBase.php:321
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "No"
 msgstr "No"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:321
+#: plugin/Gui/AdminPageFormSettingsBase.php:322
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "Yes"
 msgstr "Sí"

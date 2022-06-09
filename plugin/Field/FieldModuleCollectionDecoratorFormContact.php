@@ -55,8 +55,7 @@ class FieldModuleCollectionDecoratorFormContact
 					'length' => null,
 					'permittedvalues' => [],
 					'default' => null,
-					'label' => __( 'Message', 'onoffice-for-wp-websites' ),
-					'content' => __( 'Message', 'onoffice-for-wp-websites' )
+					'label' => __( 'Message', 'onoffice-for-wp-websites' )
 				],
 			],
 		];
