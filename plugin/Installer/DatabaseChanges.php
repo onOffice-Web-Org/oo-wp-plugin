@@ -253,6 +253,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ($dbversion == 31) {
 			$this->deleteUnSupportDataTypeField('oo_plugin_address_fieldconfig');
 			$this->deleteUnSupportDataTypeField('oo_plugin_form_fieldconfig');
+			$this->deleteUnSupportDataTypeFieldEstates();
 			$dbversion = 32;
 		}
 
@@ -934,6 +935,23 @@ class DatabaseChanges implements DatabaseChangesInterface
 				}
 			}
 		}
+	}
+
+	public function deleteUnSupportDataTypeFieldEstates(){
+		$pDataDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
+		$addressFields = $pDataDetailViewOptions->getAddressFields();
+		$fieldnameFromAPIs          = $this->getFieldsFromAPI();
+		$listTypeUnSupported        = ['user', 'datei', 'redhint', 'blackhint', 'dividingline'];
+		foreach ($addressFields as $key => $addressField) {
+			foreach ($fieldnameFromAPIs as $fieldnameFromAPI) {
+				$fieldList = $fieldnameFromAPI['elements'];
+				if (in_array($fieldList[$addressField]['type'], $listTypeUnSupported)) {
+					unset($addressFields[$key]);
+				}
+			}
+		}
+		$pDataDetailViewOptions->setAddressFields($addressFields);
+		$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 	}
 
 	/**

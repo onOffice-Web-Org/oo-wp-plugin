@@ -88,7 +88,7 @@ class TestClassDatabaseChanges
 	{
 		global $wpdb;
 		$dataDetailView = new DataDetailView();
-		$dataDetailView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
+		$dataDetailView->setAddressFields(['ind_1472_Feld_adressen2']);
 		$this->_pWpOption = new WPOptionWrapperTest();
 		$this->_pWpOption->addOption('onoffice-default-view', $dataDetailView);
 
@@ -135,7 +135,7 @@ class TestClassDatabaseChanges
 	public function testInstall(): array
 	{
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
-		$this->_pDbChanges->install($this->_pContainer);
+		$this->_pDbChanges->install();
 
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
