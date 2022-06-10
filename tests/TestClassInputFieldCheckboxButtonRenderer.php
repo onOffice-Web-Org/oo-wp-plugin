@@ -91,7 +91,7 @@ class TestClassInputFieldCheckboxButtonRenderer
         $pDbChanges->install();
         $pRenderer->render();
         $output = ob_get_clean();
-        $this->assertEquals('<input type="checkbox" name="" value="John Doe" id="checkbox_1"><p>'
+        $this->assertEquals('<input type="checkbox" name="" value="John Doe" id="checkbox_2"><p>'
             .'<input type="button" class="inputFieldCheckboxButton button" name="" value="Add to List &gt;&gt;" data-onoffice-category="">'
             .'</p>', $output);
     }
@@ -114,7 +114,7 @@ class TestClassInputFieldCheckboxButtonRenderer
         $pDbChanges->install();
         $pSubject->render();
         $output = ob_get_clean();
-        $this->assertEquals('<input type="checkbox" name="testRenderer" value="1" id="checkbox_1"><p>'
+        $this->assertEquals('<input type="checkbox" name="testRenderer" value="1" id="checkbox_3"><p>'
             .'<input type="button" class="inputFieldCheckboxButton button" name="" value="Add to List &gt;&gt;" data-onoffice-category="">'
             .'</p>', $output);
     }
