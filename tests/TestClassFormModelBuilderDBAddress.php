@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBAddress;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigAddress;
@@ -63,6 +64,9 @@ class TestClassFormModelBuilderDBAddress
 		global $wpdb;
 
 		$pWpOption = new WPOptionWrapperTest();
+		$dataDetailView = new DataDetailView();
+		$dataDetailView->setAddressFields(['ind_1472_Feld_adressen2']);
+		$pWpOption->addOption('onoffice-default-view', $dataDetailView);
 		$fieldParameters = [
 				'labels' => true,
 				'showContent' => true,

@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\tests;
 
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Renderer\InputFieldCheckboxRenderer;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\SDKWrapper;
@@ -67,6 +68,9 @@ class TestClassInputFieldCheckboxRenderer
 		global $wpdb;
 		
 		$pWpOption = new WPOptionWrapperTest();
+		$dataDetailView = new DataDetailView();
+		$dataDetailView->setAddressFields(['ind_1472_Feld_adressen2']);
+		$pWpOption->addOption('onoffice-default-view', $dataDetailView);
 		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb, $this->_pContainer);
 		$pDbChanges->install();
 	}

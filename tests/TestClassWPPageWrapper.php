@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\WP\UnknownPageException;
 use onOffice\WPlugin\WP\WPPageWrapper;
@@ -90,6 +91,9 @@ class TestClassWPPageWrapper
 		$this->_pContainer = $pContainerBuilder->build();
 		$this->_pContainer->set(SDKWrapper::class, $pSDKWrapper);
 		$pWpOption = new WPOptionWrapperTest();
+		$dataDetailView = new DataDetailView();
+		$dataDetailView->setAddressFields(['ind_1472_Feld_adressen2']);
+		$pWpOption->addOption('onoffice-default-view', $dataDetailView);
 		$pDbChanges = new DatabaseChanges($pWpOption, $wpdb, $this->_pContainer);
 		$pDbChanges->install();
 		$this->set_permalink_structure('/%year%/%monthnum%/%day%/%postname%/');
