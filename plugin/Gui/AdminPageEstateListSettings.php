@@ -31,9 +31,12 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
+use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelDBAdapterRow;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
+use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Record\RecordManager;
 use stdClass;
@@ -283,4 +286,118 @@ class AdminPageEstateListSettings
 		wp_enqueue_script('oo-sanitize-shortcode-name');
 		wp_enqueue_script('oo-copy-shortcode');
 	}
+
+    public function renderContent() {
+        if (isset($_GET['saved']) && $_GET['saved'] === 'true') {
+            echo '<div class="notice notice-success is-dismissible"><p>'
+                . esc_html__('The view has been saved.', 'onoffice-for-wp-websites')
+                . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+        }
+        if (isset($_GET['saved']) && $_GET['saved'] === 'false') {
+            echo '<div class="notice notice-error is-dismissible"><p>'
+                . esc_html__('There was a problem saving the view. Please make '
+                    . 'sure the name of the view is unique, even across all estate list types.', 'onoffice-for-wp-websites')
+                . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+        }
+        do_action('add_meta_boxes', get_current_screen()->id, null);
+        $this->generateMetaBoxes();
+
+        /* @var $pInputModelRenderer InputModelRenderer */
+        $pInputModelRenderer = $this->getContainer()->get(InputModelRenderer::class);
+        $pFormViewName = $this->getFormModelByGroupSlug(self::FORM_RECORD_NAME);
+        $pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
+
+        $this->generatePageMainTitle($this->getPageTitle());
+        echo '<form action="'.admin_url('admin-post.php').'" method="post">';
+        echo '<input type="hidden" name="action" value="'.get_current_screen()->id.'" />';
+        echo '<input type="hidden" name="record_id" value="'.$_GET['id'].'" />';
+        wp_nonce_field(get_current_screen()->id, 'nonce');
+        wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
+        wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
+        echo '<div id="poststuff">';
+        echo '<div id="post-body" class="metabox-holder columns-'
+            .(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
+        echo '<div id="post-body-content">';
+        $pInputModelRenderer->buildForAjax($pFormViewName);
+        echo '</div>';
+        echo '<div class="postbox-container" id="postbox-container-1">';
+        do_meta_boxes(get_current_screen()->id, 'normal', null );
+        echo '</div>';
+        echo '<div class="postbox-container" id="postbox-container-2">';
+        do_meta_boxes(get_current_screen()->id, 'side', null );
+        do_meta_boxes(get_current_screen()->id, 'advanced', null );
+        echo '</div>';
+        echo '<div class="clear"></div>';
+        do_action('add_meta_boxes', get_current_screen()->id, null);
+        echo '<div style="float:left;">';
+        $this->generateAccordionBoxes();
+        echo '</div>';
+        echo '<div id="listSettings" style="float:left;" class="postbox">';
+        do_accordion_sections(get_current_screen()->id, 'side', null);
+        echo '</div>';
+        echo '<div class="fieldsSortable postbox">';
+        echo '<h2 class="hndle ui-sortable-handle"><span>'.__('Fields', 'onoffice-for-wp-websites').'</span></h2>';
+        $pInputModelRenderer->buildForAjax($pFormViewSortableFields);
+        echo '</div>';
+        echo '<div class="clear"></div>';
+        echo '</div>';
+        echo '</div>';
+        do_settings_sections( $this->getPageSlug() );
+        submit_button(null, 'primary', 'send_form');
+
+        echo '</form>';
+    }
+
+    public function save_form() {
+        $this->buildForms();
+        $action = filter_input(INPUT_POST, 'action');
+        $nonce = filter_input(INPUT_POST, 'nonce');
+        $recordId = (int)filter_input(INPUT_POST, self::POST_RECORD_ID);
+        $this->validate($recordId);
+
+        if (!wp_verify_nonce($nonce, $action)) {
+            wp_die();
+        }
+
+        $mainRecordId = $recordId != 0 ? $recordId : null;
+        $values = json_decode(json_encode($_POST));
+        $this->prepareValues($values);
+        $pInputModelDBAdapterRow = new InputModelDBAdapterRow();
+
+        foreach ($this->getFormModels() as $pFormModel) {
+            foreach ($pFormModel->getInputModel() as $pInputModel) {
+                if ($pInputModel instanceof InputModelDB) {
+                    $identifier = $pInputModel->getIdentifier();
+                    $value = isset($values->$identifier) ? $values->$identifier : null;
+                    $pInputModel->setValue($value);
+                    $pInputModel->setMainRecordId($mainRecordId ?? 0);
+                    $pInputModelDBAdapterRow->addInputModelDB($pInputModel);
+                }
+            }
+        }
+
+        $row = $pInputModelDBAdapterRow->createUpdateValuesByTable();
+        $row = $this->setFixedValues($row);
+        $checkResult = $this->checkFixedValues($row);
+        $pResultObject = new stdClass();
+        $pResultObject->result = false;
+        $pResultObject->record_id = $recordId;
+        $row['oo_plugin_fieldconfig_form_defaults_values'] =
+            (array)($row['oo_plugin_fieldconfig_form_defaults_values']['value'] ?? []) +
+            (array)($values->{'defaultvalue-lang'}) ?? [];
+        $row['oo_plugin_fieldconfig_form_translated_labels'] =
+            (array)($row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
+            (array)($values->{'customlabel-lang'}) ?? [];
+
+        if ($checkResult) {
+            $this->updateValues($row, $pResultObject, $recordId);
+        }
+
+        $pageQuery = str_replace('admin_page_', 'page=', $_POST['action']);
+        $statusQuery = $pResultObject->result ? '&saved=true' : '&saved=false';
+        $idQuery = $pResultObject->record_id ? '&id=' . $pResultObject->record_id : '';
+
+        wp_redirect(admin_url('admin.php?'.$pageQuery . $idQuery . $statusQuery));
+        die();
+    }
 }

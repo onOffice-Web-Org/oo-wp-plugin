@@ -52,12 +52,8 @@ class InputFieldButtonRenderer
 
 	public function render()
 	{
-		if ( wp_is_using_https() ) {
-			echo '<input type="button" class="button button-copy" data-clipboard-text="' . esc_html( $this->getValue() ) . '" value="' . esc_html__( 'Copy',
-					'onoffice-for-wp-websites' ) . '" '
-			     . $this->renderAdditionalAttributes() . '>';
-		} else {
-			echo '';
-		}
+        echo '<input type="button" class="button button-copy" data-clipboard-text="' . esc_html( $this->getValue() ) . '" value="' . esc_html__( 'Copy',
+                'onoffice-for-wp-websites' ) . '" '
+             . $this->renderAdditionalAttributes() . '>';
 	}
 }

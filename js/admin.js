@@ -1,6 +1,6 @@
 jQuery(document).ready(function($){
 	$(document).on('click', '.notice-save-view.notice-dismiss', function () {
-		$('#onoffice-notice-wrapper').empty();
+		$(this).parent().remove();
 	});
 	$('#theme-options-form').submit(function() {
 	   $(this).ajaxSubmit({
