@@ -210,11 +210,11 @@ class AdminPageFormSettingsMain
 		$this->_pInstance->ajax_action();
 	}
 
-    public function save_form() {
-        $this->initSubclassForAjax();
-        $this->_pInstance->save_form();
-    }
-
+	public function save_form()
+	{
+		$this->initSubclassForAjax();
+		$this->_pInstance->save_form();
+	}
 
 	/**
 	 *

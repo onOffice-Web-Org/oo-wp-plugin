@@ -39,13 +39,14 @@ class TestClassInputFieldButtonRenderer
 	/**
 	 *
 	 */
-	
+
 	public function testRenderWithValues()
 	{
 		$pRenderer = new InputFieldButtonRenderer(null, 'testIdentifier');
 		ob_start();
 		$pRenderer->render();
 		$output = ob_get_clean();
-        $this->assertEquals('<input type="button" class="button button-copy" data-clipboard-text="" value="Copy" >', $output);
+		$this->assertEquals( '<input type="button" class="button button-copy" data-clipboard-text="" value="Copy" >',
+			$output );
 	}
 }
