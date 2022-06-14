@@ -50,7 +50,7 @@ use function wp_localize_script;
  */
 
 class AdminPageEstateListSettings
-	extends AdminPageEstateListSettingsBase
+extends AdminPageEstateListSettingsBase
 {
 	/** */
 	const FORM_VIEW_GEOFIELDS = 'geofields';
@@ -78,7 +78,7 @@ class AdminPageEstateListSettings
 		$pFormModelBuilder = new FormModelBuilderDBEstateListSettings();
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);
-
+		
 		$pInputModelName = $pFormModelBuilder->createInputModelName();
 		$pFormModelName = new FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
@@ -86,10 +86,10 @@ class AdminPageEstateListSettings
 		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
-
+		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
+		$pInputModelListReferenceEstates = $pFormModelBuilder->createInputModelShowReferenceEstates();
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
-		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pInputModelShowReferenceEstate = $pFormModelBuilder->createInputModelShowReferenceEstate();
 
@@ -97,11 +97,10 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
 		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice-for-wp-websites'));
+		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
+		$pFormModelRecordsFilter->addInputModel($pInputModelListReferenceEstates);
 		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
-
-		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
-		$pFormModelRecordsFilter->addInputModel($pInputModelShowReferenceEstate);
 		$this->addFormModel($pFormModelRecordsFilter);
 
 		$pInputModelSortByChosenStandard = $pFormModelBuilder->createInputModelSortByChosenStandard();
@@ -154,7 +153,7 @@ class AdminPageEstateListSettings
 
 		$pFormModelGeoFields = new FormModel();
 		$pFormModelGeoFields->setPageSlug($this->getPageSlug());
-			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
+		$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
 		$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice-for-wp-websites'));
 		$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE);
 		foreach ($pInputModelBuilderGeoRange->build($pListView) as $pInputModel) {

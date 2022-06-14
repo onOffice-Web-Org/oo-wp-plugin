@@ -137,7 +137,7 @@ class FormModelBuilderEstateDetailSettings
 	 */
 
 	public function createInputAccessControl() {
-		$allAccessControl = __('Allow detail view for reference estates', 'onoffice-for-wp-websites');
+		$allAccessControl = __('Restrict access to reference estates (404 Not Found)', 'onoffice-for-wp-websites');
 
 		$pInputModelAccessControl = $this->_pInputModelDetailViewFactory->create( InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL,
 			$allAccessControl);

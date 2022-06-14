@@ -327,3 +327,9 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	font-style: italic;
 	text-decoration: none;
 }
+.memssageReference{
+	text-align: right;
+}
+.memssageOnlyReference{
+	text-align: right;
+}
