@@ -433,15 +433,8 @@ class DetailViewPostSaveController
 
 		if ( ! $isRevision && $post->post_type === 'page' ) {
 			$postID = $post->ID;
-
-			if ( empty( $postID ) ) {
-				return;
-			}
 			$metaKeys = get_post_meta( $postID, '', true );
 
-			if ( empty( $postID ) ) {
-				return;
-			}
 			foreach ( $metaKeys as $metaKey ) {
 				if (strpos($metaKey[0], 'oo_estate') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
 					$this->deletePageShortCode( $listView, $post, "oo_plugin_listviews", "listview_id", "listview_id" );
@@ -474,7 +467,7 @@ class DetailViewPostSaveController
 			if ( ! empty( $view->page_shortcode ) ) {
 				$pageShortCodeIDs = explode( ',', $view->page_shortcode );
 			}
-			if ((in_array($postID, $pageShortCodeIDs) && ! empty($postID)) || empty($postID)) {
+			if ((in_array($postID, $pageShortCodeIDs) && !empty($postID)) || empty($postID)) {
 				break;
 			}
 			$viewShortcodeName = $this->generateViewNameOfShortCode( $view->name, $listConfig['option'] );
