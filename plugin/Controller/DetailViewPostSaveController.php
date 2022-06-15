@@ -474,7 +474,7 @@ class DetailViewPostSaveController
 			if ( ! empty( $view->page_shortcode ) ) {
 				$pageShortCodeIDs = explode( ',', $view->page_shortcode );
 			}
-			if ( in_array( $postID, $pageShortCodeIDs ) && !empty($postID)) {
+			if ((in_array($postID, $pageShortCodeIDs) && ! empty($postID)) || empty($postID)) {
 				break;
 			}
 			$viewShortcodeName = $this->generateViewNameOfShortCode( $view->name, $listConfig['option'] );
