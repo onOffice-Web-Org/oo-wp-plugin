@@ -159,8 +159,11 @@ class DetailViewPostSaveController
 
 	private function deletePageUseShortCodeWhenUpdatePage($listView, $pPost) {
 		foreach ($listView as $view) {
+			if(empty($view->page_shortcode)){
+				continue;
+			}
 			$pageShortcode = explode(',', $view->page_shortcode);
-			if ( ! in_array($pPost->ID, $pageShortcode) && count($pageShortcode) || empty($pageShortcode)) {
+			if ( ! in_array($pPost->ID, $pageShortcode)) {
 				continue;
 			}
 			foreach (self::LIST_CONFIGS as $key => $listConfig) {
@@ -471,7 +474,7 @@ class DetailViewPostSaveController
 			if ( ! empty( $view->page_shortcode ) ) {
 				$pageShortCodeIDs = explode( ',', $view->page_shortcode );
 			}
-			if ( in_array( $postID, $pageShortCodeIDs ) ) {
+			if ( in_array( $postID, $pageShortCodeIDs ) && !empty($postID)) {
 				break;
 			}
 			$viewShortcodeName = $this->generateViewNameOfShortCode( $view->name, $listConfig['option'] );
@@ -501,7 +504,7 @@ class DetailViewPostSaveController
 		foreach($listView as $view)
 		{
 			$pageID = '';
-			if (empty($view->page_shortcode))
+			if (empty($view->page_shortcode) || empty($postID))
 			{
 				continue;
 			}
