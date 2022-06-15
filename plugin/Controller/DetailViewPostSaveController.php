@@ -147,8 +147,32 @@ class DetailViewPostSaveController
 				}
 			}
 			$this->addPageUseShortCode($pPost);
+			$listView        = $this->getListView();
+			$listViewAddress = $this->getListViewAddress();
+			$listViewForm    = $this->getListForm();
+			$this->deletePageUseShortCodeWhenUpdatePage($listView, $pPost);
+			$this->deletePageUseShortCodeWhenUpdatePage($listViewAddress, $pPost);
+			$this->deletePageUseShortCodeWhenUpdatePage($listViewForm, $pPost);
 		}
 
+	}
+
+	private function deletePageUseShortCodeWhenUpdatePage($listView, $pPost) {
+		foreach ($listView as $view) {
+			$pageShortcode = explode(',', $view->page_shortcode);
+			if ( ! in_array($pPost->ID, $pageShortcode) && count($pageShortcode) || empty($pageShortcode)) {
+				continue;
+			}
+			foreach (self::LIST_CONFIGS as $key => $listConfig) {
+				$metaKeys               = get_post_meta($pPost->ID, '', true);
+				$viewShortcodeName      = $this->generateViewNameOfShortCode($view->name, $listConfig['option']);
+				$viewContained          = $this->postContains($pPost->post_content, "oo_" . $key, $viewShortcodeName);
+				$viewContainedShortcode = $this->postContains($metaKeys['list_shortcode'][0], "oo_" . $key, $viewShortcodeName);
+				if ( ! $viewContainedShortcode || $viewContained) {
+					$this->deletePageUseShortCode($pPost);
+				}
+			}
+		}
 	}
 
 
@@ -383,10 +407,10 @@ class DetailViewPostSaveController
 					$this->addPageShortCode( $listView, ['ID' => $postID, 'post_content' => $metaKey[0]], 'estate');
 				}
 				if ( strpos( $metaKey[0], 'oo_address' ) !== false ) {
-					$this->addPageShortCode( $listViewAddress, $post, 'address');
+					$this->addPageShortCode( $listViewAddress, ['ID' => $postID, 'post_content' => $metaKey[0]], 'address');
 				}
 				if ( strpos( $metaKey[0], 'oo_form' ) !== false ) {
-					$this->addPageShortCode( $listForm, $post, 'form');
+					$this->addPageShortCode( $listForm, ['ID' => $postID, 'post_content' => $metaKey[0]], 'form');
 				}
 			}
 		}
@@ -416,14 +440,14 @@ class DetailViewPostSaveController
 				return;
 			}
 			foreach ( $metaKeys as $metaKey ) {
-				if ( strpos( $metaKey[0], 'oo_estate' ) !== false ) {
+				if (strpos($metaKey[0], 'oo_estate') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
 					$this->deletePageShortCode( $listView, $post, "oo_plugin_listviews", "listview_id", "listview_id" );
 				}
-				if ( strpos( $metaKey[0], 'oo_address' ) !== false ) {
+				if (strpos($metaKey[0], 'oo_address') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
 					$this->deletePageShortCode( $listViewAddress, $post, "oo_plugin_listviews_address",
 						"listview_address_id", "listview_address_id" );
 				}
-				if ( strpos( $metaKey[0], 'oo_form' ) !== false ) {
+				if (strpos($metaKey[0], 'oo_form') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
 					$this->deletePageShortCode( $listForm, $post, "oo_plugin_forms", "form_id", "form_id" );
 				}
 			}
