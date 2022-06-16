@@ -76,39 +76,6 @@ class EstateTitleBuilder
 		}
 		$this->_pEstateDetail = $pEstateDetail;
 	}
-
-//	/**
-//	 *
-//	 * @param int $estateId
-//	 * @param string $format
-//	 *
-//	 * The Format consists of:
-//	 * %1$s: 'objekttitel',
-//	 * %2$s: 'objektart',
-//	 * %3$s: 'vermarktungsart',
-//	 * %4$s: 'ort',
-//	 * %5$s: 'objektnr_extern',
-//	 *
-//	 * @return string
-//	 */
-//
-//	public function buildTitle(int $estateId, string $format): string
-//	{
-//		$this->_pDefaultFilterBuilder->setEstateId($estateId);
-//		$this->_pEstateDetail->loadSingleEstate($estateId);
-//		$modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE;
-//		$pEstateIterator = $this->_pEstateDetail->estateIterator($modifier);
-//		$pEstateFieldModifier = $this->_pViewFieldModifierFactory->create($modifier);
-//		$fieldsForTitle = $pEstateFieldModifier->getVisibleFields();
-//
-//		if ($pEstateIterator !== false) {
-//			$fetchedValues = array_map([$pEstateIterator, 'getValueRaw'], $fieldsForTitle);
-//			$values = array_combine($fieldsForTitle, $fetchedValues);
-//			$this->_pEstateDetail->resetEstateIterator();
-//			return $this->buildEstateTitle($format, $values);
-//		}
-//		return '';
-//	}
 	
 	/**
 	 *
