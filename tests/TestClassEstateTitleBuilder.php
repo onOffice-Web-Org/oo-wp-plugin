@@ -94,33 +94,6 @@ class TestClassEstateTitleBuilder
 
 	/**
 	 *
-	 */
-
-	public function testBuild()
-	{
-		$format = '%2$s for %3$s in %4$s (%5$s)';
-		$pViewFieldModifier = new EstateViewFieldModifierTypeTitle([]);
-		$pViewFieldModifierFactory = $this->_pEstateTitleBuilder->getViewFieldModifierFactory();
-		$pViewFieldModifierFactory->expects($this->exactly(2))->method('create')
-			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
-			->will($this->returnValue($pViewFieldModifier));
-		$pEstateList = $this->_pEstateTitleBuilder->getEstateDetail();
-		$pEstateList->expects($this->exactly(2))->method('loadSingleEstate')->with(3);
-		$pEstateList->expects($this->exactly(2))->method('estateIterator')
-			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
-			->will($this->onConsecutiveCalls($this->getArrayContainer(), false));
-		$pDefaultFilterBuilder = $this->_pEstateTitleBuilder->getDefaultFilterBuilder();
-		$pDefaultFilterBuilder->expects($this->exactly(2))->method('setEstateId')->with(3);
-		$title = $this->_pEstateTitleBuilder->buildTitle(3, $format);
-		$this->assertEquals('House for Sale in Aachen (JD133)', $title);
-
-		// second call should result in an empty string
-		$this->assertEmpty($this->_pEstateTitleBuilder->buildTitle(3, $format));
-	}
-
-
-	/**
-	 *
 	 * @return ArrayContainer
 	 *
 	 */

@@ -56,49 +56,6 @@ class TestClassEstateViewDocumentTitleBuilder
 		$this->_pContainer->set(WPQueryWrapper::class, $pWPQueryWrapper);
 	}
 
-	public function testBuildDocumentTitleForEmptyEstateId()
-	{
-		$this->_pContainer->get(WPQueryWrapper::class)->getWPQuery()
-			->method('get')
-			->will($this->returnValue(0));
-		$pSubject = $this->_pContainer->get(EstateViewDocumentTitleBuilder::class);
-		$input = ['title' => 'test'];
-		$output = $pSubject->buildDocumentTitle($input);
-		$this->assertEquals(['title' => 'test'], $output);
-	}
-
-	public function testBuildDocumentTitleForShortTitle()
-	{
-		$this->_pContainer->get(WPQueryWrapper::class)->getWPQuery()
-			->method('get')
-			->will($this->returnValue(13));
-		$this->_pContainer->get(EstateTitleBuilder::class)->expects($this->once())
-			->method('buildTitle')
-			->with(13, '%1$s')
-			->will($this->returnValue('Nice Mansion in Takatukaland'));
-		$pSubject = $this->_pContainer->get(EstateViewDocumentTitleBuilder::class);
-		$input = ['title' => 'test'];
-		$output = $pSubject->buildDocumentTitle($input);
-		$this->assertEquals(['title' => 'Nice Mansion in Takatukaland'], $output);
-	}
-
-	public function testBuildDocumentTitleForLongTitle()
-	{
-		$this->_pContainer->get(WPQueryWrapper::class)->getWPQuery()
-			->method('get')
-			->will($this->returnValue(14));
-		$this->_pContainer->get(EstateTitleBuilder::class)->expects($this->exactly(2))
-			->method('buildTitle')
-			->will($this->returnValueMap([
-				[14, '%1$s', str_repeat('a', 71)],
-				[14, '%2$s (%3$s) in %4$s - %5$s', 'Mansion (Sale) in Takatukaland - WP1234'],
-			]));
-		$pSubject = $this->_pContainer->get(EstateViewDocumentTitleBuilder::class);
-		$input = ['title' => 'test'];
-		$output = $pSubject->buildDocumentTitle($input);
-		$this->assertEquals(['title' => 'Mansion (Sale) in Takatukaland - WP1234'], $output);
-	}
-	
 	/**
 	 * @throws \DI\DependencyException
 	 * @throws \DI\NotFoundException
