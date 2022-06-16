@@ -31,6 +31,7 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
@@ -76,7 +77,9 @@ extends AdminPageEstateListSettingsBase
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$pFormModelBuilder = new FormModelBuilderDBEstateListSettings();
+		$pFormModelBuilders = new FormModelBuilderEstateDetailSettings();
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
+		$pFormModels = $pFormModelBuilders->generate($this->getPageSlug());
 		$this->addFormModel($pFormModel);
 		
 		$pInputModelName = $pFormModelBuilder->createInputModelName();
@@ -92,7 +95,12 @@ extends AdminPageEstateListSettingsBase
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
 		$pInputModelShowReferenceEstate = $pFormModelBuilder->createInputModelShowReferenceEstate();
-
+		$pInputRestrictAccessControl = $pFormModelBuilders->createInputRestrictAccessControl();
+		if($pInputRestrictAccessControl->getValue()){
+			$pInputModelListReferenceEstates->setHintHtml(__('Reference estates will not link to their detail page, because the access is <a href="http://wordpress/wp-admin/admin.php?page=onoffice-estates&tab=detail" target="_blank">restricted', 'onoffice-for-wp-websites'));
+		}else{
+			$pInputModelListReferenceEstates->setHintHtml(__('Reference estates will link to their detail page, because the access is <a href="http://wordpress/wp-admin/admin.php?page=onoffice-estates&tab=detail" target="_blank">not restricted', 'onoffice-for-wp-websites'));
+		}
 		$pFormModelRecordsFilter = new FormModel();
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
 		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
@@ -257,7 +265,7 @@ extends AdminPageEstateListSettingsBase
 		$values = $pRecordReadManager->getRowById($recordId);
 		$pFactory = new DataListViewFactory();
 		$pDataListView = $pFactory->createListViewByRow($values);
-
+		
 		if (!in_array($pDataListView->getListType(), array('default', 'reference', 'favorites'))) {
 			throw new UnknownViewException;
 		}

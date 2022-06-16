@@ -574,6 +574,18 @@ class EstateList
 	}
 
 	/**
+	 *
+	 * @return bool
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function getViewRestrict(): bool
+    {
+		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->getViewRestrict();
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getEstateContactIds(): array

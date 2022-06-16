@@ -32,125 +32,137 @@ use onOffice\WPlugin\Controller\ViewProperty;
  */
 
 class DataListView
-	implements DataView, DataViewFilterableFields, ViewProperty
+    implements DataView, DataViewFilterableFields, ViewProperty
 {
-	/** */
-	const PICTURES = 'pictures';
+    /** */
+    const PICTURES = 'pictures';
 
-	/** */
-	const FIELDS = 'fields';
+    /** */
+    const FIELDS = 'fields';
 
-	/** */
-	const CONTACT_PERSON = 'contactPerson';
+    /** */
+    const CONTACT_PERSON = 'contactPerson';
 
-	/** */
-	const LISTVIEW_TYPE_DEFAULT = 'default';
+    /** */
+    const LISTVIEW_TYPE_DEFAULT = 'default';
 
-	/** */
-	const LISTVIEW_TYPE_REFERENCE = 'reference';
+    /** */
+    const LISTVIEW_TYPE_REFERENCE = 'reference';
 
-	/** */
-	const LISTVIEW_TYPE_FAVORITES = 'favorites';
+    /** */
+    const HIDE_REFERENCE_ESTATE = '0';
 
-	/** */
-	const LISTVIEW_TYPE_UNITS = 'units';
+    /** */
+    const SHOW_REFERENCE_ESTATE = '1';
 
-	/** */
-	const SORT_BY_USER_VALUES = 'sortbyuservalues';
+    /** */
+    const SHOW_ONLY_REFERENCE_ESTATE = '2';
 
-	/** */
-	const SORT_BY_STANDARD_VALUES = 'sortby';
+    /** */
+    const LISTVIEW_TYPE_FAVORITES = 'favorites';
 
-	/** @var int */
-	private $_id = null;
+    /** */
+    const LISTVIEW_TYPE_UNITS = 'units';
 
-	/** @var string */
-	private $_name = null;
+    /** */
+    const SORT_BY_USER_VALUES = 'sortbyuservalues';
 
-	/** @var string[] */
-	private $_fields = [];
+    /** */
+    const SORT_BY_STANDARD_VALUES = 'sortby';
 
-	/** @var string[] */
-	private $_filterableFields = [];
+    /** @var int */
+    private $_id = null;
 
-	/** @var string[] */
-	private $_hiddenFields = [];
+    /** @var string */
+    private $_name = null;
 
-	/** @var string[] */
-	private $_pictureTypes = [];
+    /** @var string[] */
+    private $_fields = [];
 
-	/** @var string[] */
-	private $_addressFields = [];
+    /** @var string[] */
+    private $_filterableFields = [];
 
-	/** @var int */
-	private $_filterId = 0;
+    /** @var string[] */
+    private $_hiddenFields = [];
 
-	/** @var string */
-	private $_sortorder = '';
+    /** @var string[] */
+    private $_pictureTypes = [];
 
-	/** @var string */
-	private $_sortby = '';
+    /** @var string[] */
+    private $_addressFields = [];
 
-	/** @var int */
-	private $_recordsPerPage = 5;
+    /** @var int */
+    private $_filterId = 0;
 
-	/** @var bool */
-	private $_showStatus = false;
+    /** @var string */
+    private $_sortorder = '';
 
-	/** @var string */
-	private $_listType = '';
+    /** @var string */
+    private $_sortby = '';
 
-	/** @var string */
-	private $_template = '';
+    /** @var int */
+    private $_recordsPerPage = 5;
 
-	/** @var string */
-	private $_expose = '';
+    /** @var bool */
+    private $_showStatus = false;
 
-	/** @var bool */
-	private $_random = false;
+    /** @var string */
+    private $_listType = '';
 
-	/** @var string[] */
-	private $_availableOptions = [];
+    /** @var string */
+    private $_showReferenceEstate = 0;
 
-	/** @var array */
-	private $_geoFields = [];
+    /** @var string */
+    private $_template = '';
 
-	/** @var int */
-	private $_sortBySetting = 0;
+    /** @var string */
+    private $_expose = '';
 
-	/** @var array */
-	private $_sortbyuservalues = [];
+    /** @var bool */
+    private $_random = false;
 
-	/** @var string */
-	private $_sortByUserDefinedDefault = '';
+    /** @var string[] */
+    private $_availableOptions = [];
 
-	/** @var int */
-	private $_sortByUserDefinedDirection = 0;
+    /** @var array */
+    private $_geoFields = [];
 
-	/** @var bool */
-	private $_adjustableSorting = false;
+    /** @var int */
+    private $_sortBySetting = 0;
 
-		/** @var bool */
-	private $_showReferenceStatus = false;
+    /** @var array */
+    private $_sortbyuservalues = [];
 
+    /** @var string */
+    private $_sortByUserDefinedDefault = '';
 
-	/**
-	 *
-	 * @param int $id
-	 * @param string $name
-	 *
-	 */
+    /** @var int */
+    private $_sortByUserDefinedDirection = 0;
 
-	public function __construct(int $id, string $name)
-	{
-		$this->_id = $id;
-		$this->_name = $name;
-	}
+    /** @var bool */
+    private $_adjustableSorting = false;
+
+    /** @var bool */
+    private $_showReferenceStatus = false;
 
 
-	/** @return int */
-	public function getId(): int
-		{ return $this->_id; }
+    /**
+     *
+     * @param int $id
+     * @param string $name
+     *
+     */
+
+    public function __construct(int $id, string $name)
+    {
+        $this->_id = $id;
+        $this->_name = $name;
+    }
+
+
+    /** @return int */
+    public function getId(): int
+    { return $this->_id; }
 
 	/** @return string */
 	public function getName(): string
@@ -235,6 +247,11 @@ class DataListView
 	/** @param string $listType */
 	public function setListType(string $listType)
 		{ $this->_listType = $listType; }
+    /** @param string $setShowReferenceESTATE */
+    public function setShowReferenceEstate(string $showReferenceEstate)
+    {
+        $this->_showReferenceEstate = $showReferenceEstate;
+    }
 
 	/** @param string $template */
 	public function setTemplate(string $template)
@@ -292,6 +309,10 @@ class DataListView
 	public function getViewType(): string
 		{ return $this->_listType; }
 
+    /** @return string */
+    public function getShowReferenceEstate(): string
+    { return $this->_showReferenceEstate; }
+
 	/** @param int $sortBySetting */
 	public function setSortBySetting(int $sortBySetting)
 		{ $this->_sortBySetting = $sortBySetting; }
@@ -323,36 +344,36 @@ class DataListView
 	/** @return int */
 	public function getSortByUserDefinedDirection(): int
 		{ return $this->_sortByUserDefinedDirection; }
+        
+    /**
+     * @param bool $adjustable
+     */
+    public function setAdjustableSorting(bool $adjustable)
+    {
+        $this->_adjustableSorting = $adjustable;
+    }
 
-	/**
-	 * @param bool $adjustable
-	 */
-	public function setAdjustableSorting(bool $adjustable)
-	{
-		$this->_adjustableSorting = $adjustable;
-	}
+    /**
+     * @return bool
+     */
+    public function isAdjustableSorting(): bool
+    {
+        return $this->_adjustableSorting;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function isAdjustableSorting(): bool
-	{
-		return $this->_adjustableSorting;
-	}
+    /**
+     * @return bool
+     */
+    public function getShowReferenceStatus(): bool
+    {
+        return $this->_showReferenceStatus;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getShowReferenceStatus(): bool
-	{
-		return $this->_showReferenceStatus;
-	}
-
-	/**
-	 * @param bool $showReferenceStatus
-	 */
-	public function setShowReferenceStatus(bool $showReferenceStatus)
-	{
-		$this->_showReferenceStatus = $showReferenceStatus;
-	}
+    /**
+     * @param bool $showReferenceStatus
+     */
+    public function setShowReferenceStatus(bool $showReferenceStatus)
+    {
+        $this->_showReferenceStatus = $showReferenceStatus;
+    }
 }

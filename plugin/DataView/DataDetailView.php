@@ -112,6 +112,9 @@ class DataDetailView
 	/** @var bool */
 	private $_accessControls = true;
 
+	/** @var bool */
+	private $_restrictAccess = true;
+
 	/** @var string */
 	private $_shortCodeForm = '';
 
@@ -178,6 +181,10 @@ class DataDetailView
 	public function hasDetailView(): bool
 		{ return $this->_accessControls; }
 
+	/** @return bool */
+	public function getViewRestrict(): bool
+	{ return $this->_restrictAccess; }
+
 	/** @return string */
 	public function getTemplate(): string
 		{ return $this->_template; }
@@ -217,6 +224,10 @@ class DataDetailView
 	/** @param bool $accessControl */
 	public function setHasDetailView(bool $accessControl)
 		{ $this->_accessControls = $accessControl; }
+    
+	/** @param bool $accessControl */
+	public function setHasDetailViewRestrict(bool $restrictAccess)
+	{ $this->_restrictAccess = $restrictAccess; }
 
 	/** @param string $template */
 	public function setTemplate(string $template)

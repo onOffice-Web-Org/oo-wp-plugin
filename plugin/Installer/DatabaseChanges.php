@@ -241,6 +241,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 31;
 		}
 
+		if ($dbversion == 31) {
+			$this->updateShowReferenceEstate();
+			$this->setDataDetailViewRestrictAccessControlValue();
+			$dbversion = 32;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
 	}
 
@@ -796,6 +802,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler->saveDetailView($pDetailView);
 	}
 
+	/**
+	 * @return void
+	 */
+
+	public function setDataDetailViewRestrictAccessControlValue()
+	{
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setHasDetailViewRestrict($pDetailView->getViewRestrict() ?? true);
+		$pDataDetailViewHandler->saveDetailView($pDetailView);
+	}
+
 
 	/**
 	 * @return void
@@ -833,6 +851,21 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$this->_pWPDB->query($sql);
 	}
 
+
+	/**
+	 * @return void
+	 */
+
+	public function updateShowReferenceEstate()
+	{
+	$prefix = $this->getPrefix();
+	$sql = "UPDATE {$prefix}oo_plugin_listviews
+	SET `show_reference_estate` = '2'
+	WHERE `list_type`='reference'";
+
+	$this->_pWPDB->query($sql);
+	}
+	
 
 	/**
 	 * @return void

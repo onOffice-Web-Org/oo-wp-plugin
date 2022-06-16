@@ -72,10 +72,10 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 				foreach ( $estatePictures as $id ) {
 					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
 					if ( $referenz === "1" ) {
-						if ( $pEstatesClone->hasDetailView() ) {
+						if ( $pEstatesClone->getViewRestrict() ) {
 							echo '<a href="' . esc_url( $pEstatesClone->getEstateLink() ) . '" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
 						} else {
-							echo '<a href="javascript:void(0)" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
+							echo '<div style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
 						}
 					} else {
 						echo '<a href="' . esc_url( $pEstatesClone->getEstateLink() ) . '" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
@@ -83,7 +83,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					if ($pictureValues['type'] === \onOffice\WPlugin\Types\ImageTypes::TITLE && $marketingStatus != '') {
 						echo '<span>'.esc_html($marketingStatus).'</span>';
 					}
-					echo '</a>';
+					echo $referenz === "1" && !$pEstatesClone->getViewRestrict() ? '</div>' : '</a>';
 				} ?>
 				<div class="oo-listinfo">
 					<div class="oo-listtitle">
@@ -102,10 +102,10 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 							}
 							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 						} ?>
-					</div>
+					</div>					
 					<div class="oo-detailslink">
 						<?php if ($referenz === "1") { ?>
-							<?php if ($pEstatesClone->hasDetailView()) { ?>
+							<?php if ($pEstatesClone->getViewRestrict()) { ?>
 								<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
 									<?php esc_html_e('Show Details', 'onoffice'); ?>
 								</a>
