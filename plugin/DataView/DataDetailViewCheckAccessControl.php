@@ -36,66 +36,70 @@ use onOffice\WPlugin\Factory\EstateListFactory;
  */
 class DataDetailViewCheckAccessControl
 {
-    /** @var DataDetailViewHandler */
-    private $pDataDetailViewHandler = null;
+	/** @var DataDetailViewHandler */
+	private $pDataDetailViewHandler = null;
 
-    /** @var EstateListFactory */
-    private $estateListFactory;
-
-
-    /**
-     *
-     */
-
-    public function __construct(
-        DataDetailViewHandler $pDataDetailViewHandler = null,
-        EstateListFactory $pEstateDetailFactory = null
-    ) {
-        $this->pDataDetailViewHandler = $pDataDetailViewHandler ?? new DataDetailViewHandler();
-        $this->estateListFactory = $pEstateDetailFactory ?? new EstateListFactory($this->pDataDetailViewHandler);
-    }
+	/** @var EstateListFactory */
+	private $estateListFactory;
 
 
-    /**
-     *
-     * @param int $estateId
-     * @return bool
-     *
-     */
+	/**
+	 *
+	 */
 
-    public function checkAccessControl(int $estateId): bool
-    {
-        $accessControl = $this->pDataDetailViewHandler->getDetailView()->hasDetailView();
+	public function __construct(
+		DataDetailViewHandler $pDataDetailViewHandler = null,
+		EstateListFactory $pEstateDetailFactory = null
+	)
+	{
+		$this->pDataDetailViewHandler = $pDataDetailViewHandler ?? new DataDetailViewHandler();
+		$this->estateListFactory      = $pEstateDetailFactory ?? new EstateListFactory( $this->pDataDetailViewHandler );
+	}
 
-        if (!$accessControl) {
-            $pEstateDetail = $this->estateListFactory->createEstateDetail($estateId);
-            $pEstateDetail->loadEstates();
-            $pEstateDetail->estateIterator();
-            $rawValues = $pEstateDetail->getRawValues();
-            $referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
 
-            if ($referenz === "1") {
-                return false;
-            }
-        }
-        return true;
-    }
+	/**
+	 *
+	 * @param  int  $estateId
+	 *
+	 * @return bool
+	 *
+	 */
 
-    public function checkRestrictAccess(int $estateId): bool
-    {
-        $accessControl = $this->pDataDetailViewHandler->getDetailView()->getViewRestrict();
+	public function checkAccessControl( int $estateId ): bool
+	{
+		$accessControl = $this->pDataDetailViewHandler->getDetailView()->hasDetailView();
 
-        if (!$accessControl) {
-            $pEstateDetail = $this->estateListFactory->createEstateDetail($estateId);
-            $pEstateDetail->loadEstates();
-            $pEstateDetail->estateIterator();
-            $rawValues = $pEstateDetail->getRawValues();
-            $referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
+		if ( ! $accessControl ) {
+			$pEstateDetail = $this->estateListFactory->createEstateDetail( $estateId );
+			$pEstateDetail->loadEstates();
+			$pEstateDetail->estateIterator();
+			$rawValues = $pEstateDetail->getRawValues();
+			$referenz  = $rawValues->getValueRaw( $estateId )['elements']['referenz'];
 
-            if ($referenz === "1") {
-                return false;
-            }
-        }
-        return true;
-    }
+			if ( $referenz === "1" ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public function checkRestrictAccess( int $estateId ): bool
+	{
+		$accessControl = $this->pDataDetailViewHandler->getDetailView()->getViewRestrict();
+
+		if ( ! $accessControl ) {
+			$pEstateDetail = $this->estateListFactory->createEstateDetail( $estateId );
+			$pEstateDetail->loadEstates();
+			$pEstateDetail->estateIterator();
+			$rawValues = $pEstateDetail->getRawValues();
+			$referenz  = $rawValues->getValueRaw( $estateId )['elements']['referenz'];
+
+			if ( $referenz === "1" ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 }

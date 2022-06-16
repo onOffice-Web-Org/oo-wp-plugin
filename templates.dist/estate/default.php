@@ -102,7 +102,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 							}
 							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 						} ?>
-					</div>					
+					</div>
 					<div class="oo-detailslink">
 						<?php if ($referenz === "1") { ?>
 							<?php if ($pEstatesClone->getViewRestrict()) { ?>

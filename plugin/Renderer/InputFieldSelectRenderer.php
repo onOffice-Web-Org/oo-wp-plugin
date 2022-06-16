@@ -28,60 +28,60 @@ namespace onOffice\WPlugin\Renderer;
  *
  */
 class InputFieldSelectRenderer
-    extends InputFieldRenderer
+	extends InputFieldRenderer
 {
-    /** @var bool */
-    private $_multiple = false;
+	/** @var bool */
+	private $_multiple = false;
 
-    /** @var array */
-    private $_labelOnlyValues = [];
-
-
-    /**
-     *
-     * @param string $name
-     * @param array $value
-     *
-     */
-
-    public function __construct($name, $value = array())
-    {
-        parent::__construct('select', $name, $value);
-    }
+	/** @var array */
+	private $_labelOnlyValues = [];
 
 
-    /**
-     *
-     */
+	/**
+	 *
+	 * @param  string  $name
+	 * @param  array  $value
+	 *
+	 */
 
-    public function render()
-    {
-        echo '<select name="' . esc_html($this->getName()) . '" '
-            . ($this->_multiple ? ' multiple = "multiple" ' : null)
-            . $this->renderAdditionalAttributes()
-            . ' id="' . esc_html($this->getGuiId()) . '">';
-
-        foreach ($this->getValue() as $key => $label) {
-            if (in_array($key, $this->_labelOnlyValues)) {
-                echo '<optgroup label="' . esc_html($label) . '" '
-                    . ($key == $this->getSelectedValue() ? ' selected="selected" ' : null) . '></optgroup>';
-            } else {
-                echo '<option value="' . esc_html($key) . '" '
-                    . ($key == $this->getSelectedValue() ? ' selected="selected" ' : null) . '>'
-                    . esc_html($label)
-                    . '</option>';
-            }
-        }
-        echo '</select>';
-        echo '<div class="memssageReference">' . $this->getHint() . '</div>';
-    }
+	public function __construct( $name, $value = array() )
+	{
+		parent::__construct( 'select', $name, $value );
+	}
 
 
-    /**
-     * @param array $labelOnlyValues
-     */
-    public function setLabelOnlyValues(array $labelOnlyValues)
-    {
-        $this->_labelOnlyValues = $labelOnlyValues;
-    }
+	/**
+	 *
+	 */
+
+	public function render()
+	{
+		echo '<select name="' . esc_html( $this->getName() ) . '" '
+		     . ( $this->_multiple ? ' multiple = "multiple" ' : null )
+		     . $this->renderAdditionalAttributes()
+		     . ' id="' . esc_html( $this->getGuiId() ) . '">';
+
+		foreach ( $this->getValue() as $key => $label ) {
+			if ( in_array( $key, $this->_labelOnlyValues ) ) {
+				echo '<optgroup label="' . esc_html( $label ) . '" '
+				     . ( $key == $this->getSelectedValue() ? ' selected="selected" ' : null ) . '></optgroup>';
+			} else {
+				echo '<option value="' . esc_html( $key ) . '" '
+				     . ( $key == $this->getSelectedValue() ? ' selected="selected" ' : null ) . '>'
+				     . esc_html( $label )
+				     . '</option>';
+			}
+		}
+		echo '</select>';
+		echo '<div class="memssageReference">' . $this->getHint() . '</div>';
+	}
+
+
+	/**
+	 * @param  array  $labelOnlyValues
+	 */
+	public function setLabelOnlyValues( array $labelOnlyValues )
+	{
+		$this->_labelOnlyValues = $labelOnlyValues;
+	}
 }

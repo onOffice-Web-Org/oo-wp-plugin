@@ -32,132 +32,134 @@ use onOffice\WPlugin\Model\InputModelOption;
  * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
+
 class InputModelOptionFactoryDetailView
 {
-    /** */
-    const INPUT_PICTURE_TYPE = DataDetailView::PICTURES;
+	/** */
+	const INPUT_PICTURE_TYPE = DataDetailView::PICTURES;
 
-    /** */
-    const INPUT_TEMPLATE = 'template';
+	/** */
+	const INPUT_TEMPLATE = 'template';
 
-    /** */
-    const INPUT_SHORT_CODE_FORM = 'shortcodeform';
+	/** */
+	const INPUT_SHORT_CODE_FORM = 'shortcodeform';
 
-    /** */
-    const INPUT_EXPOSE = 'expose';
+	/** */
+	const INPUT_EXPOSE = 'expose';
 
-    /** */
-    const INPUT_ACCESS_CONTROL = 'access-control';
+	/** */
+	const INPUT_ACCESS_CONTROL = 'access-control';
 
-    /** */
-    const INPUT_RESTRICT_ACCESS_CONTROL = 'restrict-access-control';
+	/** */
+	const INPUT_RESTRICT_ACCESS_CONTROL = 'restrict-access-control';
 
-    /** */
-    const INPUT_MOVIE_LINKS = 'movielinks';
+	/** */
+	const INPUT_MOVIE_LINKS = 'movielinks';
 
-    /** */
-    const INPUT_OGULO_LINKS = 'ogulolinks';
+	/** */
+	const INPUT_OGULO_LINKS = 'ogulolinks';
 
-    /** */
-    const INPUT_OBJECT_LINKS = 'objectlinks';
+	/** */
+	const INPUT_OBJECT_LINKS = 'objectlinks';
 
-    /** */
-    const INPUT_LINKS = 'links';
+	/** */
+	const INPUT_LINKS = 'links';
 
-    /** */
-    const INPUT_FIELD_CONFIG = DataDetailView::FIELDS;
+	/** */
+	const INPUT_FIELD_CONFIG = DataDetailView::FIELDS;
 
-    /** */
-    const INPUT_FIELD_CONTACTDATA_ONLY = DataDetailView::ADDRESSFIELDS;
+	/** */
+	const INPUT_FIELD_CONTACTDATA_ONLY = DataDetailView::ADDRESSFIELDS;
 
-    /** */
-    const KEY_TYPE = 'type';
+	/** */
+	const KEY_TYPE = 'type';
 
-    /** @var string */
-    const INPUT_SHOW_STATUS = 'show_status';
+	/** @var string */
+	const INPUT_SHOW_STATUS = 'show_status';
 
-    /** @var string */
-    private $_optionGroup = null;
-
-
-    /** @var array */
-    private $_inputConfig = [
-        self::INPUT_EXPOSE => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
-        self::INPUT_TEMPLATE => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
-        self::INPUT_SHORT_CODE_FORM => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
-        self::INPUT_PICTURE_TYPE => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
-        self::INPUT_FIELD_CONFIG => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
-        self::INPUT_FIELD_CONTACTDATA_ONLY => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
-        self::INPUT_MOVIE_LINKS => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
-        self::INPUT_ACCESS_CONTROL => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
-        self::INPUT_RESTRICT_ACCESS_CONTROL => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
-        ],
-        self::INPUT_SHOW_STATUS => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
-        ],
-        self::INPUT_OGULO_LINKS => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
-        ],
-        self::INPUT_OBJECT_LINKS => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
-        ],
-        self::INPUT_LINKS => [
-            self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
-        ]
-    ];
+	/** @var string */
+	private $_optionGroup = null;
 
 
-    /**
-     *
-     * @param string $optionGroup
-     *
-     */
+	/** @var array */
+	private $_inputConfig = [
+		self::INPUT_EXPOSE                  => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_TEMPLATE                => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_SHORT_CODE_FORM         => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_PICTURE_TYPE            => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_FIELD_CONFIG            => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_FIELD_CONTACTDATA_ONLY  => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_MOVIE_LINKS             => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_ACCESS_CONTROL          => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_RESTRICT_ACCESS_CONTROL => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
+		],
+		self::INPUT_SHOW_STATUS             => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
+		],
+		self::INPUT_OGULO_LINKS             => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
+		],
+		self::INPUT_OBJECT_LINKS            => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
+		],
+		self::INPUT_LINKS                   => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
+		]
+	];
 
-    public function __construct(string $optionGroup)
-    {
-        $this->_optionGroup = $optionGroup;
-    }
+
+	/**
+	 *
+	 * @param  string  $optionGroup
+	 *
+	 */
+
+	public function __construct( string $optionGroup )
+	{
+		$this->_optionGroup = $optionGroup;
+	}
 
 
-    /**
-     *
-     * @param string $name
-     * @param string $label
-     * @param bool $multi
-     * @return InputModelOption
-     * @throws ExceptionInputModelMissingField
-     *
-     */
+	/**
+	 *
+	 * @param  string  $name
+	 * @param  string  $label
+	 * @param  bool  $multi
+	 *
+	 * @return InputModelOption
+	 * @throws ExceptionInputModelMissingField
+	 *
+	 */
 
-    public function create(string $name, $label, bool $multi = false): InputModelOption
-    {
-        if (!isset($this->_inputConfig[$name])) {
-            throw new ExceptionInputModelMissingField($name);
-        }
+	public function create( string $name, $label, bool $multi = false ): InputModelOption
+	{
+		if ( ! isset( $this->_inputConfig[ $name ] ) ) {
+			throw new ExceptionInputModelMissingField( $name );
+		}
 
-        $config = $this->_inputConfig[$name];
-        $type = $config[self::KEY_TYPE];
+		$config = $this->_inputConfig[ $name ];
+		$type   = $config[ self::KEY_TYPE ];
 
-        $pInstance = new InputModelOption($this->_optionGroup, $name, $label, $type);
-        $pInstance->setIsMulti($multi);
+		$pInstance = new InputModelOption( $this->_optionGroup, $name, $label, $type );
+		$pInstance->setIsMulti( $multi );
 
-        return $pInstance;
-    }
+		return $pInstance;
+	}
 }

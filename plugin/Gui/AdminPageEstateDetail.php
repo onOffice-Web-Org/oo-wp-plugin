@@ -288,7 +288,7 @@ class AdminPageEstateDetail
 		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
-		
+
 		$pInputModelAccessControl = $pFormModelBuilder->createInputRestrictAccessControl();
 		$pFormModelAccessControl  = new FormModel();
 		$pFormModelAccessControl->setPageSlug( $this->getPageSlug() );

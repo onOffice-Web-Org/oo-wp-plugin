@@ -581,7 +581,7 @@ class EstateList
 	 */
 
 	public function getViewRestrict(): bool
-    {
+	{
 		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->getViewRestrict();
 	}
 

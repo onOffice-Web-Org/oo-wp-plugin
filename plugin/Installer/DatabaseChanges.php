@@ -43,7 +43,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 31;
+	const MAX_VERSION = 32;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -241,13 +241,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 31;
 		}
 
-		if ($dbversion == 31) {
+		if ( $dbversion == 31 ) {
 			$this->updateShowReferenceEstate();
 			$this->setDataDetailViewRestrictAccessControlValue();
 			$dbversion = 32;
 		}
 
-		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
+		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
 	/**
@@ -809,9 +809,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 	public function setDataDetailViewRestrictAccessControlValue()
 	{
 		$pDataDetailViewHandler = new DataDetailViewHandler();
-		$pDetailView = $pDataDetailViewHandler->getDetailView();
-		$pDetailView->setHasDetailViewRestrict($pDetailView->getViewRestrict() ?? true);
-		$pDataDetailViewHandler->saveDetailView($pDetailView);
+		$pDetailView            = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setHasDetailViewRestrict( $pDetailView->getViewRestrict() ?? true );
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 
 
@@ -845,10 +845,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 	public function updateShowReferenceEstateOfList()
 	{
 		$prefix = $this->getPrefix();
-		$sql = "UPDATE {$prefix}oo_plugin_listviews
+		$sql    = "UPDATE {$prefix}oo_plugin_listviews
 				SET `show_reference_estate` = 1";
 
-		$this->_pWPDB->query($sql);
+		$this->_pWPDB->query( $sql );
 	}
 
 

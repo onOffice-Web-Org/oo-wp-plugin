@@ -46,34 +46,34 @@ class TestClassDataDetailViewCheckAccessControl
 	 *
 	 */
 
-	public function testCheckAccessControl(int $estateId, $iterator, bool $result)
+	public function testCheckRestrictAccess( int $estateId, $iterator, bool $result )
 	{
 		$pDataDetailViewHandler = new DataDetailViewHandler();
-		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
-		$pDataDetailView->setHasDetailView(false);
-		$pDataDetailViewHandler->saveDetailView($pDataDetailView);
+		$pDataDetailView        = $pDataDetailViewHandler->getDetailView();
+		$pDataDetailView->setHasDetailViewRestrict( false );
+		$pDataDetailViewHandler->saveDetailView( $pDataDetailView );
 
-		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
-			->disableOriginalConstructor()
-			->getMock();
-		$pEstateDetail = $this->getMockBuilder(EstateDetail::class)
-			->setConstructorArgs([new DataDetailView()])
-			->setMethods(['loadEstates', 'estateIterator', 'getRawValues'])
-			->getMock();
+		$pEstateDetailFactory = $this->getMockBuilder( EstateListFactory::class )
+		                             ->disableOriginalConstructor()
+		                             ->getMock();
+		$pEstateDetail        = $this->getMockBuilder( EstateDetail::class )
+		                             ->setConstructorArgs( [ new DataDetailView() ] )
+		                             ->setMethods( [ 'loadEstates', 'estateIterator', 'getRawValues' ] )
+		                             ->getMock();
 		$pEstateDetail
-			->expects($this->once())->method('estateIterator')
-			->will($this->returnValue($iterator));
+			->expects( $this->once() )->method( 'estateIterator' )
+			->will( $this->returnValue( $iterator ) );
 		$pEstateDetail
-			->expects($this->once())->method('getRawValues')
-			->will($this->returnValue($iterator));
-		$pEstateDetailFactory->method('createEstateDetail')->will($this->returnValue($pEstateDetail));
+			->expects( $this->once() )->method( 'getRawValues' )
+			->will( $this->returnValue( $iterator ) );
+		$pEstateDetailFactory->method( 'createEstateDetail' )->will( $this->returnValue( $pEstateDetail ) );
 
-		$pDataDetailViewCheckAccessControl = new DataDetailViewCheckAccessControl($pDataDetailViewHandler,
-			$pEstateDetailFactory);
-		$accessControlChecker = $pDataDetailViewCheckAccessControl->checkAccessControl($estateId);
+		$pDataDetailViewCheckRestrictAccess = new DataDetailViewCheckAccessControl( $pDataDetailViewHandler,
+			$pEstateDetailFactory );
+		$restrictAccessControlChecker       = $pDataDetailViewCheckRestrictAccess->checkRestrictAccess( $estateId );
 
-		$this->assertEquals($pDataDetailView->hasDetailView(), false);
-		$this->assertEquals($result, $accessControlChecker);
+		$this->assertEquals( $pDataDetailView->getViewRestrict(), false );
+		$this->assertEquals( $result, $restrictAccessControlChecker );
 	}
 
 
@@ -86,8 +86,8 @@ class TestClassDataDetailViewCheckAccessControl
 	public function dataProvider(): Generator
 	{
 		yield from [
-			[3, new ArrayContainerEscape([3 => ['elements' => ['referenz' => "1"]]]), false],
-			[4, new ArrayContainerEscape([4 => ['elements' => ['referenz' => "0"]]]), true],
+			[ 3, new ArrayContainerEscape( [ 3 => [ 'elements' => [ 'referenz' => "1" ] ] ] ), false ],
+			[ 4, new ArrayContainerEscape( [ 4 => [ 'elements' => [ 'referenz' => "0" ] ] ] ), true ],
 		];
 	}
 }

@@ -62,7 +62,7 @@ class TestTemplateEstateDefaultDetail
 				'getDocument',
 				'getCurrentEstateId',
 				'getSimilarEstates',
-				'hasDetailView',
+				'getViewRestrict',
 				'getEstateLinks',
 				'getLinkEmbedPlayers',
 				'getDetailView',
@@ -128,7 +128,7 @@ class TestTemplateEstateDefaultDetail
 		$this->_pEstate->method('getDocument')->willReturn('Document here');
 		$this->_pEstate->method('getCurrentEstateId')->willReturn(52);
 		$this->_pEstate->method('getSimilarEstates')->willReturn('Similar Estates here');
-		$this->_pEstate->method('hasDetailView')->willReturn(true);
+		$this->_pEstate->method('getViewRestrict')->willReturn(true);
 		$this->_pEstate->method('getEstateLinks')->willReturn([$oguloLink]);
 		$this->_pEstate->method('getLinkEmbedPlayers')->willReturn([]);
 		$this->_pEstate->method('getDetailView')->willReturn('1');

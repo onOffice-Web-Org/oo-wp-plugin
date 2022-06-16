@@ -34,88 +34,88 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
  * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
-
 class DataDetailViewHandler
 {
-    /** */
-    const DEFAULT_VIEW_OPTION_KEY = 'onoffice-default-view';
+	/** */
+	const DEFAULT_VIEW_OPTION_KEY = 'onoffice-default-view';
 
-    /** @var WPOptionWrapperBase */
-    private $_pWPOptionWrapper;
-
-
-    /**
-     * @param WPOptionWrapperBase $pWPOptionWrapper
-     */
-    public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
-    {
-        $this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
-    }
+	/** @var WPOptionWrapperBase */
+	private $_pWPOptionWrapper;
 
 
-    /**
-     *
-     * @return DataDetailView
-     *
-     */
-
-    public function getDetailView(): DataDetailView
-    {
-        $optionKey = self::DEFAULT_VIEW_OPTION_KEY;
-        $pAlternate = new DataDetailView();
-        $pResult = $this->_pWPOptionWrapper->getOption($optionKey, $pAlternate);
-
-        if ($pResult == null)
-        {
-            $pResult = $pAlternate;
-        }
-
-        return $pResult;
-    }
+	/**
+	 * @param  WPOptionWrapperBase  $pWPOptionWrapper
+	 */
+	public function __construct( WPOptionWrapperBase $pWPOptionWrapper = null )
+	{
+		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
+	}
 
 
-    /**
-     *
-     * @param DataDetailView $pDataDetailView
-     *
-     */
+	/**
+	 *
+	 * @return DataDetailView
+	 *
+	 */
 
-    public function saveDetailView(DataDetailView $pDataDetailView)
-    {
-        $pWpOptionsWrapper = $this->_pWPOptionWrapper;
-        $viewOptionKey = self::DEFAULT_VIEW_OPTION_KEY;
+	public function getDetailView(): DataDetailView
+	{
+		$optionKey  = self::DEFAULT_VIEW_OPTION_KEY;
+		$pAlternate = new DataDetailView();
+		$pResult    = $this->_pWPOptionWrapper->getOption( $optionKey, $pAlternate );
 
-        if ($pWpOptionsWrapper->getOption($viewOptionKey) !== false) {
-            $pWpOptionsWrapper->updateOption($viewOptionKey, $pDataDetailView);
-        } else {
-            $pWpOptionsWrapper->addOption($viewOptionKey, $pDataDetailView);
-        }
-    }
+		if ( $pResult == null ) {
+			$pResult = $pAlternate;
+		}
+
+		return $pResult;
+	}
 
 
-    /**
-     *
-     * @param array $row
-     * @return DataDetailView
-     *
-     */
+	/**
+	 *
+	 * @param  DataDetailView  $pDataDetailView
+	 *
+	 */
 
-    public function createDetailViewByValues(array $row): DataDetailView
-    {
-        $pDataDetailView = $this->getDetailView();
-        $pDataDetailView->setTemplate($row['template'] ?? '');
-        $pDataDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
-        $pDataDetailView->setFields($row[DataDetailView::FIELDS] ?? []);
-        $pDataDetailView->setPictureTypes($row[DataDetailView::PICTURES] ?? []);
-        $pDataDetailView->setHasDetailView((bool)($row[InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL] ?? ''));
-        $pDataDetailView->setHasDetailViewRestrict((bool)($row[InputModelOptionFactoryDetailView::INPUT_RESTRICT_ACCESS_CONTROL] ?? ''));
-        $pDataDetailView->setExpose($row['expose'] ?? '');
-        $pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
-        $pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
-        $pDataDetailView->setOguloLinks($row['ogulolinks'] ?? LinksTypes::LINKS_DEACTIVATED);
-        $pDataDetailView->setObjectLinks($row['objectlinks'] ?? LinksTypes::LINKS_DEACTIVATED);
-        $pDataDetailView->setLinks($row['links'] ?? LinksTypes::LINKS_DEACTIVATED);
-        $pDataDetailView->setShowStatus($row['show_status'] ?? false);
-        return $pDataDetailView;
-    }
+	public function saveDetailView( DataDetailView $pDataDetailView )
+	{
+		$pWpOptionsWrapper = $this->_pWPOptionWrapper;
+		$viewOptionKey     = self::DEFAULT_VIEW_OPTION_KEY;
+
+		if ( $pWpOptionsWrapper->getOption( $viewOptionKey ) !== false ) {
+			$pWpOptionsWrapper->updateOption( $viewOptionKey, $pDataDetailView );
+		} else {
+			$pWpOptionsWrapper->addOption( $viewOptionKey, $pDataDetailView );
+		}
+	}
+
+
+	/**
+	 *
+	 * @param  array  $row
+	 *
+	 * @return DataDetailView
+	 *
+	 */
+
+	public function createDetailViewByValues( array $row ): DataDetailView
+	{
+		$pDataDetailView = $this->getDetailView();
+		$pDataDetailView->setTemplate( $row['template'] ?? '' );
+		$pDataDetailView->setShortCodeForm( $row['shortcodeform'] ?? '' );
+		$pDataDetailView->setFields( $row[ DataDetailView::FIELDS ] ?? [] );
+		$pDataDetailView->setPictureTypes( $row[ DataDetailView::PICTURES ] ?? [] );
+		$pDataDetailView->setHasDetailView( (bool) ( $row[ InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL ] ?? '' ) );
+		$pDataDetailView->setHasDetailViewRestrict( (bool) ( $row[ InputModelOptionFactoryDetailView::INPUT_RESTRICT_ACCESS_CONTROL ] ?? '' ) );
+		$pDataDetailView->setExpose( $row['expose'] ?? '' );
+		$pDataDetailView->setAddressFields( $row[ DataDetailView::ADDRESSFIELDS ] ?? [] );
+		$pDataDetailView->setMovieLinks( $row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE );
+		$pDataDetailView->setOguloLinks( $row['ogulolinks'] ?? LinksTypes::LINKS_DEACTIVATED );
+		$pDataDetailView->setObjectLinks( $row['objectlinks'] ?? LinksTypes::LINKS_DEACTIVATED );
+		$pDataDetailView->setLinks( $row['links'] ?? LinksTypes::LINKS_DEACTIVATED );
+		$pDataDetailView->setShowStatus( $row['show_status'] ?? false );
+
+		return $pDataDetailView;
+	}
 }

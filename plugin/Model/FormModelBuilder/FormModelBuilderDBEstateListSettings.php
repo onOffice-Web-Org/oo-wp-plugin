@@ -297,13 +297,11 @@ class FormModelBuilderDBEstateListSettings
 	public function createInputModelListType()
 	{
 		$labelListType = __('Type of List', 'onoffice-for-wp-websites');
-
 		$pInputModelListType = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_LIST_TYPE, $labelListType);
 		$pInputModelListType->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelListType->setValue($this->getValue($pInputModelListType->getField()));
 		$pInputModelListType->setValuesAvailable(self::getListViewLabels());
-		
 		return $pInputModelListType;
 	}
 
@@ -315,13 +313,13 @@ class FormModelBuilderDBEstateListSettings
 
 	public function createInputModelShowReferenceEstates()
 	{
-		$labelShowReferenceEstate = __('Reference estates', 'onoffice-for-wp-websites');
-		
+		$labelShowReferenceEstate = __( 'Reference estates', 'onoffice-for-wp-websites' );
+
 		$pInputModelShowReferenceEstate = $this->getInputModelDBFactory()->create
-			(InputModelDBFactory::INPUT_SHOW_REFERENCE_ESTATE, $labelShowReferenceEstate);
-		$pInputModelShowReferenceEstate->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
-		$pInputModelShowReferenceEstate->setValue($this->getValue($pInputModelShowReferenceEstate->getField()));
-		$pInputModelShowReferenceEstate->setValuesAvailable(self::getListViewReferenceEstates());
+		( InputModelDBFactory::INPUT_SHOW_REFERENCE_ESTATE, $labelShowReferenceEstate );
+		$pInputModelShowReferenceEstate->setHtmlType( InputModelOption::HTML_TYPE_SELECT );
+		$pInputModelShowReferenceEstate->setValue( $this->getValue( $pInputModelShowReferenceEstate->getField() ) );
+		$pInputModelShowReferenceEstate->setValuesAvailable( self::getListViewReferenceEstates() );
 
 		return $pInputModelShowReferenceEstate;
 	}
@@ -335,9 +333,11 @@ class FormModelBuilderDBEstateListSettings
 	static public function getListViewReferenceEstates()
 	{
 		return array(
-			DataListView::HIDE_REFERENCE_ESTATE => __('Hide reference estates', 'onoffice-for-wp-websites'),
-            DataListView::SHOW_REFERENCE_ESTATE => __('Show reference estates (alongside others)', 'onoffice-for-wp-websites'),
-			DataListView::SHOW_ONLY_REFERENCE_ESTATE => __('Show only reference estates (filter out all others)', 'onoffice-for-wp-websites'),
+			DataListView::HIDE_REFERENCE_ESTATE      => __( 'Hide reference estates', 'onoffice-for-wp-websites' ),
+			DataListView::SHOW_REFERENCE_ESTATE      => __( 'Show reference estates (alongside others)',
+				'onoffice-for-wp-websites' ),
+			DataListView::SHOW_ONLY_REFERENCE_ESTATE => __( 'Show only reference estates (filter out all others)',
+				'onoffice-for-wp-websites' ),
 		);
 	}
 
