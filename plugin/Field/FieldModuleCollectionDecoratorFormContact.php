@@ -46,7 +46,8 @@ class FieldModuleCollectionDecoratorFormContact
 					'length' => 0,
 					'permittedvalues' => [],
 					'default' => false,
-					'label' => 'Newsletter',
+					'label'   => __('Newsletter', 'onoffice-for-wp-websites'),
+					'content' => __('Specific Fields', 'onoffice-for-wp-websites')
 				],
 			],
 			'' => [
@@ -55,7 +56,8 @@ class FieldModuleCollectionDecoratorFormContact
 					'length' => null,
 					'permittedvalues' => [],
 					'default' => null,
-					'label' => __( 'Message', 'onoffice-for-wp-websites' )
+					'label'   => __('Message', 'onoffice-for-wp-websites'),
+					'content' => __('Specific Fields', 'onoffice-for-wp-websites')
 				],
 			],
 		];
