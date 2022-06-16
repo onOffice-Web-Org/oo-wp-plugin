@@ -44,11 +44,11 @@ class FieldModuleCollectionDecoratorSearchcriteria
 	public function getNewFields(): array {
 		return [
 			'krit_bemerkung_oeffentlich' => [
-				'type'            => FieldTypes::FIELD_TYPE_BOOLEAN,
-				'length'          => 0,
+				'type'            => FieldTypes::FIELD_TYPE_TEXT,
+				'length'          => null,
 				'permittedvalues' => [],
-				'default'         => false,
-				'label'           => __('Search Criteria Comment (external)', 'onoffice-for-wp-websites'),
+				'default'         => null,
+				'label'           => __('Comment', 'onoffice-for-wp-websites'),
 				'content'         => __('Specific Fields', 'onoffice-for-wp-websites')
 			],
 		];
