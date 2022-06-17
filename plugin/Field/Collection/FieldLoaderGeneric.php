@@ -97,7 +97,7 @@ class FieldLoaderGeneric
 				}
 
 				if ( empty( $fieldProperties['content'] ) ) {
-					$fieldProperties['content'] = __( 'Specific Fields', 'onoffice-for-wp-websites' );
+					$fieldProperties['content'] = __( 'Special Fields', 'onoffice-for-wp-websites' );
 				}
 
 				$fieldProperties['module'] = $module;

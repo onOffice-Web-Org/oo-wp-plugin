@@ -157,7 +157,7 @@ msgstr "Geo-Position"
 #: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:59
 #: plugin/Fieldnames.php:154 plugin/Fieldnames.php:238
 #: plugin/Gui/AdminPageFormSettingsBase.php:512
-msgid "Specific Fields"
+msgid "Special Fields"
 msgstr "Spezifische Felder"
 
 #: plugin/Field/Collection/FieldRowConverterSearchCriteria.php:68

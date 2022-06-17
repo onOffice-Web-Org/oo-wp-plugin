@@ -508,7 +508,7 @@ abstract class AdminPageFormSettingsBase
 
 	protected function addFieldConfigurationForMainModules(FormModelBuilder $pFormModelBuilder)
 	{
-		$specificFieldText = __('Specific Fields', 'onoffice-for-wp-websites');
+		$specificFieldText = __('Special Fields', 'onoffice-for-wp-websites');
 		$pFieldsCollection = $this->buildFieldsCollectionForCurrentForm();
 		$specificFields = [
 				$specificFieldText => [],

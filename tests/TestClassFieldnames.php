@@ -273,7 +273,7 @@ class TestClassFieldnames
 				'BEL' => 'Belgium',
 				'DEU' => 'Germany',
 			],
-			'content' => 'Specific Fields',
+			'content' => 'Special Fields',
 			'module' => 'estate',
 			'rangefield' => false,
 			'additionalTranslations' => [],

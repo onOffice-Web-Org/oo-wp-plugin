@@ -49,7 +49,7 @@ class FieldModuleCollectionDecoratorSearchcriteria
 				'permittedvalues' => [],
 				'default'         => null,
 				'label'           => __('Comment', 'onoffice-for-wp-websites'),
-				'content'         => __('Specific Fields', 'onoffice-for-wp-websites')
+				'content'         => __('Special Fields', 'onoffice-for-wp-websites')
 			],
 		];
 	}
