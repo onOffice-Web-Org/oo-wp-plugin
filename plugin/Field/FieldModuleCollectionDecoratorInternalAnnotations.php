@@ -25,6 +25,8 @@ namespace onOffice\WPlugin\Field;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Types\FieldTypes;
+
 use function __;
 
 /**
@@ -37,14 +39,17 @@ use function __;
 class FieldModuleCollectionDecoratorInternalAnnotations
 	extends FieldModuleCollectionDecoratorAbstract
 {
-	/** @var array */
-	private $_fieldAnnotations = [
-		onOfficeSDK::MODULE_ADDRESS => [],
-		onOfficeSDK::MODULE_SEARCHCRITERIA => [
-			'krit_bemerkung_oeffentlich' => 'Search Criteria Comment (external)',
-		],
-	];
 
+	/**
+	 * @return array
+	 */
+	public function getNewFields(): array {
+		return [
+			onOfficeSDK::MODULE_SEARCHCRITERIA => [
+				'krit_bemerkung_oeffentlich' => __('Search Criteria Comment (external)', 'onoffice-for-wp-websites'),
+			],
+		];
+	}
 
 	/**
 	 *
@@ -57,7 +62,7 @@ class FieldModuleCollectionDecoratorInternalAnnotations
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
 		$pField = parent::getFieldByModuleAndName($module, $name);
-		$newLabel = $this->_fieldAnnotations[$module][$name] ?? null;
+		$newLabel = $this->getNewFields()[$module][$name] ?? null;
 		if ($newLabel !== null) {
 			$pField->setLabel(__($newLabel, 'onoffice-for-wp-websites'));
 		}
@@ -78,7 +83,7 @@ class FieldModuleCollectionDecoratorInternalAnnotations
 		foreach ($fields as $pField) {
 			$module = $pField->getModule();
 			$name = $pField->getName();
-			$label = $this->_fieldAnnotations[$module][$name] ?? null;
+			$label = $this->getNewFields()[$module][$name] ?? null;
 
 			if ($label !== null) {
 				$pField->setLabel(__($label, 'onoffice-for-wp-websites'));
@@ -97,6 +102,6 @@ class FieldModuleCollectionDecoratorInternalAnnotations
 
 	public function getFieldAnnotations(): array
 	{
-		return $this->_fieldAnnotations;
+		return $this->getNewFields();
 	}
 }

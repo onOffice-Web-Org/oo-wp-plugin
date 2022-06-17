@@ -34,28 +34,34 @@ use onOffice\WPlugin\Types\FieldTypes;
 class FieldModuleCollectionDecoratorFormContact
 	extends FieldModuleCollectionDecoratorAbstract
 {
-	/** @var array */
-	private $_newFields = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'newsletter' => [
-				'type' => FieldTypes::FIELD_TYPE_BOOLEAN,
-				'length' => 0,
-				'permittedvalues' => [],
-				'default' => false,
-				'label' => 'Newsletter',
+	/**
+	 * @return array
+	 */
+	public function getNewFields(): array
+	{
+		return [
+			onOfficeSDK::MODULE_ADDRESS => [
+				'newsletter' => [
+					'type' => FieldTypes::FIELD_TYPE_BOOLEAN,
+					'length' => 0,
+					'permittedvalues' => [],
+					'default' => false,
+					'label'   => __('Newsletter', 'onoffice-for-wp-websites'),
+					'content' => __('Special Fields', 'onoffice-for-wp-websites')
+				],
 			],
-		],
-		'' => [
-			'message' => [
-				'type' => FieldTypes::FIELD_TYPE_TEXT,
-				'length' => null,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Message',
-				'content' => 'Form Specific Fields'
+			'' => [
+				'message' => [
+					'type' => FieldTypes::FIELD_TYPE_TEXT,
+					'length' => null,
+					'permittedvalues' => [],
+					'default' => null,
+					'label'   => __('Message', 'onoffice-for-wp-websites'),
+					'content' => __('Special Fields', 'onoffice-for-wp-websites')
+				],
 			],
-		],
-	];
+		];
+	}
 
 
 	/**
@@ -66,7 +72,7 @@ class FieldModuleCollectionDecoratorFormContact
 
 	public function getAllFields(): array
 	{
-		$newFields = $this->generateListOfMergedFieldsByModule($this->_newFields);
+		$newFields = $this->generateListOfMergedFieldsByModule($this->getNewFields());
 		return array_merge($this->getFieldModuleCollection()->getAllFields(), $newFields);
 	}
 
@@ -81,7 +87,7 @@ class FieldModuleCollectionDecoratorFormContact
 
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
-		$row = $this->_newFields[$module][$name] ?? null;
+		$row = $this->getNewFields()[$module][$name] ?? null;
 		if ($row !== null) {
 			$row['module'] = $module;
 			return Field::createByRow($name, $row);
@@ -100,7 +106,7 @@ class FieldModuleCollectionDecoratorFormContact
 
 	public function containsFieldByModule(string $module, string $name): bool
 	{
-		return isset($this->_newFields[$module][$name]) ||
+		return isset($this->getNewFields()[$module][$name]) ||
 			parent::containsFieldByModule($module, $name);
 	}
 }

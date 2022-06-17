@@ -50,7 +50,7 @@ class TestClassFieldModuleCollectionDecoratorSearchcriteria
 		$newFields = $pDecorator->getAllFields();
 
 		$pNewField = new Field('krit_bemerkung_oeffentlich', onOfficeSDK::MODULE_SEARCHCRITERIA);
-		$pNewField->setCategory('');
+		$pNewField->setCategory('Special Fields');
 		$pNewField->setDefault('');
 		$pNewField->setLabel('Comment');
 		$pNewField->setLength(0);
