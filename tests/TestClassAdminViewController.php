@@ -38,11 +38,7 @@ use WP_UnitTestCase;
 use function is_admin;
 use function set_current_screen;
 use function wp_scripts;
-use onOffice\WPlugin\Installer\DatabaseChanges;
-use onOffice\WPlugin\WP\WPOptionWrapperTest;
 
-use onOffice\WPlugin\SDKWrapper;
-use onOffice\SDK\Cache\onOfficeSDKCache;
 /**
  *
  * @runTestsInSeparateProcesses
