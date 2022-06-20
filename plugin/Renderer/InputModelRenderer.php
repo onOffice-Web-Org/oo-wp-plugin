@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Renderer;
 
 use Exception;
+use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -157,7 +158,7 @@ class InputModelRenderer
 
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
 				$onOfficeInputFields = false;
-				$pInstance = new InputFieldCheckboxButtonRenderer('exclude' . $elementName,
+				$pInstance = new InputFieldCheckboxButtonRenderer(AdminPageAjax::EXCLUDE_FIELD . $elementName,
 					$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setId($pInputModel->getId());

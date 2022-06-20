@@ -106,6 +106,13 @@ class AdminPageAddressListSettings
 		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
+        if ($this->getListViewId() !== null) {
+            $pInputModelEmbedCode = $this->_pFormModelBuilderAddress->createInputModelEmbedCode();
+            $pFormModelName->addInputModel($pInputModelEmbedCode);
+            $pInputModelButton = $this->_pFormModelBuilderAddress->createInputModelButton();
+            $pFormModelName->addInputModel($pInputModelButton);
+        }
+
 	}
 
 

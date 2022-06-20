@@ -262,38 +262,6 @@ abstract class AdminPageSettingsBase
 		wp_die();
 	}
 
-	/**
-	 * @return array
-	 */
-	public function transformPostValues(): array
-	{
-		$result = [];
-
-		foreach($_POST as $index => $fields) {
-			if (str_contains($index, 'exclude') || str_contains($index, 'filter_fields_order')) {
-				continue;
-			}
-			if ( is_array( $fields ) ) {
-				foreach ( $fields as $key => $field ) {
-					if ( $key === 'dummy_key' || $field === 'dummy_key' ) {
-						unset($fields[$key]);
-						continue;
-					}
-					if (is_array($field) && ($index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value')) {
-						$fields[$key] = (object) $field;
-					}
-				}
-			}
-			if ($index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value') {
-				$result[$index] = (object) $fields;
-			} else {
-				$result[$index] = $fields;
-			}
-		}
-
-		return $result;
-	}
-
 	public function save_form() {
 		$this->buildForms();
 		$action   = filter_input( INPUT_POST, 'action' );

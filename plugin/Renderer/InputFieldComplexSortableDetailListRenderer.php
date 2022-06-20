@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Renderer;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 use function esc_attr;
@@ -119,7 +120,7 @@ class InputFieldComplexSortableDetailListRenderer
 		$deactivatedStyle = null;
 		$deactivatedInOnOffice = null;
 		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
-		$name = $isDummy ? 'exclude' . $this->getName() : $this->getName();
+		$name = $isDummy ? AdminPageAjax::EXCLUDE_FIELD . $this->getName() : $this->getName();
 
 		if ($label == null) {
 			$label = $inactiveFields[$key] ?? null;

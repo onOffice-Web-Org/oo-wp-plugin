@@ -248,17 +248,7 @@ class AdminPageSimilarEstates
 			wp_die();
 		}
 
-		foreach ( $_POST as $index => $fields ) {
-			if ( is_array( $fields ) ) {
-				foreach ( $fields as $key => $field ) {
-					if ( $key === 'dummy_key' || $field === 'dummy_key' ) {
-						unset( $_POST[ $index ][ $key ] );
-					}
-				}
-			}
-		}
-
-		$values                    = json_decode( json_encode( $_POST ) );
+		$values                    = (object) $this->transformPostValues();
 		$pInputModelDBAdapterArray = new InputModelOptionAdapterArray();
 
 		foreach ( $this->getFormModels() as $pFormModel ) {

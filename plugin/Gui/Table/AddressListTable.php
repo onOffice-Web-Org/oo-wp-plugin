@@ -149,7 +149,8 @@ class AddressListTable
 
 	protected function column_shortcode($pItem)
 	{
-		return '<input type="text" readonly value="[oo_address view=&quot;'.esc_html($pItem->name).'&quot;]">';
+		return '<input type="text" readonly value="[oo_address view=&quot;'.esc_html($pItem->name).'&quot;]"><input type="button" class="button button-copy" data-clipboard-text="[oo_address view=&quot;' . esc_html( $pItem->name ) . '&quot;]" value="' . esc_html__( 'Copy',
+                'onoffice-for-wp-websites' ) . '" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
 	}
 
 
