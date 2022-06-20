@@ -375,7 +375,7 @@ msgstr "Aprire il modulo"
 #~ msgid "Search Criteria"
 #~ msgstr "Criteri di ricerca"
 
-#~ msgid "Form Specific Fields"
+#~ msgid "Form Special Fields"
 #~ msgstr "Campi specifici del modulo"
 
 #~ msgid "Geo Range Search"

@@ -106,7 +106,7 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 	private function getExpectedFieldNewsletter(): Field
 	{
 		$pFieldNewsletter = new Field('newsletter', onOfficeSDK::MODULE_ADDRESS, 'Newsletter');
-		$pFieldNewsletter->setCategory('');
+		$pFieldNewsletter->setCategory('Special Fields');
 		$pFieldNewsletter->setDefault(false);
 		$pFieldNewsletter->setLength(0);
 		$pFieldNewsletter->setPermittedvalues([]);
@@ -125,7 +125,7 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 	private function getExpectedFieldMessage(): Field
 	{
 		$pFieldMessage = new Field('message', '', 'Message');
-		$pFieldMessage->setCategory('Form Specific Fields');
+		$pFieldMessage->setCategory('Special Fields');
 		$pFieldMessage->setDefault(null);
 		$pFieldMessage->setLength(0);
 		$pFieldMessage->setPermittedvalues([]);

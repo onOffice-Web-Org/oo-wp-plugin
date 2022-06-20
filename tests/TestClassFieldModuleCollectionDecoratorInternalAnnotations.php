@@ -62,7 +62,11 @@ class TestClassFieldModuleCollectionDecoratorInternalAnnotations
 
 	public function testGetAllFields()
 	{
-		$pDecoratorAddress = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection);
+		$pDecoratorAddress = $this->getMockBuilder(FieldModuleCollectionDecoratorReadAddress::class)
+		                            ->setMethods(['getAddressEstateField', 'getFieldByModuleAndName', 'setAllAddressEstateField'])
+		                            ->setConstructorArgs([new FieldsCollection()])
+		                            ->getMock();
+		$pDecoratorAddress->method('setAllAddressEstateField')->with([FieldModuleCollectionDecoratorReadAddress::getNewAddressFields()]);
 		$pDecoratorAnnotated = new FieldModuleCollectionDecoratorInternalAnnotations($pDecoratorAddress);
 
 		$this->assertEquals(count($pDecoratorAddress->getAllFields()), count($pDecoratorAnnotated->getAllFields()));
