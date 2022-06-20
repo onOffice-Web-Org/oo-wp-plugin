@@ -77,7 +77,11 @@ class FormPostInterest
 	{
 		/* @var $pFormConfiguration DataFormConfigurationInterest */
 		$pFormConfiguration = $pFormData->getDataFormConfiguration();
-		$recipient = $pFormConfiguration->getRecipient();
+		if ( $pFormConfiguration->getDefaultRecipient() ) {
+			$recipient = get_option( 'onoffice-settings-default-email', '' );
+		} else {
+			$recipient = $pFormConfiguration->getRecipient();
+		}
 		$subject = $pFormConfiguration->getSubject();
 
 		try {
