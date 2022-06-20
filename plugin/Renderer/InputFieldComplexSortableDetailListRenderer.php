@@ -119,6 +119,7 @@ class InputFieldComplexSortableDetailListRenderer
 		$deactivatedStyle = null;
 		$deactivatedInOnOffice = null;
 		$dummyText = $isDummy ? 'data-onoffice-ignore="true"' : '';
+		$name = $isDummy ? 'exclude' . $this->getName() : $this->getName();
 
 		if ($label == null) {
 			$label = $inactiveFields[$key] ?? null;
@@ -140,7 +141,7 @@ class InputFieldComplexSortableDetailListRenderer
 					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[id]" value="'.esc_html($iteration).'">'
 					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[name]" value="'.esc_html($label).'">'
 					.'<input type="hidden" name="filter_fields_order'.esc_html($iteration).'[slug]" value="'.esc_html($key).'">'
-					.'<input type="hidden" name="'.esc_attr($this->getName()).'[]" value="'.esc_html($key).'" '
+					.'<input type="hidden" name="'.esc_attr($name).'[]" value="'.esc_html($key).'" '
 						.' '.$this->renderAdditionalAttributes().' '.$dummyText.'>'
 				.'</div>'
 			.'</div>'

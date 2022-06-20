@@ -157,7 +157,7 @@ class InputModelRenderer
 
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
 				$onOfficeInputFields = false;
-				$pInstance = new InputFieldCheckboxButtonRenderer($elementName,
+				$pInstance = new InputFieldCheckboxButtonRenderer('exclude' . $elementName,
 					$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setId($pInputModel->getId());

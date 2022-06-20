@@ -667,7 +667,7 @@ abstract class AdminPageFormSettingsBase
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
 		echo '<input type="hidden" name="record_id" value="' . ( $_GET['id'] ?? 0 ) . '" />';
-		echo '<input type="hidden" name="type" value="' . $_GET['type'] . '" />';
+		echo '<input type="hidden" name="type" value="' . $this->getType() . '" />';
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
@@ -719,18 +719,8 @@ abstract class AdminPageFormSettingsBase
 		}
 
 		$mainRecordId = $recordId != 0 ? $recordId : null;
+		$values = (object) $this->transformPostValues();
 
-		foreach ( $_POST as $index => $fields ) {
-			if ( is_array( $fields ) ) {
-				foreach ( $fields as $key => $field ) {
-					if ( $key === 'dummy_key' || $field === 'dummy_key' ) {
-						unset( $_POST[ $index ][ $key ] );
-					}
-				}
-			}
-		}
-
-		$values = json_decode( json_encode( $_POST ) );
 		$this->prepareValues( $values );
 		$pInputModelDBAdapterRow = new InputModelDBAdapterRow();
 

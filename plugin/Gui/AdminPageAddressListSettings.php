@@ -253,8 +253,10 @@ class AdminPageAddressListSettings
 				$recordId = $pRecordManagerInsert->insertByRow($row);
 
 				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
-				$row = $this->prepareRelationValues(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS,
-					'listview_address_id', $row, $recordId);
+				$row = [
+					RecordManager::TABLENAME_FIELDCONFIG_ADDRESS => $this->prepareRelationValues
+					(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS, 'listview_address_id', $row, $recordId),
+				];
 				$pRecordManagerInsert->insertAdditionalValues($row);
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {

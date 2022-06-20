@@ -263,18 +263,14 @@ class AdminViewController
 	 *
 	 */
 
-	public function add_ajax_actions()
+	public function add_actions()
 	{
 		foreach ( $this->_ajaxHooks as $hook => $pAdminPage ) {
-			if ( ! is_callable( array( $pAdminPage, 'ajax_action' ) ) ) {
+			if ( ! is_callable( array( $pAdminPage, 'save_form' ) ) ) {
 				throw new Exception( get_class( $pAdminPage ) . ' must be an instance of AdminPageAjax!' );
 			}
 
-			if ( $hook === 'admin_page_' . $this->_pageSlug . '-editlistview' || $hook === 'admin_page_' . $this->_pageSlug . '-editform' ) {
-				add_action( 'admin_post_' . $hook, array( &$this->_ajaxHooks[ $hook ], 'save_form' ) );
-			} else {
-				add_action( 'wp_ajax_' . $hook, array( $this->_ajaxHooks[ $hook ], 'ajax_action' ) );
-			}
+			add_action( 'admin_post_' . $hook, array( &$this->_ajaxHooks[ $hook ], 'save_form' ) );
 		}
 	}
 

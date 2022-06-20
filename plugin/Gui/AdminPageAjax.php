@@ -55,7 +55,7 @@ abstract class AdminPageAjax
 	 *
 	 */
 
-	abstract public function ajax_action();
+	abstract public function save_form();
 
 
 	/**
@@ -92,6 +92,7 @@ abstract class AdminPageAjax
 		$formId = $pFormModel->getGroupSlug();
 		$formIdHtmlFriendly = HtmlIdGenerator::generateByString($formId);
 		$formLabel = $pFormModel->getLabel();
+
 
 		$callback = function() use ($pFormModel) {
 			/* @var $pInputModelRenderer InputModelRenderer */

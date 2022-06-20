@@ -113,7 +113,7 @@ class TestClassAdminViewController
 	{
 		global $wp_filter;
 		$wp_filter = [];
-		$pAdminViewController->add_ajax_actions();
+		$pAdminViewController->add_actions();
 		$this->assertCount(4, $wp_filter);
 	}
 

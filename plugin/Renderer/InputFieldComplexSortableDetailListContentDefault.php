@@ -64,6 +64,10 @@ class InputFieldComplexSortableDetailListContentDefault
 				call_user_func($callbackValue, $pInputModel, $key, $type);
 			}
 
+			if ($isDummy) {
+				$pInputModel->setTable('exclude' . $pInputModel->getTable());
+			}
+
 			$pFormModel->addInputModel($pInputModel);
 		}
 

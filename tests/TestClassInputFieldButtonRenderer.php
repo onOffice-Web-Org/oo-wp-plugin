@@ -46,7 +46,7 @@ class TestClassInputFieldButtonRenderer
 		ob_start();
 		$pRenderer->render();
 		$output = ob_get_clean();
-		$this->assertEquals( '<input type="button" class="button button-copy" data-clipboard-text="" value="Copy" >',
+		$this->assertEquals( '<input type="button" class="button button-copy" data-clipboard-text="" value="Copy" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>',
 			$output );
 	}
 }
