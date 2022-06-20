@@ -84,11 +84,7 @@ class FormPostContact
 	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
-		if ($pFormConfig->getDefaultRecipient()) {
-			$recipient = get_option('onoffice-settings-default-email', '');
-		} else {
-			$recipient = $pFormConfig->getRecipient();
-		}
+		$recipient = $this->getRecipient($pFormConfig);
 		$subject = $pFormConfig->getSubject();
 
 		try {
