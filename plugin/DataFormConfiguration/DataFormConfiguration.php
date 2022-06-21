@@ -70,6 +70,12 @@ class DataFormConfiguration
 	/** @var bool */
 	private $_contactType = '';
 
+	/** @var string */
+	private $_recipient = '';
+
+	/** @var bool */
+	private $_defaultRecipient = false;
+
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -191,4 +197,31 @@ class DataFormConfiguration
 	/** @return string */
 	public function getContactType(): string
 		{ return $this->_contactType; }
+
+	/** @return bool */
+	public function getDefaultRecipient()
+		{ return $this->_defaultRecipient; }
+
+	/** @param bool $defaultRecipient */
+	public function setDefaultRecipient(bool $defaultRecipient)
+		{ $this->_defaultRecipient = $defaultRecipient; }
+
+	/** @return string */
+	public function getRecipient()
+		{ return $this->_recipient; }
+
+	/** @param string $recipient */
+	public function setRecipient($recipient)
+		{ $this->_recipient = $recipient; }
+
+	/**
+	 * @return string
+	 */
+	public function getRecipientByUserSelection(): string {
+		if ( $this->_defaultRecipient ) {
+			return get_option( 'onoffice-settings-default-email', '' );
+		}
+
+		return $this->_recipient;
+	}
 }
