@@ -42,7 +42,7 @@ class TestClassInputFieldSelectRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer"  id="select_1"></select><div class="memssageReference"></div>', $output);
+		$this->assertEquals('<select name="testRenderer"  id="select_1"></select>', $output);
 	}
 
 	/**
@@ -57,7 +57,7 @@ class TestClassInputFieldSelectRenderer
 		$output = ob_get_clean();
 		$this->assertEquals('<select name="testRenderer"  id="select_1">'
 			.'<option value="johndoe" >John Doe</option><option value="konradzuse" >'
-			.'Konrad Zuse</option></select><div class="memssageReference"></div>', $output);
+			.'Konrad Zuse</option></select>', $output);
 	}
 
 	/**
@@ -73,7 +73,7 @@ class TestClassInputFieldSelectRenderer
 		$output = ob_get_clean();
 		$this->assertEquals('<select name="testRenderer"  id="select_1">'
 			.'<optgroup label="John Doe" ></optgroup><option value="konradzuse" >'
-			.'Konrad Zuse</option></select><div class="memssageReference"></div>', $output);
+			.'Konrad Zuse</option></select>', $output);
 	}
 
 	/**
@@ -90,6 +90,6 @@ class TestClassInputFieldSelectRenderer
 		$output = ob_get_clean();
 		$this->assertEquals('<select name="testRenderer"  id="select_1">'
 			.'<optgroup label="John Doe" ></optgroup><option value="konradzuse"  selected="selected" >'
-			.'Konrad Zuse</option></select><div class="memssageReference"></div>', $output);
+			.'Konrad Zuse</option></select>', $output);
 	}
 }
