@@ -3,8 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-06-06T17:42:57+07:00\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/onoffice-for-wp-"
+"websites\n"
+"POT-Creation-Date: 2022-06-09T13:31:02+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 2.4.1\n"
 
 #. Plugin Name of the plugin
 msgid "onOffice for WP-Websites"
@@ -149,22 +150,59 @@ msgstr "absteigend"
 msgid "Geo Position"
 msgstr "Geo-Position"
 
+#: plugin/Field/Collection/FieldLoaderGeneric.php:100
+#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
+#: plugin/Field/Collection/FieldsCollectionToContentFieldLabelArrayConverter.php:48
+#: plugin/Field/FieldModuleCollectionDecoratorAbstract.php:156
+#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:59
+#: plugin/Fieldnames.php:154 plugin/Fieldnames.php:238
+#: plugin/Gui/AdminPageFormSettingsBase.php:512
+msgid "Special Fields"
+msgstr "Spezifische Felder"
+
 #: plugin/Field/Collection/FieldRowConverterSearchCriteria.php:68
 msgid "Search Criteria"
 msgstr "Suchkriterium"
 
-#: plugin/Field/Collection/FieldsCollectionBuilderShort.php:191
-#: plugin/Fieldnames.php:220 plugin/Gui/AdminPageFormSettingsContact.php:194
-msgid "Form Specific Fields"
-msgstr "Formspezifische Felder"
-
-#: plugin/Field/Collection/FieldsCollectionToContentFieldLabelArrayConverter.php:48
-msgid "(unnamed category)"
-msgstr ""
+#: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:58
+msgid "Message"
+msgstr "Nachricht"
 
 #: plugin/Field/FieldModuleCollectionDecoratorGeoPositionBackend.php:70
 msgid "Geo Range Search"
 msgstr "Umkreissuche"
+
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:234
+msgid "All non-mobile phone numbers"
+msgstr "Alle Nicht-Handynummern"
+
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:235
+msgid "All fax numbers"
+msgstr "Alle Faxnummern"
+
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:236
+msgid "All mobile numbers"
+msgstr "Alle Handynummern"
+
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:237
+msgid "All e-mail addresses"
+msgstr "Alle E-Mail-Adressen"
+
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:238
+msgid "Default phone number"
+msgstr "Standardtelefonnummer"
+
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:239
+msgid "Default fax number"
+msgstr "Standardmäßige Faxnummer"
+
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:240
+msgid "Default e-mail address"
+msgstr "Standard-E-Mail-Adresse"
+
+#: plugin/Field/FieldModuleCollectionDecoratorReadAddress.php:241
+msgid "Image"
+msgstr "Bild"
 
 #: plugin/Form.php:98
 msgid "Submit"
@@ -214,7 +252,7 @@ msgstr "Adressliste bearbeiten"
 #: plugin/Gui/AdminPageAddressListSettings.php:106
 #: plugin/Gui/AdminPageEstateListSettings.php:86
 #: plugin/Gui/AdminPageEstateUnitSettings.php:71
-#: plugin/Gui/AdminPageFormSettingsBase.php:395
+#: plugin/Gui/AdminPageFormSettingsBase.php:396
 msgid "choose name"
 msgstr "Name auswählen"
 
@@ -222,7 +260,7 @@ msgstr "Name auswählen"
 #: plugin/Gui/AdminPageEstateDetail.php:278
 #: plugin/Gui/AdminPageEstateListSettings.php:132
 #: plugin/Gui/AdminPageEstateUnitSettings.php:87
-#: plugin/Gui/AdminPageFormSettingsBase.php:412
+#: plugin/Gui/AdminPageFormSettingsBase.php:413
 msgid "Layout & Design"
 msgstr "Layout & Design"
 
@@ -278,50 +316,44 @@ msgstr "API-Token"
 msgid "API secret"
 msgstr "API-Secret"
 
-#: plugin/Gui/AdminPageApiSettings.php:124
-#, fuzzy
-#| msgid "API settings"
-msgid "API settings (encrypted)"
-msgstr "API Einstellungen"
-
-#: plugin/Gui/AdminPageApiSettings.php:126
+#: plugin/Gui/AdminPageApiSettings.php:110
 msgid "API settings"
 msgstr "API Einstellungen"
 
-#: plugin/Gui/AdminPageApiSettings.php:134
+#: plugin/Gui/AdminPageApiSettings.php:117
 #, fuzzy
 #| msgid "Fallback's E-Mail Address"
 msgid "Default Email Address"
 msgstr "Fallback-Adresse(optiona)"
 
-#: plugin/Gui/AdminPageApiSettings.php:145
+#: plugin/Gui/AdminPageApiSettings.php:128
 msgid "Email"
 msgstr "Email"
 
-#: plugin/Gui/AdminPageApiSettings.php:156
+#: plugin/Gui/AdminPageApiSettings.php:139
 msgid "Site Key"
 msgstr "Site Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:157
+#: plugin/Gui/AdminPageApiSettings.php:140
 msgid "Secret Key"
 msgstr "Secret Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:178
+#: plugin/Gui/AdminPageApiSettings.php:161
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:193
-#: plugin/Gui/AdminPageApiSettings.php:203
+#: plugin/Gui/AdminPageApiSettings.php:176
+#: plugin/Gui/AdminPageApiSettings.php:186
 msgid "Google Maps Key"
 msgstr "Google Maps-Key"
 
-#: plugin/Gui/AdminPageApiSettings.php:210
+#: plugin/Gui/AdminPageApiSettings.php:193
 #, fuzzy
 #| msgid "Index PDF brochure"
 msgid "Allow indexing of PDF brochures"
 msgstr "Indexierung von PDF-Exposés erlauben"
 
-#: plugin/Gui/AdminPageApiSettings.php:216
+#: plugin/Gui/AdminPageApiSettings.php:199
 msgid ""
 "If you allow indexing, your search engine ranking can be negatively affected "
 "and your brochures can be available from search engines even months after "
@@ -332,39 +364,39 @@ msgstr ""
 "Immobilie von der Website noch mehrere Monate lang in Suchmaschinen "
 "auffindbar sein"
 
-#: plugin/Gui/AdminPageApiSettings.php:221
+#: plugin/Gui/AdminPageApiSettings.php:204
 msgid "Search engine"
 msgstr "Search engine"
 
-#: plugin/Gui/AdminPageApiSettings.php:261
+#: plugin/Gui/AdminPageApiSettings.php:243
 msgid "The keys are OK."
 msgstr "Die Keys sind OK."
 
-#: plugin/Gui/AdminPageApiSettings.php:262
+#: plugin/Gui/AdminPageApiSettings.php:244
 msgid "There was an error:"
 msgstr "Ein Fehler ist aufgetreten:"
 
-#: plugin/Gui/AdminPageApiSettings.php:263
+#: plugin/Gui/AdminPageApiSettings.php:245
 msgid "The secret parameter is missing."
 msgstr "Der Secret-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:264
+#: plugin/Gui/AdminPageApiSettings.php:246
 msgid "The secret parameter is invalid or malformed."
 msgstr "Der Secret-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:265
+#: plugin/Gui/AdminPageApiSettings.php:247
 msgid "The response parameter is missing."
 msgstr "Der reponse-Parameter fehlt."
 
-#: plugin/Gui/AdminPageApiSettings.php:266
+#: plugin/Gui/AdminPageApiSettings.php:248
 msgid "The response parameter is invalid or malformed."
 msgstr "Der response-Parameter ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:267
+#: plugin/Gui/AdminPageApiSettings.php:249
 msgid "The request is invalid or malformed."
 msgstr "Die Anfrage ist nicht gültig."
 
-#: plugin/Gui/AdminPageApiSettings.php:278
+#: plugin/Gui/AdminPageApiSettings.php:260
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -373,35 +405,35 @@ msgstr ""
 "Sie können reCAPTCHA jedoch schon für die spätere Verwendung in den "
 "Formularen aktivieren."
 
-#: plugin/Gui/AdminPageApiSettings.php:304
+#: plugin/Gui/AdminPageApiSettings.php:286
 msgid "Save changes and clear API cache"
 msgstr "Änderungen speichern und API-Cache leeren"
 
-#: plugin/Gui/AdminPageApiSettings.php:316
+#: plugin/Gui/AdminPageApiSettings.php:298
 msgid "The cache was cleaned."
 msgstr "Der Cache wurde geleert."
 
-#: plugin/Gui/AdminPageApiSettings.php:330
+#: plugin/Gui/AdminPageApiSettings.php:312
 msgid "Map Provider"
 msgstr "Kartenanbieter"
 
-#: plugin/Gui/AdminPageApiSettings.php:337
+#: plugin/Gui/AdminPageApiSettings.php:319
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: plugin/Gui/AdminPageApiSettings.php:338
+#: plugin/Gui/AdminPageApiSettings.php:320
 msgid "Google Maps"
 msgstr "Google Maps"
 
-#: plugin/Gui/AdminPageApiSettings.php:345
+#: plugin/Gui/AdminPageApiSettings.php:327
 msgid "Maps"
 msgstr "Karten"
 
-#: plugin/Gui/AdminPageApiSettings.php:358
+#: plugin/Gui/AdminPageApiSettings.php:340
 msgid "Show title in URL"
 msgstr "Titel in URL anzeigen"
 
-#: plugin/Gui/AdminPageApiSettings.php:364
+#: plugin/Gui/AdminPageApiSettings.php:346
 msgid ""
 "If this checkbox is selected, the title of the property will be part of the "
 "URLs of the detail views. The title is placed after the record number, e.g. "
@@ -413,36 +445,36 @@ msgstr ""
 "platziert, z.B. <code>/1234-nice-location-with-view</code>. Es werden nicht "
 "mehr als die ersten fünf Wörter des Titels verwendet."
 
-#: plugin/Gui/AdminPageApiSettings.php:370
+#: plugin/Gui/AdminPageApiSettings.php:352
 msgid "Detail View URLs"
 msgstr "URLs der Detailansicht"
 
-#: plugin/Gui/AdminPageApiSettings.php:383
+#: plugin/Gui/AdminPageApiSettings.php:365
 msgid "Enable Watchlist"
 msgstr "Merkliste aktivieren"
 
-#: plugin/Gui/AdminPageApiSettings.php:384
+#: plugin/Gui/AdminPageApiSettings.php:366
 msgid "Expression used"
 msgstr "Zu verwendender Ausdruck"
 
-#: plugin/Gui/AdminPageApiSettings.php:395
-#: plugin/Gui/AdminPageApiSettings.php:404
+#: plugin/Gui/AdminPageApiSettings.php:377
+#: plugin/Gui/AdminPageApiSettings.php:386
 msgid "Watchlist"
 msgstr "Merkliste"
 
-#: plugin/Gui/AdminPageApiSettings.php:396
+#: plugin/Gui/AdminPageApiSettings.php:378
 msgid "Favorise"
 msgstr "Favorisieren"
 
-#: plugin/Gui/AdminPageApiSettings.php:415
+#: plugin/Gui/AdminPageApiSettings.php:397
 msgid "Pagination"
 msgstr "Paginierung"
 
-#: plugin/Gui/AdminPageApiSettings.php:422
+#: plugin/Gui/AdminPageApiSettings.php:404
 msgid "By WP Theme"
 msgstr "Nach WP-Thema"
 
-#: plugin/Gui/AdminPageApiSettings.php:423
+#: plugin/Gui/AdminPageApiSettings.php:405
 #, fuzzy
 #| msgid "onOffice"
 msgid "By onOffice-Plugin"
@@ -532,7 +564,7 @@ msgstr "Dokumente zum Herunterladen"
 
 #: plugin/Gui/AdminPageEstateListSettings.php:158
 #: plugin/Gui/AdminPageFormSettingsApplicantSearch.php:73
-#: plugin/Gui/AdminPageFormSettingsContact.php:233
+#: plugin/Gui/AdminPageFormSettingsContact.php:198
 msgid "Geo Fields"
 msgstr "Umkreisfelder"
 
@@ -577,15 +609,15 @@ msgstr "Formulare durchsuchen"
 msgid "Form Specific Options"
 msgstr "Formularspezifische Optionen"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:121
+#: plugin/Gui/AdminPageFormSettingsBase.php:122
 msgid "Edit Form"
 msgstr "Formular bearbeiten"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:269
+#: plugin/Gui/AdminPageFormSettingsBase.php:270
 msgid "The Form was saved."
 msgstr "Das Formular wurde gespeichert."
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:270
+#: plugin/Gui/AdminPageFormSettingsBase.php:271
 msgid ""
 "There was a problem saving the form. Please make sure the name of the form "
 "is unique."
@@ -594,48 +626,48 @@ msgstr ""
 "Sie, ob der Formularname eindeutig ist."
 
 #. translators: %s is a translated module name
-#: plugin/Gui/AdminPageFormSettingsBase.php:279
+#: plugin/Gui/AdminPageFormSettingsBase.php:280
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:621
 msgid "Module: %s"
 msgstr "Modul: %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:280
+#: plugin/Gui/AdminPageFormSettingsBase.php:281
 msgid "Edit Values"
 msgstr "Werte bearbeiten"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:283
+#: plugin/Gui/AdminPageFormSettingsBase.php:284
 msgid "Add Language"
 msgstr "Sprache hinzufügen"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:284
+#: plugin/Gui/AdminPageFormSettingsBase.php:285
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:480
 #: plugin/Model/FormModelBuilder/FormModelBuilderDBForm.php:507
 msgid "Choose Language"
 msgstr "Sprache auswählen"
 
 #. translators: %s is the name of a language
-#: plugin/Gui/AdminPageFormSettingsBase.php:286
+#: plugin/Gui/AdminPageFormSettingsBase.php:287
 msgid "Default Value: %s"
 msgstr "Standardwert: %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:287
+#: plugin/Gui/AdminPageFormSettingsBase.php:288
 msgid "Custom Label: %s"
 msgstr "Benutzerdefiniertes Etikett: %s"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:288
+#: plugin/Gui/AdminPageFormSettingsBase.php:289
 msgid "Default Value From:"
 msgstr "Standardwert von:"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:289
+#: plugin/Gui/AdminPageFormSettingsBase.php:290
 msgid "Default Value Up To:"
 msgstr "Standardwert bis:"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:320
+#: plugin/Gui/AdminPageFormSettingsBase.php:321
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "No"
 msgstr "Nein"
 
-#: plugin/Gui/AdminPageFormSettingsBase.php:321
+#: plugin/Gui/AdminPageFormSettingsBase.php:322
 #: plugin/Gui/Table/EstateListTable.php:174
 msgid "Yes"
 msgstr "Ja"
@@ -686,7 +718,7 @@ msgstr "Bitte geben Sie eine E-Mail-Adresse an!"
 msgid "Fields"
 msgstr "Felder"
 
-#: plugin/Gui/AdminPageSettingsBase.php:425
+#: plugin/Gui/AdminPageSettingsBase.php:410
 msgid "Fields Configuration"
 msgstr "Feldeinstellungen"
 

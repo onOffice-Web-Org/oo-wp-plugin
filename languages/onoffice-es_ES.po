@@ -374,7 +374,7 @@ msgstr "Abrir el formulario"
 #~ msgid "Search Criteria"
 #~ msgstr "Criterios de búsqueda"
 
-#~ msgid "Form Specific Fields"
+#~ msgid "Form Special Fields"
 #~ msgstr "Campos específicos de formulario"
 
 #~ msgid "Geo Range Search"

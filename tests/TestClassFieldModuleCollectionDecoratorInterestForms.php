@@ -50,8 +50,6 @@ class TestClassFieldModuleCollectionDecoratorInterestForms
 		$pFieldModuleDecorator = new FieldModuleCollectionDecoratorInterestForms
 		(new FieldsCollection());
 		$expectedResult = [
-			$this->getExpectedFieldNewsletter(),
-			$this->getExpectedFieldMessage(),
 			$this->getExpectedFieldComment(),
 		];
 		$this->assertEquals($expectedResult, $pFieldModuleDecorator->getAllFields());
@@ -64,12 +62,17 @@ class TestClassFieldModuleCollectionDecoratorInterestForms
 
 	public function testContainsFieldByModule()
 	{
-		$pDecorator = new FieldModuleCollectionDecoratorInterestForms
-		(new FieldModuleCollectionDecoratorReadAddress($this->getPrefilledCollection()));
+		$pDecoratorAddress = $this->getMockBuilder(FieldModuleCollectionDecoratorReadAddress::class)
+		                          ->setMethods(['getAddressEstateField', 'getFieldByModuleAndName', 'setAllAddressEstateField'])
+		                          ->setConstructorArgs([$this->getPrefilledCollection()])
+		                          ->getMock();
+		$pDecoratorAddress->method('setAllAddressEstateField')->with([FieldModuleCollectionDecoratorReadAddress::getNewAddressFields()]);
+
+		$pDecorator = new FieldModuleCollectionDecoratorInterestForms($pDecoratorAddress);
 		$this->assertTrue($pDecorator->containsFieldByModule('testModuleA', 'testFieldA'));
 		$this->assertFalse($pDecorator->containsFieldByModule('testModuleF', 'testFieldA'));
-		$this->assertTrue($pDecorator->containsFieldByModule(onOfficeSDK::MODULE_ADDRESS, 'newsletter'));
-		$this->assertTrue($pDecorator->containsFieldByModule('', 'message'));
+		$this->assertFalse($pDecorator->containsFieldByModule(onOfficeSDK::MODULE_ADDRESS, 'newsletter'));
+		$this->assertFalse($pDecorator->containsFieldByModule('', 'message'));
 	}
 
 
@@ -79,13 +82,10 @@ class TestClassFieldModuleCollectionDecoratorInterestForms
 
 	public function testGetFieldByModuleAndName()
 	{
-		$pDecorator = new FieldModuleCollectionDecoratorInterestForms
-		($this->getPrefilledCollection());
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-		('testModuleA', 'testFieldC'));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName
-		(onOfficeSDK::MODULE_ADDRESS, 'newsletter'));
-		$this->assertInstanceOf(Field::class, $pDecorator->getFieldByModuleAndName('', 'message'));
+		$pDecorator = new FieldModuleCollectionDecoratorInterestForms( $this->getPrefilledCollection() );
+
+		$this->assertInstanceOf( Field::class, $pDecorator->getFieldByModuleAndName
+		( 'testModuleA', 'testFieldC' ) );
 	}
 
 
