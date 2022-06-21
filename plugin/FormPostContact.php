@@ -92,7 +92,7 @@ class FormPostContact
 				$this->createAddress($pFormData);
 			}
 		} finally {
-			$this->sendContactRequest($pFormData, $recipient ?? '', $subject);
+			$this->sendContactRequest($pFormData, $recipient, $subject);
 		}
 	}
 
