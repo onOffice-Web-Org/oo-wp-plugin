@@ -405,6 +405,17 @@ class DetailViewPostSaveController
 				return;
 			}
 
+			$postContent = $post->post_content;
+			if ( strpos( $postContent, 'oo_estate' ) !== false ) {
+				$this->addPageShortCode( $listView, ['ID' => $postID, 'post_content' => $postContent], 'estate');
+			}
+			if ( strpos( $postContent, 'oo_address' ) !== false ) {
+				$this->addPageShortCode( $listViewAddress, ['ID' => $postID, 'post_content' => $postContent], 'address');
+			}
+			if ( strpos( $postContent, 'oo_form' ) !== false ) {
+				$this->addPageShortCode( $listForm, ['ID' => $postID, 'post_content' => $postContent], 'form');
+			}
+
 			foreach ( $metaKeys as $metaKey ) {
 				if ( strpos( $metaKey[0], 'oo_estate' ) !== false ) {
 					$this->addPageShortCode( $listView, ['ID' => $postID, 'post_content' => $metaKey[0]], 'estate');
@@ -434,6 +445,18 @@ class DetailViewPostSaveController
 		if ( ! $isRevision && $post->post_type === 'page' ) {
 			$postID = $post->ID;
 			$metaKeys = get_post_meta( $postID, '', true );
+
+			$postContent = $post->post_content;
+			if (strpos($postContent, 'oo_estate') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
+				$this->deletePageShortCode( $listView, $post, "oo_plugin_listviews", "listview_id", "listview_id" );
+			}
+			if (strpos($postContent, 'oo_address') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
+				$this->deletePageShortCode( $listViewAddress, $post, "oo_plugin_listviews_address",
+					"listview_address_id", "listview_address_id" );
+			}
+			if (strpos($postContent, 'oo_form') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
+				$this->deletePageShortCode( $listForm, $post, "oo_plugin_forms", "form_id", "form_id" );
+			}
 
 			foreach ( $metaKeys as $metaKey ) {
 				if (strpos($metaKey[0], 'oo_estate') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
