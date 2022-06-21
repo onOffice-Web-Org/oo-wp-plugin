@@ -77,7 +77,7 @@ class FormPostInterest
 	{
 		/* @var $pFormConfiguration DataFormConfigurationInterest */
 		$pFormConfiguration = $pFormData->getDataFormConfiguration();
-		$recipient = $this->getRecipient($pFormConfiguration);
+		$recipient = $pFormConfiguration->getRecipientByUserSelection();
 		$subject = $pFormConfiguration->getSubject();
 
 		try {

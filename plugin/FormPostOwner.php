@@ -85,7 +85,7 @@ class FormPostOwner
 		$pDataFormConfiguration = $pFormData->getDataFormConfiguration();
 		$this->_pFormData = $pFormData;
 
-		$recipient = $this->getRecipient($pDataFormConfiguration);
+		$recipient = $pDataFormConfiguration->getRecipientByUserSelection();
 		$subject = $pDataFormConfiguration->getSubject();
 
 		try {

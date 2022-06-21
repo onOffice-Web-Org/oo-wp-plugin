@@ -137,19 +137,6 @@ abstract class FormPost
 	}
 
 	/**
-	 * @param  DataFormConfiguration  $pFormConfiguration
-	 *
-	 * @return bool|mixed|void
-	 */
-	protected function getRecipient( DataFormConfiguration $pFormConfiguration ) {
-		if ( $pFormConfiguration->getDefaultRecipient() ) {
-			return get_option( 'onoffice-settings-default-email', '' );
-		}
-
-		return $pFormConfiguration->getRecipient();
-	}
-
-	/**
 	 * @return array
 	 */
 	protected function expandFieldsCollection()

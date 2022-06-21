@@ -191,4 +191,15 @@ class DataFormConfiguration
 	/** @return string */
 	public function getContactType(): string
 		{ return $this->_contactType; }
+
+	/**
+	 * @return string
+	 */
+	public function getRecipientByUserSelection(): ?string {
+		if ( $this->getDefaultRecipient() ) {
+			return get_option( 'onoffice-settings-default-email', '' );
+		}
+
+		return $this->getRecipient();
+	}
 }

@@ -72,19 +72,19 @@ class FormPostContact
 		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
 	}
 
+
 	/**
+	 * @param  FormData  $pFormData
 	 *
-	 * @param FormData $pFormData
 	 * @throws ApiClientException
 	 * @throws DependencyException
-	 * @throws Field\UnknownFieldException
 	 * @throws NotFoundException
 	 */
 
 	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
-		$recipient = $this->getRecipient($pFormConfig);
+		$recipient = $pFormConfig->getRecipientByUserSelection();
 		$subject = $pFormConfig->getSubject();
 
 		try {
