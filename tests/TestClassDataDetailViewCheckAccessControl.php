@@ -50,7 +50,7 @@ class TestClassDataDetailViewCheckAccessControl
 	{
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataDetailView        = $pDataDetailViewHandler->getDetailView();
-		$pDataDetailView->setHasDetailViewRestrict( false );
+		$pDataDetailView->setHasDetailViewRestrict( true );
 		$pDataDetailViewHandler->saveDetailView( $pDataDetailView );
 
 		$pEstateDetailFactory = $this->getMockBuilder( EstateListFactory::class )
@@ -72,7 +72,7 @@ class TestClassDataDetailViewCheckAccessControl
 			$pEstateDetailFactory );
 		$restrictAccessControlChecker       = $pDataDetailViewCheckRestrictAccess->checkRestrictAccess( $estateId );
 
-		$this->assertEquals( $pDataDetailView->getViewRestrict(), false );
+		$this->assertEquals( $pDataDetailView->getViewRestrict(), true );
 		$this->assertEquals( $result, $restrictAccessControlChecker );
 	}
 
@@ -86,8 +86,8 @@ class TestClassDataDetailViewCheckAccessControl
 	public function dataProvider(): Generator
 	{
 		yield from [
-			[ 3, new ArrayContainerEscape( [ 3 => [ 'elements' => [ 'referenz' => "1" ] ] ] ), false ],
-			[ 4, new ArrayContainerEscape( [ 4 => [ 'elements' => [ 'referenz' => "0" ] ] ] ), true ],
+			[ 3, new ArrayContainerEscape( [ 3 => [ 'elements' => [ 'referenz' => "1" ] ] ] ), true ],
+			[ 4, new ArrayContainerEscape( [ 4 => [ 'elements' => [ 'referenz' => "0" ] ] ] ), false ],
 		];
 	}
 }
