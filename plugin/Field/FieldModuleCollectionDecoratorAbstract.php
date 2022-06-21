@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
 use onOffice\WPlugin\Types\Field;
 
 /**
@@ -37,10 +39,13 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 	/** @var FieldModuleCollection */
 	private $_pFieldModuleCollection = null;
 
+	/** @var array */
+	protected $_allAddressEstateField = [];
+
 
 	/**
 	 *
-	 * @param FieldModuleCollection $pFieldModuleCollection
+	 * @param  FieldModuleCollection  $pFieldModuleCollection
 	 *
 	 */
 
@@ -113,8 +118,8 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 	{
 		$newFields = [];
 
-		foreach ($fieldsByModule as $module => $fieldsByModule) {
-			foreach ($fieldsByModule as $name => $row) {
+		foreach ($fieldsByModule as $module => $fields) {
+			foreach ($fields as $name => $row) {
 				$row['module'] = $module;
 				$newFields []= Field::createByRow($name, $row);
 			}
@@ -133,5 +138,71 @@ abstract class FieldModuleCollectionDecoratorAbstract implements FieldModuleColl
 	protected function getFieldModuleCollection(): FieldModuleCollection
 	{
 		return $this->_pFieldModuleCollection;
+	}
+
+
+	/**
+	 * @param $newFields
+	 *
+	 * @return array
+	 */
+
+	protected function formatFieldContent( $newFields ): array
+	{
+		$this->getAddressEstateField();
+		$newFieldFormat = [];
+
+		foreach ( $newFields[''] as $addressFieldName => $addressFieldProperties ) {
+			$addressFieldProperties['content']   = __( 'Special Fields', 'onoffice-for-wp-websites' );
+			$newFieldFormat[ $addressFieldName ] = $addressFieldProperties;
+		}
+		unset( $newFields[''] );
+
+		foreach ( $this->_allAddressEstateField as $name => $fieldProperties ) {
+			if ( isset( $newFields[ $fieldProperties['tablename'] ] ) ) {
+				foreach ( $newFields[ $fieldProperties['tablename'] ] as $addressFieldName => $addressFieldProperties ) {
+					$addressFieldProperties['content']   = $fieldProperties['content'];
+					$newFieldFormat[ $addressFieldName ] = $addressFieldProperties;
+				}
+				unset( $newFields[ $fieldProperties['tablename'] ] );
+
+				if ( empty( $newFields ) ) {
+					return $newFieldFormat;
+				}
+			}
+		}
+		foreach ( $newFields as $field ) {
+			$newFieldFormat += $field;
+		}
+
+		return $newFieldFormat;
+	}
+
+
+	/**
+	 *
+	 *
+	 */
+
+	protected function getAddressEstateField() {
+		$pDIContainerBuilder          = new ContainerBuilder;
+		$pContainer                   = $pDIContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH )->build();
+		$pFieldLoader                 = $pContainer->get( FieldLoaderGeneric::class );
+		$result                       = $pFieldLoader->sendRequest();
+		$this->_allAddressEstateField = [];
+		foreach ( $result as $fieldModule ) {
+			unset( $fieldModule['elements']['label'] );
+			$this->_allAddressEstateField += $fieldModule['elements'];
+		}
+	}
+
+
+	/**
+	 * @param $allAddressEstateField
+	 */
+
+	protected function setAllAddressEstateField($allAddressEstateField)
+	{
+		$this->_allAddressEstateField = $allAddressEstateField;
 	}
 }

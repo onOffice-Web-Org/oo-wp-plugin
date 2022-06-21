@@ -122,6 +122,7 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowCheckDuplicatesInterestOwner(true);
 				$pAdminPage->setShowGeoPositionSettings(true);
 				$pAdminPage->setShowContactTypeSelect(true);
+				$pAdminPage->setShowMessageInput(true);
 				break;
 			case Form::TYPE_OWNER:
 				/* @var $pAdminPage AdminPageFormSettingsInquiry */

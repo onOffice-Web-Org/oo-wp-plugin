@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.0
 Requires PHP: 7.3
-Stable tag: 3.2
+Stable tag: 4.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -76,7 +76,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= Unreleased =
+= 4.0 (2022-06-21) =
 
 **Removed**
 
@@ -89,7 +89,7 @@ Start editing inside the `onoffice-personalized` folder.
 **Changed**
 
 * We now load a CSS file from the template folder. This allows you to more easily modify the CSS for your templates. If you have a file "onoffice-style.css" in your template folder (e.g. at wp-content/plugins/onoffice-personalized/templates/onoffice-style.css), we will load that instead of our default styles. To remain backwards compatible, if that file is not found, we continue loading our old styles.
-* We removed some redundant fields for the contact person and improved their labels in the detail view settings. This change is backwards compatible, your templates will continue to work without changes.
+* We removed some redundant fields for the contact person in the detail view and improved their labels in the detail view settings. This change is backwards compatible, your templates will continue to work without changes.
 
 **Fixed**
 
