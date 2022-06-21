@@ -43,7 +43,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 31;
+	const MAX_VERSION = 32;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -237,9 +237,13 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ($dbversion == 30) {
-			$this->_pWpOption->addOption('onoffice-is-encryptcredent', false);
 			dbDelta($this->getCreateQueryForms());
 			$dbversion = 31;
+		}
+
+		if ($dbversion == 31) {
+			$this->_pWpOption->addOption('onoffice-is-encryptcredent', false);
+			$dbversion = 32;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
