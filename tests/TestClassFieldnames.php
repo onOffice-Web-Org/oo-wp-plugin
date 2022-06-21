@@ -273,12 +273,13 @@ class TestClassFieldnames
 				'BEL' => 'Belgium',
 				'DEU' => 'Germany',
 			],
-			'content' => 'Form Specific Fields',
+			'content' => 'Special Fields',
 			'module' => 'estate',
 			'rangefield' => false,
 			'additionalTranslations' => [],
 			'labelOnlyValues' => [],
 			'compoundFields' => [],
+			'tablename' => ''
 		];
 		$actualResult = $pFieldNames->getFieldInformation('country', onOfficeSDK::MODULE_ESTATE);
 		$this->assertEquals($expectedResult, $actualResult);
