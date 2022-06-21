@@ -86,9 +86,9 @@ class DataDetailViewCheckAccessControl
 
 	public function checkRestrictAccess( int $estateId ): bool
 	{
-		$accessControl = $this->pDataDetailViewHandler->getDetailView()->getViewRestrict();
+		$restrictAccess = $this->pDataDetailViewHandler->getDetailView()->getViewRestrict();
 
-		if ( ! $accessControl ) {
+		if ( $restrictAccess ) {
 			$pEstateDetail = $this->estateListFactory->createEstateDetail( $estateId );
 			$pEstateDetail->loadEstates();
 			$pEstateDetail->estateIterator();
@@ -96,10 +96,10 @@ class DataDetailViewCheckAccessControl
 			$referenz  = $rawValues->getValueRaw( $estateId )['elements']['referenz'];
 
 			if ( $referenz === "1" ) {
-				return false;
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 }

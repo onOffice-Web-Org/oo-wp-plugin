@@ -96,10 +96,10 @@ class AdminPageEstateListSettings
 		$pInputModelShowStatus           = $pFormModelBuilder->createInputModelShowStatus();
 		$pInputRestrictAccessControl     = $pFormModelBuilders->createInputRestrictAccessControl();
 		if ( $pInputRestrictAccessControl->getValue() ) {
-			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will not link to their detail page, because the access is <a href="http://wordpress/wp-admin/admin.php?page=onoffice-estates&tab=detail" target="_blank">restricted',
+			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will not link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">restricted</a>',
 				'onoffice-for-wp-websites' ) );
 		} else {
-			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will link to their detail page, because the access is <a href="http://wordpress/wp-admin/admin.php?page=onoffice-estates&tab=detail" target="_blank">not restricted',
+			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">not restricted</a>',
 				'onoffice-for-wp-websites' ) );
 		}
 		$pFormModelRecordsFilter = new FormModel();
