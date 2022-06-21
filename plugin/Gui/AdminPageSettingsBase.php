@@ -393,21 +393,6 @@ abstract class AdminPageSettingsBase
 
 	/**
 	 *
-	 * @param string|null $module
-	 * @param array $fieldNames
-	 */
-
-	protected function removeFieldsConfiguration($module, array $fieldNames)
-	{
-		foreach ($fieldNames as $fieldsData) {
-			$slug = $this->generateGroupSlugByModuleCategory($module, $fieldsData['category']);
-			$this->removeFieldsInFormModel($slug, $fieldsData['fieldName']);
-		}
-	}
-
-
-	/**
-	 *
 	 * @param array $modules
 	 * @param FormModelBuilder $pFormModelBuilder
 	 * @param string $htmlType

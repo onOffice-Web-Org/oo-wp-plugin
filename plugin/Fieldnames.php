@@ -138,7 +138,25 @@ class Fieldnames
 		foreach ($newFieldsByModule as $module => $newFields) {
 			$this->_fieldList[$module] = array_merge($this->_fieldList[$module] ?? [], $newFields);
 		}
+
+		$this->formatFieldAddress();
 	}
+
+
+	/**
+	 *
+	 */
+
+	private function formatFieldAddress()
+	{
+		foreach ( $this->_fieldList[ onOfficeSDK::MODULE_ADDRESS ] as $key => $fieldList ) {
+			if ( is_null( $fieldList['content'] ) || empty( $fieldList['content'] ) ) {
+				$this->_fieldList[ onOfficeSDK::MODULE_ADDRESS ][ $key ]['content'] = __( 'Special Fields',
+					'onoffice-for-wp-websites' );
+			}
+		}
+	}
+
 
 	/**
 	 * @param APIClientActionGeneric $pApiClientAction
@@ -217,8 +235,17 @@ class Fieldnames
 
 		foreach ($extraFieldsObject as $pField) {
 			$newContent = $pField->getCategory() !== '' ?
-				$pField->getCategory() : __('Form Specific Fields', 'onoffice-for-wp-websites');
+				$pField->getCategory() : __('Special Fields', 'onoffice-for-wp-websites');
 			$pField->setCategory($newContent);
+			if (isset($this->_fieldList[ $pField->getModule() ])) {
+				foreach ( $this->_fieldList[ $pField->getModule() ] as $name => $properties ) {
+					if ( ! is_null( $properties['content'] ) && $pField->getTableName() === $properties['tablename'] ) {
+						$pField->setCategory( $properties['content'] );
+						break;
+					}
+				}
+			}
+
 			$extraFields[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
 		}
 
