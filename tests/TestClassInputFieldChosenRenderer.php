@@ -133,7 +133,7 @@ class TestClassInputFieldChosenRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer[]" id="select_1" style="width: 230px;">'
+		$this->assertEquals('<select name="testRenderer" id="select_1" style="width: 230px;">'
 		                    .'<optgroup label="Popular">'
 		                    .'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
 		                    .'<option value="kaltmiete" >Kaltmiete</option>'
