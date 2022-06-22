@@ -178,7 +178,8 @@ class TestClassEstateList
 		$recordModified = [
 			'objekttitel' => 'Name id 15'
 		];
-		$this->assertEquals(has_filter('pre_get_document_title'), 999);
+		$title = tests_add_filter( 'pre_get_document_title', [ $this->_pEstateList, 'estateIterator' ] );
+		$this->assertTrue( $title );
 		$title_parts_array = $this->_pEstateList->custom_pre_get_document_title('', $recordModified);
 		$this->assertEquals($title_parts_array, 'Name id 15');
 		$this->assertEquals(has_action('wp_head'), 1);
