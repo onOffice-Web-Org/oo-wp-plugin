@@ -78,6 +78,10 @@ Start editing inside the `onoffice-personalized` folder.
 
 = Unreleased =
 
+**Added**
+
+* The detail view shortcode is now recognized when it is used in the meta fields of a page. This makes it easier to use Advanced Custom Fields (ACF).
+
 **Fixed**
 
 * The credentials no longer need to be newly entered after adding the encryption constant.
