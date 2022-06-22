@@ -96,6 +96,10 @@ class FieldLoaderGeneric
 					$fieldProperties['permittedvalues'] = $permittedValues;
 				}
 
+				if ( empty( $fieldProperties['content'] ) ) {
+					$fieldProperties['content'] = __( 'Special Fields', 'onoffice-for-wp-websites' );
+				}
+
 				$fieldProperties['module'] = $module;
 				yield $fieldName => $fieldProperties;
 			}
@@ -106,7 +110,7 @@ class FieldLoaderGeneric
 	 * @return array
 	 * @throws APIEmptyResultException
 	 */
-	private function sendRequest(): array
+	public function sendRequest(): array
 	{
 		$parametersGetFieldList = [
 			'labels' => true,

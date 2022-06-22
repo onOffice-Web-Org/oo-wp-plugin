@@ -242,6 +242,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ( $dbversion == 31 ) {
+			$this->_pWpOption->addOption('onoffice-is-encryptcredent', false);
 			$this->updateShowReferenceEstate();
 			$this->setDataDetailViewRestrictAccessControlValue();
 			$dbversion = 32;
@@ -858,14 +859,14 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	public function updateShowReferenceEstate()
 	{
-	$prefix = $this->getPrefix();
-	$sql = "UPDATE {$prefix}oo_plugin_listviews
-	SET `show_reference_estate` = '2'
-	WHERE `list_type`='reference'";
+		$prefix = $this->getPrefix();
+		$sql    = "UPDATE {$prefix}oo_plugin_listviews
+				SET `show_reference_estate` = '2'
+				WHERE `list_type`='reference'";
 
-	$this->_pWPDB->query($sql);
+		$this->_pWPDB->query( $sql );
 	}
-	
+
 
 	/**
 	 * @return void

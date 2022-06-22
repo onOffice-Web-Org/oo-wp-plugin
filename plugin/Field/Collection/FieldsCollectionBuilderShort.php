@@ -188,7 +188,7 @@ class FieldsCollectionBuilderShort
 	{
 		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorInternalAnnotations
 			(new FieldModuleCollectionDecoratorSearchcriteria(new FieldsCollection));
-		$pFieldsCollection->merge($pFieldsCollectionTmp, __('Form Specific Fields', 'onoffice-for-wp-websites'));
+		$pFieldsCollection->merge($pFieldsCollectionTmp, __('Special Fields', 'onoffice-for-wp-websites'));
 		$pFieldCategoryConverterGeoPos = $this->_pContainer->get
 			(FieldCategoryToFieldConverterSearchCriteriaGeoBackend::class);
 		$pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
