@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-06-21T09:43:50+07:00\n"
+"POT-Creation-Date: 2022-06-22T15:58:04+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -340,83 +340,89 @@ msgstr "API-token"
 msgid "API secret"
 msgstr "API geheim"
 
-#: plugin/Gui/AdminPageApiSettings.php:110
+#: plugin/Gui/AdminPageApiSettings.php:124
+#, fuzzy
+#| msgid "API settings"
+msgid "API settings (encrypted)"
+msgstr "API-instellingen"
+
+#: plugin/Gui/AdminPageApiSettings.php:126
 msgid "API settings"
 msgstr "API-instellingen"
 
-#: plugin/Gui/AdminPageApiSettings.php:117
+#: plugin/Gui/AdminPageApiSettings.php:134
 #, fuzzy
 #| msgid "Edit Address List"
 msgid "Default Email Address"
 msgstr "Adreslijst bewerken"
 
-#: plugin/Gui/AdminPageApiSettings.php:128
+#: plugin/Gui/AdminPageApiSettings.php:145
 msgid "Email"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:139
+#: plugin/Gui/AdminPageApiSettings.php:156
 msgid "Site Key"
 msgstr "Sleutel van de site"
 
-#: plugin/Gui/AdminPageApiSettings.php:140
+#: plugin/Gui/AdminPageApiSettings.php:157
 msgid "Secret Key"
 msgstr "Geheime sleutel"
 
-#: plugin/Gui/AdminPageApiSettings.php:161
+#: plugin/Gui/AdminPageApiSettings.php:178
 msgid "Google reCAPTCHA"
 msgstr "Google reCAPTCHA"
 
-#: plugin/Gui/AdminPageApiSettings.php:176
-#: plugin/Gui/AdminPageApiSettings.php:186
+#: plugin/Gui/AdminPageApiSettings.php:193
+#: plugin/Gui/AdminPageApiSettings.php:203
 msgid "Google Maps Key"
 msgstr "Google Kaarten"
 
-#: plugin/Gui/AdminPageApiSettings.php:193
+#: plugin/Gui/AdminPageApiSettings.php:210
 #, fuzzy
 #| msgid "Index PDF brochure"
 msgid "Allow indexing of PDF brochures"
 msgstr "Index PDF brochure"
 
-#: plugin/Gui/AdminPageApiSettings.php:199
+#: plugin/Gui/AdminPageApiSettings.php:216
 msgid ""
 "If you allow indexing, your search engine ranking can be negatively affected "
 "and your brochures can be available from search engines even months after "
 "the corresponding estate is deleted."
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:204
+#: plugin/Gui/AdminPageApiSettings.php:221
 msgid "Search engine"
 msgstr "Search engine"
 
-#: plugin/Gui/AdminPageApiSettings.php:243
+#: plugin/Gui/AdminPageApiSettings.php:261
 msgid "The keys are OK."
 msgstr "De sleutels zijn in orde."
 
-#: plugin/Gui/AdminPageApiSettings.php:244
+#: plugin/Gui/AdminPageApiSettings.php:262
 msgid "There was an error:"
 msgstr "Er was een fout:"
 
-#: plugin/Gui/AdminPageApiSettings.php:245
+#: plugin/Gui/AdminPageApiSettings.php:263
 msgid "The secret parameter is missing."
 msgstr "De geheime parameter ontbreekt."
 
-#: plugin/Gui/AdminPageApiSettings.php:246
+#: plugin/Gui/AdminPageApiSettings.php:264
 msgid "The secret parameter is invalid or malformed."
 msgstr "De geheime parameter is ongeldig of misvormd."
 
-#: plugin/Gui/AdminPageApiSettings.php:247
+#: plugin/Gui/AdminPageApiSettings.php:265
 msgid "The response parameter is missing."
 msgstr "De antwoordparameter ontbreekt."
 
-#: plugin/Gui/AdminPageApiSettings.php:248
+#: plugin/Gui/AdminPageApiSettings.php:266
 msgid "The response parameter is invalid or malformed."
 msgstr "De responsparameter is ongeldig of misvormd."
 
-#: plugin/Gui/AdminPageApiSettings.php:249
+#: plugin/Gui/AdminPageApiSettings.php:267
 msgid "The request is invalid or malformed."
 msgstr "Het verzoek is ongeldig of misvormd."
 
-#: plugin/Gui/AdminPageApiSettings.php:260
+#: plugin/Gui/AdminPageApiSettings.php:278
 msgid ""
 "In order to use Google reCAPTCHA, you need to provide your keys. You're free "
 "to enable it in the form settings for later use."
@@ -425,35 +431,35 @@ msgstr ""
 "staat u vrij om dit in de formulierinstellingen in te schakelen voor later "
 "gebruik."
 
-#: plugin/Gui/AdminPageApiSettings.php:286
+#: plugin/Gui/AdminPageApiSettings.php:304
 msgid "Save changes and clear API cache"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:298
+#: plugin/Gui/AdminPageApiSettings.php:316
 msgid "The cache was cleaned."
 msgstr "De cache is schoongemaakt."
 
-#: plugin/Gui/AdminPageApiSettings.php:312
+#: plugin/Gui/AdminPageApiSettings.php:330
 msgid "Map Provider"
 msgstr "Kaartaanbieder"
 
-#: plugin/Gui/AdminPageApiSettings.php:319
+#: plugin/Gui/AdminPageApiSettings.php:337
 msgid "OpenStreetMap"
 msgstr "OpenStreetMap"
 
-#: plugin/Gui/AdminPageApiSettings.php:320
+#: plugin/Gui/AdminPageApiSettings.php:338
 msgid "Google Maps"
 msgstr "Google Kaarten"
 
-#: plugin/Gui/AdminPageApiSettings.php:327
+#: plugin/Gui/AdminPageApiSettings.php:345
 msgid "Maps"
 msgstr "Kaarten"
 
-#: plugin/Gui/AdminPageApiSettings.php:340
+#: plugin/Gui/AdminPageApiSettings.php:358
 msgid "Show title in URL"
 msgstr "Toon titel in URL"
 
-#: plugin/Gui/AdminPageApiSettings.php:346
+#: plugin/Gui/AdminPageApiSettings.php:364
 msgid ""
 "If this checkbox is selected, the title of the property will be part of the "
 "URLs of the detail views. The title is placed after the record number, e.g. "
@@ -465,36 +471,36 @@ msgstr ""
 "recordnummer geplaatst, b.v. <code>/1234-nice-location-with-view</code>. "
 "Niet meer dan de eerste vijf woorden van de titel worden gebruikt."
 
-#: plugin/Gui/AdminPageApiSettings.php:352
+#: plugin/Gui/AdminPageApiSettings.php:370
 msgid "Detail View URLs"
 msgstr "URL's voor detailweergave"
 
-#: plugin/Gui/AdminPageApiSettings.php:365
+#: plugin/Gui/AdminPageApiSettings.php:383
 msgid "Enable Watchlist"
 msgstr "Watchlist inschakelen"
 
-#: plugin/Gui/AdminPageApiSettings.php:366
+#: plugin/Gui/AdminPageApiSettings.php:384
 msgid "Expression used"
 msgstr "Gebruikte expressie"
 
-#: plugin/Gui/AdminPageApiSettings.php:377
-#: plugin/Gui/AdminPageApiSettings.php:386
+#: plugin/Gui/AdminPageApiSettings.php:395
+#: plugin/Gui/AdminPageApiSettings.php:404
 msgid "Watchlist"
 msgstr "Kijklijst"
 
-#: plugin/Gui/AdminPageApiSettings.php:378
+#: plugin/Gui/AdminPageApiSettings.php:396
 msgid "Favorise"
 msgstr "Favoriet"
 
-#: plugin/Gui/AdminPageApiSettings.php:397
+#: plugin/Gui/AdminPageApiSettings.php:415
 msgid "Pagination"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:404
+#: plugin/Gui/AdminPageApiSettings.php:422
 msgid "By WP Theme"
 msgstr ""
 
-#: plugin/Gui/AdminPageApiSettings.php:405
+#: plugin/Gui/AdminPageApiSettings.php:423
 #, fuzzy
 #| msgid "onOffice"
 msgid "By onOffice-Plugin"
