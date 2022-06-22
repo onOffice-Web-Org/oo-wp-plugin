@@ -31,66 +31,67 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
  * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
+
 class DataListViewFactory
 	extends DataListViewFactoryBase
 {
 	/**
 	 *
-	 * @param  RecordManagerReadListViewEstate  $pRecordManagerReadListViewEstate
+	 * @param RecordManagerReadListViewEstate $pRecordManagerReadListViewEstate
 	 *
 	 */
 
-	public function __construct( RecordManagerReadListViewEstate $pRecordManagerReadListViewEstate = null )
+	public function __construct(RecordManagerReadListViewEstate $pRecordManagerReadListViewEstate = null)
 	{
-		$this->setRecordManagerRead( $pRecordManagerReadListViewEstate ?? new RecordManagerReadListViewEstate() );
+		$this->setRecordManagerRead($pRecordManagerReadListViewEstate ?? new RecordManagerReadListViewEstate());
 	}
 
 
 	/**
 	 *
-	 * @param  array  $row
-	 *
+	 * @param array $row
 	 * @return DataListView
 	 *
 	 */
 
-	public function createListViewByRow( array $row ): DataViewFilterableFields
+	public function createListViewByRow(array $row): DataViewFilterableFields
 	{
-		$pListView = new DataListView( $row['listview_id'], $row['name'] );
-		$pListView->setExpose( $row['expose'] );
-		$pListView->setFields( $row[ DataListView::FIELDS ] );
-		$pListView->setFilterId( $row['filterId'] ?? 0 );
+		$pListView = new DataListView($row['listview_id'], $row['name']);
+		$pListView->setExpose($row['expose']);
+		$pListView->setFields($row[DataListView::FIELDS]);
+		$pListView->setFilterId($row['filterId'] ?? 0);
 		$pListView->setShowReferenceEstate( $row['show_reference_estate'] );
 		if ( $pListView->getShowReferenceEstate() == DataListView::SHOW_ONLY_REFERENCE_ESTATE ) {
 			$pListView->setListType( 'reference' );
 		} else {
 			$pListView->setListType( $row['list_type'] );
 		}
-		$pListView->setPictureTypes( $row[ DataListView::PICTURES ] );
-		$pListView->setShowStatus( (bool) $row['show_status'] );
-		$pListView->setSortby( $row['sortby'] );
-		$pListView->setSortorder( $row['sortorder'] );
-		$pListView->setRecordsPerPage( $row['recordsPerPage'] );
-		$pListView->setTemplate( $row['template'] );
-		$pListView->setRandom( (bool) $row['random'] );
-		$pListView->setFilterableFields( $row['filterable'] );
-		$pListView->setHiddenFields( $row['hidden'] );
-		$pListView->setAvailableOptions( $row['availableOptions'] );
-		$pListView->setSortBySetting( (int) $row['sortBySetting'] );
-		$pListView->setSortByUserDefinedDefault( $row['sortByUserDefinedDefault'] );
-		$pListView->setSortByUserDefinedDirection( (int) $row['sortByUserDefinedDirection'] );
-		$pListView->setSortByUserValues( $row[ DataListView::SORT_BY_USER_VALUES ] );
+		$pListView->setPictureTypes($row[DataListView::PICTURES]);
+		$pListView->setShowStatus((bool)$row['show_status']);
+		$pListView->setSortby($row['sortby']);
+		$pListView->setSortorder($row['sortorder']);
+		$pListView->setRecordsPerPage($row['recordsPerPage']);
+		$pListView->setTemplate($row['template']);
+		$pListView->setRandom((bool)$row['random']);
+		$pListView->setFilterableFields($row['filterable']);
+		$pListView->setHiddenFields($row['hidden']);
+		$pListView->setAvailableOptions($row['availableOptions']);
+		$pListView->setSortBySetting((int)$row['sortBySetting']);
+		$pListView->setSortByUserDefinedDefault($row['sortByUserDefinedDefault']);
+		$pListView->setSortByUserDefinedDirection((int)$row['sortByUserDefinedDirection']);
+		$pListView->setSortByUserValues($row[DataListView::SORT_BY_USER_VALUES]);
+		$pListView->setShowReferenceStatus($row['show_reference_estate'] ?? 1);
 
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE  => GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE  => GeoPosition::ESTATE_LIST_SEARCH_STREET,
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE     => GeoPosition::ESTATE_LIST_SEARCH_ZIP,
-			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS         => $row['radius']
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_RADIUS,
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_STREET_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_STREET,
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_ZIP_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_ZIP,
+			InputModelDBFactoryConfigGeoFields::FIELDNAME_RADIUS => $row['radius']
 		];
 
-		$geoFieldsActive = array_intersect_key( $geoFieldsAll, $row );
-		$pListView->setGeoFields( $geoFieldsActive );
+		$geoFieldsActive = array_intersect_key($geoFieldsAll, $row);
+		$pListView->setGeoFields($geoFieldsActive);
 
 		return $pListView;
 	}

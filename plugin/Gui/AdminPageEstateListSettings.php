@@ -29,9 +29,9 @@ use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
-use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Record\BooleanValueToFieldList;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
@@ -75,26 +75,26 @@ class AdminPageEstateListSettings
 
 	protected function buildForms()
 	{
-		add_screen_option( 'layout_columns', array( 'max' => 2, 'default' => 2 ) );
-		$pFormModelBuilder  = new FormModelBuilderDBEstateListSettings();
-		$pFormModelBuilders = new FormModelBuilderEstateDetailSettings();
-		$pFormModel         = $pFormModelBuilder->generate( $this->getPageSlug(), $this->getListViewId() );
-		$pFormModels        = $pFormModelBuilders->generate( $this->getPageSlug() );
-		$this->addFormModel( $pFormModel );
+		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
+		$pFormModelBuilder = new FormModelBuilderDBEstateListSettings();
+		$pFormDetailBuilder = new FormModelBuilderEstateDetailSettings();
+		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
+		$this->addFormModel($pFormModel);
 
 		$pInputModelName = $pFormModelBuilder->createInputModelName();
-		$pFormModelName  = new FormModel();
-		$pFormModelName->setPageSlug( $this->getPageSlug() );
-		$pFormModelName->setGroupSlug( self::FORM_RECORD_NAME );
-		$pFormModelName->setLabel( __( 'choose name', 'onoffice-for-wp-websites' ) );
-		$pFormModelName->addInputModel( $pInputModelName );
-		$this->addFormModel( $pFormModelName );
-		$pInputModelListType             = $pFormModelBuilder->createInputModelListType();
+		$pFormModelName = new FormModel();
+		$pFormModelName->setPageSlug($this->getPageSlug());
+		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
+		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
+		$pFormModelName->addInputModel($pInputModelName);
+		$this->addFormModel($pFormModelName);
+
+		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelListReferenceEstates = $pFormModelBuilder->createInputModelShowReferenceEstates();
-		$pInputModelFilter               = $pFormModelBuilder->createInputModelFilter();
-		$pInputModelRecordsPerPage       = $pFormModelBuilder->createInputModelRecordsPerPage();
-		$pInputModelShowStatus           = $pFormModelBuilder->createInputModelShowStatus();
-		$pInputRestrictAccessControl     = $pFormModelBuilders->createInputRestrictAccessControl();
+		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
+		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
+		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
+		$pInputRestrictAccessControl     = $pFormDetailBuilder->createInputRestrictAccessControl();
 		if ( $pInputRestrictAccessControl->getValue() ) {
 			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will not link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">restricted</a>',
 				'onoffice-for-wp-websites' ) );
@@ -102,15 +102,17 @@ class AdminPageEstateListSettings
 			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">not restricted</a>',
 				'onoffice-for-wp-websites' ) );
 		}
+
 		$pFormModelRecordsFilter = new FormModel();
-		$pFormModelRecordsFilter->setPageSlug( $this->getPageSlug() );
-		$pFormModelRecordsFilter->setGroupSlug( self::FORM_VIEW_RECORDS_FILTER );
-		$pFormModelRecordsFilter->setLabel( __( 'Filters & Records', 'onoffice-for-wp-websites' ) );
-		$pFormModelRecordsFilter->addInputModel( $pInputModelListType );
-		$pFormModelRecordsFilter->addInputModel( $pInputModelListReferenceEstates );
-		$pFormModelRecordsFilter->addInputModel( $pInputModelFilter );
-		$pFormModelRecordsFilter->addInputModel( $pInputModelRecordsPerPage );
-		$this->addFormModel( $pFormModelRecordsFilter );
+		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
+		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
+		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice-for-wp-websites'));
+		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
+		$pFormModelRecordsFilter->addInputModel($pInputModelListReferenceEstates);
+		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
+		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
+
+		$this->addFormModel($pFormModelRecordsFilter);
 
 		$pInputModelSortByChosenStandard = $pFormModelBuilder->createInputModelSortByChosenStandard();
 		$pInputModelSorting              = $pFormModelBuilder->createInputModelSortingSelection();
@@ -133,55 +135,54 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->addInputModel( $pInputModelRandomSort );
 		$this->addFormModel( $pFormModelRecordsFilter );
 
-		$pInputModelTemplate    = $pFormModelBuilder->createInputModelTemplate( 'estate' );
+		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');
 		$pFormModelLayoutDesign = new FormModel();
-		$pFormModelLayoutDesign->setPageSlug( $this->getPageSlug() );
-		$pFormModelLayoutDesign->setGroupSlug( self::FORM_VIEW_LAYOUT_DESIGN );
-		$pFormModelLayoutDesign->setLabel( __( 'Layout & Design', 'onoffice-for-wp-websites' ) );
-		$pFormModelLayoutDesign->addInputModel( $pInputModelTemplate );
-		$pFormModelLayoutDesign->addInputModel( $pInputModelShowStatus );
-		$this->addFormModel( $pFormModelLayoutDesign );
+		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
+		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
+		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
+		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowStatus);
+		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
-		$pFormModelPictureTypes  = new FormModel();
-		$pFormModelPictureTypes->setPageSlug( $this->getPageSlug() );
-		$pFormModelPictureTypes->setGroupSlug( self::FORM_VIEW_PICTURE_TYPES );
-		$pFormModelPictureTypes->setLabel( __( 'Photo Types', 'onoffice-for-wp-websites' ) );
-		$pFormModelPictureTypes->addInputModel( $pInputModelPictureTypes );
-		$this->addFormModel( $pFormModelPictureTypes );
+		$pFormModelPictureTypes = new FormModel();
+		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
+		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
+		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
+		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
+		$this->addFormModel($pFormModelPictureTypes);
 
 		$pInputModelDocumentTypes = $pFormModelBuilder->createInputModelExpose();
-		$pFormModelDocumentTypes  = new FormModel();
-		$pFormModelDocumentTypes->setPageSlug( $this->getPageSlug() );
-		$pFormModelDocumentTypes->setGroupSlug( self::FORM_VIEW_DOCUMENT_TYPES );
-		$pFormModelDocumentTypes->setLabel( __( 'Downloadable Documents', 'onoffice-for-wp-websites' ) );
-		$pFormModelDocumentTypes->addInputModel( $pInputModelDocumentTypes );
-		$this->addFormModel( $pFormModelDocumentTypes );
+		$pFormModelDocumentTypes = new FormModel();
+		$pFormModelDocumentTypes->setPageSlug($this->getPageSlug());
+		$pFormModelDocumentTypes->setGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
+		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice-for-wp-websites'));
+		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
+		$this->addFormModel($pFormModelDocumentTypes);
 
-		$pListView = new DataListView( $this->getListViewId() ?? 0, '' );
+		$pListView = new DataListView($this->getListViewId() ?? 0, '');
 
 		$pFormModelGeoFields = new FormModel();
-		$pFormModelGeoFields->setPageSlug( $this->getPageSlug() );
-		$pFormModelGeoFields->setGroupSlug( self::FORM_VIEW_GEOFIELDS );
-		$pFormModelGeoFields->setLabel( __( 'Geo Fields', 'onoffice-for-wp-websites' ) );
-		$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange( onOfficeSDK::MODULE_ESTATE );
-		foreach ( $pInputModelBuilderGeoRange->build( $pListView ) as $pInputModel ) {
-			$pFormModelGeoFields->addInputModel( $pInputModel );
+		$pFormModelGeoFields->setPageSlug($this->getPageSlug());
+		$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
+		$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice-for-wp-websites'));
+		$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE);
+		foreach ($pInputModelBuilderGeoRange->build($pListView) as $pInputModel) {
+			$pFormModelGeoFields->addInputModel($pInputModel);
 		}
 
-		$geoNotice           = __( 'At least the following fields must be active: country, radius and city or postcode.',
-			'onoffice-for-wp-websites' );
-		$pInputModelGeoLabel = new InputModelLabel( null, $geoNotice );
-		$pInputModelGeoLabel->setValueEnclosure( InputModelLabel::VALUE_ENCLOSURE_ITALIC );
-		$pFormModelGeoFields->addInputModel( $pInputModelGeoLabel );
+		$geoNotice = __('At least the following fields must be active: country, radius and city or postcode.', 'onoffice-for-wp-websites');
+		$pInputModelGeoLabel = new InputModelLabel(null, $geoNotice);
+		$pInputModelGeoLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_ITALIC);
+		$pFormModelGeoFields->addInputModel($pInputModelGeoLabel);
 
-		$this->addFormModel( $pFormModelGeoFields );
+		$this->addFormModel($pFormModelGeoFields);
 
-		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPositionBackend( new FieldsCollection() );
-		$fieldNames       = $this->readFieldnamesByContent( onOfficeSDK::MODULE_ESTATE, $pFieldCollection );
+		$pFieldCollection = new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection());
+		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE, $pFieldCollection);
 
-		$this->addFieldsConfiguration( onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames );
-		$this->addSortableFieldsList( [ onOfficeSDK::MODULE_ESTATE ], $pFormModelBuilder );
+		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
+		$this->addSortableFieldsList([onOfficeSDK::MODULE_ESTATE], $pFormModelBuilder);
 	}
 
 

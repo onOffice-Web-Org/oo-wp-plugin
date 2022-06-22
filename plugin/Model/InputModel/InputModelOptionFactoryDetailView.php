@@ -83,43 +83,43 @@ class InputModelOptionFactoryDetailView
 
 	/** @var array */
 	private $_inputConfig = [
-		self::INPUT_EXPOSE                  => [
+		self::INPUT_EXPOSE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_TEMPLATE                => [
+		self::INPUT_TEMPLATE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_SHORT_CODE_FORM         => [
+		self::INPUT_SHORT_CODE_FORM => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_PICTURE_TYPE            => [
+		self::INPUT_PICTURE_TYPE => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_FIELD_CONFIG            => [
+		self::INPUT_FIELD_CONFIG => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_FIELD_CONTACTDATA_ONLY  => [
+		self::INPUT_FIELD_CONTACTDATA_ONLY => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_MOVIE_LINKS             => [
+		self::INPUT_MOVIE_LINKS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_ACCESS_CONTROL          => [
+		self::INPUT_ACCESS_CONTROL => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
 		self::INPUT_RESTRICT_ACCESS_CONTROL => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING,
 		],
-		self::INPUT_SHOW_STATUS             => [
+		self::INPUT_SHOW_STATUS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
 		],
-		self::INPUT_OGULO_LINKS             => [
+		self::INPUT_OGULO_LINKS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
 		],
-		self::INPUT_OBJECT_LINKS            => [
+		self::INPUT_OBJECT_LINKS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
 		],
-		self::INPUT_LINKS                   => [
+		self::INPUT_LINKS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
 		]
 	];
@@ -127,11 +127,11 @@ class InputModelOptionFactoryDetailView
 
 	/**
 	 *
-	 * @param  string  $optionGroup
+	 * @param string $optionGroup
 	 *
 	 */
 
-	public function __construct( string $optionGroup )
+	public function __construct(string $optionGroup)
 	{
 		$this->_optionGroup = $optionGroup;
 	}
@@ -139,26 +139,25 @@ class InputModelOptionFactoryDetailView
 
 	/**
 	 *
-	 * @param  string  $name
-	 * @param  string  $label
-	 * @param  bool  $multi
-	 *
+	 * @param string $name
+	 * @param string $label
+	 * @param bool $multi
 	 * @return InputModelOption
 	 * @throws ExceptionInputModelMissingField
 	 *
 	 */
 
-	public function create( string $name, $label, bool $multi = false ): InputModelOption
+	public function create(string $name, $label, bool $multi = false): InputModelOption
 	{
-		if ( ! isset( $this->_inputConfig[ $name ] ) ) {
-			throw new ExceptionInputModelMissingField( $name );
+		if (!isset($this->_inputConfig[$name])) {
+			throw new ExceptionInputModelMissingField($name);
 		}
 
-		$config = $this->_inputConfig[ $name ];
-		$type   = $config[ self::KEY_TYPE ];
+		$config = $this->_inputConfig[$name];
+		$type = $config[self::KEY_TYPE];
 
-		$pInstance = new InputModelOption( $this->_optionGroup, $name, $label, $type );
-		$pInstance->setIsMulti( $multi );
+		$pInstance = new InputModelOption($this->_optionGroup, $name, $label, $type);
+		$pInstance->setIsMulti($multi);
 
 		return $pInstance;
 	}

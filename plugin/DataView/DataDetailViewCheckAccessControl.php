@@ -50,39 +50,17 @@ class DataDetailViewCheckAccessControl
 	public function __construct(
 		DataDetailViewHandler $pDataDetailViewHandler = null,
 		EstateListFactory $pEstateDetailFactory = null
-	)
-	{
+	) {
 		$this->pDataDetailViewHandler = $pDataDetailViewHandler ?? new DataDetailViewHandler();
-		$this->estateListFactory      = $pEstateDetailFactory ?? new EstateListFactory( $this->pDataDetailViewHandler );
+		$this->estateListFactory = $pEstateDetailFactory ?? new EstateListFactory($this->pDataDetailViewHandler);
 	}
-
 
 	/**
 	 *
-	 * @param  int  $estateId
-	 *
+	 * @param int $estateId
 	 * @return bool
 	 *
 	 */
-
-	public function checkAccessControl( int $estateId ): bool
-	{
-		$accessControl = $this->pDataDetailViewHandler->getDetailView()->hasDetailView();
-
-		if ( ! $accessControl ) {
-			$pEstateDetail = $this->estateListFactory->createEstateDetail( $estateId );
-			$pEstateDetail->loadEstates();
-			$pEstateDetail->estateIterator();
-			$rawValues = $pEstateDetail->getRawValues();
-			$referenz  = $rawValues->getValueRaw( $estateId )['elements']['referenz'];
-
-			if ( $referenz === "1" ) {
-				return false;
-			}
-		}
-
-		return true;
-	}
 
 	public function checkRestrictAccess( int $estateId ): bool
 	{

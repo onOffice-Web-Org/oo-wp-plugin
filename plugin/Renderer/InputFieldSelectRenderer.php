@@ -27,26 +27,27 @@ namespace onOffice\WPlugin\Renderer;
  * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
+
 class InputFieldSelectRenderer
 	extends InputFieldRenderer
 {
 	/** @var bool */
 	private $_multiple = false;
 
-	/** @var array */
+	/** @var array  */
 	private $_labelOnlyValues = [];
 
 
 	/**
 	 *
-	 * @param  string  $name
-	 * @param  array  $value
+	 * @param string $name
+	 * @param array $value
 	 *
 	 */
 
-	public function __construct( $name, $value = array() )
+	public function __construct($name, $value = array())
 	{
-		parent::__construct( 'select', $name, $value );
+		parent::__construct('select', $name, $value);
 	}
 
 
@@ -56,22 +57,24 @@ class InputFieldSelectRenderer
 
 	public function render()
 	{
-		echo '<select name="' . esc_html( $this->getName() ) . '" '
-		     . ( $this->_multiple ? ' multiple = "multiple" ' : null )
-		     . $this->renderAdditionalAttributes()
-		     . ' id="' . esc_html( $this->getGuiId() ) . '">';
+		echo '<select name="'.esc_html($this->getName()).'" '
+		     .($this->_multiple ? ' multiple = "multiple" ' : null)
+		     .$this->renderAdditionalAttributes()
+		     .' id="'.esc_html($this->getGuiId()).'">';
 
-		foreach ( $this->getValue() as $key => $label ) {
-			if ( in_array( $key, $this->_labelOnlyValues ) ) {
-				echo '<optgroup label="' . esc_html( $label ) . '" '
-				     . ( $key == $this->getSelectedValue() ? ' selected="selected" ' : null ) . '></optgroup>';
+		foreach ($this->getValue() as $key => $label)
+		{
+			if (in_array($key, $this->_labelOnlyValues)) {
+				echo '<optgroup label="'.esc_html($label).'" '
+				     .($key == $this->getSelectedValue() ? ' selected="selected" ' : null).'></optgroup>';
 			} else {
-				echo '<option value="' . esc_html( $key ) . '" '
-				     . ( $key == $this->getSelectedValue() ? ' selected="selected" ' : null ) . '>'
-				     . esc_html( $label )
-				     . '</option>';
+				echo '<option value="'.esc_html($key).'" '
+				     .($key == $this->getSelectedValue() ? ' selected="selected" ' : null).'>'
+				     .esc_html($label)
+				     .'</option>';
 			}
 		}
+
 		echo '</select>';
 		if ( $this->getHint() ) {
 			echo '<div class="memssageReference">' . $this->getHint() . '</div>';
@@ -85,9 +88,9 @@ class InputFieldSelectRenderer
 
 
 	/**
-	 * @param  array  $labelOnlyValues
+	 * @param array $labelOnlyValues
 	 */
-	public function setLabelOnlyValues( array $labelOnlyValues )
+	public function setLabelOnlyValues(array $labelOnlyValues)
 	{
 		$this->_labelOnlyValues = $labelOnlyValues;
 	}

@@ -34,6 +34,7 @@ use onOffice\WPlugin\WP\WPOptionWrapperDefault;
  * @copyright 2003-2017, onOffice(R) GmbH
  *
  */
+
 class DataDetailViewHandler
 {
 	/** */
@@ -44,9 +45,9 @@ class DataDetailViewHandler
 
 
 	/**
-	 * @param  WPOptionWrapperBase  $pWPOptionWrapper
+	 * @param WPOptionWrapperBase $pWPOptionWrapper
 	 */
-	public function __construct( WPOptionWrapperBase $pWPOptionWrapper = null )
+	public function __construct(WPOptionWrapperBase $pWPOptionWrapper = null)
 	{
 		$this->_pWPOptionWrapper = $pWPOptionWrapper ?? new WPOptionWrapperDefault();
 	}
@@ -60,11 +61,12 @@ class DataDetailViewHandler
 
 	public function getDetailView(): DataDetailView
 	{
-		$optionKey  = self::DEFAULT_VIEW_OPTION_KEY;
+		$optionKey = self::DEFAULT_VIEW_OPTION_KEY;
 		$pAlternate = new DataDetailView();
-		$pResult    = $this->_pWPOptionWrapper->getOption( $optionKey, $pAlternate );
+		$pResult = $this->_pWPOptionWrapper->getOption($optionKey, $pAlternate);
 
-		if ( $pResult == null ) {
+		if ($pResult == null)
+		{
 			$pResult = $pAlternate;
 		}
 
@@ -74,48 +76,46 @@ class DataDetailViewHandler
 
 	/**
 	 *
-	 * @param  DataDetailView  $pDataDetailView
+	 * @param DataDetailView $pDataDetailView
 	 *
 	 */
 
-	public function saveDetailView( DataDetailView $pDataDetailView )
+	public function saveDetailView(DataDetailView $pDataDetailView)
 	{
 		$pWpOptionsWrapper = $this->_pWPOptionWrapper;
-		$viewOptionKey     = self::DEFAULT_VIEW_OPTION_KEY;
+		$viewOptionKey = self::DEFAULT_VIEW_OPTION_KEY;
 
-		if ( $pWpOptionsWrapper->getOption( $viewOptionKey ) !== false ) {
-			$pWpOptionsWrapper->updateOption( $viewOptionKey, $pDataDetailView );
+		if ($pWpOptionsWrapper->getOption($viewOptionKey) !== false) {
+			$pWpOptionsWrapper->updateOption($viewOptionKey, $pDataDetailView);
 		} else {
-			$pWpOptionsWrapper->addOption( $viewOptionKey, $pDataDetailView );
+			$pWpOptionsWrapper->addOption($viewOptionKey, $pDataDetailView);
 		}
 	}
 
 
 	/**
 	 *
-	 * @param  array  $row
-	 *
+	 * @param array $row
 	 * @return DataDetailView
 	 *
 	 */
 
-	public function createDetailViewByValues( array $row ): DataDetailView
+	public function createDetailViewByValues(array $row): DataDetailView
 	{
 		$pDataDetailView = $this->getDetailView();
-		$pDataDetailView->setTemplate( $row['template'] ?? '' );
-		$pDataDetailView->setShortCodeForm( $row['shortcodeform'] ?? '' );
-		$pDataDetailView->setFields( $row[ DataDetailView::FIELDS ] ?? [] );
-		$pDataDetailView->setPictureTypes( $row[ DataDetailView::PICTURES ] ?? [] );
-		$pDataDetailView->setHasDetailView( (bool) ( $row[ InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL ] ?? '' ) );
+		$pDataDetailView->setTemplate($row['template'] ?? '');
+		$pDataDetailView->setShortCodeForm($row['shortcodeform'] ?? '');
+		$pDataDetailView->setFields($row[DataDetailView::FIELDS] ?? []);
+		$pDataDetailView->setPictureTypes($row[DataDetailView::PICTURES] ?? []);
+		$pDataDetailView->setHasDetailView((bool)($row[InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL] ?? ''));
 		$pDataDetailView->setHasDetailViewRestrict( (bool) ( $row[ InputModelOptionFactoryDetailView::INPUT_RESTRICT_ACCESS_CONTROL ] ?? '' ) );
-		$pDataDetailView->setExpose( $row['expose'] ?? '' );
-		$pDataDetailView->setAddressFields( $row[ DataDetailView::ADDRESSFIELDS ] ?? [] );
-		$pDataDetailView->setMovieLinks( $row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE );
-		$pDataDetailView->setOguloLinks( $row['ogulolinks'] ?? LinksTypes::LINKS_DEACTIVATED );
-		$pDataDetailView->setObjectLinks( $row['objectlinks'] ?? LinksTypes::LINKS_DEACTIVATED );
-		$pDataDetailView->setLinks( $row['links'] ?? LinksTypes::LINKS_DEACTIVATED );
-		$pDataDetailView->setShowStatus( $row['show_status'] ?? false );
-
+		$pDataDetailView->setExpose($row['expose'] ?? '');
+		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
+		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
+		$pDataDetailView->setOguloLinks($row['ogulolinks'] ?? LinksTypes::LINKS_DEACTIVATED);
+		$pDataDetailView->setObjectLinks($row['objectlinks'] ?? LinksTypes::LINKS_DEACTIVATED);
+		$pDataDetailView->setLinks($row['links'] ?? LinksTypes::LINKS_DEACTIVATED);
+		$pDataDetailView->setShowStatus($row['show_status'] ?? false);
 		return $pDataDetailView;
 	}
 }
