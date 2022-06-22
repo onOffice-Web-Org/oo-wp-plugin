@@ -262,7 +262,13 @@ abstract class AdminPageSettingsBase
 		wp_die();
 	}
 
-	public function save_form() {
+
+	/**
+	 * @throws Exception
+	 */
+
+	public function save_form()
+	{
 		$this->buildForms();
 		$action   = filter_input( INPUT_POST, 'action' );
 		$nonce    = filter_input( INPUT_POST, 'nonce' );
@@ -315,6 +321,7 @@ abstract class AdminPageSettingsBase
 		wp_redirect( admin_url( 'admin.php?' . $pageQuery . $idQuery . $statusQuery ) );
 		die();
 	}
+
 
 	/**
 	 *

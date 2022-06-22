@@ -80,6 +80,10 @@ class AdminPageSimilarEstates
 	/** */
 	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
 
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
 	public function renderContent()
 	{
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
@@ -139,13 +143,11 @@ class AdminPageSimilarEstates
 		echo '</form>';
 	}
 
-
 	/**
 	 *
 	 * @param string $subTitle
 	 *
 	 */
-
 	public function generatePageMainTitle($subTitle)
 	{
 		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
@@ -158,7 +160,6 @@ class AdminPageSimilarEstates
 	/**
 	 *
 	 */
-
 	private function generateMetaBoxes()
 	{
 		$pFormSimilarEstates = $this->getFormModelByGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
@@ -238,6 +239,10 @@ class AdminPageSimilarEstates
 		return $pFieldsCollection;
 	}
 
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
 	public function save_form()
 	{
 		$this->buildForms();

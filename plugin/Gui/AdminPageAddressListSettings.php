@@ -100,19 +100,18 @@ class AdminPageAddressListSettings
 	private function addFormModelName()
 	{
 		$pInputModelName = $this->_pFormModelBuilderAddress->createInputModelName();
-		$pFormModelName = new FormModel();
+		$pFormModelName  = new FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
 		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
 		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
-        if ($this->getListViewId() !== null) {
-            $pInputModelEmbedCode = $this->_pFormModelBuilderAddress->createInputModelEmbedCode();
-            $pFormModelName->addInputModel($pInputModelEmbedCode);
-            $pInputModelButton = $this->_pFormModelBuilderAddress->createInputModelButton();
-            $pFormModelName->addInputModel($pInputModelButton);
-        }
-
+		if ( $this->getListViewId() !== null ) {
+			$pInputModelEmbedCode = $this->_pFormModelBuilderAddress->createInputModelEmbedCode();
+			$pFormModelName->addInputModel( $pInputModelEmbedCode );
+			$pInputModelButton = $this->_pFormModelBuilderAddress->createInputModelButton();
+			$pFormModelName->addInputModel( $pInputModelButton );
+		}
 	}
 
 

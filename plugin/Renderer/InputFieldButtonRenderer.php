@@ -41,8 +41,8 @@ class InputFieldButtonRenderer
 
 	/**
 	 *
-	 * @param string $name
-	 * @param mixed $value
+	 * @param  string  $name
+	 * @param  mixed  $value
 	 *
 	 */
 

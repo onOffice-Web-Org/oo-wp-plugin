@@ -264,17 +264,21 @@ class FormModelBuilderDBForm
 		return $pInputModeLabel;
 	}
 
+	/**
+	 * @return InputModelLabel
+	 */
 	public function createInputModelButton()
 	{
-		$pConfig = new InputModelDBFactoryConfigForm();
-		$config = $pConfig->getConfig();
-		$name = $config[InputModelDBFactoryConfigForm::INPUT_FORM_NAME]
-		[InputModelDBFactoryConfigForm::KEY_FIELD];
-		$formName = $this->getValue($name);
-		
-		$code = '[oo_form form="'.$formName.'"]';
-		$pInputModeLabel = new InputModelLabel('', $code);
-		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_BUTTON);
+		$pConfig  = new InputModelDBFactoryConfigForm();
+		$config   = $pConfig->getConfig();
+		$name     = $config[ InputModelDBFactoryConfigForm::INPUT_FORM_NAME ]
+		[ InputModelDBFactoryConfigForm::KEY_FIELD ];
+		$formName = $this->getValue( $name );
+
+		$code            = '[oo_form form="' . $formName . '"]';
+		$pInputModeLabel = new InputModelLabel( '', $code );
+		$pInputModeLabel->setHtmlType( InputModelBase::HTML_TYPE_BUTTON );
+
 		return $pInputModeLabel;
 	}
 

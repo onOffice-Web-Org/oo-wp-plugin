@@ -549,6 +549,7 @@ abstract class AdminPageFormSettingsBase
 
 	}
 
+
 	/**
 	 * @param int $recordId
 	 * @param array $row
@@ -557,6 +558,7 @@ abstract class AdminPageFormSettingsBase
 	 * @throws RecordManagerInsertException
 	 * @throws UnknownFieldException
 	 */
+
 	private function saveDefaultValues(int $recordId, array $row)
 	{
 		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] ?? [];
@@ -577,6 +579,7 @@ abstract class AdminPageFormSettingsBase
 			$row['oo_plugin_fieldconfig_form_defaults_values'] ?? [], $pFieldsCollectionCurrent);
 	}
 
+
 	/**
 	 * @param int $recordId
 	 * @param array $row
@@ -586,6 +589,7 @@ abstract class AdminPageFormSettingsBase
 	 * @throws RecordManagerInsertException
 	 * @throws UnknownFieldException
 	 */
+
 	private function saveCustomLabels(int $recordId, array $row)
 	{
 		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] ?? [];
@@ -630,9 +634,11 @@ abstract class AdminPageFormSettingsBase
 		wp_enqueue_script('oo-copy-shortcode');
 	}
 
+
 	/**
 	 * @return array
 	 */
+
 	public function getCurrentFormModules(): array
 	{
 		// empty module name for `message` field
@@ -651,6 +657,12 @@ abstract class AdminPageFormSettingsBase
 
 		return $modules;
 	}
+
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
 
 	public function renderContent()
 	{
@@ -715,6 +727,11 @@ abstract class AdminPageFormSettingsBase
 
 		echo '</form>';
 	}
+
+
+	/**
+	 * @throws UnknownFormException
+	 */
 
 	public function save_form()
 	{

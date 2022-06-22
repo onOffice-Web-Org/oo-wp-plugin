@@ -114,39 +114,48 @@ class FormModelBuilderDBAddress
 		return array_keys(array_filter($columns));
 	}
 
-    /**
-     * @return InputModelLabel
-     */
-    public function createInputModelEmbedCode()
-    {
-        $pConfig = new InputModelDBFactoryConfigEstate();
-        $config = $pConfig->getConfig();
-        $name = $config[InputModelDBFactory::INPUT_LISTNAME]
-        [InputModelDBFactoryConfigEstate::KEY_FIELD];
 
-        $listName = $this->getValue($name);
+	/**
+	 * @return InputModelLabel
+	 */
 
-        $codes = '[oo_address view="'.$listName.'"]';
-        $pInputModeLabel = new InputModelLabel(__('Shortcode: ', 'onoffice-for-wp-websites'), $codes);
-        $pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
-        $pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
+	public function createInputModelEmbedCode()
+	{
+		$pConfig = new InputModelDBFactoryConfigEstate();
+		$config  = $pConfig->getConfig();
+		$name    = $config[ InputModelDBFactory::INPUT_LISTNAME ]
+		[ InputModelDBFactoryConfigEstate::KEY_FIELD ];
 
-        return $pInputModeLabel;
-    }
+		$listName = $this->getValue( $name );
 
-    public function createInputModelButton()
-    {
-        $pConfig = new InputModelDBFactoryConfigEstate();
-        $config = $pConfig->getConfig();
-        $name = $config[InputModelDBFactory::INPUT_LISTNAME]
-        [InputModelDBFactoryConfigEstate::KEY_FIELD];
-        $listName = $this->getValue($name);
+		$codes           = '[oo_address view="' . $listName . '"]';
+		$pInputModeLabel = new InputModelLabel( __( 'Shortcode: ', 'onoffice-for-wp-websites' ), $codes );
+		$pInputModeLabel->setHtmlType( InputModelBase::HTML_TYPE_LABEL );
+		$pInputModeLabel->setValueEnclosure( InputModelLabel::VALUE_ENCLOSURE_CODE );
 
-        $codes = '[oo_address view="'.$listName.'"]';
-        $pInputModeLabel = new InputModelLabel('', $codes);
-        $pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_BUTTON);
-        return $pInputModeLabel;
-    }
+		return $pInputModeLabel;
+	}
+
+
+	/**
+	 * @return InputModelLabel
+	 */
+
+	public function createInputModelButton()
+	{
+		$pConfig  = new InputModelDBFactoryConfigEstate();
+		$config   = $pConfig->getConfig();
+		$name     = $config[ InputModelDBFactory::INPUT_LISTNAME ]
+		[ InputModelDBFactoryConfigEstate::KEY_FIELD ];
+		$listName = $this->getValue( $name );
+
+		$codes           = '[oo_address view="' . $listName . '"]';
+		$pInputModeLabel = new InputModelLabel( '', $codes );
+		$pInputModeLabel->setHtmlType( InputModelBase::HTML_TYPE_BUTTON );
+
+		return $pInputModeLabel;
+	}
+
 
 	/**
 	 *
