@@ -168,4 +168,12 @@ class AdminPageAddressList
 
 		parent::preOutput();
 	}
+
+	public function doExtraEnqueues()
+	{
+		wp_register_script( 'oo-copy-shortcode',
+			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/js/onoffice-copycode.js',
+			[ 'jquery' ], '', true );
+		wp_enqueue_script( 'oo-copy-shortcode');
+	}
 }
