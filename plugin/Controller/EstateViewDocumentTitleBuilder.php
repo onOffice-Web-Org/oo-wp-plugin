@@ -43,7 +43,7 @@ class EstateViewDocumentTitleBuilder
 		$this->_pEstateTitleBuilder = $pEstateTitleBuilder;
 		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 	}
-	
+
 	/**
 	 * @param string $title see Wordpress internal function wp_get_document_title()
 	 * @param string $format
@@ -56,7 +56,24 @@ class EstateViewDocumentTitleBuilder
 		if ($estateId === 0) {
 			return '';
 		}
-		
+
 		return $this->_pEstateTitleBuilder->buildCustomFieldTitle($estateId, $format);
+	}
+
+	/**
+	 * @param  array  $title  see Wordpress internal function wp_get_document_title()
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public function buildDocumentTitle( array $title ): array
+	{
+		$estateId = (int) $this->_pWPQueryWrapper->getWPQuery()->get( 'estate_id', 0 );
+		if ( $estateId === 0 ) {
+			return $title;
+		}
+		$title['title'] = $this->_pEstateTitleBuilder->buildTitle( $estateId, '%1$s' );
+
+		return $title;
 	}
 }

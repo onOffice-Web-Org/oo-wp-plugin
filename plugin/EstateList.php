@@ -431,19 +431,14 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
-		if ($this->_pWPOptionWrapper->getOption('onoffice-settings-title-and-description') == 0)
-		{
-			if($checkEstateIdRequestGuard == true){
-				add_action('wp_head', function () use ($recordModified){
-					echo '<meta name="description" content="' . esc_attr($recordModified["objektbeschreibung"] ?? null) . '" />';
-				});
-			}
-			add_filter('pre_get_document_title', function ($title_parts_array) use ($recordModified) {
-				return $this->custom_pre_get_document_title($title_parts_array, $recordModified);
-			}, 999, 1);
+		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
+			add_action( 'wp_head', function () use ( $recordModified )
+			{
+				echo '<meta name="description" content="' . esc_attr( $recordModified["objektbeschreibung"] ?? null ) . '" />';
+			} );
 		}
-		$pArrayContainer = new ArrayContainerEscape($recordModified);
-		return $pArrayContainer;
+
+		return new ArrayContainerEscape( $recordModified );
 	}
 
 	public function custom_pre_get_document_title($title_parts_array, $recordModified) {

@@ -162,6 +162,13 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 				return null;
 			}
 	}, 1, 3);
+} else {
+    add_filter('document_title_parts', function ($title) use ($pDI){
+        return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+    }, 10, 2);
+	add_filter( 'document_title_separator', function () {
+		return '|';
+	});
 }
 
 // Return title custom by custom field onOffice
