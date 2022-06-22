@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= Unreleased =
+
+**Fixed**
+
+* The credentials no longer need to be newly entered after adding the encryption constant.
+
 = 4.0 (2022-06-21) =
 
 **Removed**
