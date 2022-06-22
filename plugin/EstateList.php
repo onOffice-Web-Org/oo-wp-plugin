@@ -275,20 +275,14 @@ class EstateList
 			];
 		}
 
-		var_dump($pListView->getName());
-		var_dump($this->getViewRestrict());
-		var_dump($this->getShowReferenceEstate());
 		if ($pListView->getName() === 'detail') {
 			if ($this->getViewRestrict()) {
 				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 			}
 		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
-			var_dump('succ');
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 		}
 
-		var_dump($requestParams);
-		var_dump($this->addExtraParams());
 		$requestParams += $this->addExtraParams();
 
 		return $requestParams;

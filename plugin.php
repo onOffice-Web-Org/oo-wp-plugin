@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) or die();
 
 require __DIR__ . '/vendor/autoload.php';
 
-define( 'ONOFFICE_PLUGIN_DIR', __DIR__ );
+define('ONOFFICE_PLUGIN_DIR', __DIR__);
 
 use DI\ContainerBuilder;
 use onOffice\WPlugin\Cache\CachedOutput;
@@ -67,179 +67,175 @@ use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
-define( 'ONOFFICE_DI_CONFIG_PATH', implode( DIRECTORY_SEPARATOR, [ ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php' ] ) );
+define('ONOFFICE_DI_CONFIG_PATH', implode(DIRECTORY_SEPARATOR, [ONOFFICE_PLUGIN_DIR, 'config', 'di-config.php']));
 
 $pDIBuilder = new ContainerBuilder();
-$pDIBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH );
+$pDIBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 $pDI = $pDIBuilder->build();
 
-$pAdminViewController          = new AdminViewController();
-$pDetailViewPostSaveController = $pDI->get( DetailViewPostSaveController::class );
-$pDI->get( ScriptLoaderRegistrator::class )->generate();
+$pAdminViewController = new AdminViewController();
+$pDetailViewPostSaveController = $pDI->get(DetailViewPostSaveController::class);
+$pDI->get(ScriptLoaderRegistrator::class)->generate();
 
-add_action( 'plugins_loaded', function () use ( $pDI ) {
-	$pDI->get( DatabaseChangesInterface::class )->install();
-} );
+add_action('plugins_loaded', function() use ($pDI) {
+	$pDI->get(DatabaseChangesInterface::class)->install();
+});
 
-add_action( 'init', function () use ( $pDI ) {
-	$pRewriteRuleBuilder = $pDI->get( RewriteRuleBuilder::class );
+add_action('init', function() use ($pDI) {
+	$pRewriteRuleBuilder = $pDI->get(RewriteRuleBuilder::class);
 	$pRewriteRuleBuilder->addCustomRewriteTags();
 	$pRewriteRuleBuilder->addStaticRewriteRules();
 	$pRewriteRuleBuilder->addDynamicRewriteRules();
-} );
+});
 
 // This hook [wp] is one effective place to perform any high-level filtering or validation,
 // following queries, but before WordPress does any routing, processing, or handling.
 // https://codex.wordpress.org/Plugin_API/Action_Reference/wp
-add_action( 'wp', [ FormPostHandler::class, 'initialCheck' ] );
+add_action('wp', [FormPostHandler::class, 'initialCheck']);
 
-add_action( 'admin_menu', [ $pAdminViewController, 'register_menu' ] );
-add_action( 'admin_enqueue_scripts', [ $pAdminViewController, 'enqueue_ajax' ] );
-add_action( 'admin_enqueue_scripts', [ $pAdminViewController, 'enqueue_css' ] );
-add_action( 'admin_enqueue_scripts', [ $pAdminViewController, 'enqueueExtraJs' ] );
-add_action( 'wp_enqueue_scripts', [ CaptchaDataChecker::class, 'registerScripts' ] );
-add_action( 'save_post', [ $pDetailViewPostSaveController, 'onSavePost' ] );
-add_action( 'wp_trash_post', [ $pDetailViewPostSaveController, 'onMoveTrash' ] );
-add_action( 'oo_cache_cleanup', function () use ( $pDI ) {
-	$pDI->get( CacheHandler::class )->clean();
-} );
+add_action('admin_menu', [$pAdminViewController, 'register_menu']);
+add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_ajax']);
+add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueue_css']);
+add_action('admin_enqueue_scripts', [$pAdminViewController, 'enqueueExtraJs']);
+add_action('wp_enqueue_scripts', [CaptchaDataChecker::class, 'registerScripts']);
+add_action('save_post', [$pDetailViewPostSaveController, 'onSavePost']);
+add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
+add_action('oo_cache_cleanup', function() use ($pDI) {
+	$pDI->get(CacheHandler::class)->clean();
+});
 
-add_action( 'init', [ $pAdminViewController, 'onInit' ] );
-add_action( 'init', function () use ( $pAdminViewController ) {
+add_action('init', [$pAdminViewController, 'onInit']);
+add_action('init', function() use ($pAdminViewController) {
 	$pAdminViewController->disableHideMetaboxes();
-}, 11 );
-add_action( 'admin_init', [ $pAdminViewController, 'add_ajax_actions' ] );
-add_action( 'admin_init', [ CaptchaDataChecker::class, 'addHook' ] );
-add_action( 'admin_init', [ $pDetailViewPostSaveController, 'getAllPost' ] );
-add_action( 'plugins_loaded', function () {
-	load_plugin_textdomain( 'onoffice-for-wp-websites', false, basename( ONOFFICE_PLUGIN_DIR ) . '/languages' );
+}, 11);
+add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
+add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
+add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
+add_action('plugins_loaded', function() {
+	load_plugin_textdomain('onoffice-for-wp-websites', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
 	// Check 'onoffice-personalized' Folder exists
-	$onofficePersonalizedFolderLanguages = plugin_dir_path( __DIR__ ) . 'onoffice-personalized/languages';
-	$onofficePersonalizedFolder          = plugin_dir_path( __DIR__ ) . 'onoffice-personalized';
-	$onofficeThemeFolderLanguages        = get_template_directory() . '/onoffice-theme/languages';
+	$onofficePersonalizedFolderLanguages = plugin_dir_path(__DIR__) . 'onoffice-personalized/languages';
+	$onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
+	$onofficeThemeFolderLanguages = get_template_directory() . '/onoffice-theme/languages';
 
-	if ( is_dir( $onofficeThemeFolderLanguages ) ) {
-		load_textdomain( 'onoffice', $onofficeThemeFolderLanguages . '/onoffice-' . get_locale() . '.mo' );
-	} elseif ( is_dir( $onofficePersonalizedFolderLanguages ) ) {
-		load_plugin_textdomain( 'onoffice', false, basename( $onofficePersonalizedFolder ) . '/languages' );
+	if (is_dir($onofficeThemeFolderLanguages)) {
+		load_textdomain('onoffice', $onofficeThemeFolderLanguages . '/onoffice-'.get_locale().'.mo');
+	} elseif (is_dir($onofficePersonalizedFolderLanguages)) {
+		load_plugin_textdomain('onoffice', false, basename($onofficePersonalizedFolder) . '/languages');
 	} else {
-		load_plugin_textdomain( 'onoffice', false, basename( ONOFFICE_PLUGIN_DIR ) . '/languages' );
+		load_plugin_textdomain('onoffice', false, basename(ONOFFICE_PLUGIN_DIR) . '/languages');
 	}
-} );
+});
 
 // "Settings" link in plugins list
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $pAdminViewController, 'pluginSettingsLink' ] );
+add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewController, 'pluginSettingsLink']);
 
-$pDI->get( ContentFilterShortCodeRegistrator::class )->register();
+$pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 
-add_filter( 'document_title_parts', function ( $title ) use ( $pDI ) {
-	return $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitle( $title );
-}, 10, 2 );
+add_filter('document_title_parts', function($title) use ($pDI) {
+	return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+}, 10, 2);
 
-add_filter( 'wpml_ls_language_url', function ( $url ) use ( $pDI ) {
-	$pWPQueryWrapper = $pDI->get( WPQueryWrapper::class );
-	$estateId        = (int) $pWPQueryWrapper->getWPQuery()->get( 'estate_id', 0 );
+add_filter('wpml_ls_language_url', function($url) use ($pDI){
+	$pWPQueryWrapper = $pDI->get(WPQueryWrapper::class);
+	$estateId = (int) $pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
+	return $pDI->get(EstateDetailUrl::class)->createEstateDetailLink($url, $estateId);
+}, 10, 2);
 
-	return $pDI->get( EstateDetailUrl::class )->createEstateDetailLink( $url, $estateId );
-}, 10, 2 );
+register_activation_hook(__FILE__, [Installer::class, 'install']);
+register_deactivation_hook(__FILE__, [Installer::class, 'deactivate']);
+register_uninstall_hook(__FILE__, [Installer::class, 'deinstall']);
 
-register_activation_hook( __FILE__, [ Installer::class, 'install' ] );
-register_deactivation_hook( __FILE__, [ Installer::class, 'deactivate' ] );
-register_uninstall_hook( __FILE__, [ Installer::class, 'deinstall' ] );
-
-if ( ! wp_next_scheduled( 'oo_cache_cleanup' ) ) {
-	wp_schedule_event( time(), 'hourly', 'oo_cache_cleanup' );
+if (!wp_next_scheduled('oo_cache_cleanup')) {
+	wp_schedule_event(time(), 'hourly', 'oo_cache_cleanup');
 }
 
 // Gets triggered before we know if it has to be updated at all, so that no value has to be changed
-add_action( 'pre_update_option', function ( $value, $option ) use ( $pDI ) {
-	if ( __String::getNew( $option )->startsWith( 'onoffice' ) ) {
-		$pDI->get( CacheHandler::class )->clear();
+add_action('pre_update_option', function($value, $option) use ($pDI) {
+	if (__String::getNew($option)->startsWith('onoffice')) {
+		$pDI->get(CacheHandler::class)->clear();
 	}
-
 	return $value;
-}, 10, 2 );
+}, 10, 2);
 
-add_filter( 'query_vars', function ( array $query_vars ): array {
-	$query_vars [] = 'onoffice_estate_type_json';
-	$query_vars [] = 'onoffice_applicant_search_preview';
-	$query_vars [] = 'onoffice_estate_preview';
-	$query_vars [] = 'document_pdf';
-	$query_vars [] = 'preview_name';
-	$query_vars [] = 'nonce';
-
+add_filter('query_vars', function(array $query_vars): array {
+	$query_vars []= 'onoffice_estate_type_json';
+	$query_vars []= 'onoffice_applicant_search_preview';
+	$query_vars []= 'onoffice_estate_preview';
+	$query_vars []= 'document_pdf';
+	$query_vars []= 'preview_name';
+	$query_vars []= 'nonce';
 	return $query_vars;
-} );
+});
 
-add_action( 'parse_request', function ( WP $pWP ) use ( $pDI ) {
-	if ( isset( $pWP->query_vars['document_pdf'] ) ) {
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+	if (isset($pWP->query_vars['document_pdf'])) {
 		try {
-			$pPdfDocumentModel = new PdfDocumentModel( $pWP->query_vars['estate_id'] ?? 0,
-				$pWP->query_vars['view'] ?? '' );
+			$pPdfDocumentModel = new PdfDocumentModel($pWP->query_vars['estate_id'] ?? 0, $pWP->query_vars['view'] ?? '');
 			/* @var $pPdfDownload PdfDownload */
-			$pPdfDownload = $pDI->get( PdfDownload::class );
-			$pPdfDownload->download( $pPdfDocumentModel );
-		} catch ( PdfDocumentModelValidationException $pEx ) {
+			$pPdfDownload = $pDI->get(PdfDownload::class);
+			$pPdfDownload->download($pPdfDocumentModel);
+		} catch (PdfDocumentModelValidationException $pEx) {
 			$pWP->handle_404();
-			include( get_query_template( '404' ) );
-		} catch ( PdfDownloadException $pEx ) {
+			include(get_query_template('404'));
+		} catch (PdfDownloadException $pEx) {
 			$pWP->handle_404();
-			include( get_query_template( '404' ) );
+			include(get_query_template('404'));
 		}
 		die();
 	}
-} );
+});
 
-add_action( 'parse_request', function ( WP $pWP ) use ( $pDI ) {
+add_action('parse_request', function(WP $pWP) use ($pDI) {
 	$estateId = $pWP->query_vars['estate_id'] ?? '';
 	/** @var EstateIdRequestGuard $pEstateIdGuard */
-	$pEstateIdGuard = $pDI->get( EstateIdRequestGuard::class );
+	$pEstateIdGuard = $pDI->get(EstateIdRequestGuard::class);
 	/** @var DataDetailViewHandler $pDataDetailViewHandler */
-	$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class );
+	$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class);
 
-	if ( $estateId !== '' ) {
-		$estateId = (int) $estateId;
+	if ($estateId !== '') {
+		$estateId = (int)$estateId;
 		/** @var DataDetailViewCheckAccessControl $pDataDetailViewCheckAccessControl */
-		$pDataDetailViewCheckAccessControl = $pDI->get( DataDetailViewCheckAccessControl::class );
-		$restrictAcessChecker              = $pDataDetailViewCheckAccessControl->checkRestrictAccess( $estateId );
+		$pDataDetailViewCheckAccessControl = $pDI->get(DataDetailViewCheckAccessControl::class);
+		$restrictAccessChecker = $pDataDetailViewCheckAccessControl->checkRestrictAccess($estateId);
 
-		if ( $estateId === 0 || $restrictAcessChecker || ! $pEstateIdGuard->isValid( $estateId ) ) {
+		if ($estateId === 0 || $restrictAccessChecker|| !$pEstateIdGuard->isValid($estateId)) {
 			$pWP->handle_404();
-			include( get_query_template( '404' ) );
+			include(get_query_template('404'));
 			die();
 		}
 		$pEstateIdGuard->estateDetailUrlChecker( $estateId, $pDI->get( Redirector::class ) );
 	}
-} );
+});
 
-add_action( 'parse_request', static function ( WP $pWP ) use ( $pDI ) {
-	if ( isset( $pWP->query_vars['onoffice_estate_type_json'] ) ) {
-		$content = wp_json_encode( $pDI->get( EstateKindTypeReader::class )->read() );
+add_action('parse_request', static function(WP $pWP) use ($pDI) {
+	if (isset($pWP->query_vars['onoffice_estate_type_json'])) {
+		$content = wp_json_encode($pDI->get(EstateKindTypeReader::class)->read());
 		/** @var CachedOutput $pCachedOutput */
-		$pCachedOutput = $pDI->get( CachedOutput::class );
-		header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ) );
-		$pCachedOutput->outputCached( $content, 60 * 60 * 24 * 2 );
+		$pCachedOutput = $pDI->get(CachedOutput::class);
+		header('Content-Type: application/json; charset='.get_option('blog_charset'));
+		$pCachedOutput->outputCached($content, 60 * 60 * 24 * 2);
 		exit;
 	}
-} );
+});
 
-add_action( 'parse_request', function ( WP $pWP ) use ( $pDI ) {
-	if ( isset( $pWP->query_vars['onoffice_estate_preview'], $pWP->query_vars['preview_name'] ) &&
-	     wp_verify_nonce( $pWP->query_vars['nonce'], 'onoffice-estate-preview' ) === 1 ) {
-		wp_send_json( $pDI->get( FormPreviewEstate::class )
-		                  ->preview( (string) $pWP->query_vars['preview_name'] ) );
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+	if (isset($pWP->query_vars['onoffice_estate_preview'], $pWP->query_vars['preview_name']) &&
+	    wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-estate-preview') === 1) {
+		wp_send_json($pDI->get(FormPreviewEstate::class)
+		                 ->preview((string)$pWP->query_vars['preview_name']));
 	}
-} );
+});
 
-add_action( 'parse_request', function ( WP $pWP ) use ( $pDI ) {
-	if ( isset( $pWP->query_vars['onoffice_applicant_search_preview'], $pWP->query_vars['preview_name'] ) &&
-	     wp_verify_nonce( $pWP->query_vars['nonce'], 'onoffice-applicant-search-preview' ) === 1 ) {
-		wp_send_json( $pDI->get( FormPreviewApplicantSearch::class )
-		                  ->preview( (string) $pWP->query_vars['preview_name'] ) );
+add_action('parse_request', function(WP $pWP) use ($pDI) {
+	if (isset($pWP->query_vars['onoffice_applicant_search_preview'], $pWP->query_vars['preview_name']) &&
+	    wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-applicant-search-preview') === 1) {
+		wp_send_json($pDI->get(FormPreviewApplicantSearch::class)
+		                 ->preview((string)$pWP->query_vars['preview_name']));
 	}
-} );
+});
 
-add_filter( 'set-screen-option', function ( $status, $option, $value ) {
+add_filter('set-screen-option', function ($status, $option, $value) {
 	$pagination_screen_option = array(
 		"onoffice_address_listview_per_page",
 		"onoffice_estate_listview_per_page",
@@ -247,27 +243,26 @@ add_filter( 'set-screen-option', function ( $status, $option, $value ) {
 		"onoffice_estate_units_listview_per_page"
 	);
 
-	if ( in_array( $option, $pagination_screen_option ) ) {
+	if (in_array($option, $pagination_screen_option)) {
 		return $value;
 	}
-
 	return $status;
-}, 10, 3 );
+}, 10, 3);
 
 function update_duplicate_check_warning_option()
 {
-	update_option( 'onoffice-duplicate-check-warning', 0 );
+	update_option('onoffice-duplicate-check-warning', 0);
 	echo true;
 	wp_die();
 }
 
-add_action( 'wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option' );
+add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
-add_action( 'wp', function () {
-	if ( ! get_option( 'add-detail-posts-to-rewrite-rules' ) ) {
-		flush_rewrite_rules( false );
-		delete_option( 'add-detail-posts-to-rewrite-rules' );
+add_action('wp', function () {
+	if (!get_option('add-detail-posts-to-rewrite-rules')) {
+		flush_rewrite_rules(false);
+		delete_option('add-detail-posts-to-rewrite-rules');
 	}
-} );
+});
 
 return $pDI;

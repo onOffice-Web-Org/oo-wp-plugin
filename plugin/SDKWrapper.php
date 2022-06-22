@@ -131,13 +131,11 @@ class SDKWrapper
 		$pOptionsWrapper = $this->_pWPOptionWrapper;
 		$token = $pOptionsWrapper->getOption('onoffice-settings-apikey');
 		$secret = $pOptionsWrapper->getOption('onoffice-settings-apisecret');
-		var_dump('121321');
 		if (defined('ONOFFICE_CREDENTIALS_ENC_KEY')) {
 			try {
 				$secretDecrypt = $this->_encrypter->decrypt($secret, ONOFFICE_CREDENTIALS_ENC_KEY);
 				$tokenDecrypt = $this->_encrypter->decrypt($token, ONOFFICE_CREDENTIALS_ENC_KEY);
 			}catch (\RuntimeException $exception){
-				var_dump($exception);
 				$this->_pSDK->removeCacheInstances();
 				$secretDecrypt = $secret;
 				$tokenDecrypt = $token;
