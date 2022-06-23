@@ -84,6 +84,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixed**
 
+* The labels for email address, phone and fax numbers no longer contain "default", which was confusing for website visitors.
 * The credentials no longer need to be newly entered after adding the encryption constant.
 
 = 4.0 (2022-06-21) =
