@@ -23,6 +23,7 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
@@ -77,7 +78,6 @@ class AdminPageEstateListSettings
 	{
 		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$pFormModelBuilder = new FormModelBuilderDBEstateListSettings();
-		$pFormDetailBuilder = new FormModelBuilderEstateDetailSettings();
 		$pFormModel = $pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
 		$this->addFormModel($pFormModel);
 
@@ -94,8 +94,10 @@ class AdminPageEstateListSettings
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
-		$pInputRestrictAccessControl     = $pFormDetailBuilder->createInputRestrictAccessControl();
-		if ( $pInputRestrictAccessControl->getValue() ) {
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
+		$restrictAccessControl     = $pDataDetailView->getViewRestrict();
+		if ( $restrictAccessControl ) {
 			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will not link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">restricted</a>',
 				'onoffice-for-wp-websites' ) );
 		} else {
