@@ -86,6 +86,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 * The labels for email address, phone and fax numbers no longer contain "default", which was confusing for website visitors.
 * The credentials no longer need to be newly entered after adding the encryption constant.
+* After uninstalling the plugin, there were some options left in the database. Those are now properly removed.
 
 = 4.0 (2022-06-21) =
 
