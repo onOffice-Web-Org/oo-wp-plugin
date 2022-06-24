@@ -162,7 +162,7 @@ abstract class ListTable extends WP_List_Table
 				$pages                  = implode( ',', $listPage );
 				$record->page_shortcode = $pages;
 			}
-			if ( $record->default_recipient ) {
+			if (isset($record->default_recipient)) {
 				if ( get_option( 'onoffice-settings-default-email', '' ) ) {
 					$record->recipient = esc_html( __( "Default", 'onoffice-for-wp-websites' ) . ' (' .
 					                               get_option( 'onoffice-settings-default-email', '' ) . ')' );
@@ -171,9 +171,11 @@ abstract class ListTable extends WP_List_Table
 							'onoffice-for-wp-websites' ) ) . " <i>(" . __( "missing", 'onoffice-for-wp-websites' ) . ")</i>";
 				}
 			} else {
-				$record->recipient = sprintf( esc_html( __( "%s (override)", 'onoffice-for-wp-websites' ) ), $record->recipient );
+				if(isset($record->recipient)){
+					$record->recipient = sprintf( esc_html( __( "%s (override)", 'onoffice-for-wp-websites' ) ), $record->recipient );
+				}
 			}
-			if ( $record->form_type === 'applicantsearch' ) {
+			if (isset($record->form_type) && $record->form_type === 'applicantsearch') {
 				$record->recipient = esc_html( '-' );
 			}
 			$recordHandled[] = $record;
