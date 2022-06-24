@@ -138,9 +138,9 @@ class TemplateCall
 			}
 			foreach ( $templatesFolder as $path ) {
 				if ( $key === self::TEMPLATE_FOLDER_THEME ) {
-					$formattedPath = __String::getNew( $path )->replace( get_template_directory() . '/', '' );
+					$formattedPath = __String::getNew( $path )->replace( get_stylesheet_directory() . '/', '' );
 				} else {
-					$formattedPath = __String::getNew( $path )->replace( plugin_dir_path( ONOFFICE_PLUGIN_DIR ), '' );
+					$formattedPath = __String::getNew( $path )->replace( str_replace('/', '\\', plugin_dir_path( ONOFFICE_PLUGIN_DIR )), '' );
 				}
 				$templateInfo['path'][ $formattedPath ] = substr( strrchr( $path, "/" ), 1 );
 			}
