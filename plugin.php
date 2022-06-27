@@ -116,7 +116,7 @@ add_action('plugins_loaded', function() {
 	// Check 'onoffice-personalized' Folder exists
 	$onofficePersonalizedFolderLanguages = plugin_dir_path(__DIR__) . 'onoffice-personalized/languages';
 	$onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
-	$onofficeThemeFolderLanguages = get_template_directory() . '/onoffice-theme/languages';
+	$onofficeThemeFolderLanguages = get_stylesheet_directory() . '/onoffice-theme/languages';
 
 	if (is_dir($onofficeThemeFolderLanguages)) {
 		load_textdomain('onoffice', $onofficeThemeFolderLanguages . '/onoffice-'.get_locale().'.mo');
