@@ -58,20 +58,20 @@ class InputFieldSelectRenderer
 	public function render()
 	{
 		echo '<select name="'.esc_html($this->getName()).'" '
-		     .($this->_multiple ? ' multiple = "multiple" ' : null)
-		     .$this->renderAdditionalAttributes()
-		     .' id="'.esc_html($this->getGuiId()).'">';
+			 .($this->_multiple ? ' multiple = "multiple" ' : null)
+			 .$this->renderAdditionalAttributes()
+			 .' id="'.esc_html($this->getGuiId()).'">';
 
 		foreach ($this->getValue() as $key => $label)
 		{
 			if (in_array($key, $this->_labelOnlyValues)) {
 				echo '<optgroup label="'.esc_html($label).'" '
-				     .($key == $this->getSelectedValue() ? ' selected="selected" ' : null).'></optgroup>';
+					.($key == $this->getSelectedValue() ? ' selected="selected" ' : null).'></optgroup>';
 			} else {
 				echo '<option value="'.esc_html($key).'" '
-				     .($key == $this->getSelectedValue() ? ' selected="selected" ' : null).'>'
-				     .esc_html($label)
-				     .'</option>';
+					.($key == $this->getSelectedValue() ? ' selected="selected" ' : null).'>'
+					.esc_html($label)
+					.'</option>';
 			}
 		}
 

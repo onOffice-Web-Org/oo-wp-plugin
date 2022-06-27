@@ -73,7 +73,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					$pictureValues = $pEstatesClone->getEstatePictureValues( $id );
 
 					if ( $referenz === "1" && $pEstatesClone->getViewRestrict() ) {
-                        echo '<div style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
+						echo '<div style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
 					} else {
 						echo '<a href="' . esc_url( $pEstatesClone->getEstateLink() ) . '" style="background-image: url(' . esc_url( $pEstatesClone->getEstatePictureUrl( $id, [ 'height' => 350 ] ) ) . ');" class="oo-listimage estate-status">';
 					}

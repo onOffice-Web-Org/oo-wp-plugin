@@ -145,7 +145,7 @@ class InputModelRenderer
 
 			case InputModelOption::HTML_TYPE_COMPLEX_SORTABLE_CHECKBOX_LIST:
 				$pInstance = new InputFieldComplexSortableListRenderer($elementName,
-					$pInputModel->getValuesAvailable());
+				$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				break;
 
@@ -213,7 +213,7 @@ class InputModelRenderer
 
 			case InputModelBase::HTML_TYPE_LABEL:
 				$pInstance = new InputFieldLabelRenderer
-				(null, $elementName, $pInputModel->getValue());
+					(null, $elementName, $pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
 				$pInstance->setValueEnclosure($pInputModel->getValueEnclosure());
 

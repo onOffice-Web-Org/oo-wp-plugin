@@ -75,8 +75,8 @@ class FormModelBuilderEstateDetailSettings
 	public function __construct(Fieldnames $_pFieldnames = null)
 	{
 		$pFieldCollection = new FieldModuleCollectionDecoratorInternalAnnotations
-		(new FieldModuleCollectionDecoratorReadAddress
-		(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection())));
+			(new FieldModuleCollectionDecoratorReadAddress
+				(new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection())));
 		$this->_pFieldnames = $_pFieldnames ?? new Fieldnames($pFieldCollection);
 		$this->_pFieldnames->loadLanguage();
 		$this->setFieldnames($this->_pFieldnames);
@@ -114,7 +114,7 @@ class FormModelBuilderEstateDetailSettings
 		$allPictureTypes = ImageTypes::getAllImageTypesTranslated();
 
 		$pInputModelPictureTypes = $this->_pInputModelDetailViewFactory->create
-		(InputModelOptionFactoryDetailView::INPUT_PICTURE_TYPE, null, true);
+			(InputModelOptionFactoryDetailView::INPUT_PICTURE_TYPE, null, true);
 		$pInputModelPictureTypes->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelPictureTypes->setValuesAvailable($allPictureTypes);
 		$pictureTypes = $this->_pDataDetailView->getPictureTypes();
@@ -137,7 +137,7 @@ class FormModelBuilderEstateDetailSettings
 	 */
 
 	public function createInputAccessControl() {
-		$allAccessControl = __('Allow detail view for reference estates', 'onoffice-for-wp-websites');
+		$allAccessControl = __('Restrict access to reference estates (404 Not Found)', 'onoffice-for-wp-websites');
 
 		$pInputModelAccessControl = $this->_pInputModelDetailViewFactory->create( InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL,
 			$allAccessControl);
@@ -170,7 +170,6 @@ class FormModelBuilderEstateDetailSettings
 		return $pInputModelRestrictAccessControl;
 	}
 
-
 	/**
 	 *
 	 * @return InputModelDB
@@ -182,7 +181,7 @@ class FormModelBuilderEstateDetailSettings
 		$labelExpose = __('PDF-Expose', 'onoffice-for-wp-websites');
 
 		$pInputModelExpose = $this->_pInputModelDetailViewFactory->create
-		(InputModelOptionFactoryDetailView::INPUT_EXPOSE, $labelExpose);
+			(InputModelOptionFactoryDetailView::INPUT_EXPOSE, $labelExpose);
 		$pInputModelExpose->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$exposes = array('' => '') + $this->readExposes();
 		$pInputModelExpose->setValuesAvailable($exposes);
@@ -203,7 +202,7 @@ class FormModelBuilderEstateDetailSettings
 		$labelMovieLinks = __('Movie Links', 'onoffice-for-wp-websites');
 
 		$pInputModelMedia = $this->_pInputModelDetailViewFactory->create
-		(InputModelOptionFactoryDetailView::INPUT_MOVIE_LINKS, $labelMovieLinks);
+			(InputModelOptionFactoryDetailView::INPUT_MOVIE_LINKS, $labelMovieLinks);
 		$pInputModelMedia->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$options = array(
 			MovieLinkTypes::MOVIE_LINKS_NONE => __('Deactivated', 'onoffice-for-wp-websites'),
@@ -299,7 +298,7 @@ class FormModelBuilderEstateDetailSettings
 	public function createInputModelFieldsConfigByCategory($category, $fieldNames, $categoryLabel)
 	{
 		$pInputModelFieldsConfig = new InputModelOption
-		(null, $category, null, InputModelDBFactory::INPUT_FIELD_CONFIG);
+			(null, $category, null, InputModelDBFactory::INPUT_FIELD_CONFIG);
 		$pInputModelFieldsConfig->setIsMulti(true);
 
 		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX_BUTTON);
@@ -333,11 +332,11 @@ class FormModelBuilderEstateDetailSettings
 
 		if ($module == onOfficeSDK::MODULE_ESTATE) {
 			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
+				(InputModelOptionFactoryDetailView::INPUT_FIELD_CONFIG, null, true);
 			$fields = $this->_pDataDetailView->getFields();
 		} elseif ($module == onOfficeSDK::MODULE_ADDRESS) {
 			$pInputModelFieldsConfig = $this->_pInputModelDetailViewFactory->create
-			(InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
+				(InputModelOptionFactoryDetailView::INPUT_FIELD_CONTACTDATA_ONLY, null, true);
 			$fields = $this->_pDataDetailView->getAddressFields();
 		} else {
 			throw new UnknownModuleException();
@@ -438,7 +437,7 @@ class FormModelBuilderEstateDetailSettings
 		foreach ($allRecordsForm as $value) {
 			$form_name = __String::getNew($value->name);
 			$shortCodeForm[$value->name] = '[oo_form form=&quot;'
-			                               . esc_html($form_name) . '&quot;]';
+				. esc_html($form_name) . '&quot;]';
 		}
 		return $shortCodeForm;
 	}

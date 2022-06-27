@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.0
+Version: 3.2
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -159,13 +159,13 @@ add_action('pre_update_option', function($value, $option) use ($pDI) {
 }, 10, 2);
 
 add_filter('query_vars', function(array $query_vars): array {
-	$query_vars []= 'onoffice_estate_type_json';
-	$query_vars []= 'onoffice_applicant_search_preview';
-	$query_vars []= 'onoffice_estate_preview';
-	$query_vars []= 'document_pdf';
-	$query_vars []= 'preview_name';
-	$query_vars []= 'nonce';
-	return $query_vars;
+    $query_vars []= 'onoffice_estate_type_json';
+    $query_vars []= 'onoffice_applicant_search_preview';
+    $query_vars []= 'onoffice_estate_preview';
+    $query_vars []= 'document_pdf';
+    $query_vars []= 'preview_name';
+    $query_vars []= 'nonce';
+    return $query_vars;
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
@@ -221,17 +221,17 @@ add_action('parse_request', static function(WP $pWP) use ($pDI) {
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
 	if (isset($pWP->query_vars['onoffice_estate_preview'], $pWP->query_vars['preview_name']) &&
-	    wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-estate-preview') === 1) {
+		wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-estate-preview') === 1) {
 		wp_send_json($pDI->get(FormPreviewEstate::class)
-		                 ->preview((string)$pWP->query_vars['preview_name']));
+			->preview((string)$pWP->query_vars['preview_name']));
 	}
 });
 
 add_action('parse_request', function(WP $pWP) use ($pDI) {
 	if (isset($pWP->query_vars['onoffice_applicant_search_preview'], $pWP->query_vars['preview_name']) &&
-	    wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-applicant-search-preview') === 1) {
+		wp_verify_nonce($pWP->query_vars['nonce'], 'onoffice-applicant-search-preview') === 1) {
 		wp_send_json($pDI->get(FormPreviewApplicantSearch::class)
-		                 ->preview((string)$pWP->query_vars['preview_name']));
+			->preview((string)$pWP->query_vars['preview_name']));
 	}
 });
 
