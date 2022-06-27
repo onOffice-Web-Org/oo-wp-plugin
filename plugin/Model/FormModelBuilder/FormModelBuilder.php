@@ -120,7 +120,7 @@ abstract class FormModelBuilder
 	protected function readTemplatePaths( $directory, $pattern = '*' ) {
 		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_INCLUDED ] = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR
 										. '/index.php' ) . 'templates.dist/' . $directory . '/' . $pattern . '.php' );
-		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ]   = glob( str_replace('/', '\\', plugin_dir_path( ONOFFICE_PLUGIN_DIR ))
+		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ]   = glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
 										. 'onoffice-personalized/templates/' . $directory . '/' . $pattern . '.php' );
 		$templatesAll[ TemplateCall::TEMPLATE_FOLDER_THEME ]    = glob( get_stylesheet_directory()
 										. '/onoffice-theme/templates/' . $directory . '/' . $pattern . '.php' );

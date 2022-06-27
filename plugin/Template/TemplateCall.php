@@ -137,12 +137,7 @@ class TemplateCall
 				$templateInfo['title'] = strtok( $templateInfo['title'], " " );
 			}
 			foreach ( $templatesFolder as $path ) {
-				if ( $key === self::TEMPLATE_FOLDER_THEME ) {
-					$formattedPath = __String::getNew( $path )->replace( get_stylesheet_directory() . '/', '' );
-				} else {
-					$formattedPath = __String::getNew( $path )->replace( str_replace('/', '\\', plugin_dir_path( ONOFFICE_PLUGIN_DIR )), '' );
-				}
-				$templateInfo['path'][ $formattedPath ] = substr( strrchr( $path, "/" ), 1 );
+				$templateInfo['path'][ $path ] = substr( strrchr( $path, "/" ), 1 );
 			}
 			$templateFormatResult[ $templateInfo['order'] ] = $templateInfo;
 		}
