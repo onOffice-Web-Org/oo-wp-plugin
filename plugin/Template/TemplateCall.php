@@ -126,6 +126,7 @@ class TemplateCall
 
 	public function formatTemplatesData( $templatesAll, $directory ): array {
 		$templateFormatResult = [];
+		$pluginDirName = basename(ONOFFICE_PLUGIN_DIR);
 
 		foreach ( $templatesAll as $key => $templatesFolder ) {
 			$templateInfo           = self::TEMPLATES_FOLDER_INFO[ $key ];
@@ -137,7 +138,14 @@ class TemplateCall
 				$templateInfo['title'] = strtok( $templateInfo['title'], " " );
 			}
 			foreach ( $templatesFolder as $path ) {
-				$templateInfo['path'][ $path ] = substr( strrchr( $path, "/" ), 1 );
+				if ( $key === self::TEMPLATE_FOLDER_THEME ) {
+					$formattedPath = __String::getNew( $path )->replace( get_stylesheet_directory() . '/', '' );
+				} else if ($key === self::TEMPLATE_FOLDER_PLUGIN) {
+					$formattedPath = __String::getNew( $path )->replace( plugin_dir_path( ONOFFICE_PLUGIN_DIR ), '' );
+				} else {
+					$formattedPath = substr( $path, strpos( $path, $pluginDirName ) );
+				}
+				$templateInfo['path'][ $formattedPath ] = substr( strrchr( $path, "/" ), 1 );
 			}
 			$templateFormatResult[ $templateInfo['order'] ] = $templateInfo;
 		}
