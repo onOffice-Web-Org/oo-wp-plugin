@@ -396,10 +396,18 @@ class RecordManagerReadListViewEstate
 		return $this->readContactDataByListviewId($listviewId);
 	}
 
-	public function updateColumnPageShortCode($page,$listviewId,$tableName,$column)
+
+	/**
+	 * @param $page
+	 * @param $listviewId
+	 * @param $tableName
+	 * @param $column
+	 */
+
+	public function updateColumnPageShortCode( $page, $listviewId, $tableName, $column )
 	{
 		$prefix = $this->getTablePrefix();
-		$pWpDb = $this->getWpdb();
+		$pWpDb  = $this->getWpdb();
 		$pWpDb->query("UPDATE {$prefix}".$tableName."
 				SET `page_shortcode` ='" .$page."' 
 				WHERE `".$column."` = ".esc_sql($listviewId));

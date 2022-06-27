@@ -58,7 +58,6 @@ class TestClassDataDetailViewHandler
 		'movielinks' => MovieLinkTypes::MOVIE_LINKS_PLAYER
 	];
 
-
 	/**
 	 *
 	 */
