@@ -75,14 +75,6 @@ class DataFormConfigurationInterest
 	public function getSubject()
 		{ return $this->_subject; }
 
-	/** @return string */
-	public function getRecipient()
-		{ return $this->_recipient; }
-
-	/** @return bool */
-	public function getDefaultRecipient()
-	{ return $this->_defaultRecipient; }
-
 	/** @return bool */
 	public function getCreateInterest(): bool
 	{ return $this->_createInterest; }
@@ -98,12 +90,4 @@ class DataFormConfigurationInterest
 	/** @param string $subject */
 	public function setSubject($subject)
 		{ $this->_subject = $subject; }
-
-	/** @param string $recipient */
-	public function setRecipient($recipient)
-		{ $this->_recipient = $recipient; }
-
-	/** @param bool $defaultRecipient */
-	public function setDefaultRecipient(bool $defaultRecipient)
-	{ $this->_defaultRecipient = $defaultRecipient; }
 }

@@ -508,12 +508,23 @@ abstract class AdminPageFormSettingsBase
 
 	protected function addFieldConfigurationForMainModules(FormModelBuilder $pFormModelBuilder)
 	{
+		$specificFieldText = __('Special Fields', 'onoffice-for-wp-websites');
 		$pFieldsCollection = $this->buildFieldsCollectionForCurrentForm();
+		$specificFields = [
+				$specificFieldText => [],
+		];
 
 		foreach ($this->getCurrentFormModules() as $module) {
-			$this->addFieldConfigurationByModule
+			$fieldNames = $this->addFieldConfigurationByModule
 				($pFormModelBuilder, $pFieldsCollection, $module);
+			if (isset($fieldNames[ $specificFieldText ])) {
+				$specificFields[ $specificFieldText ] = array_merge($specificFields[ $specificFieldText ], $fieldNames[ $specificFieldText ]);
+				unset($fieldNames[ $specificFieldText ]);
+			}
+			$this->addFieldsConfiguration($module, $pFormModelBuilder, $fieldNames, true);
+			$this->addSortableFieldModule($module);
 		}
+		$this->addFieldsConfiguration('', $pFormModelBuilder, $specificFields, true);
 	}
 
 
@@ -529,9 +540,8 @@ abstract class AdminPageFormSettingsBase
 		FormModelBuilder $pFormModelBuilder, FieldsCollection $pFieldsCollection, string $module)
 	{
 		$pFieldsCollectionConverter = new FieldsCollectionToContentFieldLabelArrayConverter();
-		$fieldNames = $pFieldsCollectionConverter->convert($pFieldsCollection, $module);
-		$this->addFieldsConfiguration($module, $pFormModelBuilder, $fieldNames, true);
-		$this->addSortableFieldModule($module);
+		return $pFieldsCollectionConverter->convert($pFieldsCollection, $module);
+
 	}
 
 	/**

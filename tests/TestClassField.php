@@ -109,6 +109,7 @@ class TestClassField
 				'testField123__bis' => 'testField123 up to',
 			],
 			'compoundFields' => ['Anrede-Titel' => ['Anrede', 'Titel']],
+			'tablename' => ''
 		];
 		$this->assertEquals($expectation, $pField->getAsRow());
 
@@ -166,6 +167,7 @@ class TestClassField
 				'testField123__bis' => 'testField123 up to',
 			],
 			'compoundFields' => ['Anrede-Titel' => ['Anrede', 'Titel']],
+			'tablename' => ''
 		];
 		$pField = Field::createByRow('testField1Name', $row);
 		$this->assertEquals($row, $pField->getAsRow());

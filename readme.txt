@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.0
 Requires PHP: 7.3
-Stable tag: 3.2
+Stable tag: 4.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -76,7 +76,21 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= Unreleased =
+= 4.1 (2022-06-27) =
+
+**Added**
+
+* The detail view shortcode is now recognized when it is used in the meta fields of a page. This makes it easier to use Advanced Custom Fields (ACF).
+
+**Fixed**
+
+* The labels for email address, phone and fax numbers no longer contain "default", which was confusing for website visitors.
+* The error causing notices about undefined properties in the estate and address list overviews have been fixed.
+* When using child themes, the templates and CSS are now loading correctly.
+* The credentials no longer need to be newly entered after adding the encryption constant.
+* After uninstalling the plugin, there were some options left in the database. Those are now properly removed.
+
+= 4.0 (2022-06-21) =
 
 **Removed**
 

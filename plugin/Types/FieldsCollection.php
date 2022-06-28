@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\Types;
 
 use onOffice\WPlugin\Field\FieldModuleCollection;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\UnknownFieldException;
 
 /**
@@ -49,7 +50,7 @@ class FieldsCollection implements FieldModuleCollection
 	{
 		$name = $pField->getName();
 		$module = $pField->getModule();
-		$this->_fields [] = $pField;
+		$this->_fields []= $pField;
 		$this->_fieldsByModule[$module][$name] = $pField;
 	}
 
@@ -92,6 +93,7 @@ class FieldsCollection implements FieldModuleCollection
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
 		$pField = $this->_fieldsByModule[$module][$name] ?? null;
+
 		if ($pField === null) {
 			throw new UnknownFieldException();
 		}
@@ -118,16 +120,23 @@ class FieldsCollection implements FieldModuleCollection
 			'newsletter_aktiv'     => 'Newsletter',
 			'workContract'         => 'Employment',
 		];
+		$newAddressFieldsTranslatedLabel = FieldModuleCollectionDecoratorReadAddress::getNewAddressFieldsTranslatedLabel();
+		$newAddressFields                = FieldModuleCollectionDecoratorReadAddress::getNewAddressFields();
+
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
 			/** @var $pFieldCopy Field */
 			$pFieldCopy = clone $pField;
-
 			if ($pFieldCopy->getCategory() === '') {
 				$pFieldCopy->setCategory($fallbackCategoryName);
 			}
 			foreach ($changeDefaultFields as $key => $default) {
-				if ($pFieldCopy->getName() === $key) {
-					$pFieldCopy->setDefault($default);
+				if ( $pFieldCopy->getName() === $key ) {
+					$pFieldCopy->setDefault( $default );
+				}
+			}
+			foreach ( $newAddressFields as $key => $properties ) {
+				if ( $pFieldCopy->getName() === $key ) {
+					$pFieldCopy->setLabel( $newAddressFieldsTranslatedLabel[ $properties['label'] ] );
 				}
 			}
 
@@ -157,7 +166,7 @@ class FieldsCollection implements FieldModuleCollection
 
 	public function getAllFieldsKeyedUnsafe(): array
 	{
-		$keys = array_map(function (Field $pField): string {
+		$keys = array_map(function(Field $pField): string {
 			return $pField->getName();
 		}, $this->_fields);
 		return array_combine($keys, $this->_fields);

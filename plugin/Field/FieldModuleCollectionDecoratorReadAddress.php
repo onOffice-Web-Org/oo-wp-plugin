@@ -38,21 +38,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	extends FieldModuleCollectionDecoratorAbstract
 {
 	/** @var array */
-	private $_addressFields = [
-		'imageUrl' => [
-			'type'   => FieldTypes::FIELD_TYPE_TEXT,
-			'length' => null,
-			'label'  => 'Image',
-		],
-		'email'    => [
-			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length'          => 80,
-			'default'         => null,
-			'permittedvalues' => null,
-			'label'           => 'All e-mail addresses',
-			'tablename'       => 'Kontakt',
-			"content"         => "Contact"
-		],
+	const ADDRESS_FIELDS_MASTER_DATA = [
 		'phone'    => [
 			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
 			'length'          => 40,
@@ -60,6 +46,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'All non-mobile phone numbers',
 			'tablename'       => 'Stammdaten',
+			'module'          => 'address',
 			"content"         => "Master data"
 		],
 		'fax'      => [
@@ -69,6 +56,7 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'All fax numbers',
 			'tablename'       => 'Stammdaten',
+			'module'          => 'address',
 			"content"         => "Master data"
 		],
 		'mobile'   => [
@@ -78,37 +66,34 @@ class FieldModuleCollectionDecoratorReadAddress
 			'permittedvalues' => null,
 			'label'           => 'All mobile numbers',
 			'tablename'       => 'Stammdaten',
+			'module'          => 'address',
 			"content"         => "Master data"
 		],
-		'Email'    => [
+	];
+
+	/** @var array */
+	const ADDRESS_FIELDS_CONTACT = [
+		'email' => [
 			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length'          => 100,
+			'length'          => 80,
 			'default'         => null,
 			'permittedvalues' => null,
-			'label'           => 'Default e-mail address',
-			'module'          => 'address',
+			'label'           => 'All e-mail addresses',
 			'tablename'       => 'Kontakt',
+			'module'          => 'address',
 			"content"         => "Contact"
 		],
-		'Telefon1' => [
-			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length'          => 40,
+	];
+
+	/** @var array */
+	const ADDRESS_FIELDS_NO_CATEGORY = [
+		'imageUrl' => [
+			'type'   => FieldTypes::FIELD_TYPE_TEXT,
+			'length' => null,
 			'default'         => null,
 			'permittedvalues' => null,
-			'label'           => 'Default phone number',
-			'module'          => 'address',
-			'tablename'       => 'Stammdaten',
-			"content"         => "Master data"
-		],
-		'Telefax1' => [
-			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length'          => 40,
-			'default'         => null,
-			'permittedvalues' => null,
-			'label'           => 'Default fax number',
-			'module'          => 'address',
-			'tablename'       => 'Stammdaten',
-			"content"         => "Master data"
+			'label'  => 'Image',
+			'module' => 'address',
 		],
 	];
 
@@ -122,7 +107,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	public function getAllFields(): array
 	{
 		$newFields = [];
-		foreach ($this->_addressFields as $name => $row) {
+		foreach ($this->getNewAddressFieldsAfterFormat() as $name => $row) {
 			$row['module'] = onOfficeSDK::MODULE_ADDRESS;
 			$newFields []= Field::createByRow($name, $row);
 		}
@@ -141,7 +126,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
 		if ($module === onOfficeSDK::MODULE_ADDRESS) {
-			$row = $this->_addressFields[$name] ?? null;
+			$row = $this->getNewAddressFieldsAfterFormat()[$name] ?? null;
 			if ($row !== null) {
 				$row['module'] = onOfficeSDK::MODULE_ADDRESS;
 				return Field::createByRow($name, $row);
@@ -162,7 +147,7 @@ class FieldModuleCollectionDecoratorReadAddress
 	public function containsFieldByModule(string $module, string $name): bool
 	{
 		return ($module === onOfficeSDK::MODULE_ADDRESS &&
-			isset($this->_addressFields[$name])) ||
+			isset($this->getNewAddressFieldsAfterFormat()[$name])) ||
 			parent::containsFieldByModule($module, $name);
 	}
 
@@ -173,8 +158,54 @@ class FieldModuleCollectionDecoratorReadAddress
 	 *
 	 */
 
-	public function getNewAddressFields(): array
+	public static function getNewAddressFields(): array
 	{
-		return $this->_addressFields;
+		return self::ADDRESS_FIELDS_NO_CATEGORY + self::ADDRESS_FIELDS_CONTACT + self::ADDRESS_FIELDS_MASTER_DATA;
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public static function getNewAddressFieldsWithTableNameKey(): array
+	{
+		return [
+			''           => self::ADDRESS_FIELDS_NO_CATEGORY,
+			'Kontakt'    => self::ADDRESS_FIELDS_CONTACT,
+			'Stammdaten' => self::ADDRESS_FIELDS_MASTER_DATA,
+		];
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public function getNewAddressFieldsAfterFormat(): array
+	{
+		return $this->formatFieldContent(self::getNewAddressFieldsWithTableNameKey());
+	}
+
+
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+
+	public static function getNewAddressFieldsTranslatedLabel(): array
+	{
+		return [
+			'All non-mobile phone numbers' => __( 'All non-mobile phone numbers', 'onoffice-for-wp-websites' ),
+			'All fax numbers'              => __( 'All fax numbers', 'onoffice-for-wp-websites' ),
+			'All mobile numbers'           => __( 'All mobile numbers', 'onoffice-for-wp-websites' ),
+			'All e-mail addresses'         => __( 'All e-mail addresses', 'onoffice-for-wp-websites' ),
+			'Image'                        => __( 'Image', 'onoffice-for-wp-websites' ),
+		];
 	}
 }

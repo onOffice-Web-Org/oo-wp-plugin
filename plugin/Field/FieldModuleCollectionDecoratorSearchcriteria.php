@@ -37,17 +37,22 @@ use onOffice\WPlugin\Types\FieldTypes;
 class FieldModuleCollectionDecoratorSearchcriteria
 	extends FieldModuleCollectionDecoratorAbstract
 {
-	/** @var array */
-	private $_searchcriteriaFields = [
-		'krit_bemerkung_oeffentlich' => [
-			'type' => FieldTypes::FIELD_TYPE_TEXT,
-			'length' => null,
-			'permittedvalues' => [],
-			'default' => null,
-			'label' => 'Comment',
-		],
-	];
 
+	/**
+	 * @return array
+	 */
+	public function getNewFields(): array {
+		return [
+			'krit_bemerkung_oeffentlich' => [
+				'type'            => FieldTypes::FIELD_TYPE_TEXT,
+				'length'          => null,
+				'permittedvalues' => [],
+				'default'         => null,
+				'label'           => __('Comment', 'onoffice-for-wp-websites'),
+				'content'         => __('Special Fields', 'onoffice-for-wp-websites')
+			],
+		];
+	}
 
 	/**
 	 *
@@ -58,7 +63,7 @@ class FieldModuleCollectionDecoratorSearchcriteria
 	public function getAllFields(): array
 	{
 		$allFields = parent::getAllFields();
-		foreach ($this->_searchcriteriaFields as $fieldName => $row)
+		foreach ($this->getNewFields() as $fieldName => $row)
 		{
 			$row['module'] = onOfficeSDK::MODULE_SEARCHCRITERIA;
 			$allFields []= Field::createByRow($fieldName, $row);
@@ -79,7 +84,7 @@ class FieldModuleCollectionDecoratorSearchcriteria
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
 		if ($module === onOfficeSDK::MODULE_SEARCHCRITERIA) {
-			$row = $this->_searchcriteriaFields[$name] ?? null;
+			$row = $this->getNewFields()[$name] ?? null;
 			if ($row !== null) {
 				$row['module'] = onOfficeSDK::MODULE_ADDRESS;
 				return Field::createByRow($name, $row);
@@ -101,7 +106,7 @@ class FieldModuleCollectionDecoratorSearchcriteria
 	{
 		return
 			($module === onOfficeSDK::MODULE_SEARCHCRITERIA &&
-				isset($this->_searchcriteriaFields[$name])) ||
+				isset($this->getNewFields()[$name])) ||
 				parent::containsFieldByModule($module, $name);
 	}
 }

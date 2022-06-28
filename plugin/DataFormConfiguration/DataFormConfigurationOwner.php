@@ -73,11 +73,6 @@ class DataFormConfigurationOwner
 	/** @var string */
 	private $_subject = null;
 
-	/** @var string */
-	private $_recipient = null;
-
-	/** @var bool */
-	private $_defaultRecipient = false;
 
 	/** @return bool */
 	public function getCheckDuplicateOnCreateAddress()
@@ -107,23 +102,7 @@ class DataFormConfigurationOwner
 	public function getSubject()
 		{ return $this->_subject; }
 
-	/** @return string */
-	public function getRecipient()
-		{ return $this->_recipient; }
-
-	/** @return bool */
-	public function getDefaultRecipient()
-	{ return $this->_defaultRecipient; }
-
 	/** @param string $subject */
 	public function setSubject($subject)
 		{ $this->_subject = $subject; }
-
-	/** @param string $recipient */
-	public function setRecipient($recipient)
-		{ $this->_recipient = $recipient; }
-
-	/** @param bool $defaultRecipient */
-	public function setDefaultRecipient(bool $defaultRecipient)
-	{ $this->_defaultRecipient = $defaultRecipient; }
 }

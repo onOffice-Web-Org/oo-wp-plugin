@@ -175,45 +175,10 @@ class AdminPageFormSettingsContact
 		$this->addFormModel($pFormModelFormSpecific);
 		$this->buildGeoPositionSettings();
 		$this->addFieldConfigurationForMainModules($pFormModelBuilder);
-		$this->buildMessagesInput($pFormModelBuilder);
 
 
 		$this->addSortableFieldsList($this->getSortableFieldModules(), $pFormModelBuilder,
 			InputModelBase::HTML_TYPE_COMPLEX_SORTABLE_DETAIL_LIST);
-	}
-
-
-	/**
-	 *
-	 * @param FormModelBuilder $pFormModelBuilder
-	 *
-	 */
-
-	private function buildMessagesInput(FormModelBuilder $pFormModelBuilder)
-	{
-		$category = __('Form Specific Fields', 'onoffice-for-wp-websites');
-		if ($this->getShowMessageInput()) {
-			$pFieldCollection = new FieldModuleCollectionDecoratorFormContact(new FieldsCollection());
-			$this->_additionalCategories []= $category;
-			$pFieldMessage = $pFieldCollection->getFieldByModuleAndName('', 'message');
-
-			$fieldNameMessage = [
-				$category => [
-					'message' => $pFieldMessage->getLabel(),
-				],
-			];
-			$this->addFieldsConfiguration(null, $pFormModelBuilder, $fieldNameMessage, true);
-			$this->addSortableFieldModule(null);
-		}
-		else {
-			$removeFields = [
-				[
-					'fieldName' => 'message',
-					'category' => $category
-				],
-			];
-			$this->removeFieldsConfiguration(null, $removeFields);
-		}
 	}
 
 
