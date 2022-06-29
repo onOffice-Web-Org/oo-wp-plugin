@@ -254,6 +254,7 @@ if (!function_exists('renderParkingLot')) {
 			}
 			/* translators: 1: Name of parking lot, 2: Price */
 			$element = sprintf(__('%1$s at %2$s', 'onoffice'), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
+
 			if (!empty($parking['MarketingType'])) {
 				$element .= ' (' . $parking['MarketingType'] . ')';
 			}
@@ -278,9 +279,36 @@ if (!function_exists('formatPriceParking')) {
 			{
 				$codeCurrency = "EUR";
 			}
-			return str_replace("\xc2\xa0", " ", $format->formatCurrency($str,$codeCurrency));
+			$checkValue = str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
+			if ( $currency == 'lei' && $locale == 'ro_RO' ) {
+				return str_replace( $codeCurrency, "lei", $checkValue );
+			}
+			if ( $currency == 'kn' && $locale == 'hr_HR' ) {
+				return str_replace( $codeCurrency, "kn", $checkValue );
+			}
+			if ( strpos( $checkValue, $currency ) !== false ) {
+				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
+			} else {
+				$currency = '€';
+				if ( $digit ) {
+					$str = floatval( $str );
+					$str = number_format( $str, 2, ',', '.' );
+				} else {
+					$str = number_format( intval( $str ), 0, ',', '.' );
+				}
+				switch ( $language ) {
+					case 'ENG':
+						$str = sprintf( __( $currency . '%1$s', 'onoffice' ), $str );
+						break;
+					default:
+						$str = sprintf( __( '%1$s ' . $currency, 'onoffice' ), $str );
+						break;
+				}
+
+				return $str;
+			}
 		} else {
-			if (empty($currency))
+			if (empty($currency)) 
 			{
 				$currency = '€';
 			}
