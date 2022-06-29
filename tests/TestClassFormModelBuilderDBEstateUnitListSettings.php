@@ -32,14 +32,25 @@ use WP_UnitTestCase;
 class TestClassFormModelBuilderDBEstateUnitListSettings
 	extends WP_UnitTestCase
 {
+	/** @var InputModelDBFactory */
+	private $_pInputModelFactoryDBEntry;
+
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings::createInputModelRandomOrder
+	 * @before
 	 */
-	public function testCreateInputModelRandomOrder()
+	public function prepare()
 	{
-		$pFormModelBuilderDBEstateUnitListSettings = new FormModelBuilderDBEstateUnitListSettings();
-		$pInputModelDB = $pFormModelBuilderDBEstateUnitListSettings->createInputModelRandomOrder();
-		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+		$this->_pInputModelFactoryDBEntry = new InputModelDBFactory(new InputModelDBFactoryConfigEstate);
+	}
+
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateUnitListSettings::generate
+	 */
+	public function testGenerate()
+	{
+		$pFormModelBuilder = new FormModelBuilderDBEstateUnitListSettings();
+		$pFormModel        = $pFormModelBuilder->generate( 'abc' );
+		$this->assertEquals( $pFormModel->getPageSlug(), 'abc' );
 	}
 }
