@@ -137,14 +137,24 @@ class AdminPageEstateDetail
 
 		echo '<span class="viewusage">';
 		if ($pageId != null) {
+			esc_attr_e('The shortcode ', 'onoffice-for-wp-websites');
+			echo '<input type="text" style="max-width: 100%; margin-right: 5px;" readonly value="[oo_estate view=&quot;'
+			     . esc_html( $pDataView->getName() ) . '&quot;]">
+			     <input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;'
+			     . esc_html( $pDataView->getName() ) . '&quot;]" value="' . esc_html__( 'Copy',
+					'onoffice-for-wp-websites' ) . '" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
 			/* translators: %s will be replaced with a link to the appropriate page. */
-			printf(esc_attr(__('Detail view in use on page %s', 'onoffice-for-wp-websites')),
+			printf(esc_attr(__('  is used on %s', 'onoffice-for-wp-websites')),
 				'<span class="italic">'.esc_html(get_the_title($pageId)).'</span>');
 			edit_post_link(__('Edit Page', 'onoffice-for-wp-websites'), ' ', '', $pageId);
 		} else {
-			esc_attr_e('Detail view is not in use yet. '
-				.'Insert this code on a page to get the detail view there:', 'onoffice-for-wp-websites');
-			echo ' <code>[oo_estate view="'.$pDataView->getName().'"]</code>';
+			esc_attr_e('The shortcode ', 'onoffice-for-wp-websites');
+			echo '<input type="text" style="max-width: 100%; margin-right: 5px;" readonly value="[oo_estate view=&quot;'
+			     . esc_html( $pDataView->getName() ) . '&quot;]">
+			     <input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;'
+			     . esc_html( $pDataView->getName() ) . '&quot;]" value="' . esc_html__( 'Copy',
+					'onoffice-for-wp-websites' ) . '" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
+			esc_attr_e(' is not yet used.');
 		}
 		echo '</span>';
 
@@ -400,6 +410,10 @@ class AdminPageEstateDetail
 
 		wp_enqueue_script('admin-js');
 		wp_enqueue_script('postbox');
+		wp_register_script( 'oo-copy-shortcode',
+			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/js/onoffice-copycode.js',
+			[ 'jquery' ], '', true );
+		wp_enqueue_script( 'oo-copy-shortcode' );
 	}
 
 	/**
