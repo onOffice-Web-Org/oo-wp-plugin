@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Renderer;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Types\FieldTypes;
 use function __;
@@ -62,6 +63,10 @@ class InputFieldComplexSortableDetailListContentDefault
 
 			if ($callbackValue !== null) {
 				call_user_func($callbackValue, $pInputModel, $key, $type);
+			}
+
+			if ($isDummy) {
+				$pInputModel->setTable(AdminPageAjax::EXCLUDE_FIELD . $pInputModel->getTable());
 			}
 
 			$pFormModel->addInputModel($pInputModel);
