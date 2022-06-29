@@ -72,8 +72,8 @@ class TestClassTemplate extends \WP_UnitTestCase
 
 	public function testRender_templatesInThemeDir()
 	{
-		$this->assertNotEmpty(get_template_directory());
-		$themeTemplateDir = get_template_directory().'/onoffice-theme/';
+		$this->assertNotEmpty(get_stylesheet_directory());
+		$themeTemplateDir = get_stylesheet_directory().'/onoffice-theme/';
 
 		if (!is_dir($themeTemplateDir) &&
 			!mkdir($themeTemplateDir . '/templates/', 755, true) &&

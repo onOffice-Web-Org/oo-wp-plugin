@@ -101,7 +101,7 @@ class TestClassSDKWrapper
 	public function prepare()
 	{
 		$this->_pMockSDK = $this->getMockBuilder(onOfficeSDK::class)
-			->setMethods(['call', 'getResponseArray', 'getErrors', 'callGeneric'])
+			->setMethods(['call', 'getResponseArray', 'getErrors', 'callGeneric','removeCacheInstances'])
 			->getMock();
 		$this->_pMockSDK->method('call')
 			->with('testAction', '', null, 'testResource', [])
@@ -152,6 +152,7 @@ class TestClassSDKWrapper
 	{
 		$pSDKWrapper = $pAPIClientActionGeneric->getSDKWrapper();
 		$pSDK = $pSDKWrapper->getSDK();
+		$pSDK->expects($this->once())->method('removeCacheInstances');
 		$pSDK->expects($this->once())->method('getErrors')->will($this->returnValue([]));
 		$pSDK->method('getResponseArray')->with(2)
 			->will($this->returnValue(json_decode($this->_expectedResult, true)));

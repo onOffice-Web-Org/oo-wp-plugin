@@ -72,23 +72,19 @@ class FormPostContact
 		parent::__construct($pFormPostConfiguration, $pSearchcriteriaFields, $pFieldsCollectionConfiguratorForm);
 	}
 
+
 	/**
+	 * @param  FormData  $pFormData
 	 *
-	 * @param FormData $pFormData
 	 * @throws ApiClientException
 	 * @throws DependencyException
-	 * @throws Field\UnknownFieldException
 	 * @throws NotFoundException
 	 */
 
 	protected function analyseFormContentByPrefix(FormData $pFormData)
 	{
 		$pFormConfig = $pFormData->getDataFormConfiguration();
-		if ($pFormConfig->getDefaultRecipient()) {
-			$recipient = get_option('onoffice-settings-default-email', '');
-		} else {
-			$recipient = $pFormConfig->getRecipient();
-		}
+		$recipient = $pFormConfig->getRecipientByUserSelection();
 		$subject = $pFormConfig->getSubject();
 
 		try {
@@ -96,7 +92,7 @@ class FormPostContact
 				$this->createAddress($pFormData);
 			}
 		} finally {
-			$this->sendContactRequest($pFormData, $recipient ?? '', $subject);
+			$this->sendContactRequest($pFormData, $recipient, $subject);
 		}
 	}
 

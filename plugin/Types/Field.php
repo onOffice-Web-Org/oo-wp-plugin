@@ -53,6 +53,9 @@ class Field
 	private $_category = '';
 
 	/** @var string */
+	private $_tableName = '';
+
+	/** @var string */
 	private $_module = '';
 
 	/** @var bool */
@@ -244,6 +247,30 @@ class Field
 	 *
 	 */
 
+	public function getTableName(): string
+	{
+		return $this->_tableName;
+	}
+
+
+	/**
+	 *
+	 * @param string  $tableName
+	 *
+	 */
+
+	public function setTableName(string $tableName)
+	{
+		$this->_tableName = $tableName;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
 	public function getModule(): string
 	{
 		return $this->_module;
@@ -353,6 +380,7 @@ class Field
 			'length' => $this->_length === 0 ? null : $this->_length,
 			'permittedvalues' => $this->_permittedvalues,
 			'content' => $this->_category,
+			'tablename' => $this->_tableName,
 			'module' => $this->_module,
 			'rangefield' => $this->_isRangeField,
 			'additionalTranslations' => $this->_rangeFieldTranslations,
@@ -378,6 +406,7 @@ class Field
 		$pField->setLength($row['length'] ?? 0);
 		$pField->setPermittedvalues($row['permittedvalues'] ?? []);
 		$pField->setCategory($row['content'] ?? '');
+		$pField->setTableName($row['tablename'] ?? '');
 		$pField->setType($row['type']);
 		$pField->setIsRangeField((bool)($row['rangefield'] ?? false));
 		$pField->setRangeFieldTranslations($row['additionalTranslations'] ?? []);

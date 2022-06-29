@@ -589,6 +589,7 @@ class TestClassEstateList
 				'additionalTranslations' => [],
 				'compoundFields' => [],
 				'labelOnlyValues' => [],
+				'tablename' => ''
 			],
 			'objekttyp' => [
 				'name' => 'objekttyp',
@@ -604,6 +605,7 @@ class TestClassEstateList
 				'additionalTranslations' => [],
 				'compoundFields' => [],
 				'labelOnlyValues' => [],
+				'tablename' => ''
 			],
 		];
 

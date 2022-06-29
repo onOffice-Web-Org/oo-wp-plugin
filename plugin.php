@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 3.2
+Version: 4.1
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -116,7 +116,7 @@ add_action('plugins_loaded', function() {
 	// Check 'onoffice-personalized' Folder exists
 	$onofficePersonalizedFolderLanguages = plugin_dir_path(__DIR__) . 'onoffice-personalized/languages';
 	$onofficePersonalizedFolder = plugin_dir_path(__DIR__) . 'onoffice-personalized';
-	$onofficeThemeFolderLanguages = get_template_directory() . '/onoffice-theme/languages';
+	$onofficeThemeFolderLanguages = get_stylesheet_directory() . '/onoffice-theme/languages';
 
 	if (is_dir($onofficeThemeFolderLanguages)) {
 		load_textdomain('onoffice', $onofficeThemeFolderLanguages . '/onoffice-'.get_locale().'.mo');

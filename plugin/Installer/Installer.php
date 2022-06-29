@@ -102,6 +102,14 @@ class Installer
 		delete_option('onoffice-settings-apikey');
 		delete_option('onoffice-detail-view-showTitleUrl');
 		delete_option('onoffice-pagination-paginationprovider');
+		delete_option('onoffice-duplicate-check-warning');
+		delete_option('onoffice-pagination-paginationbyonoffice');
+		delete_option('onoffice-settings-captcha-sitekey');
+		delete_option('onoffice-settings-google-bot-index-pdf-expose');
+		delete_option('onoffice-settings-googlemaps-key');
+		delete_option('onoffice-similar-estates-settings-view');
+		delete_option('onoffice-is-encryptcredent');
+		delete_option('onoffice-settings-default-email');
 
 		self::flushRules();
 	}
