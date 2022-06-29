@@ -297,12 +297,13 @@ abstract class AdminPageSettingsBase
 			}
 		}
 
-		$row                                                 = $pInputModelDBAdapterRow->createUpdateValuesByTable();
-		$row                                                 = $this->setFixedValues( $row );
-		$checkResult                                         = $this->checkFixedValues( $row );
-		$pResultObject                                       = new stdClass();
-		$pResultObject->result                               = false;
-		$pResultObject->record_id                            = $recordId;
+		$row                      = $pInputModelDBAdapterRow->createUpdateValuesByTable();
+		$row                      = $this->setFixedValues( $row );
+		$checkResult              = $this->checkFixedValues( $row );
+		$pResultObject            = new stdClass();
+		$pResultObject->result    = false;
+		$pResultObject->record_id = $recordId;
+
 		$row['oo_plugin_fieldconfig_form_defaults_values']   =
 			(array) ( $row['oo_plugin_fieldconfig_form_defaults_values']['value'] ?? [] ) +
 			(array) ( $values->{'defaultvalue-lang'} ) ?? [];
