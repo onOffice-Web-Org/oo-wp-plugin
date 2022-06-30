@@ -29,6 +29,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
 use WP_UnitTestCase;
 
@@ -462,5 +463,21 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals($pInputModelDB->getValue(), '0');
 		$this->assertEquals($pInputModelDB->getValuesAvailable(), [""]);
 		$this->assertEquals('select', $pInputModelDB->getHtmlType());
+	}
+
+	public function testCreateInputModelEmbedCode()
+	{
+		$pFormModelBuilderDBEstateListSettings = new FormModelBuilderDBEstateListSettings();
+		$pInputModelFormEmbedCode = $pFormModelBuilderDBEstateListSettings->createInputModelEmbedCode();
+		$this->assertInstanceOf(InputModelLabel::class, $pInputModelFormEmbedCode);
+		$this->assertEquals($pInputModelFormEmbedCode->getHtmlType(), 'label');
+	}
+
+	public function testCreateInputModelButton()
+	{
+		$pFormModelBuilderDBEstateListSettings = new FormModelBuilderDBEstateListSettings();
+		$pInputModelButton = $pFormModelBuilderDBEstateListSettings->createInputModelButton();
+		$this->assertInstanceOf(InputModelLabel::class, $pInputModelButton);
+		$this->assertEquals($pInputModelButton->getHtmlType(), 'button');
 	}
 }

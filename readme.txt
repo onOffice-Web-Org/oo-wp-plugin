@@ -76,6 +76,16 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= Unreleased =
+
+**Added**
+
+* The shortcodes are now also shown in the settings for lists and we have added a button to more easily copy them.
+
+**Changed**
+
+* When saving a list or form, the page now fully reloads.
+
 = 4.1 (2022-06-27) =
 
 **Added**

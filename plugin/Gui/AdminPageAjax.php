@@ -46,6 +46,9 @@ abstract class AdminPageAjax
 	/** */
 	const ENQUEUE_DATA_MERGE = 'merge';
 
+	/** */
+	const EXCLUDE_FIELD = 'exclude';
+
 	/**
 	 *
 	 * Entry point for AJAX.
@@ -55,7 +58,7 @@ abstract class AdminPageAjax
 	 *
 	 */
 
-	abstract public function ajax_action();
+	abstract public function save_form();
 
 
 	/**
@@ -92,6 +95,7 @@ abstract class AdminPageAjax
 		$formId = $pFormModel->getGroupSlug();
 		$formIdHtmlFriendly = HtmlIdGenerator::generateByString($formId);
 		$formLabel = $pFormModel->getLabel();
+
 
 		$callback = function() use ($pFormModel) {
 			/* @var $pInputModelRenderer InputModelRenderer */
@@ -155,5 +159,39 @@ abstract class AdminPageAjax
 		}
 
 		return $resultByContent;
+	}
+
+
+	/**
+	 * @return array
+	 */
+
+	public function transformPostValues(): array
+	{
+		$result = [];
+
+		foreach ( $_POST as $index => $fields ) {
+			if ( str_contains( $index, self::EXCLUDE_FIELD ) || str_contains( $index, 'filter_fields_order' ) ) {
+				continue;
+			}
+			if ( is_array( $fields ) ) {
+				foreach ( $fields as $key => $field ) {
+					if ( $key === 'dummy_key' || $field === 'dummy_key' ) {
+						unset( $fields[ $key ] );
+						continue;
+					}
+					if ( is_array( $field ) && ( $index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value' ) ) {
+						$fields[ $key ] = (object) $field;
+					}
+				}
+			}
+			if ( $index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value' ) {
+				$result[ $index ] = (object) $fields;
+			} else {
+				$result[ $index ] = $fields;
+			}
+		}
+
+		return $result;
 	}
 }

@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2017 onOffice GmbH
+ *    Copyright (C) 2017-2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+
 /**
  *
  * @url http://www.onoffice.de
@@ -28,24 +29,22 @@ namespace onOffice\WPlugin\Renderer;
  *
  */
 
-class InputFieldEmailRenderer
+class InputFieldButtonRenderer
 	extends InputFieldRenderer
 {
+	/** @var string */
+	private $_id = null;
+
+	/** @var string */
+	private $_label = null;
+
+
 	/**
 	 *
-	 * @param string $type
-	 * @param string $name
-	 * @param string $value
+	 * @param  string  $name
+	 * @param  mixed  $value
 	 *
 	 */
-
-	public function __construct($type, $name, $value = null)
-	{
-		if (!in_array($type, array('email', 'hidden'))) {
-			throw new \Exception(' wrong type!');
-		}
-		parent::__construct($type, $name, $value);
-	}
 
 	/**
 	 *
@@ -53,13 +52,8 @@ class InputFieldEmailRenderer
 
 	public function render()
 	{
-		$textHtml = '';
-		if ( ! empty( $this->getHint() ) ) {
-			$textHtml = '<p class="hint-fallback-email hint-text">' . esc_html( $this->getHint() ) . '</p>';
-		}
-		echo '<input type="' . esc_html( $this->getType() ) . '" name="' . esc_html( $this->getName() )
-		     . '" value="' . esc_html( $this->getValue() ) . '" id="' . esc_html( $this->getGuiId() ) . '"'
-		     . ' ' . $this->renderAdditionalAttributes()
-		     . '>' . $textHtml;
+		echo '<input type="button" class="button button-copy" data-clipboard-text="' . esc_html( $this->getValue() ) . '" value="' . esc_html__( 'Copy',
+				'onoffice-for-wp-websites' ) . '" '
+		     . $this->renderAdditionalAttributes() . '><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
 	}
 }
