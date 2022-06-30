@@ -47,6 +47,27 @@ class DetailViewPostSaveController
 	/** @var Container */
 	private $_pContainer;
 
+	/** @var RecordManagerReadListViewEstate */
+	private $_pRecordReadListView;
+
+	const LIST_CONFIGS = [
+		'estate'  => [
+			"option" => "view",
+			"tableName" => "oo_plugin_listviews",
+			"key" => "listview_id",
+		],
+		'address' => [
+			"option" => "view",
+			"tableName" => "oo_plugin_listviews_address",
+			"key" => "listview_address_id",
+		],
+		'form'    => [
+			"option" => "form",
+			"tableName" => "oo_plugin_forms",
+			"key" => "form_id",
+		],
+	];
+
 	/**
 	 *
 	 * @param RewriteRuleBuilder $pRewriteRuleBuilder
@@ -60,6 +81,7 @@ class DetailViewPostSaveController
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pDIContainerBuilder->build();
+		$this->_pRecordReadListView = $this->_pContainer->get(RecordManagerReadListViewEstate::class);
 	}
 
 
@@ -85,15 +107,33 @@ class DetailViewPostSaveController
 
 			$detailViewName = $pDetailView->getName();
 			$postContent = $pPost->post_content;
+			$postType = $pPost->post_type;
+			$metaKeys = get_post_meta($postId, '', true);
+
 			$viewContained = $this->postContainsViewName($postContent, $detailViewName);
 
-			if ($viewContained) {
-				$pDetailView->setPageId((int)$postId);
-				$pDetailView->addToPageIdsHaveDetailShortCode( (int) $postId );
-				$pDataDetailViewHandler->saveDetailView($pDetailView);
-				$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
-				flush_rewrite_rules();
+			$viewContainedCustomField = false;
+			$hasOtherShortcodeInPostContent = false;
 
+			if (!$viewContained && !empty($postContent) && $this->checkOtherShortcodeInPostContent($postContent, $detailViewName)) {
+				$hasOtherShortcodeInPostContent = true;
+			}
+
+			foreach ($metaKeys as $metaKey) {
+				$viewContainedMetaKey = $this->postContainsViewName($metaKey[0], $detailViewName);
+				if ($viewContainedMetaKey) {
+					$viewContainedCustomField = true;
+				}
+			}
+
+			if (($viewContained) || ($viewContainedCustomField && $viewContained) || ($viewContainedCustomField && $hasOtherShortcodeInPostContent == false)) {
+				if ($postType == 'page') {
+					$pDetailView->setPageId((int) $postId);
+					$pDetailView->addToPageIdsHaveDetailShortCode( (int) $postId );
+					$pDataDetailViewHandler->saveDetailView($pDetailView);
+					$this->_pRewriteRuleBuilder->addDynamicRewriteRules();
+					flush_rewrite_rules();
+				}
 			} elseif ($pDetailView->getPageId() !== 0) {
 				$postRevisions = wp_get_post_revisions($postId);
 				$detailInPreviousRev = array_key_exists($pDetailView->getPageId(), $postRevisions);
@@ -107,9 +147,42 @@ class DetailViewPostSaveController
 				}
 			}
 			$this->addPageUseShortCode($pPost);
+			$listView        = $this->getListView();
+			$listViewAddress = $this->getListViewAddress();
+			$listViewForm    = $this->getListForm();
+			$this->deletePageUseShortCodeWhenUpdatePage($listView, $pPost);
+			$this->deletePageUseShortCodeWhenUpdatePage($listViewAddress, $pPost);
+			$this->deletePageUseShortCodeWhenUpdatePage($listViewForm, $pPost);
 		}
 
 	}
+
+	private function deletePageUseShortCodeWhenUpdatePage($listView, $pPost) {
+		foreach ($listView as $view) {
+			if(empty($view->page_shortcode)){
+				continue;
+			}
+			$pageShortcode = explode(',', $view->page_shortcode);
+			if ( ! in_array($pPost->ID, $pageShortcode)) {
+				continue;
+			}
+			foreach (self::LIST_CONFIGS as $key => $listConfig) {
+				$metaKeys               = get_post_meta($pPost->ID, '', true);
+				$viewShortcodeName      = $this->generateViewNameOfShortCode($view->name, $listConfig['option']);
+				$viewContained          = $this->postContains($pPost->post_content, "oo_" . $key, $viewShortcodeName);
+				$viewContainedShortcode = $this->postContains($metaKeys['list_shortcode'][0], "oo_" . $key, $viewShortcodeName);
+				if ( ! $viewContainedShortcode || $viewContained) {
+					$this->deletePageUseShortCode($pPost);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 */
+
 	public function getAllPost() {
 		$args = array(
 			'post_status' => 'publish',
@@ -169,40 +242,69 @@ class DetailViewPostSaveController
 	 *
 	 */
 
-	private function generateDetailViewCode($detailViewName) {
-		return 'view="'.$detailViewName.'"';
+	private function generateDetailViewCode( $detailViewName )
+	{
+		return 'view="' . $detailViewName . '"';
 	}
 
-	private function generateDetailCode($detailViewName,$option) {
-		return $option.'="'.$detailViewName.'"';
+
+	/**
+	 * @param $viewName
+	 * @param $option
+	 *
+	 * @return string
+	 */
+
+	private function generateViewNameOfShortCode( $viewName, $option )
+	{
+		return $option . '="' . $viewName . '"';
 	}
+
+
+	/**
+	 * @return object[]
+	 */
+
 	private function getListView()
 	{
-		$pRecordReadListView = new RecordManagerReadListViewEstate();
-		$pRecordReadListView->addColumn('listview_id');
-		$pRecordReadListView->addColumn('name');
-		$pRecordReadListView->addColumn('page_shortcode');
-		$listView = $pRecordReadListView->getRecords();
-		return $listView;
+		$this->_pRecordReadListView->addColumn( 'listview_id' );
+		$this->_pRecordReadListView->addColumn( 'name' );
+		$this->_pRecordReadListView->addColumn( 'page_shortcode' );
+
+		return $this->_pRecordReadListView->getRecords();
 	}
+
+
+	/**
+	 * @return array
+	 */
+
 	private function getListViewAddress()
 	{
-		$pRecordReadListViewAddress = new RecordManagerReadListViewAddress();
-		$pRecordReadListViewAddress->addColumn('listview_address_id');
-		$pRecordReadListViewAddress->addColumn('name');
-		$pRecordReadListViewAddress->addColumn('page_shortcode');
-		$listViewAddress = $pRecordReadListViewAddress->getRecords();
-		return $listViewAddress;
+		$pRecordReadListViewAddress = $this->_pContainer->get( RecordManagerReadListViewAddress::class );
+		$pRecordReadListViewAddress->addColumn( 'listview_address_id' );
+		$pRecordReadListViewAddress->addColumn( 'name' );
+		$pRecordReadListViewAddress->addColumn( 'page_shortcode' );
+
+		return $pRecordReadListViewAddress->getRecords();
 	}
+
+
+	/**
+	 * @return object[]
+	 */
+
 	private function getListForm()
 	{
-		$pRecordReadForm = new RecordManagerReadForm();
-		$pRecordReadForm->addColumn('form_id');
-		$pRecordReadForm->addColumn('name');
-		$pRecordReadForm->addColumn('page_shortcode');
-		$listForm = $pRecordReadForm->getRecords();
-		return $listForm;
+		$pRecordReadForm = $this->_pContainer->get( RecordManagerReadForm::class );
+		$pRecordReadForm->addColumn( 'form_id' );
+		$pRecordReadForm->addColumn( 'name' );
+		$pRecordReadForm->addColumn( 'page_shortcode' );
+
+		return $pRecordReadForm->getRecords();
 	}
+
+
 	/**
 	 *
 	 * @param string $post
@@ -231,18 +333,24 @@ class DetailViewPostSaveController
 		return false;
 	}
 
-	private function postContains($post, $viewName, $element,$option) {
-		$matches = array();
-		$regex = get_shortcode_regex(array($element));
-		preg_match_all('/'.$regex.'/ism', $post, $matches);
 
-		$detailviewCode = $this->generateDetailCode($viewName,$option);
-		if (!array_key_exists(3, $matches)) {
-			return false;
-		}
+	/**
+	 *
+	 * @param string $post
+	 * @param string $viewName
+	 * @return bool
+	 *
+	 */
+
+	private function checkOtherShortcodeInPostContent($post, $viewName) {
+		$matches = array();
+		$regex   = get_shortcode_regex(array('oo_estate'));
+		preg_match_all('/' . $regex . '/ism', $post, $matches);
+
+		$detailviewCode = $this->generateDetailViewCode($viewName);
 
 		foreach ($matches[3] as $tagParams) {
-			if (__String::getNew($tagParams)->contains($detailviewCode)) {
+			if ($tagParams !== $detailviewCode) {
 				return true;
 			}
 		}
@@ -250,100 +358,151 @@ class DetailViewPostSaveController
 		return false;
 	}
 
-	private function addPageUseShortCode($post)
+
+	/**
+	 * @param $postContent
+	 * @param $element
+	 * @param $viewShortcodeName
+	 *
+	 * @return bool
+	 */
+
+	private function postContains( $postContent, $element, $viewShortcodeName )
 	{
-		$listView = $this->getListView();
+		$matches = array();
+		$regex   = get_shortcode_regex( array( $element ) );
+		preg_match_all( '/' . $regex . '/ism', $postContent, $matches );
+
+		if ( ! array_key_exists( 3, $matches ) ) {
+			return false;
+		}
+
+		foreach ( $matches[3] as $tagParams ) {
+			if ( __String::getNew( $tagParams )->contains( $viewShortcodeName ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * @param $post
+	 */
+
+	private function addPageUseShortCode( $post )
+	{
+		$listView        = $this->getListView();
 		$listViewAddress = $this->getListViewAddress();
-		$listForm = $this->getListForm();
-		$isRevision = wp_is_post_revision($post);
-		if (!$isRevision) {
-			$postContent = $post->post_content;
-			$postID = $post->ID;
-			if (empty($postID))
-			{
+		$listForm        = $this->getListForm();
+		$isRevision      = wp_is_post_revision( $post );
+		if ( ! $isRevision && $post->post_type === 'page' ) {
+			$postID      = $post->ID;
+			$metaKeys    = get_post_meta( $postID, '', true );
+			$allContents = [ [ 0 => $post->post_content ] ] + $metaKeys;
+
+			if ( empty( $postID ) ) {
 				return;
 			}
-			if (strpos($postContent,'oo_estate') !== false)
-			{
-				$this->addPageShortCode($listView,$post,'oo_estate','view',"oo_plugin_listviews","listview_id","listview_id");
-			}
-			if (strpos($postContent,'oo_address') !== false)
-			{
-				$this->addPageShortCode($listViewAddress,$post,'oo_address','view',"oo_plugin_listviews_address","listview_address_id","listview_address_id");
-			}
-			if (strpos($postContent,'oo_form') !== false)
-			{
-				$this->addPageShortCode($listForm,$post,'oo_form','form',"oo_plugin_forms","form_id","form_id");
-			}
 
+			foreach ( $allContents as $allContent ) {
+				if ( strpos( $allContent[0], 'oo_estate' ) !== false ) {
+					$this->addPageShortCode( $listView, [ 'ID' => $postID, 'post_content' => $allContent[0] ],
+						'estate' );
+				}
+				if ( strpos( $allContent[0], 'oo_address' ) !== false ) {
+					$this->addPageShortCode( $listViewAddress, [ 'ID' => $postID, 'post_content' => $allContent[0] ],
+						'address' );
+				}
+				if ( strpos( $allContent[0], 'oo_form' ) !== false ) {
+					$this->addPageShortCode( $listForm, [ 'ID' => $postID, 'post_content' => $allContent[0] ],
+						'form' );
+				}
+			}
 		}
 	}
-	private function deletePageUseShortCode($post)
+
+
+	/**
+	 * @param $post
+	 */
+
+	private function deletePageUseShortCode( $post )
 	{
-		$listView = $this->getListView();
+		$listView        = $this->getListView();
 		$listViewAddress = $this->getListViewAddress();
-		$listForm = $this->getListForm();
-		$isRevision = wp_is_post_revision($post);
+		$listForm        = $this->getListForm();
+		$isRevision      = wp_is_post_revision( $post );
 
-		if (!$isRevision) {
-			$postContent = $post->post_content;
-			$postID = $post->ID;
-			if (empty($postID))
-			{
-				return;
-			}
-			if (strpos($postContent,'oo_estate') !== false)
-			{
-				$this->deletePageShortCode($listView,$post,"oo_plugin_listviews","listview_id","listview_id");
-			}
-			if (strpos($postContent,'oo_address') !== false)
-			{
-				$this->deletePageShortCode($listViewAddress,$post,"oo_plugin_listviews_address","listview_address_id","listview_address_id");
-			}
-			if (strpos($postContent,'oo_form') !== false)
-			{
-				$this->deletePageShortCode($listForm,$post,"oo_plugin_forms","form_id","form_id");
-			}
+		if ( ! $isRevision && $post->post_type === 'page' ) {
+			$postID      = $post->ID;
+			$metaKeys    = get_post_meta( $postID, '', true );
+			$allContents = [ [ 0 => $post->post_content ] ] + $metaKeys;
 
+			foreach ( $allContents as $allContent ) {
+				if (strpos($allContent[0], 'oo_estate') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
+					$this->deletePageShortCode( $listView, $post, "oo_plugin_listviews", "listview_id", "listview_id" );
+				}
+				if (strpos($allContent[0], 'oo_address') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
+					$this->deletePageShortCode( $listViewAddress, $post, "oo_plugin_listviews_address",
+						"listview_address_id", "listview_address_id" );
+				}
+				if (strpos($allContent[0], 'oo_form') !== false || strpos($metaKeys['list_shortcode'][0], 'oo_estate') == false) {
+					$this->deletePageShortCode( $listForm, $post, "oo_plugin_forms", "form_id", "form_id" );
+				}
+			}
 		}
 	}
-	private function addPageShortCode($listView,$post,$element,$option,$tableName,$column,$primaKey)
+
+
+	/**
+	 * @param $listView
+	 * @param $post
+	 * @param $type
+	 */
+
+	private function addPageShortCode( $listView, $post, $type)
 	{
-		$pRecordReadListView = new RecordManagerReadListViewEstate();
-		$postID = $post->ID;
-		$postContent = $post->post_content;
-		foreach($listView as $view)
-		{
-			$pageID = [];
-			if (!empty($view->page_shortcode))
-			{
-				$pageID = explode(',',$view->page_shortcode);
+		$listConfig  = self::LIST_CONFIGS[$type];
+		$postID      = $post['ID'];
+		$postContent = $post['post_content'];
+		foreach ( $listView as $view ) {
+			$pageShortCodeIDs = [];
+			if ( ! empty( $view->page_shortcode ) ) {
+				$pageShortCodeIDs = explode( ',', $view->page_shortcode );
 			}
-			if (in_array($postID,$pageID))
-			{
+			if ((in_array($postID, $pageShortCodeIDs) && !empty($postID)) || empty($postID)) {
 				break;
 			}
-			$viewContained = $this->postContains($postContent, $view->name,$element,$option);
-			if ($viewContained) {
-				if (empty($pageID))
-				{
-					$pageID = $postID;
-				}else {
-					$pageID[] = $postID;
-					$pageID = implode(",",$pageID);
-				}
-				$pRecordReadListView->updateColumnPageShortCode($pageID,$view->$primaKey,$tableName,$column);
+			$viewShortcodeName = $this->generateViewNameOfShortCode( $view->name, $listConfig['option'] );
+			$viewContained     = $this->postContains( $postContent, "oo_" . $type, $viewShortcodeName );
+			if ( $viewContained ) {
+				$pageShortCodeIDs[] = $postID;
+				$key = $listConfig["key"];
+
+				$this->_pRecordReadListView->updateColumnPageShortCode( implode( ",", $pageShortCodeIDs ),
+					$view->$key, $listConfig["tableName"], $listConfig["key"] );
 			}
 		}
 	}
-	private function deletePageShortCode($listView,$post,$tableName,$column,$primaKey)
+
+
+	/**
+	 * @param $listView
+	 * @param $post
+	 * @param $tableName
+	 * @param $column
+	 * @param $primaKey
+	 */
+
+	private function deletePageShortCode( $listView, $post, $tableName, $column, $primaKey )
 	{
-		$pRecordReadListView = new RecordManagerReadListViewEstate();
 		$postID = $post->ID;
 		foreach($listView as $view)
 		{
 			$pageID = '';
-			if (empty($view->page_shortcode))
+			if (empty($view->page_shortcode) || empty($postID))
 			{
 				continue;
 			}
@@ -354,7 +513,7 @@ class DetailViewPostSaveController
 					unset($pageShortCode[$keyPageDelete]);
 				}
 				$pageID = implode(",",$pageShortCode);
-				$pRecordReadListView->updateColumnPageShortCode($pageID,$view->$primaKey,$tableName,$column);
+				$this->_pRecordReadListView->updateColumnPageShortCode($pageID,$view->$primaKey,$tableName,$column);
 			}
 
 		}
