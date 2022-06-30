@@ -254,6 +254,9 @@ if (!function_exists('renderParkingLot')) {
 			}
 			/* translators: 1: Name of parking lot, 2: Price */
 			$element = sprintf(__('%1$s at %2$s', 'onoffice'), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
+			if ( $parking['Count'] != 1 ) {
+				$element .= ' each ';
+			}
 			if (!empty($parking['MarketingType'])) {
 				$element .= ' (' . $parking['MarketingType'] . ')';
 			}
@@ -289,6 +292,7 @@ if (!function_exists('formatPriceParking')) {
 				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
 			} else {
 				$currency = '€';
+
 				if ( $digit ) {
 					$str = floatval( $str );
 					$str = number_format( $str, 2, ',', '.' );
