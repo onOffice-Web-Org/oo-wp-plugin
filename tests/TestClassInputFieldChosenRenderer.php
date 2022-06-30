@@ -43,7 +43,7 @@ class TestClassInputFieldChosenRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;"></select>', $output);
+		$this->assertEquals('<select name="testRenderer[]" id="select_1" multiple style="width: 230px;"></select>', $output);
 	}
 
 	/**
@@ -77,7 +77,7 @@ class TestClassInputFieldChosenRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;">'
+		$this->assertEquals('<select name="testRenderer[]" id="select_1" multiple style="width: 230px;">'
 			.'<optgroup label="Popular">'
 				.'<option value="kaufpreis" >Kaufpreis</option>'
 				.'<option value="kaltmiete" >Kaltmiete</option>'
@@ -104,7 +104,7 @@ class TestClassInputFieldChosenRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;">'
+		$this->assertEquals('<select name="testRenderer[]" id="select_1" multiple style="width: 230px;">'
 			.'<optgroup label="Popular">'
 			.'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
 			.'<option value="kaltmiete" >Kaltmiete</option>'
@@ -153,7 +153,7 @@ class TestClassInputFieldChosenRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;">'
+		$this->assertEquals('<select name="testRenderer[]" id="select_1" multiple style="width: 230px;">'
 			.'<option value="kaufpreis" >Kaufpreis</option>'
 			.'<option value="kaltmiete" >Kaltmiete</option>'
 			.'</select>', $output);
@@ -171,7 +171,7 @@ class TestClassInputFieldChosenRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<select name="testRenderer" id="select_1" multiple style="width: 230px;">'
+		$this->assertEquals('<select name="testRenderer[]" id="select_1" multiple style="width: 230px;">'
 			.'<option value="kaufpreis" selected="selected">Kaufpreis</option>'
 			.'<option value="kaltmiete" >Kaltmiete</option>'
 			.'</select>', $output);

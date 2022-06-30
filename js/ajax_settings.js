@@ -1,6 +1,8 @@
 var onOffice = onOffice || {};
 onOffice.settings = onOffice_loc_settings;
-
+const estatePage = 'admin_page_onoffice-editlistview';
+const formPage = 'admin_page_onoffice-editform';
+const LIST_SCREEN_RELOAD = [estatePage, formPage];
 onOffice.ajaxSaver = function(outerDiv) {
 	if (typeof $ === 'undefined') {
 		$ = jQuery;
@@ -12,8 +14,22 @@ onOffice.ajaxSaver = function(outerDiv) {
 	this.register = function() {
 		var proto = this;
 		this._outerDiv.find('#send_ajax').on('click', function() {
-			window.scrollTo(0, 0);
-			proto.save();
+			var isValid = true;
+			var invalidInput;
+			$('input[type=email]').each(function (index, input) {
+				if (!input.checkValidity()) {
+					isValid = false;
+					invalidInput = input;
+					return false;
+				}
+			})
+			if (isValid) {
+				window.scrollTo(0, 0);
+				proto.save();
+			} else {
+				invalidInput.reportValidity();
+				invalidInput.focus();
+			}
 		});
 	};
 
@@ -23,11 +39,13 @@ onOffice.ajaxSaver = function(outerDiv) {
 		data.action = onOffice.settings.action;
 		data.nonce = onOffice.settings.nonce;
 		data.values = JSON.stringify(values);
+		var current_screen = onOffice.settings.current_screen;
 		var mergeElement = onOffice.settings.merge;
 		for (var i in mergeElement) {
 			var newKey = mergeElement[i];
 			data[newKey] = onOffice.settings[newKey];
 		}
+		$('#onoffice-notice-wrapper').empty();
 
 		jQuery.post(onOffice.settings.ajax_url, data, function(response) {
 			var responseCode, responseMessageKey;
@@ -42,14 +60,16 @@ onOffice.ajaxSaver = function(outerDiv) {
 			}
 
 			var message = onOffice.settings[responseMessageKey];
+			var getUrl = window.location.href;
+
+			var getUrlPageEdit = getUrl.split( '&' );
 			if (responseCode === true) {
-				$('#onoffice-notice-wrapper').append('<div class="notice notice-success is-dismissible"><p>' +
-					message + '</p></div>');
+				$('#onoffice-notice-wrapper').html('<div class="notice notice-success is-dismissible"><p>' +
+					message + '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>');
 			} else {
-				$('#onoffice-notice-wrapper').append('<div class="notice notice-error is-dismissible"><p>' +
-					message + '</p></div>');
+				$('#onoffice-notice-wrapper').html('<div class="notice notice-error is-dismissible"><p>' +
+					message + '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>');
 			}
-			$(document).trigger('wp-updates-notice-added');
 		});
 	};
 

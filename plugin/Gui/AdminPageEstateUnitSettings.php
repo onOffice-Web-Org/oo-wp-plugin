@@ -72,6 +72,13 @@ class AdminPageEstateUnitSettings
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
 
+		if ($this->getListViewId() !== null) {
+			$pInputModelEmbedCode = $pFormModelBuilder->createInputModelEmbedCode($this->getListViewId());
+			$pFormModelName->addInputModel($pInputModelEmbedCode);
+			$pInputModelButton = $pFormModelBuilder->createInputModelButton();
+			$pFormModelName->addInputModel($pInputModelButton);
+		}
+
 		$pInputModelRecords = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pFormModelRecords = new Model\FormModel();
 		$pFormModelRecords->setPageSlug($this->getPageSlug());
@@ -184,5 +191,15 @@ class AdminPageEstateUnitSettings
 		$rowCleanRecordsPerPage = $this->setRecordsPerPage($row, RecordManager::TABLENAME_LIST_VIEW);
 		$rowCleanRecordsPerPage[RecordManager::TABLENAME_LIST_VIEW]['list_type'] = 'units';
 		return $rowCleanRecordsPerPage;
+	}
+
+	/**
+	 *
+	 */
+
+	public function doExtraEnqueues()
+	{
+		parent::doExtraEnqueues();
+		wp_enqueue_script('oo-copy-shortcode');
 	}
 }

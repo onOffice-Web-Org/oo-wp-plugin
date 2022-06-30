@@ -200,10 +200,12 @@ class FormsTable
 	 *
 	 */
 
-	protected function column_shortcode($pItem)
+	protected function column_shortcode( $pItem )
 	{
-		return '<input type="text" readonly value="[oo_form form=&quot;'
-			.esc_html($pItem->name).'&quot;]">';
+		return '<input type="text" style="max-width: 100%; margin-right: 5px;" readonly value="[oo_form form=&quot;'
+		       . esc_html( $pItem->name ) . '&quot;]"><input type="button" class="button button-copy" data-clipboard-text="[oo_form form=&quot;'
+		       . esc_html( $pItem->name ) . '&quot;]" value="' . esc_html__( 'Copy',
+				'onoffice-for-wp-websites' ) . '" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
 	}
 
 

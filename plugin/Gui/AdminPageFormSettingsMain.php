@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
+use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Form;
 use UnexpectedValueException;
 
@@ -211,6 +212,16 @@ class AdminPageFormSettingsMain
 		$this->_pInstance->ajax_action();
 	}
 
+
+	/**
+	 * @throws UnknownFormException
+	 */
+
+	public function save_form()
+	{
+		$this->initSubclassForAjax();
+		$this->_pInstance->save_form();
+	}
 
 	/**
 	 *

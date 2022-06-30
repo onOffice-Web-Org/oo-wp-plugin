@@ -1,6 +1,6 @@
 var onOffice = onOffice || {};
 jQuery(document).ready(function ($) {
-    var sortByUserValue = $("#viewrecordssorting").find("[name=oopluginsortbyuservalues-sortbyuservalue]");
+    var sortByUserValue = $("#viewrecordssorting").find('[name="oopluginsortbyuservalues-sortbyuservalue[]"]');
     var sortByUserDefinedDirection = $("#viewrecordssorting").find("[name=oopluginlistviews-sortByUserDefinedDirection]");
     var sortRamdom = $("#viewrecordssorting").find("[name=oopluginlistviews-random]");
     var sortingSelection = $("#viewrecordssorting").find("[name=oopluginlistviews-sortBySetting]");
@@ -17,7 +17,7 @@ jQuery(document).ready(function ($) {
 
     var displayFieldsUserSelectionValue = [
         'oopluginlistviews-sortBySetting',
-        'oopluginsortbyuservalues-sortbyuservalue',
+        'oopluginsortbyuservalues-sortbyuservalue[]',
         'oopluginlistviews-sortByUserDefinedDefault',
         'oopluginlistviews-sortByUserDefinedDirection',
     ];
@@ -30,7 +30,7 @@ jQuery(document).ready(function ($) {
         var standardSortInput = $("#viewrecordssorting")
             .find("[name=oopluginlistviews-sortByUserDefinedDefault]");
         var sortByInput = $("#viewrecordssorting")
-            .find("[name=oopluginsortbyuservalues-sortbyuservalue] optgroup option:selected");
+            .find('[name="oopluginsortbyuservalues-sortbyuservalue[]"] optgroup option:selected');
         var directions = ['ASC', 'DESC'];
         var translationsMapping = onoffice_mapping_translations[selectedDirection];
 

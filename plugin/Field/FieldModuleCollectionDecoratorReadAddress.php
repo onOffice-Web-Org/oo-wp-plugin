@@ -69,26 +69,6 @@ class FieldModuleCollectionDecoratorReadAddress
 			'module'          => 'address',
 			"content"         => "Master data"
 		],
-		'Telefon1' => [
-			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length'          => 40,
-			'default'         => null,
-			'permittedvalues' => null,
-			'label'           => 'Default phone number',
-			'module'          => 'address',
-			'tablename'       => 'Stammdaten',
-			"content"         => "Master data"
-		],
-		'Telefax1' => [
-			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length'          => 40,
-			'default'         => null,
-			'permittedvalues' => null,
-			'label'           => 'Default fax number',
-			'module'          => 'address',
-			'tablename'       => 'Stammdaten',
-			"content"         => "Master data"
-		],
 	];
 
 	/** @var array */
@@ -101,16 +81,6 @@ class FieldModuleCollectionDecoratorReadAddress
 			'label'           => 'All e-mail addresses',
 			'tablename'       => 'Kontakt',
 			'module'          => 'address',
-			"content"         => "Contact"
-		],
-		'Email' => [
-			'type'            => FieldTypes::FIELD_TYPE_VARCHAR,
-			'length'          => 100,
-			'default'         => null,
-			'permittedvalues' => null,
-			'label'           => 'Default e-mail address',
-			'module'          => 'address',
-			'tablename'       => 'Kontakt',
 			"content"         => "Contact"
 		],
 	];
@@ -235,9 +205,6 @@ class FieldModuleCollectionDecoratorReadAddress
 			'All fax numbers'              => __( 'All fax numbers', 'onoffice-for-wp-websites' ),
 			'All mobile numbers'           => __( 'All mobile numbers', 'onoffice-for-wp-websites' ),
 			'All e-mail addresses'         => __( 'All e-mail addresses', 'onoffice-for-wp-websites' ),
-			'Default phone number'         => __( 'Default phone number', 'onoffice-for-wp-websites' ),
-			'Default fax number'           => __( 'Default fax number', 'onoffice-for-wp-websites' ),
-			'Default e-mail address'       => __( 'Default e-mail address', 'onoffice-for-wp-websites' ),
 			'Image'                        => __( 'Image', 'onoffice-for-wp-websites' ),
 		];
 	}

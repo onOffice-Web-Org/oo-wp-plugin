@@ -125,14 +125,24 @@ class Template
 	 */
 	protected function buildFilePath(): string
 	{
+		$pluginDirName = basename(ONOFFICE_PLUGIN_DIR);
+		// Check for old template path
+		if ( ! __String::getNew( $this->_templateName )->startsWith( 'onoffice-theme/' ) &&
+		     ! __String::getNew( $this->_templateName )->startsWith( 'onoffice-personalized/' ) &&
+		     ! __String::getNew( $this->_templateName )->startsWith( $pluginDirName )
+		) {
+			$this->_templateName = substr( $this->_templateName, strpos( $this->_templateName, 'onoffice-theme' ) );
+			$this->_templateName = substr( $this->_templateName,
+				strpos( $this->_templateName, 'onoffice-personalized' ) );
+			$this->_templateName = substr( $this->_templateName, strpos( $this->_templateName, $pluginDirName ) );
+		}
 		if (__String::getNew($this->_templateName)->startsWith('onoffice-theme/')) {
-			$templatePath = realpath(get_template_directory().'/'.$this->_templateName);
-			if (!__String::getNew($templatePath)->startsWith(realpath(get_template_directory()))) {
+			$templatePath = realpath(get_stylesheet_directory().'/'.$this->_templateName);
+			if (!__String::getNew($templatePath)->startsWith(realpath(get_stylesheet_directory()))) {
 				throw new RuntimeException('Invalid template path');
 			}
 			return $templatePath;
 		}
-		$pluginDirName = basename(ONOFFICE_PLUGIN_DIR);
 		$templatePath = realpath(WP_PLUGIN_DIR.'/'.$this->_templateName);
 		if (!__String::getNew($templatePath)->startsWith(realpath(WP_PLUGIN_DIR.'/onoffice-personalized/')) &&
 			!__String::getNew($templatePath)->startsWith(realpath(WP_PLUGIN_DIR.'/'.$pluginDirName.'/templates.dist/'))) {

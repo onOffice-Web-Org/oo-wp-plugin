@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Renderer;
 
 use Exception;
+use onOffice\WPlugin\Gui\AdminPageAjax;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -72,7 +73,7 @@ class InputModelRenderer
 		foreach ($pFormModel->getInputModel() as $pInputModel) {
 			$pInputField = $this->createInputField($pInputModel, $pFormModel);
 			$italicText = $pInputModel->getItalicLabel() ? '<i>('.esc_html($pInputModel->getItalicLabel()).')</i>	' : '';
-			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL) {
+			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON) {
 				echo '<p id="" class="wp-clearfix">';
 				echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
 				echo esc_html__($pInputModel->getLabel()). $italicText;
@@ -157,7 +158,7 @@ class InputModelRenderer
 
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
 				$onOfficeInputFields = false;
-				$pInstance = new InputFieldCheckboxButtonRenderer($elementName,
+				$pInstance = new InputFieldCheckboxButtonRenderer(AdminPageAjax::EXCLUDE_FIELD . $elementName,
 					$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setId($pInputModel->getId());
@@ -215,6 +216,10 @@ class InputModelRenderer
 				$pInstance->setLabel($pInputModel->getLabel());
 				$pInstance->setValueEnclosure($pInputModel->getValueEnclosure());
 
+				break;
+			case InputModelBase::HTML_TYPE_BUTTON:
+				$pInstance = new InputFieldButtonRenderer(null, '', $pInputModel->getValue());
+				$pInstance->setLabel($pInputModel->getLabel());
 				break;
 
 			case InputModelBase::HTML_TYPE_CHOSEN:
