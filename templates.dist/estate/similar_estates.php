@@ -9,7 +9,7 @@
 </style>
 
 <div class="oo-detailsheadline">
-	<h2><?php esc_html_e('More Estates like this', 'onoffice');?></h2>
+	<h2><?php esc_html_e('More Estates like this', 'onoffice-for-wp-websites');?></h2>
 </div>
 <div class="oo-listframe" id="oo-similarframe">
 	<?php
@@ -62,12 +62,12 @@
 						<?php if ($referenz === "1") { ?>
 							<?php if ($pEstates->hasDetailView()) { ?>
 								<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>">
-									<?php esc_html_e('Show Details', 'onoffice'); ?>
+									<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 								</a>
 							<?php } ?>
 						<?php } else { ?>
 							<a class="oo-details-btn" href="<?php echo $pEstates->getEstateLink(); ?>">
-								<?php esc_html_e('Show Details', 'onoffice'); ?>
+								<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 							</a>
 						<?php } ?>
 					</div>

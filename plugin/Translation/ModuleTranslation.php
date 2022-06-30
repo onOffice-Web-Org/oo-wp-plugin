@@ -44,7 +44,7 @@ class ModuleTranslation
 		$noopedPlural = self::getModuleTranslations()[$module] ?? [];
 
 		if ($noopedPlural !== []) {
-			return translate_nooped_plural($noopedPlural, 1, 'onoffice');
+			return translate_nooped_plural($noopedPlural, 1, 'onoffice-for-wp-websites');
 		}
 
 		return '';

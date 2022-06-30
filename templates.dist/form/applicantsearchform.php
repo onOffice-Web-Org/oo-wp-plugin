@@ -38,7 +38,7 @@ $selectTypes = array(
 	);
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo esc_html__('ERROR!', 'onoffice');
+	echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
@@ -48,7 +48,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 	if ( $pForm->isMissingField( $input ) ) {
-		echo '<span class="onoffice-pleasefill">'.esc_html__('Please fill in!', 'onoffice').'</span>';
+		echo '<span class="onoffice-pleasefill">'.esc_html__('Please fill in!', 'onoffice-for-wp-websites').'</span>';
 	}
 
 	$isRequired = $pForm->isRequiredField( $input );
@@ -61,7 +61,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	if ($input === 'Umkreis') {
 		echo '<br>'
 			.'<fieldset>'
-			.'<legend>'.esc_html__('search within distance of:', 'onoffice').'</legend>';
+			.'<legend>'.esc_html__('search within distance of:', 'onoffice-for-wp-websites').'</legend>';
 
 		foreach ($pForm->getUmkreisFields() as $key => $values) {
 			echo esc_html($values['label']).':<br>';
@@ -109,7 +109,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	echo '<br>';
 }
 
-$pForm->setGenericSetting('submitButtonLabel', esc_html__('Search for Prospective Buyers', 'onoffice'));
+$pForm->setGenericSetting('submitButtonLabel', esc_html__('Search for Prospective Buyers', 'onoffice-for-wp-websites'));
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 echo '<svg viewBox="0 0 30 30" id="spinner"></svg>';
 
@@ -125,13 +125,13 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo '<br><span>'.esc_html(
 			sprintf(_n(
 				/* translators: %s will be replaced with a number. */
-				'%s Prospective Buyer', '%s Prospective Buyers', $countResults, 'onoffice'),
+				'%s Prospective Buyer', '%s Prospective Buyers', $countResults, 'onoffice-for-wp-websites'),
 					number_format_i18n($countResults))).'</span><br>';
 
 	foreach ($applicants as $address => $searchdata) {
 		echo '<br>';
 		/* translators: %s will be replaced with a customer reference number. */
-		echo '<span>'.esc_html(sprintf(__('Customer ref. number %s', 'onoffice'), $address)).'</span>';
+		echo '<span>'.esc_html(sprintf(__('Customer ref. number %s', 'onoffice-for-wp-websites'), $address)).'</span>';
 		echo '<br>';
 		$umkreis = array();
 

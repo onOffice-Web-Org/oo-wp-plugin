@@ -26,7 +26,7 @@
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
 ?>
-<h2><?php esc_html_e('Entities', 'onoffice');?></h2>
+<h2><?php esc_html_e('Entities', 'onoffice-for-wp-websites');?></h2>
 <?php while ( $currentEstate = $pEstates->estateIterator() ) : ?>
 	<?php foreach ( $currentEstate as $field => $value ) :
 		if ( is_numeric( $value ) && 0 == $value ) {
