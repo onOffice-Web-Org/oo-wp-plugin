@@ -238,7 +238,7 @@ class FormModelBuilderDBForm
 		$formType = $this->getFormType();
 		$pFormTranslation = new FormTranslation();
 		$translation = $pFormTranslation->getPluralTranslationForForm($formType, 1);
-		$pInputModeLabel = new InputModelLabel(__('Type of Form: ', 'onoffice-for-wp-websites'), $translation);
+		$pInputModeLabel = new InputModelLabel(__('Type: ', 'onoffice-for-wp-websites'), $translation);
 
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 
@@ -257,9 +257,27 @@ class FormModelBuilderDBForm
 		$formName = $this->getValue($name);
 
 		$code = '[oo_form form="'.$formName.'"]';
-		$pInputModeLabel = new InputModelLabel(__(', Embed Code: ', 'onoffice-for-wp-websites'), $code);
+		$pInputModeLabel = new InputModelLabel(__(', shortcode: ', 'onoffice-for-wp-websites'), $code);
 		$pInputModeLabel->setHtmlType(InputModelBase::HTML_TYPE_LABEL);
 		$pInputModeLabel->setValueEnclosure(InputModelLabel::VALUE_ENCLOSURE_CODE);
+
+		return $pInputModeLabel;
+	}
+
+	/**
+	 * @return InputModelLabel
+	 */
+	public function createInputModelButton()
+	{
+		$pConfig  = new InputModelDBFactoryConfigForm();
+		$config   = $pConfig->getConfig();
+		$name     = $config[ InputModelDBFactoryConfigForm::INPUT_FORM_NAME ]
+		[ InputModelDBFactoryConfigForm::KEY_FIELD ];
+		$formName = $this->getValue( $name );
+
+		$code            = '[oo_form form="' . $formName . '"]';
+		$pInputModeLabel = new InputModelLabel( '', $code );
+		$pInputModeLabel->setHtmlType( InputModelBase::HTML_TYPE_BUTTON );
 
 		return $pInputModeLabel;
 	}
@@ -304,7 +322,7 @@ class FormModelBuilderDBForm
 
 		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create
 			(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
-		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_EMAIL);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
 		$pInputModelFormRecipient->setDeactivate(true);
 
@@ -322,7 +340,7 @@ class FormModelBuilderDBForm
 
 		$pInputModelFormRecipient = $this->getInputModelDBFactory()->create
 		(InputModelDBFactoryConfigForm::INPUT_FORM_RECIPIENT, $labelRecipient);
-		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_TEXT);
+		$pInputModelFormRecipient->setHtmlType(InputModelOption::HTML_TYPE_EMAIL);
 		$pInputModelFormRecipient->setValue($selectedRecipient);
 		$pInputModelFormRecipient->setDeactivate(true);
 		$pInputModelFormRecipient->setHintHtml(__('Note that if the contact form is on an estate detail page and the estate has a contact person, the email will be sent to their email address. Otherwise this email address will receive the email.', 'onoffice-for-wp-websites'));

@@ -100,12 +100,18 @@ class AdminPageAddressListSettings
 	private function addFormModelName()
 	{
 		$pInputModelName = $this->_pFormModelBuilderAddress->createInputModelName();
-		$pFormModelName = new FormModel();
+		$pFormModelName  = new FormModel();
 		$pFormModelName->setPageSlug($this->getPageSlug());
 		$pFormModelName->setGroupSlug(self::FORM_RECORD_NAME);
 		$pFormModelName->setLabel(__('choose name', 'onoffice-for-wp-websites'));
 		$pFormModelName->addInputModel($pInputModelName);
 		$this->addFormModel($pFormModelName);
+		if ( $this->getListViewId() !== null ) {
+			$pInputModelEmbedCode = $this->_pFormModelBuilderAddress->createInputModelEmbedCode();
+			$pFormModelName->addInputModel( $pInputModelEmbedCode );
+			$pInputModelButton = $this->_pFormModelBuilderAddress->createInputModelButton();
+			$pFormModelName->addInputModel( $pInputModelButton );
+		}
 	}
 
 
@@ -253,8 +259,10 @@ class AdminPageAddressListSettings
 				$recordId = $pRecordManagerInsert->insertByRow($row);
 
 				$row = $this->addOrderValues($row, RecordManager::TABLENAME_FIELDCONFIG_ADDRESS);
-				$row = $this->prepareRelationValues(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS,
-					'listview_address_id', $row, $recordId);
+				$row = [
+					RecordManager::TABLENAME_FIELDCONFIG_ADDRESS => $this->prepareRelationValues
+					(RecordManager::TABLENAME_FIELDCONFIG_ADDRESS, 'listview_address_id', $row, $recordId),
+				];
 				$pRecordManagerInsert->insertAdditionalValues($row);
 				$result = true;
 			} catch (RecordManagerInsertException $pException) {
@@ -348,7 +356,7 @@ class AdminPageAddressListSettings
 		wp_enqueue_script('oo-checkbox-js');
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviewsaddress-name']);
 		wp_enqueue_script('oo-sanitize-shortcode-name');
-
+		wp_enqueue_script( 'oo-copy-shortcode');
 	}
 
 	/**
