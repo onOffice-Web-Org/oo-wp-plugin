@@ -255,7 +255,7 @@ if (!function_exists('renderParkingLot')) {
 			/* translators: 1: Name of parking lot, 2: Price */
 			$element = sprintf(__('%1$s at %2$s', 'onoffice'), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
 			if ( $parking['Count'] != 1 ) {
-				$element .= __( ' each ', 'onoffice' );
+				$element .= __( ' each', 'onoffice' );
 			}
 			if (!empty($parking['MarketingType'])) {
 				$element .= ' (' . $parking['MarketingType'] . ')';
