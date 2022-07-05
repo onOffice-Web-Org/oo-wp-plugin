@@ -80,7 +80,8 @@ class EstateViewFieldModifierTypeTitle
 			'plz',
 			'objektart',
 			'vermarktungsart',
-			'Id'
+			'Id',
+			'objektnr_extern'
 		];
 		
 		return $titleFields;

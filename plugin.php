@@ -153,7 +153,9 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 					"onoffice_vermarktungsart"  => 'vermarktungsart',
 					"onoffice_marketing_method" => 'vermarktungsart',
 					"onoffice_datensatznr"      => 'Id',
-					"onoffice_id"               => 'Id'
+					"onoffice_id"               => 'Id',
+					"onoffice_immo_nr"          => 'objektnr_extern',
+					"onoffice_prop_no"          => 'objektnr_extern'
 				];
 				if ( isset( $list_meta_keys[ $meta_key ] ) ) {
 					return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ] );

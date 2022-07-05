@@ -228,7 +228,8 @@ class AdminPageApiSettings
 								- Postal code (onoffice_postal_code)
 								- Property class (onoffice_property_class)
 								- Marketing method (onoffice_marketing_method)
-								- Data Record Ref No. (onoffice_id)', 'onoffice-for-wp-websites');
+								- Data Record Ref No. (onoffice_id)
+								- Prop No. (onoffice_prop_no)', 'onoffice-for-wp-websites');
 		$descriptionDetailDoNotModify =  Parsedown::instance()
 			->setBreaksEnabled(true)->text(
 				$descriptionDetailDoNotModify

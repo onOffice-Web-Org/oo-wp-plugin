@@ -131,7 +131,9 @@ class TestClassEstateTitleBuilder
 			"onoffice_vermarktungsart"  => 'vermarktungsart',
 			"onoffice_marketing_method" => 'vermarktungsart',
 			"onoffice_datensatznr"      => 'Id',
-			"onoffice_id"               => 'Id'
+			"onoffice_id"               => 'Id',
+			"onoffice_immo_nr"          => 'objektnr_extern',
+			"onoffice_prop_no"          => 'objektnr_extern'
 		];
 		$pViewFieldModifier = new EstateViewFieldModifierTypeTitle([]);
 		$pViewFieldModifierFactory = $this->_pEstateTitleBuilder->getViewFieldModifierFactory();

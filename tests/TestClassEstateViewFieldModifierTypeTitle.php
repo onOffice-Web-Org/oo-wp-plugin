@@ -118,7 +118,8 @@ class TestClassEstateViewFieldModifierTypeTitle
 			'plz',
 			'objektart',
 			'vermarktungsart',
-			'Id'
+			'Id',
+			'objektnr_extern'
 		];
 		
 		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
@@ -139,7 +140,8 @@ class TestClassEstateViewFieldModifierTypeTitle
 			'plz',
 			'objektart',
 			'vermarktungsart',
-			'Id'
+			'Id',
+			'objektnr_extern'
 		];
 		
 		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
