@@ -107,10 +107,10 @@ class AdminPageEstateListSettings
 		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
 		$restrictAccessControl     = $pDataDetailView->getViewRestrict();
 		if ( $restrictAccessControl ) {
-			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will not link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">restricted</a>',
+			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will not link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">restricted</a>.',
 				'onoffice-for-wp-websites' ) );
 		} else {
-			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">not restricted</a>',
+			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">not restricted</a>.',
 				'onoffice-for-wp-websites' ) );
 		}
 
