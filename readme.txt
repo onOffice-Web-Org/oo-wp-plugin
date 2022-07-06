@@ -89,6 +89,7 @@ Start editing inside the `onoffice-personalized` folder.
 **Fixed**
 
 * The form overview no longer wrongly displays that all forms use the default email address. If a form overrides the default email, that override will now show up correctly in the overview.
+* The plugin no longer overwrites tables in other plugins. Specifically, the plugin is now compatible with the Rank Math SEO plugin's redirection and 404 monitor modules.
 
 = 4.1 (2022-06-27) =
 
