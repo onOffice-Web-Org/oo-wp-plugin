@@ -86,6 +86,10 @@ Start editing inside the `onoffice-personalized` folder.
 
 * When saving a list or form, the page now fully reloads.
 
+**Fixed**
+
+* The form overview no longer wrongly displays that all forms use the default email address. If a form overrides the default email, that override will now show up correctly in the overview.
+
 = 4.1 (2022-06-27) =
 
 **Added**
