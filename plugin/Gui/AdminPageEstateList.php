@@ -119,10 +119,11 @@ class AdminPageEstateList
 	public function preOutput()
 	{
 		$screen = get_current_screen();
-		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-estates") {
-			add_screen_option('per_page', array('option' => 'onoffice_estate_listview_per_page'));
+		if ( ! is_object( $screen ) || $screen->id !== "onoffice_page_onoffice-estates" ) {
+			return;
 		}
-
+	
+		add_screen_option('per_page', array('option' => 'onoffice_estate_listview_per_page'));
 		$this->_pEstateListTable = new EstateListTable();
 		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): Table\WP\ListTable {
 			return $this->_pEstateListTable;
