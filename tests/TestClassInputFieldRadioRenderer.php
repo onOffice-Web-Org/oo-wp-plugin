@@ -67,4 +67,24 @@ class TestClassInputFieldRadioRenderer
 		                     . ' <input type="radio" name="testRenderer" value="konradzuse" id="labelradio_1bkonradzusetestRenderer">'
 		                     . '<label for="labelradio_1bkonradzusetestRenderer">Konrad Zuse</label> ', $output );
 	}
+
+	/**
+	 *
+	 */
+	public function testRenderWithDescription()
+	{
+		$pSubject = new InputFieldRadioRenderer('testRenderer', [], ['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
+		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
+		$pSubject->setCheckedValue(['johndoe']);
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals(['johndoe'], $pSubject->getCheckedValue());
+		$this->assertEquals( '<input type="radio" name="testRenderer" value="johndoe" id="labelradio_1bjohndoetestRenderer">'
+		                     . '<label for="labelradio_1bjohndoetestRenderer">John Doe</label> '
+		                     . '<p class="description">John Doe</p><br>'
+		                     . '<input type="radio" name="testRenderer" value="konradzuse" id="labelradio_1bkonradzusetestRenderer">'
+		                     . '<label for="labelradio_1bkonradzusetestRenderer">Konrad Zuse</label> '
+		                     . '<p class="description">Konrad Zuse</p><br>', $output );
+	}
 }
