@@ -169,10 +169,11 @@ class AdminPageFormList
 	public function preOutput()
 	{
 		$screen = get_current_screen();
-		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-forms") {
-			add_screen_option('per_page', array('option' => 'onoffice_forms_forms_per_page'));
+		if ( ! is_object( $screen ) || $screen->id !== "onoffice_page_onoffice-forms" ) {
+			return;
 		}
 
+		add_screen_option('per_page', array('option' => 'onoffice_forms_forms_per_page'));
 		$this->_pFormsTable = new FormsTable();
 		$this->_pFormsTable->setListType($this->getTab());
 		$pDIBuilder = new ContainerBuilder();
