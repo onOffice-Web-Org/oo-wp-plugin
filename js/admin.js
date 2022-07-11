@@ -1,4 +1,7 @@
 jQuery(document).ready(function($){
+	$(document).on('click', '.notice-save-view.notice-dismiss', function () {
+		$(this).parent().remove();
+	});
 	$('#theme-options-form').submit(function() {
 	   $(this).ajaxSubmit({
 		  onLoading: $('.loader').show(),
@@ -116,9 +119,15 @@ jQuery(document).ready(function($){
 		clonedElement.find('span.item-title:contains("dummy_label")').text(fieldLabel);
 		clonedElement.find('span.item-type:contains("dummy_category")').text(fieldCategory);
 		clonedElement.find('input[value=dummy_key]').val(fieldName);
+		clonedElement.find('input[name*=dummy_key]').attr('name', function (index, name) {
+			return name.replace('dummy_key', fieldName);
+		});
 		clonedElement.find('input[value=dummy_label]').val(fieldLabel);
 		clonedElement.find('span.menu-item-settings-name').text(fieldName);
 		clonedElement.find('input[data-onoffice-ignore=true]').removeAttr('data-onoffice-ignore');
+		clonedElement.find('[name^=exclude]').attr('name', function(index, name) {
+			return name.replace('exclude', '');
+		})
 
 		if (!optionsAvailable) {
             var selectors = ['oopluginformfieldconfig-availableOptions', 'oopluginfieldconfig-availableOptions'];

@@ -154,6 +154,11 @@ class AdminPageFormList
 
 		wp_localize_script('onoffice-bulk-actions', 'onoffice_table_settings', $translation);
 		wp_enqueue_script('onoffice-bulk-actions');
+
+		wp_register_script( 'oo-copy-shortcode',
+			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/js/onoffice-copycode.js',
+			[ 'jquery' ], '', true );
+		wp_enqueue_script('oo-copy-shortcode');
 	}
 
 
@@ -164,10 +169,11 @@ class AdminPageFormList
 	public function preOutput()
 	{
 		$screen = get_current_screen();
-		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-forms") {
-			add_screen_option('per_page', array('option' => 'onoffice_forms_forms_per_page'));
+		if ( ! is_object( $screen ) || $screen->id !== "onoffice_page_onoffice-forms" ) {
+			return;
 		}
 
+		add_screen_option('per_page', array('option' => 'onoffice_forms_forms_per_page'));
 		$this->_pFormsTable = new FormsTable();
 		$this->_pFormsTable->setListType($this->getTab());
 		$pDIBuilder = new ContainerBuilder();

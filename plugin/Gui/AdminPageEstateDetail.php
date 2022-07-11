@@ -104,6 +104,16 @@ class AdminPageEstateDetail
 
 	public function renderContent()
 	{
+		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'true' ) {
+			echo '<div class="notice notice-success is-dismissible"><p>'
+			     . esc_html__( 'The detail view has been saved.', 'onoffice-for-wp-websites' )
+			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
+		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'false' ) {
+			echo '<div class="notice notice-error is-dismissible"><p>'
+			     . esc_html__( 'There was a problem saving the detail view.', 'onoffice-for-wp-websites' )
+			     . '</p><button type="button" class="notice-dismiss notice-save-view"></button></div>';
+		}
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataView = $pDataDetailViewHandler->getDetailView();
 		do_action('add_meta_boxes', get_current_screen()->id, null);
@@ -116,9 +126,10 @@ class AdminPageEstateDetail
 		$pFormViewSortableFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_SORTABLE_FIELDS_CONFIG);
 		$pFormViewSortablecontactFields = $this->getFormModelByGroupSlug(self::FORM_VIEW_CONTACT_DATA_FIELDS);
 
-		wp_nonce_field( $this->getPageSlug() );
-
-		echo '<div id="onoffice-ajax">';
+		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
+		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
+		echo '<input type="hidden" name="tab" value="' . AdminPageEstate::PAGE_ESTATE_DETAIL . '" />';
+		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
 		echo '<div id="poststuff">';
@@ -126,14 +137,24 @@ class AdminPageEstateDetail
 
 		echo '<span class="viewusage">';
 		if ($pageId != null) {
+			esc_attr_e('The shortcode ', 'onoffice-for-wp-websites');
+			echo '<input type="text" style="max-width: 100%;" readonly value="[oo_estate view=&quot;'
+			     . esc_html( $pDataView->getName() ) . '&quot;]">
+			     <input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;'
+			     . esc_html( $pDataView->getName() ) . '&quot;]" value="' . esc_html__( 'Copy',
+					'onoffice-for-wp-websites' ) . '" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
 			/* translators: %s will be replaced with a link to the appropriate page. */
-			printf(esc_attr(__('Detail view in use on page %s', 'onoffice-for-wp-websites')),
+			printf(esc_attr(__('  is used on %s', 'onoffice-for-wp-websites')),
 				'<span class="italic">'.esc_html(get_the_title($pageId)).'</span>');
 			edit_post_link(__('Edit Page', 'onoffice-for-wp-websites'), ' ', '', $pageId);
 		} else {
-			esc_attr_e('Detail view is not in use yet. '
-				.'Insert this code on a page to get the detail view there:', 'onoffice-for-wp-websites');
-			echo ' <code>[oo_estate view="'.$pDataView->getName().'"]</code>';
+			esc_attr_e('The shortcode ', 'onoffice-for-wp-websites');
+			echo '<input type="text" style="max-width: 100%;" readonly value="[oo_estate view=&quot;'
+			     . esc_html( $pDataView->getName() ) . '&quot;]">
+			     <input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;'
+			     . esc_html( $pDataView->getName() ) . '&quot;]" value="' . esc_html__( 'Copy',
+					'onoffice-for-wp-websites' ) . '" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
+			esc_attr_e(' is not yet used.', 'onoffice-for-wp-websites');
 		}
 		echo '</span>';
 
@@ -180,14 +201,9 @@ class AdminPageEstateDetail
 		echo '</div>';
 
 		do_settings_sections($this->getPageSlug());
-		submit_button(null, 'primary', 'send_ajax');
+		submit_button(null, 'primary', 'send_form');
 
-		echo '<script>'
-			.'jQuery(document).ready(function(){'
-				.'onOffice.ajaxSaver = new onOffice.ajaxSaver("onoffice-ajax");'
-				.'onOffice.ajaxSaver.register();'
-			.'});'
-		.'</script>';
+		echo '</form>';
 	}
 
 
@@ -340,54 +356,48 @@ class AdminPageEstateDetail
 		return $pFieldsCollection;
 	}
 
-	/**
-	 *
-	 */
-	public function ajax_action()
-	{
+	public function save_form() {
 		$this->buildForms();
-		$action = filter_input(INPUT_POST, 'action');
-		$nonce = filter_input(INPUT_POST, 'nonce');
+		$action = filter_input( INPUT_POST, 'action' );
+		$nonce  = filter_input( INPUT_POST, 'nonce' );
 
-		if (!wp_verify_nonce($nonce, $action)) {
+		if ( ! wp_verify_nonce( $nonce, $action ) ) {
 			wp_die();
 		}
 
-		$values = json_decode(filter_input(INPUT_POST, 'values'));
+		$values = (object) $this->transformPostValues();
+
 		$pInputModelDBAdapterArray = new InputModelOptionAdapterArray();
 
-		foreach ($this->getFormModels() as $pFormModel) {
-			foreach ($pFormModel->getInputModel() as $pInputModel) {
-				if ($pInputModel instanceof InputModelOption) {
+		foreach ( $this->getFormModels() as $pFormModel ) {
+			foreach ( $pFormModel->getInputModel() as $pInputModel ) {
+				if ( $pInputModel instanceof InputModelOption ) {
 					$identifier = $pInputModel->getIdentifier();
 
-					$value = isset($values->$identifier) ? $values->$identifier : null;
-					$pInputModel->setValue($value);
-					$pInputModelDBAdapterArray->addInputModelOption($pInputModel);
+					$value = isset( $values->$identifier ) ? $values->$identifier : null;
+					$pInputModel->setValue( $value );
+					$pInputModelDBAdapterArray->addInputModelOption( $pInputModel );
 				}
 			}
 		}
 
 		$pDataDetailViewHandler = new DataDetailViewHandler();
-		$valuesPrefixless = $pInputModelDBAdapterArray->generateValuesArray();
-		$pDataDetailView = $pDataDetailViewHandler->createDetailViewByValues($valuesPrefixless);
-		$pResultObject = new stdClass();
+		$valuesPrefixless       = $pInputModelDBAdapterArray->generateValuesArray();
+		$pDataDetailView        = $pDataDetailViewHandler->createDetailViewByValues( $valuesPrefixless );
+		$success                = true;
 
 		try {
-			$pDataDetailViewHandler->saveDetailView($pDataDetailView);
-			$pResultObject->result = true;
-		} catch (Exception $pEx) {
-			$pResultObject->result = false;
+			$pDataDetailViewHandler->saveDetailView( $pDataDetailView );
+		} catch ( Exception $pEx ) {
+			$success = false;
 		}
 
-		$pResultObject->record_id = null;
-		$pResultObject->messageKey = $pResultObject->result ?
-			self::VIEW_SAVE_SUCCESSFUL_MESSAGE :
-			self::VIEW_SAVE_FAIL_MESSAGE;
+		$tabQuery    = '&tab=' . AdminPageEstate::PAGE_ESTATE_DETAIL;
+		$statusQuery = $success ? '&saved=true' : '&saved=false';
 
-		echo json_encode($pResultObject);
+		wp_redirect( admin_url( 'admin.php?page=onoffice-estates' . $tabQuery . $statusQuery ) );
 
-		wp_die();
+		die();
 	}
 
 	/**
@@ -400,6 +410,10 @@ class AdminPageEstateDetail
 
 		wp_enqueue_script('admin-js');
 		wp_enqueue_script('postbox');
+		wp_register_script( 'oo-copy-shortcode',
+			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/js/onoffice-copycode.js',
+			[ 'jquery' ], '', true );
+		wp_enqueue_script( 'oo-copy-shortcode' );
 	}
 
 	/**

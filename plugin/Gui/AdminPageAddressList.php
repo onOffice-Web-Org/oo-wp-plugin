@@ -118,10 +118,11 @@ class AdminPageAddressList
 	public function preOutput()
 	{
 		$screen = get_current_screen();
-		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-addresses") {
-			add_screen_option( 'per_page', array('option' => 'onoffice_address_listview_per_page') );
+		if ( ! is_object( $screen ) || $screen->id !== "onoffice_page_onoffice-addresses" ) {
+			return;
 		}
 
+		add_screen_option( 'per_page', array('option' => 'onoffice_address_listview_per_page') );
 		$this->_pAddressListTable = new AddressListTable();
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
@@ -167,5 +168,13 @@ class AdminPageAddressList
 		});
 
 		parent::preOutput();
+	}
+
+	public function doExtraEnqueues()
+	{
+		wp_register_script( 'oo-copy-shortcode',
+			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/js/onoffice-copycode.js',
+			[ 'jquery' ], '', true );
+		wp_enqueue_script( 'oo-copy-shortcode');
 	}
 }

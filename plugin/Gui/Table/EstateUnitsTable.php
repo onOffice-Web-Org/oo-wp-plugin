@@ -184,7 +184,8 @@ class EstateUnitsTable extends ListTable
 
 	protected function column_shortcode($pItem)
 	{
-		return '<input type="text" readonly value="[oo_estate units=&quot;'
-			.esc_html($pItem->name).'&quot; view=&quot;...&quot;]">';
+		return '<input type="text" style="max-width: 100%; margin-right: 5px" readonly value="[oo_estate units=&quot;'
+		       . esc_html( $pItem->name ) . '&quot; view=&quot;...&quot;]"><input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;' . esc_html( $pItem->name ) . '&quot; view=&quot;...&quot;]" value="' . esc_html__( 'Copy',
+				'onoffice-for-wp-websites' ) . '" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
 	}
 }

@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.1
+Version: 4.2
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -108,7 +108,7 @@ add_action('init', [$pAdminViewController, 'onInit']);
 add_action('init', function() use ($pAdminViewController) {
 	$pAdminViewController->disableHideMetaboxes();
 }, 11);
-add_action('admin_init', [$pAdminViewController, 'add_ajax_actions']);
+add_action('admin_init', [$pAdminViewController, 'add_actions']);
 add_action('admin_init', [CaptchaDataChecker::class, 'addHook']);
 add_action('admin_init', [$pDetailViewPostSaveController, 'getAllPost']);
 add_action('plugins_loaded', function() {

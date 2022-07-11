@@ -93,10 +93,11 @@ class AdminPageEstateUnitList
 	public function preOutput()
 	{
 		$screen = get_current_screen();
-		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-estates") {
-			add_screen_option('per_page', array('option' => 'onoffice_estate_units_listview_per_page'));
+		if ( ! is_object( $screen ) || $screen->id !== "onoffice_page_onoffice-estates" ) {
+			return;
 		}
 
+		add_screen_option('per_page', array('option' => 'onoffice_estate_units_listview_per_page'));
 		$this->_pEstateUnitsTable = new EstateUnitsTable();
 		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): WP_List_Table {
 			return $this->_pEstateUnitsTable;
@@ -104,5 +105,13 @@ class AdminPageEstateUnitList
 		// callback can be same as in estate list view,
 		// since it's the same screen and kind of records
 		parent::preOutput();
+	}
+
+	public function doExtraEnqueues()
+	{
+		wp_register_script( 'oo-copy-shortcode',
+			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/js/onoffice-copycode.js',
+			[ 'jquery' ], '', true );
+		wp_enqueue_script( 'oo-copy-shortcode' );
 	}
 }
