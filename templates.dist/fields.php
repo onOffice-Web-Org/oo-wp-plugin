@@ -282,6 +282,9 @@ if (!function_exists('formatPriceParking')) {
 				$codeCurrency = "EUR";
 			}
 			$checkValue = str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
+			if ( $codeCurrency == 'GBP' && $locale != 'en_GB' ) {
+				$codeCurrency = "EUR";
+			}
 			if ( $currency == 'lei' && $locale == 'ro_RO' ) {
 				return str_replace( $codeCurrency, "lei", $checkValue );
 			}

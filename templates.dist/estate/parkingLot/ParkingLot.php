@@ -25,13 +25,19 @@ $class =  ($pDataView instanceof DataDetailView) ? 'oo-detailslisttd' : 'oo-list
 $detailParkingLot = '';
 
 if (!empty($result)) {
-	$detailParkingLot .= '<div class="'.$class.'">';
-		$detailParkingLot .= '<ul class="oo-listparking">';
-		foreach ($result as $detail) {
-			$detailParkingLot .= '<li>' .  esc_html($detail) . '</li>';
+	$detailParkingLot .= '<div class="' . $class . '">' . count( $result );
+	$item = 0;
+	foreach ( $result as $detail ) {
+		$item ++;
+		if ( $item == count( $result ) ) {
+			$detailParkingLot .= esc_html( $detail );
+		} else {
+			$detailParkingLot .= esc_html( $detail ) . ', ';
 		}
-		$detailParkingLot .= '</ul>';
+	}
 	$detailParkingLot .= '</div>';
+} else {
+	return;
 }
 $elementParkingLot =  '<div class="'.$class.'">'.esc_html($pEstates->getFieldLabel( $field )).'</div>'."\n";
 if (!empty($detailParkingLot))
