@@ -247,13 +247,17 @@ if (!function_exists('renderRegionalAddition')) {
 if (!function_exists('renderParkingLot')) {
 	function renderParkingLot(array $parkingArray, string $language, string $locale, string $codeCurrency, string $currency): array
 	{
+		$german="at";
 		$messages = [];
 		foreach ($parkingArray as $key => $parking) {
 			if (!$parking['Count']) {
 				continue;
 			}
+			if ( $language == "DEU" ) {
+				$german = "à";
+			}
 			/* translators: 1: Name of parking lot, 2: Price */
-			$element = sprintf(__('%1$s at %2$s', 'onoffice'), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
+			$element = sprintf(__( '%1$s ' . $german . ' %2$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
 			if ( $parking['Count'] != 1 ) {
 				$element .= __( ' each', 'onoffice' );
 			}
@@ -269,7 +273,7 @@ if (!function_exists('renderParkingLot')) {
 if (!function_exists('formatPriceParking')) {
 	function formatPriceParking(string $str, string $language, string $locale, string $codeCurrency, string $currency): string
 	{
-		
+
 		$digit = intval(substr(strrchr($str, "."), 1));
 		if (class_exists(NumberFormatter::class)) {
 			$format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
@@ -305,14 +309,7 @@ if (!function_exists('formatPriceParking')) {
 				} else {
 					$str = number_format( intval( $str ), 0, ',', '.' );
 				}
-				switch ( $language ) {
-					case 'ENG':
-						$str = sprintf( __( $currency . '%1$s', 'onoffice' ), $str );
-						break;
-					default:
-						$str = sprintf( __( '%1$s ' . $currency, 'onoffice' ), $str );
-						break;
-				}
+				$str = sprintf( __( $currency . '%1$s', 'onoffice' ), $str );
 
 				return $str;
 			}
@@ -327,14 +324,8 @@ if (!function_exists('formatPriceParking')) {
 			} else {
 				$str = number_format(intval($str),0,',','.');
 			}
-			switch ($language) {
-				case 'ENG':
-					$str = sprintf(__($currency.'%1$s', 'onoffice'), $str);
-					break;
-				default:
-					$str = sprintf(__('%1$s '.$currency, 'onoffice'), $str);
-					break;
-			}
+			$str = sprintf( __( $currency . '%1$s', 'onoffice' ), $str );
+
 			return $str;
 		}
 	}
