@@ -253,7 +253,7 @@ if (!function_exists('renderParkingLot')) {
 			if (!$parking['Count']) {
 				continue;
 			}
-			if ( $language == "DEU" ) {
+			if ( $language == "DEU" && $codeCurrency == "EUR" ) {
 				$german = "à";
 			}
 			/* translators: 1: Name of parking lot, 2: Price */
