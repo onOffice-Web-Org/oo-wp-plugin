@@ -113,7 +113,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 								require('parkingLot/ParkingLot.php');
 								continue;
 							}
-							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
+							echo '<div class="oo-listtd">' . esc_html( $pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : ((esc_html($value)== '?') ? esc_html('₺') : esc_html($value))).'</div>';
 						} ?>
 					</div>
 					<div class="oo-detailslink">
