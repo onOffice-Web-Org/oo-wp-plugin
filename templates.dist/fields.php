@@ -276,17 +276,19 @@ if (!function_exists('formatPriceParking')) {
 		$digit = intval(substr(strrchr($str, "."), 1));
 		if (class_exists(NumberFormatter::class)) {
 			$format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-			if ($digit) {
-				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);
+			if ( $digit ) {
+				$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, 2 );
 			} else {
-				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
+				$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, 0 );
 			}
+			if ( $currency == '?' ) {
+				$currency = '₺';
+			} 
 			if ( $codeCurrency == 'GBP' && $locale != 'en_GB' || $codeCurrency == 'USD' && $locale != 'en_US') {
 				$locale="de_DE";
 				$codeCurrency = "EUR";
 			}
-			if (empty($codeCurrency))
-			{
+			if ( empty( $codeCurrency ) ) {
 				$codeCurrency = "EUR";
 			}
 			$checkValue = str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
