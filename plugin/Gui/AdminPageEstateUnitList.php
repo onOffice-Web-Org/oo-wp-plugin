@@ -93,10 +93,11 @@ class AdminPageEstateUnitList
 	public function preOutput()
 	{
 		$screen = get_current_screen();
-		if (is_object($screen) && $screen->id === "onoffice_page_onoffice-estates") {
-			add_screen_option('per_page', array('option' => 'onoffice_estate_units_listview_per_page'));
+		if ( ! is_object( $screen ) || $screen->id !== "onoffice_page_onoffice-estates" ) {
+			return;
 		}
 
+		add_screen_option('per_page', array('option' => 'onoffice_estate_units_listview_per_page'));
 		$this->_pEstateUnitsTable = new EstateUnitsTable();
 		add_filter('handle_bulk_actions-table-onoffice_page_onoffice-estates', function(): WP_List_Table {
 			return $this->_pEstateUnitsTable;

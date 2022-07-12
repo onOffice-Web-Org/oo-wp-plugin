@@ -137,8 +137,8 @@ class AdminPageEstateDetail
 
 		echo '<span class="viewusage">';
 		if ($pageId != null) {
-			esc_attr_e('The shortcode ', 'onoffice-for-wp-websites');
-			echo '<input type="text" style="max-width: 100%; margin-right: 5px;" readonly value="[oo_estate view=&quot;'
+			esc_html_e( 'The shortcode ', 'onoffice-for-wp-websites' );
+			echo '<input type="text" style="max-width: 100%;" readonly value="[oo_estate view=&quot;'
 			     . esc_html( $pDataView->getName() ) . '&quot;]">
 			     <input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;'
 			     . esc_html( $pDataView->getName() ) . '&quot;]" value="' . esc_html__( 'Copy',
@@ -148,13 +148,13 @@ class AdminPageEstateDetail
 				'<span class="italic">'.esc_html(get_the_title($pageId)).'</span>');
 			edit_post_link(__('Edit Page', 'onoffice-for-wp-websites'), ' ', '', $pageId);
 		} else {
-			esc_attr_e('The shortcode ', 'onoffice-for-wp-websites');
-			echo '<input type="text" style="max-width: 100%; margin-right: 5px;" readonly value="[oo_estate view=&quot;'
+			esc_html_e( 'The shortcode ', 'onoffice-for-wp-websites' );
+			echo '<input type="text" style="max-width: 100%;" readonly value="[oo_estate view=&quot;'
 			     . esc_html( $pDataView->getName() ) . '&quot;]">
 			     <input type="button" class="button button-copy" data-clipboard-text="[oo_estate view=&quot;'
 			     . esc_html( $pDataView->getName() ) . '&quot;]" value="' . esc_html__( 'Copy',
 					'onoffice-for-wp-websites' ) . '" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>';
-			esc_attr_e(' is not yet used.');
+			esc_html_e( ' is not yet used.', 'onoffice-for-wp-websites' );
 		}
 		echo '</span>';
 
