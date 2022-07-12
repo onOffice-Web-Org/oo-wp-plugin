@@ -273,7 +273,6 @@ if (!function_exists('renderParkingLot')) {
 if (!function_exists('formatPriceParking')) {
 	function formatPriceParking(string $str, string $language, string $locale, string $codeCurrency, string $currency): string
 	{
-
 		$digit = intval(substr(strrchr($str, "."), 1));
 		if (class_exists(NumberFormatter::class)) {
 			$format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
@@ -282,7 +281,7 @@ if (!function_exists('formatPriceParking')) {
 			} else {
 				$format->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
 			}
-			if ( $codeCurrency == 'GBP' && $locale != 'en_GB' ) {
+			if ( $codeCurrency == 'GBP' && $locale != 'en_GB' || $codeCurrency == 'USD' && $locale != 'en_US') {
 				$locale="de_DE";
 				$codeCurrency = "EUR";
 			}
