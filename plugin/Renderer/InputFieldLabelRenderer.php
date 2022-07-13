@@ -39,7 +39,7 @@ class InputFieldLabelRenderer
 	/** @var array */
 	private $_enclosureConfig = array(
 		InputModelLabel::VALUE_ENCLOSURE_ITALIC => '<span class="italic">%s</span>',
-		InputModelLabel::VALUE_ENCLOSURE_CODE => '<code>%s</code>',
+		InputModelLabel::VALUE_ENCLOSURE_CODE => '<input type="text" readonly="" value="%s">',
 	);
 
 

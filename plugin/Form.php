@@ -348,26 +348,6 @@ class Form
 	/**
 	 *
 	 * @param string $field
-	 * @param bool $raw
-	 *
-	 * @return string
-	 *
-	 */
-
-	public function getFieldDefault(string $field, bool $raw = false): string
-	{
-		$module = $this->getModuleOfField($field);
-		$default = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field)->getDefault();
-		if (false === $raw) {
-			$default = esc_html($default);
-		}
-		return $default ? $default : '';
-	}
-
-
-	/**
-	 *
-	 * @param string $field
 	 * @return bool
 	 *
 	 */

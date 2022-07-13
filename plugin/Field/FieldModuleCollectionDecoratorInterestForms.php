@@ -36,24 +36,6 @@ class FieldModuleCollectionDecoratorInterestForms
 {
 	/** @var array */
 	private $_newFields = [
-		onOfficeSDK::MODULE_ADDRESS => [
-			'newsletter' => [
-				'type' => FieldTypes::FIELD_TYPE_BOOLEAN,
-				'length' => 0,
-				'permittedvalues' => [],
-				'default' => false,
-				'label' => 'Newsletter',
-			],
-		],
-		'' => [
-			'message' => [
-				'type' => FieldTypes::FIELD_TYPE_TEXT,
-				'length' => null,
-				'permittedvalues' => [],
-				'default' => null,
-				'label' => 'Message',
-			],
-		],
 		onOfficeSDK::MODULE_ESTATE => [
 			'krit_bemerkung_oeffentlich' => [
 				'type' => FieldTypes::FIELD_TYPE_TEXT,

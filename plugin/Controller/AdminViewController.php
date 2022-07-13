@@ -229,13 +229,14 @@ class AdminViewController
 		if ($hook == '' || !array_key_exists($hook, $this->_ajaxHooks)) {
 			return;
 		}
-
+		$currentScreen = get_current_screen()->id;
 		$pAdminView = $this->_ajaxHooks[$hook];
 		$ajaxDataAdminPage = $pAdminView->getEnqueueData();
 		$ajaxDataGeneral = [
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'action' => $hook,
 			'nonce' => wp_create_nonce($hook),
+			'current_screen' => $currentScreen
 		];
 
 		$ajaxData = array_merge($ajaxDataGeneral, $ajaxDataAdminPage);
@@ -262,14 +263,14 @@ class AdminViewController
 	 *
 	 */
 
-	public function add_ajax_actions()
+	public function add_actions()
 	{
-		foreach ($this->_ajaxHooks as $hook => $pAdminPage) {
-			if (!is_callable(array($pAdminPage, 'ajax_action'))) {
-				throw new Exception(get_class($pAdminPage).' must be an instance of AdminPageAjax!');
+		foreach ( $this->_ajaxHooks as $hook => $pAdminPage ) {
+			if ( ! is_callable( array( $pAdminPage, 'save_form' ) ) ) {
+				throw new Exception( get_class( $pAdminPage ) . ' must be an instance of AdminPageAjax!' );
 			}
 
-			add_action( 'wp_ajax_'.$hook, array($this->_ajaxHooks[$hook], 'ajax_action'));
+			add_action( 'admin_post_' . $hook, array( &$this->_ajaxHooks[ $hook ], 'save_form' ) );
 		}
 	}
 

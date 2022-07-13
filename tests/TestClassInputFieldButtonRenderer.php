@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2019 onOffice GmbH
+ *    Copyright (C) 2018 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -21,40 +21,32 @@
 
 declare (strict_types=1);
 
-namespace onOffice\WPlugin\Field\Collection;
+namespace onOffice\tests;
 
-use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Renderer\InputFieldButtonRenderer;
+use WP_UnitTestCase;
 
 /**
  *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2018, onOffice(R) GmbH
+ *
  */
 
-class FieldsCollectionToContentFieldLabelArrayConverter
+class TestClassInputFieldButtonRenderer
+	extends WP_UnitTestCase
 {
 	/**
 	 *
-	 * @param FieldsCollection $pFieldsCollection
-	 * @param string $module
-	 * @return array
-	 *
 	 */
 
-	public function convert(FieldsCollection $pFieldsCollection, string $module): array
+	public function testRenderWithValues()
 	{
-		$result = [];
-		$categories = [];
-
-		foreach ($pFieldsCollection->getFieldsByModule($module) as $key => $pField) {
-			$content = $pField->getCategory() ?: __('Special Fields', 'onoffice-for-wp-websites');
-
-			$categories []= $content;
-			$result[$content][$key] = $pField->getLabel();
-		}
-
-		foreach ($categories as $category) {
-			natcasesort($result[$category]);
-		}
-
-		return $result;
+		$pRenderer = new InputFieldButtonRenderer(null, 'testIdentifier');
+		ob_start();
+		$pRenderer->render();
+		$output = ob_get_clean();
+		$this->assertEquals( '<input type="button" class="button button-copy" data-clipboard-text="" value="Copy" ><script>if (navigator.clipboard) { jQuery(".button-copy").show(); }</script>',
+			$output );
 	}
 }

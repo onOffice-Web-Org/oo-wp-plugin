@@ -24,7 +24,10 @@ namespace onOffice\WPlugin\Model\FormModelBuilder;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
+use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use function __;
@@ -102,5 +105,45 @@ class FormModelBuilderDBEstateUnitListSettings
 	public function createSortableFieldList($module, $htmlType, bool $isShow = true): InputModelDB
 	{
 		return parent::createSortableFieldList($module, $htmlType, false);
+	}
+
+	/**
+	 * @return InputModelLabel
+	 */
+
+	public function createInputModelEmbedCode()
+	{
+		$pConfig = new InputModelDBFactoryConfigEstate();
+		$config  = $pConfig->getConfig();
+		$name    = $config[ InputModelDBFactory::INPUT_LISTNAME ]
+		[ InputModelDBFactoryConfigEstate::KEY_FIELD ];
+
+		$listName = $this->getValue( $name );
+
+		$codes           = '[oo_estate units="'.$listName.'" view="..."]';
+		$pInputModeLabel = new InputModelLabel( __( 'Shortcode: ', 'onoffice-for-wp-websites' ), $codes );
+		$pInputModeLabel->setHtmlType( InputModelBase::HTML_TYPE_LABEL );
+		$pInputModeLabel->setValueEnclosure( InputModelLabel::VALUE_ENCLOSURE_CODE );
+
+		return $pInputModeLabel;
+	}
+
+	/**
+	 * @return InputModelLabel
+	 */
+
+	public function createInputModelButton()
+	{
+		$pConfig  = new InputModelDBFactoryConfigEstate();
+		$config   = $pConfig->getConfig();
+		$name     = $config[ InputModelDBFactory::INPUT_LISTNAME ]
+		[ InputModelDBFactoryConfigEstate::KEY_FIELD ];
+		$listName = $this->getValue( $name );
+
+		$codes           = '[oo_estate units="'.$listName.'" view="..."]';
+		$pInputModeLabel = new InputModelLabel( '', $codes );
+		$pInputModeLabel->setHtmlType( InputModelBase::HTML_TYPE_BUTTON );
+
+		return $pInputModeLabel;
 	}
 }

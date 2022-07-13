@@ -1,4 +1,7 @@
 jQuery(document).ready(function($){
+	$(document).on('click', '.notice-save-view.notice-dismiss', function () {
+		$(this).parent().remove();
+	});
 	$('#theme-options-form').submit(function() {
 	   $(this).ajaxSubmit({
 		  onLoading: $('.loader').show(),
@@ -119,6 +122,9 @@ jQuery(document).ready(function($){
 		clonedElement.find('input[value=dummy_label]').val(fieldLabel);
 		clonedElement.find('span.menu-item-settings-name').text(fieldName);
 		clonedElement.find('input[data-onoffice-ignore=true]').removeAttr('data-onoffice-ignore');
+		clonedElement.find('[name^=exclude]').attr('name', function(index, name) {
+			return name.replace('exclude', '');
+		})
 
 		if (!optionsAvailable) {
             var selectors = ['oopluginformfieldconfig-availableOptions', 'oopluginfieldconfig-availableOptions'];

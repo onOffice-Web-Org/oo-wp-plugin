@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace onOffice\WPlugin\Types;
 
 use onOffice\WPlugin\Field\FieldModuleCollection;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 use onOffice\WPlugin\Field\UnknownFieldException;
 
 /**
@@ -109,15 +110,12 @@ class FieldsCollection implements FieldModuleCollection
 
 	public function merge(FieldModuleCollection $pFieldsCollection, string $fallbackCategoryName = '')
 	{
-		$changeDefaultFields = [
-			'DSGVOStatus' => 'GDPR status',
-			'SpracheKontakt'=>'Language',
-			'KontaktformBevorzugt'=>'Preferred form of contact',
-			'gwgVertragspartner'=>'Contractual partner',
-			'gwgAusweisart'=>'ID type',
-			'newsletter_aktiv'=>'Newsletter',
-			'workContract'=>'Employment',
+		$changeLabelFields = [
+			'Email' => 'Default e-mail address',
+			'Telefon1' => 'Default phone number',
+			'Telefax1' => 'Default fax number'
 		];
+
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
 			/** @var $pFieldCopy Field */
 			$pFieldCopy = clone $pField;
@@ -125,9 +123,9 @@ class FieldsCollection implements FieldModuleCollection
 			if ($pFieldCopy->getCategory() === '') {
 				$pFieldCopy->setCategory($fallbackCategoryName);
 			}
-			foreach ($changeDefaultFields as $key => $default) {
+			foreach ($changeLabelFields as $key => $label) {
 				if ($pFieldCopy->getName() === $key) {
-					$pFieldCopy->setDefault($default);
+					$pFieldCopy->setLabel($label);
 				}
 			}
 

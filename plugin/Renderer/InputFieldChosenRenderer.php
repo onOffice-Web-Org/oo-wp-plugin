@@ -33,7 +33,8 @@ class InputFieldChosenRenderer
 	 */
 	public function render()
 	{
-		$output = '<select name="'.esc_html($this->getName()).'"'
+		$name = $this->getMultiple() ? $this->getName() . '[]' : $this->getName();
+		$output = '<select name="'.esc_html($name).'"'
 					.$this->renderAdditionalAttributes()
 					.' id="'.esc_html($this->getGuiId()).'"'
 					. ($this->getMultiple() ? ' multiple' : '')
