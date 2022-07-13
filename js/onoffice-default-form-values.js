@@ -191,15 +191,12 @@ onOffice.default_values_input_converter = function () {
 
         if (!fieldDefinition.rangefield &&
             [
-                'integer', 'float', 'date', 'datetime',
+                'integer', 'float', 'date',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:float',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:int',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
             ].indexOf(fieldDefinition.type) >= 0) {
-            if (fieldDefinition.type === 'date' || fieldDefinition.type === 'datetime') {
-                mainInput.setAttribute('type', 'text');
-            }
             mainInput.name = 'oopluginfieldconfigformdefaultsvalues-value[' + fieldName + ']';
             mainInput.value = predefinedValues[fieldName][0] || '';
             return;
