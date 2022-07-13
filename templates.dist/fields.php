@@ -281,23 +281,25 @@ if (!function_exists('formatPriceParking')) {
 			} else {
 				$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, 0 );
 			}
-			if ( $currency == '?' ) {
-				$currency = '₺';
-			} 
-			if ( $codeCurrency == 'GBP' && $locale != 'en_GB' || $codeCurrency == 'USD' && $locale != 'en_US') {
-				$locale="de_DE";
-				$codeCurrency = "EUR";
-			}
 			if ( empty( $codeCurrency ) ) {
 				$codeCurrency = "EUR";
 			}
-			$checkValue = str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
-			
-			if ( $currency == 'lei' && $locale == 'ro_RO' ) {
-				return str_replace( $codeCurrency, "lei", $checkValue );
+			if ( $codeCurrency == 'GBP' && $locale != 'en_GB' || $codeCurrency == 'USD' && $locale != 'en_US' || $codeCurrency == 'CHF' && $locale != 'fr_FR' || $codeCurrency == 'HRK' && $locale != 'hr' ) {
+				$locale="de_DE";
+				$codeCurrency = "EUR";
 			}
-			if ( $currency == 'kn' && $locale == 'hr_HR' ) {
-				return str_replace( $codeCurrency, "kn", $checkValue );
+			$checkValue = str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
+			if ( $currency == 'lei' && $locale == 'ro_RO' ) {
+				return str_replace( $codeCurrency, $currency, $checkValue );
+			}
+			if ( $currency == 'kn' && $locale == 'hr' ) {
+				return str_replace( $codeCurrency, $currency, $checkValue );
+			}
+			if ( $currency == 'Лв' && $locale == 'bg_BG' ) {
+				return str_replace( $codeCurrency, $currency, $checkValue );
+			}
+			if ( strpos( $checkValue, "€" ) !== false && $codeCurrency == 'EUR' && $locale == 'cs_CZ' ) {
+				$checkValue = '';
 			}
 			if ( strpos( $checkValue, $currency ) !== false ) {
 				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
