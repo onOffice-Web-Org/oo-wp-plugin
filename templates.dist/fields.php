@@ -120,8 +120,7 @@ if (!function_exists('renderFormField')) {
 		$selectedValue = $pForm->getFieldValue($fieldName, true);
 		$isRangeValue = $pForm->isSearchcriteriaField($fieldName) && $searchCriteriaRange;
 		$fieldLabel = $pForm->getFieldLabel($fieldName, true);
-		
-		
+
 		$requiredAttribute = "";
 		if ($isRequired) {
 			$requiredAttribute = "required";

@@ -50,7 +50,7 @@ class FieldsCollection implements FieldModuleCollection
 	{
 		$name = $pField->getName();
 		$module = $pField->getModule();
-		$this->_fields [] = $pField;
+		$this->_fields []= $pField;
 		$this->_fieldsByModule[$module][$name] = $pField;
 	}
 
@@ -93,6 +93,7 @@ class FieldsCollection implements FieldModuleCollection
 	public function getFieldByModuleAndName(string $module, string $name): Field
 	{
 		$pField = $this->_fieldsByModule[$module][$name] ?? null;
+
 		if ($pField === null) {
 			throw new UnknownFieldException();
 		}
@@ -110,22 +111,18 @@ class FieldsCollection implements FieldModuleCollection
 
 	public function merge(FieldModuleCollection $pFieldsCollection, string $fallbackCategoryName = '')
 	{
-		$changeLabelFields = [
-			'Email' => 'Default e-mail address',
-			'Telefon1' => 'Default phone number',
-			'Telefax1' => 'Default fax number'
-		];
+		$newAddressFieldsTranslatedLabel = FieldModuleCollectionDecoratorReadAddress::getNewAddressFieldsTranslatedLabel();
+		$newAddressFields                = FieldModuleCollectionDecoratorReadAddress::getNewAddressFields();
 
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
 			/** @var $pFieldCopy Field */
 			$pFieldCopy = clone $pField;
-
 			if ($pFieldCopy->getCategory() === '') {
 				$pFieldCopy->setCategory($fallbackCategoryName);
 			}
-			foreach ($changeLabelFields as $key => $label) {
-				if ($pFieldCopy->getName() === $key) {
-					$pFieldCopy->setLabel($label);
+			foreach ( $newAddressFields as $key => $properties ) {
+				if ( $pFieldCopy->getName() === $key ) {
+					$pFieldCopy->setLabel( $newAddressFieldsTranslatedLabel[ $properties['label'] ] );
 				}
 			}
 
@@ -155,7 +152,7 @@ class FieldsCollection implements FieldModuleCollection
 
 	public function getAllFieldsKeyedUnsafe(): array
 	{
-		$keys = array_map(function (Field $pField): string {
+		$keys = array_map(function(Field $pField): string {
 			return $pField->getName();
 		}, $this->_fields);
 		return array_combine($keys, $this->_fields);

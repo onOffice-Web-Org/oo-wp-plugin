@@ -271,7 +271,7 @@ class Form
 
 	private function executeGeoPositionFix(array $requiredFields): array
 	{
-		if (in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields)) {
+		if (in_array(GeoPosition::FIELD_GEO_POSITION, $requiredFields))	{
 			$pGeoPosition = new GeoPositionFieldHandler();
 			$pGeoPosition->readValues($this->getDataFormConfiguration());
 			$geoPositionFields = $pGeoPosition->getActiveFields();
@@ -344,6 +344,7 @@ class Form
 
 		return $label;
 	}
+
 
 	/**
 	 *
@@ -640,15 +641,15 @@ class Form
 
 	/** @return array */
 	public function getResponseFieldsValues()
-	{ return $this->_pFormData->getResponseFieldsValues(); }
+		{ return $this->_pFormData->getResponseFieldsValues(); }
 
 
 	/** @return int */
 	public function getCountAbsolutResults(): int
-	{ return $this->_countAbsoluteResults; }
+		{ return $this->_countAbsoluteResults; }
 
 
 	/** @var int $countAbsolute */
 	private function setCountAbsoluteResults(int $countAbsolute)
-	{ $this->_countAbsoluteResults = $countAbsolute; }
+		{ $this->_countAbsoluteResults = $countAbsolute; }
 }
