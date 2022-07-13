@@ -258,7 +258,7 @@ if (!function_exists('renderParkingLot')) {
 			}
 			/* translators: 1: Name of parking lot, 2: Price */
 			$element = sprintf(__( '%1$s ' . $german . ' %2$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
-			if ( $parking['Count'] != 1 ) {
+			if (  $parking['Count'] != 1 && $codeCurrency != "EUR" ) {
 				$element .= __( ' each', 'onoffice' );
 			}
 			if (!empty($parking['MarketingType'])) {
