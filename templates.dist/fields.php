@@ -247,19 +247,19 @@ if (!function_exists('renderRegionalAddition')) {
 if (!function_exists('renderParkingLot')) {
 	function renderParkingLot(array $parkingArray, string $language, string $locale, string $codeCurrency, string $currency): array
 	{
-		$german="at";
+		$preposition = "at";
 		$messages = [];
 		foreach ($parkingArray as $key => $parking) {
 			if (!$parking['Count']) {
 				continue;
 			}
 			if ( $language == "DEU" && $codeCurrency == "EUR" ) {
-				$german = "à";
+				$preposition = "à";
 			}
 			/* translators: 1: Name of parking lot, 2: Price */
-			$element = sprintf(__( '%1$s ' . $german . ' %2$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
-			if (  $parking['Count'] != 1 && $codeCurrency != "EUR" ) {
-				$element .= __( ' each', 'onoffice' );
+			$element = sprintf(__( '%1$s ' . $preposition . ' %2$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
+			if ( $parking['Count'] != 1 && $codeCurrency != "EUR" || $language != "DEU" ) {
+				$element .= sprintf( __( ' %1$s', 'onoffice' ), 'each' );
 			}
 			if (!empty($parking['MarketingType'])) {
 				$element .= ' (' . $parking['MarketingType'] . ')';
