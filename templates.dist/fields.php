@@ -249,21 +249,27 @@ if (!function_exists('renderParkingLot')) {
 	{
 		$preposition = "at";
 		$messages = [];
+		$pluralPaking='';
+		$MarketingType='';
 		foreach ($parkingArray as $key => $parking) {
 			if (!$parking['Count']) {
 				continue;
 			}
-			if ( $language == "DEU" && $codeCurrency == "EUR" ) {
-				$preposition = "à";
+			if ( $parking['Count'] != 1 ) {
+				$pluralPaking = " each";
+			}else{
+				$pluralPaking = "";
 			}
-			/* translators: 1: Name of parking lot, 2: Price */
-			$element = sprintf(__( '%1$s ' . $preposition . ' %2$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency));
-			if ( $parking['Count'] != 1 && $codeCurrency != "EUR" || $language != "DEU" ) {
-				$element .= sprintf( __( ' %1$s', 'onoffice' ), 'each' );
+			if ($codeCurrency == "EUR" && $language == "DEU" ) {
+				$preposition = "à";
+				$pluralPaking = "";
 			}
 			if (!empty($parking['MarketingType'])) {
-				$element .= ' (' . $parking['MarketingType'] . ')';
+				$MarketingType = sprintf(__(' (' . $parking['MarketingType'] . ')'));
 			}
+			/* translators: 1: Name of parking lot, 2: Price , 3: Each , 4: MarketingType */
+			$element = sprintf(__( '%1$s ' . $preposition . ' %2$s' . '%3$s' . '%4$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency),$pluralPaking,$MarketingType);
+			
 			array_push($messages, $element);
 		}
 		return $messages;

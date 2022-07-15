@@ -25,7 +25,8 @@ $class =  ($pDataView instanceof DataDetailView) ? 'oo-detailslisttd' : 'oo-list
 $detailParkingLot = '';
 
 if (!empty($result)) {
-	$detailParkingLot .= '<div class="' . $class . '">' . count( $result );
+	$detailParkingLot .= '<div class="' . $class . '">' ; 
+
 	$item = 0;
 	foreach ( $result as $detail ) {
 		$item ++;
