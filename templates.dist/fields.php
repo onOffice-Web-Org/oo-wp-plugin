@@ -265,10 +265,10 @@ if (!function_exists('renderParkingLot')) {
 				$pluralPaking = "";
 			}
 			if (!empty($parking['MarketingType'])) {
-				$MarketingType = sprintf(__(' (' . $parking['MarketingType'] . ')'));
+				$MarketingType = (' (' . $parking['MarketingType'] . ') ');
 			}
 			/* translators: 1: Name of parking lot, 2: Price , 3: Each , 4: MarketingType */
-			$element = sprintf(__( '%1$s ' . $preposition . ' %2$s' . '%3$s' . '%4$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency),$pluralPaking,$MarketingType);
+			$element = sprintf( __( '%1$s ' . $preposition . ' %2$s' . '%3$s' . '%4$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency), $pluralPaking, $MarketingType );
 			
 			array_push($messages, $element);
 		}
@@ -279,6 +279,20 @@ if (!function_exists('renderParkingLot')) {
 if (!function_exists('formatPriceParking')) {
 	function formatPriceParking(string $str, string $language, string $locale, string $codeCurrency, string $currency): string
 	{
+		$listCurrency = [
+			'EUR' => 'de_DE',
+			'CZK' => 'cs_CZ',
+			'TRY' => 'tr_TR',
+			'BGN' => 'bg_BG',
+			'PLN' => 'pl_PL',
+			'RON' => 'ro_RO',
+			'SEK' => 'sv_SE',
+			'HRK' => 'hr',
+			'GBP' => 'en_GB',
+			'CHF' => 'fr_FR',
+			'USD' => 'en_US',
+			'HUF' => 'hu_HU',
+		];
 		$digit = intval(substr(strrchr($str, "."), 1));
 		if (class_exists(NumberFormatter::class)) {
 			$format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
@@ -287,25 +301,15 @@ if (!function_exists('formatPriceParking')) {
 			} else {
 				$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, 0 );
 			}
-			if ( empty( $codeCurrency ) ) {
-				$codeCurrency = "EUR";
-			}
-			if ( $codeCurrency == 'GBP' && $locale != 'en_GB' || $codeCurrency == 'USD' && $locale != 'en_US' || $codeCurrency == 'CHF' && $locale != 'fr_FR' || $codeCurrency == 'HRK' && $locale != 'hr' ) {
-				$locale="de_DE";
-				$codeCurrency = "EUR";
-			}
+			if ( $currency == '?' ) {
+				$currency = '₺';
+			} 
 			$checkValue = str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
-			if ( $currency == 'lei' && $locale == 'ro_RO' ) {
-				return str_replace( $codeCurrency, $currency, $checkValue );
+			if ( empty( $codeCurrency ) || $listCurrency[ $codeCurrency ] != $locale ) {
+				$checkValue = "";
 			}
-			if ( $currency == 'kn' && $locale == 'hr' ) {
+			if ( $currency == 'lei' && $locale == 'ro_RO' || $currency == 'kn' && $locale == 'hr' || $currency == 'Лв' && $locale == 'bg_BG' ) {
 				return str_replace( $codeCurrency, $currency, $checkValue );
-			}
-			if ( $currency == 'Лв' && $locale == 'bg_BG' ) {
-				return str_replace( $codeCurrency, $currency, $checkValue );
-			}
-			if ( strpos( $checkValue, "€" ) !== false && $codeCurrency == 'EUR' && $locale == 'cs_CZ' ) {
-				$checkValue = '';
 			}
 			if ( strpos( $checkValue, $currency ) !== false ) {
 				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
