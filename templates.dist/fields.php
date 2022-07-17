@@ -247,22 +247,19 @@ if (!function_exists('renderRegionalAddition')) {
 if (!function_exists('renderParkingLot')) {
 	function renderParkingLot(array $parkingArray, string $language, string $locale, string $codeCurrency, string $currency): array
 	{
-		$preposition = "at";
 		$messages = [];
-		$pluralPaking='';
-		$MarketingType='';
 		foreach ($parkingArray as $key => $parking) {
+		$MarketingType='';
+		$pluralPaking='';
+		$preposition = "at";
 			if (!$parking['Count']) {
 				continue;
 			}
 			if ( $parking['Count'] != 1 ) {
 				$pluralPaking = " each";
-			}else{
-				$pluralPaking = "";
 			}
 			if ($codeCurrency == "EUR" && $language == "DEU" ) {
 				$preposition = "à";
-				$pluralPaking = "";
 			}
 			if (!empty($parking['MarketingType'])) {
 				$MarketingType = (' (' . $parking['MarketingType'] . ') ');
