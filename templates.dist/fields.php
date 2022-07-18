@@ -258,7 +258,7 @@ if (!function_exists('renderParkingLot')) {
 			if ( $parking['Count'] != 1 ) {
 				$pluralPaking = " each";
 			}
-			if ($codeCurrency == "EUR" && $language == "DEU" ) {
+			if ($codeCurrency == "EUR" && $locale == "de_DE" ) {
 				$preposition = "à";
 				$pluralPaking = "";
 			}
