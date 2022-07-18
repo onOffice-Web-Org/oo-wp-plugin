@@ -249,8 +249,8 @@ if (!function_exists('renderParkingLot')) {
 	{
 		$messages = [];
 		foreach ($parkingArray as $key => $parking) {
-		$MarketingType='';
-		$pluralPaking='';
+		$MarketingType = '';
+		$pluralPaking = '';
 		$preposition = "at";
 			if (!$parking['Count']) {
 				continue;
@@ -260,6 +260,7 @@ if (!function_exists('renderParkingLot')) {
 			}
 			if ($codeCurrency == "EUR" && $language == "DEU" ) {
 				$preposition = "à";
+				$pluralPaking = "";
 			}
 			if (!empty($parking['MarketingType'])) {
 				$MarketingType = (' (' . $parking['MarketingType'] . ') ');
