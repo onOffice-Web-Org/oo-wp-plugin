@@ -815,7 +815,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	{
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDetailView            = $pDataDetailViewHandler->getDetailView();
-		$pDetailView->setHasDetailViewRestrict( $pDetailView->getViewRestrict() ?? true );
+		$pDetailView->setHasDetailViewRestrict( !$pDetailView->hasDetailView() );
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
 
