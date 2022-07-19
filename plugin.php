@@ -135,34 +135,26 @@ $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 if (get_option('onoffice-settings-title-and-description') === '1')
 {
 	add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pDI) {
-			$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class );
-			$pDetailView = $pDataDetailViewHandler->getDetailView();
-			$detail_page_id = $pDetailView->getPageId();
-			if ( $object_id == $detail_page_id ) {
-				$list_meta_keys = [
-					"onoffice_titel"            => 'objekttitel',
-					"onoffice_title"            => 'objekttitel',
-					"onoffice_beschreibung"     => 'objektbeschreibung',
-					"onoffice_description"      => 'objektbeschreibung',
-					"onoffice_ort"              => 'ort',
-					"onoffice_city"             => 'ort',
-					"onoffice_plz"              => 'plz',
-					"onoffice_postal_code"      => 'plz',
-					"onoffice_objektart"        => 'objektart',
-					"onoffice_property_class"   => 'objektart',
-					"onoffice_vermarktungsart"  => 'vermarktungsart',
-					"onoffice_marketing_method" => 'vermarktungsart',
-					"onoffice_datensatznr"      => 'Id',
-					"onoffice_id"               => 'Id',
-					"onoffice_immo_nr"          => 'objektnr_extern',
-					"onoffice_prop_no"          => 'objektnr_extern'
-				];
-				if ( isset( $list_meta_keys[ $meta_key ] ) ) {
-					return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ] );
+		$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class );
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$detail_page_id = $pDetailView->getPageId();
+		$fieldsDetail = $pDetailView->getFields();
+		$list_meta_keys = [];
+		if ( $object_id == $detail_page_id ) {
+			foreach ( $fieldsDetail as $item => $value ) {
+				if ( strpos( $meta_key, 'ellipsis' ) && strpos( $meta_key, $value ) ) {
+					preg_match( '~onoffice-ellipsis\s*\K\d+~', $meta_key, $characters );
+					$list_meta_keys[ "onoffice-ellipsis" . $characters[0] . "_" . $value ] = $value;
+				} else {
+					$list_meta_keys[ "onoffice_" . $value ] = $value;
 				}
-			} else {
-				return null;
 			}
+			if ( isset( $list_meta_keys[ $meta_key ] ) ) {
+				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ], (int) $characters[0], $meta_key );
+			}
+		} else {
+			return null;
+		}
 	}, 1, 3);
 } else {
     add_filter('document_title_parts', function ($title) use ($pDI){
@@ -171,8 +163,22 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 }
 
 // Return title custom by custom field onOffice
-function customFieldCallback( $pDI, $format) {
-	return $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField($format);
+function getRestrictLength( $characters, $title ) {
+	if ( empty( $characters ) ) {
+		return strlen( $title ) > 4 ? substr( $title, 0, 4 ) . "..." : $title;
+	} else {
+		return strlen( $title ) > $characters ? substr( $title, 0, $characters ) . "..." : $title;
+	}
+}
+
+// Return title custom by custom field onOffice
+function customFieldCallback( $pDI, $format, $characters, $meta_key ) {
+	$title = $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField( $format );
+	if ( ! strpos( $meta_key, 'ellipsis' ) ) {
+		return $title;
+	} else {
+		return getRestrictLength( $characters, $title );
+	}
 }
 
 

@@ -20,7 +20,7 @@
  */
 
 namespace onOffice\WPlugin\ViewFieldModifier;
-
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 /**
  *
  * @url http://www.onoffice.de
@@ -73,18 +73,10 @@ class EstateViewFieldModifierTypeTitle
 	
 	public function getAPICustomFields(): array
 	{
-		$titleFields = [
-			'objekttitel',
-			'objektbeschreibung',
-			'ort',
-			'plz',
-			'objektart',
-			'vermarktungsart',
-			'Id',
-			'objektnr_extern'
-		];
-		
-		return $titleFields;
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$dataCustomFields                 = $pDataDetailViewHandler->getDetailView();
+
+		return $dataCustomFields->getFields();
 	}
 	
 
