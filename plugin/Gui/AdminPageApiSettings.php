@@ -219,28 +219,22 @@ class AdminPageApiSettings
 		$listPluginSEOActive = $pAdminViewController->getPluginSEOActive();
 		$listNamePluginSEO = implode(", ",$listPluginSEOActive);
 		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
-		$summaryDetailDoNotModify =  esc_html__('Available custom fields','onoffice-for-wp-websites');
-		$descriptionDetailDoNotModify = esc_html__('When this option is active, the plugin makes the following custom fields available in the detail view. These custom fields can be used in SEO plugins to fill out the title and description with the information of the currently shown estate. For information on how to use custom fields consult you SEO plugin\'s documentation.
-							These custom fields are only available in the detail view and on no other page.
-								- Title (onoffice_title)
-								- Description (onoffice_description)
-								- Place (onoffice_place)
-								- Postal code (onoffice_postal_code)
-								- Property class (onoffice_property_class)
-								- Marketing method (onoffice_marketing_method)
-								- Data Record Ref No. (onoffice_id)
-								- Prop No. (onoffice_prop_no)', 'onoffice-for-wp-websites');
-		$descriptionDetailDoNotModify =  Parsedown::instance()
-			->setBreaksEnabled(true)->text(
-				$descriptionDetailDoNotModify
-			);
-		$descriptionDoNotModify = sprintf('<div class="do-not-modify">
-								<p>%1$s</p>
-								<details>
+		$summaryDetailDoNotModify = esc_html__( 'Custom fields', 'onoffice-for-wp-websites' );
+		$descriptionDetailDoNotModify = esc_html__( 'When this option is active, you can use special custom fields to use data from onOffice enterprise in your SEO plugins.
+		To display the property number (fieldname objektnr_extern) and title (fieldname objekttitel) of the current estate in the detail page\'s title, you can use the custom fields onoffice_objektnr_extern and onoffice_objekttitel.
+		For information on how to use custom fields consult you SEO plugin\'s documentation.',
+			'onoffice-for-wp-websites' );
+		$searchSupportDoNotModify = esc_html__( 'To find out the fieldname of a field, look in the detail page\'s field list. When you expand a field, it shows you the "Key of Field" which you should put behind onoffice_ to form the custom field name. You can use any field that you have added to the estate field list on the right of the detail page.',
+			'onoffice-for-wp-websites' );
+		$descriptionDoNotModify = sprintf( '<div class="do-not-modify">
+									<p>%1$s</p>
+									</br>
 									<summary>%2$s</summary>
 									<p>%3$s</p>
-								</details>
-							</div>', $titleDoNotModify, $summaryDetailDoNotModify, $descriptionDetailDoNotModify);
+									</br>
+									<p>%4$s</p>
+							</div>', $titleDoNotModify, $summaryDetailDoNotModify, $descriptionDetailDoNotModify,
+			$searchSupportDoNotModify );
 		$messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.
 								We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
 		$messageNoticeSEO =  Parsedown::instance()

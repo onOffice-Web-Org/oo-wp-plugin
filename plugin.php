@@ -165,9 +165,9 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 // Return title custom by custom field onOffice
 function getRestrictLength( $characters, $title ) {
 	if ( empty( $characters ) ) {
-		return strlen( $title ) > 4 ? substr( $title, 0, 4 ) . "..." : $title;
+		return strlen( $title ) > 4 ? mb_substr( $title, 0, 4 ) . "..." : $title;
 	} else {
-		return strlen( $title ) > $characters ? substr( $title, 0, $characters ) . "..." : $title;
+		return strlen( $title ) > $characters ? mb_substr( $title, 0, $characters ) . "..." : $title;
 	}
 }
 
