@@ -26,7 +26,7 @@ class TestClassCachedOutput
 				['Cache-Control: must-revalidate', true, null],
 				['Cache-Control: max-age=1209600', true, null],
 				['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
-				['Expires: Mon, 07 Sep 2020 02:01:01 GMT', true, null]);
+				['Expires: Mon, 07 Sep 2020 03:01:01 GMT', true, null]);
 
 		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
 			->setMethods(['create'])
@@ -60,7 +60,7 @@ class TestClassCachedOutput
 				['Cache-Control: must-revalidate', true, null],
 				['Cache-Control: max-age=1209600', true, null],
 				['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
-				['Expires: Mon, 07 Sep 2020 02:01:01 GMT', true, null]);
+				['Expires: Mon, 07 Sep 2020 03:01:01 GMT', true, null]);
 
 		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
 			->setMethods(['create'])
