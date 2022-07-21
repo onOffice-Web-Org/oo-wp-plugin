@@ -113,13 +113,24 @@ class TestClassEstateViewFieldModifierTypeTitle
 	{
 		$expectation = [
 			'objekttitel',
-			'objektbeschreibung',
-			'ort',
-			'plz',
 			'objektart',
+			'objekttyp',
 			'vermarktungsart',
-			'Id',
-			'objektnr_extern'
+			'plz',
+			'ort',
+			'bundesland',
+			'objektnr_extern',
+			'wohnflaeche',
+			'grundstuecksflaeche',
+			'nutzflaeche',
+			'anzahl_zimmer',
+			'anzahl_badezimmer',
+			'kaufpreis',
+			'kaltmiete',
+			'objektbeschreibung',
+			'lage',
+			'ausstatt_beschr',
+			'sonstige_angaben',
 		];
 		
 		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
@@ -135,13 +146,24 @@ class TestClassEstateViewFieldModifierTypeTitle
 	{
 		$expectation = [
 			'objekttitel',
-			'objektbeschreibung',
-			'ort',
-			'plz',
 			'objektart',
+			'objekttyp',
 			'vermarktungsart',
-			'Id',
-			'objektnr_extern'
+			'plz',
+			'ort',
+			'bundesland',
+			'objektnr_extern',
+			'wohnflaeche',
+			'grundstuecksflaeche',
+			'nutzflaeche',
+			'anzahl_zimmer',
+			'anzahl_badezimmer',
+			'kaufpreis',
+			'kaltmiete',
+			'objektbeschreibung',
+			'lage',
+			'ausstatt_beschr',
+			'sonstige_angaben',
 		];
 		
 		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
