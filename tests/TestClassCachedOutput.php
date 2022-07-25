@@ -21,13 +21,14 @@ class TestClassCachedOutput
 		$pMockHeaders = $this->getMockBuilder(HTTPHeaders::class)
 			->getMock();
 			
-		// $pMockHeaders->expects($this->exactly(5))
-		// 	->method('addHeader')->withConsecutive(
-		// 		['Cache-Control: public', true, null],
-		// 		['Cache-Control: must-revalidate', true, null],
-		// 		['Cache-Control: max-age=1209600', true, null],
-		// 		['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
-		// 		['Expires: Mon, 07 Sep 2020 02:01:01 GMT', true, null]);
+		$pMockHeaders->expects($this->exactly(5))
+			->method('addHeader')->withConsecutive(
+				['Cache-Control: public', true, null],
+				['Cache-Control: must-revalidate', true, null],
+				['Cache-Control: max-age=1209600', true, null],
+				['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
+				// ['Expires: Mon, 07 Sep 2020 02:01:01 GMT', true, null]
+			);
 
 		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
 			->setMethods(['create'])
@@ -54,13 +55,14 @@ class TestClassCachedOutput
 			->willReturn('"f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="');
 		$pMockHeaders->expects($this->once())
 			->method('setHttpResponseCode')->with(304);
-		// $pMockHeaders->expects($this->exactly(5))
-		// 	->method('addHeader')->withConsecutive(
-		// 		['Cache-Control: public', true, null],
-		// 		['Cache-Control: must-revalidate', true, null],
-		// 		['Cache-Control: max-age=1209600', true, null],
-		// 		['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
-		// 		['Expires: Mon, 07 Sep 2020 02:01:01 GMT', true, null]);
+		$pMockHeaders->expects($this->exactly(5))
+			->method('addHeader')->withConsecutive(
+				['Cache-Control: public', true, null],
+				['Cache-Control: must-revalidate', true, null],
+				['Cache-Control: max-age=1209600', true, null],
+				['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
+				// ['Expires: Mon, 07 Sep 2020 02:01:01 GMT', true, null]
+			);
 
 		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
 			->setMethods(['create'])
