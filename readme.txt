@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.0
 Requires PHP: 7.3
-Stable tag: 4.1
+Stable tag: 4.2
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,21 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.2 (2022-07-07) =
+
+**Added**
+
+* The shortcodes are now also shown in the settings for lists and we have added a button to more easily copy them.
+
+**Changed**
+
+* When saving a list or form, the page now fully reloads.
+
+**Fixed**
+
+* The form overview no longer wrongly displays that all forms use the default email address. If a form overrides the default email, that override will now show up correctly in the overview.
+* The plugin no longer overwrites tables in other plugins. Specifically, the plugin is now compatible with the Rank Math SEO plugin's redirection and 404 monitor modules.
 
 = 4.1 (2022-06-27) =
 
