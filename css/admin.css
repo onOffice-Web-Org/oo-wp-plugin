@@ -344,3 +344,9 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 .button.button-copy{
 	display: none;
 }
+.memssageReference{
+	text-align: right;
+}
+.memssageOnlyReference{
+	text-align: right;
+}

@@ -325,12 +325,10 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$expected = [
 			'default' => 'Default',
-			'reference' => 'Reference Estates',
 			'favorites' => 'Favorites List'];
 
 		$this->assertEquals(FormModelBuilderDBEstateListSettings::getListViewLabels(), $expected);
 	}
-
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowReferenceEstate
@@ -368,6 +366,39 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getValue(), '0');
 		$this->assertEquals('select', $pInputModelDB->getHtmlType());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getListViewReferenceEstates
+	 */
+	public function testGetListViewReferenceEstates()
+	{
+		$expected = [
+			'0' => __( 'Hide reference estates', 'onoffice-for-wp-websites' ),
+			'1' => __( 'Show reference estates (alongside others)', 'onoffice-for-wp-websites' ),
+			'2' => __( 'Show only reference estates (filter out all others)', 'onoffice-for-wp-websites' ),
+		];
+
+		$this->assertEquals( FormModelBuilderDBEstateListSettings::getListViewReferenceEstates(), $expected );
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowReferenceEstates
+	 */
+	public function testCreateInputModelShowReferenceEstates()
+	{
+		$pInstance = $this->getMockBuilder( FormModelBuilderDBEstateListSettings::class )
+		                  ->disableOriginalConstructor()
+		                  ->setMethods( [ 'getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields' ] )
+		                  ->getMock();
+
+		$pInstance->method( 'getInputModelDBFactory' )->willReturn( $this->_pInputModelFactoryDBEntry );
+		$pInstance->method( 'getValue' )->willReturn( '0' );
+
+		$pInputModelDB = $pInstance->createInputModelShowReferenceEstates();
+		$this->assertInstanceOf( InputModelDB::class, $pInputModelDB );
+		$this->assertEquals( $pInputModelDB->getValue(), '0' );
+		$this->assertEquals( 'select', $pInputModelDB->getHtmlType() );
 	}
 
 	/**

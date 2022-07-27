@@ -53,6 +53,15 @@ class DataListView
 	const LISTVIEW_TYPE_FAVORITES = 'favorites';
 
 	/** */
+	const HIDE_REFERENCE_ESTATE = '0';
+
+	/** */
+	const SHOW_REFERENCE_ESTATE = '1';
+
+	/** */
+	const SHOW_ONLY_REFERENCE_ESTATE = '2';
+
+	/** */
 	const LISTVIEW_TYPE_UNITS = 'units';
 
 	/** */
@@ -130,8 +139,11 @@ class DataListView
 	/** @var bool */
 	private $_adjustableSorting = false;
 
-		/** @var bool */
+	/** @var bool */
 	private $_showReferenceStatus = false;
+
+	/** @var string */
+	private $_showReferenceEstate = '0';
 
 
 	/**
@@ -354,5 +366,21 @@ class DataListView
 	public function setShowReferenceStatus(bool $showReferenceStatus)
 	{
 		$this->_showReferenceStatus = $showReferenceStatus;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getShowReferenceEstate(): string
+	{
+		return $this->_showReferenceEstate;
+	}
+
+	/**
+	 * @param string $showReferenceEstate
+	 */
+	public function setShowReferenceEstate(string $showReferenceEstate)
+	{
+		$this->_showReferenceEstate = $showReferenceEstate;
 	}
 }

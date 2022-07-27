@@ -108,6 +108,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setFields($row[DataDetailView::FIELDS] ?? []);
 		$pDataDetailView->setPictureTypes($row[DataDetailView::PICTURES] ?? []);
 		$pDataDetailView->setHasDetailView((bool)($row[InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL] ?? ''));
+		$pDataDetailView->setHasDetailViewRestrict( (bool) ( $row[ InputModelOptionFactoryDetailView::INPUT_RESTRICT_ACCESS_CONTROL ] ?? '' ) );
 		$pDataDetailView->setExpose($row['expose'] ?? '');
 		$pDataDetailView->setAddressFields($row[DataDetailView::ADDRESSFIELDS] ?? []);
 		$pDataDetailView->setMovieLinks($row['movielinks'] ?? MovieLinkTypes::MOVIE_LINKS_NONE);
