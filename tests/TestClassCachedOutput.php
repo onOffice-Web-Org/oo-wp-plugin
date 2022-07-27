@@ -16,7 +16,7 @@ class TestClassCachedOutput
 	 */
 	public function testOutputCached()
 	{
-		$pDateTimeImmutable = new \DateTimeImmutable('2020-08-24 01:01:01', new \DateTimeZone('UTC'));
+		$pDateTimeImmutable = new \DateTimeImmutable('2020-08-24 01:01:01', new \DateTimeZone('GMT'));
 		$pMockHeaders = $this->getMockBuilder(HTTPHeaders::class)
 			->getMock();
 		$pMockHeaders->expects($this->exactly(5))
@@ -25,7 +25,7 @@ class TestClassCachedOutput
 				['Cache-Control: must-revalidate', true, null],
 				['Cache-Control: max-age=1209600', true, null],
 				['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
-				['Expires: Mon, 07 Sep 2020 01:01:01 UTC', true, null]);
+				['Expires: Mon, 07 Sep 2020 01:01:01 GMT', true, null]);
 
 		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
 			->setMethods(['create'])
@@ -44,7 +44,7 @@ class TestClassCachedOutput
 
 	public function testOutputCachedWithIfNoneMatchHeaders()
 	{
-		$pDateTimeImmutable = new \DateTimeImmutable('2020-08-24 01:01:01', new \DateTimeZone('UTC'));
+		$pDateTimeImmutable = new \DateTimeImmutable('2020-08-24 01:01:01', new \DateTimeZone('GMT'));
 		$pMockHeaders = $this->getMockBuilder(HTTPHeaders::class)
 			->getMock();
 		$pMockHeaders->expects($this->once())
@@ -58,7 +58,7 @@ class TestClassCachedOutput
 				['Cache-Control: must-revalidate', true, null],
 				['Cache-Control: max-age=1209600', true, null],
 				['ETag: "f4OxZX/x/FO5LcGBSKHWXfwtSx+j1ncoSt3SABJtkGk="', true, null],
-				['Expires: Mon, 07 Sep 2020 01:01:01 UTC', true, null]);
+				['Expires: Mon, 07 Sep 2020 01:01:01 GMT', true, null]);
 
 		$pDateTimeImmutableFactory = $this->getMockBuilder(DateTimeImmutableFactory::class)
 			->setMethods(['create'])
