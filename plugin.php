@@ -141,20 +141,20 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 		$fieldsDetail = $pDetailView->getFields();
 		$list_meta_keys = [];
 		if ( $object_id == $detail_page_id ) {
-			$number = '';
-			foreach ( $fieldsDetail as  $value ) {
+			$valueNumber = '';
+			foreach ( $fieldsDetail as $value ) {
 				if ( strpos( $meta_key, 'ellipsis' ) && strpos( $meta_key, $value ) ) {
-					preg_match("/^.*ellipsis(.+)_.*$/i", $meta_key, $characters);
-					if( count($characters) !== 0 ){
-						$number = $characters[1];
+					preg_match( "/^.*ellipsis(.+)_.*$/i", $meta_key, $matches );
+					if ( count( $matches ) !== 0 ) {
+						$valueNumber = $matches[1];
 					}
-					$list_meta_keys[ "onoffice-ellipsis" . $number . "_" . $value ] = $value;
+					$list_meta_keys[ "onoffice-ellipsis" . $valueNumber . "_" . $value ] = $value;
 				} else {
 					$list_meta_keys[ "onoffice_" . $value ] = $value;
 				}
 			}
 			if ( isset( $list_meta_keys[ $meta_key ] ) ) {
-				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ],(int) $number, $meta_key );
+				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ], (int) $valueNumber, $meta_key );
 			}
 		} else {
 			return null;
@@ -167,21 +167,21 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 }
 
 // Return title custom by custom field onOffice
-function getRestrictLength( $number, $title ) {
-	if ( empty( $number ) ) {
+function getRestrictLength( $valueNumber, $title ) {
+	if ( empty( $valueNumber ) ) {
 		return $title;
 	} else {
-		return strlen( $title ) > $number ? mb_substr( $title, 0, $number ) . "..." : $title;
+		return strlen( $title ) > $valueNumber ? mb_substr( $title, 0, $valueNumber ) . "..." : $title;
 	}
 }
 
 // Return title custom by custom field onOffice
-function customFieldCallback( $pDI, $format, $number, $meta_key ) {
+function customFieldCallback( $pDI, $format, $valueNumber, $meta_key ) {
 	$title = $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField( $format );
 	if ( ! strpos( $meta_key, 'ellipsis' ) ) {
 		return $title;
 	} else {
-		return getRestrictLength( $number, $title );
+		return getRestrictLength( $valueNumber, $title );
 	}
 }
 
