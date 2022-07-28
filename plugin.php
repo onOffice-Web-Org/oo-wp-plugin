@@ -141,16 +141,20 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 		$fieldsDetail = $pDetailView->getFields();
 		$list_meta_keys = [];
 		if ( $object_id == $detail_page_id ) {
-			foreach ( $fieldsDetail as $item => $value ) {
+			$number = '';
+			foreach ( $fieldsDetail as  $value ) {
 				if ( strpos( $meta_key, 'ellipsis' ) && strpos( $meta_key, $value ) ) {
-					preg_match( '~onoffice-ellipsis\s*\K\d+~', $meta_key, $characters );
-					$list_meta_keys[ "onoffice-ellipsis" . $characters[0] . "_" . $value ] = $value;
+					preg_match("/^.*ellipsis(.+)_.*$/i", $meta_key, $characters);
+					if( count($characters) !== 0 ){
+						$number = $characters[1];
+					}
+					$list_meta_keys[ "onoffice-ellipsis" . $number . "_" . $value ] = $value;
 				} else {
 					$list_meta_keys[ "onoffice_" . $value ] = $value;
 				}
 			}
 			if ( isset( $list_meta_keys[ $meta_key ] ) ) {
-				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ], (int) $characters[0], $meta_key );
+				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ],(int) $number, $meta_key );
 			}
 		} else {
 			return null;
@@ -163,21 +167,21 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 }
 
 // Return title custom by custom field onOffice
-function getRestrictLength( $characters, $title ) {
-	if ( empty( $characters ) ) {
+function getRestrictLength( $number, $title ) {
+	if ( empty( $number ) ) {
 		return $title;
 	} else {
-		return strlen( $title ) > $characters ? mb_substr( $title, 0, $characters ) . "..." : $title;
+		return strlen( $title ) > $number ? mb_substr( $title, 0, $number ) . "..." : $title;
 	}
 }
 
 // Return title custom by custom field onOffice
-function customFieldCallback( $pDI, $format, $characters, $meta_key ) {
+function customFieldCallback( $pDI, $format, $number, $meta_key ) {
 	$title = $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField( $format );
 	if ( ! strpos( $meta_key, 'ellipsis' ) ) {
 		return $title;
 	} else {
-		return getRestrictLength( $characters, $title );
+		return getRestrictLength( $number, $title );
 	}
 }
 
