@@ -345,10 +345,44 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModelListType->setHtmlType(InputModelOption::HTML_TYPE_SELECT);
 		$pInputModelListType->setValue($this->getValue($pInputModelListType->getField()));
 		$pInputModelListType->setValuesAvailable(self::getListViewLabels());
-
 		return $pInputModelListType;
 	}
 
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelShowReferenceEstates()
+	{
+		$labelShowReferenceEstate = __( 'Reference estates', 'onoffice-for-wp-websites' );
+
+		$pInputModelShowReferenceEstate = $this->getInputModelDBFactory()->create
+		( InputModelDBFactory::INPUT_SHOW_REFERENCE_ESTATE, $labelShowReferenceEstate );
+		$pInputModelShowReferenceEstate->setHtmlType( InputModelOption::HTML_TYPE_SELECT );
+		$pInputModelShowReferenceEstate->setValue( $this->getValue( $pInputModelShowReferenceEstate->getField() ) );
+		$pInputModelShowReferenceEstate->setValuesAvailable( self::getListViewReferenceEstates() );
+
+		return $pInputModelShowReferenceEstate;
+	}
+
+	/**
+	 *
+	 * @return array enum values from DB
+	 *
+	 */
+
+	static public function getListViewReferenceEstates()
+	{
+		return array(
+			DataListView::HIDE_REFERENCE_ESTATE      => __( 'Hide reference estates', 'onoffice-for-wp-websites' ),
+			DataListView::SHOW_REFERENCE_ESTATE      => __( 'Show reference estates (alongside others)',
+				'onoffice-for-wp-websites' ),
+			DataListView::SHOW_ONLY_REFERENCE_ESTATE => __( 'Show only reference estates (filter out all others)',
+				'onoffice-for-wp-websites' ),
+		);
+	}
 
 	/**
 	 *
@@ -467,7 +501,6 @@ class FormModelBuilderDBEstateListSettings
 	{
 		return array(
 			DataListView::LISTVIEW_TYPE_DEFAULT => __('Default', 'onoffice-for-wp-websites'),
-			DataListView::LISTVIEW_TYPE_REFERENCE => __('Reference Estates', 'onoffice-for-wp-websites'),
 			DataListView::LISTVIEW_TYPE_FAVORITES => __('Favorites List', 'onoffice-for-wp-websites'),
 		);
 	}

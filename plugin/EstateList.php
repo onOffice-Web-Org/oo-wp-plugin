@@ -282,10 +282,10 @@ class EstateList
 		}
 
 		if ($pListView->getName() === 'detail') {
-			if (!$this->hasDetailView()) {
+			if ($this->getViewRestrict()) {
 				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 			}
-		} elseif (!$this->getShowReferenceStatus()) {
+		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 		}
 
@@ -595,6 +595,18 @@ class EstateList
 	}
 
 	/**
+	 *
+	 * @return bool
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function getViewRestrict(): bool
+	{
+		return $this->_pEnvironment->getDataDetailViewHandler()->getDetailView()->getViewRestrict();
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getEstateContactIds(): array
@@ -739,11 +751,23 @@ class EstateList
 	 */
 	public function getShowReferenceStatus(): bool
 	{
-			if ($this->_pDataView instanceof DataListView) {
-					return $this->_pDataView->getShowReferenceStatus();
-			} else {
-					return true;
-			}
+		if ( $this->_pDataView instanceof DataListView ) {
+			return $this->_pDataView->getShowReferenceStatus();
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getShowReferenceEstate(): string
+	{
+		if ( $this->_pDataView instanceof DataListView ) {
+			return $this->_pDataView->getShowReferenceEstate();
+		}
+
+		return DataListView::HIDE_REFERENCE_ESTATE;
 	}
 
 	/**

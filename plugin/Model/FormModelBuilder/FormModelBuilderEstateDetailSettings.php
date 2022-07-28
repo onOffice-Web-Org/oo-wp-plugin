@@ -137,7 +137,7 @@ class FormModelBuilderEstateDetailSettings
 	 */
 
 	public function createInputAccessControl() {
-		$allAccessControl = __('Allow detail view for reference estates', 'onoffice-for-wp-websites');
+		$allAccessControl = __('Restrict access to reference estates (404 Not Found)', 'onoffice-for-wp-websites');
 
 		$pInputModelAccessControl = $this->_pInputModelDetailViewFactory->create( InputModelOptionFactoryDetailView::INPUT_ACCESS_CONTROL,
 			$allAccessControl);
@@ -149,6 +149,26 @@ class FormModelBuilderEstateDetailSettings
 		return $pInputModelAccessControl;
 	}
 
+	/**
+	 *
+	 * @return InputModelDB
+	 * @throws ExceptionInputModelMissingField
+	 */
+
+	public function createInputRestrictAccessControl()
+	{
+		$allRestrictAccessControl = __( 'Restrict access to reference estates (404 Not Found)',
+			'onoffice-for-wp-websites' );
+
+		$pInputModelRestrictAccessControl = $this->_pInputModelDetailViewFactory->create( InputModelOptionFactoryDetailView::INPUT_RESTRICT_ACCESS_CONTROL,
+			$allRestrictAccessControl );
+		$pInputModelRestrictAccessControl->setHtmlType( InputModelOption::HTML_TYPE_CHECKBOX );
+		$pInputModelRestrictAccessControl->setValuesAvailable( 'Restrict_Access_Control' );
+		$restrictAccessControl = $this->_pDataDetailView->getViewRestrict();
+		$pInputModelRestrictAccessControl->setValue( $restrictAccessControl );
+
+		return $pInputModelRestrictAccessControl;
+	}
 
 	/**
 	 *

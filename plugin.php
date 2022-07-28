@@ -243,9 +243,9 @@ add_action('parse_request', function(WP $pWP) use ($pDI) {
 		$estateId = (int)$estateId;
 		/** @var DataDetailViewCheckAccessControl $pDataDetailViewCheckAccessControl */
 		$pDataDetailViewCheckAccessControl = $pDI->get(DataDetailViewCheckAccessControl::class);
-		$accessControlChecker = $pDataDetailViewCheckAccessControl->checkAccessControl($estateId);
+		$restrictAccessChecker = $pDataDetailViewCheckAccessControl->checkRestrictAccess($estateId);
 
-		if ($estateId === 0 || !$accessControlChecker|| !$pEstateIdGuard->isValid($estateId)) {
+		if ($estateId === 0 || $restrictAccessChecker|| !$pEstateIdGuard->isValid($estateId)) {
 			$pWP->handle_404();
 			include(get_query_template('404'));
 			die();
