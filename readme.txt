@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= Unreleased =
+
+**Changed**
+
+* We improved the controls for whether reference estates should be displayed in estate lists.
+
 = 4.2 (2022-07-07) =
 
 **Added**

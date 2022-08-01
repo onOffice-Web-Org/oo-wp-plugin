@@ -43,7 +43,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 32;
+	const MAX_VERSION = 33;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -241,12 +241,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$dbversion = 31;
 		}
 
-		if ($dbversion == 31) {
+		if ( $dbversion == 31 ) {
 			$this->_pWpOption->addOption('onoffice-is-encryptcredent', false);
 			$dbversion = 32;
 		}
 
-		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true);
+		if ( $dbversion == 32 ) {
+			$this->updateShowReferenceEstate();
+			$this->setDataDetailViewRestrictAccessControlValue();
+			$dbversion = 33;
+		}
+
+		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
 	/**
@@ -801,6 +807,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataDetailViewHandler->saveDetailView($pDetailView);
 	}
 
+	/**
+	 * @return void
+	 */
+
+	public function setDataDetailViewRestrictAccessControlValue()
+	{
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDetailView            = $pDataDetailViewHandler->getDetailView();
+		$pDetailView->setHasDetailViewRestrict( !$pDetailView->hasDetailView() );
+		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
 
 	/**
 	 * @return void
@@ -832,10 +850,25 @@ class DatabaseChanges implements DatabaseChangesInterface
 	public function updateShowReferenceEstateOfList()
 	{
 		$prefix = $this->getPrefix();
-		$sql = "UPDATE {$prefix}oo_plugin_listviews
+		$sql    = "UPDATE {$prefix}oo_plugin_listviews
 				SET `show_reference_estate` = 1";
 
-		$this->_pWPDB->query($sql);
+		$this->_pWPDB->query( $sql );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateShowReferenceEstate()
+	{
+		$prefix = $this->getPrefix();
+		$sql    = "UPDATE {$prefix}oo_plugin_listviews
+				SET `show_reference_estate` = '2'
+				WHERE `list_type`='reference'";
+
+		$this->_pWPDB->query( $sql );
 	}
 
 

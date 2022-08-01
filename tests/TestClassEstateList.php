@@ -727,7 +727,8 @@ class TestClassEstateList
 				'getPictureTypes',
 				'getAddressFields',
 				'getFilterableFields',
-				'getPageId'
+				'getPageId',
+				'getViewRestrict'
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
@@ -739,6 +740,14 @@ class TestClassEstateList
 		$pDataDetailView->method('getAddressFields')->willReturn(['Vorname', 'Name']);
 		$pDataDetailView->method('getFilterableFields')->willReturn([GeoPosition::FIELD_GEO_POSITION]);
 		$pDataDetailView->method('getPageId')->willReturn($pWPPost->ID);
+		$pDataDetailView->method('getViewRestrict')->willReturn(true);
+
+		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
+		                               ->disableOriginalConstructor()
+		                               ->setMethods(['getDetailView'])
+		                               ->getMock();
+		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
+		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
 
 		$this->_pEstateList = new EstateList($pDataDetailView, $this->_pEnvironment);
 		$this->_pEstateList->loadEstates();
@@ -885,6 +894,7 @@ class TestClassEstateList
 		$pDataView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
 		$pDataView->setShowStatus(true);
 		$pDataView->setShowReferenceStatus(false);
+		$pDataView->setShowReferenceEstate('0');
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
 		$pDataView->setExpose('testExpose');
 		return $pDataView;

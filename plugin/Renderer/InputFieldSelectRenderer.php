@@ -76,6 +76,14 @@ class InputFieldSelectRenderer
 		}
 
 		echo '</select>';
+		if ( $this->getHint() ) {
+			echo '<div class="memssageReference">' . $this->getHint() . '</div>';
+			echo '<script>'
+			     .'if (jQuery("select[name=oopluginlistviews-showreferenceestate").val() === "0") {'
+			     .  'jQuery(".memssageReference").hide();'
+			     .'}';
+			echo '</script>';
+		}
 	}
 
 

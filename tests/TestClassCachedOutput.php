@@ -16,8 +16,7 @@ class TestClassCachedOutput
 	 */
 	public function testOutputCached()
 	{
-		$pDateTimeImmutable = (new \DateTimeImmutable('2020-08-24 01:01:01'))
-			->setTimezone(new \DateTimeZone('GMT'));
+		$pDateTimeImmutable = new \DateTimeImmutable('2020-08-24 01:01:01', new \DateTimeZone('GMT'));
 		$pMockHeaders = $this->getMockBuilder(HTTPHeaders::class)
 			->getMock();
 		$pMockHeaders->expects($this->exactly(5))
@@ -45,8 +44,7 @@ class TestClassCachedOutput
 
 	public function testOutputCachedWithIfNoneMatchHeaders()
 	{
-		$pDateTimeImmutable = (new \DateTimeImmutable('2020-08-24 01:01:01'))
-			->setTimezone(new \DateTimeZone('GMT'));
+		$pDateTimeImmutable = new \DateTimeImmutable('2020-08-24 01:01:01', new \DateTimeZone('GMT'));
 		$pMockHeaders = $this->getMockBuilder(HTTPHeaders::class)
 			->getMock();
 		$pMockHeaders->expects($this->once())
