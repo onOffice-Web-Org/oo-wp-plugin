@@ -82,6 +82,9 @@ Start editing inside the `onoffice-personalized` folder.
 
 * We improved the controls for whether reference estates should be displayed in estate lists.
 
+**Fixed**
+* The translation of templates is no longer done in the "onoffice" text domain. All text will now be translated in the "onoffice-for-wp-websites" text domain, which enables us to use the WordPress translation platform for the included templates, too. This fixes translation problems for "Deutsch (Sie)" where some text was shown in English. The existing translation files will be kept so that existing templates continue to work as before.
+
 = 4.2 (2022-07-07) =
 
 **Added**
