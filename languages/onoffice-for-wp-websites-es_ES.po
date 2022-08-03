@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-06-29T13:38:23+07:00\n"
+"POT-Creation-Date: 2022-06-30T15:22:04+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -177,6 +177,7 @@ msgid "Newsletter"
 msgstr "Boletín de noticias"
 
 #: plugin/Field/FieldModuleCollectionDecoratorFormContact.php:59
+#: templates.dist/form/defaultform.php:73 templates.dist/form/ownerform.php:66
 msgid "Message"
 msgstr "Mensaje"
 
@@ -694,12 +695,12 @@ msgid "Default Value Up To:"
 msgstr "Valor de propuesta para el radio"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:323
-#: plugin/Gui/Table/EstateListTable.php:174
+#: plugin/Gui/Table/EstateListTable.php:174 templates.dist/fields.php:65
 msgid "No"
 msgstr "No"
 
 #: plugin/Gui/AdminPageFormSettingsBase.php:324
-#: plugin/Gui/Table/EstateListTable.php:174
+#: plugin/Gui/Table/EstateListTable.php:174 templates.dist/fields.php:62
 msgid "Yes"
 msgstr "Sí"
 
@@ -750,7 +751,7 @@ msgstr ""
 msgid "Please provide an Email address!"
 msgstr "Por favor proporcione una dirección de correo electrónico!"
 
-#: plugin/Gui/AdminPageSettingsBase.php:479
+#: plugin/Gui/AdminPageSettingsBase.php:480
 msgid "Fields Configuration"
 msgstr "Configuración de campos"
 
@@ -1167,6 +1168,7 @@ msgid "Object-Links"
 msgstr "Object-Links"
 
 #: plugin/Model/FormModelBuilder/FormModelBuilderEstateDetailSettings.php:252
+#: templates.dist/estate/default_detail.php:325
 #, fuzzy
 #| msgid "Link"
 msgid "Links"
@@ -1260,6 +1262,7 @@ msgid "Default Value for Radius"
 msgstr "Valor de propuesta para el radio"
 
 #: plugin/Model/InputModelBuilder/InputModelBuilderGeoRange.php:139
+#: templates.dist/fields.php:59
 msgid "Not Specified"
 msgstr "No especificado"
 
@@ -1438,14 +1441,232 @@ msgstr "Se ha producido un error:"
 msgid "Bad path \"%s\". The Page was not found."
 msgstr "Der Pfad „%s“ ist ungültig. Die Seite wurde nicht gefunden."
 
+#: templates.dist/address/default.php:39
+msgid "Picture: "
+msgstr ""
+
+#: templates.dist/address/SearchFormAddress.php:45
+msgid "Send"
+msgstr ""
+
+#: templates.dist/estate/default.php:46
+#, fuzzy
+#| msgid "Same Kind of Estate"
+msgid "Overview of Estates"
+msgstr "El mismo tipo de patrimonio"
+
+#. translators: %d will be replaced with a number.
+#: templates.dist/estate/default.php:50
+msgctxt "template"
+msgid "Found %d estates over all."
+msgstr ""
+
+#: templates.dist/estate/default.php:110 templates.dist/estate/default.php:115
+#: templates.dist/estate/similar_estates.php:65
+#: templates.dist/estate/similar_estates.php:70
+#, fuzzy
+#| msgid "Show Status"
+msgid "Show Details"
+msgstr "Mostrar Estado"
+
+#: templates.dist/estate/default.php:120 templates.dist/estate/default.php:143
+#, fuzzy
+#| msgid "Add to List >>"
+msgid "Add to "
+msgstr "Agregar a la lista >&gt"
+
+#: templates.dist/estate/default.php:149
+msgid "Remove from "
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:77
+#, fuzzy
+#| msgid "Geo Position"
+msgid "Description"
+msgstr "Posición geográfica"
+
+#: templates.dist/estate/default_detail.php:84
+#, fuzzy
+#| msgid "Location Map"
+msgid "Location"
+msgstr "Mapa de ubicación"
+
+#: templates.dist/estate/default_detail.php:94
+#, fuzzy
+#| msgid "Maps"
+msgid "Map"
+msgstr "Mapas"
+
+#: templates.dist/estate/default_detail.php:101
+msgid "Equipment"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:108
+msgid "Other Information"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:119
 #: tests/resources/templates/default_detail.php:42
 #, fuzzy
 msgid "Contact person"
 msgstr "Persona de contacto: "
 
+#: templates.dist/estate/default_detail.php:215
 #: tests/resources/templates/default_detail.php:61
 msgid "Documents"
 msgstr "Documentos"
+
+#: templates.dist/estate/default_detail.php:217
+#, fuzzy
+#| msgid "PDF-Expose"
+msgid "PDF expose"
+msgstr "PDF-Expose"
+
+#: templates.dist/estate/default_detail.php:250
+msgid "Videos"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:275
+msgid "360° tours"
+msgstr ""
+
+#: templates.dist/estate/default_detail.php:300
+#, fuzzy
+#| msgid "Object-Links"
+msgid "Objects"
+msgstr "Object-Links"
+
+#: templates.dist/estate/default_units.php:29
+msgid "Entities"
+msgstr ""
+
+#: templates.dist/estate/SearchForm.php:38
+#, fuzzy
+#| msgid "Search Forms"
+msgid "Search"
+msgstr "Formularios de búsqueda"
+
+#: templates.dist/estate/similar_estates.php:12
+#, fuzzy
+#| msgid "Real Estate Fields"
+msgid "More Estates like this"
+msgstr "Campos de datos de bienes raíces"
+
+#: templates.dist/fields.php:23
+#, fuzzy
+#| msgid "Country"
+msgid "Choose country"
+msgstr "País"
+
+#: templates.dist/fields.php:97
+msgid "From: "
+msgstr ""
+
+#: templates.dist/fields.php:100
+msgid "Up to: "
+msgstr ""
+
+#. translators: %s will be replaced with the translated field name.
+#: templates.dist/fields.php:136 templates.dist/fields.php:235
+#, fuzzy
+#| msgid "choose name"
+msgid "Choose %s"
+msgstr "escoja un nombre"
+
+#: templates.dist/form/applicantform.php:35
+#: templates.dist/form/defaultform.php:43 templates.dist/form/ownerform.php:36
+msgid "SUCCESS!"
+msgstr ""
+
+#: templates.dist/form/applicantform.php:37
+#: templates.dist/form/applicantsearchform.php:41
+#: templates.dist/form/defaultform.php:46 templates.dist/form/ownerform.php:39
+#: templates.dist/form/ownerleadgeneratorform.php:85
+msgid "ERROR!"
+msgstr ""
+
+#: templates.dist/form/applicantform.php:39
+msgid "Missing Fields!"
+msgstr ""
+
+#: templates.dist/form/applicantform.php:50
+#: templates.dist/form/ownerform.php:50
+msgid "Please fill in"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:51
+#: templates.dist/form/defaultform.php:54
+msgid "Please fill in!"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:64
+msgid "search within distance of:"
+msgstr ""
+
+#: templates.dist/form/applicantsearchform.php:112
+msgid "Search for Prospective Buyers"
+msgstr ""
+
+#. translators: %s will be replaced with a number.
+#: templates.dist/form/applicantsearchform.php:126
+msgid "%s Prospective Buyer"
+msgid_plural "%s Prospective Buyers"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s will be replaced with a customer reference number.
+#: templates.dist/form/applicantsearchform.php:134
+msgid "Customer ref. number %s"
+msgstr ""
+
+#: templates.dist/form/defaultform.php:48
+msgid "Spam detected!"
+msgstr ""
+
+#: templates.dist/form/ownerform.php:71
+#: templates.dist/form/ownerleadgeneratorform.php:90
+msgid "Your contact details"
+msgstr ""
+
+#: templates.dist/form/ownerform.php:75
+#: templates.dist/form/ownerleadgeneratorform.php:97
+msgid "Information about your property"
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:34
+#, fuzzy
+#| msgid "The Form was saved."
+msgid "The form was sent successfully."
+msgstr "El formulario fue guardado."
+
+#: templates.dist/form/ownerleadgeneratorform.php:38
+#, fuzzy
+#| msgid "There was an error:"
+msgid "There was an error sending the form."
+msgstr "Hubo un error:"
+
+#: templates.dist/form/ownerleadgeneratorform.php:41
+msgid "The form wasn't sent because spam was detected."
+msgstr ""
+
+#. translators: %s will be replaced with a translated field name.
+#: templates.dist/form/ownerleadgeneratorform.php:50
+msgid "Please enter a value for %s."
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:115
+msgid "Back"
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:118
+msgid "Next"
+msgstr ""
+
+#: templates.dist/form/ownerleadgeneratorform.php:133
+#, fuzzy
+#| msgid "Type of Form"
+msgid "Open the Form"
+msgstr "Tipo de formulario"
 
 #~ msgid "Default phone number"
 #~ msgstr "Número de teléfono predeterminado"

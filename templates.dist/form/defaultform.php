@@ -40,18 +40,18 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 <?php
 
 if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo esc_html__('SUCCESS!', 'onoffice');
+	echo esc_html__('SUCCESS!', 'onoffice-for-wp-websites');
 } else {
 	if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo esc_html__('ERROR!', 'onoffice');
+		echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
 	} elseif ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_RECAPTCHA_SPAM) {
-		echo esc_html__('Spam detected!', 'onoffice');
+		echo esc_html__('Spam detected!', 'onoffice-for-wp-websites');
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
 	foreach ( $pForm->getInputFields() as $input => $table ) {
 		if ( $pForm->isMissingField( $input ) ) {
-			echo esc_html__('Please fill in!', 'onoffice');
+			echo esc_html__('Please fill in!', 'onoffice-for-wp-websites');
 		}
 
 		if ( in_array( $input, array('message', 'Id') ) ) {
@@ -70,7 +70,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 ?>
 
 		<?php
-		esc_html_e('Message', 'onoffice');
+		esc_html_e('Message', 'onoffice-for-wp-websites');
 		echo $additionMessage; ?>:<br>
 		<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
 

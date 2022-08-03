@@ -36,7 +36,7 @@ foreach ($pAddressList->getRows() as $escapedValues) {
 	$imageUrl = $escapedValues['imageUrl'];
 	unset($escapedValues['imageUrl']);
 
-	echo esc_html__('Picture: ', 'onoffice'), $imageUrl, '<br>';
+	echo esc_html__('Picture: ', 'onoffice-for-wp-websites'), $imageUrl, '<br>';
 
 	foreach ($escapedValues as $field => $value) {
 		if ($pAddressList->getFieldType($field) === FieldTypes::FIELD_TYPE_BLOB) {

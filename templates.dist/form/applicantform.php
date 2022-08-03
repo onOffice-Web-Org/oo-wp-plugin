@@ -32,11 +32,11 @@ $addressValues = array();
 $searchcriteriaValues = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo '<p>'.esc_html__('SUCCESS!', 'onoffice').'</p>';
+	echo '<p>'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-	echo '<p>'.esc_html__('ERROR!', 'onoffice').'</p>';
+	echo '<p>'.esc_html__('ERROR!', 'onoffice-for-wp-websites').'</p>';
 } elseif ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
-	echo '<p>'.esc_html__('Missing Fields!', 'onoffice').'</p>';
+	echo '<p>'.esc_html__('Missing Fields!', 'onoffice-for-wp-websites').'</p>';
 }
 
 /* @var $pForm \onOffice\WPlugin\Form */
@@ -47,7 +47,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$line .= renderFormField($input, $pForm);
 
 	if ( $pForm->isMissingField( $input ) ) {
-		$line .= '<span>'.esc_html__('Please fill in', 'onoffice').'</span>';
+		$line .= '<span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 	}
 
 	if ($table == 'address') {
