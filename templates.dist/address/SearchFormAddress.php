@@ -42,6 +42,6 @@ foreach ($visible as $inputName => $properties) :
 endforeach;
 ?>
 
-	<input type="submit" value="<?php echo esc_attr__('Send', 'onoffice'); ?>">
+	<input type="submit" value="<?php echo esc_attr__('Send', 'onoffice-for-wp-websites'); ?>">
 </form>
 <br>

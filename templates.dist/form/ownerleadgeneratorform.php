@@ -31,14 +31,14 @@ $estateValues = array();
 $miscValues = array();
 
 if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
-	esc_html_e('The form was sent successfully.', 'onoffice');
+	esc_html_e('The form was sent successfully.', 'onoffice-for-wp-websites');
 	echo '<br>';
 } else {
 	if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
-		esc_html_e('There was an error sending the form.', 'onoffice');
+		esc_html_e('There was an error sending the form.', 'onoffice-for-wp-websites');
 		echo '<br>';
 	} elseif ($pForm->getFormStatus() === FormPost::MESSAGE_RECAPTCHA_SPAM) {
-		esc_html_e('The form wasn\'t sent because spam was detected.', 'onoffice');
+		esc_html_e('The form wasn\'t sent because spam was detected.', 'onoffice-for-wp-websites');
 		echo '<br>';
 	}
 
@@ -47,7 +47,7 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 		if ( $pForm->isMissingField( $input )  &&
 			$pForm->getFormStatus() == FormPost::MESSAGE_REQUIRED_FIELDS_MISSING) {
 			/* translators: %s will be replaced with a translated field name. */
-			echo sprintf(__('Please enter a value for %s.', 'onoffice'), esc_html($pForm->getFieldLabel( $input ))).'<br>';
+			echo sprintf(__('Please enter a value for %s.', 'onoffice-for-wp-websites'), esc_html($pForm->getFieldLabel( $input ))).'<br>';
 		}
 
 		$isRequired = $pForm->isRequiredField($input);
@@ -82,19 +82,19 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 			<div id="leadform">
 				<?php
 					if ($pForm->getFormStatus() === FormPost::MESSAGE_ERROR) {
-						echo esc_html__('ERROR!', 'onoffice');
+						echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
 					}
 				?>
 
 				<div class="lead-lightbox lead-page-1">
-					<h2><?php echo esc_html__('Your contact details', 'onoffice'); ?></h2>
+					<h2><?php echo esc_html__('Your contact details', 'onoffice-for-wp-websites'); ?></h2>
 					<p>
 						<?php echo implode('<br>', $addressValues); ?>
 					</p>
 				</div>
 
 				<div class="lead-lightbox lead-page-2">
-					<h2><?php echo esc_html__('Information about your property', 'onoffice'); ?></h2>
+					<h2><?php echo esc_html__('Information about your property', 'onoffice-for-wp-websites'); ?></h2>
 					<p>
 						<?php echo implode('<br>', $estateValues); ?>
 					</p>
@@ -112,10 +112,10 @@ if ($pForm->getFormStatus() === FormPost::MESSAGE_SUCCESS) {
 				</div>
 
 				<span class="leadform-back" style="float:left; cursor:pointer;">
-					<?php echo esc_html__('Back', 'onoffice'); ?>
+					<?php echo esc_html__('Back', 'onoffice-for-wp-websites'); ?>
 				</span>
 				<span class="leadform-forward" style="float:right; cursor:pointer;">
-					<?php echo esc_html__('Next', 'onoffice'); ?>
+					<?php echo esc_html__('Next', 'onoffice-for-wp-websites'); ?>
 				</span>
 			</div>
 		</form>
@@ -130,6 +130,6 @@ if (in_array($pForm->getFormStatus(), [
 		FormPost::MESSAGE_REQUIRED_FIELDS_MISSING,
 	])) {
 	echo '<a href="#TB_inline?width=700&height=650&inlineId=onoffice-lead" class="thickbox">';
-	echo esc_html__('Open the Form', 'onoffice');
+	echo esc_html__('Open the Form', 'onoffice-for-wp-websites');
 	echo '</a>';
 }

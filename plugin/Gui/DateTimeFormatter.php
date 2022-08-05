@@ -93,6 +93,6 @@ class DateTimeFormatter
 			throw new Exception('Not Implemented');
 		}
 
-		return date_i18n(__($format, 'onoffice'), $this->_timestamp, true);
+		return date_i18n($format, $this->_timestamp, true);
 	}
 }

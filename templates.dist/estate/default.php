@@ -43,11 +43,11 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
     <?php require('map/map.php'); ?>
 </div>
 <div class="oo-listheadline">
-	<h1><?php esc_html_e('Overview of Estates', 'onoffice'); ?></h1>
+	<h1><?php esc_html_e('Overview of Estates', 'onoffice-for-wp-websites'); ?></h1>
 	<p>
 		
 		<?php /* translators: %d will be replaced with a number. */
-		echo sprintf(esc_html_x('Found %d estates over all.', 'template', 'onoffice'), $pEstates->getEstateOverallCount());
+		echo sprintf(esc_html_x('Found %d estates over all.', 'template', 'onoffice-for-wp-websites'), $pEstates->getEstateOverallCount());
 		?>
 	</p>
 </div>
@@ -104,17 +104,17 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						<?php if ($referenz === "1") { ?>
 							<?php if (!$pEstatesClone->getViewRestrict()) { ?>
 								<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
-									<?php esc_html_e('Show Details', 'onoffice'); ?>
+									<?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
 								</a>
 							<?php } ?>
 						<?php } else { ?>
 							<a class="oo-details-btn" href="<?php echo esc_url($pEstatesClone->getEstateLink()); ?>">
-                                <?php esc_html_e('Show Details', 'onoffice'); ?>
+                                <?php esc_html_e('Show Details', 'onoffice-for-wp-websites'); ?>
                             </a>
                         <?php } ?>
                         <?php if (Favorites::isFavorizationEnabled()): ?>
                             <button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
-                                <?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice'); ?>
+                                <?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice-for-wp-websites'); ?>
                             </button>
                         <?php endif ?>
 					</div>
@@ -137,13 +137,13 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		onOffice.addFavoriteButtonLabel = function(i, element) {
 			var estateId = $(element).attr('data-onoffice-estateid');
 			if (!onofficeFavorites.favoriteExists(estateId)) {
-				$(element).text('<?php echo esc_js(__('Add to '.Favorites::getFavorizationLabel(), 'onoffice')); ?>');
+				$(element).text('<?php echo esc_js(__('Add to '.Favorites::getFavorizationLabel(), 'onoffice-for-wp-websites')); ?>');
 				$(element).on('click', function() {
 					onofficeFavorites.add(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
 				});
 			} else {
-				$(element).text('<?php echo esc_js(__('Remove from '.Favorites::getFavorizationLabel(), 'onoffice')); ?>');
+				$(element).text('<?php echo esc_js(__('Remove from '.Favorites::getFavorizationLabel(), 'onoffice-for-wp-websites')); ?>');
 				$(element).on('click', function() {
 					onofficeFavorites.remove(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
