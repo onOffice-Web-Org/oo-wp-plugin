@@ -226,6 +226,8 @@ class AdminPageApiSettings
 			'onoffice-for-wp-websites' );
 		$searchSupportDoNotModify = esc_html__( 'To find out the fieldname of a field, look in the detail page\'s field list. When you expand a field, it shows you the "Key of Field" which you should put behind onoffice_ to form the custom field name. You can use any field that you have added to the estate field list on the right of the detail page.',
 			'onoffice-for-wp-websites' );
+		$titleEllipsisDoNotModify = esc_html__( 'If you need to shorten a field to e.g. 50 characters, you can use onoffice_ellipsis50_objektbeschreibung. This will shorten the estate\'s description to 50 characters, including the ellipsis, so that the description may look like "This is a description that is shortened to 50…". To display up to 150 characters, you can use onoffice_ellipsis150_objektbeschreibung.',
+			'onoffice-for-wp-websites' );
 		$titleDescriptionDoNotModify = esc_html__( 'The title and description of the detail page are set using the <title> and tags. They make it possible to show a summary of the page when you share a link.',
 			'onoffice-for-wp-websites' );
 		$descriptionDoNotModify = sprintf( '<div class="do-not-modify">
@@ -236,8 +238,10 @@ class AdminPageApiSettings
 									</br>
 									<p>%4$s</p>
 									</br>
-							</div> <p>%5$s</p>', $titleDoNotModify, $summaryDetailDoNotModify,
-			$descriptionDetailDoNotModify, $searchSupportDoNotModify, $titleDescriptionDoNotModify );
+									<p>%5$s</p>
+							</div> <p>%6$s</p>', $titleDoNotModify, $summaryDetailDoNotModify,
+			$descriptionDetailDoNotModify, $searchSupportDoNotModify, $titleEllipsisDoNotModify,
+			$titleDescriptionDoNotModify );
 		$messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.
 								We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
 		$messageNoticeSEO =  Parsedown::instance()
