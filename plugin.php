@@ -148,7 +148,7 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 					if ( count( $matches ) !== 0 ) {
 						$valueNumber = $matches[1];
 					}
-					$list_meta_keys[ "onoffice_ellipsis" . $valueNumber . "_" . $value ] = $value;
+					$list_meta_keys[ "onoffice-ellipsis" . $valueNumber . "_" . $value ] = $value;
 				} else {
 					$list_meta_keys[ "onoffice_" . $value ] = $value;
 				}
@@ -171,10 +171,7 @@ function getRestrictLength( $valueNumber, $title ) {
 	if ( empty( $valueNumber ) ) {
 		return $title;
 	} else {
-		$valueNumber = substr( $title, 0, $valueNumber + 1 );
-
-		return strlen( $title ) > $valueNumber ? trim( mb_substr( $title, 0,
-				strrpos( $valueNumber, ' ' ) ) ) . "..." : $title;
+		return strlen( $title ) > $valueNumber ? mb_substr( $title, 0, $valueNumber ) . "..." : $title;
 	}
 }
 
