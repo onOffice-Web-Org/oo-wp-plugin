@@ -20,7 +20,7 @@ if (!function_exists('printRegion')) {
 if (!function_exists('printCountry')) {
 	function printCountry($values, $selectedValue)
 	{
-		echo '<option value="">' . esc_html__('Choose country', 'onoffice') . '</option>';
+		echo '<option value="">' . esc_html__('Choose country', 'onoffice-for-wp-websites') . '</option>';
 		foreach ($values as $key => $name) {
 			$selected = null;
 			if ($key == $selectedValue) {
@@ -56,13 +56,13 @@ if (!function_exists('renderFieldEstateSearch')) {
 			echo '<fieldset>
 		<input type="radio" id="' . esc_attr($inputName) . '_u" name="' . esc_attr($inputName) . '" value="u"
 			' . ($selectedValue === null ? ' checked' : '') . '>
-		<label for="' . esc_attr($inputName) . '_u">' . esc_html__('Not Specified', 'onoffice') . '</label>
+		<label for="' . esc_attr($inputName) . '_u">' . esc_html__('Not Specified', 'onoffice-for-wp-websites') . '</label>
 		<input type="radio" id="' . esc_attr($inputName) . '_y" name="' . esc_attr($inputName) . '" value="y"
 			' . ($selectedValue === true  ? 'checked' : '') . '>
-		<label for="' . esc_attr($inputName) . '_y">' . esc_html__('Yes', 'onoffice') . '</label>
+		<label for="' . esc_attr($inputName) . '_y">' . esc_html__('Yes', 'onoffice-for-wp-websites') . '</label>
 		<input type="radio" id="' . esc_attr($inputName) . '_n" name="' . esc_attr($inputName) . '" value="n"
 			' . ($selectedValue === false ? 'checked' : '') . '>
-		<label for="' . esc_attr($inputName) . '_n">' . esc_html__('No', 'onoffice') . '</label>
+		<label for="' . esc_attr($inputName) . '_n">' . esc_html__('No', 'onoffice-for-wp-websites') . '</label>
 	  </fieldset>';
 		} elseif (
 			in_array($properties['type'], $multiSelectableTypes) &&
@@ -94,10 +94,10 @@ if (!function_exists('renderFieldEstateSearch')) {
 			FieldTypes::FIELD_TYPE_DATETIME === $properties['type'] ||
 			FieldTypes::FIELD_TYPE_DATE === $properties['type']
 		) {
-			esc_html_e('From: ', 'onoffice');
+			esc_html_e('From: ', 'onoffice-for-wp-websites');
 			echo '<input name="' . esc_attr($inputName) . '__von" ' . $inputType;
 			echo 'value="' . esc_attr(isset($selectedValue[0]) ? $selectedValue[0] : '') . '"><br>';
-			esc_html_e('Up to: ', 'onoffice');
+			esc_html_e('Up to: ', 'onoffice-for-wp-websites');
 			echo '<input name="' . esc_attr($inputName) . '__bis" ' . $inputType;
 			echo 'value="' . esc_attr(isset($selectedValue[1]) ? $selectedValue[1] : '') . '"><br>';
 		} else {
@@ -133,7 +133,7 @@ if (!function_exists('renderFormField')) {
 		if (\onOffice\WPlugin\Types\FieldTypes::FIELD_TYPE_SINGLESELECT == $typeCurrentInput) {
 			$output .= '<select class="custom-single-select" size="1" name="' . esc_html($fieldName) . '" ' . $requiredAttribute . '>';
 			/* translators: %s will be replaced with the translated field name. */
-			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)) . '</option>';
+			$output .= '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 			foreach ($permittedValues as $key => $value) {
 				if (is_array($selectedValue)) {
 					$isSelected = in_array($key, $selectedValue, true);
@@ -232,7 +232,7 @@ if (!function_exists('renderRegionalAddition')) {
 			$regions = $pRegionController->getRegions();
 		}
 		ob_start();
-		echo '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice'), $fieldLabel)) . '</option>';
+		echo '<option value="">' . esc_html(sprintf(__('Choose %s', 'onoffice-for-wp-websites'), $fieldLabel)) . '</option>';
 		foreach ($regions as $pRegion) {
 			/* @var $pRegion Region */
 			printRegion($pRegion, $selectedValue ?? []);
