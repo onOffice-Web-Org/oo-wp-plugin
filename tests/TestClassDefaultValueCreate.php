@@ -117,7 +117,7 @@ class TestClassDefaultValueCreate
 			}));
 		$pField = new Field('testField2', 'testModule2');
 		$pDefaultValue = new DefaultValueModelMultiselect(14, $pField);
-		$pDefaultValue->setValues(['123', 'abc']);
+		$pDefaultValue->setValues( [ 1 => [ '123', 'abc' ] ] );
 		$this->assertEquals(12, $this->_pSubject->createForMultiselect($pDefaultValue));
 		$this->assertEquals(12, $pDefaultValue->getDefaultsId());
 	}

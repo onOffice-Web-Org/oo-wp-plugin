@@ -126,8 +126,10 @@ class DefaultValueCreate
 	{
 		$defaultsId = $this->createBase($pDataModel);
 
-		foreach ($pDataModel->getValues() as $value) {
-			$this->writeDatabaseValueSingle($defaultsId, $value);
+		foreach ( $pDataModel->getValues() as $values ) {
+			foreach ( $values as $value ) {
+				$this->writeDatabaseValueSingle( $defaultsId, $value );
+			}
 		}
 
 		return $defaultsId;
