@@ -60,7 +60,12 @@ class DataListViewFactory
 		$pListView->setExpose($row['expose']);
 		$pListView->setFields($row[DataListView::FIELDS]);
 		$pListView->setFilterId($row['filterId'] ?? 0);
-		$pListView->setListType($row['list_type']);
+		$pListView->setShowReferenceEstate( $row['show_reference_estate'] );
+		if ( $pListView->getShowReferenceEstate() == DataListView::SHOW_ONLY_REFERENCE_ESTATE ) {
+			$pListView->setListType( 'reference' );
+		} else {
+			$pListView->setListType( $row['list_type'] );
+		}
 		$pListView->setPictureTypes($row[DataListView::PICTURES]);
 		$pListView->setShowStatus((bool)$row['show_status']);
 		$pListView->setSortby($row['sortby']);

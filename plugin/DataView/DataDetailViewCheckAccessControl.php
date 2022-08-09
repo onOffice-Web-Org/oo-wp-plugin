@@ -55,7 +55,6 @@ class DataDetailViewCheckAccessControl
 		$this->estateListFactory = $pEstateDetailFactory ?? new EstateListFactory($this->pDataDetailViewHandler);
 	}
 
-
 	/**
 	 *
 	 * @param int $estateId
@@ -63,21 +62,22 @@ class DataDetailViewCheckAccessControl
 	 *
 	 */
 
-	public function checkAccessControl(int $estateId): bool
+	public function checkRestrictAccess( int $estateId ): bool
 	{
-		$accessControl = $this->pDataDetailViewHandler->getDetailView()->hasDetailView();
+		$restrictAccess = $this->pDataDetailViewHandler->getDetailView()->getViewRestrict();
 
-		if (!$accessControl) {
-			$pEstateDetail = $this->estateListFactory->createEstateDetail($estateId);
+		if ( $restrictAccess ) {
+			$pEstateDetail = $this->estateListFactory->createEstateDetail( $estateId );
 			$pEstateDetail->loadEstates();
 			$pEstateDetail->estateIterator();
 			$rawValues = $pEstateDetail->getRawValues();
-			$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
+			$referenz  = $rawValues->getValueRaw( $estateId )['elements']['referenz'];
 
-			if ($referenz === "1") {
-				return false;
+			if ( $referenz === "1" ) {
+				return true;
 			}
 		}
-		return true;
+
+		return false;
 	}
 }

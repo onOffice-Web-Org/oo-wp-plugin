@@ -33,10 +33,10 @@ $addressValues = array();
 $estateValues = array();
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
-	echo esc_html__('SUCCESS!', 'onoffice');
+	echo esc_html__('SUCCESS!', 'onoffice-for-wp-websites');
 } else {
 	if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_ERROR) {
-		echo esc_html__('ERROR!', 'onoffice');
+		echo esc_html__('ERROR!', 'onoffice-for-wp-websites');
 	}
 
 	/* @var $pForm \onOffice\WPlugin\Form */
@@ -47,7 +47,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$line .= renderFormField($input, $pForm);
 
 		if ( $pForm->isMissingField( $input ) ) {
-			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice').'</span>';
+			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 		}
 
 		if ($table == 'address') {
@@ -63,16 +63,16 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$isRequiredMessage = $pForm->isRequiredField( 'message' );
 		$additionMessage = $isRequiredMessage ? '*' : '';
 
-		$messageInput = esc_html__('Message', 'onoffice').$additionMessage.':<br>
+		$messageInput = esc_html__('Message', 'onoffice-for-wp-websites').$additionMessage.':<br>
 		<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
 		$addressValues []= $messageInput;
 	}
 
-	echo '<h2>'.esc_html__('Your contact details', 'onoffice').'</h2>'
+	echo '<h2>'.esc_html__('Your contact details', 'onoffice-for-wp-websites').'</h2>'
 		.'<p>';
 	echo implode('<br>', $addressValues);
 	echo '</p>
-		<h2>'.esc_html__('Information about your property', 'onoffice').'</h2>
+		<h2>'.esc_html__('Information about your property', 'onoffice-for-wp-websites').'</h2>
 		<p>';
 	echo implode('<br>', $estateValues);
 	echo '</p>';

@@ -86,14 +86,14 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 
 			<?php if ($currentEstate["objektbeschreibung"] !== "") { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Description', 'onoffice'); ?></h2>
+					<h2><?php esc_html_e('Description', 'onoffice-for-wp-websites'); ?></h2>
 					<?php echo nl2br($currentEstate["objektbeschreibung"]); ?>
 				</div>
 			<?php } ?>
 
 			<?php if ($currentEstate["lage"] !== "") { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Location', 'onoffice'); ?></h2>
+					<h2><?php esc_html_e('Location', 'onoffice-for-wp-websites'); ?></h2>
 					<?php echo nl2br($currentEstate["lage"]); ?>
 				</div>
 			<?php }
@@ -103,21 +103,21 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			$mapContent = ob_get_clean();
 			if ($mapContent != '') { ?>
 				<div class="oo-detailsmap">
-					<h2><?php esc_html_e('Map', 'onoffice'); ?></h2>
+					<h2><?php esc_html_e('Map', 'onoffice-for-wp-websites'); ?></h2>
 					<?php echo $mapContent; ?>
 				</div>
 			<?php } ?>
 
 			<?php if ($currentEstate["ausstatt_beschr"] !== "") { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Equipment', 'onoffice'); ?></h2>
+					<h2><?php esc_html_e('Equipment', 'onoffice-for-wp-websites'); ?></h2>
 					<?php echo nl2br($currentEstate["ausstatt_beschr"]); ?>
 				</div>
 			<?php } ?>
 
 			<?php if ($currentEstate["sonstige_angaben"] !== "") { ?>
 				<div class="oo-detailsfreetext">
-					<h2><?php esc_html_e('Other Information', 'onoffice'); ?></h2>
+					<h2><?php esc_html_e('Other Information', 'onoffice-for-wp-websites'); ?></h2>
 					<?php echo nl2br($currentEstate["sonstige_angaben"]); ?>
 				</div>
 			<?php } ?>
@@ -128,7 +128,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		</div>
 		<div class="oo-details-sidebar">
 			<div class="oo-asp">
-				<h2><?php echo esc_html__('Contact person', 'onoffice'); ?></h2>
+				<h2><?php echo esc_html__('Contact person', 'onoffice-for-wp-websites'); ?></h2>
 				<?php
 				$configuredAddressFields = $pEstates->getAddressFields();
 				// Remove the fields that receive special treatment.
@@ -224,9 +224,9 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			</div>
 			<div class="oo-asp oo-detailsexpose">
 				<?php if ($pEstates->getDocument() != '') : ?>
-					<h2><?php esc_html_e('Documents', 'onoffice'); ?></h2>
+					<h2><?php esc_html_e('Documents', 'onoffice-for-wp-websites'); ?></h2>
 					<a href="<?php echo $pEstates->getDocument(); ?>">
-						<?php esc_html_e('PDF expose', 'onoffice'); ?>
+						<?php esc_html_e('PDF expose', 'onoffice-for-wp-websites'); ?>
 					</a>
 				<?php endif; ?>
 			</div>
@@ -259,7 +259,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			$estateMovieLinks = $pEstates->getEstateMovieLinks();
 			if (!empty($estateMoviePlayers) || !empty($estateMovieLinks)) {
 				echo '<div class="oo-asp oo-videos">';
-				echo '<h2>' . esc_html__('Videos', 'onoffice') . '</h2>';
+				echo '<h2>' . esc_html__('Videos', 'onoffice-for-wp-websites') . '</h2>';
 
 				foreach ($estateMoviePlayers as $movieInfos) {
 					echo '<div class="oo-video">';
@@ -284,7 +284,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			$estateOguloLinks = $pEstates->getEstateLinks('ogulo');
 			if (!empty($estateOguloEmbeds) || !empty($estateOguloLinks)) {
 				echo '<div class="oo-asp oo-tours">';
-				echo '<h2>' . esc_html__('360° tours', 'onoffice') . '</h2>';
+				echo '<h2>' . esc_html__('360° tours', 'onoffice-for-wp-websites') . '</h2>';
 
 				foreach ($estateOguloEmbeds as $linkInfos) {
 					echo '<div class="oo-video">';
@@ -309,7 +309,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			$estateObjectLinks = $pEstates->getEstateLinks('object');
 			if (!empty($estateObjectEmbeds) || !empty($estateObjectLinks)) {
 				echo '<div class="oo-asp oo-objects">';
-				echo '<h2>' . esc_html__('Objects', 'onoffice') . '</h2>';
+				echo '<h2>' . esc_html__('Objects', 'onoffice-for-wp-websites') . '</h2>';
 
 				foreach ($estateObjectEmbeds as $linkInfos) {
 					echo '<div class="oo-video">';
@@ -334,7 +334,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 			$estateLinks = $pEstates->getEstateLinks('link');
 			if (!empty($estateLinkEmbeds) || !empty($estateLinks)) {
 				echo '<div class="oo-asp oo-links">';
-				echo '<h2>' . esc_html__('Links', 'onoffice') . '</h2>';
+				echo '<h2>' . esc_html__('Links', 'onoffice-for-wp-websites') . '</h2>';
 
 				foreach ($estateLinkEmbeds as $linkInfos) {
 					echo '<div class="oo-video">';

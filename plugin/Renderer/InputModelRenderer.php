@@ -130,6 +130,9 @@ class InputModelRenderer
 					$pInputModel->getValuesAvailable());
 				$pInstance->setSelectedValue($pInputModel->getValue());
 				$pInstance->setLabelOnlyValues($pInputModel->getLabelOnlyValues());
+				if ( $pInputModel->getHintHtml() != null ) {
+					$pInstance->setHint( $pInputModel->getHintHtml() );
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_CHECKBOX:

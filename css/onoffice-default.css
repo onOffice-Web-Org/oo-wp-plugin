@@ -1,10 +1,10 @@
-a.estate-status {
-	position: relative;
-	overflow: hidden;
-	display: inline-block;
+a.estate-status, div.estate-status {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
 }
 
-a.estate-status > span {
+a.estate-status > span, div.estate-status > span {
     transform: rotate(-45deg);
     width: 220px;
     height: 40px;
@@ -33,7 +33,7 @@ input[type=submit].match {
 
 div.multiselect[data-values="[]"] > input[type=button],
 div.multiselect[data-values="{}"] > input[type=button],
-div.multiselect[data-values=""] > input[type=button]{
+div.multiselect[data-values=""] > input[type=button] {
     pointer-events: none;
     opacity: 0.7;
 }
@@ -41,7 +41,8 @@ div.multiselect[data-values=""] > input[type=button]{
 @keyframes rotating {
     from {
         transform: rotate(0deg);
-    } to {
+    }
+    to {
         transform: rotate(360deg);
     }
 }
@@ -56,7 +57,7 @@ form[data-estate-search-name] #spinner {
 }
 
 form[data-estate-search-name] #spinner.thinking,
-form[data-applicant-form-id] #spinner.thinking{
+form[data-applicant-form-id] #spinner.thinking {
     animation: rotating 2s linear infinite;
     visibility: visible;
 }

@@ -23,12 +23,14 @@ namespace onOffice\WPlugin\Gui;
 
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings;
+use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderGeoRange;
 use onOffice\WPlugin\Model\InputModelDB;
@@ -95,21 +97,32 @@ class AdminPageEstateListSettings
 			$pInputModelButton = $pFormModelBuilder->createInputModelButton();
 			$pFormModelName->addInputModel($pInputModelButton);
 		}
+
+		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
+		$pInputModelListReferenceEstates = $pFormModelBuilder->createInputModelShowReferenceEstates();
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
-		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
-		$pInputModelShowReferenceEstate = $pFormModelBuilder->createInputModelShowReferenceEstate();
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
+		$restrictAccessControl     = $pDataDetailView->getViewRestrict();
+		if ( $restrictAccessControl ) {
+			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will not link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">restricted</a>.',
+				'onoffice-for-wp-websites' ) );
+		} else {
+			$pInputModelListReferenceEstates->setHintHtml( __( 'Reference estates will link to their detail page, because the access is <a href="'.esc_attr(admin_url('admin.php?page=onoffice-estates&tab=detail')).'" target="_blank">not restricted</a>.',
+				'onoffice-for-wp-websites' ) );
+		}
 
 		$pFormModelRecordsFilter = new FormModel();
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
 		$pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice-for-wp-websites'));
+		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
+		$pFormModelRecordsFilter->addInputModel($pInputModelListReferenceEstates);
 		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
 
-		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
-		$pFormModelRecordsFilter->addInputModel($pInputModelShowReferenceEstate);
 		$this->addFormModel($pFormModelRecordsFilter);
 
 		$pInputModelSortByChosenStandard = $pFormModelBuilder->createInputModelSortByChosenStandard();
@@ -162,7 +175,7 @@ class AdminPageEstateListSettings
 
 		$pFormModelGeoFields = new FormModel();
 		$pFormModelGeoFields->setPageSlug($this->getPageSlug());
-			$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
+		$pFormModelGeoFields->setGroupSlug(self::FORM_VIEW_GEOFIELDS);
 		$pFormModelGeoFields->setLabel(__('Geo Fields', 'onoffice-for-wp-websites'));
 		$pInputModelBuilderGeoRange = new InputModelBuilderGeoRange(onOfficeSDK::MODULE_ESTATE);
 		foreach ($pInputModelBuilderGeoRange->build($pListView) as $pInputModel) {
