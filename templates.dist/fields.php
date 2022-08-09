@@ -256,17 +256,17 @@ if (!function_exists('renderParkingLot')) {
 				continue;
 			}
 			if ( $parking['Count'] != 1 ) {
-				$pluralPaking = " each";
+				$pluralPaking = "each";
 			}
 			if ($codeCurrency == "EUR" && $locale == "de_DE" ) {
 				$preposition = "à";
 				$pluralPaking = "";
 			}
 			if (!empty($parking['MarketingType'])) {
-				$MarketingType = (' (' . $parking['MarketingType'] . ') ');
+				$MarketingType = ('(' . $parking['MarketingType'] . ')');
 			}
 			/* translators: 1: Name of parking lot, 2: Price , 3: Each , 4: MarketingType */
-			$element = sprintf( __( '%1$s ' . $preposition . ' %2$s' . '%3$s' . '%4$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency), $pluralPaking, $MarketingType );
+			$element = sprintf( __( '%1$s ' . $preposition . ' %2$s' . ' %3$s' . ' %4$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency), $pluralPaking, $MarketingType );
 			
 			array_push($messages, $element);
 		}
@@ -292,16 +292,13 @@ if (!function_exists('formatPriceParking')) {
 			'HUF' => 'hu_HU',
 		];
 		$digit = intval(substr(strrchr($str, "."), 1));
-		if (class_exists(NumberFormatter::class)) {
-			$format = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+		if ( class_exists( NumberFormatter::class ) ) {
+			$format = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
 			if ( $digit ) {
 				$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, 2 );
 			} else {
 				$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, 0 );
 			}
-			if ( $currency == '?' ) {
-				$currency = '₺';
-			} 
 			$checkValue = str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
 			if ( empty( $codeCurrency ) || $listCurrency[ $codeCurrency ] != $locale ) {
 				$checkValue = "";
@@ -312,32 +309,11 @@ if (!function_exists('formatPriceParking')) {
 			if ( strpos( $checkValue, $currency ) !== false ) {
 				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
 			} else {
-				$currency = '€';
+				$format       = new NumberFormatter( 'en_GB', NumberFormatter::CURRENCY );
+				$codeCurrency = 'EUR';
 
-				if ( $digit ) {
-					$str = floatval( $str );
-					$str = number_format( $str, 2, ',', '.' );
-				} else {
-					$str = number_format( intval( $str ), 0, ',', '.' );
-				}
-				$str = sprintf( __( $currency . '%1$s', 'onoffice' ), $str );
-
-				return $str;
+				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
 			}
-		} else {
-			if (empty($currency))
-			{
-				$currency = '€';
-			}
-			if ($digit) {
-				$str = floatval($str);
-				$str = number_format($str, 2,',','.');
-			} else {
-				$str = number_format(intval($str),0,',','.');
-			}
-			$str = sprintf( __( $currency . '%1$s', 'onoffice' ), $str );
-
-			return $str;
 		}
 	}
 }
