@@ -256,17 +256,17 @@ if (!function_exists('renderParkingLot')) {
 				continue;
 			}
 			if ( $parking['Count'] != 1 ) {
-				$pluralPaking = "each";
+				$pluralPaking = " each";
 			}
 			if ($codeCurrency == "EUR" && $locale == "de_DE" ) {
 				$preposition = "à";
 				$pluralPaking = "";
 			}
 			if (!empty($parking['MarketingType'])) {
-				$MarketingType = ('(' . $parking['MarketingType'] . ')');
+				$MarketingType = (' (' . $parking['MarketingType'] . ')');
 			}
 			/* translators: 1: Name of parking lot, 2: Price , 3: Each , 4: MarketingType */
-			$element = sprintf( __( '%1$s ' . $preposition . ' %2$s' . ' %3$s' . ' %4$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency), $pluralPaking, $MarketingType );
+			$element = sprintf( __( '%1$s ' . $preposition . ' %2$s' . '%3$s' . '%4$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency), $pluralPaking, $MarketingType );
 			
 			array_push($messages, $element);
 		}
