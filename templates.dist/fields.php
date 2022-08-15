@@ -303,15 +303,11 @@ if (!function_exists('formatPriceParking')) {
 			if ( empty( $codeCurrency ) || $listCurrency[ $codeCurrency ] != $locale ) {
 				$checkValue = "";
 			}
-			if ( $currency == 'lei' && $locale == 'ro_RO' || $currency == 'kn' && $locale == 'hr' || $currency == 'Лв' && $locale == 'bg_BG' ) {
-				return str_replace( $codeCurrency, $currency, $checkValue );
-			}
 			if ( strpos( $checkValue, $currency ) !== false ) {
 				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
 			} else {
 				$format       = new NumberFormatter( 'en_GB', NumberFormatter::CURRENCY );
 				$codeCurrency = 'EUR';
-
 				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
 			}
 		}

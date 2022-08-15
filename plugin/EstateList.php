@@ -263,7 +263,7 @@ class EstateList
 			'estatelanguage' => $language,
 			'outputlanguage' => $language,
 			'listlimit' => $numRecordsPerPage,
-			'formatoutput' => $formatOutput,
+			'formatoutput' => false,
 			'addMainLangId' => true,
 		];
 
@@ -391,22 +391,18 @@ class EstateList
 	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
 	{
 		global $numpages, $multipage, $more, $paged;
-
 		if (null !== $this->_numEstatePages &&
-			!$this->_pDataView->getRandom()) {
+		!$this->_pDataView->getRandom()) {
 			$multipage = true;
-
+			
 			$paged = $this->_currentEstatePage;
 			$more = true;
 			$numpages = $this->_numEstatePages;
 		}
-
 		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
-			($this->_pDataView->getFields(), $modifier);
-
+		($this->_pDataView->getFields(), $modifier);
 		$currentRecord = current($this->_records);
 		next($this->_records);
-
 		if (false === $currentRecord) {
 			return false;
 		}
@@ -415,12 +411,11 @@ class EstateList
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
 			$this->_currentEstate['id'];
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
-
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
 		if (!empty($fieldWaehrung['permittedvalues'])) {
-			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
-		}
+			$recordModified['codeWaehrung'] = $recordModified['waehrung'];
+		};
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
 
 		if ($this->getShowEstateMarketingStatus()) {
@@ -429,7 +424,6 @@ class EstateList
 		}
 
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
-
 		return $pArrayContainer;
 	}
 
