@@ -41,7 +41,7 @@
 		"estatelanguage": "ENG",
 		"outputlanguage": "ENG",
 		"listlimit": 5,
-		"formatoutput": true,
+		"formatoutput": false,
 		"addMainLangId": true,
 		"listoffset": 0,
 		"sortby":"Id",
