@@ -167,14 +167,16 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 }
 
 // Return title custom by custom field onOffice
-function getRestrictLength( $valueNumber, $title ) {
+function getRestrictLength( $valueNumber, $title ,$ellipsis = '...' ) {
 	if ( empty( $valueNumber ) ) {
 		return $title;
 	} else {
 		$newValue = substr( $title, 0, $valueNumber + 1 );
 
-		return strlen( $title ) > $valueNumber ? trim( mb_substr( $title, 0,
-				strrpos( $newValue, ' ' ) ) ) . "..." : $title;
+		$value = strlen( $title ) > $valueNumber ? trim( mb_substr( $title, 0,
+				strrpos( $newValue, ' ' ) ) ) . $ellipsis : $title;
+
+		return ( $value != $ellipsis ) ? $value : '';
 	}
 }
 

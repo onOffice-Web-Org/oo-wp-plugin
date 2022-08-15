@@ -271,11 +271,15 @@ class AdminPageApiSettings
 			__('Fill out', 'onoffice-for-wp-websites'),
 			__('Do not modify', 'onoffice-for-wp-websites'),
 		]);
+		if(get_option('onoffice-settings-title-and-description')){
+			update_option('onoffice-click-button-close-action', 0);
+		};
+
 		$pInputModeTitleAndDescription->setValue(get_option($pInputModeTitleAndDescription->getIdentifier()));
 		$pInputModeTitleAndDescription->setDescriptionRadioTextHTML([
 			$descriptionFillOut,$descriptionDoNotModify
 		]);
-
+		
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModeTitleAndDescription);
