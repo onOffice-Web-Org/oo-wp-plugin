@@ -236,6 +236,9 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_NUMBER:
 				$pInstance = new InputFieldNumberRenderer($elementName);
 				$pInstance->setValue($pInputModel->getValue());
+				if ( $pInputModel->getHintHtml() != null ) {
+					$pInstance->setHint( $pInputModel->getHintHtml() );
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_EMAIL:

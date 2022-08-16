@@ -56,5 +56,8 @@ class InputFieldNumberRenderer
 			.'" value="'.esc_html($this->getValue()).'" id="'.esc_html($this->getGuiId()).'"'
 			.' '.$this->renderAdditionalAttributes()
 			.'>';
+			if ( $this->getHint() ) {
+				echo '<p class="memssageRecordsPerPage">' . esc_html($this->getHint()) . '</p>';
+			}
 	}
 }
