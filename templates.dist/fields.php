@@ -277,20 +277,6 @@ if (!function_exists('renderParkingLot')) {
 if (!function_exists('formatPriceParking')) {
 	function formatPriceParking(string $str, string $language, string $locale, string $codeCurrency, string $currency): string
 	{
-		$listCurrency = [
-			'EUR' => 'de_DE',
-			'CZK' => 'cs_CZ',
-			'TRY' => 'tr_TR',
-			'BGN' => 'bg_BG',
-			'PLN' => 'pl_PL',
-			'RON' => 'ro_RO',
-			'SEK' => 'sv_SE',
-			'HRK' => 'hr',
-			'GBP' => 'en_GB',
-			'CHF' => 'fr_FR',
-			'USD' => 'en_US',
-			'HUF' => 'hu_HU',
-		];
 		$digit = intval(substr(strrchr($str, "."), 1));
 		if ( class_exists( NumberFormatter::class ) ) {
 			$format = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
@@ -299,17 +285,7 @@ if (!function_exists('formatPriceParking')) {
 			} else {
 				$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, 0 );
 			}
-			$checkValue = str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
-			if ( empty( $codeCurrency ) || $listCurrency[ $codeCurrency ] != $locale ) {
-				$checkValue = "";
-			}
-			if ( strpos( $checkValue, $currency ) !== false ) {
-				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
-			} else {
-				$format       = new NumberFormatter( 'en_GB', NumberFormatter::CURRENCY );
-				$codeCurrency = 'EUR';
-				return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
-			}
+			return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
 		}
 	}
 }
