@@ -248,28 +248,39 @@ if (!function_exists('renderParkingLot')) {
 	function renderParkingLot(array $parkingArray, string $language, string $locale, string $codeCurrency, string $currency): array
 	{
 		$messages = [];
-		foreach ($parkingArray as $key => $parking) {
-		$MarketingType = '';
-		$pluralPaking = '';
-		$preposition = "at";
-			if (!$parking['Count']) {
+		
+
+		foreach ( $parkingArray as $key => $parking ) {
+			$pluralPaking  = '';
+			$preposition   = "at";
+			$MarketingType = $parking['MarketingType'];
+			$parkingName='';
+			if ( ! $parking['Count'] ) {
 				continue;
 			}
 			if ( $parking['Count'] != 1 ) {
 				$pluralPaking = " each";
 			}
-			if ($codeCurrency == "EUR" && $locale == "de_DE" ) {
-				$preposition = "à";
-				$pluralPaking = "";
+
+			$parkingName = getParkingName( $key, $parking['Count'] );
+
+			if ( $codeCurrency == "EUR" && $locale == "de_DE" ) {
+				$MarketingType = ucwords( $parking['MarketingType'] );
+				$parkingName   = ucwords( $parkingName );
+				$preposition   = "à";
+				$pluralPaking  = "";
 			}
-			if (!empty($parking['MarketingType'])) {
-				$MarketingType = (' (' . $parking['MarketingType'] . ')');
+			if ( ! empty( $parking['MarketingType'] ) ) {
+					$MarketingType = ( ' (' . $MarketingType . ')' );
 			}
-			/* translators: 1: Name of parking lot, 2: Price , 3: Each , 4: MarketingType */
-			$element = sprintf( __( '%1$s ' . $preposition . ' %2$s' . '%3$s' . '%4$s', 'onoffice' ), getParkingName($key, $parking['Count']), formatPriceParking($parking['Price'], $language, $locale, $codeCurrency, $currency), $pluralPaking, $MarketingType );
-			
-			array_push($messages, $element);
+			/* translators: 1: Name of parking lot, 2: Preposition, 3: Price, 4: Each, 5: MarketingType */
+			$element = sprintf( __( '%1$s ' . '%2$s' . ' %3$s' . '%4$s' . '%5$s', 'onoffice' ), $parkingName,
+				$preposition, formatPriceParking( $parking['Price'], $language, $locale, $codeCurrency, $currency ),
+				$pluralPaking, $MarketingType );
+
+			array_push( $messages, $element );
 		}
+
 		return $messages;
 	}
 }
