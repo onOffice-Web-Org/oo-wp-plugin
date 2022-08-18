@@ -141,20 +141,20 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 		$fieldsDetail = $pDetailView->getFields();
 		$list_meta_keys = [];
 		if ( $object_id == $detail_page_id ) {
-			$valueNumber = '';
-			foreach ( $fieldsDetail as $value ) {
-				if ( strpos( $meta_key, 'ellipsis' ) && strpos( $meta_key, $value ) ) {
+			$limitEllipsis = '';
+			foreach ( $fieldsDetail as $field ) {
+				if ( strpos( $meta_key, 'ellipsis' ) && strpos( $meta_key, $field ) ) {
 					preg_match( "/^.*ellipsis(.+)_.*$/i", $meta_key, $matches );
 					if ( count( $matches ) !== 0 ) {
-						$valueNumber = $matches[1];
+						$limitEllipsis = $matches[1];
 					}
-					$list_meta_keys[ "onoffice_ellipsis" . $valueNumber . "_" . $value ] = $value;
+					$list_meta_keys[ "onoffice_ellipsis" . $limitEllipsis . "_" . $field ] = $field;
 				} else {
-					$list_meta_keys[ "onoffice_" . $value ] = $value;
+					$list_meta_keys[ "onoffice_" . $field ] = $field;
 				}
 			}
 			if ( isset( $list_meta_keys[ $meta_key ] ) ) {
-				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ], (int) $valueNumber, $meta_key );
+				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ], (int) $limitEllipsis, $meta_key );
 			}
 		} else {
 			return null;
@@ -167,13 +167,13 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 }
 
 // Return title custom by custom field onOffice
-function getRestrictLength( $valueNumber, $title ,$ellipsis = '...' ) {
-	if ( empty( $valueNumber ) ) {
+function getRestrictLength( $limitEllipsis, $title ,$ellipsis = '...' ) {
+	if ( empty( $limitEllipsis ) ) {
 		return $title;
 	} else {
-		$newValue = substr( $title, 0, $valueNumber + 1 );
+		$newValue = substr( $title, 0, $limitEllipsis + 1 );
 
-		$value = strlen( $title ) > $valueNumber ? trim( mb_substr( $title, 0,
+		$value = strlen( $title ) > $limitEllipsis ? trim( mb_substr( $title, 0,
 				strrpos( $newValue, ' ' ) ) ) . $ellipsis : $title;
 
 		return ( $value != $ellipsis ) ? $value : '';
@@ -181,12 +181,12 @@ function getRestrictLength( $valueNumber, $title ,$ellipsis = '...' ) {
 }
 
 // Return title custom by custom field onOffice
-function customFieldCallback( $pDI, $format, $valueNumber, $meta_key ) {
+function customFieldCallback( $pDI, $format, $limitEllipsis, $meta_key ) {
 	$title = $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField( $format );
 	if ( ! strpos( $meta_key, 'ellipsis' ) ) {
 		return $title;
 	} else {
-		return getRestrictLength( $valueNumber, $title );
+		return getRestrictLength( $limitEllipsis, $title );
 	}
 }
 
