@@ -152,8 +152,8 @@ abstract class FormModelBuilderDB
 		$labelRecordsPerPage = __('Estates per page', 'onoffice-for-wp-websites');
 		$pInputModelRecordsPerPage = $this->getInputModelDBFactory()->create
 			(InputModelDBFactory::INPUT_RECORDS_PER_PAGE, $labelRecordsPerPage);
-		$pInputModelRecordsPerPage->setHtmlType(InputModelOption::HTML_TYPE_NUMBER);
-		$pInputModelRecordsPerPage->setValue($this->getValue('recordsPerPage'));
+		$pInputModelRecordsPerPage->setHtmlType(InputModelBase::HTML_TYPE_NUMBER);
+		$pInputModelRecordsPerPage->setMaxValueHtml( 500 );
 		$pInputModelRecordsPerPage->setHintHtml( __( 'You can show up to 500 per page.','onoffice-for-wp-websites' ) );
 
 		return $pInputModelRecordsPerPage;

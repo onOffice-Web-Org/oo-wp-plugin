@@ -52,12 +52,21 @@ class InputFieldNumberRenderer
 
 	public function render()
 	{
+		$textHtml = '';
+		if ( ! empty( $this->getHint() ) ) {
+			$textHtml = '<p class="memssageRecordsPerPage">' . esc_html($this->getHint()) . '</p>';
+		}
+		$max = '';
+		if ( ! empty( $this->getMaxValue() ) ) {
+			$max = '" max="' . esc_html( $this->getMaxValue() ) . '"';
+		}
+		$min = '';
+		if ( ! empty( $this->getMinValue() ) ) {
+			$min = '" min="' . esc_html( $this->getMinValue() ) . '"';
+		}
 		echo '<input type="'.esc_html($this->getType()).'" name="'.esc_html($this->getName())
 			.'" value="'.esc_html($this->getValue()).'" id="'.esc_html($this->getGuiId()).'"'
-			.' '.$this->renderAdditionalAttributes()
-			.'>';
-			if ( $this->getHint() ) {
-				echo '<p class="memssageRecordsPerPage">' . esc_html($this->getHint()) . '</p>';
-			}
+			.' '.$this->renderAdditionalAttributes(). $max .$min
+			.'>'.$textHtml;
 	}
 }

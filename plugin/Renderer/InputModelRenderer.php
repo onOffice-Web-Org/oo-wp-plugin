@@ -236,6 +236,12 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_NUMBER:
 				$pInstance = new InputFieldNumberRenderer($elementName);
 				$pInstance->setValue($pInputModel->getValue());
+				if ( $pInputModel->getMaxValueHtml() != null ) {
+					$pInstance->setMaxValue( $pInputModel->getMaxValueHtml() );
+				}
+				if ( $pInputModel->getMinValueHtml() != null ) {
+					$pInstance->setMinValue( $pInputModel->getMinValueHtml() );
+				}
 				if ( $pInputModel->getHintHtml() != null ) {
 					$pInstance->setHint( $pInputModel->getHintHtml() );
 				}

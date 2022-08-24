@@ -256,7 +256,7 @@ class EstateList
 
 		$pFieldModifierHandler = new ViewFieldModifierHandler($pListView->getFields(),
 			onOfficeSDK::MODULE_ESTATE);
-		$numRecordsPerPage = ( $numRecordsPerPage <= 500 ) ? $numRecordsPerPage : 20;
+
 		$requestParams = [
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
 			'filter' => $filter,
@@ -284,7 +284,6 @@ class EstateList
 		}
 
 		$requestParams += $this->addExtraParams();
-
 		return $requestParams;
 	}
 

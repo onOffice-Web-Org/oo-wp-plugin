@@ -128,6 +128,12 @@ abstract class InputModelBase
 	/** @var string */
 	private $_italicLabel = '';
 
+    /** @var int */
+    private $_maxValue = 0;
+
+	/** @var int */
+	private $_minValue = 0;
+
 	/**
 	 *
 	 * @return string
@@ -279,5 +285,21 @@ abstract class InputModelBase
 	/** @param string $italicLabel */
 	public function setItalicLabel(string $italicLabel)
 		{ $this->_italicLabel = $italicLabel; }
+
+	/**@return int */
+	public function getMaxValueHtml(): int
+		{ return $this->_maxValue; }
+
+	/** @param int $maxValue */
+	public function setMaxValueHtml(int $maxValue)
+		{ $this->_maxValue = $maxValue; }
+
+	/**@return int */
+	public function getMinValueHtml(): int
+		{ return $this->_minValue; }
+
+	/** @param int $minValue */
+	public function setMinValueHtml(int $minValue)
+		{ $this->_minValue = $minValue; }
 
 }
