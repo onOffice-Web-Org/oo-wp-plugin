@@ -84,7 +84,7 @@ class AdminPageAddressList
 		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
 
 		if ($subTitle != '') {
-			echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
+			echo ' › ' . sprintf( esc_html__( '%s', 'onoffice-for-wp-websites' ), $subTitle );
 		}
 
 		echo '</h1>';
