@@ -86,7 +86,7 @@ class FieldModuleCollectionDecoratorInternalAnnotations
 			$label = $this->getNewFields()[$module][$name] ?? null;
 
 			if ($label !== null) {
-				$pField->setLabel(sprintf( __('%s', 'onoffice-for-wp-websites'),$label));
+				$pField->setLabel( sprintf( __( '%s', 'onoffice-for-wp-websites' ), $label ) );
 			}
 		}
 

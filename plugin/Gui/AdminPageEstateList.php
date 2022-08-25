@@ -77,7 +77,7 @@ class AdminPageEstateList
 
 		if ($subTitle != '')
 		{
-			echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
+			echo ' › ' . sprintf( esc_html__( '%s', 'onoffice-for-wp-websites' ), $subTitle );
 		}
 
 		echo ' › '.esc_html__('List Views', 'onoffice-for-wp-websites');
