@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-08-22 16:15+0700\n"
+"POT-Creation-Date: 2022-06-30T15:22:04+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: onoffice-for-wp-websites\n"
 
 #. Plugin Name of the plugin
@@ -1169,18 +1169,6 @@ msgstr ""
 
 #: plugin/Renderer/InputFieldTemplateListRenderer.php:100
 msgid "(in the folder \"%s\")"
-msgstr ""
-
-#: plugin/Template/TemplateCall.php:67
-msgid "Personalized (Theme)"
-msgstr ""
-
-#: plugin/Template/TemplateCall.php:72
-msgid "Personalized (Plugin)"
-msgstr ""
-
-#: plugin/Template/TemplateCall.php:77
-msgid "Included"
 msgstr ""
 
 #: plugin/Renderer/InputModelRenderer.php:190

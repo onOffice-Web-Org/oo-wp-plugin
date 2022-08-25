@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-08-22 16:15+0700\n"
+"POT-Creation-Date: 2022-06-30T15:22:04+07:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.1\n"
 
 #. Plugin Name of the plugin
 msgid "onOffice for WP-Websites"
@@ -1314,18 +1314,6 @@ msgstr "Bearbeiten"
 #: plugin/Renderer/InputFieldTemplateListRenderer.php:100
 msgid "(in the folder \"%s\")"
 msgstr ""
-
-#: plugin/Template/TemplateCall.php:67
-msgid "Personalized (Theme)"
-msgstr "Angepasst (Theme)"
-
-#: plugin/Template/TemplateCall.php:72
-msgid "Personalized (Plugin)"
-msgstr "Angepasst (Plugin)"
-
-#: plugin/Template/TemplateCall.php:77
-msgid "Included"
-msgstr "Mitgeliefert"
 
 #: plugin/Renderer/InputModelRenderer.php:190
 msgid "(Remains unchanged)"

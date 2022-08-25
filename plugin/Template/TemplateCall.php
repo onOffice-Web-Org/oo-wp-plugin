@@ -59,27 +59,6 @@ class TemplateCall
 			'order' => 3
 		],
 	];
-
-	public function getTemplatesFolderInfo()
-	{
-		return [
-			'theme' => [
-				'title' => __('Personalized (Theme)', 'onoffice-for-wp-websites'),
-				'folder' => 'onoffice-theme/templates/',
-				'order' => 1
-			],
-			'plugin' => [
-				'title' => __('Personalized (Plugin)', 'onoffice-for-wp-websites'),
-				'folder' => 'onoffice-personalized/templates/',
-				'order' => 2
-			],
-			'included' => [
-				'title' => __('Included', 'onoffice-for-wp-websites'),
-				'folder' => '/templates.dist/',
-				'order' => 3
-			],
-		];
-	}
 	
 	const TEMPLATE_FOLDER_INCLUDED = 'included';
 
@@ -150,7 +129,7 @@ class TemplateCall
 		$pluginDirName = basename(ONOFFICE_PLUGIN_DIR);
 		
 		foreach ( $templatesAll as $key => $templatesFolder ) {
-			$templateInfo           = self::getTemplatesFolderInfo()[$key];
+			$templateInfo           = self::TEMPLATES_FOLDER_INFO[ $key ];
 			$templateInfo['folder'] .= $directory;
 			if ( $key === self::TEMPLATE_FOLDER_INCLUDED ) {
 				$templateInfo['folder'] = basename( plugin_dir_path( ONOFFICE_PLUGIN_DIR . '/index.php' ) ) . $templateInfo['folder'];
