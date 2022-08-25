@@ -39,7 +39,7 @@ msgid "Please configure your onOffice API credentials first!"
 msgstr ""
 
 #: plugin/Controller/AdminViewController.php:151
-#: plugin/Gui/AdminPageAddressList.php:84 
+#: plugin/Gui/AdminPageAddressList.php:84
 #: plugin/Gui/AdminPageBase.php:89
 #: plugin/Gui/AdminPageEstateDetail.php:218
 #: plugin/Gui/AdminPageEstateList.php:76
