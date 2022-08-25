@@ -59,7 +59,7 @@ class TemplateCall
 			'order' => 3
 		],
 	];
-	
+
 	const TEMPLATE_FOLDER_INCLUDED = 'included';
 
 	const TEMPLATE_FOLDER_PLUGIN = 'plugin';
@@ -127,7 +127,7 @@ class TemplateCall
 	public function formatTemplatesData( $templatesAll, $directory ): array {
 		$templateFormatResult = [];
 		$pluginDirName = basename(ONOFFICE_PLUGIN_DIR);
-		
+
 		foreach ( $templatesAll as $key => $templatesFolder ) {
 			$templateInfo           = self::TEMPLATES_FOLDER_INFO[ $key ];
 			$templateInfo['folder'] .= $directory;
