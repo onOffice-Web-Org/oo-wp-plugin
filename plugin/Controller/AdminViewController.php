@@ -210,6 +210,11 @@ class AdminViewController
 		add_action( 'admin_init', array($pAdminSettingsPage, 'registerForms'));
 		add_action( 'load-'.$hookSettings, array($pAdminSettingsPage, 'handleAdminNotices'));
 
+		// add permission edit setting page for editor
+        add_filter( 'option_page_capability_onoffice-settings', function () {
+            return 'edit_pages';
+        }, 10, 1 );
+
 		add_action('current_screen', function() use ($pDI) {
 			/* @var $pWPBulkActionHandler ListTableBulkActionsHandler */
 			$pWPBulkActionHandler = $pDI->get(ListTableBulkActionsHandler::class);
