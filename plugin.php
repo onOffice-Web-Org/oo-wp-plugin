@@ -273,58 +273,56 @@ add_action('parse_request', function () use ( $pDI ) {
 	}
 });
 
-function onoffice_toolbar( WP_Admin_Bar $wp_admin_bar ) {
-	$toolBarConfig = [
-		[
-			'id'    => 'onoffice',
-			'title' => 'onOffice',
-			'href'  => admin_url('admin.php?page=onoffice'),
-			'meta'  => [ 'class' => 'onoffice' ]
-		],
-		[
-			'id'     => 'onoffice-clear-cache',
-			'title'  => 'Clear onOffice cache',
-			'href'   => admin_url('onoffice-clear-cache'),
-			'parent' => 'onoffice',
-			'meta'   => [ 'class' => 'onoffice-clear-cache' ]
-		],
-		[
-			'id'     => 'addresses',
-			'title'  => 'Addresses',
-			'href'   => admin_url('admin.php?page=onoffice-addresses'),
-			'parent' => 'onoffice',
-			'meta'   => [ 'class' => 'addresses' ]
-		],
-		[
-			'id'     => 'estates',
-			'title'  => 'Estates',
-			'href'   => admin_url('admin.php?page=onoffice-estates'),
-			'parent' => 'onoffice',
-			'meta'   => [ 'class' => 'estates' ]
-		],
-		[
-			'id'     => 'forms',
-			'title'  => 'Forms',
-			'href'   => admin_url('admin.php?page=onoffice-forms'),
-			'parent' => 'onoffice',
-			'meta'   => [ 'class' => 'forms' ]
-		],
-		[
-			'id'     => 'settings',
-			'title'  => 'Settings',
-			'href'   => admin_url('admin.php?page=onoffice-settings'),
-			'parent' => 'onoffice',
-			'meta'   => [ 'class' => 'settings' ]
-		]
-	];
-
-	foreach ( $toolBarConfig as $e ) {
-		$wp_admin_bar->add_node($e);
-	}
-}
-
 if ( ! is_admin() ) {
-	add_action('admin_bar_menu', 'onoffice_toolbar', 500);
+	add_action('admin_bar_menu', function ( $wp_admin_bar ) {
+		$toolBarConfig = [
+			[
+				'id'    => 'onoffice',
+				'title' => 'onOffice',
+				'href'  => admin_url('admin.php?page=onoffice'),
+				'meta'  => [ 'class' => 'onoffice' ]
+			],
+			[
+				'id'     => 'onoffice-clear-cache',
+				'title'  => 'Clear onOffice cache',
+				'href'   => admin_url('onoffice-clear-cache'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'onoffice-clear-cache' ]
+			],
+			[
+				'id'     => 'addresses',
+				'title'  => 'Addresses',
+				'href'   => admin_url('admin.php?page=onoffice-addresses'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'addresses' ]
+			],
+			[
+				'id'     => 'estates',
+				'title'  => 'Estates',
+				'href'   => admin_url('admin.php?page=onoffice-estates'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'estates' ]
+			],
+			[
+				'id'     => 'forms',
+				'title'  => 'Forms',
+				'href'   => admin_url('admin.php?page=onoffice-forms'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'forms' ]
+			],
+			[
+				'id'     => 'settings',
+				'title'  => 'Settings',
+				'href'   => admin_url('admin.php?page=onoffice-settings'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'settings' ]
+			]
+		];
+
+		foreach ( $toolBarConfig as $e ) {
+			$wp_admin_bar->add_node($e);
+		}
+	}, 500);
 }
 
 return $pDI;
