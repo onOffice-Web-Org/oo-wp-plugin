@@ -284,6 +284,7 @@ class EstateList
 		}
 
 		$requestParams += $this->addExtraParams();
+
 		return $requestParams;
 	}
 
@@ -424,7 +425,7 @@ class EstateList
 		}
 
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
-		
+
 		return $pArrayContainer;
 	}
 
