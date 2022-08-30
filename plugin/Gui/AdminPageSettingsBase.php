@@ -164,7 +164,7 @@ abstract class AdminPageSettingsBase
 		$this->generatePageMainTitle( $this->getPageTitle() );
 		echo '<form id="onoffice-ajax" action="' . admin_url( 'admin-post.php' ) . '" method="post">';
 		echo '<input type="hidden" name="action" value="' . get_current_screen()->id . '" />';
-		echo '<input type="hidden" name="record_id" value="' . $_GET['id'] . '" />';
+		echo '<input type="hidden" name="record_id" value="' . ( $_GET['id'] ?? 0 ) . '" />';
 		wp_nonce_field( get_current_screen()->id, 'nonce' );
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
@@ -199,7 +199,7 @@ abstract class AdminPageSettingsBase
 		echo '</div>';
 		do_settings_sections( $this->getPageSlug() );
 		submit_button( null, 'primary', 'send_form' );
-
+		
 		echo '</form>';
 	}
 
@@ -306,10 +306,10 @@ abstract class AdminPageSettingsBase
 
 		$row['oo_plugin_fieldconfig_form_defaults_values']   =
 			(array) ( $row['oo_plugin_fieldconfig_form_defaults_values']['value'] ?? [] ) +
-			(array) ( $values->{'defaultvalue-lang'} ) ?? [];
+			(array) ( $values->{'defaultvalue-lang'} ?? [] );
 		$row['oo_plugin_fieldconfig_form_translated_labels'] =
 			(array) ( $row['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? [] ) +
-			(array) ( $values->{'customlabel-lang'} ) ?? [];
+			(array) ( $values->{'customlabel-lang'} ?? [] );
 
 		if ( $checkResult ) {
 			$this->updateValues( $row, $pResultObject, $recordId );
