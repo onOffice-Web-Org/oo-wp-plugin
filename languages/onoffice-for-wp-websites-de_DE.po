@@ -1313,7 +1313,7 @@ msgstr "Bearbeiten"
 
 #: plugin/Renderer/InputFieldTemplateListRenderer.php:100
 msgid "(in the folder \"%s\")"
-msgstr ""
+msgstr "(im Ordner \"%s\")"
 
 #: plugin/Template/TemplateCall.php:67
 msgid "Personalized (Theme)"
