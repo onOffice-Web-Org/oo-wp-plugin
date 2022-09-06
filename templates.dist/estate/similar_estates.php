@@ -16,6 +16,15 @@
 	while ( $currentEstate = $pEstates->estateIterator() ) {
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
 		unset($currentEstate['vermarktungsstatus']);
+		unset($currentEstate['referenz']);
+		unset($currentEstate['reserviert']);
+		unset($currentEstate['verkauft']);
+		unset($currentEstate['exclusive']);
+		unset($currentEstate['neu']);
+		unset($currentEstate['top_angebot']);
+		unset($currentEstate['preisreduktion']);
+		unset($currentEstate['courtage_frei']);
+		unset($currentEstate['objekt_des_tages']);
         $estateId = $pEstates->getCurrentEstateId();
         $rawValues = $pEstates->getRawValues();
 		$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];

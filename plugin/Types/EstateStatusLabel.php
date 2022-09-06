@@ -89,6 +89,25 @@ class EstateStatusLabel
 
 	/**
 	 *
+	 * @param array $estateValues
+	 * @return string
+	 * @throws UnknownFieldException
+	 */
+	public function getFieldByPrioLabel(array $estateValues): array
+	{
+		$listFieldsByPrio = [];
+		
+		foreach ($this->_fieldsByPrio as $key) {
+			if( is_array( $estateValues ) && isset( $estateValues ) && count( $estateValues ) !== 0 ){
+				$listFieldsByPrio[$key] = $estateValues[$key];
+			}
+		}
+			
+		return $listFieldsByPrio;
+	}
+	
+	/**
+	 *
 	 * @param string $key
 	 * @return string
 	 * @throws UnknownFieldException

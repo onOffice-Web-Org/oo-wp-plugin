@@ -33,7 +33,17 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-	while ($currentEstate = $pEstates->estateIterator()) { ?>
+	while ($currentEstate = $pEstates->estateIterator()) {
+		unset($currentEstate['referenz']);
+		unset($currentEstate['reserviert']);
+		unset($currentEstate['verkauft']);
+		unset($currentEstate['exclusive']);
+		unset($currentEstate['neu']);
+		unset($currentEstate['top_angebot']);
+		unset($currentEstate['preisreduktion']);
+		unset($currentEstate['courtage_frei']);
+		unset($currentEstate['objekt_des_tages']);
+	?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
 			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
