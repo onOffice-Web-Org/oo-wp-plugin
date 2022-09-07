@@ -96,11 +96,9 @@ class EstateStatusLabel
 	public function getFieldByPrioLabel(array $estateValues): array
 	{
 		$listFieldsByPrio = [];
-		
-		foreach ($this->_fieldsByPrio as $key) {
-			if( is_array( $estateValues ) && isset( $estateValues ) && count( $estateValues ) !== 0 ){
-				$listFieldsByPrio[$key] = $estateValues[$key];
-			}
+
+		foreach ( $this->_fieldsByPrio as $key ) {
+			$listFieldsByPrio[ $key ] = $estateValues[ $key ];
 		}
 			
 		return $listFieldsByPrio;

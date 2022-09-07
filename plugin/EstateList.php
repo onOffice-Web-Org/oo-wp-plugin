@@ -422,7 +422,7 @@ class EstateList
 		if ($this->getShowEstateMarketingStatus()) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
-			$recordModified += $pEstateStatusLabel->getFieldByPriolabel($recordRaw);
+			$recordModified += $pEstateStatusLabel->getFieldByPriolabel( $recordRaw );
 		}
 		
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
