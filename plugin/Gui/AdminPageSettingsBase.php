@@ -319,7 +319,12 @@ abstract class AdminPageSettingsBase
 		$statusQuery = $pResultObject->result ? '&saved=true' : '&saved=false';
 		$idQuery     = $pResultObject->record_id ? '&id=' . $pResultObject->record_id : '';
 
-		wp_redirect( admin_url( 'admin.php?' . $pageQuery . $idQuery . $statusQuery ) );
+		if ( headers_sent() ) {
+			echo "<script type = 'text/javascript'>alert('Redirect failed');window.location.replace('/'); </script>";
+		} else {
+			wp_redirect( admin_url( 'admin.php?' . $pageQuery . $idQuery . $statusQuery ) );
+		}
+
 		die();
 	}
 
