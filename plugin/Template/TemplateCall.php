@@ -42,24 +42,6 @@ class TemplateCall
 	/** */
 	const TEMPLATE_TYPE_MAIL = 'mail';
 
-	const TEMPLATES_FOLDER_INFO = [
-		'theme' => [
-			'title' => 'Personalized (Theme)',
-			'folder' => 'onoffice-theme/templates/',
-			'order' => 1
-		],
-		'plugin' => [
-			'title' => 'Personalized (Plugin)',
-			'folder' => 'onoffice-personalized/templates/',
-			'order' => 2
-		],
-		'included' => [
-			'title' => 'Included',
-			'folder' => '/templates.dist/',
-			'order' => 3
-		],
-	];
-
 	public function getTemplatesFolderInfo()
 	{
 		return [
