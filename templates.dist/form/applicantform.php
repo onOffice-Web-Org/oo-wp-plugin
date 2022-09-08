@@ -68,7 +68,7 @@ if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 ?>
 	<p>
-	<h1><?php esc_html_e('Your contact details', 'onoffice'); ?></h1>
+	<h1><?php esc_html_e('Your contact details', 'onoffice-for-wp-websites'); ?></h1>
 		<div>
 			<?php echo implode('<br>', $addressValues); ?>
 		</div>
