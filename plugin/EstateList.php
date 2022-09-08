@@ -424,7 +424,7 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 			$recordModified += $pEstateStatusLabel->getFieldByPriolabel( $recordRaw );
 		}
-		
+
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 
 		return $pArrayContainer;
