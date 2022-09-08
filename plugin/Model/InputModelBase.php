@@ -128,8 +128,8 @@ abstract class InputModelBase
 	/** @var string */
 	private $_italicLabel = '';
 
-    /** @var int */
-    private $_maxValue = 0;
+	/** @var int */
+	private $_maxValue = 0;
 
 	/** @var int */
 	private $_minValue = 0;
