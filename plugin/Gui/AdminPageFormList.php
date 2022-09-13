@@ -202,7 +202,7 @@ class AdminPageFormList
 		$translation = $pFormTranslation->getPluralTranslationForForm($tab, 1);
 
 		if ($subTitle != '') {
-			echo ' › ' . sprintf( esc_html__( '%s', 'onoffice-for-wp-websites' ), $subTitle ) . ' › ' . $translation;
+			echo ' › ' . esc_html( $subTitle ) . ' › ' . $translation;
 		}
 
 		$typeParam = AdminPageFormSettingsMain::GET_PARAM_TYPE;
