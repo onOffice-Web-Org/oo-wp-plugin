@@ -74,7 +74,7 @@ if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		</div>
 	</p>
 	<p>
-	<h1>Ihre Suchkriterien</h1>
+	<h1><?php esc_html_e('Your search criteria', 'onoffice-for-wp-websites'); ?></h1>
 		<div>
 			<?php echo implode('<br>', $searchcriteriaValues) ?>
 		</div>
