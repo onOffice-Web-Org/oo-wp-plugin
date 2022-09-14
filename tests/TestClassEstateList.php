@@ -114,7 +114,8 @@ class TestClassEstateList
 			],
 		],
 	];
-	
+
+
 	/**
 	 *
 	 */
