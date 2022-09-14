@@ -252,9 +252,9 @@ if (!function_exists('renderParkingLot')) {
 		foreach ( $parkingArray as $key => $parking ) {
 			$parkingName   = '';
 			$marketingType = '';
-			$count         = $parking['Count'];
+			$isCount         = $parking['Count'];
 
-			if ( ! $count ) {
+			if ( $isCount == 0 ) {
 				continue;
 			}
 			$parkingName = getParkingName( $key, $parking['Count'] );
@@ -263,7 +263,7 @@ if (!function_exists('renderParkingLot')) {
 			}
 			$price = formatPriceParking( $parking['Price'], $locale, $codeCurrency );
 			/* translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type */
-			$element = sprintf( _n( '%1$s at %2$s%3$s', '%1$s at %2$s each%3$s', $count, 'onoffice-for-wp-websites' ), $parkingName, $price, $marketingType );
+			$element = sprintf( _n( '%1$s at %2$s%3$s', '%1$s at %2$s each%3$s', $isCount, 'onoffice-for-wp-websites' ), $parkingName, $price, $marketingType );
 
 			array_push( $messages, $element );
 		}

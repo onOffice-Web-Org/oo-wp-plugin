@@ -395,6 +395,7 @@ class EstateList
 		if (null !== $this->_numEstatePages &&
 			!$this->_pDataView->getRandom()) {
 			$multipage = true;
+
 			$paged = $this->_currentEstatePage;
 			$more = true;
 			$numpages = $this->_numEstatePages;
@@ -412,20 +413,21 @@ class EstateList
 		$this->_currentEstate['id'] = $currentRecord['id'];
 		$recordElements = $currentRecord['elements'];
 		$this->_currentEstate['mainId'] = $recordElements['mainLangId'] ??
-		$this->_currentEstate['id'];
+				$this->_currentEstate['id'];
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
-		
+
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
 		if (!empty($fieldWaehrung['permittedvalues'])) {
 			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
 		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
-		
+
 		if ($this->getShowEstateMarketingStatus()) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
+
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
 
 		return $pArrayContainer;

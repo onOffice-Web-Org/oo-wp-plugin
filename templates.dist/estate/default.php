@@ -48,6 +48,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		width: 50%;
 	}
 </style>
+
 <div class="oo-estate-map">
     <?php require('map/map.php'); ?>
 </div>
