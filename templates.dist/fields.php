@@ -248,35 +248,22 @@ if (!function_exists('renderParkingLot')) {
 	function renderParkingLot(array $parkingArray, string $language, string $locale, string $codeCurrency, string $currency): array
 	{
 		$messages = [];
-		
 
 		foreach ( $parkingArray as $key => $parking ) {
-			$pluralPaking  = '';
-			$preposition   = "at";
-			$MarketingType = $parking['MarketingType'];
-			$parkingName='';
-			if ( ! $parking['Count'] ) {
+			$parkingName   = '';
+			$marketingType = '';
+			$count         = $parking['Count'];
+
+			if ( ! $count ) {
 				continue;
 			}
-			if ( $parking['Count'] != 1 ) {
-				$pluralPaking = " each";
-			}
-
 			$parkingName = getParkingName( $key, $parking['Count'] );
-
-			if ( $codeCurrency == "EUR" && $locale == "de_DE" ) {
-				$MarketingType = ucwords( $parking['MarketingType'] );
-				$parkingName   = ucwords( $parkingName );
-				$preposition   = "à";
-				$pluralPaking  = "";
-			}
 			if ( ! empty( $parking['MarketingType'] ) ) {
-					$MarketingType = ( ' (' . $MarketingType . ')' );
+				$marketingType = getMarketingType( $parking['MarketingType'] );
 			}
-			/* translators: 1: Name of parking lot, 2: Preposition, 3: Price, 4: Each, 5: MarketingType */
-			$element = sprintf( __( '%1$s ' . '%2$s' . ' %3$s' . '%4$s' . '%5$s', 'onoffice' ), $parkingName,
-				$preposition, formatPriceParking( $parking['Price'], $language, $locale, $codeCurrency, $currency ),
-				$pluralPaking, $MarketingType );
+			$price = formatPriceParking( $parking['Price'], $locale, $codeCurrency );
+			/* translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type */
+			$element = sprintf( _n( '%1$s at %2$s%3$s', '%1$s at %2$s each%3$s', $count, 'onoffice-for-wp-websites' ), $parkingName, $price, $marketingType );
 
 			array_push( $messages, $element );
 		}
@@ -286,18 +273,32 @@ if (!function_exists('renderParkingLot')) {
 }
 
 if (!function_exists('formatPriceParking')) {
-	function formatPriceParking(string $str, string $language, string $locale, string $codeCurrency, string $currency): string
+	function formatPriceParking(string $str, string $locale, string $codeCurrency): string
 	{
-		$digit = intval(substr(strrchr($str, "."), 1));
-		if ( class_exists( NumberFormatter::class ) ) {
-			$format = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
-			if ( $digit ) {
-				$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, 2 );
-			} else {
-				$format->setAttribute( NumberFormatter::MAX_FRACTION_DIGITS, 0 );
-			}
-			return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
+		$format = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
+		if ( intval( $str ) == $str ) {
+			$format->setAttribute( NumberFormatter::MIN_SIGNIFICANT_DIGITS, 0 );
 		}
+		return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
+	}
+}
+
+if (!function_exists('getMarketingType')) {
+	function getMarketingType( string $marketingType ): string
+	{
+		switch ( $marketingType ) {
+			case 'buy':
+				/* translators: %s is the marketing type of buy */
+				$str = __( ' (purchase)', 'onoffice-for-wp-websites' );
+				break;
+			case 'rent':
+				/* translators: %s is the marketing type of rent */
+				$str = __( ' (rent)', 'onoffice-for-wp-websites' );
+				break;
+			default:
+				throw new Exception('unrecognized marketing type');
+		}
+		return esc_html( $str );
 	}
 }
 
@@ -307,31 +308,31 @@ if (!function_exists('getParkingName')) {
 		switch ($parkingName) {
 			case 'carport':
 				/* translators: %s is the amount of carports */
-				$str = _n('%1$s carport', '%1$s carports', $count, 'onoffice-for-wp-websites');
+				$str = _n('%s carport', '%s carports', $count, 'onoffice-for-wp-websites');
 				break;
 			case 'duplex':
 				/* translators: %s is the amount of duplexes */
-				$str = _n('%1$s duplex', '%1$s duplexes', $count, 'onoffice-for-wp-websites');
+				$str = _n('%s duplex', '%s duplexes', $count, 'onoffice-for-wp-websites');
 				break;
 			case 'parkingSpace':
 				/* translators: %s is the amount of parking spaces */
-				$str = _n('%1$s parking space', '%1$s parking spaces', $count, 'onoffice-for-wp-websites');
+				$str = _n('%s parking space', '%s parking spaces', $count, 'onoffice-for-wp-websites');
 				break;
 			case 'garage':
 				/* translators: %s is the amount of garages */
-				$str = _n('%1$s garage', '%1$s garages', $count, 'onoffice-for-wp-websites');
+				$str = _n('%s garage', '%s garages', $count, 'onoffice-for-wp-websites');
 				break;
 			case 'multiStoryGarage':
 				/* translators: %s is the amount of multi story garages */
-				$str = _n('%1$s multi story garage', '%1$s multi story garages', $count, 'onoffice-for-wp-websites');
+				$str = _n('%s multi-story garage', '%s multi-story garages', $count, 'onoffice-for-wp-websites');
 				break;
 			case 'undergroundGarage':
 				/* translators: %s is the amount of underground garages */
-				$str = _n('%1$s underground garage', '%1$s underground garages', $count, 'onoffice-for-wp-websites');
+				$str = _n('%s underground garage', '%s underground garages', $count, 'onoffice-for-wp-websites');
 				break;
 			case 'otherParkingLot':
 				/* translators: %s is the amount of other parking lots */
-				$str = _n('%1$s other parking lot', '%1$s other parking lots', $count, 'onoffice-for-wp-websites');
+				$str = _n('%s other parking lot', '%s other parking lots', $count, 'onoffice-for-wp-websites');
 				break;
 			default:
 				$str = $parkingName;
