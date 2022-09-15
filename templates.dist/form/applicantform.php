@@ -68,13 +68,13 @@ if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 ?>
 	<p>
-	<h1>Ihre Kontaktdaten</h1>
+	<h1><?php esc_html_e('Your contact details', 'onoffice-for-wp-websites'); ?></h1>
 		<div>
 			<?php echo implode('<br>', $addressValues); ?>
 		</div>
 	</p>
 	<p>
-	<h1>Ihre Suchkriterien</h1>
+	<h1><?php esc_html_e('Your search criteria', 'onoffice-for-wp-websites'); ?></h1>
 		<div>
 			<?php echo implode('<br>', $searchcriteriaValues) ?>
 		</div>
