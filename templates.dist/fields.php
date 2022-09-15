@@ -243,7 +243,6 @@ if (!function_exists('renderRegionalAddition')) {
 	}
 }
 
-
 if (!function_exists('renderParkingLot')) {
 	function renderParkingLot(array $parkingArray, string $language, string $locale, string $codeCurrency, string $currency): array
 	{

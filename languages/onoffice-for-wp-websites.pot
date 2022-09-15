@@ -1290,7 +1290,6 @@ msgstr ""
 msgid "Bad path \"%s\". The Page was not found."
 msgstr ""
 
-
 #: templates.dist/address/default.php:39
 msgid "Picture: "
 msgstr ""
