@@ -76,7 +76,7 @@ class EstateTitleBuilder
 		}
 		$this->_pEstateDetail = $pEstateDetail;
 	}
-	
+
 	/**
 	 *
 	 * @param int $estateId
@@ -94,7 +94,7 @@ class EstateTitleBuilder
 	 * @return string
 	 * @throws Exception
 	 */
-	
+
 	public function buildCustomFieldTitle(int $estateId, string $format): string
 	{
 		$this->_pDefaultFilterBuilder->setEstateId($estateId);
@@ -103,7 +103,7 @@ class EstateTitleBuilder
 		$pEstateIterator = $this->_pEstateDetail->estateIterator($modifier);
 		$pEstateFieldModifier = $this->_pViewFieldModifierFactory->create($modifier);
 		$fieldsForTitle = $pEstateFieldModifier->getVisibleCustomFields();
-		
+
 		if ($pEstateIterator !== false) {
 			$fetchedValues = array_map([$pEstateIterator, 'getValueRaw'], $fieldsForTitle);
 			$values = array_combine($fieldsForTitle, $fetchedValues);
@@ -143,7 +143,6 @@ class EstateTitleBuilder
 
 			return $this->buildEstateTitle( $format, $values );
 		}
-
 		return '';
 	}
 
@@ -175,7 +174,7 @@ class EstateTitleBuilder
 	{
 		return sprintf('%s', $values[$format]);
 	}
-	
+
 
 	/**
 	 *

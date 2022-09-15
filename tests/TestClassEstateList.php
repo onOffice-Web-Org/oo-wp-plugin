@@ -116,6 +116,7 @@ class TestClassEstateList
 		],
 	];
 
+
 	/**
 	 *
 	 */
@@ -877,7 +878,7 @@ class TestClassEstateList
 			'top_angebot',
 			'preisreduktion',
 			'courtage_frei',
-			'objekt_des_tages'
+			'objekt_des_tages',
 		]);
 		$redirectIfOldUrl = $this->getMockBuilder(Redirector::class)
 			->disableOriginalConstructor()
