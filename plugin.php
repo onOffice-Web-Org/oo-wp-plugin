@@ -167,7 +167,7 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 }
 
 // Return title custom by custom field onOffice
-function getRestrictLength( $limitEllipsis, $title ,$ellipsis = '...' ) {
+function getRestrictLength( $limitEllipsis, $title ,$ellipsis = '…' ) {
 	if ( empty( $limitEllipsis ) ) {
 		return $title;
 	} else {
