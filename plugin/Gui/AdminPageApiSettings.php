@@ -287,7 +287,7 @@ class AdminPageApiSettings
 
 	public function renderContent()
 	{
-		$this->generatePageMainTitle('Settings');
+		$this->generatePageMainTitle(__('Settings', 'onoffice-for-wp-websites'));
 
 		echo '<form method="post" action="options.php">';
 
