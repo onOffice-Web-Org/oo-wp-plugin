@@ -86,6 +86,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 * The translation of templates is no longer done in the "onoffice" text domain. All text will now be translated in the "onoffice-for-wp-websites" text domain, which enables us to use the WordPress translation platform for the included templates, too. This fixes translation problems for "Deutsch (Sie)" where some text was shown in English. The existing translation files will be kept so that existing templates continue to work as before.
 * You can now select default values for the "Contact type" field in contact forms. Previously, they lead to an error.
+* The custom label for the "GDPR status" field in a form can now be set and will show up in the frontend.
 * Fixed some PHP messages when saving estate lists.
 
 = 4.2 (2022-07-07) =

@@ -89,7 +89,7 @@ abstract class AdminPageBase
 		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
 
 		if ($subTitle != '') {
-			echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
+			echo ' › ' . esc_html( $subTitle );
 		}
 
 		echo '</h1>';
