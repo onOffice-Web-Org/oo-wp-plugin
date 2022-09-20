@@ -114,7 +114,10 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
                         <?php } ?>
                         <?php if (Favorites::isFavorizationEnabled()): ?>
                             <button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
-                                <?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice-for-wp-websites'); ?>
+                                <?php
+									/* translators: %s: the chosen term for the favorites list*/
+									esc_html(sprintf(__('Add to %s', 'onoffice-for-wp-websites'), Favorites::getFavorizationLabel()));
+								?>
                             </button>
                         <?php endif ?>
 					</div>
@@ -137,13 +140,21 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		onOffice.addFavoriteButtonLabel = function(i, element) {
 			var estateId = $(element).attr('data-onoffice-estateid');
 			if (!onofficeFavorites.favoriteExists(estateId)) {
-				$(element).text('<?php echo esc_js(__('Add to '.Favorites::getFavorizationLabel(), 'onoffice-for-wp-websites')); ?>');
+				$(element).text('<?php
+						echo esc_js(
+							/* translators: %s: the chosen term for the favorites list*/
+							sprintf(__('Add to %s', 'onoffice-for-wp-websites'), Favorites::getFavorizationLabel())
+						);
+					?>');
 				$(element).on('click', function() {
 					onofficeFavorites.add(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
 				});
 			} else {
-				$(element).text('<?php echo esc_js(__('Remove from '.Favorites::getFavorizationLabel(), 'onoffice-for-wp-websites')); ?>');
+				$(element).text('<?php echo esc_js(
+						/* translators: %s: the chosen term for the favorites list*/
+						sprintf(__('Remove from %s', 'onoffice-for-wp-websites'), Favorites::getFavorizationLabel())
+					); ?>');
 				$(element).on('click', function() {
 					onofficeFavorites.remove(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
