@@ -216,7 +216,7 @@ class AdminPageEstateDetail
 	public function generatePageMainTitle($subTitle)
 	{
 		echo '<h1 class="wp-heading-inline">'.esc_html__('onOffice', 'onoffice-for-wp-websites');
-		echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
+		echo ' › ' . esc_html( $subTitle );
 		echo ' › '.esc_html__('Detail View', 'onoffice-for-wp-websites');
 		echo '</h1>';
 		echo '<hr class="wp-header-end">';
