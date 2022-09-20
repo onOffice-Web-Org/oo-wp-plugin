@@ -105,7 +105,7 @@ class AdminPageEstate
 	{
 		$selectedTab = $this->getSelectedTab();
 		$defaultTab = $this->getDefaultTab();
-		$this->_pSelectedTab->generatePageMainTitle('Estates');
+		$this->_pSelectedTab->generatePageMainTitle(__('Estates', 'onoffice-for-wp-websites'));
 
 		echo '
 		<h2 class="nav-tab-wrapper">';

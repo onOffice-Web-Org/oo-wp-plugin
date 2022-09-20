@@ -73,7 +73,7 @@ class AdminPageEstateUnitList
 
 		if ($subTitle != '')
 		{
-			echo ' › '.esc_html__($subTitle, 'onoffice-for-wp-websites');
+			echo ' › ' . esc_html( $subTitle );
 		}
 
 		echo ' › '.esc_html__('Units Lists', 'onoffice-for-wp-websites');
