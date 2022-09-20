@@ -128,7 +128,18 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
                         <?php } ?>
                         <?php if (Favorites::isFavorizationEnabled()): ?>
                             <button data-onoffice-estateid="<?php echo $pEstatesClone->getCurrentMultiLangEstateMainId(); ?>" class="onoffice favorize">
-                                <?php esc_html_e('Add to '.Favorites::getFavorizationLabel(), 'onoffice-for-wp-websites'); ?>
+                                <?php
+									$setting = Favorites::getFavorizationLabel();
+									if ($setting == 'Watchlist') {
+										esc_html_e(
+											__('Add to watchlist', 'onoffice-for-wp-websites')
+										);
+									} else if ($setting == 'Favorites') {
+										esc_html_e(
+											__('Add to favorites', 'onoffice-for-wp-websites')
+										);
+									}
+								?>
                             </button>
                         <?php endif ?>
 					</div>
@@ -151,13 +162,35 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		onOffice.addFavoriteButtonLabel = function(i, element) {
 			var estateId = $(element).attr('data-onoffice-estateid');
 			if (!onofficeFavorites.favoriteExists(estateId)) {
-				$(element).text('<?php echo esc_js(__('Add to '.Favorites::getFavorizationLabel(), 'onoffice-for-wp-websites')); ?>');
+				$(element).text('<?php
+						$setting = Favorites::getFavorizationLabel();
+						if ($setting == 'Watchlist') {
+							echo esc_js(
+								__('Add to watchlist', 'onoffice-for-wp-websites')
+							);
+						} else if ($setting == 'Favorites') {
+							echo esc_js(
+								__('Add to favorites', 'onoffice-for-wp-websites')
+							);
+						}
+					?>');
 				$(element).on('click', function() {
 					onofficeFavorites.add(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
 				});
 			} else {
-				$(element).text('<?php echo esc_js(__('Remove from '.Favorites::getFavorizationLabel(), 'onoffice-for-wp-websites')); ?>');
+				$(element).text('<?php
+						$setting = Favorites::getFavorizationLabel();
+						if ($setting == 'Watchlist') {
+							echo esc_js(
+								__('Remove from watchlist', 'onoffice-for-wp-websites')
+							);
+						} else if ($setting == 'Favorites') {
+							echo esc_js(
+								__('Remove from favorites', 'onoffice-for-wp-websites')
+							);
+						}
+					?>');
 				$(element).on('click', function() {
 					onofficeFavorites.remove(estateId);
 					onOffice.addFavoriteButtonLabel(0, element);
