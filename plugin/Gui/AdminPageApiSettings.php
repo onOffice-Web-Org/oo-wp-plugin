@@ -461,7 +461,7 @@ class AdminPageApiSettings
         $pInputModelFavButtonLabel->setValue(get_option($pInputModelFavButtonLabel->getIdentifier()));
         $pInputModelFavButtonLabel->setValuesAvailable([
             Favorites::KEY_SETTING_MEMORIZE => __('Watchlist', 'onoffice-for-wp-websites'),
-            Favorites::KEY_SETTING_FAVORIZE => __('Favorise', 'onoffice-for-wp-websites'),
+            Favorites::KEY_SETTING_FAVORIZE => __('Favorites', 'onoffice-for-wp-websites'),
         ]);
 
         $pFormModel = new FormModel();
