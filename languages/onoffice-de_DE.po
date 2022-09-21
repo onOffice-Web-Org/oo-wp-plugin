@@ -4,17 +4,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: onOffice onOffice for WP-Websites 2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
-"POT-Creation-Date: 2022-07-01T15:03:52+07:00\n"
-"PO-Revision-Date: 2022-07-01 15:12+0700\n"
+"POT-Creation-Date: 2020-12-02T16:12:57+01:00\n"
+"PO-Revision-Date: 2020-12-02 18:07+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1\n"
+"X-Generator: Poedit 2.2.3\n"
 "X-Domain: onoffice\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
 msgid "onOffice for WP-Websites"
@@ -43,6 +43,62 @@ msgstr "onOffice GmbH"
 msgid "https://en.onoffice.com/"
 msgstr "https://de.onoffice.com/"
 
+#: plugin/Translation/FormTranslation.php:55
+msgctxt "forms"
+msgid "All"
+msgid_plural "All"
+msgstr[0] "Alle"
+msgstr[1] "Alle"
+
+#: plugin/Translation/FormTranslation.php:59
+msgctxt "forms"
+msgid "Contact Form"
+msgid_plural "Contact Forms"
+msgstr[0] "Kontaktformular"
+msgstr[1] "Kontaktformulare"
+
+#: plugin/Translation/FormTranslation.php:63
+msgctxt "forms"
+msgid "Interest Form"
+msgid_plural "Interest Forms"
+msgstr[0] "Interessentenformular"
+msgstr[1] "Interessentenformulare"
+
+#: plugin/Translation/FormTranslation.php:67
+msgctxt "forms"
+msgid "Owner Form"
+msgid_plural "Owner Forms"
+msgstr[0] "Eigentümerformular"
+msgstr[1] "Eigentümerformulare"
+
+#: plugin/Translation/FormTranslation.php:71
+msgctxt "forms"
+msgid "Applicant Search Form"
+msgid_plural "Applicant Search Forms"
+msgstr[0] "Interessentensuchformular"
+msgstr[1] "Interessentensuchformulare"
+
+#: plugin/Translation/ModuleTranslation.php:79
+msgctxt "modules"
+msgid "Address"
+msgid_plural "Addresses"
+msgstr[0] "Adresse"
+msgstr[1] "Adressen"
+
+#: plugin/Translation/ModuleTranslation.php:80
+msgctxt "modules"
+msgid "Estate"
+msgid_plural "Estates"
+msgstr[0] "Immobilie"
+msgstr[1] "Immobilien"
+
+#: plugin/Translation/ModuleTranslation.php:81
+msgctxt "modules"
+msgid "Search Criteria"
+msgid_plural "Search Criteria"
+msgstr[0] "Suchkriterium"
+msgstr[1] "Suchkriterien"
+
 #: templates.dist/address/default.php:39
 msgid "Picture: "
 msgstr "Foto:"
@@ -51,75 +107,74 @@ msgstr "Foto:"
 msgid "Send"
 msgstr "Absenden"
 
-#: templates.dist/estate/default.php:55
+#: templates.dist/estate/default.php:38
 msgid "Overview of Estates"
 msgstr "Immobilienübersicht"
 
 #. translators: %d will be replaced with a number.
-#: templates.dist/estate/default.php:59
+#: templates.dist/estate/default.php:42
 msgctxt "template"
 msgid "Found %d estates over all."
 msgstr "Insgesamt %d Immobilien gefunden."
 
-#: templates.dist/estate/default.php:123 templates.dist/estate/default.php:128
-#: templates.dist/estate/similar_estates.php:65
-#: templates.dist/estate/similar_estates.php:70
+#: templates.dist/estate/default.php:90
+#: templates.dist/estate/similar_estates.php:43
 msgid "Show Details"
 msgstr "Details anzeigen"
 
-#: templates.dist/estate/default.php:133 templates.dist/estate/default.php:156
+#: templates.dist/estate/default.php:94 templates.dist/estate/default.php:110
 msgid "Add to "
 msgstr "Hinzufügen zu "
 
-#: templates.dist/estate/default.php:162
+#: templates.dist/estate/default.php:116
 msgid "Remove from "
 msgstr "Löschen von "
 
-#: templates.dist/estate/default_detail.php:89
+#: templates.dist/estate/default_detail.php:70
 msgid "Description"
 msgstr "Beschreibung"
 
-#: templates.dist/estate/default_detail.php:96
+#: templates.dist/estate/default_detail.php:77
 msgid "Location"
 msgstr "Lage"
 
-#: templates.dist/estate/default_detail.php:106
+#: templates.dist/estate/default_detail.php:87
 msgid "Map"
 msgstr "Karte"
 
-#: templates.dist/estate/default_detail.php:113
+#: templates.dist/estate/default_detail.php:94
 msgid "Equipment"
 msgstr "Ausstattung"
 
-#: templates.dist/estate/default_detail.php:120
+#: templates.dist/estate/default_detail.php:101
 msgid "Other Information"
 msgstr "Weitere Informationen"
 
-#: templates.dist/estate/default_detail.php:131
+#: templates.dist/estate/default_detail.php:112
 msgid "Contact person"
 msgstr "Ansprechpartner"
 
-#: templates.dist/estate/default_detail.php:227
+#: templates.dist/estate/default_detail.php:129
 msgid "Documents"
 msgstr "Dokumente"
 
-#: templates.dist/estate/default_detail.php:229
+#: templates.dist/estate/default_detail.php:131
 msgid "PDF expose"
 msgstr "PDF-Exposé"
 
-#: templates.dist/estate/default_detail.php:262
+#: templates.dist/estate/default_detail.php:253
 msgid "Videos"
 msgstr "Videos"
 
-#: templates.dist/estate/default_detail.php:287
+#: templates.dist/estate/default_detail.php:278
 msgid "360° tours"
 msgstr "360° Rundgänge"
 
-#: templates.dist/estate/default_detail.php:312
+#: templates.dist/estate/default_detail.php:303
 msgid "Objects"
 msgstr "Objekte"
 
-#: templates.dist/estate/default_detail.php:337
+#: templates.dist/estate/default_detail.php:328
 msgid "Links"
 msgstr "Links"
 
@@ -127,55 +182,62 @@ msgstr "Links"
 msgid "Entities"
 msgstr "Einheiten"
 
+#: templates.dist/estate/default_units.php:39
+msgid "Contact person of entity:"
+msgstr "Ansprechpartner der Einheit:"
+
+#: templates.dist/estate/default_units.php:43
+msgid "Phone:"
+msgstr "Telefon:"
+
+#: templates.dist/estate/default_units.php:44
+msgid "Fax:"
+msgstr "Fax:"
+
+#: templates.dist/estate/default_units.php:46
+msgid "E-Mail:"
+msgstr "E-Mail:"
+
 #: templates.dist/estate/SearchForm.php:38
 msgid "Search"
 msgstr "Suchen"
 
-#: templates.dist/estate/similar_estates.php:12
+#: templates.dist/estate/similar_estates.php:4
 msgid "More Estates like this"
 msgstr "Weitere ähnliche Immobilien"
 
-#: templates.dist/fields.php:23
+#: templates.dist/fields.php:21
 msgid "Choose country"
 msgstr "Land auswählen"
 
-#: templates.dist/fields.php:59
+#: templates.dist/fields.php:61
 msgid "Not Specified"
 msgstr "Keine Angabe"
 
-#: templates.dist/fields.php:62
+#: templates.dist/fields.php:64
 msgid "Yes"
 msgstr "Ja"
 
-#: templates.dist/fields.php:65
+#: templates.dist/fields.php:67
 msgid "No"
 msgstr "Nein"
 
-#: templates.dist/fields.php:97
+#: templates.dist/fields.php:77 templates.dist/fields.php:157
+msgid "Edit values"
+msgstr "Werte bearbeiten"
+
+#: templates.dist/fields.php:91
 msgid "From: "
 msgstr "Von: "
 
-#: templates.dist/fields.php:100
+#: templates.dist/fields.php:94
 msgid "Up to: "
 msgstr "Bis: "
 
 #. translators: %s will be replaced with the translated field name.
-#: templates.dist/fields.php:136 templates.dist/fields.php:235
+#: templates.dist/fields.php:126 templates.dist/fields.php:205
 msgid "Choose %s"
 msgstr "%s auswählen"
-
-#. translators: 1: Name of parking lot, 2: Price
-#: templates.dist/fields.php:256
-msgid "%1$s at %2$s"
-msgstr ""
-
-#: templates.dist/fields.php:258
-msgid " each"
-msgstr ""
-
-#: templates.dist/fields.php:307 templates.dist/fields.php:329
-msgid "%1$s "
-msgstr ""
 
 #: templates.dist/form/applicantform.php:35
 #: templates.dist/form/defaultform.php:43 templates.dist/form/ownerform.php:36
@@ -270,66 +332,3 @@ msgstr "Weiter"
 #: templates.dist/form/ownerleadgeneratorform.php:133
 msgid "Open the Form"
 msgstr "Formular öffnen"
-
-#~ msgctxt "forms"
-#~ msgid "All"
-#~ msgid_plural "All"
-#~ msgstr[0] "Alle"
-#~ msgstr[1] "Alle"
-
-#~ msgctxt "forms"
-#~ msgid "Contact Form"
-#~ msgid_plural "Contact Forms"
-#~ msgstr[0] "Kontaktformular"
-#~ msgstr[1] "Kontaktformulare"
-
-#~ msgctxt "forms"
-#~ msgid "Interest Form"
-#~ msgid_plural "Interest Forms"
-#~ msgstr[0] "Interessentenformular"
-#~ msgstr[1] "Interessentenformulare"
-
-#~ msgctxt "forms"
-#~ msgid "Owner Form"
-#~ msgid_plural "Owner Forms"
-#~ msgstr[0] "Eigentümerformular"
-#~ msgstr[1] "Eigentümerformulare"
-
-#~ msgctxt "forms"
-#~ msgid "Applicant Search Form"
-#~ msgid_plural "Applicant Search Forms"
-#~ msgstr[0] "Interessentensuchformular"
-#~ msgstr[1] "Interessentensuchformulare"
-
-#~ msgctxt "modules"
-#~ msgid "Address"
-#~ msgid_plural "Addresses"
-#~ msgstr[0] "Adresse"
-#~ msgstr[1] "Adressen"
-
-#~ msgctxt "modules"
-#~ msgid "Estate"
-#~ msgid_plural "Estates"
-#~ msgstr[0] "Immobilie"
-#~ msgstr[1] "Immobilien"
-
-#~ msgctxt "modules"
-#~ msgid "Search Criteria"
-#~ msgid_plural "Search Criteria"
-#~ msgstr[0] "Suchkriterium"
-#~ msgstr[1] "Suchkriterien"
-
-#~ msgid "Contact person of entity:"
-#~ msgstr "Ansprechpartner der Einheit:"
-
-#~ msgid "Phone:"
-#~ msgstr "Telefon:"
-
-#~ msgid "Fax:"
-#~ msgstr "Fax:"
-
-#~ msgid "E-Mail:"
-#~ msgstr "E-Mail:"
-
-#~ msgid "Edit values"
-#~ msgstr "Werte bearbeiten"

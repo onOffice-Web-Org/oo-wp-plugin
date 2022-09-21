@@ -2,14 +2,14 @@
 # This file is distributed under the AGPL 3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: onOffice for WP-Websites 4.1\n"
+"Project-Id-Version: onOffice for WP-Websites 3.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/oo-wp-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-07-01T15:03:52+07:00\n"
+"POT-Creation-Date: 2022-05-23T09:43:40+02:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: onoffice\n"
@@ -42,77 +42,77 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: templates.dist/estate/default.php:55
+#: templates.dist/estate/default.php:46
 msgid "Overview of Estates"
 msgstr ""
 
 #. translators: %d will be replaced with a number.
-#: templates.dist/estate/default.php:59
+#: templates.dist/estate/default.php:50
 msgctxt "template"
 msgid "Found %d estates over all."
 msgstr ""
 
-#: templates.dist/estate/default.php:123
-#: templates.dist/estate/default.php:128
+#: templates.dist/estate/default.php:110
+#: templates.dist/estate/default.php:115
 #: templates.dist/estate/similar_estates.php:65
 #: templates.dist/estate/similar_estates.php:70
 msgid "Show Details"
 msgstr ""
 
-#: templates.dist/estate/default.php:133
-#: templates.dist/estate/default.php:156
+#: templates.dist/estate/default.php:120
+#: templates.dist/estate/default.php:143
 msgid "Add to "
 msgstr ""
 
-#: templates.dist/estate/default.php:162
+#: templates.dist/estate/default.php:149
 msgid "Remove from "
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:89
+#: templates.dist/estate/default_detail.php:77
 msgid "Description"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:96
+#: templates.dist/estate/default_detail.php:84
 msgid "Location"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:106
+#: templates.dist/estate/default_detail.php:94
 msgid "Map"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:113
+#: templates.dist/estate/default_detail.php:101
 msgid "Equipment"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:120
+#: templates.dist/estate/default_detail.php:108
 msgid "Other Information"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:131
+#: templates.dist/estate/default_detail.php:119
 msgid "Contact person"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:227
+#: templates.dist/estate/default_detail.php:218
 msgid "Documents"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:229
+#: templates.dist/estate/default_detail.php:220
 msgid "PDF expose"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:262
+#: templates.dist/estate/default_detail.php:253
 msgid "Videos"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:287
+#: templates.dist/estate/default_detail.php:278
 msgid "360° tours"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:312
+#: templates.dist/estate/default_detail.php:303
 msgid "Objects"
 msgstr ""
 
-#: templates.dist/estate/default_detail.php:337
+#: templates.dist/estate/default_detail.php:328
 msgid "Links"
 msgstr ""
 
@@ -156,20 +156,6 @@ msgstr ""
 #: templates.dist/fields.php:136
 #: templates.dist/fields.php:235
 msgid "Choose %s"
-msgstr ""
-
-#. translators: 1: Name of parking lot, 2: Price
-#: templates.dist/fields.php:256
-msgid "%1$s at %2$s"
-msgstr ""
-
-#: templates.dist/fields.php:258
-msgid " each"
-msgstr ""
-
-#: templates.dist/fields.php:307
-#: templates.dist/fields.php:329
-msgid "%1$s "
 msgstr ""
 
 #: templates.dist/form/applicantform.php:35
