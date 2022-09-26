@@ -70,7 +70,15 @@ class DataDetailView
 		'objektbeschreibung',
 		'lage',
 		'ausstatt_beschr',
-		'sonstige_angaben'
+		'sonstige_angaben',
+		'baujahr',
+		'endenergiebedarf',
+		'energieverbrauchskennwert',
+		'energieausweistyp',
+		'energieausweis_gueltig_bis',
+		'energyClass',
+		'aussen_courtage',
+		'kaution',
 	];
 
 	/** @var string[] */
@@ -131,10 +139,10 @@ class DataDetailView
 	private $_showStatus = 0;
 
 	/** @var int */
-	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_NONE;
+	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_PLAYER;
 
 	/** @var string */
-	private $_oguloLinks = LinksTypes::LINKS_DEACTIVATED;
+	private $_oguloLinks = LinksTypes::LINKS_EMBEDDED;
 
 	/** @var string */
 	private $_objectLinks = LinksTypes::LINKS_DEACTIVATED;

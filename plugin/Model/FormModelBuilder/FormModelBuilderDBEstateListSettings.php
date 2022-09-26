@@ -50,7 +50,7 @@ class FormModelBuilderDBEstateListSettings
 	extends FormModelBuilderDB
 {
 	/** */
-	const DEFAULT_RECORDS_PER_PAGE = 20;
+	const DEFAULT_RECORDS_PER_PAGE = 12;
 
 
 	/** @var string[] */
@@ -61,7 +61,6 @@ class FormModelBuilderDBEstateListSettings
 		'vermarktungsart',
 		'plz',
 		'ort',
-		'bundesland',
 		'objektnr_extern',
 		'wohnflaeche',
 		'grundstuecksflaeche',
@@ -461,7 +460,9 @@ class FormModelBuilderDBEstateListSettings
 
 		if (null == $pictureTypes)
 		{
-			$pictureTypes = array();
+			$pictureTypes = array(
+				'Titelbild',
+			);
 		}
 
 		$pInputModelPictureTypes->setValue($pictureTypes);

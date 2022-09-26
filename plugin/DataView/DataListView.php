@@ -104,7 +104,7 @@ class DataListView
 	private $_recordsPerPage = 5;
 
 	/** @var bool */
-	private $_showStatus = false;
+	private $_showStatus = true;
 
 	/** @var string */
 	private $_listType = '';
