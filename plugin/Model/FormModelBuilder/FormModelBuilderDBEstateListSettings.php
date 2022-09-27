@@ -397,7 +397,7 @@ class FormModelBuilderDBEstateListSettings
 			(InputModelDBFactory::INPUT_SHOW_STATUS, $labelShowStatus);
 		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelShowStatus->setValue($this->getValue('show_status'));
-		$pInputModelShowStatus->setValuesAvailable(1);
+		$pInputModelShowStatus->setValuesAvailable(0);
 
 		return $pInputModelShowStatus;
 	}

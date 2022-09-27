@@ -58,7 +58,6 @@ class DataDetailView
 		'vermarktungsart',
 		'plz',
 		'ort',
-		'bundesland',
 		'objektnr_extern',
 		'wohnflaeche',
 		'grundstuecksflaeche',

@@ -94,7 +94,7 @@ class FormModelBuilderEstateDetailSettings
 		$this->_pInputModelDetailViewFactory = new InputModelOptionFactoryDetailView($pageSlug);
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$this->_pDataDetailView = $pDataDetailViewHandler->getDetailView();
-		
+
 		$pFormModel = new FormModel();
 		$pFormModel->setLabel(__('Detail View', 'onoffice-for-wp-websites'));
 		$pFormModel->setGroupSlug('onoffice-detailview-settings-main');
@@ -424,7 +424,7 @@ class FormModelBuilderEstateDetailSettings
 		(InputModelOptionFactoryDetailView::INPUT_SHOW_STATUS, $labelShowStatus);
 		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelShowStatus->setValue($this->_pDataDetailView->getShowStatus());
-		$pInputModelShowStatus->setValuesAvailable(0);
+		$pInputModelShowStatus->setValuesAvailable(1);
 
 		return $pInputModelShowStatus;
 	}
