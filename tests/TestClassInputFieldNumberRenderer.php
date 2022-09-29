@@ -52,10 +52,12 @@ class TestClassInputFieldNumberRenderer
 	{
 		$pSubject = new InputFieldNumberRenderer('testRenderer');
 		$pSubject->setValue(123);
+		$pSubject->setMaxValue(500);
+		$pSubject->setMinValue(20);
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<input type="number" name="testRenderer" value="123" id="number_1" >', $output);
+		$this->assertEquals('<input type="number" name="testRenderer" value="123" id="number_1" max="500" min="20">', $output);
 	}
 
 	/**
