@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= Unreleased =
+
+**Fixed**
+
+* The limit of 500 estates per page is now communicated in the estate list settings.
+
 = 4.3 (2022-09-21) =
 
 **Changed**
