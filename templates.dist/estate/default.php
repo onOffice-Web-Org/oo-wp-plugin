@@ -27,7 +27,22 @@ use onOffice\WPlugin\Favorites;
 require 'SearchForm.php';
 /* @var $pEstates onOffice\WPlugin\EstateList */
 
-$dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
+$dontEcho = array(
+	"objekttitel",
+	"objektbeschreibung",
+	"lage",
+	"ausstatt_beschr",
+	"sonstige_angaben",
+	"referenz",
+	"reserviert",
+	"verkauft",
+	"exclusive",
+	"neu",
+	"top_angebot",
+	"preisreduktion",
+	"courtage_frei",
+	"objekt_des_tages"
+);
 
 ?>
 
@@ -60,16 +75,6 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 	$pEstatesClone->resetEstateIterator();
 	while ( $currentEstate = $pEstatesClone->estateIterator() ) :
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
-		unset($currentEstate['vermarktungsstatus']);
-		unset($currentEstate['referenz']);
-		unset($currentEstate['reserviert']);
-		unset($currentEstate['verkauft']);
-		unset($currentEstate['exclusive']);
-		unset($currentEstate['neu']);
-		unset($currentEstate['top_angebot']);
-		unset($currentEstate['preisreduktion']);
-		unset($currentEstate['courtage_frei']);
-		unset($currentEstate['objekt_des_tages']);
 		$estateId = $pEstatesClone->getCurrentEstateId();
 		$rawValues = $pEstatesClone->getRawValues();
 		$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
