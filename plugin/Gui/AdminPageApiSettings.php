@@ -231,13 +231,15 @@ class AdminPageApiSettings
 			'onoffice-for-wp-websites' );
 		$descriptionDoNotModify = sprintf( '<div class="do-not-modify">
 									<p>%1$s</p>
-									</br>
+									<details>
 									<summary>%2$s</summary>
 									<p>%3$s</p>
 									</br>
 									<p>%4$s</p>
 									</br>
 									<p>%5$s</p>
+									</details>
+									</br>
 							</div> <p>%6$s</p>', $titleDoNotModify, $summaryDetailDoNotModify,
 			$descriptionDetailDoNotModify, $searchSupportDoNotModify, $titleEllipsisDoNotModify,
 			$titleDescriptionDoNotModify );
