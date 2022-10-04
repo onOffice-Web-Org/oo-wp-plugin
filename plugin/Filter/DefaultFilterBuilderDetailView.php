@@ -102,13 +102,13 @@ class DefaultFilterBuilderDetailView
 			$randomIdDetail = array_rand( $pEstateDetail, 1 );
 			$url     = $this->getEstateLink( $pEstateDetail[ $randomIdDetail ] );
 
-			echo '<div style="margin: 50px 100px">';
+			echo '<div>';
 			echo '<div>' . esc_html_e( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
 					'onoffice-for-wp-websites' ) . '</div>';
 			if ( is_user_logged_in() ) {
 				echo '<div>' . esc_html_e( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page:',
 						'onoffice-for-wp-websites' ) . '</div>';
-				echo '<a href=' . $url . '>' . esc_html( ( 'Beautiful home with great view' ) ) . '</a>';
+				echo '<a href=' . $url . '>' . esc_html( __('Beautiful home with great view', 'onoffice-for-wp-websites') ) . '</a>';
 			}
 			echo '</div>';
 			die();
