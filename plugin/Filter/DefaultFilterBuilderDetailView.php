@@ -79,36 +79,38 @@ class DefaultFilterBuilderDetailView
 	{
 		if ($this->_estateId === 0) {
 			$pContainerBuilder = new ContainerBuilder;
-			$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
-			$pContainer = $pContainerBuilder->build();
-			$pEnvironment = new EstateListEnvironmentDefault($pContainer);
-			$pSDKWrapper = $pEnvironment->getSDKWrapper();
-			$pApiClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
-			$estateParametersRaw['data'] = $pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
-			$estateParametersRaw['data'] []= 'vermarktungsart';
-			$pApiClientAction->setParameters($estateParametersRaw);
+			$pContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH );
+			$pContainer                     = $pContainerBuilder->build();
+			$pEnvironment                   = new EstateListEnvironmentDefault( $pContainer );
+			$pSDKWrapper                    = $pEnvironment->getSDKWrapper();
+			$pApiClientAction               = new APIClientActionGeneric
+			( $pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate' );
+			$estateParametersRaw['data']    = $pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
+			$estateParametersRaw['data'] [] = 'vermarktungsart';
+			$pApiClientAction->setParameters( $estateParametersRaw );
 			$pApiClientAction->addRequestToQueue()->sendRequests();
 			$pEstateList = $pApiClientAction->getResultRecords();
 
 			$pEstateDetail = [];
-			foreach ($pEstateList as $pEstateListDetails){
-				$referenz = $pEstateListDetails['elements']['referenz'];
+			foreach ( $pEstateList as $pEstateListDetails ) {
+				$referenz      = $pEstateListDetails['elements']['referenz'];
 				$marketingType = $pEstateListDetails['elements']['vermarktungsart'];
-				if( $referenz === '0' && $marketingType !=''){
+				if ( $referenz === '0' && $marketingType != '' ) {
 					$pEstateDetail[] = $pEstateListDetails;
 				};
 			}
-			$randoms = array_rand($pEstateDetail, 1);
-			$url = $this->getEstateLink($pEstateDetail[$randoms]);
+			$randomIdDetail = array_rand( $pEstateDetail, 1 );
+			$url     = $this->getEstateLink( $pEstateDetail[ $randomIdDetail ] );
 
-			echo	'<div style="margin: 50px 100px">';
-			echo	'<div>'. esc_html_e('You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.', 'onoffice-for-wp-websites') .'</div>';
-			if (is_user_logged_in()){
-				echo	'<div>'. esc_html_e('Since you are logged in, here is a link to a random estate so that you can preview the detail page:', 'onoffice-for-wp-websites') .'</div>';
-				echo	'<a href='.$url.'>'. esc_html(('Beautiful home with great view')) .'</a>';
+			echo '<div style="margin: 50px 100px">';
+			echo '<div>' . esc_html_e( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
+					'onoffice-for-wp-websites' ) . '</div>';
+			if ( is_user_logged_in() ) {
+				echo '<div>' . esc_html_e( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page:',
+						'onoffice-for-wp-websites' ) . '</div>';
+				echo '<a href=' . $url . '>' . esc_html( ( 'Beautiful home with great view' ) ) . '</a>';
 			}
-			echo	'</div>';
+			echo '</div>';
 			die();
 		}
 
