@@ -227,8 +227,8 @@ class AdminPageApiSettings
 			'onoffice-for-wp-websites' ), '<code>onoffice_</code>');
 		$titleEllipsisDoNotModify = sprintf(esc_html__( 'If you need to shorten a field to e.g. 50 characters, you can use %1$s. This will shorten the estate\'s description to at most 50 characters, including the ellipsis. It will not cut words in the middle, but leave them out if they are too long, so "This is too loooong" will never become "This is too looo…" but rather "This is too…". To display up to 150 characters, you can use %2$s.',
 			'onoffice-for-wp-websites' ), '<code>onoffice_ellipsis50_objektbeschreibung</code>', '<code>onoffice_ellipsis150_objektbeschreibung</code>');
-		$titleDescriptionDoNotModify = esc_html__( 'The title and description of the detail page are set using the <title> and tags. They make it possible to show a summary of the page when you share a link.',
-			'onoffice-for-wp-websites' );
+		$titleDescriptionDoNotModify = sprintf(esc_html__( 'The title and description of the detail page are set using the %1$s and %2$s tags. They make it possible to show a summary of the page when you share a link.',
+			'onoffice-for-wp-websites' ), '<code>&lt;title&gt;</code>', '<code>&lt;meta name="description&gt;</code>');
 		$descriptionDoNotModify = sprintf( '<div class="do-not-modify">
 									<p>%1$s</p>
 									<details>
