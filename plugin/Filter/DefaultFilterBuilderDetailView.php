@@ -27,7 +27,7 @@ use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\Controller\EstateDetailUrl;
 use DI\ContainerBuilder;
-
+use function is_user_logged_in;
 use Exception;
 
 /**
@@ -104,7 +104,7 @@ class DefaultFilterBuilderDetailView
 			echo '<div>';
 			echo '<div>' . esc_html_e( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
 					'onoffice-for-wp-websites' ) . '</div>';
-			if ( wp_get_current_user()->roles[0] === 'administrator' ) {
+			if ( is_user_logged_in() ) {
 				echo '<div>' . esc_html_e( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page:',
 						'onoffice-for-wp-websites' ) . '</div>';
 				echo '<a href=' . $url . '>' . esc_html( __('Beautiful home with great view', 'onoffice-for-wp-websites') ) . '</a>';
