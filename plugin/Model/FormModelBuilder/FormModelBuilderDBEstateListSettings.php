@@ -52,6 +52,8 @@ class FormModelBuilderDBEstateListSettings
 	/** */
 	const DEFAULT_RECORDS_PER_PAGE = 12;
 
+	/** */
+	const DEFAULT_RECORDS_SHOW_STATUS = 1;
 
 	/** @var string[] */
 	private static $_defaultFields = array(
@@ -112,6 +114,7 @@ class FormModelBuilderDBEstateListSettings
 			$this->setValues(array(
 				DataListView::FIELDS => self::$_defaultFields,
 				'recordsPerPage' => self::DEFAULT_RECORDS_PER_PAGE,
+				'show_status' => self::DEFAULT_RECORDS_SHOW_STATUS,
 			));
 		}
 
@@ -397,7 +400,7 @@ class FormModelBuilderDBEstateListSettings
 			(InputModelDBFactory::INPUT_SHOW_STATUS, $labelShowStatus);
 		$pInputModelShowStatus->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelShowStatus->setValue($this->getValue('show_status'));
-		$pInputModelShowStatus->setValuesAvailable(0);
+		$pInputModelShowStatus->setValuesAvailable(1);
 
 		return $pInputModelShowStatus;
 	}
