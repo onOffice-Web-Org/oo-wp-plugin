@@ -178,7 +178,7 @@ class FormModelBuilderEstateDetailSettings
 
 	public function createInputModelExpose()
 	{
-		$labelExpose = __('PDF-Expose', 'onoffice-for-wp-websites');
+		$labelExpose = __('Direct download for PDF exposé', 'onoffice-for-wp-websites');
 
 		$pInputModelExpose = $this->_pInputModelDetailViewFactory->create
 			(InputModelOptionFactoryDetailView::INPUT_EXPOSE, $labelExpose);
