@@ -144,7 +144,7 @@ if (get_option('onoffice-settings-title-and-description') === '1')
 			$limitEllipsis = '';
 			foreach ( $fieldsDetail as $field ) {
 				if ( strpos( $meta_key, 'ellipsis' ) && strpos( $meta_key, $field ) ) {
-					preg_match( "/^.*ellipsis(.+)_.*$/i", $meta_key, $matches );
+					preg_match( "/^.*ellipsis(.+?)_.*$/i", $meta_key, $matches );
 					if ( count( $matches ) !== 0 ) {
 						$limitEllipsis = $matches[1];
 					}
