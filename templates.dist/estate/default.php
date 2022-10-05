@@ -75,6 +75,7 @@ $dontEcho = array(
 	$pEstatesClone->resetEstateIterator();
 	while ( $currentEstate = $pEstatesClone->estateIterator() ) :
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
+		unset($currentEstate['vermarktungsstatus']);
 		$estateId = $pEstatesClone->getCurrentEstateId();
 		$rawValues = $pEstatesClone->getRawValues();
 		$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
