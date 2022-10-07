@@ -278,41 +278,41 @@ if ( ! is_admin() ) {
 		$toolBarConfig = [
 			[
 				'id'    => 'onoffice',
-				'title' => 'onOffice',
+				'title' => __('onOffice', 'onoffice-for-wp-websites'),
 				'href'  => admin_url('admin.php?page=onoffice'),
 				'meta'  => [ 'class' => 'onoffice' ]
 			],
 			[
 				'id'     => 'onoffice-clear-cache',
-				'title'  => 'Clear onOffice cache',
+				'title' => __('Clear onOffice cache', 'onoffice-for-wp-websites'),
 				'href'   => admin_url('onoffice-clear-cache'),
 				'parent' => 'onoffice',
 				'meta'   => [ 'class' => 'onoffice-clear-cache' ]
 			],
 			[
 				'id'     => 'addresses',
-				'title'  => 'Addresses',
+				'title' => __('Addresses', 'onoffice-for-wp-websites'),
 				'href'   => admin_url('admin.php?page=onoffice-addresses'),
 				'parent' => 'onoffice',
 				'meta'   => [ 'class' => 'addresses' ]
 			],
 			[
 				'id'     => 'estates',
-				'title'  => 'Estates',
+				'title' => __('Estates', 'onoffice-for-wp-websites'),
 				'href'   => admin_url('admin.php?page=onoffice-estates'),
 				'parent' => 'onoffice',
 				'meta'   => [ 'class' => 'estates' ]
 			],
 			[
 				'id'     => 'forms',
-				'title'  => 'Forms',
+				'title' => __('Forms', 'onoffice-for-wp-websites'),
 				'href'   => admin_url('admin.php?page=onoffice-forms'),
 				'parent' => 'onoffice',
 				'meta'   => [ 'class' => 'forms' ]
 			],
 			[
 				'id'     => 'settings',
-				'title'  => 'Settings',
+				'title' => __('Settings', 'onoffice-for-wp-websites'),
 				'href'   => admin_url('admin.php?page=onoffice-settings'),
 				'parent' => 'onoffice',
 				'meta'   => [ 'class' => 'settings' ]
