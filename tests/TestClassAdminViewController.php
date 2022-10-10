@@ -100,7 +100,7 @@ class TestClassAdminViewController
 		global $wp_filter;
 		$wp_filter = [];
 		$pAdminViewController->register_menu();
-		$this->assertCount(5, $wp_filter);
+		$this->assertCount(6, $wp_filter);
 	}
 
 	/**
