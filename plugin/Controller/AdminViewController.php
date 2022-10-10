@@ -46,8 +46,6 @@ use Parsedown;
 use HTMLPurifier_Config;
 use HTMLPurifier;
 use WP_Hook;
-use const ONOFFICE_DI_CONFIG_PATH;
-use const ONOFFICE_PLUGIN_DIR;
 use function __;
 use function add_action;
 use function add_filter;
@@ -64,6 +62,8 @@ use function wp_create_nonce;
 use function wp_enqueue_script;
 use function wp_enqueue_style;
 use function wp_localize_script;
+use const ONOFFICE_DI_CONFIG_PATH;
+use const ONOFFICE_PLUGIN_DIR;
 
 /**
  *
@@ -212,6 +212,11 @@ class AdminViewController
 			array($pAdminSettingsPage, 'render'));
 		add_action( 'admin_init', array($pAdminSettingsPage, 'registerForms'));
 		add_action( 'load-'.$hookSettings, array($pAdminSettingsPage, 'handleAdminNotices'));
+
+		// add permission edit setting page for editor
+		add_filter('option_page_capability_onoffice-settings', function () {
+			return 'edit_pages';
+		}, 10, 1);
 
 		add_action('current_screen', function() use ($pDI) {
 			/* @var $pWPBulkActionHandler ListTableBulkActionsHandler */
