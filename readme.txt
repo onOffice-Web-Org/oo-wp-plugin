@@ -86,6 +86,9 @@ Start editing inside the `onoffice-personalized` folder.
 
 = 4.3 (2022-09-21) =
 
+**Added**
+* Editors can now modify and save the plugin settings.
+
 **Changed**
 
 * We improved the controls for whether reference estates should be displayed in estate lists.
