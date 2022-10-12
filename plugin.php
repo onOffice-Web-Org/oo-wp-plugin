@@ -327,8 +327,11 @@ add_action('wp', function () {
 	}
 });
 
-if(get_option('onoffice-settings-title-and-description') === false){
-	update_option('onoffice-settings-title-and-description', 0);
-};
+add_action('admin_init', function () {
+	if (get_option('onoffice-settings-title-and-description') === false) {
+		update_option('onoffice-settings-title-and-description', 0);
+	}
+});
+
 
 return $pDI;
