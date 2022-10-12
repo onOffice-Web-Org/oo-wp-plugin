@@ -84,7 +84,7 @@ class DataViewSimilarEstates
 	private $_radius = 10;
 
 	/** @var int */
-	private $_recordsPerPage = 5;
+	private $_recordsPerPage = 6;
 
 	/** @var string */
 	private $_template = '';

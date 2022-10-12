@@ -121,7 +121,15 @@ class FormModelBuilderEstateDetailSettings
 
 		if (null == $pictureTypes)
 		{
-			$pictureTypes = array();
+			$pictureTypes = array(
+				'Titelbild',
+				'Foto',
+				'Foto_gross',
+				'Panorama',
+				'Grundriss',
+				'Lageplan',
+				'Epass_Skala',
+			);
 		}
 
 		$pInputModelPictureTypes->setValue($pictureTypes);
