@@ -47,6 +47,7 @@ use onOffice\WPlugin\WP\WPQueryWrapper;
 use function __;
 use function esc_html;
 use const ONOFFICE_DI_CONFIG_PATH;
+use Parsedown;
 
 /**
  *
@@ -335,11 +336,12 @@ class Form
 
 	public function getFieldLabel(string $field, bool $raw = false): string
 	{
+		$Parsedown = new Parsedown;
 		$module = $this->getModuleOfField($field);
 		$label = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field)->getLabel();
 
 		if (false === $raw) {
-			$label = esc_html($label);
+			$label = $Parsedown->text($label);
 		}
 
 		return $label;
