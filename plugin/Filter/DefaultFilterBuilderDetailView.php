@@ -22,12 +22,7 @@
 declare(strict_types=1);
 
 namespace onOffice\WPlugin\Filter;
-use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\API\APIClientActionGeneric;
-use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
-use onOffice\WPlugin\Controller\EstateDetailUrl;
-use DI\ContainerBuilder;
-use function is_user_logged_in;
+
 use Exception;
 
 /**
@@ -45,30 +40,6 @@ class DefaultFilterBuilderDetailView
 
 
 	/**
-	 * @return string
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	public function getEstateLink($pEstateListDetail): string
-	{
-		$pLanguageSwitcher =  new EstateDetailUrl;
-		$pageId = $pEstateListDetail['id'];
-		$fullLink = '#';
-
-		if ( $pageId !== 0 ) {
-			$estate   = $pEstateListDetail['id'];
-			$url      = get_page_link( $pageId );
-			$fullLink = $pLanguageSwitcher->createEstateDetailLink( $url, (int)$estate);
-			$fullLinkElements = parse_url( $fullLink );
-			if ( empty( $fullLinkElements['query'] ) ) {
-				$fullLink .= '/';
-			}
-		}
-
-		return $fullLink;
-	}
-
-	/**
 	 *
 	 * @return array
 	 *
@@ -77,40 +48,7 @@ class DefaultFilterBuilderDetailView
 	public function buildFilter(): array
 	{
 		if ($this->_estateId === 0) {
-			$pContainerBuilder = new ContainerBuilder;
-			$pContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH );
-			$pContainer                     = $pContainerBuilder->build();
-			$pEnvironment                   = new EstateListEnvironmentDefault( $pContainer );
-			$pSDKWrapper                    = $pEnvironment->getSDKWrapper();
-			$pApiClientAction               = new APIClientActionGeneric
-			( $pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate' );
-			$estateParametersRaw['data']    = $pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
-			$estateParametersRaw['data'] [] = 'vermarktungsart';
-			$pApiClientAction->setParameters( $estateParametersRaw );
-			$pApiClientAction->addRequestToQueue()->sendRequests();
-			$pEstateList = $pApiClientAction->getResultRecords();
-
-			$pEstateDetail = [];
-			foreach ( $pEstateList as $pEstateListDetails ) {
-				$referenz      = $pEstateListDetails['elements']['referenz'];
-				$marketingType = $pEstateListDetails['elements']['vermarktungsart'];
-				if ( $referenz === '0' && $marketingType != '' ) {
-					$pEstateDetail[] = $pEstateListDetails;
-				};
-			}
-			$randomIdDetail = array_rand( $pEstateDetail, 1 );
-			$url     = $this->getEstateLink( $pEstateDetail[ $randomIdDetail ] );
-
-			echo '<div>';
-			echo '<div>' . esc_html_e( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
-					'onoffice-for-wp-websites' ) . '</div>';
-			if ( is_user_logged_in() ) {
-				echo '<div>' . esc_html_e( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page:',
-						'onoffice-for-wp-websites' ) . '</div>';
-				echo '<a href=' . $url . '>' . esc_html( __('Beautiful home with great view', 'onoffice-for-wp-websites') ) . '</a>';
-			}
-			echo '</div>';
-			die();
+			throw new Exception('EstateId must not be 0');
 		}
 
 		return [
