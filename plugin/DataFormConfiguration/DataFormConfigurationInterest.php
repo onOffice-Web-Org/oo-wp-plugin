@@ -46,11 +46,14 @@ class DataFormConfigurationInterest
 		$this->setInputs(array(
 			'Vorname' => onOfficeSDK::MODULE_ADDRESS,
 			'Name' => onOfficeSDK::MODULE_ADDRESS,
-			'Strasse' => onOfficeSDK::MODULE_ADDRESS,
-			'Plz' => onOfficeSDK::MODULE_ADDRESS,
-			'Ort' => onOfficeSDK::MODULE_ADDRESS,
 			'Telefon1' => onOfficeSDK::MODULE_ADDRESS,
 			'Email' => onOfficeSDK::MODULE_ADDRESS,
+			'vermarktungsart' => onOfficeSDK::MODULE_ADDRESS,
+			'objekttyp' => onOfficeSDK::MODULE_ADDRESS,
+			'kaufpreis' => onOfficeSDK::MODULE_ADDRESS,
+			'kaltmiete' => onOfficeSDK::MODULE_ADDRESS,
+			'wohnflaeche' => onOfficeSDK::MODULE_ADDRESS,
+			'anzahl_zimmer' => onOfficeSDK::MODULE_ADDRESS,
 		));
 	}
 
