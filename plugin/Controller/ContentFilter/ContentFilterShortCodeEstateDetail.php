@@ -115,19 +115,19 @@ class ContentFilterShortCodeEstateDetail
         $pApiClientAction               = new APIClientActionGeneric
         ( $pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate' );
         $estateParametersRaw['data']    = $pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
-        $estateParametersRaw['data'] [] = 'vermarktungsart';
+        $estateParametersRaw['data'] [] = 'veroeffentlichen';
         $pApiClientAction->setParameters( $estateParametersRaw );
         $pApiClientAction->addRequestToQueue()->sendRequests();
         $pEstateList = $pApiClientAction->getResultRecords();
 
         $pEstateDetail = [];
-        foreach ( $pEstateList as $pEstateListDetails ) {
-            $referenz      = $pEstateListDetails['elements']['referenz'];
-            $marketingType = $pEstateListDetails['elements']['vermarktungsart'];
-            if ( $referenz === '0' && $marketingType != '' ) {
-                $pEstateDetail[] = $pEstateListDetails;
-            };
-        }
+	    foreach ( $pEstateList as $pEstateListDetails ) {
+		    $referenz = $pEstateListDetails['elements']['referenz'];
+		    $publish  = $pEstateListDetails['elements']['veroeffentlichen'];
+		    if ( $referenz === '0' && $publish === '1' ) {
+			    $pEstateDetail[] = $pEstateListDetails;
+		    };
+	    }
         $randomIdDetail = array_rand( $pEstateDetail, 1 );
         return $pEstateDetail[$randomIdDetail];
     }
