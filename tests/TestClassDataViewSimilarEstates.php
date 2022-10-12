@@ -49,7 +49,7 @@ class TestClassDataViewSimilarEstates
 		$this->assertEquals(true, $pDataViewSimilarEstates->getSameMarketingMethod());
 		$this->assertEquals(false, $pDataViewSimilarEstates->getSamePostalCode());
 		$this->assertEquals(10, $pDataViewSimilarEstates->getRadius());
-		$this->assertEquals(5, $pDataViewSimilarEstates->getRecordsPerPage());
+		$this->assertEquals(6, $pDataViewSimilarEstates->getRecordsPerPage());
 	}
 
 

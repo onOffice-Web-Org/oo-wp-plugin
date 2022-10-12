@@ -42,7 +42,6 @@ class TestClassDataDetailView
 		'vermarktungsart',
 		'plz',
 		'ort',
-		'bundesland',
 		'objektnr_extern',
 		'wohnflaeche',
 		'grundstuecksflaeche',
@@ -54,7 +53,15 @@ class TestClassDataDetailView
 		'objektbeschreibung',
 		'lage',
 		'ausstatt_beschr',
-		'sonstige_angaben'
+		'sonstige_angaben',
+		'baujahr',
+		'endenergiebedarf',
+		'energieverbrauchskennwert',
+		'energieausweistyp',
+		'energieausweis_gueltig_bis',
+		'energyClass',
+		'aussen_courtage',
+		'kaution',
 	];
 
 	/** */
@@ -81,7 +88,7 @@ class TestClassDataDetailView
 		$this->assertEquals(self::DEFAULT_FIELDS_ADDRESS, $pDataDetailView->getAddressFields());
 		$this->assertEquals(self::DEFAULT_FIELDS_ESTATE, $pDataDetailView->getFields());
 		$this->assertEquals('', $pDataDetailView->getExpose());
-		$this->assertEquals(MovieLinkTypes::MOVIE_LINKS_NONE, $pDataDetailView->getMovieLinks());
+		$this->assertEquals(MovieLinkTypes::MOVIE_LINKS_PLAYER, $pDataDetailView->getMovieLinks());
 		$this->assertEquals('detail', $pDataDetailView->getName());
 		$this->assertEquals(0, $pDataDetailView->getPageId());
 		$this->assertEquals([], $pDataDetailView->getPictureTypes());
@@ -89,7 +96,7 @@ class TestClassDataDetailView
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
 		$this->assertFalse($pDataDetailView->getShowStatus());
-		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getOguloLinks());
+		$this->assertEquals(LinksTypes::LINKS_EMBEDDED, $pDataDetailView->getOguloLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getObjectLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getLinks());
 	}

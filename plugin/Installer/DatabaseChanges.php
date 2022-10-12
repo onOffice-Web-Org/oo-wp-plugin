@@ -324,7 +324,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`filterId` int(11),
 			`sortby` tinytext NOT NULL,
 			`sortorder` enum('ASC','DESC') NOT NULL DEFAULT 'ASC',
-			`show_status` tinyint(1) NOT NULL DEFAULT '0',
+			`show_status` tinyint(1) NOT NULL DEFAULT '1',
 			`list_type` ENUM('default', 'reference', 'favorites', 'units') NOT NULL DEFAULT 'default',
 			`template` tinytext NOT NULL,
 			`expose` tinytext,
