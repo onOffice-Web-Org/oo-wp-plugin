@@ -87,6 +87,7 @@ Start editing inside the `onoffice-personalized` folder.
 = 4.3 (2022-09-21) =
 
 **Added**
+
 * Editors can now modify and save the plugin settings.
 
 **Changed**
