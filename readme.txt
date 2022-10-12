@@ -78,6 +78,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 = Unreleased =
 
+**Added**
+
+* Editors can now modify and save the plugin settings.
+
+**Changed**
+
+* The default settings for lists and forms have been updated to better match common configurations.
+
 **Fixed**
 
 * The limit of 500 estates per page is now communicated in the estate list settings.
@@ -85,10 +93,6 @@ Start editing inside the `onoffice-personalized` folder.
 * The label for the PDF exposé was renamed to better communicate that it is a direct download.
 
 = 4.3 (2022-09-21) =
-
-**Added**
-
-* Editors can now modify and save the plugin settings.
 
 **Changed**
 
