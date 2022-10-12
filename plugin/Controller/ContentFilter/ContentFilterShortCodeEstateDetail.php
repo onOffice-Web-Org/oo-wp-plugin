@@ -124,9 +124,9 @@ class ContentFilterShortCodeEstateDetail
         foreach ( $pEstateList as $pEstateListDetails ) {
             $referenz      = $pEstateListDetails['elements']['referenz'];
             $publish = $pEstateListDetails['elements']['veroeffentlichen'];
-            if ( $referenz === '0' && $publish === '1' ) {
-				$pEstateDetail[] = $pEstateListDetails;
-            };
+	        if ( $referenz === '0' && $publish === '1' ) {
+		        $pEstateDetail[] = $pEstateListDetails;
+	        };
         }
         $randomIdDetail = array_rand( $pEstateDetail, 1 );
         return $pEstateDetail[$randomIdDetail];
