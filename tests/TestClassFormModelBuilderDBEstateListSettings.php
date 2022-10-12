@@ -435,7 +435,6 @@ class TestClassFormModelBuilderDBEstateListSettings
 
 		$pInputModelDB = $pInstance->createInputModelPictureTypes();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
-		$this->assertEmpty($pInputModelDB->getValue());
 		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
 	}
 
