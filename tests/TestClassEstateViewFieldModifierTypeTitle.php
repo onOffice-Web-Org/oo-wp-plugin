@@ -118,7 +118,6 @@ class TestClassEstateViewFieldModifierTypeTitle
 			'vermarktungsart',
 			'plz',
 			'ort',
-			'bundesland',
 			'objektnr_extern',
 			'wohnflaeche',
 			'grundstuecksflaeche',
@@ -131,6 +130,14 @@ class TestClassEstateViewFieldModifierTypeTitle
 			'lage',
 			'ausstatt_beschr',
 			'sonstige_angaben',
+			'baujahr',
+			'endenergiebedarf',
+			'energieverbrauchskennwert',
+			'energieausweistyp',
+			'energieausweis_gueltig_bis',
+			'energyClass',
+			'aussen_courtage',
+			'kaution',
 		];
 		
 		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
@@ -151,7 +158,6 @@ class TestClassEstateViewFieldModifierTypeTitle
 			'vermarktungsart',
 			'plz',
 			'ort',
-			'bundesland',
 			'objektnr_extern',
 			'wohnflaeche',
 			'grundstuecksflaeche',
@@ -164,6 +170,14 @@ class TestClassEstateViewFieldModifierTypeTitle
 			'lage',
 			'ausstatt_beschr',
 			'sonstige_angaben',
+			'baujahr',
+			'endenergiebedarf',
+			'energieverbrauchskennwert',
+			'energieausweistyp',
+			'energieausweis_gueltig_bis',
+			'energyClass',
+			'aussen_courtage',
+			'kaution',
 		];
 		
 		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
