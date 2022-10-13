@@ -36,6 +36,9 @@ use onOffice\WPlugin\Controller\ViewProperty;
 class DataListViewAddress
 	implements DataViewFilterableFields, ViewProperty
 {
+	/** */
+	const FIELDS = 'fields';
+
 	/** @var int */
 	private $_id = 0;
 
