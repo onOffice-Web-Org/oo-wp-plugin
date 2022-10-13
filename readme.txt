@@ -88,6 +88,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixed**
 
+* When visitors were using the wrong URL for the detail page and had to be redirect, the trailing slash was not always consistent which could lead to an extra redirect. Now, it redirects directly to the correct URL.
 * The limit of 500 estates per page is now communicated in the estate list settings.
 * In the estate search, the button shows a preview of how many estates match the current selection. Previously, reference estates were not counted. This is now fixed and the preview matches the number of results after pressing the button.
 * The label for the PDF exposé was renamed to better communicate that it is a direct download.
