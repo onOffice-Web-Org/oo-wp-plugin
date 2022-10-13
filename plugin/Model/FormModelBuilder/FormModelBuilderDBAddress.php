@@ -31,6 +31,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelLabel;
+use onOffice\WPlugin\DataView\DataListViewAddress;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewAddress;
 use onOffice\WPlugin\Types\FieldsCollection;
@@ -49,7 +50,16 @@ class FormModelBuilderDBAddress
 	/** */
 	const DEFAULT_RECORDS_PER_PAGE = 20;
 
-
+	/** @var string[] */
+	private static $_defaultFields = array(
+		'Anrede',
+		'Vorname',
+		'Name',
+		'Zusatz1',
+		'Email',
+		'Telefon1',
+		'Telefax1',
+	);
 	/**
 	 *
 	 */
@@ -74,6 +84,7 @@ class FormModelBuilderDBAddress
 	public function generate(string $pageSlug, $listViewId = null): FormModel
 	{
 		$this->setValues([
+			DataListViewAddress::FIELDS => self::$_defaultFields,
 			'recordsPerPage' => self::DEFAULT_RECORDS_PER_PAGE,
 		]);
 		if ($listViewId !== null)

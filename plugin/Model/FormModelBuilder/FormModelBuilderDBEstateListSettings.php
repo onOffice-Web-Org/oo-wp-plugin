@@ -50,8 +50,10 @@ class FormModelBuilderDBEstateListSettings
 	extends FormModelBuilderDB
 {
 	/** */
-	const DEFAULT_RECORDS_PER_PAGE = 20;
+	const DEFAULT_RECORDS_PER_PAGE = 12;
 
+	/** */
+	const DEFAULT_RECORDS_SHOW_STATUS = 1;
 
 	/** @var string[] */
 	private static $_defaultFields = array(
@@ -61,7 +63,6 @@ class FormModelBuilderDBEstateListSettings
 		'vermarktungsart',
 		'plz',
 		'ort',
-		'bundesland',
 		'objektnr_extern',
 		'wohnflaeche',
 		'grundstuecksflaeche',
@@ -113,6 +114,7 @@ class FormModelBuilderDBEstateListSettings
 			$this->setValues(array(
 				DataListView::FIELDS => self::$_defaultFields,
 				'recordsPerPage' => self::DEFAULT_RECORDS_PER_PAGE,
+				'show_status' => self::DEFAULT_RECORDS_SHOW_STATUS,
 			));
 		}
 
@@ -461,7 +463,9 @@ class FormModelBuilderDBEstateListSettings
 
 		if (null == $pictureTypes)
 		{
-			$pictureTypes = array();
+			$pictureTypes = array(
+				'Titelbild',
+			);
 		}
 
 		$pInputModelPictureTypes->setValue($pictureTypes);
