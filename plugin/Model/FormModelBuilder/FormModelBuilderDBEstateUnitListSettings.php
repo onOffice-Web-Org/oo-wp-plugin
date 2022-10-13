@@ -50,7 +50,6 @@ class FormModelBuilderDBEstateUnitListSettings
 		'vermarktungsart',
 		'plz',
 		'ort',
-		'bundesland',
 		'objektnr_extern',
 		'wohnflaeche',
 		'grundstuecksflaeche',
@@ -59,10 +58,6 @@ class FormModelBuilderDBEstateUnitListSettings
 		'anzahl_badezimmer',
 		'kaufpreis',
 		'kaltmiete',
-		'objektbeschreibung',
-		'lage',
-		'ausstatt_beschr',
-		'sonstige_angaben'
 	];
 
 

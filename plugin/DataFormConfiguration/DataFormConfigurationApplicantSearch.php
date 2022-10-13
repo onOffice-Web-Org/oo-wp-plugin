@@ -21,6 +21,8 @@
 
 namespace onOffice\WPlugin\DataFormConfiguration;
 
+use onOffice\SDK\onOfficeSDK;
+
 /**
  *
  * @url http://www.onoffice.de
@@ -33,6 +35,22 @@ class DataFormConfigurationApplicantSearch
 {
 	/** @var int */
 	private $_limitResults = 100;
+
+	/**
+	 *
+	 */
+
+	public function setDefaultFields()
+	{
+		$this->setInputs([
+			'vermarktungsart' => onOfficeSDK::MODULE_ADDRESS,
+			'objekttyp' => onOfficeSDK::MODULE_ADDRESS,
+			'kaufpreis' => onOfficeSDK::MODULE_ADDRESS,
+			'kaltmiete' => onOfficeSDK::MODULE_ADDRESS,
+			'wohnflaeche' => onOfficeSDK::MODULE_ADDRESS,
+			'anzahl_zimmer' => onOfficeSDK::MODULE_ADDRESS,
+		]);
+	}
 
 	/** @return int */
 	public function getLimitResults()
