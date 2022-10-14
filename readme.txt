@@ -81,6 +81,7 @@ Start editing inside the `onoffice-personalized` folder.
 **Added**
 
 * Editors can now modify and save the plugin settings.
+* When viewing the website, a menu has been added to the admin bar that makes it easy to reset the plugin's cache or go directly to addresses, estate lists, forms, or the settings.
 
 **Changed**
 
