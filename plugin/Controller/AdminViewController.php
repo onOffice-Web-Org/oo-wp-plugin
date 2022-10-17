@@ -390,7 +390,7 @@ class AdminViewController
 	public function displayAPIError()
 	{
 		try {
-			$this->getField()->loadLanguage();
+			$this->getField()->loadApiEstateCategories();
 		} catch (APIClientCredentialsException $pCredentialsException) {
 			$class = 'notice notice-error';
 			$label = __('API token and secret', 'onoffice-for-wp-websites');
