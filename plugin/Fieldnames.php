@@ -131,6 +131,26 @@ class Fieldnames
 	 *
 	 */
 
+	public function loadApiEstateCategories()
+	{
+		$parametersGetFieldList = [
+		];
+
+		$pSDKWrapper = $this->_pEnvironment->getSDKWrapper();
+
+		$pApiClientActionFields = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_GET, 'estateCategories');
+		$pApiClientActionFields->setParameters($parametersGetFieldList);
+		$pApiClientActionFields->addRequestToQueue();
+		$pSDKWrapper->sendRequests();
+
+		$this->createFieldList($pApiClientActionFields);
+	}
+
+	/**
+	 *
+	 */
+
 	private function mergeFieldLists()
 	{
 		$newFieldsByModule = $this->getExtraFields();
