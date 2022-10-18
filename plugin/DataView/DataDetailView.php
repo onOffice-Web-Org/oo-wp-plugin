@@ -135,7 +135,7 @@ class DataDetailView
 	private $_pageIdsHaveDetailShortCode = [];
 
 	/** @var bool */
-	private $_showStatus = 0;
+	private $_showStatus = 1;
 
 	/** @var int */
 	private $_movieLinks = MovieLinkTypes::MOVIE_LINKS_PLAYER;

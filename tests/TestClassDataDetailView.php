@@ -95,7 +95,7 @@ class TestClassDataDetailView
 		$this->assertEquals(true, $pDataDetailView->hasDetailView());
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
-		$this->assertFalse($pDataDetailView->getShowStatus());
+		$this->assertTrue($pDataDetailView->getShowStatus());
 		$this->assertEquals(LinksTypes::LINKS_EMBEDDED, $pDataDetailView->getOguloLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getObjectLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getLinks());
