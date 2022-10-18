@@ -326,12 +326,6 @@ add_action('wp', function () {
 	}
 });
 
-add_action('admin_init', function () {
-	if (get_option('onoffice-settings-title-and-description') === false) {
-		update_option('onoffice-settings-title-and-description', 0);
-	}
-});
-
 add_action('parse_request', function () use ( $pDI ) {
 	if ( str_contains($_SERVER["REQUEST_URI"], "onoffice-clear-cache") ) {
 		$pDI->get(CacheHandler::class)->clear();
