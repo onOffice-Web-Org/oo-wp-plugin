@@ -7,7 +7,6 @@ namespace onOffice\WPlugin\WP;
 class WPRedirectWrapper
 {
 	public function redirect( string $url ) {
-		wp_redirect( $url, 301 );
-		exit();
+		redirect_canonical($url);
 	}
 }

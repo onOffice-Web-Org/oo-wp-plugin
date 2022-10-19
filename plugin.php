@@ -44,11 +44,11 @@ use onOffice\WPlugin\Cache\CacheHandler;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeRegistrator;
 use onOffice\WPlugin\Controller\DetailViewPostSaveController;
+use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Controller\EstateViewDocumentTitleBuilder;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewCheckAccessControl;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
-use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Field\EstateKindTypeReader;
 use onOffice\WPlugin\Form\CaptchaDataChecker;
 use onOffice\WPlugin\Form\Preview\FormPreviewApplicantSearch;
@@ -62,7 +62,6 @@ use onOffice\WPlugin\PDF\PdfDownload;
 use onOffice\WPlugin\PDF\PdfDownloadException;
 use onOffice\WPlugin\Record\EstateIdRequestGuard;
 use onOffice\WPlugin\ScriptLoader\ScriptLoaderRegistrator;
-use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -264,5 +263,70 @@ add_action('wp', function () {
 		delete_option('add-detail-posts-to-rewrite-rules');
 	}
 });
+
+add_action('parse_request', function () use ( $pDI ) {
+	if ( str_contains($_SERVER["REQUEST_URI"], "onoffice-clear-cache") ) {
+		$pDI->get(CacheHandler::class)->clear();
+		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
+		wp_safe_redirect($location);
+		exit();
+	}
+});
+
+if ( ! is_admin() ) {
+	add_action('admin_bar_menu', function ( $wp_admin_bar ) {
+		$user = wp_get_current_user();
+		$allowed_roles = array('editor', 'administrator');
+		if( array_intersect($allowed_roles, $user->roles ) ){
+			$toolBarConfig = [
+				[
+					'id'    => 'onoffice',
+					'title' => __('onOffice', 'onoffice-for-wp-websites'),
+					'href'  => admin_url('admin.php?page=onoffice'),
+					'meta'  => [ 'class' => 'onoffice' ]
+				],
+				[
+					'id'     => 'onoffice-clear-cache',
+					'title' => __('Clear onOffice cache', 'onoffice-for-wp-websites'),
+					'href'   => admin_url('onoffice-clear-cache'),
+					'parent' => 'onoffice',
+					'meta'   => [ 'class' => 'onoffice-clear-cache' ]
+				],
+				[
+					'id'     => 'addresses',
+					'title' => __('Addresses', 'onoffice-for-wp-websites'),
+					'href'   => admin_url('admin.php?page=onoffice-addresses'),
+					'parent' => 'onoffice',
+					'meta'   => [ 'class' => 'addresses' ]
+				],
+				[
+					'id'     => 'estates',
+					'title' => __('Estates', 'onoffice-for-wp-websites'),
+					'href'   => admin_url('admin.php?page=onoffice-estates'),
+					'parent' => 'onoffice',
+					'meta'   => [ 'class' => 'estates' ]
+				],
+				[
+					'id'     => 'forms',
+					'title' => __('Forms', 'onoffice-for-wp-websites'),
+					'href'   => admin_url('admin.php?page=onoffice-forms'),
+					'parent' => 'onoffice',
+					'meta'   => [ 'class' => 'forms' ]
+				],
+				[
+					'id'     => 'settings',
+					'title' => __('Settings', 'onoffice-for-wp-websites'),
+					'href'   => admin_url('admin.php?page=onoffice-settings'),
+					'parent' => 'onoffice',
+					'meta'   => [ 'class' => 'settings' ]
+				]
+			];
+
+			foreach ( $toolBarConfig as $e ) {
+				$wp_admin_bar->add_node($e);
+			}
+		};
+	}, 500);
+}
 
 return $pDI;

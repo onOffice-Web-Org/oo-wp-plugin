@@ -78,16 +78,23 @@ Start editing inside the `onoffice-personalized` folder.
 
 = Unreleased =
 
+**Added**
+
+* Editors can now modify and save the plugin settings.
+* When viewing the website, a menu has been added to the admin bar that makes it easy to reset the plugin's cache or go directly to addresses, estate lists, forms, or the settings.
+
+**Changed**
+
+* The default settings for lists and forms have been updated to better match common configurations.
+
 **Fixed**
 
+* When visitors were using the wrong URL for the detail page and had to be redirect, the trailing slash was not always consistent which could lead to an extra redirect. Now, it redirects directly to the correct URL.
 * The limit of 500 estates per page is now communicated in the estate list settings.
 * In the estate search, the button shows a preview of how many estates match the current selection. Previously, reference estates were not counted. This is now fixed and the preview matches the number of results after pressing the button.
 * The label for the PDF exposé was renamed to better communicate that it is a direct download.
 
 = 4.3 (2022-09-21) =
-
-**Added**
-* Editors can now modify and save the plugin settings.
 
 **Changed**
 
