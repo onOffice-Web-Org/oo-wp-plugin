@@ -55,9 +55,7 @@
         return onoffice_form_preview_strings.amount_other.replace('%s', amount);
     }
 
-    const create_preview = (formElement, result, spinner) => {
-        const element = formElement.querySelector('input[data-estate-count-list]');
-        const amount = element.getAttribute('data-estate-count-list');
+    const create_preview = (formElement, amount, spinner) => {
         const preview_text = create_preview_text(amount);
         let submitElement = formElement.querySelector('input[type=submit]');
         submitElement.value = preview_text;
