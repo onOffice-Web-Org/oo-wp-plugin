@@ -33,10 +33,9 @@ if (count($visible) === 0) {
 				renderFieldEstateSearch($inputName, $properties);
 				echo '</div>';
 			endforeach;
-			?>
-            <div class="oo-searchformfield">
-				<input type="submit" value="<?php echo esc_attr__('Search', 'onoffice-for-wp-websites'); ?>"
-                       data-estate-count-list="<?php echo $pEstates->getEstateOverallCount(); ?>">
+			?>		
+			<div class="oo-searchformfield">
+				<input type="submit" value="<?php echo esc_attr__('Search', 'onoffice-for-wp-websites'); ?>">
 				<svg viewBox="0 0 30 30" id="spinner"></svg>
 			</div>
 		</div>
