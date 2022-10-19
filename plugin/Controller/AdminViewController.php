@@ -443,6 +443,9 @@ class AdminViewController
 		$listPluginSEOActive = $this->getPluginSEOActive();
 		$listNamePluginSEO = implode(", ", $listPluginSEOActive);
 		if (count($listPluginSEOActive) > 0) {
+			if(get_option('onoffice-settings-title-and-description') === null){
+				update_option('onoffice-settings-title-and-description', 1);
+			};
 			if (get_option('onoffice-click-button-close-action') == 0
 				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings'
 				&& get_option('onoffice-settings-title-and-description') == 0) {
@@ -459,6 +462,9 @@ class AdminViewController
 				echo sprintf('<div class="%1$s">%2$s</div>', esc_attr($class), $messageDecodeHTML);
 			}
 		} else {
+			if(get_option('onoffice-settings-title-and-description') === null){
+				update_option('onoffice-settings-title-and-description', 0);
+			};
 			update_option('onoffice-click-button-close-action', 0);
 		}
 	}

@@ -263,9 +263,6 @@ class AdminPageApiSettings
 		$pInputModeGoogleBotIndexPdfExpose->setValuesAvailable(1);
 		$pInputModeGoogleBotIndexPdfExpose->setValue(get_option($pInputModeGoogleBotIndexPdfExpose->getIdentifier()) == 1);
 		$pInputModeGoogleBotIndexPdfExpose->setDescriptionTextHTML(__('If you allow indexing, your search engine ranking can be negatively affected and your brochures can be available from search engines even months after the corresponding estate is deleted.','onoffice-for-wp-websites'));
-		if(!get_option('onoffice-settings-title-and-description')){
-			update_option('onoffice-settings-title-and-description', 0);
-		};
 		$labelTitleAndDescription = __('Title and description', 'onoffice-for-wp-websites');
 		$pInputModeTitleAndDescription = new InputModelOption('onoffice-settings', 'title-and-description',
 			$labelTitleAndDescription, InputModelOption::SETTING_TYPE_NUMBER);
