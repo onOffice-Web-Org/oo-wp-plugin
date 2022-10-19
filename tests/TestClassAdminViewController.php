@@ -211,9 +211,9 @@ class TestClassAdminViewController
 	{
 		$fieldNamesMock = $this->getMockBuilder(Fieldnames::class)
 			->disableOriginalConstructor()
-			->setMethods(['loadLanguage'])
+			->setMethods(['loadApiEstateCategories'])
 			->getMock();
-		$fieldNamesMock->method('loadLanguage')->willReturn(true);
+		$fieldNamesMock->method('loadApiEstateCategories')->willReturn(true);
 
 		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
 			->disableOriginalConstructor()
@@ -232,9 +232,9 @@ class TestClassAdminViewController
 		$exception = $pContainer->get(APIClientCredentialsException::class);
 		$fieldNamesMock = $this->getMockBuilder(Fieldnames::class)
 			->disableOriginalConstructor()
-			->setMethods(['loadLanguage'])
+			->setMethods(['loadApiEstateCategories'])
 			->getMock();
-		$fieldNamesMock->method('loadLanguage')->will($this->throwException($exception));
+		$fieldNamesMock->method('loadApiEstateCategories')->will($this->throwException($exception));
 
 		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
 			->disableOriginalConstructor()
