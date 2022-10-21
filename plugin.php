@@ -265,7 +265,7 @@ add_action('wp', function () {
 });
 
 add_action('parse_request', function () use ( $pDI ) {
-	if ( str_contains($_SERVER["REQUEST_URI"], "onoffice-clear-cache") ) {
+	if ( strpos($_SERVER["REQUEST_URI"], "onoffice-clear-cache") !== false ) {
 		$pDI->get(CacheHandler::class)->clear();
 		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
 		wp_safe_redirect($location);
