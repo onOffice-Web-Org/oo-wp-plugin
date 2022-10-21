@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.0
 Requires PHP: 7.3
-Stable tag: 4.4
+Stable tag: 4.4.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,12 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.4.1 (2022-10-21) =
+
+**Fixed**
+
+* When using PHP 7 with a version of WordPress older than 5.9.0, the plugin would cause a critical error because we used a function that is only available with PHP 8 or WordPress 5.9.0 or newer. We now replaced the function with one that works on older versions as well.
 
 = 4.4 (2022-10-19) =
 
