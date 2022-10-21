@@ -15,7 +15,7 @@ jobs:
       - name: Get version
         id: get-version
         # Remove the leading 'v' from the tag.
-        run: echo "::set-output name=version::$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')"
+        run: echo "name=version::$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')" >> $GITHUB_OUTPUT
 
   build:
     name: Build release
