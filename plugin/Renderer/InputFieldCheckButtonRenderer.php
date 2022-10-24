@@ -38,7 +38,7 @@ use function esc_html;
  *
  */
 
-class InputFieldFieldButtonRenderer
+class InputFieldCheckButtonRenderer
 	extends InputFieldRenderer
 {
 

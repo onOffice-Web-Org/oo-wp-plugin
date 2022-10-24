@@ -100,12 +100,10 @@ jQuery(document).ready(function($){
 		var category = $(but).attr('data-onoffice-category');
 		var checkedFields = [];
 		var inputConfigFields = $('#' + categoryShort).find('input.onoffice-possible-input:checked');
-		
 		$(inputConfigFields).each(function(index) {
 			var valElName = $(this).val();
 			var valElLabel = $(this).next().text();
 			var module = $(this).attr('data-onoffice-module');
-			console.log(valElLabel);
 			var optionsAvailable = false;
 
 			if ($(this).attr('onoffice-multipleSelectType')) {

@@ -162,15 +162,15 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
 				$onOfficeInputFields = false;
 				$pInstance = new InputFieldCheckboxButtonRenderer(AdminPageAjax::EXCLUDE_FIELD . $elementName,
-					$pInputModel->getValuesAvailable());	
-					$pInstance->setCheckedValues($pInputModel->getValue());
-					$pInstance->setId($pInputModel->getId());
-					$pInstance->setLabel($pInputModel->getLabel());
-					$pInstance->setOoModule($pFormModel->getOoModule());
-					$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
-					if ($pInputModel->getSpecialDivId() != null) {
-						$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
-					}
+					$pInputModel->getValuesAvailable());
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				$pInstance->setId($pInputModel->getId());
+				$pInstance->setLabel($pInputModel->getLabel());
+				$pInstance->setOoModule($pFormModel->getOoModule());
+				$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
+				if ($pInputModel->getSpecialDivId() != null) {
+					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
+				}
 				break;
 
 			case InputModelOption::HTML_TYPE_RADIO:
@@ -179,7 +179,7 @@ class InputModelRenderer
 				$pInstance->setCheckedValue($pInputModel->getValue());
 				break;
 
-				case InputModelOption::HTML_TYPE_TEMPLATE_LIST:
+			case InputModelOption::HTML_TYPE_TEMPLATE_LIST:
 				$pInstance = new InputFieldTemplateListRenderer($elementName,
 					$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValue($pInputModel->getValue());
@@ -254,7 +254,7 @@ class InputModelRenderer
 				break;
 
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
-				$pInstance = new InputFieldFieldButtonRenderer($elementName,
+				$pInstance = new InputFieldCheckButtonRenderer($elementName,
 				$pInputModel->getValuesAvailable());	
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
