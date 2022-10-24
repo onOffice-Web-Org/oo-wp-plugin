@@ -213,7 +213,15 @@ class AdminPageFormList
 		if ($tab !== 'all') {
 			echo '<a href="'.$newLink.'" class="page-title-action">'
 				.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
-		}
+		}else{
+            echo '<select onchange="location = this.value;" class="page-title-action">';
+                echo '<option style="display:none" value="" disabled selected>All options add new</option>';
+                echo '<option value="'.add_query_arg($typeParam, Form::TYPE_CONTACT, admin_url('admin.php?page=onoffice-editform')).'">'.esc_html__('Contact Form', 'onoffice-for-wp-websites').'</option>';
+                echo '<option value="'.add_query_arg($typeParam, Form::TYPE_APPLICANT_SEARCH, admin_url('admin.php?page=onoffice-editform')).'">'.esc_html__('Interest Form', 'onoffice-for-wp-websites').'</option>';
+                echo '<option value="'.add_query_arg($typeParam, Form::TYPE_INTEREST, admin_url('admin.php?page=onoffice-editform')).'">'.esc_html__('Owner Form', 'onoffice-for-wp-websites').'</option>';
+                echo '<option value="'.add_query_arg($typeParam, Form::TYPE_OWNER, admin_url('admin.php?page=onoffice-editform')).'">'.esc_html__('Applicant Search Form', 'onoffice-for-wp-websites').'</option>';
+            echo '</select>';
+        }
 		echo '<hr class="wp-header-end">';
 	}
 
