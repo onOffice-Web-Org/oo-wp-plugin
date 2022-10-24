@@ -41,6 +41,10 @@ jQuery(document).ready(function($){
 	   getCheckedFields(this);
 	});
 
+	$('.inputFieldAddFieldButton').click(function() {
+		getAddField(this);
+	});
+
 	$('.item-edit').click(function() {
 		$(this).parent().parent().parent().parent().find('.menu-item-settings').toggle();
 	});
@@ -48,19 +52,60 @@ jQuery(document).ready(function($){
 	$('.item-delete-link').click(function() {
 		$(this).parent().parent().remove();
 	});
+	var getAddField = function(but) {
+		var check = $(but).attr('check');
+		if(check == 1){
+			but.classList.remove("dashicons-insert");
+			but.classList.add("dashicons-remove");
+			var label = $(but).attr('data-action-div');
+			var valElName = $(but).attr('value');
+			var valElLabel = $(but).next().text();
+			var category = $(but).attr('data-onoffice-category');
+			var module = $(but).attr('data-onoffice-module');
+			$(but).attr('check', 2);
+			var optionsAvailable = false;
+			var checkedFields = [];
+			var inputConfigFields = $('#sortableFieldsList').find('#menu-item-objektart').remove();
+			console.log(inputConfigFields);
+			if ($(but).attr('onoffice-multipleSelectType')) {
+				optionsAvailable = $(but).attr('onoffice-multipleSelectType') === '1';
+			}
 
+			var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable);
+
+			var event = new CustomEvent('addFieldItem', {
+				detail: {
+					fieldname: valElName,
+					fieldlabel: valElLabel,
+					category,
+					module,
+					item: clonedItem
+				}
+			});
+			document.dispatchEvent(event);
+		} else {
+			but.classList.remove("dashicons-remove");
+			but.classList.add("dashicons-insert");
+			$(but).attr('check', 1);
+			var valElName = $(but).attr('value');
+			var checkedFields = [];
+			var inputConfigFields = $('#sortableFieldsList').find('#menu-item-'+valElName).remove();
+		}
+
+		return checkedFields;
+	};
 	var getCheckedFields = function(but) {
 		var label = $(but).attr('data-action-div');
 		var categoryShort = but.name;
 		var category = $(but).attr('data-onoffice-category');
 		var checkedFields = [];
 		var inputConfigFields = $('#' + categoryShort).find('input.onoffice-possible-input:checked');
-
+		
 		$(inputConfigFields).each(function(index) {
 			var valElName = $(this).val();
 			var valElLabel = $(this).next().text();
 			var module = $(this).attr('data-onoffice-module');
-
+			console.log(valElLabel);
 			var optionsAvailable = false;
 
 			if ($(this).attr('onoffice-multipleSelectType')) {

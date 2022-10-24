@@ -353,3 +353,12 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 .memssageRecordsPerPage{
 	text-align: right;
 }
+.inputFieldAddFieldButton{
+	margin-top: 2px;
+	opacity: 0.6;
+	transition: 0.3s;
+}
+.inputFieldAddFieldButton:hover{
+	cursor: pointer;
+	opacity: 1
+}

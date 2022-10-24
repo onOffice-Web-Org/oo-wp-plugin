@@ -162,15 +162,15 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_CHECKBOX_BUTTON:
 				$onOfficeInputFields = false;
 				$pInstance = new InputFieldCheckboxButtonRenderer(AdminPageAjax::EXCLUDE_FIELD . $elementName,
-					$pInputModel->getValuesAvailable());
-				$pInstance->setCheckedValues($pInputModel->getValue());
-				$pInstance->setId($pInputModel->getId());
-				$pInstance->setLabel($pInputModel->getLabel());
-				$pInstance->setOoModule($pFormModel->getOoModule());
-				$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
-				if ($pInputModel->getSpecialDivId() != null) {
-					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
-				}
+					$pInputModel->getValuesAvailable());	
+					$pInstance->setCheckedValues($pInputModel->getValue());
+					$pInstance->setId($pInputModel->getId());
+					$pInstance->setLabel($pInputModel->getLabel());
+					$pInstance->setOoModule($pFormModel->getOoModule());
+					$pInstance->addAdditionalAttribute('class', 'onoffice-possible-input');
+					if ($pInputModel->getSpecialDivId() != null) {
+						$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
+					}
 				break;
 
 			case InputModelOption::HTML_TYPE_RADIO:
@@ -179,7 +179,7 @@ class InputModelRenderer
 				$pInstance->setCheckedValue($pInputModel->getValue());
 				break;
 
-			case InputModelOption::HTML_TYPE_TEMPLATE_LIST:
+				case InputModelOption::HTML_TYPE_TEMPLATE_LIST:
 				$pInstance = new InputFieldTemplateListRenderer($elementName,
 					$pInputModel->getValuesAvailable());
 				$pInstance->setCheckedValue($pInputModel->getValue());
@@ -252,6 +252,18 @@ class InputModelRenderer
 				$pInstance->addAdditionalAttribute('size', '50');
 				$pInstance->setValue($pInputModel->getValue());
 				break;
+
+			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
+				$pInstance = new InputFieldRemoveRenderer($elementName,
+				$pInputModel->getValuesAvailable());	
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				$pInstance->setLabel($pInputModel->getLabel());
+				$pInstance->setOoModule($pFormModel->getOoModule());
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				if ($pInputModel->getHintHtml() != null) {
+					$pInstance->setHint($pInputModel->getHintHtml());
+				}
+				break;
 		}
 
 		if ($pInstance !== null) {
@@ -292,6 +304,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_HIDDEN:
 			case InputModelOption::HTML_TYPE_NUMBER:
 			case InputModelOption::HTML_TYPE_EMAIL:
+			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}
