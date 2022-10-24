@@ -254,7 +254,7 @@ class InputModelRenderer
 				break;
 
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
-				$pInstance = new InputFieldRemoveRenderer($elementName,
+				$pInstance = new InputFieldFieldButtonRenderer($elementName,
 				$pInputModel->getValuesAvailable());	
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
@@ -262,6 +262,9 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				if ($pInputModel->getHintHtml() != null) {
 					$pInstance->setHint($pInputModel->getHintHtml());
+				}
+				if ($pInputModel->getSpecialDivId() != null) {
+					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
 				}
 				break;
 		}

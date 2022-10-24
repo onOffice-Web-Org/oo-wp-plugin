@@ -449,4 +449,35 @@ class FormModelBuilderEstateDetailSettings
 		}
 		return $shortCodeForm;
 	}
+	
+	/**
+	 *
+	 * @param string $category
+	 * @param array $fieldNames
+	 * @param string $categoryLabel
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createButtonModelFieldsConfigByCategory($category, $fieldNames, $categoryLabel)
+	{
+		$pInputModelFieldsConfig = new InputModelOption
+			(null, $category, null, InputModelDBFactory::INPUT_FIELD_CONFIG);
+		$pInputModelFieldsConfig->setIsMulti(true);
+
+		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_BUTTON_FIELD);
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+		$pInputModelFieldsConfig->setId($category);
+		$pInputModelFieldsConfig->setLabel($categoryLabel);
+		$fields = $this->getValue(DataListView::FIELDS);
+
+		if (null == $fields)
+		{
+			$fields = array();
+		}
+
+		$pInputModelFieldsConfig->setValue($fields);
+
+		return $pInputModelFieldsConfig;
+	}
 }

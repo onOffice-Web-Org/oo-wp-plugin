@@ -38,7 +38,7 @@ use function esc_html;
  *
  */
 
-class InputFieldRemoveRenderer
+class InputFieldFieldButtonRenderer
 	extends InputFieldRenderer
 {
 
@@ -116,6 +116,7 @@ class InputFieldRemoveRenderer
 				'<span name="'.esc_html($this->getName()).'"'
 				.'class="inputFieldAddFieldButton dashicons dashicons-remove"'
 				.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
+				.' '.$this->renderAdditionalAttributes()
 				.'check="2"'
 				.' value="'.esc_html($key).'"'
 				.'data-onoffice-category="'.esc_attr($this->getLabel()).'"'
@@ -125,6 +126,7 @@ class InputFieldRemoveRenderer
 				.'class="inputFieldAddFieldButton dashicons dashicons-insert"'
 				.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 				.' value="'.esc_html($key).'"'
+				.' '.$this->renderAdditionalAttributes()
 				.'check="1"'
 				.'data-onoffice-category="'.esc_attr($this->getLabel()).'"'
 				.' id="'.esc_html($inputId).'">'
