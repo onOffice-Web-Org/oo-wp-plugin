@@ -925,10 +925,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 	public function updateDefaultSettingsTitleAndDescription() {
 		$pDataPluginSEOActive = new AdminViewController;
-		if(get_option('onoffice-settings-title-and-description') == null){
-			if($pDataPluginSEOActive->getPluginSEOActive() >= 1){
+
+		if ( get_option('onoffice-settings-title-and-description') === false ) {
+			if ($pDataPluginSEOActive->getPluginSEOActive() >= 1) {
 				update_option('onoffice-settings-title-and-description', 1);
-			}else{
+			} else {
 				update_option('onoffice-settings-title-and-description', 0);
 			}
 		};
