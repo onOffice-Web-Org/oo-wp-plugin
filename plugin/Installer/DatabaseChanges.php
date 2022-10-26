@@ -27,6 +27,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\AddressList;
 use Exception;
+use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
@@ -43,7 +44,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 33;
+	const MAX_VERSION = 34;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -250,6 +251,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateShowReferenceEstate();
 			$this->setDataDetailViewRestrictAccessControlValue();
 			$dbversion = 33;
+		}
+
+		if ( $dbversion == 33 ) {
+			$this->updateDefaultSettingsTitleAndDescription();
+			$dbversion = 34;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -910,6 +916,22 @@ class DatabaseChanges implements DatabaseChangesInterface
 		ksort($addressFields);
 		$pDetailView->setAddressFields($addressFields);
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateDefaultSettingsTitleAndDescription() {
+		$pDataPluginSEOActive = new AdminViewController;
+		if(get_option('onoffice-settings-title-and-description') == null){
+			if($pDataPluginSEOActive->getPluginSEOActive() >= 1){
+				update_option('onoffice-settings-title-and-description', 1);
+			}else{
+				update_option('onoffice-settings-title-and-description', 0);
+			}
+		};
 	}
 
 
