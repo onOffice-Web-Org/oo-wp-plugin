@@ -259,7 +259,6 @@ class InputModelRenderer
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
 				$pInstance->setOoModule($pFormModel->getOoModule());
-				$pInstance->setCheckedValues($pInputModel->getValue());
 				if ($pInputModel->getHintHtml() != null) {
 					$pInstance->setHint($pInputModel->getHintHtml());
 				}

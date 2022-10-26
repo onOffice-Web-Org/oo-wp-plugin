@@ -470,10 +470,12 @@ class FormModelBuilderEstateDetailSettings
 		$pInputModelFieldsConfig->setId($category);
 		$pInputModelFieldsConfig->setLabel($categoryLabel);
 		$fields = $this->getValue(DataListView::FIELDS);
-
 		if (null == $fields)
 		{
-			$fields = array();
+			$fields = array(
+				$this->_pDataDetailView->getAddressFields(),
+				$this->_pDataDetailView->getFields(),
+			);
 		}
 
 		$pInputModelFieldsConfig->setValue($fields);

@@ -41,8 +41,8 @@ jQuery(document).ready(function($){
 	   getCheckedFields(this);
 	});
 
-	$('.inputFieldAddFieldButton').click(function() {
-		getAddField(this);
+	$('.inputFieldButton').click(function() {
+		getCheckedFieldButton(this);
 	});
 
 	$('.item-edit').click(function() {
@@ -52,7 +52,7 @@ jQuery(document).ready(function($){
 	$('.item-delete-link').click(function() {
 		$(this).parent().parent().remove();
 	});
-	var getAddField = function(but) {
+	var getCheckedFieldButton = function(but) {
 		var check = $(but).attr('check');
 		if(check == 1){
 			but.classList.remove("dashicons-insert");
@@ -65,8 +65,6 @@ jQuery(document).ready(function($){
 			$(but).attr('check', 2);
 			var optionsAvailable = false;
 			var checkedFields = [];
-			var inputConfigFields = $('#sortableFieldsList').find('#menu-item-objektart').remove();
-			console.log(inputConfigFields);
 			if ($(but).attr('onoffice-multipleSelectType')) {
 				optionsAvailable = $(but).attr('onoffice-multipleSelectType') === '1';
 			}
@@ -89,7 +87,7 @@ jQuery(document).ready(function($){
 			$(but).attr('check', 1);
 			var valElName = $(but).attr('value');
 			var checkedFields = [];
-			var inputConfigFields = $('#sortableFieldsList').find('#menu-item-'+valElName).remove();
+			$('#sortableFieldsList').find('#menu-item-'+valElName).remove();
 		}
 
 		return checkedFields;

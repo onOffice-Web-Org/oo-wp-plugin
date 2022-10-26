@@ -112,9 +112,9 @@ class InputFieldCheckButtonRenderer
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
 				$onofficeMultipleSelect = $this->isMultipleSelect($key, $pFieldsCollection) ? '1' : '0';
-				echo (is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()) ? 
+				echo (is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()[0]) || in_array($key, $this->getCheckedValues()[1]) ? 
 				'<span name="'.esc_html($this->getName()).'"'
-				.'class="inputFieldAddFieldButton dashicons dashicons-remove"'
+				.'class="inputFieldButton dashicons dashicons-remove"'
 				.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 				.' '.$this->renderAdditionalAttributes()
 				.'check="2"'
@@ -123,7 +123,7 @@ class InputFieldCheckButtonRenderer
 				.' id="'.esc_html($inputId).'">'
 				.' </span>' :
 				'<span name="'.esc_html($this->getName()).'"'
-				.'class="inputFieldAddFieldButton dashicons dashicons-insert"'
+				.'class="inputFieldButton dashicons dashicons-insert"'
 				.' onoffice-multipleSelectType="'.$onofficeMultipleSelect.'"'
 				.' value="'.esc_html($key).'"'
 				.' '.$this->renderAdditionalAttributes()
