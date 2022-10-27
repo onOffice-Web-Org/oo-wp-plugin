@@ -78,7 +78,7 @@ class TestClassInputFieldButtonAddRemoveRenderer
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<span name="testRenderer"class="inputFieldButton dashicons dashicons-remove" onoffice-multipleSelectType="0" check="2" value="johndoe"data-onoffice-category="" id="labelbuttonHandleField_1bjohndoe"> </span><label for="labelbuttonHandleField_1bjohndoe">John Doe</label><br><span name="testRenderer"class="inputFieldButton dashicons dashicons-insert" onoffice-multipleSelectType="0" value="konradzuse" check="1"data-onoffice-category="" id="labelbuttonHandleField_1bkonradzuse"> </span><label for="labelbuttonHandleField_1bkonradzuse">Konrad Zuse</label><br>', $output);
+		$this->assertEquals('<span name="testRenderer"class="inputFieldButton dashicons dashicons-remove" typeField="2"value="johndoe"data-onoffice-category=""id="labelbuttonHandleField_1bjohndoe"></span><label style="margin-left:5px" for="labelbuttonHandleField_1bjohndoe">John Doe</label><br><span name="testRenderer"class="inputFieldButton dashicons dashicons-insert" typeField="1"value="konradzuse"data-onoffice-category=""id="labelbuttonHandleField_1bkonradzuse"></span><label style="margin-left:5px" for="labelbuttonHandleField_1bkonradzuse">Konrad Zuse</label><br>', $output);
 	}
 	
 	/**
@@ -97,7 +97,7 @@ class TestClassInputFieldButtonAddRemoveRenderer
 		$pCheckboxFieldRenderer = new InputFieldButtonAddRemoveRenderer('testRenderer',[1,2]);
 		$pCheckboxFieldRenderer->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<span name="testRenderer"class="inputFieldButton dashicons dashicons-insert" onoffice-multipleSelectType="0" value="0" check="1"data-onoffice-category="" id="labelbuttonHandleField_1b0"> </span><label for="labelbuttonHandleField_1b0">1</label><br><span name="testRenderer"class="inputFieldButton dashicons dashicons-insert" onoffice-multipleSelectType="0" value="1" check="1"data-onoffice-category="" id="labelbuttonHandleField_1b1"> </span><label for="labelbuttonHandleField_1b1">2</label><br>', $output);
+		$this->assertEquals('<span name="testRenderer"class="inputFieldButton dashicons dashicons-insert" typeField="1"value="0"data-onoffice-category=""id="labelbuttonHandleField_1b0"></span><label style="margin-left:5px" for="labelbuttonHandleField_1b0">1</label><br><span name="testRenderer"class="inputFieldButton dashicons dashicons-insert" typeField="1"value="1"data-onoffice-category=""id="labelbuttonHandleField_1b1"></span><label style="margin-left:5px" for="labelbuttonHandleField_1b1">2</label><br>', $output);
 	}
 	
 	public function testSetCheckedValues()
