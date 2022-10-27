@@ -472,7 +472,7 @@ class FormModelBuilderEstateDetailSettings
 		$fields = $this->getValue(DataListView::FIELDS);
 		if (null == $fields)
 		{
-			$fields = array(
+			$fields = array_merge(
 				$this->_pDataDetailView->getAddressFields(),
 				$this->_pDataDetailView->getFields(),
 			);

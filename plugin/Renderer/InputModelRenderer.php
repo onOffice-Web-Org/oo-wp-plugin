@@ -254,14 +254,11 @@ class InputModelRenderer
 				break;
 
 			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
-				$pInstance = new InputFieldCheckButtonRenderer($elementName,
+				$pInstance = new InputFieldButtonAddRemoveRenderer(AdminPageAjax::EXCLUDE_FIELD . $elementName,
 				$pInputModel->getValuesAvailable());	
 				$pInstance->setCheckedValues($pInputModel->getValue());
 				$pInstance->setLabel($pInputModel->getLabel());
 				$pInstance->setOoModule($pFormModel->getOoModule());
-				if ($pInputModel->getHintHtml() != null) {
-					$pInstance->setHint($pInputModel->getHintHtml());
-				}
 				if ($pInputModel->getSpecialDivId() != null) {
 					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
 				}

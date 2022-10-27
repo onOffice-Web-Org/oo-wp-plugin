@@ -53,8 +53,10 @@ jQuery(document).ready(function($){
 		$(this).parent().parent().remove();
 	});
 	var getCheckedFieldButton = function(but) {
-		var check = $(but).attr('check');
-		if(check == 1){
+		var addField= 1;
+		var removeField= 2;
+		var checkTypeField = $(but).attr('typeField');
+		if(checkTypeField == addField){
 			but.classList.remove("dashicons-insert");
 			but.classList.add("dashicons-remove");
 			var label = $(but).attr('data-action-div');
@@ -62,9 +64,11 @@ jQuery(document).ready(function($){
 			var valElLabel = $(but).next().text();
 			var category = $(but).attr('data-onoffice-category');
 			var module = $(but).attr('data-onoffice-module');
-			$(but).attr('check', 2);
+
+			$(but).attr('typeField', removeField);
 			var optionsAvailable = false;
 			var checkedFields = [];
+
 			if ($(but).attr('onoffice-multipleSelectType')) {
 				optionsAvailable = $(but).attr('onoffice-multipleSelectType') === '1';
 			}
@@ -84,7 +88,7 @@ jQuery(document).ready(function($){
 		} else {
 			but.classList.remove("dashicons-remove");
 			but.classList.add("dashicons-insert");
-			$(but).attr('check', 1);
+			$(but).attr('typeField', addField);
 			var valElName = $(but).attr('value');
 			var checkedFields = [];
 			$('#sortableFieldsList').find('#menu-item-'+valElName).remove();
@@ -98,10 +102,12 @@ jQuery(document).ready(function($){
 		var category = $(but).attr('data-onoffice-category');
 		var checkedFields = [];
 		var inputConfigFields = $('#' + categoryShort).find('input.onoffice-possible-input:checked');
+
 		$(inputConfigFields).each(function(index) {
 			var valElName = $(this).val();
 			var valElLabel = $(this).next().text();
 			var module = $(this).attr('data-onoffice-module');
+
 			var optionsAvailable = false;
 
 			if ($(this).attr('onoffice-multipleSelectType')) {

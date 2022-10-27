@@ -378,7 +378,9 @@ class FormModelBuilderSimilarEstateSettings
 
 		if (null == $fields)
 		{
-			$fields = array();
+			$fields = array_merge(
+				$this->_pDataSimilarView->getFields()
+			);
 		}
 
 		$pInputModelFieldsConfig->setValue($fields);

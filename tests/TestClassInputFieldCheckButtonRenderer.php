@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use onOffice\WPlugin\Renderer\InputFieldCheckButtonRenderer;
+use onOffice\WPlugin\Renderer\InputFieldButtonAddRemoveRenderer;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use DI\Container;
@@ -34,7 +34,7 @@ use WP_UnitTestCase;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class TestClassInputFieldCheckButtonRenderer
+class TestClassInputFieldButtonAddRemoveRenderer
 	extends WP_UnitTestCase
 {
 	/** @var Container */
@@ -60,7 +60,7 @@ class TestClassInputFieldCheckButtonRenderer
 	 */
 	public function testRenderEmptyValues()
 	{
-		$pSubject = new InputFieldCheckButtonRenderer('testRenderer',true);
+		$pSubject = new InputFieldButtonAddRemoveRenderer('testRenderer',true);
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
@@ -72,7 +72,7 @@ class TestClassInputFieldCheckButtonRenderer
 	 */
 	public function testRenderWithValues()
 	{
-		$pSubject = new InputFieldCheckButtonRenderer('testRenderer', true);
+		$pSubject = new InputFieldButtonAddRemoveRenderer('testRenderer', true);
 		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
 		$pSubject->setCheckedValues(['johndoe']);
 		ob_start();
@@ -86,7 +86,7 @@ class TestClassInputFieldCheckButtonRenderer
 	 */
 	public function testGetHint()
 	{
-		$pSubject = new InputFieldCheckButtonRenderer('testRenderer', true);
+		$pSubject = new InputFieldButtonAddRemoveRenderer('testRenderer', true);
 		$pSubject->setHint('testRenderer');
 		$this->assertEquals('testRenderer',$pSubject->getHint());
 	}
@@ -94,7 +94,7 @@ class TestClassInputFieldCheckButtonRenderer
 	public function testRenderWithArrayValue()
 	{
 		ob_start();
-		$pCheckboxFieldRenderer = new InputFieldCheckButtonRenderer('testRenderer',[1,2]);
+		$pCheckboxFieldRenderer = new InputFieldButtonAddRemoveRenderer('testRenderer',[1,2]);
 		$pCheckboxFieldRenderer->render();
 		$output = ob_get_clean();
 		$this->assertEquals('<span name="testRenderer"class="inputFieldButton dashicons dashicons-insert" onoffice-multipleSelectType="0" value="0" check="1"data-onoffice-category="" id="labelbuttonHandleField_1b0"> </span><label for="labelbuttonHandleField_1b0">1</label><br><span name="testRenderer"class="inputFieldButton dashicons dashicons-insert" onoffice-multipleSelectType="0" value="1" check="1"data-onoffice-category="" id="labelbuttonHandleField_1b1"> </span><label for="labelbuttonHandleField_1b1">2</label><br>', $output);
@@ -102,7 +102,7 @@ class TestClassInputFieldCheckButtonRenderer
 	
 	public function testSetCheckedValues()
 	{
-		$instance = new InputFieldCheckButtonRenderer('testRenderer', 1);
+		$instance = new InputFieldButtonAddRemoveRenderer('testRenderer', 1);
 		$instance->setCheckedValues([1,2]);
 		$this->assertEquals([1,2], $instance->getCheckedValues());
 	}
