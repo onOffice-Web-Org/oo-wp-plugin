@@ -474,7 +474,7 @@ class FormModelBuilderEstateDetailSettings
 		{
 			$fields = array_merge(
 				$this->_pDataDetailView->getAddressFields(),
-				$this->_pDataDetailView->getFields(),
+				$this->_pDataDetailView->getFields()
 			);
 		}
 
