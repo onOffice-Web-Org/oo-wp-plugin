@@ -218,15 +218,19 @@ class AdminPageFormList
 			echo '<a href="'.$newLink.'" class="page-title-action">'
 				.esc_html__('Add New', 'onoffice-for-wp-websites').'</a>';
 		}else{
-			echo '<span class="page-option-action">';
-            echo '<select onchange="location = this.value;">';
-			echo '<option style="display:none" value="" disabled selected>'.esc_html__('All Options Add New', 'onoffice-for-wp-websites').'</option>';
-			echo '<option value="'.$linkAddNewContactForm.'">'.esc_html__('Contact Form', 'onoffice-for-wp-websites').'</option>';
-			echo '<option value="'.$linkAddNewInterestForm.'">'.esc_html__('Interest Form', 'onoffice-for-wp-websites').'</option>';
-			echo '<option value="'.$linkAddNewOwnerForm.'">'.esc_html__('Owner Form', 'onoffice-for-wp-websites').'</option>';
-			echo '<option value="'.$linkAddNewApplicantSearchForm.'">'.esc_html__('Applicant Search Form', 'onoffice-for-wp-websites').'</option>';
-            echo '</select>';
-			echo '</span>';
+		echo '<div style = "display: inline-block;">';
+		echo '<details class="page-option-action">';
+		echo '<summary class="radios">';
+		echo '<div>'.esc_html__('All Options Add New', 'onoffice-for-wp-websites').'</div>';
+		echo '</summary>';
+		echo '<ul class="options-menu">';
+		echo '<li><a href="'.$linkAddNewContactForm.'"><p>'.esc_html__('Contact Form', 'onoffice-for-wp-websites').'</p></a></li>';
+		echo '<li><a href="'.$linkAddNewInterestForm.'"><p>'.esc_html__('Interest Form', 'onoffice-for-wp-websites').'</p></a></li>';
+		echo '<li><a href="'.$linkAddNewOwnerForm.'"><p>'.esc_html__('Owner Form', 'onoffice-for-wp-websites').'</p></a></li>';
+		echo '<li><a href="'.$linkAddNewApplicantSearchForm.'"><p>'.esc_html__('Applicant Search Form', 'onoffice-for-wp-websites').'</p></a></li>';
+		echo '</ul>';
+		echo '</details>';
+		echo '</div>';
         }
 		echo '<hr class="wp-header-end">';
 	}
