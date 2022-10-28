@@ -353,3 +353,18 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 .memssageRecordsPerPage{
 	text-align: right;
 }
+.page-option-action{
+	padding: 9px 0 4px;
+    font-size: 23px;
+    font-weight: 400;
+    margin: 0;
+}
+.page-option-action select{
+    font-size: 0.7em;
+	color: #2271b1;
+    border-color: #92c0e6;
+	opacity: 0.9;
+}
+.page-option-action select:hover{	
+	opacity: 1;
+}
