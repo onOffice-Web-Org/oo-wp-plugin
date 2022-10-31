@@ -58,26 +58,26 @@ jQuery(document).ready(function($){
 		$(data).attr('typeField', 1);
 		$(this).parent().parent().remove();
 	});
-	var getCheckedFieldButton = function(but) {
+	var getCheckedFieldButton = function(btn) {
 		var addField= 1;
 		var removeField= 2;
-		var checkTypeField = $(but).attr('typeField');
+		var checkTypeField = $(btn).attr('typeField');
 		if(checkTypeField == addField){
-			but.classList.remove("dashicons-insert");
-			but.classList.add("dashicons-remove");
-			var label = $(but).attr('data-action-div');
-			var valElName = $(but).attr('value');
-			var valElLabel = $(but).next().text();
-			var category = $(but).attr('data-onoffice-category');
-			var module = $(but).attr('data-onoffice-module');
+			btn.classList.remove("dashicons-insert");
+			btn.classList.add("dashicons-remove");
+			var label = $(btn).attr('data-action-div');
+			var valElName = $(btn).attr('value');
+			var valElLabel = $(btn).next().text();
+			var category = $(btn).attr('data-onoffice-category');
+			var module = $(btn).attr('data-onoffice-module');
 			var actionFieldName = 'labelButtonHandleField-'+valElName;
 
-			$(but).attr('typeField', removeField);
+			$(btn).attr('typeField', removeField);
 			var optionsAvailable = false;
 			var checkedFields = [];
 
-			if ($(but).attr('onoffice-multipleSelectType')) {
-				optionsAvailable = $(but).attr('onoffice-multipleSelectType') === '1';
+			if ($(btn).attr('onoffice-multipleSelectType')) {
+				optionsAvailable = $(btn).attr('onoffice-multipleSelectType') === '1';
 			}
 
 			var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable, actionFieldName);
@@ -93,12 +93,13 @@ jQuery(document).ready(function($){
 			});
 			document.dispatchEvent(event);
 		} else {
-			but.classList.remove("dashicons-remove");
-			but.classList.add("dashicons-insert");
-			$(but).attr('typeField', addField);
-			var valElName = $(but).attr('value');
+			var valElName = $(btn).attr('value');
 			var checkedFields = [];
-			$('#sortableFieldsList').find('#menu-item-'+valElName).remove();
+
+			btn.classList.remove("dashicons-remove");
+			btn.classList.add("dashicons-insert");
+			$(btn).attr('typeField', addField);
+			$('*#sortableFieldsList').find('#menu-item-'+valElName).remove();
 		}
 
 		return checkedFields;
