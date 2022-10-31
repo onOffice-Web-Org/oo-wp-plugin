@@ -356,24 +356,30 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .page-option-action {
 	position: relative;
-	width: 200px;
+	width: 160px;
+	border: 1.5px solid #c3c4c7;
+	border-radius: 3px;
 }
 
 .page-option-action summary {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 8px;
+	padding: 4px 10px;
 	cursor: pointer;
-	border-radius: 5px;
 	background-color: #fff;
-	border:1px solid rgb(76, 143, 173);
-	color:rgb(76, 143, 173);
+	color:#3c434a;
 	list-style: none;
 }
 
-.page-option-action[open] summary:after {
-	transform: rotate(-45deg) translate(0%, 0%);
+.page-option-action[open] {
+	border-radius: 3px;
+	border: 1.5px solid#3582c4;
+	color:#3582c4;
+}
+
+.page-option-action summary:hover {
+	color:#3582c4;
 }
 .page-option-action[open] summary:before {
 	content: '';
@@ -390,45 +396,38 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 .page-option-action summary:after {
 	content: '';
 	margin-bottom: 6px;
-	width: .5rem;
-	color:rgb(76, 143, 173);
-	height: .5rem;
-	border-bottom: 1px solid currentColor;
-	border-left: 1px solid currentColor;
+	width: .4rem;
+	color:#3c434a;
+	height: .4rem;
+	border-bottom: 2px solid #2c3338;
+	border-left: 2px solid #2c3338;
 	border-bottom-left-radius: 2px;
-	transform: rotate(45deg) translate(50%, 0%);
+	transform: rotate(-45deg) translate(0%, 0%);
 	transform-origin: center center;
-	transition: transform ease-in-out 100ms
-}
+	}
 
 .page-option-action .options-menu {
 	width: 100%;
-	margin-top: 3px;
+	margin-top: 1px;
 	background: #fff;
 	position: absolute;
 	box-sizing: border-box;
-	border:1px solid rgb(76, 143, 173);
-	border-radius: 5px;
+	border: 1px solid #c3c4c7;
 }
 .options-menu li a{
-	text-decoration: none
+	text-decoration: none;
+	color: #3c434a;
 }
 .page-option-action .options-menu li {
-    padding: 5px 0;
 	margin-bottom: 0px;
-	opacity: 0.8;
-	transition: 0.5s;
 }
 .options-menu li a p{
-	padding:5px 10px;
+	padding: 0px 10px;
 	margin: 0;
 }
 .options-menu li:hover{
-	background-color: #7db8e7;
-	opacity: 1;
+	background-color: rgb(46,146,249);
 }
 .options-menu li:hover a{
-	transition: 1.3s;
 	color:#fff;
-	opacity: 1;
 }
