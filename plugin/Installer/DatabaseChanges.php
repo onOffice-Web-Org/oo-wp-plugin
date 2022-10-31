@@ -927,7 +927,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$pDataPluginSEOActive = new AdminViewController;
 
 		if ( get_option('onoffice-settings-title-and-description') === false ) {
-			if ($pDataPluginSEOActive->getPluginSEOActive() >= 1) {
+			if (count($pDataPluginSEOActive->getPluginSEOActive()) >= 1) {
 				update_option('onoffice-settings-title-and-description', 1);
 			} else {
 				update_option('onoffice-settings-title-and-description', 0);
