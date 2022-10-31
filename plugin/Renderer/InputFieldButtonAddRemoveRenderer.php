@@ -66,7 +66,8 @@ class InputFieldButtonAddRemoveRenderer
 		if (is_array($this->getValue())) {
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
-                $onofficeSelect = is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()) ? 'class="inputFieldButton dashicons dashicons-remove" typeField="2"' : 'class="inputFieldButton dashicons dashicons-insert" typeField="1"';
+				$actionFieldName = 'labelButtonHandleField'.'-'.$key;
+                $onofficeSelect = is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()) ? 'class="inputFieldButton dashicons dashicons-remove '.$actionFieldName.'" typeField="2"' : 'class="inputFieldButton dashicons dashicons-insert '.$actionFieldName.'" typeField="1"';
                 echo '<span name="'.esc_html($this->getName()).'"'
                     .'' .$onofficeSelect
                     .'' .$this->renderAdditionalAttributes()

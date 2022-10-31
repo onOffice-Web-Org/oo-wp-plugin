@@ -50,6 +50,12 @@ jQuery(document).ready(function($){
 	});
 
 	$('.item-delete-link').click(function() {
+		var labelButtonHandleField= $(this).parent().parent().attr('action-field-name');
+		var data = document.querySelector("."+labelButtonHandleField);
+
+		data.classList.remove("dashicons-remove");
+		data.classList.add("dashicons-insert");
+		$(data).attr('typeField', 1);
 		$(this).parent().parent().remove();
 	});
 	var getCheckedFieldButton = function(but) {
@@ -64,6 +70,7 @@ jQuery(document).ready(function($){
 			var valElLabel = $(but).next().text();
 			var category = $(but).attr('data-onoffice-category');
 			var module = $(but).attr('data-onoffice-module');
+			var actionFieldName = 'labelButtonHandleField-'+valElName;
 
 			$(but).attr('typeField', removeField);
 			var optionsAvailable = false;
@@ -73,7 +80,7 @@ jQuery(document).ready(function($){
 				optionsAvailable = $(but).attr('onoffice-multipleSelectType') === '1';
 			}
 
-			var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable);
+			var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable, actionFieldName);
 
 			var event = new CustomEvent('addFieldItem', {
 				detail: {
@@ -150,7 +157,7 @@ jQuery(document).ready(function($){
 		return checkedFields;
 	};
 
-	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable) {
+	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable, actionFieldName) {
 		var myLabel = label ? $('#' + label) : {};
 		var dummyKey;
 
@@ -163,6 +170,7 @@ jQuery(document).ready(function($){
 		var clonedElement = dummyKey.clone(true, true);
 
 		clonedElement.attr('id', 'menu-item-'+fieldName);
+		clonedElement.attr('action-field-name', actionFieldName);
 		clonedElement.find('span.item-title:contains("dummy_label")').text(fieldLabel);
 		clonedElement.find('span.item-type:contains("dummy_category")').text(fieldCategory);
 		clonedElement.find('input[value=dummy_key]').val(fieldName);

@@ -128,7 +128,7 @@ class InputFieldComplexSortableDetailListRenderer
 			$deactivatedInOnOffice = ' ('.__('Disabled in onOffice', 'onoffice-for-wp-websites').')';
 		}
 
-		echo '<li class="sortable-item" id="menu-item-'.esc_html($key).'">'
+		echo '<li class="sortable-item" id="menu-item-'.esc_html($key).'" action-field-name="labelButtonHandleField-'.esc_html($key).'">'
 			.'<div class="menu-item-bar">'
 				.'<div class="menu-item-handle ui-sortable-handle">'
 					.'<span class="item-title" '.$deactivatedStyle.'>'
