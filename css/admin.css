@@ -387,6 +387,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 }
 
 .page-option-action summary:hover {
+	color: #3582c4;
 }
 
 .page-option-action[open] summary:before {
