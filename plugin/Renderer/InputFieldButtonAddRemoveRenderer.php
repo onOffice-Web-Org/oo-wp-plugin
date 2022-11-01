@@ -21,15 +21,6 @@
 
 namespace onOffice\WPlugin\Renderer;
 
-use onOffice\WPlugin\Utility\HtmlIdGenerator;
-use DI\ContainerBuilder;
-use Exception;
-use onOffice\WPlugin\API\APIClientCredentialsException;
-use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
-use onOffice\WPlugin\Field\UnknownFieldException;
-use onOffice\WPlugin\Types\FieldsCollection;
-use onOffice\WPlugin\Types\FieldTypes;
-use const ONOFFICE_DI_CONFIG_PATH;
 use function esc_html;
 /**
  *
@@ -69,7 +60,7 @@ class InputFieldButtonAddRemoveRenderer
 				$actionFieldName = 'labelButtonHandleField'.'-'.$key;
                 $checkDataField = is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues());
                 $onofficeSelect = $checkDataField ? 'class="inputFieldButton dashicons dashicons-remove '.$actionFieldName.'" typeField="2"' : 'class="inputFieldButton dashicons dashicons-insert '.$actionFieldName.'" typeField="1"';
-                $handleButtonChange = $checkDataField ? "opacity: 0.5;" : "opacity: 1;";
+                $handleLabelButtonChange = $checkDataField ? "opacity: 0.5;" : "opacity: 1;";
                 echo '<span name="'.esc_html($this->getName()).'"'
                     .'' .$onofficeSelect
                     .'' .$this->renderAdditionalAttributes()
@@ -77,7 +68,7 @@ class InputFieldButtonAddRemoveRenderer
                     . 'data-onoffice-category="'.esc_attr($this->getLabel()).'"'
                     . 'id="'.esc_html($inputId).'">'
                     . '</span>';
-                echo '<label style="margin-left:5px;'.$handleButtonChange.'" for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
+                echo '<label style="margin-left:5px;'.$handleLabelButtonChange.'" for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
 					.$textHtml;
 			}
 		}
