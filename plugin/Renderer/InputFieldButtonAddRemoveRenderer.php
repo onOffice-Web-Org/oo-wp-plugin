@@ -67,7 +67,9 @@ class InputFieldButtonAddRemoveRenderer
 			foreach ($this->getValue() as $key => $label) {
 				$inputId = 'label'.$this->getGuiId().'b'.$key;
 				$actionFieldName = 'labelButtonHandleField'.'-'.$key;
-                $onofficeSelect = is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues()) ? 'class="inputFieldButton dashicons dashicons-remove '.$actionFieldName.'" typeField="2"' : 'class="inputFieldButton dashicons dashicons-insert '.$actionFieldName.'" typeField="1"';
+                $checkDataField = is_array($this->getCheckedValues()) && in_array($key, $this->getCheckedValues());
+                $onofficeSelect = $checkDataField ? 'class="inputFieldButton dashicons dashicons-remove '.$actionFieldName.'" typeField="2"' : 'class="inputFieldButton dashicons dashicons-insert '.$actionFieldName.'" typeField="1"';
+                $handleButtonChange = $checkDataField ? "opacity: 0.5;" : "opacity: 1;";
                 echo '<span name="'.esc_html($this->getName()).'"'
                     .'' .$onofficeSelect
                     .'' .$this->renderAdditionalAttributes()
@@ -75,7 +77,7 @@ class InputFieldButtonAddRemoveRenderer
                     . 'data-onoffice-category="'.esc_attr($this->getLabel()).'"'
                     . 'id="'.esc_html($inputId).'">'
                     . '</span>';
-                echo '<label style="margin-left:5px" for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
+                echo '<label style="margin-left:5px;'.$handleButtonChange.'" for="'.esc_html($inputId).'">'.esc_html($label).'</label><br>'
 					.$textHtml;
 			}
 		}

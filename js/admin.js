@@ -55,6 +55,7 @@ jQuery(document).ready(function($){
 
 		data.classList.remove("dashicons-remove");
 		data.classList.add("dashicons-insert");
+		$(data).next().css( "opacity", "1")
 		$(data).attr('typeField', 1);
 		$(this).parent().parent().remove();
 	});
@@ -72,6 +73,7 @@ jQuery(document).ready(function($){
 			var module = $(btn).attr('data-onoffice-module');
 			var actionFieldName = 'labelButtonHandleField-'+valElName;
 
+			$(btn).next().css( "opacity", "0.5")
 			$(btn).attr('typeField', removeField);
 			var optionsAvailable = false;
 			var checkedFields = [];
@@ -96,6 +98,7 @@ jQuery(document).ready(function($){
 			var valElName = $(btn).attr('value');
 			var checkedFields = [];
 
+			$(btn).next().css( "opacity", "1")
 			btn.classList.remove("dashicons-remove");
 			btn.classList.add("dashicons-insert");
 			$(btn).attr('typeField', addField);
