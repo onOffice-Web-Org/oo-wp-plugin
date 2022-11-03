@@ -78,6 +78,7 @@ class ScriptLoaderGenericConfigurationDefault
 			new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath)),
 			new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath)),
 			new IncludeFileModel($style, 'onoffice_style', $this->getCSSOnofficeStyle()),
+			new IncludeFileModel($style, 'onoffice_defaultview', plugins_url('/css/onoffice_defaultview.css', $pluginPath)),
 			new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath))
 		];
 
@@ -114,12 +115,12 @@ class ScriptLoaderGenericConfigurationDefault
 			$onofficeCssStyleLink = ! empty( glob( get_stylesheet_directory()
 			                                       . '/onoffice-theme/templates/onoffice-style.css' ) )
 				? get_stylesheet_directory_uri() . '/onoffice-theme/templates/onoffice-style.css'
-				: plugins_url( 'css/onoffice_defaultview.css', $pluginPath );
+				: plugins_url( 'templates.dist/onoffice-style.css', $pluginPath );
 		} elseif ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_PLUGIN ] ) ) {
 			$onofficeCssStyleLink = ! empty( glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR )
 			                                       . 'onoffice-personalized/templates/onoffice-style.css' ) )
 				? plugins_url( 'onoffice-personalized/templates/onoffice-style.css', '' )
-				: plugins_url( 'css/onoffice_defaultview.css', $pluginPath );
+				: plugins_url( 'templates.dist/onoffice-style.css', $pluginPath );
 		} else {
 			$onofficeCssStyleLink = plugins_url( 'templates.dist/onoffice-style.css', $pluginPath );
 		}
