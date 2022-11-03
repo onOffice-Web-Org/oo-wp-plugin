@@ -35,6 +35,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
+use onOffice\WPlugin\DataView\DataDetailView;
 use wpdb;
 
 class TestClassFormModelBuilderEstateDetailSettings
@@ -302,5 +303,29 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
 	
-	
+	/**
+	* @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::CreateButtonModelFieldsConfigByCategory
+	*/
+
+	public function testCreateButtonModelFieldsConfigByCategory()
+	{
+		$pInstanceAddressFields = $this->getMockBuilder(DataDetailView::class)
+		->disableOriginalConstructor()
+		->setMethods(['getAddressFields'])
+		->getMock();
+		$pInstanceFields = $this->getMockBuilder(DataDetailView::class)
+		->disableOriginalConstructor()
+		->setMethods(['getFields'])
+		->getMock();
+		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
+		->disableOriginalConstructor()
+		->setMethods(['getValue'])
+		->getMock();
+		$pValues = array_merge([$pInstanceAddressFields,$pInstanceFields],[]);
+		$pInstance->method('getValue')->willReturn($pValues);
+		$pInstance->method('getValue')->willReturn('');
+
+		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory('category','name','label');
+		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
+	}
 }

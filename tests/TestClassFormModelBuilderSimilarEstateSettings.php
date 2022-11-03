@@ -260,4 +260,25 @@ class TestClassFormModelBuilderSimilarEstateSettings
 		$pInputModelDB = $pInstance->createInputModelSameEstateAmount();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::CreateButtonModelFieldsConfigByCategory
+	 */
+	public function testCreateButtonModelFieldsConfigByCategory()
+	{
+		$pInstanceFields = $this->getMockBuilder(DataListView::class)
+		->disableOriginalConstructor()
+		->setMethods(['getFields'])
+		->getMock();
+		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
+		->disableOriginalConstructor()
+		->setMethods(['getValue'])
+		->getMock();
+		$pInstance->method('getValue')->willReturn($pInstanceFields);
+		$pInstance->method('getValue')->willReturn('');
+
+		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory('category','name','label');
+
+		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
+	}
 }
