@@ -30,7 +30,6 @@ use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactorySimilarView;
 use onOffice\WPlugin\DataView\DataDetailView;
-use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
@@ -263,7 +262,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::CreateButtonModelFieldsConfigByCategory
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createButtonModelFieldsConfigByCategory
 	 */
 	public function testCreateButtonModelFieldsConfigByCategory()
 	{
@@ -280,6 +279,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory('category','name','label');
 
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelDB);
 		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
 	}
 }

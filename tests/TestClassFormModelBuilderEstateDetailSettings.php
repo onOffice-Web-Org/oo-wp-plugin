@@ -28,6 +28,7 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
+use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
@@ -304,7 +305,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 	}
 	
 	/**
-	* @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::CreateButtonModelFieldsConfigByCategory
+	* @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createButtonModelFieldsConfigByCategory
 	*/
 
 	public function testCreateButtonModelFieldsConfigByCategory()
@@ -326,6 +327,8 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInstance->method( 'getValue' )->willReturn( '' );
 
 		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory( 'category', 'name', 'label' );
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelDB);
 		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
 	}
 }

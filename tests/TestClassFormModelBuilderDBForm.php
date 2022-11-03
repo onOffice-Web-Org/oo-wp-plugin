@@ -303,7 +303,7 @@ class TestClassFormModelBuilderDBForm
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::CreateInputModelFieldsConfigByCategory
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelFieldsConfigByCategory
 	 */
 	public function testCreateInputModelFieldsConfigByCategory()
 	{
