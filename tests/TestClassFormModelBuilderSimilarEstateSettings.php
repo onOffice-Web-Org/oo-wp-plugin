@@ -29,6 +29,7 @@ use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactorySimilarView;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
@@ -266,7 +267,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	 */
 	public function testCreateButtonModelFieldsConfigByCategory()
 	{
-		$pInstanceFields = $this->getMockBuilder(DataListView::class)
+		$pInstanceFields = $this->getMockBuilder(DataDetailView::class)
 		->disableOriginalConstructor()
 		->setMethods(['getFields'])
 		->getMock();
