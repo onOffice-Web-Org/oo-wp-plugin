@@ -91,6 +91,9 @@ class TestClassInputFieldButtonAddRemoveRenderer
 		$this->assertEquals('testRenderer',$pSubject->getHint());
 	}
 	
+	/**
+	 *
+	 */
 	public function testRenderWithArrayValue()
 	{
 		ob_start();
@@ -100,6 +103,9 @@ class TestClassInputFieldButtonAddRemoveRenderer
 		$this->assertEquals('<span name="testRenderer"class="inputFieldButton dashicons dashicons-insert labelButtonHandleField-0" typeField="1"value="0"data-onoffice-category=""id="labelbuttonHandleField_1b0"></span><label style="margin-left:5px;opacity: 1;" for="labelbuttonHandleField_1b0">1</label><br><span name="testRenderer"class="inputFieldButton dashicons dashicons-insert labelButtonHandleField-1" typeField="1"value="1"data-onoffice-category=""id="labelbuttonHandleField_1b1"></span><label style="margin-left:5px;opacity: 1;" for="labelbuttonHandleField_1b1">2</label><br>', $output);
 	}
 	
+	/**
+	 *
+	 */	
 	public function testSetCheckedValues()
 	{
 		$instance = new InputFieldButtonAddRemoveRenderer('testRenderer', 1);

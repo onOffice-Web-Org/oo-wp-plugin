@@ -309,23 +309,23 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 	public function testCreateButtonModelFieldsConfigByCategory()
 	{
-		$pInstanceAddressFields = $this->getMockBuilder(DataDetailView::class)
-		->disableOriginalConstructor()
-		->setMethods(['getAddressFields'])
-		->getMock();
-		$pInstanceFields = $this->getMockBuilder(DataDetailView::class)
-		->disableOriginalConstructor()
-		->setMethods(['getFields'])
-		->getMock();
-		$pInstance = $this->getMockBuilder(FormModelBuilderEstateDetailSettings::class)
-		->disableOriginalConstructor()
-		->setMethods(['getValue'])
-		->getMock();
-		$pValues = array_merge([$pInstanceAddressFields,$pInstanceFields],[]);
-		$pInstance->method('getValue')->willReturn($pValues);
-		$pInstance->method('getValue')->willReturn('');
+		$pInstanceAddressFields = $this->getMockBuilder( DataDetailView::class )
+		                               ->disableOriginalConstructor()
+		                               ->setMethods( [ 'getAddressFields' ] )
+		                               ->getMock();
+		$pInstanceFields = $this->getMockBuilder( DataDetailView::class )
+		                               ->disableOriginalConstructor()
+		                               ->setMethods( [ 'getFields' ] )
+		                               ->getMock();
+		$pInstance = $this->getMockBuilder( FormModelBuilderEstateDetailSettings::class )
+		                               ->disableOriginalConstructor()
+		                               ->setMethods( [ 'getValue' ] )
+		                               ->getMock();
+		$pValues = array_merge( [ $pInstanceAddressFields, $pInstanceFields ], [] );
+		$pInstance->method( 'getValue' )->willReturn( $pValues );
+		$pInstance->method( 'getValue' )->willReturn( '' );
 
-		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory('category','name','label');
+		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory( 'category', 'name', 'label' );
 		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
 	}
 }

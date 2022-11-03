@@ -267,16 +267,16 @@ class TestClassFormModelBuilderSimilarEstateSettings
 	 */
 	public function testCreateButtonModelFieldsConfigByCategory()
 	{
-		$pInstanceFields = $this->getMockBuilder(DataDetailView::class)
-		->disableOriginalConstructor()
-		->setMethods(['getFields'])
-		->getMock();
-		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
-		->disableOriginalConstructor()
-		->setMethods(['getValue'])
-		->getMock();
-		$pInstance->method('getValue')->willReturn($pInstanceFields);
-		$pInstance->method('getValue')->willReturn('');
+		$pInstanceFields = $this->getMockBuilder( DataDetailView::class )
+		                        ->disableOriginalConstructor()
+		                        ->setMethods( [ 'getFields' ] )
+		                        ->getMock();
+		$pInstance = $this->getMockBuilder( FormModelBuilderSimilarEstateSettings::class )
+		                        ->disableOriginalConstructor()
+		                        ->setMethods( [ 'getValue' ] )
+		                        ->getMock();
+		$pInstance->method( 'getValue' )->willReturn( $pInstanceFields );
+		$pInstance->method( 'getValue' )->willReturn( '' );
 
 		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory('category','name','label');
 
