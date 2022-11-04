@@ -156,10 +156,11 @@ class EstateTitleBuilder
 	 *
 	 */
 
-	private function buildEstateTitle( string $format, array $values ): string
-	{
-		return sprintf( $format, $values['objekttitel'] );
-	}
+	private function buildEstateTitle(string $format, array $values): string
+    {
+        return sprintf($format, $values['objekttitel'], $values['objektart'],
+            $values['vermarktungsart'], $values['ort'], $values['objektnr_extern']);
+    }
 
 
 	/**
