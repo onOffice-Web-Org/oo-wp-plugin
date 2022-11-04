@@ -105,4 +105,83 @@ class TestClassEstateViewFieldModifierTypeTitle
 		// this won't do any change
 		$this->assertEquals($this->_exampleRecord, $record);
 	}
+	
+	/**
+	 * @covers onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeTitle::getAPICustomFields
+	 */
+	public function testApiCustomFields()
+	{
+		$expectation = [
+			'objekttitel',
+			'objektart',
+			'objekttyp',
+			'vermarktungsart',
+			'plz',
+			'ort',
+			'objektnr_extern',
+			'wohnflaeche',
+			'grundstuecksflaeche',
+			'nutzflaeche',
+			'anzahl_zimmer',
+			'anzahl_badezimmer',
+			'kaufpreis',
+			'kaltmiete',
+			'objektbeschreibung',
+			'lage',
+			'ausstatt_beschr',
+			'sonstige_angaben',
+			'baujahr',
+			'endenergiebedarf',
+			'energieverbrauchskennwert',
+			'energieausweistyp',
+			'energieausweis_gueltig_bis',
+			'energyClass',
+			'aussen_courtage',
+			'kaution',
+		];
+		
+		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
+		$apiCustomFields = $pEstateViewFieldModifierTypeTitle->getAPICustomFields();
+		$this->assertEquals($expectation, $apiCustomFields);
+	}
+	
+	/**
+	 * @covers onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypeTitle::getVisibleCustomFields
+	 */
+	
+	public function testVisibleCustomFields()
+	{
+		$expectation = [
+			'objekttitel',
+			'objektart',
+			'objekttyp',
+			'vermarktungsart',
+			'plz',
+			'ort',
+			'objektnr_extern',
+			'wohnflaeche',
+			'grundstuecksflaeche',
+			'nutzflaeche',
+			'anzahl_zimmer',
+			'anzahl_badezimmer',
+			'kaufpreis',
+			'kaltmiete',
+			'objektbeschreibung',
+			'lage',
+			'ausstatt_beschr',
+			'sonstige_angaben',
+			'baujahr',
+			'endenergiebedarf',
+			'energieverbrauchskennwert',
+			'energieausweistyp',
+			'energieausweis_gueltig_bis',
+			'energyClass',
+			'aussen_courtage',
+			'kaution',
+		];
+		
+		$pEstateViewFieldModifierTypeTitle = new EstateViewFieldModifierTypeTitle(['test1', 'test2']);
+		$visibleCustomFields = $pEstateViewFieldModifierTypeTitle->getVisibleCustomFields();
+		$this->assertEquals($expectation, $visibleCustomFields);
+	}
 }

@@ -37,6 +37,11 @@ use WP_UnitTestCase;
 
 /**
  *
+ * @url http://www.onoffice.de
+ * @copyright 2003-2018, onOffice(R) GmbH
+ *
+ * @covers \onOffice\WPlugin\Controller\EstateTitleBuilder
+ *
  */
 
 class TestClassEstateTitleBuilder
@@ -89,33 +94,6 @@ class TestClassEstateTitleBuilder
 
 	/**
 	 *
-	 */
-
-	public function testBuild()
-	{
-		$format = '%2$s for %3$s in %4$s (%5$s)';
-		$pViewFieldModifier = new EstateViewFieldModifierTypeTitle([]);
-		$pViewFieldModifierFactory = $this->_pEstateTitleBuilder->getViewFieldModifierFactory();
-		$pViewFieldModifierFactory->expects($this->exactly(2))->method('create')
-			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
-			->will($this->returnValue($pViewFieldModifier));
-		$pEstateList = $this->_pEstateTitleBuilder->getEstateDetail();
-		$pEstateList->expects($this->exactly(2))->method('loadSingleEstate')->with(3);
-		$pEstateList->expects($this->exactly(2))->method('estateIterator')
-			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
-			->will($this->onConsecutiveCalls($this->getArrayContainer(), false));
-		$pDefaultFilterBuilder = $this->_pEstateTitleBuilder->getDefaultFilterBuilder();
-		$pDefaultFilterBuilder->expects($this->exactly(2))->method('setEstateId')->with(3);
-		$title = $this->_pEstateTitleBuilder->buildTitle(3, $format);
-		$this->assertEquals('House for Sale in Aachen (JD133)', $title);
-
-		// second call should result in an empty string
-		$this->assertEmpty($this->_pEstateTitleBuilder->buildTitle(3, $format));
-	}
-
-
-	/**
-	 *
 	 * @return ArrayContainer
 	 *
 	 */
@@ -133,4 +111,47 @@ class TestClassEstateTitleBuilder
 		$pArrayContainer = new ArrayContainer($keyValues);
 		return $pArrayContainer;
 	}
+	
+	/**
+	 * @covers \onOffice\WPlugin\Controller\EstateTitleBuilder::buildCustomFieldTitle
+	 */
+	public function testBuildCustomFieldTitle()
+	{
+		$format = [
+			"onoffice_titel"            => 'objekttitel',
+			"onoffice_title"            => 'objekttitel',
+			"onoffice_beschreibung"     => 'objektbeschreibung',
+			"onoffice_description"      => 'objektbeschreibung',
+			"onoffice_ort"              => 'ort',
+			"onoffice_city"             => 'ort',
+			"onoffice_plz"              => 'plz',
+			"onoffice_postal_code"      => 'plz',
+			"onoffice_objektart"        => 'objektart',
+			"onoffice_property_class"   => 'objektart',
+			"onoffice_vermarktungsart"  => 'vermarktungsart',
+			"onoffice_marketing_method" => 'vermarktungsart',
+			"onoffice_datensatznr"      => 'Id',
+			"onoffice_id"               => 'Id',
+			"onoffice_immo_nr"          => 'objektnr_extern',
+			"onoffice_prop_no"          => 'objektnr_extern'
+		];
+		$pViewFieldModifier = new EstateViewFieldModifierTypeTitle([]);
+		$pViewFieldModifierFactory = $this->_pEstateTitleBuilder->getViewFieldModifierFactory();
+		$pViewFieldModifierFactory->expects($this->exactly(2))->method('create')
+			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
+			->will($this->returnValue($pViewFieldModifier));
+		$pEstateList = $this->_pEstateTitleBuilder->getEstateDetail();
+		$pEstateList->expects($this->exactly(2))->method('loadSingleEstate')->with(3);
+		$pEstateList->expects($this->exactly(2))->method('estateIterator')
+			->with(EstateViewFieldModifierTypes::MODIFIER_TYPE_TITLE)
+			->will($this->onConsecutiveCalls($this->getArrayContainer(), false));
+		$pDefaultFilterBuilder = $this->_pEstateTitleBuilder->getDefaultFilterBuilder();
+		$pDefaultFilterBuilder->expects($this->exactly(2))->method('setEstateId')->with(3);
+		$title = $this->_pEstateTitleBuilder->buildCustomFieldTitle(3, $format['onoffice_titel']);
+		
+		$this->assertEquals('Beautiful Apartment', $title);
+		
+		$this->assertEmpty($this->_pEstateTitleBuilder->buildCustomFieldTitle(3, ''));
+	}
+	
 }

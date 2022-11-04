@@ -20,7 +20,7 @@
  */
 
 namespace onOffice\WPlugin\ViewFieldModifier;
-
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
 /**
  *
  * @url http://www.onoffice.de
@@ -64,7 +64,21 @@ class EstateViewFieldModifierTypeTitle
 
 		return array_values(array_unique(array_merge($this->_viewFields, $titleFields)));
 	}
+	
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+	
+	public function getAPICustomFields(): array
+	{
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$dataCustomFields                 = $pDataDetailViewHandler->getDetailView();
 
+		return $dataCustomFields->getFields();
+	}
+	
 
 	/**
 	 *
@@ -76,8 +90,18 @@ class EstateViewFieldModifierTypeTitle
 	{
 		return $this->getAPIFields();
 	}
-
-
+	
+	/**
+	 *
+	 * @return array
+	 *
+	 */
+	
+	public function getVisibleCustomFields(): array
+	{
+		return $this->getAPICustomFields();
+	}
+	
 	/**
 	 *
 	 * @param array $record

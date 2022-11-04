@@ -23,7 +23,7 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
-use onOffice\WPlugin\Utility\__String;
+use Exception;
 use onOffice\WPlugin\WP\WPQueryWrapper;
 
 class EstateViewDocumentTitleBuilder
@@ -45,26 +45,34 @@ class EstateViewDocumentTitleBuilder
 	}
 
 	/**
-	 * @param array $title see Wordpress internal function wp_get_document_title()
-	 * @return array
+	 * @param string $title see Wordpress internal function wp_get_document_title()
+	 * @param string $format
+	 * @return string
+	 * @throws Exception
 	 */
-	public function buildDocumentTitle(array $title): array
+	public function buildDocumentTitleField(string $format): string
 	{
 		$estateId = (int)$this->_pWPQueryWrapper->getWPQuery()->get('estate_id', 0);
 		if ($estateId === 0) {
+			return '';
+		}
+
+		return $this->_pEstateTitleBuilder->buildCustomFieldTitle($estateId, $format);
+	}
+
+	/**
+	 * @param  array  $title  see Wordpress internal function wp_get_document_title()
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public function buildDocumentTitle( array $title ): array
+	{
+		$estateId = (int) $this->_pWPQueryWrapper->getWPQuery()->get( 'estate_id', 0 );
+		if ( $estateId === 0 ) {
 			return $title;
 		}
-
-		$title['title'] = $this->_pEstateTitleBuilder->buildTitle($estateId, '%1$s');
-		$titleLength = __String::getNew($title['title'])->length();
-
-		if ($titleLength === 0 || $titleLength >= 70) {
-			/* translators: %2$s is the kind of estate, %3$s the markting type,
-							%4$s the city, %5$s is the estate number.
-							Example: House (Sale) in Aachen - JJ12345 */
-			$format = __('%2$s (%3$s) in %4$s - %5$s', 'onoffice-for-wp-websites');
-			$title['title'] = $this->_pEstateTitleBuilder->buildTitle($estateId, $format);
-		}
+		$title['title'] = $this->_pEstateTitleBuilder->buildTitle( $estateId, '%1$s' );
 
 		return $title;
 	}
