@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.4
+Version: 4.4.1
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -102,7 +102,7 @@ add_action('wp_trash_post', [$pDetailViewPostSaveController, 'onMoveTrash']);
 add_action('oo_cache_cleanup', function() use ($pDI) {
 	$pDI->get(CacheHandler::class)->clean();
 });
-
+add_action('admin_notices', [$pAdminViewController, 'generalAdminNoticeSEO']);
 add_action('init', [$pAdminViewController, 'onInit']);
 add_action('init', function() use ($pAdminViewController) {
 	$pAdminViewController->disableHideMetaboxes();
@@ -131,9 +131,64 @@ add_filter('plugin_action_links_'.plugin_basename(__FILE__), [$pAdminViewControl
 
 $pDI->get(ContentFilterShortCodeRegistrator::class)->register();
 
-add_filter('document_title_parts', function($title) use ($pDI) {
-	return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
-}, 10, 2);
+if (get_option('onoffice-settings-title-and-description') === '1')
+{
+	add_filter('get_post_metadata', function($value, $object_id, $meta_key) use ($pDI) {
+		$pDataDetailViewHandler = $pDI->get( DataDetailViewHandler::class );
+		$pDetailView = $pDataDetailViewHandler->getDetailView();
+		$detail_page_id = $pDetailView->getPageId();
+		$fieldsDetail = $pDetailView->getFields();
+		$list_meta_keys = [];
+		if ( $object_id == $detail_page_id ) {
+			$limitEllipsis = '';
+			foreach ( $fieldsDetail as $field ) {
+				if ( strpos( $meta_key, 'ellipsis' ) && strpos( $meta_key, $field ) ) {
+					preg_match( "/^.*ellipsis(.+?)_.*$/i", $meta_key, $matches );
+					if ( count( $matches ) !== 0 ) {
+						$limitEllipsis = $matches[1];
+					}
+					$list_meta_keys[ "onoffice_ellipsis" . $limitEllipsis . "_" . $field ] = $field;
+				} else {
+					$list_meta_keys[ "onoffice_" . $field ] = $field;
+				}
+			}
+			if ( isset( $list_meta_keys[ $meta_key ] ) ) {
+				return customFieldCallback( $pDI, $list_meta_keys[ $meta_key ], (int) $limitEllipsis, $meta_key );
+			}
+		} else {
+			return null;
+		}
+	}, 1, 3);
+} else {
+    add_filter('document_title_parts', function ($title) use ($pDI){
+        return $pDI->get(EstateViewDocumentTitleBuilder::class)->buildDocumentTitle($title);
+    }, 10, 2);
+}
+
+// Return title custom by custom field onOffice
+function getRestrictLength( $limitEllipsis, $title ,$ellipsis = '…' ) {
+	if ( empty( $limitEllipsis ) ) {
+		return $title;
+	} else {
+		$newValue = substr( $title, 0, $limitEllipsis + 1 );
+
+		$value = strlen( $title ) > $limitEllipsis ? trim( mb_substr( $title, 0,
+				strrpos( $newValue, ' ' ) ) ) . $ellipsis : $title;
+
+		return ( $value != $ellipsis ) ? $value : '';
+	}
+}
+
+// Return title custom by custom field onOffice
+function customFieldCallback( $pDI, $format, $limitEllipsis, $meta_key ) {
+	$title = $pDI->get( EstateViewDocumentTitleBuilder::class )->buildDocumentTitleField( $format );
+	if ( ! strpos( $meta_key, 'ellipsis' ) ) {
+		return $title;
+	} else {
+		return getRestrictLength( $limitEllipsis, $title );
+	}
+}
+
 
 add_filter('wpml_ls_language_url', function($url) use ($pDI){
 	$pWPQueryWrapper = $pDI->get(WPQueryWrapper::class);
@@ -255,6 +310,13 @@ function update_duplicate_check_warning_option()
 	wp_die();
 }
 
+function update_status_close_action_button_option()
+{
+	update_option('onoffice-click-button-close-action', 1);
+	echo true;
+	wp_die();
+}
+add_action('wp_ajax_update_active_plugin_seo_option', 'update_status_close_action_button_option');
 add_action('wp_ajax_update_duplicate_check_warning_option', 'update_duplicate_check_warning_option');
 
 add_action('wp', function () {
@@ -265,7 +327,7 @@ add_action('wp', function () {
 });
 
 add_action('parse_request', function () use ( $pDI ) {
-	if ( str_contains($_SERVER["REQUEST_URI"], "onoffice-clear-cache") ) {
+	if ( strpos($_SERVER["REQUEST_URI"], "onoffice-clear-cache") !== false ) {
 		$pDI->get(CacheHandler::class)->clear();
 		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
 		wp_safe_redirect($location);

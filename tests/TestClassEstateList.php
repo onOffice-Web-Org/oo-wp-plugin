@@ -58,11 +58,12 @@ use onOffice\WPlugin\Types\EstateStatusLabel;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
 use WP_Rewrite;
 use WP_UnitTestCase;
 use function json_decode;
-
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 /**
  *
  * @url http://www.onoffice.de
@@ -125,6 +126,8 @@ class TestClassEstateList
 		$pDataView = new DataListView(1, 'test');
 		$pEstateList = new EstateList($pDataView);
 		$this->assertInstanceOf(EstateListEnvironmentDefault::class, $pEstateList->getEnvironment());
+		$pWPOptionWrapper = new WPOptionWrapperDefault();
+		$this->assertInstanceOf(WPOptionWrapperDefault::class, $pWPOptionWrapper);
 	}
 
 
@@ -166,12 +169,21 @@ class TestClassEstateList
 		$this->_pEstateList->loadEstates();
 
 		foreach (range(0, 4) as $iter) {
-			$pEstate = $this->_pEstateList->estateIterator();
+			$pEstate = $this->_pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true);
 			$this->assertInstanceOf(ArrayContainerEscape::class, $pEstate);
 		}
 
-		$this->assertFalse($this->_pEstateList->estateIterator());
+		$this->assertFalse($this->_pEstateList->estateIterator( ));
 		$this->_pEstateList->resetEstateIterator();
+		add_option('onoffice-settings-title-and-description', '0');
+		$recordModified = [
+			'objekttitel' => 'Name id 15'
+		];
+		$title = tests_add_filter( 'pre_get_document_title', [ $this->_pEstateList, 'estateIterator' ] );
+		$this->assertTrue( $title );
+		$title_parts_array = $this->_pEstateList->custom_pre_get_document_title('', $recordModified);
+		$this->assertEquals($title_parts_array, 'Name id 15');
+		$this->assertEquals(has_action('wp_head'), 1);
 		$this->assertInstanceOf(ArrayContainerEscape::class, $this->_pEstateList->estateIterator());
 	}
 
@@ -735,7 +747,7 @@ class TestClassEstateList
 		$pDataDetailView->method('getSortby')->willReturn('Id');
 		$pDataDetailView->method('getSortorder')->willReturn('ASC');
 		$pDataDetailView->method('getFilterId')->willReturn(12);
-		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp']);
+		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
 		$pDataDetailView->method('getPictureTypes')->willReturn(['Titelbild', 'Foto']);
 		$pDataDetailView->method('getAddressFields')->willReturn(['Vorname', 'Name']);
 		$pDataDetailView->method('getFilterableFields')->willReturn([GeoPosition::FIELD_GEO_POSITION]);
@@ -859,6 +871,8 @@ class TestClassEstateList
 			'referenz',
 			'reserviert',
 			'verkauft',
+			"objekttitel",
+			"objektbeschreibung",
 			'exclusive',
 			'neu',
 			'top_angebot',
@@ -886,7 +900,7 @@ class TestClassEstateList
 	private function getDataView(): DataListView
 	{
 		$pDataView = new DataListView(1, 'test');
-		$pDataView->setFields(['Id', 'objektart', 'objekttyp']);
+		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
 		$pDataView->setSortby('Id');
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);

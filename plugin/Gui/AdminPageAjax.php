@@ -171,7 +171,7 @@ abstract class AdminPageAjax
 		$result = [];
 
 		foreach ( $_POST as $index => $fields ) {
-			if ( str_contains( $index, self::EXCLUDE_FIELD ) || str_contains( $index, 'filter_fields_order' ) ) {
+			if ( strpos( $index, self::EXCLUDE_FIELD ) !== false || strpos( $index, 'filter_fields_order' ) !== false ) {
 				continue;
 			}
 			if ( is_array( $fields ) ) {

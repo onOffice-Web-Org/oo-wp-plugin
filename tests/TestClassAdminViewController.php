@@ -173,7 +173,7 @@ class TestClassAdminViewController
 		$adminPage = new AdminPageEstateDetail('admin_page_onoffice-editlistview');
 		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
 		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-editlistview");
-		$this->assertEquals(['update-duplicate-check-warning-option', 'admin-js', 'oo-copy-shortcode'], wp_scripts()->queue);
+		$this->assertEquals(['update-duplicate-check-warning-option', 'warning-active-plugin-SEO', 'admin-js', 'oo-copy-shortcode'], wp_scripts()->queue);
 	}
 
 	/**
@@ -191,7 +191,7 @@ class TestClassAdminViewController
 		$pWpHook = $wp_filter['admin_page_onoffice-editlistview'];
 		$pWpHook->callbacks = [[['function' => ['a']]]];
 		$pAdminViewController->enqueueExtraJs("admin_onoffice_test");
-		$this->assertCount(1, wp_scripts()->queue);
+		$this->assertCount(2, wp_scripts()->queue);
 	}
 
 	public function testAdminPageAjax()
@@ -285,4 +285,33 @@ class TestClassAdminViewController
 		$pAdminViewController = new AdminViewController();
 		$this->assertInstanceOf(Fieldnames::class, $pAdminViewController->getField());
 	}
+
+	public function testGeneralAdminNoticeSEO()
+	{
+		$this->run_activate_plugin_for_test( 'wordpress-seo/wp-seo.php' );
+		add_option('onoffice-settings-title-and-description', '0');
+		add_option('onoffice-click-button-close-action', '0');
+		set_current_screen('testscreen01337');
+		$pAdminViewController = new AdminViewController();
+		$pAdminViewController->generalAdminNoticeSEO();
+		$this->expectOutputString("<div class=\"notice notice-warning active-plugin-seo is-dismissible\"><p>The onOffice plugin has detected an active SEO plugin: Yoast SEO. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.<br />
+We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?page=onoffice-settings#notice-seo' target='_blank' rel='noopener'>onOffice plugin settings</a> and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.</p></div>");
+	}
+
+	private function run_activate_plugin_for_test( $plugin ) {
+		$current = get_option( 'active_plugins' );
+		$plugin = plugin_basename( trim( $plugin ) );
+
+		if ( !in_array( $plugin, $current ) ) {
+			$current[] = $plugin;
+			sort( $current );
+			do_action( 'activate_plugin', trim( $plugin ) );
+			update_option( 'active_plugins', $current );
+			do_action( 'activate_' . trim( $plugin ) );
+			do_action( 'activated_plugin', trim( $plugin) );
+		}
+
+		return null;
+	}
+
 }

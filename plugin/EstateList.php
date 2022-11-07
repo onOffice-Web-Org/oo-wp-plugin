@@ -56,6 +56,8 @@ use onOffice\WPlugin\WP\WPQueryWrapper;
 use function esc_url;
 use function get_page_link;
 use function home_url;
+use function esc_attr;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 
 class EstateList
 	implements EstateListBase
@@ -102,6 +104,8 @@ class EstateList
 	/** @var EstateDetailUrl */
 	private $_pLanguageSwitcher;
 
+	private $_pWPOptionWrapper;
+
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
@@ -123,6 +127,7 @@ class EstateList
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate');
 		$this->_pGeoSearchBuilder = $this->_pEnvironment->getGeoSearchBuilder();
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
+		$this->_pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
 		$this->_redirectIfOldUrl = $pContainer->get(Redirector::class);
 	}
 
@@ -385,10 +390,11 @@ class EstateList
 
 	/**
 	 * @param string $modifier
+	 * @param bool $checkEstateIdRequestGuard
 	 * @return ArrayContainerEscape
 	 * @throws UnknownFieldException
 	 */
-	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)
+	public function estateIterator($modifier = EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, $checkEstateIdRequestGuard  = false)
 	{
 		global $numpages, $multipage, $more, $paged;
 
@@ -428,10 +434,24 @@ class EstateList
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
 
-		$pArrayContainer = new ArrayContainerEscape($recordModified);
+		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
+			add_action( 'wp_head', function () use ( $recordModified )
+			{
+				echo '<meta name="description" content="' . esc_attr( $recordModified["objektbeschreibung"] ?? null ) . '" />';
+			} );
+		}
 
-		return $pArrayContainer;
+		return new ArrayContainerEscape( $recordModified );
 	}
+
+	public function custom_pre_get_document_title($title_parts_array, $recordModified) {
+		if (isset($recordModified["objekttitel"])) {
+			$title_parts_array = $recordModified["objekttitel"];
+		}
+
+		return $title_parts_array;
+	}
+
 
 	public function getRawValues(): ArrayContainerEscape
 	{

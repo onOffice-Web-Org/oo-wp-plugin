@@ -24,12 +24,12 @@ jobs:
       - name: Get latest stable plugin version (without leading 'v')
         id: get-stable-version
         # Remove the leading 'v' from the tag.
-        run: echo "::set-output name=stableVersion::$( git describe --tags --abbrev=0 | sed -n 's/v\(\)/\1/p')"
+        run: echo "stableVersion=$( git describe --tags --abbrev=0 | sed -n 's/v\(\)/\1/p')" >> $GITHUB_OUTPUT
 
       - name: Output development version
         id: get-development-version
         # Remove the leading 'v'.
-        run: echo "::set-output name=developmentVersion::$( git describe --tags | sed -n 's/v\(\)/\1/p')"
+        run: echo "developmentVersion=$( git describe --tags | sed -n 's/v\(\)/\1/p')" >> $GITHUB_OUTPUT
 
   dev-build:
     name: Build development release
