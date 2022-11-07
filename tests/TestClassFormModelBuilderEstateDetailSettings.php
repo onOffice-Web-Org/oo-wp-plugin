@@ -264,7 +264,7 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelShowStatus();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
 	}
-  
+
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::CreateInputModelTemplate
 	 */

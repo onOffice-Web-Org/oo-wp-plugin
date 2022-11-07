@@ -20,6 +20,7 @@
  */
 
 use onOffice\WPlugin\EstateDetail;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 
 /**
  *
@@ -33,7 +34,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-	while ($currentEstate = $pEstates->estateIterator()) { ?>
+	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) { ?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
 			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>

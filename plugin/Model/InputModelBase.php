@@ -125,8 +125,11 @@ abstract class InputModelBase
 	/** @var array */
 	private $_labelOnlyValues = [];
 
-    /** @var string */
-    private $_descriptionTextHTML = '';
+	/** @var string */
+	private $_descriptionTextHTML = '';
+
+	/** @var array */
+	private $_descriptionRadioTextHTML = [];
 
 	/** @var string */
 	private $_italicLabel = '';
@@ -281,6 +284,15 @@ abstract class InputModelBase
     public function setDescriptionTextHTML(string $textHTML)
     	{ $this->_descriptionTextHTML = $textHTML; }
 
+
+	/** @return string */
+	public function getDescriptionRadioTextHTML()
+	{ return $this->_descriptionRadioTextHTML; }
+
+	/** @param string $descriptionTextHTML */
+	public function setDescriptionRadioTextHTML(array $textHTML)
+	{ $this->_descriptionRadioTextHTML = $textHTML; }
+	
 	/**@return string */
 	public function getItalicLabel(): string
 		{ return $this->_italicLabel; }

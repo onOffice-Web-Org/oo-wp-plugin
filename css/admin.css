@@ -321,11 +321,32 @@ div[data-name^=oopluginfieldconfigformdefaultsvalues-value].multiselect > input.
 	float: right;
 	margin-top: 20px;
 }
+#notice-seo {
+	border: 1px solid #c3c4c7;
+	border-left: 4px solid #dba617;
+	background-color: #fff;
+	font-size: 13px;
+	line-height: 1.5;
+	padding: 10px;
+}
+
+#notice-seo, .description-notice, .do-not-modify {
+	margin-left: 20px;
+}
 
 #viewformspecific .hint-text {
 	color: #646970;
 	font-style: italic;
 	text-decoration: none;
+}
+
+.do-not-modify ul {
+	padding-left: 10px;
+}
+
+.do-not-modify li {
+	list-style: disc;
+	margin-left: 25px;
 }
 input#onoffice-input-submit {
 	color: #2271b1;

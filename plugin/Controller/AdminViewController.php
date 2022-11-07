@@ -42,6 +42,9 @@ use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\ListTableBulkActionsHandler;
+use Parsedown;
+use HTMLPurifier_Config;
+use HTMLPurifier;
 use WP_Hook;
 use function __;
 use function add_action;
@@ -304,7 +307,7 @@ class AdminViewController
 	public function enqueue_css()
 	{
 		wp_enqueue_style('onoffice-admin-css',
-			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
+			plugins_url('/css/admin.css', ONOFFICE_PLUGIN_DIR.'/index.php'), array(), '4.2.0');
 
 		wp_enqueue_style('chosen-admin-css',
 			plugins_url('/third_party/chosen/chosen.css', ONOFFICE_PLUGIN_DIR.'/index.php'));
@@ -323,6 +326,11 @@ class AdminViewController
 			array('jquery'));
 		wp_localize_script('update-duplicate-check-warning-option', 'duplicate_check_option_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
 		wp_enqueue_script('update-duplicate-check-warning-option');
+
+		wp_register_script('warning-active-plugin-SEO', plugins_url('js/onoffice-warning-active-plugin-seo.js', ONOFFICE_PLUGIN_DIR . '/index.php'),
+			array('jquery'));
+		wp_localize_script('warning-active-plugin-SEO', 'warning_active_plugin_vars', ['ajaxurl' => admin_url('admin-ajax.php')]);
+		wp_enqueue_script('warning-active-plugin-SEO');
 
 		if (__String::getNew($hook)->contains('onoffice')) {
 			$pObject = $this->getObjectByHook($hook);
@@ -426,6 +434,61 @@ class AdminViewController
 		return new Fieldnames(new FieldsCollection());
 	}
 
+	public function generalAdminNoticeSEO() {
+		$urlOnofficeSetting = admin_url().'admin.php?page=onoffice-settings#notice-seo';
+		$nameOnofficeSetting = esc_html__('onOffice plugin settings','onoffice-for-wp-websites');
+		$pluginOnofficeSetting = sprintf("<a href='%s' target='_blank' rel='noopener'>%s</a>", $urlOnofficeSetting,$nameOnofficeSetting);
+		
+		$listPluginSEOActive = [];
+		$listPluginSEOActive = $this->getPluginSEOActive();
+		$listNamePluginSEO = implode(", ", $listPluginSEOActive);
+		if (count($listPluginSEOActive) > 0) {
+			if (get_option('onoffice-click-button-close-action') == 0
+				&& get_current_screen()->id !== 'onoffice_page_onoffice-settings'
+				&& get_option('onoffice-settings-title-and-description') == 0) {
+				$class = 'notice notice-warning active-plugin-seo is-dismissible';
+				$message = sprintf(esc_html__('The onOffice plugin has detected an active SEO plugin: %s. You currently have configured the onOffice plugin to fill out the title and description of the detail page, which can lead to conflicts with the SEO plugin.
+								We recommend that you go to the %s and configure the onOffice plugin to not modify the title and description. This allows you to manage the title and description with your active SEO plugin.', 'onoffice-for-wp-websites'), $listNamePluginSEO, $pluginOnofficeSetting);
+				$messageParsedown = Parsedown::instance()
+					->setSafeMode(true)
+					->setUrlsLinked(false)
+					->setBreaksEnabled(true)->text(
+						$message
+					);
+				$messageDecodeHTML = html_entity_decode($messageParsedown);
+				echo sprintf('<div class="%1$s">%2$s</div>', esc_attr($class), $messageDecodeHTML);
+			}
+		} else {
+			update_option('onoffice-click-button-close-action', 0);
+		}
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function getPluginSEOActive():array
+	{
+		$listPluginSEOActive = [];
+		
+		$listPluginSEO = [
+			"wpseo/wp-seo.php" => "wpSEO",
+			"seo-by-rank-math/rank-math.php" => "Rank Math SEO",
+			"wordpress-seo/wp-seo.php" => "Yoast SEO",
+			"all-in-one-seo-pack/all_in_one_seo_pack.php" => "All in One SEO",
+			"autodescription/autodescription.php" => "SEO Framework",
+			"wp-seopress/seopress.php" => "SEOPress",
+			"squirrly-seo/squirrly.php" => "Squirrly SEO"
+		];
+		foreach ($listPluginSEO as $keyPluginSeo => $namePluginSEO)
+		{
+			if( in_array( $keyPluginSeo ,get_option("active_plugins") ) )
+			{
+				array_push($listPluginSEOActive,$namePluginSEO);
+			}
+		}
+		return $listPluginSEOActive;
+	}
+	
 	public function displayUsingEmptyDefaultEmailError()
 	{
 		if ( ! get_option( 'onoffice-settings-default-email', '' ) && $this->getRecordManagerReadForm()->getCountDefaultRecipientRecord() != 0 ) {
