@@ -88,5 +88,7 @@ class TestClassInstaller
 		$this->assertFalse(get_option('onoffice-settings-apisecret'));
 		$this->assertFalse(get_option('onoffice-settings-apikey'));
 		$this->assertFalse(get_option('onoffice-detail-view-showTitleUrl'));
+		$this->assertFalse(get_option('onoffice-click-button-close-action'));
+		$this->assertFalse(get_option('onoffice-settings-title-and-description'));
 	}
 }
