@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Record;
 
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Factory\EstateListFactory;
+use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\Utility\Redirector;
 
 /**
@@ -65,7 +66,7 @@ class EstateIdRequestGuard
 	{
 		$pEstateDetail = $this->_pEstateDetailFactory->createEstateDetail($estateId);
 		$pEstateDetail->loadEstates();
-		$this->_estateData = $pEstateDetail->estateIterator();
+		$this->_estateData = $pEstateDetail->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT, true);
 		return $this->_estateData !== false;
 	}
 

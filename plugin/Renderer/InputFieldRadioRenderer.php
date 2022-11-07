@@ -34,16 +34,20 @@ class InputFieldRadioRenderer
 	/** @var array */
 	private $_checkedValue = null;
 
+	/** @var string */
+	private $_descriptionTextHtmls = [];
+
 
 	/**
 	 *
 	 * @param string $name
 	 * @param string $value
-	 *
+	 * @param array  $descriptions
 	 */
 
-	public function __construct($name, $value)
+	public function __construct($name, $value, $descriptions = [])
 	{
+		$this->_descriptionTextHtmls = $descriptions;
 		parent::__construct('radio', $name, $value);
 	}
 
@@ -74,7 +78,8 @@ class InputFieldRadioRenderer
 					.($key == $this->getCheckedValue() ? ' checked="checked" ' : '')
 					.$this->renderAdditionalAttributes()
 					.' id="'.esc_html($inputId).'">'
-					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label> ';
+					.'<label for="'.esc_html($inputId).'">'.esc_html($label).'</label> '
+					.( isset($this->_descriptionTextHtmls[$key]) ? '<p class="description">'.$this->_descriptionTextHtmls[$key].'</p><br>' : '');
 			}
 		}
 		else

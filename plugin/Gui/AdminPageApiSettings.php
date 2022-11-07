@@ -21,11 +21,13 @@
 
 namespace onOffice\WPlugin\Gui;
 
+use DI\ContainerBuilder;
 use onOffice\WPlugin\Favorites;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use onOffice\WPlugin\Types\MapProvider;
+use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use function __;
 use function admin_url;
 use function do_settings_sections;
@@ -36,7 +38,9 @@ use function json_encode;
 use onOffice\WPlugin\Utility\SymmetricEncryption;
 use function settings_fields;
 use function submit_button;
-
+use onOffice\WPlugin\Controller\AdminViewController;
+use function wp_enqueue_style;
+use Parsedown;
 /**
  *
  */
@@ -207,6 +211,51 @@ class AdminPageApiSettings
 
 	private function addFormModelGoogleBotSettings()
 	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pAdminViewController = $pContainer->get(AdminViewController::class);
+		$listPluginSEOActive = [];
+		$listPluginSEOActive = $pAdminViewController->getPluginSEOActive();
+		$listNamePluginSEO = implode(", ",$listPluginSEOActive);
+		$titleDoNotModify = esc_html__("This plugin will not modify the title and description. This enables other plugins to manage those tags.",'onoffice-for-wp-websites');
+		$summaryDetailDoNotModify = esc_html__( 'Custom fields', 'onoffice-for-wp-websites' );
+		$descriptionDetailDoNotModify = sprintf(esc_html__( 'When this option is active, you can use special custom fields to use data from onOffice enterprise in your SEO plugins.
+		To display the property number (fieldname %1$s) and title (fieldname %2$s) of the current estate in the detail page\'s title, you can use the custom fields %3$s and %4$s.
+		For information on how to use custom fields consult you SEO plugin\'s documentation.', 'onoffice-for-wp-websites' ), '<code>objektnr_extern</code>', '<code>objekttitel</code>', '<code>onoffice_objektnr_extern</code>', '<code>onoffice_objekttitel</code>');
+		$searchSupportDoNotModify = sprintf(esc_html__( 'To find out the fieldname of a field, look in the detail page\'s field list. When you expand a field, it shows you the "Key of Field" which you should put behind %s to form the custom field name. You can use any field that you have added to the estate field list on the right of the detail page.',
+			'onoffice-for-wp-websites' ), '<code>onoffice_</code>');
+		$titleEllipsisDoNotModify = sprintf(esc_html__( 'If you need to shorten a field to e.g. 50 characters, you can use %1$s. This will shorten the estate\'s description to at most 50 characters, including the ellipsis. It will not cut words in the middle, but leave them out if they are too long, so "This is too loooong" will never become "This is too looo…" but rather "This is too…". To display up to 150 characters, you can use %2$s.',
+			'onoffice-for-wp-websites' ), '<code>onoffice_ellipsis50_objektbeschreibung</code>', '<code>onoffice_ellipsis150_objektbeschreibung</code>');
+		$titleDescriptionDoNotModify = sprintf(esc_html__( 'The title and description of the detail page are set using the %1$s and %2$s tags. They make it possible to show a summary of the page when you share a link.',
+			'onoffice-for-wp-websites' ), '<code>&lt;title&gt;</code>', '<code>&lt;meta name="description&gt;</code>');
+		$descriptionDoNotModify = sprintf( '<div class="do-not-modify">
+									<p>%1$s</p>
+									<details>
+									<summary>%2$s</summary>
+									<p>%3$s</p>
+									</br>
+									<p>%4$s</p>
+									</br>
+									<p>%5$s</p>
+									</details>
+									</br>
+							</div> <p>%6$s</p>', $titleDoNotModify, $summaryDetailDoNotModify,
+			$descriptionDetailDoNotModify, $searchSupportDoNotModify, $titleEllipsisDoNotModify,
+			$titleDescriptionDoNotModify );
+		$messageNoticeSEO = sprintf(esc_html__('We have detected an active SEO plugin: %s. This option can lead to conflicts with the SEO plugin.
+								We recommend that you configure the onOffice plugin to not modify the title and description.','onoffice-for-wp-websites'), $listNamePluginSEO);
+		$messageNoticeSEO =  Parsedown::instance()
+			->setBreaksEnabled(true)->text(
+				$messageNoticeSEO
+			);
+		$descriptionNoticeSeo = sprintf('<div id="notice-seo">%s</div>', $messageNoticeSEO);
+		$descriptionFillOut = '<p class="description-notice">
+					'.esc_html__("This plugin will fill out the title and description with the information from the estate that is shown. This option is recommended if you are not using a SEO plugin.",'onoffice-for-wp-websites').'
+				 </p>';
+		if ( count($listPluginSEOActive) > 0 && get_option('onoffice-settings-title-and-description') == 0) {
+			$descriptionFillOut = $descriptionNoticeSeo.$descriptionFillOut;
+		}
 		$labelGoogleBotIndexPdfExpose = __('Allow indexing of PDF brochures', 'onoffice-for-wp-websites');
 		$pInputModeGoogleBotIndexPdfExpose = new InputModelOption('onoffice-settings', 'google-bot-index-pdf-expose',
 			$labelGoogleBotIndexPdfExpose, InputModelOption::SETTING_TYPE_BOOLEAN);
@@ -214,11 +263,30 @@ class AdminPageApiSettings
 		$pInputModeGoogleBotIndexPdfExpose->setValuesAvailable(1);
 		$pInputModeGoogleBotIndexPdfExpose->setValue(get_option($pInputModeGoogleBotIndexPdfExpose->getIdentifier()) == 1);
 		$pInputModeGoogleBotIndexPdfExpose->setDescriptionTextHTML(__('If you allow indexing, your search engine ranking can be negatively affected and your brochures can be available from search engines even months after the corresponding estate is deleted.','onoffice-for-wp-websites'));
+		$labelTitleAndDescription = __('Title and description', 'onoffice-for-wp-websites');
+		$pInputModeTitleAndDescription = new InputModelOption('onoffice-settings', 'title-and-description',
+			$labelTitleAndDescription, InputModelOption::SETTING_TYPE_NUMBER);
+		$pInputModeTitleAndDescription->setHtmlType(InputModelOption::HTML_TYPE_RADIO);
+		$pInputModeTitleAndDescription->setValuesAvailable([
+			__('Fill out', 'onoffice-for-wp-websites'),
+			__('Do not modify', 'onoffice-for-wp-websites'),
+		]);
+		if(get_option('onoffice-settings-title-and-description')){
+			update_option('onoffice-click-button-close-action', 0);
+		};
+
+		$pInputModeTitleAndDescription->setValue(get_option($pInputModeTitleAndDescription->getIdentifier()));
+		$pInputModeTitleAndDescription->setDescriptionRadioTextHTML([
+			$descriptionFillOut,$descriptionDoNotModify
+		]);
+		
+
 		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModeTitleAndDescription);
 		$pFormModel->addInputModel($pInputModeGoogleBotIndexPdfExpose);
 		$pFormModel->setGroupSlug('onoffice-google-bot');
 		$pFormModel->setPageSlug($this->getPageSlug());
-		$pFormModel->setLabel(__('Search engine', 'onoffice-for-wp-websites'));
+		$pFormModel->setLabel(__('SEO', 'onoffice-for-wp-websites'));
 
 		$this->addFormModel($pFormModel);
 	}

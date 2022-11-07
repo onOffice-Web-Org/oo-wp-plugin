@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= Unreleased =
+
+**Added**
+
+* The title and description of detail pages are now set with the estate's data. You can deactivate this to use an SEO plugin and utilize custom fields instead. On upgrade, if we detect a popular SEO plugin, our plugin will automatically leave the title and description alone.
+
 = 4.4.1 (2022-10-21) =
 
 **Fixed**

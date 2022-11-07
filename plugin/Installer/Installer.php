@@ -110,6 +110,8 @@ class Installer
 		delete_option('onoffice-similar-estates-settings-view');
 		delete_option('onoffice-is-encryptcredent');
 		delete_option('onoffice-settings-default-email');
+		delete_option('onoffice-click-button-close-action');
+		delete_option('onoffice-settings-title-and-description');
 
 		self::flushRules();
 	}
