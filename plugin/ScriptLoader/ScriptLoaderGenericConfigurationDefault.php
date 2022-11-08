@@ -79,13 +79,11 @@ class ScriptLoaderGenericConfigurationDefault
 			new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath)),
 			new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath))
 		];
-		$onofficeStyle = $this->getCSSOnofficeStyle();
-		if(!empty($onofficeStyle)){
-			$values []= (new IncludeFileModel($style, 'onoffice_style', $onofficeStyle));
-		}
-		$onofficeDefaultView = $this->getCSSOnofficeDefaultView();
-		if(!empty($onofficeDefaultView)){
-			$values []= (new IncludeFileModel($style, 'onoffice_defaultview', $onofficeDefaultView));
+		$CSSOnofficeStyle = $this->getCSSOnofficeStyle();
+		if( ! empty($CSSOnofficeStyle) ){
+			$values []= (new IncludeFileModel($style, 'onoffice_style', $CSSOnofficeStyle));
+		} else {
+			$values []= (new IncludeFileModel($style, 'onoffice_defaultview', plugins_url( 'css/onoffice_defaultview.css', $pluginPath )));
 		}
 		if (Favorites::isFavorizationEnabled()) {
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath)))
@@ -132,23 +130,5 @@ class ScriptLoaderGenericConfigurationDefault
 		}
 
 		return $onofficeCssStyleLink;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getCSSOnofficeDefaultView(): string
-	{
-		$onofficeCssDefaultViewLink = '';
-
-		$pluginPath = ONOFFICE_PLUGIN_DIR . '/index.php';
-
-		if ( empty( glob( ONOFFICE_PLUGIN_DIR . '/templates.dist/onoffice-style.css' ) )
-		     && empty( glob( get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css' ) )
-		     && empty( glob( plugin_dir_path( ONOFFICE_PLUGIN_DIR ) . 'onoffice-personalized/templates/onoffice-style.css' ) ) ) {
-			$onofficeCssDefaultViewLink = plugins_url( 'css/onoffice_defaultview.css', $pluginPath );
-		}
-
-		return $onofficeCssDefaultViewLink;
 	}
 }
