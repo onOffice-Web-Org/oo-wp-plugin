@@ -86,6 +86,7 @@ class TestClassScriptLoaderGenericConfigurationDefault
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$onofficeCssStyleFilePath = $pScriptLoaderGenericConfigurationDefault->getStyleUriByVersion('onoffice_defaultview');
 		$this->assertEquals($onofficeCssStyleFilePath, plugins_url('css/onoffice_defaultview.css', $pluginPath));
+		$this->assertNotEmpty($onofficeCssStyleFilePath);
 	}
 
 	/**
@@ -96,5 +97,6 @@ class TestClassScriptLoaderGenericConfigurationDefault
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$onofficeCssStyleVersion = $pScriptLoaderGenericConfigurationDefault->getOnOfficeStyleVersion();
 		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_defaultview');
+		$this->assertNotEmpty($onofficeCssStyleVersion);
 	}
 }
