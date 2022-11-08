@@ -62,7 +62,7 @@ class TestClassScriptLoaderGenericConfigurationDefault
 
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$config = $pScriptLoaderGenericConfigurationDefault->getScriptLoaderGenericConfiguration();
-		$this->assertCount(18, $config);
+		$this->assertCount(17, $config);
 		/* @var $pFileModel IncludeFileModel */
 		foreach ($config as $pFileModel) {
 			$this->assertInstanceOf(IncludeFileModel::class, $pFileModel);
@@ -85,6 +85,16 @@ class TestClassScriptLoaderGenericConfigurationDefault
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$cssOnofficeStyle = $pScriptLoaderGenericConfigurationDefault->getCSSOnofficeStyle();
-		$this->assertEquals($cssOnofficeStyle, plugins_url('templates.dist/onoffice-style.css', $pluginPath));
+		$this->assertEquals($cssOnofficeStyle, plugins_url('css/onoffice_defaultview.css', $pluginPath));
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault::getCSSOnofficeDefaultView
+	 */
+	public function testGetCSSOnofficeDefaultView()
+	{
+		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
+		$cssOnofficeDefaultView = $pScriptLoaderGenericConfigurationDefault->getCSSOnofficeDefaultView();
+		$this->assertEquals($cssOnofficeDefaultView, '');
 	}
 }

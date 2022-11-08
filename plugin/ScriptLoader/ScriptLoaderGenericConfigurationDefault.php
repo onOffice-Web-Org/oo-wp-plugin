@@ -77,11 +77,16 @@ class ScriptLoaderGenericConfigurationDefault
 			new IncludeFileModel($style, 'onoffice-forms', plugins_url('/css/onoffice-forms.css', $pluginPath)),
 			new IncludeFileModel($style, 'slick', plugins_url('/third_party/slick/slick.css', $pluginPath)),
 			new IncludeFileModel($style, 'slick-theme', plugins_url('/third_party/slick/slick-theme.css', $pluginPath)),
-			new IncludeFileModel($style, 'onoffice_style', $this->getCSSOnofficeStyle()),
-			new IncludeFileModel($style, 'onoffice_defaultview', $this->getCSSOnofficeDefaultView()),
 			new IncludeFileModel($style, 'select2', plugins_url('/vendor/select2/select2/dist/css/select2.min.css', $pluginPath))
 		];
-
+		$onofficeStyle = $this->getCSSOnofficeStyle();
+		if(!empty($onofficeStyle)){
+			$values []= (new IncludeFileModel($style, 'onoffice_style', $onofficeStyle));
+		}
+		$onofficeDefaultView = $this->getCSSOnofficeDefaultView();
+		if(!empty($onofficeDefaultView)){
+			$values []= (new IncludeFileModel($style, 'onoffice_defaultview', $onofficeDefaultView));
+		}
 		if (Favorites::isFavorizationEnabled()) {
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath)))
 				->setDependencies(['jquery']);
