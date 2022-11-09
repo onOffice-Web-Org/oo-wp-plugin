@@ -139,7 +139,7 @@ class ScriptLoaderGenericConfigurationDefault
         $defaultview = 'onoffice_defaultview';
         $newstyle = 'onoffice_style';
 
-        $onofficeCssStyleVersion = $defaultview;
+        $onofficeCssStyleVersion = $newstyle;
         if ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_THEME ] ) ) {
             $onofficeCssStyleVersion = ! empty( glob( get_stylesheet_directory()
                 . '/onoffice-theme/templates/onoffice-style.css' ) )
