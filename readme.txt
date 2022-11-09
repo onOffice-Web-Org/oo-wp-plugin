@@ -85,11 +85,11 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changed**
 
-* Adding and removing fields from all field lists has been made easier.
+* Adding and removing fields from field lists has been made easier.
 
 **Fixed**
 
-* In 4.0 we introduced a new CSS file that was tied to your templates. With this changed, we renamed the style handle, which was not backwards compatible. When you use the new CSS file, it is enqueued with the new style handle. But if the previous CSS file is used, it is enqueued with the previous style handle. This should restore backwards compatibility.
+* In version 4.0 we introduced a new CSS file that was tied to your templates. With this changed, we renamed the style handle, which was not backwards compatible. Now, the new CSS file is enqueued with the new style handle, but the legacy CSS file is enqueued with the legacy style handle. This restores backwards compatibility.
 
 = 4.4.1 (2022-10-21) =
 
