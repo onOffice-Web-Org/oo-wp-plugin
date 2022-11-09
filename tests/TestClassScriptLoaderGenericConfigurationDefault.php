@@ -96,7 +96,7 @@ class TestClassScriptLoaderGenericConfigurationDefault
 	{
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$onofficeCssStyleVersion = $pScriptLoaderGenericConfigurationDefault->getOnOfficeStyleVersion();
-		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_defaultview');
+		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_style');
 		$this->assertNotEmpty($onofficeCssStyleVersion);
 	}
 }
