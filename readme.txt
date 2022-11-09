@@ -81,6 +81,15 @@ Start editing inside the `onoffice-personalized` folder.
 **Added**
 
 * The title and description of detail pages are now set with the estate's data. You can deactivate this to use an SEO plugin and utilize custom fields instead. On upgrade, if we detect a popular SEO plugin, our plugin will automatically leave the title and description alone.
+* In the form overview, you can now add a new form without first needing to filter for a specific form type.
+
+**Changed**
+
+* Adding and removing fields from all field lists has been made easier.
+
+**Fixed**
+
+* In 4.0 we introduced a new CSS file that was tied to your templates. With this changed, we renamed the style handle, which was not backwards compatible. When you use the new CSS file, it is enqueued with the new style handle. But if the previous CSS file is used, it is enqueued with the previous style handle. This should restore backwards compatibility.
 
 = 4.4.1 (2022-10-21) =
 
