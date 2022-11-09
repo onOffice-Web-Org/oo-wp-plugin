@@ -139,7 +139,7 @@ class ScriptLoaderGenericConfigurationDefault
         $defaultview = 'onoffice_defaultview';
         $newstyle = 'onoffice_style';
 
-        $onofficeCssStyleVersion = $newstyle;
+        $onofficeCssStyleVersion = $defaultview;
         if ( ! empty( $folderTemplates[ TemplateCall::TEMPLATE_FOLDER_THEME ] ) ) {
             $onofficeCssStyleVersion = ! empty( glob( get_stylesheet_directory()
                 . '/onoffice-theme/templates/onoffice-style.css' ) )
@@ -150,6 +150,8 @@ class ScriptLoaderGenericConfigurationDefault
                 . 'onoffice-personalized/templates/onoffice-style.css' ) )
                 ? $newstyle
                 : $defaultview;
+        } elseif ( ! empty( glob( ONOFFICE_PLUGIN_DIR . '/templates.dist/onoffice-style.css' ) ) ) {
+            $onofficeCssStyleVersion = $newstyle;
         }
         return $onofficeCssStyleVersion;
     }
