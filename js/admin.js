@@ -41,14 +41,72 @@ jQuery(document).ready(function($){
 	   getCheckedFields(this);
 	});
 
+	$('.inputFieldButton').click(function() {
+		getCheckedFieldButton(this);
+	});
+
 	$('.item-edit').click(function() {
 		$(this).parent().parent().parent().parent().find('.menu-item-settings').toggle();
 	});
 
 	$('.item-delete-link').click(function() {
+		var labelButtonHandleField= $(this).parent().parent().attr('action-field-name');
+		var data = document.querySelector("."+labelButtonHandleField);
+
+		data.classList.remove("dashicons-remove");
+		data.classList.add("dashicons-insert");
+		$(data).next().css( "opacity", "1")
+		$(data).attr('typeField', 1);
 		$(this).parent().parent().remove();
 	});
+	var getCheckedFieldButton = function(btn) {
+		var addField= 1;
+		var removeField= 2;
+		var checkTypeField = $(btn).attr('typeField');
+		if(checkTypeField == addField){
+			btn.classList.remove("dashicons-insert");
+			btn.classList.add("dashicons-remove");
+			var label = $(btn).attr('data-action-div');
+			var valElName = $(btn).attr('value');
+			var valElLabel = $(btn).next().text();
+			var category = $(btn).attr('data-onoffice-category');
+			var module = $(btn).attr('data-onoffice-module');
+			var actionFieldName = 'labelButtonHandleField-'+valElName;
 
+			$(btn).next().css( "opacity", "0.5")
+			$(btn).attr('typeField', removeField);
+			var optionsAvailable = false;
+			var checkedFields = [];
+
+			if ($(btn).attr('onoffice-multipleSelectType')) {
+				optionsAvailable = $(btn).attr('onoffice-multipleSelectType') === '1';
+			}
+
+			var clonedItem = createNewFieldItem(valElName, valElLabel, category, module, label, optionsAvailable, actionFieldName);
+
+			var event = new CustomEvent('addFieldItem', {
+				detail: {
+					fieldname: valElName,
+					fieldlabel: valElLabel,
+					category,
+					module,
+					item: clonedItem
+				}
+			});
+			document.dispatchEvent(event);
+		} else {
+			var valElName = $(btn).attr('value');
+			var checkedFields = [];
+
+			$(btn).next().css( "opacity", "1")
+			btn.classList.remove("dashicons-remove");
+			btn.classList.add("dashicons-insert");
+			$(btn).attr('typeField', addField);
+			$('*#sortableFieldsList').find('#menu-item-'+valElName).remove();
+		}
+
+		return checkedFields;
+	};
 	var getCheckedFields = function(but) {
 		var label = $(but).attr('data-action-div');
 		var categoryShort = but.name;
@@ -103,7 +161,7 @@ jQuery(document).ready(function($){
 		return checkedFields;
 	};
 
-	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable) {
+	var createNewFieldItem = function(fieldName, fieldLabel, fieldCategory, module, label, optionsAvailable, actionFieldName) {
 		var myLabel = label ? $('#' + label) : {};
 		var dummyKey;
 
@@ -116,6 +174,7 @@ jQuery(document).ready(function($){
 		var clonedElement = dummyKey.clone(true, true);
 
 		clonedElement.attr('id', 'menu-item-'+fieldName);
+		clonedElement.attr('action-field-name', actionFieldName);
 		clonedElement.find('span.item-title:contains("dummy_label")').text(fieldLabel);
 		clonedElement.find('span.item-type:contains("dummy_category")').text(fieldCategory);
 		clonedElement.find('input[value=dummy_key]').val(fieldName);

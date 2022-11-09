@@ -209,6 +209,9 @@ abstract class FormModelBuilder
 	 *
 	 */
 
+	abstract public function createButtonModelFieldsConfigByCategory
+	($category, $fieldNames, $categoryLabel);
+
 	abstract public function createInputModelFieldsConfigByCategory
 		($category, $fieldNames, $categoryLabel);
 

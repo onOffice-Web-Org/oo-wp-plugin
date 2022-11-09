@@ -78,13 +78,25 @@ class TestClassScriptLoaderGenericConfigurationDefault
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault::getCSSOnofficeStyle
+	 * @covers onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault::getStyleUriByVersion
 	 */
-	public function testGetCSSOnofficeStyle()
+	public function testGetOnOfficeStyleVersion()
 	{
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
-		$cssOnofficeStyle = $pScriptLoaderGenericConfigurationDefault->getCSSOnofficeStyle();
-		$this->assertEquals($cssOnofficeStyle, plugins_url('templates.dist/onoffice-style.css', $pluginPath));
+		$onofficeCssStyleFilePath = $pScriptLoaderGenericConfigurationDefault->getStyleUriByVersion('onoffice_defaultview');
+		$this->assertEquals($onofficeCssStyleFilePath, plugins_url('css/onoffice_defaultview.css', $pluginPath));
+		$this->assertNotEmpty($onofficeCssStyleFilePath);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\ScriptLoader\ScriptLoaderGenericConfigurationDefault::getOnOfficeStyleVersion
+	 */
+	public function testGetStyleUriByVersion()
+	{
+		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
+		$onofficeCssStyleVersion = $pScriptLoaderGenericConfigurationDefault->getOnOfficeStyleVersion();
+		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_style');
+		$this->assertNotEmpty($onofficeCssStyleVersion);
 	}
 }

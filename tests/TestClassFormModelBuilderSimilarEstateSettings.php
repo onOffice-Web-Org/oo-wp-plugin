@@ -29,7 +29,7 @@ use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\DataView\DataSimilarView;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings;
 use onOffice\WPlugin\Model\InputModel\InputModelOptionFactorySimilarView;
-use onOffice\WPlugin\Model\InputModelDB;
+use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
@@ -259,5 +259,27 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pInputModelDB = $pInstance->createInputModelSameEstateAmount();
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'text');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createButtonModelFieldsConfigByCategory
+	 */
+	public function testCreateButtonModelFieldsConfigByCategory()
+	{
+		$pInstanceFields = $this->getMockBuilder( DataDetailView::class )
+		                        ->disableOriginalConstructor()
+		                        ->setMethods( [ 'getFields' ] )
+		                        ->getMock();
+		$pInstance = $this->getMockBuilder( FormModelBuilderSimilarEstateSettings::class )
+		                        ->disableOriginalConstructor()
+		                        ->setMethods( [ 'getValue' ] )
+		                        ->getMock();
+		$pInstance->method( 'getValue' )->willReturn( $pInstanceFields );
+		$pInstance->method( 'getValue' )->willReturn( '' );
+
+		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory('category','name','label');
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelDB);
+		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
 	}
 }

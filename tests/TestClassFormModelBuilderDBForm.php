@@ -302,6 +302,9 @@ class TestClassFormModelBuilderDBForm
 		$this->assertEquals($pInputModelIsAvailableOptions->getHtmlType(), 'checkbox');
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createInputModelFieldsConfigByCategory
+	 */
 	public function testCreateInputModelFieldsConfigByCategory()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
@@ -316,5 +319,24 @@ class TestClassFormModelBuilderDBForm
 
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals( 'checkboxWithSubmitButton', $pInputModelDB->getHtmlType() );
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::createButtonModelFieldsConfigByCategory
+	 */
+	public function testCreateButtonModelFieldsConfigByCategory()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getInputModelDBFactory', 'getValue'])
+		                  ->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory('category','name','label');
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
 	}
 }

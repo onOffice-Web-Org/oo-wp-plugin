@@ -641,6 +641,29 @@ class FormModelBuilderDBForm
 		$pInputModel->setValue($module);
 	}
 
+	/**
+	 *
+	 * @param string $category
+	 * @param array $fieldNames
+	 * @param string $categoryLabel
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createButtonModelFieldsConfigByCategory($category, $fieldNames, $categoryLabel)
+	{
+		$pInputModelFieldsConfig = $this->getInputModelDBFactory()->create(
+			InputModelDBFactory::INPUT_FIELD_CONFIG, $category, true);
+
+		$pInputModelFieldsConfig->setHtmlType(InputModelBase::HTML_TYPE_BUTTON_FIELD);
+		$pInputModelFieldsConfig->setValuesAvailable($fieldNames);
+		$pInputModelFieldsConfig->setId($category);
+		$pInputModelFieldsConfig->setLabel($categoryLabel);
+		$fields = $this->getValue(DataFormConfiguration::FIELDS, []);
+		$pInputModelFieldsConfig->setValue($fields);
+
+		return $pInputModelFieldsConfig;
+	}
 	/** @return string */
 	public function getFormType()
 		{ return $this->_formType; }

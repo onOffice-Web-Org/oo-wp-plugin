@@ -72,6 +72,9 @@ abstract class InputModelBase
 	/** */
 	const HTML_TYPE_EMAIL = 'email';
 
+	/** */
+	const HTML_TYPE_BUTTON_FIELD = 'buttonHandleField';
+
 	const HTML_TYPE_ITALIC_LABEL_CHECKBOX = 'italicLabelCheckbox';
 
 	/** @var string */
