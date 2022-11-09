@@ -510,4 +510,21 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertInstanceOf(InputModelLabel::class, $pInputModelButton);
 		$this->assertEquals($pInputModelButton->getHtmlType(), 'button');
 	}
+
+
+	public function testCreateButtonModelFieldsConfigByCategory()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['getInputModelDBFactory', 'getValue'])
+		                  ->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory('category','name','label');
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
+	}
 }

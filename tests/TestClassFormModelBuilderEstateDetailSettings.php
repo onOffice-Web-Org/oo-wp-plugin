@@ -28,6 +28,7 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Field\FieldnamesEnvironment;
 use onOffice\WPlugin\Field\FieldnamesEnvironmentTest;
+use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\ExceptionInputModelMissingField;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
@@ -35,6 +36,7 @@ use onOffice\WPlugin\Model\InputModel\InputModelOptionFactoryDetailView;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
+use onOffice\WPlugin\DataView\DataDetailView;
 use wpdb;
 
 class TestClassFormModelBuilderEstateDetailSettings
@@ -302,5 +304,31 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'select');
 	}
 	
-	
+	/**
+	* @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createButtonModelFieldsConfigByCategory
+	*/
+
+	public function testCreateButtonModelFieldsConfigByCategory()
+	{
+		$pInstanceAddressFields = $this->getMockBuilder( DataDetailView::class )
+		                               ->disableOriginalConstructor()
+		                               ->setMethods( [ 'getAddressFields' ] )
+		                               ->getMock();
+		$pInstanceFields = $this->getMockBuilder( DataDetailView::class )
+		                               ->disableOriginalConstructor()
+		                               ->setMethods( [ 'getFields' ] )
+		                               ->getMock();
+		$pInstance = $this->getMockBuilder( FormModelBuilderEstateDetailSettings::class )
+		                               ->disableOriginalConstructor()
+		                               ->setMethods( [ 'getValue' ] )
+		                               ->getMock();
+		$pValues = array_merge( [ $pInstanceAddressFields, $pInstanceFields ], [] );
+		$pInstance->method( 'getValue' )->willReturn( $pValues );
+		$pInstance->method( 'getValue' )->willReturn( '' );
+
+		$pInputModelDB = $pInstance->createButtonModelFieldsConfigByCategory( 'category', 'name', 'label' );
+
+		$this->assertInstanceOf(InputModelOption::class, $pInputModelDB);
+		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
+	}
 }

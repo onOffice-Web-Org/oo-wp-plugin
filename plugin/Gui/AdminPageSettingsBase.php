@@ -450,7 +450,7 @@ abstract class AdminPageSettingsBase
 	{
 		foreach ($fieldNames as $category => $fields) {
 			$slug = $this->generateGroupSlugByModuleCategory($module, $category);
-			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
+			$pInputModelFieldsConfig = $pFormModelBuilder->createButtonModelFieldsConfigByCategory
 				($slug, $fields, $category);
 			if ($addModule) {
 				$pInputModelFieldsConfig->setModule($module ?? '');

@@ -340,7 +340,7 @@ class AdminPageSimilarEstates
 											array $fieldNames)
 	{
 		foreach ($fieldNames as $category => $fields) {
-			$pInputModelFieldsConfig = $pFormModelBuilder->createInputModelFieldsConfigByCategory
+			$pInputModelFieldsConfig = $pFormModelBuilder->createButtonModelFieldsConfigByCategory
 			($module . $category, $fields, $category);
 			$pInputModelFieldsConfig->setSpecialDivId(self::getSpecialDivId($module));
 			$pFormModelFieldsConfig = new FormModel();

@@ -253,6 +253,17 @@ class InputModelRenderer
 				$pInstance->addAdditionalAttribute('size', '50');
 				$pInstance->setValue($pInputModel->getValue());
 				break;
+
+			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
+				$pInstance = new InputFieldButtonAddRemoveRenderer(AdminPageAjax::EXCLUDE_FIELD . $elementName,
+				$pInputModel->getValuesAvailable());	
+				$pInstance->setCheckedValues($pInputModel->getValue());
+				$pInstance->setLabel($pInputModel->getLabel());
+				$pInstance->setOoModule($pFormModel->getOoModule());
+				if ($pInputModel->getSpecialDivId() != null) {
+					$pInstance->addAdditionalAttribute('data-action-div', $pInputModel->getSpecialDivId());
+				}
+				break;
 		}
 
 		if ($pInstance !== null) {
@@ -293,6 +304,7 @@ class InputModelRenderer
 			case InputModelOption::HTML_TYPE_HIDDEN:
 			case InputModelOption::HTML_TYPE_NUMBER:
 			case InputModelOption::HTML_TYPE_EMAIL:
+			case InputModelOption::HTML_TYPE_BUTTON_FIELD:
 				if ($pInputModel->getIsMulti()) {
 					$name .= '[]';
 				}
