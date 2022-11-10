@@ -2,7 +2,7 @@
 
 /**
  *
- *    Copyright (C) 2018 onOffice GmbH
+ *    Copyright (C) 2019 onOffice GmbH
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU Affero General Public License as published by
@@ -19,28 +19,31 @@
  *
  */
 
-namespace onOffice\WPlugin\API;
-use onOffice\WPlugin\Controller\Exception\ExceptionPrettyPrintable;
+declare (strict_types=1);
+
+namespace onOffice\tests;
+
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\API\APIEmptyResultException;
+use onOffice\WPlugin\SDKWrapper;
+use WP_UnitTestCase;
 
 /**
  *
- * @url http://www.onoffice.de
- * @copyright 2003-2018, onOffice(R) GmbH
- *
  */
 
-class APIEmptyResultException
-	extends ApiClientException
-	implements ExceptionPrettyPrintable
+class TestClassAPIEmptyResultException
+	extends WP_UnitTestCase
 {
 	/**
 	 *
-	 * @return string
-	 *
 	 */
 
-	public function printFormatted(): string
+	public function testPrintFormatted()
 	{
-		return __('The onOffice plugin has an unexpected problem when trying to reach the onOffice API.', 'onoffice-for-wp-websites');
+		$pAPIClientAction = new APIClientActionGeneric(new SDKWrapper, '', '');
+		$pException = new APIEmptyResultException($pAPIClientAction);
+		$this->assertEquals('The onOffice plugin has an unexpected problem when trying to reach the onOffice API.',
+			$pException->printFormatted());
 	}
 }
