@@ -22,6 +22,7 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Field\FieldModuleCollection;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Model\FormModel;
@@ -81,6 +82,8 @@ abstract class AdminPageAjax
 				/* translators: %s will be replaced with the link to the login credentials page. */
 				wp_die(sprintf(__('It looks like you did not enter any valid API credentials. '
 					.'Please go back and review your %s.', 'onoffice-for-wp-websites'), $loginCredentialsLink), 'onOffice plugin');
+			} catch ( APIEmptyResultException $pEmptyResultException ) {
+				wp_die(__('There is a problem with the API', 'onoffice-for-wp-websites'));
 			}
 		}
 	}

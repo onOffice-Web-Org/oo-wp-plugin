@@ -24,6 +24,7 @@ namespace onOffice\WPlugin\Controller;
 use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Gui\AdminPageAddressList;
@@ -406,6 +407,11 @@ class AdminViewController
 			/* translators: %s will be replaced with the translation of 'API token and secret'. */
 			$message = sprintf(esc_html(__('It looks like you did not enter any valid API '
 				.'credentials. Please consider reviewing your %s.', 'onoffice-for-wp-websites')), $loginCredentialsLink);
+
+			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		} catch ( APIEmptyResultException $pEmptyResultException ) {
+			$class = 'notice notice-error';
+			$message = esc_html(__('There is a problem with the API ', 'onoffice-for-wp-websites'));
 
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		}
