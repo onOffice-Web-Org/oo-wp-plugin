@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use DI\ContainerBuilder;
 use Exception;
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\AdminViewController;
 use onOffice\WPlugin\Fieldnames;
 use onOffice\WPlugin\Gui\AdminPageAjax;
@@ -314,4 +315,25 @@ We recommend that you go to the <a href='http://example.org/wp-admin/admin.php?p
 		return null;
 	}
 
+	public function testDisplayEmptyResultException()
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+
+		$exception = $pContainer->get(APIEmptyResultException::class);
+		$fieldNamesMock = $this->getMockBuilder(Fieldnames::class)
+			->disableOriginalConstructor()
+			->setMethods(['loadApiEstateCategories'])
+			->getMock();
+		$fieldNamesMock->method('loadApiEstateCategories')->will($this->throwException($exception));
+
+		$pAdminViewController = $this->getMockBuilder(AdminViewController::class)
+			->disableOriginalConstructor()
+			->setMethods(['getField'])
+			->getMock();
+		$pAdminViewController->method('getField')->willReturn($fieldNamesMock);
+		$pAdminViewController->displayAPIError();
+		$this->expectOutputString('<div class="notice notice-error"><p>The onOffice plugin has an unexpected problem when trying to reach the onOffice API.</p><p>Please check the <a href="https://status.onoffice.de/">onOffice server status</a> to see if there are known problems. Otherwise, report the problem using the <a href="https://wp-plugin.onoffice.com/en/support/">support form</a>.</p></div>');
+	}
 }

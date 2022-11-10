@@ -23,6 +23,7 @@ namespace onOffice\tests;
 
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Controller\Exception\UnknownFilterException;
 use onOffice\WPlugin\Controller\UserCapabilities;
 use onOffice\WPlugin\DataView\UnknownViewException;
@@ -127,5 +128,23 @@ class TestClassLogger
 	{
 		$pException = new UnknownFilterException('test from '.__CLASS__, 13);
 		$this->_pLogger->logError($pException);
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testLogErrorAndDisplayMessageAPIEmptyResultException()
+	{
+		wp_get_current_user()->add_cap('edit_pages');
+
+		$pApiClientAction = $this->getMockBuilder(APIClientActionGeneric::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$pException = new APIEmptyResultException($pApiClientAction);
+		$expectation = '<big><strong>The onOffice plugin has an unexpected problem when trying to reach the onOffice API.</strong></big>';
+
+		$this->assertEquals($expectation, $this->_pLogger->logErrorAndDisplayMessage($pException));
 	}
 }
