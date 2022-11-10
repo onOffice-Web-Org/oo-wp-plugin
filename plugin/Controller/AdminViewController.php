@@ -411,9 +411,16 @@ class AdminViewController
 			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		} catch ( APIEmptyResultException $pEmptyResultException ) {
 			$class = 'notice notice-error';
-			$message = esc_html(__('There is a problem with the API ', 'onoffice-for-wp-websites'));
+			$label = __('The onOffice plugin has an unexpected problem when trying to reach the onOffice API.', 'onoffice-for-wp-websites');
+			$labelOnOfficeServerStatus = __( 'onOffice server status', 'onoffice-for-wp-websites' );
+			$onOfficeServerStatusLink  = sprintf( '<a href="https://status.onoffice.de/">%s</a>', $labelOnOfficeServerStatus );
+			$labelSupportFormLink      = __( 'support form', 'onoffice-for-wp-websites' );
+			$supportFormLink           = sprintf( '<a href="https://wp-plugin.onoffice.com/en/support/">%s</a>', $labelSupportFormLink );
+			/* translators: %1$s is office server status page link, %2$s is support form page link */
+			$message                   = sprintf( esc_html( __( 'Please check the %1$s to see if there are known problems. Otherwise, report the problem using the %2$s.',
+				'onoffice-for-wp-websites' ) ), $onOfficeServerStatusLink, $supportFormLink );
 
-			printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+			printf( '<div class="%1$s"><p>%2$s</p><p>%3$s</p></div>', esc_attr( $class ), $label, $message );
 		}
 	}
 

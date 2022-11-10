@@ -20,6 +20,7 @@
  */
 
 namespace onOffice\WPlugin\API;
+use onOffice\WPlugin\Controller\Exception\ExceptionPrettyPrintable;
 
 /**
  *
@@ -30,4 +31,16 @@ namespace onOffice\WPlugin\API;
 
 class APIEmptyResultException
 	extends ApiClientException
-{}
+	implements ExceptionPrettyPrintable
+{
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	public function printFormatted(): string
+	{
+		return __('The onOffice plugin has an unexpected problem when trying to reach the onOffice API.', 'onoffice-for-wp-websites');
+	}
+}

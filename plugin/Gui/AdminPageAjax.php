@@ -83,7 +83,15 @@ abstract class AdminPageAjax
 				wp_die(sprintf(__('It looks like you did not enter any valid API credentials. '
 					.'Please go back and review your %s.', 'onoffice-for-wp-websites'), $loginCredentialsLink), 'onOffice plugin');
 			} catch ( APIEmptyResultException $pEmptyResultException ) {
-				wp_die(__('There is a problem with the API', 'onoffice-for-wp-websites'));
+				$label = __('The onOffice plugin has an unexpected problem when trying to reach the onOffice API.', 'onoffice-for-wp-websites');
+				$labelOnOfficeServerStatus = __( 'onOffice server status', 'onoffice-for-wp-websites' );
+				$onOfficeServerStatusLink  = sprintf( '<a href="https://status.onoffice.de/">%s</a>', $labelOnOfficeServerStatus );
+				$labelSupportFormLink      = __( 'support form', 'onoffice-for-wp-websites' );
+				$supportFormLink           = sprintf( '<a href="https://wp-plugin.onoffice.com/en/support/">%s</a>', $labelSupportFormLink );
+				/* translators: %1$s is office server status page link, %2$s is support form page link */
+				$message                   = sprintf( esc_html( __( 'Please check the %1$s to see if there are known problems. Otherwise, report the problem using the %2$s.',
+					'onoffice-for-wp-websites' ) ), $onOfficeServerStatusLink, $supportFormLink );
+				wp_die( sprintf( '<div><p>%1$s</p><p>%2$s</p></div>', $label, $message ) );
 			}
 		}
 	}
