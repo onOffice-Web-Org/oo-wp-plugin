@@ -388,38 +388,46 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .page-option-action {
 	position: relative;
-	width: 160px;
-	border-radius: 3px;
-	border: 1px solid #8c8f94;
-	background-color: #fff;
+	border-radius: 2px;
+	border: 1px solid #2271b1;
 	margin-left: 10px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
 }
 
 .page-option-action summary {
+	padding: 4px 8px;
+	font-weight: 600;
 	font-size: 14px;
-	padding: 4px 10px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	background-color: #f6f7f7;
 	cursor: pointer;
-	color:#3c434a;
+	color: #2271b1;
 	list-style: none;
 }
 
+.page-option-action summary div{
+	padding-right:10px;
+}
+
 .page-option-action[open]{
-	border-radius: 3px;
+	border-radius: 2px;
 	border: 1px solid#3582c4;
 	box-shadow:0px 0px 0px 1px #3582c4;
 }
 
 .page-option-action[open] summary{
+	background-color: #f0f0f1;
 	color:#124B75;
 }
 
-.page-option-action summary:hover {
-	color: #3582c4;
+.page-option-action summary:hover{
+	box-shadow:0px 0px 0px 1px #124B75;
+	background-color: #f0f0f1;
+	border-radius: 1px;
+	color:#124B75;
 }
 
 .page-option-action[open] summary:before {
@@ -436,7 +444,7 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .page-option-action summary:after {
 	content: '';
-	margin-bottom: 6px;
+	margin-bottom: 4px;
 	width: .4rem;
 	height: .4rem;
 	border-bottom: 2px solid #8c8f94;
@@ -447,8 +455,8 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 }
 
 .page-option-action .options-menu {
-	width: 100%;
-	margin-top: 1px;
+	width: max-content;
+	margin-top: 4px;
 	background: #fff;
 	position: absolute;
 	box-sizing: border-box;
@@ -476,4 +484,11 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .options-menu li:hover a p{
 	color:#fff;
+}
+@media only screen and (max-width: 782px) {
+	.page-option-action summary{
+		padding: 10px 15px;
+		font-size: 14px;
+		white-space: nowrap;
+	}
 }
