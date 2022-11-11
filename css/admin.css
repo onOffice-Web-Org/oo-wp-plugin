@@ -386,6 +386,12 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 	opacity: 1
 }
 
+.page-option-add-form{
+	display: inline-block;
+	position: relative;
+	top:-3px
+}
+
 .page-option-action {
 	position: relative;
 	border-radius: 2px;
