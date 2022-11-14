@@ -90,6 +90,7 @@ Start editing inside the `onoffice-personalized` folder.
 **Fixed**
 
 * In version 4.0 we introduced a new CSS file that was tied to your templates. With this changed, we renamed the style handle, which was not backwards compatible. Now, the new CSS file is enqueued with the new style handle, but the legacy CSS file is enqueued with the legacy style handle. This restores backwards compatibility.
+* When the onOffice API returned an unexpected error, the plugin could cause a fatal error which made the backend unusable. We now handle these API errors so that you can keep using the backend even when the API breaks.
 
 = 4.4.1 (2022-10-21) =
 
