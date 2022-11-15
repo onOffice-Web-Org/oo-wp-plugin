@@ -413,9 +413,9 @@ class AdminViewController
 			$class = 'notice notice-error';
 			$label = __('The onOffice plugin has an unexpected problem when trying to reach the onOffice API.', 'onoffice-for-wp-websites');
 			$labelOnOfficeServerStatus = __( 'onOffice server status', 'onoffice-for-wp-websites' );
-			$onOfficeServerStatusLink  = sprintf( '<a href="https://status.onoffice.de/">%s</a>', $labelOnOfficeServerStatus );
+			$onOfficeServerStatusLink  = sprintf( '<a href="' . __('https://status.onoffice.de/', 'onoffice-for-wp-websites') . '">%s</a>', $labelOnOfficeServerStatus );
 			$labelSupportFormLink      = __( 'support form', 'onoffice-for-wp-websites' );
-			$supportFormLink           = sprintf( '<a href="https://wp-plugin.onoffice.com/en/support/">%s</a>', $labelSupportFormLink );
+			$supportFormLink           = sprintf( '<a href="' . __('https://wp-plugin.onoffice.com/en/support/', 'onoffice-for-wp-websites') . '">%s</a>', $labelSupportFormLink );
 			/* translators: %1$s is office server status page link, %2$s is support form page link */
 			$message                   = sprintf( esc_html( __( 'Please check the %1$s to see if there are known problems. Otherwise, report the problem using the %2$s.',
 				'onoffice-for-wp-websites' ) ), $onOfficeServerStatusLink, $supportFormLink );
