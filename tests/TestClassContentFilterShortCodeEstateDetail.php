@@ -178,9 +178,46 @@ class TestClassContentFilterShortCodeEstateDetail
 		$this->assertStringEqualsFile($expectedFile, $pSubject->render(['units' => 'test_units']));
 	}
 
+
+	/**
+	 *
+	 */
 	public function testGetViewName()
 	{
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
 		$this->assertSame('detail', $pSubject->getViewName());
 	}
+
+
+	/**
+	 *
+	 */
+	public function testRenderHtmlHelperUserIfEmptyEstateId()
+	{
+		$pEstateDetailFactory = $this->getMockBuilder(ContentFilterShortCodeEstateDetail::class)
+		->setMethods(['getRandomEstateDetail','getEstateLink'])
+		->disableOriginalConstructor()
+		->getMock();
+
+		$this->assertEquals( '<div><div>You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</div></div>', $pEstateDetailFactory->renderHtmlHelperUserIfEmptyEstateId() );
+	}
+
+
+	/**
+	 *
+	 */
+	public function testRenderHtmlHelperUserLoginIfEmptyEstateId()
+	{
+		$pEstateDetailFactory = $this->getMockBuilder(ContentFilterShortCodeEstateDetail::class)
+		->setMethods(['getRandomEstateDetail','getEstateLink'])
+		->disableOriginalConstructor()
+		->getMock();
+		$pEstateDetailFactory->method('getRandomEstateDetail')->willReturn(['1']);
+		$pEstateDetailFactory->method('getEstateLink')->willReturn('http://example.org/detail/123649/');
+
+		$user_id = $this->factory->user->create();
+		wp_set_current_user( $user_id );
+		$this->assertEquals( '<div><div>You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</div><div>Since you are logged in, here is a link to a random estate so that you can preview the detail page:</div><a href=http://example.org/detail/123649/>Beautiful home with great view</a></div>', $pEstateDetailFactory->renderHtmlHelperUserIfEmptyEstateId() );
+	}
+
 }
