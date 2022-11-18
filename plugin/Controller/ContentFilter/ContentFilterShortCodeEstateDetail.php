@@ -95,13 +95,13 @@ class ContentFilterShortCodeEstateDetail
 		$pEstateDetail    = $this->getRandomEstateDetail();
 		$ramdomEstateLink = $this->getEstateLink( $pEstateDetail );
 		$html = '<div>';
-		$html .= '<div>' . esc_html( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
+		$html .= '<div>' . __( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
 				'onoffice-for-wp-websites' ) . '</div>';
 		if ( is_user_logged_in() ) {
 			$estateTitle = $pEstateDetail['elements']["objekttitel"];
-			$html .= '<div>' . esc_html( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page:',
+			$html .= '<div>' . __( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page:',
 					'onoffice-for-wp-websites' ) . '</div>';
-			$html .= '<a href=' . $ramdomEstateLink . '>' . esc_html( $estateTitle ) . '</a>';
+			$html .= '<a href=' . $ramdomEstateLink . '>' . __( $estateTitle ) . '</a>';
 		}
 		$html .= '</div>';
 
