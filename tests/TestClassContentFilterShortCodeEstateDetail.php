@@ -240,6 +240,8 @@ class TestClassContentFilterShortCodeEstateDetail
 	 */
 	public function testRenderHtmlHelperUserLoginIfEmptyEstateId()
 	{
+		wp_set_current_user( 1 );
+
 		$pEstateDetailFactory = $this->getMockBuilder( ContentFilterShortCodeEstateDetail::class )
 		                             ->disableOriginalConstructor()
 		                             ->setMethods( [ 'getRandomEstateDetail', 'getEstateLink', 'is_user_logged_in' ] )
@@ -247,7 +249,7 @@ class TestClassContentFilterShortCodeEstateDetail
 
 		$pEstateDetailFactory->method( 'getRandomEstateDetail' )->willReturn( $this->getDataEstateDetail() );
 		$pEstateDetailFactory->method( 'getEstateLink' )->willReturn( 'http://example.org/detail/123649/' );
-		$pEstateDetailFactory->method( 'is_user_logged_in' )->willReturn( true );
+		$pEstateDetailFactory->method( 'is_user_logged_in' )->willReturn( is_user_logged_in() );
 
 		$this->assertTrue( $pEstateDetailFactory->is_user_logged_in() );
 		$this->assertEquals( '<div><div>You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</div><div>Since you are logged in, here is a link to a random estate so that you can preview the detail page:</div><a href=http://example.org/detail/123649/>abc</a></div>',
