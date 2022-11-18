@@ -30,6 +30,7 @@ use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateDetail
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\EstateDetail;
+use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -216,6 +217,23 @@ class TestClassContentFilterShortCodeEstateDetail
 		];
 	}
 
+	/**
+	 *
+	 */
+	public function testGetEstateLink()
+	{
+		$url = 'http://example.org/detail/';
+		$estateId = 281;
+		$title = 'abc';
+		$pInstance = $this->_pContainer->get(EstateDetailUrl::class);
+		$pEstateDetailFactory = $this->getMockBuilder( ContentFilterShortCodeEstateDetail::class )
+	 	                             ->setMethods( ['getPageLink'] )
+		                             ->disableOriginalConstructor()
+		                             ->getMock();
+		$pEstateDetailFactory->method('getPageLink')->willReturn($url);
+		$fullLink = $pInstance->createEstateDetailLink($url, $estateId, $title) .'/';
+		$this->assertEquals( $pEstateDetailFactory->getEstateLink($this->getDataEstateDetail()), $fullLink );
+	}
 
 	/**
 	 *
@@ -232,7 +250,7 @@ class TestClassContentFilterShortCodeEstateDetail
 
 		$pEstateDetailFactory->method( 'getRandomEstateDetail' )->willReturn( $this->getDataEstateDetail() );
 		$pEstateDetailFactory->method( 'getEstateLink' )->willReturn( 'http://example.org/detail/123649/' );
-		$pEstateDetailFactory->method( 'is_user_logged_in' )->willReturn( is_user_logged_in() );
+		$pEstateDetailFactory->method( 'is_user_logged_in' )->willReturn( true );
 
 		$this->assertTrue( $pEstateDetailFactory->is_user_logged_in() );
 		$this->assertEquals( '<div><div>You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</div><div>Since you are logged in, here is a link to a random estate so that you can preview the detail page:</div><a href=http://example.org/detail/123649/>abc</a></div>',

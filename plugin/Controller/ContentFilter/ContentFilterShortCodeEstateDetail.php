@@ -98,9 +98,10 @@ class ContentFilterShortCodeEstateDetail
 		$html .= '<div>' . esc_html( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
 				'onoffice-for-wp-websites' ) . '</div>';
 		if ( is_user_logged_in() ) {
+			$estateTitle = $pEstateDetail['elements']["objekttitel"];
 			$html .= '<div>' . esc_html( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page:',
 					'onoffice-for-wp-websites' ) . '</div>';
-			$html .= '<a href=' . $ramdomEstateLink . '>' . esc_html( $pEstateDetail['elements']["objekttitel"] ) . '</a>';
+			$html .= '<a href=' . $ramdomEstateLink . '>' . esc_html( $estateTitle ) . '</a>';
 		}
 		$html .= '</div>';
 
@@ -146,6 +147,14 @@ class ContentFilterShortCodeEstateDetail
 
 	/**
 	 * @return string
+	 */
+	public function getPageLink(): string
+	{
+		return get_page_link();
+	}
+
+	/**
+	 * @return string
 	 * @throws DependencyException
 	 * @throws NotFoundException
 	 */
@@ -158,7 +167,7 @@ class ContentFilterShortCodeEstateDetail
 		if ( $pageId !== 0 ) {
 			$estate           = $pEstateListDetail['id'];
 			$title            = $pEstateListDetail['elements']['objekttitel'] ?? '';
-			$url              = get_page_link();
+			$url              = $this->getPageLink();
 			$fullLink         = $pLanguageSwitcher->createEstateDetailLink( $url, (int) $estate, $title );
 			$fullLinkElements = parse_url( $fullLink );
 			if ( empty( $fullLinkElements['query'] ) ) {
