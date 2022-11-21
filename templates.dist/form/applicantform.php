@@ -30,6 +30,7 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 $addressValues = array();
 $searchcriteriaValues = array();
+$dontEcho = array("gdprcheckbox");
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo '<p>'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
@@ -46,6 +47,10 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	$line = $pForm->getFieldLabel( $input ).$addition.': ';
 	$line .= renderFormField($input, $pForm);
 
+	if ( in_array($input, $dontEcho) ) {
+		continue;
+	}
+
 	if ( $pForm->isMissingField( $input ) ) {
 		$line .= '<span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 	}
@@ -53,7 +58,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	if ($table == 'address') {
 		$addressValues []= $line;
 	}
-
+	
 	if ($table == 'searchcriteria') {
 		$searchcriteriaValues []= $line;
 	}
@@ -62,6 +67,11 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		$addressValues []= $line;
 	}
 
+}
+
+if (array_key_exists('gdprcheckbox', $pForm->getInputFields())){
+	$gdprcheckboxInput = '<input type="checkbox" name="gdprcheckbox" value="gdprcheckbox">I agree to the <a href="/privacy-policy">Privacy Policies</a>';
+	$addressValues []= $gdprcheckboxInput;
 }
 
 if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
