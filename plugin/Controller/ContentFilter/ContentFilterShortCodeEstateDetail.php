@@ -24,6 +24,7 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
 use DI\ContainerBuilder;
+use onOffice\WPlugin\Language;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
@@ -116,11 +117,14 @@ class ContentFilterShortCodeEstateDetail
 		$pContainer                     = $pContainerBuilder->build();
 		$pEnvironment                   = new EstateListEnvironmentDefault( $pContainer );
 		$pSDKWrapper                    = $pEnvironment->getSDKWrapper();
+		$language = Language::getDefault();
 		$pApiClientAction               = new APIClientActionGeneric
 		( $pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate' );
 		$estateParametersRaw['data']    = $pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] [] = 'veroeffentlichen';
-		$estateParametersRaw["data"] [] = 'objekttitel';
+		$estateParametersRaw['data'] [] = 'objekttitel';
+		$estateParametersRaw['estatelanguage'] = $language;
+		$estateParametersRaw['outputlanguage'] = $language;
 
 		$pApiClientAction->setParameters( $estateParametersRaw );
 		$pApiClientAction->addRequestToQueue()->sendRequests();
