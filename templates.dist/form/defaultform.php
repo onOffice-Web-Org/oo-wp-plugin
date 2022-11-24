@@ -20,7 +20,6 @@
  */
 
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
-$dontEcho = array("gdprcheckbox");
 ?>
 
 <h3>
@@ -54,9 +53,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			echo esc_html__('Please fill in!', 'onoffice-for-wp-websites');
 		}
 
-		if ( in_array($input, $dontEcho) ) {
-			continue;
-		}
 
 		if ( in_array( $input, array('message', 'Id') ) ) {
 			continue;
@@ -81,9 +77,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 <?php
 	endif;
 
-	if (array_key_exists('gdprcheckbox', $pForm->getInputFields())){
-		echo '<input type="checkbox" name="gdprcheckbox" value="gdprcheckbox">I agree to the <a href="/privacy-policy">Privacy Policies</a>';
-	}
 	echo '<br>';
 
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');

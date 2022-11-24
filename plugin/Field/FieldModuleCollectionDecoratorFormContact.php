@@ -49,14 +49,6 @@ class FieldModuleCollectionDecoratorFormContact
 					'label'   => __('Newsletter', 'onoffice-for-wp-websites'),
 					'content' => __('Special Fields', 'onoffice-for-wp-websites')
 				],
-				'gdprcheckbox' => [
-					'type' => FieldTypes::FIELD_TYPE_BOOLEAN,
-					'length' => null,
-					'permittedvalues' => [],
-					'default' => null,
-					'label'   => __('GDPR (Checkbox)', 'onoffice-for-wp-websites'),
-					'content' => __('Special Fields', 'onoffice-for-wp-websites')
-				],
 			],
 			'' => [
 				'message' => [
@@ -65,6 +57,14 @@ class FieldModuleCollectionDecoratorFormContact
 					'permittedvalues' => [],
 					'default' => null,
 					'label'   => __('Message', 'onoffice-for-wp-websites'),
+					'content' => __('Special Fields', 'onoffice-for-wp-websites')
+				],
+				'gdprcheckbox' => [
+					'type' => FieldTypes::FIELD_TYPE_BOOLEAN,
+					'length' => 0,
+					'permittedvalues' => [],
+					'default' => false,
+					'label'   => __('GDPR (Checkbox)', 'onoffice-for-wp-websites'),
 					'content' => __('Special Fields', 'onoffice-for-wp-websites')
 				],
 			],
