@@ -360,6 +360,7 @@ class TestClassDataFormConfigurationFactory
 				'individual_fieldname' => '0',
 				'availableOptions' => '0',
 				'required' => '1',
+				'markdown' => '0',
 				'contact_type' => '',
 			],
 			[
@@ -372,6 +373,7 @@ class TestClassDataFormConfigurationFactory
 				'individual_fieldname' => '0',
 				'availableOptions' => '0',
 				'required' => '1',
+				'markdown' => '0',
 				'contact_type' => '',
 			],
 			[
@@ -384,6 +386,7 @@ class TestClassDataFormConfigurationFactory
 				'individual_fieldname' => '0',
 				'availableOptions' => '1',
 				'required' => '0',
+				'markdown' => '0',
 				'contact_type' => '',
 			],
 		];
