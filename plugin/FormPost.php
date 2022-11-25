@@ -208,7 +208,6 @@ abstract class FormPost
 		$this->_pCompoundFields = $this->_pFormPostConfiguration->getCompoundFields();
 		$requiredFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getRequiredFields());
 		$inputs = $this->_pCompoundFields->mergeAssocFields($this->_pFieldsCollection, $pFormConfig->getInputs());
-		$makedownFields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $pFormConfig->getMarkdownFields());
 		$pFormConfig->setInputs($inputs);
 
 		$formFields = $this->getAllowedPostVars($pFormConfig);
@@ -216,7 +215,6 @@ abstract class FormPost
 		$pFormData = new FormData($pFormConfig, $formNo);
 		$pFormData->setRequiredFields($requiredFields);
 		$pFormData->setFormtype($pFormConfig->getFormType());
-		$pFormData->setMarkdownFields($makedownFields);
 		$pFormData->setValues($formData);
 
 		return $pFormData;

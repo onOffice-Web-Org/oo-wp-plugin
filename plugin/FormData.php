@@ -181,14 +181,6 @@ class FormData
 	public function getRequiredFields(): array
 		{ return $this->_requiredFields; }
 
-	/** @return array */
-	public function getMarkdownFields(): array
-		{ return $this->_markdownFields; }
-
-	/** @return array */
-	public function setMarkdownFields(array $markdownFields)
-		{ $this->_markdownFields = $markdownFields; }
-
 	/** @param array $values */
 	public function setValues(array $values)
 		{ $this->_values = $values; }

@@ -127,7 +127,6 @@ class Form
 			$this->_pFormData = new FormData($pFormConfig, $this->_formNo);
 			$this->_pFormData->setRequiredFields($this->getRequiredFields());
 			$this->_pFormData->setFormtype($pFormConfig->getFormType());
-			$this->_pFormData->setMarkdownFields($this->getMarkdownFields());
 			$this->_pFormData->setFormSent(false);
 			$this->_pFormData->setValues
 				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
