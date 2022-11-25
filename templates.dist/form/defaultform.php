@@ -20,6 +20,7 @@
  */
 
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
+
 ?>
 
 <h3>
@@ -52,7 +53,6 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		if ( $pForm->isMissingField( $input ) ) {
 			echo esc_html__('Please fill in!', 'onoffice-for-wp-websites');
 		}
-
 
 		if ( in_array( $input, array('message', 'Id') ) ) {
 			continue;

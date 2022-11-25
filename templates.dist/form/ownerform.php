@@ -20,7 +20,7 @@
  */
 
 include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
-$dontEcho = array("gdprcheckbox");
+
 ?>
 
 <form method="post" id="onoffice-form">
@@ -50,10 +50,6 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 		}
 
-		if ( in_array($input, $dontEcho) ) {
-			continue;
-		}
-
 		if ($table == 'address') {
 			$addressValues []= $line;
 		}
@@ -62,6 +58,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			$estateValues []= $line;
 		}
 	}
+
 	if (array_key_exists('message', $pForm->getInputFields())) {
 		$isRequiredMessage = $pForm->isRequiredField( 'message' );
 		$additionMessage = $isRequiredMessage ? '*' : '';
@@ -69,10 +66,6 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		$messageInput = esc_html__('Message', 'onoffice-for-wp-websites').$additionMessage.':<br>
 		<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
 		$addressValues []= $messageInput;
-	}
-	if (array_key_exists('gdprcheckbox', $pForm->getInputFields())){
-		$gdprcheckboxInput = '<input type="checkbox" name="gdprcheckbox" value="gdprcheckbox">I agree to the <a href="/privacy-policy">Privacy Policies</a>';
-		$addressValues []= $gdprcheckboxInput;
 	}
 
 	echo '<h2>'.esc_html__('Your contact details', 'onoffice-for-wp-websites').'</h2>'
@@ -83,7 +76,7 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		<p>';
 	echo implode('<br>', $estateValues);
 	echo '</p>';
-	
+
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
 }
 ?>

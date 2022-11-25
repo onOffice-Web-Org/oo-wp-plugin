@@ -30,7 +30,6 @@ include(ONOFFICE_PLUGIN_DIR.'/templates.dist/fields.php');
 
 $addressValues = array();
 $searchcriteriaValues = array();
-$dontEcho = array("gdprcheckbox");
 
 if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 	echo '<p>'.esc_html__('SUCCESS!', 'onoffice-for-wp-websites').'</p>';
@@ -54,7 +53,7 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	if ($table == 'address') {
 		$addressValues []= $line;
 	}
-	
+
 	if ($table == 'searchcriteria') {
 		$searchcriteriaValues []= $line;
 	}
@@ -64,7 +63,6 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 }
-
 
 if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
