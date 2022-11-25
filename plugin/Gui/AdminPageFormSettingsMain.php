@@ -140,7 +140,6 @@ class AdminPageFormSettingsMain
 				$pAdminPage->setShowCheckDuplicates(true);
 				$pAdminPage->setShowAddressFields(true);
 				$pAdminPage->setShowMessageInput(true);
-				$pAdminPage->setShowNewsletterCheckbox(true);
 				$pAdminPage->setShowEstateContextCheckbox(true);
 				$pAdminPage->setShowContactTypeSelect(true);
 				break;
