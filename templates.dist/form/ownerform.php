@@ -67,7 +67,11 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
 		$addressValues []= $messageInput;
 	}
-
+	if (array_key_exists('gdprcheckbox', $pForm->getInputFields())) {
+		$line = renderFormField('gdprcheckbox', $pForm);
+		$line .= $pForm->getFieldLabel('gdprcheckbox');
+		$addressValues []= $line;
+	}
 	echo '<h2>'.esc_html__('Your contact details', 'onoffice-for-wp-websites').'</h2>'
 		.'<p>';
 	echo implode('<br>', $addressValues);

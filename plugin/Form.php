@@ -362,7 +362,7 @@ class Form
 		}
 		foreach($this->getMarkdownFields() as $markdownFields){
 			if($markdownFields == $field){
-				$label = $Parsedown->text($label);
+				$label = $Parsedown->line($label);
 			}
 		}
 		return $label;

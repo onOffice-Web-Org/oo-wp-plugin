@@ -72,8 +72,6 @@ class FormData
 	/** @var DataFormConfiguration */
 	private $_pDataFormConfiguration = null;
 
-	/** @var array */
-	private $_markdownFields = [];
 
 	/**
 	 *

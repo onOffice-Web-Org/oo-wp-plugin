@@ -50,6 +50,9 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 		$line .= '<span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 	}
 
+	if ( in_array( $input, array('gdprcheckbox') ) ) {
+		continue;
+	}
 	if ($table == 'address') {
 		$addressValues []= $line;
 	}
@@ -63,7 +66,11 @@ foreach ( $pForm->getInputFields() as $input => $table ) {
 	}
 
 }
-
+if (array_key_exists('gdprcheckbox', $pForm->getInputFields())) {
+	$line = renderFormField('gdprcheckbox', $pForm);
+	$line .= $pForm->getFieldLabel('gdprcheckbox');
+	$addressValues []= $line;
+}
 if ($pForm->getFormStatus() !== \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 ?>
