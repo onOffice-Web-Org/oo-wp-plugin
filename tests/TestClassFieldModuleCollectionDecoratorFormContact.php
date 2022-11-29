@@ -51,8 +51,8 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 			(new FieldsCollection());
 		$expectedResult = [
 			$this->getExpectedFieldNewsletter(),
-			$this->getExpectedFieldMessage(),
 			$this->getExpectedFieldGDPRCheckbox(),
+			$this->getExpectedFieldMessage(),
 		];
 		$this->assertEquals($expectedResult, $pFieldModuleDecorator->getAllFields());
 	}
@@ -145,7 +145,7 @@ class TestClassFieldModuleCollectionDecoratorFormContact
 
 	private function getExpectedFieldGDPRCheckbox(): Field
 	{
-		$pFieldMessage = new Field('gdprcheckbox', '', 'GDPR (Checkbox)');
+		$pFieldMessage = new Field('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS, 'GDPR (Checkbox)');
 		$pFieldMessage->setCategory('Special Fields');
 		$pFieldMessage->setDefault(false);
 		$pFieldMessage->setLength(0);
