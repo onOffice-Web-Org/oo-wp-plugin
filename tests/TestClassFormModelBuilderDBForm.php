@@ -357,5 +357,6 @@ class TestClassFormModelBuilderDBForm
 
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+		$this->assertEquals([$pInstance, 'callbackValueInputModelIsMarkDown'], $pInputModelDB->getValueCallback());
 	}
 }
