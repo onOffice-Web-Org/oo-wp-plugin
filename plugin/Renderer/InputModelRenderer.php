@@ -76,7 +76,7 @@ class InputModelRenderer
 			if ($pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_LABEL && $pInputModel->getHtmlType() !== InputModelBase::HTML_TYPE_BUTTON) {
 				echo '<p id="" class="wp-clearfix">';
 				echo '<label class="howto" for="'.esc_html($pInputField->getGuiId()).'">';
-				echo esc_html__($pInputModel->getLabel()). $italicText;
+				echo $pInputModel->getLabel();
 				echo '</label>';
 				$pInputField->render();
 				echo '</p>';

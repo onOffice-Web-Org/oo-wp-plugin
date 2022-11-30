@@ -497,7 +497,10 @@ class FormModelBuilderDBForm
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Label uses Markdown', 'onoffice-for-wp-websites');
+		$text = __( 'Markdown', 'onoffice-for-wp-websites' );
+		$linkMarkdown = sprintf( '<a href="' . __( 'https://wp-plugin.onoffice.com/en/advanced-features/markdown-labels',
+				'onoffice-for-wp-websites' ) . '">%s</a>', $text );
+		$label = sprintf( __( 'Label uses %s', 'onoffice-for-wp-websites' ), $linkMarkdown );
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_MARK_DOWN;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
