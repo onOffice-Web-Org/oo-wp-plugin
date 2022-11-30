@@ -53,28 +53,28 @@ jQuery(document).ready(function($){
 		var labelButtonHandleField= $(this).parent().parent().attr('action-field-name');
 		var data = document.querySelector("."+labelButtonHandleField);
 
-		data.classList.remove("dashicons-remove");
-		data.classList.add("dashicons-insert");
-		$(data).next().css( "opacity", "1")
-		$(data).attr('typeField', 1);
+		$(data).children().first().removeClass("dashicons-remove");
+		$(data).children().first().addClass("dashicons-insert");
+		$(data).children().next().css( "opacity", "1")
+		$(data).children().attr('typeField', 1);
 		$(this).parent().parent().remove();
 	});
 	var getCheckedFieldButton = function(btn) {
 		var addField= 1;
 		var removeField= 2;
-		var checkTypeField = $(btn).attr('typeField');
+		var checkTypeField = $(btn).children().attr('typeField');
 		if(checkTypeField == addField){
-			btn.classList.remove("dashicons-insert");
-			btn.classList.add("dashicons-remove");
+			$(btn).children().first().removeClass("dashicons-insert");
+			$(btn).children().first().addClass("dashicons-remove");
 			var label = $(btn).attr('data-action-div');
 			var valElName = $(btn).attr('value');
-			var valElLabel = $(btn).next().text();
+			var valElLabel = $(btn).children().next().text();
 			var category = $(btn).attr('data-onoffice-category');
 			var module = $(btn).attr('data-onoffice-module');
 			var actionFieldName = 'labelButtonHandleField-'+valElName;
-
-			$(btn).next().css( "opacity", "0.5")
-			$(btn).attr('typeField', removeField);
+			$(btn).children().first().next().css( "opacity", "0.5")
+			$(btn).children().first().css( "opacity", "0.5")
+			$(btn).children().first().attr("typeField", removeField);
 			var optionsAvailable = false;
 			var checkedFields = [];
 
@@ -98,10 +98,11 @@ jQuery(document).ready(function($){
 			var valElName = $(btn).attr('value');
 			var checkedFields = [];
 
-			$(btn).next().css( "opacity", "1")
-			btn.classList.remove("dashicons-remove");
-			btn.classList.add("dashicons-insert");
-			$(btn).attr('typeField', addField);
+			$(btn).children().first().css( "opacity", "0.8")
+			$(btn).children().first().next().css( "opacity", "1")
+			$(btn).children().first().removeClass("dashicons-remove");
+			$(btn).children().first().addClass("dashicons-insert");
+			$(btn).children().first().attr("typeField", addField);
 			$('*#sortableFieldsList').find('#menu-item-'+valElName).remove();
 		}
 

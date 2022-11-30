@@ -59,16 +59,16 @@ class InputFieldButtonAddRemoveRenderer
 				$inputId                 = 'label' . $this->getGuiId() . 'b' . $key;
 				$actionFieldName         = 'labelButtonHandleField' . '-' . $key;
 				$checkDataField          = is_array( $this->getCheckedValues() ) && in_array( $key, $this->getCheckedValues() );
-				$onofficeSelect          = $checkDataField ? 'class="inputFieldButton dashicons dashicons-remove ' . $actionFieldName . '" typeField="2"' : 'class="inputFieldButton dashicons dashicons-insert ' . $actionFieldName . '" typeField="1"';
+				$onofficeSelect          = $checkDataField ? 'class="dashicons dashicons-remove" typeField="2"' : 'class="dashicons dashicons-insert" typeField="1"';
 				$handleLabelButtonChange = $checkDataField ? "opacity: 0.5;" : "opacity: 1;";
-				echo '<span name="' . esc_html( $this->getName() ) . '"'
-				     . '' . $onofficeSelect
-				     . '' . $this->renderAdditionalAttributes()
-				     . 'value="' . esc_html( $key ) . '"'
-				     . 'data-onoffice-category="' . esc_attr( $this->getLabel() ) . '"'
-				     . 'id="' . esc_html( $inputId ) . '">'
-				     . '</span>';
-				echo '<label style="margin-left:5px;' . $handleLabelButtonChange . '" for="' . esc_html( $inputId ) . '">' . esc_html( $label ) . '</label><br>'
+				echo '<span class="inputFieldButton ' . $actionFieldName . '"'
+				. '' .'name="' . esc_html( $this->getName() ) . '"'
+				. '' . $this->renderAdditionalAttributes()
+				. 'value="' . esc_html( $key ) . '"'
+				. 'data-onoffice-category="' . esc_attr( $this->getLabel() ) . '"'
+				. 'id="' . esc_html( $inputId ) . '">';
+				echo '<span '.$onofficeSelect.'></span>';
+				echo '<label style="margin-left:5px;' . $handleLabelButtonChange . '">' . esc_html( $label ) . '</label></span><br>'
 				     . $textHtml;
 			}
 		}
