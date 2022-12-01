@@ -144,55 +144,55 @@ class TestClassContentFilterShortCodeEstateDetail
 		$this->_pEstate->method('getSimilarEstates')->willReturn('');
 	}
 
-	// public function testRender()
-	// {
-	// 	$pTemplateMocker = new TemplateMocker();
-	// 	$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
-	// 		->setMethods(['getDetailView'])
-	// 		->getMock();
+	public function testRender()
+	{
+		$pTemplateMocker = new TemplateMocker();
+		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
+			->setMethods(['getDetailView'])
+			->getMock();
 
-	// 	$pDataDetailView = new DataDetailView;
-	// 	$pDataDetailView->setTemplate('resources/templates/default_detail.php');
-	// 	$pDataDetailViewHandler
-	// 		->expects($this->once())
-	// 		->method('getDetailView')
-	// 		->will($this->returnValue($pDataDetailView));
+		$pDataDetailView = new DataDetailView;
+		$pDataDetailView->setTemplate('resources/templates/default_detail.php');
+		$pDataDetailViewHandler
+			->expects($this->once())
+			->method('getDetailView')
+			->will($this->returnValue($pDataDetailView));
 
-	// 	$pWPQuery = new \WP_Query;
-	// 	$pWPQuery->query_vars['estate_id'] = 13;
+		$pWPQuery = new \WP_Query;
+		$pWPQuery->query_vars['estate_id'] = 13;
 
-	// 	$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
-	// 		->setMethods(['getWPQuery'])
-	// 		->getMock();
-	// 	$pWPQueryWrapper->expects($this->once())
-	// 		->method('getWPQuery')
-	// 		->will($this->returnValue($pWPQuery));
-	// 	$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
-	// 		->disableOriginalConstructor()
-	// 		->getMock();
-	// 	$pEstateDetailFactory->expects($this->once())
-	// 		->method('createEstateDetail')
-	// 		->will($this->returnValue($this->_pEstate));
+		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
+			->setMethods(['getWPQuery'])
+			->getMock();
+		$pWPQueryWrapper->expects($this->once())
+			->method('getWPQuery')
+			->will($this->returnValue($pWPQuery));
+		$pEstateDetailFactory = $this->getMockBuilder(EstateListFactory::class)
+			->disableOriginalConstructor()
+			->getMock();
+		$pEstateDetailFactory->expects($this->once())
+			->method('createEstateDetail')
+			->will($this->returnValue($this->_pEstate));
 
-	// 	$this->_pContainer->set(Template::class, $pTemplateMocker);
-	// 	$this->_pContainer->set(DataDetailView::class, $pDataDetailView);
-	// 	$this->_pContainer->set(WPQueryWrapper::class, $pWPQueryWrapper);
-	// 	$this->_pContainer->set(DataDetailViewHandler::class, $pDataDetailViewHandler);
-	// 	$this->_pContainer->set(EstateListFactory::class, $pEstateDetailFactory);
-	// 	$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
-	// 	$expectedFile = __DIR__.'/resources/templates/TestClassContentFilterShortCodeEstateDetail_expected.txt';
-	// 	$this->assertStringEqualsFile($expectedFile, $pSubject->render(['units' => 'test_units']));
-	// }
+		$this->_pContainer->set(Template::class, $pTemplateMocker);
+		$this->_pContainer->set(DataDetailView::class, $pDataDetailView);
+		$this->_pContainer->set(WPQueryWrapper::class, $pWPQueryWrapper);
+		$this->_pContainer->set(DataDetailViewHandler::class, $pDataDetailViewHandler);
+		$this->_pContainer->set(EstateListFactory::class, $pEstateDetailFactory);
+		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
+		$expectedFile = __DIR__.'/resources/templates/TestClassContentFilterShortCodeEstateDetail_expected.txt';
+		$this->assertStringEqualsFile($expectedFile, $pSubject->render(['units' => 'test_units']));
+	}
 
 
-	// /**
-	//  *
-	//  */
-	// public function testGetViewName()
-	// {
-	// 	$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
-	// 	$this->assertSame('detail', $pSubject->getViewName());
-	// }
+	/**
+	 *
+	 */
+	public function testGetViewName()
+	{
+		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
+		$this->assertSame('detail', $pSubject->getViewName());
+	}
 
 
 	/**
