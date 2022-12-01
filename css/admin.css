@@ -377,14 +377,13 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 
 .inputFieldButton{
 	margin-top: 2px;
-	opacity: 0.8;
-	color: rgba(0, 0, 0, 0.904);
+	color: rgba(20, 20, 20, 0.685);
 	transition: 0.3s;
 }
 
 .inputFieldButton:hover{
 	cursor: pointer;
-	opacity: 1
+	color: rgb(0, 0, 0);
 }
 
 .page-option-add-form{

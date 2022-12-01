@@ -73,7 +73,6 @@ jQuery(document).ready(function($){
 			var module = $(btn).attr('data-onoffice-module');
 			var actionFieldName = 'labelButtonHandleField-'+valElName;
 			$(btn).children().first().next().css( "opacity", "0.5")
-			$(btn).children().first().css( "opacity", "0.5")
 			$(btn).children().first().attr("typeField", removeField);
 			var optionsAvailable = false;
 			var checkedFields = [];
@@ -98,7 +97,6 @@ jQuery(document).ready(function($){
 			var valElName = $(btn).attr('value');
 			var checkedFields = [];
 
-			$(btn).children().first().css( "opacity", "0.8")
 			$(btn).children().first().next().css( "opacity", "1")
 			$(btn).children().first().removeClass("dashicons-remove");
 			$(btn).children().first().addClass("dashicons-insert");
