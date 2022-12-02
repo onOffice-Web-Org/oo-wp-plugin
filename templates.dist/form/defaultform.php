@@ -54,11 +54,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			echo esc_html__('Please fill in!', 'onoffice-for-wp-websites');
 		}
 
-		if ( in_array( $input, array('message', 'Id') ) ) {
-			continue;
-		}
-
-		if ( in_array( $input, array('gdprcheckbox', 'Id') ) ) {
+		if ( in_array( $input, array('message', 'Id', 'gdprcheckbox') ) ) {
 			continue;
 		}
 
