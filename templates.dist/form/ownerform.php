@@ -49,7 +49,9 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		if ( $pForm->isMissingField( $input ) ) {
 			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 		}
-
+		if ( in_array( $input, array('gdprcheckbox') ) ) {
+			continue;
+		}
 		if ($table == 'address') {
 			$addressValues []= $line;
 		}
