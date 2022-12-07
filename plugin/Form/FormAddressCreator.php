@@ -75,7 +75,11 @@ class FormAddressCreator
 		if (!empty($contactType)) {
 			$requestParams['ArtDaten'] = $contactType;
 		}
-		unset($requestParams['newsletter']);
+
+		if(!empty($requestParams['newsletter']))
+        {
+            unset($requestParams['newsletter']);
+        }
 
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'address');
