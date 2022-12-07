@@ -75,12 +75,10 @@ class FormAddressCreator
 		if (!empty($contactType)) {
 			$requestParams['ArtDaten'] = $contactType;
 		}
-
-		if(!empty($requestParams['newsletter']))
+		if(key_exists('newsletter', $requestParams))
         {
             unset($requestParams['newsletter']);
         }
-
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'address');
 		$pApiClientAction->setParameters($requestParams);
@@ -112,7 +110,9 @@ class FormAddressCreator
 
 		$addressData = [];
 		$pFieldsCollection = new FieldsCollection();
-		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection)
+		->addFieldsSearchCriteria( $pFieldsCollection )
+		->addFieldsFormFrontend( $pFieldsCollection );
 		$addressFields = $pFormData->getAddressData($pFieldsCollection);
 
 		foreach ($addressFields as $inputName => $value) {

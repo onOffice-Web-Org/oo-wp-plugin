@@ -88,7 +88,6 @@ class FormPostInterest
 				                                                   ->createOrCompleteAddress( $pFormData,
 					                                                   $checkduplicate, $contactType);
 				$this->createSearchcriteria( $pFormData, $addressId );
-				$this->createAddress( $addressId );
 			}
 		} finally {
 			if ( $recipient != null ) {
@@ -112,35 +111,6 @@ class FormPostInterest
 			->getFormFieldsWithRangeFields($formFields);
 		return $postvars;
 	}
-
-
-	/**
-	 *
-	 * @param FormData $pFormData
-	 * @return void
-	 * @throws ApiClientException
-	 * @throws Field\UnknownFieldException
-	 */
-
-	private function createAddress($addressId)
-	{
-		if (!$this->_pFormPostInterestConfiguration->getNewsletterAccepted()) {
-			// No subscription for newsletter, which is ok
-			return;
-		}
-
-		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
-		$pAPIClientAction = new APIClientActionGeneric
-			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'registerNewsletter');
-		$pAPIClientAction->setParameters(['register' => true]);
-		$pAPIClientAction->setResourceId($addressId);
-		$pAPIClientAction->addRequestToQueue()->sendRequests();
-
-		if (!$pAPIClientAction->getResultStatus()) {
-			throw new ApiClientException($pAPIClientAction);
-		}
-	}
-
 
 	/**
 	 * @param FormData $pFormData
@@ -223,4 +193,5 @@ class FormPostInterest
 			throw new ApiClientException($pApiClientAction);
 		}
 	}
+
 }

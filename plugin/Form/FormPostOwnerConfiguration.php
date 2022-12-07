@@ -61,17 +61,10 @@ interface FormPostOwnerConfiguration
 
 	/**
 	 *
-	 * @return bool
-	 *
-	 */
-
-	public function getNewsletterAccepted(): bool;
-
-	/**
-	 *
 	 * @return FormAddressCreator
 	 *
 	 */
 
 	public function getFormAddressCreator(): FormAddressCreator;
+
 }

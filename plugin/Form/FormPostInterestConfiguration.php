@@ -59,12 +59,4 @@ interface FormPostInterestConfiguration
 	public function getSearchcriteriaFields(): SearchcriteriaFields;
 
 
-	/**
-	 *
-	 * @return bool
-	 *
-	 */
-
-	public function getNewsletterAccepted(): bool;
-
 }
