@@ -76,7 +76,7 @@ class FormAddressCreator
 			$requestParams['ArtDaten'] = $contactType;
 		}
 
-		if(!empty($requestParams['newsletter']))
+		if(isset($requestParams['newsletter']))
         {
             unset($requestParams['newsletter']);
         }
