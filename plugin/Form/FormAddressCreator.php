@@ -78,9 +78,7 @@ class FormAddressCreator
 		if (isset($requestParams['gdprcheckbox']) && $requestParams['gdprcheckbox']){
 			$requestParams['DSGVOStatus'] = "speicherungzugestimmt";
 		}
-		if (!empty($requestParams['gdprcheckbox'])) {
-			unset($requestParams['gdprcheckbox']);
-		}
+		unset($requestParams['gdprcheckbox']);
 
 		$pApiClientAction = new APIClientActionGeneric
 			($this->_pSDKWrapper, onOfficeSDK::ACTION_ID_CREATE, 'address');
