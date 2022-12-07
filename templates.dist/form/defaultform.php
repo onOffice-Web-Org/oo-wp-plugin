@@ -54,7 +54,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			echo esc_html__('Please fill in!', 'onoffice-for-wp-websites');
 		}
 
-		if ( in_array( $input, array('message', 'Id') ) ) {
+		if ( in_array( $input, array('message', 'Id', 'gdprcheckbox') ) ) {
 			continue;
 		}
 
@@ -76,7 +76,10 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 
 <?php
 	endif;
-
+	if (array_key_exists('gdprcheckbox', $pForm->getInputFields())) {
+		echo renderFormField('gdprcheckbox', $pForm);
+		echo $pForm->getFieldLabel('gdprcheckbox');
+	}
 	echo '<br>';
 
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
