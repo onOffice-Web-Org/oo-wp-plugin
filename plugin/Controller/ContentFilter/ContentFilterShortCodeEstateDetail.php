@@ -150,13 +150,6 @@ class ContentFilterShortCodeEstateDetail
 		return $this->_pDataDetailViewHandler->getDetailView()->getName();
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getPageLink(): string
-	{
-		return get_page_link();
-	}
 
 	/**
 	 * @return string
@@ -172,7 +165,7 @@ class ContentFilterShortCodeEstateDetail
 		if ( $pageId !== 0 ) {
 			$estate           = $pEstateListDetail['id'];
 			$title            = $pEstateListDetail['elements']['objekttitel'] ?? '';
-			$url              = $this->getPageLink();
+			$url              = get_page_link();
 			$fullLink         = $pLanguageSwitcher->createEstateDetailLink( $url, (int) $estate, $title );
 			$fullLinkElements = parse_url( $fullLink );
 			if ( empty( $fullLinkElements['query'] ) ) {
