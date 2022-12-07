@@ -353,7 +353,7 @@ class Form
 
 	public function getFieldLabel(string $field, bool $raw = false): string
 	{
-		$Parsedown = new Parsedown;
+		$parsedown = new Parsedown;
 		$module = $this->getModuleOfField($field);
 		$label = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field)->getLabel();
 
@@ -362,7 +362,7 @@ class Form
 		}
 		foreach($this->getMarkdownFields() as $markdownFields){
 			if($markdownFields == $field){
-				$label = $Parsedown->line($label);
+				$label = $parsedown->line($label);
 			}
 		}
 		return $label;
