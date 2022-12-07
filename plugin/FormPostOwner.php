@@ -98,6 +98,7 @@ class FormPostOwner
 				$estateData = $this->getEstateData();
 				$estateId   = $this->createEstate( $estateData );
 				$this->createOwnerRelation( $estateId, $addressId );
+				$this->createAddress($addressId);
 			}
 		} finally {
 			if ( null != $recipient ) {
@@ -168,6 +169,32 @@ class FormPostOwner
 		return $estateData;
 	}
 
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @return void
+	 * @throws ApiClientException
+	 * @throws Field\UnknownFieldException
+	 */
+
+	private function createAddress($addressId)
+	{
+		if (!$this->_pFormPostOwnerConfiguration->getNewsletterAccepted()) {
+			// No subscription for newsletter, which is ok
+			return;
+		}
+
+		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'registerNewsletter');
+		$pAPIClientAction->setParameters(['register' => true]);
+		$pAPIClientAction->setResourceId($addressId);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		if (!$pAPIClientAction->getResultStatus()) {
+			throw new ApiClientException($pAPIClientAction);
+		}
+	}
 
 	/**
 	 *

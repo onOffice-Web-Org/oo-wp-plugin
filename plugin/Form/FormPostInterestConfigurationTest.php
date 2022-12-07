@@ -97,4 +97,28 @@ class FormPostInterestConfigurationTest
 	{
 		return $this->_pSearchcriteriaFields;
 	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function getNewsletterAccepted(): bool
+	{
+		return $this->_newsletterAccepted;
+	}
+
+
+	/**
+	 *
+	 * @param bool $newsletterAccepted
+	 *
+	 */
+
+	public function setNewsletterAccepted(bool $newsletterAccepted)
+	{
+		$this->_newsletterAccepted = $newsletterAccepted;
+	}
 }
