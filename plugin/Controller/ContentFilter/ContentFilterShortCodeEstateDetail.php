@@ -134,7 +134,7 @@ class ContentFilterShortCodeEstateDetail
 		foreach ( $pEstateList as $pEstateListDetails ) {
 			$referenz = $pEstateListDetails['elements']['referenz'];
 			$publish  = $pEstateListDetails['elements']['veroeffentlichen'];
-			if ( $referenz === '0' && $publish === '1' && $pEstateListDetails['id'] == 292487) {
+			if ( $referenz === '0' && $publish === '1' ) {
 				$pEstateDetail[] = $pEstateListDetails;
 			};
 		}
