@@ -222,7 +222,7 @@ class AdminPageFormList
 			echo '<a href="' . $newLink . '" class="page-title-action">'
 			     . esc_html__( 'Add New', 'onoffice-for-wp-websites' ) . '</a>';
 		} else {
-			echo '<div style = "display: inline-block;">'
+		echo '<div class="page-option-add-form">'
 			     . '<details class="page-option-action">'
 			     . '<summary class="radios">'
 			     . '<div>' . esc_html__( 'Add New', 'onoffice-for-wp-websites' ) . '</div>'

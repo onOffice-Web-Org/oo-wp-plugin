@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.0
 Requires PHP: 7.3
-Stable tag: 4.4.1
+Stable tag: 4.5
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -76,11 +76,21 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
-= Unreleased =
+= 4.5 (2022-11-16) =
 
 **Added**
 
 * The title and description of detail pages are now set with the estate's data. You can deactivate this to use an SEO plugin and utilize custom fields instead. On upgrade, if we detect a popular SEO plugin, our plugin will automatically leave the title and description alone.
+* In the form overview, you can now add a new form without first needing to filter for a specific form type.
+
+**Changed**
+
+* Adding and removing fields from field lists has been made easier.
+
+**Fixed**
+
+* In version 4.0 we introduced a new CSS file that was tied to your templates. With this changed, we renamed the style handle, which was not backwards compatible. Now, the new CSS file is enqueued with the new style handle, but the legacy CSS file is enqueued with the legacy style handle. This restores backwards compatibility.
+* When the onOffice API returned an unexpected error, the plugin could cause a fatal error which made the backend unusable. We now handle these API errors so that you can keep using the backend even when the API breaks.
 
 = 4.4.1 (2022-10-21) =
 
