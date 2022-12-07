@@ -57,6 +57,4 @@ interface FormPostInterestConfiguration
 	 */
 
 	public function getSearchcriteriaFields(): SearchcriteriaFields;
-
-
 }

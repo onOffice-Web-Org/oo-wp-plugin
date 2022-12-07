@@ -108,5 +108,4 @@ class FormPostOwnerConfigurationTest
 	{
 		return $this->_pFormAddressCreator;
 	}
-
 }

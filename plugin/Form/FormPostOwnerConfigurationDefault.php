@@ -101,6 +101,4 @@ class FormPostOwnerConfigurationDefault
 	{
 		return $this->_pFormAddressCreator;
 	}
-
-
 }

@@ -66,5 +66,4 @@ interface FormPostOwnerConfiguration
 	 */
 
 	public function getFormAddressCreator(): FormAddressCreator;
-
 }

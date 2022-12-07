@@ -110,9 +110,7 @@ class FormAddressCreator
 
 		$addressData = [];
 		$pFieldsCollection = new FieldsCollection();
-		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection)
-		->addFieldsSearchCriteria( $pFieldsCollection )
-		->addFieldsFormFrontend( $pFieldsCollection );
+		$this->_pFieldsCollectionBuilderShort->addFieldsAddressEstate($pFieldsCollection);
 		$addressFields = $pFormData->getAddressData($pFieldsCollection);
 
 		foreach ($addressFields as $inputName => $value) {

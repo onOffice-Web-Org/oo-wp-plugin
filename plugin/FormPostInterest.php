@@ -193,5 +193,4 @@ class FormPostInterest
 			throw new ApiClientException($pApiClientAction);
 		}
 	}
-
 }
