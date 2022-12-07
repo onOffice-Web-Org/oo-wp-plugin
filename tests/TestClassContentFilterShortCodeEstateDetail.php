@@ -222,6 +222,23 @@ class TestClassContentFilterShortCodeEstateDetail
 		];
 	}
 
+	/**
+	 *
+	 */
+	public function testGetEstateLink()
+	{
+		$url                  = 'http://example.org/detail/';
+		$estateId             = 281;
+		$title                = 'abc';
+		$pInstance            = $this->_pContainer->get( EstateDetailUrl::class );
+		$pEstateDetailFactory = $this->getMockBuilder( ContentFilterShortCodeEstateDetail::class )
+		                             ->setMethods( [ 'getPageLink' ] )
+		                             ->disableOriginalConstructor()
+		                             ->getMock();
+		$pEstateDetailFactory->method( 'getPageLink' )->willReturn( $url );
+		$fullLink = $pInstance->createEstateDetailLink( $url, $estateId, $title ) . '/';
+		$this->assertEquals( $pEstateDetailFactory->getEstateLink( $this->getDataEstateDetail() ), $fullLink );
+	}
 
 	/**
 	 *

@@ -123,6 +123,7 @@ class ContentFilterShortCodeEstateDetail
 		$estateParametersRaw['data']    = $pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
 		$estateParametersRaw['data'] [] = 'veroeffentlichen';
 		$estateParametersRaw['data'] [] = 'objekttitel';
+		$estateParametersRaw['addMainLangId'] = true;
 		$estateParametersRaw['estatelanguage'] = $language;
 		$estateParametersRaw['outputlanguage'] = $language;
 
@@ -133,7 +134,7 @@ class ContentFilterShortCodeEstateDetail
 		foreach ( $pEstateList as $pEstateListDetails ) {
 			$referenz = $pEstateListDetails['elements']['referenz'];
 			$publish  = $pEstateListDetails['elements']['veroeffentlichen'];
-			if ( $referenz === '0' && $publish === '1' ) {
+			if ( $referenz === '0' && $publish === '1' && $pEstateListDetails['id'] == 292487) {
 				$pEstateDetail[] = $pEstateListDetails;
 			};
 		}
@@ -150,6 +151,14 @@ class ContentFilterShortCodeEstateDetail
 		return $this->_pDataDetailViewHandler->getDetailView()->getName();
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getPageLink(): string
+	{
+		return get_page_link();
+	}
+
 
 	/**
 	 * @return string
@@ -159,13 +168,13 @@ class ContentFilterShortCodeEstateDetail
 	public function getEstateLink( $pEstateListDetail ): string
 	{
 		$pLanguageSwitcher = new EstateDetailUrl;
-		$pageId            = $pEstateListDetail['id'];
+		$pageId            = $pEstateListDetail['elements']['mainLangId'] ?? $pEstateListDetail['id'];
 		$fullLink          = '#';
 
 		if ( $pageId !== 0 ) {
-			$estate           = $pEstateListDetail['id'];
+			$estate           = $pEstateListDetail['elements']['mainLangId'] ?? $pEstateListDetail['id'];
 			$title            = $pEstateListDetail['elements']['objekttitel'] ?? '';
-			$url              = get_page_link();
+			$url              = $this->getPageLink();
 			$fullLink         = $pLanguageSwitcher->createEstateDetailLink( $url, (int) $estate, $title );
 			$fullLinkElements = parse_url( $fullLink );
 			if ( empty( $fullLinkElements['query'] ) ) {
