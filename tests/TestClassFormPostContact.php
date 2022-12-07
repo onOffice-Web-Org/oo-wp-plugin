@@ -278,7 +278,6 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
 			'AGB_akzeptiert' => true,
-			"newsletter" => true,
 			'checkDuplicate' => true,
 		];
 
@@ -305,7 +304,6 @@ class TestClassFormPostContact
 			'Ort' => 'Aachen',
 			'phone' => '0815/2345677',
 			'AGB_akzeptiert' => true,
-			"newsletter" => true,
 			'checkDuplicate' => false,
 		];
 
