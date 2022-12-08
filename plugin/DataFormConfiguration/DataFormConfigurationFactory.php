@@ -209,6 +209,10 @@ class DataFormConfigurationFactory
 		if (array_key_exists('availableOptions', $row) && $row['availableOptions'] == 1) {
 			$pFormConfiguration->addAvailableOptionsField($fieldName);
 		}
+
+		if (array_key_exists('markdown', $row) && $row['markdown'] == 1) {
+			$pFormConfiguration->addMarkdownFields($fieldName);
+		}
 	}
 
 
@@ -231,6 +235,7 @@ class DataFormConfigurationFactory
 
 		$formId = $row['form_id'];
 		$required = $row['required'];
+		$markdown = $row['markdown'];
 		$geoPositionSettings = $this->_pGeoPositionFieldHandler->getActiveFields();
 		$fieldMapping = (new GeoPosition)->getSearchCriteriaFields();
 
@@ -241,6 +246,7 @@ class DataFormConfigurationFactory
 			$geoPositionField = [
 				'form_id' => $formId,
 				'required' => $required,
+				'markdown' => $markdown,
 				'fieldname' => $fieldMapping[$field],
 				'fieldlabel' => null,
 				'module' => $row['module'],
