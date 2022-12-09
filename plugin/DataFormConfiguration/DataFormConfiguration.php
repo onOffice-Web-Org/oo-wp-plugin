@@ -76,6 +76,8 @@ class DataFormConfiguration
 	/** @var bool */
 	private $_defaultRecipient = false;
 
+	/** @var array */
+	private $_markdownFields = [];
 	/**
 	 *
 	 * Override to set default fields for new, empty forms
@@ -140,6 +142,18 @@ class DataFormConfiguration
 	/** @param string $contactTypeField */
 	public function setContactTypeField(string $contactTypeField)
 		{ $this->_contactType = $contactTypeField; }
+
+	/** @return array */
+	public function getMarkdownFields(): array
+		{ return $this->_markdownFields; }
+
+	/** @param array $markdownFields */
+	public function setMarkdownFields(array $markdownFields)
+		{ $this->_markdownFields = $markdownFields; }
+
+	/** @param string $requiredField */
+	public function addMarkdownFields(string $markdownFields)
+		{ $this->_markdownFields []= $markdownFields; }
 	/**
 	 *
 	 * @param string $input

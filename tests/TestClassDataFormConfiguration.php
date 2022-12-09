@@ -63,6 +63,8 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setAvailableOptionsFields(['test1', 'test2']);
 		$pDataFormConfiguration->addAvailableOptionsField('test3');
 		$pDataFormConfiguration->setId(3);
+		$pDataFormConfiguration->setMarkdownFields(['test1', 'test2']);
+		$pDataFormConfiguration->addMarkdownFields('test3');
 		$pDataFormConfiguration->setShowEstateContext(true);
 
 		$this->_pDataFormConfiguration = $pDataFormConfiguration;
@@ -95,6 +97,8 @@ class TestClassDataFormConfiguration
 			$pDataFormConfiguration->getAvailableOptionsFields());
 		$this->assertEquals(3, $pDataFormConfiguration->getId());
 		$this->assertEquals(Form::TYPE_INTEREST, $pDataFormConfiguration->getViewType());
+		$this->assertEquals(['test1', 'test2', 'test3'],
+			$pDataFormConfiguration->getMarkdownFields());
 		$this->assertEquals('form', $pDataFormConfiguration->getModule());
 		$this->assertTrue($pDataFormConfiguration->getShowEstateContext());
 	}
@@ -131,6 +135,7 @@ class TestClassDataFormConfiguration
 		$pDataFormConfiguration->setDefaultFields();
 		$this->assertEquals([], $pDataFormConfiguration->getInputs());
 		$this->assertEquals([], $pDataFormConfiguration->getAvailableOptionsFields());
+		$this->assertEquals([], $pDataFormConfiguration->getMarkdownFields());
 		$this->assertFalse($pDataFormConfiguration->getShowEstateContext());
 	}
 }

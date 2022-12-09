@@ -243,6 +243,19 @@ abstract class AdminPageFormSettingsBase
 
 	/**
 	 *
+	 * @param stdClass $pValues
+	 *
+	 */
+
+	protected function customFontMarkdown(stdClass $pValues)
+	{
+		$pBoolToFieldList = new BooleanValueToFieldList(new InputModelDBFactoryConfigForm, $pValues);
+		$pBoolToFieldList->fillCheckboxValues(InputModelDBFactoryConfigForm::INPUT_FORM_MARK_DOWN);
+	}
+
+
+	/**
+	 *
 	 * @param array $row
 	 * @return array
 	 *
@@ -749,6 +762,7 @@ abstract class AdminPageFormSettingsBase
 		$values = (object) $this->transformPostValues();
 
 		$this->prepareValues( $values );
+		$this->customFontMarkdown( $values );
 		$pInputModelDBAdapterRow = new InputModelDBAdapterRow();
 
 		foreach ( $this->getFormModels() as $pFormModel ) {

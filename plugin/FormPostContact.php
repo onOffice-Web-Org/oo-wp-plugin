@@ -190,6 +190,10 @@ class FormPostContact
 			$requestParams['addressdata']['newsletter_aktiv'] = $this->_pFormPostContactConfiguration
 				->getNewsletterAccepted();
 		}
+		if (isset($addressData['gdprcheckbox']) && $addressData['gdprcheckbox']){
+			$requestParams['addressdata']['DSGVOStatus'] = "speicherungzugestimmt";
+		}
+		unset($requestParams['addressdata']['gdprcheckbox']);
 		unset($requestParams['addressdata']['newsletter']);
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
