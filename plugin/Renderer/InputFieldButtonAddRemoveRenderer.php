@@ -53,21 +53,22 @@ class InputFieldButtonAddRemoveRenderer
 
 	public function render()
 	{
-		$textHtml = !empty($this->getHint()) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
-		if (is_array($this->getValue())) {
-			foreach ($this->getValue() as $key => $label) {
+		$textHtml = ! empty( $this->getHint() ) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
+		if ( is_array( $this->getValue() ) ) {
+			foreach ( $this->getValue() as $key => $label ) {
 				$inputId                 = 'label' . $this->getGuiId() . 'b' . $key;
 				$actionFieldName         = 'labelButtonHandleField' . '-' . $key;
-				$checkDataField          = is_array( $this->getCheckedValues() ) && in_array( $key, $this->getCheckedValues() );
+				$checkDataField          = is_array( $this->getCheckedValues() ) && in_array( $key,
+						$this->getCheckedValues() );
 				$onofficeSelect          = $checkDataField ? 'class="dashicons dashicons-remove" typeField="2"' : 'class="dashicons dashicons-insert" typeField="1"';
 				$handleLabelButtonChange = $checkDataField ? "opacity: 0.5;" : "opacity: 1;";
 				echo '<span class="inputFieldButton ' . $actionFieldName . '"'
-				. '' .'name="' . esc_html( $this->getName() ) . '"'
-				. '' . $this->renderAdditionalAttributes()
-				. 'value="' . esc_html( $key ) . '"'
-				. 'data-onoffice-category="' . esc_attr( $this->getLabel() ) . '"'
-				. 'id="' . esc_html( $inputId ) . '">';
-				echo '<span '.$onofficeSelect.'></span>';
+				     . '' . 'name="' . esc_html( $this->getName() ) . '"'
+				     . '' . $this->renderAdditionalAttributes()
+				     . 'value="' . esc_html( $key ) . '"'
+				     . 'data-onoffice-category="' . esc_attr( $this->getLabel() ) . '"'
+				     . 'id="' . esc_html( $inputId ) . '">';
+				echo '<span ' . $onofficeSelect . '></span>';
 				echo '<label style="margin-left:5px;' . $handleLabelButtonChange . '">' . esc_html( $label ) . '</label></span><br>'
 				     . $textHtml;
 			}

@@ -55,15 +55,15 @@ jQuery(document).ready(function($){
 
 		$(data).children().first().removeClass("dashicons-remove");
 		$(data).children().first().addClass("dashicons-insert");
-		$(data).children().next().css( "opacity", "1")
+		$(data).children().next().css("opacity", "1");
 		$(data).children().attr('typeField', 1);
 		$(this).parent().parent().remove();
 	});
 	var getCheckedFieldButton = function(btn) {
-		var addField= 1;
-		var removeField= 2;
+		var addField = 1;
+		var removeField = 2;
 		var checkTypeField = $(btn).children().attr('typeField');
-		if(checkTypeField == addField){
+		if (checkTypeField == addField) {
 			$(btn).children().first().removeClass("dashicons-insert");
 			$(btn).children().first().addClass("dashicons-remove");
 			var label = $(btn).attr('data-action-div');
@@ -71,8 +71,8 @@ jQuery(document).ready(function($){
 			var valElLabel = $(btn).children().next().text();
 			var category = $(btn).attr('data-onoffice-category');
 			var module = $(btn).attr('data-onoffice-module');
-			var actionFieldName = 'labelButtonHandleField-'+valElName;
-			$(btn).children().first().next().css( "opacity", "0.5")
+			var actionFieldName = 'labelButtonHandleField-' + valElName;
+			$(btn).children().first().next().css("opacity", "0.5")
 			$(btn).children().first().attr("typeField", removeField);
 			var optionsAvailable = false;
 			var checkedFields = [];
@@ -97,11 +97,11 @@ jQuery(document).ready(function($){
 			var valElName = $(btn).attr('value');
 			var checkedFields = [];
 
-			$(btn).children().first().next().css( "opacity", "1")
+			$(btn).children().first().next().css("opacity", "1")
 			$(btn).children().first().removeClass("dashicons-remove");
 			$(btn).children().first().addClass("dashicons-insert");
 			$(btn).children().first().attr("typeField", addField);
-			$('*#sortableFieldsList').find('#menu-item-'+valElName).remove();
+			$('*#sortableFieldsList').find('#menu-item-' + valElName).remove();
 		}
 
 		return checkedFields;
