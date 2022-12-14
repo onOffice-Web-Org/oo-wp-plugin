@@ -69,7 +69,7 @@ class TestClassFormAddressCreator
 	public function prepare()
 	{
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate'])
+			->setMethods(['addFieldsAddressEstate','addFieldsSearchCriteria','addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 		$this->_pSDKWrapper = new SDKWrapperMocker();

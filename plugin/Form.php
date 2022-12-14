@@ -25,6 +25,7 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Parsedown;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\EstateTitleBuilder;
 use onOffice\WPlugin\Controller\GeoPositionFieldHandler;
@@ -324,6 +325,23 @@ class Form
 		return $this->_pFormData->getStatus();
 	}
 
+		/**
+	 *
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function getMarkdownFields(): array
+	{
+		/** @var CompoundFieldsFilter $pCompoundFieldsFilter */
+		$pCompoundFieldsFilter = $this->_pContainer->get(CompoundFieldsFilter::class);
+		$markdownFields = $this->getDataFormConfiguration()->getMarkdownFields();
+		$markdownFieldsSplitCompound = $pCompoundFieldsFilter->mergeFields
+			($this->_pFieldsCollection, $markdownFields);
+		return $this->executeGeoPositionFix($markdownFieldsSplitCompound);
+	}
+
 	/**
 	 *
 	 * @param string $field
@@ -335,13 +353,18 @@ class Form
 
 	public function getFieldLabel(string $field, bool $raw = false): string
 	{
+		$parsedown = new Parsedown;
 		$module = $this->getModuleOfField($field);
 		$label = $this->_pFieldsCollection->getFieldByModuleAndName($module, $field)->getLabel();
 
 		if (false === $raw) {
 			$label = esc_html($label);
 		}
-
+		foreach($this->getMarkdownFields() as $markdownFields){
+			if($markdownFields == $field){
+				$label = $parsedown->line($label);
+			}
+		}
 		return $label;
 	}
 

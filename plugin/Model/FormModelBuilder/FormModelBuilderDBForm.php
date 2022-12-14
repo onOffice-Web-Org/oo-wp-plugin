@@ -122,10 +122,12 @@ class FormModelBuilderDBForm
 		$pModule = $this->getInputModelModule();
 		$pReferenceIsRequired = $this->getInputModelIsRequired();
 		$pReferenceIsAvailableOptions = $this->getInputModelIsAvailableOptions();
+		$pReferenceIsMarkdown = $this->getInputModelIsMarkDown();
 		$pInputModelFieldsConfig->addReferencedInputModel($pModule);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
+		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsMarkdown);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
@@ -190,6 +192,7 @@ class FormModelBuilderDBForm
 		$values = array();
 		$values['fieldsRequired'] = array();
 		$values['fieldsAvailableOptions'] = array();
+		$values['fieldsMarkdown'] = array();
 		$pFactory = new DataFormConfigurationFactory($this->_formType);
 
 		if ($formId !== null) {
@@ -204,6 +207,7 @@ class FormModelBuilderDBForm
 		$values[DataFormConfiguration::FIELDS] = array_keys($pDataFormConfiguration->getInputs());
 		$values['fieldsRequired'] = $pDataFormConfiguration->getRequiredFields();
 		$values['fieldsAvailableOptions'] = $pDataFormConfiguration->getAvailableOptionsFields();
+		$values['fieldsMarkdown'] = $pDataFormConfiguration->getMarkdownFields();
 
 		$this->setValues($values);
 		$pFormModel = new FormModel();
@@ -488,6 +492,27 @@ class FormModelBuilderDBForm
 	/**
 	 * @return InputModelDB
 	 */
+
+	public function getInputModelIsMarkDown()
+	{
+		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
+		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
+		$text = __( 'Markdown', 'onoffice-for-wp-websites' );
+		$linkMarkdown = sprintf( '<a href="' . __( 'https://wp-plugin.onoffice.com/en/advanced-features/markdown-labels',
+				'onoffice-for-wp-websites' ) . '">%s</a>', $text );
+		$label = sprintf( __( 'Label uses %s', 'onoffice-for-wp-websites' ), $linkMarkdown );
+		$type = InputModelDBFactoryConfigForm::INPUT_FORM_MARK_DOWN;
+		/* @var $pInputModel InputModelDB */
+		$pInputModel = $pInputModelFactory->create($type, $label, true);
+		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_CHECKBOX);
+		$pInputModel->setValueCallback(array($this, 'callbackValueInputModelIsMarkDown'));
+
+		return $pInputModel;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
 	public function getInputModelDefaultValueLanguageSwitch(): InputModelDB
 	{
 		$pInputModel = new InputModelDB('defaultvalue_newlang', __('Add language', 'onoffice-for-wp-websites'));
@@ -597,6 +622,18 @@ class FormModelBuilderDBForm
 	{
 		$fieldsAvOpt = $this->getValue('fieldsAvailableOptions');
 		$value = in_array($key, $fieldsAvOpt);
+		$pInputModel->setValue($value);
+		$pInputModel->setValuesAvailable($key);
+	}
+
+	/**
+	 * @param InputModelBase $pInputModel
+	 * @param string $key Name of input
+	 */
+	public function callbackValueInputModelIsMarkDown(InputModelBase $pInputModel, $key)
+	{
+		$fieldsMarkDown = $this->getValue('fieldsMarkdown');
+		$value = in_array($key, $fieldsMarkDown);
 		$pInputModel->setValue($value);
 		$pInputModel->setValuesAvailable($key);
 	}
