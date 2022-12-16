@@ -90,6 +90,9 @@ class InputModelDBFactoryConfigForm
 	const INPUT_FORM_CUSTOM_LABEL = 'customlabel';
 
 	/** */
+	const INPUT_FORM_MARK_DOWN = 'formMarkdown';
+
+	/** */
 	const INPUT_FORM_ESTATE_CONTEXT_AS_HEADING = 'show_estate_context';
 
     /** */
@@ -190,6 +193,10 @@ class InputModelDBFactoryConfigForm
 		self::INPUT_FORM_CUSTOM_LABEL => [
 			self::KEY_TABLE => 'oo_plugin_fieldconfig_form_translated_labels',
 			self::KEY_FIELD => 'value',
+		],
+		self::INPUT_FORM_MARK_DOWN => [
+			self::KEY_TABLE => 'oo_plugin_form_fieldconfig',
+			self::KEY_FIELD => 'markdown',
 		],
 	];
 

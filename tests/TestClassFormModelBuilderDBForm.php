@@ -339,4 +339,24 @@ class TestClassFormModelBuilderDBForm
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBForm::getInputModelIsMarkDown
+	 */
+	public function testGetInputModelIsMarkDown()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBForm::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('1');
+
+		$pInputModelDB = $pInstance->getInputModelIsMarkDown();
+
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+		$this->assertEquals([$pInstance, 'callbackValueInputModelIsMarkDown'], $pInputModelDB->getValueCallback());
+	}
 }

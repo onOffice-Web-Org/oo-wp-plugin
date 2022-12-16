@@ -23,12 +23,19 @@ declare (strict_types=1);
 
 namespace onOffice\WPlugin\Controller\ContentFilter;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Language;
 use DI\DependencyException;
 use DI\NotFoundException;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Controller\EstateDetailUrl;
+use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
+use function is_user_logged_in;
 
 class ContentFilterShortCodeEstateDetail
 {
@@ -73,12 +80,67 @@ class ContentFilterShortCodeEstateDetail
 		$pDetailView = $this->_pDataDetailViewHandler->getDetailView();
 		$pTemplate = $this->_pTemplate->withTemplateName($pDetailView->getTemplate());
 		$estateId = $this->_pWPQueryWrapper->getWPQuery()->query_vars['estate_id'] ?? 0;
+		if($estateId === 0){
+			return $this->renderHtmlHelperUserIfEmptyEstateId();
+		}
 		$pEstateDetailList = $this->_pEstateDetailFactory->createEstateDetail((int)$estateId);
 		$pEstateDetailList->setUnitsViewName($attributes['units'] ?? null);
 		$pEstateDetailList->loadSingleEstate($estateId);
 		return $pTemplate
 			->withEstateList($pEstateDetailList)
 			->render();
+	}
+
+	public function renderHtmlHelperUserIfEmptyEstateId()
+	{
+		$pEstateDetail    = $this->getRandomEstateDetail();
+		$ramdomEstateLink = $this->getEstateLink( $pEstateDetail );
+		$html = '<div>';
+		$html .= '<p>' . __( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
+				'onoffice-for-wp-websites' ) . '</p>';
+		if ( is_user_logged_in() ) {
+			$titleDefault = __( 'Example estate', 'onoffice-for-wp-websites' );
+			$estateTitle  = $pEstateDetail['elements']["objekttitel"] !== '' ? $pEstateDetail['elements']["objekttitel"] : $titleDefault;
+			$html         .= '<p>' . __( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page:',
+					'onoffice-for-wp-websites' ) . '</p>';
+			$html         .= '<a href=' . $ramdomEstateLink . '>' . $estateTitle . '</a>';
+		}
+		$html .= '</div>';
+
+		return $html;
+	}
+
+	public function getRandomEstateDetail()
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions( ONOFFICE_DI_CONFIG_PATH );
+		$pContainer                     = $pContainerBuilder->build();
+		$pEnvironment                   = new EstateListEnvironmentDefault( $pContainer );
+		$pSDKWrapper                    = $pEnvironment->getSDKWrapper();
+		$language = Language::getDefault();
+		$pApiClientAction               = new APIClientActionGeneric
+		( $pSDKWrapper, onOfficeSDK::ACTION_ID_READ, 'estate' );
+		$estateParametersRaw['data']    = $pEnvironment->getEstateStatusLabel()->getFieldsByPrio();
+		$estateParametersRaw['data'] [] = 'veroeffentlichen';
+		$estateParametersRaw['data'] [] = 'objekttitel';
+		$estateParametersRaw['addMainLangId'] = true;
+		$estateParametersRaw['estatelanguage'] = $language;
+		$estateParametersRaw['outputlanguage'] = $language;
+
+		$pApiClientAction->setParameters( $estateParametersRaw );
+		$pApiClientAction->addRequestToQueue()->sendRequests();
+		$pEstateList   = $pApiClientAction->getResultRecords();
+		$pEstateDetail = [];
+		foreach ( $pEstateList as $pEstateListDetails ) {
+			$referenz = $pEstateListDetails['elements']['referenz'];
+			$publish  = $pEstateListDetails['elements']['veroeffentlichen'];
+			if ( $referenz === '0' && $publish === '1' ) {
+				$pEstateDetail[] = $pEstateListDetails;
+			};
+		}
+		$randomIdDetail = array_rand( $pEstateDetail, 1 );
+
+		return $pEstateDetail[ $randomIdDetail ];
 	}
 
 	/**
@@ -88,4 +150,39 @@ class ContentFilterShortCodeEstateDetail
 	{
 		return $this->_pDataDetailViewHandler->getDetailView()->getName();
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getPageLink(): string
+	{
+		return get_page_link();
+	}
+
+
+	/**
+	 * @return string
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function getEstateLink( $pEstateListDetail ): string
+	{
+		$pLanguageSwitcher = new EstateDetailUrl;
+		$pageId            = $pEstateListDetail['elements']['mainLangId'] ?? $pEstateListDetail['id'];
+		$fullLink          = '#';
+
+		if ( $pageId !== 0 ) {
+			$estate           = $pEstateListDetail['elements']['mainLangId'] ?? $pEstateListDetail['id'];
+			$title            = $pEstateListDetail['elements']['objekttitel'] ?? '';
+			$url              = $this->getPageLink();
+			$fullLink         = $pLanguageSwitcher->createEstateDetailLink( $url, (int) $estate, $title );
+			$fullLinkElements = parse_url( $fullLink );
+			if ( empty( $fullLinkElements['query'] ) ) {
+				$fullLink .= '/';
+			}
+		}
+
+		return $fullLink;
+	}
+	
 }

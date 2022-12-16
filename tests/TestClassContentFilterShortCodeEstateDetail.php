@@ -27,9 +27,15 @@ use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\WPlugin\ArrayContainerEscape;
 use onOffice\WPlugin\Controller\ContentFilter\ContentFilterShortCodeEstateDetail;
+use onOffice\WPlugin\API\ApiClientException;
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\Controller\EstateListEnvironmentDefault;
+use onOffice\WPlugin\SDKWrapper;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\EstateDetail;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\API\APIClientActionGeneric;
+use onOffice\WPlugin\Controller\EstateDetailUrl;
 use onOffice\WPlugin\Factory\EstateListFactory;
 use onOffice\WPlugin\Template;
 use onOffice\WPlugin\WP\WPQueryWrapper;
@@ -178,9 +184,81 @@ class TestClassContentFilterShortCodeEstateDetail
 		$this->assertStringEqualsFile($expectedFile, $pSubject->render(['units' => 'test_units']));
 	}
 
+
+	/**
+	 *
+	 */
 	public function testGetViewName()
 	{
 		$pSubject = $this->_pContainer->get(ContentFilterShortCodeEstateDetail::class);
 		$this->assertSame('detail', $pSubject->getViewName());
 	}
+
+
+	/**
+	 *
+	 */
+	public function testRenderHtmlHelperUserIfEmptyEstateId()
+	{
+		$pEstateDetailFactory = $this->getMockBuilder(ContentFilterShortCodeEstateDetail::class)
+		->setMethods(['getRandomEstateDetail','getEstateLink'])
+		->disableOriginalConstructor()
+		->getMock();
+
+		$this->assertEquals( '<div><p>You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</p></div>', $pEstateDetailFactory->renderHtmlHelperUserIfEmptyEstateId() );
+	}
+
+
+	/**
+	 *
+	 */	
+	public function getDataEstateDetail(){
+		return [
+			'id' => 281,
+			'type' => 'address',
+			'elements' => [
+				"objekttitel" => 'abc'
+			],
+		];
+	}
+
+	/**
+	 *
+	 */
+	public function testGetEstateLink()
+	{
+		$url                  = 'http://example.org/detail/';
+		$estateId             = 281;
+		$title                = 'abc';
+		$pInstance            = $this->_pContainer->get( EstateDetailUrl::class );
+		$pEstateDetailFactory = $this->getMockBuilder( ContentFilterShortCodeEstateDetail::class )
+		                             ->setMethods( [ 'getPageLink' ] )
+		                             ->disableOriginalConstructor()
+		                             ->getMock();
+		$pEstateDetailFactory->method( 'getPageLink' )->willReturn( $url );
+		$fullLink = $pInstance->createEstateDetailLink( $url, $estateId, $title ) . '/';
+		$this->assertEquals( $pEstateDetailFactory->getEstateLink( $this->getDataEstateDetail() ), $fullLink );
+	}
+
+	/**
+	 *
+	 */
+	public function testRenderHtmlHelperUserLoginIfEmptyEstateId()
+	{
+		wp_set_current_user( 1 );
+
+		$pEstateDetailFactory = $this->getMockBuilder( ContentFilterShortCodeEstateDetail::class )
+		                             ->disableOriginalConstructor()
+		                             ->setMethods( [ 'getRandomEstateDetail', 'getEstateLink', 'is_user_logged_in' ] )
+		                             ->getMock();
+
+		$pEstateDetailFactory->method( 'getRandomEstateDetail' )->willReturn( $this->getDataEstateDetail() );
+		$pEstateDetailFactory->method( 'getEstateLink' )->willReturn( 'http://example.org/detail/123649/' );
+		$pEstateDetailFactory->method( 'is_user_logged_in' )->willReturn( is_user_logged_in() );
+
+		$this->assertTrue( $pEstateDetailFactory->is_user_logged_in() );
+		$this->assertEquals( '<div><p>You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</p><p>Since you are logged in, here is a link to a random estate so that you can preview the detail page:</p><a href=http://example.org/detail/123649/>abc</a></div>',
+			$pEstateDetailFactory->renderHtmlHelperUserIfEmptyEstateId() );
+	}
+
 }
