@@ -76,6 +76,17 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= Unreleased =
+
+**Added**
+
+* Allow Markdown in labels. This allows for example privacy policy checkboxes to link to a privacy policy.
+* Add a special field that displays the GDPR as a checkbox instead of a dropdown.
+
+**Changed**
+
+* When previewing the detail page without an estate's ID in the URL, we explain more clearly why no estate can be shown. If the user is logged in, we link to a random estate so that they can easily preview the detail page.
+
 = 4.5 (2022-11-16) =
 
 **Added**
