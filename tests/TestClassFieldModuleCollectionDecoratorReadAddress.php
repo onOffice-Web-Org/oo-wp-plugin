@@ -76,7 +76,7 @@ class TestClassFieldModuleCollectionDecoratorReadAddress
 
 	public function testCombined()
 	{
-		$countOverall = count($this->_pFieldModule::getNewAddressFields()) + 2;
+		$countOverall = count($this->_pFieldModule::getNewAddressFields()) + 3;
 		$pDecoratorContactForm = new FieldModuleCollectionDecoratorFormContact($this->_pFieldModule);
 		$this->assertEquals($countOverall, count($pDecoratorContactForm->getAllFields()));
 	}

@@ -144,8 +144,8 @@ class InputFieldTemplateListRenderer
 				break;
 			case 'onoffice-editform':
 				$type = $_GET['type'];
-				$id = (int)$_GET['id'];
-				if (!empty($id)) {
+				if (!empty($_GET['id'])) {
+					$id = (int)$_GET['id'];
 					$pDataFormConfigFactory = new DataFormConfigurationFactory();
 					$pDataFormConfigFactory->setIsAdminInterface(true);
 					$pFormConfiguration = $pDataFormConfigFactory->loadByFormId($id);

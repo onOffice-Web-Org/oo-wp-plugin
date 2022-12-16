@@ -146,6 +146,7 @@ class TestClassDataFormConfigurationFactory
 			$this->assertEmpty($pDataFormConfiguration->getInputs());
 			$this->assertEmpty($pDataFormConfiguration->getRequiredFields());
 			$this->assertEmpty($pDataFormConfiguration->getTemplate());
+			$this->assertEmpty($pDataFormConfiguration->getMarkdownFields());
 
 			switch ($formType) {
 				case Form::TYPE_CONTACT:
@@ -306,6 +307,8 @@ class TestClassDataFormConfigurationFactory
 			$this->assertEquals($fieldsArrayFlat, $pDataFormConfiguration->getInputs());
 			$this->assertEquals(['Vorname', 'Name'], $pDataFormConfiguration->getRequiredFields());
 			$this->assertEquals('testtemplate.php', $pDataFormConfiguration->getTemplate());
+			$this->assertEquals(['Vorname', 'Name'], $pDataFormConfiguration->getMarkdownFields());
+
 			$this->assertTrue($pDataFormConfiguration->getCaptcha());
 
 			switch ($formType) {
@@ -360,6 +363,7 @@ class TestClassDataFormConfigurationFactory
 				'individual_fieldname' => '0',
 				'availableOptions' => '0',
 				'required' => '1',
+				'markdown' => '1',
 				'contact_type' => '',
 			],
 			[
@@ -372,6 +376,7 @@ class TestClassDataFormConfigurationFactory
 				'individual_fieldname' => '0',
 				'availableOptions' => '0',
 				'required' => '1',
+				'markdown' => '1',
 				'contact_type' => '',
 			],
 			[
@@ -384,6 +389,7 @@ class TestClassDataFormConfigurationFactory
 				'individual_fieldname' => '0',
 				'availableOptions' => '1',
 				'required' => '0',
+				'markdown' => '0',
 				'contact_type' => '',
 			],
 		];
