@@ -80,8 +80,8 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Added**
 
-* Allow Markdown in labels. This allows for example privacy policy checkboxes to link to a privacy policy.
-* Add a special field that displays the GDPR consent as a checkbox instead of a dropdown.
+* Allow Markdown in labels for form fields. This allows for example privacy policy checkboxes to link to a privacy policy.
+* Add a special form field that displays the GDPR consent as a checkbox instead of a dropdown.
 
 **Changed**
 
