@@ -108,7 +108,7 @@ class TestClassFieldModuleCollectionDecoratorCustomLabel
 			$this->_pWPDBMock->method('get_results')->will($this->returnValue($rows));
 			$this->_pCustomLabelRead = new CustomLabelRead($this->_pWPDBMock);
 			$this->_pCustomLabelRead->readCustomLabelByFormIdAndFieldName(1, $pFieldsCollectionByFormId['fieldname'],
-				'de_DE');
+				'de_DE','oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
 		}
 		$this->_pContainer->set(CustomLabelRead::class, $this->_pCustomLabelRead);
 	}
