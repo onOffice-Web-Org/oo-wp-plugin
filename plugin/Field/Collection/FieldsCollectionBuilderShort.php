@@ -38,6 +38,7 @@ use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelEstate;
 
 
 /**
@@ -161,6 +162,25 @@ class FieldsCollectionBuilderShort
 		return $this;
 	}
 
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $formName
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFormException
+	 */
+
+	 public function addCustomLabelFieldsEstateFrontend(FieldsCollection $pFieldsCollection, $formName): self
+	 {
+		 $pFieldsCollectionTmp = new FieldModuleCollectionDecoratorCustomLabelEstate($pFieldsCollection, $formName);
+		 $pFieldsCollection->merge($pFieldsCollectionTmp);
+		 $pFieldCategoryConverterGeoPos = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoFrontend::class);
+		 $pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
+		 $pFieldsCollection->merge($pFieldsCollectionGeo);
+		 return $this;
+	 }
 	/**
 	 *
 	 * @param FieldCategoryToFieldConverter $pConverter

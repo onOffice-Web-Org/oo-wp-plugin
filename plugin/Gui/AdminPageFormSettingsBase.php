@@ -233,7 +233,7 @@ abstract class AdminPageFormSettingsBase
 
 		if ($result) {
 			$this->saveDefaultValues($recordId, $row);
-			$this->saveCustomLabels($recordId, $row);
+			$this->saveCustomLabels($recordId, $row, RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS);
 		}
 
 		$pResult->result = $result;
@@ -374,7 +374,7 @@ abstract class AdminPageFormSettingsBase
 
 		foreach ($this->buildFieldsCollectionForCurrentForm()->getAllFields() as $pField) {
 			$pCustomLabelModel = $pCustomLabelRead->readCustomLabelsField
-			((int)$this->getListViewId(), $pField);
+			((int)$this->getListViewId(), $pField, RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS);
 
 			$valuesByLocale = $pCustomLabelModel->getValuesByLocale();
 			$currentLocale = $pLanguage->getLocale();
@@ -603,7 +603,7 @@ abstract class AdminPageFormSettingsBase
 	 * @throws UnknownFieldException
 	 */
 
-	private function saveCustomLabels(int $recordId, array $row)
+	private function saveCustomLabels(int $recordId, array $row ,string $pCustomsLabelConfigurationField, string $pTranslateLabelConfigurationField)
 	{
 		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG_FORMS] ?? [];
 		$fieldNamesSelected = array_column($fields, 'fieldname');
@@ -617,11 +617,11 @@ abstract class AdminPageFormSettingsBase
 
 		/** @var CustomLabelDelete $pCustomLabelDelete */
 		$pCustomLabelDelete = $this->getContainer()->get(CustomLabelDelete::class);
-		$pCustomLabelDelete->deleteByFormIdAndFieldNames($recordId, $fieldNamesSelected);
+		$pCustomLabelDelete->deleteByFormIdAndFieldNames($recordId, $fieldNamesSelected, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
 
 		$pCustomLabelSave = $this->getContainer()->get(CustomLabelRowSaver::class);
 		$pCustomLabelSave->saveCustomLabels($recordId,
-			$row['oo_plugin_fieldconfig_form_translated_labels'] ?? [], $pFieldsCollectionCurrent);
+			$row['oo_plugin_fieldconfig_form_translated_labels'] ?? [], $pFieldsCollectionCurrent, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
 	}
 
 
