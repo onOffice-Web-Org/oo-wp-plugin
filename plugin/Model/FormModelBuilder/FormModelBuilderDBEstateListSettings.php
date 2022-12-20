@@ -333,13 +333,11 @@ class FormModelBuilderDBEstateListSettings
 		$fieldNames = [];
 
 		if (is_array($module)) {
-			$this->_formModules = $module;
 			foreach ($module as $submodule) {
 				$newFields = $pFieldsCollection->getFieldsByModule($submodule ?? '');
 				$fieldNames = array_merge($fieldNames, $newFields);
 			}
 		} else {
-			$this->_formModules = [$module];
 			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
 		}
 
