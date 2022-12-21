@@ -50,6 +50,8 @@ class FieldModuleCollectionDecoratorCustomLabelEstate
 	/** @var array */
 	private $_fieldCustomLabels = [];
 
+	/** @var FieldModuleCollection */
+	private $_pFieldModuleCollection = null;
 
 	public function __construct(FieldModuleCollection $pFieldModuleCollection, $formName, Container $pContainer = null)
 	{
