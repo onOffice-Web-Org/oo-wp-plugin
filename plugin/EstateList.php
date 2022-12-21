@@ -476,7 +476,7 @@ class EstateList
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
-			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName());
+			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $this->_pDataView->getListType());
 
 		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 		$fieldNewName = esc_html($label);

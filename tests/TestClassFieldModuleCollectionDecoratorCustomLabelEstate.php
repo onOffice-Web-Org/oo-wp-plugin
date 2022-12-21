@@ -88,10 +88,9 @@ class TestClassFieldModuleCollectionDecoratorCustomLabelEstate
 		$this->_pRecordManagerReadListViewEstate->method('getFieldconfigByListviewId')->will($this->returnValueMap([
 			[1, $this->getBasicFieldsArray(1)]
 		]));
-		$this->_pRecordManagerReadListViewEstate->method('getRowByName')->will($this->returnValueMap([
-			['testListviewId1', $this->getBaseRow(1)]
-		]));
-
+		$this->_pRecordManagerReadListViewEstate->method('getRowByName')->will($this->returnValue(
+			$this->getBaseRow(1)
+		));
 		$this->_pContainer->set(RecordManagerReadListViewEstate::class, $this->_pRecordManagerReadListViewEstate);
 		$pFieldsCollectionByFormIds = $this->_pContainer->get(RecordManagerReadListViewEstate::class)->getFieldconfigByListviewId(1);
 
@@ -115,7 +114,7 @@ class TestClassFieldModuleCollectionDecoratorCustomLabelEstate
 	public function testGetAllFields()
 	{
 		$pDecoratorCustomLabel = new FieldModuleCollectionDecoratorCustomLabelEstate($this->_pFieldModuleCollection,
-			'testListviewId1', $this->_pContainer);
+			'testListViewId1', 'default', $this->_pContainer);
 		$fieldCustomLabels = $pDecoratorCustomLabel->getFieldCustomLabels();
 		$cloneFields = array();
 
@@ -184,7 +183,7 @@ class TestClassFieldModuleCollectionDecoratorCustomLabelEstate
 	{
 		return [
 			'listview_id' => $listviewId,
-			'name' => 'testListviewId' . $listviewId,
+			'name' => 'testListViewId' . $listviewId,
 			'filterId' => '0',
 			'sortby' => 'test',
 			'sortorder' => 'ASC',
