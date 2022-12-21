@@ -116,6 +116,8 @@ abstract class AdminPageEstateListSettingsBase
 						(RecordManager::TABLENAME_PICTURETYPES, 'listview_id', $row, $recordId),
 					RecordManager::TABLENAME_SORTBYUSERVALUES => $this->prepareRelationValues
 						(RecordManager::TABLENAME_SORTBYUSERVALUES, 'listview_id', $row, $recordId),
+					RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS => $this->prepareRelationValues
+						(RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS, 'listview_id', $row, $recordId),
 				];
 
 				$pInsert->insertAdditionalValues($row);
