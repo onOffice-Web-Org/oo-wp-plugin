@@ -334,7 +334,7 @@ class FormModelBuilderDBEstateListSettings
 
 		if (is_array($module)) {
 			foreach ($module as $submodule) {
-				$newFields = $pFieldsCollection->getFieldsByModule($submodule ?? '');
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
 				$fieldNames = array_merge($fieldNames, $newFields);
 			}
 		} else {
@@ -742,7 +742,6 @@ class FormModelBuilderDBEstateListSettings
 			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
 		});
-
 		return $pInputModel;
 	}
 }

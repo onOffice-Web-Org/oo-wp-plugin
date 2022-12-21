@@ -45,6 +45,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	public function prepare()
 	{
 		$this->_pInputModelFactoryDBEntry = new InputModelDBFactory(new InputModelDBFactoryConfigEstate);
+
 	}
 
 
@@ -495,6 +496,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals('select', $pInputModelDB->getHtmlType());
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelEmbedCode
+	 */
 	public function testCreateInputModelEmbedCode()
 	{
 		$pFormModelBuilderDBEstateListSettings = new FormModelBuilderDBEstateListSettings();
@@ -503,6 +507,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals($pInputModelFormEmbedCode->getHtmlType(), 'label');
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelButton
+	 */
 	public function testCreateInputModelButton()
 	{
 		$pFormModelBuilderDBEstateListSettings = new FormModelBuilderDBEstateListSettings();
@@ -511,7 +518,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals($pInputModelButton->getHtmlType(), 'button');
 	}
 
-
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createButtonModelFieldsConfigByCategory
+	 */
 	public function testCreateButtonModelFieldsConfigByCategory()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
@@ -526,5 +535,27 @@ class TestClassFormModelBuilderDBEstateListSettings
 
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::testGetInputModelCustomLabelLanguageSwitch
+	 */
+	public function testGetInputModelCustomLabelLanguageSwitch()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['readAvailableLanguageNamesUsingNativeName'])
+		                  ->getMock();
+						  
+		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();
+        $this->assertInstanceOf(InputModelDB::class, $inputModel);
+        $this->assertEquals('Add custom label language', $inputModel->getLabel());
+        $this->assertEquals('language-custom-label', $inputModel->getTable());
+        $this->assertEquals('language', $inputModel->getField());
+
+        $values = $inputModel->getValuesAvailable();
+
+        $this->assertContains('Choose Language', $values);
+        $this->assertNotContains(get_locale(), $values);
 	}
 }
