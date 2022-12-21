@@ -538,7 +538,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	}
 
 	/**
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::testGetInputModelCustomLabelLanguageSwitch
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelCustomLabelLanguageSwitch
 	 */
 	public function testGetInputModelCustomLabelLanguageSwitch()
 	{
