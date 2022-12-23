@@ -50,6 +50,9 @@ class DataDetailView
 	/** */
 	const ADDRESSFIELDS = 'addressfields';
 
+	/** */
+	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_estate_translated_labels';
+
 	/** @var string[] */
 	private $_fields = [
 		'objekttitel',
@@ -155,6 +158,8 @@ class DataDetailView
 	/** @var DataViewSimilarEstates */
 	private $_pDataViewSimilarEstates = null;
 
+	/** @var string[] */
+	private $_customLabel = [];
 
 	/**
 	 *
@@ -326,4 +331,12 @@ class DataDetailView
 	/** @param int $pageId */
 	public function removeFromPageIdsHaveDetailShortCode(int $pageId)
 		{ unset($this->_pageIdsHaveDetailShortCode[$pageId]); }
+
+	/** @return array */
+	public function getCustomLabels(): array
+		{ return $this->_customLabel; }
+
+	/** @param array $customlabel */
+	public function setCustomLabels(array $customLabel)
+		{ $this->_customLabel = $customLabel; }
 }

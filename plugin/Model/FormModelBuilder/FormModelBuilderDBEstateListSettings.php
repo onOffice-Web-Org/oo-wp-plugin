@@ -720,7 +720,10 @@ class FormModelBuilderDBEstateListSettings
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
-			->addFieldsAddressEstate($pFieldsCollection);
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 		return $pFieldsCollection;
 	}
 

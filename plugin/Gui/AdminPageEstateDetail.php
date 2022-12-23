@@ -66,7 +66,7 @@ use function wp_nonce_field;
 use function wp_register_script;
 use function wp_verify_nonce;
 use const ONOFFICE_PLUGIN_DIR;
-
+use onOffice\WPlugin\Field\UnknownFieldException;
 /**
  *
  */
@@ -97,6 +97,9 @@ class AdminPageEstateDetail
 
 	/** */
 	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
+
+	/** */
+	const CUSTOM_LABELS = 'customlabels';
 
 	/**
 	 *
@@ -383,6 +386,11 @@ class AdminPageEstateDetail
 
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$valuesPrefixless       = $pInputModelDBAdapterArray->generateValuesArray();
+
+		$valuesPrefixless['oo_plugin_fieldconfig_estate_translated_labels'] =
+		(array)($valuesPrefixless['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
+		(array)($values->{'customlabel-lang'} ?? [] );
+
 		$pDataDetailView        = $pDataDetailViewHandler->createDetailViewByValues( $valuesPrefixless );
 		$success                = true;
 
@@ -414,6 +422,14 @@ class AdminPageEstateDetail
 			plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . '/js/onoffice-copycode.js',
 			[ 'jquery' ], '', true );
 		wp_enqueue_script( 'oo-copy-shortcode' );
+		wp_register_script('onoffice-custom-form-label-js',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-custom-form-label.js', ['onoffice-multiselect'], '', true);
+		wp_enqueue_script('onoffice-custom-form-label-js');
+		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
+		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+		wp_enqueue_script('onoffice-multiselect');
+		wp_enqueue_style('onoffice-multiselect');
 	}
 
 	/**
@@ -442,6 +458,8 @@ class AdminPageEstateDetail
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the detail view.', 'onoffice-for-wp-websites'),
 			AdminPageEstate::PARAM_TAB => AdminPageEstate::PAGE_ESTATE_DETAIL,
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
+			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 		);
 	}
 
@@ -494,5 +512,19 @@ class AdminPageEstateDetail
 	private static function getSpecialDivId($module)
 	{
 		return 'actionFor'.$module;
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+	private function readCustomLabels(): array
+	{
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$dataDetailView = $pDataDetailViewHandler->getDetailView();
+		$dataDetailCustomLabel = $dataDetailView->getCustomLabels();
+		return $dataDetailCustomLabel;
 	}
 }

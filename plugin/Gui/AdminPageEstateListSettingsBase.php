@@ -39,6 +39,7 @@ use onOffice\WPlugin\Field\CustomLabel\Exception\CustomLabelDeleteException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\WP\InstalledLanguageReader;
 
 /**
  *
@@ -173,7 +174,6 @@ abstract class AdminPageEstateListSettingsBase
 
 	public function getEnqueueData(): array
 	{
-		$pLanguage = $this->getContainer()->get(Language::class);
 		return array(
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view. Please make '
@@ -182,7 +182,6 @@ abstract class AdminPageEstateListSettingsBase
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
-			'language_native' => $pLanguage->getLocale(),
 		);
 	}
 
@@ -198,20 +197,20 @@ abstract class AdminPageEstateListSettingsBase
 		/** @var CustomLabelRead $pCustomLabelRead*/
 		$pCustomLabelRead = $this->getContainer()->get(CustomLabelRead::class);
 		$pLanguage = $this->getContainer()->get(Language::class);
-	
-		foreach ($this->buildFieldsCollectionForCurrentForm()->getAllFields() as $pField) {
+
+		foreach ($this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField) {
 			$pCustomLabelModel = $pCustomLabelRead->readCustomLabelsField
 			((int)$this->getListViewId(), $pField, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
 			$valuesByLocale = $pCustomLabelModel->getValuesByLocale();
-	
+
 			$currentLocale = $pLanguage->getLocale();
-			
+
 			if (isset($valuesByLocale[$currentLocale])) {
 				$valuesByLocale['native'] = $valuesByLocale[$currentLocale];
 				unset($valuesByLocale[$currentLocale]);
 			}
 			$result[$pField->getName()] = $valuesByLocale;
-		}
+		}		
 
 		return $result;
 	}
@@ -225,12 +224,14 @@ abstract class AdminPageEstateListSettingsBase
 	 * @throws UnknownFieldException
 	 */
 
-	private function buildFieldsCollectionForCurrentForm(): FieldsCollection
+	private function buildFieldsCollectionForCurrentEstate(): FieldsCollection
 	{
 		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pDefaultFieldsCollection = new FieldsCollection();
-		$pFieldsCollectionBuilder->addFieldsAddressEstate($pDefaultFieldsCollection);
-		$pFieldsCollectionBuilder->addFieldsAddressEstateWithRegionValues($pDefaultFieldsCollection);
+		$pFieldsCollectionBuilder->addFieldsAddressEstate( $pDefaultFieldsCollection )
+		                         ->addFieldsAddressEstateWithRegionValues( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateGeoPosisionBackend( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateDecoratorReadAddressBackend( $pDefaultFieldsCollection );
 
 		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
 			if (!in_array($pField->getModule(), [onOfficeSDK::MODULE_ESTATE], true)) {
@@ -257,7 +258,7 @@ abstract class AdminPageEstateListSettingsBase
 	{
 		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG] ?? [];
 		$fieldNamesSelected = array_column($fields, 'fieldname');
-		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentForm();
+		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentEstate();
 
 		/** @var FieldsCollectionBuilderFromNamesForm $pFieldsCollectionBuilder */
 		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesForm::class);

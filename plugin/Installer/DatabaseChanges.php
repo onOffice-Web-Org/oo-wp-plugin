@@ -731,6 +731,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDataViewSimilarEstatesNew->setRadius($dataDetailViewSimilarEstates->getRadius());
 			$pDataViewSimilarEstatesNew->setRecordsPerPage($dataDetailViewSimilarEstates->getRecordsPerPage());
 			$pDataViewSimilarEstatesNew->setTemplate($dataDetailViewSimilarEstates->getTemplate());
+			$pDataViewSimilarEstatesNew->setCustomLabels($dataDetailViewSimilarEstates->getCustomLabels());
 			$pDataSimilarViewOptions->setDataViewSimilarEstates($pDataViewSimilarEstatesNew);
 			$this->_pWpOption->addOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
 		}

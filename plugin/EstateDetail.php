@@ -32,6 +32,8 @@ use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataSimilarEstatesSettingsHandler;
 use onOffice\WPlugin\Types\LinksTypes;
 use onOffice\WPlugin\Types\MovieLinkTypes;
+use onOffice\WPlugin\DataView\DataDetailViewHandler;
+use onOffice\SDK\onOfficeSDK;
 use WP_Embed;
 
 /**
@@ -317,5 +319,27 @@ class EstateDetail
 	public function getShowEstateMarketingStatus(): bool
 	{
 		return $this->getDataView()->getShowStatus();
+	}
+
+	/**
+	 * @param string $field
+	 * @return string
+	 */
+	public function getFieldLabel($field): string
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+		$pLanguage = $pContainer->get(Language::class)->getLocale();
+		$pDataDetailViewHandler = new DataDetailViewHandler();
+		$dataDetailView = $pDataDetailViewHandler->getDetailView();
+		$dataDetailCustomLabel = $dataDetailView->getCustomLabels();
+		if(!empty($dataDetailCustomLabel[$field]->$pLanguage) || !empty($dataDetailCustomLabel[$field]->native)){
+			$fieldNewName = $dataDetailCustomLabel[$field]->$pLanguage ?? $dataDetailCustomLabel[$field]->native;
+		}else {
+			$recordType = onOfficeSDK::MODULE_ESTATE;
+			$fieldNewName = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
+		}
+		return $fieldNewName;
 	}
 }
