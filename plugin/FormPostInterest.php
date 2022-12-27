@@ -160,8 +160,9 @@ class FormPostInterest
 		$message = $values['message'] ?? '';
 		$message .= "\nSuchkriterien des Interessenten:\n".
 					"$searchCriterias";
+		$addressData = $pFormData->getAddressData( $this->getFieldsCollection() );
 		$requestParams = [
-			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
+			'addressdata' => $addressData,
 			'message' => $message,
 			'subject' => sanitize_text_field($subject),
 			'formtype' => $pFormData->getFormtype(),
