@@ -44,6 +44,9 @@ class FormPostOwnerConfigurationTest
 	/** @var FormAddressCreator */
 	private $_pFormAddressCreator;
 
+	/** @var bool */
+	private $_newsletterAccepted = false;
+
 	/**
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param FormAddressCreator $pFormAddressCreator
@@ -107,5 +110,29 @@ class FormPostOwnerConfigurationTest
 	public function getFormAddressCreator(): FormAddressCreator
 	{
 		return $this->_pFormAddressCreator;
+	}
+
+
+	/**
+	 *
+	 * @return bool
+	 *
+	 */
+
+	public function getNewsletterAccepted(): bool
+	{
+		return $this->_newsletterAccepted;
+	}
+
+
+	/**
+	 *
+	 * @param  bool  $newsletterAccepted
+	 *
+	 */
+
+	public function setNewsletterAccepted( bool $newsletterAccepted )
+	{
+		$this->_newsletterAccepted = $newsletterAccepted;
 	}
 }
