@@ -62,6 +62,7 @@ use function wp_verify_nonce;
 use const ONOFFICE_PLUGIN_DIR;
 use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
+use onOffice\WPlugin\Language;
 
 /**
  *
@@ -276,9 +277,7 @@ class AdminPageSimilarEstates
 		$pDataSimilarSettingsHandler = $this->getContainer()->get( DataSimilarEstatesSettingsHandler::class );
 		$valuesPrefixless            = $pInputModelDBAdapterArray->generateValuesArray();
 
-		$valuesPrefixless['oo_plugin_fieldconfig_estate_translated_labels'] =
-		(array)($valuesPrefixless['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? []) +
-		(array)($values->{'customlabel-lang'} ?? [] );
+		$valuesPrefixless = $this->saveField($valuesPrefixless, $values);
 
 		$pDataSimilarView            = $pDataSimilarSettingsHandler->createDataSimilarEstatesSettingsByValues( $valuesPrefixless );
 		$success                     = true;
@@ -399,6 +398,35 @@ class AdminPageSimilarEstates
 	}
 
 	/**
+	 *
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+
+	private function buildFieldsCollectionForCurrentEstate(): FieldsCollection
+	{
+		$pFieldsCollectionBuilder = $this->getContainer()->get( FieldsCollectionBuilderShort::class );
+		$pDefaultFieldsCollection = new FieldsCollection();
+		$pFieldsCollectionBuilder->addFieldsAddressEstate( $pDefaultFieldsCollection )
+		                         ->addFieldsAddressEstateWithRegionValues( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateGeoPosisionBackend( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateDecoratorReadAddressBackend( $pDefaultFieldsCollection );
+
+		foreach ( $pDefaultFieldsCollection->getAllFields() as $pField ) {
+			if ( ! in_array( $pField->getModule(), [ onOfficeSDK::MODULE_ESTATE ], true ) ) {
+				$pDefaultFieldsCollection->removeFieldByModuleAndName
+				( $pField->getModule(), $pField->getName() );
+			}
+
+		}
+
+		return $pDefaultFieldsCollection;
+	}
+
+
+	/**
 	 * @return array
 	 * @throws DependencyException
 	 * @throws NotFoundException
@@ -406,9 +434,61 @@ class AdminPageSimilarEstates
 	 */
 	private function readCustomLabels(): array
 	{
+		$result                 = [];
 		$pDataSimilarEstateViewHandler = $this->getContainer()->get( DataSimilarEstatesSettingsHandler::class );
 		$dataSimilarEstateView = $pDataSimilarEstateViewHandler->getDataSimilarEstatesSettings();
-		$dataSimilarEstateCustomLabel = $dataSimilarEstateView->getDataViewSimilarEstates()->getCustomLabels();
-		return $dataSimilarEstateCustomLabel;
+		$dataSimilarEstateCustomLabel         = $dataSimilarEstateView->getDataViewSimilarEstates();
+		$pLanguage              = $this->getContainer()->get( Language::class );
+
+		foreach ( $this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField ) {
+			$valuesByLocale = $dataSimilarEstateCustomLabel->getCustomLabels();
+			$currentLocale  = $pLanguage->getLocale();
+			$valuesByLocale = $valuesByLocale[ $pField->getName() ];
+
+			if ( isset( $valuesByLocale[ $currentLocale ] ) ) {
+				$valuesByLocale['native'] = $valuesByLocale[ $currentLocale ];
+				unset( $valuesByLocale[ $currentLocale ] );
+			}
+			$result[ $pField->getName() ] = $valuesByLocale;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param array $valuesPrefixless
+	 * @param string $value
+	 */
+	private function saveField( array $valuesPrefixless, $values )
+	{
+		$data        = [];
+		$customLabel = (array) ( $values->{'customlabel-lang'} );
+
+		foreach ( $customLabel as $key => $value ) {
+			$data[ $key ] = $this->addLocaleToModelForField( $value );
+		}
+		$valuesPrefixless['oo_plugin_fieldconfig_estate_translated_labels'] =
+			(array) ( $valuesPrefixless['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? [] ) +
+			( $data );
+
+		return $valuesPrefixless;
+	}
+
+	/**
+	 * @param array $value
+	 */
+	private function addLocaleToModelForField( $value )
+	{
+		$pLanguage = $this->getContainer()->get( Language::class );
+
+		foreach ( $value as $locale => $values ) {
+			$value = (array) $value;
+			if ( $locale === 'native' ) {
+				$value[ $pLanguage->getLocale() ] = $values;
+				unset( $value['native'] );
+			}
+		}
+
+		return $value;
 	}
 }
