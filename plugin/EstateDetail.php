@@ -334,8 +334,8 @@ class EstateDetail
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$dataDetailView = $pDataDetailViewHandler->getDetailView();
 		$dataDetailCustomLabel = $dataDetailView->getCustomLabels();
-		if(!empty($dataDetailCustomLabel[$field]->$pLanguage) || !empty($dataDetailCustomLabel[$field]->native)){
-			$fieldNewName = $dataDetailCustomLabel[$field]->$pLanguage ?? $dataDetailCustomLabel[$field]->native;
+		if(!empty($dataDetailCustomLabel[$field][$pLanguage])){
+			$fieldNewName = $dataDetailCustomLabel[$field][$pLanguage];
 		}else {
 			$recordType = onOfficeSDK::MODULE_ESTATE;
 			$fieldNewName = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
