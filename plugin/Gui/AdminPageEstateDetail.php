@@ -583,7 +583,7 @@ class AdminPageEstateDetail
 		}
 		$valuesPrefixless['oo_plugin_fieldconfig_estate_translated_labels'] =
 			(array) ( $valuesPrefixless['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? [] ) +
-			( $data ?? [] );
+			( $data );
 
 		return $valuesPrefixless;
 	}
