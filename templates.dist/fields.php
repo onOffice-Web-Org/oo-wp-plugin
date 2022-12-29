@@ -3,6 +3,7 @@
 use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Language;
 
 if (!function_exists('printRegion')) {
 	function printRegion(onOffice\WPlugin\Region\Region $pRegion, $selected = array(), $level = 0)
@@ -240,5 +241,108 @@ if (!function_exists('renderRegionalAddition')) {
 		$output .= ob_get_clean();
 		$output .= '</select>';
 		return $output;
+	}
+}
+
+if (!function_exists('renderParkingLot')) {
+	function renderParkingLot(array $parkingArray, $currentEstate): array
+	{
+		$language = new Language();
+		$locale = $language->getLocale();
+		$locale = !empty($locale) ? $locale : 'de_DE';
+		$codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
+		unset($currentEstate['codeWaehrung']);
+		$codeCurrency = !empty($codeCurrency) ? $codeCurrency : 'EUR';
+		$messages = [];
+
+		foreach ( $parkingArray as $key => $parking ) {
+			$parkingName   = '';
+			$marketingType = '';
+			$isCount         = $parking['Count'];
+
+			if ( $isCount == 0 ) {
+				continue;
+			}
+			$parkingName = getParkingName( $key, $parking['Count'] );
+			if ( ! empty( $parking['MarketingType'] ) ) {
+				$marketingType = getMarketingType( $parking['MarketingType'] );
+			}
+			$price = formatPriceParking( $parking['Price'], $locale, $codeCurrency );
+			/* translators: 1: Count and name of parking lot, 2: Price, 3: Marketing type */
+			$element = sprintf( _n( '%1$s at %2$s%3$s', '%1$s at %2$s each%3$s', $isCount, 'onoffice-for-wp-websites' ), $parkingName, $price, $marketingType );
+
+			array_push( $messages, $element );
+		}
+
+		return $messages;
+	}
+}
+
+if (!function_exists('formatPriceParking')) {
+	function formatPriceParking(string $str, string $locale, string $codeCurrency): string
+	{
+		$format = new NumberFormatter( $locale, NumberFormatter::CURRENCY );
+		if ( intval( $str ) == $str ) {
+			$format->setAttribute( NumberFormatter::MIN_SIGNIFICANT_DIGITS, 0 );
+		}
+		return str_replace( "\xc2\xa0", " ", $format->formatCurrency( $str, $codeCurrency ) );
+	}
+}
+
+if (!function_exists('getMarketingType')) {
+	function getMarketingType( string $marketingType ): string
+	{
+		switch ( $marketingType ) {
+			case 'buy':
+				/* translators: %s is the marketing type of buy */
+				$str = __( ' (purchase)', 'onoffice-for-wp-websites' );
+				break;
+			case 'rent':
+				/* translators: %s is the marketing type of rent */
+				$str = __( ' (rent)', 'onoffice-for-wp-websites' );
+				break;
+			default:
+				throw new Exception('unrecognized marketing type');
+		}
+		return esc_html( $str );
+	}
+}
+
+if (!function_exists('getParkingName')) {
+	function getParkingName(string $parkingName, int $count): string
+	{
+		switch ($parkingName) {
+			case 'carport':
+				/* translators: %s is the amount of carports */
+				$str = _n('%s carport', '%s carports', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'duplex':
+				/* translators: %s is the amount of duplexes */
+				$str = _n('%s duplex', '%s duplexes', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'parkingSpace':
+				/* translators: %s is the amount of parking spaces */
+				$str = _n('%s parking space', '%s parking spaces', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'garage':
+				/* translators: %s is the amount of garages */
+				$str = _n('%s garage', '%s garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'multiStoryGarage':
+				/* translators: %s is the amount of multi story garages */
+				$str = _n('%s multi-story garage', '%s multi-story garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'undergroundGarage':
+				/* translators: %s is the amount of underground garages */
+				$str = _n('%s underground garage', '%s underground garages', $count, 'onoffice-for-wp-websites');
+				break;
+			case 'otherParkingLot':
+				/* translators: %s is the amount of other parking lots */
+				$str = _n('%s other parking lot', '%s other parking lots', $count, 'onoffice-for-wp-websites');
+				break;
+			default:
+				$str = $parkingName;
+		}
+		return esc_html(sprintf($str, $count));
 	}
 }

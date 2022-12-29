@@ -23,6 +23,7 @@
  *
  */
 use onOffice\WPlugin\Favorites;
+use onOffice\WPlugin\Language;
 // display search form
 require 'SearchForm.php';
 /* @var $pEstates onOffice\WPlugin\EstateList */
@@ -36,6 +37,16 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 		opacity: 0.8;
 		text-decoration: none !important;
 		background: #80acd3 !important;
+	}
+	.oo-listinfotableview {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	ul.oo-listparking {
+		padding: 0 10px;
+	}
+	.clear {
+		width: 50%;
 	}
 </style>
 
@@ -86,7 +97,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					<div class="oo-listtitle">
 						<?php echo $currentEstate["objekttitel"]; ?>
 					</div>
-					<div class="oo-listinfotable">
+					<div class="oo-listinfotable oo-listinfotableview">
 						<?php foreach ( $currentEstate as $field => $value ) {
 							if ( is_numeric( $value ) && 0 == $value ) {
 								continue;
@@ -96,6 +107,13 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 							}
 							if ( $value == "" ) {
 								continue;
+							}
+							if ($field == 'multiParkingLot') {
+								$valuesField = $currentEstate->getValueRaw($field);
+								$value = renderParkingLot($valuesField, $currentEstate);
+								if ( empty($value) ) {
+									continue;
+								}
 							}
 							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 						} ?>

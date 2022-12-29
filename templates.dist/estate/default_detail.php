@@ -31,6 +31,14 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
 /** @var EstateDetail $pEstates */
 ?>
+<style>
+	ul.oo-listparking {
+		padding: 0 10px;
+	}
+	.clear {
+		width: 25%;
+	}
+</style>
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
@@ -65,6 +73,13 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					}
 					if ($value == "") {
 						continue;
+					}
+					if ($field == 'multiParkingLot') {
+						$valuesField = $currentEstate->getValueRaw($field);
+						$value = renderParkingLot($valuesField, $currentEstate);
+						if ( empty($value) ) {
+							continue;
+						}
 					}
 					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
 						. '<div class="oo-detailslisttd">'
