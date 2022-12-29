@@ -72,12 +72,6 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 	while ( $currentEstate = $pEstatesClone->estateIterator() ) :
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
 		unset($currentEstate['vermarktungsstatus']);
-		$language = new Language();
-		$locale = $language->getLocale();
-		$locale = !empty($locale) ? $locale : 'de_DE';
-		$codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
-		unset($currentEstate['codeWaehrung']);
-		$codeCurrency = !empty($codeCurrency) ? $codeCurrency : 'EUR';
 		$estateId = $pEstatesClone->getCurrentEstateId();
 		$rawValues = $pEstatesClone->getRawValues();
 		$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
@@ -116,7 +110,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 							}
 							if ($field == 'multiParkingLot') {
 								$valuesField = $currentEstate->getValueRaw($field);
-								$value = renderParkingLot($valuesField, $locale, $codeCurrency);
+								$value = renderParkingLot($valuesField, $currentEstate);
 								if ( empty($value) ) {
 									continue;
 								}

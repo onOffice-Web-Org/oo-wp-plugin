@@ -3,6 +3,7 @@
 use onOffice\WPlugin\Region\Region;
 use onOffice\WPlugin\Region\RegionController;
 use onOffice\WPlugin\Types\FieldTypes;
+use onOffice\WPlugin\Language;
 
 if (!function_exists('printRegion')) {
 	function printRegion(onOffice\WPlugin\Region\Region $pRegion, $selected = array(), $level = 0)
@@ -244,8 +245,14 @@ if (!function_exists('renderRegionalAddition')) {
 }
 
 if (!function_exists('renderParkingLot')) {
-	function renderParkingLot(array $parkingArray, string $locale, string $codeCurrency): array
+	function renderParkingLot(array $parkingArray, $currentEstate): array
 	{
+		$language = new Language();
+		$locale = $language->getLocale();
+		$locale = !empty($locale) ? $locale : 'de_DE';
+		$codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
+		unset($currentEstate['codeWaehrung']);
+		$codeCurrency = !empty($codeCurrency) ? $codeCurrency : 'EUR';
 		$messages = [];
 
 		foreach ( $parkingArray as $key => $parking ) {
