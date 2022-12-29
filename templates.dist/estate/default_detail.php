@@ -21,8 +21,6 @@
 
 use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
-use onOffice\WPlugin\Language;
-require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'fields.php';
 
 /**
  *
@@ -44,15 +42,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
-	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) { 
-		$language = new Language();
-		$locale = $language->getLocale();
-		$locale = !empty($locale) ? $locale : 'de_DE';
-		$values = $currentEstate->getValueRaw('multiParkingLot');
-		$codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
-		unset($currentEstate['codeWaehrung']);
-		$codeCurrency = !empty($codeCurrency) ? $codeCurrency : 'EUR';
-		?>
+	while ($currentEstate = $pEstates->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_DEFAULT)) { ?>
 		<div class="oo-detailsheadline">
 			<h1><?php echo $currentEstate["objekttitel"]; ?></h1>
 			<?php if (!empty($currentEstate['vermarktungsstatus'])) { ?>
@@ -85,7 +75,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 						continue;
 					}
 					if ($field == 'multiParkingLot') {
-						$value = renderParkingLot($values, $locale, $codeCurrency);
+						require('parkingLot/ParkingLot.php');
+						continue;
 					}
 					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"
 						. '<div class="oo-detailslisttd">'

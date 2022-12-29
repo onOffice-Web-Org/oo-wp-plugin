@@ -23,7 +23,6 @@
  *
  */
 use onOffice\WPlugin\Favorites;
-use onOffice\WPlugin\Language;
 // display search form
 require 'SearchForm.php';
 /* @var $pEstates onOffice\WPlugin\EstateList */
@@ -70,18 +69,11 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 	$pEstatesClone = clone $pEstates;
 	$pEstatesClone->resetEstateIterator();
 	while ( $currentEstate = $pEstatesClone->estateIterator() ) :
-		$language = new Language();
 		$marketingStatus = $currentEstate['vermarktungsstatus'];
 		unset($currentEstate['vermarktungsstatus']);
-		$locale = $language->getLocale();
-		$locale = !empty($locale) ? $locale : 'de_DE';
 		$estateId = $pEstatesClone->getCurrentEstateId();
 		$rawValues = $pEstatesClone->getRawValues();
-		$values = $currentEstate->getValueRaw('multiParkingLot');
-		$codeCurrency = $currentEstate->getValueRaw('codeWaehrung');
 		$referenz = $rawValues->getValueRaw($estateId)['elements']['referenz'];
-		unset($currentEstate['codeWaehrung']);
-		$codeCurrency = !empty($codeCurrency) ? $codeCurrency : 'EUR';
 	?>
 		<div class="oo-listobject">
 			<div class="oo-listobjectwrap">
@@ -116,7 +108,8 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 								continue;
 							}
 							if ($field == 'multiParkingLot') {
-								$value = renderParkingLot($values, $locale, $codeCurrency);
+								require('parkingLot/ParkingLot.php');
+								continue;
 							}
 							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 						} ?>
