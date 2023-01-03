@@ -531,7 +531,7 @@ class AdminPageEstateDetail
 		                         ->addFieldsEstateDecoratorReadAddressBackend( $pDefaultFieldsCollection );
 
 		foreach ( $pDefaultFieldsCollection->getAllFields() as $pField ) {
-			if ( ! in_array( $pField->getModule(), [ onOfficeSDK::MODULE_ESTATE ], true ) ) {
+			if ( ! in_array( $pField->getModule(), [ onOfficeSDK::MODULE_ADDRESS, onOfficeSDK::MODULE_ESTATE ], true ) ) {
 				$pDefaultFieldsCollection->removeFieldByModuleAndName
 				( $pField->getModule(), $pField->getName() );
 			}
