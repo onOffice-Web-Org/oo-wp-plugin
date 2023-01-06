@@ -103,7 +103,7 @@ class TestClassCustomLabelCreate
 		$pCustomLabels = new CustomLabelModelField(14, $pField);
 		$pCustomLabels->addValueByLocale('de_DE', 'Custom Label DE');
 		$pCustomLabels->addValueByLocale('fr_BE', 'Custom Label BE');
-		$resultId = $this->_pSubject->createForField($pCustomLabels);
+		$resultId = $this->_pSubject->createForField($pCustomLabels,'oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
 		$this->assertEquals(121, $resultId);
 	}
 }

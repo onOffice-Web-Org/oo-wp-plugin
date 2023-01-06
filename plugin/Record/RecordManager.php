@@ -71,6 +71,11 @@ abstract class RecordManager
 	/** */
 	const TABLENAME_FIELDCONFIG_ADDRESS = 'oo_plugin_address_fieldconfig';
 
+	/** */
+	const TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS = 'oo_plugin_fieldconfig_estate_customs_labels';
+
+	/** */
+	const TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS = 'oo_plugin_fieldconfig_estate_translated_labels';
 
 	/**
 	 *

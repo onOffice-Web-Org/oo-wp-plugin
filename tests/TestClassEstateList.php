@@ -226,16 +226,43 @@ class TestClassEstateList
 
 	public function testGetFieldLabel()
 	{
-		$pFields = new FieldsCollection();
-		$pFieldnamesMock = $this->getMockBuilder(Fieldnames::class)
-			->setMethods(['getFieldLabel'])
-			->setConstructorArgs([$pFields])
-			->getMock();
-		$pFieldnamesMock->method('getFieldLabel')->with(
-				$this->equalTo('testfield'), $this->equalTo(onOfficeSDK::MODULE_ESTATE))
-			->willReturn('Test Field');
-		$this->_pEnvironment->method('getFieldnames')->willReturn($pFieldnamesMock);
-		$this->assertEquals('Test Field', $this->_pEstateList->getFieldLabel('testfield'));
+		$pFieldsCollection = new FieldsCollection();
+		$pFieldObjektArt = new Field('objektart', 'estate', 'testLabel');
+		$pFieldObjektArt->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+		$pFieldsCollection->addField($pFieldObjektArt);
+
+		$expectation = [
+			'objektart' => [
+				'name' => 'objektart',
+				'type' => 'singleselect',
+				'value' => 'haus',
+				'label' => 'testLabel',
+				'default' => null,
+				'length' => null,
+				'permittedvalues' => [],
+				'content' => '',
+				'module' => 'estate',
+				'rangefield' => false,
+				'additionalTranslations' => [],
+				'compoundFields' => [],
+				'labelOnlyValues' => [],
+				'tablename' => ''
+			],
+		];
+
+		$pFieldsCollectionBuilderMock = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
+				->disableOriginalConstructor()
+				->getMock();
+		$pFieldsCollectionBuilderMock->method('addFieldsAddressEstate')
+			->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
+			use ($pFieldsCollection, $pFieldsCollectionBuilderMock): FieldsCollectionBuilderShort
+			{
+				$pFieldsCollectionOut->merge($pFieldsCollection);
+				return $pFieldsCollectionBuilderMock;
+			});
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderMock);
+
+		$this->assertEquals($expectation['objektart']['label'], $this->_pEstateList->getFieldLabel('objektart'));
 	}
 
 
@@ -632,7 +659,6 @@ class TestClassEstateList
 				$pFieldsCollectionOut->merge($pFieldsCollection);
 				return $pFieldsCollectionBuilderMock;
 			});
-
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderMock);
 		$this->assertEquals($expectation, $this->_pEstateList->getVisibleFilterableFields());
 	}

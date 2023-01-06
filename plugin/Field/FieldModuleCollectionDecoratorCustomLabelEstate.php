@@ -23,16 +23,17 @@ declare(strict_types=1);
 
 namespace onOffice\WPlugin\Field;
 
+use function __;
 use DI\Container;
 use DI\ContainerBuilder;
 use onOffice\SDK\onOfficeSDK;
-use onOffice\WPlugin\Record\RecordManager;
-use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
 use onOffice\WPlugin\Language;
-use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\Field;
+use onOffice\WPlugin\Record\RecordManager;
 
-use function __;
+use onOffice\WPlugin\Record\RecordManagerReadForm;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 
 /**
  *
@@ -40,7 +41,7 @@ use function __;
  * @copyright 2003-2021, onOffice(R) GmbH
  *
  */
-class FieldModuleCollectionDecoratorCustomLabelForm
+class FieldModuleCollectionDecoratorCustomLabelEstate
 	extends FieldModuleCollectionDecoratorAbstract
 {
 	/** @var Container */
@@ -52,33 +53,25 @@ class FieldModuleCollectionDecoratorCustomLabelForm
 	/** @var FieldModuleCollection */
 	private $_pFieldModuleCollection = null;
 
-
-	public function __construct(FieldModuleCollection $pFieldModuleCollection, $formName, Container $pContainer = null)
+	public function __construct(FieldModuleCollection $pFieldModuleCollection, $formName, string $typeList = null, Container $pContainer = null)
 	{
 		parent::__construct($pFieldModuleCollection);
 		$this->_pFieldModuleCollection = $pFieldModuleCollection;
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
-		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadForm::class);
-		$results = $recordManagerReadForm->getRowByName($formName);
-		$fieldsByFormIds = $recordManagerReadForm->readFieldsByFormId(intval($results['form_id']));
+		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadListViewEstate::class);
+		$results = $recordManagerReadForm->getRowByName($formName, $typeList);
+		$fieldsByFormIds = $recordManagerReadForm->getFieldconfigByListviewId(intval($results['listview_id']));
+
 		foreach ($fieldsByFormIds as $fieldsByFormId) {
 			$lang = $this->_pContainer->get(Language::class);
 			$customLabelRead = $this->_pContainer->get(CustomLabelRead::class);
-			$query = $customLabelRead->readCustomLabelByFormIdAndFieldName(intval($results['form_id']),
+			$query = $customLabelRead->readCustomLabelByFormIdAndFieldName(intval($results['listview_id']),
 				$fieldsByFormId['fieldname'],
-				$lang->getLocale(),RecordManager::TABLENAME_FIELDCONFIG_FORM_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_FORM_TRANSLATED_LABELS);
+				$lang->getLocale(),RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
 			if (empty($query[0]->value)) {
 				continue;
 			}
-			if ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ADDRESS) {
-				$this->_fieldCustomLabels[onOfficeSDK::MODULE_ADDRESS][$fieldsByFormId['fieldname']] = $query[0]->value;
-			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_SEARCHCRITERIA) {
-				$this->_fieldCustomLabels[onOfficeSDK::MODULE_SEARCHCRITERIA][$fieldsByFormId['fieldname']] = $query[0]->value;
-			} elseif ($fieldsByFormId['module'] === onOfficeSDK::MODULE_ESTATE) {
-				$this->_fieldCustomLabels[onOfficeSDK::MODULE_ESTATE][$fieldsByFormId['fieldname']] = $query[0]->value;
-			} else {
-				$this->_fieldCustomLabels[''][$fieldsByFormId['fieldname']] = $query[0]->value;
-			}
+			$this->_fieldCustomLabels[onOfficeSDK::MODULE_ESTATE][$fieldsByFormId['fieldname']] = $query[0]->value;
 		}
 	}
 
