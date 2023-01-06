@@ -118,7 +118,6 @@ class FormPostOwnerConfigurationTest
 	 * @return bool
 	 *
 	 */
-
 	public function getNewsletterAccepted(): bool
 	{
 		return $this->_newsletterAccepted;
@@ -130,7 +129,6 @@ class FormPostOwnerConfigurationTest
 	 * @param  bool  $newsletterAccepted
 	 *
 	 */
-
 	public function setNewsletterAccepted( bool $newsletterAccepted )
 	{
 		$this->_newsletterAccepted = $newsletterAccepted;
