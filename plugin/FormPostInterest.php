@@ -88,7 +88,7 @@ class FormPostInterest
 				                                                   ->createOrCompleteAddress( $pFormData,
 					                                                   $checkduplicate, $contactType);
 				$this->createSearchcriteria( $pFormData, $addressId );
-				$this->createAddress( $addressId );
+				$this->setNewsletter( $addressId );
 			}
 		} finally {
 			if ( $recipient != null ) {
@@ -122,7 +122,7 @@ class FormPostInterest
 	 * @throws Field\UnknownFieldException
 	 */
 
-	private function createAddress( $addressId)
+	private function setNewsletter( $addressId)
 	{
 		if (!$this->_pFormPostInterestConfiguration->getNewsletterAccepted()) {
 			// No subscription for newsletter, which is ok

@@ -98,7 +98,7 @@ class FormPostOwner
 				$estateData = $this->getEstateData();
 				$estateId   = $this->createEstate( $estateData );
 				$this->createOwnerRelation( $estateId, $addressId );
-				$this->createAddress( $addressId );
+				$this->setNewsletter( $addressId );
 			}
 		} finally {
 			if ( null != $recipient ) {
@@ -179,7 +179,7 @@ class FormPostOwner
 	 * @throws Field\UnknownFieldException
 	 */
 
-	private function createAddress( $addressId )
+	private function setNewsletter( $addressId )
 	{
 		if ( ! $this->_pFormPostOwnerConfiguration->getNewsletterAccepted() ) {
 			// No subscription for newsletter, which is ok
