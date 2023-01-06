@@ -98,6 +98,7 @@ class FormPostOwner
 				$estateData = $this->getEstateData();
 				$estateId   = $this->createEstate( $estateData );
 				$this->createOwnerRelation( $estateId, $addressId );
+				$this->setNewsletter( $addressId );
 			}
 		} finally {
 			if ( null != $recipient ) {
@@ -171,6 +172,34 @@ class FormPostOwner
 
 	/**
 	 *
+	 * @param  FormData  $pFormData
+	 *
+	 * @return void
+	 * @throws ApiClientException
+	 * @throws Field\UnknownFieldException
+	 */
+
+	private function setNewsletter( $addressId )
+	{
+		if ( ! $this->_pFormPostOwnerConfiguration->getNewsletterAccepted() ) {
+			// No subscription for newsletter, which is ok
+			return;
+		}
+
+		$pSDKWrapper      = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
+		$pAPIClientAction = new APIClientActionGeneric
+		( $pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'registerNewsletter' );
+		$pAPIClientAction->setParameters( [ 'register' => true ] );
+		$pAPIClientAction->setResourceId( $addressId );
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		if ( ! $pAPIClientAction->getResultStatus() ) {
+			throw new ApiClientException( $pAPIClientAction );
+		}
+	}
+
+	/**
+	 *
 	 * @param int $estateId
 	 * @param int $addressId
 	 * @throws ApiClientException
@@ -230,6 +259,11 @@ class FormPostOwner
 
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
+		}
+
+		if (isset($addressData['newsletter'])) {
+			$requestParams['addressdata']['newsletter_aktiv'] = $this->_pFormPostOwnerConfiguration
+				->getNewsletterAccepted();
 		}
 
 		$pSDKWrapper = $this->_pFormPostOwnerConfiguration->getSDKWrapper();
