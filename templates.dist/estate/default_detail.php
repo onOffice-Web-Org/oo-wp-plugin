@@ -21,6 +21,7 @@
 
 use onOffice\WPlugin\EstateDetail;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
+require __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'fields.php';
 
 /**
  *
