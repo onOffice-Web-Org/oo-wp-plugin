@@ -211,6 +211,10 @@ class APIClientActionGeneric
 	protected function getResult(): array
 		{ return $this->_result; }
 
+    /** @return string */
+    public function getErrorMessage(): string
+    { return $this->_result['status']['message'] ?? ''; }
+
 	/** @return callable */
 	public function getResultCallback(): callable
 		{ return $this->_resultCallback; }

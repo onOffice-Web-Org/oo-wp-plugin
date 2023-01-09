@@ -33,12 +33,6 @@ use onOffice\WPlugin\Record\RecordManagerInsertGeneric;
  */
 class CustomLabelCreate
 {
-	/** */
-	const TABLE_CUSTOMS_LABELS = 'oo_plugin_fieldconfig_form_customs_labels';
-
-	/** */
-	const TABLE_TRANSLATED_LABELS = 'oo_plugin_fieldconfig_form_translated_labels';
-
 
 	/** @var RecordManagerFactory */
 	private $_pRecordManagerFactory;
@@ -63,12 +57,12 @@ class CustomLabelCreate
 	 * @throws RecordManagerInsertException
 	 */
 
-	public function createForField(CustomLabelModelField $pDataModel): int
+	public function createForField(CustomLabelModelField $pDataModel, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField): int
 	{
 		$field = $pDataModel->getField()->getName();
-		$customsLabelsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field);
+		$customsLabelsId = $this->writeDatabaseGeneral($pDataModel->getFormId(), $field, $pCustomsLabelConfigurationField);
 		foreach ($pDataModel->getValuesByLocale() as $locale => $value) {
-			$this->writeDatabaseValueSingle($customsLabelsId, $value, $locale);
+			$this->writeDatabaseValueSingle($customsLabelsId, $value, $locale, $pTranslateLabelConfigurationField);
 		}
 		return $customsLabelsId;
 	}
@@ -76,6 +70,7 @@ class CustomLabelCreate
 	/**
 	 *
 	 * Step one: write oo_fieldconfig_form_customs_labels
+	 * step two: write to oo_fieldconfig_estate_translated_labels
 	 *
 	 * @param int $formId
 	 * @param string $field
@@ -84,38 +79,40 @@ class CustomLabelCreate
 	 *
 	 */
 
-	private function writeDatabaseGeneral(int $formId, string $field): int
+	private function writeDatabaseGeneral(int $formId, string $field, $pCustomsLabelConfigurationField): int
 	{
-		$pRecordManager = $this->createRecordManagerDefaults();
+		$pRecordManager = $this->createRecordManagerDefaults($pCustomsLabelConfigurationField);
 		$values = [
 			'form_id' => $formId,
 			'fieldname' => $field,
 		];
-		return $pRecordManager->insertByRow([self::TABLE_CUSTOMS_LABELS => $values]);
+		return $pRecordManager->insertByRow([$pCustomsLabelConfigurationField => $values]);
 	}
 
 
 	/**
 	 *
 	 * step two: write to oo_fieldconfig_form_translated_labels
+	 * step two: write to oo_fieldconfig_estate_translated_labels
 	 *
 	 * @param int $customsLabelsId
 	 * @param string $value
 	 * @param string $locale
+	 * @param string $pTranslateLabelConfigurationField
 	 *
 	 * @throws RecordManagerInsertException
 	 *
 	 */
 
-	private function writeDatabaseValueSingle(int $customsLabelsId, string $value, string $locale = '')
+	private function writeDatabaseValueSingle(int $customsLabelsId, string $value, string $locale = '', $pTranslateLabelConfigurationField = null)
 	{
-		$pRecordManager = $this->createRecordManagerCustomsLabels();
+		$pRecordManager = $this->createRecordManagerCustomsLabels($pTranslateLabelConfigurationField);
 		$values = [
 			'input_id' => $customsLabelsId,
 			'locale' => $locale,
 			'value' => $value,
 		];
-		$pRecordManager->insertByRow([self::TABLE_TRANSLATED_LABELS => $values]);
+		$pRecordManager->insertByRow([$pTranslateLabelConfigurationField => $values]);
 	}
 
 
@@ -125,9 +122,9 @@ class CustomLabelCreate
 	 *
 	 */
 
-	private function createRecordManagerDefaults(): RecordManagerInsertGeneric
+	private function createRecordManagerDefaults($pCustomsLabelConfigurationField): RecordManagerInsertGeneric
 	{
-		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_CUSTOMS_LABELS);
+		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric($pCustomsLabelConfigurationField);
 	}
 
 
@@ -137,8 +134,8 @@ class CustomLabelCreate
 	 *
 	 */
 
-	private function createRecordManagerCustomsLabels(): RecordManagerInsertGeneric
+	private function createRecordManagerCustomsLabels($pTranslateLabelConfigurationField): RecordManagerInsertGeneric
 	{
-		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric(self::TABLE_TRANSLATED_LABELS);
+		return $this->_pRecordManagerFactory->createRecordManagerInsertGeneric($pTranslateLabelConfigurationField);
 	}
 }

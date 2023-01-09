@@ -70,7 +70,7 @@ class TestClassCustomLabelDelete
 			->with($expectedQuery, 13, 'objektart', 'de_DE')
 			->will($this->returnValue('testQuery'));
 		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(true));
-		$this->_pSubject->deleteSingleCustomLabelByFieldname(13, 'objektart', 'de_DE');
+		$this->_pSubject->deleteSingleCustomLabelByFieldname(13, 'objektart', 'de_DE','oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
 	}
 
 	/**
@@ -79,7 +79,7 @@ class TestClassCustomLabelDelete
 	public function testDeleteByFormIdAndFieldNamesEmptyFieldlist()
 	{
 		$this->_pWPDB->expects($this->never())->method('query');
-		$this->_pSubject->deleteByFormIdAndFieldNames(13, []);
+		$this->_pSubject->deleteByFormIdAndFieldNames(13, [],'wp_test_oo_plugin_fieldconfig_form_customs_labels','wp_test_oo_plugin_fieldconfig_form_translated_labels');
 	}
 
 	/**
@@ -95,7 +95,7 @@ class TestClassCustomLabelDelete
 			. "wp_test_oo_plugin_fieldconfig_form_customs_labels.fieldname IN('testField1', 'testField2')";
 		$this->_pWPDB->expects($this->once())->method('query')->with($expectedQuery)->will($this->returnValue(true));
 
-		$this->_pSubject->deleteByFormIdAndFieldNames(13, ['testField1', 'testField2']);
+		$this->_pSubject->deleteByFormIdAndFieldNames(13, ['testField1', 'testField2'],'wp_test_oo_plugin_fieldconfig_form_customs_labels','wp_test_oo_plugin_fieldconfig_form_translated_labels');
 	}
 
 	/**
@@ -105,7 +105,7 @@ class TestClassCustomLabelDelete
 	{
 		$this->expectException(CustomLabelDeleteException::class);
 		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(false));
-		$this->_pSubject->deleteByFormIdAndFieldNames(13, ['testField2']);
+		$this->_pSubject->deleteByFormIdAndFieldNames(13, ['testField2'],'wp_test_oo_plugin_fieldconfig_form_customs_labels','wp_test_oo_plugin_fieldconfig_form_translated_labels');
 	}
 
 	/**
@@ -117,7 +117,7 @@ class TestClassCustomLabelDelete
 		$this->_pWPDB->expects($this->once())->method('prepare')
 			->will($this->returnValue('testQuery'));
 		$this->_pWPDB->expects($this->once())->method('query')->will($this->returnValue(false));
-		$this->_pSubject->deleteSingleCustomLabelByFieldname(13, 'objektart', 'de_DE');
+		$this->_pSubject->deleteSingleCustomLabelByFieldname(13, 'objektart', 'de_DE','wp_test_oo_plugin_fieldconfig_form_customs_labels','wp_test_oo_plugin_fieldconfig_form_translated_labels');
 	}
 
 	/**
@@ -133,7 +133,7 @@ class TestClassCustomLabelDelete
 		$this->_pWPDB->expects($this->once())->method('prepare')->with($expectedQuery,
 			1337)->will($this->returnValue('testQuery2'));
 		$this->_pWPDB->expects($this->once())->method('query')->with('testQuery2')->will($this->returnValue(true));
-		$this->_pSubject->deleteSingleCustomLabelById(1337);
+		$this->_pSubject->deleteSingleCustomLabelById(1337,'oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
 	}
 
 	/**
@@ -144,6 +144,6 @@ class TestClassCustomLabelDelete
 		$this->expectException(CustomLabelDeleteException::class);
 		$this->_pWPDB->expects($this->once())->method('prepare')->will($this->returnValue('testQuery2'));
 		$this->_pWPDB->expects($this->once())->method('query')->with('testQuery2')->will($this->returnValue(false));
-		$this->_pSubject->deleteSingleCustomLabelById(1337);
+		$this->_pSubject->deleteSingleCustomLabelById(1337,'wp_test_oo_plugin_fieldconfig_form_customs_labels','wp_test_oo_plugin_fieldconfig_form_translated_labels');
 	}
 }

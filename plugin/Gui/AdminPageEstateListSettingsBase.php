@@ -25,8 +25,21 @@ use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
+use onOffice\WPlugin\Field\CustomLabel\CustomLabelDelete;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesForm;
+use onOffice\WPlugin\Field\CustomLabel\ModelToOutputConverter\CustomLabelRowSaver;
+use onOffice\SDK\onOfficeSDK;
+use onOffice\WPlugin\Language;
+use onOffice\WPlugin\Types\FieldsCollection;
 use stdClass;
 use function __;
+use onOffice\WPlugin\Field\CustomLabel\Exception\CustomLabelDeleteException;
+use DI\DependencyException;
+use DI\NotFoundException;
+use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\WP\InstalledLanguageReader;
 
 /**
  *
@@ -44,6 +57,8 @@ abstract class AdminPageEstateListSettingsBase
 	/** */
 	const FORM_VIEW_FIELDS_CONFIG = 'viewfieldsconfig';
 
+	/** */
+	const CUSTOM_LABELS = 'customlabels';
 
 	/**
 	 *
@@ -102,6 +117,8 @@ abstract class AdminPageEstateListSettingsBase
 						(RecordManager::TABLENAME_PICTURETYPES, 'listview_id', $row, $recordId),
 					RecordManager::TABLENAME_SORTBYUSERVALUES => $this->prepareRelationValues
 						(RecordManager::TABLENAME_SORTBYUSERVALUES, 'listview_id', $row, $recordId),
+					RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS => $this->prepareRelationValues
+						(RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS, 'listview_id', $row, $recordId),
 				];
 
 				$pInsert->insertAdditionalValues($row);
@@ -111,7 +128,9 @@ abstract class AdminPageEstateListSettingsBase
 				$recordId = null;
 			}
 		}
-
+		if ($result) {
+			$this->saveCustomLabels($recordId, $row, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
+		}
 		$pResult->result = $result;
 		$pResult->record_id = $recordId;
 	}
@@ -160,7 +179,98 @@ abstract class AdminPageEstateListSettingsBase
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view. Please make '
 				.'sure the name of the view is unique, even across all estate list types.', 'onoffice-for-wp-websites'),
 			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
+			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
 		);
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+	private function readCustomLabels(): array
+	{
+		$result = [];
+		/** @var CustomLabelRead $pCustomLabelRead*/
+		$pCustomLabelRead = $this->getContainer()->get(CustomLabelRead::class);
+		$pLanguage = $this->getContainer()->get(Language::class);
+
+		foreach ($this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField) {
+			$pCustomLabelModel = $pCustomLabelRead->readCustomLabelsField
+			((int)$this->getListViewId(), $pField, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
+			$valuesByLocale = $pCustomLabelModel->getValuesByLocale();
+
+			$currentLocale = $pLanguage->getLocale();
+
+			if (isset($valuesByLocale[$currentLocale])) {
+				$valuesByLocale['native'] = $valuesByLocale[$currentLocale];
+				unset($valuesByLocale[$currentLocale]);
+			}
+			$result[$pField->getName()] = $valuesByLocale;
+		}		
+
+		return $result;
+	}
+
+
+	/**
+	 *
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+
+	private function buildFieldsCollectionForCurrentEstate(): FieldsCollection
+	{
+		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pDefaultFieldsCollection = new FieldsCollection();
+		$pFieldsCollectionBuilder->addFieldsAddressEstate( $pDefaultFieldsCollection )
+		                         ->addFieldsAddressEstateWithRegionValues( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateGeoPosisionBackend( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateDecoratorReadAddressBackend( $pDefaultFieldsCollection );
+
+		foreach ($pDefaultFieldsCollection->getAllFields() as $pField) {
+			if (!in_array($pField->getModule(), [onOfficeSDK::MODULE_ESTATE], true)) {
+				$pDefaultFieldsCollection->removeFieldByModuleAndName
+					($pField->getModule(), $pField->getName());
+			}
+			
+		}
+		
+		return $pDefaultFieldsCollection;
+	}
+
+	/**
+	 * @param int $recordId
+	 * @param array $row
+	 * @throws CustomLabelDeleteException
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+
+	private function saveCustomLabels(int $recordId, array $row ,string $pCustomsLabelConfigurationField, string $pTranslateLabelConfigurationField)
+	{
+		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG] ?? [];
+		$fieldNamesSelected = array_column($fields, 'fieldname');
+		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentEstate();
+
+		/** @var FieldsCollectionBuilderFromNamesForm $pFieldsCollectionBuilder */
+		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesForm::class);
+		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollectionFromBaseCollection
+		($fieldNamesSelected, $pFieldsCollectionBase);
+
+		/** @var CustomLabelDelete $pCustomLabelDelete */
+		$pCustomLabelDelete = $this->getContainer()->get(CustomLabelDelete::class);
+		$pCustomLabelDelete->deleteByFormIdAndFieldNames($recordId, $fieldNamesSelected, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
+
+		$pCustomLabelSave = $this->getContainer()->get(CustomLabelRowSaver::class);
+		$pCustomLabelSave->saveCustomLabels($recordId,
+			$row['oo_plugin_fieldconfig_estate_translated_labels'] ?? [], $pFieldsCollectionCurrent, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
 	}
 }

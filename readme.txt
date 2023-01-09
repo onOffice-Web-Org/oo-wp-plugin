@@ -2,9 +2,9 @@
 Contributors: jayay, anniken1
 Tags: real estate, onoffice
 Requires at least: 4.6
-Tested up to: 6.0
+Tested up to: 6.1.1
 Requires PHP: 7.3
-Stable tag: 4.5
+Stable tag: 4.6
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,17 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.6 (2022-12-19) =
+
+**Added**
+
+* Allow Markdown in labels for form fields. This allows for example privacy policy checkboxes to link to a privacy policy.
+* Add a special form field that displays the GDPR consent as a checkbox instead of a dropdown.
+
+**Changed**
+
+* When previewing the detail page without an estate's ID in the URL, we explain more clearly why no estate can be shown. If the user is logged in, we link to a random estate so that they can easily preview the detail page.
 
 = 4.5 (2022-11-16) =
 

@@ -88,6 +88,7 @@ class FormPostInterest
 				                                                   ->createOrCompleteAddress( $pFormData,
 					                                                   $checkduplicate, $contactType);
 				$this->createSearchcriteria( $pFormData, $addressId );
+				$this->setNewsletter( $addressId );
 			}
 		} finally {
 			if ( $recipient != null ) {
@@ -112,6 +113,35 @@ class FormPostInterest
 		return $postvars;
 	}
 
+
+	/**
+	 *
+	 * @param FormData $pFormData
+	 * @return void
+	 * @throws ApiClientException
+	 * @throws Field\UnknownFieldException
+	 */
+
+	private function setNewsletter( $addressId)
+	{
+		if (!$this->_pFormPostInterestConfiguration->getNewsletterAccepted()) {
+			// No subscription for newsletter, which is ok
+			return;
+		}
+
+		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
+		$pAPIClientAction = new APIClientActionGeneric
+			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'registerNewsletter');
+		$pAPIClientAction->setParameters(['register' => true]);
+		$pAPIClientAction->setResourceId($addressId);
+		$pAPIClientAction->addRequestToQueue()->sendRequests();
+
+		if (!$pAPIClientAction->getResultStatus()) {
+			throw new ApiClientException($pAPIClientAction);
+		}
+	}
+
+
 	/**
 	 * @param FormData $pFormData
 	 * @param string $recipient
@@ -130,8 +160,9 @@ class FormPostInterest
 		$message = $values['message'] ?? '';
 		$message .= "\nSuchkriterien des Interessenten:\n".
 					"$searchCriterias";
+		$addressData = $pFormData->getAddressData( $this->getFieldsCollection() );
 		$requestParams = [
-			'addressdata' => $pFormData->getAddressData($this->getFieldsCollection()),
+			'addressdata' => $addressData,
 			'message' => $message,
 			'subject' => sanitize_text_field($subject),
 			'formtype' => $pFormData->getFormtype(),
@@ -141,6 +172,10 @@ class FormPostInterest
 
 		if ($recipient !== '') {
 			$requestParams['recipient'] = $recipient;
+		}
+		if (isset($addressData['newsletter'])) {
+			$requestParams['addressdata']['newsletter_aktiv'] = $this->_pFormPostInterestConfiguration
+				->getNewsletterAccepted();
 		}
 		$pSDKWrapper = $this->_pFormPostInterestConfiguration->getSDKWrapper();
 		$pAPIClientAction = new APIClientActionGeneric

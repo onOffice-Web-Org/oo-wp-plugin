@@ -67,6 +67,9 @@ class AdminPageFormSettingsContact
 	private $_showCheckDuplicatesInterestOwner = false;
 
 	/** @var bool */
+	private $_showNewsletterCheckbox = false;
+
+	/** @var bool */
 	private $_showGeoPositionSettings = false;
 
 	/** @var bool */
@@ -159,6 +162,11 @@ class AdminPageFormSettingsContact
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
+		if ($this->_showNewsletterCheckbox) {
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_NEWSLETTER);
+			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
 		if ($this->_showEstateContextCheckbox) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_ESTATE_CONTEXT_AS_HEADING);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
@@ -244,6 +252,10 @@ class AdminPageFormSettingsContact
 	/** @param bool $showCheckDuplicatesInterestOwner */
 	public function setShowCheckDuplicatesInterestOwner(bool $showCheckDuplicatesInterestOwner)
 		{ $this->_showCheckDuplicatesInterestOwner = $showCheckDuplicatesInterestOwner; }
+
+	/** @param bool $showNewsletterCheckbox */
+	public function setShowNewsletterCheckbox(bool $showNewsletterCheckbox)
+		{ $this->_showNewsletterCheckbox = $showNewsletterCheckbox; }
 
 	/** @param bool $showGeoPositionSettings */
 	public function setShowGeoPositionSettings(bool $showGeoPositionSettings)

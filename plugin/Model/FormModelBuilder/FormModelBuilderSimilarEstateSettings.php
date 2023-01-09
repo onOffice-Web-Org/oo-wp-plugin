@@ -40,6 +40,8 @@ use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use function __;
+use onOffice\WPlugin\WP\InstalledLanguageReader;
+use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
 
 /**
  *
@@ -150,7 +152,10 @@ class FormModelBuilderSimilarEstateSettings
 		$pFieldsCollection = new FieldsCollection();
 
 		$pFieldsCollectionBuilder
-			->addFieldsAddressEstate($pFieldsCollection);
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 		return $pFieldsCollection;
 	}
 
@@ -202,6 +207,8 @@ class FormModelBuilderSimilarEstateSettings
 
 		$pInputModelFieldsConfig->setValuesAvailable($fieldNamesArray);
 		$pInputModelFieldsConfig->setValue($fields);
+		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
+		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		return $pInputModelFieldsConfig;
 	}
 
@@ -386,5 +393,42 @@ class FormModelBuilderSimilarEstateSettings
 		$pInputModelFieldsConfig->setValue($fields);
 
 		return $pInputModelFieldsConfig;
+	}
+
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return InputModelDB
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getInputModelCustomLabel(FieldsCollection $pFieldsCollection): InputModelDB
+	{
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pInputModelBuilder = $pContainer->get(InputModelBuilderCustomLabel::class);
+		return $pInputModelBuilder->createInputModelCustomLabel($pFieldsCollection, $this->getValue('customlabel', []));
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function getInputModelCustomLabelLanguageSwitch(): InputModelDB
+	{
+		$pInputModel = new InputModelDB('customlabel_newlang',
+			__('Add custom label language', 'onoffice-for-wp-websites'));
+		$pInputModel->setTable('language-custom-label');
+		$pInputModel->setField('language');
+
+		$pLanguageReader = new InstalledLanguageReader;
+		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
+			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
+		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
+		});
+
+		return $pInputModel;
 	}
 }

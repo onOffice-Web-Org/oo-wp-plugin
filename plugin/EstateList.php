@@ -58,6 +58,7 @@ use function get_page_link;
 use function home_url;
 use function esc_attr;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 
 class EstateList
 	implements EstateListBase
@@ -474,8 +475,16 @@ class EstateList
 	public function getFieldLabel($field): string
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
-		$fieldNewName = $this->_pEnvironment->getFieldnames()->getFieldLabel($field, $recordType);
+		$pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
+			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $this->_pDataView->getListType());
 
+		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+		$fieldNewName = esc_html($label);
 		return $fieldNewName;
 	}
 
