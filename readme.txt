@@ -84,12 +84,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changed**
 
-* When the API causes an exception, previously only the error code was given. Now we output the error message, too.
+* When the API causes an error, previously only the error code was given. Now we output the error message, too.
 
 **Fixed**
 
-* Fields were added to a field list but then deactivated in onOffice enterprise could not be removed due to a bug. This was fixed, so that now deactivated fields can be removed from the field list.
-* In forms, the plugins adds a special field called "Newsletter". Previously when sending a form that contained this field, it would fail. We now have fixed the bug, so that forms with this field can be sent as expected.
+* Fields that were added to a field list but then deactivated in onOffice enterprise could not be removed due to a bug. This was fixed, so that now deactivated fields can be removed from the field list.
+* In forms, the plugin adds a special field called "Newsletter". Previously when sending a form that contained this field, it would fail. We now have fixed the bug, so that forms with this field can be sent as expected.
 
 = 4.6 (2022-12-19) =
 
