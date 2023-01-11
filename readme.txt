@@ -76,6 +76,21 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.7 (2023-01-11) =
+
+**Added**
+
+* Previously, only form fields could have custom labels. Now you can give fields from estate lists and the detail view custom labels, too.
+
+**Changed**
+
+* When the API causes an exception, previously only the error code was given. Now we output the error message, too.
+
+**Fixed**
+
+* Fields were added to a field list but then deactivated in onOffice enterprise could not be removed due to a bug. This was fixed, so that now deactivated fields can be removed from the field list.
+* In forms, the plugins adds a special field called "Newsletter". Previously when sending a form that contained this field, it would fail. We now have fixed the bug, so that forms with this field can be sent as expected.
+
 = 4.6 (2022-12-19) =
 
 **Added**
