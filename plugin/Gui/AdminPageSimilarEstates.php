@@ -60,6 +60,9 @@ use function wp_nonce_field;
 use function wp_register_script;
 use function wp_verify_nonce;
 use const ONOFFICE_PLUGIN_DIR;
+use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\WP\InstalledLanguageReader;
+use onOffice\WPlugin\Language;
 
 /**
  *
@@ -79,6 +82,9 @@ class AdminPageSimilarEstates
 
 	/** */
 	const FORM_VIEW_SORTABLE_FIELDS_CONFIG = 'viewSortableFieldsConfig';
+
+	/** */
+	const CUSTOM_LABELS = 'customlabels';
 
 	/**
 	 * @throws DependencyException
@@ -270,6 +276,9 @@ class AdminPageSimilarEstates
 
 		$pDataSimilarSettingsHandler = $this->getContainer()->get( DataSimilarEstatesSettingsHandler::class );
 		$valuesPrefixless            = $pInputModelDBAdapterArray->generateValuesArray();
+
+		$valuesPrefixless = $this->saveField($valuesPrefixless, $values);
+
 		$pDataSimilarView            = $pDataSimilarSettingsHandler->createDataSimilarEstatesSettingsByValues( $valuesPrefixless );
 		$success                     = true;
 
@@ -297,6 +306,14 @@ class AdminPageSimilarEstates
 
 		wp_enqueue_script('admin-js');
 		wp_enqueue_script('postbox');
+		wp_register_script('onoffice-custom-form-label-js',
+			plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'js/onoffice-custom-form-label.js', ['onoffice-multiselect'], '', true);
+		wp_enqueue_script('onoffice-custom-form-label-js');
+		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
+		wp_register_script('onoffice-multiselect', plugins_url('/js/onoffice-multiselect.js', $pluginPath));
+		wp_register_style('onoffice-multiselect', plugins_url('/css/onoffice-multiselect.css', $pluginPath));
+		wp_enqueue_script('onoffice-multiselect');
+		wp_enqueue_style('onoffice-multiselect');
 	}
 
 	/**
@@ -325,6 +342,8 @@ class AdminPageSimilarEstates
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the similar estates view.', 'onoffice-for-wp-websites'),
 			AdminPageEstate::PARAM_TAB => AdminPageEstate::PAGE_SIMILAR_ESTATES,
 			self::ENQUEUE_DATA_MERGE => array(AdminPageEstate::PARAM_TAB),
+			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 		);
 	}
 
@@ -376,5 +395,100 @@ class AdminPageSimilarEstates
 	private static function getSpecialDivId($module)
 	{
 		return 'actionFor' . $module;
+	}
+
+	/**
+	 *
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+
+	private function buildFieldsCollectionForCurrentEstate(): FieldsCollection
+	{
+		$pFieldsCollectionBuilder = $this->getContainer()->get( FieldsCollectionBuilderShort::class );
+		$pDefaultFieldsCollection = new FieldsCollection();
+		$pFieldsCollectionBuilder->addFieldsAddressEstate( $pDefaultFieldsCollection )
+		                         ->addFieldsAddressEstateWithRegionValues( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateGeoPosisionBackend( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateDecoratorReadAddressBackend( $pDefaultFieldsCollection );
+
+		foreach ( $pDefaultFieldsCollection->getAllFields() as $pField ) {
+			if ( ! in_array( $pField->getModule(), [ onOfficeSDK::MODULE_ESTATE ], true ) ) {
+				$pDefaultFieldsCollection->removeFieldByModuleAndName
+				( $pField->getModule(), $pField->getName() );
+			}
+
+		}
+
+		return $pDefaultFieldsCollection;
+	}
+
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFieldException
+	 */
+	private function readCustomLabels(): array
+	{
+		$result                 = [];
+		$pDataSimilarEstateViewHandler = $this->getContainer()->get( DataSimilarEstatesSettingsHandler::class );
+		$dataSimilarEstateView = $pDataSimilarEstateViewHandler->getDataSimilarEstatesSettings();
+		$dataSimilarEstateCustomLabel         = $dataSimilarEstateView->getDataViewSimilarEstates();
+		$pLanguage              = $this->getContainer()->get( Language::class );
+
+		foreach ( $this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField ) {
+			$valuesByLocale = $dataSimilarEstateCustomLabel->getCustomLabels();
+			$currentLocale  = $pLanguage->getLocale();
+			$valuesByLocale = $valuesByLocale[ $pField->getName() ];
+
+			if ( isset( $valuesByLocale[ $currentLocale ] ) ) {
+				$valuesByLocale['native'] = $valuesByLocale[ $currentLocale ];
+				unset( $valuesByLocale[ $currentLocale ] );
+			}
+			$result[ $pField->getName() ] = $valuesByLocale;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param array $valuesPrefixless
+	 * @param string $value
+	 */
+	private function saveField( array $valuesPrefixless, $values )
+	{
+		$data        = [];
+		$customLabel = (array) ( $values->{'customlabel-lang'} );
+
+		foreach ( $customLabel as $key => $value ) {
+			$data[ $key ] = $this->addLocaleToModelForField( $value );
+		}
+		$valuesPrefixless['oo_plugin_fieldconfig_estate_translated_labels'] =
+			(array) ( $valuesPrefixless['oo_plugin_fieldconfig_form_translated_labels']['value'] ?? [] ) +
+			( $data );
+
+		return $valuesPrefixless;
+	}
+
+	/**
+	 * @param array $value
+	 */
+	private function addLocaleToModelForField( $value )
+	{
+		$pLanguage = $this->getContainer()->get( Language::class );
+
+		foreach ( $value as $locale => $values ) {
+			$value = (array) $value;
+			if ( $locale === 'native' ) {
+				$value[ $pLanguage->getLocale() ] = $values;
+				unset( $value['native'] );
+			}
+		}
+
+		return $value;
 	}
 }

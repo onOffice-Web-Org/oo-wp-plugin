@@ -62,13 +62,13 @@ class CustomLabelRowSaver
 	 * @throws RecordManagerInsertException
 	 * @throws UnknownFieldException
 	 */
-	public function saveCustomLabels(int $formId, array $row, FieldsCollection $pUsedFieldsCollection)
+	public function saveCustomLabels(int $formId, array $row, FieldsCollection $pUsedFieldsCollection, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField)
 	{
 		foreach ($row as $field => $values) {
 			$values = is_object($values) ? (array)$values : $values;
 			if ($values !== [] && $values !== '') {
 				$pField = $pUsedFieldsCollection->getFieldByKeyUnsafe($field);
-				$this->saveForFoundType($formId, $pField, $values);
+				$this->saveForFoundType($formId, $pField, $values, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
 			}
 		}
 	}
@@ -79,9 +79,9 @@ class CustomLabelRowSaver
 	 * @param mixed $values
 	 * @throws RecordManagerInsertException
 	 */
-	private function saveForFoundType(int $formId, Field $pField, $values)
+	private function saveForFoundType(int $formId, Field $pField, $values, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField)
 	{
-		$this->saveField($formId, $pField, $values);
+		$this->saveField($formId, $pField, $values, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
 	}
 
 	/**
@@ -91,14 +91,14 @@ class CustomLabelRowSaver
 	 * @param array $values
 	 * @throws RecordManagerInsertException
 	 */
-	private function saveField(int $formId, Field $pField, array $values)
+	private function saveField(int $formId, Field $pField, array $values, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField)
 	{
 		$pModel = new CustomLabelModelField($formId, $pField);
 
 		foreach ($values as $locale => $value) {
 			$this->addLocaleToModelForField($pModel, $locale, $value);
 		}
-		$this->_pCustomLabelCreate->createForField($pModel);
+		$this->_pCustomLabelCreate->createForField($pModel, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
 	}
 
 	/**

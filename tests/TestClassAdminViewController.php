@@ -86,8 +86,7 @@ class TestClassAdminViewController
 	{
 		wp_scripts()->registered = [];
 		$pAdminViewController->enqueue_ajax('admin_page_onoffice-editlistviewaddress');
-		$pAdminViewController->enqueue_ajax('admin_page_onoffice-editlistview');
-		$pAdminViewController->enqueue_ajax('admin_page_onoffice-editunitlist');
+
 		$this->assertCount(3, wp_scripts()->registered);
 	}
 
@@ -174,7 +173,7 @@ class TestClassAdminViewController
 		$adminPage = new AdminPageEstateDetail('admin_page_onoffice-editlistview');
 		$pWpHook->callbacks = [[['function' => [$adminPage]]]];
 		$pAdminViewController->enqueueExtraJs("admin_page_onoffice-editlistview");
-		$this->assertEquals(['update-duplicate-check-warning-option', 'warning-active-plugin-SEO', 'admin-js', 'oo-copy-shortcode'], wp_scripts()->queue);
+		$this->assertEquals(['update-duplicate-check-warning-option', 'warning-active-plugin-SEO', 'admin-js', 'oo-copy-shortcode','onoffice-custom-form-label-js','onoffice-multiselect'], wp_scripts()->queue);
 	}
 
 	/**

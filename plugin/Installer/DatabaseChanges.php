@@ -44,7 +44,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 35;
+	const MAX_VERSION = 36;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -261,6 +261,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ( $dbversion == 34 ) {
 			dbDelta( $this->getCreateQueryFormFieldConfig() );
 			$dbversion = 35;
+		}
+
+		if ( $dbversion == 35 ) {
+			dbDelta( $this->getCreateQueryFieldConfigEstateCustomsLabels() );
+			dbDelta( $this->getCreateQueryFieldConfigEstateTranslatedLabels() );
+			$dbversion = 36;
 		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
@@ -651,6 +657,43 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 
 	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigEstateCustomsLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_estate_customs_labels";
+		$sql = "CREATE TABLE $tableName (
+			`customs_labels_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`form_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`customs_labels_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigEstateTranslatedLabels(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix . "oo_plugin_fieldconfig_estate_translated_labels";
+		$sql = "CREATE TABLE $tableName (
+			`customs_labels_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`input_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			PRIMARY KEY (`customs_labels_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+	/**
 	 *
 	 */
 
@@ -688,6 +731,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDataViewSimilarEstatesNew->setRadius($dataDetailViewSimilarEstates->getRadius());
 			$pDataViewSimilarEstatesNew->setRecordsPerPage($dataDetailViewSimilarEstates->getRecordsPerPage());
 			$pDataViewSimilarEstatesNew->setTemplate($dataDetailViewSimilarEstates->getTemplate());
+			$pDataViewSimilarEstatesNew->setCustomLabels($dataDetailViewSimilarEstates->getCustomLabels());
 			$pDataSimilarViewOptions->setDataViewSimilarEstates($pDataViewSimilarEstatesNew);
 			$this->_pWpOption->addOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
 		}
@@ -796,6 +840,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_form_defaults_values",
 			$prefix."oo_plugin_fieldconfig_form_customs_labels",
 			$prefix."oo_plugin_fieldconfig_form_translated_labels",
+			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
+			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
 		);
 
 		foreach ($tables as $table)	{

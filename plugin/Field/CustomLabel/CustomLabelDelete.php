@@ -48,15 +48,15 @@ class CustomLabelDelete
 	 * @param array $fieldNames
 	 * @throws CustomLabelDeleteException
 	 */
-	public function deleteByFormIdAndFieldNames(int $formId, array $fieldNames)
+	public function deleteByFormIdAndFieldNames(int $formId, array $fieldNames, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField)
 	{
 		if ($fieldNames === []) {
 			return;
 		}
 
-		$query = $this->getBaseDeleteQuery() . " WHERE "
-			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.form_id = '" . esc_sql($formId) . "' AND "
-			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.fieldname IN('"
+		$query = $this->getBaseDeleteQuery($pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField) . " WHERE "
+			. "{$this->_pWPDB->prefix}$pCustomsLabelConfigurationField.form_id = '" . esc_sql($formId) . "' AND "
+			. "{$this->_pWPDB->prefix}$pCustomsLabelConfigurationField.fieldname IN('"
 			. implode("', '", esc_sql($fieldNames))
 			. "')";
 
@@ -69,10 +69,10 @@ class CustomLabelDelete
 	 * @param int $defaultId
 	 * @throws CustomLabelDeleteException
 	 */
-	public function deleteSingleCustomLabelById(int $defaultId)
+	public function deleteSingleCustomLabelById(int $defaultId, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField)
 	{
-		$query = $this->getBaseDeleteQuery() . " WHERE "
-			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id = %d";
+		$query = $this->getBaseDeleteQuery($pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField) . " WHERE "
+			. "{$this->_pWPDB->prefix}$pCustomsLabelConfigurationField.customs_labels_id = %d";
 
 		if (!$this->_pWPDB->query($this->_pWPDB->prepare($query, $defaultId))) {
 			throw new CustomLabelDeleteException();
@@ -84,12 +84,12 @@ class CustomLabelDelete
 	 * @param string $fieldname
 	 * @throws CustomLabelDeleteException
 	 */
-	public function deleteSingleCustomLabelByFieldname(int $formId, string $fieldname, string $locale = null)
+	public function deleteSingleCustomLabelByFieldname(int $formId, string $fieldname, string $locale = null, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField)
 	{
-		$query = $this->getBaseDeleteQuery() . " WHERE "
-			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.form_id = %d AND "
-			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.fieldname = %s AND "
-			. "{$this->_pWPDB->prefix}oo_plugin_fieldconfig_form_customs_labels.locale = %s";
+		$query = $this->getBaseDeleteQuery($pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField) . " WHERE "
+			. "{$this->_pWPDB->prefix}$pCustomsLabelConfigurationField.form_id = %d AND "
+			. "{$this->_pWPDB->prefix}$pCustomsLabelConfigurationField.fieldname = %s AND "
+			. "{$this->_pWPDB->prefix}$pCustomsLabelConfigurationField.locale = %s";
 
 		if (false === $this->_pWPDB->query($this->_pWPDB->prepare($query, $formId, $fieldname, $locale))) {
 			throw new CustomLabelDeleteException();
@@ -99,12 +99,12 @@ class CustomLabelDelete
 	/**
 	 * @return string
 	 */
-	private function getBaseDeleteQuery(): string
+	private function getBaseDeleteQuery($pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField): string
 	{
 		$prefix = $this->_pWPDB->prefix;
-		return "DELETE {$prefix}oo_plugin_fieldconfig_form_customs_labels, {$prefix}oo_plugin_fieldconfig_form_translated_labels "
-			. "FROM {$prefix}oo_plugin_fieldconfig_form_customs_labels "
-			. "INNER JOIN {$prefix}oo_plugin_fieldconfig_form_translated_labels "
-			. "ON {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id = {$prefix}oo_plugin_fieldconfig_form_translated_labels.input_id";
+		return "DELETE {$prefix}$pCustomsLabelConfigurationField, {$prefix}$pTranslateLabelConfigurationField "
+			. "FROM {$prefix}$pCustomsLabelConfigurationField "
+			. "INNER JOIN {$prefix}$pTranslateLabelConfigurationField "
+			. "ON {$prefix}$pCustomsLabelConfigurationField.customs_labels_id = {$prefix}$pTranslateLabelConfigurationField.input_id";
 	}
 }

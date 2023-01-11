@@ -75,7 +75,7 @@ class TestClassCustomLabelRead
 		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
 		$pField = new Field('testField', 'testModule');
 
-		$pResult = $this->_pSubject->readCustomLabelsField($formId, $pField);
+		$pResult = $this->_pSubject->readCustomLabelsField($formId, $pField,'oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
 		$this->assertInstanceOf(CustomLabelModelField::class, $pResult);
 		$this->assertEquals($pReference, $pResult);
 	}

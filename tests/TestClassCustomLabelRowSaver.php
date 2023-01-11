@@ -75,7 +75,7 @@ class TestClassCustomLabelRowSaver
 		$pFieldsCollection = $this->buildFieldsCollection();
 		$this->_pSubject->saveCustomLabels(13, [
 			'testField' => self::EXAMPLE_RECORDS['testField'],
-		], $pFieldsCollection);
+		], $pFieldsCollection, 'oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
 	}
 
 	/**
