@@ -98,7 +98,7 @@ class ContentFilterShortCodeEstateDetail
 		$linkEstateDetail  = __( "https://wp-plugin.onoffice.com/en/first-steps/estate-lists/",
 			'onoffice-for-wp-websites' );
 		$linkEstateDetail  = '<a href=' . $linkEstateDetail . '>' . $estateTitle . '</a>';
-		$description       = sprintf( __( "The plugin could find any estates. Please make sure that you have published some estates, as described in the %s",
+		$description       = sprintf( __( "The plugin couldn't find any estates. Please make sure that you have published some estates, as described in the %s",
 			'onoffice-for-wp-websites' ), $linkEstateDetail );
 		if ( ! empty( $pDataEstateDetail ) ) {
 			$titleDefault     = __( 'Example estate', 'onoffice-for-wp-websites' );
