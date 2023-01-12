@@ -20,6 +20,7 @@
 
 namespace onOffice\WPlugin\Field;
 
+use Exception;
 use NumberFormatter;
 use onOffice\WPlugin\Language;
 
