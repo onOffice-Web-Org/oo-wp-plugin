@@ -59,6 +59,7 @@ use function home_url;
 use function esc_attr;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\FieldParkingLot;
 
 class EstateList
 	implements EstateListBase
@@ -425,7 +426,7 @@ class EstateList
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
 		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
-		if (!empty($fieldWaehrung['permittedvalues'])) {
+		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
 			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
 		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
@@ -441,8 +442,13 @@ class EstateList
 				echo '<meta name="description" content="' . esc_attr( $recordModified["objektbeschreibung"] ?? null ) . '" />';
 			} );
 		}
+		$recordModified = new ArrayContainerEscape($recordModified);
+		if ($recordModified['multiParkingLot']) {
+			$parking = new FieldParkingLot();
+			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
+		}
 
-		return new ArrayContainerEscape( $recordModified );
+		return $recordModified;
 	}
 
 	public function custom_pre_get_document_title($title_parts_array, $recordModified) {

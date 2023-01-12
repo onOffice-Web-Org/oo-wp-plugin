@@ -108,13 +108,6 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 							if ( $value == "" ) {
 								continue;
 							}
-							if ($field == 'multiParkingLot') {
-								$valuesField = $currentEstate->getValueRaw($field);
-								$value = renderParkingLot($valuesField, $currentEstate);
-								if ( empty($value) ) {
-									continue;
-								}
-							}
 							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
 						} ?>
 					</div>
