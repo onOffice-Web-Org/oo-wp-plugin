@@ -52,7 +52,10 @@ jQuery(document).ready(function($){
 	$('.item-delete-link').click(function() {
 		var labelButtonHandleField= $(this).parent().parent().attr('action-field-name');
 		var data = document.querySelector("."+labelButtonHandleField);
-
+		if(data === null){
+			$(this).parent().parent().remove();
+			return;
+		}
 		$(data).children().first().removeClass("dashicons-remove");
 		$(data).children().first().addClass("dashicons-insert");
 		$(data).children().next().css("opacity", "1");

@@ -257,7 +257,7 @@ class TestClassContentFilterShortCodeEstateDetail
 		$pEstateDetailFactory->method( 'is_user_logged_in' )->willReturn( is_user_logged_in() );
 
 		$this->assertTrue( $pEstateDetailFactory->is_user_logged_in() );
-		$this->assertEquals( '<div><p>You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</p><p>Since you are logged in, here is a link to a random estate so that you can preview the detail page:</p><a href=http://example.org/detail/123649/>abc</a></div>',
+		$this->assertEquals( '<div><p>You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.</p><p>Since you are logged in, here is a link to a random estate so that you can preview the detail page: <br><a href=http://example.org/detail/123649/>abc</a></p></div>',
 			$pEstateDetailFactory->renderHtmlHelperUserIfEmptyEstateId() );
 	}
 
