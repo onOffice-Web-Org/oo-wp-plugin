@@ -94,13 +94,18 @@ class ContentFilterShortCodeEstateDetail
 	public function renderHtmlHelperUserIfEmptyEstateId()
 	{
 		$pEstateDetail    = $this->getRandomEstateDetail();
-		$ramdomEstateLink = $this->getEstateLink( $pEstateDetail );
+		$estateTitle = __("estate list documentation", 'onoffice-for-wp-websites');
+		$ramdomEstateLink = __("https://wp-plugin.onoffice.com/en/first-steps/estate-lists/", 'onoffice-for-wp-websites');
+
+		if(!empty($pEstateDetail)){
+			$titleDefault = __( 'Example estate', 'onoffice-for-wp-websites' );
+			$estateTitle  = $pEstateDetail['elements']["objekttitel"] !== '' ? $pEstateDetail['elements']["objekttitel"] : $titleDefault;
+			$ramdomEstateLink = $this->getEstateLink( $pEstateDetail );
+		}
 		$html = '<div>';
 		$html .= '<p>' . __( 'You have opened the detail page, but we do not know which estate to show you, because there is no estate ID in the URL. Please go to an estate list and open an estate from there.',
 				'onoffice-for-wp-websites' ) . '</p>';
 		if ( is_user_logged_in() ) {
-			$titleDefault = __( 'Example estate', 'onoffice-for-wp-websites' );
-			$estateTitle  = $pEstateDetail['elements']["objekttitel"] !== '' ? $pEstateDetail['elements']["objekttitel"] : $titleDefault;
 			$html         .= '<p>' . __( 'Since you are logged in, here is a link to a random estate so that you can preview the detail page:',
 					'onoffice-for-wp-websites' ) . '</p>';
 			$html         .= '<a href=' . $ramdomEstateLink . '>' . $estateTitle . '</a>';
@@ -138,9 +143,12 @@ class ContentFilterShortCodeEstateDetail
 				$pEstateDetail[] = $pEstateListDetails;
 			};
 		}
-		$randomIdDetail = array_rand( $pEstateDetail, 1 );
-
-		return $pEstateDetail[ $randomIdDetail ];
+		if(!empty($pEstateDetail)){
+			$randomIdDetail = array_rand( $pEstateDetail, 1 );
+			return $pEstateDetail[ $randomIdDetail ];
+		}else {
+			return [];
+		}
 	}
 
 	/**
