@@ -57,6 +57,19 @@ class InputFieldSelectRenderer
 
 	public function render()
 	{
+		$textHtml = '';
+		if ( ! empty( $this->getHint() ) ) {
+			if($this->getName() === "oopluginlistviews-showreferenceestate"){
+				$textHtml = '<div class="memssageReference">' . $this->getHint() . '</div>';
+				echo '<script>'
+					.'if (jQuery("select[name=oopluginlistviews-showreferenceestate").val() === "0") {'
+					.  'jQuery(".memssageReference").hide();'
+					.'}';
+				echo '</script>';
+			} else {
+				$textHtml = '<div style="text-align: right">' . $this->getHint() . '</div>';
+			}
+		}
 		echo '<select name="'.esc_html($this->getName()).'" '
 			 .($this->_multiple ? ' multiple = "multiple" ' : null)
 			 .$this->renderAdditionalAttributes()
@@ -75,15 +88,7 @@ class InputFieldSelectRenderer
 			}
 		}
 
-		echo '</select>';
-		if ( $this->getHint() ) {
-			echo '<div class="memssageReference">' . $this->getHint() . '</div>';
-			echo '<script>'
-			     .'if (jQuery("select[name=oopluginlistviews-showreferenceestate").val() === "0") {'
-			     .  'jQuery(".memssageReference").hide();'
-			     .'}';
-			echo '</script>';
-		}
+		echo '</select>'. $textHtml;
 	}
 
 
