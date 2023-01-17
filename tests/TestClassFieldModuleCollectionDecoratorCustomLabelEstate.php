@@ -29,13 +29,14 @@ use Generator;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
 use onOffice\WPlugin\Field\FieldModuleCollection;
-use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelForm;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelEstate;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use WP_UnitTestCase;
 use wpdb;
+use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 
 /**
  *
@@ -43,11 +44,11 @@ use wpdb;
  * @copyright 2003-2018, onOffice(R) GmbH
  *
  */
-class TestClassFieldModuleCollectionDecoratorCustomLabel
+class TestClassFieldModuleCollectionDecoratorCustomLabelEstate
 	extends WP_UnitTestCase
 {
-	/** @var RecordManagerReadForm */
-	private $_pRecordManagerReadForm = null;
+	/** @var RecordManagerReadListViewEstate */
+	private $_pRecordManagerReadListViewEstate = null;
 
 	/** @var CustomLabelRead */
 	private $_pCustomLabelRead = null;
@@ -82,33 +83,25 @@ class TestClassFieldModuleCollectionDecoratorCustomLabel
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
 
-		$this->_pRecordManagerReadForm = $this->getMockBuilder(RecordManagerReadForm::class)
+		$this->_pRecordManagerReadListViewEstate = $this->getMockBuilder(RecordManagerReadListViewEstate::class)
 			->getMock();
-		$this->_pRecordManagerReadForm->method('readFieldsByFormId')->will($this->returnValueMap([
-			[1, $this->getBasicFieldsArray(1, Form::TYPE_CONTACT)]
+		$this->_pRecordManagerReadListViewEstate->method('getFieldconfigByListviewId')->will($this->returnValueMap([
+			[1, $this->getBasicFieldsArray(1)]
 		]));
-
-		$this->_pRecordManagerReadForm->method('getRowByName')->will($this->returnValueMap([
-			['testForm1', $this->getBaseRow(1, Form::TYPE_CONTACT)]
-		]));
-
-		$this->_pContainer->set(RecordManagerReadForm::class, $this->_pRecordManagerReadForm);
-		$pFieldsCollectionByFormIds = $this->_pContainer->get(RecordManagerReadForm::class)->readFieldsByFormId(1);
+		$this->_pRecordManagerReadListViewEstate->method('getRowByName')->will($this->returnValue(
+			$this->getBaseRow(1)
+		));
+		$this->_pContainer->set(RecordManagerReadListViewEstate::class, $this->_pRecordManagerReadListViewEstate);
+		$pFieldsCollectionByFormIds = $this->_pContainer->get(RecordManagerReadListViewEstate::class)->getFieldconfigByListviewId(1);
 
 		$this->_pFieldModuleCollection = new FieldsCollection();
 		foreach ($pFieldsCollectionByFormIds as $pFieldsCollectionByFormId) {
 			$this->_pFieldModuleCollection->addField(new Field($pFieldsCollectionByFormId['fieldname'],
-				onOfficeSDK::MODULE_ADDRESS));
-			$this->_pFieldModuleCollection->addField(new Field($pFieldsCollectionByFormId['fieldname'],
-				onOfficeSDK::MODULE_SEARCHCRITERIA));
-			$this->_pFieldModuleCollection->addField(new Field($pFieldsCollectionByFormId['fieldname'],
 				onOfficeSDK::MODULE_ESTATE));
-			$this->_pFieldModuleCollection->addField(new Field($pFieldsCollectionByFormId['fieldname'],
-				''));
 			$this->_pWPDBMock->method('get_results')->will($this->returnValue($rows));
 			$this->_pCustomLabelRead = new CustomLabelRead($this->_pWPDBMock);
 			$this->_pCustomLabelRead->readCustomLabelByFormIdAndFieldName(1, $pFieldsCollectionByFormId['fieldname'],
-				'de_DE','oo_plugin_fieldconfig_form_customs_labels','oo_plugin_fieldconfig_form_translated_labels');
+				'de_DE','oo_plugin_fieldconfig_estate_customs_labels','oo_plugin_fieldconfig_estate_translated_labels');
 		}
 		$this->_pContainer->set(CustomLabelRead::class, $this->_pCustomLabelRead);
 	}
@@ -120,10 +113,11 @@ class TestClassFieldModuleCollectionDecoratorCustomLabel
 
 	public function testGetAllFields()
 	{
-		$pDecoratorCustomLabel = new FieldModuleCollectionDecoratorCustomLabelForm($this->_pFieldModuleCollection,
-			'testForm1', $this->_pContainer);
+		$pDecoratorCustomLabel = new FieldModuleCollectionDecoratorCustomLabelEstate($this->_pFieldModuleCollection,
+			'testListViewId1', 'default', $this->_pContainer);
 		$fieldCustomLabels = $pDecoratorCustomLabel->getFieldCustomLabels();
 		$cloneFields = array();
+
 		foreach ($pDecoratorCustomLabel->getAllFields() as $key => $field) {
 			$cloneFields[$key] = clone $field;
 			$module = $cloneFields[$key]->getModule();
@@ -138,58 +132,40 @@ class TestClassFieldModuleCollectionDecoratorCustomLabel
 
 	/**
 	 *
-	 * @param int $formId
-	 * @param string $formType
+	 * @param int $estateId
 	 * @return array
 	 *
 	 */
 
-	private function getBasicFieldsArray(int $formId, string $formType): array
+	private function getBasicFieldsArray(int $estateId): array
 	{
 		$fields = [
 			[
-				'form_fieldconfig_id' => '1',
-				'form_id' => $formId,
+				'fieldconfig_id' => '1',
+				'listview_id' => $estateId,
 				'order' => '1',
 				'fieldname' => 'Test 1',
 				'fieldlabel' => 'Field label 1',
-				'module' => onOfficeSDK::MODULE_ADDRESS,
-				'individual_fieldname' => '0',
+				'hidden' => '0',
 				'availableOptions' => '0',
-				'required' => '1',
 			],
 			[
-				'form_fieldconfig_id' => '1',
-				'form_id' => $formId,
+				'fieldconfig_id' => '1',
+				'listview_id' => $estateId,
 				'order' => '1',
 				'fieldname' => 'Test 3',
 				'fieldlabel' => 'Field label 3',
-				'module' => onOfficeSDK::MODULE_SEARCHCRITERIA,
-				'individual_fieldname' => '0',
+				'hidden' => '0',
 				'availableOptions' => '0',
-				'required' => '1',
 			],
 			[
-				'form_fieldconfig_id' => '1',
-				'form_id' => $formId,
+				'fieldconfig_id' => '1',
+				'listview_id' => $estateId,
 				'order' => '1',
 				'fieldname' => 'Test 3',
 				'fieldlabel' => 'Field label 3',
-				'module' => onOfficeSDK::MODULE_ESTATE,
-				'individual_fieldname' => '0',
+				'hidden' => '0',
 				'availableOptions' => '0',
-				'required' => '1',
-			],
-			[
-				'form_fieldconfig_id' => '1',
-				'form_id' => $formId,
-				'order' => '1',
-				'fieldname' => 'Test 4',
-				'fieldlabel' => 'Field label 4',
-				'module' => '',
-				'individual_fieldname' => '0',
-				'availableOptions' => '0',
-				'required' => '1',
 			],
 		];
 
@@ -198,29 +174,44 @@ class TestClassFieldModuleCollectionDecoratorCustomLabel
 
 	/**
 	 *
-	 * @param int $formId
-	 * @param string $formType
+	 * @param int $estateId
 	 * @return array
 	 *
 	 */
 
-	private function getBaseRow(int $formId, string $formType): array
+	private function getBaseRow(int $listviewId): array
 	{
 		return [
-			'form_id' => $formId,
-			'name' => 'testForm' . $formId,
-			'form_type' => $formType,
+			'listview_id' => $listviewId,
+			'name' => 'testListViewId' . $listviewId,
+			'filterId' => '0',
+			'sortby' => 'test',
+			'sortorder' => 'ASC',
+			'show_status' => '0',
+			'list_type' => 'default',
 			'template' => 'testtemplate.php',
-			'recipient' => 'test@my-onoffice.com',
-			'subject' => 'A Subject',
-			'createaddress' => '1',
-			'limitresults' => '30',
-			'checkduplicates' => '1',
-			'pages' => '3',
-			'captcha' => '1',
-			'newsletter' => '1',
-			'availableOptions' => '1',
-			'show_estate_context' => '0',
+			'expose' => '',
+			'recordsPerPage' => '20',
+			'random' => '0',
+			'country_active' => '0',
+			'zip_active' => '1',
+			'city_active' => '0',
+			'street_active' => '0',
+			'radius_active' => '1',
+			'radius' => '10',
+			'geo_order' => 'street,zip,city,country,radius',
+			'sortBySetting' => '',
+			'sortByUserDefinedDefault' => '',
+			'sortByUserDefinedDirection' => '0',
+			'pictures' => [],
+			'sortbyuservalues' => [],
+			'fields' => [
+				'test1',
+				'test2'
+			],
+			'filterable' => [],
+			'hidden' => [],
+			'availableOptions' => []
 		];
 	}
 }

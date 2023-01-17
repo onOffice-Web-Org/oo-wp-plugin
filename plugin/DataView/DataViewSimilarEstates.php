@@ -71,6 +71,9 @@ class DataViewSimilarEstates
 	const FIELD_SIMILAR_ESTATES_TEMPLATE = 'similar_estates_template';
 
 
+	/** */
+	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_estate_translated_labels';
+
 	/** @var bool */
 	private $_sameEstateKind = true;
 
@@ -89,6 +92,8 @@ class DataViewSimilarEstates
 	/** @var string */
 	private $_template = '';
 
+	/** @var array */
+	private $_customLabel = [];
 
 	/** @param bool $sameEstateKind */
 	public function setSameEstateKind(bool $sameEstateKind)
@@ -177,4 +182,12 @@ class DataViewSimilarEstates
 	/** @return bool */
 	public function getRandom(): bool
 		{ return false;	}
+
+	/** @return array */
+	public function getCustomLabels()
+		{ return $this->_customLabel; }
+
+	/** @param array */
+	public function setCustomLabels(array $customLabel)
+		{ $this->_customLabel = $customLabel;	}
 }

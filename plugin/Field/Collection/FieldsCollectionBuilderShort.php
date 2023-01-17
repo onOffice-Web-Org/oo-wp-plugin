@@ -38,6 +38,9 @@ use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Record\RecordManagerReadForm;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelEstate;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionBackend;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorReadAddress;
 
 
 /**
@@ -130,6 +133,36 @@ class FieldsCollectionBuilderShort
 	 * @throws NotFoundException
 	 */
 
+	public function addFieldsEstateDecoratorReadAddressBackend(FieldsCollection $pFieldsCollection): self
+	{
+		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection);
+		$pFieldsCollection->merge($pFieldsCollectionTmp);
+		return $this;
+	}
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function addFieldsEstateGeoPosisionBackend(FieldsCollection $pFieldsCollection): self
+	{
+		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorGeoPositionBackend(new FieldsCollection);
+		$pFieldsCollection->merge($pFieldsCollectionTmp);
+		return $this;
+	}
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
 	public function addFieldsFormFrontend(FieldsCollection $pFieldsCollection): self
 	{
 		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorFormContact
@@ -161,6 +194,25 @@ class FieldsCollectionBuilderShort
 		return $this;
 	}
 
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @param string $formName
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws UnknownFormException
+	 */
+
+	 public function addCustomLabelFieldsEstateFrontend(FieldsCollection $pFieldsCollection, $formName, $typeList): self
+	 {
+		 $pFieldsCollectionTmp = new FieldModuleCollectionDecoratorCustomLabelEstate($pFieldsCollection, $formName, $typeList);
+		 $pFieldsCollection->merge($pFieldsCollectionTmp);
+		 $pFieldCategoryConverterGeoPos = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoFrontend::class);
+		 $pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
+		 $pFieldsCollection->merge($pFieldsCollectionGeo);
+		 return $this;
+	 }
 	/**
 	 *
 	 * @param FieldCategoryToFieldConverter $pConverter

@@ -128,5 +128,8 @@ class DataSimilarEstatesSettingsHandler
 		$pDataViewSimilar->setTemplate
 			($row[DataViewSimilarEstates::FIELD_SIMILAR_ESTATES_TEMPLATE] ??
 				$pDataViewSimilar->getTemplate());
+		$pDataViewSimilar->setCustomLabels
+			($row[DataViewSimilarEstates::FIELD_CUSTOM_LABEL] ??
+				$pDataViewSimilar->getCustomLabels());
 	}
 }

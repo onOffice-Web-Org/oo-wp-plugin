@@ -32,6 +32,10 @@ use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\Model\InputModelOption;
 use WP_UnitTestCase;
+use DI\Container;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\FieldsCollection;
+use DI\ContainerBuilder;
 
 class TestClassFormModelBuilderDBEstateListSettings
 	extends WP_UnitTestCase
@@ -495,6 +499,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals('select', $pInputModelDB->getHtmlType());
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelEmbedCode
+	 */
 	public function testCreateInputModelEmbedCode()
 	{
 		$pFormModelBuilderDBEstateListSettings = new FormModelBuilderDBEstateListSettings();
@@ -503,6 +510,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals($pInputModelFormEmbedCode->getHtmlType(), 'label');
 	}
 
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelButton
+	 */
 	public function testCreateInputModelButton()
 	{
 		$pFormModelBuilderDBEstateListSettings = new FormModelBuilderDBEstateListSettings();
@@ -511,7 +521,9 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals($pInputModelButton->getHtmlType(), 'button');
 	}
 
-
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createButtonModelFieldsConfigByCategory
+	 */
 	public function testCreateButtonModelFieldsConfigByCategory()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
@@ -527,4 +539,121 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelCustomLabelLanguageSwitch
+	 */
+	public function testGetInputModelCustomLabelLanguageSwitch()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['readAvailableLanguageNamesUsingNativeName'])
+		                  ->getMock();
+						  
+		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();
+        $this->assertInstanceOf(InputModelDB::class, $inputModel);
+        $this->assertEquals('Add custom label language', $inputModel->getLabel());
+        $this->assertEquals('language-custom-label', $inputModel->getTable());
+        $this->assertEquals('language', $inputModel->getField());
+
+        $values = $inputModel->getValuesAvailable();
+
+        $this->assertContains('Choose Language', $values);
+        $this->assertNotContains(get_locale(), $values);
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelSortingSelection
+	 */
+	public function testCreateInputModelSortingSelection()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('0');
+
+		$pInputModelDB = $pInstance->createInputModelSortingSelection();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getValue(), '0');
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelAvailableOptions
+	 */
+	public function testGetInputModelAvailableOptions()
+	{
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+
+		$pInputModelDB = $pInstance->getInputModelAvailableOptions();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
+		$this->assertEquals([$pInstance, 'callbackValueInputModelAvailableOptions'], $pInputModelDB->getValueCallback());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelIsHidden
+	 */
+	public function testGetInputModelIsHidden()
+	{
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+
+		$pInputModelDB = $pInstance->getInputModelIsHidden();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals(InputModelBase::HTML_TYPE_CHECKBOX, $pInputModelDB->getHtmlType());
+		$this->assertEquals([$pInstance, 'callbackValueInputModelIsHidden'], $pInputModelDB->getValueCallback());
+	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::callbackValueInputModelIsHidden
+	 */
+	public function testCallbackValueInputModelIsHidden()
+    {
+        $key = 'field_key';
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+		$pInputModelBase = new InputModelDB('testInput', 'testLabel');
+		$pInputModelBase->setValue('bonjour');
+		$pInputModelBase->setValuesAvailable('field_key');
+
+		$pInstance->callbackValueInputModelIsHidden($pInputModelBase, $key);
+        
+        $this->assertFalse($pInputModelBase->getValue());
+        $this->assertEquals($key, $pInputModelBase->getValuesAvailable());
+    }
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::callbackValueInputModelIsFilterable
+	 */
+	public function testCallbackValueInputModelIsFilterable()
+    {
+        $key = 'field_key2';
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+		$pInputModelBase = new InputModelDB('testInput', 'testLabel');
+		$pInputModelBase->setValue('bonjour');
+		$pInputModelBase->setValuesAvailable('field_key');
+
+		$pInstance->callbackValueInputModelIsHidden($pInputModelBase, $key);
+        
+        $this->assertFalse($pInputModelBase->getValue());
+        $this->assertEquals($key, $pInputModelBase->getValuesAvailable());
+    }
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::callbackValueInputModelAvailableOptions
+	 */
+	public function testCallbackValueInputModelAvailableOptions()
+    {
+        $key = 'field_key3';
+		$pInstance = new FormModelBuilderDBEstateListSettings();
+		$pInputModelBase = new InputModelDB('testInput', 'testLabel');
+		$pInputModelBase->setValue('bonjour');
+		$pInputModelBase->setValuesAvailable('field_key');
+
+		$pInstance->callbackValueInputModelIsHidden($pInputModelBase, $key);
+        
+        $this->assertFalse($pInputModelBase->getValue());
+        $this->assertEquals($key, $pInputModelBase->getValuesAvailable());
+    }
 }

@@ -53,9 +53,9 @@ class CustomLabelRead
 	 * @param Field $pField
 	 * @return CustomLabelModelField
 	 */
-	public function readCustomLabelsField(int $formId, Field $pField): CustomLabelModelField
+	public function readCustomLabelsField(int $formId, Field $pField, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField): CustomLabelModelField
 	{
-		$query = $this->createBaseQuery($formId, $pField);
+		$query = $this->createBaseQuery($formId, $pField, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
 		$rows = $this->_pWPDB->get_results($query, OBJECT);
 		$pDataModel = new CustomLabelModelField($formId, $pField);
 
@@ -72,9 +72,9 @@ class CustomLabelRead
 	 * @param $current_lang
 	 * @return array
 	 */
-	public function readCustomLabelByFormIdAndFieldName(int $formId, $field, $current_lang): array
+	public function readCustomLabelByFormIdAndFieldName(int $formId, $field, $current_lang, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField): array
 	{
-		$query = $this->createCustomsLabelsByFormIdQuery($formId, $field, $current_lang);
+		$query = $this->createCustomsLabelsByFormIdQuery($formId, $field, $current_lang, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
 		return $this->_pWPDB->get_results($query, OBJECT);
 	}
 
@@ -84,18 +84,18 @@ class CustomLabelRead
 	 * @param Field $pField
 	 * @return string
 	 */
-	private function createBaseQuery(int $formId, Field $pField): string
+	private function createBaseQuery(int $formId, Field $pField, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField): string
 	{
 		$prefix = $this->_pWPDB->prefix;
-		$query = "SELECT {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id,"
-			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.locale,\n"
-			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.value\n"
-			. "FROM {$prefix}oo_plugin_fieldconfig_form_customs_labels\n"
-			. "INNER JOIN {$prefix}oo_plugin_fieldconfig_form_translated_labels\n"
-			. "ON {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id = "
-			. " {$prefix}oo_plugin_fieldconfig_form_translated_labels.input_id\n"
-			. "WHERE {$prefix}oo_plugin_fieldconfig_form_customs_labels.fieldname = '" . esc_sql($pField->getName()) . "' AND\n"
-			. " {$prefix}oo_plugin_fieldconfig_form_customs_labels.form_id = " . esc_sql($formId);
+		$query = "SELECT {$prefix}$pCustomsLabelConfigurationField.customs_labels_id,"
+			. "{$prefix}$pTranslateLabelConfigurationField.locale,\n"
+			. "{$prefix}$pTranslateLabelConfigurationField.value\n"
+			. "FROM {$prefix}$pCustomsLabelConfigurationField\n"
+			. "INNER JOIN {$prefix}$pTranslateLabelConfigurationField\n"
+			. "ON {$prefix}$pCustomsLabelConfigurationField.customs_labels_id = "
+			. " {$prefix}$pTranslateLabelConfigurationField.input_id\n"
+			. "WHERE {$prefix}$pCustomsLabelConfigurationField.fieldname = '" . esc_sql($pField->getName()) . "' AND\n"
+			. " {$prefix}$pCustomsLabelConfigurationField.form_id = " . esc_sql($formId);
 		return $query;
 	}
 
@@ -105,19 +105,19 @@ class CustomLabelRead
 	 * @param $current_lang
 	 * @return string
 	 */
-	private function createCustomsLabelsByFormIdQuery(int $formId, string $field, $current_lang): string
+	private function createCustomsLabelsByFormIdQuery(int $formId, string $field, $current_lang, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField): string
 	{
 		$prefix = $this->_pWPDB->prefix;
-		$queryByFormId = "SELECT {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id,"
-			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.locale,\n"
-			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.value\n"
-			. "FROM {$prefix}oo_plugin_fieldconfig_form_customs_labels\n"
-			. "INNER JOIN {$prefix}oo_plugin_fieldconfig_form_translated_labels\n"
-			. "ON {$prefix}oo_plugin_fieldconfig_form_customs_labels.customs_labels_id = "
-			. " {$prefix}oo_plugin_fieldconfig_form_translated_labels.input_id\n"
-			. "WHERE {$prefix}oo_plugin_fieldconfig_form_customs_labels.fieldname = '" . esc_sql($field) . "' AND\n"
-			. "{$prefix}oo_plugin_fieldconfig_form_translated_labels.locale = '" . esc_sql($current_lang) . "' AND\n"
-			. " {$prefix}oo_plugin_fieldconfig_form_customs_labels.form_id = " . esc_sql($formId);
+		$queryByFormId = "SELECT {$prefix}$pCustomsLabelConfigurationField.customs_labels_id,"
+			. "{$prefix}$pTranslateLabelConfigurationField.locale,\n"
+			. "{$prefix}$pTranslateLabelConfigurationField.value\n"
+			. "FROM {$prefix}$pCustomsLabelConfigurationField\n"
+			. "INNER JOIN {$prefix}$pTranslateLabelConfigurationField\n"
+			. "ON {$prefix}$pCustomsLabelConfigurationField.customs_labels_id = "
+			. " {$prefix}$pTranslateLabelConfigurationField.input_id\n"
+			. "WHERE {$prefix}$pCustomsLabelConfigurationField.fieldname = '" . esc_sql($field) . "' AND\n"
+			. "{$prefix}$pTranslateLabelConfigurationField.locale = '" . esc_sql($current_lang) . "' AND\n"
+			. " {$prefix}$pCustomsLabelConfigurationField.form_id = " . esc_sql($formId);
 		return $queryByFormId;
 	}
 }

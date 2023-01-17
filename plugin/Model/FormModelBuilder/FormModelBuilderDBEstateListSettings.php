@@ -37,7 +37,14 @@ use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Model\InputModelLabel;
+use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
+use DI\ContainerBuilder;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\WP\InstalledLanguageReader;
+use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderCustomLabel;
 use function __;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  *
@@ -322,17 +329,54 @@ class FormModelBuilderDBEstateListSettings
 		if (! $isShow) {
 			return $pSortableFieldsList;
 		}
+		$pFieldsCollection = $this->getFieldsCollection();
+		$fieldNames = [];
+
+		if (is_array($module)) {
+			foreach ($module as $submodule) {
+				$newFields = $pFieldsCollection->getFieldsByModule($submodule);
+				$fieldNames = array_merge($fieldNames, $newFields);
+			}
+		} else {
+			$fieldNames = $pFieldsCollection->getFieldsByModule($module);
+		}
+
+		$fieldNamesArray = [];
+		$pFieldsCollectionUsedFields = new FieldsCollection;
+
+		foreach ($fieldNames as $pField) {
+			$fieldNamesArray[$pField->getName()] = $pField->getAsRow();
+			$pFieldsCollectionUsedFields->addField($pField);
+		}
+		$pSortableFieldsList->setValuesAvailable($fieldNamesArray);
+		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
+		$pSortableFieldsList->setValue($fields);
 		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
 		$pInputModelIsHidden = $this->getInputModelIsHidden();
 		$pInputModelIsAvailableOptions = $this->getInputModelAvailableOptions();
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsAvailableOptions);
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 
 		return $pSortableFieldsList;
 	}
 
-
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return InputModelDB
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getInputModelCustomLabel(FieldsCollection $pFieldsCollection): InputModelDB
+	{
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pInputModelBuilder = $pContainer->get(InputModelBuilderCustomLabel::class);
+		return $pInputModelBuilder->createInputModelCustomLabel($pFieldsCollection, $this->getValue('customlabel', []));
+	}
 	/**
 	 *
 	 * @return InputModelDB
@@ -660,4 +704,47 @@ class FormModelBuilderDBEstateListSettings
 
 	    return $pInputModel;
     }
+
+	/**
+	 * @return FieldsCollection
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getFieldsCollection(): FieldsCollection
+	{
+		$pContainerBuilder = new ContainerBuilder;
+		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pContainerBuilder->build();
+
+		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		$pFieldsCollection = new FieldsCollection();
+
+		$pFieldsCollectionBuilder
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
+		return $pFieldsCollection;
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function getInputModelCustomLabelLanguageSwitch(): InputModelDB
+	{
+		$pInputModel = new InputModelDB('customlabel_newlang',
+			__('Add custom label language', 'onoffice-for-wp-websites'));
+		$pInputModel->setTable('language-custom-label');
+		$pInputModel->setField('language');
+
+		$pLanguageReader = new InstalledLanguageReader;
+		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
+			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
+		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValueCallback(function (InputModelDB $pInputModel) {
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
+		});
+		return $pInputModel;
+	}
 }
