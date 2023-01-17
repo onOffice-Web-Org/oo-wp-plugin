@@ -733,6 +733,7 @@ class EstateList
 				->getAsRow();
 			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
+			$result[$field]['label'] = $this->getFieldLabel($field);
 		}
 		return $result;
 	}
