@@ -445,7 +445,7 @@ class AdminPageSimilarEstates
 			$currentLocale  = $pLanguage->getLocale();
 			$valuesByLocale = $valuesByLocale[ $pField->getName() ];
 
-			if ( isset( $valuesByLocale[ $currentLocale ] ) ) {
+			if ( isset( $valuesByLocale[ $currentLocale ] ) && !empty( $valuesByLocale[ $currentLocale ]) ) {
 				$valuesByLocale['native'] = $valuesByLocale[ $currentLocale ];
 				unset( $valuesByLocale[ $currentLocale ] );
 			}
