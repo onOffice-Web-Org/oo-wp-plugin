@@ -205,7 +205,7 @@ abstract class AdminPageEstateListSettingsBase
 
 			$currentLocale = $pLanguage->getLocale();
 
-			if (isset($valuesByLocale[$currentLocale]) && !empty( $valuesByLocale[ $currentLocale ])) {
+			if (isset($valuesByLocale[$currentLocale])) {
 				$valuesByLocale['native'] = $valuesByLocale[$currentLocale];
 				unset($valuesByLocale[$currentLocale]);
 			}

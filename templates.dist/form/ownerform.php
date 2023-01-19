@@ -49,16 +49,8 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		if ( $pForm->isMissingField( $input ) ) {
 			$line .= ' <span>'.esc_html__('Please fill in', 'onoffice-for-wp-websites').'</span>';
 		}
-		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-			$line = renderFormField( 'gdprcheckbox', $pForm );
-			$line .= $pForm->getFieldLabel( 'gdprcheckbox' );
-		}
-		if ( in_array( $input, array( 'message' )) ) {
-			$isRequiredMessage = $pForm->isRequiredField( 'message' );
-			$additionMessage = $isRequiredMessage ? '*' : '';
-	
-			$line = esc_html__('Message', 'onoffice-for-wp-websites').$additionMessage.':<br>';
-			$line .= '<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
+		if ( in_array( $input, array('gdprcheckbox') ) ) {
+			continue;
 		}
 		if ($table == 'address') {
 			$addressValues []= $line;
@@ -67,12 +59,21 @@ if ($pForm->getFormStatus() === \onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		if ($table == 'estate') {
 			$estateValues []= $line;
 		}
-
-		if ($table == '') {
-			$addressValues []= $line;
-		}
 	}
 
+	if (array_key_exists('message', $pForm->getInputFields())) {
+		$isRequiredMessage = $pForm->isRequiredField( 'message' );
+		$additionMessage = $isRequiredMessage ? '*' : '';
+
+		$messageInput = esc_html__('Message', 'onoffice-for-wp-websites').$additionMessage.':<br>
+		<textarea name="message">'.$pForm->getFieldValue('message').'</textarea><br>';
+		$addressValues []= $messageInput;
+	}
+	if (array_key_exists('gdprcheckbox', $pForm->getInputFields())) {
+		$line = renderFormField('gdprcheckbox', $pForm);
+		$line .= $pForm->getFieldLabel('gdprcheckbox');
+		$addressValues []= $line;
+	}
 	echo '<h2>'.esc_html__('Your contact details', 'onoffice-for-wp-websites').'</h2>'
 		.'<p>';
 	echo implode('<br>', $addressValues);
