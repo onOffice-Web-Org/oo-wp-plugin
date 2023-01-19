@@ -76,6 +76,14 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= Unreleased =
+
+**Fixed**
+
+* If an estate showed similar estates on its detail page, there was a bug that would cause a fatal error. We fixed it so that similar estates can be shown normally again.
+* When an estate field was renamed, the new name would previously not be used in the search form. We fixed it and now a field's custom label is used everywhere.
+* When no estates were published, the detail page preview would crash. We fixed it and now refer to the documentation on how to publish estates.
+
 = 4.7 (2023-01-11) =
 
 **Added**
