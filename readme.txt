@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.1.1
 Requires PHP: 7.3
-Stable tag: 4.6
+Stable tag: 4.7.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,29 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.7.1 (2023-01-23) =
+
+**Fixed**
+
+* If an estate showed similar estates on its detail page, there was a bug that would cause a fatal error. We fixed it so that similar estates can be shown normally again.
+* When an estate field was renamed, the new name would previously not be used in the search form. We fixed it and now a field's custom label is used everywhere.
+* When no estates were published, the detail page preview without an estate ID would crash. We fixed it and now refer to the documentation on how to publish estates.
+
+= 4.7 (2023-01-11) =
+
+**Added**
+
+* Previously, only form fields could have custom labels. Now you can give fields from estate lists and the detail view custom labels, too.
+
+**Changed**
+
+* When the API causes an error, previously only the error code was given. Now we output the error message, too.
+
+**Fixed**
+
+* Fields that were added to a field list but then deactivated in onOffice enterprise could not be removed due to a bug. This was fixed, so that now deactivated fields can be removed from the field list.
+* In forms, the plugin adds a special field called "Newsletter". Previously when sending a form that contained this field, it would fail. We now have fixed the bug, so that forms with this field can be sent as expected.
 
 = 4.6 (2022-12-19) =
 

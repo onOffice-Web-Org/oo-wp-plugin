@@ -483,11 +483,12 @@ class EstateList
 		$recordType = onOfficeSDK::MODULE_ESTATE;
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
-			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $this->_pDataView->getListType());
+			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
 
 		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 		$fieldNewName = esc_html($label);
@@ -743,6 +744,7 @@ class EstateList
 				->getAsRow();
 			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value;
+			$result[$field]['label'] = $this->getFieldLabel($field);
 		}
 		return $result;
 	}
