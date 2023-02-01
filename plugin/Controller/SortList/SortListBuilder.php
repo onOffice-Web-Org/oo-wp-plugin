@@ -59,7 +59,7 @@ class SortListBuilder
 
 		$pSortListDataModel->setSortbyUserDirection($pListView->getSortByUserDefinedDirection());
 
-		$sortbyValues = $this->estimateSortByValues($pListView->getSortByUserValues());
+		$sortbyValues = $this->estimateSortByValues($pListView->getSortByUserValues(), $pListView->getName(), $pListView->getListType());
 		$pSortListDataModel->setSortByUserValues($sortbyValues);
 
 		if ($pSortListDataModel->isAdjustableSorting())	{
@@ -110,13 +110,16 @@ class SortListBuilder
 
 	/**
 	 * @param array $sortByUserValues
+	 * @param string $pListViewName
+	 * @param string $listType
 	 * @return array
 	 * @throws UnknownFieldException
 	 */
-	private function estimateSortByValues(array $sortByUserValues): array
+	private function estimateSortByValues(array $sortByUserValues, string $pListViewName, string $listType): array
 	{
 		$pFieldsCollection = new FieldsCollection();
-		$this->_pBuilderShort->addFieldsAddressEstate($pFieldsCollection);
+		$this->_pBuilderShort->addFieldsAddressEstate( $pFieldsCollection )
+		                     ->addCustomLabelFieldsEstateFrontend( $pFieldsCollection, $pListViewName, $listType );
 		$sortbyValues = [];
 
 		foreach ($sortByUserValues as $sortByField) {
