@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.1.1
 Requires PHP: 7.3
-Stable tag: 4.7
+Stable tag: 4.7.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,14 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.7.1 (2023-01-23) =
+
+**Fixed**
+
+* If an estate showed similar estates on its detail page, there was a bug that would cause a fatal error. We fixed it so that similar estates can be shown normally again.
+* When an estate field was renamed, the new name would previously not be used in the search form. We fixed it and now a field's custom label is used everywhere.
+* When no estates were published, the detail page preview without an estate ID would crash. We fixed it and now refer to the documentation on how to publish estates.
 
 = 4.7 (2023-01-11) =
 

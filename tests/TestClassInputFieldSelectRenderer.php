@@ -92,4 +92,37 @@ class TestClassInputFieldSelectRenderer
 			.'<optgroup label="John Doe" ></optgroup><option value="konradzuse"  selected="selected" >'
 			.'Konrad Zuse</option></select>', $output);
 	}
+
+	/**
+	 *
+	 */
+	public function testRenderWithValuesAndHint()
+	{
+		$pSubject = new InputFieldSelectRenderer('testRenderer');
+		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
+		$pSubject->setHint('test');
+		$pSubject->getName('test');
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<select name="testRenderer"  id="select_1">'
+			.'<option value="johndoe" >John Doe</option><option value="konradzuse" >Konrad Zuse</option>'
+			.'</select><div style="text-align: right">test</div>', $output);
+	}
+	/**
+	 *
+	 */
+	public function testRenderWithValuesAndNameShowReferenceEstate()
+	{
+		$pSubject = new InputFieldSelectRenderer('oopluginlistviews-showreferenceestate');
+		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
+		$pSubject->setHint('test');
+		ob_start();
+		$pSubject->render();
+		$output = ob_get_clean();
+		$this->assertEquals('<script>if (jQuery("select[name=oopluginlistviews-showreferenceestate").val() === "0") {jQuery(".memssageReference").hide();}</script>'
+			.'<select name="oopluginlistviews-showreferenceestate"  id="select_1">'
+			.'<option value="johndoe" >John Doe</option><option value="konradzuse" >Konrad Zuse</option>'
+			.'</select><div class="memssageReference">test</div>', $output);
+	}
 }
