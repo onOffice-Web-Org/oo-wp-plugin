@@ -479,6 +479,8 @@ class EstateList
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
 			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
+		$pFieldsCollection->merge
+			(new FieldModuleCollectionDecoratorGeoPositionFrontend($pFieldsCollection));
 
 		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 		$fieldNewName = esc_html($label);
