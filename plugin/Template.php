@@ -137,9 +137,9 @@ class Template
 			$this->_templateName = substr( $this->_templateName, strpos( $this->_templateName, $pluginDirName ) );
 		}
 		if (__String::getNew($this->_templateName)->startsWith('onoffice-theme/')) {
-			$templatePath = realpath(get_stylesheet_directory().'/'.$this->_templateName);
-			if (!__String::getNew($templatePath)->startsWith(realpath(get_stylesheet_directory()))) {
-				throw new RuntimeException('Invalid template path');
+			$templatePath = realpath(get_theme_file_path($this->_templateName));
+			if ($templatePath === false) {
+				throw new RuntimeException('Invalid template path `' . get_theme_file_path($this->_templateName) . '`');
 			}
 			return $templatePath;
 		}
