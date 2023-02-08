@@ -843,6 +843,7 @@ class TestClassEstateList
 		unset($parametersReadEstateRaw['georangesearch']);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
+
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', [
 				'parentids' => [15, 1051, 1082, 1193, 1071],
@@ -855,6 +856,7 @@ class TestClassEstateList
 			'categories' => ['Titelbild', "Foto"],
 			'language' => 'ENG'
 		], null, $responseGetEstatePictures);
+
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
