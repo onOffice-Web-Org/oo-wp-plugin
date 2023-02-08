@@ -210,6 +210,7 @@ class EstateList
 	private function loadRecords(int $currentPage)
 	{
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
+		$estateParameters = $this->filterActiveInputFields($estateParameters);
 		$this->_pApiClientAction->setParameters($estateParameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
@@ -225,6 +226,30 @@ class EstateList
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 	}
 
+	/**
+	 * @param $inputs
+	 * @return array
+	 *
+	 */
+
+	private function filterActiveInputFields($inputs): array
+	{
+		$recordType = onOfficeSDK::MODULE_ESTATE;
+		$pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
+
+		foreach ($inputs['data'] as $key => $name) {
+			if (!$pFieldsCollection->containsFieldByModule($recordType, $name)) {
+				unset($inputs['data'][$key]);
+			}
+		}
+
+		return $inputs;
+	}
 	/**
 	 * @param array $estateIds
 	 * @throws DependencyException
