@@ -843,7 +843,6 @@ class TestClassEstateList
 		unset($parametersReadEstateRaw['georangesearch']);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
-
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', [
 				'parentids' => [15, 1051, 1082, 1193, 1071],
@@ -856,7 +855,6 @@ class TestClassEstateList
 			'categories' => ['Titelbild', "Foto"],
 			'language' => 'ENG'
 		], null, $responseGetEstatePictures);
-
 		$pContainerBuilder = new ContainerBuilder;
 		$pContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
 		$this->_pContainer = $pContainerBuilder->build();
@@ -882,6 +880,17 @@ class TestClassEstateList
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setConstructorArgs([$this->_pContainer])
 			->getMock();
+		$pFieldsCollection = $this->getEstateFieldsData();
+
+		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
+			use ($pFieldsCollection, $pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+			{
+				$pFieldsCollectionOut->merge($pFieldsCollection);
+				return $pFieldsCollectionBuilderShort;
+			});
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
+
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
 		$this->_pEstateList = new EstateList($pDataListView, $this->_pEnvironment);
@@ -952,5 +961,45 @@ class TestClassEstateList
 		$pDataView = $this->getDataView();
 		$pDataView->setRandom(true);
 		return $pDataView;
+	}
+
+	/**
+	 *
+	 * @return EstateFieldsData
+	 * 
+	 *
+	 */
+	public function getEstateFieldsData() {
+		$fieldsCollection = new FieldsCollection();
+		$fieldNames = [
+			'Id',
+			'objektart',
+			'objekttyp',
+			'objekttitel',
+			'objektbeschreibung',
+			'virtualAddress',
+			'objektadresse_freigeben',
+			'reserviert',
+			'verkauft',
+			'vermarktungsart',
+			'virtualStreet',
+			'virtualHouseNumber',
+			'laengengrad',
+			'breitengrad',
+			'virtualLatitude',
+			'virtualLongitude',
+			'strasse',
+			'showGoogleMap',
+			'hausnummer',
+			'ort',
+			'objektnr_extern',
+			'plz',
+			'land',
+		];
+		foreach ($fieldNames as $fieldName) {
+			$field = new Field($fieldName, 'estate', 'testLabel');
+			$fieldsCollection->addField($field);
+		}
+		return $fieldsCollection;
 	}
 }
