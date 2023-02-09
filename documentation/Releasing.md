@@ -27,6 +27,10 @@ For general guidance on writing a changelog, see [Keep a Changelog](https://keep
     - [Updated the changelog](#update-the-changelog).
 2. Update the version number in `readme.txt` and `plugin.php`.
     - To check if e.g. version `3.2` is configured correctly, you can run the [Deno](https://deno.land/) script `deno run --allow-read ./scripts/check-version-in-config-files.ts 3.2`. It will guide you through all the places that need to be updated.
+    - Otherwise, the version needs to be set in the following places:
+      - In the comment of the `readme.txt` as the `Stable tag`.
+      - As the newest [changelog](#update-the-changelog) item in `readme.txt`.
+      - In the comment of the `plugin.php` as the `Version`.
 3. Commit the new version with e.g. message "Update to version v3.2".
 4. To trigger the release, you create a new tag. This is easiest to do by creating a release on GitHub:
     1. Go to https://github.com/onOfficeGmbH/oo-wp-plugin/releases.
