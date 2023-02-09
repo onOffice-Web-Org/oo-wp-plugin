@@ -84,10 +84,10 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Fixed**
 
-* Parking lots previously would display as "Array, Array, Arra". They are now shown correctly, in a format similar to the one in onOffice enterprise.
+* Parking lots previously would display as "Array, Array, Array". They are now shown correctly, in a format similar to the one in onOffice enterprise.
 * When saving a custom label for an estate or form field that contained quotes, like ", they would be escaped with \". The plugin now preserves the original characters when saving.
-* When a template from the theme folder was selected and then a child theme was activated, the frontend showed an error about the template path being invalid. This was fixed so that it loads the correct template.
-* Custom labels for estate list fields are used in the frontend in the dropdown where the sorting of the list can be selected.
+* When a template from the theme folder was selected and then a child theme was activated, the frontend showed an error about the template path being invalid. This was fixed so that it loads the template correctly.
+* Custom labels for estate list fields are now used in the frontend in the dropdown where the sorting of the list can be selected.
 
 = 4.7.1 (2023-01-23) =
 
