@@ -268,6 +268,10 @@ You can view all previous changes in our [changelog.txt](https://github.com/onOf
 
 == Arbitrary section ==
 
+Note that we cannot guarantee compatibility with all other plugins and themes.
+
+While it works well with most, if you encounter issues that we cannot reproduce, feel free to open a PR in our repository. If we understand the change and can test the functionality, we will be happy to include your fix.
+
 = Development =
 
 Development takes place in our [Github repository](https://github.com/onOfficeGmbH/oo-wp-plugin).
