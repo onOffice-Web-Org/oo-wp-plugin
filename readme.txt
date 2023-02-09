@@ -81,6 +81,7 @@ Start editing inside the `onoffice-personalized` folder.
 **Changed**
 
 * The onOffice menu in the admin bar now appears in the backend, too.
+* In an estate list or the detail page, when a field contains only an empty array (for example the parking lots field), it will no longer be displayed with a blank value, but removed from the list. If you have personalized your templates, you need to add this check for an empty array to get the same behavior.
 
 **Fixed**
 
