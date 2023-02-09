@@ -71,7 +71,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					if (in_array($field, $dontEcho)) {
 						continue;
 					}
-					if ($value == "") {
+					if (empty($value)) {
 						continue;
 					}
 					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"

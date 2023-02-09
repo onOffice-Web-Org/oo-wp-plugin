@@ -105,7 +105,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 							if ( in_array($field, $dontEcho) ) {
 								continue;
 							}
-							if ( $value == "" ) {
+							if ( empty($value) ) {
 								continue;
 							}
 							echo '<div class="oo-listtd">'.esc_html($pEstatesClone->getFieldLabel( $field )) .'</div><div class="oo-listtd">'.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)).'</div>';
