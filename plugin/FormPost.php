@@ -118,8 +118,10 @@ abstract class FormPost
 		$pFormData = $this->buildFormData($pConfig, $formNo);
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
-
-		if ($pFormData->getMissingFields() === [] && !$this->checkCaptcha($pConfig) || $this->_pFormPostConfiguration->getPostHoneypot() !== "") {
+		if($this->_pFormPostConfiguration->getPostHoneypot() !== ""){
+			$pFormData->setStatus(self::MESSAGE_SUCCESS);
+			return;
+		} elseif ($pFormData->getMissingFields() === [] && !$this->checkCaptcha($pConfig)) {
 			$pFormData->setStatus(self::MESSAGE_RECAPTCHA_SPAM);
 			return;
 		} elseif ($pFormData->getMissingFields() !== []) {
