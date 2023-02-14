@@ -68,3 +68,6 @@ form[data-applicant-form-id] #spinner {
     width: 40px;
     vertical-align: middle;
 }
+.tmpField{
+	display: none!important;
+}

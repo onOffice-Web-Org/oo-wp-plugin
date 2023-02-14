@@ -388,5 +388,11 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 		}
 	};
 }, 500);
+function enqueue_my_scripts() {
+	wp_enqueue_script( 'onoffice-honeypot', plugins_url( 'onoffice-honeypot.js', __FILE__ ), array(), '1.0.0', true );
+	$post_titles=get_option('onoffice-settings-honeypot');
+	wp_localize_script( 'onoffice-honeypot', 'postTitles', array(  'tmpField' => $post_titles ) );
+}
 
+add_action( 'wp_enqueue_scripts', 'enqueue_my_scripts' );
 return $pDI;

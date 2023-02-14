@@ -50,6 +50,9 @@ class FormPostConfigurationTest
 	/** @var CompoundFieldsFilter */
 	private $_pCompoundFields;
 
+	/** @var string */
+	private $_postHoneypot = "";
+
 	/**
 	 *
 	 * @param Logger $pLogger
@@ -138,5 +141,27 @@ class FormPostConfigurationTest
 	public function getFieldsCollectionBuilderShort(): FieldsCollectionBuilderShort
 	{
 		return $this->_pFieldsCollectionBuilderShort;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+	public function getPostHoneypot(): string
+	{
+		return $this->_postHoneypot;
+	}
+
+
+	/**
+	 *
+	 * @param  string  $postHoneypot
+	 *
+	 */
+	public function setPostHoneypot( string $postHoneypot )
+	{
+		$this->_postHoneypot = $postHoneypot;
 	}
 }

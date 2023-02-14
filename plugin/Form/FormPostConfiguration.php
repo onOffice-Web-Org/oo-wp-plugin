@@ -77,4 +77,12 @@ interface FormPostConfiguration
 	 */
 
 	public function getCompoundFields(): CompoundFieldsFilter;
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	 public function getPostHoneypot(): string;
 }

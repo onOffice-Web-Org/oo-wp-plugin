@@ -67,6 +67,7 @@ class AdminPageApiSettings
 		$this->addFormModelMapProvider($pageSlug);
 		$this->addFormModelGoogleMapsKey();
 		$this->addFormModelGoogleCaptcha();
+		$this->addFormModelHoneypot();
 		$this->addFormModelFavorites($pageSlug);
         $this->addFormModelDetailView($pageSlug);
 		$this->addFormModelPagination($pageSlug);
@@ -439,6 +440,30 @@ class AdminPageApiSettings
 
         $this->addFormModel($pFormModel);
     }
+
+	/**
+	 *
+	 */
+
+	private function addFormModelHoneypot()
+	{
+		$labelSiteKey = __('Add honeypot to forms', 'onoffice-for-wp-websites');
+		$pInputModelHoneypot = new InputModelOption
+			('onoffice-settings', 'honeypot', $labelSiteKey, InputModelOption::SETTING_TYPE_BOOLEAN);
+		$optionNameKey = $pInputModelHoneypot->getIdentifier();
+		$pInputModelHoneypot->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelHoneypot->setValuesAvailable(1);
+		$pInputModelHoneypot->setValue(get_option($optionNameKey));
+		$pInputModelHoneypot->setDescriptionTextHTML(__('A honeypot is an invisible field to trick spam bots. We recommend to keep this active, but you can deactivate it if it causes any problems.', 'onoffice-for-wp-websites'));
+
+		$pFormModel = new FormModel();
+		$pFormModel->addInputModel($pInputModelHoneypot);
+		$pFormModel->setGroupSlug('onoffice-honeypot-form');
+		$pFormModel->setPageSlug($this->getPageSlug());
+		$pFormModel->setLabel(__('Forms', 'onoffice-for-wp-websites'));
+
+		$this->addFormModel($pFormModel);
+	}
 
     /**
      *
