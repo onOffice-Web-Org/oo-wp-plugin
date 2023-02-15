@@ -22,7 +22,7 @@ For general guidance on writing a changelog, see [Keep a Changelog](https://keep
 
 1. Ensure you have prepared the release:
     - Tested it.
-    - Translateed it. (This requires a development release so that the translations show up.)
+    - Translated it. (This requires a development release so that the translations show up.)
     - Documented the changes.
     - [Updated the changelog](#update-the-changelog).
 2. Update the version number in `readme.txt` and `plugin.php`.
