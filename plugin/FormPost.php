@@ -119,6 +119,7 @@ abstract class FormPost
 		$pFormData = $this->buildFormData($pConfig, $formNo);
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
+
 		if ($this->_pFormPostConfiguration->getPostMessage() !== "") {
 			$pFormData->setStatus(self::MESSAGE_SUCCESS);
 			return;
