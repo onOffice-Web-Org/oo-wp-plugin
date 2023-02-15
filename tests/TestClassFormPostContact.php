@@ -490,7 +490,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->addInput('Telefon1', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('newsletter', onOfficeSDK::MODULE_ADDRESS);
-		$pDataFormConfiguration->addInput('message', '');
+		$pDataFormConfiguration->addInput('message', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->setRecipient('test@my-onoffice.com');
 		$pDataFormConfiguration->setCreateAddress(false);
 		$pDataFormConfiguration->setFormType(Form::TYPE_CONTACT);
