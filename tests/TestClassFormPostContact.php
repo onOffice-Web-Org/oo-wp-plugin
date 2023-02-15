@@ -161,14 +161,6 @@ class TestClassFormPostContact
 				$pFieldMessage->setType(FieldTypes::FIELD_TYPE_TEXT);
 				$pFieldsCollection->addField($pFieldMessage);
 
-				$pFieldArtDaten = new Field('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
-				$pFieldArtDaten->setType(FieldTypes::FIELD_TYPE_TEXT);
-				$pFieldsCollection->addField($pFieldArtDaten);
-
-				$pFieldgdprcheckbox= new Field('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
-				$pFieldgdprcheckbox->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
-				$pFieldsCollection->addField($pFieldgdprcheckbox);
-
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
 
@@ -393,7 +385,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);
 		$pDataFormConfiguration->setCheckDuplicateOnCreateAddress(true);
-		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 1);
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
@@ -469,8 +461,6 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'Telefon1' => '0815/2345677',
-			'gdprcheckbox' => 'y',
-			'ArtDaten' => 'test',
 			'AGB_akzeptiert' => 'y',
 			'newsletter' => 'y',
 			'Id' => '1337',
@@ -504,15 +494,13 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->addInput('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('newsletter', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('message', onOfficeSDK::MODULE_ADDRESS);
-		$pDataFormConfiguration->addInput('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
-		$pDataFormConfiguration->addInput('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->setRecipient('test@my-onoffice.com');
 		$pDataFormConfiguration->setCreateAddress(true);
 		$pDataFormConfiguration->setFormType(Form::TYPE_CONTACT);
 		$pDataFormConfiguration->setFormName('contactForm');
 		$pDataFormConfiguration->setSubject('¡A new Contact!');
 		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'Email']);
-		$pDataFormConfiguration->setContactTypeField('abc');
+		$pDataFormConfiguration->setContactTypeField('');
 		$this->mockNewsletterCall();
 
 		return $pDataFormConfiguration;
@@ -563,8 +551,6 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'Telefon1' => '0815/2345677',
-			'gdprcheckbox' => 'y',
-			'ArtDaten' => 'test',
 			'AGB_akzeptiert' => 'y',
 			'newsletter' => 'y',
 			'Id' => '1337',
