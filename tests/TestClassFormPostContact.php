@@ -29,6 +29,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationContact;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Form\FormPostConfigurationTest;
+use onOffice\WPlugin\Form\FormPostConfigurationDefault;
 use onOffice\WPlugin\Form\FormPostContactConfigurationTest;
 use onOffice\WPlugin\FormPost;
 use onOffice\WPlugin\FormPostContact;
@@ -79,12 +80,14 @@ class TestClassFormPostContact
 			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
+		add_option('onoffice-settings-honeypot', true);
 
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
 			->getMock();
 		$this->_pContainer = new Container;
 		$this->_pContainer->set(SDKWrapper::class, $this->_pSDKWrapperMocker);
 		$this->_pContainer->set(Form\FormPostConfiguration::class, autowire(FormPostConfigurationTest::class));
+		$this->_pContainer->set(Form\FormPostConfiguration::class, autowire(FormPostConfigurationDefault::class));
 		$this->_pContainer->set(Form\FormPostContactConfiguration::class, autowire(FormPostContactConfigurationTest::class));
 		$this->_pContainer->set(WPQueryWrapper::class, $pWPQueryWrapper);
 		$this->_pContainer->set(Logger::class, $pLogger);
@@ -152,6 +155,10 @@ class TestClassFormPostContact
 				$pFieldNewsletter = new Field('newsletter', onOfficeSDK::MODULE_ADDRESS);
 				$pFieldNewsletter->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
 				$pFieldsCollection->addField($pFieldNewsletter);
+
+				$pFieldMessage = new Field('message', '');
+				$pFieldMessage->setType(FieldTypes::FIELD_TYPE_TEXT);
+				$pFieldsCollection->addField($pFieldMessage);
 
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
@@ -404,6 +411,68 @@ class TestClassFormPostContact
 
 	/**
 	 *
+	 */
+
+	public function testPostHoneypotMessageEmpty()
+	{
+		$_POST = $this->getPostVariables();
+
+		$_POST = [
+			'message' => 'content2',
+		];
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testFormHoneypot()
+	{
+		$_POST = $this->getPostVariables();
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+
+
+	/**
+	 *
+	 */
+
+	public function testFormHoneypotEmpty()
+	{
+		$_POST = [
+			'Vorname' => 'John',
+			'Name' => 'Doe',
+			'Email' => 'john.doe@my-onoffice.com',
+			'Plz' => '52068',
+			'Ort' => 'Aachen',
+			'Telefon1' => '0815/2345677',
+			'AGB_akzeptiert' => 'y',
+			'newsletter' => 'y',
+			'Id' => '1337',
+			'Anrede' => '',
+			'tmpField' => 'content',
+		];
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+	/**
+	 *
 	 * @return DataFormConfigurationContact
 	 *
 	 */
@@ -421,6 +490,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->addInput('Telefon1', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('newsletter', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('message', '');
 		$pDataFormConfiguration->setRecipient('test@my-onoffice.com');
 		$pDataFormConfiguration->setCreateAddress(false);
 		$pDataFormConfiguration->setFormType(Form::TYPE_CONTACT);
@@ -482,6 +552,8 @@ class TestClassFormPostContact
 			'newsletter' => 'y',
 			'Id' => '1337',
 			'Anrede' => '',
+			'message' => 'content1',
+			'tmpField' => 'content2',
 		];
 	}
 }

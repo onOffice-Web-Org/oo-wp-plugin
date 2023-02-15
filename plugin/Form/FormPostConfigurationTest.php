@@ -160,17 +160,6 @@ class FormPostConfigurationTest
 
 	/**
 	 *
-	 * @param  string  $postHoneypot
-	 *
-	 */
-	public function setPostHoneypot( string $postHoneypot )
-	{
-		$this->_postHoneypot = $postHoneypot;
-	}
-
-
-	/**
-	 *
 	 * @return string
 	 *
 	 */
@@ -179,14 +168,4 @@ class FormPostConfigurationTest
 		return $this->_postMessage;
 	}
 
-
-	/**
-	 *
-	 * @param  string  $postHoneypot
-	 *
-	 */
-	public function setPostMessage( string $postHoneypot )
-	{
-		$this->_postMessage = $postHoneypot;
-	}
 }

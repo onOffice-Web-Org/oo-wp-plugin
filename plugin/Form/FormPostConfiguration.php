@@ -92,5 +92,5 @@ interface FormPostConfiguration
 	 *
 	 */
 
-	 public function getPostMessage(): string;
+	public function getPostMessage(): string;
 }
