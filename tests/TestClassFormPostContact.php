@@ -92,6 +92,7 @@ class TestClassFormPostContact
 		$this->_pContainer->set(WPQueryWrapper::class, $pWPQueryWrapper);
 		$this->_pContainer->set(Logger::class, $pLogger);
 		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $this->_pFieldsCollectionBuilderShort);
+		$this->_pContainer->get(Form\FormPostContactConfiguration::class)->setNewsletterAccepted(true);
 
 
 		$this->_pFieldsCollectionBuilderShort->method('addFieldsSearchCriteria')
@@ -159,6 +160,14 @@ class TestClassFormPostContact
 				$pFieldMessage = new Field('message', '');
 				$pFieldMessage->setType(FieldTypes::FIELD_TYPE_TEXT);
 				$pFieldsCollection->addField($pFieldMessage);
+
+				$pFieldArtDaten = new Field('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldArtDaten->setType(FieldTypes::FIELD_TYPE_TEXT);
+				$pFieldsCollection->addField($pFieldArtDaten);
+
+				$pFieldgdprcheckbox= new Field('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
+				$pFieldgdprcheckbox->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+				$pFieldsCollection->addField($pFieldgdprcheckbox);
 
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
@@ -384,7 +393,7 @@ class TestClassFormPostContact
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
 		$pDataFormConfiguration->setCreateAddress(true);
 		$pDataFormConfiguration->setCheckDuplicateOnCreateAddress(true);
-		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 1);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
@@ -422,6 +431,7 @@ class TestClassFormPostContact
 		];
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$pDataFormConfiguration->setCreateAddress(true);
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
@@ -438,6 +448,7 @@ class TestClassFormPostContact
 		$_POST = $this->getPostVariables();
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$pDataFormConfiguration->setCreateAddress(true);
 		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
 
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
@@ -458,6 +469,8 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'Telefon1' => '0815/2345677',
+			'gdprcheckbox' => 'y',
+			'ArtDaten' => 'test',
 			'AGB_akzeptiert' => 'y',
 			'newsletter' => 'y',
 			'Id' => '1337',
@@ -491,13 +504,15 @@ class TestClassFormPostContact
 		$pDataFormConfiguration->addInput('AGB_akzeptiert', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('newsletter', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->addInput('message', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('gdprcheckbox', onOfficeSDK::MODULE_ADDRESS);
+		$pDataFormConfiguration->addInput('ArtDaten', onOfficeSDK::MODULE_ADDRESS);
 		$pDataFormConfiguration->setRecipient('test@my-onoffice.com');
-		$pDataFormConfiguration->setCreateAddress(false);
+		$pDataFormConfiguration->setCreateAddress(true);
 		$pDataFormConfiguration->setFormType(Form::TYPE_CONTACT);
 		$pDataFormConfiguration->setFormName('contactForm');
 		$pDataFormConfiguration->setSubject('¡A new Contact!');
 		$pDataFormConfiguration->setRequiredFields(['Vorname', 'Name', 'Email']);
-		$pDataFormConfiguration->setContactTypeField('');
+		$pDataFormConfiguration->setContactTypeField('abc');
 		$this->mockNewsletterCall();
 
 		return $pDataFormConfiguration;
@@ -548,6 +563,8 @@ class TestClassFormPostContact
 			'Plz' => '52068',
 			'Ort' => 'Aachen',
 			'Telefon1' => '0815/2345677',
+			'gdprcheckbox' => 'y',
+			'ArtDaten' => 'test',
 			'AGB_akzeptiert' => 'y',
 			'newsletter' => 'y',
 			'Id' => '1337',
