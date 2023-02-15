@@ -6,7 +6,7 @@ jQuery(document).ready(function($){
             'name': 'tmpField',
           });
         message.replaceWith(newInput);
-        var label = $('<label>').text('Message:').attr("class", "tmpField");
+        var label = $('<label>').text('Message:').attr("class", "message");
         var input = $('<input>').attr({
             'type': 'text',
             'name': 'message',

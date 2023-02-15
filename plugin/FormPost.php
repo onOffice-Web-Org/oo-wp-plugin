@@ -312,7 +312,7 @@ abstract class FormPost
 	/**
 	 * Updates the honeypot field in the $_POST array.
 	 */
-	private function updatePostHoneypot(): void
+	private function updatePostHoneypot()
 	{
 		if(!get_option('onoffice-settings-honeypot')){
 			return;
