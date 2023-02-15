@@ -119,7 +119,7 @@ abstract class FormPost
 		$pFormData = $this->buildFormData($pConfig, $formNo);
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
-		if($this->_pFormPostConfiguration->getPostMessage() !== ""){
+		if ($this->_pFormPostConfiguration->getPostMessage() !== "") {
 			$pFormData->setStatus(self::MESSAGE_SUCCESS);
 			return;
 		} elseif ($pFormData->getMissingFields() === [] && !$this->checkCaptcha($pConfig)) {
@@ -314,22 +314,21 @@ abstract class FormPost
 	 */
 	private function updatePostHoneypot()
 	{
-		if(!get_option('onoffice-settings-honeypot')){
+		if ( ! get_option( 'onoffice-settings-honeypot' ) ) {
 			return;
 		}
 		$honeypotValue = $this->_pFormPostConfiguration->getPostHoneypot();
-		if ($honeypotValue !== '') {
-			if(!empty($this->_pFormPostConfiguration->getPostMessage())){
+		if ( $honeypotValue !== '' ) {
+			if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
 				$_POST['message'] = $_POST['tmpField'];
-			}else{
-				unset($_POST['message']);
+			} else {
+				unset( $_POST['message'] );
 			}
 			$_POST['tmpField'] = $honeypotValue;
 		} else {
-			if(!empty($this->_pFormPostConfiguration->getPostMessage()))
-			{
+			if ( ! empty( $this->_pFormPostConfiguration->getPostMessage() ) ) {
 				$_POST['message'] = $_POST['tmpField'];
-				unset($_POST['tmpField']);
+				unset( $_POST['tmpField'] );
 			}
 		}
 	}
