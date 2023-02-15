@@ -53,6 +53,9 @@ class FormPostConfigurationTest
 	/** @var string */
 	private $_postHoneypot = "";
 
+	/** @var string */
+	private $_postMessage = "";
+
 	/**
 	 *
 	 * @param Logger $pLogger
@@ -163,5 +166,27 @@ class FormPostConfigurationTest
 	public function setPostHoneypot( string $postHoneypot )
 	{
 		$this->_postHoneypot = $postHoneypot;
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+	public function getPostMessage(): string
+	{
+		return $this->_postMessage;
+	}
+
+
+	/**
+	 *
+	 * @param  string  $postHoneypot
+	 *
+	 */
+	public function setPostMessage( string $postHoneypot )
+	{
+		$this->_postMessage = $postHoneypot;
 	}
 }

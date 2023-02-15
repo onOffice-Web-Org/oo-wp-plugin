@@ -115,10 +115,11 @@ abstract class FormPost
 
 	public function initialCheck(DataFormConfiguration $pConfig, int $formNo)
 	{
+		$this->updatePostHoneypot();
 		$pFormData = $this->buildFormData($pConfig, $formNo);
 		$pFormData->setFormSent(true);
 		$this->setFormDataInstances($pFormData);
-		if($this->_pFormPostConfiguration->getPostHoneypot() !== ""){
+		if($this->_pFormPostConfiguration->getPostMessage() !== ""){
 			$pFormData->setStatus(self::MESSAGE_SUCCESS);
 			return;
 		} elseif ($pFormData->getMissingFields() === [] && !$this->checkCaptcha($pConfig)) {
@@ -308,6 +309,31 @@ abstract class FormPost
 	}
 
 
+	/**
+	 * Updates the honeypot field in the $_POST array.
+	 */
+	private function updatePostHoneypot(): void
+	{
+		if(!get_option('onoffice-settings-honeypot')){
+			return;
+		}
+		$honeypotValue = $this->_pFormPostConfiguration->getPostHoneypot();
+		if ($honeypotValue !== '') {
+			if(!empty($this->_pFormPostConfiguration->getPostMessage())){
+				$_POST['message'] = $_POST['tmpField'];
+			}else{
+				unset($_POST['message']);
+			}
+			$_POST['tmpField'] = $honeypotValue;
+		} else {
+			if(!empty($this->_pFormPostConfiguration->getPostMessage()))
+			{
+				$_POST['message'] = $_POST['tmpField'];
+				unset($_POST['tmpField']);
+			}
+		}
+	}
+	
 	/**
 	 *
 	 * @return int
