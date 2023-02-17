@@ -103,9 +103,9 @@ class TestClassMainPage
 	public function testRender()
 	{
 		$pMainPage = new MainPage($this->_pLanguage, $this->_pFileMapping, $this->_pFilesystem);
-		$this->assertStringContainsString('<div class="card">contents of es.html</div>', $pMainPage->render());
-		$this->assertStringContainsString('<div class="card">contents of en_US.html</div>', $pMainPage->render());
-		$this->assertStringContainsString('<div class="card">contents of en_GB.html</div>', $pMainPage->render());
-		$this->assertStringContainsString('<div class="card">contents of de.html</div>', $pMainPage->render());
+		$this->assertStringContainsString('<div class="card"><p>contents of es.html</p></div>', $pMainPage->render());
+		$this->assertStringContainsString('<div class="card"><p>contents of en_US.html</p></div>', $pMainPage->render());
+		$this->assertStringContainsString('<div class="card"><p>contents of en_GB.html</p></div>', $pMainPage->render());
+		$this->assertStringContainsString('<div class="card"><p>contents of de.html</p></div>', $pMainPage->render());
 	}
 }
