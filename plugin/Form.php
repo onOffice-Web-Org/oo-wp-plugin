@@ -99,6 +99,7 @@ class Form
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice-for-wp-websites'));
 		$this->setGenericSetting('formId', 'onoffice-form');
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
+		$this->typeForm($type);
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
@@ -611,6 +612,16 @@ class Form
 		return esc_html($this->_formNo);
 	}
 
+
+	/**
+	 *
+	 */
+
+	public function typeForm($type)
+	{
+		wp_localize_script( 'onoffice-honeypot', 'honeypot', array(  'type' => $type ) );
+	}
+ 
 
 	/**
 	 *

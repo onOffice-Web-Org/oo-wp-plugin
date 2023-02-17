@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    if (postTitles['tmpField'] == true) {
+    if (postTitles['tmpField'] == true && honeypot['type'] !== 'applicantsearch') {
         var message = $('textarea[name="message"]');
         var newInput = $('<textarea>').attr({
             'type': 'text',
