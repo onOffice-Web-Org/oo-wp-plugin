@@ -619,9 +619,10 @@ class Form
 
 	public function typeForm($type)
 	{
-		wp_localize_script( 'onoffice-honeypot', 'honeypot', array(  'type' => $type ) );
+		wp_enqueue_script( 'onoffice-form-type', plugins_url( 'onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php' ), array('jquery'));
+		wp_localize_script( 'onoffice-form-type', 'form', array(  'type' => $type ) );
 	}
- 
+
 
 	/**
 	 *
