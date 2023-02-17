@@ -1,6 +1,6 @@
 jQuery(document).ready(function ($) {
     if (postTitles['tmpField'] == true && form['type'] !== 'applicantsearch') {
-        var message = $('textarea[name="message"]');
+        var message = $('textarea[name="message"]')[0] ?? $('input[name="message"]');
         var newInput = $('<textarea>').attr({
             'type': 'text',
             'name': 'tmpField',
