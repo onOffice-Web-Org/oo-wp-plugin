@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Controller;
 
 use onOffice\WPlugin\Filesystem\Filesystem;
 use onOffice\WPlugin\Language;
+use Parsedown;
 
 
 /**
@@ -81,10 +82,13 @@ class MainPage
 
 	private function includeHtml(): string
 	{
+		$parsedown = new Parsedown;
 		$fileMapping = $this->_pFileMapping->getMapping();
 		$locale = $this->_pLanguage->getLocale();
 		$file = $fileMapping[$locale] ?? $fileMapping['en_US'] ??
 				$fileMapping['en_GB'] ?? $fileMapping['de_DE'] ?? '';
-		return $this->_pFilesystem->getContents($file);
+		$markdown = $this->_pFilesystem->getContents($file);
+		$html = $parsedown->text($markdown);
+		return $html;
 	}
 }
