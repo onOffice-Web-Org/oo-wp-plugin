@@ -87,8 +87,9 @@ class MainPage
 		$locale = $this->_pLanguage->getLocale();
 		$file = $fileMapping[$locale] ?? $fileMapping['en_US'] ??
 				$fileMapping['en_GB'] ?? $fileMapping['de_DE'] ?? '';
-		$markdown = $this->_pFilesystem->getContents($file);
-		$html = $parsedown->text($markdown);
+		$contents = $this->_pFilesystem->getContents($file);
+		$textTranslation = __($contents, 'onoffice-for-wp-websites');
+		$html = $parsedown->text($textTranslation);
 		return $html;
 	}
 }
