@@ -210,8 +210,8 @@ class EstateList
 	private function loadRecords(int $currentPage)
 	{
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
-		$estateParameters = $this->filterActiveInputFields($estateParameters);
-		$this->_pApiClientAction->setParameters($estateParameters);
+		$filteredEstateParameters = $this->filterActiveInputFields($estateParameters);
+		$this->_pApiClientAction->setParameters($filteredEstateParameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
 		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
