@@ -280,7 +280,7 @@ class AdminPageApiSettings
 		$pInputModeTitleAndDescription->setDescriptionRadioTextHTML([
 			$descriptionFillOut,$descriptionDoNotModify
 		]);
-		
+
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModeTitleAndDescription);
@@ -454,7 +454,8 @@ class AdminPageApiSettings
 		$pInputModelHoneypot->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
 		$pInputModelHoneypot->setValuesAvailable(1);
 		$pInputModelHoneypot->setValue(get_option($optionNameKey));
-		$pInputModelHoneypot->setDescriptionTextHTML(__('A honeypot is an invisible field to trick spam bots. We recommend to keep this active, but you can deactivate it if it causes any problems.', 'onoffice-for-wp-websites'));
+		$pInputModelHoneypot->setDescriptionTextHTML( __( 'A honeypot is an invisible field to trick spam bots. Note that when a bot is detected, it will pretend the form was sent successfully. We recommend to keep this active, but you can deactivate it if it causes any problems.',
+			'onoffice-for-wp-websites' ) );
 
 		$pFormModel = new FormModel();
 		$pFormModel->addInputModel($pInputModelHoneypot);
