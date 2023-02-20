@@ -69,6 +69,6 @@ form[data-applicant-form-id] #spinner {
     vertical-align: middle;
 }
 
-.honeypot-message{
+.message{
     display: none!important;
 }

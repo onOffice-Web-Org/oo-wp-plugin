@@ -1,16 +1,25 @@
 jQuery(document).ready(function ($) {
     if (honeypot_enabled['honeypotValue'] == true && form['type'] !== 'applicantsearch') {
-        var message = $('textarea[name="message"]')[0] ?? $('input[name="message"]');
-        var newInput = $('<textarea>').attr({
-            'type': 'text',
-            'name': 'tmpField',
-        });
-        message.replaceWith(newInput);
-        var label = $('<label>').text('Message:').attr("class", "honeypot-message");
+        var messageTextarea = $('textarea[name="message"]');
+        var messageInput = $('input[name="message"]');
+        if(messageTextarea.val() == ''){
+            var newInput = $('<textarea>').attr({
+                'type': 'text',
+                'name': 'tmpField',
+            });
+            messageTextarea.replaceWith(newInput);
+        } else if (messageInput.val() == '')  {
+            var newInput = $('<input>').attr({
+                'type': 'text',
+                'name': 'tmpField',
+            });
+            messageInput.replaceWith(newInput);
+        }
+        var label = $('<label>').text('Message:').attr("class", "message");
         var input = $('<input>').attr({
             'type': 'text',
             'name': 'message',
-            'class': 'honeypot-message'
+            'class': 'message'
         });
         $("#onoffice-form").prepend(input);
         $("#onoffice-form").prepend(label);
