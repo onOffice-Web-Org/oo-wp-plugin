@@ -66,8 +66,7 @@ class ContentFilterShortCodeEstate
 	public function replaceShortCodes(array $attributesInput): string
 	{
 		try {
-			$attributes = $this->processAttributes($attributesInput);
-			return $this->buildReplacementString($attributes);
+			return $this->buildReplacementString($attributesInput);
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
@@ -89,7 +88,7 @@ class ContentFilterShortCodeEstate
 			'view' => null,
 			'units' => null,
 		], $attributesInput);
-		if ($attributes['view'] === $this->_pContentFilterShortCodeEstateDetail->getViewName()) {
+		if ($attributes['view'] === $this->_pContentFilterShortCodeEstateDetail->getViewName() || $attributes['view'] === $this->_pContentFilterShortCodeEstateDetail->getViewNameReplace()) {
 			return $this->_pContentFilterShortCodeEstateDetail->render($attributes);
 		}
 		return $this->_pContentFilterShortCodeEstateList->render($attributes);
@@ -101,15 +100,5 @@ class ContentFilterShortCodeEstate
 	public function getTag(): string
 	{
 		return 'oo_estate';
-	}
-
-	/**
-	 * @return array
-	 */
-	public function processAttributes($attributesInput): array
-	{
-		$attributesInput['view'] = str_replace('u0022', '', $attributesInput['view']);
-
-		return $attributesInput;
 	}
 }

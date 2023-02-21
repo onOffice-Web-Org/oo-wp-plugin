@@ -320,15 +320,13 @@ class DetailViewPostSaveController
 		preg_match_all('/'.$regex.'/ism', $post, $matches);
 
 		$detailviewCode = $this->generateDetailViewCode($viewName);
-		$unescapedCode = str_replace('\u0022', '"', $detailviewCode);
 
 		if (!array_key_exists(3, $matches)) {
 			return false;
 		}
 
 		foreach ($matches[3] as $tagParams) {
-			$properTagParams = str_replace('\u0022', '"', $tagParams);
-			if (__String::getNew($properTagParams)->contains($unescapedCode)) {
+			if (__String::getNew($tagParams)->contains($detailviewCode)) {
 				return true;
 			}
 		}
@@ -400,6 +398,7 @@ class DetailViewPostSaveController
 		$listViewAddress = $this->getListViewAddress();
 		$listForm        = $this->getListForm();
 		$isRevision      = wp_is_post_revision( $post );
+
 		if ( ! $isRevision && $post->post_type === 'page' ) {
 			$postID      = $post->ID;
 			$metaKeys    = get_post_meta( $postID, '', true );

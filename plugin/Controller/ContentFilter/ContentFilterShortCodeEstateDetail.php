@@ -169,6 +169,14 @@ class ContentFilterShortCodeEstateDetail
 	/**
 	 * @return string
 	 */
+	public function getViewNameReplace(): string
+	{
+		return $this->_pDataDetailViewHandler->getDetailView()->getViewNameReplace();
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getPageLink(): string
 	{
 		return get_page_link();

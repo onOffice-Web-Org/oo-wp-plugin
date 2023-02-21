@@ -213,6 +213,10 @@ class DataDetailView
 	public function getName(): string
 		{ return 'detail'; }
 
+	/** @return string */
+	public function getViewNameReplace(): string
+		{ return 'u0022detailu0022'; }
+
 	/** @return string[] */
 	public function getAddressFields(): array
 		{ return $this->_addressFields; }
