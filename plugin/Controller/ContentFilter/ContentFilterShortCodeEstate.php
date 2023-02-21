@@ -66,7 +66,8 @@ class ContentFilterShortCodeEstate
 	public function replaceShortCodes(array $attributesInput): string
 	{
 		try {
-			return $this->buildReplacementString($attributesInput);
+			$attributes = $this->processAttributes($attributesInput);
+			return $this->buildReplacementString($attributes);
 		} catch (Exception $pException) {
 			return $this->_pLogger->logErrorAndDisplayMessage($pException);
 		}
@@ -100,5 +101,15 @@ class ContentFilterShortCodeEstate
 	public function getTag(): string
 	{
 		return 'oo_estate';
+	}
+
+	/**
+	 * @return array
+	 */
+	public function processAttributes($attributesInput): array
+	{
+		$attributesInput['view'] = str_replace('u0022', '', $attributesInput['view']);
+
+		return $attributesInput;
 	}
 }
