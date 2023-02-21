@@ -68,7 +68,7 @@ class MainPage
 	{
 		return '<img src="'.plugins_url('/plugin/Gui/resource/mainPage/logo.png', ONOFFICE_PLUGIN_DIR.'/index').'" class="logo">'
 			.'<div class="card">'
-			.$this->includeHtml()
+			.$this->includeHtmlPluginOverview()
 			.'</div>'
 			.'<div id="madeby">Made with <span class="heart">♥</span> by onOffice</span>';
 	}
@@ -82,14 +82,41 @@ class MainPage
 
 	private function includeHtml(): string
 	{
-		$parsedown = new Parsedown;
 		$fileMapping = $this->_pFileMapping->getMapping();
 		$locale = $this->_pLanguage->getLocale();
 		$file = $fileMapping[$locale] ?? $fileMapping['en_US'] ??
 				$fileMapping['en_GB'] ?? $fileMapping['de_DE'] ?? '';
-		$contents = $this->_pFilesystem->getContents($file);
-		$textTranslation = __($contents, 'onoffice-for-wp-websites');
-		$html = $parsedown->text($textTranslation);
+		return $this->_pFilesystem->getContents($file);
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	private function getPluginOverview(): string
+	{
+		$connectText = __("Connect your website to onOffice enterprise", 'onoffice-for-wp-websites');
+		$integrationText = __("You are ready to integrate all your real estate into your website and create forms that send data into onOffice enterprise.", 'onoffice-for-wp-websites');
+		$setupText = __("For help with setting up the plugin, read through our [setup tutorial](https://wp-plugin.onoffice.com/en/first-steps/).", 'onoffice-for-wp-websites');
+		$documentationText = __("The [documentation website](https://wp-plugin.onoffice.com/en/) also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the [support form](https://wp-plugin.onoffice.com/en/support/).", 'onoffice-for-wp-websites');
+		return "## $connectText\n\n$integrationText\n\n$setupText\n\n$documentationText";
+	}
+
+
+	/**
+	 *
+	 * @return string
+	 *
+	 */
+
+	 private function includeHtmlPluginOverview(): string
+	 {
+		$parsedown = new Parsedown;
+		$html = $parsedown->text($this->getPluginOverview());
+
 		return $html;
 	}
 }

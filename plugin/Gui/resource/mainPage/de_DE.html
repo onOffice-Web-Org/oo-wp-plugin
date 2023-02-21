@@ -1,7 +1,121 @@
-## Connect your website to onOffice enterprise
+<h1>Herzlich Willkommen zu onOffice für WP-Websites</h1>
+<p>
+	Das Plugin ermöglicht die Darstellung von Immobilien und Adressen aus der onOffice enterprise
+	edition.<br>
+	Mit Formularen erfasste Daten werden direkt an Ihre onOffice enterprise edition Version
+	übertragen.
+</p>
 
-You are ready to integrate all your real estate into your website and create forms that send data into onOffice enterprise.
+<h2>API-User</h2>
+<p>
+	Zur Anbindung des Plugins an Ihre onOffice enterprise edition ist ein API-User erforderlich.
+	Sobald dieser in onOffice eingerichtet ist, geben Sie bitte den API-Token (32-Stellen) in den
+	<a href="admin.php?page=onoffice-settings" target="_blank">Einstellungen</a> des Plugins an.
+	Bei Fragen zum API-User wenden Sie sich bitte an den Support:
+	<a href="mailto:support@onoffice.com">support@onoffice.com</a>.
+</p>
 
-For help with setting up the plugin, read through our [setup tutorial](https://wp-plugin.onoffice.com/en/first-steps/).
+<h2>Ansichten erstellen</h2>
+<p>
+	Über die Menüpunkte <a href="admin.php?page=onoffice-addresses" target="_blank">Adressen</a>,
+	<a href="admin.php?page=onoffice-estates" target="_blank">Immobilien</a> und
+	<a href="admin.php?page=onoffice-forms&type=all" target="_blank">Formulare</a> lassen sich neue
+	Ansichten anlegen und bearbeiten. Auf diesen Konfigurationsseiten befinden sich verschiedene
+	Boxen mit Einstellungen, über die sich das Verhalten und das Aussehen der Ansichten verwalten
+	lässt.
+</p>
 
-The [documentation website](https://wp-plugin.onoffice.com/en/) also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the [support form](https://wp-plugin.onoffice.com/en/support/).
+<h3>Layout & Design</h3>
+<p>
+	In der Box ‘Layout & Design’ können Sie verschiedene Templates auswählen, um das grundlegende
+	Aussehen der Ansicht zu bestimmen. Wenn Sie eigene Templates anlegen möchten, können Sie diese
+	im Wordpress Plugin-Verzeichnis im Ordner “onoffice-personalized"  hinterlegen und anschließend
+	auswählen.
+</p>
+<h3>Felder</h3>
+<p>
+	Welche Informationen in einer Liste angezeigt werden, oder im Kontaktformular angegeben werden
+	müssen, können Sie über die Box ‘Felder’ kontrollieren. Sie können der Box alle Felder
+	hinzufügen, die Sie in Ihrer onOffice enterprise Version freigegeben haben - ganz nach Ihren
+	Vorstellungen und Wünschen.
+</p>
+<h2>Einbindung per Shortcode</h2>
+<p>
+	Alle Ansichten lassen sich ganz einfach über Shortcodes auf Ihrer Seite einbinden. Die
+	Shortcodes finden Sie in den Listenansichten unter den Menüpunkten
+	<a href="admin.php?page=onoffice-addresses" target="_blank">Adressen</a>,
+	<a href="admin.php?page=onoffice-estates" target="_blank">Immobilien</a> und
+	<a href="admin.php?page=onoffice-forms&amp;type=all" target="_blank">Formulare</a>.
+</p>
+<p>
+	Sie können beliebig viele Ansichten und Formulare anlegen, passend zum gewünschten Einsatz. Eine
+	Ausnahme bildet die <a href="admin.php?page=onoffice-estates&amp;tab=detail" target="_blank">
+	Detailansicht</a> der Immobilien. Diese wird einmalig definiert und gilt für alle
+	Immobilien-Listen.
+</p>
+<h2>Beispiel: Immobilienliste</h2>
+<h3>Listenansicht erstellen</h3>
+<p>
+	Um eine Liste Ihrer Immobilien zu erstellen, gehen Sie im Hauptmenü auf
+	<a href="admin.php?page=onoffice-estates" target="_blank">onOffice > Immobilien</a>.
+	Klicken Sie im Reiter ‘Listenansichten’ auf ‘Neu’. Es öffnet sich die Ansicht zur Konfiguration
+	der Liste.
+</p>
+<h3>Listenansicht konfigurieren</h3>
+<p>
+	Legen Sie im oberen Eingabefeld einen Namen für die Liste fest. Um neue Listen und Änderungen an
+	bestehenden Listen zu speichern, klicken Sie ganz unten auf <i>‘Änderungen speichern’</i>.
+</p>
+<p>
+	Welche Immobiliendaten in der Liste ausgegeben werden, sehen Sie rechts unten in der Box
+	<i>‘Felder’</i>. Um neue Felder hinzuzufügen, nutzen Sie die Kategorien links neben der Box ‘Felder’.
+	Über den kleinen Pfeil können die Kategorien ausgeklappt werden. Setzen Sie das Häkchen neben
+	dem gewünschten Feld und klicken Sie auf <i>‘Hinzufügen’</i>, das Feld erscheint nun in der Box
+	‘Felder’. Jedes hinzugefügte Feld wird später in der Liste ausgegeben. Wenn Sie möchten, dass
+	der Besucher die Liste nach einem bestimmten Feld filtern kann, klicken Sie auf das Feld und
+	setzen Sie den Haken bei ‘Filterbar’.
+</p>
+<p>
+	Im oberen Bereich der Konfigurationsansicht gibt es die Box <i>‘Filter und Datensätze’</i>. Über die
+	Einstellungen Sortierkriterium und Sortierrichtung können Sie bestimmen, wie die Liste sortiert
+	wird.
+</p>
+<p>
+	Über die Einstellung <i>‘Auswahl einschränken’</i> können Sie Filter auf die Liste anwenden. Dadurch
+	wird dem Nutzer eine vorgefilterte Liste angezeigt, welche beispielsweise nur aktive Immobilien
+	oder Immobilien eines bestimmten Typs ausgibt.
+</p>
+
+<h2>Beispiel: Interessentenformular</h2>
+<h3>Formular erstellen</h3>
+<p>
+	Um ein Interessentenformular zu erstellen, gehen Sie im Hauptmenü auf
+	<a href="admin.php?page=onoffice-forms" target="_blank">onOffice > Formulare</a>.
+	Klicken Sie oben auf <a href="admin.php?page=onoffice-forms&type=interest" target="_blank">
+		Interessentenformular</a> und dann auf ‘Neu’. Es öffnet sich die Ansicht zur
+	Konfiguration des Formulars.
+</p>
+
+<h3>Formular konfigurieren</h3>
+
+<p>
+	Vergeben Sie im oberen Eingabefeld einen Namen für das Formular. Wie bei den Listen finden Sie
+	unten rechts die Box ‘Felder’. Alle Felder, die dort auftauchen, werden als Eingabefelder im
+	Formular ausgegeben. Über die Dropdown-Auswahl in jedem Feld können Sie das Feld als
+	Pflichtangabe festlegen.
+</p>
+<p>
+	Wichtig ist es, in der Box <i>‘Formularspezifische Optionen’</i> die E-Mail-Adresse des Empfängers
+	anzugeben. Wenn der Besucher Ihrer Website das Formular ausfüllt und abschickt, werden die Daten
+	an die angegebene E-Mail-Adresse verschickt.<br>
+	Um Spam zu vermeiden, können Sie an dieser Stelle auch die Verwendung von Captchas festlegen.
+	Die Einstellungen zu den Captchas finden Sie im Menüpunkt
+	<a href="admin.php?page=onoffice-settings" target="_blank">onOffice > Einstellungen</a>.
+</p>
+<h2>Cache leeren</h2>
+<p>
+	Damit Änderungen der Daten in onOffice enterprise edition direkt auf der Webseite zu sehen sind,
+	gehen Sie in die <a href="admin.php?page=onoffice-settings" target="_blank">Einstellungen</a>
+	und klicken Sie auf <i>‘Änderungen speichern’</i>.
+</p>
+
