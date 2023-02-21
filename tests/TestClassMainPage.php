@@ -91,7 +91,6 @@ class TestClassMainPage
 			}));
 
 		$this->_pLanguage = $this->getMockBuilder(Language::class)->getMock();
-		$this->_pLanguage->expects($this->atLeast(1))->method('getLocale')->will($this->returnValue('es_ES'));
 
 	}
 
@@ -100,12 +99,12 @@ class TestClassMainPage
 	 *
 	 */
 
-	public function testRender()
-	{
-		$pMainPage = new MainPage($this->_pLanguage, $this->_pFileMapping, $this->_pFilesystem);
-		$this->assertStringContainsString('<div class="card"><p>contents of es.html</p></div>', $pMainPage->render());
-		$this->assertStringContainsString('<div class="card"><p>contents of en_US.html</p></div>', $pMainPage->render());
-		$this->assertStringContainsString('<div class="card"><p>contents of en_GB.html</p></div>', $pMainPage->render());
-		$this->assertStringContainsString('<div class="card"><p>contents of de.html</p></div>', $pMainPage->render());
-	}
+	 public function testRender()
+	 {
+		 $pMainPage = new MainPage($this->_pLanguage, $this->_pFileMapping, $this->_pFilesystem);
+		 $this->assertStringContainsString('><div class="card"><h2>Connect your website to onOffice enterprise</h2>', $pMainPage->render());
+		 $this->assertStringContainsString('<p>You are ready to integrate all your real estate into your website and create forms that send data into onOffice enterprise.</p>', $pMainPage->render());
+		 $this->assertStringContainsString('<p>For help with setting up the plugin, read through our <a href="https://wp-plugin.onoffice.com/en/first-steps/">setup tutorial</a>.</p>', $pMainPage->render());
+		 $this->assertStringContainsString('<p>The <a href="https://wp-plugin.onoffice.com/en/">documentation website</a> also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the <a href="https://wp-plugin.onoffice.com/en/support/">support form</a>.</p>', $pMainPage->render());
+	 }
 }
