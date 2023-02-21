@@ -98,6 +98,7 @@ class DetailViewPostSaveController
 		if ($pPost->post_status === 'trash') {
 			return;
 		}
+
 		$isRevision = wp_is_post_revision($pPost);
 
 		if (!$isRevision) {
@@ -398,7 +399,6 @@ class DetailViewPostSaveController
 		$listViewAddress = $this->getListViewAddress();
 		$listForm        = $this->getListForm();
 		$isRevision      = wp_is_post_revision( $post );
-
 		if ( ! $isRevision && $post->post_type === 'page' ) {
 			$postID      = $post->ID;
 			$metaKeys    = get_post_meta( $postID, '', true );
