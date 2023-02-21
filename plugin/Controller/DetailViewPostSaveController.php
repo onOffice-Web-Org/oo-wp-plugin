@@ -98,7 +98,6 @@ class DetailViewPostSaveController
 		if ($pPost->post_status === 'trash') {
 			return;
 		}
-
 		$isRevision = wp_is_post_revision($pPost);
 
 		if (!$isRevision) {
@@ -321,13 +320,15 @@ class DetailViewPostSaveController
 		preg_match_all('/'.$regex.'/ism', $post, $matches);
 
 		$detailviewCode = $this->generateDetailViewCode($viewName);
+		$unescapedCode = str_replace('\u0022', '"', $detailviewCode);
 
 		if (!array_key_exists(3, $matches)) {
 			return false;
 		}
 
 		foreach ($matches[3] as $tagParams) {
-			if (__String::getNew($tagParams)->contains($detailviewCode)) {
+			$properTagParams = str_replace('\u0022', '"', $tagParams);
+			if (__String::getNew($properTagParams)->contains($unescapedCode)) {
 				return true;
 			}
 		}
