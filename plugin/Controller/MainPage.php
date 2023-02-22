@@ -98,11 +98,15 @@ class MainPage
 
 	private function getPluginOverview(): string
 	{
-		$connectText = __("Connect your website to onOffice enterprise", 'onoffice-for-wp-websites');
-		$integrationText = __("You are ready to integrate all your real estate into your website and create forms that send data into onOffice enterprise.", 'onoffice-for-wp-websites');
-		$setupText = __("For help with setting up the plugin, read through our [setup tutorial](https://wp-plugin.onoffice.com/en/first-steps/).", 'onoffice-for-wp-websites');
-		$documentationText = __("The [documentation website](https://wp-plugin.onoffice.com/en/) also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the [support form](https://wp-plugin.onoffice.com/en/support/).", 'onoffice-for-wp-websites');
-		return "## $connectText\n\n$integrationText\n\n$setupText\n\n$documentationText";
+		return __(<<<EOF
+		## Connect your website to onOffice enterprise
+
+		You are ready to integrate all your real estate into your website and create forms that send data into onOffice enterprise.
+
+		For help with setting up the plugin, read through our [setup tutorial](https://wp-plugin.onoffice.com/en/first-steps/).
+
+		The [documentation website](https://wp-plugin.onoffice.com/en/) also offers detailed explanations of the features. If you encounter a problem, you can send us a message using the [support form](https://wp-plugin.onoffice.com/en/support/).
+		EOF, 'onoffice-for-wp-websites');
 	}
 
 
