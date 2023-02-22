@@ -44,7 +44,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 36;
+	const MAX_VERSION = 37;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -267,6 +267,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			dbDelta( $this->getCreateQueryFieldConfigEstateCustomsLabels() );
 			dbDelta( $this->getCreateQueryFieldConfigEstateTranslatedLabels() );
 			$dbversion = 36;
+		}
+
+		if ( $dbversion == 36 ) {
+			$this->_pWpOption->addOption( 'onoffice-settings-honeypot', true );
+			$dbversion = 37;
 		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
