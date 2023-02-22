@@ -19,7 +19,7 @@
  *
  */
 
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace onOffice\WPlugin\Controller;
 
@@ -34,28 +34,6 @@ use Parsedown;
 
 class MainPage
 {
-	/** @var Language */
-	private $_pLanguage = null;
-
-	/** @var MainPageFileMapping */
-	private $_pFileMapping = null;
-
-	/** @var Filesystem */
-	private $_pFilesystem = null;
-
-
-	/**
-	 *
-	 * @param Language $pLanguage
-	 *
-	 */
-
-	public function __construct(Language $pLanguage, MainPageFileMapping $pFileMapping, Filesystem $pFilesystem)
-	{
-		$this->_pLanguage = $pLanguage;
-		$this->_pFileMapping = $pFileMapping;
-		$this->_pFilesystem = $pFilesystem;
-	}
 
 
 	/**
@@ -66,27 +44,11 @@ class MainPage
 
 	public function render(): string
 	{
-		return '<img src="'.plugins_url('/plugin/Gui/resource/mainPage/logo.png', ONOFFICE_PLUGIN_DIR.'/index').'" class="logo">'
-			.'<div class="card">'
-			.$this->includeHtmlPluginOverview()
-			.'</div>'
-			.'<div id="madeby">Made with <span class="heart">♥</span> by onOffice</span>';
-	}
-
-
-	/**
-	 *
-	 * @return string
-	 *
-	 */
-
-	private function includeHtml(): string
-	{
-		$fileMapping = $this->_pFileMapping->getMapping();
-		$locale = $this->_pLanguage->getLocale();
-		$file = $fileMapping[$locale] ?? $fileMapping['en_US'] ??
-				$fileMapping['en_GB'] ?? $fileMapping['de_DE'] ?? '';
-		return $this->_pFilesystem->getContents($file);
+		return '<img src="' . plugins_url('/plugin/Gui/resource/mainPage/logo.png', ONOFFICE_PLUGIN_DIR . '/index') . '" class="logo">'
+			. '<div class="card">'
+			. $this->includeHtmlPluginOverview()
+			. '</div>'
+			. '<div id="madeby">Made with <span class="heart">♥</span> by onOffice</span>';
 	}
 
 
@@ -116,8 +78,8 @@ class MainPage
 	 *
 	 */
 
-	 private function includeHtmlPluginOverview(): string
-	 {
+	private function includeHtmlPluginOverview(): string
+	{
 		$parsedown = new Parsedown;
 		$html = $parsedown->text($this->getPluginOverview());
 
