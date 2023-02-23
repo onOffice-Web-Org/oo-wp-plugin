@@ -76,6 +76,20 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.9 (2023-02-23) =
+
+**Added**
+
+* Option to add a honeypot field to forms to combat spam.
+
+**Changed**
+
+* Introduction page was made translatable and simplified.
+
+**Fixed**
+
+* Detect detail view shortcode in ACF blocks' data.
+
 = 4.8 (2023-02-09) =
 
 **Changed**
