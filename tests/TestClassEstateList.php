@@ -937,7 +937,7 @@ class TestClassEstateList
 	private function getDataView(): DataListView
 	{
 		$pDataView = new DataListView(1, 'test');
-		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
+		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'ind_1876_Feld_adressen21', 'ind_2050_Feld_ObjZusatz65']);
 		$pDataView->setSortby('Id');
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);
@@ -967,8 +967,7 @@ class TestClassEstateList
 
 	/**
 	 *
-	 * @return EstateFieldsData
-	 * 
+	 * @return FieldsCollection
 	 *
 	 */
 	public function getEstateFieldsData() {

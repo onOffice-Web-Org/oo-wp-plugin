@@ -210,8 +210,7 @@ class EstateList
 	private function loadRecords(int $currentPage)
 	{
 		$estateParameters = $this->getEstateParameters($currentPage, $this->_formatOutput);
-		$filteredEstateParameters = $this->filterActiveInputFields($estateParameters);
-		$this->_pApiClientAction->setParameters($filteredEstateParameters);
+		$this->_pApiClientAction->setParameters($estateParameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
 		$estateParametersRaw = $this->getEstateParameters($currentPage, false);
@@ -228,12 +227,13 @@ class EstateList
 
 	/**
 	 * @param $inputs
-	 * @return array
+	 * @return DataView
 	 *
 	 */
 
-	private function filterActiveInputFields($inputs): array
+	private function filterActiveInputFields($inputs): DataView
 	{
+		$activeInputs = [];
 		$recordType = onOfficeSDK::MODULE_ESTATE;
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
@@ -242,12 +242,12 @@ class EstateList
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
-		foreach ($inputs['data'] as $key => $name) {
-			if (!$pFieldsCollection->containsFieldByModule($recordType, $name)) {
-				unset($inputs['data'][$key]);
+		foreach ($inputs->getFields() as $name) {
+			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
+				$activeInputs[] = $name;
 			}
 		}
-
+		$inputs->setFields($activeInputs);
 		return $inputs;
 	}
 	/**
@@ -280,7 +280,7 @@ class EstateList
 	private function getEstateParameters(int $currentPage, bool $formatOutput)
 	{
 		$language = Language::getDefault();
-		$pListView = $this->_pDataView;
+		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
