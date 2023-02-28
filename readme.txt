@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.1.1
 Requires PHP: 7.3
-Stable tag: 4.7
+Stable tag: 4.9
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,42 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.9 (2023-02-23) =
+
+**Added**
+
+* Option to add a honeypot field to forms to combat spam.
+
+**Changed**
+
+* Introduction page was made translatable and simplified.
+
+**Fixed**
+
+* Detect detail view shortcode in ACF blocks' data.
+
+= 4.8 (2023-02-09) =
+
+**Changed**
+
+* The onOffice menu in the admin bar now appears in the backend, too.
+* In an estate list or the detail page, when a field contains only an empty array (for example the parking lots field), it will no longer be displayed with a blank value, but removed from the list. If you have personalized your templates, you need to add this check for an empty array to get the same behavior.
+
+**Fixed**
+
+* Parking lots previously would display as "Array, Array, Array". They are now shown correctly, in a format similar to the one in onOffice enterprise.
+* When saving a custom label for an estate or form field that contained quotes, like ", they would be escaped with \". The plugin now preserves the original characters when saving.
+* When a template from the theme folder was selected and then a child theme was activated, the frontend showed an error about the template path being invalid. This was fixed so that it loads the template correctly.
+* Custom labels for estate list fields are now used in the frontend in the dropdown where the sorting of the list can be selected.
+
+= 4.7.1 (2023-01-23) =
+
+**Fixed**
+
+* If an estate showed similar estates on its detail page, there was a bug that would cause a fatal error. We fixed it so that similar estates can be shown normally again.
+* When an estate field was renamed, the new name would previously not be used in the search form. We fixed it and now a field's custom label is used everywhere.
+* When no estates were published, the detail page preview without an estate ID would crash. We fixed it and now refer to the documentation on how to publish estates.
 
 = 4.7 (2023-01-11) =
 
@@ -259,6 +295,10 @@ Start editing inside the `onoffice-personalized` folder.
 You can view all previous changes in our [changelog.txt](https://github.com/onOfficeGmbH/oo-wp-plugin/blob/master/changelog.txt).
 
 == Arbitrary section ==
+
+Note that we cannot guarantee compatibility with all other plugins and themes.
+
+While it works well with most, if you encounter issues that we cannot reproduce, feel free to open a PR in our repository. If we understand the change and can test the functionality, we will be happy to include your fix.
 
 = Development =
 

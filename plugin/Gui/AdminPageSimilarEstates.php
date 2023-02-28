@@ -443,9 +443,9 @@ class AdminPageSimilarEstates
 		foreach ( $this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField ) {
 			$valuesByLocale = $dataSimilarEstateCustomLabel->getCustomLabels();
 			$currentLocale  = $pLanguage->getLocale();
-			$valuesByLocale = $valuesByLocale[ $pField->getName() ];
+			$valuesByLocale = $valuesByLocale[ $pField->getName() ] ?? '';
 
-			if ( isset( $valuesByLocale[ $currentLocale ] ) ) {
+			if ( isset( $valuesByLocale[ $currentLocale ] ) && is_array( $valuesByLocale ) ) {
 				$valuesByLocale['native'] = $valuesByLocale[ $currentLocale ];
 				unset( $valuesByLocale[ $currentLocale ] );
 			}

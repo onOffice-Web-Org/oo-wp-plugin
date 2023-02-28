@@ -32,6 +32,9 @@
 		if ( is_numeric( $value ) && 0 == $value ) {
 			continue;
 		}
+		if (empty($value)) {
+			continue;
+		}
 	?>
 		<?php echo $pEstates->getFieldLabel( $field ) .': '.(is_array($value) ? esc_html(implode(', ', $value)) : esc_html($value)); ?><br>
 

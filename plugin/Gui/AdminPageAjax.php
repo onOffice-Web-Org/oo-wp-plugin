@@ -181,7 +181,12 @@ abstract class AdminPageAjax
 	{
 		$result = [];
 
-		foreach ( $_POST as $index => $fields ) {
+		// WordPress escapes quotes (and backslashes) in $_POST. This is called "magic quotes", for details see https://core.trac.wordpress.org/ticket/18322.
+		// If we would save the strings with the backslashes, those would not be unescaped correctly later, so on the next save, we would keep adding backslashes.
+		// Therefore, we unescape all strings here.
+		$normalizedPost = wp_unslash($_POST);
+
+		foreach ( $normalizedPost as $index => $fields ) {
 			if ( strpos( $index, self::EXCLUDE_FIELD ) !== false || strpos( $index, 'filter_fields_order' ) !== false ) {
 				continue;
 			}

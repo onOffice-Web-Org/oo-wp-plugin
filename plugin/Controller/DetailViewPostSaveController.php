@@ -326,7 +326,10 @@ class DetailViewPostSaveController
 			return false;
 		}
 
-		foreach ($matches[3] as $tagParams) {
+		$view = $matches[3];
+		$view = str_replace('\u0022', '"', $view);
+		
+		foreach ($view as $tagParams) {
 			if (__String::getNew($tagParams)->contains($detailviewCode)) {
 				return true;
 			}

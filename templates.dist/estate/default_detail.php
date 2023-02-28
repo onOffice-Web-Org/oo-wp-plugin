@@ -31,6 +31,14 @@ use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr", "sonstige_angaben");
 /** @var EstateDetail $pEstates */
 ?>
+<style>
+	ul.oo-listparking {
+		padding: 0 10px;
+	}
+	.clear {
+		width: 25%;
+	}
+</style>
 <div class="oo-detailview">
 	<?php
 	$pEstates->resetEstateIterator();
@@ -63,7 +71,7 @@ $dontEcho = array("objekttitel", "objektbeschreibung", "lage", "ausstatt_beschr"
 					if (in_array($field, $dontEcho)) {
 						continue;
 					}
-					if ($value == "") {
+					if (empty($value)) {
 						continue;
 					}
 					echo '<div class="oo-detailslisttd">' . esc_html($pEstates->getFieldLabel($field)) . '</div>' . "\n"

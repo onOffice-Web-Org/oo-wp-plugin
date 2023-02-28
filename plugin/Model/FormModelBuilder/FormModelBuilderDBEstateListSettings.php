@@ -194,6 +194,10 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModelFiltername->setValuesAvailable($availableFilters);
 		$filteridSelected = $this->getValue($pInputModelFiltername->getField());
 		$pInputModelFiltername->setValue($filteridSelected);
+		$linkUrl = __("https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en","onoffice-for-wp-websites");
+		$linkLabel = '<a href="' . $linkUrl . '" >' . __( 'Learn more.', 'onoffice-for-wp-websites' ) . '</a>';
+		$pInputModelFiltername->setHintHtml( sprintf( __( 'Choose an estate filter from onOffice enterprise. %s',
+			'onoffice-for-wp-websites' ), $linkLabel ) );
 
 		return $pInputModelFiltername;
 	}
