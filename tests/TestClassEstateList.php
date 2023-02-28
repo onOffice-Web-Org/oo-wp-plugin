@@ -342,14 +342,14 @@ class TestClassEstateList
 	 */
 
 	public function testGetEstatePictureUrl()
-{
-	$this->_pEstateList->loadEstates();
-	$this->_pEstateList->estateIterator();
-	$this->assertEquals($this->_estatePicturesByEstateId[15][2]['url'],
-		$this->_pEstateList->getEstatePictureUrl(2));
-	$this->assertEquals($this->_estatePicturesByEstateId[15][3]['url'].'@200x300',
-		$this->_pEstateList->getEstatePictureUrl(3, ['width' => 200, 'height' => 300]));
-}
+	{
+		$this->_pEstateList->loadEstates();
+		$this->_pEstateList->estateIterator();
+		$this->assertEquals($this->_estatePicturesByEstateId[15][2]['url'],
+			$this->_pEstateList->getEstatePictureUrl(2));
+		$this->assertEquals($this->_estatePicturesByEstateId[15][3]['url'].'@200x300',
+			$this->_pEstateList->getEstatePictureUrl(3, ['width' => 200, 'height' => 300]));
+	}
 
 
 	/**
