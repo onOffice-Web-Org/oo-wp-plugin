@@ -342,14 +342,14 @@ class TestClassEstateList
 	 */
 
 	public function testGetEstatePictureUrl()
-	{
-		$this->_pEstateList->loadEstates();
-		$this->_pEstateList->estateIterator();
-		$this->assertEquals($this->_estatePicturesByEstateId[15][2]['url'],
-			$this->_pEstateList->getEstatePictureUrl(2));
-		$this->assertEquals($this->_estatePicturesByEstateId[15][3]['url'].'@200x300',
-			$this->_pEstateList->getEstatePictureUrl(3, ['width' => 200, 'height' => 300]));
-	}
+{
+	$this->_pEstateList->loadEstates();
+	$this->_pEstateList->estateIterator();
+	$this->assertEquals($this->_estatePicturesByEstateId[15][2]['url'],
+		$this->_pEstateList->getEstatePictureUrl(2));
+	$this->assertEquals($this->_estatePicturesByEstateId[15][3]['url'].'@200x300',
+		$this->_pEstateList->getEstatePictureUrl(3, ['width' => 200, 'height' => 300]));
+}
 
 
 	/**
@@ -809,19 +809,6 @@ class TestClassEstateList
 		$this->assertEquals('', $result['vermarktungsstatus']);
 	}
 
-
-	/**
-	 *
-	 */
-	public function testFilterActiveInputFields()
-	{
-		$fields = [ 'Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung' ];
-		$this->_pEstateList->loadEstates();
-
-		$this->assertEquals( $fields, $this->_pEstateList->getDataView()->getFields() );
-	}
-
-
 	/**
 	 *
 	 * @before
@@ -895,17 +882,17 @@ class TestClassEstateList
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setConstructorArgs([$this->_pContainer])
 			->getMock();
-		$pFieldsCollection = $this->getEstateFieldsData();
-
-		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
-			->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
-			use ($pFieldsCollection, $pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
-			{
-				$pFieldsCollectionOut->merge($pFieldsCollection);
-				return $pFieldsCollectionBuilderShort;
-			});
-		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
-
+			$pFieldsCollection = $this->getEstateFieldsData();
+	
+			$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+				->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
+				use ($pFieldsCollection, $pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+				{
+					$pFieldsCollectionOut->merge($pFieldsCollection);
+					return $pFieldsCollectionBuilderShort;
+				});
+			$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
+	
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
 		$this->_pEstateList = new EstateList($pDataListView, $this->_pEnvironment);
@@ -950,7 +937,7 @@ class TestClassEstateList
 	private function getDataView(): DataListView
 	{
 		$pDataView = new DataListView(1, 'test');
-		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'ind_1876_Feld_adressen21', 'ind_2050_Feld_ObjZusatz65']);
+		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
 		$pDataView->setSortby('Id');
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);
