@@ -78,7 +78,7 @@ class TestClassSortListDropDownGenerator
 			->willReturn($this->_pListView);
 
 		$this->_pBuilder = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
-			->setMethods(['addFieldsAddressEstate'])
+			->setMethods(['addFieldsAddressEstate','addCustomLabelFieldsEstateFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
 

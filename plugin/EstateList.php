@@ -59,6 +59,7 @@ use function home_url;
 use function esc_attr;
 use onOffice\WPlugin\WP\WPOptionWrapperDefault;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\FieldParkingLot;
 
 class EstateList
 	implements EstateListBase
@@ -449,6 +450,10 @@ class EstateList
 		$this->_currentEstate['title'] = $currentRecord['elements']['objekttitel'] ?? '';
 
 		$recordModified = $pEstateFieldModifierHandler->processRecord($currentRecord['elements']);
+		$fieldWaehrung = $this->_pEnvironment->getFieldnames()->getFieldInformation('waehrung', onOfficeSDK::MODULE_ESTATE);
+		if (!empty($fieldWaehrung['permittedvalues']) && !empty($recordModified['waehrung']) && isset($recordModified['waehrung']) ) {
+			$recordModified['codeWaehrung'] = array_search($recordModified['waehrung'], $fieldWaehrung['permittedvalues']);
+		}
 		$recordRaw = $this->_recordsRaw[$this->_currentEstate['id']]['elements'];
 
 		if ($this->getShowEstateMarketingStatus()) {
@@ -462,8 +467,13 @@ class EstateList
 				echo '<meta name="description" content="' . esc_attr( $recordModified["objektbeschreibung"] ?? null ) . '" />';
 			} );
 		}
+		$recordModified = new ArrayContainerEscape($recordModified);
+		if ($recordModified['multiParkingLot']) {
+			$parking = new FieldParkingLot();
+			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
+		}
 
-		return new ArrayContainerEscape( $recordModified );
+		return $recordModified;
 	}
 
 	public function custom_pre_get_document_title($title_parts_array, $recordModified) {
@@ -498,11 +508,12 @@ class EstateList
 		$recordType = onOfficeSDK::MODULE_ESTATE;
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
 		$pFieldBuilderShort
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
-			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $this->_pDataView->getListType());
+			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
 
 		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 		$fieldNewName = esc_html($label);

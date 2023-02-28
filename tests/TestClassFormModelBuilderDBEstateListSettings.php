@@ -485,7 +485,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
 		                  ->disableOriginalConstructor()
-		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', "readFilters"])
+		                  ->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields', "readFilters", 'getHintHtml'])
 		                  ->getMock();
 
 		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
@@ -497,6 +497,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$this->assertEquals($pInputModelDB->getValue(), '0');
 		$this->assertEquals($pInputModelDB->getValuesAvailable(), [""]);
 		$this->assertEquals('select', $pInputModelDB->getHtmlType());
+		$this->assertEquals('Choose an estate filter from onOffice enterprise. <a href="https://de.enterprisehilfe.onoffice.com/help_entries/property-filter/?lang=en" >Learn more.</a>', $pInputModelDB->getHintHtml());
 	}
 
 	/**

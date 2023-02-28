@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.7
+Version: 4.9
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -335,60 +335,64 @@ add_action('parse_request', function () use ( $pDI ) {
 	}
 });
 
-if ( ! is_admin() ) {
-	add_action('admin_bar_menu', function ( $wp_admin_bar ) {
-		$user = wp_get_current_user();
-		$allowed_roles = array('editor', 'administrator');
-		if( array_intersect($allowed_roles, $user->roles ) ){
-			$toolBarConfig = [
-				[
-					'id'    => 'onoffice',
-					'title' => __('onOffice', 'onoffice-for-wp-websites'),
-					'href'  => admin_url('admin.php?page=onoffice'),
-					'meta'  => [ 'class' => 'onoffice' ]
-				],
-				[
-					'id'     => 'onoffice-clear-cache',
-					'title' => __('Clear onOffice cache', 'onoffice-for-wp-websites'),
-					'href'   => admin_url('onoffice-clear-cache'),
-					'parent' => 'onoffice',
-					'meta'   => [ 'class' => 'onoffice-clear-cache' ]
-				],
-				[
-					'id'     => 'addresses',
-					'title' => __('Addresses', 'onoffice-for-wp-websites'),
-					'href'   => admin_url('admin.php?page=onoffice-addresses'),
-					'parent' => 'onoffice',
-					'meta'   => [ 'class' => 'addresses' ]
-				],
-				[
-					'id'     => 'estates',
-					'title' => __('Estates', 'onoffice-for-wp-websites'),
-					'href'   => admin_url('admin.php?page=onoffice-estates'),
-					'parent' => 'onoffice',
-					'meta'   => [ 'class' => 'estates' ]
-				],
-				[
-					'id'     => 'forms',
-					'title' => __('Forms', 'onoffice-for-wp-websites'),
-					'href'   => admin_url('admin.php?page=onoffice-forms'),
-					'parent' => 'onoffice',
-					'meta'   => [ 'class' => 'forms' ]
-				],
-				[
-					'id'     => 'settings',
-					'title' => __('Settings', 'onoffice-for-wp-websites'),
-					'href'   => admin_url('admin.php?page=onoffice-settings'),
-					'parent' => 'onoffice',
-					'meta'   => [ 'class' => 'settings' ]
-				]
-			];
+add_action('admin_bar_menu', function ( $wp_admin_bar ) {
+	$user = wp_get_current_user();
+	$allowed_roles = array('editor', 'administrator');
+	if( array_intersect($allowed_roles, $user->roles ) ){
+		$toolBarConfig = [
+			[
+				'id'    => 'onoffice',
+				'title' => __('onOffice', 'onoffice-for-wp-websites'),
+				'href'  => admin_url('admin.php?page=onoffice'),
+				'meta'  => [ 'class' => 'onoffice' ]
+			],
+			[
+				'id'     => 'onoffice-clear-cache',
+				'title' => __('Clear onOffice cache', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('onoffice-clear-cache'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'onoffice-clear-cache' ]
+			],
+			[
+				'id'     => 'addresses',
+				'title' => __('Addresses', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('admin.php?page=onoffice-addresses'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'addresses' ]
+			],
+			[
+				'id'     => 'estates',
+				'title' => __('Estates', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('admin.php?page=onoffice-estates'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'estates' ]
+			],
+			[
+				'id'     => 'forms',
+				'title' => __('Forms', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('admin.php?page=onoffice-forms'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'forms' ]
+			],
+			[
+				'id'     => 'settings',
+				'title' => __('Settings', 'onoffice-for-wp-websites'),
+				'href'   => admin_url('admin.php?page=onoffice-settings'),
+				'parent' => 'onoffice',
+				'meta'   => [ 'class' => 'settings' ]
+			]
+		];
 
-			foreach ( $toolBarConfig as $e ) {
-				$wp_admin_bar->add_node($e);
-			}
-		};
-	}, 500);
+		foreach ( $toolBarConfig as $e ) {
+			$wp_admin_bar->add_node($e);
+		}
+	};
+}, 500);
+function enqueue_my_scripts() {
+	wp_enqueue_script( 'onoffice-honeypot', plugins_url( 'onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php' ), array('jquery'));
+	$honeypot_enabled = get_option('onoffice-settings-honeypot');
+	wp_localize_script( 'onoffice-honeypot', 'honeypot_enabled', array(  'honeypotValue' => $honeypot_enabled ) );
 }
 
+add_action( 'wp_enqueue_scripts', 'enqueue_my_scripts' );
 return $pDI;

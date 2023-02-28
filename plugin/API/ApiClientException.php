@@ -70,8 +70,8 @@ class ApiClientException
 
 		$errorMessage = $pApiClientAction->getErrorMessage();
 		$message = json_encode($messageFormat, JSON_PRETTY_PRINT);
-		$errorCode = "error code ".json_encode($pApiClientAction->getErrorCode(), JSON_PRETTY_PRINT);
-		return "The API returned an error with code {$errorCode} and the following message:\n{$errorMessage}\n\nThe request that caused this error was:\n\n{$message}\n\n".parent::__toString();
+		$errorCode = json_encode($pApiClientAction->getErrorCode(), JSON_PRETTY_PRINT);
+		return "The API returned an error with code {$errorCode} and the following message:\n{$errorMessage}\n\nThe request that caused this error was:\n{$message}\n\n".parent::__toString();
 	}
 
 

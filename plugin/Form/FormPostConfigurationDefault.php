@@ -114,4 +114,20 @@ class FormPostConfigurationDefault
 	{
 		return $this->_pCompoundFields;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getPostHoneypot(): string
+	{
+		return filter_var( $_POST['message'] ?? "" );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPostMessage(): string
+	{
+		return filter_var( $_POST['tmpField'] ?? "" );
+	}
 }
