@@ -809,6 +809,19 @@ class TestClassEstateList
 		$this->assertEquals('', $result['vermarktungsstatus']);
 	}
 
+
+	/**
+	 *
+	 */
+	public function testFilterActiveInputFields()
+	{
+		$fields = [ 'Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung' ];
+		$this->_pEstateList->loadEstates();
+
+		$this->assertEquals( $fields, $this->_pEstateList->getDataView()->getFields() );
+	}
+
+
 	/**
 	 *
 	 * @before
