@@ -17,6 +17,9 @@ onOffice.custom_labels_input_converter = function () {
             .querySelector('input[name*="oopluginfieldconfigformtranslatedlabels-value"].onoffice-input');
         var fieldname = element.parentElement.parentElement.parentElement
             .querySelector('span.menu-item-settings-name').textContent;
+        if (onOffice.custom_labels_inputs_converted.indexOf(fieldname) !== -1 && fieldname !== 'dummy_key') {
+            return;
+        }
         onOffice.custom_labels_inputs_converted.push(fieldname);
         mainInput.name = 'customlabel-lang[' + fieldname + '][native]';
 
