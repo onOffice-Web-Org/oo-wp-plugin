@@ -882,16 +882,16 @@ class TestClassEstateList
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setConstructorArgs([$this->_pContainer])
 			->getMock();
-			$pFieldsCollection = $this->getEstateFieldsData();
-	
-			$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
-				->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
-				use ($pFieldsCollection, $pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
-				{
-					$pFieldsCollectionOut->merge($pFieldsCollection);
-					return $pFieldsCollectionBuilderShort;
-				});
-			$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
+		$pFieldsCollection = $this->getEstateFieldsData();
+
+		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
+			use ($pFieldsCollection, $pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+			{
+				$pFieldsCollectionOut->merge($pFieldsCollection);
+				return $pFieldsCollectionBuilderShort;
+			});
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
 	
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
