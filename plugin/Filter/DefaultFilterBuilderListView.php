@@ -93,7 +93,9 @@ class DefaultFilterBuilderListView
 				$filter = $this->getReferenceViewFilter();
 				break;
 		}
-
+		if ( $this->_pDataListView->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE ) {
+			$filter = $this->getHideReferenceViewFilter();
+		}
 		$filterWithRegion = $this->addSubRegionFilter($filter);
 
 		return $filterWithRegion;
@@ -170,6 +172,19 @@ class DefaultFilterBuilderListView
 		$filter = $this->_defaultFilter;
 		$filter['referenz'] = [
 			['op' => '=', 'val' => 1],
+		];
+
+		return $filter;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getHideReferenceViewFilter(): array
+	{
+		$filter = $this->_defaultFilter;
+		$filter['referenz'] = [
+			['op' => '=', 'val' => 0],
 		];
 
 		return $filter;
