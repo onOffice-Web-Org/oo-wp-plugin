@@ -483,6 +483,7 @@ class EstateList
 		$pListView = $this->_pDataView;
 		$recordType = onOfficeSDK::MODULE_ESTATE;
 		$pFieldsCollection = new FieldsCollection();
+		$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
 		$pFieldBuilderShort
@@ -494,7 +495,6 @@ class EstateList
 		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 
 		if($pListView instanceof DataDetailView){
-			$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
 			$dataDetailView = $pListView->getCustomLabels();
 			if(!empty($dataDetailView[$field][$pLanguage])){
 				$label = $dataDetailView[$field][$pLanguage];
@@ -502,7 +502,6 @@ class EstateList
 		}
 
 		if($pListView instanceof DataViewSimilarEstates){
-			$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
 			$dataSimilarEstates = $pListView->getCustomLabels();
 			if(!empty($dataSimilarEstates[$field][$pLanguage])){
 				$label = $dataSimilarEstates[$field][$pLanguage];
