@@ -493,13 +493,22 @@ class EstateList
 
 		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 
-		if($pListView instanceof DataViewSimilarEstates){
+		if($pListView instanceof DataDetailView){
 			$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
 			$dataDetailView = $pListView->getCustomLabels();
 			if(!empty($dataDetailView[$field][$pLanguage])){
 				$label = $dataDetailView[$field][$pLanguage];
 			}
 		}
+
+		if($pListView instanceof DataViewSimilarEstates){
+			$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
+			$dataSimilarEstates = $pListView->getCustomLabels();
+			if(!empty($dataSimilarEstates[$field][$pLanguage])){
+				$label = $dataSimilarEstates[$field][$pLanguage];
+			}
+		}
+
 		$fieldNewName = esc_html($label);
 		return $fieldNewName;
 	}
