@@ -480,10 +480,9 @@ class EstateList
 	 */
 	public function getFieldLabel($field): string
 	{
-		$pListView = $this->_pDataView;
 		$recordType = onOfficeSDK::MODULE_ESTATE;
 		$pFieldsCollection = new FieldsCollection();
-		$pLanguage = $this->_pEnvironment->getContainer()->get(Language::class)->getLocale();
+		$pLanguage = $this->_pEnvironment->getContainer()->get( Language::class )->getLocale();
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
 		$pFieldBuilderShort
@@ -494,17 +493,17 @@ class EstateList
 
 		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 
-		if($pListView instanceof DataDetailView){
-			$dataDetailView = $pListView->getCustomLabels();
-			if(!empty($dataDetailView[$field][$pLanguage])){
-				$label = $dataDetailView[$field][$pLanguage];
+		if ( $this->_pDataView instanceof DataDetailView ) {
+			$dataDetailView = $this->_pDataView->getCustomLabels();
+			if ( ! empty( $dataDetailView[ $field ][ $pLanguage ] ) ) {
+				$label = $dataDetailView[ $field ][ $pLanguage ];
 			}
 		}
 
-		if($pListView instanceof DataViewSimilarEstates){
-			$dataSimilarEstates = $pListView->getCustomLabels();
-			if(!empty($dataSimilarEstates[$field][$pLanguage])){
-				$label = $dataSimilarEstates[$field][$pLanguage];
+		if ( $this->_pDataView instanceof DataViewSimilarEstates ) {
+			$dataSimilarEstates = $this->_pDataView->getCustomLabels();
+			if ( ! empty( $dataSimilarEstates[ $field ][ $pLanguage ] ) ) {
+				$label = $dataSimilarEstates[ $field ][ $pLanguage ];
 			}
 		}
 
