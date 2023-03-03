@@ -204,9 +204,9 @@ class FieldsCollectionBuilderShort
 	 * @throws UnknownFormException
 	 */
 
-	 public function addCustomLabelFieldsEstateFrontend(FieldsCollection $pFieldsCollection, $formName, $listType): self
+	 public function addCustomLabelFieldsEstateFrontend(FieldsCollection $pFieldsCollection, $formName, $typeList): self
 	 {
-		 $pFieldsCollectionTmp = new FieldModuleCollectionDecoratorCustomLabelEstate($pFieldsCollection, $formName, $listType);
+		 $pFieldsCollectionTmp = new FieldModuleCollectionDecoratorCustomLabelEstate($pFieldsCollection, $formName, $typeList);
 		 $pFieldsCollection->merge($pFieldsCollectionTmp);
 		 $pFieldCategoryConverterGeoPos = $this->_pContainer->get(FieldCategoryToFieldConverterSearchCriteriaGeoFrontend::class);
 		 $pFieldsCollectionGeo = $this->buildSearchcriteriaFieldsCollectionByFieldLoader($pFieldCategoryConverterGeoPos);
