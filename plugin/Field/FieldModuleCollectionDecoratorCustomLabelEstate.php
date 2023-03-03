@@ -53,13 +53,13 @@ class FieldModuleCollectionDecoratorCustomLabelEstate
 	/** @var FieldModuleCollection */
 	private $_pFieldModuleCollection = null;
 
-	public function __construct(FieldModuleCollection $pFieldModuleCollection, $formName, string $typeList = null, Container $pContainer = null)
+	public function __construct(FieldModuleCollection $pFieldModuleCollection, $formName, Container $pContainer = null)
 	{
 		parent::__construct($pFieldModuleCollection);
 		$this->_pFieldModuleCollection = $pFieldModuleCollection;
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
 		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadListViewEstate::class);
-		$results = $recordManagerReadForm->getRowByName($formName, $typeList);
+		$results = $recordManagerReadForm->getRowByName($formName);
 		$fieldsByFormIds = $recordManagerReadForm->getFieldconfigByListviewId( intval( $results['listview_id'] ?? 0 ) );
 
 		foreach ($fieldsByFormIds as $fieldsByFormId) {
