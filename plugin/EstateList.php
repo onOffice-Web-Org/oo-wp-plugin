@@ -495,14 +495,14 @@ class EstateList
 
 		if ( $this->_pDataView instanceof DataDetailView ) {
 			$dataDetailView = $this->_pDataView->getCustomLabels();
-			if ( ! empty( $dataDetailView[ $field ][ $pLanguage ] ) ) {
+			if (!empty( $dataDetailView[ $field ][ $pLanguage ])) {
 				$label = $dataDetailView[ $field ][ $pLanguage ];
 			}
 		}
 
 		if ( $this->_pDataView instanceof DataViewSimilarEstates ) {
 			$dataSimilarEstates = $this->_pDataView->getCustomLabels();
-			if ( ! empty( $dataSimilarEstates[ $field ][ $pLanguage ] ) ) {
+			if (!empty( $dataSimilarEstates[ $field ][ $pLanguage ])) {
 				$label = $dataSimilarEstates[ $field ][ $pLanguage ];
 			}
 		}
