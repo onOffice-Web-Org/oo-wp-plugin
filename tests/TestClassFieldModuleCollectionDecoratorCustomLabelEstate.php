@@ -114,7 +114,7 @@ class TestClassFieldModuleCollectionDecoratorCustomLabelEstate
 	public function testGetAllFields()
 	{
 		$pDecoratorCustomLabel = new FieldModuleCollectionDecoratorCustomLabelEstate($this->_pFieldModuleCollection,
-			'testListViewId1', 'default', $this->_pContainer);
+			'testListViewId1', $this->_pContainer);
 		$fieldCustomLabels = $pDecoratorCustomLabel->getFieldCustomLabels();
 		$cloneFields = array();
 
