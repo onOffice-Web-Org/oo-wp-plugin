@@ -54,20 +54,7 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 			echo esc_html__('Please fill in!', 'onoffice-for-wp-websites');
 		}
 
-		if ( in_array( $input, array( 'Id' ) ) ) {
-			continue;
-		}
-		if ( in_array( $input, array( 'gdprcheckbox' ) ) ) {
-			echo renderFormField( 'gdprcheckbox', $pForm );
-			echo $pForm->getFieldLabel( 'gdprcheckbox' ) . '<br>';
-			continue;
-		}
-		if ( in_array( $input, array( 'message' ) ) ) {
-			$isRequiredMessage = $pForm->isRequiredField( 'message' );
-			$additionMessage   = $isRequiredMessage ? '*' : '';
-			esc_html_e( 'Message', 'onoffice-for-wp-websites' );
-			echo $additionMessage . ':<br>';
-			echo '<textarea name="message">' . $pForm->getFieldValue( 'message' ) . '</textarea><br>';
+		if ( in_array( $input, array('message', 'Id', 'gdprcheckbox') ) ) {
 			continue;
 		}
 
@@ -76,9 +63,23 @@ if ($pForm->getFormStatus() === onOffice\WPlugin\FormPost::MESSAGE_SUCCESS) {
 		echo $pForm->getFieldLabel($input).$addition.': ';
 		echo renderFormField($input, $pForm).'<br>';
 	}
+
+	if (array_key_exists('message', $pForm->getInputFields())):
+		$isRequiredMessage = $pForm->isRequiredField( 'message' );
+		$additionMessage = $isRequiredMessage ? '*' : '';
 ?>
 
+		<?php
+		esc_html_e('Message', 'onoffice-for-wp-websites');
+		echo $additionMessage; ?>:<br>
+		<textarea name="message"><?php echo $pForm->getFieldValue( 'message' ); ?></textarea><br>
+
 <?php
+	endif;
+	if (array_key_exists('gdprcheckbox', $pForm->getInputFields())) {
+		echo renderFormField('gdprcheckbox', $pForm);
+		echo $pForm->getFieldLabel('gdprcheckbox');
+	}
 	echo '<br>';
 
 	include(ONOFFICE_PLUGIN_DIR.'/templates.dist/form/formsubmit.php');
