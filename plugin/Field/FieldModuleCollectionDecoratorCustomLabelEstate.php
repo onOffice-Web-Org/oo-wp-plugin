@@ -59,12 +59,11 @@ class FieldModuleCollectionDecoratorCustomLabelEstate
 		$this->_pFieldModuleCollection = $pFieldModuleCollection;
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
 		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadListViewEstate::class);
-		if($typeList == null){
-			$results = $recordManagerReadForm->getRowByName($formName, $typeList);
-		} else {
-			$results = $recordManagerReadForm->getRowByName($formName);
+		$results = $recordManagerReadForm->getRowByName($formName, null);
+		$fieldsByFormIds = $recordManagerReadForm->getFieldconfigByListviewId(intval($results['listview_id']));
+		if(empty($fieldsByFormIds)){
+			return;
 		}
-		$fieldsByFormIds = $recordManagerReadForm->getFieldconfigByListviewId( intval( $results['listview_id'] ?? 0 ) );
 
 		foreach ($fieldsByFormIds as $fieldsByFormId) {
 			$lang = $this->_pContainer->get(Language::class);
