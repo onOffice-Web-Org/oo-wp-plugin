@@ -26,6 +26,7 @@ use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Utility\__String;
 use function esc_html;
 /**
  *
@@ -55,7 +56,7 @@ class InputFieldButtonAddRemoveRenderer
 	 *
 	 * @param string $key
 	 * @param FieldsCollection $pFieldsCollection
-	 * @return bool
+	 * @return string
 	 */
 
 	public function getModule(string $key, FieldsCollection $pFieldsCollection): string
@@ -103,7 +104,7 @@ class InputFieldButtonAddRemoveRenderer
 		if ( is_array( $this->getValue() ) ) {
 			foreach ( $this->getValue() as $key => $label ) {
 				$module = $this->getModule($key, $pFieldsCollection);
-				if (!empty($module)) {
+				if (!__String::getNew($module)->isEmpty()) {
 					$this->addAdditionalAttribute('data-onoffice-module', $module);
 				}
 				$inputId                 = 'label' . $this->getGuiId() . 'b' . $key;
