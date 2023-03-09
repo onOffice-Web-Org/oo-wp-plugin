@@ -19,16 +19,16 @@
  *
  */
 
- declare (strict_types=1);
+declare (strict_types=1);
 
- namespace onOffice\tests;
- 
- use onOffice\WPlugin\Renderer\InputFieldButtonAddRemoveRenderer;
- use onOffice\WPlugin\Installer\DatabaseChanges;
- use onOffice\WPlugin\WP\WPOptionWrapperTest;
- use DI\Container;
- use DI\ContainerBuilder;
- use WP_UnitTestCase;
+namespace onOffice\tests;
+
+use onOffice\WPlugin\Renderer\InputFieldButtonAddRemoveRenderer;
+use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use DI\Container;
+use DI\ContainerBuilder;
+use WP_UnitTestCase;
 
 /**
  * @runTestsInSeparateProcesses
@@ -74,11 +74,12 @@ class TestClassInputFieldButtonAddRemoveRenderer
 	{
 		$pSubject = new InputFieldButtonAddRemoveRenderer('testRenderer', true);
 		$pSubject->setValue(['johndoe' => 'John Doe', 'konradzuse' => 'Konrad Zuse']);
+		$pSubject->setCheckedValues(['johndoe']);
 		$pSubject->setOoModule('address');
 		ob_start();
 		$pSubject->render();
 		$output = ob_get_clean();
-		$this->assertEquals('<span class="inputFieldButton labelButtonHandleField-johndoe"name="testRenderer"data-onoffice-module="address"value="johndoe"data-onoffice-category=""id="labelbuttonHandleField_1bjohndoe"><span class="dashicons dashicons-insert" typeField="1"></span><label style="margin-left:5px;opacity: 1;">John Doe</label></span><br><span class="inputFieldButton labelButtonHandleField-konradzuse"name="testRenderer"data-onoffice-module="address"value="konradzuse"data-onoffice-category=""id="labelbuttonHandleField_1bkonradzuse"><span class="dashicons dashicons-insert" typeField="1"></span><label style="margin-left:5px;opacity: 1;">Konrad Zuse</label></span><br>', $output);
+		$this->assertEquals('<span class="inputFieldButton labelButtonHandleField-johndoe"name="testRenderer"data-onoffice-module="address"value="johndoe"data-onoffice-category=""id="labelbuttonHandleField_1bjohndoe"><span class="dashicons dashicons-remove" typeField="2"></span><label style="margin-left:5px;opacity: 0.5;">John Doe</label></span><br><span class="inputFieldButton labelButtonHandleField-konradzuse"name="testRenderer"data-onoffice-module="address"value="konradzuse"data-onoffice-category=""id="labelbuttonHandleField_1bkonradzuse"><span class="dashicons dashicons-insert" typeField="1"></span><label style="margin-left:5px;opacity: 1;">Konrad Zuse</label></span><br>', $output);
 	}
 	
 	/**
