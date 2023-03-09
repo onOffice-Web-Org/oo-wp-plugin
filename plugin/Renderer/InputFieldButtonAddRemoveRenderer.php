@@ -21,6 +21,11 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\API\APIEmptyResultException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Types\FieldsCollection;
 use function esc_html;
 /**
  *
@@ -46,6 +51,46 @@ class InputFieldButtonAddRemoveRenderer
         parent::__construct('buttonHandleField', $name, $value);
     }
 
+	/**
+	 *
+	 * @param string $key
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return bool
+	 */
+
+	public function getModule(string $key, FieldsCollection $pFieldsCollection): string
+	{
+		return $pFieldsCollection->getFieldByKeyUnsafe($key)->getModule();
+	}
+ 
+ 
+	 /**
+	  *
+	  * @return FieldsCollection
+	  *
+	  * @throws Exception
+	  */
+ 
+	public function buildFieldsCollection(): FieldsCollection
+	{
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pFieldsCollection = new FieldsCollection();
+
+		/** @var FieldsCollectionBuilderShort $pFieldsCollectionBuilder */
+		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		try {
+			$pFieldsCollectionBuilder
+				->addFieldsAddressEstate($pFieldsCollection)
+				->addFieldsSearchCriteria($pFieldsCollection)
+				->addFieldsSearchCriteriaSpecificBackend($pFieldsCollection)
+				->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+				->addFieldsFormFrontend($pFieldsCollection);
+		} catch (APIClientCredentialsException $pCredentialsException) {
+		} catch (APIEmptyResultException $pEmptyResultException) {}
+		return $pFieldsCollection;
+	}
 
 	/**
 	 *
@@ -54,8 +99,13 @@ class InputFieldButtonAddRemoveRenderer
 	public function render()
 	{
 		$textHtml = ! empty( $this->getHint() ) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
+		$pFieldsCollection = $this->buildFieldsCollection();
 		if ( is_array( $this->getValue() ) ) {
 			foreach ( $this->getValue() as $key => $label ) {
+				$module = $this->getModule($key, $pFieldsCollection);
+				if (!empty($module)) {
+					$this->addAdditionalAttribute('data-onoffice-module', $module);
+				}
 				$inputId                 = 'label' . $this->getGuiId() . 'b' . $key;
 				$actionFieldName         = 'labelButtonHandleField' . '-' . $key;
 				$checkDataField          = is_array( $this->getCheckedValues() ) && in_array( $key,
