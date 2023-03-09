@@ -103,7 +103,7 @@ class InputFieldButtonAddRemoveRenderer
 		$pFieldsCollection = $this->buildFieldsCollection();
 		if ( is_array( $this->getValue() ) ) {
 			foreach ( $this->getValue() as $key => $label ) {
-				$module = $this->getModule($key, $pFieldsCollection);
+				$module = empty($this->getOoModule()) ? $this->getModule($key, $pFieldsCollection) : $this->getOoModule();
 				if (!__String::getNew($module)->isEmpty()) {
 					$this->addAdditionalAttribute('data-onoffice-module', $module);
 				}
