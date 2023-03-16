@@ -131,7 +131,9 @@ class Form
 			$this->_pFormData->setValues
 				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
 		}
-		$this->addHoneypotFileToForm($type);
+		if($type !== Form::TYPE_APPLICANT_SEARCH){
+			$this->addHoneypotFileToForm();
+		}
 	}
 
 	/**
@@ -617,11 +619,9 @@ class Form
 	 *
 	 */
 
-	public function addHoneypotFileToForm($type)
+	public function addHoneypotFileToForm()
 	{
-		if($type !== Form::TYPE_APPLICANT_SEARCH){
-			wp_enqueue_script( 'onoffice-honeypot', plugins_url( '/js/onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php'), array('jquery'), true );
-		}
+		wp_enqueue_script( 'onoffice-honeypot', plugins_url( '/js/onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php'), array('jquery'), true );
 	}
 
 
