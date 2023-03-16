@@ -570,9 +570,6 @@ abstract class AdminPageSettingsBase
 	protected function addOrderValues(array $row, $table)
 	{
 		if (array_key_exists($table, $row)) {
-			if($table == RecordManager::TABLENAME_FIELDCONFIG_FORMS && $this->getType() !== Form::TYPE_APPLICANT_SEARCH){
-                unset($row[RecordManager::TABLENAME_FIELDCONFIG_FORMS]['availableOptions']);
-            }
 			array_walk($row[$table], function (&$value, $key) {
 				$value['order'] = (int)$key + 1;
 			});
