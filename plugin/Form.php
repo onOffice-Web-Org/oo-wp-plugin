@@ -99,7 +99,6 @@ class Form
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice-for-wp-websites'));
 		$this->setGenericSetting('formId', 'onoffice-form');
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
-		$this->typeForm($type);
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
@@ -132,6 +131,7 @@ class Form
 			$this->_pFormData->setValues
 				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
 		}
+		$this->checkHoneypot($type);
 	}
 
 	/**
@@ -617,10 +617,11 @@ class Form
 	 *
 	 */
 
-	public function typeForm($type)
+	public function checkHoneypot($type)
 	{
-		wp_enqueue_script( 'onoffice-form-type', plugins_url( 'onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php' ), array('jquery'));
-		wp_localize_script( 'onoffice-form-type', 'form', array(  'type' => $type ) );
+		if($type !== Form::TYPE_APPLICANT_SEARCH){
+			wp_enqueue_script( 'onoffice-honeypot', plugins_url( '/js/onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php'), array('jquery'), true );
+		}
 	}
 
 
