@@ -48,7 +48,6 @@ use onOffice\WPlugin\Translation\ModuleTranslation;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
-use onOffice\WPlugin\Form;
 use function __;
 use function get_locale;
 use function get_option;
@@ -131,9 +130,7 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsMarkdown);
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
-		if($this->getFormType() === Form::TYPE_APPLICANT_SEARCH){
-			$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
-		}
+		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
 
 		return $pInputModelFieldsConfig;
 	}
