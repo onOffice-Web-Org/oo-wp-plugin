@@ -27,6 +27,7 @@ use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
 use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelDBAdapterRow;
+use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Renderer\InputModelRenderer;
 use stdClass;
 use const ONOFFICE_PLUGIN_DIR;
@@ -568,6 +569,9 @@ abstract class AdminPageSettingsBase
 	protected function addOrderValues(array $row, $table)
 	{
 		if (array_key_exists($table, $row)) {
+			if ( $table == RecordManager::TABLENAME_FIELDCONFIG_FORMS && $this->getType() !== Form::TYPE_APPLICANT_SEARCH ) {
+				unset( $row[ RecordManager::TABLENAME_FIELDCONFIG_FORMS ]['availableOptions'] );
+			}
 			array_walk($row[$table], function (&$value, $key) {
 				$value['order'] = (int)$key + 1;
 			});

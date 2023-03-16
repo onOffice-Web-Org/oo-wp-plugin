@@ -33,6 +33,7 @@ use onOffice\WPlugin\DataFormConfiguration\DataFormConfigurationFactory;
 use onOffice\WPlugin\Field\Collection\FieldLoaderGeneric;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilder;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigForm;
@@ -131,6 +132,9 @@ class FormModelBuilderDBForm
 		$pInputModelFieldsConfig->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsRequired);
 		$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
+		if($this->getFormType() === Form::TYPE_APPLICANT_SEARCH){
+			$pInputModelFieldsConfig->addReferencedInputModel($pReferenceIsAvailableOptions);
+		}
 
 		return $pInputModelFieldsConfig;
 	}
