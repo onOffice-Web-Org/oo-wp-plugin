@@ -131,7 +131,7 @@ class Form
 			$this->_pFormData->setValues
 				(['range' => $pGeoPositionDefaults->getRadiusValue()] + $this->getDefaultValues());
 		}
-		$this->addFormHoneypotScript($type);
+		$this->addHoneypotFileToForm($type);
 	}
 
 	/**
@@ -617,7 +617,7 @@ class Form
 	 *
 	 */
 
-	public function addFormHoneypotScript($type)
+	public function addHoneypotFileToForm($type)
 	{
 		if($type !== Form::TYPE_APPLICANT_SEARCH){
 			wp_enqueue_script( 'onoffice-honeypot', plugins_url( '/js/onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php'), array('jquery'), true );
