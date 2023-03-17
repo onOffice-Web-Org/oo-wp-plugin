@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    if (honeypot_enabled['honeypotValue'] == true) {
+    if (honeypot_enabled['honeypotValue'] == true && form['type'] !== 'applicantsearch') {
         var messageTextarea = $('textarea[name="message"]');
         var messageInput = $('input[name="message"]');
         if(messageTextarea.val() == ''){
