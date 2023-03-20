@@ -1,5 +1,7 @@
+var form = form || {};
+form.type = form.type || '';
 jQuery(document).ready(function ($) {
-    if (honeypot_enabled['honeypotValue'] == true && form['type'] !== 'applicantsearch') {
+    if (honeypot_enabled['honeypotValue'] == true && form.type !== '' && form.type !== 'applicantsearch') {
         var messageTextarea = $('textarea[name="message"]');
         var messageInput = $('input[name="message"]');
         if(messageTextarea.val() == ''){
