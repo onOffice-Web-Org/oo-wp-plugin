@@ -3,17 +3,9 @@ jQuery(document).ready(function ($) {
         var messageTextarea = $('textarea[name="message"]');
         var messageInput = $('input[name="message"]');
         if(messageTextarea.val() == ''){
-            var newInput = $('<textarea>').attr({
-                'type': 'text',
-                'name': 'tmpField',
-            });
-            messageTextarea.replaceWith(newInput);
+            messageTextarea.attr('name', 'tmpField');
         } else if (messageInput.val() == '')  {
-            var newInput = $('<input>').attr({
-                'type': 'text',
-                'name': 'tmpField',
-            });
-            messageInput.replaceWith(newInput);
+            messageInput.attr('name', 'tmpField');
         }
         var label = $('<label>').text('Message:').attr("class", "message");
         var input = $('<input>').attr({
