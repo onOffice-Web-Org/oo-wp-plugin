@@ -59,7 +59,7 @@ class InputFieldButtonAddRemoveRenderer
 	 * @return string
 	 */
 
-	public function getModule(string $key, FieldsCollection $pFieldsCollection): string
+	private function getModule(string $key, FieldsCollection $pFieldsCollection): string
 	{
 		return $pFieldsCollection->getFieldByKeyUnsafe($key)->getModule();
 	}
@@ -72,7 +72,7 @@ class InputFieldButtonAddRemoveRenderer
 	  * @throws Exception
 	  */
  
-	public function buildFieldsCollection(): FieldsCollection
+	private function buildFieldsCollection(): FieldsCollection
 	{
 		$pDIContainerBuilder = new ContainerBuilder;
 		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
