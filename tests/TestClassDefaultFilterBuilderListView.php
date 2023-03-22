@@ -160,12 +160,6 @@ class TestClassDefaultFilterBuilderListView
 					'val' => 1,
 				],
 			],
-			'referenz' => [
-				[
-					'op' => '=',
-					'val' => 1,
-				],
-			],
 		];
 
 
