@@ -92,7 +92,8 @@ class TestClassBooleanValueToFieldList
 		// test unset
 		$pBooleanValueToFieldList->fillCheckboxValues
 			(InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE);
-		$this->assertObjectHasAttribute('oopluginfieldconfig-filterable', $pValues);
+		$this->assertIsObject($pValues);
+        $this->assertTrue(property_exists($pValues, 'oopluginfieldconfig-filterable'));
 		$this->assertEquals([], $pValues->{'oopluginfieldconfig-filterable'});
 	}
 
