@@ -25,6 +25,7 @@ use DI\ContainerBuilder;
 use onOffice\WPlugin\API\APIClientCredentialsException;
 use onOffice\WPlugin\API\APIEmptyResultException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Utility\__String;
 use function esc_html;
@@ -61,7 +62,11 @@ class InputFieldButtonAddRemoveRenderer
 
 	private function getModule(string $key, FieldsCollection $pFieldsCollection): string
 	{
-		return $pFieldsCollection->getFieldByKeyUnsafe($key)->getModule();
+		try {
+			return $pFieldsCollection->getFieldByKeyUnsafe($key)->getModule();
+		} catch (UnknownFieldException $pEx) {
+			return false;
+		}
 	}
  
  
@@ -83,6 +88,7 @@ class InputFieldButtonAddRemoveRenderer
 		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
 		try {
 			$pFieldsCollectionBuilder
+				->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
 				->addFieldsAddressEstate($pFieldsCollection)
 				->addFieldsSearchCriteria($pFieldsCollection)
 				->addFieldsSearchCriteriaSpecificBackend($pFieldsCollection)
