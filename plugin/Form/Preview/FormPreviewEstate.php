@@ -10,6 +10,7 @@ use Exception;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\API\APIClientActionGeneric;
 use onOffice\WPlugin\API\ApiClientException;
+use onOffice\WPlugin\DataView\DataListView;
 use onOffice\WPlugin\DataView\DataListViewFactory;
 use onOffice\WPlugin\DataView\UnknownViewException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilderFactory;
@@ -70,6 +71,16 @@ class FormPreviewEstate
 		}
 		$pDefaultFilterBuilder = $this->_pDefaultFilterBuilderFactory->buildDefaultListViewFilter($pListView);
 		$requestParams['filter'] = $pDefaultFilterBuilder->buildFilter();
+
+		switch ($pListView->getShowReferenceEstate()) {
+			case DataListView::HIDE_REFERENCE_ESTATE:
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+				break;
+			case DataListView::SHOW_ONLY_REFERENCE_ESTATE:
+				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+				break;
+		}
+
 		$pApiClientAction = $this->_pApiClientAction->withActionIdAndResourceType
 			(onOfficeSDK::ACTION_ID_READ, 'estate');
 		$pApiClientAction->setParameters($requestParams);

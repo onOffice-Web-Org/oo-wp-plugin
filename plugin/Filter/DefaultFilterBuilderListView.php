@@ -89,11 +89,7 @@ class DefaultFilterBuilderListView
 			case DataListView::LISTVIEW_TYPE_FAVORITES:
 				$filter = $this->getFavoritesFilter();
 				break;
-			case DataListView::LISTVIEW_TYPE_REFERENCE:
-				$filter = $this->getReferenceViewFilter();
-				break;
 		}
-
 		$filterWithRegion = $this->addSubRegionFilter($filter);
 
 		return $filterWithRegion;
@@ -157,19 +153,6 @@ class DefaultFilterBuilderListView
 		$filter = $this->_defaultFilter;
 		$filter['Id'] = [
 			['op' => 'in', 'val' => $ids],
-		];
-
-		return $filter;
-	}
-
-	/**
-	 * @return array
-	 */
-	private function getReferenceViewFilter(): array
-	{
-		$filter = $this->_defaultFilter;
-		$filter['referenz'] = [
-			['op' => '=', 'val' => 1],
 		];
 
 		return $filter;
