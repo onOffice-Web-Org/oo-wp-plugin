@@ -21,6 +21,13 @@
 
 namespace onOffice\WPlugin\Renderer;
 
+use DI\ContainerBuilder;
+use onOffice\WPlugin\API\APIClientCredentialsException;
+use onOffice\WPlugin\API\APIEmptyResultException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderShort;
+use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Utility\__String;
 use function esc_html;
 /**
  *
@@ -46,6 +53,51 @@ class InputFieldButtonAddRemoveRenderer
         parent::__construct('buttonHandleField', $name, $value);
     }
 
+	/**
+	 *
+	 * @param string $key
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return string
+	 */
+
+	private function getModule(string $key, FieldsCollection $pFieldsCollection): string
+	{
+		try {
+			return $pFieldsCollection->getFieldByKeyUnsafe($key)->getModule();
+		} catch (UnknownFieldException $pEx) {
+			return false;
+		}
+	}
+ 
+ 
+	 /**
+	  *
+	  * @return FieldsCollection
+	  *
+	  * @throws Exception
+	  */
+ 
+	private function buildFieldsCollection(): FieldsCollection
+	{
+		$pDIContainerBuilder = new ContainerBuilder;
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pFieldsCollection = new FieldsCollection();
+
+		/** @var FieldsCollectionBuilderShort $pFieldsCollectionBuilder */
+		$pFieldsCollectionBuilder = $pContainer->get(FieldsCollectionBuilderShort::class);
+		try {
+			$pFieldsCollectionBuilder
+				->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
+				->addFieldsAddressEstate($pFieldsCollection)
+				->addFieldsSearchCriteria($pFieldsCollection)
+				->addFieldsSearchCriteriaSpecificBackend($pFieldsCollection)
+				->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+				->addFieldsFormFrontend($pFieldsCollection);
+		} catch (APIClientCredentialsException $pCredentialsException) {
+		} catch (APIEmptyResultException $pEmptyResultException) {}
+		return $pFieldsCollection;
+	}
 
 	/**
 	 *
@@ -54,8 +106,13 @@ class InputFieldButtonAddRemoveRenderer
 	public function render()
 	{
 		$textHtml = ! empty( $this->getHint() ) ? '<p class="hint-text">' . $this->getHint() . '</p>' : "";
+		$pFieldsCollection = $this->buildFieldsCollection();
 		if ( is_array( $this->getValue() ) ) {
 			foreach ( $this->getValue() as $key => $label ) {
+				$module = empty($this->getOoModule()) ? $this->getModule($key, $pFieldsCollection) : $this->getOoModule();
+				if (!__String::getNew($module)->isEmpty()) {
+					$this->addAdditionalAttribute('data-onoffice-module', $module);
+				}
 				$inputId                 = 'label' . $this->getGuiId() . 'b' . $key;
 				$actionFieldName         = 'labelButtonHandleField' . '-' . $key;
 				$checkDataField          = is_array( $this->getCheckedValues() ) && in_array( $key,

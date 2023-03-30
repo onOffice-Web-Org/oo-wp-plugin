@@ -196,7 +196,7 @@ jQuery(document).ready(function($){
 			availableOptionEl.parent().remove();
 		}
 
-		if (module) {
+		if(onOffice_loc_settings.modulelabels && module){
 			var inputModule = clonedElement.find('input[name^=oopluginformfieldconfig-module]');
 			inputModule.val(module);
 			var labelIdFor = inputModule.attr('id');
