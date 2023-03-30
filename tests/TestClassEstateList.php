@@ -882,6 +882,17 @@ class TestClassEstateList
 		$pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
 			->setConstructorArgs([$this->_pContainer])
 			->getMock();
+		$pFieldsCollection = $this->getEstateFieldsData();
+
+		$pFieldsCollectionBuilderShort->method('addFieldsAddressEstate')
+			->willReturnCallback(function (FieldsCollection $pFieldsCollectionOut)
+			use ($pFieldsCollection, $pFieldsCollectionBuilderShort): FieldsCollectionBuilderShort
+			{
+				$pFieldsCollectionOut->merge($pFieldsCollection);
+				return $pFieldsCollectionBuilderShort;
+			});
+		$this->_pContainer->set(FieldsCollectionBuilderShort::class, $pFieldsCollectionBuilderShort);
+	
 		$pDefaultFilterBuilder = new DefaultFilterBuilderListView($pDataListView, $pFieldsCollectionBuilderShort);
 		$this->_pEnvironment->method('getDefaultFilterBuilder')->willReturn($pDefaultFilterBuilder);
 		$this->_pEstateList = new EstateList($pDataListView, $this->_pEnvironment);
@@ -952,5 +963,44 @@ class TestClassEstateList
 		$pDataView = $this->getDataView();
 		$pDataView->setRandom(true);
 		return $pDataView;
+	}
+
+	/**
+	 *
+	 * @return FieldsCollection
+	 *
+	 */
+	public function getEstateFieldsData() {
+		$fieldsCollection = new FieldsCollection();
+		$fieldNames = [
+			'Id',
+			'objektart',
+			'objekttyp',
+			'objekttitel',
+			'objektbeschreibung',
+			'virtualAddress',
+			'objektadresse_freigeben',
+			'reserviert',
+			'verkauft',
+			'vermarktungsart',
+			'virtualStreet',
+			'virtualHouseNumber',
+			'laengengrad',
+			'breitengrad',
+			'virtualLatitude',
+			'virtualLongitude',
+			'strasse',
+			'showGoogleMap',
+			'hausnummer',
+			'ort',
+			'objektnr_extern',
+			'plz',
+			'land',
+		];
+		foreach ($fieldNames as $fieldName) {
+			$field = new Field($fieldName, 'estate', 'testLabel');
+			$fieldsCollection->addField($field);
+		}
+		return $fieldsCollection;
 	}
 }

@@ -58,7 +58,7 @@ class TestClassFormPreviewEstate
 			->after("1")
 			->id("2")
 			->method('setParameters')
-			->with(['listlimit' => 0, 'filter' => ['veroeffentlichen' => [['op' => '=', 'val' => 1]]], 'filterid' => 24])
+			->with(['listlimit' => 0, 'filter' => ['veroeffentlichen' => [['op' => '=', 'val' => 1]],'referenz' => [['op' => '=','val' => 0],],], 'filterid' => 24])
 			->willReturnSelf();
 		$pApiClientAction
 			->expects($this->once())

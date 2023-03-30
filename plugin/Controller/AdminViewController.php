@@ -152,10 +152,15 @@ class AdminViewController
 		$pDI = $pDIBuilder->build();
 
 		// main page
-		add_menu_page( __('onOffice', 'onoffice-for-wp-websites'), __('onOffice', 'onoffice-for-wp-websites'),
-			$roleMainPage, $this->_pageSlug, function() use ($pDI) {
-				echo $pDI->get(MainPage::class)->render();
-			}, plugin_dir_url(ONOFFICE_PLUGIN_DIR.'/index.php').'images/onOffice-Logo-screen_wp-grey.svg');
+		add_menu_page( __( 'onOffice', 'onoffice-for-wp-websites' ), __( 'onOffice', 'onoffice-for-wp-websites' ),
+			$roleMainPage, $this->_pageSlug, function () use ( $pDI ) {
+				echo $pDI->get( MainPage::class )->render();
+			}, plugin_dir_url( ONOFFICE_PLUGIN_DIR . '/index.php' ) . 'images/onOffice-Logo-screen_wp-grey.svg' );
+
+		// Getting started
+		add_submenu_page( $this->_pageSlug, __( 'Getting started', 'onoffice-for-wp-websites' ),
+			__( 'Getting started', 'onoffice-for-wp-websites' ),
+			$roleMainPage, $this->_pageSlug );
 
 		$pAdminPageAddresses = new AdminPageAddressList($this->_pageSlug);
 		$hookAddresses = add_submenu_page( $this->_pageSlug, __('Addresses', 'onoffice-for-wp-websites'), __('Addresses', 'onoffice-for-wp-websites'),

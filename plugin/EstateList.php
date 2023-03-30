@@ -227,6 +227,31 @@ class EstateList
 	}
 
 	/**
+	 * @param $inputs
+	 * @return DataView
+	 *
+	 */
+
+	private function filterActiveInputFields($inputs): DataView
+	{
+		$activeInputs = [];
+		$recordType = onOfficeSDK::MODULE_ESTATE;
+		$pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
+
+		foreach ($inputs->getFields() as $name) {
+			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
+				$activeInputs[] = $name;
+			}
+		}
+		$inputs->setFields($activeInputs);
+		return $inputs;
+	}
+	/**
 	 * @param array $estateIds
 	 * @throws DependencyException
 	 * @throws NotFoundException
@@ -256,7 +281,7 @@ class EstateList
 	private function getEstateParameters(int $currentPage, bool $formatOutput)
 	{
 		$language = Language::getDefault();
-		$pListView = $this->_pDataView;
+		$pListView = $this->filterActiveInputFields($this->_pDataView);
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
 
 		$numRecordsPerPage = $this->getRecordsPerPage();
@@ -288,6 +313,8 @@ class EstateList
 			}
 		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
 		}
 
 		$requestParams += $this->addExtraParams();

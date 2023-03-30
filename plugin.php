@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.8
+Version: 4.9
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -388,5 +388,11 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 		}
 	};
 }, 500);
+function enqueue_my_scripts() {
+	wp_enqueue_script( 'onoffice-honeypot', plugins_url( 'onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php' ), array('jquery'));
+	$honeypot_enabled = get_option('onoffice-settings-honeypot');
+	wp_localize_script( 'onoffice-honeypot', 'honeypot_enabled', array(  'honeypotValue' => $honeypot_enabled ) );
+}
 
+add_action( 'wp_enqueue_scripts', 'enqueue_my_scripts' );
 return $pDI;
