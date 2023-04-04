@@ -502,12 +502,10 @@ class EstateList
 	}
 
 	/**
-	 * @param string $field
-	 * @return string
+	 * @return FieldsCollection
 	 */
-	public function getFieldLabel($field): string
+	private function buildFieldsCollection(): FieldsCollection
 	{
-		$recordType = onOfficeSDK::MODULE_ESTATE;
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
@@ -516,8 +514,26 @@ class EstateList
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
 			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
+		$pFieldsCollection->merge(new FieldModuleCollectionDecoratorGeoPositionFrontend($pFieldsCollection));
+	
+		return $pFieldsCollection;
+	}
 
-		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+	/**
+	 * @param string $field
+	 * @return string
+	 */
+	public function getFieldLabel($field): string
+	{
+		$recordType = onOfficeSDK::MODULE_ESTATE;
+		$pFieldsCollection = $this->buildFieldsCollection();
+
+		try {
+			$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+		} catch (UnknownFieldException $pE) {
+			$label = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
+		}
+
 		$fieldNewName = esc_html($label);
 		return $fieldNewName;
 	}
