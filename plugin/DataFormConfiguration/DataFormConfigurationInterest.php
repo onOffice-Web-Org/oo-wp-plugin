@@ -48,12 +48,12 @@ class DataFormConfigurationInterest
 			'Name' => onOfficeSDK::MODULE_ADDRESS,
 			'Telefon1' => onOfficeSDK::MODULE_ADDRESS,
 			'Email' => onOfficeSDK::MODULE_ADDRESS,
-			'vermarktungsart' => onOfficeSDK::MODULE_ADDRESS,
-			'objekttyp' => onOfficeSDK::MODULE_ADDRESS,
-			'kaufpreis' => onOfficeSDK::MODULE_ADDRESS,
-			'kaltmiete' => onOfficeSDK::MODULE_ADDRESS,
-			'wohnflaeche' => onOfficeSDK::MODULE_ADDRESS,
-			'anzahl_zimmer' => onOfficeSDK::MODULE_ADDRESS,
+			'vermarktungsart' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'objekttyp' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'kaufpreis' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'kaltmiete' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'wohnflaeche' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'anzahl_zimmer' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 		));
 	}
 
