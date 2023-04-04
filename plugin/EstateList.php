@@ -513,8 +513,8 @@ class EstateList
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
+			->addFieldsEstateGeoPositionFrontend($pFieldsCollection)
 			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
-		$pFieldsCollection->merge(new FieldModuleCollectionDecoratorGeoPositionFrontend($pFieldsCollection));
 	
 		return $pFieldsCollection;
 	}
