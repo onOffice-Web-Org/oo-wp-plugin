@@ -38,6 +38,7 @@ use onOffice\WPlugin\Field\DefaultValue\DefaultValueDelete;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverter;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueRowSaver;
 use onOffice\WPlugin\Field\UnknownFieldException;
+use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilder;
@@ -240,6 +241,27 @@ abstract class AdminPageFormSettingsBase
 		$pResult->record_id = $recordId;
 	}
 
+
+	/**
+	 *
+	 * @param array $row
+	 * @param string $table
+	 * @return array
+	 *
+	 */
+
+	protected function addOrderValues(array $row, $table)
+	{
+		if (array_key_exists($table, $row)) {
+			if ( $table == RecordManager::TABLENAME_FIELDCONFIG_FORMS && $this->getType() !== Form::TYPE_APPLICANT_SEARCH ) {
+				unset( $row[ RecordManager::TABLENAME_FIELDCONFIG_FORMS ]['availableOptions'] );
+			}
+			array_walk($row[$table], function (&$value, $key) {
+				$value['order'] = (int)$key + 1;
+			});
+		}
+		return $row;
+	}
 
 	/**
 	 *
