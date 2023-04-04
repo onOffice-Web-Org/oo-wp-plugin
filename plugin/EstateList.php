@@ -509,6 +509,7 @@ class EstateList
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
 		$pFieldsCollection = new FieldsCollection();
+		$pLanguage = $this->_pEnvironment->getContainer()->get( Language::class )->getLocale();
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
 		$pFieldBuilderShort
@@ -518,6 +519,14 @@ class EstateList
 			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
 
 		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+
+		if ( $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
+			$dataView = $this->_pDataView->getCustomLabels();
+			if (!empty( $dataView[ $field ][ $pLanguage ])) {
+				$label = $dataView[ $field ][ $pLanguage ];
+			}
+		}
+
 		$fieldNewName = esc_html($label);
 		return $fieldNewName;
 	}

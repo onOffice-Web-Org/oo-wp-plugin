@@ -59,7 +59,14 @@ class FieldModuleCollectionDecoratorCustomLabelEstate
 		$this->_pFieldModuleCollection = $pFieldModuleCollection;
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
 		$recordManagerReadForm = $this->_pContainer->get(RecordManagerReadListViewEstate::class);
-		$results = $recordManagerReadForm->getRowByName($formName, $typeList);
+		if($typeList === "reference"){
+			$results = $recordManagerReadForm->getRowByName($formName, null);
+		}else{
+			$results = $recordManagerReadForm->getRowByName($formName, $typeList);
+		}
+		if(empty($results['listview_id'])){
+			return;
+		}
 		$fieldsByFormIds = $recordManagerReadForm->getFieldconfigByListviewId(intval($results['listview_id']));
 
 		foreach ($fieldsByFormIds as $fieldsByFormId) {
