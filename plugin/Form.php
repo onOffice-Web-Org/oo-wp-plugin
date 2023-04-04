@@ -99,7 +99,7 @@ class Form
 		$this->setGenericSetting('submitButtonLabel', __('Submit', 'onoffice-for-wp-websites'));
 		$this->setGenericSetting('formId', 'onoffice-form');
 		$this->_pContainer = $pContainer ?? $this->buildContainer();
-		$this->typeForm($type);
+		$this->typeFormToHoneyPot($type);
 		$pFieldsCollection = new FieldsCollection();
 		$pFieldBuilderShort = $this->_pContainer->get(FieldsCollectionBuilderShort::class);
 		$pFieldBuilderShort
@@ -615,12 +615,14 @@ class Form
 
 	/**
 	 *
+	 * @param $type
+	 *
 	 */
 
-	public function typeForm($type)
+	public function typeFormToHoneyPot($type)
 	{
-		wp_enqueue_script( 'onoffice-form-type', plugins_url( 'onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php' ), array('jquery'));
-		wp_localize_script( 'onoffice-form-type', 'form', array(  'type' => $type ) );
+		wp_enqueue_script( 'onoffice-honeypot', plugins_url( 'js/onoffice-honeypot.js', ONOFFICE_PLUGIN_DIR . '/index.php'), array('jquery'));
+		wp_localize_script( 'onoffice-honeypot', 'form', array(  'type' => $type ) );
 	}
 
 
