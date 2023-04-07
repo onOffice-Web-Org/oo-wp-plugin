@@ -522,7 +522,12 @@ class EstateList
 		$recordType = onOfficeSDK::MODULE_ESTATE;
 
 		$pLanguage = $this->_pEnvironment->getContainer()->get( Language::class )->getLocale();
-		$label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+
+		try {
+		  $label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+		} catch (UnknownFieldException $pE) {
+			$label = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
+		}
 
 		if ( $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
 			$dataView = $this->_pDataView->getCustomLabels();
