@@ -196,12 +196,12 @@ abstract class AdminPageAjax
 						unset( $fields[ $key ] );
 						continue;
 					}
-					if ( is_array( $field ) && ( $index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value' ) ) {
+					if ( is_array( $field ) && ( $index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value' || $index === 'oopluginfieldconfigestatedefaultsvalues-value') ) {
 						$fields[ $key ] = (object) $field;
 					}
 				}
 			}
-			if ( $index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value' ) {
+			if ( $index === 'defaultvalue-lang' || $index === 'customlabel-lang' || $index === 'oopluginfieldconfigformdefaultsvalues-value' || $index === 'oopluginfieldconfigestatedefaultsvalues-value') {
 				$result[ $index ] = (object) $fields;
 			} else {
 				$result[ $index ] = $fields;

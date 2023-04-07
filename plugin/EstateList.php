@@ -38,7 +38,9 @@ use onOffice\WPlugin\DataView\DataView;
 use onOffice\WPlugin\DataView\DataViewFilterableFields;
 use onOffice\WPlugin\DataView\DataViewSimilarEstates;
 use onOffice\WPlugin\DataView\UnknownViewException;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorEstate;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionFieldDuplicatorForGeoEstate;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueEstateModelToOutputConverter;
 use onOffice\WPlugin\Field\DistinctFieldsHandler;
 use onOffice\WPlugin\Field\DistinctFieldsHandlerModel;
 use onOffice\WPlugin\Field\DistinctFieldsHandlerModelBuilder;
@@ -48,6 +50,7 @@ use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Filter\DefaultFilterBuilder;
 use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Redirector;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
@@ -111,6 +114,9 @@ class EstateList
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
+	/** @var FieldsCollection */
+	private $_pFieldsCollection;
+
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -131,6 +137,18 @@ class EstateList
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
 		$this->_pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
 		$this->_redirectIfOldUrl = $pContainer->get(Redirector::class);
+
+		$pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
+			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionConfiguratorEstate::class);
+		$this->_pFieldsCollection = $pFieldBuilderShort->buildForEstateType($pFieldsCollection);
+		
 	}
 
 	/**
@@ -236,15 +254,9 @@ class EstateList
 	{
 		$activeInputs = [];
 		$recordType = onOfficeSDK::MODULE_ESTATE;
-		$pFieldsCollection = new FieldsCollection();
-		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
-		$pFieldBuilderShort
-			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
-			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		foreach ($inputs->getFields() as $name) {
-			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
+			if ($this->_pFieldsCollection->containsFieldByModule($recordType, $name)) {
 				$activeInputs[] = $name;
 			}
 		}
@@ -508,17 +520,9 @@ class EstateList
 	public function getFieldLabel($field): string
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
-		$pFieldsCollection = new FieldsCollection();
-		$pLanguage = $this->_pEnvironment->getContainer()->get( Language::class )->getLocale();
-		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
-		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
-		$pFieldBuilderShort
-			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
-			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
-			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
 
-		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+		$pLanguage = $this->_pEnvironment->getContainer()->get( Language::class )->getLocale();
+		$label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 
 		if ( $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
 			$dataView = $this->_pDataView->getCustomLabels();
@@ -529,6 +533,44 @@ class EstateList
 
 		$fieldNewName = esc_html($label);
 		return $fieldNewName;
+	}
+
+	/**
+	 * @param string $field
+	 */
+	public function getFieldValue($field)
+	{
+		$values = $this->getDefaultValues();
+		$fieldValue = $values[$field] ?? '';
+
+		return $fieldValue;
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getDefaultValues(): array
+	{
+		/** @var DefaultValueEstateModelToOutputConverter $pDefaultValueRead */
+		$pDefaultValueRead = $this->_pEnvironment->getContainer()->get(DefaultValueEstateModelToOutputConverter::class);
+		$formId = $this->getDataView()->getId();
+		$values = [];
+		foreach ($this->_pFieldsCollection->getAllFields() as $pField) {
+			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
+			$values[$pField->getName()] = $value[0] ?? '';
+
+			if ($pField->getIsRangeField()) {
+				$values[$pField->getName().'__von'] = $value['min'] ?? '';
+				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
+			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
+				$values[$pField->getName()] = $value;
+			} elseif (FieldTypes::isStringType($pField->getType())) {
+				$values[$pField->getName()] = ($value['native'] ?? '') ?: (array_shift($value) ?? '');
+			}
+		}
+		return array_filter($values);
 	}
 
 	/**
@@ -779,7 +821,7 @@ class EstateList
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
 				->getAsRow();
 			$result[$field]['name'] = $field;
-			$result[$field]['value'] = $value;
+			$result[$field]['value'] = $this->getFieldValue($field);
 			$result[$field]['label'] = $this->getFieldLabel($field);
 		}
 		return $result;

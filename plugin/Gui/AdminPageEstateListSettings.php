@@ -299,6 +299,7 @@ class AdminPageEstateListSettings
 		parent::doExtraEnqueues();
 		wp_enqueue_script('oo-checkbox-js');
 		wp_enqueue_script('onoffice-custom-form-label-js');
+		wp_enqueue_script('onoffice-default-estate-values-js');
 		wp_enqueue_script('oo-reference-estate-js');
 		$pluginPath = ONOFFICE_PLUGIN_DIR.'/index.php';
 		wp_localize_script('oo-sanitize-shortcode-name', 'shortcode', ['name' => 'oopluginlistviews-name']);

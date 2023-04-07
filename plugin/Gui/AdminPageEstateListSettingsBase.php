@@ -22,6 +22,11 @@
 namespace onOffice\WPlugin\Gui;
 
 use onOffice\WPlugin\DataView\DataDetailView;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionBuilderFromNamesEstate;
+use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorEstate;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueEstateDelete;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueEstateModelToOutputConverter;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueEstateRowSaver;
 use onOffice\WPlugin\Record\RecordManager;
 use onOffice\WPlugin\Record\RecordManagerFactory;
 use onOffice\WPlugin\Record\RecordManagerInsertException;
@@ -33,6 +38,7 @@ use onOffice\WPlugin\Field\CustomLabel\ModelToOutputConverter\CustomLabelRowSave
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Language;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use stdClass;
 use function __;
 use onOffice\WPlugin\Field\CustomLabel\Exception\CustomLabelDeleteException;
@@ -59,6 +65,12 @@ abstract class AdminPageEstateListSettingsBase
 
 	/** */
 	const CUSTOM_LABELS = 'customlabels';
+
+	/** */
+	const DEFAULT_VALUES = 'defaultvalues';
+
+	/** */
+	const FIELD_MULTISELECT_EDIT_VALUES = 'field_multiselect_edit_values';
 
 	/**
 	 *
@@ -119,6 +131,8 @@ abstract class AdminPageEstateListSettingsBase
 						(RecordManager::TABLENAME_SORTBYUSERVALUES, 'listview_id', $row, $recordId),
 					RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS => $this->prepareRelationValues
 						(RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS, 'listview_id', $row, $recordId),
+					RecordManager::TABLENAME_FIELDCONFIG_ESTATE_DEFAULTS_VALUES => $this->prepareRelationValues
+						(RecordManager::TABLENAME_FIELDCONFIG_ESTATE_DEFAULTS_VALUES, 'listview_id', $row, $recordId),
 				];
 
 				$pInsert->insertAdditionalValues($row);
@@ -129,6 +143,7 @@ abstract class AdminPageEstateListSettingsBase
 			}
 		}
 		if ($result) {
+			$this->saveDefaultValues($recordId, $row);
 			$this->saveCustomLabels($recordId, $row, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_CUSTOMS_LABELS, RecordManager::TABLENAME_FIELDCONFIG_ESTATE_TRANSLATED_LABELS);
 		}
 		$pResult->result = $result;
@@ -174,14 +189,26 @@ abstract class AdminPageEstateListSettingsBase
 
 	public function getEnqueueData(): array
 	{
+		/** @var Language $pInstalledLanguageReader */
+		$pLanguage = $this->getContainer()->get(Language::class);
 		return array(
 			self::VIEW_SAVE_SUCCESSFUL_MESSAGE => __('The view has been saved.', 'onoffice-for-wp-websites'),
 			self::VIEW_SAVE_FAIL_MESSAGE => __('There was a problem saving the view. Please make '
 				.'sure the name of the view is unique, even across all estate list types.', 'onoffice-for-wp-websites'),
 			self::ENQUEUE_DATA_MERGE => array(AdminPageSettingsBase::POST_RECORD_ID),
 			self::CUSTOM_LABELS => $this->readCustomLabels(),
+			self::FIELD_MULTISELECT_EDIT_VALUES => __('Edit Values', 'onoffice-for-wp-websites'),
+			self::DEFAULT_VALUES => $this->readDefaultValues(),
+			'fieldList' => $this->getFieldList(),
 			'label_custom_label' => __('Custom Label: %s', 'onoffice-for-wp-websites'),
 			AdminPageSettingsBase::POST_RECORD_ID => $this->getListViewId(),
+			'label_default_value' => __('Default Value: %s', 'onoffice-for-wp-websites'),
+			'label_add_language' => __('Add Language', 'onoffice-for-wp-websites'),
+			'label_choose_language' => __('Choose Language', 'onoffice-for-wp-websites'),
+			'label_default_value_from' => __('Default Value From:', 'onoffice-for-wp-websites'),
+			'label_default_value_up_to' => __('Default Value Up To:', 'onoffice-for-wp-websites'),
+			'installed_wp_languages' => $this->getInstalledLanguages(),
+			'language_native' => $pLanguage->getLocale(),
 		);
 	}
 
@@ -240,8 +267,9 @@ abstract class AdminPageEstateListSettingsBase
 			}
 			
 		}
-		
-		return $pDefaultFieldsCollection;
+		/** @var FieldsCollectionConfiguratorEstate $pFieldsCollectionConfiguratorEstate */
+		$pFieldsCollectionConfiguratorEstate = $this->getContainer()->get(FieldsCollectionConfiguratorEstate::class);
+		return $pFieldsCollectionConfiguratorEstate->buildForEstateType($pDefaultFieldsCollection);
 	}
 
 	/**
@@ -272,5 +300,85 @@ abstract class AdminPageEstateListSettingsBase
 		$pCustomLabelSave = $this->getContainer()->get(CustomLabelRowSaver::class);
 		$pCustomLabelSave->saveCustomLabels($recordId,
 			$row['oo_plugin_fieldconfig_estate_translated_labels'] ?? [], $pFieldsCollectionCurrent, $pCustomsLabelConfigurationField, $pTranslateLabelConfigurationField);
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getInstalledLanguages(): array
+	{
+		/** @var InstalledLanguageReader $pInstalledLanguageReader */
+		$pInstalledLanguageReader = $this->getContainer()->get(InstalledLanguageReader::class);
+		return $pInstalledLanguageReader->readAvailableLanguageNamesUsingNativeName();
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getFieldList(): array
+	{
+		$result = [];
+		foreach ($this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField) {
+			$result[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
+			if ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
+				$result[$pField->getModule()][$pField->getName()]['permittedvalues'] = [
+					'0' => __('No', 'onoffice-for-wp-websites'),
+					'1' => __('Yes', 'onoffice-for-wp-websites'),
+				];
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function readDefaultValues(): array
+	{
+		$result = [];
+		/** @var DefaultValueEstateModelToOutputConverter $pDefaultValueConverter */
+		$pDefaultValueConverter = $this->getContainer()->get(DefaultValueEstateModelToOutputConverter::class);
+
+		foreach ($this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField) {
+			$result[$pField->getName()] = $pDefaultValueConverter->getConvertedField
+				((int)$this->getListViewId(), $pField);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param int $recordId
+	 * @param array $row
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 * @throws RecordManagerInsertException
+	 * @throws UnknownFieldException
+	 */
+
+	private function saveDefaultValues(int $recordId, array $row)
+	{
+		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG] ?? [];
+		$fieldNamesSelected = array_column($fields, 'fieldname');
+		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentEstate();
+		/** @var FieldsCollectionBuilderFromNamesEstate $pFieldsCollectionBuilder */
+		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesEstate::class);
+		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollectionFromBaseCollection
+			($fieldNamesSelected, $pFieldsCollectionBase);
+
+			/** @var DefaultValueEstateDelete $pDefaultValueDelete */
+		$pDefaultValueDelete = $this->getContainer()->get(DefaultValueEstateDelete::class);
+		$pDefaultValueDelete->deleteByEstateIdAndFieldNames($recordId, $fieldNamesSelected);
+
+		$pDefaultValueSave = $this->getContainer()->get(DefaultValueEstateRowSaver::class);
+
+		$pDefaultValueSave->saveDefaultValues($recordId,
+			$row['oo_plugin_fieldconfig_estate_defaults_values'] ?? [], $pFieldsCollectionCurrent);
 	}
 }

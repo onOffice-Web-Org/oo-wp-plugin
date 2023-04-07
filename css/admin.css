@@ -497,3 +497,13 @@ body #post-body-content p.wp-clearfix:nth-child(1){
 		white-space: nowrap;
 	}
 }
+
+div[data-name^=oopluginfieldconfigestatedefaultsvalues-value].multiselect {
+    width: 100%;
+    margin-top: 10pt;
+}
+
+div[data-name^=oopluginfieldconfigestatedefaultsvalues-value].multiselect > input.onoffice-multiselect-edit {
+    position: relative;
+    float: right;
+}

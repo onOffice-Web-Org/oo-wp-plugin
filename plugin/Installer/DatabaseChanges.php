@@ -44,7 +44,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 38;
+	const MAX_VERSION = 39;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -277,6 +277,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 		if ( $dbversion == 37 ) {
 			$this->_pWpOption->updateOption( 'onoffice-settings-honeypot', false );
 			$dbversion = 38;
+		}
+
+		if ( $dbversion == 38 ) {
+			dbDelta( $this->getCreateQueryFieldConfigDefaultsEstate() );
+			dbDelta( $this->getCreateQueryFieldConfigDefaultsValuesEstate() );
+			$dbversion = 39;
 		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
@@ -852,6 +858,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$prefix."oo_plugin_fieldconfig_form_translated_labels",
 			$prefix."oo_plugin_fieldconfig_estate_customs_labels",
 			$prefix."oo_plugin_fieldconfig_estate_translated_labels",
+			$prefix."oo_plugin_fieldconfig_estate_defaults",
+			$prefix."oo_plugin_fieldconfig_estate_defaults_values",
 		);
 
 		foreach ($tables as $table)	{
@@ -1018,4 +1026,42 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
 	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigDefaultsEstate(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig_estate_defaults";
+		$sql = "CREATE TABLE $tableName (
+			`defaults_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`estate_id` bigint(20) NOT NULL,
+			`fieldname` tinytext NOT NULL,
+			PRIMARY KEY (`defaults_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function getCreateQueryFieldConfigDefaultsValuesEstate(): string
+	{
+		$prefix = $this->getPrefix();
+		$charsetCollate = $this->getCharsetCollate();
+		$tableName = $prefix."oo_plugin_fieldconfig_estate_defaults_values";
+		$sql = "CREATE TABLE $tableName (
+			`defaults_values_id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`defaults_id` bigint(20) NOT NULL,
+			`locale` tinytext NULL DEFAULT NULL,
+			`value` text,
+			PRIMARY KEY (`defaults_values_id`)
+		) $charsetCollate;";
+
+		return $sql;
+	}
+
 }

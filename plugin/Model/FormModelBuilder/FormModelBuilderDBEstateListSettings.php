@@ -21,6 +21,7 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
+use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
 use onOffice\WPlugin\DataView\DataListView;
@@ -31,10 +32,12 @@ use onOffice\WPlugin\Model\FormModel;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactory;
 use onOffice\WPlugin\Model\InputModel\InputModelDBFactoryConfigEstate;
 use onOffice\WPlugin\Model\InputModelBase;
+use onOffice\WPlugin\Model\InputModelBuilder\InputModelBuilderDefaultValueEstate;
 use onOffice\WPlugin\Model\InputModelDB;
 use onOffice\WPlugin\Model\InputModelOption;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use onOffice\WPlugin\Types\FieldsCollection;
+use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Model\InputModelLabel;
 use onOffice\WPlugin\DataFormConfiguration\DataFormConfiguration;
@@ -361,6 +364,8 @@ class FormModelBuilderDBEstateListSettings
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsAvailableOptions);
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
+		$pSortableFieldsList->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
 
@@ -749,6 +754,45 @@ class FormModelBuilderDBEstateListSettings
 			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
 			$pInputModel->setLabel(__('Add custom label language', 'onoffice-for-wp-websites'));
 		});
+		return $pInputModel;
+	}
+
+	/**
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return InputModelDB
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function getInputModelDefaultValue(FieldsCollection $pFieldsCollection): InputModelDB
+	{
+		$pDIContainerBuilder = new Container();
+		$pInputModelBuilder = $pDIContainerBuilder->get(InputModelBuilderDefaultValueEstate::class);
+		return $pInputModelBuilder->createInputModelDefaultValue($pFieldsCollection, $this->getValue('defaultvalue', []));
+	}
+
+	/**
+	 * @return InputModelDB
+	 */
+	public function getInputModelDefaultValueLanguageSwitch(): InputModelDB
+	{
+		$pInputModel = new InputModelDB('defaultvalue_newlang', __('Add language', 'onoffice-for-wp-websites'));
+		$pInputModel->setTable('language');
+		$pInputModel->setField('language');
+
+		$pLanguageReader = new InstalledLanguageReader;
+		$languages = ['' => __('Choose Language', 'onoffice-for-wp-websites')]
+			+ $pLanguageReader->readAvailableLanguageNamesUsingNativeName();
+		$pInputModel->setValuesAvailable(array_diff_key($languages, [get_locale() => []]));
+		$pInputModel->setValueCallback(function(InputModelDB $pInputModel, string $key, string $type = null) {
+			$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_HIDDEN);
+			$pInputModel->setLabel('');
+
+			if (FieldTypes::isStringType($type ?? '')) {
+				$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_SELECT);
+				$pInputModel->setLabel(__('Add language', 'onoffice-for-wp-websites'));
+			}
+		});
+
 		return $pInputModel;
 	}
 }
