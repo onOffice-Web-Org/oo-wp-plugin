@@ -31,6 +31,7 @@ use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\CustomLabel\CustomLabelRead;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorCustomLabelForm;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorFormContact;
+use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorGeoPositionFrontend;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorInternalAnnotations;
 use onOffice\WPlugin\Field\FieldModuleCollectionDecoratorSearchcriteria;
 use onOffice\WPlugin\Form;
@@ -262,6 +263,21 @@ class FieldsCollectionBuilderShort
 		$pFieldCollectionAddressEstate = $this->_pContainer->get(FieldsCollectionBuilder::class)
 			->buildFieldsCollection($pFieldLoader);
 		$pFieldsCollection->merge($pFieldCollectionAddressEstate);
+		return $this;
+	}
+
+	/**
+	 *
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return $this
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+
+	public function addFieldsEstateGeoPositionFrontend(FieldsCollection $pFieldsCollection): self
+	{
+		$pFieldsCollectionTmp = new FieldModuleCollectionDecoratorGeoPositionFrontend(new FieldsCollection);
+		$pFieldsCollection->merge($pFieldsCollectionTmp);
 		return $this;
 	}
 }

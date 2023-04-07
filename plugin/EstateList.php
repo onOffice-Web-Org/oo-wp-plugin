@@ -516,9 +516,14 @@ class EstateList
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
+			->addFieldsEstateGeoPositionFrontend($pFieldsCollection)
 			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
 
-		$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+		try {
+			$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+		} catch (UnknownFieldException $pE) {
+			$label = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
+		}
 
 		if ( $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
 			$dataView = $this->_pDataView->getCustomLabels();
