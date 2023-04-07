@@ -520,11 +520,10 @@ class EstateList
 	public function getFieldLabel($field): string
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
-
 		$pLanguage = $this->_pEnvironment->getContainer()->get( Language::class )->getLocale();
 
 		try {
-		  $label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+			$label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 		} catch (UnknownFieldException $pE) {
 			$label = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
 		}
