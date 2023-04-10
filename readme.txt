@@ -76,6 +76,24 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.10 (2023-04-11) =
+
+**Changed**
+
+* Honeypot is disabled by default now to avoid errors with custom stylesheets. It must be manually enabled in each new and running environment.
+* Order of serveral fields in formulars.
+
+**Fixed**
+
+* Error if a field in enterprise is missing for an estate.
+* Error while loading Honeypot JS.
+* Number of search results if references are hidden.
+* Initial saving of GDPR checkbox and custom labels.
+
+**Removed**
+
+* A deprecated option for formulars.
+
 = 4.9 (2023-02-23) =
 
 **Added**
