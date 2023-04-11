@@ -80,8 +80,8 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Changed**
 
-* Honeypot is disabled by default now to avoid errors with custom stylesheets. It must be manually enabled in each new and running environment.
-* Order of serveral fields in formulars.
+* Honeypot is disabled by default now to avoid errors with custom stylesheets. It now has to be enabled manually.
+* Order of serveral fields in forms.
 
 **Fixed**
 
@@ -92,7 +92,7 @@ Start editing inside the `onoffice-personalized` folder.
 
 **Removed**
 
-* A deprecated option for formulars.
+* A deprecated option for forms.
 
 = 4.9 (2023-02-23) =
 
