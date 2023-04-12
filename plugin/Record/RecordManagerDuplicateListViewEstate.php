@@ -155,52 +155,7 @@ class RecordManagerDuplicateListViewEstate extends RecordManager
 						$this->_pWPDB->insert($tableSortByUserValues, $newSortByUserValuesRow);
 					}
 				}
-
-	// 			//duplicate data related oo_plugin_fieldconfig_estate_defaults table
-	// 			$estateDefaultsFieldConfigTable = $prefix . self::TABLENAME_FIELDCONFIG_ESTATE_DEFAULTS;
-	// 			$estateDefaultsFieldConfigValueTable = $prefix . self::TABLENAME_FIELDCONFIG_ESTATE_DEFAULTS_VALUES;
-	// 			$selectEstateDefaultsById = "SELECT * FROM {$this->_pWPDB->_escape($estateDefaultsFieldConfigTable)} WHERE estate_id='{$this->_pWPDB->_escape($id)}'";
-	// 			$estateDefaultsRows = $this->_pWPDB->get_results($selectEstateDefaultsById);
-	// 			if (!empty($estateDefaultsRows) && (count($estateDefaultsRows) !== 0)) {
-	// 				foreach ($estateDefaultsRows as $estateDefaultsRow) {
-	// 					$newEstateDefaultsRow = [];
-	// 					$newEstateDefaultsRow['estate_id'] = $duplicateListViewId;
-	// 					$newEstateDefaultsRow['fieldname'] = $estateDefaultsRow->fieldname;
-	// 					$this->_pWPDB->insert($estateDefaultsFieldConfigTable, $newEstateDefaultsRow);
-
-	// 					$newDefaultsId = $this->_pWPDB->insert_id;
-	// 					$selectEstateDefaultValueById = "SELECT * FROM {$this->_pWPDB->_escape($estateDefaultsFieldConfigValueTable)} WHERE defaults_id ='{$this->_pWPDB->_escape($estateDefaultsRow->defaults_id)}'";
-	// 					$estateDefaultsValueRows = $this->_pWPDB->get_results($selectEstateDefaultValueById, 'ARRAY_A');
-	// 					$this->duplicateDataRelated( $newDefaultsId, $estateDefaultsValueRows,
-	// 						$estateDefaultsFieldConfigValueTable, 'defaults_id', 'defaults_values_id' );
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-
-	// /**
-	//  * @param int $newInsertDataId
-	//  * @param array $formDataRelatedRows
-	//  * @param string $relatedTableName
-	//  * @param string $relatedKeyId
-	//  * @param string $disAllowKey
-	//  */
-
-	//  public function duplicateDataRelated(
-	// 	int $newInsertDataId,
-	// 	array $formDataRelatedRows,
-	// 	string $relatedTableName,
-	// 	string $relatedKeyId,
-	// 	string $disAllowKey
-	// ) {
-	// 	foreach ( $formDataRelatedRows as $formDataRelatedRow ) {
-	// 		$existingColumns = $this->_pWPDB->get_col("DESC {$relatedTableName}", 0);
-	// 		$formFilterDataRelatedRow = array_intersect_key($formDataRelatedRow, array_flip($existingColumns));
-	// 		$formFilterDataRelatedRow[ $relatedKeyId ] = $newInsertDataId;
-	// 		unset( $formFilterDataRelatedRow[ $disAllowKey ] );
-	// 		$this->_pWPDB->insert( $relatedTableName, $formFilterDataRelatedRow );
+			}
 		}
 	}
 }
