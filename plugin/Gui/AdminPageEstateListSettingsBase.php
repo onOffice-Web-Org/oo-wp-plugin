@@ -260,6 +260,12 @@ abstract class AdminPageEstateListSettingsBase
 		$fieldNamesSelected = array_column($fields, 'fieldname');
 		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentEstate();
 
+		foreach ($fieldNamesSelected as $key => $name) {
+			if (!$pFieldsCollectionBase->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $name)) {
+				unset($fieldNamesSelected[$key]);
+				unset($row['oo_plugin_fieldconfig_estate_translated_labels'][$name]);
+			}
+		}
 		/** @var FieldsCollectionBuilderFromNamesForm $pFieldsCollectionBuilder */
 		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesForm::class);
 		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollectionFromBaseCollection
