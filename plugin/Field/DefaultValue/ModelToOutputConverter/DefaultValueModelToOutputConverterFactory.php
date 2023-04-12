@@ -102,4 +102,14 @@ class DefaultValueModelToOutputConverterFactory
 	{
 		return $this->_pContainer->get(DefaultValueModelToOutputConverterBool::class);
 	}
+
+	/**
+	 * @return DefaultValueModelToOutputConverterDate
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function createForDate(): DefaultValueModelToOutputConverterDate
+	{
+		return $this->_pContainer->get(DefaultValueModelToOutputConverterDate::class);
+	}
 }

@@ -112,6 +112,18 @@ class DefaultValueEstateCreate
 		return $defaultsId;
 	}
 
+	/**
+	 * @param DefaultValueModelDate $pDataModel
+	 * @return int
+	 * @throws RecordManagerInsertException
+	 */
+	public function createForDate(DefaultValueModelDate $pDataModel): int
+	{
+		$defaultsId = $this->createBase($pDataModel);
+		$this->writeDatabaseValueSingle($defaultsId, (string)$pDataModel->getValueFrom());
+		$this->writeDatabaseValueSingle($defaultsId, (string)$pDataModel->getValueTo());
+		return $defaultsId;
+	}
 
 	/**
 	 *

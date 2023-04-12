@@ -199,6 +199,12 @@ class RecordStructure
 				self::EMPTY_VALUE => '',
 			),
 		],
+		'oo_plugin_fieldconfig_estate_defaults_values' => [
+			'value' => array(
+				self::NULL_ALLOWED => false,
+				self::EMPTY_VALUE => '',
+			),
+		],
 	);
 
 

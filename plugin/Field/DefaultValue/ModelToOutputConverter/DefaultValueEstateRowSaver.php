@@ -25,6 +25,7 @@ namespace onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter;
 
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueEstateCreate;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
+use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelDate;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelSingleselect;
@@ -87,14 +88,14 @@ class DefaultValueEstateRowSaver
 	 */
 	private function saveForFoundType(int $estateId, Field $pField, $values)
 	{
-		$isSingleValue = FieldTypes::isDateOrDateTime($pField->getType()) ||
-			FieldTypes::isNumericType($pField->getType()) ||
-			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT;
+		$isSingleValue = $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT;
 		$isMultiSelect = $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
 		$isBoolean = $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
 		$isStringType = FieldTypes::isStringType($pField->getType());
+		$isDate =  FieldTypes::isDateOrDateTime($pField->getType());
+		$isNumberType = FieldTypes::isNumericType($pField->getType());
 
-		if ($pField->getIsRangeField()) {
+		if ($pField->getIsRangeField() || $isNumberType) {
 			$this->saveNumericRange($estateId, $pField, $values);
 		} elseif ($isSingleValue) {
 			$this->saveGeneric($estateId, $pField, $values);
@@ -104,6 +105,8 @@ class DefaultValueEstateRowSaver
 			$this->saveBool($estateId, $pField, $values);
 		} elseif ($isStringType) {
 			$this->saveText($estateId, $pField, $values);
+		} elseif ($isDate) {
+			$this->saveDate($estateId, $pField, $values);
 		}
 	}
 
@@ -188,5 +191,19 @@ class DefaultValueEstateRowSaver
 			$locale = $this->_pLanguage->getLocale();
 		}
 		$pModel->addValueByLocale($locale, $value);
+	}
+
+	/**
+	 * @param int $estateId
+	 * @param Field $pField
+	 * @param array $values
+	 * @throws RecordManagerInsertException
+	 */
+	private function saveDate(int $formId, Field $pField, array $values)
+	{
+		$pModel = new DefaultValueModelDate($formId, $pField);
+		$pModel->setValueFrom(($values['min']));
+		$pModel->setValueTo(($values['max']));
+		$this->_pDefaultValueCreate->createForDate($pModel);
 	}
 }

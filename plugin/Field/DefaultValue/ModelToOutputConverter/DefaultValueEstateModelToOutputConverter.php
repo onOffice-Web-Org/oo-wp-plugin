@@ -67,15 +67,15 @@ class DefaultValueEstateModelToOutputConverter
 	 */
 	public function getConvertedField(int $estateId, Field $pField): array
 	{
-		$isSingleValue = FieldTypes::isDateOrDateTime($pField->getType()) ||
-			FieldTypes::isNumericType($pField->getType()) ||
-			$pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT;
+		$isSingleValue = $pField->getType() === FieldTypes::FIELD_TYPE_SINGLESELECT;
 		$isMultiSelect = $pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT;
 		$isBoolean = $pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN;
 		$isStringType = FieldTypes::isStringType($pField->getType());
 		$isRegZusatz = FieldTypes::isRegZusatzSearchcritTypes($pField->getType());
+		$isDate = FieldTypes::isDateOrDateTime($pField->getType());
+		$isNumberType = FieldTypes::isNumericType($pField->getType());
 
-		if ($pField->getIsRangeField()) {
+		if ($pField->getIsRangeField() || $isNumberType) {
 			return $this->convertNumericRange($estateId, $pField);
 		} elseif ($isSingleValue) {
 			return $this->convertGeneric($estateId, $pField);
@@ -88,6 +88,8 @@ class DefaultValueEstateModelToOutputConverter
 		} elseif ($isRegZusatz) {
 			$pField->setType(FieldTypes::FIELD_TYPE_MULTISELECT);
 			return $this->convertMultiSelect($estateId, $pField);
+		} elseif ($isDate) {
+			return $this->convertDate($estateId, $pField);
 		}
 		return [];
 	}
@@ -163,6 +165,20 @@ class DefaultValueEstateModelToOutputConverter
 	{
 		$pModel = $this->_pDefaultValueReader->readDefaultValuesBool($estateId, $pField);
 		$pConverter = $this->_pOutputConverterFactory->createForBool();
+		return $pConverter->convertToRow($pModel);
+	}
+
+	/**
+	 * @param int $estateId
+	 * @param Field $pField
+	 * @return array
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	private function convertDate(int $estateId, Field $pField): array
+	{
+		$pModel = $this->_pDefaultValueReader->readDefaultValuesDate($estateId, $pField);
+		$pConverter = $this->_pOutputConverterFactory->createForDate();
 		return $pConverter->convertToRow($pModel);
 	}
 }

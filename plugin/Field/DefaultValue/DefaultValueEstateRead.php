@@ -134,6 +134,24 @@ class DefaultValueEstateRead
 	/**
 	 * @param int $estate_id
 	 * @param Field $pField
+	 * @return DefaultValueModelDate
+	 */
+	public function readDefaultValuesDate(int $estate_id, Field $pField): DefaultValueModelDate
+	{
+		$query = $this->createBaseQuery($estate_id, $pField);
+		$rows = $this->_pWPDB->get_results($query, OBJECT);
+		$pDataModel = new DefaultValueModelDate($estate_id, $pField);
+
+		if (count($rows) === 2) {
+			$pDataModel->setValueFrom($rows[0]->value);
+			$pDataModel->setValueTo($rows[1]->value);
+		}
+		return $pDataModel;
+	}
+
+	/**
+	 * @param int $estate_id
+	 * @param Field $pField
 	 * @return string
 	 */
 	private function createBaseQuery(int $estate_id, Field $pField): string

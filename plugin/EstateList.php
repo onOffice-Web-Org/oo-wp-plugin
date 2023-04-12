@@ -52,6 +52,7 @@ use onOffice\WPlugin\Filter\GeoSearchBuilder;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\Utility\Redirector;
+use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\ViewFieldModifier\EstateViewFieldModifierTypes;
 use onOffice\WPlugin\ViewFieldModifier\ViewFieldModifierHandler;
 use onOffice\WPlugin\WP\WPPageWrapper;
@@ -145,6 +146,8 @@ class EstateList
 			->addFieldsAddressEstate($pFieldsCollection)
 			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
+			->addFieldsEstateGeoPositionFrontend($pFieldsCollection)
+			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
 			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
 		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionConfiguratorEstate::class);
 		$this->_pFieldsCollection = $pFieldBuilderShort->buildForEstateType($pFieldsCollection);
@@ -540,14 +543,32 @@ class EstateList
 	}
 
 	/**
+	 * @param string $rangeField
+	 * @return bool
+	 */
+	private function isRangeField(string $rangeField, $field): bool
+	{
+		$pString = __String::getNew($rangeField);
+		return $pString->startsWith($field) && $pString->endsWith('__von') || $pString->startsWith($field) && $pString->endsWith('__bis');
+	}
+
+	/**
 	 * @param string $field
 	 */
 	public function getFieldValue($field)
 	{
 		$values = $this->getDefaultValues();
-		$fieldValue = $values[$field] ?? '';
+		$data = [];
+		if(!empty($values[$field])){
+			return $values[$field];
+		}
 
-		return $fieldValue;
+		foreach($values as $key => $value) {
+			if($this->isRangeField($key, $field)){
+				$data[$field][] = $value;
+			}
+		}
+		return $data[$field];
 	}
 
 	/**
@@ -565,7 +586,7 @@ class EstateList
 			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
 			$values[$pField->getName()] = $value[0] ?? '';
 
-			if ($pField->getIsRangeField()) {
+			if ($pField->getIsRangeField() || FieldTypes::isDateOrDateTime($pField->getType()) || FieldTypes::isNumericType($pField->getType())) {
 				$values[$pField->getName().'__von'] = $value['min'] ?? '';
 				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
 			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
@@ -823,12 +844,12 @@ class EstateList
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
-				->getAsRow();
+				->getAsRow();;
 			$result[$field]['name'] = $field;
-			$result[$field]['value'] = $this->getFieldValue($field);
+			$result[$field]['value'] = $value ?? $this->getFieldValue($field);
 			$result[$field]['label'] = $this->getFieldLabel($field);
 		}
-		return $result;
+ 		return $result;
 	}
 
 	/**

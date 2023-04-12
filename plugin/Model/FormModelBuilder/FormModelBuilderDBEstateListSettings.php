@@ -765,8 +765,10 @@ class FormModelBuilderDBEstateListSettings
 	 */
 	private function getInputModelDefaultValue(FieldsCollection $pFieldsCollection): InputModelDB
 	{
-		$pDIContainerBuilder = new Container();
-		$pInputModelBuilder = $pDIContainerBuilder->get(InputModelBuilderDefaultValueEstate::class);
+		$pDIContainerBuilder = new ContainerBuilder();
+		$pDIContainerBuilder->addDefinitions(ONOFFICE_DI_CONFIG_PATH);
+		$pContainer = $pDIContainerBuilder->build();
+		$pInputModelBuilder = $pContainer->get(InputModelBuilderDefaultValueEstate::class);
 		return $pInputModelBuilder->createInputModelDefaultValue($pFieldsCollection, $this->getValue('defaultvalue', []));
 	}
 

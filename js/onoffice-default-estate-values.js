@@ -197,11 +197,31 @@ onOffice.default_values_input_converter = function () {
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
             ].indexOf(fieldDefinition.type) >= 0) {
-            if (fieldDefinition.type === 'date' || fieldDefinition.type === 'datetime') {
-                mainInput.setAttribute('type', 'text');
+            mainInput.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][min]';
+            mainInput.className = 'onoffice-input';
+            var mainInputClone = mainInput.cloneNode(true);
+            mainInputClone.id = 'input_js_' + onOffice.js_field_count;
+            onOffice.js_field_count += 1;
+            var labelFrom = mainInput.parentElement.querySelector('label[for='+mainInput.id+']')
+            var labelUpTo = labelFrom.cloneNode(true);
+            labelUpTo.htmlFor = mainInputClone.id;
+            labelFrom.textContent = onOffice_loc_settings.label_default_value_from;
+            labelUpTo.textContent = onOffice_loc_settings.label_default_value_up_to;
+            mainInputClone.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][max]';
+            if (fieldDefinition.type === 'date') {
+                mainInput.setAttribute('type', 'date');
+                mainInputClone.setAttribute('type', 'date');
             }
-            mainInput.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + ']';
-            mainInput.value = predefinedValues[fieldName][0] || '';
+            mainInput.parentElement.appendChild(labelUpTo);
+            mainInput.parentElement.appendChild(mainInputClone);
+            console.log(mainInput);
+            var predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
+                !Array.isArray(predefinedValues[fieldName]);
+    
+            if (predefinedValuesIsObject) {
+                mainInput.value = predefinedValues[fieldName]['min'] || '';
+                mainInputClone.value = predefinedValues[fieldName]['max'] || '';
+            }
             return;
         }
 
