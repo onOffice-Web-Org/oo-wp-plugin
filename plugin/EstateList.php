@@ -543,32 +543,14 @@ class EstateList
 	}
 
 	/**
-	 * @param string $rangeField
-	 * @return bool
-	 */
-	private function isRangeField(string $rangeField, $field): bool
-	{
-		$pString = __String::getNew($rangeField);
-		return $pString->startsWith($field) && $pString->endsWith('__von') || $pString->startsWith($field) && $pString->endsWith('__bis');
-	}
-
-	/**
 	 * @param string $field
 	 */
 	public function getFieldValue($field)
 	{
 		$values = $this->getDefaultValues();
-		$data = [];
-		if(!empty($values[$field])){
-			return $values[$field];
-		}
+		$fieldValue = $values[$field];
 
-		foreach($values as $key => $value) {
-			if($this->isRangeField($key, $field)){
-				$data[$field][] = $value;
-			}
-		}
-		return $data[$field];
+		return $fieldValue;
 	}
 
 	/**
@@ -584,11 +566,11 @@ class EstateList
 		$values = [];
 		foreach ($this->_pFieldsCollection->getAllFields() as $pField) {
 			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
-			$values[$pField->getName()] = $value[0] ?? '';
+			$values[$pField->getName()] = $value[0] ?? [];
 
 			if ($pField->getIsRangeField() || FieldTypes::isDateOrDateTime($pField->getType()) || FieldTypes::isNumericType($pField->getType())) {
-				$values[$pField->getName().'__von'] = $value['min'] ?? '';
-				$values[$pField->getName().'__bis'] = $value['max'] ?? '';
+				$values[$pField->getName()][] = $value['min'] ?? '';
+				$values[$pField->getName()][] = $value['max'] ?? '';
 			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
 				$values[$pField->getName()] = $value;
 			} elseif (FieldTypes::isStringType($pField->getType())) {
@@ -844,7 +826,7 @@ class EstateList
 		$result = [];
 		foreach ($fieldsValues as $field => $value) {
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
-				->getAsRow();;
+				->getAsRow();
 			$result[$field]['name'] = $field;
 			$result[$field]['value'] = $value ?? $this->getFieldValue($field);
 			$result[$field]['label'] = $this->getFieldLabel($field);
