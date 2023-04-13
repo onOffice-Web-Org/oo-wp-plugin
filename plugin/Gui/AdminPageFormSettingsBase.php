@@ -616,7 +616,7 @@ abstract class AdminPageFormSettingsBase
 		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentForm();
 
 		foreach ($fieldNamesSelected as $key => $name) {
-			$module = $this->getModule($name,$pFieldsCollectionBase);
+			$module = $this->getModule($name, $pFieldsCollectionBase);
 			if (!$pFieldsCollectionBase->containsFieldByModule($module, $name)) {
 				unset($fieldNamesSelected[$key]);
 				unset($row['oo_plugin_fieldconfig_form_defaults_values'][$name]);
@@ -654,7 +654,7 @@ abstract class AdminPageFormSettingsBase
 		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentForm();
 
 		foreach ($fieldNamesSelected as $key => $name) {
-			$module = $this->getModule($name,$pFieldsCollectionBase);
+			$module = $this->getModule($name, $pFieldsCollectionBase);
 			if (!$pFieldsCollectionBase->containsFieldByModule($module, $name)) {
 				unset($fieldNamesSelected[$key]);
 				unset($row['oo_plugin_fieldconfig_form_translated_labels'][$name]);
