@@ -326,8 +326,9 @@ abstract class AdminPageEstateListSettingsBase
 			$result[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
 			if ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$result[$pField->getModule()][$pField->getName()]['permittedvalues'] = [
-					'0' => __('No', 'onoffice-for-wp-websites'),
-					'1' => __('Yes', 'onoffice-for-wp-websites'),
+					'0' => __('Not Specified', 'onoffice-for-wp-websites'),
+					'1' => __('No', 'onoffice-for-wp-websites'),
+					'2' => __('Yes', 'onoffice-for-wp-websites'),
 				];
 			}
 		}
@@ -367,6 +368,13 @@ abstract class AdminPageEstateListSettingsBase
 		$fields = $row[RecordManager::TABLENAME_FIELDCONFIG] ?? [];
 		$fieldNamesSelected = array_column($fields, 'fieldname');
 		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentEstate();
+		foreach ($fieldNamesSelected as $key => $name) {
+			if (!$pFieldsCollectionBase->containsFieldByModule(onOfficeSDK::MODULE_ESTATE, $name)) {
+				unset($fieldNamesSelected[$key]);
+				unset($row['oo_plugin_fieldconfig_estate_defaults_values'][$name]);
+			}
+		}
+
 		/** @var FieldsCollectionBuilderFromNamesEstate $pFieldsCollectionBuilder */
 		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesEstate::class);
 		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollectionFromBaseCollection

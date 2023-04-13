@@ -88,18 +88,6 @@ class DefaultValueEstateCreate
 	}
 
 	/**
-	 * @param DefaultValueModelBool $pDataModel
-	 * @return int
-	 * @throws RecordManagerInsertException
-	 */
-	public function createForBool(DefaultValueModelBool $pDataModel): int
-	{
-		$defaultsId = $this->createBase($pDataModel);
-		$this->writeDatabaseValueSingle($defaultsId, (string)intval($pDataModel->getValue()));
-		return $defaultsId;
-	}
-
-	/**
 	 * @param DefaultValueModelNumericRange $pDataModel
 	 * @return int
 	 * @throws RecordManagerInsertException

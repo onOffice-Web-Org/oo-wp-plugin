@@ -77,12 +77,10 @@ class DefaultValueEstateModelToOutputConverter
 
 		if ($pField->getIsRangeField() || $isNumberType) {
 			return $this->convertNumericRange($estateId, $pField);
-		} elseif ($isSingleValue) {
+		} elseif ($isSingleValue || $isBoolean) {
 			return $this->convertGeneric($estateId, $pField);
 		} elseif ($isMultiSelect) {
 			return $this->convertMultiSelect($estateId, $pField);
-		} elseif ($isBoolean) {
-			return $this->convertBoolean($estateId, $pField);
 		} elseif ($isStringType) {
 			return $this->convertText($estateId, $pField);
 		} elseif ($isRegZusatz) {
@@ -151,20 +149,6 @@ class DefaultValueEstateModelToOutputConverter
 	{
 		$pModel = $this->_pDefaultValueReader->readDefaultValuesNumericRange($estateId, $pField);
 		$pConverter = $this->_pOutputConverterFactory->createForNumericRange();
-		return $pConverter->convertToRow($pModel);
-	}
-
-	/**
-	 * @param int $estateId
-	 * @param Field $pField
-	 * @return array
-	 * @throws DependencyException
-	 * @throws NotFoundException
-	 */
-	private function convertBoolean(int $estateId, Field $pField): array
-	{
-		$pModel = $this->_pDefaultValueReader->readDefaultValuesBool($estateId, $pField);
-		$pConverter = $this->_pOutputConverterFactory->createForBool();
 		return $pConverter->convertToRow($pModel);
 	}
 

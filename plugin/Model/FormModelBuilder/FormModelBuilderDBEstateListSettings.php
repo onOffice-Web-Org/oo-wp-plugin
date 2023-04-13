@@ -21,7 +21,6 @@
 
 namespace onOffice\WPlugin\Model\FormModelBuilder;
 
-use DI\Container;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\SortList\SortListTypes;
 use onOffice\WPlugin\DataView\DataListView;

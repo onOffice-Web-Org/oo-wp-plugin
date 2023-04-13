@@ -82,22 +82,6 @@ class DefaultValueEstateRead
 	/**
 	 * @param int $estate_id
 	 * @param Field $pField
-	 * @return DefaultValueModelBool
-	 */
-	public function readDefaultValuesBool(int $estate_id, Field $pField): DefaultValueModelBool
-	{
-		$query = $this->createBaseQuery($estate_id, $pField);
-		$row = $this->_pWPDB->get_row($query, ARRAY_A);
-		$pDataModel = new DefaultValueModelBool($estate_id, $pField);
-		$pDataModel->setDefaultsId(!empty($row['defaults_id']) ? (int)$row['defaults_id'] : 0);
-		$pDataModel->setValue(!empty($row['value']) ? (bool)intval($row['value']) : false);
-
-		return $pDataModel;
-	}
-
-	/**
-	 * @param int $estate_id
-	 * @param Field $pField
 	 * @return DefaultValueModelText
 	 */
 	public function readDefaultValuesText(int $estate_id, Field $pField): DefaultValueModelText

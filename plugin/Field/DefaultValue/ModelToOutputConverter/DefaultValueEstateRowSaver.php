@@ -97,12 +97,10 @@ class DefaultValueEstateRowSaver
 
 		if ($pField->getIsRangeField() || $isNumberType) {
 			$this->saveNumericRange($estateId, $pField, $values);
-		} elseif ($isSingleValue) {
+		} elseif ($isSingleValue || $isBoolean) {
 			$this->saveGeneric($estateId, $pField, $values);
 		} elseif ($isMultiSelect) {
 			$this->saveMultiSelect($estateId, $pField, $values);
-		} elseif ($isBoolean) {
-			$this->saveBool($estateId, $pField, $values);
 		} elseif ($isStringType) {
 			$this->saveText($estateId, $pField, $values);
 		} elseif ($isDate) {
@@ -121,19 +119,6 @@ class DefaultValueEstateRowSaver
 		$pModel = new DefaultValueModelSingleselect($estateId, $pField);
 		$pModel->setValue($value);
 		$this->_pDefaultValueCreate->createForSingleselect($pModel);
-	}
-
-	/**
-	 * @param int $estateId
-	 * @param Field $pField
-	 * @param string $value
-	 * @throws RecordManagerInsertException
-	 */
-	private function saveBool(int $estateId, Field $pField, string $value)
-	{
-		$pModel = new DefaultValueModelBool($estateId, $pField);
-		$pModel->setValue((bool)$value);
-		$this->_pDefaultValueCreate->createForBool($pModel);
 	}
 
 	/**
@@ -199,9 +184,9 @@ class DefaultValueEstateRowSaver
 	 * @param array $values
 	 * @throws RecordManagerInsertException
 	 */
-	private function saveDate(int $formId, Field $pField, array $values)
+	private function saveDate(int $estateId, Field $pField, array $values)
 	{
-		$pModel = new DefaultValueModelDate($formId, $pField);
+		$pModel = new DefaultValueModelDate($estateId, $pField);
 		$pModel->setValueFrom(($values['min']));
 		$pModel->setValueTo(($values['max']));
 		$this->_pDefaultValueCreate->createForDate($pModel);

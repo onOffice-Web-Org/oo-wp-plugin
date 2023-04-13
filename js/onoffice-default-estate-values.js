@@ -170,8 +170,9 @@ onOffice.default_values_input_converter = function () {
             })(multiselect);
         } else if (fieldDefinition.type === "boolean") {
             mainInput.innerHTML = ""; // remove options
-            mainInput.options.add(new Option(fieldDefinition.permittedvalues[0], '0'));
+            mainInput.options.add(new Option(fieldDefinition.permittedvalues[0], ''));
             mainInput.options.add(new Option(fieldDefinition.permittedvalues[1], '1'));
+            mainInput.options.add(new Option(fieldDefinition.permittedvalues[2], '2'));
             mainInput.selectedIndex = onOffice_loc_settings.defaultvalues[fieldName] || '0';
         }
     });

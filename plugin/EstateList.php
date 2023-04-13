@@ -116,7 +116,7 @@ class EstateList
 	private $_redirectIfOldUrl;
 
 	/** @var FieldsCollection */
-	private $_pFieldsCollection;
+	private $_pFieldsCollection = null;
 
 	/**
 	 * @param DataView $pDataView
@@ -548,7 +548,7 @@ class EstateList
 	public function getFieldValue($field)
 	{
 		$values = $this->getDefaultValues();
-		$fieldValue = $values[$field];
+		$fieldValue = $values[$field] ?? null;
 
 		return $fieldValue;
 	}
@@ -566,7 +566,7 @@ class EstateList
 		$values = [];
 		foreach ($this->_pFieldsCollection->getAllFields() as $pField) {
 			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
-			$values[$pField->getName()] = $value[0] ?? [];
+			$values[$pField->getName()] = $value[0] ?? null;
 
 			if ($pField->getIsRangeField() || FieldTypes::isDateOrDateTime($pField->getType()) || FieldTypes::isNumericType($pField->getType())) {
 				$values[$pField->getName()][] = $value['min'] ?? '';
@@ -575,9 +575,11 @@ class EstateList
 				$values[$pField->getName()] = $value;
 			} elseif (FieldTypes::isStringType($pField->getType())) {
 				$values[$pField->getName()] = ($value['native'] ?? '') ?: (array_shift($value) ?? '');
+			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
+				$values[$pField->getName()] = !empty($value[0]) ? ($value[0] == 2 ? true : false) : null;
 			}
 		}
-		return array_filter($values);
+		return $values;
 	}
 
 	/**
