@@ -259,11 +259,9 @@ abstract class FormPost
 
 	protected function getAllowedRequiredFields($requiredFields): array
 	{
-		$inputs = $requiredFields;
-		$fields = $this->_pCompoundFields->mergeFields($this->_pFieldsCollection, $inputs);
 		$activeRequiredFields = [];
 
-		foreach ($fields as $name) {
+		foreach ($requiredFields as $name) {
 			$module = $this->getModule($name);
 			if ($this->_pFieldsCollection->containsFieldByModule($module, $name)) {
 				$activeRequiredFields[] = $name;
