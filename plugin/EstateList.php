@@ -475,12 +475,14 @@ class EstateList
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
 		}
 	
-		if(!empty($recordModified['preisAufAnfrage']) && $recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites")){
-			if(!empty($recordModified['kaufpreis'])){
-				$recordModified['kaufpreis'] = esc_html__('Price on request','onoffice-for-wp-websites');
-			}
-			if(!empty($recordModified['warmmiete'])){
-				$recordModified['warmmiete'] = esc_html__('Price on request','onoffice-for-wp-websites');
+		if(!empty($recordModified['preisAufAnfrage'])){
+			if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites")){
+				if(!empty($recordModified['kaufpreis'])){
+					$recordModified['kaufpreis'] = esc_html__('Price on request','onoffice-for-wp-websites');
+				}
+				if(!empty($recordModified['warmmiete'])){
+					$recordModified['warmmiete'] = esc_html__('Price on request','onoffice-for-wp-websites');
+				}
 			}
 			unset($recordModified['preisAufAnfrage']);
 		}
