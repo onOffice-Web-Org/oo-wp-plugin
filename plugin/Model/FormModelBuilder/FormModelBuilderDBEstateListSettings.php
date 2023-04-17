@@ -361,12 +361,12 @@ class FormModelBuilderDBEstateListSettings
 		$pInputModelIsHidden = $this->getInputModelIsHidden();
 		$pInputModelIsAvailableOptions = $this->getInputModelAvailableOptions();
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
-		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
-		$pSortableFieldsList->addReferencedInputModel($pInputModelIsAvailableOptions);
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelDefaultValue($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelDefaultValueLanguageSwitch());
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabel($pFieldsCollectionUsedFields));
 		$pSortableFieldsList->addReferencedInputModel($this->getInputModelCustomLabelLanguageSwitch());
+		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
+		$pSortableFieldsList->addReferencedInputModel($pInputModelIsAvailableOptions);
 
 		return $pSortableFieldsList;
 	}
