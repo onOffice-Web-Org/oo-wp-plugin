@@ -81,23 +81,6 @@ class DefaultValueEstateDelete
 	}
 
 	/**
-	 * @param int $estate_id
-	 * @param string $fieldname
-	 * @throws DefaultValueDeleteException
-	 */
-	public function deleteSingleDefaultValueByFieldname(int $estate_id, string $fieldname, string $locale = null)
-	{
-		$query = $this->getBaseDeleteQuery()." WHERE "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_estate_defaults.estate_id = %d AND "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_estate_defaults.fieldname = %s AND "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_estate_defaults.locale = %s";
-
-		if (false === $this->_pWPDB->query($this->_pWPDB->prepare($query, $estate_id, $fieldname, $locale))) {
-			throw new DefaultValueDeleteException();
-		}
-	}
-
-	/**
 	 * @return string
 	 */
 	private function getBaseDeleteQuery(): string

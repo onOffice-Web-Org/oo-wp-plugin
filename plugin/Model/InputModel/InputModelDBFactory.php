@@ -84,6 +84,8 @@ class InputModelDBFactory
 	/** */
 	const INPUT_FIELD_CONFIG = 'fieldConfig';
 
+	/** */
+	const INPUT_ESTATE_DEFAULT_VALUE = 'defaultValue';
 
 	/** @var InputModelDBFactoryConfigBase */
 	private $_pInputModelDBFactoryConfig = null;

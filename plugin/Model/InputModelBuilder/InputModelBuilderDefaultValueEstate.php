@@ -79,7 +79,7 @@ class InputModelBuilderDefaultValueEstate
 		$pFieldsCollectionClone = $this->cloneFieldsCollectionWithDummyField($pFieldsCollection);
 		$pInputModelFactory = new InputModelDBFactory($this->_pInputModelDBFactoryConfigEstate);
 		$label = __('Default Value', 'onoffice-for-wp-websites');
-		$type = InputModelDBFactoryConfigEstate::INPUT_ESTATE_DEFAULT_VALUE;
+		$type = InputModelDBFactory::INPUT_ESTATE_DEFAULT_VALUE;
 		/** @var InputModelDB $pInputModel */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
 		$pInputModel->setHtmlType(InputModelBase::HTML_TYPE_TEXT);

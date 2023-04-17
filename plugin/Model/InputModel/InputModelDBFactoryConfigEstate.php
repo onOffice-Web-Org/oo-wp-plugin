@@ -32,8 +32,6 @@ namespace onOffice\WPlugin\Model\InputModel;
 class InputModelDBFactoryConfigEstate
 	implements InputModelDBFactoryConfigBase, InputModelDBFactoryFilterableFields
 {
-	/** */
-	const INPUT_ESTATE_DEFAULT_VALUE = 'defaultValue';
 
 	/** @var array */
 	private $_inputConfig = [
@@ -121,7 +119,7 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortByUserDefinedDirection',
 		],
-		self::INPUT_ESTATE_DEFAULT_VALUE => [
+		InputModelDBFactory::INPUT_ESTATE_DEFAULT_VALUE => [
 			self::KEY_TABLE => 'oo_plugin_fieldconfig_estate_defaults_values',
 			self::KEY_FIELD => 'value',
 		],

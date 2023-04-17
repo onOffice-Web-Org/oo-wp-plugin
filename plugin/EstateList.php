@@ -115,9 +115,6 @@ class EstateList
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
-	/** @var FieldsCollection */
-	private $_pFieldsCollection = null;
-
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -138,20 +135,6 @@ class EstateList
 		$this->_pLanguageSwitcher = $pContainer->get(EstateDetailUrl::class);
 		$this->_pWPOptionWrapper = $pContainer->get(WPOptionWrapperDefault::class);
 		$this->_redirectIfOldUrl = $pContainer->get(Redirector::class);
-
-		$pFieldsCollection = new FieldsCollection();
-		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
-		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
-		$pFieldBuilderShort
-			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
-			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
-			->addFieldsEstateGeoPositionFrontend($pFieldsCollection)
-			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
-			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
-		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionConfiguratorEstate::class);
-		$this->_pFieldsCollection = $pFieldBuilderShort->buildForEstateType($pFieldsCollection);
-		
 	}
 
 	/**
@@ -257,9 +240,15 @@ class EstateList
 	{
 		$activeInputs = [];
 		$recordType = onOfficeSDK::MODULE_ESTATE;
+		$pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 
 		foreach ($inputs->getFields() as $name) {
-			if ($this->_pFieldsCollection->containsFieldByModule($recordType, $name)) {
+			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
 				$activeInputs[] = $name;
 			}
 		}
@@ -550,10 +539,19 @@ class EstateList
 	public function getFieldLabel($field): string
 	{
 		$recordType = onOfficeSDK::MODULE_ESTATE;
+		$pFieldsCollection = new FieldsCollection();
 		$pLanguage = $this->_pEnvironment->getContainer()->get( Language::class )->getLocale();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$listType = method_exists($this->_pDataView, 'getListType') ? $this->_pDataView->getListType() : null;
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection)
+			->addFieldsEstateGeoPositionFrontend($pFieldsCollection)
+			->addCustomLabelFieldsEstateFrontend($pFieldsCollection, $this->_pDataView->getName(), $listType);
 
 		try {
-			$label = $this->_pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
+			$label = $pFieldsCollection->getFieldByModuleAndName($recordType, $field)->getLabel();
 		} catch (UnknownFieldException $pE) {
 			$label = $this->getEnvironment()->getFieldnames()->getFieldLabel($field, $recordType);
 		}
@@ -580,6 +578,20 @@ class EstateList
 		return $fieldValue;
 	}
 
+	private function buildFieldsCollectionForCurrentEstate(): FieldsCollection
+	{
+		$pFieldsCollectionBuilder = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pDefaultFieldsCollection = new FieldsCollection();
+		$pFieldsCollectionBuilder->addFieldsAddressEstate( $pDefaultFieldsCollection )
+		                         ->addFieldsAddressEstateWithRegionValues( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateGeoPosisionBackend( $pDefaultFieldsCollection )
+		                         ->addFieldsEstateDecoratorReadAddressBackend( $pDefaultFieldsCollection );
+
+		/** @var FieldsCollectionConfiguratorEstate $pFieldsCollectionConfiguratorEstate */
+		$pFieldsCollectionConfiguratorEstate = $this->_pEnvironment->getContainer()->get(FieldsCollectionConfiguratorEstate::class);
+		return $pFieldsCollectionConfiguratorEstate->buildForEstateType($pDefaultFieldsCollection);
+	}
+
 	/**
 	 * @return array
 	 * @throws DependencyException
@@ -591,13 +603,13 @@ class EstateList
 		$pDefaultValueRead = $this->_pEnvironment->getContainer()->get(DefaultValueEstateModelToOutputConverter::class);
 		$formId = $this->getDataView()->getId();
 		$values = [];
-		foreach ($this->_pFieldsCollection->getAllFields() as $pField) {
+		foreach ($this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField) {
 			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
 			$values[$pField->getName()] = $value[0] ?? null;
 
 			if ($pField->getIsRangeField() || FieldTypes::isDateOrDateTime($pField->getType()) || FieldTypes::isNumericType($pField->getType())) {
-				$values[$pField->getName()][] = $value['min'] ?? '';
-				$values[$pField->getName()][] = $value['max'] ?? '';
+				$values[$pField->getName()][] = !empty($value['min']) ? $value['min'] : '';
+				$values[$pField->getName()][] = !empty($value['max']) ? $value['max'] : '';
 			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
 				$values[$pField->getName()] = $value;
 			} elseif (FieldTypes::isStringType($pField->getType())) {
@@ -606,7 +618,7 @@ class EstateList
 				$values[$pField->getName()] = !empty($value[0]) ? ($value[0] == 2 ? true : false) : null;
 			}
 		}
-		return $values;
+		return array_filter($values);
 	}
 
 	/**
