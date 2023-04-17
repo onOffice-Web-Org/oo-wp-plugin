@@ -474,20 +474,26 @@ class EstateList
 			$parking = new FieldParkingLot();
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
 		}
-	
+
 		if(!empty($recordModified['preisAufAnfrage'])){
-			if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites")){
-				if(!empty($recordModified['kaufpreis'])){
-					$recordModified['kaufpreis'] = esc_html__('Price on request','onoffice-for-wp-websites');
-				}
-				if(!empty($recordModified['warmmiete'])){
-					$recordModified['warmmiete'] = esc_html__('Price on request','onoffice-for-wp-websites');
-				}
+			if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites") && !empty($recordModified['kaufpreis'])){
+				$this->displayTextPriceOnRequest($recordModified, 'kaufpreis');
+			}
+			if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites") && !empty($recordModified['warmmiete'])){
+				$this->displayTextPriceOnRequest($recordModified, 'warmmiete');
 			}
 			unset($recordModified['preisAufAnfrage']);
 		}
 
 		return $recordModified;
+	}
+
+	/**
+	 * @param ArrayContainerEscape $recordModified
+	 * @param string $field
+	 */
+	private function displayTextPriceOnRequest($recordModified, $field){
+		$recordModified[$field] = esc_html__('Price on request','onoffice-for-wp-websites');
 	}
 
 	public function custom_pre_get_document_title($title_parts_array, $recordModified) {
