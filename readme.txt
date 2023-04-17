@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.10.1 (2023-04-17) =
+
+**Fixed**
+
+* Critical errors if fields are deactivated in enterprise
+
 = 4.10 (2023-04-11) =
 
 **Changed**
