@@ -507,3 +507,7 @@ div[data-name^=oopluginfieldconfigestatedefaultsvalues-value].multiselect > inpu
     position: relative;
     float: right;
 }
+
+.onoffice-input-date {
+	width: 80%;
+}

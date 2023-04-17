@@ -170,9 +170,8 @@ onOffice.default_values_input_converter = function () {
             })(multiselect);
         } else if (fieldDefinition.type === "boolean") {
             mainInput.innerHTML = ""; // remove options
-            mainInput.options.add(new Option(fieldDefinition.permittedvalues[0], ''));
+            mainInput.options.add(new Option(fieldDefinition.permittedvalues[0], '0'));
             mainInput.options.add(new Option(fieldDefinition.permittedvalues[1], '1'));
-            mainInput.options.add(new Option(fieldDefinition.permittedvalues[2], '2'));
             mainInput.selectedIndex = onOffice_loc_settings.defaultvalues[fieldName] || '0';
         }
     });
@@ -198,32 +197,31 @@ onOffice.default_values_input_converter = function () {
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:integer',
                 'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:decimal'
             ].indexOf(fieldDefinition.type) >= 0) {
-            mainInput.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][min]';
-            mainInput.className = 'onoffice-input';
-            var mainInputClone = mainInput.cloneNode(true);
-            mainInputClone.id = 'input_js_' + onOffice.js_field_count;
-            onOffice.js_field_count += 1;
-            var labelFrom = mainInput.parentElement.querySelector('label[for='+mainInput.id+']')
-            var labelUpTo = labelFrom.cloneNode(true);
-            labelUpTo.htmlFor = mainInputClone.id;
-            labelFrom.textContent = onOffice_loc_settings.label_default_value_from;
-            labelUpTo.textContent = onOffice_loc_settings.label_default_value_up_to;
-            mainInputClone.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][max]';
-            if (fieldDefinition.type === 'date') {
-                mainInput.setAttribute('type', 'date');
-                mainInputClone.setAttribute('type', 'date');
-            }
-            mainInput.parentElement.appendChild(labelUpTo);
-            mainInput.parentElement.appendChild(mainInputClone);
-            console.log(mainInput);
-            var predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
-                !Array.isArray(predefinedValues[fieldName]);
-    
-            if (predefinedValuesIsObject) {
-                mainInput.value = predefinedValues[fieldName]['min'] || '';
-                mainInputClone.value = predefinedValues[fieldName]['max'] || '';
-            }
-            return;
+                mainInput.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][min]';
+                mainInput.className = 'onoffice-input-date';
+                var mainInputClone = mainInput.cloneNode(true);
+                mainInputClone.id = 'input_js_' + onOffice.js_field_count;
+                onOffice.js_field_count += 1;
+                var labelFrom = mainInput.parentElement.querySelector('label[for='+mainInput.id+']')
+                var labelUpTo = labelFrom.cloneNode(true);
+                labelUpTo.htmlFor = mainInputClone.id;
+                labelFrom.textContent = onOffice_loc_settings.label_default_value_from;
+                labelUpTo.textContent = onOffice_loc_settings.label_default_value_up_to;
+                mainInputClone.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][max]';
+                if (fieldDefinition.type === 'date') {
+                    mainInput.setAttribute('type', 'date');
+                    mainInputClone.setAttribute('type', 'date');
+                }
+                mainInput.parentElement.appendChild(labelUpTo);
+                mainInput.parentElement.appendChild(mainInputClone);
+                var predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
+                    !Array.isArray(predefinedValues[fieldName]);
+        
+                if (predefinedValuesIsObject) {
+                    mainInput.value = predefinedValues[fieldName]['min'] || '';
+                    mainInputClone.value = predefinedValues[fieldName]['max'] || '';
+                }
+                return;
         }
 
         mainInput.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][min]';
@@ -259,10 +257,15 @@ document.addEventListener("addFieldItem", function(e) {
     if (['varchar', 'text',
         'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar',
         'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:Text'].indexOf(fieldDefinition.type) >= 0) {
+            var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
+            var input = document.createElement('input');
             var select = document.createElement('select');
             select.id = 'select_js_' + onOffice.js_field_count;
             select.name = 'language-language';
             select.className = 'onoffice-input';
+            input.id = 'select_js_' + onOffice.js_field_count;
+            input.name = 'oopluginfieldconfigestatedefaultsvalues-value[]';
+            input.className = 'onoffice-input';
     
             select.options.add(new Option(onOffice_loc_settings.label_choose_language, ''));
             var keys = Object.keys(onOffice_loc_settings.installed_wp_languages);
@@ -283,6 +286,9 @@ document.addEventListener("addFieldItem", function(e) {
             label.textContent = onOffice_loc_settings.label_add_language;
             p.appendChild(label);
             p.appendChild(select);
+            input.setAttribute('type', 'text')
+            input.setAttribute('size', '50')
+            element.parentNode.replaceChild(input, element);
     } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 0) {
         var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
         var select = document.createElement('select');

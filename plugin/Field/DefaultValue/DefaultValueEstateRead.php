@@ -54,7 +54,7 @@ class DefaultValueEstateRead
 	 * @param Field $pField
 	 * @return DefaultValueModelSingleselect
 	 */
-	public function readDefaultValuesSingleselect(int $estate_id, Field $pField): DefaultValueModelSingleselect
+	public function readDefaultValuesSingleSelect(int $estate_id, Field $pField): DefaultValueModelSingleselect
 	{
 		$query = $this->createBaseQuery($estate_id, $pField);
 		$row = $this->_pWPDB->get_row($query, ARRAY_A);

@@ -80,7 +80,7 @@ class DefaultValueEstateCreate
 	 * @return int
 	 * @throws RecordManagerInsertException
 	 */
-	public function createForSingleselect(DefaultValueModelSingleselect $pDataModel): int
+	public function createForSingleSelect(DefaultValueModelSingleselect $pDataModel): int
 	{
 		$defaultsId = $this->createBase($pDataModel);
 		$this->writeDatabaseValueSingle($defaultsId, $pDataModel->getValue());

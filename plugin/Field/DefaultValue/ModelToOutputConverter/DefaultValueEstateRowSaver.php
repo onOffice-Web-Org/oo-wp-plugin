@@ -24,7 +24,6 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter;
 
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueEstateCreate;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelDate;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
@@ -118,7 +117,7 @@ class DefaultValueEstateRowSaver
 	{
 		$pModel = new DefaultValueModelSingleselect($estateId, $pField);
 		$pModel->setValue($value);
-		$this->_pDefaultValueCreate->createForSingleselect($pModel);
+		$this->_pDefaultValueCreate->createForSingleSelect($pModel);
 	}
 
 	/**

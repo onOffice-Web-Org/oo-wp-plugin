@@ -105,7 +105,7 @@ class DefaultValueEstateModelToOutputConverter
 
 	private function convertGeneric(int $estateId, Field $pField): array
 	{
-		$pModel = $this->_pDefaultValueReader->readDefaultValuesSingleselect($estateId, $pField);
+		$pModel = $this->_pDefaultValueReader->readDefaultValuesSingleSelect($estateId, $pField);
 		$pConverter = $this->_pOutputConverterFactory->createForSingleSelect();
 		return $pConverter->convertToRow($pModel);
 	}
