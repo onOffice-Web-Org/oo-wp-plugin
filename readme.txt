@@ -4,7 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 6.1.1
 Requires PHP: 7.3
-Stable tag: 4.9
+Stable tag: 4.10.1
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -75,6 +75,30 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
+
+= 4.10.1 (2023-04-17) =
+
+**Fixed**
+
+* Critical errors if fields are deactivated in enterprise
+
+= 4.10 (2023-04-11) =
+
+**Changed**
+
+* Honeypot is disabled by default now to avoid errors with custom stylesheets. It now has to be enabled manually.
+* Order of serveral fields in forms.
+
+**Fixed**
+
+* Error if a field in enterprise is missing for an estate.
+* Error while loading Honeypot JS.
+* Number of search results if references are hidden.
+* Initial saving of GDPR checkbox and custom labels.
+
+**Removed**
+
+* A deprecated option for forms.
 
 = 4.9 (2023-02-23) =
 
