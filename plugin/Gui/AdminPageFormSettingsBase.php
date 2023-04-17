@@ -584,6 +584,21 @@ abstract class AdminPageFormSettingsBase
 
 	}
 
+	/**
+	 *
+	 * @param string $name
+	 * @param FieldsCollection $pFieldsCollection
+	 * @return string
+	 */
+
+	private function getModule(string $name, FieldsCollection $pFieldsCollection): string
+	{
+		try {
+			return $pFieldsCollection->getFieldByKeyUnsafe($name)->getModule();
+		} catch (UnknownFieldException $pEx) {
+			return '';
+		}
+	}
 
 	/**
 	 * @param int $recordId
@@ -600,6 +615,13 @@ abstract class AdminPageFormSettingsBase
 		$fieldNamesSelected = array_column($fields, 'fieldname');
 		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentForm();
 
+		foreach ($fieldNamesSelected as $key => $name) {
+			$module = $this->getModule($name, $pFieldsCollectionBase);
+			if (!$pFieldsCollectionBase->containsFieldByModule($module, $name)) {
+				unset($fieldNamesSelected[$key]);
+				unset($row['oo_plugin_fieldconfig_form_defaults_values'][$name]);
+			}
+		}
 		/** @var FieldsCollectionBuilderFromNamesForm $pFieldsCollectionBuilder */
 		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesForm::class);
 		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollectionFromBaseCollection
@@ -631,6 +653,13 @@ abstract class AdminPageFormSettingsBase
 		$fieldNamesSelected = array_column($fields, 'fieldname');
 		$pFieldsCollectionBase = $this->buildFieldsCollectionForCurrentForm();
 
+		foreach ($fieldNamesSelected as $key => $name) {
+			$module = $this->getModule($name, $pFieldsCollectionBase);
+			if (!$pFieldsCollectionBase->containsFieldByModule($module, $name)) {
+				unset($fieldNamesSelected[$key]);
+				unset($row['oo_plugin_fieldconfig_form_translated_labels'][$name]);
+			}
+		}
 		/** @var FieldsCollectionBuilderFromNamesForm $pFieldsCollectionBuilder */
 		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderFromNamesForm::class);
 		$pFieldsCollectionCurrent = $pFieldsCollectionBuilder->buildFieldsCollectionFromBaseCollection

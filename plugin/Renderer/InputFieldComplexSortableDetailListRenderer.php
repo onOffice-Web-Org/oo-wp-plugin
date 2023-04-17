@@ -25,6 +25,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Gui\AdminPageAjax;
+use onOffice\WPlugin\Model\InputModelBase;
 use onOffice\WPlugin\Types\FieldsCollection;
 use function __;
 use function esc_attr;
@@ -126,6 +127,7 @@ class InputFieldComplexSortableDetailListRenderer
 			$label = $inactiveFields[$key] ?? null;
 			$deactivatedStyle = ' style="color:red;" ';
 			$deactivatedInOnOffice = ' ('.__('Disabled in onOffice', 'onoffice-for-wp-websites').')';
+			$type = InputModelBase::HTML_TYPE_TEXT;
 		}
 
 		echo '<li class="sortable-item" id="menu-item-'.esc_html($key).'" action-field-name="labelButtonHandleField-'.esc_html($key).'">'
