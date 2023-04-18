@@ -476,11 +476,9 @@ class EstateList
 		}
 
 		if(!empty($recordModified['preisAufAnfrage'])){
-			if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites") && !empty($recordModified['kaufpreis'])){
-				$this->displayTextPriceOnRequest($recordModified, 'kaufpreis');
-			}
-			if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites") && !empty($recordModified['warmmiete'])){
-				$this->displayTextPriceOnRequest($recordModified, 'warmmiete');
+			$priceFields = ['kaufpreis', 'warmmiete', 'kaltmiete'];
+			foreach ($priceFields as $priceField){
+				$this->displayTextPriceOnRequest($recordModified, $priceField);
 			}
 			unset($recordModified['preisAufAnfrage']);
 		}
@@ -493,8 +491,10 @@ class EstateList
 	 * @param string $field
 	 */
 	private function displayTextPriceOnRequest($recordModified, $field){
-		$recordModified[$field] = esc_html__('Price on request','onoffice-for-wp-websites');
-	}
+        if($recordModified['preisAufAnfrage'] === __("Yes", "onoffice-for-wp-websites") && !empty($recordModified[$field])) {
+            $recordModified[ $field ] = esc_html__('Price on request', 'onoffice-for-wp-websites');
+        }
+    }
 
 	public function custom_pre_get_document_title($title_parts_array, $recordModified) {
 		if (isset($recordModified["objekttitel"])) {
