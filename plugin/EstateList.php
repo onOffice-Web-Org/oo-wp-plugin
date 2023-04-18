@@ -873,7 +873,7 @@ class EstateList
 			$result[$field]['value'] = $value ?? $this->getFieldValue($field);
 			$result[$field]['label'] = $this->getFieldLabel($field);
 		}
- 		return $result;
+		return $result;
 	}
 
 	/**

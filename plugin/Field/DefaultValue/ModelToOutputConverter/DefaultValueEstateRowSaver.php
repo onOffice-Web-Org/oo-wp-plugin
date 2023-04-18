@@ -130,7 +130,7 @@ class DefaultValueEstateRowSaver
 	{
 		$pModel = new DefaultValueModelMultiselect($estateId, $pField);
 		$pModel->setValues($values);
-		$this->_pDefaultValueCreate->createForMultiselect($pModel);
+		$this->_pDefaultValueCreate->createForMultiSelect($pModel);
 	}
 
 	/**

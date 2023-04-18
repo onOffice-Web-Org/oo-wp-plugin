@@ -272,10 +272,9 @@ document.addEventListener("addFieldItem", function(e) {
             var keys = Object.keys(onOffice_loc_settings.installed_wp_languages);
             keys.forEach(function (k) {
                 var v = onOffice_loc_settings.installed_wp_languages[k];
-                if (k === onOffice_loc_settings.language_native) {
-                    k = 'native';
+                if (k !== onOffice_loc_settings.language_native) {
+                    select.options.add(new Option(v, k));
                 }
-                select.options.add(new Option(v, k));
             });
     
             onOffice.js_field_count += 1;
@@ -290,7 +289,7 @@ document.addEventListener("addFieldItem", function(e) {
             input.setAttribute('type', 'text')
             input.setAttribute('size', '50')
             element.parentNode.replaceChild(input, element);
-    } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 0) {
+    } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 1) {
         var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
         var select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;

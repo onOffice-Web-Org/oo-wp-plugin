@@ -122,7 +122,7 @@ class DefaultValueEstateCreate
 	 *
 	 */
 
-	public function createForMultiselect(DefaultValueModelMultiselect $pDataModel): int
+	public function createForMultiSelect(DefaultValueModelMultiselect $pDataModel): int
 	{
 		$defaultsId = $this->createBase($pDataModel);
 
