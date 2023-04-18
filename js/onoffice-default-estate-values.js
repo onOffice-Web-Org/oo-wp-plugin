@@ -289,7 +289,7 @@ document.addEventListener("addFieldItem", function(e) {
             input.setAttribute('type', 'text')
             input.setAttribute('size', '50')
             element.parentNode.replaceChild(input, element);
-    } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 1) {
+    } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 0) {
         var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
         var select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;
