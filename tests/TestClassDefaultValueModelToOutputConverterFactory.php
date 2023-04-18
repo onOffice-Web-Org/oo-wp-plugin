@@ -32,6 +32,7 @@ use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModel
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterNumericRange;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterSingleselect;
 use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterText;
+use onOffice\WPlugin\Field\DefaultValue\ModelToOutputConverter\DefaultValueModelToOutputConverterDate;
 use WP_UnitTestCase;
 
 class TestClassDefaultValueModelToOutputConverterFactory
@@ -100,5 +101,15 @@ class TestClassDefaultValueModelToOutputConverterFactory
 	{
 		$pConverter = $this->_pSubject->createForBool();
 		$this->assertInstanceOf(DefaultValueModelToOutputConverterBool::class, $pConverter);
+	}
+
+	/**
+	 * @throws DependencyException
+	 * @throws NotFoundException
+	 */
+	public function testCreateForDate()
+	{
+		$pConverter = $this->_pSubject->createForDate();
+		$this->assertInstanceOf(DefaultValueModelToOutputConverterDate::class, $pConverter);
 	}
 }

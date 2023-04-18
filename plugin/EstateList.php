@@ -618,7 +618,7 @@ class EstateList
 				$values[$pField->getName()] = !empty($value[0]) ? ($value[0] == 2 ? true : false) : null;
 			}
 		}
-		return array_filter($values);
+		return $values;
 	}
 
 	/**

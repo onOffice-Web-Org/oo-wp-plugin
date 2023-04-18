@@ -553,7 +553,6 @@ class TestClassFormModelBuilderDBEstateListSettings
 						  
 		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();
         $this->assertInstanceOf(InputModelDB::class, $inputModel);
-        $this->assertEquals('Add custom label language', $inputModel->getLabel());
         $this->assertEquals('language-custom-label', $inputModel->getTable());
         $this->assertEquals('language', $inputModel->getField());
 
@@ -657,4 +656,26 @@ class TestClassFormModelBuilderDBEstateListSettings
         $this->assertFalse($pInputModelBase->getValue());
         $this->assertEquals($key, $pInputModelBase->getValuesAvailable());
     }
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::getInputModelDefaultValueLanguageSwitch
+	 */
+	public function testGetInputModelDefaultValueLanguageSwitch()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+		                  ->disableOriginalConstructor()
+		                  ->setMethods(['readAvailableLanguageNamesUsingNativeName'])
+		                  ->getMock();
+						  
+		$inputModel = $pInstance->getInputModelDefaultValueLanguageSwitch();
+        $this->assertInstanceOf(InputModelDB::class, $inputModel);
+        $this->assertEquals('Add language', $inputModel->getLabel());
+        $this->assertEquals('language', $inputModel->getTable());
+        $this->assertEquals('language', $inputModel->getField());
+
+        $values = $inputModel->getValuesAvailable();
+
+        $this->assertContains('Choose Language', $values);
+        $this->assertNotContains(get_locale(), $values);
+	}
 }

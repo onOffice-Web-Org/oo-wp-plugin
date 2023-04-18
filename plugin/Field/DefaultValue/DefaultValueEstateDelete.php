@@ -67,20 +67,6 @@ class DefaultValueEstateDelete
 	}
 
 	/**
-	 * @param int $defaultId
-	 * @throws DefaultValueDeleteException
-	 */
-	public function deleteSingleDefaultValueById(int $defaultId)
-	{
-		$query = $this->getBaseDeleteQuery()." WHERE "
-			."{$this->_pWPDB->prefix}oo_plugin_fieldconfig_estate_defaults.defaults_id = %d";
-
-		if (!$this->_pWPDB->query($this->_pWPDB->prepare($query, $defaultId))) {
-			throw new DefaultValueDeleteException();
-		}
-	}
-
-	/**
 	 * @return string
 	 */
 	private function getBaseDeleteQuery(): string
