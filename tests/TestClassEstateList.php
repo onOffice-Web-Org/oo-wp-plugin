@@ -611,14 +611,23 @@ class TestClassEstateList
 		$pFieldObjektArt->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldObjektTyp = new Field('objekttyp', 'estate');
 		$pFieldObjektTyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+		$pFieldObjektadresseDreigeben = new Field('objektadresse_freigeben', 'estate');
+		$pFieldObjektadresseDreigeben->setType(FieldTypes::FIELD_TYPE_TEXT);
+		$pFieldReserViert = new Field('reserviert', 'estate');
+		$pFieldReserViert->setType(FieldTypes::FIELD_TYPE_BOOLEAN);
+		$pFieldLaengengrad = new Field('laengengrad', 'estate');
+		$pFieldLaengengrad->setType(FieldTypes::FIELD_TYPE_DATE);
 		$pFieldsCollection->addField($pFieldObjektArt);
 		$pFieldsCollection->addField($pFieldObjektTyp);
+		$pFieldsCollection->addField($pFieldObjektadresseDreigeben);
+		$pFieldsCollection->addField($pFieldLaengengrad);
+		$pFieldsCollection->addField($pFieldReserViert);
 
 		$expectation = [
 			'objektart' => [
 				'name' => 'objektart',
 				'type' => 'singleselect',
-				'value' => 'haus',
+				'value' => [],
 				'label' => '',
 				'default' => null,
 				'length' => null,
@@ -634,7 +643,7 @@ class TestClassEstateList
 			'objekttyp' => [
 				'name' => 'objekttyp',
 				'type' => 'singleselect',
-				'value' => 'reihenhaus',
+				'value' => [],
 				'label' => '',
 				'default' => null,
 				'length' => null,

@@ -870,7 +870,7 @@ class EstateList
 			$result[$field] = $pFieldsCollection->getFieldByKeyUnsafe($field)
 				->getAsRow();
 			$result[$field]['name'] = $field;
-			$result[$field]['value'] = $value ?? $this->getFieldValue($field);
+			$result[$field]['value'] = $this->getFieldValue($field) ?? $value;
 			$result[$field]['label'] = $this->getFieldLabel($field);
 		}
 		return $result;
