@@ -317,7 +317,7 @@ document.addEventListener("addFieldItem", function(e) {
         element.parentNode.replaceChild(select, element);
     }
 
-    var paragraph = e.detail.item.querySelectorAll('.menu-item-settings p')[2];
+    var paragraph = e.detail.item.querySelectorAll('.menu-item-settings p')[3];
     paragraph.parentNode.insertBefore(p, paragraph.nextSibling);
 
     var index = onOffice.default_values_inputs_converted.indexOf(fieldName);
