@@ -358,7 +358,7 @@ class FormModelBuilderDBEstateListSettings
 		$fields = $this->getValue(DataFormConfiguration::FIELDS) ?? [];
 		$pSortableFieldsList->setValue($fields);
 		$pInputModelIsFilterable = $this->getInputModelIsFilterable();
-		$pInputModelIsHidden = $this->getInputModelIsHidden(); 
+		$pInputModelIsHidden = $this->getInputModelIsHidden();
 		$pInputModelIsAvailableOptions = $this->getInputModelAvailableOptions();
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsFilterable);
 		$pSortableFieldsList->addReferencedInputModel($pInputModelIsHidden);
