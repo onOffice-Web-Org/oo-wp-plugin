@@ -273,12 +273,12 @@ abstract class FormPost
  
 	/**
 	 *
-	 * @param $requiredFields
+	 * @param array $requiredFields
 	 * @return string[]
 	 *
 	 */
 
-	protected function getAllowedRequiredFieldsIsRangeField($requiredFields): array
+	private function getAllowedRequiredFieldsIsRangeField(array $requiredFields): array
 	{
 		foreach ($requiredFields as $key => $value) {
 			$isRangeField = $this->_pFieldsCollection->getFieldByKeyUnsafe($value)->getIsRangeField();
