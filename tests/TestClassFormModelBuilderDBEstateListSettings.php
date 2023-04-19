@@ -553,7 +553,7 @@ class TestClassFormModelBuilderDBEstateListSettings
 						  
 		$inputModel = $pInstance->getInputModelCustomLabelLanguageSwitch();
         $this->assertInstanceOf(InputModelDB::class, $inputModel);
-		$this->assertEquals('Add custom label language', $inputModel->getLabel());
+        $this->assertEquals('Add custom label language', $inputModel->getLabel());
         $this->assertEquals('language-custom-label', $inputModel->getTable());
         $this->assertEquals('language', $inputModel->getField());
 
