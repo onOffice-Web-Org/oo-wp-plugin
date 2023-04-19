@@ -280,15 +280,15 @@ abstract class FormPost
 
 	protected function getAllowedRequiredFieldsIsRangeField($requiredFields): array
 	{
+		foreach ($requiredFields as $key => $value) {
+			$isRangeField = $this->_pFieldsCollection->getFieldByKeyUnsafe($value)->getIsRangeField();
+			if ($isRangeField) {
+				array_push($requiredFields, $value.'__von');
+				array_push($requiredFields, $value.'__bis');
+				unset($requiredFields[$key]);
+			}
+		}
 
-		foreach ($requiredFields as $key => $value){
-            $isRangeField = $this->_pFieldsCollection->getFieldByKeyUnsafe($value)->getIsRangeField();
-            if($isRangeField){
-                array_push($requiredFields,$value.'__von');
-                array_push($requiredFields,$value.'__bis');
-                unset($requiredFields[$key]);
-            }
-        }
 		return $requiredFields;
 	}
 
