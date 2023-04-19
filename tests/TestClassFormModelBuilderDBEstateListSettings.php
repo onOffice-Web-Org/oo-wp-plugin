@@ -663,10 +663,10 @@ class TestClassFormModelBuilderDBEstateListSettings
 	public function testGetInputModelDefaultValueLanguageSwitch()
 	{
 		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
-		                  ->disableOriginalConstructor()
-		                  ->setMethods(['readAvailableLanguageNamesUsingNativeName'])
-		                  ->getMock();
-						  
+							->disableOriginalConstructor()
+							->setMethods(['readAvailableLanguageNamesUsingNativeName'])
+							->getMock();
+							
 		$inputModel = $pInstance->getInputModelDefaultValueLanguageSwitch();
         $this->assertInstanceOf(InputModelDB::class, $inputModel);
         $this->assertEquals('Add language', $inputModel->getLabel());

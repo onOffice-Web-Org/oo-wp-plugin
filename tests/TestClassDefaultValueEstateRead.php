@@ -68,13 +68,13 @@ class TestClassDefaultValueEstateRead
 	/**
 	 *
 	 * @dataProvider dataProviderSingleSelect
-	 * @param int $formId
+	 * @param int $estateId
 	 * @param int $defaultValueId
 	 * @param string $value
 	 *
 	 */
 
-	public function testReadDefaultValuesSingleselect(int $formId, int $defaultValueId, string $value)
+	public function testReadDefaultValuesSingleselect(int $estateId, int $defaultValueId, string $value)
 	{
 		$row = [
 			'defaults_id' => $defaultValueId,
@@ -82,10 +82,10 @@ class TestClassDefaultValueEstateRead
 		];
 		$this->_pWPDBMock->expects($this->once())->method('get_row')->will($this->returnValue($row));
 		$pField = new Field('testField', 'testModule');
-		$pExpectedDataModel = new DefaultValueModelSingleselect($formId, $pField);
+		$pExpectedDataModel = new DefaultValueModelSingleselect($estateId, $pField);
 		$pExpectedDataModel->setValue($value);
 		$pExpectedDataModel->setDefaultsId($defaultValueId);
-		$pResult = $this->_pSubject->readDefaultValuesSingleselect($formId, $pField);
+		$pResult = $this->_pSubject->readDefaultValuesSingleselect($estateId, $pField);
 		$this->assertInstanceOf(DefaultValueModelSingleselect::class, $pResult);
 		$this->assertEquals($pExpectedDataModel, $pResult);
 	}
@@ -107,15 +107,15 @@ class TestClassDefaultValueEstateRead
 
 	/**
 	 * @dataProvider dataProviderMultiSelect
-	 * @param int $formId
+	 * @param int $estateId
 	 * @param array $rows
 	 * @param DefaultValueModelMultiselect $pReference
 	 */
-	public function testReadDefaultValuesMultiSelect(int $formId, array $rows, DefaultValueModelMultiselect $pReference)
+	public function testReadDefaultValuesMultiSelect(int $estateId, array $rows, DefaultValueModelMultiselect $pReference)
 	{
 		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
 		$pField = new Field('testField', 'testModule');
-		$pResult = $this->_pSubject->readDefaultValuesMultiSelect($formId, $pField);
+		$pResult = $this->_pSubject->readDefaultValuesMultiSelect($estateId, $pField);
 		$this->assertInstanceOf(DefaultValueModelMultiselect::class, $pResult);
 		$this->assertEquals($pReference, $pResult);
 	}
@@ -154,18 +154,18 @@ class TestClassDefaultValueEstateRead
 	/**
 	 *
 	 * @dataProvider dataProviderText
-	 * @param int $formId
+	 * @param int $estateId
 	 * @param array $rows
 	 * @param DefaultValueModelText $pReference
 	 *
 	 */
 
-	public function testReadDefaultValuesText(int $formId, array $rows, DefaultValueModelText $pReference)
+	public function testReadDefaultValuesText(int $estateId, array $rows, DefaultValueModelText $pReference)
 	{
 		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
 		$pField = new Field('testField', 'testModule');
 
-		$pResult = $this->_pSubject->readDefaultValuesText($formId, $pField);
+		$pResult = $this->_pSubject->readDefaultValuesText($estateId, $pField);
 		$this->assertInstanceOf(DefaultValueModelText::class, $pResult);
 		$this->assertEquals($pReference, $pResult);
 	}
@@ -208,16 +208,16 @@ class TestClassDefaultValueEstateRead
 
 	/**
 	 * @dataProvider dataProviderNumericRange
-	 * @param int $formId
+	 * @param int $estateId
 	 * @param array $rows
 	 * @param DefaultValueModelNumericRange $pReference
 	 */
-	public function testReadDefaultValuesNumericRange(int $formId, array $rows, DefaultValueModelNumericRange $pReference)
+	public function testReadDefaultValuesNumericRange(int $estateId, array $rows, DefaultValueModelNumericRange $pReference)
 	{
 		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
 		$pField = new Field('testField', 'testModule');
 
-		$pResult = $this->_pSubject->readDefaultValuesNumericRange($formId, $pField);
+		$pResult = $this->_pSubject->readDefaultValuesNumericRange($estateId, $pField);
 		$this->assertInstanceOf(DefaultValueModelNumericRange::class, $pResult);
 		$this->assertEquals($pReference, $pResult);
 	}
@@ -249,16 +249,16 @@ class TestClassDefaultValueEstateRead
 
 	/**
 	 * @dataProvider dataProviderDate
-	 * @param int $formId
+	 * @param int $estateId
 	 * @param array $rows
 	 * @param DefaultValueModelDate $pReference
 	 */
-	public function testReadDefaultValuesDate(int $formId, array $rows, DefaultValueModelDate $pReference)
+	public function testReadDefaultValuesDate(int $estateId, array $rows, DefaultValueModelDate $pReference)
 	{
 		$this->_pWPDBMock->expects($this->once())->method('get_results')->will($this->returnValue($rows));
 		$pField = new Field('testField', 'testModule');
 
-		$pResult = $this->_pSubject->readDefaultValuesDate($formId, $pField);
+		$pResult = $this->_pSubject->readDefaultValuesDate($estateId, $pField);
 		$this->assertInstanceOf(DefaultValueModelDate::class, $pResult);
 		$this->assertEquals($pReference, $pResult);
 	}

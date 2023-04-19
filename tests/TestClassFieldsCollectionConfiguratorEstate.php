@@ -26,7 +26,6 @@ namespace onOffice\tests;
 use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorEstate;
 use onOffice\WPlugin\Field\UnknownFieldException;
-use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Types\Field;
 use onOffice\WPlugin\Types\FieldsCollection;
 use onOffice\WPlugin\Types\FieldTypes;
@@ -37,7 +36,7 @@ class TestClassFieldsCollectionConfiguratorEstate
 	/**
 	 * @throws UnknownFieldException
 	 */
-	public function testConfigureForInterestForm()
+	public function testConfigureForEstate()
 	{
 		$pFieldsCollection = $this->buildFieldsCollectionSelect();
 		$pSubject = new FieldsCollectionConfiguratorEstate;
@@ -57,7 +56,7 @@ class TestClassFieldsCollectionConfiguratorEstate
 	/**
 	 * @throws UnknownFieldException
 	 */
-	public function testBuildForFormType()
+	public function testBuildForEstateType()
 	{
 		$pSubject = new FieldsCollectionConfiguratorEstate;
 		$pFieldsCollection = new FieldsCollection;

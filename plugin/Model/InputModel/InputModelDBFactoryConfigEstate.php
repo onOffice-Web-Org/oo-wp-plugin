@@ -32,7 +32,6 @@ namespace onOffice\WPlugin\Model\InputModel;
 class InputModelDBFactoryConfigEstate
 	implements InputModelDBFactoryConfigBase, InputModelDBFactoryFilterableFields
 {
-
 	/** @var array */
 	private $_inputConfig = [
 		InputModelDBFactory::INPUT_FILTERID => [

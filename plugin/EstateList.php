@@ -601,10 +601,10 @@ class EstateList
 	{
 		/** @var DefaultValueEstateModelToOutputConverter $pDefaultValueRead */
 		$pDefaultValueRead = $this->_pEnvironment->getContainer()->get(DefaultValueEstateModelToOutputConverter::class);
-		$formId = $this->getDataView()->getId();
+		$estateId = $this->getDataView()->getId();
 		$values = [];
 		foreach ($this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField) {
-			$value = $pDefaultValueRead->getConvertedField($formId, $pField);
+			$value = $pDefaultValueRead->getConvertedField($estateId, $pField);
 			$values[$pField->getName()] = $value[0] ?? null;
 
 			if ($pField->getIsRangeField() || FieldTypes::isDateOrDateTime($pField->getType()) || FieldTypes::isNumericType($pField->getType())) {
