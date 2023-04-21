@@ -27,7 +27,6 @@ use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
-use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelBool;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelDate;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelMultiselect;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueModelNumericRange;
