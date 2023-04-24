@@ -773,7 +773,7 @@ class TestClassEstateList
 		$pDataDetailView->method('getSortby')->willReturn('Id');
 		$pDataDetailView->method('getSortorder')->willReturn('ASC');
 		$pDataDetailView->method('getFilterId')->willReturn(12);
-		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
+		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'preisAufAnfrage', 'warmmiete']);
 		$pDataDetailView->method('getPictureTypes')->willReturn(['Titelbild', 'Foto']);
 		$pDataDetailView->method('getAddressFields')->willReturn(['Vorname', 'Name']);
 		$pDataDetailView->method('getFilterableFields')->willReturn([GeoPosition::FIELD_GEO_POSITION]);
@@ -807,6 +807,17 @@ class TestClassEstateList
 		$this->_pEstateList->loadEstates();
 		$result = $this->_pEstateList->estateIterator();
 		$this->assertEquals('', $result['vermarktungsstatus']);
+	}
+
+
+	/**
+	 *
+	 */
+	public function testDisplayTextPriceOnRequest()
+	{
+		$this->_pEstateList->loadEstates();
+		$result = $this->_pEstateList->estateIterator();
+		$this->assertEquals('Price on request', $result['warmmiete']);
 	}
 
 	/**
@@ -910,6 +921,8 @@ class TestClassEstateList
 			'verkauft',
 			"objekttitel",
 			"objektbeschreibung",
+			"preisAufAnfrage",
+			"warmmiete",
 			'exclusive',
 			'neu',
 			'top_angebot',
@@ -937,7 +950,7 @@ class TestClassEstateList
 	private function getDataView(): DataListView
 	{
 		$pDataView = new DataListView(1, 'test');
-		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung']);
+		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'preisAufAnfrage', 'warmmiete']);
 		$pDataView->setSortby('Id');
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);
@@ -978,6 +991,8 @@ class TestClassEstateList
 			'objekttyp',
 			'objekttitel',
 			'objektbeschreibung',
+			'preisAufAnfrage',
+			'warmmiete',
 			'virtualAddress',
 			'objektadresse_freigeben',
 			'reserviert',
