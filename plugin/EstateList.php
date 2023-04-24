@@ -476,7 +476,8 @@ class EstateList
 		}
 
 		if(!empty($recordModified['preisAufAnfrage'])){
-			$priceFields = ['kaufpreis', 'warmmiete', 'kaltmiete'];
+			$priceFields = ['kaufpreis', 'erbpacht', 'nettokaltmiete', 'warmmiete', 'pacht', 'kaltmiete',
+							'miete_pauschal', 'saisonmiete', 'wochmietbto', 'kaufpreis_pro_qm', 'mietpreis_pro_qm'];
 			foreach ($priceFields as $priceField){
 				$this->displayTextPriceOnRequest($recordModified, $priceField);
 			}
