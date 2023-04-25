@@ -47,8 +47,7 @@ class TestClassFieldsCollectionConfiguratorEstate
 				($pField->getModule(), $pField->getName());
 			$this->assertNotSame($pFieldOriginal, $pField);
 			$this->assertThat($pField, $this->callback(function(Field $pField) {
-				return
-					($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT);
+				return ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT);
 			}));
 		}
 	}
