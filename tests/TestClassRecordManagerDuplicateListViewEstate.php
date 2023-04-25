@@ -181,9 +181,7 @@ class TestClassRecordManagerDuplicateListViewEstate
 
 		$this->_pWPDB->expects($this->exactly(1))
 			->method('get_col')
-			->willReturnOnConsecutiveCalls(
-				$colData
-			);
+			->willReturnOnConsecutiveCalls($colData);
 
 		$this->_pWPDB->expects($this->exactly(6))
 		             ->method('get_results')
@@ -248,7 +246,7 @@ class TestClassRecordManagerDuplicateListViewEstate
 			'value' . 'locale',
 			'fieldname',
 			'defaults_id',
-			'form_id',
+			'listview_id',
 			'order',
 			'individual_fieldname',
 			'required',
@@ -261,9 +259,7 @@ class TestClassRecordManagerDuplicateListViewEstate
 
 		$this->_pWPDB->expects($this->exactly(1))
 			->method('get_col')
-			->willReturnOnConsecutiveCalls(
-				$colData
-			);
+			->willReturnOnConsecutiveCalls($colData);
 		$this->_pWPDB->expects($this->exactly(6))
 		             ->method('get_results')
 		             ->willReturnOnConsecutiveCalls($fieldConfigRecordOutput, $fieldConfigRecordOutput, $pictureTypeRecordOutput,
