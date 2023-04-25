@@ -144,7 +144,7 @@ class TestClassDefaultValueEstateRowSaver
 	 */
 	public function testSaveDefaultValuesBoolean()
 	{
-		$this->_pDefaultValueCreate->expects($this->once())->method('createForSingleselect');
+		$this->_pDefaultValueCreate->expects($this->once())->method('createForSingleSelect');
 		$pFieldsCollection = $this->buildFieldsCollection();
 		$this->_pSubject->saveDefaultValues(13, [
 			'testBoolean' => self::EXAMPLE_RECORDS['testBoolean'],

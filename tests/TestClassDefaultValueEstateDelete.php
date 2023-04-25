@@ -23,7 +23,6 @@ declare (strict_types=1);
 
 namespace onOffice\tests;
 
-use Generator;
 use onOffice\WPlugin\Field\DefaultValue\DefaultValueEstateDelete;
 use onOffice\WPlugin\Field\DefaultValue\Exception\DefaultValueDeleteException;
 use WP_UnitTestCase;

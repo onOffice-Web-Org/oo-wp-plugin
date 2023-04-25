@@ -603,7 +603,7 @@ class TestClassEstateList
 			->getMock();
 		$pMockOutputFields->expects($this->once())
 			->method('getVisibleFilterableFields')
-			->willReturn(['objektart' => 'haus', 'objekttyp' => 'reihenhaus']);
+			->willReturn(['objektart' => 'haus', 'objekttyp' => 'reihenhaus', 'objekttitel' => null]);
 		$this->_pContainer->set(OutputFields::class, $pMockOutputFields);
 
 		$pFieldsCollection = new FieldsCollection();
@@ -611,6 +611,8 @@ class TestClassEstateList
 		$pFieldObjektArt->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldObjektTyp = new Field('objekttyp', 'estate');
 		$pFieldObjektTyp->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
+		$pFieldObjektTitel = new Field('objekttitel', 'estate');
+		$pFieldObjektTitel->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldObjektadresseDreigeben = new Field('objektadresse_freigeben', 'estate');
 		$pFieldObjektadresseDreigeben->setType(FieldTypes::FIELD_TYPE_TEXT);
 		$pFieldReserViert = new Field('reserviert', 'estate');
@@ -619,6 +621,7 @@ class TestClassEstateList
 		$pFieldLaengengrad->setType(FieldTypes::FIELD_TYPE_DATE);
 		$pFieldsCollection->addField($pFieldObjektArt);
 		$pFieldsCollection->addField($pFieldObjektTyp);
+		$pFieldsCollection->addField($pFieldObjektTitel);
 		$pFieldsCollection->addField($pFieldObjektadresseDreigeben);
 		$pFieldsCollection->addField($pFieldLaengengrad);
 		$pFieldsCollection->addField($pFieldReserViert);
@@ -644,6 +647,22 @@ class TestClassEstateList
 				'name' => 'objekttyp',
 				'type' => 'singleselect',
 				'value' => 'reihenhaus',
+				'label' => '',
+				'default' => null,
+				'length' => null,
+				'permittedvalues' => [],
+				'content' => '',
+				'module' => 'estate',
+				'rangefield' => false,
+				'additionalTranslations' => [],
+				'compoundFields' => [],
+				'labelOnlyValues' => [],
+				'tablename' => ''
+			],
+			'objekttitel' => [
+				'name' => 'objekttitel',
+				'type' => 'singleselect',
+				'value' => [],
 				'label' => '',
 				'default' => null,
 				'length' => null,

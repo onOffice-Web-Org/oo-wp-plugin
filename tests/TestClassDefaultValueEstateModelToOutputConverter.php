@@ -241,7 +241,7 @@ class TestClassDefaultValueEstateModelToOutputConverter extends WP_UnitTestCase
 
 		$pDefaultValueEstateReader = $this->_pContainer->get(DefaultValueEstateRead::class);
 		$pDefaultValueEstateReader->expects($this->once())
-			->method('readDefaultValuesSingleselect')->will($this->returnValue($pSingleSelectFieldModel));
+			->method('readDefaultValuesSingleSelect')->will($this->returnValue($pSingleSelectFieldModel));
 		$result = $this->_pSubject->getConvertedField(13, $this->_pField);
 		$this->assertEquals(['Monday'], $result);
 	}

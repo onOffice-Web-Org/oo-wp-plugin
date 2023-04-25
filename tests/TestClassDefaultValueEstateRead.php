@@ -74,7 +74,7 @@ class TestClassDefaultValueEstateRead
 	 *
 	 */
 
-	public function testReadDefaultValuesSingleselect(int $estateId, int $defaultValueId, string $value)
+	public function testReadDefaultValuesSingleSelect(int $estateId, int $defaultValueId, string $value)
 	{
 		$row = [
 			'defaults_id' => $defaultValueId,
@@ -85,7 +85,7 @@ class TestClassDefaultValueEstateRead
 		$pExpectedDataModel = new DefaultValueModelSingleselect($estateId, $pField);
 		$pExpectedDataModel->setValue($value);
 		$pExpectedDataModel->setDefaultsId($defaultValueId);
-		$pResult = $this->_pSubject->readDefaultValuesSingleselect($estateId, $pField);
+		$pResult = $this->_pSubject->readDefaultValuesSingleSelect($estateId, $pField);
 		$this->assertInstanceOf(DefaultValueModelSingleselect::class, $pResult);
 		$this->assertEquals($pExpectedDataModel, $pResult);
 	}

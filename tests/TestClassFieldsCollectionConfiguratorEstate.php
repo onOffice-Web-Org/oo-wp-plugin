@@ -60,12 +60,12 @@ class TestClassFieldsCollectionConfiguratorEstate
 	{
 		$pSubject = new FieldsCollectionConfiguratorEstate;
 		$pFieldsCollection = new FieldsCollection;
-		$pFieldSingleSelect = new Field('testFieldSingleselect', onOfficeSDK::MODULE_ESTATE);
+		$pFieldSingleSelect = new Field('testFieldSingleSelect', onOfficeSDK::MODULE_ESTATE);
 		$pFieldSingleSelect->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldsCollection->addField($pFieldSingleSelect);
 		$pCollectionInterest = $pSubject->buildForEstateType($pFieldsCollection);
 		$this->assertEquals(FieldTypes::FIELD_TYPE_MULTISELECT,
-			$pCollectionInterest->getFieldByKeyUnsafe('testFieldSingleselect')->getType());
+			$pCollectionInterest->getFieldByKeyUnsafe('testFieldSingleSelect')->getType());
 	}
 
 	/**
@@ -74,7 +74,7 @@ class TestClassFieldsCollectionConfiguratorEstate
 	private function buildFieldsCollectionSelect(): FieldsCollection
 	{
 		$pFieldsCollection = new FieldsCollection;
-		$pField = new Field('testFieldSingleselect', onOfficeSDK::MODULE_ESTATE);
+		$pField = new Field('testFieldSingleSelect', onOfficeSDK::MODULE_ESTATE);
 		$pField->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
 		$pFieldsCollection->addField($pField);
 		return $pFieldsCollection;

@@ -76,7 +76,7 @@ class TestClassDefaultValueEstateCreate
 	 *
 	 */
 
-	public function testCreateForSingleselect()
+	public function testCreateForSingleSelect()
 	{
 		$this->_pRecordManagerFactory->expects($this->exactly(2))->method('createRecordManagerInsertGeneric');
 		$this->_pRecordManagerInsertGeneric->expects($this->exactly(2))->method('insertByRow')
@@ -91,11 +91,11 @@ class TestClassDefaultValueEstateCreate
 				return 0;
 			}));
 		$pField = new Field('testField1', 'testModule1');
-		$pDefaultValueModelSingleselect = new DefaultValueModelSingleselect(3, $pField);
-		$pDefaultValueModelSingleselect->setValue('testDefaultValue');
-		$result = $this->_pSubject->createForSingleselect($pDefaultValueModelSingleselect);
+		$pDefaultValueModelSingleSelect = new DefaultValueModelSingleselect(3, $pField);
+		$pDefaultValueModelSingleSelect->setValue('testDefaultValue');
+		$result = $this->_pSubject->createForSingleSelect($pDefaultValueModelSingleSelect);
 		$this->assertEquals(13, $result);
-		$this->assertEquals(13, $pDefaultValueModelSingleselect->getDefaultsId());
+		$this->assertEquals(13, $pDefaultValueModelSingleSelect->getDefaultsId());
 	}
 
 
@@ -103,7 +103,7 @@ class TestClassDefaultValueEstateCreate
 	 *
 	 */
 
-	public function testCreateForMultiselect()
+	public function testCreateForMultiSelect()
 	{
 		$this->_pRecordManagerInsertGeneric->expects($this->exactly(3))->method('insertByRow')
 				->will($this->returnCallback(function(array $values) {
@@ -118,7 +118,7 @@ class TestClassDefaultValueEstateCreate
 		$pField = new Field('testField2', 'testModule2');
 		$pDefaultValue = new DefaultValueModelMultiselect(14, $pField);
 		$pDefaultValue->setValues( [ 1 => [ '123', 'abc' ] ] );
-		$this->assertEquals(12, $this->_pSubject->createForMultiselect($pDefaultValue));
+		$this->assertEquals(12, $this->_pSubject->createForMultiSelect($pDefaultValue));
 		$this->assertEquals(12, $pDefaultValue->getDefaultsId());
 	}
 
