@@ -627,7 +627,7 @@ class TestClassEstateList
 			'objektart' => [
 				'name' => 'objektart',
 				'type' => 'singleselect',
-				'value' => [],
+				'value' => 'haus',
 				'label' => '',
 				'default' => null,
 				'length' => null,
@@ -643,7 +643,7 @@ class TestClassEstateList
 			'objekttyp' => [
 				'name' => 'objekttyp',
 				'type' => 'singleselect',
-				'value' => [],
+				'value' => 'reihenhaus',
 				'label' => '',
 				'default' => null,
 				'length' => null,
