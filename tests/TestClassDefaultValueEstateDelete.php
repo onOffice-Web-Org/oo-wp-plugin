@@ -58,7 +58,7 @@ class TestClassDefaultValueEstateDelete
 	/**
 	 * @throws DefaultValueDeleteException
 	 */
-	public function testDeleteByEstateIdAndFieldNamesEmptyFieldlist()
+	public function testDeleteByEstateIdAndFieldNamesEmptyListField()
 	{
 		$this->_pWPDB->expects($this->never())->method('query');
 		$this->_pSubject->deleteByEstateIdAndFieldNames(13, []);

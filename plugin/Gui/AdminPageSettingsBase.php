@@ -255,7 +255,7 @@ abstract class AdminPageSettingsBase
 			(array)($values->{'customlabel-lang'}) ?? [];
 		$row['oo_plugin_fieldconfig_estate_defaults_values'] =
 			(array)($row['oo_plugin_fieldconfig_estate_defaults_values']['value'] ?? []) +
-			(array)($values->{'defaultvalue-lang'} ) ?? [];
+			(array)($values->{'defaultvalue-lang'} ?? [] );
 
 		if ($checkResult) {
 			$this->updateValues($row, $pResultObject, $recordId);
