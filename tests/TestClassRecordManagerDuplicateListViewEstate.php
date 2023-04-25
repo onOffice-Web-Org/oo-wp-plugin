@@ -122,6 +122,26 @@ class TestClassRecordManagerDuplicateListViewEstate
 
 	public function testDuplicateByIds()
 	{
+		$sampleDataObj = [
+			(object)[
+				'estate_id'         => 23,
+				'defaults_id'       => 23,
+				'customs_labels_id' => 23,
+				'locale'            => 1,
+				'value'             => 1,
+				'fieldname'         => 'test1',
+			]
+		];
+		$sampleDataArr = [
+			[
+				'estate_id'         => 23,
+				'defaults_id'       => 23,
+				'customs_labels_id' => 23,
+				'locale'            => 1,
+				'value'             => 1,
+				'fieldname'         => 'test1',
+			]
+		];
 		$fieldConfigRecordOutput = [
 			(object)[
 				'fieldname' => 'test1',
@@ -142,10 +162,33 @@ class TestClassRecordManagerDuplicateListViewEstate
 			]
 		];
 
-		$this->_pWPDB->expects($this->exactly(4))
-			->method('get_results')
-			->willReturnOnConsecutiveCalls($fieldConfigRecordOutput, $fieldConfigRecordOutput, $pictureTypeRecordOutput,
-				$sortByUserValueRecordOutput);
+		$recordRootCopy = (object) [
+			'estate_id' => 22,
+			'name'    => 'list view root - Copy 1',
+		];
+		$colData = [
+			'value' . 'locale',
+			'fieldname',
+			'defaults_id',
+			'estate_id',
+			'listview_id',
+			'order',
+			'availableOptions'
+		];
+		$this->_pWPDB->expects($this->once())
+					 ->method('get_row')
+					 ->willReturnOnConsecutiveCalls($recordRootCopy);
+
+		$this->_pWPDB->expects($this->exactly(1))
+			->method('get_col')
+			->willReturnOnConsecutiveCalls(
+				$colData
+			);
+
+		$this->_pWPDB->expects($this->exactly(6))
+		             ->method('get_results')
+		             ->willReturnOnConsecutiveCalls($fieldConfigRecordOutput, $fieldConfigRecordOutput, $pictureTypeRecordOutput,
+							$sortByUserValueRecordOutput, $sampleDataObj, $sampleDataArr);
 
 		$this->_pWPDB->insert_id = 23;
 		$this->_pSubject->duplicateByIds(22);
@@ -158,6 +201,26 @@ class TestClassRecordManagerDuplicateListViewEstate
 
 	public function testAppendCountToNameDuplicateByIds()
 	{
+		$sampleDataObj = [
+			(object)[
+				'estate_id'           => 23,
+				'defaults_id'       => 23,
+				'customs_labels_id' => 23,
+				'locale'            => 1,
+				'value'             => 1,
+				'fieldname'         => 'test1',
+			]
+		];
+		$sampleDataArr = [
+			[
+				'estate_id'           => 23,
+				'defaults_id'       => 23,
+				'customs_labels_id' => 23,
+				'locale'            => 1,
+				'value'             => 1,
+				'fieldname'         => 'test1',
+			]
+		];
 		$recordRootCopy = (object)[
 			'name' => 'list view root - Copy 1',
 		];
@@ -181,14 +244,30 @@ class TestClassRecordManagerDuplicateListViewEstate
 			]
 		];
 
+		$colData = [
+			'value' . 'locale',
+			'fieldname',
+			'defaults_id',
+			'form_id',
+			'order',
+			'individual_fieldname',
+			'required',
+			'availableOptions'
+		];
+
 		$this->_pWPDB->expects($this->once())
 			->method('get_row')
 			->will($this->returnValue($recordRootCopy));
 
-		$this->_pWPDB->expects($this->exactly(4))
-			->method('get_results')
-			->willReturnOnConsecutiveCalls($fieldConfigRecordOutput, $fieldConfigRecordOutput, $pictureTypeRecordOutput,
-				$sortByUserValueRecordOutput);
+		$this->_pWPDB->expects($this->exactly(1))
+			->method('get_col')
+			->willReturnOnConsecutiveCalls(
+				$colData
+			);
+		$this->_pWPDB->expects($this->exactly(6))
+		             ->method('get_results')
+		             ->willReturnOnConsecutiveCalls($fieldConfigRecordOutput, $fieldConfigRecordOutput, $pictureTypeRecordOutput,
+						$sortByUserValueRecordOutput, $sampleDataObj, $sampleDataArr);
 
 		$this->_pWPDB->insert_id = 23;
 		$this->_pSubject->duplicateByIds(22);
