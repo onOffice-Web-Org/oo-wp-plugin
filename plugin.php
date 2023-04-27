@@ -330,8 +330,18 @@ add_action('parse_request', function () use ( $pDI ) {
 	if ( strpos($_SERVER["REQUEST_URI"], "onoffice-clear-cache") !== false ) {
 		$pDI->get(CacheHandler::class)->clear();
 		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
+		update_option('onoffice-notice-cache-was-cleared', true);
 		wp_safe_redirect($location);
 		exit();
+	}
+});
+
+add_action('admin_notices', function () {
+	if (get_option('onoffice-notice-cache-was-cleared') == true) {
+		$class = 'notice notice-success is-dismissible';
+		$message = __('The cache was cleared successfully.', 'onoffice-for-wp-websites');
+		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		update_option('onoffice-notice-cache-was-cleared', false);
 	}
 });
 
