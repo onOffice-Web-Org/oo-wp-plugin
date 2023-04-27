@@ -515,10 +515,10 @@ div[data-name^=oopluginfieldconfigestatedefaultsvalues-value].multiselect > inpu
 	border-radius: 4px;
 	width: 50%;
 	gap: 10px;
-    display: grid;
-    padding: 10px;
-    float: left;
-    margin-left: 4px;
-    justify-content: initial;
-    border: 1px solid #8c8f94;
+	display: grid;
+	padding: 10px;
+	float: left;
+	margin-left: 4px;
+	justify-content: initial;
+	border: 1px solid #8c8f94;
 }

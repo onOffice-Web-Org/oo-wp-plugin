@@ -83,12 +83,12 @@ class TestClassInputModelBuilderDefaultValueEstate
 		$pExpectedInputModelSingleSelect->setValuesAvailable(['' => '']);
 		yield [$pExpectedInputModelSingleSelect, FieldTypes::FIELD_TYPE_SINGLESELECT, [], []];
 
-		$pExpectedInputModelSingleSelect = new InputModelDB('testInput', 'testLabel');
-		$pExpectedInputModelSingleSelect->setHtmlType(InputModelDB::HTML_TYPE_SELECT);
-		$pExpectedInputModelSingleSelect->setValue(['n']);
-		$pExpectedInputModelSingleSelect->setValuesAvailable(['n' => '', 'y' => 'MySpace', '' => '']);
+		$pExpectedInputModelBoolean = new InputModelDB('testInput', 'testLabel');
+		$pExpectedInputModelBoolean->setHtmlType(InputModelDB::HTML_TYPE_RADIO);
+		$pExpectedInputModelBoolean->setValue(['n']);
+		$pExpectedInputModelBoolean->setValuesAvailable(['n' => '', 'y' => 'MySpace', '' => '']);
 		yield [
-			$pExpectedInputModelSingleSelect,
+			$pExpectedInputModelBoolean,
 			FieldTypes::FIELD_TYPE_BOOLEAN,
 			['n' => '', 'y' => 'MySpace', '' => ''],
 			['testInput' => ['n']],
