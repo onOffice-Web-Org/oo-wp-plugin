@@ -168,16 +168,10 @@ onOffice.default_values_input_converter = function () {
                     multiselect.show();
                 };
             })(multiselect);
-        } else if (fieldDefinition.type === "boolean") {
-            mainInput.innerHTML = ""; // remove options
-            mainInput.options.add(new Option(fieldDefinition.permittedvalues[0], ''));
-            mainInput.options.add(new Option(fieldDefinition.permittedvalues[1], '1'));
-            mainInput.options.add(new Option(fieldDefinition.permittedvalues[2], '2'));
-            mainInput.selectedIndex = onOffice_loc_settings.defaultvalues[fieldName] || '0';
         }
     });
 
-    // numeric range, int, float
+    // numeric range, int, float, boolean
     document.querySelectorAll('input[name^=oopluginfieldconfigestatedefaultsvalues-value]').forEach(function (mainInput) {
         var mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
         if (mainElement === null) {
@@ -189,6 +183,31 @@ onOffice.default_values_input_converter = function () {
         }
         onOffice.default_values_inputs_converted.push(fieldName);
         var fieldDefinition = getFieldDefinition(fieldName);
+
+        if (fieldDefinition.type === "boolean") {
+            var parent = mainInput;
+            var element = document.createElement('fieldset');
+            var keys = Object.keys(fieldDefinition.permittedvalues).sort();
+            parent.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + ']';
+
+            element.className = 'onoffice-input-radio';
+            keys.forEach(k => {
+                var mainInputClone = parent.cloneNode(true);
+                var label = document.createElement('label');
+                onOffice.js_field_count += 1;
+                mainInputClone.id = 'input_radio_js_' + onOffice.js_field_count;
+                mainInputClone.value = k;
+                label.textContent = fieldDefinition.permittedvalues[k];
+                if(k == onOffice_loc_settings.defaultvalues[fieldName]){
+                    mainInputClone.checked = true;
+                }
+                label.appendChild(mainInputClone);
+                element.appendChild(label)
+                parent.parentElement.appendChild(element)
+            }); 
+            mainInput.remove();
+            return;
+        }
 
         if (!fieldDefinition.rangefield &&
             [
@@ -267,7 +286,7 @@ document.addEventListener("addFieldItem", function(e) {
             input.id = 'select_js_' + onOffice.js_field_count;
             input.name = 'oopluginfieldconfigestatedefaultsvalues-value[]';
             input.className = 'onoffice-input';
-    
+
             select.options.add(new Option(onOffice_loc_settings.label_choose_language, ''));
             var keys = Object.keys(onOffice_loc_settings.installed_wp_languages);
             keys.forEach(function (k) {
@@ -276,7 +295,7 @@ document.addEventListener("addFieldItem", function(e) {
                     select.options.add(new Option(v, k));
                 }
             });
-    
+
             onOffice.js_field_count += 1;
             select.options.selectedIndex = 0;
     
@@ -289,7 +308,7 @@ document.addEventListener("addFieldItem", function(e) {
             input.setAttribute('type', 'text')
             input.setAttribute('size', '50')
             element.parentNode.replaceChild(input, element);
-    } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 0) {
+    } else if (['singleselect', 'multiselect'].indexOf(fieldDefinition.type) >= 0) {
         var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
         var select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;
@@ -315,6 +334,30 @@ document.addEventListener("addFieldItem", function(e) {
         onOffice.js_field_count += 1;
         select.options.selectedIndex = 0;
         element.parentNode.replaceChild(select, element);
+    } if(['boolean'].indexOf(fieldDefinition.type) >= 0){
+        var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
+        var fieldset = document.createElement('fieldset');
+        var keys = Object.keys(fieldDefinition.permittedvalues).sort();
+        fieldset.className = 'onoffice-input-radio';
+
+        keys.forEach(function (k) {
+            var label = document.createElement('label');
+            var input = document.createElement('input');
+            input.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + ']';
+            input.type = 'radio';
+            input.value = k;
+            input.className = 'onoffice-input';
+            onOffice.js_field_count += 1;
+            label.htmlFor = 'input_radio_js_' + onOffice.js_field_count;
+            label.textContent = fieldDefinition.permittedvalues[k];
+            if(k == onOffice_loc_settings.defaultvalues[fieldName]){
+                input.checked = true;
+            }
+            label.appendChild(input);
+            fieldset.appendChild(label)
+        });
+
+        element.parentNode.replaceChild(fieldset, element);
     }
 
     var paragraph = e.detail.item.querySelectorAll('.menu-item-settings p')[3];

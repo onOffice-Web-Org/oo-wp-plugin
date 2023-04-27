@@ -45,7 +45,7 @@ class InputModelBuilderDefaultValueEstate
 		FieldTypes::FIELD_TYPE_INTEGER => InputModelOption::HTML_TYPE_NUMBER,
 		FieldTypes::FIELD_TYPE_MULTISELECT => InputModelOption::HTML_TYPE_SELECT,
 		FieldTypes::FIELD_TYPE_SINGLESELECT => InputModelOption::HTML_TYPE_SELECT,
-		FieldTypes::FIELD_TYPE_BOOLEAN => InputModelOption::HTML_TYPE_SELECT,
+		FieldTypes::FIELD_TYPE_BOOLEAN => InputModelOption::HTML_TYPE_RADIO,
 	];
 
 

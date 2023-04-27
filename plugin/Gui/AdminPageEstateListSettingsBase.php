@@ -332,7 +332,7 @@ abstract class AdminPageEstateListSettingsBase
 			$result[$pField->getModule()][$pField->getName()] = $pField->getAsRow();
 			if ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
 				$result[$pField->getModule()][$pField->getName()]['permittedvalues'] = [
-					'0' => __('Not Specified', 'onoffice-for-wp-websites'),
+					'' => __('Not Specified', 'onoffice-for-wp-websites'),
 					'1' => __('No', 'onoffice-for-wp-websites'),
 					'2' => __('Yes', 'onoffice-for-wp-websites'),
 				];
