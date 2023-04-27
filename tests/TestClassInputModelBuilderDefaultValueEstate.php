@@ -86,11 +86,11 @@ class TestClassInputModelBuilderDefaultValueEstate
 		$pExpectedInputModelBoolean = new InputModelDB('testInput', 'testLabel');
 		$pExpectedInputModelBoolean->setHtmlType(InputModelDB::HTML_TYPE_RADIO);
 		$pExpectedInputModelBoolean->setValue(['n']);
-		$pExpectedInputModelBoolean->setValuesAvailable(['n' => '', 'y' => 'MySpace', '' => '']);
+		$pExpectedInputModelBoolean->setValuesAvailable(['n' => '1', 'y' => '2', '' => '']);
 		yield [
 			$pExpectedInputModelBoolean,
 			FieldTypes::FIELD_TYPE_BOOLEAN,
-			['n' => '', 'y' => 'MySpace', '' => ''],
+			['n' => '1', 'y' => '2', '' => ''],
 			['testInput' => ['n']],
 		];
 	}

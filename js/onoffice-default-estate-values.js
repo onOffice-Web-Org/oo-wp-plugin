@@ -334,7 +334,7 @@ document.addEventListener("addFieldItem", function(e) {
         onOffice.js_field_count += 1;
         select.options.selectedIndex = 0;
         element.parentNode.replaceChild(select, element);
-    } if(['boolean'].indexOf(fieldDefinition.type) >= 0){
+    } else if(['boolean'].indexOf(fieldDefinition.type) >= 0){
         var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
         var fieldset = document.createElement('fieldset');
         var keys = Object.keys(fieldDefinition.permittedvalues).sort();
