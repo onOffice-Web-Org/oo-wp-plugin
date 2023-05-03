@@ -218,8 +218,9 @@ abstract class FormPost
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
 		$requiredFields = $this->getAllowedRequiredFields($requiredFields);
+		$requiredFieldsAreAllowed = $this->getAllowedRequiredFieldsIsRangeField($requiredFields);
 		$pFormData = new FormData($pFormConfig, $formNo);
-		$pFormData->setRequiredFields($requiredFields);
+		$pFormData->setRequiredFields($requiredFieldsAreAllowed);
 		$pFormData->setFormtype($pFormConfig->getFormType());
 		$pFormData->setValues($formData);
 
@@ -268,6 +269,27 @@ abstract class FormPost
 			}
 		}
 		return $activeRequiredFields;
+	}
+ 
+	/**
+	 *
+	 * @param array $requiredFields
+	 * @return string[]
+	 *
+	 */
+
+	private function getAllowedRequiredFieldsIsRangeField(array $requiredFields): array
+	{
+		foreach ($requiredFields as $key => $value) {
+			$isRangeField = $this->_pFieldsCollection->getFieldByKeyUnsafe($value)->getIsRangeField();
+			if ($isRangeField) {
+				array_push($requiredFields, $value.'__von');
+				array_push($requiredFields, $value.'__bis');
+				unset($requiredFields[$key]);
+			}
+		}
+
+		return $requiredFields;
 	}
 
 

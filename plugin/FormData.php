@@ -98,7 +98,9 @@ class FormData
 		$missing = [];
 
 		if ($this->_formSent) {
-			$filledFormData = array_filter($this->_values);
+			$filledFormData = array_filter($this->_values, function ($v) {
+				return $v !== 0;
+			});
 			$requiredFields = array_flip($this->_requiredFields);
 			$filled = array_intersect_key($filledFormData, $requiredFields);
 			$missingKeyValues = array_diff_key($requiredFields, $filled);
