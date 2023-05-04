@@ -4,9 +4,9 @@ jQuery(document).ready(function ($) {
     if (honeypot_enabled['honeypotValue'] == true && form.type !== '' && form.type !== 'applicantsearch') {
         var messageTextarea = $('textarea[name="message"]');
         var messageInput = $('input[name="message"]');
-        if(messageTextarea.val() == ''){
+        if(messageTextarea.length === 1){
             messageTextarea.attr('name', 'tmpField');
-        } else if (messageInput.val() == '')  {
+        } else if (messageInput.length === 1)  {
             messageInput.attr('name', 'tmpField');
         }
         var label = $('<label>').text('Message:').attr("class", "message");

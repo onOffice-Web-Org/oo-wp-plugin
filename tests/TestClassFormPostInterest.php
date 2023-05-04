@@ -106,6 +106,8 @@ class TestClassFormPostInterest
 			'kaufpreis__von' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'kaufpreis__bis' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 			'krit_bemerkung_oeffentlich' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'stp_anzahl__von' => onOfficeSDK::MODULE_SEARCHCRITERIA,
+			'stp_anzahl__bis' => onOfficeSDK::MODULE_SEARCHCRITERIA,
 		]));
 
 		$this->_pFieldsCollectionBuilderShort = $this->getMockBuilder(FieldsCollectionBuilderShort::class)
@@ -135,6 +137,11 @@ class TestClassFormPostInterest
 				$pField4->setType(FieldTypes::FIELD_TYPE_TEXT);
 				$pField4->setLabel('Comment');
 				$pFieldsCollection->addField($pField4);
+
+				$pField5 = new Field('stp_anzahl', onOfficeSDK::MODULE_SEARCHCRITERIA);
+				$pField5->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pField5->setIsRangeField(true);
+				$pFieldsCollection->addField($pField5);
 
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
@@ -173,6 +180,11 @@ class TestClassFormPostInterest
 				$pField2->setType(FieldTypes::FIELD_TYPE_FLOAT);
 				$pField2->setLabel('Kaufpreis');
 				$pFieldsCollection->addField($pField2);
+
+				$pFieldStpAnzahl = new Field('stp_anzahl', onOfficeSDK::MODULE_ESTATE);
+				$pFieldStpAnzahl->setType(FieldTypes::FIELD_TYPE_FLOAT);
+				$pFieldStpAnzahl->setLabel('Stp_anzahl');
+				$pFieldsCollection->addField($pFieldStpAnzahl);
 
 				return $this->_pFieldsCollectionBuilderShort;
 			}));
@@ -216,7 +228,9 @@ class TestClassFormPostInterest
 			'kaufpreis__von' => '200000.00',
 			'kaufpreis__bis' => '800000.00',
 			'objekttyp' => ['reihenendhaus', 'reihenhaus'],
-			'krit_bemerkung_oeffentlich' => 'comment3'
+			'krit_bemerkung_oeffentlich' => 'comment3',
+			'stp_anzahl__von' => '20.00',
+			'stp_anzahl__bis' => '40.00',
 		];
 
 		$pConfig = $this->getNewDataFormConfigurationInterest();
@@ -245,6 +259,8 @@ class TestClassFormPostInterest
 			'vermarktungsart' => 'kauf',
 			'kaufpreis__von' => '200000.00',
 			'kaufpreis__bis' => '800000.00',
+			'stp_anzahl__von' => '20.00',
+			'stp_anzahl__bis' => '40.00'
 		];
 
 		$unsuccessfulCombinations = [
@@ -287,7 +303,7 @@ class TestClassFormPostInterest
 		$pFormData = $this->_pFormPostInterest->getFormDataInstance('interestform', 3);
 
 		$this->assertEquals(FormPost::MESSAGE_REQUIRED_FIELDS_MISSING, $pFormData->getStatus());
-		$this->assertEquals(['Name', 'vermarktungsart'], $pFormData->getMissingFields());
+		$this->assertEquals(['Name', 'vermarktungsart', 'stp_anzahl__von' , 'stp_anzahl__bis'], $pFormData->getMissingFields());
 	}
 
 
@@ -305,11 +321,12 @@ class TestClassFormPostInterest
 		$pConfig->addInput('Email', onOfficeSDK::MODULE_ADDRESS);
 		$pConfig->addInput('vermarktungsart', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pConfig->addInput('kaufpreis', onOfficeSDK::MODULE_SEARCHCRITERIA);
+		$pConfig->addInput('stp_anzahl', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pConfig->addInput('message', '');
 		$pConfig->addInput('krit_bemerkung_oeffentlich', onOfficeSDK::MODULE_SEARCHCRITERIA);
 		$pConfig->setFormName('interestform');
 		$pConfig->setRecipient('test@my-onoffice.com');
-		$pConfig->setRequiredFields(['Vorname', 'Name', 'vermarktungsart']);
+		$pConfig->setRequiredFields(['Vorname', 'Name', 'vermarktungsart', 'stp_anzahl']);
 		$pConfig->setSubject('Interest');
 		$pConfig->setTemplate('testtemplate.php');
 		$pConfig->setFormType(Form::TYPE_INTEREST);
@@ -381,6 +398,8 @@ class TestClassFormPostInterest
 				'krit_bemerkung_oeffentlich' => 'comment3',
 				'kaufpreis__von' => 200000.00,
 				'kaufpreis__bis' => 800000.00,
+				'stp_anzahl__von' => 20.00,
+				'stp_anzahl__bis' => 40.00,
 			],
 			'addressid' => 294,
 		];
@@ -433,7 +452,7 @@ class TestClassFormPostInterest
 				'Name' => 'Doe',
 				'Email' => 'john@doemail.com'
 			],
-			'message' => "\nSuchkriterien des Interessenten:\nVermarktungsart: Kauf\nComment: comment3\nKaufpreis (min): 200000\nKaufpreis (max): 800000",
+			'message' => "\nSuchkriterien des Interessenten:\nVermarktungsart: Kauf\nComment: comment3\nKaufpreis (min): 200000\nKaufpreis (max): 800000\nStp_anzahl (min): 20\nStp_anzahl (max): 40",
 			'subject' => 'Interest',
 			'formtype' => Form::TYPE_INTEREST,
 			"referrer" => "",
