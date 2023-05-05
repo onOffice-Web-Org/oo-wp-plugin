@@ -61,6 +61,9 @@ class InputModelDBFactory
 	const INPUT_SHOW_STATUS = 'showStatus';
 
 	/** */
+	const INPUT_SHOW_PRICE_ON_REQUEST = 'showPriceOnRequest';
+
+	/** */
 	const INPUT_SHOW_REFERENCE_ESTATE = 'showReferenceEstate';
 
 	/** */

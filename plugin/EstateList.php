@@ -475,7 +475,7 @@ class EstateList
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
 		}
 
-		if(!empty($recordModified['preisAufAnfrage'])){
+		if($this->getShowPriceOnRequest() && !empty($recordModified['preisAufAnfrage'])){
 			$priceFields = ['kaufpreis', 'erbpacht', 'nettokaltmiete', 'warmmiete', 'pacht', 'kaltmiete',
 							'miete_pauschal', 'saisonmiete', 'wochmietbto', 'kaufpreis_pro_qm', 'mietpreis_pro_qm'];
 			foreach ($priceFields as $priceField){
@@ -861,6 +861,14 @@ class EstateList
 	/** @return array */
 	public function getAddressFields(): array
 		{ return $this->_pDataView->getAddressFields(); }
+
+	/** @return array */
+	public function getShowPriceOnRequest()
+	{
+		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView ) {
+			return $this->_pDataView->getShowPriceOnRequest();
+		}
+	}
 
 	/** @return EstateFiles */
 	protected function getEstateFiles()
