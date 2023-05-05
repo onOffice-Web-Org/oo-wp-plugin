@@ -339,7 +339,7 @@ add_action('parse_request', function () use ( $pDI ) {
 add_action('admin_notices', function () {
 	if (get_option('onoffice-notice-cache-was-cleared') == true) {
 		$class = 'notice notice-success is-dismissible';
-		$message = __('The cache was cleared successfully.', 'onoffice-for-wp-websites');
+		$message = esc_html__('The cache was cleared successfully.', 'onoffice-for-wp-websites');
 		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
 		update_option('onoffice-notice-cache-was-cleared', false);
 	}
