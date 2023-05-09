@@ -307,6 +307,9 @@ class EstateList
 			];
 		}
 
+		if ($this->getShowPriceOnRequest()) {
+			$requestParams['data'][] = 'preisAufAnfrage';
+		}
 		if ($pListView->getName() === 'detail') {
 			if ($this->getViewRestrict()) {
 				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
@@ -865,7 +868,7 @@ class EstateList
 	/** @return array */
 	public function getShowPriceOnRequest()
 	{
-		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView ) {
+		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
 			return $this->_pDataView->getShowPriceOnRequest();
 		}
 	}

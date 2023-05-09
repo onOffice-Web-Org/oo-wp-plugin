@@ -83,6 +83,7 @@ class ViewFieldModifierHandler
 			function($value) {	return '';},
 			$visibleFields);
 
+		$visibleFields['preisAufAnfrage'] = '';
 		$intersection = array_intersect_key($newRecord, $visibleFields);
 
 		$fields = array_merge($visibleFields, $intersection);

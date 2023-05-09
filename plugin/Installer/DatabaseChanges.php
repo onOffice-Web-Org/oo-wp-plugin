@@ -281,6 +281,8 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		if ( $dbversion == 38 ) {
 			dbDelta($this->getCreateQueryListviews());
+			$this->updateShowPriceOnRequest();
+			$this->updateShowPriceOnRequestDataSimilarEstatesAndDetailEstate();
 			$dbversion = 39;
 		}
 
@@ -1024,5 +1026,59 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDetailView->addToPageIdsHaveDetailShortCode( (int) $post['ID'] );
 		}
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateShowPriceOnRequest()
+	{
+		$prefix = $this->getPrefix();
+		$tableNameFieldConfig = $prefix . "oo_plugin_fieldconfig";
+		$tableNameListViews = $prefix . "oo_plugin_listviews";
+
+		$listDetailPosts = $this->_pWPDB->get_results( "SELECT `ListView_id` FROM {$tableNameFieldConfig}
+							WHERE fieldname = 'preisAufAnfrage'", ARRAY_A );
+		if(!empty($listDetailPosts)){
+			$this->_pWPDB->get_results("DELETE FROM $tableNameFieldConfig " ."WHERE fieldname = 'preisAufAnfrage'");
+			foreach ( $listDetailPosts as $post ) {
+				$id = (int) $post['ListView_id'];
+				$this->_pWPDB->query("UPDATE $tableNameListViews 
+					SET `show_price_on_request` = '1'
+					WHERE `ListView_id` = $id");
+			}
+		}
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateShowPriceOnRequestDataSimilarEstatesAndDetailEstate()
+	{
+		$pDataSimilarViewOptions = get_option('onoffice-similar-estates-settings-view');
+		if(!empty($pDataSimilarViewOptions) && in_array('preisAufAnfrage', $pDataSimilarViewOptions->getFields())){
+			$data = $pDataSimilarViewOptions->getDataViewSimilarEstates()->getFields();
+			$fields = array_flip($data);
+			unset($fields['preisAufAnfrage']);
+			$data = array_flip($fields);
+			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setFields($data);
+			$pDataSimilarViewOptions->setFields($data);
+			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setShowPriceOnRequest(true);
+			$this->_pWpOption->updateOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
+		}
+		$pDataDetailViewOptions = get_option('onoffice-default-view');
+		if(!empty($pDataDetailViewOptions) && in_array('preisAufAnfrage', $pDataDetailViewOptions->getFields())){
+			$data = $pDataDetailViewOptions->getFields();
+			$fields = array_flip($data);
+			unset($fields['preisAufAnfrage']);
+			$data = array_flip($fields);
+			$pDataDetailViewOptions->setFields($data);
+			$pDataDetailViewOptions->setShowPriceOnRequest(true);
+			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
+		}
 	}
 }

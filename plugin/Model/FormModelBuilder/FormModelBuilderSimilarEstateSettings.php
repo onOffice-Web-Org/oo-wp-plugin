@@ -431,4 +431,24 @@ class FormModelBuilderSimilarEstateSettings
 
 		return $pInputModel;
 	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelShowPriceOnRequest()
+	{
+		$pDataViewSimilarEstates = $this->_pDataSimilarView->getDataViewSimilarEstates();
+		$labelShowPriceOnRequest = __('Show price on request', 'onoffice-for-wp-websites');
+
+		$pInputModelShowPriceOnRequest = $this->_pInputModelSimilarViewFactory->create
+		(InputModelOptionFactorySimilarView::INPUT_SHOW_PRICE_ON_REQUEST, $labelShowPriceOnRequest);
+		$pInputModelShowPriceOnRequest->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowPriceOnRequest->setValue($pDataViewSimilarEstates->getShowPriceOnRequest());
+		$pInputModelShowPriceOnRequest->setValuesAvailable(1);
+
+		return $pInputModelShowPriceOnRequest;
+	}
 }

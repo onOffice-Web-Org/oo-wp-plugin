@@ -203,6 +203,7 @@ class AdminPageSimilarEstates
 		$pInputModelSimilarEstatesSamePostalCode = $pFormModelBuilder->createInputModelSameEstatePostalCode();
 		$pInputModelSimilarEstatesRadius = $pFormModelBuilder->createInputModelSameEstateRadius();
 		$pInputModelSimilarEstatesAmount = $pFormModelBuilder->createInputModelSameEstateAmount();
+		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
 		$pInputModelSimilarEstatesTemplate = $pFormModelBuilder->createInputModelTemplate
 			(InputModelOptionFactorySimilarView::INPUT_FIELD_SIMILAR_ESTATES_TEMPLATE);
 		$pInputModelSimilarEstatesActivated = $pFormModelBuilder->getCheckboxEnableSimilarEstates();
@@ -218,6 +219,7 @@ class AdminPageSimilarEstates
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesRadius);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesAmount);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesTemplate);
+		$pFormModelSimilarEstates->addInputModel($pInputModelShowPriceOnRequest);
 		$this->addFormModel($pFormModelSimilarEstates);
 
 		$pFieldsCollection = $this->readAllFields();
@@ -242,6 +244,7 @@ class AdminPageSimilarEstates
 		(new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection()))));
 		$this->getContainer()->get(FieldsCollectionBuilderShort::class)
 			->addFieldsAddressEstate($pFieldsCollection);
+		$pFieldsCollection->removeFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, 'preisAufAnfrage');
 		return $pFieldsCollection;
 	}
 

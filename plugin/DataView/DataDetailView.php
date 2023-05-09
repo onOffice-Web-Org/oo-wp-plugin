@@ -53,6 +53,9 @@ class DataDetailView
 	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_estate_translated_labels';
 
+	/** */
+	const FIELD_PRICE_ON_REQUEST = 'show_price_on_request';
+
 	/** @var string[] */
 	private $_fields = [
 		'objekttitel',
@@ -162,7 +165,7 @@ class DataDetailView
 	private $_customLabel = [];
 
 	/** @var bool */
-	private $_showPriceOnRequest = 0;
+	private $_showPriceOnRequest = false;
 
 	/**
 	 *

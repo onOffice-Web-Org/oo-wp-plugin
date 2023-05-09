@@ -359,6 +359,7 @@ class AdminPageEstateDetail
 					(new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection()))));
 		$this->getContainer()->get(FieldsCollectionBuilderShort::class)
 			->addFieldsAddressEstate($pFieldsCollection);
+		$pFieldsCollection->removeFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, 'preisAufAnfrage');
 		return $pFieldsCollection;
 	}
 

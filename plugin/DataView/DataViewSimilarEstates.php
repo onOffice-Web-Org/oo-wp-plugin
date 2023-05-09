@@ -70,6 +70,8 @@ class DataViewSimilarEstates
 	/** */
 	const FIELD_SIMILAR_ESTATES_TEMPLATE = 'similar_estates_template';
 
+	/** */
+	const FIELD_PRICE_ON_REQUEST = 'show_price_on_request';
 
 	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_estate_translated_labels';
@@ -94,6 +96,9 @@ class DataViewSimilarEstates
 
 	/** @var array */
 	private $_customLabel = [];
+
+	/** @var bool */
+	private $_showPriceOnRequest = false;
 
 	/** @param bool $sameEstateKind */
 	public function setSameEstateKind(bool $sameEstateKind)
@@ -190,4 +195,12 @@ class DataViewSimilarEstates
 	/** @param array */
 	public function setCustomLabels(array $customLabel)
 		{ $this->_customLabel = $customLabel;	}
+	
+	/** @return bool */
+	public function getShowPriceOnRequest(): bool
+	{ return $this->_showPriceOnRequest; }
+
+	/** @param bool $showPriceOnRequest */
+	public function setShowPriceOnRequest(bool $showPriceOnRequest)
+	{ $this->_showPriceOnRequest = $showPriceOnRequest; }
 }
