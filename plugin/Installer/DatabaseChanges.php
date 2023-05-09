@@ -281,8 +281,9 @@ class DatabaseChanges implements DatabaseChangesInterface
 
 		if ( $dbversion == 38 ) {
 			dbDelta($this->getCreateQueryListviews());
-			$this->updateShowPriceOnRequest();
-			$this->updateShowPriceOnRequestDataSimilarEstatesAndDetailEstate();
+			$this->updateShowPriceOnRequestOptionForListView();
+			$this->updateShowPriceOnRequestOptionForSimilarView();
+			$this->updateShowPriceOnRequestOptionForDetailView();
 			$dbversion = 39;
 		}
 
@@ -1033,18 +1034,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 * @return void
 	 */
 
-	public function updateShowPriceOnRequest()
+	public function updateShowPriceOnRequestOptionForListView()
 	{
 		$prefix = $this->getPrefix();
 		$tableNameFieldConfig = $prefix . "oo_plugin_fieldconfig";
 		$tableNameListViews = $prefix . "oo_plugin_listviews";
 
-		$listDetailPosts = $this->_pWPDB->get_results( "SELECT `ListView_id` FROM {$tableNameFieldConfig}
+		$listViewsPosts = $this->_pWPDB->get_results( "SELECT `ListView_id` FROM ".esc_sql($tableNameFieldConfig)."
 							WHERE fieldname = 'preisAufAnfrage'", ARRAY_A );
-		if(!empty($listDetailPosts)){
-			$this->_pWPDB->get_results("DELETE FROM $tableNameFieldConfig " ."WHERE fieldname = 'preisAufAnfrage'");
-			foreach ( $listDetailPosts as $post ) {
-				$id = (int) $post['ListView_id'];
+		if(!empty($listViewsPosts)){
+			$this->_pWPDB->get_results("DELETE FROM ".esc_sql($tableNameFieldConfig)." " ."WHERE fieldname = 'preisAufAnfrage'");
+			foreach ( $listViewsPosts as $post ) {
+				$id = esc_sql((int) $post['ListView_id']);
 				$this->_pWPDB->query("UPDATE $tableNameListViews 
 					SET `show_price_on_request` = '1'
 					WHERE `ListView_id` = $id");
@@ -1057,26 +1058,35 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 * @return void
 	 */
 
-	public function updateShowPriceOnRequestDataSimilarEstatesAndDetailEstate()
+	public function updateShowPriceOnRequestOptionForSimilarView()
 	{
 		$pDataSimilarViewOptions = get_option('onoffice-similar-estates-settings-view');
 		if(!empty($pDataSimilarViewOptions) && in_array('preisAufAnfrage', $pDataSimilarViewOptions->getFields())){
-			$data = $pDataSimilarViewOptions->getDataViewSimilarEstates()->getFields();
-			$fields = array_flip($data);
+			$oldData = $pDataSimilarViewOptions->getDataViewSimilarEstates()->getFields();
+			$fields = array_flip($oldData);
 			unset($fields['preisAufAnfrage']);
-			$data = array_flip($fields);
-			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setFields($data);
-			$pDataSimilarViewOptions->setFields($data);
+			$newData = array_flip($fields);
+			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setFields($newData);
+			$pDataSimilarViewOptions->setFields($newData);
 			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setShowPriceOnRequest(true);
 			$this->_pWpOption->updateOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
 		}
+	}
+
+
+	/**
+	 * @return void
+	 */
+
+	public function updateShowPriceOnRequestOptionForDetailView()
+	{
 		$pDataDetailViewOptions = get_option('onoffice-default-view');
 		if(!empty($pDataDetailViewOptions) && in_array('preisAufAnfrage', $pDataDetailViewOptions->getFields())){
-			$data = $pDataDetailViewOptions->getFields();
-			$fields = array_flip($data);
+			$oldData = $pDataDetailViewOptions->getFields();
+			$fields = array_flip($oldData);
 			unset($fields['preisAufAnfrage']);
-			$data = array_flip($fields);
-			$pDataDetailViewOptions->setFields($data);
+			$newData = array_flip($fields);
+			$pDataDetailViewOptions->setFields($newData);
 			$pDataDetailViewOptions->setShowPriceOnRequest(true);
 			$this->_pWpOption->updateOption('onoffice-default-view', $pDataDetailViewOptions);
 		}

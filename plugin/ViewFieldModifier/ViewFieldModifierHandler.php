@@ -77,13 +77,18 @@ class ViewFieldModifierHandler
 
 		$newRecord = $this->_pModifier->reduceRecord($record);
 
-		$visibleFields = array_flip($this->_pModifier->getVisibleFields());
+		$visibleFieldNames = $this->_pModifier->getVisibleFields();
+
+		if(!empty($newRecord['preisAufAnfrage'])){
+			$visibleFieldNames[] = 'preisAufAnfrage';
+		}
+		$visibleFields = array_flip($visibleFieldNames);
+
 
 		$visibleFields = array_map(
 			function($value) {	return '';},
 			$visibleFields);
 
-		$visibleFields['preisAufAnfrage'] = '';
 		$intersection = array_intersect_key($newRecord, $visibleFields);
 
 		$fields = array_merge($visibleFields, $intersection);

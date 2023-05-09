@@ -116,7 +116,7 @@ class TestClassDatabaseChanges
 		$this->assertGreaterThanOrEqual(self::NUM_NEW_TABLES, count($this->_createQueries));
 
 		$dbversion = $this->_pDbChanges->getDbVersion();
-		$this->assertEquals(38, $dbversion);
+		$this->assertEquals(39, $dbversion);
 		return $this->_createQueries;
 	}
 
@@ -166,6 +166,11 @@ class TestClassDatabaseChanges
 				'form_id' => '3',
 				'name' => 'Applicant Search Form',
 				'form_type' => 'applicantsearch',
+			],
+			(object)[
+				'listview_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'default',
 			]
 		];
 		$fieldConfigOutput = [
@@ -209,6 +214,11 @@ class TestClassDatabaseChanges
 				'form_id' => '3',
 				'name' => 'Applicant Search Form',
 				'form_type' => 'applicantsearch',
+			],
+			(object)[
+				'listview_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'default',
 			]
 		];
 		$fieldConfigOutput = [
@@ -241,7 +251,7 @@ class TestClassDatabaseChanges
 	 */
 	public function testMaxVersion()
 	{
-		$this->assertEquals(38, DatabaseChanges::MAX_VERSION);
+		$this->assertEquals(39, DatabaseChanges::MAX_VERSION);
 	}
 
 
