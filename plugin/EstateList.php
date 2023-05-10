@@ -870,6 +870,8 @@ class EstateList
 	{
 		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
 			return $this->_pDataView->getShowPriceOnRequest();
+		} else {
+			return true;
 		}
 	}
 
