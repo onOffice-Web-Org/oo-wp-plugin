@@ -616,7 +616,7 @@ class EstateList
 			} elseif (FieldTypes::isStringType($pField->getType())) {
 				$values[$pField->getName()] = ($value['native'] ?? '') ?: (array_shift($value) ?? '');
 			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
-				$values[$pField->getName()] = !empty($value[0]) ? ($value[0] == 2) : null;
+				$values[$pField->getName()] = !empty($value[0]) ? ($value[0] == 1) : null;
 			}
 		}
 		return $values;
