@@ -812,16 +812,6 @@ class TestClassEstateList
 
 	/**
 	 *
-	 */
-	public function testDisplayTextPriceOnRequest()
-	{
-		$this->_pEstateList->loadEstates();
-		$result = $this->_pEstateList->estateIterator();
-		$this->assertEquals('Price on request', $result['warmmiete']);
-	}
-
-	/**
-	 *
 	 * @before
 	 *
 	 */

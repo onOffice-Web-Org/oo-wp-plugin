@@ -166,11 +166,6 @@ class TestClassDatabaseChanges
 				'form_id' => '3',
 				'name' => 'Applicant Search Form',
 				'form_type' => 'applicantsearch',
-			],
-			(object)[
-				'listview_id' => '3',
-				'name' => 'Estate List',
-				'list_type' => 'default',
 			]
 		];
 		$fieldConfigOutput = [
@@ -185,15 +180,29 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
+		$listViewOutput = [
+			[
+				'ListView_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'default',
+			]
+		];
+		$fieldListViewConfigOutput = [
+			(object)[
+				'ListView_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'preisAufAnfrage',
+			]
+		];
 		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(5))
+		$this->_pWPDBMock->expects($this->exactly(7))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
 
 		$this->_pWPDBMock->expects($this->exactly(4))->method('delete')
 			->will($this->returnValue(true));
@@ -214,11 +223,6 @@ class TestClassDatabaseChanges
 				'form_id' => '3',
 				'name' => 'Applicant Search Form',
 				'form_type' => 'applicantsearch',
-			],
-			(object)[
-				'listview_id' => '3',
-				'name' => 'Estate List',
-				'list_type' => 'default',
 			]
 		];
 		$fieldConfigOutput = [
@@ -228,15 +232,29 @@ class TestClassDatabaseChanges
 				'fieldname' => 'message'
 			]
 		];
+		$listViewOutput = [
+			[
+				'ListView_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'default',
+			]
+		];
+		$fieldListViewConfigOutput = [
+			(object)[
+				'ListView_id' => '3',
+				'name' => 'Estate List',
+				'list_type' => 'preisAufAnfrage',
+			]
+		];
 		$detailPageIds = [[ "ID" => 8 ]];
 
 		$this->_pWPDBMock = $this->getMockBuilder(wpdb::class)
 			->setConstructorArgs(['testUser', 'testPassword', 'testDB', 'testHost'])
 			->getMock();
 
-		$this->_pWPDBMock->expects($this->exactly(3))
+		$this->_pWPDBMock->expects($this->exactly(5))
 			->method('get_results')
-			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds);
+			->willReturnOnConsecutiveCalls($formsOutput, $fieldConfigOutput, $detailPageIds, $listViewOutput, $fieldListViewConfigOutput);
 
 		$this->_pWPDBMock->expects($this->once())->method('delete')
 			->will($this->returnValue(true));
