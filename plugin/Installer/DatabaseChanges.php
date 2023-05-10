@@ -1040,15 +1040,15 @@ class DatabaseChanges implements DatabaseChangesInterface
 		$tableNameFieldConfig = $prefix . "oo_plugin_fieldconfig";
 		$tableNameListViews = $prefix . "oo_plugin_listviews";
 
-		$listViewsPosts = $this->_pWPDB->get_results( "SELECT `ListView_id` FROM {$tableNameFieldConfig}
+		$listViewsPosts = $this->_pWPDB->get_results( "SELECT `listview_id` FROM {$tableNameFieldConfig}
 							WHERE fieldname = 'preisAufAnfrage'", ARRAY_A );
 		if(!empty($listViewsPosts)){
 			$this->_pWPDB->get_results("DELETE FROM {$tableNameFieldConfig} " ."WHERE fieldname = 'preisAufAnfrage'");
 			foreach ( $listViewsPosts as $post ) {
-				$id = esc_sql((int) $post['ListView_id']);
+				$id = esc_sql((int) $post['listview_id']);
 				$this->_pWPDB->query("UPDATE $tableNameListViews 
 					SET `show_price_on_request` = '1'
-					WHERE `ListView_id` = $id");
+					WHERE `listview_id` = $id");
 			}
 		}
 	}
