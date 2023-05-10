@@ -7,14 +7,14 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 }
 
 onOffice.default_values_input_converter = function () {
-    var predefinedValues = onOffice_loc_settings.defaultvalues || {};
+    const predefinedValues = onOffice_loc_settings.defaultvalues || {};
 
     // plaintext
     document.querySelectorAll('select[name=language-language].onoffice-input').forEach(function (element) {
         element.backupLanguageSelection = {};
-        var mainInput = element.parentElement.parentElement
+        const mainInput = element.parentElement.parentElement
             .querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value].onoffice-input');
-        var fieldname = element.parentElement.parentElement.parentElement
+        const fieldname = element.parentElement.parentElement.parentElement
             .querySelector('span.menu-item-settings-name').textContent;
         if (onOffice.default_values_inputs_converted.indexOf(fieldname) !== -1) {
             return;
@@ -24,22 +24,22 @@ onOffice.default_values_input_converter = function () {
 
         (function () {
             if (predefinedValues[fieldname] !== undefined) {
-                var predefinedValuesIsObject = (typeof predefinedValues[fieldname] === 'object') &&
+                const predefinedValuesIsObject = (typeof predefinedValues[fieldname] === 'object') &&
                     !Array.isArray(predefinedValues[fieldname]);
                 if (predefinedValuesIsObject) {
-                    for (var lang in predefinedValues[fieldname]) {
-                        var relevantOption = element.querySelector('option[value=' + lang + ']');
+                    for (let lang in predefinedValues[fieldname]) {
+                        const relevantOption = element.querySelector('option[value=' + lang + ']');
                         if (lang !== 'native') {
-                            var clone = generateClone(mainInput, lang);
-                            var label = generateLabel(relevantOption.text || '', clone);
-                            var deleteButton = generateDeleteButton(element, lang);
-                            var paragraph = generateParagraph(label, clone, deleteButton);
+                            const clone = generateClone(mainInput, lang);
+                            const label = generateLabel(relevantOption.text || '', clone);
+                            const deleteButton = generateDeleteButton(element, lang);
+                            const paragraph = generateParagraph(label, clone, deleteButton);
                             mainInput.parentNode.parentNode.insertBefore(paragraph, element.parentNode);
                             element.backupLanguageSelection[lang] = relevantOption;
                             element.options[relevantOption.index] = null;
                         }
 
-                        var targetInput = element.parentElement.parentElement.querySelector(
+                        const targetInput = element.parentElement.parentElement.querySelector(
                             'input[name="defaultvalue-lang[' + fieldname + '][' + lang + ']"]');
                         targetInput.value = predefinedValues[fieldname][lang];
                     }
@@ -48,24 +48,24 @@ onOffice.default_values_input_converter = function () {
         })();
 
         element.addEventListener('change', function (event) {
-            var value = event.srcElement.value || '';
+            const value = event.target.value || '';
 
             if (value !== '') {
-                var clone = generateClone(mainInput, value);
-                var label = generateLabel(event.srcElement.selectedOptions[0].text, clone);
-                var deleteButton = generateDeleteButton(event.srcElement, value);
-                var paragraph = generateParagraph(label, clone, deleteButton);
+                const clone = generateClone(mainInput, value);
+                const label = generateLabel(event.target.selectedOptions[0].text, clone);
+                const deleteButton = generateDeleteButton(event.target, value);
+                const paragraph = generateParagraph(label, clone, deleteButton);
 
-                element.backupLanguageSelection[event.srcElement.selectedOptions[0].value] =
-                    event.srcElement.selectedOptions[0];
-                event.srcElement.options[event.srcElement.selectedIndex] = null;
+                element.backupLanguageSelection[event.target.selectedOptions[0].value] =
+                    event.target.selectedOptions[0];
+                event.target.options[event.target.selectedIndex] = null;
 
-                mainInput.parentNode.parentNode.insertBefore(paragraph, event.srcElement.parentNode);
+                mainInput.parentNode.parentNode.insertBefore(paragraph, event.target.parentNode);
             }
         });
 
         function generateClone(mainInput, language) {
-            var clone = mainInput.cloneNode(true);
+            const clone = mainInput.cloneNode(true);
             clone.id = 'defaultvalue-lang-' + language;
             clone.name = 'defaultvalue-lang[' + fieldname + '][' + language + ']';
             clone.style.width = '100%';
@@ -75,7 +75,7 @@ onOffice.default_values_input_converter = function () {
         }
 
         function generateLabel(labelText, clone) {
-            var label = document.createElement('label');
+            const label = document.createElement('label');
             label.classList = ['howto'];
             label.htmlFor = clone.id;
             label.style.minWidth = 'min-content';
@@ -83,8 +83,8 @@ onOffice.default_values_input_converter = function () {
             return label;
         }
 
-        function generateDeleteButton(srcElement, language) {
-            var deleteButton = document.createElement('span');
+        function generateDeleteButton(target, language) {
+            const deleteButton = document.createElement('span');
             deleteButton.id = 'deleteButtonLang-' + language;
             deleteButton.className = 'dashicons dashicons-dismiss deleteButtonLang';
             deleteButton.targetLanguage = language;
@@ -92,16 +92,16 @@ onOffice.default_values_input_converter = function () {
             deleteButton.style.verticalAlign = 'middle';
 
             deleteButton.addEventListener('click', function (deleteEvent) {
-                var restoreValue = element.backupLanguageSelection[deleteEvent.srcElement.targetLanguage];
-                srcElement.options.add(restoreValue);
-                srcElement.selectedIndex = 0;
-                deleteEvent.srcElement.parentElement.remove();
+                const restoreValue = element.backupLanguageSelection[deleteEvent.target.targetLanguage];
+                target.options.add(restoreValue);
+                target.selectedIndex = 0;
+                deleteEvent.target.parentElement.remove();
             });
             return deleteButton;
         }
 
         function generateParagraph(label, clone, deleteButton) {
-            var paragraph = document.createElement('p');
+            const paragraph = document.createElement('p');
             paragraph.classList = ['wp-clearfix'];
             paragraph.style.display = 'inline-flex';
             paragraph.style.width = '100%';
@@ -115,41 +115,41 @@ onOffice.default_values_input_converter = function () {
     // single-select, multi-select, boolean
     document.querySelectorAll('select[name^=oopluginfieldconfigestatedefaultsvalues-value]')
         .forEach(function (mainInput) {
-        var mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
+        const mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
         if (mainElement === null) {
             return;
         }
 
-        var fieldName = mainElement.textContent;
+        const fieldName = mainElement.textContent;
         if (onOffice.default_values_inputs_converted.indexOf(fieldName) !== -1) {
             return;
         }
         onOffice.default_values_inputs_converted.push(fieldName);
         mainInput.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + ']';
-        var predefinedValuesIsArray = (typeof predefinedValues[fieldName] === 'object') &&
+        const predefinedValuesIsArray = (typeof predefinedValues[fieldName] === 'object') &&
             Array.isArray(predefinedValues[fieldName]);
 
         if (predefinedValuesIsArray) {
             mainInput.value = predefinedValues[fieldName][0];
         }
 
-        var fieldList = onOffice_loc_settings.fieldList || {};
-        var fieldDefinition = getFieldDefinition(fieldName);
-        for (var module in fieldList) {
+        const fieldList = onOffice_loc_settings.fieldList || {};
+        let fieldDefinition = getFieldDefinition(fieldName);
+        for (const module in fieldList) {
             if (fieldList[module][fieldName] !== undefined) {
                 fieldDefinition = fieldList[module][fieldName];
             }
         }
 
         if (fieldDefinition.type === "multiselect") {
-            var parent = mainInput.parentElement;
+            const parent = mainInput.parentElement;
             mainInput.remove();
 
-            var div = document.createElement('div');
+            const div = document.createElement('div');
             div.setAttribute('data-name', 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][]');
             div.classList.add('multiselect');
 
-            var button = document.createElement('input');
+            const button = document.createElement('input');
             button.setAttribute('type', 'button');
             button.setAttribute('value', onOffice_loc_settings.field_multiselect_edit_values);
             button.classList.add('onoffice-multiselect-edit');
@@ -157,11 +157,11 @@ onOffice.default_values_input_converter = function () {
 
             parent.appendChild(div);
 
-            var multiselectOptions = {
+            const multiselectOptions = {
                 name_is_array: true,
                 cb_class: 'onoffice-input'
             };
-            var multiselect = new onOffice.multiselect(div, fieldDefinition.permittedvalues,
+            const multiselect = new onOffice.multiselect(div, fieldDefinition.permittedvalues,
                 onOffice_loc_settings.defaultvalues[fieldName] || [], multiselectOptions);
             button.onclick = (function(multiselect) {
                 return function() {
@@ -173,27 +173,27 @@ onOffice.default_values_input_converter = function () {
 
     // numeric range, int, float, boolean
     document.querySelectorAll('input[name^=oopluginfieldconfigestatedefaultsvalues-value]').forEach(function (mainInput) {
-        var mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
+        const mainElement = mainInput.parentElement.parentElement.querySelector('span.menu-item-settings-name');
         if (mainElement === null) {
             return;
         }
-        var fieldName = mainElement.textContent;
+        const fieldName = mainElement.textContent;
         if (onOffice.default_values_inputs_converted.indexOf(fieldName) !== -1 || fieldName === 'dummy_key') {
             return;
         }
         onOffice.default_values_inputs_converted.push(fieldName);
-        var fieldDefinition = getFieldDefinition(fieldName);
+        const fieldDefinition = getFieldDefinition(fieldName);
 
         if (fieldDefinition.type === "boolean") {
-            var parent = mainInput;
-            var element = document.createElement('fieldset');
-            var keys = Object.keys(fieldDefinition.permittedvalues).sort();
+            const parent = mainInput;
+            const element = document.createElement('fieldset');
+            const keys = Object.keys(fieldDefinition.permittedvalues).sort();
             parent.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + ']';
 
             element.className = 'onoffice-input-radio';
             keys.forEach(k => {
-                var mainInputClone = parent.cloneNode(true);
-                var label = document.createElement('label');
+                const mainInputClone = parent.cloneNode(true);
+                const label = document.createElement('label');
                 onOffice.js_field_count += 1;
                 mainInputClone.id = 'input_radio_js_' + onOffice.js_field_count;
                 mainInputClone.value = k;
@@ -219,11 +219,11 @@ onOffice.default_values_input_converter = function () {
             ].indexOf(fieldDefinition.type) >= 0) {
                 mainInput.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][min]';
                 mainInput.className = 'onoffice-input-date';
-                var mainInputClone = mainInput.cloneNode(true);
+                const mainInputClone = mainInput.cloneNode(true);
                 mainInputClone.id = 'input_js_' + onOffice.js_field_count;
                 onOffice.js_field_count += 1;
-                var labelFrom = mainInput.parentElement.querySelector('label[for='+mainInput.id+']')
-                var labelUpTo = labelFrom.cloneNode(true);
+                const labelFrom = mainInput.parentElement.querySelector('label[for='+mainInput.id+']')
+                const labelUpTo = labelFrom.cloneNode(true);
                 labelUpTo.htmlFor = mainInputClone.id;
                 labelFrom.textContent = onOffice_loc_settings.label_default_value_from;
                 labelUpTo.textContent = onOffice_loc_settings.label_default_value_up_to;
@@ -234,7 +234,7 @@ onOffice.default_values_input_converter = function () {
                 }
                 mainInput.parentElement.appendChild(labelUpTo);
                 mainInput.parentElement.appendChild(mainInputClone);
-                var predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
+                const predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
                     !Array.isArray(predefinedValues[fieldName]);
         
                 if (predefinedValuesIsObject) {
@@ -245,18 +245,18 @@ onOffice.default_values_input_converter = function () {
         }
 
         mainInput.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][min]';
-        var mainInputClone = mainInput.cloneNode(true);
+        const mainInputClone = mainInput.cloneNode(true);
         mainInputClone.id = 'input_js_' + onOffice.js_field_count;
         onOffice.js_field_count += 1;
-        var labelFrom = mainInput.parentElement.querySelector('label[for='+mainInput.id+']')
-        var labelUpTo = labelFrom.cloneNode(true);
+        const labelFrom = mainInput.parentElement.querySelector('label[for='+mainInput.id+']')
+        const labelUpTo = labelFrom.cloneNode(true);
         labelUpTo.htmlFor = mainInputClone.id;
         labelFrom.textContent = onOffice_loc_settings.label_default_value_from;
         labelUpTo.textContent = onOffice_loc_settings.label_default_value_up_to;
         mainInputClone.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + '][max]';
         mainInput.parentElement.appendChild(labelUpTo);
         mainInput.parentElement.appendChild(mainInputClone);
-        var predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
+        const predefinedValuesIsObject = (typeof predefinedValues[fieldName] === 'object') &&
             !Array.isArray(predefinedValues[fieldName]);
 
         if (predefinedValuesIsObject) {
@@ -269,17 +269,17 @@ onOffice.default_values_input_converter = function () {
 onOffice.js_field_count = onOffice.js_field_count || 0;
 
 document.addEventListener("addFieldItem", function(e) {
-    var fieldName = e.detail.fieldname;
-    var p = document.createElement('p');
+    const fieldName = e.detail.fieldname;
+    const p = document.createElement('p');
     p.classList.add(['wp-clearfix']);
-    var fieldDefinition = getFieldDefinition(fieldName);
+    const fieldDefinition = getFieldDefinition(fieldName);
 
     if (['varchar', 'text',
         'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar',
         'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:Text'].indexOf(fieldDefinition.type) >= 0) {
-            var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
-            var input = document.createElement('input');
-            var select = document.createElement('select');
+            const element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
+            const input = document.createElement('input');
+            const select = document.createElement('select');
             select.id = 'select_js_' + onOffice.js_field_count;
             select.name = 'language-language';
             select.className = 'onoffice-input';
@@ -288,9 +288,9 @@ document.addEventListener("addFieldItem", function(e) {
             input.className = 'onoffice-input';
 
             select.options.add(new Option(onOffice_loc_settings.label_choose_language, ''));
-            var keys = Object.keys(onOffice_loc_settings.installed_wp_languages);
+            const keys = Object.keys(onOffice_loc_settings.installed_wp_languages);
             keys.forEach(function (k) {
-                var v = onOffice_loc_settings.installed_wp_languages[k];
+                const v = onOffice_loc_settings.installed_wp_languages[k];
                 if (k !== onOffice_loc_settings.language_native) {
                     select.options.add(new Option(v, k));
                 }
@@ -299,7 +299,7 @@ document.addEventListener("addFieldItem", function(e) {
             onOffice.js_field_count += 1;
             select.options.selectedIndex = 0;
     
-            var label = document.createElement('label');
+            const label = document.createElement('label');
             label.htmlFor = select.id;
             label.className = 'howto';
             label.textContent = onOffice_loc_settings.label_add_language;
@@ -309,18 +309,18 @@ document.addEventListener("addFieldItem", function(e) {
             input.setAttribute('size', '50')
             element.parentNode.replaceChild(input, element);
     } else if (['singleselect', 'multiselect'].indexOf(fieldDefinition.type) >= 0) {
-        var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
-        var select = document.createElement('select');
+        const element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
+        const select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;
         select.name = 'oopluginfieldconfigestatedefaultsvalues-value[]';
         select.className = 'onoffice-input';
 
         select.options.add(new Option('', ''));
-        var keys = Object.keys(fieldDefinition.permittedvalues);
+        const keys = Object.keys(fieldDefinition.permittedvalues);
         keys.forEach(function (k) {
-            var v = fieldDefinition.permittedvalues[k];
+            const v = fieldDefinition.permittedvalues[k];
             if (fieldDefinition.labelOnlyValues.indexOf(k) !== -1) {
-                var group = document.createElement('optgroup');
+                const group = document.createElement('optgroup');
                 group.label = v;
                 select.options.add(group);
             } else {
@@ -335,14 +335,14 @@ document.addEventListener("addFieldItem", function(e) {
         select.options.selectedIndex = 0;
         element.parentNode.replaceChild(select, element);
     } else if(['boolean'].indexOf(fieldDefinition.type) >= 0){
-        var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
-        var fieldset = document.createElement('fieldset');
-        var keys = Object.keys(fieldDefinition.permittedvalues).sort();
+        const element = e.detail.item.querySelector('input[name^=oopluginfieldconfigestatedefaultsvalues-value]');
+        const fieldset = document.createElement('fieldset');
+        const keys = Object.keys(fieldDefinition.permittedvalues).sort();
         fieldset.className = 'onoffice-input-radio';
 
         keys.forEach(function (k) {
-            var label = document.createElement('label');
-            var input = document.createElement('input');
+            const label = document.createElement('label');
+            const input = document.createElement('input');
             input.name = 'oopluginfieldconfigestatedefaultsvalues-value[' + fieldName + ']';
             input.type = 'radio';
             input.value = k;
@@ -360,10 +360,10 @@ document.addEventListener("addFieldItem", function(e) {
         element.parentNode.replaceChild(fieldset, element);
     }
 
-    var paragraph = e.detail.item.querySelectorAll('.menu-item-settings p')[3];
+    const paragraph = e.detail.item.querySelectorAll('.menu-item-settings p')[3];
     paragraph.parentNode.insertBefore(p, paragraph.nextSibling);
 
-    var index = onOffice.default_values_inputs_converted.indexOf(fieldName);
+    const index = onOffice.default_values_inputs_converted.indexOf(fieldName);
     if (index !== -1) {
         delete onOffice.default_values_inputs_converted[index];
     }
@@ -372,8 +372,8 @@ document.addEventListener("addFieldItem", function(e) {
 });
 
 function getFieldDefinition(fieldName) {
-    var fieldList = onOffice_loc_settings.fieldList || {};
-    for (var module in fieldList) {
+    const fieldList = onOffice_loc_settings.fieldList || {};
+    for (const module in fieldList) {
         if (fieldList[module][fieldName] !== undefined) {
             return fieldList[module][fieldName];
         }

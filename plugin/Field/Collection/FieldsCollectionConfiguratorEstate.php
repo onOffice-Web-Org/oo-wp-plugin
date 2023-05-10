@@ -32,7 +32,7 @@ class FieldsCollectionConfiguratorEstate
 	 * @param FieldsCollection $pFieldsCollection
 	 * @return FieldsCollection
 	 */
-	public function configureFoEstate(FieldsCollection $pFieldsCollection): FieldsCollection
+	private function configureForEstate(FieldsCollection $pFieldsCollection): FieldsCollection
 	{
 		$pFieldsCollectionNew = new FieldsCollection;
 		foreach ($pFieldsCollection->getAllFields() as $pField) {
@@ -52,6 +52,6 @@ class FieldsCollectionConfiguratorEstate
 	 */
 	public function buildForEstateType(FieldsCollection $pFieldsCollection): FieldsCollection
 	{
-		return $this->configureFoEstate($pFieldsCollection);
+		return $this->configureForEstate($pFieldsCollection);
 	}
 }

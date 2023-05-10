@@ -36,25 +36,6 @@ class TestClassFieldsCollectionConfiguratorEstate
 	/**
 	 * @throws UnknownFieldException
 	 */
-	public function testConfigureForEstate()
-	{
-		$pFieldsCollection = $this->buildFieldsCollectionSelect();
-		$pSubject = new FieldsCollectionConfiguratorEstate;
-		$pFieldsCollectionNew = $pSubject->configureFoEstate($pFieldsCollection);
-		$this->assertCount(1, $pFieldsCollectionNew->getAllFields());
-		foreach ($pFieldsCollectionNew->getAllFields() as $pField) {
-			$pFieldOriginal = $pFieldsCollection->getFieldByModuleAndName
-				($pField->getModule(), $pField->getName());
-			$this->assertNotSame($pFieldOriginal, $pField);
-			$this->assertThat($pField, $this->callback(function(Field $pField) {
-				return ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT);
-			}));
-		}
-	}
-
-	/**
-	 * @throws UnknownFieldException
-	 */
 	public function testBuildForEstateType()
 	{
 		$pSubject = new FieldsCollectionConfiguratorEstate;
@@ -65,17 +46,5 @@ class TestClassFieldsCollectionConfiguratorEstate
 		$pCollectionInterest = $pSubject->buildForEstateType($pFieldsCollection);
 		$this->assertEquals(FieldTypes::FIELD_TYPE_MULTISELECT,
 			$pCollectionInterest->getFieldByKeyUnsafe('testFieldSingleSelect')->getType());
-	}
-
-	/**
-	 * @return FieldsCollection
-	 */
-	private function buildFieldsCollectionSelect(): FieldsCollection
-	{
-		$pFieldsCollection = new FieldsCollection;
-		$pField = new Field('testFieldSingleSelect', onOfficeSDK::MODULE_ESTATE);
-		$pField->setType(FieldTypes::FIELD_TYPE_SINGLESELECT);
-		$pFieldsCollection->addField($pField);
-		return $pFieldsCollection;
 	}
 }

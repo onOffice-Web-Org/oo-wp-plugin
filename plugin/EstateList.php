@@ -570,10 +570,10 @@ class EstateList
 	/**
 	 * @param string $field
 	 */
-	public function getFieldValue($field)
+	private function getFieldValue($field)
 	{
 		$values = $this->getDefaultValues();
-		$fieldValue = $values[$field] ?? null;
+		$fieldValue = $values[$field];
 
 		return $fieldValue;
 	}
@@ -605,17 +605,18 @@ class EstateList
 		$values = [];
 		foreach ($this->buildFieldsCollectionForCurrentEstate()->getAllFields() as $pField) {
 			$value = $pDefaultValueRead->getConvertedField($estateId, $pField);
-			$values[$pField->getName()] = $value[0] ?? null;
+			$values[$pField->getName()] = $value[0] ?? '';
 
 			if ($pField->getIsRangeField() || FieldTypes::isDateOrDateTime($pField->getType()) || FieldTypes::isNumericType($pField->getType())) {
-				$values[$pField->getName()][] = !empty($value['min']) ? $value['min'] : '';
-				$values[$pField->getName()][] = !empty($value['max']) ? $value['max'] : '';
+				$minValue = !empty($value['min']) ? $value['min'] : '';
+				$maxValue = !empty($value['max']) ? $value['max'] : '';
+				$values[$pField->getName()] = [$minValue, $maxValue];
 			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_MULTISELECT) {
 				$values[$pField->getName()] = $value;
 			} elseif (FieldTypes::isStringType($pField->getType())) {
 				$values[$pField->getName()] = ($value['native'] ?? '') ?: (array_shift($value) ?? '');
 			} elseif ($pField->getType() === FieldTypes::FIELD_TYPE_BOOLEAN) {
-				$values[$pField->getName()] = !empty($value[0]) ? ($value[0] == 2 ? true : false) : null;
+				$values[$pField->getName()] = !empty($value[0]) ? ($value[0] == 2) : null;
 			}
 		}
 		return $values;
