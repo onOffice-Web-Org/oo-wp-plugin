@@ -182,14 +182,14 @@ class TestClassDatabaseChanges
 		];
 		$listViewOutput = [
 			[
-				'ListView_id' => '3',
+				'listview_id' => '3',
 				'name' => 'Estate List',
 				'list_type' => 'default',
 			]
 		];
 		$fieldListViewConfigOutput = [
 			(object)[
-				'ListView_id' => '3',
+				'listview_id' => '3',
 				'name' => 'Estate List',
 				'list_type' => 'preisAufAnfrage',
 			]
@@ -234,14 +234,14 @@ class TestClassDatabaseChanges
 		];
 		$listViewOutput = [
 			[
-				'ListView_id' => '3',
+				'listview_id' => '3',
 				'name' => 'Estate List',
 				'list_type' => 'default',
 			]
 		];
 		$fieldListViewConfigOutput = [
 			(object)[
-				'ListView_id' => '3',
+				'listview_id' => '3',
 				'name' => 'Estate List',
 				'list_type' => 'preisAufAnfrage',
 			]
