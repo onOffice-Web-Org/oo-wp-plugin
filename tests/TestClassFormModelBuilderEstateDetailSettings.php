@@ -331,4 +331,16 @@ class TestClassFormModelBuilderEstateDetailSettings
 		$this->assertInstanceOf(InputModelOption::class, $pInputModelDB);
 		$this->assertEquals( 'buttonHandleField', $pInputModelDB->getHtmlType() );
 	}
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelShowPriceOnRequest
+	 * @throws ExceptionInputModelMissingField
+	 */
+	public function testCreateInputModelShowPriceOnRequest()
+	{
+		$pFormModelBuilderDBEstateDetailSettings = new FormModelBuilderEstateDetailSettings($this->_pFieldnames);
+		$pFormModelBuilderDBEstateDetailSettings->generate('test');
+		$pInputModelDB = $pFormModelBuilderDBEstateDetailSettings->createInputModelShowPriceOnRequest();
+		$this->assertEquals($pInputModelDB->getHtmlType(), 'checkbox');
+	}
 }

@@ -420,13 +420,13 @@ class TestClassEstateList
 	{
 		$valueMap = true;
 		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
-		                         ->setMethods(['__construct', 'hasDetailView'])
-		                         ->getMock();
+								->setMethods(['__construct', 'hasDetailView'])
+								->getMock();
 		$pDataDetailView->expects($this->once())->method('hasDetailView')->willReturn($valueMap);
 
 		$pDataDetailViewHandlerMock = $this->getMockBuilder(DataDetailViewHandler::class)
-		                         ->setMethods(['__construct', 'getDetailView'])
-		                         ->getMock();
+								->setMethods(['__construct', 'getDetailView'])
+								->getMock();
 		$pDataDetailViewHandlerMock->expects($this->once())->method('getDetailView')->willReturn($pDataDetailView);
 
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandlerMock);
@@ -766,24 +766,26 @@ class TestClassEstateList
 				'getAddressFields',
 				'getFilterableFields',
 				'getPageId',
-				'getViewRestrict'
+				'getViewRestrict',
+				'getShowPriceOnRequest'
 			])
 			->getMock();
 		$pDataDetailView->method('getRecordsPerPage')->willReturn(5);
 		$pDataDetailView->method('getSortby')->willReturn('Id');
 		$pDataDetailView->method('getSortorder')->willReturn('ASC');
 		$pDataDetailView->method('getFilterId')->willReturn(12);
-		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'preisAufAnfrage', 'warmmiete']);
+		$pDataDetailView->method('getFields')->willReturn(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'warmmiete']);
 		$pDataDetailView->method('getPictureTypes')->willReturn(['Titelbild', 'Foto']);
 		$pDataDetailView->method('getAddressFields')->willReturn(['Vorname', 'Name']);
 		$pDataDetailView->method('getFilterableFields')->willReturn([GeoPosition::FIELD_GEO_POSITION]);
 		$pDataDetailView->method('getPageId')->willReturn($pWPPost->ID);
 		$pDataDetailView->method('getViewRestrict')->willReturn(true);
+		$pDataDetailView->method('getShowPriceOnRequest')->willReturn(true);
 
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
-		                               ->disableOriginalConstructor()
-		                               ->setMethods(['getDetailView'])
-		                               ->getMock();
+									->disableOriginalConstructor()
+									->setMethods(['getDetailView'])
+									->getMock();
 		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
 
@@ -809,6 +811,16 @@ class TestClassEstateList
 		$this->assertEquals('', $result['vermarktungsstatus']);
 	}
 
+
+	/**
+	 *
+	 */
+	public function testDisplayTextPriceOnRequest()
+	{
+		$this->_pEstateList->loadEstates();
+		$result = $this->_pEstateList->estateIterator();
+		$this->assertEquals('Price on request', $result['warmmiete']);
+	}
 
 	/**
 	 *
@@ -911,8 +923,7 @@ class TestClassEstateList
 			'verkauft',
 			"objekttitel",
 			"objektbeschreibung",
-			"preisAufAnfrage",
-			"warmmiete",
+			'warmmiete',
 			'exclusive',
 			'neu',
 			'top_angebot',
@@ -940,7 +951,7 @@ class TestClassEstateList
 	private function getDataView(): DataListView
 	{
 		$pDataView = new DataListView(1, 'test');
-		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'preisAufAnfrage', 'warmmiete']);
+		$pDataView->setFields(['Id', 'objektart', 'objekttyp', 'objekttitel', 'objektbeschreibung', 'warmmiete']);
 		$pDataView->setSortby('Id');
 		$pDataView->setSortorder('ASC');
 		$pDataView->setFilterId(12);
@@ -950,6 +961,7 @@ class TestClassEstateList
 		$pDataView->setShowReferenceStatus(false);
 		$pDataView->setShowReferenceEstate('0');
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
+		$pDataView->setShowPriceOnRequest(true);
 		$pDataView->setExpose('testExpose');
 		return $pDataView;
 	}
@@ -981,7 +993,6 @@ class TestClassEstateList
 			'objekttyp',
 			'objekttitel',
 			'objektbeschreibung',
-			'preisAufAnfrage',
 			'warmmiete',
 			'virtualAddress',
 			'objektadresse_freigeben',

@@ -6,7 +6,6 @@
 			"objekttyp",
 			"objekttitel",
 			"objektbeschreibung",
-			"preisAufAnfrage",
 			"warmmiete",
 			"virtualAddress",
 			"objektadresse_freigeben",
@@ -25,7 +24,8 @@
 			"ort",
 			"objektnr_extern",
 			"plz",
-			"land"
+			"land",
+			"preisAufAnfrage"
 		],
 		"filter": {
 			"veroeffentlichen": [
@@ -90,12 +90,12 @@
 						"hausnummer": "",
 						"objekttitel": "Name id 15",
 						"objektbeschreibung": "description test",
-						"preisAufAnfrage": "Yes",
 						"warmmiete": "200.00000",
 						"ort": "",
 						"objektnr_extern": "DJ636",
 						"plz": "",
 						"land": "Germany",
+						"preisAufAnfrage": "Yes",
 						"mainLangId": null
 					}
 				},
