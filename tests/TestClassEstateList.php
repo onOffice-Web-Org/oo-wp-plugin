@@ -783,9 +783,9 @@ class TestClassEstateList
 		$pDataDetailView->method('getShowPriceOnRequest')->willReturn(true);
 
 		$pDataDetailViewHandler = $this->getMockBuilder(DataDetailViewHandler::class)
-									->disableOriginalConstructor()
-									->setMethods(['getDetailView'])
-									->getMock();
+		                               ->disableOriginalConstructor()
+		                               ->setMethods(['getDetailView'])
+		                               ->getMock();
 		$pDataDetailViewHandler->method('getDetailView')->willReturn($pDataDetailView);
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandler);
 
