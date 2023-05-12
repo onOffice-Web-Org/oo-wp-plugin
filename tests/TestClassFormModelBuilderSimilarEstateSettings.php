@@ -285,8 +285,6 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::createInputModelShowPriceOnRequest
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::setInputModelSimilarViewFactory
-	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderSimilarEstateSettings::getTemplateValueByField
 	 */
 	public function testCreateInputModelShowPriceOnRequest()
 	{
