@@ -1034,7 +1034,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 * @return void
 	 */
 
-	public function updateShowPriceOnRequestOptionForListView()
+	private function updateShowPriceOnRequestOptionForListView()
 	{
 		$prefix = $this->getPrefix();
 		$tableNameFieldConfig = $prefix . "oo_plugin_fieldconfig";
@@ -1058,7 +1058,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 * @return void
 	 */
 
-	public function updateShowPriceOnRequestOptionForSimilarView()
+	private function updateShowPriceOnRequestOptionForSimilarView()
 	{
 		$pDataSimilarViewOptions = get_option('onoffice-similar-estates-settings-view');
 		if(!empty($pDataSimilarViewOptions) && in_array('preisAufAnfrage', $pDataSimilarViewOptions->getFields())){
@@ -1078,7 +1078,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	 * @return void
 	 */
 
-	public function updateShowPriceOnRequestOptionForDetailView()
+	private function updateShowPriceOnRequestOptionForDetailView()
 	{
 		$pDataDetailViewOptions = get_option('onoffice-default-view');
 		if(!empty($pDataDetailViewOptions) && in_array('preisAufAnfrage', $pDataDetailViewOptions->getFields())){

@@ -866,7 +866,7 @@ class EstateList
 		{ return $this->_pDataView->getAddressFields(); }
 
 	/** @return bool */
-	public function getShowPriceOnRequest()
+	private function getShowPriceOnRequest()
 	{
 		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
 			return $this->_pDataView->getShowPriceOnRequest();
