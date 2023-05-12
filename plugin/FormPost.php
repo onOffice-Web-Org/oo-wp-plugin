@@ -30,6 +30,7 @@ use onOffice\WPlugin\DataFormConfiguration\UnknownFormException;
 use onOffice\WPlugin\Field\Collection\FieldsCollectionConfiguratorForm;
 use onOffice\WPlugin\Field\CompoundFieldsFilter;
 use onOffice\WPlugin\Field\SearchcriteriaFields;
+use onOffice\WPlugin\Field\UnknownFieldException;
 use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
@@ -216,8 +217,10 @@ abstract class FormPost
 
 		$formFields = $this->getAllowedPostVars($pFormConfig);
 		$formData = $pFormFieldValidator->getValidatedValues($formFields, $this->_pFieldsCollection);
+		$requiredFields = $this->getAllowedRequiredFields($requiredFields);
+		$requiredFieldsAreAllowed = $this->getAllowedRequiredFieldsIsRangeField($requiredFields);
 		$pFormData = new FormData($pFormConfig, $formNo);
-		$pFormData->setRequiredFields($requiredFields);
+		$pFormData->setRequiredFields($requiredFieldsAreAllowed);
 		$pFormData->setFormtype($pFormConfig->getFormType());
 		$pFormData->setValues($formData);
 
@@ -231,6 +234,62 @@ abstract class FormPost
 	protected function getFieldsCollection(): FieldsCollection
 	{
 		return $this->_pFieldsCollection;
+	}
+
+	/**
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+
+	private function getModule(string $name): string
+	{
+		try {
+			return $this->_pFieldsCollection->getFieldByKeyUnsafe($name)->getModule();
+		} catch (UnknownFieldException $pEx) {
+			return '';
+		}
+	}
+ 
+	/**
+	 *
+	 * @param $requiredFields
+	 * @return string[]
+	 *
+	 */
+
+	protected function getAllowedRequiredFields($requiredFields): array
+	{
+		$activeRequiredFields = [];
+
+		foreach ($requiredFields as $name) {
+			$module = $this->getModule($name);
+			if ($this->_pFieldsCollection->containsFieldByModule($module, $name)) {
+				$activeRequiredFields[] = $name;
+			}
+		}
+		return $activeRequiredFields;
+	}
+ 
+	/**
+	 *
+	 * @param array $requiredFields
+	 * @return string[]
+	 *
+	 */
+
+	private function getAllowedRequiredFieldsIsRangeField(array $requiredFields): array
+	{
+		foreach ($requiredFields as $key => $value) {
+			$isRangeField = $this->_pFieldsCollection->getFieldByKeyUnsafe($value)->getIsRangeField();
+			if ($isRangeField) {
+				array_push($requiredFields, $value.'__von');
+				array_push($requiredFields, $value.'__bis');
+				unset($requiredFields[$key]);
+			}
+		}
+
+		return $requiredFields;
 	}
 
 

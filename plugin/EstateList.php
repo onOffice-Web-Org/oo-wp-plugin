@@ -251,6 +251,33 @@ class EstateList
 		$inputs->setFields($activeInputs);
 		return $inputs;
 	}
+
+	/**
+	 * @param $inputs
+	 * @return DataView
+	 *
+	 */
+
+	private function filterActiveInputFilterableFields($inputs): DataView
+	{
+		$activeInputs = [];
+		$recordType = onOfficeSDK::MODULE_ESTATE;
+		$pFieldsCollection = new FieldsCollection();
+		$pFieldBuilderShort = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
+		$pFieldBuilderShort
+			->addFieldsAddressEstate($pFieldsCollection)
+			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
+			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
+
+		foreach ($inputs->getFilterableFields() as $name) {
+			if ($pFieldsCollection->containsFieldByModule($recordType, $name)) {
+				$activeInputs[] = $name;
+			}
+		}
+		$inputs->setFilterableFields($activeInputs);
+		return $inputs;
+	}
+
 	/**
 	 * @param array $estateIds
 	 * @throws DependencyException
@@ -788,17 +815,18 @@ class EstateList
 		$pFieldsCollectionFieldDuplicatorForGeoEstate =
 			$pContainer->get(FieldsCollectionFieldDuplicatorForGeoEstate::class);
 		$pFieldsCollectionFieldDuplicatorForGeoEstate->duplicateFields($pFieldsCollection);
+		$pDataView = $this->filterActiveInputFilterableFields($this->_pDataView);
 		/** @var DistinctFieldsHandler $pDistinctFieldsHandler */
 		$pDistinctFieldsHandler = $pContainer->get(DistinctFieldsHandler::class);
-		$pFieldsCollection = $pDistinctFieldsHandler->modifyFieldsCollectionForEstate($this->_pDataView, $pFieldsCollection);
+		$pFieldsCollection = $pDistinctFieldsHandler->modifyFieldsCollectionForEstate($pDataView, $pFieldsCollection);
 
 		$fieldsValues = $pContainer->get(OutputFields::class)
-			->getVisibleFilterableFields($this->_pDataView,
+			->getVisibleFilterableFields($pDataView,
 				$pFieldsCollection, new GeoPositionFieldHandler);
 
 		if (array_key_exists("radius",$fieldsValues))
 		{
-			$geoFields = $this->_pDataView->getGeoFields();
+			$geoFields = $pDataView->getGeoFields();
 			$fieldsValues["radius"] = !empty($geoFields['radius']) ? $geoFields['radius'] : NULL;
 		}
 		$result = [];

@@ -61,7 +61,7 @@
     height: auto;
 }
 
-.oo-detailsmap #map, .oo-estate-map #map {
+.oo-detailsmap #map, .oo-estate-map #map, .oo-detailsmap #gmap, .oo-estate-map #gmap {
     height: 300px !important;
 }
 
