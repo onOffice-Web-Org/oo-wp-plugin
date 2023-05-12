@@ -307,7 +307,7 @@ class EstateList
 			];
 		}
 
-		if ($this->getShowPriceOnRequest()) {
+		if ($this->enableShowPriceOnRequestText()) {
 			$requestParams['data'][] = 'preisAufAnfrage';
 		}
 		if ($pListView->getName() === 'detail') {
@@ -478,7 +478,7 @@ class EstateList
 			$recordModified['multiParkingLot'] = $parking->renderParkingLot($recordModified, $recordModified);
 		}
 
-		if($this->getShowPriceOnRequest()){
+		if($this->enableShowPriceOnRequestText()){
 			$priceFields = ['kaufpreis', 'erbpacht', 'nettokaltmiete', 'warmmiete', 'pacht', 'kaltmiete',
 							'miete_pauschal', 'saisonmiete', 'wochmietbto', 'kaufpreis_pro_qm', 'mietpreis_pro_qm'];
 			foreach ($priceFields as $priceField){
@@ -866,7 +866,7 @@ class EstateList
 		{ return $this->_pDataView->getAddressFields(); }
 
 	/** @return bool */
-	private function getShowPriceOnRequest()
+	private function enableShowPriceOnRequestText()
 	{
 		if ( $this->_pDataView instanceof DataListView || $this->_pDataView instanceof DataDetailView || $this->_pDataView instanceof DataViewSimilarEstates ) {
 			return $this->_pDataView->getShowPriceOnRequest();
