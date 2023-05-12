@@ -420,13 +420,13 @@ class TestClassEstateList
 	{
 		$valueMap = true;
 		$pDataDetailView = $this->getMockBuilder(DataDetailView::class)
-								->setMethods(['__construct', 'hasDetailView'])
-								->getMock();
+		                         ->setMethods(['__construct', 'hasDetailView'])
+		                         ->getMock();
 		$pDataDetailView->expects($this->once())->method('hasDetailView')->willReturn($valueMap);
 
 		$pDataDetailViewHandlerMock = $this->getMockBuilder(DataDetailViewHandler::class)
-								->setMethods(['__construct', 'getDetailView'])
-								->getMock();
+		                         ->setMethods(['__construct', 'getDetailView'])
+		                         ->getMock();
 		$pDataDetailViewHandlerMock->expects($this->once())->method('getDetailView')->willReturn($pDataDetailView);
 
 		$this->_pEnvironment->method('getDataDetailViewHandler')->willReturn($pDataDetailViewHandlerMock);
