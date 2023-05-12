@@ -59,6 +59,7 @@ class TestClassScriptLoaderGenericConfigurationDefault
 	public function testGetScriptLoaderGenericConfiguration()
 	{
 		add_option('onoffice-favorization-enableFav', true);
+		add_option('onoffice-settings-honeypot', true);
 
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$config = $pScriptLoaderGenericConfigurationDefault->getScriptLoaderGenericConfiguration();

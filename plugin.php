@@ -401,7 +401,9 @@ add_action('admin_bar_menu', function ( $wp_admin_bar ) {
 
 function do_extra_enqueue_honeypot() {
 	$honeypot_enabled = get_option('onoffice-settings-honeypot');
-	wp_localize_script( 'onoffice-honeypot', 'honeypot_enabled', array(  'honeypotValue' => $honeypot_enabled ) );
+	if($honeypot_enabled == true){
+		wp_localize_script( 'onoffice-honeypot', 'honeypot_enabled', array(  'honeypotValue' => $honeypot_enabled ) );
+	}
 }
 
 add_action( 'wp_enqueue_scripts', 'do_extra_enqueue_honeypot' );
