@@ -334,7 +334,6 @@ class TestClassFormModelBuilderEstateDetailSettings
 
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings::createInputModelShowPriceOnRequest
-	 * @throws ExceptionInputModelMissingField
 	 */
 	public function testCreateInputModelShowPriceOnRequest()
 	{
