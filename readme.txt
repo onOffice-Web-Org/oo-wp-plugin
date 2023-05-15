@@ -76,6 +76,22 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.11 (2023-05-15) =
+
+**Added**
+
+* An info message appears when clearing cache.
+
+**Changed**
+
+* Link to documentation opens in a new tab.
+
+**Fixed**
+
+* Error in forms with message field filled with default value.
+* Error in forms with range fields marked as required.
+* Missing initial height of google map.
+
 = 4.10.1 (2023-04-17) =
 
 **Fixed**
