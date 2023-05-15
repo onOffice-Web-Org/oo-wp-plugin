@@ -28,6 +28,7 @@ use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Installer\DatabaseChanges;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
+use onOffice\WPlugin\DataView\DataSimilarView;
 use WP_UnitTestCase;
 use function add_filter;
 use function get_option;
@@ -334,6 +335,37 @@ class TestClassDatabaseChanges
 		}
 
 		return $query;
+	}
+
+	/**
+	 * @covers \onOffice\WPlugin\Installer\DatabaseChanges::updateShowPriceOnRequestOptionForSimilarView
+	 */
+
+	public function testUpdateShowPriceOnRequestOptionForSimilarView(): array
+	{
+		global $wpdb;
+		$dataDetailView = new DataSimilarView();
+		$data = $dataDetailView->getFields();
+		$data[] = 'preisAufAnfrage';
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataSimilarView();
+		$dataSimilarViewOptions->name = "onoffice-default-view";
+		$dataSimilarViewOptions->setFields($data);
+		add_option('onoffice-similar-estates-settings-view', $dataSimilarViewOptions);
+
+		$this->_pDbChanges->deinstall();
+		add_option('oo_plugin_db_version', '38');
+		add_filter('query', [$this, 'saveCreateQuery'], 1);
+		$this->_pDbChanges->install();
+		remove_filter('query', [$this, 'saveCreateQuery'], 1);
+		$pDetailViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
+
+		$newShowPriceOnRequest = $pDetailViewOptions->getDataViewSimilarEstates()->getShowPriceOnRequest();
+
+		$this->assertEquals(true, $newShowPriceOnRequest);
+
+		return $this->_createQueries;
 	}
 
 	/**
