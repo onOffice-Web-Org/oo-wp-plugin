@@ -103,6 +103,7 @@ class TestClassForm
 
 		$pDefaultValueModelToOutputConverter->expects($this->atLeastOnce())->method('getConvertedField')
 			->will($this->onConsecutiveCalls(['testValue'], ['testMulti1', 'testMulti2'], [['min' => 13.1, 'max' => 14.]]));
+		add_option('onoffice-settings-honeypot', true);
 
 		$this->_pSubject = new Form('testForm1', Form::TYPE_INTEREST, $this->_pContainer);
 	}
@@ -117,5 +118,16 @@ class TestClassForm
 			$this->_pSubject->getFieldValue('testFieldMultiSelect', true));
 		$this->assertEquals(['min' => 13.1, 'max' => 14.],
 			$this->_pSubject->getFieldValue('testRange', true));
+	}
+
+	/**
+	 *
+	 */
+	public function testTypeFormToHoneyPot()
+	{
+		$this->assertTrue( wp_script_is( 'onoffice-honeypot', 'enqueued' ) );
+		$this->assertEquals(['onoffice-honeypot'], wp_scripts()->queue);
+		$pTypeForm = wp_scripts()->get_data('onoffice-honeypot', 'data');
+		$this->assertStringContainsString('"type":"interest"', $pTypeForm);
 	}
 }
