@@ -72,8 +72,7 @@ class TestClassDatabaseChanges
 	private $_fields = [
 		'Field 1',
 		'Field 2',
-		'Field 3',
-		'preisAufAnfrage'
+		'Field 3'
 	];
 
 	/**
@@ -84,9 +83,6 @@ class TestClassDatabaseChanges
 		global $wpdb;
 		$dataDetailView = new DataDetailView();
 		$dataDetailView->setAddressFields(['Vorname', 'Name', 'defaultemail']);
-		$data = $dataDetailView->getFields();
-		$data[] = 'preisAufAnfrage';
-		$dataDetailView->setFields($data);
 		$this->_pWpOption = new WPOptionWrapperTest();
 		$this->_pWpOption->addOption('onoffice-default-view', $dataDetailView);
 		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
@@ -94,7 +90,6 @@ class TestClassDatabaseChanges
 		$dataSimilarViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
 		$dataSimilarViewOptions->name = "onoffice-default-view";
 		$dataSimilarViewOptions->setDataDetailViewActive(true);
-		$dataSimilarViewOptions->setFields($data);
 
 		$dataViewSimilarEstates = $dataSimilarViewOptions->getDataViewSimilarEstates();
 		$dataViewSimilarEstates->setFields($this->_fields);
@@ -359,11 +354,12 @@ class TestClassDatabaseChanges
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
 		$this->_pDbChanges->install();
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
-		$pDetailViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
 
-		$newShowPriceOnRequest = $pDetailViewOptions->getDataViewSimilarEstates()->getShowPriceOnRequest();
+		$pSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
+		$pDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
 
-		$this->assertEquals(true, $newShowPriceOnRequest);
+		$this->assertNotContains('preisAufAnfrage', $pDataViewSimilarEstates->getFields());
+		$this->assertEquals(true, $pDataViewSimilarEstates->getShowPriceOnRequest());
 
 		return $this->_createQueries;
 	}
@@ -374,6 +370,17 @@ class TestClassDatabaseChanges
 
 	public function testUpdateShowPriceOnRequestOptionForDetailView(): array
 	{
+		global $wpdb;
+		$dataDetailView = new DataDetailView();
+		$data = $dataDetailView->getFields();
+		$data[] = 'preisAufAnfrage';
+		$this->_pDbChanges = new DatabaseChanges($this->_pWpOption, $wpdb);
+
+		$dataDetailViewOptions = new \onOffice\WPlugin\DataView\DataDetailView();
+		$dataDetailViewOptions->name = "onoffice-default-view";
+		$dataDetailViewOptions->setFields($data);
+		update_option('onoffice-default-view', $dataDetailViewOptions);
+
 		$this->_pDbChanges->deinstall();
 		add_option('oo_plugin_db_version', '38');
 		add_filter('query', [$this, 'saveCreateQuery'], 1);
@@ -381,9 +388,9 @@ class TestClassDatabaseChanges
 		remove_filter('query', [$this, 'saveCreateQuery'], 1);
 
 		$pDetailViewOptions = $this->_pWpOption->getOption('onoffice-default-view');
-		$newShowPriceOnRequest = $pDetailViewOptions->getShowPriceOnRequest();
 
-		$this->assertEquals(true, $newShowPriceOnRequest);
+		$this->assertNotContains('preisAufAnfrage', $pDetailViewOptions->getFields());
+		$this->assertEquals(true, $pDetailViewOptions->getShowPriceOnRequest());
 
 		return $this->_createQueries;
 	}
