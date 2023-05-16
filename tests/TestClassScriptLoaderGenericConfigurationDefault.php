@@ -59,11 +59,10 @@ class TestClassScriptLoaderGenericConfigurationDefault
 	public function testGetScriptLoaderGenericConfiguration()
 	{
 		add_option('onoffice-favorization-enableFav', true);
-		add_option('onoffice-settings-honeypot', true);
 
 		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
 		$config = $pScriptLoaderGenericConfigurationDefault->getScriptLoaderGenericConfiguration();
-		$this->assertCount(18, $config);
+		$this->assertCount(17, $config);
 		/* @var $pFileModel IncludeFileModel */
 		foreach ($config as $pFileModel) {
 			$this->assertInstanceOf(IncludeFileModel::class, $pFileModel);

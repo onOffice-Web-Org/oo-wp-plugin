@@ -24,7 +24,6 @@ declare (strict_types=1);
 namespace onOffice\WPlugin\ScriptLoader;
 
 use onOffice\WPlugin\Favorites;
-use onOffice\WPlugin\Form;
 use onOffice\WPlugin\Template\TemplateCall;
 use const ONOFFICE_PLUGIN_DIR;
 use function plugins_url;
@@ -86,12 +85,6 @@ class ScriptLoaderGenericConfigurationDefault
 		if (Favorites::isFavorizationEnabled()) {
 			$values []= (new IncludeFileModel($script, 'onoffice-favorites', plugins_url('/js/favorites.js', $pluginPath)))
 				->setDependencies(['jquery']);
-		}
-
-		if (Form::isHoneypotEnabled()) {
-			$values []= (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/js/onoffice-honeypot.js', $pluginPath)))
-				->setDependencies(['jquery'])
-				->setLoadInFooter(true);
 		}
 
 		wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
