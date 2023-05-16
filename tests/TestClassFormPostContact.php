@@ -80,7 +80,7 @@ class TestClassFormPostContact
 			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
-		add_option('onoffice-settings-honeypot', false);
+		add_option('onoffice-settings-honeypot', true);
 
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
 			->getMock();
@@ -416,7 +416,6 @@ class TestClassFormPostContact
 
 	public function testPostHoneypotMessageEmpty()
 	{
-		update_option('onoffice-settings-honeypot', true);
 		$_POST = $this->getPostVariables();
 
 		$_POST = [
@@ -438,7 +437,6 @@ class TestClassFormPostContact
 
 	public function testFormHoneypot()
 	{
-		update_option('onoffice-settings-honeypot', true);
 		$_POST = $this->getPostVariables();
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
@@ -456,7 +454,6 @@ class TestClassFormPostContact
 
 	public function testFormHoneypotEmpty()
 	{
-		update_option('onoffice-settings-honeypot', true);
 		$_POST = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
@@ -477,6 +474,25 @@ class TestClassFormPostContact
 		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
 	}
+
+
+	/**
+	 *
+	 */
+
+	public function testFormWhenHoneypotInactive()
+	{
+		update_option('onoffice-settings-honeypot', false);
+		$_POST = $this->getPostVariables();
+
+		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
+		$pDataFormConfiguration->setCreateAddress(true);
+		$this->_pFormPostContact->initialCheck($pDataFormConfiguration, 2);
+
+		$pFormData = $this->_pFormPostContact->getFormDataInstance('contactForm', 2);
+		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
+	}
+
 	/**
 	 *
 	 * @return DataFormConfigurationContact
