@@ -475,7 +475,6 @@ class TestClassFormPostContact
 		$this->assertEquals(FormPost::MESSAGE_SUCCESS, $pFormData->getStatus());
 	}
 
-
 	/**
 	 *
 	 */
