@@ -80,7 +80,7 @@ class TestClassFormPostContact
 			->setMethods(['addFieldsAddressEstate', 'addFieldsSearchCriteria',  'addFieldsFormFrontend'])
 			->setConstructorArgs([new Container])
 			->getMock();
-		add_option('onoffice-settings-honeypot', true);
+		add_option('onoffice-settings-honeypot', false);
 
 		$pWPQueryWrapper = $this->getMockBuilder(WPQueryWrapper::class)
 			->getMock();
@@ -416,6 +416,7 @@ class TestClassFormPostContact
 
 	public function testPostHoneypotMessageEmpty()
 	{
+		update_option('onoffice-settings-honeypot', true);
 		$_POST = $this->getPostVariables();
 
 		$_POST = [
@@ -437,6 +438,7 @@ class TestClassFormPostContact
 
 	public function testFormHoneypot()
 	{
+		update_option('onoffice-settings-honeypot', true);
 		$_POST = $this->getPostVariables();
 
 		$pDataFormConfiguration = $this->getNewDataFormConfiguration();
@@ -454,6 +456,7 @@ class TestClassFormPostContact
 
 	public function testFormHoneypotEmpty()
 	{
+		update_option('onoffice-settings-honeypot', true);
 		$_POST = [
 			'Vorname' => 'John',
 			'Name' => 'Doe',
