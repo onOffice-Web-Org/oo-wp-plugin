@@ -88,11 +88,11 @@ class ScriptLoaderGenericConfigurationDefault
 				->setDependencies(['jquery']);
 		}
 
-        if (Form::isHoneypotEnabled()) {
-            $values []= (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/js/onoffice-honeypot.js', $pluginPath)))
-                ->setDependencies(['jquery'])
-                ->setLoadInFooter(true);
-        }
+		if (Form::isHoneypotEnabled()) {
+			$values []= (new IncludeFileModel($script, 'onoffice-honeypot', plugins_url('/js/onoffice-honeypot.js', $pluginPath)))
+				->setDependencies(['jquery'])
+				->setLoadInFooter(true);
+		}
 
 		wp_localize_script('onoffice-form-preview', 'onoffice_form_preview_strings', [
 			'amount_none' => __('0 matches', 'onoffice-for-wp-websites'),
