@@ -44,7 +44,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 38;
+	const MAX_VERSION = 39;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -278,6 +278,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->_pWpOption->updateOption( 'onoffice-settings-honeypot', false );
 			$dbversion = 38;
 		}
+
+		if ( $dbversion == 38 ) {
+			dbDelta($this->getCreateQueryListviews());
+			$dbversion = 39;
+		}
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -368,6 +373,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 			`sortByUserDefinedDirection` ENUM('0','1') NOT NULL DEFAULT '0' COMMENT 'Formulierung der Sortierrichtung: 0 means highestFirst/lowestFirt, 1 means descending/ascending',
 			`show_reference_estate` tinyint(1) NOT NULL DEFAULT '0',
 			`page_shortcode` tinytext NOT NULL,
+			`show_map` tinyint(1) NOT NULL DEFAULT '1',
 			PRIMARY KEY (`listview_id`),
 			UNIQUE KEY `name` (`name`)
 		) $charsetCollate;";

@@ -111,6 +111,12 @@ class EstateList
 	/** @var Redirector */
 	private $_redirectIfOldUrl;
 
+	/** @var array */
+	private $_recordsMap = [];
+
+	/** @var array */
+	private $_recordsRawMap = [];
+
 	/**
 	 * @param DataView $pDataView
 	 * @param EstateListEnvironment $pEnvironment
@@ -184,6 +190,9 @@ class EstateList
 		$this->_pEnvironment->getFieldnames()->loadLanguage();
 		$this->loadRecords($currentPage);
 
+		if ($this->getShowMap()) {
+			$this->loadRecordsMap();
+		}
 		$fileCategories = $this->getPreloadEstateFileCategories();
 
 		$estateIds = $this->getEstateIdToForeignMapping($this->_records);
@@ -224,6 +233,26 @@ class EstateList
 		$this->_records = $this->_pApiClientAction->getResultRecords();
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
 		$this->_recordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+	}
+
+	/**
+	 * @throws UnknownViewException
+	 * @throws API\ApiClientException
+	 */
+	private function loadRecordsMap()
+	{
+		$estateMapParameters = $this->getEstateMapParameters();
+		$this->_pApiClientAction->setParameters($estateMapParameters);
+		$this->_pApiClientAction->addRequestToQueue();
+
+		$estateMapParametersRaw = $this->getEstateMapParameters();
+		$pApiClientActionRawValues = clone $this->_pApiClientAction;
+		$pApiClientActionRawValues->setParameters($estateMapParametersRaw);
+		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
+
+		$this->_recordsMap = $this->_pApiClientAction->getResultRecords();
+		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
+		$this->_recordsRawMap = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 	}
 
 	/**
@@ -339,6 +368,31 @@ class EstateList
 				$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 			}
 		} elseif ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
+		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+		}
+
+		$requestParams += $this->addExtraParams();
+
+		return $requestParams;
+	}
+
+	/**
+	 * @return array
+	 * @throws UnknownViewException
+	 */
+	private function getEstateMapParameters()
+	{
+		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
+		$pFieldModifierHandler = new ViewFieldModifierHandler([], onOfficeSDK::MODULE_ESTATE);
+
+		$requestParams = [
+			'data' => $pFieldModifierHandler->getAllAPIFields(),
+			'filter' => $filter,
+		];
+
+		if ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
@@ -469,6 +523,12 @@ class EstateList
 		$currentRecord = current($this->_records);
 		next($this->_records);
 
+		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->getShowMap()) {
+			$currentRecord = current($this->_recordsMap);
+			next($this->_recordsMap);
+			$this->_recordsRaw = $this->_recordsRawMap;
+		}
+
 		if (false === $currentRecord) {
 			return false;
 		}
@@ -488,6 +548,9 @@ class EstateList
 		if ($this->getShowEstateMarketingStatus()) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
+		}
+		if ($this->_pDataView instanceof DataListView) {
+			$recordModified['showGoogleMap'] = $this->getShowMap();
 		}
 
 		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
@@ -857,6 +920,18 @@ class EstateList
 		}
 
 		return DataListView::HIDE_REFERENCE_ESTATE;
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function getShowMap(): bool
+	{
+		if ($this->_pDataView instanceof DataListView) {
+			return $this->_pDataView->getShowMap();
+		}
+
+		return false;
 	}
 
 	/**
