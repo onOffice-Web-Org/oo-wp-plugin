@@ -549,7 +549,7 @@ class EstateList
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
 		}
-		if ($this->_pDataView instanceof DataListView) {
+		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
 			$recordModified['showGoogleMap'] = $this->getShowMap();
 		}
 
