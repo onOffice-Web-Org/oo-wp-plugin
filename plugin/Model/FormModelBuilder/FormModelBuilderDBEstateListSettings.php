@@ -213,7 +213,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Filterable', 'onoffice-for-wp-websites');
+		$label = __('Show in search', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_FILTERABLE;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
@@ -234,7 +234,7 @@ class FormModelBuilderDBEstateListSettings
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigEstate();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Reduce values according to selected filter', 'onoffice-for-wp-websites');
+		$label = __('Hide empty values from onOffice enterprise', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigEstate::INPUT_FIELD_AVAILABLE_OPTIONS;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);
