@@ -112,10 +112,10 @@ class EstateList
 	private $_redirectIfOldUrl;
 
 	/** @var array */
-	private $_recordsMap = [];
+	private $_mapRecords = [];
 
 	/** @var array */
-	private $_recordsRawMap = [];
+	private $_mapRecordsRaw = [];
 
 	/**
 	 * @param DataView $pDataView
@@ -191,7 +191,7 @@ class EstateList
 		$this->loadRecords($currentPage);
 
 		if ($this->getShowMap()) {
-			$this->loadRecordsMap();
+			$this->loadMapRecords();
 		}
 		$fileCategories = $this->getPreloadEstateFileCategories();
 
@@ -239,20 +239,20 @@ class EstateList
 	 * @throws UnknownViewException
 	 * @throws API\ApiClientException
 	 */
-	private function loadRecordsMap()
+	private function loadMapRecords()
 	{
-		$estateMapParameters = $this->getEstateMapParameters();
+		$estateMapParameters = $this->getEstateParametersForShowMap($this->_formatOutput);
 		$this->_pApiClientAction->setParameters($estateMapParameters);
 		$this->_pApiClientAction->addRequestToQueue();
 
-		$estateMapParametersRaw = $this->getEstateMapParameters();
+		$estateMapParametersRaw = $this->getEstateParametersForShowMap(false);
 		$pApiClientActionRawValues = clone $this->_pApiClientAction;
 		$pApiClientActionRawValues->setParameters($estateMapParametersRaw);
 		$pApiClientActionRawValues->addRequestToQueue()->sendRequests();
 
-		$this->_recordsMap = $this->_pApiClientAction->getResultRecords();
+		$this->_mapRecords = $this->_pApiClientAction->getResultRecords();
 		$recordsRaw = $pApiClientActionRawValues->getResultRecords();
-		$this->_recordsRawMap = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
+		$this->_mapRecordsRaw = array_combine(array_column($recordsRaw, 'id'), $recordsRaw);
 	}
 
 	/**
@@ -382,14 +382,18 @@ class EstateList
 	 * @return array
 	 * @throws UnknownViewException
 	 */
-	private function getEstateMapParameters()
+	private function getEstateParametersForShowMap(bool $formatOutput)
 	{
+		$language = Language::getDefault();
 		$filter = $this->_pEnvironment->getDefaultFilterBuilder()->buildFilter();
 		$pFieldModifierHandler = new ViewFieldModifierHandler([], onOfficeSDK::MODULE_ESTATE);
 
 		$requestParams = [
 			'data' => $pFieldModifierHandler->getAllAPIFields(),
 			'filter' => $filter,
+			'estatelanguage' => $language,
+			'outputlanguage' => $language,
+			'formatoutput' => $formatOutput,
 		];
 
 		if ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
@@ -397,8 +401,13 @@ class EstateList
 		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
 		}
-
-		$requestParams += $this->addExtraParams();
+		if (($this->_pDataView instanceof DataViewFilterableFields &&
+				in_array(GeoPosition::FIELD_GEO_POSITION, $this->_pDataView->getFilterableFields(), true))) {
+			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
+			if ($geoRangeSearchParameters !== []) {
+				$requestParams['georangesearch'] = $geoRangeSearchParameters;
+			}
+		}
 
 		return $requestParams;
 	}
@@ -520,14 +529,14 @@ class EstateList
 		$pEstateFieldModifierHandler = $this->_pEnvironment->getViewFieldModifierHandler
 			($this->_pDataView->getFields(), $modifier);
 
-		$currentRecord = current($this->_records);
-		next($this->_records);
-
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->getShowMap()) {
-			$currentRecord = current($this->_recordsMap);
-			next($this->_recordsMap);
-			$this->_recordsRaw = $this->_recordsRawMap;
+			$records = &$this->_mapRecords;
+			$this->_recordsRaw = &$this->_mapRecordsRaw;
+		} else {
+			$records = &$this->_records;
 		}
+		$currentRecord = current($records);
+		next($records);
 
 		if (false === $currentRecord) {
 			return false;
@@ -925,7 +934,7 @@ class EstateList
 	/**
 	 * @return bool
 	 */
-	private function getShowMap(): bool
+	public function getShowMap(): bool
 	{
 		if ($this->_pDataView instanceof DataListView) {
 			return $this->_pDataView->getShowMap();
