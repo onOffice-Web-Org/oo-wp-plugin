@@ -811,6 +811,19 @@ class TestClassEstateList
 
 	/**
 	 *
+	 */
+	public function testGetShowMap()
+	{
+		$pDataView = $this->getDataView();
+		$pDataView->setShowMap(true);
+		$pEstateList = new EstateList($pDataView, $this->_pEnvironment);
+		$pEstateList->loadEstates();
+		$result = $pEstateList->estateIterator(EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP);
+		$this->assertEquals('1', $result['showGoogleMap']);
+	}
+
+	/**
+	 *
 	 * @before
 	 *
 	 */
@@ -831,6 +844,14 @@ class TestClassEstateList
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsFromRelation.json'), true);
 		$responseGetEstatePictures = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatePictures.json'), true);
+		$dataReadEstateMap = json_decode
+			(file_get_contents(__DIR__ . '/resources/ApiResponseReadEstatesMapPublishedENG.json'), true);
+		$responseReadEstateMap = $dataReadEstateMap['response'];
+		$parametersReadEstateMap = $dataReadEstateMap['parameters'];
+		$dataReadEstateMapRaw = json_decode
+			(file_get_contents(__DIR__ . '/resources/ApiResponseReadEstatesMapPublishedENGRaw.json'), true);
+		$responseReadEstateMapRaw = $dataReadEstateMapRaw['response'];
+		$parametersReadEstateMapRaw = $dataReadEstateMapRaw['parameters'];
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
@@ -843,6 +864,11 @@ class TestClassEstateList
 		unset($parametersReadEstateRaw['georangesearch']);
 		$this->_pSDKWrapperMocker->addResponseByParameters
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
+
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateMap, null, $responseReadEstateMap);
+		$this->_pSDKWrapperMocker->addResponseByParameters
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateMapRaw, null, $responseReadEstateMapRaw);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', [

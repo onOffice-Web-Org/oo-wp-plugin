@@ -1,0 +1,122 @@
+{
+	"parameters": {
+		"data": [
+			"virtualAddress",
+			"objektadresse_freigeben",
+			"reserviert",
+			"verkauft",
+			"vermarktungsart",
+			"virtualStreet",
+			"virtualHouseNumber",
+			"laengengrad",
+			"breitengrad",
+			"virtualLatitude",
+			"virtualLongitude",
+			"strasse",
+			"showGoogleMap",
+			"hausnummer",
+			"objekttitel",
+			"objektart",
+			"ort",
+			"objektnr_extern",
+			"plz",
+			"land",
+			"Id"
+		],
+		"filter": {
+			"veroeffentlichen": [
+				{
+					"op": "=",
+					"val": 1
+				}
+			],
+			"referenz": [
+				{
+					"op": "=",
+					"val": 0
+				}
+			]
+		},
+		"estatelanguage": "ENG",
+		"outputlanguage": "ENG",
+		"formatoutput": false,
+		"filterid": 12,
+		"georangesearch": {
+			"radius": 500,
+			"country": "DEU",
+			"zip": "52068"
+		}
+	},
+	"response": {
+		"actionid": "urn:onoffice-de-ns:smart:2.5:smartml:action:read",
+		"resourceid": "",
+		"resourcetype": "estate",
+		"cacheable": true,
+		"identifier": "",
+		"data": {
+			"meta": {
+				"cntabsolute": 9
+			},
+			"records": [
+				{
+					"id": 15,
+					"type": "estate",
+					"elements": {
+						"virtualAddress": "0",
+						"objektadresse_freigeben": "0",
+						"reserviert": "0",
+						"verkauft": "1",
+						"vermarktungsart": "Purchase",
+						"virtualStreet": "",
+						"virtualHouseNumber": "",
+						"laengengrad": "0.00000",
+						"breitengrad": "0.00000",
+						"virtualLatitude": "0.00000",
+						"virtualLongitude": "0.00000",
+						"strasse": "",
+						"showGoogleMap": "1",
+						"hausnummer": "",
+						"objekttitel": "Name id 15",
+						"objektart": "Hospitality industry",
+						"ort": "",
+						"objektnr_extern": "DJ636",
+						"plz": "",
+						"land": "Germany",
+						"Id": "15"
+					}
+				},
+				{
+					"id": 1051,
+					"type": "estate",
+					"elements": {
+						"virtualAddress": "0",
+						"objektadresse_freigeben": "0",
+						"reserviert": "0",
+						"verkauft": "0",
+						"vermarktungsart": "Rent",
+						"virtualStreet": "",
+						"virtualHouseNumber": "",
+						"laengengrad": "6.13455",
+						"breitengrad": "50.78580",
+						"virtualLatitude": "0.00000",
+						"virtualLongitude": "0.00000",
+						"strasse": "Charlottenburger Allee",
+						"showGoogleMap": "1",
+						"hausnummer": "",
+						"objekttitel": "hallo<script>alert(\"hallo\");<\/script>",
+						"objektart": "Hospitality industry",
+						"ort": "Aachen \/ Rothe Erde",
+						"objektnr_extern": "UT591",
+						"plz": "52068",
+						"land": "Germany",
+						"Id": "1.051"
+					}
+				}
+			]
+		},
+		"status": {
+			"errorcode": 0,
+			"message": "OK"
+		}
+	}
+}

@@ -396,13 +396,16 @@ class EstateList
 			'formatoutput' => $formatOutput,
 		];
 
+		if ($this->_pDataView->getFilterId() !== 0) {
+			$requestParams['filterid'] = $this->_pDataView->getFilterId();
+		}
 		if ($this->getShowReferenceEstate() === DataListView::HIDE_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 0];
 		} elseif ($this->getShowReferenceEstate() === DataListView::SHOW_ONLY_REFERENCE_ESTATE) {
 			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
 		}
 		if (($this->_pDataView instanceof DataViewFilterableFields &&
-				in_array(GeoPosition::FIELD_GEO_POSITION, $this->_pDataView->getFilterableFields(), true))) {
+			in_array(GeoPosition::FIELD_GEO_POSITION, $this->_pDataView->getFilterableFields(), true))) {
 			$geoRangeSearchParameters = $this->getGeoSearchBuilder()->buildParameters();
 			if ($geoRangeSearchParameters !== []) {
 				$requestParams['georangesearch'] = $geoRangeSearchParameters;
