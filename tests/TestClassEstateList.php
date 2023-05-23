@@ -844,14 +844,14 @@ class TestClassEstateList
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetIdsFromRelation.json'), true);
 		$responseGetEstatePictures = json_decode
 			(file_get_contents(__DIR__.'/resources/ApiResponseGetEstatePictures.json'), true);
-		$dataReadEstateMap = json_decode
-			(file_get_contents(__DIR__ . '/resources/ApiResponseReadEstatesMapPublishedENG.json'), true);
-		$responseReadEstateMap = $dataReadEstateMap['response'];
-		$parametersReadEstateMap = $dataReadEstateMap['parameters'];
-		$dataReadEstateMapRaw = json_decode
-			(file_get_contents(__DIR__ . '/resources/ApiResponseReadEstatesMapPublishedENGRaw.json'), true);
-		$responseReadEstateMapRaw = $dataReadEstateMapRaw['response'];
-		$parametersReadEstateMapRaw = $dataReadEstateMapRaw['parameters'];
+		$dataReadEstateForShowMap = json_decode
+			(file_get_contents(__DIR__ . '/resources/ApiResponseReadEstatesForShowMapPublishedENG.json'), true);
+		$responseReadEstateForShowMap = $dataReadEstateForShowMap['response'];
+		$parametersReadEstateForShowMap = $dataReadEstateForShowMap['parameters'];
+		$dataReadEstateForShowMapRaw = json_decode
+			(file_get_contents(__DIR__ . '/resources/ApiResponseReadEstatesForShowMapPublishedENGRaw.json'), true);
+		$responseReadEstateForShowMapRaw = $dataReadEstateForShowMapRaw['response'];
+		$parametersReadEstateForShowMapRaw = $dataReadEstateForShowMapRaw['parameters'];
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstate, null, $responseReadEstate);
@@ -866,9 +866,9 @@ class TestClassEstateList
 		(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateRaw, null, $responseReadEstateRaw);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateMap, null, $responseReadEstateMap);
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateForShowMap, null, $responseReadEstateForShowMap);
 		$this->_pSDKWrapperMocker->addResponseByParameters
-			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateMapRaw, null, $responseReadEstateMapRaw);
+			(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parametersReadEstateForShowMapRaw, null, $responseReadEstateForShowMapRaw);
 
 		$this->_pSDKWrapperMocker->addResponseByParameters
 			(onOfficeSDK::ACTION_ID_GET, 'idsfromrelation', '', [
