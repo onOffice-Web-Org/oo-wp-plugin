@@ -92,7 +92,6 @@ class InputFieldButtonAddRemoveRenderer
 				->addFieldsAddressEstate($pFieldsCollection)
 				->addFieldsSearchCriteria($pFieldsCollection)
 				->addFieldsSearchCriteriaSpecificBackend($pFieldsCollection)
-				->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 				->addFieldsFormFrontend($pFieldsCollection);
 		} catch (APIClientCredentialsException $pCredentialsException) {
 		} catch (APIEmptyResultException $pEmptyResultException) {}
