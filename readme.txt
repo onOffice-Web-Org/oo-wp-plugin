@@ -76,6 +76,12 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.11.1 (2023-05-24) =
+
+**Fixed**
+
+* Performance error while loading estate list
+
 = 4.11 (2023-05-15) =
 
 **Added**
