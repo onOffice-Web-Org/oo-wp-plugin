@@ -229,7 +229,6 @@ abstract class AdminPageEstateListSettingsBase
 		$pFieldsCollectionBuilder = $this->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pDefaultFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilder->addFieldsAddressEstate( $pDefaultFieldsCollection )
-		                         ->addFieldsAddressEstateWithRegionValues( $pDefaultFieldsCollection )
 		                         ->addFieldsEstateGeoPosisionBackend( $pDefaultFieldsCollection )
 		                         ->addFieldsEstateDecoratorReadAddressBackend( $pDefaultFieldsCollection );
 
