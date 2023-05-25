@@ -58,7 +58,6 @@ use onOffice\WPlugin\Types\FieldTypes;
 use onOffice\WPlugin\WP\InstalledLanguageReader;
 use stdClass;
 use function __;
-use function add_screen_option;
 use function esc_sql;
 use function wp_enqueue_script;
 
@@ -420,7 +419,6 @@ abstract class AdminPageFormSettingsBase
 
 	protected function buildForms()
 	{
-		add_screen_option('layout_columns', array('max' => 2, 'default' => 2) );
 		$this->_pFormModelBuilder = $this->getContainer()->get(FormModelBuilderDBForm::class);
 		$this->_pFormModelBuilder->setFormType($this->getType());
 		$pFormModel = $this->_pFormModelBuilder->generate($this->getPageSlug(), $this->getListViewId());
