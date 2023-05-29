@@ -322,7 +322,12 @@ abstract class AdminPageSettingsBase
 		}
 
 		$pageQuery   = str_replace( 'admin_page_', 'page=', $_POST['action'] );
-		$statusQuery = !is_null($pResultObject->result) ? ($pResultObject->result ? '&saved=true' : '&saved=false'): '&saved="empty"';
+		$statusQuery = '&saved=false';
+		if (is_null($pResultObject->result)) {
+			$statusQuery = '&saved=empty';
+		} else if ($pResultObject->result) {
+			$statusQuery = '&saved=true';
+		}
 		$idQuery     = $pResultObject->record_id ? '&id=' . $pResultObject->record_id : '';
 
 		if ( headers_sent() ) {
