@@ -72,7 +72,6 @@ class AdminPageAddressListSettings
 
 	public function renderContent()
 	{
-		$this->validate($this->getListViewId());
 		if ( isset( $_GET['saved'] ) && $_GET['saved'] === 'empty' ) {
 			echo '<div class="notice notice-error is-dismissible"><p>'
 				. esc_html__( 'There was a problem saving the address. The Name field cannot be empty.', 'onoffice-for-wp-websites' )
