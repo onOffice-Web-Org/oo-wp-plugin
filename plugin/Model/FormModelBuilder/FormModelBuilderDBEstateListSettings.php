@@ -729,7 +729,6 @@ class FormModelBuilderDBEstateListSettings
 
 		$pFieldsCollectionBuilder
 			->addFieldsAddressEstate($pFieldsCollection)
-			->addFieldsAddressEstateWithRegionValues($pFieldsCollection)
 			->addFieldsEstateDecoratorReadAddressBackend($pFieldsCollection)
 			->addFieldsEstateGeoPosisionBackend($pFieldsCollection);
 		return $pFieldsCollection;

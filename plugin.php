@@ -25,7 +25,7 @@ Plugin URI: https://wpplugindoc.onoffice.de
 Author: onOffice GmbH
 Author URI: https://en.onoffice.com/
 Description: Your connection to onOffice: This plugin enables you to have quick access to estates and forms – no additional sync with the software is needed. Consult support@onoffice.de for source code.
-Version: 4.10.1
+Version: 4.11.1
 License: AGPL 3+
 License URI: https://www.gnu.org/licenses/agpl-3.0
 Text Domain: onoffice-for-wp-websites
@@ -330,8 +330,18 @@ add_action('parse_request', function () use ( $pDI ) {
 	if ( strpos($_SERVER["REQUEST_URI"], "onoffice-clear-cache") !== false ) {
 		$pDI->get(CacheHandler::class)->clear();
 		$location = ! empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : admin_url('admin.php?page=onoffice-settings');
+		update_option('onoffice-notice-cache-was-cleared', true);
 		wp_safe_redirect($location);
 		exit();
+	}
+});
+
+add_action('admin_notices', function () {
+	if (get_option('onoffice-notice-cache-was-cleared') == true) {
+		$class = 'notice notice-success is-dismissible';
+		$message = esc_html__('The cache was cleared successfully.', 'onoffice-for-wp-websites');
+		printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), $message);
+		update_option('onoffice-notice-cache-was-cleared', false);
 	}
 });
 
