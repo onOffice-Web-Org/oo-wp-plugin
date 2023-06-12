@@ -580,9 +580,7 @@ class EstateList
 		$pFieldsCollectionBuilder = $this->_pEnvironment->getContainer()->get(FieldsCollectionBuilderShort::class);
 		$pDefaultFieldsCollection = new FieldsCollection();
 		$pFieldsCollectionBuilder->addFieldsAddressEstate( $pDefaultFieldsCollection )
-		                         ->addFieldsAddressEstateWithRegionValues( $pDefaultFieldsCollection )
-		                         ->addFieldsEstateGeoPosisionBackend( $pDefaultFieldsCollection )
-		                         ->addFieldsEstateDecoratorReadAddressBackend( $pDefaultFieldsCollection );
+		                         ->addFieldsEstateGeoPositionFrontend( $pDefaultFieldsCollection );
 
 		/** @var FieldsCollectionConfiguratorEstate $pFieldsCollectionConfiguratorEstate */
 		$pFieldsCollectionConfiguratorEstate = $this->_pEnvironment->getContainer()->get(FieldsCollectionConfiguratorEstate::class);
