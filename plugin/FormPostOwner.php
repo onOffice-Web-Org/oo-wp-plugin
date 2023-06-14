@@ -87,6 +87,7 @@ class FormPostOwner
 
 		$recipient = $pDataFormConfiguration->getRecipientByUserSelection();
 		$subject = $pDataFormConfiguration->getSubject();
+		$estateData = $this->getEstateData();
 
 		try {
 			if ( $pDataFormConfiguration->getCreateOwner() ) {
@@ -95,7 +96,6 @@ class FormPostOwner
 				$addressId  = $this->_pFormPostOwnerConfiguration->getFormAddressCreator()
 				                                                 ->createOrCompleteAddress( $pFormData,
 					                                                 $checkduplicate, $contactType);
-				$estateData = $this->getEstateData();
 				$estateId   = $this->createEstate( $estateData );
 				$this->createOwnerRelation( $estateId, $addressId );
 				$this->setNewsletter( $addressId );
@@ -227,6 +227,21 @@ class FormPostOwner
 	}
 
 	/**
+	 * @param array $inputData
+	 * @return string
+	 */
+	private function createStringFromInputData(array $inputData): string
+	{
+		$data = [];
+
+		foreach ($inputData as $key => $value) {
+			$data []= ucfirst($key).': '.ucfirst($value);
+		}
+
+		return implode("\n", $data);
+	}
+
+	/**
 	 *
 	 * @param string $recipient
 	 * @param int $estateId
@@ -243,6 +258,11 @@ class FormPostOwner
 		$addressData = $this->_pFormData->getAddressData($this->getFieldsCollection());
 		$values = $this->_pFormData->getValues();
 		$estateData = array_keys($estateValues);
+		$formType = $this->_pFormData->getFormtype();
+		$estateInformation = $this->createStringFromInputData($estateValues);
+		if (empty($estateId)) {
+			$formType .= "\n" . "$estateInformation";
+		}
 
 		$requestParams = [
 			'addressdata' => $addressData,
@@ -250,7 +270,7 @@ class FormPostOwner
 			'message' => $values['message'] ?? null,
 			'subject' => $subject,
 			'referrer' => $this->_pFormPostOwnerConfiguration->getReferrer(),
-			'formtype' => $this->_pFormData->getFormtype(),
+			'formtype' => $formType,
 		];
 
 		if ($estateData != []) {
