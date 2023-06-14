@@ -750,4 +750,23 @@ class FormModelBuilderDBEstateListSettings
 		});
 		return $pInputModel;
 	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelShowMap()
+	{
+		$labelShowMap = __('Show estate map', 'onoffice-for-wp-websites');
+
+		$pInputModelShowMap = $this->getInputModelDBFactory()->create
+		(InputModelDBFactory::INPUT_SHOW_MAP, $labelShowMap);
+		$pInputModelShowMap->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowMap->setValue($this->getValue('show_map') ?? true);
+		$pInputModelShowMap->setValuesAvailable(1);
+
+		return $pInputModelShowMap;
+	}
 }

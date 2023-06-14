@@ -84,6 +84,8 @@ class InputModelDBFactory
 	/** */
 	const INPUT_FIELD_CONFIG = 'fieldConfig';
 
+	/** */
+	const INPUT_SHOW_MAP = 'showMap';
 
 	/** @var InputModelDBFactoryConfigBase */
 	private $_pInputModelDBFactoryConfig = null;

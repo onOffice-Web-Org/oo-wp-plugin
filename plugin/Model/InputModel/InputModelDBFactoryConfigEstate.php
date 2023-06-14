@@ -118,6 +118,11 @@ class InputModelDBFactoryConfigEstate
 			self::KEY_TABLE => 'oo_plugin_listviews',
 			self::KEY_FIELD => 'sortByUserDefinedDirection',
 		],
+
+		InputModelDBFactory::INPUT_SHOW_MAP => [
+			self::KEY_TABLE => 'oo_plugin_listviews',
+			self::KEY_FIELD => 'show_map',
+		],
 	];
 
 

@@ -103,6 +103,7 @@ class AdminPageEstateListSettings
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
+		$pInputModelShowMap = $pFormModelBuilder->createInputModelShowMap();
 		$pDataDetailViewHandler = new DataDetailViewHandler();
 		$pDataDetailView = $pDataDetailViewHandler->getDetailView();
 		$restrictAccessControl     = $pDataDetailView->getViewRestrict();
@@ -157,6 +158,7 @@ class AdminPageEstateListSettings
 		$pFormModelLayoutDesign->setLabel(__('Layout & Design', 'onoffice-for-wp-websites'));
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$pFormModelLayoutDesign->addInputModel($pInputModelShowStatus);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowMap);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
