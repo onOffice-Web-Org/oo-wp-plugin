@@ -102,7 +102,7 @@ class FormPostOwner
 			}
 		} finally {
 			if ( null != $recipient ) {
-				$this->sendContactRequest( $recipient, $estateId ?? 0, $estateData ?? [], $subject );
+				$this->sendContactRequest( $recipient, $estateId ?? 0, $estateData, $subject );
 			}
 		}
 	}
