@@ -259,9 +259,9 @@ class FormPostOwner
 		$values = $this->_pFormData->getValues();
 		$estateData = array_keys($estateValues);
 		$formType = $this->_pFormData->getFormtype();
-		$estateInformation = $this->createStringFromInputData($estateValues);
+		$informationEnterFromInputOwnerForm = $this->createStringFromInputData($estateValues);
 		if (empty($estateId)) {
-			$formType .= "\n" . "$estateInformation";
+			$formType .= "\n" . $informationEnterFromInputOwnerForm;
 		}
 
 		$requestParams = [
