@@ -958,6 +958,7 @@ class TestClassEstateList
 		$pDataView->setShowReferenceEstate('0');
 		$pDataView->setFilterableFields([GeoPosition::FIELD_GEO_POSITION]);
 		$pDataView->setExpose('testExpose');
+		$pDataView->setShowMap(true);
 		return $pDataView;
 	}
 
