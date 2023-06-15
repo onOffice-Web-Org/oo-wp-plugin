@@ -489,7 +489,7 @@ class EstateList
 		}
 
 		if ($modifier === EstateViewFieldModifierTypes::MODIFIER_TYPE_MAP && $this->_pDataView instanceof DataListView) {
-			$recordModified['showGoogleMap'] = $this->getShowMap();
+			$recordModified['showGoogleMap'] = $this->getShowMapConfig();
 		}
 
 		if ( $checkEstateIdRequestGuard && $this->_pWPOptionWrapper->getOption( 'onoffice-settings-title-and-description' ) == 0 ) {
@@ -822,7 +822,7 @@ class EstateList
 	/**
 	 * @return bool
 	 */
-	public function getShowMap(): bool
+	private function getShowMapConfig(): bool
 	{
 		if ($this->_pDataView instanceof DataListView) {
 			return $this->_pDataView->getShowMap();
