@@ -131,5 +131,8 @@ class DataSimilarEstatesSettingsHandler
 		$pDataViewSimilar->setCustomLabels
 			($row[DataViewSimilarEstates::FIELD_CUSTOM_LABEL] ??
 				$pDataViewSimilar->getCustomLabels());
+		$pDataViewSimilar->setPictureTypes
+			($row[DataViewSimilarEstates::PICTURES] ??
+				$pDataViewSimilar->getPictureTypes());
 	}
 }

@@ -32,6 +32,7 @@ use onOffice\WPlugin\Controller\RewriteRuleBuilder;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderEstateDetailSettings;
 use onOffice\WPlugin\Template\TemplateCall;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataSimilarView;
@@ -278,6 +279,12 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->_pWpOption->updateOption( 'onoffice-settings-honeypot', false );
 			$dbversion = 38;
 		}
+
+		if ( $dbversion == 38 ) {
+			$this->updateDefaultPictureTypesSimilarEstate();
+			$dbversion = 39;
+		}
+
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
 	}
 
@@ -1017,5 +1024,18 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$pDetailView->addToPageIdsHaveDetailShortCode( (int) $post['ID'] );
 		}
 		$pDataDetailViewHandler->saveDetailView( $pDetailView );
+	}
+
+
+	/**
+	 *
+	 */
+	private function updateDefaultPictureTypesSimilarEstate()
+	{
+		$pDataSimilarViewOptions = get_option('onoffice-similar-estates-settings-view');
+		if(empty($pDataSimilarViewOptions->getDataViewSimilarEstates()->getPictureTypes())){
+			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setPictureTypes([ImageTypes::TITLE]);
+			$this->_pWpOption->updateOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
+		}
 	}
 }

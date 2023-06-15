@@ -70,6 +70,8 @@ class DataViewSimilarEstates
 	/** */
 	const FIELD_SIMILAR_ESTATES_TEMPLATE = 'similar_estates_template';
 
+	/** */
+	const PICTURES = 'pictures';
 
 	/** */
 	const FIELD_CUSTOM_LABEL = 'oo_plugin_fieldconfig_estate_translated_labels';
@@ -94,6 +96,9 @@ class DataViewSimilarEstates
 
 	/** @var array */
 	private $_customLabel = [];
+
+	/** @var string[] */
+	private $_pictureTypes = [];
 
 	/** @param bool $sameEstateKind */
 	public function setSameEstateKind(bool $sameEstateKind)
@@ -157,7 +162,11 @@ class DataViewSimilarEstates
 
 	/** @return array */
 	public function getPictureTypes(): array
-		{ return [ImageTypes::TITLE]; }
+		{ return $this->_pictureTypes; }
+
+	/** @param array $pictureTypes */
+	public function setPictureTypes(array $pictureTypes)
+		{ $this->_pictureTypes = $pictureTypes; }
 
 	/** @return string */
 	public function getTemplate(): string

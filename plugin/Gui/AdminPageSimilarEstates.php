@@ -86,6 +86,8 @@ class AdminPageSimilarEstates
 	/** */
 	const CUSTOM_LABELS = 'customlabels';
 
+	/** */
+	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
@@ -168,6 +170,9 @@ class AdminPageSimilarEstates
 	 */
 	private function generateMetaBoxes()
 	{
+		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
+		$this->createMetaBoxByForm($pFormPictureTypes, 'normal');
+
 		$pFormSimilarEstates = $this->getFormModelByGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
 		$this->createMetaBoxByForm($pFormSimilarEstates, 'normal');
 	}
@@ -219,6 +224,14 @@ class AdminPageSimilarEstates
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesAmount);
 		$pFormModelSimilarEstates->addInputModel($pInputModelSimilarEstatesTemplate);
 		$this->addFormModel($pFormModelSimilarEstates);
+
+		$pInputModelSimilarEstatesPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
+		$pFormModelPictureTypes = new FormModel();
+		$pFormModelPictureTypes->setPageSlug($this->getPageSlug());
+		$pFormModelPictureTypes->setGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
+		$pFormModelPictureTypes->setLabel(__('Photo Types', 'onoffice-for-wp-websites'));
+		$pFormModelPictureTypes->addInputModel($pInputModelSimilarEstatesPictureTypes);
+		$this->addFormModel($pFormModelPictureTypes);
 
 		$pFieldsCollection = $this->readAllFields();
 		$pFieldsCollectionConverter = $this->getContainer()->get(FieldsCollectionToContentFieldLabelArrayConverter::class);
