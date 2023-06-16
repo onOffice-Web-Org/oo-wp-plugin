@@ -281,7 +281,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 
 		if ( $dbversion == 38 ) {
-			$this->updateDefaultPictureTypesSimilarEstate();
+			$this->updateDefaultPictureTypesForSimilarEstate();
 			$dbversion = 39;
 		}
 
@@ -1030,10 +1030,10 @@ class DatabaseChanges implements DatabaseChangesInterface
 	/**
 	 *
 	 */
-	private function updateDefaultPictureTypesSimilarEstate()
+	private function updateDefaultPictureTypesForSimilarEstate()
 	{
 		$pDataSimilarViewOptions = get_option('onoffice-similar-estates-settings-view');
-		if(empty($pDataSimilarViewOptions->getDataViewSimilarEstates()->getPictureTypes())){
+		if(!empty($pDataSimilarViewOptions) && empty($pDataSimilarViewOptions->getDataViewSimilarEstates()->getPictureTypes())){
 			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setPictureTypes([ImageTypes::TITLE]);
 			$this->_pWpOption->updateOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
 		}
