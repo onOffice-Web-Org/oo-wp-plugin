@@ -101,7 +101,7 @@ class TestClassDataViewSimilarEstates
 		];
 		$this->assertEquals($expectedFields, $pDataViewSimilarEstates->getFields());
 		$this->assertEquals('SimilarEstates', $pDataViewSimilarEstates->getName());
-		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
+		$this->assertEquals([], $pDataViewSimilarEstates->getPictureTypes());
 		$this->assertEquals('', $pDataViewSimilarEstates->getTemplate());
 	}
 
