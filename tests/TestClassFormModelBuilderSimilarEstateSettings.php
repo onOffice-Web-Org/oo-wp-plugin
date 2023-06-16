@@ -292,7 +292,7 @@ class TestClassFormModelBuilderSimilarEstateSettings
 
 		$pWPOptionsWrapper = new WPOptionWrapperTest();
 		$pDataSimilarEstatesSettingsHandler = new DataSimilarEstatesSettingsHandler($pWPOptionsWrapper);
-		$this->_pDataDetailView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
+		$this->_pDataSimilarView = $pDataSimilarEstatesSettingsHandler->createDataSimilarEstatesSettingsByValues($row);
 
 
 		$pInstance = $this->getMockBuilder(FormModelBuilderSimilarEstateSettings::class)
