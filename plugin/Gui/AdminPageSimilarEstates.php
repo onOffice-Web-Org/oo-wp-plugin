@@ -127,8 +127,11 @@ class AdminPageSimilarEstates
 
 		echo '<div id="post-body" class="metabox-holder columns-'
 			.(1 == get_current_screen()->get_columns() ? '1' : '2').'">';
-		echo '<div class="postbox-container" id="postbox-container-2">';
+		echo '<div class="postbox-container" id="postbox-container-1">';
 		do_meta_boxes(get_current_screen()->id, 'normal', null );
+		echo '</div>';
+		echo '<div class="postbox-container" id="postbox-container-2">';
+		do_meta_boxes(get_current_screen()->id, 'side', null );
 		echo '</div>';
 		echo '<div class="clear"></div>';
 		echo '<div style="float:left;">';
@@ -170,11 +173,11 @@ class AdminPageSimilarEstates
 	 */
 	private function generateMetaBoxes()
 	{
+		$pFormSimilarEstates = $this->getFormModelByGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
+		$this->createMetaBoxByForm($pFormSimilarEstates, 'side');
+
 		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
 		$this->createMetaBoxByForm($pFormPictureTypes, 'normal');
-
-		$pFormSimilarEstates = $this->getFormModelByGroupSlug(self::FORM_VIEW_SIMILAR_ESTATES);
-		$this->createMetaBoxByForm($pFormSimilarEstates, 'normal');
 	}
 
 	/**
