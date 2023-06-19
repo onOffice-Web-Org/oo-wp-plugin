@@ -151,8 +151,6 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'reserviert',
 			'verkauft',
 			'vermarktungsart',
-			'breitengrad',
-			'laengengrad',
 		];
 
 		$pEstateViewFieldModifierTypeDefault = $this->getPreconfiguredFieldModifier();
