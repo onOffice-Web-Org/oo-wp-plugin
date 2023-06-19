@@ -325,7 +325,7 @@ class TestClassDatabaseChanges
 		$pSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
 		$pDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
 
-		$this->assertEquals(['Titelbild'], $pDataViewSimilarEstates->getPictureTypes());
+		$this->assertEquals(['Foto'], $pDataViewSimilarEstates->getPictureTypes());
 
 		return $this->_createQueries;
 	}

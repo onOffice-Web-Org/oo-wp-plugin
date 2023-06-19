@@ -1034,7 +1034,7 @@ class DatabaseChanges implements DatabaseChangesInterface
 	{
 		$pDataSimilarViewOptions = get_option('onoffice-similar-estates-settings-view');
 		if(!empty($pDataSimilarViewOptions) && empty($pDataSimilarViewOptions->getDataViewSimilarEstates()->getPictureTypes())){
-			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setPictureTypes([ImageTypes::TITLE]);
+			$pDataSimilarViewOptions->getDataViewSimilarEstates()->setPictureTypes([ImageTypes::PHOTO]);
 			$this->_pWpOption->updateOption('onoffice-similar-estates-settings-view', $pDataSimilarViewOptions);
 		}
 	}
