@@ -88,6 +88,7 @@ class AdminPageSimilarEstates
 
 	/** */
 	const FORM_VIEW_PICTURE_TYPES = 'viewpicturetypes';
+
 	/**
 	 * @throws DependencyException
 	 * @throws NotFoundException
