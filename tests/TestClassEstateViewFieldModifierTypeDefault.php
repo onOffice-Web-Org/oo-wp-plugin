@@ -128,8 +128,6 @@ class TestClassEstateViewFieldModifierTypeDefault
 			'anotherField',
 			'moreFields',
 			'Underscore_field11',
-			'laengengrad',
-			'breitengrad',
 		];
 
 		$pEstateViewFieldModifierTypeDefault = $this->getPreconfiguredFieldModifier();
