@@ -26,6 +26,7 @@ namespace onOffice\tests;
 use onOffice\WPlugin\DataView\DataDetailView;
 use onOffice\WPlugin\DataView\DataDetailViewHandler;
 use onOffice\WPlugin\Installer\DatabaseChanges;
+use onOffice\WPlugin\Types\ImageTypes;
 use onOffice\WPlugin\Utility\__String;
 use onOffice\WPlugin\WP\WPOptionWrapperTest;
 use WP_UnitTestCase;
@@ -325,7 +326,7 @@ class TestClassDatabaseChanges
 		$pSimilarViewOptions = $this->_pWpOption->getOption('onoffice-similar-estates-settings-view');
 		$pDataViewSimilarEstates = $pSimilarViewOptions->getDataViewSimilarEstates();
 
-		$this->assertEquals(['Foto'], $pDataViewSimilarEstates->getPictureTypes());
+		$this->assertEquals([ImageTypes::TITLE], $pDataViewSimilarEstates->getPictureTypes());
 
 		return $this->_createQueries;
 	}
