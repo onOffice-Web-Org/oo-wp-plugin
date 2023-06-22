@@ -238,6 +238,8 @@ document.addEventListener("addFieldItem", function(e) {
     if (['varchar', 'text',
         'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:varchar',
         'urn:onoffice-de-ns:smart:2.5:dbAccess:dataType:Text'].indexOf(fieldDefinition.type) >= 0) {
+        const element = e.detail.item.querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value]');
+        const input = document.createElement('input');
         var select = document.createElement('select');
         select.id = 'select_js_' + onOffice.js_field_count;
         select.name = 'language-language';
@@ -262,6 +264,9 @@ document.addEventListener("addFieldItem", function(e) {
         label.textContent = onOffice_loc_settings.label_add_language;
         p.appendChild(label);
         p.appendChild(select);
+        input.setAttribute('type', 'text')
+        input.setAttribute('size', '50')
+        element.parentNode.replaceChild(input, element);
     } else if (['singleselect', 'multiselect', 'boolean'].indexOf(fieldDefinition.type) >= 0) {
         var element = e.detail.item.querySelector('input[name^=oopluginfieldconfigformdefaultsvalues-value]');
         var select = document.createElement('select');
