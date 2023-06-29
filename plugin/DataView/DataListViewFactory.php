@@ -81,6 +81,7 @@ class DataListViewFactory
 		$pListView->setSortByUserDefinedDirection((int)$row['sortByUserDefinedDirection']);
 		$pListView->setSortByUserValues($row[DataListView::SORT_BY_USER_VALUES]);
 		$pListView->setShowReferenceStatus($row['show_reference_estate'] ?? 1);
+		$pListView->setShowPriceOnRequest((bool)$row['show_price_on_request']);
 
 		$geoFieldsAll = [
 			InputModelDBFactoryConfigGeoFields::FIELDNAME_COUNTRY_ACTIVE => GeoPosition::ESTATE_LIST_SEARCH_COUNTRY,

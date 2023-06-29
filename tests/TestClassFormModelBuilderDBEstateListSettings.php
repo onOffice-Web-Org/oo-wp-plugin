@@ -657,4 +657,23 @@ class TestClassFormModelBuilderDBEstateListSettings
         $this->assertFalse($pInputModelBase->getValue());
         $this->assertEquals($key, $pInputModelBase->getValuesAvailable());
     }
+
+	/**
+	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowPriceOnRequest
+	 */
+	public function testCreateInputModelShowPriceOnRequest()
+	{
+		$pInstance = $this->getMockBuilder(FormModelBuilderDBEstateListSettings::class)
+			->disableOriginalConstructor()
+			->setMethods(['getInputModelDBFactory', 'getValue', 'getOnlyDefaultSortByFields'])
+			->getMock();
+
+		$pInstance->method('getInputModelDBFactory')->willReturn($this->_pInputModelFactoryDBEntry);
+		$pInstance->method('getValue')->willReturn('0');
+
+		$pInputModelDB = $pInstance->createInputModelShowPriceOnRequest();
+		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
+		$this->assertEquals($pInputModelDB->getValue(), '0');
+		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
+	}
 }

@@ -145,6 +145,8 @@ class DataListView
 	/** @var string */
 	private $_showReferenceEstate = '0';
 
+	/** @var bool */
+	private $_showPriceOnRequest = false;
 
 	/**
 	 *
@@ -335,6 +337,14 @@ class DataListView
 	/** @return int */
 	public function getSortByUserDefinedDirection(): int
 		{ return $this->_sortByUserDefinedDirection; }
+
+	/** @param bool $showPriceOnRequest */
+	public function setShowPriceOnRequest(bool $showPriceOnRequest)
+		{ $this->_showPriceOnRequest = $showPriceOnRequest; }
+
+	/** @return bool */
+	public function getShowPriceOnRequest(): bool
+		{ return $this->_showPriceOnRequest; }
 
 	/**
 	 * @param bool $adjustable

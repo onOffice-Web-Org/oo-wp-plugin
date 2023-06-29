@@ -750,4 +750,23 @@ class FormModelBuilderDBEstateListSettings
 		});
 		return $pInputModel;
 	}
+
+	/**
+	 *
+	 * @return InputModelDB
+	 *
+	 */
+
+	public function createInputModelShowPriceOnRequest()
+	{
+		$labelShowPriceOnRequest = __('Show price on request', 'onoffice-for-wp-websites');
+
+		$pInputModelShowPriceOnRequest = $this->getInputModelDBFactory()->create
+			(InputModelDBFactory::INPUT_SHOW_PRICE_ON_REQUEST, $labelShowPriceOnRequest);
+		$pInputModelShowPriceOnRequest->setHtmlType(InputModelOption::HTML_TYPE_CHECKBOX);
+		$pInputModelShowPriceOnRequest->setValue($this->getValue('show_price_on_request'));
+		$pInputModelShowPriceOnRequest->setValuesAvailable(1);
+
+		return $pInputModelShowPriceOnRequest;
+	}
 }
