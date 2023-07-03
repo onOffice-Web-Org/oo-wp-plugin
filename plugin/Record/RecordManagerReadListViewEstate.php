@@ -91,11 +91,14 @@ class RecordManagerReadListViewEstate
         {
             $where .= "AND (name LIKE '%".esc_sql($_GET['search'])."%' OR template LIKE '%".esc_sql($_GET['search'])."%')";
         }
+		$orderby = ( ! empty($_GET['orderby'])) ? $_GET['orderby'] : 'name';
+		$order = ( ! empty($_GET['order'])) ? $_GET['order'] : 'asc';
+
         $sql = "SELECT SQL_CALC_FOUND_ROWS {$columns}
 				FROM {$prefix}oo_plugin_listviews
 				{$join}
 				WHERE {$where}
-				ORDER BY `name` ASC
+				ORDER BY `{$orderby}` {$order}
 				LIMIT {$this->getOffset()}, {$this->getLimit()}";
 
         $this->setFoundRows($pWpDb->get_results($sql, OBJECT));
