@@ -154,9 +154,9 @@ class EstateListTable extends ListTable
 	public function get_sortable_columns()
 	{
 		$columns = array(
-			'name' => ['name', true],
-			'template' => ['template', true],
-			'list_type' => ['list_type', true],
+			'name' => ['name', false],
+			'template' => ['template', false],
+			'list_type' => ['list_type', false],
 		);
 		return $columns;
 	}
