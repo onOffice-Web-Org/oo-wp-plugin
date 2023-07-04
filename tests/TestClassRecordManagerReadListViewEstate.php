@@ -24,6 +24,7 @@ namespace onOffice\tests;
 use Closure;
 use onOffice\WPlugin\Record\RecordManagerReadListViewEstate;
 use WP_UnitTestCase;
+use wpdb;
 
 /**
  *
