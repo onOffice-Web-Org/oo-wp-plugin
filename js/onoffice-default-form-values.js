@@ -244,6 +244,9 @@ document.addEventListener("addFieldItem", function(e) {
         select.id = 'select_js_' + onOffice.js_field_count;
         select.name = 'language-language';
         select.className = 'onoffice-input';
+        input.id = 'select_js_' + onOffice.js_field_count;
+        input.name = 'oopluginfieldconfigestatedefaultsvalues-value[]';
+        input.className = 'onoffice-input';
 
         select.options.add(new Option(onOffice_loc_settings.label_choose_language, ''));
         var keys = Object.keys(onOffice_loc_settings.installed_wp_languages);
