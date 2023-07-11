@@ -99,4 +99,22 @@ class TestClassScriptLoaderGenericConfigurationDefault
 		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_style');
 		$this->assertNotEmpty($onofficeCssStyleVersion);
 	}
+
+	/**
+	 *
+	 */
+	public function testGetStyleUriByVersionOnChildTheme()
+	{
+		$styleFilePath = get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css';
+		if (!file_exists($styleFilePath)) {
+			file_put_contents(get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css', 'onoffice-style.css');
+		}
+		$pScriptLoaderGenericConfigurationDefault = new ScriptLoaderGenericConfigurationDefault();
+		$onofficeCssStyleVersion = $pScriptLoaderGenericConfigurationDefault->getOnOfficeStyleVersion();
+		$onofficeCssStyleFilePath = $pScriptLoaderGenericConfigurationDefault->getStyleUriByVersion($onofficeCssStyleVersion);
+
+		$this->assertEquals($onofficeCssStyleVersion, 'onoffice_style');
+		$this->assertEquals($onofficeCssStyleFilePath, get_stylesheet_directory_uri() . '/onoffice-theme/templates/onoffice-style.css');
+		unlink(get_stylesheet_directory() . '/onoffice-theme/templates/onoffice-style.css');
+	}
 }
