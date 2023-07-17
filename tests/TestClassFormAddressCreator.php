@@ -174,6 +174,21 @@ class TestClassFormAddressCreator
 		return $pFormData;
 	}
 
+	/**
+	 *
+	 */
+
+	public function testCreateOrCompleteAddressWithSupervisor()
+	{
+		$this->configureSDKWrapperMockerForAddressCreationWithSupervisor(1);
+		$this->configureSDKWrapperMockerForReadEstateByEstateId(1);
+		$this->configureSDKWrapperMockerForUserBySupervisorId(3);
+		
+		$pFormData = $this->createFormData();
+		$result = $this->_pSubject->createOrCompleteAddress($pFormData, false, 'Admin', 1);
+		$this->assertEquals(1, $result);
+	}
+
 		/**
 	 *
 	 */
@@ -223,6 +238,77 @@ class TestClassFormAddressCreator
 		$this->addCreateAddressResponseToSKDWrapper($response);
 	}
 
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperMockerForAddressCreationWithSupervisor(int $id)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:create',
+			'resourceid' => '',
+			'resourcetype' => 'address',
+			'cacheable' => false,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $id, 'type' => 'address', 'elements' => []],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->addCreateAddressResponseToSKDWrapperWithSupervisor($response);
+	}
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperMockerForReadEstateByEstateId(int $id)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:read',
+			'resourceid' => '',
+			'resourcetype' => 'estate',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $id, 'type' => 'estate', 'elements' => ['benutzer' => '3']],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->readEstateResponseToSKDWrapperWithEstateId($response);
+	}
+
+	/**
+	 *
+	 */
+
+	private function configureSDKWrapperMockerForUserBySupervisorId(int $id)
+	{
+		$response = [
+			'actionid' => 'urn:onoffice-de-ns:smart:2.5:smartml:action:get',
+			'resourceid' => '',
+			'resourcetype' => 'users',
+			'cacheable' => true,
+			'identifier' => '',
+			'data' => [
+				'meta' => ['cntabsolute' => null],
+				'records' => [
+					['id' => $id, 'type' => '', 'elements' => ['username' => 'testUserName']],
+				],
+			],
+			'status' => ['errorcode' => 0, 'message' => 'OK'],
+		];
+
+		$this->readUserResponseToSKDWrapperWithSupervisorId($response);
+	}
 
 	/**
 	 *
@@ -247,5 +333,31 @@ class TestClassFormAddressCreator
 			'checkDuplicate' => false,
 			'ArtDaten' => 'Admin'
 		], null, $response);
+	}
+
+	private function addCreateAddressResponseToSKDWrapperWithSupervisor(array $response)
+	{
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_CREATE, 'address', '', [
+			'testaddressfield1varchar' => 'testValue',
+			'testaddressfield1multiselect' => ['hut','tut'],
+			'checkDuplicate' => false,
+			'ArtDaten' => 'Admin',
+			"Benutzer" => "testUserName"
+		], null, $response);
+	}
+
+	private function readEstateResponseToSKDWrapperWithEstateId(array $response)
+	{
+		$parameters = [
+			'filter' => ['Id' => [['op' => '=', 'val' => 1]]],
+			'data' => array('benutzer'),
+		];
+
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_READ, 'estate', '', $parameters, null, $response);
+	}
+
+	private function readUserResponseToSKDWrapperWithSupervisorId(array $response)
+	{
+		$this->_pSDKWrapper->addResponseByParameters(onOfficeSDK::ACTION_ID_GET, 'users', '', [], null, $response);
 	}
 }

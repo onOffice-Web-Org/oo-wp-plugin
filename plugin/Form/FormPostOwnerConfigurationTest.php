@@ -27,6 +27,7 @@ use onOffice\SDK\onOfficeSDK;
 use onOffice\WPlugin\Controller\InputVariableReader;
 use onOffice\WPlugin\Controller\InputVariableReaderConfigTest;
 use onOffice\WPlugin\SDKWrapper;
+use onOffice\WPlugin\WP\WPQueryWrapper;
 
 /**
  *
@@ -47,20 +48,26 @@ class FormPostOwnerConfigurationTest
 	/** @var bool */
 	private $_newsletterAccepted = false;
 
+	/** @var WPQueryWrapper */
+	private $_pWPQueryWrapper;
+
 	/**
 	 * @param SDKWrapper $pSDKWrapper
 	 * @param FormAddressCreator $pFormAddressCreator
 	 * @param InputVariableReaderConfigTest $pInputVariableReaderConfigTest
+	 * @param WPQueryWrapper $pWPQueryWrapper
 	 */
 
 	public function __construct(
 		SDKWrapper $pSDKWrapper,
 		FormAddressCreator $pFormAddressCreator,
-		InputVariableReaderConfigTest $pInputVariableReaderConfigTest)
+		InputVariableReaderConfigTest $pInputVariableReaderConfigTest,
+		WPQueryWrapper $pWPQueryWrapper)
 	{
 		$this->_pInputVariableReaderConfigTest = $pInputVariableReaderConfigTest;
 		$this->_pFormAddressCreator = $pFormAddressCreator;
 		$this->_pSDKWrapper = $pSDKWrapper;
+		$this->_pWPQueryWrapper = $pWPQueryWrapper;
 	}
 
 
@@ -132,5 +139,17 @@ class FormPostOwnerConfigurationTest
 	public function setNewsletterAccepted( bool $newsletterAccepted )
 	{
 		$this->_newsletterAccepted = $newsletterAccepted;
+	}
+
+
+	/**
+	 *
+	 * @return WPQueryWrapper
+	 *
+	 */
+
+	public function getWPQueryWrapper(): WPQueryWrapper
+	{
+		return $this->_pWPQueryWrapper;
 	}
 }
