@@ -44,7 +44,7 @@ use const ABSPATH;
 class DatabaseChanges implements DatabaseChangesInterface
 {
 	/** @var int */
-	const MAX_VERSION = 39;
+	const MAX_VERSION = 40;
 
 	/** @var WPOptionWrapperBase */
 	private $_pWpOption;
@@ -285,6 +285,11 @@ class DatabaseChanges implements DatabaseChangesInterface
 			$this->updateShowPriceOnRequestOptionForSimilarView();
 			$this->updateShowPriceOnRequestOptionForDetailView();
 			$dbversion = 39;
+		}
+
+		if ($dbversion == 39) {
+			$this->deleteExposeColumnFromListviews();
+			$dbversion = 40;
 		}
 
 		$this->_pWpOption->updateOption( 'oo_plugin_db_version', $dbversion, true );
@@ -780,6 +785,16 @@ class DatabaseChanges implements DatabaseChangesInterface
 		}
 	}
 
+	/**
+	 *
+	 */
+	private function deleteExposeColumnFromListviews()
+	{
+		$prefix = $this->getPrefix();
+		$tableName = $prefix . "oo_plugin_listviews";
+		$sql = "ALTER TABLE $tableName DROP COLUMN expose";
+		$this->_pWPDB->query($sql);
+	}
 
 	/**
 	 *

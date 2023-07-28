@@ -103,14 +103,6 @@ class AdminPageEstateUnitSettings
 		$pFormModelPictureTypes->addInputModel($pInputModelPictureTypes);
 		$this->addFormModel($pFormModelPictureTypes);
 
-		$pInputModelDocumentTypes = $pFormModelBuilder->createInputModelExpose();
-		$pFormModelDocumentTypes = new Model\FormModel();
-		$pFormModelDocumentTypes->setPageSlug($this->getPageSlug());
-		$pFormModelDocumentTypes->setGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
-		$pFormModelDocumentTypes->setLabel(__('Downloadable Documents', 'onoffice-for-wp-websites'));
-		$pFormModelDocumentTypes->addInputModel($pInputModelDocumentTypes);
-		$this->addFormModel($pFormModelDocumentTypes);
-
 		$fieldNames = $this->readFieldnamesByContent(onOfficeSDK::MODULE_ESTATE);
 
 		$this->addFieldsConfiguration(onOfficeSDK::MODULE_ESTATE, $pFormModelBuilder, $fieldNames);
@@ -129,9 +121,6 @@ class AdminPageEstateUnitSettings
 
 		$pFormLayoutDesign = $this->getFormModelByGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
 		$this->createMetaBoxByForm($pFormLayoutDesign, 'side');
-
-		$pFormDocumentTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_DOCUMENT_TYPES);
-		$this->createMetaBoxByForm($pFormDocumentTypes, 'normal');
 
 		$pFormRecords = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$this->createMetaBoxByForm($pFormRecords, 'side');
