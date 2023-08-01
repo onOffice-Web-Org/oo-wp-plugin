@@ -115,6 +115,7 @@ class Form
 
 		$pFormConfigFactory = $this->_pContainer->get(DataFormConfigurationFactory::class);
 		$pFormConfig = $pFormConfigFactory->loadByFormName($formName);
+		$this->renderCaptchaScript($pFormConfig->getCaptcha());
 		$this->_pFieldsCollection = $this->buildFieldsCollectionForForm($pFieldsCollection, $type, $pFormConfig);
 		try {
 			$this->_pFormData = $pFormPost->getFormDataInstance($formName, $this->_formNo);
@@ -600,6 +601,18 @@ class Form
 		return esc_html($result);
 	}
 
+	/**
+	 *
+	 * @param bool $isCaptchaRequired
+	 *
+	 */
+
+	private function renderCaptchaScript(bool $isCaptchaRequired = false)
+	{
+		if (wp_script_is('onoffice-captchacontrol', 'registered')) {
+			echo '<script>var requiresCaptchaForm = ' . json_encode($isCaptchaRequired) . ';</script>';
+		}
+	}
 
 	/**
 	 *

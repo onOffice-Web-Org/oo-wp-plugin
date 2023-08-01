@@ -21,3 +21,20 @@ var onOffice = onOffice || {};
 		return iePosition > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./);
 	};
 })();
+
+var requiresCaptchaForm = requiresCaptchaForm || false;
+jQuery(document).ready(function ($) {
+	if (requiresCaptchaForm == true) {
+		function addRecaptchaScript() {
+			if (!$("#recaptcha-script").length) {
+				$("<script>")
+					.attr("src", "https://www.google.com/recaptcha/api.js")
+					.attr("async", false)
+					.attr("id", "recaptcha-script")
+					.appendTo("head");
+			}
+		}
+		const targetedFormElements = "#onoffice-form input, #onoffice-form textarea, #onoffice-form button, #onoffice-form";
+		$(targetedFormElements).on("focus select2:open", addRecaptchaScript);
+	}
+});
