@@ -117,6 +117,7 @@ class DataDetailViewHandler
 		$pDataDetailView->setLinks($row['links'] ?? LinksTypes::LINKS_DEACTIVATED);
 		$pDataDetailView->setShowStatus($row['show_status'] ?? false);
 		$pDataDetailView->setCustomLabels($row[DataDetailView::FIELD_CUSTOM_LABEL] ?? []);
+		$pDataDetailView->setShowPriceOnRequest($row[DataDetailView::FIELD_PRICE_ON_REQUEST] ?? false);
 		return $pDataDetailView;
 	}
 }

@@ -292,6 +292,7 @@ class AdminPageEstateDetail
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate();
 		$pInputModelShortCodeForm = $pFormModelBuilder->createInputModelShortCodeForm();
 		$pInputShowStatus = $pFormModelBuilder->createInputModelShowStatus();
+		$pInputModelShowPriceOnRequest = $pFormModelBuilder->createInputModelShowPriceOnRequest();
 		$pFormModelLayoutDesign = new FormModel();
 		$pFormModelLayoutDesign->setPageSlug($this->getPageSlug());
 		$pFormModelLayoutDesign->setGroupSlug(self::FORM_VIEW_LAYOUT_DESIGN);
@@ -299,6 +300,7 @@ class AdminPageEstateDetail
 		$pFormModelLayoutDesign->addInputModel($pInputModelTemplate);
 		$pFormModelLayoutDesign->addInputModel( $pInputModelShortCodeForm );
 		$pFormModelLayoutDesign->addInputModel($pInputShowStatus);
+		$pFormModelLayoutDesign->addInputModel($pInputModelShowPriceOnRequest);
 		$this->addFormModel($pFormModelLayoutDesign);
 
 		$pInputModelPictureTypes = $pFormModelBuilder->createInputModelPictureTypes();
@@ -357,6 +359,7 @@ class AdminPageEstateDetail
 					(new FieldModuleCollectionDecoratorReadAddress(new FieldsCollection()))));
 		$this->getContainer()->get(FieldsCollectionBuilderShort::class)
 			->addFieldsAddressEstate($pFieldsCollection);
+		$pFieldsCollection->removeFieldByModuleAndName(onOfficeSDK::MODULE_ESTATE, 'preisAufAnfrage');
 		return $pFieldsCollection;
 	}
 

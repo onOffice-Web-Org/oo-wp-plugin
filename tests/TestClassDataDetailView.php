@@ -96,6 +96,7 @@ class TestClassDataDetailView
 		$this->assertEquals('', $pDataDetailView->getTemplate());
 		$this->assertEquals('', $pDataDetailView->getShortCodeForm());
 		$this->assertTrue($pDataDetailView->getShowStatus());
+		$this->assertEquals(false, $pDataDetailView->getShowPriceOnRequest());
 		$this->assertEquals(LinksTypes::LINKS_EMBEDDED, $pDataDetailView->getOguloLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getObjectLinks());
 		$this->assertEquals(LinksTypes::LINKS_DEACTIVATED, $pDataDetailView->getLinks());
@@ -129,6 +130,8 @@ class TestClassDataDetailView
 		$pDataDetailView->setShortCodeForm('[oo_form form="Contact Form"]');
 		$this->assertEquals('[oo_form form="Contact Form"]', $pDataDetailView->getShortCodeForm());
 		$pDataDetailView->setShowStatus(true);
+		$pDataDetailView->setShowPriceOnRequest(true);
+		$this->assertEquals(true, $pDataDetailView->getShowPriceOnRequest());
 		$this->assertTrue($pDataDetailView->getShowStatus());
 	}
 

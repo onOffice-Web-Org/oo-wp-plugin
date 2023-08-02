@@ -78,6 +78,9 @@ class InputModelOptionFactoryDetailView
 	const INPUT_SHOW_STATUS = 'show_status';
 
 	/** @var string */
+	const INPUT_SHOW_PRICE_ON_REQUEST = 'show_price_on_request';
+
+	/** @var string */
 	private $_optionGroup = null;
 
 
@@ -121,6 +124,9 @@ class InputModelOptionFactoryDetailView
 		],
 		self::INPUT_LINKS => [
 			self::KEY_TYPE => InputModelOption::SETTING_TYPE_STRING
+		],
+		self::INPUT_SHOW_PRICE_ON_REQUEST => [
+			self::KEY_TYPE => InputModelOption::SETTING_TYPE_BOOLEAN
 		]
 	];
 

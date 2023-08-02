@@ -457,7 +457,7 @@ class FormModelBuilderDBForm
 	{
 		$pInputModelFactoryConfig = new InputModelDBFactoryConfigForm();
 		$pInputModelFactory = new InputModelDBFactory($pInputModelFactoryConfig);
-		$label = __('Reduce values according to selected filter', 'onoffice-for-wp-websites');
+		$label = __('Hide empty values from onOffice enterprise', 'onoffice-for-wp-websites');
 		$type = InputModelDBFactoryConfigForm::INPUT_FORM_AVAILABLE_OPTIONS;
 		/* @var $pInputModel InputModelDB */
 		$pInputModel = $pInputModelFactory->create($type, $label, true);

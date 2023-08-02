@@ -6,6 +6,12 @@
 			"objekttyp",
 			"objekttitel",
 			"objektbeschreibung",
+			"warmmiete",
+			"kaufpreis",
+			"erbpacht",
+			"nettokaltmiete",
+			"pacht",
+			"kaltmiete",
 			"virtualAddress",
 			"objektadresse_freigeben",
 			"reserviert",
@@ -23,7 +29,8 @@
 			"ort",
 			"objektnr_extern",
 			"plz",
-			"land"
+			"land",
+			"preisAufAnfrage"
 		],
 		"filter": {
 			"veroeffentlichen": [
@@ -88,10 +95,17 @@
 						"hausnummer": "",
 						"objekttitel": "Name id 15",
 						"objektbeschreibung": "description test",
+						"warmmiete": "200.00000",
+						"kaufpreis": "200.00000",
+						"erbpacht": "300.00000",
+						"nettokaltmiete": "400.00000",
+						"pacht": "500.00000",
+						"kaltmiete": "600.00000",
 						"ort": "",
 						"objektnr_extern": "DJ636",
 						"plz": "",
 						"land": "Germany",
+						"preisAufAnfrage": "Yes",
 						"mainLangId": null
 					}
 				},
