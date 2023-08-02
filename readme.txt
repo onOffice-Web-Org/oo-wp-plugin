@@ -76,6 +76,27 @@ Start editing inside the `onoffice-personalized` folder.
 
 == Changelog ==
 
+= 4.12 (2023-08-02) =
+
+**Added**
+
+* An option to toggle visibility of the map for each estate list.
+* 'Price on request' option to hide prices in lists and detail view.
+
+**Changed**
+
+* Renaming a notification if name of estate list, form, etc. is empty while saving.
+* Renaming the options to add fields to the search and filter.
+
+**Fixed**
+
+* The honeypot javascript is always being loaded even when disabled.
+* Customizing labels of message field in forms doesn't work.
+
+**Removed**
+
+* Faulty options for the admistration view.
+
 = 4.11.1 (2023-05-24) =
 
 **Fixed**
