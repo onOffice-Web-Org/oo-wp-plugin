@@ -658,7 +658,6 @@ class TestClassFormModelBuilderDBEstateListSettings
         $this->assertEquals($key, $pInputModelBase->getValuesAvailable());
     }
 
-  
 	/**
 	 * @covers onOffice\WPlugin\Model\FormModelBuilder\FormModelBuilderDBEstateListSettings::createInputModelShowPriceOnRequest
 	 */
@@ -675,7 +674,6 @@ class TestClassFormModelBuilderDBEstateListSettings
 		$pInputModelDB = $pInstance->createInputModelShowPriceOnRequest();
 		$this->assertInstanceOf(InputModelDB::class, $pInputModelDB);
 		$this->assertEquals($pInputModelDB->getValue(), '0');
-
 		$this->assertEquals('checkbox', $pInputModelDB->getHtmlType());
 	}
 
