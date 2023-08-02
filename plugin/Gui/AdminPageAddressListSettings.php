@@ -380,7 +380,7 @@ class AdminPageAddressListSettings
 	protected function checkFixedValues($row)
 	{
 		$table = RecordManager::TABLENAME_LIST_VIEW_ADDRESS;
-		$result = isset($row[$table]['name']) && $row[$table]['name'] != null && !empty(trim($row[$table]['name']));
+		$result = isset($row[$table]['name']) && !empty(trim($row[$table]['name']));
 
 		return $result;
 	}

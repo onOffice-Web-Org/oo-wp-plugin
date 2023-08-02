@@ -137,7 +137,7 @@ abstract class AdminPageFormSettingsBase
 	protected function checkFixedValues($row)
 	{
 		$table = RecordManager::TABLENAME_FORMS;
-		$result = isset($row[$table]['name']) && $row[$table]['name'] != null && !empty(trim($row[$table]['name']));
+		$result = isset($row[$table]['name']) && !empty(trim($row[$table]['name']));
 
 		return $result;
 	}
